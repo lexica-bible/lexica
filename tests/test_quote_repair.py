@@ -375,9 +375,13 @@ def main():
     assert s227 < B.NEARMATCH_THRESHOLD < s236, (s227, B.NEARMATCH_THRESHOLD, s236)
     assert B.NEARMATCH_THRESHOLD == 0.664, B.NEARMATCH_THRESHOLD
 
-    # ── 13. FIXTURE 1 — real G227 8258771a_2: "quenched/crushed" is the card's own paraphrase
-    # of Isa 42:3 with NO attribution -> meta:v4 EXEMPT (note); the Job anchoring span holds ->
-    # ZERO feedable spans -> the model is NEVER called and the card parks. ──
+    # ── 13. FIXTURE 1 — real G227 8258771a_2, now under the #68 coordinate-list rule (the
+    # G227 real-bytes GREEN flip): the Job quote sits after a COORDINATE lead-in ("Job 42:7 and
+    # Job 42:8:") that assigns no primary, so matching 42:7 is correctly anchored -> NO anchoring
+    # fail. "quenched/crushed" stays the card's own paraphrase of Isa 42:3 with no attribution ->
+    # meta:v4 EXEMPT (note). No feedable AND no held span -> the model is NEVER called and the
+    # card is CLEAN at the quote gate (it stays parked on its OWN non-quote defects). The
+    # anchoring-held -> park routing proof lives in fixtures 9/10 (trailing-bracket G236). ──
     G227CARD = ('Sub-use: a reported thing turns out to match what happened. '
                 'Job 42:7 and Job 42:8: Eliphaz and friends "spoke not anything before me true," '
                 'while Job did. Nothing in the verse establishes a legal setting; the move is '
@@ -385,17 +389,13 @@ def main():
     G227VT = {("Job", 42, 7): NM_JOB427, ("Job", 42, 8): NM_JOB428, ("Isa", 42, 3): NM_ISA423}
     notes, kinds = [], []
     fails, nr = B.probe1_verbatim(G227CARD, G227VT, notes=notes, fail_kinds=kinds)
-    assert kinds == ["anchoring"], (fails, kinds)             # only the Job anchoring fail
-    assert not any("quenched/crushed" in f for f in fails), fails
+    assert kinds == [] and fails == [], (fails, kinds)        # coordinate lead-in -> no anchoring fail (#68)
     assert any("quenched/crushed" in n and "own-paraphrase" in n and "meta:v6" in n for n in notes), notes
 
     def never227(_msg):
         raise AssertionError("model called on a card with no feedable (wording) span")
     final, rec, probs = B.quote_repair(G227CARD, G227VT, never227)
-    assert final == G227CARD and probs, probs
-    assert any("anchoring" in p.lower() for p in probs), probs
-    assert rec and rec.get("anchoring_only") and "unsourced_held" not in rec, rec
-    assert B.bank_refused_repair("G227", "quote", rec) is None    # nothing to bank
+    assert (final, rec, probs) == (G227CARD, None, []), (final == G227CARD, rec, probs)  # clean, no-op
 
     # ── 14. FIXTURE 2 — real G236 59667b81_2: "changing over" keeps a near-match target (Dan
     # 4:16 "change over", 0.833 >= threshold) -> stays `wording`, fed, fixed, clean. The fed
@@ -414,9 +414,11 @@ def main():
     f2, n2 = B.probe1_verbatim(final, G236CLEAN_VT)
     assert f2 == [] and n2 == [], (f2, n2)
 
-    # ── 15. FIXTURE 3 — grafted mixed card (G236 wording span + G227 held spans): the model is
-    # fed ONLY the wording finding; the anchoring finding AND the own-paraphrase note are both
-    # held back; on the re-check the anchoring span caps out -> park, NOT a guard breach. ──
+    # ── 15. FIXTURE 3 — grafted mixed card, now under #68: a wording span (Dan 4:16 "changing
+    # over") + a COORDINATE Job lead-in (no primary -> passes) + the "quenched/crushed" own-
+    # paraphrase note. Only the wording finding is fed; it is fixed and the card ships CLEAN (the
+    # Job coordinate lead-in no longer manufactures an anchoring park). The wording-fed +
+    # anchoring-held -> park routing proof lives in fixtures 9/10 (trailing-bracket G236). ──
     GRAFT = ('The seasons "changing over" the king mark intervals (Dan 4:16). '
              'Job 42:7 and Job 42:8: friends "spoke not anything before me true," while Job did. '
              'Nothing sets a legal frame; the move is from "quenched/crushed" to genuine outcome.')
@@ -424,17 +426,18 @@ def main():
                ("Job", 42, 8): NM_JOB428, ("Isa", 42, 3): NM_ISA423}
     notes, kinds = [], []
     fails, nr = B.probe1_verbatim(GRAFT, GRAFTVT, notes=notes, fail_kinds=kinds)
-    assert sorted(kinds) == ["anchoring", "wording"], (fails, kinds)   # quenched/crushed = NOTE
+    assert kinds == ["wording"], (fails, kinds)               # Job coordinate lead-in passes (#68)
     assert any("quenched/crushed" in n and "meta:v6" in n for n in notes), notes
     GRAFT_FIX = GRAFT.replace('"changing over"', '"seven times shall change over him"')
     rm = RouteMock(GRAFT_FIX)
     final, rec, probs = B.quote_repair(GRAFT, GRAFTVT, rm)
     assert len(rm.msgs) == 1, rm.msgs
     assert "matches NO cited verse" in rm.msgs[0], "the wording finding was not fed"
-    assert "anchored primary" not in rm.msgs[0], "the anchoring finding LEAKED to the model"
-    assert probs and any("cap" in p.lower() for p in probs), probs
-    assert not any("spans-only" in p for p in probs), ("routed to a breach, not a park", probs)
-    assert final == GRAFT
+    assert "anchored primary" not in rm.msgs[0], "no anchoring finding should exist to leak"
+    assert probs == [], probs                                 # wording fixed, coordinate passes, note -> clean
+    assert final == GRAFT_FIX
+    f2, n2 = B.probe1_verbatim(final, GRAFTVT)
+    assert f2 == [], f2
 
     # ── 16. FIXTURE 4 (TEETH) — the SAME paraphrase span WITH a trailing (Isa 42:3) ref is
     # attribution-anchored: it FAILS as `unsourced` (a claimed source for words that exist
@@ -595,6 +598,72 @@ def main():
     B.probe1_verbatim(HV_CARD, HV_VT, notes=notes, warns=warns)
     assert warns == [], warns                    # registered @ 0.720 -> suppressed despite run 2
     assert notes and "Heaven/heavens" in notes[0] and "residual" in notes[0], notes
+
+    # ══════════════════════════════════════════════════════════════════════════════════════
+    # 28-33. COORDINATE-LIST / RANGE LEAD-IN ANCHORING (ENGINE_LESSONS #68, ruled 2026-07-14).
+    # A lead-in naming its refs as a bare list/range assigns no primary -> a quote matching ANY
+    # listed ref is correctly anchored (lead-ins ONLY; the trailing-bracket paired-swap teeth are
+    # a separate branch). Real-bytes GREEN flips: fixture 13 (Job "and"-list) + 28 (Ezra range).
+    # Teeth stay RED: 29 (sequential mislabel) + 30 (trailing swap). Edges pinned per the
+    # reviewer's three conditions: 31 (no-corpus-text), 32 (empty-glue), 33 (window drift).
+    # Verse bytes reuse the banked reads above. Red-first: against the pre-#68 code the two green
+    # flips (13, 28) and the mixed card (15) fired anchoring and failed loudly.
+    # ──────────────────────────────────────────────────────────────────────────────────────
+    # 28. GREEN — real G236 range lead-in "Ezra 6:11-12 ... 'changes this word'": the range is
+    #     ONE _REF_RE match expanding to [6:11, 6:12] (pin 2 — a range collapses to one match;
+    #     if the dash ever split into two the dash is not glue, so the guard fails CLOSED and
+    #     fires). 6:11 matches -> no anchoring fail. Range counterpart to fixtures 9/10's bracket.
+    G236RANGE = 'Ezra 6:11-12 threatens anyone who "changes this word" with destruction.'
+    G236RANGE_VT = {k: G236MIX_VT[k] for k in (("Ezr", 6, 11), ("Ezr", 6, 12))}
+    kinds = []
+    fails, nr = B.probe1_verbatim(G236RANGE, G236RANGE_VT, notes=[], fail_kinds=kinds)
+    assert kinds == [] and fails == [], (fails, kinds)
+    assert B._coordinate_leadin(G236RANGE, G236RANGE.index('"'))
+
+    # 29. TEETH — sequential lead-in mislabel stays RED: clause words between the refs ("warns;
+    #     note") are not coordinate glue, so nearest-first still governs. The quote's words are
+    #     Dan 4:16's but the NEAREST ref is Gen 31:7 -> anchoring FIRES.
+    SEQ = 'Dan 4:16 warns; note Gen 31:7 "seven times shall change over him."'
+    SEQ_VT = {("Dan", 4, 16): NM_DAN416, ("Gen", 31, 7): NM_GEN317}
+    kinds = []
+    fails, nr = B.probe1_verbatim(SEQ, SEQ_VT, notes=[], fail_kinds=kinds)
+    assert kinds == ["anchoring"], (fails, kinds)
+    assert not B._coordinate_leadin(SEQ, SEQ.index('"'))
+
+    # 30. TEETH — trailing-bracket paired swap ('"q1" and "q2" (Ref1, Ref2)') stays RED: a
+    #     SEPARATE branch (trailing=True) #68 must not touch. q2 (Gen 31:7 words) is bracket-
+    #     adjacent so it pairs with the LAST ref (Dan 4:16) but matches Gen 31:7 -> FIRES.
+    SWAP = ('The two stand together: "seven times shall change over him" and '
+            '"bartered my wage for the ten lambs" (Gen 31:7, Dan 4:16).')
+    SWAP_VT = {("Dan", 4, 16): NM_DAN416, ("Gen", 31, 7): NM_GEN317}
+    kinds = []
+    fails, nr = B.probe1_verbatim(SWAP, SWAP_VT, notes=[], fail_kinds=kinds)
+    assert kinds == ["anchoring"], (fails, kinds)
+
+    # 31. EDGE (tightening pin / fixture 4) — a listed ref with NO corpus text can never be the
+    #     matched verse, so it cannot create a false pass. Coordinate lead-in with 42:8's text
+    #     unavailable: 42:7 still matches -> coordinate pass, no fail, and no NOT-RUN (nothing is
+    #     unmatched).
+    EDGE = 'Job 42:7 and Job 42:8: friends "spoke not anything before me true," while Job did.'
+    EDGE_VT = {("Job", 42, 7): NM_JOB427, ("Job", 42, 8): None}
+    kinds = []
+    fails, nr = B.probe1_verbatim(EDGE, EDGE_VT, notes=[], fail_kinds=kinds)
+    assert kinds == [] and fails == [] and nr == [], (fails, kinds, nr)
+
+    # 32. PIN 1 (empty-glue edge) — _COORD_GLUE_RE's parts are all optional, so two abutting refs
+    #     with only whitespace between them read as coordinate. Unreachable in real prose but
+    #     pinned so it cannot drift silently.
+    assert B._coordinate_leadin('Job 42:7 Job 42:8 "x"', len('Job 42:7 Job 42:8 '))
+    assert B._COORD_GLUE_RE.fullmatch("") and B._COORD_GLUE_RE.fullmatch(" ")
+
+    # 33. PIN 3 (no cross-sentence over-reach) — a coordinate list preceded by an unrelated
+    #     trailing-bracket ref in the PRIOR sentence still reads coordinate: the walk stops at the
+    #     clause gap so the prior ref never poisons the decision. Red-first caught the fixed-window
+    #     helper failing exactly here (the grafted mixed card, fixture 15). The _local_refs bound
+    #     stays named so its drift is visible.
+    CROSS = 'Context (Dan 4:16). Job 42:7 and Job 42:8: friends "spoke..." here.'
+    assert B._coordinate_leadin(CROSS, CROSS.index('"'))
+    assert B._LOCAL_REF_WINDOW == 48
 
     print("test_quote_repair: ok")
 

@@ -5758,6 +5758,61 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT (2026-07-14; DESIGN + BUILD,
+### reviewer-adjudicated under standing delegation, full receipt cycle. JP ran both PA prose
+### reads; all tests db-free/model-free, run locally; frozen V9 untouched — build-time gate only.)
+**THE QUESTION (was unruled):** the two anchoring parks (G227, G236) are LEAD-IN MULTI-REF
+mis-anchors — a single quote (or one-per-endpoint quotes) following a lead-in that names its refs
+as a COORDINATE LIST/RANGE, the quote matching ONE listed ref. Ruling-3's re-anchor covers the
+G162 trailing-bracket two-quotes shape; this is its own shape. `probe1_verbatim`'s nearest-first
+rule (V11.1 ticket 2, ruled for SEQUENTIAL lead-in prose) named the NEAREST ref primary and fired:
+G227 "Job 42:7 and Job 42:8:" → wording 42:7, primary 42:8; G236 "Ezra 6:11-12" → wording 6:11,
+primary 6:12.
+**RULED DESIGN (ADOPTED w/ precondition + tightening):** a coordinate list/range assigns NO
+primary — a quote matching ANY listed ref is correctly anchored. Safe because a span reaches the
+anchoring branch only after a word-for-word match to a cited verse (relaxation can't pass
+fabricated/reworded text); every listed ref is cited by construction (`cited_refs` sweeps the whole
+card, ranges expanded — CC correction accepted, guarantee is via that scan, NOT the matched-verse
+step). Teeth preserved: trailing-bracket paired-swaps (separate branch) + sequential lead-ins
+(clause words between refs → still nearest-first). Scope CORRECTED mid-design (CC-flagged, accepted
+as strengthening): the "single quote" qualifier dropped — G236's own bytes carry two quotes under
+one range lead-in, one per endpoint.
+**PRECONDITION READS (JP ran, byte-adjudicated — the honesty gate, not a courtesy):** G227
+(ARCHIVED card of record `8258771a`) = plain scene-set over the pair (God's rebuke stated in both
+42:7 + 42:8; pairing is the honest citation) — calibration holds. G236 (LIVE draft `59667b81`) =
+honest range citation, "changes this word" (6:11) + "eradicate…" (6:12), one quote per endpoint —
+calibration holds. Both stay IN scope. Asymmetry recorded: archived vs live, correct pairing, not
+same-class artifacts.
+**BUILT (`build_lexica_def.py`):** `_coordinate_leadin(raw, qs)` + a one-line guard wrapping the
+existing anchoring fire (lead-ins only; `coord_pass = bool(hit) and not trailing and
+_coordinate_leadin(...)`). `_COORD_GLUE_RE` = whitespace/comma + optional and/or. `_LOCAL_REF_WINDOW`
+= 48 named (drift-visible).
+**LEDGER — SHIPPED HELPER DIFFERS FROM THE SHOW-CODE-APPROVED HELPER (window → walk), re-reviewed
+here; this receipt covers the corrected version explicitly.** The approved helper scanned a FIXED
+80-char window; red-first caught it over-reaching across a SENTENCE BOUNDARY — the grafted mixed
+card (fixture 15) pulled the prior sentence's `(Dan 4:16)` trailing bracket into the run, its gap to
+"Job 42:7" isn't glue, so a real coordinate list read as non-coordinate and FIRED. The correction
+stayed INSIDE the approved guard slot (architecture held; only the helper internals changed): the
+shipped helper WALKS OUT from the ref nearest the quote and stops at the first clause gap, capturing
+the adjacent run by construction — no fixed window. This SUPERSEDES pin 3 (no window to drift);
+fixture 33 repurposed to pin the no-cross-sentence property the window was a proxy for. Range case
+rides `ref_spans` expanding the run text (a range is one `_REF_RE` match → still counts two verses;
+if the dash ever split, it's not glue → fails CLOSED and fires).
+**RED-FIRST (both directions, db-free/model-free, run locally):** old fixtures vs new code → 13
+flips (`kinds` empties); new fixtures vs old code → 13's green assertion fails loudly (anchoring
+fires). Fixtures: 13 (Job and-list) + 28 (Ezra range) GREEN flips on real bytes; 29 (sequential
+mislabel) + 30 (trailing swap) stay RED; 31 (listed ref no corpus text — can't false-pass) + 32
+(empty-glue) + 33 (no cross-sentence) pinned. TWO EXISTING near-match fixtures (13, 15) baked in the
+old false-positive (asserted anchoring FIRES on the Job coordinate lead-in) → updated to ruled
+behavior; own-paraphrase-note assertion preserved on 13, the wording-fed→park routing proof still
+covered by fixtures 9/10 (trailing-bracket G236) — surfaced first, patched second. 32 relevant
+Python suites green; 4 `import ai` fails pre-existing (fail identically on original code, excluded).
+**OUTCOME:** the anchoring FALSE-POSITIVE clears on G227 + G236; neither ships — both stay PARKED on
+their own separate defects (G227 near-match residual + non-quote gates; G236 changing-over wording +
+the real Ezra defect). Gate calibration, not card defect. = ENGINE_LESSONS #68. **STATE: code +
+tests + #68 + this entry in ONE commit (no-crossing, post-receipt); origin advanced; PA on next
+pull (build-time gate, no reload). Scoreboard UNCHANGED 2/10ʰ · 7/15.**
+
 ### META:V5 IN-BAND CUE DEMOTE — BUILT + LANDED; LIVE SWEEP + 2 ADJUDICATIONS PENDING (2026-07-14)
 **RULING (scope-b, reviewer, standing delegation):** neither pole — the cue path is NOT sovereign
 and an in-band score does NOT kill the exemption. An in-band combined near-match score (0.62–0.75)

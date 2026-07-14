@@ -2298,6 +2298,12 @@ def _match_quote(qnorm, vnorm):
     return False
 
 
+# Window size for the _local_refs lead-in fallback scan, NAMED so a drift trips the #68 window
+# pin (test_quote_repair). _coordinate_leadin deliberately uses NO fixed window — it walks the
+# adjacent coordinate run and cannot see fewer refs than this bound.
+_LOCAL_REF_WINDOW = 48
+
+
 def _local_refs(raw, qs, qe):
     """The quote's own local ref list (anchoring rule): a trailing parenthetical within a few
     chars of the closing quote; else refs already named inside the enclosing parenthetical
@@ -2330,13 +2336,36 @@ def _local_refs(raw, qs, qe):
         refs = ref_spans(seg)
         if refs:
             return list(reversed(refs)), False         # nearest-first (lead-in prose)
-    return list(reversed(ref_spans(head[-48:]))), False # nearest-first (lead-in prose)
+    return list(reversed(ref_spans(head[-_LOCAL_REF_WINDOW:]))), False  # nearest-first (lead-in prose)
 
 
 # V11.1 ticket 2: the connector gap between paired quotes sharing one trailing bracket —
 # '"q1" and "q2" (Ref1, Ref2)'. Deliberately tight: bare and/or (optional comma), nothing
 # else, so ordinary prose between quotes never triggers pairing.
 _PAIR_GAP_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)\s+$|\s*,\s*$")
+
+# Coordinate ref-list / range lead-in (anchoring calibration, ENGINE_LESSONS #68, ruled
+# 2026-07-14): a lead-in that names its refs as a bare list or range — "Job 42:7 and Job 42:8:",
+# "Ezra 6:11-12" — assigns NO primary; the quote is correctly anchored to whichever listed ref
+# its wording matches. The tell is COORDINATE GLUE between the ref matches: whitespace/comma + an
+# optional and/or, nothing else. We WALK OUT from the ref nearest the quote and STOP at the first
+# clause gap, so the run is exactly the adjacent citation — a fixed char window over-reaches into
+# a prior sentence's trailing-bracket ref (caught red-first on the grafted mixed card). The run's
+# text is expanded by ref_spans, so a range ("6:11-12", one _REF_RE match) still counts its two
+# verses; a lone ref expands to one -> not a list -> nearest-first still governs. A sequential
+# lead-in ("Mat 7:11 says '..' while Luk 11:13 says '..'") has clause words between the matches,
+# so the walk stops immediately and the run is a single ref -> fires. Lead-ins ONLY; the
+# trailing-bracket paired-swap rule (defect-5 teeth) is a separate branch and is untouched.
+_COORD_GLUE_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)?\s*")
+def _coordinate_leadin(raw, qs):
+    head = raw[:qs]
+    ms = list(_REF_RE.finditer(head))
+    if not ms:
+        return False
+    lo = len(ms) - 1                                    # the ref nearest the quote
+    while lo > 0 and _COORD_GLUE_RE.fullmatch(head[ms[lo - 1].end():ms[lo].start()]):
+        lo -= 1                                         # extend left while gaps stay coordinate glue
+    return len(ref_spans(head[ms[lo].start():])) >= 2   # the adjacent run names >= 2 verses
 
 # meta:v3 (Ruling 2) — the ATTRIBUTION lead-in posture: a ref immediately followed by an
 # attribution verb, right before the open quote ("Psa 68:18 reads", "Num 3:9 says:").
@@ -2567,19 +2596,26 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None, warns=None):
             continue
         local, trailing = _local_refs(raw, qs, qe)
         if len(local) >= 2:
-            # V11.1 ticket 2, paired-quote rule: '"q1" and "q2" (Ref1, Ref2)' — the
-            # bracket-adjacent quote pairs with the LAST ref. Trailing brackets only;
-            # a swapped pair still fires (teeth pinned by the swap fixture).
-            expected = (local[-1] if trailing and gap is not None
-                        and _PAIR_GAP_RE.fullmatch(gap) else local[0])
             hit = [k for k in local if k in matched]
-            if len(hit) == 1 and expected != hit[0]:
-                fails.append(
-                    f'quote "{label}" carries the wording of {hit[0][0]} {hit[0][1]}:{hit[0][2]} '
-                    f'but is anchored primary on {expected[0]} {expected[1]}:{expected[2]} '
-                    f'(anchoring rule)')
-                if fail_kinds is not None:
-                    fail_kinds.append("anchoring")
+            # Coordinate-list / range lead-in (ENGINE_LESSONS #68, ruled 2026-07-14): a lead-in
+            # naming its refs as a bare list/range assigns no primary, so a quote matching ANY
+            # listed ref is correctly anchored. Lead-ins ONLY (the trailing-bracket paired-swap
+            # teeth below are a separate branch, untouched). `hit` vouches the matched ref is
+            # cited; every listed ref is cited by construction (cited_refs sweeps the whole card).
+            coord_pass = bool(hit) and not trailing and _coordinate_leadin(raw, qs)
+            if not coord_pass:
+                # V11.1 ticket 2, paired-quote rule: '"q1" and "q2" (Ref1, Ref2)' — the
+                # bracket-adjacent quote pairs with the LAST ref. Trailing brackets only;
+                # a swapped pair still fires (teeth pinned by the swap fixture).
+                expected = (local[-1] if trailing and gap is not None
+                            and _PAIR_GAP_RE.fullmatch(gap) else local[0])
+                if len(hit) == 1 and expected != hit[0]:
+                    fails.append(
+                        f'quote "{label}" carries the wording of {hit[0][0]} {hit[0][1]}:{hit[0][2]} '
+                        f'but is anchored primary on {expected[0]} {expected[1]}:{expected[2]} '
+                        f'(anchoring rule)')
+                    if fail_kinds is not None:
+                        fail_kinds.append("anchoring")
     return fails, notruns
 
 

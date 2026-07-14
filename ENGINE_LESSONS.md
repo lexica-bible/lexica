@@ -987,3 +987,26 @@ both drifting from the doc.
     regardless of band) re-opens with that span as evidence. The frozen function set is a DESIGN
     element (closure fixture-locked); changing it is a design re-open. *(audit: META:V6 CONTENT-TOKEN
     DISCRIMINATOR, 2026-07-14)*
+
+68. **A "primary anchor" is a property of the citation's SHAPE, not its position — a coordinate
+    list or range assigns none.** The nearest-first anchoring rule (V11.1 ticket 2, ruled for
+    SEQUENTIAL lead-in prose — "2Sa 19:42 asks '..' while Mat 7:11 says '..'") over-fired on
+    COORDINATE lead-ins ("Job 42:7 and Job 42:8:", "Ezra 6:11-12"): it named the NEAREST ref
+    primary and flagged a quote whose real scripture sits in the OTHER listed verse as a
+    mis-anchor — though the reader is pointed at both and the words genuinely live in one. A span
+    reaches the anchoring branch ONLY after a word-for-word match to a cited verse, so the
+    relaxation can never pass fabricated/reworded text (G227 "Job 42:7 and Job 42:8" + G236 "Ezra
+    6:11-12" both byte-adjudicated: plain scene-set / honest range citation). Every listed ref is
+    cited by construction — `cited_refs` sweeps the whole card — so a lead-in cannot name a verse
+    the card never looks up. FIX: for a lead-in whose refs are joined only by COORDINATE GLUE
+    (whitespace/comma + and/or), a quote matching ANY listed ref is anchored. Two teeth stay:
+    trailing-bracket paired-swaps (a separate branch, untouched) and sequential lead-ins (clause
+    words between refs -> still nearest-first). METHOD NOTE (banked, reviewer-endorsed): the first
+    helper used a fixed char window and red-first caught it over-reaching across a SENTENCE
+    BOUNDARY (it grabbed a prior sentence's trailing-bracket ref, so a real coordinate list read
+    as sequential and fired — the grafted mixed-card fixture); the shipped helper WALKS OUT from
+    the ref nearest the quote and stops at the first clause gap, capturing the adjacent run by
+    construction rather than by a tuned constant — a structural boundary beats a distance guess.
+    Sibling of #61 (fail-KIND routes deterministically; here fail-EXISTENCE is decided by citation
+    shape) and #67 (presence-not-adjacency — the same "read the structure, not a proxy" move).
+    *(audit: LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT, 2026-07-14)*

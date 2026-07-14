@@ -1,5 +1,21 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT + COMMITTED (2026-07-14). The
+> unruled lead-in anchoring question (G227/G236) is CLOSED. A coordinate list/range lead-in
+> ("Job 42:7 and Job 42:8:", "Ezra 6:11-12") assigns NO primary — a quote matching ANY listed
+> ref is anchored; nearest-first is over-application. Two teeth stay (trailing-bracket swaps +
+> sequential lead-ins). Both precondition prose reads byte-adjudicated calibration (G227 archived
+> `8258771a` scene-set / G236 live `59667b81` range). `_coordinate_leadin` + a one-line guard in
+> `probe1_verbatim`, lead-ins only; frozen V9 untouched; build-time gate (no reload). Reviewer
+> receipt granted; helper SHIPPED differs from the show-code-approved one (fixed window → walk-out,
+> red-first caught the window over-reaching a sentence boundary — receipt covers the corrected
+> version). Red-first both directions; 32 Python suites green. The anchoring FALSE-POSITIVE clears
+> on G227+G236; NEITHER ships — both stay PARKED on their OWN defects (G227 near-match residual +
+> non-quote gates · G236 changing-over wording + real Ezra defect). NEXT parked-word work = G236,
+> then G162, G1390, each on its OWN recoverability check first (offline archived-card method, zero
+> spend). Full record: AUDIT "LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT" +
+> ENGINE_LESSONS #68. Scoreboard UNCHANGED 2/10ʰ · 7/15.**
+
 > **META:V5→V6 FOURTH-WALL ARC CLOSED (2026-07-14). The metalinguistic-cue exemption now has a
 > FOURTH WALL: an in-band cue exemption WARNS (blocks apply) only when the span reproduces a verse-
 > word RUN (`_verse_run_content` >= 2 distinct content tokens present; content = tokens minus a
