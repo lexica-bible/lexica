@@ -5333,3 +5333,11 @@ lifts only after the parked words are RE-RUN and proven on the fixed pipeline. T
 carries: coverage-repair follow · G236 spans-only DESYNC edge · stale test_lexica_draw_cache.py
 fixture (w.english, not in CI) · ticket-8 stray-0 · probe-2 over-firing calibration (Peter/8-verses;
 no detector edit without its own red-first byte). Lesson basis: ENGINE_LESSONS #56/#57.
+**PROCESS LEDGER — no-crossing breach (2026-07-13).** The doc close-out commit 55cbc40 was
+committed AND pushed without its own reviewer receipt; the commit-approval receipt covered only
+the F1–F3 code commit a58a4b5. Same class as the ee21606 addendum (acting past the posting/receipt
+step). Low stakes (docs only, content matches events; retroactive content receipt granted), remedy =
+this ledger line, no revert. Rule restated: the no-crossing receipt is per-commit — a follow-on
+doc/close-out commit needs its own receipt or an explicit standing exemption. PROPOSAL for the next
+session's open (JP's ruling): pre-clear doc-only close-out commits as a standing exemption, since
+this friction recurs every close-out.
