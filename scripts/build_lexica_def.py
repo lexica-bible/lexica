@@ -1886,6 +1886,11 @@ The stored verse texts:
 
 Correct ONLY the wording inside quotation marks so each failed quoted span matches its verse's stored text. Change NOTHING outside the quotation marks: every word of prose, every sense headline, every citation, and the number and position of the quotations must stay exactly as they are. Do NOT remove the quotation marks from a span: if a quoted phrase is the card's own wording rather than a scripture quotation, leave it and its quotation marks exactly as they are. If a quotation cannot be made to match its verse without also changing the surrounding prose, leave that quotation exactly as it is.
 
+Three moves are forbidden even when one of them looks like the fix:
+- Do not change any word of prose outside the quotation marks, even to match a look-alike word inside a nearby quote.
+- Do not add, remove, move, or split any citation; a quoted span whose only possible correction is to change which verse it is attributed to must be left exactly as it is.
+- If the only way to make a quoted span match its verse is to change something outside its own quotation marks, leave that span unchanged.
+
 If, after checking, nothing can be corrected inside the quotation marks this way, return the card exactly as given, unchanged.
 
 Output the corrected definition and nothing else — no preamble, no explanation, no list of what you changed, no "Here is the corrected definition" line. Your entire reply must be the card itself, from its first line to its last.

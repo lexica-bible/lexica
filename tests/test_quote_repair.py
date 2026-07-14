@@ -310,6 +310,30 @@ def main():
     assert rec and rec.get("anchoring_only") and "refused_post" not in rec, rec
     assert B.bank_refused_repair("G236", "quote", rec) is None      # nothing to bank
 
+    # ── 11. CHECKPOINT 3 (prompt-sharpen, 2026-07-14): QUOTE_REPAIR_PROMPT now NAMES the
+    # three forbidden-but-tempting moves — edit unquoted prose for a look-alike word / add,
+    # move or split a ref / only-fix-is-outside -> leave unchanged. Each maps to a real
+    # observed breach shape (#58 look-alike prose edit; the ref-move in G236 bank 9bf3f7ef;
+    # the "only fix is outside" rationalization verbatim in G227 bank d65ed578). It is
+    # belt-and-suspenders: CP1's router already keeps the anchoring kind away from the
+    # model, and the spans-only guard independently catches a breach. No gate logic moves.
+    # Red-first, model-free: the instruction phrase must be in the prompt AND reach the fed
+    # message; a ContractMock keyed on it returns the clean fix WITH the instruction and the
+    # #58 unquoted-prose breach shape WITHOUT it. ──
+    assert "look-alike" in B.QUOTE_REPAIR_PROMPT, "CP3 forbidden-moves instruction missing from prompt"
+    cm3 = ContractMock("look-alike", K1_FIX, BAD_PROSE)
+    final, rec, probs = B.quote_repair(K1_RAW, sub(("Pro", 18, 16)), cm3)
+    assert probs == [], f"CP3: contract-honoring repair refused: {probs!r}"
+    assert final == K1_FIX and len(cm3.msgs) == 1
+    assert "look-alike" in cm3.msgs[0], "CP3: the instruction did not reach the fed message"
+    # the breach control genuinely breaches (documents what the instruction backs up)
+    assert B.quote_repair_guard(K1_RAW, BAD_PROSE), "CP3: breach control did not breach the guard"
+    # the qrepair stamp MOVED with the prompt (placement check, reviewer 2026-07-14): the
+    # sharpened paragraph sits inside the hashed template, so the version differs from BOTH
+    # banked prompt versions the four parked cards were built under.
+    assert B.quote_repair_prompt_ver() not in ("qrepair:1e8c9c383df6", "qrepair:b90d5287ca16"), \
+        B.quote_repair_prompt_ver()
+
     print("test_quote_repair: ok")
 
 
