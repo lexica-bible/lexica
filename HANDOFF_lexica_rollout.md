@@ -1,6 +1,6 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **PARKED-WORD QUEUE — G236 + G162 CLOSED THIS SESSION; G1390 NEXT (2026-07-14). Offline
+> **PARKED-WORD QUEUE COMPLETE — ALL FOUR WORDS OFF MYSTERY-PARKED (2026-07-14). Offline
 > archived-card method (read-only, ZERO spend), roster pre-check now the first gate for every parked
 > word. **G236 -> DESIGN PASS (floor-level, spend-gated):** four verses (Ezr 6:11/6:12, Neh 9:26, Isa
 > 24:5) misfiled into substitution = a real sense-inventory gap (ἀλλάσσω needs an "alter/violate a
@@ -11,10 +11,19 @@
 > recurrence, unfixable in-quote) + preamble leak (output-contract observation) + a fixable Isa 14:2
 > dropped-word misquote. Redraw = JP's gamble call (3 defects + Est 2:6 recurrence history), not pressed.
 > METHOD NOTE (strengthens #52): G162's live + archived cards SHARE sig `aa064d41` but differ in prose —
-> sig pins fed input not prose (#15), so recoverability MUST test a predicted-span, never the sig. **NEXT
-> = G1390 (`bda7de94`, probe-2 adjudication defect — JP's word), same sequence, roster pre-check first.**
-> Full records: AUDIT "G162 OFFLINE CHECK" + "G236 DESIGN READ — EZRA CLUSTER". Scoreboard UNCHANGED
-> 2/10ʰ · 7/15. Doc-only, exemption invoked.**
+> sig pins fed input not prose (#15), so recoverability MUST test a predicted-span, never the sig.
+> **G1390 -> SHIP-READINESS CANDIDATE (the session's best):** roster pre-check clean (count-anchored, no
+> membership trap); quote gate clean; the 7 probe-2 named-subject warns byte-adjudicated **7-for-7
+> OVER-FIRING** (6 passage-owner-not-named-in-verse + "Sabbath" non-person plural miss — no Korah/Kore);
+> old V11 prose defects (hint-echo, Php 4:17 drift) resolved in this newer draw. Park reason INVALIDATED
+> (detector noise). **NO APPLY until coverage gate + floor-match + full hand-battery clear, then JP's
+> apply call** (writes live); the offline check runs neither coverage nor floor-match. Version note:
+> warns stored under meta:v3, adjudication byte-level so the verdict stands; the probe-2 over-firing
+> ticket now has its best dataset (7 byte-adjudicated cases = red-first fixtures). **QUEUE DONE: G236 ->
+> design pass (floor-level, spend-gated) · G162 -> redraw gamble (JP's call) · G1390 -> ship-readiness
+> pass (best candidate, zero defects found).** Full records: AUDIT "G1390 OFFLINE CHECK" + "G162 OFFLINE
+> CHECK" + "G236 DESIGN READ — EZRA CLUSTER". Scoreboard UNCHANGED 2/10ʰ · 7/15. Doc-only, exemption
+> invoked.**
 
 > **G236 REDRAW HELD -> DESIGN (2026-07-14). JP cleared the spend gate + authorized a G236 redraw;
 > HELD before spend on byte evidence, reviewer CONCUR — NO draw ran, NO card pending, ZERO spend. The

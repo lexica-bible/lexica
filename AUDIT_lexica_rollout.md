@@ -5758,6 +5758,52 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### G1390 OFFLINE CHECK — PROBE-2 7-FOR-7 OVER-FIRING; PARK REASON INVALIDATED -> SHIP-READINESS
+### CANDIDATE (2026-07-14; parked-word queue item 3, offline archived-card method + byte-adjudicated
+### probe-2 warns, reviewer-CONFIRMED under standing delegation. JP ran every PA read; read-only, ZERO
+### model spend. Doc-only close-out, exemption invoked.)
+**METHOD:** offline archived-card check (card sig `bda7de94`, read-only) for recoverability + the quote
+gate; the 7 probe-2 warns came from the stored draw-record `probe_warns` block and were byte-adjudicated
+against the card's claims + verse text (the offline helper runs ONLY the quote gate — probe-2 is not
+wired into it, so the record + manual byte-check is the path).
+**ROSTER PRE-CHECK (standing first gate) — CLEAN:** G1390 HAS a roster but it is COUNT-anchored (the
+#55 count guard enforces "2 senses", NOT #30 membership) — so NO specific verse is locked to a group,
+no G236-class enforced-misfile; group contents (transfer-gifts vs cultic-offerings) are sense-
+appropriate.
+**KEY:** `bda7de94` (live `draws/G1390.json`), confirmed from the record; `bc1e2f69` = older path-(c)
+key (2 history copies), NOT used. **QUOTE GATE: CLEAN** — "giving" own-word note only, 0 fails / 0 warns;
+recoverability PASS.
+**PROBE-2 = 7-FOR-7 OVER-FIRING (all seven byte-adjudicated, NONE assumed benign — the Korah/Kore
+discipline):**
+| name | ref | verdict |
+|---|---|---|
+| Israel | 1Ki 13:7 | name-from-context — Jeroboam is 1Ki 13's king ("the king of Israel"); verse says "the king" |
+| Nebuchadnezzar | Dan 2:6 | name-from-context — he owns all of Daniel 2 |
+| Hiram | 2Ch 2:10 | name-from-context — "your servants" = Huram of Tyre's woodcutters |
+| Belshazzar | Dan 5:17 | name-from-context — he is Daniel 5's king |
+| Paul | Php 4:17 | name-from-context — author of Philippians |
+| Aaron | Num 18:7 | name-from-context — Num 18 addresses "you [Aaron] and your sons" |
+| Sabbath | Lev 23:38 | FALSE POSITIVE — non-person, and the verse literally has "the **Sabbaths**" (plural; `\bsabbath\b` misses it) |
+No Korah/Kore-class misattribution anywhere in the seven.
+**TWO FALSE-ALARM CLASSES (detector-ticket evidence — the best dataset the probe-2 over-firing ticket
+has; any future probe-2 fix goes RED-FIRST against these exact 7 byte-adjudicated cases):** (1)
+**PASSAGE-OWNER-NOT-NAMED-IN-VERSE** — the subject owns the passage but the single cited verse doesn't
+repeat the name (6 of 7); (2) **CAPITALIZED NON-PERSON NOUN with a morphological miss** ("Sabbath" vs
+the verse's "Sabbaths").
+**VERSION NOTE:** the stored `probe_warns` block reads `meta:v3` (`p2wl:v2` / `scan3:v2`) — these warns
+fired under an OLDER stack than live (`meta:v6`). The adjudication was BYTE-LEVEL, so the verdict stands
+regardless of version; a fresh probe-2 run under current versions may already fire fewer. `scan3` = []
+(clean), `notrun` = [] in the record.
+**STATUS — PARK REASON INVALIDATED -> SHIP-READINESS CANDIDATE (the session's best):** the 7 warns are
+detector NOISE, not a card defect; quote gate clean + scanner-3 clean + probe-2 all-benign, and the old
+V11 prose defects (the Ecc 5:1 hint-echo leak, the Php 4:17 solo-sense drift) look RESOLVED in this
+newer draw (Php 4:17 now homed in sense 1 transfer, matching the floor; Eph 4:8 / Psa 68:18 direction
+split handled per hint). **NO APPLY** until ALL THREE clear — (a) coverage gate, (b) floor-structure
+match, (c) full hand-battery — then JP's apply call (writes live). The offline check runs NEITHER
+coverage nor floor-match; the hand read is owed. Not called shippable here; promoted to a readiness
+look. Scoreboard UNCHANGED **2/10ʰ · 7/15** (a candidate is not a ship). **STATE: no code changed;
+doc-only, exemption invoked. Parked-word queue COMPLETE (all four words off mystery-parked status).**
+
 ### G162 OFFLINE CHECK — RECOVERABILITY PASS; PARK OVER-DETERMINED (2026-07-14; parked-word queue
 ### item 2, offline archived-card method, reviewer-adjudicated under standing delegation. JP ran every
 ### PA read; read-only end to end, ZERO model spend. Doc-only close-out, exemption invoked.)
