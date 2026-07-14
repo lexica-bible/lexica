@@ -965,3 +965,25 @@ both drifting from the doc.
     tests exactly the prediction card. Helper `scripts/offline_gate_check.py` (read-only end to end,
     reuses production detectors). Per-word precondition: the archived card must contain the predicted
     span before its gate check runs. *(audit: PARKED-WORD REDRAW — LIVE RE-RUN RETIRED, 2026-07-14)*
+
+67. **A fourth wall that fires on a structural, benign pattern trains humans to ignore it — the
+    discriminator must key on the pattern's ROOT, not just the score.** meta:v5 demoted every
+    IN-BAND (0.62–0.75) metalinguistic-cue exemption to an adjudicate WARN. The live sweep proved
+    it fires on a STRUCTURAL benign pattern: a lemma's gloss necessarily resembles that lemma's own
+    inflected forms in its own cited verses, so 12/79 live cards warned, all gloss displays. Warn-
+    until-adjudicated at that rate is a treadmill, not an audit trail — when ~95% of warns are noise
+    the human stops reading them. FIX (meta:v6, scope-b (b), 2026-07-14): the CONTENT-TOKEN
+    DISCRIMINATOR — an in-band cue exemption warns only when the span reproduces a verse-word RUN
+    (>= 2 distinct CONTENT tokens present in a cited verse; content = tokens minus a FROZEN closed
+    English function set); a single lemma-gloss inflection (run <= 1) stays a NOTE. Presence, NOT
+    adjacency (a reordered laundered quote still warns — reorder killed G227 once; an adjacency
+    "fix" would silently bless reorders). **NAMED BOUNDARY RISK (Option A, ruled — banked, not a
+    silent gap):** a cue-exempted FULL-token reorder (every content word present, scrambled,
+    rendering cue, no anchor) scores ~1.0 on the token leg → OUT of band → invisible to BOTH the
+    band watch (>0.75) and the v6 run check (in-band-gated) → stays a note. Defense-in-depth: non-
+    cue reorders → own-paraphrase branch (the token-set leg, G236 lineage); ref-carrying reorders →
+    anchor wall. **RE-OPEN TRIGGER (automatic, no fresh ruling):** if any real card ever surfaces a
+    cue-exempted full-token reorder (sweep, adjudication, or audit), Option B (warn by run>=2
+    regardless of band) re-opens with that span as evidence. The frozen function set is a DESIGN
+    element (closure fixture-locked); changing it is a design re-open. *(audit: META:V6 CONTENT-TOKEN
+    DISCRIMINATOR, 2026-07-14)*

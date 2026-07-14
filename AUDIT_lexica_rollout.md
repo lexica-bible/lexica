@@ -5708,6 +5708,33 @@ LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeli
 doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
 until the near-match BUILD lands and the four words re-run clean.**
 
+### META:V6 CONTENT-TOKEN DISCRIMINATOR — BUILT + GREEN; RE-SWEEP + RE-READ PENDING (2026-07-14)
+**RULING (scope-b (b), reviewer, standing delegation):** meta:v5's in-band cue WARN fires on a
+STRUCTURAL benign pattern (a lemma's gloss resembles its own inflected forms in its own verses) —
+live sweep = 12/79 cards, 13 spans, all gloss displays. Warn-at-that-rate = a treadmill that trains
+humans to ignore warns. FIX = a discriminator: an in-band cue exemption WARNS only when the span
+reproduces a verse-word RUN; a single lemma-gloss inflection stays a NOTE. Option A (in-band-gated)
+chosen over B; the full-token-reorder boundary is DOCUMENTED not closed (= ENGINE_LESSONS #67, with
+an automatic Option-B re-open trigger).
+**BUILT (red-first, routing-only; commit TBD this session):** `_verse_run_content` = MAX over cited
+verses of the span's DISTINCT CONTENT tokens present in a verse (content = tokens minus the FROZEN
+`_ENGLISH_FUNCTION` set, slash-split); `>= 2` = a run. Cue branch: `in_band AND run>=2 AND not
+adjudicated -> WARN`, else NOTE (out-of-band / single-inflection run<2 / adjudicated residual).
+`META_VER -> meta:v6`. PRESENCE not adjacency (reorders warn). `t<=0.706`, band edges, three walls,
+own-word/own-paraphrase, registry mechanism, enforcement wiring all UNCHANGED.
+**FIXTURES (final set, red-first via a stub that noted everything):** 22 must-warn(i) infl+run
+(0.727, run2→WARN), 23 must-warn(ii) partial reorder (0.667, run2→WARN), 24 must-note single
+inflection (0.667, run1→NOTE), 25 CLOSURE (pure function words→0 content tokens), 26 BOUNDARY pin
+(full reorder ~1.0→OUT of band→NOTE, reddens if the boundary flips). Synthetic, non-calibration
+(fixture-21 status); the 13 sweep spans are EVIDENCE, never fixtures. `captivating` (v11 probes)
+reverted v5-WARN→v6-NOTE (run1). All 22 curated tests + v11 probes GREEN.
+**PENDING (ruled sequence):** JP pulls → `--sweep` RE-READ under meta:v6 (PREDICTION on record:
+most single-word glosses → note; genuine verse-run reproductions e.g. "things he did/exercised" if
+the verse reads "…things which he did" → stay warns) → owed-adjudication re-read for `sets-of-change`
+(0.696, G236) + `captivating` (0.700, G162): clear-by-design if routed to note, else one-span
+adjudication → then G162/G1390 under meta:v6. **HELD:** rebuild/apply of survivors, G162/G1390, G236
+close. Zero spend this build.
+
 ### META:V5 IN-BAND CUE DEMOTE — BUILT + LANDED; LIVE SWEEP + 2 ADJUDICATIONS PENDING (2026-07-14)
 **RULING (scope-b, reviewer, standing delegation):** neither pole — the cue path is NOT sovereign
 and an in-band score does NOT kill the exemption. An in-band combined near-match score (0.62–0.75)
@@ -5716,7 +5743,7 @@ DEMOTES a metalinguistic-cue exemption from a non-blocking note to an ADJUDICATE
 Out-of-band untouched. The three walls still decide EXEMPT; the score decides only sign-off. It is
 the FOURTH WALL on the anchor wall's blind spot (an unanchored span textually near a cited verse) —
 closes the ledgered meta:v2 laundering risk.
-**BUILT (red-first, routing-only; commit 88888 TBD):** `probe1_verbatim` cue branch computes
+**BUILT (red-first, routing-only; commit `ed87d1b`):** `probe1_verbatim` cue branch computes
 `_target_exists_score` after the three walls; in-band + not an enumerated adjudicated residual →
 WARN, else note. `META_VER → meta:v5`. `NEARMATCH_BAND_LO/HI = 0.62/0.75`. `_META_ADJUDICATED =
 {"this [is] true [that] you have said": (0.638,)}` (G227, upheld; match on `round(score,3)` so float

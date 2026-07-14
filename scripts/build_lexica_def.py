@@ -2103,7 +2103,7 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
-META_VER = "meta:v5"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
+META_VER = "meta:v6"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
                                 # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL.
                                 # v3 (Ruling 2, 2026-07-13): ADDITIVE own-word class on top of
                                 # v2's cue path (untouched) — a single-word own-vocabulary
@@ -2129,13 +2129,19 @@ META_VER = "meta:v5"            # metalinguistic-mention exemption. v2 (F3, rule
 # "reliable" (G227 d2), "captivating" (G162 d2). "other item" stays UNEXEMPTED here (no cue
 # reaches scare-quotes-around-a-concept); under meta:v4 it is handled by the target-exists layer
 # below (combined 0.706 >= threshold -> fed -> cap-out -> parks; never exempted — ruled must-refuse).
-# LEDGERED RISK (raised 2026-07-13) — CLOSED by v5 (scope-b ruling, 2026-07-14): a genuine
-# misquote sitting unanchored in gloss-notes territory with a cue in its window used to launder
-# through as an exemption (the anchor wall only catches spans that ATTACH a ref). v5 adds the
-# fourth wall: after the three walls exempt, an IN-BAND combined near-match score (0.62–0.75)
-# DEMOTES the exemption to an adjudicate-required WARN that blocks apply until a human signs off
-# — so an unanchored span textually near a cited verse can no longer ship unadjudicated.
-# Out-of-band exemptions are untouched; exemptions and warns are both LOUD (→ audit).
+# LEDGERED RISK (raised 2026-07-13) — CLOSED by the FOURTH WALL (v5 built it, v6 sharpened it):
+# a genuine misquote sitting unanchored in gloss-notes territory with a cue in its window used to
+# launder through as an exemption (the anchor wall only catches spans that ATTACH a ref).
+# v5 (scope-b): after the three walls exempt, an IN-BAND combined near-match score (0.62–0.75)
+#   DEMOTES the exemption to an adjudicate-required WARN that blocks apply. But an in-band score
+#   fires on the benign gloss<->own-inflection overlap too (a lemma's gloss resembles its own
+#   inflected forms in its own verses) — the live sweep flagged 12/79 cards, all benign.
+# v6 (scope-b (b), ENGINE_LESSONS #67): the CONTENT-TOKEN DISCRIMINATOR. In-band cue exemption
+#   WARNS only when the span reproduces a verse-word RUN (>= 2 distinct content tokens present in
+#   a cited verse — see _verse_run_content); a single lemma-gloss inflection (run <= 1) stays a
+#   NOTE. DOCUMENTED BOUNDARY (Option A, ruled): a FULL-token reorder scores ~1.0 -> out of band
+#   -> stays a note; defended by the own-paraphrase branch (non-cue reorders) + the anchor wall
+#   (ref-carrying reorders). Out-of-band exemptions untouched; exemptions and warns both LOUD.
 META_PATTERNS = ("render", "gloss", "the word", "the lemma", "reads as", "sense of", "so-called")
 
 # TARGET-EXISTS test (meta:v4 / ENGINE_LESSONS #63) — the direct "is there a snap-to target
@@ -2176,6 +2182,57 @@ NEARMATCH_BAND_LO, NEARMATCH_BAND_HI = 0.62, 0.75
 _META_ADJUDICATED = {
     "this [is] true [that] you have said": (0.638,),   # G227, upheld 2026-07-14 (Joh 4:18 display)
 }
+
+# meta:v6 DISCRIMINATOR (scope-b (b) ruling, 2026-07-14): an in-band cue exemption WARNS only
+# when the span reproduces a RUN of the verse's own words (the laundering shape), NOT when the
+# in-band score is a single lemma-gloss inflection (the benign gloss<->own-inflection signature
+# that fired on 12/79 live cards under v5). The FROZEN closed English function-word set below is a
+# DESIGN ELEMENT, not a maintenance list — changing it is a design re-open, never an "as-
+# encountered" edit. Its only job: strip words that carry no run signal so the ">= 2 distinct
+# content tokens present = a verse-word RUN" bar is meaningful.
+_ENGLISH_FUNCTION = frozenset("""
+a an the this that these those
+and or but nor so yet for
+of to in on at by with from into unto up out over under as than
+he she it they we you i him her them us me his hers its their our your my mine
+who whom whose which what
+is are was were be been being am do does did have has had
+shall will would should may might can could must
+not no if then when where while because though although
+before after upon about against among amongst between betwixt through throughout during without within
+""".split())
+
+
+def _content_tokens(span):
+    """meta:v6: the span's DISTINCT content tokens — lowercased, punctuation-trimmed
+    (_TOKENSET_PUNC), slash-compound split ('assign/give' -> assign, give), minus the FROZEN
+    English function set. These are the words that carry a verse-word-RUN signal."""
+    out = set()
+    for w in span.lower().replace("/", " ").split():
+        t = w.strip(_TOKENSET_PUNC)
+        if t and t not in _ENGLISH_FUNCTION:
+            out.add(t)
+    return out
+
+
+def _verse_run_content(qn, normed):
+    """meta:v6 DISCRIMINATOR: the MAX over cited verses of how many of the span's DISTINCT content
+    tokens appear verbatim in that verse. >= 2 => the span reproduces a RUN of verse words (the
+    laundering shape) -> WARN; <= 1 => the in-band score is a single lemma-gloss inflection
+    (char-similar, not a run) -> stays a NOTE. PRESENCE, NOT ADJACENCY, on purpose: a REORDERED
+    laundered quote still counts (reorder killed G227 once) — do NOT 'fix' this into an adjacency
+    test, it would silently bless reorders. Max over ALL cited verses, not only the char-best-match
+    verse (strictly safer). A span with < 2 content tokens can never reach the bar (short-circuit).
+    DOCUMENTED BOUNDARY (Option A, ruled): a FULL-token reorder scores ~1.0 on the token leg -> OUT
+    of band -> never reaches this check -> stays a note. Named risk, see ENGINE_LESSONS."""
+    ct = _content_tokens(qn)
+    if len(ct) < 2:
+        return len(ct)                       # single content token can't be a run — short-circuit
+    best = 0
+    for vn in normed.values():
+        vt = {t for t in (w.strip(_TOKENSET_PUNC) for w in vn.lower().split()) if t}
+        best = max(best, len(ct & vt))
+    return best
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -2416,27 +2473,29 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None, warns=None):
                 ctx = raw[max(0, qs - 80):qe + 40].lower()
                 pat = next((p for p in META_PATTERNS if p in ctx), None)
                 if pat:
-                    # meta:v5 (scope-b ruling, 2026-07-14): the three walls (no verse match, no
-                    # ref anchor, rendering cue) have decided EXEMPT. The near-match score decides
-                    # ONLY whether the exemption needs human sign-off: an IN-BAND score DEMOTES the
-                    # note to an adjudicate-required WARN (blocks apply) — the fourth wall on the
-                    # laundering vector the anchor wall misses (unanchored span near a cited verse).
-                    # An enumerated ADJUDICATED residual at its ruled score does NOT re-warn (drift
-                    # does). Out-of-band stays a non-blocking note, exactly as v2.
+                    # meta:v6 (scope-b (b) ruling, 2026-07-14): the three walls have decided
+                    # EXEMPT. An IN-BAND cue exemption is DEMOTED to an adjudicate-required WARN
+                    # ONLY when the span reproduces a verse-word RUN (>= 2 distinct content tokens
+                    # present in a cited verse) — the laundering shape. A single lemma-gloss
+                    # inflection (run <= 1) stays a NOTE (the v5 blast radius: gloss resembles its
+                    # own inflected form). Out-of-band stays a note (documented full-reorder
+                    # boundary). Enumerated adjudicated residuals do not re-warn at their score.
                     ms = _target_exists_score(qn, normed)
                     in_band = NEARMATCH_BAND_LO <= ms <= NEARMATCH_BAND_HI
-                    if in_band and round(ms, 3) not in _META_ADJUDICATED.get(qn, ()):
+                    run = _verse_run_content(qn, normed) if in_band else 0
+                    if (in_band and run >= 2
+                            and round(ms, 3) not in _META_ADJUDICATED.get(qn, ())):
                         if warns is not None:
                             warns.append(
                                 f'quote "{label}" metalinguistic-mention exemption ({META_VER} '
-                                f'cue "{pat}", no verse match, no ref anchor) but its near-match '
-                                f'score {ms:.3f} is IN the fragility band '
-                                f'[{NEARMATCH_BAND_LO}-{NEARMATCH_BAND_HI}] — ADJUDICATE (in-band '
+                                f'cue "{pat}", no verse match, no ref anchor) reproduces a RUN of '
+                                f'{run} verse content token(s) at near-match {ms:.3f} (in band '
+                                f'[{NEARMATCH_BAND_LO}-{NEARMATCH_BAND_HI}]) — ADJUDICATE (in-band '
                                 f'metalinguistic class): confirm the span DISPLAYS a rendering, '
                                 f'not a laundered near-quote')
                         continue
                     if notes is not None:
-                        tag = (f'IN band, adjudicated-upheld residual {ms:.3f}' if in_band
+                        tag = (f'IN band, single lemma-gloss inflection (run {run} < 2)' if in_band
                                else f'near-match {ms:.3f} out of band')
                         notes.append(
                             f'quote "{label}" EXEMPTED as metalinguistic mention ({META_VER} '
