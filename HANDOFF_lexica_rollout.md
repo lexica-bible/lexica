@@ -20,6 +20,10 @@
 > open from there, never this line. Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation LIVE
 > (`bank_refused_repair`, b5fa87d). The four banked refused-repair artifacts
 > (draws/history/G###_quote_refused_*.json) inherit into the build.
+> **CONDITIONAL-LIFT STILL IN FORCE — carry it forward: DESIGN RULED ≠ HOLES CLOSED.** The block stays
+> CONDITIONALLY LIFTED; the F2 gap (#58) and F3 hole (#59) remain OPEN until the build's red-first
+> checkpoints actually close them on the banked bytes. The design ruling picked the fixes; it did not
+> prove them. Also: PA lags origin (docs-only divergence) — the build session PULLS before any run work.
 > **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
 > into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
 > DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption
