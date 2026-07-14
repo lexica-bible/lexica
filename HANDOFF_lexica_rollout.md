@@ -1,5 +1,21 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **PARKED-WORD QUEUE — G236 + G162 CLOSED THIS SESSION; G1390 NEXT (2026-07-14). Offline
+> archived-card method (read-only, ZERO spend), roster pre-check now the first gate for every parked
+> word. **G236 -> DESIGN PASS (floor-level, spend-gated):** four verses (Ezr 6:11/6:12, Neh 9:26, Isa
+> 24:5) misfiled into substitution = a real sense-inventory gap (ἀλλάσσω needs an "alter/violate a
+> standing norm" home the 2-sense carve lacks); fix routes floor-level (NOT a roster hand-edit,
+> path-(c) ban), full sense-1 sweep required (Act 6:14 flagged, Gal 4:20 borderline), red-first fixture
+> before any roster move. **G162 -> PARKED, CHARACTERIZED:** roster pre-check CLEAN (no roster, not
+> structurally doomed); park over-determined = Est 2:6 city-seizure content claim (forward-rule
+> recurrence, unfixable in-quote) + preamble leak (output-contract observation) + a fixable Isa 14:2
+> dropped-word misquote. Redraw = JP's gamble call (3 defects + Est 2:6 recurrence history), not pressed.
+> METHOD NOTE (strengthens #52): G162's live + archived cards SHARE sig `aa064d41` but differ in prose —
+> sig pins fed input not prose (#15), so recoverability MUST test a predicted-span, never the sig. **NEXT
+> = G1390 (`bda7de94`, probe-2 adjudication defect — JP's word), same sequence, roster pre-check first.**
+> Full records: AUDIT "G162 OFFLINE CHECK" + "G236 DESIGN READ — EZRA CLUSTER". Scoreboard UNCHANGED
+> 2/10ʰ · 7/15. Doc-only, exemption invoked.**
+
 > **G236 REDRAW HELD -> DESIGN (2026-07-14). JP cleared the spend gate + authorized a G236 redraw;
 > HELD before spend on byte evidence, reviewer CONCUR — NO draw ran, NO card pending, ZERO spend. The
 > path-(c) roster (`scripts/draw_hints.py` G236) LISTS `Ezr 6:11`+`Ezr 6:12` in group 1 (substitution),

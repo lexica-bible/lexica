@@ -5758,6 +5758,79 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### G162 OFFLINE CHECK — RECOVERABILITY PASS; PARK OVER-DETERMINED (2026-07-14; parked-word queue
+### item 2, offline archived-card method, reviewer-adjudicated under standing delegation. JP ran every
+### PA read; read-only end to end, ZERO model spend. Doc-only close-out, exemption invoked.)
+**METHOD:** offline archived-card gate check (`scripts/offline_gate_check.py`, card sig `aa064d41`,
+read-only), same as G227/G236. Standing roster pre-check ran FIRST (new first gate for every parked
+word).
+**ROSTER PRE-CHECK — CLEAN:** G162 has NO path-(c) roster (`draw_hints.py` = hints + jobs only; path
+(c) explicitly EXCLUDED G162 — "quote/citation/misattribution wall, no floor-drift, roster has zero
+purchase"). So the G236-class trap (a roster forcing a misfile the #30 guard locks in) CANNOT occur
+here — a future G162 redraw is not structurally pre-doomed.
+**KEY VERIFICATION + A METHOD NOTE THAT STRENGTHENS #52:** key of record = **`aa064d41`**, confirmed
+from the record (re-run live-keys line, gate-1 MATCH entries, the archive path), not recall. **BOTH
+`draws/G162.json` (live) AND the archived `draws/history/G162_20260713T022852_aa064d41.json` read
+`sig aa064d41` — SAME SIG, DIFFERENT PROSE** (the live card is a later reworded draft; K3 span absent).
+The sig pins the FED INPUT, not the prose (= ENGINE_LESSONS #15), so sig alone could NOT disambiguate
+the card of record — the CONTENT check (K3 span present) is what pinned the archived history file as
+the prediction card. **METHOD NOTE (strengthens #52): the recoverability precondition MUST test a
+predicted-span presence, never the sig/filename — here even the sig collided.** Recoverability: K3 span
+present in the archived card -> **PASS**.
+**GATE READ:** `captivating` -> NOTE (meta:v6, cue "sense of", run 1 < 2); its 0.700 in-band =
+KNOWN-AND-RULED (meta:v6 note, cleared in the owed re-read, score unmoved 0.700 -> 0.700), same
+classification as G236's `sets-of-change` 0.696 — not a stopper. `the ones capturing shall be captives`
+-> `[wording]` fail, near-match **1.000**. The predicted Isa 49:24/25 anchoring did NOT fire — this
+archived card SEPARATES the two refs (each its own quote: "should be captured unjustly" Isa 49:24 /
+"If any should capture a giant" Isa 49:25), no lump -> the anchoring artifact (logged NON-KILLING) is
+silent under the current gate. warns 0.
+**PARK OVER-DETERMINED — three separate defects, verse bytes quote-checked read-only:**
+- **Est 2:6 = the real blocker (content, unfixable in-quote).** Card asserts Nebuchadnezzar `"captured"`
+  **Jerusalem** (city-seizure). Verse bytes: "who was a captive **from** Jerusalem, which Nebuchadnezzar
+  ... captured" — the captured object is the PERSON; Jerusalem is provenance. = the on-record **Est 2:6
+  forward-rule** recurrence (αἰχμαλωτεύω takes PEOPLE, not cities). Gate-invisible, outside
+  quote-repair's reach.
+- **Preamble leak (stray prose).** The card body OPENS with the model's working note: *"Here is the full
+  corrected definition with each of the four unplaced occurrences integrated into Sense 1 ..."* —
+  meta-text surviving into the card. **DESIGN OBSERVATION (log, not a scoped item yet):** a leading-
+  boilerplate check on the output contract would catch this class.
+- **Isa 14:2 (K3) = fixable, non-parking alone.** Card `"the ones capturing shall be captives"` drops
+  `them`; verse reads "the ones capturing **them** shall be captives" — the verbatim phrase EXISTS in
+  the verse, so a repair would restore it. 1.000 near-match reflects the near-verbatim overlap.
+**OUTCOME:** G162 PARKED, over-determined (Est 2:6 content claim + preamble leak both unreachable by
+quote-repair; the K3 misquote fixable but insufficient alone). Roster-clean -> a redraw is NOT
+structurally doomed (contrast G236), BUT three defects + the Est 2:6 recurrence history make a redraw a
+GAMBLE, not a sure fix — spend stays with JP, not pressed this session. If G162 ever redraws, a FULL
+hand battery is owed (this read caught the gate-invisible pair; more may exist). Scoreboard UNCHANGED
+**2/10ʰ · 7/15**. **STATE: no code changed; doc-only, exemption invoked. NEXT queue = G1390
+(`bda7de94`), same method, roster pre-check first.**
+
+### G236 DESIGN READ — EZRA CLUSTER CONFIRMED, SENSE-INVENTORY GAP (2026-07-14; design track of the
+### REDRAW-HELD routing, reviewer-CONFIRMED under standing delegation. JP ran the Neh/Isa read;
+### read-only, ZERO spend. Doc-only.)
+**QUESTION (from the redraw-held routing):** is Ezr 6:11-12's misfile a two-verse re-home, or a
+sense-inventory gap? Test (reviewer-endorsed): "interfering with a thing that stays the same" (alter/
+violate) vs "one out, one in" (substitution).
+**BYTE-CHECK (verse text read read-only):**
+- **Neh 9:26** "they **changed and revolted** from you ... tossed your law behind their body" =
+  ABANDONED/violated their loyalty; the relationship they broke still stands, no replacement comes in
+  -> alter/violate.
+- **Isa 24:5** "they transgressed the law ... effaced and **bartered away** the orders — the eternal
+  covenant" = BROKE the covenant; no replacement covenant; the "away" is translator shaping (the card
+  itself conceded that) -> alter/violate.
+**CONCLUSION (CONFIRMED):** both land in the SAME cluster as Ezr 6:11-12 -> a real **sense-inventory
+gap**: ἀλλάσσω has a third job the card's two senses (substitute / transform-in-nature) don't carve —
+**altering / violating / tampering with a standing thing (decree, covenant, loyalty, institution) that
+REMAINS.** Four verses misfiled into substitution so far (Ezr 6:11, 6:12, Neh 9:26, Isa 24:5), all
+forced there by the v9 floor's modal homes.
+**DESIGN-PASS SCOPE (the fix, not built here):** (1) **FULL sense-1 sweep required** — byte-check EVERY
+sense-1 verse for swap-vs-alter, not just the four (flagged: **Act 6:14** "change the customs which
+Moses delivered" looks same-cluster; **Gal 4:20** "change my voice" borderline-swap — per-verse work).
+(2) Fix routes **FLOOR-LEVEL** (revise the carve, re-establish the floor — a SPEND, JP-gated), NOT a
+roster hand-edit (path-(c) hand-carve ban). (3) **RED-FIRST**: a fixture pinning the corrected Ezra
+placement lands BEFORE any roster movement (roster = gate input). **STATE: no code changed; doc-only,
+exemption invoked. G236 stays PARKED as a floor/carve design item until that pass runs.**
+
 ### G236 REDRAW HELD — ROSTER ENFORCES THE EZRA MISFILE; ROUTED TO DESIGN (2026-07-14; spend
 ### gate cleared by JP then HELD on byte evidence, reviewer CONCUR under standing delegation.
 ### NO draw ran, NO card pending, ZERO model spend. Doc-only close-out, exemption invoked.)
