@@ -5642,3 +5642,68 @@ needs its own red-first byte). Live-card block: the quote-repair pipeline still 
 so the lift stays conditional. Authority = this entry + ENGINE_LESSONS #58/#59/#60/#61/#62 + HANDOFF top
 pointer. **STATE: origin = local = PA = `94bcd22` (aligned; PA verified by pull). doc-only close-out
 commit invokes the standing exemption ("doc-only, exemption invoked").**
+
+### OWN-PARAPHRASE CALIBRATION CHECKPOINT — DESIGN RULED (2026-07-14; DESIGN pass, reviewer-
+### adjudicated under standing delegation. Nothing but docs committed; frozen V9 + all code untouched.
+### JP ran every PA read; all pulls read-only against the two fresh banks + bible.db.)
+**PRE-CONDITION (byte-checked, reported not acted on): NEITHER anchoring park is the G162 lumped-ref
+shape.** Both are LEAD-IN MULTI-REF mis-anchors, a shape distinct from Ruling 3's two-quotes-one-
+trailing-bracket: G236 `changes this word` hangs off lead-in prose "Ezra 6:11–12 threatens anyone
+who…" (wording = 6:11, nearest-first primary = 6:12 — a RANGE lead-in); G227 `spoke not anything
+before me true,` hangs off "Job 42:7 and Job 42:8: Eliphaz and friends…" (wording = 42:7, nearest-
+first primary = 42:8 — a PAIR lead-in, and the card names BOTH verses, so this may be gate
+calibration rather than a card defect). **Session-2 consequence: the Ruling-3 re-anchor build does
+NOT cover these two cards; the lead-in multi-ref shape is its own (unruled) question.**
+**RULED DESIGN — the NEAR-MATCH rule (primary; slash-compound evaluated and SUPERSEDED).** Answers
+the ledger note's structural question ("decide unfixable-in-quote directly, don't taxonomize shapes"):
+- **The rule.** A quoted span that matches no cited verse gets a TARGET-EXISTS test: slide a word
+  window (span's word count ±1) across every cited verse's stored text; score each window vs the
+  span with the standard character-similarity ratio (difflib SequenceMatcher, deterministic, both
+  sides through the production `probe_norm`, lowercased). Best score **>= 0.727** → a real snap-to
+  target exists → fail-kind **wording**, fed to the repair model as today. Best score **< 0.727** →
+  no target anywhere → third fail-kind **unsourced**, NEVER fed. The model only ever sees spans with
+  a demonstrated target — one rule covering anchoring (already kind-tagged), own-paraphrase, and
+  unseen shapes. No new tunable at run time.
+- **The unsourced split (attribution, reuses `_attribution_anchored` unchanged).** NOT attribution-
+  anchored (no trailing ref bracket, no reads/says lead-in) → the span is the writer's own notation
+  making no scripture claim → EXEMPT as a new ADDITIVE meta:v4 own-paraphrase class, LOUD note
+  (lesson #47). Attribution-anchored → the card claims a source for words with no verbatim existence
+  → stays a FAIL (kind unsourced) and PARKS — never fed. Non-launderable: a real misquote-with-a-ref
+  and no target parks; an unanchored no-target span exempts loudly (same ledgered posture as
+  meta:v2/v3).
+- **Mixed-card routing (reviewer amendment, ruled): HOLD-BACK, not full-park.** Wording spans still
+  get their one bounded call; unsourced spans are masked exactly like anchoring and resurface on the
+  re-check as a clean cap-out. unsourced-only / unsourced+anchoring cards → deterministic park, no
+  model call (the existing `if not wording` branch, zero new logic).
+- **Threshold = bytes, not judgment.** Decision rule PRE-STATED before the numbers landed (gap >=
+  0.15 → near-match ships, threshold at midpoint; else slash ships interim). Real-byte scores via
+  the production parser/normalizer on PA: G236 `changing over` **0.833** @ Dan 4:16 `change over`
+  (fed — the rule recovers the exact clean fix G236's run actually made); G227 `quenched/crushed`
+  **0.621** @ Isa 42:3 `being crushed` (unsourced — breach opportunity removed). Gap 0.212,
+  midpoint **0.727**.
+- **FRAGILITY NOTE (reviewer condition 1, binding):** 0.727 is calibrated on an n=2 pair. Any future
+  span scoring in roughly the **0.62–0.83 band is a MANDATORY re-open byte** — re-rule the threshold
+  on the enlarged set. Never a run-time judgment call; the rule stays deterministic.
+- **Slash-compound record.** It also decided the pair correctly (slash catches the breach span,
+  verses contain zero '/' — count run on PA = 0, documentary since the check only ever ran in the
+  no-match branch) but is SUPERSEDED: a shape taxonomy invites a fourth shape; the target-exists
+  test is the structural fix. "No cue" rejected (population descriptor, not a discriminator);
+  corpus-wide absence rejected (would also catch `changing over` and park G236's real fix).
+**RED-FIRST BYTE PLAN (for the BUILD session, its own JP checkpoint):** breach byte = the real G227
+`8258771a_2` card — after re-classification it has ZERO feedable spans, fixture asserts NO model
+call (the no-call park proof) and `quenched/crushed` exempt (its real context has no attribution —
+byte-confirmed this session). Clean byte = the real G236 `59667b81_2` card — `changing over` still
+wording, still fed, in-quote fix path unchanged. Grafted mixed fixture = G227 card + G236's real
+span — model called with ONLY the wording span; the paraphrase + Job anchoring spans both held, both
+cap out. Teeth = `"quenched/crushed" (Isa 42:3)` attribution-grafted → must FAIL unsourced + park,
+never feed. **Fixtures pin BOTH real scores (0.833 / 0.621) as bytes, not just pass/fail (reviewer
+condition 2)** — a normalizer change that shifts the ratios trips the fixture instead of silently
+moving the threshold's meaning. Existing must-fails + meta:v2/v3 fixtures unchanged.
+**NOT DONE THIS SESSION (unchanged parks):** G1390 probe-2 adjudication (offered as optional, not
+called); Ruling-3 re-anchor build; probe-2 over-firing; /consolidate (flagged, deferred — MEMORY.md
+still over threshold). **Reviewer rulings on record:** approve-with-amendment → amended NOT-final
+(evaluate near-match as primary) → **APPROVED FINAL** with the two doc conditions above. = ENGINE_
+LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeline property).
+**STATE: no code changed; origin = local = PA = `94bcd22` code state; this close-out commit is
+doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
+until the near-match BUILD lands and the four words re-run clean.**

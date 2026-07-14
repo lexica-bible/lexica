@@ -902,3 +902,26 @@ both drifting from the doc.
     the model), designed in its OWN checkpoint, not by prompt suppression. → **conditional lift NOT
     closed** (breach on any = not closed); F2 gap persists in this narrower form. *(audit: QUOTE-REPAIR
     CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED, 2026-07-14; G227 breach / G236 clean byte pairs)*
+
+63. **Decide "unfixable in-quote" DIRECTLY (does a snap-to target exist?) instead of taxonomizing
+    what unfixable spans look like — a shape list invites a fourth shape.** The own-paraphrase design
+    session weighed the #62 candidates: slash-compound decided the real n=2 pair correctly but is a
+    shape patch; "no cue" is a population descriptor (everything reaching the fail line lacks a cue);
+    corpus-wide absence also catches the FIXABLE span (G236's `changing over` exists verbatim nowhere
+    either — what made it fixable was a NEAR-MATCH, `change over`, sitting in a cited verse). RULED:
+    the target-exists test — best sliding-window similarity of the span vs every cited verse's text;
+    >= threshold → wording (fed), below → unsourced (never fed; exempt-vs-park by attribution). One
+    rule covers anchoring, paraphrase, and unseen shapes. Method lesson: the DECISION RULE was stated
+    before the scores landed (gap >= 0.15 → ship, threshold = midpoint), so 0.727 is bytes (0.833
+    fed / 0.621 refused), not judgment — and an n=2 threshold carries a mandatory re-open band
+    (~0.62–0.83) instead of run-time discretion. *(audit: OWN-PARAPHRASE CALIBRATION CHECKPOINT —
+    DESIGN RULED, 2026-07-14)*
+
+64. **Containment is a PIPELINE property, not a patch: guard + cap-1 + red-first fixtures + banked
+    refused bytes make a bad round cost one model call and zero bad bytes.** Three rounds of quote-
+    repair failures (narration #57, no-legal-move breaches #58, the stochastic own-paraphrase reflex
+    #62) all ended the same way — draw dead, evidence banked, nothing shipped wrong — because the
+    spans-only guard is byte-strict, the cap forbids re-repair, every detector change is red-first,
+    and every refusal preserves its bytes for diagnosis. That standing structure is what makes
+    calibration rounds safe to run at all; keep it invariant while the feed logic evolves. *(source:
+    reviewer ledger note, 2026-07-14; entered by direction at the design close)*
