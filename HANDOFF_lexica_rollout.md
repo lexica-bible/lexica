@@ -1,5 +1,19 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **G236 REDRAW HELD -> DESIGN (2026-07-14). JP cleared the spend gate + authorized a G236 redraw;
+> HELD before spend on byte evidence, reviewer CONCUR — NO draw ran, NO card pending, ZERO spend. The
+> path-(c) roster (`scripts/draw_hints.py` G236) LISTS `Ezr 6:11`+`Ezr 6:12` in group 1 (substitution),
+> and the #30 membership guard blocks any draw from moving them — so a redraw would REPRODUCE the pinned
+> Ezra misfile by construction and can't fix it. Root = the v9 floor's modal home for Ezra is
+> substitution (roster copied byte-for-byte from it) = FLOOR/sense-frame defect, not per-draw. ROUTED TO
+> DESIGN (scoped, analysis-before-any-roster-edit): (a) floor's Ezra home fails the byte test [ἀλλάσσω =
+> alter/tamper, nothing swapped]; (b) missing "alter/modify" home vs Ezra->sense 2 — CANDIDATE SIBLINGS
+> to byte-check: Neh 9:26, Isa 24:5; (c) fix is floor/inventory-level, NOT a roster hand-edit (path-(c)
+> hand-carve ban), red-first fixture pinning the corrected placement BEFORE the roster moves. STANDING
+> CHECK ADDED: check a parked word's roster for an enforced-misfile before any of its spend. Scoreboard
+> UNCHANGED 2/10ʰ · 7/15. Full record: AUDIT "G236 REDRAW HELD — ROSTER ENFORCES THE EZRA MISFILE".
+> Doc-only, exemption invoked. NEXT = the design pass + G162 recoverability (parallel, zero-spend).**
+
 > **G236 OFFLINE CHECK — CLOSED, PARK UPHELD (2026-07-14). First parked-word queue item done via the
 > offline archived-card method (`scripts/offline_gate_check.py`, card sig `59667b81`, read-only, ZERO
 > spend). Recoverability PASS (sig confirmed from the file's OWN bytes, `changing over` present; key

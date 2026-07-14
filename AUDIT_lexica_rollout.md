@@ -5758,6 +5758,47 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### G236 REDRAW HELD — ROSTER ENFORCES THE EZRA MISFILE; ROUTED TO DESIGN (2026-07-14; spend
+### gate cleared by JP then HELD on byte evidence, reviewer CONCUR under standing delegation.
+### NO draw ran, NO card pending, ZERO model spend. Doc-only close-out, exemption invoked.)
+**SEQUENCE (on record so no session thinks a draw is pending):** JP cleared the spend gate and
+AUTHORIZED a G236 redraw — the goal being a fresh card that fixes the pinned Ezra misfile and/or the
+`changing over` wording. During pre-draw prep CC found the redraw could NOT fix the Ezra defect and
+HELD before spend; reviewer CONCUR. Authorization was for a redraw that COULD fix G236; the bytes show
+it can't, so holding is compliance with the spend gate's purpose, not an override.
+**BYTE EVIDENCE (from `scripts/draw_hints.py` G236 roster — the register the tests pin, not recall):**
+the path-(c) roster's **group 1 = the SUBSTITUTION sense**, and it LISTS **`Ezr 6:11` + `Ezr 6:12`**
+(among the clothing/barter/decree verses: Gen 35:2, Gen 41:14, 2Ki 5:5/22/23, 1Ki 20:25, ...). Group 2
+= transformation (1Co 15:51/52, Dan 4:16/25/32, Heb 1:12, Isa 40:31, Isa 41:1, Psa 102:26). The **#30
+membership guard REFUSES apply** if a draw moves a rostered verse off its listed group. So a parked-word
+redraw (rides `--hints` + this `--roster`) is INSTRUCTED to file Ezra under substitution AND BLOCKED
+from re-homing it -> it reproduces the exact pinned misfile by construction. The reviewer's own
+pre-flag ("misfile repeats -> it's the frame, go to design") is satisfied BEFORE spend, which is
+strictly better.
+**ROOT:** the roster's Ezra placement is copied BYTE-FOR-BYTE from the v9 floor's modal homes (roster
+provenance line). So the FLOOR CONSENSUS itself misfiles Ezr 6:11-12 under substitution — the defect is
+FLOOR / sense-frame level, not per-draw. A redraw can only reproduce it.
+**ROUTED TO DESIGN (scoped, next; show analysis before any roster edit — roster = gate input, treat
+as data-under-change):**
+- (a) Does the floor's substitution-home for Ezr 6:11-12 fail the byte test? **Yes** — ἀλλάσσω there =
+  ALTER a decree / TAMPER with the temple; nothing is swapped out for a replacement (the offline-check
+  entry below has the verse bytes).
+- (b) Third "alter / modify / tamper" home vs Ezra -> sense 2? Sense 2 = transformation-IN-NATURE (a
+  subject becoming different); a violated decree / tampered temple doesn't fit that either. Points to a
+  MISSING home, not a clean move to sense 2. **CANDIDATE SIBLINGS to byte-check in the design pass**
+  (may be the same "alter / violate a standing norm" sense forced into substitution, i.e. a genuine
+  inventory gap not a 2-verse re-home): **Neh 9:26** ("changed and revolted"), **Isa 24:5** ("bartered
+  away the orders — the eternal covenant").
+- (c) Roster + guard changes follow the (b) verdict. **CONSTRAINT: the path-(c) hand-carve ban** means
+  the roster cannot be hand-edited to move Ezra — rosters are floor-derived by rule. So the real fix is
+  floor / inventory-level (revise the sense carve, re-establish the floor), not a roster patch.
+  **RED-FIRST: a fixture pinning the corrected Ezra placement goes in BEFORE the roster moves.**
+**STANDING CHECK ADDED (parked-word queue):** before any parked-word spend, check its roster for an
+enforced-misfile of the same class — a defective placement the #30 guard would lock a redraw into.
+Applies to G162 (`aa064d41`) next, in parallel (zero-spend).
+**STATE: no code changed; doc-only, exemption invoked. Scoreboard UNCHANGED 2/10ʰ · 7/15. No draw
+pending. NEXT design = the (a)/(b)/(c) pass above; NEXT queue = G162 recoverability + roster pre-check.**
+
 ### G236 OFFLINE CHECK — RECOVERABILITY PASS; "REAL EZRA DEFECT" PINNED; PARK UPHELD ON TWO
 ### GROUNDS (2026-07-14; parked-word queue, offline archived-card method, reviewer-adjudicated
 ### under standing delegation. JP ran every PA read; read-only end to end, ZERO model spend.)
