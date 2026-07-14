@@ -5577,3 +5577,68 @@ commands · payload discipline (reposts inline, ASCII-escape non-ASCII). CONDITI
 — the F2 gap (#58) + F3 hole (#59) close ONLY when these red-first checkpoints pass; DESIGN RULED ≠
 HOLES CLOSED. STATE AT OPEN: origin = local = PA = `63ecff4` (VERIFY PA BY PULL — the recorded PA base
 was stale last session; the pull is the byte). Scoreboard 2/10ʰ · 7/15. Nothing mid-flight.
+
+### QUOTE-REPAIR CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED (2026-07-14; BUILD pass, three JP
+### checkpoints each red-first + Ruling-4 rider, then the four held-open words re-run on the fixed
+### pipeline. Reviewer-adjudicated under standing delegation. Frozen V9 prompt untouched throughout.)
+**BUILD — three checkpoints landed, each red-first, receipt before commit (commits bc41006 / b963be2
+/ 94bcd22, all on origin/master; PA pulled to 94bcd22, both probe suites green on PA).**
+- **CP1 (bc41006) — Ruling 1 deterministic pre-routing + Ruling 4 rider.** `probe1_verbatim` gains an
+  optional `fail_kinds` list tagged AT SOURCE at the two `fails.append` sites (wording = `matches NO
+  cited verse`; anchoring = `anchored primary on`) — same optional out-param shape as `notes`, zero
+  signature break. `quote_repair` splits on it: anchoring-only card → model NEVER called (park, no
+  refused_post to bank); mixed card feeds ONLY wording, the held-back anchoring fail resurfaces on
+  re-gate as a clean cap-out. Ruling 4 rider (`_repair_introduced_spans`, success path only): records
+  every repair-CHANGED span re-gated to the ref it now matches → draw record field + `repair-introduced;
+  re-gated MATCH vs <ref>` at apply. Red-first = the REAL G236 mixed card in ONE fixture (bank 59667b81:
+  wording `changing over` fed + anchoring `changes this word` Ezr 6:11-on-6:12 held back).
+- **CP2 (b963be2) — Ruling 2 meta:v3 own-word exemption.** ADDITIVE class on top of v2's cue path
+  (untouched): a SINGLE alpha word that appears UNQUOTED elsewhere in the card and is NOT
+  attribution-anchored → exempt, LOUD note. `_attribution_anchored` reuses `_local_refs`' own `trailing`
+  flag (no re-derived copy) + a `reads/says` lead-in. Red-first = the real G1390 `giving` span (fail →
+  exempt) + attribution teeth `"giving" (Num 3:9)` (still fails). **#59 CORRECTION (verified this
+  session):** `_local_refs("giving")` returns `[]` — the clause refs sit past its 12-char window — so
+  the pre-v3 wall failed "giving" on MISSING CUE, not on the refs as #59's prose said; meta:v3 exempts
+  it regardless.
+- **CP3 (94bcd22) — prompt-sharpen (belt-and-suspenders).** `QUOTE_REPAIR_PROMPT` now NAMES the three
+  forbidden moves (no unquoted-prose edit for a look-alike word · no add/move/split a ref ·
+  only-fix-is-outside → leave unchanged). Auto-versioned: the `qrepair:` hash moved
+  `b90d5287ca16 → 4ceeeff4ab2d`. Frozen V9 (`VERSE_PROMPT`) is a separate constant, untouched.
+**RE-RUN — four words, `--dry-run --quote-repair` (apply blocked → NO APPLY EVER structural), each a
+cache HIT on its parked draw (flags reproduced from each draw's provenance: all four `--hints`; G236/
+G1390/G227 `--roster <their floor>`; G162 bare). Live keys read read-only: G236 `59667b81`, G1390
+`bda7de94`, G162 `aa064d41`, G227 `8258771a`.**
+- **G1390 → quote gate CLEAN, no model call.** meta:v3 exempted `giving` (LOUD note on the real parked
+  bytes). **F3 hole (#59) shut in practice.** (7 probe-2 named-subject warns keep the card parked — a
+  different, unchanged detector, out of scope; probe-2 over-firing is the parked ticket.)
+- **G162 → clean cap-out park, no breach.** Routing live (`2 fixable wording … 1 anchoring held back`).
+  Model fixed one of two wording spans (`he captured all the possessions`); the other + the Isa
+  49:24-on-49:25 anchoring span capped out. One-of-two-fixed = model variance in a single bounded round;
+  card parks on the anchoring span regardless.
+- **G227 → BREACH (caught).** Routing live (`1 wording … 1 anchoring held back`, Job 42:7-on-42:8 never
+  fed). The wording span `quenched/crushed` is the card's OWN paraphrase of Isa 42:3; the model reduced
+  it in-quote (`"quenched/crushed"→"crushed"`, allowed) AND changed unquoted prose to match (`not
+  defective or quenched → …or crushed`) → spans-only guard REFUSED (draw dead, `8258771a_2` banked,
+  zero bad bytes). CP3's named prohibition did NOT stop the reflex; the guard did.
+- **G236 → clean cap-out park, no breach.** Identical own-paraphrase span class: `"changing over"→"change
+  over"` (matches Dan 4:16/4:25/4:32), surrounding prose byte-identical — clean in-quote fix; the held
+  `changes this word` Ezr 6:11-on-6:12 anchoring span capped out (`59667b81_2` banked).
+**LIFT STATUS = NOT CLOSED.** Close criterion was "no breach on any"; G227 breached (caught). 3/4 clean
+(G1390 pass · G162 + G236 clean cap-out), one caught breach, zero bad bytes, ALL FOUR remain parked.
+Scoreboard UNCHANGED 2/10ʰ · 7/15. The F2 gap (#58) persists in a NEWLY-PINNED, narrower form: the
+OWN-PARAPHRASE wording span (kind-a by the gate, unfixable in-quote, no exemption path). The n=2 pair
+(G227 breach / G236 clean, byte-identical conditions) proves the model's out-of-quote consistency edit
+is STOCHASTIC → the fix must remove the OPPORTUNITY (routing/exemption), not rely on prompt suppression.
+= ENGINE_LESSONS #62.
+**LEDGER — G236 key correction (confirmed):** live key of record = **`59667b81`** (the AUDIT-named
+`changes this word`, Ezr 6:11-on-6:12 card, and the CP1 fixture card); `9bf3f7ef` = banked evidence
+ONLY, not a live draw, not re-runnable via `--quote-repair`. The prior "key of record 9bf3f7ef" line was
+a stale carry-forward (same crossup doc-noted at CP1).
+**PARKED for their own sessions (unchanged scope):** the OWN-PARAPHRASE calibration checkpoint (design a
+third fail-kind / exemption class — candidate discriminators: slash-compound · no cue · span absent from
+every cited verse AND present nowhere as verse text; TO BE DESIGNED, not ruled here); the G162 lumped-ref
+re-anchor path (Ruling 3, specified-not-built, build on recurrence); probe-2 over-firing (Peter/8-verses,
+needs its own red-first byte). Live-card block: the quote-repair pipeline still has one open breach class,
+so the lift stays conditional. Authority = this entry + ENGINE_LESSONS #58/#59/#60/#61/#62 + HANDOFF top
+pointer. **STATE: origin = local = PA = `94bcd22` (aligned; PA verified by pull). doc-only close-out
+commit invokes the standing exemption ("doc-only, exemption invoked").**

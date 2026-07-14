@@ -879,3 +879,26 @@ both drifting from the doc.
     vocabulary word so it never becomes a fed wording-fail at all. → v2: the repair feed is filtered by
     fail-kind, not handed the raw gate output. *(audit: ANCHOR-WALL CALIBRATION CHECKPOINT — DESIGN
     RULED, 2026-07-13; Rulings 1–3)*
+
+62. **An OWN-PARAPHRASE quoted span is kind-a "wording" by the gate but unfixable in-quote, and the
+    model's out-of-quote consistency edit is a STOCHASTIC reflex — so the prompt can't be trusted to
+    suppress it; the fix has to remove the opportunity.** The calibration BUILD landed (Rulings 1/2/4 +
+    prompt-sharpen, three red-first checkpoints, commits bc41006/b963be2/94bcd22) and the four parked
+    words re-ran on the fixed pipeline. Routing worked on all four (anchoring kind never fed); G1390
+    passed clean (meta:v3 exempted "giving", no model call); G162 clean cap-out park. But **G227
+    BREACHED** on a span that is the card's OWN imagery-compression, `"quenched/crushed"` — it matches
+    no verse (so kind-a → fed as "fixable") yet has no verbatim source, so instead of the F2 no-op the
+    model reduced the quote in-quote (`"quenched/crushed"→"crushed"`, allowed) AND changed the *unquoted*
+    prose to match (`not defective or quenched → …or crushed`, the breach — the #58 look-alike shape,
+    live under the NEW CP3 prompt `qrepair:4ceeeff4ab2d`). The guard caught it (draw dead, zero bad
+    bytes). Then **G236 did NOT breach** on the identical span class (`"changing over"→"change over"`,
+    prose byte-identical, matches Dan 4:16/4:25/4:32) — same prompt, guard, cap, span shape → one
+    breach, one clean fix. → the own-paraphrase span is a NEW, narrower hole than #58: no exemption
+    reaches it (meta:v3 needs a single ALPHA word — this is a slash-compound; the cue path finds no
+    cue), so it falls through to the model, which *sometimes* makes the forbidden consistency edit. The
+    n=2 pair (byte-identical conditions, opposite outcomes) proves the reflex is stochastic, so CP3's
+    named prohibition is DOCUMENTATION and the guard is the WALL — the real fix must remove the
+    opportunity (a third fail-kind / an own-paraphrase exemption class that keeps such spans away from
+    the model), designed in its OWN checkpoint, not by prompt suppression. → **conditional lift NOT
+    closed** (breach on any = not closed); F2 gap persists in this narrower form. *(audit: QUOTE-REPAIR
+    CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED, 2026-07-14; G227 breach / G236 clean byte pairs)*

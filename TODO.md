@@ -671,6 +671,16 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 ## Word cards / lexicon — open items
 
+- **OWN-PARAPHRASE CALIBRATION CHECKPOINT (design, open 2026-07-14) — the quote-repair lift's one
+  remaining open breach class.** The calibration BUILD landed (routing/meta:v3/prompt-sharpen) but the
+  four-word re-run left the lift NOT closed: G227 breached on `"quenched/crushed"` (the card's own
+  paraphrase — kind-a by the gate, unfixable in-quote, fed to the model, which made the #58 out-of-quote
+  look-alike edit); G236's identical span class fixed cleanly (stochastic reflex). Design a third
+  fail-kind / own-paraphrase exemption that removes the OPPORTUNITY (keeps such spans away from the model)
+  — NOT prompt suppression. Own red-first byte + checkpoint. **Authority = HANDOFF top pointer + AUDIT
+  "QUOTE-REPAIR CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED" + ENGINE_LESSONS #62** (don't duplicate the
+  detail here). code: scripts/build_lexica_def.py `probe1_verbatim`/`quote_repair`/`_own_word_exempt`
+
 - **TICKET (open, NOT-NOW — do not pull on this mid-calibration): some word cards render
   "loading" only.** JP observed cards stuck at "loading" (2026-07-10, batch-3 session 5).
   JP repro detail (2026-07-10): SAME CARDS EVERY TIME — points at bad/missing per-word data

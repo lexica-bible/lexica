@@ -1,33 +1,30 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = QUOTE-REPAIR CALIBRATION BUILD** (implements the anchor-wall checkpoint's ruled
-> design). The ANCHOR-WALL CALIBRATION CHECKPOINT is DONE (2026-07-13, DESIGN RULED, reviewer-approved
-> under standing delegation): four rulings close the two F1–F3 holes the RE-RUN exposed. **THE HINGE:**
-> `probe1_verbatim` emits two structurally distinct fails — WORDING (`matches NO cited verse`, fixable
-> in-quote) vs ANCHORING-RULE (`carries the wording of A … anchored primary on B`, unfixable in-quote by
-> construction). Both re-run breaches came from feeding the anchoring kind to the model. **RULING 1 (F2)**
-> = deterministic pre-routing: kind-tag fails from the ONE production probe; wording → model repair,
-> anchoring → never the model (park). Removes both breach shapes at the right layer. **RULING 2 (F3)** =
-> meta:v3 additive own-word exemption (single word + own out-of-quote vocabulary + not quote-anchored →
-> exempt; non-launderable, disjoint from the cue path). **RULING 3 (G162)** = park now, deterministic
-> re-anchor path SPECIFIED-not-built (build on recurrence). **RULING 4** = repair-introduced wording made
-> LOUD + byte-confirmed before apply. **BUILD = THREE JP checkpoints, each red-first** (Ruling 1 routing ·
-> Ruling 2 meta:v3 · the prompt-sharpen split OUT of Ruling 1), receipt before commit; Ruling 4 rides
-> Ruling 1's build; frozen V9 untouched. G236 mixed card must be ONE red-first fixture proving both halves.
-> Build inputs (G1390 + G162 banked windows) are paste-ready in the audit — **GATE NOT YET REACHED, do
-> NOT run those reads until the build session asks.** Full record = AUDIT entry **"ANCHOR-WALL CALIBRATION
-> CHECKPOINT — DESIGN RULED"** + ENGINE_LESSONS #58/#59/#60 (holes) + #61 (the fail-kind routing layer);
-> open from there, never this line. Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation LIVE
-> (`bank_refused_repair`, b5fa87d). The four banked refused-repair artifacts
-> (draws/history/G###_quote_refused_*.json) inherit into the build.
-> **CONDITIONAL-LIFT STILL IN FORCE — carry it forward: DESIGN RULED ≠ HOLES CLOSED.** The block stays
-> CONDITIONALLY LIFTED; the F2 gap (#58) and F3 hole (#59) remain OPEN until the build's red-first
-> checkpoints actually close them on the banked bytes. The design ruling picked the fixes; it did not
-> prove them. **STATE: origin = local = PA = `63ecff4` (aligned).** VERIFY PA BY PULL, not by this line —
-> last session's state lines carried a stale PA base (`9ca33ce`; PA's real base was `863e113`, one doc
-> commit ahead), harmless docs-only but proof that a state line's PA commit is not PA's commit. The full
-> BUILD opener + the stale-base ledger live in the AUDIT "ANCHOR-WALL CALIBRATION CHECKPOINT — DESIGN
-> RULED" entry (NEXT-SESSION OPENER — BUILD).
+> **NEXT SESSION = OWN-PARAPHRASE CALIBRATION CHECKPOINT (DESIGN).** The quote-repair calibration BUILD is
+> DONE (2026-07-14) — Rulings 1/2/4 + prompt-sharpen landed across THREE red-first JP checkpoints (commits
+> bc41006 CP1 routing+rider · b963be2 CP2 meta:v3 · 94bcd22 CP3 prompt-sharpen; all on origin=local=PA
+> `94bcd22`, probe suites green on PA). Then the four held-open words re-ran on the fixed pipeline. **THE
+> LIFT IS NOT CLOSED.** Routing worked on all four (anchoring kind never fed); G1390 passed clean (meta:v3
+> exempted "giving", no model call — F3/#59 shut in practice); G162 + G236 clean cap-out parks. But **G227
+> BREACHED (caught, zero bad bytes)** on `"quenched/crushed"` — the card's OWN paraphrase of Isa 42:3: it's
+> kind-a (matches no verse) so it's FED as "fixable," but has no verbatim source, so the model made the
+> #58 out-of-quote look-alike edit instead of the F2 no-op. **G236's identical span class (`changing over`)
+> did NOT breach** — same prompt/guard/cap, one breach + one clean fix → the reflex is STOCHASTIC (n=2 byte
+> pair). So the OWN-PARAPHRASE span is a NEW, narrower hole than #58: no exemption reaches it (meta:v3 needs
+> a single ALPHA word — this is a slash-compound; no cue), it falls through to the model, which *sometimes*
+> makes the forbidden edit. CP3's prompt is DOCUMENTATION; the guard is the WALL. **DESIGN TASK (not ruled —
+> design it): remove the OPPORTUNITY** — a third fail-kind / own-paraphrase exemption class that keeps such
+> spans away from the model (candidate discriminators: slash-compound · no cue · span absent from every
+> cited verse AND present nowhere as verse text). Its own red-first byte + checkpoint; no same-session patch.
+> Full record = AUDIT **"QUOTE-REPAIR CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED"** + ENGINE_LESSONS
+> #58/#59/#60/#61/#62; open from there, never this line. Scoreboard UNCHANGED 2/10ʰ · 7/15. The re-run
+> banked two fresh refused artifacts (draws/history/G227_quote_refused_8258771a_2.json = the breach byte,
+> G236_..._59667b81_2.json = the clean-fix byte) — the n=2 evidence for the design.
+> **G236 KEY OF RECORD = `59667b81`** (live, AUDIT-named, CP1 fixture card); `9bf3f7ef` = banked evidence
+> ONLY, not re-runnable. **CONDITIONAL-LIFT STILL IN FORCE — one open breach class (own-paraphrase). Live
+> cards stay blocked from a clean lift until the own-paraphrase checkpoint closes it.** Parked, unchanged
+> scope: G162 lumped-ref re-anchor (Ruling 3, specified-not-built, build on recurrence); probe-2 over-firing
+> (needs its own red-first byte). **STATE: origin = local = PA = `94bcd22` (aligned, PA verified by pull).
 > **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
 > into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
 > DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption
