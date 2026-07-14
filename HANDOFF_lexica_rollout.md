@@ -1,16 +1,17 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **META:V6 BUILT + GREEN (scope-b (b)): the FOURTH WALL now DISCRIMINATES — an in-band cue
-> exemption WARNS only when the span reproduces a verse-word RUN (`_verse_run_content` >= 2 distinct
-> content tokens present, content = tokens minus a FROZEN function set); a single lemma-gloss
-> inflection stays a NOTE. This clears meta:v5's 12/79-card benign blast radius. Option A (in-band-
-> gated); FULL-token-reorder BOUNDARY documented not closed (ENGINE_LESSONS #67, auto Option-B
-> re-open trigger). `META_VER=meta:v6`; t≤0.706 + band + three walls + registry unchanged. NEXT
-> SEQUENCE (ruled): JP pulls → `python scripts/offline_gate_check.py --sweep` RE-READ under v6
-> (prediction logged: single-word glosses→note, verse-run reproductions→warn) → owed-adjudication
-> re-read for `sets-of-change` 0.696 (G236) + `captivating` 0.700 (G162): clear-by-design if noted,
-> else one-span adjudication → G162/G1390 under v6. Full record: AUDIT "META:V6 CONTENT-TOKEN
-> DISCRIMINATOR". G236 stopped-on-band pending span-2.**
+> **META:V5→V6 FOURTH-WALL ARC CLOSED (2026-07-14). The metalinguistic-cue exemption now has a
+> FOURTH WALL: an in-band cue exemption WARNS (blocks apply) only when the span reproduces a verse-
+> word RUN (`_verse_run_content` >= 2 distinct content tokens present; content = tokens minus a
+> FROZEN function set); a single lemma-gloss inflection stays a NOTE. Live-card blast radius 12→1;
+> the 1 (G3772 "Heaven/heavens" 0.720) adjudicated UPHELD + registered. All 4 parked words re-read
+> CLEAN under v6, warns 0 (offline archived-card method, zero spend). meta:v6 is a BUILD-TIME gate
+> (in force via the PA pull; no reload). Option A in-band-gated; FULL-token-reorder BOUNDARY
+> documented (ENGINE_LESSONS #67 + auto Option-B re-open trigger). Same-word-inflection slash
+> sub-pattern flagged (auto re-open on a 2nd). t≤0.706 + band + three walls unchanged. Registry
+> `_META_ADJUDICATED` = G227 0.638 + G3772 0.720, earned span-by-span. Full record: AUDIT "META:V6
+> CONTENT-TOKEN DISCRIMINATOR" + ENGINE_LESSONS #67. The 4 words stay PARKED on their OWN defects
+> (unchanged); the gate-design work is what closed.**
 > **G227 CLOSED CLEAN (offline check, reviewer-adjudicated 2026-07-14): prediction-met in full —
 > `quenched/crushed` 0.621 exempt (threshold-decided), Job anchoring held (park). NEW in-band span
 > `this [is] true [that] you have said` 0.638 = meta:v4 cue exemption UPHELD → 0.638 is now an

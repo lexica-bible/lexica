@@ -5741,10 +5741,22 @@ fixture 27 added (run≥2 registered → note); note-tag bug fixed (registered r
 "inflection run<2"). **SUB-PATTERN FLAGGED + auto re-open trigger** (same-word-inflection slash X/Xs
 → spurious 2-token run; a SECOND such warn re-opens the collapse-same-stem question). HYPHEN BYTE
 VERIFIED: `content_tokens("sets-of-change")` = one token (only slashes split), not inference.
-**VERIFICATION ORDERED before owed spans marked cleared:** offline `--card` re-read under v6 of
-G236 `sets-of-change` + G162 `captivating` archived cards — paste bytes, don't infer.
-**PENDING:** owed re-read → G236 closes on result → G162/G1390 under v6 (translated predictions
-logged first). **HELD:** rebuild/apply of survivors, G162/G1390, G236 close. Zero spend.
+**OWED RE-READ DONE (bytes, v6):** `sets-of-change` (G236, run 1) → NOTE, warns 0; `captivating`
+(G162, run 1, from the ARCHIVED aa064d41 card — current draft reworded it away) → NOTE, warns 0.
+Both clear by design; owed list EMPTY, no adjudication needed.
+**ALL FOUR PARKED WORDS RE-READ CLEAN UNDER v6 (warns 0 each):** G227 closed (0.638 residual
+registered); G236 closed (sets-of-change note · changing over [wording] 0.833 · Ezra "changes this
+word" [anchoring] held — original prediction-frame intact); G162 (captivating note · own K3-class
+"the ones capturing shall be captives" [wording] 1.000 = its parked defect, untouched by v6);
+G1390 (giving → own-word note, 0 fails/0 warns — cleaner than predicted). G1390 prediction card =
+live `bda7de94` (`bc1e2f69` = older path-(c) key, reconciled vs the re-run "Live keys read read-
+only" line, same pattern as G236's 9bf3f7ef→59667b81).
+**ARC CLOSED (meta:v5 → v6):** fourth wall BUILT (v5, blast radius 12/79) → DISCRIMINATED (v6,
+content-token run check) → radius 12→1 → G3772 earned warn adjudicated UPHELD + registered → 4
+parked words re-read clean. meta:v6 is a BUILD-TIME gate (no app reload needed; in force via the
+PA pull for any future build/apply). Zero model spend the entire arc. **The 4 words stay PARKED on
+their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
+G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
 ### META:V5 IN-BAND CUE DEMOTE — BUILT + LANDED; LIVE SWEEP + 2 ADJUDICATIONS PENDING (2026-07-14)
 **RULING (scope-b, reviewer, standing delegation):** neither pole — the cue path is NOT sovereign
