@@ -5023,6 +5023,53 @@ HIT each fire), so the .bak copies are belt-and-suspenders, safe to delete once 
 **NEXT.** Path (c) design for G236, G1390, G227 (roster/floor-anchored placement stage). G162 NOT
 on path (c) (quote/citation/misattribution wall, no floor-drift). Lesson: ENGINE_LESSONS #57.
 
+### PATH (c) RUN — THREE PARKS + CLOSE-OUT (2026-07-13; reviewer-adjudicated each word under JP
+### standing delegation; RUN only — no code, no rebuild, no ships). First live outing of the
+### path-(c) roster mechanism (built f4e0f14). PA synced e164239 → 3665ef0 by ff-only pull at open
+### (Gate 0 fired once: PA behind origin, missing f4e0f14..3665ef0; cleared by pull; no-crossing
+### held — no runnable word command crossed before its gate). Suites 37 passed at 3665ef0; three
+### floors present. Per word, one dry-run: `--dry-run --word G### --hints --roster
+### agreement_G###_v9_… --floor <same>`.
+- **G236 ἀλλάσσω — PARKED.** Roster gates BOTH clean draw 1: #30 no consensus pair split; #55 ship 2
+  = roster 2. Draw failed the verbatim-quote hard gate (2 spans: unanchored "changing over"; "changes
+  this word" carries Ezr 6:11 wording anchored on Ezr 6:12) + 8 misattribution warns. Quote-repair
+  BLOCKED pending F1–F3; `--force-gate-bypass` refused (known-bad quote onto a live card breaks the
+  accuracy bar + quote-repair lock). No card written; no `--apply` target.
+- **G1390 δόμα — PARKED.** Roster gates BOTH clean draw 1: #30 clean; #55 ship 2 = roster 2. All
+  three constraint hints held (Eph 4:9–11 pin: only 4:8 cited, no range; Psa 68:18 / Eph 4:8
+  directional discipline; Ecc 5:1 as human-to-God cultic gift under sense 2). Draw failed the
+  verbatim-quote gate (1 span: unanchored "giving") + 7 misattribution warns + 1 rendering-mismatch
+  flag (gloss "gift" vs corpus "gifts", Eph 4:8). Quote-repair BLOCKED; bypass refused. No card written.
+- **G227 ἀληθής — PARKED, #30 fired + adjudicated CLEARED.** #55 clean (ship 3 = roster 3). #30 fired
+  on 2 verses, BOTH cleared on roster grounds: Job 17:10 shipped in its roster home (group 3) — the
+  "split" is from float verses (2Co 6:8/Mar 12:14/Mat 22:16/Neh 7:2), not off a consensus home; Neh
+  7:2 is itself a roster float verse — no home to be off, its sense-2 homing is a permitted judgment
+  call on an open verse. All three hints held (1Jn 2:8 as commandment with G228 honored; Joh 5:31–32
+  + 3Jn 1:12 as named duals; Joh 8:15 never cited, four courtroom verses listed out). Draw failed the
+  verbatim-quote gate (3 spans: "spoke not anything before me true," Job 42:7 wording anchored on Job
+  42:8; unanchored "quenched/crushed" and "this [is] true [that] you have said" — both from
+  gloss_notes) + misattribution warns (incl. over-broad Peter/8-verses). Quote-repair BLOCKED; bypass
+  refused. No card written.
+**#30 DETECTOR NOTE (float-blindness; flag only, NO edits this RUN).** #30 computes off floor
+pair-frequencies and does not read the roster's float designations, so on a word with a float set it
+fires on legitimate float placements (both G227 fires were this). Design question for a later pass:
+teach #30 the float list, or keep the fire and adjudicate. Logged, not actioned.
+**RUN VERDICT — path (c) VALIDATED.** Three words, three parks, ALL on the identical downstream
+constraint (verbatim-quote gate), ZERO on roster grounds. Enforcer triad performed to design: #55
+3-for-3 clean; #30 clean twice (G236/G1390) and fired once (G227) with both fires clearing on
+adjudication against the banked roster. The mechanism placed and counted correctly on every first
+draw. Scoreboard UNCHANGED: 2/10ʰ hinted · 7/15 unhinted — a park is not a counted attempt.
+**SOLE BLOCKER = F1–F3 quote-repair**, now with fresh live evidence across all three words: 6 gate
+spans in two classes (unanchored, misanchored); gloss_notes confirmed as a span source (both G227
+unanchored spans originated there, not the senses block); probe-2 calibration data (the
+Peter/8-verses over-broad fire). Quote-repair STAYS BLOCKED on live cards until F1–F3 land.
+**RULES/PROCESS.** Every word: dry-run posted alone, JP ran on PA, raw output pasted inline, reviewer
+adjudicated #30+#55 against the banked roster, reviewer's pasted receipt = the park ruling (R2-b
+honored — CC authored no receipt). Apply-is-a-gate (ratified this session): `--apply` never posted;
+no runnable command crossed before its gate. Frozen V9 prompt untouched; rosters read not re-derived;
+one word/one command/one gate; no code edits. Docket forward: F1–F3 (priority) + coverage-repair
+follow + G236 desync edge + stale test_lexica_draw_cache.py fixture + ticket-8 stray-0.
+
 ### PATH (c) BUILD — PROCESS BREACH, CORRECTIVE LEDGER (2026-07-13; reviewer-flagged; commits
 ### f4e0f14 + 8451c06 stand UN-ADJUDICATED pending the reviewer's retroactive ruling). The build
 ### content may be sound, but it was committed through an INVALID process. Three named breaches,
