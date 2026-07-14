@@ -5758,6 +5758,57 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### G236 OFFLINE CHECK — RECOVERABILITY PASS; "REAL EZRA DEFECT" PINNED; PARK UPHELD ON TWO
+### GROUNDS (2026-07-14; parked-word queue, offline archived-card method, reviewer-adjudicated
+### under standing delegation. JP ran every PA read; read-only end to end, ZERO model spend.)
+**METHOD:** second offline archived-card gate check (`scripts/offline_gate_check.py`, card sig
+`59667b81`, read-only, no model, no redraw), same method as the G227 offline check. First of the
+parked-word queue G236 -> G162 -> G1390, each gated on its OWN recoverability precondition first.
+**KEY VERIFICATION CHAIN (the crossup lesson, honored):** card of record = **`59667b81`**, confirmed
+from THREE written-record locations before any command — HANDOFF top pointer, the F1-F3 re-run ledger
+("live key of record = 59667b81"), the META:V6 re-read entry — NOT recall. `9bf3f7ef` = banked
+evidence ONLY, correctly flagged do-not-use. Locate step confirmed the sig from the FILE'S OWN BYTES,
+not the filename/path (#52): `draws/G236.json` reads sig `59667b81`, `changing over` present ->
+RECOVERABILITY **PASS**. The two `draws/history/*9bf3f7ef*` cards correctly lack the span; the
+`*_quote_refused_*` files are banked refusal evidence (no sig).
+**GATE READ — PREDICTION-MET, no surprises (all three gate changes since G236 last ran landed as
+aimed):** `sets-of-change` -> NOTE (meta:v6, single content token, run 1 < 2); `changing over` ->
+`[wording]` fail, near-match **0.833** @ Dan 4:16 `change over` (fed path); Ezra `changes this word`
+`[anchoring]` -> **CLEARS, no fire** under the coordinate-list rule (= #68) — the mis-anchor
+false-positive is gone. warns 0, not-run 0.
+**`sets-of-change` 0.696 IN-BAND = KNOWN-AND-RULED, not a stopper (reviewer-confirmed):** same span,
+same score (0.696 -> 0.696, no drift), already surfaced under meta:v5 and already ruled a plain NOTE
+by the meta:v6 owed re-read (warns 0). Exempt via the run-under-2 metalinguistic route, NOT the score
+registry, so its absence from the enumerated residual set (0.621 / 0.638 / 0.706 / 0.750) is EXPECTED,
+not a gap. The helper's mandatory-stop boilerplate applies to NEW in-band spans only; this is neither
+new nor moved. No re-open.
+**"REAL EZRA DEFECT" PINNED (was NAMED-only in the LEAD-IN close-out; now characterized concretely):**
+the card files Ezra 6:11-12 under **sense 1** ("Substituting one thing for another — one entity goes
+out and a different one comes in"). Verse bytes quote-checked read-only against the card:
+- Ezr 6:11 "every man who ever **changes this word** ... shall be demolished ..." = ALTERING / violating
+  the royal decree.
+- Ezr 6:12 "eradicate every king and people who should stretch out his hand to **change** and remove
+  from view the house of God" = TAMPERING WITH / destroying the temple.
+The card's quotes are **VERBATIM-accurate** to the bytes (so the quote-repair path is IRRELEVANT to
+this defect). The defect is the SENSE FRAME: alpha-lasso (ἀλλάσσω) here = **alter / tamper**, NOT
+sense-1 substitution — nothing replaces the decree, nothing replaces the temple. The card's own bridge
+sentence — *"an authoritative text or institution is replaced by a different arrangement"* — is an
+INVENTED rationale the verses do not carry: the **harmonizing pattern** (= ENGINE_LESSONS #30 / #17e),
+frame recruits verse then a rationale is authored to fit. The bridge claim is itself part of the
+defect, not just the placement.
+**PARK UPHELD — two independent grounds, either sufficient:** (1) `changing over` = a real wording
+defect, repairable ONLY by a spend-costing repair run (JP-gated, never pre-cleared); (2) Ezra 6:11-12
+misplacement + the unsupported bridge = structurally OUTSIDE the quote-repair path's reach (quotes are
+fine, the frame is wrong). Scoreboard UNCHANGED **2/10ʰ · 7/15** (a park is not an attempt).
+**PRODUCT:** the offline recoverability method worked end to end — right card by bytes, gates landed as
+predicted, a previously-vague park reason turned into a concrete on-record defect. A proper fix would
+likely need an "alter / modify" sense the card's 2-sense carve lacks (something remains but is changed,
+distinct from swap-one-out and from transform-in-nature) -> a future DESIGN question, NOT this session.
+No new lesson: method (#66) + harmonizing pattern (#30/#17e) + coordinate-list clear (#68) all already
+banked. **NEXT = G162 (archived `aa064d41`), same offline method, recoverability first.**
+**STATE: no code changed (helper is the existing read-only script); this close-out commit is doc-only,
+exemption invoked. origin advances; PA on next pull. Zero model spend this session.**
+
 ### LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT (2026-07-14; DESIGN + BUILD,
 ### reviewer-adjudicated under standing delegation, full receipt cycle. JP ran both PA prose
 ### reads; all tests db-free/model-free, run locally; frozen V9 untouched — build-time gate only.)

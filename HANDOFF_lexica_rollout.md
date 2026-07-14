@@ -1,5 +1,20 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **G236 OFFLINE CHECK — CLOSED, PARK UPHELD (2026-07-14). First parked-word queue item done via the
+> offline archived-card method (`scripts/offline_gate_check.py`, card sig `59667b81`, read-only, ZERO
+> spend). Recoverability PASS (sig confirmed from the file's OWN bytes, `changing over` present; key
+> verified from three record locations, `9bf3f7ef` = evidence-only). Gate read PREDICTION-MET: `sets-of-
+> change` NOTE (meta:v6), `changing over` [wording] 0.833 fed-path, Ezra anchoring CLEARS under the
+> coordinate-list rule (#68). `sets-of-change` 0.696 in-band = KNOWN-AND-RULED (unmoved score, meta:v6
+> note), not a stopper. **"REAL EZRA DEFECT" PINNED (was named-only):** the card misfiles Ezra 6:11-12
+> (ἀλλάσσω = ALTER a decree / TAMPER with the temple, quote-checked verbatim) under sense-1 SUBSTITUTION,
+> with an INVENTED bridge "replaced by a different arrangement" the verses don't carry = harmonizing
+> pattern (#30/#17e). PARK holds on TWO independent grounds: (1) `changing over` wording, fixable only by
+> a JP-gated spend run; (2) the Ezra misplacement, structurally outside quote-repair's reach. Scoreboard
+> UNCHANGED 2/10ʰ · 7/15. **NEXT = G162 (archived `aa064d41`), same offline method, recoverability
+> first.** Full record: AUDIT "G236 OFFLINE CHECK — RECOVERABILITY PASS; 'REAL EZRA DEFECT' PINNED".
+> Doc-only close-out, exemption invoked; no code changed, ZERO model spend.**
+
 > **LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT + COMMITTED (2026-07-14). The
 > unruled lead-in anchoring question (G227/G236) is CLOSED. A coordinate list/range lead-in
 > ("Job 42:7 and Job 42:8:", "Ezra 6:11-12") assigns NO primary — a quote matching ANY listed
