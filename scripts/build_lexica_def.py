@@ -2086,9 +2086,12 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
-META_VER = "meta:v2"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
-                                # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL;
-                                # cue list grows by exhibit.
+META_VER = "meta:v3"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
+                                # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL.
+                                # v3 (Ruling 2, 2026-07-13): ADDITIVE own-word class on top of
+                                # v2's cue path (untouched) — a single-word own-vocabulary
+                                # scare-quote, NOT attribution-anchored, is exempt (the cue-less
+                                # emphasis-quote gap #59). cue list grows by exhibit.
 # A quoted span is a METALINGUISTIC MENTION (exempt from the quote gate, LOUD note, never
 # silent — lesson #47) only when ALL THREE hold: matches no cited verse · it carries NO local
 # ref anchor (_local_refs returns []) · a rendering-talk cue sits within the context window.
@@ -2206,6 +2209,43 @@ def _local_refs(raw, qs, qe):
 # else, so ordinary prose between quotes never triggers pairing.
 _PAIR_GAP_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)\s+$|\s*,\s*$")
 
+# meta:v3 (Ruling 2) — the ATTRIBUTION lead-in posture: a ref immediately followed by an
+# attribution verb, right before the open quote ("Psa 68:18 reads", "Num 3:9 says:").
+_ATTR_LEADIN_RE = re.compile(r"\d+:\d+\s+(?:reads?|says?|states?|writes?)\s*[:,]?$")
+
+
+def _attribution_anchored(raw, qs, qe):
+    """meta:v3 (Ruling 2) — is the quote in an ATTRIBUTION position (a claimed source)?
+    True when a ref sits in a trailing parenthetical right at the close (reuses
+    _local_refs' OWN trailing-bracket branch via its `trailing` flag — not a re-derived
+    copy), or an immediate 'Book C:V reads/says[:]' lead-in precedes the open quote. A
+    clause ref elsewhere in the sentence is NOT an attribution and does NOT count — that
+    discriminator is what lets an own-word emphasis quote through while a smuggled
+    single-word misquote (which the card would attribute) stays failing. Used ONLY by the
+    own-word exemption; the gate's anchoring rule keeps using _local_refs unchanged."""
+    refs, trailing = _local_refs(raw, qs, qe)
+    if refs and trailing:
+        return True
+    return bool(_ATTR_LEADIN_RE.search(raw[:qs].rstrip()))
+
+
+def _own_word_exempt(raw, qn, qs, qe):
+    """meta:v3 (Ruling 2): a SINGLE-word scare-quote that is the card's OWN vocabulary
+    (the same word appears UNQUOTED elsewhere in the card — the tell it is the writer's
+    emphasis, not a scripture claim) and is NOT attribution-anchored. Disjoint from the
+    cue path (single-word only), so the multi-word must-fails (they changed their gods,
+    other item) never reach it. Returns the word when exempt, else None. Base variant
+    (own-prose recurrence); a gloss-match tightening is HELD for a future exhibit."""
+    w = qn.strip()
+    if not w or " " in w:                               # single token only
+        return None
+    w = w.strip(".,;:!?'\"").lower()
+    if not w.isalpha() or _attribution_anchored(raw, qs, qe):
+        return None                                     # a claimed source -> keep failing
+    if re.search(rf"(?<![a-z]){re.escape(w)}(?![a-z])", _strip_quoted(raw).lower()):
+        return w                                        # appears unquoted in the card's own prose
+    return None
+
 
 def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
     """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
@@ -2251,6 +2291,18 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
                             f'cue "{pat}", no verse match, no ref anchor) — '
                             f'non-blocking note')
                     continue
+            # meta:v3 (Ruling 2): own-word emphasis mention — a single word that is the
+            # card's own out-of-quote vocabulary and is NOT attribution-anchored. Additive
+            # to the cue path above; disjoint (single-word only), so a multi-word misquote
+            # never reaches it. LOUD note, never silent (lesson #47).
+            ow = _own_word_exempt(raw, qn, qs, qe)
+            if ow:
+                if notes is not None:
+                    notes.append(
+                        f'quote "{label}" EXEMPTED as own-word emphasis mention ({META_VER} '
+                        f'single word "{ow}" in the card\'s own prose, no verse match, not '
+                        f'attribution-anchored) — non-blocking note')
+                continue
             if missing:
                 notruns.append(
                     f'quote "{label}" — NOT RUN: no match among available texts and '

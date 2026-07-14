@@ -360,6 +360,38 @@ def main():
     assert len(fails) == 1 and 'they changed their gods' in fails[0], (fails, notes)
     assert not any('EXEMPTED' in n for n in notes), notes
 
+    # ═══ PROBE 1 — meta:v3 OWN-WORD exemption (Ruling 2, 2026-07-13, ENGINE_LESSONS
+    # #59). ADDITIVE to the cue path (untouched): a SINGLE word that is the card's own
+    # vocabulary (appears UNQUOTED elsewhere) and is NOT attribution-anchored is an
+    # emphasis mention, not a scripture claim. Real G1390 bytes (bank bda7de94): the
+    # Range sentence's scare-quoted "giving" + the card's own unquoted "giving".
+    # #59 CORRECTION (verified 2026-07-13, this session): the real span's clause refs sit
+    # past _local_refs' 12-char window (_local_refs returns []), so the pre-v3 wall failed
+    # it on MISSING CUE, not on the refs; meta:v3 exempts it regardless. Verse bytes
+    # already in VT (Num 3:9, Lev 23:38). Red-first: before meta:v3 this span FAILED
+    # (session record: FAILS=['quote "giving" matches NO cited verse...']). ═══
+    raw_giving = ('one party grants another something of material value; the giving may be '
+                  'freely offered, solicited, or withheld. At its most institutionalized it '
+                  'names portions assigned within the priestly-cultic order, where the '
+                  '"giving" is regulated by divine command rather than personal generosity '
+                  '(Num 3:9; Lev 23:38).')
+    notes = []
+    fails, notrun = B.probe1_verbatim(raw_giving, sub(("Num", 3, 9), ("Lev", 23, 38)), notes=notes)
+    assert fails == [] and notrun == [], (fails, notrun)
+    # the LOUD note is PRESENT (Ruling 2 visibility; reviewer tightening 2026-07-13)
+    assert any('giving' in n and 'EXEMPTED' in n and 'own-word' in n for n in notes), notes
+
+    # attribution TEETH (the load-bearing case): the SAME single own-word WITH a
+    # trailing-bracket ref is attribution-anchored -> the exemption must NOT touch it,
+    # and NO exemption note is emitted. Proves meta:v3 can't launder an attributed
+    # single-word misquote. "giving" is not in Num 3:9's stored text.
+    raw_giving_attr = ('the giving may be freely offered; the priestly "giving" (Num 3:9) is '
+                       'regulated by divine command.')
+    notes = []
+    fails, _ = B.probe1_verbatim(raw_giving_attr, sub(("Num", 3, 9)), notes=notes)
+    assert len(fails) == 1 and 'giving' in fails[0], (fails, notes)
+    assert not any('EXEMPTED' in n for n in notes), notes
+
     # ═══ PROBE 1 — FAIL-KIND TAGGING (Ruling 1 / ENGINE_LESSONS #61, 2026-07-13):
     # probe1_verbatim tags each fail AT SOURCE as "wording" (matches no verse —
     # fixable in-quote) or "anchoring" (right words, wrong ref — unfixable in-quote)
