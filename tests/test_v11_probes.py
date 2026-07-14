@@ -55,6 +55,12 @@ VT = {
     ("Luk", 11, 13): "If then you, being wicked ones, know to give good gifts to your children; how much more the father from heaven shall give holy spirit to the ones asking him?",
     # V11.1 ticket-3 verse bytes (JP live read, 2026-07-12, this session's record):
     ("Gen", 35, 2): "And Jacob said to his house, and to all the ones with him, Take away the alien gods from your midst, and cleanse and change your robes!",
+    # meta:v2 3c verse bytes (JP live read, 2026-07-12; also banked in test_quote_repair.py):
+    ("Jer", 2, 11): "if nations changed their gods, and these are not gods! But my people changed their glory by which they do not derive benefit.",
+    # meta:v2 3b verse bytes (JP live read, 2026-07-13): Isa 43:9 has "speak truth" and
+    # "truth" but not "speak what is true" — so the gloss-word spans match and only the
+    # rendering-contrast span needs the exemption.
+    ("Isa", 43, 9): "All the nations were brought together, and rulers from them shall be brought together. Who will announce these things? Or the things from the beginning, who will announce? Let them bring forth their witnesses, and let them be justified, and let them hear, and let them speak truth!",
 }
 
 
@@ -240,12 +246,16 @@ def main():
     fails, notrun = B.probe1_verbatim(raw_ital, sub(("Gen", 35, 2)))
     assert fails == [] and notrun == [], (fails, notrun)
 
-    # ═══ PROBE 1 — V11.1 ticket 4: metalinguistic-mention exemption (meta:v1; option (i)
-    # as ruled + ≤2-word cap). Exemption ONLY when all three hold: (a) span matches no
-    # cited verse, (b) context pattern hit, (c) span ≤2 words. Each condition pinned as
-    # the lone blocker below. Exemptions are LOUD — a note in the notes list, never a
-    # silent skip (lesson #47). Real bytes: reliable (G227 d2), captivating (G162 d2),
-    # other item (G236 d2), all from the banked/live consults. ═══
+    # ═══ PROBE 1 — metalinguistic-mention exemption. meta:v2 (F3, 2026-07-13,
+    # ENGINE_LESSONS #56/#57): the ≤2-word cap is RETIRED and replaced by the ANCHOR
+    # WALL. Exemption now holds when all three of: (a) span matches no cited verse,
+    # (b) NO local ref anchor (_local_refs returns []), (c) a metalinguistic cue sits in
+    # the context window. The no-anchor test is the non-word-count discriminator that
+    # blocks laundering — a smuggled misquote always attaches a ref, so an unanchored
+    # span makes no scripture claim to be unfaithful to. Exemptions stay LOUD — a note in
+    # the notes list, never a silent skip (lesson #47). Real bytes: reliable (G227 d2),
+    # captivating (G162 d2), other item (G236 d2), all from the banked/live consults;
+    # the meta:v2 3a–3c fixtures below add the real PRE bytes that parked G227/G236. ═══
 
     # 1t MUST-CLEAR with note — "reliable" (real bytes; "rendering" context pattern).
     raw_rel = ('The gloss set does not include a distinct "reliable" or "trustworthy" '
@@ -265,17 +275,22 @@ def main():
     assert fails == [] and notrun == [], (fails, notrun)
     assert len(notes) == 1 and 'captivating' in notes[0], notes
 
-    # 1v MUST-STILL-REFUSE — condition (b) alone blocks: "other item" (real bytes) is
-    # ≤2 words and matches nothing, but NO pattern reaches scare-quotes-around-a-concept.
-    # Ruled: stays on the adjudicated-bypass path; the design working, not a gap.
+    # 1v MUST-STILL-REFUSE — cue (c) blocks: "other item" (real bytes) is unanchored and
+    # matches nothing, but NO cue reaches scare-quotes-around-a-concept, so the anchor
+    # wall alone does not exempt it. Ruled: stays on the adjudicated-bypass path; the
+    # design working, not a gap. (meta:v2 preserves this verdict unchanged.)
     raw_oth = ('the two are distinguished by whether an "other item" is explicitly placed '
                'in the position vacated.')
     notes = []
     fails, _ = B.probe1_verbatim(raw_oth, {}, notes=notes)
     assert len(fails) == 1 and 'other item' in fails[0] and notes == [], (fails, notes)
 
-    # 1w MUST-STILL-REFUSE — condition (c) alone blocks: long span WITH a pattern hit
-    # still fires (the misquote-riding-"sense of" loosening channel, structurally closed).
+    # 1w MUST-STILL-REFUSE — a long span carrying a REF still fires. WALL RELOCATION
+    # (meta:v2, reviewer-noted): pre-F3 this was blocked by the ≤2-word cap; now it is
+    # blocked by the ANCHOR WALL (the trailing "(Gen 35:2)" makes it anchored, so the
+    # exemption is skipped regardless of length or cue). Same verdict, different wall —
+    # not a behavior change. This is the misquote-riding-"sense of" laundering channel,
+    # kept structurally closed by the ref, not by the word count.
     raw_long = ('the sense of "cleanse and exchange your robes entirely" (Gen 35:2).')
     notes = []
     fails, _ = B.probe1_verbatim(raw_long, sub(("Gen", 35, 2)), notes=notes)
@@ -289,12 +304,61 @@ def main():
     assert fails == [] and notrun == [] and notes == [], (fails, notrun, notes)
 
     # 1y MUST-STILL-REFUSE — Levites class, RECONSTRUCTED (ruled: d1 overwritten; the
-    # self-label class the exemption must never reach — long span AND no pattern, two
-    # independent walls).
+    # self-label class the exemption must never reach). Under meta:v2 the ANCHOR WALL
+    # blocks it: the trailing "(Num 3:9)" makes the span anchored, so the exemption is
+    # skipped (the pattern-hit/word-count reasoning is moot once a ref is present).
     raw_lev = ('the Levites are given as "sacred allocation for the sanctuary" (Num 3:9).')
     notes = []
     fails, _ = B.probe1_verbatim(raw_lev, sub(("Num", 3, 9)), notes=notes)
     assert len(fails) == 1 and notes == [], (fails, notes)
+
+    # ── meta:v2 3a–3c: the REAL PRE bytes that parked the words on the live gate (F3
+    # charter — the exemption is proven on the actual bytes, not a paraphrase). ──
+
+    # 3a MUST-CLEAR (G227 d3 real bytes, key d65ed578, verbatim window) — two multi-word
+    # metalinguistic labels the card quotes from ITSELF ("the lemma shifts from X to Y"):
+    # no verse match, no ref anchor, "the lemma" cue. The ≤2-word cap could never reach
+    # these (4 and 6 words) — meta:v2's whole reason to exist.
+    raw_g227 = ('In juridical-flavored contexts about witness and judgment, the lemma '
+                'shifts from "matches the facts" to "counts as adequate under the '
+                'applicable rule." The question is not primarily whether the content is '
+                'accurate but whether the testimony is receivable or the judgment stands.')
+    notes = []
+    fails, notrun = B.probe1_verbatim(raw_g227, {}, notes=notes)
+    assert fails == [] and notrun == [], (fails, notrun)
+    assert any('matches the facts' in n and 'EXEMPTED' in n for n in notes), notes
+    assert any('counts as adequate' in n and 'EXEMPTED' in n for n in notes), notes
+
+    # 3b MUST-CLEAR (G227 d3 real bytes, FULL bullet from the header) — the reviewer-ruled
+    # extension: the fixture now INCLUDES the "(Isa 43:9)" ref in the bullet header, so the
+    # "out of _local_refs' window" claim is PROVEN, not asserted. The rendering-contrast
+    # span "speak what is true" still has no local anchor (the header ref is >48 chars back,
+    # not in its enclosing paren) and carries a "rendering"/"the lemma" cue → exempt. The
+    # other spans ("truth", "speak", "speak truth") DO occur in Isa 43:9 → they match and
+    # pass, never touching the exemption. Proves the exemption covers the gloss_notes field
+    # (both G227 unanchored spans came from here) on the true card shape.
+    raw_g227b = ('**"truth" (Isa 43:9):** The lemma here is an accusative object of "speak"; '
+                 'rendering it as a noun ("speak truth") rather than an adjective phrase '
+                 '("speak what is true") is within the range of sense 1 but slightly '
+                 'abstracts toward a nominalized concept the Greek adjective does not require.')
+    notes = []
+    fails, notrun = B.probe1_verbatim(raw_g227b, sub(("Isa", 43, 9)), notes=notes)
+    assert fails == [] and notrun == [], (fails, notrun)
+    assert any('speak what is true' in n and 'EXEMPTED' in n for n in notes), notes
+
+    # 3c MUST-STILL-REFUSE (G236 d3 real bytes, key 9bf3f7ef, verbatim window) — "they
+    # changed their gods" is a GENUINE misquote (Jer 2:11 reads "if nations changed their
+    # gods") sitting unanchored in a paired-quote list (the shared "(Jer 2:11)" is too
+    # far off for the anchor rule to reach the first quote). NO cue in its window, so the
+    # cue requirement keeps it FAILING. THIS is the case that killed "unanchored alone =
+    # exempt": without the cue wall a real misquote would launder straight through.
+    raw_g236 = ('replacing one thing with another in a transfer that the context marks '
+                'as illegitimate or as a violation: "they changed their gods" and "my '
+                'people changed their glory" (Jer 2:11, two occurrences);')
+    notes = []
+    fails, _ = B.probe1_verbatim(raw_g236, sub(("Jer", 2, 11)), notes=notes)
+    assert len(fails) == 1 and 'they changed their gods' in fails[0], (fails, notes)
+    assert not any('EXEMPTED' in n for n in notes), notes
 
     # ═══ PROBE 2 — named-subject warn ═══
     # 2a MUST-FAIL, defect 1 (G1390 real bytes): Jehoiada absent from 2Ch 21:3.

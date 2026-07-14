@@ -110,6 +110,21 @@ class Mock:
         return self.outputs.pop(0)
 
 
+class ContractMock:
+    """A call_model that behaves like a model HONORING the repair prompt's output
+    contract only when the contract instruction is actually present in the message —
+    `compliant` when `trigger` is in the message, `noncompliant` (a narration-wrapped
+    reply, the real 0-for-3 failure shape) otherwise. This lets F1/F2 be proven
+    red-first model-free: the OLD prompt lacks the trigger → the mock narrates → the
+    guard breaches; the NEW prompt carries it → the mock returns the bare card."""
+    def __init__(self, trigger, compliant, noncompliant):
+        self.trigger, self.compliant, self.noncompliant = trigger, compliant, noncompliant
+        self.msgs = []
+    def __call__(self, msg):
+        self.msgs.append(msg)
+        return self.compliant if self.trigger in msg else self.noncompliant
+
+
 def main():
     # ── 1. FIVE FIRE controls (must-fail-first): each banked kill class fires the
     # repair, the mock's spans-only correction passes the guard and the re-run gate.
@@ -201,6 +216,40 @@ def main():
         assert B.bank_refused_repair("G1390", "quote", {"fails": []}) is None
     finally:
         B.DRAWS_DIR = old_dir
+
+    # ── 7. F1 CARD-ONLY CONTRACT (output-contract fix, ENGINE_LESSONS #57): a model
+    # that narrates its work OUTSIDE the card (the real 0-for-3 shape — a preamble that
+    # quotes the spans it is fixing) breaches the spans-only guard even though the fix
+    # underneath is correct. With the contract in force the model returns the bare card
+    # and the correct fix survives. Proven red-first: against the OLD prompt (no "and
+    # nothing else") the mock narrates → guard breach; the NEW prompt recovers it.
+    assert "and nothing else" in B.QUOTE_REPAIR_PROMPT, "F1 output contract missing from prompt"
+    narrated = ('I need to fix the quote "they changed their gods".\n\nHere is the '
+                'corrected definition:\n\n' + K5_FIX)
+    cm = ContractMock("and nothing else", K5_FIX, narrated)
+    final, rec, probs = B.quote_repair(K5_RAW, sub(("Jer", 2, 11)), cm)
+    assert probs == [], f"F1: contract-honoring repair still refused: {probs!r}"
+    assert final == K5_FIX, "F1: the correct fix did not survive the contract"
+    assert len(cm.msgs) == 1
+    # the narration path really would have breached (documents the failure the contract closes)
+    assert B.quote_repair_guard(K5_RAW, narrated), "F1: narration control did not breach the guard"
+
+    # ── 8. F2 NO-OP CHANNEL: when nothing can be corrected inside the quotation marks,
+    # the model returns the card unchanged instead of narrating a decline in-band. The
+    # unchanged reply passes the guard and dies cleanly on the cap-out (a real defect the
+    # repair can't reach), NOT on a guard breach. Proven red-first: the OLD prompt (no
+    # no-op channel) makes the mock narrate the decline → guard breach ("spans-only");
+    # the NEW prompt makes it return byte-identical → clean cap-out ("cap").
+    NOOP_PHRASE = "return the card exactly as given, unchanged"
+    assert NOOP_PHRASE in B.QUOTE_REPAIR_PROMPT, "F2 no-op channel missing from prompt"
+    narrated_decline = ('I cannot fix "a gift of a man widens him and sits him by monarchs" '
+                        'without changing the prose.\n\n' + K1_RAW)
+    cm2 = ContractMock(NOOP_PHRASE, K1_RAW, narrated_decline)
+    final2, rec2, probs2 = B.quote_repair(K1_RAW, sub(("Pro", 18, 16)), cm2)
+    assert final2 == K1_RAW, "F2: no-op reply should leave the card untouched"
+    assert probs2 and any("cap" in p.lower() for p in probs2), (probs2,)
+    assert not any("spans-only" in p for p in probs2), f"F2: no-op path breached the guard: {probs2!r}"
+    assert len(cm2.msgs) == 1
 
     print("test_quote_repair: ok")
 

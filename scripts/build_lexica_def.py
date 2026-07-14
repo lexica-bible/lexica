@@ -1865,6 +1865,11 @@ def coverage_repair(raw, fed_keys, ctx, call_model, max_rounds=2):
 # byte-strict by skeleton equality. Cap: ONE round (ruling 1; no rounds knob on purpose — the cap
 # lives in the ruling and the body). After a repair the FULL battery re-runs as if the card were
 # new (lesson #50 rule b) — machine gates this pass, hand-check battery at the run session.
+# OUTPUT CONTRACT (F1/F2, 2026-07-13, ENGINE_LESSONS #57): the prompt now demands the CARD
+# ONLY — no preamble, no reasoning — and gives an explicit no-op channel (return the card
+# unchanged when nothing is fixable). This closes the 0-for-3 failure where the model's
+# narration, not its fix, tripped the spans-only guard. The guard itself is UNCHANGED (it
+# was vindicated 3-for-3); the fix lives in the prompt, never the guard.
 # The frozen V9 verse prompt is untouched; this block is versioned separately (qrepair stamp).
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 QUOTE_REPAIR_PROMPT = """\
@@ -1876,7 +1881,11 @@ The stored verse texts:
 
 {verses}
 
-Correct ONLY the wording inside quotation marks so each failed quoted span matches its verse's stored text. Change NOTHING outside the quotation marks: every word of prose, every sense headline, every citation, and the number and position of the quotations must stay exactly as they are. If a quotation cannot be made to match its verse without also changing the surrounding prose, leave that quotation exactly as it is. Return the full corrected definition.
+Correct ONLY the wording inside quotation marks so each failed quoted span matches its verse's stored text. Change NOTHING outside the quotation marks: every word of prose, every sense headline, every citation, and the number and position of the quotations must stay exactly as they are. Do NOT remove the quotation marks from a span: if a quoted phrase is the card's own wording rather than a scripture quotation, leave it and its quotation marks exactly as they are. If a quotation cannot be made to match its verse without also changing the surrounding prose, leave that quotation exactly as it is.
+
+If, after checking, nothing can be corrected inside the quotation marks this way, return the card exactly as given, unchanged.
+
+Output the corrected definition and nothing else — no preamble, no explanation, no list of what you changed, no "Here is the corrected definition" line. Your entire reply must be the card itself, from its first line to its last.
 
 {card}"""
 
@@ -2030,16 +2039,25 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
-META_VER = "meta:v1"            # metalinguistic-mention exemption (V11.1 ticket 4, ruled
-                                # 2026-07-12): pattern list + ≤2-word cap; grows by exhibit.
+META_VER = "meta:v2"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
+                                # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL;
+                                # cue list grows by exhibit.
 # A quoted span is a METALINGUISTIC MENTION (exempt from the quote gate, LOUD note, never
-# silent — lesson #47) only when ALL THREE hold: matches no cited verse · a rendering-talk
-# pattern sits within the context window · span is ≤2 words. The cap is structural: nothing
-# that could plausibly be a verse quote is two words, so a misquoted sentence riding a
-# nearby "sense of" can never be exempted. Real-byte exhibits: "reliable" (G227 d2),
-# "captivating" (G162 d2). "other item" stays UNEXEMPTED by ruling (no honest pattern
-# reaches scare-quotes-around-a-concept; adjudicated-bypass path remains).
-META_PATTERNS = ("render", "gloss", "the word", "reads as", "sense of", "so-called")
+# silent — lesson #47) only when ALL THREE hold: matches no cited verse · it carries NO local
+# ref anchor (_local_refs returns []) · a rendering-talk cue sits within the context window.
+# The NO-ANCHOR test is the non-word-count discriminator (ENGINE_LESSONS #56/#57): a smuggled
+# misquote always attaches a ref, so an unanchored span makes no scripture claim to be
+# unfaithful to, while a real misquote-with-a-ref (the "riding sense-of" laundering channel)
+# stays anchored and FAILS regardless of length or cue. This is what lets the ≤2-word cap go
+# and reaches the multi-word labels it never could ("matches the facts", "counts as adequate
+# under the applicable rule.", "speak what is true" — G227 d3 real bytes). Real-byte exhibits:
+# "reliable" (G227 d2), "captivating" (G162 d2). "other item" stays UNEXEMPTED (unanchored but
+# no cue reaches scare-quotes-around-a-concept; adjudicated-bypass path remains).
+# LEDGERED RISK (accepted 2026-07-13, no fix this session): a genuine misquote sitting
+# unanchored in gloss-notes territory with a cue in its window would now launder through as an
+# exemption. No real byte has ever shown it; exemptions are LOUD (→ probe1_notes → audit) and
+# card convention attaches refs to real verse quotes (keeping the anchor wall live for them).
+META_PATTERNS = ("render", "gloss", "the word", "the lemma", "reads as", "sense of", "so-called")
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -2164,16 +2182,20 @@ def probe1_verbatim(raw, verse_texts, notes=None):
         label = qn if len(qn) <= 60 else qn[:57] + "..."
         matched = [k for k, vn in normed.items() if _match_quote(qn, vn)]
         if not matched:
-            # meta:v1 (V11.1 ticket 4): metalinguistic-mention exemption — all three
-            # conditions, each fixture-pinned as the lone blocker; LOUD note, never silent.
-            if len(qn.split()) <= 2:
+            # meta:v2 (F3): metalinguistic-mention exemption — matches no cited verse AND
+            # carries no local ref anchor AND a rendering-talk cue sits in the window. The
+            # no-anchor test replaces meta:v1's ≤2-word cap as the structural laundering
+            # wall (a real misquote-with-a-ref stays anchored and falls through to FAIL).
+            # LOUD note, never silent.
+            m_local, _ = _local_refs(raw, qs, qe)
+            if not m_local:
                 ctx = raw[max(0, qs - 80):qe + 40].lower()
                 pat = next((p for p in META_PATTERNS if p in ctx), None)
                 if pat:
                     if notes is not None:
                         notes.append(
                             f'quote "{label}" EXEMPTED as metalinguistic mention ({META_VER} '
-                            f'pattern "{pat}", ≤2 words, matches no cited verse) — '
+                            f'cue "{pat}", no verse match, no ref anchor) — '
                             f'non-blocking note')
                     continue
             if missing:
