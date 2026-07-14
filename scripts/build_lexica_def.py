@@ -1741,6 +1741,9 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
                              "outside quotation marks changed); every gate re-ran fresh on the "
                              "repaired card, full hand battery owed as if new (lesson #50 b)")
                             if qrepair else "",
+        # RULING 4 (2026-07-13): the quoted spans the repair CHANGED, each re-gated to the ref it
+        # now matches, so the reviewer byte-confirms the introduced wording at ship (never silent).
+        "quote_repair_introduced": (qrepair or {}).get("repair_introduced", []),
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
@@ -1936,13 +1939,32 @@ def quote_repair(raw, vt, call_model):
     NOTE: gate fails and NOT-RUNs are mutually exclusive in probe1_verbatim (any missing text
     turns every unmatched span into a NOT-RUN, and NOT-RUN must never become a repair path) —
     so a fire here always has the full texts in hand. The gate re-check runs the PRODUCTION
-    probe1_verbatim, never a copy."""
-    fails, _ = probe1_verbatim(raw, vt, notes=[])
+    probe1_verbatim, never a copy.
+    RULING 1 (#61) DETERMINISTIC PRE-ROUTING: the gate emits two fail kinds; only the fixable
+    WORDING kind (matches no verse) ever reaches the model. An ANCHORING-rule fail (right words,
+    wrong ref) is unfixable inside the quotes by construction (the only fix moves a ref, which
+    the spans-only guard forbids), so it is NEVER fed. A card whose ONLY fails are anchoring =
+    deterministic no-op (the model is not called at all, zero breach surface) and parks. A mixed
+    card feeds its wording fails, and the held-back anchoring fail resurfaces on the re-run as a
+    clean cap-out park — same ship outcome as before, breach surface removed."""
+    kinds = []
+    fails, _ = probe1_verbatim(raw, vt, notes=[], fail_kinds=kinds)
     if not fails:
         return raw, None, []
+    wording   = [f for f, k in zip(fails, kinds) if k == "wording"]
+    anchoring = [f for f, k in zip(fails, kinds) if k == "anchoring"]
     rec = {"fails": fails, "rounds": 1, "prompt_ver": quote_repair_prompt_ver()}
-    print(f"  QUOTE-REPAIR PASS round 1 — {len(fails)} failed span(s)")
-    new = call_model(quote_repair_user_msg(fails, vt, raw))
+    if not wording:
+        # Deterministic no-op: nothing the model can safely fix. No model call, no
+        # refused_post (nothing existed to bank — bank_refused_repair no-ops on rec).
+        rec["anchoring_only"] = anchoring
+        return raw, rec, ["quote-repair declined deterministically (Ruling 1): the only fail(s) "
+                          "are anchoring-rule (right words, wrong ref), unfixable inside the "
+                          "quotes — the card parks and the model was not called: "
+                          + " | ".join(anchoring)]
+    print(f"  QUOTE-REPAIR PASS round 1 — {len(wording)} fixable wording span(s)"
+          + (f"; {len(anchoring)} anchoring-rule fail(s) held back (never fed)" if anchoring else ""))
+    new = call_model(quote_repair_user_msg(wording, vt, raw))   # ONLY wording fails fed
     probs = quote_repair_guard(raw, new)
     if probs:
         rec["pre"] = raw            # ticket 1: pre-repair card (the gate's input)
@@ -1956,7 +1978,32 @@ def quote_repair(raw, vt, call_model):
         return raw, rec, [f"quote-repair cap-out: {len(still)} span(s) still fail after the "
                           f"single ruled round — the draw is dead (V11.2 cap 1): "
                           + " | ".join(still)]
+    # RULING 4 (rides Ruling 1, success path only, no gate logic): record every quoted span
+    # the repair CHANGED, tagged with the ref it now matches, so a human byte-confirms the
+    # introduced wording against the live verse at ship (never a silent substitution).
+    rec["repair_introduced"] = _repair_introduced_spans(raw, new, vt)
     return new, rec, []
+
+
+def _repair_introduced_spans(pre_raw, post_raw, vt):
+    """RULING 4 (2026-07-13, ENGINE_LESSONS #21 + silent-fallback rule): the quoted spans the
+    repair CHANGED (content differs pre vs post), each tagged with the ref it now MATCHES under
+    the ruled allowances. The spans-only guard has already proven the skeletons identical, so
+    pre/post quoted spans align 1:1 in order. Read-only report — surfaced at apply so the human
+    reads the live verse before shipping; changes no gate logic. vt = the same live-lookup dict
+    the gate used, so the MATCH is re-gated against the exact texts, not re-parsed refs."""
+    pre = [s for s, _, _ in _quote_spans(pre_raw)]
+    post = [s for s, _, _ in _quote_spans(post_raw)]
+    normed = {k: probe_norm(v) for k, v in vt.items() if v}
+    out = []
+    for before, after in zip(pre, post):
+        if before == after:
+            continue
+        qn = probe_norm(_EMPH_MARK_RE.sub("", after))
+        ref = next((f"{k[0]} {k[1]}:{k[2]}" for k, vn in normed.items()
+                    if _match_quote(qn, vn)), "no cited verse")
+        out.append({"before": before, "after": after, "matched": ref})
+    return out
 
 
 def _coverage_audit(conn, sid, raw, senses_block):
@@ -2160,7 +2207,7 @@ def _local_refs(raw, qs, qe):
 _PAIR_GAP_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)\s+$|\s*,\s*$")
 
 
-def probe1_verbatim(raw, verse_texts, notes=None):
+def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
     """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
     G2805 ×3). Every quoted span must match verses.text of a verse cited on the card under
     the ruled allowances; a span matching exactly one ref of a multi-ref local list must be
@@ -2168,7 +2215,13 @@ def probe1_verbatim(raw, verse_texts, notes=None):
     card-cited ref (own live lookups at the call site — the fed sample can never cover
     Range/gloss/repair-integrated refs). A span matching nothing while any cited text is
     unavailable is NOT-RUN (loud, and it blocks apply) — never a pass, never a silent fail.
-    Returns (fails, notruns)."""
+    Returns (fails, notruns).
+    FAIL-KIND TAGGING (Ruling 1 / ENGINE_LESSONS #61): if a list is passed as fail_kinds,
+    each fail is tagged AT SOURCE — index-parallel to fails — as "wording" (matches no cited
+    verse, fixable in-quote) or "anchoring" (right words, wrong ref, unfixable in-quote). The
+    tag is emitted by the SAME branch that emits the fail, so the two can never drift; the
+    quote-repair pass routes on it (only wording fails ever reach the model). Same optional
+    out-param shape as notes — every existing caller that omits it is unaffected."""
     fails, notruns = [], []
     missing = [k for k, v in verse_texts.items() if v is None]
     normed = {k: probe_norm(v) for k, v in verse_texts.items() if v}
@@ -2206,6 +2259,8 @@ def probe1_verbatim(raw, verse_texts, notes=None):
                 fails.append(
                     f'quote "{label}" matches NO cited verse under the ruled allowances '
                     f'(verbatim-quote gate)')
+                if fail_kinds is not None:
+                    fail_kinds.append("wording")
             continue
         local, trailing = _local_refs(raw, qs, qe)
         if len(local) >= 2:
@@ -2220,6 +2275,8 @@ def probe1_verbatim(raw, verse_texts, notes=None):
                     f'quote "{label}" carries the wording of {hit[0][0]} {hit[0][1]}:{hit[0][2]} '
                     f'but is anchored primary on {expected[0]} {expected[1]}:{expected[2]} '
                     f'(anchoring rule)')
+                if fail_kinds is not None:
+                    fail_kinds.append("anchoring")
     return fails, notruns
 
 
@@ -3073,6 +3130,11 @@ def main():
                       f"(round(s): {qrec['rounds']}, {qrec['prompt_ver']}) — review THIS "
                       f"card below (FULL battery owed as if new, lesson #50 b); a later "
                       f"--apply ships these bytes.")
+                # RULING 4: surface every repair-CHANGED span loud, so the reviewer reads the
+                # live verse and byte-confirms the introduced wording before it ships.
+                for ch in qrec.get("repair_introduced", []):
+                    print(f"    repair-introduced; re-gated MATCH vs {ch['matched']}: "
+                          f'"{ch["before"]}" → "{ch["after"]}" — byte-confirm vs the live verse.')
             else:
                 print("  --quote-repair: quote gate clean — quote repair did not fire.")
 

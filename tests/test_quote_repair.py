@@ -251,6 +251,65 @@ def main():
     assert not any("spans-only" in p for p in probs2), f"F2: no-op path breached the guard: {probs2!r}"
     assert len(cm2.msgs) == 1
 
+    # ── 9. RULING 1 (#61) DETERMINISTIC PRE-ROUTING: the quote gate emits two fail
+    # kinds and only the fixable WORDING kind reaches the model; the unfixable
+    # ANCHORING kind (right words, wrong ref) is held back — the model never sees a
+    # fail whose only fix is out-of-quote. Real G236 mixed-card bytes (banked key
+    # 59667b81, F1-F3 RE-RUN): "changes this word" (Ezr 6:11-on-6:12, anchoring) +
+    # "changing over" (matches no verse, wording). Verse bytes = JP live reads
+    # 2026-07-13. Red-first: before the split the old quote_repair fed BOTH lines. ──
+    G236MIX_VT = {
+        ("Ezr", 6, 11): "And from me was rendered a decree, that every man who ever changes this word the timber of his house shall be demolished, and a stake being straight up he shall be pitched upon it, and his house will be for ravaging.",
+        ("Ezr", 6, 12): "And the God of whom encamps with his name there, he shall eradicate every king and people who should stretch out his hand to change and remove from view the house of God, that one in Jerusalem. I Darius rendered the decree. Carefully let it become!",
+        ("Dan", 4, 32): "And from men they shall banish you, and with wild beasts your dwelling shall be, and grass as an ox they shall feed you, and seven seasons shall change over you, until of which time you shall know that the highest dominates the kingdom of men, and to whom ever it seems good to give it.",
+    }
+    G236MIX = ('Ezra threatens anyone who "changes this word" (Ezr 6:12; Ezr 6:11). '
+               'The repeated seasons "changing over" the king mark successive intervals '
+               '(Dan 4:32).')
+    fails, _ = B.probe1_verbatim(G236MIX, G236MIX_VT)
+    assert len(fails) == 2, fails                            # the mixed card fires both kinds
+    assert any("anchored primary" in f for f in fails) and any("matches NO" in f for f in fails), fails
+
+    # the mock fixes ONLY the wording span (changing over -> Dan 4:32's own words);
+    # the anchoring span it must NEVER be asked to touch.
+    G236MIX_FIX = G236MIX.replace('"changing over"', '"seven seasons shall change over you"')
+
+    class RouteMock:
+        """Records every findings block it was fed; returns the wording-fixed card."""
+        def __init__(self, out):
+            self.out, self.msgs = out, []
+        def __call__(self, msg):
+            self.msgs.append(msg)
+            return self.out
+
+    rm = RouteMock(G236MIX_FIX)
+    final, rec, probs = B.quote_repair(G236MIX, G236MIX_VT, rm)
+    assert len(rm.msgs) == 1, rm.msgs
+    assert "changing over" in rm.msgs[0], "the wording fail was not fed to the model"
+    assert "anchored primary" not in rm.msgs[0], "the anchoring fail LEAKED to the model"
+    # outcome: the held-back anchoring fail resurfaces on the re-run -> clean cap-out
+    # park, NOT a guard breach; the cached card is untouched (same ship outcome as the
+    # old breach-park, breach surface removed).
+    assert probs and any("cap" in p.lower() for p in probs), probs
+    assert not any("spans-only" in p for p in probs), ("routed to a breach, not a park", probs)
+    assert final == G236MIX
+
+    # ── 10. ANCHORING-ONLY card: nothing fixable in-quote -> the model is NEVER
+    # called (deterministic no-op), the card parks with no refused_post to bank
+    # (nothing existed). Real G236 anchoring span alone. Red-first: the old code fed
+    # the anchoring fail to the model, so `never2` would have raised. ──
+    G236ANCHOR = 'Ezra threatens anyone who "changes this word" (Ezr 6:12; Ezr 6:11).'
+    G236ANCHOR_VT = {k: G236MIX_VT[k] for k in (("Ezr", 6, 11), ("Ezr", 6, 12))}
+
+    def never2(_msg):
+        raise AssertionError("model called on an anchoring-only card")
+
+    final, rec, probs = B.quote_repair(G236ANCHOR, G236ANCHOR_VT, never2)
+    assert final == G236ANCHOR and probs, probs
+    assert any("anchoring" in p.lower() for p in probs), probs
+    assert rec and rec.get("anchoring_only") and "refused_post" not in rec, rec
+    assert B.bank_refused_repair("G236", "quote", rec) is None      # nothing to bank
+
     print("test_quote_repair: ok")
 
 

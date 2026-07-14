@@ -360,6 +360,40 @@ def main():
     assert len(fails) == 1 and 'they changed their gods' in fails[0], (fails, notes)
     assert not any('EXEMPTED' in n for n in notes), notes
 
+    # ═══ PROBE 1 — FAIL-KIND TAGGING (Ruling 1 / ENGINE_LESSONS #61, 2026-07-13):
+    # probe1_verbatim tags each fail AT SOURCE as "wording" (matches no verse —
+    # fixable in-quote) or "anchoring" (right words, wrong ref — unfixable in-quote)
+    # via an optional parallel fail_kinds list, index-aligned to fails. The tag is
+    # written by the SAME branch that emits the fail (not a re-derived copy), so the
+    # classifier and the fail can never drift. Card = the REAL G236 mixed card's two
+    # spans (banked key 59667b81, F1-F3 RE-RUN): "changes this word" (Ezr 6:11-on-6:12,
+    # anchoring) + "changing over" (matches no verse, wording). Verse bytes = JP live
+    # reads 2026-07-13. Red-first: before fail_kinds existed this raised TypeError. ═══
+    G236MIX_VT = {
+        ("Ezr", 6, 11): "And from me was rendered a decree, that every man who ever changes this word the timber of his house shall be demolished, and a stake being straight up he shall be pitched upon it, and his house will be for ravaging.",
+        ("Ezr", 6, 12): "And the God of whom encamps with his name there, he shall eradicate every king and people who should stretch out his hand to change and remove from view the house of God, that one in Jerusalem. I Darius rendered the decree. Carefully let it become!",
+        ("Dan", 4, 32): "And from men they shall banish you, and with wild beasts your dwelling shall be, and grass as an ox they shall feed you, and seven seasons shall change over you, until of which time you shall know that the highest dominates the kingdom of men, and to whom ever it seems good to give it.",
+    }
+    raw_g236mix = ('Ezra threatens anyone who "changes this word" (Ezr 6:12; Ezr 6:11). '
+                   'The repeated seasons "changing over" the king mark successive intervals '
+                   '(Dan 4:32).')
+    kinds = []
+    fails, notrun = B.probe1_verbatim(raw_g236mix, G236MIX_VT, fail_kinds=kinds)
+    assert len(fails) == 2 and notrun == [], (fails, notrun)
+    assert len(kinds) == len(fails), (kinds, fails)         # index-parallel
+    ai = next(i for i, f in enumerate(fails) if "anchored primary" in f)
+    wi = next(i for i, f in enumerate(fails) if "matches NO" in f)
+    assert kinds[ai] == "anchoring", (kinds, fails)
+    assert kinds[wi] == "wording", (kinds, fails)
+    # the exact banked fail lines are reproduced (real bytes, not a paraphrase)
+    assert ('quote "changes this word" carries the wording of Ezr 6:11 but is anchored '
+            'primary on Ezr 6:12 (anchoring rule)') == fails[ai], fails[ai]
+    assert ('quote "changing over" matches NO cited verse under the ruled allowances '
+            '(verbatim-quote gate)') == fails[wi], fails[wi]
+    # the list stays OPTIONAL — every existing caller that omits it is unaffected.
+    f2, n2 = B.probe1_verbatim(raw_g236mix, G236MIX_VT)
+    assert f2 == fails and n2 == [], (f2, n2)
+
     # ═══ PROBE 2 — named-subject warn ═══
     # 2a MUST-FAIL, defect 1 (G1390 real bytes): Jehoiada absent from 2Ch 21:3.
     raw_d1 = ("Jehoiada's father distributing silver, gold, and shields to his sons (2Ch 21:3);")
