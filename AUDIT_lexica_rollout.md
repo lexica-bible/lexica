@@ -5419,3 +5419,41 @@ read not re-derived; one word/one command/one gate; no code edits. This doc-only
 invokes the STANDING EXEMPTION (doc-only close-out pre-cleared from the per-commit receipt — proposed
 in the PROCESS LEDGER above, JP-adopted under standing delegation + reviewer-confirmed this session);
 "doc-only, exemption invoked" stated in the commit message.
+**NEXT-SESSION OPENER — CC block (anchor-wall calibration checkpoint).** CHARTER: DESIGN pass to close
+the two F1–F3 holes the re-run exposed. Design + rulings only — no word runs/draws/floors unless the
+design itself calls for a red-first check on a banked card; output = a ruled design a later BUILD
+session implements. READ FIRST (in order): this "F1–F3 RE-RUN — FOUR WORDS, ALL PARKED" entry;
+ENGINE_LESSONS #58 (F2 no-op decline = two-instance pattern) / #59 (F3 anchor-wall misses cue-less
+emphasis scare-quotes) / #60 (spans-only forbids the legit ref-split); the "F1–F3 QUOTE-REPAIR
+OUTPUT-CONTRACT BUILD" entry (what F1/F2/F3 are + the ledgered meta:v2 laundering risk you must NOT open
+while widening F3); HANDOFF top pointer. FOUR BANKED CARDS (red-first evidence, draws/history/):
+G236_quote_refused_59667b81.json · G227_quote_refused_8258771a.json · G1390_quote_refused_bda7de94.json
+· G162_quote_refused_aa064d41_2.json. SCOPE (three design problems + one standing note): (1) F2 decline
+hardening — two shapes, likely two fixes (G1390 reworded UNQUOTED prose = wrong edit; G162 moved a
+LUMPED ref = right edit forbidden by spans-only); design how the decline path gets taken reliably, test
+each shape red-first on its banked card. (2) F3 anchor-wall widening — catch a cue-less own-word
+emphasis scare-quote (G1390's "giving") WITHOUT opening the meta:v2 laundering hole; G227 is the working
+reference (cue-bearing exemption fires); any wall change proven red-first on G1390's byte AND still-green
+on G227's exempt spans + the frozen must-fail fixtures. (3) G162 structural finding — a lumped-ref
+misanchor has a safe mechanical fix quote-repair can never apply; RULE it: force a no-op on that shape,
+or add a separate re-anchor path with its own byte-gate. (4) Standing note (fold into whatever ships): a
+repair that INTRODUCES verse wording needs its own byte-check before any apply. Shelf, untouched:
+probe-2 over-firing (Peter/8-verses) — no detector edit without its own red-first byte. LOCKS: frozen V9
+prompt UNTOUCHED · no detector/prompt edit without a red-first byte · a detector/prompt edit is a JP
+checkpoint (receipt before commit) · no-crossing per-commit (doc-only close-out pre-cleared — state
+"doc-only, exemption invoked") · R1 · R1-b · R2-a · R2-b · show-code-before-changing · JP runs all PA
+commands · payload discipline (reposts inline, ASCII-escape non-ASCII). STATE AT OPEN: origin/master =
+PA = 9ca33ce (or descendant) · scoreboard 2/10ʰ · 7/15 · block CONDITIONALLY LIFTED (proven paths
+lifted; F2 gap + F3 hole held open until this checkpoint closes them — JP ruled to KEEP the conditional
+framing, not veto) · nothing mid-flight.
+**NEXT-SESSION OPENER — reviewer block.** Role: adjudicate the anchor-wall calibration design under JP's
+standing delegation, every ruling against the BANKED BYTES, not CC's paraphrase (#52 made structural).
+DESIGN session — pressure-test each proposed fix against its red-first card before it's ruled sound.
+Enforce: F2 fixes — each of the two shapes (G1390 wrong-reword, G162 forbidden-ref-move) reproduced
+red-first on its own banked card; a fix addressing only one shape must say so. F3 widening — proven to
+newly-catch G1390's "giving" byte AND leave G227's cue-bearing exemption green AND not open the ledgered
+meta:v2 laundering hole (all three, or it doesn't ship). G162 re-anchor decision — if a re-anchor path
+is chosen it needs its own byte-gate designed in, not assumed. Any detector/prompt edit = a JP
+checkpoint (receipt before commit, no-crossing per-commit). You author no receipts CC can synthesize
+(R2-b); named JP checkpoints survive standing delegation. NEXT after this checkpoint: a BUILD session
+implementing whatever this design rules, then a re-run of the held-open words on the fixed pipeline.
