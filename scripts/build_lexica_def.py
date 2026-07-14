@@ -2181,6 +2181,10 @@ NEARMATCH_BAND_LO, NEARMATCH_BAND_HI = 0.62, 0.75
 # any real drift re-warns (ruling: "score drift re-warns"). Grows one entry per adjudication.
 _META_ADJUDICATED = {
     "this [is] true [that] you have said": (0.638,),   # G227, upheld 2026-07-14 (Joh 4:18 display)
+    "Heaven/heavens": (0.720,),                        # G3772, upheld 2026-07-14 (gloss-notes label;
+                                                       # slash-split of ONE gloss's two number-forms,
+                                                       # both in a "heaven of heavens" verse — the run
+                                                       # is an artifact, not verse-wording reproduction)
 }
 
 # meta:v6 DISCRIMINATOR (scope-b (b) ruling, 2026-07-14): an in-band cue exemption WARNS only
@@ -2495,8 +2499,12 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None, warns=None):
                                 f'not a laundered near-quote')
                         continue
                     if notes is not None:
-                        tag = (f'IN band, single lemma-gloss inflection (run {run} < 2)' if in_band
-                               else f'near-match {ms:.3f} out of band')
+                        if not in_band:
+                            tag = f'near-match {ms:.3f} out of band'
+                        elif run >= 2:                       # registered adjudicated-upheld residual
+                            tag = f'IN band run {run}, adjudicated-upheld residual {ms:.3f}'
+                        else:
+                            tag = f'IN band, single lemma-gloss inflection (run {run} < 2)'
                         notes.append(
                             f'quote "{label}" EXEMPTED as metalinguistic mention ({META_VER} '
                             f'cue "{pat}", no verse match, no ref anchor, {tag}) — '

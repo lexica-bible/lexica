@@ -5728,12 +5728,23 @@ inflection (0.667, run1→NOTE), 25 CLOSURE (pure function words→0 content tok
 (full reorder ~1.0→OUT of band→NOTE, reddens if the boundary flips). Synthetic, non-calibration
 (fixture-21 status); the 13 sweep spans are EVIDENCE, never fixtures. `captivating` (v11 probes)
 reverted v5-WARN→v6-NOTE (run1). All 22 curated tests + v11 probes GREEN.
-**PENDING (ruled sequence):** JP pulls → `--sweep` RE-READ under meta:v6 (PREDICTION on record:
-most single-word glosses → note; genuine verse-run reproductions e.g. "things he did/exercised" if
-the verse reads "…things which he did" → stay warns) → owed-adjudication re-read for `sets-of-change`
-(0.696, G236) + `captivating` (0.700, G162): clear-by-design if routed to note, else one-span
-adjudication → then G162/G1390 under meta:v6. **HELD:** rebuild/apply of survivors, G162/G1390, G236
-close. Zero spend this build.
+**RE-SWEEP DONE (v6):** blast radius 12 → 1. Per-span clearing VERIFIED (not just counted):
+`shall/should` via 0 content tokens (function closure); `arising`/`come upon`/`what are you
+enduring?`/`fraternal` via single content token (note always); 7 two-token spans via verse-lacks-
+the-run. CC per-span prediction was BACKWARDS on the borderline pair (predicted `Heaven/heavens`
+clears + `things he did/exercised` stays; the reverse happened — guessed verse contents, logged as
+why per-span verification was ordered). **SURVIVOR G3772 `Heaven/heavens` 0.720 run 2 — ADJUDICATED
+UPHELD + REGISTERED** (`_META_ADJUDICATED` @ 0.720; gloss-notes label, slash-split of one gloss's
+two number-forms both in a "heaven of heavens" verse — artifact run, not verse-wording). First
+earned warn; registry working as designed (earned span-by-span, receipted). Registry-suppression
+fixture 27 added (run≥2 registered → note); note-tag bug fixed (registered residual was mislabeled
+"inflection run<2"). **SUB-PATTERN FLAGGED + auto re-open trigger** (same-word-inflection slash X/Xs
+→ spurious 2-token run; a SECOND such warn re-opens the collapse-same-stem question). HYPHEN BYTE
+VERIFIED: `content_tokens("sets-of-change")` = one token (only slashes split), not inference.
+**VERIFICATION ORDERED before owed spans marked cleared:** offline `--card` re-read under v6 of
+G236 `sets-of-change` + G162 `captivating` archived cards — paste bytes, don't infer.
+**PENDING:** owed re-read → G236 closes on result → G162/G1390 under v6 (translated predictions
+logged first). **HELD:** rebuild/apply of survivors, G162/G1390, G236 close. Zero spend.
 
 ### META:V5 IN-BAND CUE DEMOTE — BUILT + LANDED; LIVE SWEEP + 2 ADJUDICATIONS PENDING (2026-07-14)
 **RULING (scope-b, reviewer, standing delegation):** neither pole — the cue path is NOT sovereign

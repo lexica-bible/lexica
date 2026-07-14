@@ -580,6 +580,22 @@ def main():
     assert warns == [], warns                    # out of band -> never reaches the run check
     assert notes and "out of band" in notes[0], notes
 
+    # 27. REGISTRY SUPPRESSION (v6) -- an ADJUDICATED-upheld span with run >= 2 does NOT re-warn at
+    #     its ruled score. Real entry: G3772 "Heaven/heavens" @ 0.720 (gloss-notes label; slash-split
+    #     of one gloss's two number-forms). Synthetic verse engineered to reproduce 0.720 with BOTH
+    #     forms present (run 2). This is the registry working under v6 for a run>=2 case; drift off
+    #     0.720 would re-warn (round-3 keyed).
+    HV_CARD = 'The gloss "Heaven/heavens" is formally adequate for both senses here.'
+    HV_VT = {("Deu", 10, 14): "over earth and heavens high God heavens above heaven glory host"}
+    assert round(B._target_exists_score(_pn("Heaven/heavens"),
+                 {k: _pn(v) for k, v in HV_VT.items()}), 3) == 0.720
+    assert B._verse_run_content(_pn("Heaven/heavens"),
+                                {k: _pn(v) for k, v in HV_VT.items()}) == 2
+    notes, warns = [], []
+    B.probe1_verbatim(HV_CARD, HV_VT, notes=notes, warns=warns)
+    assert warns == [], warns                    # registered @ 0.720 -> suppressed despite run 2
+    assert notes and "Heaven/heavens" in notes[0] and "residual" in notes[0], notes
+
     print("test_quote_repair: ok")
 
 
