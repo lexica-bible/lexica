@@ -1,23 +1,25 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = ANCHOR-WALL CALIBRATION CHECKPOINT** (the design pass that closes the two F1–F3
-> holes the RE-RUN exposed). The F1–F3 RE-RUN is DONE (2026-07-13): all four parked words re-run on the
-> fixed quote-repair pipeline, ALL PARKED — 0 shipped / 3 parked-real (G236 Ezr 6:11-on-6:12, G227 Job
-> 42:7-on-42:8, G162 two paraphrase spans + Isa 49:24/25 lumped-ref, each byte-confirmed) / 1
-> parked-on-pipeline (G1390, card status UNDETERMINED). F1–F3 is PROVEN on the fixable-span path
-> (G236/G227/G162's clean in-quote fixes) + the F3 design-target exemption (G227 same-key 3→2), and
-> HOLED on two: F2's no-op decline is a TWO-INSTANCE pattern (G1390 wrong-reword + G162
-> correct-but-forbidden ref-move — different fixes) and F3's anchor-wall misses cue-less emphasis
-> scare-quotes (G1390's "giving"). **BLOCK = CONDITIONALLY LIFTED** (reviewer, standing delegation; JP
-> MAY VETO the conditional framing): lifted for the proven paths, with the F2 gap + F3 hole as named
-> open items gating the checkpoint. The checkpoint inherits FOUR banked refused-repair artifacts
-> (draws/history/G###_quote_refused_*.json) + the sharpened taxonomy: F2 decline hardening (two shapes)
-> · F3 anchor-wall widening (cue-less emphasis quotes, without opening the ledgered meta:v2 laundering
-> hole) · G162's structural finding (a lumped-ref re-anchor path with its own byte-gate — design input,
-> NOT a bug) · the standing note that a repair which INTRODUCES verse wording needs its own byte-check
-> before apply. Full record = AUDIT entry **"F1–F3 RE-RUN — FOUR WORDS, ALL PARKED"** + ENGINE_LESSONS
-> #58/#59/#60 (open from there, never this line). Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation LIVE
-> (`bank_refused_repair`, b5fa87d).
+> **NEXT SESSION = QUOTE-REPAIR CALIBRATION BUILD** (implements the anchor-wall checkpoint's ruled
+> design). The ANCHOR-WALL CALIBRATION CHECKPOINT is DONE (2026-07-13, DESIGN RULED, reviewer-approved
+> under standing delegation): four rulings close the two F1–F3 holes the RE-RUN exposed. **THE HINGE:**
+> `probe1_verbatim` emits two structurally distinct fails — WORDING (`matches NO cited verse`, fixable
+> in-quote) vs ANCHORING-RULE (`carries the wording of A … anchored primary on B`, unfixable in-quote by
+> construction). Both re-run breaches came from feeding the anchoring kind to the model. **RULING 1 (F2)**
+> = deterministic pre-routing: kind-tag fails from the ONE production probe; wording → model repair,
+> anchoring → never the model (park). Removes both breach shapes at the right layer. **RULING 2 (F3)** =
+> meta:v3 additive own-word exemption (single word + own out-of-quote vocabulary + not quote-anchored →
+> exempt; non-launderable, disjoint from the cue path). **RULING 3 (G162)** = park now, deterministic
+> re-anchor path SPECIFIED-not-built (build on recurrence). **RULING 4** = repair-introduced wording made
+> LOUD + byte-confirmed before apply. **BUILD = THREE JP checkpoints, each red-first** (Ruling 1 routing ·
+> Ruling 2 meta:v3 · the prompt-sharpen split OUT of Ruling 1), receipt before commit; Ruling 4 rides
+> Ruling 1's build; frozen V9 untouched. G236 mixed card must be ONE red-first fixture proving both halves.
+> Build inputs (G1390 + G162 banked windows) are paste-ready in the audit — **GATE NOT YET REACHED, do
+> NOT run those reads until the build session asks.** Full record = AUDIT entry **"ANCHOR-WALL CALIBRATION
+> CHECKPOINT — DESIGN RULED"** + ENGINE_LESSONS #58/#59/#60 (holes) + #61 (the fail-kind routing layer);
+> open from there, never this line. Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation LIVE
+> (`bank_refused_repair`, b5fa87d). The four banked refused-repair artifacts
+> (draws/history/G###_quote_refused_*.json) inherit into the build.
 > **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
 > into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
 > DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption

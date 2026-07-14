@@ -5457,3 +5457,85 @@ is chosen it needs its own byte-gate designed in, not assumed. Any detector/prom
 checkpoint (receipt before commit, no-crossing per-commit). You author no receipts CC can synthesize
 (R2-b); named JP checkpoints survive standing delegation. NEXT after this checkpoint: a BUILD session
 implementing whatever this design rules, then a re-run of the held-open words on the fixed pipeline.
+
+### ANCHOR-WALL CALIBRATION CHECKPOINT — DESIGN RULED (2026-07-13; reviewer-adjudicated under JP
+### standing delegation; DESIGN pass — no code, no word runs, no draws, nothing committed but docs).
+### Closes the two F1–F3 holes the RE-RUN exposed (ENGINE_LESSONS #58/#59/#60). Output = a ruled
+### design a BUILD session implements. Frozen V9 prompt untouched. PA = 9ca33ce throughout.
+**THE HINGE (grounds all four rulings).** The quote gate `probe1_verbatim` emits TWO structurally
+distinct fail messages, and the whole design turns on the split: (a) `matches NO cited verse …`
+(build_lexica_def.py:2206) = a WORDING miss (paraphrase, plural/singular drift, or an own-word) —
+fixable in-quote; (b) `carries the wording of A … anchored primary on B (anchoring rule)`
+(build_lexica_def.py:2219) = the words ALREADY match a verse, only the ref is wrong — UNFIXABLE
+in-quote by construction (the only fix moves a ref, out-of-quote). Both re-run breach shapes came
+from feeding kind-(b) fails to a model that then reached outside the quote marks.
+**RULING 1 — F2 decline hardening = DETERMINISTIC PRE-ROUTING (APPROVED).** Before the repair call,
+split the gate's fails by kind, tagged AT SOURCE from the one production probe (a classification, not
+a re-derived copy — build session picks least-ripple mechanism: structured fail records or a parallel
+kinds list). Kind-(a) wording fails → the model repair as today (the only thing it can safely do).
+Kind-(b) anchoring-rule fails → NEVER sent to the model; route to Ruling 3. A card whose ONLY fails
+are kind-(b) → deterministic no-op, card parks, model never called (zero breach surface). Removes both
+breach shapes at the root rather than by prompt persuasion — the right layer. CONSISTENCY with the
+a58a4b5 "keep feeding mis-anchor flags" ruling is PRESERVED: every fixable WORDING span on a
+mis-anchor-flagged card still feeds (G236 `changes of apparels`→`apparel` is kind-(a), fed+fixed); only
+the specific unfixable anchoring SPAN is held back (G236 `changes this word`, Ezr 6:11-on-6:12). Same
+ship outcome on all four banked cards, breach removed. BELT-AND-SUSPENDERS (prompt): sharpen
+`QUOTE_REPAIR_PROMPT` to name the forbidden-but-tempting moves (never edit unquoted prose even with a
+look-alike word · never add/move/split a ref · only-fix-is-outside-the-quotes → return unchanged) —
+APPROVED but it is a PROMPT edit = its OWN JP checkpoint + red-first byte, does NOT ride Ruling 1's
+checkpoint. RED-FIRST (build): the G236 MIXED card must prove BOTH halves in ONE fixture (wording span
+still fed + anchoring span held back), not two synthetic ones — reviewer-added condition.
+**RULING 2 — F3 anchor-wall widening = meta:v3 ADDITIVE own-word class (APPROVED, base variant).**
+F3 is still needed under Ruling 1 because G1390's "giving" is kind-(a) (matches no verse) and would be
+FED to the model as fixable-looking; only the gate can stop it. Add ONE exempt class to meta:v2,
+leaving the cue path untouched — a scare-quoted span is exempt when ALL hold: (1) matches no cited verse
+(as today), (2) it is a SINGLE word, (3) that word appears in the card's own prose OUTSIDE quotation
+marks (reuse `_strip_quoted`, build_lexica_def.py:2242 — the tell it's the card's own vocabulary), (4)
+NOT quote-anchored (no ref in ATTRIBUTION position — trailing bracket within ~12 chars of the close, or
+an immediate `Ref reads/says:` lead-in; clause refs elsewhere do NOT count). LOUD note, as every
+exemption. NON-LAUNDERABLE because it is disjoint from the cue path (single-word only) and requires the
+card's own out-of-quote vocabulary, which verse wording can't satisfy without already being visible
+prose; the must-fails 3c (`they changed their gods`, real Jer 2:11 misquote) and 1v (`other item`) are
+MULTI-word → untouched; G227's cue-bearing exemptions are multi-word → untouched. GLOSS-MATCH variant
+(require the word to be a form of the headword gloss/lemma) HELD as optional hardening — needs a new
+probe-1 input for zero demonstrated need; recurrence can earn it. SHIP CONDITION (one test run): G1390
+"giving" byte newly exempt (was FAIL) · G227 3a/3b spans still exempt · 3c/1v/`other item`/1w/1y still
+fail.
+**RULING 3 — G162 lumped-ref = PARK now, re-anchor path SPECIFIED-not-built (APPROVED).** The
+lumped-ref anchoring fail routes out of the repair (Ruling 1) → card parks. NOT building a new gated
+re-anchor channel for one instance (project's standing log-don't-build pattern). Full spec for a future
+BUILD session on RECURRENCE — a DETERMINISTIC transform (no model) with its OWN byte-gate, since the fix
+is an out-of-quote ref move the spans-only guard forbids by construction (#60): TRIGGER = an
+anchoring-rule fail where both refs are already cited in one shared bracket and each quote matches
+EXACTLY ONE distinct ref by position; TRANSFORM = split the shared bracket into per-quote parentheticals,
+one ref per quote (enforces the card's own one-quote-one-ref convention); BYTE-GATE = re-run
+`probe1_verbatim`, every previously-lumped quote now anchors clean, ZERO new fails anywhere, skeleton
+identical EXCEPT the single edited bracket region (a bounded, LEDGERED exception to spans-only — the only
+sanctioned out-of-quote edit, and it is gated, not a spans-only weakening). Any condition fails →
+abandon, park.
+**RULING 4 — repair-introduced verse wording made LOUD (APPROVED).** The byte-check ALREADY exists
+(`probe1_verbatim` re-runs on the repaired card vs live verse texts, build_lexica_def.py:1952); the gap
+is VISIBILITY. Record every span the repair CHANGED (post≠pre inside a quote) as `repair-introduced;
+re-gated MATCH vs <ref>` in the draw record + surface it in the apply output, so at ship the human
+byte-confirms the introduced wording with a live verse read (JP) — never a silent substitution (rides
+lesson #21 + the silent-fallback rule). NO gate logic changes under this ruling — the draw-record field
++ apply-output surface are the whole deliverable; it RIDES Ruling 1's build.
+**SHELF (untouched, one flag):** probe-2 over-firing (Peter/8-verses) — not this session; a detector
+touch needs its own red-first byte we don't have.
+**BUILD-SESSION CHECKPOINT STRUCTURE (reviewer-confirmed):** THREE separate JP checkpoints, each
+red-first, receipt before commit — (1) Ruling 1 deterministic pre-routing; (2) Ruling 2 meta:v3;
+(3) the prompt-sharpen (split OUT of Ruling 1). Ruling 4 is doc/output only and rides Ruling 1's build.
+Frozen V9 untouched throughout.
+**BUILD-SESSION INPUTS (paste-ready, GATE NOT YET REACHED — JP does NOT run these until the build
+session opens and asks; reviewer instruction):** the G227/G236 bytes are already pinned as fixtures in
+tests/test_v11_probes.py; the G1390 + G162 red-first fixtures need those two banked windows —
+`find ~/bible-db -name 'G1390_quote_refused_*.json' -exec python3 -m json.tool {} \;` and the G162
+twin. Reads only.
+**PROCESS.** Reviewer adjudicated under standing delegation; rulings applied as CC recommended with two
+reviewer refinements folded in (G236 mixed-card single fixture · prompt-sharpen split to its own
+checkpoint). R2-b honored — reviewer's pasted adjudication is the ruling; CC authored no receipt. This
+doc-only close-out invokes the STANDING EXEMPTION (doc-only close-out pre-cleared from the per-commit
+receipt); "doc-only, exemption invoked" stated in the commit message. Lessons = ENGINE_LESSONS #58/#59/
+#60 (holes) + #61 (the fail-kind routing layer, added this session). NEXT = a BUILD session implementing
+Rulings 1/2/prompt (three checkpoints) + Ruling 4, then a re-run of the held-open words on the fixed
+pipeline.

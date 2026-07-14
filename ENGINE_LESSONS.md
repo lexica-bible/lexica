@@ -861,3 +861,21 @@ both drifting from the doc.
     OR add a separate re-anchor path with its own byte-gate. A re-anchor channel resolves G162's shape
     and does nothing for G1390's — the two F2-gap shapes (#58) need different fixes. *(audit: F1–F3
     RE-RUN close-out, 2026-07-13; G162 PARKED entry)*
+
+61. **The fail's KIND is the routing layer — an unfixable-in-quote defect must never reach the model,
+    and the gate already distinguishes the kinds at source.** The anchor-wall calibration checkpoint
+    ruled #58/#59/#60's fixes, and the load-bearing insight was that `probe1_verbatim` emits two
+    structurally distinct fails: a WORDING miss (`matches NO cited verse` — fixable in-quote) and an
+    ANCHORING-RULE miss (`carries the wording of A … anchored primary on B` — the words already match a
+    verse, so the ONLY fix moves a ref, out-of-quote → unfixable in-quote by construction). Both re-run
+    breach shapes (#58) came from feeding the anchoring kind to a model with no legal move, which then
+    reached outside the quote marks (wrong-reword) or moved the ref (right-but-forbidden). RULING:
+    kind-tag the fails from the ONE production probe and route — wording → model repair, anchoring →
+    never the model (park, or the deterministic re-anchor path of #60). This removes the breach surface
+    DETERMINISTICALLY, at the right layer, instead of by prompt persuasion; the prompt sharpen is
+    belt-and-suspenders, not the fix. Generalizes the #9 deterministic/model boundary to the repair
+    feed: the model only ever does in-quote wording repair, which is all it can safely do. F3's meta:v3
+    own-word exemption (#59) is the SAME move upstream — stop the gate firing on the card's own single
+    vocabulary word so it never becomes a fed wording-fail at all. → v2: the repair feed is filtered by
+    fail-kind, not handed the raw gate output. *(audit: ANCHOR-WALL CALIBRATION CHECKPOINT — DESIGN
+    RULED, 2026-07-13; Rulings 1–3)*
