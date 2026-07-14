@@ -136,8 +136,7 @@ def main():
           "(fragility band %.2f-%.2f) ---" % (BAND_LO, BAND_HI))
     band_hits = []
     for qn, score in score_no_match_spans(raw, normed):
-        rel = (">= t  (fed as wording)" if score >= B.NEARMATCH_THRESHOLD
-               else "<  t  (own-paraphrase branch)")
+        rel = ">= t" if score >= B.NEARMATCH_THRESHOLD else "<  t"
         in_band = BAND_LO <= score <= BAND_HI
         flag = "   <-- IN BAND" if in_band else ""
         if in_band:
@@ -145,6 +144,14 @@ def main():
         label = qn if len(qn) <= 55 else qn[:52] + "..."
         print('  %.3f  %s  "%s"%s' % (score, rel, label, flag))
     print("  threshold t = %.3f" % B.NEARMATCH_THRESHOLD)
+    # THRESHOLD POSITION ONLY -- this table is NOT a fate. A span's ACTUAL verdict is in the
+    # gate section above: an upstream rule (metalinguistic cue / own-word) can exempt a span
+    # BEFORE the near-match test runs, so a score here does not by itself mean fed-as-wording
+    # or own-paraphrase. Only a span that survives the upstream exemptions is decided by t.
+    # The band watch still lists every in-band score -- a cue-exempted span sitting in-band is
+    # exactly the "is the exemption masking a near-quote?" case worth a human look.
+    print("  (threshold position only; cross-read each span against the gate verdict above --\n"
+          "   an upstream exemption can decide a span regardless of its score here.)")
 
     print("\n--- summary ---")
     print("fails: %d | exempt/notes: %d | not-run: %d | in-band spans: %d"
