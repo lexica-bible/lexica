@@ -5707,3 +5707,43 @@ LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeli
 **STATE: no code changed; origin = local = PA = `94bcd22` code state; this close-out commit is
 doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
 until the near-match BUILD lands and the four words re-run clean.**
+
+### OWN-PARAPHRASE NEAR-MATCH GATE — BUILD LANDED (2026-07-14; CODE session, full receipt cycle;
+### committed dbea202, PA pulled + invariant tests green + reloaded. JP ran every PA read/deploy.)
+**WHAT LANDED** (`scripts/build_lexica_def.py`, `probe1_verbatim` no-match branch): a TARGET-EXISTS
+test, COMBINED score `_target_exists_score = max(_nearmatch_best (char-window best-similarity),
+_tokenset_containment (order-insensitive SET))`, both sides production `probe_norm`. `>= 0.664` →
+`wording` (fed); `< 0.664` → `unsourced` split three ways: EMPTY cited set OR attribution-anchored →
+FAIL + park (held from model); unanchored WITH a cited set → meta:v4 own-paraphrase EXEMPT (LOUD
+note). `nearmatch:v2` stamped in `probe_vers`. `quote_repair` holds `unsourced` like `anchoring`.
+**RULING CHAIN (reviewer-adjudicated, standing delegation):** (1) char-only BUILD **HALTED** — red-
+first vs the existing gate corpus showed char-ratio at t=0.727 scored a REAL G227 defect-6 reorder
+`bring forth judgment to validity` (all Isa 42:3 words, re-ordered) at 0.690 < cut → EXEMPTED it →
+the gate's founding class would SHIP. Also regressed `other item` (→exempt) and K2 (→park). (2)
+DESIGN **re-opened** — char-ratio is order-blind; added the token-SET leg (reorder = right words,
+wrong order → containment ~1.0). Neither leg subsumes the other. SET over multiset (multiset
+penalised K2's repeated "a" 0.600 vs set 0.750). (3) **PIN t=0.664** — midpoint of the FULLY-
+ENUMERATED near-match no-target residual pair (`quenched/crushed` 0.621 EXEMPT / `other item` 0.706
+must-refuse), enumerated by CATCH-LAYER (meta:v2/v3 catch most own-notation upstream; the near-match
+residual was just those two spans — measured, not sampled; that is what made the pin defensible
+where 0.727's n=2 was not).
+**TWO STANDING MUST-REFUSE MECHANISMS (written into code + commit):** (1) EMPTY cited set never
+exempts; (2) **`t <= 0.706` is a binding constraint on ALL future threshold changes** (raising t
+above 0.706 overturns `other item`'s must-refuse — a breach, not a tune). **FRAGILITY BAND 0.62–0.75
+on the COMBINED score** (squeeze 0.621/0.706/0.750): any in-band span = mandatory re-open; the watch
+is LIVE DURING ANY RUN (mid-run in-band span → stop before that card proceeds).
+**TESTS (red-first per fixture):** `test_quote_repair` fixtures 12–21 — score pins (both legs +
+combined, bytes), the three reviewer-named must-lands (reorder→wording; other-item real-card Gen 31:7
+driver 0.706 fed→cap→park; empty-VT→unsourced fail), and **fixture 21 = the token-leg guard**
+(synthetic scramble of REAL Isa 42:3 words, char 0.640/token 1.000/combined 1.000, proven RED against
+a char-only scorer, NOT a calibration point — excluded from all threshold/band math). `test_v11_probes`
+1a→wording/1v→empty-set fail. Red-first vs pre-build `92282e8` = AttributeError (feature absent).
+**Reviewer receipts on record:** BUILD submission APPROVED → HALT confirmed + design re-opened →
+discriminator shape + SET + pin 0.664 ruled → guard fixture APPROVED → final-green receipt → commit +
+deploy confirmed. = ENGINE_LESSONS #65 (calibrate across every defect class; enumerate residual by
+catch-layer; a redundant-but-load-bearing leg still needs a red guard).
+**NEXT (separate JP-gated checkpoint, real model spend, NOT pre-cleared):** four-word re-run.
+Predictions on record: reorders fed, own-paraphrase exempts loud, other-item-class fed→cap→park,
+anchoring parks unchanged (lead-in multi-ref, out of scope) and NOT breaches. Close = no breach on any.
+**STATE: origin = local = PA = `dbea202` (BUILD landed + deployed). Scoreboard unchanged 2/10ʰ · 7/15;
+conditional lift stays in force until the four words re-run clean. Frozen V9 untouched; no word ran.**

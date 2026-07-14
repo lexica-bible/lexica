@@ -925,3 +925,25 @@ both drifting from the doc.
     and every refusal preserves its bytes for diagnosis. That standing structure is what makes
     calibration rounds safe to run at all; keep it invariant while the feed logic evolves. *(source:
     reviewer ledger note, 2026-07-14; entered by direction at the design close)*
+
+65. **A discriminator calibrated on near-verbatim edits is BLIND to the class that scrambles the same
+    words — the calibration set must span every defect class the gate already catches, or the first
+    real member of the missing class ships.** The #63 target-exists test used char-ratio (difflib),
+    calibrated on the n=2 pair (`changing over` / `quenched/crushed`), both near-verbatim. It shipped
+    RED-FIRST-caught: run against the existing defect-5/6 gate corpus, char-ratio scored a real reorder
+    (`bring forth judgment to validity`, all of Isa 42:3's words re-ordered) at 0.690 — below the 0.727
+    cut — and EXEMPTED it as own-paraphrase. char-ratio is order-blind; a scrambled real quote and a
+    genuine own-paraphrase collide in the band. FIX (ruled): COMBINED score `max(char-window,
+    token-SET containment)` — token-set is order-insensitive, so any reorder scores ~1.0 and is fed;
+    neither leg subsumes the other (char carries inflection like `changing over` 0.833/token 0.500;
+    token carries reorders like 0.690/1.000). Two method lessons that made the RE-PIN defensible where
+    0.727 was not: (a) **enumerate the no-target residual by CATCH-LAYER, don't sample it** — meta:v2
+    (cue) + meta:v3 (own-word) catch most own-notation UPSTREAM, so the near-match layer's real residual
+    was just two spans (`quenched/crushed` 0.621 exempt / `other item` 0.706 must-refuse), fully mapped,
+    not a guessed distribution; the n-too-small fragility was structural, not statistical. (b) **a
+    redundant leg still needs a red guard** — at the pinned t=0.664 the token leg changes NO current-
+    corpus outcome (every real target clears 0.664 on char alone), so a synthetic heavy-scramble guard
+    fixture (char 0.640 < t, token 1.000; proven red against a char-only scorer) locks the leg's purpose
+    against silent deletion. A standing must-refuse verdict (`other item`) became a binding constraint
+    on the threshold itself (`t <= 0.706`), written into code + commit so a future tune can't overturn a
+    ruling. *(audit: OWN-PARAPHRASE NEAR-MATCH GATE — BUILD LANDED, 2026-07-14; commit dbea202)*

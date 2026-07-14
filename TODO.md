@@ -671,15 +671,17 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 ## Word cards / lexicon — open items
 
-- **OWN-PARAPHRASE CALIBRATION CHECKPOINT (design, open 2026-07-14) — the quote-repair lift's one
-  remaining open breach class.** The calibration BUILD landed (routing/meta:v3/prompt-sharpen) but the
-  four-word re-run left the lift NOT closed: G227 breached on `"quenched/crushed"` (the card's own
-  paraphrase — kind-a by the gate, unfixable in-quote, fed to the model, which made the #58 out-of-quote
-  look-alike edit); G236's identical span class fixed cleanly (stochastic reflex). Design a third
-  fail-kind / own-paraphrase exemption that removes the OPPORTUNITY (keeps such spans away from the model)
-  — NOT prompt suppression. Own red-first byte + checkpoint. **Authority = HANDOFF top pointer + AUDIT
-  "QUOTE-REPAIR CALIBRATION BUILD + RE-RUN — LIFT NOT CLOSED" + ENGINE_LESSONS #62** (don't duplicate the
-  detail here). code: scripts/build_lexica_def.py `probe1_verbatim`/`quote_repair`/`_own_word_exempt`
+- **FOUR-WORD RE-RUN (open 2026-07-14) — JP-gated checkpoint, real model spend, NOT pre-cleared.**
+  The own-paraphrase near-match gate is BUILT + LIVE (`dbea202`): combined `max(char, token-SET)`,
+  t=0.664, meta:v4, empty-set rule, `nearmatch:v2`. Re-run G162/G227/G236/G1390 through the fixed
+  pipeline to test the lift close. Predictions on record (scoreboard reads against them): reorders fed,
+  own-paraphrase exempts loud, other-item-class fed→cap→park, anchoring parks UNCHANGED and NOT breaches;
+  close = no breach on any. **Fragility-band watch (0.62–0.75 combined) is LIVE mid-run — any in-band
+  span = stop and report before that card proceeds.** Propose as its own checkpoint with per-word
+  predicted outcomes. **Authority = HANDOFF top pointer + AUDIT "OWN-PARAPHRASE NEAR-MATCH GATE — BUILD
+  LANDED" + ENGINE_LESSONS #63/#64/#65** (don't duplicate detail here). Standing constraint in code:
+  `t <= 0.706` (other-item must-refuse). Parked: G1390 probe-2 (revisit post-re-run, enlarged byte set);
+  lead-in multi-ref anchoring (G227 Job pair / G236 Ezra range). code: `probe1_verbatim`/`quote_repair`.
 
 - **TICKET (open, NOT-NOW — do not pull on this mid-calibration): some word cards render
   "loading" only.** JP observed cards stuck at "loading" (2026-07-10, batch-3 session 5).

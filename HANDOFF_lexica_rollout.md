@@ -1,34 +1,37 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = OWN-PARAPHRASE BUILD (implement the ruled NEAR-MATCH design).** The design is RULED
-> (2026-07-14, reviewer-APPROVED FINAL under standing delegation; doc-only session, no code touched).
-> **THE RULING:** a no-match quoted span gets a TARGET-EXISTS test — best sliding-window similarity
-> (word window n±1, production probe_norm both sides, difflib ratio) vs every cited verse's text.
-> **>= 0.727 → wording, fed; < 0.727 → third fail-kind `unsourced`, NEVER fed** (exempt as additive
-> meta:v4 with LOUD note when not attribution-anchored; FAIL + park when attribution-anchored —
-> non-launderable). Mixed cards HOLD BACK unsourced like anchoring (wording still fed, held spans cap
-> out on re-check); unsourced-only/+anchoring → deterministic park, no call. Threshold = bytes from
-> the real n=2 pair (G236 `changing over` 0.833 @ Dan 4:16 `change over` = fed; G227 `quenched/
-> crushed` 0.621 @ Isa 42:3 `being crushed` = refused), decision rule pre-stated. **FRAGILITY (binding):
-> any future span scoring ~0.62–0.83 = mandatory re-open byte; never run-time discretion. Fixtures must
-> pin BOTH real scores as bytes.** Slash-compound = evaluated fallback, SUPERSEDED (verses contain zero
-> '/'; shape taxonomy rejected — ENGINE_LESSONS #63). RED-FIRST plan for the build: real G227
-> `8258771a_2` = no-model-call park proof (its `quenched/crushed` has no attribution → exempts); real
-> G236 `59667b81_2` = fed-path-unchanged proof; grafted G227+G236 mixed fixture (only the wording span
-> fed); attribution-grafted teeth `"quenched/crushed" (Isa 42:3)` must fail unsourced + park. Build =
-> its own JP checkpoint, red-first, then the four words re-run — close criterion stays "no breach on
-> any". Full record = AUDIT **"OWN-PARAPHRASE CALIBRATION CHECKPOINT — DESIGN RULED"** + ENGINE_LESSONS
-> #63/#64 (containment = pipeline property) on top of #58–#62; open from there, never this line.
-> **PRE-CONDITION SETTLED:** neither G236 nor G227's anchoring park is the G162 lumped-ref shape — both
-> are LEAD-IN MULTI-REF mis-anchors (G236 range "Ezra 6:11–12…", G227 pair "Job 42:7 and Job 42:8:…",
-> where the card names BOTH verses — possibly gate calibration, not a card defect). **Ruling-3
-> re-anchor build does NOT cover these two; lead-in multi-ref is its own unruled question.**
-> **G236 KEY OF RECORD = `59667b81`**; `9bf3f7ef` = banked evidence ONLY. **CONDITIONAL-LIFT STILL IN
-> FORCE — the own-paraphrase class is ruled but not built. Live cards stay blocked until the build
-> lands and the four words re-run clean.** Parked, unchanged scope: G1390 probe-2 adjudication (offered,
-> not called); G162 lumped-ref re-anchor (Ruling 3, build on recurrence); probe-2 over-firing (needs its
-> own red-first byte); /consolidate still due (MEMORY.md over threshold). Scoreboard UNCHANGED 2/10ʰ ·
-> 7/15. **STATE: origin = local = PA = `94bcd22` code state (this close-out adds docs only).
+> **NEXT SESSION = FOUR-WORD RE-RUN (own JP-gated checkpoint — a real model spend, NOT pre-cleared).**
+> The own-paraphrase near-match gate is BUILT + LIVE (`dbea202`, PA pulled + invariant tests green +
+> reloaded). **WHAT LANDED (in `probe1_verbatim`'s no-match branch):** a TARGET-EXISTS test with a
+> COMBINED score `max(char-window best-similarity, token-SET containment)` — order-sensitive OR
+> order-insensitive, both sides through production `probe_norm`. `>= 0.664` → `wording` (fed as today);
+> `< 0.664` → third fail-kind `unsourced` split THREE ways: EMPTY cited set OR attribution-anchored →
+> FAIL + park (held from model, never fed); unanchored WITH a cited set → meta:v4 own-paraphrase EXEMPT
+> (LOUD note). `nearmatch:v2` stamped in `probe_vers`.
+> **THE RULING CHAIN (why the shape is what it is — do not re-litigate):** char-only BUILD HALTED red —
+> at t=0.727 it scored a real G227 defect-6 reorder (`bring forth judgment to validity`, char 0.690)
+> below the cut and waved it through as own-paraphrase (the gate's founding class would have SHIPPED).
+> DESIGN re-opened: char-ratio is ORDER-BLIND, so the token-SET leg was added (a reorder = all right
+> words wrong order → containment ~1.0). PIN: t=0.664 = midpoint of the fully-enumerated near-match
+> no-target residual pair on PA (`quenched/crushed` 0.621 EXEMPT / `other item` 0.706 must-refuse).
+> **TWO STANDING MUST-REFUSE MECHANISMS (written rulings, travel with the code):** (1) an EMPTY cited
+> set NEVER exempts (exemption requires a comparison to have occurred); (2) **`t <= 0.706` is a standing
+> constraint on ALL future threshold changes** — raising t above 0.706 overturns `other item`'s
+> must-refuse verdict and is a breach, not a tune. **FRAGILITY BAND 0.62–0.75 on the COMBINED score**
+> (residual squeeze 0.621/0.706/0.750): any span in-band = MANDATORY re-open byte, and the band watch is
+> LIVE DURING ANY RUN — a mid-run in-band span = stop and report before that card proceeds.
+> **RE-RUN PREDICTIONS (on record, so the scoreboard reads against them, not surprises):** reorders now
+> FED (fixable wording); own-paraphrase spans EXEMPT with loud notes (breach opportunity gone);
+> other-item-class FED → can't fix → cap → PARK (not shipped); anchoring parks UNCHANGED and are NOT
+> breaches. Close criterion = no breach on any; any breach = a new byte, stop.
+> **PARKED, unchanged scope:** the two anchoring parks are LEAD-IN MULTI-REF mis-anchors (G227 pair "Job
+> 42:7 and Job 42:8:…", G236 range "Ezra 6:11–12…") — Ruling-3 re-anchor does NOT cover them, their own
+> unruled question; G1390 probe-2 adjudication (JP's word, revisit post-re-run with the enlarged byte
+> set); G162 lumped-ref re-anchor; probe-2 over-firing (needs its own red-first byte); /consolidate due.
+> **G236 KEY OF RECORD = `59667b81`**; `9bf3f7ef` = banked evidence ONLY. Full record = AUDIT
+> **"OWN-PARAPHRASE NEAR-MATCH GATE — BUILD LANDED"** + ENGINE_LESSONS #63/#64/#65; open from there,
+> never this line. Scoreboard UNCHANGED **2/10ʰ · 7/15** (four words still parked until the re-run).
+> **STATE: origin = local = PA = `dbea202` (BUILD landed + deployed; frozen V9 untouched; no word ran).**
 > **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
 > into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
 > DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption
