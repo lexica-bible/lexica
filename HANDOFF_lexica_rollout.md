@@ -23,7 +23,11 @@
 > **CONDITIONAL-LIFT STILL IN FORCE — carry it forward: DESIGN RULED ≠ HOLES CLOSED.** The block stays
 > CONDITIONALLY LIFTED; the F2 gap (#58) and F3 hole (#59) remain OPEN until the build's red-first
 > checkpoints actually close them on the banked bytes. The design ruling picked the fixes; it did not
-> prove them. Also: PA lags origin (docs-only divergence) — the build session PULLS before any run work.
+> prove them. **STATE: origin = local = PA = `63ecff4` (aligned).** VERIFY PA BY PULL, not by this line —
+> last session's state lines carried a stale PA base (`9ca33ce`; PA's real base was `863e113`, one doc
+> commit ahead), harmless docs-only but proof that a state line's PA commit is not PA's commit. The full
+> BUILD opener + the stale-base ledger live in the AUDIT "ANCHOR-WALL CALIBRATION CHECKPOINT — DESIGN
+> RULED" entry (NEXT-SESSION OPENER — BUILD).
 > **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
 > into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
 > DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption

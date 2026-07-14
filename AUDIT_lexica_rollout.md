@@ -5539,3 +5539,41 @@ receipt); "doc-only, exemption invoked" stated in the commit message. Lessons = 
 #60 (holes) + #61 (the fail-kind routing layer, added this session). NEXT = a BUILD session implementing
 Rulings 1/2/prompt (three checkpoints) + Ruling 4, then a re-run of the held-open words on the fixed
 pipeline.
+**PROCESS LEDGER — stale PA base of record (2026-07-13).** Every state line this session (opener +
+close-outs) recorded PA = `9ca33ce`; the build session's PA pull showed PA fast-forwarding
+`863e113..63ecff4` — so PA's real base was `863e113` (one doc commit ahead of 9ca33ce, the
+"bank next-session opener blocks" commit), and the recorded 9ca33ce was STALE. Harmless (docs-only
+fast-forward, all now aligned at 63ecff4), but the lesson base applies: a state line's claim of PA's
+commit is NOT PA's commit — the pull output is the byte. → the build opener carries "verify PA by pull,
+don't trust the inherited PA base"; nothing downstream should inherit a PA commit from a state line
+without a pull confirming it.
+**NEXT-SESSION OPENER — BUILD (quote-repair calibration build).** CHARTER: BUILD pass — implement the
+four rulings across THREE JP checkpoints, each RED-FIRST (the RED byte before the fix), receipt before
+commit; frozen V9 prompt UNTOUCHED. Output = the pipeline fixes landed + on PA, then the four held-open
+words re-run to close the conditional lift. READ FIRST (in order): AUDIT "ANCHOR-WALL CALIBRATION
+CHECKPOINT — DESIGN RULED" (the hinge + Rulings 1–4 + refinements + checkpoint structure);
+ENGINE_LESSONS #58/#59/#60 (holes) + #61 (fail-kind routing = the hinge); the current code —
+`probe1_verbatim` (build_lexica_def.py:2163), meta:v2 wall (2042–2060), `quote_repair`/guard/prompt
+(1927/1914/1875); the four banked cards (draws/history/) — G227/G236 already pinned in
+tests/test_v11_probes.py, G1390+G162 pulled via the paste-ready reads (gate reached now).
+CHECKPOINT 1 — Ruling 1 deterministic pre-routing: kind-tag the gate's fails from the ONE production
+probe; wording (`matches NO cited verse`) → model repair, anchoring-rule (`… anchored primary on …`) →
+never the model (park). RED-FIRST = the G236 MIXED card in ONE fixture proving BOTH halves (wording
+span still fed + anchoring span held back), not two synthetic ones; consistency = never drop a fixable
+wording span on a mis-anchor card (a58a4b5 ruling). CHECKPOINT 2 — Ruling 2 meta:v3 own-word exemption:
+single word + own out-of-quote vocabulary (`_strip_quoted`, :2242) + not quote-anchored → exempt, LOUD.
+RED-FIRST (one run) = G1390 "giving" newly exempt · G227 3a/3b still exempt · 3c/1v/`other item`/1w/1y
+still fail. Base variant (prose-recurrence); gloss-match HELD. CHECKPOINT 3 — prompt-sharpen (its OWN
+checkpoint + red-first byte): name the forbidden moves in `QUOTE_REPAIR_PROMPT` (never edit unquoted
+prose even with a look-alike word · never add/move/split a ref · only-fix-is-outside-the-quotes → return
+unchanged); qrepair-versioned, V9 untouched. RIDER — Ruling 4 (rides Checkpoint 1's build, NO gate
+logic change): record every repair-CHANGED span as `repair-introduced; re-gated MATCH vs <ref>` in the
+draw record + apply output. PARKED, do NOT build: G162 re-anchor path (specified above — build only on
+recurrence); probe-2 over-firing (Peter/8-verses — no detector edit without its own red-first byte).
+LOCKS: frozen V9 UNTOUCHED · no detector/prompt edit without a red-first byte · each edit = a JP
+checkpoint (receipt before commit) · no-crossing per-commit (doc-only close-out pre-cleared — state
+"doc-only, exemption invoked") · R1 · R1-b · R2-a · R2-b · show-code-before-changing · JP runs all PA
+commands · payload discipline (reposts inline, ASCII-escape non-ASCII). CONDITIONAL-LIFT STILL IN FORCE
+— the F2 gap (#58) + F3 hole (#59) close ONLY when these red-first checkpoints pass; DESIGN RULED ≠
+HOLES CLOSED. STATE AT OPEN: origin = local = PA = `63ecff4` (VERIFY PA BY PULL — the recorded PA base
+was stale last session; the pull is the byte). Scoreboard 2/10ʰ · 7/15. Nothing mid-flight.
