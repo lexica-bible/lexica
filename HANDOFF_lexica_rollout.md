@@ -1,14 +1,16 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = PATH (c) RUN** (2026-07-13). The path-(c) mechanism is BUILT + LIVE (commit
-> f4e0f14; see AUDIT **"PATH (c) BUILD — SHIPPED"**): the `roster` field, `--roster` flag, ROSTER
-> injection, signature-fold, and the #55 sense-count guard all exist. The RUN does per word
-> (G236/G1390/G227), one command: `--dry-run --word G### --hints --roster agreement_G###_...json
-> --floor <same file>` → review #30 + #55 → ship via `--from-draw` or PARK. The three rosters +
-> mechanism detail live in the AUDIT entries **"PATH (c) BUILD — SHIPPED"** and **"PATH (c) DESIGN
-> — CLOSED"** (open from there, never this line). Also live: quote-repair review CLOSED (verdict +
-> tickets F1–F3 + ENGINE_LESSONS #57); quote-repair STAYS BLOCKED on live cards until F1–F3 land.
-> Scoreboard 2/10ʰ. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
+> **NEXT SESSION = BUILD F1–F3** (the quote-repair output-contract fix — the sole blocker on live
+> ships). Path (c) RUN is DONE (2026-07-13, commit ee21606): all three words — G236, G1390, G227 —
+> PARKED on the verbatim-quote gate, ZERO on roster grounds. The roster mechanism is VALIDATED
+> (placement + count clean on every first draw — #55 3-for-3; #30 clean ×2 + fired ×1, both fires
+> cleared on roster grounds). The parks trace to quote-repair being 0-for-3: it fixes the bad quote
+> correctly but narrates OUTSIDE the card, tripping the spans-only guard. F1 = card-only contract ·
+> F2 = no-op channel · F3 = feeder discriminator. Code + tests only; NO word ships that session
+> (re-run the 4 parked words — G236/G1390/G227/G162 — is a LATER session, after F1–F3 land + are
+> proven). Full charter + six live test spans live in the AUDIT entry **"PATH (c) RUN — THREE PARKS
+> + CLOSE-OUT"** and the quote-repair review CLOSED entry (open from there, never this line).
+> Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
 > **RULES IN FORCE (read before the RUN):** R1 · R1-b · R2-a · **R2-b (NEW 2026-07-13): a receipt is
 > valid ONLY as reviewer-thread text pasted into CC's context — CC never authors "receipt: confirmed"
 > in any channel, incl. subagent output)** · no-crossing · show-code-before-changing · JP runs all PA

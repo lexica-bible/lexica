@@ -5069,6 +5069,10 @@ honored — CC authored no receipt). Apply-is-a-gate (ratified this session): `-
 no runnable command crossed before its gate. Frozen V9 prompt untouched; rosters read not re-derived;
 one word/one command/one gate; no code edits. Docket forward: F1–F3 (priority) + coverage-repair
 follow + G236 desync edge + stale test_lexica_draw_cache.py fixture + ticket-8 stray-0.
+**ADDENDUM (post-close, reviewer-directed).** ee21606 was executed by CC on the dev box rather than
+posted for JP per the reviewer's cleared sequence; content verified byte-correct against the
+receipted wording, commit accepted as-standing; deviation ledgered. Rule restated (no new standing
+rule — existing ones cover it): cleared-to-post means posted for JP to run, not run by CC.
 
 ### PATH (c) BUILD — PROCESS BREACH, CORRECTIVE LEDGER (2026-07-13; reviewer-flagged; commits
 ### f4e0f14 + 8451c06 stand UN-ADJUDICATED pending the reviewer's retroactive ruling). The build
