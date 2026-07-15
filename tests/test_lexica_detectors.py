@@ -404,18 +404,18 @@ def test_registry_hits_2co521():
 # gate-clean. That silent discard is what this detector ends; it is REPORT-ONLY and no block rule
 # ships with it (reviewer ruling, meta:v5 blast-radius precedent).
 #
-# ⚠ FIXTURE PROVENANCE — READ BEFORE TRUSTING A ZERO FROM THIS DETECTOR.
-# The fixtures below are SYNTHETIC and are NOT the bytes of any real card. They test BOUNDARY
+# FIXTURE PROVENANCE.
+# The four fixtures below are SYNTHETIC and are NOT the bytes of any real card. They test BOUNDARY
 # LOGIC only (the #71 precedent: a hand-typed fixture is the right tool where it tests boundary
-# logic, and CI cannot read the corpus by ruling). They are deliberately NOT rebuilt from the kill
-# record's prose: the archived G162 quote there is TRUNCATED ("... integrated into Sense 1 ..."),
-# and a fixture rebuilt from a doc's prose is a typed claim, which is banned.
-# ⇒ THE KNOWN-POSITIVE CONTROL IS **OWED, NOT DONE**. This file's own standing rule (see the
-# module docstring) is that a detector fires on a KNOWN POSITIVE from the archived defect record
-# before any zero of its is trusted. The known positive is G162's archived draw
-# (draws/history/G162_20260713T022852_aa064d41.json) — PA-only, `draws/` is gitignored, so CC
-# cannot read it. Until that read runs, this detector's boundary logic is proven and its ZEROS
-# ARE NOT. Do not report "clean" off this suite alone.
+# logic, and CI cannot read the corpus by ruling). The KNOWN-POSITIVE control is separate and real
+# — it is the last test in this block, and it LANDED 2026-07-14 (capture details there).
+#
+# WHY THEY WERE NOT REBUILT FROM THE KILL RECORD — VINDICATED ON THE BYTES. The AUDIT entry quotes
+# G162's preamble as ending "... integrated into Sense 1 ...". The PA capture shows the real text
+# runs ~100 chars FURTHER (", at the points where their texts belong, without altering the sense
+# structure, headlines, or any existing quotation:"). The doc's ellipsis was hiding live text: a
+# fixture typed from that prose would have been WRONG. This is `feedback_verify_before_claiming`'s
+# fixture rule earning its keep — a fixture string is a claim; paste it or derive it, never type it.
 
 _BP_CLEAN = """**Senses:**
 
@@ -475,6 +475,65 @@ def test_leading_boilerplate_tags_bare_title_apart_from_meta():
     hits = B.leading_boilerplate(_BP_TITLE)
     assert hits, "a bare title line is still a contract breach and must surface"
     assert [h["kind"] for h in hits] == ["title"]
+
+
+# ── THE KNOWN POSITIVE — G162's archived draw, real bytes (PA capture 2026-07-14) ────────────
+#
+# The standing rule in this file's docstring: a detector fires on a KNOWN POSITIVE from the
+# archived defect record before any zero of its is trusted. This is that control, and it is the
+# defect the G162 park entry logged: "the card body OPENS with the model's working note".
+#
+# PROVENANCE — PASTED from emitted output, never typed. Source:
+#   draws/history/G162_20260713T022852_aa064d41.json   (draws/ is gitignored, PA-only)
+#   SHA256(file) 6a984686c2a5732fcaaa489adab7edd9cb1a89460ea0299ee2092ffd580efcd1
+#   SHA256(raw)  b439981c78ec5f9e27e5d9c91921e20c7f2b831b236f059abd3465105876cb7b
+#   len(raw)     6638
+# Captured by running the PRODUCTION detector on PA against the full 6638-char card (reuse the
+# production detector, never a copy): it returned exactly 1 fire, kind `meta`, text identical to
+# _G162_EXPECTED_FIRE below.
+#
+# SCOPE OF WHAT THIS TEST PROVES, stated honestly: the fixture is the card's LEADING REGION, not
+# all 6638 chars (CI has no access to draws/). This test therefore reproduces the PA result on the
+# region the detector reads — everything before the first bold-numbered headline, which is the
+# whole of the detector's input by construction. The proof that it fires on the COMPLETE card is
+# the PA run itself, pinned by the hashes above.
+#
+# NOTE — THE REAL CARD IS THE HEADERLESS SHAPE. It carries NO "Senses:" header; it dives straight
+# into "**1. Taking persons ...**". So the known positive exercises the headerless fallback cut on
+# real bytes, not just the synthetic control above. The detector must return the preamble ALONE and
+# never the card's own senses.
+
+_G162_KNOWN_POSITIVE = (
+    'Here is the full corrected definition with each of the four unplaced occurrences integrated '
+    'into Sense 1, at the points where their texts belong, without altering the sense structure, '
+    'headlines, or any existing quotation:\n'
+    '\n'
+    '---\n'
+    '\n'
+    '**1. Taking persons or groups from their place by force — the act of seizing and removing '
+    'human captives in a military or raiding context**\n'
+    '\n'
+    'This is the dominant use of the lemma. The taker may be a foreign army, a raiding party, or '
+    'an individual captor; the taken are removed to another land or held as prisoners.\n'
+)
+
+_G162_EXPECTED_FIRE = (
+    'Here is the full corrected definition with each of the four unplaced occurrences integrated '
+    'into Sense 1, at the points where their texts belong, without altering the sense structure, '
+    'headlines, or any existing quotation:'
+)
+
+
+def test_leading_boilerplate_fires_on_g162_known_positive():
+    """THE CONTROL. Real archived bytes, the defect the G162 park logged. One fire, `meta`, and
+    the text is the COMPLETE leaked preamble — not a truncation of it, and not one word of the
+    card's own senses."""
+    hits = B.leading_boilerplate(_G162_KNOWN_POSITIVE)
+    assert len(hits) == 1, "expected exactly 1 fire on G162's real preamble, got %r" % (hits,)
+    assert hits[0]["kind"] == "meta"
+    assert hits[0]["text"] == _G162_EXPECTED_FIRE
+    # The headerless cut, on real bytes: the card's own sense must never be called boilerplate.
+    assert "Taking persons" not in hits[0]["text"]
 
 
 if __name__ == "__main__":     # plain-script mode for CI + the pre-commit hook

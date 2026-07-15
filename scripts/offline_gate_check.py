@@ -155,12 +155,6 @@ def write_path_checks(db_path, card, raw, vt):
             print("      - [%s] %r" % (h["kind"], h["text"][:100]))
     else:
         print("  [RAN]  %-18s clean" % "boilerplate")
-    # REMOVE THIS CLAUSE in the SAME commit that lands the green known-positive fixture — not
-    # before, not after (reviewer condition). Until then this report must not read as certifying
-    # boilerplate coverage.
-    print("  ⚠ boilerplate ZEROS ARE NOT TRUSTED YET: the known-positive control (G162's archived "
-          "draw, PA-only) has NOT run. Boundary logic is proven; a 'clean' above is UNPROVEN.")
-
     # OUTPUT CONTRACT, not comments (reviewer condition, 2026-07-14): a reader of this REPORT must
     # see what the report does not cover. Silence reads as covered — #69(i).
     print("\n--- checks that CANNOT run offline (named, never silent) ---")

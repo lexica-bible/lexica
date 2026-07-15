@@ -1163,23 +1163,43 @@ both drifting from the doc.
     control's red.** Kin of `feedback_audit_tools_must_fail`. *(audit: PROBE-2 GUARD — THE SILENT
     DEGRADE NOW SPEAKS, 2026-07-14; number ruled by JP)*
 
-76. **A POSITIVE control cannot catch an OVER-FIRING detector — only the silent direction can — and
-    an "it doesn't exist yet" red proves absence, not discrimination.** Red-firsting the
-    leading-boilerplate detector produced four reds that all read the same:
+76. **A control that asserts PRESENCE is blind to over-firing; one that asserts EXACTNESS sees it.
+    The axis is not positive-vs-silent — it is loose-vs-tight — and an "it doesn't exist yet" red
+    proves absence, not discrimination.**
+    ⚠ **THIS ENTRY WAS BANKED WRONG AND CORRECTED THE SAME DAY, BY ITS OWN BYTES.** It first read
+    *"a POSITIVE control cannot catch an OVER-FIRING detector — only the silent direction can."*
+    That is FALSE, and the G162 known-positive control falsified it hours later: over-fire the
+    detector and that control goes **RED**. The difference was never the direction. The synthetic
+    positive asserted `assert hits` — mere PRESENCE, which an over-firing detector satisfies
+    trivially. The known-positive asserted `len(hits) == 1` AND the exact fire text AND that the
+    card's own sense was absent from it — EXACTNESS, which over-firing cannot satisfy. **The
+    original lesson generalized from ONE loose assertion to a whole class, which is the exact
+    move `feedback_verify_before_claiming` exists to stop — committed inside the commit that banked
+    a lesson about unproven controls.** The reviewer had approved the wrong version; approval is not
+    verification. Red-firsting the leading-boilerplate detector produced four reds that all read the
+    same:
     `AttributeError: no attribute 'leading_boilerplate'`. That red is the **WEAK form** — it fires
     because the function is MISSING, so it would look identical for a detector whose logic was
     inverted, over-broad, or a stub returning a constant. Proof came only from the **direction-lock**:
     the real detector was deliberately over-fired (both cuts removed), and **the positive control
-    stayed GREEN** while both silent controls went red. A detector that fires on EVERYTHING passes
-    every "it fires on the defect" test ever written for it. → (i) **every detector needs a control in
-    BOTH directions, and the silent one is the load-bearing half** — the positive control only proves
-    reach, never restraint; (ii) an AttributeError/ImportError red is a scaffolding check, NOT
+    stayed GREEN** while both silent controls went red — because that control asked only "did
+    something fire?". A detector that fires on EVERYTHING passes every LOOSE "it fires on the defect"
+    test ever written for it. → (i) **write the assertion tight and it watches both directions at
+    once**: `assert hits` proves reach and nothing else, while an exact count + exact text + an
+    explicit "and NOT the neighbouring content" clause catches under- AND over-firing in one control.
+    A silent control is the cheap way to buy restraint-proof, not the only way — reach for it when
+    the assertion cannot be made exact; (ii) an AttributeError/ImportError red is a scaffolding check, NOT
     evidence the assertions discriminate — the honest red is the one obtained by *breaking working
     logic*, which means the direction-lock belongs in the GREEN step, not "after"; (iii) the revert is
     its own hazard, same as #75(ii): restore from a byte-level backup and cite the matching hash +
     a zero grep of the over-fire marker, so the diff proves the sabotage left (here: restored sha256
-    `c82be4f5…`, residue 0); (iv) corollary for reading old suites — **a detector whose fixtures are
-    all positives has never been shown to restrain itself**, whatever its green record says. Kin of
-    #75 (that one: which control fired; this one: which DIRECTION was ever tested) and
-    `feedback_audit_tools_must_fail`. *(audit: G162 PREAMBLE-LEAK TICKET — PRE-CHANGE REVIEW, RULED
-    BUILD, 2026-07-14; reviewer-ruled bankable at the green receipt)*
+    `c82be4f5…`, residue 0; the known-positive lock: `0a7cbb7c…`, residue 0); (iv) corollary for
+    reading old suites — **a detector whose fixtures all assert mere presence has never been shown to
+    restrain itself**, whatever its green record says; (v) the meta-lesson from this entry's own
+    correction — **a lesson is a claim and gets verified like one.** A lesson banked from a single
+    observation, reviewer-approved, and written in absolutes was falsified by the next run of the
+    same suite. Bank the OBSERVATION tight; let the generalization earn its width. Kin of #75 (that
+    one: which control fired; this one: which DIRECTION was ever tested — and how loosely it asked)
+    and `feedback_audit_tools_must_fail`. *(audit: G162 PREAMBLE-LEAK TICKET — PRE-CHANGE REVIEW,
+    RULED BUILD, 2026-07-14; banked at the green receipt, SELF-CORRECTED at the known-positive
+    landing the same day)*
