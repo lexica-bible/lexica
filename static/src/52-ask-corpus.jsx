@@ -996,7 +996,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       </div>
     </div>
   ) : (
-    <ZoneEmpty icon={<Icon.Book/>} title="Nothing selected yet"
+    <ZoneEmpty icon={<Icon.Book width="30" height="30"/>} title="Nothing selected yet"
       sub="Ask a question — the passages it rests on and the words it turns on show here. Then click a passage to inspect it."/>
   );
   const inspectRoot = selectedOcc ? {

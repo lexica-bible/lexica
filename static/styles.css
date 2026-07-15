@@ -4039,11 +4039,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .notes-mode { margin-bottom: 12px; }
 .journal-toolbar { margin-bottom: 14px; }
 .journal-list { list-style: none; margin: 0; padding: 0; }
-.journal-item {
-  border: 1px solid var(--rule); border-radius: var(--radius); padding: 12px 14px;
-  margin-bottom: 10px; cursor: pointer; background: var(--paper);
-}
-.journal-item:hover { border-color: var(--gold); }
+/* .journal-item = a .listrow (shared box/divider/hover/selected), exactly like its sibling
+   .notes-item — JP 2026-07-15: no box-in-a-box, this was the last card. The row's own border /
+   radius / paper fill / margin / padding / hover all came from the system the moment it joined
+   it; only the CONTENT rules belong here. */
 .journal-item-title { font-size: 16px; font-weight: 600; color: var(--ink); }
 .journal-item-preview {
   font-size: 13px; color: var(--ink-2); margin-top: 4px; line-height: 1.4;
@@ -4128,8 +4127,16 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .notes-list { list-style: none; margin: 0; padding: 0; }
 /* .notes-item = a .listrow (shared box/divider/hover/selected); stacked content within */
 .notes-item-ref { font-weight: 700; color: var(--ink); font-size: 14px; margin-bottom: 3px; }
-.notes-item-snippet { color: var(--ink-2); font-style: italic; font-size: 13px; margin-bottom: 4px; }
+.notes-item-snippet { color: var(--ink-2); font-style: italic; font-size: 13px; }
 .notes-item-body { color: var(--ink-2); font-size: 14px; line-height: 1.45; white-space: pre-wrap; }
+/* ONE line of preview, whichever kind the row is showing — the row is a way BACK to a note, not
+   a place to read it (the editor is that). On the ROW itself, not scoped to the desktop rail:
+   the same list renders in the mobile sheet, where a rail-scoped clamp would simply not apply
+   and the rows would stay tall on the surface that can least afford it. */
+.notes-item-body, .notes-item-snippet {
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 0;
+}
 .notes-item-empty { color: var(--ink-3); font-style: italic; }
 
 /* ============================================================
@@ -5086,11 +5093,16 @@ button.study-verse-ref { border: none; }
 .notes-rail-top { flex: 0 0 auto; box-sizing: border-box; padding: 11px 14px; border-bottom: 1px solid var(--rule); }
 .notes-rail-top .notes-mode { margin: 0; }
 .notes-rail-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 12px 40px; }
-.notes-rail-scroll .notes-item { padding: 10px 12px; margin-bottom: 8px; }
-.notes-rail-scroll .notes-item.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--paper)); }
-.notes-rail-scroll .notes-item-body { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* Both lists in this rail are .listrow siblings and get the same rhythm — the note index and
+   the journal index are the same KIND of thing (a list you pick from), so they read the same.
+   The two selected-state rules were already character-identical; merged rather than left as two
+   copies to drift. (`border-color` dropped with the merge: .listrow is border:0, so it had
+   never painted anything — the selected state is .listrow.on's wash + accent bar.) */
+.notes-rail-scroll .notes-item,
+.notes-rail-scroll .journal-item { padding: 10px 12px; margin-bottom: 8px; }
+.notes-rail-scroll .notes-item.on,
+.notes-rail-scroll .journal-item.on { background: color-mix(in oklab, var(--accent) 8%, var(--paper)); }
 .notes-rail-scroll .journal-view { padding: 0; }
-.notes-rail-scroll .journal-item.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--paper)); }
 
 /* center: the search/filter strip over the scrolling editor body */
 .notes-strip { flex: 0 0 auto; box-sizing: border-box; padding: 10px 20px;
@@ -5127,6 +5139,18 @@ button.study-verse-ref { border: none; }
 .note-insp-anchor .corpus-verse { background: color-mix(in oklab, var(--accent) 8%, var(--paper)); border-radius: var(--radius); }
 .note-insp-anchor .corpus-text { font-weight: 600; color: var(--ink); }
 .note-insp-near .corpus-text { color: var(--ink-4); }
+/* ITALICS = translator-supplied words, so they must never out-shout the scripture they sit in —
+   they are the LEAST original text on the page. Word study's verse list is the reference: there
+   the base is normal weight + --ink and `.lib-prose-italic`'s --ink-2 recedes from it. This
+   panel's own emphasis broke that BOTH ways, measured 2026-07-15:
+     · anchor rows: the row is weight 600, and the italic INHERITED it -> bold-italic.
+     · near rows:   the row is dimmed to --ink-4 (#9a9ea8), but `.lib-prose-italic` sets --ink-2
+                    (#3b3f48) DIRECTLY on the span, so it beat the inherited dim and the supplied
+                    word rendered DARKER than the real scripture beside it.
+   The row's own anchor/near emphasis is Notes's meaning and stays; the ITALIC converges on the
+   reference (anchor: 400 + --ink-2, identical to Word study's) and can only ever recede. */
+.note-insp-anchor .lib-prose-italic { font-weight: 400; }
+.note-insp-near .lib-prose-italic { color: inherit; }
 
 /* --- Notes on the shared Shell's mobile collapse (the toolbar + sheets) ----------------
    Notes takes NEWS's shape, not Ask-corpus's: nothing in its center is pinned to the bottom
@@ -5237,15 +5261,14 @@ button.study-verse-ref { border: none; }
 /* shared empty state: icon mark + bold title + subtitle, with the cross-line
    that continues the header's bottom edge across the inspect panel (desktop). */
 .zempty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
-/* KNOWN DIVERGENCE, logged not fixed (Notes-mobile pass, 2026-07-15). This rule sets the
-   mark's COLOR and its slot, never its SIZE — by the icon rule, the size belongs at the call
-   site. Measured: Word study 30x30 and Study 30x30 pass it; Notes (x4) and Ask-corpus (x1)
-   pass the component BARE, so they inherit Icon.Note's 14px / Icon.Book's 16px defaults and
-   their empty-state mark renders SMALLER than the same glyph in the bar below it (22px).
-   Word study is the reference; the other two are the outliers. NOT fixed here on purpose:
-   it is one app-wide inconsistency across shared desktop+mobile code on two other tabs, and
-   this pass is pinned to Notes-mobile layout with desktop geometry held byte-identical.
-   Fix it in one cross-surface pass (size all five at the call site), not per-tab. */
+/* CONVERGED 2026-07-15 (was a logged divergence from the Notes-mobile pass). This rule sets the
+   mark's COLOUR and its slot and DELIBERATELY NOT ITS SIZE — by the icon rule, a glyph is sized
+   at the CALL SITE, never by the CSS around it. So every ZoneEmpty passes `width="30" height="30"`
+   (Word study is the reference; all 11 call sites now match it). Six of them used to pass the
+   component bare and inherited Icon.Note's 14px / Icon.Book's 16px defaults, which rendered the
+   empty-state hero mark SMALLER than the same glyph in the bottom bar below it (22px).
+   DO NOT "fix" a future outlier by adding a size here: that would silently resize every
+   consumer and defeat the call-site rule the icon standard rests on. Fix the call site. */
 .zempty-mark { color: var(--ink-4); margin-bottom: 16px; }
 .zempty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; text-wrap: balance; }
 .zempty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; text-wrap: balance; }
@@ -5319,7 +5342,11 @@ button.study-verse-ref { border: none; }
 .ws .tg.on { color: var(--ink); font-weight: 600; }
 .ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--accent); border-radius: var(--radius); }   /* navy/accent underline, NOT gold (design 2026-06-19): match the Library search tabs + keep gold for target words only */
 .ws .tg:disabled { color: var(--ink-4); opacity: 0.4; cursor: default; }
-.ws .filters-sep { width: 1px; height: 14px; background: var(--rule-2); }
+/* Group divider inside a control strip (Word study: ABP/KJV/BSB | All/OT/NT | All/Greek/Hebrew;
+   Notes: the filter group | the sort group). Promoted out of the `.ws` scope 2026-07-15 so the
+   second consumer REUSES it instead of minting a second divider style — Word study is the
+   visual reference, and its render is unchanged (nothing else competes for this selector). */
+.filters-sep { width: 1px; height: 14px; background: var(--rule-2); }
 
 .occ-filter { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 2px 12px; font-size: 12.5px; color: var(--ink-3); }
 .occ-filter b { color: var(--ink); font-weight: 600; }

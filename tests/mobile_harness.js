@@ -178,9 +178,16 @@ const chapterFor = (book, ch) => {
 // `{{v}}` is substituted with the requested verse on both sides. That marker earns its keep:
 // each VerseRow fetches its OWN verse, so it proves in a measurement WHICH verses actually
 // rendered — a range of identical rows can't tell you that.
+// `italic: true` marks a TRANSLATOR-SUPPLIED word — views_library.py verse_words returns
+// `"italic": bool(w["italic"])`, and every verse renderer turns it into `.lib-prose-italic`
+// (the KJV/BSB branches in 50-corpus-results.jsx and the ABP prose path in
+// 59c-library-render.jsx all use that one class). A supplied copula is the classic case: the
+// Greek has no "is", so ABP prints it italic. Without one in the fixture, no verse rendered by
+// this harness has any italics at all — and italic formatting can't be measured on a row that
+// has none.
 const VERSE_WORDS = { words: [
   word({ english: "God", strongs: "G2316", strongs_base: "G2316", lemma: "θεός", translit: "theos", gloss: "God" }),
-  word({ english: "is", strongs: "G1510", strongs_base: "G1510", lemma: "εἰμί", translit: "eimi", is_function: true }),
+  word({ english: "is", strongs: "G1510", strongs_base: "G1510", lemma: "εἰμί", translit: "eimi", is_function: true, italic: true }),
   word({ english: "spirit-v{{v}}", strongs: "G4151", strongs_base: "G4151", lemma: "πνεῦμα", translit: "pneuma", gloss: "spirit" }),
 ] };
 
@@ -236,6 +243,15 @@ const NOTES = [
   { id: "h-page-1", device: "harness", kind: "journal", title: "Spirit — working notes",
     body: "Start from the plain sense and let the corpus argue.\n\nNo verse anchor here on purpose.",
     created: "2026-07-06T09:00:00.000Z", updated: "2026-07-10T09:00:00.000Z" },
+  // A SECOND page, because one row can't show a list's rhythm. The journal list is a
+  // .listrow family now (dividers between rows, no card), and a single row renders neither a
+  // divider (`.listrow:last-child` drops it) nor a neighbour to be separated FROM — so a
+  // one-page fixture would have "proved" the row styling while showing none of it.
+  // Untitled on purpose: JournalList falls back to "Untitled page" for a page with no title
+  // (35-notes.jsx), and that fallback is a real row a reader sees.
+  { id: "h-page-2", device: "harness", kind: "journal", title: "",
+    body: "Draft with no title yet — this row renders the “Untitled page” fallback.",
+    created: "2026-07-04T09:00:00.000Z", updated: "2026-07-08T09:00:00.000Z" },
 ];
 
 const FIXTURES = {

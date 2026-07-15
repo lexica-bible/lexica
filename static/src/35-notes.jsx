@@ -271,16 +271,27 @@ function NoteVerseInspect({ note, onReadInContext }) {
     </div>
   );
 
+  // A truly-empty state renders the BARE ZoneEmpty — no band, and no wrapper either. The shared
+  // `.zinspect .zempty::before` ALREADY draws the header-continuation line at var(--hdr-h), so a
+  // band above it paints a SECOND rule with a dead gap between (measured: band border y=66,
+  // cross-line y=148, 82px of nothing). Ask-corpus's `inspectIdle` solved it the same way.
+  // The ZoneEmpty must be the DIRECT child of `.zinspect`: that `::before` is positioned against
+  // the .zempty box, so wrapping it in `.note-insp-scroll` (padding: 16px …) slides the one
+  // divider 16px below the header line it exists to continue. The band earns its place only when
+  // it has something to say — the verse ref.
+  if (!anchored) {
+    return (
+      <ZoneEmpty icon={<Icon.Note width="30" height="30"/>} title="No verse anchored"
+        sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />
+    );
+  }
   return (
     <div className="note-insp">
       <div className="note-insp-band">{label}</div>
       <div className="note-insp-scroll">
-        {anchored
-          ? <div className="note-insp-ctx">
-              {noteInspRows(lo, hi, lastVerse).map(r => row(r.verse, r.kind))}
-            </div>
-          : <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
-              sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />}
+        <div className="note-insp-ctx">
+          {noteInspRows(lo, hi, lastVerse).map(r => row(r.verse, r.kind))}
+        </div>
       </div>
     </div>
   );
@@ -364,7 +375,7 @@ function JournalList({ editingId, onOpen, onNew }) {
       ) : (
         <ul className="journal-list">
           {pages.map(p => (
-            <li key={p.id} className={"journal-item" + (p.id === editingId ? " on" : "")} onClick={() => onOpen(p.id)}>
+            <li key={p.id} className={"journal-item listrow" + (p.id === editingId ? " on" : "")} onClick={() => onOpen(p.id)}>
               <div className="journal-item-title">{(p.title || "").trim() || "Untitled page"}</div>
               {(p.body || "").trim() && <div className="journal-item-preview">{p.body.trim().slice(0, 160)}</div>}
               <div className="journal-item-date">{fmtDate(p.updated)}</div>
@@ -441,8 +452,14 @@ function NotesView({ isMobile, onReadInContext }) {
         {n.color && <span className="notes-item-dot" style={{ background: NOTE_COLOR_CSS[n.color] }} />}
         {n.refLabel || (n.book + " " + n.chapter)}
       </div>
-      {n.snippet && <div className="notes-item-snippet">“{n.snippet}”</div>}
-      {n.body && <div className="notes-item-body">{n.body}</div>}
+      {/* The row previews the NOTE, not the verse — this list holds notes, so the row names
+          its own content (JP, shape 2). It used to print the full verse quote AND the body,
+          so a row could run five or six lines and the thing you actually wrote came last.
+          A bare highlight or bookmark has no body, so it falls back to the verse snippet —
+          one line of it, not the whole quote, or the fallback grows back into the problem. */}
+      {n.body && n.body.trim()
+        ? <div className="notes-item-body">{n.body}</div>
+        : n.snippet ? <div className="notes-item-snippet">“{n.snippet}”</div> : null}
     </li>
   );
 
@@ -463,6 +480,10 @@ function NotesView({ isMobile, onReadInContext }) {
             <button key={k} className={"seg-b" + (filter === k ? " on" : "")} onClick={() => setFilter(k)}>{lbl}</button>
           ))}
         </div>
+        {/* Two different jobs run together here — WHICH notes (filter) and IN WHAT ORDER
+            (sort). Word study's strip already separates its groups this way, so reuse its
+            divider rather than mint a second one. */}
+        <span className="filters-sep"/>
         <div className="seg seg--line">
           <button className={"seg-b" + (sort === "recent" ? " on" : "")} onClick={() => setSort("recent")}>Recent</button>
           <button className={"seg-b" + (sort === "ref" ? " on" : "")} onClick={() => setSort("ref")}>Reference</button>
@@ -512,27 +533,24 @@ function NotesView({ isMobile, onReadInContext }) {
   // different reachability: the phone's center has to carry the first step itself.
   const anyNotes = NotesStore.all().length > 0;
   const noteEmpty = (isMobile && !anyNotes)
-    ? <ZoneEmpty icon={<Icon.Note/>} title="No notes yet"
+    ? <ZoneEmpty icon={<Icon.Note width="30" height="30"/>} title="No notes yet"
         sub="In the Library, select some text in a verse and choose “Add note.” Everything you save collects here." />
-    : <ZoneEmpty icon={<Icon.Note/>} title="No note open" sub="Pick a note from the list to read and edit it here." />;
+    : <ZoneEmpty icon={<Icon.Note width="30" height="30"/>} title="No note open" sub="Pick a note from the list to read and edit it here." />;
 
   const centerContent = mode === "journal"
     ? (journalEditing
         ? <JournalEditor key={journalEditing} pageId={journalEditing} onBack={() => setJournalEditing(null)} />
-        : <ZoneEmpty icon={<Icon.Book/>} title="No page open" sub="Pick a page from the list, or start a new one." />)
+        : <ZoneEmpty icon={<Icon.Book width="30" height="30"/>} title="No page open" sub="Pick a page from the list, or start a new one." />)
     : (selectedId
         ? <NoteCenterEditor key={selectedId} noteId={selectedId} onClose={() => setSelectedId(null)} onReadInContext={onReadInContext} />
         : noteEmpty);
 
+  // Journal mode's inspect is empty BY DESIGN (pages have no verse anchor, ever), so it takes
+  // the same bare-ZoneEmpty shape as NoteVerseInspect's empty state — no band, one divider.
+  // The band said "Journal" directly above a ZoneEmpty titled "Journal": a second rule, a dead
+  // gap, and the panel's name printed twice.
   const inspectContent = mode === "journal"
-    ? (
-        <div className="note-insp">
-          <div className="note-insp-band">Journal</div>
-          <div className="note-insp-scroll">
-            <ZoneEmpty icon={<Icon.Book/>} title="Journal" sub="Journal pages aren’t tied to a verse, so nothing shows here." />
-          </div>
-        </div>
-      )
+    ? <ZoneEmpty icon={<Icon.Book width="30" height="30"/>} title="Journal" sub="Journal pages aren’t tied to a verse, so nothing shows here." />
     : <NoteVerseInspect note={selNote} onReadInContext={onReadInContext} />;
 
   // ── MOBILE: the shared Shell's collapse (News + Ask-corpus are the pattern) ─
