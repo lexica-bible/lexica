@@ -1,5 +1,48 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> # ⇒ SESSION 2026-07-15 (b): THE ANTI-RANGE PULL IS SPENT. BOTH HALVES SHIPPED, ZERO MODEL SPEND. ⇐
+> **THE RIPE PULL IS GONE — do not re-pitch it.** ENGINE_LESSONS #80's anti-range line is BUILT,
+> reviewer-receipted, and live in the frozen prompt (`808b54c`), and its compliance count is on the
+> gate report (`2a36ece`). Spec-first held: one-block spec → reviewer ruling → code, no exceptions.
+> **THE LINE** sits in VERSE_PROMPT Constraints directly after QUOTES ARE VERBATIM (a written range
+> is a TRUTH claim about unchecked verses, not a formatting nit), worded from the two pins already
+> proven in production. **STAMP MOVED `lexica:7d7758f4156b` → `lexica:bd8b7e3f8209`** — every cached
+> draw is stale, **LAZILY** (redraw when next touched; no forced re-run, no spend at merge).
+> **THE CARVE-OUT:** "range" is load-bearing in FOUR other places in that prompt (Method step 4, the
+> Output "Range:" line, the Formatting header, **and Formatting's "Keep Range as one paragraph" —
+> the fourth surfaced only while reading bytes to fix a broken fixture; spec pitched three**). The
+> sense-Range section is explicitly exempted and all four usages are pinned. Addendum to the spec
+> record, NOT a re-open (reviewer-ruled).
+> **NEW GUARD — the stamp PIN (`tests/test_prompt_contract.py`):** an unacknowledged prompt edit now
+> FAILS CI. Moving the prompt is allowed; moving it SILENTLY is not. Update `PROMPT_STAMP` + the
+> STAMP HISTORY block in the same commit as any prompt edit. Red-first shown in order.
+> **LINT: DECIDED AND CLOSED.** Baseline `21 of 85 live cards / 50 written ranges` (decision rule
+> pre-committed BEFORE the number, so it could not be argued after). 21 > 0 → **non-blocking
+> WRITTEN-RANGE count on the gate report** (report-only, mirrors LEADING-BOILERPLATE: computed from
+> raw at print time, not stored, refuses nothing). **A BLOCKING pre-gate lint is REJECTED and the
+> number cannot re-open it** — the citation gate already has the teeth, blocking would duplicate
+> them and false-fire on true-interior ranges. `written_ranges()` is single-sourced in production;
+> the audit's copy is DELETED. Zeros are trusted — controls fire on the three words that paid.
+> **⚠ EN-DASH IS LOAD-BEARING:** all 50 live ranges use en-dash, not hyphen. A hyphen-only detector
+> reports a FALSE ZERO across the whole corpus. Pinned by test.
+> **= ENGINE_LESSONS #81, and it is the session's real yield: a control fixture that does not match
+> PRODUCTION'S SHAPE certifies nothing.** The baseline read was careful about the range shape and
+> still reported 100 where there were 50 — a card carries `raw` AND the sections split out of it,
+> and the stand-in db had no `raw` at all, so the controls could not have caught it. Caught by the
+> output's own shape (every count even), i.e. the eyeball on live bytes — the instrument #77 says a
+> decision must never rest on. The anti-copy rule governs EVERY layer of a read, not its cleverest
+> part.
+> **NEXT PULL — the queue, unchanged and now unblocked:** the legacy **"None" trio (G2588 / G4172 /
+> G3624)**, lazy redraws through the new feed + new stamp, full current gate battery, no legacy
+> shortcuts. **G3624 carries a LIVE written range (`Heb 3:2–3` ×2)** — its redraw is the first
+> natural test of whether the anti-range line holds on a word with a known range habit. **WATCH, do
+> not force it** (reviewer). Flag that in its one-line prior-card context at BATCH REVIEW. Then
+> format unification (design pass, zero spend).
+> **⚠ STILL OWED, UNTOUCHED: the `finish_rebuild.sh` ACCEPTANCE RUN** — JP's next real
+> `/rebuild-words`. A `lexica_def` write does NOT discharge it. Nothing this session touched it.
+>
+> ---
+>
 > # ⇒ SESSION 2026-07-15: THE DESIGN PASS LANDED AND THE QUEUE CLEARED. THREE CARDS SHIPPED. ⇐
 > **GROUNDED-NAMING = CLOSED, BUILT, THREE LIVE PROOFS.** Root cause (reviewer-accepted, on the
 > bytes): the *"reason only from the supplied occurrences"* ban bound **SENSES, never referents**

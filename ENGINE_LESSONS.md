@@ -1289,3 +1289,31 @@ both drifting from the doc.
     one citation list, one copy misquoted — the fix was deleting the bad twin); name-shy prose (G2374
     named nothing outside quotes despite grounded context — watch whether ±2 buys the prose it was
     priced for). *(audit: SESSION 2026-07-15 entry, watch-items block)*
+
+81. **A control fixture that does not match PRODUCTION'S SHAPE is a control that proves nothing —
+    it certifies the fixture. Build the stand-in from the real thing's keys, or the green is
+    self-referential.** The anti-range baseline read was careful in exactly the place the rules
+    name: the range shape came from the production walker (`_TAIL_UNIT_RE`'s dash arm, never a
+    copy), and it was control-tested on five known positives and four negatives — including both
+    banked traps — before its number was allowed to decide anything. It still reported **100 ranges
+    where there were 50.** Cause: a stored entry carries BOTH `raw` (the model's full prose) AND the
+    sections split out of it (`:2222`, "kept so an improved splitter can re-split"); the read joined
+    every text field, counting every range once in `raw` and again in its section. **The controls
+    could not have caught it — every one ran on hand-made STRINGS, and the stand-in db was built
+    with `senses`/`range` keys and NO `raw`, so the fixture lacked the very field that causes the
+    defect.** The green was real and meaningless. **Two compounding sub-lessons, both paid the same
+    session:** (i) **the copy I was careful about was not the only copy** — production reads `raw`
+    ONLY (`:3242`, `refused_tails(entry.get("raw",""))`) and I invented my own field handling one
+    layer up from the range shape I had single-sourced; the anti-copy rule governs EVERY layer of a
+    read, not just its cleverest part. (ii) the twin, caught the same hour: the key column was typed
+    `strongs_g` from the LEXICON table's join out of memory when the real key is `strongs`
+    (`:3153`) — a hand-typed name that would have crashed on PA, caught only because JP ran it.
+    **What actually caught the defect was the OUTPUT'S OWN SHAPE** — every card's list was its own
+    ranges duplicated and every count was even — i.e. the eyeball, at the end, on live bytes, which
+    is precisely the instrument #77 says must never be the one a decision rests on. Remedy: the
+    audit's copy of the walker is deleted (it imports production's `written_ranges`), and the
+    stand-in is rebuilt from the production CREATE's real keys. Kin of the audit-tools-must-fail
+    rule but a DISTINCT failure: there the detector sleeps; here **the detector fired perfectly and
+    the fixture lied about the world.** Distinct also from #77 (which governs the baseline NUMBER):
+    this governs the SHAPE the number is read from. *(audit: anti-range baseline, 2026-07-15;
+    reported 100, real 50, decision unmoved — 21 of 85 cards is stable under the bug)*
