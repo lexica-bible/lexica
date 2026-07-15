@@ -1,5 +1,27 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **TOOLING SEQUENCE CLOSED — G1390 NOW SHIPS WITH ZERO KNOWN BLEMISHES (2026-07-15 01:39 UTC).**
+> Eph 4:8 gloss label `*gift*` → `*gifts*` APPLIED to the live row (JP-run, no model call, zero
+> spend), riding the fixed tool exactly as banked. **The carry rule passed its FIRST LIVE TEST:** an
+> adjudicated live row survived a surgical edit with **the ruling carried verbatim and all 7 warns
+> intact** — the falsified-record failure this arc existed to prevent, now demonstrated prevented on
+> the live row, not just in a fixture. The `meta:v3`→`meta:v6` risk **flagged before the run did not
+> bite** (sets matched, carry held) — naming it was still right. **WRITE VERIFIED FROM THE ROW** (not
+> the tool's own pre-write printout): gloss note reads `*gifts* in Eph 4:8` · `warns_adjudicated`
+> present · `probe2_warns`=7 · stamp `lexica:f27027b50754` unchanged · gate 38 · zero singular
+> `*gift*` labels left. Serves without a reload. The rendering-claim fire is GONE and the absence was
+> proven meaningful (`show_entry` checked to print such fires, `build_lexica_def.py:3019`) before
+> being read as clean. `Php` dangling flag = pre-existing, traced to the ship record's own "benign,
+> logged … known false-positive class" ruling — not waved off. **Sequence: `3b51592` fix_lexica_raw
+> 3-gap fix → `a750cd2` offline_gate_check write-path battery → Eph 4:8 label fix (live).**
+> **Scoreboard UNCHANGED `3/10ʰ · 7/15`** (a label repair is not a ship). **LOGGED SLIP:** CC posted
+> the runnable `--apply` before its gate cleared — cheap-and-safe is exactly where the habit erodes;
+> logged, no corrective commit. **STATE: origin = local = PA = `a750cd2` + doc commits; live G1390 row
+> updated.** Frozen V9 untouched; ZERO model spend the entire session.
+> **OPENS = G236 design pass (floor-level, spend-gated) · G162 redraw (JP's gamble call) · probe-2
+> over-firing ticket (7 byte-adjudicated fixtures — the best dataset in the arc).** Full record: AUDIT
+> "G1390 Eph 4:8 LABEL FIX — APPLIED + VERIFIED".
+
 > **TOOLING TICKET 2 DONE — `offline_gate_check` NOW RUNS THE WRITE-PATH BATTERY (2026-07-14,
 > commit `a750cd2`, pushed + PA pulled; code + test, NO word runs, ZERO spend).** **The harness ran
 > 1 production detector out of the 11 the write path runs** — so a readiness pass could certify a

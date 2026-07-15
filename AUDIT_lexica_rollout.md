@@ -6453,3 +6453,61 @@ LIVE POSSIBILITY FLAGGED BEFORE THE RUN: G1390's stored warns were computed unde
 fixed tool re-runs the probes under `meta:v6` — if the newer probes word them differently the sets
 won't match and the tool will correctly REFUSE to carry the ruling (changed set ⇒ full reopen). The
 one-letter fix may therefore cost a re-adjudication. That is the safety rule working, not a fault.**
+
+---
+
+### G1390 Eph 4:8 LABEL FIX — APPLIED + VERIFIED; **G1390 NOW SHIPS WITH ZERO KNOWN BLEMISHES**
+### (2026-07-15 01:39 UTC; live-row write, JP-run; NO model call, ZERO spend; the sequence closes)
+
+**THE FIX:** gloss-note bullet 2 label `*gift*` → `*gifts*` — one letter. The card labelled the
+gloss `*gift*` while the corpus renders **"gifts"** (and the card's own senses_block quotes *"gave
+gifts to men"* two fields up). Ruled a REAL fire at the G1390 ship and **deliberately left unfixed**
+because the only tool that could fix it would have SILENTLY ERASED the adjudication — *wrong-but-tiny
+beats falsified-record*. It rode the fixed tool, last in the sequence, exactly as banked.
+
+**THE CARRY RULE'S FIRST LIVE TEST — PASSED (standing, for the record).** An adjudicated live row
+survived a surgical edit with **the ruling carried VERBATIM and all seven warns intact**. Dry-run
+line: `✓ warn set UNCHANGED by this edit — prior adjudication carried: probe-2 7/7 over-firing…`.
+This is precisely the falsified-record failure the ticket existed to prevent, now demonstrated
+prevented on the live row rather than only in a fixture.
+**The `meta:v3` → `meta:v6` risk, FLAGGED BEFORE THE RUN, did not bite:** the stored warns were
+computed under the older probe surface and the fixed tool re-ran them under the newer one; the sets
+matched anyway, so the carry held. Naming a risk that doesn't materialize is the correct side of the
+asymmetry (reviewer: "worth keeping as practice") — the alternative was meeting it mid-apply.
+
+**PROBES RAN WHERE THE OLD TOOL PRINTED "NOT RUN".** The same command against the pre-fix tool would
+have printed `V11 prose probes NOT RUN … all UNCHECKED` and written anyway, dropping the ruling and
+the 7 warns. Gap 1 + gap 2 both demonstrated fixed on the live path.
+
+**RENDERING-CLAIM FIRE GONE, ABSENCE PROVEN MEANINGFUL.** No `gloss_claims` line in the apply output
+— and `show_entry` was CHECKED to confirm it loops and prints such fires (`build_lexica_def.py:3019`)
+before the absence was read as clean. An unverified absence would have been the same silence-reads-as-
+covered mistake this whole ticket is about.
+
+**`Php` DANGLING FLAG — TRACED TO THE RECORD, NOT WAVED OFF.** The apply output carries
+`⚠ dangling book refs (flag only): Php` (the card's prose says "the Philippians", the people — the
+lint resolves the name to a book code; the documented fail-closed trade-off). CC checked the SHIP
+RECORD rather than assert "not mine": already logged there as **"Benign, logged … the known
+false-positive class, flag-only."** Pre-existing, seen, ruled. (Reviewer: asserting "not mine"
+without reading the ruling would have been recall over record.)
+
+**WRITE VERIFIED FROM THE ROW, not from the tool's own printout** (which is produced BEFORE the
+write): stored gloss note reads `*gifts* in Eph 4:8` · `warns_adjudicated` still present ·
+`probe2_warns` = **7** · stamp `lexica:f27027b50754` UNCHANGED (a surgical edit is not a new
+generation) · citation gate **38** · `updated 2026-07-15T01:39:49` · **zero** occurrences of the
+singular `*gift*` label left anywhere in the card. Serves without a reload.
+
+**PROCESS SLIP, LOGGED NOT BURIED (reviewer-flagged, no corrective commit):** CC posted the runnable
+`--apply` command BEFORE the reviewer's acceptance of the dry-run had issued — "no runnable command
+until its gate has cleared" reads on that acceptance. Mitigation was real (zero-spend, single-row,
+dry-run-proven, gated behind JP running it) but the rule carves out no exception for cheap commands,
+and **cheap is exactly where the habit erodes**. Gate subsequently cleared; the command stood as
+posted.
+
+**STATE: origin = local = PA = `a750cd2` + doc commits; live `bible.db` G1390 row updated (one
+letter). Frozen V9 untouched; NO model call; ZERO spend for the entire session. Scoreboard
+UNCHANGED `3/10ʰ · 7/15`** (a label repair is not a ship — G1390 was already counted at its ship).
+**THE TOOLING SEQUENCE IS CLOSED:** `fix_lexica_raw` 3-gap fix (`3b51592`) → `offline_gate_check`
+write-path battery (`a750cd2`) → Eph 4:8 label fix (this). **OPENS = G236 design pass (floor-level,
+spend-gated) · G162 redraw (JP's gamble call) · probe-2 over-firing ticket (7 byte-adjudicated
+fixtures, now the best dataset in the arc).**
