@@ -5741,6 +5741,17 @@ button.study-verse-ref { border: none; }
   flex: 1 1 0; display: flex; align-items: center; justify-content: center;
   background: none; border: 0; color: var(--ink-3); cursor: pointer;
 }
+/* Bottom-bar icon size, matched to the app's other mobile bottom bars rather than picked by
+   eye (JP, 2026-07-15). MEASURED, and they don't agree: Word study's .wm-tab is 22px, the
+   Library cockpit's .mbar-* is 21px (the top .mobile-tabs is also 22px). 22 wins on two
+   counts — it's what the bar of the SAME SHAPE uses (.wm-tabs is icon-only equal slots, like
+   this one, where the cockpit is a mixed bar carrying the book/chapter text button), and it's
+   2:1 across the app. The 1px is invisible; the point is to stop inventing a fourth number.
+   The Icon components default to 14–16px because they were drawn for dense inline rows like
+   the desktop top bar — dropped into a bottom bar they read small AND disagreed with each
+   other (16/16/14). Sizing at the BAR keeps every future zbar consumer consistent without
+   touching the shared glyphs, and grows the glyph only: the button is still the tap target. */
+.zbar-btn svg { width: 22px; height: 22px; }
 .zbar-btn.on { color: var(--accent); }
 .zbar-btn:disabled { color: var(--ink-4); opacity: 0.5; }
 .zsheet-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; }
