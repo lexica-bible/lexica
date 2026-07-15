@@ -501,7 +501,8 @@ function NewsView({ isMobile }) {
   const exportTimer = useRef(null);
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
   const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
-  const [selStory, setSelStory] = useState(null);     // desktop: card selected into the why-rail
+  const [selStory, setSelStory] = useState(null);     // card selected into the why-rail (desktop) / Watch sheet (mobile)
+  const [mSheet, setMSheet] = useState(null);         // mobile shell: null | "threads" | "watch" | "options"
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
   useEffect(() => { localStorage.setItem("lexica.news.wkey.v1", windowKey); }, [windowKey]);
@@ -866,6 +867,13 @@ function NewsView({ isMobile }) {
   // "+N outside this window" — all-time kept/dismissed minus what's in the current window.
   // Both halves come from /api/news/counts, so it's cheap; only the active view's number
   // is shown (the lists are window-scoped now, so this keeps the all-time set discoverable).
+  // Selecting a card fills the inspect zone. Desktop = the right rail (in place). Mobile =
+  // the Watch sheet — the SAME sheet the toolbar's middle button opens, just entered by a
+  // different door (a tap pre-selects the story; the button opens whatever's already there).
+  // Before this, mobile passed no onSelect at all and the whole why/feed-shape zone was
+  // simply unreachable on a phone.
+  const pickStory = (s) => { setSelStory(s); if (isMobile) setMSheet("watch"); };
+
   const keptOutside = Math.max(0, (counts.kept_all || 0) - (counts.kept || 0));
   const dismissedOutside = Math.max(0, (counts.dismissed_all || 0) - (counts.dismissed || 0));
   const outsideN = view === "kept" ? keptOutside : view === "dismissed" ? dismissedOutside : 0;
@@ -900,8 +908,8 @@ function NewsView({ isMobile }) {
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
                        readOnly={!canReview} since={since} until={until} isMobile={isMobile}
-                       onSelect={isMobile ? null : setSelStory}
-                       selected={!isMobile && selStory && selStory.ids && s.ids && selStory.ids[0] === s.ids[0]} />
+                       onSelect={pickStory}
+                       selected={!!(selStory && selStory.ids && s.ids && selStory.ids[0] === s.ids[0])} />
           ))}
         </div>
         {outsideN > 0 && (
@@ -913,43 +921,120 @@ function NewsView({ isMobile }) {
     )
   );
 
-  // ---------------- MOBILE: single stacked column (unchanged shape) -------------
+  // ---------------- MOBILE: the shared Shell, zones collapsed behind the toolbar ------
+  // News is the FIRST surface to consume Shell's mobile collapse (Ask-corpus + Study are
+  // still on their old single-column branches). The mapping is the desktop's own zones, not
+  // a new information architecture:
+  //   LEFT rail (threads)                                  -> the "Threads" sheet   [left button]
+  //   CENTER (feed cards)                                  -> stays inline, the whole screen
+  //   RIGHT inspect (FeedShape, or NewsWhy on a selection)  -> the "Watch" sheet    [middle button]
+  //   the top bar's date / score / sort                     -> the "Options" sheet  [right button]
+  // Three buttons, JP's ruling. The bar reads left-to-right the way the desktop does: the
+  // navigate zone on the left, the inspect zone in the middle (it's the thing you look AT),
+  // the knobs on the right. "Options" and not "Filters" on the right BECAUSE Threads is
+  // itself a filter — labelling one of two filtering sheets "Filters" would say the other
+  // one isn't.
+  // Why this replaces the old stacked column: that column pushed a 205px filter strip above
+  // the feed (first headline started 404px down — half a phone screen of controls before one
+  // story), AND it dropped the inspect zone entirely, so a phone reader could never see why a
+  // story surfaced. The toolbar buys both back for one 48px bar.
+  // NOTE the bar is at the BOTTOM and the app's own .mobile-tabs is fixed at the TOP, so the
+  // two never collide (checked, not assumed — styles.css .mobile-tabs is `top: 0`).
   if (isMobile) {
-    return (
-      <div className="news-view">
-        <div className="news-head">
-          <h1 className="news-h1">News watch</h1>
-          {meta.reviewer_name ? (
-            <span className="news-asline" title="Keep/Dismiss are recorded under this reviewer">
-              Reviewing as <strong>{meta.reviewer_name}</strong>
-            </span>
-          ) : !canReview ? (
-            // The read-only signal, stated ONCE where it costs no row width. On mobile the
-            // grayed Keep/Dismiss aren't rendered (see hideActions), and a plain reader gets
-            // no "Reviewing as" line from the server (_reviewer() -> no id), so without this
-            // there'd be nothing left telling a reader what the tab is. Says the same thing
-            // the desktop tooltip says: you're reading someone's curated watch.
-            <span className="news-asline">Read-only — a curated watch</span>
-          ) : null}
-          {viewsToggle}
-        </div>
-        {/* Since/Score/Sort apply to all three views, so they always show. Copy-shortlist
-            stays Kept-only. */}
-        <div className="news-filters">
-          {inboxFilters}
-          <select className="news-thread-sel" value={thread} onChange={e => setThread(e.target.value)}>
-            <option value="">All threads</option>
-            {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
-          </select>
-          <button className="news-btn" disabled={loading} title="Re-pull the scored feed"
-                  onClick={() => setRefreshN(n => n + 1)}>
-            {loading ? "Refreshing…" : "Refresh"}
-          </button>
-          {view === "kept" && <>{copyMenu}{exportMenu}</> /* shortlist copy + export: Kept only */}
-          {flash && <span className="news-flash">{flash}</span>}
-        </div>
-        {feedInner}
+    const mHead = (
+      <div className="news-head">
+        <h1 className="news-h1">News watch</h1>
+        {meta.reviewer_name ? (
+          <span className="news-asline" title="Keep/Dismiss are recorded under this reviewer">
+            Reviewing as <strong>{meta.reviewer_name}</strong>
+          </span>
+        ) : !canReview ? (
+          // The read-only signal, stated ONCE where it costs no row width. On mobile the
+          // grayed Keep/Dismiss aren't rendered (see hideActions), and a plain reader gets
+          // no "Reviewing as" line from the server (_reviewer() -> no id), so without this
+          // there'd be nothing left telling a reader what the tab is. Says the same thing
+          // the desktop tooltip says: you're reading someone's curated watch.
+          <span className="news-asline">Read-only — a curated watch</span>
+        ) : null}
+        {/* Tabs lead, refresh sits at the far right of the same row — the desktop top bar's
+            order (views on the left, icon controls right), and an icon rather than the old
+            labelled 66px button.
+            WHY IT STAYS VISIBLE rather than moving into the Options sheet (measured at 375px,
+            not assumed): it rides the tabs row's spare width (129.7px spare vs a 32px icon)
+            and costs 6.4px of header — the icon is 32px against the tabs' 26.8px. That 6.4px
+            is 1.7% of the 214px this pass reclaimed. Against it: a tap, and filing under
+            "Options" a control that changes what the feed CONTAINS rather than how it's
+            filtered. Shrinking it to 27px would zero the 6.4px but trade away a real touch
+            target for noise. So: visible, full size. */}
+        {viewsToggle}
+        <button className="news-bar-icon" disabled={loading} title="Refresh the scored feed"
+                aria-label="Refresh the scored feed" onClick={() => setRefreshN(n => n + 1)}>
+          <Icon.Refresh className={loading ? "spin" : undefined} />
+        </button>
+        {/* Shortlist copy + export stay Kept-only, and stay in the CENTER: they act on the
+            visible shortlist, so they belong with it, not behind a filters sheet. */}
+        {view === "kept" && <div className="news-mkept">{copyMenu}{exportMenu}</div>}
+        {flash && <span className="news-flash">{flash}</span>}
       </div>
+    );
+    // LEFT sheet = the desktop rail, verbatim: the same threadList element the desktop
+    // renders. Same state, same handlers — only its home moved.
+    const mThreads = <div className="news-msheet">{threadList}</div>;
+    // RIGHT sheet = the desktop top bar's knobs (date window / score / sort), grouped under
+    // the rail's own small-caps section rhythm.
+    const mOptions = (
+      <div className="news-msheet">
+        <div className="news-msec">
+          <div className="news-mlabel">Date window</div>
+          <div className="news-filters news-mfilters">
+            <label className="news-f"><span>Since</span>{dateInput}</label>
+            <label className="news-f"><span>Until</span>{untilInput}</label>
+            {presets}
+          </div>
+        </div>
+        <div className="news-msec">
+          <div className="news-mlabel">Score</div>
+          {scoreSeg}
+        </div>
+        <div className="news-msec">
+          <div className="news-mlabel">Sort</div>
+          {sortSel}
+        </div>
+      </div>
+    );
+    // MIDDLE = the inspect zone. The toolbar button and a card tap are two doors into the
+    // SAME room: both land on this one expression — a selected card shows its why, otherwise
+    // the feed-shape readout. "‹ Watch" still clears the selection back to the readout, so
+    // the sheet's own depth works whichever door you came through.
+    const mWatch = selStory
+      ? <NewsWhy story={selStory} onBack={() => setSelStory(null)} />
+      : <FeedShape shape={shape} />;
+    const sheet = mSheet === "threads" ? mThreads
+      : mSheet === "options" ? mOptions
+      : mSheet === "watch" ? mWatch
+      : null;
+    const flip = (k) => () => setMSheet(m => (m === k ? null : k));
+    const tools = [
+      { key: "threads", label: "Threads", icon: <Icon.Hash />, on: mSheet === "threads", onTap: flip("threads") },
+      { key: "watch", label: "Watch", icon: <Icon.Panel />, on: mSheet === "watch", onTap: flip("watch") },
+      { key: "options", label: "Options", icon: <Icon.Filter />, on: mSheet === "options", onTap: flip("options") },
+    ];
+    return (
+      <Shell
+        className="news-frame news-m"
+        isMobile={true}
+        center={<div className="news-view">{mHead}{feedInner}</div>}
+        mobile={{
+          tools,
+          sheet,
+          // The Watch sheet carries its own header band + its own scroll box (.news-shape is a
+          // flex column), so it goes BARE — the padded .zsheet-body would nest a second scroll
+          // box and collapse the stack's flex-fill. Filters is plain content -> normal body.
+          sheetBare: mSheet === "watch",
+          sheetTitle: mSheet === "threads" ? "Threads" : mSheet === "options" ? "Options" : null,
+          onCloseSheet: () => setMSheet(null),
+        }}
+      />
     );
   }
 

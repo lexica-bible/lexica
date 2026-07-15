@@ -5646,6 +5646,40 @@ button.study-verse-ref { border: none; }
   .news-view { padding: 16px 12px 90px; }
   .news-story { gap: 10px; padding: 12px; }
   .news-actions { flex-direction: row; }
+
+  /* --- News on the shared Shell's mobile collapse (the toolbar + sheets) --------------
+     Same pinning trick as Ask-corpus (.ac): sit in the VISIBLE viewport (100dvh tracks the
+     address bar) below the fixed TOP tab bar, and clip, so only the feed scrolls instead of
+     the whole page rubber-banding. .main already pads the top for that bar; drop its bottom
+     pad so the shell ends exactly at the visible bottom. */
+  .app.view-news .main { padding-bottom: 0; }
+  .news-frame.zshell-m {
+    height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    overflow: hidden; min-width: 0;
+  }
+  /* .zcenter-m is the scroll box and the .zbar is FIXED over its bottom edge, so the feed
+     needs its own clearance or the last card hides behind the toolbar. */
+  .news-frame.zshell-m .news-view {
+    padding-bottom: calc(var(--bar-h) + 16px + env(safe-area-inset-bottom, 0px));
+  }
+  .news-frame.zshell-m .news-head { align-items: baseline; }
+  /* Refresh: quiet icon in the header, not a labelled button eating a row. */
+  .news-frame.zshell-m .news-head .news-bar-icon { margin-left: auto; }
+  .news-mkept { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
+
+  /* Filters sheet: the desktop rail's sections, same small-caps rhythm as .brail-eyebrow. */
+  .news-msheet { display: flex; flex-direction: column; gap: 18px; padding: 4px 0 16px; }
+  .news-msec { display: flex; flex-direction: column; gap: 8px; }
+  .news-mlabel {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--ink-4);
+  }
+  /* Inside the sheet the strip is just content — no bottom rule, no margin (the sheet's
+     own sections carry the rhythm now). */
+  .news-mfilters { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .news-msheet .news-seg { flex-wrap: wrap; }
+  .news-msheet .news-thread-sel { align-self: flex-start; }
 }
 
 /* ============================================================
