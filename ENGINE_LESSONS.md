@@ -1238,4 +1238,14 @@ both drifting from the doc.
     **BELIEVABLE CATASTROPHE** — "every card is missing 40 verses a reader should see" is exactly the
     finding that would have justified redrawing all 81 cards. **The direction of a silent breakage is
     UNKNOWABLE IN ADVANCE, so "watch for absurd output" is not a rule. The control is.**
-    *(audit: the retracted blast read, 2026-07-14; reviewer-ruled as the standing template)*
+    **MANDATORY FOR DECISION-FEEDING READS (ruled after a THIRD instrument slip in ninety minutes —
+    broken blast read, over-firing grep, INVENTED BASELINE):** predicting *"G25 goes 37 → 38 verses"*
+    while never having READ the stored count is the same failure in a smaller coat — the baseline was
+    inferred from a delta and stated as fact. (It was **36**; the prediction was wrong and the
+    mechanism was fine — the slip cost a round trip and nearly discredited a working fix.)
+    → **EVERY ad-hoc read that feeds a GO decision must state its baseline as a READ FACT, with the
+    command that produced it, or it does not feed the decision.** All three slips were caught
+    honestly and none reached a decision — but they CLUSTERED as the reads grew more consequential,
+    and a number that sizes a 31-card remediation cannot rest on a remembered baseline.
+    *(audit: the retracted blast read + the G25 baseline, 2026-07-14; reviewer-ruled as the standing
+    template)*
