@@ -7049,11 +7049,17 @@ points the same way. That is not evidence.** The flag stands for a future sessio
 **PARKED**. **No G236 spend can be pitched as buying the ruled third home: there is no legal route
 to it off this floor.**
 
-**REVIVAL TRIGGER (named, narrow):** bound to **this floor's modal count of 2.** Revives only if
-the floor is legitimately replaced — the fed evidence or the engine changes **for reasons of their
-own** — and a NEW floor lands at modal count ≥3 that a roster could lawfully read. **A new floor
-drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp** (re-scoring until the
-answer arrives) **and is dead on the same reasoning.**
+**REVIVAL TRIGGER (named, narrow — OPERATIONAL TEST ADDED, reviewer-tightened 2026-07-14):** bound
+to **this floor's modal count of 2.** Revives only if the floor is legitimately replaced and a NEW
+floor lands at modal count ≥3 that a roster could lawfully read.
+
+**THE TEST IS PROVENANCE ORDER, NOT STATED INTENT.** The fed-evidence or engine change that produced
+the replacement floor must be **already committed and justified in its OWN ticket, with NO reference
+to G236's C1, BEFORE any G236 re-read is pitched.** **Why:** the first wording — *"for reasons of
+their own"* — invites a future session to argue **motive**, and motive is precisely what a session
+under pressure can always supply. A commit that predates the pitch and never mentions C1 cannot have
+been written to clear it. **A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 with a
+fresh timestamp** (re-scoring until the answer arrives) **and is dead on the same reasoning.**
 
 ### Why this session ends better than it started
 

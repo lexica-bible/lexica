@@ -1105,3 +1105,38 @@ both drifting from the doc.
     times); (iv) the cheap read paid for itself every time — read the machinery, not the pitch. Kin of
     #70/#71/#72 (recall over bytes) with the loss denominated in money instead of a false record.
     *(audit: SPEND DELIBERATION — two spends proposed, both refused on bytes, 2026-07-15)*
+
+74. **Floor-DERIVED is not floor-CONSENSUS — and BOTH sides of the loop lost the distinction in one
+    session, in opposite directions.** The roster's entire legal defense is that it is *"not
+    hand-invented — it is the floor's OWN repeated-review consensus"* (`draw_hints.py:15-26`). Two
+    failures grew from the same root — nobody had separated *"the floor contains it"* from *"the floor
+    settled it"*. **Direction 1 — too strict (the loop's own banked board):** the SPEND BOARD read
+    *"hand-carve the roster ⇒ BANNED (path-(c))"*, an INVERSION of the charter, which bans hand-carving
+    for **hints/jobs ONLY** and expressly permits a roster to fix count + grouping. It had also priced
+    the lever at *"~10× a redraw, the board's most expensive item"* — pricing a floor re-run when the
+    real lever anchors the SHIP draw at ONE (`build_lexica_def.py:3125`). A prior session compressed a
+    rule into a slogan; the slogan then killed the only surviving mechanism sight-unseen, and every
+    later session inherited the slogan, not the rule. **Direction 2 — too loose (CC, this session):**
+    having falsified the slogan, CC framed the deciding question as *"is the third home IN the floor?"*
+    — floor-DERIVED. But a placement in 1 of 10 draws is in the floor and is consensus by no reading;
+    reading it back is **minority-shopping in the roster's clothes — hand-carving one layer removed.**
+    Reviewer-caught before the data was opened. **Direction 3 — the same root, third face (lever 12,
+    reviewer-raised, disposed):** re-aggregating the saved floor under a NON-MODAL counting rule.
+    Duplicate in form (the roster IS the aggregation output) and worse in substance: it re-scores the
+    vote until the floor returns the ruled direction's answer, then claims the roster's *"I only read
+    what the floor settled"* defense for the result. **Consensus-manufacture wearing consensus's
+    clothes.** → (i) when a mechanism's legality rests on "it came from X", the load-bearing word is
+    never *contains* — write the STRENGTH test into the charter, because "derived from" silently admits
+    a minority of one; (ii) **pre-register the criterion, its numbers, AND its predicted outcome BEFORE
+    the deciding read**, with thresholds taken from the machinery's OWN named bands (~2/10 *"poles
+    blur"* · 5/5 *"true seam"* · 7-8/10 *"homed"*) and never from what would be convenient — here it
+    made a one-line read decisive and left no room to rationalize the lone 3-sense draw into a rescue
+    (**the draw was left UNOPENED; the temptation is banked in the audit precisely because it was
+    real**); (iii) a rule compressed into a slogan for a handoff will be inherited as the slogan —
+    when a board line blocks a mechanism, cite the charter's own bytes beside it or the next session
+    obeys a rule that was never ruled; (iv) both directions are the SAME error, so neither "we already
+    ruled it banned" nor "but the evidence is right there" is a check on the other — only the charter's
+    own words are. Kin of #73 (a ruled DIRECTION is not a MECHANISM — this is its next layer: a named
+    mechanism is still not a LEGAL one) and of #70/#71 (recall over bytes; here the recall was the
+    project's own board). *(audit: G236 PART 2 — MECHANISM KILLED ON THE FLOOR'S OWN BYTES, 2026-07-14;
+    written under JP's standing delegation, reviewer-RULED in over CC's self-assignment restraint)*

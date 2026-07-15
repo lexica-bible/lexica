@@ -198,11 +198,20 @@ same way; that is not evidence, and the flag stands.
 **PARKED**. **The standing gate on every G236 spend is CLOSED**: there is no legal route to the
 ruled third home off this floor, so no G236 spend can be pitched as buying one.
 
-**REVIVAL TRIGGER (named, narrow):** this verdict is bound to **this floor's modal count of 2**.
-It revives only if the floor itself is legitimately replaced — i.e. the fed evidence or the engine
-changes for reasons of their own, and a NEW floor lands with a modal count ≥3 that a roster could
-lawfully read. **A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 wearing a fresh
-timestamp — re-scoring until the answer arrives — and is dead on the same reasoning.**
+**REVIVAL TRIGGER (named, narrow — with an OPERATIONAL test, reviewer-tightened 2026-07-14):** this
+verdict is bound to **this floor's modal count of 2**. It revives only if the floor itself is
+legitimately replaced and a NEW floor lands at modal count ≥3 that a roster could lawfully read.
+
+**"For reasons of its own" is NOT a statement of intent — it is a PROVENANCE ORDER test, and the
+order is checkable:** the fed-evidence or engine change that produced the replacement floor must be
+**already committed and justified in its OWN ticket, making no reference to G236's C1, BEFORE any
+G236 re-read is pitched.** Provenance order is the test; stated motive is not. **Why the tightening:**
+"for reasons of their own" invites a future session to argue motive, and motive is exactly what a
+session under pressure can always supply. A commit that predates the pitch and never mentions C1
+cannot have been written to clear it.
+
+**A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 wearing a fresh timestamp —
+re-scoring until the answer arrives — and is dead on the same reasoning.**
 
 **COST OF THE WHOLE ANSWER: ZERO.** A refusal grounded in the floor's own bytes is a finding, not
 a failure. The board's most expensive item was never the candidate, and the actual candidate cost

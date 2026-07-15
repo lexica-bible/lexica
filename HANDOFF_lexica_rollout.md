@@ -26,10 +26,15 @@
 > — BELOW the ~2/10 *"poles blur"* noise band (`:65`) and far below C3's 5/10. IT WAS NOT OPENED**; opening
 > it to see whether it "really" got the senses right is minority-shopping in the roster's clothes, the
 > exact move the criterion exists to refuse. **The criterion predicted the kill before the data and was
-> not renegotiated after it.** **REVIVAL TRIGGER (narrow):** bound to THIS floor's modal count of 2 —
-> revives only if the floor is legitimately replaced for reasons of its own and a NEW floor lands with a
-> modal count ≥3. **A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp
-> and is dead on the same reasoning.** **STILL UNVERIFIED, not upgraded:** the old *"~10 draws agreed"* on
+> not renegotiated after it.** **REVIVAL TRIGGER (narrow, OPERATIONAL TEST — reviewer-tightened
+> 2026-07-14):** bound to THIS floor's modal count of 2 — revives only if the floor is legitimately replaced
+> and a NEW floor lands at modal count ≥3. **THE TEST IS PROVENANCE ORDER, NOT STATED INTENT: the
+> fed-evidence or engine change behind the new floor must ALREADY be committed and justified in its OWN
+> ticket, making NO reference to G236's C1, BEFORE any G236 re-read is pitched.** (*"for reasons of its
+> own"* invited a future session to argue MOTIVE — which a session under pressure can always supply; a
+> commit that predates the pitch and never mentions C1 cannot have been written to clear it.) **A new floor
+> drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp and is dead on the same
+> reasoning.** **STILL UNVERIFIED, not upgraded:** the old *"~10 draws agreed"* on
 > Ezr 6:11 is a PLACEMENT claim; this read reports COUNT. It points the same way — that is not evidence.
 > **COST OF THE ENTIRE ANSWER: ZERO.** Full record: `DESIGN_g236_part2_mechanism.md` + AUDIT "G236 PART 2
 > — MECHANISM KILLED ON THE FLOOR'S OWN BYTES". The history that produced this verdict follows. ▼
