@@ -146,6 +146,10 @@ conserving tool calls; the focus notes below are about context quality, not rati
   run by the user on PA; Claude proposes the exact command, the user confirms before any write.
   Checkpoint approval required before any correction-table write, schema change, or
   binding-logic modification.
+  **But `abp_texts/` IS in the repo — read it, don't ask JP to paste ABP text.** It is
+  DIAGNOSIS-grade only: it's the PRE-BUILD source (brackets unreordered, Strong's inline), so it
+  is NOT the bytes any gate compares against. **Anything byte-exact — a quote fix, an `--old`
+  string — comes from a PA dump of the built `verses.text`, never from `abp_texts/`.**
 - After ANY edit to `static/src/*.jsx`: `npm run build`, commit BOTH source and rebuilt
   `app.js`. Full build-system detail + line-ending traps: `docs/claude/frontend.md`.
 

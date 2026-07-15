@@ -1104,6 +1104,14 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
   `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
 
 ## Lexica def-engine — small open tickets
+- **Legacy redraw order — next dip = the 24 VERSE-SHORT cards.** The 3 `"None"`-marker cards
+  (G2588/G4172/G3624) are DONE 2026-07-15 (cards 85→88, zero spend — record in
+  `AUDIT_lexica_rollout.md`, top entry). Rules unchanged from JP's 2026-07-14 ruling: lazily, a few
+  per session at most, development first, full current gate battery, no shortcuts.
+- **Repair-leg gotcha (cost a revert 2026-07-15, ENGINE_LESSONS #83):** if drafts are repaired and
+  waiting to ship, SHIP THEM BEFORE committing any prompt edit — a prompt edit stales every cached
+  draw at commit time and `--from-draw` refuses a stale draw. Spec-first governs authorization order,
+  not commit order.
 - **Gloss-note claim-checker sprays junk warnings** (seen on the G5590 fix, 2026-07-11): reports a
   MATCH as a mismatch ("claimed *breath* — corpus renders breath") and treats stray italicized words
   ("or", whole sentences) as claimed glosses — looks like the quote-extraction pattern grabbing every

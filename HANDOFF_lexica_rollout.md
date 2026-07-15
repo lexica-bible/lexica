@@ -1,5 +1,49 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> # ⇒ SESSION 2026-07-15 (c): THE "None" TRIO IS SHIPPED — CARDS 85 → 88, ZERO MODEL SPEND. ⇐
+> **THE PULL IS DONE. `G2588` καρδία · `G4172` πόλις · `G3624` οἶκος ARE LIVE** on the current engine,
+> shipped from their own repaired drafts ("using reviewed draw … no model call" on all three tails).
+> **The `"None"` marker is GONE** — the pull's whole reason: G3624's card told readers 1Co 1:16 /
+> 2Ti 1:16 / 2Ti 4:19 render the word as the word "None"; it now reads them as the households of
+> Stephanas and Onesiphorus. Coverage 82/82 · 83/83 · 83/83; citation gate 83/83 ×3; zero quote
+> refusals. **NEXT LEGACY DIP = the 24 VERSE-SHORT cards** (fixed order, JP's 2026-07-14 lazy ruling
+> — a few per session at most, development first). Then format unification (design pass, zero spend).
+> **THE SESSION'S REAL YIELD — ENGINE_LESSONS #82: a defect banned on one surface reappears on the
+> next surface that can carry it.** The anti-range line killed `Heb 3:2–3`; the same instinct moved
+> into the QUOTE MARKS. Six verbatim-quote-gate refusals / three independent words / ONE batch, one
+> mechanism in five disguises (wording smoothed; an ellipsis hiding a REORDER at Deu 2:34; a gap
+> closed SILENTLY at Psa 5:7; and the sharpest — a quote WELDED from Heb 3:5+3:6 hung on Heb 3:2 with
+> 3:6 uncited). **G3624 is the lesson in one word:** perfect obedience to the anti-range line (3:2,
+> 3:3, 3:4, 3:5 listed one by one, WRITTEN-RANGE zero) and the identical defect re-expressed inside
+> quotation marks, in the same Heb 3 passage its old card ranged over.
+> **QUOTE-CONTINUITY LINE IS LIVE — `45c5e02`, STAMP `bd8b7e3f8209` → `f8c77bf889f6`.** Appended to
+> QUOTES ARE VERBATIM as that rule's missing half (one verse per span · an ellipsis may only OMIT, in
+> the verse's own order · gaps must be marked · "when in doubt, quote less"). Contract test shipped
+> WITH it. Consequences **LAZY**: every cached draw stale, redraw when next touched, no forced re-run,
+> no spend owed. **Do not re-pitch it and do not re-open the anti-range line (still spent).**
+> **⚠ THE COMMIT-ORDER TRAP, #83 — READ BEFORE ANY PROMPT EDIT:** a prompt edit stales every cached
+> draw AT COMMIT TIME. The spec was ruled "spec first, then repair", the prompt landed first, and it
+> STRANDED the three drafts we had just hand-repaired. **Spec-first governs AUTHORIZATION order, not
+> COMMIT order — a ruled spec may be held while owned drafts ship. SHIPS LAND BEFORE THE PROMPT
+> MOVES.** Cost a revert-hold-reland (`500a754` → `1b5499e` → `45c5e02`); zero spend, ten repairs
+> preserved, both stamp moves in STAMP HISTORY with the why.
+> **#84, owned: `--from-draw` does NOT ship past staleness** — it hard-refuses (`status != "hit"`),
+> and "requires a cache HIT" was IN the help text I quoted while claiming the opposite. Help text is
+> the author's summary of a branch, not the branch. The clean refusal is the guard's credit, not the
+> claim's.
+> **THE TEN REPAIRS (the machinery that did the work, zero spend):** `fix_lexica_raw --draw`, every
+> `--old`/`--new` transcribed from a JP-pasted PA dump of the built `verses.text` — never from
+> `abp_texts/`. **`abp_texts/` IS IN THE REPO and IS diagnosis-grade** (it named all six defects) —
+> **but it is PRE-BUILD source (brackets unreordered, Strong's inline), NOT fix-byte-grade.** #81's
+> shape exactly: a stand-in that doesn't match production's shape.
+> **CARRIED, NOT CLOSED — BATCH REVIEW material:** double-shelved warns (5 on G2588, 1 on G4172) +
+> G4172's sub-use overload flag, all shipped non-blocking · the `#30 floor-diff NOT-RUN` lines are the
+> standing insurance-clause condition, unchanged.
+> **⚠ STILL OWED, UNTOUCHED: the `finish_rebuild.sh` ACCEPTANCE RUN** — JP's next real
+> `/rebuild-words`. Nothing this session went near it. Scoreboard `3/10ʰ · 7/15` UNTOUCHED (JP's).
+>
+> ---
+>
 > # ⇒ SESSION 2026-07-15 (b): THE ANTI-RANGE PULL IS SPENT. BOTH HALVES SHIPPED, ZERO MODEL SPEND. ⇐
 > **THE RIPE PULL IS GONE — do not re-pitch it.** ENGINE_LESSONS #80's anti-range line is BUILT,
 > reviewer-receipted, and live in the frozen prompt (`808b54c`), and its compliance count is on the

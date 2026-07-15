@@ -1317,3 +1317,51 @@ both drifting from the doc.
     the fixture lied about the world.** Distinct also from #77 (which governs the baseline NUMBER):
     this governs the SHAPE the number is read from. *(audit: anti-range baseline, 2026-07-15;
     reported 100, real 50, decision unmoved — 21 of 85 cards is stable under the bug)*
+
+82. **A defect BANNED ON ONE SURFACE reappears on the next surface that can carry it. The
+    anti-range line killed the verse-RANGE (`Heb 3:2–3`); the same instinct — assert a span you
+    did not check — moved straight into the QUOTE MARKS.** Six verbatim-quote-gate refusals across
+    three independent words in ONE dry-run batch, one mechanism in five disguises: wording smoothed
+    to read continuously (G2588 Oba 1:3 "says"/"saying"; Heb 3:10 dropped "they"; Lam 3:41 "we
+    shall"/"We should"), an ellipsis hiding a REORDER (G4172 Deu 2:34 — ABP reads "we utterly
+    destroyed every city"), a gap closed SILENTLY with no ellipsis at all (G3624 Psa 5:7), and the
+    sharpest: a quote WELDED from Heb 3:5 + Heb 3:6 and hung on Heb 3:2, with 3:6 uncited anywhere
+    on the card. **G3624 is the whole lesson in one word:** it obeyed the anti-range line perfectly
+    (listed 3:2, 3:3, 3:4, 3:5 one by one, WRITTEN-RANGE count zero) and re-expressed the identical
+    defect inside quotation marks, in the same Heb 3 passage its old card had ranged over. Obedience
+    in FORM, disease intact. Remedy: the quote-continuity line, appended to QUOTES ARE VERBATIM as
+    that rule's missing half (one verse per span; an ellipsis may only OMIT, in the verse's own
+    order; gaps must be marked; "when in doubt, quote less" as the compliant escape route) — stamp
+    `bd8b7e3f8209` → `f8c77bf889f6`, `45c5e02`. **The design question for v2: when a constraint bans
+    a defect, ask what OTHER surface can express the same instinct, and fence it in the same edit.**
+    Note the asymmetry that made this cheap: the range habit had NO gate (G3793's phantom verses
+    shipped), the quote habit is fully gated — all six were caught before a reader saw them, so this
+    line buys draw-side economics (retries), not reader safety. *(audit: legacy "None" trio,
+    2026-07-15; 6 refusals / 3 words / 1 batch)*
+
+83. **A prompt edit stales every cached draw AT COMMIT TIME — so when repaired drafts are waiting to
+    ship, THE SHIPS LAND BEFORE THE PROMPT MOVES. Spec-first governs AUTHORIZATION order, not COMMIT
+    order: a ruled spec may be held while owned drafts ship.** Paid on the trio: the quote-continuity
+    spec was ruled "spec first, then repair" and the prompt edit was committed immediately — which
+    staled the three hand-repaired drafts (ten byte-sourced fixes, banked minutes earlier) that were
+    queued to ship. `--from-draw` hard-refuses a stale draw BY DESIGN (`build_lexica_def.py`
+    draw_status / the from_draw branch) — there is no path that ships one, and there must not be:
+    the guard's invariant is absolute and it had just caught us. Resolution was revert-hold-reland
+    (ship at the stamp that DREW them, so each card's stamp stays truthful, then re-land the line
+    byte-identical) — zero spend, ten repairs preserved, both stamp moves in STAMP HISTORY. The
+    rejected alternatives are the lesson's edges: redrawing spends calls a ruling already declined
+    and bins owned repairs; a "stale-but-repaired" bypass puts a standing hole in the one guard whose
+    whole job is that a stale draw can never silently apply. **Kin of #79** (the deterministic lever
+    beats another model call) — here the deterministic lever was a commit order, not a tool.
+    *(audit: legacy "None" trio, 2026-07-15; 500a754 → 1b5499e → 45c5e02)*
+
+84. **"The flag's help text says X" is not a reading of the branch — it is a guess wearing a
+    citation.** Claimed `--from-draw` ships a reviewed draw past staleness, sourced from its help
+    string ("bypassing the synth_ver up-to-date skip; requires a cache HIT"). The branch says the
+    opposite: `status != "hit"` → hard refuse, and "requires a cache HIT" was the refusal condition
+    stated plainly in the very text quoted. The skip it bypasses and the staleness check are
+    DIFFERENT gates; reading one as the other cost a no-op command set and a revert. **Help text is
+    the author's summary of a branch, not the branch** — same class as #81's "the copy I was careful
+    about was not the only copy": care at one layer certifies nothing about the layer under it. The
+    clean refusal is the GUARD's credit, not the claim's — a wrong claim that a guard catches is
+    still a wrong claim. *(audit: legacy "None" trio, 2026-07-15; verify-before-claim breach, owned)*

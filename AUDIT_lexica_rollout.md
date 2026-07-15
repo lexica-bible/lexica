@@ -9,6 +9,77 @@ Pass criteria per entry (JP's bar): citation gate clean, **dangling and noncanon
 
 ---
 
+## LEGACY "None" TRIO — SHIPPED 2026-07-15. Cards 85 → 88. ZERO model spend.
+
+**`G2588` καρδία (#86) · `G4172` πόλις (#87) · `G3624` οἶκος (#88)** — the fixed head of the legacy
+redraw order (JP's 2026-07-14 "redraw not patch, and lazily" ruling), all three reader-facing marker
+taint that a `--resplit` could not reach (the marker was in the stored raw).
+
+**THE PULL'S OBJECTIVE, MET AND VERIFIED IN SHIPPED BYTES:** the `"None"` marker is gone from all
+three. G3624's old gloss_notes read *'The three NT occurrences rendered "None" (1Co 1:16; 2Ti 1:16;
+2Ti 4:19)'* — telling a reader those verses render the word as the word "None". The shipped card puts
+all three under sense 3 as the households of Stephanas and Onesiphorus, correctly.
+
+**HOW THEY SHIPPED — repaired, not redrawn.** All three drew stale at the new stamp and FAILED their
+first dry-run on two gate classes: coverage (4 uncited fed occurrences total — 1Ch 12:17 · Gen 46:28,
+Jas 4:13 · Lam 1:20) and verbatim-quote (6 spans). Ten hand fixes through `fix_lexica_raw --draw`,
+every `--old`/`--new` transcribed from a JP-pasted PA dump of the built `verses.text`. Final tails:
+coverage 82/82 · 83/83 · 83/83, citation gate 83/83 ×3, zero quote refusals, "using reviewed draw …
+no model call" on all three. **Stamp on all three cards: `bd8b7e3f8209`** — the prompt that actually
+drew them (see the commit-order entry below).
+
+**THE SIX QUOTE REFUSALS = ENGINE_LESSONS #82** (one mechanism, five disguises — the range habit
+relocated from the reference into the quote marks):
+| word | verse | the card wrote | ABP built text | defect |
+|---|---|---|---|---|
+| G2588 | Oba 1:3 | "**says** in his heart" | "**saying** in his heart" | wording smoothed |
+| G2588 | Heb 3:10 | "continually err" | "Continually **they** err" | word dropped |
+| G2588 | Lam 3:41 | "**we shall** lift up" | "**We should** lift up" | modal swapped |
+| G4172 | Deu 2:34 | "every city … we utterly destroyed" | "we utterly destroyed every city" | **ellipsis hid a REORDER** |
+| G3624 | Psa 5:7 | "I shall enter into your house" | "But I, **in the multitude of your mercy** shall enter…" | **gap closed SILENTLY** |
+| G3624 | Heb 3:2 | "Moses indeed was trustworthy … **Christ as a son over his house**" | first half = **Heb 3:5**, second = **Heb 3:6** | **WELD across two verses, hung on a third; 3:6 uncited** |
+
+**G3624 IS THE LESSON IN ONE WORD:** it obeyed the anti-range line perfectly — listed Heb 3:2, 3:3,
+3:4, 3:5 one by one, WRITTEN-RANGE count zero — and re-expressed the identical defect inside the
+quote marks, in the same Heb 3 passage its old card had ranged over. Obedience in FORM, disease
+intact. Resolution: quote trimmed to the Heb 3:5 span only; 3:6 stays honestly uncited rather than
+quote-cited (the 3:6 half duplicated prose already in the sentence — content loss zero).
+**The `×2` in the prior handoff's "G3624 carries a live written range (`Heb 3:2–3` ×2)" was the #81
+double-count artifact, as suspected at spec time — carried as unverified, never used as a number.**
+
+**OUTCOME: the quote-continuity line, `45c5e02`, stamp `bd8b7e3f8209` → `f8c77bf889f6`** (appended to
+QUOTES ARE VERBATIM as that rule's missing half; contract test shipped with it). **Asymmetry worth
+keeping:** the range habit had NO gate (G3793's phantom verses shipped); the quote habit is fully
+gated — all six caught pre-reader. The line buys draw-side retries, not reader safety.
+
+**THE COMMIT-ORDER TRAP = ENGINE_LESSONS #83.** The spec was ruled "spec first, then repair"; the
+prompt edit was committed immediately and **staled the three drafts we had just repaired** — a prompt
+edit stales every cached draw at commit time, and `--from-draw` hard-refuses a stale draw by design.
+Resolution: revert-hold-reland (`500a754` → `1b5499e` → `45c5e02`) — ship at the stamp that DREW them
+so each card's stamp stays truthful, then re-land the line byte-identical (hashed back to
+`f8c77bf889f6`, proving identity rather than assuming it). Zero spend, ten repairs preserved.
+**Rejected, and the rejections are the lesson's edges:** redrawing spends three calls a ruling had
+already declined and bins the repairs; a "stale-but-repaired" bypass puts a standing hole in the one
+guard whose invariant is that a stale draw can never silently apply.
+
+**BREACH, OWNED = ENGINE_LESSONS #84:** claimed `--from-draw` ships past staleness, sourced from its
+help text — which literally says "requires a cache HIT". Help text is the author's summary of a
+branch, not the branch. Cost a no-op command set; the clean refusal is the guard's credit, not the
+claim's. Second, smaller: the spec promised a presence-only contract test and `500a754` shipped the
+stamp move without it — caught during the revert check, landed in `45c5e02`.
+
+**`abp_texts/` — STANDING, worth knowing before the next repair:** it IS in the repo and IS
+diagnosis-grade (it named all six defects unaided). It is **PRE-BUILD source** (brackets unreordered,
+Strong's numbers inline) and is **NOT fix-byte-grade** — #81's shape exactly. Fix bytes come from a
+PA dump of the built `verses.text`, always.
+
+**CARRIED, NOT CLOSED — BATCH REVIEW material:** double-shelved warns (5 on G2588: Ezr 6:22, Gen
+20:5, Heb 3:12, Jas 3:14, Job 12:24; 1 on G4172: Rev 16:19) and G4172's sub-use overload flag (sense
+1 carries 5 sub-uses; #14 forbids forced folds), all shipped non-blocking. `#30 floor-diff NOT-RUN` on
+all three = the standing insurance-clause condition, unchanged.
+
+---
+
 ## Batch One — calibration batch
 
 Top 20 content words after skipping FUNC-flagged (I, all, who, someone) + 11
