@@ -5678,6 +5678,11 @@ button.study-verse-ref { border: none; }
   /* Inside the sheet the strip is just content — no bottom rule, no margin (the sheet's
      own sections carry the rhythm now). */
   .news-mfilters { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  /* The why/watch panel's 80px bottom padding is DESKTOP clearance (there it sits in a fixed
+     full-height rail). Inside a sheet it's just an 80px dead gap under the last source —
+     the other sheets' .zsheet-body carries no such gap, so it read as "not the same card".
+     Trim it to the sheet's own safe-area padding. */
+  .zsheet .news-shape-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   .news-msheet .news-seg { flex-wrap: wrap; }
   .news-msheet .news-thread-sel { align-self: flex-start; }
 }

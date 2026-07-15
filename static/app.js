@@ -270,7 +270,20 @@ const hasMore=!!(data.scope||data.scope_contested||data.underspecified||data.gla
 // (otherwise the body scrolls normally). Uses native non-passive listeners so we
 // can block page scroll / pull-to-refresh while dragging (React's touch props
 // are passive and can't).
-function useSwipeToDismiss(onClose){const sheetRef=React.useRef(null);const scrollRef=React.useRef(null);const closeRef=React.useRef(onClose);closeRef.current=onClose;React.useEffect(()=>{const el=sheetRef.current;if(!el)return;let startY=0,dragY=0,active=false,fromChrome=false;const SNAP='transform 0.25s cubic-bezier(0.2,0.8,0.2,1)';const atTop=()=>{const sc=scrollRef.current;return!sc||sc.scrollTop<=0;};const onStart=e=>{const sc=scrollRef.current;fromChrome=!(sc&&sc.contains(e.target));// touch began on the handle/header, not the scroll body
+function useSwipeToDismiss(onClose){const sheetRef=React.useRef(null);const scrollRef=React.useRef(null);const closeRef=React.useRef(onClose);closeRef.current=onClose;React.useEffect(()=>{const el=sheetRef.current;if(!el)return;let startY=0,dragY=0,active=false,fromChrome=false,box=null;const SNAP='transform 0.25s cubic-bezier(0.2,0.8,0.2,1)';// WHICH element is actually scrolling under this touch.
+// Most sheets own their scrolling body and hand it over via scrollRef — that stays the
+// contract and wins outright, so their behaviour is untouched. But a sheet whose CHILD
+// owns the scroll box (ZoneSheet's `bare` mode — an inline RightStack, the News
+// why-panel) has no ref to give: scrollRef stays null, and a null ref used to mean
+// "no scroll box anywhere", which made atTop() always true and fromChrome always true.
+// Every downward drag then read as a dismiss and preventDefault killed the list's own
+// scrolling — so scrolling a long list back UP dragged the sheet shut instead
+// (JP, 2026-07-15, the News Watch sheet's source list). Falling back to the nearest
+// scrollable ancestor of the touch gives those sheets the SAME gesture contract rather
+// than a special case: the dismiss drag arms only when the content is already at its top.
+const scrollBoxAt=target=>{if(scrollRef.current)return scrollRef.current;let n=target;while(n&&n!==el){if(n.scrollHeight>n.clientHeight+1){const oy=getComputedStyle(n).overflowY;if(oy==='auto'||oy==='scroll')return n;}n=n.parentElement;}return null;// genuinely nothing scrolling: chrome-only sheet
+};const atTop=()=>!box||box.scrollTop<=0;const onStart=e=>{box=scrollBoxAt(e.target);// resolve per gesture, not once at mount
+fromChrome=!(box&&box.contains(e.target));// touch began on the handle/header, not the scroll body
 active=fromChrome||atTop();// chrome always arms; body only when scrolled to top
 startY=e.touches[0].clientY;dragY=0;};const onMove=e=>{if(!active)return;const d=e.touches[0].clientY-startY;if(d<=0||!fromChrome&&!atTop()){// pulling up, or body-drag that got scrolled → hand back
 if(dragY){el.style.transition='';el.style.transform='';dragY=0;}active=false;return;}dragY=d;el.style.transition='none';el.style.transform=`translateY(${d}px)`;if(e.cancelable)e.preventDefault();// stop the page scrolling / pull-to-refresh
