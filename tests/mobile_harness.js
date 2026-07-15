@@ -21,7 +21,16 @@
 //   * a verse's words         -> core.py `_serialize_word_core` + ai.py `_fetch_verse_words`
 //   * key_strongs entries     -> ai.py `_stamp_rail_fields` (contested + alias_note)
 //   * quota                   -> views_notes.py `ai_quota_status` return
+//   * /api/news/meta          -> views_news.py `meta` return (:587) + `_reviewer` id shape
+//   * /api/news/all           -> views_news.py `all_news` return (:570)
+//   * a news card             -> views_news.py `_serialize` return + the `event`/`members`
+//                                fields `_all_cards` attaches after it, + the `status`
+//                                `all_news` re-attaches per reviewer
+//   * thread keys/labels      -> views_news.py `THREAD_LABELS`
 // The VALUES are illustrative; the SHAPES (field names, nesting, types) are the payload's.
+// Two values are NOT free to be illustrative, because the code computes on them rather than
+// printing them: a news thread KEY (it resolves through THREAD_LABELS) and any DATE (the feed's
+// default window is a rolling 21 days off the clock — see the News block).
 //
 // NOTES is the one fixture with NO Python producer, on purpose — the notes store is
 // browser-local (12-notes-store.jsx, localStorage "lexica.notes.v1"), so it is seeded into
@@ -254,11 +263,194 @@ const NOTES = [
     created: "2026-07-04T09:00:00.000Z", updated: "2026-07-08T09:00:00.000Z" },
 ];
 
+// ── News ────────────────────────────────────────────────────────────────────
+// news.db is PA-only, so every shape below is traced to the PRODUCING Python in this repo,
+// per field. NewsView's mobile branch never reaches its <Shell> without this: it returns a
+// bare `.news-view` early three times over (84-news.jsx:737 no meta / :738 !canRead /
+// :739 !available), so the bar can only be MEASURED once meta clears all three.
+//
+// WHAT NEWS ACTUALLY CALLS — verified by call site, not from the route list. 00-core.jsx
+// defines SEVEN news helpers (:233-286) but NewsView calls only FOUR: newsMeta (:512),
+// newsAll (:538), newsStatus (:668), newsResolve (:695). `newsList`/`newsCounts`/`newsShape`
+// have ZERO call sites app-wide — /all carries the whole clustered feed and the browser
+// derives every count/shape locally (the `shape` memo, :629). Only the first two run at
+// MOUNT; the other two are POSTs on a tap. So the boot fixture is /meta + /all, and stubbing
+// /counts or /shape would be answering for calls that never come.
+//
+// THE GATE, checked not assumed: `?admin=1` seeds `lexica.news.key.v1` (which is also what
+// gates the News tab into the nav at all, 90-app.jsx:130) and `_newsKey()` (00-core.jsx:58)
+// puts it on the query string. The SERVER gate (_can_read / _shared_key_ok) never runs here
+// — fetch is stubbed above the network — so what actually decides is the CLIENT gate reading
+// this reply: owner|reader, then available. Hence owner+available+can_write below.
+//
+// DATES ARE RELATIVE TO TODAY, ON PURPOSE. The default window is `windowKey` "21"
+// (84-news.jsx:489) and `since` is recomputed FRESH every render from the clock
+// (`_newsDaysAgo`, :10 + :494), with the floor at score >= 5 (:496). A hardcoded date would
+// drift out of the window and this fixture would quietly render "No stories match" — a bar
+// measured over an empty feed, passing vacuously, some weeks after anyone last looked.
+const _newsDay = (n) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
+
+// views_news.py THREAD_LABELS (:44-59) — the gatherer's 13 threads + "new". Keys are the
+// vocabulary `card.thread` / `member.t` must speak: the rail, the shape readout and the card
+// meta line all resolve a label through this map (`labels[face.t] || face.t || "?"`,
+// :96), so an invented key would render as a bare "?" and look like a data bug.
+const THREAD_LABELS = {
+  papacy_moral_authority: "Papacy as moral authority",
+  american_pope: "Vatican–US relations",
+  encyclical_political: "Encyclicals / doctrine going political",
+  ai_moralized: "Economic/tech control",
+  legislating_morality: "Legislating worship/morality",
+  ecumenism: "Ecumenism (Protestant–Catholic)",
+  ecumenism_orthodox: "Catholic–Orthodox reunion",
+  protestant_collapse: "Protestant / Evangelical collapse",
+  alien_agenda: "Alien / UFO disclosure",
+  culture_shaping: "Culture shaping",
+  signs_wonders: "Signs & wonders / miracles",
+  political_realignment: "Political realignment",
+  sabbath_sunday: "Sabbath / Sunday law",
+  new: "New angle",
+};
+
+// /api/news/meta — views_news.py meta() (:574). The available+permitted return is :587-589
+// (owner, reader, available, labels, can_write, reviewer, reviewer_name). `reviewer` is the
+// STABLE id shape 'u<user_id>' for an admin (_reviewer, :113-126) — never a human name; the
+// display alias is resolved separately by _reviewer_label (:129) off the notes.db users row,
+// which is why the two fields disagree here rather than echoing each other.
+const NEWS_META = { owner: true, reader: false, available: true, labels: THREAD_LABELS,
+                    can_write: true, reviewer: "u1", reviewer_name: "Harness reviewer" };
+
+// A member of a card's `members` list — views_news.py _all_cards (:522-534). The short keys
+// are the producer's own (s=score, t=thread, nf=new-flag, d=date, pw=paywalled). `via` is
+// provenance and is exactly one of two produced strings: "RSS" when the ingest query started
+// "rss:", else "Google News" (:533).
+const member = (o) => Object.assign({
+  s: 5, t: "culture_shaping", nf: 0, d: _newsDay(3), title: "", url: "", resolved: "",
+  pw: false, summary: "", why: "", src: "?", via: "Google News",
+}, o);
+
+// A card — views_news.py _serialize (:361-378) + the two fields _all_cards attaches after it
+// (`event` :518, `members` :522), + `status`, which _all_cards deliberately POPS (:516) and
+// all_news() re-attaches per request from the reviewer's own rows (:562-564). So `status`
+// belongs on the card here even though _serialize doesn't emit it.
+const card = (o) => Object.assign({
+  ids: [], title: "", url: "", resolved_url: "", summary: "", score: 5, thread: "culture_shaping",
+  thread_label: "", why: "", published: "", peak_date: "", count: 1, sources: [], status: "new",
+  event: "", members: [],
+}, o);
+
+// The stand-in text says it's stand-in — a fixture that reads like real reporting is one
+// screenshot away from being quoted as real. What must be realistic is LENGTH, because that
+// is the thing under measurement: the long headline exists so wrapping can be measured at
+// 375px (the admin Keep/Dismiss squeeze in TODO.md is a ~148px/5-line headline claim), and
+// the short one so the two-line case is present to compare against.
+const LONG_TITLE = "Stand-in headline, long on purpose — the harness measures layout, not the feed, " +
+                   "and a headline that never wraps cannot prove a row's height at 375px";
+const SHORT_TITLE = "Stand-in headline — short";
+
+// Shaped so every branch the mobile bar opens onto is reachable, since a bar measured over a
+// feed with nothing in it proves only that the bar draws:
+//   * threads sheet  -> four DISTINCT threads, so the rail has rows to be a list
+//   * watch sheet    -> scores straddling _SURFACE_SCORE (6, :21) so the shape readout has a
+//                       real surfaced/buried split, not an all-or-nothing line; one nf:1 for
+//                       the "new angle" tally
+//   * options sheet  -> nothing needed; it's the top bar's own knobs
+//   * the view tabs  -> one card per status (new / keep / dismiss)
+//   * the 🔒 marker  -> one wholly-paywalled card (every member pw), the only way `face_pw`
+//                       comes out true on the Max preset (:71)
+//   * "+N outside"   -> the last card is KEPT but dated 40d back, outside the default 21d
+//                       window, which is the only way `keptOutside` (:899) is non-zero
+const NEWS_CARDS = [
+  card({
+    ids: [101, 102, 103], title: LONG_TITLE, url: "https://example.invalid/news/101",
+    resolved_url: "https://example.invalid/real/101",
+    summary: "Stand-in summary — three articles clustered into one card so the article→card collapse line has a real numerator.",
+    score: 9, thread: "papacy_moral_authority", thread_label: THREAD_LABELS.papacy_moral_authority,
+    why: "Stand-in scorer rationale — this is the text the Watch sheet shows for a selected card.",
+    published: _newsDay(1), peak_date: _newsDay(3), count: 3, status: "new",
+    event: "Stand-in event name",
+    sources: [{ source: "Stand-in Wire", url: "https://example.invalid/news/101", published: _newsDay(1) },
+              { source: "Stand-in Post", url: "https://example.invalid/news/102", published: _newsDay(3) }],
+    members: [
+      member({ s: 9, t: "papacy_moral_authority", nf: 1, d: _newsDay(3), title: LONG_TITLE,
+               url: "https://example.invalid/news/101", resolved: "https://example.invalid/real/101",
+               summary: "Stand-in summary — the face article.", why: "Stand-in scorer rationale — the face article's why.",
+               src: "Stand-in Wire", via: "RSS" }),
+      member({ s: 7, t: "papacy_moral_authority", d: _newsDay(3), title: SHORT_TITLE,
+               url: "https://example.invalid/news/102", src: "Stand-in Post" }),
+      member({ s: 5, t: "papacy_moral_authority", d: _newsDay(1), title: "Stand-in headline — the straggler",
+               url: "https://example.invalid/news/103", src: "Stand-in Review" }),
+    ],
+  }),
+  card({
+    ids: [201], title: "Stand-in headline — a paywalled card, the one that renders the lock marker",
+    url: "https://example.invalid/news/201",
+    summary: "Stand-in summary — every member paywalled, so the face is paywalled on the Max preset too.",
+    score: 8, thread: "ecumenism", thread_label: THREAD_LABELS.ecumenism,
+    why: "Stand-in scorer rationale — paywalled card.",
+    published: _newsDay(5), peak_date: _newsDay(5), count: 1, status: "new",
+    sources: [{ source: "Stand-in Journal", url: "https://example.invalid/news/201", published: _newsDay(5) }],
+    members: [member({ s: 8, t: "ecumenism", d: _newsDay(5), pw: true,
+                       title: "Stand-in headline — a paywalled card, the one that renders the lock marker",
+                       url: "https://example.invalid/news/201", src: "Stand-in Journal" })],
+  }),
+  card({
+    ids: [301], title: "Stand-in headline — scored below the surface line, so it counts as buried",
+    url: "https://example.invalid/news/301",
+    summary: "Stand-in summary — score 5 sits under _SURFACE_SCORE (6) but on the default floor (5), so it shows AND counts buried.",
+    score: 5, thread: "ai_moralized", thread_label: THREAD_LABELS.ai_moralized,
+    why: "Stand-in scorer rationale — buried card.",
+    published: _newsDay(8), peak_date: _newsDay(8), count: 1, status: "new",
+    sources: [{ source: "Stand-in Wire", url: "https://example.invalid/news/301", published: _newsDay(8) }],
+    members: [member({ s: 5, t: "ai_moralized", d: _newsDay(8), title: "Stand-in headline — scored below the surface line, so it counts as buried",
+                       url: "https://example.invalid/news/301", src: "Stand-in Wire", via: "RSS" })],
+  }),
+  card({
+    ids: [401], title: "Stand-in headline — this one is kept, inside the window",
+    url: "https://example.invalid/news/401",
+    summary: "Stand-in summary — the Kept tab's in-window row.",
+    score: 7, thread: "sabbath_sunday", thread_label: THREAD_LABELS.sabbath_sunday,
+    why: "Stand-in scorer rationale — kept card.",
+    published: _newsDay(12), peak_date: _newsDay(12), count: 1, status: "keep",
+    sources: [{ source: "Stand-in Post", url: "https://example.invalid/news/401", published: _newsDay(12) }],
+    members: [member({ s: 7, t: "sabbath_sunday", d: _newsDay(12), title: "Stand-in headline — this one is kept, inside the window",
+                       url: "https://example.invalid/news/401", src: "Stand-in Post" })],
+  }),
+  card({
+    ids: [501], title: "Stand-in headline — dismissed",
+    url: "https://example.invalid/news/501",
+    summary: "Stand-in summary — the Dismissed tab's row.",
+    score: 6, thread: "culture_shaping", thread_label: THREAD_LABELS.culture_shaping,
+    why: "Stand-in scorer rationale — dismissed card.",
+    published: _newsDay(19), peak_date: _newsDay(19), count: 1, status: "dismiss",
+    sources: [{ source: "Stand-in Review", url: "https://example.invalid/news/501", published: _newsDay(19) }],
+    members: [member({ s: 6, t: "culture_shaping", d: _newsDay(19), title: "Stand-in headline — dismissed",
+                       url: "https://example.invalid/news/501", src: "Stand-in Review" })],
+  }),
+  card({
+    ids: [601], title: "Stand-in headline — kept, but OUTSIDE the default 21d window",
+    url: "https://example.invalid/news/601",
+    summary: "Stand-in summary — dated 40d back so the Kept tab's \"+N outside this window\" line has something to count.",
+    score: 8, thread: "protestant_collapse", thread_label: THREAD_LABELS.protestant_collapse,
+    why: "Stand-in scorer rationale — out-of-window kept card.",
+    published: _newsDay(40), peak_date: _newsDay(40), count: 1, status: "keep",
+    sources: [{ source: "Stand-in Wire", url: "https://example.invalid/news/601", published: _newsDay(40) }],
+    members: [member({ s: 8, t: "protestant_collapse", d: _newsDay(40), title: "Stand-in headline — kept, but OUTSIDE the default 21d window",
+                       url: "https://example.invalid/news/601", src: "Stand-in Wire" })],
+  }),
+];
+
+// /api/news/all — views_news.py all_news() (:543). Exactly three keys on the success return
+// (:570). `labels` rides BOTH this and /meta from the same server constant; NewsView reads it
+// off meta (:555), so they must agree — one constant above, both readers.
+const NEWS_ALL = { available: true, cards: NEWS_CARDS, labels: THREAD_LABELS };
+
 const FIXTURES = {
   "/api/auth/me": ME,
   "/api/ai-search": AI_SEARCH,
   "/api/books": BOOKS,
   "/api/lexica/contested": CONTESTED,
+  "/api/news/meta": NEWS_META,
+  "/api/news/all": NEWS_ALL,
 };
 
 // Routes that carry ids in the PATH (chapter, verse) rather than a query string. Exact-match
@@ -437,6 +629,6 @@ http.createServer((req, res) => {
 }).listen(PORT, "127.0.0.1", () => {
   console.log("mobile harness on http://127.0.0.1:" + PORT + "/?view=corpus");
   console.log("views: library | lexicon | corpus | notes | study | news | about");
-  console.log("add &admin=1 for the admin's chrome (7 mobile nav tabs, not 5)");
-  console.log("add &notes=1 to seed the notes store (4 notes + 1 journal page)");
+  console.log("add &admin=1 for the admin's chrome (7 mobile nav tabs, not 5) — also the News tab's gate");
+  console.log("add &notes=1 to seed the notes store (5 notes + 2 journal pages)");
 });
