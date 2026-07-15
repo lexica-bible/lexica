@@ -7702,3 +7702,58 @@ claiming this batch would discharge it was WITHDRAWN on the bytes** (fifth insta
 marker-tainted live cards** (`G2588`/`G4172` coverage, `G3624` gloss_notes — **REDRAW, not resplit**:
 the marker lives in the stored raw) · then **format unification** (design pass first, target = the
 fresh batch's native output).
+
+---
+
+## G2787 κιβωτός — SHIPPED. CARD #82. — 2026-07-14
+**`→ written to lexica_def.` LIVE. Live cards 80 → 82 this session.** The ark card: three clean
+senses (Noah's vessel / the sanctuary box / the temple money-chest) and a gloss note that refuses to
+import sense 2's sacred freight into 2Ki 12's plain chest — **the plain-meaning-over-tradition bar,
+met unprompted.** That quality is why the card was REPAIRED, not redrawn.
+
+**⚠ THE REDRAW WAS REFUSED, AND THE REFUSAL WAS THE RIGHT CALL.** A ruling said "G2787 redraw
+(earned: parser fix + prompt fix since its draw)". **It was not earned.** The FEED fix landed BEFORE
+G2787 was drawn (proof: its card carries no `"None"`); the PARSER fix changed what the GATE SEES,
+not what the DRAW WAS FED; the PROMPT fix touches `--repair`, not the draw. **Nothing about the draw
+input had moved ⇒ a redraw would have been a re-roll at unchanged input = A HOPE.** The free re-read
+(cached draw, gates re-run, zero calls) was the correct step and it PREDICTED ITS OWN RESULT EXACTLY.
+
+**THE FREE RE-READ — PREDICTION STATED BEFORE THE READ, HIT EXACTLY:** coverage 9 absentees → **4**,
+and precisely the four named as real (Deu 10:1, Deu 10:3, Jdg 20:27, 2Sa 6:6); the five phantoms
+(Exo 25:15, Jos 3:8, Jos 3:11, 1Sa 4:5, 2Sa 6:4) gone. **BONUS, and it CALIBRATES the masking story a
+third and final time:** citation gate **45/45 → 50/50**, verses **45 → 50**. The five recovered refs
+ALL PASS — **on this card the bracket bug was PURE UNDERCOUNT, not masked bad citations.** `b1f5742`
+has two distinct values, now stated at the size the evidence supports: it **recovers real verses**
+(5, on this card) and it **un-blinds the citation gate** (4 cards, per the histogram). Neither is
+the other.
+
+**THE REPAIRS — both instruments did exactly their job, in one command, two calls, both earned:**
+- **`--repair`:** 4 absentees integrated **with real quoted text, each in the RIGHT sub-use** (Deu 10:1
+  *"make for yourself a wooden ark"* → container · 2Sa 6:6 *"Uzzah stretched out his hand to the ark
+  of God to hold it"* → mobile-object · Jdg 20:27 → cult-object). **Placement right, not merely
+  present.** Coverage **54/54**.
+- **`--quote-repair`:** the Mat/Luk blend **DEAD, byte-confirmed by the pass itself**:
+  *"as far as **of** which day Noah entered…"* → *"as far as which day Noah entered…"*, **re-gated
+  MATCH vs Luk 17:27**. The Matthew contamination excised — ONE word, inside quote marks, right
+  direction. Structure guard silent; same three headlines, no citation lost.
+
+**⚠ F1 CONTRACT CONFIRMED ON A SECOND INDEPENDENT LIVE TEST — AND A CLEANER ONE: the boilerplate
+detector fired NOTHING AT ALL on the repaired card.** G3464's test was *"the repair added nothing to
+an existing fire"*; this is *"no fire at all"*, on a card the contract had never seen. **The
+coverage-repair prompt's missing output contract — the root cause of the G162 preamble this session
+opened on — is fixed, proven twice, on live bytes.**
+
+**"ISRAEL" WARN — ADJUDICATED ARTIFACT, VERIFIED ON THE CODE, NOT PATTERN-MATCHED TO TYRE.**
+`_cite_chunks` (`:2782`) splits prose at a **parenthetical close**, so the chunk carrying
+`(2Ki 12:9–10)` in the **Range** field also carries the **PRECEDING UNCITED SENTENCE** (*"the portable
+cult-box of Israel's sanctuary"*). probe-2 then checks that name against the only refs in the chunk.
+**The card makes NO Israel claim about 2Ki 12** — sense 3 names Jehoiada, the temple in Jerusalem,
+and the house of the LORD, nothing else. **NAMED MECHANISM: an uncited sentence adjacent to a cited
+one is folded into its chunk.** Same over-fire FAMILY as G3464's Tyre, one sentence further out
+(Tyre sat in the same sentence as its refs; Israel does not). **Second instance; the mechanism is
+named, no detector ticket — report-and-adjudicate is the design. A THIRD grouping artifact is the
+pull.** Note ships in the row.
+
+**SPEND: 6 calls this session, SIX PRECEDING CHANGES, ZERO re-rolls at unchanged input** — draw →
+feed fix → redraw → prompt fix → repair → (G2787 draw) → parser fix → free re-read → repair +
+quote-repair. **The rule operating, not being invoked.**
