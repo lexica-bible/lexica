@@ -12,11 +12,20 @@
 # Run AFTER:  python3 scripts/build_words_from_abp.py <copy.db> bh_scrape.db
 #
 # Usage:  bash scripts/finish_rebuild.sh bible_test.db
+#
+# THE VERDICT IS HONEST (JP-ruled 2026-07-14). This chain deliberately does NOT `set -e`: every
+# step is independently targeted and re-runnable, and aborting mid-way would leave a half-patched
+# copy that is harder to reason about than a finished one with named failures. But until now
+# run() also never LOOKED at an exit code — so ANY failing step (import_tipnr included) scrolled
+# past under the steps after it and the script still printed "done". A failure degrading into a
+# green-looking finish is exactly the silent-fallback class this repo keeps paying for.
+# So: keep going, COLLECT what went wrong, and REFUSE to declare success.
 set -uo pipefail
 DB="${1:-bible_test.db}"
 cd "$(dirname "$0")/.."
 
-run() { echo; echo "── $* ──"; "$@"; }
+PROBLEMS=()
+run() { echo; echo "── $* ──"; if ! "$@"; then PROBLEMS+=("$*"); fi; }
 
 echo "== finish_rebuild on ${DB} =="
 
@@ -84,6 +93,18 @@ else
 fi
 
 echo
+if [ "${#PROBLEMS[@]}" -ne 0 ]; then
+  echo "=============================================================================="
+  echo "!! finish_rebuild did NOT finish clean — ${#PROBLEMS[@]} step(s) reported a problem:"
+  for p in "${PROBLEMS[@]}"; do echo "     - ${p}"; done
+  echo
+  echo "!! DO NOT SWAP. Read each step's own output above — a step that reported a"
+  echo "   problem may have FAILED, or may have completed and flagged something for a"
+  echo "   human (the probe-2 guard fixture drift check is the second kind: the rebuild"
+  echo "   is fine, the fixture is stale). Fix or re-rule, then re-run this script."
+  echo "=============================================================================="
+  exit 1
+fi
 echo "== finish_rebuild done. Next: audits + compare_words.py vs live, THEN swap. =="
 echo "   (positions moved in step 6 — after a real swap, re-run build_abp_surface.py"
 echo "    + build_abp_translit.py per the rebuild checklist)"

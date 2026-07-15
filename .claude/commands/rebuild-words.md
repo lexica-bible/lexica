@@ -60,7 +60,21 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
    (import_tipnr, ~27,965 matched — the build CLEARS is_pn + PN Strong's) then the PINNED
    data-patches that can't fold, then a final punctuation float. Each only touches its own named
-   verses, safe to re-run:
+   verses, safe to re-run.
+   **THE SCRIPT'S VERDICT IS THE GATE (2026-07-14).** It does NOT abort mid-chain (steps are
+   independently re-runnable; a half-patched copy is worse than a finished one with named
+   failures) — instead it COLLECTS any step that reported a problem and REFUSES to print
+   `== finish_rebuild done ==`, naming them and exiting non-zero. **If you do not see the
+   `done` line, DO NOT SWAP.** (Before this it printed `done` regardless — a failing step just
+   scrolled past.)
+   **RIDING import_tipnr: the p2wl:v2 GUARD FIXTURE DRIFT CHECK** (`check_p2_guard_fixture.py`,
+   JP-ruled). import_tipnr is the sole writer of `is_pn=1`, so the check fires there automatically
+   — nothing extra to run. It asks whether the corpus still matches the name-marking the probe-2
+   test fixture claims (baseline verified 2026-07-12). **A drift flag does NOT mean the rebuild
+   is wrong — it means the FIXTURE is stale.** Decide whether the corpus change is legitimate,
+   PASTE the run's findings into `check_p2_guard_fixture.py` (never retype — #71), re-date
+   `FIXTURE_VERIFIED`, re-run the probe-2 tests, then swap. Silence = it matched.
+   The steps:
    - fix_subject_reorder (20) / fix_mat25_37 (1) / fix_supplied_attach (5): hand-listed
      synthetic-bracket verses needing per-verse English rewrites no general rule produces.
    - fix_theos_filler_tags (2): Lam 3:16 "and"→καί, 1Pe 1:23 "of God living" split. Pinned.

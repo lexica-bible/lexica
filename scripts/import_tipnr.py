@@ -619,10 +619,27 @@ def main():
     ).fetchone()[0]
 
     conn.commit()
+
+    # ── p2wl:v2 GUARD FIXTURE DRIFT CHECK (JP-ruled 2026-07-14) ────────────────────────────────
+    # Chained in HERE because this script is the VERIFIED sole writer of is_pn=1 (the two UPDATEs
+    # above); the build CLEARS is_pn and everything else only reads it. So this is the one event
+    # that can move the marking the probe-2 test fixture claims — and it fires whether we ran from
+    # finish_rebuild.sh's tail or standalone. No hand-run step, no memory dependency.
+    # Runs AFTER commit: the rebuild work is saved and complete before anything can be reported.
+    # SEVERITY (JP-ruled): drift NEVER fails or aborts the rebuild — the rebuild is not wrong, the
+    # FIXTURE is stale. The nonzero exit is a VERDICT, not an abort: finish_rebuild.sh collects it
+    # and refuses to print "done", so the flag cannot scroll past. See DESIGN_p2_guard_drift_check.md.
+    from check_p2_guard_fixture import check_guard_fixture
+    fixture_ok, fixture_lines = check_guard_fixture(conn)
     conn.close()
 
     print(f"  {remaining:,} words still strongs_base='*' (unmatched — metaV by name still works)")
-    print("\nDone.")
+    for line in fixture_lines:
+        print(line)
+    print("\nDone." if fixture_ok else "\nDone — proper nouns imported, but SEE THE FIXTURE DRIFT "
+                                       "FLAG ABOVE before swapping.")
+    if not fixture_ok:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

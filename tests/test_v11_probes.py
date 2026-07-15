@@ -25,6 +25,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 import build_lexica_def as B
+# The probe-2 guard fixture claim's SINGLE SOURCE — that file owns the words and drift-checks
+# them against the live corpus on PA; this suite reads them (JP ruling 2026-07-14).
+from check_p2_guard_fixture import GUARD_NAMES_ABSENT, GUARD_NAMES_PRESENT
 
 
 # ── Embedded verse texts (verses.text bytes, PA consult 2026-07-12) ─────────────────────────
@@ -477,7 +480,12 @@ def main():
     # = live reads, same session. Guard fixture set mirrors the live control run on PA:
     # korah/solomon/laban/jesus/peter ARE words-table name-marked heads; votive/active/
     # applying are NOT (raw output in the session record). ═══
-    KNOWN = frozenset({"korah", "solomon", "laban", "jesus", "peter"})
+    # SINGLE SOURCE (JP ruling 2026-07-14, checkpoint cleared): the claim is NOT hard-typed here
+    # any more. It lives in scripts/check_p2_guard_fixture.py, which OWNS it and drift-checks it
+    # against the LIVE corpus at every import_tipnr run (the verified sole writer of is_pn=1).
+    # This file READS it. One copy, two readers, no third copy ever — retyping the words here
+    # would be the #71 class (a fixture string is a claim) that the check exists to close.
+    KNOWN = GUARD_NAMES_PRESENT
 
     # 2f MUST-CLEAR — "Sub-use:" label class (G1390 real bytes, Votive; [offerings" (Lev
     # 23:38).] completes the window cut; the quote is Lev 23:38's own wording).
@@ -727,6 +735,54 @@ def main():
     assert named == ["Applying", "Solomon"], named          # MORE warns, not fewer
     assert B.open_probe_warns(e), "a guard not-run must BLOCK apply"
     gdb.close()
+
+    # ═══ GUARD FIXTURE DRIFT CHECK — check_p2_guard_fixture (JP-ruled 2026-07-14) ═════════════
+    # Chained into import_tipnr (the verified sole writer of is_pn=1) so it runs automatically at
+    # the rebuild event — no hand-run step, no memory dependency. It compares THE claim (that
+    # file owns it; this suite imports it — one copy) against the live corpus, using PRODUCTION's
+    # own read + membership helper, never a copy.
+    # RED-FIRST, EACH DIRECTION FIRING ALONE (#75 — a first-firing assert can mask a ruled
+    # control): a synthetic corpus is built per case so exactly one thing is wrong at a time.
+    import check_p2_guard_fixture as G
+
+    def corpus(marked, unmarked=()):
+        c = sqlite3.connect(":memory:")
+        c.execute("CREATE TABLE words (english_head TEXT, is_pn INT)")
+        c.executemany("INSERT INTO words VALUES (?, 1)", [(w,) for w in marked])
+        c.executemany("INSERT INTO words VALUES (?, 0)", [(w,) for w in unmarked])
+        return c
+
+    # HEALTHY — the claim holds: every PRESENT name marked, every ABSENT word not.
+    ok_db = corpus(G.GUARD_NAMES_PRESENT, G.GUARD_NAMES_ABSENT)
+    ok, lines = G.check_guard_fixture(ok_db)
+    assert ok and len(lines) == 1 and "[OK]" in lines[0], lines   # quiet on success
+    assert G.FIXTURE_VERIFIED in lines[0], lines                  # baseline date is CITED, not remembered
+    ok_db.close()
+
+    # DRIFT 1 — a name LOST its marking. THE DANGEROUS DIRECTION: production would demote
+    # "korah" at a sentence start and EAT its warn, while the test still passed.
+    lost = corpus(G.GUARD_NAMES_PRESENT - {"korah"}, G.GUARD_NAMES_ABSENT)
+    ok, lines = G.check_guard_fixture(lost)
+    body = "\n".join(lines)
+    assert not ok and "DO NOT SWAP" in body and "korah" in body, body
+    assert "FIXTURE IS STALE" in body, body        # names the right culprit: not the rebuild
+    lost.close()
+
+    # DRIFT 2 — a non-name GAINED a marking (fires ALONE: nothing else is wrong here).
+    gained = corpus(set(G.GUARD_NAMES_PRESENT) | {"applying"}, G.GUARD_NAMES_ABSENT - {"applying"})
+    ok, lines = G.check_guard_fixture(gained)
+    body = "\n".join(lines)
+    assert not ok and "applying" in body and "DO NOT SWAP" in body, body
+    assert "korah" not in body, body               # ONLY the real drift is named
+    gained.close()
+
+    # GUARD READ ITSELF DEAD — never a pass. A check that cannot read the corpus must say so,
+    # not report OK (the silence this whole arc exists to kill).
+    broken = sqlite3.connect(":memory:")           # no `words` table at all
+    ok, lines = G.check_guard_fixture(broken)
+    body = "\n".join(lines)
+    assert not ok and "NOT RUN" in body and "not a pass" in body, body
+    broken.close()
 
     print("test_v11_probes: all assertions passed")
 
