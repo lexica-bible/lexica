@@ -378,11 +378,15 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
   controls don't render, above it they gray as now. No new state, no server change. Optional polish: put
   the read-only signal where it costs nothing (a small label on the card header, or once at the top of the
   feed) so the reader still learns what the tab is. Land it in the mobile commit — do NOT reopen Pass 1.
-  Then the rest: the News tab isn't reachable on a phone. Half the
-  "confirm the cause" question is answered (read 2026-07-15, gate pass): it is NOT missing from the mobile
-  bottom nav — a `mobile-tab` button is there, gated on `showNews` like the desktop entry. So the cause is
-  downstream of the nav (a mobile branch / layout), not a missing button. Not verified on a real phone.
-  code: static/src/84-news.jsx, 90-app.jsx (mobile-tab ~line 608), 20-shared-components.jsx
+  **STALE PREMISE CORRECTED (JP on his phone, 2026-07-15): "the News tab isn't reachable on a phone" is
+  WRONG — News renders on mobile and he used it well enough to see the card rows** (that's what surfaced
+  the Keep/Dismiss complaint above). The old line predates the mobile-tab button; the button is there in
+  `90-app.jsx` (~line 608), gated on `showNews` like the desktop entry. **So this is NOT a "make it
+  render" build — it's polish on a working surface.** What's actually left is unmeasured: nobody has
+  sized the gap between what mobile News does today and the Shell/RightStack treatment the other
+  consumers got (rail + inspect as sheets). START BY LOOKING at it on a phone and writing down what's
+  wrong; do NOT inherit a scope from this line. The dead-control item above may be most of it.
+  code: static/src/84-news.jsx, 90-app.jsx (mobile-tab ~line 608), 22-shell.jsx (mobile sheet mode)
 - **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
   its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
   Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
