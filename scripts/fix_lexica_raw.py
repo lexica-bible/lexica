@@ -57,12 +57,82 @@ def canon_warns(audit):
                       ensure_ascii=False, sort_keys=True)
 
 
+def fix_draw(sid, args):
+    """DRAW-FILE MODE (reviewer-ruled 2026-07-15, G5088 second quote-repair cap-out): the same
+    surgical edit, applied to the CACHED DRAW of a word that has never passed the gates into
+    lexica_def — the table mode can't reach it (no stored row), and a hand edit of the file is
+    hard-refused at apply by the 'edited' guard (by design: reviewed bytes must equal shipped
+    bytes). This mode IS the sanctioned edit: it updates the stored prose fingerprint so the
+    builder accepts the bytes, banks the pre-fix draw to draws/history/, and stamps the fix
+    (old/new/why) into the record so the edit is visible forever — a silent hand edit still
+    refuses exactly as before.
+
+    Same certification boundary as table mode (header above): byte-grounded quote fixes and
+    deletions of unverified claims ONLY; never a re-carve. VALIDATION DOES NOT HAPPEN HERE —
+    this mode edits and stamps, then the builder's own review pass re-runs the FULL battery on
+    the fixed bytes (the production gates, never a copy; and only the builder has the fed
+    sample for coverage + probe-2 context grounding). Ship path after fixing:
+        build_lexica_def.py --dry-run [--hints] --word <sid>   (full battery, review)
+        build_lexica_def.py --apply  [--hints] --word <sid>    (ships the reviewed bytes)"""
+    rec = B.load_draw(sid)
+    if rec is None:
+        sys.exit(f"no cached draw for {sid} ({B.draw_path(sid)})")
+    raw = rec.get("raw", "")
+    if rec.get("prose_sha") != B._sha1(raw):
+        sys.exit("draw prose does not match its stored fingerprint — the file was edited OUTSIDE "
+                 "this tool. Refusing (the 'edited' guard exists for exactly this); restore the "
+                 "file from draws/history/ first.")
+    if args.show_raw:
+        print(f"\n===== {sid}  {rec.get('lemma','')} — cached draw raw prose =====\n")
+        print(raw)
+        return
+    if args.apply:
+        sys.exit("--apply is not a draw-mode action: the fix is written to the draw file "
+                 "immediately, and SHIPPING stays with build_lexica_def.py --apply after its "
+                 "own dry-run review of the fixed bytes.")
+    if args.old is None or args.new is None:
+        sys.exit("pass --old AND --new (exact text to replace), or --show-raw to dump the raw.")
+    if not (args.why or "").strip():
+        sys.exit("--why is REQUIRED in draw mode (ruling condition 4, 2026-07-15): the fix "
+                 "provenance is stamped into the draw record.")
+    n = raw.count(args.old)
+    if n != 1:
+        sys.exit(f"--old must match the draw raw EXACTLY ONCE; found {n}. Aborting (nothing changed).")
+    raw2 = raw.replace(args.old, args.new)
+    new_sha = B._sha1(raw2)
+    print(f"\n{sid}  {rec.get('lemma','')}  (draw {rec.get('sig','')[:8]})")
+    print(f"  -  {args.old}")
+    print(f"  +  {args.new}")
+    B.archive_draw(sid, rec.get("sig"), new_sha)     # bank the pre-fix bytes to history first
+    rec["raw"] = raw2
+    rec["prose_sha"] = new_sha                       # sig UNCHANGED — the draw input never moved
+    rec.setdefault("raw_fixes", []).append({
+        "old": args.old, "new": args.new, "why": args.why,
+        "when": datetime.datetime.now(datetime.timezone.utc)
+                        .replace(tzinfo=None).isoformat(timespec="seconds"),
+    })
+    tmp = B.draw_path(sid) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(rec, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, B.draw_path(sid))
+    print(f"  fixed draw written -> {B.draw_path(sid)} ({len(rec['raw_fixes'])} raw fix(es) on record)")
+    print("  NEXT: re-run the builder's --dry-run for the FULL gate battery on these bytes; "
+          "only its --apply ships them.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", required=True, help="G/H number, e.g. G5484")
     ap.add_argument("--old", help="exact text in the stored raw to replace (must occur once)")
     ap.add_argument("--new", help="replacement text")
+    ap.add_argument("--draw", action="store_true",
+                    help="operate on the word's CACHED DRAW file instead of the lexica_def row — "
+                         "for a word that has never passed the gates into the table (see fix_draw)")
+    ap.add_argument("--why", help="draw mode: REQUIRED one-line provenance for the fix "
+                                  "(stamped into the draw record's raw_fixes)")
+    ap.add_argument("--draws-dir", dest="draws_dir",
+                    help="override the draws directory (tests only)")
     ap.add_argument("--show-raw", action="store_true", dest="show_raw",
                     help="print the stored raw prose and exit — to craft an exact --old/--new edit")
     ap.add_argument("--adjudicate-warns", metavar="NOTE", dest="adjudicate_warns",
@@ -77,6 +147,11 @@ def main():
     sid = args.word.upper()
     if sid[:1] not in ("G", "H"):
         sid = "G" + sid
+    if args.draws_dir:
+        B.DRAWS_DIR = args.draws_dir
+    if args.draw:
+        fix_draw(sid, args)
+        return
 
     # Read-only unless we're actually writing the row (--apply); a dry-run / --show-raw must never
     # be able to touch the live file (audit C3, 2026-07-01 — same invariant as build_lexica_def.py).

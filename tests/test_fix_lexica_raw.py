@@ -178,6 +178,58 @@ def main():
     assert e3["audit"].get("warns_adjudicated") == ADJUDICATION, (
         "the refused run must leave the stored row untouched")
 
+    # ═══ DRAW MODE (reviewer-ruled 2026-07-15, G5088 second quote-repair cap-out) ═══
+    # The same surgical edit on a CACHED DRAW of a never-written word. Red-first: before the
+    # mode existed, --draw was an unknown argument (argparse exit 2).
+    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
+    import build_lexica_def as B
+
+    draws = os.path.join(tmp, "draws")
+    os.makedirs(draws, exist_ok=True)
+    draw_raw = "Senses: she bore a son (Gen 1:1). The translation renders with the sacrificial sense."
+    rec = {"strongs": "G5088", "lemma": "τίκτω", "translit": "tikto", "sig": "cafe0123",
+           "prose_sha": B._sha1(draw_raw), "raw": draw_raw, "created": "2026-07-15T00:00:00"}
+    dpath = os.path.join(draws, "G5088.json")
+
+    def seed_draw():
+        with open(dpath, "w", encoding="utf-8") as f:
+            json.dump(rec, f, ensure_ascii=False)
+
+    def run_draw(*extra):
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+        return subprocess.run([sys.executable, TOOL, "--word", "G5088", "--draw",
+                               "--draws-dir", draws] + list(extra),
+                              capture_output=True, text=True, encoding="utf-8", env=env)
+
+    # happy path: fix lands, fingerprint updated, provenance stamped, pre-fix bytes banked
+    seed_draw()
+    r = run_draw("--old", " The translation renders with the sacrificial sense.", "--new", "",
+                 "--why", "fixture: delete parroted instruction text")
+    assert r.returncode == 0, r.stdout + r.stderr
+    d = json.load(open(dpath, encoding="utf-8"))
+    assert "sacrificial" not in d["raw"], "the deletion did not land"
+    assert d["prose_sha"] == B._sha1(d["raw"]), (
+        "fingerprint not updated — the builder would refuse these bytes as 'edited'")
+    assert d["sig"] == "cafe0123", "sig must NOT move — the draw input never changed"
+    assert d["raw_fixes"] and d["raw_fixes"][0]["why"].startswith("fixture:"), (
+        "raw_fixes provenance missing (ruling condition 4)")
+    hist = os.listdir(os.path.join(draws, "history"))
+    assert any(h.startswith("G5088_") for h in hist), "pre-fix draw not banked to history"
+
+    # refusals: missing --why · non-unique --old · tampered file · --apply in draw mode
+    seed_draw()
+    assert run_draw("--old", "she bore", "--new", "x").returncode != 0, "--why must be REQUIRED"
+    assert run_draw("--old", "s", "--new", "x", "--why", "w").returncode != 0, (
+        "a non-unique --old must refuse")
+    assert run_draw("--old", "she bore", "--new", "x", "--why", "w",
+                    "--apply").returncode != 0, "--apply must refuse in draw mode"
+    tampered = dict(rec, raw=rec["raw"] + " EDITED BY HAND")
+    with open(dpath, "w", encoding="utf-8") as f:
+        json.dump(tampered, f, ensure_ascii=False)
+    r = run_draw("--old", "she bore", "--new", "x", "--why", "w")
+    assert r.returncode != 0 and "OUTSIDE this tool" in (r.stdout + r.stderr), (
+        "a hand-tampered draw (prose/fingerprint mismatch) must refuse:\n" + r.stdout + r.stderr)
+
     print("test_fix_lexica_raw: all assertions passed")
 
 
