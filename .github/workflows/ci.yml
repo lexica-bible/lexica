@@ -46,6 +46,7 @@ jobs:
           python tests/test_helper_double_tag.py
           python tests/test_context_feed.py
           python tests/test_prompt_contract.py
+          python tests/test_written_ranges.py
 
   frontend:
     runs-on: ubuntu-latest

@@ -22,30 +22,10 @@ Run on PA (db path is an argument, same shape as audit_range_tails.py):
 import sys, os, json, sqlite3
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
-from build_lexica_def import _REF_RE, _TAIL_UNIT_RE, refused_tails   # noqa: E402
-
-
-def ranges_in(text):
-    """Every written verse range in this prose, via the PRODUCTION walker's own dash arm.
-    Mirrors ref_spans' walk exactly: find a ref, then step the tail units after it; report the
-    units that are ranges. Never a second copy of the range shape."""
-    found = []
-    for m in _REF_RE.finditer(text or ""):
-        pos = m.end()
-        ch, vs = int(m.group(2)), int(m.group(3))
-        while True:
-            t = _TAIL_UNIT_RE.match(text, pos)
-            if not t:
-                break
-            if t.group("end") is not None:
-                found.append(f"{m.group(1)} {ch}:{vs}{t.group('dash')}{t.group('end')}")
-                vs = int(t.group("end"))
-            elif t.group("tch") is not None:
-                ch, vs = int(t.group("tch")), int(t.group("tvs"))
-            else:
-                vs = int(t.group("tv"))
-            pos = t.end()
-    return found
+# written_ranges is PRODUCTION's (build_lexica_def), the same function the gate report prints.
+# This script originally carried its own copy of the walk; that copy is GONE — a second copy is
+# exactly what drifts, and this session paid for that lesson twice already.
+from build_lexica_def import written_ranges as ranges_in, refused_tails   # noqa: E402
 
 
 def main():

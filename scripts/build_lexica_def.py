@@ -803,6 +803,40 @@ def refused_tails(text):
     return r
 
 
+def written_ranges(text):
+    """Every verse RANGE the prose writes out ("Rev 19:1-6"), expanded or not — the COMPLIANCE
+    channel for the anti-range constraint (VERSE_PROMPT Constraints; ENGINE_LESSONS #80).
+
+    DISTINCT FROM THE CITATION GATE, which is the teeth. The gate asks "is this cited verse real
+    and does it carry the lemma" — it already catches a range whose interior is false (that is how
+    G3793's Rev 19:2-5 phantoms were caught). This asks a different question the gate cannot:
+    "did the model write a range AT ALL", which is a contract breach even when the interior
+    happens to be true. Report-only by ruling — a BLOCKING pre-gate lint was rejected: it would
+    duplicate the gate's teeth and false-fire on true-interior ranges.
+
+    Same walk as ref_spans (find a ref, step its tail units); reports the units that are ranges
+    instead of expanding them. The range SHAPE is _TAIL_UNIT_RE's dash arm — the production regex
+    the gate's own expansion uses — never a second copy. Baseline at build time: 21 of 85 live
+    cards, 50 written ranges (2026-07-15)."""
+    found = []
+    for m in _REF_RE.finditer(text or ""):
+        pos = m.end()
+        ch, vs = int(m.group(2)), int(m.group(3))
+        while True:
+            t = _TAIL_UNIT_RE.match(text, pos)
+            if not t:
+                break
+            if t.group("end") is not None:
+                found.append(f"{_norm_book(m.group(1))} {ch}:{vs}{t.group('dash')}{t.group('end')}")
+                vs = int(t.group("end"))
+            elif t.group("tch") is not None:
+                ch, vs = int(t.group("tch")), int(t.group("tvs"))
+            else:
+                vs = int(t.group("tv"))
+            pos = t.end()
+    return found
+
+
 def cited_refs(text):
     """Pull verse refs (book, ch, vs) out of generated prose — de-duped, in order.
     Tail forms (ranges, comma/semicolon shorthand) expand via ref_spans (#28)."""
@@ -3242,6 +3276,20 @@ def show_entry(entry):
     for rt in refused_tails(entry.get("raw", "")):
         print(f"  ⚠ REFUSED-TAIL: range '{rt}' not expanded (backwards or span > 30) — "
               f"the tail verses are NOT counted as cited; adjudicate by hand")
+    # WRITTEN RANGES — REPORT-ONLY (anti-range constraint, reviewer-ruled 2026-07-15; #80).
+    # Same posture as LEADING-BOILERPLATE below: computed from raw at print time, NOT stored, no
+    # audit field, no def_json shape change, and NOTHING refuses a card on it. A BLOCKING lint was
+    # REJECTED on the pre-committed rule — the citation gate above already has the teeth (a false
+    # interior surfaces there as a real-miss), so blocking here would duplicate them and false-fire
+    # on ranges whose interior is true. What this adds is the COMPLIANCE read the gate cannot give:
+    # the constraint says never write a range, so a range is a breach even when it expands clean.
+    # Zeros ARE trusted here: the walker is control-tested on known positives (the three words that
+    # paid — G3793's "Rev 19:1-6", the G227/G2168 pins) in tests/test_written_ranges.py.
+    wr = written_ranges(entry.get("raw", ""))
+    if wr:
+        print(f"  ⚠ WRITTEN-RANGE ×{len(wr)} (report-only, blocks nothing) — the prompt says name "
+              f"verses one by one; a range asserts its interior, incl. verses that may not carry "
+              f"this lemma: {', '.join(wr)}")
     # LEADING-BOILERPLATE — REPORT-ONLY (G162 preamble-leak ticket, reviewer-ruled 2026-07-14).
     # Computed from raw at print time and NOT stored, exactly like refused_tails above: no audit
     # field, no def_json shape change, and NOTHING refuses a card on it. It reports a broken output
