@@ -10,7 +10,8 @@ the same commit as the prompt edit, and say why in the message.
 
 STAMP HISTORY (each line = a deliberate prompt move):
   lexica:7d7758f4156b  grounded-naming feed, +/-2 context + referent rule   (238147a, 2026-07-15)
-  lexica:bd8b7e3f8209  anti-range constraint line (ENGINE_LESSONS #80)      (this commit)
+  lexica:bd8b7e3f8209  anti-range constraint line (ENGINE_LESSONS #80)      (2a36ece-era, 2026-07-15)
+  lexica:f8c77bf889f6  quote-continuity line (6 gate refusals / 3 words)    (this commit)
 
 The text asserts below are the contract, not the behavior. A prompt line cannot be unit-tested for
 OBEDIENCE — that is watched on the next drawn card's gate tail at BATCH REVIEW, never asserted here
@@ -22,7 +23,7 @@ import build_lexica_def as B   # noqa: E402
 
 # READ FACT, not recalled: PASTED from this file's own RED run against the edited prompt
 # (leg 2 of the red-first sequence, 2026-07-15), which printed the value it computed.
-PROMPT_STAMP = "lexica:bd8b7e3f8209"
+PROMPT_STAMP = "lexica:f8c77bf889f6"
 
 
 def test_prompt_stamp_is_pinned():
