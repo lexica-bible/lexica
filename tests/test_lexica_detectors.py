@@ -394,6 +394,89 @@ def test_registry_hits_2co521():
     assert "PARKED dossier" in hits[0]["source"]
 
 
+# ── leading-boilerplate detector (G162 preamble-leak ticket, reviewer-ruled BUILD 2026-07-14) ─
+#
+# WHAT THIS CLASS IS: the model opens the card with its own working note ("Here is the corrected
+# definition ...") instead of the bare card. Both prompts forbid it (build_lexica_def.py:200 draw,
+# :1896 repair). NOTHING checks it — verified against the full detector enumeration in
+# offline_gate_check.py:94-156. split_definition SILENTLY DISCARDS the leak (pre-section lines go
+# to a local `preamble` that reaches senses_block in no path), so a contract-breaching draw reads
+# gate-clean. That silent discard is what this detector ends; it is REPORT-ONLY and no block rule
+# ships with it (reviewer ruling, meta:v5 blast-radius precedent).
+#
+# ⚠ FIXTURE PROVENANCE — READ BEFORE TRUSTING A ZERO FROM THIS DETECTOR.
+# The fixtures below are SYNTHETIC and are NOT the bytes of any real card. They test BOUNDARY
+# LOGIC only (the #71 precedent: a hand-typed fixture is the right tool where it tests boundary
+# logic, and CI cannot read the corpus by ruling). They are deliberately NOT rebuilt from the kill
+# record's prose: the archived G162 quote there is TRUNCATED ("... integrated into Sense 1 ..."),
+# and a fixture rebuilt from a doc's prose is a typed claim, which is banned.
+# ⇒ THE KNOWN-POSITIVE CONTROL IS **OWED, NOT DONE**. This file's own standing rule (see the
+# module docstring) is that a detector fires on a KNOWN POSITIVE from the archived defect record
+# before any zero of its is trusted. The known positive is G162's archived draw
+# (draws/history/G162_20260713T022852_aa064d41.json) — PA-only, `draws/` is gitignored, so CC
+# cannot read it. Until that read runs, this detector's boundary logic is proven and its ZEROS
+# ARE NOT. Do not report "clean" off this suite alone.
+
+_BP_CLEAN = """**Senses:**
+
+**1. to take captive.** The word takes people, never cities (2Ch 21:17).
+
+**Range:** it runs from the seizing of persons to their carrying off.
+"""
+
+_BP_META = """Here is the full corrected definition with the unplaced occurrences integrated.
+
+**Senses:**
+
+**1. to take captive.** The word takes people, never cities (2Ch 21:17).
+
+**Range:** it runs from the seizing of persons to their carrying off.
+"""
+
+_BP_TITLE = """**G162 αἰχμαλωτεύω (aichmalōteuō)**
+
+---
+
+**Senses:**
+
+**1. to take captive.** The word takes people, never cities (2Ch 21:17).
+"""
+
+_BP_HEADERLESS_CLEAN = """**1. to take captive.** The word takes people, never cities (2Ch 21:17).
+
+**Range:** it runs from the seizing of persons to their carrying off.
+"""
+
+
+def test_leading_boilerplate_fires_on_meta_note():
+    """THE CLASS: a working note before the first section header. Must surface, tagged meta."""
+    hits = B.leading_boilerplate(_BP_META)
+    assert hits, "leading_boilerplate must fire on a model working note opening the card"
+    assert hits[0]["kind"] == "meta"
+    assert "Here is the full corrected definition" in hits[0]["text"]
+
+
+def test_leading_boilerplate_silent_on_clean_card():
+    """The other direction, alone: a card that opens on its section header fires NOTHING."""
+    assert B.leading_boilerplate(_BP_CLEAN) == []
+
+
+def test_leading_boilerplate_silent_on_headerless_senses():
+    """The split_definition fallback shape (no 'Senses:' header, senses lead as bold-numbered
+    lines). The senses are the CARD, not boilerplate — firing here would flood the signal."""
+    assert B.leading_boilerplate(_BP_HEADERLESS_CLEAN) == []
+
+
+def test_leading_boilerplate_tags_bare_title_apart_from_meta():
+    """The KNOWN-BENIGN class (ὄρος 2026-07-07: drafts open with a title line and/or a --- rule
+    the prompt asked them not to write; the splitter already handles it). It is still a contract
+    breach, so it surfaces — but tagged `title`, NEVER `meta`, so the sweep can size the two
+    classes apart before any block rule is written."""
+    hits = B.leading_boilerplate(_BP_TITLE)
+    assert hits, "a bare title line is still a contract breach and must surface"
+    assert [h["kind"] for h in hits] == ["title"]
+
+
 if __name__ == "__main__":     # plain-script mode for CI + the pre-commit hook
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

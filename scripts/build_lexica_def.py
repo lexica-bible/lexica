@@ -1043,6 +1043,68 @@ def split_definition(prose):
     }
 
 
+# A line that is ENTIRELY one bold span — a draft's title/lemma restatement ("**G3735 ὄρος (óros)**").
+# The negative lookahead keeps the SENSE-headline shape (**1. ...**) out: those are the card itself.
+_LONE_TITLE_LINE_RE = re.compile(r'\A\s*\*\*\s*(?!\d+\.)[^*]+?\s*\*\*\s*\Z')
+_HR_LINE_RE = re.compile(r'\A\s*-{3,}\s*\Z')
+
+
+def leading_boilerplate(prose):
+    """REPORT-ONLY detector (G162 preamble-leak ticket, reviewer-ruled BUILD 2026-07-14): surface
+    the prose a draft puts BEFORE its card.
+
+    WHY IT EXISTS — A SILENT DISCARD. Both prompts forbid this text (VERSE_PROMPT: "No preamble, no
+    restating the lemma, no closing summary"; the repair prompt's card-only contract at :1896) and
+    NOTHING checked it — verified against the full detector enumeration in offline_gate_check.py.
+    split_definition DROPS this text in EVERY path, so a draw that breached the output contract read
+    gate-clean (G162's archived card: a working note leaked into the body, warns 0, gate-invisible).
+    The leak never reaches a reader (split_definition drops it; views_lexica.py pops `raw`) — so this
+    buys a DRAW-HEALTH signal, not reader protection. Containment lowers the stakes, not the
+    obligation: the Silent-Fallback Rule forbids leaving the discard silent.
+
+    THE CUT MIRRORS split_definition (never re-derived): text before the first section header, cut
+    again at the first bold-numbered headline so the headerless-senses fallback shape never has its
+    own senses called boilerplate. Blank lines and `---` rules drop out — formatting noise, not a
+    claim. What survives is a contract breach, tagged:
+      meta  — working-note prose ("Here is the corrected definition ..."). THE kill class.
+      title — a bare lemma/title restatement. Known-benign shape (ὄρος 2026-07-07: the splitter
+              already handles it), still a breach, tagged APART so the two classes can be SIZED
+              separately before any block rule is written.
+
+    REPORT-ONLY, deliberately: NO block rule, NO stored field, no caller may refuse a card on this.
+    An open warn blocks apply (the probe2/scan3 rule), so a day-one block would stop a rebuild of
+    every live card carrying a leak. The block decision is its own reviewed step, sized off a sweep
+    (meta:v5 blast-radius precedent).
+    """
+    pre = []
+    for ln in (prose or "").splitlines():
+        if _SECTION_RE.match(ln):
+            break
+        pre.append(ln)
+    text = "\n".join(pre)
+    m = re.search(r'^\s*\*\*\s*\d+\.', text, re.M)   # the headerless-senses fallback's own cut
+    if m:
+        text = text[:m.start()]
+
+    fires, meta = [], []
+
+    def flush():
+        if meta:
+            fires.append({"kind": "meta", "text": "\n".join(meta).strip()})
+            meta.clear()
+
+    for ln in text.splitlines():
+        if not ln.strip() or _HR_LINE_RE.match(ln):
+            continue
+        if _LONE_TITLE_LINE_RE.match(ln):
+            flush()                                  # keep appearance order between the two kinds
+            fires.append({"kind": "title", "text": ln.strip()})
+        else:
+            meta.append(ln.strip())                  # consecutive prose = ONE fire, so a count sizes
+    flush()                                          # the CLASS, not the line breaks in it
+    return fires
+
+
 def sense_provenance(senses_block):
     """Per-sense LXX provenance, ALIGNED to sense_headlines order. Splits the Senses prose at the
     same bold '**N. …**' markers the headlines come from, counts each sense's grounding refs by
@@ -3052,6 +3114,18 @@ def show_entry(entry):
     for rt in refused_tails(entry.get("raw", "")):
         print(f"  ⚠ REFUSED-TAIL: range '{rt}' not expanded (backwards or span > 30) — "
               f"the tail verses are NOT counted as cited; adjudicate by hand")
+    # LEADING-BOILERPLATE — REPORT-ONLY (G162 preamble-leak ticket, reviewer-ruled 2026-07-14).
+    # Computed from raw at print time and NOT stored, exactly like refused_tails above: no audit
+    # field, no def_json shape change, and NOTHING refuses a card on it. It reports a broken output
+    # CONTRACT (the draft wrote prose before its card), not a broken card — split_definition drops
+    # this text and the reader never sees it. Printing it is the whole point: the discard was
+    # SILENT, so a contract-breaching draw read gate-clean. Block rule is a separate reviewed step,
+    # sized off a sweep — see the AUDIT entry. ZEROS FROM THIS ARE NOT YET TRUSTED: the
+    # known-positive control (G162's archived draw, PA-only) has not run.
+    for bp in leading_boilerplate(entry.get("raw", "")):
+        print(f"  ⚠ LEADING-BOILERPLATE [{bp['kind']}] — the draft wrote this BEFORE its card, "
+              f"breaching the output contract (report-only, blocks nothing; the splitter drops it "
+              f"so no reader sees it): {bp['text'][:120]!r}")
     if a.get("noncanon"):
         print(f"  ✗ non-canonical book label(s) — HARD REJECT: {', '.join(a['noncanon'])}")
     for d in (a.get("double_shelved") or []):
