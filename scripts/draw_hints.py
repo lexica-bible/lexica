@@ -180,6 +180,21 @@ DRAW_HINTS = {
         "provenance": "AUDIT_lexica_rollout.md G2805 PARKED entry (re-selection r16, run session 3, "
                       "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
     },
+    "G5088": {   # τίκτω — bear/give birth
+        "hints": [
+            "Jer 22:26 reads 'into a land of which you were not birthed there; and there you "
+            "shall die' - quote its wording byte-exact, keeping ABP's 'of which ... there' "
+            "construction, or describe the verse without quoting it.",
+        ],
+        "jobs": [],
+        "provenance": "AUDIT_lexica_rollout.md G5088 PARKED entry (2026-07-14) + quote-repair "
+                      "cap-out (V11.2 cap 1, draw 79d00733 DEAD, refused repair banked "
+                      "G5088_quote_refused_79d00733.json, 2026-07-15): the model normalized "
+                      "ABP's 'of which ... there' to 'where' twice (draw + repair). Jer 22:26 "
+                      "bytes = JP live sqlite read 2026-07-15 (on the session record); applied "
+                      "under JP's standing delegation, reviewer verification at re-entry "
+                      "(ruling 5b).",
+    },
     "G162": {    # αἰχμαλωτεύω — take captive
         "hints": [
             "Psa 68:18 reads 'you received gifts by men'; Eph 4:8 (quoting it) reads 'he gave "

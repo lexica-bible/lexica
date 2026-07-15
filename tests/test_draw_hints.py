@@ -15,13 +15,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 import build_lexica_def as B
 from draw_hints import DRAW_HINTS
 
-# The seven batch-4 shelf words (BATCH 4 CLOSED, JP ruling 2026-07-12). Editing the register =
+# The seven batch-4 shelf words (BATCH 4 CLOSED, JP ruling 2026-07-12), plus G5088 (added
+# 2026-07-15: quote-repair cap-out killed the draw — Jer 22:26 wording pin, standing-delegation
+# ruling, reviewer verification at re-entry; see the entry's provenance). Editing the register =
 # a JP checkpoint; this pin makes an unruled edit fail loudly instead of shipping silently.
-RULED_SEVEN = {"G1244", "G1390", "G2168", "G227", "G236", "G2805", "G162"}
+RULED_MEMBERS = {"G1244", "G1390", "G2168", "G227", "G236", "G2805", "G162", "G5088"}
 
 
-def test_register_membership_is_the_ruled_seven():
-    assert set(DRAW_HINTS) == RULED_SEVEN, sorted(DRAW_HINTS)
+def test_register_membership_is_the_ruled_set():
+    assert set(DRAW_HINTS) == RULED_MEMBERS, sorted(DRAW_HINTS)
 
 
 def test_every_entry_names_provenance_and_one_line_hints():
