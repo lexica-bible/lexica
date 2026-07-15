@@ -166,6 +166,11 @@ Constraints:
   with an ellipsis (…). When several verses share a refrain or formula, quote ONE
   verse and name it - never write a blended wording, and never claim the members
   are worded identically unless they are.
+- REFERENCES NAME VERSES ONE BY ONE. Never write a span of verses as a reference
+  range. "Rev 19:1-6" asserts every verse between its endpoints, including any
+  that do not carry this lemma - list the verses you actually mean, separated by
+  commas ("Rev 19:1, 19:6"). This governs REFERENCES only; the Range section,
+  which states how far the word's meaning stretches, is unaffected.
 
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in

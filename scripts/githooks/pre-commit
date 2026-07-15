@@ -48,6 +48,7 @@ python tests/test_quote_repair.py >/dev/null
 python tests/test_draw_history.py >/dev/null
 python tests/test_helper_double_tag.py >/dev/null
 python tests/test_context_feed.py >/dev/null
+python tests/test_prompt_contract.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
 node tests/test_chrono_reconcile.js >/dev/null
