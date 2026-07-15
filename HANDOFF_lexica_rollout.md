@@ -1,5 +1,32 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **TOOLING TICKET 1 DONE — `fix_lexica_raw` NOW RUNS THE FULL WRITE-PATH BATTERY (2026-07-14,
+> commit `3b51592`, pushed; code + test, NO word runs, ZERO spend).** #69 third instance. **Scope
+> amended 2 gaps → 3** (reviewer-ruled): the tool also had NO open-warn refusal, and fixing gap 1
+> alone would have made it WORSE (probes start emitting warns into an ungated path). Fixed: `conn`
+> passed so the probes actually run · prior adjudication carried ONLY across an identical
+> CANONICALIZED warn set · `open_probe_warns` refusal added (dry-run WARNS, only `--apply` refuses —
+> the main path's convention, not invented strictness) · new `--adjudicate-warns` for the changed-set
+> case. **CARRY RULE (standing, this tool):** a ruling covers only the warns it saw; **changed set ⇒
+> FULL REOPEN, no partial carry** (partial carry = machine adjudication, reserved for a reviewer).
+> **Canonicalization required, not cosmetic — byte-level:** warns are plain strings appended in SCAN
+> ORDER (`build_lexica_def.py:2728`), never sorted ⇒ raw equality would misfire on a benign reorder.
+> **RED-FIRST vs the REAL script** (`tests/test_fix_lexica_raw.py`, synthetic DB, banked G1390 bytes,
+> no network/PA): gap 2's red **exceeded the ticket** — the row was written with the WHOLE warn
+> history wiped (no `warns_adjudicated`, no `probe2_warns`), reading "clean, no warns ever"; gap 3
+> shipped **"Kore"** (the run's first true positive, `test_v11_probes.py:509`) silently at exit 0 —
+> the ungated path passed a KNOWN-CAUGHT defect class. Registered in BOTH CI lists in the same commit.
+> Full list green (23 files, no regression). **TWO CC ERRORS, both machine-caught, both banked:**
+> invented fixture bytes (hand-recalled warn string vs real emitted bytes; red RE-PROVEN against the
+> corrected fixture so the green is the fix, not the fixture) = **ENGINE_LESSONS #70**; and a cp1252
+> console-encoding trap the pre-commit hook refused (CI would have passed, every local commit failed).
+> **Eph 4:8 label fix (`*gift*`→`*gifts*`) is UNBLOCKED — it rides this tool and ships LAST.**
+> **OPENS = offline-lint extension ticket (NEXT, separate change) · Eph 4:8 label fix (last) · G236
+> design pass (floor-level, spend-gated) · G162 redraw (JP's gamble call) · probe-2 over-firing ticket
+> (7 byte-adjudicated fixtures).** Full record: AUDIT "TOOLING — `fix_lexica_raw` RUNS THE FULL
+> WRITE-PATH BATTERY". **STATE: origin = local = `3b51592`; PA NOT pulled (needs a pull; tool is run
+> by hand, no reload).** Scoreboard unchanged `3/10ʰ · 7/15`. Frozen V9 untouched.
+
 > **G1390 δόμα SHIPPED ʰ — FIRST UNPARK OF THE ARC (2026-07-14). Scoreboard 2/10ʰ -> `3/10ʰ` · `7/15`
 > UNCHANGED (7/15 is JP-ruled FINAL + UNTOUCHABLE; hinted ships never join it — a reviewer "8/15" was
 > refused and corrected against the committed rulings). Applied from reviewed draw `bda7de94` (cache

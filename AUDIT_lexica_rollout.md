@@ -6305,3 +6305,79 @@ Predictions on record: reorders fed, own-paraphrase exempts loud, other-item-cla
 anchoring parks unchanged (lead-in multi-ref, out of scope) and NOT breaches. Close = no breach on any.
 **STATE: origin = local = PA = `dbea202` (BUILD landed + deployed). Scoreboard unchanged 2/10ʰ · 7/15;
 conditional lift stays in force until the four words re-run clean. Frozen V9 untouched; no word ran.**
+
+---
+
+### TOOLING — `fix_lexica_raw` RUNS THE FULL WRITE-PATH BATTERY (2026-07-14; commit `3b51592`;
+### code + test only, NO word runs, ZERO spend; ticket 1 of the two banked with the G1390 ship)
+
+**SCOPE AMENDED 2 GAPS → 3 (reviewer-ruled, standing delegation, no JP routing).** The ticket banked
+with the G1390 ship named two defects. A third was found on the read and folded into the same change:
+the tool never called `open_probe_warns`, so it had no open-warn refusal. Decisive reason for
+folding it in rather than ticketing separately: **fixing gap 1 alone makes the tool WORSE** — once
+the probes actually run they emit warns, and with no refusal the tool writes exactly the rows the
+main path refuses. #69, third instance.
+
+**THE THREE GAPS (all byte-verified before the fix):**
+1. **Probes not run.** `fix_lexica_raw.py:95` called `B.validate_entry(entry)` with no `conn`;
+   `build_lexica_def.py:3525` (main path) passes it. Two call sites, one defective. With `conn=None`
+   validate_entry prints "prose probes NOT RUN" and skips the verbatim-quote gate (which BLOCKS on
+   the main path), the named-subject probe and the identity scanner.
+2. **Adjudication silently stripped.** `assemble()` rebuilds `audit` fresh from the prose and never
+   carries `warns_adjudicated`.
+3. **No open-warn refusal.** Main path refuses at `build_lexica_def.py:3558`; this tool never did.
+
+**RED-FIRST, REAL SCRIPT (`tests/test_fix_lexica_raw.py`).** Reviewer accepted the end-to-end harness
+over a mock on the stated ground that *a mocked test of an untested tool proves the mock* — and the
+whole defect class survived precisely because nothing drove the real script. Synthetic DB (verses /
+words / lexica_def only), banked real G1390 bytes, no network, no PA state, zero spend. RED on all
+three:
+- gap 1 — tool's own stderr: `V11 prose probes NOT RUN for G1390 … all UNCHECKED`, then wrote (exit 0).
+- gap 2 — **FINDING OF RECORD (exceeds the ticket):** the row was written and the stored audit came
+  back with NO `warns_adjudicated` **and NO `probe2_warns`** — the whole warn history wiped, not just
+  the ruling stripped. The row read *clean, no warns ever*. This is the rationale the identical-set
+  carry rule rests on.
+- gap 3 — an edit introducing **"Kore"** (a name in no cited verse; per `tests/test_v11_probes.py:509`
+  the run's **first true positive**) was written silently at exit 0. The ungated path passed a
+  KNOWN-CAUGHT defect class, not a hypothetical.
+
+**CARRY RULE (ruled, standing for this tool).** A prior ruling covers only the warns it saw. Carry it
+across a surgical edit ONLY when the new warn set is identical over the CANONICAL form. Silent
+carry-forward BANNED — every branch prints.
+**Canonicalization is required, not cosmetic (byte-level, reviewer condition):** warns are plain
+strings appended in SCAN ORDER (`build_lexica_def.py:2728`), never sorted ⇒ the stored representation
+is NOT canonical; a surgical edit that moves text reorders identical warns, so raw string equality
+would force a spurious refusal on a benign reorder — which is what invites a "just carry it"
+workaround later. `canon_warns()` = stable ordering + stable serialization over the five warn
+surfaces `open_probe_warns` gates on.
+**CHANGED SET ⇒ FULL REOPEN, NO PARTIAL CARRY (ruled).** Every warn returns to the reviewer,
+including ones a prior ruling covered. Partial carry would make the TOOL decide which prior items are
+"same enough" = machine adjudication, reserved for a reviewer. Review cost accepted; paid only when an
+edit actually moves the warn set, which is itself worth a fresh look.
+**Dry-run/apply parity:** the gate mirrors the main path's CONVENTION, not a stricter one — a dry-run
+WARNS (it exists to preview), only `--apply` refuses. #69 asks for the same checks, read as the same
+behaviour. New `--adjudicate-warns NOTE`, same surface as the builder's, for the changed-set case.
+
+**TWO CC ERRORS, BOTH CAUGHT BY THE MACHINE, BOTH BANKED:**
+- **Invented fixture bytes.** The seeded prior warn was hand-written `… — adjudicate`, copied from the
+  SHAPE of an existing assertion; the real emitted string ends `— adjudicate (misattribution class)`.
+  The existing assertion never caught it because it only tests `"Jehoiada" in warns[0]` — a substring
+  check certifies the substring, nothing else. The invented tail read as a CHANGED set, so the fixture
+  tested nothing and the tool was right all along. Caught by the first green run. Fixture corrected to
+  emitted bytes; **red RE-PROVEN on all three gaps against the corrected fixture**, so the green is
+  attributable to the fix and not to the fixture edit. = **ENGINE_LESSONS #70.**
+- **Console-encoding portability.** First commit attempt was REFUSED by the pre-commit hook:
+  `UnicodeEncodeError` — the tool prints the Greek lemma, the hook runs without `PYTHONIOENCODING`,
+  Windows console is cp1252. CI (utf-8 Linux) would have passed while every local commit failed. Fix:
+  the test sets its OWN child encoding rather than depending on the caller's console. Verified passing
+  under a bare `env -u PYTHONIOENCODING` run. (The hook did its job; memory `feedback_utf8_console_output`.)
+
+**REGISTERED IN BOTH CI LISTS IN THE SAME COMMIT** (reviewer condition — an unregistered red test
+protects nothing): `.github/workflows/ci.yml` + `scripts/githooks/pre-commit`. Full curated list green,
+23 files, no regression (incl. `test_v11_probes`).
+
+**Eph 4:8 label fix (`*gift*`→`*gifts*`) is now UNBLOCKED** — it rides this fixed tool, per the
+wrong-but-tiny-beats-falsified-record ruling. It ships LAST, after the offline-lint ticket.
+**STATE: origin = local = `3b51592`. PA NOT pulled (code change — needs a pull; no reload needed for
+the tool itself, it is run by hand). Frozen V9 untouched; no model call; scoreboard unchanged
+3/10ʰ · 7/15.** NEXT = the offline-lint extension ticket (separate change), then Eph 4:8.

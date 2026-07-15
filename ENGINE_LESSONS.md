@@ -1035,3 +1035,22 @@ both drifting from the doc.
     to ride the fixed tool rather than buy accuracy with an audit lie. Sibling of #21 (a gate that
     reads a length is not reading the text), #31 (warning-after-write is not a control), and #50
     (a machine-gate kill leaves the hand battery unrun). *(audit: G1390 δόμα — SHIPPED ʰ, 2026-07-14)*
+
+70. **Seed a fixture from EMITTED BYTES, never from a hand-recalled string — and an assertion that
+    checks a substring does not certify the bytes.** Building #69's red-first test, the prior
+    probe-2 warn was seeded by hand as `… 2Ch 21:3 — adjudicate`, copied from the shape of an
+    existing assertion in `tests/test_v11_probes.py`. The real emitted string
+    (`build_lexica_def.py`, `probe2_names`) ends `— adjudicate (misattribution class)`. The existing
+    assertion had never caught the difference because it only tests `"Jehoiada" in warns[0]` — a
+    substring check certifies the substring, nothing else. The invented tail read as a CHANGED warn
+    set, so the carry test compared a real set against a set that never existed and the fixture
+    tested nothing; the tool was behaving correctly the whole time. Caught only because the harness
+    drove the REAL script end-to-end (a mock would have agreed with the invented bytes and shipped a
+    green that proved nothing). → v2: (i) fixture strings that a comparison KEYS ON are captured from
+    a real run's output, never retyped from memory or inferred from a neighbouring assertion; (ii) a
+    test that changes its own fixture between red and green must RE-PROVE red against the corrected
+    fixture, or the green is unattributed — the change may be what turned it; (iii) when a
+    hand-written fixture disagrees with the machine, suspect the fixture first. Second byte-vs-recall
+    lesson of this arc — kin of #15/#52 (the sig pins fed input, not prose; two cards shared
+    `aa064d41` with different prose) and of the standing rule that the written record outranks
+    recall in BOTH directions. *(audit: TOOLING — fix_lexica_raw 3-gap fix, 2026-07-14)*
