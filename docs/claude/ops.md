@@ -39,12 +39,19 @@ security, rebuild procedure.
      that list lean, add only when a new test imports something new.
   2. Rebuilds `app.js` and FAILS if the committed copy is stale.
   3. Runs the **node** unit tests `tests/test_ac_word_groups.js` + `tests/test_rstack_logic.js`
-     (in the `frontend` job; the pre-commit hook runs them too) PLUS the Library reading-mode
+     + `tests/test_note_inspect.js` (in the `frontend` job; the pre-commit hook runs them too)
+     PLUS the Library reading-mode
      gates `test_library_order.js` + `test_render_markup.js` + the whole-bundle **render smoke
      gate `smoke_app.js`** (renders `<App/>` with real React via `react-dom/server` to catch
      blank-site reference/TDZ errors the pure-logic tests can't see — a component-body error
      passed green before it existed). react/react-dom are TEST-ONLY devDependencies; the app
      loads React from the CDN UMD.
+  **Both lists are EXPLICIT filenames, never a glob — a new test file must be added to the CI
+  job AND `scripts/githooks/pre-commit` or it gates nothing.**
+  **A regression test carries a CONTROL section** (`test_note_inspect.js` is the worked example):
+  transcribe the shipped-BROKEN logic beside the fixed one and assert the expectations FAIL
+  against it. Otherwise a green only proves the test ran, not that it can see the bug it exists
+  for — the same rule as `feedback_audit_tools_must_fail`, applied to a fix instead of a detector.
   Repo is public; check the Actions tab or
   `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is on the dev box
   (2026-06-22; Claude calls it by full path) — NOT on PA. Memory `project_dependabot_workflow`.

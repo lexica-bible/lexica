@@ -64,9 +64,34 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   **localStorage seed written before `app.js` runs**, not an `/api/` stub. Do NOT shape it from
   `views_notes.py` — `notes_sync` stores the client's blob opaquely (`json.dumps(n)`) and hands the
   same blob back, so the server is a round-tripper and never authors a field. The producers are the
-  CLIENT: `NotesStore.create()`/`createJournal()` for the record, `60-library.jsx verseAnchor()` for
-  the anchor fields. Name them per field in the header as usual. Keep such a seed OPT-IN: notes also
-  paint marks in the Library reader, so an always-on seed would quietly move other surfaces' numbers.
+  CLIENT: `NotesStore.create()`/`createJournal()` for the record, and — **TWO different anchor
+  writers, not one** — `60-library.jsx verseAnchor()` (:1291-1295, the verse-number MENU: stamps
+  `start` and `end` to the same verse, so it can only ever make a single-verse note) or
+  `resolveSelection()` (:1093-1102, the DRAG-SELECT: stores `start.verse`/`end.verse` separately,
+  real `pos` values, and a range `refLabel`). Shape a RANGE fixture from the second; reading only
+  the single-verse writer is how you'd "confirm" that ranges aren't stored at all. Name them per
+  field in the header as usual. Keep such a seed OPT-IN: notes also paint marks in the Library
+  reader, so an always-on seed would quietly move other surfaces' numbers.
+- **When a fixture DIMENSION becomes load-bearing, it gets real values with named provenance —
+  and unknowns THROW.** The chapter fixture's verse count used to be decoration ("a short slice is
+  enough to boot"); the moment `NoteVerseInspect` derived the chapter's last verse from it, that
+  count decided a test's outcome, and an invented length would have been deciding results. It now
+  carries REAL counts read from the repo's own `abp_texts/` (Joh 4=54, Gen 1=31, Rom 8=39,
+  Psa 104=35 — pre-build is fine for a COUNT), and an unknown chapter raises instead of standing
+  in. A stand-in that quietly answers for something it knows nothing about isn't a fixture, it's a
+  fault injector (the `chronological.json` lesson, second instance).
+- **Stub the shape the PRODUCER returns, never the shape the caller expects.** A stub shaped to a
+  buggy caller's assumption makes the bug untestable and green. `/api/chapter` stays a bare list in
+  the harness precisely because the panel that misread it is what we're catching.
+- **Make a fixture row say WHICH row it is.** The harness's verse words carry a `spirit-v{{v}}`
+  marker substituted with the requested verse, so a measurement proves which verses actually
+  rendered and fetched — not merely how many. "3 rows appeared" is not the same claim as "verses
+  21, 22 and 23 appeared", and only the second one catches an off-by-one range.
+- **The `?bundle=head` A/B validates against REMEMBERED numbers too, not just stale reads.** Second
+  instance: Notes's desktop shell measured 1388px where the previous session banked 1400 — not a
+  regression, but the shared chapter fixture having grown to Gen 1's real 31 verses, making the
+  page tall enough for a scrollbar. Identical on BOTH bundles. A number from a previous session is
+  a memory, not a baseline: re-derive it from HEAD at the same viewport and fixtures.
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -134,6 +159,31 @@ editor guts shared via `useNoteEditor`/`NoteEditFields`; inspect top:0). Seam in
 Study module on `<Shell>` (see data-model.md, study.db). News gained a SELECTED-state inspect
 (click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Full record:
 memory `project_three_zone_shell`.
+
+### The Notes inspect — two defects, one panel (fixed 2026-07-15, `e9089c9`)
+The anchored-verse panel shipped 2026-07-01 with two bugs that only a range note showed both of.
+Both decisions are now pure in **`static/src/34-notes-logic.jsx`**, locked by
+`tests/test_note_inspect.js` (in CI + pre-commit).
+- **`/api/chapter` returns a BARE LIST** (`views_library.py:268`, `jsonify([...])`), and the
+  Library consumes it as one (`60-library.jsx:444`, `setVerses(data)`). The panel read `d.verses`
+  → always empty → the chapter's last verse always fell back to the anchor → the "after"
+  neighbour could never render. **Sibling routes disagree on shape ON PURPOSE**
+  (`/api/verse-words` returns `{words:[...]}`), so read the producer; don't pattern-match off the
+  route next door. Two independent derivations agreeing (the Python's return + the other
+  consumer's use) is what settles it.
+- **A note anchors a RANGE, and the read path never looked.** `resolveSelection()`
+  (`60-library.jsx:1093-1102`) stores `start.verse` and `end.verse` separately from the two edges
+  of a drag-select; the panel used `start.verse` only, so a multi-verse note showed its first
+  verse while the band still said "John 4:21–23". **Trace the WRITE path before believing a data
+  bug** — here the write was innocent and the stored `refLabel` was already a range, so it was
+  display-only: no loss, no history to repair.
+- **THE LESSON — two defects on one surface can hide behind each other.** Fixing the list-read
+  alone would have rendered a range note's OWN second verse as a *dimmed neighbour* — presenting
+  the note's text as context, which is worse than omitting it. When one panel has two faults, fix
+  them together and pin the interaction with a test; don't ship the half that looks green.
+- **A label is a promise.** The old anchor row wore the range label on a single rendered verse.
+  Now the band carries the range and each anchor row carries its own ref. A label that says more
+  than the panel renders is a bug even when nothing crashes.
 
 **An empty state names the ACTION that fills the room — and the answer can differ by surface.**
 Word study's is the reference ("Search a Greek or Hebrew word… to study it here"). Notes's center

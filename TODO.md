@@ -395,13 +395,6 @@ Left to do:
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,
   so it's his own triage view. Fix would be stacking the actions under the headline on mobile; that's a
   design call on LIVE controls, so it waits for JP. code: static/src/84-news.jsx (NewsStory `.news-actions`)
-- **Notes inspect: the next-verse row never renders** (chipped 2026-07-15, DESKTOP bug, pre-existing).
-  `NoteVerseInspect` (static/src/35-notes.jsx ~245) reads the `/api/chapter` reply as `d.verses`, but
-  that route returns a bare LIST — confirmed two ways: `views_library.py:268` `jsonify([...])`, and the
-  other consumer `60-library.jsx:444` `setVerses(data)`. So `maxVerse` always falls back to the anchor
-  verse and the `v < maxVerse` guard is never true: the panel shows previous + anchor, never the verse
-  after. Found while measuring the Notes mobile pass; out of that charter (layout only).
-  code: static/src/35-notes.jsx (NoteVerseInspect)
 - **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
   its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
   Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
