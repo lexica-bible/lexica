@@ -1,5 +1,48 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **SESSION 2026-07-14 (THROUGHPUT TURN) — A CARD SHIPPED. READ THIS BLOCK FIRST; THE BLOCK BELOW IT
+> IS THE PRIOR SESSION'S AND ITS POSTURE IS SUPERSEDED.**
+>
+> **1. `G3464` μύρον IS LIVE — card #81, live cards 80 → 81.** First ship in weeks. **Scoreboard
+> `3/10ʰ · 7/15` UNCHANGED and CORRECT**: that is the CALIBRATION count (FINAL + UNTOUCHABLE), and
+> throughput words are NOT members. **The number that moves is LIVE CARDS.**
+>
+> **2. POSTURE CHANGED — PULL, NOT PUSH (JP + reviewer).** The deliverable is SHIPPED DEFINITIONS, not
+> tooling. Shelf items are worked ONLY when a real card's failure pulls one. **A session that ships
+> zero definitions is a MISS unless a pulled failure justifies it.** **SPEND: both poles retired.**
+> Each call must be earned by a CHANGE since the last read; **a re-draw at an unchanged input is a
+> hope, not an iteration** → JP. Batches need authorization; single calls inside an authorized loop do
+> not. **Do NOT report "zero spend" as a merit line** — a past session's overstated thrift is
+> withdrawn. Memory: `feedback_spend_posture`.
+>
+> **3. TWO ROOT CAUSES FOUND BY PULL, BOTH FIXED, BOTH FROM ONE CANARY.** (a) **The FEED was lying:** a
+> blank `english_head` (None BY DESIGN — ~45% of Greek rows, correct data, mostly articles/particles)
+> was printed into the fed line as the TEXT `"None"`; the model believed it and wrote it into the card
+> (`1d88d98`). **The 45% was a trap — named before it drove a fix.** (b) **G162's PREAMBLE — ROOT CAUSE:
+> repair calls run with NO SYSTEM PROMPT**, so the only contract a repair gets is inline; F1 was applied
+> to `QUOTE_REPAIR_PROMPT` and **never** to `REPAIR_PROMPT`, which ended *"Return the full corrected
+> definition."* — and G162 answered *"Here is the full corrected definition…"* (`09c6db3`). All 7 prompt
+> templates audited; gap was **exactly one**. **The boilerplate detector built this session CERTIFIED
+> that fix on live bytes** (post-repair `[meta]` byte-identical to pre-repair ⇒ the repair added
+> nothing).
+>
+> **⚠ 4. THE ACCEPTANCE RUN IS STILL OWED AND UNTOUCHED.** `finish_rebuild.sh`'s clean path has never
+> run with real steps. **A `lexica_def` write does NOT discharge it** — a ruling claiming this batch
+> would was **WITHDRAWN on the bytes**. It remains **JP's next real `/rebuild-words`**: `done` closes
+> it, a named-failures banner means DO NOT SWAP. Watch it; do not rebuild just to test it.
+>
+> **5. QUEUE:** `G2787` → `G2374` → `G5088` → `G3793` (canary-loop discipline) · then the **3
+> marker-tainted live cards** (`G2588`/`G4172` coverage, `G3624` gloss_notes carry a reader-facing
+> `"None"` — **REDRAW, not resplit**) · then **format unification** (design pass first, zero-spend,
+> target = the fresh batch's native output). **Backlog stays under the PULL rule.**
+>
+> **NAMED CLASSES, no detectors (no pull):** fabricated **common-noun** referent is **gate-invisible**
+> (the "king" at Psa 133:2 — probe-2 checks NAMES) · **training-not-evidence**, now **2 instances with
+> OPPOSITE truth values** (the "king" WRONG; "Tyre" RIGHT — ABP calls the city **"Sor"**). **probe-2
+> caught the TRUE claim and missed the FALSE one.** A third instance is the pull.
+> **STANDING:** LXX psalms carry the title at **verse 0** here — an apparent ±1 offset vs the ABP app is
+> EXPECTED, not a finding.
+
 > **SESSION 2026-07-14 — ZERO MODEL SPEND, 9 commits, `origin = local = PA = fb82d0c`. TWO ARCS
 > CLOSED, ONE ACCEPTANCE RUN OWED. Read this block, then the SPEND BOARD below.**
 >

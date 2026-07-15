@@ -7607,3 +7607,59 @@ and that the leak-naming sentence never returns. **PROOF OF FIX IS THE NEXT REPA
 BOILERPLATE DETECTOR OUTPUT** (reviewer-set): a `[meta]` fire echoing the repair instruction = the fix
 did not take. **The detector built at the top of this session is the live control on the root cause
 found at the bottom of it.**
+
+---
+
+## G3464 μύρον — SHIPPED. CARD #81. — 2026-07-14
+**`→ written to lexica_def.` LIVE** (a data write — no deploy). **Live cards 80 → 81.** First card
+shipped in weeks. **Scoreboard `3/10ʰ · 7/15` UNCHANGED and CORRECT** — that is the CALIBRATION count
+(JP-ruled FINAL + UNTOUCHABLE); μύρον is a THROUGHPUT ship and is not a member of the 15-set.
+
+**PROOF OF FIX, ON THE SHIPPED BYTES — the boilerplate detector certified its own root cause.** The
+reviewer's condition was: *a `[meta]` fire echoing the repair instruction ⇒ the fix did not take.*
+Post-repair `[meta]` is **BYTE-IDENTICAL** to the pre-repair one (`'**Scented, oil-based preparation
+used for anointing, personal grooming, trade, or burial** — a fragrant substance of liq'`) — the
+ORIGINAL DRAW's own title line, correctly PRESERVED by the repair. **THE REPAIR ADDED NOTHING**, where
+G162's had prepended *"Here is the full corrected definition with each of the four unplaced
+occurrences…"*. **The detector built at the top of the session certified, on live bytes, the root-cause
+fix found at the bottom of it — with no instrument invented for the purpose.**
+
+**THE LOOP, VERBATIM — 3 calls, 3 changes, ZERO hopes** (this is what the refined spend rule
+describes, and it produced a shipped card AND two root-cause fixes on its first run):
+1. **draw** → died at the verbatim-quote gate → **READ:** the **FEED was lying** (blank `english_head`
+   → the text `"None"` → the model believed it and wrote it into the card) → **CHANGE:** fixed the feed
+   (`1d88d98`).
+2. **redraw** → `"None"` gone · quote gate PASSES · the invented "king" gone · probe-2 warns 7 → 1 →
+   **READ:** coverage 25/27, two verses trimmed → the designed answer was `--repair`, and **READING
+   that pass before running it found the G162 ROOT CAUSE** → **CHANGE:** gave the coverage-repair
+   prompt the F1 contract it never had (`09c6db3`).
+3. **repair** → round 1 integrated Joh 12:5 + Mat 26:9 into the existing sub-use with verbatim quotes ·
+   coverage 27/27 · citation gate 27/27 · structure guard SILENT → **adjudicate on verse bytes** → SHIP.
+
+**TYRE WARN — ADJUDICATED ON BYTES, note shipped IN the row (self-documenting).** Both legs split:
+**Rev 18:13 = ARTIFACT** (the card claims no Tyre; the addressee is **Babylon**, 18:10 — probe grouping
+attributed the paragraph's name to every ref under it). **Eze 27:17 = SOUND** (**ABP names the city
+`Sor`**, 27:2-3, addressed as *"your"* at v17; Sor = Tyre — chapter-context, not verse-local, not
+load-bearing). **THE MECHANISM, RECORDED NOT EXCUSED: only v17 was fed, so "Tyre" came from TRAINING,
+not evidence — the SAME mechanism as the Psa 133 "king". That one was WRONG; this one is RIGHT. Luck,
+not method.** **⇒ probe-2 SEES NAMES: it CAUGHT THE TRUE CLAIM AND MISSED THE FALSE ONE.** That is the
+precise shape of its blind spot; it sits beside the fabricated-common-noun class. **No detector — the
+false kind still has ONE instance and there is no pull. A THIRD training-not-evidence instance is the
+pull.**
+
+**#30 RULED (reviewer, adopting CC's reading): THROUGHPUT SHIPS SIT OUTSIDE THE INSURANCE CLAUSE.**
+The clause governs COUNT ships — the 15-set, whose placement disputes a floor-diff exists to check.
+The 7/15 arc is final and untouchable, so a throughput word cannot be a member; it has no floor and no
+placement controversy for #30 to adjudicate, and requiring the agreement rig per fresh word would
+rebuild the calibration burden the throughput ruling exists to escape. **The `#30 NOT RUN` warn stays
+named and loud on every pass — correctly — and does not gate throughput applies.** A genuine placement
+dispute is the pull that buys a word a floor.
+
+**⚠ THE ACCEPTANCE RUN IS UNTOUCHED AND STILL OWED. This was a `lexica_def` write, NOT a words
+rebuild.** `finish_rebuild.sh` fires only from `/rebuild-words`. **Do NOT record it as closed. A ruling
+claiming this batch would discharge it was WITHDRAWN on the bytes** (fifth instance of the arc's shape).
+
+**NEXT:** batch resumes `G2787` → `G2374` → `G5088` → `G3793`, canary-loop discipline · then the **3
+marker-tainted live cards** (`G2588`/`G4172` coverage, `G3624` gloss_notes — **REDRAW, not resplit**:
+the marker lives in the stored raw) · then **format unification** (design pass first, target = the
+fresh batch's native output).
