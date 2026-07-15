@@ -5990,11 +5990,25 @@ silent under the current gate. warns 0.
   corrected definition with each of the four unplaced occurrences integrated into Sense 1 ..."* —
   meta-text surviving into the card. **DESIGN OBSERVATION (log, not a scoped item yet):** a leading-
   boilerplate check on the output contract would catch this class.
+  **CORRECTION 2026-07-14 (code-verified, reviewer-ruled) — THIS LEG IS DISPLAY-INVISIBLE AND NOT
+  LOAD-BEARING.** A leaked preamble reaches NO reader. Two independent strips: (1) `split_definition`
+  (`scripts/build_lexica_def.py:978`) files pre-section lines into a LOCAL `preamble` list that reaches
+  `senses_block` in NO path — "Senses:" header present -> dropped · header absent -> the fallback cuts
+  everything before the first bold-numbered headline · no headline -> senses empty; (2)
+  `views_lexica.py:184` — `entry.pop("raw", None)` before serving. **OUTCOME UNCHANGED: Est 2:6 parks
+  G162 ALONE.** The park is over-determined by TWO legs, not three — this entry's "three defects"
+  framing OVERSTATES one leg. **The DESIGN OBSERVATION still stands and is now BUILD-ruled:** the gap
+  is a **SILENT DISCARD** (the splitter eats contract-breaching output, so a sick draw reads
+  gate-clean — this card: warns 0), which the Silent-Fallback Rule forbids leaving silent. **Display
+  containment lowers the STAKES, not the obligation.** Detector = **REPORT-ONLY** at build; the block
+  rule is **DEFERRED** to a sweep-sized, separately-reviewed step (meta:v5 blast-radius precedent).
 - **Isa 14:2 (K3) = fixable, non-parking alone.** Card `"the ones capturing shall be captives"` drops
   `them`; verse reads "the ones capturing **them** shall be captives" — the verbatim phrase EXISTS in
   the verse, so a repair would restore it. 1.000 near-match reflects the near-verbatim overlap.
 **OUTCOME:** G162 PARKED, over-determined (Est 2:6 content claim + preamble leak both unreachable by
-quote-repair; the K3 misquote fixable but insufficient alone). Roster-clean -> a redraw is NOT
+quote-repair; the K3 misquote fixable but insufficient alone). **[CORRECTED 2026-07-14 — see the
+CORRECTION on the preamble-leak bullet: that leg is DISPLAY-INVISIBLE, so the park rests on Est 2:6
+ALONE. Park outcome UNCHANGED; the "three defects" count above is overstated by one.]** Roster-clean -> a redraw is NOT
 structurally doomed (contrast G236), BUT three defects + the Est 2:6 recurrence history make a redraw a
 GAMBLE, not a sure fix — spend stays with JP, not pressed this session. If G162 ever redraws, a FULL
 hand battery is owed (this read caught the gate-invisible pair; more may exist). Scoreboard UNCHANGED
@@ -7263,3 +7277,54 @@ the floor was only re-rendered from its saved file.** **SPEND BOARD: NO well-def
 one fewer candidate** — G162 redraw (verdict AGAINST, JP's gamble call) is the only spend-shaped
 item left, and its verdict already stands. **ZERO-SPEND SHELF: KNOWN-set #71 ticket
 (`test_v11_probes.py:480`) · G162 preamble-leak detector ticket · prose-economy (JP's inquiry).**
+
+---
+
+## G162 PREAMBLE-LEAK TICKET — PRE-CHANGE REVIEW, RULED BUILD (REPORT-ONLY) — 2026-07-14
+**ZERO model spend. Opened the ticket by reading, before writing anything.** Reviewer-ruled;
+delegation note applied (standing delegation, not routed to JP). Proceed order set by the reviewer:
+this doc-only correction FIRST, then detector design + a RED fixture posted BEFORE any green commit.
+
+**THE TICKET'S NEGATIVE CLAIM IS TRUE — VERIFIED, NOT INFERRED.** No leading-boilerplate check
+exists. Checked against the FULL enumeration in `scripts/offline_gate_check.py:94-156`: eleven
+production detectors run (citation gate · dangling · noncanon · double_shelved · gloss_claims ·
+hedged · subuse_overload · registry_verses · probe1 · probe2 · scan3) plus four named as
+offline-impossible (coverage gate · floor-match · #30 membership · #55 sense-count). **NONE inspects
+the card's leading prose.** The output contract lives ONLY in the PROMPTS —
+`build_lexica_def.py:200` (draw) and `:1896` (repair) — which is consistent with **#57's** ruling
+that this fix belongs in the prompt, not the guard.
+
+**THE FINDING THAT CHANGED THE TICKET: the leak is DISPLAY-INVISIBLE** (two independent strips —
+full byte-trace on the G162 park entry's CORRECTION line above). So a detector buys a **DRAW-HEALTH
+signal, NOT reader protection** — LOWER value than the ticket's framing implies. **Ruled BUILD
+anyway, and the ground matters:** the gap is a **SILENT DISCARD** — the splitter throws away
+contract-breaching model output without a word, so a sick draw reads clean on every machine gate
+(G162: warns 0, gate-invisible). The **Silent-Fallback Rule** (JP 2026-07-11) forbids leaving that
+silent. **"Logged, contained at display" was REFUSED as a close: containment lowers the STAKES, not
+the obligation.** Seam is already computed (`preamble` is a local in `split_definition`) — surface
+it, don't drop it. Cost minimal.
+
+**BLOCK RULE DEFERRED — BINDING SEQUENCE (meta:v5 blast-radius precedent):** (1) detector
+REPORT-ONLY, red-first, kill fixture proven RED before green; (2) sweep mode over live cards' stored
+`raw`, read-only, zero spend, to SIZE the class; (3) the block decision comes FROM the measured
+blast radius, as its own reviewed step. **No block rule ships in step (1) under any wording** — an
+open WARN blocks apply (probe2/scan3 rule), so a day-one block would stop a rebuild of every live
+card carrying a leaked preamble.
+
+**BOARD-LINE DRIFT — LOGGED (third instance of the ticket-as-promissory-note shape this arc).** The
+session brief carried the ticket as *"a check its own kill record says EXISTS but doesn't"*. **The
+kill record says no such thing** — its words are conditional and self-tagged unscoped: *"DESIGN
+OBSERVATION (log, not a scoped item yet): a leading-boilerplate check ... WOULD catch this class"*
+(`AUDIT:5991`). **The repo line was RIGHT** (`HANDOFF:128` reads *"would be caught by a check that
+does not exist"*) — **the drift entered in the compression to the board line, not in the record.**
+Same shape as **#71** (misframed ticket) and G236's two board lines falsified by their own cited
+files. **Standing read: open from the record, never from a summary line — including this arc's own
+board.**
+
+**NOT VERIFIED (kept as a caveat):** G162's own card bytes. `draws/` is gitignored (PA-only), so CC
+cannot read the archived card locally. **The code-level finding holds regardless of that card's
+shape** — the pre-section drop is unconditional across every `split_definition` path. If the
+card-specific confirmation is ever wanted, it is a JP PA read.
+
+**STATE: ZERO model spend, ZERO code changed, doc-only. Scoreboard UNCHANGED `3/10ʰ · 7/15`.
+SPEND BOARD still EMPTY — this ticket is zero-spend and does not put anything on it.**
