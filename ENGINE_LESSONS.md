@@ -1140,3 +1140,25 @@ both drifting from the doc.
     mechanism is still not a LEGAL one) and of #70/#71 (recall over bytes; here the recall was the
     project's own board). *(audit: G236 PART 2 — MECHANISM KILLED ON THE FLOOR'S OWN BYTES, 2026-07-14;
     written under JP's standing delegation, reviewer-RULED in over CC's self-assignment restraint)*
+
+75. **A first-firing assert can MASK whether a ruled control actually works.** Building the probe-2
+    guard's loudness, the reviewer ruled a specific control: a break moving the FAILURE DIRECTION
+    (guard-error must produce MORE warns plus a not-run, never fewer) had to be caught red-first.
+    The break was made — the loader's error path returned an empty set instead of None, flipping
+    demotion ON with nothing in it, so every boundary token was demoted and warns went **2 → 0**:
+    real misattributions vanishing silently, exactly the direction that loses information. The suite
+    went red — **but at a CONTRACT assert sitting earlier in the file, not at the direction lock.**
+    Two of them, in sequence. Each had to be stood down before the ruled control could be watched
+    fire alone (`AssertionError: []`). **Had the run stopped at "the suite caught it", the direction
+    lock would have been recorded as proven while never having been exercised at all** — a control
+    certified by its neighbours' alarm. → (i) **three asserts "catching" a break is not three proofs
+    — it may be one proof and two shadows**; a suite going red tells you SOMETHING fired, never that
+    the thing you built fired; (ii) to certify a SPECIFIC ruled control, stand down the asserts ahead
+    of it so it fires ALONE, then restore them — and the restore is its own hazard, because **a
+    stood-down assert that stayed down is the very defect class the ticket was closing, recurring
+    inside its own build** (grep the stand-down marker to zero and let the diff show it; the reviewer
+    required exactly this as a citable commit line, not a claim); (iii) this is the certification rule
+    turned on the tests themselves — *a detector never watched to fail ALONE is not known to work* —
+    and the same shape as #52: **a tool's display of a line is not the line; a suite's red is not your
+    control's red.** Kin of `feedback_audit_tools_must_fail`. *(audit: PROBE-2 GUARD — THE SILENT
+    DEGRADE NOW SPEAKS, 2026-07-14; number ruled by JP)*
