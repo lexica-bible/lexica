@@ -57,6 +57,16 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   500px — use device emulation), seed `lexica_tour_seen` (the first-run modal covers everything),
   and stub `/api/` ONLY (it once answered for `chronological.json` and blanked the whole desktop).
   `?admin=1` matters — JP reviews as admin, whose nav carries more tabs than a reader's.
+  `&notes=1` seeds the notes store (4 notes + 1 journal page).
+- **Provenance when a surface has NO server producer (Notes, 2026-07-15 — the adapted form).** The
+  rule is "shape fixtures from the producing code", not "from Python". Notes is browser-local:
+  `NotesStore` reads `localStorage` once on first load and caches, so its fixture is a
+  **localStorage seed written before `app.js` runs**, not an `/api/` stub. Do NOT shape it from
+  `views_notes.py` — `notes_sync` stores the client's blob opaquely (`json.dumps(n)`) and hands the
+  same blob back, so the server is a round-tripper and never authors a field. The producers are the
+  CLIENT: `NotesStore.create()`/`createJournal()` for the record, `60-library.jsx verseAnchor()` for
+  the anchor fields. Name them per field in the header as usual. Keep such a seed OPT-IN: notes also
+  paint marks in the Library reader, so an always-on seed would quietly move other surfaces' numbers.
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -125,31 +135,70 @@ Study module on `<Shell>` (see data-model.md, study.db). News gained a SELECTED-
 (click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Full record:
 memory `project_three_zone_shell`.
 
-### Shell's MOBILE collapse — News (2026-07-15), then Ask-corpus (2026-07-15)
+**An empty state names the ACTION that fills the room — and the answer can differ by surface.**
+Word study's is the reference ("Search a Greek or Hebrew word… to study it here"). Notes's center
+said "Pick a note from the list", which is TRUE on desktop — the empty list is open beside it,
+already saying "In the Library, select some text…". On a phone the collapse puts that list behind
+a button, so for a reader with nothing saved the line pointed at an empty room and buried the only
+first step one tap away. Fixed mobile-only (`isMobile && !anyNotes`), and that is not a fork: the
+two surfaces differ *because their reachability differs*. Ask what's already on screen before
+writing "pick from the list".
+
+### Shell's MOBILE collapse — News, then Ask-corpus, then Notes (all 2026-07-15)
 `MobileBar`/`ZoneSheet`/`.zbar` shipped in Phase 1 with **nothing using them** until News. **Study
 is the last surface still parked** on its own old single-column branch. `Shell` mobile = center
 inline + `mobile={{tools, sheet, sheetTitle, sheetBare, onCloseSheet}}`; a tool opens its zone as a
-swipe-dismiss sheet. What the two consumers proved, so the next doesn't re-derive it:
+swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-derive it:
 
 - **A bar slot names a ZONE, not a verb.** News collapsed three zones, Ask-corpus two (Recent +
-  Inspect) — count the surface's actual zones, don't inherit a button count. Ask-corpus's "New
-  thread" is a one-shot ACTION and stayed in the center strip; a verb in a zone bar is the same
-  glyph/function mismatch the icon standard exists to stop.
+  Inspect), Notes two (its list + the anchored-verse inspect) — count the surface's actual zones,
+  don't inherit a button count. Ask-corpus's "New thread" is a one-shot ACTION and stayed in the
+  center strip; a verb in a zone bar is the same glyph/function mismatch the icon standard exists
+  to stop.
+- **A MODE switch is not a zone either — and if it gates the bar's meaning, it stays in the
+  center.** Notes's `Verse notes | Journal` seg decides what its list slot even holds, so burying
+  it in a sheet would hide the key to the bar; it rides the center strip (`.notes-mstrip`), which
+  also keeps it reachable without a tap the way the old single column had it.
+- **A control the collapse BURIES needs its content moved, not just its zone.** Notes's
+  search/filters sit in the desktop CENTER strip because the rail is open beside them. On a phone
+  the list is behind a button, so a filter left in the center would drive a list you can't see —
+  they go INTO the list sheet with the list they filter. Ask what each control acts on, not where
+  desktop happens to put it.
 - **A zone that doesn't apply YET grays, it doesn't vanish** (`tools[].disabled`) — gray-don't-hide,
   and Word study's bar already did it (3 of 4 tabs gray until a word loads). Ask-corpus's Inspect
-  grays until the first answer.
+  grays until the first answer. **Notes adds the PERMANENT gray:** in Journal mode its inspect is
+  empty BY DESIGN (pages have no verse anchor, ever), not "empty yet" — and it still grays rather
+  than dropping the slot, so the bar doesn't reshuffle under the reader when they switch modes. A
+  zone that can never apply *in this mode* is still gray, not gone.
+- **Prove a gray by RECTS, and prove occlusion by HIT TEST.** A disabled tool must still render a
+  real 22×22 glyph box (mounted-and-hidden reads as present — check `svgW`/rects, not presence).
+  And when a sheet overlaps the bar, don't compare z-index declarations: ask
+  `document.elementFromPoint()` what actually paints on top. Declarations get defeated by stacking
+  contexts; the hit test can't be. (Notes's sheet is z51 over the z30 bar — confirmed by hit test,
+  which is why nothing inside a sheet needs its own bar clearance.)
 - **Two ways to keep content off the bar; pick by whether the surface has a PINNED control.** News
   pins its shell to `100dvh - --bar-h` and lets the fixed `.zbar` float over the scrolling feed,
   which pads itself clear. Ask-corpus CAN'T — its composer is pinned to the bottom, so a floating
   bar sits on the input. It ends the shell ABOVE the bar instead
   (`100dvh - 2*--bar-h - both safe areas`, `.ac-frame.zshell-m`) and nothing inside re-adds the
-  safe area. Same rule, different shape.
+  safe area. Same rule, different shape. **Notes took News's shape** — its editor's Save/Delete
+  scrolls with the body, nothing is pinned — so the test is literally "is anything pinned to the
+  bottom", not "does it feel like a chat".
 - **If the surface owns its scrolling, `.zcenter-m` must not be a second scroll box around it**
-  (`overflow: hidden`), or the pinned composer floats on a nested scroller.
+  (`overflow: hidden`), or the pinned composer floats on a nested scroller. **`.zcenter-m` is a
+  scroll box BY DEFAULT** (`flex:1 1 auto; overflow-y:auto`), so any surface whose center already
+  has its own scrolling body inherits a nested pair silently. Notes makes it the flex COLUMN
+  instead (`overflow:hidden; display:flex; flex-direction:column`), so its fixed mode strip and
+  its scrolling editor body keep exactly their desktop jobs. Count the scroll boxes by walking the
+  subtree's computed `overflow-y` — don't assume.
 - **A panel's own header band is DESKTOP chrome — hide it inside the sheet.** The sheet's
   `sheetTitle` already names the panel, so Ask-corpus's rail printed "Recent conversations" twice,
   one line apart (`.ac-m .zsheet .ac-rail-top { display: none }`). Caught in a screenshot, not in
-  the numbers.
+  the numbers. **The other resolution: let the band BE the header and pass no `sheetTitle`.** Pick
+  that when the band says something the title can't — Notes's inspect band carries the verse ref
+  ("John 4:24"), which is more use than a repeated "Anchored verse". Then re-size it: a desktop
+  band is `min-height: var(--hdr-h)` to clear the navy nav it floats over, and inside a sheet
+  there's no nav to clear, so it's just a title row.
 - **No bar collision:** `.zbar` is `bottom:0`; the app's own `.mobile-tabs` is `top:0`. The bottom
   is free. (Library's cockpit is the exception — it owns the bottom on its own tab.)
 - **Pin to the visible viewport** or the whole page rubber-bands: the surface needs
@@ -164,6 +213,12 @@ swipe-dismiss sheet. What the two consumers proved, so the next doesn't re-deriv
   now falls back to the nearest scrollable ancestor of the touch when no ref is given (an explicit
   `scrollRef` still wins, so every other sheet is unchanged). **The fallback can't rescue a scroll
   box that isn't a plain `overflow:auto` descendant** — hand it a ref then.
+  **PROVE the fallback on a FORCED overflow, never by code read.** It binds only a box that
+  *actually* overflows (`scrollHeight > clientHeight + 1`), so a sheet whose fixture content is
+  short exercises nothing and passes vacuously. Notes's inspect needed +1400px of injected filler
+  before the gesture could fail at all. Two cases, destructive one LAST with the subject asserted
+  still attached: scrolled DOWN → drag must NOT dismiss (transform stays `none`; this is the bug
+  the fallback exists for), then at top → drag past 90px MUST dismiss.
 - **Bottom-bar icons are 22px** (`.zbar-btn svg`), sized at the bar so every consumer inherits one
   size and the shared `Icon.*` glyphs (14–16px, drawn for dense inline rows) stay untouched. The
   in-app references DISAGREE — Word study `.wm-tab` 22px vs Library cockpit `.mbar-*` 21px — 22
@@ -172,6 +227,20 @@ swipe-dismiss sheet. What the two consumers proved, so the next doesn't re-deriv
   book/chapter text button), so its icons are sized to the type beside them. That's the original
   ruling's own logic applied, not amended.
 - Bar height stays `--bar-h`: the app's bar rhythm and the sheets' max-height maths key off it.
+- **A BASELINE read obeys settle-before-read exactly like a verification read** — and a wrong
+  baseline is worse than a wrong verification, because it inverts the sign of every comparison
+  after it. Notes's desktop baseline was taken ~1s after navigate and measured 1388px wide: the
+  page was still tall enough for a transient scrollbar, and the post-change re-read at a true
+  1400px looked like a 12px regression that never existed. Settle on a CONDITION (the rows are
+  there AND `scrollHeight` stopped moving), not on a `setTimeout` guess.
+- **`?bundle=head` is the baseline validator of record.** When a guardrail looks failed, A/B the
+  COMMITTED bundle at the same viewport BEFORE diagnosing the working copy — same page, same
+  fixtures, only the bundle swaps. That is what proved the 1388 was the bad number, not the 1400.
+- **Scope every read to the surface you mean.** The desktop app mounts every view at once, so a
+  bare `document.querySelector('.zempty')` or `.zbar` happily returns ANOTHER tab's
+  mounted-and-hidden copy at 0×0 — it bit twice in one session (a `.zbar` that was Ask-corpus's
+  while measuring Notes, a `.zempty` that was Ask-corpus's while measuring Word study). Query
+  inside the owning surface's root and assert the rect is non-zero.
 
 ### Icons: ONE glyph per function, from `10-icons.jsx` (2026-07-15)
 **RULE THE MATRIX FUNCTION-FIRST — one row per FUNCTION, one column per BAR, each cell the
@@ -182,24 +251,45 @@ feed works* in News, and `Icon.Grid` meant *chip view* in the reader AND Word st
 glyph-first list cannot surface a double-booking by construction; a function-first one surfaces
 it in the first pass. The settled matrix:
 
-| Function | Library cockpit | Word study | News | Ask-corpus |
-|---|---|---|---|---|
-| Search | `Search` | `Search` | — | (inside the field) |
-| Detail panel / inspect | `Panel` | `Panel` (word card) | `Panel` (Watch) | `Panel` |
-| Filter — narrow the set | — | `Filter` ("Views") | `Filter` (Options) | — |
-| Reading/display options | `Modes` | — | — | — |
-| Playback | `Play`/`Pause` | — | — | — |
-| The list you navigate by | `[Book Ch]` text | `Book` | `Hash` | `Clock` |
+| Function | Library cockpit | Word study | News | Ask-corpus | Notes |
+|---|---|---|---|---|---|
+| Search | `Search` | `Search` | — | (inside the field) | (inside the list sheet) |
+| Detail panel / inspect | `Panel` | `Panel` (word card) | `Panel` (Watch) | `Panel` | `Panel` (Anchored verse) |
+| Filter — narrow the set | — | `Filter` ("Views") | `Filter` (Options) | — | (inside the list sheet) |
+| Reading/display options | `Modes` | — | — | — | — |
+| Playback | `Play`/`Pause` | — | — | — | — |
+| The list you navigate by | `[Book Ch]` text | `Book` | `Hash` | `Clock` | `Note` / `Book` † |
+
+† Notes's list slot is **MODE-FOLLOWING** — the first one. One slot, two content names: `Note`
+(pencil) for "Verse notes", `Book` for "Journal pages", flipping with the `Verse notes | Journal`
+seg. Allowed *because* the row names content and this list's content genuinely changes; a fixed
+glyph would have to be wrong in one mode. **Conditions on any future mode-following slot:** the
+mode control must be VISIBLE on the same screen as the bar (Notes keeps its seg in the center
+strip for exactly this — a slot whose meaning changes behind a closed sheet is a trap), and both
+names must already be in that tab's own vocabulary.
 
 - **The last row is content-named ON PURPOSE — do NOT merge it.** Those glyphs name what the
   list *holds* (threads are hashes, recent is time, distribution is books); one shared glyph
   would put a hashtag on "Recent conversations". Tab-specific by design, not drift.
+- **CROSS-TAB REUSE PRECEDENT (Notes, 2026-07-15): the last row is per-tab SCOPED, so the same
+  glyph may serve two tabs' list slots.** `Book` is Word study's Distribution button AND Notes's
+  journal list. Tolerated because bar glyphs are only ever seen one tab at a time, and because
+  the reusing tab **already owned that glyph in its own vocabulary** (Notes's journal ZoneEmpty
+  used `Icon.Book` long before the bar did) — reaching for the tab's existing word beats minting
+  a novel one. This licence is for the content-named row ONLY; every other row is app-wide
+  one-glyph-one-function and a collision there is still a bug.
 - `Info` means **help** and nothing else. `Grid` means **chip view** and nothing else. `Modes`
   means **reading options** and nothing else. Check here before reusing any of them.
 - **A control's LABEL is not its function — open the sheet.** "Views" got the grid glyph off its
   name; it actually holds Edition/Testament/Go-deeper, i.e. a filter. Read the contents, then rule.
 - **Verify a merge by SHAPE, not by the component name you typed** — compare the drawn children
   (`rect3|pathM15 3v18` etc.) across bars; that's what proves two bars really share a glyph.
+  Notes's three slots read back `pathM4 20h4L18.5 9.5…` (pencil), `pathM4 4.5A2.5…` (book) and
+  `rect3|pathM15 3v18` (Panel — character-for-character the shape above).
+- **Drive a state change THROUGH the control, and hit-test it first.** `el.click()` fires happily
+  on something `display:none`, so a mode flip "verified" that way proves the state changed, not
+  that a reader could change it. Read the button's rect, ask `elementFromPoint()` at its centre
+  whether that button is really what's there, tap THAT, then re-read the glyph by shape.
 `Icon.*` is the only icon set. Word study used to keep a private `WsI` — deleted, because it was a
 **fork, not drift**: its `Sliders` was character-for-character identical to `Icon.Modes`, and that
 one drawing meant "Views" in Word study and "Reading options" in Library. One glyph, two jobs, in

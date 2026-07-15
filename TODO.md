@@ -361,24 +361,44 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
-**Shell's MOBILE collapse has TWO consumers now: News + Ask-corpus (both 2026-07-15) — copy them for
-Study, the last one parked.** The gotchas they paid for (bar collision, `100dvh` pinning, scroll-box
-clearance, the BARE-sheet `scrollRef` trap + the case its fallback can't rescue, bottom-bar icon size,
-zones-not-verbs, the two ways to clear the bar, the doubled panel header) are standing frontend
-detail, so they live in **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
+**Shell's MOBILE collapse has THREE consumers now: News + Ask-corpus + Notes (all 2026-07-15) —
+copy them for Study, THE LAST ONE PARKED.** The gotchas they paid for (bar collision, `100dvh`
+pinning, scroll-box clearance, the BARE-sheet `scrollRef` trap + the case its fallback can't rescue,
+bottom-bar icon size, zones-not-verbs, the two ways to clear the bar, the doubled panel header, and
+from Notes: the permanent gray, the mode-following list glyph, `.zcenter-m`'s default nested scroll
+box, occlusion by hit test, the baseline A/B) are standing frontend detail, so they live in
+**`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
 Left to do:
-- **Harness: add a News feed fixture** (small, do it before the next bar/icon pass). `tests/mobile_harness.js`
-  can render Library / Word study / Ask-corpus at a phone width, but **News's mobile branch never reaches its
-  `<Shell>`** without feed data, so its `.zbar` can't be measured — the 2026-07-15 icon pass had to reason about
-  News's two bar glyphs from the shared components instead of seeing them. **The one bar we can't render is the
-  one that will drift.** Shape the fixture from the producing side (`views_news.py`), same rule as the others.
-  code: tests/mobile_harness.js (FIXTURES / FIXTURE_PREFIXES)
+- **Harness: add a News feed fixture** — now the OLDEST unpaid debt here, and it has already been
+  deferred through two bar/icon passes. `tests/mobile_harness.js` renders Library / Word study /
+  Ask-corpus / Notes (`&notes=1`) at a phone width, but **News's mobile branch never reaches its
+  `<Shell>`** without feed data, so its `.zbar` still can't be measured — both the 2026-07-15 icon pass
+  AND the Notes pass had to reason about News's three bar glyphs from the shared components instead of
+  seeing them. **The one bar we can't render is the one that will drift** — and it is now the only bar
+  in the matrix never verified by drawn shape. Shape the fixture from the producing side
+  (`views_news.py`), same rule as the others; Notes shows the adapted form when a surface has no
+  server producer (frontend.md). code: tests/mobile_harness.js (FIXTURES / FIXTURE_PREFIXES)
+- **ZoneEmpty marks: size all five at the call site** (chipped 2026-07-15). Word study + Study pass
+  `width="30" height="30"`; Notes (×4) and Ask-corpus (×1) pass the glyph bare, so their empty-state
+  hero mark renders at 14–16px — SMALLER than the same glyph in the bar below it (22px). `.zempty-mark`
+  sets colour + slot only, never size, which is the icon rule working as intended; the call sites are
+  the bug. Left out of the Notes-mobile pass on purpose (shared desktop code on two other tabs, would
+  move desktop pixels); the divergence is logged in `styles.css` above `.zempty-mark` — delete that
+  comment as part of the fix. Needs its own desktop before/after per surface.
+  code: static/src/35-notes.jsx, 52-ask-corpus.jsx
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,
   so it's his own triage view. Fix would be stacking the actions under the headline on mobile; that's a
   design call on LIVE controls, so it waits for JP. code: static/src/84-news.jsx (NewsStory `.news-actions`)
+- **Notes inspect: the next-verse row never renders** (chipped 2026-07-15, DESKTOP bug, pre-existing).
+  `NoteVerseInspect` (static/src/35-notes.jsx ~245) reads the `/api/chapter` reply as `d.verses`, but
+  that route returns a bare LIST — confirmed two ways: `views_library.py:268` `jsonify([...])`, and the
+  other consumer `60-library.jsx:444` `setVerses(data)`. So `maxVerse` always falls back to the anchor
+  verse and the `v < maxVerse` guard is never true: the panel shows previous + anchor, never the verse
+  after. Found while measuring the Notes mobile pass; out of that charter (layout only).
+  code: static/src/35-notes.jsx (NoteVerseInspect)
 - **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
   its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
   Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
