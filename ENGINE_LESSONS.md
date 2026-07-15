@@ -1010,3 +1010,28 @@ both drifting from the doc.
     Sibling of #61 (fail-KIND routes deterministically; here fail-EXISTENCE is decided by citation
     shape) and #67 (presence-not-adjacency — the same "read the structure, not a proxy" move).
     *(audit: LEAD-IN MULTI-REF ANCHORING — COORDINATE-LIST RULE BUILT, 2026-07-14)*
+
+69. **A path that WRITES must run every check the main write path runs — a "complete battery" is
+    defined by the APPLY's checklist, not by the checks the reviewer reached for.** Two instances in
+    one night, same shape, one benign and one nearly costly. (a) **The readiness pass under-ran.**
+    G1390's offline ship-readiness pass ran the quote gate + coverage + floor-match + a full hand read
+    and was reported COMPLETE — but the rendering-claim lint and the dangling-ref lint only fire in the
+    apply/assemble path, so a REAL fire (the Eph 4:8 gloss label claims `*gift*`; corpus renders
+    "gifts"; the card's own senses_block quotes "gave gifts to men" two fields up) reached a LIVE row
+    and was caught by the apply's own output, not by the battery that had just certified it. (b) **The
+    surgical-fix path under-ran, and would have falsified the record.** `fix_lexica_raw` calls
+    `validate_entry(entry)` with NO `conn`, so the V11 probes take the `if conn is None:` branch —
+    they PRINT "NOT RUN" and stamp NOTHING; `assemble()` then builds a fresh entry that never carries
+    `warns_adjudicated`; and the tool never calls `open_probe_warns`, so nothing blocks. Applying the
+    one-letter label fix would therefore have SILENTLY ERASED the adjudication ruling and the 7
+    probe-2 warns from the live row — leaving it reading "clean, no warns ever". Caught from the
+    dry-run's own warning line, before any write. → v2: (i) a readiness/verification harness ENUMERATES
+    the write path's checks and runs all of them, or NAMES each one it skips (silence reads as
+    "covered"); (ii) every secondary/surgical write path either runs the full probe set or REFUSES —
+    a warning printed on a pass that still writes is not a control (#31's shape, new door); (iii) an
+    audit field that GATES a ship (`warns_adjudicated`) must SURVIVE any rewrite of its row, or the
+    rewrite is a regression — content-addressing the ruling to the row, not to the pass that wrote it.
+    Ruling that fell out of it: **wrong-but-tiny beats falsified-record** — the label fix was deferred
+    to ride the fixed tool rather than buy accuracy with an audit lie. Sibling of #21 (a gate that
+    reads a length is not reading the text), #31 (warning-after-write is not a control), and #50
+    (a machine-gate kill leaves the hand battery unrun). *(audit: G1390 δόμα — SHIPPED ʰ, 2026-07-14)*

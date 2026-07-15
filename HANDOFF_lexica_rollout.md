@@ -1,5 +1,32 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **G1390 δόμα SHIPPED ʰ — FIRST UNPARK OF THE ARC (2026-07-14). Scoreboard 2/10ʰ -> `3/10ʰ` · `7/15`
+> UNCHANGED (7/15 is JP-ruled FINAL + UNTOUCHABLE; hinted ships never join it — a reviewer "8/15" was
+> refused and corrected against the committed rulings). Applied from reviewed draw `bda7de94` (cache
+> hit, no-model-call line confirmed, INSERT — no prior row); **post-apply verified: shipped prose_sha ==
+> draw prose_sha `e8ff9254...` MATCH**, warns_adjudicated stamped. Readiness package ALL CLEAR: coverage
+> 38/38 (fed sample rebuilt offline via the production sampling chain — `fed` is a COUNT not a list, and
+> a live dry-run would redraw a parked word (#66); validated by count-match) · #30 zero fires + zero
+> floor_unseen (N=10) · #55 2=2 · quote gate clean · probe-2 **7/7 over-firing** byte-adjudicated ·
+> hand-battery 5/5 beyond-quote claims byte-verified (Eze 46:5 down to `italic_words`) · both prior kills
+> FIXED (Kore; no hint-parrot). **LOCK CLEARED ON BYTES:** `repaired=[]`/`quote_repaired=[]` -> never
+> repaired -> not in the NO-APPLY class (that's `bc1e2f69`, archived). **HINT-2 PRECEDENT SET:** rephrased
+> substance + a verse-forced 3-word contrast = steering, NOT echo; verbatim parroting stays a kill.
+> **OPEN BLEMISH (logged, ticketed, deliberately unfixed):** Eph 4:8 gloss label reads `*gift*`, corpus
+> renders "gifts" — a REAL fire, one letter. **Fix DEFERRED because `fix_lexica_raw` is DEFECTIVE:** it
+> calls `validate_entry` with no `conn` (probes NOT RUN, stamp nothing) and `assemble()` drops
+> `warns_adjudicated` — a surgical fix would SILENTLY ERASE the adjudication + the 7 warns, leaving the
+> row reading "clean, no warns ever". Caught from the dry-run's warning line, zero bad writes.
+> **wrong-but-tiny beats falsified-record.** TWO TICKETS, red-first, G1390/Eph 4:8 = first fixture:
+> (1) `fix_lexica_raw` — pass `conn` + preserve/re-stamp `warns_adjudicated`; (2) extend
+> `offline_gate_check.py`/readiness harness to run the rendering-claim + dangling-ref lints offline.
+> = ENGINE_LESSONS **#69** (a path that writes must run every check the main write path runs — 2
+> instances). CARRIED NOTE: the earlier 7->10 ʰ-denominator derivation is UNDOCUMENTED; "10" carried
+> forward, not re-derived. **OPENS = G236 design pass (floor-level, spend-gated) · G162 redraw (JP's
+> gamble call) · probe-2 over-firing ticket (now with 7 byte-adjudicated fixture cases) · the two
+> tooling tickets above.** Full record: AUDIT "G1390 δόμα — SHIPPED ʰ · FIRST UNPARK OF THE ARC".
+> Doc-only, exemption invoked. ZERO model spend the entire session.**
+
 > **PARKED-WORD QUEUE COMPLETE — ALL FOUR WORDS OFF MYSTERY-PARKED (2026-07-14). Offline
 > archived-card method (read-only, ZERO spend), roster pre-check now the first gate for every parked
 > word. **G236 -> DESIGN PASS (floor-level, spend-gated):** four verses (Ezr 6:11/6:12, Neh 9:26, Isa

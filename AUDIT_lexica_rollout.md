@@ -5758,6 +5758,93 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### G1390 δόμα — **SHIPPED ʰ · FIRST UNPARK OF THE ARC** (2026-07-14; readiness pass + JP-authorized
+### apply, reviewer-adjudicated under standing delegation. JP ran every PA command. ZERO model spend
+### the entire session. Doc-only close-out, exemption invoked.)
+**SHIP RECORD:** applied from the reviewed draw **`bda7de94`** — cache HIT, `using reviewed draw ...
+(key bda7de94) — no model call` confirmed in the output; stamp `lexica:f27027b50754`; **INSERT** (no
+prior row — G1390 previously 404'd to its LSJ card), nothing overwritten. **Post-apply verification:
+shipped `prose_sha` == draw `prose_sha` == `e8ff9254d156139c877a94245a0037507380354e` -> MATCH** (the
+shipped bytes ARE the reviewed bytes); `warns_adjudicated` stamped True. Command of record:
+`--apply --require-cache --word G1390 --from-draw bda7de94 --hints --roster
+agreement_G1390_v9_20260712-181939.json --floor <same> --adjudicate-warns "<ruling>"`. Fail-closed by
+construction: `--from-draw` requires a cache hit on that exact key and NEVER re-rolls; `--require-cache`
+refuses rather than drawing fresh.
+**READINESS PACKAGE — every check clear:**
+- **Coverage 38/38.** The fed list is NOT stored (the record's `fed` is a COUNT), and a live dry-run
+  would REDRAW a parked word (#66) — so the fed sample was REBUILT OFFLINE through the production
+  sampling chain (`abp_filter` -> `occurrences` -> `dynamic_budget` -> `select_spread` ->
+  `reserve_collocation_slots` -> `fetch_context`), read-only, validated by **count-match 38 = 38**
+  before the result was trusted. Membership-fidelity caveat logged (count-match is necessary, not
+  sufficient); the hand-battery walks every citation and partially compensates.
+- **#30 floor-diff** vs `agreement_G1390_v9_20260712-181939.json` (N=10, consensus = pairs together in
+  >=6): **no consensus pair split**, **zero floor_unseen**. (Evidence-gathering, not guard-enforcement —
+  G1390's guard is count-only; the distinction is on record so no future reader misreads a #30 fire here
+  as a guard violation.)
+- **#55 count guard:** ship 2 = roster 2. **Quote gate:** clean ("giving" own-word note, meta:v6).
+  **Scanner-3:** clean. **Roster pre-check:** COUNT-anchored -> no G236-class enforced-misfile.
+- **Probe-2 7-for-7 OVER-FIRING**, all byte-adjudicated (detail in the entry below).
+- **Hand-battery:** 5 beyond-quote claims byte-verified — Hos 10:6, 2Ch 21:3 ("their father gave to them
+  many gifts ... But the kingdom he gave to Jehoram" = gifts to the OTHER sons, card accurate), Dan 2:48,
+  Num 27:6, and **Eze 46:5 verified down to `italic_words`** (the card's claim that ABP "adds 'offering'
+  as an interpretive supplement" is TRUE: the G1390 slot reads phrase `gift offering`, `italic_words =
+  offering`, `english_head = gift` — the fabrication class produced a CORRECT claim here).
+- **Both prior kills CONFIRMED FIXED:** Korah-for-Kore gone (card reads "**Kore** the Levite" at
+  2Ch 31:14); no hint-parrot. **No preamble leak.** **Hints 1 + 3 obeyed** (only Eph 4:8, never 4:9-11,
+  never a range; each of Psa 68:18 / Eph 4:8 described in its own wording, explicitly un-harmonized).
+**LOCK CLEARANCE — ON BYTES, not dates or inference.** The standing lock reads *"NO APPLY EVER for the
+dead cached G227/G1390 **repaired** cards."* `bda7de94`'s own record: `repaired=[]`, `repair_rounds=0`,
+`quote_repaired=[]`, `quote_repair_rounds=0` -> **never repaired -> not a member of the locked class.**
+The locked G1390 card is `bc1e2f69` (archived in `draws/history/`). The lock's own condition — *"any
+future run re-adjudicates from the park entries first"* — is exactly what this readiness pass performed.
+**HINT-2 ECHO — PRECEDENT SET (the line between echo and steering, now inspectable).** Hint 2 = *"Ecc
+5:1's δόμα is a human-to-God cultic gift, not divine bestowal."* Card = *"the word there belongs to what
+the worshiper brings to the house of God, not to divine bestowal."* **CLEARED as substance, not leak:**
+(1) the distinctive hint coinage ("human-to-God cultic gift") is ABSENT — that is precisely what killed
+d1; what survives is a three-word contrast. (2) The contrast is **verse-forced, not hint-injected**: the
+card carries a divine-bestowal sub-use in sense 1 (Ecc 3:13 / 5:19 / Eph 4:8), so any honest Ecc 5:1
+treatment MUST say which side of that line it falls on — a card omitting it would be worse. (3)
+"bestowal" is the card's OWN register (it appears in the Eph 4:8 discussion, where the hint doesn't
+reach) — a word the card uses natively cannot be a fingerprint of the hint. **The d1 standard stands:
+parroting the hint's characterization verbatim is a kill; rephrasing the substance into the card's own
+words while retaining a short verse-necessary contrast is the mechanism working as designed.**
+**OPEN BLEMISH (logged, ticketed, deliberately NOT fixed):** the gloss-note rendering-claim lint fired
+at Eph 4:8 — the card labels the gloss `*gift*` while the corpus renders **"gifts"**, and the card's OWN
+senses_block quotes *"gave gifts to men"* two fields up. **Ruled a REAL fire** (bullet 1 sets the
+convention: the italic label IS ABP's actual rendering — `*presents*` at Num 28:2 / 2Ch 32:23; bullet 2
+breaks it). Severity: one letter in a label. **Fix DEFERRED** — see the tool defect below. Wrong-but-tiny
+beats falsified-record.
+**NEW TICKET — `fix_lexica_raw` DEFECT (found from its own dry-run warning line, BEFORE any write;
+zero bad bytes).** The tool calls `validate_entry(entry)` with **no `conn`**, so the V11 prose probes hit
+the `if conn is None:` branch — they PRINT "NOT RUN" and **stamp nothing**; and `assemble()` builds a
+FRESH entry that never carries `warns_adjudicated`. The tool also never calls `open_probe_warns`, so
+nothing blocks. Net: a surgical prose fix on an adjudicated row would have **silently stripped the
+adjudication ruling AND the 7 probe-2 warns** — the live row would then read "clean, no warns ever" = a
+**falsified record**, traded for a one-letter label fix. G1390 is the FIRST row where this could bite
+(the first shipped with an adjudication stamp). **TICKET:** (a) pass `conn` so the probes run on surgical
+edits; (b) preserve or re-stamp `warns_adjudicated` (or give the tool its own `--adjudicate-warns`).
+**RED-FIRST; G1390 / Eph 4:8 is the first fixture.** The Eph 4:8 label fix RIDES the fixed tool.
+**MERGE-ADJACENT TICKET:** extend `offline_gate_check.py` / the readiness harness to run the
+rendering-claim + dangling-ref lints offline (same fixture, same lesson).
+**METHOD LESSON = ENGINE_LESSONS #69** — a path that WRITES must run every check the main write path
+runs; a "complete battery" is defined by the apply's checklist, not by the checks the reviewer reached
+for. TWO instances in one night (the readiness pass skipping the apply-path lints; `fix_lexica_raw`
+skipping the probes and dropping the adjudication).
+**Benign, logged:** dangling book ref "Php" — the card's prose says "the Philippians" (the people); the
+known false-positive class, flag-only.
+**SCOREBOARD: 2/10ʰ -> **3/10ʰ** · **7/15 UNCHANGED**.** SOURCED, not recalled: the ʰ line opened at
+**0/7** ("hinted scoreboard opens at 0/7 — separate line, superscript-h marker, **never joins the
+7/15**"); the line read 2/10ʰ **while all four words INCLUDING G1390 were parked**, so G1390 was already
+inside that denominator — a park->ship conversion moves the NUMERATOR only. **7/15 is JP-ruled FINAL +
+UNTOUCHABLE and hinted ships never join it.** LEDGER: the reviewer asserted "8/15" from recall; CC
+refused to bank it and corrected against the committed rulings — **the written-record-outranks-recall
+rule applies to the reviewer symmetrically** (precedent: reviewer-recall catches x3, one session).
+CARRIED NOTE (pre-existing, NOT tonight's): the earlier **7 -> 10 denominator derivation is undocumented**
+in the record — "10" is carried forward unchanged rather than re-derived; flagged for whoever needs it
+(sibling of the UNRULED hint-counter arithmetic).
+**STATE: G1390 LIVE + byte-verified. Zero model spend. Parked-word queue COMPLETE — four words
+characterized, one shipped, two tool defects caught before either fired.**
+
 ### G1390 OFFLINE CHECK — PROBE-2 7-FOR-7 OVER-FIRING; PARK REASON INVALIDATED -> SHIP-READINESS
 ### CANDIDATE (2026-07-14; parked-word queue item 3, offline archived-card method + byte-adjudicated
 ### probe-2 warns, reviewer-CONFIRMED under standing delegation. JP ran every PA read; read-only, ZERO
