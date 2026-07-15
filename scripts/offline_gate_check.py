@@ -75,6 +75,83 @@ def score_no_match_spans(raw, normed):
     return out
 
 
+def write_path_checks(db_path, card, raw, vt):
+    """Run the WRITE PATH's checks against this card, and NAME every one that can't run here
+    (ENGINE_LESSONS #69(i); scope ruled (b), 2026-07-14). Before this, the harness ran ONE
+    production detector (probe1_verbatim) out of the eleven the write path runs — so a readiness
+    pass could certify a card on 1-of-11 and read as COVERED. That is how the Eph 4:8
+    rendering-claim fire reached a live row (#69(a)): the lint only ever fired in assemble.
+
+    Everything here is READ-ONLY and reuses the PRODUCTION detectors (never a copy), same rule as
+    the rest of this file. Report, not gate: this tool's exit contract is unchanged (0 = report
+    printed, 2 = recoverability precondition failed). The apply path remains the thing that
+    blocks; the harness's job is that a human never certifies past a check nobody ran."""
+    uri = "file:%s?mode=ro" % os.path.abspath(db_path)
+    conn = sqlite3.connect(uri, uri=True)
+    conn.row_factory = sqlite3.Row
+    conn.create_function("strip_accents", 1, B.strip_accents)
+    sid = card.get("strongs", "?")
+    fields = B.split_definition(raw)
+    refs = B.cited_refs(raw)
+    fired = 0
+
+    def report(label, items, fmt=str):
+        nonlocal fired
+        if items:
+            fired += len(items)
+            print("  [RAN]  %-18s %d fire(s):" % (label, len(items)))
+            for it in items:
+                print("      - " + fmt(it))
+        else:
+            print("  [RAN]  %-18s clean" % label)
+
+    print("\n--- write-path checks (assemble's audit block + validate_entry probes) ---")
+
+    cg = B.run_citation_gate(conn, sid, refs)
+    bad = [m for m in cg["misses"] if m["bucket"] in ("real", "noverse")]
+    print("  [RAN]  %-18s %d/%d pass | tagging %d | real %d | no-verse %d%s"
+          % ("citation gate", cg["pass"], cg["total"], cg["tagging"], cg["real"], cg["noverse"],
+             ("  <-- BLOCKS at apply" if bad else "")))
+    fired += len(bad)
+
+    report("dangling", B.dangling_book_refs(conn, raw))
+    report("noncanon", B.noncanon_book_refs(conn, raw))
+    report("double_shelved", B.double_shelved(fields["senses_block"]))
+    # THE Eph 4:8 CLASS — the rendering-claim lint. Fires when a gloss-note's italic label is not
+    # the lemma's ACTUAL rendering at the ref it cites.
+    report("gloss_claims", B.gloss_note_claims(conn, sid, fields.get("gloss_notes", "")),
+           fmt=lambda c: "[%s] gloss *%s* vs corpus rendering %r at %s"
+                         % (c.get("kind"), c.get("gloss"), c.get("rend"), c.get("ref")))
+    report("hedged", B.hedged_citations(fields["senses_block"]))
+    report("subuse_overload", B.subuse_overload(fields["senses_block"]))
+    report("registry_verses", B.registry_verse_hits(refs))
+
+    # probe1 already ran above (the gate verdict section) — named here so the enumeration is
+    # complete and a reader can see it was not skipped.
+    print("  [RAN]  %-18s see the verbatim-quote gate verdict section above" % "probe1")
+    p2w, p2nr = B.probe2_names(raw, vt,
+                               extra_whitelist=(card.get("lemma"), card.get("translit")),
+                               known_names=B._p2_corpus_names(conn))
+    report("probe2", p2w + p2nr)
+    report("scan3", B.scan3_identity(raw, vt))
+    conn.close()
+
+    # OUTPUT CONTRACT, not comments (reviewer condition, 2026-07-14): a reader of this REPORT must
+    # see what the report does not cover. Silence reads as covered — #69(i).
+    print("\n--- checks that CANNOT run offline (named, never silent) ---")
+    print("  [SKIPPED] coverage gate     : needs the FED SAMPLE. fed_uncited is stamped at the "
+          "call site (the one place the fed list exists); an archived-card pass has no fed list. "
+          "Runs at apply.")
+    print("  [SKIPPED] floor-match       : needs the floor draws file (load_floor). Runs at "
+          "apply/build.")
+    print("  [SKIPPED] #30 membership    : needs the path-(c) roster. Runs at apply/build.")
+    print("  [SKIPPED] #55 sense-count   : needs the roster/floor sense counts. Runs at "
+          "apply/build.")
+    print("  (These four are NOT covered by this report. A card is not ship-ready on this "
+          "output alone.)")
+    return fired
+
+
 def sweep(db_path):
     """meta:v5 BLAST-RADIUS SWEEP (scope-b ruling, 2026-07-14): run the gate over EVERY live
     card's stored raw and report every in-band cue-exemption WARN (span + score). Live cards =
@@ -211,9 +288,12 @@ def main():
     print("  (threshold position only; cross-read each span against the gate verdict above --\n"
           "   an upstream exemption can decide a span regardless of its score here.)")
 
+    lint_fires = write_path_checks(args.db, card, raw, vt)
+
     print("\n--- summary ---")
-    print("fails: %d | warns: %d | exempt/notes: %d | not-run: %d | in-band spans: %d"
-          % (len(fails), len(warns), len(notes), len(notruns), len(band_hits)))
+    print("fails: %d | warns: %d | exempt/notes: %d | not-run: %d | in-band spans: %d | "
+          "write-path check fires: %d"
+          % (len(fails), len(warns), len(notes), len(notruns), len(band_hits), lint_fires))
     if band_hits:
         print("IN-BAND spans present -> classify each: known residual (already ruled) vs NEW. "
               "Any NEW in-band span = mandatory re-open, STOP the card, report before it "
