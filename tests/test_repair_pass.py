@@ -172,6 +172,28 @@ def main():
     assert B.coverage_gate(FED, senses_of(final)) == []
     assert "Deu 23:23 [here:" not in mock.msgs[1], "round 2 re-fed an integrated ref"
 
+    # ── 6. OUTPUT CONTRACT — BOTH repair prompts, never one (G3464 canary pull, 2026-07-14).
+    # WHY THIS IS A TEST AND NOT A COMMENT: repair calls run with NO SYSTEM PROMPT — _live_repair
+    # (build_lexica_def.py ~:3553) passes no system=, so VERSE_PROMPT's "No preamble, no restating
+    # the lemma, no closing summary" NEVER reaches a repair. The only contract a repair pass gets
+    # is the one inline in its user message. #57 ruled the fix belongs in the PROMPT, and F1
+    # adopted it — but F1 was applied to QUOTE_REPAIR_PROMPT and NOT to REPAIR_PROMPT, and that
+    # gap wrote G162's leaked preamble: the coverage prompt ended "Return the full corrected
+    # definition." and the card came back "Here is the full corrected definition with each of the
+    # four unplaced occurrences integrated into Sense 1, ... without altering the sense structure,
+    # headlines, or any existing quotation:" — a near-verbatim echo of the instruction, naming
+    # this prompt's own subject. Two prompts diverged once; this control is why they cannot again.
+    for name, prompt in (("REPAIR_PROMPT", B.REPAIR_PROMPT),
+                         ("QUOTE_REPAIR_PROMPT", B.QUOTE_REPAIR_PROMPT)):
+        low = prompt.lower()
+        assert "no preamble" in low, f"{name} lost the F1 output contract (no preamble)"
+        assert "nothing else" in low, f"{name} lost the F1 output contract (nothing else)"
+        assert "card itself" in low, f"{name} lost the F1 output contract (card itself)"
+    # The trailing sentence that NAMED the leak must not come back: an instruction that says
+    # "Return the full corrected definition" hands the model the exact preamble it then writes.
+    assert "return the full corrected definition" not in B.REPAIR_PROMPT.lower(), \
+        "REPAIR_PROMPT again names the phrase G162 echoed back as its preamble"
+
     print("test_repair_pass: ok")
 
 

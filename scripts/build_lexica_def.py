@@ -1856,7 +1856,9 @@ The definition below is complete except that these fed occurrences are not yet c
 
 {occurrences}
 
-Integrate each into the sense where its text belongs — add citations (and the minimum prose needed to house them) WITHOUT changing the sense structure or the sense headlines, removing any existing citation, or altering any existing quotation. Return the full corrected definition.
+Integrate each into the sense where its text belongs — add citations (and the minimum prose needed to house them) WITHOUT changing the sense structure or the sense headlines, removing any existing citation, or altering any existing quotation.
+
+Output the corrected definition and nothing else — no preamble, no explanation, no list of what you changed, no "Here is the corrected definition" line. Your entire reply must be the card itself, from its first line to its last.
 
 {card}"""
 

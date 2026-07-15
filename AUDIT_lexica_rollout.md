@@ -5990,6 +5990,9 @@ silent under the current gate. warns 0.
   corrected definition with each of the four unplaced occurrences integrated into Sense 1 ..."* —
   meta-text surviving into the card. **DESIGN OBSERVATION (log, not a scoped item yet):** a leading-
   boilerplate check on the output contract would catch this class.
+  **➜ ROOT CAUSE FOUND 2026-07-14 — see "G162's PREAMBLE: ROOT CAUSE FOUND" at the tail of this
+  file. This preamble was the COVERAGE REPAIR PASS echoing its own uncontracted prompt; it is not
+  a mystery of the draw. The record points FORWARD to the cause.**
   **CORRECTION 2026-07-14 (code-verified, reviewer-ruled) — THIS LEG IS DISPLAY-INVISIBLE AND NOT
   LOAD-BEARING.** A leaked preamble reaches NO reader. Two independent strips: (1) `split_definition`
   (`scripts/build_lexica_def.py:978`) files pre-section lines into a LOCAL `preamble` list that reaches
@@ -7505,3 +7508,61 @@ against the fixed feed = model spend = JP's call**, recommended to ride with the
 **BATCH PAUSED after the canary until this fix landed — every draw against a lying feed risks the same
 class and wastes spend. STATE: 1 Sonnet call spent, 0 cards shipped, scoreboard UNCHANGED `3/10ʰ ·
 7/15`.**
+
+---
+
+## G162's PREAMBLE: ROOT CAUSE FOUND — THE COVERAGE-REPAIR PROMPT HAD NO OUTPUT CONTRACT — 2026-07-14
+**FOUND BY PULL, FROM A FRESH CARD'S FAILURE — the rule working exactly as written.** The G3464
+canary's redraw failed the coverage gate (25/27; Joh 12:5 + Mat 26:9 never cited). The designed
+response is the V10 coverage repair pass. **Reading that pass before running it produced the root
+cause of the defect THIS ENTIRE SESSION WAS BUILT ON** (cross-ref: the G162 PARKED entry's
+preamble-leak bullet, ~`:5989`).
+
+**THE STRUCTURAL FACT NOBODY HAD WRITTEN DOWN: REPAIR CALLS RUN WITH NO SYSTEM PROMPT.**
+`_live_repair` (`build_lexica_def.py` ~`:3553`) calls `client.messages.create(model=…,
+max_tokens=…, messages=[…])` — **no `system=`**. So `VERSE_PROMPT`'s *"No preamble, no restating the
+lemma, no closing summary"* **NEVER REACHES A REPAIR PASS.** The only output contract a repair gets
+is the one inline in its own user message. That is why `QUOTE_REPAIR_PROMPT` carries F1's clause
+inline — and why its absence from `REPAIR_PROMPT` left the coverage repair **completely
+uncontracted**.
+
+**THE ECHO — the prompt handed the model the preamble, then never banned it:**
+> **PROMPT (old):** *"Integrate each into the sense where its text belongs … WITHOUT changing the
+> sense structure or the sense headlines, removing any existing citation, or altering any existing
+> quotation. **Return the full corrected definition.**"*
+> **G162's CARD:** *"**Here is the full corrected definition** with each of the four **unplaced
+> occurrences** integrated into Sense 1, at the points where their texts belong, **without altering
+> the sense structure, headlines, or any existing quotation:**"*
+
+A near-verbatim echo of the instruction — and *"unplaced occurrences"* is **this prompt's own
+subject** (*"these fed occurrences are not yet cited under a sense"*). **G162's leak was the coverage
+repair pass talking back.** **#57 IS VINDICATED PRECISELY** (*"the fix belongs in the PROMPT, not the
+guard"*) — F1 adopted the contract and it was applied to **ONE of the TWO** repair prompts. **That gap
+has been live ever since.**
+
+**CC DECLINED TO RUN `--repair`** — running a known-defective contract into the exact class this
+session built a detector for would have been indefensible. Reviewer receipted the decline.
+
+**THE THIRD-PROMPT AUDIT (reviewer-ruled as PART OF the fix, not a follow-up) — ALL SEVEN TEMPLATES
+MACHINE-CHECKED, not eyeballed. THE GAP WAS EXACTLY ONE:**
+| template | how it reaches the model | contract (before) |
+|---|---|---|
+| `VERSE_PROMPT` | SYSTEM prompt (draw) | ✓ no preamble · no closing summary |
+| `REPAIR_PROMPT` | USER msg, **NO system prompt** | **✗ NONE — THE GAP** |
+| `QUOTE_REPAIR_PROMPT` | USER msg, **NO system prompt** | ✓ no preamble · nothing else · card itself |
+| `lexica_agreement` `live`/`v7`/`v8`/`v9` | system prompt (floor draws) | ✓ all four |
+**Every other prompt already had it.** Post-fix re-run: all seven carry the contract.
+
+**THE FIX:** F1's wording **reused VERBATIM** from `QUOTE_REPAIR_PROMPT` (author nothing new — the
+clause is already live and proven in the sibling), and the trailing *"Return the full corrected
+definition."* — the sentence that NAMED the leak — **deleted**. Not model-regressing per the CLAUDE.md
+bar: same clause, no new framing, no blacklist. `repair_prompt_ver()` moves to `repair:eaca26ac4719`
+(stamped on repaired draws — expected). The F2 decline channel and the structure guard are untouched.
+
+**CONTROL (red-first, `tests/test_repair_pass.py` control 6, in CI):** RED on the real gap —
+`AssertionError: REPAIR_PROMPT lost the F1 output contract (no preamble)` — then GREEN. It asserts
+**BOTH** repair prompts carry the clause (two prompts diverged once; this is why they cannot again)
+and that the leak-naming sentence never returns. **PROOF OF FIX IS THE NEXT REPAIRED CARD'S
+BOILERPLATE DETECTOR OUTPUT** (reviewer-set): a `[meta]` fire echoing the repair instruction = the fix
+did not take. **The detector built at the top of this session is the live control on the root cause
+found at the bottom of it.**
