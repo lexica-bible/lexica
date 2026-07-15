@@ -112,6 +112,13 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
 - **A fix scoped to a desktop container does not reach the phone.** The Notes row clamp went on
   `.notes-rail-scroll` (desktop-only); the same list renders in the mobile sheet, where rows stayed
   107px. Measured per surface, not inferred from the desktop pass. Put the rule on the ROW.
+- **A HANDOFF STATES WHAT IT MEASURED AND ORDERS THE NEXT SESSION TO RE-MEASURE IT.** The standing
+  form for a banked session opener (`HANDOFF_*.md`): give the next session the measured state so it
+  starts informed, AND tell it to verify that state against the repo, because a prompt is a memory
+  the moment it's written. Everything ages — endpoint lists, chip counts, file:line cites. A chip
+  in this arc said "5 call sites" when the truth was 6; a later session had added one after the
+  chip was authored. Point at the doc for standing rules rather than re-listing them (a re-listed
+  rule is a copy that drifts); spend the prompt's words on the WHY and on the stop conditions.
 - **OPEN VERIFICATION — `.filters-sep` promotion (2026-07-15).** The rule was promoted out of its
   `.ws` scope so Notes could reuse it. Proven inert by exhaustive search (one rule for that class,
   no competitor, so the specificity drop has nothing to lose to) — but NOT measured, because Word

@@ -369,7 +369,9 @@ from Notes: the permanent gray, the mode-following list glyph, `.zcenter-m`'s de
 box, occlusion by hit test, the baseline A/B) are standing frontend detail, so they live in
 **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
-Left to do:
+Left to do (the first two have banked session openers — paste them whole, don't re-derive:
+**`HANDOFF_news_fixture.md`** then **`HANDOFF_study_mobile.md`**; the memory-index pass is
+**`HANDOFF_memory_consolidate.md`**, on JP's call, independent of these two):
 - **Harness: add a News feed fixture** — now the OLDEST unpaid debt here, and it has already been
   deferred through two bar/icon passes. `tests/mobile_harness.js` renders Library / Word study /
   Ask-corpus / Notes (`&notes=1`) at a phone width, but **News's mobile branch never reaches its
