@@ -11,7 +11,14 @@ the same commit as the prompt edit, and say why in the message.
 STAMP HISTORY (each line = a deliberate prompt move):
   lexica:7d7758f4156b  grounded-naming feed, +/-2 context + referent rule   (238147a, 2026-07-15)
   lexica:bd8b7e3f8209  anti-range constraint line (ENGINE_LESSONS #80)      (2a36ece-era, 2026-07-15)
-  lexica:f8c77bf889f6  quote-continuity line (6 gate refusals / 3 words)    (this commit)
+  lexica:f8c77bf889f6  quote-continuity line (6 gate refusals / 3 words)    (500a754, 2026-07-15)
+  lexica:bd8b7e3f8209  REVERT of the above -- HELD, not abandoned           (this commit)
+      The quote-continuity line is reviewer-APPROVED and re-lands as the next commit. It came
+      out because a prompt edit stales every cached draw AT COMMIT TIME, and three hand-repaired
+      drafts (G2588/G4172/G3624, ten banked fixes) were waiting to ship at bd8b7e3f8209. Shipping
+      them under the prompt that produced them keeps each card's stamp truthful; redrawing would
+      spend three declined calls and bin the repairs. Spec-first governs AUTHORIZATION order, not
+      COMMIT order -- a ruled spec may be held while owned drafts ship.
 
 The text asserts below are the contract, not the behavior. A prompt line cannot be unit-tested for
 OBEDIENCE — that is watched on the next drawn card's gate tail at BATCH REVIEW, never asserted here
@@ -23,7 +30,7 @@ import build_lexica_def as B   # noqa: E402
 
 # READ FACT, not recalled: PASTED from this file's own RED run against the edited prompt
 # (leg 2 of the red-first sequence, 2026-07-15), which printed the value it computed.
-PROMPT_STAMP = "lexica:f8c77bf889f6"
+PROMPT_STAMP = "lexica:bd8b7e3f8209"
 
 
 def test_prompt_stamp_is_pinned():

@@ -165,12 +165,7 @@ Constraints:
   to a verse must match that verse's stored text word for word; mark any omission
   with an ellipsis (…). When several verses share a refrain or formula, quote ONE
   verse and name it - never write a blended wording, and never claim the members
-  are worded identically unless they are. A quoted span comes from ONE verse —
-  never weld wording from two verses into one quotation, even adjacent verses in
-  one argument. An ellipsis may only OMIT: the segments around it must appear in
-  the verse's own order, and any gap between quoted segments must be marked —
-  closing a gap silently is a misquote. When in doubt, quote less: a short exact
-  span beats a long smooth one.
+  are worded identically unless they are.
 - REFERENCES NAME VERSES ONE BY ONE. Never write a span of verses as a reference
   range. "Rev 19:1-6" asserts every verse between its endpoints, including any
   that do not carry this lemma - list the verses you actually mean, separated by
