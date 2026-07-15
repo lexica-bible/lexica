@@ -7511,6 +7511,28 @@ class and wastes spend. STATE: 1 Sonnet call spent, 0 cards shipped, scoreboard 
 
 ---
 
+## SPEND POSTURE — CORRECTED BY JP, STANDING — 2026-07-14
+**ZERO MODEL SPEND IS NOT A VIRTUE AND IS NOT A BAR.** JP ruled it explicitly: a past session
+overstated a "minimize spend" posture and it got carried forward as if it were a standard. **He does
+NOT mind calls spent on dev / fix / iterate loops. Ship-quality and correctness drive; spend
+follows.** Iterate freely within authorized work.
+**WHAT SURVIVES:** the spend-board process — JP authorizes batches and stays informed. That is about
+**him knowing what is happening, NOT about the number being small.**
+**READ THIS BEFORE COPYING THIS FILE'S OWN FRAMING.** Entries above (and the HANDOFF's banners)
+repeatedly announce *"ZERO model spend"* as if it were an achievement. **It was not, and it must not
+be a target.** The same day's throughput correction found the real failure mode: **a pipeline shipping
+nothing, being audited about itself.** A rule that makes a session hesitate to run a draw it needs
+buys nothing and costs delivery. **The single canary call this session paid for itself immediately** —
+it bought a live reader-facing defect (the feed telling the model a rendering was `"None"`) AND the
+root cause of the G162 preamble leak, neither of which any amount of free reading had surfaced.
+**STANDING RULES:** do not report zero-spend as a win · do not pick a cheaper design, a longer
+read-only detour, or a delayed draw *because* it avoids a call · do not hesitate to re-draw against a
+fixed feed — a wasted call is cheaper than reasoning off bad bytes · keep proposing batch/novel spend
+through the board. **The canary pattern (cheapest word first) stays — as ENGINEERING (fail early at
+low cost), never as thrift.** Memory: `feedback_spend_posture`.
+
+---
+
 ## G162's PREAMBLE: ROOT CAUSE FOUND — THE COVERAGE-REPAIR PROMPT HAD NO OUTPUT CONTRACT — 2026-07-14
 **FOUND BY PULL, FROM A FRESH CARD'S FAILURE — the rule working exactly as written.** The G3464
 canary's redraw failed the coverage gate (25/27; Joh 12:5 + Mat 26:9 never cited). The designed
