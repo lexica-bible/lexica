@@ -869,14 +869,18 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           <button className={"wm-tab" + (sheet === "dist" ? " on" : "")} disabled={!profile} onClick={() => setSheet("dist")} title="Distribution" aria-label="Distribution">
             <Icon.Book/>
           </button>
+          {/* The word's detail panel = every other surface's inspect. Same glyph as News's
+              Watch and Ask-corpus's Inspect (2026-07-15). */}
           <button className={"wm-tab" + (sheet === "card" ? " on" : "")} disabled={!profile} onClick={() => setSheet("card")} title="Word card" aria-label="Word card">
-            <Icon.Card/>
+            <Icon.Panel/>
           </button>
-          {/* Views = how the results are ARRANGED, so it takes the grid. It used to wear the
-              sliders/mixer glyph, which is Library's "Reading options" — one glyph doing two
-              unrelated jobs across two bars. Modes stays single-function; this one splits off. */}
+          {/* "Views" is a FILTER sheet, whatever its label says: Edition (ABP/HEB/KJV/BSB),
+              Testament (All/Old/New), Go deeper — it narrows WHICH occurrences you see. Same
+              function as News's Options, so it takes the same glyph. It briefly wore Icon.Grid
+              on the guess that "Views" meant layout; nobody had opened the sheet, and Grid
+              already means CHIP VIEW in the reader. Read the sheet, not the label. */}
           <button className={"wm-tab" + (sheet === "views" ? " on" : "")} disabled={!profile} onClick={() => setSheet("views")} title="Views" aria-label="Views">
-            <Icon.Grid/>
+            <Icon.Filter/>
           </button>
         </nav>
 

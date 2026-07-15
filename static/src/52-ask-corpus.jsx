@@ -486,8 +486,12 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quot
     <div className={"ac-composer " + (pinned ? "pinned" : "hero")}>
       <div className="ac-field">
         <Icon.Search className="ac-field-i"/>
+        {/* enterKeyHint makes the phone keyboard's return key say "Search" — the same submit
+            path Word study relies on. Load-bearing on MOBILE, where the send button beside
+            this input is hidden and the keyboard IS the submit affordance. No effect on a
+            desktop keyboard, so the desktop button is untouched. */}
         <input className="ac-input" value={value} onChange={e => setValue(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && go()} placeholder={placeholder} />
+          onKeyDown={e => e.key === "Enter" && go()} enterKeyHint="search" placeholder={placeholder} />
         <button className="ac-send" onClick={go} aria-label="Ask" disabled={busy}>
           {busy ? <span className="spinner"/> : <Icon.ArrowRight/>}
         </button>

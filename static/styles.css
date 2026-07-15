@@ -5022,6 +5022,23 @@ button.study-verse-ref { border: none; }
   .ac-m .ac-landing-in { margin-top: 60px; max-width: none; }
   .ac-m .ac-title { font-size: 24px; margin: 0 0 8px; }
   .ac-m .ac-composer.hero { margin-bottom: 14px; }
+
+  /* The search box itself, converged on Word study's (.wm-search) — JP on device: "slightly
+     larger, and a button on the right Word study doesn't have". Measured at 375px: 54px tall
+     vs 48, 16.5px text vs 16, an 18px icon vs 20, 16px left pad vs 13, 11px gap vs 9, and the
+     heavy shadow vs the flat one. Each one matched below.
+     The --ai (purple) accent STAYS: it isn't drift, it's the mark of the AI surface — the
+     send button, "New search" and this icon all carry it, and a highlight that means
+     something doesn't get normalised away. Geometry converges; meaning doesn't. */
+  .ac-m .ac-field { height: 48px; gap: 9px; padding: 0 8px 0 13px; box-shadow: var(--shadow-sm); }
+  .ac-m .ac-field-i { flex: 0 0 20px; }
+  .ac-m .ac-input { font-size: 16px; }
+  /* The send button MERGES into the keyboard's Search key on mobile (enterKeyHint on the
+     input) — which is how Word study has always submitted, so this is the reference's own
+     path, not a dropped control. Its other job, the busy spinner, is redundant here: the
+     answer renders "Synthesis / Reading across the canon…" the moment you ask. DESKTOP keeps
+     the button (a mouse has no Search key), which is why this hides rather than deletes. */
+  .ac-m .ac-send { display: none; }
   .ac-m .ac-lede { font-size: 14px; line-height: 1.55; margin: 0 0 20px; max-width: none; }
   /* The samples stay a LIST, not Word study's inline dot-separated chips: these are whole
      questions ("Where does Scripture link blood and covenant?"), not one-word lookups —

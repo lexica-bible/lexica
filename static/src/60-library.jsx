@@ -1629,8 +1629,13 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
               )}
             </button>
           </div>
+          {/* The detail panel for what you're reading. Wore Icon.Info until 2026-07-15, which
+              meant this same glyph said "overview panel" here and "How the feed works" in News
+              — one glyph, two functions. Every surface's detail panel is Icon.Panel now
+              (News Watch, Ask-corpus Inspect, Word study's word card); Info goes back to
+              meaning help and nothing else. */}
           <button className="mbar-overview" onClick={() => setSummaryOpen(true)} aria-label={chronoOn ? "Reading intro" : "Chapter overview"}>
-            <Icon.Info/>
+            <Icon.Panel/>
           </button>
           <button className={"mbar-trans" + (modesOpen ? " on" : "")} onClick={() => setModesOpen(true)} aria-label="Reading options">
             <Icon.Modes/>
