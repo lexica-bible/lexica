@@ -1054,3 +1054,21 @@ both drifting from the doc.
     lesson of this arc — kin of #15/#52 (the sig pins fed input, not prose; two cards shared
     `aa064d41` with different prose) and of the standing rule that the written record outranks
     recall in BOTH directions. *(audit: TOOLING — fix_lexica_raw 3-gap fix, 2026-07-14)*
+
+71. **A check that derives its REFERENCE SET from the data changes meaning with the fixture — and
+    fails quietly.** `dangling_book_refs` / `noncanon_book_refs` decide "is this a real book?" via
+    `_valid_books()` = `SELECT DISTINCT book FROM verses`. Run against a two-book test fixture they
+    flagged canonical **"Num"/"2Ch" as NON-canonical** and let a bare dangling **"Rev"** pass unseen
+    — the lints were not broken and the card was not defective; the fixture had silently redefined
+    the lints' notion of the canon. Nothing announced it: the output looked like findings. The
+    repair is the tell — seed the reference set from the PRODUCTION table (`_BOOK_CODE`), never a
+    hand-typed list, because hand-typing it is #70 wearing a different hat. → v2: (i) a detector
+    whose verdict depends on a set READ FROM THE CORPUS must say so at its call site, and its tests
+    must seed that set from production, not from the handful of rows the case-under-test needs;
+    (ii) when a lint's output disagrees with a fact you are certain of (Num IS canonical), suspect
+    the FIXTURE'S WORLD before the lint — the same "suspect the fixture first" reflex as #70;
+    (iii) a fixture is not just inputs, it is the detector's whole universe — an under-seeded one
+    doesn't weaken the test, it changes what the test MEANS. Sibling of #70 (fixture-vs-reality) and
+    of the standing certification rule (a detector must fire on a known positive before a zero is
+    trusted — here a known NEGATIVE mis-fired for a fixture reason and would have been read as a
+    finding). *(audit: TOOLING — offline_gate_check write-path battery, 2026-07-14)*

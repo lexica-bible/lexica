@@ -1,5 +1,37 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **TOOLING TICKET 2 DONE — `offline_gate_check` NOW RUNS THE WRITE-PATH BATTERY (2026-07-14,
+> commit `a750cd2`, pushed + PA pulled; code + test, NO word runs, ZERO spend).** **The harness ran
+> 1 production detector out of the 11 the write path runs** — so a readiness pass could certify a
+> card on **1-of-11 and read as covered**, which is how the Eph 4:8 fire reached a live row
+> (#69(a)). **Scope ruled (b):** fix all ten missing, not the two the ticket named (fixing two while
+> eight stay silent discharges the wording, not the purpose). All eleven now print `[RAN]`; the four
+> that CANNOT run offline (coverage gate · floor-match · #30 · #55) print `[SKIPPED]` **with reason
+> — output contract, not comments**, closing with *"A card is not ship-ready on this output alone."*
+> Report, not gate: exit contract unchanged. **RED = #69(a) in one line:** on the card with the LIVE
+> blemish the harness printed `fails: 0 | warns: 0 | … | in-band spans: 0` — clean everywhere while
+> the fire sat in the gloss notes. **GREEN:** `[rendering-mismatch] gloss *gift* vs corpus rendering
+> 'gifts' at Eph 4:8`. Red re-proven vs the corrected fixture ⇒ green = the fix. **Fixture = REAL
+> BYTES (JP read-only PA dump): CC STOPPED rather than rebuild the claim from the AUDIT's prose —
+> a hand-built claim is shaped to fire (#70, applied within the hour of banking it).**
+> **FINDING OF RECORD (now closed):** the G1390 offline check reported "probe-2 7-for-7 over-firing"
+> but the harness **never ran probe 2** — those were the archived card's STORED warns. Sound there
+> (byte-adjudicated) but it READS AS COVERAGE; probe 2 now actually runs. **NEW TRAP = ENGINE_LESSONS
+> #71:** a lint that derives its reference set from the data (`_valid_books` = the `verses` table)
+> changes meaning with the fixture and fails QUIETLY — a thin fixture made canonical "Num"/"2Ch" read
+> as non-canonical. Seed from the production `_BOOK_CODE`, never a hand-typed list.
+> **NEXT = Eph 4:8 label fix (`*gift*`→`*gifts*`), the LAST change of the sequence — rides the fixed
+> tool, JP-run, DRY-RUN FIRST (`fix_lexica_raw.py --word G1390 --old "*gift* in Eph 4:8" --new
+> "*gifts* in Eph 4:8"`), writes the live row. FLAGGED BEFORE THE RUN: G1390's stored warns are
+> `meta:v3`, the fixed tool re-runs the probes at `meta:v6` — if they word differently the sets won't
+> match and the tool will correctly REFUSE to carry the ruling (changed set ⇒ FULL reopen). The
+> one-letter fix may cost a re-adjudication; that is the rule working, not a fault.**
+> **THEN OPENS = G236 design pass (floor-level, spend-gated) · G162 redraw (JP's gamble call) ·
+> probe-2 over-firing ticket (7 byte-adjudicated fixtures).** Full record: AUDIT "TOOLING —
+> `offline_gate_check` RUNS THE WRITE-PATH BATTERY". **STATE: origin = local = PA = `a750cd2`** (PA
+> was at `91e0888`, NOT the `00a4a0f` the prior handoff claimed — its own "verify by pull" was right).
+> Scoreboard unchanged `3/10ʰ · 7/15`. Frozen V9 untouched.
+
 > **TOOLING TICKET 1 DONE — `fix_lexica_raw` NOW RUNS THE FULL WRITE-PATH BATTERY (2026-07-14,
 > commit `3b51592`, pushed; code + test, NO word runs, ZERO spend).** #69 third instance. **Scope
 > amended 2 gaps → 3** (reviewer-ruled): the tool also had NO open-warn refusal, and fixing gap 1

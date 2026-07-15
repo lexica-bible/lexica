@@ -6381,3 +6381,75 @@ wrong-but-tiny-beats-falsified-record ruling. It ships LAST, after the offline-l
 **STATE: origin = local = `3b51592`. PA NOT pulled (code change — needs a pull; no reload needed for
 the tool itself, it is run by hand). Frozen V9 untouched; no model call; scoreboard unchanged
 3/10ʰ · 7/15.** NEXT = the offline-lint extension ticket (separate change), then Eph 4:8.
+
+---
+
+### TOOLING — `offline_gate_check` RUNS THE WRITE-PATH BATTERY (2026-07-14; commit `a750cd2`;
+### code + test only, NO word runs, ZERO spend; ticket 2 of the two banked with the G1390 ship)
+
+**THE GAP, MEASURED:** the harness ran **ONE** production detector (`probe1_verbatim`, plus a
+verdict-neutral score walk) out of the **ELEVEN** the write path runs. A readiness pass could
+certify a card on **1-of-11 and read as covered** — which is precisely how the Eph 4:8
+rendering-claim fire reached a LIVE row (#69(a)): that lint only ever fired inside `assemble`.
+
+**SCOPE RULED (b) BY REVIEWER — fix all ten missing, not the two the ticket named.** Decisive
+reason: fixing two while eight stay silent discharges the ticket's *wording*, not its *purpose*,
+and re-earns #69 a fourth time. #69(i) already decided it: enumerate and run all, or NAME each
+skip. All ten run READ-ONLY and reuse the production detectors (never a copy).
+**NOW RUN + NAMED `[RAN]`:** `run_citation_gate` · `dangling_book_refs` · `noncanon_book_refs` ·
+`double_shelved` · `gloss_note_claims` (the Eph 4:8 class) · `hedged_citations` ·
+`subuse_overload` · `registry_verse_hits` · `probe1_verbatim` · `probe2_names` · `scan3_identity`.
+**NAMED `[SKIPPED]` AS OUTPUT CONTRACT** (reviewer condition — the reader of a readiness REPORT
+must see them, not the reader of the source): coverage gate (needs the fed sample, stamped at the
+call site) · floor-match (needs the floor draws file) · #30 membership · #55 sense-count (both need
+the roster). Output closes: *"These four are NOT covered by this report. A card is not ship-ready
+on this output alone."* Exit contract UNCHANGED (0 = report printed, 2 = recoverability fail) —
+report, not gate; the apply path still blocks. The harness's job is that nobody certifies past a
+check nobody ran.
+
+**RED-FIRST vs the REAL script** (`tests/test_offline_gate_lints.py`). **RED — #69(a) in one line:**
+on the card carrying the LIVE blemish the harness printed `fails: 0 | warns: 0 | exempt/notes: 0 |
+not-run: 0 | in-band spans: 0` — clean on every line while the fire sat in the gloss notes.
+**GREEN:** `[rendering-mismatch] gloss *gift* vs corpus rendering 'gifts' at Eph 4:8`. Red
+RE-PROVEN against the corrected fixture (tool reverted) ⇒ the green is the extension, not the
+fixture.
+
+**FIXTURE = REAL BYTES** (read-only PA dump by JP, 2026-07-14): G1390 `gloss_notes` (both bullets
+verbatim), Eph 4:8's G1390 slot (`english_head` = `gifts`), Eph 4:8 verse text. **CC STOPPED and
+asked for the dump rather than reconstruct from the AUDIT's prose description** — a hand-built
+claim would be SHAPED TO FIRE, so its green would prove only that the author can trip their own
+lint (#70, applied within the hour of banking it).
+
+**FINDING OF RECORD — PROBE-2 CAVEAT ON THE G1390 OFFLINE CHECK (reviewer condition 3).** The
+G1390 offline check reported *"probe-2 7-for-7 over-firing"*, but **this harness never ran
+probe 2** — those warns were read from the archived card's STORED record, not recomputed. Sound in
+that instance (they were byte-adjudicated), but it **reads as coverage**. The G1390 offline check's
+record carries this caveat. **CLOSED by this commit:** probe 2 now actually runs offline.
+
+**TRAP BANKED (lessons candidate) — a lint that derives its REFERENCE SET from the fixture changes
+meaning with the fixture, and fails QUIETLY.** `_valid_books()` = `SELECT DISTINCT book FROM
+verses`, so the first green run against a two-book fixture flagged canonical **"Num"/"2Ch" as
+NON-canonical** and let a bare **"Rev"** pass unseen. Both were fixture artifacts, not findings.
+Repair: seed one placeholder row per canonical code **derived from the production `_BOOK_CODE`
+table** — a hand-typed book list would have been #70 a third time.
+
+**KNOWN FIXTURE ARTIFACT, DOCUMENTED NOT HIDDEN:** the fixture's citation gate reads 1/4 pass
+(Num 28:2 / 2Ch 32:23 unseeded; Psa 68:18 carries no words row — its `english_head` was NOT dumped
+and is NOT guessed). The live card's gate is clean on the record; no assertion depends on those
+numbers, the gate is exercised only to prove it RUNS. Reviewer: *"a fabricated row to make the
+number pretty would have been worse than the odd-looking truth."*
+
+**SECOND CC ERROR OF THE TICKET, caught on the diff stat:** a `sed -i` flipped `.github/workflows/
+ci.yml` from CRLF to LF — 147 changed lines for a 1-line addition. Restored, re-applied with a
+binary write, back to `1 insertion`. (The trap is already in memory `feedback_python_write_crlf`;
+walked into it anyway.)
+
+Registered in BOTH CI lists. Full curated list green, no regression.
+**STATE: origin = local = PA = `a750cd2` (JP pulled; PA was at `91e0888`, NOT the `00a4a0f` the
+session handoff claimed — the handoff's own "VERIFY BY PULL, don't trust this line" was right).
+Frozen V9 untouched; no model call; zero spend; scoreboard unchanged 3/10ʰ · 7/15.**
+**NEXT = Eph 4:8 label fix (`*gift*`→`*gifts*`), riding the fixed tool, JP-run, dry-run first.
+LIVE POSSIBILITY FLAGGED BEFORE THE RUN: G1390's stored warns were computed under `meta:v3` and the
+fixed tool re-runs the probes under `meta:v6` — if the newer probes word them differently the sets
+won't match and the tool will correctly REFUSE to carry the ruling (changed set ⇒ full reopen). The
+one-letter fix may therefore cost a re-adjudication. That is the safety rule working, not a fault.**
