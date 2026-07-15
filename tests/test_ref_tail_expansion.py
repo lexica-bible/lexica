@@ -134,7 +134,72 @@ def test_prose_stop_cases():
     assert B.ref_spans("Joh 4:18 and the woman") == [("Joh", 4, 18)]
 
 
+# ── BRACKETED ANNOTATION MUST NOT TRUNCATE A CITATION CHAIN (G2787 pull, 2026-07-14) ─────────
+#
+# THE DEFECT: the model annotates a verse where the lemma occurs twice — "Exo 25:14 [x2], 25:15".
+# That prose is TRUE and the prompt never asked for it (VERSE_PROMPT has no such convention,
+# machine-checked): the FEED lists one line per OCCURRENCE, so a twice-occurring verse appears
+# twice and the model says so. But _TAIL_UNIT_RE only walks a book-less tail across [,;] or a
+# dash, so the bracket STOPPED THE WALK and every ref after it in the chain was dropped —
+# SILENTLY. G2787's coverage gate reported 9 absentees of which FIVE WERE CITED IN THE CARD.
+# Worse than a gate-reporting bug: ref_spans feeds build_verses, so a lost ref never gets its
+# verse attached — where the lost ref is not also FED, nothing fires and the card ships short.
+# That is the silent-undercount class this scanner's docstring says it must never recreate.
+#
+# THE FIX IS SKIP-ONLY (reviewer-bound): the walker may STEP OVER "[...]" between a ref and its
+# tail. It may NEVER COUNT bracket contents. The scanner's deliberate conservatism is untouched.
+# The [x2] annotation is NOT discouraged anywhere — the parser adapts to true prose, not the
+# reverse.
+
+def test_bracket_does_not_truncate_chain():
+    """The four REAL card strings from the G2787 draw (pasted from its emitted senses_block).
+    Each must yield its FULL ref set — these are the five the gate called absent while the card
+    cited them."""
+    assert B.ref_spans("Exo 25:14 [x2], 25:15") == [("Exo", 25, 14), ("Exo", 25, 15)]
+    assert B.ref_spans("Jos 3:3, 3:6 [x2], 3:8, 3:11") == [
+        ("Jos", 3, 3), ("Jos", 3, 6), ("Jos", 3, 8), ("Jos", 3, 11)]
+    assert B.ref_spans("1Sa 4:3, 4:4 [x2], 4:5") == [("1Sa", 4, 3), ("1Sa", 4, 4), ("1Sa", 4, 5)]
+    assert B.ref_spans("2Sa 6:2, 6:3 [x2], 6:4") == [("2Sa", 6, 2), ("2Sa", 6, 3), ("2Sa", 6, 4)]
+
+
+def test_bracket_skip_handles_the_live_card_shapes():
+    """G3538's live shape ('9:7 [×2], 11' — a same-chapter verse tail after the annotation) and a
+    multi-word bracket (G3464 wrote '[x2, including the second occurrence tagged ...]')."""
+    assert B.ref_spans("Job 9:7 [×2], 11") == [("Job", 9, 7), ("Job", 9, 11)]
+    assert B.ref_spans("Joh 12:3 [x2, including the second occurrence], 12:5") == [
+        ("Joh", 12, 3), ("Joh", 12, 5)]
+
+
+def test_bracket_contents_are_never_counted():
+    """SKIP-ONLY, the binding scope. A digit-bearing bracket must not invent a ref: the walker
+    steps OVER it, it never reads INSIDE it."""
+    assert B.ref_spans("Gen 1:1 [see 2:3]") == [("Gen", 1, 1)]
+    assert B.ref_spans("Gen 1:1 [see 2:3], 5") == [("Gen", 1, 1), ("Gen", 1, 5)]
+    # a bracket carrying a full ref shape still contributes nothing of its own
+    assert B.ref_spans("Gen 1:1 [cf. 2:3]") == [("Gen", 1, 1)]
+
+
+def test_numbered_book_after_bracket_still_not_swallowed():
+    """The docstring's standing guard must survive the skip: G5207's live shape is
+    '32:14 [animal young]; 2Ch ...' — the '; 2' is 2Chronicles' DIGIT, not a verse tail."""
+    assert B.ref_spans("Gen 32:14 [animal young]; 2Ch 5:2") == [("Gen", 32, 14), ("2Ch", 5, 2)]
+
+
+def test_bracket_free_forms_are_byte_unchanged():
+    """THE CONTROL (reviewer condition): this edit must not perturb what already works."""
+    assert B.ref_spans("Exo 25:14, 25:15") == [("Exo", 25, 14), ("Exo", 25, 15)]
+    assert B.ref_spans("Jos 3:3, 3:6, 3:8, 3:11") == [
+        ("Jos", 3, 3), ("Jos", 3, 6), ("Jos", 3, 8), ("Jos", 3, 11)]
+    assert B.ref_spans("Rom 1:1, 4") == [("Rom", 1, 1), ("Rom", 1, 4)]
+    assert B.ref_spans("Job 42:7–8") == [("Job", 42, 7), ("Job", 42, 8)]
+
+
 def main():
+    test_bracket_does_not_truncate_chain()
+    test_bracket_skip_handles_the_live_card_shapes()
+    test_bracket_contents_are_never_counted()
+    test_numbered_book_after_bracket_still_not_swallowed()
+    test_bracket_free_forms_are_byte_unchanged()
     test_range_dash_expands_and_control_misses()
     test_range_hyphen_and_interior()
     test_range_guards()

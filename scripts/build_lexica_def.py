@@ -695,8 +695,21 @@ def _norm_book(label):
 # start of a NUMBERED BOOK NAME, not a verse ("Jas 1:12, 1Pe 1:6": the ", 1" is 1Peter's
 # digit, and swallowing it invented "Jas 1:1"). Caught by the first live resweep run
 # (2026-07-12: phantom :1/:2 deltas across the high-frequency cards); control test pins it.
+# A BRACKETED ANNOTATION between a ref and its tail must not END the walk (G2787, 2026-07-14).
+# The model annotates a verse carrying two occurrences — "Exo 25:14 [x2], 25:15" — because the
+# FEED lists one line per OCCURRENCE, so a twice-occurring verse appears twice and the model says
+# so. The prose is TRUE and unprompted (VERSE_PROMPT has no such convention). Before this, the
+# bracket stopped the tail walker and EVERY ref after it in the chain vanished SILENTLY: G2787's
+# coverage gate named 9 absentees of which FIVE WERE CITED IN THE CARD. Not merely a gate-report
+# bug — ref_spans feeds build_verses, so a dropped ref never gets its verse attached, and where
+# that ref is not also FED nothing fires and the card ships short. That is the silent-undercount
+# class this scanner must never recreate (see the docstring).
+# SKIP-ONLY, and the scope is load-bearing: the walker may STEP OVER "[...]"; it may NEVER read or
+# count what is inside one. Everything the scanner counts, and every conservatism above, is
+# unchanged — a digit-bearing bracket ("[see 2:3]") still contributes nothing, and the
+# numbered-book guard ("; 2Ch") still holds because that branch never matches a book digit.
 _TAIL_UNIT_RE = re.compile(
-    r"\s*(?:"
+    r"\s*(?:\[[^\]]*\]\s*)?(?:"                              # step OVER an annotation, never into it
     r"(?P<dash>[–—-])\s*(?P<end>\d+)(?!\d*[A-Za-z:])"        # verse range end
     r"|[,;]\s*(?P<tch>\d+):(?P<tvs>\d+)(?!\d*[A-Za-z:])"     # ", 21:12" / "; 16:15" — new ch:vs
     r"|,\s*(?P<tv>\d+)(?!\d*[A-Za-z:])"                      # ", 4" — same chapter, new verse
