@@ -132,7 +132,12 @@ def write_path_checks(db_path, card, raw, vt):
     p2w, p2nr = B.probe2_names(raw, vt,
                                extra_whitelist=(card.get("lemma"), card.get("translit")),
                                known_names=B._p2_corpus_names(conn))
-    report("probe2", p2w + p2nr)
+    # A dead name-guard is a NOT-RUN and must surface HERE too (DESIGN_p2_guard_loudness.md,
+    # reviewer-ruled in scope): without it this report would list probe2's findings as if
+    # demotion had run, claiming coverage it does not have — the exact defect this fixes.
+    # Silence reads as covered, #69(i) — the same rule this file's output contract below states.
+    guard_nr = B._p2_guard_notrun(conn)
+    report("probe2", ([guard_nr] if guard_nr else []) + p2w + p2nr)
     report("scan3", B.scan3_identity(raw, vt))
     conn.close()
 

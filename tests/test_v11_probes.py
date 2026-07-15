@@ -607,6 +607,13 @@ def main():
     # …and no junk probe-2 warns from citation text (the "Isa" class).
     assert e["audit"]["probe2_warns"] == [], e["audit"]["probe2_warns"]
     assert e["audit"]["probe_vers"]["norm"] == B.NORM_VER
+    # ACCEPTANCE GATE (reviewer ruling 3, 2026-07-14): this block's db has a `verses` table and
+    # NO `words` table — it has ALWAYS been running in the guard-ERROR state, and before the
+    # loudness fix it degraded SILENTLY and passed GREEN. That is the certification rule's own
+    # failure case wearing a passing test, and it is what the #71 read found. It must now REPORT.
+    # ASSERTING, not tolerating: a test that passes whether or not the not-run appears is the
+    # same silence one layer up.
+    assert any("guard" in n.lower() for n in e["audit"]["probe2_notrun"]), e["audit"]["probe2_notrun"]
     # bypass rides the same adjudicated path as the citation gate.
     e = entry_with({"bypass_reason": "adjudicated: artifact edge case"})
     e["raw"] = raw_d6
@@ -688,8 +695,38 @@ def main():
     warns, notrun = B.probe2_names(raw_guard, sub(("2Ch", 21, 3)), known_names=None)
     named = sorted({w.split('"')[1] for w in warns})
     assert named == ["Applying", "Solomon"], (warns, notrun)   # degrade ADDS, never removes
+
+    # ═══ GUARD LOUDNESS — a guard-load failure must SPEAK (DESIGN_p2_guard_loudness.md;
+    # reviewer-ruled 2026-07-14) ═══════════════════════════════════════════════════════════════
+    # A guard-load failure IS a not-run: the demotion check did not run. It rides the RULED
+    # probe2_notrun class — loud on stderr (:2903-2904), stored (:2898), BLOCKS apply via
+    # open_probe_warns (:2801, verified). No new tier, no new field, no new checkpoint surface.
+    # Guard-ABSENT (conn=None) is already loud one layer up (:2876-2879) and never reaches the
+    # loader, so guard-ERROR is the ONLY state this adds. The loader's error and the parameter's
+    # legitimate None were the same byte — that was the whole defect.
+    assert B._p2_guard_notrun(pn) == "", B._p2_guard_notrun(pn)   # healthy guard says NOTHING
+    say = B._p2_guard_notrun(nodb)                                # guard-error SPEAKS
+    assert say and "guard" in say.lower() and "demotion" in say.lower(), say
+    assert B._p2_corpus_names(nodb) is None, "contract unchanged: still degrades to None"
     pn.close()
     nodb.close()
+
+    # DIRECTION LOCK (reviewer build condition 2, 2026-07-14) — end-to-end through
+    # validate_entry: the loud path must NOT move the failure direction. Guard-error =>
+    # demotion OFF => MORE warns (both names), PLUS the not-run. Never fewer. If a future
+    # change makes the guard's absence quieter instead of louder, this goes red.
+    gdb = sqlite3.connect(":memory:")
+    gdb.row_factory = sqlite3.Row
+    gdb.execute("CREATE TABLE verses (book TEXT, chapter INT, verse INT, text TEXT)")
+    gdb.execute("INSERT INTO verses VALUES ('2Ch', 21, 3, ?)", (VT[("2Ch", 21, 3)],))
+    e = entry_with()                          # …no `words` table => the guard-ERROR state
+    e["raw"] = raw_guard
+    B.validate_entry(e, gdb)
+    assert any("guard" in n.lower() for n in e["audit"]["probe2_notrun"]), e["audit"]["probe2_notrun"]
+    named = sorted({w.split('"')[1] for w in e["audit"]["probe2_warns"]})
+    assert named == ["Applying", "Solomon"], named          # MORE warns, not fewer
+    assert B.open_probe_warns(e), "a guard not-run must BLOCK apply"
+    gdb.close()
 
     print("test_v11_probes: all assertions passed")
 

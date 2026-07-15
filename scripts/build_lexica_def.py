@@ -2735,19 +2735,54 @@ def probe2_names(raw, verse_texts, extra_whitelist=(), known_names=None):
 # connection. Control-tested live 2026-07-12 (session record): korah/solomon/laban/jesus/
 # peter present, votive/active/applying absent. Any failure → None → NO demotion (the
 # guard degrading must always fail toward the human, never silently widen demotion).
-_P2_PN_CACHE = {}
+#
+# LOUDNESS (DESIGN_p2_guard_loudness.md, reviewer-ruled 2026-07-14). The degrade stays — the
+# FAILURE DIRECTION IS UNCHANGED and must stay unchanged — but it no longer happens in silence.
+# The defect it cures: the loader's ERROR and probe2_names' LEGITIMATE `known_names=None`
+# ("demotion off by choice") were the SAME BYTE, so a dead guard arrived wearing the contract's
+# clothes and was handled as if someone had chosen it. A guard-load failure is a NOT-RUN — the
+# demotion check did not run — so it rides the RULED probe2_notrun class (loud on stderr,
+# stored on the audit, BLOCKS apply via open_probe_warns). No new tier, no new field.
+# Guard-ABSENT needs nothing here: no connection is already loud one layer up in validate_entry
+# and never reaches this loader, so a None from HERE can only ever mean the read FAILED.
+# The reason rides in the SAME cache entry — a second dict would double the id(conn) key
+# surface flagged in the design note (never-evicting; revival trigger = any long-running
+# multi-connection caller).
+_P2_PN_CACHE = {}          # id(conn) -> (names_or_None, error_text)
 
 
-def _p2_corpus_names(conn):
+def _p2_load_guard(conn):
     key = id(conn)
     if key not in _P2_PN_CACHE:
         try:
             rows = conn.execute("SELECT DISTINCT lower(english_head) FROM words "
                                 "WHERE is_pn=1 AND english_head != ''").fetchall()
-            _P2_PN_CACHE[key] = {r[0] for r in rows}
-        except Exception:
-            _P2_PN_CACHE[key] = None
+            _P2_PN_CACHE[key] = ({r[0] for r in rows}, "")
+        except Exception as exc:
+            _P2_PN_CACHE[key] = (None, f"{type(exc).__name__}: {exc}")
     return _P2_PN_CACHE[key]
+
+
+def _p2_corpus_names(conn):
+    """The guard set, or None if it could not be loaded (contract UNCHANGED — None still means
+    no demotion, still fails toward the human). Callers that report coverage must ALSO call
+    _p2_guard_notrun, or their silence reads as covered (#69(i))."""
+    return _p2_load_guard(conn)[0]
+
+
+def _p2_guard_notrun(conn):
+    """The NOT-RUN line when the guard failed to load against a LIVE connection, else "" (a
+    healthy load says nothing — a not-run on every good run is noise that trains blindness).
+    Fold into probe2_notrun at the call site: that class already blocks apply."""
+    err = _p2_load_guard(conn)[1]
+    if not err:
+        return ""
+    return (f"p2wl:v2 corpus-name guard FAILED to load — sentence-starter demotion did NOT run, "
+            f"so every boundary token stayed a candidate: the probe-2 warns below are UNGUARDED "
+            f"and some MAY be over-firing. They are still real candidates — adjudicate them on "
+            f"their own texts, but do NOT write them off as the is_pn-incompleteness class (#72): "
+            f"that explanation does not apply when the guard never loaded. Fix the guard "
+            f"read first ({err})")
 
 
 # Scanner-3 pattern list (VERSIONED — SCAN3_PATTERNS_VER; grows by exhibit, changes ruled).
@@ -2890,6 +2925,11 @@ def validate_entry(entry, conn=None):
         p2_warns, p2_nr = probe2_names(raw, vt,
                                        extra_whitelist=(entry.get("lemma"), entry.get("translit")),
                                        known_names=_p2_corpus_names(conn))
+        # A dead guard is a NOT-RUN, never a silent degrade (DESIGN_p2_guard_loudness.md).
+        # Rides the existing class: printed below, stored, and blocks apply. "" when healthy.
+        guard_nr = _p2_guard_notrun(conn)
+        if guard_nr:
+            p2_nr = [guard_nr] + p2_nr
         s3_warns = scan3_identity(raw, vt)
         a["probe_vers"] = {"norm": NORM_VER, "p2wl": P2_WHITELIST_VER,
                            "scan3": SCAN3_PATTERNS_VER, "meta": META_VER,
