@@ -141,6 +141,26 @@ def write_path_checks(db_path, card, raw, vt):
     report("scan3", B.scan3_identity(raw, vt))
     conn.close()
 
+    # A SEPARATE HEADING ON PURPOSE (reviewer-ruled 2026-07-14). This detector is NOT a write-path
+    # check, so listing it above would claim the build gates on it — false. Omitting it would leave
+    # the report SILENT on the class, and silence reads as covered (#69(i)). Both are falsifications
+    # of the output contract, in opposite directions; its own honest heading is the only shape that
+    # is true both ways. Its fires deliberately do NOT enter `fired` — that count is reported as
+    # "write-path check fires", which these are not.
+    print("\n--- report-only detectors (NOT run by the write path · gate nothing) ---")
+    bp = B.leading_boilerplate(raw)
+    if bp:
+        print("  [RAN]  %-18s %d fire(s):" % ("boilerplate", len(bp)))
+        for h in bp:
+            print("      - [%s] %r" % (h["kind"], h["text"][:100]))
+    else:
+        print("  [RAN]  %-18s clean" % "boilerplate")
+    # REMOVE THIS CLAUSE in the SAME commit that lands the green known-positive fixture — not
+    # before, not after (reviewer condition). Until then this report must not read as certifying
+    # boilerplate coverage.
+    print("  ⚠ boilerplate ZEROS ARE NOT TRUSTED YET: the known-positive control (G162's archived "
+          "draw, PA-only) has NOT run. Boundary logic is proven; a 'clean' above is UNPROVEN.")
+
     # OUTPUT CONTRACT, not comments (reviewer condition, 2026-07-14): a reader of this REPORT must
     # see what the report does not cover. Silence reads as covered — #69(i).
     print("\n--- checks that CANNOT run offline (named, never silent) ---")

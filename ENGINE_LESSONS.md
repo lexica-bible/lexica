@@ -1162,3 +1162,24 @@ both drifting from the doc.
     and the same shape as #52: **a tool's display of a line is not the line; a suite's red is not your
     control's red.** Kin of `feedback_audit_tools_must_fail`. *(audit: PROBE-2 GUARD — THE SILENT
     DEGRADE NOW SPEAKS, 2026-07-14; number ruled by JP)*
+
+76. **A POSITIVE control cannot catch an OVER-FIRING detector — only the silent direction can — and
+    an "it doesn't exist yet" red proves absence, not discrimination.** Red-firsting the
+    leading-boilerplate detector produced four reds that all read the same:
+    `AttributeError: no attribute 'leading_boilerplate'`. That red is the **WEAK form** — it fires
+    because the function is MISSING, so it would look identical for a detector whose logic was
+    inverted, over-broad, or a stub returning a constant. Proof came only from the **direction-lock**:
+    the real detector was deliberately over-fired (both cuts removed), and **the positive control
+    stayed GREEN** while both silent controls went red. A detector that fires on EVERYTHING passes
+    every "it fires on the defect" test ever written for it. → (i) **every detector needs a control in
+    BOTH directions, and the silent one is the load-bearing half** — the positive control only proves
+    reach, never restraint; (ii) an AttributeError/ImportError red is a scaffolding check, NOT
+    evidence the assertions discriminate — the honest red is the one obtained by *breaking working
+    logic*, which means the direction-lock belongs in the GREEN step, not "after"; (iii) the revert is
+    its own hazard, same as #75(ii): restore from a byte-level backup and cite the matching hash +
+    a zero grep of the over-fire marker, so the diff proves the sabotage left (here: restored sha256
+    `c82be4f5…`, residue 0); (iv) corollary for reading old suites — **a detector whose fixtures are
+    all positives has never been shown to restrain itself**, whatever its green record says. Kin of
+    #75 (that one: which control fired; this one: which DIRECTION was ever tested) and
+    `feedback_audit_tools_must_fail`. *(audit: G162 PREAMBLE-LEAK TICKET — PRE-CHANGE REVIEW, RULED
+    BUILD, 2026-07-14; reviewer-ruled bankable at the green receipt)*
