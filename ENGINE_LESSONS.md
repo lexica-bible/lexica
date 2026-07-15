@@ -1072,3 +1072,18 @@ both drifting from the doc.
     of the standing certification rule (a detector must fire on a known positive before a zero is
     trusted — here a known NEGATIVE mis-fired for a fixture reason and would have been read as a
     finding). *(audit: TOOLING — offline_gate_check write-path battery, 2026-07-14)*
+
+72. **A marking column is not an index — `is_pn` marks SOME proper nouns, not the names in a verse.**
+    Job 1:15 reads "And **Sabeans** fell upon and captured them" and carries ZERO `is_pn` rows; the
+    corpus-wide union reaches "sabean" through ONE row (`sabeans`), and only via plural loosening. Two
+    designs were built on "does this verse name a person = does it have an `is_pn` marking" before the
+    bytes said otherwise — and the failure direction is the SILENT one: a person present but unmarked
+    reads as "no person named" and gets DEMOTED, which is precisely what a triage tier would then have
+    the human skip. → (i) before a column becomes an index, prove COMPLETENESS on a case where the
+    answer is visible in the text, not coverage on cases where it happens to be marked; (ii) a
+    corpus-wide UNION of a sparse per-row flag is denser but not complete — measure its depth (one row
+    is a real answer) rather than assuming density; (iii) when every candidate mechanism costs a ruled
+    behavior, the design is not buyable at current data — park it with the precondition NAMED, so the
+    revival has a trigger instead of a memory. Kin of #71 (seed from production, and know what the
+    production set MEANS) and of the certification rule (a detector's zero is only as good as its
+    reference set). *(audit: PROBE-2 OVER-FIRING — closed as a design finding, 2026-07-15)*

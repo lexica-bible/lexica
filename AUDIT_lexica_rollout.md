@@ -6603,3 +6603,194 @@ the file. Same recall-over-bytes class as #70, caught by the machine within one 
 floor) — SPEND, JP-GATED, not pressed. Part 3 = red-first fixture pinning the corrected placement of
 all 5, scoped against the NARROW wording, drafted only AFTER part 2's gate clears. G236 stays PARKED
 until then.**
+
+### PROBE-2 OVER-FIRING — CLOSED AS A DESIGN FINDING, ZERO CODE; ROOT = `is_pn` IS AN
+### INCOMPLETE NAME INDEX (2026-07-15; ticket 3 of the arc, picked under standing delegation as
+### the only zero-spend ticket with a ready dataset. JP ran every PA read; read-only end to end,
+### ZERO model spend. Reviewer issued rulings B–G under NO-QUESTIONS standing delegation.
+### Doc-only close-out, exemption invoked.)
+
+**OUTCOME:** the ticket does NOT produce a detector fix. It produces ONE named blocker that accounts
+for BOTH candidate mechanisms and constrains every future consumer of `is_pn`. **G1390's 7 probe-2
+warns STAND: 6 correct-by-spec, 1 (Sabbath) a known FALSE POSITIVE whose mechanism is now fully
+understood and provably unfixable at current data.** A shipped patch would have been worth less.
+
+**THE BLOCKER (stated once; cited by both parks below):** **`words.is_pn` is NOT a complete index of
+the names present in a verse.** BYTE PROOF: `Job 1:15` reads *"And **Sabeans** fell upon and captured
+them..."* and the verse has **ZERO** `is_pn` rows with a non-empty `english_head`. The name is in the
+text; the corpus does not mark it. **CAVEAT KEPT AS STATED:** CC did NOT trace WHY (`import_tipnr.py`
+marks `strongs_base='*'` words; a proper noun carrying a real Strong's number would never be flagged —
+plausible, NOT verified on Job 1:15's rows). The incompleteness itself is byte-proven; its mechanism is
+not. **THINNESS DATAPOINT:** the corpus-wide name set reaches "sabean" through **`sabeans | rows: 1`** —
+ONE marked row in the whole corpus, and only via `_p2_known`'s plural loosening. The union is denser
+than the per-verse markings but is demonstrably one row deep in a real case.
+
+**WHAT OVER-FIRING IS, IN BYTES (draw record `bda7de94`, `vers` = `meta:v3`, probe2 n=7, scan3/notrun
+both empty — all four predictions posted BEFORE the read, all met; the AUDIT's own table transcribed
+the record faithfully, checked not assumed):** class 1 = passage-owner not named in the cited verse
+(6); class 2 = capitalized non-person with a morphological miss (1, Sabbath).
+
+**FINDING THAT SHAPED EVERYTHING — THE SABBATH/SABEAN TRAP:** the AUDIT's own verdict line names the
+PLURAL as Sabbath's mechanism (*"plural; `\bsabbath\b` misses it"*). But `test_v11_probes.py` must-keep
+**2j** rules that exact behavior CORRECT for Sabean: *"stored text has plural 'Sabeans', the `\b`
+whole-word check **correctly misses it**"*. Sabbath/"Sabbaths" and Sabean/"Sabeans" are **byte-identical
+in mechanism and adjudicated OPPOSITE.** Plural-matching would clear Sabbath and BREAK a ruled must-keep
+in the same stroke. **The AUDIT's phrasing points a future session at the one axis that is closed.**
+Morphology is CLOSED as an axis (Ruling A).
+
+**CLASS 1 IS NOT A BUG — IT IS THE SPEC.** `probe2_names`' docstring: *"Every proper name in a claim must
+appear in at least one of the claim's cited verse texts"*, WARN not block, *"the machine's job is making
+sure the human never misses the candidate"*. All 6 fire as specified. Changing it = a RULING about the
+probe's purpose, not a repair.
+
+**8-ROW SCORING TABLE — BOTH DESIGNS (verbatim, the byte-elimination record for the similarity
+mechanism). Person markings from the round-2 read; only 2 of 8 verses carry ANY:**
+| # | card name | ref | persons in verse | cell | ruled tier | right? |
+|---|---|---|---|---|---|---|
+| 1 | Israel | 1Ki 13:7 | — | 2 | quiet | ✓ benign |
+| 2 | Nebuchadnezzar | Dan 2:6 | — | 2 | quiet | ✓ |
+| 3 | Hiram | 2Ch 2:10 | — | 2 | quiet | ✓ — **see SHARED ERROR below** |
+| 4 | Belshazzar | Dan 5:17 | **daniel** | 3 | **LOUD** | ✗ over-fires — **Ruling C** |
+| 5 | Paul | Php 4:17 | — | 2 | quiet | ✓ |
+| 6 | Aaron | Num 18:7 | — | 2 | quiet | ✓ |
+| 7 | Sabbath | Lev 23:38 | — | 2 | quiet | ✓ (Ruling A axis) |
+| 8 | **Korah** | 2Ch 31:14 | **kore, imnah, levite** | 3 | **LOUD** | ✓ **true positive kept** |
+**SIMILARITY VERSION, SCORED FOR THE RECORD:** with cell 3 LOUD (as it must be), similarity produces
+**IDENTICAL verdicts on all 8 — ZERO changed.** Korah is loud via similarity, Belshazzar via cell 3, the
+rest quiet because no name exists for similarity to compare against. **The similarity mechanism is
+ELIMINATED ON BYTES, not on argument.** (The only variant where it acts is cell 3 = quiet, which buys
+Belshazzar by silencing the wrong-person-named class — better noise number, worse detector.)
+
+**RULING B (reviewer-issued, standing delegation) — TIER SPLIT ADOPTED AS DIRECTION**, WARN semantics
+preserved (stratify, never suppress). **CC REFINEMENT ACCEPTED AS WITHIN B:** forcing the THIRD CELL into
+the open eliminated the similarity mechanism rather than specifying it — once "person named, none similar"
+is LOUD (the swap with nothing licensing it is the WORSE misattribution), similarity partitions loud from
+loud and does nothing. Discriminator that survived: **does the cited verse name any person other than the
+one claimed?**
+
+**RULING C (reviewer-issued) — BELSHAZZAR STAYS LOUD; 6-of-7 IS THE HONEST CEILING.** Dan 5:17 names
+Daniel while Belshazzar is only "the king" — the card does byte-for-byte what Korah's card did. The
+separator is WORLD KNOWLEDGE no byte carries; demoting it demotes Korah's class. **The ticket's
+noise-reduction estimate is REVISED ON THE RECORD: 6 of 7, not 7 of 7.** The surviving warn is the
+detector doing its stated job — failing toward the human. Not chased.
+
+**RULING D+E (reviewer-issued) — PERSON vs PEOPLE-GROUP vs PLACE.** `words.is_pn` = proper noun ONLY, no
+type (`import_tipnr.py:610/615`). The distinction exists in production but NOT as a words column:
+`is_people_group()` (`entity_resolution.py:131`, a classifier — gentilic regex + shared list) and
+`tipnr_entities.section` / the `pn_types` set (PA-only tables). **DESIGN CORROBORATION: cell 3
+REDISCOVERED A RULED PRODUCTION PATTERN** — `data-model.md:153` records `/api/metav/entity` already gating
+on `section='person'` AND NOT `is_people_group`. Nothing to invent. **VERIFIED BY RUNNING THE PRODUCTION
+CLASSIFIER ON THE REAL MARKINGS (not read off the regex):** `levite=True` · `kore/imnah/daniel=False`;
+collision guard holds (`ephraim/miriam=False`, `hittites/egyptian/chaldean=True`). **E: people-group half
+CLOSED via import-not-copy; place half LOGGED as a named, accepted, UNDEMONSTRATED cost** — no place
+appears in the 8, and red-first forbids pinning a fire that cannot be shown red; it closes the day a real
+fire supplies bytes. The CI constraint independently kills the TIPNR path (probe tests run WITHOUT
+bible.db; `section`/`pn_types` would widen probe 2's dependency and every fixture's carriage). A place
+fire is Ruling-C-shaped: loud, wrong basis, fails toward the human. **Cell 3 final wording:** *any `is_pn`
+marking other than the claimed name, excluding people-groups.*
+
+**RULING F (reviewer-issued) — THE TIER IS PARKED.** Every groundable mechanism costs a ruled behavior:
+options 2/3 reopen Ruling A; option 1 (tier on `is_pn`, restate the quiet reason) **erodes 2j in SUBSTANCE
+while passing it in FORM**. **SUBSTANCE-vs-LETTER (on record so a revived tier cannot re-walk it):** under
+`is_pn`, Sabean/Job 1:15 goes QUIET — the corpus does not mark "Sabeans" — yet 2j exists precisely to rule
+Sabean's warn worth keeping (*"exonym-variant class, warn by design"*). The must-keep survives the letter
+(`len(warns)==1`, `"Sabean" in warns[0]`) while the tier demotes the one warn the project ruled important.
+**PARKED on the BLOCKER above, not killed.**
+Also pinned: **the tier could NOT split into two lists.** SEVEN must-keeps assert `len(warns) == 1`
+(`tests/test_v11_probes.py` lines 441 Jehoiada · 449 Eliphaz · 456 David · 514 Korah · 523 Sabean ·
+530 Laban · 553 Votive). THREE are byte-proven to go RED under a two-list design — 2j (Job 1:15), 2k
+(Gen 31:7) and 2n (Lev 23:38), every one of those verses confirmed MARKINGLESS by this session's reads,
+so each empties its `warns`. 2i survives (2Ch 31:14 carries `kore`). The other four were NOT tier-scored —
+their verses' markings were never read, and are not claimed. **CC first wrote "all three must-keeps", a
+count never run; the real number is seven and the finding is STRONGER, but the number was recall.** One
+list with the tier marked in the string is the only shape. Its value is real but bounded, and the BYTES
+define the bound — `open_probe_warns` (`build_lexica_def.py:2793`) blocks on `probe1_warns + probe2_warns
++ scan3_warns + probe1_notrun + probe2_notrun`, returning `[] if (not blocking or
+a.get("warns_adjudicated")) else blocking`: **any probe-2 warn blocks, and `warns_adjudicated` is a SINGLE
+flag clearing the whole set.** So the gate costs one stamp either way; the true cost is the HUMAN
+byte-adjudicating 7 warns by hand, which is what G1390 paid. Marking tiers cuts that read 7→2. **CC HAD
+THIS BACKWARDS FIRST** (claimed no relief), corrected on reading `open_probe_warns`.
+
+**RULING G (reviewer-issued) — RULING A IS PARKED TOO. THE CARVE-OUT DOES NOT SURVIVE.**
+Ruling A (issued earlier): *Sabbath fixes on the person-hood axis... scoped narrowly enough that must-keep
+2i stays green* — morphology closed, which STANDS. But the mechanism is impossible, by construction:
+**SABBATH / KORAH COORDINATE TABLE (verbatim — the impossibility proof):**
+| | token | in guard? | at boundary? |
+|---|---|---|---|
+| **Sabbath** | capitalized | **no** (absent from corpus set) | no (after `"; regular "`) |
+| **Korah (2i)** | capitalized | **no** (`KNOWN - {"korah"}`) | no (after `"; "`) |
+**Identical on every axis a corpus-name exemption can see.** 2i DELIBERATELY constructs Korah as an
+unknown capitalized name at a non-boundary (its canary design, catching boundary-widening); read #1's
+bytes put Sabbath on exactly those coordinates. Any rule dropping Sabbath drops 2i's Korah. **Not a
+threshold to tune — an impossibility proof.** **THE ONLY AXIS SEPARATING THEM IS THE PARKED TIER**
+(Lev 23:38 has no markings → quiet; 2Ch 31:14 has `kore` → loud). Second, independent ground: the
+exemption inherits the SAME BLOCKER — `sabeans | rows: 1`.
+**READ #2 CONTROL RE-PROVED, NOT CARRIED** (conditional logic ruled BEFORE the read so the result could not
+be argued after): `korah 38 · kore 4 · laban 56 · solomon 308 · jesus 863 · peter 147 · sabeans 1` present;
+`sabbath` / `sabbaths` / `votive` / `active` / `applying` ABSENT. Every control lands as the 2733 record
+claims. `sabbath` absent ⇒ the conditional said PROCEED; read #1's bytes stopped it anyway.
+**SABBATH PROSE (real bytes, live record `bda7de94`, line 26):** *"...carried symbolically on Aaron's
+forehead (Exo 28:38); **regular Sabbath and festival tithes** stand alongside vows as a category:
+"besides your gifts, and besides all your vows, and besides all your voluntary offerings" (Lev 23:38)."*
+Sabbath sits after `"; regular "` — semicolon EXPLICITLY not a boundary (ruled), which is why it survives
+to warn; it is a modifier on "tithes", not a subject.
+**WHY THE FIXTURE SUITE NEVER CAUGHT THE LIVE SABBATH (2f/2n, `test_v11_probes.py:484`):** `raw_votive` is
+a G1390 real-byte fixture citing **the SAME verse, Lev 23:38** — *"Sub-use: Votive and voluntary sanctuary
+offerings — "besides the Sabbaths of the LORD, …" (Lev 23:38)."* "Votive" is a SECOND Sabbath-class token
+(capitalized non-person, absent from the corpus set) and it does NOT warn — saved ONLY by sitting after
+`"Sub-use: "`, a RULED boundary, so the guard demotes it (2f asserts `warns == []`; 2n removes the guard
+and it warns again). And that fixture's "Sabbaths" is INSIDE THE QUOTE, which `_strip_quoted` blanks — so
+it never becomes a candidate. The LIVE card's "Sabbath" is UNQUOTED at a NON-boundary. Two ruled mechanisms
+hid the class from its own suite.
+
+**ERRORS OF RECORD — ALL MACHINE-CAUGHT OR CAUGHT BEFORE IMPLEMENTATION, NONE BURIED:**
+- **SHARED (CC + reviewer) — the Hiram byte-twin, FALSIFIED BY BYTES.** CC claimed Hiram/2Ch 2:10 was a
+  "byte-twin of Korah" (card says Hiram, corpus says Huram), built on the AUDIT's phrase *"'your servants'
+  = Huram of Tyre's woodcutters"* — which describes CONTEXT, not verse contents. **2Ch 2:10 names NOBODY**
+  ("...as gifts to **your servants**...", zero `is_pn` rows). Prose-derived inference asserted as bytes,
+  inside the ticket that exists because its dataset was NOT prose-derived. **Reviewer endorsed it as "the
+  sharpest thing in the arc" without asking for the bytes it rested on — R1-b applied to fixture strings
+  but not to an analytical claim.** Caught by the round-2 read. The conclusion (similarity not load-bearing)
+  SURVIVED; the reasoning that reached it did not.
+- **REVIEWER CARVE-OUT, WRONG TWICE, CORRECTED BY CC BEFORE IMPLEMENTATION BOTH TIMES. Original wording
+  preserved so a future session reading Ruling F alone cannot re-walk it:** *"Ruling A never depended on
+  the tier. Sabbath's fix is a person-hood exemption on the card's claimed name — the corpus-name axis,
+  not the verse-marking axis."* (1) Both axes draw from the SAME `is_pn` flag; the safety argument actually
+  rested on union-vs-per-verse density, unverified until "sabbath" was checked. (2) The only axis separating
+  Sabbath from 2i's Korah IS the parked tier — the carve-out's independence claim was false.
+- **CC — an unrun count.** "All three must-keeps assert `len(warns)==1`" was recall; the real number is
+  SEVEN. Caught only because the reviewer demanded the bytes behind the passage. The finding got stronger,
+  which is exactly why the habit is dangerous: a recalled number that flatters the argument reads as fine.
+- **REVIEWER — R1-b lapse, then a recall error while correcting it (checking side, second instance this
+  session).** The four claims in the Ruling-F passage WERE posted — as characterizations with file:line
+  refs, in the message Ruling F answered — and were ruled on WITHOUT the bytes being demanded (the original
+  lapse). The later block asserted they *"never appeared in any exchange I reviewed"*, a reconstruction
+  from memory of the session record, wrong on the facts. **The demand for bytes was correct; its stated
+  basis was not. Being right by accident cleans neither error.** A file:line citation is a promissory note,
+  not evidence — that is the rule both sides landed on.
+- **CC gate slip:** the Gen 31:7 / Job 1:15 validation reads were posted in the same message as the finding,
+  without their own gate clearance (the cleared gate was fixture drafting). Read-only and the finding was the
+  session's most valuable — which is exactly the erosion the handoff names. Reviewer named it once, not
+  litigated; CC acknowledged without defense. CC's stop-and-not-draft afterward was the discipline working.
+- **CC instruction correction (endorsed):** the reviewer directed pulling the Korah prose from the same
+  record as Sabbath's. Unfulfillable — Korah's bytes are in the KILLED draw `bc1e2f69` (archived); the live
+  `bda7de94` is the clean shipped card with no Korah claim. CC flagged rather than substituting; the
+  test-file bytes (`test_v11_probes.py:511`, documented provenance) are a valid source.
+
+**STATE: ZERO code changed. No detector edited, no fixture landed, no test touched; full probe suite green
+at baseline (`python tests/test_v11_probes.py`, the CI invocation — pytest collects nothing, it is a plain
+script). ZERO model spend. Doc-only, exemption invoked. Scoreboard UNCHANGED `3/10ʰ · 7/15` — A FINDING IS
+NOT A SHIP.**
+**PARK CONDITIONS (both cite the ONE blocker):** tier + Sabbath exemption become buildable the day
+production carries a COMPLETE name index (`is_pn` or a successor). Place half of cell 3 closes the day a
+real place fire supplies bytes. **Do NOT re-pitch either from the AUDIT's over-firing phrasing — morphology
+is a CLOSED axis (Ruling A) and the corpus-name axis is CLOSED by the 2i identity (Ruling G).**
+**FLAG — NEW ZERO-SPEND CANDIDATE (named, NOT chased this session):** the probe-2 test guard seeds from a
+HAND-TYPED set — `KNOWN = frozenset({"korah","solomon","laban","jesus","peter"})`
+(`tests/test_v11_probes.py:480`) — while the production guard reads the corpus (`_p2_corpus_names`). That is
+a live **#71** instance ("its tests must seed that set from production, not from the handful of rows the
+case-under-test needs") sitting in the very file this ticket reasoned about all night. It PREDATES #71, so
+it is NOT a regression. Out of scope here; a future session may pick it up as its own ticket.
+**NEXT: G236 part 2 (floor-level fix, SPEND, JP-GATED) · G162 redraw (JP's gamble call) · prose-economy
+design ticket · the KNOWN-set flag above. The probe-2 ticket is CLOSED — it has no remaining zero-spend
+work.**

@@ -1,5 +1,41 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **PROBE-2 OVER-FIRING — CLOSED AS A DESIGN FINDING, ZERO CODE (2026-07-15). ROOT = `is_pn` IS AN
+> INCOMPLETE NAME INDEX = ENGINE_LESSONS #72.** The ticket produces NO detector fix and that is the
+> right outcome: **ONE named blocker accounts for BOTH candidate mechanisms** and constrains every
+> future consumer of `is_pn`. **BYTE PROOF: Job 1:15 reads "And Sabeans fell upon and captured them"
+> and carries ZERO `is_pn` rows** — the name is in the text, the corpus does not mark it. (CC did NOT
+> trace WHY; the caveat is kept.) Thinness: the corpus-wide set reaches "sabean" through **one row**.
+> **G1390's 7 warns STAND — 6 correct-by-spec (the docstring specifies exactly that), 1 (Sabbath) a
+> known FALSE POSITIVE, mechanism fully understood, unfixable at current data.** **TIER PARKED (F)** —
+> every groundable mechanism costs a ruled behavior; tiering on `is_pn` erodes must-keep 2j in SUBSTANCE
+> while passing it in FORM (Sabean goes quiet because the corpus doesn't mark "Sabeans"). **SABBATH
+> EXEMPTION PARKED (G)** — **impossibility proof, not a threshold:** 2i deliberately constructs Korah as
+> an unknown capitalized name at a non-boundary, and the live Sabbath prose sits on exactly those
+> coordinates ⇒ any rule dropping Sabbath drops 2i's Korah. **The only axis separating them is the parked
+> tier.** **SIMILARITY ELIMINATED ON BYTES** — scored on all 8, it changes ZERO verdicts (the 8-row table
+> is in the entry, verbatim). **Ruling C: Belshazzar stays LOUD, 6-of-7 is the honest ceiling** (Dan 5:17
+> names Daniel; the separator is world knowledge no byte carries) — noise estimate REVISED on the record.
+> **Ruling D+E:** `is_pn` = proper noun only, no type; person-vs-people-group lives in `is_people_group()`
+> (`entity_resolution.py:131`, import-not-copy, `levite=True` verified by RUNNING it), person-vs-place in
+> the PA-only TIPNR tables — and cell 3 **rediscovered a ruled production pattern** (`data-model.md:153`
+> already gates `section='person'` AND NOT `is_people_group`). Place half = named, accepted, UNDEMONSTRATED
+> cost. **WHY THE SUITE NEVER CAUGHT IT:** `raw_votive` (2f) cites the SAME verse with a SECOND
+> Sabbath-class token, saved only by a ruled boundary + `_strip_quoted` blanking the quote. **ERRORS BANKED
+> BOTH SIDES:** CC's Hiram byte-twin FALSIFIED by bytes (prose-derived inference asserted as fact) with the
+> reviewer's endorsement-without-verification logged beside it · reviewer's carve-out wrong TWICE, corrected
+> by CC before implementation both times (original wording preserved) · CC's unrun count ("three" must-keeps;
+> real number SEVEN) · reviewer's R1-b lapse then a recall error while correcting it · CC's gate slip on the
+> validation reads. **A file:line citation is a promissory note, not evidence — the rule both sides landed
+> on.** **STATE: origin = local = this commit; PA unverified (verify by pull). ZERO code changed, no test
+> touched, suite green at baseline. ZERO model spend. Scoreboard UNCHANGED `3/10ʰ · 7/15` — A FINDING IS NOT
+> A SHIP.** **PARK CONDITIONS: tier + exemption revive the day production carries a COMPLETE name index; do
+> NOT re-pitch from the AUDIT's over-firing phrasing — morphology is CLOSED (A), corpus-name axis CLOSED by
+> the 2i identity (G).** **OPENS = G236 part 2 (floor-level fix, SPEND, JP-GATED) · G162 redraw (JP's gamble
+> call) · prose-economy design ticket · NEW zero-spend flag: the probe-2 test guard seeds from a HAND-TYPED
+> `KNOWN` frozenset (`test_v11_probes.py:480`), a live #71 instance that PREDATES #71 (not a regression, not
+> chased).** Full record: AUDIT "PROBE-2 OVER-FIRING — CLOSED AS A DESIGN FINDING".
+
 > **G236 DESIGN PASS — PART 1 DONE: FULL SENSE-1 SWEEP, MISFILE SET = 5 NOT 4 (2026-07-15).** All 23
 > group-1 verses byte-checked against the reviewer-endorsed test (*"interfering with a thing that stays
 > the same"* vs *"one out, one in"*, pulled verbatim from the DESIGN READ entry before the table was
