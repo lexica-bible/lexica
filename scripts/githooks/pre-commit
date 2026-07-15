@@ -42,6 +42,7 @@ python tests/test_ref_tail_expansion.py >/dev/null
 python tests/test_coverage_gate.py >/dev/null
 python tests/test_repair_pass.py >/dev/null
 python tests/test_v11_probes.py >/dev/null
+python tests/test_fix_lexica_raw.py >/dev/null
 python tests/test_quote_repair.py >/dev/null
 python tests/test_draw_history.py >/dev/null
 python tests/test_helper_double_tag.py >/dev/null

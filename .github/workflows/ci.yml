@@ -39,6 +39,7 @@ jobs:
           python tests/test_coverage_gate.py
           python tests/test_repair_pass.py
           python tests/test_v11_probes.py
+          python tests/test_fix_lexica_raw.py
           python tests/test_quote_repair.py
           python tests/test_draw_history.py
           python tests/test_helper_double_tag.py

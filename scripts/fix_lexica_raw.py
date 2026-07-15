@@ -41,6 +41,22 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_lexica_def as B
 
 
+# The V11 warn surfaces open_probe_warns() gates on — the set an adjudication rules over.
+_WARN_KEYS = ("probe1_warns", "probe2_warns", "scan3_warns", "probe1_notrun", "probe2_notrun")
+
+
+def canon_warns(audit):
+    """CANONICAL form of the warn set, for the identical-set carry test (reviewer ruling
+    2026-07-14). Stable ordering + stable serialization — NOT raw string equality of whatever
+    the audit block happens to emit: warns are plain strings appended in SCAN ORDER
+    (build_lexica_def.py, probe2_names et al), never sorted, so a surgical edit that moves text
+    reorders identical warns. Comparing raw would force a spurious refusal on a benign reorder —
+    which is exactly what invites a 'just carry it' workaround later."""
+    a = audit or {}
+    return json.dumps({k: sorted(a.get(k) or []) for k in _WARN_KEYS},
+                      ensure_ascii=False, sort_keys=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
@@ -49,6 +65,12 @@ def main():
     ap.add_argument("--new", help="replacement text")
     ap.add_argument("--show-raw", action="store_true", dest="show_raw",
                     help="print the stored raw prose and exit — to craft an exact --old/--new edit")
+    ap.add_argument("--adjudicate-warns", metavar="NOTE", dest="adjudicate_warns",
+                    help="record the reviewer adjudication for OPEN V11 warns on the CORRECTED "
+                         "entry — needed when the edit CHANGES the warn set (the prior ruling "
+                         "never saw the new items, so it is not carried). Same surface as "
+                         "build_lexica_def.py --adjudicate-warns; stamped into "
+                         "audit.warns_adjudicated so the row self-documents the ruling.")
     ap.add_argument("--apply", action="store_true", help="write the row (default: dry-run, show only)")
     args = ap.parse_args()
 
@@ -70,6 +92,11 @@ def main():
         sys.exit(f"no stored Lexica row for {sid}")
     e = json.loads(row["def_json"])
     raw = e.get("raw", "")
+    # The prior reviewer ruling + the warn set it ruled OVER — captured BEFORE assemble(), which
+    # rebuilds `audit` fresh from the prose and does NOT carry warns_adjudicated (gap 2).
+    prior_audit = e.get("audit") or {}
+    prior_adj = prior_audit.get("warns_adjudicated")
+    prior_warns = canon_warns(prior_audit)
     if args.show_raw:
         print(f"\n===== {sid}  {e.get('lemma','')} — stored raw prose =====\n")
         print(raw)
@@ -92,12 +119,56 @@ def main():
     entry["synth_ver"] = row["synth_ver"] or B.synth_ver()   # surgical edit ≠ new generation: keep the stamp
     B.show_entry(entry)
 
-    problems = B.validate_entry(entry)
+    # GAP 1 (ENGINE_LESSONS #69, third instance): `conn` MUST be passed — without it
+    # validate_entry prints "prose probes NOT RUN" and SKIPS the verbatim-quote gate, the
+    # named-subject probe and the identity scanner. This path WRITES, so it runs every check
+    # the main write path runs (build_lexica_def.py, the validate_entry(entry, conn) call site).
+    problems = B.validate_entry(entry, conn)
     if problems:
         print("  ✗ PARSE FAILURE — not written:")
         for p in problems:
             print("     - " + p)
         sys.exit(1)
+
+    # GAP 2 — CARRY RULE (reviewer-ruled 2026-07-14, standing for this tool). A ruling
+    # adjudicated the warns that existed WHEN IT WAS MADE. Carry it across a surgical edit ONLY
+    # when the new warn set is identical over the CANONICAL form; if the set changed, the old
+    # ruling never saw the new items — do NOT carry (that would stamp "reviewed" on items no
+    # reviewer saw = a falsified record). SILENT CARRY-FORWARD IS BANNED: every branch prints.
+    # CHANGED SET => FULL REOPEN, NO PARTIAL CARRY (ruled 2026-07-14): every warn goes back to
+    # the reviewer, including ones a prior ruling covered. Keeping the "same" items and reopening
+    # only the new ones would make the TOOL decide which prior items are same-enough — machine
+    # adjudication, which the ruling reserves for a reviewer. The review cost is paid only when an
+    # edit actually moves the warn set, which is rare and is itself worth a fresh look.
+    new_warns = canon_warns(entry.get("audit"))
+    has_warns = json.loads(new_warns) != json.loads(canon_warns({}))
+    if prior_adj and new_warns == prior_warns:
+        entry["audit"]["warns_adjudicated"] = prior_adj
+        print(f"  ✓ warn set UNCHANGED by this edit — prior adjudication carried: {prior_adj}")
+    elif args.adjudicate_warns and has_warns:
+        entry["audit"]["warns_adjudicated"] = args.adjudicate_warns
+        print(f"  ✓ adjudication recorded for the corrected entry: {args.adjudicate_warns}")
+    elif prior_adj:
+        print("  ⚠ this edit CHANGED the warn set — the prior adjudication is NOT carried "
+              "(it never saw the new items). Prior ruling, for the reviewer:", file=sys.stderr)
+        print(f"      {prior_adj}", file=sys.stderr)
+
+    # GAP 3 — the open-warn refusal the main write path enforces. Created by fixing gap 1: once
+    # the probes actually run here they emit warns, and with no gate this tool would write
+    # exactly the rows build_lexica_def refuses.
+    # Same CONVENTION as the main path, not just the same check: a dry-run WARNS (it exists to
+    # preview the correction), only --apply refuses.
+    blocked = B.open_probe_warns(entry)
+    if blocked:
+        if args.apply:
+            print(f"  ✗ NOT written — {len(blocked)} OPEN V11 item(s) with no adjudication; after "
+                  f"the reviewer rules them, re-run with --adjudicate-warns \"ruling\":",
+                  file=sys.stderr)
+            for w in blocked:
+                print("      - " + w, file=sys.stderr)
+            sys.exit(1)
+        print(f"  ⚠ {len(blocked)} OPEN V11 item(s) — an apply will be REFUSED until "
+              f"adjudicated (--adjudicate-warns).", file=sys.stderr)
 
     if args.apply:
         conn.execute(
