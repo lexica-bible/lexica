@@ -361,17 +361,22 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
-**Shell's MOBILE collapse has its first consumer: News (2026-07-15) — copy it for the two parked
-below.** The gotchas it paid for (bar collision, `100dvh` pinning, scroll-box clearance, the BARE-sheet
-`scrollRef` trap + the case its fallback can't rescue, bottom-bar icon size) are standing frontend
+**Shell's MOBILE collapse has TWO consumers now: News + Ask-corpus (both 2026-07-15) — copy them for
+Study, the last one parked.** The gotchas they paid for (bar collision, `100dvh` pinning, scroll-box
+clearance, the BARE-sheet `scrollRef` trap + the case its fallback can't rescue, bottom-bar icon size,
+zones-not-verbs, the two ways to clear the bar, the doubled panel header) are standing frontend
 detail, so they live in **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
 Left to do:
-- **Ask-corpus MOBILE rail** (PARKED 2026-07-03, JP's call — next fresh checkpoint) — desktop rail is DONE,
-  fixture-locked (`test_ac_word_groups.js` + `test_rstack_logic.js` + `test_rail_payload_contract.py`) + CI-gated,
-  and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
-  in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
-  code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
+- **Ask-corpus horizontal scroll — OPEN, BLOCKED on JP's device state** (2026-07-15). JP sees a small
+  left/right scroll on the Ask-corpus page on his real phone. Does NOT reproduce: measured at 320 + 375,
+  reader + admin, landing + thread, with a detector control-tested on a forced 500px positive. **Needs
+  JP's screenshot 2 + phone model / viewport width**, then re-measure — the landing was rebuilt for the
+  mobile pass, so the source may already be gone. Do NOT "fix" it with `overflow-x: hidden`, and do NOT
+  trust `document.scrollWidth` here: `.ac` already carries a clip that blinds it (the mask is documented
+  in frontend.md and is scheduled for removal WITH this repro, so it's tested against the real case).
+  Harness: `node tests/mobile_harness.js 8099` → `/?view=corpus&admin=1`.
+  code: static/src/52-ask-corpus.jsx, styles.css (`.ac`, `.ac-m`)
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,

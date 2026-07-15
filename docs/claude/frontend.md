@@ -47,6 +47,16 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   key off it.
 
 ### Shared controls + touch (cross-tab rules, learned the hard way)
+- **Measuring a phone layout: `tests/mobile_harness.js`.** Serves the REAL committed bundle +
+  `styles.css` + the local React UMD against stubbed payloads, so a phone-width layout can be
+  MEASURED in a real engine (`node tests/mobile_harness.js 8099` →
+  `/?view=corpus&admin=1`; `&bundle=head` serves the COMMITTED bundle for A/B). A tool, not a gate
+  — deliberately NOT in the CI list: it renders, it doesn't assert. Fixture provenance is per
+  fixture in its header, each traced to the code that produces it. Three traps it already paid for,
+  all in `feedback_audit_tools_must_fail`: assert `window.innerWidth` (Chrome won't window below
+  500px — use device emulation), seed `lexica_tour_seen` (the first-run modal covers everything),
+  and stub `/api/` ONLY (it once answered for `chronological.json` and blanked the whole desktop).
+  `?admin=1` matters — JP reviews as admin, whose nav carries more tabs than a reader's.
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -93,8 +103,18 @@ UNTOUCHED and NOT forced into RightStack. ThreeZone retired.
 **Ask-corpus = FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` — chat
 layout; rail = threads, center = answer, inspect = the selected answer's provenance (Key passages
 + a merged "Words in scope" list). A synthesis chip + passage rows PEEK the occurrence → fork →
-word drill (`.ac-rstack`, top:0). Mobile still the old layout. Spec: `HANDOFF_corpus_shell.md` +
-memory `project_three_zone_shell`.
+word drill (`.ac-rstack`, top:0). **Mobile now on the shell's collapse too (2026-07-15)** — see the
+collapse block below. Spec: `HANDOFF_corpus_shell.md` + memory `project_three_zone_shell`.
+
+**⚠ `.ac` carries a pre-existing `overflow-x: hidden` (OPEN — scheduled for removal WITH a repro).**
+It predates the mobile pass and masks any sideways overflow inside Ask-corpus. Measured 2026-07-15
+at 320 + 375, reader + admin, landing + thread: nothing currently overflows, so the mask hides
+nothing *that we can reproduce*. It was left in deliberately: JP reports a small left/right scroll
+on his real phone (open item, needs his device width), and if that's real, this mask is what's
+hiding it — so removing it now would be a change with no detector to test against. **Remove it
+together with the item-3 repro, tested on the real case, not before.** Note the trap it sets:
+`document.scrollWidth` reads clean *through* this clip even with a 500px probe on the page — use
+`getBoundingClientRect()` to hunt overflow here (memory `feedback_audit_tools_must_fail`).
 
 **Notes + Seam index + News-rail SHIPPED 2026-07-01** (desktop): Notes on `<Shell>` (rail =
 note index, center = editor edited IN-TAB, right = the note's anchored verse via `VerseRow`;
@@ -103,12 +123,31 @@ Study module on `<Shell>` (see data-model.md, study.db). News gained a SELECTED-
 (click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Full record:
 memory `project_three_zone_shell`.
 
-### Shell's MOBILE collapse — News is the first consumer (2026-07-15)
-`MobileBar`/`ZoneSheet`/`.zbar` shipped in Phase 1 with **nothing using them** until News; Mobile
-Ask-corpus and Study are still parked on their own old single-column branches, and **News is the
-pattern to copy**. `Shell` mobile = center inline + `mobile={{tools, sheet, sheetTitle, sheetBare,
-onCloseSheet}}`; a tool opens its zone as a swipe-dismiss sheet. What it proved, so the next
-consumer doesn't re-derive it:
+### Shell's MOBILE collapse — News (2026-07-15), then Ask-corpus (2026-07-15)
+`MobileBar`/`ZoneSheet`/`.zbar` shipped in Phase 1 with **nothing using them** until News. **Study
+is the last surface still parked** on its own old single-column branch. `Shell` mobile = center
+inline + `mobile={{tools, sheet, sheetTitle, sheetBare, onCloseSheet}}`; a tool opens its zone as a
+swipe-dismiss sheet. What the two consumers proved, so the next doesn't re-derive it:
+
+- **A bar slot names a ZONE, not a verb.** News collapsed three zones, Ask-corpus two (Recent +
+  Inspect) — count the surface's actual zones, don't inherit a button count. Ask-corpus's "New
+  thread" is a one-shot ACTION and stayed in the center strip; a verb in a zone bar is the same
+  glyph/function mismatch the icon standard exists to stop.
+- **A zone that doesn't apply YET grays, it doesn't vanish** (`tools[].disabled`) — gray-don't-hide,
+  and Word study's bar already did it (3 of 4 tabs gray until a word loads). Ask-corpus's Inspect
+  grays until the first answer.
+- **Two ways to keep content off the bar; pick by whether the surface has a PINNED control.** News
+  pins its shell to `100dvh - --bar-h` and lets the fixed `.zbar` float over the scrolling feed,
+  which pads itself clear. Ask-corpus CAN'T — its composer is pinned to the bottom, so a floating
+  bar sits on the input. It ends the shell ABOVE the bar instead
+  (`100dvh - 2*--bar-h - both safe areas`, `.ac-frame.zshell-m`) and nothing inside re-adds the
+  safe area. Same rule, different shape.
+- **If the surface owns its scrolling, `.zcenter-m` must not be a second scroll box around it**
+  (`overflow: hidden`), or the pinned composer floats on a nested scroller.
+- **A panel's own header band is DESKTOP chrome — hide it inside the sheet.** The sheet's
+  `sheetTitle` already names the panel, so Ask-corpus's rail printed "Recent conversations" twice,
+  one line apart (`.ac-m .zsheet .ac-rail-top { display: none }`). Caught in a screenshot, not in
+  the numbers.
 - **No bar collision:** `.zbar` is `bottom:0`; the app's own `.mobile-tabs` is `top:0`. The bottom
   is free. (Library's cockpit is the exception — it owns the bottom on its own tab.)
 - **Pin to the visible viewport** or the whole page rubber-bands: the surface needs
@@ -127,7 +166,25 @@ consumer doesn't re-derive it:
   size and the shared `Icon.*` glyphs (14–16px, drawn for dense inline rows) stay untouched. The
   in-app references DISAGREE — Word study `.wm-tab` 22px vs Library cockpit `.mbar-*` 21px — 22
   wins as the icon-only-equal-slots shape and 2:1 app-wide. Don't invent a fourth number.
+  **Library's cockpit stays a documented 21px EXCEPTION** — it's the mixed bar (it carries the
+  book/chapter text button), so its icons are sized to the type beside them. That's the original
+  ruling's own logic applied, not amended.
 - Bar height stays `--bar-h`: the app's bar rhythm and the sheets' max-height maths key off it.
+
+### Icons: ONE glyph per function, from `10-icons.jsx` (2026-07-15)
+`Icon.*` is the only icon set. Word study used to keep a private `WsI` — deleted, because it was a
+**fork, not drift**: its `Sliders` was character-for-character identical to `Icon.Modes`, and that
+one drawing meant "Views" in Word study and "Reading options" in Library. One glyph, two jobs, in
+two bars. `Card` + `ChevR` had no shared twin, so they were **promoted into `Icon`** rather than
+deleted. Views now takes `Icon.Grid` (arrangement); `Icon.Modes` means reading options and nothing
+else.
+- **Never fork a glyph to resize it.** The `Icon.*` components spread props, so pass
+  `width`/`height` at the call site (`<Icon.Search width="20" height="20"/>`). This is load-bearing:
+  the CSS around those uses sets only the flex SLOT (`.wm-search-i { flex: 0 0 20px }`), never the
+  glyph, so swapping a 20px fork for a bare 16px shared component silently shrinks a shipped
+  control. Bars are the exception — they size at the bar (`.zbar-btn svg`, `.wm-tab svg`), so bar
+  buttons take the component bare.
+- Before adding a glyph, grep the set for the FUNCTION, not the shape.
 
 ## Library tab
 Full per-feature history in memory (each block names its file). Standing rules + gotchas here.
