@@ -6876,3 +6876,127 @@ board.** **ZERO-SPEND SHELF:** G236 part-2 MECHANISM design (the new gate) · th
 prose-economy (JP's inquiry) · G162's preamble-leak boilerplate check (its own kill record says that class
 *"would be caught"* by a check that does not exist — a zero-spend detector ticket sitting inside a kill
 record).
+
+---
+
+## G236 PART 2 — MECHANISM DESIGN PASS: 12 LEVERS, 11 DEAD, CRITERION PRE-REGISTERED (2026-07-14)
+
+**ZERO model spend. ZERO code changed. Doc-only.** Answers the standing gate on every G236 spend:
+*how do you move a floor when the floor is a vote, the prompt is frozen, and the roster cannot be
+touched?* Full note: **`DESIGN_g236_part2_mechanism.md`**. Reviewer ruling on CC's three asks pasted
+by JP; this entry banks the outcome.
+
+**RESULT: 12 levers enumerated. 11 dead. 1 standing — ROSTER REVISION.** The question is not
+answered yet; it is now **decidable by a free read**, which it was not at session open.
+
+### The two falsified board lines (corrected in place, same commit)
+
+**Both were falsified by the very files they cite. Neither rescues a spend; both change what part 2
+IS.** This is the promissory-note class firing again — *a file:line citation is a promissory note,
+not evidence* — this time against the handoff's own SPEND BOARD.
+
+- **(a) *"~10× a redraw, the board's most expensive item"* — WRONG.** Priced off a FLOOR RE-RUN. The
+  surviving lever anchors the **SHIP draw** (`build_lexica_def.py:3125`) and never re-runs the floor
+  ⇒ **ONE draw, not ten.** The board's most expensive item was never the candidate.
+- **(b) *"hand-carve the roster ⇒ BANNED (path-(c))"* — an INVERSION.** `draw_hints.py:15-26`: the
+  hand-carve ban *"governs hints/jobs ONLY"*; a roster **IS** allowed to fix how many senses and
+  which verses group, *"because it is not hand-invented — it is the floor's OWN repeated-review
+  consensus"*. It also rides the **user message**, *"frozen V9 prompt untouched"* (`:511-517`) — so
+  it clears the frozen-prompt leg, and "floors draw UNHINTED" never bites it.
+- **(c) UNVERIFIED, flagged not corrected:** the board said *"it called Ezr 6:11 substitution, ~10
+  draws agreed"*. **NOBODY HAS READ THIS FLOOR.** A promissory note about a PA-only file — and it
+  happens to pre-answer the strength test C3 now sets. Not carried forward as fact.
+
+**What SURVIVED the audit and still kills levers 1-2:** *same prompt + same verses ⇒ same vote*,
+grounded in `lexica_agreement.py:369` (V9 = coverage + verbatim quotes only, **no sense-inventory
+language** — CC confirmed this byte-true). **The refusal at #73 was RIGHT.** It killed a mechanism
+nobody should have pitched, while the real candidate went unpriced and unexamined.
+
+### Lever 12 — disposed of explicitly (reviewer-raised)
+
+**Re-aggregating the existing floor under a non-modal counting rule. DEAD.** *Duplicate in form* —
+the roster IS the aggregation output, so this is lever 11 by another road. *Worse in substance than
+any of the ten* — lever 11's whole defense is "I read what the floor already settled"; lever 12
+re-scores the vote until the floor returns the ruled direction's answer, then claims the roster's
+defense for it. **Load-bearing consequence:** if the third home is visible ONLY under a new counting
+rule, **reading it back IS lever 12 and is dead.** Lever 11 survives only under the roster's
+**existing** rule. C1 enforces that line.
+
+### The material gap — CC ERROR, reviewer-caught before any read
+
+**CC framed the deciding question as *"is the third home in the floor?"* — floor-DERIVED. The
+roster's defense is floor-CONSENSUS. They are not the same thing.** A placement in 1 of 10 draws is
+in the floor and is consensus by no reading; reading it back is **minority-shopping in the roster's
+clothes — hand-carving one layer removed.** CC's question was under-specified in the direction of
+convenience. **This is why the criterion is pre-registered rather than written after the data.**
+
+### THE CRITERION — banked BEFORE the floor is opened (red-first analog for an evidence read)
+
+*A criterion written after seeing the floor is no criterion.* All four legs must hold.
+
+- **C1 — COUNT: modal per-draw sense count ≥ 3.** The roster class fixes count as *"the modal
+  per-draw sense count"* (`draw_hints.py:20`) — not CC's to re-pick, since re-picking it **is lever
+  12**. Modal count 2 ⇒ no legal roster off this floor carries a third group, whatever any minority
+  draw shows. **GENUINELY UNRESOLVED:** G236's roster carries `"count": 2` (`:149`) but its
+  provenance says ***"modal homes"* and NEVER *"modal count"*** (`:157`) — unlike G1390 (*"+ modal
+  count; count-anchored"*, `:75`) and G227 (*"+ modal count; membership-anchored"*, `:127`). **G236
+  is the one roster of three that does not record its count as modal.** No byte CC has read
+  establishes that 2 is this floor's modal count.
+- **The erasure case C1 exists to catch:** if a substantial share of draws produced a 3-sense
+  structure with a coherent third home, and the modal COUNT collapsed to 2, that home was **rounded
+  away by the count collapse, not outvoted per verse.** That is the ONLY route by which the third
+  home is floor-consensus yet absent from the roster.
+- **C2 — SHARED HOME.** Non-group-1 placements must converge on ONE home. Homes come from the
+  floor's *"per-verse company"* (`:20-21`); **scatter has no company, so it cannot make a home** —
+  five verses in five idiosyncratic homes is noise, not an unread consensus.
+- **C3 — STRENGTH: ≥5/10 per verse**, from the machinery's OWN named bands, not convenience:
+  **~2/10** = *"poles blur ~2/10 even under clean anchors"* (`:65`) = the noise band ·
+  **5/5** = *"floor 5/5 true seam"* (`:155`, G236's own seam) = the named genuine-split line ·
+  **7-8/10** = what *"the floor homes X"* means (`:166`, `:123`). **The number is fixed before the
+  data and does not move afterward.**
+- **C4 — PER-VERSE, not the set** (`:20-21`). A set-level test lets a strong verse drag a weak one
+  across = hand-carving. **3 of 5 passing ⇒ only 3 move; the other 2 stay parked as a named gap.**
+  Part 1 proved sense 1 coheres once the misfiles leave; it never proved the 5 travel together.
+
+**PREDICTED BEFORE THE READ: C1 probably kills it.** `"count": 2` suggests modal 2, which closes the
+only route. Not proven — hence the read, rather than settling it by assumption in either direction.
+
+### Both branches bankable
+
+- **Criterion met** ⇒ roster revision is floor-consensus, legal under the existing rule, prompt
+  untouched, floor untouched. **ONE ship draw.** Part 3's red-first fixture follows.
+- **Criterion NOT met** ⇒ **the mechanism does not exist at current floor evidence.** G236 stays
+  parked, and **the open question is ANSWERED** — the standing gate on every G236 spend closes.
+  **A refusal grounded in the floor's own bytes is a finding, not a failure.**
+
+### The deciding read — reviewer-APPROVED, gated to JP
+
+`agreement_G236_v9_20260712-165959.json` (named in the roster; **PA-only, not in the repo** — CC
+confirmed by search). **CC HAS NOT READ IT. No claim is made about its contents.** Cost **ZERO** —
+`--from-json` re-renders a saved run free, no model call (`lexica_agreement.py:738`). Gate order:
+**(a) this note lands → (b) command drafted paste-ready for JP.** JP runs it; the command gate is
+his, not the reviewer's. Read order: **modal count (C1) → shared home (C2) → per-verse strength
+(C3/C4).**
+
+### Citations — VERIFIED BY CC THIS SESSION, on CC's own repo reads
+
+*Recorded as "verified by CC" so a future session knows whose eyes* (reviewer flag, no action
+required: repo reads are CC's job; the receipt rule governs receipts, not evidence). Every line
+opened and read, none recalled.
+
+| Citation | Verdict |
+|---|---|
+| `lexica_agreement.py:733` | `--runs` default 10 — **confirmed verbatim** |
+| `lexica_agreement.py:369` | V9 = coverage + verbatim quotes, **no sense-inventory language** — confirmed, handoff byte-true |
+| `draw_hints.py:15-26` | **FALSIFIES** the roster ban |
+| `draw_hints.py:157` vs `:75`/`:127` | G236 says *"modal homes"*, never *"modal count"* — **the C1 gap** |
+| `build_lexica_def.py:511-539, 594-597, 3125, 3190` | roster rides the user message, anchors the **ship** draw — **FALSIFIES** the pricing |
+| `build_lexica_def.py:1779` | repair forbids structure/headline change — **repair structurally barred** |
+
+**STATE: ZERO model spend. ZERO code changed. Scoreboard UNCHANGED `3/10ʰ · 7/15`. A DESIGN PASS IS
+NOT A SHIP.** V9 frozen, untouched. Roster and floor untouched. **SPEND BOARD: still NO well-defined
+spend** — the one standing lever is gated behind a FREE read that may kill it. **OPENS = the free
+G236 floor read (approved, JP-gated) · KNOWN-set #71 ticket (`test_v11_probes.py:480`) · G162
+preamble-leak detector ticket · prose-economy · G162 redraw (verdict AGAINST, JP's gamble call).**
+**LESSON CANDIDATE flagged, not written (scope):** *floor-DERIVED ≠ floor-CONSENSUS* — the shape of
+lever 12 and of CC's caught error; worth an ENGINE_LESSONS number on JP's or the reviewer's call.

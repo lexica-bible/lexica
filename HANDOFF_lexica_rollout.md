@@ -16,17 +16,55 @@
 > clearance. (CC error logged too: called Est 2:6 a "recurrence" — inferred from prose, the draw history
 > says the defects wander.)
 > **G236 PART 2 — MECHANISM UNDEFINED; THIS IS NOW THE GATE ON EVERY G236 SPEND.** Pitched as "a repair,
-> not a draw". It is neither. **A floor is TEN MODEL DRAWS VOTING** (`lexica_agreement.py:733`, `--runs`
-> default 10 — the rig exists because *"the residual wobble is the MEDIUM, not a tuning bug"*), so it is
-> ~10× a redraw, the board's most expensive item. **And re-running it REPRODUCES the misfile:** V9 adds
-> only coverage + quote discipline (`lexica_agreement.py:369`) and does NOT dictate the sense inventory —
-> the model derives senses from the verses, it called Ezr 6:11 substitution, ~10 draws agreed, and THAT
-> VOTE IS THE FLOOR. Same prompt + same verses ⇒ same vote. **Every mechanism that could move the vote is
-> blocked:** prompt change ⇒ V9 FROZEN, prompt of record for the JP-ruled-FINAL 7/15 · hint the floor ⇒
-> floors draw **UNHINTED** by design · hand-carve the roster ⇒ **BANNED** (path-(c)). **THE CONFLATION:
-> a ruled fix DIRECTION (narrow third home) is not a fix MECHANISM.** **REAL NEXT STEP = a ZERO-SPEND
-> design pass: how do you move a floor when the floor is a vote, the prompt is frozen, and the roster
-> cannot be touched? That question is OPEN.**
+> not a draw". It is neither — **and "not a repair" is now VERIFIED, not assumed:** the V10 repair
+> instruction reads *"WITHOUT changing the sense structure or the sense headlines"*
+> (`build_lexica_def.py:1779`), so repair is STRUCTURALLY BARRED from creating a third home.
+> **A floor is TEN MODEL DRAWS VOTING** (`lexica_agreement.py:733`, `--runs` default 10 — the rig exists
+> because *"the residual wobble is the MEDIUM, not a tuning bug"*). **Re-running the floor REPRODUCES the
+> misfile:** V9 adds only coverage + quote discipline (`lexica_agreement.py:369`) and does NOT dictate the
+> sense inventory — the model derives senses from the verses. Same prompt + same verses ⇒ same vote.
+> **THAT REASONING STANDS and it is what kills a floor re-run.**
+>
+> **⚠ TWO LINES OF THIS BOARD WERE FALSIFIED BY THEIR OWN CITED FILES (CC read, 2026-07-14; corrected in
+> place). Neither rescues a spend; both change what part 2 IS.**
+> **(a) "~10× a redraw, the board's most expensive item" — WRONG, priced off the wrong mechanism.** That
+> prices a FLOOR RE-RUN. The surviving lever (roster revision) anchors the **SHIP draw**
+> (`build_lexica_def.py:3125`) and never re-runs the floor ⇒ **ONE draw, not ten.**
+> **(b) "hand-carve the roster ⇒ BANNED (path-(c))" — an INVERSION of the rule.** `draw_hints.py:15-26`:
+> the hand-carve ban *"governs hints/jobs ONLY"*; a roster **IS** allowed to fix how many senses and which
+> verses group, *"because it is not hand-invented — it is the floor's OWN repeated-review consensus"*. And
+> a roster rides the **user message**, *"frozen V9 prompt untouched"* (`:511-517`) — so it clears the
+> frozen-prompt constraint too, and "floors draw UNHINTED" never bites it.
+> **(c) UNVERIFIED CLAIM, flagged not corrected:** the old text said *"it called Ezr 6:11 substitution,
+> ~10 draws agreed"*. **NOBODY HAS READ THIS FLOOR.** That is a promissory note about
+> `agreement_G236_v9_20260712-165959.json` (PA-only), and it happens to pre-answer the strength test the
+> criterion now sets. Do NOT carry it forward as fact.
+>
+> **STILL BLOCKED (unchanged):** prompt change ⇒ V9 FROZEN, prompt of record for the JP-ruled-FINAL 7/15 ·
+> hint the floor ⇒ floors draw **UNHINTED** · stable-jobs hint ⇒ G236's jobs list is EMPTY · repair ⇒
+> structurally barred (above) · roster `excluded` ⇒ coverage defect vs V9's own "COVERAGE IS TOTAL" ·
+> roster `float` ⇒ moves between EXISTING groups, cannot create a third · re-aggregate the floor under a
+> new counting rule ⇒ **DEAD (lever 12)**: duplicate in form (the roster IS the aggregation output), worse
+> in substance (it re-scores until the floor agrees with the ruled direction, then claims the roster's
+> defense). **THE CONFLATION STANDS: a ruled fix DIRECTION (narrow third home) is not a fix MECHANISM.**
+>
+> **DESIGN PASS DONE (zero spend, doc-only) = `DESIGN_g236_part2_mechanism.md`.** 12 levers enumerated,
+> 11 dead, **1 standing: ROSTER REVISION.** Its legality turns on a distinction CC first got WRONG
+> (reviewer-caught): **floor-DERIVED ≠ floor-CONSENSUS.** A placement in 1 of 10 draws is in the floor and
+> is not consensus — reading it back is minority-shopping in the roster's clothes. **CRITERION
+> PRE-REGISTERED BEFORE THE READ** (red-first analog; a criterion written after the data is no criterion):
+> **C1** modal per-draw sense count ≥3 — and G236's roster provenance says *"modal homes"*, **never
+> *"modal count"*** (`draw_hints.py:157`), unlike G1390 (`:75`) and G227 (`:127`), so whether `count: 2` is
+> this floor's modal count is **NOT ESTABLISHED BY ANY BYTE READ** · **C2** the non-group-1 placements must
+> share ONE home (scatter has no *"company"*, so it cannot make a home) · **C3** ≥5/10 per verse, from the
+> machinery's OWN bands (~2/10 = *"poles blur"* noise `:65` · 5/5 = *"true seam"* `:155` · 7-8/10 = homed
+> `:166`/`:123`) — **the number does not move after the data** · **C4** per-verse, not the set.
+> **PREDICTED BEFORE THE READ: C1 probably kills it.** **BOTH BRANCHES BANKABLE** — criterion met ⇒ legal
+> roster revision, one ship draw; criterion NOT met ⇒ **the mechanism does not exist at current floor
+> evidence, G236 stays parked, and the open question is ANSWERED.**
+> **NEXT = the FREE deciding read** (`--from-json` re-renders a saved run, no model call,
+> `lexica_agreement.py:738`) on `agreement_G236_v9_20260712-165959.json` — **reviewer-APPROVED, sequenced
+> after this note lands; JP runs it (command gate is his).**
 > **ZERO-SPEND SHELF (all still good, nothing lost):** G236 part-2 MECHANISM design (the new gate) · the
 > KNOWN-set #71 ticket (`test_v11_probes.py:480`, hand-typed guard, predates #71, not a regression) ·
 > prose-economy (JP's inquiry) · G162's preamble-leak boilerplate check (its own kill record says that
