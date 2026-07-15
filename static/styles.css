@@ -5432,7 +5432,14 @@ button.study-verse-ref { border: none; }
 .news-presets { display: flex; gap: 4px; }
 .news-presets button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--rule-2);
   border-radius: var(--radius); background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; }
-.news-presets button:hover { border-color: var(--accent); color: var(--accent); }
+/* Hover is a POINTER affordance. On a touch screen :hover latches onto whatever you last
+   touched, so dragging a scrolling list paints every row you held on the way past — JP saw it
+   on the Threads sheet, 2026-07-15, and it's the same defect on every list below (the chips
+   scroll too, inside the Options sheet). Gating on (hover: hover) is the shared fix: desktop
+   is untouched, touch simply has no hover state to strand. */
+@media (hover: hover) {
+  .news-presets button:hover { border-color: var(--accent); color: var(--accent); }
+}
 .news-presets button.on { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 .news-seg { display: flex; gap: 4px; }
 .news-thread-sel { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--rule-2);
@@ -5484,7 +5491,7 @@ button.study-verse-ref { border: none; }
 .news-actions .news-btn { padding: 4px 12px; }
 .news-btn { font: inherit; font-size: 12.5px; padding: 5px 12px; border: 1px solid var(--rule-2);
   border-radius: var(--radius); background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; white-space: nowrap; }
-.news-btn:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) { .news-btn:hover { border-color: var(--accent); color: var(--accent); } }
 .news-btn:disabled { opacity: 0.5; cursor: default; }
 /* Inline spinner for the Copy shortlist button while it resolves wrapper URLs. */
 .news-spin { display: inline-block; width: 11px; height: 11px; vertical-align: -1px;
@@ -5516,7 +5523,9 @@ button.study-verse-ref { border: none; }
 .news-rail-threads { display: flex; flex-direction: column; gap: 2px; }
 .news-thread-item { font: inherit; font-size: 13px; text-align: left; padding: 6px 9px;
   border-radius: var(--radius); background: none; color: var(--ink-2); cursor: pointer; line-height: 1.3; }
-.news-thread-item:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg)); color: var(--accent); }
+@media (hover: hover) {
+  .news-thread-item:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg)); color: var(--accent); }
+}
 .news-thread-item.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 .news-rail-asline { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule);
   font-size: 12px; color: var(--muted); }
@@ -5569,7 +5578,7 @@ button.study-verse-ref { border: none; }
 .news-copy-item { font: inherit; font-size: 13px; text-align: left; padding: 8px 10px;
   border: none; border-radius: var(--radius); background: none; color: var(--ink); cursor: pointer;
   white-space: nowrap; }
-.news-copy-item:hover { background: var(--accent-soft); color: var(--accent); }
+@media (hover: hover) { .news-copy-item:hover { background: var(--accent-soft); color: var(--accent); } }
 /* Refresh — icon button, tooltip only. Spins while a pull is in flight. */
 .news-bar-icon { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border: 1px solid var(--rule-2); border-radius: var(--radius);
@@ -5612,6 +5621,10 @@ button.study-verse-ref { border: none; }
   background: color-mix(in oklab, var(--accent) 70%, var(--bg)); }
 .news-shape-n { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-2);
   min-width: 18px; text-align: right; }
+/* The clickable "biggest stories" row is a real button — strip the button chrome so it stays
+   the same quiet text row it was; the hover wash is the whole affordance. */
+.news-shape-crow--click { width: 100%; font: inherit; text-align: left; background: none;
+  border-left: 0; border-right: 0; border-top: 0; cursor: pointer; }
 .news-shape-crow { display: flex; align-items: baseline; gap: 8px; padding: 5px 0;
   border-bottom: 1px solid var(--rule); }
 .news-shape-crow:last-child { border-bottom: none; }
@@ -5619,7 +5632,10 @@ button.study-verse-ref { border: none; }
 .news-shape-cn { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 
 /* SELECTED state: a feed card is clickable to inspect its "why it scored" in the rail. */
-.news-story--click:hover { background: color-mix(in oklab, var(--accent) 9%, transparent); }
+@media (hover: hover) {
+  .news-story--click:hover { background: color-mix(in oklab, var(--accent) 9%, transparent); }
+  .news-shape-crow--click:hover .news-shape-cev { color: var(--accent); }
+}
 .news-story.on { background: color-mix(in oklab, var(--accent) 12%, transparent); }
 
 /* the why-rail (SELECTED) reuses .news-shape's frame; these are its own bits. The band
@@ -5717,13 +5733,16 @@ button.study-verse-ref { border: none; }
   height: var(--bar-h, 48px); padding-bottom: env(safe-area-inset-bottom);
   display: flex; background: var(--paper); border-top: 1px solid var(--rule); z-index: 30;
 }
+/* Icon-only (the caption moved to aria-label/title). The BUTTON is the tap target — full bar
+   height, equal share of the width — so the glyph loses its caption without the hit area
+   losing anything. Bar height stays --bar-h: it's the app's own bar rhythm (.mobile-tabs,
+   the Library cockpit) and the sheets' max-height maths keys off it. */
 .zbar-btn {
-  flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; background: none; border: 0; color: var(--ink-3); cursor: pointer;
+  flex: 1 1 0; display: flex; align-items: center; justify-content: center;
+  background: none; border: 0; color: var(--ink-3); cursor: pointer;
 }
 .zbar-btn.on { color: var(--accent); }
 .zbar-btn:disabled { color: var(--ink-4); opacity: 0.5; }
-.zbar-lbl { font-size: 10px; letter-spacing: 0.02em; }
 .zsheet-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; }
 .zsheet {
   position: fixed; left: 0; right: 0; bottom: 0; max-height: 82dvh;

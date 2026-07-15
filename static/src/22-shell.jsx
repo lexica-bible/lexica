@@ -91,6 +91,10 @@ function ZoneSheet({ title, onClose, children, bare }) {
 
 // Mobile bottom toolbar — one equal-width slot per collapsed zone (rail / inspect / etc.).
 // `tools` = [{ key, label, icon, on, onTap }]; tapping opens that zone as a sheet over center.
+// ICON-ONLY (JP, 2026-07-15): the label is dropped from the FACE, not from the control — it
+// still rides `aria-label` + `title`, so screen readers and long-press keep it. The button is
+// the tap target (`flex: 1` across the bar's full height), so removing the caption can't
+// shrink the hit area: it's the button that's padded, never the glyph.
 function MobileBar({ tools }) {
   return (
     <nav className="zbar" aria-label="Panels">
@@ -98,7 +102,6 @@ function MobileBar({ tools }) {
         <button key={t.key} className={"zbar-btn" + (t.on ? " on" : "")} onClick={t.onTap}
                 disabled={t.disabled} aria-label={t.label} title={t.label}>
           {t.icon}
-          <span className="zbar-lbl">{t.label}</span>
         </button>
       ))}
     </nav>

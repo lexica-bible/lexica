@@ -359,7 +359,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
 // old per-card rationale (which just echoed the card). Shows by default, no selection.
 // The BURIED count is the hero: the stories the scorer looked at and held back — the one
 // thing here you can't get by scrolling the feed.
-function FeedShape({ shape }) {
+function FeedShape({ shape, onPick }) {
   if (!shape) return <div className="news-shape news-shape-loading">Reading the feed…</div>;
   const threads = (shape.threads || []).filter(t => t.surfaced > 0).slice(0, 6);
   const maxSurf = Math.max(1, ...threads.map(t => t.surfaced));
@@ -397,11 +397,16 @@ function FeedShape({ shape }) {
         {clusters.length > 0 && (
           <div className="news-shape-sec">
             <div className="news-shape-h">Biggest stories</div>
+            {/* A real <button> (not a div+onClick) so it's keyboard- and screen-reader-reachable;
+                it's styled to stay the same quiet row — the hover wash is the only affordance,
+                per the no-decorative-containers rule. */}
             {clusters.map((c, i) => (
-              <div key={i} className="news-shape-crow">
+              <button key={i} className="news-shape-crow news-shape-crow--click"
+                      onClick={() => onPick && onPick(c.id)}
+                      title={"Why it surfaced: " + c.event}>
                 <span className="news-shape-cev">{c.event}</span>
                 <span className="news-shape-cn">{c.n}</span>
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -638,7 +643,11 @@ function NewsView({ isMobile }) {
         const cur = byT[k] || { s: 0, sc: 0 };
         cur.s += hi ? 1 : 0; cur.sc++; byT[k] = cur;
       }
-      events.push({ event: c.event || c.title, n: mem.length,
+      // `id` carries the cluster back to its card so the row can be opened (see
+      // openShapeCluster). The readout is built from `cards`, NOT `windowed` — deliberately,
+      // since the buried count is the whole point — so an id here can name a card the feed's
+      // own floor/thread filter is hiding. That's handled at the click, not by trimming here.
+      events.push({ id: c.ids[0], event: c.event || c.title, n: mem.length,
                     hi: mem.reduce((mx, m) => Math.max(mx, m.s), 0) });
     }
     const threads = Object.keys(byT).map(t => ({
@@ -788,10 +797,18 @@ function NewsView({ isMobile }) {
               onClick={() => setWindowKey("max")}>Max</button>
     </div>
   );
+  // Score chips REUSE the date presets' style (`.news-presets`), they don't imitate it: same
+  // base chip, same `.on` accent fill, one rule for both. They were `.seg-b`, whose selected
+  // state is a WHITE pill (`--ctl-on`) — so on the Options sheet the selected score read white
+  // while the 7d/14d chip right above it read accent, two different answers to "this one is
+  // picked" in one sheet (JP, 2026-07-15). `.seg-b` is shared with Notes/Study/Library/the view
+  // tabs, so its white pill is NOT ours to restyle — the fix is that score was wearing the
+  // wrong class, not that the class is wrong. Mobile-only: the desktop strip uses `scoreSel`,
+  // a plain dropdown, so it never had this divergence (checked).
   const scoreSeg = (
-    <div className="news-seg news-score-seg">
+    <div className="news-presets news-score-seg">
       {scoreOpts.map(([v, lbl]) => (
-        <button key={v} className={"seg-b" + (String(minScore || "") === v ? " on" : "")}
+        <button key={v} className={String(minScore || "") === v ? "on" : ""}
                 onClick={() => setMinScore(Number(v || 0))}>{lbl}</button>
       ))}
     </div>
@@ -854,16 +871,6 @@ function NewsView({ isMobile }) {
               onClick={doExport}>{exported ? "Exported ✓" : "Export .txt"}</button>
     </div>
   );
-  const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
-    <>
-      <label className="news-f"><span>Since</span>{dateInput}</label>
-      <label className="news-f"><span>Until</span>{untilInput}</label>
-      {presets}
-      {scoreSeg}
-      {sortSel}
-    </>
-  );
-
   // "+N outside this window" — all-time kept/dismissed minus what's in the current window.
   // Both halves come from /api/news/counts, so it's cheap; only the active view's number
   // is shown (the lists are window-scoped now, so this keeps the all-time set discoverable).
@@ -873,6 +880,21 @@ function NewsView({ isMobile }) {
   // Before this, mobile passed no onSelect at all and the whole why/feed-shape zone was
   // simply unreachable on a phone.
   const pickStory = (s) => { setSelStory(s); if (isMobile) setMSheet("watch"); };
+
+  // "Biggest stories" row -> that story's why-view. The THIRD door into the same room (desktop
+  // fills the rail, mobile opens the Watch sheet — pickStory already routes both).
+  // The filter question, decided on what the data does: the readout counts every in-window
+  // story, ignoring the score floor and the thread filter ON PURPOSE (buried is the point), so
+  // a row here CAN name a card the feed is hiding. Rebuilding it with floor 0 / no thread means
+  // such a row still opens and shows its real why. The alternative — clearing JP's filters to
+  // reveal it — silently rearranges the feed he set up, as a side effect of a click that only
+  // asked to read one story. A row you can see should open; it should not redecorate the room.
+  const openShapeCluster = (id) => {
+    const c = (cards || []).find(x => x.ids && x.ids[0] === id);
+    if (!c) return;
+    const s = _windowCard(c, since, until, 0, "", labels);   // date window only
+    if (s) pickStory(s);
+  };
 
   const keptOutside = Math.max(0, (counts.kept_all || 0) - (counts.kept || 0));
   const dismissedOutside = Math.max(0, (counts.dismissed_all || 0) - (counts.dismissed || 0));
@@ -1008,15 +1030,27 @@ function NewsView({ isMobile }) {
     // the sheet's own depth works whichever door you came through.
     const mWatch = selStory
       ? <NewsWhy story={selStory} onBack={() => setSelStory(null)} />
-      : <FeedShape shape={shape} />;
+      : <FeedShape shape={shape} onPick={openShapeCluster} />;
     const sheet = mSheet === "threads" ? mThreads
       : mSheet === "options" ? mOptions
       : mSheet === "watch" ? mWatch
       : null;
     const flip = (k) => () => setMSheet(m => (m === k ? null : k));
+    // The Watch BUTTON always means "today's watch" — it drops any card selection on the way
+    // in, so it can't reopen the last card's why-view days later (JP, 2026-07-15). Cleared
+    // HERE at the door rather than when the sheet closes: closing keeps the selection, which
+    // is what leaves the card highlighted in the feed and matches the desktop rail holding its
+    // selection. "‹ Watch" is untouched — it lives inside the sheet and clears the same state.
+    // So: button = readout, card tap = that card's why, back link = readout. Three paths, one
+    // room, no stale door.
+    const openWatch = () => {
+      if (mSheet === "watch") { setMSheet(null); return; }
+      setSelStory(null);
+      setMSheet("watch");
+    };
     const tools = [
       { key: "threads", label: "Threads", icon: <Icon.Hash />, on: mSheet === "threads", onTap: flip("threads") },
-      { key: "watch", label: "Watch", icon: <Icon.Panel />, on: mSheet === "watch", onTap: flip("watch") },
+      { key: "watch", label: "Watch", icon: <Icon.Panel />, on: mSheet === "watch", onTap: openWatch },
       { key: "options", label: "Options", icon: <Icon.Filter />, on: mSheet === "options", onTap: flip("options") },
     ];
     return (
@@ -1154,7 +1188,8 @@ function NewsView({ isMobile }) {
       rail={rail}
       center={<>{topBar}<div className="news-feed">{feedInner}</div></>}
       inspect={<aside className="zinspect">
-        {selStory ? <NewsWhy story={selStory} onBack={() => setSelStory(null)} /> : <FeedShape shape={shape} />}
+        {selStory ? <NewsWhy story={selStory} onBack={() => setSelStory(null)} />
+                  : <FeedShape shape={shape} onPick={openShapeCluster} />}
       </aside>}
     />
   );
