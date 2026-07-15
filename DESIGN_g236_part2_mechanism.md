@@ -166,6 +166,48 @@ Cost: **zero.** `--from-json` re-renders a saved run free, no model call
 The read must answer, in this order: **the modal per-draw sense count** (C1) → **whether the
 non-group-1 placements share a home** (C2) → **the per-verse strength of that home** (C3, C4).
 
+## OUTCOME — THE READ RAN. C1 FAILS. THE MECHANISM DOES NOT EXIST. (2026-07-14)
+
+**JP ran the free read on PA. Zero spend, no model call, no database touched.**
+
+```
+SENSE-COUNT spread: {1:1, 2:8, 3:1}  mean 2.0
+```
+
+**C1 required a modal per-draw sense count ≥3. The modal count is 2, at 8 of 10 draws.** Not
+marginal — decisive. Under the roster class's own rule (*"count = the modal per-draw sense
+count"*, `draw_hints.py:20`), **no legal roster off this floor carries a third group.** Lever 11
+was the only one standing. It is dead.
+
+**C2/C3/C4 NOT EVALUATED — and deliberately so.** The criterion is all-four-must-hold; C1 fails,
+so the question is answered. **The lone 3-sense draw is 1 of 10 — below the ~2/10 *"poles blur"*
+noise band the machinery itself names (`:65`), and far below C3's 5/10.** Even if it carries the
+exact ruled third home, it cannot support a roster. **It was NOT opened.** Opening it to see
+whether it "really" got the senses right is *minority-shopping in the roster's clothes* — the
+precise move the pre-registered criterion exists to refuse. **The criterion predicted this kill
+before the data ("C1 probably kills it") and is not being renegotiated after it.**
+
+**NOT UPGRADED:** the old board's *"it called Ezr 6:11 substitution, ~10 draws agreed"* remains
+**UNVERIFIED**. This read reports the sense COUNT spread, not per-verse PLACEMENT. It points the
+same way; that is not evidence, and the flag stands.
+
+### THE FINDING (this is the deliverable)
+
+**The G236 part-2 mechanism does not exist at current floor evidence.** Not "undefined", not
+"needs more design" — **enumerated to exhaustion and killed on the floor's own bytes.** G236 stays
+**PARKED**. **The standing gate on every G236 spend is CLOSED**: there is no legal route to the
+ruled third home off this floor, so no G236 spend can be pitched as buying one.
+
+**REVIVAL TRIGGER (named, narrow):** this verdict is bound to **this floor's modal count of 2**.
+It revives only if the floor itself is legitimately replaced — i.e. the fed evidence or the engine
+changes for reasons of their own, and a NEW floor lands with a modal count ≥3 that a roster could
+lawfully read. **A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 wearing a fresh
+timestamp — re-scoring until the answer arrives — and is dead on the same reasoning.**
+
+**COST OF THE WHOLE ANSWER: ZERO.** A refusal grounded in the floor's own bytes is a finding, not
+a failure. The board's most expensive item was never the candidate, and the actual candidate cost
+nothing to kill.
+
 ## Citations — verified by CC this session, on CC's own repo reads
 
 Repo reads are CC's job; the receipt rule governs receipts, not evidence. Recorded so a future

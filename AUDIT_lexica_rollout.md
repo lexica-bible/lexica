@@ -7000,3 +7000,81 @@ G236 floor read (approved, JP-gated) · KNOWN-set #71 ticket (`test_v11_probes.p
 preamble-leak detector ticket · prose-economy · G162 redraw (verdict AGAINST, JP's gamble call).**
 **LESSON CANDIDATE flagged, not written (scope):** *floor-DERIVED ≠ floor-CONSENSUS* — the shape of
 lever 12 and of CC's caught error; worth an ENGINE_LESSONS number on JP's or the reviewer's call.
+
+---
+
+## G236 PART 2 — MECHANISM KILLED ON THE FLOOR'S OWN BYTES; THE GATE IS CLOSED (2026-07-14)
+
+**ZERO model spend. ZERO code changed. The read cost nothing** (`--from-json`, no model call, no db
+— it returns before either opens). **The standing gate on every G236 spend is now CLOSED.**
+
+### The read (JP-run on PA, same session, hours after the criterion was banked)
+
+```
+SENSE-COUNT spread: {1:1, 2:8, 3:1}  mean 2.0
+```
+
+**C1 required a modal per-draw sense count ≥3. The modal count is 2, at 8 of 10 draws.** Decisive,
+not marginal. Under the roster class's own rule — *"count = the modal per-draw sense count"*
+(`draw_hints.py:20`) — **no legal roster off this floor can carry a third group.** Lever 11 (roster
+revision) was the ONLY lever standing out of 12. **It is dead.**
+
+**This also settles the C1 gap the criterion named:** G236's provenance said *"modal homes"* and
+never *"modal count"* (`:157`), so whether `count: 2` was this floor's modal count was **not
+established by any byte**. It is now: **it is.** The roster's count was faithful to the floor; the
+provenance line was merely thinner than G1390's and G227's. **No defect in the roster.**
+
+### What was NOT done, and why that is the point
+
+**C2/C3/C4 were NOT evaluated.** All-four-must-hold; C1 failed; the question is answered.
+
+**The lone 3-sense draw was NOT OPENED.** It is **1 of 10** — below the ~2/10 *"poles blur"* noise
+band the machinery itself names (`:65`), and far below C3's 5/10 line. **Even if it carries the
+exact ruled third home, it cannot support a roster.** Opening it to check whether it "really" got
+the senses right is **minority-shopping in the roster's clothes** — hand-carving one layer removed,
+the precise move the pre-registered criterion exists to refuse. **The temptation is recorded here
+because it was real: a single draw agreeing with the ruled direction is the most seductive object
+on this board, and the criterion's whole purpose was to make it unreachable BEFORE anyone knew it
+existed.** **The criterion predicted this kill in writing ("C1 probably kills it") and was not
+renegotiated after the data landed.**
+
+**NOT UPGRADED:** the old board's *"it called Ezr 6:11 substitution, ~10 draws agreed"* stays
+**UNVERIFIED**. That is a per-verse PLACEMENT claim; this read reports the sense COUNT spread. **It
+points the same way. That is not evidence.** The flag stands for a future session.
+
+### THE FINDING
+
+**The G236 part-2 mechanism does not exist at current floor evidence.** Not *undefined*, not
+*needs more design* — **enumerated to exhaustion and killed on the floor's own bytes.** G236 stays
+**PARKED**. **No G236 spend can be pitched as buying the ruled third home: there is no legal route
+to it off this floor.**
+
+**REVIVAL TRIGGER (named, narrow):** bound to **this floor's modal count of 2.** Revives only if
+the floor is legitimately replaced — the fed evidence or the engine changes **for reasons of their
+own** — and a NEW floor lands at modal count ≥3 that a roster could lawfully read. **A new floor
+drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp** (re-scoring until the
+answer arrives) **and is dead on the same reasoning.**
+
+### Why this session ends better than it started
+
+The board opened with *"G236 part 2 = MECHANISM UNDEFINED"* — an open question gating an
+unpriced spend, with two of its own board lines falsified by the files they cited and a third
+(*"~10 draws agreed"*) a promissory note about a floor nobody had read. **It closes with the
+question ANSWERED, the gate CLOSED, the board corrected, and a revival trigger narrow enough that
+the next session cannot re-pitch from prose.** **Total spend: ZERO.** **A refusal grounded in the
+floor's own bytes is a finding, not a failure** — and the answer cost nothing precisely because the
+enumeration ran before the wallet opened.
+
+**METHOD BANKED (the transferable part):** *pre-register the criterion, with its numbers, BEFORE
+the deciding read.* Derive the thresholds from the machinery's OWN named bands (~2/10 blur · 5/5
+seam · 7-8/10 homed), never from what would be convenient, and **state the predicted outcome in
+writing first.** Here it made a one-line read decisive and un-arguable: the kill landed in the
+first line of output, and there was no room left to rationalize the 1/10 draw into a rescue. The
+red-first discipline for gate changes, carried over to an evidence read.
+
+**STATE: ZERO model spend. ZERO code changed. Scoreboard UNCHANGED `3/10ʰ · 7/15`. A FINDING IS NOT
+A SHIP.** V9 frozen and untouched. Roster and floor untouched — **nothing was written to either;
+the floor was only re-rendered from its saved file.** **SPEND BOARD: NO well-defined spend, and now
+one fewer candidate** — G162 redraw (verdict AGAINST, JP's gamble call) is the only spend-shaped
+item left, and its verdict already stands. **ZERO-SPEND SHELF: KNOWN-set #71 ticket
+(`test_v11_probes.py:480`) · G162 preamble-leak detector ticket · prose-economy (JP's inquiry).**

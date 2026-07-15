@@ -15,7 +15,26 @@
 > every machine gate" line.** If JP ever clears it anyway, quote "fresh draws don't cure" beside the
 > clearance. (CC error logged too: called Est 2:6 a "recurrence" — inferred from prose, the draw history
 > says the defects wander.)
-> **G236 PART 2 — MECHANISM UNDEFINED; THIS IS NOW THE GATE ON EVERY G236 SPEND.** Pitched as "a repair,
+> **G236 PART 2 — ANSWERED 2026-07-14: THE MECHANISM DOES NOT EXIST AT CURRENT FLOOR EVIDENCE. THE GATE
+> IS CLOSED. DO NOT PITCH A G236 SPEND.** Enumerated to exhaustion (12 levers, 11 dead), the one standing
+> lever (ROSTER REVISION) killed by the floor's OWN bytes on a criterion pre-registered BEFORE the read.
+> **THE READ (JP-run, PA, ZERO spend, no model call, no db): `SENSE-COUNT spread: {1:1, 2:8, 3:1} mean
+> 2.0`.** C1 required a modal per-draw sense count **≥3**; the modal count is **2, at 8 of 10 draws** —
+> decisive, not marginal. Under the roster class's own rule (*"count = the modal per-draw sense count"*,
+> `draw_hints.py:20`) **no legal roster off this floor carries a third group.** **C2/C3/C4 NOT EVALUATED —
+> deliberately: all-four-must-hold, C1 failed, the question is answered.** **The lone 3-sense draw is 1/10
+> — BELOW the ~2/10 *"poles blur"* noise band (`:65`) and far below C3's 5/10. IT WAS NOT OPENED**; opening
+> it to see whether it "really" got the senses right is minority-shopping in the roster's clothes, the
+> exact move the criterion exists to refuse. **The criterion predicted the kill before the data and was
+> not renegotiated after it.** **REVIVAL TRIGGER (narrow):** bound to THIS floor's modal count of 2 —
+> revives only if the floor is legitimately replaced for reasons of its own and a NEW floor lands with a
+> modal count ≥3. **A new floor drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp
+> and is dead on the same reasoning.** **STILL UNVERIFIED, not upgraded:** the old *"~10 draws agreed"* on
+> Ezr 6:11 is a PLACEMENT claim; this read reports COUNT. It points the same way — that is not evidence.
+> **COST OF THE ENTIRE ANSWER: ZERO.** Full record: `DESIGN_g236_part2_mechanism.md` + AUDIT "G236 PART 2
+> — MECHANISM KILLED ON THE FLOOR'S OWN BYTES". The history that produced this verdict follows. ▼
+>
+> **G236 PART 2 (historical — the state this REPLACES).** Pitched as "a repair,
 > not a draw". It is neither — **and "not a repair" is now VERIFIED, not assumed:** the V10 repair
 > instruction reads *"WITHOUT changing the sense structure or the sense headlines"*
 > (`build_lexica_def.py:1779`), so repair is STRUCTURALLY BARRED from creating a third home.
@@ -62,9 +81,8 @@
 > **PREDICTED BEFORE THE READ: C1 probably kills it.** **BOTH BRANCHES BANKABLE** — criterion met ⇒ legal
 > roster revision, one ship draw; criterion NOT met ⇒ **the mechanism does not exist at current floor
 > evidence, G236 stays parked, and the open question is ANSWERED.**
-> **NEXT = the FREE deciding read** (`--from-json` re-renders a saved run, no model call,
-> `lexica_agreement.py:738`) on `agreement_G236_v9_20260712-165959.json` — **reviewer-APPROVED, sequenced
-> after this note lands; JP runs it (command gate is his).**
+> **THE FREE DECIDING READ RAN (JP, PA, 2026-07-14) AND KILLED IT — see the ANSWERED block at the top of
+> this entry. The mechanism does not exist; the gate is closed; G236 stays PARKED.**
 > **ZERO-SPEND SHELF (all still good, nothing lost):** G236 part-2 MECHANISM design (the new gate) · the
 > KNOWN-set #71 ticket (`test_v11_probes.py:480`, hand-typed guard, predates #71, not a regression) ·
 > prose-economy (JP's inquiry) · G162's preamble-leak boilerplate check (its own kill record says that
