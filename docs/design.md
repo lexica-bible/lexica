@@ -32,6 +32,16 @@ recolors via `--row-accent` on its container. Surfaces reference the system;
 no local copies. (Local copies are how the card pattern drifted across six
 surfaces in the first place.)
 
+**The last card retired 2026-07-15 (`63b550e`): the journal page list.** Every
+repeating row in the app is a `.listrow` now. The tell that one survived was a
+sibling mismatch — the note index beside it had been a `.listrow` since the shell
+landed, so two lists of the same KIND sat in one rail looking like different
+species. **When adding a list, check what its siblings are before styling it**;
+and when flattening one, inventory what the card carries first — if it holds an
+affordance `.listrow` has no slot for, that's a real question, not a flatten.
+(The journal row turned out to be a click target round three stacked text lines:
+nothing `.listrow` lacked, so it just joined.)
+
 ### 2. References are text
 Strong's numbers, verse references, and translation tags render as bare text:
 mono or small caps, muted color, no background, no border. The typeface and

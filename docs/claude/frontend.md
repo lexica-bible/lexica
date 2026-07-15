@@ -92,6 +92,32 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   regression, but the shared chapter fixture having grown to Gen 1's real 31 verses, making the
   page tall enough for a scrollbar. Identical on BOTH bundles. A number from a previous session is
   a memory, not a baseline: re-derive it from HEAD at the same viewport and fixtures.
+- **⚠ `?bundle=head` IS JS-ONLY, BY CONSTRUCTION — it CANNOT baseline a CSS change.** It serves
+  `git show HEAD:static/app.js`; `styles.css` always comes live off disk. So on a CSS edit the mix
+  run is HEAD's code against YOUR stylesheet — neither before nor after. Treat it as diagnostic
+  only. **For CSS, the baseline of record is the STASH ROUND-TRIP**, in the same session, same
+  browser, same fixtures: back the files up → `git stash push -u` → `npm run build` (so app.js on
+  disk is HEAD's too) → measure → `git stash pop` → rebuild → **byte-check the restore against the
+  backup**. Anything else is comparing against a memory.
+- **"Stable twice" is NOT "true" — a stability check can pass on a transient.** The Notes frame
+  reads 1388 or 1400 depending on when you look (a scrollbar during load), and BOTH values survived
+  a settle-until-unchanged probe and a double-read six seconds apart, in different runs. Two
+  "stable" readings that disagree mean the probe is measuring the weather. **The only baseline of
+  record is HEAD measured by the IDENTICAL method in the SAME session** — that is what proved 1400
+  is the truth and every 1388 was the artifact. This is the settle lesson's final form; the earlier
+  two (wait before reading; validate the baseline) are subsumed by it.
+- **Settle on the DRIVER of the dimension, not on the surface you're reading.** The probe that
+  produced the phantom waited for the Notes rail — while the LIBRARY, mounted alongside, was still
+  loading and driving the page height that decides the scrollbar that decides the width.
+- **A fix scoped to a desktop container does not reach the phone.** The Notes row clamp went on
+  `.notes-rail-scroll` (desktop-only); the same list renders in the mobile sheet, where rows stayed
+  107px. Measured per surface, not inferred from the desktop pass. Put the rule on the ROW.
+- **OPEN VERIFICATION — `.filters-sep` promotion (2026-07-15).** The rule was promoted out of its
+  `.ws` scope so Notes could reuse it. Proven inert by exhaustive search (one rule for that class,
+  no competitor, so the specificity drop has nothing to lose to) — but NOT measured, because Word
+  study only renders its divider once a word is loaded and the harness has no lexicon fixture.
+  **Close it in the next session that has a word loaded: measure Word study's rendered divider
+  byte-identical (1×14, `--rule-2`).** Logged as reasoned-not-measured on purpose.
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -184,6 +210,47 @@ Both decisions are now pure in **`static/src/34-notes-logic.jsx`**, locked by
 - **A label is a promise.** The old anchor row wore the range label on a single rendered verse.
   Now the band carries the range and each anchor row carries its own ref. A label that says more
   than the panel renders is a bug even when nothing crashes.
+
+## WORD STUDY IS THE VISUAL REFERENCE SURFACE
+When a visual question is ambiguous, the tiebreaker is **what does Word study do** — the way
+Library is the canonical *reader* (docs/design.md), Word study is the canonical *workspace*. Six
+rulings now converge on it, so this is a standing rule, not a coincidence:
+
+| Ruling | The reference |
+|---|---|
+| Landing rhythm | title → search → helper → samples; an empty state names the ACTION that fills it |
+| Empty-state hero mark | `width="30" height="30"` **at the call site** — never sized by CSS |
+| Verse-list formatting | the **UNOVERRIDDEN base**: normal weight, inherited ink, italics recede |
+| Strip grouping | groups separated by `.filters-sep` (1×14, `--rule-2`) |
+| Empty-state band | a truly-empty inspect drops its band; the shared cross-line is the one divider |
+| Guardrail | **Word study byte-identical** is the hard gate on any cross-surface pass |
+
+- **It is the reference BECAUSE it is unmodified.** The verse-list ruling is the sharpest case:
+  Word study has no `.corpus-text` override at all, so "converge on Word study" resolves to
+  "delete the other surface's overrides" — the smallest possible fix, not a new rule. Check
+  whether the reference is plain before inventing something to copy.
+- **A future divergence from it needs a LOGGED reason** in the CSS at the divergence, naming what
+  meaning the difference carries (Notes's anchor/near emphasis is a legitimate one: the panel has
+  a distinction Word study's flat list doesn't).
+- **Never "also converge" the reference.** If a pass moves Word study's pixels, the pass is wrong
+  — that's how a reference stops being one.
+
+### Italics are translator-supplied words — they never out-shout the scripture (2026-07-15, `63b550e`)
+In ABP an italic word is the TRANSLATOR's, not the text's — the least original thing on the page,
+so it must always be the quietest. `.lib-prose-italic` (`color: var(--ink-2); font-style: italic`)
+is the ONE rule that marks them, everywhere: the KJV/BSB branches in `50-corpus-results.jsx` and
+the ABP prose path in `59c-library-render.jsx` all use it. The Notes inspect broke it **both ways**
+at once, and both are traps for the next surface that styles verse text:
+- **Inheritance:** `.note-insp-anchor .corpus-text { font-weight: 600 }` — the italic span
+  INHERITED the weight and rendered bold-italic. A weight on a verse container hits the italics too.
+- **Direct-beats-inherited:** `.note-insp-near .corpus-text { color: var(--ink-4) }` dims the row,
+  but `.lib-prose-italic` sets `--ink-2` DIRECTLY on the span, so it beat the inherited dim and the
+  supplied word rendered **darker than the real scripture beside it** — the exact inversion of what
+  italics mean. **Any rule that dims verse text must say what happens to the italics inside it**,
+  because `.lib-prose-italic`'s hard-coded colour only "recedes" from the default ink.
+Fix shape: leave `.lib-prose-italic` alone (the reference depends on it) and scope the correction
+to the diverging surface — `.note-insp-anchor .lib-prose-italic { font-weight: 400 }` +
+`.note-insp-near .lib-prose-italic { color: inherit }`.
 
 **An empty state names the ACTION that fills the room — and the answer can differ by surface.**
 Word study's is the reference ("Search a Greek or Hebrew word… to study it here"). Notes's center

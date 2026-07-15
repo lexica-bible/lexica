@@ -382,14 +382,12 @@ Left to do:
   **DO THIS BEFORE Study's collapse (2026-07-15 ruling):** Study will cite News as its reference
   pattern, and the reference should not be the one instance nobody has verified. It is no longer
   background debt — it's the standing exception to a rule every other consumer now satisfies.
-- **ZoneEmpty marks: size all five at the call site** (chipped 2026-07-15). Word study + Study pass
-  `width="30" height="30"`; Notes (×4) and Ask-corpus (×1) pass the glyph bare, so their empty-state
-  hero mark renders at 14–16px — SMALLER than the same glyph in the bar below it (22px). `.zempty-mark`
-  sets colour + slot only, never size, which is the icon rule working as intended; the call sites are
-  the bug. Left out of the Notes-mobile pass on purpose (shared desktop code on two other tabs, would
-  move desktop pixels); the divergence is logged in `styles.css` above `.zempty-mark` — delete that
-  comment as part of the fix. Needs its own desktop before/after per surface.
-  code: static/src/35-notes.jsx, 52-ask-corpus.jsx
+- **Close the `.filters-sep` open verification** (small, opportunistic — do it in any session that
+  loads a word into Word study). The rule was promoted out of its `.ws` scope 2026-07-15 so Notes's
+  strip could reuse it. Proven inert by exhaustive search (one rule for the class, no competitor), but
+  NOT measured — Word study only draws its divider once a word is loaded, and the harness has no
+  lexicon fixture. Measure it byte-identical (1×14, `--rule-2`) and strike the open-verification note
+  in `docs/claude/frontend.md`. code: static/styles.css (`.filters-sep`)
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,
