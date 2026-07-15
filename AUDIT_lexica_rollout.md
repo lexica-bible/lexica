@@ -7366,3 +7366,56 @@ are matched) before its output was used. **A read that reports LOADING is not a 
 WORKING.** Kin of #76 and the Silent-Fallback Rule.
 **OBSERVED, NOT OPENED (one line, no action):** only 5 of 80 live cards carry any `coverage` text.
 Not investigated, not this ticket.
+
+---
+
+## THROUGHPUT TURN — BATCH OF FIVE RECEIPTED + THE QUEUE — 2026-07-14
+**COURSE CORRECTION (reviewer + JP):** the shelf/sweep work was DEPRIORITIZED — sizing a defect class
+in a pipeline shipping zero definitions is infrastructure about infrastructure. **STANDING RULE now:
+PULL, NOT PUSH — shelf items are worked only when a real card's failure pulls one. A session that
+ships zero definitions is a MISS unless a pulled failure justifies it.** The boilerplate arc is CLOSED
+at report-only + known-positive-proven; the sweep design is BANKED COMPLETE (no rework owed if a pull
+ever re-opens it).
+
+**⚠ ACCEPTANCE-RUN CORRECTION — THE RULING LINE WAS FALSE AND IS WITHDRAWN (FIFTH INSTANCE OF THE
+SHAPE).** The course correction stated *"Run them through the full pipeline. This IS the owed
+acceptance run: finish_rebuild.sh's clean path fires with real steps for the first time."* **IT CANNOT
+AND DOES NOT.** `finish_rebuild.sh` is the **tail of the WORDS-TABLE rebuild** — its own header: *"the
+post-build TAIL of the single-pass words rebuild … Run AFTER: build_words_from_abp.py"* — invoked ONLY
+by `/rebuild-words` (`.claude/commands/rebuild-words.md:60`). `build_lexica_def.py` writes `lexica_def`
+and NEVER calls it. **A definition batch cannot fire it, cannot discharge the acceptance obligation,
+and must NOT be recorded as having done so. THE ACCEPTANCE RUN REMAINS JP'S NEXT REAL `/rebuild-words`
+— STILL OWED, UNCHANGED.** Caught by reading the script; the reviewer withdrew the line on the bytes.
+**FIFTH instance this arc of a ticket's/ruling's own description not surviving contact with the file it
+names** (#71 misframed · two G236 board lines falsified by their own cited files · the HANDOFF
+board-line drift · an AUDIT quote's ellipsis hiding ~100 chars of live text · now the reviewer's own
+ruling). **The reviewer's note stands as a rule on that role too: APPROVAL IS NOT VERIFICATION.**
+
+**BATCH RECEIPTED — 5 fresh words, JP-authorized, `G3464` FIRST as the canary** (≤40 occurrences ⇒
+whole corpus fed ⇒ if the pipeline is broken it fails at minimum cost):
+`G3464` μύρον 40 · `G2787` κιβωτός 243 · `G2374` θύρα 235 · `G5088` τίκτω 250 · `G3793` ὄχλος 246.
+All verified UNBUILT (absent from `lexica_def`), proper-noun rows excluded, clear of the contested
+register, the hint roster, and the parked four. Frequency rationale: four at 235–250 (enough evidence
+for a real range, far below the 800+ monsters) + one ≤40 to exercise the full-evidence path cheaply.
+
+**SELECTION CRITERIA — THE REJECTIONS ARE THE VALUABLE HALF (reviewer-ruled: these govern FUTURE
+batches, not just this one). A throughput word is disqualified by any of:**
+- **PARKED-FAMILY SIBLING** — `G225` ἀλήθεια rejected: sibling of `G227` ἀληθής, PARKED as a research
+  problem. The family, not the number, carries the hard case.
+- **FORK-ADJACENT / ALIAS-MERGED** — `G37` ἁγιάζω rejected: ABP tags the whole holy family on `G39`
+  (already built); a card here inherits the alias seam.
+- **BATTLEGROUND WORD** — `G264` ἁμαρτάνω, `G2920` κρίσις, `G2917` κρίμα, `G4352` προσκυνέω rejected:
+  sin/judgment/worship are the plain-meaning-vs-tradition fights. Real work, NOT throughput work.
+- **SENSE-BOUNDARY OVERLAP WITH A BUILT CARD** — `G991` βλέπω rejected: overlaps the built perception
+  verbs `G1492`/`G2657`; the draw would litigate boundaries against shipped cards.
+
+**QUEUE (set now so no shelf work is invented between steps):** (1) BATCH ships — success = cards live
+on lexica.bible; (2) FORMAT UNIFICATION **design pass, zero spend** — the ~80 older cards drifted in
+formatting across build eras; enumerate the drift across all ~85, define ONE target format **anchored
+on the fresh batch's cards** (the pipeline's current native output — unifying to a format the next
+build drifts from would be wasted), post for review before touching anything. Reader-facing ⇒ outranks
+the shelf; (3) UNIFICATION execution, gated normally. **BACKLOG** (prose-economy · title
+known-positive · the banked sweep · coverage-field sparsity) stays under the PULL rule throughout.
+
+**STATE at this entry: ZERO model spend so far. Scoreboard `3/10ʰ · 7/15` — UNCHANGED until a card
+ships.**

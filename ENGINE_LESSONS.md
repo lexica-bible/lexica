@@ -1203,3 +1203,22 @@ both drifting from the doc.
     and `feedback_audit_tools_must_fail`. *(audit: G162 PREAMBLE-LEAK TICKET — PRE-CHANGE REVIEW,
     RULED BUILD, 2026-07-14; banked at the green receipt, SELF-CORRECTED at the known-positive
     landing the same day)*
+
+77. **A read that reports LOADING is not a read that reports WORKING — make the tool prove it BIT.**
+    A throwaway candidate read printed `(function-word list loaded: 171 entries)` and then filtered
+    NOTHING: `cache_funcwords.json` stores BARE numbers (`'1032'`), the comparison used G-prefixed
+    keys (`'G1032'`), every check missed silently. **The reassuring line was TRUE and USELESS** — the
+    list really had loaded; loading was never the question. It was caught only because the output was
+    absurd on its face (καί, ὁ, αὐτός ranked as "content words"). Had the mis-key hit a subtler
+    filter, the list would have looked plausible and been used. → (i) **a success line must assert the
+    thing you actually depend on, not a step on the way to it** — the fix was not a better pattern but
+    a `FILTER PROOF` line asserting that known members ARE matched (`[n in fw for n in ('3588',
+    '2532', ...)]` must be all-True) BEFORE the output is used; (ii) **key-shape mismatches fail
+    SILENTLY and symmetrically** — a set lookup that never matches raises nothing, returns nothing,
+    and reads as "no exclusions needed"; whenever two id spaces meet (G-prefixed vs bare — the same
+    seam as the `strongs_base` invariant), assert an overlap, never assume one; (iii) **throwaway code
+    gets the same rule as shipped code** — this fell inside the very session hunting silent fallbacks,
+    which is exactly when a scratch read feels too small to verify; (iv) generalization of #69(i) from
+    reports to TOOLS: silence reads as covered, and so does a green-looking load. Kin of
+    `project_silent_fallback_rule` and `feedback_audit_tools_must_fail`. *(audit: CLOSING-SUMMARY
+    CLASS — SIZED ON LIVE CARDS, 2026-07-14; reviewer-ruled bankable)*
