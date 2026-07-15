@@ -647,6 +647,50 @@ def main():
     named = sorted({w.split('"')[1] for w in warns})
     assert named == ["Aquila", "Jesus", "Prisca"] and notrun == [], (warns, notrun)
 
+    # ═══ p2wl:v2 GUARD SOURCE — _p2_corpus_names (#71 ticket, 2026-07-14) ═══════════════════
+    # WHY THIS EXISTS: the KNOWN fixture above is a synthetic set, and that is CORRECT where it
+    # sits — 2f-2i test the DEMOTION BOUNDARY LOGIC and want controlled input, and CI runs
+    # without bible.db (header condition) so the real corpus is unreachable here by ruling.
+    # But that left the BRIDGE untested: _p2_corpus_names is the production function that
+    # actually loads the guard, and NOTHING exercised its success path — its only prior
+    # exercise was the validate_entry wiring block above, whose in-memory db has no `words`
+    # table, so the guard threw, degraded to None, demotion switched OFF, and the test passed
+    # GREEN on a blown-up guard. A guard whose zero has never been proven against a known
+    # positive is the certification rule's own failure case. Production callers:
+    # build_lexica_def.py:2892 (validate_entry) + offline_gate_check.py:134.
+    # Uses the PRODUCTION function, never a copy. Rows mirror the words-table shape the real
+    # read depends on (is_pn + english_head); the guard is lowercased + DISTINCT by contract.
+    pn = sqlite3.connect(":memory:")
+    pn.execute("CREATE TABLE words (english_head TEXT, is_pn INT)")
+    pn.executemany("INSERT INTO words VALUES (?, ?)",
+                   [("Korah", 1), ("korah", 1),      # DISTINCT + lower() must fold these to one
+                    ("Solomon", 1), ("Laban", 1),
+                    ("gifts", 0),                    # is_pn=0 must NOT reach the guard
+                    ("", 1)])                        # empty head must NOT reach the guard
+    got = B._p2_corpus_names(pn)
+    assert got == {"korah", "solomon", "laban"}, got          # FIRES on a known positive
+    assert "gifts" not in got and "" not in got, got          # is_pn=0 / empty excluded
+
+    # …and the loaded guard must actually DRIVE demotion through the production path: "Solomon"
+    # at a sentence start is a real name and KEEPS its warn; "Applying" at a sentence start is
+    # card furniture and is demoted. Same raw, same boundary — only guard membership differs.
+    raw_guard = ('the gifts are regulatory. Solomon received nothing here (2Ch 21:3). '
+                 'Applying "barter" to 2Ch 21:3 is defensible.')
+    warns, notrun = B.probe2_names(raw_guard, sub(("2Ch", 21, 3)), known_names=got)
+    named = sorted({w.split('"')[1] for w in warns})
+    assert named == ["Solomon"] and notrun == [], (warns, notrun)
+
+    # DEGRADE PATH — PROVEN, not assumed. No `words` table => guard unavailable => None =>
+    # NO demotion (fail toward the human, never a silent widening). This is the state the
+    # wiring block above was silently running in.
+    nodb = sqlite3.connect(":memory:")
+    assert B._p2_corpus_names(nodb) is None, "missing words table must degrade to None"
+    warns, notrun = B.probe2_names(raw_guard, sub(("2Ch", 21, 3)), known_names=None)
+    named = sorted({w.split('"')[1] for w in warns})
+    assert named == ["Applying", "Solomon"], (warns, notrun)   # degrade ADDS, never removes
+    pn.close()
+    nodb.close()
+
     print("test_v11_probes: all assertions passed")
 
 
