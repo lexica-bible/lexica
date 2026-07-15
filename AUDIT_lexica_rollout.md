@@ -7000,6 +7000,100 @@ G236 floor read (approved, JP-gated) · KNOWN-set #71 ticket (`test_v11_probes.p
 preamble-leak detector ticket · prose-economy · G162 redraw (verdict AGAINST, JP's gamble call).**
 **LESSON CANDIDATE flagged, not written (scope):** *floor-DERIVED ≠ floor-CONSENSUS* — the shape of
 lever 12 and of CC's caught error; worth an ENGINE_LESSONS number on JP's or the reviewer's call.
+**RULED IN + WRITTEN as #74** (reviewer, 2026-07-14, over CC's self-assignment restraint; `d3d3987`).
+
+---
+
+## PROBE-2 GUARD — THE SILENT DEGRADE NOW SPEAKS (2026-07-14; `c7d49c3` design → `99bce2c` build)
+
+**ZERO model spend. Reviewer-receipted at both gates** (design note held for receipt, then the diff
+held for receipt before commit — this touches gate behavior, so the test-only receipt rule did not
+apply). Closes the ticket the #71 read opened.
+
+### The collapse finding — it SHRANK the ticket
+
+**The guard-absent/guard-error split does not exist at this layer.** Guard-ABSENT is already loud one
+layer up: no connection ⇒ *"V11 prose probes NOT RUN … all UNCHECKED"* (`:2876-2879`) and the loader
+is never reached (the call sits inside the `elif raw:` branch, `:2880`/`:2892`). **So a `None` from
+`_p2_corpus_names` can ONLY mean the read FAILED against a live connection.** One state to make
+loud, not two — so the fix became routing an existing condition into an existing ruled convention.
+
+**THE DEFECT IN ONE LINE:** the loader's **error** and `probe2_names`' legitimate
+`known_names=None` (*"demotion off by choice"*) were the **SAME BYTE**. A dead guard arrived wearing
+the contract's clothes and was handled as if someone had chosen it.
+
+### What shipped
+
+`_p2_load_guard` returns `(names_or_None, error_text)` in **ONE** cache entry (a second dict would
+have doubled the `id(conn)` key surface). `_p2_corpus_names` **contract UNCHANGED** — set, or None on
+failure, still no demotion, **still fails toward the human**. `_p2_guard_notrun` speaks on a failed
+load and says **nothing** when healthy (a not-run on every good run is noise that trains blindness).
+Both call sites fold it into `probe2_notrun` — `validate_entry` **and** `offline_gate_check.py:134`,
+in scope and in the same commit. **No new tier, no new field, no checkpoint surface.**
+
+### THE SESSION'S LINE — the direction-lock break
+
+**An empty-set guard flips demotion ON with nothing in it: every boundary token is demoted and warns
+drop TWO → ZERO.** Real misattributions vanish, silently, in the dangerous direction — the exact
+regression the reviewer's ruling 2 required the tests to catch. **They caught it.**
+
+**And it took standing down TWO earlier contract asserts to watch it bite alone** — they fired first
+and masked it. **LESSON CANDIDATE, flagged UNNUMBERED per the #74 convention (reviewer's or JP's call
+on the number): a first-firing assert can MASK whether a ruled control actually works.** Three
+asserts "catching" a break is not three proofs — it may be one proof and two shadows. **To certify
+that a specific ruled control does its job, the asserts ahead of it must be stood down so it fires
+alone** — and then restored, which is its own hazard (below). Kin of the certification rule (a
+detector never watched to fail alone is not known to work) and of #52 (a tool's display of a line is
+not the line).
+
+### Control breaks — three, each caught
+
+| Break | Caught by |
+|---|---|
+| **Loudness** regressed to silence | `:605` acceptance gate — `AssertionError: []` |
+| **Direction**: error returns `set()` not `None` | direction lock — `AssertionError: []`, warns 2 → **0** |
+| **Contract**: no longer degrades | two independent contract asserts |
+
+### The acceptance gate — a live instance of the defect, inside our own tests
+
+`test_v11_probes.py:605` has **ALWAYS** run against a db with `verses` and **no `words` table** — the
+guard-ERROR state — and before this it degraded **silently and passed GREEN**. **That is the
+certification rule's own failure case wearing a passing test**, and it is what the #71 read found. It
+now **ASSERTS** the not-run, not merely tolerates it: a test that passes either way is the same
+silence one layer up.
+
+### Errors caught, both sides, before commit
+
+- **CC:** the first not-run text said the warns *"are OVER-FIRING"* — **asserting more than the
+  machine knows, and telling the human to DISMISS them, the opposite of adjudicating sighted.**
+  Guard-error warns are still real candidates, just unguarded. **Reviewer-conditioned and trimmed
+  BEFORE commit** to: demotion did not run, the warns are UNGUARDED and some MAY be over-firing,
+  they are still real candidates, adjudicate on their own texts, do NOT write them off as #72 (that
+  explanation does not apply when the guard never loaded).
+- **CC:** stood down two asserts to expose the direction lock. **Both restored, verified by grep (0
+  hits) and visible in the diff** — reviewer-required as a citable line, because *a stood-down assert
+  that stayed down would be this ticket's own defect class recurring inside its own build.*
+
+### Verified this session, not carried
+
+**`probe2_notrun` blocking-list membership CONFIRMED at `build_lexica_def.py:2801`** (`open_probe_warns`
+sums `probe1_warns + probe2_warns + scan3_warns + probe1_notrun + probe2_notrun`). The design note
+asserted the class blocks apply; **it was checked before anything was routed into it** — the
+promissory-note rule applied to our own note.
+
+**SCOPE HELD:** failure direction untouched · `known_names=None` contract untouched · **`is_pn` root
+stays CLOSED (#72)** — a loud guard does not make `is_pn` complete and was not pitched as if it did ·
+`id(conn)` key stays **FLAGGED/NO-CLAIM** with its revival trigger (any long-running
+multi-connection caller; Flask the named candidate).
+
+**WHAT IT IS NOT FOR: it does not improve probe 2's accuracy by one warn.** Its entire value is that
+a future reader can tell whether the check RAN. Per #73 that is a detector-side change — it raises
+KILL probability, not conversion probability.
+
+**STATE: ZERO model spend. Ten neighbour suites green. Scoreboard UNCHANGED `3/10ʰ · 7/15`.** V9
+frozen and untouched; no card, roster, or floor touched. **SHELF: item 2 = the PA-side drift check
+(`TICKET_p2_guard_drift_check.md`, JP's call, written up not designed) · prose-economy (JP's
+inquiry).**
 
 ---
 
