@@ -7328,3 +7328,41 @@ card-specific confirmation is ever wanted, it is a JP PA read.
 
 **STATE: ZERO model spend, ZERO code changed, doc-only. Scoreboard UNCHANGED `3/10ʰ · 7/15`.
 SPEND BOARD still EMPTY — this ticket is zero-spend and does not put anything on it.**
+
+---
+
+## CLOSING-SUMMARY CLASS — SIZED ON LIVE CARDS: POSSIBLE, NOT PRESENT. TICKET CLOSED — 2026-07-14
+**ZERO spend, ZERO code. Read-only, JP-run on PA.** Opened because the boilerplate detector's scope
+statement had to name what it is BLIND to, and one blind spot turned out to be reader-facing:
+`VERSE_PROMPT` (:200) bans preamble AND "no closing summary"; `leading_boilerplate` sees only the
+former. **MECHANISM (verified on the real functions, not reasoned):** a trailing summary returns `[]`
+from the detector AND `split_definition` files it into the LAST section's body — for a normal card,
+`coverage` — which `views_lexica` SERVES (it pops only `raw`). **So unlike the leading class, the
+closing class would REACH THE READER.** That is why it was ranked ahead of the shelf.
+**THE READ: all 80 live cards, every served text field (`senses_block`/`range`/`gloss_notes`/
+`coverage`), TAIL window on each field's last line.** The tail is the RIGHT window and makes the read
+complete BY CONSTRUCTION: a trailing summary can only be the last line of the last section, so it
+cannot hide from it. (A first pass used a HEAD window and was rejected as incomplete — it could not
+see a summary appended to the end of a long line. The rejected pass is the reason the tail pass
+exists; recorded because the fix was a window, not a pattern.)
+**VERDICT: ZERO of 80 cards.** Every field tail is genuine card prose (sense analysis, range
+reasoning, gloss adjudication). **No card ends in model meta-text.** Three attention-flags from a
+broad sorting pattern were all FALSE POSITIVES on ordinary card vocabulary, each explained on the
+bytes: `G3004` matched *"definition"* inside *"...carries no sense the speech-act definition does not
+already cover"*; `G3772` matched *"above"* inside *"the space above the earth"*; `G5547` is card
+prose at both ends. **The pattern SORTED attention; it never decided — every last line printed
+regardless, so the zero does NOT rest on the pattern.**
+**DISPOSITION: CLOSED as POSSIBLE-BUT-NOT-PRESENT.** The mechanism is real and stays recorded; the
+class does not exist in production. **No detector, no fix, no code — building a guard for a defect
+with zero instances is the infrastructure-about-infrastructure trap the throughput ruling names.**
+Re-opens only if a fresh card exhibits it (PULL, not push).
+**METHOD FAILURE WORTH THE RECORD — a throwaway read SILENTLY FELL BACK, inside the session hunting
+that class.** The candidate read printed `(function-word list loaded: 171 entries)` and then filtered
+NOTHING: `cache_funcwords.json` stores BARE numbers (`'1032'`), the comparison used G-prefixed keys,
+every check missed, and the reassuring line made it look like it had worked. Caught only because the
+output was obviously wrong (καί, ὁ, αὐτός ranked as "content words"). **The fix was not a better
+pattern — it was making the tool PROVE it bit** (`FILTER PROOF` line asserting known function words
+are matched) before its output was used. **A read that reports LOADING is not a read that reports
+WORKING.** Kin of #76 and the Silent-Fallback Rule.
+**OBSERVED, NOT OPENED (one line, no action):** only 5 of 80 live cards carry any `coverage` text.
+Not investigated, not this ticket.
