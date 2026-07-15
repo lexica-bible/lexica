@@ -671,6 +671,20 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 ## Word cards / lexicon — open items
 
+- **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
+  `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
+  only (no db, no network). JP's **next real `/rebuild-words`** is the acceptance run: the chain
+  should print `== finish_rebuild done ==`, and the p2wl:v2 guard fixture drift check should fire
+  automatically inside `import_tipnr` (its verified sole writer of `is_pn=1`). **`done` ⇒ the arc
+  closes. A named-failures banner ⇒ DO NOT SWAP, read the step's own output.**
+  **WATCH the first live run, do NOT assume it** — a wrapper that refuses to say `done` when it
+  should would be a new false alarm in the highest-stakes procedure here. **Do NOT rebuild just to
+  test this** — that inverts the reason for the check (JP, 2026-07-14). Full record: AUDIT "GUARD
+  FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD" + `DESIGN_p2_guard_drift_check.md`.
+
+- **PROSE-ECONOMY DESIGN TICKET (JP's own inquiry, banked — zero-spend, fresh-head design work).**
+  The only item on the zero-spend shelf. Not pre-decided, not pre-pitched.
+
 - **FOUR-WORD RE-RUN (open 2026-07-14) — JP-gated checkpoint, real model spend, NOT pre-cleared.**
   The own-paraphrase near-match gate is BUILT + LIVE (`dbea202`): combined `max(char, token-SET)`,
   t=0.664, meta:v4, empty-set rule, `nearmatch:v2`. Re-run G162/G227/G236/G1390 through the fixed
@@ -680,8 +694,13 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   span = stop and report before that card proceeds.** Propose as its own checkpoint with per-word
   predicted outcomes. **Authority = HANDOFF top pointer + AUDIT "OWN-PARAPHRASE NEAR-MATCH GATE — BUILD
   LANDED" + ENGINE_LESSONS #63/#64/#65** (don't duplicate detail here). Standing constraint in code:
-  `t <= 0.706` (other-item must-refuse). Parked: G1390 probe-2 (revisit post-re-run, enlarged byte set);
-  lead-in multi-ref anchoring (G227 Job pair / G236 Ezra range). code: `probe1_verbatim`/`quote_repair`.
+  `t <= 0.706` (other-item must-refuse). Parked: lead-in multi-ref anchoring (G227 Job pair / G236 Ezra
+  range). code: `probe1_verbatim`/`quote_repair`.
+  **~~G1390 probe-2 (revisit post-re-run, enlarged byte set)~~ — CLOSED 2026-07-15, do NOT revisit on
+  a re-run.** Root = **`is_pn` is an INCOMPLETE name index** = ENGINE_LESSONS **#72**; G1390's 7 warns
+  STAND (6 correct-by-spec, 1 Sabbath false positive, unfixable at current data). A bigger byte set
+  cannot help — the corpus doesn't mark the names. **Revival trigger is a COMPLETE name index, NOT a
+  re-run.**
 
 - **TICKET (open, NOT-NOW — do not pull on this mid-calibration): some word cards render
   "loading" only.** JP observed cards stuck at "loading" (2026-07-10, batch-3 session 5).

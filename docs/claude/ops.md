@@ -178,6 +178,24 @@ never improvise. Hard safety rules stay in CLAUDE.md "Do Not". Background: memor
 `build_words_from_bh.py`) write ONLY to `bible.db.new` (a consistent online snapshot); the live
 file is never opened for writing; swap is one reversible `mv`.
 
+**`finish_rebuild.sh`'s contract — DO NOT "fix" it with `set -e` (2026-07-14).** The no-abort is
+DELIBERATE: every tail step is independently targeted and re-runnable, so a half-patched copy is
+worse than a finished one with named failures. It keeps going, COLLECTS any step that reported a
+problem, and REFUSES to print `== finish_rebuild done ==` — naming them and exiting non-zero.
+**No `done` line ⇒ DO NOT SWAP.** (Until 2026-07-14 `run()` never looked at an exit code at all,
+so ANY failing step — `import_tipnr` included — scrolled past and it still printed `done`; a
+failure degrading into a green-looking finish.) A step that "reported a problem" may have FAILED
+**or** may have completed and flagged something for a human — the p2wl:v2 guard fixture drift
+check is the second kind. **Its clean path with real steps is UNVERIFIED (stubs only) — watch the
+first live run.**
+
+**`import_tipnr.py` is the SOLE writer of `is_pn=1`** (the build CLEARS it; everything else only
+reads it) — which is why the p2wl:v2 guard fixture drift check is chained there and fires
+automatically, standalone run included. The claim it checks is single-sourced in
+`scripts/check_p2_guard_fixture.py`, which OWNS it (the probe-2 test imports it — never a second
+copy). **Drift ≠ a broken rebuild: it means the FIXTURE is stale.** Paste the run's findings in,
+re-date `FIXTURE_VERIFIED`, re-run the probe-2 tests. Detail: `DESIGN_p2_guard_drift_check.md`.
+
 ## Rate limiting / security (2026-06-07 pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide `300/min` per endpoint per IP; paid
   AI endpoints set tighter `@limiter.limit("200 per hour")`. Static assets exempted via a

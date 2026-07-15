@@ -1,5 +1,40 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **SESSION 2026-07-14 — ZERO MODEL SPEND, 9 commits, `origin = local = PA = fb82d0c`. TWO ARCS
+> CLOSED, ONE ACCEPTANCE RUN OWED. Read this block, then the SPEND BOARD below.**
+>
+> **1. G236 PART 2 — ANSWERED: THE MECHANISM DOES NOT EXIST at current floor evidence. GATE CLOSED.
+> DO NOT PITCH A G236 SPEND.** 12 levers enumerated, 11 dead; the one standing (roster revision)
+> killed by the floor's OWN bytes on a criterion pre-registered BEFORE the read. The free read
+> (`--from-json`, no model call): `SENSE-COUNT spread: {1:1, 2:8, 3:1}` — C1 needed modal sense
+> count ≥3, it is **2 at 8 of 10 draws**. The lone 3-sense draw is 1/10, below the ~2/10 *"poles
+> blur"* noise band, and **was NOT opened** (that is minority-shopping). **Two old board lines were
+> FALSIFIED by their own cited files** — *"~10× a redraw"* (priced a floor re-run; the real lever
+> was ONE ship draw) and *"hand-carve the roster ⇒ BANNED"* (an inversion: the ban governs
+> hints/jobs ONLY). **Revival = PROVENANCE ORDER, not stated intent.** = **#74**.
+>
+> **2. PROBE-2 GUARD ARC — SHIPPED (`3899ed2` → `99bce2c` → `6fe3e52`).** The **#71 ticket was
+> MISFRAMED**: the hand-typed fixture is the RIGHT tool where it sits (it tests boundary logic, and
+> CI cannot read the corpus by ruling). **The real gap was one layer down — `_p2_corpus_names` had
+> ZERO tests, and its only exercise (`test_v11_probes.py:605`) ran it BROKEN and passed GREEN.**
+> Now: a dead guard is a NOT-RUN that blocks apply · the fixture claim is single-sourced in
+> `scripts/check_p2_guard_fixture.py` (the test imports it — no second copy) · the drift check is
+> chained into `import_tipnr` (the VERIFIED sole writer of `is_pn=1`), so it fires automatically.
+> **Found on the way: `finish_rebuild.sh` had been swallowing EVERY step's failure and printing
+> `done` regardless** — import_tipnr included. Fixed: collects, refuses to say `done`, still never
+> aborts mid-chain. = **#75**.
+>
+> **⚠ 3. THE ONE THING OWED — ACCEPTANCE RUN. `finish_rebuild.sh`'s CLEAN path has NEVER run with
+> real steps** (proven with stubbed steps only — no db, no network). **JP's next real
+> `/rebuild-words` is the acceptance run. WATCH it, do NOT assume it. Do NOT rebuild just to test
+> it — that inverts the reason for the check (JP).** `done` ⇒ arc closes. Named-failures banner ⇒
+> DO NOT SWAP. **Next session: do NOT record this arc as closed until that run happens.**
+>
+> **SHELF = prose-economy (JP's inquiry) + G162's preamble-leak detector ticket. SPEND BOARD =
+> EMPTY, and that is a FINDING, not a gap.** Scoreboard **UNCHANGED `3/10ʰ · 7/15`**.
+> **THE SESSION'S SHAPE, worth carrying:** both arcs were closed by READING, not spending — and
+> in both, **the ticket's own description was a promissory note that changed once opened.**
+
 > **SPEND BOARD — READ THIS BEFORE PITCHING ANY SPEND (2026-07-15, session close). THERE IS CURRENTLY
 > NO WELL-DEFINED SPEND ON THE BOARD.** Two were pitched at session close and BOTH would have bought the
 > defect they were meant to fix; nothing was spent. **= ENGINE_LESSONS #73.**
