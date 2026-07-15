@@ -47,6 +47,7 @@ jobs:
           python tests/test_context_feed.py
           python tests/test_prompt_contract.py
           python tests/test_written_ranges.py
+          python tests/test_news_gate.py
 
   frontend:
     runs-on: ubuntu-latest

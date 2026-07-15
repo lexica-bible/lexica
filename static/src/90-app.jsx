@@ -432,10 +432,23 @@ function App() {
   // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
   // never shows the summary.
   const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
+  // Who sees the News tab: ANY signed-in account (auth-only — deliberately not tier-based),
+  // the admin, or a share-key reader. Mirrors _can_read() in views_news.py; the server is the
+  // actual gate, this only decides whether the nav entry is worth showing. authEmail seeds
+  // synchronously from the saved session (see `owner` above), so the entry is in the FIRST
+  // painted frame — it must not flash in late on refresh.
+  const showNews = owner || newsReader || !!authEmail;
+  // News is the one tab that can vanish under the reader (sign out, or a remembered
+  // "news" tab from an old session on a now-anonymous browser). The tab body is mounted
+  // behind the same showNews condition as the nav, so without this the main area renders
+  // BLANK with no nav entry to click back — fall back to the Library instead.
+  useEffect(() => {
+    if (!showNews && mainView === "news") setMainView("library");
+  }, [showNews, mainView]);
 
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
-      <Header activeView={mainView} onNavChange={handleNavChange} owner={owner} showNews={owner || newsReader}
+      <Header activeView={mainView} onNavChange={handleNavChange} owner={owner} showNews={showNews}
         email={authEmail} name={authName} onLogin={() => setAuthOpen("login")} onAccount={() => setAccountOpen(true)}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
@@ -454,7 +467,7 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
-        {(owner || newsReader) && newsEverVisited && (
+        {showNews && newsEverVisited && (
           <div style={{ display: mainView === "news" ? undefined : "none" }}>
             <NewsView isMobile={isMobile} />
           </div>
@@ -592,7 +605,7 @@ function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h7"/></svg>
             </button>
           )}
-          {(owner || newsReader) && (
+          {showNews && (
             <button className={"mobile-tab" + (mainView === "news" ? " active" : "")} onClick={() => handleNavChange("news")} title="News" aria-label="News">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V7"/><path d="M18 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2"/><path d="M7 8h7M7 12h7M7 16h4"/></svg>
             </button>

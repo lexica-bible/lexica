@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
-"""News watch — admin-only review tab for the end-times news gatherer.
+"""News watch — the end-times news gatherer's feed, read by any signed-in account.
 
 The data is gathered + AI-scored OFFLINE by scripts/news/ (gather_news.py +
-score_news.py) into news.db. This blueprint just SERVES that file to the in-app
-tab, admin-gated (404 to everyone else, exactly like visitor stats):
+score_news.py) into news.db. This blueprint just SERVES that file to the in-app tab.
 
-  GET  /api/news/meta             → {owner, available, labels, reviewer}
+TWO GATES, deliberately separate:
+  read  (_can_read)  — any signed-in account, ANY tier, or the no-login share key.
+  write (_reviewer)  — admin or share-key holder only. Triage is not a reader's job.
+Everyone else gets a 404, exactly like visitor stats. Reading never implies writing:
+
+  GET  /api/news/meta             → {owner, reader, available, labels, can_write, reviewer}
+  GET  /api/news/all              → the whole clustered feed in one shot (the tab's only fetch)
   GET  /api/news/counts?...       → window-scoped inbox/kept/dismissed card tallies
   GET  /api/news/list?...         → stories (near-duplicates grouped into one card)
-  POST /api/news/status           → mark a story keep / dismiss / new
+  GET  /api/news/shape?...        → feed-level readout (surfaced/buried/threads)
+  POST /api/news/status           → mark a story keep / dismiss / new        [write]
+  POST /api/news/resolve          → cache wrapper→real article URLs           [write]
 
-Read-mostly: the only write is flipping an article's review status. It never
-gathers or scores (that's the offline scripts' job) and never touches bible.db.
+Read-mostly, but note /resolve IS a write (it caches into items.resolved_url and fetches
+outbound) — it gates with /status, not with the reads. It never gathers or scores (that's
+the offline scripts' job) and never touches bible.db.
 """
 import datetime
 import hashlib
@@ -26,7 +34,7 @@ from collections import Counter
 from flask import Blueprint, jsonify, request
 
 from core import news_db, NEWS_DB, limiter, notes_db
-from views_notes import is_admin, ai_caller
+from views_notes import is_admin, is_logged_in, ai_caller
 
 bp = Blueprint("news", __name__)
 
@@ -69,8 +77,11 @@ def _shared_key_ok():
 
 
 def _can_read():
-    """Admins always; a valid share-key holder gets read-only access too."""
-    return is_admin() or _shared_key_ok()
+    """Any signed-in account reads the feed. The gate is AUTH-ONLY and deliberately NOT
+    tier-based (no berean/admin check) — every account gets the same full feed. Admin is
+    signed in, so it's covered here; the no-login share key still reads without an account.
+    Reading never implies triage: writes gate on _reviewer() below, not on this."""
+    return is_logged_in() or _shared_key_ok()
 
 
 # Per-reviewer review state. One row per (article, reviewer); the reviewer id is a
@@ -562,10 +573,12 @@ def all_news():
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, who's
-    reviewing. Yes/no to everyone; data only to admin. The per-tab tallies live in
-    /api/news/counts (they're window-scoped and reseed when the date/score changes)."""
+    reviewing. Yes/no to everyone; data to any signed-in account. A plain account comes
+    back reader=True + can_write=False — it must say available=True or the tab renders
+    empty for every new signup. Anonymous still gets available=False. The per-tab tallies
+    live in /api/news/counts (window-scoped, reseed when the date/score changes)."""
     admin = is_admin()
-    reader = (not admin) and _shared_key_ok()
+    reader = (not admin) and (is_logged_in() or _shared_key_ok())
     if not (admin or reader):
         return jsonify({"owner": False, "reader": False, "available": False})
     if not _available():
@@ -800,8 +813,15 @@ def resolve_urls():
     Never raises — an unresolvable wrapper comes back AS the wrapper, so copy
     always succeeds. Body: {urls:[...], dry:bool}. dry=true resolves + returns but
     writes NOTHING (the confirm-the-write-shape variant). Deploy-safe: if the
-    resolved_url column isn't there yet, it resolves + returns without caching."""
-    if not _can_read():
+    resolved_url column isn't there yet, it resolves + returns without caching.
+
+    WRITE GATE, not a read gate. This caches into items.resolved_url and fires outbound
+    fetches, so it sits with the other writes (_reviewer) — otherwise opening reads to every
+    account would have opened it as a side effect. A reader's copy/export still works: the
+    caller is fail-soft and emits the raw wrapper when resolve says no (withResolvedUrls in
+    84-news.jsx)."""
+    _, can_write = _reviewer()
+    if not can_write:
         return jsonify({"error": "not found"}), 404
     try:
         body = json.loads(request.get_data(cache=False) or b"{}")
