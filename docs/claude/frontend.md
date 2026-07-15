@@ -106,15 +106,17 @@ layout; rail = threads, center = answer, inspect = the selected answer's provena
 word drill (`.ac-rstack`, top:0). **Mobile now on the shell's collapse too (2026-07-15)** — see the
 collapse block below. Spec: `HANDOFF_corpus_shell.md` + memory `project_three_zone_shell`.
 
-**⚠ `.ac` carries a pre-existing `overflow-x: hidden` (OPEN — scheduled for removal WITH a repro).**
-It predates the mobile pass and masks any sideways overflow inside Ask-corpus. Measured 2026-07-15
-at 320 + 375, reader + admin, landing + thread: nothing currently overflows, so the mask hides
-nothing *that we can reproduce*. It was left in deliberately: JP reports a small left/right scroll
-on his real phone (open item, needs his device width), and if that's real, this mask is what's
-hiding it — so removing it now would be a change with no detector to test against. **Remove it
-together with the item-3 repro, tested on the real case, not before.** Note the trap it sets:
-`document.scrollWidth` reads clean *through* this clip even with a 500px probe on the page — use
-`getBoundingClientRect()` to hunt overflow here (memory `feedback_audit_tools_must_fail`).
+**`.ac` carries a pre-existing `overflow-x: hidden` — SAFE CLEANUP CANDIDATE, not urgent.**
+It predates the mobile pass and masks any sideways overflow inside Ask-corpus. The scroll JP
+reported on his real phone is **GONE** — confirmed by him on device after the mobile pass shipped
+("no scroll", 2026-07-15, post-deploy of `dba2edb` + `5d8e489`); the landing and the search box
+were both rebuilt in those, which is the likeliest reason. Measured independently at 320 + 375,
+reader + admin, landing + thread, with a detector control-tested on a forced 500px probe: nothing
+overflows. So the mask is now known to be hiding nothing, and removing it is a tidy-up someone can
+take whenever they're in here — no repro needed, just re-measure after. Note the trap it sets while
+it stays: `document.scrollWidth` reads clean *through* this clip even with a 500px probe on the
+page — use `getBoundingClientRect()` to hunt overflow here (memory
+`feedback_audit_tools_must_fail`).
 
 **Notes + Seam index + News-rail SHIPPED 2026-07-01** (desktop): Notes on `<Shell>` (rail =
 note index, center = editor edited IN-TAB, right = the note's anchored verse via `VerseRow`;
@@ -172,6 +174,32 @@ swipe-dismiss sheet. What the two consumers proved, so the next doesn't re-deriv
 - Bar height stays `--bar-h`: the app's bar rhythm and the sheets' max-height maths key off it.
 
 ### Icons: ONE glyph per function, from `10-icons.jsx` (2026-07-15)
+**RULE THE MATRIX FUNCTION-FIRST — one row per FUNCTION, one column per BAR, each cell the
+current glyph; then one ruling per row.** This is the method, not a formality: the first pass
+tabulated by glyph ("who uses `WsI.Search`?"), unified the source inside one tab, and declared
+the app-wide job done — while `Icon.Info` still meant *chapter overview* in Library and *how the
+feed works* in News, and `Icon.Grid` meant *chip view* in the reader AND Word study's "Views". A
+glyph-first list cannot surface a double-booking by construction; a function-first one surfaces
+it in the first pass. The settled matrix:
+
+| Function | Library cockpit | Word study | News | Ask-corpus |
+|---|---|---|---|---|
+| Search | `Search` | `Search` | — | (inside the field) |
+| Detail panel / inspect | `Panel` | `Panel` (word card) | `Panel` (Watch) | `Panel` |
+| Filter — narrow the set | — | `Filter` ("Views") | `Filter` (Options) | — |
+| Reading/display options | `Modes` | — | — | — |
+| Playback | `Play`/`Pause` | — | — | — |
+| The list you navigate by | `[Book Ch]` text | `Book` | `Hash` | `Clock` |
+
+- **The last row is content-named ON PURPOSE — do NOT merge it.** Those glyphs name what the
+  list *holds* (threads are hashes, recent is time, distribution is books); one shared glyph
+  would put a hashtag on "Recent conversations". Tab-specific by design, not drift.
+- `Info` means **help** and nothing else. `Grid` means **chip view** and nothing else. `Modes`
+  means **reading options** and nothing else. Check here before reusing any of them.
+- **A control's LABEL is not its function — open the sheet.** "Views" got the grid glyph off its
+  name; it actually holds Edition/Testament/Go-deeper, i.e. a filter. Read the contents, then rule.
+- **Verify a merge by SHAPE, not by the component name you typed** — compare the drawn children
+  (`rect3|pathM15 3v18` etc.) across bars; that's what proves two bars really share a glyph.
 `Icon.*` is the only icon set. Word study used to keep a private `WsI` — deleted, because it was a
 **fork, not drift**: its `Sliders` was character-for-character identical to `Icon.Modes`, and that
 one drawing meant "Views" in Word study and "Reading options" in Library. One glyph, two jobs, in

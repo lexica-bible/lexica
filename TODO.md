@@ -368,15 +368,12 @@ zones-not-verbs, the two ways to clear the bar, the doubled panel header) are st
 detail, so they live in **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
 Left to do:
-- **Ask-corpus horizontal scroll — OPEN, BLOCKED on JP's device state** (2026-07-15). JP sees a small
-  left/right scroll on the Ask-corpus page on his real phone. Does NOT reproduce: measured at 320 + 375,
-  reader + admin, landing + thread, with a detector control-tested on a forced 500px positive. **Needs
-  JP's screenshot 2 + phone model / viewport width**, then re-measure — the landing was rebuilt for the
-  mobile pass, so the source may already be gone. Do NOT "fix" it with `overflow-x: hidden`, and do NOT
-  trust `document.scrollWidth` here: `.ac` already carries a clip that blinds it (the mask is documented
-  in frontend.md and is scheduled for removal WITH this repro, so it's tested against the real case).
-  Harness: `node tests/mobile_harness.js 8099` → `/?view=corpus&admin=1`.
-  code: static/src/52-ask-corpus.jsx, styles.css (`.ac`, `.ac-m`)
+- **Harness: add a News feed fixture** (small, do it before the next bar/icon pass). `tests/mobile_harness.js`
+  can render Library / Word study / Ask-corpus at a phone width, but **News's mobile branch never reaches its
+  `<Shell>`** without feed data, so its `.zbar` can't be measured — the 2026-07-15 icon pass had to reason about
+  News's two bar glyphs from the shared components instead of seeing them. **The one bar we can't render is the
+  one that will drift.** Shape the fixture from the producing side (`views_news.py`), same rule as the others.
+  code: tests/mobile_harness.js (FIXTURES / FIXTURE_PREFIXES)
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,
