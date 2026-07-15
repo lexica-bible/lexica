@@ -1222,3 +1222,20 @@ both drifting from the doc.
     reports to TOOLS: silence reads as covered, and so does a green-looking load. Kin of
     `project_silent_fallback_rule` and `feedback_audit_tools_must_fail`. *(audit: CLOSING-SUMMARY
     CLASS — SIZED ON LIVE CARDS, 2026-07-14; reviewer-ruled bankable)*
+
+    **COROLLARY — THE STANDING TEMPLATE FOR ANY COMPARISON READ (extension, RULED after this lesson
+    RECURRED ONE HOUR AFTER BEING BANKED, by its own author).** A blast read compared
+    `{'book','chapter','verse'}` tuples against stored verses whose real shape is
+    `{"ref": "Exo 25:14", "text": …}` (`build_verses` stores ONE ref STRING). Every lookup returned
+    `None`, nothing matched, and the read announced **"81 of 81 live cards missing ~40 verses each"** —
+    with total confidence. The tell was present and nearly missed: **G3464 had 27 verses attached and
+    the read called 27 missing — EXACTLY ALL of them.** → **A READ THAT COMPARES TWO DERIVATIONS MUST
+    FIRST PROVE THE DERIVATIONS TOUCH: print a sample from each side, assert the overlap is > 0, and
+    REFUSE TO EMIT A NUMBER if it is not.** → **Both sides must come from the PRODUCTION derivation —
+    never set a hand-rolled key tuple beside a production one**; that mismatch is invisible and total.
+    **WHY A CONTROL AND NOT VIGILANCE — the load-bearing half:** the FIRST failure broke toward
+    **ABSURDITY** (καί ranked a "content word") and caught itself. The SECOND broke toward a
+    **BELIEVABLE CATASTROPHE** — "every card is missing 40 verses a reader should see" is exactly the
+    finding that would have justified redrawing all 81 cards. **The direction of a silent breakage is
+    UNKNOWABLE IN ADVANCE, so "watch for absurd output" is not a rule. The control is.**
+    *(audit: the retracted blast read, 2026-07-14; reviewer-ruled as the standing template)*
