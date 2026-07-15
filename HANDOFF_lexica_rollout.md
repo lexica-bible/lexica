@@ -37,7 +37,10 @@
 > as a one-block spec BEFORE code** — the `--draw` mode was ratified, but the sequencing note stands.
 > **QUEUE:** anti-range pitch → legacy "None" trio (G2588/G4172/G3624, lazy) → format unification
 > (design pass, zero spend) · **JP's new cadence: batch sets, then one BATCH REVIEW dump to the
-> reviewer** — full `==========` blocks verbatim + one line of park/prior context per word.
+> reviewer** — full `==========` blocks verbatim + one line of park/prior context per word **+ each
+> word's APPLY-RUN gate tail (coverage/citation counts + flags) — the carve-depth and name-shy watch
+> items adjudicate against those, not the prose alone (reviewer format note, 2026-07-15; dry run
+> PASSED on the shipped-bytes spot check — all three cards byte-confirmed in the live table).**
 > **⚠ STANDING, UNTOUCHED: the `finish_rebuild.sh` ACCEPTANCE RUN is still owed** — JP's next real
 > `/rebuild-words`; a `lexica_def` write does NOT discharge it.
 >
