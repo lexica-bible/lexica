@@ -6511,3 +6511,95 @@ UNCHANGED `3/10ʰ · 7/15`** (a label repair is not a ship — G1390 was already
 write-path battery (`a750cd2`) → Eph 4:8 label fix (this). **OPENS = G236 design pass (floor-level,
 spend-gated) · G162 redraw (JP's gamble call) · probe-2 over-firing ticket (7 byte-adjudicated
 fixtures, now the best dataset in the arc).**
+
+### G236 SENSE-1 SWEEP — FULL 23-VERSE BYTE-CHECK; MISFILE SET = 5 (Act 6:14 NEW, NT);
+### THIRD HOME RULED "ALTER/VIOLATE A STANDING NORM" (narrow) (2026-07-15; design-pass PART 1
+### of the REDRAW-HELD routing. JP ran the dump read-only; reviewer ACCEPTED the sweep and
+### ISSUED the narrow ruling under standing delegation. ZERO spend, no code changed. Doc-only.)
+
+**SCOPE:** part 1 of the three-part design pass ("G236 DESIGN READ — EZRA CLUSTER" above): the FULL
+sense-1 sweep it required. Parts 2 (floor-level fix = the SPEND) and 3 (red-first fixture) NOT done —
+part 2 stays JP-gated; part 3 is not drafted until part 2's gate clears, since the fixture pins a
+placement the spend creates.
+
+**REF LIST PROVENANCE:** the 23 group-1 refs come from the path-(c) roster bytes
+(`scripts/draw_hints.py` G236, roster floor `agreement_G236_v9_20260712-165959.json`), NOT the AUDIT's
+prose about the roster. Book-name mapping was byte-grounded BEFORE the command was drafted (reviewer-
+required checkpoint): all 23 refs parse under the production catcher `_REF_RE` and all 14 book strings
+survive production `_norm_book` UNCHANGED (`build_lexica_def.py:610` `_BOOK_CODE`, exact lookup, no
+fuzzy fallback) — i.e. the roster strings ARE the stored `verses.book` codes. So the refs went into the
+read VERBATIM: no parsing, no normalization step. The flagged recall-slip surface was REMOVED, not
+mitigated. (Grounding check imported the real `_norm_book`/`_REF_RE`/`DRAW_HINTS` — never a copy.)
+
+**COUNT GATE — FIRST LIVE DEMONSTRATION OF ITS TARGET CLASS (pattern for part 2's session, inherit it):**
+the count check ran BEFORE the dump, contract "must print 23" (fewer = a ref doesn't exist as written;
+more = duplicate rows per verse ⇒ the sweep would read the wrong text). It FAILED LOUDLY on PA's sqlite3
+lacking `chr()` — regenerated with literal separators, then cleared at **23**. Loud failure ahead of the
+read is exactly what count-first exists to buy.
+
+**TEST (verbatim from the DESIGN READ entry's bytes, pulled before this table was written):**
+*"interfering with a thing that stays the same"* (alter/violate) vs *"one out, one in"* (substitution).
+
+**MISFILED INTO SUBSTITUTION — belong in the missing third home (5). Verse bytes pasted from the dump:**
+- **Ezr 6:11** — "every man who ever changes this word the timber of his house shall be demolished" ⇒
+  the decree STANDS and is tampered with; no replacement named. (Prior adjudication RE-CONFIRMED from
+  this dump's bytes, not carried from prose.)
+- **Ezr 6:12** — "who should stretch out his hand to change and remove from view the house of God, that
+  one in Jerusalem" ⇒ the temple STANDS; tampering. No replacement. (RE-CONFIRMED from bytes.)
+- **Neh 9:26** — "And they changed and revolted from you. And they tossed your law behind their body"
+  ⇒ loyalty violated; nothing named coming in. (RE-CONFIRMED from bytes.)
+- **Isa 24:5** — "they transgressed the law of the LORD, and effaced and bartered away the orders — the
+  eternal covenant" ⇒ covenant broken; no replacement covenant. (RE-CONFIRMED from bytes.)
+- **Act 6:14 — NEW FIND (was flagged suspected-same-cluster; now CONFIRMED).** "For we have heard him
+  saying, that this Jesus the Nazarene will destroy this place, and change the customs which Moses
+  delivered up to us" ⇒ the customs are a STANDING NORM being overturned; nothing swapped in. Same
+  shape as Ezr 6:11. **SCOPE CONSEQUENCE: Act 6:14 is NT — the gap is NOT an OT-only artifact.**
+
+**CORRECTLY HOMED IN SUBSTITUTION (17, no action):** 1Ki 5:14 (work shifts rotate, one crew out one in)
+· 1Ki 20:25 ("horse for horse, and chariots for chariots") · 2Ki 5:5 / 5:22 / 5:23 ("changes of
+apparel") · 2Sa 12:20 · Gen 35:2 · Gen 41:14 · Jer 52:33 (clothing swaps) · Exo 13:13 ("barter for
+sheep") · Gen 31:7 ("bartered my wage for the ten lambs") · Lev 27:10 / 27:27 / 27:33 ("good for bad",
+"cattle for cattle") · Jer 2:11 · Psa 106:20 · Rom 1:23.
+**CARVE VERDICT: sense 1 stays COHERENT once the 5 come out** — the remaining 17 are plainly
+one-out-one-in. A clean inventory GAP, not a broken carve.
+
+**DISCRIMINATOR (candidate fixture rule — STATED WITH ITS LIMIT, do not re-advertise as fully mechanical):**
+*does the verse name the thing that came IN?* Yes ⇒ substitution. No ⇒ alter. The idolatry verses are
+why it has teeth: Psa 106:20 ("changed their glory **into** a representation of a calf") and Rom 1:23
+("**bartered** the glory of the incorruptible God **for** a representation") SOUND like violated loyalty
+but name the incoming thing explicitly; the 5 misfiles name none.
+- **BYTE-MECHANICAL FOR 21 of the 22 non-borderline verses.**
+- **Jer 2:11 = PARALLEL-ADJUDICATED, NOT byte-mechanical (reviewer-caught overreach; CC's first
+  statement claimed all 22).** Its own bytes ("if nations changed their gods, and these are not gods!
+  But my people changed their glory by which they do not derive benefit") name no incoming thing in
+  either clause; the substitution verdict rests on the Psa 106:20 / Rom 1:23 trope parallel. A reading
+  that takes "by which they do not derive benefit" as the incoming thing is AVAILABLE but the clause
+  attaches ambiguously in the English — resting a byte-mechanical rule on a contested parse is the same
+  overreach in a new coat, so it is NOT used. **VERDICT UNCHANGED (substitution); BASIS weaker and now
+  says so.** **WHY THIS MATTERS: a rule advertised as byte-mechanical that isn't will misfire exactly
+  once, later, silently.**
+- **OPEN READ, LOGGED + NOT RUN: the Greek for Jer 2:11 could settle it byte-mechanically. NO CLAIM IS
+  MADE HERE ABOUT WHAT THE GREEK SAYS — those bytes were not in front of CC, and quoting them from
+  memory is the exact failure class this arc exists to stop. Verdict would not change either way.**
+
+**RULING — THIRD HOME WORDED (reviewer-ISSUED under NO-QUESTIONS standing delegation, applied as the
+ruling, not routed to JP):** the third home is **"alter/violate a standing norm"** (NARROW), not the
+wide "alter a thing that persists". **DECISIVE REASON (as issued):** narrow AGREES with the floor
+(which homes Gal 4:20 substitution 7–8/10) and with the already-removed Gal 4:20 transformation pin;
+the wide wording FIGHTS ground truth to rescue one borderline verse.
+
+**Gal 4:20 — RESOLVED, STAYS IN SUBSTITUTION. Dual basis, both halves on record (the fixture rule needs
+both):** (1) it names NO replacement (which alone would point alter), AND (2) there is NO standing norm
+being violated — his voice is not a decree/covenant/loyalty/institution. Under the NARROW wording (1)
+is not sufficient without (2), so Gal 4:20 does not move. Its borderline status was REPORTED, never
+forced.
+
+**STATE: no code changed; nothing in the roster or floor moved; doc-only, exemption invoked. ZERO model
+spend. Scoreboard UNCHANGED `3/10ʰ · 7/15` — A SWEEP IS NOT A SHIP.**
+**CC ERROR LOGGED (machine-caught, self-reported):** CC guessed the roster's top-level name (`HINTS`)
+in the grounding check; the import failed immediately and the real name (`DRAW_HINTS`) was read from
+the file. Same recall-over-bytes class as #70, caught by the machine within one run.
+**NEXT: part 2 = the floor-level fix (revise the carve to add the narrow third home, re-establish the
+floor) — SPEND, JP-GATED, not pressed. Part 3 = red-first fixture pinning the corrected placement of
+all 5, scoped against the NARROW wording, drafted only AFTER part 2's gate clears. G236 stays PARKED
+until then.**

@@ -1,5 +1,34 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **G236 DESIGN PASS — PART 1 DONE: FULL SENSE-1 SWEEP, MISFILE SET = 5 NOT 4 (2026-07-15).** All 23
+> group-1 verses byte-checked against the reviewer-endorsed test (*"interfering with a thing that stays
+> the same"* vs *"one out, one in"*, pulled verbatim from the DESIGN READ entry before the table was
+> written). **Act 6:14 is a NEW CONFIRMED misfile — and it is NT, so the gap is NOT an OT-only artifact
+> (part 2's carve revision must cover NT).** The 5: Ezr 6:11 · Ezr 6:12 · Neh 9:26 · Isa 24:5 · Act
+> 6:14. The four prior verdicts were RE-DERIVED from this dump's bytes, never carried from AUDIT prose
+> (#70). **CARVE VERDICT: sense 1 stays COHERENT once the 5 come out** (remaining 17 plainly
+> one-out-one-in) — a clean inventory GAP, not a broken carve. **RULING (reviewer-ISSUED under standing
+> delegation): third home = "alter/violate a standing norm" (NARROW)** — it agrees with the floor (Gal
+> 4:20 substitution 7–8/10) and the removed transformation pin; the wide wording fights ground truth to
+> rescue one borderline verse. **Gal 4:20 RESOLVED, stays in substitution on a DUAL basis** (names no
+> replacement AND no standing norm violated; under narrow, half 1 is not sufficient without half 2).
+> **DISCRIMINATOR for part 3's fixture — carries its limit, do NOT re-advertise as fully mechanical:**
+> *does the verse name the thing that came IN?* **byte-mechanical for 21 of 22; Jer 2:11 is
+> PARALLEL-ADJUDICATED** (its own bytes name no incoming thing; verdict rests on the Psa 106:20 / Rom
+> 1:23 trope). CC's first statement claimed all 22 — reviewer-caught overreach, corrected before
+> banking. **Greek read for Jer 2:11 LOGGED + NOT RUN, no claim made about what it says.** **METHOD
+> BANKED: book-name mapping byte-grounded BEFORE the command was drafted** (roster strings ARE the
+> stored codes ⇒ refs went in verbatim, no parsing step — the slip surface REMOVED, not mitigated);
+> **count-gate-first got its FIRST LIVE WIN** (failed loudly on PA's missing `chr()`, regenerated,
+> cleared at 23 — inherit this ordering in part 2). **CC error logged in the entry, not just chat:**
+> guessed the roster variable name, machine-caught in one run. **STATE: origin = local = this commit;
+> PA unverified (verify by pull, don't trust this line). Nothing in roster or floor moved. ZERO model
+> spend. Scoreboard UNCHANGED `3/10ʰ · 7/15` — A SWEEP IS NOT A SHIP.** **OPENS = G236 part 2 =
+> floor-level fix (SPEND, JP-GATED, not pressed) · part 3 = red-first fixture vs the NARROW wording,
+> drafted only AFTER part 2's gate clears · G162 redraw (JP's gamble call) · probe-2 over-firing ticket
+> · prose-economy design ticket.** G236 stays PARKED until part 2 runs. Full record: AUDIT "G236
+> SENSE-1 SWEEP — FULL 23-VERSE BYTE-CHECK".
+
 > **TOOLING SEQUENCE CLOSED — G1390 NOW SHIPS WITH ZERO KNOWN BLEMISHES (2026-07-15 01:39 UTC).**
 > Eph 4:8 gloss label `*gift*` → `*gifts*` APPLIED to the live row (JP-run, no model call, zero
 > spend), riding the fixed tool exactly as banked. **The carry rule passed its FIRST LIVE TEST:** an
