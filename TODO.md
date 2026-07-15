@@ -365,16 +365,20 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
   in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
   code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
-- **News-on-mobile** (net-new, the LAST shell surface). **FIRST ITEM (JP + reviewer 2026-07-15): drop the
-  reader's Keep/Dismiss on mobile.** A grayed pair eats ~half a card row at 375px, and a control that does
-  nothing is paying rent in the scarcest space on the page. NOT a reversal of the desktop gray ruling (see
-  the account-gate section): on desktop the tooltip is cheap and teaches the reader what the feed is; on a
-  phone row the same control costs too much. Same control, different cost, different answer — and it's a
-  breakpoint, not a new mode: `readOnly` already exists and already fires, so below the mobile breakpoint
-  readOnly controls don't render, above it they gray as now. No new state, no server change. Optional
-  polish: put the read-only signal where it costs nothing (a small label on the card header, or once at the
-  top of the feed) so the reader still learns what the tab is. Land it in the mobile commit — do NOT reopen
-  Pass 1. Then the rest: the News tab isn't reachable on a phone. Half the
+- **News-on-mobile** (net-new, the LAST shell surface). **FIRST ITEM (JP + reviewer 2026-07-15): hide
+  controls that DO NOTHING on a 375px row** — today that's the reader's grayed Keep/Dismiss, which eats
+  ~half a card row. Scope it that way, NOT as "no Keep on mobile ever": the item is about dead controls,
+  not about Keep. (If reader bookmarks ever ship — see the account-gate section — a reader's Keep would
+  DO something, and the mobile question gets asked fresh: a control that works earns its row. Scoped like
+  this there's no conflict to inherit.) NOT a reversal of the desktop gray ruling: on desktop the tooltip
+  is cheap and teaches the reader what the feed is; on a phone row the same control costs too much. Same
+  control, different cost, different answer. **It is a SPACE argument only — there is no contamination
+  principle behind it** (the scorer never reads keeps; see the account-gate section). It's a breakpoint,
+  not a new mode: `readOnly` already exists and already fires, so below the mobile breakpoint readOnly
+  controls don't render, above it they gray as now. No new state, no server change. Optional polish: put
+  the read-only signal where it costs nothing (a small label on the card header, or once at the top of the
+  feed) so the reader still learns what the tab is. Land it in the mobile commit — do NOT reopen Pass 1.
+  Then the rest: the News tab isn't reachable on a phone. Half the
   "confirm the cause" question is answered (read 2026-07-15, gate pass): it is NOT missing from the mobile
   bottom nav — a `mobile-tab` button is there, gated on `showNews` like the desktop entry. So the cause is
   downstream of the nav (a mobile branch / layout), not a missing button. Not verified on a real phone.
@@ -450,6 +454,23 @@ Gates locked + control-tested by `tests/test_news_gate.py` (in CI + the pre-comm
   (a grayed control + "Read-only" tooltip isn't broken, it tells a reader the feed is a curated watch;
   matches `feedback_gray_dont_hide`). Kept/Dismissed tabs reading zero for a reader: **leave them**, same
   reasoning. Raw inbox to readers: **approved** (JP) — no curated/published feed build.
+- **KEEPS ARE INERT — checked 2026-07-15, write it down because the intuitive story is wrong.** Nothing
+  in the nightly cron reads the review rows. The scorer selects on `WHERE score IS NULL` (id/title/source/
+  summary only — `scripts/news/score_news.py:207`); gather / pull_rss / group_news / resolve_new_faces
+  never mention the table (`scripts/news/daily.sh` is the whole cron). The ONLY reader anywhere is
+  `scripts/news/resolve_dry.py:75`, a hand-run read-only diagnostic that borrows kept stories as a
+  sample — not in the cron. **So keeps train nothing. They are bookmarks.** Two consequences: (1) the
+  mobile hide is a SPACE argument only — no contamination principle behind it; (2) reader keeps could not
+  pollute the scorer even if readers could write them. Do not re-argue this from memory — memory will
+  reach for "keeps train the scorer" because that's the intuitive story. It's wrong.
+  *(How it got asked: the Pass-1 audit proved Flask can't TRIGGER scoring; that had been quietly carrying
+  a second, never-checked claim that the cron CONSUMES keeps. Different claims. Memory
+  `feedback_verify_before_claiming` part 8 — proven adjacent is not proven.)*
+- **Reader bookmarks — small ticket, not scheduled.** Cheaper than it looks now that keeps are known
+  inert: the review table is ALREADY per-person (`(item_id, reviewer)`), and `_reviewer()` already keeps
+  identities structurally apart (`u<uid>` admin / `k<keytag>` share key). Giving a plain account its own
+  id is close to the whole feature. Nothing feeds the scorer, so a reader's keeps stay private notes.
+  code: views_news.py `_reviewer()` + `set_status`
 - Share key (`/?news=<key>`, one holder = Tudor) untouched. Retirement is not ticketed.
 - **Shareable News link — own ticket, NOT Pass 2** (reviewer 2026-07-15). Nothing to "fix": there is no
   News URL and no login page (the app is one page at `/`; log-in is an in-page popup), so the return-to
