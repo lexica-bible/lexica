@@ -7511,6 +7511,45 @@ class and wastes spend. STATE: 1 Sonnet call spent, 0 cards shipped, scoreboard 
 
 ---
 
+## QUOTES ARE BYTE-EXACT TO ABP — JP RULING, STANDING — 2026-07-14
+**A quoted span reproduces the corpus text EXACTLY, typos included. No silent normalization inside
+quote marks.** Ruled on a live case: Dan 4:35 reads *"he does among the force of **the of** heaven"*
+— an ABP typo — and G1411's card quoted it as *"the force of the heaven"*, tidying it. **The tidy is
+the defect.** The verbatim-quote gate flagged it and the gate is CORRECT AS-IS; this ruling states
+the standard the gate was already enforcing, so it is a rule and not a side effect.
+**WHY (JP's Berean/text-first bar):** a quote is a promise the reader can check it against the text
+in front of them. A card that silently improves the source breaks that promise in the one place the
+project cannot afford to — and the reader has no way to know it happened. **`[sic]`-style conventions
+are not adopted; the text stands as ABP wrote it.**
+
+---
+
+## LEGACY CARDS — REDRAW, NOT PATCH, AND LAZILY. NO CAMPAIGN. — JP RULING 2026-07-14
+**THE 64 PRE-GATE CARDS STAY LIVE AS-IS. Their defects are ACCEPTED FOR NOW, on the record.**
+**GROUNDS (JP's call, recorded):** the 64 carry MULTIPLE defect classes — loose quotes · the `"None"`
+marker (3 cards) · verse-shortness (24) · boilerplate title lines · whatever else older prompts and
+the old feed produced that no current instrument has looked for. **All are cosmetic-to-minor; the
+CONTENT is hand-audited and sound. A card with a slightly loose quote today is not worse than it was
+last week — it is just VISIBLE now.**
+**REDRAW BEATS QUOTE-REPAIR for these: quote-repair fixes ONE class per call; a redraw against the
+current engine (fixed feed, contracted prompts, all gates live) fixes EVERY class in one call. Same
+order of spend, strictly more value. Patching old draws is polishing output from an engine already
+superseded.**
+**BUT LAZILY — NO CAMPAIGN, and this is the load-bearing half:** a 64-card redraw sweep is ~64 calls
+plus adjudication attention on each — **the sessions-of-remediation pattern that ate the last month.**
+- **DEVELOPMENT FIRST. New words keep priority. Growth over repair.**
+- Legacy redraws happen **OPPORTUNISTICALLY**: when a defect surfaces reader-facing, when it blocks
+  other work, or as sprinkle-in work in a session with momentum and spend room. **A few per session
+  at most.**
+- **FIXED ORDER when dipping in:** the 3 `"None"`-marker cards (`G2588`, `G4172`, `G3624`) → the 24
+  verse-short → the remainder.
+- **Every legacy redraw runs the FULL current gate stack like any fresh word. No shortcuts because
+  "it was live before."**
+**This gets the whole corpus onto the current engine over weeks without ever making remediation the
+session's identity again.**
+
+---
+
 ## SPEND POSTURE — THE MEDIUM, NAMED. STANDING RULE — 2026-07-14
 **THE RULE: spend freely on iterate loops where each call follows a READ and a CHANGE** —
 `draw → read the result → change something (feed, prompt, gate, word) → draw`. **Each call is earned
