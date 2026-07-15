@@ -5758,6 +5758,41 @@ PA pull for any future build/apply). Zero model spend the entire arc. **The 4 wo
 their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over wording + Ezra anchoring,
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
+### TICKET — PROSE ECONOMY (design; FUTURE DRAWS ONLY; nothing built) (2026-07-14)
+**ATTRIBUTION — READ THIS FIRST:** relayed by the reviewer as a JP ruling made after CC's close-out
+message. **The ruling text is NOT in CC's context — CC cannot source it.** Banked as **RELAYED, not as
+a sourced JP checkpoint**; firm the attribution at the next JP touch. Caution is precedent-based, not
+doubt for its own sake: the reviewer made one sourcing error tonight (asserted scoreboard "8/15" from
+recall; refused and corrected against the committed rulings), the standing rule is that **the written
+record outranks a paste AND recall in BOTH directions**, and R2-b holds that named JP checkpoints
+survive delegation. Nothing here is built or gated on the attribution — it is a design ticket.
+**CONTENT:** routine occurrences -> **grouped bare citations WITH quotes**; full analytical prose
+**RESERVED** for load-bearing / contested / boundary verses (the Psa 68:18 / Eph 4:8-class
+adjudications). **Prose SHAPE only.**
+**COVERAGE UNAFFECTED (explicit):** coverage stays **TOTAL** — the 38/38-style citation bar is
+untouched. This changes how much PROSE a cited verse earns, never WHETHER it is cited. The V9
+coverage-is-total line and the coverage gate stand.
+**SCOPE:** **FUTURE DRAWS ONLY.** No retrofit of the live entries; **G1390 (just shipped) is NOT
+touched**; no rework.
+**SLOT:** rides or sequences with the **G236 design pass** — that session decides **bundle vs
+sequence**. OPEN SUB-QUESTION (the reason it isn't pre-decided): two prompt changes inside one redraw
+**muddies attribution** — you cannot tell which change produced which effect — which argues for
+sequencing over bundling.
+**GATE IMPLICATIONS (noted, NOT resolved):**
+- Output-shape change -> **PROMPT work**: the frozen V9 prompt is what would move, so it carries its own
+  gate (frozen-V9-untouched has been a standing lock through this entire arc — moving it is a ruling,
+  not a tweak).
+- **Coverage gate survives as-is** (it reads citations, not prose density).
+- The quote gate + probes see **different prose DENSITY** — fewer prose claims means fewer probe-2
+  surfaces, but ALSO fewer places a defect can be caught IN prose. Cuts both ways; not obviously a net
+  safety gain.
+- **"Which verses earn prose" is a NEW model judgment surface** — a call the engine has never had to
+  make. **Flagged as the ticket's main design risk:** judgment surfaces are exactly where this engine's
+  defect history lives (#24 fabrication tracks contested referents · #30 placement-against-consensus ·
+  #40 freight arriving through sub-use architecture). A rule that hands the model "decide what's
+  routine" is a new place for it to be confidently wrong, and "routine" is not a corpus fact.
+**STATE: nothing built, nothing gated, no code or prompt touched. Doc-only, exemption invoked.**
+
 ### G1390 δόμα — **SHIPPED ʰ · FIRST UNPARK OF THE ARC** (2026-07-14; readiness pass + JP-authorized
 ### apply, reviewer-adjudicated under standing delegation. JP ran every PA command. ZERO model spend
 ### the entire session. Doc-only close-out, exemption invoked.)
