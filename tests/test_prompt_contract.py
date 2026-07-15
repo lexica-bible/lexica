@@ -12,13 +12,13 @@ STAMP HISTORY (each line = a deliberate prompt move):
   lexica:7d7758f4156b  grounded-naming feed, +/-2 context + referent rule   (238147a, 2026-07-15)
   lexica:bd8b7e3f8209  anti-range constraint line (ENGINE_LESSONS #80)      (2a36ece-era, 2026-07-15)
   lexica:f8c77bf889f6  quote-continuity line (6 gate refusals / 3 words)    (500a754, 2026-07-15)
-  lexica:bd8b7e3f8209  REVERT of the above -- HELD, not abandoned           (this commit)
-      The quote-continuity line is reviewer-APPROVED and re-lands as the next commit. It came
-      out because a prompt edit stales every cached draw AT COMMIT TIME, and three hand-repaired
-      drafts (G2588/G4172/G3624, ten banked fixes) were waiting to ship at bd8b7e3f8209. Shipping
-      them under the prompt that produced them keeps each card's stamp truthful; redrawing would
-      spend three declined calls and bin the repairs. Spec-first governs AUTHORIZATION order, not
-      COMMIT order -- a ruled spec may be held while owned drafts ship.
+  lexica:bd8b7e3f8209  REVERT of the above -- HELD, not abandoned           (1b5499e, 2026-07-15)
+      Held one leg so three hand-repaired drafts (G2588/G4172/G3624, ten banked fixes) could ship
+      at the stamp they were DRAWN under -- a prompt edit stales every cached draw at commit time,
+      and --from-draw hard-refuses a stale draw by design. All three shipped clean (cards 85 -> 88).
+      Spec-first governs AUTHORIZATION order, not COMMIT order: a ruled spec may be held while
+      owned drafts ship. Ships land BEFORE the prompt moves.
+  lexica:f8c77bf889f6  quote-continuity line RE-LANDED, byte-identical      (this commit)
 
 The text asserts below are the contract, not the behavior. A prompt line cannot be unit-tested for
 OBEDIENCE — that is watched on the next drawn card's gate tail at BATCH REVIEW, never asserted here
@@ -30,7 +30,7 @@ import build_lexica_def as B   # noqa: E402
 
 # READ FACT, not recalled: PASTED from this file's own RED run against the edited prompt
 # (leg 2 of the red-first sequence, 2026-07-15), which printed the value it computed.
-PROMPT_STAMP = "lexica:bd8b7e3f8209"
+PROMPT_STAMP = "lexica:f8c77bf889f6"
 
 
 def test_prompt_stamp_is_pinned():
@@ -54,6 +54,25 @@ def test_verse_prompt_carries_the_anti_range_constraint():
     c = B.VERSE_PROMPT.index("Constraints:")
     o = B.VERSE_PROMPT.index("Output (compact")
     assert c < B.VERSE_PROMPT.index("REFERENCES NAME VERSES ONE BY ONE") < o
+
+
+def test_verse_prompt_carries_the_quote_continuity_line():
+    """The quote-continuity half of QUOTES ARE VERBATIM. Six gate refusals across three
+    independent words in ONE batch paid for it (G2588 Oba 1:3 / Heb 3:10 / Lam 3:41 wording
+    smoothed; G4172 Deu 2:34 ellipsis hiding a REORDER; G3624 Psa 5:7 gap closed silently,
+    and the Heb 3:5+3:6 WELD hung on 3:2 with 3:6 uncited). One mechanism: asserting a
+    continuous span the text does not carry — the range habit relocated from the reference
+    into the quote marks. Contract only: obedience is watched on gate tails at BATCH REVIEW,
+    never asserted here."""
+    flat = " ".join(B.VERSE_PROMPT.split())
+    assert "A quoted span comes from ONE verse" in flat          # the weld
+    assert "An ellipsis may only OMIT" in flat                   # the reorder + the silent gap
+    assert "When in doubt, quote less" in flat                   # the compliant escape route
+    # It belongs INSIDE the QUOTES ARE VERBATIM bullet — it is that rule's missing half, not a
+    # new bullet. Anchored between that header and the next constraint.
+    q = B.VERSE_PROMPT.index("QUOTES ARE VERBATIM")
+    r = B.VERSE_PROMPT.index("REFERENCES NAME VERSES ONE BY ONE")
+    assert q < B.VERSE_PROMPT.index("A quoted span comes from ONE verse") < r
 
 
 def test_anti_range_line_does_not_swallow_the_sense_range_section():
