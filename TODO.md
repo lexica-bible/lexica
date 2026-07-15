@@ -379,6 +379,9 @@ Left to do:
   in the matrix never verified by drawn shape. Shape the fixture from the producing side
   (`views_news.py`), same rule as the others; Notes shows the adapted form when a surface has no
   server producer (frontend.md). code: tests/mobile_harness.js (FIXTURES / FIXTURE_PREFIXES)
+  **DO THIS BEFORE Study's collapse (2026-07-15 ruling):** Study will cite News as its reference
+  pattern, and the reference should not be the one instance nobody has verified. It is no longer
+  background debt — it's the standing exception to a rule every other consumer now satisfies.
 - **ZoneEmpty marks: size all five at the call site** (chipped 2026-07-15). Word study + Study pass
   `width="30" height="30"`; Notes (×4) and Ask-corpus (×1) pass the glyph bare, so their empty-state
   hero mark renders at 14–16px — SMALLER than the same glyph in the bar below it (22px). `.zempty-mark`
