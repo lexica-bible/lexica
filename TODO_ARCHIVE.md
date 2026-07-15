@@ -6,6 +6,60 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-15 — News on mobile, Pass 2: dead controls, the three-button toolbar, and JP's polish batch
+
+Eight commits: `3aac547` `54a949e` `1a35822` `7b9b500` `1d2912f` `5dd5576` `312868e` `89f0949`.
+News is now the FIRST consumer of the shared Shell's mobile collapse. Nothing here is open.
+The standing frontend rules this produced live in `docs/claude/frontend.md`
+("Shell's MOBILE collapse" + "Shared controls + touch") — this is the record of WHY.
+
+**What shipped.** Read-only Keep/Dismiss no longer render below the mobile breakpoint (they gray
+as before on desktop — JP's ruling, not reversed). The 205px filter strip and the missing inspect
+zone both went, replaced by a three-button bottom toolbar: **Threads · Watch · Options**. First
+headline moved **404px → 190px** on a 375px phone. Then JP's five-item polish batch off the real
+deploy, plus a scroll bug and an icon-size correction.
+
+**Rulings, with the reasons that make them re-litigation-proof:**
+- **Three buttons** — JP's call. Don't redesign.
+- **"Read-only — a curated watch" label is a SIGNAL, not decoration.** A plain reader gets no
+  "Reviewing as" line (`_reviewer()` returns no id for a non-writer), so the grayed pair was the
+  ONLY read-only indication on mobile. Removing it without the label = a zero-signal read-only
+  feed, which is a defect, not a simplification.
+- **Refresh stays visible in the header.** It costs 6.4px (measured — the assumption that it was
+  free was wrong). Kept because Refresh changes what the feed CONTAINS, not how it's filtered, so
+  it doesn't belong in a filters sheet. The category reason is the durable one; the pixel count ages.
+- **"Options", not "Filters"** — Threads is itself a filter, so naming one of two filtering sheets
+  "Filters" says the other isn't. A future session will want to "fix" this back. Don't.
+- **A "biggest stories" row the feed is hiding still opens** — rebuilt with the date window only,
+  filters untouched. The readout ignores the score floor + thread on purpose (buried is the point),
+  so such rows exist by design. Clearing JP's filters to reveal one would rearrange the feed he
+  configured as a side effect of a click that only asked to read one story.
+- **`.seg-b`'s white selected pill is not ours to restyle** — it's shared with Notes/Study/Library
+  nav/the view tabs. The score chips were wearing the wrong class, not the class being wrong.
+- **Icon size 22px**, and the two in-app references DISAGREE (Word study 22 vs Library cockpit 21).
+  Recorded as a trade-off, not a clean match. Reference family = the bottom bars (JP's ruling).
+
+**Lessons worth the ink:**
+- **A control that cannot fail proves nothing.** Two scroll "controls" reported no overflow — the
+  list never scrolled, so arming dismiss at top was CORRECT, not the bug. Both had to be re-run at
+  a height that forced real overflow before they counted.
+- **A/B against the committed bundle separates "my bug" from "my harness".** A desktop blank looked
+  like a regression; the same blank happened without the change.
+- **Assert the instrument.** `resize_page` silently floors at 500px — the first "375px" screenshot
+  was a 500px lie. Every later measurement asserted `innerWidth` before believing anything.
+- **Fixture shape errors masquerade as app bugs.** A catch-all `[]` made `d.entries` resolve to
+  `Array.prototype.entries` — a function — which React ran as a state updater and blanked the app.
+- **Everything JP hit was on real hardware, not in the harness** (scroll direction, icon size).
+  Synthesized touch is a weaker instrument than a thumb.
+- **Process:** one breach — committed before the reviewer receipt. Branch-not-master and
+  nothing-pushed are mitigations, not compliance. Mitigations answer "how bad"; gates answer
+  "whether". Detector: reaching for a mitigation to justify acting IS the signal the gate is shut.
+
+**Killed premise:** "the News tab isn't reachable on a phone" (a 2026-07-01 note) was stale — it
+renders fine, confirmed by JP and an independent harness pass. It cost the start of this session.
+
+---
+
 ## Style ticket (sub-use-dominant card shape) — RESOLVED at the V7 window walk, 2026-07-08
 Ticket ran its full course: 3 instances collected (ἔτος organizing ¶, ἄρχων, ῥῆμα), draw behavior
 consistent → per its own terms, CODIFIED as house shape in the V7 prompt (`b8cbe7c`). The open format

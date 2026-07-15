@@ -361,19 +361,10 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
-**Shell's MOBILE collapse now has its first real consumer: News (`1a35822`, 2026-07-15).** Until then
-`MobileBar`/`ZoneSheet`/`.zbar` had shipped but nothing used them — News is the pattern to copy for the
-two mobile consumers still parked below. What it proved, so the next one doesn't re-derive it: the
-`.zbar` sits at the BOTTOM and the app's `.mobile-tabs` is fixed at the TOP, so they don't collide; a
-surface needs its own `height: calc(100dvh - var(--bar-h) - safe-top)` + `.app.view-<tab> .main
-{padding-bottom:0}` (the Ask-corpus `.ac` pinning trick); the scroll box needs its own bottom clearance
-or the last row hides behind the bar; and an inspect panel that carries its own header + scroll box goes
-in as a BARE sheet (`sheetBare`) or the padded body nests a second scroll box and collapses it.
-**⚠ A BARE sheet's child owns the scroll box, so ZoneSheet has no `scrollRef` to hand the dismiss gesture**
-— that shipped as a real bug (`1d2912f`): scroll-up dragged the sheet shut. The hook now finds the scroll
-box from the touch when no ref is given, so bare sheets work out of the box; an explicit `scrollRef` still
-wins. Nothing to redo — but if you build a sheet whose scroll box is NOT a plain overflow:auto descendant,
-that fallback can't find it, and you're back in the same hole.
+**Shell's MOBILE collapse has its first consumer: News (2026-07-15) — copy it for the two parked
+below.** The gotchas it paid for (bar collision, `100dvh` pinning, scroll-box clearance, the BARE-sheet
+`scrollRef` trap + the case its fallback can't rescue, bottom-bar icon size) are standing frontend
+detail, so they live in **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
 Left to do:
 - **Ask-corpus MOBILE rail** (PARKED 2026-07-03, JP's call — next fresh checkpoint) — desktop rail is DONE,
@@ -381,108 +372,6 @@ Left to do:
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
   in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
   code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
-- **News-on-mobile — ITEM 1 SHIPPED 2026-07-15 (`3aac547`, reviewer-approved, on master; JP deploys).**
-  A read-only viewer's Keep/Dismiss no longer render below the mobile breakpoint; above it they gray
-  exactly as before. **The desktop gray ruling is JP's — do NOT re-argue it.** Breakpoint, not a new
-  mode: `readOnly` already existed and already fired — no new state, no server change. Scoped as DEAD
-  CONTROLS, not as Keep: if reader bookmarks ever ship a reader's Keep would DO something and the
-  question gets asked fresh (a control that works earns its row). **SPACE argument only — no
-  contamination principle behind it; keeps are INERT (see the account-gate section).**
-  - Measured at a true 375px (real bundle + real CSS, feed fixtures shaped from views_news.py, plain
-    account): headline column **148→283px**, headline **4→2 lines**, row **194.5→110.7px (−43%)**, feed
-    block **693→442px** (~1.5 more cards/screen). Before, the dead pair took 125px of a 351px row — the
-    buttons + score chip were wider than the story text.
-  - **RULING (reviewer 2026-07-15) — the "Read-only — a curated watch" header label is IN SCOPE**, not
-    optional polish: a plain reader gets **no "Reviewing as" line** (`_reviewer()` returns no id for a
-    non-writer, so `reviewer_name` is ""), which made the grayed pair the ONLY read-only signal on
-    mobile. Removing it without the label leaves a zero-signal read-only feed — **a defect, not a
-    simplification.** Don't tidy the label away later.
-  - Verified, not assumed: desktop reader still grays the pair + tooltip, Shell + FeedShape intact;
-    admin on mobile keeps LIVE buttons. No sideways scroll at 375px.
-  - ⚠ **The "News tab isn't reachable on a phone" premise is DEAD** (JP `c64b139`, plus an independent
-    375px harness pass: tab present, active, renders). Don't let it come back.
-  code: static/src/84-news.jsx
-- **News-on-mobile ITEM 2 + the RIGHT-ZONE build — BOTH SHIPPED 2026-07-15 (`1a35822`, reviewer-approved,
-  on master; JP deploys). News is the FIRST surface on the shared Shell's mobile collapse.** The 205px
-  filter strip is gone and the inspect zone exists on a phone for the first time. **One change closed both
-  tickets, and the reviewer ratified that they were never separable on mobile:** the toolbar is what makes
-  the inspect zone reachable at all, so you cannot do item 2's strip without deciding where the zones go.
-  - **THREE BUTTONS — JP's ruling, don't redesign it:** **Threads** (left) · **Watch** (middle) ·
-    **Options** (right). Reads left-to-right like the desktop: navigate zone left, the thing you look AT
-    in the middle, the knobs right. Desktop zones map straight across — rail→Threads, top bar's
-    date/score/sort→Options, inspect (FeedShape / NewsWhy)→Watch, feed keeps the screen.
-  - Measured at an asserted 375px: **first headline 404.2→189.9px (−214)**; strip→one 48px bar.
-  - **Watch is ONE room with TWO doors** (tested, not asserted): the middle button opens whatever's
-    there; a card tap opens the same sheet pre-selected to that card's why; "‹ Watch" clears back to the
-    readout. `onSelect` used to be null on mobile — that's why the zone was unreachable before.
-  - **All 17 strip controls survive** — 15 in Options (2 dates + 6 presets + 6 score + sort), threads in
-    Threads (1 control, 15 buttons), Refresh in the header. *(Count of record: 17. An earlier "16" was a
-    CC transcription slip that propagated into a reviewer brief and was caught against the instrument.)*
-  - **RULING — Refresh stays VISIBLE in the header** (measurement overturned the assumption it was free:
-    it costs 6.4px, a 32px icon against 26.8px tabs). Kept anyway, and the reason that survives
-    re-litigation is the CATEGORY one: **Refresh changes what the feed CONTAINS, not how it's filtered,
-    so it does not belong in a filters sheet.** 6.4px is 1.7% of the 214px reclaimed. Shrinking it to
-    27px would zero that but trade away a real touch target.
-  - **RULING — "Options", NOT "Filters"** on the right: Threads is itself a filter, so naming one of two
-    filtering sheets "Filters" says the other one isn't. A future session will be tempted to "fix" this
-    label back. Don't.
-  - **No bar collision, checked not assumed:** the toolbar is at the BOTTOM; the app's `.mobile-tabs` is
-    fixed at the TOP (`styles.css`, `top: 0`).
-  - Verified, not assumed: desktop untouched (top bar, rail, FeedShape, grayed pair + tooltip, card click
-    still fills the rail in place, zero mobile leakage); admin mobile keeps live controls + copy/export;
-    item 1's read-only label survives; last card clears the toolbar at full scroll. 9 gates green.
-  code: static/src/84-news.jsx (the `isMobile` branch), 22-shell.jsx (Shell mobile + MobileBar), styles.css
-- **News mobile — SCROLL FIX + JP's POLISH BATCH, all SHIPPED 2026-07-15 (`1d2912f`, `5dd5576`, `312868e`,
-  reviewer-approved, on master).** Everything below came off JP using the deployed build on a real phone.
-  - **Watch sheet scroll (`1d2912f`) — a shared-hook bug, mine from `1a35822`.** Scrolling a long source
-    list back UP dragged the sheet shut. Cause: `ZoneSheet` never attaches `scrollRef` in **`bare` mode**
-    (22-shell.jsx), and Watch is the only bare consumer — the hook read a missing ref as "nothing scrolls
-    here", so `atTop()` and `fromChrome` were always true, the dismiss drag was armed on every touch, and
-    `preventDefault` killed the list's own scrolling. **That predicts the direction asymmetry exactly:**
-    scrolling DOWN moves the finger UP (`d <= 0`, hands back — which is why down felt fine). Fixed by
-    CONVERGING the contract, not special-casing Watch: the hook falls back to the nearest scrollable
-    ancestor of the touch when no ref is given. An explicit `scrollRef` still wins outright, so the nine
-    other sheets are bit-for-bit unchanged — **and Ask-corpus/Study mobile inherit the fix before they
-    exist.** Also trimmed `.news-shape-body`'s 80px DESKTOP rail clearance inside a sheet (dead gap under
-    the last source; the other sheets have none).
-  - **Item 1 — toolbar icon-only** (`5dd5576`), caption dropped from the FACE not the control (still on
-    `aria-label`/`title`). Tap target unchanged at 125×47 — the button was always the target.
-  - **Item 2 — score chips** now REUSE the date presets' style (one rule, measured identical fill).
-    **`.seg-b` BOUNDARY — the load-bearing bit:** score wore `.seg-b`, whose selected state is a WHITE
-    pill, so the picked score read white beside an accent 7d chip. `.seg-b` is shared with Notes / Study /
-    Library nav / the News view tabs — **its white is NOT ours to restyle. Score was wearing the wrong
-    class, not the class being wrong.** Desktop scores via a dropdown and never had the divergence.
-  - **Item 3 — "Biggest stories" rows open that story's why-view**, desktop (fills the rail) + mobile
-    (Watch sheet). **RULING on a row the feed is hiding** — the readout counts every in-window story and
-    ignores the score floor + thread filter ON PURPOSE (buried is the point), so a row CAN name a hidden
-    card. It reopens rebuilt with the **date window only**: it shows, **filters untouched**. Clearing JP's
-    filters to reveal it would silently rearrange the feed he configured, as a side effect of a click that
-    only asked to read one story. Proven with a buried fixture (score 3, under the 5+ floor): opens, shows
-    score 3, feed + filters unchanged.
-  - **Item 4 — sticky hover.** On touch `:hover` latches onto whatever you last held, so scroll-dragging
-    painted every row you passed. **Fixed at the SHARED level** — all five News hover affordances gated
-    behind `@media (hover: hover)` — because it was the shared defect, not a Threads one (the Options chips
-    scroll too). Desktop hover untouched. Verified against the live stylesheet, not the edit.
-  - **Item 5 — the Watch BUTTON always means today's watch**: it drops any card selection on the way in.
-    Cleared at the DOOR, not on close — closing keeps the selection, which leaves the card highlighted and
-    matches the desktop rail holding its selection. "‹ Watch" untouched.
-  - **Item 6 — toolbar icon SIZE (`312868e`), a correction to item 1.** **Reference family = the BOTTOM
-    bars (JP's ruling), not the top nav.** Measured live and **they disagree**: Word study's `.wm-tab` =
-    22px, Library's cockpit `.mbar-*` = 21px (top `.mobile-tabs` = 22px). Chose **22px** as a TRADE-OFF,
-    not a clean match: Word study's bar is the same SHAPE as this one (icon-only, equal slots) where the
-    cockpit is a mixed bar carrying the book/chapter text button, and 22 is 2:1 app-wide. The glyphs were
-    never "shrunk by removing captions" — they sat at their component defaults (14/16/16), drawn for dense
-    inline rows, and **didn't match each other either**. Sized at the BAR (`.zbar-btn svg`) so future zbar
-    consumers inherit one size and the shared Icons stay untouched.
-  - Also removed **`inboxFilters`** — dead code of CC's own making, orphaned by the toolbar rework.
-  - ⚠ **Harness fixture artifact, so nobody re-flags it:** the scratchpad harness sets a card's `event` to
-    a headline; production sets it to a short Haiku cluster label. So a "biggest stories" row label that
-    disagrees with the opened story's headline in old screenshots is the FIXTURE, not a defect.
-  - Parked (not fixed): the sheet scroll box has no `overscroll-behavior`, so a hard fling past the end can
-    scroll the page behind. **The other sheets share that absence — matching means matching**, including
-    shared absences. Its own uniform pass across all sheets if JP sees background creep on hardware.
-  code: static/src/20-shared-components.jsx (`useSwipeToDismiss`), 22-shell.jsx (`MobileBar`/`ZoneSheet`),
-  84-news.jsx, static/styles.css
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,

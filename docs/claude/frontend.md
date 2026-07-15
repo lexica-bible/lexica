@@ -31,8 +31,9 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
 ## Responsive breakpoints
 - **Desktop ≥1100px**: navy header, left nav panel (224px), lib-bar toolbar, detail panel as
   right sidebar.
-- **Mobile <1100px**: no header, sticky mobile toolbar (lib-toolbar), bottom tab nav, panels as
-  bottom sheets.
+- **Mobile <1100px**: no header, the app's tab nav `.mobile-tabs` fixed at the **TOP** (`top:0` —
+  NOT the bottom; the bottom is free for a per-tab bar), panels as bottom sheets. Per-tab bottom
+  bars: Library's reading cockpit `.lib-toolbar`, Word study `.wm-tabs`, News `.zbar`.
 - JS thresholds: `navVisible >= 1100`, `isMobile < 1100` (two states only).
 - CSS: `@media (max-width: 1099px)` / `(min-width: 1100px)` — plus 520px for very small phones
   and a **1500px header nav-overflow** breakpoint (below it the desktop header hides the inline
@@ -41,8 +42,21 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   card. Hamburger = `Header` in `20-shared-components.jsx`; CSS `.hdr-burger`/`.hdr-menu` +
   `@media (max-width:1499px)`.
 - One shared height `--bar-h` (48px, :root) sizes EVERY mobile chrome bar (top nav, Library
-  cockpit `.lib-toolbar`, `.wm-tabs`) + sheet clearances — bars/sheets use `100dvh` + safe-area,
-  never `100vh`.
+  cockpit `.lib-toolbar`, `.wm-tabs`, `.zbar`) + sheet clearances — bars/sheets use `100dvh` +
+  safe-area, never `100vh`. Don't reclaim it locally: consumers and the sheets' max-height maths
+  key off it.
+
+### Shared controls + touch (cross-tab rules, learned the hard way)
+- **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
+  `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
+  held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
+  chips and card rows all do).
+- **`.seg-b`'s selected state is a WHITE pill (`--ctl-on`) and it is SHARED** — Notes, Study,
+  Library nav, the News view tabs. If a control's selected state looks wrong for its context, the
+  control is probably wearing the wrong class; **restyling `.seg-b` to fix one caller silently
+  restyles four others.** (News's score chips read white beside accent date chips until they were
+  moved onto `.news-presets` — one rule, both.) Same shape as the "reference the system, never a
+  local copy" rule: pick the right shared class, don't fork the colour.
 
 ## Three-zone shell (shared workspace frame)
 Navigate / read / inspect. **Frame components in `static/src/22-shell.jsx`:** `Shell` (four-slot
@@ -68,8 +82,10 @@ a header BAND (`var(--hdr-h)`) so content clears the navy header (+ a `.app.view
 .hdr-right` account-pill offset).
 
 **Migrations (all parity-only, proven by parity gates — frame DOM + computed-style diff;
-Library also a Node state-machine gate):** News + Word study render `<Shell>` on desktop (each
-keeps its own `if (isMobile)` branch; `Shell` has `railClass`/`centerClass`). Library's five
+Library also a Node state-machine gate):** News + Word study render `<Shell>` on desktop
+(`Shell` has `railClass`/`centerClass`); Word study still keeps its own `if (isMobile)` branch,
+News's mobile branch now renders `<Shell isMobile>` too (see the mobile-collapse block below).
+Library's five
 inspect panels carry shared `.zinspect` with `.detail-side` slimmed to its extras — its
 App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile) is
 UNTOUCHED and NOT forced into RightStack. ThreeZone retired.
@@ -84,9 +100,34 @@ memory `project_three_zone_shell`.
 note index, center = editor edited IN-TAB, right = the note's anchored verse via `VerseRow`;
 editor guts shared via `useNoteEditor`/`NoteEditFields`; inspect top:0). Seam index = a `Seams`
 Study module on `<Shell>` (see data-model.md, study.db). News gained a SELECTED-state inspect
-(click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Mobile for all
-three stays the old layout. Only remaining consumer = **News-on-mobile** (net-new, not a
-migration). Full record: memory `project_three_zone_shell`.
+(click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Full record:
+memory `project_three_zone_shell`.
+
+### Shell's MOBILE collapse — News is the first consumer (2026-07-15)
+`MobileBar`/`ZoneSheet`/`.zbar` shipped in Phase 1 with **nothing using them** until News; Mobile
+Ask-corpus and Study are still parked on their own old single-column branches, and **News is the
+pattern to copy**. `Shell` mobile = center inline + `mobile={{tools, sheet, sheetTitle, sheetBare,
+onCloseSheet}}`; a tool opens its zone as a swipe-dismiss sheet. What it proved, so the next
+consumer doesn't re-derive it:
+- **No bar collision:** `.zbar` is `bottom:0`; the app's own `.mobile-tabs` is `top:0`. The bottom
+  is free. (Library's cockpit is the exception — it owns the bottom on its own tab.)
+- **Pin to the visible viewport** or the whole page rubber-bands: the surface needs
+  `height: calc(100dvh - var(--bar-h) - safe-top)` + `overflow:hidden`, plus
+  `.app.view-<tab> .main { padding-bottom: 0 }`. Same trick as Ask-corpus's `.ac`.
+- **The scroll box needs its own bottom clearance** (`--bar-h` + safe-area) or the last row hides
+  behind the fixed bar.
+- **A panel that carries its own header + scroll box goes in as a BARE sheet** (`sheetBare`), else
+  the padded `.zsheet-body` nests a second scroll box and collapses the flex-fill. **⚠ But a bare
+  sheet's CHILD owns the scroll box, so `ZoneSheet` has no `scrollRef` to hand the dismiss
+  gesture** — that shipped as a real bug (scroll-up dragged the sheet shut). `useSwipeToDismiss`
+  now falls back to the nearest scrollable ancestor of the touch when no ref is given (an explicit
+  `scrollRef` still wins, so every other sheet is unchanged). **The fallback can't rescue a scroll
+  box that isn't a plain `overflow:auto` descendant** — hand it a ref then.
+- **Bottom-bar icons are 22px** (`.zbar-btn svg`), sized at the bar so every consumer inherits one
+  size and the shared `Icon.*` glyphs (14–16px, drawn for dense inline rows) stay untouched. The
+  in-app references DISAGREE — Word study `.wm-tab` 22px vs Library cockpit `.mbar-*` 21px — 22
+  wins as the icon-only-equal-slots shape and 2:1 app-wide. Don't invent a fourth number.
+- Bar height stays `--bar-h`: the app's bar rhythm and the sheets' max-height maths key off it.
 
 ## Library tab
 Full per-feature history in memory (each block names its file). Standing rules + gotchas here.
