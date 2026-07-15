@@ -270,7 +270,13 @@ function _dedupByOutlet(members) {
 // so cap the visible rows and tuck the rest behind a fold like the out-of-window coverage.
 const _SRC_DEPTH = 15;
 
-function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, selected }) {
+// `isMobile` is here for ONE reason: a control that does nothing doesn't earn a 375px row.
+// Below the mobile breakpoint a read-only viewer's Keep/Dismiss aren't rendered at all;
+// above it they gray exactly as before (JP's desktop ruling — a grayed control + its
+// tooltip teaches a reader what the feed is, and on a wide row that costs nothing).
+// Same control, different cost, different answer. It's a breakpoint, not a new mode:
+// readOnly is unchanged and still drives the desktop gray.
+function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, selected, isMobile }) {
   const top = story.sources[0] || {};
   const tier = _scoreTier(story.score);
   // A plain, non-interactive cluster-size signal (distinct outlets). The why + the full
@@ -287,6 +293,10 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
   // Click the card BODY to inspect why it scored (the rail); the headline link and the
   // Keep/Dismiss buttons stop the bubble, so they keep their own action.
   const pick = onSelect ? () => onSelect(story) : undefined;
+  // Dead controls on a phone row: the reader can't act, so the pair is pure cost — it
+  // squeezes the headline column and buys nothing. The read-only signal moves to one
+  // line at the top of the feed (see the mobile branch), where it costs no row width.
+  const hideActions = readOnly && isMobile;
   return (
     <div className={"news-story listrow" + (onSelect ? " news-story--click" : "") + (selected ? " on" : "")}
          onClick={pick}>
@@ -308,6 +318,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
           ))}
         </div>
       </div>
+      {hideActions ? null : (
       <div className="news-actions">
         {view === "inbox" ? (
           <>
@@ -338,6 +349,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
           </>
         )}
       </div>
+      )}
     </div>
   );
 }
@@ -887,7 +899,7 @@ function NewsView({ isMobile }) {
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
-                       readOnly={!canReview} since={since} until={until}
+                       readOnly={!canReview} since={since} until={until} isMobile={isMobile}
                        onSelect={isMobile ? null : setSelStory}
                        selected={!isMobile && selStory && selStory.ids && s.ids && selStory.ids[0] === s.ids[0]} />
           ))}
@@ -911,6 +923,13 @@ function NewsView({ isMobile }) {
             <span className="news-asline" title="Keep/Dismiss are recorded under this reviewer">
               Reviewing as <strong>{meta.reviewer_name}</strong>
             </span>
+          ) : !canReview ? (
+            // The read-only signal, stated ONCE where it costs no row width. On mobile the
+            // grayed Keep/Dismiss aren't rendered (see hideActions), and a plain reader gets
+            // no "Reviewing as" line from the server (_reviewer() -> no id), so without this
+            // there'd be nothing left telling a reader what the tab is. Says the same thing
+            // the desktop tooltip says: you're reading someone's curated watch.
+            <span className="news-asline">Read-only — a curated watch</span>
           ) : null}
           {viewsToggle}
         </div>
