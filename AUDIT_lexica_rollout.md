@@ -7097,6 +7097,91 @@ inquiry).**
 
 ---
 
+## GUARD FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD + finish_rebuild's VERDICT STOPS LYING (2026-07-14; `ea872eb` design → `6fe3e52` build)
+
+**ZERO model spend. Reviewer-receipted at both gates. Three JP rulings, all built.** Closes item 2.
+
+### ⚠ THE FINDING THAT OUTGREW THE TICKET
+
+**`finish_rebuild.sh` swallowed EVERY step's failure, and had been doing so the whole time.**
+`:15` read `set -uo pipefail` — **no `-e`** — and `run()` never looked at an exit code. So **any**
+failing step, **`import_tipnr` included**, scrolled past under the steps after it and the script
+still printed `== finish_rebuild done ==`. **A failure degrading into a green-looking finish —
+the same silent-fallback class closed one layer down earlier the same session, sitting unnoticed
+in the rebuild flow.** It was also load-bearing: a drift check that merely exited non-zero would
+have been **swallowed**, so JP's own ruling could not be met without facing it first.
+
+**Fixed as ruled:** `run()` collects; the chain still does **NOT** abort (steps are independently
+re-runnable — a half-patched copy is worse than a finished one with named failures); the closing
+banner **refuses to say "done"**, names every step that reported, exits non-zero. **No `done`
+line ⇒ DO NOT SWAP.**
+
+### The hook — verified, not chosen by taste
+
+**`import_tipnr.py` is the SOLE writer of `is_pn=1`** (`:610`, `:615`); the build **CLEARS** it
+(`build_words_from_abp.py:1635`); everything else in `scripts/` only reads it. **The single writer
+of the marking is the single hook** — and it fires whether import_tipnr runs inside the tail **or
+standalone** (which CLAUDE.md mandates after ANY rebuild). **Hooking the wrapper instead would
+have MISSED the standalone run.** Nothing for JP to remember: the ruling is met **structurally**.
+
+The check reuses production's **own** read (`_p2_corpus_names`) **and** its own membership helper
+(`_p2_known`, which loosens singular/plural) — what matters is what the **live guard would
+actually treat as known**, not raw set membership. **Never a copy.**
+
+### Single source (ruling 2, checkpoint cleared)
+
+The eight-word claim was hard-typed in a test function **and** restated in a comment — **two
+copies, ONE verification (2026-07-12), no way to notice drift: the #71 class.** It now lives in
+`scripts/check_p2_guard_fixture.py`, which **owns** it; the test **imports** it. **No third copy
+ever** — writing the words into the checker as well would have *been* the third. `FIXTURE_VERIFIED`
+rides with the claim and **prints on every run**, so staleness is **computable, not remembered**.
+**The `votive/active/applying` half was COMMENT-ONLY until now** — this check tests it for the
+first time.
+
+### Severity (ruling 3)
+
+The check runs **after** the save, so the rebuild's work is committed and complete before anything
+is reported. **The non-zero exit is a VERDICT, not an abort.** The flag says plainly: **THE REBUILD
+IS NOT WRONG — THE FIXTURE IS STALE**, and tells the operator to **PASTE this run's findings**
+(never retype — #71), re-date, re-run the probe-2 tests, then swap. **Silence on success** — a loud
+banner on every good rebuild trains the eye to skip it.
+
+### Red-first — both directions, each firing ALONE (#75)
+
+| Break | What the broken checker said |
+|---|---|
+| Blind to a **LOST** marking (**the dangerous direction** — production demotes the name and **eats its warn** while the test still passes) | **`[OK] … still matches the corpus`** — with `korah` gone |
+| Blind to a **GAINED** marking | the same false **`[OK]`** — with `applying` marked |
+
+**Both reproduce, on demand, the exact false-green this arc exists to kill.** A fourth case proves
+a dead guard read reports **NOT RUN** and *"not a pass"*, never OK.
+
+**Wrapper proven BOTH ways** against the **real** script with steps stubbed (no db, no network, no
+repo files touched; stub removed): **GREEN** — all clean ⇒ `done`, exit 0, no banner. **RED** —
+only import_tipnr reports ⇒ names that ONE step, **no `done`**, exit 1, **and every remaining step
+still ran**, proving no mid-chain abort.
+
+**UNPLANNED RED PROOF, logged for honesty:** the first stub attempt used a Windows-style path, so
+Git Bash never picked it up and resolved `python3` to a WindowsApps shim that fails. All 15 steps
+failed ⇒ banner named all 15, exit 1, no `done`. **A real red proof against the real script — but
+an accident, not a design, and NOT the clean-path proof.**
+
+### ⚠ OUTSTANDING ACCEPTANCE RUN — the arc is NOT closed
+
+**THE CLEAN PATH WITH REAL STEPS IS UNVERIFIED.** It was proven only with stubs; it can only be
+seen on PA at **JP's next real rebuild**. **THE WRAPPER'S FIRST LIVE RUN SHOULD BE WATCHED, NOT
+ASSUMED** — a wrapper that refuses to say "done" when it should say it would be a new false alarm
+in the highest-stakes procedure this repo has. **If that rebuild prints `done`, the arc closes. If
+it flags, the fixture is stale and the message says what to paste back.** **Next session: do NOT
+record this as closed until that run happens.**
+
+**STATE: ZERO model spend. Ten suites green. Scoreboard UNCHANGED `3/10ʰ · 7/15`.** V9 frozen; no
+card, roster, or floor touched. `/rebuild-words` step 3 updated (the script's verdict IS the gate;
+the drift check rides import_tipnr automatically). **SHELF: prose-economy (JP's inquiry) — and the
+acceptance run above.**
+
+---
+
 ## G236 PART 2 — MECHANISM KILLED ON THE FLOOR'S OWN BYTES; THE GATE IS CLOSED (2026-07-14)
 
 **ZERO model spend. ZERO code changed. The read cost nothing** (`--from-json`, no model call, no db
