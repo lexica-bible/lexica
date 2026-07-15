@@ -359,7 +359,18 @@ The shared frame (`Shell` + `RightStack` in `static/src/22-shell.jsx`) is done; 
 index, and News right-rail all shipped on it 2026-07-01. **Status note (JP, 2026-07-10): the Seam index
 consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which JP has taken down from
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
-`project_three_zone_shell` + `HANDOFF_corpus_shell.md`. Left to do:
+`project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
+
+**Shell's MOBILE collapse now has its first real consumer: News (`1a35822`, 2026-07-15).** Until then
+`MobileBar`/`ZoneSheet`/`.zbar` had shipped but nothing used them — News is the pattern to copy for the
+two mobile consumers still parked below. What it proved, so the next one doesn't re-derive it: the
+`.zbar` sits at the BOTTOM and the app's `.mobile-tabs` is fixed at the TOP, so they don't collide; a
+surface needs its own `height: calc(100dvh - var(--bar-h) - safe-top)` + `.app.view-<tab> .main
+{padding-bottom:0}` (the Ask-corpus `.ac` pinning trick); the scroll box needs its own bottom clearance
+or the last row hides behind the bar; and an inspect panel that carries its own header + scroll box goes
+in as a BARE sheet (`sheetBare`) or the padded body nests a second scroll box and collapses it.
+
+Left to do:
 - **Ask-corpus MOBILE rail** (PARKED 2026-07-03, JP's call — next fresh checkpoint) — desktop rail is DONE,
   fixture-locked (`test_ac_word_groups.js` + `test_rstack_logic.js` + `test_rail_payload_contract.py`) + CI-gated,
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
@@ -386,16 +397,41 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
   - ⚠ **The "News tab isn't reachable on a phone" premise is DEAD** (JP `c64b139`, plus an independent
     375px harness pass: tab present, active, renders). Don't let it come back.
   code: static/src/84-news.jsx
-- **News-on-mobile ITEM 2 (proposed; reviewer-accepted as next-pass scope, NOT done) — the filter strip
-  eats the screen.** At 375px the mobile filter strip is **205px tall and the first headline starts 404px
-  down**: half a phone screen of controls before a single story. Reviewer's read: a **bigger space win
-  than item 1 was**. Layout-only, same scope discipline as item 1.
-  code: static/src/84-news.jsx (the `isMobile` branch's `.news-filters`), static/styles.css
-- **News mobile RIGHT ZONE — separate ticket, and it's a BUILD, not polish.** Mobile News has no Shell,
-  no thread-rail sheet, no FeedShape, and cards aren't tappable (`onSelect` is null when `isMobile`), so
-  a phone reader can never see "why it surfaced". **This is the actual Shell/RightStack parity gap** vs
-  the other consumers — same job as the Ask-corpus mobile rail above. Don't bolt it onto a polish pass.
-  code: static/src/84-news.jsx, 22-shell.jsx (mobile sheet mode)
+- **News-on-mobile ITEM 2 + the RIGHT-ZONE build — BOTH SHIPPED 2026-07-15 (`1a35822`, reviewer-approved,
+  on master; JP deploys). News is the FIRST surface on the shared Shell's mobile collapse.** The 205px
+  filter strip is gone and the inspect zone exists on a phone for the first time. **One change closed both
+  tickets, and the reviewer ratified that they were never separable on mobile:** the toolbar is what makes
+  the inspect zone reachable at all, so you cannot do item 2's strip without deciding where the zones go.
+  - **THREE BUTTONS — JP's ruling, don't redesign it:** **Threads** (left) · **Watch** (middle) ·
+    **Options** (right). Reads left-to-right like the desktop: navigate zone left, the thing you look AT
+    in the middle, the knobs right. Desktop zones map straight across — rail→Threads, top bar's
+    date/score/sort→Options, inspect (FeedShape / NewsWhy)→Watch, feed keeps the screen.
+  - Measured at an asserted 375px: **first headline 404.2→189.9px (−214)**; strip→one 48px bar.
+  - **Watch is ONE room with TWO doors** (tested, not asserted): the middle button opens whatever's
+    there; a card tap opens the same sheet pre-selected to that card's why; "‹ Watch" clears back to the
+    readout. `onSelect` used to be null on mobile — that's why the zone was unreachable before.
+  - **All 17 strip controls survive** — 15 in Options (2 dates + 6 presets + 6 score + sort), threads in
+    Threads (1 control, 15 buttons), Refresh in the header. *(Count of record: 17. An earlier "16" was a
+    CC transcription slip that propagated into a reviewer brief and was caught against the instrument.)*
+  - **RULING — Refresh stays VISIBLE in the header** (measurement overturned the assumption it was free:
+    it costs 6.4px, a 32px icon against 26.8px tabs). Kept anyway, and the reason that survives
+    re-litigation is the CATEGORY one: **Refresh changes what the feed CONTAINS, not how it's filtered,
+    so it does not belong in a filters sheet.** 6.4px is 1.7% of the 214px reclaimed. Shrinking it to
+    27px would zero that but trade away a real touch target.
+  - **RULING — "Options", NOT "Filters"** on the right: Threads is itself a filter, so naming one of two
+    filtering sheets "Filters" says the other one isn't. A future session will be tempted to "fix" this
+    label back. Don't.
+  - **No bar collision, checked not assumed:** the toolbar is at the BOTTOM; the app's `.mobile-tabs` is
+    fixed at the TOP (`styles.css`, `top: 0`).
+  - Verified, not assumed: desktop untouched (top bar, rail, FeedShape, grayed pair + tooltip, card click
+    still fills the rail in place, zero mobile leakage); admin mobile keeps live controls + copy/export;
+    item 1's read-only label survives; last card clears the toolbar at full scroll. 9 gates green.
+  code: static/src/84-news.jsx (the `isMobile` branch), 22-shell.jsx (Shell mobile + MobileBar), styles.css
+- **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
+  "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
+  regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,
+  so it's his own triage view. Fix would be stacking the actions under the headline on mobile; that's a
+  design call on LIVE controls, so it waits for JP. code: static/src/84-news.jsx (NewsStory `.news-actions`)
 - **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
   its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
   Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
