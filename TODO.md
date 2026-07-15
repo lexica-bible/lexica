@@ -365,7 +365,16 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
   in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
   code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
-- **News-on-mobile** (net-new, the LAST shell surface) — the News tab isn't reachable on a phone. Half the
+- **News-on-mobile** (net-new, the LAST shell surface). **FIRST ITEM (JP + reviewer 2026-07-15): drop the
+  reader's Keep/Dismiss on mobile.** A grayed pair eats ~half a card row at 375px, and a control that does
+  nothing is paying rent in the scarcest space on the page. NOT a reversal of the desktop gray ruling (see
+  the account-gate section): on desktop the tooltip is cheap and teaches the reader what the feed is; on a
+  phone row the same control costs too much. Same control, different cost, different answer — and it's a
+  breakpoint, not a new mode: `readOnly` already exists and already fires, so below the mobile breakpoint
+  readOnly controls don't render, above it they gray as now. No new state, no server change. Optional
+  polish: put the read-only signal where it costs nothing (a small label on the card header, or once at the
+  top of the feed) so the reader still learns what the tab is. Land it in the mobile commit — do NOT reopen
+  Pass 1. Then the rest: the News tab isn't reachable on a phone. Half the
   "confirm the cause" question is answered (read 2026-07-15, gate pass): it is NOT missing from the mobile
   bottom nav — a `mobile-tab` button is there, gated on `showNews` like the desktop entry. So the cause is
   downstream of the nav (a mobile branch / layout), not a missing button. Not verified on a real phone.
@@ -433,9 +442,10 @@ into the same commit: `/api/news/resolve` was a WRITE sitting on the READ gate (
 `items.resolved_url` + fetches outbound) — invisible while reads were admin-only, because every reader
 was also a writer; opening reads is what pulls the two gates apart. Moved to `_reviewer()` → `can_write`.
 Gates locked + control-tested by `tests/test_news_gate.py` (in CI + the pre-commit hook).
-- **JP still to eyeball: the plain-account view.** The `readOnly` path (grayed Keep/Dismiss) had never
-  executed before this commit — until now every reader could also write, so it was dead code. It's the
-  only unproven thing in the pass, and it's the first screen Tudor's viewers see.
+- **Plain-account view CONFIRMED LIVE by JP 2026-07-15** — the `readOnly` path (grayed Keep/Dismiss) had
+  never executed before this commit (every reader was also a writer, so it was dead code). Now exercised
+  on the real site. Pass 1 has nothing unproven left. Follow-on: the grayed pair costs too much row on a
+  phone — parked as the first Pass-2 item under News-on-mobile.
 - Rulings logged: **gray, don't hide** the reader's Keep/Dismiss — reviewer ruled hide, JP superseded
   (a grayed control + "Read-only" tooltip isn't broken, it tells a reader the feed is a curated watch;
   matches `feedback_gray_dont_hide`). Kept/Dismissed tabs reading zero for a reader: **leave them**, same
