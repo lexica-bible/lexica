@@ -29,7 +29,7 @@ import build_lexica_def as B
 # Minimal but real save_draw inputs (the test_repair_pass ctx shape).
 SID = "G9999"
 GSET = [("gift", 3)]
-CTX = [("Pro", 18, 16, "gift", "", "A gift of a man widens him; and sits him by monarchs.", "", "")]
+CTX = [("Pro", 18, 16, "gift", "", "A gift of a man widens him; and sits him by monarchs.", "", "", [])]
 
 
 def hist_files():

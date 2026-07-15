@@ -35,7 +35,7 @@ def test_every_entry_names_provenance_and_one_line_hints():
         assert isinstance(e.get("jobs", []), list), f"{sid}: jobs must be a list"
 
 
-_CTX = [("Gen", 1, 1, "made", "", "In the beginning God made the heaven and the earth.", "made", "")]
+_CTX = [("Gen", 1, 1, "made", "", "In the beginning God made the heaven and the earth.", "made", "", [])]
 _GSET = [("made", 1)]
 
 
@@ -114,8 +114,8 @@ def test_phrase_context_reaches_the_draw():
     """The fragment-rendering fix's injection half: a multi-word slot phrase shows in the
     here-tag with its translator additions named, and a fragment-risk head is annotated in the
     gloss set; a single-word slot's tag is unchanged."""
-    ctx = [("2Ch", 4, 13, "latticed", "", "prose here", "latticed works;", "works"),
-           ("Gen", 1, 1, "made", "", "prose here", "made", "")]
+    ctx = [("2Ch", 4, 13, "latticed", "", "prose here", "latticed works;", "works", []),
+           ("Gen", 1, 1, "made", "", "prose here", "made", "", [])]
     msg = B.verse_user_msg("G1350", "diktyon", [("latticed", 1), ("made", 1)], ctx,
                            pmap={"latticed": [("latticed works", 1)]})
     assert 'phrase here: "latticed works;" (added words: works)' in msg
@@ -138,12 +138,13 @@ def test_phrase_context_reaches_the_draw():
 # lift, nothing for the quote gate to match. The function-word gloss ("of") is deliberately NOT
 # named — feeding it invites the next fabrication ("mýron is rendered *of*").
 
-# (book, ch, vs, rend, form, prose, phrase, ital) — the ctx tuple fetch_context builds.
+# (book, ch, vs, rend, form, prose, phrase, ital, context) — the ctx tuple fetch_context builds.
+# The 9th element is the grounded-naming context list (2026-07-15); [] = no neighbors fed.
 _OCC_BLANK_HEAD = [("Joh", 12, 3, None, "", "Then Mary, taking a pound of perfumed liquid...",
-                    "of", "")]
+                    "of", "", [])]
 _OCC_NORMAL     = [("Mat", 26, 7, "liquid", "μύρου (mýrou)",
                     "there came to him a woman having an alabaster flask of perfumed liquid...",
-                    "perfumed liquid", "")]
+                    "perfumed liquid", "", [])]
 
 # The tag carries NO apostrophe either: "ABP's" would put one in, and a bare ' is a quote
 # character the gate's span-matching has to reason about. Say it without possessives.

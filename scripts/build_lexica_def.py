@@ -56,6 +56,16 @@ SPLIT_VER    = "split3"              # which split_definition() wrote a row (sto
                                      # split3: sense headers parsed bold OR plain-numbered (was bold-only;
                                      # a plain-numbered draw produced an empty glance -> validate refused).
 
+# ── GROUNDED-NAMING context span (design pass, reviewer-ruled 2026-07-15). Each fed occurrence
+# carries up to this many surrounding verses EITHER SIDE, same chapter only, labeled as read-only
+# context — so a narrative subject's name is GROUNDED in text the model can see instead of
+# RECALLED from training (the G2374 Corinth/Hazah + G5088 Elizabeth park cause). ±2 was ruled
+# over ±1 on the read fact: it additionally grounds Elisha's widow (2Ki 4:2 for 4:4) and Mary at
+# the manger verse (Luk 2:5 for 2:7), leaving exactly the accepted residual (Solomon complex,
+# Paul-as-author). Same-chapter only: chapter-crossing would rest on an unverified verse-row
+# ordering, and every read-fact rescue case was same-chapter.
+CONTEXT_SPAN = 2
+
 OCC_MIN = 2   # verse-grounded entries need a real distribution to characterize a range; a hapax
               # (1×) has none, so it's left to the LSJ card. No CLI bypass — building one means
               # editing this constant on purpose (audit A1, 2026-07-01).
@@ -80,8 +90,9 @@ You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
   this lemma, with frequencies
-- a set of occurrences: each a verse with surrounding context where this lemma
-  appears, with the inflected form marked
+- a set of occurrences: each a verse where this lemma appears, with the
+  inflected form marked, plus surrounding context verses (lines marked
+  "context") supplied for reading only
 
 Build the definition from what the lemma does across the supplied occurrences.
 Reason from the contexts, not from prior knowledge of the word and not from the
@@ -120,6 +131,11 @@ Constraints:
 - Reason only from the supplied occurrences. Do not import senses the supplied
   verses do not show, even if you know the word carries them elsewhere. If you
   reach for a sense and cannot point to a supplied verse, drop it.
+- Name a person or place only if that name appears in the supplied text - the
+  occurrence's verse or its context lines. If the supplied text does not name
+  the referent, do not name it, even if you know the narrative: describe by
+  role instead (a woman, the author, the city). Context lines exist to ground
+  names; they are never citations and never count as occurrences.
 - If the gloss set contains a sense none of the supplied occurrences exhibit, do
   not define it. Note that the gloss list includes it but the occurrences do not
   attest it. Do not invent context to cover it.
@@ -477,8 +493,21 @@ def fetch_context(conn, occs, has_surface):
                              (o["vid"], o["pos"])).fetchone()
             if s and s["form"]:
                 form = s["form"] + (f" ({s['translit']})" if s["translit"] else "")
+        # GROUNDED-NAMING context (2026-07-15): up to CONTEXT_SPAN verses either side, same
+        # chapter. A missing neighbor is OMITTED entirely — never printed blank or as a
+        # placeholder (the "None" feed-lie class, G3464 canary: the feed must never assert
+        # something that isn't there).
+        ch0, vs0 = int(o["ch"]), int(o["vs"])
+        neigh = []
+        for nv in range(vs0 - CONTEXT_SPAN, vs0 + CONTEXT_SPAN + 1):
+            if nv == vs0:
+                continue
+            r = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                             (o["book"], ch0, nv)).fetchone()
+            if r and r["text"]:
+                neigh.append((ch0, nv, r["text"]))
         out.append((o["book"], o["ch"], o["vs"], o["rend"], form, prose,
-                    (o["phrase"] or ""), (o["ital"] or "")))
+                    (o["phrase"] or ""), (o["ital"] or ""), neigh))
     return out
 
 
@@ -500,7 +529,7 @@ def _occ_lines(ctx):
     V10 repair message (the design requires the repair feed to match the original feed
     shape byte-for-byte, so this must never fork into two copies)."""
     out = []
-    for book, ch, vs, rend, form, prose, phrase, ital in ctx:
+    for book, ch, vs, rend, form, prose, phrase, ital, neigh in ctx:
         if (rend or "").strip():
             tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
                    + (f"; form: {form}" if form else "") + "]")
@@ -523,6 +552,12 @@ def _occ_lines(ctx):
                    + (f"; form: {form}" if form else "") + "]")
         out.append(f"  {book} {ch}:{vs} {tag}")
         out.append(f"     {prose}")
+        # GROUNDED-NAMING context lines (2026-07-15). Label states the contract on the line
+        # itself: read-only, not an occurrence, never a citation. ASCII only (matches the feed's
+        # existing style; nothing here for the quote gate to reason about).
+        for nch, nvs, ntext in neigh:
+            out.append(f"     ~ context {book} {nch}:{nvs} (read only; NOT an occurrence - "
+                       f"never cite it): {ntext}")
     return out
 
 
@@ -575,7 +610,10 @@ def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=N
                  "Where ABP prints a MULTI-WORD phrase on this word's slot, the tag also shows that full "
                  "phrase: analyze the phrase as the rendering, never the bare [here] token alone. "
                  "'added words' are translator additions with no Greek behind them; a phrase can also "
-                 "carry words belonging to NEIGHBORING Greek words - the [here] token is this lemma's own:")
+                 "carry words belonging to NEIGHBORING Greek words - the [here] token is this lemma's own. "
+                 "Lines marked '~ context' are surrounding verses supplied so names and referents are "
+                 "grounded in text you can see; they are NOT occurrences - never cite a context "
+                 "reference, and every citation must be one of the occurrence references:")
     lines.extend(_occ_lines(ctx))
     if hint:
         # STRUCTURE-HINT CHANNEL (escalation mechanism, ruled 2026-07-07). Rides in the user message as a
@@ -2797,19 +2835,26 @@ def _cite_chunks(body):
             yield tail, refs
 
 
-def probe2_names(raw, verse_texts, extra_whitelist=(), known_names=None):
+def probe2_names(raw, verse_texts, extra_whitelist=(), known_names=None, context_texts=None):
     """PROBE 2 — named-subject check (V11; the Jehoiada/Eliphaz/Jer 3:21 misattribution class).
     WARN, not block — the standing kill sub-rule is a HUMAN rule; the machine's job is making
     sure the human never misses the candidate. Every proper name in a claim must appear in at
     least one of the claim's cited verse texts. A missing verse text = NOT-RUN for that name
     (loud, blocks apply) — never a pass. known_names = the p2wl:v2 corpus-name guard set
-    (lowercased); None disables sentence-starter demotion entirely. Returns (warns, notruns)."""
+    (lowercased); None disables sentence-starter demotion entirely. Returns (warns, notruns).
+    context_texts (grounded-naming, 2026-07-15) = {ref: [context verse texts]} for FED
+    occurrences only — a name grounded in a cited occurrence's OWN fed context verses passes
+    (the model was shown that text). Scoped per-occurrence, never pooled card-wide; None (e.g.
+    a resplit pass, which has no fed sample) = strict as before, failing toward the human."""
     extra = {str(w).lower() for w in extra_whitelist if w}
     body = _strip_quoted(raw)
     warns, notruns = [], []
     for chunk, refs in _cite_chunks(body):
         texts = {k: verse_texts.get(k) for k in refs}
         avail = [probe_norm(t).lower() for t in texts.values() if t]
+        if context_texts:
+            avail.extend(probe_norm(t).lower()
+                         for k in refs for t in context_texts.get(k, ()) if t)
         missing = [k for k, t in texts.items() if t is None]
         for name in _proper_names(chunk, body, known_names):
             if name.lower() in extra:
@@ -2973,12 +3018,15 @@ def carry_adjudication(old_entry, new_audit, is_resplit):
     return note if _warn_set(old) == new else None
 
 
-def validate_entry(entry, conn=None):
+def validate_entry(entry, conn=None, fed_ctx=None):
     """Tell a LEGITIMATELY-empty field from a PARSE FAILURE wearing the same blank. The fields here
     are the ones where empty is NEVER legitimate, so an empty one means the splitter couldn't read
     the model's output — a loud error that must refuse to write the row, not a silent blank that
     reads as clean at scale (the numbered-book lesson). Range / gloss_notes / coverage are NOT here
-    on purpose: empty is a fine graceful degrade for those scholar fields. Returns problems ([]=ok)."""
+    on purpose: empty is a fine graceful degrade for those scholar fields. Returns problems ([]=ok).
+    fed_ctx (grounded-naming, 2026-07-15) = {(book,ch,vs): [context verse texts]} for the FED
+    occurrences, passed on draw/apply passes only — probe-2 grounds a name against a cited
+    occurrence's own fed context. None (resplit: no fed sample) = probe-2 strict as before."""
     problems = []
     if not entry["sense_headlines"]:
         problems.append(
@@ -3060,7 +3108,8 @@ def validate_entry(entry, conn=None):
         p1_fails, p1_nr = probe1_verbatim(raw, vt, notes=p1_notes, warns=p1_warns)
         p2_warns, p2_nr = probe2_names(raw, vt,
                                        extra_whitelist=(entry.get("lemma"), entry.get("translit")),
-                                       known_names=_p2_corpus_names(conn))
+                                       known_names=_p2_corpus_names(conn),
+                                       context_texts=fed_ctx)
         # A dead guard is a NOT-RUN, never a silent degrade (DESIGN_p2_guard_loudness.md).
         # Rides the existing class: printed below, stored, and blocks apply. "" when healthy.
         guard_nr = _p2_guard_notrun(conn)
@@ -3679,10 +3728,14 @@ def main():
         # V9 coverage gate input — the fed sample only exists on draw/apply passes.
         if args.resplit:
             entry["audit"]["fed_uncited"] = None
+            fed_ctx = None   # no fed sample on a resplit — probe-2 runs strict (fails toward the human)
             print("  ⚠ coverage gate NOT RUN — resplit re-splits stored prose; no fed sample "
                   "on this pass.")
         else:
             fed_keys = [(c[0], c[1], c[2]) for c in ctx]
+            # grounded-naming: each fed occurrence's context verse texts, keyed by its ref,
+            # handed to probe-2 so a name the model was SHOWN (in context) doesn't warn.
+            fed_ctx = {(c[0], c[1], c[2]): [t for _, _, t in c[8]] for c in ctx}
             entry["audit"]["fed_uncited"] = coverage_gate(fed_keys, entry["senses_block"])
             n_fed = len(set(fed_keys))
             print(f"  coverage gate: {n_fed - len(entry['audit']['fed_uncited'])}/{n_fed} "
@@ -3710,7 +3763,7 @@ def main():
                   "placement blind spot is UNCHECKED (the insurance clause gates count ships on "
                   "#30 live).")
 
-        problems = validate_entry(entry, conn)
+        problems = validate_entry(entry, conn, fed_ctx=fed_ctx)
         if problems:
             print("  ✗ PARSE FAILURE — NOT written (a load-bearing field came back empty):")
             for p in problems:

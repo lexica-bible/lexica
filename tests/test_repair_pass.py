@@ -35,12 +35,12 @@ FED = [("2Sa", 19, 42), ("Pro", 18, 16), ("Psa", 68, 18), ("Eph", 4, 8),
        ("Mat", 7, 11), ("Deu", 23, 23)]
 
 CTX = [
-    ("2Sa", 19, 42, "gift",  "", "…or has he lifted a gift to us?", "", ""),
-    ("Pro", 18, 16, "gift",  "", "A gift of a man widens him…", "", ""),
-    ("Psa", 68, 18, "gifts", "", "…you received gifts by man…", "", ""),
-    ("Eph", 4, 8,   "gifts", "", "…he gave gifts to men.", "", ""),
-    ("Mat", 7, 11,  "gifts", "", "…know to give good gifts to your children…", "", ""),
-    ("Deu", 23, 23, "gift",  "", "…as you vowed to the LORD your God a gift…", "", ""),
+    ("2Sa", 19, 42, "gift",  "", "…or has he lifted a gift to us?", "", "", []),
+    ("Pro", 18, 16, "gift",  "", "A gift of a man widens him…", "", "", []),
+    ("Psa", 68, 18, "gifts", "", "…you received gifts by man…", "", "", []),
+    ("Eph", 4, 8,   "gifts", "", "…he gave gifts to men.", "", "", []),
+    ("Mat", 7, 11,  "gifts", "", "…know to give good gifts to your children…", "", "", []),
+    ("Deu", 23, 23, "gift",  "", "…as you vowed to the LORD your God a gift…", "", "", []),
 ]
 
 RAW_TRIMMED = (

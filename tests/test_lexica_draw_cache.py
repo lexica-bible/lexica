@@ -106,7 +106,7 @@ def _no_model(*a, **k):
 def test_signature_status_and_roundtrip(tmp_path, monkeypatch):
     monkeypatch.setattr(B, "DRAWS_DIR", str(tmp_path / "draws"))
     gset = [("loved", 3)]
-    ctx = [("Joh", 3, 16, "loved", "", "For God so loved")]
+    ctx = [("Joh", 3, 16, "loved", "", "For God so loved", "", "", [])]
     sig = B.draw_signature("G25", "agapao", gset, ctx)
 
     B.save_draw("G25", "ἀγαπάω", "agapao", gset, ctx, "PROSE")
