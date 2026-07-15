@@ -28,11 +28,24 @@
 // localStorage, not stubbed at /api/. Do NOT shape it from views_notes.py: `notes_sync`
 // (views_notes.py:708) stores the client's blob OPAQUELY (`json.dumps(n)`) and hands the same
 // blob back — it never authors a field, so the server is a round-tripper, not the producer.
-// The producers are the CLIENT:
-//   * an anchored note        -> 12-notes-store.jsx `create()` (id/device/body/color/
+// The producers are the CLIENT. Note there are TWO anchor writers, and they are not
+// interchangeable — a note's shape depends on which one made it:
+//   * a SINGLE-verse note     -> 12-notes-store.jsx `create()` (id/device/body/color/
 //                                created/updated) merged over 60-library.jsx `verseAnchor()`
-//                                (corpus/translation/book/bookName/chapter/start/end/
-//                                snippet/refLabel)
+//                                (:1291-1295 — corpus/translation/book/bookName/chapter/
+//                                start/end/snippet/refLabel). This is the VERSE-NUMBER MENU
+//                                path: it stamps `start` and `end` to the SAME verse and
+//                                `pos: null`, so it can only ever produce a single-verse note.
+//   * a MULTI-verse note      -> the same `create()` over 60-library.jsx `resolveSelection()`
+//                                (:1093-1102 — the DRAG-SELECT path). It resolves each edge of
+//                                the selection to its own verse (:1057-1058), swaps them into
+//                                order if the drag ran backwards (:1063-1066), and stores
+//                                `start.verse` / `end.verse` SEPARATELY (:1098-1099) with real
+//                                word positions in `pos`. `refLabel` comes out already a range
+//                                — `book ch:startV–endV`, EN-DASH (:1073).
+//                                Shape a range fixture from THIS, not from `verseAnchor()`:
+//                                reading the single-verse writer and assuming it covers ranges
+//                                is how you'd "confirm" that ranges aren't stored at all.
 //   * `bookmark: true`        -> 60-library.jsx `vmBookmark` -> create({...a, bookmark: true})
 //   * a journal page          -> 12-notes-store.jsx `createJournal()` (kind/title/body)
 //
@@ -125,17 +138,56 @@ const BOOKS = [
 // /api/lexica/contested — 00-core.jsx reads `d.strongs` and builds a Set from it.
 const CONTESTED = { strongs: ["G2316", "G4151"] };
 
-// /api/chapter/<book>/<ch> — views_library.py chapter_text() returns a LIST of
-// {verse, heading, prose, words}. DESKTOP mounts LibraryView alongside whatever tab is
-// active, so an empty object here crashed the whole app before any other surface could
-// render (withMarks -> arr.forEach). Mobile never showed it because it mounts only the
-// active view. Same story as /api/books: a fixture gap, not a product bug.
-const CHAPTER = [
-  { verse: 1, heading: "The Word became flesh", prose: "In the beginning was the word, and the word was with God, and God was the word.",
-    words: [word({ english: "In the beginning", strongs: "G1722", strongs_base: "G1722", lemma: "ἐν", translit: "en", is_function: true }),
-            word({ english: "was", strongs: "G1510", strongs_base: "G1510", lemma: "εἰμί", translit: "eimi" })] },
-  { verse: 2, heading: null, prose: "This one was in the beginning with God.", words: [PNEUMA] },
-];
+// /api/chapter/<book>/<ch> — views_library.py `chapter_text()` returns a BARE LIST of
+// {verse, heading, prose, words} (views_library.py:268, `return jsonify([...])`). Keep it a
+// list: the Library consumes it as one (60-library.jsx:444, `setVerses(data)`), and stubbing
+// the shape a buggy caller *expects* would hide the bug instead of catching it.
+// DESKTOP mounts LibraryView alongside whatever tab is active, so an empty object here crashed
+// the whole app before any other surface could render (withMarks -> arr.forEach). Mobile never
+// showed it because it mounts only the active view. Same story as /api/books.
+//
+// The chapter's LENGTH is load-bearing, not decoration: NoteVerseInspect derives the chapter's
+// last verse from this reply to decide whether an "after" neighbour exists, so an invented
+// length would decide a test's outcome. These are the REAL lengths, read out of the repo's own
+// ABP source (abp_texts/ — pre-build, diagnosis-grade, which is all a verse COUNT needs):
+//   grep -oE '^\(Joh 4:[0-9]+\)' abp_texts/abp_nt_texts/abp_john.txt | tail -1   -> 54
+// Covered: every chapter this harness actually asks for (Gen/1 from the Library's boot, plus
+// each chapter the NOTES seed anchors). An unknown chapter THROWS rather than inventing a
+// length — a stand-in that quietly answers for a chapter it knows nothing about is how a
+// fixture starts deciding results (the chronological.json lesson).
+const CHAPTER_LEN = { "Gen/1": 31, "Joh/1": 51, "Joh/4": 54, "Rom/8": 39, "Psa/104": 35 };
+
+// One verse's worth of stand-in prose. The READER isn't under test here — what matters per row
+// is that it carries the produced field names and that its verse number is real.
+const chapterVerse = (v) => ({
+  verse: v,
+  heading: v === 1 ? "In the beginning" : null,
+  prose: `Stand-in prose for verse ${v} — the harness measures layout, not the corpus.`,
+  words: [word({ english: "word", strongs: "G3056", strongs_base: "G3056", lemma: "λόγος", translit: "logos" })],
+});
+const chapterFor = (book, ch) => {
+  const n = CHAPTER_LEN[`${book}/${ch}`];
+  if (!n) throw new Error(`mobile_harness: no real verse count for ${book} ${ch} — add it to ` +
+    `CHAPTER_LEN from abp_texts/ rather than letting the fixture invent one.`);
+  return Array.from({ length: n }, (_, i) => chapterVerse(i + 1));
+};
+
+// /api/verse-words/<book>/<ch>/<v> — views_library.py verse_words() returns {"words": [...]},
+// NOT a bare list (that route and chapter_text() disagree ON PURPOSE; check the producer, don't
+// pattern-match off its neighbour). VerseRow reads `d.words` and fetches per row, lazily.
+// `{{v}}` is substituted with the requested verse on both sides. That marker earns its keep:
+// each VerseRow fetches its OWN verse, so it proves in a measurement WHICH verses actually
+// rendered — a range of identical rows can't tell you that.
+const VERSE_WORDS = { words: [
+  word({ english: "God", strongs: "G2316", strongs_base: "G2316", lemma: "θεός", translit: "theos", gloss: "God" }),
+  word({ english: "is", strongs: "G1510", strongs_base: "G1510", lemma: "εἰμί", translit: "eimi", is_function: true }),
+  word({ english: "spirit-v{{v}}", strongs: "G4151", strongs_base: "G4151", lemma: "πνεῦμα", translit: "pneuma", gloss: "spirit" }),
+] };
+
+// Precomputed so BOTH the server and the in-page stub resolve from ONE table (the page's stub
+// is inlined JSON — it can't call these functions).
+const CHAPTERS = {};
+for (const k of Object.keys(CHAPTER_LEN)) { const [b, c] = k.split("/"); CHAPTERS[k] = chapterFor(b, c); }
 
 // The notes store's localStorage seed (&notes=1). Anchored notes carry the anchor builder's
 // fields; `updated` drives the default newest-first sort, so these are ordered on purpose.
@@ -167,6 +219,20 @@ const NOTES = [
     corpus: "bible", translation: "abp", book: "Psa", bookName: "Psalms", chapter: 104,
     start: { verse: 30, pos: null }, end: { verse: 30, pos: null },
     snippet: "You shall send forth your spirit and they shall be created", refLabel: "Psalms 104:30" },
+  // A MULTI-VERSE note. Shape traced from the WRITE path, not from memory: 60-library.jsx
+  // `resolveSelection()` resolves each selection edge to its own verse (:1057-1058), swaps them
+  // into order if you dragged backwards (:1063-1066), and stores start/end separately
+  // (:1098-1099) with a range refLabel built as `book ch:startV–endV` (:1073, EN-DASH). So a
+  // range genuinely survives to storage — `end.verse` is real data, not a copy of `start.verse`.
+  // `pos` is a word-position within the verse and is only non-null on a drag-select, which is
+  // exactly what this note is.
+  { id: "h-note-5", device: "harness",
+    body: "The whole exchange, not just the punchline — she asks about the mountain, he answers about spirit.",
+    color: "green", created: "2026-07-05T09:00:00.000Z", updated: "2026-07-09T09:00:00.000Z",
+    corpus: "bible", translation: "abp", book: "Joh", bookName: "John", chapter: 4,
+    start: { verse: 21, pos: 3 }, end: { verse: 23, pos: 7 },
+    snippet: "Believe me woman that an hour comes when neither on this mountain nor in Jerusalem shall you worship the father",
+    refLabel: "John 4:21–23" },
   { id: "h-page-1", device: "harness", kind: "journal", title: "Spirit — working notes",
     body: "Start from the plain sense and let the corpus argue.\n\nNo verse anchor here on purpose.",
     created: "2026-07-06T09:00:00.000Z", updated: "2026-07-10T09:00:00.000Z" },
@@ -179,16 +245,41 @@ const FIXTURES = {
   "/api/lexica/contested": CONTESTED,
 };
 
-// Prefix-matched fixtures: routes that carry ids in the PATH (chapter, verse) rather than
-// a query string. Exact-match FIXTURES wins; these catch the parameterised families.
-const FIXTURE_PREFIXES = [
-  ["/api/chapter/", CHAPTER],
-  ["/api/kjv/chapter/", CHAPTER],
-  ["/api/bsb/chapter/", CHAPTER],
-];
+// Routes that carry ids in the PATH (chapter, verse) rather than a query string. Exact-match
+// FIXTURES wins; these catch the parameterised families. The two regexes and the resolver body
+// are shared verbatim with the in-page stub (RESOLVER_SRC below) so the server and the browser
+// can't answer differently — a fixture that disagrees with itself is worse than none.
+const RE_CHAPTER = /^\/api\/(?:chapter|kjv\/chapter|bsb\/chapter)\/([^/]+)\/(\d+)$/;
+const RE_VERSE_WORDS = /^\/api\/(?:verse-words|heb\/verse-words)\/([^/]+)\/(\d+)\/(\d+)$/;
+
+// Kept as SOURCE TEXT because the in-page stub must run the same resolver the server does, and
+// a function can't ride there as JSON. Reads _F / _CH / _VW from the page's scope.
+const RESOLVER_SRC = `
+  function _resolve(u) {
+    if (Object.prototype.hasOwnProperty.call(_F, u)) return _F[u];
+    var m = u.match(${RE_CHAPTER});
+    if (m) {
+      var hit = _CH[m[1] + "/" + m[2]];
+      if (!hit) throw new Error("mobile_harness: no real verse count for " + m[1] + " " + m[2] +
+        " — add it to CHAPTER_LEN from abp_texts/ rather than letting the fixture invent one.");
+      return hit;
+    }
+    m = u.match(${RE_VERSE_WORDS});
+    if (m) return JSON.parse(JSON.stringify(_VW).split("{{v}}").join(m[3]));
+    return undefined;
+  }`;
+
 const fixtureFor = (pathname) => {
   if (Object.prototype.hasOwnProperty.call(FIXTURES, pathname)) return FIXTURES[pathname];
-  for (const [pre, val] of FIXTURE_PREFIXES) if (pathname.startsWith(pre)) return val;
+  let m = pathname.match(RE_CHAPTER);
+  if (m) {
+    const hit = CHAPTERS[`${m[1]}/${m[2]}`];
+    if (!hit) throw new Error(`mobile_harness: no real verse count for ${m[1]} ${m[2]} — add it ` +
+      `to CHAPTER_LEN from abp_texts/ rather than letting the fixture invent one.`);
+    return hit;
+  }
+  m = pathname.match(RE_VERSE_WORDS);
+  if (m) return JSON.parse(JSON.stringify(VERSE_WORDS).split("{{v}}").join(m[3]));
   return undefined;
 };
 
@@ -237,7 +328,9 @@ const PAGE = (view, admin, bundle, notes) => `<!DOCTYPE html>
     else localStorage.removeItem("lexica.notes.v1");
   } catch (e) {}
   const _F = ${JSON.stringify(FIXTURES)};
-  const _FP = ${JSON.stringify(FIXTURE_PREFIXES)};
+  const _CH = ${JSON.stringify(CHAPTERS)};
+  const _VW = ${JSON.stringify(VERSE_WORDS)};
+  ${RESOLVER_SRC}
   const _realFetch = window.fetch.bind(window);
   window.fetch = function (url, opts) {
     const u = String(url).split("?")[0];
@@ -248,8 +341,7 @@ const PAGE = (view, admin, bundle, notes) => `<!DOCTYPE html>
     // desktop app before any surface rendered. A stub that answers for files it has no
     // business answering for is not a fixture, it's a fault injector.
     if (u.indexOf("/api/") !== 0) return _realFetch(url, opts);
-    let hit = Object.prototype.hasOwnProperty.call(_F, u) ? _F[u] : undefined;
-    if (hit === undefined) { for (const [pre, val] of _FP) if (u.indexOf(pre) === 0) { hit = val; break; } }
+    const hit = _resolve(u);
     const body = hit !== undefined ? hit : {};
     // 00-core.jsx aiSearchStream BRANCHES on the content-type header: anything that isn't
     // text/event-stream takes the one-lump cache-hit path. Ask-search is served as a real

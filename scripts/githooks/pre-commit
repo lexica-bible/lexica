@@ -53,6 +53,7 @@ python tests/test_written_ranges.py >/dev/null
 python tests/test_news_gate.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
+node tests/test_note_inspect.js >/dev/null
 node tests/test_chrono_reconcile.js >/dev/null
 node tests/test_library_order.js >/dev/null
 node tests/test_render_markup.js >/dev/null

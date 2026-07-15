@@ -220,41 +220,54 @@ function NoteCenterEditor({ noteId, onClose, onReadInContext }) {
   );
 }
 
-// DESKTOP Notes tab — the right inspect rail: the note's anchored verse + one verse of
-// context each side, kept in view while you write. The anchor is emphasized, the two
-// neighbors dimmed. Reuses the reader's shared VerseRow. Depth-1, no drill. Journal /
-// non-Bible notes have no anchor, so it shows an empty state.
+// DESKTOP Notes tab — the right inspect rail: the note's anchored verse(s) + one verse of
+// context each side, kept in view while you write. The anchor is emphasized, the neighbors
+// dimmed. Reuses the reader's shared VerseRow. Depth-1, no drill. Journal / non-Bible notes
+// have no anchor, so it shows an empty state.
+// A note anchors a RANGE (60-library.jsx resolveSelection stores start.verse + end.verse from
+// the two edges of a drag-select), so "the anchor" is every verse from start to end — all of it
+// the note's own text — and the neighbors sit outside the WHOLE range. The two decisions here
+// are pure and live in 34-notes-logic.jsx, under test in tests/test_note_inspect.js.
 function NoteVerseInspect({ note, onReadInContext }) {
   const anchored = note && note.corpus === "bible" && note.start;
-  const v = anchored ? note.start.verse : 0;
+  const lo = anchored ? note.start.verse : 0;
+  // An older note, or one from the verse-number menu, has end === start; a note with no `end`
+  // at all reads as single rather than blowing up.
+  const hi = anchored ? Math.max(lo, (note.end && note.end.verse) || lo) : 0;
+  const multi = hi > lo;
   // A full header-height band clears the navy header (the inspect floats top:0, unified
   // with News / Word study). Band title = the verse ref when anchored, else a caption.
-  const label = anchored ? (note.refLabel || `${note.book} ${note.chapter}:${v}`) : "Anchored verse";
+  // The refLabel the write path stores is ALREADY a range ("John 4:21–23", :1073); the fallback
+  // matches it, en-dash and all, for a note that somehow lacks one.
+  const label = anchored
+    ? (note.refLabel || `${note.book} ${note.chapter}:${lo}${multi ? `–${hi}` : ""}`)
+    : "Anchored verse";
   // heb/bsb/kjv notes show in their own text; everything else is ABP.
   const tm = anchored && ["kjv", "bsb", "heb"].includes(note.translation) ? note.translation : "abp";
 
   // Learn the chapter's last verse so we never render an empty out-of-range "next" row.
-  // On any miss we fall back to the anchor verse → the next neighbor simply stays hidden.
-  const [maxVerse, setMaxVerse] = useState(null);
+  // On any miss we fall back to the range's LAST verse → the next neighbor simply stays hidden.
+  const [lastVerse, setLastVerse] = useState(null);
   useEffect(() => {
-    if (!anchored) { setMaxVerse(null); return; }
+    if (!anchored) { setLastVerse(null); return; }
     let cancelled = false;
-    setMaxVerse(null);
+    setLastVerse(null);
     api.chapter(note.book, note.chapter)
-      .then(d => {
-        if (cancelled) return;
-        const vs = (d && d.verses) || [];
-        setMaxVerse(vs.length ? Math.max(...vs.map(x => x.verse)) : v);
-      })
-      .catch(() => { if (!cancelled) setMaxVerse(v); });
+      .then(d => { if (!cancelled) setLastVerse(noteInspLastVerse(d, hi)); })
+      .catch(() => { if (!cancelled) setLastVerse(hi); });
     return () => { cancelled = true; };
-  }, [anchored, note && note.book, note && note.chapter, v]);
+  }, [anchored, note && note.book, note && note.chapter, hi]);
 
+  // Each anchor row is labelled with its OWN ref once there's more than one — the band already
+  // carries the range, and stamping "John 4:21–23" on the row that is only verse 21 is what the
+  // panel used to do. A single-verse note keeps the stored refLabel exactly as it shipped.
+  const anchorLabel = (vs) => (multi ? `${note.bookName || note.book} ${note.chapter}:${vs}` : label);
   const row = (vs, kind) => (
     <div className={"note-insp-v note-insp-" + kind} key={vs}>
       <VerseRow book={note.book} chapter={note.chapter} verse={vs}
-        label={kind === "anchor" ? label : `${note.book} ${note.chapter}:${vs}`}
-        textMode={tm} onReadInContext={kind === "anchor" ? onReadInContext : undefined} />
+        label={kind === "anchor" ? anchorLabel(vs) : `${note.book} ${note.chapter}:${vs}`}
+        textMode={tm}
+        onReadInContext={kind === "anchor" && vs === lo ? onReadInContext : undefined} />
     </div>
   );
 
@@ -264,9 +277,7 @@ function NoteVerseInspect({ note, onReadInContext }) {
       <div className="note-insp-scroll">
         {anchored
           ? <div className="note-insp-ctx">
-              {v > 1 && row(v - 1, "near")}
-              {row(v, "anchor")}
-              {maxVerse != null && v < maxVerse && row(v + 1, "near")}
+              {noteInspRows(lo, hi, lastVerse).map(r => row(r.verse, r.kind))}
             </div>
           : <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
               sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />}
