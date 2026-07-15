@@ -337,8 +337,8 @@ function JournalEditor({ pageId, onBack }) {
   );
 }
 
-// The list of free-form journal pages + a "New page" button. Shared by the
-// self-contained mobile JournalView and the desktop shell's rail.
+// The list of free-form journal pages + a "New page" button. The shell's rail on desktop,
+// the list sheet on mobile.
 function JournalList({ editingId, onOpen, onNew }) {
   useNotesVersion();
   const pages = NotesStore.journals();
@@ -365,19 +365,16 @@ function JournalList({ editingId, onOpen, onNew }) {
   );
 }
 
-// The Journal side of the Notes tab (MOBILE / self-contained) — the list swaps to a
-// full-page editor in place. Desktop composes JournalList + JournalEditor into the shell.
-function JournalView() {
-  const [editing, setEditing] = useState(null);
-  if (editing) return <JournalEditor pageId={editing} onBack={() => setEditing(null)} />;
-  const newPage = () => { const p = NotesStore.createJournal(); setEditing(p.id); };
-  return <JournalList editingId={null} onOpen={setEditing} onNew={newPage} />;
-}
+// (There was a self-contained JournalView here — the mobile journal's list-swaps-to-editor
+// page, from when mobile Notes had no center of its own. The shell gives it one, so mobile
+// composes JournalList + JournalEditor across the zones exactly like desktop, and the
+// separate mobile-only journal is gone rather than left to drift from the desktop one.)
 
-// The Notes tab. Desktop = the shared three-zone Shell (rail = note index · strip =
-// search/filter · center = editor · right = the anchored verse). Mobile = the old
-// single column (tapping a note jumps to the Library editor, unchanged).
-function NotesView({ onOpen, isMobile, onReadInContext }) {
+// The Notes tab, on the shared three-zone Shell (rail = note index · strip = search/filter ·
+// center = editor · right = the anchored verse). Mobile collapses the rail + inspect behind
+// the bottom toolbar as sheets; the center (the editor) stays inline. News + Ask-corpus are
+// the reference consumers — docs/claude/frontend.md, "Shell's MOBILE collapse".
+function NotesView({ isMobile, onReadInContext }) {
   useNotesVersion();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState("all");   // all | bookmark | highlight | note
@@ -386,8 +383,9 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
   const [mode, setMode] = useState("notes");        // notes | journal
-  const [selectedId, setSelectedId] = useState(null);   // desktop: note open in the center editor
-  const [journalEditing, setJournalEditing] = useState(null);   // desktop: journal page in the center
+  const [selectedId, setSelectedId] = useState(null);   // note open in the center editor
+  const [journalEditing, setJournalEditing] = useState(null);   // journal page in the center
+  const [mSheet, setMSheet] = useState(null);       // mobile: which zone is open — list | inspect
   let notes = NotesStore.search(q);               // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);
   else if (filter === "highlight") notes = notes.filter(n => n.color);
@@ -417,11 +415,14 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
     sections.forEach(s => s.items.sort(byRef));
   }
 
-  // Desktop opens the note in the center editor; mobile jumps to the Library editor.
-  const openItem = isMobile ? onOpen : (n) => setSelectedId(n.id);
+  // A note opens in the CENTER editor on both. Mobile used to jump to the Library's editor
+  // instead — that was the workaround for having no center of its own; the shell gives it one,
+  // and the jump survives as the editor's explicit "Read in context ›". Picking one closes the
+  // list sheet, so the tap lands you on what you picked.
+  const openItem = (n) => { setSelectedId(n.id); setMSheet(null); };
 
   const renderItem = (n) => (
-    <li key={n.id} className={"notes-item listrow" + (!isMobile && n.id === selectedId ? " on" : "")} onClick={() => openItem(n)}>
+    <li key={n.id} className={"notes-item listrow" + (n.id === selectedId ? " on" : "")} onClick={() => openItem(n)}>
       <div className="notes-item-ref">
         {(n.body || n.bookmark) && (
           <span className="notes-item-type" aria-hidden="true">{n.body ? <Icon.Note/> : <Icon.Bookmark/>}</span>
@@ -484,29 +485,25 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
     <ul className="notes-list">{notes.map(renderItem)}</ul>
   );
 
-  // ── MOBILE: the old single column (unchanged behaviour) ───────────────────
-  if (isMobile) {
-    return (
-      <div className="notes-view">
-        <div className="notes-view-head">
-          <div className="notes-view-titlerow">
-            <h2 className="notes-view-title">My Notes</h2>
-          </div>
-          {modeSeg}
-          {mode === "notes" && notesControls}
-        </div>
-        {mode === "journal" ? <JournalView/> : notesListContent}
-      </div>
-    );
-  }
-
-  // ── DESKTOP: the shared three-zone Shell ──────────────────────────────────
+  // ── The zone contents, shared by BOTH branches ────────────────────────────
   const selNote = selectedId ? NotesStore.get(selectedId) : null;
-  const newJournalPage = () => { const p = NotesStore.createJournal(); setJournalEditing(p.id); };
+  const newJournalPage = () => { const p = NotesStore.createJournal(); setJournalEditing(p.id); setMSheet(null); };
+  const openPage = (id) => { setJournalEditing(id); setMSheet(null); };
 
   const railBody = mode === "journal"
-    ? <JournalList editingId={journalEditing} onOpen={setJournalEditing} onNew={newJournalPage} />
+    ? <JournalList editingId={journalEditing} onOpen={openPage} onNew={newJournalPage} />
     : notesListContent;
+
+  // "Pick a note from the list" is true on DESKTOP, where the list is open beside the center —
+  // an empty one saying "No notes yet. In the Library, select some text…" right there. The
+  // mobile collapse puts the list behind a button, so for a reader with NOTHING saved that
+  // line points at an empty room and buries the only real first step one tap away. Same room,
+  // different reachability: the phone's center has to carry the first step itself.
+  const anyNotes = NotesStore.all().length > 0;
+  const noteEmpty = (isMobile && !anyNotes)
+    ? <ZoneEmpty icon={<Icon.Note/>} title="No notes yet"
+        sub="In the Library, select some text in a verse and choose “Add note.” Everything you save collects here." />
+    : <ZoneEmpty icon={<Icon.Note/>} title="No note open" sub="Pick a note from the list to read and edit it here." />;
 
   const centerContent = mode === "journal"
     ? (journalEditing
@@ -514,7 +511,7 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
         : <ZoneEmpty icon={<Icon.Book/>} title="No page open" sub="Pick a page from the list, or start a new one." />)
     : (selectedId
         ? <NoteCenterEditor key={selectedId} noteId={selectedId} onClose={() => setSelectedId(null)} onReadInContext={onReadInContext} />
-        : <ZoneEmpty icon={<Icon.Note/>} title="No note open" sub="Pick a note from the list to read and edit it here." />);
+        : noteEmpty);
 
   const inspectContent = mode === "journal"
     ? (
@@ -527,6 +524,60 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
       )
     : <NoteVerseInspect note={selNote} onReadInContext={onReadInContext} />;
 
+  // ── MOBILE: the shared Shell's collapse (News + Ask-corpus are the pattern) ─
+  if (isMobile) {
+    // TWO zones collapse: the list and the anchored-verse inspect. The mode seg is NOT one —
+    // it's a mode switch, and it decides what the list button below even means, so it has to
+    // stay visible while the bar is. It rides the center strip.
+    //
+    // The list's search + filters come WITH the list into its sheet. Desktop can leave them in
+    // the center strip because the rail sits open beside them; here the list is behind a bar
+    // button, so a filter in the center would drive a list you can't see.
+    const listSheet = mode === "journal" ? railBody : <>{notesControls}{railBody}</>;
+    // The list button is content-named — the last row of the icon matrix, per-tab BY RULING
+    // (docs/claude/frontend.md). What this list holds changes with the mode, so the name and
+    // the glyph change with it: verse notes are notes (the pencil), journal pages are pages
+    // (the book — the tab's OWN journal vocabulary, cf. the journal ZoneEmpty above). One
+    // fixed glyph would have to be wrong in one of the two modes.
+    const listLabel = mode === "journal" ? "Journal pages" : "Verse notes";
+    // The inspect GRAYS, never hides — a real zone that doesn't apply right now. Three ways it
+    // doesn't apply: no note picked yet, the picked note has no verse anchor (imported /
+    // journal), or Journal mode, where the zone is empty BY DESIGN and not just "empty yet".
+    const inspectApplies = mode === "notes" && !!(selNote && selNote.corpus === "bible" && selNote.start);
+    const tools = [
+      { key: "list", label: listLabel, icon: mode === "journal" ? <Icon.Book/> : <Icon.Note/>,
+        on: mSheet === "list", onTap: () => setMSheet(s => (s === "list" ? null : "list")) },
+      { key: "inspect", label: "Anchored verse", icon: <Icon.Panel/>, disabled: !inspectApplies,
+        on: mSheet === "inspect", onTap: () => setMSheet(s => (s === "inspect" ? null : "inspect")) },
+    ];
+    return (
+      <Shell
+        isMobile={true}
+        className="notes-frame notes-m"
+        center={
+          <>
+            <div className="notes-mstrip">{modeSeg}</div>
+            <div className="notes-center-body">{centerContent}</div>
+          </>
+        }
+        mobile={{
+          tools,
+          // Inspect goes in BARE: .note-insp carries its own header band + its own scroll box,
+          // so the padded .zsheet-body would nest a second scroll box and collapse the fill.
+          // Its band already names the panel (the verse ref), so it takes no sheetTitle — the
+          // band IS the header, and adding one would print the name twice. The list is plain
+          // content -> normal body. (frontend.md, the bare-sheet + doubled-header rules.)
+          sheet: mSheet === "list" ? listSheet
+               : mSheet === "inspect" ? inspectContent : null,
+          sheetBare: mSheet === "inspect",
+          sheetTitle: mSheet === "list" ? listLabel : null,
+          onCloseSheet: () => setMSheet(null),
+        }}
+      />
+    );
+  }
+
+  // ── DESKTOP: the shared three-zone Shell ──────────────────────────────────
   return (
     <>
       <Shell

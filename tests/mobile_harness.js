@@ -23,6 +23,19 @@
 //   * quota                   -> views_notes.py `ai_quota_status` return
 // The VALUES are illustrative; the SHAPES (field names, nesting, types) are the payload's.
 //
+// NOTES is the one fixture with NO Python producer, on purpose — the notes store is
+// browser-local (12-notes-store.jsx, localStorage "lexica.notes.v1"), so it is seeded into
+// localStorage, not stubbed at /api/. Do NOT shape it from views_notes.py: `notes_sync`
+// (views_notes.py:708) stores the client's blob OPAQUELY (`json.dumps(n)`) and hands the same
+// blob back — it never authors a field, so the server is a round-tripper, not the producer.
+// The producers are the CLIENT:
+//   * an anchored note        -> 12-notes-store.jsx `create()` (id/device/body/color/
+//                                created/updated) merged over 60-library.jsx `verseAnchor()`
+//                                (corpus/translation/book/bookName/chapter/start/end/
+//                                snippet/refLabel)
+//   * `bookmark: true`        -> 60-library.jsx `vmBookmark` -> create({...a, bookmark: true})
+//   * a journal page          -> 12-notes-store.jsx `createJournal()` (kind/title/body)
+//
 // Run:  node tests/mobile_harness.js [port]      then drive http://127.0.0.1:<port>/
 "use strict";
 const http = require("http");
@@ -124,6 +137,41 @@ const CHAPTER = [
   { verse: 2, heading: null, prose: "This one was in the beginning with God.", words: [PNEUMA] },
 ];
 
+// The notes store's localStorage seed (&notes=1). Anchored notes carry the anchor builder's
+// fields; `updated` drives the default newest-first sort, so these are ordered on purpose.
+// The set is shaped to make every branch of NotesView reachable: one note WITH a body (the
+// "Notes" filter + the center editor), one bookmark-only and one highlight-only (the
+// "Bookmarks"/"Highlights" filters, and the list's two marker glyphs), four distinct books
+// (Group-by-book + the canonical-order sort), and one journal page (the Journal mode + the
+// inspect's no-anchor empty state). Gen/Psa/Joh/Rom are all in the BOOKS slice above, so the
+// inspect's api.chapter() lookup resolves.
+const NOTES = [
+  { id: "h-note-1", device: "harness", body: "Predicate of God himself — not a thing he has.",
+    color: "yellow", created: "2026-07-10T09:00:00.000Z", updated: "2026-07-14T09:00:00.000Z",
+    corpus: "bible", translation: "abp", book: "Joh", bookName: "John", chapter: 4,
+    start: { verse: 24, pos: null }, end: { verse: 24, pos: null },
+    snippet: "God is spirit", refLabel: "John 4:24" },
+  { id: "h-note-2", device: "harness", body: "", color: null, bookmark: true,
+    created: "2026-07-09T09:00:00.000Z", updated: "2026-07-13T09:00:00.000Z",
+    corpus: "bible", translation: "abp", book: "Gen", bookName: "Genesis", chapter: 1,
+    start: { verse: 2, pos: null }, end: { verse: 2, pos: null },
+    snippet: "and spirit of God bore upon the water", refLabel: "Genesis 1:2" },
+  { id: "h-note-3", device: "harness", body: "", color: "blue",
+    created: "2026-07-08T09:00:00.000Z", updated: "2026-07-12T09:00:00.000Z",
+    corpus: "bible", translation: "bsb", book: "Rom", bookName: "Romans", chapter: 8,
+    start: { verse: 16, pos: null }, end: { verse: 16, pos: null },
+    snippet: "The spirit itself testifies together with our spirit", refLabel: "Romans 8:16" },
+  { id: "h-note-4", device: "harness",
+    body: "Ruach here is breath/wind before it is anything else — worth holding the range.",
+    color: null, created: "2026-07-07T09:00:00.000Z", updated: "2026-07-11T09:00:00.000Z",
+    corpus: "bible", translation: "abp", book: "Psa", bookName: "Psalms", chapter: 104,
+    start: { verse: 30, pos: null }, end: { verse: 30, pos: null },
+    snippet: "You shall send forth your spirit and they shall be created", refLabel: "Psalms 104:30" },
+  { id: "h-page-1", device: "harness", kind: "journal", title: "Spirit — working notes",
+    body: "Start from the plain sense and let the corpus argue.\n\nNo verse anchor here on purpose.",
+    created: "2026-07-06T09:00:00.000Z", updated: "2026-07-10T09:00:00.000Z" },
+];
+
 const FIXTURES = {
   "/api/auth/me": ME,
   "/api/ai-search": AI_SEARCH,
@@ -149,7 +197,7 @@ const fixtureFor = (pathname) => {
 // that isn't here; anything unfixtured resolves empty rather than hanging (a hang would
 // leave the surface mid-render and every measurement would be of a half-drawn page).
 // __LEX_HARNESS__ records what was asked for, so a read can prove the surface got its data.
-const PAGE = (view, admin, bundle) => `<!DOCTYPE html>
+const PAGE = (view, admin, bundle, notes) => `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -179,6 +227,14 @@ const PAGE = (view, admin, bundle) => `<!DOCTYPE html>
       localStorage.removeItem("lexica.owner.v1");
       localStorage.removeItem("lexica.news.key.v1");
     }
+    // ?notes=1 — seed the notes store. It is NOT stubbed at /api/ because it isn't served
+    // from there: NotesStore reads localStorage on first load() and caches, so the seed has
+    // to be in place BEFORE app.js runs. Unseeded, every Notes read is of the empty state —
+    // which is a real state worth measuring, so this stays opt-in rather than always-on
+    // (and the notes/highlights also paint marks in the Library reader, which would quietly
+    // move every OTHER surface's measurements).
+    if (${notes ? "true" : "false"}) localStorage.setItem("lexica.notes.v1", ${JSON.stringify(JSON.stringify(NOTES))});
+    else localStorage.removeItem("lexica.notes.v1");
   } catch (e) {}
   const _F = ${JSON.stringify(FIXTURES)};
   const _FP = ${JSON.stringify(FIXTURE_PREFIXES)};
@@ -267,10 +323,12 @@ http.createServer((req, res) => {
   const view = url.searchParams.get("view") || "corpus";
   const admin = url.searchParams.get("admin") === "1";
   const bundle = url.searchParams.get("bundle") || "working";
+  const notes = url.searchParams.get("notes") === "1";
   res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-  res.end(PAGE(view, admin, bundle));
+  res.end(PAGE(view, admin, bundle, notes));
 }).listen(PORT, "127.0.0.1", () => {
   console.log("mobile harness on http://127.0.0.1:" + PORT + "/?view=corpus");
   console.log("views: library | lexicon | corpus | notes | study | news | about");
   console.log("add &admin=1 for the admin's chrome (7 mobile nav tabs, not 5)");
+  console.log("add &notes=1 to seed the notes store (4 notes + 1 journal page)");
 });

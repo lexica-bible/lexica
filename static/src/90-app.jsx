@@ -133,16 +133,10 @@ function App() {
 
   // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
   const openNote = (id) => { setActiveEntry(null); setLibCrossRef(null); setActiveNote(id); };
-  // From the Notes tab: jump to the verse in the Library, then open the editor.
-  const openNoteFromList = (n) => {
-    if (n.corpus === "bible") {
-      searchScrollRef.current = window.scrollY;
-      setLibEverVisited(true);
-      setMainView("library");
-      setLibNav({ book: n.book, chapter: n.chapter, highlight: n.start.verse, scroll: true, extern: true, translation: n.translation === "kjv" ? "kjv" : "abp" });
-    }
-    openNote(n.id);
-  };
+  // (openNoteFromList lived here — the Notes tab's mobile tap, which jumped to the Library and
+  // opened the editor THERE because mobile Notes had no center of its own. It has one now, so
+  // the tap edits in place and the jump is the editor's own "Read in context ›". Retired
+  // rather than left wired to nothing: two ways into one editor is how they drift.)
 
 
   useEffect(() => {
@@ -472,7 +466,7 @@ function App() {
             <NewsView isMobile={isMobile} />
           </div>
         )}
-        {mainView === "notes" && <NotesView onOpen={openNoteFromList} isMobile={isMobile} onReadInContext={handleReadInContext} />}
+        {mainView === "notes" && <NotesView isMobile={isMobile} onReadInContext={handleReadInContext} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} isMobile={isMobile} />
         </div>

@@ -3945,10 +3945,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .note-del:hover { color: #b91c1c; }
 
 /* Notes browse tab */
-.notes-view { max-width: 760px; margin: 0 auto; padding: 24px 20px 80px; }
-.notes-view-head { margin-bottom: 16px; }
-.notes-view-titlerow { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.notes-view-title { font-size: 22px; font-weight: 700; color: var(--ink); margin: 0; flex: 0 0 auto; }
+/* (.notes-view / -head / -titlerow / -title lived here — the old mobile single column and its
+   "My Notes" heading. Both branches are on the shell now: the tab is named by the nav you
+   arrived through, so the heading was a second name for the same room, and Library / Word
+   study / News / Ask-corpus none of them print one.) */
 .notes-tool-btn {
   border: 1px solid var(--rule); background: var(--paper); color: var(--ink-2);
   border-radius: var(--radius); padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
@@ -4020,10 +4020,6 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   .seg-b.on { background: var(--ctl-on); color: var(--ink); box-shadow: var(--shadow-sm); font-weight: 500; }
   .seg-b:active:not(.on) { background: var(--bg-sunk); color: var(--ink); }
 
-  .notes-view { padding: 14px 14px 80px; }
-  .notes-view-head { margin-bottom: 10px; }
-  .notes-view-titlerow { margin-bottom: 8px; }
-  .notes-view-title { font-size: 18px; }
   .notes-tool-btn { padding: 6px 10px; font-size: 12px; }
   .notes-acct-email { font-size: 12.5px; }
   .notes-mode { margin-bottom: 8px; }
@@ -5079,10 +5075,10 @@ button.study-verse-ref { border: none; }
 }
 
 /* ============================================================
-   NOTES — the shared three-zone Shell (desktop only; mobile keeps .notes-view).
-   Rail = the note index · center = search strip + the open editor · right = the
-   note's anchored verse. A NEW inspect surface, so it starts BELOW the nav (not
-   the shipped-surface top:0 float) — no account-pill offset needed.
+   NOTES — the shared three-zone Shell. Rail = the note index · center = search strip +
+   the open editor · right = the note's anchored verse. A NEW inspect surface, so it
+   starts BELOW the nav (not the shipped-surface top:0 float) — no account-pill offset
+   needed. Mobile collapses the rail + inspect into sheets; see the mobile block below.
    ============================================================ */
 .notes-center { background: var(--bg); }
 /* rail: mode toggle pinned on top of the scrolling note/journal list */
@@ -5131,6 +5127,51 @@ button.study-verse-ref { border: none; }
 .note-insp-anchor .corpus-verse { background: color-mix(in oklab, var(--accent) 8%, var(--paper)); border-radius: var(--radius); }
 .note-insp-anchor .corpus-text { font-weight: 600; color: var(--ink); }
 .note-insp-near .corpus-text { color: var(--ink-4); }
+
+/* --- Notes on the shared Shell's mobile collapse (the toolbar + sheets) ----------------
+   Notes takes NEWS's shape, not Ask-corpus's: nothing in its center is pinned to the bottom
+   (the editor's Save/Delete scrolls with the body), so the shell sits in the visible viewport
+   below the fixed top tab bar and the fixed .zbar FLOATS over the scrolling center, which pads
+   itself clear. 100dvh tracks the address bar; clipping keeps the page from rubber-banding.
+   .main already pads the top for the tab bar; drop its bottom pad so the shell ends exactly at
+   the visible bottom. (frontend.md, "the two ways to clear the bar".) */
+@media (max-width: 1099px) {
+  .app.view-notes .main { padding-bottom: 0; }
+  .notes-frame.zshell-m {
+    height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    overflow: hidden; min-width: 0;
+  }
+  /* Notes's center owns its scrolling — the mode strip is a fixed head and the editor body
+     below it scrolls — so .zcenter-m must NOT be a second scroll box around it (it is one by
+     default: flex:1 + overflow-y:auto). Make it the column instead, exactly as the desktop
+     .zcenter is, and the two zones inside keep their desktop jobs. */
+  .notes-frame.zshell-m .zcenter-m { overflow: hidden; display: flex; flex-direction: column; }
+  /* The mode strip is the center's own fixed head; the editor body below it is the scroll box
+     and takes the bar clearance, or the Save/Delete row hides behind the toolbar. */
+  .notes-m .notes-mstrip { flex: 0 0 auto; box-sizing: border-box; padding: 10px 14px;
+    border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+  .notes-m .notes-mstrip .notes-mode { margin: 0; }
+  .notes-m .notes-center-body { padding-bottom: calc(var(--bar-h) + 16px + env(safe-area-inset-bottom, 0px)); }
+  /* The editor is the phone's whole center now — drop the desktop column's inset. */
+  .notes-m .note-center, .notes-m .journal-editor { padding: 14px 14px 0; }
+
+  /* The list sheet: the rail's contents, with the search + filters that drive them. The rail's
+     desktop chrome does NOT come along — .notes-rail-scroll's own scroll box would nest inside
+     the sheet's, and the sheet head already names the list. */
+  .notes-m .zsheet .notes-search { margin: 0 0 10px; }
+  .notes-m .zsheet .notes-controls { margin: 0 0 12px; }
+  .notes-m .zsheet .notes-list { margin: 0; }
+  .notes-m .zsheet .journal-view { padding: 0; }
+
+  /* Inspect rides in BARE (it owns its band + scroll box), so it must fill the sheet itself. */
+  .notes-m .zsheet--bare .note-insp { flex: 1 1 auto; min-height: 0; }
+  /* The band is a DESKTOP header height (--hdr-h, sized to clear the navy nav it floats over).
+     Inside a sheet there's no nav to clear, so it's just a title row — size it like one. */
+  .notes-m .zsheet--bare .note-insp-band { min-height: 0; padding: 2px 4px 10px; border-bottom: 0;
+    background: none; }
+  .notes-m .zsheet--bare .note-insp-scroll { padding: 0 0 calc(16px + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* ============================================================
    SEAM INDEX — the contested-word browse (Study tab), on the shared three-zone Shell.
@@ -5196,6 +5237,15 @@ button.study-verse-ref { border: none; }
 /* shared empty state: icon mark + bold title + subtitle, with the cross-line
    that continues the header's bottom edge across the inspect panel (desktop). */
 .zempty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
+/* KNOWN DIVERGENCE, logged not fixed (Notes-mobile pass, 2026-07-15). This rule sets the
+   mark's COLOR and its slot, never its SIZE — by the icon rule, the size belongs at the call
+   site. Measured: Word study 30x30 and Study 30x30 pass it; Notes (x4) and Ask-corpus (x1)
+   pass the component BARE, so they inherit Icon.Note's 14px / Icon.Book's 16px defaults and
+   their empty-state mark renders SMALLER than the same glyph in the bar below it (22px).
+   Word study is the reference; the other two are the outliers. NOT fixed here on purpose:
+   it is one app-wide inconsistency across shared desktop+mobile code on two other tabs, and
+   this pass is pinned to Notes-mobile layout with desktop geometry held byte-identical.
+   Fix it in one cross-surface pass (size all five at the call site), not per-tab. */
 .zempty-mark { color: var(--ink-4); margin-bottom: 16px; }
 .zempty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; text-wrap: balance; }
 .zempty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; text-wrap: balance; }
