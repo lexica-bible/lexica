@@ -365,9 +365,11 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
   in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
   code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
-- **News-on-mobile** (net-new, the LAST shell surface) — the News tab isn't reachable on a phone. First
-  confirm the cause (missing from the mobile bottom nav vs a stubbed mobile branch), then make it render.
-  code: static/src/84-news.jsx, 90-app.jsx, 20-shared-components.jsx
+- **News-on-mobile** (net-new, the LAST shell surface) — the News tab isn't reachable on a phone. Half the
+  "confirm the cause" question is answered (read 2026-07-15, gate pass): it is NOT missing from the mobile
+  bottom nav — a `mobile-tab` button is there, gated on `showNews` like the desktop entry. So the cause is
+  downstream of the nav (a mobile branch / layout), not a missing button. Not verified on a real phone.
+  code: static/src/84-news.jsx, 90-app.jsx (mobile-tab ~line 608), 20-shared-components.jsx
 - **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
   its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
   Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
@@ -421,6 +423,30 @@ public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full
    across refresh ("Last 7d" doesn't creep to 8d); right inspect divider lines up with the navy header
    edge when a card is selected; single-source card reads "1 source" (no "· peaked"); the scoring lens
    now lives in the ⓘ popover, not on each card.
+
+---
+
+## News watch — account gate (Pass 1 SHIPPED 2026-07-15 `69a7156`, one item open)
+The tab was admin-only (+ Tudor's `/?news=<key>` share link). It now reads for ANY signed-in account —
+auth-only, deliberately NOT tier-based. Writes (keep/dismiss) stay admin/share-key. Audit finding folded
+into the same commit: `/api/news/resolve` was a WRITE sitting on the READ gate (it caches into
+`items.resolved_url` + fetches outbound) — invisible while reads were admin-only, because every reader
+was also a writer; opening reads is what pulls the two gates apart. Moved to `_reviewer()` → `can_write`.
+Gates locked + control-tested by `tests/test_news_gate.py` (in CI + the pre-commit hook).
+- **JP still to eyeball: the plain-account view.** The `readOnly` path (grayed Keep/Dismiss) had never
+  executed before this commit — until now every reader could also write, so it was dead code. It's the
+  only unproven thing in the pass, and it's the first screen Tudor's viewers see.
+- Rulings logged: **gray, don't hide** the reader's Keep/Dismiss — reviewer ruled hide, JP superseded
+  (a grayed control + "Read-only" tooltip isn't broken, it tells a reader the feed is a curated watch;
+  matches `feedback_gray_dont_hide`). Kept/Dismissed tabs reading zero for a reader: **leave them**, same
+  reasoning. Raw inbox to readers: **approved** (JP) — no curated/published feed build.
+- Share key (`/?news=<key>`, one holder = Tudor) untouched. Retirement is not ticketed.
+- **Shareable News link — own ticket, NOT Pass 2** (reviewer 2026-07-15). Nothing to "fix": there is no
+  News URL and no login page (the app is one page at `/`; log-in is an in-page popup), so the return-to
+  problem the original prompt assumed does not exist. The funnel works — no account, no tab; make an
+  account, tab appears. What's missing is a deep link (`/?view=news`, ideally per-story) that survives
+  signup. Real value later; not launch-blocking, and don't bolt routing onto the mobile pass.
+  code: static/src/90-app.jsx (the `?news=`/`?b=`/`?lex=` deep-link effect is the pattern to copy)
 
 ---
 
