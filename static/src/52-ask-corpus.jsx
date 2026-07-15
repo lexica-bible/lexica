@@ -601,7 +601,10 @@ function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
 function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexicon, isMobile }) {
   const [thread, setThread] = useState([]);
   const [draft, setDraft] = useState("");
-  const [railOpen, setRailOpen] = useState(false);
+  // MOBILE sheet: which collapsed zone is open ("recent" | "inspect" | null). Was a
+  // two-state railOpen when the rail was the only thing that collapsed; the shell's bar
+  // carries two zones, so it needs to name which one.
+  const [mSheet, setMSheet] = useState(null);
   const [scope, setScope] = useState(null);   // { strongs, lemma, translit } from a Word study handoff
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
@@ -675,7 +678,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     }
     setDraft("");
     setSelIdx(null);   // a fresh question takes focus — rail follows the newest answer again
-    if (isMobile) setRailOpen(false);
+    if (isMobile) setMSheet(null);
     // A question from the landing (empty thread) starts a NEW conversation; a
     // follow-up keeps the current one. The auto-save effect persists it by id.
     if (thread.length === 0) setCurrentId("c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
@@ -764,7 +767,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // Start a clean conversation — clears the thread (back to the landing) but keeps
   // any Word-study scope and the saved-conversations rail. The current thread is
   // already saved by the effect above, so there's nothing to flush here.
-  const newThread = () => { setThread([]); setDraft(""); setCurrentId(null); setSelIdx(null); if (isMobile) setRailOpen(false); };
+  const newThread = () => { setThread([]); setDraft(""); setCurrentId(null); setSelIdx(null); if (isMobile) setMSheet(null); };
 
   // Reopen a saved conversation — restores its turns verbatim. NO model calls (the
   // whole point): the answers are already in hand, so nothing re-runs.
@@ -774,7 +777,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     setCurrentId(c.id);
     setDraft("");
     setSelIdx(null);
-    if (isMobile) setRailOpen(false);
+    if (isMobile) setMSheet(null);
   };
 
   // Handoff from Word study (scope) or a pushed question (ask) — consumed once.
@@ -921,7 +924,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // DESKTOP strip: just the New Thread control (right). The ask bar is centered on the
   // landing, then pinned to the center bottom.
 
-  const landingHead = (
+  // Split into title-block + lede so MOBILE can run Word study's landing order (title →
+  // search → helper → samples) while DESKTOP keeps its own (title → lede → search →
+  // samples) byte-for-byte. Desktop composes them back as `landingHead`.
+  const landingTitle = (
     <>
       <h1 className="ac-title">Ask the corpus</h1>
       {scope && (
@@ -931,11 +937,14 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           <span className="ac-scope-s refmark">{scope.strongs}</span>
         </p>
       )}
-      <p className="ac-lede">{scope
-        ? <>Ask anything about <b>{scope.translit || scope.lemma}</b> across the whole of Scripture — its synonyms, its spread, the passages that carry it. Or ask a broader question.</>
-        : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."}</p>
     </>
   );
+  const landingLede = (
+    <p className="ac-lede">{scope
+      ? <>Ask anything about <b>{scope.translit || scope.lemma}</b> across the whole of Scripture — its synonyms, its spread, the passages that carry it. Or ask a broader question.</>
+      : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."}</p>
+  );
+  const landingHead = <>{landingTitle}{landingLede}</>;
 
   const examplesRow = (
     <div className="ac-examples">
@@ -992,34 +1001,63 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       onOpenStudy={(s) => onNavigateToLexicon?.(s, /^H/i.test(s) ? "heb" : "abp")} ctl={rightCtl}/>,
   } : null;
 
-  // ── MOBILE: unchanged layout (own hero/pinned composer) until the mobile shell step ──
+  // ── MOBILE: the shared Shell's collapse (News is the pattern; docs/claude/frontend.md).
+  // TWO zones collapse here, not News's three: the conversations rail and the inspect
+  // panel. "New thread" is a one-shot ACTION, not a zone, so it stays in the center strip
+  // — a bar slot names a room you can be in, and giving one to a verb is the same
+  // glyph/function mismatch the icon pass exists to kill.
   if (isMobile) {
+    const tools = [
+      { key: "recent", label: "Recent conversations", icon: <Icon.Clock />,
+        on: mSheet === "recent", onTap: () => setMSheet(s => (s === "recent" ? null : "recent")) },
+      // Inspect GRAYS before the first answer rather than hiding — it's a real feature that
+      // doesn't apply yet, which is the gray-don't-hide call, and it matches Word study's own
+      // bar (three of its four tabs gray until a word is loaded).
+      { key: "inspect", label: "Inspect", icon: <Icon.Panel />, disabled: !selectedAnswer && !latestPanel,
+        on: mSheet === "inspect", onTap: () => setMSheet(s => (s === "inspect" ? null : "inspect")) },
+    ];
     return (
-      <div className={"ac" + (railOpen ? " rail-open" : "")}>
-        {railOpen && <div className="ac-rail-scrim" onClick={() => setRailOpen(false)}/>}
-        <aside className={"ac-rail" + (!railOpen ? " hidden" : "")}>{railInner}</aside>
-        <main className="ac-main">
-          <div className="ac-mobi-actions">
-            {started && (
-              <button className="ac-mobi-new" onClick={newThread} title="Start a new conversation">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-                New search
-              </button>
-            )}
-            <button className="ac-mobi-hist" onClick={() => setRailOpen(true)} title="Recent conversations">
-              <Icon.Clock/> Recent
-            </button>
+      <Shell
+        isMobile={true}
+        className="ac-frame ac-m"
+        center={
+          <div className="ac">
+            <main className="ac-main">
+              <div className="ac-mobi-actions">
+                {started && (
+                  <button className="ac-mobi-new" onClick={newThread} title="Start a new conversation">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                    New search
+                  </button>
+                )}
+              </div>
+              {!started ? (
+                <div className="ac-landing"><div className="ac-landing-in">
+                  {/* Word study's landing order: title → search → helper → samples. The
+                      quota line needs no placement decision — it lives INSIDE AcComposer,
+                      so it rides the search box wherever the box goes. */}
+                  {landingTitle}
+                  {composerFor(false)}
+                  {landingLede}
+                  {examplesRow}
+                </div></div>
+              ) : (<>{threadBody}{composerFor(true)}</>)}
+            </main>
           </div>
-          {!started ? (
-            <div className="ac-landing"><div className="ac-landing-in">
-              {landingHead}
-              {composerFor(false)}
-              {examplesRow}
-            </div></div>
-          ) : (<>{threadBody}{composerFor(true)}</>)}
-        </main>
-      </div>
+        }
+        mobile={{
+          tools,
+          // Inspect goes in BARE: it carries its own header band + scroll box, so the padded
+          // .zsheet-body would nest a second scroll box and collapse the fill. The rail is
+          // plain content -> normal body. (frontend.md, the bare-sheet rule.)
+          sheet: mSheet === "recent" ? railInner
+               : mSheet === "inspect" ? <RightStack ctl={rightCtl} root={inspectRoot} empty={inspectIdle} className="ac-rstack" inline /> : null,
+          sheetBare: mSheet === "inspect",
+          sheetTitle: mSheet === "recent" ? "Recent conversations" : null,
+          onCloseSheet: () => setMSheet(null),
+        }}
+      />
     );
   }
 

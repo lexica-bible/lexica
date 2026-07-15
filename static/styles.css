@@ -4609,8 +4609,8 @@ button.study-verse-ref { border: none; }
   min-height: 0;
 }
 
-/* LEFT RAIL — session history */
-.ac-rail { border-right: 1px solid var(--rule); background: var(--bg-sunk); min-height: 0; display: flex; flex-direction: column; }
+/* LEFT RAIL — session history. The .ac-rail aside itself is gone (desktop's rail slot is
+   the shell's .zrail; mobile's is a sheet), so only its CONTENTS carry styling now. */
 /* rail header shares the strip band so the bottom rule runs unbroken across both columns */
 .ac-rail-top { flex: 0 0 auto; box-sizing: border-box; height: var(--strip-h);
   display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--rule); }
@@ -4977,7 +4977,6 @@ button.study-verse-ref { border: none; }
 .lexicon-ask-corpus { color: var(--ai); }
 .lexicon-ask-corpus svg { color: var(--ai); }
 
-.ac-rail-scrim { display: none; }
 
 /* MOBILE — app breakpoint is 1100 (conform to the app, not the mockup) */
 @media (max-width: 1099px) {
@@ -4995,21 +4994,47 @@ button.study-verse-ref { border: none; }
      ends exactly at the visible bottom (no extra page height to scroll into). */
   .app.view-corpus .main { padding-bottom: 0; }
   .ac-thread, .ac-landing { overscroll-behavior: contain; }
-  /* mobile-only: the welcome/thread screen has no visible rail, so this opens it to
-     reach saved conversations (rendered only when isMobile). */
-  .ac-mobi-hist {
-    align-self: flex-start;
-    display: inline-flex; align-items: center; gap: 6px;
-    margin: 10px 16px 2px; padding: 6px 12px;
-    border: 1px solid var(--rule); border-radius: var(--radius);
-    background: var(--ctl-bg); color: var(--ink-2);
-    font-size: 12.5px; font-weight: 600;
+
+  /* ── Ask-corpus on the shared Shell's mobile collapse (2026-07-15) ──────────
+     News pins its shell to (100dvh - top nav) and lets the fixed .zbar float over the
+     scrolling feed, with the feed padding itself clear. Ask-corpus can't: its composer is
+     PINNED to the bottom of .ac, so a bar floating over it would sit on the input. So the
+     shell ENDS above the bar instead — same rule (nothing hides behind the bar), the shape
+     the surface actually has. Both safe areas fall outside the shell now, so nothing inside
+     may add them again. */
+  .ac-frame.zshell-m {
+    height: calc(100vh - (2 * var(--bar-h)) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - (2 * var(--bar-h)) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    overflow: hidden; min-width: 0;
   }
-  .ac-mobi-hist svg { width: 13px; height: 13px; color: var(--ink-4); }
-  .ac-mobi-hist:active { background: var(--bg); }
-  /* mobile action row: start a fresh search (primary, AI accent) + reach saved convos */
+  /* .ac owns the scrolling (its .ac-landing / .ac-thread scroll under a pinned composer),
+     so .zcenter-m must NOT be a second scroll box around it. */
+  .ac-frame.zshell-m .zcenter-m { overflow: hidden; }
+  .ac-frame.zshell-m .ac { height: 100%; }
+  /* The safe area is outside the shell now — don't pay it twice. */
+  .ac-frame.zshell-m .ac-composer.pinned { padding: 12px 18px 14px; }
+
+  /* Landing, converged to Word study's (2026-07-15). Reference = .occ-welcome: 16px
+     margins, 24px serif title, search box, 14px helper, samples — one tight column
+     starting near the top. Ask-corpus ran a 44/34px title, a 16.5px lede, 28px margins and
+     a 10vh push, which put its first input 236px lower than Word study's on a 375px phone. */
+  .ac-m .ac-landing { padding: 0 16px; place-items: start stretch; }
+  .ac-m .ac-landing-in { margin-top: 60px; max-width: none; }
+  .ac-m .ac-title { font-size: 24px; margin: 0 0 8px; }
+  .ac-m .ac-composer.hero { margin-bottom: 14px; }
+  .ac-m .ac-lede { font-size: 14px; line-height: 1.55; margin: 0 0 20px; max-width: none; }
+  /* The samples stay a LIST, not Word study's inline dot-separated chips: these are whole
+     questions ("Where does Scripture link blood and covenant?"), not one-word lookups —
+     inline chips would wrap into mush. Structure converges; the row shape follows the
+     content. This is the one deliberate divergence from the reference. */
+  .ac-m .ac-examples { margin-top: 0; gap: 2px 0; }
+
+  /* mobile action row: start a fresh search (primary, AI accent). "Recent" left this row
+     for the bottom bar — it names a ZONE, so it earns a bar slot; New search is a one-shot
+     action and stays here. The row collapses to nothing on the landing (New only renders
+     once a thread exists), which is what buys the landing its top space back. */
   .ac-mobi-actions { display: flex; align-items: center; gap: 8px; margin: 10px 16px 2px; }
-  .ac-mobi-actions .ac-mobi-hist { align-self: auto; margin: 0; }
+  .ac-mobi-actions:empty { display: none; margin: 0; }
   .ac-mobi-new {
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
     border: 1px solid var(--ai); border-radius: var(--radius);
@@ -5019,9 +5044,14 @@ button.study-verse-ref { border: none; }
   .ac-mobi-new svg { color: var(--ai); }
   .ac-mobi-new:active { background: color-mix(in oklab, var(--ai) 18%, var(--ctl-bg)); }
   .ac-construction { padding: 8px 16px; font-size: 12.5px; }
-  .ac-rail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
-  .ac-rail.hidden { display: none; }
-  .ac-rail-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
+  /* The slide-in rail + its scrim are GONE: the conversations rail is a shell sheet now,
+     reached from the bottom bar. .ac-rail-top/-list/-item (railInner's own bits) are alive
+     and unchanged — they just render inside the sheet instead of a fixed aside. */
+  /* ...except the rail's own header. On DESKTOP it's the band that lines the rail up with
+     the center strip's rule; inside a sheet the sheet's own head already names the panel,
+     so it rendered "Recent conversations" twice, one line apart. The sheet head wins (it's
+     the sheet's chrome, same as every other sheet); the desktop band is untouched. */
+  .ac-m .zsheet .ac-rail-top { display: none; }
   .ac-title { font-size: 34px; }
   .ac-lede { font-size: 15px; }
   .ac-examples { grid-template-columns: 1fr; }

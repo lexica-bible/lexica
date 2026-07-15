@@ -135,4 +135,17 @@ const Icon = {
       <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/>
     </svg>
   ),
+  // Word card → a card with a head band. Promoted here from Word study's own private set
+  // (the forked `WsI`), which had no shared twin — so it moved rather than being deleted.
+  Card: (p) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>
+    </svg>
+  ),
+  // Drill-in chevron. Same story as Card — promoted, not duplicated.
+  ChevR: (p) => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="m9 6 6 6-6 6"/>
+    </svg>
+  ),
 };

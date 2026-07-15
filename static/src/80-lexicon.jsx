@@ -26,15 +26,17 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 
-// Mobile word-study glyphs (kept local; mirror the design handoff's WMI set).
-const WsI = {
-  Search: (p) => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>),
-  Book: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5a2.5 2.5 0 0 0 0 5H19"/><path d="M19 16H7.5"/></svg>),
-  Card: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>),
-  Sliders: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 8h9M19 8h0M5 16h0M10 16h9"/><circle cx="16" cy="8" r="2.4"/><circle cx="7.5" cy="16" r="2.4"/></svg>),
-  ChevR: (p) => (<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m9 6 6 6-6 6"/></svg>),
-  Close: (p) => (<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M6 6l12 12M6 18 18 6"/></svg>),
-};
+// WsI — Word study's PRIVATE icon set — is gone (2026-07-15). It was a FORK, not drift:
+// its Sliders was character-for-character identical to Icon.Modes, and its Search redrew
+// Icon.Search's exact two shapes at a different stroke. Same function, two definitions, and
+// the sliders glyph was serving "Views" here while meaning "Reading options" in Library —
+// one glyph, two jobs, which is what the app-wide pass exists to stop. Card + ChevR had no
+// shared twin, so they were PROMOTED into Icon rather than deleted.
+// Sizes: the bottom bar sizes its own glyphs (.wm-tab svg -> 22px), so the bar takes the
+// shared components bare. The NON-bar uses (the search box's leading icon, its clear button,
+// the context chevron) were 20/19/15px by the old set's own width attrs and the CSS only
+// sets the flex slot, not the glyph — so they pass their size explicitly. Consolidating the
+// definition must not resize a shipped surface.
 
 // Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
 // grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
@@ -821,7 +823,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <span className="wm-ctx-tr">{profile.translit}</span>
               {firstGloss && <><span className="wm-ctx-dot">·</span><span className="wm-ctx-gloss">{firstGloss}</span></>}
             </span>
-            <span className="wm-ctx-go"><WsI.ChevR/></span>
+            <span className="wm-ctx-go"><Icon.ChevR/></span>
           </button>
         )}
 
@@ -844,11 +846,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             <div className="occ-welcome">
               <div className="occ-welcome-t">Greek &amp; Hebrew word study</div>
               <form className="wm-search wm-welcome-search" onSubmit={handleSubmit}>
-                <WsI.Search className="wm-search-i"/>
+                <Icon.Search className="wm-search-i" width="20" height="20"/>
                 <input className="wm-search-input" type="text" value={query}
                   onChange={e => setQuery(e.target.value)} enterKeyHint="search"
                   placeholder="Word, transliteration, Strong's…"/>
-                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><WsI.Close/></button>}
+                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><Icon.Close width="19" height="19"/></button>}
               </form>
               <div className="occ-welcome-s">Search a word, transliteration, or Strong's number — or tap a sample.</div>
               <div className="occ-welcome-chips">
@@ -862,16 +864,19 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
         <nav className="wm-tabs" aria-label="Word study tools">
           <button className={"wm-tab" + (sheet === "search" ? " on" : "")} onClick={() => setSheet("search")} title="Search" aria-label="Search">
-            <WsI.Search/>
+            <Icon.Search/>
           </button>
           <button className={"wm-tab" + (sheet === "dist" ? " on" : "")} disabled={!profile} onClick={() => setSheet("dist")} title="Distribution" aria-label="Distribution">
-            <WsI.Book/>
+            <Icon.Book/>
           </button>
           <button className={"wm-tab" + (sheet === "card" ? " on" : "")} disabled={!profile} onClick={() => setSheet("card")} title="Word card" aria-label="Word card">
-            <WsI.Card/>
+            <Icon.Card/>
           </button>
+          {/* Views = how the results are ARRANGED, so it takes the grid. It used to wear the
+              sliders/mixer glyph, which is Library's "Reading options" — one glyph doing two
+              unrelated jobs across two bars. Modes stays single-function; this one splits off. */}
           <button className={"wm-tab" + (sheet === "views" ? " on" : "")} disabled={!profile} onClick={() => setSheet("views")} title="Views" aria-label="Views">
-            <WsI.Sliders/>
+            <Icon.Grid/>
           </button>
         </nav>
 
@@ -918,11 +923,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           <WsSheet title="Search" onClose={() => setSheet(null)}>
             <div className="wm-searchsheet">
               <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
-                <WsI.Search className="wm-search-i"/>
+                <Icon.Search className="wm-search-i" width="20" height="20"/>
                 <input className="wm-search-input" type="text" value={query} autoFocus
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Word, transliteration, Strong's…"/>
-                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><WsI.Close/></button>}
+                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><Icon.Close width="19" height="19"/></button>}
               </form>
               <div className="wm-search-hint">Greek, Hebrew, a transliteration, an English gloss, or a Strong's number.</div>
               <div className="wm-search-chips">
