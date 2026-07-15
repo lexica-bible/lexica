@@ -1,5 +1,39 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **SPEND BOARD — READ THIS BEFORE PITCHING ANY SPEND (2026-07-15, session close). THERE IS CURRENTLY
+> NO WELL-DEFINED SPEND ON THE BOARD.** Two were pitched at session close and BOTH would have bought the
+> defect they were meant to fix; nothing was spent. **= ENGINE_LESSONS #73.**
+> **G162 REDRAW — verdict AGAINST it, on the record.** The ruling was issued then WITHDRAWN, three legs
+> all severed by bytes: (1) *"the only card in the arc to pass every machine gate"* is an inflation of
+> the entry's *"FIRST CARD OF THE SESSION"* (`AUDIT:4484`) — and passing every machine gate did NOT save
+> it (d1 died on a HUMAN read, Gen 14:14); (2) "the stack improved ⇒ it converts near-misses" INVERTS —
+> better detectors CATCH more, they don't write better prose, and G162's killers were gate-invisible;
+> (3) the hint fallback died on the hint check — the Est 2:6 forward rule ALREADY existed at adjudication
+> when the draw broke it (`AUDIT:4761`), G162's hints run **1 OBEY / 1 BREAK** (the break self-indicting),
+> and the banked verdict is **"fresh draws don't cure, whether the failure recurs or roams"** (`AUDIT:4776`
+> — d2↔d3 ZERO defect overlap, defects ROAM across a wide surface). **DO NOT re-pitch from the "passed
+> every machine gate" line.** If JP ever clears it anyway, quote "fresh draws don't cure" beside the
+> clearance. (CC error logged too: called Est 2:6 a "recurrence" — inferred from prose, the draw history
+> says the defects wander.)
+> **G236 PART 2 — MECHANISM UNDEFINED; THIS IS NOW THE GATE ON EVERY G236 SPEND.** Pitched as "a repair,
+> not a draw". It is neither. **A floor is TEN MODEL DRAWS VOTING** (`lexica_agreement.py:733`, `--runs`
+> default 10 — the rig exists because *"the residual wobble is the MEDIUM, not a tuning bug"*), so it is
+> ~10× a redraw, the board's most expensive item. **And re-running it REPRODUCES the misfile:** V9 adds
+> only coverage + quote discipline (`lexica_agreement.py:369`) and does NOT dictate the sense inventory —
+> the model derives senses from the verses, it called Ezr 6:11 substitution, ~10 draws agreed, and THAT
+> VOTE IS THE FLOOR. Same prompt + same verses ⇒ same vote. **Every mechanism that could move the vote is
+> blocked:** prompt change ⇒ V9 FROZEN, prompt of record for the JP-ruled-FINAL 7/15 · hint the floor ⇒
+> floors draw **UNHINTED** by design · hand-carve the roster ⇒ **BANNED** (path-(c)). **THE CONFLATION:
+> a ruled fix DIRECTION (narrow third home) is not a fix MECHANISM.** **REAL NEXT STEP = a ZERO-SPEND
+> design pass: how do you move a floor when the floor is a vote, the prompt is frozen, and the roster
+> cannot be touched? That question is OPEN.**
+> **ZERO-SPEND SHELF (all still good, nothing lost):** G236 part-2 MECHANISM design (the new gate) · the
+> KNOWN-set #71 ticket (`test_v11_probes.py:480`, hand-typed guard, predates #71, not a regression) ·
+> prose-economy (JP's inquiry) · G162's preamble-leak boilerplate check (its own kill record says that
+> class *"would be caught"* by a check that does not exist).
+> **SESSION: ZERO model spend, ZERO code changed, three doc commits. Scoreboard UNCHANGED `3/10ʰ · 7/15`.**
+> Full record: AUDIT "SPEND DELIBERATION — TWO SPENDS PROPOSED, BOTH REFUSED ON BYTES".
+
 > **PROBE-2 OVER-FIRING — CLOSED AS A DESIGN FINDING, ZERO CODE (2026-07-15). ROOT = `is_pn` IS AN
 > INCOMPLETE NAME INDEX = ENGINE_LESSONS #72.** The ticket produces NO detector fix and that is the
 > right outcome: **ONE named blocker accounts for BOTH candidate mechanisms** and constrains every

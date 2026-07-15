@@ -1087,3 +1087,21 @@ both drifting from the doc.
     revival has a trigger instead of a memory. Kin of #71 (seed from production, and know what the
     production set MEANS) and of the certification rule (a detector's zero is only as good as its
     reference set). *(audit: PROBE-2 OVER-FIRING — closed as a design finding, 2026-07-15)*
+
+73. **A ruled fix DIRECTION is not a fix MECHANISM — and the gap is where money dies.** Three times in
+    one session a spend was pitched with a "known payoff", and all three would have BOUGHT THE DEFECT:
+    the G236 redraw (the roster forces the misfile the draw was meant to fix — held), the G162 redraw
+    (its own record already rules "fresh draws don't cure, whether the failure recurs or roams" —
+    withdrawn), and G236 part 2 (a floor is TEN DRAWS VOTING, not a repair; same prompt + same verses ⇒
+    the same vote that misfiled Ezra in the first place — refused). Each pitch was persuasive and each
+    collapsed on a cheap read of the machinery. → (i) before ANY spend, answer "what CHANGED on the
+    generation side since the thing failed?" — if the answer is "the detectors", that raises KILL
+    probability, not conversion probability: better detectors catch more, they do not write better
+    prose; (ii) "the fix direction is ruled" is NOT "the fix is available" — name the MECHANISM and
+    check it is not banned (path-(c) hand-carve), frozen (V9 is the prompt of record for every shipped
+    card), or by-design excluded (floors draw UNHINTED) BEFORE treating the spend as defined; (iii) a
+    spend authorization covers a spend that COULD fix the thing — holding when the bytes say it can't is
+    COMPLIANCE with the gate's purpose, not an override (the G236-redraw precedent, now applied three
+    times); (iv) the cheap read paid for itself every time — read the machinery, not the pitch. Kin of
+    #70/#71/#72 (recall over bytes) with the loss denominated in money instead of a false record.
+    *(audit: SPEND DELIBERATION — two spends proposed, both refused on bytes, 2026-07-15)*

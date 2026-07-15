@@ -6793,4 +6793,86 @@ case-under-test needs") sitting in the very file this ticket reasoned about all 
 it is NOT a regression. Out of scope here; a future session may pick it up as its own ticket.
 **NEXT: G236 part 2 (floor-level fix, SPEND, JP-GATED) · G162 redraw (JP's gamble call) · prose-economy
 design ticket · the KNOWN-set flag above. The probe-2 ticket is CLOSED — it has no remaining zero-spend
-work.**
+work.** *(SUPERSEDED IN PART by the SPEND DELIBERATION entry below: G162's redraw has a banked verdict
+AGAINST it, and part 2's MECHANISM is undefined — read that entry before pitching either.)*
+
+### SPEND DELIBERATION — TWO SPENDS PROPOSED, BOTH REFUSED ON BYTES; NOTHING SPENT
+### (2026-07-15, session close. JP cleared a spend ("I'll take what you recommend"); CC found both
+### candidates buy a defect and recommended NOT spending; JP: "close and bank". ZERO model spend,
+### ZERO code. Doc-only, exemption invoked. Banked at the reviewer's instruction — a withdrawn spend
+### ruling is exactly the record a future session needs.)
+
+**WHY THIS IS ON THE RECORD:** twice tonight a spend was pitched with a "known payoff" and twice the
+bytes said the money would REPRODUCE the defect it was meant to fix. Both pitches read persuasively.
+Neither survived a cheap read of the machinery. **The pattern is the entry's point** — see #73.
+
+**(1) G162 REDRAW — RULING ISSUED, THEN WITHDRAWN. THREE LEGS, ALL SEVERED BY BYTES:**
+- **LEG 1 — the résumé, INFLATED.** The ruling's decisive reason was that G162 "passed every machine
+  gate on draw 1, **the only card in the arc to do so**". The bytes read *"FIRST CARD OF THE SESSION TO
+  PASS EVERY MACHINE GATE"* (`AUDIT:4484`). First-of-session promoted to only-in-arc, issued as a
+  decisive reason in a SPEND ruling without reading the entry. **And passing every machine gate did not
+  save it — d1 was killed by a HUMAN read (Gen 14:14 placement) no detector saw.**
+- **LEG 2 — the mechanism argument, BACKWARDS.** "The detector stack improved twice since it died, so
+  this tests whether the current stack converts near-misses." Better detectors do not write better
+  prose — they CATCH more. G162's killers were gate-invisible (Est 2:6 content claim; preamble leak) or
+  gate-external. **A sharper stack raises KILL probability, not conversion probability.**
+- **LEG 3 — the fallback (hint the Est 2:6 forward rule), REMOVED BY THE HINT CHECK (zero-spend, run
+  before any gate cleared):** (a) the forward rule ALREADY EXISTED at adjudication when the draw broke
+  it — *"caught by the byte-grounded Est 2:6 forward rule **ruled BEFORE the draw**"* (`AUDIT:4761`);
+  (b) G162's hint compliance is **1 OBEY / 1 BREAK**, and the break was *"structural, not oversight,
+  self-indicting"* (the card contradicted its own sentence); (c) **the decisive one — G162's defects
+  ROAM:** *"d2↔d3 ZERO defect overlap … Not regression toward a fixable target: draw variance across a
+  wide defect surface … G236 = SAME defect recurring; G162 = DIFFERENT defects each draw. **Together:
+  fresh draws don't cure, whether the failure recurs or roams**"* (`AUDIT:4776`). A hint removes ONE
+  point from a wide surface; draw 4 dies elsewhere, as draws 1→2→3 did.
+- **CC ERROR, SAME CLASS, SELF-CAUGHT:** CC told JP "Est 2:6 is a recurrence — the model keeps making
+  it", implying a fixable target. The draw history says G162's defects do NOT repeat, they wander. CC
+  inferred "recurrence" from the offline-check's phrasing without reading the death certificates —
+  while recommending the word JP would have bought.
+**STATUS: G162 redraw = no affirmative case on the record + a banked verdict against it.** Not
+gate-closed by rule — JP may always gamble. **If it is ever cleared, quote "fresh draws don't cure"
+beside the clearance so the decision is visibly against the record.** **DO NOT re-pitch it from the
+"passed every machine gate" line — that is a landmine of the same shape as this AUDIT's own over-firing
+phrasing (see the probe-2 entry).**
+
+**(2) G236 PART 2 — PITCHED AS "A REPAIR, NOT A DRAW"; IT IS NEITHER. MECHANISM UNDEFINED.**
+Part 2 was cleared as the only spend with a "known payoff — byte-proven defect, ruled fix direction".
+CC read the machinery before it fired. **BYTES:**
+- **A floor is TEN MODEL DRAWS VOTING, not a repair.** `lexica_agreement.py:733` — `--runs` default
+  **10**, *"10 reproduces the canary"*. The rig exists because *"the residual wobble is the MEDIUM, not
+  a tuning bug … build a word several times and let the draws VOTE"* (`lexica_agreement.py:8`). So part
+  2 is ~10× a single redraw — **the most expensive item on the board**, cleared by one casual line.
+- **RE-RUNNING THE FLOOR REPRODUCES THE MISFILE.** V9 adds only COVERAGE + QUOTE discipline
+  (`lexica_agreement.py:369`); **it does not dictate the sense inventory — the model derives senses from
+  the verses.** The model read Ezr 6:11, called it substitution, and ~10 draws agreed: that vote IS the
+  floor's modal home (the roster copied it byte-for-byte). Same prompt + same verses ⇒ **same vote.**
+  **This is the G236-REDRAW-HELD logic one level up** — authorization was for a spend that COULD fix the
+  defect; the bytes say this one can't.
+- **EVERY MECHANISM THAT COULD MOVE THE VOTE IS BLOCKED:** change the prompt ⇒ V9 is FROZEN and is the
+  prompt of record for every shipped card incl. the JP-ruled-FINAL 7/15 (an architectural decision, not
+  a night's spend) · hint the floor ⇒ floors are drawn **UNHINTED** by design (G236's own floor record:
+  *"drawn unhinted"*) · hand-carve the roster ⇒ **BANNED** (path-(c)).
+**THE CONFLATION, NAMED:** the fix **DIRECTION** is ruled (narrow third home, "alter/violate a standing
+norm"). The fix **MECHANISM** is not established. "Ruled direction" was read as "known repair". **STATUS:
+G236 part 2 is NOT a well-defined spend. Its real next step is a ZERO-SPEND design pass on the MECHANISM:
+how do you move a floor when the floor is a vote, the prompt is frozen, and the roster cannot be
+touched? That question is OPEN and is the gate on every G236 spend.**
+
+**REVIEWER ERRORS OF RECORD (third and fourth of the session, both spend-side, both caught before money
+moved):** the G162 ruling was built on an unverified characterization of the record (résumé) plus a
+mechanism argument that inverts under inspection; the part-2 clearance rested on "a repair, not a draw",
+which the machinery contradicts. **Pattern note, on the record as instructed: three reviewer-side recall
+errors tonight, all in the same shape — a claim about the record made from memory of the record.** Both
+roles reached for a spend recommendation before reading the death certificates.
+**JP GATE NOTE:** JP's *"I'll take what you recommend"* was read as clearing a spend. CC flagged that
+the recommendation had been "part 2 when you have the appetite — **or spend nothing tonight**", and that
+a floor rebuild is the board's most expensive item. **CC did not fire it; JP closed at zero spend.**
+
+**STATE: ZERO model spend for the ENTIRE session. ZERO code changed across all three commits. Scoreboard
+UNCHANGED `3/10ʰ · 7/15`. Two findings banked (G236 part 1: 5 misfiles, NT in scope · probe-2: CLOSED,
+root = #72).** **SPEND BOARD AS IT NOW STANDS:** G162 redraw = verdict against · G236 part 2 = mechanism
+undefined, blocked on a zero-spend design pass · **there is currently NO well-defined spend on the
+board.** **ZERO-SPEND SHELF:** G236 part-2 MECHANISM design (the new gate) · the KNOWN-set #71 ticket ·
+prose-economy (JP's inquiry) · G162's preamble-leak boilerplate check (its own kill record says that class
+*"would be caught"* by a check that does not exist — a zero-spend detector ticket sitting inside a kill
+record).
