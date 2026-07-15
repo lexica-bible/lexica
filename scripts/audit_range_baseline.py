@@ -68,8 +68,16 @@ def main():
         except Exception:
             print(f"{sid:8s} UNREADABLE def_json -- flagging, not skipping silently")
             continue
-        # every prose field a range could hide in, not just the ones we expect
-        prose = "\n".join(str(v) for k, v in d.items() if isinstance(v, str))
+        # READ `raw` ONLY -- the SAME field the production gate reads (build_lexica_def.py:3242,
+        # `refused_tails(entry.get("raw", ""))`). raw is the model's full prose; senses/range/
+        # gloss_notes/coverage are SPLIT OUT OF IT and stored alongside (":2222 -- kept so an
+        # improved splitter can re-split"). A first pass joined every text field and counted every
+        # range TWICE (once in raw, once in its section) -- 100 ranges reported where there were
+        # ~50. Caught on the live output: every card's list was its own ranges duplicated.
+        prose = d.get("raw") or ""
+        if not prose:
+            print(f"{sid:8s} NO raw FIELD -- flagging, not skipping silently")
+            continue
         hits = ranges_in(prose)
         refused = refused_tails(prose)
         if hits or refused:
