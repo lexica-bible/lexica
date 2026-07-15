@@ -1,7 +1,36 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **SESSION 2026-07-14 (THROUGHPUT TURN) — A CARD SHIPPED. READ THIS BLOCK FIRST; THE BLOCK BELOW IT
-> IS THE PRIOR SESSION'S AND ITS POSTURE IS SUPERSEDED.**
+> # ⇒ NEXT SESSION OPENS HERE: THE GROUNDED-NAMING DESIGN PASS. ⇐
+> **THE PULL FIRED AND ITS TRIGGER IS MET — TWO BATCH WORDS PARKED ON ONE CAUSE.** `G3793` DOES NOT
+> RUN until this lands; a third word into the same wall spends a call to learn nothing.
+>
+> **THE DEFECT:** on narrative-dense words **the model names referents its FED TEXT DOES NOT
+> CONTAIN** — 6 of 9 times harmlessly (the name sits in the verse next door), but it also produced
+> **`Hazah`** (the Hebrew's *Hazor*; **a name this corpus does not carry at all**), **`Corinth`** for
+> Ephesus (1Co 16:8 says Ephesus **in the verse before the one cited**), and **`Elizabeth`** for
+> **Mary at Luk 2:7 — the manger verse.** **6-right/2-wrong is unreliability DEMONSTRATED.**
+> **`VERSE_PROMPT` ALREADY BANS THIS** (*"Reason only from the supplied occurrences"*) — **the model
+> breaks it SELECTIVELY, exactly where prose wants a subject. The question is WHY the existing ban
+> fails on that shape, NOT how to add another.**
+> **probe-2 IS NOT THE DEFECT — it caught 9/9 and 10/10 against fed text on both parked cards.**
+> **OPTIONS (bring, don't build; JP rules the option set; ZERO build before that):** (a) targeted
+> prompt wording on locatives/epithets · **(b) FEED THE ADJACENT CONTEXT VERSE** so naming is
+> grounded not recalled — **the interesting one: 6 of 9 artifacts resolve to "the name is next
+> door", so the model is reaching for context THE FEED WITHHOLDS** (costs: bigger feed, and it MOVES
+> THE DRAW SIGNATURE — state both) · (c) hybrid.
+> **BINDING: price what each option does to the SIX BENIGN cases** — *"Elisha's widow"* → *"a
+> woman"* is a real prose cost JP must see BEFORE, not discover after. **No-regression bar applies.**
+> Full scope + all byte evidence: AUDIT "DESIGN PASS — GROUNDED NAMING" + the two park entries.
+>
+> ---
+>
+> **SESSION 2026-07-14 (THROUGHPUT TURN) — TWO CARDS SHIPPED, TWO PARKED. The block below it is the
+> PRIOR session's and its posture is SUPERSEDED.**
+> **SHIPPED `G3464` μύρον (#81) + `G2787` κιβωτός (#82); live cards 80 → 82.** **PARKED `G2374` θύρα
+> (Zion/Corinth/Hazah) + `G5088` τίκτω (Mary/Elizabeth swap)** — **the parks are the PULL RULE
+> WORKING: both were caught BEFORE a reader saw either card.** Scoreboard `3/10ʰ · 7/15` UNTOUCHED
+> (that is the CALIBRATION count; throughput words are not members). **Spend: 9 calls, every one
+> change-backed.**
 >
 > **1. `G3464` μύρον IS LIVE — card #81, live cards 80 → 81.** First ship in weeks. **Scoreboard
 > `3/10ʰ · 7/15` UNCHANGED and CORRECT**: that is the CALIBRATION count (FINAL + UNTOUCHABLE), and

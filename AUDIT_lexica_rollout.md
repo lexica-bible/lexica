@@ -7787,8 +7787,12 @@ ruling's description failing on contact — and the credit was declined, not tak
   **Zion** stand at the doors **being reproached**."* No Zion in 2:14 or 2:13 — **and the relation is
   REVERSED**: the ones at the doors are the reprovers, not the reproached. **Not an imported name: a
   FALSE CLAIM ABOUT WHAT THE VERSE SAYS** — the one class the project cannot carry at any rate.
-- **OPEN BYTE: `HAZAH` (Jer 49:31)** — ABP renders the referent *"a stable nation"*; the name is in
-  neither 49:31 nor 49:30. **May sit at 49:28, outside the read window. NOT CALLED.**
+- **`HAZAH` (Jer 49:31) — REAL. CLOSED ON BYTES (Jer 49:28-31 read).** The oracle is against
+  **Kedar** and *"the queen of the courtyard"* (49:28); **no "Hazah" anywhere in it.** ABP renders the
+  Hebrew's **Hazor** as *"the courtyard"* — **the model reached for a name from the HEBREW TRADITION
+  THAT THIS CORPUS'S TRANSLATION DOES NOT CARRY.** Training-not-evidence in its purest form: not a
+  context verse next door, not a wrong verse — **a name that exists only outside the corpus.**
+**⇒ G2374 PARKS ON THREE FABRICATED REFERENTS: `Zion`, `Corinth`, `Hazah`.**
 
 **ARTIFACT ×6, each citing WHERE THE NAME LIVES:** `Passover` → Exo 12:21 · `Elisha` → 2Ki 4:1-2 ·
 `Solomon` → 1Ki 7:1 · `Paul` → author (1Co 1:1; the verse says *"me"*) · `Philadelphia` → Rev 3:7
@@ -7817,3 +7821,82 @@ draw ⇒ **JP-level design decision, its own reviewed step.**
 **RULED: the design pass opens AFTER the batch's remaining two words (G5088, G3793) — it must not
 stall throughput. IF EITHER REMAINING WORD PARKS ON THIS SAME CLASS, THE DESIGN PASS JUMPS THE
 QUEUE: two parked batch words on one cause is a STALLED PIPELINE, not a research problem.**
+**⇒ THE TRIGGER FIRED ON THE VERY NEXT WORD. See the G5088 park below.**
+
+---
+
+## G5088 τίκτω — PARKED. THE MOTHER OF JESUS SWAPPED FOR HER COUSIN. TRIGGER MET. — 2026-07-14
+**PARKED. Same grounds as G2374: a FALSE PROSE CLAIM, which no instrument reaches, and a redraw at
+unchanged input is a hope.** Craft was clean — citations 55/55, no boilerplate, two well-drawn
+senses, and a gloss note that correctly flags *"birthed"* as non-standard English rather than a
+distinct sense.
+
+**THE KILLER — `Elizabeth` at Luk 2:7. CONFIRMED ON BYTES:**
+> **CARD:** *Mary "bore her first-born son" (Mat 1:25); **Elizabeth** "gave birth to a son"
+> (**Luk 2:7**)*
+> **Luk 2:5:** *"to be registered with **Mary**, to the one being espoused to him as wife, being
+> pregnant."* · **Luk 2:7:** *"And **she** gave birth to her son the first-born, and she swaddled
+> him, and laid him in the stable…"* · **Luk 1:57:** *"And **Elizabeth** fulfilled the time of her
+> giving birth; and she bore a son."*
+
+**Luk 2:7 is MARY, in Bethlehem. Elizabeth's birth is Luk 1:57 — different chapter, different woman,
+different child. The card split ONE birth across TWO people.** **THIS IS NOT the "name is in the
+verse next door" artifact: the name is from a DIFFERENT NARRATIVE.** Its quote for that span
+independently fails the gate (*"gave birth to a son"* matches nothing).
+**THE WORST INSTANCE OF THE CLASS: Zion invented a referent · Corinth swapped a city · THIS SWAPS
+THE MOTHER OF JESUS FOR HER COUSIN AT THE MANGER VERSE** — the exact verse a reader is most likely
+to know, and most likely to check.
+
+**HELD, un-adjudicated, so a post-fix session resumes on facts:** coverage 55/57 (`Rev 12:2`,
+`Rev 12:13` uncited — `--repair` territory) · **4 quote spans** (*"gave birth to a son"* · *"not
+[given] birth"* — another editorial bracket inside quotes, the byte-exact class · *"there you were
+not birthed"* · *"brought forth."*) · **9 held probe-2 warns** that LOOK like the class being RIGHT
+(Leah/Gen 29:35 · Bathsheba/2Sa 11:27 · Rehoboam/2Ch 11:19-20 · Mary/Mat 1:25 + Luk 1:31 + Luk 2:6 ·
+Manoah/Jdg 13:3 · Jehoiachin/Jer 22:26 · Shunammite/2Ki 4:17 — note 2Ki 4:16-17 name **Elisha**, not
+the Shunammite) — **not called; they adjudicate if the card survives to be repaired.**
+
+**⇒ TRIGGER MET: TWO BATCH WORDS PARKED ON ONE CAUSE. THE DESIGN PASS JUMPS THE QUEUE. `G3793` DOES
+NOT RUN** — pushing a third word into the same wall spends a call to learn nothing new.
+
+---
+
+## DESIGN PASS — GROUNDED NAMING. NEXT SESSION'S OPENING ITEM. — scoped 2026-07-14, NOT BUILT
+**THE FAILURE SHAPE, stated from the evidence, not from theory:** on **narrative-dense** words the
+model **imports referents from recalled context** — adjacent verses it was never shown (6 benign) ·
+other traditions (`Hazor`→"Hazah", a name this corpus does not carry) · **wrong narratives entirely**
+(`Corinth` for Ephesus; `Elizabeth` for Mary). **`VERSE_PROMPT` ALREADY SAYS *"Reason only from the
+supplied occurrences."* The ban EXISTS and the model breaks it SELECTIVELY — precisely where prose
+wants a SUBJECT.** That is the question: **not "add a ban" but why the existing one fails on that
+shape.**
+**probe-2 IS NOT THE DEFECT — it caught 9 of 9 and 10 of 10, against fed text, on both parked
+cards.** (Its `Gershon`/`Gershonites` morphology gap is a separate minor note, one instance.)
+**CANDIDATE MECHANISMS TO EVALUATE (bring, don't build):**
+- **(a)** targeted prompt wording against **locatives / epithets / named subjects** absent from fed
+  text;
+- **(b)** **feed the ADJACENT CONTEXT VERSE** so naming is GROUNDED rather than RECALLED — the
+  interesting one on the evidence, since **6 of 9 artifacts resolve to *"the name is in the verse
+  next door"***, i.e. the model is reaching for context **the feed withholds**. **COSTS: a bigger
+  feed per draw, and it MOVES THE DRAW SIGNATURE — state both for JP.**
+- **(c)** any hybrid.
+**BINDING ON THE DESIGN: it MUST price what each option does to the SIX BENIGN cases.** *"Elisha's
+widow is told to lock the door"* → *"a woman is told to lock the door"* **is a real prose cost and JP
+must see it priced, not discover it after.** **No-regression bar applies — this is a model-behaviour
+change.** **ZERO BUILD until JP rules on the option set.**
+
+---
+
+## SESSION CLOSE — 2026-07-14
+**SHIPPED: 2 cards. `G3464` μύρον (#81) · `G2787` κιβωτός (#82). Live cards 80 → 82.**
+**PARKED: 2. `G2374` θύρα (three fabricated referents) · `G5088` τίκτω (Mary/Elizabeth swap).**
+**UNRUN: `G3793` ὄχλος — still receipted, does not run until the design pass lands.**
+**Scoreboard `3/10ʰ · 7/15` UNTOUCHED — that is the CALIBRATION count; throughput words are not
+members. SPEND: 9 calls, EVERY ONE change-backed, zero re-rolls at unchanged input.**
+**THE PARKS ARE THE PULL RULE WORKING — both were caught BEFORE a reader saw either card.**
+**STANDING, CARRIED UNCHANGED:** the `finish_rebuild.sh` **ACCEPTANCE RUN is still OWED** on JP's
+next real `/rebuild-words` (a `lexica_def` write does NOT discharge it) · the **64 legacy cards are
+ACCEPTED AS-IS** under the lazy-redraw policy (the `"None"` trio first when dipped into) ·
+**format-unification now queues BEHIND the design pass.**
+**RULES BANKED THIS SESSION:** byte-exact quotes · the spend rule (a call is earned by a CHANGE; an
+unchanged input is a hope) · #77 + its corollary (a comparison read PROVES it bites; a
+decision-feeding read states its baseline as a READ FACT) · #76 (loose-vs-tight assertions) ·
+throughput-first / **PULL, NOT PUSH**.
