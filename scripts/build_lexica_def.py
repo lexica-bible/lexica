@@ -2932,6 +2932,47 @@ def open_probe_warns(entry):
     return [] if (not blocking or a.get("warns_adjudicated")) else blocking
 
 
+def _warn_set(audit):
+    """The EXACT five lists open_probe_warns blocks on, in a stable comparable form. Read from the
+    same place the gate reads (never a second list) — if the gate ever blocks on a sixth thing,
+    this must gain it or the carry below would silently ignore it."""
+    a = audit or {}
+    return tuple(sorted((a.get("probe1_warns") or []) + (a.get("probe2_warns") or [])
+                        + (a.get("scan3_warns") or [])
+                        + (a.get("probe1_notrun") or []) + (a.get("probe2_notrun") or [])))
+
+
+def carry_adjudication(old_entry, new_audit, is_resplit):
+    """Carry a stored adjudication across a --resplit, or return None (reviewer-ruled 2026-07-14).
+
+    WHY IT EXISTS: --resplit rebuilds the entry from scratch, so `warns_adjudicated` vanishes and
+    open_probe_warns REFUSES every card that shipped with an adjudicated warn. That made the
+    zero-spend remediation of the 31 verse-short live cards partial — and partial WEARING A CLEAN
+    FACE, since the other cards report success (the #69(i) shape at batch level).
+
+    WHY CARRYING IS SAFE HERE AND NOWHERE ELSE: a resplit re-derives from the SAME STORED PROSE —
+    no model call, not one word of the card changes. The claims the human ruled on are therefore
+    byte-unchanged. If the WARN SET is byte-identical too, the ruling still covers exactly what it
+    covered when it was made. Change either and the carry refuses.
+
+    THE TRUST TRANSFER IS A DECISION, NOT A DEFAULT (reviewer + JP, on the record): a batch resplit
+    ships carried adjudications on a byte comparison rather than a fresh human pass, because that
+    comparison is strictly more reliable than a human re-reading 31 unchanged warn sets — hand
+    re-adjudication at that volume IS rubber-stamping with extra steps. The carry is stamped
+    VISIBLY on the row (`warns_adjudication_carried`) so the trail never reads as a fresh ruling.
+    """
+    if not is_resplit:
+        return None                      # a fresh draw has NEW prose; no prior ruling can cover it
+    new = _warn_set(new_audit)
+    if not new:
+        return None                      # nothing to adjudicate — never plant a stale note
+    old = (old_entry or {}).get("audit") or {}
+    note = old.get("warns_adjudicated")
+    if not note:
+        return None                      # invent nothing
+    return note if _warn_set(old) == new else None
+
+
 def validate_entry(entry, conn=None):
     """Tell a LEGITIMATELY-empty field from a PARSE FAILURE wearing the same blank. The fields here
     are the ones where empty is NEVER legitimate, so an empty one means the splitter couldn't read
@@ -3702,6 +3743,20 @@ def main():
                                       or entry["audit"].get("probe1_notrun")
                                       or entry["audit"].get("probe2_notrun")):
             entry["audit"]["warns_adjudicated"] = args.adjudicate_warns
+        elif args.resplit:
+            # A resplit re-derives from the SAME stored prose, so a stored ruling still covers the
+            # same claims — carried ONLY when the warn set is byte-identical (carry_adjudication
+            # holds the reasoning and the refusals). An explicit --adjudicate-warns above always
+            # wins. Without this, a batch resplit refuses every adjudicated card while reporting
+            # success on the rest.
+            _old = json.loads(existing["def_json"]) if (existing and existing["def_json"]) else None
+            _carried = carry_adjudication(_old, entry["audit"], True)
+            if _carried:
+                entry["audit"]["warns_adjudicated"] = _carried
+                entry["audit"]["warns_adjudication_carried"] = True   # VISIBLE — never silent
+                print("  ⚠ adjudication CARRIED from the stored row (warn set byte-identical, "
+                      "prose unchanged by a resplit) — NOT a fresh human ruling; stamped "
+                      "warns_adjudication_carried on the row.")
         blocked = open_probe_warns(entry)
         if blocked:
             if args.apply:

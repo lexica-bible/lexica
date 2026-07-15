@@ -784,6 +784,53 @@ def main():
     assert not ok and "NOT RUN" in body and "not a pass" in body, body
     broken.close()
 
+    # ── ADJUDICATION CARRY ACROSS A RESPLIT (reviewer-ruled 2026-07-14) ──────────────────────
+    # WHY IT EXISTS: --resplit rebuilds the entry from scratch, so warns_adjudicated is lost and
+    # open_probe_warns REFUSES every card that shipped with an adjudicated warn. That turned the
+    # zero-spend remediation of 31 verse-short live cards into a partial one wearing a clean face.
+    # WHY CARRYING IS SAFE HERE AND NOWHERE ELSE: a resplit re-derives from the SAME STORED PROSE
+    # — no model call, not one word of the card changes. So the claims the human ruled on are
+    # byte-unchanged. If the WARN SET is also byte-identical, the ruling still covers exactly what
+    # it covered. Any change to either and it must refuse.
+    # THE TRUST TRANSFER IS A DECISION, NOT A DEFAULT (reviewer + JP, on the record): a batch
+    # resplit ships carried adjudications on a byte comparison rather than a fresh human pass,
+    # because that comparison is strictly more reliable than a human re-reading 31 unchanged warn
+    # sets — hand re-adjudication at that volume IS rubber-stamping with extra steps. The carry
+    # flag keeps the audit trail.
+    ADJ = "probe-2 Tyre: ruled artifact on verse bytes"
+
+    def audit(warns, note=None):
+        a = {"probe2_warns": list(warns)}
+        if note:
+            a["warns_adjudicated"] = note
+        return a
+
+    # 1. same warn set + a stored ruling -> CARRIES
+    assert B.carry_adjudication({"audit": audit(["W1"], ADJ)}, audit(["W1"]), True) == ADJ
+
+    # 2. THE LOAD-BEARING CONTROL: the warn set MOVED -> REFUSES, and the card then blocks.
+    #    Everything else here would pass against a stub that always carries; this is the one
+    #    that cannot.
+    assert B.carry_adjudication({"audit": audit(["W1"], ADJ)}, audit(["W1", "W2"]), True) is None
+    assert B.open_probe_warns({"audit": audit(["W1", "W2"])}), "a re-warned card must still block"
+    #    a warn DISAPPEARING is also a change — the ruling covered a set that no longer exists
+    assert B.carry_adjudication({"audit": audit(["W1", "W2"], ADJ)}, audit(["W1"]), True) is None
+
+    # 3. no stored ruling -> invents nothing
+    assert B.carry_adjudication({"audit": audit(["W1"])}, audit(["W1"]), True) is None
+
+    # 4. FRESH DRAW never carries, even on an identical warn set — the prose is NEW there, so no
+    #    prior ruling can legitimately cover it. This pins the resplit-only scope permanently.
+    assert B.carry_adjudication({"audit": audit(["W1"], ADJ)}, audit(["W1"]), False) is None
+
+    # 5. no warns at all -> nothing planted (a stale note on a clean card is its own defect)
+    assert B.carry_adjudication({"audit": audit([], ADJ)}, audit([]), True) is None
+
+    # 6. the comparison spans EVERY list open_probe_warns blocks on, not just probe2
+    old6 = {"audit": {"probe2_warns": ["W1"], "probe1_notrun": ["N1"], "warns_adjudicated": ADJ}}
+    assert B.carry_adjudication(old6, {"probe2_warns": ["W1"], "probe1_notrun": ["N1"]}, True) == ADJ
+    assert B.carry_adjudication(old6, {"probe2_warns": ["W1"], "probe1_notrun": ["N2"]}, True) is None
+
     print("test_v11_probes: all assertions passed")
 
 
