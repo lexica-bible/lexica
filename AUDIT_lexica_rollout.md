@@ -7757,3 +7757,63 @@ pull.** Note ships in the row.
 **SPEND: 6 calls this session, SIX PRECEDING CHANGES, ZERO re-rolls at unchanged input** — draw →
 feed fix → redraw → prompt fix → repair → (G2787 draw) → parser fix → free re-read → repair +
 quote-repair. **The rule operating, not being invoked.**
+
+---
+
+## G2374 θύρα — PARKED, TWO REAL CONTENT ERRORS. AND THE PULL FIRES. — 2026-07-14
+**PARKED. Do NOT ship. Do NOT redraw at unchanged input.** The card is otherwise excellent —
+coverage 57/57, citations 57/57, no boilerplate, two clean senses, and it holds Rev 3:20's door
+inside the ACCESS logic without importing the devotional reading. **It parks on content, not
+craft.**
+
+**BYTE-EXACT RULING'S FIRST LIVE CATCH *AND* FIRST LIVE FIX (same card):** the quote gate blocked
+`"at the door and knock[ing],"` — the model had inserted an editorial **`[ing]`** *inside quote
+marks* to bend Rev 3:20's grammar into its sentence. **Exactly the silent tidying JP ruled against
+hours earlier** (ruled on a typo-tidy; first application is a grammar-tidy). `--quote-repair` fixed
+it, byte-confirmed: → `"at the door and knock,"`, **re-gated MATCH vs Rev 3:20**.
+**CORRECTION ON THE RECORD:** a ruling called this the *"third live test of the F1 contract"*. **It
+is not** — this card ran `--quote-repair` ONLY, and `QUOTE_REPAIR_PROMPT` **always** carried F1; the
+fix (`09c6db3`) was to `REPAIR_PROMPT`, never invoked here. **The F1 fix stands at TWO tests, not
+three** (G3464 "added nothing to an existing fire"; G2787 "no fire at all"). *Seventh instance of a
+ruling's description failing on contact — and the credit was declined, not taken.*
+
+**THE TWO REAL ERRORS (adjudicated on bytes, 9 of 9 warns):**
+- **`CORINTH` (1Co 16:9) — FABRICATED LOCATIVE, DISCONFIRMED BY THE ADJACENT VERSE.** `1Co 16:8`:
+  *"But I shall remain in **Ephesus** until Pentecost."* Card: *"a door opens to me great and active
+  **at Corinth**."* **It is Ephesus.** The model confused the letter's **destination** with its
+  **origin**. **⇒ TRAINING-NOT-EVIDENCE, SECOND *WRONG* INSTANCE.**
+- **`ZION` (Hag 2:14) — FABRICATED REFERENT *AND* AN INVERTED RELATION. The worst defect of the
+  night.** Verse: *"and you detested **the ones reproving** at the doors."* Card: *"the daughters of
+  **Zion** stand at the doors **being reproached**."* No Zion in 2:14 or 2:13 — **and the relation is
+  REVERSED**: the ones at the doors are the reprovers, not the reproached. **Not an imported name: a
+  FALSE CLAIM ABOUT WHAT THE VERSE SAYS** — the one class the project cannot carry at any rate.
+- **OPEN BYTE: `HAZAH` (Jer 49:31)** — ABP renders the referent *"a stable nation"*; the name is in
+  neither 49:31 nor 49:30. **May sit at 49:28, outside the read window. NOT CALLED.**
+
+**ARTIFACT ×6, each citing WHERE THE NAME LIVES:** `Passover` → Exo 12:21 · `Elisha` → 2Ki 4:1-2 ·
+`Solomon` → 1Ki 7:1 · `Paul` → author (1Co 1:1; the verse says *"me"*) · `Philadelphia` → Rev 3:7
+(3:20/4:1 are the chunk-grouping family) · **`Gershonites` → THE NAME IS IN THE FED VERSE**: Num 3:25
+reads *"the sons of **Gershon**"* and the probe missed it because the card wrote the **gentilic**.
+**NEW ARTIFACT SUB-CLASS: NAME-FORM MISMATCH (proper noun vs gentilic) — a probe-2 morphology gap,
+NOT a card defect. First instance, logged, no ticket.**
+
+**WHY IT PARKS RATHER THAN REPAIRS: NO INSTRUMENT REACHES A FALSE PROSE CLAIM.** Quote-repair fixes
+quotes; coverage-repair fixes citations. **A redraw fixes nothing either — the draw input has not
+moved, so it is a re-roll at unchanged input = A HOPE.** The card parks **until the input changes.**
+
+**⚠ THE PULL FIRES — AND probe-2 IS NOT THE DEFECT. IT CAUGHT 9 OF 9 against fed text; it did its
+job perfectly.** The defect is **UPSTREAM: the draw prompt permits the model to name referents its
+fed text does not contain.** 6 of 9 times that produced true, useful prose (*"Elisha's widow"*,
+*"the Solomon complex"*); **twice it produced a falsehood. 6-right/2-wrong is unreliability
+DEMONSTRATED, not merely frequency.**
+**THE HARD PART, not papered over: `VERSE_PROMPT` ALREADY SAYS *"Reason only from the supplied
+occurrences."* The ban EXISTS and the model breaks it SELECTIVELY — on locatives and epithets while
+holding elsewhere.** So the design question is **not "add a ban"** but **why the existing instruction
+fails on that shape** — and whether the answer is prompt wording, or **feeding the ADJACENT CONTEXT
+VERSE so naming is grounded rather than recalled.** *(b) is the interesting one on the evidence:*
+**6 of 9 artifacts resolve to "the name is in the verse next door" — the model is reaching for
+context the FEED WITHHOLDS.** It changes the feed AND the draw signature and costs a bigger feed per
+draw ⇒ **JP-level design decision, its own reviewed step.**
+**RULED: the design pass opens AFTER the batch's remaining two words (G5088, G3793) — it must not
+stall throughput. IF EITHER REMAINING WORD PARKS ON THIS SAME CLASS, THE DESIGN PASS JUMPS THE
+QUEUE: two parked batch words on one cause is a STALLED PIPELINE, not a research problem.**
