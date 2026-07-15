@@ -7900,3 +7900,80 @@ ACCEPTED AS-IS** under the lazy-redraw policy (the `"None"` trio first when dipp
 unchanged input is a hope) · #77 + its corollary (a comparison read PROVES it bites; a
 decision-feeding read states its baseline as a READ FACT) · #76 (loose-vs-tight assertions) ·
 throughput-first / **PULL, NOT PUSH**.
+
+---
+
+## SESSION 2026-07-15 — DESIGN PASS RULED + BUILT + THREE LIVE PROOFS. QUEUE CLEARED.
+**SHIPPED: `G2374` θύρα #83 · `G5088` τίκτω #84 · `G3793` ὄχλος #85. Live cards 82 → 85.**
+Scoreboard `3/10ʰ · 7/15` UNTOUCHED. Every model call change-backed; the stop-rule (banked before
+G5088's third draw: fail on NEW spans ⇒ park, no negotiation) was never reached.
+
+**THE DESIGN PASS — RULING TRAIL (all reviewer-receipted, JP-pasted):**
+1. **Diagnosis accepted as the answer to "why the ban fails on that shape":** (a) the constraint at
+   the old prompt bound **senses, not referents** — "Elisha's widow" imports no sense, so the model
+   wasn't even breaking the ban as written; (b) **the prompt promised "a verse with surrounding
+   context" while `fetch_context` fed ONE verse** (`SELECT text FROM verses WHERE id=?`) — the
+   #69(i) class plus an explicit lie in the prompt. The model reached for context BECAUSE the prompt
+   said it was there. "Selective disobedience" dissolved.
+2. **Option (c) approved conditional** → condition 1: the ±1 rescue count as READ FACT (JP pasted the
+   parked G2374 card). **The read CORRECTED the estimate in both directions:** Philadelphia rescued
+   (Rev 3:7↔3:8, I'd said not), residual at ±1 = **3 degraded** (Elisha 2Ki 4:1-2 vs fed 4:4;
+   Solomon 1Ki 7:1 vs 7:5; Paul-as-author) — ABOVE the accepted 1–2. **±2 ruled**: restores exactly
+   the accepted residual (Solomon, Paul) and grounds Mary at the manger verse (Luk 2:5 for 2:7).
+   Condition 2: one-block labeling spec, receipted point-by-point (context inside `_occ_lines` so
+   the repair feed stays byte-identical by construction · missing neighbor OMITTED, never blank ·
+   prompt line made TRUE not deleted · probe-2 per-occurrence, never pooled · red-first fixtures).
+3. **BUILT `238147a`:** `CONTEXT_SPAN=2`, same-chapter only (chapter-crossing would rest on an
+   unverified verse-row ordering; every read-fact rescue was same-chapter) · referent rule in the
+   prompt (name only what the supplied text names, else role) · `probe2_names(context_texts=)` +
+   `validate_entry(fed_ctx=)` — resplit/fix paths stay strict (fail toward the human) ·
+   `tests/test_context_feed.py` (7 tests incl. the three reviewer controls, red-first) · stamp moved
+   `lexica:7d7758f4156b` — all cached draws stale, which LEGITIMIZED the two parked redraws.
+
+**G2374 #83 (draw cb50ec86, 1 draw + 1 coverage repair):** park record discharged on the bytes —
+Zion GONE and the Hag 2:14 relation FIXED ("the ones reproving at the doors" detested, matching the
+verse) · Corinth GONE (1Co 16:9 quote-only, no city named) · Hazah GONE (role-worded). Repair wove
+in Deu 22:21 / Joh 20:19 / Joh 20:26 — **the V10 repair pass's first production run.** 57/57 both
+gates, zero probe-2 warns. NOTE the over-compliance: the model named NOTHING in its own prose (all
+names sit inside verbatim quotes) — safe side of the priced degrade, logged as the name-shy watch.
+
+**G5088 #84 (3 draws — each at CHANGED input — + 5 raw fixes):** draw 1 (pre-design, parked) →
+draw 2 (16ef3be8→79d00733, new feed): Mary check PASSED (Luk 2:7 unnamed "she", Elizabeth at her own
+1:57) but Jer 22:26 misquoted ("where" for ABP's "of which … there") → quote-repair round DIED
+matching (cap 1) → **hint channel: Jer 22:26 wording pin banked in `draw_hints` (`7deb862`,
+membership pin updated 7→8 with the ruling)** → draw 3 (55ae0011, hints injected): pin OBEYED
+byte-exact, but 4 NEW quote spans + 1 uncited + **the "sacrificial sense" leak — VERSE_PROMPT's own
+attribution example parroted into Isa 7:14, contradicting the card's own gloss note** → coverage
+repair landed 1Sa 4:20; quote-repair round DIED AGAIN, differently: **the spans-only guard refused
+the output (text outside quotes changed) — the guard's first live catch** → reviewer ruled the
+RAW-FIX path (redraw would be a re-roll at unchanged input) → **`fix_lexica_raw --draw` BUILT
+(`a9b4cc2`)**: draw-file mode, fingerprint updated, history banked, `--why` mandatory, tampering
+still refuses, red-first tests → 5 fixes from JP-pasted verse bytes (duplicate 1Ch 2:4 DELETED — the
+second copy was already verse-exact; Gen 30:9 "Leah saw"; Jdg 13:3 trimmed contiguous; Deu 21:15
+clause order restored — the card had REORDERED around an ellipsis; sacrificial-sense sentence
+DELETED not reworded, by ruling) → battery clean, warn adjudicated (metalinguistic gloss-label
+display, meta:v6), SHIPPED.
+
+**G3793 #85 (1 fresh draw + 1 coverage repair + 5 raw fixes — FIRST FRESH WORD THROUGH THE NEW
+FEED):** **referent discipline HELD on the park terrain** — Edom/Jehu/Judah/Pharaoh/Moab all
+verified silent against fed text; ONE warn total ("Israelite" at Jos 6:9/6:13, an inferred
+nationality, deleted) vs the park era's 9-with-2-lies. Gate work: coverage repair (Eze 23:47,
+Act 13:45) · 3 quote fixes from verse bytes (Joh 6:2 "there followed him…"; Mar 3:20 verse-exact
+incl. "comes"/"neither"; Eze 16:40+23:46 DE-QUOTED — no contiguous span exists, describe without
+quoting) · **the RANGE class struck a third time**: gloss note "Rev 19:1–6" expanded to four phantom
+citations (Rev 19:2-5, all 'real' misses) — fixed to "Rev 19:1 and Rev 19:6". Warn adjudicated
+(same meta:v6 class, G5088 precedent cited as settled law), SHIPPED.
+
+**ADJUDICATIONS ON ROW RECORDS (via `--adjudicate-warns`, self-documenting):** G5088 + G3793 both
+carry "metalinguistic gloss-label display (meta:v6 class)" reviewer rulings, 2026-07-15.
+
+**PROCESS RULE BANKED (reviewer):** an extension that touches a GUARD (here: the 'edited draw'
+refusal) comes back as a ONE-BLOCK SPEC before code, same as design-pass condition 2. The `--draw`
+mode was RATIFIED (it preserves the guard's purpose — no INVISIBLE hand edits — with exact-once,
+history, provenance), but the sequencing note is on the record.
+
+**WATCH ITEMS (logged, not built):** multi-span quote-repair fragility (2 cap-outs at 4 spans; the
+two failure modes differ — can't-match vs can't-stay-in-spans) · name-shy prose · instruction-example
+leak class · duplicate-ref-in-one-list lint · `test_lexica_draw_cache.py` rot (stale fixtures,
+pre-existing, NOT in CI; ctx tuples fixed in passing, sqlite fixture failures not chased).
+**NEXT PULL, RIPE: the anti-range prompt line** — three words have now paid for it.

@@ -1249,3 +1249,43 @@ both drifting from the doc.
     and a number that sizes a 31-card remediation cannot rest on a remembered baseline.
     *(audit: the retracted blast read + the G25 baseline, 2026-07-14; reviewer-ruled as the standing
     template)*
+
+78. **A ban the model "breaks selectively" is usually a ban that never bound the failure shape — read
+    the ban's LETTER against the failure before designing a stronger one.** The grounded-naming defect
+    (fabricated referents: Corinth-for-Ephesus, Elizabeth-for-Mary, Hazah) looked like selective
+    disobedience of "Reason only from the supplied occurrences." On the bytes it was two mechanical
+    facts: (i) the constraint bound SENSES — naming a subject imports no sense, so the model wasn't
+    breaking the rule as written; (ii) the prompt PROMISED "a verse with surrounding context" while
+    fetch_context fed ONE bare verse — the model honored a false promise, supplying the promised
+    context from training, exactly where prose wants a subject. **The fix was making the promise TRUE
+    (feed ±2 same-chapter context, labeled read-only/never-cite) plus binding the actual shape (a
+    referent rule), not a louder ban.** Three live proofs same session: both parks discharged, and the
+    first fresh word (G3793) drew ONE inferred-adjective warn vs the park era's 9-with-2-lies. Kin of
+    #69(i) (silence invites inference) and the G3464 "None" feed-lie — the feed asserting something
+    false about itself is one defect class whether the lie is a value or a promise.
+    *(audit: DESIGN PASS — GROUNDED NAMING, ruled+built 2026-07-15, commit 238147a)*
+
+79. **Quote-repair is a single-span instrument: at 4 simultaneous spans it capped out twice in one
+    word, by two DIFFERENT failure modes (couldn't match the verse; couldn't stay inside the spans —
+    the spans-only guard's first live catch). The deterministic lever for multi-span prose defects is
+    verse-bytes-in-hand hand fixes, not another model call.** Built for it: fix_lexica_raw --draw
+    (a9b4cc2) — the sanctioned edit of a CACHED draw (a never-written word is unreachable by the table
+    mode), fingerprint updated so the builder accepts the bytes, pre-fix draw banked to history, --why
+    provenance mandatory, silent tampering still refuses; validation stays with the builder's own
+    battery (production gates, never a copy). Ten fixes shipped through it same session, every --old
+    transcribed from JP-pasted verse bytes, zero from memory. **Process rule banked (reviewer): an
+    extension that touches a GUARD comes back as a one-block spec BEFORE code** — this one was
+    ratified because it preserved the guard's purpose (no INVISIBLE edits), but the sequencing note
+    stands. *(audit: G5088 #84 entry, 2026-07-15)*
+
+80. **The verse-RANGE habit has now cost three words and is a ripe pull.** G227 and G2168 carry banked
+    never-write-a-range hint pins; G3793's gloss note wrote "Rev 19:1–6" and the range expander
+    dutifully cited four phantom verses (19:2-5, all real-miss citation failures). Three independent
+    words = no longer a per-word pin; the pitch for next session is ONE standing prompt line (never
+    write a verse range; list the verses out) — a stamp-moving prompt edit, so it rides V-pile
+    discipline. Sub-classes logged the same session, detector tickets ONLY on recurrence:
+    instruction-example leak (VERSE_PROMPT's "sacrificial sense" attribution example parroted into a
+    birth verse — deleted by ruling, not reworded); duplicate-ref-in-one-list (1Ch 2:4 cited twice in
+    one citation list, one copy misquoted — the fix was deleting the bad twin); name-shy prose (G2374
+    named nothing outside quotes despite grounded context — watch whether ±2 buys the prose it was
+    priced for). *(audit: SESSION 2026-07-15 entry, watch-items block)*

@@ -1,26 +1,45 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> # ⇒ NEXT SESSION OPENS HERE: THE GROUNDED-NAMING DESIGN PASS. ⇐
-> **THE PULL FIRED AND ITS TRIGGER IS MET — TWO BATCH WORDS PARKED ON ONE CAUSE.** `G3793` DOES NOT
-> RUN until this lands; a third word into the same wall spends a call to learn nothing.
->
-> **THE DEFECT:** on narrative-dense words **the model names referents its FED TEXT DOES NOT
-> CONTAIN** — 6 of 9 times harmlessly (the name sits in the verse next door), but it also produced
-> **`Hazah`** (the Hebrew's *Hazor*; **a name this corpus does not carry at all**), **`Corinth`** for
-> Ephesus (1Co 16:8 says Ephesus **in the verse before the one cited**), and **`Elizabeth`** for
-> **Mary at Luk 2:7 — the manger verse.** **6-right/2-wrong is unreliability DEMONSTRATED.**
-> **`VERSE_PROMPT` ALREADY BANS THIS** (*"Reason only from the supplied occurrences"*) — **the model
-> breaks it SELECTIVELY, exactly where prose wants a subject. The question is WHY the existing ban
-> fails on that shape, NOT how to add another.**
-> **probe-2 IS NOT THE DEFECT — it caught 9/9 and 10/10 against fed text on both parked cards.**
-> **OPTIONS (bring, don't build; JP rules the option set; ZERO build before that):** (a) targeted
-> prompt wording on locatives/epithets · **(b) FEED THE ADJACENT CONTEXT VERSE** so naming is
-> grounded not recalled — **the interesting one: 6 of 9 artifacts resolve to "the name is next
-> door", so the model is reaching for context THE FEED WITHHOLDS** (costs: bigger feed, and it MOVES
-> THE DRAW SIGNATURE — state both) · (c) hybrid.
-> **BINDING: price what each option does to the SIX BENIGN cases** — *"Elisha's widow"* → *"a
-> woman"* is a real prose cost JP must see BEFORE, not discover after. **No-regression bar applies.**
-> Full scope + all byte evidence: AUDIT "DESIGN PASS — GROUNDED NAMING" + the two park entries.
+> # ⇒ SESSION 2026-07-15: THE DESIGN PASS LANDED AND THE QUEUE CLEARED. THREE CARDS SHIPPED. ⇐
+> **GROUNDED-NAMING = CLOSED, BUILT, THREE LIVE PROOFS.** Root cause (reviewer-accepted, on the
+> bytes): the *"reason only from the supplied occurrences"* ban bound **SENSES, never referents**
+> (naming a subject broke no rule as written), AND **the prompt PROMISED "a verse with surrounding
+> context" while `fetch_context` fed ONE bare verse** — the model honored a false promise, filling
+> the missing context from training. Not selective disobedience. Fix = option **(c) at ±2**
+> (reviewer-ruled after the ±1 read-fact came in at 3 degraded benign cases, above the accepted
+> 1–2): context verses fed labeled read-only/never-cite, the prompt's promise made TRUE, a referent
+> rule added (name only what the supplied text names, else role), probe-2 grounds names against the
+> cited occurrence's OWN fed context (per-occurrence, never pooled). Commit `238147a`, red-first
+> controls, all in `tests/test_context_feed.py`. **Draw signatures all moved (priced): every old
+> cached draw is stale.**
+> **SHIPPED: `G2374` θύρα #83 · `G5088` τίκτω #84 · `G3793` ὄχλος #85. Live cards 82 → 85.** Both
+> parks discharged (Zion/Corinth/Hazah gone; Mary unnamed-correct at Luk 2:7, Elizabeth at 1:57);
+> G3793's fresh draw had ONE referent warn ("Israelite", an inference, deleted) vs the park era's
+> nine-with-two-lies. Scoreboard `3/10ʰ · 7/15` UNCHANGED (calibration count; these are throughput).
+> **NEW MACHINERY THIS SESSION (all reviewer-receipted):** `draw_hints` gained **G5088** (Jer 22:26
+> wording pin — the hint channel resurrected a quote-repair-dead draw at CHANGED input, `7deb862`) ·
+> **`fix_lexica_raw --draw`** (`a9b4cc2`): sanctioned surgical edit of a CACHED draw (never-written
+> word) — fingerprint updated, pre-fix bytes banked to history, `--why` provenance mandatory, silent
+> hand edits still refuse; validation stays with the builder's battery. Used on G5088 (5 fixes) and
+> G3793 (5 fixes), all transcribed from JP-pasted verse bytes, zero from memory.
+> **NEXT SESSION'S PULL, RIPE: the ANTI-RANGE prompt line.** Range-writing has now cost THREE words
+> (G227 + G2168 banked pins; G3793's gloss note "Rev 19:1–6" cited four phantom verses). Pitch the
+> reviewer ONE standing constraint line (never write a verse range; list the verses) — a V-pile
+> prompt edit, stamp moves, lazy consequences only.
+> **WATCH ITEMS (logged, no build):** quote-repair cap-outs cluster on MULTI-SPAN cards (2 of 2 died
+> at 4 spans; hand-fix from verse bytes is the cheaper lever) · name-shy prose (G2374 named nothing
+> outside quotes despite grounded context — if it persists across draws, the ±2 feed isn't buying
+> the prose it was priced for) · instruction-example leak (G5088 parroted VERSE_PROMPT's "sacrificial
+> sense" example into a birth verse — deleted by ruling; detector ticket only if it recurs) ·
+> duplicate-ref-in-one-list lint candidate (G5088 cited 1Ch 2:4 twice in one list, one copy wrong) ·
+> `tests/test_lexica_draw_cache.py` pre-existing rot (stale fixtures, NOT in CI; partially repaired
+> in passing). **PROCESS RULE (reviewer, on the record): an extension that touches a GUARD comes back
+> as a one-block spec BEFORE code** — the `--draw` mode was ratified, but the sequencing note stands.
+> **QUEUE:** anti-range pitch → legacy "None" trio (G2588/G4172/G3624, lazy) → format unification
+> (design pass, zero spend) · **JP's new cadence: batch sets, then one BATCH REVIEW dump to the
+> reviewer** — full `==========` blocks verbatim + one line of park/prior context per word.
+> **⚠ STANDING, UNTOUCHED: the `finish_rebuild.sh` ACCEPTANCE RUN is still owed** — JP's next real
+> `/rebuild-words`; a `lexica_def` write does NOT discharge it.
 >
 > ---
 >
