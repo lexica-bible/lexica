@@ -7511,11 +7511,24 @@ class and wastes spend. STATE: 1 Sonnet call spent, 0 cards shipped, scoreboard 
 
 ---
 
-## SPEND POSTURE — CORRECTED BY JP, STANDING — 2026-07-14
-**ZERO MODEL SPEND IS NOT A VIRTUE AND IS NOT A BAR.** JP ruled it explicitly: a past session
-overstated a "minimize spend" posture and it got carried forward as if it were a standard. **He does
-NOT mind calls spent on dev / fix / iterate loops. Ship-quality and correctness drive; spend
-follows.** Iterate freely within authorized work.
+## SPEND POSTURE — THE MEDIUM, NAMED. STANDING RULE — 2026-07-14
+**THE RULE: spend freely on iterate loops where each call follows a READ and a CHANGE** —
+`draw → read the result → change something (feed, prompt, gate, word) → draw`. **Each call is earned
+by the change before it.**
+**NEEDS AUTHORIZATION:** batches (multiple words), and **any re-draw at an UNCHANGED input — if
+nothing changed since the last draw, a re-draw is A HOPE, NOT AN ITERATION**, and goes to JP. Single
+calls inside an authorized arc's iterate loop need NO per-call sign-off.
+**BOTH POLES ARE RETIRED. THE DISCRIMINATOR WAS NEVER COST — it was whether anything was LEARNED
+between calls:**
+- **The old failure was never spending — it was spending WITHOUT READING.** The `10+3+1+1+1` barrages
+  at parked words, where draw 6 taught nothing draw 2 hadn't. The dollar count was not what was
+  wrong; **the unchanged input was.**
+- **The overcorrection — zero-spend as a virtue — is ALSO retired.** It bought hesitation loops,
+  sequencing contortions, and "ZERO SPEND" worn as a merit badge. It nearly bought worse: the
+  throughput correction (same day) found **a pipeline shipping nothing while being audited about
+  itself.**
+**Both failure modes are the same mistake in different clothes: the barrage never read, the
+zero-spend posture never drew.**
 **WHAT SURVIVES:** the spend-board process — JP authorizes batches and stays informed. That is about
 **him knowing what is happening, NOT about the number being small.**
 **READ THIS BEFORE COPYING THIS FILE'S OWN FRAMING.** Entries above (and the HANDOFF's banners)
@@ -7525,11 +7538,17 @@ nothing, being audited about itself.** A rule that makes a session hesitate to r
 buys nothing and costs delivery. **The single canary call this session paid for itself immediately** —
 it bought a live reader-facing defect (the feed telling the model a rendering was `"None"`) AND the
 root cause of the G162 preamble leak, neither of which any amount of free reading had surfaced.
-**STANDING RULES:** do not report zero-spend as a win · do not pick a cheaper design, a longer
-read-only detour, or a delayed draw *because* it avoids a call · do not hesitate to re-draw against a
-fixed feed — a wasted call is cheaper than reasoning off bad bytes · keep proposing batch/novel spend
-through the board. **The canary pattern (cheapest word first) stays — as ENGINEERING (fail early at
-low cost), never as thrift.** Memory: `feedback_spend_posture`.
+**THE CANARY LOOP IS THE MODEL — two calls, BOTH EARNED, a change sitting between them.** Call 1
+(G3464 μύρον) died at the quote gate and bought a live reader-facing defect: the feed told the model
+a missing rendering was the word `"None"`, and the model believed it. **The feed was fixed.** Call 2
+proved the fix on live bytes and surfaced the next real blocker. Neither call was a hope.
+**STANDING RULES:** report spend as PLAIN FACT ("2 calls"), never a merit line · **before any
+re-draw, ask what CHANGED since the last one — no answer ⇒ do not draw, take it to JP** · do not pick
+a cheaper design, a longer read-only detour, or a delayed draw *because* it avoids a call · never
+hesitate to re-draw against a FIXED feed/prompt — that call is earned, and reasoning off known-bad
+bytes is the expensive option · keep proposing batch/novel spend through the board. **The canary
+pattern (cheapest word first) stays — as ENGINEERING (fail early at low cost), never as thrift.**
+Memory: `feedback_spend_posture`.
 
 ---
 
