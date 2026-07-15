@@ -7419,3 +7419,89 @@ known-positive · the banked sweep · coverage-field sparsity) stays under the P
 
 **STATE at this entry: ZERO model spend so far. Scoreboard `3/10ʰ · 7/15` — UNCHANGED until a card
 ships.**
+
+---
+
+## CANARY G3464 — THE FEED WAS LYING TO THE MODEL. FIXED. — 2026-07-14
+**THE CANARY PAID FOR ITSELF ON THE FIRST CALL.** `G3464` μύρον (≤40 ⇒ whole corpus fed, chosen so a
+broken pipeline fails at minimum cost) **died at the verbatim-quote gate, nothing written, one Sonnet
+call spent** — and bought a live reader-facing defect that had been shipping quietly.
+
+**ROOT — REPRODUCED LOCALLY, NOT INFERRED.** `_occ_lines` built every fed occurrence line as
+``tag = f'[here: "{rend}"' …`` where `rend` = `words.english_head` (`occurrences()`, :302). That column
+is **`None` BY DESIGN** when ABP's gloss on the slot carries no content word (`parse_abp.py:135`/`:144`
+— head = last non-function word; `_head_word` returns None for an all-function gloss). **The f-string
+printed that absence as the literal TEXT `"None"`.** The model was fed `[here: "None"]`, believed it,
+and wrote *`Joh 12:3 [×2, including the second occurrence tagged "None"]`* into the card. The
+verbatim-quote gate then killed the draw: quote `"None"` matches no cited verse. **THE GATE WAS RIGHT.
+THE FEED WAS LYING.** No bypass was proposed or taken — a bypass would have SHIPPED the marker.
+**This is the Silent-Fallback Rule exactly: a missing value degraded into a plausible-looking string
+NOT visibly distinct from the real thing.** `"None"` reads as a rendering.
+
+**THE 45% WAS A TRAP — NAMED BEFORE ANYONE ACTED ON IT.** 271,187 of 596,612 Greek rows (45.45%) carry
+a blank `english_head`. **That is CORRECT, not a defect** — it is dominated by articles and particles,
+whose glosses are all-function by nature. **Nothing is wrong with the data**; one line of FORMATTING was
+wrong. A fix driven by that number would have attacked the corpus instead of the string.
+**THE LEAK WAS CONFINED TO ONE FUNCTION:** `gloss_set` already excludes blanks explicitly
+(`WHERE english_head IS NOT NULL AND english_head != ''`), so the reader-facing renderings summary was
+CLEAN (the canary's "5 renderings" held no phantom). Only `_occ_lines` interpolated the raw value.
+One fix covers the draw feed AND the V10 repair feed — they share the function by design.
+
+**THE FIX:** when the head is blank, state the absence **explicitly** (#69(i) — silence invites
+inference) and **UNQUOTABLY**:
+`[no content-word rendering on this slot — the English for this occurrence is carried by the
+surrounding phrase]`. **No quote character anywhere** — nothing for the model to lift, nothing for the
+gate to match (an apostrophe was designed OUT: *"ABP's"* would have put one in). **The slot's
+function-word gloss is deliberately NOT named** (G3464's slot glosses `of`, a genitive parked by
+`_split_compounds`): presenting it invites the NEXT fabrication — a card claiming the lemma *"is
+rendered of"*. **JP RULED the draw-signature consequence ACCEPTED:** the fed shape joins the sig (#15),
+so future draws re-sign; live cards keep their stored raw and are untouched until organically rebuilt;
+no mass re-draw authorized.
+
+**TESTS — red-first, each control run ALONE (#75), tight per #76** (`tests/test_draw_hints.py`, already
+in CI): the three defect controls went RED **on real AssertionErrors printing the actual bytes**
+`'  Joh 12:3 [here: "None"]'` — the STRONG red form, not an "it doesn't exist yet" scaffolding red —
+then GREEN. **The byte-unchanged control on a normal row was GREEN BEFORE AND AFTER**, by design: it
+pins the 55% that work and proves the edit did not perturb them. **A CIRCULAR TEST WAS CAUGHT AND
+KILLED IN THE RED STAGE:** the unquotable check first asserted against the tag CONSTANT rather than the
+emitted line — a constant checked against itself proves nothing. Rewritten to assert on `_occ_lines`'
+real output. (It also failed its own apostrophe check, which is how the wording bug surfaced.)
+
+**PSA 133 "OFFSET" — RESOLVED, NO ERROR, NO ACTION.** The card cited `Psa 133:2`; JP's ABP app shows
+the μύρον text at `133:3`. **The DB holds the superscription as VERSE 0:** `133:0` "An ode of the
+steps." · `133:1` "Behold, indeed what is good…" · `133:2` "As perfumed liquid upon the head going down
+upon the beard — the beard of Aaron…" · `133:3` "as dew of Hermon…", with the `G3464` row at verse 2
+(head `liquid`). **The app numbers the superscription as verse 1, shifting everything by one — app
+133:3 IS db 133:2. The card cited CORRECTLY.** Not a corpus versification defect, not a second citation
+error: **a display-numbering difference between the ABP app and the DB.** The citation gate's 27/27 pass
+was the tell — it had already verified the word sits at the cited ref. **STANDING NOTE: LXX-numbered
+psalms carry the title at verse 0 in this corpus; an apparent ±1 "offset" against the app is expected
+and is NOT a finding.**
+
+**NAMED CLASS (logged, NO detector — one instance, no pull): FABRICATED COMMON-NOUN REFERENT IS
+GATE-INVISIBLE.** The card wrote *"the king (Aaron's) beard is compared to it … (Psa 133:2)"*. **The fed
+prose contains no king** (db bytes above) — the model invented the referent. **It passed EVERY gate,
+and the reason is structural: probe-2 checks NAMED subjects (proper nouns), and "the king" is not a
+name.** A fabricated COMMON-NOUN referent has no detector at all. Confirmed by JP against the ABP app.
+**Adjudication item for the post-fix redraw. If a SECOND card exhibits this, that is the pull.**
+
+**HELD FOR THE POST-FIX REDRAW (not adjudicated on the dead draw — if the feed changes, the card
+re-draws and these are moot):** 7 probe-2 warns (named subject absent: "Jesus" ×4 groups, "Asa",
+"Tyre", "Babylon" — the card names people the verses carry by pronoun) · the Psa 133 "king" invention ·
+sub-use overload (sense 1 carries 4 sub-uses, flag only, #14 forbids forced folds) · dangling book refs
+"Amo"/"Son" (flag only).
+
+**BOILERPLATE DETECTOR — FIRED ON ITS FIRST LIVE FRESH CARD, BOTH KINDS** (`[title]` + `[meta]`).
+**The class is ROUTINE, not rare — G162's archive was not an outlier**, which the arc could not have
+known without a fresh card. Report-only behaved exactly as ruled: it reported, blocked nothing, cost
+the run nothing.
+
+**LIVE-CARD REMEDIATION — 3 of 80, ALL READER-FACING** (served fields, not merely stored raw):
+`G2588` coverage · `G4172` coverage · `G3624` gloss_notes (the worst: *'The three NT occurrences
+rendered "None" (1Co 1:16; 2Ti 1:16; 2Ti 4:19)'* tells a reader those verses render the word as the
+word "None"). **A `--resplit` CANNOT fix these — the marker is in the stored raw. They need a REDRAW
+against the fixed feed = model spend = JP's call**, recommended to ride with the resumed batch.
+
+**BATCH PAUSED after the canary until this fix landed — every draw against a lying feed risks the same
+class and wastes spend. STATE: 1 Sonnet call spent, 0 cards shipped, scoreboard UNCHANGED `3/10ʰ ·
+7/15`.**

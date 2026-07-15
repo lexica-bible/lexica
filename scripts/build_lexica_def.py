@@ -501,8 +501,26 @@ def _occ_lines(ctx):
     shape byte-for-byte, so this must never fork into two copies)."""
     out = []
     for book, ch, vs, rend, form, prose, phrase, ital in ctx:
-        tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
-               + (f"; form: {form}" if form else "") + "]")
+        if (rend or "").strip():
+            tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
+                   + (f"; form: {form}" if form else "") + "]")
+        else:
+            # BLANK HEAD — english_head is None BY DESIGN when ABP's gloss on this slot carries no
+            # content word (parse_abp.py:135/:144 — head = last non-function word; _head_word
+            # returns None for an all-function gloss). ~45% of Greek rows, correctly: articles and
+            # particles. This branch exists because the old f-string printed that absence as the
+            # TEXT "None" — NOT visibly distinct from a real rendering, so the model believed it,
+            # wrote 'the occurrence tagged "None"' into the card, and the verbatim-quote gate
+            # rightly killed the draw for quoting a word no verse contains (G3464 canary,
+            # 2026-07-14, a live model call). The gate was right; the FEED was lying.
+            # The replacement states the absence EXPLICITLY (#69(i) — silence invites inference)
+            # and UNQUOTABLY: no quote character, so there is nothing for the model to lift and
+            # nothing for the gate to match. The slot's function-word gloss (e.g. a genitive "of"
+            # parked here by _split_compounds) is deliberately NOT named — presenting it would
+            # invite the next fabrication, a card claiming the lemma "is rendered of".
+            tag = ("[no content-word rendering on this slot — the English for this occurrence is "
+                   "carried by the surrounding phrase"
+                   + (f"; form: {form}" if form else "") + "]")
         out.append(f"  {book} {ch}:{vs} {tag}")
         out.append(f"     {prose}")
     return out

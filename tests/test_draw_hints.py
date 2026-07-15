@@ -123,6 +123,68 @@ def test_phrase_context_reaches_the_draw():
     assert '[here: "made"]' in msg
 
 
+# ── the fed occurrence line: a blank head must never reach the model as "None" ───────────────
+#
+# THE DEFECT (G3464 canary, 2026-07-14, live model call): _occ_lines built its tag with
+# f'[here: "{rend}"' where rend = words.english_head. That column is None BY DESIGN when ABP's
+# gloss on the slot carries no content word (parse_abp.py:135/:144 — head = last non-function
+# word; _head_word returns None for an all-function gloss). The f-string printed that absence as
+# the TEXT "None", which is NOT visibly distinct from a real rendering. The model believed it and
+# wrote 'the second occurrence tagged "None"' into the card; the verbatim-quote gate then killed
+# the draw for quoting a word no verse contains. The gate was RIGHT — the feed was lying.
+# 45% of Greek rows have a blank head (correct, mostly articles/particles), so this fed every draw.
+#
+# The fix states the absence explicitly and UNQUOTABLY. No quote marks: nothing for the model to
+# lift, nothing for the quote gate to match. The function-word gloss ("of") is deliberately NOT
+# named — feeding it invites the next fabrication ("mýron is rendered *of*").
+
+# (book, ch, vs, rend, form, prose, phrase, ital) — the ctx tuple fetch_context builds.
+_OCC_BLANK_HEAD = [("Joh", 12, 3, None, "", "Then Mary, taking a pound of perfumed liquid...",
+                    "of", "")]
+_OCC_NORMAL     = [("Mat", 26, 7, "liquid", "μύρου (mýrou)",
+                    "there came to him a woman having an alabaster flask of perfumed liquid...",
+                    "perfumed liquid", "")]
+
+# The tag carries NO apostrophe either: "ABP's" would put one in, and a bare ' is a quote
+# character the gate's span-matching has to reason about. Say it without possessives.
+_BLANK_HEAD_TAG = ("[no content-word rendering on this slot — the English for this occurrence is "
+                   "carried by the surrounding phrase]")
+
+
+def test_blank_head_never_feeds_the_string_none():
+    """THE REGRESSION. A blank english_head must not reach the model as the word None."""
+    lines = B._occ_lines(_OCC_BLANK_HEAD)
+    assert "None" not in "\n".join(lines), (
+        "a blank english_head leaked into the feed as the text 'None' — the G3464 defect: %r" % (lines,))
+
+
+def test_blank_head_states_the_absence_explicitly():
+    """Tight per #76: assert the EXACT emitted tag, not merely that something changed. This also
+    pins that the function-word gloss ('of', the fixture's phrase) is NOT named as a rendering —
+    feeding it invites the next fabrication. Silence would pass a bare 'None' check while leaving
+    the model to infer (#69(i)); the exact-match is what forbids both."""
+    lines = B._occ_lines(_OCC_BLANK_HEAD)
+    assert lines[0] == "  Joh 12:3 " + _BLANK_HEAD_TAG, repr(lines[0])
+    assert lines[1] == "     Then Mary, taking a pound of perfumed liquid..."
+
+
+def test_blank_head_tag_is_unquotable():
+    """The tag must carry NO quote character — the quote gate matches quoted spans against verse
+    text, and the whole defect was the model quoting a value the feed invented. Asserted on the
+    EMITTED line, never on the constant: a constant checked against itself proves nothing."""
+    tagline = B._occ_lines(_OCC_BLANK_HEAD)[0]
+    assert '"' not in tagline, repr(tagline)
+    assert "'" not in tagline, repr(tagline)
+
+
+def test_normal_row_tag_is_byte_unchanged():
+    """THE CONTROL (reviewer condition, mandatory): this edit must not perturb the 55% that work.
+    A row WITH a head keeps the exact original tag shape, quotes and all."""
+    lines = B._occ_lines(_OCC_NORMAL)
+    assert lines[0] == '  Mat 26:7 [here: "liquid"; phrase here: "perfumed liquid"; form: μύρου (mýrou)]', \
+        repr(lines[0])
+
+
 if __name__ == "__main__":     # plain-script mode for CI + the pre-commit hook
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
