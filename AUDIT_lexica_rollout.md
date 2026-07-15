@@ -5759,13 +5759,17 @@ their OWN defects (unchanged — G227 lead-in anchoring, G236 changing-over word
 G162 K3 capturing defect, G1390 probe-2); the GATE-design work is what's done + validated.**
 
 ### TICKET — PROSE ECONOMY (design; FUTURE DRAWS ONLY; nothing built) (2026-07-14)
-**ATTRIBUTION — READ THIS FIRST:** relayed by the reviewer as a JP ruling made after CC's close-out
-message. **The ruling text is NOT in CC's context — CC cannot source it.** Banked as **RELAYED, not as
-a sourced JP checkpoint**; firm the attribution at the next JP touch. Caution is precedent-based, not
-doubt for its own sake: the reviewer made one sourcing error tonight (asserted scoreboard "8/15" from
-recall; refused and corrected against the committed rulings), the standing rule is that **the written
-record outranks a paste AND recall in BOTH directions**, and R2-b holds that named JP checkpoints
-survive delegation. Nothing here is built or gated on the attribution — it is a design ticket.
+**ATTRIBUTION — RESOLVED TO CONFIRMED (2026-07-14).** Provenance of record: **the inquiry is JP's own**
+— reading the live δόμα page after the ship he asked, unprompted, "do you think we need every single
+citation explained in all of the definitions?"; the reviewer answered by distinguishing **CITED**
+(load-bearing, untouchable) from **NARRATED IN PROSE** (not necessarily) and sketched the grouped-
+citations form; JP then directed the ticket-not-rework outcome. So: **inquiry raised by JP · design
+sketch by reviewer · ticketed at JP's direction.** Ledger (keep — the process worked): CC first banked
+this as **RELAYED, attribution unsourced**, because the ruling was made in the reviewer chat where CC
+has no visibility and CC will not write "JP ruled" into the permanent record off an unsourceable relay
+— the same standard CC had just applied against the reviewer's recalled "8/15" an hour earlier. JP then
+confirmed the question was his in his own words, and the attribution resolves to **CONFIRMED**. The rule
+held in both directions, which is the point of it.
 **CONTENT:** routine occurrences -> **grouped bare citations WITH quotes**; full analytical prose
 **RESERVED** for load-bearing / contested / boundary verses (the Psa 68:18 / Eph 4:8-class
 adjudications). **Prose SHAPE only.**
@@ -5787,10 +5791,34 @@ sequencing over bundling.
   surfaces, but ALSO fewer places a defect can be caught IN prose. Cuts both ways; not obviously a net
   safety gain.
 - **"Which verses earn prose" is a NEW model judgment surface** — a call the engine has never had to
-  make. **Flagged as the ticket's main design risk:** judgment surfaces are exactly where this engine's
-  defect history lives (#24 fabrication tracks contested referents · #30 placement-against-consensus ·
-  #40 freight arriving through sub-use architecture). A rule that hands the model "decide what's
-  routine" is a new place for it to be confidently wrong, and "routine" is not a corpus fact.
+  make. **The ticket's main design risk:** judgment surfaces are exactly where this engine's defect
+  history lives (#24 fabrication tracks contested referents · #30 placement-against-consensus · #40
+  freight arriving through sub-use architecture). A rule that hands the model "decide what's routine" is
+  a new place for it to be confidently wrong, and **"routine" is not a corpus fact.**
+  **CANDIDATE ANSWER (reviewer, JP has seen the flag): CHECKABLE CRITERIA FROM THE RECORD** — contested
+  (register) / float (roster) / hint-target (draw_hints) / gloss-note-subject: all **lookups, not
+  opinions**, determinable from artifacts the engine already holds. That converts "earns prose" from a
+  model judgment into a DETERMINISTIC selector, which is the deterministic/model-boundary rule (#9)
+  applied to a new surface. **Design-pass bar: if the selector stays record-derived, the risk is
+  answered; if it becomes model-judged, the flag STANDS.**
+**CC ASSESSMENT (asked by JP, on record):** **agree — a real improvement, and the load-bearing reason is
+ACCURACY, not brevity.** Tonight's evidence: every defect found across four words lived in the
+NARRATION, never in the quotes — G162's "captured Jerusalem" (quote fine, surrounding claim wrong),
+G236's "replaced by a different arrangement" (quotes verbatim, bridge invented), and three more claims
+(Ephraim's calf-idol / Jehoram's father / Hiram's workers) that each cost a hand byte-check. **Quotes
+are machine-checkable (the gate does 38/38 for free); narration is the layer NO machine can check**, so
+every narrated verse bills a human. And on δόμα the marginal prose buys nothing: "Abraham distributes
+valuables to his concubines' sons and sends them away" retells a story the reader can read, beside a
+quote that already says "Abraham gave gifts" — while the Psa 68:18 / Eph 4:8 passage IS load-bearing
+(same word, opposite directions, a real crux). **So the cut removes DEFECT SURFACE, not information**,
+and concentrates human review where judgment is genuinely required. Consistent with the V9 finding that
+trimming was a discipline line, not a structure loss (6/7 cards trimmed 72-97%, no length trade), and
+with the design doctrine's emphasis budget (ornament must argue its way in). **CC's two conditions:**
+(1) the selector must be RECORD-DERIVED (above) — a model-judged "routine" reinstates the risk;
+(2) **keep minimal orientation** — a bare "I will give to you a gift!" leaves the reader without who/whom;
+the target is killing story-RETELLING, not the identifying clause. Caveat on (2): even a thin who/whom
+clause carries claim risk — tonight's probe-2 "Israel" fire at 1Ki 13:7 sat on exactly that kind of
+phrase — so orientation should be as short as the reader needs and no shorter.
 **STATE: nothing built, nothing gated, no code or prompt touched. Doc-only, exemption invoked.**
 
 ### G1390 δόμα — **SHIPPED ʰ · FIRST UNPARK OF THE ARC** (2026-07-14; readiness pass + JP-authorized
