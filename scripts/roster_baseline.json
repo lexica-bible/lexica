@@ -77,11 +77,11 @@ null
 ],
 "aaron": [
 "H175",
-"G2"
+null
 ],
 "abaddon": [
 "H11",
-"G3"
+null
 ],
 "abagtha": [
 "H5",
@@ -125,7 +125,7 @@ null
 ],
 "abel": [
 "H1893",
-"G6"
+null
 ],
 "abel beth maacah": [
 "H62",
@@ -201,7 +201,7 @@ null
 ],
 "abiathar": [
 "H54",
-"G8"
+null
 ],
 "abib": [
 "H24",
@@ -249,7 +249,7 @@ null
 ],
 "abijah": [
 "H29",
-"G7"
+null
 ],
 "abijam": [
 "H38",
@@ -321,7 +321,7 @@ null
 ],
 "abraham": [
 "H85",
-"G11"
+null
 ],
 "abram": [
 "H87",
@@ -341,7 +341,7 @@ null
 ],
 "acco": [
 "H5910",
-"G4424"
+null
 ],
 "accuser": [
 "H7854",
@@ -413,7 +413,7 @@ null
 ],
 "adam": [
 "H121",
-"G76"
+null
 ],
 "adamah": [
 "H128",
@@ -593,7 +593,7 @@ null,
 ],
 "agag": [
 "H90",
-"G9826"
+null
 ],
 "agagite": [
 "H91",
@@ -649,7 +649,7 @@ null
 ],
 "ahaz": [
 "H271",
-"G881"
+null
 ],
 "ahaziah": [
 "H274",
@@ -1065,7 +1065,7 @@ null
 ],
 "amminadab": [
 "H5992",
-"G284"
+null
 ],
 "amminadib": [
 "H5993",
@@ -1097,7 +1097,7 @@ null
 ],
 "amon": [
 "H526",
-"G300"
+null
 ],
 "amorite": [
 "H567",
@@ -1361,7 +1361,7 @@ null
 ],
 "arabia": [
 "H6152",
-"G688"
+null
 ],
 "arad": [
 "H6166",
@@ -1397,7 +1397,7 @@ null
 ],
 "aramaic": [
 "H762",
-"G1444"
+null
 ],
 "arameans": [
 "H7421",
@@ -1581,7 +1581,7 @@ null
 ],
 "arpachshad": [
 "H775",
-"G742"
+null
 ],
 "arpad": [
 "H774",
@@ -1625,7 +1625,7 @@ null
 ],
 "asa": [
 "H609",
-"G760"
+null
 ],
 "asahel": [
 "H6214",
@@ -1689,7 +1689,7 @@ null
 ],
 "ashdod": [
 "H795",
-"G108"
+null
 ],
 "ashdodite": [
 "H796",
@@ -1697,7 +1697,7 @@ null
 ],
 "asher": [
 "H836",
-"G768"
+null
 ],
 "asherah": [
 "H842",
@@ -2093,7 +2093,7 @@ null
 ],
 "baal": [
 "H1168",
-"G896"
+null
 ],
 "baal gad": [
 "H1171",
@@ -2249,7 +2249,7 @@ null
 ],
 "babylon": [
 "H894",
-"G897"
+null
 ],
 "babylonians": [
 "H3779",
@@ -2285,7 +2285,7 @@ null
 ],
 "balaam": [
 "H1109",
-"G903"
+null
 ],
 "balac": [
 "H1111",
@@ -2301,7 +2301,7 @@ null
 ],
 "balak": [
 "H1111",
-"G904"
+null
 ],
 "ballath": [
 "H1168",
@@ -2357,7 +2357,7 @@ null
 ],
 "barak": [
 "H1301",
-"G913"
+null
 ],
 "barhumite": [
 "H1273",
@@ -2669,7 +2669,7 @@ null
 ],
 "benjamin": [
 "H1144",
-"G958"
+null
 ],
 "benjamin_gate": [
 "H1144",
@@ -2685,7 +2685,7 @@ null
 ],
 "beor": [
 "H1160",
-"G1007"
+null
 ],
 "bera": [
 "H1298",
@@ -2973,7 +2973,7 @@ null
 ],
 "beth-barah": [
 "H1012",
-"G963"
+null
 ],
 "beth-biri": [
 "H1011",
@@ -3173,7 +3173,7 @@ null,
 ],
 "bethlehem": [
 "H1035",
-"G965"
+null
 ],
 "bethphage": [
 null,
@@ -3353,7 +3353,7 @@ null,
 ],
 "boaz": [
 "H1162",
-"G1003"
+null
 ],
 "bocheru": [
 "H1074",
@@ -3501,7 +3501,7 @@ null,
 ],
 "cain": [
 "H7014",
-"G2535"
+null
 ],
 "cainan": [
 null,
@@ -3549,7 +3549,7 @@ null,
 ],
 "canaan": [
 "H3667",
-"G5477"
+null
 ],
 "canaanite woman": [
 "H3669",
@@ -3577,7 +3577,7 @@ null,
 ],
 "caphtor": [
 "H3731",
-"G2914"
+null
 ],
 "caphtorim": [
 "H3732",
@@ -3681,7 +3681,7 @@ null
 ],
 "chaldea": [
 "H3778",
-"G5466"
+null
 ],
 "chanaan": [
 "H3667",
@@ -3765,7 +3765,7 @@ null
 ],
 "cherub": [
 "H3743",
-"G5502"
+null
 ],
 "chesalon": [
 "H3693",
@@ -3817,7 +3817,7 @@ null
 ],
 "chinnereth": [
 "H3672",
-"G1056"
+null
 ],
 "chinneroth": [
 "H3672",
@@ -4081,7 +4081,7 @@ null
 ],
 "cush": [
 "H3568",
-"G128"
+null
 ],
 "cushan": [
 "H3572",
@@ -4113,7 +4113,7 @@ null
 ],
 "cyprus": [
 "H3794",
-"G2953"
+null
 ],
 "cyrene": [
 null,
@@ -4161,7 +4161,7 @@ null,
 ],
 "damascus": [
 "H1834",
-"G1153"
+null
 ],
 "dan": [
 "H1835",
@@ -4173,7 +4173,7 @@ null
 ],
 "daniel": [
 "H1840",
-"G1158"
+null
 ],
 "dannah": [
 "H1837",
@@ -4237,7 +4237,7 @@ null
 ],
 "david": [
 "H1732",
-"G1138"
+null
 ],
 "day star": [
 "H1966",
@@ -4557,7 +4557,7 @@ null
 ],
 "eber": [
 "H5677",
-"G1443"
+null
 ],
 "ebez": [
 "H77",
@@ -4629,7 +4629,7 @@ null
 ],
 "egypt": [
 "H4714",
-"G125"
+null
 ],
 "egypt_sea": [
 "H4714",
@@ -4705,7 +4705,7 @@ null
 ],
 "elam": [
 "H5867",
-"G1639"
+null
 ],
 "elasah": [
 "H501",
@@ -4829,7 +4829,7 @@ null
 ],
 "elijah": [
 "H452",
-"G2243"
+null
 ],
 "elika": [
 "H470",
@@ -4885,7 +4885,7 @@ null
 ],
 "elisha": [
 "H477",
-"G1666"
+null
 ],
 "elishah": [
 "H473",
@@ -5157,11 +5157,11 @@ null
 ],
 "enoch": [
 "H2585",
-"G1802"
+null
 ],
 "enosh": [
 "H583",
-"G1800"
+null
 ],
 "epaenetus": [
 null,
@@ -5217,7 +5217,7 @@ null
 ],
 "ephraim": [
 "H669",
-"G2187"
+null
 ],
 "ephraim_gate": [
 "H669",
@@ -5261,7 +5261,7 @@ null,
 ],
 "eran": [
 "H6197",
-"G9827"
+null
 ],
 "eranite": [
 "H6198",
@@ -5297,7 +5297,7 @@ null
 ],
 "esau": [
 "H6215",
-"G2269"
+null
 ],
 "esau_mount": [
 "H6215",
@@ -5429,7 +5429,7 @@ null,
 ],
 "euphrates": [
 "H6578",
-"G2166"
+null
 ],
 "eutychus": [
 null,
@@ -5437,7 +5437,7 @@ null,
 ],
 "eve": [
 "H2332",
-"G2096"
+null
 ],
 "everlasting": [
 "H5769",
@@ -5669,11 +5669,11 @@ null,
 ],
 "gabriel": [
 "H1403",
-"G1043"
+null
 ],
 "gad": [
 "H1410",
-"G1045"
+null
 ],
 "gadara": [
 null,
@@ -5729,7 +5729,7 @@ null
 ],
 "galilee": [
 "H1551",
-"G1056"
+null
 ],
 "gallim": [
 "H1554",
@@ -5801,7 +5801,7 @@ null
 ],
 "gaza": [
 "H5804",
-"G1048"
+null
 ],
 "gazez": [
 "H1495",
@@ -5901,7 +5901,7 @@ null,
 ],
 "gentiles": [
 "H1471",
-"G1484"
+null
 ],
 "genubath": [
 "H1592",
@@ -6041,7 +6041,7 @@ null
 ],
 "gideon": [
 "H1439",
-"G1066"
+null
 ],
 "gideoni": [
 "H1441",
@@ -6169,7 +6169,7 @@ null
 ],
 "gog": [
 "H1463",
-"G1136"
+null
 ],
 "goiim": [
 "H1471",
@@ -6197,7 +6197,7 @@ null
 ],
 "gomorrah": [
 "H6017",
-"G1116"
+null
 ],
 "gomorrha": [
 "H6017",
@@ -6233,7 +6233,7 @@ null
 ],
 "greece": [
 "H3120",
-"G1671"
+null
 ],
 "greek": [
 null,
@@ -6393,7 +6393,7 @@ null
 ],
 "hagar": [
 "H1904",
-"G28"
+null
 ],
 "haggai": [
 "H2292",
@@ -6585,7 +6585,7 @@ null
 ],
 "hamor": [
 "H2544",
-"G1697"
+null
 ],
 "hamran": [
 "H2566",
@@ -6685,7 +6685,7 @@ null
 ],
 "haran": [
 "H2771",
-"G5488"
+null
 ],
 "hararite": [
 "H2043",
@@ -7045,7 +7045,7 @@ null
 ],
 "hebrews": [
 "H5680",
-"G1445"
+null
 ],
 "hebron": [
 "H2275",
@@ -7277,7 +7277,7 @@ null
 ],
 "hezekiah": [
 "H2396",
-"G1478"
+null
 ],
 "hezion": [
 "H2383",
@@ -7297,7 +7297,7 @@ null
 ],
 "hezron": [
 "H2696",
-"G2074"
+null
 ],
 "hezronite": [
 "H2697",
@@ -7429,7 +7429,7 @@ null
 ],
 "holy_place": [
 "H6944",
-"G39"
+null
 ],
 "hophni": [
 "H2652",
@@ -7501,7 +7501,7 @@ null,
 ],
 "hosea": [
 "H1954",
-"G5617"
+null
 ],
 "hoshaiah": [
 "H1955",
@@ -7905,11 +7905,11 @@ null
 ],
 "isaac": [
 "H3327",
-"G2464"
+null
 ],
 "isaiah": [
 "H3470",
-"G2268"
+null
 ],
 "iscah": [
 "H3252",
@@ -8033,7 +8033,7 @@ null
 ],
 "israel": [
 "H3478",
-"G2474"
+null
 ],
 "israelitess": [
 "H3482",
@@ -8041,7 +8041,7 @@ null
 ],
 "issachar": [
 "H3485",
-"G2466"
+null
 ],
 "isshiah": [
 "H3449",
@@ -8505,7 +8505,7 @@ null
 ],
 "jared": [
 "H3382",
-"G2391"
+null
 ],
 "jaresiah": [
 "H3298",
@@ -8581,7 +8581,7 @@ null
 ],
 "javan": [
 "H3120",
-"G1672"
+null
 ],
 "jazer": [
 "H3270",
@@ -8749,11 +8749,11 @@ null
 ],
 "jehoiachin": [
 "H3078",
-"G2423"
+null
 ],
 "jehoiada": [
 "H3077",
-"G914"
+null
 ],
 "jehoiakim": [
 "H3079",
@@ -8773,7 +8773,7 @@ null
 ],
 "jehoram": [
 "H3088",
-"G2496"
+null
 ],
 "jehoshabeath": [
 "H3090",
@@ -8781,7 +8781,7 @@ null
 ],
 "jehoshaphat": [
 "H3092",
-"G2498"
+null
 ],
 "jehosheba": [
 "H3089",
@@ -8881,7 +8881,7 @@ null
 ],
 "jephthah": [
 "H3316",
-"G2422"
+null
 ],
 "jephunneh": [
 "H3312",
@@ -8909,7 +8909,7 @@ null
 ],
 "jeremiah": [
 "H3414",
-"G2408"
+null
 ],
 "jeremias": [
 "H3414",
@@ -8933,7 +8933,7 @@ null
 ],
 "jericho": [
 "H3405",
-"G2410"
+null
 ],
 "jericho_valley": [
 "H1237",
@@ -8977,7 +8977,7 @@ null
 ],
 "jerusalem": [
 "H3389",
-"G2414"
+null
 ],
 "jerusalem_wives": [
 "H802",
@@ -9049,14 +9049,14 @@ null
 ],
 "jesse": [
 "H3448",
-"G2421"
+null
 ],
 "jesui": [
 "H3441",
 null
 ],
 "jesus": [
-"H6005",
+null,
 "G2424"
 ],
 "jether": [
@@ -9073,7 +9073,7 @@ null
 ],
 "jetur": [
 "H3195",
-"G2484"
+null
 ],
 "jeuel": [
 "H3262",
@@ -9097,7 +9097,7 @@ null
 ],
 "jezebel": [
 "H348",
-"G2403"
+null
 ],
 "jezer": [
 "H3337",
@@ -9189,7 +9189,7 @@ null
 ],
 "job": [
 "H347",
-"G2492"
+null
 ],
 "jobab": [
 "H3103",
@@ -9209,7 +9209,7 @@ null
 ],
 "joel": [
 "H3100",
-"G2493"
+null
 ],
 "joelah": [
 "H3132",
@@ -9289,7 +9289,7 @@ null
 ],
 "jonah": [
 "H3124",
-"G2495"
+null
 ],
 "jonam": [
 null,
@@ -9309,7 +9309,7 @@ null
 ],
 "joppa": [
 "H3305",
-"G2445"
+null
 ],
 "jorah": [
 "H3139",
@@ -9325,7 +9325,7 @@ null
 ],
 "jordan": [
 "H3383",
-"G2446"
+null
 ],
 "jorim": [
 null,
@@ -9401,7 +9401,7 @@ null
 ],
 "josiah": [
 "H2977",
-"G2502"
+null
 ],
 "josias": [
 "H2977",
@@ -9425,7 +9425,7 @@ null
 ],
 "jotham": [
 "H3147",
-"G2488"
+null
 ],
 "jothor": [
 "H3503",
@@ -9485,7 +9485,7 @@ null,
 ],
 "judea": [
 "H3063",
-"G2449"
+null
 ],
 "judges": [
 "H1784",
@@ -9581,7 +9581,7 @@ null
 ],
 "kanah": [
 "H7071",
-"G2580"
+null
 ],
 "kandake": [
 null,
@@ -9701,7 +9701,7 @@ null
 ],
 "kenan": [
 "H7018",
-"G2536"
+null
 ],
 "kenani": [
 "H3662",
@@ -9789,7 +9789,7 @@ null
 ],
 "kidron": [
 "H6939",
-"G2748"
+null
 ],
 "kidron valley": [
 "H6939",
@@ -9901,7 +9901,7 @@ null
 ],
 "kish": [
 "H7027",
-"G2797"
+null
 ],
 "kishi": [
 "H7029",
@@ -9957,7 +9957,7 @@ null
 ],
 "korah": [
 "H7141",
-"G2879"
+null
 ],
 "korahite": [
 "H7145",
@@ -10049,7 +10049,7 @@ null
 ],
 "lamech": [
 "H3929",
-"G2984"
+null
 ],
 "laodicea": [
 null,
@@ -10193,7 +10193,7 @@ null
 ],
 "libya": [
 "H3864",
-"G3033"
+null
 ],
 "libyan": [
 "H3864",
@@ -10241,7 +10241,7 @@ null
 ],
 "lod": [
 "H3850",
-"G3069"
+null
 ],
 "lois": [
 null,
@@ -10253,7 +10253,7 @@ null
 ],
 "lord": [
 "H3068",
-"G2962"
+null
 ],
 "lords of the high places": [
 "H1181",
@@ -10261,7 +10261,7 @@ null
 ],
 "lot": [
 "H3876",
-"G3091"
+null
 ],
 "lotan": [
 "H3877",
@@ -10497,7 +10497,7 @@ null
 ],
 "magog": [
 "H4031",
-"G3098"
+null
 ],
 "magor-missabib": [
 "H4036",
@@ -10517,7 +10517,7 @@ null
 ],
 "mahalalel": [
 "H4111",
-"G3121"
+null
 ],
 "mahalath": [
 "H4258",
@@ -10725,7 +10725,7 @@ null
 ],
 "manasseh": [
 "H4519",
-"G3128"
+null
 ],
 "manasses": [
 "H4519",
@@ -10957,7 +10957,7 @@ null
 ],
 "media": [
 "H4074",
-"G3370"
+null
 ],
 "median": [
 "H4077",
@@ -10969,7 +10969,7 @@ null
 ],
 "megiddo": [
 "H4023",
-"G717"
+null
 ],
 "mehetabeel": [
 "H4105",
@@ -11045,7 +11045,7 @@ null
 ],
 "melchizedek": [
 "H4442",
-"G3198"
+null
 ],
 "melea": [
 null,
@@ -11257,7 +11257,7 @@ null
 ],
 "mesopotamia": [
 "H763",
-"G3318"
+null
 ],
 "messiah": [
 null,
@@ -11281,7 +11281,7 @@ null
 ],
 "methuselah": [
 "H4968",
-"G3103"
+null
 ],
 "methushael": [
 "H4967",
@@ -11341,7 +11341,7 @@ null
 ],
 "michael": [
 "H4317",
-"G3413"
+null
 ],
 "michah": [
 "H4318",
@@ -11377,7 +11377,7 @@ null
 ],
 "midian": [
 "H4080",
-"G3099"
+null
 ],
 "midianite woman": [
 "H4084",
@@ -11465,7 +11465,7 @@ null
 ],
 "millo": [
 "H4407",
-"G6202"
+null
 ],
 "miniamin": [
 "H4509",
@@ -11569,7 +11569,7 @@ null
 ],
 "mizpah": [
 "H4709",
-"G707"
+null
 ],
 "mizpeh": [
 "H4708",
@@ -11609,7 +11609,7 @@ null
 ],
 "molech": [
 "H4432",
-"G3434"
+null
 ],
 "molid": [
 "H4140",
@@ -11681,11 +11681,11 @@ null
 ],
 "moses": [
 "H4872",
-"G3475"
+null
 ],
 "most_holy_place": [
 "H6944",
-"G39"
+null
 ],
 "motherinlaw_of_peter": [
 null,
@@ -11749,7 +11749,7 @@ null
 ],
 "naaman": [
 "H5283",
-"G3497"
+null
 ],
 "naamathite": [
 "H5284",
@@ -11857,11 +11857,11 @@ null
 ],
 "nahor": [
 "H5152",
-"G3493"
+null
 ],
 "nahshon": [
 "H5177",
-"G3476"
+null
 ],
 "nahum": [
 "H5151",
@@ -11905,7 +11905,7 @@ null
 ],
 "naphtali": [
 "H5321",
-"G3508"
+null
 ],
 "naphtuhim": [
 "H5320",
@@ -11917,7 +11917,7 @@ null,
 ],
 "nathan": [
 "H5416",
-"G3481"
+null
 ],
 "nathan melek": [
 "H5419",
@@ -12249,7 +12249,7 @@ null
 ],
 "nineveh": [
 "H5210",
-"G3535"
+null
 ],
 "nisan": [
 "H5212",
@@ -12281,7 +12281,7 @@ null
 ],
 "noah": [
 "H5146",
-"G3575"
+null
 ],
 "nob": [
 "H5011",
@@ -12353,7 +12353,7 @@ null
 ],
 "obed": [
 "H5744",
-"G5601"
+null
 ],
 "obed-edom": [
 "H5654",
@@ -12441,7 +12441,7 @@ null
 ],
 "olives_mount": [
 "H2132",
-"G1638"
+null
 ],
 "olivet": [
 "H2132",
@@ -12465,7 +12465,7 @@ null
 ],
 "on": [
 "H203",
-"G9829"
+null
 ],
 "onam": [
 "H208",
@@ -12741,7 +12741,7 @@ null
 ],
 "passover": [
 "H6453",
-"G3957"
+null
 ],
 "passover offering": [
 "H6453",
@@ -12821,7 +12821,7 @@ null
 ],
 "peleg": [
 "H6389",
-"G5317"
+null
 ],
 "pelet": [
 "H6404",
@@ -12889,7 +12889,7 @@ null
 ],
 "perez": [
 "H6557",
-"G5329"
+null
 ],
 "perez uzzah": [
 "H6560",
@@ -12981,7 +12981,7 @@ null,
 ],
 "pharaoh": [
 "H6547",
-"G5328"
+null
 ],
 "pharaohneco": [
 "H5224",
@@ -13361,7 +13361,7 @@ null,
 ],
 "queen_of_sheba": [
 "H4436",
-"G938"
+null
 ],
 "quirinius": [
 null,
@@ -13441,7 +13441,7 @@ null
 ],
 "rachel": [
 "H7354",
-"G4478"
+null
 ],
 "raddai": [
 "H7288",
@@ -13457,7 +13457,7 @@ null
 ],
 "rahab": [
 "H7343",
-"G4460"
+null
 ],
 "raham": [
 "H7357",
@@ -13481,7 +13481,7 @@ null
 ],
 "rakkath": [
 "H7557",
-"G5085"
+null
 ],
 "rakkon": [
 "H7542",
@@ -13489,11 +13489,11 @@ null
 ],
 "ram": [
 "H7410",
-"G689"
+null
 ],
 "ramah": [
 "H7414",
-"G4471"
+null
 ],
 "ramath lehi": [
 "H7437",
@@ -13573,7 +13573,7 @@ null
 ],
 "rebekah": [
 "H7259",
-"G4479"
+null
 ],
 "rebellion": [
 "H4805",
@@ -13597,7 +13597,7 @@ null
 ],
 "red_sea": [
 "H5488",
-"G2063"
+null
 ],
 "reelaiah": [
 "H7480",
@@ -13629,7 +13629,7 @@ null
 ],
 "rehoboam": [
 "H7346",
-"G4497"
+null
 ],
 "rehoboth": [
 "H7344",
@@ -13721,11 +13721,11 @@ null
 ],
 "reu": [
 "H7466",
-"G4466"
+null
 ],
 "reuben": [
 "H7205",
-"G4502"
+null
 ],
 "reuel": [
 "H7467",
@@ -13893,7 +13893,7 @@ null
 ],
 "ruth": [
 "H7327",
-"G4503"
+null
 ],
 "sabaoth": [
 "H3068",
@@ -13901,7 +13901,7 @@ null
 ],
 "sabbath": [
 "H7676",
-"G4521"
+null
 ],
 "sabbath rest": [
 "H7676",
@@ -14001,7 +14001,7 @@ null
 ],
 "salmon": [
 "H8007",
-"G4533"
+null
 ],
 "salmone": [
 null,
@@ -14025,7 +14025,7 @@ null
 ],
 "samaria": [
 "H8111",
-"G4540"
+null
 ],
 "samgar": [
 "H5562",
@@ -14049,11 +14049,11 @@ null,
 ],
 "samson": [
 "H8123",
-"G4546"
+null
 ],
 "samuel": [
 "H8050",
-"G4545"
+null
 ],
 "sanballat": [
 "H5571",
@@ -14081,7 +14081,7 @@ null,
 ],
 "sarah": [
 "H8283",
-"G4564"
+null
 ],
 "sarai": [
 "H8297",
@@ -14113,11 +14113,11 @@ null
 ],
 "satan": [
 "H7854",
-"G954"
+null
 ],
 "saul": [
 "H7586",
-"G4549"
+null
 ],
 "sceva": [
 null,
@@ -14273,7 +14273,7 @@ null
 ],
 "sepharad": [
 "H5614",
-"G4554"
+null
 ],
 "sepharim": [
 "H5616",
@@ -14313,11 +14313,11 @@ null,
 ],
 "serug": [
 "H8286",
-"G4562"
+null
 ],
 "seth": [
 "H8352",
-"G4589"
+null
 ],
 "sethur": [
 "H5639",
@@ -14505,7 +14505,7 @@ null
 ],
 "sharon": [
 "H8289",
-"G4565"
+null
 ],
 "sharonite": [
 "H8290",
@@ -14569,7 +14569,7 @@ null
 ],
 "sheba": [
 "H7652",
-"G3558"
+null
 ],
 "shebaniah": [
 "H7645",
@@ -14609,7 +14609,7 @@ null
 ],
 "shechem": [
 "H7928",
-"G4966"
+null
 ],
 "shechemite": [
 "H7930",
@@ -14621,7 +14621,7 @@ null
 ],
 "sheep_gate": [
 "H6629",
-"G4262"
+null
 ],
 "sheerah": [
 "H7609",
@@ -14637,7 +14637,7 @@ null
 ],
 "shelah": [
 "H7974",
-"G4527"
+null
 ],
 "shelanite": [
 "H8024",
@@ -14673,7 +14673,7 @@ null
 ],
 "shem": [
 "H8035",
-"G4590"
+null
 ],
 "shema": [
 "H8087",
@@ -14741,7 +14741,7 @@ null
 ],
 "sheol": [
 "H7585",
-"G1067"
+null
 ],
 "shepham": [
 "H8221",
@@ -15237,7 +15237,7 @@ null
 ],
 "sidon": [
 "H6721",
-"G4605"
+null
 ],
 "sihon": [
 "H5511",
@@ -15285,7 +15285,7 @@ null
 ],
 "sinai": [
 "H5514",
-"G4614"
+null
 ],
 "sinai_wilderness": [
 "H4057",
@@ -15381,7 +15381,7 @@ null
 ],
 "sodom": [
 "H5467",
-"G4670"
+null
 ],
 "soko": [
 "H7755",
@@ -15393,7 +15393,7 @@ null
 ],
 "solomon": [
 "H8010",
-"G4672"
+null
 ],
 "solomon's_portico": [
 null,
@@ -15593,7 +15593,7 @@ null,
 ],
 "syria": [
 "H758",
-"G4947"
+null
 ],
 "syrophoenician": [
 "H758",
@@ -15725,7 +15725,7 @@ null
 ],
 "tamar": [
 "H8559",
-"G2283"
+null
 ],
 "tammuz": [
 "H8542",
@@ -15893,7 +15893,7 @@ null
 ],
 "terah": [
 "H8646",
-"G2291"
+null
 ],
 "teraphim": [
 "H8655",
@@ -16397,7 +16397,7 @@ null,
 ],
 "tyre": [
 "H6865",
-"G5183"
+null
 ],
 "tyrian": [
 "H6876",
@@ -16497,7 +16497,7 @@ null
 ],
 "uriah": [
 "H223",
-"G3774"
+null
 ],
 "urias": [
 "H223",
@@ -16513,7 +16513,7 @@ null
 ],
 "urim": [
 "H224",
-"G1212"
+null
 ],
 "uthai": [
 "H5793",
@@ -16557,7 +16557,7 @@ null
 ],
 "uzziah": [
 "H5818",
-"G3604"
+null
 ],
 "uzziel": [
 "H5816",
@@ -16633,7 +16633,7 @@ null
 ],
 "weeks": [
 "H7620",
-"G4005"
+null
 ],
 "well lahai-roi": [
 "H883",
@@ -16845,7 +16845,7 @@ null
 ],
 "zarephath": [
 "H6886",
-"G4558"
+null
 ],
 "zarethan": [
 "H6891",
@@ -16917,7 +16917,7 @@ null
 ],
 "zebulun": [
 "H2074",
-"G2194"
+null
 ],
 "zebulunite": [
 "H2075",
@@ -17025,7 +17025,7 @@ null
 ],
 "zerah": [
 "H2226",
-"G2196"
+null
 ],
 "zerahiah": [
 "H2228",

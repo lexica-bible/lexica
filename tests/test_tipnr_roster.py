@@ -26,7 +26,10 @@ import check_roster_regression as gate
 # The hijack casualties of 2026-07-16 (pinned to the OLD loader's correct
 # answers) + the reviewed alias-batch gains.
 SENTINELS = {
-    "jesus":     {"g": "G2424"},   # was stolen by Barabbas (G912)
+    # jesus: g stolen by Barabbas (G912); h must stay EMPTY — TIPNR's Jesus record
+    # cross-links Immanuel's H6005, and filling it flips every OT LXX "Jesus"
+    # (= Joshua) off the certified-live behavior.
+    "jesus":     {"h": None, "g": "G2424"},
     "judah":     {"h": "H3063", "g": "G2455"},   # was stolen by Hodaviah / Juda-place
     "simon":     {"g": "G4613"},   # was stolen by Peter's number
     "jacob":     {"g": "G2384"},   # was stolen by Israel's number
@@ -61,24 +64,27 @@ def test_sentinels(now):
 def test_zero_regression(now):
     baseline = json.loads((ROOT / "scripts" / "roster_baseline.json")
                           .read_text(encoding="utf-8"))
-    regressions, gains, new_keys = gate.diff(baseline, now)
-    assert not regressions, (
-        f"{len(regressions)} roster regression(s) vs baseline:\n  "
-        + "\n  ".join(f"{k}: {why}" for k, why in sorted(regressions)[:20]))
-    print(f"  ok: 0 regressions vs baseline ({len(baseline)} names;"
-          f" gains {gains}, new {len(new_keys)})")
+    regressions, new_keys = gate.diff(baseline, now)
+    assert not regressions and not new_keys, (
+        f"roster differs from baseline — {len(regressions)} changed,"
+        f" {len(new_keys)} new:\n  "
+        + "\n  ".join(f"{k}: {why}" for k, why in sorted(regressions)[:20])
+        + ("\n  new: " + ", ".join(sorted(new_keys)[:20]) if new_keys else ""))
+    print(f"  ok: exact match vs baseline ({len(baseline)} names)")
 
 
 def test_detector_fires():
     # The gate must FAIL on a known positive before its zero is trusted:
-    # poison one baseline entry and require diff() to flag it.
-    poisoned = {"jesus": ["H9999", "G912"], "ghost-name": [None, "G1"]}
-    now = {"jesus": [None, "G2424"]}
-    regressions, _g, _n = gate.diff(poisoned, now)
+    # poison entries and require diff() to flag every class — changed number,
+    # vanished name, FILLED slot (the Jesus/Immanuel gain class), new name.
+    poisoned = {"jesus": ["H9999", "G912"], "ghost-name": [None, "G1"],
+                "aaron": [None, None]}
+    now = {"jesus": [None, "G2424"], "aaron": [None, "G2"], "brand-new": ["H1", None]}
+    regressions, new_keys = gate.diff(poisoned, now)
     reasons = {k for k, _ in regressions}
-    assert "jesus" in reasons and "ghost-name" in reasons, (
+    assert {"jesus", "ghost-name", "aaron"} <= reasons and new_keys == ["brand-new"], (
         "regression detector failed to fire on planted defects")
-    print("  ok: detector fires on planted number-change and missing-name")
+    print("  ok: detector fires on change, loss, fill, and new-name")
 
 
 if __name__ == "__main__":

@@ -255,12 +255,17 @@ def parse_tipnr(lines, _audit=None):
 
     save(cur)
 
-    # Phase A — main-record names, two passes over the finished records.
-    # Pass 1 claims each key with the record's own MAIN-LINE numbers — byte-
-    # compatible with the old loader, so duplicate main names ('Judah' ×n) keep
-    # resolving to the record they always did. Pass 2 fills still-empty slots with
-    # the sub-record-enriched numbers — the entities-gain-numbers win of the loader
-    # fix, without letting an earlier record's sub-rows steal a later record's key.
+    # Phase A — main-record names, claimed with the record's own MAIN-LINE numbers
+    # only. This makes every previously-resolving name BYTE-IDENTICAL to the old
+    # loader (proven 0-diff on the pinned file 2026-07-16): duplicate main names
+    # ('Judah' ×n) keep resolving to the record they always did, and no sub-record
+    # number ever changes an existing name's answer. Deliberately NO fill from the
+    # sub-record-enriched numbers: TIPNR cross-links identities across testaments
+    # (its Jesus record carries Immanuel's H6005), so a filled slot flips the
+    # testament fallback on real words (every OT LXX "Jesus" = Joshua would have
+    # gone from certified-live behavior to Immanuel's number). Wrong > missing.
+    # The enrichment still feeds `agg` (the tipnr TABLE, binding/metaV) and the
+    # queued NEW spellings below — that's the alias batch's actual goal.
     for rec in records:
         for nm in rec["names"]:
             key = nm.lower()
@@ -271,13 +276,6 @@ def parse_tipnr(lines, _audit=None):
                 e["h"] = rec["h0"]
             if rec["g0"] and not e["g"]:
                 e["g"] = rec["g0"]
-    for rec in records:
-        for nm in rec["names"]:
-            e = lookup[nm.lower()]
-            if rec["h"] and not e["h"]:
-                e["h"] = rec["h"]
-            if rec["g"] and not e["g"]:
-                e["g"] = rec["g"]
 
     # Resolve the queued sub-record spellings: a MAIN-record name always wins (the
     # key is skipped — zero regression to existing resolution), a spelling whose
