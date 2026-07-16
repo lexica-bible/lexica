@@ -83,11 +83,22 @@ distinct piles that need different treatments:
    spellings with NO KJV canonical form. A variant→canonical map may have no target;
    needs its own ruling (own Strong's? unnumbered by design?). Do NOT force-map these.
 3. **Blank names — 477 rows** (the single biggest bucket): starred word, no English at all.
-   Different bug class entirely; sample query below, root-cause before any fix.
-4. **Common words starred** — saying (13), said, woman, field, man, area: the star is on
-   non-names → mis-marking upstream, not a lookup miss.
+4. **Common words starred** — saying (13), said, woman, field, man, area.
 5. **Possessives / frequent names** — jacobs, aarons; jesus/moses/david missing 8–9× each.
-   Verse-specific (punctuation/compounds); eyeball, don't blind-map.
+
+**Piles 3–5 DIAGNOSED (2026-07-16, sample run + abp_texts source read): one class —
+shared-chunk names.** Source ground truth (abp_1chronicles.txt, 1Ch 1:49):
+`Shaul died,G599 G*` — one text chunk carrying TWO tags (the verb's number + the name's
+star). The build gave the trailing `G*` its own EMPTY word row (pile 3) while "Shaul" rode
+inside the verb's word. Pile 4 is the milder form: the slot text is "Hezekiah said," /
+"of Lebanon, saying," / "Bashan area" — the name IS in the slot but `english_head` picked
+the trailing common word, so the surface-keyed lookup asked for "saying" and missed.
+Pile 5 (possessives, frequent-name stragglers) is largely the same phrase-slot family.
+Fix class: build-side chunk/head handling (respect the multi-tag split; head-pick the
+capitalized name over the trailing common word), NOT alias-map entries. Likely covers
+500+ of the 2,203. This is `build_words_from_abp.py` / `_split_compounds` territory —
+grep every copy of the chunk-splitting logic before sizing (standing rule), and any fix
+follows the `/rebuild-words` procedure, not an in-place patch.
 
 Follow-up sampling (JP runs; piles 3 and 4):
 ```
