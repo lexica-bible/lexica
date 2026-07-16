@@ -56,3 +56,16 @@ Conditions carried over:
 with the remainder itemized by pile; capfall actual vs predicted reconciled row-for-row.
 
 Verdict requested: approve the rescoped capfall (148-row class) + the two dispositions.
+
+---
+## OUTCOME (2026-07-16) — approved; conditions discharged
+- Fix landed with red-first fixture (`test_capfall_subject_split`, failed before / passes
+  after, four negative guards) — commit 098a742.
+- Class documentation landed: `docs/tickets/blank_star_classes.md` (148/64/40/225 itemized;
+  CAP list = the reconciliation baseline for the dry-run before --apply).
+- **1Ch 10:13 puzzle RESOLVED by live-row proof (JP paste 2026-07-16):**
+  `1|Saul|*|H7586` + `2|died|599|G599` — the earlier production run already split it; the
+  verse's remaining blank is the pos-22 "he asked" row (NOCAP class, correct as blank).
+  The roster-gap accounting stands with no unexplained miss.
+- Still run-time gated: capfall dry-run count reconciled against the 148 baseline on the
+  rebuild copy before --apply.
