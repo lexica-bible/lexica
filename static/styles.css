@@ -5481,34 +5481,21 @@ button.study-verse-ref { border: none; }
   .wm-tab.on { color: var(--accent); }
   .wm-tab:disabled { opacity: 0.38; }
 
-  /* bottom sheets — fixed overlays above the top nav */
-  /* scrim + slide-up shared with the sheet contract (.sh) so every bottom sheet animates the same */
-  .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15, 23, 42, 0.4); animation: fade-in 0.2s ease; }
-  .wm-sheet {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 121;
-    display: flex; flex-direction: column;
-    background: var(--paper); border-radius: 6px 6px 0 0;
-    box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
-    max-height: 62%; animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-    /* Clear the home indicator / bottom browser bar — the proper way, so the
-       card body keeps a clean 18px and isn't padding-hacked to dodge the chrome. */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .wm-sheet.tall { max-height: 90%; height: 90%; }
-  @keyframes wm-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .wm-grab { flex: 0 0 auto; cursor: grab; touch-action: none; }
-  .wm-grab:active { cursor: grabbing; }
-  .wm-handle { width: 40px; height: 4px; border-radius: var(--radius); background: var(--rule-2); margin: 10px auto 2px; }
-  .wm-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; border-bottom: 1px solid var(--rule); }
-  .wm-sheet-title { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
-  .wm-sheet-title--mono { font-family: var(--f-mono); font-size: 15px; font-weight: 500; letter-spacing: 0.01em; }
-  .wm-sheet-x { width: 34px; height: 34px; border-radius: var(--radius); display: grid; place-items: center; color: var(--ink-3); background: none; border: none; }
-  .wm-sheet-x:active { background: var(--bg-sunk); }
-  .wm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  /* The `.wm-sheet` frame is GONE (step 4, 2026-07-16) — Word study's four tool sheets ride
+     the shared contract (.sh): Distribution + Word card = panel, Views + Search = menu on the
+     .msheet-card band pattern. The last per-frame height (62%/90%), radius (6px), z (121) and
+     handle died with it. Only CONTENT classes remain below. */
+  /* The word-card sheet's title is the Strong's BADGE — content identity, so it keeps its mono
+     type (typography-scope ruling; same call as the Library card's .detail-head badge). Type
+     ONLY — nothing structural rides this class. */
+  .wm-sh-card .sh-title { font-family: var(--f-mono); font-size: 15px; font-weight: 500; letter-spacing: 0.01em; }
 
-  /* sheet bodies reuse the desktop word-card / rail / mode controls */
-  .wm-card { padding: 22px 18px 18px; }
-  .wm-rail { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 1px; }
+  /* sheet bodies reuse the desktop word-card / rail / mode controls. Side inset now comes from
+     the shell (.sh-body's 18px), so the panels' own side padding dropped to 0: the word card's
+     effective 18px edge inset is UNCHANGED; the rail's rows moved 12px -> 18px, converging on
+     the contract rhythm every other card uses. */
+  .wm-card { padding: 22px 0 18px; }
+  .wm-rail { padding: 10px 0 28px; display: flex; flex-direction: column; gap: 1px; }
   .wm-rail .brow { padding: 9px 10px; }
   .wm-rail .brow-name { font-size: 14px; }
   .wm-jump {
@@ -5521,7 +5508,9 @@ button.study-verse-ref { border: none; }
   .wm-jump-w.heb { direction: rtl; }
 
   /* search sheet */
-  .wm-searchsheet { padding: 16px 16px 28px; display: flex; flex-direction: column; gap: 14px; }
+  /* Search rides BARE (msheet-card), so this block owns its own side inset — 18px, the
+     contract rhythm (was 16px under the old frame). */
+  .wm-searchsheet { padding: 16px 18px 28px; display: flex; flex-direction: column; gap: 14px; }
   .wm-search {
     display: flex; align-items: center; gap: 9px; height: 48px; padding: 0 8px 0 13px;
     background: var(--paper); border: 1px solid var(--rule-2); border-radius: var(--radius); box-shadow: var(--shadow-sm);
@@ -5532,7 +5521,10 @@ button.study-verse-ref { border: none; }
   .wm-search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); }
   .wm-search-input::placeholder { color: var(--ink-4); }
   .wm-search-clear { width: 30px; height: 30px; border-radius: var(--radius); display: grid; place-items: center; color: var(--ink-4); flex: 0 0 auto; background: none; border: none; }
-  .wm-search-clear:active { background: var(--bg-sunk); }
+  .wm-search-clear:active:not(:disabled) { background: var(--bg-sunk); }
+  /* Gray-don't-hide: with nothing to clear the × DISABLES in place (Menu precondition —
+     controls never unmount). Same dim as every other disabled control (opacity 0.35). */
+  .wm-search-clear:disabled { opacity: 0.35; cursor: default; }
   .wm-search-hint { font-size: 12.5px; color: var(--ink-4); line-height: 1.5; padding: 0 2px; text-wrap: balance; }
   .wm-search-chips { display: flex; flex-wrap: wrap; gap: 6px 18px; }
   /* search bar shown right on the empty word-study screen (entry point + feedback) */

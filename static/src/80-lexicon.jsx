@@ -38,39 +38,14 @@ function _comboOK(corpus, testament, language) {
 // sets the flex slot, not the glyph — so they pass their size explicitly. Consolidating the
 // definition must not resize a shipped surface.
 
-// Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
-// grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
-function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
-  // Same swipe-down-to-dismiss as every other sheet: the shared hook arms on the
-  // chrome (handle/header) OR on the body when it's scrolled to the top.
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
-  const [kb, setKb] = useState(0);   // how far the on-screen keyboard eats into the screen
-  // Lift the sheet above the keyboard. Done via `bottom` (not transform) so it never
-  // fights the swipe hook, which drives the sheet's transform.
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const onResize = () => setKb(Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-    vv.addEventListener("resize", onResize);
-    vv.addEventListener("scroll", onResize);
-    onResize();
-    return () => { vv.removeEventListener("resize", onResize); vv.removeEventListener("scroll", onResize); };
-  }, []);
-  return (
-    <>
-      <div className="wm-scrim" onClick={onClose}/>
-      <div ref={sheetRef} className={"wm-sheet" + (tall ? " tall" : "")} style={kb ? { bottom: kb } : undefined}>
-        <div className="wm-grab">
-          <div className="wm-handle" aria-hidden="true"/>
-          <div className="wm-sheet-head">
-            <span className={"wm-sheet-title" + (titleMono ? " wm-sheet-title--mono" : "")}>{title}</span>
-          </div>
-        </div>
-        <div ref={scrollRef} className="wm-sheet-body">{children}</div>
-      </div>
-    </>
-  );
-}
+// The four mobile tool sheets ride the shared `Sheet` (the mobile sheet contract) — the
+// `.wm-sheet` frame is gone. Classes per the standing ruling: Distribution + Word card hold
+// DATA -> panel (full contract height); Views + Search hold CONTROLS ONLY -> menu (height from
+// the control set; the menus reuse the .msheet-card band+body pattern Reading options/You
+// established, so the two families can't drift). The old frame's keyboard-lift (visualViewport
+// -> bottom offset) died with it: the shell owns sheet geometry, no shipped Sheet card lifts
+// (the note editor's textarea included), and a per-card lift is exactly the fork the contract
+// exists to stop — if a lift is wanted it lands in the SHELL, its own ruling.
 
 function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onAskWord }) {
   const [railOpen, setRailOpen] = useState(false);     // mobile: distribution drawer
@@ -885,17 +860,26 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </nav>
 
         {sheet === "dist" && (
-          <WsSheet tall title={profile ? "Distribution · " + profile.translit : "Distribution"} onClose={() => setSheet(null)}>
+          <Sheet title={profile ? "Distribution · " + profile.translit : "Distribution"} onClose={() => setSheet(null)}>
             <div className="wm-rail">{renderDistRows(() => setSheet(null))}</div>
-          </WsSheet>
+          </Sheet>
         )}
         {sheet === "card" && (
-          <WsSheet tall title={profile ? profile.strongs : "Word card"} titleMono hideClose onClose={() => setSheet(null)}>
+          /* The title is the Strong's BADGE — content identity, not a panel name — so it keeps
+             its mono type (the typography-scope ruling: geometry unifies, title type belongs to
+             the card family; same call as the Library word card's .detail-head badge). The
+             `.wm-sh-card` class carries ONLY that type override, nothing structural. */
+          <Sheet className="wm-sh-card" title={profile ? profile.strongs : "Word card"} onClose={() => setSheet(null)}>
             <div className="wm-card">{renderWordCardInner()}</div>
-          </WsSheet>
+          </Sheet>
         )}
         {sheet === "views" && (
-          <WsSheet title="Views" onClose={() => setSheet(null)}>
+          <Sheet bare variant="menu" onClose={() => setSheet(null)}>
+            <div className="msheet-card">
+              <div className="msheet-head sh-band">
+                <span className="msheet-title">Views</span>
+              </div>
+              <div className="msheet-body">
             <div className="mode-sec">
               <div className="mode-lbl">Edition</div>
               <div className="mseg">
@@ -921,26 +905,38 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 </button>
               </div>
             )}
-          </WsSheet>
-        )}
-        {sheet === "search" && (
-          <WsSheet title="Search" onClose={() => setSheet(null)}>
-            <div className="wm-searchsheet">
-              <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
-                <Icon.Search className="wm-search-i" width="20" height="20"/>
-                <input className="wm-search-input" type="text" value={query} autoFocus
-                  onChange={e => setQuery(e.target.value)}
-                  placeholder="Word, transliteration, Strong's…"/>
-                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><Icon.Close width="19" height="19"/></button>}
-              </form>
-              <div className="wm-search-hint">Greek, Hebrew, a transliteration, an English gloss, or a Strong's number.</div>
-              <div className="wm-search-chips">
-                {["πνεῦμα", "pistis", "G26", "spirit", "ἀγάπη", "H7307"].map(q => (
-                  <button key={q} className="welcome-chip suggest-link" onClick={() => { setSheet(null); handleSubmit(null, q); }}>{q}</button>
-                ))}
               </div>
             </div>
-          </WsSheet>
+          </Sheet>
+        )}
+        {sheet === "search" && (
+          <Sheet bare variant="menu" onClose={() => setSheet(null)}>
+            <div className="msheet-card">
+              <div className="msheet-head sh-band">
+                <span className="msheet-title">Search</span>
+              </div>
+              <div className="msheet-body">
+                <div className="wm-searchsheet">
+                  <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
+                    <Icon.Search className="wm-search-i" width="20" height="20"/>
+                    <input className="wm-search-input" type="text" value={query} autoFocus
+                      onChange={e => setQuery(e.target.value)}
+                      placeholder="Word, transliteration, Strong's…"/>
+                    {/* Gray-don't-hide (Menu precondition, reviewer-ruled 2026-07-16): the clear ×
+                        used to UNMOUNT on an empty box — a Menu's controls may disable but never
+                        unmount. Same treatment as Reading options' locked toggles. */}
+                    <button type="button" className="wm-search-clear" disabled={!query} onClick={() => setQuery("")} aria-label="Clear"><Icon.Close width="19" height="19"/></button>
+                  </form>
+                  <div className="wm-search-hint">Greek, Hebrew, a transliteration, an English gloss, or a Strong's number.</div>
+                  <div className="wm-search-chips">
+                    {["πνεῦμα", "pistis", "G26", "spirit", "ἀγάπη", "H7307"].map(q => (
+                      <button key={q} className="welcome-chip suggest-link" onClick={() => { setSheet(null); handleSubmit(null, q); }}>{q}</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Sheet>
         )}
       </div>
     );
