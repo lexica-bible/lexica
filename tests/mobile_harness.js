@@ -27,6 +27,9 @@
 //                                fields `_all_cards` attaches after it, + the `status`
 //                                `all_news` re-attaches per reviewer
 //   * thread keys/labels      -> views_news.py `THREAD_LABELS`
+//   * the six Word-study endpoints + the three per-verse word routes -> the "Word study
+//     (lexicon)" block below, each cited to its producer there (views_lexicon.py /
+//     views_lexica.py + scripts/build_lexica_def.py / views_kjv.py / views_bsb.py / views_heb.py)
 // The VALUES are illustrative; the SHAPES (field names, nesting, types) are the payload's.
 // Two values are NOT free to be illustrative, because the code computes on them rather than
 // printing them: a news thread KEY (it resolves through THREAD_LABELS) and any DATE (the feed's
@@ -164,7 +167,14 @@ const CONTESTED = { strongs: ["G2316", "G4151"] };
 // each chapter the NOTES seed anchors). An unknown chapter THROWS rather than inventing a
 // length — a stand-in that quietly answers for a chapter it knows nothing about is how a
 // fixture starts deciding results (the chronological.json lesson).
-const CHAPTER_LEN = { "Gen/1": 31, "Joh/1": 51, "Joh/4": 54, "Rom/8": 39, "Psa/104": 35 };
+// The four extra chapters below (Exo/Isa/Mat/Rev) exist for the LEXICON fixture's occurrence
+// spread — same rule, same source:
+//   grep -oE '^\(Exo 1:[0-9]+\)'  abp_texts/abp_ot_texts/abp_exodus.txt     | tail -1  -> 22
+//   grep -oE '^\(Isa 11:[0-9]+\)' abp_texts/abp_ot_texts/abp_isaiah.txt     | tail -1  -> 16
+//   grep -oE '^\(Mat 3:[0-9]+\)'  abp_texts/abp_nt_texts/abp_matthew.txt    | tail -1  -> 17
+//   grep -oE '^\(Rev 22:[0-9]+\)' abp_texts/abp_nt_texts/abp_revelation.txt | tail -1  -> 21
+const CHAPTER_LEN = { "Gen/1": 31, "Exo/1": 22, "Joh/1": 51, "Joh/4": 54, "Rom/8": 39,
+                      "Psa/104": 35, "Isa/11": 16, "Mat/3": 17, "Rev/22": 21 };
 
 // One verse's worth of stand-in prose. The READER isn't under test here — what matters per row
 // is that it carries the produced field names and that its verse number is real.
@@ -204,6 +214,231 @@ const VERSE_WORDS = { words: [
 // is inlined JSON — it can't call these functions).
 const CHAPTERS = {};
 for (const k of Object.keys(CHAPTER_LEN)) { const [b, c] = k.split("/"); CHAPTERS[k] = chapterFor(b, c); }
+
+// ── Word study (lexicon) ────────────────────────────────────────────────────
+// Six endpoints, each shaped from its PRODUCER (sibling routes disagree on shape ON PURPOSE —
+// /api/lexicon/lookup returns a bare list while /profile returns one object; read the producer,
+// never the neighbour):
+//   * /api/lexicon/lookup   -> views_lexicon.py lexicon_lookup (:465): BARE LIST of
+//                              {strongs, lemma, translit, gloss} + `match` ("exact"/"contains")
+//                              on the English/translit band (:524-531). Enrichment (*_glosses /
+//                              *_totals) attaches ONLY when >1 rows survive (:478) — a lone
+//                              exact hit skips it and the frontend auto-opens the word.
+//   * /api/lexicon/english  -> views_lexicon.py lexicon_english (:630): BARE LIST, rows built by
+//                              _emit (:1011-1022): {strongs, lemma, translit, count,
+//                              abp_glosses, heb_glosses, kjv_glosses, bsb_glosses,
+//                              abp_total, heb_total, kjv_total, bsb_total}. Each *_glosses is
+//                              `_fold` output (:994-1008): [{gloss, count}] with `m: true` on
+//                              the matched rendering and an optional trailing {trunc: true}
+//                              marker; each *_total is a number or null (dict .get miss).
+//   * /api/lexicon/profile  -> views_lexicon.py lexicon_profile return (:1256) — the 22 keys
+//                              below, verbatim. Nested shapes: books rows {book, name,
+//                              testament, count} (:1212-1214); gloss rows {gloss, count}
+//                              (_fold_glosses, :246); related rows {strongs, lemma, translit,
+//                              gloss} (_greek_cognates, :122 — [] for Hebrew, :1241);
+//                              alias_note (contested_register.alias_note_for, :298 — null for
+//                              an unaliased word); default_verses rows {book, chapter, verse}
+//                              (_all_books_verses, :1375/:1409/:1445) + default_truncated bool.
+//   * /api/lexicon/books    -> views_lexicon.py lexicon_books (:1339): {books: [same rows]}.
+//   * /api/lexicon/verses   -> views_lexicon.py lexicon_verses — TWO SHAPES, ONE ENDPOINT:
+//                              book=all (:1489) -> {verses: [{book, chapter, verse}],
+//                              glosses: [], truncated}; a PICKED book has NO `truncated` key
+//                              and rows that differ per corpus: ABP (:1631/:1641)
+//                              {chapter, verse, words: [{w, h, i}], text}; KJV (:1608/:1618)
+//                              {chapter, verse, words: [{w, h, i, punc}]}; HEB (:1518/:1521)
+//                              and BSB (:1551/:1554) verse KEYS only {chapter, verse}.
+//                              glosses = [{gloss, count}] sorted by -count.
+//   * /api/lexica/<sid>     -> the STORED entry document. The producer is the WRITER,
+//                              scripts/build_lexica_def.py `assemble` (:2229-2262) — the serve
+//                              route (views_lexica.py:99) only pops `raw` (:157) and rides
+//                              alias_note on top. Nested: audit = run_citation_gate (:993-997)
+//                              + dangling/noncanon (lists of strings) + double_shelved /
+//                              gloss_claims / hedged / subuse_overload / registry_verses
+//                              (lists, [] when quiet); coverage_audit's empty-but-shaped block
+//                              (:2220-2221); sense_prov rows {ot, nt, lxx} (:1241);
+//                              fork = fork_field (:1708-1717) {core, frames: [{label,
+//                              tradition, gloss}], graph_ref, gloss, divergence_type,
+//                              lead_flip} (+ note); verses rows {ref, text} (build_verses,
+//                              :1699). A word with NO entry serves {error: "not found"}
+//                              (views_lexica.py:128/:143-144) — a REAL produced shape the card
+//                              turns into the LSJ/BDB fallback.
+// Plus the three per-verse word routes the occurrence list's rows fetch lazily:
+//   * /api/kjv/verse_words + /api/bsb/verse_words -> views_kjv.py (:190-202) / views_bsb.py
+//     (:174-186): BARE LIST of {word_id, word, italic:bool, punc, strongs_ids:[], lemma, xlit}.
+//   * /api/hebrew/verse-words -> views_heb.py (:163-169): {words: [{hebrew, strongs, gloss,
+//     translit}]}.
+//
+// THE COUNT AXIS rides the two seeded words, not a page flag: G4151 is the MANY word (60
+// occurrences over 9 chapters in 8 books — past the occurrence list's 50-row "See more" page)
+// and H7307 is the FEW word (4 occurrences, 2 books). The EMPTY state is the tab's own landing
+// (no word loaded, no fetch) — reachable by just not searching.
+// Every occurrence is minted inside a chapter CHAPTER_LEN knows, within its REAL verse count —
+// the refs are computed ON (a row's tap navigates the Library to that chapter), so an invented
+// chapter would decide a test's outcome. An unknown Strong's number / search / gloss / book
+// THROWS (the CHAPTER_LEN rule): the fixture answers for its two words and nothing else.
+const _LEX_RENDER_G4151 = (i) => (i % 9 === 0 ? "wind" : i % 7 === 3 ? "breath" : "spirit");
+const _lexOccSpread = (spread, render) => {
+  const out = [];
+  let i = 0;
+  for (const [book, chapter, n] of spread) {
+    const len = CHAPTER_LEN[`${book}/${chapter}`];
+    if (!len || n > len) throw new Error(`mobile_harness: lexicon spread wants ${n} verses of ` +
+      `${book} ${chapter} (real length ${len || "unknown"}) — fix the spread, not CHAPTER_LEN.`);
+    for (let v = 1; v <= n; v++) out.push({ book, chapter, verse: v, r: render(i++) });
+  }
+  return out;
+};
+
+// The two seeded words. `occ` is the ONE occurrence table everything downstream derives from
+// (distribution rows, totals, rendering breakdowns, verse lists, gloss filters) — one source,
+// so the profile/books/verses replies can't disagree with each other. `r` is the occurrence's
+// rendering, which is what the ?gloss= filter slices on (the producer compares normalized
+// renderings; the fixture's are already normal). Definitions follow the plain-meaning rule:
+// the RANGE, never a church-word (χάρις=favor not "grace"; πνεῦμα=spirit/breath/wind).
+const LEX_WORDS = {
+  G4151: {
+    strongs: "G4151", lemma: "πνεῦμα", translit: "pneuma",
+    definition: "spirit, breath, wind — moving air; the immaterial self",
+    derivation: "from G4154 (pneō) — to blow",
+    related: [{ strongs: "G4154", lemma: "πνέω", translit: "pneō", gloss: "to blow" }],
+    has: { abp: true, heb: false, kjv: true, bsb: true },
+    defaultCorpus: "abp",
+    // 60 = past the 50-row "See more" page size on purpose. OT 15 / NT 45.
+    occ: _lexOccSpread([
+      ["Gen", 1, 2], ["Exo", 1, 3], ["Psa", 104, 6], ["Isa", 11, 4],
+      ["Mat", 3, 5], ["Joh", 1, 6], ["Joh", 4, 10], ["Rom", 8, 21], ["Rev", 22, 3],
+    ], _LEX_RENDER_G4151),
+  },
+  H7307: {
+    strongs: "H7307", lemma: "רוּחַ", translit: "ruach",
+    // Hebrew `definition` is the long BDB description paragraph (views_lexicon.py:1055) —
+    // shaped long on purpose so the card's Hebrew fallback body has a paragraph to lay out.
+    definition: "Stand-in BDB-style paragraph — wind; by resemblance breath, a sensible (violent) " +
+                "exhalation; by resemblance spirit, the animating principle; the harness measures " +
+                "layout, not the lexicon.",
+    derivation: "",
+    related: [],
+    has: { abp: false, heb: true, kjv: true, bsb: true },
+    defaultCorpus: "heb",
+    occ: _lexOccSpread([["Gen", 1, 2], ["Psa", 104, 2]],
+      (i) => (i === 1 ? "wind" : i === 3 ? "breath" : "spirit")),
+  },
+};
+
+// Book display meta for the fixture's 8 books — name from the BOOKS slice above (one constant,
+// both readers), testament by the NT membership the producer derives from its _NT set (:1128).
+const LEX_NT = ["Mat", "Joh", "Rom", "Rev"];
+const LEX_META = {};
+for (const b of BOOKS) LEX_META[b.abbrev] = { name: b.name };
+
+// /api/lexicon/lookup seeds — a Greek lemma and its transliteration, each ONE exact hit
+// (match:"exact", no enrichment — the >1 branch never runs), which the frontend auto-opens
+// (80-lexicon.jsx showLookup: a lone true exact goes straight to the profile).
+const LEX_LOOKUP = {
+  "πνεῦμα": [{ strongs: "G4151", lemma: "πνεῦμα", translit: "pneuma",
+               gloss: "spirit, breath, wind", match: "exact" }],
+  "pneuma": [{ strongs: "G4151", lemma: "πνεῦμα", translit: "pneuma",
+               gloss: "spirit, breath, wind", match: "exact" }],
+};
+
+// /api/lexicon/english seed — q="spirit" finds both words. Derived fields (counts, gloss
+// lists) are computed from LEX_WORDS' own occurrence tables below at module load, so the
+// finder's numbers agree with each word's study page (the same invariant the producer keeps —
+// its totals helpers count "the SAME way the Word-study profile does", :760-765). `m: true`
+// bolds the matched rendering; the lone {trunc: true} marker on the BSB line is the
+// truncation-"…" DISPLAY case (renderRend draws it; the producer emits it whenever a source
+// has more rendering rows than the 8 shown).
+const _lexFold = (occ) => {
+  const counts = {}, order = [];
+  for (const o of occ) { if (!(o.r in counts)) { counts[o.r] = 0; order.push(o.r); } counts[o.r]++; }
+  return order.map(g => ({ gloss: g, count: counts[g] })).sort((a, b) => b.count - a.count);
+};
+const _lexEnglishRow = (w, extras) => {
+  const g = _lexFold(w.occ).map(x => (x.gloss === "spirit" ? { ...x, m: true } : x));
+  const total = w.occ.length;
+  return Object.assign({
+    strongs: w.strongs, lemma: w.lemma, translit: w.translit, count: total,
+    abp_glosses: w.has.abp ? g : [], heb_glosses: w.has.heb ? g : [],
+    kjv_glosses: w.has.kjv ? g : [], bsb_glosses: w.has.bsb ? g : [],
+    abp_total: w.has.abp ? total : null, heb_total: w.has.heb ? total : null,
+    kjv_total: w.has.kjv ? total : null, bsb_total: w.has.bsb ? total : null,
+  }, extras);
+};
+const LEX_ENGLISH = {
+  spirit: [
+    _lexEnglishRow(LEX_WORDS.G4151, {
+      bsb_glosses: _lexFold(LEX_WORDS.G4151.occ).map(x => (x.gloss === "spirit" ? { ...x, m: true } : x))
+        .concat([{ trunc: true }]),
+    }),
+    _lexEnglishRow(LEX_WORDS.H7307, {}),
+  ],
+};
+
+// /api/lexica/G4151 — the stored Lexica entry, per the writer's `assemble` shape minus `raw`
+// (the serve route pops it). G4151 sits in the CONTESTED fixture set above, and the serve
+// route REFUSES a contested word stored without a fork (views_lexica.py:153-156) — so this
+// entry MUST carry one; a forkless G4151 here would model a reply the server never sends.
+// The stand-in text says it's stand-in (same rule as the News headlines).
+const LEX_LEXICA_G4151 = {
+  strongs: "G4151", lemma: "πνεῦμα", translit: "pneuma",
+  sense_headlines: [
+    "**1. Breath, wind — moving air**",
+    "**2. The animating breath of a living creature**",
+    "**3. A spirit — an immaterial being**",
+  ],
+  senses_block:
+    "**1. Breath, wind — moving air** — stand-in sense body; the harness measures layout, " +
+    "not the dictionary (Gen 1:2; Psa 104:30).\n\n" +
+    "**2. The animating breath of a living creature** — stand-in sense body (Psa 104:29; Joh 4:24).\n\n" +
+    "**3. A spirit — an immaterial being** — stand-in sense body (Joh 4:24; Rom 8:16).",
+  range: "Stand-in Range paragraph — from moving air to the immaterial self, the span a reader " +
+         "should hold rather than one settled English word.",
+  gloss_notes: "Stand-in gloss note — long enough to wrap at 375px, which is the thing under measurement.",
+  coverage: "Stand-in coverage line.",
+  sense_prov: [{ ot: 2, nt: 0, lxx: true }, { ot: 1, nt: 1, lxx: false }, { ot: 0, nt: 2, lxx: false }],
+  coverage_audit: { collocations: [], renderings: [], senses: [], thin_senses: [],
+                    contested: true, flags: [] },
+  pinned_core: null,
+  fork: {
+    core: "Stand-in shared core — what every reading agrees the word denotes.",
+    frames: [
+      { label: "Stand-in frame A", tradition: "Stand-in tradition A", gloss: "stand-in gloss A" },
+      { label: "Stand-in frame B", tradition: "Stand-in tradition B", gloss: "stand-in gloss B" },
+    ],
+    graph_ref: null, gloss: "spirit", divergence_type: "stand-in-axis", lead_flip: false,
+    note: "Stand-in fork note — the both-priors card's footer line.",
+  },
+  verses: [
+    { ref: "Gen 1:2", text: "Stand-in ABP prose for Genesis 1:2 — the cited-verse block under the entry." },
+    { ref: "Psa 104:30", text: "Stand-in ABP prose for Psalms 104:30." },
+    { ref: "Joh 4:24", text: "Stand-in ABP prose for John 4:24." },
+  ],
+  provenance: "verse-grounded · LEXICA",
+  split_ver: "split3",
+  audit: { pass: 5, total: 5, tagging: 0, real: 0, noverse: 0, misses: [],
+           dangling: [], noncanon: [], double_shelved: [], gloss_claims: [], hedged: [],
+           subuse_overload: [], registry_verses: [] },
+};
+
+// The lazily-fetched verse-words rows the occurrence list renders per corpus. `{{v}}` is the
+// same per-verse identity marker VERSE_WORDS uses. Both a G and an H token ride the KJV/BSB
+// list so EITHER seeded word's rows carry a highlightable match (citedStrongs lights only its
+// own number). The lone `italic: true` keeps translator-supplied styling measurable here too.
+const LEX_KJVISH_WORDS = [
+  { word_id: 1, word: "God", italic: false, punc: "", strongs_ids: ["G2316"], lemma: "θεός", xlit: "theos" },
+  { word_id: 2, word: "is", italic: true, punc: "", strongs_ids: [], lemma: "", xlit: "" },
+  { word_id: 3, word: "spirit-v{{v}}", italic: false, punc: ",", strongs_ids: ["G4151"], lemma: "πνεῦμα", xlit: "pneuma" },
+  { word_id: 4, word: "spirit", italic: false, punc: ".", strongs_ids: ["H7307"], lemma: "רוּחַ", xlit: "ruach" },
+];
+const LEX_HEB_WORDS = { words: [
+  { hebrew: "ר֫וּחַ", strongs: "H7307", gloss: "spirit-v{{v}}", translit: "ruach" },
+  { hebrew: "אֱלֹהִים", strongs: "H430", gloss: "God", translit: "elohim" },
+] };
+
+// ONE bundle for the shared resolver (server + in-page stub read the same object).
+const LEX = { words: LEX_WORDS, nt: LEX_NT, meta: LEX_META, lookup: LEX_LOOKUP,
+              english: LEX_ENGLISH, lexica: { G4151: LEX_LEXICA_G4151 },
+              kjvish: LEX_KJVISH_WORDS, heb: LEX_HEB_WORDS };
 
 // The notes store's localStorage seed (&notes=1). Anchored notes carry the anchor builder's
 // fields; `updated` drives the default newest-first sort, so these are ordered on purpose.
@@ -498,17 +733,130 @@ const FIXTURES = {
   "/api/news/all": NEWS_ALL,
 };
 
-// Routes that carry ids in the PATH (chapter, verse) rather than a query string. Exact-match
-// FIXTURES wins; these catch the parameterised families. The two regexes and the resolver body
-// are shared verbatim with the in-page stub (RESOLVER_SRC below) so the server and the browser
-// can't answer differently — a fixture that disagrees with itself is worse than none.
+// Routes that carry ids in the PATH (chapter, verse, Strong's) or the QUERY STRING rather than
+// an exact path. Exact-match FIXTURES wins; these catch the parameterised families.
+// NOTE the verse-words regex used to also accept "/api/heb/verse-words/…" — a route that does
+// not exist (the real Hebrew route is /api/hebrew/verse-words, 00-core.jsx:114); the dead
+// alternative answered for nothing and is dropped now that the real one is fixtured.
 const RE_CHAPTER = /^\/api\/(?:chapter|kjv\/chapter|bsb\/chapter)\/([^/]+)\/(\d+)$/;
-const RE_VERSE_WORDS = /^\/api\/(?:verse-words|heb\/verse-words)\/([^/]+)\/(\d+)\/(\d+)$/;
+const RE_VERSE_WORDS = /^\/api\/verse-words\/([^/]+)\/(\d+)\/(\d+)$/;
+const RE_KB_VERSE_WORDS = /^\/api\/(?:kjv|bsb)\/verse_words\/([^/]+)\/(\d+)\/(\d+)$/;
+const RE_HEB_VERSE_WORDS = /^\/api\/hebrew\/verse-words\/([^/]+)\/(\d+)\/(\d+)$/;
+const RE_LEX_PROFILE = /^\/api\/lexicon\/profile\/([^/]+)$/;
+const RE_LEX_BOOKS = /^\/api\/lexicon\/books\/([^/]+)$/;
+const RE_LEX_VERSES = /^\/api\/lexicon\/verses\/([^/]+)\/([^/]+)$/;
+const RE_LEXICA = /^\/api\/lexica\/([GH]\d+(?:\.\d+)?)$/;
 
 // Kept as SOURCE TEXT because the in-page stub must run the same resolver the server does, and
-// a function can't ride there as JSON. Reads _F / _CH / _VW from the page's scope.
+// a function can't ride there as JSON. Reads _F / _CH / _VW / _LX from scope. The SERVER now
+// evaluates this SAME text (new Function below) instead of keeping a hand-mirrored copy — the
+// old duplicate was two bodies that had to be edited in lockstep, and a fixture that disagrees
+// with itself is worse than none.
+// Takes the FULL url (query string included): the lexicon family branches on ?q/?corpus/
+// ?gloss/?testament. Unknown seeds THROW, loudly, on both sides (the CHAPTER_LEN rule).
 const RESOLVER_SRC = `
-  function _resolve(u) {
+  function _lexWord(sid) {
+    if (!Object.prototype.hasOwnProperty.call(_LX.words, sid))
+      throw new Error("mobile_harness: no lexicon fixture for " + sid +
+        " — G4151 and H7307 are the seeded words; add one rather than inventing a reply.");
+    return _LX.words[sid];
+  }
+  function _lexIsNT(b) { return _LX.nt.indexOf(b) >= 0; }
+  function _lexOccOf(w, testament, gloss) {
+    return w.occ.filter(function (o) {
+      if (testament === "ot" && _lexIsNT(o.book)) return false;
+      if (testament === "nt" && !_lexIsNT(o.book)) return false;
+      if (gloss && o.r !== gloss) return false;
+      return true;
+    });
+  }
+  function _lexGlossCheck(w, gloss) {
+    if (gloss && !w.occ.some(function (o) { return o.r === gloss; }))
+      throw new Error("mobile_harness: '" + gloss + "' is not a rendering the " + w.strongs +
+        " fixture ever serves — a silent empty here would decide a filter test.");
+  }
+  function _lexFoldJs(occ) {
+    var counts = {}, order = [];
+    occ.forEach(function (o) { if (!(o.r in counts)) { counts[o.r] = 0; order.push(o.r); } counts[o.r]++; });
+    return order.map(function (g) { return { gloss: g, count: counts[g] }; })
+      .sort(function (a, b) { return b.count - a.count; });
+  }
+  function _lexBooksFor(w, gloss) {
+    var counts = {}, order = [];
+    w.occ.forEach(function (o) {
+      if (gloss && o.r !== gloss) return;
+      if (!(o.book in counts)) { counts[o.book] = 0; order.push(o.book); }
+      counts[o.book]++;
+    });
+    return order.map(function (b) {
+      return { book: b, name: _LX.meta[b].name, testament: _lexIsNT(b) ? "NT" : "OT", count: counts[b] };
+    }).sort(function (a, b) { return b.count - a.count; });
+  }
+  // The resolved corpus, per the producer's fallbacks (:1107-1127 profile; :1472/:1478 verses):
+  // default = the word's native text; "all" folds to it; heb without heb data folds to kjv.
+  function _lexCorpus(w, asked) {
+    var c = asked || w.defaultCorpus;
+    if (c === "all") c = w.defaultCorpus;
+    if (c === "heb" && !w.has.heb) c = "kjv";
+    return c;
+  }
+  function _lexProfile(w, asked, testament) {
+    var c = _lexCorpus(w, asked);
+    var books = _lexBooksFor(w, "");
+    var total = 0;
+    books.forEach(function (b) { total += b.count; });
+    var g = _lexFoldJs(w.occ);
+    return {
+      strongs: w.strongs, lemma: w.lemma, translit: w.translit,
+      definition: w.definition, derivation: w.derivation, related: w.related,
+      total: total, books: books, corpus: c,
+      glosses: g.slice(),
+      abp_glosses: w.has.abp ? g : [], heb_glosses: w.has.heb ? g : [],
+      kjv_glosses: w.has.kjv ? g : [], bsb_glosses: w.has.bsb ? g : [],
+      has_abp: w.has.abp, has_kjv: w.has.kjv, has_heb: w.has.heb, has_bsb: w.has.bsb,
+      alias_note: null,
+      default_verses: _lexOccOf(w, testament || "all", "").map(function (o) {
+        return { book: o.book, chapter: o.chapter, verse: o.verse };
+      }),
+      default_truncated: false,
+    };
+  }
+  function _lexVerses(w, book, asked, gloss, testament) {
+    _lexGlossCheck(w, gloss);
+    var c = _lexCorpus(w, asked);
+    if (book === "all") {
+      return { verses: _lexOccOf(w, testament || "all", gloss).map(function (o) {
+                 return { book: o.book, chapter: o.chapter, verse: o.verse };
+               }), glosses: [], truncated: false };
+    }
+    var occ = w.occ.filter(function (o) { return o.book === book; });
+    if (!occ.length)
+      throw new Error("mobile_harness: the " + w.strongs + " fixture has no occurrences in '" +
+        book + "' — the UI can only ask for books its own distribution listed.");
+    // Rendering breakdown counts BEFORE the gloss filter, exactly like the producer (:1509-1521:
+    // gloss_counts accumulates over every occurrence; the filter only prunes the verse rows).
+    var glosses = _lexFoldJs(occ);
+    var rows = occ.filter(function (o) { return !gloss || o.r === gloss; });
+    var verses;
+    if (c === "kjv") {
+      verses = rows.map(function (o) { return { chapter: o.chapter, verse: o.verse, words: [
+        { w: "Stand-in", h: 0, i: 0, punc: "" }, { w: "prose", h: 0, i: 1, punc: "," },
+        { w: o.r + "-v" + o.verse, h: 1, i: 0, punc: "." },
+      ] }; });
+    } else if (c === "heb" || c === "bsb") {
+      verses = rows.map(function (o) { return { chapter: o.chapter, verse: o.verse }; });
+    } else {
+      verses = rows.map(function (o) { return { chapter: o.chapter, verse: o.verse, words: [
+        { w: "Stand-in", h: 0, i: 0 }, { w: "prose", h: 0, i: 1 },
+        { w: o.r + "-v" + o.verse, h: 1, i: 0 },
+      ], text: "Stand-in ABP prose for " + book + " " + o.chapter + ":" + o.verse + "." }; });
+    }
+    return { verses: verses, glosses: glosses };
+  }
+  function _resolve(full) {
+    var qi = String(full).indexOf("?");
+    var u = qi >= 0 ? String(full).slice(0, qi) : String(full);
+    var P = new URLSearchParams(qi >= 0 ? String(full).slice(qi + 1) : "");
     if (Object.prototype.hasOwnProperty.call(_F, u)) return _F[u];
     var m = u.match(${RE_CHAPTER});
     if (m) {
@@ -519,22 +867,45 @@ const RESOLVER_SRC = `
     }
     m = u.match(${RE_VERSE_WORDS});
     if (m) return JSON.parse(JSON.stringify(_VW).split("{{v}}").join(m[3]));
+    m = u.match(${RE_KB_VERSE_WORDS});
+    if (m) return JSON.parse(JSON.stringify(_LX.kjvish).split("{{v}}").join(m[3]));
+    m = u.match(${RE_HEB_VERSE_WORDS});
+    if (m) return JSON.parse(JSON.stringify(_LX.heb).split("{{v}}").join(m[3]));
+    if (u === "/api/lexicon/lookup") {
+      var q = P.get("q") || "";
+      if (!Object.prototype.hasOwnProperty.call(_LX.lookup, q))
+        throw new Error("mobile_harness: no lookup fixture for '" + q + "'.");
+      return _LX.lookup[q];
+    }
+    if (u === "/api/lexicon/english") {
+      var qe = P.get("q") || "";
+      if (!Object.prototype.hasOwnProperty.call(_LX.english, qe))
+        throw new Error("mobile_harness: no english-finder fixture for '" + qe + "'.");
+      // corpus/testament re-queries serve the same rows — the SHAPE is what's fixtured.
+      return _LX.english[qe];
+    }
+    m = u.match(${RE_LEX_PROFILE});
+    if (m) return _lexProfile(_lexWord(m[1]), P.get("corpus"), P.get("testament"));
+    m = u.match(${RE_LEX_BOOKS});
+    if (m) {
+      var wb = _lexWord(m[1]);
+      _lexGlossCheck(wb, P.get("gloss") || "");
+      return { books: _lexBooksFor(wb, P.get("gloss") || "") };
+    }
+    m = u.match(${RE_LEX_VERSES});
+    if (m) return _lexVerses(_lexWord(m[1]), m[2], P.get("corpus"), P.get("gloss") || "", P.get("testament"));
+    m = u.match(${RE_LEXICA});
+    if (m) {
+      if (Object.prototype.hasOwnProperty.call(_LX.lexica, m[1])) return _LX.lexica[m[1]];
+      if (Object.prototype.hasOwnProperty.call(_LX.words, m[1])) return { error: "not found" };
+      throw new Error("mobile_harness: no lexica fixture for " + m[1] + ".");
+    }
     return undefined;
   }`;
 
-const fixtureFor = (pathname) => {
-  if (Object.prototype.hasOwnProperty.call(FIXTURES, pathname)) return FIXTURES[pathname];
-  let m = pathname.match(RE_CHAPTER);
-  if (m) {
-    const hit = CHAPTERS[`${m[1]}/${m[2]}`];
-    if (!hit) throw new Error(`mobile_harness: no real verse count for ${m[1]} ${m[2]} — add it ` +
-      `to CHAPTER_LEN from abp_texts/ rather than letting the fixture invent one.`);
-    return hit;
-  }
-  m = pathname.match(RE_VERSE_WORDS);
-  if (m) return JSON.parse(JSON.stringify(VERSE_WORDS).split("{{v}}").join(m[3]));
-  return undefined;
-};
+// The server runs the SAME resolver text the page embeds — one body, two hosts.
+const fixtureFor = new Function("_F", "_CH", "_VW", "_LX",
+  RESOLVER_SRC + "\n  return _resolve;")(FIXTURES, CHAPTERS, VERSE_WORDS, LEX);
 
 // ── The page ────────────────────────────────────────────────────────────────
 // Loads the real bundle. `fetch` is stubbed BEFORE app.js so no call escapes to a server
@@ -581,9 +952,22 @@ const PAGE = (view, admin, bundle, notesSeed) => `<!DOCTYPE html>
       ? `localStorage.setItem("lexica.notes.v1", ${JSON.stringify(JSON.stringify(notesSeed))});`
       : `localStorage.removeItem("lexica.notes.v1");`}
   } catch (e) {}
+  // The measuring pane runs this page as a HIDDEN tab (document.hidden === true), where the
+  // engine suspends rAF and IntersectionObserver callbacks entirely — control-proved 2026-07-15:
+  // an observer on an on-screen element stayed silent for 3s and rAF never ran. (Same mechanism
+  // as the frozen-CSS-animations trap.) Left alone, every IO-lazy row (VerseRow, the ONLY IO
+  // consumer — 50-corpus-results.jsx:17) sits at "Loading…" forever and a list measurement is
+  // of placeholders. So the harness makes lazy EAGER: observe() fires once, immediately, as
+  // intersecting. Laziness is not under test here — layout is.
+  window.IntersectionObserver = function (cb) {
+    const self = { observe: (el) => { try { cb([{ isIntersecting: true, target: el, intersectionRatio: 1 }], self); } catch (e) {} },
+                   disconnect: () => {}, unobserve: () => {}, takeRecords: () => [] };
+    return self;
+  };
   const _F = ${JSON.stringify(FIXTURES)};
   const _CH = ${JSON.stringify(CHAPTERS)};
   const _VW = ${JSON.stringify(VERSE_WORDS)};
+  const _LX = ${JSON.stringify(LEX)};
   ${RESOLVER_SRC}
   const _realFetch = window.fetch.bind(window);
   window.fetch = function (url, opts) {
@@ -595,7 +979,7 @@ const PAGE = (view, admin, bundle, notesSeed) => `<!DOCTYPE html>
     // desktop app before any surface rendered. A stub that answers for files it has no
     // business answering for is not a fixture, it's a fault injector.
     if (u.indexOf("/api/") !== 0) return _realFetch(url, opts);
-    const hit = _resolve(u);
+    const hit = _resolve(String(url));   // FULL url — the lexicon family branches on the query string
     const body = hit !== undefined ? hit : {};
     // 00-core.jsx aiSearchStream BRANCHES on the content-type header: anything that isn't
     // text/event-stream takes the one-lump cache-hit path. Ask-search is served as a real
@@ -648,7 +1032,16 @@ http.createServer((req, res) => {
     return;
   }
   if (url.pathname.startsWith("/api/")) {
-    const hit = fixtureFor(url.pathname);
+    // An unknown seed REJECTS LOUDLY (the notes=… 400 rule) instead of crashing the process —
+    // a probe's typo must fail its own request, not kill every parallel probe's server.
+    // The in-page stub keeps the raw throw (it fails only the page that made the call).
+    let hit;
+    try { hit = fixtureFor(url.pathname + url.search); }
+    catch (e) {
+      res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end(String(e.message || e));
+      return;
+    }
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(hit !== undefined ? hit : {}));
     return;
@@ -687,4 +1080,7 @@ http.createServer((req, res) => {
   console.log("add &admin=1 for the admin's chrome (7 mobile nav tabs, not 5) — also the News tab's gate");
   console.log("add &notes=1 to seed the notes store (5 notes + 2 journal pages)");
   console.log("add &notes=many for the same set + " + MANY_EXTRA + " generated notes (the count axis; omit &notes for empty)");
+  console.log("lexicon (view=lexicon): seeded words G4151 (many: 60 occ) / H7307 (few: 4 occ);");
+  console.log("  searches that answer: '\\u03c0\\u03bd\\u03b5\\u03c5\\u03bc\\u03b1(accented)'/'pneuma' (lookup), 'spirit' (english), G4151/H7307 (direct).");
+  console.log("  anything else THROWS on purpose — landing = the empty state.");
 });

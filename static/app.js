@@ -403,7 +403,10 @@ const topIdx=layers.length-1;return/*#__PURE__*/React.createElement(RightStackCt
 // `Sheet` (20-shared-components.jsx) — a zone sheet is not a special kind of card, it's a card.
 // Everything structural (height, header, handle, radius, stacking, the dismiss gesture) lives
 // in the contract; don't re-add any of it here. `bare` passes straight through.
-function ZoneSheet({title,onClose,children,bare}){return/*#__PURE__*/React.createElement(Sheet,{title:title,onClose:onClose,bare:bare},children);}// Mobile bottom toolbar — one equal-width slot per collapsed zone (rail / inspect / etc.).
+// `variant` passes through untouched: the two size classes (panel/menu) are the CONTRACT's,
+// and a zone card self-classifies on the contract's own line (holds data -> panel, controls
+// only -> menu) — the wrapper adds no third opinion.
+function ZoneSheet({title,onClose,children,bare,variant}){return/*#__PURE__*/React.createElement(Sheet,{title:title,onClose:onClose,bare:bare,variant:variant},children);}// Mobile bottom toolbar — one equal-width slot per collapsed zone (rail / inspect / etc.).
 // `tools` = [{ key, label, icon, on, onTap }]; tapping opens that zone as a sheet over center.
 // ICON-ONLY (JP, 2026-07-15): the label is dropped from the FACE, not from the control — it
 // still rides `aria-label` + `title`, so screen readers and long-press keep it. The button is
@@ -421,7 +424,7 @@ function Shell({rail,center,inspect,mobile,isMobile,className,centerOnly,railCla
 // the nav (the .zinspect.rstack override), not the shipped surfaces' top:0 float.
 // railClass/centerClass let a migrated surface keep an extra per-slot class on the .zrail/
 // .zcenter element (Word study's "brail"/"center") so its DOM stays byte-identical.
-return/*#__PURE__*/React.createElement("div",{className:"zshell"+(centerOnly?" center-only":"")+(className?" "+className:"")},/*#__PURE__*/React.createElement("aside",{className:"zrail"+(railClass?" "+railClass:"")},rail),/*#__PURE__*/React.createElement("main",{className:"zcenter"+(centerClass?" "+centerClass:"")},center),!centerOnly&&inspect);}const m=mobile||{};return/*#__PURE__*/React.createElement("div",{className:"zshell-m"+(className?" "+className:"")},/*#__PURE__*/React.createElement("main",{className:"zcenter-m"},center),!centerOnly&&/*#__PURE__*/React.createElement(MobileBar,{tools:m.tools}),m.sheet&&/*#__PURE__*/React.createElement(ZoneSheet,{title:m.sheetTitle,bare:m.sheetBare,onClose:m.onCloseSheet},m.sheet));}// ============================================================
+return/*#__PURE__*/React.createElement("div",{className:"zshell"+(centerOnly?" center-only":"")+(className?" "+className:"")},/*#__PURE__*/React.createElement("aside",{className:"zrail"+(railClass?" "+railClass:"")},rail),/*#__PURE__*/React.createElement("main",{className:"zcenter"+(centerClass?" "+centerClass:"")},center),!centerOnly&&inspect);}const m=mobile||{};return/*#__PURE__*/React.createElement("div",{className:"zshell-m"+(className?" "+className:"")},/*#__PURE__*/React.createElement("main",{className:"zcenter-m"},center),!centerOnly&&/*#__PURE__*/React.createElement(MobileBar,{tools:m.tools}),m.sheet&&/*#__PURE__*/React.createElement(ZoneSheet,{title:m.sheetTitle,bare:m.sheetBare,variant:m.sheetVariant,onClose:m.onCloseSheet},m.sheet));}// ============================================================
 // SUMMARY PANEL — Library right-pane DEFAULT (desktop) / bottom sheet (mobile)
 // ------------------------------------------------------------
 // A short Berean book blurb + a pericope-aware chapter summary for whatever the
@@ -2659,7 +2662,12 @@ const mWatch=selStory?/*#__PURE__*/React.createElement(NewsWhy,{story:selStory,o
 const openWatch=()=>{if(mSheet==="watch"){setMSheet(null);return;}setSelStory(null);setMSheet("watch");};const tools=[{key:"threads",label:"Threads",icon:/*#__PURE__*/React.createElement(Icon.Hash,null),on:mSheet==="threads",onTap:flip("threads")},{key:"watch",label:"Watch",icon:/*#__PURE__*/React.createElement(Icon.Panel,null),on:mSheet==="watch",onTap:openWatch},{key:"options",label:"Options",icon:/*#__PURE__*/React.createElement(Icon.Filter,null),on:mSheet==="options",onTap:flip("options")}];return/*#__PURE__*/React.createElement(Shell,{className:"news-frame news-m",isMobile:true,center:/*#__PURE__*/React.createElement("div",{className:"news-view"},mHead,feedInner),mobile:{tools,sheet,// The Watch sheet carries its own header band + its own scroll box (.news-shape is a
 // flex column), so it goes BARE — the padded .zsheet-body would nest a second scroll
 // box and collapse the stack's flex-fill. Filters is plain content -> normal body.
-sheetBare:mSheet==="watch",sheetTitle:mSheet==="threads"?"Threads":mSheet==="options"?"Options":null,onCloseSheet:()=>setMSheet(null)}});}// ---------------- DESKTOP: the shared three-zone frame ------------------------
+sheetBare:mSheet==="watch",// Options is CONTROLS ONLY (date window / score / sort — nothing conditionally
+// mounted, verified against mOptions above), so it's a MENU under the contract's
+// classification line; it was swept in as a panel with the rest of the News cards
+// and opened as a near-full card with one control-strip's worth of content (JP,
+// 2026-07-15). Threads and Watch hold data -> panels, untouched.
+sheetVariant:mSheet==="options"?"menu":undefined,sheetTitle:mSheet==="threads"?"Threads":mSheet==="options"?"Options":null,onCloseSheet:()=>setMSheet(null)}});}// ---------------- DESKTOP: the shared three-zone frame ------------------------
 // LEFT rail is now JUST the thread list (the navigate zone) — every other control
 // moved up into the center's horizontal top bar (below). Threads get the full height.
 // The THREADS header rides Word study's .brail-top band (59px + bottom border), so its

@@ -74,8 +74,11 @@ function RightStack({ ctl, root, empty, className, inline }) {
 // `Sheet` (20-shared-components.jsx) — a zone sheet is not a special kind of card, it's a card.
 // Everything structural (height, header, handle, radius, stacking, the dismiss gesture) lives
 // in the contract; don't re-add any of it here. `bare` passes straight through.
-function ZoneSheet({ title, onClose, children, bare }) {
-  return <Sheet title={title} onClose={onClose} bare={bare}>{children}</Sheet>;
+// `variant` passes through untouched: the two size classes (panel/menu) are the CONTRACT's,
+// and a zone card self-classifies on the contract's own line (holds data -> panel, controls
+// only -> menu) — the wrapper adds no third opinion.
+function ZoneSheet({ title, onClose, children, bare, variant }) {
+  return <Sheet title={title} onClose={onClose} bare={bare} variant={variant}>{children}</Sheet>;
 }
 
 // Mobile bottom toolbar — one equal-width slot per collapsed zone (rail / inspect / etc.).
@@ -124,7 +127,7 @@ function Shell({ rail, center, inspect, mobile, isMobile, className, centerOnly,
     <div className={"zshell-m" + (className ? " " + className : "")}>
       <main className="zcenter-m">{center}</main>
       {!centerOnly && <MobileBar tools={m.tools} />}
-      {m.sheet && <ZoneSheet title={m.sheetTitle} bare={m.sheetBare} onClose={m.onCloseSheet}>{m.sheet}</ZoneSheet>}
+      {m.sheet && <ZoneSheet title={m.sheetTitle} bare={m.sheetBare} variant={m.sheetVariant} onClose={m.onCloseSheet}>{m.sheet}</ZoneSheet>}
     </div>
   );
 }

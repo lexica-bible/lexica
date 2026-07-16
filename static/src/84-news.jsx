@@ -1065,6 +1065,12 @@ function NewsView({ isMobile }) {
           // flex column), so it goes BARE — the padded .zsheet-body would nest a second scroll
           // box and collapse the stack's flex-fill. Filters is plain content -> normal body.
           sheetBare: mSheet === "watch",
+          // Options is CONTROLS ONLY (date window / score / sort — nothing conditionally
+          // mounted, verified against mOptions above), so it's a MENU under the contract's
+          // classification line; it was swept in as a panel with the rest of the News cards
+          // and opened as a near-full card with one control-strip's worth of content (JP,
+          // 2026-07-15). Threads and Watch hold data -> panels, untouched.
+          sheetVariant: mSheet === "options" ? "menu" : undefined,
           sheetTitle: mSheet === "threads" ? "Threads" : mSheet === "options" ? "Options" : null,
           onCloseSheet: () => setMSheet(null),
         }}
