@@ -152,7 +152,6 @@ function NoteEditFields({ ed, scrollRef, hideSnippet }) {
 function NotesPanel({ noteId, isMobile, onClose }) {
   const ed = useNoteEditor(noteId, isMobile, onClose);
   // Swipe-down-to-close on mobile (same hook the word / xref / summary sheets use).
-  const { sheetRef, scrollRef } = useSwipeToDismiss(ed.close);
 
   if (!ed.note) return null;
   const note = ed.note;
@@ -171,15 +170,17 @@ function NotesPanel({ noteId, isMobile, onClose }) {
   );
 
   if (isMobile) {
+    // A bare child of the shared Sheet: the card owns its .detail-head band and its
+    // .detail-body scroll box, so it takes no scrollRef — the dismiss gesture finds the
+    // scroll box itself. Height comes from the contract now (this card used to hard-code
+    // 80dvh, the one detail card someone had already patched against the content-fit bug).
     return (
-      <>
-        <div className="sheet-scrim" onClick={ed.close}/>
-        <aside ref={sheetRef} className="detail detail-sheet note-sheet" role="dialog" aria-label="Note">
-          <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+      <Sheet bare onClose={ed.close}>
+        <aside className="detail detail-card note-sheet" role="dialog" aria-label="Note">
           {head}
-          <NoteEditFields ed={ed} scrollRef={scrollRef} />
+          <NoteEditFields ed={ed} />
         </aside>
-      </>
+      </Sheet>
     );
   }
   return (

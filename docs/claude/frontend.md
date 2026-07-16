@@ -227,14 +227,34 @@ padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill
   News's and Ask-corpus's headers stood 66px against every other card's 36.8 — invisible to a
   divider check and caught only by measuring every header. Add the class to any new band.
   **VERTICAL only** — the side inset is each card's own content rhythm and those bodies differ.
-- **A band carrying an inline control stands taller** (Ask-corpus depth 2, with its `‹ Overview`
-  back link: 42.4 vs 36.8). True of BOTH carriers — `.sh-head` with `actions` does the same — so
-  it's consistent, not drift. Flagged, not ruled.
+- **A band carrying an inline control MAY exceed the 36.8px reference by that control's needs —
+  RULED consistent, not drift (2026-07-15). Do not "fix" this.** Ask-corpus at depth 2, with its
+  `‹ Overview` back link, measures 42.4. Both carriers behave identically (`.sh-head` with
+  `actions` grows the same way), so the rule is the same everywhere: a header is as tall as its
+  contents need, and a plain title needs 36.8.
 - Notes's inspect band used to set `border-bottom: 0` inside the sheet — **it was matching
   `.zsheet-head`, the frame that was missing the divider.** A card conformed to a broken frame;
   that's the shape of this whole drift in one line.
 - The child fills via `.sh--bare > *:last-child { flex: 1 1 auto; min-height: 0 }`. The panel
   height is definite, so the child has real room — the old frame had to hard-code `82dvh`.
+
+### Migration state (the five frames)
+| Frame | Cards | State |
+|---|---|---|
+| `.zsheet` | 7 (News ×3, Ask-corpus ×2, Notes ×2) | **DONE** — step 1, `05dbd6f` |
+| `.detail-sheet` | 5 (word card, chapter overview, xref, note editor, day intro) | **DONE** — step 2 |
+| `.msheet` | 2 (Reading options, You) | step 3 — still z220 + its own 64px clearance |
+| `.wm-sheet` | 4 (Word study) | step 4 — still z121; **blocked on the lexicon fixture** |
+| `.mpick` | 1 | header spec only — the sanctioned exception below |
+
+**A card's TITLE TYPE is its own; the SHELL is what's shared.** The detail family's headers are
+not serif 16/600 and must not be forced to it: the word card's is the Strong's BADGE (mono 18/500
+— and "references are bare mono" is design doctrine), the overview's is a book title (serif
+20/500). Two reasons this is right, not a concession: `.detail-head` is SHARED with the desktop
+side panels (a mobile-only fork would make one card look two ways), and the word card is the
+LOCKED spacing reference. So conformance for these five is the shell + the divider, which they
+already had. **What the contract guarantees is that every card opens the same size, in the same
+box, with a title over a hairline** — not that a Strong's number and a book name wear one font.
 
 ### The single sanctioned exception: `.mpick` (the book picker)
 Full-screen height + its own ✕. It is a **screen-replacing navigator with its own back-stack**

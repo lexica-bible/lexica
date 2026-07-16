@@ -123,7 +123,6 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
     return () => { cancelled = true; };
   }, [dayNo]);
 
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const titleRef = useRef(null);
   const era = chrono && chrono.eras && day ? chrono.eras.find(e => e.id === day.era) : null;
   const win = day ? readingWindow(day, chrono) : null;
@@ -181,11 +180,11 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   );
 
   if (isMobile) {
+    // A bare child of the shared Sheet — the card owns its band + scroll box; the sheet
+    // supplies the chrome (scrim, handle, height, the dismiss gesture).
     return (
-      <>
-        <div className="sheet-scrim" onClick={onClose} />
-        <aside ref={sheetRef} className="detail detail-sheet summary-sheet dintro-sheet" role="dialog" aria-label="Reading intro">
-          <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+      <Sheet bare onClose={onClose}>
+        <aside className="detail detail-card summary-sheet dintro-sheet" role="dialog" aria-label="Reading intro">
           {/* Same header as desktop: title on the left (wraps), the "‹ Overview" toggle
               on the right pinned to the top. No ✕ — the drag handle + tap-outside close it. */}
           <div className="detail-head">
@@ -194,9 +193,9 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
             </div>
             {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview" title="Overview">‹</button>}
           </div>
-          <div className="detail-body" ref={scrollRef}>{content}</div>
+          <div className="detail-body">{content}</div>
         </aside>
-      </>
+      </Sheet>
     );
   }
 

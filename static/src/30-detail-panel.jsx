@@ -5,7 +5,7 @@
 // reader is on. On DESKTOP it's the resting content of the right sidebar (reuses
 // the .detail-side shell); a word/verse click replaces it and closing returns
 // here. On MOBILE it opens on demand as a bottom sheet from the reading cockpit's
-// ⓘ button (isMobile + onClose), riding the same .detail-sheet rails as the
+// ⓘ button (isMobile + onClose), riding the same shared Sheet as the
 // word-study sheet.
 // ============================================================
 // Rich MetaV person body — the tags / born-died / relationships block, WITHOUT the
@@ -113,8 +113,6 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   }, [book, chapter]);
 
   // Swipe-to-dismiss for the mobile sheet (same hook the word-study / xref sheets
-  // use). Harmlessly no-ops on desktop, where sheetRef is never attached.
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const titleRef = useRef(null);
 
   const bookText = data && data.book_summary;
@@ -148,11 +146,11 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // Mobile: bottom sheet opened from the reading cockpit. Swipe down (drag
   // anywhere) or tap the scrim to close — matches the other sheets.
   if (isMobile) {
+    // A bare child of the shared Sheet: the card owns its .detail-head band + .detail-body
+    // scroll box, so the sheet supplies only chrome (scrim, handle, height, the gesture).
     return (
-      <>
-        <div className="sheet-scrim" onClick={onClose}/>
-        <aside ref={sheetRef} className="detail detail-sheet summary-sheet" role="dialog" aria-label="Reading overview">
-          <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+      <Sheet bare onClose={onClose}>
+        <aside className="detail detail-card summary-sheet" role="dialog" aria-label="Reading overview">
           {/* Same header as desktop: title on the left (wraps), the "‹ Intro" toggle on
               the right pinned to the top. No ✕ — the drag handle + tap-outside close it. */}
           <div className="detail-head">
@@ -161,9 +159,9 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
             </div>
             {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro" title="Intro">‹</button>}
           </div>
-          <div className="detail-body" ref={scrollRef}>{content}</div>
+          <div className="detail-body">{content}</div>
         </aside>
-      </>
+      </Sheet>
     );
   }
 
@@ -675,8 +673,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const barWidth = Math.min(100, (occurrences / Math.max(1, totalResults)) * 100);
   const morphLine = (entry.greek && !isHebrew) ? decodeMorph(entry.morph, entry.greek, entry.strongs_base)
     : (isHebrew ? (entry.grammar || "") : "");   // Hebrew: the decoded TAHOT grammar, same card slot as Greek
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
-
   // --------------------------------------------------------------------------
   // Panel descriptor — resolve the isPN / isHebrew / metavType tangle into ONE
   // place: a `hero` block and an ordered `sections` list. The return below is
@@ -1229,9 +1225,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     }
   };
 
-  return (
-    <aside ref={isMobile ? sheetRef : null} className={"detail " + (isMobile ? "detail-sheet" : "zinspect detail-side")} role="dialog" aria-label="Lexicon detail">
-      {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
+  // The card is the SAME element in both homes — a bare child of the shared Sheet on mobile,
+  // the desktop rail aside otherwise. Its .detail-head band + .detail-body scroll box are its
+  // own (and shared with desktop, so they do NOT move); the sheet supplies only the chrome.
+  const card = (
+    <aside className={"detail " + (isMobile ? "detail-card" : "zinspect detail-side")} role="dialog" aria-label="Lexicon detail">
       <div className="detail-head">
         <div className="detail-head-l">
           {/* Numbering crosswalk glued to the badge as one unit (.detail-strong-wrap) — the one
@@ -1258,7 +1256,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         ) : null}
       </div>
 
-      <div className="detail-body" ref={isMobile ? scrollRef : null}>
+      <div className="detail-body">
         <div className={"detail-hero" + (hero.noGloss ? " no-gloss" : "")}>
           <div className="detail-hero-id">
             <div ref={heroRef}
@@ -1305,4 +1303,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       </div>
     </aside>
   );
+  if (!isMobile) return card;
+  return <Sheet bare onClose={onClose}>{card}</Sheet>;
 }

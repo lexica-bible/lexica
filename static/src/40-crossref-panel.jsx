@@ -55,7 +55,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
 
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
   const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
 
   // Body shares the word-study / Reading-intro rail: a .detail-hero block (the
   // source reference + a passage count) then .sec/.sec-head sections — the AI
@@ -117,9 +116,13 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
     </>
   );
 
-  return (
-    <aside ref={isMobile ? sheetRef : null} className={"xref-panel " + (isMobile ? "detail-sheet" : "zinspect detail-side")} role="dialog" aria-label="Related Passages">
-      {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
+  // ONE panel, two homes: a bare child of the shared Sheet on mobile, the desktop rail aside
+  // otherwise. The card keeps its own .detail-head band + .detail-body scroll box — that's what
+  // makes it a BARE sheet child, and why Sheet hands it no scrollRef (the dismiss gesture finds
+  // the scroll box itself). Everything that used to make this element A SHEET — position, height,
+  // radius, handle, stacking, the swipe hook — now lives in the contract.
+  const panel = (
+    <aside className={"xref-panel " + (isMobile ? "detail-card" : "zinspect detail-side")} role="dialog" aria-label="Related Passages">
       <div className="detail-head">
         <div className="detail-head-l">
           <span className="detail-pos summary-pos">{heroRef}</span>
@@ -130,7 +133,9 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         ) : null}
       </div>
-      <div className="detail-body" ref={isMobile ? scrollRef : null}>{content}</div>
+      <div className="detail-body">{content}</div>
     </aside>
   );
+  if (!isMobile) return panel;
+  return <Sheet bare onClose={onClose}>{panel}</Sheet>;
 }
