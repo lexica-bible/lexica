@@ -86,6 +86,19 @@ instead of reframing) — memory `project_ai_synthesis_quality`.
   (TSK count via `_xref_scores`) wins the seat. Frontend SEATBELT (`AcProse`): the prose only
   LINKS a verse ref actually in retrieved results — a model-named unretrieved verse renders
   plain.
+- **Function-word key filter — THREE legs, all required (2026-07-16,
+  `docs/tickets/TICKET_highlight_cited_set.md`).** The prompt tells the model to omit
+  articles from `key_strongs` but a model instruction is never enforcement: G3588 landed in
+  a key set and lit every "the" in the evidence verses. Legs: (1) `_filter_function_keys`
+  at the acceptance point in ai.py (before the per-language caps); (2)
+  `_drop_function_key_entries` on the CACHE-READ path (old cached payloads keep their keys);
+  (3) display-time — reopened Ask-corpus threads replay a BROWSER-STORED copy and never
+  re-hit the endpoint, so `/api/lexicon/function-strongs` (mirrors /api/lexica/contested)
+  feeds `_acDropFunctionKeys` in 51-corpus-logic.jsx. Remove any leg and a surface regresses.
+  The cited-highlight set itself (`_acCitedSet`, ONE copy, 51-corpus-logic) emits ONLY
+  prefixed numbers — bare forms collided cross-language because matchers bare both sides
+  (H3588 "ki" would light Greek articles). Locked by tests/test_key_strongs_filter.py +
+  tests/test_ac_cited_set.js (both in pre-commit + CI lists).
 - **Honest empty-state + neutrality.** Payload carries `grounded: false` when the search found
   no real occurrence → pale-amber "no direct occurrences" caveat instead of a confident
   write-up. Both explanation prompts carry a NEUTRALITY rule — answer from the text, not the

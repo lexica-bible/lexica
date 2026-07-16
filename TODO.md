@@ -438,6 +438,33 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
+- **★ REBUILD SESSION (head-word) — NEXT UP, chartered in `docs/REBUILD_SCOPE_headword.md`** (JP
+  ruling R-1 2026-07-16). Gate zero = disk-space paste (JP's PA quota, NOT the NFS df number); in the
+  run: RC-2 emit fix + RC-1 scoped head pick + hand-checked alias map (~1,690 rows — the BULK of the
+  work, curated BEFORE the run) + backup keep-count 7→3 + the owed finish_rebuild.sh acceptance check.
+  Fresh session, HIGH effort, /rebuild-words procedure. AFTER it: the Greek-name migration
+  (docs/DESIGN_greek_name_identity.md, five JP rulings pending) as its OWN staged rebuild.
+- **pn_binding hand-check rows never scheduled** (2026-07-16 binding rebuild, "step 5") — the
+  --apply run wrote 65 HOT rows (several same-name entities at one verse) to
+  `scripts/pn_binding_hot.txt` and 798 number-only floor suspects to `scripts/pn_binding_numonly.txt`
+  on PA. All floor safely (nothing renders wrong), but the hand-check that could recover the good
+  ones has never been scheduled. Candidate: fold into the provenance audit session.
+- **Provenance-contract RENDER items unchartered** — the audit sweep session (contract §8) is
+  chartered as AUDIT ONLY; the build work the contract requires has no charter: §6 name-display
+  rule (the Midian name-echo, known failure E), §5 tappable source tags + one tooltip registry,
+  §4 name-path "matched by name, not checked against this verse" line, AI tag back on summaries.
+  Explicit line item so it doesn't hide inside the audit. code: static/src/30-detail-panel.jsx +
+  views_summary.py; spec docs/PROVENANCE_CONTRACT.md
+- **Descriptor-of-individual gentilics** (JP 2026-07-16, explicit line item per his ask) — after
+  the gentilic guard, "Canaanitess" @ 1Ch 2:3 floors to the AI fallback. Open question for the
+  audit session: can descriptor uses earn a REAL bind (ancestor People/Clan where the tier
+  supports it — or even the individual, Bath-shua, via apposition)? Ruling record:
+  docs/tickets/TICKET_gentilic_binding.md (the "descriptor-of-individual" paragraph).
+- **5 known-red tests on clean master, unticketed** — tests/test_lexica_draw_cache.py fails 5
+  tests on any machine without the live DB (sqlite: no such table). Confirmed on clean master
+  2026-07-16 (twice). Either the tests gain a skip-without-DB guard or a fixture; unticketed
+  known-red is rot. NOT in the pre-commit/CI curated lists (those pass), so no gate is lying —
+  it's pytest-full-suite noise that trains people to ignore failures.
 - **Ask-corpus words-in-scope counts should be search-relevant** (JP standing gripe, logged
   2026-07-16) — the rail's chips + the "N occurrences" line show TOTAL-Bible counts (theos 4,557);
   they should show occurrences within THIS search's verse pool. Needs backend work: the payload

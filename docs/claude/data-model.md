@@ -416,6 +416,10 @@ NT_BOOKS, BOOK_ORDER, BOOK_LABELS in static/src/00-core.jsx use the same set; `_
 app.py matches.
 
 ## MetaV (person/place sidebar)
+- **Provenance contract (2026-07-16): `docs/PROVENANCE_CONTRACT.md`** governs every card
+  section — source-of-record labeling, three-state verse-corroboration, name-display rule,
+  entity-type taxonomy. Tickets under `docs/tickets/`; the audit sweep + render build work
+  are open fronts (TODO.md). Read the contract before touching card sections or badges.
 - Tables: `metav_people` (+_aliases, _groups, _relationships), `metav_places` (+_aliases; has
   lat/lon, strongs_g). Looked up by NAME (not strongs). Frontend fetches person + place in
   parallel; toggle shown when both exist.
@@ -437,8 +441,19 @@ app.py matches.
   place keeps BOTH (was a PK collision: last-imported type won → Adam H121 read 'place').
   `entity_type` = legacy single token. Migration adds the column at PA startup; re-run
   import_tipnr.py after any rebuild. pn_types (the set) is trustworthy.
-- Gentilics (`/ites?$/`): card labeled "People / Clan", place header "Homeland", AI summary
+- Gentilics: card labeled "People / Clan", place header "Homeland", AI summary
   fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value).
+  **GENTILIC GUARD (2026-07-16, live):** `is_people_group` is now a BINDING input, not
+  display-only — the binder blocks a gentilic surface word from confidently binding a
+  PLACE entity (TIPNR lists gentilic spellings under its place entities, so even exact
+  hits fired; Canaanitess@1Ch.2.3 opened the place Canaan). **SAME-NAME EXEMPTION:** the
+  guard fires only when the word DIFFERS from the place's own headword (compact-compared)
+  — the -ian/-ean suffix also matches real place names (Midian, 51 binds, Beth-shean),
+  and blocking a place's own name hid good cards. The suffix rule gained -itess(es)
+  (Canaanitess never classified before). Blocked binds floor to Fix A or convert to the
+  ancestor person. Tests: tests/test_versification.py (Canaanitess control + Midian
+  exemption + the REVERSED old "gentilic renders its place" control — JP overturned that
+  ruling after the PA sweep found ~478 gentilic→place binds).
 - AI curation: `/api/metav/ai-description/<name>` — Haiku, 1-2 sentences, SCOPED to the clicked
   book/ch/verse. **VERSE-GROUNDED (2026-07-05, "G"): fed the displayed verse text + the reader's
   translation identity (`_displayed_verse`), told to explain the name AS RENDERED there — NOT
@@ -462,7 +477,9 @@ app.py matches.
   being READ. (EVERY word card shows just the active text's occurrence line — 2026-06-28; the
   full cross-Bible breakdown lives in Word study.) A bind GATES the whole name-based metaV fetch
   (kills the name-guess person/place card + Groups + Nave's + place-LSJ at once). 404 → the old
-  name-path + Fix A, byte-same (deploy-safe). 14,803 render binds, zero confident-wrong; TIPNR
+  name-path + Fix A, byte-same (deploy-safe). 14,389 render binds (2026-07-16 gentilic-guard
+  re-apply; was 14,803 — 420 gentilic→place blocked, ~6 converted, delta ACCOUNTED before
+  apply), zero confident-wrong; TIPNR
   is the identity spine, metaV is enrichment only. Engine = **`entity_resolution.py`** (repo
   root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
 - **Bound places SHOW a map again (2026-07-05):** coords come THROUGH the entity endpoint
@@ -482,9 +499,12 @@ app.py matches.
   occurrence sections and the ABP count comes from `/api/strongs-count/<n>?by=base`. OT names
   key to HEBREW on purpose — TIPNR's Greek form is a STEP-extended number (G9827) our lexicon
   lacks and ABP never uses; the ABP Greek occurrences still surface via the Hebrew base.
-  **Don't re-pitch a "pure Greek" re-key.** (The old "Appears N×" TIPNR ref-list was tried +
-  removed — it listed verse pointers, some without the word.) Full record + build order:
-  memory `project_entity_resolution_rebuild`.
+  **The "don't re-pitch a pure Greek re-key" rule is SUPERSEDED (JP ruling R-2, 2026-07-16):**
+  the Greek-name identity migration is approved as DIRECTION — its own staged rebuild AFTER
+  the head-word rebuild, designed in `docs/DESIGN_greek_name_identity.md` (five open JP
+  rulings inside; do not build until they land). The Hebrew-key stopgap stays live until then.
+  (The old "Appears N×" TIPNR ref-list was tried + removed — it listed verse pointers, some
+  without the word.) Full record + build order: memory `project_entity_resolution_rebuild`.
 - CRITICAL: the lexicon join `l.strongs_g = w.strongs_base` structurally prevents a Hebrew
   H-number matching a Greek row (the old SUBSTR+LIKE guard let H121 slip → bogus G121 lemma
   broke Hebrew-PN metaV). Applies to BOTH chapter_text and verse_words.
