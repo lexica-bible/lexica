@@ -1,0 +1,419 @@
+# Alias decisions — verse-constrained candidates (456 total: 373 sheet + 83 pre-excluded/tail-moved)
+# name | sample ref | target entity | strongs | verdict | reason
+antilebanon | Deu 11:24 | Lebanon | H3844 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+esthaol | Jdg 16:31 | Eshtaol | H847 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+abia | 1Ch 3:10 | Abijah | H29 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tekoite | 1Ch 11:28 | Tekoa | H8620 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+nazarite | Jdg 13:5 | Nazirites | H5139 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+milcha | Gen 11:29 | Milcah | H4435 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mehunim | 2Ch 26:7 | Meunites | H4586 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+maraioth | 1Ch 6:7 | Meraioth | H4812 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kirjathbaal | Jos 15:60 | Kiriath-jearim | H7157 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gaba | Ezr 2:26 | Geba | H1387 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+baalgad | Jos 11:17 | Hermon_Mount | H2768 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+zoba | 2Sa 10:6 | Zobah | H6678 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zarhite | Jos 7:17 | Zerah | H2226 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+tekoites | Neh 3:27 | Tekoa | H8620 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+tarah | Num 33:27 | Terah | H8646 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+soccoth | Num 33:5 | Succoth | H5523 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shittin | Jos 2:1 | Shittim | H7851 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shenir | Deu 3:9 | Hermon_Mount | H2768 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shemei | Ezr 10:23 | Shimei | H8096 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shapher | Num 33:23 | Shepher_Mount | H8234 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+secheniah | Neh 12:14 | Shebaniah | H7645 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+saraiah | Jer 36:26 | Seraiah | H8304 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+samiah | Gen 36:36 | Samlah | H8072 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+raphaiah | 1Ch 7:2 | Rephaiah | H7509 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+phua | 1Ch 7:1 | Puah | H6312 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+phrygian | Act 16:6 | Phrygia | G5435 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+pergamos | Rev 1:11 | Pergamum | G4010 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nehelamite | Jer 29:24 | Nehelamites | H5161 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+nashon | Num 1:7 | Nahshon | H5177 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+morasthite | Jer 26:18 | Moresheth | H4182 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+melchishua | 1Sa 14:49 | Malchi-shua | H4444 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+masseiah | 1Ch 15:20 | Maaseiah | H4641 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+magiddo | 1Ch 7:29 | Megiddo | H4023 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kos | Neh 3:21 | Hakkoz | H6976 | ACCEPT | not a TIPNR form piece anywhere else; identity at Neh 3:21 verified
+korhites | 1Ch 12:6 | Korah | H7141 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+kenezite | Jos 14:14 | Kenaz | H7073 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+kenez | 1Ch 4:13 | Kenaz | H7073 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+keir | Jer 48:31 | Kir | H7024 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jobathah | Num 33:33 | Jotbathah | H3193 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jehoaikim | Jer 36:28 | Jehoiakim | H3079 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jaazer | Num 21:32 | Jazer | H3270 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hiroth | Num 33:7 | Pi-hahiroth | H6367 | ACCEPT | not a TIPNR form piece anywhere else; identity at Num 33:7 verified
+halak | Jos 11:17 | Halak_Mount | H2510 | ACCEPT | fragment of a compound name, but unique to Halak_Mount corpus-wide (TIPNR forms checked)
+hai | Gen 12:8 | Ai | H5857 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hagidgad | Num 33:32 | Hor-haggidgad | H2735 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+eneas | Act 9:33 | Aeneas | G132 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ebronah | Num 33:34 | Abronah | H5684 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+charge | 2Ki 25:23 | Kareah | H7143 | REJECT | common English word from a bad head pick — RC-1 territory
+bethshan | 1Sa 31:10 | Beth-shean | H1052 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethmarcaboth | 1Ch 4:31 | Madmannah | H4089 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethakad | 2Ki 10:12 | Beth-eked | H1044 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+barechiah | Neh 3:30 | Berechiah | H1296 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+barachiah | Isa 8:2 | Jeberechiah | H3000 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+azem | Jos 15:29 | Ezem | H6107 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+asiah | 1Ch 15:11 | Asaiah | H6222 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+arphad | 2Ki 18:34 | Arpad | H774 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+araba | Jer 39:4 | Arabah | H6160 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zummim | Deu 2:20 | Rephaim | H7497 | ACCEPT | not a TIPNR form piece anywhere else; identity at Deu 2:20 verified
+zoreah | Jos 15:33 | Zorah | H6881 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zobedah | 1Ch 4:8 | Zobebah | H6637 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zibeah | 2Ch 24:1 | Zibiah | H6645 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zerhites | Num 26:20 | Zerah | H2226 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+zererath | Jdg 7:22 | Zarethan | H6891 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zeredathah | 2Ch 4:17 | Zarethan | H6891 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zereda | 1Ki 11:26 | Zeredah | H6868 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zereah | Neh 11:29 | Zorah | H6881 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zarthan | 1Ki 7:46 | Zarethan | H6891 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zartanah | 1Ki 4:12 | Zarethan | H6891 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zareathitees | 1Ch 2:53 | Zorathites | H6882 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zaphnathpaaneah | Gen 41:45 | Joseph | H3130 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+zabbud | Ezr 8:14 | Zaccur | H2139 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+uzzensherah | 1Ch 7:24 | Uzzen-sheerah | H242 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tishbon | 1Ki 17:1 | Tishbe | H8453 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tirah | 1Ch 4:16 | Tiria | H8493 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+timnathserah | Jos 19:50 | Timnath-heres | H8556 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+timmnathserah | Jos 24:30 | Timnath-heres | H8556 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+thelasar | 2Ki 19:12 | Telassar | H8515 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+thamah | Ezr 2:53 | Temah | H8547 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+temani | Gen 36:34 | Teman | H8487 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+telmon | Ezr 2:42 | Talmon | H2929 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+telharsa | Ezr 2:59 | Tel-harsha | H8521 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+telharesha | Neh 7:61 | Tel-harsha | H8521 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tekoe | 1Ch 4:5 | Tekoa | H8620 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tekoahite | 2Sa 14:9 | Tekoa | H8620 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+taverns | Act 28:15 | Three_Taverns | G5140 | ACCEPT | fragment of a compound name, but unique to Three_Taverns corpus-wide (TIPNR forms checked)
+tappua | 1Ch 2:43 | Tappuah | H8599 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tapphuah | Jos 15:34 | Tappuah | H8599 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tanach | Jos 21:25 | Taanach | H8590 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tamah | Neh 7:55 | Temah | H8547 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tam | Gen 46:20 | Egypt | H4714 | REJECT | fragment, no plausible entity at Gen 46:20 (0.67 vs Egypt is noise) — research tail
+tahtim | 2Sa 24:6 | Tahtim-hodshi | H8483 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+tahapanhes | Jer 2:16 | Tahpanhes | H8471 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+tabaoth | Ezr 2:43 | Tabbaoth | H2884 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+sushan | Dan 8:2 | Susa | H7800 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+suchathites | 1Ch 2:55 | Sucathite | H7756 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+sopator | Act 20:4 | Sopater | G4986 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+sodomites | Gen 19:4 | Sodom | H5467 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+shunamite | 1Ki 1:15 | Shunammites | H7767 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+shophan | Num 32:35 | Atroth-shophan | H5855 | ACCEPT | fragment of a compound name, but unique to Atroth-shophan corpus-wide (TIPNR forms checked)
+shocho | 2Ch 28:18 | Socoh | H7755 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shiphmi | 1Ch 27:27 | Shiphmites | H8225 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+shimma | 1Ch 2:13 | Shimeah | H8093 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shimiramoth | 1Ch 15:20 | Shemiramoth | H8070 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shihon | Jos 19:19 | Shion | H7866 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shicron | Jos 15:11 | Shikkeron | H7942 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shibmah | Num 32:38 | Sibmah | H7643 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+sherezar | Zec 7:2 | Sharezer | H8272 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shemiah | 1Ch 9:16 | Shemaiah | H8098 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shemesh | Jos 19:41 | Beth-shemesh | H1053 | CAUTION | fragment appears under 3 entities (Beth-shemesh, En-shemesh, On…) — audit-session item, not mapped
+shebam | Num 32:3 | Sebam | H7643 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shearaiah | 1Ch 8:38 | Sheariah | H8187 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shean | 1Ki 4:12 | Beth-shean | H1052 | ACCEPT | fragment of a compound name, but unique to Beth-shean corpus-wide (TIPNR forms checked)
+sharaim | Jos 15:36 | Shaaraim | H8189 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shalitha | 1Sa 9:4 | Shalishah | H8031 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shalim | 1Sa 9:4 | Shaalim | H8171 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+shahazinah | Jos 19:22 | Shahazumah | H7831 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+seriah | 2Sa 8:17 | Seraiah | H8304 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+senuah | Neh 11:9 | Hassenuah | H5574 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+seirath | Jdg 3:26 | Seirah | H8167 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+secundos | Act 20:4 | Secundus | G4580 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+sanaballat | Neh 2:19 | Sanballat | H5571 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+samis | Jos 19:12 | Sarid | H8301 | REJECT | 0.67 vs Sarid at Jos 19:12 with messy LXX readings — unproven, research tail
+samarian | 2Ki 18:11 | Assyria | H804 | REJECT | candidate Assyria is WRONG (2Ki 18:11 context) — remapped by hand to Samaria below
+sabtecha | 1Ch 1:9 | Sabteca | H5455 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ruben | Gen 37:29 | Reuben | H7205 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+renmon | Amo 4:3 | Harmon | H2038 | REJECT | LXX reads Remman/Rimmon where Hebrew has Harmon (Amo 4:3) — an LXX identification difference, R-2 pile, do not force
+remphan | Act 7:43 | Rephan | G4481 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+rebecca | Rom 9:10 | Rebekah | H7259 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+raphael | 1Ch 26:7 | Rephael | H7501 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ramath | Jos 13:26 | Ramoth | H7216 | CAUTION | fragment appears under 2 entities (Ramath-lehi, Ramoth…) — audit-session item, not mapped
+rabsares | Jer 39:13 | Rab-saris | H7249 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+pua | Num 26:23 | Puah | H6312 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+piarathon | 1Ch 27:14 | Pirathon | H6552 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+phison | Gen 2:11 | Pishon | H6376 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+phelethite | 1Ch 18:17 | Pelethites | H6432 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+phasur | Ezr 10:22 | Pashhur | H6583 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+pharzites | Num 26:20 | Perez | H6557 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+phaltiel | 2Sa 3:15 | Palti | H6406 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+paulus | Act 13:7 | Paul | G3972 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+pasdammin | 1Ch 11:13 | Ephes-dammim | H658 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+odollam | 1Sa 22:1 | Adullam | H5725 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nodabeans | 1Ch 5:19 | Kedemah | H6929 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ninevites | Luk 11:30 | Nineveh | H5210 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+netophathi | Neh 12:28 | Netophah | H5199 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+netopha | 1Ch 27:13 | Netophah | H5199 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nergalsharezer | Jer 39:3 | Nergal-sar-ezer | H5371 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+nepishites | 1Ch 5:19 | Naphish | H5305 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nephusim | Ezr 2:50 | Nephushesim | H5300 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+nekeb | Jos 19:33 | Adami-nekeb | H129 | ACCEPT | fragment of a compound name, but unique to Adami-nekeb corpus-wide (TIPNR forms checked)
+nebusarkes | Jer 39:3 | Nebu-sar-sekim | H8310 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nebosarsechim | Jer 39:3 | Nebu-sar-sekim | H8310 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+naxaligaash | 2Sa 23:30 | Gaash | H1608 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nathaneel | Ezr 10:22 | Nethanel | H5417 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+naphuhim | 1Ch 1:11 | Naphtuhim | H5320 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+napheta | Jos 17:11 | Naphath | H5316 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+napheg | 2Sa 5:15 | Nepheg | H5298 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+namuel | Num 26:9 | Nemuel | H5241 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nahari | 2Sa 23:37 | Naharai | H5171 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+nahallel | Jos 19:15 | Nahalol | H5096 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+nabushasban | Jer 39:13 | Nebushazban | H5021 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+naan | 1Ch 4:15 | Naam | H5277 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+naammah | 2Ch 12:13 | Naamah | H5279 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+naahshon | Exo 6:23 | Nahshon | H5177 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+moserite | Ezr 9:1 | Amorites | H567 | REJECT | Ezr 9:1 lists many gentilics; 0.8 vs Amorites unproven — research tail
+mosera | Deu 10:6 | Moserah | H4149 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+moan | 1Ch 2:45 | Maon | H4584 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+moabitish | 1Ki 11:1 | Moab | H4124 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mizpha | Jos 13:26 | Ramoth | H7216 | ACCEPT | not a TIPNR form piece anywhere else; identity at Jos 13:26 verified
+mizpar | Ezr 2:2 | Mispar | H4558 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mithridath | Ezr 4:7 | Mithredath | H4990 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+misheal | Jos 19:26 | Mishal | H4861 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+miphkad | Neh 3:31 | Muster_Gate | H4663 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+milchah | Num 36:11 | Milcah | H4435 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+methuseleh | Gen 5:22 | Methuselah | H4968 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+methusaela | Gen 4:18 | Methushael | H4967 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mesobaite | 1Ch 11:47 | Mezobaites | H4677 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+meshellemiah | 1Ch 9:21 | Meshelemiah | H4920 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+meron | Jos 12:20 | Shimron | H8110 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+meon | Jer 48:23 | Baal-meon | H1186 | ACCEPT | fragment of a compound name, but unique to Baal-meon corpus-wide (TIPNR forms checked)
+menahethites | 1Ch 2:54 | Manahath | H4506 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+melchiram | 1Ch 3:18 | Malchiram | H4443 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+melchijah | Neh 12:42 | Malchijah | H4441 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mekeziz | Jos 18:21 | Emek-keziz | H6010 | ACCEPT | not a TIPNR form piece anywhere else; identity at Jos 18:21 verified
+meholahite | 2Sa 21:8 | Meholathites | H4259 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+matthaniah | Ezr 10:30 | Mattaniah | H4983 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mathaniah | Neh 12:35 | Mattaniah | H4983 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+mathan | 2Ki 11:18 | Mattan | H4977 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+massai | 1Ch 9:12 | Maasai | H4640 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+masphar | Neh 7:7 | Mispar | H4558 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+masek | Gen 15:2 | LORD | H3068 | REJECT | LXX transliteration of Hebrew mesheq ("possession", Gen 15:2) — a common noun, not the LORD; mapping = fabrication
+maphaath | Jos 21:37 | Mephaath | H4158 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+maleleel | Luk 3:37 | Mahalalel | H4111 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+magdala | Mat 15:39 | Magadan | G3093 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+libnath | Jos 19:26 | Shihor-libnath | H7884 | ACCEPT | fragment of a compound name, but unique to Shihor-libnath corpus-wide (TIPNR forms checked)
+libinites | Num 26:58 | Libni | H3845 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+lesen | Jos 19:47 | Dan | H1835 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+lamluz | Gen 28:19 | Bethel | H1008 | ACCEPT | not a TIPNR form piece anywhere else; identity at Gen 28:19 verified
+lakum | Jos 19:33 | Lakkum | H3946 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+korathites | Num 26:58 | Korah | H7141 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+korahthite | 1Ch 9:31 | Korah | H7141 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+kithlish | Jos 15:40 | Chitlish | H3798 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kis | Act 13:21 | Kish | H7027 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kirjathsepher | Jdg 1:11 | Debir | H1688 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kirjatharim | Ezr 2:25 | Kiriath-jearim | H7157 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kenizites | Gen 15:19 | Kenizzites | H7074 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+keila | 1Ch 4:19 | Keilah | H7084 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+kamuel | 1Ch 27:17 | Kemuel | H7055 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+judaize | Gal 2:14 | Judah | H3063 | REJECT | a verb (Gal 2:14, G2450), not an entity name — leave
+judahmen | Neh 4:2 | Judah | H3063 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jozadek | Ezr 3:8 | Jehozadak | H3087 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jozachar | 2Ki 12:21 | Jozacar | H3108 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+joshabbasshebeth | 2Sa 23:8 | Jashobeam | H3434 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+johahnan | 2Ch 17:15 | Jehohanan | H3076 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jobath | Deu 10:7 | Jotbathah | H3193 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+joa | Neh 12:22 | Joiada | H3111 | REJECT | Neh 12:22 lists Joiada AND Johanan — ambiguous sibling, cannot pick — research tail
+jiphtah | Jos 15:43 | Iphtah | H3316 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jimnites | Num 26:44 | Imnah | H3232 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jimnah | Gen 46:17 | Imnah | H3232 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jimna | Num 26:44 | Imnah | H3232 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jeturites | 1Ch 5:19 | Jetur | H3195 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+jethlah | Jos 19:42 | Ithlah | H3494 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jesuites | Num 26:44 | Ishvi | H3440 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+jessiah | 1Ch 12:6 | Isshiah | H3449 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jesimoth | Num 33:49 | Beth-jeshimoth | H1020 | ACCEPT | not a TIPNR form piece anywhere else; identity at Num 33:49 verified
+jeshaiaih | Ezr 8:7 | Jeshaiah | H3470 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jeshabeab | 1Ch 24:13 | Jeshebeab | H3428 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jerousha | 2Ch 27:1 | Jerusha | H3388 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jerimuth | Jos 10:5 | Jarmuth | H3412 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jekabseel | Neh 11:25 | Jekabzeel | H3343 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jehoshuah | 1Ch 7:27 | Joshua | H3091 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jebneel | Jos 15:11 | Jabneel | H2995 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jatir | Jos 15:48 | Jattir | H3492 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jasanah | Neh 3:6 | Yeshanah_Gate | H3465 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jarite | 2Sa 20:26 | Jair | H2971 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+japhleti | Jos 16:3 | Japhlet | H3310 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+jahaza | Jos 13:18 | Jahaz | H3096 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jadaiah | Neh 11:10 | Jedaiah | H3048 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jabel | Gen 4:20 | Jabal | H2989 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+jaareoregim | 2Sa 21:19 | Jaare-oregim | H3296 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+ithma | 1Ch 11:46 | Ithmah | H3495 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+italic | Act 10:1 | Italy | G2482 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+israelitish | Lev 24:11 | Israel | H3478 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ismaelites | Jdg 8:24 | Ishmael | H3458 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ishtob | 2Sa 10:8 | Tob | H2897 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+ishbi | 2Sa 21:16 | Ishbi-benob | H3430 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+iron | Jos 19:38 | Yiron | H3375 | ACCEPT | not a TIPNR form piece anywhere else; identity at Jos 19:38 verified
+ijeabarim | Num 21:11 | Iye-abarim | H5863 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+iezraiah | 1Ch 7:3 | Izrahiah | H3156 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+iesshiah | 1Ch 24:21 | Isshiah | H3449 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+husha | 1Ch 4:4 | Hushah | H2364 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+honam | 1Ch 1:39 | Hemam | H1950 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+holam | Jos 10:3 | Hoham | H1944 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hodshi | 2Sa 24:6 | Tahtim-hodshi | H8483 | ACCEPT | fragment of a compound name, but unique to Tahtim-hodshi corpus-wide (TIPNR forms checked)
+henah | Isa 37:13 | Hena | H2012 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hazrah | 2Ch 34:22 | Harhas | H2745 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hazezontamar | Gen 14:7 | Engedi | H5872 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+hazerenan | Num 34:9 | Hazar-enan | H2704 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hazazontamar | 2Ch 20:2 | Engedi | H5872 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+havoth | Deu 3:14 | Havvoth-jair | H2334 | ACCEPT | not a TIPNR form piece anywhere else; identity at Deu 3:14 verified
+hareth | 1Sa 22:5 | Hereth | H2802 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+haphraim | Jos 19:19 | Ophrah | H6084 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hamothdor | Jos 21:32 | Hammath | H2575 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+haggabah | Ezr 2:45 | Hagabah | H2286 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+hagerite | 1Ch 27:31 | Hagri | H1905 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+habratha | Gen 48:7 | Bethlehem | H1035 | REJECT | same as chabratha (Gen 48:7)
+haareph | 1Ch 2:51 | Hareph | H2780 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+golon | Deu 4:43 | Golan | H1474 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+golam | Gen 36:23 | Onam | H208 | REJECT | WRONG SIBLING: LXX Golam at Gen 36:23 is ALVAN (first son), candidate Onam is the fifth — research tail
+goim | Jos 12:23 | Goiim | H1471 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+gittahhepher | Jos 19:13 | Gath-hepher | H1662 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+giblites | 1Ki 5:18 | Gebal | H1380 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gezrites | 1Sa 27:8 | Geshur | H1650 | REJECT | WRONG SIBLING: 1Sa 27:8 names Geshurites AND Gezrites as separate peoples — research tail (Gezer/Girzites)
+gesham | 1Ch 2:47 | Geshan | H1529 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gerson | Gen 46:11 | Gershon | H1648 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gergashites | Jos 9:1 | Girgashites | H1622 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gedeliah | 1Ch 25:9 | Gedaliah | H1436 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gathites | 1Sa 5:8 | Gath | H1661 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+gamalli | Num 13:12 | Gemalli | H1582 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gadera | 1Ch 4:23 | Gederah | H1449 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+gabath | Jos 24:33 | Gibeah | H1390 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+eshtaulites | 1Ch 2:53 | Eshtaol | H847 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+eshean | Jos 15:52 | Eshan | H824 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+esamathim | 1Ch 2:53 | Shumathites | H8126 | REJECT | LXX form at 1Ch 2:53 but the verse lists FOUR sibling families — cannot pick one by spelling distance; research tail
+ephesdammin | 1Sa 17:1 | Ephes-dammim | H658 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+elnatham | Ezr 8:16 | Elnathan | H494 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+elisaph | Num 3:24 | Eliasaph | H460 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+eliatha | 1Ch 25:27 | Eliathah | H448 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ekronite | Jos 13:3 | Ekron | H6138 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+eisiana | Neh 12:39 | Yeshanah_Gate | H3465 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+damascenes | 2Co 11:32 | Damascus | H1834 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+dabir | Jos 10:39 | Debir | H1688 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+dabbasheth | Jos 19:11 | Dabbesheth | H1708 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+dabareh | Jos 21:28 | Daberath | H1705 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+cyrenaean | Mat 27:32 | Cyrene | G2956 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+colosse | Col 1:2 | Colossae | G2857 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+clauda | Act 27:16 | Cauda | G2802 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+chushanrishathaim | Jdg 3:8 | Cushan-rishathaim | H3573 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+chislothtabor | Jos 19:12 | Chesulloth | H3694 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+chisleu | Zec 7:1 | Chislev | H3691 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+chepharhaammonai | Jos 18:24 | Chephar-ammoni | H3723 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+charashim | 1Ch 4:14 | Ge-harashim | H2798 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+chalanes | Isa 10:9 | Calneh | H3641 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+chabratha | Gen 35:16 | Bethlehem | H1035 | REJECT | LXX transliteration of Hebrew kibrah ("some distance", Gen 35:16) — not Bethlehem; mapping = fabrication
+caphthorim | 1Ch 1:12 | Caphtorim | H3732 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+camon | Jdg 10:5 | Kamon | H7056 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+caldeans | Jer 25:12 | Chaldea | H3778 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bougean | Est 9:10 | Agag | H90 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bosodeiah | Neh 3:6 | Besodeiah | H1152 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+boseath | 2Ki 22:1 | Bozkath | H1218 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethsham | 1Sa 31:12 | Beth-shean | H1052 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethphelet | Neh 11:26 | Beth-pelet | H1046 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethpalet | Jos 15:27 | Beth-pelet | H1046 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethheccerem | Neh 3:14 | Beth-haccherem | H1021 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethharan | Num 32:36 | Beth-haram | H1027 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethhanan | 1Ki 4:9 | Elonbeth-hanan | H358 | ACCEPT | fragment of a compound name, but unique to Elonbeth-hanan corpus-wide (TIPNR forms checked)
+bethhaccerem | Jer 6:1 | Beth-haccherem | H1021 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethgilgal | Neh 12:29 | Gilgal | H1537 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bethelite | 1Ki 16:34 | Bethel | H1008 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+bethelberith | Jdg 9:46 | Baal-berith | H1170 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethbirei | 1Ch 4:31 | Beth-biri | H1011 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+betharam | Jos 13:27 | Beth-haram | H1027 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+betharaba | Jos 18:18 | Beth-arabah | H1026 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethagan | 2Ki 9:27 | Beth-haggan | H1004 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+berothite | 1Ch 11:39 | Beeroth | H881 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+berodach | 2Ki 20:12 | Merodach-baladan | H1255 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+behurim | 2Sa 3:16 | Bahurim | H980 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+beerashan | 1Sa 30:30 | Bor-ashan | H3565 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bealath | Jos 15:24 | Baalath-beer | H1192 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bavai | Neh 3:18 | Bavvai | H942 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bathuel | Gen 24:24 | Bethuel | H1328 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+barjesus | Act 13:6 | Bar-jesus | G919 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+bared | Gen 16:14 | Bered | H1260 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+baalshalisha | 2Ki 4:42 | Baal-shalishah | H1190 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+baaliah | 1Ch 12:5 | Bealiah | H1183 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+baalhermon | Jdg 3:3 | Hermon_Mount | H2768 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+azzah | 1Ki 4:24 | Gaza | H5804 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+azra | 1Ki 16:9 | Arza | H777 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+aznoth | Jos 19:34 | Aznoth-tabor | H243 | ACCEPT | fragment of a compound name, but unique to Aznoth-tabor corpus-wide (TIPNR forms checked)
+azabuk | Neh 3:16 | Azbuk | H5802 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+avim | Jos 18:23 | Avvim | H5761 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+atharin | Num 21:1 | Atharim | H871 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+asterathite | 1Ch 11:44 | Ashtaroth | H6252 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+astartion | 1Sa 31:10 | Ashtaroth | H6252 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ashurites | 2Sa 2:9 | Asher | H836 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+ashkelonite | Jos 13:3 | Ashkelon | H831 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+ashdodish | Neh 13:24 | Ashdod | H795 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ashchenazi | Jer 51:27 | Ashkenaz | H813 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+ashbea | 1Ch 4:21 | Beth-ashbea | H1004 | ACCEPT | fragment of a compound name, but unique to Beth-ashbea corpus-wide (TIPNR forms checked)
+aruboth | 1Ki 4:10 | Arubboth | H700 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+arkite | Gen 10:16 | Amorites | H567 | REJECT | WRONG SIBLING: Arkites are their own nation (Gen 10:17), not Amorites — research tail (needs own entity)
+aristarcus | Act 19:29 | Aristarchus | G708 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+arbai | Jos 14:15 | Arba | H704 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+apses | 1Ch 24:15 | Happizzez | H6483 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+apharsathchites | Ezr 4:9 | Apharasthchite | H671 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+anathothite | 2Sa 23:27 | Anathoth | H6068 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+ammonitish | 1Ki 11:1 | Ammon | H5983 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+amminhud | Num 34:20 | Ammihud | H5989 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+aman | Jos 15:26 | Amam | H538 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+aloth | 1Ki 4:16 | Baalath-beer | H1192 | ACCEPT | not a TIPNR form piece anywhere else; identity at 1Ki 4:16 verified
+alammelech | Jos 19:26 | Allammelech | H487 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+aholibama | Gen 36:25 | Oholibamah | H173 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+adriatic | Act 27:27 | Adriatic_Sea | G99 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+adami | Jos 19:33 | Adami-nekeb | H129 | ACCEPT | gentilic/plural derivation of the entity name; entity attested at ref
+acrabbim | Jos 15:3 | Akrabbim | H4610 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+achsa | 1Ch 2:49 | Achsah | H5915 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+accho | Jdg 1:31 | Acco | H5910 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+abigal | 1Sa 25:36 | Abigail | H26 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+abiasar | Exo 6:24 | Ebiasaph | H43 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+abelshittim | Num 33:49 | Shittim | H7851 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+abelmaim | 2Ch 16:4 | Abel-beth-maacah | H62 | ACCEPT | TIPNR's own attested form for this entity (normalized match); identity at ref
+abelbethmaachah | 2Ki 15:29 | Abel-beth-maacah | H62 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+abadon | 1Ch 9:36 | Abdon | H5658 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+The | 1Sa 9:9 | Israel | H3478 | REJECT | junk key from a bad head pick — RC-1 territory, never an alias
+samarian | 2Ki 18:11 | samaria | H8111 | ACCEPT | gentilic of Samaria; context is the exile FROM Samaria — candidate machine pick (Assyria) rejected, hand-verified target
+abiezrites | Jdg 8:32 | abiezer | H44 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+amalekite | 1Sa 30:13 | amalek | H6002 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+amalekites | 1Sa 27:8 | amalek | H6002 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+ashur | 1Ch 2:24 | ashhur | H806 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+babylonia | Isa 39:1 | babylon | H894 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+belial | 2Co 6:15 | satan | H7854 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+benjaminite | 2Sa 19:16 | benjamin | H1144 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+benjamite | 1Ki 2:8 | benjamin | H1144 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+benjamites | 1Ch 27:12 | benjamin | H1144 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+bethlehemite | 1Sa 16:18 | bethlehem | H1035 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+christ | Act 15:11 | jesus | G2424 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+danites | 1Ch 12:35 | dan | H1835 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+dodai | 1Ch 27:4 | dodo | H1734 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+gershonite | 1Ch 29:8 | gershon | H1648 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+gershonites | Num 26:57 | gershon | H1648 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+hadar | Gen 25:15 | hadad | H2301 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+helem | 1Ch 7:35 | hotham | H2369 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+heliopolis | Exo 1:11 | on | H204 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+hermons | Psa 42:6 | hermon_mount | H2768 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+horites | Gen 14:6 | hori | H2753 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+immanuel | Isa 7:14 | jesus | G2424 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+ishmaelite | 1Ch 27:30 | ishmael | H3458 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+jakan | 1Ch 1:42 | akan | H3292 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+jewish | Act 16:1 | judah | H3063 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+kohathite | 1Ch 9:32 | kohath | H6955 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+kohathites | Num 26:57 | kohath | H6955 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+levitical | Heb 7:11 | levi | H3878 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+mahalaleel | Gen 5:12 | mahalalel | H4111 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+malcham | 1Ch 8:9 | malcam | H4445 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+manassites | Deu 4:43 | manasseh | H4519 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+merarites | Num 26:57 | merari | H4847 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+nazarenes | Act 24:5 | nazareth | G3478 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+nohah | 1Ch 8:2 | naaman | H5283 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+reubenite | 1Ch 11:42 | reuben | H7205 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+reubenites | 1Ch 26:32 | reuben | H7205 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sabeans | Isa 45:14 | sheba | H7614 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sala | Luk 3:35 | shelah | H7974 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sheshbazzar | Ezr 1:8 | zerubbabel | H2216 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sheth | Num 24:17 | seth | H8352 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+shuham | Num 26:42 | hushim | H2366 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sion | Deu 4:48 | hermon_mount | H2768 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+sirion | Deu 3:9 | hermon_mount | H2768 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+zephon | Num 26:15 | ziphion | H6837 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)

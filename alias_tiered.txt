@@ -1,0 +1,373 @@
+T3|antilebanon|5|Deu 11:24|0.78|Lebanon|H3844|Lebanon|Lebanon
+T3|esthaol|4|Jdg 16:31|0.86|Eshtaol|H847|Eshtaol|Eshtaol/Eshtaolite
+T3|abia|4|1Ch 3:10|0.8|Abijah|H29|King living at the time of Divided Monarchy|Abijah/Abijam
+T2|tekoite|3|1Ch 11:28|0.88|Tekoa|H8620|Tekoa|Tekoa/Tekoah/Tekoitess
+T3|nazarite|3|Jdg 13:5|0.88|Nazirites|H5139|Religious category in the Old and New Testaments|Be Nazirite/Nazirite/Nazirite vow/Nazirites
+T3|milcha|3|Gen 11:29|0.83|Milcah|H4435|Woman living at the time of the Patriarchs|Milcah/Milkah
+T2|mehunim|3|2Ch 26:7|0.8|Meunites|H4586|People from Meunit(?)|Mehunite/Meinites/Meunite/Meunites/beside/habitation
+T3|maraioth|3|1Ch 6:7|0.88|Meraioth|H4812|Priest living at the time of Divided Monarchy|Meraioth
+T3|kirjathbaal|3|Jos 15:60|0.87|Kiriath-jearim|H7157|Kiriath-jearim|Baalah/Jaar/Kiriath/Kiriath Baal/Kiriath Jearim/Kiriath-arim/Kiriath-b
+T3|gaba|3|Ezr 2:26|0.75|Geba|H1387|Geba_1|Geba
+T1|baalgad|3|Jos 11:17|0.93|Hermon_Mount|H2768|Mount Hermon|Baal Gad/Baal Hamon/Baal Hermon/Baal-gad/Baal-hamon/Baal-hermon/Hermon
+T3|zoba|2|2Sa 10:6|0.89|Zobah|H6678|Zobah|Hamath Zobah/Hamath-zobah/Zobah
+T2|zarhite|2|Jos 7:17|0.8|Zerah|H2226|Judah's son living at the time of Egypt and Wilderness|Ezrahite/Izrahite/Zarah/Zerah/Zerahite
+T2|tekoites|2|Neh 3:27|0.88|Tekoa|H8620|Tekoa|Tekoa/Tekoah/Tekoitess
+T3|tarah|2|Num 33:27|0.8|Terah|H8646|Terah= near Mount Hor_1 (Hor_Mount@Num.20.22-Deu=H2023G)|Terah
+T3|soccoth|2|Num 33:5|0.86|Succoth|H5523|Succoth_2|Succoth
+T3|shittin|2|Jos 2:1|0.86|Shittim|H7851|Abel-shittim|Abel Shittim/Abel-shittim/Shittim
+T3|shenir|2|Deu 3:9|0.91|Hermon_Mount|H2768|Mount Hermon|Baal Gad/Baal Hamon/Baal Hermon/Baal-gad/Baal-hamon/Baal-hermon/Hermon
+T3|shemei|2|Ezr 10:23|0.83|Shimei|H8096|Man living at the time of Exile and Return|Shimei
+T3|shapher|2|Num 33:23|0.7|Shepher_Mount|H8234|Mount Shepher= near Mount Hor_1 (Hor_Mount@Num.20.22-Deu=H2023G)|Shepher_Mount/mount Shapher
+T3|secheniah|2|Neh 12:14|0.78|Shebaniah|H7645|Man living at the time of Exile and Return|Shebaniah/Shecaniah/Shekaniah
+T3|saraiah|2|Jer 36:26|0.86|Seraiah|H8304|Man living at the time of Divided Monarchy|Seraiah
+T3|samiah|2|Gen 36:36|0.83|Samlah|H8072|King living at the time of the Patriarchs|Samlah
+T3|raphaiah|2|1Ch 7:2|0.88|Rephaiah|H7509|Man living at the time of Egypt and Wilderness|Rephaiah
+T3|phua|2|1Ch 7:1|0.8|Puah|H6312|Man living at the time of Egypt and Wilderness|Phuvah/Puah/Punite/Puvah
+T2|phrygian|2|Act 16:6|0.93|Phrygia|G5435|Phrygia= near Laodicea (Laodicea@Col.2.1-Rev=G2993)|Phrygia
+T3|pergamos|2|Rev 1:11|0.8|Pergamum|G4010|Pergamum|Pergamum
+T2|nehelamite|2|Jer 29:24|0.95|Nehelamites|H5161|People from Nehel(?)|Nehelam/Nehelamites
+T3|nashon|2|Num 1:7|0.92|Nahshon|H5177|Man living before Israel's Monarchy|Naashon/Naasson/Nahshon
+T3|morasthite|2|Jer 26:18|0.82|Moresheth|H4182|Moresheth= near Mareshah (Mareshah@Jos.15.44-Mic=H4762G)|Moresheth/Moresheth Gath/Moresheth-gath/Moreshethite
+T1|melchishua|2|1Sa 14:49|0.95|Malchi-shua|H4444|Man living at the time of United Monarchy|Malchi-shua/Malki-Shua/Melchi-shua
+T3|masseiah|2|1Ch 15:20|0.88|Maaseiah|H4641|Singer living at the time of Divided Monarchy|Maaseiah
+T3|magiddo|2|1Ch 7:29|0.86|Megiddo|H4023|Megiddo|Armageddon/Megiddo
+T3|kos|2|Neh 3:21|0.8|Hakkoz|H6976|Man living at the time of Exile and Return|Hakkoz/Koz
+T2|korhites|2|1Ch 12:6|0.93|Korah|H7141|Aaron's adversary living at the time of Egypt and Wilderness|Core/Korah/Korahite
+T2|kenezite|2|Jos 14:14|0.82|Kenaz|H7073|Man living at the time of Egypt and Wilderness|Kenaz/Kenizzite
+T3|kenez|2|1Ch 4:13|0.8|Kenaz|H7073|Man living at the time of Egypt and Wilderness|Kenaz/Kenizzite
+T3|keir|2|Jer 48:31|0.86|Kir|H7024|Kir of Moab|Kir/Kir Hareseth/Kir-hareseth/Mizpah/Mizpeh
+T3|jobathah|2|Num 33:33|0.94|Jotbathah|H3193|Jotbathah= near Ezion-geber (Ezion-geber@Num.33.35-2Ch=H6100)|Jotbathah
+T3|jehoaikim|2|Jer 36:28|0.89|Jehoiakim|H3079|King living at the time of Divided Monarchy|Eliakim/Jehoiakim/Zedekiah
+T3|jaazer|2|Num 21:32|0.91|Jazer|H3270|Jazer|Jazer
+T3|hiroth|2|Num 33:7|0.86|Pi-hahiroth|H6367|Pi-hahiroth|Hahiroth/Pi Hahiroth/Pi-hahiroth
+T3|halak|2|Jos 11:17|0.62|Halak_Mount|H2510|Mount Halak|Halak_Mount
+T3|hai|2|Gen 12:8|0.8|Ai|H5857|Ai_1|Ai/Aiath/Aija/city
+T3|hagidgad|2|Num 33:32|0.76|Hor-haggidgad|H2735|Hor-haggidgad|Gudgodah/Hor Haggidgad/Hor-haggidgad
+T3|eneas|2|Act 9:33|0.8|Aeneas|G132|Man living at the time of the New Testament|Aeneas
+T3|ebronah|2|Num 33:34|0.86|Abronah|H5684|Abronah= near Ezion-geber (Ezion-geber@Num.33.35-2Ch=H6100)|Abronah
+EXCL|charge|2|2Ki 25:23|0.67|Kareah|H7143|Man living at the time of Divided Monarchy|Careah/Kareah
+T1|bethshan|2|1Sa 31:10|0.94|Beth-shean|H1052|Beth-shan|Beth Shan/Beth-shan/Beth-shean
+T1|bethmarcaboth|2|1Ch 4:31|0.96|Madmannah|H4089|Madmannah|Beth Markaboth/Beth-marcaboth/Madmannah
+T3|bethakad|2|2Ki 10:12|0.71|Beth-eked|H1044|Beth-eked= near Jezreel_2 (Jezreel@Jos.19.18-Hos=H3157H)|Beth Eked/Beth-eked/shearing house
+T3|barechiah|2|Neh 3:30|0.89|Berechiah|H1296|Man living at the time of Exile and Return|Berechiah
+T3|barachiah|2|Isa 8:2|0.7|Jeberechiah|H3000|Man living at the time of Divided Monarchy|Jeberechiah
+T3|azem|2|Jos 15:29|0.75|Ezem|H6107|Ezem= near Beersheba (Beersheba@Gen.21.14-Amo=H0884)|Ezem
+T3|asiah|2|1Ch 15:11|0.91|Asaiah|H6222|Man living at the time of Divided Monarchy|Asaiah
+T3|arphad|2|2Ki 18:34|0.91|Arpad|H774|Arpad= near Hamath (Hamath@Num.13.21-Zec=H2574G)|Arpad
+T3|araba|2|Jer 39:4|0.91|Arabah|H6160|Arabah|Arabah/desert/plain/wilderness
+T3|zummim|1|Deu 2:20|0.67|Rephaim|H7497|People from Repha(?)|Rephaim/Zamzummin
+T3|zoreah|1|Jos 15:33|0.91|Zorah|H6881|Zorah|Zorah
+T3|zobedah|1|1Ch 4:8|0.86|Zobebah|H6637|Man living at the time of Divided Monarchy|Hazzobebah/Zobebah
+T3|zibeah|1|2Ch 24:1|0.83|Zibiah|H6645|Woman living at the time of Divided Monarchy|Zibiah
+T2|zerhites|1|Num 26:20|0.93|Zerah|H2226|Judah's son living at the time of Egypt and Wilderness|Ezrahite/Izrahite/Zarah/Zerah/Zerahite
+T3|zererath|1|Jdg 7:22|0.93|Zarethan|H6891|Zarethan|Zarethan/Zeredah/Zererah
+T3|zeredathah|1|2Ch 4:17|0.82|Zarethan|H6891|Zarethan|Zarethan/Zeredah/Zererah
+T3|zereda|1|1Ki 11:26|0.92|Zeredah|H6868|Zeredah_1= near Mount Ebal (Ebal_Mount@Deu.11.29-Jer=H5858C)|Zeredah
+T3|zereah|1|Neh 11:29|0.73|Zorah|H6881|Zorah|Zorah
+T3|zarthan|1|1Ki 7:46|0.93|Zarethan|H6891|Zarethan|Zarethan/Zeredah/Zererah
+T3|zartanah|1|1Ki 4:12|0.75|Zarethan|H6891|Zarethan|Zarethan/Zeredah/Zererah
+T3|zareathitees|1|1Ch 2:53|0.8|Zorathites|H6882|People from Shobal(?)|Zorathite/Zorathites/Zorite
+T3|zaphnathpaaneah|1|Gen 41:45|0.9|Joseph|H3130|Jacob's son living at the time of the Patriarchs|Joseph/Zaphenath-paneah/him
+T3|zabbud|1|Ezr 8:14|0.91|Zaccur|H2139|Man living at the time of Exile and Return|Zabud/Zaccur/Zakkur
+T3|uzzensherah|1|1Ch 7:24|0.92|Uzzen-sheerah|H242|Uzzen-sheerah|Uzzen Sheerah/Uzzen-sheerah
+T3|tishbon|1|1Ki 17:1|0.77|Tishbe|H8453|Tishbe= near Hazor_1 (Hazor@Jos.11.1-2Ki=H2674G)|Tishbe/Tishbite/inhabitants
+T3|tirah|1|1Ch 4:16|0.8|Tiria|H8493|Man living at the time of Divided Monarchy|Tiria
+T1|timnathserah|1|Jos 19:50|0.96|Timnath-heres|H8556|Timnath-heres|Timnath Heres/Timnath Serah/Timnath-heres/Timnath-serah
+T3|timmnathserah|1|Jos 24:30|0.92|Timnath-heres|H8556|Timnath-heres|Timnath Heres/Timnath Serah/Timnath-heres/Timnath-serah
+T3|thelasar|1|2Ki 19:12|0.88|Telassar|H8515|Telassar= near Susa (Susa@Ezr.4.9-Dan=H7800)|Telassar
+T3|thamah|1|Ezr 2:53|0.73|Temah|H8547|Man living at the time of Exile and Return|Temah
+T2|temani|1|Gen 36:34|0.91|Teman|H8487|Edomite living at the time of the Patriarchs|Teman/Temanite
+T3|telmon|1|Ezr 2:42|0.83|Talmon|H2929|Levite living at the time of Exile and Return|Talmon
+T3|telharsa|1|Ezr 2:59|0.89|Tel-harsha|H8521|Tel-harsha= near Calneh (Calneh@Gen.10.10-Amo=H3641A)|Tel Harsha/Tel-harsha
+T3|telharesha|1|Neh 7:61|0.9|Tel-harsha|H8521|Tel-harsha= near Calneh (Calneh@Gen.10.10-Amo=H3641A)|Tel Harsha/Tel-harsha
+T3|tekoe|1|1Ch 4:5|0.8|Tekoa|H8620|Tekoa|Tekoa/Tekoah/Tekoitess
+T2|tekoahite|1|2Sa 14:9|0.8|Tekoa|H8620|Tekoa|Tekoa/Tekoah/Tekoitess
+T3|taverns|1|Act 28:15|0.63|Three_Taverns|G5140|Three Taverns|Three_Taverns
+T3|tappua|1|1Ch 2:43|0.92|Tappuah|H8599|Man living at the time of Divided Monarchy|Tappuah
+T3|tapphuah|1|Jos 15:34|0.93|Tappuah|H8599|Tappuah_2= near Enam (Enam@Jos.15.34=H5879H)|Tappuah
+T3|tanach|1|Jos 21:25|0.92|Taanach|H8590|Taanach|Aner/Taanach
+T3|tamah|1|Neh 7:55|0.8|Temah|H8547|Man living at the time of Exile and Return|Temah
+T3|tam|1|Gen 46:20|0.67|Egypt|H4714|Egypt|Egypt/Egyptian/Egyptian women/Egyptians/Ham/Rahab/rebellion/they
+T2|tahtim|1|2Sa 24:6|0.63|Tahtim-hodshi|H8483|Kadesh_2|Hittites/Tahtim Hodshi/Tahtim-hodshi
+T3|tahapanhes|1|Jer 2:16|0.89|Tahpanhes|H8471|Tahpanhes|Tahpanhes/Tehaphnehes
+T3|tabaoth|1|Ezr 2:43|0.93|Tabbaoth|H2884|Man living at the time of Exile and Return|Tabbaoth
+T3|sushan|1|Dan 8:2|0.8|Susa|H7800|Susa|Susa/Susanchite
+T3|suchathites|1|1Ch 2:55|0.95|Sucathite|H7756|Scribal group in the Old Testament|Sucathite
+T3|sopator|1|Act 20:4|0.86|Sopater|G4986|Man living at the time of the New Testament|Sopater/Sosipater
+T2|sodomites|1|Gen 19:4|0.77|Sodom|H5467|Sodom|Sodom
+T2|shunamite|1|1Ki 1:15|0.95|Shunammites|H7767|People from Shunam(?)|Shunammite/Shunammites
+T3|shophan|1|Num 32:35|0.67|Atroth-shophan|H5855|Atroth-shophan= near Aroer_2 (Aroer@Num.32.34-Isa=H6177G)|Atroth Shophan/Atroth-shophan
+T3|shocho|1|2Ch 28:18|0.92|Socoh|H7755|Socoh_1|Shochoh/Shoco/Sochoh/Socoh/Sokoh
+T2|shiphmi|1|1Ch 27:27|0.88|Shiphmites|H8225|People from Shiphm(?)|Shiphmite/Shiphmites
+T3|shimma|1|1Ch 2:13|0.83|Shimeah|H8093|David's brother living at the time of United Monarchy|Shammah/Shimea/Shimeah/Shimei
+T3|shimiramoth|1|1Ch 15:20|0.91|Shemiramoth|H8070|Singer living at the time of Divided Monarchy|Shemiramoth
+T3|shihon|1|Jos 19:19|0.91|Shion|H7866|Shion|Shion
+T3|shicron|1|Jos 15:11|0.75|Shikkeron|H7942|Shikkeron= near Ekron (Ekron@Jos.13.3-Zec=H6138)|Shikkeron
+T3|shibmah|1|Num 32:38|0.92|Sibmah|H7643|Sibmah|Sibmah
+T3|sherezar|1|Zec 7:2|0.88|Sharezer|H8272|Man living at the time of Exile and Return|Sharezer/Sherezer
+T3|shemiah|1|1Ch 9:16|0.93|Shemaiah|H8098|Levite living at the time of Exile and Return|Shammua/Shemaiah
+T3|shemesh|1|Jos 19:41|0.82|Beth-shemesh|H1053|Beth-shemesh_1|Beth Shemesh/Beth-shemesh/Ir Shemesh/Ir-shemesh
+T3|shebam|1|Num 32:3|0.91|Sebam|H7643|Sebam= near Sibmah (Sibmah@Num.32.38-Jer=H7643H)|Sebam
+T3|shearaiah|1|1Ch 8:38|0.94|Sheariah|H8187|Man living at the time of Divided Monarchy|Sheariah
+T3|shean|1|1Ki 4:12|0.67|Beth-shean|H1052|Beth-shan|Beth Shan/Beth-shan/Beth-shean
+T3|sharaim|1|Jos 15:36|0.93|Shaaraim|H8189|Shaaraim_1|Shaaraim
+T3|shalitha|1|1Sa 9:4|0.82|Shalishah|H8031|Shalishah= near Gibeon (Gibeon@Jos.9.3-Ezk=H1391)|Shalishah
+T3|shalim|1|1Sa 9:4|0.92|Shaalim|H8171|Shaalim= near Gibeon (Gibeon@Jos.9.3-Ezk=H1391)|Shaalim
+T3|shahazinah|1|Jos 19:22|0.9|Shahazumah|H7831|Shahazumah= near Beth-shemesh_2 (Beth-shemesh@Jos.19.22=H1053H)|Shahazimah/Shahazumah
+T3|seriah|1|2Sa 8:17|0.92|Seraiah|H8304|Man living at the time of United Monarchy|Seraiah/Shavsha/Sheva/Sheya/Shisha
+T3|senuah|1|Neh 11:9|0.86|Hassenuah|H5574|Man who lived in Senaah@Ezr.2.35-Neh before the time of Exile and Return|Hasenuah/Hassenaah/Hassenuah/of Senuah
+T3|seirath|1|Jdg 3:26|0.92|Seirah|H8167|Seirah= near Bethel_1 (Bethel@Gen.12.8-Zec=H1008G)|Seirah
+T3|secundos|1|Act 20:4|0.8|Secundus|G4580|Man living at the time of the New Testament|Secundus
+T3|sanaballat|1|Neh 2:19|0.95|Sanballat|H5571|Man living at the time of Exile and Return|Sanballat
+T3|samis|1|Jos 19:12|0.67|Sarid|H8301|Sarid|Sarid
+T3|samarian|1|2Ki 18:11|0.62|Assyria|H804|Assyria|Ashur/Asshur/Assyria/Assyrian
+T3|sabtecha|1|1Ch 1:9|0.94|Sabteca|H5455|Man living at the time of the Patriarchs|Sabteca/Sabtechah/Sabteka
+T3|ruben|1|Gen 37:29|0.91|Reuben|H7205|Jacob's son living at the time of the Patriarchs|Reuben/Reubenite
+T3|renmon|1|Amo 4:3|0.67|Harmon|H2038|Harmon= near Samaria (Samaria@1Ki.13.32-Act=H8111)|Harmon
+T3|remphan|1|Act 7:43|0.92|Rephan|G4481|A male deity in the Old Testament|Rephan
+T3|rebecca|1|Rom 9:10|0.71|Rebekah|H7259|Woman living at the time of the Patriarchs|Rebekah
+T3|raphael|1|1Ch 26:7|0.86|Rephael|H7501|Levite living at the time of Divided Monarchy|Rephael
+T3|ramath|1|Jos 13:26|0.91|Ramoth|H7216|Ramoth-gilead|Galeed/Mizpah/Mizpeh/Ramah/Ramath Mizpeh/Ramath-mizpeh/Ramoth
+T3|rabsares|1|Jer 39:13|0.75|Rab-saris|H7249|Man living at the time of Divided Monarchy|Rab-saris/chief officer
+T3|pua|1|Num 26:23|0.86|Puah|H6312|Man living at the time of Egypt and Wilderness|Phuvah/Puah/Punite/Puvah
+T3|piarathon|1|1Ch 27:14|0.94|Pirathon|H6552|Pirathon|Pirathon/Pirathonite
+T3|phison|1|Gen 2:11|0.83|Pishon|H6376|Near Eden|Pishon
+T3|phelethite|1|1Ch 18:17|0.95|Pelethites|H6432|People from Pelath(?)|Pelethite/Pelethites
+T3|phasur|1|Ezr 10:22|0.83|Pashhur|H6583|Levite living at the time of Exile and Return|Pashhur/Pashur
+T2|pharzites|1|Num 26:20|0.75|Perez|H6557|Man living at the time of Egypt and Wilderness|Perez/Perezite/Phares/Pharez
+T3|phaltiel|1|2Sa 3:15|0.93|Palti|H6406|Man living at the time of United Monarchy|Palti/Paltiel/Phalti
+T3|paulus|1|Act 13:7|0.89|Paul|G3972|Apostle living at the time of the New Testament|Paul/Saul/he
+T3|pasdammin|1|1Ch 11:13|0.84|Ephes-dammim|H658|Ephes-dammim|Ephes Dammim/Ephes-dammim/Pas Dammim/Pas-dammim
+T3|odollam|1|1Sa 22:1|0.71|Adullam|H5725|Adullam|Adullam/Adullamite
+T3|nodabeans|1|1Ch 5:19|0.77|Kedemah|H6929|Arabian living at the time of the Patriarchs|Kedemah/Nodab
+T2|ninevites|1|Luk 11:30|0.8|Nineveh|H5210|Nineveh|Nineveh
+T2|netophathi|1|Neh 12:28|0.91|Netophah|H5199|Netophah|Netophah/Netophathite
+T3|netopha|1|1Ch 27:13|0.93|Netophah|H5199|Netophah|Netophah/Netophathite
+T1|nergalsharezer|1|Jer 39:3|0.97|Nergal-sar-ezer|H5371|Babylonian official living at the time of Divided Monarchy|Nergal-Sharezer/Nergal-sar-ezer/Nergal-shar-ezer
+T3|nepishites|1|1Ch 5:19|0.62|Naphish|H5305|Arabian living at the time of the Patriarchs|Naphish
+T2|nephusim|1|Ezr 2:50|0.94|Nephushesim|H5300|People from Nephus(?)|Nephishesim/Nephisim/Nephushesim/Nephussim
+T3|nekeb|1|Jos 19:33|0.62|Adami-nekeb|H129|Adami-nekeb|Adami-nekeb
+T3|nebusarkes|1|Jer 39:3|0.7|Nebu-sar-sekim|H8310|Man living at the time of Divided Monarchy|Nebo-Sarsekim/Nebu-sar-sekim
+T3|nebosarsechim|1|Jer 39:3|0.85|Nebu-sar-sekim|H8310|Man living at the time of Divided Monarchy|Nebo-Sarsekim/Nebu-sar-sekim
+T3|naxaligaash|1|2Sa 23:30|0.62|Gaash|H1608|Gaash= near Timnath-heres (Timnath-heres@Jos.19.50-Jdg=H8556A)|Gaash
+T3|nathaneel|1|Ezr 10:22|0.89|Nethanel|H5417|Man living at the time of Exile and Return|Nethaneel/Nethanel
+T3|naphuhim|1|1Ch 1:11|0.94|Naphtuhim|H5320|People from Naphtuh(?)|Naphtuhim
+T3|napheta|1|Jos 17:11|0.71|Naphath|H5316|Naphath= near Megiddo (Megiddo@Jos.12.21-Rev=H4023)|Naphath/Naphoth/countries
+T3|napheg|1|2Sa 5:15|0.83|Nepheg|H5298|David's son living at the time of United Monarchy|Nepheg
+T3|namuel|1|Num 26:9|0.83|Nemuel|H5241|Man living at the time of Egypt and Wilderness|Nemuel
+T2|nahari|1|2Sa 23:37|0.92|Naharai|H5171|Warrior living at the time of United Monarchy|Naharai
+T3|nahallel|1|Jos 19:15|0.8|Nahalol|H5096|Nahalol|Nahalal/Nahalol
+T3|nabushasban|1|Jer 39:13|0.91|Nebushazban|H5021|Man living at the time of Divided Monarchy|Nebushasban/Nebushazban/Nebuzaradan
+T3|naan|1|1Ch 4:15|0.75|Naam|H5277|Man living before Israel's Monarchy|Naam
+T3|naammah|1|2Ch 12:13|0.92|Naamah|H5279|Woman living at the time of United Monarchy|Naamah
+T3|naahshon|1|Exo 6:23|0.93|Nahshon|H5177|Man living before Israel's Monarchy|Naashon/Naasson/Nahshon
+T3|moserite|1|Ezr 9:1|0.8|Amorites|H567|People from Amor(?)|Amorite/Amorites
+T3|mosera|1|Deu 10:6|0.92|Moserah|H4149|Moserah= near Mount Hor_1 (Hor_Mount@Num.20.22-Deu=H2023G)|Moserah
+T3|moan|1|1Ch 2:45|0.75|Maon|H4584|Man living at the time of Divided Monarchy|Maon
+T3|moabitish|1|1Ki 11:1|0.75|Moab|H4124|Moab|Moab/Moabite
+T3|mizpha|1|Jos 13:26|0.83|Ramoth|H7216|Ramoth-gilead|Galeed/Mizpah/Mizpeh/Ramah/Ramath Mizpeh/Ramath-mizpeh/Ramoth
+T3|mizpar|1|Ezr 2:2|0.83|Mispar|H4558|Man living at the time of Exile and Return|Mispar/Mispereth
+T3|mithridath|1|Ezr 4:7|0.9|Mithredath|H4990|Man living at the time of Exile and Return|Mithredath
+T3|misheal|1|Jos 19:26|0.92|Mishal|H4861|Mishal= near Abdon (Abdon@Jos.19.28-1Ch=H5658G)|Mashal/Mishal
+T3|miphkad|1|Neh 3:31|0.74|Muster_Gate|H4663|Muster Gate= in Jerusalem (Jerusalem@Gen.14.18-Rev=H3389)|Inspection gate/Muster_Gate/gate Miphkad
+T3|milchah|1|Num 36:11|0.92|Milcah|H4435|Woman living at the time of Egypt and Wilderness|Milcah/Milkah
+T3|methuseleh|1|Gen 5:22|0.9|Methuselah|H4968|Man living at the time before the Flood|Mathusala/Methuselah
+T3|methusaela|1|Gen 4:18|0.95|Methushael|H4967|Man living at the time before the Flood|Methusael/Methushael
+T3|mesobaite|1|1Ch 11:47|0.89|Mezobaites|H4677|Warriors from or of Mezoba(?)|Mezobaite/Mezobaites
+T3|meshellemiah|1|1Ch 9:21|0.96|Meshelemiah|H4920|Levite living at the time of Exile and Return|Meshelemiah/Shelemiah
+T3|meron|1|Jos 12:20|0.67|Shimron|H8110|Shimron|Shimron/Shimron Meron/Shimron-meron
+T3|meon|1|Jer 48:23|0.75|Baal-meon|H1186|Baal-meon|Baal Meon/Baal-meon/Beon/Beth Meon/Beth-meon
+T3|menahethites|1|1Ch 2:54|0.63|Manahath|H4506|Edomite living at the time of the Patriarchs|Manahath/half the Manahathites
+T3|melchiram|1|1Ch 3:18|0.89|Malchiram|H4443|Man living at the time of Divided Monarchy|Malchiram/Malkiram
+T3|melchijah|1|Neh 12:42|0.89|Malchijah|H4441|Man living at the time of Exile and Return|Malchijah
+T3|mekeziz|1|Jos 18:21|0.82|Emek-keziz|H6010|Emek-keziz= near Beth-hoglah (Beth-hoglah@Jos.15.6-=H1031)|Emek-keziz
+T3|meholahite|1|2Sa 21:8|0.95|Meholathites|H4259|People from Meholath(?)|Meholathite/Meholathites
+T3|matthaniah|1|Ezr 10:30|0.95|Mattaniah|H4983|Man living at the time of Exile and Return|Mattaniah
+T3|mathaniah|1|Neh 12:35|0.89|Mattaniah|H4983|Man living at the time of Exile and Return|Mattaniah
+T3|mathan|1|2Ki 11:18|0.83|Mattan|H4977|Man living at the time of Divided Monarchy|Mattan
+T3|massai|1|1Ch 9:12|0.86|Maasai|H4640|Levite living at the time of Exile and Return|Amashai/Amashsai/Maasai/Maasiai
+T3|masphar|1|Neh 7:7|0.77|Mispar|H4558|Man living at the time of Exile and Return|Mispar/Mispereth
+T3|masek|1|Gen 15:2|0.73|LORD|H3068|The Deity|Abba/Almighty/Baali/Banner/Eli/Elohim/Eloi/Eternal/Everlasting/God/Hig
+T3|maphaath|1|Jos 21:37|0.88|Mephaath|H4158|Mephaath|Mephaath/Mophaath
+T3|maleleel|1|Luk 3:37|0.78|Mahalalel|H4111|Man living at the time before the Flood|Mahalaleel/Mahalalel/Mahalel
+T3|magdala|1|Mat 15:39|0.75|Magadan|G3093|Magadan|Dalmanutha/Magadan/Magdalene
+T3|libnath|1|Jos 19:26|0.67|Shihor-libnath|H7884|Shihor-libnath|Shihor Libnath/Shihor-libnath
+T2|libinites|1|Num 26:58|0.93|Libni|H3845|Levite living at the time of Egypt and Wilderness|Laadan/Ladan/Libni/Libnite
+T3|lesen|1|Jos 19:47|0.73|Dan|H1835|Dan|Dan/Danite/Laish/Leshem
+T3|lamluz|1|Gen 28:19|0.67|Bethel|H1008|Bethel_1|Aven/Beth-el/Bethel/Bochim/El-beth-el/El-bethel/House of God/Luz/wicke
+T3|lakum|1|Jos 19:33|0.91|Lakkum|H3946|Lakkum= near Mount Tabor (Tabor_Mount@Jos.19.22-Hos=H8396G)|Lakkum
+T2|korathites|1|Num 26:58|0.94|Korah|H7141|Aaron's adversary living at the time of Egypt and Wilderness|Core/Korah/Korahite
+T2|korahthite|1|1Ch 9:31|0.89|Korah|H7141|Aaron's adversary living at the time of Egypt and Wilderness|Core/Korah/Korahite
+T3|kithlish|1|Jos 15:40|0.75|Chitlish|H3798|Chitlish= near Gederah (Gederah@Jos.15.36-1Ch=H1449)|Chitlish
+T3|kis|1|Act 13:21|0.67|Kish|H7027|Saul's father living at the time of United Monarchy|Cis/Kish
+T3|kirjathsepher|1|Jdg 1:11|0.89|Debir|H1688|Debir_1|Debir/Kiriath Sannah/Kiriath Sepher/Kiriath-sannah/Kiriath-sepher
+T3|kirjatharim|1|Ezr 2:25|0.88|Kiriath-jearim|H7157|Kiriath-jearim|Baalah/Jaar/Kiriath/Kiriath Baal/Kiriath Jearim/Kiriath-arim/Kiriath-b
+T2|kenizites|1|Gen 15:19|0.94|Kenizzites|H7074|People from Keniz(?)|Kenizzite/Kenizzites
+T3|keila|1|1Ch 4:19|0.91|Keilah|H7084|Keilah|Keilah
+T3|kamuel|1|1Ch 27:17|0.83|Kemuel|H7055|Man living at the time of Divided Monarchy|Kemuel
+T3|judaize|1|Gal 2:14|0.73|Judah|H3063|Jacob's son living at the time of the Patriarchs|David/Jew/Jewish/Jewish people/Jews/Juda/Judah/Judas/Judean/of Judea/t
+T3|judahmen|1|Neh 4:2|0.77|Judah|H3063|Jacob's son living at the time of the Patriarchs|David/Jew/Jewish/Jewish people/Jews/Juda/Judah/Judas/Judean/of Judea/t
+T3|jozadek|1|Ezr 3:8|0.86|Jehozadak|H3087|High Priest living at the time of Exile and Return|Jehozadak/Josedech/Jozadak
+T3|jozachar|1|2Ki 12:21|0.93|Jozacar|H3108|Ammonite living at the time of Divided Monarchy|Jozabad/Jozacar/Jozachar KJV/Zabad
+T3|joshabbasshebeth|1|2Sa 23:8|0.91|Jashobeam|H3434|Warrior living at the time of Divided Monarchy|Jashobeam/Josheb-basshebeth/that sat in the seat
+T3|johahnan|1|2Ch 17:15|0.82|Jehohanan|H3076|Man living at the time of Divided Monarchy|Jehohanan
+T3|jobath|1|Deu 10:7|0.8|Jotbathah|H3193|Jotbathah= near Ezion-geber (Ezion-geber@Num.33.35-2Ch=H6100)|Jotbathah
+T3|joa|1|Neh 12:22|0.67|Joiada|H3111|Priest living at the time of Exile and Return|Jehoiada/Joiada
+T3|jiphtah|1|Jos 15:43|0.92|Iphtah|H3316|Iphtah= near Ashnah (Ashnah@Jos.15.33-=H0823)|Iphtah
+T3|jimnites|1|Num 26:44|0.92|Imnah|H3232|Man living at the time of Egypt and Wilderness|Imnah/Imnite
+T3|jimnah|1|Gen 46:17|0.91|Imnah|H3232|Man living at the time of Egypt and Wilderness|Imnah/Imnite
+T3|jimna|1|Num 26:44|0.8|Imnah|H3232|Man living at the time of Egypt and Wilderness|Imnah/Imnite
+T2|jeturites|1|1Ch 5:19|0.77|Jetur|H3195|Ituraea|Ituraea/Iturea/Jetur
+T3|jethlah|1|Jos 19:42|0.77|Ithlah|H3494|Ithlah|Ithlah
+T2|jesuites|1|Num 26:44|0.83|Ishvi|H3440|Man living at the time of Egypt and Wilderness|Ishuai/Ishvi/Ishvite/Isui/Jesui
+T3|jessiah|1|1Ch 12:6|0.92|Isshiah|H3449|Man living at the time of Divided Monarchy|Ishiah/Isshiah/Jesiah
+T3|jesimoth|1|Num 33:49|0.73|Beth-jeshimoth|H1020|Beth-jeshimoth|Beth Jeshimoth/Beth-jeshimoth
+T3|jeshaiaih|1|Ezr 8:7|0.94|Jeshaiah|H3470|Man living at the time of Exile and Return|Jeshaiah
+T3|jeshabeab|1|1Ch 24:13|0.89|Jeshebeab|H3428|Man living at the time of Divided Monarchy|Jeshebeab
+T3|jerousha|1|2Ch 27:1|0.93|Jerusha|H3388|Woman living at the time of Divided Monarchy|Jerusha/Jerushah
+T3|jerimuth|1|Jos 10:5|0.8|Jarmuth|H3412|Jarmuth_1|Jarmuth
+T3|jekabseel|1|Neh 11:25|0.89|Jekabzeel|H3343|Jekabzeel= near Adadah (Adadah@Jos.15.22=H5735)|Jekabzeel
+T3|jehoshuah|1|1Ch 7:27|0.94|Joshua|H3091|Judge living at the time of Egypt and Wilderness and Conquest|Hoshea/Jehoshua/Jeshua/Jesus/Joshua/Oshea
+T3|jebneel|1|Jos 15:11|0.86|Jabneel|H2995|Jabneel_1|Jabneel/Jabneh
+T3|jatir|1|Jos 15:48|0.91|Jattir|H3492|Jattir|Jattir
+T3|jasanah|1|Neh 3:6|0.8|Yeshanah_Gate|H3465|Gate of Yeshanah= in Jerusalem (Jerusalem@Gen.14.18-Rev=H3389)|Jeshanah/Yeshanah/Yeshanah_Gate/old/old gate
+T3|jarite|1|2Sa 20:26|0.92|Jair|H2971|Man living at the time of Egypt and Wilderness|Jair/Jairite
+T2|japhleti|1|Jos 16:3|0.93|Japhlet|H3310|Man living before Israel's Monarchy|Japhlet/Japhletite
+T3|jahaza|1|Jos 13:18|0.92|Jahaz|H3096|Jahaz|Jahaz/Jahazah/Jahzah
+T3|jadaiah|1|Neh 11:10|0.86|Jedaiah|H3048|Levite living at the time of Exile and Return|Jedaiah
+T3|jabel|1|Gen 4:20|0.8|Jabal|H2989|Man living at the time before the Flood|Jabal
+T1|jaareoregim|1|2Sa 21:19|0.96|Jaare-oregim|H3296|Warrior living at the time of United Monarchy|Jaare-oregim/Jair/Jaur
+T3|ithma|1|1Ch 11:46|0.91|Ithmah|H3495|Moabite warrior living at the time of Divided Monarchy|Ithmah
+T3|italic|1|Act 10:1|0.77|Italy|G2482|Italy|Italian/Italy
+T3|israelitish|1|Lev 24:11|0.82|Israel|H3478|Man living at the time of the Patriarchs|God/Israel/Israelite/Israelitess/Jacob/Jeshurun/he
+T3|ismaelites|1|Jdg 8:24|0.95|Ishmael|H3458|Abraham's son living at the time of the Patriarchs|Ishmael/Ishmaelite/Ishmeelite
+T1|ishtob|1|2Sa 10:8|0.92|Tob|H2897|Tob|Ish-tob/Tob/men of Tob
+T2|ishbi|1|2Sa 21:16|0.62|Ishbi-benob|H3430|Giant living at the time of United Monarchy|Ishbi-benob/Ishbo-benob
+T3|iron|1|Jos 19:38|0.89|Yiron|H3375|Yiron|Yiron
+T1|ijeabarim|1|Num 21:11|0.95|Iye-abarim|H5863|Iye-abarim= near Dibon_1 (Diblathaim@Num.33.46-Jer=H5963)|Ije-abarim/Iye Abarim/Iye-abarim
+T3|iezraiah|1|1Ch 7:3|0.88|Izrahiah|H3156|Man living at the time of Divided Monarchy|Izrahiah
+T3|iesshiah|1|1Ch 24:21|0.93|Isshiah|H3449|Levite living at the time of Divided Monarchy|Isshiah/Jeshaiah
+T3|husha|1|1Ch 4:4|0.91|Hushah|H2364|Man living at the time of Divided Monarchy|Hushah
+T3|honam|1|1Ch 1:39|0.8|Hemam|H1950|Edomite living at the time of the Patriarchs|Hemam/Homam
+T3|holam|1|Jos 10:3|0.8|Hoham|H1944|King living before Israel's Monarchy|Hoham
+T3|hodshi|1|2Sa 24:6|0.63|Tahtim-hodshi|H8483|Kadesh_2|Hittites/Tahtim Hodshi/Tahtim-hodshi
+T3|henah|1|Isa 37:13|0.89|Hena|H2012|Hena|Hena
+T3|hazrah|1|2Ch 34:22|0.83|Harhas|H2745|Man living at the time of Divided Monarchy|Harhas/Hasrah
+T1|hazezontamar|1|Gen 14:7|0.96|Engedi|H5872|Engedi|Engedi/Hazazon-tamar/Hazezon Tamar/Hazezon-tamar
+T3|hazerenan|1|Num 34:9|0.84|Hazar-enan|H2704|Hazar-enan|Hazar Enan/Hazar-enan
+T1|hazazontamar|1|2Ch 20:2|0.96|Engedi|H5872|Engedi|Engedi/Hazazon-tamar/Hazezon Tamar/Hazezon-tamar
+T3|havoth|1|Deu 3:14|0.67|Havvoth-jair|H2334|Havvoth-jair= near Gilead (Gilead@Gen.31.21-Zec=H1568G)|Havvoth Jair/Havvoth-jair
+T3|hareth|1|1Sa 22:5|0.83|Hereth|H2802|Hereth|Hereth
+T3|haphraim|1|Jos 19:19|0.94|Ophrah|H6084|Ophrah_2|Hapharaim/Ophrah
+T3|hamothdor|1|Jos 21:32|0.9|Hammath|H2575|Hammath|Hammath/Hammon/Hammoth Dor/Hammoth-dor
+T3|haggabah|1|Ezr 2:45|0.93|Hagabah|H2286|Man living at the time of Exile and Return|Hagaba/Hagabah
+T2|hagerite|1|1Ch 27:31|0.93|Hagri|H1905|Warrior living at the time of Divided Monarchy|Haggeri/Hagri/Hagrite
+T3|habratha|1|Gen 48:7|0.71|Bethlehem|H1035|Bethlehem_1|Bethlehem/Bethlehemite/Ephratah/Ephrath/Ephrathah/Jashubi-lehem/Lehem
+T3|haareph|1|1Ch 2:51|0.92|Hareph|H2780|Man living at the time of Egypt and Wilderness|Hareph
+T3|golon|1|Deu 4:43|0.8|Golan|H1474|Golan|Galon/Golan
+T3|golam|1|Gen 36:23|0.67|Onam|H208|Edomite living at the time of the Patriarchs|Onam
+T2|goim|1|Jos 12:23|0.89|Goiim|H1471|People from Goy(?)|Goiim/Goyim/nations
+T3|gittahhepher|1|Jos 19:13|0.78|Gath-hepher|H1662|Gath-hepher|Gath Hepher/Gath-hepher
+T3|giblites|1|1Ki 5:18|0.8|Gebal|H1380|Gebal|Gebal/Gebalite
+T3|gezrites|1|1Sa 27:8|0.75|Geshur|H1650|Geshur|Geshur/Geshurite
+T3|gesham|1|1Ch 2:47|0.83|Geshan|H1529|Man living at the time of Divided Monarchy|Geshan
+T3|gerson|1|Gen 46:11|0.92|Gershon|H1648|Levite living at the time of Egypt and Wilderness|Gershom/Gershomite/Gershon/Gershonite
+T3|gergashites|1|Jos 9:1|0.9|Girgashites|H1622|People from Girgas(?)|Girgashite/Girgashites/Girgasite
+T3|gedeliah|1|1Ch 25:9|0.88|Gedaliah|H1436|Levite living at the time of United Monarchy|Gedaliah
+T2|gathites|1|1Sa 5:8|0.73|Gath|H1661|Gath|Gath/Gittite/Metheg Ammah/Metheg-ammah
+T3|gamalli|1|Num 13:12|0.86|Gemalli|H1582|Man living at the time of Egypt and Wilderness|Gemalli
+T3|gadera|1|1Ch 4:23|0.77|Gederah|H1449|Gederah|Gederah/Gederathite/Gederite
+T3|gabath|1|Jos 24:33|0.77|Gibeah|H1390|Gibeah_1|Gibeah/Gibeath/Gibeathite
+T2|eshtaulites|1|1Ch 2:53|0.9|Eshtaol|H847|Eshtaol|Eshtaol/Eshtaolite
+T3|eshean|1|Jos 15:52|0.91|Eshan|H824|Eshan|Eshan
+T3|esamathim|1|1Ch 2:53|0.63|Shumathites|H8126|People from Shumath(?)|Shumathite/Shumathites
+T3|ephesdammin|1|1Sa 17:1|0.87|Ephes-dammim|H658|Ephes-dammim|Ephes Dammim/Ephes-dammim/Pas Dammim/Pas-dammim
+T3|elnatham|1|Ezr 8:16|0.88|Elnathan|H494|Man living at the time of Exile and Return|Elnathan
+T3|elisaph|1|Num 3:24|0.93|Eliasaph|H460|Man living at the time of Egypt and Wilderness|Eliasaph
+T3|eliatha|1|1Ch 25:27|0.93|Eliathah|H448|Levite living at the time of Divided Monarchy|Eliathah
+T2|ekronite|1|Jos 13:3|0.94|Ekron|H6138|Ekron|Ekron/Ekronites
+T3|eisiana|1|Neh 12:39|0.67|Yeshanah_Gate|H3465|Gate of Yeshanah= in Jerusalem (Jerusalem@Gen.14.18-Rev=H3389)|Jeshanah/Yeshanah/Yeshanah_Gate/old/old gate
+T3|damascenes|1|2Co 11:32|0.71|Damascus|H1834|Damascus|Damascus
+T3|dabir|1|Jos 10:39|0.8|Debir|H1688|Debir_1|Debir/Kiriath Sannah/Kiriath Sepher/Kiriath-sannah/Kiriath-sepher
+T3|dabbasheth|1|Jos 19:11|0.9|Dabbesheth|H1708|Dabbesheth|Dabbesheth
+T3|dabareh|1|Jos 21:28|0.67|Daberath|H1705|Daberath|Daberath
+T3|cyrenaean|1|Mat 27:32|0.82|Cyrene|G2956|Cyrene|Cyrene/Cyrenian
+T3|colosse|1|Col 1:2|0.93|Colossae|G2857|Colossae|Colossae/Colossians
+T3|clauda|1|Act 27:16|0.91|Cauda|G2802|Cauda|Cauda
+T3|chushanrishathaim|1|Jdg 3:8|0.94|Cushan-rishathaim|H3573|King living before Israel's Monarchy|Cushan-rishathaim
+T1|chislothtabor|1|Jos 19:12|0.96|Chesulloth|H3694|Chesulloth|Chesulloth/Chisloth-tabor/Kisloth Tabor/Tabor
+T3|chisleu|1|Zec 7:1|0.86|Chislev|H3691|Name of the 9th month|Chislev
+T3|chepharhaammonai|1|Jos 18:24|0.87|Chephar-ammoni|H3723|Chephar-ammoni|Chephar-ammoni
+T3|charashim|1|1Ch 4:14|0.8|Ge-harashim|H2798||Ge-harashim
+T3|chalanes|1|Isa 10:9|0.77|Calneh|H3641|Calneh|Calneh/Calno/Canneh/Kalneh/Kalno/Kanneh
+T3|chabratha|1|Gen 35:16|0.67|Bethlehem|H1035|Bethlehem_1|Bethlehem/Bethlehemite/Ephratah/Ephrath/Ephrathah/Jashubi-lehem/Lehem
+T3|caphthorim|1|1Ch 1:12|0.95|Caphtorim|H3732|People from Caphtor (Crete)|Caphtorim
+T3|camon|1|Jdg 10:5|0.8|Kamon|H7056|Kamon= in Gilead (Gilead@Gen.31.21-Zec=H1568G)|Kamon
+T3|caldeans|1|Jer 25:12|0.93|Chaldea|H3778|Chaldea|Babylonians/Chaldea/Chaldean/astrologers
+T3|bougean|1|Est 9:10|0.86|Agag|H90|King living at the time of United Monarchy|Agag/Agagite/Bougeon
+T3|bosodeiah|1|Neh 3:6|0.89|Besodeiah|H1152|Man living at the time of Exile and Return|Besodeiah
+T3|boseath|1|2Ki 22:1|0.71|Bozkath|H1218|Bozkath= near Lachish (Lachish@Jos.10.3-Mic=H3923)|Bozkath
+T3|bethsham|1|1Sa 31:12|0.82|Beth-shean|H1052|Beth-shan|Beth Shan/Beth-shan/Beth-shean
+T1|bethphelet|1|Neh 11:26|0.95|Beth-pelet|H1046|Beth-pelet= near Hazar-shual (Hazar-shual@Jos.15.28-Neh=H2705)|Beth Pelet/Beth-palet/Beth-pelet/Beth-phelet
+T1|bethpalet|1|Jos 15:27|0.95|Beth-pelet|H1046|Beth-pelet= near Hazar-shual (Hazar-shual@Jos.15.28-Neh=H2705)|Beth Pelet/Beth-palet/Beth-pelet/Beth-phelet
+T3|bethheccerem|1|Neh 3:14|0.88|Beth-haccherem|H1021|Beth-haccherem|Beth-haccerem/Beth-haccherem
+T1|bethharan|1|Num 32:36|0.95|Beth-haram|H1027|Beth-haram|Beth Haram/Beth Haran/Beth-aram/Beth-haram/Beth-haran
+T3|bethhanan|1|1Ki 4:9|0.78|Elonbeth-hanan|H358|Elonbeth-hanan|Elon Bethhanan/Elon beth-hanan/Elonbeth-hanan
+T1|bethhaccerem|1|Jer 6:1|0.96|Beth-haccherem|H1021|Beth-haccherem|Beth-haccerem/Beth-haccherem
+T1|bethgilgal|1|Neh 12:29|0.95|Gilgal|H1537|Gilgal_1|Beth Gilgal/Beth-gilgal/Geliloth/Gilgal/house of Gilgal
+T2|bethelite|1|1Ki 16:34|0.8|Bethel|H1008|Bethel_1|Aven/Beth-el/Bethel/Bochim/El-beth-el/El-bethel/House of God/Luz/wicke
+T3|bethelberith|1|Jdg 9:46|0.7|Baal-berith|H1170|A male deity in the Old Testament|Baal-berith
+T2|bethbirei|1|1Ch 4:31|0.89|Beth-biri|H1011|Beth-biri= near Madmannah (Madmannah@Jos.15.31-1Ch=H4089G)|Beth Biri/Beth-biri
+T1|betharam|1|Jos 13:27|0.94|Beth-haram|H1027|Beth-haram|Beth Haram/Beth Haran/Beth-aram/Beth-haram/Beth-haran
+T3|betharaba|1|Jos 18:18|0.9|Beth-arabah|H1026|Beth-arabah|Arbathite/Beth Arabah/Beth-arabah
+T3|bethagan|1|2Ki 9:27|0.84|Beth-haggan|H1004|Beth-haggan= near Megiddo (Megiddo@Jos.12.21-Rev=H4023)|Beth-haggan
+T3|berothite|1|1Ch 11:39|0.95|Beeroth|H881|Beeroth|Beer/Beeroth/Beerothite
+T3|berodach|1|2Ki 20:12|0.67|Merodach-baladan|H1255|King living at the time of Divided Monarchy|Berodach-baladan/Marduk-Baladan/Merodach-baladan
+T3|behurim|1|2Sa 3:16|0.86|Bahurim|H980|Bahurim|Baharum/Baharumite/Bahurim/Barhumite
+T3|beerashan|1|1Sa 30:30|0.78|Bor-ashan|H3565|Bor-ashan= near Ashnah (Ashnah@Jos.15.33-=H0823)|Bor-ashan/Chor-ashan
+T3|bealath|1|Jos 15:24|0.86|Baalath-beer|H1192|Baalath-beer|Baal/Baalath Beer/Baalath-beer/Ballath/Bealoth/Ramoth
+T3|bavai|1|Neh 3:18|0.91|Bavvai|H942|Man living at the time of Exile and Return|Bavvai/Bevai/Binnui
+T3|bathuel|1|Gen 24:24|0.86|Bethuel|H1328|Man living at the time of the Patriarchs|Bethuel
+T1|barjesus|1|Act 13:6|0.88|Bar-jesus|G919|Man living at the time of the New Testament|Bar-Jesus/Bar-jesus/Elymas
+T3|bared|1|Gen 16:14|0.8|Bered|H1260|Bered= near Kadesh-barnea (Kadesh-barnea@Num.32.8-Psa=H6946G)|Bered
+T3|baalshalisha|1|2Ki 4:42|0.92|Baal-shalishah|H1190|Baal-shalishah= near Gilgal_2 (Gilgal@2Ki.2.1-=H1537H)|Baal Shalishah/Baal-shalishah
+T3|baaliah|1|1Ch 12:5|0.86|Bealiah|H1183|Warrior living at the time of Divided Monarchy|Bealiah
+T1|baalhermon|1|Jdg 3:3|0.95|Hermon_Mount|H2768|Mount Hermon|Baal Gad/Baal Hamon/Baal Hermon/Baal-gad/Baal-hamon/Baal-hermon/Hermon
+T3|azzah|1|1Ki 4:24|0.67|Gaza|H5804|Gaza|Ayyah/Gaza/Gazite
+T3|azra|1|1Ki 16:9|0.75|Arza|H777|Man living at the time of Divided Monarchy|Arza
+T3|aznoth|1|Jos 19:34|0.67|Aznoth-tabor|H243|Aznoth-tabor= near Mount Tabor (Tabor_Mount@Jos.19.22-Hos=H8396G)|Aznoth Tabor/Aznoth-tabor
+T3|azabuk|1|Neh 3:16|0.91|Azbuk|H5802|Man living at the time of Exile and Return|Azbuk
+T2|avim|1|Jos 18:23|0.89|Avvim|H5761|Avvim= near Hebron (Hebron@Gen.13.18-Neh=H2275A)|Avvim
+T3|atharin|1|Num 21:1|0.86|Atharim|H871|Atharim= near Zephath (Zephath@Num.14.45-1Ch=H6857)|Atharim
+T3|asterathite|1|1Ch 11:44|0.96|Ashtaroth|H6252|Ashtaroth|Ashtaroth/Ashterathite/Be Eshterah/Beeshterah
+T3|astartion|1|1Sa 31:10|0.67|Ashtaroth|H6252|A female deity in the time of the Old Testament|Ashtaroth
+T1|ashurites|1|2Sa 2:9|1.0|Asher|H836|Jacob's son living at the time of the Patriarchs|Aser/Asher/Asherite/Ashurite/cypress wood/pine
+T2|ashkelonite|1|Jos 13:3|0.84|Ashkelon|H831|Ashkelon|Ashkelon
+T3|ashdodish|1|Neh 13:24|0.8|Ashdod|H795|Ashdod|Ashdod/Ashdodite/Azotus
+T3|ashchenazi|1|Jer 51:27|0.78|Ashkenaz|H813|Ashkenaz|Ashkenaz
+T3|ashbea|1|1Ch 4:21|0.71|Beth-ashbea|H1004||Beth-ashbea
+T3|aruboth|1|1Ki 4:10|0.93|Arubboth|H700|Arubboth= near Socoh_1 (Socoh@Jos.15.35-2Ch=H7755G)|Arubboth
+T3|arkite|1|Gen 10:16|0.77|Amorites|H567|People from Amor(?)|Amorite/Amorites
+T3|aristarcus|1|Act 19:29|0.9|Aristarchus|G708|Man living at the time of the New Testament|Aristarchus
+T2|arbai|1|Jos 14:15|0.89|Arba|H704|Canaanite living before Israel's Monarchy|Arba
+T3|apses|1|1Ch 24:15|0.8|Happizzez|H6483|Man living at the time of Divided Monarchy|Aphses/Happizzez
+T3|apharsathchites|1|Ezr 4:9|0.93|Apharasthchite|H671|Word sometimes translated as a title|Apharasthchite/Apharsachites/governors/officials
+T2|anathothite|1|2Sa 23:27|0.9|Anathoth|H6068|Anathoth|Anathoth/Antothite
+T3|ammonitish|1|1Ki 11:1|0.8|Ammon|H5983|Ammon|Ammon/Ammonite/Ammonitess/Rabbah/Rabbath
+T3|amminhud|1|Num 34:20|0.93|Ammihud|H5989|Man living at the time of Egypt and Wilderness|Ammihud
+T3|aman|1|Jos 15:26|0.75|Amam|H538|Amam= near Moladah (Moladah@Jos.15.26-Neh=H4137)|Amam
+T3|aloth|1|1Ki 4:16|0.83|Baalath-beer|H1192|Baalath-beer|Baal/Baalath Beer/Baalath-beer/Ballath/Bealoth/Ramoth
+T3|alammelech|1|Jos 19:26|0.95|Allammelech|H487|Allammelech|Allammelech/Allammelek
+T3|aholibama|1|Gen 36:25|0.95|Oholibamah|H173|Woman living at the time of the Patriarchs|Aholibamah/Oholibamah
+T3|adriatic|1|Act 27:27|0.8|Adriatic_Sea|G99|Adriatic Sea|Adriatic_Sea
+T2|adami|1|Jos 19:33|0.62|Adami-nekeb|H129|Adami-nekeb|Adami-nekeb
+T3|acrabbim|1|Jos 15:3|0.88|Akrabbim|H4610|Akrabbim|Akrabbim/Scorpion
+T3|achsa|1|1Ch 2:49|0.91|Achsah|H5915|Woman living at the time of Egypt and Wilderness|Achsah/Aksah
+T3|accho|1|Jdg 1:31|0.89|Acco|H5910|Ptolemais|Acco/Akko/Ptolemais
+T3|abigal|1|1Sa 25:36|0.92|Abigail|H26|David's wife living at the time of United Monarchy|Abigail
+T3|abiasar|1|Exo 6:24|0.8|Ebiasaph|H43|Levite living at the time of Egypt and Wilderness|Abiasaph/Asaph/Ebiasaph
+T1|abelshittim|1|Num 33:49|0.96|Shittim|H7851|Abel-shittim|Abel Shittim/Abel-shittim/Shittim
+T1|abelmaim|1|2Ch 16:4|0.94|Abel-beth-maacah|H62|Abel-beth-maacah|Abel/Abel Beth Maacah/Abel Maim/Abel-beth-maacah/Abel-maim/to Abel Bet
+T3|abelbethmaachah|1|2Ki 15:29|0.9|Abel-beth-maacah|H62|Abel-beth-maacah|Abel/Abel Beth Maacah/Abel Maim/Abel-beth-maacah/Abel-maim/to Abel Bet
+T3|abadon|1|1Ch 9:36|0.91|Abdon|H5658|Man living at the time of United Monarchy|Abdon
+T3|The|1|1Sa 9:9|0.8|Israel|H3478|Man living at the time of the Patriarchs|God/Israel/Israelite/Israelitess/Jacob/Jeshurun/he

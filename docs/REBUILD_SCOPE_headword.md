@@ -5,6 +5,9 @@ slash command, not improvised. This doc is the session charter; the tickets hold
 detail (`TICKET_headword_class.md`, `TICKET_missing_strongs_pn.md`).
 
 ## Gate zero — disk space (pre-flight, BLOCKS the run)
+**CLEARED 2026-07-16 (JP paste): dashboard 1.1 GB free**; minus the ~0.4 GB pre-rebuild
+backup leaves ~0.7 GB ≥ the 600 MB floor. Backups pile 1.2 GB, bible.db 403 MB at check
+time. Re-verify only if significant new data lands before the run.
 - Requirement: **≥600 MB free AFTER the pre-rebuild backup exists**, shown by paste
   (`du -sh ~/db_backups/ ~/bible-db/*.db*` + the PA dashboard's free number — the
   NFS `df` figure is the shared server, NOT the account allowance; lesson 2026-07-16).
