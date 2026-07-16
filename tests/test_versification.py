@@ -142,6 +142,9 @@ def _fixture():
         {"head": "canaan", "section": "person",            # Ham's son, the eponymous
          "spellings": {"canaan"}, "bases": {"H3667"},      # ancestor (People/Clan target)
          "refs": {(1, 10, 18)}},
+        {"head": "midian", "section": "place",             # -ian suffix false positive:
+         "spellings": {"midian"}, "bases": {"H4080"},      # the place's OWN name must
+         "refs": {(2, 2, 15)}},                            # stay bindable (Exo 2:15)
     ]
     name_idx, base_idx, compact_idx = er.build_indexes(ents)
     return ents, name_idx, base_idx, compact_idx
@@ -230,6 +233,18 @@ def test_canaanitess_control_case():
     # place blocked on the exact path; the person Canaan doesn't list 1Ch 2:3 and
     # doesn't carry H3669 -> floors to Fix A (a supported People/Clan card or nothing).
     assert not b.render
+
+
+def test_place_own_name_exempt_from_gentilic_guard():
+    # SAME-NAME EXEMPTION (dry-run accounting 2026-07-16): is_people_group's
+    # -ian/-ean suffix also matches real place names — 'Midian' (51 live binds)
+    # classifies as a people word but IS the place's own headword, so the guard
+    # must not block it. Clicking the place's own name keeps its place card.
+    assert er.is_people_group("Midian")     # the false-positive classification...
+    b = _bind("Midian", 2, 2, 15, "H4080")
+    assert b.render and b.kind == "exact"   # ...does not block the place's own name
+    ents, *_ = _fixture()
+    assert ents[b.entity]["section"] == "place"
 
 
 def test_gentilic_binds_the_ancestor_person_when_corroborated():

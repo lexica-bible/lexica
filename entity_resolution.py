@@ -482,16 +482,27 @@ def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, bas
     # descriptor / people reference, so a PLACE-type candidate can never be a
     # confident bind for it ("Canaanitess" must not open the place Canaan — TIPNR
     # lists gentilic spellings under its place entities, so even the exact path hit
-    # them; ~350 live binds, 40 names). Blocked candidates simply drop out: the
+    # them; 478 live binds, 63 names). Blocked candidates simply drop out: the
     # occurrence either binds the eponymous-ancestor PERSON (People/Clan render,
     # the established Hittites->Heth model) via the remaining candidates, or floors
     # to Fix A. Blocking can only floor, never mis-bind — the safe direction.
+    #   SAME-NAME EXEMPTION (dry-run accounting, 2026-07-16): a gentilic is derived
+    # FROM a name, so the guard fires only when the surface word DIFFERS from the
+    # place's own headword. is_people_group's -ian/-ean suffix also matches real
+    # place names (Midian — 51 live binds, Beth-shean, the valley Rephaim); a reader
+    # clicking the place's own name gets the place card. 'canaanite' != 'canaan' ->
+    # blocked; 'midian' == 'midian' -> allowed. Compact-compared (hyphen/space-blind).
     gentilic = is_people_group(n)
+    nc = _compact(n)
+
+    def _blocked(i):
+        return (gentilic and ents[i]["section"] == "place"
+                and nc != _compact(ents[i]["head"]))
 
     # 1. EXACT name + verse (number is just metadata here). Versification serves it.
     exact, exact_rule = [], ""
     for i in name_idx.get(n, ()):
-        if gentilic and ents[i]["section"] == "place":
+        if _blocked(i):
             continue
         ok, rule = _verse_in_entity(ents[i], bk, ch, vs)
         if ok:
@@ -521,7 +532,7 @@ def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, bas
         ents[j]["section"] == "person" and B in ents[j]["bases"]
         for j in name_idx.get(n, ()))
     for i in cands:
-        if ents[i]["section"] == "place" and (person_same_num or gentilic):
+        if (person_same_num and ents[i]["section"] == "place") or _blocked(i):
             continue
         ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
         if ok and B and B in ents[i]["bases"]:
