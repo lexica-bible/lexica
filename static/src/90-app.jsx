@@ -1,19 +1,17 @@
 // ============================================================
 // YOU SHEET — mobile profile sheet (login + appearance + about) opened from the
-// rightmost toolbar slot. Reuses the reading-sheet frame (useSwipeToDismiss + the
-// .msheet / .mode-sec / .mseg classes) so it can't drift from the ModesSheet.
+// rightmost toolbar slot. Shares the .msheet-card / .mode-sec / .mseg classes with the
+// ModesSheet so it can't drift from it, and the shared Sheet supplies the chrome.
+// MENU class: controls only, no data.
 // ============================================================
 function YouSheet({ email, name, libFontSize, changeFontSize, theme, setTheme, onLogin, onSignup, onAccount, onLogout, onAbout, onClose }) {
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   return (
-    <>
-      <div className="sheet-scrim" onClick={onClose} />
-      <div className="msheet" ref={sheetRef}>
-        <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
-        <div className="msheet-head">
+    <Sheet bare variant="menu" onClose={onClose}>
+      <div className="msheet-card">
+        <div className="msheet-head sh-band">
           <span className="msheet-title">You</span>
         </div>
-        <div className="msheet-body" ref={scrollRef}>
+        <div className="msheet-body">
           <div className="mode-sec">
             <div className="mode-lbl">Account</div>
             {email ? (
@@ -55,7 +53,7 @@ function YouSheet({ email, name, libFontSize, changeFontSize, theme, setTheme, o
           </div>
         </div>
       </div>
-    </>
+    </Sheet>
   );
 }
 

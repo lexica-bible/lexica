@@ -69,6 +69,16 @@
   --r-sm: var(--radius);
   --r-md: var(--radius);
   --r-lg: var(--radius);
+  /* THE SECOND SANCTIONED RADIUS — sheets only (JP-ruled 2026-07-15). A full-width sheet
+     corner reads at a different scale than a chip's: 18px is right on a sheet and wrong on a
+     button (at ~30px tall a chip would go lozenge, which the doctrine bans by name). Owned by
+     the shared shell — `.sh` is the ONLY consumer; no per-family radii.
+     The doctrine's "one radius" was already split IN PRACTICE before this: .detail-sheet and
+     .msheet had been 18px for months while .zsheet and .wm-sheet were 6px. Steps 1-2 of the
+     sheet pass converged everything to 6px citing that doctrine — i.e. it picked a side in a
+     split nobody had noticed, and picked against JP's eye. This restores it and sanctions it.
+     Full record: docs/claude/frontend.md -> "The mobile sheet contract". */
+  --sheet-radius: 18px;
 
   --sidebar-w: 460px;
   /* News's right feed-shape panel matches Library/Word study width (pinned to the
@@ -2610,24 +2620,24 @@ input { font-family: inherit; }
 /* ============================================================
    MODES SHEET (mobile reading options — Figma spec)
 ============================================================ */
-.msheet {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 220;
-  background: var(--paper);
-  border-top-left-radius: 18px; border-top-right-radius: 18px;
-  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
-  padding-bottom: env(safe-area-inset-bottom, 12px);
-  animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-  /* swipe-to-dismiss + scroll: cap height below the top tab bar, scroll the body */
-  display: flex; flex-direction: column;
-  max-height: calc(100dvh - 64px - env(safe-area-inset-top, 0px));
-  will-change: transform;
-}
-.msheet-body { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; }
-@keyframes msheet-up { from { transform: translateY(40px); opacity: 0.4; } to { transform: none; opacity: 1; } }
-.msheet-handle { width: 40px; height: 4px; background: var(--rule-2); border-radius: var(--radius); margin: 10px auto 2px; }
+/* Reading options + You, INSIDE the shared sheet (step 3). The `.msheet` frame is gone — with
+   it the hardcoded `64px` top clearance, which was nobody's number: every other bar in the app
+   keys off --bar-h (48). Clearance is --sh-clear-top now.
+   These two are the MENU class: their height follows a control set fixed in code, never data.
+   They ride BARE — each owns its .msheet-head band and its .msheet-body scroll box, and the
+   sections' full-width top rules depend on the body having NO side padding, which .sh-body
+   would have added. */
+.msheet-card { display: flex; flex-direction: column; min-height: 0; }
+.msheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+/* The band IS this card's header (it rides bare), so it wears the contract's header spec —
+   divider included. It had no divider before: .msheet-head was the second of the two frames
+   that were missing it, alongside .zsheet-head. "Reading" and "You" are plain PANEL NAMES, so
+   they take the contract type — unlike the Library cards, whose titles are content identity
+   (a Strong's badge, a book name) and keep their own. */
 .msheet-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 18px 4px;
+  padding: 2px 18px 10px;
+  border-bottom: 1px solid var(--rule);
 }
 .text-row { display: flex; gap: 10px; }
 .text-row .text-ed { flex: 2 1 0; min-width: 0; }
@@ -2635,9 +2645,7 @@ input { font-family: inherit; }
 .display-row { display: flex; gap: 10px; align-items: stretch; }
 .display-row .mseg { flex: 1 1 0; min-width: 0; }
 .display-row .font-picker .mseg-b { flex: 1 1 0; }
-.msheet-title { font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
-.msheet-x { width: 36px; height: 36px; border-radius: var(--radius); display: grid; place-items: center; color: var(--ink-3); font-size: 16px; }
-.msheet-x:active { background: var(--bg-sunk); }
+.msheet-title { font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
 .mode-sec { padding: 16px 18px; border-top: 1px solid var(--rule); }
 .mode-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 11px; }
 .mode-hint { font-size: 12.5px; color: var(--ink-4); margin: -5px 0 10px; }
@@ -5903,7 +5911,7 @@ button.study-verse-ref { border: none; }
   z-index: 151;
   display: flex; flex-direction: column;
   background: var(--paper);
-  border-radius: var(--radius) var(--radius) 0 0;
+  border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
   box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
   overscroll-behavior: contain;
   animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -5938,7 +5946,15 @@ button.study-verse-ref { border: none; }
 }
 .sh-title { flex: 1; min-width: 0; font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
 .sh-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
-.sh-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 18px env(safe-area-inset-bottom); }
+/* NO bottom safe-area padding here — `.sh` already sits ABOVE the home indicator (its `bottom`
+   includes the inset). The two old frames cleared the indicator two DIFFERENT ways: `.zsheet`
+   sat flush at bottom:0 and padded its BODY; `.detail-sheet` offset the SHEET and padded
+   nothing. This shell took the sheet offset from one and the body padding from the other, so
+   it counted the indicator TWICE — ~34px of dead strip under the last row on a notched phone.
+   Invisible to every measurement in this repo: the harness runs desktop Chrome, where
+   env(safe-area-inset-*) is 0, so the bug is unreachable by the tool that would catch it.
+   Pick ONE owner of the inset; it's the sheet. (2026-07-15, found reading the CSS, not a probe.) */
+.sh-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 18px; }
 /* A bare child's band IS the card's header. On DESKTOP those bands are sized to clear the navy
    nav they float over (--hdr-h = 66px); inside a sheet there is no nav to clear, so the band is
    just a title row and must stand exactly as tall as .sh-head. Notes had already done this in a

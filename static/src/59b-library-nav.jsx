@@ -509,7 +509,6 @@ function ModesSheet({
   showStrongs, showInterlinear, setOpt, pickView, toggleStudy, chipMode, viewMode, libFontSize, changeFontSize, onClose,
   chrono, orderMode, setOrder, theme, setTheme,
 }) {
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
   const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "esv" || translation === "niv";   // English-only / ESV / NIV: no Greek toggles (BSB has its own per-word Strong's data)
   const hebMode = translation === "heb";   // Hebrew interlinear chips; "prose" flips them left-to-right
@@ -551,15 +550,17 @@ function ModesSheet({
       </button>
     );
   };
+  // MENU class: this card holds only controls fixed in code, never data, so its height follows
+  // that control set (a full-height card of toggles would be mostly empty). Rides BARE — it owns
+  // its head band + its scrolling body, and the sections' full-width rules need a body with no
+  // side padding.
   return (
-    <>
-      <div className="sheet-scrim" onClick={onClose} />
-      <div className="msheet" ref={sheetRef}>
-        <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
-        <div className="msheet-head">
+    <Sheet bare variant="menu" onClose={onClose}>
+      <div className="msheet-card">
+        <div className="msheet-head sh-band">
           <span className="msheet-title">Reading</span>
         </div>
-        <div className="msheet-body" ref={scrollRef}>
+        <div className="msheet-body">
           <div className="mode-sec">
             <div className="mode-lbl">Text</div>
             {activeNonCanon ? (
@@ -640,7 +641,7 @@ function ModesSheet({
           </div>
         </div>
       </div>
-    </>
+    </Sheet>
   );
 }
 

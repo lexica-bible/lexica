@@ -176,7 +176,7 @@ other two. JP called it: *"the reason past passes didn't stick is five frames."*
 | Height source | `--sh-clear-top` (`--bar-h`) / `--sh-clear-bottom` (0, or `--bar-h` on Library) |
 | Header | drag handle → title row → hairline `1px var(--rule)`. Title = `--f-serif` 16px/600. |
 | Handle | 40×4, `--rule-2` (Word study's number — the reference surface) |
-| Radius | `var(--radius)` top corners only. **The 18px pair is dead — don't reintroduce it.** |
+| Radius | `var(--sheet-radius)` (18px) top corners only — see the correction below |
 | Stacking | ONE layer: scrim 150, sheet 151 |
 | Dismiss | `useSwipeToDismiss`, 90px commit. Already uniform pre-pass; don't fork it. |
 
@@ -185,6 +185,18 @@ other two. JP called it: *"the reason past passes didn't stick is five frames."*
   list at 375px: All (5 rows) 516.4px tall → Bookmarks (1 row) 248px — the card shrank 268px and
   its top edge leapt down 268px. JP reported it as a Notes bug; it was the FRAME, and six other
   cards had it latent. Now 0/1/3/5/11/45 rows all measure 764px.
+- **A state that hides chrome changes the ROOM, not the rule.** Focus mode hides the cockpit and
+  the nav, so it just re-declares the clearances (`.app.view-library.focus-mode`) and the ONE
+  height rule does the rest. It used to re-declare position AND height on the frame. Any future
+  "this state is different" is a clearance token, not a second height.
+- **⚠ THE SHEET OWNS THE HOME-INDICATOR INSET — never pad it again inside.** `.sh`'s `bottom`
+  includes `env(safe-area-inset-bottom)`, so `.sh-body` must NOT. The two old frames disagreed
+  (`.zsheet` sat flush and padded its body; `.detail-sheet` offset the sheet and padded nothing),
+  and this shell first shipped with one from each — counting the inset TWICE, ~34px of dead strip
+  under the last row on a notched phone. **No probe in this repo can see it**: the harness is
+  desktop Chrome, where every `env(safe-area-inset-*)` is 0. Found by reading the CSS, not by
+  measuring — which is the point: when a value is unreachable by the instrument, reading the rule
+  IS the check, and "all green" means nothing about it.
 - **48px standard, 96px on Library.** One rule, two results. Library's reading cockpit owns that
   tab's bottom and must not be covered. The zone bars (`.zbar`) are deliberately coverable — a
   card sits OVER its own bar (hit-test proof below), which is why nothing inside a sheet needs
@@ -195,6 +207,27 @@ other two. JP called it: *"the reason past passes didn't stick is five frames."*
   short of the nav anyway, so the nav stays visible and tappable over an open card. Before this,
   `.msheet` (220) and `.mpick` (210) floated over it while `.detail-sheet` (51) and `.wm-sheet`
   (121) sat under — nobody had decided; they'd each just picked a number.
+
+### ⚠ CORRECTION — the radius, and how this pass got it wrong (JP-ruled 2026-07-15)
+**This table said "`var(--radius)` top corners only. The 18px pair is dead — don't reintroduce
+it." That was wrong, and steps 1–2 shipped it.** The correct rule is `--sheet-radius: 18px`, a
+SECOND sanctioned radius owned by the shell. The record is kept rather than rewritten because
+the mistake is the instructive part:
+
+- The doctrine says "one radius (6px)". **In practice it had been split for months**:
+  `.detail-sheet` and `.msheet` were 18px, `.zsheet` and `.wm-sheet` 6px. Nobody had noticed.
+- So "converge on the doctrine" was not enforcing an intact rule — **it was picking a side in a
+  split**, and it picked against JP's eye on the surfaces he uses most (the Library cards).
+- The inventory is what settled it: a global raise to 18px was never viable (220 rules — every
+  chip and button would go **lozenge**, which the doctrine bans *by name*), and desktop panels
+  carry no radius at all, so a sheet-only token has nothing to leak into.
+- **The lesson: when a doctrine and the shipped pixels disagree, that's a question, not a
+  bug to fix by fiat.** Cite the doctrine to *raise* it; don't cite it to settle it silently.
+  A rule that half the app has been ignoring for months may be the thing that's out of date.
+
+Doctrine now reads: one radius (`--radius: 6px`), **plus one sheet radius**
+(`--sheet-radius: 18px`) — a full-width sheet corner reads at a different scale than a chip's.
+Handle stays on `var(--radius)`: at 4px tall it is fully round at either value.
 
 ### Two size classes — and the classification rule is not a judgement call
 **Holds data → `panel`. Holds controls only → `menu`.** A new card self-classifies on that line.
@@ -243,7 +276,7 @@ padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill
 |---|---|---|
 | `.zsheet` | 7 (News ×3, Ask-corpus ×2, Notes ×2) | **DONE** — step 1, `05dbd6f` |
 | `.detail-sheet` | 5 (word card, chapter overview, xref, note editor, day intro) | **DONE** — step 2 |
-| `.msheet` | 2 (Reading options, You) | step 3 — still z220 + its own 64px clearance |
+| `.msheet` | 2 (Reading options, You) | **DONE** — step 3; the first live Menu cards |
 | `.wm-sheet` | 4 (Word study) | step 4 — still z121; **blocked on the lexicon fixture** |
 | `.mpick` | 1 | header spec only — the sanctioned exception below |
 

@@ -95,8 +95,15 @@ built Library. (Full record: `docs/design.md`.)
 5. **Emphasis budget.** Before adding visual weight, name the meaning it carries. Default to
    the quietest version that works; ornament must argue its way in. **Quiet is not formless** —
    a list of choices must still read as discrete items at rest.
-6. **One radius.** All rounded rectangles use the shared `--radius` token (6px, soft-square;
-   never 0-sharp, never lozenge). Functional exceptions only: `50%` circles, `0`.
+6. **One radius, plus one SHEET radius.** All rounded rectangles use the shared `--radius`
+   token (6px, soft-square; never 0-sharp, never lozenge). **Mobile bottom sheets are the one
+   sanctioned exception: `--sheet-radius` (18px), owned by the shared `Sheet` shell** — a
+   full-width sheet corner reads at a different scale than a chip's, so 18px is right on a
+   sheet and wrong on a button (at ~30px tall a chip would go lozenge, banned above). JP-ruled
+   2026-07-15; the "one radius" line had already been split in practice for months (two of the
+   four sheet frames were 18px) and a pass that converged them to 6px converged against his
+   eye. Full record: `docs/claude/frontend.md` → "The mobile sheet contract". Other functional
+   exceptions: `50%` circles, `0`.
 7. **Toggles — never box + underline together.** Text segments → underline-under-active, no box
    (`.seg--line`). Icon toggles → boxed active.
 
