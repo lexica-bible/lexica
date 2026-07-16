@@ -154,6 +154,20 @@ const api = {
     }
     return api._contestedP;
   },
+  // The function-word Strong's set (prefixed "G3588"-style forms) — the ONE server
+  // source, so the client can drop articles/particles from saved threads' key lists
+  // at display time (stored copies predate the backend Door-1 filter; same pattern
+  // as contestedStrongs above). Memoised; a network miss = empty set (under-filter
+  // only — real key words are never hidden).
+  functionStrongs: () => {
+    if (!api._funcStrongsP) {
+      api._funcStrongsP = fetch("/api/lexicon/function-strongs")
+        .then(r => r.json())
+        .then(d => new Set((d && d.strongs) || []))
+        .catch(() => new Set());
+    }
+    return api._funcStrongsP;
+  },
   books: () =>
     fetch("/api/books").then(r => r.json()),
   chronological: () =>

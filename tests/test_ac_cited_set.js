@@ -17,7 +17,7 @@ const assert = require("assert");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { _acCitedSet } = require(path.join(__dirname, "..", "static", "src", "51-corpus-logic.jsx"));
+const { _acCitedSet, _acDropFunctionKeys } = require(path.join(__dirname, "..", "static", "src", "51-corpus-logic.jsx"));
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log("ok  " + name); };
@@ -63,6 +63,35 @@ test("mixed list keeps each key in its own language", () => {
   const s = _acCitedSet([{ strongs: "G746" }, { strongs: "H7225" }]);
   assert(s.has("G746") && s.has("H7225"));
   assert(!s.has("H746") && !s.has("G7225"));
+});
+
+// ── the display-time function-word drop (saved threads replay stored key lists
+// that predate the backend Door-1 filter; the Gen 1:1 arche thread stored G3588) ──
+
+test("stored-thread control: G3588 dropped from a saved key list", () => {
+  const funcSet = new Set(["G3588", "G2532"]);
+  const keys = [{ strongs: "G746" }, { strongs: "G3588", lemma: "ὁ" }, { strongs: "G2316" }];
+  const kept = _acDropFunctionKeys(keys, funcSet);
+  assert.deepStrictEqual(kept.map(k => k.strongs), ["G746", "G2316"]);
+  const s = _acCitedSet(kept);
+  assert(!s.has("G3588") && s.has("G746") && s.has("G2316"));
+});
+
+test("no funcSet (network miss) = no-op, never hides real key words", () => {
+  const keys = [{ strongs: "G746" }, { strongs: "G3588" }];
+  assert.strictEqual(_acDropFunctionKeys(keys, null), keys);
+  assert.strictEqual(_acDropFunctionKeys(keys, new Set()), keys);
+});
+
+test("drop is language-aware: H853 drops, G853 survives", () => {
+  const funcSet = new Set(["H853"]);
+  const kept = _acDropFunctionKeys([{ strongs: "H853" }, { strongs: "G853" }], funcSet);
+  assert.deepStrictEqual(kept.map(k => k.strongs), ["G853"]);
+});
+
+test("_acCitedSet excludeSet drops directly too", () => {
+  const s = _acCitedSet([{ strongs: "G746" }, { strongs: "G3588" }], new Set(["G3588"]));
+  assert(s.has("G746") && !s.has("G3588"));
 });
 
 console.log(`\n${n} cited-set tests passed`);

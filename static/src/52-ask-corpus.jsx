@@ -197,11 +197,13 @@ const acRealTurn = (t) => !!(t && t.question && !t.loading && !t.error && !t.loc
 // (plain JS, so tests/test_ac_word_groups.js locks the SAME code). It's a global in the
 // concatenated bundle, defined before this file in filename order.
 
-function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet }) {
+function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet, funcSet }) {
   const results = answer.results || [];
-  const cited = _acCited(answer.keyStrongs);
+  // Saved threads replay stored key lists that may predate the backend function-word
+  // filter — drop articles/particles at display time (funcSet = the server set).
+  const words = _acDropFunctionKeys(answer.keyStrongs || [], funcSet);
+  const cited = _acCited(words);
   const grounded = answer.grounded !== false;
-  const words = answer.keyStrongs || [];
   // Key passages = the primary passages the synthesis leaned on, then any thematic
   // ("additional") refs, each tagged so a theme-only link isn't misread as direct evidence.
   // If nothing was flagged primary (a small pool), every retrieved verse shows. Deduped by ref.
@@ -347,8 +349,10 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
 }
 
 // One answered (or in-flight) question.
-function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selected, onSelect, isMobile }) {
-  const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
+function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selected, onSelect, isMobile, funcSet }) {
+  // funcSet drops function-word keys from stored lists (see ProvenancePanel).
+  const cited = useMemo(() => _acCited(_acDropFunctionKeys(turn.keyStrongs, funcSet)),
+                        [turn.keyStrongs, funcSet]);
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
   const verifiedRefs = useMemo(() => {
@@ -612,6 +616,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
   const [contestedSet, setContestedSet] = useState(null);   // fork Strong's set from the server (one source of truth)
+  const [funcSet, setFuncSet] = useState(null);              // function-word Strong's set (drops stored article keys)
   const [showOlderConvos, setShowOlderConvos] = useState(false);   // rail: reveal past the 10-item cap
   const [confirmClear, setConfirmClear] = useState(false);   // rail: two-step guard on Clear all
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
@@ -633,6 +638,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   useEffect(() => {
     let live = true;
     api.contestedStrongs().then(s => { if (live) setContestedSet(s); });
+    // Function-word set, same pattern: cleans stored key lists at display time.
+    api.functionStrongs().then(s => { if (live) setFuncSet(s); });
     return () => { live = false; };
   }, []);
 
@@ -956,7 +963,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         {thread.map((turn, i) => (
           <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma}
             onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect} isMobile={isMobile}
-            selected={!isMobile && i === selectedIdx}
+            selected={!isMobile && i === selectedIdx} funcSet={funcSet}
             onSelect={isMobile ? null : () => selectTurn(i)}/>
         ))}
       </div>
@@ -983,7 +990,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       <div className="ac-insp-band sh-band">{selectedAnswer ? "What this answer rests on" : "How often these words occur"}</div>
       <div className="ac-insp-scroll">
         {selectedAnswer
-          ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet}/>
+          ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet} funcSet={funcSet}/>
           : <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>}
       </div>
     </div>

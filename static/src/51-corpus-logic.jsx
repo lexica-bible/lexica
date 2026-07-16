@@ -68,19 +68,41 @@ function _acWordGroups(words, panel, contestedSet) {
 // H3588 (ki) lit every Greek article (G3588) in the evidence verses (Door 2 of
 // docs/tickets/TICKET_highlight_cited_set.md). A bare key number is Greek by the
 // SQL-gen prompt contract ("H prefix for Hebrew, G prefix or bare digits for Greek").
-function _acCitedSet(keyStrongs) {
+// Canonical prefixed form of one key-word entry ("G746"), or null when the entry
+// carries no usable number. Bare digits are Greek by the SQL-gen prompt contract.
+function _acNormTag(p) {
+  const tag = String((p && (p.strongs || p.strongs_base)) || "").trim();
+  const m = /^([GHgh]?)(\d+(?:\.\d+)*)$/.exec(tag);
+  return m ? (m[1] ? m[1].toUpperCase() : "G") + m[2] : null;
+}
+
+function _acCitedSet(keyStrongs, excludeSet) {
   if (!keyStrongs || !keyStrongs.length) return null;
   const s = new Set();
   for (const p of keyStrongs) {
-    const tag = String((p && (p.strongs || p.strongs_base)) || "").trim();
-    const m = /^([GHgh]?)(\d+(?:\.\d+)*)$/.exec(tag);
-    if (!m) continue;
-    const prefix = m[1] ? m[1].toUpperCase() : "G";
-    s.add(prefix + m[2]);
+    const canon = _acNormTag(p);
+    if (!canon) continue;
+    if (excludeSet && excludeSet.has(canon)) continue;
+    s.add(canon);
   }
   return s.size ? s : null;
 }
 
+// Drop function-word entries (articles, particles) from a saved key list. Saved
+// Ask-corpus threads replay their browser-stored copy and never re-hit the answer
+// endpoint, so a key list stored BEFORE the backend Door-1 filter (G3588 on the
+// Gen 1:1 arche thread) can only be cleaned here, at display time — same pattern
+// as the contested-register re-stamp. funcSet comes from /api/lexicon/function-
+// strongs (prefixed forms, the ONE server-side source); null/empty = no-op, so a
+// network miss can only under-filter, never hide real key words.
+function _acDropFunctionKeys(keyStrongs, funcSet) {
+  if (!keyStrongs || !funcSet || !funcSet.size) return keyStrongs || [];
+  return keyStrongs.filter((p) => {
+    const canon = _acNormTag(p);
+    return !(canon && funcSet.has(canon));
+  });
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { _acWordGroups, _acCitedSet };
+  module.exports = { _acWordGroups, _acCitedSet, _acDropFunctionKeys };
 }

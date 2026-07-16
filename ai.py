@@ -1300,6 +1300,25 @@ def _filter_function_keys(pairs):
     return out
 
 
+def _drop_function_key_entries(entries):
+    """The cache-read leg of the Door-1 filter (TICKET_highlight_cited_set): answers
+    cached BEFORE the acceptance-point filter landed still carry function-word keys
+    (the Gen 1:1 arche thread stored G3588 — the article chip + every 'the' glowing).
+    Same sets, same language rule as _filter_function_keys; entry['strongs'] is
+    normally H/G-prefixed (bare = Greek per the prompt contract). Pure lookup, no
+    model — safe to run on every cache read, mirrors the `contested` re-stamp."""
+    kept = []
+    for e in entries:
+        m = re.match(r'^([GHgh]?)(\d+)', str(e.get("strongs", "")).strip())
+        if m:
+            pref, base = m.group(1).upper(), m.group(2)
+            heb = pref == "H" or (pref == "" and int(base) > 5624)
+            if (base in _HEB_FUNCTION_STRONGS) if heb else (base in _FUNCTION_STRONGS):
+                continue
+        kept.append(e)
+    return kept
+
+
 def _stamp_rail_fields(key_strongs_data):
     """Stamp each in-scope word with the two flags the rail badges on: `contested` (sits in
     the CONTESTED fork register) and `alias_note` (the standard↔ABP numbering crosswalk, or
@@ -1798,6 +1817,11 @@ def ai_search():
                         {**e, "contested": e.get("strongs", "") in contested_register.CONTESTED_BY_SID}
                         for e in out["key_strongs"]
                     ]
+                    # Door-1 filter, cache-read leg: answers cached before the
+                    # acceptance-point filter still carry function-word keys
+                    # (G3588 on the Gen 1:1 arche thread) — drop them on read,
+                    # same as the contested re-stamp above. Pure lookup, no model.
+                    out["key_strongs"] = _drop_function_key_entries(out["key_strongs"])
                 out["quota"] = ai_quota_status(role, uid)
                 return jsonify(out)
 

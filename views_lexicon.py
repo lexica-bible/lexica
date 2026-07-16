@@ -29,6 +29,23 @@ bp = Blueprint("lexicon", __name__)
 # words cover "him/them". Only the finder is affected; the word page for H853 is unchanged.
 _HEB_FUNCTION_STRONGS = frozenset({"853"})
 
+
+@bp.route("/api/lexicon/function-strongs")
+def function_strongs():
+    """The function-word Strong's set (prefixed forms), mirroring /api/lexica/contested:
+    ONE source of truth served small so the client can drop function-word keys from
+    saved Ask-corpus threads by plain membership — a reopened thread replays its
+    browser-stored copy and never re-hits the answer endpoint, so a stored key list
+    that predates the Door-1 filter (G3588 on the Gen 1:1 arche thread,
+    TICKET_highlight_cited_set) can only be cleaned at display time. Startup-populated
+    set; changes only on a words/lexicon rebuild, so a day's cache is safe."""
+    from flask import jsonify as _jsonify
+    strongs = sorted(f"G{n}" for n in _FUNCTION_STRONGS)
+    strongs += sorted(f"H{n}" for n in _HEB_FUNCTION_STRONGS)
+    resp = _jsonify({"strongs": strongs})
+    resp.headers["Cache-Control"] = "public, max-age=86400"
+    return resp
+
 # Canonical book ordering for the cross-book "All books" occurrence list. ABP's
 # verses.book (and heb_words.book) are TEXT abbreviations, so a plain ORDER BY sorts
 # ALPHABETICALLY — this CASE maps each abbrev to its 1-66 Bible order (same idea as

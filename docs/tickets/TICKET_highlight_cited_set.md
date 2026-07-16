@@ -54,6 +54,25 @@ omission. Both doors fixed regardless (JP ruling).
   fix cleans their highlighting anyway (prefixed-only set); Door 1 applies to new
   draws. No cache purge needed.
 
+## The THIRD leg (post-deploy, 2026-07-16) — saved threads needed their own fix
+First deploy did NOT clear the Gen 1:1 symptom. The claim above was WRONG for
+door-1 cases: "self-heal via the frontend" only covered twin-manufactured
+collisions. This thread's stored key list legitimately CONTAINS G3588 (the model
+put it there — the "ho" chip), and reopened threads replay a BROWSER-STORED copy,
+never re-hitting the answer endpoint — so neither the acceptance filter nor a
+cache-read filter can touch them. Three legs now closed:
+1. Acceptance (new draws): `ai.py _filter_function_keys` — as above.
+2. Server cache reads: `ai.py _drop_function_key_entries` on the cache-hit path,
+   mirroring the `contested` re-stamp (pure lookup, no model).
+3. Display time (browser-saved threads): `/api/lexicon/function-strongs` — a tiny
+   endpoint serving the prefixed function-word set (mirrors /api/lexica/contested,
+   the codebase's own precedent for exactly this staleness problem) +
+   `_acDropFunctionKeys` in 51-corpus-logic.jsx, applied in ProvenancePanel and
+   AcTurn before the cited set is built AND before the chips render (the "ho" chip
+   disappears too). Network miss = empty set = under-filter only.
+Locked by 4 added tests in tests/test_ac_cited_set.js (stored-thread G3588
+control, no-op-on-miss, H853/G853 language-awareness, excludeSet path).
+
 ## Live check after deploy (JP)
 Re-open the Gen 1:1 arche thread: articles ("the", "by") no longer highlight in key
 passages; "beginning"/"God"/content words still do (the fix must not go dark).
