@@ -74,7 +74,7 @@ at rest (spacing, markers, link color), not merge into prose. De-boxing removes
 the container, not the item-ness. A row of four sample words should read as four
 tappable things before you hover, not as a sentence.
 
-### 6. One radius
+### 6. One radius — plus one SHEET radius
 Squared means **soft-squared**, not sharp. Geometry uses one shared radius token
 (`--radius`, **6px**) on every rounded rectangle: buttons, inputs, notices, cards,
 the CONTESTED badge. 6px is exactly the pre-flatten Library toolbar control
@@ -83,6 +83,27 @@ soft-square character to match app-wide. The rule is "one token, soft square" �
 never 0-sharp (a hard square lost the toolbar its character), never a full-round
 lozenge (999px). Exceptions are functional only: `50%` for circles/dots, `0` for
 a deliberately flush edge.
+
+**The one sanctioned second radius: `--sheet-radius` (18px), mobile bottom sheets
+only, owned by the shared `Sheet` shell** (JP-ruled 2026-07-15). A full-width sheet
+corner reads at a different scale than a chip's: 18px is right on a sheet and wrong
+on a button — at ~30px tall a chip would go lozenge, which this rule bans by name.
+
+**How it got ruled, because the process is the lesson.** "One radius" was already
+split IN PRACTICE for months: two of the four mobile sheet frames were 18px
+(`.detail-sheet`, `.msheet`) and two were 6px (`.zsheet`, `.wm-sheet`). Nobody had
+noticed. A pass then cited *this page* to converge them all to 6px — and JP said he
+preferred the 18px look on the Library cards he uses most. So citing the doctrine
+had not enforced an intact rule; **it had picked a side in a split, and picked
+against the owner's eye.** An inventory settled it: a global raise was never viable
+(220 rules — every chip lozenged), and desktop panels carry no radius at all, so a
+sheet-only token has nothing to leak into.
+
+**The standing lesson: when a doctrine and the shipped pixels disagree, that is a
+QUESTION, not a bug to fix by fiat.** Cite a rule to RAISE the conflict; don't cite
+it to settle one silently. A rule half the app has been ignoring for months may be
+the thing that is out of date. Full record: `docs/claude/frontend.md` → "THE MOBILE
+SHEET CONTRACT".
 
 ### Toggles
 Two toggle shapes, never mixed on one control:

@@ -820,11 +820,13 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
   beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` →
   compacts `.lib-reading` on desktop.
-- **Mobile = bottom sheets, unified 2026-06-19:** every rail panel + word-study/notes/reading
-  sheet shares ONE slide-up animation + scrim + radius/shadow and closes by **swipe-down +
-  tap-scrim — NO close X on mobile** (X stays on DESKTOP panels; real centered modals keep
-  theirs). Section spacing aligns to the LOCKED word card. `useSwipeToDismiss`, memory
-  `project_mobile_gestures`. Heights still drift (not yet unified — see that memory).
+- **Mobile = bottom sheets. The five Library rail cards are on the shared `Sheet` (2026-07-15)** —
+  height, header, radius, layer and the dismiss gesture all come from **THE MOBILE SHEET CONTRACT**
+  (above); nothing here. They close by **swipe-down + tap-scrim — NO close X on mobile** (X stays on
+  DESKTOP panels; real centered modals keep theirs). Section spacing aligns to the LOCKED word card,
+  and each card's title type stays its own (the word card's Strong's badge is mono by doctrine).
+  The old "heights still drift, not yet unified" note is DEAD — that was the defect the contract
+  fixed; `project_mobile_gestures` still holds the gesture history, not the heights.
 
 ### Other Library features
 - Focus mode (memory `project_focus_mode`): tap blank to enter, Esc/tap exits. Mobile hides
