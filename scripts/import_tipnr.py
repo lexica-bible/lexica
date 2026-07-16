@@ -588,7 +588,7 @@ def main():
 
         def _strip_lead(s):
             for prefix in ("land of the ", "land of ", "of the ", "of ", "to ",
-                           "in the ", "in ", "for ", "both ", "and ", "this ",
+                           "in the ", "in ", "for ", "both ", "and ", "as ", "this ",
                            "was ", "with ", "the ", "an ", "a ", "O ", "o "):
                 if s.lower().startswith(prefix):
                     return s[len(prefix):]
