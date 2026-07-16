@@ -135,6 +135,13 @@ def _fixture():
         {"head": "moab", "section": "place",               # 'Moabites' reaches it only
          "spellings": {"moab"}, "bases": {"H4124"},        # by stem/alias (fuzzy path)
          "refs": {(1, 19, 37)}},
+        {"head": "canaan", "section": "place",             # TIPNR lists the gentilic
+         "spellings": {"canaan", "canaanite", "canaanites", "canaanitess"},
+         "bases": {"H3667", "H3669"},                      # spellings under the PLACE —
+         "refs": {(13, 2, 3), (1, 10, 18)}},               # the guard must block these
+        {"head": "canaan", "section": "person",            # Ham's son, the eponymous
+         "spellings": {"canaan"}, "bases": {"H3667"},      # ancestor (People/Clan target)
+         "refs": {(1, 10, 18)}},
     ]
     name_idx, base_idx, compact_idx = er.build_indexes(ents)
     return ents, name_idx, base_idx, compact_idx
@@ -204,12 +211,36 @@ def test_cushi_runner_floors_no_place_for_a_person():
     assert not _bind("Cushi", 10, 18, 21, "H3570").render
 
 
-def test_people_gentilic_still_renders_its_place():
-    # Negative control (the fix must not over-floor): 'Moabites' stems/aliases to the
-    # place Moab and there is NO 'moabites' person entity, so the number-matched fuzzy
-    # place render is left intact.
-    b = _bind("Moabites", 1, 19, 37, "H4124")
-    assert b.render and b.kind == "fuzzy" and b.entity == 8
+def test_gentilic_never_binds_a_place():
+    # GENTILIC GUARD (2026-07-16 ticket) — this test REVERSES the old negative control
+    # ("people gentilic still renders its place"): JP overturned that ruling after the
+    # PA sweep found ~350 gentilic->place binds (40 names). A gentilic is a person
+    # descriptor / people reference; a place card for it is the bug class. 'Moabites'
+    # reaches the place Moab with an agreeing number and a listed verse — every old
+    # guard passes — and it must now FLOOR (no person candidate exists -> Fix A).
+    assert not _bind("Moabites", 1, 19, 37, "H4124").render
+
+
+def test_canaanitess_control_case():
+    # THE known bad case (Canaanitess@1Ch.2.3). Two defects stacked: -itess was
+    # missing from the people-suffix rule, and TIPNR lists 'canaanitess' as a spelling
+    # of the PLACE Canaan so the EXACT path bound it. Both fixed:
+    assert er.is_people_group("Canaanitess")            # -itess(es) now classifies
+    b = _bind("Canaanitess", 13, 2, 3, "H3669")
+    # place blocked on the exact path; the person Canaan doesn't list 1Ch 2:3 and
+    # doesn't carry H3669 -> floors to Fix A (a supported People/Clan card or nothing).
+    assert not b.render
+
+
+def test_gentilic_binds_the_ancestor_person_when_corroborated():
+    # Positive control — the guard must not kill the GOOD path: 'Canaanites' at
+    # Gen 10:18 (the Table of Nations). Place blocked; alias 'canaan' reaches the
+    # PERSON (Ham's son), who lists the verse and carries the stored number ->
+    # renders (the card layer shows People/Clan via is_people_group).
+    b = _bind("Canaanites", 1, 10, 18, "H3667")
+    assert b.render and b.kind == "fuzzy"
+    ents, *_ = _fixture()
+    assert ents[b.entity]["section"] == "person"
 
 
 # ── parse_tipnr section attribution (Session 6 label fix) ────────────────────

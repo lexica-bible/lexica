@@ -102,16 +102,19 @@ def clean_summary(s):
     return re.sub(r"\s+", " ", s)
 
 
-# ── People-group / gentilic classifier (DISPLAY-TIME only) ───────────────────
+# ── People-group / gentilic classifier ───────────────────────────────────────
 # TIPNR models a people through its eponymous ancestor, a PERSON entity (Hittites->Heth,
 # Jews->Judah). So a gentilic word binds to a person and would render individual-person
 # framing (Parents/Children) for a collective. This flags such a word so the card can show
-# a "People / Clan" view instead. NOT a binding input — bind_occurrence never calls it, the
-# binds are unchanged. ONE list, shared by the bound card (via /api/metav/entity) AND the
-# section-mismatch audit, so they can't drift.
-#   Suffixes are the HIGH-PRECISION gentilic endings only (-ites/-ians/-eans). Bare -im/-i
-#   are EXCLUDED — they collide with person names (Ephraim, Miriam, Levi). The irregular
-#   peoples an ending can't reach live in the curated set (incl. the real -im peoples).
+# a "People / Clan" view instead. ONE list, shared by the bound card (via /api/metav/entity),
+# the section-mismatch audit, AND (since the 2026-07-16 gentilic-guard ticket) the binder
+# itself: bind_occurrence blocks a place-type candidate for a gentilic surface word —
+# a person descriptor must never confidently open a place card (Canaanitess@1Ch.2.3 bug;
+# TIPNR lists gentilic spellings under place entities, so the exact path hit them).
+#   Suffixes are the HIGH-PRECISION gentilic endings only (-ite(s)/-itess(es)/-ians/-eans).
+#   Bare -im/-i are EXCLUDED — they collide with person names (Ephraim, Miriam, Levi). The
+#   irregular peoples an ending can't reach live in the curated set (incl. the real -im
+#   peoples).
 PEOPLE_GROUP_WORDS = {
     # peoples whose ending a suffix rule can't reach
     "jews", "jew", "greeks", "greek", "gentiles", "gentile", "hebrews", "philistines",
@@ -124,8 +127,10 @@ PEOPLE_GROUP_WORDS = {
     "emim", "rephaim", "anakim", "nephilim", "zamzummim", "zuzim",
 }
 # 's?' makes the plural optional, so each rule matches BOTH singular and plural
-# (hittite/hittites, egyptian/egyptians, chaldean/chaldeans).
-_PEOPLE_SUFFIX = re.compile(r"(ites?|ians?|eans?)$", re.I)
+# (hittite/hittites, egyptian/egyptians, chaldean/chaldeans). -itess(es) is the
+# feminine gentilic (Canaanitess, Moabitess) — it was MISSING until 2026-07-16, which
+# is why Canaanitess never classified as a people word ('ites?' can't reach 'itess').
+_PEOPLE_SUFFIX = re.compile(r"(itess(es)?|ites?|ians?|eans?)$", re.I)
 
 
 def is_people_group(name):
@@ -473,9 +478,21 @@ def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, bas
     if bk is None:
         return Bind(kind="none")
 
+    # GENTILIC GUARD (2026-07-16 ticket): a gentilic surface word is a PERSON
+    # descriptor / people reference, so a PLACE-type candidate can never be a
+    # confident bind for it ("Canaanitess" must not open the place Canaan — TIPNR
+    # lists gentilic spellings under its place entities, so even the exact path hit
+    # them; ~350 live binds, 40 names). Blocked candidates simply drop out: the
+    # occurrence either binds the eponymous-ancestor PERSON (People/Clan render,
+    # the established Hittites->Heth model) via the remaining candidates, or floors
+    # to Fix A. Blocking can only floor, never mis-bind — the safe direction.
+    gentilic = is_people_group(n)
+
     # 1. EXACT name + verse (number is just metadata here). Versification serves it.
     exact, exact_rule = [], ""
     for i in name_idx.get(n, ()):
+        if gentilic and ents[i]["section"] == "place":
+            continue
         ok, rule = _verse_in_entity(ents[i], bk, ch, vs)
         if ok:
             exact.append(i)
@@ -504,7 +521,7 @@ def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, bas
         ents[j]["section"] == "person" and B in ents[j]["bases"]
         for j in name_idx.get(n, ()))
     for i in cands:
-        if person_same_num and ents[i]["section"] == "place":
+        if ents[i]["section"] == "place" and (person_same_num or gentilic):
             continue
         ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
         if ok and B and B in ents[i]["bases"]:
