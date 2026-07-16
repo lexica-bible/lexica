@@ -224,3 +224,43 @@ B | aelon | 1 | Deu 2:8 | [('Elath', 'H359', 0.6), ('Esau', 'H6215', 0.44)]
 B | adama | 1 | Isa 15:9 | [('Dibon', 'H1769', 0.4), ('Moab', 'H4124', 0.22)]
 B | achmetha | 1 | Ezr 6:2 | [('Media', 'H4074', 0.46), ('Ecbatana', 'H307', 0.38)]
 B | abira | 1 | Neh 1:1 | [('Hacaliah', 'H2446', 0.46), ('Susa', 'H7800', 0.27)]
+# Pile P (2026-07-16 gate-5 adjudication, reviewer-accepted): possessive/plural-cell
+#   keys - PRE-EXISTING on live (all verbatim in double_star_names.txt). The alias-batch
+#   reconciliation's REPLICA ladder counted them resolvable; the REAL ladder never
+#   resolves a possessive ("Aaron's," -> singular-strip leaves the apostrophe) or a
+#   multi-word cell ("being Romans."). Honest leaves; ladder possessive-strip = a
+#   parked improvement needing its own review. Note alias-batch value delivered here:
+#   Tyrians rows 5->1, Romans 6->3 (the bare-cell rows now resolve via tyrian/roman keys).
+P | romans | 3 | Act 16:21 | multi-word cells ("being Romans.")
+P | tyrians | 1 | Act 12:20 | multi-word cell ("with the Tyrians")
+P | laodiceans | 1 | Col 4:16 | multi-word cell ("assembly of Laodiceans")
+P | jacobs | 3 | Gen 30:42 | possessive
+P | aarons | 3 | Exo 29:26 | possessive
+P | solomons | 1 | Act 3:11 | possessive
+P | simons | 1 | Luk 5:3 | possessive
+P | mosess | 1 | Jud 1:9 | possessive
+P | mephibosheths | 1 | 2Sa 16:4 | possessive
+P | labans | 1 | Gen 30:42 | possessive
+P | hamaths | 1 | Eze 48:1 | possessive
+P | ephraims | 1 | Gen 50:23 | possessive
+P | davids | 1 | Mat 22:42 | possessive
+P | caesars | 1 | Mat 22:21 | possessive
+P | abners | 1 | 2Sa 3:11 | possessive
+# Pile R (2026-07-16): heads REVEALED by the approved R-1 fixes - RC-2 put real names
+#   on formerly-blank CAP slots (variant spellings / titles / gentilics the roster
+#   lacks), RC-1 re-headed descriptive star cells off their common words (old heads
+#   marble/woman/region in the live dump). Honest leaves; josua/shapan/meramoth are
+#   clean candidates for a reviewer-gated micro alias batch later (canonical keys
+#   joshua/shaphan/meremoth all present in the roster).
+R | josua | 1 | Jos 5:15 | CAP reveal - LXX spelling of Joshua
+R | shapan | 1 | 2Ki 22:9 | CAP reveal - spelling of Shaphan
+R | meramoth | 1 | Neh 3:21 | CAP reveal - spelling of Meremoth
+R | tirshatha | 1 | Ezr 2:63 | CAP reveal - Persian title, not a name
+R | ninevite | 1 | Mat 12:41 | CAP reveal - gentilic adjective
+R | lots | 1 | Luk 17:32 | CAP reveal - possessive ("Lot's wife")
+R | josephs | 1 | Gen 50:23 | CAP reveal - possessive
+R | jobs | 1 | Job 42:10 | CAP reveal - possessive
+R | parian | 2 | Est 1:6 | RC-1 re-head (old head "marble") - gentilic adjective
+R | midianitish | 2 | Num 25:14 | RC-1 re-head (old head "woman") - gentilic adjective
+R | phoenician | 1 | Exo 6:15 | RC-1 re-head (old head "woman") - gentilic adjective
+R | babylonian | 1 | Isa 14:23 | RC-1 re-head (old head "region") - gentilic adjective

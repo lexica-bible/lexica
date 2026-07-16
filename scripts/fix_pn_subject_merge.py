@@ -102,6 +102,10 @@ _FUNCTION_LEAD = {
     "he", "she", "it", "they", "we", "you", "i", "who", "what", "when", "where",
     "which", "while", "whose", "him", "her", "his", "their", "its", "my", "your",
     "if", "behold", "yes", "no", "not", "in", "on", "at", "by", "to", "of", "as",
+    # "O" — vocative particle, never a name. Absent until 2026-07-16: the RC-2
+    # fallback peeled "O" onto Isa 41:14's name slot ("O Israel, very few in
+    # number!" -> name "O"). A vocative-aware peel is a parked improvement.
+    "o",
     "how", "why", "thus", "also", "even", "still", "let", "do", "did", "shall",
     "will", "may", "thou", "thee", "ye",
 }

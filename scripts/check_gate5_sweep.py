@@ -28,6 +28,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+# The five PRE-EXISTING empty-head rows, pinned BY REF (reviewer ruling
+# 2026-07-16): these exact rows pass, ANY other empty head is STOP. A
+# class-level allowance would have swallowed the Isa 41:14 vocative mispeel.
+DOCUMENTED_EMPTY_HEADS = {
+    ("1Sa 9:9", 27), ("2Sa 19:22", 22), ("2Sa 3:33", 15),
+    ("Neh 8:7", 22), ("Num 27:13", 18),
+}
+
 
 def load_name_keys():
     """Every bare key the resolution ladder can hit exactly: parsed roster +
@@ -80,14 +88,27 @@ def main():
         " FROM words w JOIN verses v ON v.id = w.verse_id"
         " WHERE w.strongs_base='*' AND trim(coalesce(w.english,'')) <> ''"
         " GROUP BY 1 ORDER BY 2 DESC").fetchall()
+    # Empty heads are judged ROW BY ROW against the pinned five, never as a class.
+    empty_rows = con.execute(
+        "SELECT v.book || ' ' || v.chapter || ':' || v.verse, w.position, w.english"
+        " FROM words w JOIN verses v ON v.id = w.verse_id"
+        " WHERE w.strongs_base='*' AND trim(coalesce(w.english,'')) <> ''"
+        " AND trim(coalesce(w.english_head,'')) = ''").fetchall()
     con.close()
 
     buckets = {"LEAVE": 0, "RESOLVES": 0, "PILE-A": [], "STOP": []}
     total_rows = 0
+    documented_empty = 0
+    for ref, pos, eng in empty_rows:
+        if (ref, pos) in DOCUMENTED_EMPTY_HEADS:
+            documented_empty += 1
+        else:
+            buckets["STOP"].append(
+                ("", 1, f"{ref} | {pos}", f"UNDOCUMENTED empty head (english {eng!r})"))
     for head, cnt, ref in rows:
         total_rows += cnt
         if not head:
-            buckets["STOP"].append((head, cnt, ref, "EMPTY head on a non-blank row"))
+            continue  # handled row-by-row above
         elif head in leave:
             buckets["LEAVE"] += 1
         elif head in pile_a:
@@ -102,6 +123,7 @@ def main():
     print(f"db: {db}")
     print(f"named unresolved rows: {total_rows} across {len(rows)} distinct heads")
     print(f"  documented leaves present : {buckets['LEAVE']}")
+    print(f"  documented empty-head rows: {documented_empty} (of the pinned 5)")
     print(f"  head-resolves (multi-word row shapes, pre-existing class): {buckets['RESOLVES']}")
     print(f"  pile-A heads still present: {len(buckets['PILE-A'])} (each needs an eyeball)")
     for head, cnt, ref, why in buckets["PILE-A"]:

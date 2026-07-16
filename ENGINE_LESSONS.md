@@ -1355,6 +1355,25 @@ both drifting from the doc.
     beats another model call) — here the deterministic lever was a commit order, not a tool.
     *(audit: legacy "None" trio, 2026-07-15; 500a754 → 1b5499e → 45c5e02)*
 
+87. **A replica of a mechanism is not the mechanism; reconciliation checkers must call the
+    production code path, not re-implement it.** (Reviewer-worded, 2026-07-16.) The alias
+    batch's count reconciliation ("1,296 → 1,075 resolvable + 221 documented, unexplained 0")
+    used a REPLICA of the resolution ladder, which resolved possessives and plurals the real
+    ladder cannot ("Aaron's," → singular-strip leaves the apostrophe). ~15 keys sat in
+    "resolvable" that the corpus can never resolve — surfaced only when the gate-5 sweep ran
+    against the REAL import output. Same failure family struck twice in one day: the review
+    simulation vs the landed loader (the 93-vs-149 hijack fingerprint) and the replica ladder
+    vs the real ladder. Both times the divergence of copy from original was itself the
+    finding. *(head-word rebuild run, 2026-07-16; leave-list re-cut with pile P)*
+
+88. **A runnable command in the same message as its approval request defeats the gate even
+    when the fix is right.** Posted the ladder-fix adjudication packet WITH the import_tipnr
+    command attached; JP ran it before the reviewer's verdict landed. The fix was approved
+    retroactively (blast radius 2 rows, measured), but the sequencing rule exists for the
+    times the verdict would have been no. Command posts AFTER the verdict, in its own
+    message — no exceptions for confidence. *(head-word rebuild run, 2026-07-16;
+    reviewer-logged protocol slip, owned)*
+
 84. **"The flag's help text says X" is not a reading of the branch — it is a guess wearing a
     citation.** Claimed `--from-draw` ships a reviewed draw past staleness, sourced from its help
     string ("bypassing the synth_ver up-to-date skip; requires a cache HIT"). The branch says the

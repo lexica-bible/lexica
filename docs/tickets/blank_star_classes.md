@@ -22,11 +22,17 @@ Source spot-checks are quoted from `abp_texts/` (diagnosis-grade pre-build sourc
 Whether NOCAP/EMPTY rows should carry a Strong's number with no English is an
 audit-session ruling, not a build fix.
 
-## R-1 run outcome (2026-07-16, reviewer-cleared gate 2) — CAP resolves 138 + 10
+## R-1 run outcome (2026-07-16, reviewer-cleared gate 2; AMENDED same day after the
+## gate-5 sweep) — CAP resolves 137 + 11
 
-The head-word rebuild's in-build split fixed **138** of the CAP 148 (capfall count;
-2,299 old-mechanism + 138 = the build's 2,437). The remaining **10 stay blank by
-design** — CAP-classified on look (capitalized lead) but not mergeable in shape.
+The head-word rebuild's in-build split fixes **137** of the CAP 148 (capfall count;
+2,299 old-mechanism + 137 = an expected build total of **2,436**). The remaining
+**11 stay blank by design** — CAP-classified on look (capitalized lead) but not
+mergeable in shape. The 11th, found by the gate-5 sweep on the second build:
+**Isa 41:14 | 4** — the previous cell is "O Israel, very few in number!"; the lead
+is the VOCATIVE "O", not a name, and the one-token peel put "O" on the name slot.
+"o" added to `_FUNCTION_LEAD` (fix_pn_subject_merge.py) so the row stays merged =
+live's exact state; a vocative-aware peel is a parked improvement.
 Verified per-row against the code + ABP source (`check_blank_star_residue.py` is the
 measuring tool; control-tested on live: 148/0/0/0):
 
@@ -42,11 +48,13 @@ measuring tool; control-tested on live: 148/0/0/0):
 - **_NOT_SUBJECT guard (1)** — Gen 41:12 | 7 ("Hebrew servant"): adjective+noun, the
   guard added 2026-06-26 doing its job.
 
-**GATE-5 EXPECTATION (formal): blank star-row residue on the rebuilt copy =
-339 = 10 CAP-remainder + 64 MID + 40 NOCAP + 225 EMPTY** (measured 339 on
-bible.db.new 2026-07-16, zero rows outside the piles) — plus, at the ROSTER level,
-the 221 documented leave-list names (`alias_leave_list.txt` + decisions/cautions).
-Any other residue = STOP.
+**GATE-5 EXPECTATION (formal, as amended): blank star-row residue on the rebuilt
+copy = 340 = 11 CAP-remainder + 64 MID + 40 NOCAP + 225 EMPTY** — plus, at the
+ROSTER level, the documented leave-list piles (`alias_leave_list.txt` A/B/P/R +
+decisions rejects/cautions), the head-resolves multi-word-cell class, and the five
+empty-head rows PINNED BY REF in `check_gate5_sweep.py`. Any other residue = STOP.
+(History: first cut said 339/10; the second build's gate-5 sweep found Isa 41:14
+mispeeled — see above — and the sweep checker + this expectation were re-pinned.)
 
 Format: ref | word position | previous cell's English
 
