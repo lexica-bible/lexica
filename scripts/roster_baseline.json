@@ -1,0 +1,17326 @@
+{
+"(?) indicates  a decision based on an ambiguity e.g. jahdai": [
+null,
+null
+],
+"(a) is added to a 'parent' who is an ancestor of the person rather than their actual parent.  eg mahol": [
+null,
+null
+],
+"(d) is added to a 'parent' when a group or nation descended from them, eg canaan": [
+null,
+null
+],
+"(f) indicates a founder of that place or group, eg  \"tekoa": [
+null,
+null
+],
+"(login = stepbibleproject": [
+null,
+null
+],
+"^\\$=+ (person|place|other).*\\r\\n^([^\\t\\r\\n]*\\t){7}#([^\\t\\r\\n]*).*\\r\\n(–.*\\r\\n)+– total\\t[^\\t\\r\\n]*\\t([^\\t\\r\\n]*)\\t[^": [
+null,
+null
+],
+"a band": [
+"H3896",
+null
+],
+"a place that was far off": [
+"H1023",
+null
+],
+"a troop": [
+"H3896",
+null
+],
+"a wood": [
+"H2793",
+null
+],
+"a_wife_of_eliphaz": [
+"H464",
+null
+],
+"a_wife_of_ezekiel": [
+"H3168",
+null
+],
+"a_wife_of_hezron": [
+"H2696",
+null
+],
+"a_wife_of_jerahmeel": [
+"H3396",
+null
+],
+"a_wife_of_josiah": [
+"H2977",
+null
+],
+"a_wife_of_lot": [
+"H3876",
+null
+],
+"a_wife_of_peter": [
+null,
+"G4074"
+],
+"a_wife_of_simeon": [
+"H8095",
+null
+],
+"a_wife_of_solomon": [
+"H8010",
+null
+],
+"aaron": [
+"H175",
+"G2"
+],
+"abaddon": [
+"H11",
+"G3"
+],
+"abagtha": [
+"H5",
+null
+],
+"abana": [
+"H71",
+null
+],
+"abarim": [
+"H5682",
+null
+],
+"abba": [
+"H3068",
+"G5"
+],
+"abda": [
+"H5653",
+null
+],
+"abdeel": [
+"H5655",
+null
+],
+"abdi": [
+"H5660",
+null
+],
+"abdiel": [
+"H5661",
+null
+],
+"abdon": [
+"H5658",
+null
+],
+"abed-nego": [
+"H5665",
+null
+],
+"abel": [
+"H1893",
+"G6"
+],
+"abel beth maacah": [
+"H62",
+null
+],
+"abel keramim": [
+"H64",
+null
+],
+"abel maim": [
+"H66",
+null
+],
+"abel meholah": [
+"H65",
+null
+],
+"abel mizraim": [
+"H67",
+null
+],
+"abel shittim": [
+"H63",
+null
+],
+"abel-beth-maacah": [
+"H62",
+null
+],
+"abel-keramim": [
+"H64",
+null
+],
+"abel-maim": [
+"H66",
+null
+],
+"abel-meholah": [
+"H65",
+null
+],
+"abel-mizraim": [
+"H67",
+null
+],
+"abel-shittim": [
+"H63",
+null
+],
+"abez": [
+"H77",
+null
+],
+"abi": [
+"H21",
+null
+],
+"abi-albon": [
+"H45",
+null
+],
+"abia": [
+"H29",
+"G7"
+],
+"abiah": [
+"H29",
+null
+],
+"abiasaph": [
+"H23",
+null
+],
+"abiathar": [
+"H54",
+"G8"
+],
+"abib": [
+"H24",
+null
+],
+"abida": [
+"H28",
+null
+],
+"abidan": [
+"H27",
+null
+],
+"abiel": [
+"H22",
+null
+],
+"abiezer": [
+"H44",
+null
+],
+"abigail": [
+"H26",
+null
+],
+"abigal": [
+"H26",
+null
+],
+"abigibeon": [
+"H1391",
+null
+],
+"abihail": [
+"H32",
+null
+],
+"abihu": [
+"H30",
+null
+],
+"abihud": [
+"H31",
+null
+],
+"abijah": [
+"H29",
+"G7"
+],
+"abijam": [
+"H38",
+null
+],
+"abilene": [
+null,
+"G9"
+],
+"abimael": [
+"H39",
+null
+],
+"abimelech": [
+"H40",
+null
+],
+"abimelek": [
+"H40",
+null
+],
+"abinadab": [
+"H41",
+null
+],
+"abinoam": [
+"H42",
+null
+],
+"abiram": [
+"H48",
+null
+],
+"abishag": [
+"H49",
+null
+],
+"abishai": [
+"H52",
+null
+],
+"abishalom": [
+"H53",
+null
+],
+"abishua": [
+"H50",
+null
+],
+"abishur": [
+"H51",
+null
+],
+"abital": [
+"H37",
+null
+],
+"abitub": [
+"H36",
+null
+],
+"abiud": [
+null,
+"G10"
+],
+"abner": [
+"H74",
+null
+],
+"abraham": [
+"H85",
+"G11"
+],
+"abram": [
+"H87",
+null
+],
+"abronah": [
+"H5684",
+null
+],
+"absalom": [
+"H53",
+null
+],
+"accad": [
+"H390",
+null
+],
+"acco": [
+"H5910",
+"G4424"
+],
+"accuser": [
+"H7854",
+null
+],
+"achaia": [
+null,
+"G882"
+],
+"achaicus": [
+null,
+"G883"
+],
+"achan": [
+"H5912",
+null
+],
+"achar": [
+"H5917",
+null
+],
+"achaz": [
+"H271",
+null
+],
+"achbor": [
+"H5907",
+null
+],
+"achim": [
+null,
+"G885"
+],
+"achish": [
+"H397",
+null
+],
+"achor_valley": [
+"H5911",
+null
+],
+"achsah": [
+"H5915",
+null
+],
+"achshaph": [
+"H407",
+null
+],
+"achzib": [
+"H392",
+null
+],
+"adadah": [
+"H5735",
+null
+],
+"adah": [
+"H5711",
+null
+],
+"adaiah": [
+"H5718",
+null
+],
+"adalia": [
+"H118",
+null
+],
+"adam": [
+"H121",
+"G76"
+],
+"adamah": [
+"H128",
+null
+],
+"adami-nekeb": [
+"H129",
+null
+],
+"adar": [
+"H143",
+null
+],
+"adaya": [
+"H5714",
+null
+],
+"adbeel": [
+"H110",
+null
+],
+"addan": [
+"H135",
+null
+],
+"addar": [
+"H146",
+null
+],
+"added a few missing places: addan": [
+null,
+null
+],
+"added children: asriel": [
+null,
+null
+],
+"added gentilics of person names that were known and linked with them. maacathites": [
+null,
+null
+],
+"added individuals:  cyrus": [
+null,
+null
+],
+"added places which are translated as normal words in some bibles: bajith": [
+null,
+null
+],
+"addi": [
+null,
+"G78"
+],
+"addon": [
+"H114",
+null
+],
+"ader": [
+"H5738",
+null
+],
+"adiel": [
+"H5717",
+null
+],
+"adin": [
+"H5720",
+null
+],
+"adina": [
+"H5721",
+null
+],
+"adino": [
+"H5722",
+null
+],
+"adithaim": [
+"H5723",
+null
+],
+"adlai": [
+"H5724",
+null
+],
+"admah": [
+"H126",
+null
+],
+"admatha": [
+"H133",
+null
+],
+"administrators": [
+"H2967",
+null
+],
+"adna": [
+"H5733",
+null
+],
+"adnah": [
+"H5734",
+null
+],
+"adoni-bezek": [
+"H137",
+null
+],
+"adoni-zedek": [
+"H139",
+null
+],
+"adonijah": [
+"H138",
+null
+],
+"adonikam": [
+"H140",
+null
+],
+"adoniram": [
+"H141",
+null
+],
+"adoraim": [
+"H115",
+null
+],
+"adoram": [
+"H151",
+null
+],
+"adrammelech": [
+"H152",
+null
+],
+"adrammelek": [
+"H152",
+null
+],
+"adramyttium": [
+null,
+"G98"
+],
+"adriatic_sea": [
+null,
+"G99"
+],
+"adriel": [
+"H5741",
+null
+],
+"adullam": [
+"H5725",
+null
+],
+"adullamite": [
+"H5726",
+null
+],
+"adummim": [
+"H131",
+null
+],
+"aeneas": [
+null,
+"G132"
+],
+"aenon": [
+null,
+"G137"
+],
+"agabus": [
+null,
+"G13"
+],
+"agag": [
+"H90",
+"G9826"
+],
+"agagite": [
+"H91",
+null
+],
+"agar": [
+"H1904",
+null
+],
+"agee": [
+"H89",
+null
+],
+"agrippa": [
+null,
+"G67"
+],
+"agur": [
+"H94",
+null
+],
+"ahab": [
+"H256",
+null
+],
+"aharah": [
+"H315",
+null
+],
+"aharhel": [
+"H316",
+null
+],
+"ahasai": [
+"H273",
+null
+],
+"ahasbai": [
+"H308",
+null
+],
+"ahaserus": [
+"H325",
+null
+],
+"ahasuerus": [
+"H325",
+null
+],
+"ahava": [
+"H163",
+null
+],
+"ahaz": [
+"H271",
+"G881"
+],
+"ahaziah": [
+"H274",
+null
+],
+"ahban": [
+"H257",
+null
+],
+"aher": [
+"H313",
+null
+],
+"ahi": [
+"H277",
+null
+],
+"ahiah": [
+"H281",
+null
+],
+"ahiam": [
+"H279",
+null
+],
+"ahian": [
+"H291",
+null
+],
+"ahiezer": [
+"H295",
+null
+],
+"ahihud": [
+"H284",
+null
+],
+"ahijah": [
+"H281",
+null
+],
+"ahikam": [
+"H296",
+null
+],
+"ahilud": [
+"H286",
+null
+],
+"ahimaaz": [
+"H290",
+null
+],
+"ahiman": [
+"H289",
+null
+],
+"ahimelech": [
+"H288",
+null
+],
+"ahimoth": [
+"H287",
+null
+],
+"ahinadab": [
+"H292",
+null
+],
+"ahinoam": [
+"H293",
+null
+],
+"ahio": [
+"H283",
+null
+],
+"ahira": [
+"H299",
+null
+],
+"ahiram": [
+"H297",
+null
+],
+"ahiramite": [
+"H298",
+null
+],
+"ahisamach": [
+"H294",
+null
+],
+"ahisamak": [
+"H294",
+null
+],
+"ahishahar": [
+"H300",
+null
+],
+"ahishar": [
+"H301",
+null
+],
+"ahithophel": [
+"H302",
+null
+],
+"ahitub": [
+"H285",
+null
+],
+"ahlab": [
+"H303",
+null
+],
+"ahlai": [
+"H304",
+null
+],
+"ahoah": [
+"H265",
+null
+],
+"ahohi": [
+"H266",
+null
+],
+"ahohite": [
+"H266",
+null
+],
+"aholah": [
+"H170",
+null
+],
+"aholiab": [
+"H171",
+null
+],
+"aholibah": [
+"H172",
+null
+],
+"aholibamah": [
+"H173",
+null
+],
+"ahumai": [
+"H267",
+null
+],
+"ahuzam": [
+"H275",
+null
+],
+"ahuzzam": [
+"H275",
+null
+],
+"ahuzzath": [
+"H276",
+null
+],
+"ahzai": [
+"H273",
+null
+],
+"ai": [
+"H5857",
+null
+],
+"aiah": [
+"H345",
+null
+],
+"aiath": [
+"H5857",
+null
+],
+"aija": [
+"H5857",
+null
+],
+"aijalon": [
+"H357",
+null
+],
+"ain": [
+"H5871",
+null
+],
+"ajah": [
+"H345",
+null
+],
+"akan": [
+"H3292",
+null
+],
+"akbor": [
+"H5907",
+null
+],
+"akeldama": [
+null,
+"G184"
+],
+"akim": [
+null,
+"G885"
+],
+"akko": [
+"H5910",
+null
+],
+"akkub": [
+"H6126",
+null
+],
+"akrabbim": [
+"H4610",
+null
+],
+"aksah": [
+"H5915",
+null
+],
+"akshaph": [
+"H407",
+null
+],
+"akzib": [
+"H392",
+null
+],
+"al-taschith": [
+"H516",
+null
+],
+"alameth": [
+"H5964",
+null
+],
+"alamoth": [
+"H5961",
+null
+],
+"alemeth": [
+"H5964",
+null
+],
+"alexander": [
+null,
+"G223"
+],
+"alexandria": [
+null,
+"G222"
+],
+"alexandrian": [
+null,
+"G221"
+],
+"aliah": [
+"H5933",
+null
+],
+"alian": [
+"H5935",
+null
+],
+"allammelech": [
+"H487",
+null
+],
+"allammelek": [
+"H487",
+null
+],
+"allon": [
+"H438",
+null
+],
+"allon-bachuth": [
+"H439",
+null
+],
+"allon-bacuth": [
+"H439",
+null
+],
+"allon-bakuth": [
+"H439",
+null
+],
+"almodad": [
+"H486",
+null
+],
+"almon": [
+"H5960",
+null
+],
+"almon diblathaim": [
+"H5963",
+null
+],
+"almon-diblathaim": [
+"H5963",
+null
+],
+"alpha": [
+null,
+"G1"
+],
+"alphaeus": [
+null,
+"G256"
+],
+"alush": [
+"H442",
+null
+],
+"alvah": [
+"H5933",
+null
+],
+"alvan": [
+"H5935",
+null
+],
+"amad": [
+"H6008",
+null
+],
+"amal": [
+"H6000",
+null
+],
+"amalek": [
+"H6002",
+null
+],
+"amam": [
+"H538",
+null
+],
+"amana": [
+"H549",
+null
+],
+"amariah": [
+"H568",
+null
+],
+"amasa": [
+"H6021",
+null
+],
+"amasai": [
+"H6022",
+null
+],
+"amashai": [
+"H6023",
+null
+],
+"amashsai": [
+"H6023",
+null
+],
+"amasiah": [
+"H6007",
+null
+],
+"amaw": [
+"H5971",
+null
+],
+"amaziah": [
+"H558",
+null
+],
+"ami": [
+"H532",
+null
+],
+"aminadab": [
+"H5992",
+null
+],
+"amittai": [
+"H573",
+null
+],
+"ammah": [
+"H522",
+null
+],
+"ammiel": [
+"H5988",
+null
+],
+"ammihud": [
+"H5989",
+null
+],
+"ammihur": [
+"H5989",
+null
+],
+"amminadab": [
+"H5992",
+"G284"
+],
+"amminadib": [
+"H5993",
+null
+],
+"ammishaddai": [
+"H5996",
+null
+],
+"ammizabad": [
+"H5990",
+null
+],
+"ammon": [
+"H5983",
+null
+],
+"ammonitess": [
+"H5985",
+null
+],
+"amnon": [
+"H550",
+null
+],
+"amok": [
+"H5987",
+null
+],
+"amon": [
+"H526",
+"G300"
+],
+"amorite": [
+"H567",
+null
+],
+"amorites": [
+"H567",
+null
+],
+"amos": [
+"H5986",
+"G301"
+],
+"amoz": [
+"H531",
+null
+],
+"amphipolis": [
+null,
+"G295"
+],
+"amplias": [
+null,
+"G291"
+],
+"ampliatus": [
+null,
+"G291"
+],
+"amram": [
+"H6019",
+null
+],
+"amramite": [
+"H6020",
+null
+],
+"amraphel": [
+"H569",
+null
+],
+"amzi": [
+"H557",
+null
+],
+"anab": [
+"H6024",
+null
+],
+"anah": [
+"H6034",
+null
+],
+"anaharath": [
+"H588",
+null
+],
+"anaiah": [
+"H6043",
+null
+],
+"anak": [
+"H6061",
+null
+],
+"anakim": [
+"H6062",
+null
+],
+"anamim": [
+"H6047",
+null
+],
+"anammelech": [
+"H6048",
+null
+],
+"anammelek": [
+"H6048",
+null
+],
+"anan": [
+"H6052",
+null
+],
+"anani": [
+"H6054",
+null
+],
+"ananiah": [
+"H6055",
+null
+],
+"ananias": [
+null,
+"G367"
+],
+"anath": [
+"H6067",
+null
+],
+"anathoth": [
+"H6068",
+null
+],
+"anathothite": [
+"H6069",
+null
+],
+"and hubbah": [
+"H3160",
+null
+],
+"and ramoth": [
+"H3406",
+null
+],
+"andrew": [
+null,
+"G406"
+],
+"andronicus": [
+null,
+"G408"
+],
+"anem": [
+"H6046",
+null
+],
+"aner": [
+"H6063",
+null
+],
+"angle": [
+"H4740",
+null
+],
+"aniam": [
+"H593",
+null
+],
+"anim": [
+"H6044",
+null
+],
+"anna": [
+null,
+"G451"
+],
+"annas": [
+null,
+"G452"
+],
+"anthothijah": [
+"H6070",
+null
+],
+"antioch": [
+null,
+"G490"
+],
+"antiochian": [
+null,
+"G491"
+],
+"antipas": [
+null,
+"G493"
+],
+"antipatris": [
+null,
+"G494"
+],
+"antothijah": [
+"H6070",
+null
+],
+"antothite": [
+"H6069",
+null
+],
+"anub": [
+"H6036",
+null
+],
+"apelles": [
+null,
+"G559"
+],
+"apharasthchite": [
+"H671",
+null
+],
+"apharsachites": [
+"H671",
+null
+],
+"apharsite": [
+"H670",
+null
+],
+"aphek": [
+"H663",
+null
+],
+"aphekah": [
+"H664",
+null
+],
+"aphiah": [
+"H647",
+null
+],
+"aphik": [
+"H663",
+null
+],
+"aphses": [
+"H6483",
+null
+],
+"apollonia": [
+null,
+"G624"
+],
+"apollos": [
+null,
+"G625"
+],
+"apollyon": [
+"H11",
+"G623"
+],
+"appaim": [
+"H649",
+null
+],
+"apphia": [
+null,
+"G682"
+],
+"aquila": [
+null,
+"G207"
+],
+"ar": [
+"H6144",
+null
+],
+"ara": [
+"H690",
+null
+],
+"arab": [
+"H694",
+null
+],
+"arabah": [
+"H6160",
+null
+],
+"arabia": [
+"H6152",
+"G688"
+],
+"arad": [
+"H6166",
+null
+],
+"arah": [
+"H733",
+null
+],
+"aram": [
+"H758",
+null
+],
+"aram naharaim": [
+"H763",
+null
+],
+"aram zobah": [
+"H760",
+null
+],
+"aram-maacah": [
+"H758",
+null
+],
+"aram-naharaim": [
+"H763",
+null
+],
+"aram-zobah": [
+"H760",
+null
+],
+"aramaic": [
+"H762",
+"G1444"
+],
+"arameans": [
+"H7421",
+null
+],
+"aramitess": [
+"H761",
+null
+],
+"aran": [
+"H765",
+null
+],
+"arania": [
+"H728",
+null
+],
+"ararat": [
+"H780",
+null
+],
+"araunah": [
+"H728",
+null
+],
+"arba": [
+"H704",
+null
+],
+"arbathite": [
+"H6164",
+null
+],
+"arbite": [
+"H701",
+null
+],
+"archelaus": [
+null,
+"G745"
+],
+"archevite": [
+"H756",
+null
+],
+"archippus": [
+null,
+"G751"
+],
+"archite": [
+"H757",
+null
+],
+"archites": [
+"H757",
+null
+],
+"arcturus": [
+"H5906",
+null
+],
+"ard": [
+"H714",
+null
+],
+"ardite": [
+"H716",
+null
+],
+"ardon": [
+"H715",
+null
+],
+"areli": [
+"H692",
+null
+],
+"arelite": [
+"H692",
+null
+],
+"areopagite": [
+null,
+"G698"
+],
+"areopagus": [
+null,
+"G697"
+],
+"aretas": [
+null,
+"G702"
+],
+"argob": [
+"H709",
+null
+],
+"aridai": [
+"H742",
+null
+],
+"aridatha": [
+"H743",
+null
+],
+"arieh": [
+"H745",
+null
+],
+"ariel": [
+"H739",
+null
+],
+"ariels": [
+"H739",
+null
+],
+"arimathea": [
+"H4709",
+"G707"
+],
+"arioch": [
+"H746",
+null
+],
+"arisai": [
+"H747",
+null
+],
+"aristarchus": [
+null,
+"G708"
+],
+"aristobulus": [
+null,
+"G711"
+],
+"arkites": [
+"H6208",
+null
+],
+"armageddon": [
+"H4023",
+"G717"
+],
+"armoni": [
+"H764",
+null
+],
+"arnan": [
+"H770",
+null
+],
+"arni": [
+"H7410",
+"G6095"
+],
+"arnon": [
+"H769",
+null
+],
+"arod": [
+"H720",
+null
+],
+"arodi": [
+"H722",
+null
+],
+"arodite": [
+"H722",
+null
+],
+"aroer": [
+"H6177",
+null
+],
+"aroerite": [
+"H6200",
+null
+],
+"arpachshad": [
+"H775",
+"G742"
+],
+"arpad": [
+"H774",
+null
+],
+"artaxerxes": [
+"H783",
+null
+],
+"artemas": [
+null,
+"G734"
+],
+"artemis": [
+null,
+"G735"
+],
+"arubboth": [
+"H700",
+null
+],
+"arumah": [
+"H725",
+null
+],
+"arvad": [
+"H719",
+null
+],
+"arvadite": [
+"H721",
+null
+],
+"arvadites": [
+"H721",
+null
+],
+"arza": [
+"H777",
+null
+],
+"asa": [
+"H609",
+"G760"
+],
+"asahel": [
+"H6214",
+null
+],
+"asahiah": [
+"H6222",
+null
+],
+"asaiah": [
+"H6222",
+null
+],
+"asaph": [
+"H623",
+null
+],
+"asareel": [
+"H840",
+null
+],
+"asarel": [
+"H840",
+null
+],
+"asarelah": [
+"H841",
+null
+],
+"asen": [
+null,
+"G9825"
+],
+"asenath": [
+"H621",
+null
+],
+"aser": [
+"H836",
+null
+],
+"ashan": [
+"H6228",
+null
+],
+"asharelah": [
+"H841",
+null
+],
+"ashbel": [
+"H788",
+null
+],
+"ashbelite": [
+"H789",
+null
+],
+"ashchenaz": [
+"H813",
+null
+],
+"ashdod": [
+"H795",
+"G108"
+],
+"ashdodite": [
+"H796",
+null
+],
+"asher": [
+"H836",
+"G768"
+],
+"asherah": [
+"H842",
+null
+],
+"asherim": [
+"H842",
+null
+],
+"asherite": [
+"H843",
+null
+],
+"asheroth": [
+"H842",
+null
+],
+"ashhur": [
+"H806",
+null
+],
+"ashima": [
+"H807",
+null
+],
+"ashkelon": [
+"H831",
+null
+],
+"ashkenaz": [
+"H813",
+null
+],
+"ashnah": [
+"H823",
+null
+],
+"ashpenaz": [
+"H828",
+null
+],
+"ashriel": [
+"H844",
+null
+],
+"ashtaroth": [
+"H6252",
+null
+],
+"ashterathite": [
+"H6254",
+null
+],
+"ashteroth karnaim": [
+"H6255",
+null
+],
+"ashteroth-karnaim": [
+"H6255",
+null
+],
+"ashtoreth": [
+"H6253",
+null
+],
+"ashurbanipal": [
+"H620",
+null
+],
+"ashurite": [
+"H805",
+null
+],
+"ashurites": [
+"H805",
+null
+],
+"ashvath": [
+"H6220",
+null
+],
+"asia": [
+null,
+"G773"
+],
+"asian": [
+null,
+"G774"
+],
+"asiarch": [
+null,
+"G775"
+],
+"asiel": [
+"H6221",
+null
+],
+"asnah": [
+"H619",
+null
+],
+"asnapper": [
+"H620",
+null
+],
+"aspatha": [
+"H630",
+null
+],
+"asriel": [
+"H844",
+null
+],
+"asrielite": [
+"H845",
+null
+],
+"asshur": [
+"H804",
+null
+],
+"asshurim": [
+"H805",
+null
+],
+"assir": [
+"H617",
+null
+],
+"assos": [
+null,
+"G789"
+],
+"assyria": [
+"H804",
+null
+],
+"assyrian": [
+"H804",
+null
+],
+"astrologers": [
+"H3779",
+null
+],
+"asyncritus": [
+null,
+"G799"
+],
+"atad": [
+"H329",
+null
+],
+"atarah": [
+"H5851",
+null
+],
+"ataroth": [
+"H5852",
+null
+],
+"ataroth addar": [
+"H5853",
+null
+],
+"ataroth-addar": [
+"H5853",
+null
+],
+"ater": [
+"H333",
+null
+],
+"athach": [
+"H6269",
+null
+],
+"athaiah": [
+"H6265",
+null
+],
+"athak": [
+"H6269",
+null
+],
+"athaliah": [
+"H6271",
+null
+],
+"atharim": [
+"H871",
+null
+],
+"athenian": [
+null,
+"G117"
+],
+"athens": [
+null,
+"G116"
+],
+"athlai": [
+"H6270",
+null
+],
+"atroth shophan": [
+"H5855",
+null
+],
+"atroth-beth-joab": [
+"H5854",
+null
+],
+"atroth-shophan": [
+"H5855",
+null
+],
+"attai": [
+"H6262",
+null
+],
+"attalia": [
+null,
+"G825"
+],
+"augustan": [
+null,
+"G4575"
+],
+"augustus": [
+null,
+"G828"
+],
+"ava": [
+"H5755",
+null
+],
+"aven": [
+"H206",
+null
+],
+"aven_valley": [
+"H206",
+null
+],
+"avites": [
+"H5761",
+null
+],
+"avith": [
+"H5762",
+null
+],
+"aviv": [
+"H24",
+null
+],
+"avvim": [
+"H5761",
+null
+],
+"avvite": [
+"H5761",
+null
+],
+"awel-marduk": [
+"H192",
+null
+],
+"ayoth": [
+"H5762",
+null
+],
+"ayyah": [
+"H5804",
+null
+],
+"azal": [
+"H682",
+null
+],
+"azaliah": [
+"H683",
+null
+],
+"azaniah": [
+"H245",
+null
+],
+"azarael": [
+"H5832",
+null
+],
+"azareel": [
+"H5832",
+null
+],
+"azarel": [
+"H5832",
+null
+],
+"azariah": [
+"H5838",
+null
+],
+"azariahu": [
+"H5838",
+null
+],
+"azaz": [
+"H5811",
+null
+],
+"azazel": [
+"H5799",
+null
+],
+"azaziah": [
+"H5812",
+null
+],
+"azbuk": [
+"H5802",
+null
+],
+"azekah": [
+"H5825",
+null
+],
+"azel": [
+"H682",
+null
+],
+"azgad": [
+"H5803",
+null
+],
+"aziel": [
+"H5815",
+null
+],
+"aziza": [
+"H5819",
+null
+],
+"azmaveth": [
+"H5820",
+null
+],
+"azmon": [
+"H6111",
+null
+],
+"aznoth tabor": [
+"H243",
+null
+],
+"aznoth-tabor": [
+"H243",
+null
+],
+"azor": [
+null,
+"G107"
+],
+"azotus": [
+"H795",
+"G108"
+],
+"azriel": [
+"H5837",
+null
+],
+"azrikam": [
+"H5840",
+null
+],
+"azubah": [
+"H5806",
+null
+],
+"azur": [
+"H5809",
+null
+],
+"azzan": [
+"H5821",
+null
+],
+"azzur": [
+"H5809",
+null
+],
+"baal": [
+"H1168",
+"G896"
+],
+"baal gad": [
+"H1171",
+null
+],
+"baal hamon": [
+"H1174",
+null
+],
+"baal hazor": [
+"H1178",
+null
+],
+"baal hermon": [
+"H1179",
+null
+],
+"baal meon": [
+"H1186",
+null
+],
+"baal of peor": [
+"H1187",
+null
+],
+"baal perazim": [
+"H1188",
+null
+],
+"baal shalishah": [
+"H1190",
+null
+],
+"baal tamar": [
+"H1193",
+null
+],
+"baal zephon": [
+"H1189",
+null
+],
+"baal-bamoth": [
+"H1181",
+null
+],
+"baal-berith": [
+"H1170",
+null
+],
+"baal-gad": [
+"H1171",
+null
+],
+"baal-hamon": [
+"H1174",
+null
+],
+"baal-hanan": [
+"H1177",
+null
+],
+"baal-hazor": [
+"H1178",
+null
+],
+"baal-hermon": [
+"H1179",
+null
+],
+"baal-meon": [
+"H1186",
+null
+],
+"baal-peor": [
+"H1187",
+null
+],
+"baal-perazim": [
+"H1188",
+null
+],
+"baal-shalishah": [
+"H1190",
+null
+],
+"baal-tamar": [
+"H1193",
+null
+],
+"baal-zebub": [
+"H1176",
+null
+],
+"baal-zephon": [
+"H1189",
+null
+],
+"baalah": [
+"H1173",
+null
+],
+"baalah_mount": [
+"H1173",
+null
+],
+"baalath": [
+"H1191",
+null
+],
+"baalath beer": [
+"H1192",
+null
+],
+"baalath-beer": [
+"H1192",
+null
+],
+"baale-judah": [
+"H1173",
+null
+],
+"baali": [
+"H1180",
+null
+],
+"baalis": [
+"H1185",
+null
+],
+"baana": [
+"H1195",
+null
+],
+"baanah": [
+"H1196",
+null
+],
+"baara": [
+"H1199",
+null
+],
+"baaseiah": [
+"H1202",
+null
+],
+"baasha": [
+"H1201",
+null
+],
+"babel": [
+"H894",
+null
+],
+"babylon": [
+"H894",
+"G897"
+],
+"babylonians": [
+"H3779",
+null
+],
+"baharum": [
+"H978",
+null
+],
+"baharumite": [
+"H978",
+null
+],
+"bahurim": [
+"H980",
+null
+],
+"bajith": [
+"H1006",
+null
+],
+"bakbakkar": [
+"H1230",
+null
+],
+"bakbuk": [
+"H1227",
+null
+],
+"bakbukiah": [
+"H1229",
+null
+],
+"balaam": [
+"H1109",
+"G903"
+],
+"balac": [
+"H1111",
+null
+],
+"baladan": [
+"H1081",
+null
+],
+"balah": [
+"H1088",
+null
+],
+"balak": [
+"H1111",
+"G904"
+],
+"ballath": [
+"H1168",
+null
+],
+"bamah": [
+"H1117",
+null
+],
+"bamoth": [
+"H1120",
+null
+],
+"bamoth-baal": [
+"H1120",
+null
+],
+"bani": [
+"H1137",
+null
+],
+"banner": [
+"H5251",
+null
+],
+"bar-jesus": [
+null,
+"G919"
+],
+"bar-jona": [
+null,
+"G920"
+],
+"bar-jonah": [
+null,
+"G920"
+],
+"barabbas": [
+null,
+"G912"
+],
+"barachel": [
+"H1292",
+null
+],
+"barachiah": [
+"H3077",
+"G914"
+],
+"barachias": [
+"H3077",
+"G914"
+],
+"barak": [
+"H1301",
+"G913"
+],
+"barhumite": [
+"H1273",
+null
+],
+"bariah": [
+"H1282",
+null
+],
+"barkos": [
+"H1302",
+null
+],
+"barnabas": [
+null,
+"G921"
+],
+"barsabas": [
+null,
+"G923"
+],
+"barsabbas": [
+null,
+"G923"
+],
+"bartholomew": [
+null,
+"G918"
+],
+"bartimaeus": [
+null,
+"G924"
+],
+"baruch": [
+"H1263",
+null
+],
+"barzillai": [
+"H1271",
+null
+],
+"basemath": [
+"H1315",
+null
+],
+"bashan": [
+"H1316",
+null
+],
+"bashemath": [
+"H1315",
+null
+],
+"basmath": [
+"H1315",
+null
+],
+"bath rabbim": [
+"H1337",
+null
+],
+"bath-rabbim": [
+"H1337",
+null
+],
+"bath-sheba": [
+"H1340",
+null
+],
+"bath-shua": [
+"H1323",
+null
+],
+"bathsheba": [
+"H1339",
+null
+],
+"bavvai": [
+"H942",
+null
+],
+"bazlith": [
+"H1213",
+null
+],
+"bazluth": [
+"H1213",
+null
+],
+"be": [
+"H5144",
+null
+],
+"be eshterah": [
+"H1203",
+null
+],
+"be nazirite": [
+"H5144",
+null
+],
+"bealiah": [
+"H1183",
+null
+],
+"bealoth": [
+"H1175",
+null
+],
+"bear": [
+"H5906",
+null
+],
+"beautiful_gate": [
+null,
+"G5611"
+],
+"bebai": [
+"H893",
+null
+],
+"becher": [
+"H1071",
+null
+],
+"becherite": [
+"H1076",
+null
+],
+"bechorath": [
+"H1064",
+null
+],
+"becorath": [
+"H1064",
+null
+],
+"bedad": [
+"H911",
+null
+],
+"bedan": [
+"H917",
+null
+],
+"bedeiah": [
+"H912",
+null
+],
+"beeliada": [
+"H1182",
+null
+],
+"beelzebub": [
+"H7854",
+"G954"
+],
+"beelzebul": [
+"H7854",
+"G954"
+],
+"beer": [
+"H876",
+null
+],
+"beer elim": [
+"H879",
+null
+],
+"beer-elim": [
+"H879",
+null
+],
+"beer-lahai-roi": [
+"H883",
+null
+],
+"beera": [
+"H878",
+null
+],
+"beerah": [
+"H880",
+null
+],
+"beeri": [
+"H882",
+null
+],
+"beeroth": [
+"H881",
+null
+],
+"beerothite": [
+"H886",
+null
+],
+"beersheba": [
+"H884",
+null
+],
+"beeshterah": [
+"H1203",
+null
+],
+"before sabbath": [
+"H7676",
+"G4315"
+],
+"behemoth": [
+"H930",
+null
+],
+"bekorath": [
+"H1064",
+null
+],
+"bel": [
+"H1078",
+null
+],
+"bela": [
+"H1106",
+null
+],
+"belah": [
+"H1106",
+null
+],
+"belaite": [
+"H1108",
+null
+],
+"belshazzar": [
+"H1112",
+null
+],
+"ben": [
+"H1122",
+null
+],
+"ben-abinadab": [
+"H1125",
+null
+],
+"ben-ammi": [
+"H1151",
+null
+],
+"ben-deker": [
+"H1128",
+null
+],
+"ben-geber": [
+"H1127",
+null
+],
+"ben-hadad": [
+"H1130",
+null
+],
+"ben-hail": [
+"H1134",
+null
+],
+"ben-hanan": [
+"H1135",
+null
+],
+"ben-hesed": [
+"H1136",
+null
+],
+"ben-hur": [
+"H1133",
+null
+],
+"ben-oni": [
+"H1126",
+null
+],
+"ben-zoheth": [
+"H1132",
+null
+],
+"benaiah": [
+"H1141",
+null
+],
+"bene berak": [
+"H1139",
+null
+],
+"bene jaakan": [
+"H1142",
+null
+],
+"bene-berak": [
+"H1139",
+null
+],
+"bene-jaakan": [
+"H1142",
+null
+],
+"beninu": [
+"H1148",
+null
+],
+"benjamin": [
+"H1144",
+"G958"
+],
+"benjamin_gate": [
+"H1144",
+null
+],
+"beno": [
+"H1121",
+null
+],
+"beon": [
+"H1194",
+null
+],
+"beor": [
+"H1160",
+"G1007"
+],
+"bera": [
+"H1298",
+null
+],
+"beracah": [
+"H1294",
+null
+],
+"beracah_valley": [
+"H1294",
+null
+],
+"berachah": [
+"H1294",
+null
+],
+"berachiah": [
+"H1296",
+null
+],
+"beraiah": [
+"H1256",
+null
+],
+"berakah": [
+"H1294",
+null
+],
+"berea": [
+null,
+"G960"
+],
+"berean": [
+null,
+"G961"
+],
+"berechiah": [
+"H1296",
+null
+],
+"bered": [
+"H1260",
+null
+],
+"beri": [
+"H1275",
+null
+],
+"beriah": [
+"H1283",
+null
+],
+"beriite": [
+"H1284",
+null
+],
+"bernice": [
+null,
+"G959"
+],
+"berodach-baladan": [
+"H1255",
+null
+],
+"berothah": [
+"H1268",
+null
+],
+"berothai": [
+"H1268",
+null
+],
+"besai": [
+"H1153",
+null
+],
+"beside": [
+"H5984",
+null
+],
+"besodeiah": [
+"H1152",
+null
+],
+"besor": [
+"H1308",
+null
+],
+"betah": [
+"H984",
+null
+],
+"beten": [
+"H991",
+null
+],
+"beth anath": [
+"H1043",
+null
+],
+"beth anoth": [
+"H1042",
+null
+],
+"beth arbel": [
+"H1009",
+null
+],
+"beth aven": [
+"H1007",
+null
+],
+"beth azmaveth": [
+"H1041",
+null
+],
+"beth barah": [
+"H1012",
+null
+],
+"beth biri": [
+"H1011",
+null
+],
+"beth dagon": [
+"H1016",
+null
+],
+"beth diblathaim": [
+"H1015",
+null
+],
+"beth eden": [
+"H1040",
+null
+],
+"beth eked": [
+"H1044",
+null
+],
+"beth emek": [
+"H1025",
+null
+],
+"beth ezel": [
+"H1018",
+null
+],
+"beth gader": [
+"H1013",
+null
+],
+"beth gamul": [
+"H1014",
+null
+],
+"beth gilgal": [
+"H1019",
+null
+],
+"beth haram": [
+"H1027",
+null
+],
+"beth haran": [
+"H1028",
+null
+],
+"beth hoglah": [
+"H1031",
+null
+],
+"beth horon": [
+"H1032",
+null
+],
+"beth jeshimoth": [
+"H1020",
+null
+],
+"beth kar": [
+"H1033",
+null
+],
+"beth lebaoth": [
+"H1034",
+null
+],
+"beth markaboth": [
+"H1024",
+null
+],
+"beth meon": [
+"H1010",
+null
+],
+"beth millo": [
+"H1037",
+null
+],
+"beth nimrah": [
+"H1039",
+null
+],
+"beth ophrah": [
+"H1036",
+null
+],
+"beth pazzez": [
+"H1048",
+null
+],
+"beth pelet": [
+"H1046",
+null
+],
+"beth peor": [
+"H1047",
+null
+],
+"beth rapha": [
+"H1051",
+null
+],
+"beth rehob": [
+"H1050",
+null
+],
+"beth shan": [
+"H1052",
+null
+],
+"beth shittah": [
+"H1029",
+null
+],
+"beth tappuah": [
+"H1054",
+null
+],
+"beth zur": [
+"H1049",
+null
+],
+"beth-anath": [
+"H1043",
+null
+],
+"beth-anoth": [
+"H1042",
+null
+],
+"beth-arabah": [
+"H1026",
+null
+],
+"beth-aram": [
+"H1027",
+null
+],
+"beth-arbel": [
+"H1009",
+null
+],
+"beth-ashbea": [
+"H1004",
+null
+],
+"beth-ashtoreth": [
+"H1045",
+null
+],
+"beth-aven": [
+"H1007",
+null
+],
+"beth-azmaveth": [
+"H1041",
+null
+],
+"beth-baal-meon": [
+"H1004",
+null
+],
+"beth-barah": [
+"H1012",
+"G963"
+],
+"beth-biri": [
+"H1011",
+null
+],
+"beth-car": [
+"H1033",
+null
+],
+"beth-dagon": [
+"H1016",
+null
+],
+"beth-diblathaim": [
+"H1015",
+null
+],
+"beth-eden": [
+"H1040",
+null
+],
+"beth-eked": [
+"H1044",
+null
+],
+"beth-emek": [
+"H1025",
+null
+],
+"beth-ezel": [
+"H1018",
+null
+],
+"beth-gader": [
+"H1013",
+null
+],
+"beth-gamul": [
+"H1014",
+null
+],
+"beth-gilgal": [
+"H1019",
+null
+],
+"beth-haccerem": [
+"H1021",
+null
+],
+"beth-haccherem": [
+"H1021",
+null
+],
+"beth-haggan": [
+"H1004",
+null
+],
+"beth-haram": [
+"H1027",
+null
+],
+"beth-haran": [
+"H1028",
+null
+],
+"beth-hoglah": [
+"H1031",
+null
+],
+"beth-horon": [
+"H1032",
+null
+],
+"beth-horon_lower": [
+"H1032",
+null
+],
+"beth-horon_upper": [
+"H1032",
+null
+],
+"beth-jeshimoth": [
+"H1020",
+null
+],
+"beth-le-aphrah": [
+"H1036",
+null
+],
+"beth-lebaoth": [
+"H1034",
+null
+],
+"beth-lehem": [
+"H1035",
+null
+],
+"beth-marcaboth": [
+"H1024",
+null
+],
+"beth-meon": [
+"H1010",
+null
+],
+"beth-merhak": [
+"H1023",
+null
+],
+"beth-millo": [
+"H1037",
+null
+],
+"beth-nimrah": [
+"H1039",
+null
+],
+"beth-palet": [
+"H1046",
+null
+],
+"beth-pazzez": [
+"H1048",
+null
+],
+"beth-pelet": [
+"H1046",
+null
+],
+"beth-peor": [
+"H1047",
+null
+],
+"beth-phelet": [
+"H1046",
+null
+],
+"beth-rapha": [
+"H1051",
+null
+],
+"beth-rehob": [
+"H1050",
+null
+],
+"beth-shan": [
+"H1052",
+null
+],
+"beth-shean": [
+"H1052",
+null
+],
+"beth-shemesh": [
+"H1053",
+null
+],
+"beth-shittah": [
+"H1029",
+null
+],
+"beth-tappuah": [
+"H1054",
+null
+],
+"beth-togarmah": [
+"H8425",
+null
+],
+"beth-zur": [
+"H1049",
+null
+],
+"bethabara": [
+"H1012",
+"G962"
+],
+"bethany": [
+null,
+"G963"
+],
+"bethel": [
+"H1008",
+null
+],
+"bether": [
+"H1336",
+null
+],
+"bether_mountain": [
+"H1336",
+null
+],
+"bethesda": [
+null,
+"G964"
+],
+"bethlehem": [
+"H1035",
+"G965"
+],
+"bethphage": [
+null,
+"G967"
+],
+"bethsaida": [
+null,
+"G966"
+],
+"bethuel": [
+"H1328",
+null
+],
+"bethul": [
+"H1329",
+null
+],
+"bethzatha": [
+null,
+"G964"
+],
+"betonim": [
+"H993",
+null
+],
+"beulah": [
+"H1166",
+null
+],
+"bevai": [
+"H942",
+null
+],
+"bezai": [
+"H1209",
+null
+],
+"bezaleel": [
+"H1212",
+null
+],
+"bezalel": [
+"H1212",
+null
+],
+"bezek": [
+"H966",
+null
+],
+"bezer": [
+"H1221",
+null
+],
+"bichri": [
+"H1075",
+null
+],
+"bichrite": [
+"H1276",
+null
+],
+"bidkar": [
+"H920",
+null
+],
+"bigtha": [
+"H903",
+null
+],
+"bigthan": [
+"H904",
+null
+],
+"bigthana": [
+"H904",
+null
+],
+"bigvai": [
+"H902",
+null
+],
+"bikri": [
+"H1075",
+null
+],
+"bikrites": [
+"H1276",
+null
+],
+"bildad": [
+"H1085",
+null
+],
+"bileam": [
+"H1109",
+null
+],
+"bilgah": [
+"H1083",
+null
+],
+"bilgai": [
+"H1084",
+null
+],
+"bilhah": [
+"H1090",
+null
+],
+"bilhan": [
+"H1092",
+null
+],
+"bilshan": [
+"H1114",
+null
+],
+"bimhal": [
+"H1118",
+null
+],
+"binea": [
+"H1150",
+null
+],
+"binnui": [
+"H1131",
+null
+],
+"birsha": [
+"H1306",
+null
+],
+"birzaith": [
+"H1269",
+null
+],
+"birzavith": [
+"H1269",
+null
+],
+"birzoth": [
+"H1269",
+null
+],
+"bishlam": [
+"H1312",
+null
+],
+"bithiah": [
+"H1332",
+null
+],
+"bithron": [
+"H1338",
+null
+],
+"bithynia": [
+null,
+"G978"
+],
+"biziothiah": [
+"H964",
+null
+],
+"biztha": [
+"H968",
+null
+],
+"blastus": [
+null,
+"G986"
+],
+"boanerges": [
+null,
+"G993"
+],
+"boaz": [
+"H1162",
+"G1003"
+],
+"bocheru": [
+"H1074",
+null
+],
+"bochim": [
+"H1066",
+null
+],
+"bohan": [
+"H932",
+null
+],
+"booths_festival": [
+null,
+"G4634"
+],
+"booz": [
+"H1162",
+null
+],
+"bor-ashan": [
+"H3565",
+null
+],
+"border": [
+"H1419",
+null
+],
+"bosor": [
+"H1160",
+null
+],
+"bougeon": [
+"H90",
+"G9826"
+],
+"bozez": [
+"H949",
+null
+],
+"bozkath": [
+"H1218",
+null
+],
+"bozrah": [
+"H1224",
+null
+],
+"broad_wall": [
+"H7342",
+null
+],
+"brook": [
+"H5158",
+null
+],
+"brook_of_egypt": [
+"H5158",
+null
+],
+"brook_of_the_arabah": [
+"H5158",
+null
+],
+"brook_of_the_willows": [
+"H5158",
+null
+],
+"brother": [
+"H277",
+null
+],
+"bubastis": [
+"H6364",
+null
+],
+"bukki": [
+"H1231",
+null
+],
+"bukkiah": [
+"H1232",
+null
+],
+"bul": [
+"H945",
+null
+],
+"bunah": [
+"H946",
+null
+],
+"bunni": [
+"H1138",
+null
+],
+"burning-place": [
+"H8613",
+null
+],
+"buttock": [
+"H8351",
+null
+],
+"buz": [
+"H938",
+null
+],
+"buzi": [
+"H941",
+null
+],
+"buzite": [
+"H940",
+null
+],
+"buzites": [
+"H940",
+null
+],
+"cabbon": [
+"H3522",
+null
+],
+"cabul": [
+"H3521",
+null
+],
+"caesar": [
+null,
+"G2541"
+],
+"caesarea": [
+null,
+"G2542"
+],
+"caesarea_philippi": [
+null,
+"G2542"
+],
+"caiaphas": [
+null,
+"G2533"
+],
+"cain": [
+"H7014",
+"G2535"
+],
+"cainan": [
+null,
+"G2536"
+],
+"calah": [
+"H3625",
+null
+],
+"calcol": [
+"H3633",
+null
+],
+"caleb": [
+"H3612",
+null
+],
+"caleb ephrathah": [
+"H3613",
+null
+],
+"caleb_ephrathah": [
+"H3613",
+null
+],
+"calebite": [
+"H3614",
+null
+],
+"calneh": [
+"H3641",
+null
+],
+"calno": [
+"H3641",
+null
+],
+"calvary": [
+null,
+"G2898"
+],
+"cana": [
+"H7071",
+"G2580"
+],
+"canaan": [
+"H3667",
+"G5477"
+],
+"canaanite woman": [
+"H3669",
+null
+],
+"canaanite_woman": [
+"H3669",
+null
+],
+"canals": [
+"H2975",
+null
+],
+"candace": [
+null,
+"G2582"
+],
+"canneh": [
+"H3656",
+null
+],
+"capernaum": [
+null,
+"G2584"
+],
+"caphtor": [
+"H3731",
+"G2914"
+],
+"caphtorim": [
+"H3732",
+null
+],
+"cappadocia": [
+null,
+"G2587"
+],
+"captains": [
+"H3774",
+null
+],
+"carcas": [
+"H3752",
+null
+],
+"carchemish": [
+"H3751",
+null
+],
+"careah": [
+"H7143",
+null
+],
+"carian": [
+"H3746",
+null
+],
+"carite": [
+"H3746",
+null
+],
+"carkas": [
+"H3752",
+null
+],
+"carmel": [
+"H3760",
+null
+],
+"carmel_mount": [
+"H3760",
+null
+],
+"carmelite": [
+"H3761",
+null
+],
+"carmelitess": [
+"H3762",
+null
+],
+"carmi": [
+"H3756",
+null
+],
+"carmite": [
+"H3757",
+null
+],
+"carpus": [
+null,
+"G2591"
+],
+"carshena": [
+"H3771",
+null
+],
+"casiphia": [
+"H3703",
+null
+],
+"casks": [
+"H2051",
+null
+],
+"casluhim": [
+"H3695",
+null
+],
+"cauda": [
+null,
+"G2802"
+],
+"cenchrea": [
+null,
+"G2747"
+],
+"cenchreae": [
+null,
+"G2747"
+],
+"cephas": [
+null,
+"G2786"
+],
+"chalcol": [
+"H3633",
+null
+],
+"chaldea": [
+"H3778",
+"G5466"
+],
+"chanaan": [
+"H3667",
+"G5477"
+],
+"changed azariah": [
+null,
+null
+],
+"changed to gentilic: ish-tob (h0382) to group from tob": [
+"H2897",
+null
+],
+"channel": [
+"H7641",
+null
+],
+"chebar": [
+"H3529",
+null
+],
+"chedorlaomer": [
+"H3540",
+null
+],
+"chelal": [
+"H3636",
+null
+],
+"chelluh": [
+"H3622",
+null
+],
+"chelub": [
+"H3620",
+null
+],
+"chelubai": [
+"H3621",
+null
+],
+"cheluhi": [
+"H3622",
+null
+],
+"chemosh": [
+"H3645",
+null
+],
+"chenaanah": [
+"H3668",
+null
+],
+"chenani": [
+"H3662",
+null
+],
+"chenaniah": [
+"H3663",
+null
+],
+"chephar-ammoni": [
+"H3723",
+null
+],
+"chephirah": [
+"H3716",
+null
+],
+"cheran": [
+"H3763",
+null
+],
+"cherethites": [
+"H3774",
+null
+],
+"cherith": [
+"H3747",
+null
+],
+"cherub": [
+"H3743",
+"G5502"
+],
+"chesalon": [
+"H3693",
+null
+],
+"chesed": [
+"H3777",
+null
+],
+"chesil": [
+"H3686",
+null
+],
+"chesulloth": [
+"H3694",
+null
+],
+"chezib": [
+"H3580",
+null
+],
+"chidon": [
+"H3592",
+null
+],
+"chief": [
+"H8661",
+null
+],
+"chief officer": [
+"H7249",
+null
+],
+"chileab": [
+"H3609",
+null
+],
+"chilion": [
+"H3630",
+null
+],
+"chilmad": [
+"H3638",
+null
+],
+"chimham": [
+"H3643",
+null
+],
+"chinnereth": [
+"H3672",
+"G1056"
+],
+"chinneroth": [
+"H3672",
+null
+],
+"chios": [
+null,
+"G5508"
+],
+"chislev": [
+"H3691",
+null
+],
+"chislon": [
+"H3692",
+null
+],
+"chisloth-tabor": [
+"H3696",
+null
+],
+"chitlish": [
+"H3798",
+null
+],
+"chittim": [
+"H3794",
+null
+],
+"chloe": [
+null,
+"G5514"
+],
+"chor-ashan": [
+"H3565",
+null
+],
+"chorazin": [
+null,
+"G5523"
+],
+"chozeba": [
+"H3578",
+null
+],
+"christ jesus": [
+null,
+"G5547"
+],
+"christian": [
+null,
+"G5546"
+],
+"chronicles": [
+"H1697",
+null
+],
+"chub": [
+"H3552",
+null
+],
+"chun": [
+"H3560",
+null
+],
+"chuza": [
+null,
+"G5529"
+],
+"cilicia": [
+null,
+"G2791"
+],
+"cinneroth": [
+"H3672",
+null
+],
+"cis": [
+"H7027",
+"G2797"
+],
+"cistern of sirah": [
+"H953",
+null
+],
+"cities": [
+"H7152",
+null
+],
+"citizens of heights of": [
+"H1181",
+null
+],
+"city": [
+"H5857",
+null
+],
+"city of palms": [
+"H5899",
+null
+],
+"city of salt": [
+"H5898",
+null
+],
+"city_of_salt": [
+"H5898",
+null
+],
+"claudia": [
+null,
+"G2803"
+],
+"claudius": [
+null,
+"G2804"
+],
+"cleft": [
+"H1336",
+null
+],
+"clement": [
+null,
+"G2815"
+],
+"cleopas": [
+null,
+"G2810"
+],
+"cleophas": [
+null,
+"G2832"
+],
+"cliff": [
+"H5553",
+null
+],
+"clopas": [
+null,
+"G2832"
+],
+"cnidus": [
+null,
+"G2834"
+],
+"coast": [
+"H2256",
+null
+],
+"col-hozeh": [
+"H3626",
+null
+],
+"colonnade": [
+"H6503",
+null
+],
+"colossae": [
+null,
+"G2857"
+],
+"colossians": [
+null,
+"G2858"
+],
+"conaniah": [
+"H3562",
+null
+],
+"coniah": [
+"H3659",
+null
+],
+"cononiah": [
+"H3562",
+null
+],
+"converted to place: eshtemoa": [
+null,
+null
+],
+"corban": [
+null,
+"G2878"
+],
+"core": [
+"H7141",
+"G2879"
+],
+"corinth": [
+null,
+"G2882"
+],
+"corinthian": [
+null,
+"G2881"
+],
+"corinthus": [
+null,
+"G2882"
+],
+"cornelius": [
+null,
+"G2883"
+],
+"corner_gate": [
+"H6438",
+null
+],
+"corrected pedaiah": [
+null,
+null
+],
+"cos": [
+null,
+"G2972"
+],
+"cosam": [
+null,
+"G2973"
+],
+"countries": [
+"H5316",
+null
+],
+"court": [
+"H6503",
+null
+],
+"coz": [
+"H6976",
+null
+],
+"cozbi": [
+"H3579",
+null
+],
+"cozeba": [
+"H3578",
+null
+],
+"crescens": [
+null,
+"G2913"
+],
+"cretan": [
+"H3731",
+"G2912"
+],
+"crete": [
+"H3731",
+"G2914"
+],
+"crispus": [
+null,
+"G2921"
+],
+"cun": [
+"H3560",
+null
+],
+"cush": [
+"H3568",
+"G128"
+],
+"cushan": [
+"H3572",
+null
+],
+"cushan-rishathaim": [
+"H3573",
+null
+],
+"cushi": [
+"H3570",
+null
+],
+"cushitess": [
+"H3571",
+null
+],
+"cuth": [
+"H3575",
+null
+],
+"cuthah": [
+"H3575",
+null
+],
+"cypress wood": [
+"H843",
+null
+],
+"cyprus": [
+"H3794",
+"G2953"
+],
+"cyrene": [
+null,
+"G2956"
+],
+"cyrenian": [
+null,
+"G2956"
+],
+"cyrus": [
+"H3566",
+null
+],
+"dabbesheth": [
+"H1708",
+null
+],
+"daberath": [
+"H1705",
+null
+],
+"dagon": [
+"H1712",
+null
+],
+"dalaiah": [
+"H1806",
+null
+],
+"dalmanutha": [
+null,
+"G1148"
+],
+"dalmatia": [
+null,
+"G1149"
+],
+"dalphon": [
+"H1813",
+null
+],
+"damaris": [
+null,
+"G1152"
+],
+"damascus": [
+"H1834",
+"G1153"
+],
+"dan": [
+"H1835",
+null
+],
+"dan they went": [
+"H1842",
+null
+],
+"daniel": [
+"H1840",
+"G1158"
+],
+"dannah": [
+"H1837",
+null
+],
+"dara": [
+"H1873",
+null
+],
+"darda": [
+"H1862",
+null
+],
+"darius": [
+"H1867",
+null
+],
+"darkon": [
+"H1874",
+null
+],
+"dathan": [
+"H1885",
+null
+],
+"daughter1_of_lot": [
+"H3876",
+null
+],
+"daughter2_of_lot": [
+"H3876",
+null
+],
+"daughter_of_annas": [
+null,
+"G2533"
+],
+"daughter_of_machir": [
+"H4353",
+null
+],
+"daughter_of_meshullam": [
+"H4918",
+null
+],
+"daughter_of_pharaoh": [
+"H6547",
+null
+],
+"daughter_of_putiel": [
+"H6317",
+null
+],
+"daughter_of_sanballat": [
+"H5571",
+null
+],
+"daughter_of_shecaniah": [
+"H7935",
+null
+],
+"david": [
+"H1732",
+"G1138"
+],
+"day star": [
+"H1966",
+null
+],
+"dead sea": [
+"H6160",
+null
+],
+"death of the son": [
+"H4192",
+null
+],
+"debir": [
+"H1688",
+null
+],
+"deborah": [
+"H1683",
+null
+],
+"decapolis": [
+null,
+"G1179"
+],
+"dedan": [
+"H1719",
+null
+],
+"dedanite": [
+"H1720",
+null
+],
+"dedication_festival": [
+null,
+"G1456"
+],
+"dehavite": [
+"H1723",
+null
+],
+"dehavites": [
+"H1723",
+null
+],
+"dekar": [
+"H1857",
+null
+],
+"deker": [
+"H1857",
+null
+],
+"delaiah": [
+"H1806",
+null
+],
+"delilah": [
+"H1807",
+null
+],
+"demas": [
+null,
+"G1214"
+],
+"demetrius": [
+null,
+"G1216"
+],
+"deported": [
+"H1540",
+null
+],
+"derbe": [
+null,
+"G1190"
+],
+"desert": [
+"H6160",
+null
+],
+"deserted": [
+"H5800",
+null
+],
+"desolate": [
+"H8077",
+null
+],
+"desstruction": [
+"H11",
+null
+],
+"destiny": [
+"H4507",
+null
+],
+"destruction": [
+"H11",
+null
+],
+"deuel": [
+"H1845",
+null
+],
+"devil": [
+"H7854",
+"G1228"
+],
+"diana": [
+null,
+"G735"
+],
+"diblaim": [
+"H1691",
+null
+],
+"diblathaim": [
+"H5963",
+null
+],
+"dibon": [
+"H1769",
+null
+],
+"dibon-gad": [
+"H1769",
+null
+],
+"dibri": [
+"H1704",
+null
+],
+"didymus": [
+null,
+"G1324"
+],
+"diklah": [
+"H1853",
+null
+],
+"dilean": [
+"H1810",
+null
+],
+"dimnah": [
+"H1829",
+null
+],
+"dimon": [
+"H1775",
+null
+],
+"dimonah": [
+"H1776",
+null
+],
+"dinah": [
+"H1783",
+null
+],
+"dinaite": [
+"H1784",
+null
+],
+"dinaites": [
+"H1784",
+null
+],
+"dinhabah": [
+"H1838",
+null
+],
+"dionysius": [
+null,
+"G1354"
+],
+"diotrephes": [
+null,
+"G1361"
+],
+"dishan": [
+"H1789",
+null
+],
+"dishon": [
+"H1787",
+null
+],
+"divided eshtemoa & anim": [
+null,
+null
+],
+"diviners'_oak": [
+"H6049",
+null
+],
+"dizahab": [
+"H1774",
+null
+],
+"do not destroy": [
+"H516",
+null
+],
+"dodanim": [
+"H1721",
+null
+],
+"dodavah": [
+"H1735",
+null
+],
+"dodavahu": [
+"H1735",
+null
+],
+"dodi": [
+"H1734",
+null
+],
+"dodo": [
+"H1734",
+null
+],
+"doeg": [
+"H1673",
+null
+],
+"dophkah": [
+"H1850",
+null
+],
+"dor": [
+"H1756",
+null
+],
+"dorcas": [
+null,
+"G1393"
+],
+"dothan": [
+"H1886",
+null
+],
+"dove on distant oaks": [
+"H3128",
+null
+],
+"dove on far-off terebinths": [
+"H3128",
+null
+],
+"dragon_spring": [
+"H8577",
+null
+],
+"drunkards": [
+"H5436",
+null
+],
+"drusilla": [
+null,
+"G1409"
+],
+"dumah": [
+"H1746",
+null
+],
+"dung_gate": [
+"H830",
+null
+],
+"dura": [
+"H1757",
+null
+],
+"ease": [
+"H4496",
+null
+],
+"easily": [
+"H4496",
+null
+],
+"east": [
+"H6924",
+null
+],
+"east_gate": [
+"H4217",
+null
+],
+"ebal": [
+"H5858",
+null
+],
+"ebal_mount": [
+"H5858",
+null
+],
+"ebed": [
+"H5651",
+null
+],
+"ebed-melech": [
+"H5663",
+null
+],
+"ebed-melek": [
+"H5663",
+null
+],
+"ebenezer": [
+"H72",
+null
+],
+"eber": [
+"H5677",
+"G1443"
+],
+"ebez": [
+"H77",
+null
+],
+"ebiasaph": [
+"H43",
+null
+],
+"ebron": [
+"H5683",
+null
+],
+"ecbatana": [
+"H307",
+null
+],
+"eddi": [
+"H3260",
+null
+],
+"eddo": [
+"H3260",
+null
+],
+"edem": [
+"H6197",
+"G9827"
+],
+"eden": [
+"H5731",
+null
+],
+"eder": [
+"H5740",
+null
+],
+"edom": [
+"H123",
+null
+],
+"edrei": [
+"H154",
+null
+],
+"eg the tag h2608a is used for 15 individuals. one of those, hananiah": [
+null,
+null
+],
+"eglah": [
+"H5698",
+null
+],
+"eglaim": [
+"H97",
+null
+],
+"eglath shelishiyah": [
+"H5697",
+null
+],
+"eglath-shelishiyah": [
+"H5697",
+null
+],
+"eglon": [
+"H5700",
+null
+],
+"egypt": [
+"H4714",
+"G125"
+],
+"egypt_sea": [
+"H4714",
+null
+],
+"egyptian women": [
+"H4713",
+null
+],
+"egyptians": [
+"H4713",
+null
+],
+"ehi": [
+"H278",
+null
+],
+"ehud": [
+"H164",
+null
+],
+"eker": [
+"H6134",
+null
+],
+"ekron": [
+"H6138",
+null
+],
+"ekronites": [
+"H6139",
+null
+],
+"el paran": [
+"H364",
+null
+],
+"el-berith": [
+"H410",
+null
+],
+"el-beth-el": [
+"H416",
+null
+],
+"el-bethel": [
+"H416",
+null
+],
+"el-elohe-israel": [
+"H410",
+null
+],
+"el-paran": [
+"H364",
+null
+],
+"ela": [
+"H414",
+null
+],
+"eladah": [
+"H497",
+null
+],
+"elah": [
+"H425",
+null
+],
+"elah_valley": [
+"H425",
+null
+],
+"elam": [
+"H5867",
+"G1639"
+],
+"elasah": [
+"H501",
+null
+],
+"elath": [
+"H359",
+null
+],
+"eldaah": [
+"H420",
+null
+],
+"eldad": [
+"H419",
+null
+],
+"elead": [
+"H496",
+null
+],
+"eleadah": [
+"H497",
+null
+],
+"elealeh": [
+"H500",
+null
+],
+"eleasah": [
+"H501",
+null
+],
+"eleazar": [
+"H499",
+"G1648"
+],
+"eleph": [
+"H507",
+null
+],
+"elhanan": [
+"H445",
+null
+],
+"eli": [
+"H5941",
+null
+],
+"eliab": [
+"H446",
+null
+],
+"eliada": [
+"H450",
+null
+],
+"eliadah": [
+"H450",
+null
+],
+"eliah": [
+"H452",
+null
+],
+"eliahba": [
+"H455",
+null
+],
+"eliakim": [
+"H471",
+"G1662"
+],
+"eliam": [
+"H463",
+null
+],
+"eliasaph": [
+"H460",
+null
+],
+"eliashib": [
+"H475",
+null
+],
+"eliathah": [
+"H448",
+null
+],
+"elidad": [
+"H449",
+null
+],
+"eliehoenai": [
+"H454",
+null
+],
+"eliel": [
+"H447",
+null
+],
+"elienai": [
+"H462",
+null
+],
+"eliezer": [
+"H461",
+"G1663"
+],
+"elihoenai": [
+"H454",
+null
+],
+"elihoreph": [
+"H456",
+null
+],
+"elihu": [
+"H453",
+null
+],
+"elijah": [
+"H452",
+"G2243"
+],
+"elika": [
+"H470",
+null
+],
+"elim": [
+"H362",
+null
+],
+"elimelech": [
+"H458",
+null
+],
+"elimelek": [
+"H458",
+null
+],
+"elioenai": [
+"H454",
+null
+],
+"eliphal": [
+"H465",
+null
+],
+"eliphalet": [
+"H467",
+null
+],
+"eliphaz": [
+"H464",
+null
+],
+"elipheleh": [
+"H466",
+null
+],
+"eliphelehu": [
+"H466",
+null
+],
+"eliphelet": [
+"H467",
+null
+],
+"elisabeth": [
+null,
+"G1665"
+],
+"eliseus": [
+"H477",
+null
+],
+"elisha": [
+"H477",
+"G1666"
+],
+"elishah": [
+"H473",
+null
+],
+"elishama": [
+"H476",
+null
+],
+"elishaphat": [
+"H478",
+null
+],
+"elisheba": [
+"H472",
+null
+],
+"elishua": [
+"H474",
+null
+],
+"eliud": [
+null,
+"G1664"
+],
+"elizabeth": [
+null,
+"G1665"
+],
+"elizaphan": [
+"H469",
+null
+],
+"elizur": [
+"H468",
+null
+],
+"elkanah": [
+"H511",
+null
+],
+"elkosh": [
+"H512",
+null
+],
+"ellasar": [
+"H495",
+null
+],
+"elmadam": [
+null,
+"G1678"
+],
+"elmodam": [
+null,
+"G1678"
+],
+"elnaam": [
+"H493",
+null
+],
+"elnathan": [
+"H494",
+null
+],
+"elohim": [
+"H430",
+null
+],
+"eloi": [
+"H3068",
+"G1682"
+],
+"elon": [
+"H356",
+null
+],
+"elon beth-hanan": [
+"H358",
+null
+],
+"elon bethhanan": [
+"H358",
+null
+],
+"elonbeth-hanan": [
+"H358",
+null
+],
+"elonite": [
+"H440",
+null
+],
+"eloth": [
+"H359",
+null
+],
+"elpaal": [
+"H508",
+null
+],
+"elpalet": [
+"H467",
+null
+],
+"elpelet": [
+"H467",
+null
+],
+"elteke": [
+"H514",
+null
+],
+"eltekeh": [
+"H514",
+null
+],
+"eltekon": [
+"H515",
+null
+],
+"eltolad": [
+"H513",
+null
+],
+"elul": [
+"H435",
+null
+],
+"eluzai": [
+"H498",
+null
+],
+"elymas": [
+null,
+"G1681"
+],
+"elzabad": [
+"H443",
+null
+],
+"elzaphan": [
+"H469",
+null
+],
+"emek-keziz": [
+"H6010",
+null
+],
+"emim": [
+"H368",
+null
+],
+"emmanuel": [
+"H6005",
+"G2424"
+],
+"emmaus": [
+null,
+"G1695"
+],
+"emmor": [
+"H2544",
+null
+],
+"emperor": [
+null,
+"G4575"
+],
+"en gannim": [
+"H5873",
+null
+],
+"en haddah": [
+"H5876",
+null
+],
+"en hakkore": [
+"H5875",
+null
+],
+"en hazor": [
+"H5877",
+null
+],
+"en mishpat": [
+"H5880",
+null
+],
+"en rimmon": [
+"H5884",
+null
+],
+"en rogel": [
+"H5883",
+null
+],
+"en shemesh": [
+"H5885",
+null
+],
+"en tappuah": [
+"H5887",
+null
+],
+"en-dor": [
+"H5874",
+null
+],
+"en-gannim": [
+"H5873",
+null
+],
+"en-haddah": [
+"H5876",
+null
+],
+"en-hakkore": [
+"H5875",
+null
+],
+"en-hazor": [
+"H5877",
+null
+],
+"en-mishpat": [
+"H5880",
+null
+],
+"en-rimmon": [
+"H5884",
+null
+],
+"en-rogel": [
+"H5883",
+null
+],
+"en-shemesh": [
+"H5885",
+null
+],
+"en-tappuah": [
+"H5887",
+null
+],
+"enaim": [
+"H5879",
+null
+],
+"enam": [
+"H5879",
+null
+],
+"enan": [
+"H5881",
+null
+],
+"endor": [
+"H5874",
+null
+],
+"eneglaim": [
+"H5882",
+null
+],
+"engedi": [
+"H5872",
+null
+],
+"enoch": [
+"H2585",
+"G1802"
+],
+"enosh": [
+"H583",
+"G1800"
+],
+"epaenetus": [
+null,
+"G1866"
+],
+"epaphras": [
+null,
+"G1889"
+],
+"epaphroditus": [
+null,
+"G1891"
+],
+"epenetus": [
+null,
+"G1866"
+],
+"ephah": [
+"H5891",
+null
+],
+"ephai": [
+"H5778",
+null
+],
+"epher": [
+"H6081",
+null
+],
+"ephes dammim": [
+"H658",
+null
+],
+"ephes-dammim": [
+"H658",
+null
+],
+"ephesian": [
+null,
+"G2180"
+],
+"ephesus": [
+null,
+"G2181"
+],
+"ephlal": [
+"H654",
+null
+],
+"ephod": [
+"H641",
+null
+],
+"ephraim": [
+"H669",
+"G2187"
+],
+"ephraim_gate": [
+"H669",
+null
+],
+"ephrain": [
+"H6085",
+null
+],
+"ephratah": [
+"H672",
+null
+],
+"ephrath": [
+"H672",
+null
+],
+"ephrathah": [
+"H672",
+null
+],
+"ephrathite": [
+"H673",
+null
+],
+"ephron": [
+"H6085",
+null
+],
+"ephron_mount": [
+"H6085",
+null
+],
+"epicurean": [
+null,
+"G1946"
+],
+"er": [
+"H6147",
+"G2262"
+],
+"eran": [
+"H6197",
+"G9827"
+],
+"eranite": [
+"H6198",
+"G9827"
+],
+"erastus": [
+null,
+"G2037"
+],
+"erech": [
+"H751",
+null
+],
+"eri": [
+"H6179",
+null
+],
+"erite": [
+"H6180",
+null
+],
+"esaias": [
+"H3470",
+null
+],
+"esar-haddon": [
+"H634",
+null
+],
+"esarhaddon": [
+"H634",
+null
+],
+"esau": [
+"H6215",
+"G2269"
+],
+"esau_mount": [
+"H6215",
+null
+],
+"esek": [
+"H6230",
+null
+],
+"eshan": [
+"H824",
+null
+],
+"eshbaal": [
+"H792",
+null
+],
+"eshban": [
+"H790",
+null
+],
+"eshcol": [
+"H812",
+null
+],
+"eshcol_valley": [
+"H812",
+null
+],
+"eshek": [
+"H6232",
+null
+],
+"eshkol": [
+"H812",
+null
+],
+"eshtaol": [
+"H847",
+null
+],
+"eshtaolite": [
+"H848",
+null
+],
+"eshtemoa": [
+"H851",
+null
+],
+"eshtemoh": [
+"H851",
+null
+],
+"eshton": [
+"H850",
+null
+],
+"esli": [
+null,
+"G2069"
+],
+"esrom": [
+"H2696",
+"G2074"
+],
+"esther": [
+"H635",
+null
+],
+"etam": [
+"H5862",
+null
+],
+"eternal": [
+"H5769",
+null
+],
+"eth kazin": [
+"H6278",
+null
+],
+"eth-kazin": [
+"H6278",
+null
+],
+"etham": [
+"H864",
+null
+],
+"ethan": [
+"H387",
+null
+],
+"ethanim": [
+"H388",
+null
+],
+"ethbaal": [
+"H856",
+null
+],
+"ether": [
+"H6281",
+null
+],
+"ethnan": [
+"H869",
+null
+],
+"ethni": [
+"H867",
+null
+],
+"eubulus": [
+null,
+"G2103"
+],
+"eunice": [
+null,
+"G2131"
+],
+"euodia": [
+null,
+"G2136"
+],
+"euodias": [
+null,
+"G2136"
+],
+"euphrates": [
+"H6578",
+"G2166"
+],
+"eutychus": [
+null,
+"G2161"
+],
+"eve": [
+"H2332",
+"G2096"
+],
+"everlasting": [
+"H5769",
+null
+],
+"evi": [
+"H189",
+null
+],
+"evil": [
+"H1100",
+null
+],
+"evil-merodach": [
+"H192",
+null
+],
+"ezbai": [
+"H229",
+null
+],
+"ezbon": [
+"H675",
+null
+],
+"ezekias": [
+"H2396",
+"G1478"
+],
+"ezekiel": [
+"H3168",
+null
+],
+"ezel": [
+"H237",
+null
+],
+"ezel_stone": [
+"H237",
+null
+],
+"ezem": [
+"H6107",
+null
+],
+"ezer": [
+"H5829",
+null
+],
+"ezion geber": [
+"H6100",
+null
+],
+"ezion-geber": [
+"H6100",
+null
+],
+"eznite": [
+"H6112",
+null
+],
+"eznites": [
+"H6112",
+null
+],
+"ezra": [
+"H5830",
+null
+],
+"ezrah": [
+"H5834",
+null
+],
+"ezrahite": [
+"H250",
+null
+],
+"ezrahites": [
+"H250",
+null
+],
+"ezri": [
+"H5836",
+null
+],
+"fair_havens": [
+null,
+"G2570"
+],
+"father": [
+null,
+"G2501"
+],
+"father_of_barnabas": [
+null,
+"G921"
+],
+"father_of_conaniah": [
+"H3562",
+null
+],
+"father_of_elizabeth": [
+null,
+"G1665"
+],
+"father_of_eunice": [
+null,
+"G2131"
+],
+"father_of_hilkiah": [
+"H2518",
+null
+],
+"father_of_hodiah": [
+"H1940",
+null
+],
+"father_of_lazarus": [
+null,
+"G2976"
+],
+"father_of_mamre": [
+"H4471",
+null
+],
+"father_of_nathan": [
+"H5416",
+null
+],
+"father_of_tahpenes": [
+"H8472",
+null
+],
+"father_of_timothy": [
+null,
+"G5095"
+],
+"felix": [
+null,
+"G5344"
+],
+"festival of booths": [
+null,
+"G4634"
+],
+"festus": [
+null,
+"G5347"
+],
+"field": [
+"H7704",
+null
+],
+"fish_gate": [
+"H1709",
+null
+],
+"fool": [
+null,
+"G4469"
+],
+"foothills": [
+"H8219",
+null
+],
+"for ever": [
+"H5867",
+null
+],
+"forest_ephraim": [
+"H669",
+null
+],
+"forsaken": [
+"H5800",
+null
+],
+"fortress": [
+"H4869",
+null
+],
+"fortunatus": [
+null,
+"G5415"
+],
+"fortune": [
+"H1408",
+null
+],
+"forum_of_appius": [
+null,
+"G675"
+],
+"foundation_gate": [
+"H3247",
+null
+],
+"fountain_gate": [
+"H5869",
+null
+],
+"freedmen": [
+null,
+"G3032"
+],
+"fridaybefore": [
+"H7676",
+"G4315"
+],
+"from nohah": [
+"H4496",
+null
+],
+"gaal": [
+"H1603",
+null
+],
+"gaash": [
+"H1608",
+null
+],
+"gabbai": [
+"H1373",
+null
+],
+"gabbatha": [
+null,
+"G1042"
+],
+"gabriel": [
+"H1403",
+"G1043"
+],
+"gad": [
+"H1410",
+"G1045"
+],
+"gadara": [
+null,
+"G1046"
+],
+"gadarene": [
+null,
+"G1046"
+],
+"gaddi": [
+"H1426",
+null
+],
+"gaddiel": [
+"H1427",
+null
+],
+"gadi": [
+"H1424",
+null
+],
+"gaham": [
+"H1514",
+null
+],
+"gahar": [
+"H1515",
+null
+],
+"gaius": [
+null,
+"G1050"
+],
+"galal": [
+"H1559",
+null
+],
+"galatia": [
+null,
+"G1053"
+],
+"galatian": [
+null,
+"G1052"
+],
+"galeed": [
+"H1567",
+null
+],
+"galilean": [
+"H1551",
+"G1057"
+],
+"galilee": [
+"H1551",
+"G1056"
+],
+"gallim": [
+"H1554",
+null
+],
+"gallio": [
+null,
+"G1058"
+],
+"galon": [
+"H1474",
+null
+],
+"gamad": [
+"H1575",
+null
+],
+"gamaliel": [
+"H1583",
+"G1059"
+],
+"gamul": [
+"H1577",
+null
+],
+"gareb": [
+"H1619",
+null
+],
+"garmite": [
+"H1636",
+null
+],
+"garmites": [
+"H1636",
+null
+],
+"gashmu": [
+"H1654",
+null
+],
+"gatam": [
+"H1609",
+null
+],
+"gate miphkad": [
+"H4663",
+null
+],
+"gath": [
+"H1661",
+null
+],
+"gath hepher": [
+"H1662",
+null
+],
+"gath rimmon": [
+"H1667",
+null
+],
+"gath-hepher": [
+"H1662",
+null
+],
+"gath-rimmon": [
+"H1667",
+null
+],
+"gaza": [
+"H5804",
+"G1048"
+],
+"gazez": [
+"H1495",
+null
+],
+"gazite": [
+"H5841",
+null
+],
+"gazzam": [
+"H1502",
+null
+],
+"ge-harashim": [
+"H2798",
+null
+],
+"geba": [
+"H1387",
+null
+],
+"gebal": [
+"H1380",
+null
+],
+"gebalite": [
+"H1382",
+null
+],
+"geber": [
+"H1398",
+null
+],
+"gebim": [
+"H1374",
+null
+],
+"gedaliah": [
+"H1436",
+null
+],
+"gedeon": [
+"H1439",
+null
+],
+"geder": [
+"H1445",
+null
+],
+"gederah": [
+"H1449",
+null
+],
+"gederathite": [
+"H1452",
+null
+],
+"gederite": [
+"H1451",
+null
+],
+"gederoth": [
+"H1450",
+null
+],
+"gederothaim": [
+"H1453",
+null
+],
+"gedor": [
+"H1446",
+null
+],
+"gehazi": [
+"H1522",
+null
+],
+"gehenna": [
+"H7585",
+"G1067"
+],
+"geliloth": [
+"H1553",
+null
+],
+"gemalli": [
+"H1582",
+null
+],
+"gemariah": [
+"H1587",
+null
+],
+"gennesaret": [
+null,
+"G1082"
+],
+"gentiles": [
+"H1471",
+"G1484"
+],
+"genubath": [
+"H1592",
+null
+],
+"gera": [
+"H1617",
+null
+],
+"gerar": [
+"H1642",
+null
+],
+"gerasa": [
+null,
+"G1086"
+],
+"gerasene": [
+null,
+"G1086"
+],
+"gergesa": [
+null,
+"G1086"
+],
+"gergesene": [
+null,
+"G1086"
+],
+"gerizim_mount": [
+"H1630",
+null
+],
+"gershom": [
+"H1647",
+null
+],
+"gershomite": [
+"H1647",
+null
+],
+"gershon": [
+"H1648",
+null
+],
+"geruth_chimham": [
+"H1628",
+null
+],
+"geshan": [
+"H1529",
+null
+],
+"geshem": [
+"H1654",
+null
+],
+"geshur": [
+"H1650",
+null
+],
+"geshurite": [
+"H1651",
+null
+],
+"gether": [
+"H1666",
+null
+],
+"gethsemane": [
+null,
+"G1068"
+],
+"geuel": [
+"H1345",
+null
+],
+"gezer": [
+"H1507",
+null
+],
+"giah": [
+"H1520",
+null
+],
+"giant": [
+"H7497",
+null
+],
+"gibbar": [
+"H1402",
+null
+],
+"gibbethon": [
+"H1405",
+null
+],
+"gibea": [
+"H1388",
+null
+],
+"gibeah": [
+"H1390",
+null
+],
+"gibeath": [
+"H1394",
+null
+],
+"gibeath-elohim": [
+"H1389",
+null
+],
+"gibeath-haaraloth": [
+"H6190",
+null
+],
+"gibeathite": [
+"H1395",
+null
+],
+"gibeon": [
+"H1391",
+null
+],
+"gibeonite": [
+"H1393",
+null
+],
+"giddalti": [
+"H1437",
+null
+],
+"giddel": [
+"H1435",
+null
+],
+"gideon": [
+"H1439",
+"G1066"
+],
+"gideoni": [
+"H1441",
+null
+],
+"gidom": [
+"H1440",
+null
+],
+"gihon": [
+"H1521",
+null
+],
+"gilalai": [
+"H1562",
+null
+],
+"gilboa": [
+"H1533",
+null
+],
+"gilboa_mount": [
+"H1533",
+null
+],
+"gilead": [
+"H1568",
+null
+],
+"gilgal": [
+"H1537",
+null
+],
+"gilo": [
+"H1526",
+null
+],
+"giloh": [
+"H1542",
+null
+],
+"gilonite": [
+"H1526",
+null
+],
+"gimzo": [
+"H1579",
+null
+],
+"ginath": [
+"H1527",
+null
+],
+"ginnetho": [
+"H1599",
+null
+],
+"ginnethoi": [
+"H1599",
+null
+],
+"ginnethon": [
+"H1599",
+null
+],
+"girgashite": [
+"H1622",
+null
+],
+"girgashites": [
+"H1622",
+null
+],
+"girgasite": [
+"H1622",
+null
+],
+"girzite": [
+"H1511",
+null
+],
+"girzites": [
+"H1511",
+null
+],
+"gishpa": [
+"H1658",
+null
+],
+"gispa": [
+"H1658",
+null
+],
+"gittaim": [
+"H1664",
+null
+],
+"gittite": [
+"H1663",
+null
+],
+"gittith": [
+"H1665",
+null
+],
+"gizonite": [
+"H1493",
+null
+],
+"gizonites": [
+"H1493",
+null
+],
+"go": [
+"H935",
+null
+],
+"goah": [
+"H1601",
+null
+],
+"gob": [
+"H1359",
+null
+],
+"gog": [
+"H1463",
+"G1136"
+],
+"goiim": [
+"H1471",
+null
+],
+"going to": [
+"H187",
+null
+],
+"golan": [
+"H1474",
+null
+],
+"golgotha": [
+null,
+"G1115"
+],
+"goliath": [
+"H1555",
+null
+],
+"gomer": [
+"H1586",
+null
+],
+"gomorrah": [
+"H6017",
+"G1116"
+],
+"gomorrha": [
+"H6017",
+"G1116"
+],
+"goshen": [
+"H1657",
+null
+],
+"governors": [
+"H671",
+null
+],
+"goyim": [
+"H1471",
+null
+],
+"gozan": [
+"H1470",
+null
+],
+"great": [
+"H3377",
+null
+],
+"great stature": [
+"H4060",
+null
+],
+"great_sea": [
+"H1419",
+null
+],
+"greece": [
+"H3120",
+"G1671"
+],
+"greek": [
+null,
+"G1673"
+],
+"greeks": [
+"H1471",
+"G1484"
+],
+"guard": [
+"H4453",
+null
+],
+"guard_gate": [
+"H4307",
+null
+],
+"gudgodah": [
+"H1412",
+null
+],
+"guni": [
+"H1476",
+null
+],
+"gunite": [
+"H1477",
+null
+],
+"gur": [
+"H1483",
+null
+],
+"gurbaal": [
+"H1485",
+null
+],
+"haahashtari": [
+"H326",
+null
+],
+"habaiah": [
+"H2252",
+null
+],
+"habakkuk": [
+"H2265",
+null
+],
+"habaziniah": [
+"H2262",
+null
+],
+"habazziniah": [
+"H2262",
+null
+],
+"habitation": [
+"H4586",
+null
+],
+"habor": [
+"H2249",
+null
+],
+"hacaliah": [
+"H2446",
+null
+],
+"hachaliah": [
+"H2446",
+null
+],
+"hachilah": [
+"H2444",
+null
+],
+"hachmoni": [
+"H2453",
+null
+],
+"hachmonite": [
+"H2453",
+null
+],
+"hachmonites": [
+"H2453",
+null
+],
+"hadad": [
+"H1908",
+null
+],
+"hadad rimmon": [
+"H1910",
+null
+],
+"hadad-rimmon": [
+"H1910",
+null
+],
+"hadadezer": [
+"H1909",
+null
+],
+"hadadrimmon": [
+"H1910",
+null
+],
+"hadashah": [
+"H2322",
+null
+],
+"hadassah": [
+"H1919",
+null
+],
+"hades": [
+"H7585",
+"G86"
+],
+"hadid": [
+"H2307",
+null
+],
+"hadlai": [
+"H2311",
+null
+],
+"hadoram": [
+"H1913",
+null
+],
+"hadrach": [
+"H2317",
+null
+],
+"hadrak": [
+"H2317",
+null
+],
+"haeleph": [
+"H507",
+null
+],
+"hagab": [
+"H2285",
+null
+],
+"hagaba": [
+"H2286",
+null
+],
+"hagabah": [
+"H2286",
+null
+],
+"hagar": [
+"H1904",
+"G28"
+],
+"haggai": [
+"H2292",
+null
+],
+"haggedolim": [
+"H1419",
+null
+],
+"haggeri": [
+"H1905",
+null
+],
+"haggi": [
+"H2291",
+null
+],
+"haggiah": [
+"H2293",
+null
+],
+"haggite": [
+"H2291",
+null
+],
+"haggith": [
+"H2294",
+null
+],
+"hagri": [
+"H1905",
+null
+],
+"hagrite": [
+"H1905",
+null
+],
+"hahiroth": [
+"H6367",
+null
+],
+"hakaliah": [
+"H2446",
+null
+],
+"hakkatan": [
+"H6997",
+null
+],
+"hakkephirim": [
+"H3715",
+null
+],
+"hakkoz": [
+"H6976",
+null
+],
+"hakmoni": [
+"H2453",
+null
+],
+"hakmonite": [
+"H2453",
+null
+],
+"hakupha": [
+"H2709",
+null
+],
+"halah": [
+"H2477",
+null
+],
+"halak_mount": [
+"H2510",
+null
+],
+"half the manahathites": [
+"H2680",
+null
+],
+"halhul": [
+"H2478",
+null
+],
+"hali": [
+"H2482",
+null
+],
+"hall_of_judgment": [
+"H197",
+null
+],
+"hall_of_pillars": [
+"H197",
+null
+],
+"hall_of_the_throne": [
+"H197",
+null
+],
+"hallohesh": [
+"H3873",
+null
+],
+"halohesh": [
+"H3873",
+null
+],
+"ham": [
+"H2526",
+null
+],
+"haman": [
+"H2001",
+null
+],
+"hamath": [
+"H2574",
+null
+],
+"hamath the great": [
+"H2579",
+null
+],
+"hamath zobah": [
+"H2578",
+null
+],
+"hamath-zobah": [
+"H2578",
+null
+],
+"hamathite": [
+"H2577",
+null
+],
+"hamathites": [
+"H2577",
+null
+],
+"hamital": [
+"H2537",
+null
+],
+"hammath": [
+"H2575",
+null
+],
+"hammedatha": [
+"H4099",
+null
+],
+"hammelech": [
+"H4428",
+null
+],
+"hammolecheth": [
+"H4447",
+null
+],
+"hammoleketh": [
+"H4447",
+null
+],
+"hammon": [
+"H2540",
+null
+],
+"hammoth dor": [
+"H2576",
+null
+],
+"hammoth-dor": [
+"H2576",
+null
+],
+"hammuel": [
+"H2536",
+null
+],
+"hamon-gog_valley": [
+"H1996",
+null
+],
+"hamonah": [
+"H1997",
+null
+],
+"hamor": [
+"H2544",
+"G1697"
+],
+"hamran": [
+"H2566",
+null
+],
+"hamuel": [
+"H2536",
+null
+],
+"hamul": [
+"H2538",
+null
+],
+"hamulite": [
+"H2539",
+null
+],
+"hamutal": [
+"H2537",
+null
+],
+"hanameel": [
+"H2601",
+null
+],
+"hanamel": [
+"H2601",
+null
+],
+"hanan": [
+"H2605",
+null
+],
+"hanani": [
+"H2607",
+null
+],
+"hananiah": [
+"H2608",
+null
+],
+"hanes": [
+"H2609",
+null
+],
+"haniel": [
+"H2592",
+null
+],
+"hannah": [
+"H2584",
+null
+],
+"hannathon": [
+"H2615",
+null
+],
+"hanniel": [
+"H2592",
+null
+],
+"hanoch": [
+"H2585",
+null
+],
+"hanochite": [
+"H2599",
+null
+],
+"hanok": [
+"H2585",
+null
+],
+"hanokite": [
+"H2599",
+null
+],
+"hanun": [
+"H2586",
+null
+],
+"hapharaim": [
+"H2663",
+null
+],
+"happizzez": [
+"H6483",
+null
+],
+"hara": [
+"H2024",
+null
+],
+"haradah": [
+"H2732",
+null
+],
+"haran": [
+"H2771",
+"G5488"
+],
+"hararite": [
+"H2043",
+null
+],
+"hararites": [
+"H2043",
+null
+],
+"harbona": [
+"H2726",
+null
+],
+"harbonah": [
+"H2726",
+null
+],
+"hareph": [
+"H2780",
+null
+],
+"harhaiah": [
+"H2736",
+null
+],
+"harhas": [
+"H2745",
+null
+],
+"harhur": [
+"H2744",
+null
+],
+"harim": [
+"H2766",
+null
+],
+"hariph": [
+"H2756",
+null
+],
+"hariphite": [
+"H2741",
+null
+],
+"harmon": [
+"H2038",
+null
+],
+"harnepher": [
+"H2774",
+null
+],
+"harod": [
+"H5878",
+null
+],
+"harodite": [
+"H2733",
+null
+],
+"haroeh": [
+"H7204",
+null
+],
+"harorite": [
+"H2033",
+null
+],
+"harosheth-hagoyim": [
+"H2800",
+null
+],
+"harsha": [
+"H2797",
+null
+],
+"harum": [
+"H2037",
+null
+],
+"harumaph": [
+"H2739",
+null
+],
+"haruphite": [
+"H2741",
+null
+],
+"haruphites": [
+"H2741",
+null
+],
+"haruz": [
+"H2743",
+null
+],
+"hasadiah": [
+"H2619",
+null
+],
+"hasenuah": [
+"H5570",
+null
+],
+"hashabiah": [
+"H2811",
+null
+],
+"hashabnah": [
+"H2812",
+null
+],
+"hashabneiah": [
+"H2813",
+null
+],
+"hashabniah": [
+"H2813",
+null
+],
+"hashbadana": [
+"H2806",
+null
+],
+"hashbaddanah": [
+"H2806",
+null
+],
+"hashem": [
+"H2044",
+null
+],
+"hashmonah": [
+"H2832",
+null
+],
+"hashub": [
+"H2815",
+null
+],
+"hashubah": [
+"H2807",
+null
+],
+"hashum": [
+"H2828",
+null
+],
+"hashupha": [
+"H2817",
+null
+],
+"hasrah": [
+"H2641",
+null
+],
+"hassenaah": [
+"H5570",
+null
+],
+"hassenuah": [
+"H5574",
+null
+],
+"hasshub": [
+"H2815",
+null
+],
+"hassophereth": [
+"H5618",
+null
+],
+"hasupha": [
+"H2817",
+null
+],
+"hatach": [
+"H2047",
+null
+],
+"hathach": [
+"H2047",
+null
+],
+"hathak": [
+"H2047",
+null
+],
+"hathath": [
+"H2867",
+null
+],
+"hatipha": [
+"H2412",
+null
+],
+"hatita": [
+"H2410",
+null
+],
+"hattil": [
+"H2411",
+null
+],
+"hattush": [
+"H2407",
+null
+],
+"hauran": [
+"H2362",
+null
+],
+"havilah": [
+"H2341",
+null
+],
+"havvoth jair": [
+"H2334",
+null
+],
+"havvoth-jair": [
+"H2334",
+null
+],
+"hazael": [
+"H2371",
+null
+],
+"hazaiah": [
+"H2382",
+null
+],
+"hazar addar": [
+"H2692",
+null
+],
+"hazar gaddah": [
+"H2693",
+null
+],
+"hazar shual": [
+"H2705",
+null
+],
+"hazar susah": [
+"H2701",
+null
+],
+"hazar susim": [
+"H2702",
+null
+],
+"hazar-addar": [
+"H2692",
+null
+],
+"hazar-enan": [
+"H2704",
+null
+],
+"hazar-gaddah": [
+"H2693",
+null
+],
+"hazar-hattikon": [
+"H2694",
+null
+],
+"hazar-shual": [
+"H2705",
+null
+],
+"hazar-susah": [
+"H2701",
+null
+],
+"hazar-susim": [
+"H2702",
+null
+],
+"hazarmaveth": [
+"H2700",
+null
+],
+"hazazon-tamar": [
+"H2688",
+null
+],
+"hazelelponi": [
+"H6753",
+null
+],
+"hazer hattikon": [
+"H2694",
+null
+],
+"hazer-hatticon": [
+"H2694",
+null
+],
+"hazerim": [
+"H2699",
+null
+],
+"hazeroth": [
+"H2698",
+null
+],
+"hazezon tamar": [
+"H2688",
+null
+],
+"hazezon-tamar": [
+"H2688",
+null
+],
+"haziel": [
+"H2381",
+null
+],
+"hazo": [
+"H2375",
+null
+],
+"hazor": [
+"H2674",
+null
+],
+"hazor hadattah": [
+"H2675",
+null
+],
+"hazor-hadattah": [
+"H2675",
+null
+],
+"hazzelelponi": [
+"H6753",
+null
+],
+"hazzobebah": [
+"H6637",
+null
+],
+"heber": [
+"H2268",
+null
+],
+"heberite": [
+"H2277",
+null
+],
+"hebrew": [
+"H3066",
+null
+],
+"hebrews": [
+"H5680",
+"G1445"
+],
+"hebron": [
+"H2275",
+null
+],
+"hebron_valley": [
+"H2275",
+null
+],
+"hebronite": [
+"H2276",
+null
+],
+"hegai": [
+"H1896",
+null
+],
+"hege": [
+"H1896",
+null
+],
+"heglam": [
+"H1540",
+null
+],
+"heifer of three years": [
+"H5697",
+null
+],
+"heights": [
+"H1181",
+null
+],
+"helah": [
+"H2458",
+null
+],
+"helam": [
+"H2431",
+null
+],
+"helbah": [
+"H2462",
+null
+],
+"helbon": [
+"H2463",
+null
+],
+"heldai": [
+"H2469",
+null
+],
+"heleb": [
+"H2460",
+null
+],
+"helech": [
+"H2428",
+null
+],
+"heled": [
+"H2466",
+null
+],
+"helek": [
+"H2507",
+null
+],
+"helekite": [
+"H2516",
+null
+],
+"heleph": [
+"H2501",
+null
+],
+"helez": [
+"H2503",
+null
+],
+"heli": [
+null,
+"G2242"
+],
+"helkai": [
+"H2517",
+null
+],
+"helkath": [
+"H2520",
+null
+],
+"helkath hazzurim": [
+"H2521",
+null
+],
+"helkath-hazzurim": [
+"H2521",
+null
+],
+"hellenist": [
+"H3120",
+"G1675"
+],
+"helon": [
+"H2497",
+null
+],
+"hemam": [
+"H1950",
+null
+],
+"heman": [
+"H1968",
+null
+],
+"hemath": [
+"H2575",
+null
+],
+"hemdan": [
+"H2533",
+null
+],
+"hen": [
+"H2581",
+null
+],
+"hena": [
+"H2012",
+null
+],
+"henadad": [
+"H2582",
+null
+],
+"henoch": [
+"H2585",
+null
+],
+"hepher": [
+"H2660",
+null
+],
+"hepherite": [
+"H2662",
+null
+],
+"hephzi-bah": [
+"H2657",
+null
+],
+"hephzibah": [
+"H2657",
+null
+],
+"heres": [
+"H2776",
+null
+],
+"heresh": [
+"H2792",
+null
+],
+"hereth": [
+"H2802",
+null
+],
+"hermas": [
+null,
+"G2057"
+],
+"hermes": [
+null,
+"G2060"
+],
+"hermogenes": [
+null,
+"G2061"
+],
+"hermon_mount": [
+"H2768",
+null
+],
+"herod": [
+null,
+"G2264"
+],
+"herodian": [
+null,
+"G2265"
+],
+"herodias": [
+null,
+"G2266"
+],
+"herodion": [
+null,
+"G2267"
+],
+"heroes": [
+"H739",
+null
+],
+"hesed": [
+"H2618",
+null
+],
+"heshbon": [
+"H2809",
+null
+],
+"heshmon": [
+"H2829",
+null
+],
+"heth": [
+"H2845",
+null
+],
+"hethlon": [
+"H2855",
+null
+],
+"hezeki": [
+"H2395",
+null
+],
+"hezekiah": [
+"H2396",
+"G1478"
+],
+"hezion": [
+"H2383",
+null
+],
+"hezir": [
+"H2387",
+null
+],
+"hezrai": [
+"H2695",
+null
+],
+"hezro": [
+"H2695",
+null
+],
+"hezron": [
+"H2696",
+"G2074"
+],
+"hezronite": [
+"H2697",
+null
+],
+"hiddai": [
+"H1914",
+null
+],
+"hiel": [
+"H2419",
+null
+],
+"hierapolis": [
+null,
+"G2404"
+],
+"higgaion": [
+"H1902",
+null
+],
+"high official": [
+"H7248",
+null
+],
+"hilen": [
+"H2432",
+null
+],
+"hilkiah": [
+"H2518",
+null
+],
+"hillel": [
+"H1985",
+null
+],
+"hirah": [
+"H2437",
+null
+],
+"hiram": [
+"H2438",
+null
+],
+"his father": [
+"H29",
+null
+],
+"hittites": [
+"H8483",
+null
+],
+"hivite": [
+"H2340",
+null
+],
+"hivites": [
+"H2340",
+null
+],
+"hizki": [
+"H2395",
+null
+],
+"hizkiah": [
+"H2396",
+null
+],
+"hizkijah": [
+"H2396",
+null
+],
+"hobab": [
+"H2246",
+null
+],
+"hobah": [
+"H2327",
+null
+],
+"hobaiah": [
+"H2252",
+null
+],
+"hod": [
+"H1936",
+null
+],
+"hodaiah": [
+"H1938",
+null
+],
+"hodaviah": [
+"H1938",
+null
+],
+"hodesh": [
+"H2321",
+null
+],
+"hodevah": [
+"H1937",
+null
+],
+"hodiah": [
+"H1940",
+null
+],
+"hodijah": [
+"H1941",
+null
+],
+"hodoua": [
+"H1941",
+null
+],
+"hoglah": [
+"H2295",
+null
+],
+"hoham": [
+"H1944",
+null
+],
+"holon": [
+"H2473",
+null
+],
+"holy_place": [
+"H6944",
+"G39"
+],
+"hophni": [
+"H2652",
+null
+],
+"hophra": [
+"H6547",
+null
+],
+"hor haggidgad": [
+"H2735",
+null
+],
+"hor-haggidgad": [
+"H2735",
+null
+],
+"hor_mount": [
+"H2023",
+null
+],
+"horam": [
+"H2036",
+null
+],
+"horeb": [
+"H2722",
+null
+],
+"horem": [
+"H2765",
+null
+],
+"horesh": [
+"H2793",
+null
+],
+"hori": [
+"H2753",
+null
+],
+"hormah": [
+"H2767",
+null
+],
+"horonaim": [
+"H2773",
+null
+],
+"horonite": [
+"H2772",
+null
+],
+"horonites": [
+"H2772",
+null
+],
+"horse_gate": [
+"H5483",
+null
+],
+"hosah": [
+"H2621",
+null
+],
+"hosanna": [
+null,
+"G5614"
+],
+"hosea": [
+"H1954",
+"G5617"
+],
+"hoshaiah": [
+"H1955",
+null
+],
+"hoshama": [
+"H1953",
+null
+],
+"hoshea": [
+"H1954",
+null
+],
+"hotham": [
+"H2369",
+null
+],
+"hothan": [
+"H2369",
+null
+],
+"hothir": [
+"H1956",
+null
+],
+"house of aphrah": [
+"H1036",
+null
+],
+"house of ashtoroth": [
+"H1045",
+null
+],
+"house of eden": [
+"H1040",
+null
+],
+"house of gilgal": [
+"H1019",
+null
+],
+"house of god": [
+"H1008",
+null
+],
+"house of millo": [
+"H1037",
+null
+],
+"house_of_the_forest": [
+"H1004",
+null
+],
+"household gods": [
+"H8655",
+null
+],
+"huge_man": [
+"H4060",
+null
+],
+"hukkok": [
+"H2712",
+null
+],
+"hukok": [
+"H2712",
+null
+],
+"hul": [
+"H2343",
+null
+],
+"huldah": [
+"H2468",
+null
+],
+"humtah": [
+"H2547",
+null
+],
+"hupham": [
+"H2349",
+null
+],
+"huphamite": [
+"H2350",
+null
+],
+"huppah": [
+"H2647",
+null
+],
+"huppim": [
+"H2650",
+null
+],
+"hur": [
+"H1133",
+null
+],
+"hurai": [
+"H2360",
+null
+],
+"huram": [
+"H2361",
+null
+],
+"huram-abi": [
+"H2361",
+null
+],
+"huri": [
+"H2359",
+null
+],
+"husband_of_hammolecheth": [
+"H4447",
+null
+],
+"husband_of_mary": [
+null,
+"G3137"
+],
+"husband_of_matred": [
+"H4308",
+null
+],
+"husband_of_shimeath": [
+"H8100",
+null
+],
+"husband_of_zeruiah": [
+"H6870",
+null
+],
+"hushah": [
+"H2364",
+null
+],
+"hushai": [
+"H2365",
+null
+],
+"husham": [
+"H2367",
+null
+],
+"hushathite": [
+"H2843",
+null
+],
+"hushathites": [
+"H2843",
+null
+],
+"hushim": [
+"H2366",
+null
+],
+"huz": [
+"H5780",
+null
+],
+"hymenaeus": [
+null,
+"G5211"
+],
+"ibhar": [
+"H2984",
+null
+],
+"ibleam": [
+"H2991",
+null
+],
+"ibneiah": [
+"H2997",
+null
+],
+"ibnijah": [
+"H2998",
+null
+],
+"ibri": [
+"H5681",
+null
+],
+"ibsam": [
+"H3005",
+null
+],
+"ibzan": [
+"H78",
+null
+],
+"ichabod": [
+"H350",
+null
+],
+"iconium": [
+null,
+"G2430"
+],
+"idalah": [
+"H3030",
+null
+],
+"idbash": [
+"H3031",
+null
+],
+"iddo": [
+"H3035",
+null
+],
+"idol": [
+"H8655",
+null
+],
+"idolatry": [
+"H8655",
+null
+],
+"idols": [
+"H8655",
+null
+],
+"idumea": [
+null,
+"G2401"
+],
+"iezerite": [
+"H373",
+null
+],
+"igal": [
+"H3008",
+null
+],
+"igdaliah": [
+"H3012",
+null
+],
+"igeal": [
+"H3008",
+null
+],
+"iim": [
+"H5864",
+null
+],
+"ije-abarim": [
+"H5863",
+null
+],
+"ijon": [
+"H5859",
+null
+],
+"ikkesh": [
+"H6142",
+null
+],
+"ilai": [
+"H5866",
+null
+],
+"illyricum": [
+null,
+"G2437"
+],
+"image": [
+"H8655",
+null
+],
+"images": [
+"H8655",
+null
+],
+"imla": [
+"H3229",
+null
+],
+"imlah": [
+"H3229",
+null
+],
+"immer": [
+"H564",
+null
+],
+"imna": [
+"H3234",
+null
+],
+"imnah": [
+"H3232",
+null
+],
+"imnite": [
+"H3232",
+null
+],
+"imperial": [
+null,
+"G4575"
+],
+"imrah": [
+"H3236",
+null
+],
+"imri": [
+"H566",
+null
+],
+"in caleb ephrathah": [
+"H3612",
+null
+],
+"in the jaw": [
+"H3895",
+null
+],
+"india": [
+"H1912",
+null
+],
+"inhabitants": [
+"H8453",
+null
+],
+"inspection gate": [
+"H4663",
+null
+],
+"iphdeiah": [
+"H3301",
+null
+],
+"iphedeiah": [
+"H3301",
+null
+],
+"iphtah": [
+"H3316",
+null
+],
+"iphtahel_valley": [
+"H3317",
+null
+],
+"ir": [
+"H5893",
+null
+],
+"ir nahash": [
+"H5904",
+null
+],
+"ir shemesh": [
+"H5905",
+null
+],
+"ir-nahash": [
+"H5904",
+null
+],
+"ir-shemesh": [
+"H5905",
+null
+],
+"ira": [
+"H5896",
+null
+],
+"irad": [
+"H5897",
+null
+],
+"iram": [
+"H5902",
+null
+],
+"iri": [
+"H5901",
+null
+],
+"irijah": [
+"H3376",
+null
+],
+"irpeel": [
+"H3416",
+null
+],
+"iru": [
+"H5900",
+null
+],
+"isaac": [
+"H3327",
+"G2464"
+],
+"isaiah": [
+"H3470",
+"G2268"
+],
+"iscah": [
+"H3252",
+null
+],
+"iscariot": [
+null,
+"G2469"
+],
+"ish-bosheth": [
+"H378",
+null
+],
+"ish-tob": [
+"H382",
+null
+],
+"ishbah": [
+"H3431",
+null
+],
+"ishbak": [
+"H3435",
+null
+],
+"ishbi-benob": [
+"H3430",
+null
+],
+"ishbo-benob": [
+"H3430",
+null
+],
+"ishhod": [
+"H379",
+null
+],
+"ishi": [
+"H3469",
+null
+],
+"ishiah": [
+"H3449",
+null
+],
+"ishijah": [
+"H3449",
+null
+],
+"ishma": [
+"H3457",
+null
+],
+"ishmael": [
+"H3458",
+null
+],
+"ishmaiah": [
+"H3460",
+null
+],
+"ishmeelite": [
+"H3459",
+null
+],
+"ishmerai": [
+"H3461",
+null
+],
+"ishod": [
+"H379",
+null
+],
+"ishpah": [
+"H3472",
+null
+],
+"ishpan": [
+"H3473",
+null
+],
+"ishuah": [
+"H3438",
+null
+],
+"ishuai": [
+"H3440",
+null
+],
+"ishui": [
+"H3440",
+null
+],
+"ishvah": [
+"H3438",
+null
+],
+"ishvi": [
+"H3440",
+null
+],
+"ishvite": [
+"H3441",
+null
+],
+"iskah": [
+"H3252",
+null
+],
+"ismachiah": [
+"H3253",
+null
+],
+"ismaiah": [
+"H3460",
+null
+],
+"ispah": [
+"H3472",
+null
+],
+"israel": [
+"H3478",
+"G2474"
+],
+"israelitess": [
+"H3482",
+null
+],
+"issachar": [
+"H3485",
+"G2466"
+],
+"isshiah": [
+"H3449",
+null
+],
+"isshijah": [
+"H3449",
+null
+],
+"isuah": [
+"H3438",
+null
+],
+"isui": [
+"H3440",
+null
+],
+"italian": [
+null,
+"G2483"
+],
+"italy": [
+null,
+"G2482"
+],
+"ithai": [
+"H863",
+null
+],
+"ithamar": [
+"H385",
+null
+],
+"ithiel": [
+"H384",
+null
+],
+"ithlah": [
+"H3494",
+null
+],
+"ithmah": [
+"H3495",
+null
+],
+"ithnan": [
+"H3497",
+null
+],
+"ithra": [
+"H3501",
+null
+],
+"ithran": [
+"H3506",
+null
+],
+"ithream": [
+"H3507",
+null
+],
+"ithrite": [
+"H3505",
+null
+],
+"ithrites": [
+"H3505",
+null
+],
+"ittah-kazin": [
+"H6278",
+null
+],
+"ittai": [
+"H863",
+null
+],
+"ituraea": [
+"H3195",
+"G2484"
+],
+"iturea": [
+"H3195",
+"G2484"
+],
+"ivah": [
+"H5755",
+null
+],
+"ivvah": [
+"H5755",
+null
+],
+"iye": [
+"H5864",
+null
+],
+"iye abarim": [
+"H5863",
+null
+],
+"iye-abarim": [
+"H5863",
+null
+],
+"iyim": [
+"H5864",
+null
+],
+"izal": [
+"H187",
+null
+],
+"izehar": [
+"H3324",
+null
+],
+"izhar": [
+"H3328",
+null
+],
+"izharite": [
+"H3325",
+null
+],
+"izliah": [
+"H3152",
+null
+],
+"izrahiah": [
+"H3156",
+null
+],
+"izrahite": [
+"H3155",
+null
+],
+"izri": [
+"H3339",
+null
+],
+"izziah": [
+"H3150",
+null
+],
+"jaakobah": [
+"H3291",
+null
+],
+"jaala": [
+"H3279",
+null
+],
+"jaalah": [
+"H3279",
+null
+],
+"jaalam": [
+"H3281",
+null
+],
+"jaan": [
+"H1842",
+null
+],
+"jaanai": [
+"H3285",
+null
+],
+"jaar": [
+"H3293",
+null
+],
+"jaare-oregim": [
+"H3296",
+null
+],
+"jaareshiah": [
+"H3298",
+null
+],
+"jaasai": [
+"H3299",
+null
+],
+"jaasau": [
+"H3299",
+null
+],
+"jaasiel": [
+"H3300",
+null
+],
+"jaasu": [
+"H3299",
+null
+],
+"jaazaniah": [
+"H2970",
+null
+],
+"jaaziah": [
+"H3269",
+null
+],
+"jaaziel": [
+"H3268",
+null
+],
+"jabal": [
+"H2989",
+null
+],
+"jabbok": [
+"H2999",
+null
+],
+"jabesh": [
+"H3003",
+null
+],
+"jabesh-gilead": [
+"H3003",
+null
+],
+"jabez": [
+"H3258",
+null
+],
+"jabin": [
+"H2985",
+null
+],
+"jabneel": [
+"H2995",
+null
+],
+"jabneh": [
+"H2996",
+null
+],
+"jacan": [
+"H3275",
+null
+],
+"jachan": [
+"H3275",
+null
+],
+"jachin": [
+"H3199",
+null
+],
+"jachinite": [
+"H3200",
+null
+],
+"jacob": [
+null,
+"G2384"
+],
+"jada": [
+"H3047",
+null
+],
+"jadau": [
+"H3035",
+null
+],
+"jaddai": [
+"H3035",
+null
+],
+"jaddua": [
+"H3037",
+null
+],
+"jadon": [
+"H3036",
+null
+],
+"jael": [
+"H3278",
+null
+],
+"jagur": [
+"H3017",
+null
+],
+"jahath": [
+"H3189",
+null
+],
+"jahaz": [
+"H3096",
+null
+],
+"jahazah": [
+"H3096",
+null
+],
+"jahaziah": [
+"H3167",
+null
+],
+"jahaziel": [
+"H3166",
+null
+],
+"jahdai": [
+"H3056",
+null
+],
+"jahdiel": [
+"H3164",
+null
+],
+"jahdo": [
+"H3163",
+null
+],
+"jahleel": [
+"H3177",
+null
+],
+"jahleelite": [
+"H3178",
+null
+],
+"jahmai": [
+"H3181",
+null
+],
+"jahzah": [
+"H3096",
+null
+],
+"jahzeel": [
+"H3183",
+null
+],
+"jahzeelite": [
+"H3184",
+null
+],
+"jahzeiah": [
+"H3167",
+null
+],
+"jahzerah": [
+"H3170",
+null
+],
+"jahziel": [
+"H3185",
+null
+],
+"jair": [
+"H2971",
+null
+],
+"jairite": [
+"H2972",
+null
+],
+"jairus": [
+null,
+"G2383"
+],
+"jakeh": [
+"H3348",
+null
+],
+"jakim": [
+"H3356",
+null
+],
+"jalam": [
+"H3281",
+null
+],
+"jalon": [
+"H3210",
+null
+],
+"jambres": [
+null,
+"G2387"
+],
+"james": [
+null,
+"G2385"
+],
+"jamin": [
+"H3226",
+null
+],
+"jaminite": [
+"H3228",
+null
+],
+"jamlech": [
+"H3230",
+null
+],
+"janai": [
+"H3285",
+null
+],
+"janen": [
+null,
+"G9831"
+],
+"janim": [
+"H3241",
+null
+],
+"janna": [
+null,
+"G2388"
+],
+"jannai": [
+null,
+"G2388"
+],
+"jannes": [
+null,
+"G2389"
+],
+"janoah": [
+"H3239",
+null
+],
+"janum": [
+"H3241",
+null
+],
+"japheth": [
+"H3315",
+null
+],
+"japhia": [
+"H3309",
+null
+],
+"japhlet": [
+"H3310",
+null
+],
+"japhletite": [
+"H3311",
+null
+],
+"jarah": [
+"H3294",
+null
+],
+"jareb": [
+"H3377",
+null
+],
+"jared": [
+"H3382",
+"G2391"
+],
+"jaresiah": [
+"H3298",
+null
+],
+"jarha": [
+"H3398",
+null
+],
+"jarib": [
+"H3402",
+null
+],
+"jarmuth": [
+"H3412",
+null
+],
+"jaroah": [
+"H3386",
+null
+],
+"jashar": [
+"H3477",
+null
+],
+"jashen": [
+"H3464",
+null
+],
+"jasher": [
+"H3477",
+null
+],
+"jashib": [
+"H3437",
+null
+],
+"jashobeam": [
+"H3434",
+null
+],
+"jashub": [
+"H3437",
+null
+],
+"jashubi-lehem": [
+"H3433",
+null
+],
+"jashubite": [
+"H3432",
+null
+],
+"jasiel": [
+"H3300",
+null
+],
+"jason": [
+null,
+"G2394"
+],
+"jathniel": [
+"H3496",
+null
+],
+"jattir": [
+"H3492",
+null
+],
+"jaur": [
+"H3265",
+null
+],
+"javan": [
+"H3120",
+"G1672"
+],
+"jazer": [
+"H3270",
+null
+],
+"jazer_sea": [
+"H3270",
+null
+],
+"jaziz": [
+"H3151",
+null
+],
+"jealous": [
+"H7067",
+null
+],
+"jeaterai": [
+"H2979",
+null
+],
+"jeatherai": [
+"H2979",
+null
+],
+"jeberechiah": [
+"H3000",
+null
+],
+"jebusi": [
+"H2983",
+null
+],
+"jebusite": [
+"H2983",
+null
+],
+"jebusites": [
+"H2983",
+null
+],
+"jecamiah": [
+"H3359",
+null
+],
+"jechiliah": [
+"H3203",
+null
+],
+"jecholiah": [
+"H3203",
+null
+],
+"jechoniah": [
+"H3078",
+"G2423"
+],
+"jechonias": [
+"H3078",
+"G2423"
+],
+"jecoliah": [
+"H3203",
+null
+],
+"jedaiah": [
+"H3048",
+null
+],
+"jediael": [
+"H3043",
+null
+],
+"jedidah": [
+"H3040",
+null
+],
+"jedidiah": [
+"H3041",
+null
+],
+"jedithun": [
+"H3038",
+null
+],
+"jeduthun": [
+"H3038",
+null
+],
+"jeezer": [
+"H372",
+null
+],
+"jeezerites": [
+"H373",
+null
+],
+"jehaleleel": [
+"H3094",
+null
+],
+"jehalelel": [
+"H3094",
+null
+],
+"jehallelel": [
+"H3094",
+null
+],
+"jehdeiah": [
+"H3165",
+null
+],
+"jehezekel": [
+"H3168",
+null
+],
+"jehezekiah": [
+"H3169",
+null
+],
+"jehezkel": [
+"H3168",
+null
+],
+"jehiah": [
+"H3174",
+null
+],
+"jehiel": [
+"H3171",
+null
+],
+"jehieli": [
+"H3172",
+null
+],
+"jehizkiah": [
+"H3169",
+null
+],
+"jehoadah": [
+"H3085",
+null
+],
+"jehoaddah": [
+"H3085",
+null
+],
+"jehoaddan": [
+"H3086",
+null
+],
+"jehoaddin": [
+"H3086",
+null
+],
+"jehoahaz": [
+"H3059",
+null
+],
+"jehohanan": [
+"H3076",
+null
+],
+"jehoiachin": [
+"H3078",
+"G2423"
+],
+"jehoiada": [
+"H3077",
+"G914"
+],
+"jehoiakim": [
+"H3079",
+null
+],
+"jehoiarib": [
+"H3080",
+null
+],
+"jehonadab": [
+"H3082",
+null
+],
+"jehonathan": [
+"H3083",
+null
+],
+"jehoram": [
+"H3088",
+"G2496"
+],
+"jehoshabeath": [
+"H3090",
+null
+],
+"jehoshaphat": [
+"H3092",
+"G2498"
+],
+"jehosheba": [
+"H3089",
+null
+],
+"jehoshua": [
+"H3091",
+null
+],
+"jehozabad": [
+"H3075",
+null
+],
+"jehozadak": [
+"H3087",
+null
+],
+"jehu": [
+"H3058",
+null
+],
+"jehubbah": [
+"H3160",
+null
+],
+"jehucal": [
+"H3081",
+null
+],
+"jehud": [
+"H3055",
+null
+],
+"jehudi": [
+"H3065",
+null
+],
+"jehudijah": [
+"H3057",
+null
+],
+"jehuel": [
+"H3171",
+null
+],
+"jehush": [
+"H3266",
+null
+],
+"jeiel": [
+"H3273",
+null
+],
+"jekabzeel": [
+"H3343",
+null
+],
+"jekameam": [
+"H3360",
+null
+],
+"jekamiah": [
+"H3359",
+null
+],
+"jekoliah": [
+"H3203",
+null
+],
+"jekuthiel": [
+"H3354",
+null
+],
+"jemima": [
+"H3224",
+null
+],
+"jemimah": [
+"H3224",
+null
+],
+"jeminite": [
+"H3227",
+null
+],
+"jemnath": [
+null,
+"G9832"
+],
+"jemuel": [
+"H3223",
+null
+],
+"jephthae": [
+"H3316",
+"G2422"
+],
+"jephthah": [
+"H3316",
+"G2422"
+],
+"jephunneh": [
+"H3312",
+null
+],
+"jerah": [
+"H3392",
+null
+],
+"jerahmeel": [
+"H3396",
+null
+],
+"jerahmeelite": [
+"H3397",
+null
+],
+"jered": [
+"H3382",
+null
+],
+"jeremai": [
+"H3413",
+null
+],
+"jeremiah": [
+"H3414",
+"G2408"
+],
+"jeremias": [
+"H3414",
+"G2408"
+],
+"jeremoth": [
+"H3406",
+null
+],
+"jeremy": [
+"H3414",
+"G2408"
+],
+"jeriah": [
+"H3404",
+null
+],
+"jeribai": [
+"H3403",
+null
+],
+"jericho": [
+"H3405",
+"G2410"
+],
+"jericho_valley": [
+"H1237",
+null
+],
+"jeriel": [
+"H3400",
+null
+],
+"jerijah": [
+"H3404",
+null
+],
+"jerimoth": [
+"H3406",
+null
+],
+"jerioth": [
+"H3408",
+null
+],
+"jeroboam": [
+"H3379",
+null
+],
+"jeroham": [
+"H3395",
+null
+],
+"jerubbaal": [
+"H3378",
+null
+],
+"jerubbesheth": [
+"H3380",
+null
+],
+"jeruel": [
+"H3385",
+null
+],
+"jerusalem": [
+"H3389",
+"G2414"
+],
+"jerusalem_wives": [
+"H802",
+null
+],
+"jerusha": [
+"H3388",
+null
+],
+"jerushah": [
+"H3388",
+null
+],
+"jesaiah": [
+"H3470",
+null
+],
+"jeshaiah": [
+"H3470",
+null
+],
+"jeshanah": [
+"H3466",
+null
+],
+"jesharelah": [
+"H3480",
+null
+],
+"jeshebeab": [
+"H3428",
+null
+],
+"jesher": [
+"H3475",
+null
+],
+"jeshimon": [
+"H3452",
+null
+],
+"jeshishai": [
+"H3454",
+null
+],
+"jeshohaiah": [
+"H3439",
+null
+],
+"jeshua": [
+"H3442",
+null
+],
+"jeshuah": [
+"H3442",
+null
+],
+"jeshurun": [
+"H3484",
+null
+],
+"jesiah": [
+"H3449",
+null
+],
+"jesimiel": [
+"H3450",
+null
+],
+"jesse": [
+"H3448",
+"G2421"
+],
+"jesui": [
+"H3441",
+null
+],
+"jesus": [
+"H6005",
+"G2424"
+],
+"jether": [
+"H3500",
+null
+],
+"jetheth": [
+"H3509",
+null
+],
+"jethro": [
+"H3503",
+null
+],
+"jetur": [
+"H3195",
+"G2484"
+],
+"jeuel": [
+"H3262",
+null
+],
+"jeush": [
+"H3266",
+null
+],
+"jeuz": [
+"H3263",
+null
+],
+"jewish people": [
+"H3063",
+"G2453"
+],
+"jezaniah": [
+"H3153",
+null
+],
+"jezebel": [
+"H348",
+"G2403"
+],
+"jezer": [
+"H3337",
+null
+],
+"jezerite": [
+"H3340",
+null
+],
+"jeziah": [
+"H3150",
+null
+],
+"jeziel": [
+"H3149",
+null
+],
+"jezliah": [
+"H3152",
+null
+],
+"jezoar": [
+"H3328",
+null
+],
+"jezrahiah": [
+"H3156",
+null
+],
+"jezreel": [
+"H3157",
+null
+],
+"jezreel_valley": [
+"H3157",
+null
+],
+"jezreelite": [
+"H3158",
+null
+],
+"jezreelitess": [
+"H3159",
+null
+],
+"jezuel": [
+"H3149",
+null
+],
+"jibsam": [
+"H3005",
+null
+],
+"jidlaph": [
+"H3044",
+null
+],
+"jireh": [
+"H7200",
+null
+],
+"joab": [
+"H3097",
+null
+],
+"joah": [
+"H3098",
+null
+],
+"joahaz": [
+"H3099",
+null
+],
+"joanan": [
+null,
+"G2490"
+],
+"joanna": [
+null,
+"G2489"
+],
+"joash": [
+"H3101",
+null
+],
+"joatham": [
+"H3147",
+"G2488"
+],
+"job": [
+"H347",
+"G2492"
+],
+"jobab": [
+"H3103",
+null
+],
+"jochebed": [
+"H3115",
+null
+],
+"joda": [
+null,
+"G6043"
+],
+"joed": [
+"H3133",
+null
+],
+"joel": [
+"H3100",
+"G2493"
+],
+"joelah": [
+"H3132",
+null
+],
+"joezer": [
+"H3134",
+null
+],
+"jogbehah": [
+"H3011",
+null
+],
+"jogli": [
+"H3020",
+null
+],
+"joha": [
+"H3109",
+null
+],
+"johanan": [
+"H3076",
+null
+],
+"john": [
+null,
+"G2491"
+],
+"joiada": [
+"H3111",
+null
+],
+"joiakim": [
+"H3113",
+null
+],
+"joiarib": [
+"H3114",
+null
+],
+"jokdeam": [
+"H3347",
+null
+],
+"jokim": [
+"H3137",
+null
+],
+"jokmeam": [
+"H3361",
+null
+],
+"jokneam": [
+"H3362",
+null
+],
+"jokshan": [
+"H3370",
+null
+],
+"joktan": [
+"H3355",
+null
+],
+"joktheel": [
+"H3371",
+null
+],
+"jona": [
+null,
+"G2495"
+],
+"jonadab": [
+"H3082",
+null
+],
+"jonah": [
+"H3124",
+"G2495"
+],
+"jonam": [
+null,
+"G2494"
+],
+"jonan": [
+null,
+"G2494"
+],
+"jonath-elem-rechokim": [
+"H3128",
+null
+],
+"jonathan": [
+"H3129",
+null
+],
+"joppa": [
+"H3305",
+"G2445"
+],
+"jorah": [
+"H3139",
+null
+],
+"jorai": [
+"H3140",
+null
+],
+"joram": [
+"H3141",
+null
+],
+"jordan": [
+"H3383",
+"G2446"
+],
+"jorim": [
+null,
+"G2497"
+],
+"jorkeam": [
+"H3421",
+null
+],
+"jorkoam": [
+"H3421",
+null
+],
+"josabad": [
+"H3107",
+null
+],
+"josaphat": [
+"H3092",
+"G2498"
+],
+"jose": [
+null,
+"G2499"
+],
+"josech": [
+null,
+"G6044"
+],
+"josedech": [
+"H3087",
+null
+],
+"josek": [
+null,
+"G6044"
+],
+"joseph": [
+"H3130",
+"G2501"
+],
+"joses": [
+null,
+"G2500"
+],
+"joshah": [
+"H3144",
+null
+],
+"joshaphat": [
+"H3146",
+null
+],
+"joshaviah": [
+"H3145",
+null
+],
+"joshbekashah": [
+"H3436",
+null
+],
+"josheb-basshebeth": [
+"H3429",
+null
+],
+"joshibiah": [
+"H3143",
+null
+],
+"joshua": [
+"H3091",
+"G2424"
+],
+"josiah": [
+"H2977",
+"G2502"
+],
+"josias": [
+"H2977",
+"G2502"
+],
+"josibiah": [
+"H3143",
+null
+],
+"josiphiah": [
+"H3131",
+null
+],
+"jotbah": [
+"H3192",
+null
+],
+"jotbathah": [
+"H3193",
+null
+],
+"jotham": [
+"H3147",
+"G2488"
+],
+"jothor": [
+"H3503",
+null
+],
+"joyachin": [
+"H3112",
+null
+],
+"jozabad": [
+"H3107",
+null
+],
+"jozacar": [
+"H3108",
+null
+],
+"jozachar kjv": [
+"H3107",
+null
+],
+"jozadak": [
+"H3136",
+null
+],
+"jubal": [
+"H3106",
+null
+],
+"jucal": [
+"H3116",
+null
+],
+"judah": [
+"H3063",
+"G2455"
+],
+"judahite": [
+"H3057",
+null
+],
+"judahite wife": [
+"H3057",
+null
+],
+"judaism": [
+null,
+"G2454"
+],
+"judas": [
+null,
+"G2455"
+],
+"jude": [
+null,
+"G2455"
+],
+"judea": [
+"H3063",
+"G2449"
+],
+"judges": [
+"H1784",
+null
+],
+"judith": [
+"H3067",
+null
+],
+"julia": [
+null,
+"G2456"
+],
+"julius": [
+null,
+"G2457"
+],
+"junia": [
+null,
+"G2458"
+],
+"jupiter": [
+null,
+"G2203"
+],
+"jushab-hesed": [
+"H3142",
+null
+],
+"justus": [
+null,
+"G2459"
+],
+"juttah": [
+"H3194",
+null
+],
+"kabbon": [
+"H3522",
+null
+],
+"kabzeel": [
+"H6909",
+null
+],
+"kadesh": [
+"H6946",
+null
+],
+"kadesh barnea": [
+"H6947",
+null
+],
+"kadesh-barnea": [
+"H6947",
+null
+],
+"kadmiel": [
+"H6934",
+null
+],
+"kadmonite": [
+"H6935",
+null
+],
+"kadmonites": [
+"H6935",
+null
+],
+"kain": [
+"H7014",
+null
+],
+"kalkol": [
+"H3633",
+null
+],
+"kallai": [
+"H7040",
+null
+],
+"kalneh": [
+"H3641",
+null
+],
+"kalno": [
+"H3641",
+null
+],
+"kamon": [
+"H7056",
+null
+],
+"kanah": [
+"H7071",
+"G2580"
+],
+"kandake": [
+null,
+"G2582"
+],
+"kanneh": [
+"H3656",
+null
+],
+"kareah": [
+"H7143",
+null
+],
+"karka": [
+"H7173",
+null
+],
+"karkas": [
+"H3752",
+null
+],
+"karkor": [
+"H7174",
+null
+],
+"karmi": [
+"H3756",
+null
+],
+"karmite": [
+"H3757",
+null
+],
+"karnaim": [
+"H7161",
+null
+],
+"karshena": [
+"H3771",
+null
+],
+"kartah": [
+"H7177",
+null
+],
+"kartan": [
+"H7178",
+null
+],
+"kasiphia": [
+"H3703",
+null
+],
+"kasluhites": [
+"H3695",
+null
+],
+"kattath": [
+"H7005",
+null
+],
+"kedar": [
+"H6938",
+null
+],
+"kedemah": [
+"H6929",
+null
+],
+"kedemoth": [
+"H6932",
+null
+],
+"kedesh": [
+"H6943",
+null
+],
+"kedesh-naphtali": [
+"H6943",
+null
+],
+"kehelathah": [
+"H6954",
+null
+],
+"keilah": [
+"H7084",
+null
+],
+"kelahai": [
+"H3622",
+null
+],
+"kelaiah": [
+"H7041",
+null
+],
+"kelita": [
+"H7042",
+null
+],
+"kelub": [
+"H3620",
+null
+],
+"keluhi": [
+"H3622",
+null
+],
+"kemuel": [
+"H7055",
+null
+],
+"kenaanah": [
+"H3668",
+null
+],
+"kenan": [
+"H7018",
+"G2536"
+],
+"kenani": [
+"H3662",
+null
+],
+"kenaniah": [
+"H3663",
+null
+],
+"kenath": [
+"H7079",
+null
+],
+"kenaz": [
+"H7073",
+null
+],
+"kenites": [
+"H7017",
+null
+],
+"kenizzite": [
+"H7074",
+null
+],
+"kenizzites": [
+"H7074",
+null
+],
+"kephirah": [
+"H3716",
+null
+],
+"keran": [
+"H3763",
+null
+],
+"keren-happuch": [
+"H7163",
+null
+],
+"kerioth": [
+"H7152",
+null
+],
+"kerioth-hezron": [
+"H7152",
+null
+],
+"keros": [
+"H7026",
+null
+],
+"kesed": [
+"H3777",
+null
+],
+"keturah": [
+"H6989",
+null
+],
+"kezia": [
+"H7103",
+null
+],
+"keziah": [
+"H7103",
+null
+],
+"kibroth hattaavah": [
+"H6914",
+null
+],
+"kibroth-hattaavah": [
+"H6914",
+null
+],
+"kibzaim": [
+"H6911",
+null
+],
+"kidon": [
+"H3592",
+null
+],
+"kidron": [
+"H6939",
+"G2748"
+],
+"kidron valley": [
+"H6939",
+"G2748"
+],
+"kilion": [
+"H3630",
+null
+],
+"kinah": [
+"H7016",
+null
+],
+"king's_highway": [
+"H4428",
+null
+],
+"king's_valley": [
+"H4428",
+null
+],
+"kinnereth": [
+"H3672",
+null
+],
+"kir": [
+"H7024",
+null
+],
+"kir hareseth": [
+"H7025",
+null
+],
+"kir-hareseth": [
+"H7025",
+null
+],
+"kiriath": [
+"H7157",
+null
+],
+"kiriath arba": [
+"H7153",
+null
+],
+"kiriath baal": [
+"H7154",
+null
+],
+"kiriath huzoth": [
+"H7155",
+null
+],
+"kiriath jearim": [
+"H7157",
+null
+],
+"kiriath sannah": [
+"H7158",
+null
+],
+"kiriath sepher": [
+"H7158",
+null
+],
+"kiriath-arba": [
+"H7153",
+null
+],
+"kiriath-arim": [
+"H7157",
+null
+],
+"kiriath-baal": [
+"H7154",
+null
+],
+"kiriath-huzoth": [
+"H7155",
+null
+],
+"kiriath-jearim": [
+"H7157",
+null
+],
+"kiriath-sannah": [
+"H7158",
+null
+],
+"kiriath-sepher": [
+"H7158",
+null
+],
+"kiriathaim": [
+"H7156",
+null
+],
+"kirjath": [
+"H7157",
+null
+],
+"kirjath-huzoth": [
+"H7155",
+null
+],
+"kirjath-jearim": [
+"H7157",
+null
+],
+"kish": [
+"H7027",
+"G2797"
+],
+"kishi": [
+"H7029",
+null
+],
+"kishion": [
+"H7191",
+null
+],
+"kishon": [
+"H7028",
+null
+],
+"kisloth tabor": [
+"H3696",
+null
+],
+"kitron": [
+"H7003",
+null
+],
+"kittim": [
+"H3794",
+null
+],
+"kittites": [
+"H3794",
+null
+],
+"kiyyun": [
+"H3594",
+null
+],
+"koa": [
+"H6970",
+null
+],
+"kohath": [
+"H6955",
+null
+],
+"kol-hozeh": [
+"H3626",
+null
+],
+"kolaiah": [
+"H6964",
+null
+],
+"konaniah": [
+"H3562",
+null
+],
+"korah": [
+"H7141",
+"G2879"
+],
+"korahite": [
+"H7145",
+null
+],
+"kore": [
+"H6981",
+null
+],
+"koz": [
+"H6976",
+null
+],
+"kozbi": [
+"H3579",
+null
+],
+"kozeba": [
+"H3578",
+null
+],
+"kub": [
+"H3552",
+null
+],
+"kue": [
+"H4723",
+null
+],
+"kun": [
+"H3560",
+null
+],
+"kushaiah": [
+"H6984",
+null
+],
+"kuthah": [
+"H3575",
+null
+],
+"laadah": [
+"H3935",
+null
+],
+"laadan": [
+"H3936",
+null
+],
+"laban": [
+"H3837",
+null
+],
+"lachish": [
+"H3923",
+null
+],
+"ladan": [
+"H3936",
+null
+],
+"lael": [
+"H3815",
+null
+],
+"lahad": [
+"H3855",
+null
+],
+"lahmam": [
+"H3903",
+null
+],
+"lahmi": [
+"H3902",
+null
+],
+"laish": [
+"H3889",
+null
+],
+"laishah": [
+"H3919",
+null
+],
+"lakkum": [
+"H3946",
+null
+],
+"lamech": [
+"H3929",
+"G2984"
+],
+"laodicea": [
+null,
+"G2993"
+],
+"laodicean": [
+null,
+"G2994"
+],
+"lapidoth": [
+"H3941",
+null
+],
+"lappidoth": [
+"H3941",
+null
+],
+"large tree": [
+"H438",
+null
+],
+"lasea": [
+null,
+"G2996"
+],
+"lasha": [
+"H3962",
+null
+],
+"lasharon": [
+"H8289",
+null
+],
+"latin": [
+null,
+"G4515"
+],
+"lazarus": [
+null,
+"G2976"
+],
+"leah": [
+"H3812",
+null
+],
+"leb-kamai": [
+"H3820",
+null
+],
+"lebana": [
+"H3838",
+null
+],
+"lebanah": [
+"H3838",
+null
+],
+"lebanon": [
+"H3844",
+null
+],
+"lebanon_mount": [
+"H3844",
+null
+],
+"lebanon_valley": [
+"H3844",
+null
+],
+"lebaoth": [
+"H3822",
+null
+],
+"lebbaeus": [
+null,
+"G3002"
+],
+"lebonah": [
+"H3829",
+null
+],
+"lecah": [
+"H3922",
+null
+],
+"legion": [
+null,
+"G3003"
+],
+"lehabim": [
+"H3853",
+null
+],
+"lehem": [
+"H3433",
+null
+],
+"lehi": [
+"H3896",
+null
+],
+"lekah": [
+"H3922",
+null
+],
+"lemuel": [
+"H3927",
+null
+],
+"leshem": [
+"H3959",
+null
+],
+"letushim": [
+"H3912",
+null
+],
+"leummim": [
+"H3817",
+null
+],
+"levi": [
+"H3878",
+"G3017"
+],
+"leviathan": [
+"H3882",
+null
+],
+"libnah": [
+"H3841",
+null
+],
+"libni": [
+"H3845",
+null
+],
+"libnite": [
+"H3846",
+null
+],
+"libya": [
+"H3864",
+"G3033"
+],
+"libyan": [
+"H3864",
+null
+],
+"like his heart": [
+"H3614",
+null
+],
+"likhi": [
+"H3949",
+null
+],
+"lily of the covenant": [
+"H7802",
+null
+],
+"linked josiphiah": [
+null,
+null
+],
+"linus": [
+null,
+"G3044"
+],
+"lionlike men": [
+"H739",
+null
+],
+"lo debar": [
+"H3810",
+null
+],
+"lo-ammi": [
+"H3818",
+null
+],
+"lo-debar": [
+"H3810",
+null
+],
+"lo-ruhamah": [
+"H3819",
+null
+],
+"lod": [
+"H3850",
+"G3069"
+],
+"lois": [
+null,
+"G3090"
+],
+"look for names in ketiv etc that aren't listed separately, eg. zaanannim": [
+null,
+null
+],
+"lord": [
+"H3068",
+"G2962"
+],
+"lords of the high places": [
+"H1181",
+null
+],
+"lot": [
+"H3876",
+"G3091"
+],
+"lotan": [
+"H3877",
+null
+],
+"lucas": [
+null,
+"G3065"
+],
+"lucifer": [
+"H1966",
+null
+],
+"lucius": [
+null,
+"G3066"
+],
+"lud": [
+"H3865",
+null
+],
+"ludiim": [
+"H3866",
+null
+],
+"ludim": [
+"H3866",
+null
+],
+"luhith": [
+"H3872",
+null
+],
+"luhoth": [
+"H3872",
+null
+],
+"luke": [
+null,
+"G3065"
+],
+"lush": [
+"H3889",
+null
+],
+"luz": [
+"H3870",
+null
+],
+"lybia": [
+"H6316",
+null
+],
+"lycaonia": [
+null,
+"G3071"
+],
+"lycaonian": [
+null,
+"G3072"
+],
+"lycia": [
+null,
+"G3073"
+],
+"lydda": [
+"H3850",
+"G3069"
+],
+"lydia": [
+null,
+"G3070"
+],
+"lysanias": [
+null,
+"G3078"
+],
+"lysias": [
+null,
+"G3079"
+],
+"lystra": [
+null,
+"G3082"
+],
+"maacah": [
+"H4601",
+null
+],
+"maacath": [
+"H4601",
+null
+],
+"maacathite": [
+"H4602",
+null
+],
+"maacathites": [
+"H4602",
+null
+],
+"maachah": [
+"H4601",
+null
+],
+"maadai": [
+"H4572",
+null
+],
+"maadiah": [
+"H4573",
+null
+],
+"maai": [
+"H4597",
+null
+],
+"maakah": [
+"H4601",
+null
+],
+"maakathite": [
+"H4602",
+null
+],
+"maarath": [
+"H4638",
+null
+],
+"maareh-geba": [
+"H4629",
+null
+],
+"maasai": [
+"H4640",
+null
+],
+"maaseiah": [
+"H4641",
+null
+],
+"maasiai": [
+"H4640",
+null
+],
+"maath": [
+null,
+"G3092"
+],
+"maaz": [
+"H4619",
+null
+],
+"maaziah": [
+"H4590",
+null
+],
+"macedonia": [
+null,
+"G3109"
+],
+"macedonian": [
+null,
+"G3110"
+],
+"machbanai": [
+"H4344",
+null
+],
+"machbannai": [
+"H4344",
+null
+],
+"machbenah": [
+"H4343",
+null
+],
+"machi": [
+"H4352",
+null
+],
+"machir": [
+"H4353",
+null
+],
+"machirite": [
+"H4354",
+null
+],
+"machnadebai": [
+"H4367",
+null
+],
+"machpelah": [
+"H4375",
+null
+],
+"madai": [
+"H4074",
+null
+],
+"madmannah": [
+"H4089",
+null
+],
+"madmen": [
+"H4086",
+null
+],
+"madmenah": [
+"H4088",
+null
+],
+"madon": [
+"H4068",
+null
+],
+"magadan": [
+null,
+"G3093"
+],
+"magbish": [
+"H4019",
+null
+],
+"magdalene": [
+null,
+"G3094"
+],
+"magdiel": [
+"H4025",
+null
+],
+"magog": [
+"H4031",
+"G3098"
+],
+"magor-missabib": [
+"H4036",
+null
+],
+"magpiash": [
+"H4047",
+null
+],
+"mahalab": [
+"H2256",
+null
+],
+"mahalah": [
+"H4244",
+null
+],
+"mahalalel": [
+"H4111",
+"G3121"
+],
+"mahalath": [
+"H4258",
+null
+],
+"mahalel": [
+"H4111",
+"G3121"
+],
+"mahali": [
+"H4249",
+null
+],
+"mahanaim": [
+"H4266",
+null
+],
+"mahaneh dan": [
+"H4265",
+null
+],
+"mahaneh-dan": [
+"H4265",
+null
+],
+"maharai": [
+"H4121",
+null
+],
+"mahath": [
+"H4287",
+null
+],
+"mahavite": [
+"H4233",
+null
+],
+"mahavites": [
+"H4233",
+null
+],
+"mahazioth": [
+"H4238",
+null
+],
+"maher-shalal-hash-baz": [
+"H4122",
+null
+],
+"mahlah": [
+"H4244",
+null
+],
+"mahli": [
+"H4249",
+null
+],
+"mahlite": [
+"H4250",
+null
+],
+"mahlon": [
+"H4248",
+null
+],
+"mahol": [
+"H4235",
+null
+],
+"mahseiah": [
+"H4271",
+null
+],
+"makaz": [
+"H4739",
+null
+],
+"makbannai": [
+"H4344",
+null
+],
+"makbenah": [
+"H4343",
+null
+],
+"makheloth": [
+"H4722",
+null
+],
+"makijah": [
+"H4441",
+null
+],
+"makir": [
+"H4353",
+null
+],
+"makirite": [
+"H4354",
+null
+],
+"makkedah": [
+"H4719",
+null
+],
+"maknadebai": [
+"H4367",
+null
+],
+"malachi": [
+"H4401",
+null
+],
+"malcam": [
+"H4445",
+null
+],
+"malchi-shua": [
+"H4444",
+null
+],
+"malchiah": [
+"H4441",
+null
+],
+"malchiel": [
+"H4439",
+null
+],
+"malchielite": [
+"H4440",
+null
+],
+"malchijah": [
+"H4441",
+null
+],
+"malchiram": [
+"H4443",
+null
+],
+"malchus": [
+null,
+"G3124"
+],
+"malkam": [
+"H4445",
+null
+],
+"malki-shua": [
+"H4444",
+null
+],
+"malkiel": [
+"H4439",
+null
+],
+"malkijah": [
+"H4441",
+null
+],
+"malkiram": [
+"H4443",
+null
+],
+"mallothi": [
+"H4413",
+null
+],
+"malluch": [
+"H4409",
+null
+],
+"malluchi": [
+"H4409",
+null
+],
+"malluk": [
+"H4409",
+null
+],
+"malta": [
+null,
+"G3194"
+],
+"mamre": [
+"H4471",
+null
+],
+"manaen": [
+null,
+"G3127"
+],
+"manahath": [
+"H4506",
+null
+],
+"manahathite": [
+"H4506",
+null
+],
+"manahethite": [
+"H4506",
+null
+],
+"manasseh": [
+"H4519",
+"G3128"
+],
+"manasses": [
+"H4519",
+"G3128"
+],
+"manoah": [
+"H4495",
+null
+],
+"maoch": [
+"H4582",
+null
+],
+"maok": [
+"H4582",
+null
+],
+"maon": [
+"H4584",
+null
+],
+"maonite": [
+"H4584",
+null
+],
+"mara": [
+"H4755",
+null
+],
+"marah": [
+"H4785",
+null
+],
+"maralah": [
+"H4831",
+null
+],
+"maranatha": [
+null,
+"G3134"
+],
+"marcus": [
+null,
+"G3138"
+],
+"mareal": [
+"H4831",
+null
+],
+"mareshah": [
+"H4762",
+null
+],
+"mark": [
+null,
+"G3138"
+],
+"maroth": [
+"H4796",
+null
+],
+"married": [
+"H1166",
+null
+],
+"married jerimoth": [
+null,
+null
+],
+"marsena": [
+"H4826",
+null
+],
+"martha": [
+null,
+"G3136"
+],
+"mary": [
+null,
+"G3137"
+],
+"mary_magdalene": [
+null,
+"G3137"
+],
+"mash": [
+"H4851",
+null
+],
+"mashal": [
+"H4913",
+null
+],
+"maskil": [
+"H4905",
+null
+],
+"masrekah": [
+"H4957",
+null
+],
+"massa": [
+"H4854",
+null
+],
+"massah": [
+"H4532",
+null
+],
+"master": [
+"H1180",
+null
+],
+"mathusala": [
+"H4968",
+"G3103"
+],
+"matred": [
+"H4308",
+null
+],
+"matri": [
+"H4309",
+null
+],
+"matrite": [
+"H4309",
+null
+],
+"mattan": [
+"H4977",
+null
+],
+"mattanah": [
+"H4980",
+null
+],
+"mattaniah": [
+"H4983",
+null
+],
+"mattatha": [
+null,
+"G3160"
+],
+"mattathah": [
+"H4992",
+null
+],
+"mattathias": [
+null,
+"G3161"
+],
+"mattattah": [
+"H4992",
+null
+],
+"mattenai": [
+"H4982",
+null
+],
+"matthan": [
+null,
+"G3157"
+],
+"matthat": [
+null,
+"G3158"
+],
+"matthew": [
+null,
+"G3156"
+],
+"matthias": [
+null,
+"G3159"
+],
+"mattithiah": [
+"H4993",
+null
+],
+"mazzaroth": [
+"H4216",
+null
+],
+"me jarkon": [
+"H4313",
+null
+],
+"me-jarkon": [
+"H4313",
+null
+],
+"mearah": [
+"H4632",
+null
+],
+"mebunnai": [
+"H4012",
+null
+],
+"mecherathite": [
+"H4382",
+null
+],
+"mecherathites": [
+"H4382",
+null
+],
+"meconah": [
+"H4368",
+null
+],
+"medad": [
+"H4312",
+null
+],
+"medan": [
+"H4091",
+null
+],
+"medeba": [
+"H4311",
+null
+],
+"medes": [
+"H4074",
+"G3370"
+],
+"media": [
+"H4074",
+"G3370"
+],
+"median": [
+"H4077",
+null
+],
+"mediterranean sea": [
+"H6430",
+null
+],
+"megiddo": [
+"H4023",
+"G717"
+],
+"mehetabeel": [
+"H4105",
+null
+],
+"mehetabel": [
+"H4105",
+null
+],
+"mehida": [
+"H4240",
+null
+],
+"mehir": [
+"H4243",
+null
+],
+"meholathite": [
+"H4259",
+null
+],
+"meholathites": [
+"H4259",
+null
+],
+"mehujael": [
+"H4232",
+null
+],
+"mehuman": [
+"H4104",
+null
+],
+"mehunim": [
+"H4586",
+null
+],
+"mehunite": [
+"H4586",
+null
+],
+"meinim": [
+"H4586",
+null
+],
+"meinites": [
+"H4586",
+null
+],
+"mekonah": [
+"H4368",
+null
+],
+"melatiah": [
+"H4424",
+null
+],
+"melchi": [
+null,
+"G3197"
+],
+"melchi-shua": [
+"H4444",
+null
+],
+"melchiah": [
+"H4441",
+null
+],
+"melchisedec": [
+"H4442",
+"G3198"
+],
+"melchizedek": [
+"H4442",
+"G3198"
+],
+"melea": [
+null,
+"G3190"
+],
+"melech": [
+"H4429",
+null
+],
+"melek": [
+"H4429",
+null
+],
+"melicu": [
+"H4409",
+null
+],
+"melzar": [
+"H4453",
+null
+],
+"memphis": [
+"H5297",
+null
+],
+"memucan": [
+"H4462",
+null
+],
+"memukan": [
+"H4462",
+null
+],
+"men": [
+"H1373",
+null
+],
+"men of tob": [
+"H382",
+null
+],
+"menahem": [
+"H4505",
+null
+],
+"menan": [
+null,
+"G3104"
+],
+"menna": [
+null,
+"G3104"
+],
+"menuhoth": [
+"H4506",
+null
+],
+"meonothai": [
+"H4587",
+null
+],
+"mephaath": [
+"H4158",
+null
+],
+"mephibosheth": [
+"H4648",
+null
+],
+"merab": [
+"H4764",
+null
+],
+"meraiah": [
+"H4811",
+null
+],
+"meraioth": [
+"H4812",
+null
+],
+"merari": [
+"H4847",
+null
+],
+"merathaim": [
+"H4850",
+null
+],
+"merchants": [
+"H3667",
+null
+],
+"mercurius": [
+null,
+"G2060"
+],
+"mered": [
+"H4778",
+null
+],
+"meremoth": [
+"H4822",
+null
+],
+"meres": [
+"H4825",
+null
+],
+"merged individuals: jerubbesheth_712+gideon_554, hence abimelech_711+abimelech_561; halohesh_2358+hallohesh_2494 (cf.neh.3.12 'ruler of half of jerusalem' & neh.10.14,24 'chief of the people'); gershom": [
+null,
+null
+],
+"merged other: el-berith": [
+null,
+null
+],
+"merged: maacah": [
+null,
+null
+],
+"meri-baal": [
+"H4810",
+null
+],
+"meribah": [
+"H4809",
+null
+],
+"meribah-kadesh": [
+"H4809",
+null
+],
+"merodach": [
+"H4781",
+null
+],
+"merodach-baladan": [
+"H1255",
+null
+],
+"merom": [
+"H4792",
+null
+],
+"meronothite": [
+"H4824",
+null
+],
+"meronothites": [
+"H4824",
+null
+],
+"meroz": [
+"H4789",
+null
+],
+"mesech": [
+"H4902",
+null
+],
+"mesha": [
+"H4337",
+null
+],
+"meshech": [
+"H4902",
+null
+],
+"meshech-tubal": [
+"H4902",
+null
+],
+"meshek": [
+"H4902",
+null
+],
+"meshelemiah": [
+"H4920",
+null
+],
+"meshezabeel": [
+"H4898",
+null
+],
+"meshezabel": [
+"H4898",
+null
+],
+"meshillemith": [
+"H4921",
+null
+],
+"meshillemoth": [
+"H4919",
+null
+],
+"meshobab": [
+"H4877",
+null
+],
+"meshullam": [
+"H4918",
+null
+],
+"meshullemeth": [
+"H4922",
+null
+],
+"mesopotamia": [
+"H763",
+"G3318"
+],
+"messiah": [
+null,
+"G3323"
+],
+"metheg ammah": [
+"H4965",
+null
+],
+"metheg-ammah": [
+"H4965",
+null
+],
+"methlabben": [
+"H4192",
+null
+],
+"methusael": [
+"H4967",
+null
+],
+"methuselah": [
+"H4968",
+"G3103"
+],
+"methushael": [
+"H4967",
+null
+],
+"meunim": [
+"H4586",
+null
+],
+"meunites": [
+"H4586",
+null
+],
+"mezahab": [
+"H4314",
+null
+],
+"mezobaite": [
+"H4677",
+null
+],
+"mezobaites": [
+"H4677",
+null
+],
+"miamin": [
+"H4326",
+null
+],
+"mibhar": [
+"H4006",
+null
+],
+"mibsam": [
+"H4017",
+null
+],
+"mibzar": [
+"H4014",
+null
+],
+"mica": [
+"H4316",
+null
+],
+"micah": [
+"H4318",
+null
+],
+"micahu": [
+"H4319",
+null
+],
+"micaiah": [
+"H4321",
+null
+],
+"michael": [
+"H4317",
+"G3413"
+],
+"michah": [
+"H4318",
+null
+],
+"michal": [
+"H4324",
+null
+],
+"michmas": [
+"H4363",
+null
+],
+"michmash": [
+"H4363",
+null
+],
+"michmethah": [
+"H4366",
+null
+],
+"michmethath": [
+"H4366",
+null
+],
+"michri": [
+"H4381",
+null
+],
+"middin": [
+"H4081",
+null
+],
+"midian": [
+"H4080",
+"G3099"
+],
+"midianite woman": [
+"H4084",
+null
+],
+"migdal eder": [
+"H4029",
+null
+],
+"migdal el": [
+"H4027",
+null
+],
+"migdal gad": [
+"H4028",
+null
+],
+"migdal-el": [
+"H4027",
+null
+],
+"migdal-gad": [
+"H4028",
+null
+],
+"migdol": [
+"H4024",
+null
+],
+"mightiest warriors": [
+"H739",
+null
+],
+"migron": [
+"H4051",
+null
+],
+"mijamin": [
+"H4326",
+null
+],
+"mikal": [
+"H4324",
+null
+],
+"mikloth": [
+"H4732",
+null
+],
+"mikmash": [
+"H4363",
+null
+],
+"mikmethath": [
+"H4366",
+null
+],
+"mikneiah": [
+"H4737",
+null
+],
+"mikri": [
+"H4381",
+null
+],
+"miktam": [
+"H4387",
+null
+],
+"milalai": [
+"H4450",
+null
+],
+"milcah": [
+"H4435",
+null
+],
+"miletus": [
+null,
+"G3399"
+],
+"milkah": [
+"H4435",
+null
+],
+"millo": [
+"H4407",
+"G6202"
+],
+"miniamin": [
+"H4509",
+null
+],
+"minni": [
+"H4508",
+null
+],
+"minnith": [
+"H4511",
+null
+],
+"miriam": [
+"H4813",
+null
+],
+"mirma": [
+"H4821",
+null
+],
+"mirmah": [
+"H4821",
+null
+],
+"misgab": [
+"H4869",
+null
+],
+"mishael": [
+"H4332",
+null
+],
+"mishal": [
+"H4861",
+null
+],
+"misham": [
+"H4936",
+null
+],
+"mishma": [
+"H4927",
+null
+],
+"mishmannah": [
+"H4925",
+null
+],
+"mishraite": [
+"H4954",
+null
+],
+"mishraites": [
+"H4954",
+null
+],
+"mispar": [
+"H4558",
+null
+],
+"mispereth": [
+"H4559",
+null
+],
+"misrephoth maim": [
+"H4956",
+null
+],
+"misrephoth-maim": [
+"H4956",
+null
+],
+"mithcah": [
+"H4989",
+null
+],
+"mithkah": [
+"H4989",
+null
+],
+"mithnite": [
+"H4981",
+null
+],
+"mithnites": [
+"H4981",
+null
+],
+"mithredath": [
+"H4990",
+null
+],
+"mitylene": [
+null,
+"G3412"
+],
+"mizar_mount": [
+"H4706",
+null
+],
+"mizpah": [
+"H4709",
+"G707"
+],
+"mizpeh": [
+"H4708",
+null
+],
+"mizpeh_valley": [
+"H4709",
+null
+],
+"mizraim": [
+"H4714",
+null
+],
+"mizzah": [
+"H4199",
+null
+],
+"mnason": [
+null,
+"G3416"
+],
+"moab": [
+"H4124",
+null
+],
+"moab_plains": [
+"H4124",
+null
+],
+"moadiah": [
+"H4153",
+null
+],
+"moladah": [
+"H4137",
+null
+],
+"molech": [
+"H4432",
+"G3434"
+],
+"molid": [
+"H4140",
+null
+],
+"moloch": [
+"H4432",
+"G3434"
+],
+"mophaath": [
+"H4158",
+null
+],
+"mordecai": [
+"H4782",
+null
+],
+"moreh": [
+"H4176",
+null
+],
+"moresheth": [
+"H4182",
+null
+],
+"moresheth gath": [
+"H4182",
+null
+],
+"moresheth-gath": [
+"H4182",
+null
+],
+"moreshethite": [
+"H4183",
+null
+],
+"moreshethites": [
+"H4183",
+null
+],
+"moriah": [
+"H4179",
+null
+],
+"moriah_mount": [
+"H4179",
+null
+],
+"morning": [
+"H1338",
+null
+],
+"morning star": [
+"H1966",
+null
+],
+"mortar": [
+"H4389",
+null
+],
+"moserah": [
+"H4149",
+null
+],
+"moseroth": [
+"H4149",
+null
+],
+"moses": [
+"H4872",
+"G3475"
+],
+"most_holy_place": [
+"H6944",
+"G39"
+],
+"motherinlaw_of_peter": [
+null,
+"G4074"
+],
+"mount shapher": [
+"H8234",
+null
+],
+"moza": [
+"H4162",
+null
+],
+"mozah": [
+"H4681",
+null
+],
+"muppim": [
+"H4649",
+null
+],
+"mushi": [
+"H4187",
+null
+],
+"mushite": [
+"H4188",
+null
+],
+"muster_gate": [
+"H4663",
+null
+],
+"muth-labben": [
+"H4192",
+null
+],
+"my baal": [
+"H1180",
+null
+],
+"my delight is in her": [
+"H2657",
+null
+],
+"myra": [
+null,
+"G3460"
+],
+"mysia": [
+null,
+"G3465"
+],
+"naam": [
+"H5277",
+null
+],
+"naamah": [
+"H5279",
+null
+],
+"naaman": [
+"H5283",
+"G3497"
+],
+"naamathite": [
+"H5284",
+null
+],
+"naamathites": [
+"H5284",
+null
+],
+"naamite": [
+"H5280",
+null
+],
+"naarah": [
+"H5292",
+null
+],
+"naarai": [
+"H5293",
+null
+],
+"naaran": [
+"H5295",
+null
+],
+"naarath": [
+"H5292",
+null
+],
+"naashon": [
+"H5177",
+null
+],
+"naasson": [
+"H5177",
+"G3476"
+],
+"nabal": [
+"H5037",
+null
+],
+"naboth": [
+"H5022",
+null
+],
+"nachon": [
+"H5225",
+null
+],
+"nachor": [
+"H5152",
+"G3493"
+],
+"nacon": [
+"H5225",
+null
+],
+"nadab": [
+"H5070",
+null
+],
+"naggai": [
+null,
+"G3477"
+],
+"nagge": [
+null,
+"G3477"
+],
+"nahalal": [
+"H5096",
+null
+],
+"nahaliel": [
+"H5160",
+null
+],
+"nahalol": [
+"H5096",
+null
+],
+"naham": [
+"H5163",
+null
+],
+"nahamani": [
+"H5167",
+null
+],
+"naharai": [
+"H5171",
+null
+],
+"nahash": [
+"H5176",
+null
+],
+"nahath": [
+"H5184",
+null
+],
+"nahbi": [
+"H5147",
+null
+],
+"nahor": [
+"H5152",
+"G3493"
+],
+"nahshon": [
+"H5177",
+"G3476"
+],
+"nahum": [
+"H5151",
+"G3486"
+],
+"nain": [
+null,
+"G3484"
+],
+"naioth": [
+"H5121",
+null
+],
+"nakon": [
+"H5225",
+null
+],
+"names are based on the most common form + the first ref where the individual occurs (where a different name may be used), eg uzziah": [
+null,
+null
+],
+"naomi": [
+"H5281",
+null
+],
+"naphath": [
+"H5316",
+null
+],
+"naphath-dor": [
+"H5316",
+null
+],
+"naphish": [
+"H5305",
+null
+],
+"naphoth": [
+"H5316",
+null
+],
+"naphtali": [
+"H5321",
+"G3508"
+],
+"naphtuhim": [
+"H5320",
+null
+],
+"narcissus": [
+null,
+"G3488"
+],
+"nathan": [
+"H5416",
+"G3481"
+],
+"nathan melek": [
+"H5419",
+null
+],
+"nathan-melech": [
+"H5419",
+null
+],
+"nathanael": [
+null,
+"G3482"
+],
+"naum": [
+null,
+"G3486"
+],
+"nazareth": [
+null,
+"G3478"
+],
+"nazirite": [
+"H5139",
+null
+],
+"nazirite vow": [
+"H5145",
+null
+],
+"nazirites": [
+"H5139",
+null
+],
+"neah": [
+"H5272",
+null
+],
+"neapolis": [
+null,
+"G3496"
+],
+"neariah": [
+"H5294",
+null
+],
+"nebai": [
+"H5109",
+null
+],
+"nebaioth": [
+"H5032",
+null
+],
+"nebajoth": [
+"H5032",
+null
+],
+"neballat": [
+"H5041",
+null
+],
+"nebat": [
+"H5028",
+null
+],
+"nebo": [
+"H5015",
+null
+],
+"nebo-sarsekim": [
+"H8310",
+null
+],
+"nebo_mount": [
+"H5015",
+null
+],
+"nebu-sar-sekim": [
+"H8310",
+null
+],
+"nebuchadnezzar": [
+"H5019",
+null
+],
+"nebushasban": [
+"H5021",
+null
+],
+"nebushazban": [
+"H5021",
+null
+],
+"nebuzaradan": [
+"H5018",
+null
+],
+"necho": [
+"H5224",
+null
+],
+"neco": [
+"H5224",
+null
+],
+"nedabiah": [
+"H5072",
+null
+],
+"negeb": [
+"H5045",
+null
+],
+"negev": [
+"H5045",
+null
+],
+"nehelam": [
+"H5161",
+null
+],
+"nehelamites": [
+"H5161",
+null
+],
+"nehemiah": [
+"H5166",
+null
+],
+"nehum": [
+"H5149",
+null
+],
+"nehushta": [
+"H5179",
+null
+],
+"nehushtan": [
+"H5180",
+null
+],
+"neiel": [
+"H5272",
+null
+],
+"nekoda": [
+"H5353",
+null
+],
+"nemuel": [
+"H5241",
+null
+],
+"nemuelite": [
+"H5242",
+null
+],
+"nepheg": [
+"H5298",
+null
+],
+"nephilim": [
+"H5303",
+null
+],
+"nephishesim": [
+"H5300",
+null
+],
+"nephisim": [
+"H5304",
+null
+],
+"nephtali": [
+"H5321",
+"G3508"
+],
+"nephtoah": [
+"H5318",
+null
+],
+"nephushesim": [
+"H5300",
+null
+],
+"ner": [
+"H5369",
+null
+],
+"nereus": [
+null,
+"G3517"
+],
+"nergal": [
+"H5370",
+null
+],
+"nergal-sar-ezer": [
+"H5371",
+null
+],
+"nergal-shar-ezer": [
+"H5371",
+null
+],
+"nergal-sharezer": [
+"H5371",
+null
+],
+"neri": [
+null,
+"G3518"
+],
+"neriah": [
+"H5374",
+null
+],
+"nero": [
+null,
+"G3505"
+],
+"netaim": [
+"H5196",
+null
+],
+"nethaneel": [
+"H5417",
+null
+],
+"nethanel": [
+"H5417",
+null
+],
+"nethaniah": [
+"H5418",
+null
+],
+"netophah": [
+"H5199",
+null
+],
+"netophathite": [
+"H5200",
+null
+],
+"new moon": [
+null,
+"G3561"
+],
+"new quarter": [
+"H4932",
+null
+],
+"new_gate": [
+"H2319",
+null
+],
+"new_moon": [
+null,
+"G3561"
+],
+"neziah": [
+"H5335",
+null
+],
+"nezib": [
+"H5334",
+null
+],
+"nibhaz": [
+"H5026",
+null
+],
+"nibshan": [
+"H5044",
+null
+],
+"nicanor": [
+null,
+"G3527"
+],
+"nicodemus": [
+null,
+"G3530"
+],
+"nicolaitan": [
+null,
+"G3531"
+],
+"nicolaitans": [
+null,
+"G3531"
+],
+"nicolas": [
+null,
+"G3532"
+],
+"nicolaus": [
+null,
+"G3532"
+],
+"nicopolis": [
+null,
+"G3533"
+],
+"niger": [
+null,
+"G3526"
+],
+"nile": [
+"H2975",
+null
+],
+"nimrah": [
+"H5247",
+null
+],
+"nimrim": [
+"H5249",
+null
+],
+"nimrod": [
+"H5248",
+null
+],
+"nimshi": [
+"H5250",
+null
+],
+"nineveh": [
+"H5210",
+"G3535"
+],
+"nisan": [
+"H5212",
+null
+],
+"nisroch": [
+"H5268",
+null
+],
+"nissi": [
+"H5251",
+null
+],
+"niv": [
+null,
+"G4251"
+],
+"no": [
+"H4996",
+null
+],
+"no mercy": [
+"H3819",
+null
+],
+"noadiah": [
+"H5129",
+null
+],
+"noah": [
+"H5146",
+"G3575"
+],
+"nob": [
+"H5011",
+null
+],
+"nobah": [
+"H5025",
+null
+],
+"nobai": [
+"H5109",
+null
+],
+"nod": [
+"H5113",
+null
+],
+"nodab": [
+"H5114",
+null
+],
+"noe": [
+"H5146",
+"G3575"
+],
+"nogah": [
+"H5052",
+null
+],
+"nomad": [
+"H6163",
+null
+],
+"non": [
+"H5126",
+null
+],
+"nophah": [
+"H5302",
+null
+],
+"north": [
+"H6828",
+null
+],
+"not my people": [
+"H3818",
+null
+],
+"nun": [
+"H5126",
+null
+],
+"nympha": [
+null,
+"G3564"
+],
+"oak": [
+"H438",
+null
+],
+"obadiah": [
+"H5662",
+null
+],
+"obal": [
+"H5745",
+null
+],
+"obed": [
+"H5744",
+"G5601"
+],
+"obed-edom": [
+"H5654",
+null
+],
+"obil": [
+"H179",
+null
+],
+"oboth": [
+"H88",
+null
+],
+"ochran": [
+"H5918",
+null
+],
+"ocran": [
+"H5918",
+null
+],
+"oded": [
+"H5752",
+null
+],
+"of judea": [
+"H3063",
+"G2453"
+],
+"of senuah": [
+"H5574",
+null
+],
+"of shelah": [
+"H8023",
+null
+],
+"og": [
+"H5747",
+null
+],
+"ohad": [
+"H161",
+null
+],
+"ohel": [
+"H169",
+null
+],
+"oholah": [
+"H170",
+null
+],
+"oholiab": [
+"H171",
+null
+],
+"oholibah": [
+"H172",
+null
+],
+"oholibamah": [
+"H173",
+null
+],
+"okran": [
+"H5918",
+null
+],
+"olam": [
+"H5867",
+null
+],
+"old": [
+"H3465",
+null
+],
+"old gate": [
+"H3466",
+null
+],
+"olives": [
+"H2132",
+null
+],
+"olives_mount": [
+"H2132",
+"G1638"
+],
+"olivet": [
+"H2132",
+"G1638"
+],
+"olympas": [
+null,
+"G3652"
+],
+"omar": [
+"H201",
+null
+],
+"omega": [
+null,
+"G5598"
+],
+"omri": [
+"H6018",
+null
+],
+"on": [
+"H203",
+"G9829"
+],
+"onam": [
+"H208",
+null
+],
+"onan": [
+"H209",
+null
+],
+"onesimus": [
+null,
+"G3682"
+],
+"onesiphorus": [
+null,
+"G3683"
+],
+"ono": [
+"H207",
+null
+],
+"ophai": [
+"H5778",
+null
+],
+"ophel": [
+"H6077",
+null
+],
+"ophir": [
+"H211",
+null
+],
+"ophni": [
+"H6078",
+null
+],
+"ophrah": [
+"H6084",
+null
+],
+"oreb": [
+"H6159",
+null
+],
+"oren": [
+"H767",
+null
+],
+"orion": [
+"H3685",
+null
+],
+"ornah": [
+"H728",
+null
+],
+"ornan": [
+"H771",
+null
+],
+"orpah": [
+"H6204",
+null
+],
+"osee": [
+"H1954",
+null
+],
+"oshea": [
+"H1954",
+null
+],
+"osnappar": [
+"H620",
+null
+],
+"others": [
+"H120",
+null
+],
+"othni": [
+"H6273",
+null
+],
+"othniel": [
+"H6274",
+null
+],
+"ozem": [
+"H684",
+null
+],
+"ozias": [
+"H5818",
+"G3604"
+],
+"ozni": [
+"H244",
+null
+],
+"oznite": [
+"H244",
+null
+],
+"paarai": [
+"H6474",
+null
+],
+"pacatiana": [
+null,
+"G3818"
+],
+"padan": [
+"H6307",
+null
+],
+"paddan": [
+"H6307",
+null
+],
+"paddan-aram": [
+"H6307",
+null
+],
+"padon": [
+"H6303",
+null
+],
+"pagan": [
+"H1471",
+"G1482"
+],
+"pagans": [
+"H1471",
+"G1484"
+],
+"pagiel": [
+"H6295",
+null
+],
+"pahath-moab": [
+"H6355",
+null
+],
+"pai": [
+"H6464",
+null
+],
+"palal": [
+"H6420",
+null
+],
+"pallu": [
+"H6396",
+null
+],
+"palluite": [
+"H6384",
+null
+],
+"palm": [
+"H6865",
+null
+],
+"palti": [
+"H6406",
+null
+],
+"paltiel": [
+"H6409",
+null
+],
+"paltite": [
+"H6407",
+null
+],
+"pamphylia": [
+null,
+"G3828"
+],
+"paphos": [
+null,
+"G3974"
+],
+"parah": [
+"H6511",
+null
+],
+"paran": [
+"H6290",
+null
+],
+"paran_mount": [
+"H6290",
+null
+],
+"parbar": [
+"H6503",
+null
+],
+"parents": [
+null,
+"G2501"
+],
+"parmashta": [
+"H6534",
+null
+],
+"parmenas": [
+null,
+"G3937"
+],
+"parnach": [
+"H6535",
+null
+],
+"parnak": [
+"H6535",
+null
+],
+"parosh": [
+"H6551",
+null
+],
+"parshandatha": [
+"H6577",
+null
+],
+"parthian": [
+null,
+"G3934"
+],
+"parthians": [
+null,
+"G3934"
+],
+"paruah": [
+"H6515",
+null
+],
+"parvaim": [
+"H6516",
+null
+],
+"pas dammim": [
+"H6450",
+null
+],
+"pas-dammim": [
+"H6450",
+null
+],
+"pasach": [
+"H6457",
+null
+],
+"pasak": [
+"H6457",
+null
+],
+"paseah": [
+"H6454",
+null
+],
+"pashhur": [
+"H6583",
+null
+],
+"pashur": [
+"H6583",
+null
+],
+"passover": [
+"H6453",
+"G3957"
+],
+"passover offering": [
+"H6453",
+null
+],
+"patara": [
+null,
+"G3959"
+],
+"pathros": [
+"H6624",
+null
+],
+"pathrusim": [
+"H6625",
+null
+],
+"patmos": [
+null,
+"G3963"
+],
+"patrobas": [
+null,
+"G3969"
+],
+"pau": [
+"H6464",
+null
+],
+"paul": [
+null,
+"G3972"
+],
+"pavement": [
+null,
+"G3038"
+],
+"peace": [
+"H7965",
+null
+],
+"pedahel": [
+"H6300",
+null
+],
+"pedahzur": [
+"H6301",
+null
+],
+"pedaiah": [
+"H6305",
+null
+],
+"pekah": [
+"H6492",
+null
+],
+"pekahiah": [
+"H6494",
+null
+],
+"pekod": [
+"H6489",
+null
+],
+"pelaiah": [
+"H6411",
+null
+],
+"pelaliah": [
+"H6421",
+null
+],
+"pelatiah": [
+"H6410",
+null
+],
+"peleg": [
+"H6389",
+"G5317"
+],
+"pelet": [
+"H6404",
+null
+],
+"peleth": [
+"H6431",
+null
+],
+"pelethite": [
+"H6432",
+null
+],
+"pelethites": [
+"H6432",
+null
+],
+"pelonite": [
+"H6397",
+null
+],
+"pelonites": [
+"H6397",
+null
+],
+"pelusium": [
+"H5512",
+null
+],
+"peniel": [
+"H6439",
+null
+],
+"peninnah": [
+"H6444",
+null
+],
+"pentecost": [
+"H7620",
+"G4005"
+],
+"penuel": [
+"H6439",
+null
+],
+"people's_gate": [
+"H5971",
+null
+],
+"people+gentilics of people (or of unknown places):  titius|justus": [
+null,
+null
+],
+"peor": [
+"H6465",
+null
+],
+"perazim_mount": [
+"H6559",
+null
+],
+"peresh": [
+"H6570",
+null
+],
+"perez": [
+"H6557",
+"G5329"
+],
+"perez uzzah": [
+"H6560",
+null
+],
+"perez-uzza": [
+"H6560",
+null
+],
+"perez-uzzah": [
+"H6560",
+null
+],
+"perezite": [
+"H6558",
+null
+],
+"perga": [
+null,
+"G4011"
+],
+"pergamum": [
+null,
+"G4010"
+],
+"perida": [
+"H6514",
+null
+],
+"perizzite": [
+"H6522",
+null
+],
+"perizzites": [
+"H6522",
+null
+],
+"persia": [
+"H6539",
+null
+],
+"persis": [
+null,
+"G4069"
+],
+"peruda": [
+"H6514",
+null
+],
+"peter": [
+null,
+"G4074"
+],
+"pethahiah": [
+"H6611",
+null
+],
+"pethor": [
+"H6604",
+null
+],
+"pethuel": [
+"H6602",
+null
+],
+"peullethai": [
+"H6469",
+null
+],
+"peulthai": [
+"H6469",
+null
+],
+"phalec": [
+"H6389",
+"G5317"
+],
+"phallu": [
+"H6396",
+null
+],
+"phalti": [
+"H6406",
+null
+],
+"phanuel": [
+null,
+"G5323"
+],
+"pharaoh": [
+"H6547",
+"G5328"
+],
+"pharaohneco": [
+"H5224",
+null
+],
+"pharaohnecoh": [
+"H5224",
+null
+],
+"phares": [
+"H6557",
+"G5329"
+],
+"pharez": [
+"H6557",
+null
+],
+"pharisee": [
+null,
+"G5330"
+],
+"pharosh": [
+"H6551",
+null
+],
+"pharpar": [
+"H6554",
+null
+],
+"phaseah": [
+"H6454",
+null
+],
+"phebe": [
+null,
+"G5402"
+],
+"phenice": [
+null,
+"G5405"
+],
+"phichol": [
+"H6369",
+null
+],
+"phicol": [
+"H6369",
+null
+],
+"philadelphia": [
+null,
+"G5359"
+],
+"philemon": [
+null,
+"G5371"
+],
+"philetus": [
+null,
+"G5372"
+],
+"philip": [
+null,
+"G5376"
+],
+"philippi": [
+null,
+"G5375"
+],
+"philippian": [
+null,
+"G5374"
+],
+"philistia": [
+"H6429",
+null
+],
+"philistim": [
+"H6430",
+null
+],
+"philistine": [
+"H6430",
+null
+],
+"philologus": [
+null,
+"G5378"
+],
+"phinehas": [
+"H6372",
+null
+],
+"phlegon": [
+null,
+"G5393"
+],
+"phoebe": [
+null,
+"G5402"
+],
+"phoenicia": [
+null,
+"G5403"
+],
+"phoenix": [
+null,
+"G5405"
+],
+"phrygia": [
+null,
+"G5435"
+],
+"phurah": [
+"H6513",
+null
+],
+"phut": [
+"H6316",
+null
+],
+"phuvah": [
+"H6312",
+null
+],
+"phygellus": [
+null,
+"G5436"
+],
+"phygelus": [
+null,
+"G5436"
+],
+"pi hahiroth": [
+"H6367",
+null
+],
+"pi-beseth": [
+"H6364",
+null
+],
+"pi-hahiroth": [
+"H6367",
+null
+],
+"pilate": [
+null,
+"G4091"
+],
+"pildash": [
+"H6394",
+null
+],
+"pileha": [
+"H6401",
+null
+],
+"pilha": [
+"H6401",
+null
+],
+"piltai": [
+"H6408",
+null
+],
+"pine": [
+"H843",
+null
+],
+"pinon": [
+"H6373",
+null
+],
+"piram": [
+"H6502",
+null
+],
+"pirathon": [
+"H6552",
+null
+],
+"pirathonite": [
+"H6553",
+null
+],
+"pisgah": [
+"H6449",
+null
+],
+"pishon": [
+"H6376",
+null
+],
+"pisidia": [
+null,
+"G4099"
+],
+"pispa": [
+"H6462",
+null
+],
+"pispah": [
+"H6462",
+null
+],
+"pit": [
+"H7845",
+null
+],
+"pithom": [
+"H6619",
+null
+],
+"pithon": [
+"H6377",
+null
+],
+"pleiades": [
+"H3598",
+null
+],
+"pochereth of zebaim": [
+"H6380",
+null
+],
+"pochereth-hazzebaim": [
+"H6380",
+null
+],
+"pontius": [
+null,
+"G4194"
+],
+"pontus": [
+null,
+"G4195"
+],
+"poratha": [
+"H6334",
+null
+],
+"porcius": [
+null,
+"G4201"
+],
+"poti-pherah": [
+"H6319",
+null
+],
+"potiphar": [
+"H6318",
+null
+],
+"potiphera": [
+"H6319",
+null
+],
+"potsherd_gate": [
+"H2777",
+null
+],
+"pottersfield": [
+null,
+"G2763"
+],
+"preparation": [
+null,
+"G3904"
+],
+"preparation_festival": [
+null,
+"G3904"
+],
+"prevail": [
+"H401",
+null
+],
+"prisca": [
+null,
+"G4251"
+],
+"priscilla": [
+null,
+"G4252"
+],
+"prison gate": [
+"H4307",
+null
+],
+"prochorus": [
+null,
+"G4402"
+],
+"procorus": [
+null,
+"G4402"
+],
+"provider": [
+"H7200",
+null
+],
+"ptolemais": [
+"H5910",
+"G4424"
+],
+"puah": [
+"H6326",
+null
+],
+"publican": [
+"H1471",
+"G1482"
+],
+"publius": [
+null,
+"G4196"
+],
+"pudens": [
+null,
+"G4227"
+],
+"pul": [
+"H6322",
+null
+],
+"punite": [
+"H6324",
+null
+],
+"punon": [
+"H6325",
+null
+],
+"pur": [
+"H6332",
+null
+],
+"purah": [
+"H6513",
+null
+],
+"purim": [
+"H6332",
+null
+],
+"put": [
+"H6316",
+null
+],
+"puteoli": [
+null,
+"G4223"
+],
+"puthite": [
+"H6336",
+null
+],
+"puthites": [
+"H6336",
+null
+],
+"putiel": [
+"H6317",
+null
+],
+"puvah": [
+"H6312",
+null
+],
+"pyrrhus": [
+null,
+"G6077"
+],
+"quartus": [
+null,
+"G2890"
+],
+"queen_of_sheba": [
+"H4436",
+"G938"
+],
+"quirinius": [
+null,
+"G2958"
+],
+"raama": [
+"H7484",
+null
+],
+"raamah": [
+"H7484",
+null
+],
+"raamiah": [
+"H7485",
+null
+],
+"raamses": [
+"H7486",
+null
+],
+"rab-mag": [
+"H7248",
+null
+],
+"rab-saris": [
+"H7249",
+null
+],
+"rab-shakeh": [
+"H7262",
+null
+],
+"rabbah": [
+"H7237",
+null
+],
+"rabbath": [
+"H7237",
+null
+],
+"rabbi": [
+null,
+"G4461"
+],
+"rabbith": [
+"H7245",
+null
+],
+"rabboni": [
+null,
+"G4462"
+],
+"rabsaris": [
+"H7249",
+null
+],
+"rabshakeh": [
+"H7262",
+null
+],
+"raca": [
+null,
+"G4469"
+],
+"racal": [
+"H7403",
+null
+],
+"rachab": [
+"H7343",
+"G4477"
+],
+"rachal": [
+"H7403",
+null
+],
+"rachel": [
+"H7354",
+"G4478"
+],
+"raddai": [
+"H7288",
+null
+],
+"ragau": [
+"H7466",
+"G4466"
+],
+"raguel": [
+"H7467",
+null
+],
+"rahab": [
+"H7343",
+"G4460"
+],
+"raham": [
+"H7357",
+null
+],
+"rahel": [
+"H7354",
+"G4478"
+],
+"raised": [
+"H5722",
+null
+],
+"rakal": [
+"H7403",
+null
+],
+"rakem": [
+"H7552",
+null
+],
+"rakkath": [
+"H7557",
+"G5085"
+],
+"rakkon": [
+"H7542",
+null
+],
+"ram": [
+"H7410",
+"G689"
+],
+"ramah": [
+"H7414",
+"G4471"
+],
+"ramath lehi": [
+"H7437",
+null
+],
+"ramath mizpeh": [
+"H7434",
+null
+],
+"ramath-lehi": [
+"H7437",
+null
+],
+"ramath-mizpeh": [
+"H7434",
+null
+],
+"ramathaim a zuphite": [
+"H7436",
+null
+],
+"ramathaim-zophim": [
+"H7436",
+null
+],
+"ramathite": [
+"H7435",
+null
+],
+"ramathites": [
+"H7435",
+null
+],
+"rameses": [
+"H7486",
+null
+],
+"ramiah": [
+"H7422",
+null
+],
+"ramoth": [
+"H7216",
+null
+],
+"ramoth-gilead": [
+"H7418",
+null
+],
+"rapha": [
+"H7497",
+null
+],
+"raphah": [
+"H7498",
+null
+],
+"raphaites": [
+"H7497",
+null
+],
+"raphu": [
+"H7505",
+null
+],
+"reaia": [
+"H7211",
+null
+],
+"reaiah": [
+"H7211",
+null
+],
+"reba": [
+"H7254",
+null
+],
+"rebekah": [
+"H7259",
+"G4479"
+],
+"rebellion": [
+"H4805",
+null
+],
+"recah": [
+"H7397",
+null
+],
+"rechab": [
+"H7394",
+null
+],
+"rechabite": [
+"H7397",
+null
+],
+"rechah": [
+"H7397",
+null
+],
+"red_sea": [
+"H5488",
+"G2063"
+],
+"reelaiah": [
+"H7480",
+null
+],
+"regem": [
+"H7276",
+null
+],
+"regem melek": [
+"H7278",
+null
+],
+"regem-melech": [
+"H7278",
+null
+],
+"region": [
+"H2256",
+null
+],
+"rehabiah": [
+"H7345",
+null
+],
+"rehob": [
+"H7340",
+null
+],
+"rehoboam": [
+"H7346",
+"G4497"
+],
+"rehoboth": [
+"H7344",
+null
+],
+"rehoboth-ir": [
+"H7344",
+null
+],
+"rehum": [
+"H7348",
+null
+],
+"rei": [
+"H7472",
+null
+],
+"rekab": [
+"H7394",
+null
+],
+"rekabite": [
+"H7397",
+null
+],
+"rekah": [
+"H7397",
+null
+],
+"rekem": [
+"H7552",
+null
+],
+"remaliah": [
+"H7425",
+null
+],
+"remeth": [
+"H7432",
+null
+],
+"remmon": [
+"H7417",
+null
+],
+"removed": [
+"H1540",
+null
+],
+"removed because they are people: esau; abiezer": [
+null,
+null
+],
+"rephael": [
+"H7501",
+null
+],
+"rephah": [
+"H7506",
+null
+],
+"rephaiah": [
+"H7509",
+null
+],
+"rephaim": [
+"H7497",
+null
+],
+"rephaim_valley": [
+"H7497",
+null
+],
+"rephan": [
+null,
+"G4481"
+],
+"rephidim": [
+"H7508",
+null
+],
+"resen": [
+"H7449",
+null
+],
+"resheph": [
+"H7566",
+null
+],
+"reu": [
+"H7466",
+"G4466"
+],
+"reuben": [
+"H7205",
+"G4502"
+],
+"reuel": [
+"H7467",
+null
+],
+"reumah": [
+"H7208",
+null
+],
+"rezeph": [
+"H7530",
+null
+],
+"rezia": [
+"H7525",
+null
+],
+"rezin": [
+"H7526",
+null
+],
+"rezon": [
+"H7331",
+null
+],
+"rhegium": [
+null,
+"G4484"
+],
+"rhesa": [
+null,
+"G4488"
+],
+"rhoda": [
+null,
+"G4498"
+],
+"rhodes": [
+null,
+"G4499"
+],
+"ribai": [
+"H7380",
+null
+],
+"riblah": [
+"H7247",
+null
+],
+"righteousness": [
+"H6664",
+null
+],
+"rimmon": [
+"H7417",
+null
+],
+"rimmon perez": [
+"H7428",
+null
+],
+"rimmon-perez": [
+"H7428",
+null
+],
+"rimmono": [
+"H7417",
+null
+],
+"rinnah": [
+"H7441",
+null
+],
+"riphath": [
+"H7384",
+null
+],
+"rissah": [
+"H7446",
+null
+],
+"rithmah": [
+"H7575",
+null
+],
+"rivers": [
+"H2975",
+null
+],
+"rizia": [
+"H7525",
+null
+],
+"rizpah": [
+"H7532",
+null
+],
+"roboam": [
+"H7346",
+"G4497"
+],
+"rock of escape": [
+"H5555",
+null
+],
+"rock_of_escape": [
+"H5555",
+null
+],
+"rodanim": [
+"H1721",
+null
+],
+"rodanites": [
+"H1721",
+null
+],
+"rogelim": [
+"H7274",
+null
+],
+"rohagah": [
+"H7303",
+null
+],
+"rohgah": [
+"H7303",
+null
+],
+"romamti-ezer": [
+"H7320",
+null
+],
+"roman": [
+null,
+"G4514"
+],
+"roman colony": [
+null,
+"G2862"
+],
+"rome": [
+null,
+"G4514"
+],
+"rosh": [
+"H7220",
+null
+],
+"royal of my people": [
+"H5993",
+null
+],
+"rufus": [
+null,
+"G4504"
+],
+"rugged": [
+"H1336",
+null
+],
+"rumah": [
+"H7316",
+null
+],
+"ruth": [
+"H7327",
+"G4503"
+],
+"sabaoth": [
+"H3068",
+"G4519"
+],
+"sabbath": [
+"H7676",
+"G4521"
+],
+"sabbath rest": [
+"H7676",
+"G4520"
+],
+"sabta": [
+"H5454",
+null
+],
+"sabtah": [
+"H5454",
+null
+],
+"sabteca": [
+"H5455",
+null
+],
+"sabtechah": [
+"H5455",
+null
+],
+"sabteka": [
+"H5455",
+null
+],
+"sacar": [
+"H7940",
+null
+],
+"sachar": [
+"H7940",
+null
+],
+"sachia": [
+"H7634",
+null
+],
+"sadducee": [
+null,
+"G4523"
+],
+"sadoc": [
+null,
+"G4524"
+],
+"sahar": [
+"H6713",
+null
+],
+"sakar": [
+"H7940",
+null
+],
+"salah": [
+"H7974",
+null
+],
+"salamis": [
+null,
+"G4529"
+],
+"salathiel": [
+null,
+"G4528"
+],
+"salcah": [
+"H5548",
+null
+],
+"salchah": [
+"H5548",
+null
+],
+"salecah": [
+"H5548",
+null
+],
+"salekah": [
+"H5548",
+null
+],
+"salim": [
+null,
+"G4530"
+],
+"sallai": [
+"H5543",
+null
+],
+"sallu": [
+"H5543",
+null
+],
+"salma": [
+"H8007",
+null
+],
+"salmon": [
+"H8007",
+"G4533"
+],
+"salmone": [
+null,
+"G4534"
+],
+"salome": [
+null,
+"G2266"
+],
+"salt_sea": [
+"H4417",
+null
+],
+"salt_valley": [
+"H4417",
+null
+],
+"salu": [
+"H5543",
+null
+],
+"samaria": [
+"H8111",
+"G4540"
+],
+"samgar": [
+"H5562",
+null
+],
+"samgar-nebo": [
+"H5562",
+null
+],
+"samlah": [
+"H8072",
+null
+],
+"samos": [
+null,
+"G4544"
+],
+"samothrace": [
+null,
+"G4543"
+],
+"samson": [
+"H8123",
+"G4546"
+],
+"samuel": [
+"H8050",
+"G4545"
+],
+"sanballat": [
+"H5571",
+null
+],
+"sanctuary": [
+"H6944",
+null
+],
+"sansannah": [
+"H5578",
+null
+],
+"saph": [
+"H5593",
+null
+],
+"sapphira": [
+null,
+"G4551"
+],
+"sara": [
+"H8283",
+"G4564"
+],
+"sarah": [
+"H8283",
+"G4564"
+],
+"sarai": [
+"H8297",
+null
+],
+"saraph": [
+"H8315",
+null
+],
+"sardis": [
+"H5614",
+"G4554"
+],
+"sargon": [
+"H5623",
+null
+],
+"sarid": [
+"H8301",
+null
+],
+"saron": [
+"H8289",
+"G4565"
+],
+"saruch": [
+"H8286",
+"G4562"
+],
+"satan": [
+"H7854",
+"G954"
+],
+"saul": [
+"H7586",
+"G4549"
+],
+"sceva": [
+null,
+"G4630"
+],
+"scorpion": [
+"H4610",
+null
+],
+"scoundrel": [
+"H1100",
+null
+],
+"scythian": [
+null,
+"G4658"
+],
+"scythians": [
+null,
+"G4658"
+],
+"sea of galilee": [
+"H3672",
+null
+],
+"sea of the plain": [
+"H6160",
+null
+],
+"seba": [
+"H5434",
+null
+],
+"sebam": [
+"H7643",
+null
+],
+"secacah": [
+"H5527",
+null
+],
+"sechu": [
+"H7906",
+null
+],
+"second quarter": [
+"H4932",
+null
+],
+"second_quarter": [
+"H4932",
+null
+],
+"secu": [
+"H7906",
+null
+],
+"secundus": [
+null,
+"G4580"
+],
+"segib": [
+"H7687",
+null
+],
+"segub": [
+"H7687",
+null
+],
+"seir": [
+"H8165",
+null
+],
+"seir_mount": [
+"H8165",
+null
+],
+"seirah": [
+"H8167",
+null
+],
+"sekakah": [
+"H5527",
+null
+],
+"seku": [
+"H7906",
+null
+],
+"sela": [
+"H5554",
+null
+],
+"sela hammahlekoth": [
+"H5555",
+null
+],
+"selah": [
+"H5542",
+null
+],
+"seled": [
+"H5540",
+null
+],
+"seleucia": [
+null,
+"G4581"
+],
+"sem": [
+"H8035",
+"G4590"
+],
+"semachiah": [
+"H5565",
+null
+],
+"semei": [
+null,
+"G4584"
+],
+"semein": [
+null,
+"G4584"
+],
+"senaah": [
+"H5570",
+null
+],
+"seneh": [
+"H5573",
+null
+],
+"senir": [
+"H8149",
+null
+],
+"sennacherib": [
+"H5576",
+null
+],
+"seorim": [
+"H8188",
+null
+],
+"separated immanuel/emmanuel from jesus; hermes/mercurius from paul; jupiter from barnabas; jethro/deuel; judith": [
+null,
+null
+],
+"sephar": [
+"H5611",
+null
+],
+"sepharad": [
+"H5614",
+"G4554"
+],
+"sepharim": [
+"H5616",
+null
+],
+"sepharvaim": [
+"H5617",
+null
+],
+"sepharvites": [
+"H5617",
+null
+],
+"serah": [
+"H8294",
+null
+],
+"seraiah": [
+"H8304",
+null
+],
+"seraph": [
+"H8314",
+null
+],
+"sered": [
+"H5624",
+null
+],
+"seredite": [
+"H5625",
+null
+],
+"sergius_paulus": [
+null,
+"G4588"
+],
+"serug": [
+"H8286",
+"G4562"
+],
+"seth": [
+"H8352",
+"G4589"
+],
+"sethur": [
+"H5639",
+null
+],
+"shaalabbin": [
+"H8169",
+null
+],
+"shaalbim": [
+"H8169",
+null
+],
+"shaalbonite": [
+"H8170",
+null
+],
+"shaalim": [
+"H8171",
+null
+],
+"shaaph": [
+"H8174",
+null
+],
+"shaaraim": [
+"H8189",
+null
+],
+"shaashgaz": [
+"H8190",
+null
+],
+"shabbethai": [
+"H7678",
+null
+],
+"shachia": [
+"H7634",
+null
+],
+"shage": [
+"H7681",
+null
+],
+"shagee": [
+"H7681",
+null
+],
+"shaharaim": [
+"H7842",
+null
+],
+"shahazimah": [
+"H7831",
+null
+],
+"shahazumah": [
+"H7831",
+null
+],
+"shalishah": [
+"H8031",
+null
+],
+"shallecheth": [
+"H7996",
+null
+],
+"shallum": [
+"H7967",
+null
+],
+"shallun": [
+"H7968",
+null
+],
+"shalmai": [
+"H8014",
+null
+],
+"shalman": [
+"H8020",
+null
+],
+"shalmaneser": [
+"H8022",
+null
+],
+"shalom": [
+"H7965",
+null
+],
+"shama": [
+"H8091",
+null
+],
+"shamariah": [
+"H8114",
+null
+],
+"shamed": [
+"H8106",
+null
+],
+"shamer": [
+"H8106",
+null
+],
+"shamgar": [
+"H8044",
+null
+],
+"shamhuth": [
+"H8049",
+null
+],
+"shamir": [
+"H8069",
+null
+],
+"shamlai": [
+"H8073",
+null
+],
+"shamma": [
+"H8037",
+null
+],
+"shammah": [
+"H8037",
+null
+],
+"shammai": [
+"H8060",
+null
+],
+"shammoth": [
+"H8054",
+null
+],
+"shammua": [
+"H8051",
+null
+],
+"shammuah": [
+"H8051",
+null
+],
+"shamsherai": [
+"H8125",
+null
+],
+"shamur": [
+"H8053",
+null
+],
+"shapham": [
+"H8223",
+null
+],
+"shaphan": [
+"H8227",
+null
+],
+"shaphat": [
+"H8202",
+null
+],
+"shaphir": [
+"H8208",
+null
+],
+"sharai": [
+"H8298",
+null
+],
+"sharar": [
+"H8325",
+null
+],
+"sharezer": [
+"H8272",
+null
+],
+"sharon": [
+"H8289",
+"G4565"
+],
+"sharonite": [
+"H8290",
+null
+],
+"sharuhen": [
+"H8287",
+null
+],
+"shashai": [
+"H8343",
+null
+],
+"shashak": [
+"H8349",
+null
+],
+"shaul": [
+"H7586",
+null
+],
+"shaulite": [
+"H7587",
+null
+],
+"shaveh": [
+"H7740",
+null
+],
+"shaveh kiriathaim": [
+"H7740",
+null
+],
+"shavsha": [
+"H7798",
+null
+],
+"she": [
+"H7354",
+null
+],
+"sheal": [
+"H7594",
+null
+],
+"shealtiel": [
+"H7597",
+"G4528"
+],
+"shear-jashub": [
+"H7610",
+null
+],
+"sheariah": [
+"H8187",
+null
+],
+"shearing house": [
+"H1044",
+null
+],
+"sheba": [
+"H7652",
+"G3558"
+],
+"shebaniah": [
+"H7645",
+null
+],
+"shebarim": [
+"H7671",
+null
+],
+"shebat": [
+"H7627",
+null
+],
+"sheber": [
+"H7669",
+null
+],
+"shebna": [
+"H7644",
+null
+],
+"shebnah": [
+"H7644",
+null
+],
+"shebuel": [
+"H7619",
+null
+],
+"shecaniah": [
+"H7935",
+null
+],
+"shechaniah": [
+"H7935",
+null
+],
+"shechem": [
+"H7928",
+"G4966"
+],
+"shechemite": [
+"H7930",
+null
+],
+"shedeur": [
+"H7707",
+null
+],
+"sheep_gate": [
+"H6629",
+"G4262"
+],
+"sheerah": [
+"H7609",
+null
+],
+"shehariah": [
+"H7841",
+null
+],
+"shekaniah": [
+"H7935",
+null
+],
+"shelah": [
+"H7974",
+"G4527"
+],
+"shelanite": [
+"H8024",
+null
+],
+"shelemiah": [
+"H8018",
+null
+],
+"sheleph": [
+"H8026",
+null
+],
+"shelesh": [
+"H8028",
+null
+],
+"shelomi": [
+"H8015",
+null
+],
+"shelomith": [
+"H8019",
+null
+],
+"shelomoth": [
+"H8013",
+null
+],
+"shelumiel": [
+"H8017",
+null
+],
+"shem": [
+"H8035",
+"G4590"
+],
+"shema": [
+"H8087",
+null
+],
+"shemaah": [
+"H8094",
+null
+],
+"shemaiah": [
+"H8098",
+null
+],
+"shemariah": [
+"H8114",
+null
+],
+"shemeber": [
+"H8038",
+null
+],
+"shemed": [
+"H8106",
+null
+],
+"shemer": [
+"H8106",
+null
+],
+"shemida": [
+"H8061",
+null
+],
+"shemidaite": [
+"H8062",
+null
+],
+"sheminith": [
+"H8067",
+null
+],
+"shemiramoth": [
+"H8070",
+null
+],
+"shemirimoth": [
+"H8070",
+null
+],
+"shemuel": [
+"H8050",
+null
+],
+"shen": [
+"H8129",
+null
+],
+"shenazar": [
+"H8137",
+null
+],
+"shenazzar": [
+"H8137",
+null
+],
+"sheol": [
+"H7585",
+"G1067"
+],
+"shepham": [
+"H8221",
+null
+],
+"shephathiah": [
+"H8203",
+null
+],
+"shephatiah": [
+"H8203",
+null
+],
+"shephelah": [
+"H8219",
+null
+],
+"shepher_mount": [
+"H8234",
+null
+],
+"shephi": [
+"H8195",
+null
+],
+"shepho": [
+"H8195",
+null
+],
+"shephupham": [
+"H8197",
+null
+],
+"shephuphan": [
+"H8197",
+null
+],
+"sherah": [
+"H7609",
+null
+],
+"sherebiah": [
+"H8274",
+null
+],
+"sheresh": [
+"H8329",
+null
+],
+"sherezer": [
+"H8272",
+null
+],
+"sheshach": [
+"H8347",
+null
+],
+"sheshai": [
+"H8344",
+null
+],
+"sheshak": [
+"H8347",
+null
+],
+"sheshan": [
+"H8348",
+null
+],
+"shethar": [
+"H8369",
+null
+],
+"shethar-bozenai": [
+"H8370",
+null
+],
+"shethar-boznai": [
+"H8370",
+null
+],
+"sheva": [
+"H7724",
+null
+],
+"sheya": [
+"H7864",
+null
+],
+"shibah": [
+"H7656",
+null
+],
+"shibboleth": [
+"H7641",
+null
+],
+"shibolet": [
+"H7641",
+null
+],
+"shiggaion": [
+"H7692",
+null
+],
+"shigionoth": [
+"H7692",
+null
+],
+"shihor": [
+"H7883",
+null
+],
+"shihor libnath": [
+"H7884",
+null
+],
+"shihor-libnath": [
+"H7884",
+null
+],
+"shikkeron": [
+"H7942",
+null
+],
+"shilhi": [
+"H7977",
+null
+],
+"shilhim": [
+"H7978",
+null
+],
+"shillem": [
+"H8006",
+null
+],
+"shillemite": [
+"H8016",
+null
+],
+"shiloah": [
+"H7975",
+null
+],
+"shiloh": [
+"H7886",
+null
+],
+"shiloni": [
+"H8023",
+null
+],
+"shilonites": [
+"H8023",
+null
+],
+"shilshah": [
+"H8030",
+null
+],
+"shimea": [
+"H8092",
+null
+],
+"shimeah": [
+"H8039",
+null
+],
+"shimeam": [
+"H8043",
+null
+],
+"shimeath": [
+"H8100",
+null
+],
+"shimeathite": [
+"H8101",
+null
+],
+"shimei": [
+"H8096",
+null
+],
+"shimeite": [
+"H8097",
+null
+],
+"shimeon": [
+"H8095",
+null
+],
+"shimhi": [
+"H8096",
+null
+],
+"shimi": [
+"H8096",
+null
+],
+"shimite": [
+"H8097",
+null
+],
+"shimon": [
+"H7889",
+null
+],
+"shimrath": [
+"H8119",
+null
+],
+"shimri": [
+"H8113",
+null
+],
+"shimrith": [
+"H8116",
+null
+],
+"shimron": [
+"H8110",
+null
+],
+"shimron meron": [
+"H8112",
+null
+],
+"shimron-meron": [
+"H8112",
+null
+],
+"shimronite": [
+"H8117",
+null
+],
+"shimshai": [
+"H8124",
+null
+],
+"shinab": [
+"H8134",
+null
+],
+"shinar": [
+"H8152",
+null
+],
+"shion": [
+"H7866",
+null
+],
+"shiphi": [
+"H8230",
+null
+],
+"shiphmite": [
+"H8225",
+null
+],
+"shiphmites": [
+"H8225",
+null
+],
+"shiphrah": [
+"H8236",
+null
+],
+"shiphtan": [
+"H8204",
+null
+],
+"shirtai": [
+"H7861",
+null
+],
+"shisha": [
+"H7894",
+null
+],
+"shishak": [
+"H7895",
+null
+],
+"shitrai": [
+"H7861",
+null
+],
+"shittim": [
+"H7851",
+null
+],
+"shittim_valley": [
+"H7851",
+null
+],
+"shiza": [
+"H7877",
+null
+],
+"shoa": [
+"H7772",
+null
+],
+"shobab": [
+"H7727",
+null
+],
+"shobach": [
+"H7731",
+null
+],
+"shobai": [
+"H7630",
+null
+],
+"shobak": [
+"H7731",
+null
+],
+"shobal": [
+"H7732",
+null
+],
+"shobek": [
+"H7733",
+null
+],
+"shobi": [
+"H7629",
+null
+],
+"shochoh": [
+"H7755",
+null
+],
+"shoco": [
+"H7755",
+null
+],
+"shoham": [
+"H7719",
+null
+],
+"shomer": [
+"H7763",
+null
+],
+"shophach": [
+"H7780",
+null
+],
+"shophak": [
+"H7780",
+null
+],
+"shrine": [
+"H5522",
+null
+],
+"shua": [
+"H7774",
+null
+],
+"shuah": [
+"H7744",
+null
+],
+"shual": [
+"H7777",
+null
+],
+"shubael": [
+"H7619",
+null
+],
+"shuhah": [
+"H7746",
+null
+],
+"shuhamite": [
+"H7749",
+null
+],
+"shuhite": [
+"H7747",
+null
+],
+"shuhites": [
+"H7747",
+null
+],
+"shulammite": [
+"H7759",
+null
+],
+"shulammites": [
+"H7759",
+null
+],
+"shumathite": [
+"H8126",
+null
+],
+"shumathites": [
+"H8126",
+null
+],
+"shunammite": [
+"H7767",
+null
+],
+"shunammites": [
+"H7767",
+null
+],
+"shunem": [
+"H7766",
+null
+],
+"shuni": [
+"H7764",
+null
+],
+"shunite": [
+"H7765",
+null
+],
+"shupham": [
+"H8197",
+null
+],
+"shuphamite": [
+"H7781",
+null
+],
+"shuppim": [
+"H8206",
+null
+],
+"shur": [
+"H7793",
+null
+],
+"shushak": [
+"H7895",
+null
+],
+"shushan eduth": [
+"H7802",
+null
+],
+"shushan_eduth": [
+"H7802",
+null
+],
+"shuthelah": [
+"H7803",
+null
+],
+"shuthelahite": [
+"H8364",
+null
+],
+"sia": [
+"H5517",
+null
+],
+"siaha": [
+"H5517",
+null
+],
+"sibbecai": [
+"H5444",
+null
+],
+"sibbechai": [
+"H5444",
+null
+],
+"sibmah": [
+"H7643",
+null
+],
+"sibraim": [
+"H5453",
+null
+],
+"siddim_valley": [
+"H7708",
+null
+],
+"sidon": [
+"H6721",
+"G4605"
+],
+"sihon": [
+"H5511",
+null
+],
+"sihor": [
+"H7883",
+null
+],
+"sikkuth": [
+"H5522",
+null
+],
+"silas": [
+null,
+"G4609"
+],
+"silla": [
+"H5538",
+null
+],
+"siloah": [
+"H7975",
+null
+],
+"silvanus": [
+null,
+"G4610"
+],
+"simeon": [
+"H8095",
+"G4826"
+],
+"simon": [
+null,
+"G4613"
+],
+"simri": [
+"H8113",
+null
+],
+"sin": [
+"H5512",
+null
+],
+"sinai": [
+"H5514",
+"G4614"
+],
+"sinai_wilderness": [
+"H4057",
+null
+],
+"sinim": [
+"H5515",
+null
+],
+"sinite": [
+"H5513",
+null
+],
+"sinites": [
+"H5513",
+null
+],
+"siphmoth": [
+"H8224",
+null
+],
+"sippai": [
+"H5598",
+null
+],
+"sirah": [
+"H5626",
+null
+],
+"sisamai": [
+"H5581",
+null
+],
+"sisera": [
+"H5516",
+null
+],
+"sismai": [
+"H5581",
+null
+],
+"sister_of_tahpenes": [
+"H8472",
+null
+],
+"sithri": [
+"H5644",
+null
+],
+"sitnah": [
+"H7856",
+null
+],
+"sivan": [
+"H5510",
+null
+],
+"skull": [
+null,
+"G2898"
+],
+"slope": [
+"H7704",
+null
+],
+"smyrna": [
+null,
+"G4667"
+],
+"so": [
+"H5471",
+null
+],
+"socho": [
+"H7755",
+null
+],
+"sochoh": [
+"H7755",
+null
+],
+"soco": [
+"H7755",
+null
+],
+"socoh": [
+"H7755",
+null
+],
+"sodi": [
+"H5476",
+null
+],
+"sodom": [
+"H5467",
+"G4670"
+],
+"soko": [
+"H7755",
+null
+],
+"sokoh": [
+"H7755",
+null
+],
+"solomon": [
+"H8010",
+"G4672"
+],
+"solomon's_portico": [
+null,
+"G4672"
+],
+"some estrong numbers are already fully disambiguated eg dedan": [
+null,
+null
+],
+"some estrong numbers are partially disambiguated eg cush": [
+null,
+null
+],
+"son of abinadab": [
+"H1125",
+null
+],
+"son of dekar": [
+"H1128",
+null
+],
+"son of geber": [
+"H1127",
+null
+],
+"son of hesed": [
+"H1136",
+null
+],
+"son of hur": [
+"H1133",
+null
+],
+"son of jonah": [
+null,
+"G920"
+],
+"son_of_jashen": [
+"H3464",
+null
+],
+"son_of_joiada": [
+"H3111",
+null
+],
+"sons": [
+"H1137",
+null
+],
+"sopater": [
+null,
+"G4986"
+],
+"sophereth": [
+"H5618",
+null
+],
+"sorek_valley": [
+"H7796",
+null
+],
+"sosipater": [
+null,
+"G4989"
+],
+"sosthenes": [
+null,
+"G4988"
+],
+"sotai": [
+"H5479",
+null
+],
+"spain": [
+null,
+"G4681"
+],
+"spear": [
+"H6112",
+null
+],
+"spelled abel-shittim as shittim": [
+null,
+null
+],
+"spelled gesham": [
+null,
+null
+],
+"stachys": [
+null,
+"G4720"
+],
+"stephanas": [
+null,
+"G4734"
+],
+"stephen": [
+null,
+"G4736"
+],
+"steward": [
+"H4453",
+null
+],
+"stoic": [
+null,
+"G4770"
+],
+"stone": [
+"H59",
+null
+],
+"straight": [
+null,
+"G2117"
+],
+"stronghold": [
+"H4869",
+null
+],
+"suah": [
+"H5477",
+null
+],
+"sucathite": [
+"H7756",
+null
+],
+"succoth": [
+"H5523",
+null
+],
+"succoth benoth": [
+"H5524",
+null
+],
+"succoth-benoth": [
+"H5524",
+null
+],
+"sukkiim": [
+"H5525",
+null
+],
+"suph": [
+"H5489",
+null
+],
+"suphah": [
+"H5492",
+null
+],
+"supreme commander": [
+"H8661",
+null
+],
+"sur": [
+"H5495",
+null
+],
+"susa": [
+"H7800",
+null
+],
+"susanchite": [
+"H7801",
+null
+],
+"susanna": [
+null,
+"G4677"
+],
+"susi": [
+"H5485",
+null
+],
+"sychar": [
+null,
+"G4965"
+],
+"sychem": [
+"H7927",
+null
+],
+"syene": [
+"H5482",
+null
+],
+"syntyche": [
+null,
+"G4941"
+],
+"syracuse": [
+null,
+"G4946"
+],
+"syria": [
+"H758",
+"G4947"
+],
+"syrophoenician": [
+"H758",
+"G4949"
+],
+"syrtis": [
+null,
+"G4950"
+],
+"taanach": [
+"H8590",
+null
+],
+"taanath shiloh": [
+"H8387",
+null
+],
+"taanath-shiloh": [
+"H8387",
+null
+],
+"tabbaoth": [
+"H2884",
+null
+],
+"tabbath": [
+"H2888",
+null
+],
+"tabeal": [
+"H2870",
+null
+],
+"tabeel": [
+"H2870",
+null
+],
+"taberah": [
+"H8404",
+null
+],
+"tabernacle": [
+"H5522",
+null
+],
+"tabernacles": [
+null,
+"G4634"
+],
+"tabitha": [
+null,
+"G5000"
+],
+"tabor": [
+"H8396",
+null
+],
+"tabor_mount": [
+"H8396",
+null
+],
+"tabrimmon": [
+"H2886",
+null
+],
+"tabrimon": [
+"H2886",
+null
+],
+"tachmonite": [
+"H8461",
+null
+],
+"tadmor": [
+"H8412",
+null
+],
+"tahan": [
+"H8465",
+null
+],
+"tahanite": [
+"H8470",
+null
+],
+"tahash": [
+"H8477",
+null
+],
+"tahath": [
+"H8480",
+null
+],
+"tahchemonite": [
+"H8461",
+null
+],
+"tahkemonite": [
+"H8461",
+null
+],
+"tahpanhes": [
+"H8471",
+null
+],
+"tahpenes": [
+"H8472",
+null
+],
+"tahrea": [
+"H8475",
+null
+],
+"tahtim hodshi": [
+"H8483",
+null
+],
+"tahtim-hodshi": [
+"H8483",
+null
+],
+"talmai": [
+"H8526",
+null
+],
+"talmon": [
+"H2929",
+null
+],
+"tamar": [
+"H8559",
+"G2283"
+],
+"tammuz": [
+"H8542",
+null
+],
+"tanhumeth": [
+"H8576",
+null
+],
+"taphath": [
+"H2955",
+null
+],
+"tappuah": [
+"H8599",
+null
+],
+"taralah": [
+"H8634",
+null
+],
+"tarea": [
+"H8390",
+null
+],
+"tarpelite": [
+"H2967",
+null
+],
+"tarshish": [
+"H8659",
+null
+],
+"tarsus": [
+null,
+"G5019"
+],
+"tartak": [
+"H8662",
+null
+],
+"tartan": [
+"H8661",
+null
+],
+"tartarus": [
+"H7585",
+"G5020"
+],
+"tatnai": [
+"H8674",
+null
+],
+"tattenai": [
+"H8674",
+null
+],
+"tebah": [
+"H2875",
+null
+],
+"tebaliah": [
+"H2882",
+null
+],
+"tebeth": [
+"H2887",
+null
+],
+"tehaphnehes": [
+"H8471",
+null
+],
+"tehinnah": [
+"H8468",
+null
+],
+"tekoa": [
+"H8620",
+null
+],
+"tekoah": [
+"H8620",
+null
+],
+"tekoitess": [
+"H8621",
+null
+],
+"tel aviv": [
+"H8512",
+null
+],
+"tel harsha": [
+"H8521",
+null
+],
+"tel melah": [
+"H8528",
+null
+],
+"tel-abib": [
+"H8512",
+null
+],
+"tel-harsha": [
+"H8521",
+null
+],
+"tel-melah": [
+"H8528",
+null
+],
+"telah": [
+"H8520",
+null
+],
+"telaim": [
+"H2923",
+null
+],
+"telassar": [
+"H8515",
+null
+],
+"telem": [
+"H2928",
+null
+],
+"tema": [
+"H8485",
+null
+],
+"temah": [
+"H8547",
+null
+],
+"teman": [
+"H8487",
+null
+],
+"temanite": [
+"H8489",
+null
+],
+"temeni": [
+"H8488",
+null
+],
+"temple": [
+"H1006",
+null
+],
+"temple of ashtoroth": [
+"H1045",
+null
+],
+"temple of the ashoreths": [
+"H1045",
+null
+],
+"temple of the sun": [
+"H1053",
+null
+],
+"terah": [
+"H8646",
+"G2291"
+],
+"teraphim": [
+"H8655",
+null
+],
+"teresh": [
+"H8657",
+null
+],
+"terror on every side": [
+"H4036",
+null
+],
+"tertius": [
+null,
+"G5060"
+],
+"tertullus": [
+null,
+"G5061"
+],
+"thaddaeus": [
+null,
+"G2280"
+],
+"thahash": [
+"H8477",
+null
+],
+"thamar": [
+"H8559",
+"G2283"
+],
+"thara": [
+"H8646",
+"G2291"
+],
+"tharshish": [
+"H8659",
+null
+],
+"that is": [
+"H1723",
+null
+],
+"that sat in the seat": [
+"H3429",
+null
+],
+"the adam": [
+"H120",
+null
+],
+"the edge of the city": [
+"H1023",
+null
+],
+"the exhaustive lists of refs were created from these texts. for 2nd + 3rd occurrences of a name in the same verse, reference appended with \"a\", \"b\" etc.  - see e.g. abel": [
+null,
+null
+],
+"the great man": [
+"H1419",
+null
+],
+"the king": [
+"H4428",
+null
+],
+"the last house": [
+"H1023",
+null
+],
+"the man": [
+"H120",
+null
+],
+"the purpose is to disambiguate those individuals who currently have the same strong number, such as adam (h0121g) who shares the same tag as the place called adam at jos.3.16, and individuals who share an alternate name with another, such as jonadab": [
+null,
+null
+],
+"the stone pavement": [
+null,
+"G3038"
+],
+"thebes": [
+"H4996",
+null
+],
+"thebez": [
+"H8405",
+null
+],
+"their king": [
+"H4428",
+null
+],
+"theophilus": [
+null,
+"G2321"
+],
+"thessalonian": [
+null,
+"G2331"
+],
+"thessalonians": [
+null,
+"G2331"
+],
+"thessalonica": [
+null,
+"G2332"
+],
+"theudas": [
+null,
+"G2333"
+],
+"they": [
+"H4713",
+null
+],
+"thine army": [
+"H2428",
+null
+],
+"thomas": [
+null,
+"G2381"
+],
+"those of judah": [
+"H3064",
+null
+],
+"three_taverns": [
+null,
+"G5140"
+],
+"thummim": [
+"H8550",
+null
+],
+"thyatira": [
+null,
+"G2363"
+],
+"tiberius": [
+null,
+"G5086"
+],
+"tibhath": [
+"H2880",
+null
+],
+"tibni": [
+"H8402",
+null
+],
+"tidal": [
+"H8413",
+null
+],
+"tiglath-pileser": [
+"H8407",
+null
+],
+"tigris": [
+"H2313",
+null
+],
+"tikvah": [
+"H8616",
+null
+],
+"tikvath": [
+"H8445",
+null
+],
+"tilgath-pilneser": [
+"H8407",
+null
+],
+"tilon": [
+"H8436",
+null
+],
+"timaeus": [
+null,
+"G5090"
+],
+"timna": [
+"H8555",
+null
+],
+"timnah": [
+"H8553",
+null
+],
+"timnath heres": [
+"H8556",
+null
+],
+"timnath serah": [
+"H8556",
+null
+],
+"timnath-heres": [
+"H8556",
+null
+],
+"timnath-serah": [
+"H8556",
+null
+],
+"timnite": [
+"H8554",
+null
+],
+"timnites": [
+"H8554",
+null
+],
+"timon": [
+null,
+"G5096"
+],
+"timotheus": [
+null,
+"G5095"
+],
+"timothy": [
+null,
+"G5095"
+],
+"tiphsah": [
+"H8607",
+null
+],
+"tiras": [
+"H8494",
+null
+],
+"tirathite": [
+"H8654",
+null
+],
+"tirhakah": [
+"H8640",
+null
+],
+"tirhanah": [
+"H8647",
+null
+],
+"tiria": [
+"H8493",
+null
+],
+"tirzah": [
+"H8656",
+null
+],
+"tishbe": [
+"H8453",
+null
+],
+"tishbite": [
+"H8664",
+null
+],
+"titius": [
+null,
+"G6084"
+],
+"title - misc: aramaic": [
+null,
+null
+],
+"title - musical term or song title: selah": [
+null,
+null
+],
+"title - name of a month, festival, season or technical term: elul": [
+null,
+null
+],
+"title - name of a non-physical personage or place or monster: sheol|hell": [
+null,
+null
+],
+"title of gentilic that is non-geographical and non-personal, or a leader: rabbi": [
+null,
+null
+],
+"titus": [
+null,
+"G5103"
+],
+"tizite": [
+"H8491",
+null
+],
+"tizites": [
+"H8491",
+null
+],
+"to abel and beth-maachah": [
+"H62",
+null
+],
+"to abel beth maakah": [
+"H62",
+null
+],
+"to abel of beth-maacah": [
+"H62",
+null
+],
+"toah": [
+"H8430",
+null
+],
+"tob": [
+"H2897",
+null
+],
+"tob-adonijah": [
+"H2899",
+null
+],
+"tobadonijah": [
+"H2899",
+null
+],
+"tobiah": [
+"H2900",
+null
+],
+"tobijah": [
+"H2900",
+null
+],
+"tochen": [
+"H8507",
+null
+],
+"togarmah": [
+"H8425",
+null
+],
+"tohu": [
+"H8459",
+null
+],
+"toi": [
+"H8583",
+null
+],
+"tokahath": [
+"H8445",
+null
+],
+"tokhath": [
+"H8445",
+null
+],
+"tola": [
+"H8439",
+null
+],
+"tolad": [
+"H8434",
+null
+],
+"tolaite": [
+"H8440",
+null
+],
+"tolon": [
+"H8436",
+null
+],
+"tophel": [
+"H8603",
+null
+],
+"tophet": [
+"H8613",
+null
+],
+"topheth": [
+"H8612",
+null
+],
+"tophetteh": [
+"H8613",
+null
+],
+"tou": [
+"H8583",
+null
+],
+"tower": [
+"H4024",
+null
+],
+"tower of edar": [
+"H4029",
+null
+],
+"tower of eder": [
+"H4029",
+null
+],
+"tower_of_eder": [
+"H4029",
+null
+],
+"tower_of_hananel": [
+"H2606",
+null
+],
+"tower_of_the_hundred": [
+"H4026",
+null
+],
+"tower_of_the_ovens": [
+"H4026",
+null
+],
+"trachonitis": [
+null,
+"G5139"
+],
+"trading": [
+"H3667",
+null
+],
+"travelers_valley": [
+"H1516",
+null
+],
+"treasury": [
+null,
+"G2878"
+],
+"tribute": [
+"H7886",
+null
+],
+"troas": [
+null,
+"G5174"
+],
+"trogyllium": [
+null,
+"G5175"
+],
+"trophimus": [
+null,
+"G5161"
+],
+"troublemakers": [
+"H1100",
+null
+],
+"tryphaena": [
+null,
+"G5170"
+],
+"tryphena": [
+null,
+"G5170"
+],
+"tryphosa": [
+null,
+"G5173"
+],
+"tubal": [
+"H8422",
+null
+],
+"tubal-cain": [
+"H8423",
+null
+],
+"turning": [
+"H4740",
+null
+],
+"twin": [
+null,
+"G1324"
+],
+"tychicus": [
+null,
+"G5190"
+],
+"tyrannus": [
+null,
+"G5181"
+],
+"tyre": [
+"H6865",
+"G5183"
+],
+"tyrian": [
+"H6876",
+null
+],
+"tyrus": [
+"H6865",
+null
+],
+"ucal": [
+"H401",
+null
+],
+"uel": [
+"H177",
+null
+],
+"ulai": [
+"H195",
+null
+],
+"ulam": [
+"H198",
+null
+],
+"ulla": [
+"H5925",
+null
+],
+"ummah": [
+"H5981",
+null
+],
+"unnamed#1": [
+"H0",
+"G0"
+],
+"unnamed#2": [
+"H0",
+"G0"
+],
+"unnamed#3": [
+"H0",
+"G0"
+],
+"unnamed#4": [
+"H0",
+"G0"
+],
+"unnamed#5": [
+null,
+"G0"
+],
+"unnamed#6": [
+null,
+"G0"
+],
+"unnamed#7": [
+null,
+"G0"
+],
+"unnamed#8": [
+null,
+"G0"
+],
+"unnamed#9": [
+null,
+"G0"
+],
+"unni": [
+"H6042",
+null
+],
+"unno": [
+"H6042",
+null
+],
+"uphaz": [
+"H210",
+null
+],
+"ur": [
+"H218",
+null
+],
+"urbane": [
+null,
+"G3773"
+],
+"urbanus": [
+null,
+"G3773"
+],
+"uri": [
+"H221",
+null
+],
+"uriah": [
+"H223",
+"G3774"
+],
+"urias": [
+"H223",
+"G3774"
+],
+"uriel": [
+"H222",
+null
+],
+"urijah": [
+"H223",
+null
+],
+"urim": [
+"H224",
+"G1212"
+],
+"uthai": [
+"H5793",
+null
+],
+"uz": [
+"H5780",
+null
+],
+"uzai": [
+"H186",
+null
+],
+"uzal": [
+"H187",
+null
+],
+"uzza": [
+"H5798",
+null
+],
+"uzzah": [
+"H5798",
+null
+],
+"uzzen sheerah": [
+"H242",
+null
+],
+"uzzen-sheerah": [
+"H242",
+null
+],
+"uzzi": [
+"H5813",
+null
+],
+"uzzia": [
+"H5814",
+null
+],
+"uzziah": [
+"H5818",
+"G3604"
+],
+"uzziel": [
+"H5816",
+null
+],
+"uzzielite": [
+"H5817",
+null
+],
+"vaizatha": [
+"H2055",
+null
+],
+"vajezatha": [
+"H2055",
+null
+],
+"valley": [
+"H6002",
+null
+],
+"valley_gate": [
+"H1516",
+null
+],
+"valor": [
+"H5543",
+null
+],
+"vaniah": [
+"H2057",
+null
+],
+"vashni": [
+"H2059",
+null
+],
+"vashti": [
+"H2060",
+null
+],
+"vedan": [
+"H2051",
+null
+],
+"vophsi": [
+"H2058",
+null
+],
+"waheb": [
+"H2052",
+null
+],
+"washer's_field": [
+"H3526",
+null
+],
+"water_gate": [
+"H4325",
+null
+],
+"way_of_holiness": [
+"H1870",
+null
+],
+"weary god": [
+"H384",
+null
+],
+"week": [
+"H7676",
+"G4521"
+],
+"weeks": [
+"H7620",
+"G4005"
+],
+"well lahai-roi": [
+"H883",
+null
+],
+"western coastlands": [
+"H3794",
+null
+],
+"when a deliberate difference exists that should be reflected in the translation, the alternate is prefixed, eg abram|abraham": [
+null,
+null
+],
+"white": [
+"H6713",
+null
+],
+"wicked": [
+"H1100",
+null
+],
+"wickedness": [
+"H206",
+null
+],
+"wielded": [
+"H5722",
+null
+],
+"wife from judah": [
+"H3057",
+null
+],
+"wife_of_heli": [
+null,
+"G2242"
+],
+"wilderness": [
+"H6160",
+null
+],
+"wildgoats_rocks": [
+"H3277",
+null
+],
+"wine": [
+"H3120",
+null
+],
+"worn out": [
+"H401",
+null
+],
+"worthless": [
+"H1100",
+null
+],
+"xerxes": [
+"H325",
+null
+],
+"yah": [
+"H3050",
+null
+],
+"yeshan": [
+"H3465",
+null
+],
+"yeshanah": [
+"H3465",
+null
+],
+"yeshanah_gate": [
+"H3465",
+null
+],
+"yiron": [
+"H3375",
+null
+],
+"yob": [
+"H3102",
+null
+],
+"zaanaim": [
+"H6815",
+null
+],
+"zaanan": [
+"H6630",
+null
+],
+"zaanannim": [
+"H6815",
+null
+],
+"zaavan": [
+"H2190",
+null
+],
+"zabad": [
+"H2066",
+null
+],
+"zabbai": [
+"H2079",
+null
+],
+"zabdi": [
+"H2067",
+null
+],
+"zabdiel": [
+"H2068",
+null
+],
+"zabud": [
+"H2071",
+null
+],
+"zabulon": [
+"H2074",
+"G2194"
+],
+"zaccai": [
+"H2140",
+null
+],
+"zacchaeus": [
+null,
+"G2195"
+],
+"zacchur": [
+"H2139",
+null
+],
+"zaccur": [
+"H2139",
+null
+],
+"zachariah": [
+"H2148",
+null
+],
+"zacher": [
+"H2144",
+null
+],
+"zadok": [
+"H6659",
+"G4524"
+],
+"zaham": [
+"H2093",
+null
+],
+"zahar": [
+"H6713",
+null
+],
+"zair": [
+"H6811",
+null
+],
+"zakkai": [
+"H2140",
+null
+],
+"zakkur": [
+"H2139",
+null
+],
+"zalaph": [
+"H6764",
+null
+],
+"zalmon": [
+"H6756",
+null
+],
+"zalmonah": [
+"H6758",
+null
+],
+"zalmunna": [
+"H6759",
+null
+],
+"zamzummin": [
+"H2157",
+null
+],
+"zanoah": [
+"H2182",
+null
+],
+"zaphenath-paneah": [
+"H6847",
+null
+],
+"zaphon": [
+"H6829",
+null
+],
+"zarah": [
+"H2226",
+"G2196"
+],
+"zarephath": [
+"H6886",
+"G4558"
+],
+"zarethan": [
+"H6891",
+null
+],
+"zatthu": [
+"H2240",
+null
+],
+"zattu": [
+"H2240",
+null
+],
+"zavan": [
+"H2190",
+null
+],
+"zaza": [
+"H2117",
+null
+],
+"zealot": [
+null,
+"G2581"
+],
+"zebadiah": [
+"H2069",
+null
+],
+"zebah": [
+"H2078",
+null
+],
+"zebedee": [
+null,
+"G2199"
+],
+"zebidah": [
+"H2080",
+null
+],
+"zebina": [
+"H2081",
+null
+],
+"zeboiim": [
+"H6636",
+null
+],
+"zeboim": [
+"H6650",
+null
+],
+"zeboim_valley": [
+"H6650",
+null
+],
+"zeboyim": [
+"H6636",
+null
+],
+"zebudah": [
+"H2080",
+null
+],
+"zebul": [
+"H2083",
+null
+],
+"zebulun": [
+"H2074",
+"G2194"
+],
+"zebulunite": [
+"H2075",
+null
+],
+"zechariah": [
+"H2148",
+"G2197"
+],
+"zecher": [
+"H2144",
+null
+],
+"zedad": [
+"H6657",
+null
+],
+"zedekiah": [
+"H6667",
+null
+],
+"zeeb": [
+"H2062",
+null
+],
+"zeker": [
+"H2144",
+null
+],
+"zela": [
+"H6762",
+null
+],
+"zelek": [
+"H6768",
+null
+],
+"zelophehad": [
+"H6765",
+null
+],
+"zelotes": [
+null,
+"G2208"
+],
+"zelzah": [
+"H6766",
+null
+],
+"zemaraim": [
+"H6787",
+null
+],
+"zemarite": [
+"H6786",
+null
+],
+"zemarites": [
+"H6786",
+null
+],
+"zemira": [
+"H2160",
+null
+],
+"zemirah": [
+"H2160",
+null
+],
+"zenan": [
+"H6799",
+null
+],
+"zenas": [
+null,
+"G2211"
+],
+"zephaniah": [
+"H6846",
+null
+],
+"zephath": [
+"H6857",
+null
+],
+"zephathah_valley": [
+"H6859",
+null
+],
+"zephi": [
+"H6825",
+null
+],
+"zepho": [
+"H6825",
+null
+],
+"zephonite": [
+"H6831",
+null
+],
+"zer": [
+"H6863",
+null
+],
+"zerah": [
+"H2226",
+"G2196"
+],
+"zerahiah": [
+"H2228",
+null
+],
+"zerahite": [
+"H2227",
+null
+],
+"zered": [
+"H2218",
+null
+],
+"zeredah": [
+"H6868",
+null
+],
+"zererah": [
+"H6888",
+null
+],
+"zeresh": [
+"H2238",
+null
+],
+"zereth": [
+"H6889",
+null
+],
+"zereth shahar": [
+"H6890",
+null
+],
+"zereth-shahar": [
+"H6890",
+null
+],
+"zeri": [
+"H6874",
+null
+],
+"zeror": [
+"H6872",
+null
+],
+"zeruah": [
+"H6871",
+null
+],
+"zerubbabel": [
+"H2216",
+"G2216"
+],
+"zeruiah": [
+"H6870",
+null
+],
+"zetham": [
+"H2241",
+null
+],
+"zethan": [
+"H2133",
+null
+],
+"zethar": [
+"H2242",
+null
+],
+"zeus": [
+null,
+"G2203"
+],
+"zia": [
+"H2127",
+null
+],
+"ziba": [
+"H6717",
+null
+],
+"zibeon": [
+"H6649",
+null
+],
+"zibia": [
+"H6644",
+null
+],
+"zibiah": [
+"H6645",
+null
+],
+"zichri": [
+"H2147",
+null
+],
+"ziddim": [
+"H6661",
+null
+],
+"zidkijah": [
+"H6667",
+null
+],
+"zidon": [
+"H6721",
+null
+],
+"zif": [
+"H2099",
+null
+],
+"ziha": [
+"H6727",
+null
+],
+"ziklag": [
+"H6860",
+null
+],
+"zikri": [
+"H2147",
+null
+],
+"zillah": [
+"H6741",
+null
+],
+"zillethai": [
+"H6769",
+null
+],
+"zilpah": [
+"H2153",
+null
+],
+"zilthai": [
+"H6769",
+null
+],
+"zimmah": [
+"H2155",
+null
+],
+"zimran": [
+"H2175",
+null
+],
+"zimri": [
+"H2174",
+null
+],
+"zin": [
+"H6790",
+null
+],
+"zina": [
+"H2126",
+null
+],
+"zior": [
+"H6730",
+null
+],
+"ziph": [
+"H2128",
+null
+],
+"ziphah": [
+"H2129",
+null
+],
+"ziphion": [
+"H6837",
+null
+],
+"ziphite": [
+"H2130",
+null
+],
+"ziphron": [
+"H2202",
+null
+],
+"zippor": [
+"H6834",
+null
+],
+"zipporah": [
+"H6855",
+null
+],
+"zithri": [
+"H5644",
+null
+],
+"ziv": [
+"H2099",
+null
+],
+"ziz": [
+"H6732",
+null
+],
+"ziza": [
+"H2124",
+null
+],
+"zizah": [
+"H2125",
+null
+],
+"zoan": [
+"H6814",
+null
+],
+"zoar": [
+"H6820",
+null
+],
+"zobah": [
+"H6678",
+null
+],
+"zobah-hamath": [
+"H6678",
+null
+],
+"zobebah": [
+"H6637",
+null
+],
+"zohar": [
+"H6714",
+null
+],
+"zoheth": [
+"H2105",
+null
+],
+"zophah": [
+"H6690",
+null
+],
+"zophai": [
+"H6689",
+null
+],
+"zophar": [
+"H6691",
+null
+],
+"zophim": [
+"H6839",
+null
+],
+"zorah": [
+"H6881",
+null
+],
+"zorathite": [
+"H6882",
+null
+],
+"zorathites": [
+"H6882",
+null
+],
+"zorite": [
+"H6882",
+null
+],
+"zuar": [
+"H6686",
+null
+],
+"zuph": [
+"H6689",
+null
+],
+"zur": [
+"H6698",
+null
+],
+"zuriel": [
+"H6700",
+null
+],
+"zurishaddai": [
+"H6701",
+null
+],
+"zuzim": [
+"H2104",
+null
+]
+}

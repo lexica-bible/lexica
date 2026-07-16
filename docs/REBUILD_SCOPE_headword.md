@@ -56,8 +56,21 @@ time. Re-verify only if significant new data lands before the run.
      two live-verified guard checks (Canaanitess 1Ch 2:3 → honest fallback; Midian
      Exo 2:15 → place card) PLUS at least one NEW-name gentilic (e.g. Christian
      Act 11:26 or Tyrians 1Ch 22:4). Guard behavior shifts → STOP.
-  2. Ambiguous-drop list = `docs/tickets/alias_ambiguous_dropped.txt` (93 spellings;
-     23 overlap hand ALIASES and still resolve through it — no behavior change).
+  2. Ambiguous-drop list = `docs/tickets/alias_ambiguous_dropped.txt` (**149** spellings
+     after the 2026-07-16 two-phase harvest fix; 31 overlap hand ALIASES and still
+     resolve through it. The earlier 93 was the HIJACK BUG's signature — first-writer
+     alternates stole 56 keys instead of dropping/deferring; see the roster-regression
+     incident below).
+  2b. **Roster zero-regression gate (PERMANENT, reviewer-mandated 2026-07-16):**
+     `python3 scripts/check_roster_regression.py` must print CLEAN before ANY
+     import_tipnr run whose loader or TIPNR file changed. Locked in CI by
+     `tests/test_tipnr_roster.py` (sentinels: jesus=G2424, judah=H3063/G2455,
+     simon=G4613, lord=H3068 … + christian=G5546, ashchenaz=H813). Incident: the
+     landed alias batch let alphabetically-earlier entities steal 79 keys
+     (jesus→G912 Barabbas); three green spot-controls didn't cover the other 4,300.
+     A control proves its key; roster changes require the full diff. NOTE: elias no
+     longer resolves from the roster natively — it resolves via hand ALIASES at
+     ladder step 7 (elias→elijah), which is the control now.
   3. **Christian → G5546 (own Group number, NOT G2424)** — load-bearing, fires before
      the roster is trusted. RAN GREEN on the pinned file 2026-07-16, re-verify on PA.
 - RC-2: 1Ch 1:49 → a Shaul row with real identity, no blank row (known positive).

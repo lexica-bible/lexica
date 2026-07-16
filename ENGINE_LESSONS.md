@@ -1377,3 +1377,17 @@ both drifting from the doc.
     was a commit diff, and the guess was the execution order. Self-caught at the output
     reconciliation; replaced with outcome measurement (control-tested residue checker).
     *(head-word rebuild run, 2026-07-16; reviewer-logged, second retraction of the session)*
+
+86. **A control proves its key; a roster change requires the full diff.** The alias batch's
+    three run-time controls (Christian→G5546, Ashchenaz→H813, Elias) all ran green while 79
+    other names silently changed numbers — jesus→G912 (Barabbas), judah→H1938, simon→G4074 —
+    because the alternate-spelling harvest wrote through a first-record-wins save and TIPNR
+    is alphabetical: Barabbas's record claims 'jesus' before Jesus's is read. Three green
+    keys out of 4,400 certify three keys. The check that catches the class — old-output vs
+    new-output over EVERY key, hard-regressions-must-be-0 — existed as reasoning nowhere and
+    as a gate nowhere; the reviewer owned that alongside CC. Now permanent:
+    `check_roster_regression.py` + baseline + `tests/test_tipnr_roster.py` in CI. Kin of the
+    two-derivations oracle (CLAUDE.md): the old loader and the new loader ARE two derivations
+    of one fact, and their diff was sitting there unasked. Caught at the import_tipnr spot-
+    check print (Jesus→G912 visible in the run output) — one screen line, read, saved the swap.
+    *(head-word rebuild run, 2026-07-16; bible.db.new discarded, live untouched)*

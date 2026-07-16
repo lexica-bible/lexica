@@ -80,25 +80,27 @@ def parse_tipnr(lines, _audit=None):
     """
     lookup = {}   # lower(name) -> entry dict
     agg    = {}   # strongs -> {"name": str, "types": set()}  (one entry per strongs)
-    _disp_pending = {}   # display-form key -> set of (h, g) owners (ambiguity check)
-    _disp_vals    = {}   # display-form key -> first owner's entry dict
+    # EVERY sub-record spelling (alternate names AND per-version display forms) is
+    # QUEUED here, never saved directly: TIPNR lists other entities' names as
+    # alternates ("Jesus" under Barabbas via "Jesus Barabbas") and the file is
+    # alphabetical, so a first-writer save let an earlier entity STEAL a later
+    # entity's key (2026-07-16: 79 hijacked names — jesus→G912, judah→H1938,
+    # simon→G4074…). Queued keys resolve AFTER every record is read: a main-record
+    # name always wins, and a spelling claimed by entities with different numbers
+    # is dropped (wrong number > missing number).
+    _disp_pending = {}   # queued spelling -> set of (h, g) owners (ambiguity check)
+    _disp_vals    = {}   # queued spelling -> first owner's type
 
     section   = "other"   # current $=== section
     mixed_hdr = False     # F1: current block header names BOTH person AND place
     cur       = None      # current main record
 
+    records = []  # finished main records, in file order (phase A resolves from these)
+
     def save(cur):
         if not cur:
             return
-        for nm in cur["names"]:
-            key = nm.lower()
-            if key not in lookup:
-                lookup[key] = {"h": None, "g": None, "type": cur["type"]}
-            e = lookup[key]
-            if cur["h"] and not e["h"]:
-                e["h"] = cur["h"]
-            if cur["g"] and not e["g"]:
-                e["g"] = cur["g"]
+        records.append(cur)
         for s in filter(None, [cur["h"], cur["g"]]):
             a = agg.setdefault(s, {"name": cur["name"], "types": set()})
             a["types"].add(cur["type"])
@@ -178,6 +180,10 @@ def parse_tipnr(lines, _audit=None):
                         cur["h"] = s
                     elif s[0] == "G" and not cur["g"]:
                         cur["g"] = s
+            # Snapshot the MAIN-LINE numbers before sub-records enrich h/g: phase A
+            # claims duplicate main-name keys with these first, so 'judah' keeps
+            # resolving to the record it always did under the old loader.
+            cur["h0"], cur["g0"] = cur["h"], cur["g"]
 
         else:
             # ── Sub-record ───────────────────────────────────────────
@@ -219,43 +225,78 @@ def parse_tipnr(lines, _audit=None):
                                  "Name combined", "Aramaic", "Greek",
                                  "(same form as previous)", "Group",
                                  "(same ref[s] with Variant)", "LXX addition"):
+                # The row's own number (Group rows: Christian=G5546) wins over the
+                # entity's; both go into the owner pair the ambiguity check keys on.
+                hg = (row_s if row_s and row_s[0] == "H" else cur["h"],
+                      row_s if row_s and row_s[0] == "G" else cur["g"])
+
+                def _queue(spelling):
+                    k = spelling.lower()
+                    _disp_pending.setdefault(k, set()).add(hg)
+                    _disp_vals.setdefault(k, {"type": cur["type"]})
+
+                # Alternate-name spelling ("Elias" under Elijah) — QUEUED, never a
+                # direct save (see the queue comment up top: direct first-writer
+                # saves let Barabbas steal 'jesus').
                 unique = parts[base + 1].strip() if len(parts) > base + 1 else ""
                 alt = unique.split("|")[0].split("@")[0].strip()
                 if alt and alt != cur["name"] and _NAME_SHAPE.fullmatch(alt):
-                    cur["names"].add(alt)
+                    _queue(alt)
                 # Per-version display forms ("Ashkenaz =ESV,NIV; Ashchenaz =KJV"):
                 # TIPNR's own attested spellings, incl. the KJV forms ABP-adjacent
-                # English uses. Queued (not added directly): a spelling used by
-                # two DIFFERENT entities is ambiguous and must be dropped, which
-                # can only be decided after every record is read.
+                # English uses. Same queue, same ambiguity rule.
                 disp = parts[base + 3].strip() if len(parts) > base + 3 else ""
                 if disp and not disp.startswith("http") and "«" not in disp:
-                    hg = (row_s if row_s and row_s[0] == "H" else cur["h"],
-                          row_s if row_s and row_s[0] == "G" else cur["g"])
                     for piece in disp.split(";"):
                         a2 = piece.split("=")[0].strip()
                         if (a2 and a2 != cur["name"] and len(a2) > 1
                                 and _NAME_SHAPE.fullmatch(a2)):
-                            k = a2.lower()
-                            _disp_pending.setdefault(k, set()).add(hg)
-                            _disp_vals.setdefault(
-                                k, {"h": hg[0], "g": hg[1], "type": cur["type"]})
+                            _queue(a2)
 
     save(cur)
 
-    # Resolve queued display-form keys: add only when the primary roster lacks the
-    # spelling (zero regression), DROP any spelling owned by entities with different
-    # numbers (wrong number > missing number). The dropped list is exposed for the
-    # audit record (docs/tickets/alias_ambiguous_dropped.txt).
+    # Phase A — main-record names, two passes over the finished records.
+    # Pass 1 claims each key with the record's own MAIN-LINE numbers — byte-
+    # compatible with the old loader, so duplicate main names ('Judah' ×n) keep
+    # resolving to the record they always did. Pass 2 fills still-empty slots with
+    # the sub-record-enriched numbers — the entities-gain-numbers win of the loader
+    # fix, without letting an earlier record's sub-rows steal a later record's key.
+    for rec in records:
+        for nm in rec["names"]:
+            key = nm.lower()
+            if key not in lookup:
+                lookup[key] = {"h": None, "g": None, "type": rec["type"]}
+            e = lookup[key]
+            if rec["h0"] and not e["h"]:
+                e["h"] = rec["h0"]
+            if rec["g0"] and not e["g"]:
+                e["g"] = rec["g0"]
+    for rec in records:
+        for nm in rec["names"]:
+            e = lookup[nm.lower()]
+            if rec["h"] and not e["h"]:
+                e["h"] = rec["h"]
+            if rec["g"] and not e["g"]:
+                e["g"] = rec["g"]
+
+    # Resolve the queued sub-record spellings: a MAIN-record name always wins (the
+    # key is skipped — zero regression to existing resolution), a spelling whose
+    # owners carry different numbers is DROPPED (wrong number > missing number),
+    # and only a single-owner spelling is added. Owner pairs with no number at all
+    # carry no claim and are ignored. The dropped list is exposed for the audit
+    # record (docs/tickets/alias_ambiguous_dropped.txt).
     dropped = []
     for k in sorted(_disp_pending):
         if k in lookup:
             continue
-        owners = _disp_pending[k]
+        owners = {p for p in _disp_pending[k] if p != (None, None)}
+        if not owners:
+            continue
         if len(owners) > 1:
             dropped.append((k, sorted(x for pair in owners for x in pair if x)))
             continue
-        lookup[k] = _disp_vals[k]
+        h, g = next(iter(owners))
+        lookup[k] = {"h": h, "g": g, "type": _disp_vals[k]["type"]}
     parse_tipnr.dropped_ambiguous = dropped
 
     def _primary(types):
