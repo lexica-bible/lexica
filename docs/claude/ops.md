@@ -141,7 +141,10 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   `AUDIT_abp_invariants.md`.
 - `cert_invariants.py [db]` / `--controls` — the runnable ABP invariant suite (Tier A CERTIFIED
   end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 7 checks: row pins
-  (words 626,305 / verses 31,237), split-flip=0 (imports the production `find_flips`, never a
+  (words 626,305 / verses 31,237; pronoun-review flag count 6,882 at fe06eed-era code,
+  2026-07-16 head-word rebuild — advisory anchor for the next run, not a suite check;
+  the tsv is overwritten per build, so an unpinned count can't be diffed later), split-flip=0
+  (imports the production `find_flips`, never a
   copy), em-dash '--'=0, correction-overlay reconciliation (failures NAME the row), feed
   manifest, backup freshness, and (Session 4) person/place binding — no proper-noun name renders
   BOTH a fuzzy-place AND an exact-person (the Cushi shape; reads pn_binding+tipnr_entities,

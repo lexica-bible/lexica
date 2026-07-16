@@ -1365,3 +1365,15 @@ both drifting from the doc.
     about was not the only copy": care at one layer certifies nothing about the layer under it. The
     clean refusal is the GUARD's credit, not the claim's — a wrong claim that a guard catches is
     still a wrong claim. *(audit: legacy "None" trio, 2026-07-15; verify-before-claim breach, owned)*
+
+85. **Verify where landed code actually EXECUTES before stating sequencing on the record.**
+    Stated that RC-2's reconciliation count would come from the standalone splitter's own
+    read-only pass "after the build" — but the build imports the splitter's routine and had
+    already run it (silencing its detail line), so the count was inside the build's printed
+    total. The charter described the plan-era location (build script), the commit landed it
+    elsewhere (splitter), and the build imported it back — three true statements about WHERE
+    the code lives, none of which answered WHEN it runs. Sequencing claims trace the call
+    path, not the file path. Kin of #84 (a citation that isn't a reading) — here the citation
+    was a commit diff, and the guess was the execution order. Self-caught at the output
+    reconciliation; replaced with outcome measurement (control-tested residue checker).
+    *(head-word rebuild run, 2026-07-16; reviewer-logged, second retraction of the session)*

@@ -22,6 +22,32 @@ Source spot-checks are quoted from `abp_texts/` (diagnosis-grade pre-build sourc
 Whether NOCAP/EMPTY rows should carry a Strong's number with no English is an
 audit-session ruling, not a build fix.
 
+## R-1 run outcome (2026-07-16, reviewer-cleared gate 2) — CAP resolves 138 + 10
+
+The head-word rebuild's in-build split fixed **138** of the CAP 148 (capfall count;
+2,299 old-mechanism + 138 = the build's 2,437). The remaining **10 stay blank by
+design** — CAP-classified on look (capitalized lead) but not mergeable in shape.
+Verified per-row against the code + ABP source (`check_blank_star_residue.py` is the
+measuring tool; control-tested on live: 148/0/0/0):
+
+- **Single-word cells (8)** — no verb merged on, nothing to split; the splitter's
+  candidate rule requires two words. Name already visible; only the neighbor
+  placeholder is blank (same audit-session question as NOCAP/EMPTY):
+  Gen 22:21 | 1 (Huz) · 2Sa 12:9 | 14 (Uriah) · 2Sa 23:1 | 8 (Trustworthy) ·
+  Gen 26:20 | 21 (Injustice) · Gen 26:21 | 17 (Hatred) · Gen 26:22 | 17 (Expanse) ·
+  Gen 31:48 | 20 (Hill) · Mat 20:22 | 3 (Jesus). (Gen 26:20–22 / 31:48 are ABP's
+  TRANSLATED well/place names — no roster form can exist.)
+- **Bracketed (1)** — 1Sa 24:5 | 7 ("[2struck 1David's heart]"): capfall runs only on
+  the clean unbracketed shape; also possessive, not subject. Manual-look class.
+- **_NOT_SUBJECT guard (1)** — Gen 41:12 | 7 ("Hebrew servant"): adjective+noun, the
+  guard added 2026-06-26 doing its job.
+
+**GATE-5 EXPECTATION (formal): blank star-row residue on the rebuilt copy =
+339 = 10 CAP-remainder + 64 MID + 40 NOCAP + 225 EMPTY** (measured 339 on
+bible.db.new 2026-07-16, zero rows outside the piles) — plus, at the ROSTER level,
+the 221 documented leave-list names (`alias_leave_list.txt` + decisions/cautions).
+Any other residue = STOP.
+
 Format: ref | word position | previous cell's English
 
 ## CAP — capfall fixes these (reconciliation baseline) (148)
