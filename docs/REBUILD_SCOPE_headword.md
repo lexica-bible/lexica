@@ -1,6 +1,9 @@
 # REBUILD SESSION SCOPE — head-word fix run (R-1, one heavyweight run)
 
-Status: DRAFT 2026-07-16, awaiting JP gate clearance. Procedure = the `/rebuild-words`
+Status: **READY TO RUN 2026-07-16 — all three review gates cleared (payloads
+REVIEW_rebuild_precode.md / REVIEW_rc2_rereview.md / REVIEW_alias_batch.md), gate zero cleared,
+all approved code LANDED (RC-1 6d7a6ee · RC-2 098a742 · alias batch 3ca0f29 · retention). Only
+the run itself remains — fresh session, this charter + /rebuild-words.** Procedure = the `/rebuild-words`
 slash command, not improvised. This doc is the session charter; the tickets hold the
 detail (`TICKET_headword_class.md`, `TICKET_missing_strongs_pn.md`).
 

@@ -441,6 +441,18 @@ app.py matches.
   place keeps BOTH (was a PK collision: last-imported type won → Adam H121 read 'place').
   `entity_type` = legacy single token. Migration adds the column at PA startup; re-run
   import_tipnr.py after any rebuild. pn_types (the set) is trustworthy.
+- **TIPNR roster (2026-07-16, loader root-cause fix, not yet imported on PA — rides the
+  head-word rebuild):** `import_tipnr.parse_tipnr` now reads the en-dash sub-records the old
+  code discarded as comments (10,127 lines — every alternate spelling and sub-record Strong's
+  had been silently lost; the hand ALIASES map was compensating, e.g. Elias). Roster 2,824 →
+  4,387 keys, numbered entities 2,687 → 2,862. Rules that must survive future edits:
+  **Group rows (gentilics) keep their OWN Strong's — Christian=G5546, NOT parent Jesus'
+  G2424** (load-bearing control in the rebuild charter); a display-form spelling owned by
+  entities with DIFFERENT numbers is DROPPED, not guessed (93 logged in
+  `docs/tickets/alias_ambiguous_dropped.txt`); harvested keys never override primary names.
+  `scripts/tipnr_alias_variants.py` (399 hand-checked KJV/LXX variants; per-entry audit trail
+  `docs/tickets/alias_decisions.txt`) is consulted at ladder step 7 — inline ALIASES wins on
+  overlap. entity_resolution.py has its OWN separate TIPNR parser — unchanged by this fix.
 - Gentilics: card labeled "People / Clan", place header "Homeland", AI summary
   fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value).
   **GENTILIC GUARD (2026-07-16, live):** `is_people_group` is now a BINDING input, not

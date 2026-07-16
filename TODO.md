@@ -438,11 +438,15 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
-- **★ REBUILD SESSION (head-word) — NEXT UP, chartered in `docs/REBUILD_SCOPE_headword.md`** (JP
-  ruling R-1 2026-07-16). Gate zero = disk-space paste (JP's PA quota, NOT the NFS df number); in the
-  run: RC-2 emit fix + RC-1 scoped head pick + hand-checked alias map (~1,690 rows — the BULK of the
-  work, curated BEFORE the run) + backup keep-count 7→3 + the owed finish_rebuild.sh acceptance check.
-  Fresh session, HIGH effort, /rebuild-words procedure. AFTER it: the Greek-name migration
+- **★ REBUILD SESSION (head-word) — NEXT UP; ALL pre-run gates CLEARED 2026-07-16, only the run
+  itself remains.** Charter = `docs/REBUILD_SCOPE_headword.md` (carries gate-zero clearance, the
+  reviewer's run-time conditions, and every reconciliation baseline). Landed in code, all
+  reviewer-approved with controls green: RC-1 scoped star-slot head pick (6d7a6ee) · RC-2
+  capitalized-lead splitter fallback w/ red-first fixture (098a742; dry-run must reconcile vs the
+  148-row baseline in `docs/tickets/blank_star_classes.md` before apply) · TIPNR loader root-cause
+  fix + 399-entry variant map (3ca0f29; Christian=G5546 + gentilic-guard re-checks are run-time
+  conditions) · backup keep-3. Fresh session, HIGH effort, /rebuild-words procedure; the owed
+  finish_rebuild.sh acceptance check rides it. AFTER it: the Greek-name migration
   (docs/DESIGN_greek_name_identity.md, five JP rulings pending) as its OWN staged rebuild.
 - **pn_binding hand-check rows never scheduled** (2026-07-16 binding rebuild, "step 5") — the
   --apply run wrote 65 HOT rows (several same-name entities at one verse) to
