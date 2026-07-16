@@ -361,6 +361,21 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
+**MOBILE SHEET CONTRACT — 4 of 5 frames DONE (2026-07-15).** JP reported the Library/Notes cards
+disagreeing on header, open height, and height-under-content. All three traced to ONE root: five
+hand-rolled sheet frames where one belonged, so every past fix was per-card and the drift grew back
+— and every defect had a local patch sitting on it (Notes' band had DELETED its divider to match the
+frame that was missing one; the note editor hard-coded `80dvh`; focus mode re-declared its own
+height). Now one shared `Sheet` (`20-shared-components.jsx`) owns height, header, radius, layer and
+the gesture. `.zsheet` `05dbd6f` · `.detail-sheet` `86e04e5` · `.msheet` `cf086b2`.
+**LEFT: `.wm-sheet` (Word study ×4) — BLOCKED BY RULING on the lexicon fixture** (its pixels don't
+move until its four sheets are measurable; the guardrail permits a JP-ordered convergence, not a
+silent or unmeasured one). Opener: **`HANDOFF_mobile_sheets.md`** — it carries the six endpoints'
+traced top-level shapes, the nested-shape work itemised, the open ledger (News' selected why-head ·
+day-intro card · `.filters-sep`) and the traps. Spec + all standing law:
+**`docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT"**. Doctrine amended: `--sheet-radius:18px`
+is a second sanctioned radius (CLAUDE.md #6) — "one radius" had been split in practice for months.
+
 **Shell's MOBILE collapse has THREE consumers: News + Ask-corpus + Notes (all 2026-07-15). Study is
 the last one un-migrated and is DEPRIORITIZED — copy these three IF it ever comes back, but nothing
 here schedules it** (see the ruling below). The gotchas they paid for (bar collision, `100dvh`
