@@ -960,7 +960,15 @@ const orderedVerses=groups.flatMap(g=>g.verses);const primaryVerses=hasPrimary?o
 // dropped.
 function _acWordGroups(words,panel,contestedSet){const ks={};(words||[]).forEach(w=>{if(w&&w.strongs)ks[w.strongs]=w;});const inScope=new Set(Object.keys(ks));const isContested=s=>contestedSet&&contestedSet.has(s)||!!(ks[s]&&ks[s].contested);const order=[],byLang={};const ensure=lang=>{if(!byLang[lang]){byLang[lang]={lang,label:lang==="H"?"Hebrew (OT)":"Greek (NT / Greek OT)",max:0,set_aside:0,rows:[],seen:new Set()};order.push(byLang[lang]);}return byLang[lang];};// 1) family rows from the panel — counts, glosses, bars, the set-aside boundary.
 (panel&&panel.groups||[]).forEach(pg=>{const g=ensure(pg.lang);g.label=pg.label||g.label;g.set_aside+=pg.set_aside||0;g.max=Math.max(g.max,pg.max||0);(pg.family||[]).forEach(r=>{if(g.seen.has(r.strongs))return;g.seen.add(r.strongs);g.rows.push({strongs:r.strongs,lemma:r.lemma,translit:r.translit,gloss:r.gloss||"",count:r.count,core:!!r.core,hasCount:true,inScope:inScope.has(r.strongs),contested:isContested(r.strongs),aliasNote:ks[r.strongs]&&ks[r.strongs].alias_note||null});});});// 2) answer-scope words the panel didn't include — keep them (never drop scope words).
-(words||[]).forEach(w=>{if(!w||!w.strongs)return;const lang=/^H/i.test(w.strongs)?"H":"G";const g=ensure(lang);if(g.seen.has(w.strongs))return;g.seen.add(w.strongs);g.rows.push({strongs:w.strongs,lemma:w.lemma,translit:w.translit,gloss:"",count:null,core:false,hasCount:false,inScope:true,contested:isContested(w.strongs),aliasNote:w.alias_note||null});});return order;}if(typeof module!=="undefined"&&module.exports){module.exports={_acWordGroups};}// ============================================================
+(words||[]).forEach(w=>{if(!w||!w.strongs)return;const lang=/^H/i.test(w.strongs)?"H":"G";const g=ensure(lang);if(g.seen.has(w.strongs))return;g.seen.add(w.strongs);g.rows.push({strongs:w.strongs,lemma:w.lemma,translit:w.translit,gloss:"",count:null,core:false,hasCount:false,inScope:true,contested:isContested(w.strongs),aliasNote:w.alias_note||null});});return order;}// _acCitedSet — the highlight cited-set builder, ONE copy (was two drifting copies:
+// 52-ask-corpus._acCited + 90-app.citedStrongsApp). Emits ONLY language-prefixed
+// numbers: every word row's number is fully prefixed (the strongs_base invariant),
+// so bare forms in the set bought nothing except cross-language collisions — the
+// old builder manufactured a G-twin AND H-twin for every key, so a Hebrew key
+// H3588 (ki) lit every Greek article (G3588) in the evidence verses (Door 2 of
+// docs/tickets/TICKET_highlight_cited_set.md). A bare key number is Greek by the
+// SQL-gen prompt contract ("H prefix for Hebrew, G prefix or bare digits for Greek").
+function _acCitedSet(keyStrongs){if(!keyStrongs||!keyStrongs.length)return null;const s=new Set();for(const p of keyStrongs){const tag=String(p&&(p.strongs||p.strongs_base)||"").trim();const m=/^([GHgh]?)(\d+(?:\.\d+)*)$/.exec(tag);if(!m)continue;const prefix=m[1]?m[1].toUpperCase():"G";s.add(prefix+m[2]);}return s.size?s:null;}if(typeof module!=="undefined"&&module.exports){module.exports={_acWordGroups,_acCitedSet};}// ============================================================
 // ASK THE CORPUS — the single home for AI search.
 // A question in plain language → a synthesis answer with cited Greek/Hebrew
 // lemmas and the passages that carry it. Reuses /api/ai-search (login-gated)
@@ -978,9 +986,10 @@ function _acWordGroups(words,panel,contestedSet){const ks={};(words||[]).forEach
 function acDisplayedResults(entries){if(!entries.some(e=>e.is_primary))return entries;return entries.filter(e=>e.is_primary||e.is_additional);}// Broad starter questions (no word in scope).
 const _AC_BROAD=["Where does Scripture link blood and covenant?","Compare the OT and NT view of the Sabbath","What does fire symbolize across the prophets?","How is the temple reimagined in the New Testament?"];// Contextual questions seeded from the word handed in from Word study.
 function acScopeSuggestions(scope){if(!scope)return _AC_BROAD;const w=scope.translit||scope.lemma||"this word";return[`How does ${w} differ from its synonyms?`,`Trace ${w} from the OT to the NT`,`Where is ${w} most concentrated?`,`When does ${w} mean one thing versus another?`];}// The set of Strong's strings that mark a turn's key words in its verse list
-// (so the matched word lights up gold). Mirrors App.citedStrongsApp.
-function _acCited(keyStrongs){if(!keyStrongs||!keyStrongs.length)return null;const s=new Set();for(const p of keyStrongs){const tag=p.strongs||p.strongs_base;// p.strongs is H/G-prefixed
-if(!tag)continue;const bare=strongsBare(tag);s.add(tag);s.add(bare);s.add(`G${bare}`);s.add(`H${bare}`);}return s.size?s:null;}// Resolve a book name/abbrev the AI wrote in prose ("Matthew", "Exo",
+// (so the matched word lights up gold). ONE shared builder in 51-corpus-logic.jsx
+// (same set as App's citedStrongsApp — the old per-file copies drifted and both
+// manufactured cross-language twins; TICKET_highlight_cited_set Door 2).
+const _acCited=_acCitedSet;// Resolve a book name/abbrev the AI wrote in prose ("Matthew", "Exo",
 // "1 Corinthians", "1Co") to the app's book key. Built from BOOK_LABELS, so it
 // accepts both the 3-letter key and the full name; spaces/case are ignored.
 const _BOOK_LOOKUP=(()=>{const m={};const add=(s,key)=>{if(s)m[String(s).toLowerCase().replace(/\s+/g,"")]=key;};for(const key in BOOK_LABELS){add(key,key);add(BOOK_LABELS[key],key);}// a few abbreviations the model favours that aren't the app's key
@@ -2749,12 +2758,11 @@ setLibNav(prev=>prev&&(prev.book==null||prev.book===book)&&(prev.chapter||1)===c
 useEffect(()=>{if(mainView==="library")setLibNav(n=>n&&n.highlight!=null?{...n,scroll:true,instant:true}:n);},[mainView]);// Corpus-filtered AI results (OT/NT filter)
 const corpusFilteredResults=useMemo(()=>{let r=allResults;if(corpusFilter==="ot")r=r.filter(e=>!NT_BOOKS.has(e.book));if(corpusFilter==="nt")r=r.filter(e=>NT_BOOKS.has(e.book));return r;},[allResults,corpusFilter]);// Count occurrences per strongs across AI results
 const countMap=useMemo(()=>{const map={};for(const e of corpusFilteredResults){const key=e.strongs_raw||e.strongs_base;if(key)map[key]=(map[key]||0)+1;}return map;},[corpusFilteredResults]);// Key strongs from AI search
-const primaryStrongs=useMemo(()=>{if(mode==="ai"&&aiMeta&&aiMeta.keyStrongs&&aiMeta.keyStrongs.length>0)return aiMeta.keyStrongs;return null;},[mode,aiMeta]);// Compute citedStrongs at App level — single source of truth, no prop-threading issues
-const citedStrongsApp=useMemo(()=>{if(!primaryStrongs||!primaryStrongs.length)return null;const s=new Set();for(const p of primaryStrongs){if(p.strongs_base){const bare=strongsBare(p.strongs_base);s.add(p.strongs_base);// as-is (e.g. "4151" or "G4151")
-s.add(bare);// bare (e.g. "4151")
-s.add(`G${bare}`);// G-prefixed
-s.add(`H${bare}`);// H-prefixed
-}}return s.size>0?s:null;},[primaryStrongs]);// Count of distinct primary verses (AI mode only)
+const primaryStrongs=useMemo(()=>{if(mode==="ai"&&aiMeta&&aiMeta.keyStrongs&&aiMeta.keyStrongs.length>0)return aiMeta.keyStrongs;return null;},[mode,aiMeta]);// Compute citedStrongs at App level — single source of truth, no prop-threading
+// issues. ONE shared builder (51-corpus-logic._acCitedSet, locked by
+// tests/test_ac_cited_set.js) — the old inline copy manufactured G- and H-twins
+// for every number (TICKET_highlight_cited_set Door 2).
+const citedStrongsApp=useMemo(()=>_acCitedSet(primaryStrongs),[primaryStrongs]);// Count of distinct primary verses (AI mode only)
 const primaryVerseCount=useMemo(()=>{if(mode!=="ai")return null;const seen=new Set();for(const e of allResults){if(e.is_primary)seen.add(e.ref);}return seen.size;},[allResults,mode]);const[showTour,setShowTour]=useState(()=>{// A /?news=<key> share link (Tudor's read-only News) skips the full-site welcome tour.
 try{if(new URLSearchParams(window.location.search).get("news"))return false;}catch(e){}try{return!localStorage.getItem("lexica_tour_seen");}catch{return false;}});const handleTourDone=()=>{try{localStorage.setItem("lexica_tour_seen","1");}catch{}setShowTour(false);};const[libEverVisited,setLibEverVisited]=useState(true);// News mounts on first visit, then STAYS mounted (display:none when away) — like the
 // Library above. Without this the tab was conditionally rendered, so leaving it unmounted

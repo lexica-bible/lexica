@@ -33,7 +33,7 @@ from core import (
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
 )
 from views_lsj import _lsj_concept_lookup
-from views_lexicon import _greek_cognates, _norm_lemma
+from views_lexicon import _greek_cognates, _norm_lemma, _HEB_FUNCTION_STRONGS
 import corpus_panel   # deterministic lexical-texture panel (no model call) — see corpus_panel.py
 import contested_register   # CONTESTED_BY_SID — flag fork words in the answer's provenance rail
 from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
@@ -1275,6 +1275,31 @@ def _compute_grounded(results, has_rows, has_phrase_hits, target_bases, is_thema
     return any(not is_thematic(v.get("words", [])) for v in results)
 
 
+def _filter_function_keys(pairs):
+    """Drop key_strongs whose number is a function word (article, particle,
+    conjunction) — the HARD enforcement behind the prompt's 'omit articles'
+    instruction, which the model can silently ignore (Door 1 of
+    docs/tickets/TICKET_highlight_cited_set.md: G3588 in a key set lights every
+    'the' in the evidence verses).
+
+    pairs are (bare_number, prefix_or_None); prefix None resolves the same way
+    the caller's _is_heb does (explicit prefix wins, else the >5624 range).
+    Reuses the production sets — core._FUNCTION_STRONGS (bare Greek numbers,
+    startup-populated IN PLACE; empty set = filter is a no-op, deploy-safe) and
+    views_lexicon._HEB_FUNCTION_STRONGS (bare Hebrew). Never a forked copy."""
+    out = []
+    for num, orig in pairs:
+        base = num.split(".")[0]
+        heb = orig == "H" or (orig is None and int(base) > 5624)
+        if heb:
+            if base in _HEB_FUNCTION_STRONGS:
+                continue
+        elif base in _FUNCTION_STRONGS:
+            continue
+        out.append((num, orig))
+    return out
+
+
 def _stamp_rail_fields(key_strongs_data):
     """Stamp each in-scope word with the two flags the rail badges on: `contested` (sits in
     the CONTESTED fork register) and `alias_note` (the standard↔ABP numbering crosswalk, or
@@ -1906,6 +1931,11 @@ def ai_search():
         for _pm, _pn in re.findall(r'\b([GHgh])(\d+(?:\.\d+)?)\b', explanation):
             _expl_pref.setdefault(_pn, _pm.upper())
         _ks_pairs_all = [(num, orig or _expl_pref.get(num)) for (num, orig) in _ks_pairs_all]
+        # HARD function-word filter (TICKET_highlight_cited_set Door 1): the prompt
+        # tells the model to omit articles/particles, but nothing enforced it — a
+        # key set containing 3588 lights every "the" in the evidence verses. Filter
+        # BEFORE the per-language caps so a dropped article doesn't eat a slot.
+        _ks_pairs_all = _filter_function_keys(_ks_pairs_all)
 
         def _is_heb(pair):
             sn, orig = pair

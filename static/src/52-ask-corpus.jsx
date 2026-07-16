@@ -41,18 +41,10 @@ function acScopeSuggestions(scope) {
 }
 
 // The set of Strong's strings that mark a turn's key words in its verse list
-// (so the matched word lights up gold). Mirrors App.citedStrongsApp.
-function _acCited(keyStrongs) {
-  if (!keyStrongs || !keyStrongs.length) return null;
-  const s = new Set();
-  for (const p of keyStrongs) {
-    const tag = p.strongs || p.strongs_base;   // p.strongs is H/G-prefixed
-    if (!tag) continue;
-    const bare = strongsBare(tag);
-    s.add(tag); s.add(bare); s.add(`G${bare}`); s.add(`H${bare}`);
-  }
-  return s.size ? s : null;
-}
+// (so the matched word lights up gold). ONE shared builder in 51-corpus-logic.jsx
+// (same set as App's citedStrongsApp — the old per-file copies drifted and both
+// manufactured cross-language twins; TICKET_highlight_cited_set Door 2).
+const _acCited = _acCitedSet;
 
 // Resolve a book name/abbrev the AI wrote in prose ("Matthew", "Exo",
 // "1 Corinthians", "1Co") to the app's book key. Built from BOOK_LABELS, so it

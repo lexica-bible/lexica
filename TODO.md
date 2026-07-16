@@ -438,6 +438,13 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
+- **Ask-corpus words-in-scope counts should be search-relevant** (JP standing gripe, logged
+  2026-07-16) — the rail's chips + the "N occurrences" line show TOTAL-Bible counts (theos 4,557);
+  they should show occurrences within THIS search's verse pool. Needs backend work: the payload
+  doesn't carry per-word pool counts — compute per key word over the pinned pool, ship in the
+  payload, do NOT approximate from the curated key passages. Same pass: give the `hasCount:false`
+  rows a visibly-distinct "no count" state instead of a minimum-width bar (silent-fallback rule).
+  code: ai.py (payload), static/src/52-ask-corpus.jsx + 51-corpus-logic.jsx (render)
 - **News beast-arm badge** (authored follow-up) — a per-thread "which beast/arm" tag in the why-rail.
   Not built on purpose: the thread→arm map isn't 1:1 (several threads serve BOTH arms), so it's
   hand-authored content JP will sit with, then it drops into the why-section. code: views_news.py map,

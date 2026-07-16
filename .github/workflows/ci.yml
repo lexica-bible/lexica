@@ -48,6 +48,7 @@ jobs:
           python tests/test_prompt_contract.py
           python tests/test_written_ranges.py
           python tests/test_news_gate.py
+          python tests/test_key_strongs_filter.py
 
   frontend:
     runs-on: ubuntu-latest
@@ -71,6 +72,7 @@ jobs:
       - name: Run node unit tests (frontend pure logic)
         run: |
           node tests/test_ac_word_groups.js
+          node tests/test_ac_cited_set.js
           node tests/test_rstack_logic.js
           node tests/test_note_inspect.js
           node tests/test_chrono_reconcile.js

@@ -32,9 +32,46 @@ bare). Mirror in `App.citedStrongsApp` (the comment says _acCited mirrors it —
 and fix BOTH copies; grep before sizing, standing rule).
 
 ## Which door fired here
-Determined by the key-word chips in the Gen 1:1 thread's rail ("What this answer
-rests on"): a 3588-family chip visible → Door 1; absent → Door 2. PENDING JP's answer.
-The answer picks the control test's known-bad case; both fixes land either way.
+**Door 1 CONFIRMED (JP, 2026-07-16):** G3588 (ὁ) appears in the words-in-scope list
+on the Gen 1:1 arche thread — the model included the article, nothing enforced the
+omission. Both doors fixed regardless (JP ruling).
+
+## Implemented 2026-07-16 (awaiting receipt)
+- Door 1: `ai.py _filter_function_keys` — hard filter at the key_strongs acceptance
+  point, BEFORE the per-language caps (a dropped article doesn't eat a slot). Reuses
+  `core._FUNCTION_STRONGS` + `views_lexicon._HEB_FUNCTION_STRONGS` (both bare-number
+  sets; empty set = no-op, deploy-safe). Locked by tests/test_key_strongs_filter.py
+  (5 tests incl. the G3588 known-bad control + a language-awareness proof: H853
+  drops, G853 survives).
+- Door 2: ONE shared builder `_acCitedSet` in 51-corpus-logic.jsx replaces BOTH
+  drifting copies (52-ask-corpus `_acCited`, 90-app `citedStrongsApp`). Emits ONLY
+  language-prefixed numbers — the twin-manufacture is gone, and bare forms are out
+  of the set entirely (matchers bare both sides, so a bare key collided cross-
+  language even without the twins). Bare key numbers resolve Greek per the prompt
+  contract. Locked by tests/test_ac_cited_set.js (7 tests incl. the H3588 control).
+- Both test files added to the pre-commit AND ci.yml explicit lists (standing rule).
+- Cached answers: stored payloads keep their old key_strongs — the Door-2 frontend
+  fix cleans their highlighting anyway (prefixed-only set); Door 1 applies to new
+  draws. No cache purge needed.
+
+## Live check after deploy (JP)
+Re-open the Gen 1:1 arche thread: articles ("the", "by") no longer highlight in key
+passages; "beginning"/"God"/content words still do (the fix must not go dark).
+
+## Adjacent findings (same rail component, JP scope addition 2026-07-16)
+- **Chip counts are corpus-wide by design** (`occCount` sums the panel's total-Bible
+  counts). JP's standing want: search-relevant counts — occurrences within THIS
+  search's verse pool. Honest scoping: the answer payload does NOT carry per-word
+  pool counts (only the curated key passages + results); a real fix needs the
+  backend to compute per-key-word counts over the pinned pool and ship them in the
+  payload. No existing TODO entry found (checked 2026-07-16) — entry ADDED to
+  TODO.md. Do not approximate from the shipped passages (they're a curated subset).
+- **Zero-length bars** (gē, archēgos, ho, thea): the `hasCount:false` state — rows
+  the panel has no count for render a minimum-width bar, identical to a tiny real
+  count. Silent-fallback rule violation (a missing number must look different from
+  a small number). Folded into the TODO entry.
+- **"23 related forms set aside — spelling matches, meaning unconfirmed"**: working
+  as designed (the gloss-unconfirmed cognate aside from the words-in-scope builder).
 
 ## Controls (per door, before any zero is trusted)
 - Door 1: feed the acceptance path a key_strongs list containing "3588" → the filter

@@ -60,6 +60,27 @@ function _acWordGroups(words, panel, contestedSet) {
   return order;
 }
 
+// _acCitedSet — the highlight cited-set builder, ONE copy (was two drifting copies:
+// 52-ask-corpus._acCited + 90-app.citedStrongsApp). Emits ONLY language-prefixed
+// numbers: every word row's number is fully prefixed (the strongs_base invariant),
+// so bare forms in the set bought nothing except cross-language collisions — the
+// old builder manufactured a G-twin AND H-twin for every key, so a Hebrew key
+// H3588 (ki) lit every Greek article (G3588) in the evidence verses (Door 2 of
+// docs/tickets/TICKET_highlight_cited_set.md). A bare key number is Greek by the
+// SQL-gen prompt contract ("H prefix for Hebrew, G prefix or bare digits for Greek").
+function _acCitedSet(keyStrongs) {
+  if (!keyStrongs || !keyStrongs.length) return null;
+  const s = new Set();
+  for (const p of keyStrongs) {
+    const tag = String((p && (p.strongs || p.strongs_base)) || "").trim();
+    const m = /^([GHgh]?)(\d+(?:\.\d+)*)$/.exec(tag);
+    if (!m) continue;
+    const prefix = m[1] ? m[1].toUpperCase() : "G";
+    s.add(prefix + m[2]);
+  }
+  return s.size ? s : null;
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { _acWordGroups };
+  module.exports = { _acWordGroups, _acCitedSet };
 }

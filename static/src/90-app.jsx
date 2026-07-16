@@ -230,21 +230,11 @@ function App() {
     return null;
   }, [mode, aiMeta]);
 
-  // Compute citedStrongs at App level — single source of truth, no prop-threading issues
-  const citedStrongsApp = useMemo(() => {
-    if (!primaryStrongs || !primaryStrongs.length) return null;
-    const s = new Set();
-    for (const p of primaryStrongs) {
-      if (p.strongs_base) {
-        const bare = strongsBare(p.strongs_base);
-        s.add(p.strongs_base);   // as-is (e.g. "4151" or "G4151")
-        s.add(bare);             // bare (e.g. "4151")
-        s.add(`G${bare}`);       // G-prefixed
-        s.add(`H${bare}`);       // H-prefixed
-      }
-    }
-    return s.size > 0 ? s : null;
-  }, [primaryStrongs]);
+  // Compute citedStrongs at App level — single source of truth, no prop-threading
+  // issues. ONE shared builder (51-corpus-logic._acCitedSet, locked by
+  // tests/test_ac_cited_set.js) — the old inline copy manufactured G- and H-twins
+  // for every number (TICKET_highlight_cited_set Door 2).
+  const citedStrongsApp = useMemo(() => _acCitedSet(primaryStrongs), [primaryStrongs]);
 
   // Count of distinct primary verses (AI mode only)
   const primaryVerseCount = useMemo(() => {
