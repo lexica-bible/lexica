@@ -77,12 +77,16 @@ no name extraction.
    capitalized token, split the name out of the previous slot onto the star row (the
    `parse_abp.parse_words` repair, adapted to `_emit_words`/`build_verse_words`). Kills
    the 477 blank rows and puts real names on star rows.
-2. **RC-1 — name-aware head pick:** in `_head_word`, prefer a capitalized
-   non-sentence-initial token (a proper name) over the default last-content-word pick;
-   everything else keeps the existing rule (the "my spirit"→"spirit" behavior must not
-   change). Slot text arrives mid-verse so capitalization is a real signal in ABP;
-   sentence-start false positives are the risk to test (the Lexica engine's
-   sentence-starter demotion faced the same issue — reuse its lesson, not its code).
+2. **RC-1 — name-aware head pick, SCOPED TO NAME-TAGGED SLOTS ONLY (measured
+   2026-07-16):** the corpus-wide count of "slot starts with a capitalized word that
+   isn't the head" is 14,938 — and most of those are CORRECT: in "the LORD said" the
+   slot's number tag belongs to the VERB, so "said" is the right head for that slot.
+   A blanket prefer-the-capitalized-token rule would wrongly rewrite thousands of
+   intended heads. The scoped rule: prefer the capitalized non-sentence-initial token
+   ONLY where the slot's tag is the star/PN tag (the head is supposed to BE the name).
+   All other slots keep the existing pick unchanged. Sentence-start false positives
+   remain the risk to test (the Lexica engine's sentence-starter demotion faced the
+   same issue — reuse its lesson, not its code).
 3. Re-run the dependent chain per `/rebuild-words`: import_tipnr (its full-slot ladder
    now sees clean name slots) → surface → translit → build_rendering_norm →
    build_entity_binding. The frontend gold-paint logic needs NO change once heads are
@@ -91,6 +95,21 @@ no name extraction.
    fallback rule) AFTER the rebuild shows what remains.
 4. Every recompute site listed above inherits the fix automatically (they all call
    `_head_word`) — but the rebuild gate must include the control cases below.
+
+**MEASURED COUNTS (PA run, 2026-07-16 — replaces the "500+" estimate):**
+- Blank-star rows (RC-2): **477 exact**.
+- Starred rows with a common-word head (RC-1 in-scope): **36** on the 10-word probe
+  list — a minor pile; the full set will surface during the rebuild gate.
+- The 2,203 double-star total therefore splits ≈ 477 blank + ~36 mislabeled-head +
+  **~1,690 spelling-variant/LXX-only** — the ALIAS MAP is the bulk of the workload,
+  not the build fix. Fix-order implication: RC-2 + scoped RC-1 ride the rebuild as
+  planned, but the variant-map curation (TICKET_missing_strongs_pn fix A) is the
+  larger effort and should start first since it lands before the same rebuild.
+- Lemma-leak spot-check: H2396 (Hezekiah) shows a SINGLE head "hezekiah" ×123 — the
+  junk heads are confined to starred rows, not spread across real numbers. Symptom
+  (b) is contained; the wrong-highlight symptom (c) should likewise be concentrated
+  on starred/blank slots plus the all-function fallback (live control still pending —
+  JP to supply a known-bad passage).
 
 ## Controls (must fire before any zero is trusted)
 
