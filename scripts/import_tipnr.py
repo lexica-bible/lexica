@@ -26,6 +26,17 @@ DRY_RUN  = "--dry-run" in sys.argv
 # The live download stays only behind --download-tipnr, for drift checks.
 TIPNR_PINNED = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                             "tipnr", "TIPNR.txt")
+
+# What a harvested alternate spelling must look like (blocks urls/refs/junk).
+_NAME_SHAPE = re.compile(r"[A-Za-z][A-Za-z'\- ]*")
+
+try:
+    # Hand-checked KJV/LXX variant -> canonical roster key (2026-07-16 batch; every
+    # entry's verdict + reason in docs/tickets/alias_decisions.txt). Consulted at
+    # ladder step 7; the inline ALIASES map wins on any overlap.
+    from tipnr_alias_variants import VARIANT_ALIASES
+except ImportError:
+    VARIANT_ALIASES = {}
 DOWNLOAD_TIPNR = "--download-tipnr" in sys.argv
 
 TIPNR_URL = (
@@ -69,6 +80,8 @@ def parse_tipnr(lines, _audit=None):
     """
     lookup = {}   # lower(name) -> entry dict
     agg    = {}   # strongs -> {"name": str, "types": set()}  (one entry per strongs)
+    _disp_pending = {}   # display-form key -> set of (h, g) owners (ambiguity check)
+    _disp_vals    = {}   # display-form key -> first owner's entry dict
 
     section   = "other"   # current $=== section
     mixed_hdr = False     # F1: current block header names BOTH person AND place
@@ -103,12 +116,17 @@ def parse_tipnr(lines, _audit=None):
         if not line.strip():
             continue
 
-        # Skip pure header / comment lines
+        # Skip pure header / comment lines. NOTE: en-dash lines are NOT comments —
+        # they are the sub-records (alternate spellings, per-version forms, gentilic
+        # Group rows). Skipping them here silently discarded 10,127 of TIPNR's
+        # 10,223 sub-record lines since the import was written (found 2026-07-16 —
+        # the roster-gap root cause; 'Elias' itself was missing and only survived
+        # via the hand ALIASES map).
         stripped = line.lstrip()
-        if stripped[0] in ("=", "‖", "#", "*") or stripped.startswith("–") or stripped.startswith("UnifiedName"):
+        if stripped[0] in ("=", "‖", "#", "*") or stripped.startswith("UnifiedName"):
             continue
 
-        is_sub = line[0] in (" ", "\t")
+        is_sub = line[0] in (" ", "\t") or line.startswith("–")
         parts  = line.split("\t")
 
         if not is_sub:
@@ -166,28 +184,79 @@ def parse_tipnr(lines, _audit=None):
             if not cur or len(parts) < 3:
                 continue
 
-            significance = parts[1].strip() if len(parts) > 1 else ""
+            # Real sub-records start "– <significance>\t..." (en-dash, no leading
+            # tab), so the significance is in COLUMN 0 and every data column sits
+            # one LEFT of what the old whitespace-indented map assumed. The
+            # whitespace form is kept for the handful of legacy lines.
+            if line.startswith("–"):
+                significance = parts[0].lstrip("–").strip()
+                base = 0
+            else:
+                significance = parts[1].strip() if len(parts) > 1 else ""
+                base = 1
+            if significance.lower().startswith("total"):
+                continue
 
-            # Grab strongs from whichever column contains «
-            for col in parts[2:7]:
+            # Grab the sub-record's OWN strongs (the « column). Group rows
+            # (gentilics) carry their own number — 'Christian' is G5546, not the
+            # parent Jesus entry's G2424 — so remember it for the display forms.
+            row_s = None
+            for col in parts[base + 1: base + 4]:
                 s = extract_strongs_from_field(col.strip())
                 if s:
+                    row_s = s
                     if s[0] == "H" and not cur["h"]:
                         cur["h"] = s
                     elif s[0] == "G" and not cur["g"]:
                         cur["g"] = s
+                    break
 
-            # Collect alternate name spellings for better matching
+            # Collect alternate name spellings for better matching.
             # "Greek" captures LXX forms of OT names (e.g. Elias for Elijah)
-            # which the ABP uses throughout since it's LXX-based
+            # which the ABP uses throughout since it's LXX-based; "Group" rows
+            # are gentilics (Christian, Tyrians) with their own numbers.
             if significance in ("Named", "Spelled", "Spelled combined",
-                                 "Name combined", "Aramaic", "Greek"):
-                unique = parts[2].strip() if len(parts) > 2 else ""
+                                 "Name combined", "Aramaic", "Greek",
+                                 "(same form as previous)", "Group",
+                                 "(same ref[s] with Variant)", "LXX addition"):
+                unique = parts[base + 1].strip() if len(parts) > base + 1 else ""
                 alt = unique.split("|")[0].split("@")[0].strip()
-                if alt and alt != cur["name"]:
+                if alt and alt != cur["name"] and _NAME_SHAPE.fullmatch(alt):
                     cur["names"].add(alt)
+                # Per-version display forms ("Ashkenaz =ESV,NIV; Ashchenaz =KJV"):
+                # TIPNR's own attested spellings, incl. the KJV forms ABP-adjacent
+                # English uses. Queued (not added directly): a spelling used by
+                # two DIFFERENT entities is ambiguous and must be dropped, which
+                # can only be decided after every record is read.
+                disp = parts[base + 3].strip() if len(parts) > base + 3 else ""
+                if disp and not disp.startswith("http") and "«" not in disp:
+                    hg = (row_s if row_s and row_s[0] == "H" else cur["h"],
+                          row_s if row_s and row_s[0] == "G" else cur["g"])
+                    for piece in disp.split(";"):
+                        a2 = piece.split("=")[0].strip()
+                        if (a2 and a2 != cur["name"] and len(a2) > 1
+                                and _NAME_SHAPE.fullmatch(a2)):
+                            k = a2.lower()
+                            _disp_pending.setdefault(k, set()).add(hg)
+                            _disp_vals.setdefault(
+                                k, {"h": hg[0], "g": hg[1], "type": cur["type"]})
 
     save(cur)
+
+    # Resolve queued display-form keys: add only when the primary roster lacks the
+    # spelling (zero regression), DROP any spelling owned by entities with different
+    # numbers (wrong number > missing number). The dropped list is exposed for the
+    # audit record (docs/tickets/alias_ambiguous_dropped.txt).
+    dropped = []
+    for k in sorted(_disp_pending):
+        if k in lookup:
+            continue
+        owners = _disp_pending[k]
+        if len(owners) > 1:
+            dropped.append((k, sorted(x for pair in owners for x in pair if x)))
+            continue
+        lookup[k] = _disp_vals[k]
+    parse_tipnr.dropped_ambiguous = dropped
 
     def _primary(types):
         for t in ("person", "place", "other"):
@@ -513,9 +582,10 @@ def main():
             if candidate.endswith("s"):
                 e = lookup.get(candidate[:-1].lower())
                 if e: return e
-        # 7. Manual alias table for gentilics and name variants
+        # 7. Manual alias table for gentilics and name variants, then the
+        #    hand-checked variant batch (ALIASES wins on overlap)
         for candidate in (bare.lower(), bare2.lower(), clean.lower(), english.lower()):
-            mapped = ALIASES.get(candidate)
+            mapped = ALIASES.get(candidate) or VARIANT_ALIASES.get(candidate)
             if mapped:
                 e = lookup.get(mapped)
                 if e: return e

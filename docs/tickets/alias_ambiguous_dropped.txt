@@ -1,0 +1,97 @@
+# Display-form spellings DROPPED as ambiguous by the fixed TIPNR loader
+# (owned by entities with different numbers; wrong > missing). 2026-07-16.
+# Reviewer condition 2 on the alias batch. spelling | owner numbers
+abiezrite | H33 H44
+ahimelek | H288 H40
+amalekite | H6002 H6003
+ammonite | H5983 H5984  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+arabian | G690 H6152 H6152 H6163  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+arkite | H6208 H757
+ashur | H804 H806
+aswan | H5482 H5515
+babylonia | H894 H895
+babylonian | H894 H896
+benjaminite | H1144 H1145 H3227 H3228
+benjamite | H3225 H3227 H3228
+berekiah | G914 H1296 H3077
+beth arabah | H1026 H6160
+beth shemesh | H1030 H1053
+beth-el | H1008 H1017
+canaanite | G2581 G5478 H3667 H3667 H3669  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+chaldean | G5466 H3679 H3778 H3778 H3779  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+cherethite | H3746 H3774
+cushite | H3568 H3569  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+danite | H1835 H1839
+edomite | H123 H130  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+egyptian | G124 H4713 H4714 H4714  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+ephraimite | H669 H673
+ethiopian | G128 H3568 H3569  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+gadite | H1410 H1425  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+gentile | G1482 G1484 G1672 G1674 H1471 H1471 H3120 H3120
+gershonite | H1648 H1649
+gileadite | H1568 H1569  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+hadarezer | H1909 H1928  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+harran | G5488 H2771 H2771
+hazar enan | H2703 H2704
+he | G2424 G3972 G4074 G4091 H3290 H5511 H558
+heathen | G1482 G1484 H1471 H1471 H1471
+hell | G1067 G5020 H7585 H7585
+hermon | H2768 H2769
+him | G2501 H3130 H3130
+his | H4872 H5146
+holy place | G39 H6944 H6944
+horite | H2752 H2753
+ishmaelite | H3459 H3481
+israelite | G2474 G2475 H3478 H3478 H3478 H3481  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+jakan | H3275 H3292
+jehovah | H3068 H3069
+jehukal | H3081 H3116
+jeish | H3266 H3274
+jew | G2450 G2452 G2453 H3062 H3063 H3063 H3063 H3064  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+jewish | G2451 G2453 H3063 H3063 H3064
+jonas | G2491 G2495 H3124
+judean | G2449 H3063 H3063 H3064
+kenite | H7014 H7017
+kerethite | H3746 H3774
+kohathite | H6955 H6956
+levite | G3019 H3878 H3878 H3879 H3881  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+levitical | G3020 H3878 H3881
+lydian | H3865 H3866
+maachathite | H4601 H4602  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+mahalaleel | G3121 H4111 H4111
+malcham | H4428 H4445
+manassite | H4519 H4520
+mankind | H120 H121
+marduk-baladan | H1255 H4757
+merarite | H4847 H4848
+meunite | H4586 H5984
+micha | H4316 H4318
+michaiah | H4320 H4321 H4322  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+midianite | H4080 H4084 H4092  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+mika | H4316 H4318
+moabite | H4124 H4125  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+molek | G3434 H4428 H4432 H4432 H4445
+most high | H5920 H5943 H5945 H5946
+most holy place | G39 H6944 H6944
+nations | G1484 H1471 H1471
+nazarene | G3479 G3480  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+nebuchadrezzar | H5019 H5020
+nephussim | H5300 H5304
+passover lamb | G3957 H6453 H6453
+people | G1484 H120 H1471 H5971
+peoples | G1484 H1471 H1471
+persian | H6539 H6540 H6542 H6543 H670  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+reubenite | H7205 H7206
+shilonite | H7888 H8023  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+sibbekai | H4012 H5444
+sidonian | G4606 H6721 H6722  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+simeonite | H8095 H8099
+sion | G4622 H3389 H7865
+syrian | G4948 H130 H7421 H758 H758 H761
+troop | H1408 H4507
+uruk | H751 H756
+villages | H2699 H3715
+west | H3220 H6152
+zacharias | G2197 G2197 H2148  <- ALSO IN HAND ALIASES (still resolves via it - no behavior change)
+zorobabel | G2216 G2216 H2216
+# total dropped: 93; overlapping hand ALIASES: 23 ['ammonite', 'arabian', 'canaanite', 'chaldean', 'cushite', 'edomite', 'egyptian', 'ethiopian', 'gadite', 'gileadite', 'hadarezer', 'israelite', 'jew', 'levite', 'maachathite', 'michaiah', 'midianite', 'moabite', 'nazarene', 'persian', 'shilonite', 'sidonian', 'zacharias']

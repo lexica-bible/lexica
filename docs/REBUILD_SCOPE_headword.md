@@ -48,6 +48,15 @@ time. Re-verify only if significant new data lands before the run.
   genuinely head-less slots remain.
 
 ## Controls (every one fires before its zero is trusted)
+- **Alias batch (reviewer conditions, 2026-07-16):**
+  1. **Gentilic guard regression** — before the binding re-apply is trusted, re-run the
+     two live-verified guard checks (Canaanitess 1Ch 2:3 → honest fallback; Midian
+     Exo 2:15 → place card) PLUS at least one NEW-name gentilic (e.g. Christian
+     Act 11:26 or Tyrians 1Ch 22:4). Guard behavior shifts → STOP.
+  2. Ambiguous-drop list = `docs/tickets/alias_ambiguous_dropped.txt` (93 spellings;
+     23 overlap hand ALIASES and still resolve through it — no behavior change).
+  3. **Christian → G5546 (own Group number, NOT G2424)** — load-bearing, fires before
+     the roster is trusted. RAN GREEN on the pinned file 2026-07-16, re-verify on PA.
 - RC-2: 1Ch 1:49 → a Shaul row with real identity, no blank row (known positive).
 - RC-1: Isa 38:21 "Isaiah said" → head isaiah · Jos 17:1 "Bashan area." → bashan ·
   Deu 15:12 "Hebrew woman," → hebrew.
