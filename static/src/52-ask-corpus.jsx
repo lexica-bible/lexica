@@ -560,7 +560,7 @@ function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
   const fork = lexica && lexica.fork;
   return (
     <div className="ac-insp-root">
-      <div className="ac-insp-band ac-insp-band--split">
+      <div className="ac-insp-band ac-insp-band--split sh-band">
         <button className="detail-back" onClick={onClose}>‹ Overview</button>
         <span className="ac-insp-ref">{occ.label}</span>
       </div>
@@ -988,7 +988,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // (no static "Inspect" label, no phantom second rule). A band shows only once there's content.
   const inspectIdle = (selectedAnswer || latestPanel) ? (
     <div className="ac-insp-idle">
-      <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : "How often these words occur"}</div>
+      <div className="ac-insp-band sh-band">{selectedAnswer ? "What this answer rests on" : "How often these words occur"}</div>
       <div className="ac-insp-scroll">
         {selectedAnswer
           ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet}/>

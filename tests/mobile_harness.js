@@ -263,6 +263,51 @@ const NOTES = [
     created: "2026-07-04T09:00:00.000Z", updated: "2026-07-08T09:00:00.000Z" },
 ];
 
+// ── The COUNT axis (&notes=1 | &notes=many) ─────────────────────────────────────
+// Height stability is a per-COUNT claim, so "empty / few / many" is a required axis on every
+// Panel card (reviewer ruling, 2026-07-15): a card that sizes to its content looks correct at
+// one row count and wrong at another, and a single-count fixture would pass a card that jumps.
+//   * empty -> omit &notes    (store cleared; NotesView's own empty state)
+//   * few   -> &notes=1       (the curated set above: 5 notes + 2 journal pages)
+//   * many  -> &notes=many    (the curated set + MANY_EXTRA generated verse notes)
+// The generated rows are NOT a new shape. Each is the traced SINGLE-VERSE note shape — the one
+// 60-library.jsx `verseAnchor()` (:1291-1295) writes from the verse-number menu: `start` and
+// `end` stamped to the SAME verse with `pos: null`, which is all that anchor writer can ever
+// produce. Only book/chapter/verse/updated/flags vary. They stay inside the four chapters
+// CHAPTER_LEN knows and inside each one's REAL verse count — an unknown chapter throws by
+// design (:179), and an out-of-range verse would be inventing corpus.
+// The bookmark/color/body cycle is load-bearing, not decoration: the list's four filters
+// (35-notes.jsx:412-414) each slice on one of those fields, so a "many" seed that varied none
+// of them would leave three of the four filters showing the curated set's handful — i.e. it
+// would claim to measure "many" while measuring "few" on every filter but All.
+const MANY_ANCHORS = [
+  { book: "Joh", bookName: "John", chapter: 4 },
+  { book: "Gen", bookName: "Genesis", chapter: 1 },
+  { book: "Rom", bookName: "Romans", chapter: 8 },
+  { book: "Psa", bookName: "Psalms", chapter: 104 },
+];
+const MANY_EXTRA = 40;
+const manyNotes = () => {
+  const out = NOTES.slice();
+  for (let i = 0; i < MANY_EXTRA; i++) {
+    const a = MANY_ANCHORS[i % MANY_ANCHORS.length];
+    const verse = (i % CHAPTER_LEN[`${a.book}/${a.chapter}`]) + 1;
+    const day = String(1 + (i % 28)).padStart(2, "0");
+    out.push({
+      id: `h-many-${i}`, device: "harness",
+      body: i % 3 === 0 ? `Generated row ${i} — carries a body, so the "Notes" filter sees it.` : "",
+      color: i % 2 === 0 ? "yellow" : null,
+      bookmark: i % 4 === 1,
+      created: `2026-06-${day}T09:00:00.000Z`, updated: `2026-06-${day}T09:00:00.000Z`,
+      corpus: "bible", translation: "abp", book: a.book, bookName: a.bookName, chapter: a.chapter,
+      start: { verse, pos: null }, end: { verse, pos: null },
+      snippet: `Stand-in snippet for ${a.bookName} ${a.chapter}:${verse}.`,
+      refLabel: `${a.bookName} ${a.chapter}:${verse}`,
+    });
+  }
+  return out;
+};
+
 // ── News ────────────────────────────────────────────────────────────────────
 // news.db is PA-only, so every shape below is traced to the PRODUCING Python in this repo,
 // per field. NewsView's mobile branch never reaches its <Shell> without this: it returns a
@@ -496,7 +541,7 @@ const fixtureFor = (pathname) => {
 // that isn't here; anything unfixtured resolves empty rather than hanging (a hang would
 // leave the surface mid-render and every measurement would be of a half-drawn page).
 // __LEX_HARNESS__ records what was asked for, so a read can prove the surface got its data.
-const PAGE = (view, admin, bundle, notes) => `<!DOCTYPE html>
+const PAGE = (view, admin, bundle, notesSeed) => `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -526,14 +571,15 @@ const PAGE = (view, admin, bundle, notes) => `<!DOCTYPE html>
       localStorage.removeItem("lexica.owner.v1");
       localStorage.removeItem("lexica.news.key.v1");
     }
-    // ?notes=1 — seed the notes store. It is NOT stubbed at /api/ because it isn't served
-    // from there: NotesStore reads localStorage on first load() and caches, so the seed has
-    // to be in place BEFORE app.js runs. Unseeded, every Notes read is of the empty state —
-    // which is a real state worth measuring, so this stays opt-in rather than always-on
-    // (and the notes/highlights also paint marks in the Library reader, which would quietly
-    // move every OTHER surface's measurements).
-    if (${notes ? "true" : "false"}) localStorage.setItem("lexica.notes.v1", ${JSON.stringify(JSON.stringify(NOTES))});
-    else localStorage.removeItem("lexica.notes.v1");
+    // ?notes=1 (few) | ?notes=many — seed the notes store. It is NOT stubbed at /api/ because
+    // it isn't served from there: NotesStore reads localStorage on first load() and caches, so
+    // the seed has to be in place BEFORE app.js runs. Unseeded, every Notes read is of the
+    // empty state — which is a real state worth measuring, so this stays opt-in rather than
+    // always-on (and the notes/highlights also paint marks in the Library reader, which would
+    // quietly move every OTHER surface's measurements).
+    ${notesSeed
+      ? `localStorage.setItem("lexica.notes.v1", ${JSON.stringify(JSON.stringify(notesSeed))});`
+      : `localStorage.removeItem("lexica.notes.v1");`}
   } catch (e) {}
   const _F = ${JSON.stringify(FIXTURES)};
   const _CH = ${JSON.stringify(CHAPTERS)};
@@ -623,12 +669,22 @@ http.createServer((req, res) => {
   const view = url.searchParams.get("view") || "corpus";
   const admin = url.searchParams.get("admin") === "1";
   const bundle = url.searchParams.get("bundle") || "working";
-  const notes = url.searchParams.get("notes") === "1";
+  // empty (omitted) / few (=1) / many (=many) — the required count axis. An unrecognised value
+  // is a typo in a probe, not a request for the empty state: fail loudly rather than silently
+  // measuring an empty card and calling it "many".
+  const notesArg = url.searchParams.get("notes");
+  if (notesArg !== null && notesArg !== "1" && notesArg !== "many") {
+    res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end(`mobile_harness: notes=${notesArg} is not a seed. Use notes=1 (few), notes=many, or omit it (empty).`);
+    return;
+  }
+  const notesSeed = notesArg === "many" ? manyNotes() : notesArg === "1" ? NOTES : null;
   res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-  res.end(PAGE(view, admin, bundle, notes));
+  res.end(PAGE(view, admin, bundle, notesSeed));
 }).listen(PORT, "127.0.0.1", () => {
   console.log("mobile harness on http://127.0.0.1:" + PORT + "/?view=corpus");
   console.log("views: library | lexicon | corpus | notes | study | news | about");
   console.log("add &admin=1 for the admin's chrome (7 mobile nav tabs, not 5) — also the News tab's gate");
   console.log("add &notes=1 to seed the notes store (5 notes + 2 journal pages)");
+  console.log("add &notes=many for the same set + " + MANY_EXTRA + " generated notes (the count axis; omit &notes for empty)");
 });

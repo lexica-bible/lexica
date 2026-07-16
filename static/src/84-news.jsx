@@ -366,7 +366,7 @@ function FeedShape({ shape, onPick }) {
   const clusters = shape.clusters || [];
   return (
     <div className="news-shape">
-      <div className="news-shape-head">Today's watch</div>
+      <div className="news-shape-head sh-band">Today's watch</div>
       <div className="news-shape-body">
         <div className="news-shape-tally">
           <div className="news-shape-buried">
@@ -433,7 +433,7 @@ function NewsWhy({ story, onBack }) {
   const peak = (story.peak_date || "").slice(0, 10);
   return (
     <div className="news-shape news-why">
-      <div className="news-shape-head news-why-head">
+      <div className="news-shape-head news-why-head sh-band">
         <span className="news-why-headt">Why it surfaced</span>
         <button className="detail-back" onClick={onBack}>‹ Watch</button>
       </div>

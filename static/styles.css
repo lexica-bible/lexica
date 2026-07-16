@@ -5080,7 +5080,7 @@ button.study-verse-ref { border: none; }
      the center strip's rule; inside a sheet the sheet's own head already names the panel,
      so it rendered "Recent conversations" twice, one line apart. The sheet head wins (it's
      the sheet's chrome, same as every other sheet); the desktop band is untouched. */
-  .ac-m .zsheet .ac-rail-top { display: none; }
+  .ac-m .sh .ac-rail-top { display: none; }
   .ac-title { font-size: 34px; }
   .ac-lede { font-size: 15px; }
   .ac-examples { grid-template-columns: 1fr; }
@@ -5192,18 +5192,23 @@ button.study-verse-ref { border: none; }
   /* The list sheet: the rail's contents, with the search + filters that drive them. The rail's
      desktop chrome does NOT come along — .notes-rail-scroll's own scroll box would nest inside
      the sheet's, and the sheet head already names the list. */
-  .notes-m .zsheet .notes-search { margin: 0 0 10px; }
-  .notes-m .zsheet .notes-controls { margin: 0 0 12px; }
-  .notes-m .zsheet .notes-list { margin: 0; }
-  .notes-m .zsheet .journal-view { padding: 0; }
+  .notes-m .sh .notes-search { margin: 0 0 10px; }
+  .notes-m .sh .notes-controls { margin: 0 0 12px; }
+  .notes-m .sh .notes-list { margin: 0; }
+  .notes-m .sh .journal-view { padding: 0; }
 
   /* Inspect rides in BARE (it owns its band + scroll box), so it must fill the sheet itself. */
-  .notes-m .zsheet--bare .note-insp { flex: 1 1 auto; min-height: 0; }
+  .notes-m .sh--bare .note-insp { flex: 1 1 auto; min-height: 0; }
   /* The band is a DESKTOP header height (--hdr-h, sized to clear the navy nav it floats over).
-     Inside a sheet there's no nav to clear, so it's just a title row — size it like one. */
-  .notes-m .zsheet--bare .note-insp-band { min-height: 0; padding: 2px 4px 10px; border-bottom: 0;
+     Inside a sheet there's no nav to clear, so it's just a title row — size it like one.
+     It KEEPS its divider (its own base rule): in a bare sheet the band IS the card's header,
+     and the contract's header is divider + title. It used to drop the divider to match the
+     old .zsheet-head, which didn't have one — matching the frame that was wrong. Its type is
+     already the contract's (.sh-title: serif 16/600), so the two carriers agree. Padding is
+     left exactly as shipped (63b550e) — that's the content inset, not the header spec. */
+  .notes-m .sh--bare .note-insp-band { min-height: 0; padding: 2px 4px 10px;
     background: none; }
-  .notes-m .zsheet--bare .note-insp-scroll { padding: 0 0 calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .notes-m .sh--bare .note-insp-scroll { padding: 0 0 calc(16px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ============================================================
@@ -5829,9 +5834,9 @@ button.study-verse-ref { border: none; }
   .news-mfilters { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
   /* The why/watch panel's 80px bottom padding is DESKTOP clearance (there it sits in a fixed
      full-height rail). Inside a sheet it's just an 80px dead gap under the last source —
-     the other sheets' .zsheet-body carries no such gap, so it read as "not the same card".
+     the other sheets' .sh-body carries no such gap, so it read as "not the same card".
      Trim it to the sheet's own safe-area padding. */
-  .zsheet .news-shape-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .sh .news-shape-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   .news-msheet .news-seg { flex-wrap: wrap; }
   .news-msheet .news-thread-sel { align-self: flex-start; }
 }
@@ -5887,16 +5892,79 @@ button.study-verse-ref { border: none; }
 .zbar-btn svg { width: 22px; height: 22px; }
 .zbar-btn.on { color: var(--accent); }
 .zbar-btn:disabled { color: var(--ink-4); opacity: 0.5; }
-.zsheet-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; }
-.zsheet {
-  position: fixed; left: 0; right: 0; bottom: 0; max-height: 82dvh;
-  background: var(--paper); border-radius: 6px 6px 0 0; z-index: 51;
-  display: flex; flex-direction: column; box-shadow: 0 -8px 30px rgba(0,0,0,0.18);
+/* ═══ THE MOBILE SHEET CONTRACT ══════════════════════════════════════════════════════
+   ONE shell for every mobile bottom-sheet card. Spec + rulings: docs/claude/frontend.md →
+   "The mobile sheet contract". Component: `Sheet` in 20-shared-components.jsx.
+   Replaced five hand-rolled frames whose drift made every fix per-card (JP, 2026-07-15).
+   ⚠ MOBILE CHROME ONLY — never style .detail-head/.detail-body/.note-insp* structure from
+   here; those are SHARED with the DESKTOP side panels. This block styles `.sh-*` and nothing
+   else. A per-card height/radius/handle/z-index override IS the drift; don't add one.
+   ──────────────────────────────────────────────────────────────────────────────────── */
+:root {
+  --sh-clear-top: var(--bar-h);      /* the app's fixed top nav (.mobile-tabs) */
+  --sh-clear-bottom: 0px;            /* default: the card runs to the screen's bottom edge */
 }
-/* A bare sheet (an inline RightStack inside) has no intrinsic content height, so the flex-fill
-   stack would collapse — give it a definite height to fill. */
-.zsheet--bare { height: 82dvh; }
-.zsheet-grab { flex: 0 0 auto; display: flex; justify-content: center; padding: 8px 0 4px; cursor: grab; }
-.zsheet-handle { width: 36px; height: 4px; border-radius: var(--radius); background: var(--rule-2, var(--rule)); }
-.zsheet-head { flex: 0 0 auto; padding: 4px 18px 10px; font-weight: 600; font-size: 14px; color: var(--ink); }
-.zsheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 18px env(safe-area-inset-bottom); }
+/* Library is the one tab with a bottom bar the card must NOT cover: the reading cockpit
+   (.lib-toolbar) is that tab's primary control. The zone bars (.zbar) are deliberately
+   coverable — a card sits over its own bar, which is why nothing in a sheet needs bar
+   clearance (hit-test proof: frontend.md). Hence 48px standard / 96px on Library. */
+.app.view-library { --sh-clear-bottom: var(--bar-h); }
+
+.sh-scrim { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); z-index: 150; animation: fade-in 0.2s ease; }
+.sh {
+  position: fixed; left: 0; right: 0;
+  bottom: calc(var(--sh-clear-bottom) + env(safe-area-inset-bottom, 0px));
+  /* ONE sheet layer, and it sits UNDER the app's top nav (z 200) — every card stops short of
+     the nav anyway, so the nav stays visible and tappable over an open card. Above all page
+     chrome (the nav drawer at 60, the mobile audio dock at 49, the desktop popouts at 100). */
+  z-index: 151;
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
+  overscroll-behavior: contain;
+  animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+/* PANEL — the default, for any card holding DATA. A HEIGHT, not a ceiling: the card fills
+   the room and its content cannot move it. A filter that drops the row count from 5 to 1
+   must not resize the card (JP's report; the old .zsheet sized to content and jumped 268px). */
+.sh--panel {
+  height: calc(100dvh - var(--sh-clear-top) - var(--sh-clear-bottom)
+               - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+/* MENU — the named variant, for a card holding ONLY controls fixed in code. Its height may
+   follow that control set (a one-input Search card at full height is 600px of nothing), but
+   never data. A menu that moves across its own state changes is misclassified -> panel. */
+.sh--menu {
+  max-height: calc(100dvh - var(--sh-clear-top) - var(--sh-clear-bottom)
+                   - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+.sh-grab { flex: 0 0 auto; display: flex; justify-content: center; padding: 8px 0 4px; cursor: grab; touch-action: none; }
+.sh-handle { width: 40px; height: 4px; border-radius: var(--radius); background: var(--rule-2, var(--rule)); }
+/* The header spec. The divider is the point — the frames that HAD one (.detail-head,
+   .wm-sheet-head, .mpick-head, and every bare child's own band) read as finished cards;
+   the two that didn't (.zsheet-head, .msheet-head) read as unfinished, which is the
+   inconsistency JP reported against Notes. Type matches the bands a bare card brings in
+   (.note-insp-band / .news-shape-head: serif 16/600) so both carriers of the title agree. */
+.sh-head {
+  flex: 0 0 auto; box-sizing: border-box;
+  display: flex; align-items: center; gap: 10px;
+  padding: 2px 18px 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.sh-title { flex: 1; min-width: 0; font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
+.sh-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+.sh-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 18px env(safe-area-inset-bottom); }
+/* A bare child's band IS the card's header. On DESKTOP those bands are sized to clear the navy
+   nav they float over (--hdr-h = 66px); inside a sheet there is no nav to clear, so the band is
+   just a title row and must stand exactly as tall as .sh-head. Notes had already done this in a
+   LOCAL override; News and Ask-corpus never did, so their headers stood 66px against every other
+   card's 36.8 — the same shape of drift as the missing divider, just harder to see. One rule, at
+   the contract, so the next bare card inherits it instead of re-deriving it.
+   VERTICAL only: the horizontal inset is each card's own content rhythm (its band lines up with
+   its own body), and those bodies genuinely differ. Don't fold that in here. */
+.sh--bare .sh-band { height: auto; min-height: 0; padding-top: 2px; padding-bottom: 10px; }
+/* A bare child owns the scroll box, so it must be the flex-fill itself. The panel height above
+   is definite, so the child has real room to fill — the old frame had to hard-code 82dvh here. */
+.sh--bare > *:last-child { flex: 1 1 auto; min-height: 0; }

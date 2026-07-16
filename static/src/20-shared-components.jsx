@@ -510,6 +510,54 @@ function useSwipeToDismiss(onClose) {
 }
 
 // ============================================================
+// THE MOBILE SHEET — one shell for every bottom-sheet card.
+// ============================================================
+// Full spec + the rulings behind it: docs/claude/frontend.md → "The mobile sheet contract".
+// Built 2026-07-15 to end a documented drift: five hand-rolled frames (.detail-sheet,
+// .wm-sheet, .msheet, .zsheet, .mpick) meant every fix was per-card and the drift grew back.
+// Consumers pass content; the shell owns structure. Do NOT re-add a per-card height,
+// radius, handle or z-index — that is the drift this exists to stop.
+//
+// ⚠ THIS SHELL OWNS MOBILE CHROME ONLY. `.detail-head` / `.detail-body` (and the other
+// panel-body classes) are SHARED with the DESKTOP side panels (`.detail-side`). Style them
+// here and a mobile fix lands on the desktop rail. Anything this shell styles is `.sh-*`.
+//
+// HEIGHT — two classes, and the classification rule is not a judgement call:
+//   holds data -> `panel`;  holds controls only -> `menu`.
+//   • panel (DEFAULT) = a FIXED height: from just under the app's top nav down to the
+//     bottom clearance. Not a ceiling — a height. The body scrolls inside it, and nothing
+//     about the content can move it. This is the fix for the jump JP reported: a card that
+//     sized to its rows changed height when a filter changed the row count.
+//   • menu = a named contract VARIANT, not a per-card override. Its height comes from a
+//     control set fixed in code, never from data. A menu whose height moves across its OWN
+//     state changes is misclassified and becomes a panel. There is no third class.
+//
+// `bare` = the child owns its own scroll box (an inline RightStack, the News why-panel), so
+// skip the padded .sh-body or it nests a second scroll box and collapses the flex-fill.
+// A bare child carries its own header BAND — that band IS the header (it already wears the
+// divider + title spec), so a bare sheet takes no `title`: passing one prints the name twice.
+function Sheet({ title, actions, onClose, variant, bare, className, children }) {
+  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
+  const cls = ["sh", "sh--" + (variant || "panel"), bare ? "sh--bare" : "", className || ""]
+    .filter(Boolean).join(" ");
+  return (
+    <>
+      <div className="sh-scrim" onClick={onClose} />
+      <div ref={sheetRef} className={cls} role="dialog" aria-label={title || "Panel"}>
+        <div className="sh-grab" aria-hidden="true"><div className="sh-handle" /></div>
+        {(title || actions) && (
+          <div className="sh-head">
+            <span className="sh-title">{title}</span>
+            {actions ? <span className="sh-actions">{actions}</span> : null}
+          </div>
+        )}
+        {bare ? children : <div ref={scrollRef} className="sh-body">{children}</div>}
+      </div>
+    </>
+  );
+}
+
+// ============================================================
 // LEAFLET MINI-MAP
 // ============================================================
 // Leaflet (CSS+JS) is loaded ON DEMAND — the map only ever appears inside the

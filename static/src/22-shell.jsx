@@ -57,7 +57,7 @@ function RightStack({ ctl, root, empty, className, inline }) {
       {Wrap(layers.map((L, i) => (
         <div key={L._id} className={"rstack-layer" + (i === topIdx ? " on" : "")} aria-hidden={i !== topIdx}>
           {!L.root && (
-            <div className="rstack-bar">
+            <div className="rstack-bar sh-band">
               <button className="detail-back" onClick={ctl.pop} aria-label={"Back to " + (L.backLabel || "previous").toLowerCase()}>
                 ‹ {L.backLabel || "Back"}
               </button>
@@ -70,23 +70,12 @@ function RightStack({ ctl, root, empty, className, inline }) {
   );
 }
 
-// A swipe-dismiss bottom sheet for the mobile shell (reuses the shared hook from
-// 20-shared-components so it matches every other sheet's feel). Plain scrim + rounded
-// sheet; drag down or tap the scrim to close.
-// `bare` = the child manages its own fill + scroll (an inline RightStack), so skip the padded
-// scrolling .zsheet-body wrapper and let the child be the flex-fill instead.
+// The shell's collapsed zone, as a bottom sheet. This is now a THIN WRAPPER on the shared
+// `Sheet` (20-shared-components.jsx) — a zone sheet is not a special kind of card, it's a card.
+// Everything structural (height, header, handle, radius, stacking, the dismiss gesture) lives
+// in the contract; don't re-add any of it here. `bare` passes straight through.
 function ZoneSheet({ title, onClose, children, bare }) {
-  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
-  return (
-    <>
-      <div className="zsheet-scrim" onClick={onClose} />
-      <div ref={sheetRef} className={"zsheet" + (bare ? " zsheet--bare" : "")} role="dialog" aria-label={title || "Panel"}>
-        <div className="zsheet-grab" aria-hidden="true"><div className="zsheet-handle" /></div>
-        {title && <div className="zsheet-head">{title}</div>}
-        {bare ? children : <div ref={scrollRef} className="zsheet-body">{children}</div>}
-      </div>
-    </>
-  );
+  return <Sheet title={title} onClose={onClose} bare={bare}>{children}</Sheet>;
 }
 
 // Mobile bottom toolbar — one equal-width slot per collapsed zone (rail / inspect / etc.).

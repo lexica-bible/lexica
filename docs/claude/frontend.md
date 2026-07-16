@@ -57,7 +57,19 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   500px — use device emulation), seed `lexica_tour_seen` (the first-run modal covers everything),
   and stub `/api/` ONLY (it once answered for `chronological.json` and blanked the whole desktop).
   `?admin=1` matters — JP reviews as admin, whose nav carries more tabs than a reader's.
-  `&notes=1` seeds the notes store (4 notes + 1 journal page).
+  `&notes=1` seeds the notes store (5 notes + 2 journal pages); `&notes=many` adds 40 generated
+  rows (the count axis — empty/few/many is required on every Panel card); omit it for empty.
+  An unknown `notes=` value is REJECTED with a 400 — a typo must not quietly serve the empty
+  state and be measured as "many".
+- **⚠ A 200 FROM THE RIGHT PORT IS NOT A 200 FROM YOUR CODE (2026-07-15).** A harness left
+  running by an EARLIER session was squatting on 8099; the new one died with `EADDRINUSE` in the
+  background while `curl` cheerfully returned 200 from the old one. Its old code reads an
+  unknown `notes=many` as "no seed", so the next measurement would have been of an EMPTY list,
+  reported as "many" — a fault injector wearing a green tick. **Caught only by control-testing
+  the FAILURE case**: the bad-seed probe was supposed to 400 and returned 200, and that
+  contradiction is what exposed the squatter. Check the process you started is the process
+  answering (a known-negative probe does it in one call), and prefer a fresh port to killing
+  something a parallel session may own.
 - **Provenance when a surface has NO server producer (Notes, 2026-07-15 — the adapted form).** The
   rule is "shape fixtures from the producing code", not "from Python". Notes is browser-local:
   `NotesStore` reads `localStorage` once on first load and caches, so its fixture is a
@@ -144,6 +156,93 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   restyles four others.** (News's score chips read white beside accent date chips until they were
   moved onto `.news-presets` — one rule, both.) Same shape as the "reference the system, never a
   local copy" rule: pick the right shared class, don't fork the colour.
+
+## THE MOBILE SHEET CONTRACT (2026-07-15)
+Every mobile bottom-sheet card is the shared **`Sheet`** (`static/src/20-shared-components.jsx`),
+styled by the `.sh-*` block in `static/styles.css`. Consumers pass CONTENT; the shell owns
+STRUCTURE. **A per-card height, radius, handle, z-index or header is the drift this exists to
+stop — don't add one.** `ZoneSheet` (22-shell.jsx) is a thin wrapper, not a second frame.
+
+**Why it exists.** Five hand-rolled frames (`.detail-sheet`, `.wm-sheet`, `.msheet`, `.zsheet`,
+`.mpick`) meant every fix was card-by-card and the drift grew back — five open heights, three
+handle widths, two radii, five z-index layers, and a header divider on three frames but not the
+other two. JP called it: *"the reason past passes didn't stick is five frames."* The parked
+"heights still drift" note in `project_mobile_gestures` was this, unfixed for a month.
+
+### The contract
+| Rule | The value |
+|---|---|
+| Open height | FIXED at open. Fills from under the top nav to the tab's bottom clearance. |
+| Height source | `--sh-clear-top` (`--bar-h`) / `--sh-clear-bottom` (0, or `--bar-h` on Library) |
+| Header | drag handle → title row → hairline `1px var(--rule)`. Title = `--f-serif` 16px/600. |
+| Handle | 40×4, `--rule-2` (Word study's number — the reference surface) |
+| Radius | `var(--radius)` top corners only. **The 18px pair is dead — don't reintroduce it.** |
+| Stacking | ONE layer: scrim 150, sheet 151 |
+| Dismiss | `useSwipeToDismiss`, 90px commit. Already uniform pre-pass; don't fork it. |
+
+- **Height is a HEIGHT, not a ceiling.** The old frames capped and then sized to content, so a
+  filter that dropped the row count resized the card under the reader. Measured on the Notes
+  list at 375px: All (5 rows) 516.4px tall → Bookmarks (1 row) 248px — the card shrank 268px and
+  its top edge leapt down 268px. JP reported it as a Notes bug; it was the FRAME, and six other
+  cards had it latent. Now 0/1/3/5/11/45 rows all measure 764px.
+- **48px standard, 96px on Library.** One rule, two results. Library's reading cockpit owns that
+  tab's bottom and must not be covered. The zone bars (`.zbar`) are deliberately coverable — a
+  card sits OVER its own bar (hit-test proof below), which is why nothing inside a sheet needs
+  bar clearance. Consequence worth knowing: **you cannot tap another zone's button while a sheet
+  is open** — close it first. A probe that ignores its own hit-test return will silently measure
+  the wrong sheet (it did, once, this session).
+- **The nav stays on top.** `.mobile-tabs` is z200, so every card sits UNDER it. Each card stops
+  short of the nav anyway, so the nav stays visible and tappable over an open card. Before this,
+  `.msheet` (220) and `.mpick` (210) floated over it while `.detail-sheet` (51) and `.wm-sheet`
+  (121) sat under — nobody had decided; they'd each just picked a number.
+
+### Two size classes — and the classification rule is not a judgement call
+**Holds data → `panel`. Holds controls only → `menu`.** A new card self-classifies on that line.
+- **`panel`** (the default) — a fixed height; content cannot move it. Every card holding data.
+- **`menu`** — a named contract VARIANT, never a per-card override. Its height follows a control
+  set fixed IN CODE, never data. It exists because a one-input Search card at full height is
+  ~600px of nothing — the same dead-space argument JP used to rule on the Ask-corpus bar.
+- **A menu whose height moves across its OWN state changes is misclassified and becomes a
+  panel.** There is no third class and no per-card tuning. Test every menu for this.
+- The old `.wm-sheet.tall` flag was NOT drift — it was this distinction, un-named: Word study's
+  Distribution + Word card are data (tall), its Views + Search are controls (short).
+
+### `bare` — the child owns its scroll box
+An inline RightStack / the News why-panel manage their own fill + scroll, so `bare` skips the
+padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill).
+- **A bare child brings its OWN header band, and that band IS the card's header** — so a bare
+  sheet takes NO `title`, or the name prints twice. The bands already wear the contract's spec
+  (serif 16/600 + the divider), which is why "one header spec, two carriers" resolves this
+  instead of a fork. **A bare card qualifies for the exemption ONLY if its band is
+  UNCONDITIONAL** — one that appears in some states and not others must supply a `title` for the
+  states it lacks. All four bands today are unconditional at every state the sheet can reach
+  (Ask-corpus's truly-empty `ZoneEmpty` has no band by ruling, but its bar slot is DISABLED
+  until there's an answer, so that state is unreachable as a sheet — check the gate, not just
+  the render).
+- **Every band wears `sh-band`** (`.note-insp-band` / `.news-shape-head` / `.ac-insp-band` /
+  `.rstack-bar`). One rule at the contract re-sizes them inside a sheet:
+  `.sh--bare .sh-band { height: auto; min-height: 0; padding-top: 2px; padding-bottom: 10px }`.
+  **Why it's needed:** on desktop a band is `--hdr-h` (66px) to clear the navy nav it floats
+  over; inside a sheet there is no nav, so it's a title row. Notes had fixed this LOCALLY, so
+  News's and Ask-corpus's headers stood 66px against every other card's 36.8 — invisible to a
+  divider check and caught only by measuring every header. Add the class to any new band.
+  **VERTICAL only** — the side inset is each card's own content rhythm and those bodies differ.
+- **A band carrying an inline control stands taller** (Ask-corpus depth 2, with its `‹ Overview`
+  back link: 42.4 vs 36.8). True of BOTH carriers — `.sh-head` with `actions` does the same — so
+  it's consistent, not drift. Flagged, not ruled.
+- Notes's inspect band used to set `border-bottom: 0` inside the sheet — **it was matching
+  `.zsheet-head`, the frame that was missing the divider.** A card conformed to a broken frame;
+  that's the shape of this whole drift in one line.
+- The child fills via `.sh--bare > *:last-child { flex: 1 1 auto; min-height: 0 }`. The panel
+  height is definite, so the child has real room — the old frame had to hard-code `82dvh`.
+
+### The single sanctioned exception: `.mpick` (the book picker)
+Full-screen height + its own ✕. It is a **screen-replacing navigator with its own back-stack**
+(Books → Chapters), not a card layered over the reader; a 66-book list inside a card would be a
+scroll box in a scroll box. The ✕ stays because full-screen means **there is no scrim to tap** —
+it's the only visible way out, so the "no close X on mobile" rule's modal exemption applies.
+It DOES adopt the shared header spec and it keeps the swipe hook (both, not either).
+**This is the only exception. A second one needs its own ruling.**
 
 ## Three-zone shell (shared workspace frame)
 Navigate / read / inspect. **Frame components in `static/src/22-shell.jsx`:** `Shell` (four-slot
@@ -250,6 +349,16 @@ rulings now converge on it, so this is a standing rule, not a coincidence:
   a distinction Word study's flat list doesn't).
 - **Never "also converge" the reference.** If a pass moves Word study's pixels, the pass is wrong
   — that's how a reference stops being one.
+- **⚠ AMENDMENT (2026-07-15, JP-confirmed) — what the guardrail actually bars.** It bars
+  *incidental* convergence: a pass where Word study is a BYSTANDER must leave it byte-identical.
+  It does NOT bar a unification JP explicitly ordered that names Word study as a target — it bars
+  doing that **silently or unmeasured**. So reference-surface convergence needs BOTH: an explicit
+  JP-sanctioned ruling, AND the measurement built BEFORE the pixels move. **Precedent: the mobile
+  sheet contract** (this session) — Word study was one of the five frames, so `.wm-sheet` had to
+  migrate; the ruling was taken explicitly, and the lexicon fixture is a binding pre-condition of
+  the `.wm-sheet` step (its four sheets are unmeasurable until it exists — six endpoints:
+  `lexiconLookup`/`lexiconProfile`/`lexiconVerses`/`lexiconEnglish`/`lexiconBooks`/`lexica`).
+  Citing this amendment to move Word study without a fresh ruling is the abuse it guards against.
 
 ### Italics are translator-supplied words — they never out-shout the scripture (2026-07-15, `63b550e`)
 In ABP an italic word is the TRANSLATOR's, not the text's — the least original thing on the page,

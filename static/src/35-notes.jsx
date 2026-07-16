@@ -287,7 +287,7 @@ function NoteVerseInspect({ note, onReadInContext }) {
   }
   return (
     <div className="note-insp">
-      <div className="note-insp-band">{label}</div>
+      <div className="note-insp-band sh-band">{label}</div>
       <div className="note-insp-scroll">
         <div className="note-insp-ctx">
           {noteInspRows(lo, hi, lastVerse).map(r => row(r.verse, r.kind))}
