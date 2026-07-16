@@ -1,10 +1,16 @@
 # TICKET — Stopword highlighting in Ask-the-corpus: cited-set contamination
 
-Status: OPEN — diagnosed 2026-07-16 (the head-word live control: prediction FAILED the
-right way — head data in the control verses is CLEAN; the defect is in the highlight
-set, not the words table). DECOUPLED from the head-word rebuild — ships on the fast
-path (code + tests + deploy, gentilic-guard pattern). JP ruling: fix BOTH doors
-regardless of which fired.
+Status: **SHIPPED + LIVE-VERIFIED 2026-07-16** (deploys `d948a4d` + `d925983`; Gen 1:1
+arche thread: articles stopped glowing, real words stay gold, "ho" chip gone). All
+three legs live: acceptance filter on fresh answers · unified frontend builder ·
+read-time cleaning of saved answers (server cache reads + browser-stored threads via
+the function-strongs endpoint).
+**Lesson (cost one deploy cycle):** "cached answers self-heal via the frontend" was
+asserted UNVERIFIED — true only for door-2 collisions, and reopened threads replay a
+browser-stored copy that no server-side filter can reach. Corrected discipline: a
+coverage claim is verified against the ACTUAL load path (where the displayed data
+comes from, not where it's made) before receipt.
+Original diagnosis follows.
 
 ## Symptom
 An arche (G746) search's key passages highlight "the" / "by" across Gen 1:1-3,
