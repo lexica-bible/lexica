@@ -417,6 +417,64 @@ def test_eimi_subject_split():
           [("Crete shall be", "G1510"), ("a pasture", "G3542")])
 
 
+# ── 11d. capitalized-lead fallback split — RC-2 (roster-gap spellings) ──────────
+def test_capfall_subject_split():
+    """RC-2 (2026-07-16, reviewer-gated): a merged cell whose lead is a capitalized
+    NON-roster name (genealogy spelling variants — Shaul, Zephi…) with an adjacent
+    empty '*' slot still splits: the roster doesn't know the spelling, but the empty
+    '*' is ABP's own declaration a proper-noun word belongs there. Same conservative
+    shape as the εἰμί path: unbracketed, slot strictly AFTER, one leading word."""
+    import sqlite3
+    if B.apply_pn_subject_split is None:
+        check("pn-subject fold importable (capfall)", False, True)
+        return
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE verses(id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT)")
+    con.execute("CREATE TABLE words(verse_id INT, position INT, english TEXT, english_head TEXT,"
+                " strongs TEXT, strongs_base TEXT, greek_pos INT, bracket_id INT, italic INT,"
+                " italic_words TEXT, smcap_words TEXT, morph TEXT, lemma TEXT, is_pn INT DEFAULT 0)")
+    con.execute("CREATE TABLE tipnr(name TEXT)")
+    con.execute("INSERT INTO tipnr VALUES('David')")      # 'Shaul' is NOT in the roster
+    con.execute("INSERT INTO verses VALUES(1,'1Ch',1,49)")   # 'Shaul died,'      -> split
+    con.execute("INSERT INTO verses VALUES(2,'1Ch',10,13)")  # 'he asked' lc lead -> skip
+    con.execute("INSERT INTO verses VALUES(3,'Deu',15,12)")  # 'Hebrew servant' _NOT_SUBJECT -> skip
+    con.execute("INSERT INTO verses VALUES(4,'X',1,1)")      # cap lead, slot BEFORE -> skip
+
+    def w(vid, pos, eng, sbase, gp=None, bid=None, ispn=0, head=None, lemma=None):
+        con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
+                    "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (vid, pos, eng, head, sbase.lstrip("GH"), sbase, gp, bid, 0, "", "", None, lemma, ispn))
+
+    # POSITIVE: the 1Ch 1:49 control shape — non-roster capitalized lead + empty '*' after
+    w(1, 1, "Shaul died,", "G599", head="died", lemma="apothnesko")
+    w(1, 2, "", "*", ispn=1)
+    # NEGATIVE 1: lowercase lead with an empty '*' -> untouched
+    w(2, 1, "he asked", "G1905", head="asked")
+    w(2, 2, "", "*", ispn=1)
+    # NEGATIVE 2: _NOT_SUBJECT lead (gentilic heading a non-verb phrase) -> untouched
+    w(3, 1, "Hebrew servant", "G3816", head="servant")
+    w(3, 2, "", "*", ispn=1)
+    # NEGATIVE 3: capitalized non-roster lead but the empty '*' is BEFORE -> untouched
+    w(4, 1, "", "*", ispn=1)
+    w(4, 2, "Zephi came", "G2064", head="came")
+
+    B.apply_pn_subject_split(con, apply=True, log=lambda *a: None)
+    con.commit()
+
+    cap = {r[0]: (r[1], r[2]) for r in con.execute(
+        "SELECT position,english,strongs_base FROM words WHERE verse_id=1 ORDER BY position")}
+    check("capfall: name on lower slot as '*' for import_tipnr", cap[1], ("Shaul", "*"))
+    check("capfall: verb on higher slot keeps its number", cap[2], ("died,", "G599"))
+    for vid, label, want in (
+            (2, "lowercase lead untouched", [("he asked", "G1905"), ("", "*")]),
+            (3, "_NOT_SUBJECT lead untouched", [("Hebrew servant", "G3816"), ("", "*")]),
+            (4, "slot-before shape untouched", [("", "*"), ("Zephi came", "G2064")])):
+        got = [tuple(r) for r in con.execute(
+            "SELECT english,strongs_base FROM words WHERE verse_id=? ORDER BY position", (vid,))]
+        check(f"capfall: {label}", got, want)
+
+
 # ── 11b. italic-head re-clean runs AFTER the PN-subject split ───────────────────
 def test_italic_heads_after_pn_split():
     # The subject-name split rewrites english_head via _head_word WITHOUT the italic

@@ -246,6 +246,7 @@ def run(conn, apply=False, log=print):
     ).fetchall()
 
     fixed = 0
+    fixed_capfall = 0
     skipped_bracket = 0
     skipped_split = 0
     skipped_eimi = 0
@@ -264,7 +265,17 @@ def run(conn, apply=False, log=print):
         is_eimi = (r["strongs_base"] == "G1510"
                    and not is_roster
                    and fw.lower() not in _FUNCTION_LEAD)
-        if not (is_roster or is_eimi):
+        # RC-2 (2026-07-16, reviewer-gated): capitalized-lead fallback for spellings the
+        # roster does NOT know (the 1Ch 1-9 genealogy variants — Shaul, Zephi, Sabta…).
+        # The adjacent empty '*' slot is ABP's own declaration that a proper-noun word
+        # belongs there — the same argument that justified the εἰμί path — so a merged
+        # cell led by a capitalized non-roster, non-function word still splits. Runs ONLY
+        # on the clean unbracketed slot-AFTER shape (guard shared with εἰμί below); the
+        # name lands as a '*' slot for import_tipnr + the alias map to resolve.
+        is_capfall = (not is_roster and not is_eimi
+                      and fw.lower() not in _FUNCTION_LEAD
+                      and fw.lower() not in _NOT_SUBJECT)
+        if not (is_roster or is_eimi or is_capfall):
             continue
         vid, mpos = r["verse_id"], r["position"]
         slot = _empty_star_pos(conn, vid, mpos)
@@ -277,7 +288,7 @@ def run(conn, apply=False, log=print):
         # The εἰμί path is conservative: only the clean unbracketed slot-AFTER shape
         # (every known case). A bracketed or slot-BEFORE εἰμί is left for a manual look
         # so we never reorder a bracket — or peel a reversed slot — blind.
-        if is_eimi and (bracketed or not after):
+        if (is_eimi or is_capfall) and (bracketed or not after):
             skipped_eimi += 1
             continue
         # Bracketed roster cells: keep BOTH the name and the verb inside the bracket, each
@@ -322,6 +333,8 @@ def run(conn, apply=False, log=print):
                  r["smcap_words"], r["morph"], r["lemma"], vid, higher_pos),
             )
         fixed += 1
+        if is_capfall:
+            fixed_capfall += 1
 
     for nm in sorted(by_name, key=lambda n: (-len(by_name[n]), n)):
         items = by_name[nm]
@@ -329,10 +342,11 @@ def run(conn, apply=False, log=print):
         for line in items:
             log(line)
 
-    log(f"\nWould split {fixed:,} merged name(s) across {len(by_name):,} names.")
+    log(f"\nWould split {fixed:,} merged name(s) across {len(by_name):,} names"
+        f" ({fixed_capfall:,} via the capitalized-lead fallback — RC-2 reconciliation count).")
     log(f"  skipped (bracketed cell/slot): {skipped_bracket:,}  <- handled separately")
     log(f"  skipped (couldn't peel name) : {skipped_split:,}")
-    log(f"  skipped (εἰμί bracketed/before): {skipped_eimi:,}  <- left for a manual look")
+    log(f"  skipped (εἰμί/capfall bracketed or slot-before): {skipped_eimi:,}  <- left for a manual look")
     log(f"  no adjacent empty slot       : {no_slot:,}  <- left alone (correct as-is)")
     return fixed
 
