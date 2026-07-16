@@ -73,6 +73,34 @@ nothing (standing rule).
 For each hit, the proposed canonical Strong's is looked up by hand (Strong's / TIPNR bases),
 never guessed from spelling similarity alone — a wrong number is worse than a missing one.
 
+## Sweep results (PA run, 2026-07-16) — the class is scoped
+Control PASSED (ashchenaz @ 1Ch 1:6 surfaced). **2,203 double-star rows total**, in five
+distinct piles that need different treatments:
+
+1. **Variant spellings** (the core class) — the 1Ch 1–9 genealogy flood: sabta, zephi,
+   alian, shimma, henoch… Hundreds of rows. Fix A (ALIASES map) applies.
+2. **LXX-only forms** — oumasphae, aisi, ephradabak, esamathim, emasaraim…: ABP/LXX Greek
+   spellings with NO KJV canonical form. A variant→canonical map may have no target;
+   needs its own ruling (own Strong's? unnumbered by design?). Do NOT force-map these.
+3. **Blank names — 477 rows** (the single biggest bucket): starred word, no English at all.
+   Different bug class entirely; sample query below, root-cause before any fix.
+4. **Common words starred** — saying (13), said, woman, field, man, area: the star is on
+   non-names → mis-marking upstream, not a lookup miss.
+5. **Possessives / frequent names** — jacobs, aarons; jesus/moses/david missing 8–9× each.
+   Verse-specific (punctuation/compounds); eyeball, don't blind-map.
+
+Follow-up sampling (JP runs; piles 3 and 4):
+```
+sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.position, w.english, w.english_head
+  FROM words w JOIN verses v ON v.id = w.verse_id
+  WHERE w.strongs='*' AND w.strongs_base='*' AND COALESCE(w.english_head, w.english, '')=''
+  LIMIT 30;"
+sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.english
+  FROM words w JOIN verses v ON v.id = w.verse_id
+  WHERE w.strongs='*' AND w.strongs_base='*' AND lower(COALESCE(w.english_head, w.english)) IN ('saying','said','woman','field','man','area')
+  LIMIT 30;"
+```
+
 ## Acceptance
 - Ashchenaz @ 1Ch 1:6 carries H813 on `strongs_base`; card shows the Strong's head and the
   occurrence sections un-gate.
