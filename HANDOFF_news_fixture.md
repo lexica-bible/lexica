@@ -1,5 +1,12 @@
 # Handoff — News feed fixture + the last unverified bar
 
+> **SPENT — this opener RAN and its debt is PAID (2026-07-15, `b2fa9be`). Do not paste it again.**
+> The fixture is in `tests/mobile_harness.js`; News's bar is measured and the icon matrix is
+> verified by drawn shape end to end (`docs/claude/frontend.md` → "Icons: ONE glyph per
+> function"). Item 3 (`.filters-sep`) is the ONE thing it did not close — it stays open in
+> TODO.md with the cost now measured: it needs a lexicon fixture, which is its own project.
+> Kept for the record, not for reuse.
+
 Status at handoff: three of four surfaces ride the shell's mobile collapse (News `1a35822`,
 Ask-corpus `dba2edb`, Notes `7c9dd93`). News's bar is the **only one in the icon matrix never
 verified by drawn shape** — its mobile branch never reaches its `<Shell>` without feed data, so

@@ -5049,20 +5049,18 @@ button.study-verse-ref { border: none; }
      content. This is the one deliberate divergence from the reference. */
   .ac-m .ac-examples { margin-top: 0; gap: 2px 0; }
 
-  /* mobile action row: start a fresh search (primary, AI accent). "Recent" left this row
-     for the bottom bar — it names a ZONE, so it earns a bar slot; New search is a one-shot
-     action and stays here. The row collapses to nothing on the landing (New only renders
-     once a thread exists), which is what buys the landing its top space back. */
-  .ac-mobi-actions { display: flex; align-items: center; gap: 8px; margin: 10px 16px 2px; }
-  .ac-mobi-actions:empty { display: none; margin: 0; }
-  .ac-mobi-new {
-    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-    border: 1px solid var(--ai); border-radius: var(--radius);
-    background: color-mix(in oklab, var(--ai) 10%, var(--ctl-bg)); color: var(--ai);
-    font-size: 12.5px; font-weight: 600;
-  }
-  .ac-mobi-new svg { color: var(--ai); }
-  .ac-mobi-new:active { background: color-mix(in oklab, var(--ai) 18%, var(--ctl-bg)); }
+  /* The mobile action row is GONE (JP 2026-07-15): "New search" followed "Recent" into the
+     bottom bar, so `.ac-mobi-actions` / `.ac-mobi-new` had no callers left and went with it.
+     The bar now carries both — see the named zone/verb exception in 52-ask-corpus.jsx. */
+
+  /* QUOTA READS BEFORE THE BOX, NOT AFTER IT (JP 2026-07-15). It's the fact you need to
+     DECIDE whether to spend a question, so a reader must meet it on the way IN; below the
+     input it arrived too late and, dangling under a field, read like an error slot.
+     CSS-ONLY on purpose: `.ac-quota` lives inside the SHARED AcComposer (desktop uses the
+     same component), so reordering the markup would move desktop too. Ordering it here
+     keeps the DOM shared and desktop byte-identical — no fork. */
+  .ac-m .ac-composer { display: flex; flex-direction: column; }
+  .ac-m .ac-quota { order: -1; margin-top: 0; margin-bottom: 8px; }
   .ac-construction { padding: 8px 16px; font-size: 12.5px; }
   /* The slide-in rail + its scrim are GONE: the conversations rail is a shell sheet now,
      reached from the bottom bar. .ac-rail-top/-list/-item (railInner's own bits) are alive

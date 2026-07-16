@@ -369,27 +369,31 @@ from Notes: the permanent gray, the mode-following list glyph, `.zcenter-m`'s de
 box, occlusion by hit test, the baseline A/B) are standing frontend detail, so they live in
 **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
-Left to do (the first two have banked session openers — paste them whole, don't re-derive:
-**`HANDOFF_news_fixture.md`** then **`HANDOFF_study_mobile.md`**; the memory-index pass is
-**`HANDOFF_memory_consolidate.md`**, on JP's call, independent of these two):
-- **Harness: add a News feed fixture** — now the OLDEST unpaid debt here, and it has already been
-  deferred through two bar/icon passes. `tests/mobile_harness.js` renders Library / Word study /
-  Ask-corpus / Notes (`&notes=1`) at a phone width, but **News's mobile branch never reaches its
-  `<Shell>`** without feed data, so its `.zbar` still can't be measured — both the 2026-07-15 icon pass
-  AND the Notes pass had to reason about News's three bar glyphs from the shared components instead of
-  seeing them. **The one bar we can't render is the one that will drift** — and it is now the only bar
-  in the matrix never verified by drawn shape. Shape the fixture from the producing side
-  (`views_news.py`), same rule as the others; Notes shows the adapted form when a surface has no
-  server producer (frontend.md). code: tests/mobile_harness.js (FIXTURES / FIXTURE_PREFIXES)
-  **DO THIS BEFORE Study's collapse (2026-07-15 ruling):** Study will cite News as its reference
-  pattern, and the reference should not be the one instance nobody has verified. It is no longer
-  background debt — it's the standing exception to a rule every other consumer now satisfies.
-- **Close the `.filters-sep` open verification** (small, opportunistic — do it in any session that
-  loads a word into Word study). The rule was promoted out of its `.ws` scope 2026-07-15 so Notes's
-  strip could reuse it. Proven inert by exhaustive search (one rule for the class, no competitor), but
-  NOT measured — Word study only draws its divider once a word is loaded, and the harness has no
-  lexicon fixture. Measure it byte-identical (1×14, `--rule-2`) and strike the open-verification note
-  in `docs/claude/frontend.md`. code: static/styles.css (`.filters-sep`)
+Left to do (**Study is DEPRIORITIZED and stays parked — JP ruling 2026-07-15. It is NOT a live tab,
+it needs work, and it is low on the list. Do NOT queue it as next-up.** It waits for JP to RAISE it,
+not for a go on the existing queue order — so a session finding the queue empty should not reach for
+it. Its opener `HANDOFF_study_mobile.md` stays banked for whenever that happens. The news-fixture
+opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index pass is
+**`HANDOFF_memory_consolidate.md`**, on JP's call):
+- ~~**Harness: add a News feed fixture**~~ — **DONE 2026-07-15 (`b2fa9be`).** `/api/news/meta` +
+  `/api/news/all` shaped from `views_news.py`, per field (and only those two: of the seven news
+  helpers in `00-core.jsx`, NewsView calls four, and only these two run at mount — `newsList`/
+  `newsCounts`/`newsShape` have zero call sites app-wide). News's `.zbar` rendered and measured at
+  an asserted 375px, so the icon matrix is now **verified by drawn shape end to end**: News reads
+  Hash / Panel / Filter exactly as ruled, and the Panel row is byte-identical across four bars.
+  The reasoned-from-components reading was right all along — it was still unverified, which was
+  the whole point. Lessons (the elastic viewport; fixture dates that must be relative to the
+  clock) are in `docs/claude/frontend.md`. **Study's collapse is no longer blocked on this.**
+- **Close the `.filters-sep` open verification** — **NOT a ride-along; it needs a scheduled slot.**
+  It was carried as "small, opportunistic — cheap once you're in the harness". The 2026-07-15 News
+  session MEASURED that cost instead of re-guessing it, and it isn't cheap: Word study draws the
+  divider only behind `profile`/`groupings` (`80-lexicon.jsx:1013`, `:1071`), and reaching either
+  needs a lexicon fixture over SIX endpoints (`lexiconLookup`/`lexiconProfile`/`lexiconVerses`/
+  `lexiconEnglish`/`lexiconBooks`/`lexica`), each traced to its producer — a fixture project the
+  size of the News one. Inert-by-search re-confirmed (one rule for the class, no competitor; the
+  `design/` hits are throwaway mockups, not the app). The MEASUREMENT (1×14, `--rule-2`) is what's
+  still owed, and whoever builds the lexicon fixture gets it nearly free — so bundle it there
+  rather than scheduling it alone. code: static/styles.css (`.filters-sep`), tests/mobile_harness.js
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,

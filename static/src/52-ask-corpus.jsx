@@ -1006,10 +1006,18 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   } : null;
 
   // ── MOBILE: the shared Shell's collapse (News is the pattern; docs/claude/frontend.md).
-  // TWO zones collapse here, not News's three: the conversations rail and the inspect
-  // panel. "New thread" is a one-shot ACTION, not a zone, so it stays in the center strip
-  // — a bar slot names a room you can be in, and giving one to a verb is the same
-  // glyph/function mismatch the icon pass exists to kill.
+  // Two ZONES collapse here (the conversations rail + the inspect panel) — plus, since JP's
+  // 2026-07-15 ruling, one ACTION: New search.
+  //
+  // THIS IS A NAMED EXCEPTION TO "a bar slot names a ZONE, not a verb", NOT a drift.
+  // That rule cited this exact button as its worked example ("Ask-corpus's 'New thread' is a
+  // one-shot ACTION and stayed in the center strip"). JP reversed it on the pixels: a 2-slot
+  // bar with dead space, next to a floating button eating a row of the thread, is a worse
+  // phone than a 3-slot bar. The rule's PURPOSE survives intact — it exists to stop a
+  // glyph/function MISMATCH, and `Icon.Plus` here means "start a new one" and nothing else,
+  // so nothing is double-booked. The zone/verb distinction stays the DEFAULT for a new bar;
+  // this is the one place it's bought out, and the reason is on the record in frontend.md.
+  // Precedent it now sits beside: Library's cockpit already carries Play/Pause, a verb.
   if (isMobile) {
     const tools = [
       { key: "recent", label: "Recent conversations", icon: <Icon.Clock />,
@@ -1019,6 +1027,12 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       // bar (three of its four tabs gray until a word is loaded).
       { key: "inspect", label: "Inspect", icon: <Icon.Panel />, disabled: !selectedAnswer && !latestPanel,
         on: mSheet === "inspect", onTap: () => setMSheet(s => (s === "inspect" ? null : "inspect")) },
+      // GRAYS on the landing instead of vanishing — same call as Inspect above. The old
+      // button rendered only once `started`, so it could pop into existence; a slot that
+      // appears would reshuffle the bar under the reader's thumb mid-read. `on` is never set:
+      // it fires and returns you to the landing, it isn't a room you can be sitting in.
+      { key: "new", label: "New search", icon: <Icon.Plus />, disabled: !started,
+        on: false, onTap: newThread },
     ];
     return (
       <Shell
@@ -1027,15 +1041,9 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         center={
           <div className="ac">
             <main className="ac-main">
-              <div className="ac-mobi-actions">
-                {started && (
-                  <button className="ac-mobi-new" onClick={newThread} title="Start a new conversation">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-                    New search
-                  </button>
-                )}
-              </div>
+              {/* The "+ New search" button that used to sit here is now a bar slot (see
+                  `tools` above, JP 2026-07-15) — it was the only thing in this row, so the
+                  row went with it and the thread got its ~50px back. */}
               {!started ? (
                 <div className="ac-landing"><div className="ac-landing-in">
                   {/* Word study's landing order: title → search → helper → samples. The

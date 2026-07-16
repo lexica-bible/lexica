@@ -125,6 +125,15 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   study only renders its divider once a word is loaded and the harness has no lexicon fixture.
   **Close it in the next session that has a word loaded: measure Word study's rendered divider
   byte-identical (1×14, `--rule-2`).** Logged as reasoned-not-measured on purpose.
+  **STILL OPEN after the News-fixture session (2026-07-15) — and now with the cost measured, not
+  guessed.** It was carried as an opportunistic ride-along ("cheap once you're in the harness").
+  It isn't: Word study draws the divider only behind `profile` or `groupings`
+  (`80-lexicon.jsx:1013` / `:1071`), and reaching either needs a lexicon fixture over SIX
+  endpoints (`lexiconLookup` / `lexiconProfile` / `lexiconVerses` / `lexiconEnglish` /
+  `lexiconBooks` / `lexica`), each with its own payload to trace to its producer. That's a
+  fixture project the size of the News one, not a ride-along — **so it is scheduled work, not
+  scrap-time work.** The inert-by-search half re-confirmed (one `.filters-sep` rule in
+  `static/styles.css`, no competitor; the `design/` hits are throwaway mockups, not the app).
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -274,11 +283,26 @@ is the last surface still parked** on its own old single-column branch. `Shell` 
 inline + `mobile={{tools, sheet, sheetTitle, sheetBare, onCloseSheet}}`; a tool opens its zone as a
 swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-derive it:
 
-- **A bar slot names a ZONE, not a verb.** News collapsed three zones, Ask-corpus two (Recent +
-  Inspect), Notes two (its list + the anchored-verse inspect) — count the surface's actual zones,
-  don't inherit a button count. Ask-corpus's "New thread" is a one-shot ACTION and stayed in the
-  center strip; a verb in a zone bar is the same glyph/function mismatch the icon standard exists
-  to stop.
+- **A bar slot names a ZONE, not a verb — the DEFAULT, with one bought-out exception.** Count the
+  surface's actual zones, don't inherit a button count: News collapsed three, Notes two (its list +
+  the anchored-verse inspect).
+  **⚠ THE EXCEPTION — Ask-corpus's "New search" (JP ruling, 2026-07-15).** This rule's own worked
+  example USED to be this button ("a one-shot ACTION, so it stays in the center strip"). **JP
+  reversed it on the pixels, and the reversal is the record now:** a 2-slot bar with dead space,
+  sitting under a floating button that ate a row of the thread, is a worse phone than a 3-slot bar.
+  Ask-corpus's mobile bar is Recent / Inspect / **New search** (`Icon.Plus`, grays until a thread
+  exists). What survives intact is the rule's PURPOSE — it exists to stop a glyph/function
+  MISMATCH, and `Plus` means "start a new one" and nothing else, so nothing is double-booked. The
+  zone/verb split stays the DEFAULT for any new bar; this is the one place it's bought out.
+  **Two things worth knowing before citing this rule or the exception:**
+  - **"Primary actions live in the bar" is NOT true of this app** — it was the stated rationale for
+    the change and it doesn't survive a look at the matrix. Every other bar slot in every other tab
+    names a zone or a panel. The only other verb in any bar is Library's cockpit `Play`/`Pause`, and
+    the cockpit is the documented odd one out (it's the mixed bar). The change stands on the
+    dead-space/reclaimed-row argument, which is real and measured — not on a consistency that
+    isn't there. Don't propagate the verb to a third bar by citing "consistency."
+  - A verb slot sets `on: false` permanently — it fires and leaves; it is never a room you can be
+    sitting in, so it must never paint an active state.
 - **A MODE switch is not a zone either — and if it gates the bar's meaning, it stays in the
   center.** Notes's `Verse notes | Journal` seg decides what its list slot even holds, so burying
   it in a sheet would hide the key to the bar; it rides the center strip (`.notes-mstrip`), which
@@ -360,6 +384,19 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
 - **`?bundle=head` is the baseline validator of record.** When a guardrail looks failed, A/B the
   COMMITTED bundle at the same viewport BEFORE diagnosing the working copy — same page, same
   fixtures, only the bundle swaps. That is what proved the 1388 was the bad number, not the 1400.
+- **THE VIEWPORT IS ELASTIC — ASSERT `innerWidth` INSIDE THE READ, AT BOTH ENDS (2026-07-15).**
+  The browser pane auto-fits its viewport to content, so a phone-width measurement is not a
+  setting you make once and trust. Two ways it bit in one session: a resize to 375 silently
+  reverted to 1280 during a long-running probe, leaving a MOBILE-rendered DOM (`news-m`, the
+  branch had mounted at 375) laid out at desktop width — every pixel a lie, and nothing about
+  the DOM saying so, because `isMobile` (`90-app.jsx:80`, `innerWidth < 1100`) only re-checks on
+  a real resize EVENT that a viewport override doesn't fire. Then, worse: an overflow detector
+  that planted a 500px probe **widened the window to 500**, so it compared 500 against 500 and
+  reported "clean" — *the act of measuring changed the thing measured*, and the failure mode was
+  a reassuring zero. **It was caught only because the detector was control-tested on its own
+  known positive** (`feedback_audit_tools_must_fail`) — the check that is supposed to be a
+  formality is the one that found it. So: read `innerWidth` at the START and END of the same
+  script, assert both are the width you meant, and treat any injected geometry as suspect.
 - **Scope every read to the surface you mean.** The desktop app mounts every view at once, so a
   bare `document.querySelector('.zempty')` or `.zbar` happily returns ANOTHER tab's
   mounted-and-hidden copy at 0×0 — it bit twice in one session (a `.zbar` that was Ask-corpus's
@@ -381,8 +418,13 @@ it in the first pass. The settled matrix:
 | Detail panel / inspect | `Panel` | `Panel` (word card) | `Panel` (Watch) | `Panel` | `Panel` (Anchored verse) |
 | Filter — narrow the set | — | `Filter` ("Views") | `Filter` (Options) | — | (inside the list sheet) |
 | Reading/display options | `Modes` | — | — | — | — |
-| Playback | `Play`/`Pause` | — | — | — | — |
+| Playback ‡ | `Play`/`Pause` | — | — | — | — |
+| Start a new one ‡ | — | — | — | `Plus` (New search) | — |
 | The list you navigate by | `[Book Ch]` text | `Book` | `Hash` | `Clock` | `Note` / `Book` † |
+
+‡ The two VERB rows — the exceptions to "a bar slot names a zone" (see the rule above). `Plus` is
+Ask-corpus's, JP-ruled 2026-07-15. Both are bought-out cases, not licence for a third: a verb needs
+its own ruling, and it never paints an active state.
 
 † Notes's list slot is **MODE-FOLLOWING** — the first one. One slot, two content names: `Note`
 (pencil) for "Verse notes", `Book` for "Journal pages", flipping with the `Verse notes | Journal`
@@ -408,6 +450,17 @@ names must already be in that tab's own vocabulary.
   name; it actually holds Edition/Testament/Go-deeper, i.e. a filter. Read the contents, then rule.
 - **Verify a merge by SHAPE, not by the component name you typed** — compare the drawn children
   (`rect3|pathM15 3v18` etc.) across bars; that's what proves two bars really share a glyph.
+- **THE WHOLE MATRIX IS NOW VERIFIED BY DRAWN SHAPE (2026-07-15, `b2fa9be`).** News was the last
+  holdout — its mobile branch couldn't reach its `<Shell>` without feed data, so two passes
+  reasoned about its three glyphs from the shared components instead of seeing them. The harness
+  News fixture closed it: rendered at an asserted 375px, News reads Threads=`Hash`
+  (`M10 3 8 21…`), Watch=`Panel` (`rect[3 3 18 18 rx2] + M15 3v18`), Options=`Filter`
+  (`M3 6h18M6 12h12M10 18h4`) — the matrix as ruled, nothing re-ruled. Cross-bar by shape: the
+  Panel row is BYTE-IDENTICAL across News's Watch, Ask-corpus's Inspect, Notes's Anchored verse
+  and Word study's Word card (four bars, one glyph), and News's Options equals Word study's
+  Views. **The reasoned-from-components reading turned out RIGHT — which is the point worth
+  keeping: it was right, and it was still unverified.** A correct guess and a measurement are
+  the same value and different facts.
   Notes's three slots read back `pathM4 20h4L18.5 9.5…` (pencil), `pathM4 4.5A2.5…` (book) and
   `rect3|pathM15 3v18` (Panel — character-for-character the shape above).
 - **Drive a state change THROUGH the control, and hit-test it first.** `el.click()` fires happily

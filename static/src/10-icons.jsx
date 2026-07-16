@@ -22,6 +22,14 @@ const Icon = {
       <path d="M5 12h14M13 6l6 6-6 6"/>
     </svg>
   ),
+  // Start something new (Ask-corpus's "New search"). Was inlined by hand at TWO call sites
+  // with its own strokeWidth — this is the one copy now. Means START A NEW ONE and nothing
+  // else; it is not a generic "add".
+  Plus: (p) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+  ),
   Book: (p) => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
       <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5a2.5 2.5 0 0 0 0 5H20"/><path d="M8 6h8M8 10h6"/>
