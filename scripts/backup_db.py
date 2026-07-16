@@ -50,6 +50,13 @@ from pathlib import Path
 _SKIP_SUFFIX = (".bak", ".new", ".blank")
 _SKIP_CONTAIN = ("-wal", "-shm", "-journal")
 
+# Per-db retention override: bible.db copies are ~270-400 MB each and dominate
+# the pile; JP-ruled 2026-07-16 keep 3 (the newest good copy is never deleted
+# by _rotate regardless, and the standing rule stands: never delete the only
+# pre-rebuild backup). Small dbs (study.db is the irreplaceable one) keep the
+# --keep default.
+KEEP_OVERRIDE = {"bible.db": 3}
+
 
 def discover_dbs(src: Path) -> list[Path]:
     out = []
@@ -190,7 +197,7 @@ def backup_all(src: Path, out: Path, keep: int, raw: int) -> int:
         print(f"  OK  {stem}: ok ({jm}), {len(counts)} tables, ~{key:,} rows in largest, "
               f"{size/1e6:.1f} MB")
         _chmod_ro(dest)
-        _rotate(out, stem, keep, raw)
+        _rotate(out, stem, min(keep, KEEP_OVERRIDE.get(stem, keep)), raw)
 
     print()
     if bad:

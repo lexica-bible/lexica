@@ -77,7 +77,7 @@ _PRESERVE_CASE = frozenset({
 })
 
 
-def _head_word(text: str, italic_words=None) -> str | None:
+def _head_word(text: str, italic_words=None, prefer_name=False) -> str | None:
     """Last non-function word of the gloss — primary search token.
 
     Preserves capitalization for theological terms (God, Lord, Spirit etc.)
@@ -98,6 +98,21 @@ def _head_word(text: str, italic_words=None) -> str | None:
         return None
     raw_tokens = text.split()
     skip_italic = {w.strip().lower() for w in italic_words} if italic_words else None
+
+    if prefer_name:
+        # Star/PN slots only (RC-1, JP-ruled 2026-07-16): the head should be the
+        # NAME, not a trailing common word ("Hezekiah said," -> hezekiah, not
+        # said). Last capitalized content token wins; if none, fall through to
+        # the normal pick. Callers pass prefer_name ONLY for strongs='*' slots —
+        # a blanket rule rewrites correct heads ("the LORD said" heads said).
+        for raw_tok in reversed(raw_tokens):
+            clean = re.sub(r"[^\w]", "", raw_tok)
+            if not clean or not clean[0].isupper():
+                continue
+            lower = clean.lower()
+            if lower in _FUNCTION_WORDS or lower in _HEAD_STOP:
+                continue
+            return clean if clean in _PRESERVE_CASE else lower
 
     def _pick(drop_italic):
         for raw_tok in reversed(raw_tokens):

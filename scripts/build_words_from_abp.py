@@ -29,7 +29,7 @@ except ImportError:
     _FUNCTION_WORDS = frozenset()
     _HEAD_STOP = frozenset()
 
-    def _head_word(text, italic_words=None):
+    def _head_word(text, italic_words=None, prefer_name=False):
         if not text:
             return None
         skip = {w.strip().lower() for w in italic_words} if italic_words else set()
@@ -1317,6 +1317,23 @@ def _strip_italic_heads(rows: list) -> None:
             rows[i] = r[:2] + (new_head,) + r[3:]
 
 
+def _star_name_heads(rows: list) -> None:
+    """RC-1: a star/PN slot's search head prefers the capitalized NAME over a
+    trailing common word ("Hezekiah said," -> hezekiah, "Bashan area." ->
+    bashan) so the surface-keyed Strong's backfill (import_tipnr) looks up the
+    name, not the tail. Scoped to strongs='*' ONLY — content slots keep the
+    existing last-word pick (JP-ruled 2026-07-16; the 14,938-row measurement
+    proved a blanket rule rewrites correct heads). Runs LAST in the repair
+    chain so it sees the final English of every star row. Touches english_head
+    (idx 2) only; re-runnable."""
+    for i, r in enumerate(rows):
+        if r[3] != "*" or not r[1] or " " not in r[1]:
+            continue
+        new_head = _head_word(r[1], prefer_name=True)
+        if new_head and new_head != r[2]:
+            rows[i] = r[:2] + (new_head,) + r[3:]
+
+
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     """
     Combine ABP word list with BH metadata.
@@ -1435,6 +1452,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     _greek_pos_backfill(rows)
     _strip_helper_double_tag(rows)  # splitter charter: peeled helper never keeps the verb's tag
     _strip_italic_heads(rows)   # LAST: head must be the slot's own word, not an added (italic) one
+    _star_name_heads(rows)      # RC-1: star/PN slots head the NAME, not a trailing common word
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.
     return [r[:10] + (r[11], r[12]) for r in rows]
