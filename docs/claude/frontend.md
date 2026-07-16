@@ -237,6 +237,13 @@ Handle stays on `var(--radius)`: at 4px tall it is fully round at either value.
   ~600px of nothing — the same dead-space argument JP used to rule on the Ask-corpus bar.
 - **A menu whose height moves across its OWN state changes is misclassified and becomes a
   panel.** There is no third class and no per-card tuning. Test every menu for this.
+- **⚠ THE MENU CLASS'S PRECONDITION, AND IT IS LAW: a Menu's controls may DISABLE but never
+  UNMOUNT. A card that hides controls is a Panel.** This is what makes the class safe, and it
+  is `gray-don't-hide` (memory `feedback_gray_dont_hide`) doing load-bearing work rather than
+  decorative work: Reading options measured identical across 14 state changes *because* locking
+  a text greys its Greek toggles instead of removing them. Had they unmounted, the card would
+  resize under the reader and the whole class would be unsound. Check this BEFORE classifying a
+  new card as a Menu — it is a property of the card's code, not a matter of taste.
 - The old `.wm-sheet.tall` flag was NOT drift — it was this distinction, un-named: Word study's
   Distribution + Word card are data (tall), its Views + Search are controls (short).
 
