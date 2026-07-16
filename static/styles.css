@@ -5053,14 +5053,25 @@ button.study-verse-ref { border: none; }
      bottom bar, so `.ac-mobi-actions` / `.ac-mobi-new` had no callers left and went with it.
      The bar now carries both — see the named zone/verb exception in 52-ask-corpus.jsx. */
 
-  /* QUOTA READS BEFORE THE BOX, NOT AFTER IT (JP 2026-07-15). It's the fact you need to
-     DECIDE whether to spend a question, so a reader must meet it on the way IN; below the
-     input it arrived too late and, dangling under a field, read like an error slot.
+  /* QUOTA: ON THE LANDING ONLY, AND ABOVE THE BOX (JP 2026-07-15, amended post-deploy).
+     It's the fact you need to DECIDE whether to spend a question, so a reader meets it on
+     the way IN — but only ONCE, on the landing. In the thread it rode the follow-up box and
+     nagged on every turn, so it's gone from there entirely.
      CSS-ONLY on purpose: `.ac-quota` lives inside the SHARED AcComposer (desktop uses the
-     same component), so reordering the markup would move desktop too. Ordering it here
-     keeps the DOM shared and desktop byte-identical — no fork. */
-  .ac-m .ac-composer { display: flex; flex-direction: column; }
-  .ac-m .ac-quota { order: -1; margin-top: 0; margin-bottom: 8px; }
+     same component), so touching the markup would move desktop too.
+
+     ⚠ THE FLEX IS SCOPED TO `.hero` ON PURPOSE — DO NOT WIDEN IT BACK TO `.ac-composer`.
+     That is exactly what broke the follow-up box (shipped in e3da57d, caught by JP on
+     deploy, measured 339px -> 215px). `.ac-composer.pinned .ac-field` carries
+     `margin: 0 auto`, and in a FLEX column an item with auto side-margins does not stretch
+     to the container — the auto margins win and it shrinks to fit its content. As a plain
+     block it fills the width and the max-width does the capping. The landing never broke
+     because ITS auto margin sits on the composer, not the field. So: the pinned composer
+     must stay a block, which it now does — and that same scoping is what removes the quota
+     from the thread, since the ordering it needed was the only reason flex was there. */
+  .ac-m .ac-composer.hero { display: flex; flex-direction: column; }
+  .ac-m .ac-composer.hero .ac-quota { order: -1; margin-top: 0; margin-bottom: 8px; }
+  .ac-m .ac-composer.pinned .ac-quota { display: none; }
   .ac-construction { padding: 8px 16px; font-size: 12.5px; }
   /* The slide-in rail + its scrim are GONE: the conversations rail is a shell sheet now,
      reached from the bottom bar. .ac-rail-top/-list/-item (railInner's own bits) are alive
