@@ -1,71 +1,72 @@
-# HANDOFF — Provenance contract / entity arc (session of 2026-07-16)
+# HANDOFF — rebuild-prep session close (2026-07-16, at 2501ee2)
 
-Session closed clean; wrap ran (living docs + memory updated). This is the pick-up sheet.
+Supersedes the earlier 8488ba3 handoff. Session closed clean; wrap ran (living docs + memory
+updated). This is the pick-up sheet.
 
-## 1. Shipped and LIVE-VERIFIED today
-- **Provenance contract** — `docs/PROVENANCE_CONTRACT.md` committed + JP-gated: source-of-record
-  labeling, three-state verse-corroboration, one tooltip registry, name-display rule, entity
-  taxonomy (grounded by PA inventory; TIPNR "other" bucket = 34 entries, open items OI-1/2).
-- **Gentilic guard** (through `2a88176`): a gentilic never confidently binds a place entity,
-  EXCEPT the place's own name (same-name exemption — Midian class, caught by pre-apply
-  accounting). -itess(es) added to the people classifier. Live checks passed both directions
-  (Canaanitess 1Ch 2:3 → honest fallback; Midian Exo 2:15 → place card + map).
-- **Binding re-apply**: pn_binding render rows **14,389** (was 14,803; 420 blocked − ~6
-  converted = 414 net, predicted 14,390 — arithmetic CLOSED before apply). tipnr_entities 2,164.
-- **Highlight cited-set fix, all three legs** (`d948a4d` + `d925983`, ticket closed `bce0aa3`):
-  acceptance filter on fresh answers · unified prefixed-only frontend builder · read-time
-  cleaning (server cache + browser-stored threads via `/api/lexicon/function-strongs`).
-  Live-verified on the Gen 1:1 arche thread (articles dark, content words gold, "ho" chip gone).
-  Ticket: `docs/tickets/TICKET_highlight_cited_set.md` (claim-failure lesson logged inside).
+## 1. REBUILD: READY TO RUN — the next session's whole job
+All three review gates cleared (payloads `REVIEW_rebuild_precode.md` / `REVIEW_rc2_rereview.md`
+/ `REVIEW_alias_batch.md`, verdicts pasted + logged) **and gate zero cleared** (JP dashboard
+paste: 1.1 GB free). Every approved change is LANDED in code with controls green:
+- **RC-1** scoped star-slot head pick (6d7a6ee) — name beats trailing common word, star slots only.
+- **RC-2** capitalized-lead splitter fallback (098a742) — red-first fixture in
+  tests/test_folded_fixes.py; 1Ch 10:13 puzzle closed by live-row proof (Saul already split).
+- **Alias batch** (3ca0f29) — see §3.
+- **Backup retention** bible.db keep-3 (6d7a6ee).
+Only the run remains: **fresh session, HIGH effort, `/rebuild-words` procedure, opener =
+`docs/REBUILD_SCOPE_headword.md`** (status header there says READY TO RUN and carries
+everything below). First post = the copy-first backup command; nothing writes before JP's
+paste confirms the backup exists.
 
-## 2. Open fronts — nine items, each with pointer + gate
-1. **Rebuild session (NEXT UP)** — charter `docs/REBUILD_SCOPE_headword.md`. Gate zero = JP's
-   disk-space paste at run time (his PA quota, NOT the NFS df). Big pre-run lift: the alias map,
-   ~1,690 hand-checked variant rows (`docs/tickets/TICKET_missing_strongs_pn.md`). Also in the
-   run: RC-2 emit fix (477 blank rows), RC-1 scoped head pick, backup keep-count 7→3, owed
-   finish_rebuild.sh acceptance check. Fresh session, HIGH effort, /rebuild-words procedure.
-2. **Synthesis Greek script** — `docs/tickets/TICKET_synthesis_greek_script.md`. Parked, nothing
-   built. Direction: render the lemma from the DB keyed on the cited number, not prompt changes.
-3. **Greek-name migration** — `docs/DESIGN_greek_name_identity.md`. Gate: JP's five rulings
-   (Q1–Q5, incl. the LXX-only render wording = Q3). Sequenced AFTER the rebuild — its audit diff
-   needs clean heads.
-4. **Provenance audit sweep** — contract §8 checklist, chartered as AUDIT ONLY (a follow-up
-   session; the contract defines "correct", the sweep measures).
-5. **Contract RENDER build work — chartered NOWHERE (the gap JP caught)**: §6 name-echo fix
-   (Midian card, known failure E), §5 tappable tags + one tooltip registry, §4 name-path state
-   line, AI tag back on summaries. TODO.md entry exists; needs a charter before build.
-6. **pn_binding hand-check rows** — 65 HOT + 798 number-only suspects in
-   `scripts/pn_binding_hot.txt` / `pn_binding_numonly.txt` on PA ("step 5"). Never scheduled;
-   candidate to fold into the audit session. All floor safely meanwhile.
-7. **Descriptor-of-individual gentilics** — can "Canaanitess" (Bath-shua) earn a real bind
-   (tier-gated People/Clan, or the individual via apposition)? Ruling record in
-   `docs/tickets/TICKET_gentilic_binding.md`; explicit audit-session line item per JP.
-8. **5 known-red tests** — tests/test_lexica_draw_cache.py fails without the live DB on any
-   clean checkout. Not in the curated gate lists (no gate lies), but unticketed red rots —
-   TODO.md entry; fix = skip-without-DB guard or fixture.
-9. **Ask-corpus counts + zero-bars** — chips show total-Bible counts, should be search-pool
-   counts (needs backend payload work, do NOT approximate); `hasCount:false` rows render like
-   tiny counts (silent-fallback violation). TODO.md entry; JP's timeline.
+## 2. Five run-time gates (written IN the charter — listed here for the record)
+1. Pre-rebuild backup exists before anything writes; **no `-wal`/`-shm` sidecar on bible.db**
+   at backup time.
+2. RC-2 dry-run catch count reconciles against the **148-row baseline**
+   (`docs/tickets/blank_star_classes.md`) before apply; shortfall itemized.
+3. **Christian → G5546** (Group row's own number, not parent Jesus' G2424) fires before the
+   roster is trusted.
+4. Gentilic guard re-checks pass before the binding re-apply is trusted: Canaanitess 1Ch 2:3
+   honest fallback · Midian Exo 2:15 place card · at least one NEW-name gentilic
+   (Christian/Tyrians). Guard behavior shifts → **STOP**.
+5. Post-rebuild double-star residue = the **221 documented leaves**
+   (`docs/tickets/alias_leave_list.txt` + decisions/caution rows) + the blank-star classes
+   (`blank_star_classes.md`). Anything else → **STOP**.
 
-## 3. Standing rulings (today)
-- **R-1**: words rebuild approved; batch everything pending into ONE run (the charter's list).
-- **R-2**: Greek-name identity approved as direction — SUPERSEDES the old "Hebrew-key, don't
-  re-pitch a pure Greek re-key" rule (data-model.md + memory updated). Honest "ABP-only form,
-  no Strong's mapping" state where nothing maps; never fabricate.
-- **Backup retention**: never delete the only pre-rebuild backup; keep most-recent known-good,
-  drop older. Keep-count 7→3 rides the rebuild. (~540 MB of old bible.db dailies trimmed today;
-  July 13/14/15 kept.)
-- **Scoped head-pick**: RC-1 name-preference applies ONLY to star/PN-tagged slots — the 14,938
-  measurement proved a blanket rule rewrites correct heads ("the LORD said" tags the verb).
+## 3. Alias batch outcome (the day's biggest find)
+- **Loader root-cause fix**: `import_tipnr.parse_tipnr` had discarded 10,127 en-dash
+  sub-record lines as comments since day one — every alternate spelling (Elias, Sabta,
+  Ashchenaz) and every sub-record Strong's was lost; the hand ALIASES map was compensating.
+  Fixed: roster 2,824 → 4,387 keys; numbered entities 2,687 → 2,862; Group gentilic rows keep
+  their OWN numbers.
+- **`scripts/tipnr_alias_variants.py`** — 399 hand-checked KJV/LXX variant entries, wired at
+  ladder step 7 (inline ALIASES wins on overlap). Per-entry verdict + reason =
+  `docs/tickets/alias_decisions.txt` (16 rejects incl. wrong-sibling traps + LXX common-noun
+  transliterations; 2 fragment cautions parked).
+- **Leave-list** `docs/tickets/alias_leave_list.txt`: 10 common-word keys (RC-1 territory) +
+  209 LXX-only/research names, honest-unmapped per R-2.
+- **93 ambiguous spellings dropped + logged** (`docs/tickets/alias_ambiguous_dropped.txt`);
+  23 overlap hand ALIASES and still resolve through it — no behavior change. (An earlier
+  simulation said 149; 93 is the number the landed code produces and logs.)
+- Count reconciliation: 1,296 dump names → 1,075 resolvable + 221 documented, unexplained 0.
+- Takes effect at the rebuild's import_tipnr step — nothing on the live site changes until then.
 
-## 4. Lessons (filed in memory; one line each)
-- **A coverage claim is verified against the LOAD PATH** — "cached answers self-heal" ignored
-  that reopened threads replay a browser-stored copy; cost one deploy cycle.
-  (feedback_verify_before_claiming, part 9 + index tripwire.)
-- **Close the arithmetic before any --apply** — dry-run 470 vs predicted ~350 didn't reconcile;
-  the gap WAS the Midian false-positive class. (project_provenance_contract.)
-- **df on shared NFS ≠ the account's quota** — 1.4 TB "free" vs JP's real 0.7 GB.
-- **Measure before designing a rule** — one count query killed the "obvious" blanket head fix.
+## 4. Stale items from the previous handoff — REMOVED
+- "Alias map ~1,690 rows is the big pre-run lift" — DONE (and it became a loader fix + 399
+  entries, not 1,690 hand lines).
+- RC-2 open questions — CLOSED (approved, fixture green, puzzle resolved).
+- Gate zero disk paste — CLEARED.
 
-Memory authorities: `project_provenance_contract` (today's arc + ledger),
-`project_entity_resolution_rebuild` (guard section), MEMORY.md hooks updated.
+## 5. Open fronts carried forward UNCHANGED (pointers as before)
+1. **Synthesis Greek script** — `docs/tickets/TICKET_synthesis_greek_script.md`; parked.
+2. **Greek-name migration** — `docs/DESIGN_greek_name_identity.md`; awaits JP's Q1–Q5 rulings;
+   sequenced AFTER this rebuild.
+3. **Provenance audit sweep** — contract §8, AUDIT ONLY session.
+4. **Contract RENDER build work** — chartered nowhere yet (§6 name-echo, §5 tappable tags,
+   §4 name-path state line, AI tag on summaries); TODO.md entry.
+5. **pn_binding hand-check rows** — 65 HOT + 798 number-only on PA; fold into the audit session.
+6. **Descriptor-of-individual gentilics** — `docs/tickets/TICKET_gentilic_binding.md`;
+   audit-session line item.
+7. **5 known-red tests** — tests/test_lexica_draw_cache.py without the live DB; TODO.md entry.
+8. **Ask-corpus counts + zero-bars** — TODO.md entry; JP's timeline.
+
+Standing rulings (R-1 batch-into-one-run, R-2 Greek-name direction + never-fabricate, backup
+retention, scoped head-pick) unchanged — see memory + the 8488ba3 handoff history in git.
