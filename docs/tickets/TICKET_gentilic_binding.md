@@ -1,7 +1,14 @@
 # TICKET — Gentilic mis-binding: "Canaanitess" binds to the PLACE Canaan
 
-Status: OPEN. No code changes until the provenance contract (`docs/PROVENANCE_CONTRACT.md`)
-is reviewed and committed; this ticket references its §4 (verse-corroboration) and §7 (types).
+Status: **SHIPPED + LIVE-VERIFIED 2026-07-16.** Guard in `entity_resolution.py`
+(commits `d087375` + `c4210d9`, the second adding the SAME-NAME EXEMPTION — the place's
+own name is never blocked; Midian/Beth-shean/Rephaim false positives caught by dry-run
+accounting: 478 flagged − 58 exempt = 420 blocked, ~6 converted to person binds, render
+rows 14,803 → 14,389). Side tables rebuilt on PA (`--apply` 2026-07-16). Live checks
+passed: 1Ch 2:3 Canaanitess → honest fallback (AI-tagged blurb + Strong's), no place
+card; Exo 2:15 Midian → place card + map + "Matched to this verse" intact. The LOOKUP
+side of gentilic names (double-star Strong's rows) still rides the head-word rebuild —
+see `TICKET_headword_class.md`.
 
 ## Symptom
 "Canaanitess" in 1Ch 2 (Bath-shua, Judah's wife — a woman) opens an entity card for the
