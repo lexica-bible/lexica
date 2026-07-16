@@ -131,21 +131,23 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   in this arc said "5 call sites" when the truth was 6; a later session had added one after the
   chip was authored. Point at the doc for standing rules rather than re-listing them (a re-listed
   rule is a copy that drifts); spend the prompt's words on the WHY and on the stop conditions.
-- **OPEN VERIFICATION — `.filters-sep` promotion (2026-07-15).** The rule was promoted out of its
-  `.ws` scope so Notes could reuse it. Proven inert by exhaustive search (one rule for that class,
-  no competitor, so the specificity drop has nothing to lose to) — but NOT measured, because Word
-  study only renders its divider once a word is loaded and the harness has no lexicon fixture.
-  **Close it in the next session that has a word loaded: measure Word study's rendered divider
-  byte-identical (1×14, `--rule-2`).** Logged as reasoned-not-measured on purpose.
-  **STILL OPEN after the News-fixture session (2026-07-15) — and now with the cost measured, not
-  guessed.** It was carried as an opportunistic ride-along ("cheap once you're in the harness").
-  It isn't: Word study draws the divider only behind `profile` or `groupings`
-  (`80-lexicon.jsx:1013` / `:1071`), and reaching either needs a lexicon fixture over SIX
-  endpoints (`lexiconLookup` / `lexiconProfile` / `lexiconVerses` / `lexiconEnglish` /
-  `lexiconBooks` / `lexica`), each with its own payload to trace to its producer. That's a
-  fixture project the size of the News one, not a ride-along — **so it is scheduled work, not
-  scrap-time work.** The inert-by-search half re-confirmed (one `.filters-sep` rule in
-  `static/styles.css`, no competitor; the `design/` hits are throwaway mockups, not the app).
+- **`.filters-sep` promotion — CLOSED 2026-07-16.** Measured on desktop Word study with a loaded
+  word (the lexicon fixture): exactly 1×14, background == `var(--rule-2)`, detector control-tested
+  both ways (broken → blind, restored → sees). The promotion out of `.ws` scope changed nothing.
+- **⚠ THE MEASURING PANE IS A HIDDEN TAB — rAF and IntersectionObserver callbacks NEVER fire**
+  (`document.hidden === true`; control-proved 2026-07-16: an observer on an on-screen element
+  stayed silent 3s, rAF never ran). This is the MECHANISM behind the frozen-animations trap, and
+  it also means: any IO-lazy content measures as its "Loading…" placeholder forever, and
+  screenshots time out (the renderer won't paint). The harness shims IntersectionObserver to fire
+  eagerly (VerseRow is the only IO consumer; layout is under test, not laziness) — the shim +
+  proof live in `tests/mobile_harness.js`. Rects are the evidence of record in this pane; also
+  wait ~100-150ms after any synthetic click before reading (state flushes ride timers here).
+- **The harness HAS a lexicon fixture (2026-07-16).** Seeded words G4151 (many: 60 occ, past the
+  50-row "See more") and H7307 (few: 4 occ, Hebrew path); searches that answer: πνεῦμα / pneuma
+  (lookup), "spirit" (English finder), the two numbers direct. ONE occurrence table per word
+  derives profile/books/verses so replies can't disagree; unknown seeds THROW on both sides, and
+  the server now EVALUATES the same resolver text the page embeds (no hand-mirrored copy to
+  drift). Provenance cites live in the file header.
 - **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
   `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
   held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
@@ -245,7 +247,8 @@ Handle stays on `var(--radius)`: at 4px tall it is fully round at either value.
   resize under the reader and the whole class would be unsound. Check this BEFORE classifying a
   new card as a Menu — it is a property of the card's code, not a matter of taste.
 - The old `.wm-sheet.tall` flag was NOT drift — it was this distinction, un-named: Word study's
-  Distribution + Word card are data (tall), its Views + Search are controls (short).
+  Distribution + Word card are data (tall), its Views + Search are controls (short). (Resolved
+  exactly that way in step 4; `.wm-sheet` is gone.)
 
 ### `bare` — the child owns its scroll box
 An inline RightStack / the News why-panel manage their own fill + scroll, so `bare` skips the
@@ -278,14 +281,36 @@ padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill
 - The child fills via `.sh--bare > *:last-child { flex: 1 1 auto; min-height: 0 }`. The panel
   height is definite, so the child has real room — the old frame had to hard-code `82dvh`.
 
-### Migration state (the five frames)
+### Migration state — COMPLETE (2026-07-16). Five frames → one Sheet.
 | Frame | Cards | State |
 |---|---|---|
 | `.zsheet` | 7 (News ×3, Ask-corpus ×2, Notes ×2) | **DONE** — step 1, `05dbd6f` |
 | `.detail-sheet` | 5 (word card, chapter overview, xref, note editor, day intro) | **DONE** — step 2 |
 | `.msheet` | 2 (Reading options, You) | **DONE** — step 3; the first live Menu cards |
-| `.wm-sheet` | 4 (Word study) | step 4 — still z121; **blocked on the lexicon fixture** |
+| `.wm-sheet` | 4 (Word study: Distribution, Word card, Views, Search) | **DONE** — step 4, `54eb853` |
 | `.mpick` | 1 | header spec only — the sanctioned exception below |
+
+Step-4 record (the reference surface, measured before AND after on the lexicon fixture):
+- Distribution + Word card = **Panels** (48/764, flush under nav — 764 at 3 rows and at 9);
+  Views + Search = **Menus on the `.msheet-card` band pattern** (372.9 / 274.5, stable across
+  every owned state incl. the HEB-button word swap). The old `.tall` turned out to be a FIXED
+  90% height, not the max-height ceiling the handoff claimed — measure before moving.
+- The word card's sheet title keeps its mono Strong's badge via **`.wm-sh-card`** — a TYPE-ONLY
+  class on the Sheet (typography belongs to the card family; nothing structural rides it). Its
+  header measures 35.3, which is the header rule working (a 15px mono badge needs less than a
+  plain title's 36.8) — do not "fix" it.
+- Content insets: the shell's `.sh-body` supplies the 18px side inset, so `.wm-card` dropped its
+  own to zero (word-card contents byte-preserved); the rail (12→18) and searchsheet (16→18)
+  deliberately converged on contract rhythm.
+- **Search's clear × is grayed-not-hidden when the box is empty** (reviewer-ruled 2026-07-16) —
+  the Menu precondition applied to a live case: it used to UNMOUNT. The landing form's × outside
+  the sheet is still conditional on purpose (not a Menu card).
+- **News Options is a Menu too** (JP's carryover, same day): `ZoneSheet`/`Shell.mobile` now pass
+  the contract's `variant` through (`sheetVariant`); 764 → 358, stable across every knob. Panel
+  audit at the same time: every other zone sheet holds data — Options was the lone miss.
+- **The old per-card keyboard-lift died with the frame** (reviewer-ruled: a fork, not a feature —
+  no shipped Sheet card lifts, the note editor's textarea included). If a lift is ever wanted it
+  is a SHELL-level ruling for all cards. Open ledger item, not a regression.
 
 **A card's TITLE TYPE is its own; the SHELL is what's shared.** The detail family's headers are
 not serif 16/600 and must not be forced to it: the word card's is the Strong's BADGE (mono 18/500

@@ -361,20 +361,20 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
-**MOBILE SHEET CONTRACT — 4 of 5 frames DONE (2026-07-15).** JP reported the Library/Notes cards
-disagreeing on header, open height, and height-under-content. All three traced to ONE root: five
-hand-rolled sheet frames where one belonged, so every past fix was per-card and the drift grew back
-— and every defect had a local patch sitting on it (Notes' band had DELETED its divider to match the
-frame that was missing one; the note editor hard-coded `80dvh`; focus mode re-declared its own
-height). Now one shared `Sheet` (`20-shared-components.jsx`) owns height, header, radius, layer and
-the gesture. `.zsheet` `05dbd6f` · `.detail-sheet` `86e04e5` · `.msheet` `cf086b2`.
-**LEFT: `.wm-sheet` (Word study ×4) — BLOCKED BY RULING on the lexicon fixture** (its pixels don't
-move until its four sheets are measurable; the guardrail permits a JP-ordered convergence, not a
-silent or unmeasured one). Opener: **`HANDOFF_mobile_sheets.md`** — it carries the six endpoints'
-traced top-level shapes, the nested-shape work itemised, the open ledger (News' selected why-head ·
-day-intro card · `.filters-sep`) and the traps. Spec + all standing law:
-**`docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT"**. Doctrine amended: `--sheet-radius:18px`
-is a second sanctioned radius (CLAUDE.md #6) — "one radius" had been split in practice for months.
+**MOBILE SHEET CONTRACT — COMPLETE 2026-07-16, all 5 frames dead.** One shared `Sheet`
+(`20-shared-components.jsx`) owns height/header/radius/layer/gesture for every mobile card;
+`.mpick` stands as the sole sanctioned exception. `.zsheet` `05dbd6f` · `.detail-sheet` `86e04e5`
+· `.msheet` `cf086b2` · `.wm-sheet` `54eb853` (Word study, on the lexicon fixture `3b69089` —
+which also reclassified News Options Panel→Menu, JP's carryover). Spec + the step-4 record:
+**`docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT"**. Full story → TODO_ARCHIVE.
+**Small open ledger from the pass (verification debt, not scheduled work):**
+- News' selected why-head inside its sheet — never measured (default band 36.8 is; the SELECTED
+  state carries a `‹ Watch` control, expect ~42.4 per the band-with-control ruling).
+- Day-intro card — needs chronological mode in the harness; shares the chapter-overview code path
+  (measured 716/48/764) but that's inference, not measurement.
+- Keyboard-lift — the old `.wm-sheet` per-card lift died as a fork (ruled 2026-07-16); if a sheet
+  should ever rise above the on-screen keyboard, it's a SHELL-level ruling for all cards. Needs a
+  real phone; the harness can't shrink visualViewport.
 
 **Shell's MOBILE collapse has THREE consumers: News + Ask-corpus + Notes (all 2026-07-15). Study is
 the last one un-migrated and is DEPRIORITIZED — copy these three IF it ever comes back, but nothing
@@ -401,16 +401,9 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   The reasoned-from-components reading was right all along — it was still unverified, which was
   the whole point. Lessons (the elastic viewport; fixture dates that must be relative to the
   clock) are in `docs/claude/frontend.md`. **Study's collapse is no longer blocked on this.**
-- **Close the `.filters-sep` open verification** — **NOT a ride-along; it needs a scheduled slot.**
-  It was carried as "small, opportunistic — cheap once you're in the harness". The 2026-07-15 News
-  session MEASURED that cost instead of re-guessing it, and it isn't cheap: Word study draws the
-  divider only behind `profile`/`groupings` (`80-lexicon.jsx:1013`, `:1071`), and reaching either
-  needs a lexicon fixture over SIX endpoints (`lexiconLookup`/`lexiconProfile`/`lexiconVerses`/
-  `lexiconEnglish`/`lexiconBooks`/`lexica`), each traced to its producer — a fixture project the
-  size of the News one. Inert-by-search re-confirmed (one rule for the class, no competitor; the
-  `design/` hits are throwaway mockups, not the app). The MEASUREMENT (1×14, `--rule-2`) is what's
-  still owed, and whoever builds the lexicon fixture gets it nearly free — so bundle it there
-  rather than scheduling it alone. code: static/styles.css (`.filters-sep`), tests/mobile_harness.js
+- ~~**Close the `.filters-sep` open verification**~~ — **DONE 2026-07-16** with the lexicon fixture,
+  exactly as planned (bundled, nearly free): 1×14, `--rule-2`, detector control-tested both ways.
+  Record in `docs/claude/frontend.md`; story in TODO_ARCHIVE.
 - **PARKED (JP 2026-07-15, not released) — swap the DESKTOP Ask-corpus strip's hand-inlined plus to
   `Icon.Plus`.** `Icon.Plus` was added 2026-07-15 for the mobile bar and retired the mobile inline
   copy; the desktop strip (`52-ask-corpus.jsx`, the `.ac-strip-new` button) still draws its own by

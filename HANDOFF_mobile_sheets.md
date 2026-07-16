@@ -1,3 +1,8 @@
+# ★ SPENT 2026-07-16 — step 4 ran and SHIPPED (fixture `3b69089`, migration `54eb853`). ★
+# Everything below is history; the record of what shipped is docs/claude/frontend.md → "THE
+# MOBILE SHEET CONTRACT" (step-4 record). Notable correction: `.tall` was a FIXED 90% height,
+# not the max-height ceiling claimed below. Do not work from this file.
+
 # HANDOFF — Mobile sheet contract: step 4 (Word study) + the lexicon fixture
 
 **Read `docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT" first. It is the spec; this file

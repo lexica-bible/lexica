@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-16 — Mobile sheet contract COMPLETE: lexicon fixture + step 4 (.wm-sheet dies)
+
+Two commits, each behind its own reviewer gate: `3b69089` (fixture + News Options) and `54eb853`
+(migration). The five-frame unification that started 2026-07-15 is finished — every mobile card
+rides the one shared `Sheet`; `.mpick` is the sole sanctioned exception. Standing record:
+`docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT" (step-4 record). Worth keeping here:
+- **The lexicon fixture** (tests/mobile_harness.js): six endpoints + three per-verse word routes,
+  producer-cited to the nested shapes; seeded words G4151 (many) / H7307 (few) carry the count
+  axis; unknown seeds throw both sides; the server now EVALUATES the same resolver text the page
+  embeds — the old hand-mirrored duplicate is gone.
+- **New instrument fact:** the measuring pane is a hidden tab — rAF/IntersectionObserver never
+  fire (control-proved), screenshots won't paint. Harness shims IO eager; details in the file +
+  frontend.md.
+- **`.filters-sep` verification CLOSED** (carried across three sessions): 1×14, `--rule-2`,
+  detector control-tested both ways. Bundling it with the fixture made it nearly free, as
+  predicted.
+- **News Options Panel→Menu** (JP's carryover): 764→358, stable across every knob; precondition
+  checked in code first; the Panel audit found it was the only misclassified zone sheet.
+- **Rulings applied under standing delegation:** Search's clear × grays instead of unmounting
+  (Menu precondition, live case); the old per-card keyboard-lift died as a fork (a lift, if ever,
+  is shell-level — on the ledger).
+- **Handoff correction for the record:** `.wm-sheet.tall` was a FIXED 90% height, not a
+  max-height ceiling — the "before" baseline caught it; measure before moving.
+
+---
+
 ## 2026-07-15 — News on mobile, Pass 2: dead controls, the three-button toolbar, and JP's polish batch
 
 Eight commits: `3aac547` `54a949e` `1a35822` `7b9b500` `1d2912f` `5dd5576` `312868e` `89f0949`.
