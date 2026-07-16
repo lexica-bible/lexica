@@ -8,6 +8,10 @@ detail (`TICKET_headword_class.md`, `TICKET_missing_strongs_pn.md`).
 - Requirement: **≥600 MB free AFTER the pre-rebuild backup exists**, shown by paste
   (`du -sh ~/db_backups/ ~/bible-db/*.db*` + the PA dashboard's free number — the
   NFS `df` figure is the shared server, NOT the account allowance; lesson 2026-07-16).
+- Pre-backup check (reviewer flag 2026-07-16): confirm NO `bible.db-wal` / `bible.db-shm`
+  sidecar exists at backup time (`ls ~/bible-db/bible.db-*` should find nothing) — an
+  orphaned journal sidecar means the file alone may not hold the latest writes. Orphaned
+  sidecars on dead TEST dbs are ignorable; don't delete any mid-run.
 - Standing rule: NEVER delete the only pre-rebuild backup. If space forces a choice,
   keep the most recent known-good, drop older. (2026-07-16 trim: four old bible.db
   dailies dropped, July 13/14/15 kept, ~540 MB freed — pile now 1.1 GB.)
