@@ -47,26 +47,27 @@ Zero-Strong's proper nouns cluster where variant spellings cluster: genealogies 
 Detection (JP runs on PA — CC cannot query the db; read-only):
 
 ```
-sqlite3 ~/bible-db/bible.db "SELECT book, chapter, verse, COALESCE(english_head, english) AS name
-  FROM words
-  WHERE strongs='*' AND (strongs_base IS NULL OR strongs_base='')
-    AND book IN ('1Ch','Gen','Mat','Luk')
-  ORDER BY book, chapter, verse LIMIT 200;"
+sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, COALESCE(w.english_head, w.english) AS name
+  FROM words w JOIN verses v ON v.id = w.verse_id
+  WHERE w.strongs='*' AND w.strongs_base='*'
+    AND v.book IN ('1Ch','Gen','Mat','Luk')
+  ORDER BY v.book, v.chapter, v.verse LIMIT 200;"
 
-sqlite3 ~/bible-db/bible.db "SELECT COALESCE(english_head, english) AS name, count(*)
-  FROM words
-  WHERE strongs='*' AND (strongs_base IS NULL OR strongs_base='')
+sqlite3 ~/bible-db/bible.db "SELECT COALESCE(w.english_head, w.english) AS name, count(*)
+  FROM words w
+  WHERE w.strongs='*' AND w.strongs_base='*'
   GROUP BY 1 ORDER BY 2 DESC LIMIT 100;"
 
-sqlite3 ~/bible-db/bible.db "SELECT count(*) FROM words
-  WHERE strongs='*' AND (strongs_base IS NULL OR strongs_base='');"
+sqlite3 ~/bible-db/bible.db "SELECT count(*) FROM words WHERE strongs='*' AND strongs_base='*';"
 ```
 
-Notes on the queries: `strongs='*'` is the TIPNR proper-noun marker (backfill writes the real
-number to `strongs_base` and leaves `strongs` bare-starred on purpose — see data-model.md,
-"Bound-card occurrences"). If the exact column predicates don't match live schema, the marker
-convention is the thing to key on; adjust with JP before trusting a zero. Control test: the
-query set MUST surface Ashchenaz @ 1Ch 1:6 — a detector that misses the known positive proves
+Notes on the queries — GROUND-TRUTHED against the live row 2026-07-16: `strongs='*'` is the
+TIPNR proper-noun marker (backfill writes the real number to `strongs_base` and leaves
+`strongs` bare-starred on purpose — see data-model.md, "Bound-card occurrences"). **A missed
+backfill leaves `strongs_base='*'` as well — NOT NULL/empty** (verified: the Ashchenaz row is
+`strongs='*', strongs_base='*'`; the NULL/empty predicate returned a false zero). Book and
+chapter live on `verses`, so the sweep joins `words.verse_id → verses.id`. Control test: the
+query set MUST surface ashchenaz @ 1Ch 1:6 — a detector that misses the known positive proves
 nothing (standing rule).
 
 For each hit, the proposed canonical Strong's is looked up by hand (Strong's / TIPNR bases),
