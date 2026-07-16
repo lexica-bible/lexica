@@ -361,12 +361,14 @@ consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which 
 public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
 `project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
 
-**Shell's MOBILE collapse has THREE consumers now: News + Ask-corpus + Notes (all 2026-07-15) —
-copy them for Study, THE LAST ONE PARKED.** The gotchas they paid for (bar collision, `100dvh`
+**Shell's MOBILE collapse has THREE consumers: News + Ask-corpus + Notes (all 2026-07-15). Study is
+the last one un-migrated and is DEPRIORITIZED — copy these three IF it ever comes back, but nothing
+here schedules it** (see the ruling below). The gotchas they paid for (bar collision, `100dvh`
 pinning, scroll-box clearance, the BARE-sheet `scrollRef` trap + the case its fallback can't rescue,
-bottom-bar icon size, zones-not-verbs, the two ways to clear the bar, the doubled panel header, and
-from Notes: the permanent gray, the mode-following list glyph, `.zcenter-m`'s default nested scroll
-box, occlusion by hit test, the baseline A/B) are standing frontend detail, so they live in
+bottom-bar icon size, zones-not-verbs **+ its one bought-out exception**, the two ways to clear the
+bar, the doubled panel header, the flex/auto-margin shrink, and from Notes: the permanent gray, the
+mode-following list glyph, `.zcenter-m`'s default nested scroll box, occlusion by hit test, the
+baseline A/B) are standing frontend detail, so they live in
 **`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
 
 Left to do (**Study is DEPRIORITIZED and stays parked — JP ruling 2026-07-15. It is NOT a live tab,
@@ -394,6 +396,17 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   `design/` hits are throwaway mockups, not the app). The MEASUREMENT (1×14, `--rule-2`) is what's
   still owed, and whoever builds the lexicon fixture gets it nearly free — so bundle it there
   rather than scheduling it alone. code: static/styles.css (`.filters-sep`), tests/mobile_harness.js
+- **PARKED (JP 2026-07-15, not released) — swap the DESKTOP Ask-corpus strip's hand-inlined plus to
+  `Icon.Plus`.** `Icon.Plus` was added 2026-07-15 for the mobile bar and retired the mobile inline
+  copy; the desktop strip (`52-ask-corpus.jsx`, the `.ac-strip-new` button) still draws its own by
+  hand at a different stroke width. It's the "reference the system, never a local copy" rule, so it
+  should land eventually — but swapping it MOVES DESKTOP PIXELS, which is why it stayed out of a
+  mobile-scoped commit. Needs its own desktop-scoped pass + JP's eye. code: static/src/52-ask-corpus.jsx
+- **OWED EXTERNALLY — JP's deploy eyeball on Ask-corpus mobile** (both states: the landing, and a
+  thread's follow-up box). The numbers are verified at an asserted 375px — bar 3 slots @22px, quota
+  landing-only and above the input, follow-up field restored to its pre-pass 339px, desktop untouched
+  at 1400px — but **the VISUAL was never certified: the screenshot tool timed out on both passes**
+  (no page errors, tool-side). Nothing blocks on it; it's the last unverified surface of that work.
 - **FLAGGED, NOT SCHEDULED — admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows worst:
   "Back to Inbox" + "Dismiss" side by side push the headline to ~148px / 5 lines). Pre-existing, NOT a
   regression, and item 1's ruling protects it — **a control that works earns its row**. But JP is the admin,

@@ -332,6 +332,19 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   safe area. Same rule, different shape. **Notes took News's shape** — its editor's Save/Delete
   scrolls with the body, nothing is pinned — so the test is literally "is anything pinned to the
   bottom", not "does it feel like a chat".
+- **⚠ MAKING A CONTAINER `display:flex` CAN SHRINK A CHILD THAT USED TO FILL IT — check every child
+  for `margin: … auto` first (2026-07-15, `5eaeb23`).** Ask-corpus's mobile composer was made a flex
+  COLUMN purely to re-order the quota line above the input. That silently narrowed the follow-up
+  field from **339px to 215px**: `.ac-composer.pinned .ac-field` carries `margin: 0 auto`, and in a
+  flex container an item with AUTO margins on the cross axis does not stretch — the auto margins
+  absorb the free space and the item shrinks to fit its content. As a plain block it filled the
+  width and `max-width` did the capping. **The landing didn't break, which is the tell worth
+  remembering:** its auto margin sits on the COMPOSER, not on the field, so only the pinned one
+  moved. A layout rule added for one child reaches every child. Fix was to scope the flex to the one
+  state that needed it (`.ac-m .ac-composer.hero`). **This class of regression is INVISIBLE to the
+  gates** — they're logic tests and CI has no browser — so measure a geometry change against a real
+  baseline (a `git show <sha>:static/styles.css` swap; `?bundle=head` is JS-only and cannot baseline
+  CSS) or it ships. This one shipped and JP caught it on his phone.
 - **If the surface owns its scrolling, `.zcenter-m` must not be a second scroll box around it**
   (`overflow: hidden`), or the pinned composer floats on a nested scroller. **`.zcenter-m` is a
   scroll box BY DEFAULT** (`flex:1 1 auto; overflow-y:auto`), so any surface whose center already

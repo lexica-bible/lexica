@@ -19,9 +19,9 @@ You're wrapping up a chunk of work. Bring the project's living docs up to date s
 4. **Consolidation check (flag only — do NOT consolidate here).** After updating, check each living doc for consolidation debt and flag it in the summary if tripped — but don't restructure now; that's `/consolidate`, run deliberately.
    - core CLAUDE.md creeping toward ~300 lines (it should sit near ~200 — flag real growth, not its normal size), or a durable fact that landed in core but belongs in a module (or the reverse)
    - a `docs/claude/` module bloated with session narrative or duplicating a memory file wholesale
-   - MEMORY.md index over ~17KB (the hook threshold), or any single memory file over ~200 lines, or 3+ memory files covering one topic
+   - MEMORY.md index approaching **~24KB** (JP ruling 2026-07-15, raised from ~17KB), or any single memory file over ~200 lines, or 3+ memory files covering one topic. **Why it moved:** the guards-stay-in-the-index rule (a hook keeps the TRIPWIRE, narrative goes down) sets a floor above the old number, so 17KB fired every session on normal accumulation and stopped telling bloat apart from growth. A threshold that always fires is the same nothing as one that never does. Routing discipline is unchanged — this raises the trigger, not the standard. *(There is no hook enforcing this — an older wording here called it "the hook threshold" and that hook does not exist; the check is this step, run by whoever is reading this.)*
    - TODO.md over ~20 open items
-   If any trips, say so plainly — e.g. "MEMORY.md is at 18KB, `/consolidate` is due" — and stop there. Never silently consolidate inside a wrap; a routine close-out must stay light and predictable.
+   If any trips, say so plainly — e.g. "MEMORY.md is at 23.5KB, `/consolidate` is due" — and stop there. Never silently consolidate inside a wrap; a routine close-out must stay light and predictable.
 
 **Verify before you record.** This command exists partly to fix notes past sessions got wrong, so don't trust this session's own account blindly. Before writing a durable fact (a new table, an invariant, a deploy step), confirm it against the actual code or schema — not against what the conversation claimed shipped. Record what's true in the repo, not what was intended.
 
