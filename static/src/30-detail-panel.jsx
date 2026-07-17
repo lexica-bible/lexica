@@ -858,6 +858,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // it), promote the single body line, tuck the badge inline on its baseline. Covers
       // PERSON-thin, PEOPLE/CLAN, and a coordinate-less place alike.
       const thin = !richPerson && !hasMap && !placeNote && ((line ? 1 : 0) + factItems.length) <= 1;
+      const chipOwnLine = peopleClan || (be.section !== "person" && be.section !== "place");
       if (thin) {
         const first = factItems[0];
         const opener = line
@@ -871,11 +872,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
             <div className="pnbound-thinrow">
               {opener}
-              {/* People/Clan: badge on its own line, matching the full PERSON card
-                  (JP eyeball 2026-07-16 — inline it crowds the description). */}
-              {!peopleClan && <span className="pnbound-badge">Matched to this verse</span>}
+              {/* People/Clan + every 'other'-type card (Deity/Group/Being/Reference):
+                  badge on its own line, matching the full PERSON card (JP eyeball +
+                  reviewer ruling 2026-07-16 — inline it crowds the description). */}
+              {!chipOwnLine && <span className="pnbound-badge">Matched to this verse</span>}
             </div>
-            {peopleClan && <div className="pnbound-badge">Matched to this verse</div>}
+            {chipOwnLine && <div className="pnbound-badge">Matched to this verse</div>}
           </section>
         );
       }
