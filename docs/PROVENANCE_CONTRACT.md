@@ -29,7 +29,7 @@ from it — never duplicated per page.
 | `strongs` | Strong's | Strong's dictionary entries (the `bdb` table is Strong's Hebrew, NOT Brown-Driver-Briggs) | `bdb`, lexicon/dotted_lexicon lemma data |
 | `lsj` | LSJ | Liddell-Scott-Jones Greek lexicon | `lsj` tables |
 | `lexica` | Lexica | Our own verse-grounded dictionary (AI-drafted, hand-gated) | `lexica_def` |
-| `naves` | Nave's | Nave's Topical Bible name-topics | study.db `entries` (`metavn_*`) |
+| ~~`naves`~~ | ~~Nave's~~ | **REMOVED 2026-07-16 (JP): Nave's data deleted from PA; dead frontend code removed under the render charter** | — |
 | `corpus` | ABP / KJV / BSB | The texts themselves: occurrence counts, verse quotes, in-verse English | `words`, `verses`, `kjv_verses`, `bsb_verses`, heb.db |
 | `ai` | AI | Synthesized content, generated per request and cached — not a human-curated source | AI cache: `pn:` descriptions (Haiku), `summary` book/chapter (Sonnet/Haiku), LSJ blurbs |
 
