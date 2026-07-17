@@ -502,7 +502,6 @@ function App() {
           totalResults={allResults.length}
                     onNavigateToLexicon={handleNavigateToLexicon}
           onReadInContext={handleReadInContext}
-          onOpenStudyName={handleOpenStudyName}
           overviewBack={mainView === "library"}
           backLabel={libCrossRef ? "Cross-references" : (libDetailBase === "intro" ? "Intro" : "Overview")}
         />
@@ -520,8 +519,7 @@ function App() {
             totalResults={allResults.length}
                         onNavigateToLexicon={handleNavigateToLexicon}
             onReadInContext={handleReadInContext}
-            onOpenStudyName={handleOpenStudyName}
-          />
+            />
         </>
       )}
       {showNote && (

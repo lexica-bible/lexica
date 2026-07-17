@@ -320,10 +320,6 @@ const api = {
       headers: { "Content-Type": "application/json", ..._authHeaders() },
       body: JSON.stringify({ ref }),
     }).then(r => r.ok ? r.json() : { verses: [] }).catch(() => ({ verses: [] })),
-  // Nave's topical for a person/place name (subtopic headers + counts) on the metaV sidebar.
-  studyForName: (name) =>
-    fetch(`/api/study/for-name/${encodeURIComponent(name)}`, { headers: _authHeaders() })
-      .then(r => r.ok ? r.json() : { sections: [] }).catch(() => ({ sections: [] })),
   // Which published concept studies cite this verse → the reader's "In studies:" line.
   studyForVerse: (book, chapter, verse) =>
     fetch(`/api/study/for-verse/${encodeURIComponent(book)}/${chapter}/${verse}`)
