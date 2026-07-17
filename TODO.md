@@ -453,6 +453,12 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   so more candidates get considered and refused — conservative direction). All floor safely,
   but the hand-check that could recover the good ones has never been scheduled. Candidate:
   fold into the provenance audit session.
+- **Person/clan card display nits (JP eyeball, R-1 post-swap 2026-07-16)** — one frontend
+  ticket, normal UI session, NOT data: (a) PEOPLE/CLAN card variant crowds the "Matched to
+  this verse" chip inline against the description (Χριστιανός card) where the PERSON variant
+  gives it its own line; (b) possible name duplication — title "Shaul" then PERSON block
+  "Shaul" again; first check a long-standing card (David/Moses) to tell standing template
+  layout from a data-shape trigger. code: static/src/30-detail-panel.jsx (.detail-* card)
 - **Provenance-contract RENDER items unchartered** — the audit sweep session (contract §8) is
   chartered as AUDIT ONLY; the build work the contract requires has no charter: §6 name-display
   rule (the Midian name-echo, known failure E), §5 tappable source tags + one tooltip registry,
