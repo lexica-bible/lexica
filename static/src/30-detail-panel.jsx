@@ -877,15 +877,22 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
             <div className="pnbound-thinrow">
               {opener}
-              <span className="pnbound-badge">Matched to this verse</span>
+              {/* People/Clan: badge on its own line, matching the full PERSON card
+                  (JP eyeball 2026-07-16 — inline it crowds the description). */}
+              {!peopleClan && <span className="pnbound-badge">Matched to this verse</span>}
             </div>
+            {peopleClan && <div className="pnbound-badge">Matched to this verse</div>}
           </section>
         );
       }
+      // The hero above already headlines the clicked name; when the entity's name is
+      // the same word, a second "Shaul" directly under the title reads as a stutter.
+      // Keep the row only when it differs (a spelling variant is real information).
+      const nameEchoesHero = properName && heroName.toLowerCase() === properName.toLowerCase();
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
-          <div className="pnbound-name">{heroName}</div>
+          {!nameEchoesHero && <div className="pnbound-name">{heroName}</div>}
           {line && <p className="pnbound-desc">{line}</p>}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
