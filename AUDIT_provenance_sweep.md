@@ -5,7 +5,9 @@ pre-existing card-nits ticket (E, commit `3ee0d18`, JP-confirmed, reviewer-accep
 Inputs: `docs/PROVENANCE_CONTRACT.md`, `docs/tickets/TICKET_gentilic_binding.md`,
 PA inventory queries (JP-run 2026-07-16), `scripts/pn_binding_hot.txt` (110 rows) +
 `scripts/pn_binding_numonly.txt` (1,200 rows) fetched from PA via static/ fallback
-(public copies DELETED after fetch — logged per reviewer note 2).
+(public copies DELETED after fetch — JP ran the rm 2026-07-16, CC verified both URLs
+return 404. Session CLOSED COMPLETE per reviewer receipt (which also ratified the
+bundled commit `0614b54` as-is, with the flag-shape-changes rule going forward).
 
 ## 1. Render sweep — checks A–F, every card section (code-verified, line cites)
 

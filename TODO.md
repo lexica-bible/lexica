@@ -447,23 +447,25 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   vocative-aware peel (Isa 41:14 "O Israel") · josua/shapan/meramoth micro alias batch
   (canonical keys exist) · the 178 lookup H/G fill-gains reverted for byte-identity (NT name
   words still ride the Hebrew fallback — a real future improvement, per-word review needed).
-- **pn_binding hand-check rows never scheduled** — the 2026-07-16 R-1 binding --apply wrote
-  65 HOT rows to `scripts/pn_binding_hot.txt` and **1,200** number-only floor suspects to
-  `scripts/pn_binding_numonly.txt` on PA (grew from 798: the alias batch numbered more rows,
-  so more candidates get considered and refused — conservative direction). All floor safely,
-  but the hand-check that could recover the good ones has never been scheduled. Candidate:
-  fold into the provenance audit session.
+- **pn_binding hand-check — DONE at class level (audit 2026-07-16, reviewer-accepted;
+  `AUDIT_provenance_sweep.md` §4).** All 1,310 rows bucketed; nothing is a live bug. The one
+  recoverable class — **352 spelling-variant rows (abia→abijah class)** — queues into R-2's
+  variant batch, per-pair eyeball + roster-freeze check required. Everything else stays
+  floored by ruling (groups, adonai title, wrong-candidate protection, true ambiguity).
 - **Provenance-contract RENDER items unchartered** — the audit sweep session (contract §8) is
   chartered as AUDIT ONLY; the build work the contract requires has no charter: §6 name-display
   rule (the Midian name-echo, known failure E), §5 tappable source tags + one tooltip registry,
   §4 name-path "matched by name, not checked against this verse" line, AI tag back on summaries.
   Explicit line item so it doesn't hide inside the audit. code: static/src/30-detail-panel.jsx +
-  views_summary.py; spec docs/PROVENANCE_CONTRACT.md
-- **Descriptor-of-individual gentilics** (JP 2026-07-16, explicit line item per his ask) — after
-  the gentilic guard, "Canaanitess" @ 1Ch 2:3 floors to the AI fallback. Open question for the
-  audit session: can descriptor uses earn a REAL bind (ancestor People/Clan where the tier
-  supports it — or even the individual, Bath-shua, via apposition)? Ruling record:
-  docs/tickets/TICKET_gentilic_binding.md (the "descriptor-of-individual" paragraph).
+  views_summary.py; spec docs/PROVENANCE_CONTRACT.md. **Audit 2026-07-16 additions
+  (AUDIT_provenance_sweep.md §1–2): §6 name-echo is DONE (`3ee0d18`); summary panel has NO
+  label at all (fails A, not just F); the combined MetaV/TIPNR badge on `.pnbound` (B); and
+  the 216 live 'other'-type cards (Pharisee 93, Baal 67…) all headed "Identity" — per-type
+  wording rulings needed (groups → People/Clan-style; deities/months/etc → JP rules).**
+- **Descriptor-of-individual gentilics — CLOSED by audit ruling (2026-07-16, reviewer-accepted):**
+  no binder change; the tier genuinely doesn't support these binds today (numonly evidence).
+  Revisit ONLY if R-2's group-entity work (pile U) creates a better target. Ruling record:
+  docs/tickets/TICKET_gentilic_binding.md + AUDIT_provenance_sweep.md §5.
 - **5 known-red tests on clean master, unticketed** — tests/test_lexica_draw_cache.py fails 5
   tests on any machine without the live DB (sqlite: no such table). Confirmed on clean master
   2026-07-16 (twice). Either the tests gain a skip-without-DB guard or a fixture; unticketed
