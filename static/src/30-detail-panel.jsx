@@ -805,8 +805,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // the people, not the individual.
       const clickName = extractProperName(entry.pnName || entry.gloss || "");
       const heroName = (peopleClan && clickName) ? clickName : be.name;
+      // TIPNR 'other'-section records (34: deities, groups, months, constellations, the
+      // temple pillars, Satan, Leviathan) used to all read "Identity". JP+reviewer ruling
+      // 2026-07-16 (render charter R1–R4): type the heading from TIPNR's OWN description
+      // words — no imported category (no "pagan"), the descr line carries the detail.
+      const otherLabel = /deity/i.test(be.desc || "") ? "Deity"
+                       : /group/i.test(be.desc || "") ? "Group"
+                       : /\b(angel|monster)\b/i.test(be.desc || "") ? "Being"
+                       : "Reference";
       const label = peopleClan ? "People / Clan"
-                  : be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
+                  : be.section === "place" ? "Place" : be.section === "person" ? "Person" : otherLabel;
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
       // but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
