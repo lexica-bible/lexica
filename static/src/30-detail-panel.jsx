@@ -125,15 +125,17 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   const content = (
     <>
       {loading && <div className="summary-loading">Reading the chapter…</div>}
+      {/* Provenance contract §3: every synthesized block carries the AI tag (JP ruling —
+          the summary panel had NO source label at all; audit 2026-07-16 check A+F). */}
       {!loading && bookText && (
         <div className="detail-section">
-          <div className="detail-h">About</div>
+          <div className="detail-h">About<span className="lsj-badge lsj-badge--accent">AI</span></div>
           <p className="detail-p">{renderInlineMd(bookText)}</p>
         </div>
       )}
       {!loading && chapText && (
         <div className="detail-section last">
-          <div className="detail-h">This chapter</div>
+          <div className="detail-h">This chapter<span className="lsj-badge lsj-badge--accent">AI</span></div>
           <p className="detail-p">{renderInlineMd(chapText)}</p>
         </div>
       )}

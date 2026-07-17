@@ -1222,6 +1222,9 @@ input { font-family: inherit; }
   margin: 0 0 10px;
   display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
 }
+/* AI tag inside a .detail-h heading (summary panel) — the heading isn't a flex
+   .sec-head row, so the badge needs its own gap. */
+.detail-h .lsj-badge { margin-left: 8px; vertical-align: 1px; }
 .detail-h-sub {
   font-size: 11px;
   color: var(--ink-4);
