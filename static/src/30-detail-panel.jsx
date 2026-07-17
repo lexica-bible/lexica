@@ -955,6 +955,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             }
           </div>
         ) : null}
+        {/* Contract §4 state 2: this card is a NAME lookup (it only renders when no
+            verse-bind exists) — say so, in the same voice as the AI block's caveat. */}
+        {metavData && (
+          <p className="detail-ai-caveat">Matched by name — not checked against this verse.</p>
+        )}
         </>}
       </section>
     );
