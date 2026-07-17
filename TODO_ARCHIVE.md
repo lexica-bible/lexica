@@ -6,6 +6,18 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-16 — Person/clan card display nits (R-1 post-swap eyeball) — DONE, JP confirmed
+
+Two display-only fixes in `static/src/30-detail-panel.jsx` (commit `3ee0d18`): (a) the TIPNR
+verse-bound card no longer repeats the entity name under the title when it's the same word
+(David's metaV card never had the echo — it was the bound-card layout, made visible everywhere
+by R-1's new OT binds; a differing spelling still shows); (b) the People/Clan card's "Matched
+to this verse" chip moved to its own line, matching the PERSON card. Person/place thin cards
+keep the inline chip. Verified live shapes on Shaul Gen 46:10, David Mat 1:6, Christians
+Act 11:26.
+
+---
+
 ## 2026-07-16 — HEAD-WORD REBUILD (R-1) COMPLETE + SWAPPED LIVE — three builds, two STOPs, every number closed
 
 The chartered heavyweight run (`docs/REBUILD_SCOPE_headword.md`, now stamped RUN COMPLETE).
