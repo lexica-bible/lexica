@@ -1,5 +1,14 @@
 # CHARTER — Provenance-contract render work
 
+**STATUS: CLOSED COMPLETE 2026-07-16** (reviewer receipt, screenshot-verified) — except
+item 4 (tappable badge tooltips + shared registry), which stands chartered FORWARD as its
+own session, gated on the mobile sheet contract. Shipped: items 1/2/3/5/6 (commits
+`6288c5c` range) + the chip-line consistency fix on the new card types (`c3c0cdd`, found
+in reviewer verification). Verification receipts (reviewer-confirmed screenshots, JP):
+Shaul Gen 46:10 (combined badge + own-line chip + no echo) · Gen 1 overview (AI tags) ·
+Baal (plain-TIPNR negative case, then own-line chip) · Pharisee ("Group") · David Mat 1:6
+(name-path caveat line, plain metaV badge).
+
 Chartered 2026-07-16 off the audit (`AUDIT_provenance_sweep.md`); JP picked it as next.
 Spec of record: `docs/PROVENANCE_CONTRACT.md`. Scope = DISPLAY code only
 (`static/src/30-detail-panel.jsx` + `views_summary.py` for the AI tag payload if needed);

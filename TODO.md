@@ -452,16 +452,13 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   recoverable class — **352 spelling-variant rows (abia→abijah class)** — queues into R-2's
   variant batch, per-pair eyeball + roster-freeze check required. Everything else stays
   floored by ruling (groups, adonai title, wrong-candidate protection, true ambiguity).
-- **Provenance-contract RENDER items unchartered** — the audit sweep session (contract §8) is
-  chartered as AUDIT ONLY; the build work the contract requires has no charter: §6 name-display
-  rule (the Midian name-echo, known failure E), §5 tappable source tags + one tooltip registry,
-  §4 name-path "matched by name, not checked against this verse" line, AI tag back on summaries.
-  Explicit line item so it doesn't hide inside the audit. code: static/src/30-detail-panel.jsx +
-  views_summary.py; spec docs/PROVENANCE_CONTRACT.md. **Audit 2026-07-16 additions
-  (AUDIT_provenance_sweep.md §1–2): §6 name-echo is DONE (`3ee0d18`); summary panel has NO
-  label at all (fails A, not just F); the combined MetaV/TIPNR badge on `.pnbound` (B); and
-  the 216 live 'other'-type cards (Pharisee 93, Baal 67…) all headed "Identity" — per-type
-  wording rulings needed (groups → People/Clan-style; deities/months/etc → JP rules).**
+- **Provenance render work — CLOSED COMPLETE 2026-07-16 except tooltips** (reviewer receipt;
+  `docs/CHARTER_provenance_render.md` has the full record + screenshot receipts). Shipped:
+  AI tags on summaries · name-path caveat line · conditional MetaV/TIPNR badge · Deity/Group/
+  Being/Reference headings (rulings R1–R5 final: no "pagan", Satan+Leviathan = Being) ·
+  Nave's dead code removed (data nuked on PA) · chip-on-own-line on all non-person/place
+  cards. **REMAINING: item 4 — tappable badge tooltips, ONE shared component + ONE registry
+  keyed by contract §2; own session, gated on the mobile sheet contract.**
 - **Descriptor-of-individual gentilics — CLOSED by audit ruling (2026-07-16, reviewer-accepted):**
   no binder change; the tier genuinely doesn't support these binds today (numonly evidence).
   Revisit ONLY if R-2's group-entity work (pile U) creates a better target. Ruling record:
