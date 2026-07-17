@@ -6,6 +6,27 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-16 — HEAD-WORD REBUILD (R-1) COMPLETE + SWAPPED LIVE — three builds, two STOPs, every number closed
+
+The chartered heavyweight run (`docs/REBUILD_SCOPE_headword.md`, now stamped RUN COMPLETE).
+Outcome: RC-1 star-slot heads + RC-2 capfall splits (137, the 11-row remainder documented) +
+TIPNR loader fix + variant map live; 1,552-row exhaustive compare vs certified live, every row
+mechanism-mapped (1,234 number gains + 274 split cells + 44 re-heads); binds 14,389→14,530
+(+141 traced to zero unexplained), person links 1,625→1,644 (+19 traced); gentilic-guard trio
+zero-shift; rollback = `bible.db.bak-2026-07-17` + `bible_pre_headword_2026-07-16.db`.
+**The two STOPs are the story:** (1) run 1 discarded — the landed loader's first-writer
+alternate harvest let alphabetically-earlier entities STEAL keys (jesus→G912 Barabbas, 79
+names); fixed with a two-phase harvest (old keys byte-identical to certified live — even the
+"gains" were reverted after the Jesus/Immanuel H6005 fill proved a gain can flip the
+testament fallback on real words), guarded permanently by `check_roster_regression.py` +
+baseline + `tests/test_tipnr_roster.py` in CI. (2) run 2 discarded — the gate-5 sweep caught
+Isa 41:14's vocative "O" peeled onto the name slot; "o" added to `_FUNCTION_LEAD`.
+Lessons #85–#89 in ENGINE_LESSONS (call-path-not-file-path · control-proves-its-key ·
+replica-is-not-the-mechanism · command-after-verdict · checker-columns-from-the-spec).
+The `/rebuild-words` checklist gained the missing abp_surface BACKFILL step (health_check's
+floor caught the omission post-swap) and its stale numbers were re-pinned. The owed
+finish_rebuild.sh acceptance: satisfied (honest-verdict behavior observed across three runs).
+
 ## 2026-07-16 — Mobile sheet contract COMPLETE: lexicon fixture + step 4 (.wm-sheet dies)
 
 Two commits, each behind its own reviewer gate: `3b69089` (fixture + News Options) and `54eb853`

@@ -1,5 +1,11 @@
 # HANDOFF — rebuild-prep session close (2026-07-16, at 2501ee2)
 
+> **SUPERSEDED 2026-07-16 (late session): THE RUN IS DONE — swapped live, health 0/0.**
+> §1–§3 below are history. Record: `docs/REBUILD_SCOPE_headword.md` status header +
+> TODO_ARCHIVE "HEAD-WORD REBUILD (R-1) COMPLETE" + ENGINE_LESSONS #85–#89. The §5
+> open-fronts list is still current EXCEPT: the rebuild is done, R-2 is unblocked, and the
+> audit-session pile grew (leave-list piles P/R/U/V + numonly now 1,200 — see TODO.md).
+
 Supersedes the earlier 8488ba3 handoff. Session closed clean; wrap ran (living docs + memory
 updated). This is the pick-up sheet.
 

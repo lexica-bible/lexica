@@ -1,11 +1,15 @@
 # REBUILD SESSION SCOPE — head-word fix run (R-1, one heavyweight run)
 
-Status: **READY TO RUN 2026-07-16 — all three review gates cleared (payloads
-REVIEW_rebuild_precode.md / REVIEW_rc2_rereview.md / REVIEW_alias_batch.md), gate zero cleared,
-all approved code LANDED (RC-1 6d7a6ee · RC-2 098a742 · alias batch 3ca0f29 · retention). Only
-the run itself remains — fresh session, this charter + /rebuild-words.** Procedure = the `/rebuild-words`
-slash command, not improvised. This doc is the session charter; the tickets hold the
-detail (`TICKET_headword_class.md`, `TICKET_missing_strongs_pn.md`).
+Status: **RUN COMPLETE — SWAPPED LIVE 2026-07-16 session (swap ~00:45 console time).** All five
+run-time gates closed with receipts; post-swap checks green (health_check 0/0 after the
+abp_surface backfill the checklist had been missing). Three builds were needed: run 1 was
+discarded on the ROSTER HIJACK STOP (first-writer alternates let Barabbas steal 'jesus' — 79
+names; two-phase loader fix + permanent zero-regression gate `check_roster_regression.py`),
+run 2 was discarded on the gate-5 catch (Isa 41:14 vocative "O" mispeel → `_FUNCTION_LEAD`),
+run 3 hit every pinned number exactly (626,305 build / 2,436 splits / 6,882 flagged / 340
+residue / +141 binds traced / +19 links traced). Reconciliation record: this doc's controls +
+`docs/tickets/blank_star_classes.md` + `alias_leave_list.txt` piles P/R/U/V + ENGINE_LESSONS
+#85–#89. Kept below unchanged as the historical charter.
 
 ## Gate zero — disk space (pre-flight, BLOCKS the run)
 **CLEARED 2026-07-16 (JP paste): dashboard 1.1 GB free**; minus the ~0.4 GB pre-rebuild

@@ -31,7 +31,15 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
 2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
-   correction + morph. Confirm `Words inserted: ~625,921`, `Verses skipped: 0`, ~6,880 flagged.
+   correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live
+   pin = 626,309), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
+   `Split 2,436 merged subject-name(s)` (the folded PN-subject split incl. the RC-2
+   capitalized-lead fallback; 2,299 roster/εἰμί + 137 capfall — reconciliation record
+   `docs/tickets/blank_star_classes.md`). All four ran EXACT on the 2026-07-16 R-1 run.
+   GATE (2026-07-16, permanent): if import_tipnr.py or tipnr/TIPNR.txt changed since the
+   last run, `python3 scripts/check_roster_regression.py` must print CLEAN before
+   import_tipnr runs — the roster is frozen outside reviewed re-baselines
+   (tests/test_tipnr_roster.py locks it in CI; the Barabbas-stole-'jesus' incident).
    FOLDED INTO THIS PASS (no longer separate): bracket_punct (~331v), g1473_gloss (~1,724),
    lord_subject (~795), funcword_subject (~108), lord_oath (29), greek_pos backfill. Already at
    build from before: pronoun correction (Rahlfs/TAGNT), _redistribute_pronoun_compounds,
@@ -58,7 +66,8 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
    project_blank_strongs_fill.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
-   (import_tipnr, ~27,965 matched — the build CLEARS is_pn + PN Strong's) then the PINNED
+   (import_tipnr, 31,392 matched at the 2026-07-16 roster — the build CLEARS is_pn + PN
+   Strong's) then the PINNED
    data-patches that can't fold, then a final punctuation float. Each only touches its own named
    verses, safe to re-run.
    **THE SCRIPT'S VERDICT IS THE GATE (2026-07-14).** It does NOT abort mid-chain (steps are
@@ -120,9 +129,13 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; touch wsgi.
 9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
-   leaves stale forms until it's rebuilt. Read-only on words/verses. THEN re-run
+   leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
+   `scripts/backfill_abp_surface.py <db> --bh bh_scrape.db --apply` — the surface builder writes
+   only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
+   find and health_check FLOORS the table at 359,288, so a rebuild without the backfill trips the
+   floor (it did, 2026-07-16 — the guard caught it; this step was missing here). THEN re-run
    `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
-   SBL style from the lexicon, 'h' from the lemma).
+   SBL style from the lexicon, 'h' from the lemma) — it covers the backfilled rows too.
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory

@@ -438,21 +438,21 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
-- **★ REBUILD SESSION (head-word) — NEXT UP; ALL pre-run gates CLEARED 2026-07-16, only the run
-  itself remains.** Charter = `docs/REBUILD_SCOPE_headword.md` (carries gate-zero clearance, the
-  reviewer's run-time conditions, and every reconciliation baseline). Landed in code, all
-  reviewer-approved with controls green: RC-1 scoped star-slot head pick (6d7a6ee) · RC-2
-  capitalized-lead splitter fallback w/ red-first fixture (098a742; dry-run must reconcile vs the
-  148-row baseline in `docs/tickets/blank_star_classes.md` before apply) · TIPNR loader root-cause
-  fix + 399-entry variant map (3ca0f29; Christian=G5546 + gentilic-guard re-checks are run-time
-  conditions) · backup keep-3. Fresh session, HIGH effort, /rebuild-words procedure; the owed
-  finish_rebuild.sh acceptance check rides it. AFTER it: the Greek-name migration
-  (docs/DESIGN_greek_name_identity.md, five JP rulings pending) as its OWN staged rebuild.
-- **pn_binding hand-check rows never scheduled** (2026-07-16 binding rebuild, "step 5") — the
-  --apply run wrote 65 HOT rows (several same-name entities at one verse) to
-  `scripts/pn_binding_hot.txt` and 798 number-only floor suspects to `scripts/pn_binding_numonly.txt`
-  on PA. All floor safely (nothing renders wrong), but the hand-check that could recover the good
-  ones has never been scheduled. Candidate: fold into the provenance audit session.
+- **R-2 Greek-name migration — NOW UNBLOCKED** (the head-word rebuild it waited on is DONE +
+  LIVE 2026-07-16, see archive). Own staged rebuild; `docs/DESIGN_greek_name_identity.md`;
+  five JP rulings pending. Related parked candidates from the R-1 run (reviewer-parked, pull
+  not push, all recorded in `docs/tickets/alias_leave_list.txt` pile comments):
+  gentilic Group rows binding their own Group entities (hittites pile U) · per-reign Pharaoh
+  link disambiguation (pile V) · ladder possessive-strip ("Aaron's," class, pile P) ·
+  vocative-aware peel (Isa 41:14 "O Israel") · josua/shapan/meramoth micro alias batch
+  (canonical keys exist) · the 178 lookup H/G fill-gains reverted for byte-identity (NT name
+  words still ride the Hebrew fallback — a real future improvement, per-word review needed).
+- **pn_binding hand-check rows never scheduled** — the 2026-07-16 R-1 binding --apply wrote
+  65 HOT rows to `scripts/pn_binding_hot.txt` and **1,200** number-only floor suspects to
+  `scripts/pn_binding_numonly.txt` on PA (grew from 798: the alias batch numbered more rows,
+  so more candidates get considered and refused — conservative direction). All floor safely,
+  but the hand-check that could recover the good ones has never been scheduled. Candidate:
+  fold into the provenance audit session.
 - **Provenance-contract RENDER items unchartered** — the audit sweep session (contract §8) is
   chartered as AUDIT ONLY; the build work the contract requires has no charter: §6 name-display
   rule (the Midian name-echo, known failure E), §5 tappable source tags + one tooltip registry,
