@@ -273,3 +273,12 @@ R | babylonian | 1 | Isa 14:23 | RC-1 re-head (old head "region") - gentilic adj
 #   Christian on G5546. PARKED CANDIDATE (R-2 or reviewer-gated micro-batch, pull
 #   not push): bind gentilic Group rows to their own Group entities properly.
 U | hittites | 13 | Gen 15:20 Exo 3:8 Exo 3:17 Exo 13:5 Exo 23:28 Jos 1:4 Jos 9:1 Jos 11:3 1Ki 10:29 1Ki 11:1 2Ki 7:6 2Ch 1:17 Neh 9:8
+# Pile V (2026-07-16 person-link adjudication, reviewer-accepted): Pharaoh x7
+#   title-ambiguity DEMOTIONS - live's 7 metaV person links for Pharaoh entities were
+#   name-only guesses tying an ambiguous royal TITLE to single metaV persons. The
+#   rebuild's binding put five distinct Pharaoh entities into the linking pool; the
+#   linker demoted the guess (9 cands, best 0.00, title-unlinkable). Wrong link >
+#   missing link; name-path intact. Same event as gate-4's +20 Pharaoh renders, at
+#   the link layer. PARKED (audit session, pull not push): per-reign Pharaoh
+#   disambiguation via reign refs.
+V | pharaoh | 7 | Gen.12.15 Gen.37.36 Exo.3.10 1Ki.3.1 1Ch.4.18 2Ki.18.21 Jer.25.19
