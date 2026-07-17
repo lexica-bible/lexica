@@ -893,7 +893,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const nameEchoesHero = properName && heroName.toLowerCase() === properName.toLowerCase();
       return (
         <section key="boundEntity" className="sec pnbound">
-          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
+          {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
+              sources — the badge credits both. CONDITIONAL on the data actually shown
+              (richPerson), never on the card variant: a TIPNR-only card stays "TIPNR". */}
+          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
           {!nameEchoesHero && <div className="pnbound-name">{heroName}</div>}
           {line && <p className="pnbound-desc">{line}</p>}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
