@@ -264,3 +264,12 @@ R | parian | 2 | Est 1:6 | RC-1 re-head (old head "marble") - gentilic adjective
 R | midianitish | 2 | Num 25:14 | RC-1 re-head (old head "woman") - gentilic adjective
 R | phoenician | 1 | Exo 6:15 | RC-1 re-head (old head "woman") - gentilic adjective
 R | babylonian | 1 | Isa 14:23 | RC-1 re-head (old head "region") - gentilic adjective
+# Pile U (2026-07-16 gate-4 adjudication, reviewer-accepted): gentilic-own-number
+#   UNBINDS - 13 render binds present on live that the rebuilt copy correctly refuses.
+#   Mechanism: these "Hittites" word rows now carry the gentilic Group row's OWN
+#   number (H2850, an alias-batch gain); the binder refuses to corroborate H2850
+#   against the person entity Heth (H2845) they used to fuzzy-bind to. Old state =
+#   lucky wrong-ish bind; new state = honest name-path fallback. Same principle as
+#   Christian on G5546. PARKED CANDIDATE (R-2 or reviewer-gated micro-batch, pull
+#   not push): bind gentilic Group rows to their own Group entities properly.
+U | hittites | 13 | Gen 15:20 Exo 3:8 Exo 3:17 Exo 13:5 Exo 23:28 Jos 1:4 Jos 9:1 Jos 11:3 1Ki 10:29 1Ki 11:1 2Ki 7:6 2Ch 1:17 Neh 9:8

@@ -1374,6 +1374,17 @@ both drifting from the doc.
     message — no exceptions for confidence. *(head-word rebuild run, 2026-07-16;
     reviewer-logged protocol slip, owned)*
 
+89. **A verification query must enumerate the columns the verified mechanism writes — from
+    the mechanism's spec, not from memory of what usually changes.** The gate-4 orphan check
+    tested numbers and English text but not the head label; RC-1's whole job is changing head
+    labels, and the binder reads exactly that column. 14 "orphans" appeared that were the
+    checker's blindness, not the binding's — the second checker of the night blind to part of
+    its mechanism space (kin of #87's replica ladder). The nonzero itself was the save: a
+    checker that returns rows gets read; one that would have silently returned 0 on a narrower
+    join (the un-book-mapped draft, vetoed by the reviewer) teaches nothing. Write the change-
+    column list by reading what the fix WRITES, then test all of it and nothing else.
+    *(head-word rebuild run, 2026-07-16; v2 zero closed gate 4 at +141 = 154 − 13)*
+
 84. **"The flag's help text says X" is not a reading of the branch — it is a guess wearing a
     citation.** Claimed `--from-draw` ships a reviewed draw past staleness, sourced from its help
     string ("bypassing the synth_ver up-to-date skip; requires a cache HIT"). The branch says the
