@@ -599,9 +599,15 @@ def _greek_identity_payload(conn, verse_id, position):
         if lex and lex["lemma"]:
             lemma, translit = lex["lemma"], lex["translit"] or ""
         elif "step_lexicon" in have:
+            # step_lexicon keys: estrong = padded TBESG text ('G0007G'), base =
+            # plain NUMBER (7) — the indexed join key. The identity number is
+            # unpadded text ('G9827'), so join on the number, never the text
+            # (receipt-2 catch: a text join here never matched anything).
+            digits = "".join(ch for ch in gs[1:] if ch.isdigit())
             sl = conn.execute(
-                "SELECT lemma, translit FROM step_lexicon WHERE base = ? LIMIT 1",
-                (gs,)).fetchone()
+                "SELECT lemma, translit FROM step_lexicon WHERE base = ? "
+                "ORDER BY estrong LIMIT 1",
+                (int(digits),)).fetchone() if digits else None
             if sl and sl["lemma"]:
                 lemma, translit, step = sl["lemma"], sl["translit"] or "", True
         # S2-Q4: a numbered identity counts by its Greek number — over the

@@ -30,7 +30,12 @@ def _fixture() -> sqlite3.Connection:
         CREATE TABLE words (id INTEGER PRIMARY KEY, verse_id INT, position INT,
                             strongs_base TEXT, english TEXT);
         CREATE TABLE lexicon (strongs_g TEXT PRIMARY KEY, lemma TEXT, translit TEXT);
-        CREATE TABLE step_lexicon (estrong TEXT, base TEXT, lemma TEXT, translit TEXT, gloss TEXT);
+        -- REAL shape (import_step_lexicon.py, verified on PA 2026-07-24): estrong is
+        -- the padded TBESG text key, base is a plain NUMBER. The first fixture had
+        -- base as text and passed while live never matched — a replica isn't the
+        -- mechanism; this fixture must mirror the importer's CREATE TABLE exactly.
+        CREATE TABLE step_lexicon (estrong TEXT PRIMARY KEY, base INTEGER,
+                                   lemma TEXT, translit TEXT, gloss TEXT);
         CREATE TABLE pn_greek_identity (
             verse_id INT, position INT, greek_strongs TEXT, greek_lemma TEXT,
             source TEXT, hebrew_base TEXT, PRIMARY KEY (verse_id, position));
@@ -48,7 +53,10 @@ def _fixture() -> sqlite3.Connection:
             (3, 4, NULL, 'Ἰωβήλ', 'lemma-only', NULL),
         -- none bucket (control C4)
             (3, 6, NULL, NULL, 'none', NULL);
-        INSERT INTO step_lexicon VALUES ('G9901','G9901','Θάρα','thara','Terah');
+        INSERT INTO step_lexicon VALUES ('G9901', 9901, 'Θάρα','thara','Terah');
+        -- low padded number: identity 'G2' must reach estrong 'G0002' via base=2
+        INSERT INTO step_lexicon VALUES ('G0002', 2, 'Ἀαρών','aarōn','Aaron');
+        INSERT INTO pn_greek_identity VALUES (3, 8, 'G2', NULL, 'tipnr', 'H175');
         -- ABP words carrying the Hebrew stopgap number (the cross-ref's own count)
         INSERT INTO words VALUES (1,1,3,'H1732','David'), (2,2,5,'H1732','David'),
                                  (3,2,9,'H1732',''), (4,2,7,'H8646','Terah');
@@ -89,6 +97,12 @@ def main() -> int:
     check("step: lemma from step_lexicon", p["lemma"], "Θάρα")
     check("step: STEP flag set", p["step"], True)
     check("step: count by Greek number", p["greek_count"], 1)
+
+    # padded low number: the receipt-2 catch — 'G2' must reach estrong 'G0002'
+    # through the NUMBER column (a text join never matches the padded key)
+    p = _greek_identity_payload(c, 3, 8)
+    check("padded: lemma via numeric base join", p["lemma"], "Ἀαρών")
+    check("padded: STEP flag set", p["step"], True)
 
     # lemma-only (C3 shape)
     p = _greek_identity_payload(c, 3, 2)
