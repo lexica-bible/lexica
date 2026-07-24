@@ -43,6 +43,22 @@ def main():
                        encoding="utf-8-sig").read().splitlines()
     lookup, _ = import_tipnr.parse_tipnr(tipnr_lines)
 
+    # Entity -> its own Greek number, from the binder's parse (sub-records included —
+    # import_tipnr's lookup deliberately carries main-line numbers only, which misses
+    # the Greek sub-record numbers OT names carry, incl. the STEP-extended ones).
+    # Rule: exactly ONE Greek base on the entity -> that's its Greek identity; two or
+    # more -> no guess (wrong > missing), the word falls to the lemma-only state.
+    ents = er.parse_tipnr(tipnr_lines)
+    ent_g, multi_g = {}, 0
+    for e in ents:
+        gs = sorted(b for b in e["bases"] if b.startswith("G"))
+        if len(gs) == 1:
+            ent_g[e["uniq"]] = gs[0]
+        elif len(gs) > 1:
+            multi_g += 1
+    print(f"entities with exactly one Greek number: {len(ent_g):,} "
+          f"(multi-Greek entities, no guess: {multi_g:,})")
+
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=DELETE")
@@ -52,20 +68,29 @@ def main():
         "SELECT count(*) FROM sqlite_master WHERE name='pn_binding'").fetchone()[0]
     binds = {}
     if have_binding:
-        # entity head name from the bind's uniq ('Abijah@1Ch.24.10-Luk' -> 'abijah');
-        # keyed exactly like the binder keys its rows: (book#, ch, vs, norm name).
+        # keyed exactly like the binder keys its rows: (book#, ch, vs, norm name);
+        # value = the bound entity's uniq (the key into ent_g above).
         for r in conn.execute("SELECT book, chapter, verse, name, entity_uniq "
                               "FROM pn_binding WHERE render=1"):
-            head = er.norm_name(r["entity_uniq"].split("@")[0])
-            binds[(r["book"], r["chapter"], r["verse"], r["name"])] = head
+            binds[(r["book"], r["chapter"], r["verse"], r["name"])] = r["entity_uniq"]
     print(f"pn_binding render rows loaded: {len(binds):,}"
           + ("" if have_binding else "  (table absent — layer 'tipnr' via lookup only)"))
 
-    words = conn.execute("""
+    # The printed-Greek side table is the lemma fallback for name words — words.lemma
+    # is mostly blank on proper nouns (the dry-run control that caught this: 26,867
+    # 'none' rows on the first pass, 2026-07-24).
+    have_surface = conn.execute(
+        "SELECT count(*) FROM sqlite_master WHERE name='abp_surface'").fetchone()[0]
+    surf_join = ("LEFT JOIN abp_surface s ON s.verse_id = w.verse_id "
+                 "AND s.position = w.position") if have_surface else ""
+    surf_col = "s.form" if have_surface else "NULL"
+    words = conn.execute(f"""
         SELECT w.verse_id, w.position, w.strongs_base, w.lemma,
+               {surf_col} AS surface_form,
                COALESCE(NULLIF(w.english_head,''), w.english) AS label,
                v.book, v.chapter, v.verse
         FROM words w JOIN verses v ON v.id = w.verse_id
+        {surf_join}
         WHERE w.is_pn = 1
     """).fetchall()
     print(f"proper-noun words: {len(words):,}\n")
@@ -74,22 +99,24 @@ def main():
     for w in words:
         base = w["strongs_base"] or ""
         heb = base if base.startswith("H") else None
-        greek, lemma, source = None, w["lemma"], None
+        greek, source = None, None
+        lemma = w["lemma"] or w["surface_form"]   # dictionary form, else printed Greek
         if base.startswith("G"):
             greek, source = base, "abp-tag"
         else:
             nm = er.norm_name(w["label"] or "")
             bk = er.book_num(w["book"])
-            head = binds.get((bk, w["chapter"], w["verse"], nm)) if bk is not None else None
-            ent = lookup.get(head) if head else None
-            if ent is None and nm:
-                ent = lookup.get(nm)          # unbound word: the roster itself
-            if ent and ent.get("g"):
-                greek, source = ent["g"], "tipnr"
-            elif lemma:
-                source = "lemma-only"
+            uniq = binds.get((bk, w["chapter"], w["verse"], nm)) if bk is not None else None
+            if uniq and uniq in ent_g:
+                greek, source = ent_g[uniq], "tipnr"
             else:
-                source = "none"               # no number, no lemma — counted, not hidden
+                ent = lookup.get(nm) if nm else None    # unbound word: the roster itself
+                if ent and ent.get("g"):
+                    greek, source = ent["g"], "tipnr"
+                elif lemma:
+                    source = "lemma-only"
+                else:
+                    source = "none"           # no number, no lemma — counted, not hidden
         split[source] += 1
         rows.append((w["verse_id"], w["position"], greek, lemma, source, heb))
 
