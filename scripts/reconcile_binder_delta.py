@@ -56,8 +56,23 @@ print(f"number-only rows: {len(old_num)} -> {len(new_num)} "
 print(f"hot rows        : {len(old_hot)} -> {len(new_hot)} "
       f"(departed {len(old_hot - new_hot)}, NEW {len(new_hot - old_hot)})\n")
 
-dep_ok = sorted(n for n in names_of(departed) if n.lower() in accepted)
-dep_bad = sorted(n for n in names_of(departed) if n.lower() not in accepted)
+sys.path.insert(0, ROOT)
+import entity_resolution as er
+
+
+def traces(name):
+    """A departed/arrived name traces to an accepted pair either directly or through
+    the binder's own stem-then-alias chain (kenezite -> stem 'kenez' -> accepted
+    'kenez'->'kenaz'; name_variants is the production chain, not a re-implementation)."""
+    n = name.lower()
+    if n in accepted:
+        return True
+    stems = er.gentilic_roots(n)
+    return bool(stems & accepted)
+
+
+dep_ok = sorted(n for n in names_of(departed) if traces(n))
+dep_bad = sorted(n for n in names_of(departed) if not traces(n))
 print(f"departed number-only names tracing to ACCEPTED pairs: {len(dep_ok)}")
 print(f"departed names NOT on the accepted list (must be explained): {len(dep_bad)}")
 for n in dep_bad:
@@ -69,10 +84,16 @@ print(f"\nNEW number-only rows (must be zero or explained): {len(arrived)}")
 for ln in sorted(arrived)[:50]:
     print("   +", ln)
 new_hot_rows = new_hot - old_hot
-print(f"NEW hot rows (must be zero or explained): {len(new_hot_rows)}")
-for ln in sorted(new_hot_rows)[:50]:
+hot_ok = [ln for ln in sorted(new_hot_rows) if traces(ln.split("\t")[0].strip())]
+hot_bad = [ln for ln in sorted(new_hot_rows) if not traces(ln.split("\t")[0].strip())]
+print(f"NEW hot rows tracing to accepted pairs (now visible, honestly ambiguous, "
+      f"hand-check queue): {len(hot_ok)}")
+for ln in hot_ok[:50]:
+    print("   ~", ln)
+print(f"NEW hot rows NOT tracing to an accepted pair (must be zero): {len(hot_bad)}")
+for ln in hot_bad[:50]:
     print("   +", ln)
 
-fail = bool(dep_bad or arrived or new_hot_rows)
+fail = bool(dep_bad or arrived or hot_bad)
 print("\nRECONCILE:", "UNEXPLAINED MOVEMENT — STOP" if fail else "CLEAN — every move traces")
 sys.exit(1 if fail else 0)
