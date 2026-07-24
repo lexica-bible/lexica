@@ -1,6 +1,8 @@
 # TICKET — the 5,030 PN words the scrape pairing refused (lemma residue)
 
-Status: OPEN, sized 2026-07-24 (R-2 stage-1 dry-run). Pull, not push — pick up after
+Status: OPEN, sized 2026-07-24 (R-2 stage-1 dry-run). RE-SIZED same day: 5,030 → 3,380
+after the G1 fix (unbound name-path words gained the name's agreed Greek number, which
+absorbed 1,650 of the refused rows into 'tipnr' — the meter moved for a named reason). Pull, not push — pick up after
 stage 1 lands, or alongside Pile P (possessive/plural cells), which likely shares causes.
 
 ## What it is
