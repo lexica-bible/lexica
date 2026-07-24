@@ -438,9 +438,10 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
-- **R-2 Greek-name migration — NOW UNBLOCKED** (the head-word rebuild it waited on is DONE +
-  LIVE 2026-07-16, see archive). Own staged rebuild; `docs/DESIGN_greek_name_identity.md`;
-  five JP rulings pending. Related parked candidates from the R-1 run (reviewer-parked, pull
+- **R-2 Greek-name migration — NOW UNBLOCKED, HANDOFF READY: open the session from
+  `HANDOFF_r2_greek_names.md`** (consolidates the design, the five chat-ready rulings, the
+  variant batch + conditions, the parked piles, and the session-open checklist). Own staged
+  rebuild; `docs/DESIGN_greek_name_identity.md`; five JP rulings pending. Related parked candidates from the R-1 run (reviewer-parked, pull
   not push, all recorded in `docs/tickets/alias_leave_list.txt` pile comments):
   gentilic Group rows binding their own Group entities (hittites pile U) · per-reign Pharaoh
   link disambiguation (pile V) · ladder possessive-strip ("Aaron's," class, pile P) ·
