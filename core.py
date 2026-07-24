@@ -38,6 +38,15 @@ DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bible.db")
 # env line back and reload — no code revert.
 READER_GREEK_IDENTITY = os.environ.get("READER_GREEK_IDENTITY", "") == "1"
 
+# R-2 stage 3 flips (docs/PLAN_r2_stage3.md) — the SECOND switch, deliberately
+# separate from READER_GREEK_IDENTITY so rolling back a new flip never rolls back
+# the shipped, receipted stage-2 card (reviewer rollback-grouping ruling).
+# Covers: #2 reader ABP Strong's tags Greek-keyed for backfilled proper nouns,
+# then #1 Word study ABP branch. Default OFF: the chapter/verse word feeds are
+# byte-identical to today (the G1 OFF-proof gate). Rollback = delete the env
+# line + reload.
+READER_GREEK_FLIPS = os.environ.get("READER_GREEK_FLIPS", "") == "1"
+
 _anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
 if not _anthropic_key:
     log.warning("ANTHROPIC_API_KEY not set — AI search will be unavailable")

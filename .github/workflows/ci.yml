@@ -52,6 +52,7 @@ jobs:
           python tests/test_key_strongs_filter.py
           python tests/test_tipnr_roster.py
           python tests/test_pn_greek_identity.py
+          python tests/test_reader_greek_flips.py
 
   frontend:
     runs-on: ubuntu-latest

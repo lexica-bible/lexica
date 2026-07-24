@@ -10,9 +10,39 @@ import re
 
 from flask import Blueprint, jsonify
 
+import core as _core
 from core import db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols
 
 bp = Blueprint("library", __name__)
+
+
+def _greek_flip_parts(conn):
+    """R-2 stage 3 flip #2 (docs/PLAN_r2_stage3.md): with READER_GREEK_FLIPS on
+    AND the stage-1 identity table present, each ABP word row carries its served
+    Greek identity so the reader's Strong's tags can key Greek for backfilled
+    proper nouns. Switch off (or table missing) -> empty strings and the feed
+    payload is byte-identical to today (the G1 OFF-proof gate)."""
+    if not _core.READER_GREEK_FLIPS:
+        return "", ""
+    has_gid = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_greek_identity'"
+    ).fetchone() is not None
+    if not has_gid:
+        return "", ""
+    return (", g.greek_strongs AS g_strongs, g.source AS g_src",
+            "LEFT JOIN pn_greek_identity g ON g.verse_id = w.verse_id AND g.position = w.position")
+
+
+def _gid_field(r, enabled):
+    """The per-word identity field, present ONLY when a real identity was served
+    (source != 'none'); 'strongs' is the Greek number or empty for a lemma-only
+    word (the tag hides rather than fabricate a number — Q3)."""
+    if not enabled:
+        return {}
+    src = r["g_src"]
+    if not src or src == "none":
+        return {}
+    return {"g_id": {"strongs": r["g_strongs"] or "", "src": src}}
 
 
 @bp.route("/api/verse/<book>/<int:chapter>/<int:verse>")
@@ -58,16 +88,18 @@ def verse_words(book, chapter, verse):
         # Plain-meaning lemma gloss (scripts/build_word_gloss.py); replaces the KJV-ized
         # l.kjv_def. Falls back to l.kjv_def until that table is built (deploy-safe).
         gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
+        gid_sel, gid_join = _greek_flip_parts(conn)
         wrows = conn.execute(
             f"""SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
                       COALESCE(w.italic_words, '') AS italic_words,
                       w.strongs_base, w.strongs, w.is_pn, w.morph,
                       {lem_sel}, {tr_sel}, {gloss_sel} AS kjv_def, l.strongs_def, l.derivation,
-                      t.entity_type AS pn_type, t.entity_types AS pn_types
+                      t.entity_type AS pn_type, t.entity_types AS pn_types{gid_sel}
                FROM words w
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
                {dl_join} {wg_join}
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
+               {gid_join}
                WHERE w.verse_id = ?
                ORDER BY w.position""",
             (row["id"],),
@@ -86,6 +118,7 @@ def verse_words(book, chapter, verse):
                 "pn_type":     w["pn_type"],
                 "pn_types":    w["pn_types"],
                 "is_content":  w["strongs_base"] not in _FUNCTION_STRONGS,
+                **_gid_field(w, bool(gid_sel)),
             }
             for w in wrows
         ]
@@ -225,13 +258,14 @@ def chapter_text(book, chapter):
                    if has_dotted else "")
         # Plain-meaning lemma gloss over l.kjv_def (deploy-safe; see verse_words).
         gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
+        gid_sel, gid_join = _greek_flip_parts(conn)
         rows = conn.execute(
             f"""SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
                       {lem_sel}, {tr_sel}, {gloss_sel} AS kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       t.entity_type AS pn_type, t.entity_types AS pn_types,
-                      p.heading{surf_sel}
+                      p.heading{surf_sel}{gid_sel}
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
@@ -239,6 +273,7 @@ def chapter_text(book, chapter):
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                {surf_join}
+               {gid_join}
                WHERE v.book = ? AND v.chapter = ?
                ORDER BY v.verse, w.position""",
             (book, chapter),
@@ -264,6 +299,7 @@ def chapter_text(book, chapter):
             # table is built + this word anchored. Blank otherwise → no extra line.
             "inflected":          (r["surface_form"]     if has_surface else "") or "",
             "inflected_translit": (r["surface_translit"] if has_surface else "") or "",
+            **_gid_field(r, bool(gid_sel)),
         })
     return jsonify([
         {

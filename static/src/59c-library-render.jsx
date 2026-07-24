@@ -11,6 +11,34 @@
 // ============================================================
 const LibRender = (function () {
 
+  // R-2 stage 3 flip #2 (docs/PLAN_r2_stage3.md): when the feed serves a Greek
+  // identity (w.g_id, READER_GREEK_FLIPS on), the ABP Strong's tag keys Greek for
+  // a backfilled proper noun. Returns the override tag text, null for hidden
+  // (lemma-only: no fabricated number, Q3), or undefined when the site keeps
+  // today's text — a word carrying its own real inline G-number is never
+  // re-derived (C2a rule), and with the switch off g_id is absent so every site
+  // renders byte-identically to before.
+  const greekTagOverride = (w) => {
+    if (!w.g_id) return undefined;
+    if (w.strongs && w.strongs !== "*") return undefined;
+    return w.g_id.strongs || null;
+  };
+  // Chip/prose tag: today's logic (full dotted 'G'+strongs, else strongs_base)
+  // unless the flip overrides.
+  const abpChipStrongsTag = (w) => {
+    const o = greekTagOverride(w);
+    if (o !== undefined) return o;
+    if (!w.strongs_base || w.strongs_base === "*") return null;
+    return (w.strongs && w.strongs !== "*") ? "G" + w.strongs : w.strongs_base;
+  };
+  // ABP-interlinear tag: strongs_base VERBATIM (the documented mode-three rule)
+  // unless the flip overrides.
+  const abpInterStrongsTag = (w) => {
+    const o = greekTagOverride(w);
+    if (o !== undefined) return o;
+    return (w.strongs_base && w.strongs_base !== "*") ? w.strongs_base : null;
+  };
+
   const joinProse = (words) => {
     const tokens = words.map(w => w.english).filter(Boolean);
     return tokens.reduce((acc, tok, i) => {
@@ -204,8 +232,8 @@ const LibRender = (function () {
             onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english_head || w.english } : makeEntry(w)) : undefined}>
             {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
             <span className="lib-iw-english">{englishParts(w)}</span>
-            {showStrongs && (w.strongs_base && w.strongs_base !== "*"
-              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+            {showStrongs && (abpChipStrongsTag(w)
+              ? <span className="lib-iw-strongs">{abpChipStrongsTag(w)}</span>
               : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
           </span>
         );
@@ -222,8 +250,8 @@ const LibRender = (function () {
           {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-english">{label}</span>
           {showStrongs && (
-            w.strongs_base && w.strongs_base !== "*"
-              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+            abpChipStrongsTag(w)
+              ? <span className="lib-iw-strongs">{abpChipStrongsTag(w)}</span>
               : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
           )}
         </span>
@@ -263,8 +291,8 @@ const LibRender = (function () {
               <span className="lib-iw-english">{englishParts(w)}</span>
               {brkClose(0, 0)}
             </span>
-            {showStrongs && (w.strongs_base && w.strongs_base !== "*"
-              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+            {showStrongs && (abpChipStrongsTag(w)
+              ? <span className="lib-iw-strongs">{abpChipStrongsTag(w)}</span>
               : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
           </span>
         );
@@ -287,8 +315,8 @@ const LibRender = (function () {
             {brkClose(0, 0)}
           </span>
           {showStrongs && (
-            w.strongs_base && w.strongs_base !== "*"
-              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+            abpChipStrongsTag(w)
+              ? <span className="lib-iw-strongs">{abpChipStrongsTag(w)}</span>
               : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
           )}
         </span>
@@ -769,7 +797,8 @@ const LibRender = (function () {
       // lookup matches (a lowercase english_head misses the bind -> lexeme card).
       const pnPayload = pnClickPayload(w, g.text);
       // Strong's VERBATIM: strongs_base as stored (H#### or G####); '*' -> hidden.
-      const strongsShown = w.strongs_base && w.strongs_base !== "*";
+      // Flip #2 override rides on top (Greek number for a backfilled PN when served).
+      const strongsTagText = abpInterStrongsTag(w);
       const openBrk = brk.open ? <span className="lib-iw-brk">[</span> : null;
       const closeBrk = brk.close
         ? <React.Fragment><span className="lib-iw-brk">]</span>{brk.trail ? <span className="lib-abpil-trail">{brk.trail}</span> : null}</React.Fragment>
@@ -784,8 +813,8 @@ const LibRender = (function () {
             {brk.pos != null && <span className="lib-iw-pos">{brk.pos}</span>}
             {g.text || " "}{closeBrk}
           </span>
-          {showStrongs && (strongsShown
-            ? <span className="lib-abpil-strongs">{w.strongs_base}</span>
+          {showStrongs && (strongsTagText
+            ? <span className="lib-abpil-strongs">{strongsTagText}</span>
             : <span className="lib-abpil-strongs" style={{ visibility: "hidden" }}>G0</span>)}
         </span>
       );

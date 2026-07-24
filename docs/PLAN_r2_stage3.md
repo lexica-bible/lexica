@@ -118,9 +118,33 @@ Not sized yet — sized after G1 clears, against the same switch. Read surface a
 the pre-rebuild side-table dependency are already recorded in
 docs/R2_stage3_evidence.md §2.
 
-## G3 memo
+## G3 — RULED (reviewer, 2026-07-24): Option B. G3 CLEAR.
 
-Drafted separately: docs/R2_stage3_G3_memo.md — options for the 14,850
-lemma-only number cells under the retirement rebuild. BLOCKS candidate-3 sizing
-until the reviewer rules; the ruling gets recorded here in the rebuild charter
-section when issued.
+Memo: docs/R2_stage3_G3_memo.md. Ruling (pasted reviewer text):
+
+> G3 ruling: Option B. Delegation note: ruled by reviewer on CC's
+> recommendation, applied as delegated.
+> Reasons of record:
+> * Only option consistent with the ruled Q3 card state — a missing identity is
+>   data; the column means one thing everywhere after the retirement, which is
+>   the retirement's purpose.
+> * A is refused because it permanently re-opens the Agag-class seam for this
+>   bucket and makes every future consumer carry the exception.
+> * C is dispositioned as unavailable, not merely rejected: lemma-only is
+>   defined post-STEP-check, so minting numbers is a provenance-contract
+>   violation. Record it as closed, no revisit.
+> Conditions bound into the rebuild charter with the ruling:
+> 1. Unfindability gate (mandatory): the count gate CC proposed — 14,850 rows
+>    enumerated before (Hebrew-keyed) and after (Q2 home + lemma), zero
+>    findable-before/unfindable-after. S2-Q4 bar applies.
+> 2. Must-touch enlargement recorded, not appended: all H-number-keyed reads
+>    over these rows repoint to the Q2 home — same G4 item as the cross-ref
+>    count, enlarged in scope, not a new class. CC greps for H-number-keyed
+>    serving sites at rebuild-sizing time so the must-touch list is enumerated
+>    from code, not assumed complete.
+> 3. No #2 rework: the tag helper's lemma-only branch already renders the B
+>    state correctly — note in the charter that G1's live checks double as a
+>    preview of post-rebuild B behavior for this bucket.
+
+Candidate-3 sizing UNBLOCKED but waits its sequence turn (after G1, G2).
+Option C is CLOSED — no revisit.
