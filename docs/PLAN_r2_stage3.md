@@ -190,6 +190,32 @@ still opens the Hebrew-keyed page → receipt → clear.
 can answer — both are behind READER_GREEK_FLIPS, deployed together in one
 commit, so no window where the link 404s.
 
+## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
+
+**Invariance-proof DEVIATION (accepted, recorded, not waived):** the deploy
+landed onto an app with the switch already ON, a stale-worker mix served
+errors mid-deploy, and no before/after capture of an existing surface was
+taken — the original proof form is gone. Substitute evidence accepted by the
+reviewer: (a) the locked test's OFF-invariance assertions
+(tests/test_ws_greek_flips.py, both CI lists); (b) live checks θεός-unchanged +
+H90 cross-ref resolves; (c) ADDED: a normal numbered-name Word study page
+(G1138 David class) verified unchanged — nearest neighbor to the changed path.
+
+**STALE-WORKER LESSON (standing, deploy notes):** the `touch`-reload left a
+half-refreshed worker mix live — old code answering 404, then a mixed state
+answering 500, while a fresh console process ran the same code+data clean.
+Ruling: for ANY deploy that changes serving code, (1) the PythonAnywhere
+dashboard Reload button is the STANDARD reload, not `touch`; (2) the 5×
+repeated-curl worker sweep on a changed endpoint is part of DEPLOY
+VERIFICATION, not incident response. (This is G2's lesson the way the fixture
+lesson was stage 2's.)
+
+**Chapter-feed g_id classification (pre-receipt question, answered):** the
+"1" from the live probe was `grep -c` counting LINES — the whole chapter JSON
+is one line. Counted properly, 1Sa 15 carries **83** g_id marks: 51 numbered
+(tipnr; G9826 ×8, matching Word study's 1Sa count exactly) + 32 lemma-only
+(empty number, tag hidden). No G1 regression.
+
 ## G3 — RULED (reviewer, 2026-07-24): Option B. G3 CLEAR.
 
 Memo: docs/R2_stage3_G3_memo.md. Ruling (pasted reviewer text):
