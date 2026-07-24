@@ -1,6 +1,11 @@
 # TICKET — STEP tag placement (cosmetic; reviewer follow-up from R-2 stage-2 receipt 2)
 
-Status: OPEN (low priority, cosmetic). Opened 2026-07-24 at receipt-2 close.
+Status: LANDED (2026-07-24) — awaiting JP's post-deploy C2 screenshot to close.
+Fix: tag removed from the head band; now renders beside the G9xxx number in the body's
+ABP Occurrences line (the static branch — STEP-keyed cards always take it). Guarded so a
+lemma-only card never shows a stray tag. No CSS change; reuses `.detail-strong-alias`.
+
+Opened 2026-07-24 at receipt-2 close.
 
 The STEP source tag (ruling S2-Q2) renders in the card's top head band —
 `static/src/30-detail-panel.jsx`, the `detail-strong-wrap` span (`· STEP` as a

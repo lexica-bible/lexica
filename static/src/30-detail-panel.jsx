@@ -1115,6 +1115,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         ) : (
           <div className="occ-link occ-link--static">
             <b>{greekId.greek_count}</b>× in ABP {greekId.greek_strongs ? `as ${greekId.greek_strongs}` : "(this form)"}
+            {greekId.step && greekId.greek_strongs && <span className="detail-strong-alias"> · STEP</span>}
           </div>
         )}
       </section>
@@ -1286,7 +1287,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 lemma-only keeps the neutral PN tag — never the Hebrew number (that
                 moved to the cross-ref section). STEP tag per ruling S2-Q2. */}
             <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : entry.strongs}</span>
-            {greekId && greekId.step && <span className="detail-strong-alias">· STEP</span>}
+            {/* STEP tag moved to the body occurrence line beside the number
+                (TICKET_step_tag_placement — read as breadcrumb up here). */}
             {aliasNote && (
               <span className="detail-strong-alias">
                 {aliasNote.direction === "to_abp"
