@@ -9,12 +9,24 @@ reports. The flip (stage 2) is a later code deploy; nothing here is user-visible
 
 1. **Variant map +11** (committed `59a2d78`, hand-checked, decision lines recorded) —
    picked up automatically by the import_tipnr re-run.
-2. **STEP extended Greek lexicon import** (Q1: yes, license CLEAR — CC BY 4.0, credit
+2. **Binder variant batch +206** (added after the 2026-07-24 frame correction — see the
+   correction block atop `docs/tickets/variant_batch_verdicts.txt` and the binder-side
+   verdicts in `docs/tickets/variant_batch_binder_verdicts.txt`, sub-batched
+   NEW-SESSION / R1-REVISIT per the reviewer's condition). Entries live in
+   `entity_resolution.py` as the labeled `R2_BINDER_VARIANTS` block; picked up by the
+   `build_entity_binding --apply` re-run. **Why this is low-risk (asserted per reviewer
+   condition):** a binder alias only ever ADDS a fuzzy candidate — the binder renders a
+   fuzzy bind only when the word's stored number also sits in the entity's own number
+   set AND the clicked verse is in the entity's reference list; ties floor as HOT. An
+   imperfect entry can only leave a word floored, never attach a wrong card. 27 pairs
+   killed (gentilic class → pile U; true two-target ambiguity; already covered). All
+   25 binder tests pass with the block in place.
+3. **STEP extended Greek lexicon import** (Q1: yes, license CLEAR — CC BY 4.0, credit
    already in CREDITS.md). New side table `step_lexicon` built from the same TBESG file
    `build_word_gloss.py` already downloads (reuse its `parse_tbesg`), but keeping the
    full entry per extended G-number: number, Greek lemma, transliteration, brief gloss.
    New table = the Q1-ruled checkpoint; no existing table touched.
-3. **Greek identity side table** `pn_greek_identity`, keyed by verse+position for every
+4. **Greek identity side table** `pn_greek_identity`, keyed by verse+position for every
    ABP proper-noun word (Q2's side-table ruling applied to stage 1's direction too).
    Per word, layered per the design: (a) real G-number if the ABP text carries one on
    the name, (b) TIPNR's Greek number for the bound entity (renderable once
@@ -22,11 +34,11 @@ reports. The flip (stage 2) is a later code deploy; nothing here is user-visible
    (Q3's card state — wording lands at stage 2, the STATE is stored now).
    Also snapshots the current Hebrew `strongs_base` per word so the flip's cross-ref
    is frozen at build time.
-4. **Two-derivations audit** — the ruled instrument: per entity, occurrence counts
+5. **Two-derivations audit** — the ruled instrument: per entity, occurrence counts
    keyed the old way (Hebrew `strongs_base`) vs the new way (Greek identity). The diff
    report goes to the reviewer BEFORE any swap. Disagreements are resolved against
    TIPNR/ABP, never by preference.
-5. **Post-run diagnostic (reviewer-folded):** fresh number-only dump; specifically
+6. **Post-run diagnostic (reviewer-folded):** fresh number-only dump; specifically
    re-check the 82 killed variant pairs — any of their rows still number-only points at
    the word cell (possessive/plural/split), which becomes the next parked pile, not a
    map fix.
@@ -46,10 +58,11 @@ import_tipnr's parser or TIPNR.txt, so any delta at all is unexplained.
 
 ## Run shape (all commands run by JP on PA; dry-run before every write)
 
-Step 0 — scripts land in the repo first (to be written next, each reviewed before
-commit): `scripts/import_step_lexicon.py`, `scripts/build_pn_greek_identity.py`,
-`scripts/audit_two_derivations.py`. All three take the db path as the first argument
-and default to dry-run; writes need `--apply`.
+Step 0 — DONE 2026-07-24: `scripts/import_step_lexicon.py`,
+`scripts/build_pn_greek_identity.py`, `scripts/audit_two_derivations.py` are in the
+repo. All three take the db path as the first argument; the two writers default to
+dry-run and need `--apply`; the audit is read-only and prints a labeled CONTROL PANEL
+block (named PASS/FAIL per control) at the end of its output.
 
 1. Copies: `cp ~/bible-db/bible.db ~/bible-db/bible_pre_r2s1_$(date +%F).db`
    then `cp ~/bible-db/bible.db ~/bible-db/bible_test.db`.
@@ -75,15 +88,18 @@ and default to dry-run; writes need `--apply`.
    - `build_entity_binding` re-run + the guard trio from R-1 — expected deltas
      itemized (new binds only where an alias surface now resolves; hittites ×13 and
      Pharaoh ×7 stay honestly unbound).
-8. Controls (every detector fires on a known positive before a zero is trusted):
-   - maacha @ 2Ch 11:21 — currently number-only; must resolve to H4601.
-   - shetharboznai @ Ezr 5:3 — must resolve to H8370.
-   - jiphthahel @ Jos 19:14 — must resolve to H3317.
-   - NEGATIVE control: syrian (killed gentilic) must NOT gain the place's H758.
-   - NO-CHANGE control: abia @ 1Ch 3:10 (R-1 shipped entry) — identical before/after.
-   - pn_greek_identity spot: David @ Mat 1:6 must carry a real Greek identity
-     (the design's marquee case); one LXX-only form (pile B) must carry the
-     lemma-only state, not a fabricated number.
+8. Controls — ALL emitted by `audit_two_derivations.py`'s CONTROL PANEL block (JP's
+   paste shows named PASS/FAIL lines; no grepping):
+   - N1 maacha @ 2Ch 11:21 → H4601 · N2 shetharboznai @ Ezr 5:3 → H8370 ·
+     N3 jiphthahel @ Jos 19:14 → H3317 (the known positives — number-only today).
+   - N4 NEGATIVE: no 'syrian' word carries the place number H758.
+   - N5 NO-CHANGE: abia @ 1Ch 3:10 stays H29 (R-1 shipped entry).
+   - B1 BIND-POSITIVE: maacha @ 2Ch 11:21 must now have a rendered entity card
+     (binder-side, per the added batch item). B2 BIND-NEGATIVE: 'syrian' must have
+     no rendered bind.
+   - G1 David @ Mat 1:6 carries a real Greek identity (G1138). G2 the LXX-only pile
+     carries the honest lemma-only state (count > 0). G3 the no-number-no-lemma
+     bucket is counted, not hidden.
 9. Reviewer sees: gate outputs + the two-derivations diff + control results. Receipt
    BEFORE the swap (pasted reviewer text only, per R2-b).
 10. Swap (one reversible move): `mv bible.db bible_pre_r2s1_swap.db && mv

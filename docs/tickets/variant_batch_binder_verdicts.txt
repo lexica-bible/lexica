@@ -1,0 +1,249 @@
+# R-2 BINDER-side variant verdicts (2026-07-24) - second disposition pass, per the frame
+# correction (top of variant_batch_verdicts.txt). Axis: ENTITY BINDS, target map =
+# entity_resolution.VARIANT_ALIASES (NOT scripts/tipnr_alias_variants.py).
+# Bind standard per pair: the target entity's own reference list contains the attested verse,
+# checked via the PRODUCTION binder code (entity_resolution.parse_tipnr + build_indexes).
+# WHY THIS PASS IS LOW-RISK (number-guard property, asserted per reviewer condition): a
+# VARIANT_ALIASES entry only ever ADDS a fuzzy candidate; the binder renders a fuzzy bind only
+# when the word's stored Strong's number ALSO sits in the entity's own number set AND the verse
+# is in the entity's reference list; ties floor as HOT. An imperfect entry can only leave a word
+# floored - it cannot attach a wrong card.
+# Sub-batches: NEW-SESSION = pairs first dispositioned 2026-07-24; R1-REVISIT = the pairs whose
+# importer-map entries shipped in R-1 (decision lines in alias_decisions.txt), now getting their
+# binder-side look (reviewer condition 3).
+# ACCEPT-CROSS = surface is an exact TIPNR spelling of a different same-family entity; the alias
+# adds the ref-matched entity as an extra guarded candidate (jehoram/joram class).
+# batch | surface | example ref | target entity head | verdict | reason
+R1-REVISIT | abadon | 1Ch 9:36 | abdon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | abia | 1Ch 3:10 | abijah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | abiah | 1Ch 6:28 | abijah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | abigal | 1Sa 25:36 | abigail | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | abimelech | 1Ch 18:16 | ahimelech | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | acrabbim | Jos 15:3 | akrabbim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | adonizedec | Jos 10:1 | adoni-zedek | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | ahiah | 1Ch 8:7 | ahijah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | ahijah | Neh 10:26 | ahiah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | aholibama | Gen 36:25 | oholibamah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | alexandrian | Act 18:24 | alexandria | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | aman | Jos 15:26 | amam | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | amminhud | Num 34:20 | ammihud | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | araba | Jer 39:4 | arabah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | arabian | Neh 6:1 | arabia | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | aristarcus | Act 19:29 | aristarchus | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | asiah | 1Ch 15:6 | asaiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | asnapper | Ezr 4:10 | osnappar | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | atharin | Num 21:1 | atharim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | azabuk | Neh 3:16 | azbuk | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | azareel | 1Ch 12:6 | azarel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | azra | 1Ki 16:9 | arza | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | azur | Eze 11:1 | azzur | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | baaliah | 1Ch 12:5 | bealiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | barechiah | Neh 3:4 | berechiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bared | Gen 16:14 | bered | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bathuel | Gen 24:24 | bethuel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | behurim | 2Sa 3:16 | bahurim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | berachah | 1Ch 12:3 | beracah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | berean | Act 20:4 | berea | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | betharam | Jos 13:27 | beth-haram | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bethhaccerem | Jer 6:1 | beth-haccherem | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bethharan | Num 32:36 | beth-haram | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | bethhoron | 1Ch 6:68 | beth-horon_lower | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | bethhoron | Jos 16:5 | beth-horon_upper | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+R1-REVISIT | bethpalet | Jos 15:27 | beth-pelet | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bethphelet | Neh 11:26 | beth-pelet | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bethshan | 1Sa 31:10 | beth-shean | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | boseath | 2Ki 22:1 | bozkath | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | bosodeiah | Neh 3:6 | besodeiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | cain | Jos 15:57 | kain | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | chaldean | Dan 2:10 | chaldea | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+NEW-SESSION | chinnereth | Jos 19:35 | chinneroth | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | chinneroth | Jos 12:3 | chinnereth | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | chisleu | Zec 7:1 | chislev | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | cushi | 2Sa 18:21 | cush | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | dabir | Jos 10:39 | debir | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | ebal | 1Ch 1:22 | obal | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | eliah | 1Ch 8:27 | elijah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | eliatha | 1Ch 25:27 | eliathah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | elioenai | 1Ch 26:3 | eliehoenai | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | elisaph | Num 3:24 | eliasaph | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | elnatham | Ezr 8:16 | elnathan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | eneas | Act 9:33 | aeneas | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | ephratah | 1Ch 2:24 | ephrathah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | esthaol | Jdg 16:31 | eshtaol | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | gadera | 1Ch 4:23 | gederah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | galatian | Act 16:6 | galatia | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+NEW-SESSION | galilean | Act 5:37 | galilee | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | gamalli | Num 13:12 | gemalli | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | gedeliah | 1Ch 25:9 | gedaliah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | gedi | 1Sa 23:29 | engedi | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | gerson | Gen 46:11 | gershon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | goim | Jos 12:23 | goiim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | golon | Deu 4:43 | golan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | haareph | 1Ch 2:51 | hareph | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | haggabah | Ezr 2:45 | hagabah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | hashabniah | Neh 3:10 | hashabneiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | hemath | 1Ch 2:55 | hammath | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | henah | Isa 37:13 | hena | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | henoch | 1Ch 1:33 | hanoch | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | hezekiah | 1Ch 3:23 | hizkiah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | holam | Jos 10:3 | hoham | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | honam | 1Ch 1:39 | hemam | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | husha | 1Ch 4:4 | hushah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | hymeneus | 1Ti 1:20 | hymenaeus | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | iesshiah | 1Ch 24:21 | isshiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | iezraiah | 1Ch 7:3 | izrahiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | ijeabarim | Num 21:11 | iye-abarim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | italic | Act 10:1 | italy | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | ithma | 1Ch 11:46 | ithmah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jaazaniah | 2Ki 25:23 | jezaniah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | jabel | Gen 4:20 | jabal | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jabok | Jdg 11:13 | jabbok | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jadaiah | Neh 11:10 | jedaiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jahaza | Jos 13:18 | jahaz | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jatir | Jos 15:48 | jattir | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jebneel | Jos 15:11 | jabneel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jehiel | 2Ch 29:14 | jehuel | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | jehoaikim | Jer 36:28 | jehoiakim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jehonathan | 1Ch 27:25 | jonathan | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jehoram | 2Ch 22:5 | joram | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jeiel | 2Ch 29:13 | jeuel | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | jekabseel | Neh 11:25 | jekabzeel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jered | 1Ch 1:2 | jared | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jeremoth | 1Ch 23:23 | jerimoth | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jerimoth | 1Ch 7:8 | jeremoth | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | jerimuth | Jos 10:5 | jarmuth | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jerousha | 2Ch 27:1 | jerusha | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jesaiah | 1Ch 3:21 | jeshaiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jeshabeab | 1Ch 24:13 | jeshebeab | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jeshaiaih | Ezr 8:7 | jeshaiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | jeshua | Ezr 2:2 | joshua | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jiphthahel | Jos 19:14 | iphtahel_valley | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | jobathah | Num 33:33 | jotbathah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | johanan | Ezr 10:6 | jehohanan | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | joram | 1Ch 3:11 | jehoram | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | jorkoam | 1Ch 2:44 | jorkeam | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | joseph | Luk 3:26 | josech | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | juda | Luk 3:26 | joda | KILL | binder alias map already carries this surface (-> judah)
+NEW-SESSION | judah | Mar 6:3 | jude | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | kamuel | 1Ch 27:17 | kemuel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | keila | 1Ch 4:19 | keilah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | keir | Jer 48:31 | kir | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | kenez | 1Ch 4:13 | kenaz | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | kis | Act 13:21 | kish | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | laadan | 1Ch 7:26 | ladan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | lycaonian | Act 14:11 | lycaonia | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+NEW-SESSION | maacha | 2Ch 11:21 | maacah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | macedonian | Act 19:29 | macedonia | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | magiddo | 1Ch 7:29 | megiddo | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | mahalaleel | Gen 5:12 | mahalalel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | malchiah | 1Ch 6:40 | malchijah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | maphaath | Jos 21:37 | mephaath | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | maraioth | 1Ch 6:7 | meraioth | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | masphar | Neh 7:7 | mispar | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | massai | 1Ch 9:12 | maasai | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse (today: variant/stem reach exists but does not bind the attested verse)
+R1-REVISIT | masseiah | 1Ch 15:20 | maaseiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | mathan | 2Ki 11:18 | mattan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | mathaniah | Neh 12:35 | mattaniah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | matthaniah | Ezr 10:30 | mattaniah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | mede | Dan 5:31 | media | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | mekeziz | Jos 18:21 | emek-keziz | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | melchijah | Neh 12:42 | malchijah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | melchiram | 1Ch 3:18 | malchiram | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | melchishua | 1Sa 14:49 | malchi-shua | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | meshellemiah | 1Ch 9:21 | meshelemiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | meshezabeel | Neh 3:4 | meshezabel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | methusaela | Gen 4:18 | methushael | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | methuseleh | Gen 5:22 | methuselah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | miamin | Ezr 10:25 | mijamin | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | micah | 1Ch 9:15 | mica | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | micha | Neh 11:17 | mica | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | micha | 2Sa 9:12 | micah | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+R1-REVISIT | milcha | Gen 11:29 | milcah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | milchah | Num 36:11 | milcah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | mithridath | Ezr 4:7 | mithredath | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | mizpar | Ezr 2:2 | mispar | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | mizpeh | Jos 11:3 | mizpeh_valley | KILL | binder alias map already carries this surface (-> mizpah)
+R1-REVISIT | moan | 1Ch 2:45 | maon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | naahshon | Exo 6:23 | nahshon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | naammah | 2Ch 12:13 | naamah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | naan | 1Ch 4:15 | naam | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nabushasban | Jer 39:13 | nebushazban | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | nachon | 2Sa 6:6 | nacon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nahallel | Jos 19:15 | nahalol | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nahari | 2Sa 23:37 | naharai | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | namuel | Num 26:9 | nemuel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | napheg | 2Sa 5:15 | nepheg | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | naphuhim | 1Ch 1:11 | naphtuhim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nashon | Num 1:7 | nahshon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nathaneel | Ezr 10:22 | nethanel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | nergalsharezer | Jer 39:3 | nergal-sar-ezer | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | netopha | 1Ch 27:13 | netophah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | netophathi | Neh 12:28 | netophah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | odollam | 1Sa 22:1 | adullam | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | penuel | 1Ki 12:25 | peniel | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | persian | Dan 6:28 | persia | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | phrygian | Act 16:6 | phrygia | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | piarathon | 1Ch 27:14 | pirathon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | raama | 1Ch 1:9 | raamah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | raphael | 1Ch 26:7 | rephael | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | raphaiah | 1Ch 9:43 | raphah | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+R1-REVISIT | raphaiah | 1Ch 7:2 | rephaiah | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | raphaim | Deu 2:11 | rephaim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse (today: variant/stem reach exists but does not bind the attested verse)
+NEW-SESSION | rechah | 1Ch 4:12 | recah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | remphan | Act 7:43 | rephan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | rephaim | 2Sa 23:13 | rephaim_valley | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | rogel | 2Sa 17:17 | en-rogel | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | ruben | Gen 37:29 | reuben | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | sabtechah | Gen 10:7 | sabteca | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | sacar | 1Ch 26:4 | sachar | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | sacar | 1Ch 11:35 | sharar | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | sallai | Neh 12:20 | sallu | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | salma | 1Ch 2:11 | salmon | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | samaritan | Joh 4:9 | samaria | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | samiah | Gen 36:36 | samlah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | sanaballat | Neh 2:19 | sanballat | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | saraiah | Jer 36:26 | seraiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | saul | Gen 36:37 | shaul | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | secundos | Act 20:4 | secundus | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | seriah | 2Sa 8:17 | seraiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shahazinah | Jos 19:22 | shahazumah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shalitha | 1Sa 9:4 | shalishah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | shamer | 1Ch 6:46 | shemer | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | shamer | 1Ch 7:34 | shomer | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | shammuah | 2Sa 5:14 | shammua | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shearaiah | 1Ch 8:38 | sheariah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | shechaniah | Neh 12:3 | shebaniah | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | shechaniah | 1Ch 3:21 | shecaniah | KILL | surface maps to 2 different entity heads in the file - one alias slot cannot hold both; the audit ruled this multi-candidate class floor-stays
+NEW-SESSION | shelomith | 1Ch 23:9 | shelomoth | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | shemei | Ezr 10:23 | shimei | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shemiah | 1Ch 9:16 | shemaiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | shemuel | 1Ch 6:33 | samuel | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | sherezar | Zec 7:2 | sharezer | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | shetharboznai | Ezr 5:3 | shethar-bozenai | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shihon | Jos 19:19 | shion | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shimiramoth | 1Ch 15:20 | shemiramoth | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | shittin | Jos 2:1 | shittim | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | shochoh | 1Sa 17:1 | socoh | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | soccoth | Num 33:5 | succoth | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | socho | 1Ch 4:18 | soco | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | sochoh | 1Ki 4:10 | socoh | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | sopator | Act 20:4 | sopater | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | sushan | Dan 8:2 | susa | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | syrian | 1Ch 18:5 | syria | KILL | gentilic class - ruled floor-stays (pile U group-entity work); carries over from the number-side verdicts
+R1-REVISIT | tabaoth | Ezr 2:43 | tabbaoth | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tahapanhes | Jer 2:16 | tahpanhes | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tapphuah | Jos 15:34 | tappuah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tappua | 1Ch 2:43 | tappuah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tekoe | 1Ch 4:5 | tekoa | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | telmon | Ezr 2:42 | talmon | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | tharshish | 1Ch 7:10 | tarshish | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tirah | 1Ch 4:16 | tiria | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | tishbon | 1Ki 17:1 | tishbe | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | uzza | 1Ch 6:29 | uzzah | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+R1-REVISIT | zarthan | 1Ki 7:46 | zarethan | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | zeboim | 1Sa 13:18 | zeboim_valley | ACCEPT-CROSS | surface is already a TIPNR spelling of a DIFFERENT entity (exact path floors on verse mismatch); alias adds the ref-matched entity as a number-guarded fuzzy candidate
+NEW-SESSION | zechri | 2Ch 28:7 | zichri | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | zereah | Neh 11:29 | zorah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | zibeah | 2Ch 24:1 | zibiah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+NEW-SESSION | zilthai | 1Ch 8:20 | zillethai | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
+R1-REVISIT | zobedah | 1Ch 4:8 | zobebah | ACCEPT | binder cannot reach this surface today; target entity ref-matches the attested verse
