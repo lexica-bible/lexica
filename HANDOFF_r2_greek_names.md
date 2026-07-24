@@ -1,5 +1,30 @@
 # HANDOFF — R-2 Greek-name migration (open a fresh session from this doc)
 
+## ★ STAGE 1 LIVE — swapped 2026-07-24, reviewer-receipted. READ THIS FIRST.
+
+Swapped after the full gate bundle: reconcile CLEAN (every bind move traced to the 206
+accepted pairs; 3 hot arrivals verified honestly-ambiguous), applies matched trials,
+control panel 10/10 PASS (audit_two_derivations.py prints it — G1 David@Mat 1:6 =
+G1138 closed by the sub-record fix), gates 0 / 1-warning-root-caused / **IDENTICAL**
+(626,309 rows, same fingerprint — purely-additive proven at byte level). JP verified
+the Maachah @ 2Ch 11:21 card live (the batch's showcase recovery) + normal reading.
+
+What live now carries (all additive; no reader behavior changed):
+- pn_binding 14,830 render (+300) / 68 hot / 885 numonly; binder map +206
+  (`R2_BINDER_VARIANTS`, verdicts in docs/tickets/variant_batch_binder_verdicts.txt).
+- `step_lexicon` 10,846 rows (TBESG full entries; TIPNR Greek coverage 476/476 — the
+  lone "G0" is TIPNR's nine unnamed#N placeholders, not a word).
+- `pn_greek_identity` 32,479 rows: abp-tag 3,518 · tipnr 10,731 · lemma-only 14,850 ·
+  none 3,380 (the sized residue: docs/tickets/TICKET_pn_lemma_residue.md).
+- Rollback: `~/bible-db/bible_pre_r2s1_swap.db` (one reversible move back).
+
+Open threads: (1) nightly backup freshness must flip under 25h on 2026-07-25 — the
+8-day failure was the disk quota, cleaned this session; if it fails again it's real
+I/O, investigate before anything else. (2) The 3,380 lemma residue ticket (pull).
+(3) The 3 hot arrivals (Elnathan/Malchijah/Nergal-sar-ezer) sit in the hand-check
+queue. Stages 2–3 (reader flip, Hebrew retirement) PARKED until JP raises them.
+Run log + declared expectations: docs/PLAN_r2_stage1.md.
+
 Written 2026-07-16 at JP's ask, consolidating: `docs/DESIGN_greek_name_identity.md`
 (direction approved by JP, R-2 ruling 2026-07-16 — design only, no build yet),
 the provenance audit (`AUDIT_provenance_sweep.md`), and the R-1 parked piles
