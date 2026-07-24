@@ -95,6 +95,24 @@ Edit sizing may proceed against sites 1–4, 6–10 (site 5 label-only).
 - C7 Switch OFF at first deploy: an ABP card payload diffed before/after = identical.
 - C8 Maachah @ 2Ch 11:21 (stage-1 showcase) still renders its bound card.
 
+## BUILD LANDED (commit 78f4467, 2026-07-24) — switch OFF, awaiting OFF-deploy
+
+- Switch: `READER_GREEK_IDENTITY` env var read in core.py (default OFF). ON = add
+  `os.environ["READER_GREEK_IDENTITY"] = "1"` above the app import in the WSGI file
+  + reload. OFF-rollback = delete that line + reload.
+- Endpoint: `/api/pn/greek-identity?book&chapter&verse&pos` (views_metav.py), fed by
+  `_greek_identity_payload` — 404 when OFF / tables absent / 'none' bucket (C4).
+  Per-click per receipt 0; chapter feed untouched.
+- Card (30-detail-panel.jsx): Greek number or PN header + STEP tag (S2-Q2), Greek
+  lemma hero (C1), Q3 state line for lemma-only, one Greek-keyed ABP count section
+  replacing abpOcc/pnOcc/hebrewAbpOcc, Hebrew cross-ref section with own count +
+  explicit "Word study by Hebrew number" label (site-5 ruling); BDB block yields to
+  the cross-ref under a served identity. All inert while the endpoint 404s.
+- Locked test tests/test_pn_greek_identity.py (in ci.yml + pre-commit, both lists).
+- Count-trace gate scripts/gate_stage2_counts.py (S2-Q4 GATE): itemizes every changed
+  count against ~/r2s1_deriv_diff.txt; `--selftest` proves the detector fires
+  (fixture-proven locally both ways before commit).
+
 ## Order of work (nothing starts before the rulings land)
 
 1. Rulings above → recorded here.
