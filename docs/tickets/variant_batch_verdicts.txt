@@ -9,6 +9,24 @@
 # NOTE on the KILL/already-resolves class: these surfaces resolve since the R-1 loader fix. If any of
 #   their rows are STILL number-only after the R-1 rebuild, the failure is in the word cell (possessive/
 #   plural/split), not the alias map - re-derive that list from a post-R-1 numonly dump in stage 1.
+# ============================ FRAME CORRECTION (2026-07-24, same day) ============================
+# The verdicts below were argued on the NUMBER axis (import_tipnr's match ladder). Checked against
+# the source bucket afterward: pn_binding_numonly.txt rows are "number-matched, name didn't match,
+# floored" (AUDIT_provenance_sweep.md section 4) - these words already HAVE numbers; what they lack
+# is the ENTITY BIND, and the binder (entity_resolution.py) keeps its OWN separate VARIANT_ALIASES
+# and does NOT read scripts/tipnr_alias_variants.py. Two consequences, stated plainly:
+#  - The 11 ACCEPT reasons overstated: 10 of 11 already resolve to the SAME number via
+#    import_tipnr's hand DIRECT list (step 8). Real value of the 11 entries: resolution moves to
+#    step 7 with the entity's TRUE type (DIRECT hardcodes type 'place' - wrong for the people:
+#    zechri, maacha, hymeneus, raphaim...), and 'gedi' is genuinely new. Entries stay; claim shrunk.
+#  - The bind recovery - the bucket's ruled goal - is NOT delivered by any verdict below. It needs
+#    a SECOND disposition pass targeting entity_resolution.VARIANT_ALIASES (number-guarded: an
+#    imperfect entry can only floor, never mis-bind). The TIPNR evidence gathered here (ref-match
+#    at the attested verse) is exactly the bind-standard evidence and carries over; the gentilic
+#    kills carry over unchanged (the 527-row gentilic class is ruled floor-stays / pile U).
+#    The 139 "SHIPPED" verdicts do NOT transfer - shipped in import_tipnr's map says nothing about
+#    the binder's map. Binder-side disposition: separate pass, reviewer receipt before it lands.
+# ==================================================================================================
 # surface | example ref | candidate key | number delivered | verdict | reason
 abadon | 1Ch 9:36 | abdon | H5658 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
 abia | 1Ch 3:10 | abijah | H29 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)

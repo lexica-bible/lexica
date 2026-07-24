@@ -82,6 +82,22 @@ TIPNR before it enters the variant map; roster-freeze gate before import; lands 
 R-2's stage-1 rebuild, never as a live patch. Expect the eyeball pass to kill some
 pairs — a close spelling is a candidate, not a match.
 
+## Variant batch — FRAME CORRECTION (2026-07-24, later same day)
+
+The pass below dispositioned the pairs on the NUMBER axis. The source bucket
+(pn_binding_numonly.txt) is the BIND-floored class — words that already carry numbers
+but have no entity card. The binder keeps its OWN alias map
+(`entity_resolution.VARIANT_ALIASES`, number-guarded) and never reads
+`scripts/tipnr_alias_variants.py`. So: the 11 landed entries are kept (honest value:
+step-7 resolution with the TRUE entity type — import_tipnr's DIRECT list was already
+covering 10 of them number-wise but stamps everything type 'place'; 'gedi' is new), and
+the ACTUAL bind recovery is an open second pass: derive binder-map entries from the
+same per-pair TIPNR evidence (ref-match at the attested verse = the bind standard),
+gentilic kills carry over (ruled floor-stays / pile U), the 139 R-1-shipped pairs need
+their own binder-side look (their R-1 decision lines are reusable evidence). Reviewer
+receipt required before anything lands in entity_resolution.py. Full correction block:
+top of `docs/tickets/variant_batch_verdicts.txt`.
+
 ## Variant batch eyeball pass — DONE (2026-07-24)
 
 All 233 pairs dispositioned against TIPNR via the production parser
