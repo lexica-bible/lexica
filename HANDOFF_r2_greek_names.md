@@ -191,3 +191,56 @@ From `docs/tickets/alias_leave_list.txt` pile comments (all reviewer-accepted pa
    + a kill list with reasons.
 5. Stage-1 rebuild plan as a dry-run first; JP runs PA commands; reviewer sees the
    stage-1 two-derivations diff before any swap.
+
+## Stage 3 — opening context (reviewer-ruled framing)
+
+### 1. State summary
+Stage 2 live and closed (788de67) — ABP PN cards Greek-keyed behind
+READER_GREEK_IDENTITY, both receipts issued, rollback one WSGI line. Cosmetic
+STEP-tag thread fully closed (a949ba7 → d4b8958, docs wrap fbfddee). Plan of
+record: docs/PLAN_r2_stage2.md close-out block. Open items: exactly the three
+stage-3 candidates below. Nothing else pending.
+
+### 2. Candidates
+1. Word study ABP branch flip
+2. Reader interlinear tags Greek-keyed for backfilled PNs
+3. Hebrew retirement rebuild
+
+### 3. Known visible seam (JP-flagged, scoping input)
+Cards now show Greek identity (Agag card = G9826) while reader interlinear tags
+for the same backfilled PNs still serve Hebrew keys (H90, H6002 visible in
+1Sa 15). This is the deliberate stage-2/stage-3 gap, not a bug. JP flagged it
+directly; the reviewer will treat it as a scoping input favoring candidate 2
+earlier in sequence — weighed at the dependency pass, not auto-ruled.
+
+### 4. Unverified sequencing prior (needs ruling before it's binding)
+Prior from the stage-2 close session: the Hebrew retirement rebuild trails
+candidates 1–2, on the assumption the two Greek-keying items read from tables
+the rebuild doesn't rewrite. This is UNVERIFIED — it must be checked against
+the rebuild's actual table footprint before the reviewer rules on sequence.
+
+### 5. First work item: pre-scoping evidence pass (read-only, no code changes)
+One report for the reviewer's dependency ruling, covering:
+1. Rebuild table footprint — every table the Hebrew retirement rebuild would
+   drop, rewrite, or restructure per its existing plan/notes; for each, mark
+   whether candidate 1 or 2 reads from it.
+2. Candidate 1 read surface — every table/column and code path the Word study
+   ABP branch reads for PN identity today, and what flips under Greek keying.
+3. Candidate 2 read surface — same for the reader interlinear tag path serving
+   backfilled PNs (the path currently emitting H90/H6002 for Agag/Amalek in
+   1Sa 15 while the card shows G9826).
+4. Builder classification — per candidate: changed-builder, flag-only, or mixed
+   (determines whether trial-then-apply binds).
+5. Shared-switch feasibility — whether candidates 1 and 2 can sit behind
+   READER_GREEK_IDENTITY or one analogous switch with one-line rollback, or
+   need separate switches.
+6. Collision list — any file, table, or builder touched by more than one
+   candidate.
+
+Evidence only — no sequence recommendations; sequencing is the reviewer's
+ruling.
+
+### 6. Standing rules (carry forward)
+Trial-then-apply on changed builders. JP runs all PA commands. Verify →
+receipt → clear. Reviewer rulings applied as delegated with delegation notes;
+no decisions routed to JP.
