@@ -386,6 +386,11 @@ const api = {
     fetch(`/api/metav/place/${encodeURIComponent(name)}`).then(r => r.json()),
   metavEntity: (name, book, chapter, verse) =>
     fetch(`/api/metav/entity/${encodeURIComponent(name)}?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`).then(r => r.json()),
+  // R-2 stage 2: Greek identity for an ABP proper-noun click. Server switch OFF
+  // (or a 'none'-bucket word) answers 404 -> null here -> today's card, unchanged.
+  pnGreekIdentity: (book, chapter, verse, pos) =>
+    fetch(`/api/pn/greek-identity?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}&pos=${pos}`)
+      .then(r => r.ok ? r.json() : null),
   bdb: (sid) =>
     fetch(`/api/bdb/${encodeURIComponent(sid)}`).then(r => r.json()),
   crossRefsCurated: (book, chapter, verse) =>
@@ -593,6 +598,9 @@ function wordEntryCore(src, { ref, book, chapter, verse, gloss }) {
     derivation: src.derivation || "",
     is_function: src.is_function || false,
     is_pn: src.is_pn || false,
+    // Word slot within its verse (ABP chapter feed) — keys the R-2 per-click
+    // Greek-identity lookup. Sources without positions leave it null.
+    position: (src.position !== undefined && src.position !== null) ? src.position : null,
   };
 }
 

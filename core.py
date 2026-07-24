@@ -31,6 +31,13 @@ log = logging.getLogger("bible")
 
 DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bible.db")
 
+# R-2 stage 2 reader flip — the SINGLE named switch (docs/PLAN_r2_stage2.md, S2-Q1).
+# Set READER_GREEK_IDENTITY=1 in the WSGI env to turn the Greek-identity proper-noun
+# card ON. Default OFF: the identity endpoint answers "not found" and every card
+# renders exactly as before (the OFF-proof gate, control C7). Rollback = flip the
+# env line back and reload — no code revert.
+READER_GREEK_IDENTITY = os.environ.get("READER_GREEK_IDENTITY", "") == "1"
+
 _anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
 if not _anthropic_key:
     log.warning("ANTHROPIC_API_KEY not set — AI search will be unavailable")

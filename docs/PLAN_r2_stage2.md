@@ -36,6 +36,19 @@ C2a and Terah named in C6; otherwise the draft panel already matched).
 NEXT STEP: consumer enumeration (walk the contamination map + word-study doc, list
 every serving site) — **the list goes to the reviewer BEFORE any edit is sized.**
 
+## RECEIPT 0 — consumer enumeration ACCEPTED (reviewer, 2026-07-24)
+
+docs/PLAN_r2_stage2_consumers.md accepted as the edit-sizing basis; no orphans, no
+scope creep. Three rulings issued with the receipt:
+- **Join point: PER-CLICK lookup beside metav_entity, NOT a chapter-feed join** — the
+  chapter feed stays byte-identical with the switch OFF (the OFF-proof gate), and the
+  identity cost is paid only on a PN click.
+- **Site 5 (Word study ABP branch) HELD Hebrew-keyed this stage; label-only edit** on
+  the card link so card and Word study don't silently contradict. Word study flip =
+  a named STAGE-3 candidate.
+- **SEO pages confirmed out of scope** (Q4 findability covers them; noted, not fixed).
+Edit sizing may proceed against sites 1–4, 6–10 (site 5 label-only).
+
 ## The rulings as originally posted (record)
 
 - **S2-Q1 — flip shape: all ABP card surfaces at once, behind one switch?**

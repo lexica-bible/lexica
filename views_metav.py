@@ -558,3 +558,102 @@ def strongs_count_route(strongs_base):
     finally:
         conn.close()
     return jsonify({"count": row["cnt"] if row else 0})
+
+
+# ---------------------------------------------------------------------------
+# R-2 stage 2: per-click Greek identity for an ABP proper-noun card
+# (docs/PLAN_r2_stage2.md). Served from the stage-1 side tables only —
+# pn_greek_identity + step_lexicon; the words table is never touched. Gated by
+# core.READER_GREEK_IDENTITY: with the switch OFF every call answers 404 and the
+# frontend renders today's card unchanged (the OFF-proof gate). Per-click by
+# reviewer ruling (receipt 0): the chapter feed stays byte-identical.
+# ---------------------------------------------------------------------------
+
+def _greek_identity_payload(conn, verse_id, position):
+    """Identity + counts for ONE proper-noun word. Returns None when there is
+    nothing to serve: no row, tables absent, or the 'none' bucket (control C4 —
+    those cards must not change). Pure function of the connection so the locked
+    test (tests/test_pn_greek_identity.py) drives it on a fixture db."""
+    have = {r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+        "('pn_greek_identity','step_lexicon','lexicon','words')")}
+    if "pn_greek_identity" not in have:
+        return None
+    r = conn.execute(
+        "SELECT greek_strongs, greek_lemma, source, hebrew_base "
+        "FROM pn_greek_identity WHERE verse_id = ? AND position = ?",
+        (verse_id, position)).fetchone()
+    if not r or r["source"] == "none":
+        return None
+    gs = r["greek_strongs"]
+    lemma = r["greek_lemma"] or ""
+    translit = ""
+    step = False
+    if gs:
+        # Lemma/translit resolve: main lexicon first, else step_lexicon — the
+        # STEP flag marks an extended number our lexicon doesn't carry (S2-Q2:
+        # the card shows a quiet "STEP" source tag beside it).
+        lex = conn.execute(
+            "SELECT lemma, translit FROM lexicon WHERE strongs_g = ?",
+            (gs,)).fetchone() if "lexicon" in have else None
+        if lex and lex["lemma"]:
+            lemma, translit = lex["lemma"], lex["translit"] or ""
+        elif "step_lexicon" in have:
+            sl = conn.execute(
+                "SELECT lemma, translit FROM step_lexicon WHERE base = ? LIMIT 1",
+                (gs,)).fetchone()
+            if sl and sl["lemma"]:
+                lemma, translit, step = sl["lemma"], sl["translit"] or "", True
+        # S2-Q4: a numbered identity counts by its Greek number — over the
+        # identity table, the same derivation the stage-1 audit certified.
+        count = conn.execute(
+            "SELECT count(*) FROM pn_greek_identity WHERE greek_strongs = ?",
+            (gs,)).fetchone()[0]
+    else:
+        # lemma-only (Q3): no number in any scheme — count by the stored form.
+        count = conn.execute(
+            "SELECT count(*) FROM pn_greek_identity "
+            "WHERE greek_lemma = ? AND greek_strongs IS NULL",
+            (lemma,)).fetchone()[0] if lemma else 0
+    heb_count = None
+    if r["hebrew_base"] and "words" in have:
+        # The cross-ref line carries its OWN count (S2-Q4: nothing findable
+        # before becomes unfindable) — same shape as /api/strongs-count?by=base.
+        heb_count = conn.execute(
+            "SELECT count(*) FROM words WHERE strongs_base = ? "
+            "AND english IS NOT NULL AND english != ''",
+            (r["hebrew_base"],)).fetchone()[0]
+    return {
+        "greek_strongs": gs,
+        "lemma": lemma,
+        "translit": translit,
+        "step": step,
+        "source": r["source"],
+        "greek_count": count,
+        "hebrew_base": r["hebrew_base"],
+        "hebrew_count": heb_count,
+    }
+
+
+@bp.route("/api/pn/greek-identity")
+def pn_greek_identity_route():
+    import core as _core
+    if not _core.READER_GREEK_IDENTITY:
+        return jsonify({"error": "not found"}), 404
+    book = (request.args.get("book") or "").strip()
+    ch = (request.args.get("chapter") or "").strip()
+    vs = (request.args.get("verse") or "").strip()
+    pos = (request.args.get("pos") or "").strip()
+    if not (book and ch.isdigit() and vs.isdigit() and pos.isdigit()):
+        return jsonify({"error": "need book/chapter/verse/pos"}), 400
+    conn = db_ro()
+    try:
+        vrow = conn.execute(
+            "SELECT id FROM verses WHERE book = ? AND chapter = ? AND verse = ?",
+            (book, int(ch), int(vs))).fetchone()
+        payload = _greek_identity_payload(conn, vrow["id"], int(pos)) if vrow else None
+    finally:
+        conn.close()
+    if not payload:
+        return jsonify({"error": "not found"}), 404
+    return jsonify(payload)

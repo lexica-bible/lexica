@@ -338,6 +338,23 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // metaV person so the genealogy (parent/sibling clans) is preserved.
   const isGentilic = !!(isPN && entry && /ites?$/i.test(extractProperName(entry.pnName || entry.gloss || "")));
 
+  // R-2 stage 2: the ABP proper-noun card's GREEK identity (pn_greek_identity via
+  // /api/pn/greek-identity). The server-side switch READER_GREEK_IDENTITY gates the
+  // endpoint — with it OFF, or for a 'none'-bucket word (control C4), this stays
+  // null and the card renders exactly as before. ABP reader only: KJV/BSB/Hebrew
+  // clicks stay Hebrew-keyed (ruling S2-Q4 / Q4).
+  const [greekId, setGreekId] = useState(null);
+  useEffect(() => {
+    setGreekId(null);
+    if (!entry || !isPN || entry.isKjv || entry.isBsb || entry.isHeb || entry.isExtra) return;
+    if (entry.position === null || entry.position === undefined || !entry.book) return;
+    let cancelled = false;
+    api.pnGreekIdentity(entry.book, entry.chapter, entry.verse, entry.position)
+      .then(d => { if (!cancelled && d && !d.error) setGreekId(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [entry && entry.id]);
+
   // PN occurrence count (by name, for strongs='*' entries)
   const [pnCount, setPnCount] = useState(null);
   useEffect(() => {
@@ -682,11 +699,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // VERBATIM — the dotted_lexicon row's base-neighbour lemma + the ABP romanizer mangle a two-word
   // phrase ("ἀνάμέσος / anámésos"). Use the authored phrase/translit, never entry.greek/entry.translit.
   const idiomHdr = (lexica && lexica.kind === "idiom") ? lexica : null;
+  // R-2 flip: with a Greek identity served, the hero shows the GREEK form (control
+  // C1 — Δαυίδ up top, the name on the gloss line) and lemma-only cards add the
+  // honest state line below. greekId null (switch OFF / none-bucket) leaves every
+  // value exactly as before.
+  const giLemma = (greekId && greekId.lemma) || "";
   const hero = {
     he: isHebrew,
-    noGloss: isPN && !entry.greek && !isHebrew,
-    script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss)),
-    translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit : entry.translit),
+    noGloss: isPN && !entry.greek && !isHebrew && !giLemma,
+    script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || giLemma || nameOrGloss)),
+    translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit : (entry.translit || (giLemma ? greekId.translit : ""))),
     standaloneGloss: trimTail((isPN || metavData) ? properName
       : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
     morph: morphLine,
@@ -730,7 +752,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (boundEntity) sections.push("boundEntity");
   if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
   if (aiDescription || aiDescLoading) sections.push("aidesc");
-  if (isHebrewWord) sections.push("bdb");
+  // R-2 flip: under a served Greek identity the Hebrew number is a CROSS-REFERENCE,
+  // not the identity — the BDB block (the Hebrew identity presentation) gives way to
+  // the quiet cross-ref section below; Word study by the Hebrew number stays one
+  // click away there (nothing findable before becomes unfindable).
+  if (isHebrewWord && !greekId) sections.push("bdb");
   // metavType "person" suppresses the definition (a real proper-noun person has no useful
   // lexical entry). θεός (G2316) is no longer special-cased here: it now skips metaV entirely
   // (see the lookup gate above), so its Lexica entry leads as the definition like any word.
@@ -747,18 +773,25 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // incl. a backfilled proper noun whose ABP form keys on its Hebrew base, shows the matching
   // line below).
   const activeText = entry.isKjv ? "kjv" : entry.isBsb ? "bsb" : entry.isHeb ? "heb" : "abp";
-  if (!isHebrewWord && (!isPN || boundOcc) && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  // R-2 flip: a served Greek identity replaces the three ABP-count shapes below
+  // (abpOcc / pnOcc / hebrewAbpOcc) with ONE Greek-keyed count section + the
+  // Hebrew cross-ref section. greekId null -> the old lines, unchanged.
+  if (greekId && activeText === "abp") {
+    sections.push("greekIdOcc");
+    if (greekId.hebrew_base) sections.push("hebCrossRef");
+  }
+  if (!greekId && !isHebrewWord && (!isPN || boundOcc) && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   // Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
   // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
   // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
   if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
   if (entry.isBsb && !isPN && !isHebrew && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
-  if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
+  if (!greekId && !entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
   // A Hebrew word shows occurrences only for the text being read (Hebrew OT / KJV / BSB, or ABP
   // via its Hebrew base for a backfilled proper noun); each opens that source in Word study,
   // where the full cross-Bible breakdown lives.
-  if (isHebrewWord && activeText === "abp" && abpBaseCount !== null && abpBaseCount > 0) sections.push("hebrewAbpOcc");
+  if (!greekId && isHebrewWord && activeText === "abp" && abpBaseCount !== null && abpBaseCount > 0) sections.push("hebrewAbpOcc");
   if (isHebrewWord && activeText === "heb" && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
   if (isHebrewWord && activeText === "kjv" && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   if (isHebrewWord && activeText === "bsb" && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
@@ -1069,6 +1102,34 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </button>
       </section>
     );
+    // R-2 flip: the one ABP count under the Greek identity (S2-Q4). A number our
+    // lexicon carries links into Word study by that Greek number; a STEP-extended
+    // or lemma-only identity shows a static count (Word study can't key those yet).
+    case "greekIdOcc": return (
+      <section key="greekIdOcc" className="sec">
+        <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
+        {greekId.greek_strongs && !greekId.step ? (
+          <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
+            <b>{greekId.greek_count}</b>× in ABP as {greekId.greek_strongs} <Icon.ArrowRight/>
+          </button>
+        ) : (
+          <div className="occ-link occ-link--static">
+            <b>{greekId.greek_count}</b>× in ABP {greekId.greek_strongs ? `as ${greekId.greek_strongs}` : "(this form)"}
+          </div>
+        )}
+      </section>
+    );
+    // R-2 flip: the Hebrew number, demoted to a quiet cross-reference with its own
+    // count — the OT-number path stays findable (Word study by the Hebrew number;
+    // the link says so explicitly per receipt-0's site-5 ruling).
+    case "hebCrossRef": return (
+      <section key="hebCrossRef" className="sec">
+        <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
+          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× by Hebrew number</> : null} — Word study by Hebrew number <Icon.ArrowRight/>
+        </button>
+      </section>
+    );
     case "pnOcc": return (
       <section key="pnOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
@@ -1221,7 +1282,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               reader's eye already is. Worded by the door they came in; the pool caveat (if any)
               stays in the LexicaBody provenance block, served side. */}
           <span className="detail-strong-wrap">
-            <span className="detail-strong-head">{entry.strongs}</span>
+            {/* R-2 flip: a served Greek identity is the header number (C1/C2/C2a);
+                lemma-only keeps the neutral PN tag — never the Hebrew number (that
+                moved to the cross-ref section). STEP tag per ruling S2-Q2. */}
+            <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : entry.strongs}</span>
+            {greekId && greekId.step && <span className="detail-strong-alias">· STEP</span>}
             {aliasNote && (
               <span className="detail-strong-alias">
                 {aliasNote.direction === "to_abp"
@@ -1258,6 +1323,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             )}
             {!hero.noGloss && !heroInlineGloss && heroTopGloss && (
               <div className="detail-gloss">{heroTopGloss}</div>
+            )}
+            {/* R-2 flip, ruling S2-Q3: a lemma-only identity states its status
+                honestly — the printed form has no number in any scheme. */}
+            {greekId && !greekId.greek_strongs && (
+              <div className="detail-morph">ABP-only form — no Strong's mapping</div>
             )}
           </div>
           {(heroForm || hero.morph) && (
