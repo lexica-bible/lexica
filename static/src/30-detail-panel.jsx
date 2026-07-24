@@ -1102,20 +1102,23 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </button>
       </section>
     );
-    // R-2 flip: the one ABP count under the Greek identity (S2-Q4). A number our
-    // lexicon carries links into Word study by that Greek number; a STEP-extended
-    // or lemma-only identity shows a static count (Word study can't key those yet).
+    // R-2 flip: the one ABP count under the Greek identity (S2-Q4). Any NUMBERED
+    // identity links into Word study by that Greek number — STEP-extended included
+    // (G2 flip: Word study answers for G9xxx via step_lexicon + the identity
+    // union, behind the same READER_GREEK_FLIPS switch, deployed together so the
+    // link never lands on a 404). Lemma-only stays a static count (number-keyed
+    // Word study can't key a stored form — G2 holdout, reviewer-confirmed).
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
-        {greekId.greek_strongs && !greekId.step ? (
+        {greekId.greek_strongs ? (
           <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            <b>{greekId.greek_count}</b>× in ABP as {greekId.greek_strongs} <Icon.ArrowRight/>
+            <b>{greekId.greek_count}</b>× in ABP as {greekId.greek_strongs}
+            {greekId.step && <span className="detail-strong-alias"> (STEP)</span>} <Icon.ArrowRight/>
           </button>
         ) : (
           <div className="occ-link occ-link--static">
-            <b>{greekId.greek_count}</b>× in ABP {greekId.greek_strongs ? `as ${greekId.greek_strongs}` : "(this form)"}
-            {greekId.step && greekId.greek_strongs && <span className="detail-strong-alias"> (STEP)</span>}
+            <b>{greekId.greek_count}</b>× in ABP (this form)
           </div>
         )}
       </section>

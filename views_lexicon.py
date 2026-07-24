@@ -13,6 +13,7 @@ import sqlite3
 
 from flask import Blueprint, jsonify, request
 
+import core as _core
 from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 from number_fold import normalize as _fold_norm
 from contested_register import alias_note_for
@@ -306,8 +307,47 @@ def _abp_strongs_filter(conn, num, sid):
             "SELECT 1 FROM dotted_lexicon WHERE strongs = ?", ("G" + num,)).fetchone():
         return "w.strongs = ?", [num]
     if ready:
-        return ("w.strongs_base = ? AND 'G' || w.strongs NOT IN (SELECT strongs FROM dotted_lexicon)", [sid])
-    return "w.strongs_base = ?", [sid]
+        pred, params = ("w.strongs_base = ? AND 'G' || w.strongs NOT IN (SELECT strongs FROM dotted_lexicon)", [sid])
+    else:
+        pred, params = "w.strongs_base = ?", [sid]
+    # R-2 stage 3 flip #1 (docs/PLAN_r2_stage3.md, G2): under READER_GREEK_FLIPS a
+    # Greek number's ABP occurrences also include the backfilled proper-noun words
+    # whose SERVED Greek identity is this number (tipnr-sourced rows — their words
+    # row still carries the Hebrew stopgap, so they can only arrive via this
+    # branch; an abp-tag row is a native words row, matched by the base predicate
+    # above, so no row can arrive twice — locked-test proven, not just asserted).
+    # G4-MUST-TOUCH (stage-3 charter, G3 ruling condition 2): this
+    # pn_greek_identity read repoints to words.strongs_base inside the Hebrew
+    # retirement rebuild (candidate 3) — same class as the cross-ref count repoint.
+    if _core.READER_GREEK_FLIPS and sid.startswith("G") and "." not in num and _pngi_ready(conn):
+        pred = (f"(({pred}) OR EXISTS (SELECT 1 FROM pn_greek_identity pg "
+                f"WHERE pg.verse_id = w.verse_id AND pg.position = w.position "
+                f"AND pg.greek_strongs = ? AND pg.source = 'tipnr'))")
+        params = params + [sid]
+    return pred, params
+
+
+def _pngi_ready(conn):
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_greek_identity'"
+    ).fetchone() is not None
+
+
+def _step_lexicon_row(conn, snum):
+    """Gated STEP-extended fallback for a Greek number the main lexicon lacks
+    (G9xxx name numbers). step_lexicon keys: estrong = padded TEXT ('G0007G'),
+    base = plain NUMBER — join on the number, never the text (the receipt-2
+    lesson). Returns the row or None; None whenever the switch is off or the
+    table isn't built (deploy-safe: the profile 404s exactly as before)."""
+    if not _core.READER_GREEK_FLIPS:
+        return None
+    if not conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='step_lexicon'"
+    ).fetchone():
+        return None
+    return conn.execute(
+        "SELECT lemma, translit, gloss FROM step_lexicon WHERE base = ? "
+        "ORDER BY estrong LIMIT 1", (int(snum),)).fetchone()
 
 
 # ── Hebrew OT interlinear source (heb.db) ─────────────────────────────────────
@@ -1060,6 +1100,7 @@ def lexicon_profile(strongs):
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
     _deriv_raw = ""
     is_diff = False   # set True below for an ABP dotted number that's its own word
+    is_step = False   # set True below for a STEP-extended number served via step_lexicon (G2)
     conn = db_ro()
     try:
         if is_heb:
@@ -1095,18 +1136,30 @@ def lexicon_profile(strongs):
                     "SELECT lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?", (snum,)
                 ).fetchone()
                 if not row:
-                    return jsonify({"error": "not found"}), 404
-                lemma = row["lemma"] or ""
-                translit = row["translit"] or ""
-                # Plain-meaning gloss (word_gloss) leads — same dictionary sense the reader
-                # card shows — then the text-first chain (KJV rendering → derivation →
-                # Strong's paraphrase) so Strong's interpretive wording never leads.
-                definition = (_word_gloss(conn, strongs_id)
-                              or row["kjv_def"] or row["derivation"] or row["strongs_def"] or "")
-                _deriv_raw = row["derivation"] or ""
-                # Etymology for the card's Derivation section (only when it adds
-                # something the definition line isn't already showing).
-                derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
+                    # R-2 stage 3 flip #1 (G2): a STEP-extended name number (G9xxx)
+                    # the main lexicon lacks resolves from step_lexicon; is_step
+                    # drives the card's quiet "STEP" source tag. Switch off /
+                    # table absent -> 404 exactly as before (the OFF-proof).
+                    srow = _step_lexicon_row(conn, snum)
+                    if srow is None:
+                        return jsonify({"error": "not found"}), 404
+                    is_step = True
+                    lemma = srow["lemma"] or ""
+                    translit = srow["translit"] or ""
+                    definition = srow["gloss"] or ""
+                    derivation = ""
+                else:
+                    lemma = row["lemma"] or ""
+                    translit = row["translit"] or ""
+                    # Plain-meaning gloss (word_gloss) leads — same dictionary sense the reader
+                    # card shows — then the text-first chain (KJV rendering → derivation →
+                    # Strong's paraphrase) so Strong's interpretive wording never leads.
+                    definition = (_word_gloss(conn, strongs_id)
+                                  or row["kjv_def"] or row["derivation"] or row["strongs_def"] or "")
+                    _deriv_raw = row["derivation"] or ""
+                    # Etymology for the card's Derivation section (only when it adds
+                    # something the definition line isn't already showing).
+                    derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
         sid = f"H{snum}" if is_heb else f"G{snum}"   # base lexicon key (Hebrew sources from heb.db below)
         # Hebrew words source occurrences from the real Hebrew OT (heb.db), not the
         # KJV's Strong's tagging. KJV stays as an explicit toggle (KJV-as-text). A few
@@ -1270,7 +1323,9 @@ def lexicon_profile(strongs):
             conn, _vcorpus, num, snum, sid, is_heb, is_func, "", _tt, _ALL_VERSES_CAP)
         # Numbering crosswalk (word-study card header) — same shared helper the word card uses,
         # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated})
+        # "step" rides only when TRUE so every pre-existing profile payload stays
+        # byte-identical across the G2 deploy (the invariance proof).
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

@@ -1150,6 +1150,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             {/* Badge + numbering crosswalk glued as one unit — same treatment as the Library card. */}
             <span className="detail-strong-wrap">
               <span className="detail-strong-head">{profile.strongs}</span>
+              {/* G2 flip: STEP-extended number served via step_lexicon — quiet
+                  source tag, same style as the reader card (S2-Q2). */}
+              {profile.step && <span className="detail-strong-alias"> (STEP)</span>}
               {profile.alias_note && (
                 <span className="detail-strong-alias">
                   {profile.alias_note.direction === "to_abp"
