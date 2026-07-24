@@ -100,9 +100,13 @@ one entry, shared H1032), **82 KILL**. The kill reasons matter for stage 1:
   these are Pile U work (Group-entity binds), not map entries.
 - raphaiah: the file's raphah suggestion killed; the shipped rephaiah entry is the
   person TIPNR names at the attested verse.
-Roster note: the 11 new keys will show as roster ADDITIONS at the next import —
-`check_roster_regression.py` will flag them; that's the expected, deliberate baseline
-update inside stage 1, per its procedure.
+Roster note — CORRECTED 2026-07-24 (the first version of this paragraph claimed the 11
+would show as roster additions; checked against roster_baseline.json and that was wrong):
+the variant map is NOT part of the roster. The baseline holds only parse_tipnr's own
+name list (4,331 — none of R-1's 399 alias keys are in it), and the map is consulted
+only after the roster misses. Expected freeze-gate result at the stage-1 import:
+**CLEAN, zero additions, zero changes.** The 11 map entries are instead proven by
+per-word controls (named in the stage-1 plan) and by their decision lines.
 
 ## Parked R-1 candidates (pull, not push — pick up only if R-2's work touches them)
 
