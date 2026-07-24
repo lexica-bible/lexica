@@ -1129,7 +1129,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
           {/* Header already says "Hebrew Cross-Reference" — the line stays terse
               (reviewer refinement on TICKET_step_tag_placement follow-up). */}
-          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× — Word study</> : <> · Word study</>} <Icon.ArrowRight/>
+          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× — Word study</> : <> · Word study</>}
         </button>
       </section>
     );
@@ -1246,7 +1246,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         )}
         <div className="dverse-tools">
           <button className="link-btn" onClick={() => onReadInContext && onReadInContext(entry.book, entry.chapter, entry.verse)}>
-            Read in context <Icon.ArrowRight/>
+            Read in context
           </button>
           <span className="dot">·</span>
           <button
