@@ -43,6 +43,16 @@ reports. The flip (stage 2) is a later code deploy; nothing here is user-visible
    the word cell (possessive/plural/split), which becomes the next parked pile, not a
    map fix.
 
+**Scope extension, logged 2026-07-24 (reviewer-ruled):** `bh_scrape.db` added as a
+stage-1 READ source for the identity builder's lemma layer. Reason: abp_surface skips
+name slots (the documented ~30k gap), so the printed Greek for OT/LXX names exists
+ONLY in the scrape — shipping without it would write 23,858 wrong-shaped "none" states.
+Evidence before wiring: bh_words schema + Gen 10:7 (name rows carry printed Greek —
+Χους/Σαβά/Ρεγμά — with a blank number). Pairing: by NAME within the verse (slot numbers
+drift across build splits), exactly one match or refuse; matched/refused both printed.
+Re-trial result: lemma-only 18,828 · refused/none 5,030 (the residue ticket:
+docs/tickets/TICKET_pn_lemma_residue.md).
+
 KJV/BSB untouched (Q4). No words rebuild: `build_words_from_abp.py` does NOT run —
 nothing in the build changed since R-1. Only import_tipnr (writes PN numbers into
 words on the COPY) and the two new additive builders run.
