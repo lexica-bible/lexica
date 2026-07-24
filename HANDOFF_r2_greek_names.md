@@ -1,5 +1,11 @@
 # HANDOFF — R-2 Greek-name migration (open a fresh session from this doc)
 
+## ★ STAGE 2 OPEN — plan receipted, rulings landed, NO code yet. Fresh session starts at
+## docs/PLAN_r2_stage2.md (rulings block at top). First action: consumer enumeration
+## (contamination map + docs/claude/word-study.md) → list to the REVIEWER before any
+## edit is sized. Panel C1–C9 pre-declared in the plan; two-receipt deploy (OFF-proof
+## then ON); the count-trace gate script is part of the build, not a promise.
+
 ## ★ STAGE 1 LIVE — swapped 2026-07-24, reviewer-receipted. READ THIS FIRST.
 
 Swapped after the full gate bundle: reconcile CLEAN (every bind move traced to the 206

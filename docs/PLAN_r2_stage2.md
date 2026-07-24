@@ -19,7 +19,24 @@ An ABP proper-noun word card, on click:
 - Occurrence line counts by the Greek identity (see S2-Q4).
 - Words in the 'none' bucket (3,380) change NOTHING — they keep today's card.
 
-## Rulings needed BEFORE any code (posted in chat with recommendations)
+## RULINGS LANDED (reviewer, 2026-07-24) — all five as recommended, plus one addition
+
+S2-Q1 yes (all surfaces, one switch — mixed cards are a visible provenance
+inconsistency). S2-Q2 yes (plain "STEP" tag now; tooltip-registry integration deferred
+to the tooltip session). S2-Q3 wording carried over. S2-Q4 accepted **with the tracing
+requirement made a GATE**: a script (the stage-2 analogue of reconcile_binder_delta)
+diffs every changed occurrence count against the stage-1 two-derivations report —
+counts that change because the identity got truer are the feature; any other change is
+a bug; only the itemized diff distinguishes them. S2-Q5 yes as drafted. Reviewer also
+confirmed the split concern: the BINDER does not flip — NT name binding is a future
+step, and this plan already respects that.
+REQUIRED ADDITION (met below): the live panel is defined HERE, before code — the
+reviewer's minimal list mapped onto C1–C9 (an explicit abp-tag control was added as
+C2a and Terah named in C6; otherwise the draft panel already matched).
+NEXT STEP: consumer enumeration (walk the contamination map + word-study doc, list
+every serving site) — **the list goes to the reviewer BEFORE any edit is sized.**
+
+## The rulings as originally posted (record)
 
 - **S2-Q1 — flip shape: all ABP card surfaces at once, behind one switch?**
   Partial flips make mixed cards (Greek header, Hebrew count). Recommend: one code
@@ -52,11 +69,16 @@ An ABP proper-noun word card, on click:
   as cross-ref line only.
 - C2 An OT name with a STEP-extended number shows the G9xxx identity + STEP tag, lemma
   from step_lexicon (pick from the identity table at flip time; count expected > 0).
+- C2a An abp-tag word (the word's own number is already Greek — NT name class) renders
+  its Greek identity with NO change in number, proving the flip doesn't re-derive what
+  the text already carries.
 - C3 A lemma-only word (from the 14,850) shows the printed Greek + the Q3 state line,
   NO fabricated number.
 - C4 A 'none'-bucket word renders EXACTLY today's card (byte-same payload).
 - C5 KJV and BSB name clicks: unchanged (Hebrew-keyed) — one of each, screenshots.
-- C6 Occurrence line on C1/C2 matches the two-derivations report's numbers.
+- C6 Occurrence lines match the two-derivations report — Terah (H8646 → G2291×12 + 2
+  unnumbered) is the named exemplar, and the count-trace GATE script (S2-Q4 ruling)
+  itemizes every changed count against the report; zero unexplained.
 - C7 Switch OFF at first deploy: an ABP card payload diffed before/after = identical.
 - C8 Maachah @ 2Ch 11:21 (stage-1 showcase) still renders its bound card.
 
