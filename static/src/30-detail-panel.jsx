@@ -1108,13 +1108,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     // union, behind the same READER_GREEK_FLIPS switch, deployed together so the
     // link never lands on a 404). Lemma-only stays a static count (number-keyed
     // Word study can't key a stored form — G2 holdout, reviewer-confirmed).
+    // No trailing arrow on the link: standalone card link (JP flag at G2-R1,
+    // per the standing arrow ruling — list links keep arrows, card links don't).
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         {greekId.greek_strongs ? (
           <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
             <b>{greekId.greek_count}</b>× in ABP as {greekId.greek_strongs}
-            {greekId.step && <span className="detail-strong-alias"> (STEP)</span>} <Icon.ArrowRight/>
+            {greekId.step && <span className="detail-strong-alias"> (STEP)</span>}
           </button>
         ) : (
           <div className="occ-link occ-link--static">

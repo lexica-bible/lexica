@@ -148,10 +148,15 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
           // Strong's is in citedStrongs — get the gold "corpus-hit" highlight via a
           // hiClass that lights up their position. No per-word click / brackets /
           // numbers; the reference button jumps into the reader to study any word.
+          // G2-R1 highlight fix: a word reached via its SERVED Greek identity
+          // (w.g_id — a backfilled PN whose stored number is still Hebrew) must
+          // light up when that Greek number is the cited one, or the G9xxx
+          // occurrence list renders with no highlight at all.
           const citedPositions = new Set(
             (citedStrongs && citedStrongs.size)
               ? words.filter(w => citedStrongs.has(w.strongs_base) || citedStrongs.has(strongsBare(w.strongs_base))
-                                || citedStrongs.has(w.strongs) || citedStrongs.has(strongsBare(w.strongs))).map(w => w.position)
+                                || citedStrongs.has(w.strongs) || citedStrongs.has(strongsBare(w.strongs))
+                                || (w.g_id && w.g_id.strongs && (citedStrongs.has(w.g_id.strongs) || citedStrongs.has(strongsBare(w.g_id.strongs))))).map(w => w.position)
               : []
           );
           const proseCtx = {

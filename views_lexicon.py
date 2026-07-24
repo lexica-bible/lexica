@@ -316,13 +316,20 @@ def _abp_strongs_filter(conn, num, sid):
     # row still carries the Hebrew stopgap, so they can only arrive via this
     # branch; an abp-tag row is a native words row, matched by the base predicate
     # above, so no row can arrive twice — locked-test proven, not just asserted).
+    # Shape matters (G2-R1 perf fix): the first version OR-wrapped the base
+    # predicate, which defeated the strongs_base index and full-scanned words on
+    # EVERY Greek word-study query. This rowid-IN form keeps both arms on their
+    # indexes (base via strongs_base, identity via idx_pngi_greek) — verified by
+    # EXPLAIN QUERY PLAN, SCAN -> SEARCH both arms.
     # G4-MUST-TOUCH (stage-3 charter, G3 ruling condition 2): this
     # pn_greek_identity read repoints to words.strongs_base inside the Hebrew
     # retirement rebuild (candidate 3) — same class as the cross-ref count repoint.
     if _core.READER_GREEK_FLIPS and sid.startswith("G") and "." not in num and _pngi_ready(conn):
-        pred = (f"(({pred}) OR EXISTS (SELECT 1 FROM pn_greek_identity pg "
-                f"WHERE pg.verse_id = w.verse_id AND pg.position = w.position "
-                f"AND pg.greek_strongs = ? AND pg.source = 'tipnr'))")
+        inner = pred.replace("w.", "w1.")
+        pred = (f"w.rowid IN (SELECT w1.rowid FROM words w1 WHERE {inner} "
+                f"UNION SELECT w2.rowid FROM pn_greek_identity pg JOIN words w2 "
+                f"ON w2.verse_id = pg.verse_id AND w2.position = pg.position "
+                f"WHERE pg.greek_strongs = ? AND pg.source = 'tipnr')")
         params = params + [sid]
     return pred, params
 
