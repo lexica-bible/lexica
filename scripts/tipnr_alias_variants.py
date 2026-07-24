@@ -20,6 +20,7 @@ VARIANT_ALIASES = {
     'achsa': 'achsah',  # H5915 @ 1Ch 2:49
     'acrabbim': 'akrabbim',  # H4610 @ Jos 15:3
     'adami': 'adami-nekeb',  # H129 @ Jos 19:33
+    'adonizedec': 'adoni-zedek',  # H139 @ Jos 10:1
     'adriatic': 'adriatic_sea',  # G99 @ Act 27:27
     'aholibama': 'oholibamah',  # H173 @ Gen 36:25
     'alammelech': 'allammelech',  # H487 @ Jos 19:26
@@ -78,6 +79,7 @@ VARIANT_ALIASES = {
     'bethhanan': 'elonbeth-hanan',  # H358 @ 1Ki 4:9
     'bethharan': 'beth-haram',  # H1027 @ Num 32:36
     'bethheccerem': 'beth-haccherem',  # H1021 @ Neh 3:14
+    'bethhoron': 'beth-horon_lower',  # H1032 @ 1Ch 6:68 (Upper/Lower share H1032; one entry covers both)
     'bethmarcaboth': 'madmannah',  # H4089 @ 1Ch 4:31
     'bethpalet': 'beth-pelet',  # H1046 @ Jos 15:27
     'bethphelet': 'beth-pelet',  # H1046 @ Neh 11:26
@@ -119,6 +121,7 @@ VARIANT_ALIASES = {
     'gamalli': 'gemalli',  # H1582 @ Num 13:12
     'gathites': 'gath',  # H1661 @ 1Sa 5:8
     'gedeliah': 'gedaliah',  # H1436 @ 1Ch 25:9
+    'gedi': 'engedi',  # H5872 @ 1Sa 23:29 (second cell of split "En- gedi")
     'gergashites': 'girgashites',  # H1622 @ Jos 9:1
     'gerson': 'gershon',  # H1648 @ Gen 46:11
     'gesham': 'geshan',  # H1529 @ 1Ch 2:47
@@ -146,6 +149,7 @@ VARIANT_ALIASES = {
     'holam': 'hoham',  # H1944 @ Jos 10:3
     'honam': 'hemam',  # H1950 @ 1Ch 1:39
     'husha': 'hushah',  # H2364 @ 1Ch 4:4
+    'hymeneus': 'hymenaeus',  # G5211 @ 1Ti 1:20
     'iesshiah': 'isshiah',  # H3449 @ 1Ch 24:21
     'iezraiah': 'izrahiah',  # H3156 @ 1Ch 7:3
     'ijeabarim': 'iye-abarim',  # H5863 @ Num 21:11
@@ -159,6 +163,7 @@ VARIANT_ALIASES = {
     'jaareoregim': 'jaare-oregim',  # H3296 @ 2Sa 21:19
     'jaazer': 'jazer',  # H3270 @ Num 21:32
     'jabel': 'jabal',  # H2989 @ Gen 4:20
+    'jabok': 'jabbok',  # H2999 @ Jdg 11:13
     'jadaiah': 'jedaiah',  # H3048 @ Neh 11:10
     'jahaza': 'jahaz',  # H3096 @ Jos 13:18
     'japhleti': 'japhlet',  # H3310 @ Jos 16:3
@@ -182,6 +187,7 @@ VARIANT_ALIASES = {
     'jimnah': 'imnah',  # H3232 @ Gen 46:17
     'jimnites': 'imnah',  # H3232 @ Num 26:44
     'jiphtah': 'iphtah',  # H3316 @ Jos 15:43
+    'jiphthahel': 'iphtahel_valley',  # H3317 @ Jos 19:14
     'jobath': 'jotbathah',  # H3193 @ Deu 10:7
     'jobathah': 'jotbathah',  # H3193 @ Num 33:33
     'johahnan': 'jehohanan',  # H3076 @ 2Ch 17:15
@@ -209,6 +215,7 @@ VARIANT_ALIASES = {
     'lesen': 'dan',  # H1835 @ Jos 19:47
     'libinites': 'libni',  # H3845 @ Num 26:58
     'libnath': 'shihor-libnath',  # H7884 @ Jos 19:26
+    'maacha': 'maacah',  # H4601 @ 2Ch 11:21
     'magdala': 'magadan',  # G3093 @ Mat 15:39
     'magiddo': 'megiddo',  # H4023 @ 1Ch 7:29
     'maleleel': 'mahalalel',  # H4111 @ Luk 3:37
@@ -285,8 +292,10 @@ VARIANT_ALIASES = {
     'rabsares': 'rab-saris',  # H7249 @ Jer 39:13
     'raphael': 'rephael',  # H7501 @ 1Ch 26:7
     'raphaiah': 'rephaiah',  # H7509 @ 1Ch 7:2
+    'raphaim': 'rephaim',  # H7497 @ Deu 2:11
     'rebecca': 'rebekah',  # H7259 @ Rom 9:10
     'remphan': 'rephan',  # G4481 @ Act 7:43
+    'rogel': 'en-rogel',  # H5883 @ 2Sa 17:17 (second cell of split "En- rogel")
     'ruben': 'reuben',  # H7205 @ Gen 37:29
     'sabtecha': 'sabteca',  # H5455 @ 1Ch 1:9
     'samarian': 'samaria',  # H8111 @ 2Ki 18:11
@@ -310,6 +319,7 @@ VARIANT_ALIASES = {
     'shemiah': 'shemaiah',  # H8098 @ 1Ch 9:16
     'shenir': 'hermon_mount',  # H2768 @ Deu 3:9
     'sherezar': 'sharezer',  # H8272 @ Zec 7:2
+    'shetharboznai': 'shethar-bozenai',  # H8370 @ Ezr 5:3
     'shibmah': 'sibmah',  # H7643 @ Num 32:38
     'shicron': 'shikkeron',  # H7942 @ Jos 15:11
     'shihon': 'shion',  # H7866 @ Jos 19:19
@@ -355,6 +365,7 @@ VARIANT_ALIASES = {
     'zarhite': 'zerah',  # H2226 @ Jos 7:17
     'zartanah': 'zarethan',  # H6891 @ 1Ki 4:12
     'zarthan': 'zarethan',  # H6891 @ 1Ki 7:46
+    'zechri': 'zichri',  # H2147 @ 2Ch 28:7
     'zereah': 'zorah',  # H6881 @ Neh 11:29
     'zereda': 'zeredah',  # H6868 @ 1Ki 11:26
     'zeredathah': 'zarethan',  # H6891 @ 2Ch 4:17

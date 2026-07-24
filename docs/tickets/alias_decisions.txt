@@ -417,3 +417,15 @@ shuham | Num 26:42 | hushim | H2366 | ACCEPT | TIPNR's own form for this entity,
 sion | Deu 4:48 | hermon_mount | H2768 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
 sirion | Deu 3:9 | hermon_mount | H2768 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
 zephon | Num 26:15 | ziphion | H6837 | ACCEPT | TIPNR's own form for this entity, verified by exact reference match (row category outside the loader harvest set)
+# --- R-2 variant batch, 2026-07-24 (verdicts: docs/tickets/variant_batch_verdicts.txt) ---
+adonizedec | Jos 10:1 | Adoni-zedek | H139 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person/place at ref (hand-checked)
+bethhoron | 1Ch 6:68 | Beth-horon_Lower | H1032 | ACCEPT | unhyphenated KJV form; Upper and Lower share H1032 so one entry covers both records
+gedi | 1Sa 23:29 | Engedi | H5872 | ACCEPT | second cell of the split "En- gedi" compound; entity attested at ref
+hymeneus | 1Ti 1:20 | Hymenaeus | G5211 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the person at ref (hand-checked)
+jabok | Jdg 11:13 | Jabbok | H2999 | ACCEPT | KJV/LXX spelling variant; TIPNR identity line matches the place at ref (hand-checked)
+jiphthahel | Jos 19:14 | Iphtahel_Valley | H3317 | ACCEPT | KJV "Jiphthah-el" unhyphenated; TIPNR record's first ref IS the attested verse
+maacha | 2Ch 11:21 | Maacah | H4601 | ACCEPT | KJV/LXX spelling variant; all Maacah records share H4601 so the lookup number is safe
+raphaim | Deu 2:11 | Rephaim | H7497 | ACCEPT | KJV/LXX spelling variant of the people group; entity attested at ref
+rogel | 2Sa 17:17 | En-rogel | H5883 | ACCEPT | second cell of the split "En- rogel" compound; entity attested at ref
+shetharboznai | Ezr 5:3 | Shethar-bozenai | H8370 | ACCEPT | unhyphenated KJV "Shethar-boznai"; TIPNR record's first ref IS the attested verse
+zechri | 2Ch 28:7 | Zichri | H2147 | ACCEPT | KJV/LXX spelling variant; all Zichri records share H2147 so the lookup number is safe

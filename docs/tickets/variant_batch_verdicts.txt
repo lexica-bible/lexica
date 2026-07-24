@@ -1,0 +1,245 @@
+# R-2 variant-batch verdicts (2026-07-24) - per-pair eyeball, filter of record per JP ruling.
+# Working set: docs/tickets/variant_batch_candidates.txt (233 unique pairs / 391 rows; 352 count superseded).
+# Method: every pair checked against TIPNR.txt via the PRODUCTION parser (import_tipnr.parse_tipnr) -
+#   target's number, ref-match of the example verse inside the entity's record block, and whether the
+#   surface already resolves or was dropped-ambiguous by the loader. Ladder fact that drives most kills:
+#   direct lookup of the surface runs BEFORE the variant map, so a surface already in the lookup makes
+#   the map entry unreachable.
+# Verdicts: ACCEPT 11, MERGED 1, KILL 82, SHIPPED 139 (of 233 candidate lines)
+# NOTE on the KILL/already-resolves class: these surfaces resolve since the R-1 loader fix. If any of
+#   their rows are STILL number-only after the R-1 rebuild, the failure is in the word cell (possessive/
+#   plural/split), not the alias map - re-derive that list from a post-R-1 numonly dump in stage 1.
+# surface | example ref | candidate key | number delivered | verdict | reason
+abadon | 1Ch 9:36 | abdon | H5658 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+abia | 1Ch 3:10 | abijah | H29 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+abiah | 1Ch 6:28 | abijah | H29 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H29); the ladder finds it before the variant map is ever consulted - entry would be dead code
+abigal | 1Sa 25:36 | abigail | H26 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+abimelech | 1Ch 18:16 | ahimelech | H288 | KILL | surface already resolves directly to H40 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to ahimelech could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+acrabbim | Jos 15:3 | akrabbim | H4610 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+adonizedec | Jos 10:1 | adoni-zedek | H139 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+ahiah | 1Ch 8:7 | ahijah | H281 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H281); the ladder finds it before the variant map is ever consulted - entry would be dead code
+ahijah | Neh 10:26 | ahiah | H281 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H281); the ladder finds it before the variant map is ever consulted - entry would be dead code
+aholibama | Gen 36:25 | oholibamah | H173 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+alexandrian | Act 18:24 | alexandria | G222 | KILL | surface already resolves directly to G221 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to alexandria could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+aman | Jos 15:26 | amam | H538 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+amminhud | Num 34:20 | ammihud | H5989 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+araba | Jer 39:4 | arabah | H6160 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+arabian | Neh 6:1 | arabia | H6152 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+aristarcus | Act 19:29 | aristarchus | G708 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+asiah | 1Ch 15:6 | asaiah | H6222 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+asnapper | Ezr 4:10 | osnappar | H620 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H620); the ladder finds it before the variant map is ever consulted - entry would be dead code
+atharin | Num 21:1 | atharim | H871 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+azabuk | Neh 3:16 | azbuk | H5802 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+azareel | 1Ch 12:6 | azarel | H5832 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5832); the ladder finds it before the variant map is ever consulted - entry would be dead code
+azra | 1Ki 16:9 | arza | H777 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+azur | Eze 11:1 | azzur | H5809 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5809); the ladder finds it before the variant map is ever consulted - entry would be dead code
+baaliah | 1Ch 12:5 | bealiah | H1183 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+barechiah | Neh 3:4 | berechiah | H1296 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bared | Gen 16:14 | bered | H1260 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bathuel | Gen 24:24 | bethuel | H1328 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+behurim | 2Sa 3:16 | bahurim | H980 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+berachah | 1Ch 12:3 | beracah | H1294 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H1294); the ladder finds it before the variant map is ever consulted - entry would be dead code
+berean | Act 20:4 | berea | G960 | KILL | surface already resolves directly to G961 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to berea could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+betharam | Jos 13:27 | beth-haram | H1027 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bethhaccerem | Jer 6:1 | beth-haccherem | H1021 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bethharan | Num 32:36 | beth-haram | H1027 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bethhoron | 1Ch 6:68 | beth-horon_lower | H1032 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+bethhoron | Jos 16:5 | beth-horon_upper | H1032 | MERGED | same surface as the row above; one map entry (-> beth-horon_lower) covers both because Upper and Lower Beth-horon share the base number H1032, and the map feeds only the number ladder (verse-level entity binding is separate)
+bethpalet | Jos 15:27 | beth-pelet | H1046 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bethphelet | Neh 11:26 | beth-pelet | H1046 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bethshan | 1Sa 31:10 | beth-shean | H1052 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+boseath | 2Ki 22:1 | bozkath | H1218 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+bosodeiah | Neh 3:6 | besodeiah | H1152 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+cain | Jos 15:57 | kain | H7014 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7014); the ladder finds it before the variant map is ever consulted - entry would be dead code
+chaldean | Dan 2:10 | chaldea | H3778 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+chinnereth | Jos 19:35 | chinneroth | H3672 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3672); the ladder finds it before the variant map is ever consulted - entry would be dead code
+chinneroth | Jos 12:3 | chinnereth | H3672 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3672); the ladder finds it before the variant map is ever consulted - entry would be dead code
+chisleu | Zec 7:1 | chislev | H3691 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+cushi | 2Sa 18:21 | cush | H3568 | KILL | surface already resolves directly to H3570 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to cush could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+dabir | Jos 10:39 | debir | H1688 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+ebal | 1Ch 1:22 | obal | H5745 | KILL | surface already resolves directly to H5858 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to obal could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+eliah | 1Ch 8:27 | elijah | H452 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H452); the ladder finds it before the variant map is ever consulted - entry would be dead code
+eliatha | 1Ch 25:27 | eliathah | H448 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+elioenai | 1Ch 26:3 | eliehoenai | H454 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H454); the ladder finds it before the variant map is ever consulted - entry would be dead code
+elisaph | Num 3:24 | eliasaph | H460 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+elnatham | Ezr 8:16 | elnathan | H494 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+eneas | Act 9:33 | aeneas | G132 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+ephratah | 1Ch 2:24 | ephrathah | H672 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H672); the ladder finds it before the variant map is ever consulted - entry would be dead code
+esthaol | Jdg 16:31 | eshtaol | H847 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+gadera | 1Ch 4:23 | gederah | H1449 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+galatian | Act 16:6 | galatia | G1053 | KILL | surface already resolves directly to G1052 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to galatia could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+galilean | Act 5:37 | galilee | H1551 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H1551); the ladder finds it before the variant map is ever consulted - entry would be dead code
+gamalli | Num 13:12 | gemalli | H1582 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+gedeliah | 1Ch 25:9 | gedaliah | H1436 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+gedi | 1Sa 23:29 | engedi | H5872 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+gerson | Gen 46:11 | gershon | H1648 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+goim | Jos 12:23 | goiim | H1471 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+golon | Deu 4:43 | golan | H1474 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+haareph | 1Ch 2:51 | hareph | H2780 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+haggabah | Ezr 2:45 | hagabah | H2286 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+hashabniah | Neh 3:10 | hashabneiah | H2813 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H2813); the ladder finds it before the variant map is ever consulted - entry would be dead code
+hemath | 1Ch 2:55 | hammath | H2575 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H2575); the ladder finds it before the variant map is ever consulted - entry would be dead code
+henah | Isa 37:13 | hena | H2012 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+henoch | 1Ch 1:33 | hanoch | H2585 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H2585); the ladder finds it before the variant map is ever consulted - entry would be dead code
+hezekiah | 1Ch 3:23 | hizkiah | H2396 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H2396); the ladder finds it before the variant map is ever consulted - entry would be dead code
+holam | Jos 10:3 | hoham | H1944 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+honam | 1Ch 1:39 | hemam | H1950 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+husha | 1Ch 4:4 | hushah | H2364 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+hymeneus | 1Ti 1:20 | hymenaeus | G5211 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+iesshiah | 1Ch 24:21 | isshiah | H3449 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+iezraiah | 1Ch 7:3 | izrahiah | H3156 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+ijeabarim | Num 21:11 | iye-abarim | H5863 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+italic | Act 10:1 | italy | G2482 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+ithma | 1Ch 11:46 | ithmah | H3495 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jaazaniah | 2Ki 25:23 | jezaniah | H3153 | KILL | surface already resolves directly to H2970 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to jezaniah could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jabel | Gen 4:20 | jabal | H2989 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jabok | Jdg 11:13 | jabbok | H2999 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+jadaiah | Neh 11:10 | jedaiah | H3048 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jahaza | Jos 13:18 | jahaz | H3096 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jatir | Jos 15:48 | jattir | H3492 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jebneel | Jos 15:11 | jabneel | H2995 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jehiel | 2Ch 29:14 | jehuel | H3171 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3171); the ladder finds it before the variant map is ever consulted - entry would be dead code
+jehoaikim | Jer 36:28 | jehoiakim | H3079 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jehonathan | 1Ch 27:25 | jonathan | H3129 | KILL | surface already resolves directly to H3083 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to jonathan could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jehoram | 2Ch 22:5 | joram | H3141 | KILL | surface already resolves directly to H3088 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to joram could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jeiel | 2Ch 29:13 | jeuel | H3262 | KILL | surface already resolves directly to H3273 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to jeuel could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jekabseel | Neh 11:25 | jekabzeel | H3343 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jered | 1Ch 1:2 | jared | H3382 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3382); the ladder finds it before the variant map is ever consulted - entry would be dead code
+jeremoth | 1Ch 23:23 | jerimoth | H3406 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3406); the ladder finds it before the variant map is ever consulted - entry would be dead code
+jerimoth | 1Ch 7:8 | jeremoth | H3406 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3406); the ladder finds it before the variant map is ever consulted - entry would be dead code
+jerimuth | Jos 10:5 | jarmuth | H3412 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jerousha | 2Ch 27:1 | jerusha | H3388 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jesaiah | 1Ch 3:21 | jeshaiah | H3470 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3470); the ladder finds it before the variant map is ever consulted - entry would be dead code
+jeshabeab | 1Ch 24:13 | jeshebeab | H3428 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jeshaiaih | Ezr 8:7 | jeshaiah | H3470 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+jeshua | Ezr 2:2 | joshua | H3091 | KILL | surface already resolves directly to H3442 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to joshua could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jiphthahel | Jos 19:14 | iphtahel_valley | H3317 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+jobathah | Num 33:33 | jotbathah | H3193 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+johanan | Ezr 10:6 | jehohanan | H3076 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3076); the ladder finds it before the variant map is ever consulted - entry would be dead code
+joram | 1Ch 3:11 | jehoram | H3088 | KILL | surface already resolves directly to H3141 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to jehoram could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+jorkoam | 1Ch 2:44 | jorkeam | H3421 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3421); the ladder finds it before the variant map is ever consulted - entry would be dead code
+joseph | Luk 3:26 | josech | G6044 | KILL | surface already resolves directly to H3130 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to josech could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+juda | Luk 3:26 | joda | G6043 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+judah | Mar 6:3 | jude | G2455 | KILL | surface already resolves directly to H3063 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to jude could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+kamuel | 1Ch 27:17 | kemuel | H7055 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+keila | 1Ch 4:19 | keilah | H7084 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+keir | Jer 48:31 | kir | H7024 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+kenez | 1Ch 4:13 | kenaz | H7073 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+kis | Act 13:21 | kish | H7027 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+laadan | 1Ch 7:26 | ladan | H3936 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H3936); the ladder finds it before the variant map is ever consulted - entry would be dead code
+lycaonian | Act 14:11 | lycaonia | G3071 | KILL | surface already resolves directly to G3072 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to lycaonia could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+maacha | 2Ch 11:21 | maacah | H4601 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+macedonian | Act 19:29 | macedonia | G3109 | KILL | surface already resolves directly to G3110 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to macedonia could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+magiddo | 1Ch 7:29 | megiddo | H4023 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mahalaleel | Gen 5:12 | mahalalel | H4111 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+malchiah | 1Ch 6:40 | malchijah | H4441 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H4441); the ladder finds it before the variant map is ever consulted - entry would be dead code
+maphaath | Jos 21:37 | mephaath | H4158 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+maraioth | 1Ch 6:7 | meraioth | H4812 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+masphar | Neh 7:7 | mispar | H4558 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+massai | 1Ch 9:12 | maasai | H4640 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+masseiah | 1Ch 15:20 | maaseiah | H4641 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mathan | 2Ki 11:18 | mattan | H4977 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mathaniah | Neh 12:35 | mattaniah | H4983 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+matthaniah | Ezr 10:30 | mattaniah | H4983 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mede | Dan 5:31 | media | H4074 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+mekeziz | Jos 18:21 | emek-keziz | H6010 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+melchijah | Neh 12:42 | malchijah | H4441 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+melchiram | 1Ch 3:18 | malchiram | H4443 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+melchishua | 1Sa 14:49 | malchi-shua | H4444 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+meshellemiah | 1Ch 9:21 | meshelemiah | H4920 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+meshezabeel | Neh 3:4 | meshezabel | H4898 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H4898); the ladder finds it before the variant map is ever consulted - entry would be dead code
+methusaela | Gen 4:18 | methushael | H4967 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+methuseleh | Gen 5:22 | methuselah | H4968 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+miamin | Ezr 10:25 | mijamin | H4326 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H4326); the ladder finds it before the variant map is ever consulted - entry would be dead code
+micah | 1Ch 9:15 | mica | H4316 | KILL | surface already resolves directly to H4318 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to mica could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+micha | Neh 11:17 | mica | H4316 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+micha | 2Sa 9:12 | micah | H4318 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+milcha | Gen 11:29 | milcah | H4435 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+milchah | Num 36:11 | milcah | H4435 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mithridath | Ezr 4:7 | mithredath | H4990 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mizpar | Ezr 2:2 | mispar | H4558 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+mizpeh | Jos 11:3 | mizpeh_valley | H4709 | KILL | surface already resolves directly to H4708 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to mizpeh_valley could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+moan | 1Ch 2:45 | maon | H4584 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+naahshon | Exo 6:23 | nahshon | H5177 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+naammah | 2Ch 12:13 | naamah | H5279 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+naan | 1Ch 4:15 | naam | H5277 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nabushasban | Jer 39:13 | nebushazban | H5021 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nachon | 2Sa 6:6 | nacon | H5225 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5225); the ladder finds it before the variant map is ever consulted - entry would be dead code
+nahallel | Jos 19:15 | nahalol | H5096 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nahari | 2Sa 23:37 | naharai | H5171 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+namuel | Num 26:9 | nemuel | H5241 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+napheg | 2Sa 5:15 | nepheg | H5298 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+naphuhim | 1Ch 1:11 | naphtuhim | H5320 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nashon | Num 1:7 | nahshon | H5177 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nathaneel | Ezr 10:22 | nethanel | H5417 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+nergalsharezer | Jer 39:3 | nergal-sar-ezer | H5371 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+netopha | 1Ch 27:13 | netophah | H5199 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+netophathi | Neh 12:28 | netophah | H5199 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+odollam | 1Sa 22:1 | adullam | H5725 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+penuel | 1Ki 12:25 | peniel | H6439 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H6439); the ladder finds it before the variant map is ever consulted - entry would be dead code
+persian | Dan 6:28 | persia | H6539 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+phrygian | Act 16:6 | phrygia | G5435 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+piarathon | 1Ch 27:14 | pirathon | H6552 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+raama | 1Ch 1:9 | raamah | H7484 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7484); the ladder finds it before the variant map is ever consulted - entry would be dead code
+raphael | 1Ch 26:7 | rephael | H7501 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+raphaiah | 1Ch 9:43 | raphah | H7498 | KILL | shipped map already sends raphaiah->rephaiah (H7509), which is the person TIPNR names at 1Ch 9:43; the file's raphah (H7498) is the 8:37 slot, wrong for the attested verse
+raphaiah | 1Ch 7:2 | rephaiah | H7509 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+raphaim | Deu 2:11 | rephaim | H7497 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+rechah | 1Ch 4:12 | recah | H7397 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7397); the ladder finds it before the variant map is ever consulted - entry would be dead code
+remphan | Act 7:43 | rephan | G4481 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+rephaim | 2Sa 23:13 | rephaim_valley | H7497 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7497); the ladder finds it before the variant map is ever consulted - entry would be dead code
+rogel | 2Sa 17:17 | en-rogel | H5883 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+ruben | Gen 37:29 | reuben | H7205 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+sabtechah | Gen 10:7 | sabteca | H5455 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5455); the ladder finds it before the variant map is ever consulted - entry would be dead code
+sacar | 1Ch 26:4 | sachar | H7940 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7940); the ladder finds it before the variant map is ever consulted - entry would be dead code
+sacar | 1Ch 11:35 | sharar | H8325 | KILL | surface already resolves directly to H7940 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to sharar could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+sallai | Neh 12:20 | sallu | H5543 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5543); the ladder finds it before the variant map is ever consulted - entry would be dead code
+salma | 1Ch 2:11 | salmon | H8007 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H8007); the ladder finds it before the variant map is ever consulted - entry would be dead code
+samaritan | Joh 4:9 | samaria | H8111 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+samiah | Gen 36:36 | samlah | H8072 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+sanaballat | Neh 2:19 | sanballat | H5571 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+saraiah | Jer 36:26 | seraiah | H8304 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+saul | Gen 36:37 | shaul | H7586 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7586); the ladder finds it before the variant map is ever consulted - entry would be dead code
+secundos | Act 20:4 | secundus | G4580 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+seriah | 2Sa 8:17 | seraiah | H8304 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shahazinah | Jos 19:22 | shahazumah | H7831 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shalitha | 1Sa 9:4 | shalishah | H8031 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shamer | 1Ch 6:46 | shemer | H8106 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H8106); the ladder finds it before the variant map is ever consulted - entry would be dead code
+shamer | 1Ch 7:34 | shomer | H7763 | KILL | surface already resolves directly to H8106 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to shomer could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+shammuah | 2Sa 5:14 | shammua | H8051 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H8051); the ladder finds it before the variant map is ever consulted - entry would be dead code
+shearaiah | 1Ch 8:38 | sheariah | H8187 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shechaniah | Neh 12:3 | shebaniah | H7645 | KILL | surface already resolves directly to H7935 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to shebaniah could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+shechaniah | 1Ch 3:21 | shecaniah | H7935 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7935); the ladder finds it before the variant map is ever consulted - entry would be dead code
+shelomith | 1Ch 23:9 | shelomoth | H8013 | KILL | surface already resolves directly to H8019 (its own TIPNR identity), so the ladder never reaches the variant map; aliasing to shelomoth could also change an established resolution if the direct hit were ever removed - unsafe and unreachable
+shemei | Ezr 10:23 | shimei | H8096 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shemiah | 1Ch 9:16 | shemaiah | H8098 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shemuel | 1Ch 6:33 | samuel | H8050 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H8050); the ladder finds it before the variant map is ever consulted - entry would be dead code
+sherezar | Zec 7:2 | sharezer | H8272 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shetharboznai | Ezr 5:3 | shethar-bozenai | H8370 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+shihon | Jos 19:19 | shion | H7866 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shimiramoth | 1Ch 15:20 | shemiramoth | H8070 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shittin | Jos 2:1 | shittim | H7851 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+shochoh | 1Sa 17:1 | socoh | H7755 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7755); the ladder finds it before the variant map is ever consulted - entry would be dead code
+soccoth | Num 33:5 | succoth | H5523 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+socho | 1Ch 4:18 | soco | H7755 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7755); the ladder finds it before the variant map is ever consulted - entry would be dead code
+sochoh | 1Ki 4:10 | socoh | H7755 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H7755); the ladder finds it before the variant map is ever consulted - entry would be dead code
+sopator | Act 20:4 | sopater | G4986 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+sushan | Dan 8:2 | susa | H7800 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+syrian | 1Ch 18:5 | syria | H758 | KILL | loader drops this spelling as ambiguous: TIPNR gives it more than one number (gentilic Group rows carry their own number, distinct from the place). A map entry would hand it a single number TIPNR itself refuses. Gentilics route to Pile U (Group-entity binds) in R-2 proper
+tabaoth | Ezr 2:43 | tabbaoth | H2884 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tahapanhes | Jer 2:16 | tahpanhes | H8471 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tapphuah | Jos 15:34 | tappuah | H8599 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tappua | 1Ch 2:43 | tappuah | H8599 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tekoe | 1Ch 4:5 | tekoa | H8620 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+telmon | Ezr 2:42 | talmon | H2929 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tharshish | 1Ch 7:10 | tarshish | H8659 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H8659); the ladder finds it before the variant map is ever consulted - entry would be dead code
+tirah | 1Ch 4:16 | tiria | H8493 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+tishbon | 1Ki 17:1 | tishbe | H8453 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+uzza | 1Ch 6:29 | uzzah | H5798 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H5798); the ladder finds it before the variant map is ever consulted - entry would be dead code
+zarthan | 1Ki 7:46 | zarethan | H6891 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+zeboim | 1Sa 13:18 | zeboim_valley | H6650 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H6650); the ladder finds it before the variant map is ever consulted - entry would be dead code
+zechri | 2Ch 28:7 | zichri | H2147 | ACCEPT | new entry: surface unresolvable by the loader, single TIPNR owner, ref-match at the attested verse
+zereah | Neh 11:29 | zorah | H6881 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+zibeah | 2Ch 24:1 | zibiah | H6645 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)
+zilthai | 1Ch 8:20 | zillethai | H6769 | KILL | surface already resolves directly in the TIPNR lookup to the same number (H6769); the ladder finds it before the variant map is ever consulted - entry would be dead code
+zobedah | 1Ch 4:8 | zobebah | H6637 | SHIPPED | identical entry already in the R-1 variant map (hand-checked then)

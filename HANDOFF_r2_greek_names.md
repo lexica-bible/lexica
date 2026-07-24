@@ -82,6 +82,28 @@ TIPNR before it enters the variant map; roster-freeze gate before import; lands 
 R-2's stage-1 rebuild, never as a live patch. Expect the eyeball pass to kill some
 pairs — a close spelling is a candidate, not a match.
 
+## Variant batch eyeball pass — DONE (2026-07-24)
+
+All 233 pairs dispositioned against TIPNR via the production parser
+(`docs/tickets/variant_batch_verdicts.txt` has every line): **139 SHIPPED** (already in the
+R-1 map, identical), **11 ACCEPT** (now added to `tipnr_alias_variants.py`, 410 entries,
+decision lines appended to alias_decisions.txt), **1 MERGED** (bethhoron upper/lower →
+one entry, shared H1032), **82 KILL**. The kill reasons matter for stage 1:
+- Most kills: the surface ALREADY resolves directly in the TIPNR lookup since the R-1
+  loader fix — the ladder finds it before the variant map is consulted, so an entry is
+  dead code. If any of those rows are still number-only after R-1, the failure is in the
+  word cell (possessive/plural/split), not the map — re-derive from a post-R-1 numonly
+  dump during the stage-1 audit.
+- Gentilic kills (arabian, chaldean, mede, persian, samaritan, syrian, +micha/juda):
+  the loader drops these as ambiguous because TIPNR gives the gentilic its OWN number
+  distinct from the place. Aliasing to the place would hand them the wrong number —
+  these are Pile U work (Group-entity binds), not map entries.
+- raphaiah: the file's raphah suggestion killed; the shipped rephaiah entry is the
+  person TIPNR names at the attested verse.
+Roster note: the 11 new keys will show as roster ADDITIONS at the next import —
+`check_roster_regression.py` will flag them; that's the expected, deliberate baseline
+update inside stage 1, per its procedure.
+
 ## Parked R-1 candidates (pull, not push — pick up only if R-2's work touches them)
 
 From `docs/tickets/alias_leave_list.txt` pile comments (all reviewer-accepted parks):
