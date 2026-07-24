@@ -799,7 +799,11 @@ function NewsView({ isMobile }) {
   // Live count for a tab — shown once the counts have loaded (so even "0" reads, which is
   // the point: Inbox is one slice of a triaged whole). No parens (thinner, fits the rail);
   // all three are window-scoped.
-  const cnt = (k) => Number.isFinite(counts[k]) ? ` ${counts[k]}` : "";
+  // The count rides its own span so the narrow-desktop bar can drop it (.news-cnt hides
+  // under 1360px — the counts are the one variable-width element; the feed header still
+  // states the active view's count). Mobile + full desktop show it as before.
+  const cnt = (k) => Number.isFinite(counts[k])
+    ? <span className="news-cnt"> {counts[k]}</span> : null;
   const viewsToggle = (
     <div className="news-views">
       <button className={"seg-b" + (view === "inbox" ? " on" : "")} onClick={() => setView("inbox")}>
@@ -870,17 +874,28 @@ function NewsView({ isMobile }) {
       ))}
     </select>
   );
-  // Rendered straight from the count (the source of truth), so it CAN'T drift as the clock rolls.
-  const dateLabel = windowKey === "max" ? "All dates"
-    : windowKey === "custom" ? "Custom range"
-    : "Last " + windowKey + "d";
+  // Rendered straight from the count (the source of truth), so it CAN'T drift as the clock
+  // rolls. Long + short forms; the narrow-desktop bar shows the short one (.news-lbl-*).
+  const dateShort = windowKey === "max" ? "All"
+    : windowKey === "custom" ? "Custom"
+    : windowKey + "d";
+  const dateLabel = (
+    <>
+      <span className="news-lbl-long">{windowKey === "max" ? "All dates"
+        : windowKey === "custom" ? "Custom range"
+        : "Last " + windowKey + "d"}</span>
+      <span className="news-lbl-short">{dateShort}</span>
+    </>
+  );
 
   // Copy-shortlist: a dropdown (Link only / Title + link / Title + description + link). One
   // definition, dropped into both the desktop top bar and the mobile filter strip. Closes on
   // outside-click (the scrim) or Esc (effect above). Label flips to "Copied n ✓" after a copy.
+  // The idle label carries a long + short form; a media query shows one (the short form
+  // keeps the Kept bar to a single row on a narrow desktop — width, not behavior).
   const copyLabel = copiedN ? "Copied " + copiedN + " ✓"
     : copying ? <><span className="news-spin" /> Resolving…</>
-    : "Copy shortlist ▾";
+    : <><span className="news-lbl-long">Copy shortlist ▾</span><span className="news-lbl-short">Copy ▾</span></>;
   const copyMenu = (
     <div className="news-bar-pop news-copy-pop">
       <button className={"news-btn news-keep" + (copyOpen ? " on" : "")}
@@ -907,7 +922,8 @@ function NewsView({ isMobile }) {
     <div className="news-bar-pop news-copy-pop">
       <button className="news-btn"
               disabled={copying || !stories.length}
-              onClick={doExport}>{exported ? "Exported ✓" : "Export .txt"}</button>
+              onClick={doExport}>{exported ? "Exported ✓"
+                : <><span className="news-lbl-long">Export .txt</span><span className="news-lbl-short">Export</span></>}</button>
     </div>
   );
   // Bulk triage buttons. Each view renders ONLY its own actions (so the plain labels are
@@ -1182,8 +1198,11 @@ function NewsView({ isMobile }) {
             </>
           )}
         </div>
-        <label className="news-bar-f"><span>Score</span>{scoreSel}</label>
-        <label className="news-bar-f"><span>Sort</span>{sortSel}</label>
+        {/* No "Score"/"Sort" text labels — the selects' own values ("6+ score",
+            "Top stories") already say what they are; the words were pure row width
+            (dropped to keep the bar one row with the bulk buttons, JP 2026-07-24). */}
+        <label className="news-bar-f" title="Score floor">{scoreSel}</label>
+        <label className="news-bar-f" title="Sort order">{sortSel}</label>
         <span className="news-bar-sep" aria-hidden="true" />
         {/* Re-pull the scored set without a full reload (also the force-refresh for a hand
             re-score — the held set's cache busts on a new pull, not an in-place re-score). */}

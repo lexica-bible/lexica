@@ -83,7 +83,13 @@
   --sidebar-w: 460px;
   /* News's right feed-shape panel matches Library/Word study width (pinned to the
      shared --sidebar-w so they stay locked together). */
-  --news-sidebar-w: var(--sidebar-w);
+  /* News's inspect panel is DELIBERATELY narrower than the shared 460 (restored 2026-07-24,
+     reverting 352e191's unification): the panel is always open and News's top bar carries
+     more controls than any other tab (views+date+score+sort+refresh+info+copy/export+bulk),
+     so the center needs the room — 18cb9a2's original reasoning, which 352e191 traded away
+     for cross-tab sameness. One-row bar at >=1280 is the harder contract; 460 makes it
+     unreachable (measured: the Kept row overflows by ~60px even fully compacted). */
+  --news-sidebar-w: 380px;
 
   /* Shared LIST-ROW system (see the ".listrow" section below). ONE definition of how a
      row inside any rail/feed/list looks: the panel is the container, rows are content —
@@ -5654,20 +5660,46 @@ button.study-verse-ref { border: none; }
 
 /* CENTER top control bar — one horizontal no-wrap row, Library's .lib-bar pattern. Sits
    above .news-feed inside the shared .zcenter; the rail below it is threads-only. */
-/* min-height (not height): one row still renders at the shared --strip-h band height, but
-   when the controls outgrow the feed column (narrow desktop / the bulk buttons) the bar
-   WRAPS and grows instead of running under the fixed right panel — trailing buttons were
-   getting clipped behind "Today's watch". Content never earns a horizontal clip. */
+/* ONE ROW is the contract (JP rejected wrapping — an orphaned second-row button reads
+   broken). The row is bought with compaction, not wrap: tight gaps, no Score/Sort text
+   labels, slimmer button padding, and short Copy/Export labels on a narrower desktop
+   (the .news-lbl-* media query below). flex-wrap stays ONLY as the absolute floor so a
+   truly tiny desktop window degrades to a second row instead of clipping under the fixed
+   right panel — at the supported widths (>=1280) everything fits on one row (rect-verified
+   in the harness, Inbox + Kept). min-height keeps the single-row band at --strip-h. */
 .news-bar { flex: 0 0 auto; box-sizing: border-box; min-height: var(--strip-h);
-  display: flex; align-items: center; padding: 8px 20px; border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--rule);
   background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }  /* --strip-h = the shared top-band height, so the bars line up across tabs */
-/* white-space: nowrap keeps each control's own label on one line; wrapping happens BETWEEN
-   controls (flex-wrap), so a squeezed bar drops whole buttons to a second row cleanly. */
-.news-bar-l { display: flex; align-items: center; gap: 10px; row-gap: 8px; flex-wrap: wrap;
+.news-bar-l { display: flex; align-items: center; gap: 5px; row-gap: 8px; flex-wrap: wrap;
   min-width: 0; white-space: nowrap; }
 .news-bar-sep { width: 1px; height: 22px; background: var(--rule); flex: 0 0 auto; }
-.news-bar .news-views { flex-wrap: nowrap; gap: 4px; }
-.news-bar .news-views .seg-b { padding: 5px 9px; font-size: 12.5px; white-space: nowrap; }
+.news-bar .news-views { flex-wrap: nowrap; gap: 3px; }
+.news-bar .news-views .seg-b { padding: 5px 6px; font-size: 12px; white-space: nowrap; }
+/* Slimmer controls INSIDE the bar only (cards keep their own padding). */
+.news-bar .news-btn, .news-bar .news-bar-btn { padding: 5px 7px; font-size: 12px; }
+.news-bar .news-bar-icon { width: 28px; height: 28px; }
+.news-bar .news-thread-sel { font-size: 12px; padding-left: 4px; }
+.news-bar .news-bar-f { font-size: 12px; }
+/* Long/short label pairs (Copy shortlist / Export .txt / the date button): below 1520 the
+   short form shows so the Kept row (Copy + Export + Dismiss All) holds one line. Measured. */
+.news-lbl-short { display: none; }
+@media (max-width: 1520px) {
+  .news-bar .news-lbl-long { display: none; }
+  .news-bar .news-lbl-short { display: inline; }
+}
+/* Second compaction tier for the narrow desktop band (rail still visible). The view pills'
+   COUNTS go — they're the one variable-width element (a 3-digit inbox eats the whole
+   margin), and the feed header still states the active view's count. Everything else is a
+   notch tighter. Keeps the bar one row down to ~1280 (rect-verified, Inbox + Kept). */
+@media (max-width: 1360px) {
+  .news-bar-l { gap: 4px; }
+  .news-bar .news-bar-sep { display: none; }
+  .news-bar .news-cnt { display: none; }
+  .news-bar .news-views .seg-b { padding: 4px 5px; font-size: 11.5px; }
+  .news-bar .news-btn, .news-bar .news-bar-btn { padding: 4px 6px; font-size: 11.5px; }
+  .news-bar .news-bar-icon { width: 26px; height: 26px; }
+  .news-bar .news-thread-sel { font-size: 11.5px; }
+}
 .news-bar-f { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-4); }
 .news-bar-f > span { font-weight: 600; }
 /* Date window dropdown — a button + a popover holding Since/Until + the presets. */
