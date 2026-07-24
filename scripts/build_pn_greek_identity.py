@@ -31,9 +31,22 @@ sys.path.insert(0, os.path.join(_HERE, ".."))
 import import_tipnr                      # parse_tipnr (the loader-fixed roster)
 import entity_resolution as er           # norm_name (the binder's normalizer)
 
+from build_abp_surface import ABBREV_TO_SLUG   # the ONE ABP-abbrev -> scrape-slug map
+
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible.db"))
 APPLY = "--apply" in sys.argv
+BH = next((sys.argv[i + 1] for i, a in enumerate(sys.argv)
+           if a == "--bh" and i + 1 < len(sys.argv)),
+          os.path.expanduser("~/bible-db/bh_scrape.db"))
+
+
+def _name_token(s):
+    """A word's name label reduced to a bare lowercase token ('of Raamah,' -> 'raamah')."""
+    s = re.sub(r"[^a-z' -]", " ", (s or "").lower())
+    toks = [t for t in s.split() if t not in
+            ("of", "the", "and", "to", "in", "for", "with", "a", "an", "o")]
+    return toks[-1] if toks else ""
 
 
 def main():
@@ -95,7 +108,37 @@ def main():
     """).fetchall()
     print(f"proper-noun words: {len(words):,}\n")
 
+    # Printed-Greek source for name slots: the scrape (bh_words), where a NAME row has
+    # a blank number and the Greek form in `greek` (abp_surface skips name slots — the
+    # documented 30,126-slot gap; second dry-run control catch, 2026-07-24). Pairing is
+    # by the NAME within the verse, never by position (the build splits slots, so
+    # positions drift): exactly one name-slot row whose English carries the word's name
+    # token, else REFUSE and count.
+    scrape = {}
+    if os.path.isfile(BH):
+        bh = sqlite3.connect(f"file:{BH}?mode=ro", uri=True)
+        for b, c, v, greek, english in bh.execute(
+                "SELECT book, chapter, verse, greek, english FROM bh_words "
+                "WHERE (strongs IS NULL OR strongs='') AND greek IS NOT NULL AND greek != ''"):
+            scrape.setdefault((b, c, v), []).append((_name_token(english), greek))
+        bh.close()
+        print(f"scrape name-slot rows loaded: {sum(len(v) for v in scrape.values()):,} "
+              f"across {len(scrape):,} verses")
+    else:
+        print(f"NOTE: scrape db not found at {BH} — lemma layer limited to words.lemma/abp_surface")
+
+    def scrape_greek(book, ch, vs, label):
+        tok = _name_token(label)
+        if not tok:
+            return None
+        slug = ABBREV_TO_SLUG.get(book)
+        if not slug:
+            return None
+        hits = [g for (t, g) in scrape.get((slug, ch, vs), []) if t == tok]
+        return hits[0] if len(hits) == 1 else None     # multi or none -> refuse
+
     rows, split = [], {"abp-tag": 0, "tipnr": 0, "lemma-only": 0, "none": 0}
+    scrape_used = scrape_refused = 0
     for w in words:
         base = w["strongs_base"] or ""
         heb = base if base.startswith("H") else None
@@ -113,16 +156,26 @@ def main():
                 ent = lookup.get(nm) if nm else None    # unbound word: the roster itself
                 if ent and ent.get("g"):
                     greek, source = ent["g"], "tipnr"
-                elif lemma:
-                    source = "lemma-only"
                 else:
-                    source = "none"           # no number, no lemma — counted, not hidden
+                    if not lemma:
+                        lemma = scrape_greek(w["book"], w["chapter"], w["verse"], w["label"])
+                        if lemma:
+                            scrape_used += 1
+                        else:
+                            scrape_refused += 1
+                    if lemma:
+                        source = "lemma-only"
+                    else:
+                        source = "none"       # no number, no lemma — counted, not hidden
         split[source] += 1
         rows.append((w["verse_id"], w["position"], greek, lemma, source, heb))
 
     print("identity split:")
     for k in ("abp-tag", "tipnr", "lemma-only", "none"):
         print(f"  {k:10} {split[k]:,}")
+    print(f"  (lemma via scrape: {scrape_used:,} matched; {scrape_refused:,} refused "
+          f"— no clean one-to-one name match in the verse; refused rows are the "
+          f"'none' bucket's residue, visible, not guessed)")
     print()
 
     if not APPLY:
