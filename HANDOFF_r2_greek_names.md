@@ -59,6 +59,17 @@ an identity instead of double-star blanks. NT name cards also become verse-binda
   *Recommendation: yes — one rebuild for stage 1, code-deploy flip later, retire in a
   final rebuild. Matches the design and keeps every step small enough to check.*
 
+## R2-Q1 license check — PASSED (logged 2026-07-24, before any import)
+
+Checked at the source: the STEPBible-Data repository (github.com/STEPBible/STEPBible-Data)
+licenses ALL its data, including the TBESG extended Greek lexicon file
+("TBESG - Tyndale Brief lexicon of Extended Strongs for Greek - CC BY.txt"),
+under CC BY 4.0. Required credit: "STEP Bible" linked to www.STEPBible.org. No other
+restrictions; commercial use and modification allowed with attribution.
+CREDITS.md already carries the required line (TBESG/TBESH, STEP Bible / Tyndale House,
+CC BY 4.0) — same terms as TAHOT and TIPNR already in use. No new credit needed;
+Q1's condition is satisfied and the STEP ingest is cleared.
+
 ## Riding along: the 352-row variant batch (audit 2026-07-16)
 
 The numonly hand-check's recoverable bucket: surface spellings that failed the string
