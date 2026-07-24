@@ -1115,7 +1115,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         ) : (
           <div className="occ-link occ-link--static">
             <b>{greekId.greek_count}</b>× in ABP {greekId.greek_strongs ? `as ${greekId.greek_strongs}` : "(this form)"}
-            {greekId.step && greekId.greek_strongs && <span className="detail-strong-alias"> · STEP</span>}
+            {greekId.step && greekId.greek_strongs && <span className="detail-strong-alias"> (STEP)</span>}
           </div>
         )}
       </section>
@@ -1127,7 +1127,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebCrossRef" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
-          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× by Hebrew number</> : null} — Word study by Hebrew number <Icon.ArrowRight/>
+          {/* Header already says "Hebrew Cross-Reference" — the line stays terse
+              (reviewer refinement on TICKET_step_tag_placement follow-up). */}
+          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× — Word study</> : <> · Word study</>} <Icon.ArrowRight/>
         </button>
       </section>
     );
