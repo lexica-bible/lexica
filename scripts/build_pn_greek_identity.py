@@ -72,6 +72,19 @@ def main():
     print(f"entities with exactly one Greek number: {len(ent_g):,} "
           f"(multi-Greek entities, no guess: {multi_g:,})")
 
+    # UNBOUND words (incl. the binder's deliberate name-path tier: David, Moses...):
+    # the name's own Greek number, IF every entity carrying that spelling agrees on
+    # exactly one (David -> 1 entity, G1138; Mary -> 6 entities, all G3137). Mixed or
+    # absent -> no guess. (The G1 control caught the gap: import_tipnr's lookup holds
+    # main-line numbers only, and David's G1138 sits on a sub-record.)
+    name_idx, _bi, _ci = er.build_indexes(ents)
+    name_g = {}
+    for nm_key, idxs in name_idx.items():
+        union = {g for i in idxs for g in ents[i]["bases"] if g.startswith("G")}
+        if len(union) == 1:
+            name_g[nm_key] = next(iter(union))
+    print(f"name spellings with one agreed Greek number: {len(name_g):,}")
+
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=DELETE")
@@ -153,9 +166,10 @@ def main():
             if uniq and uniq in ent_g:
                 greek, source = ent_g[uniq], "tipnr"
             else:
-                ent = lookup.get(nm) if nm else None    # unbound word: the roster itself
-                if ent and ent.get("g"):
-                    greek, source = ent["g"], "tipnr"
+                if nm and nm in name_g:                 # unbound word: the name's own number
+                    greek, source = name_g[nm], "tipnr"
+                elif nm and lookup.get(nm, {}).get("g"):
+                    greek, source = lookup[nm]["g"], "tipnr"
                 else:
                     if not lemma:
                         lemma = scrape_greek(w["book"], w["chapter"], w["verse"], w["label"])
