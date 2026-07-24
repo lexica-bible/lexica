@@ -12,7 +12,12 @@
   table shape. Fix 7b31eb4 + two regression checks. LESSON: fixture = the
   importer's CREATE TABLE, verified against real rows, never re-derived.
 - Follow-up (cosmetic): STEP tag placement — docs/tickets/TICKET_step_tag_placement.md.
-- Held for stage 3: Word study ABP branch flip (receipt-0 ruling). Flags on record:
+- Held for stage 3 (two named candidates): (1) Word study ABP branch flip (receipt-0
+  ruling); (2) reader interlinear tags Greek-keyed for backfilled PNs — reviewer
+  addendum post-close: the in-text Strong's mode shows the Hebrew number under a
+  backfilled PN (H90 under Agag) while the card says G9826; NOT a defect — the
+  chapter feed was deliberately outside flip scope (per-click ruling, OFF-proof
+  surface). No stage-2 reopen. Flags on record:
   Βουγαίου = TIPNR's own G9826 form (source-faithful); SEO pages mixed-keyed by design.
 
 Drafted 2026-07-24 off HANDOFF_r2_greek_names.md's stage-1 close-out. Stage 2 is a CODE

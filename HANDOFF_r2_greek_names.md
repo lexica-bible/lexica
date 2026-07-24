@@ -4,7 +4,9 @@
 ## proper-noun cards now carry the GREEK identity; Hebrew demoted to a labeled
 ## cross-ref line. Close-out block atop docs/PLAN_r2_stage2.md (nine checks green,
 ## count gate proven both ways, 146 changed counts fully traced). Open: STEP-tag
-## placement (cosmetic ticket), Word study ABP branch flip = named stage-3 item.
+## placement (cosmetic ticket); stage-3 candidates: Word study ABP branch flip +
+## reader interlinear tags Greek-keyed for backfilled PNs (chapter feed was kept
+## out of flip scope by ruling — card G9826 over in-text H90 is by design).
 ## Rollback: delete the READER_GREEK_IDENTITY=1 line in the WSGI file + reload.
 
 ## ★ STAGE 1 LIVE — swapped 2026-07-24, reviewer-receipted. READ THIS FIRST.
