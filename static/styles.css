@@ -5654,10 +5654,17 @@ button.study-verse-ref { border: none; }
 
 /* CENTER top control bar — one horizontal no-wrap row, Library's .lib-bar pattern. Sits
    above .news-feed inside the shared .zcenter; the rail below it is threads-only. */
-.news-bar { flex: 0 0 auto; box-sizing: border-box; height: var(--strip-h);
-  display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--rule);
+/* min-height (not height): one row still renders at the shared --strip-h band height, but
+   when the controls outgrow the feed column (narrow desktop / the bulk buttons) the bar
+   WRAPS and grows instead of running under the fixed right panel — trailing buttons were
+   getting clipped behind "Today's watch". Content never earns a horizontal clip. */
+.news-bar { flex: 0 0 auto; box-sizing: border-box; min-height: var(--strip-h);
+  display: flex; align-items: center; padding: 8px 20px; border-bottom: 1px solid var(--rule);
   background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }  /* --strip-h = the shared top-band height, so the bars line up across tabs */
-.news-bar-l { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap; }
+/* white-space: nowrap keeps each control's own label on one line; wrapping happens BETWEEN
+   controls (flex-wrap), so a squeezed bar drops whole buttons to a second row cleanly. */
+.news-bar-l { display: flex; align-items: center; gap: 10px; row-gap: 8px; flex-wrap: wrap;
+  min-width: 0; white-space: nowrap; }
 .news-bar-sep { width: 1px; height: 22px; background: var(--rule); flex: 0 0 auto; }
 .news-bar .news-views { flex-wrap: nowrap; gap: 4px; }
 .news-bar .news-views .seg-b { padding: 5px 9px; font-size: 12.5px; white-space: nowrap; }
