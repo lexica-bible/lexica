@@ -112,11 +112,83 @@ sites are Q4-out-of-scope and untouched.
   own scheme (the provenance rule stage 2 already applied to counts).
 - Feed payload grows slightly when ON (one small field on PN words only).
 
-## Next after G1: candidate #1 (G2)
+## G1 — CLEAR (receipt G1-R2, reviewer, 2026-07-24)
 
-Not sized yet — sized after G1 clears, against the same switch. Read surface and
-the pre-rebuild side-table dependency are already recorded in
-docs/R2_stage3_evidence.md §2.
+Build 16b4eac1, deployed OFF (OFF-PROOF: IDENTICAL on both feeds), flipped ON by
+JP. Four live checks clean: Agag G9826 tag matches the card (1); real inline
+G-numbers untouched (2); lemma-only positively shown hidden — Havilah/Shur @
+1Sa 15:7 (3); KJV/BSB tags Hebrew-keyed unchanged (4, HEB covered by the same
+untouched path). H7017/H6002 @ 1Sa 15:6 classified against the live identity
+table: all four rows bucket 'none' → H-number print is the spec'd fallback, not
+a defect. Receipt of record: G1-R2, evidence = four-check screenshots + the
+15:6 classification paste. Reviewer scope note attached to the receipt:
+never-scoped rows (gentilics etc.) still speaking Hebrew is a COVERAGE
+BOUNDARY, not an inconsistency; earning them Greek identities = a new backfill
+class, adjacent to the parked R-1 gentilic ticket (pile U), future candidate,
+NOT stage-3 scope.
+
+## G2 sizing — candidate #1: Word study ABP branch flip (sized 2026-07-24, build on go)
+
+Evidence base: docs/R2_stage3_evidence.md §2; all line cites re-verified against
+current views_lexicon.py before sizing.
+
+**What flips, precisely.** Word study becomes able to answer for a
+STEP-extended Greek identity (G9xxx), so the card's identity/count lines can
+LINK there instead of showing a static count (30-detail-panel.jsx:1106–1112
+"Word study can't key those yet" — that block is the target). Today a G9xxx
+profile 404s at views_lexicon.py:1094–1098 (main lexicon has no row) and the
+ABP occurrence predicate (`_abp_strongs_filter` :291–310) structurally matches
+zero rows (words never carries G9xxx pre-rebuild).
+
+**The ABP occurrence set under the flip (the core definition):** for a Greek
+number, ABP occurrences = rows words carries natively (today's predicate,
+unchanged) PLUS `pn_greek_identity` rows with source='tipnr' for that number
+(verse_id+position → the words row). No double count by construction: an
+abp-tag identity row IS a native words row; a tipnr row is Hebrew-keyed in
+words, so it can only arrive via the identity table. Gated on
+READER_GREEK_FLIPS + table present; switch OFF = today's behavior exactly.
+
+**Backend edits (views_lexicon.py only):**
+1. Profile :1094–1098 — on main-lexicon miss for a G-number, gated fallback to
+   `step_lexicon` (join on `base` as a NUMBER — the receipt-2 lesson), serving
+   lemma/translit/gloss + a `step: true` field for the card's provenance tag.
+2. `_abp_book_counts` :1151, `_abp_gloss_rows` :1173, the occurrence verse
+   lists (`lexicon_verses` + `_all_books_verses`) — each gains the gated
+   tipnr-identity union defined above.
+3. The ABP-empty corpus fallback :1138–1144 — must consult the union before
+   demoting a G9xxx to KJV/BSB (which can never carry it), else the reader
+   lands on the wrong tab.
+4. NO change to: Hebrew branch, KJV/BSB/HEB branches, the English finder, the
+   lookup/translit search bands.
+
+**Frontend edits:**
+5. 30-detail-panel.jsx :1106–1112 — STEP identity gets a real "Word study"
+   link (G9xxx, source "abp") replacing the static count.
+6. 80-lexicon.jsx — word-card head shows the quiet "STEP" source tag beside a
+   G9xxx number (same S2-Q2 style as the reader card); scoped to `.wd`, never
+   the shared classes.
+
+**Held OUT of G2 (reviewer to confirm with the go):**
+- Lemma-only identities: Word study is number-keyed; keying by a stored Greek
+  form is a new key type (new machinery, new URL shape). Card keeps the static
+  count. Park as its own candidate.
+- Real-G native counts: unchanged. The known count seam (card greek_count =
+  identity rows; Word study native rows may include non-PN uses of the same
+  number) is handled by the G2 count gate below, not by changing native logic.
+
+**G2 gate (stage-2 pattern, no trial-then-apply):** locked test on a fixture
+mirroring the real builders' table shapes (extends the G1 fixture) on BOTH CI
+lists; deploy OFF → OFF-proof (a G9xxx profile still 404s; a normal profile
+byte-identical) → receipt → flip is already ON site-wide (same switch), so the
+deploy itself is the flip → live checks: (a) Terah/Βουγαίου-class G9xxx card
+link opens Word study with lemma from STEP + STEP tag; (b) its ABP total
+EQUALS the card's greek_count, any diff itemized to native non-PN rows;
+(c) a normal Greek word's Word study unchanged; (d) Hebrew cross-ref link
+still opens the Hebrew-keyed page → receipt → clear.
+
+**Switch note:** the card link (5) must only render when the Word study side
+can answer — both are behind READER_GREEK_FLIPS, deployed together in one
+commit, so no window where the link 404s.
 
 ## G3 — RULED (reviewer, 2026-07-24): Option B. G3 CLEAR.
 
