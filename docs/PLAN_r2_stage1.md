@@ -68,8 +68,15 @@ block (named PASS/FAIL per control) at the end of its output.
    then `cp ~/bible-db/bible.db ~/bible-db/bible_test.db`.
 2. Roster gate (see above): CLEAN or stop.
 3. `python3 scripts/import_tipnr.py bible_test.db --dry-run` → paste the summary.
-   Expected movement vs R-1: ONLY the 11 alias surfaces (matched-count rises by their
-   row counts; nothing else shifts). Then the real run without `--dry-run`.
+   Expected movement vs R-1: **Matched: 0** (corrected 2026-07-24 after the actual
+   dry-run — the original "+11 rows" expectation predated the frame correction; the
+   11 surfaces got their numbers in R-1 via DIRECT, so the remaining '*' words are
+   the mangled-cell residue no name list fixes. The batch's movement shows at the
+   build_entity_binding step as new binds, and words stays byte-identical here).
+   Then the real run without `--dry-run`.
+   RESULT 2026-07-24: roster CLEAN 4,331 exact; dry-run Matched 0 / 745 residue ✓;
+   STEP dry-run: 10,846 entries, TIPNR Greek coverage 476/476 = 100% (the lone
+   "missing G0" is TIPNR's nine unnamed#N placeholder people, number 0 — not a word).
 4. `python3 scripts/import_step_lexicon.py bible_test.db` (dry-run report: entry count,
    G9xxx coverage, spot lemmas) → `--apply`.
 5. `python3 scripts/build_pn_greek_identity.py bible_test.db` (dry-run report: words
