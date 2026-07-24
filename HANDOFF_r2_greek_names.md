@@ -1,10 +1,11 @@
 # HANDOFF — R-2 Greek-name migration (open a fresh session from this doc)
 
-## ★ STAGE 2 OPEN — plan receipted, rulings landed, NO code yet. Fresh session starts at
-## docs/PLAN_r2_stage2.md (rulings block at top). First action: consumer enumeration
-## (contamination map + docs/claude/word-study.md) → list to the REVIEWER before any
-## edit is sized. Panel C1–C9 pre-declared in the plan; two-receipt deploy (OFF-proof
-## then ON); the count-trace gate script is part of the build, not a promise.
+## ★ STAGE 2 CLOSED — LIVE 2026-07-24, receipt 2 issued (commit 7b31eb4). ABP
+## proper-noun cards now carry the GREEK identity; Hebrew demoted to a labeled
+## cross-ref line. Close-out block atop docs/PLAN_r2_stage2.md (nine checks green,
+## count gate proven both ways, 146 changed counts fully traced). Open: STEP-tag
+## placement (cosmetic ticket), Word study ABP branch flip = named stage-3 item.
+## Rollback: delete the READER_GREEK_IDENTITY=1 line in the WSGI file + reload.
 
 ## ★ STAGE 1 LIVE — swapped 2026-07-24, reviewer-receipted. READ THIS FIRST.
 

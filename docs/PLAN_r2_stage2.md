@@ -1,5 +1,20 @@
 # PLAN — R-2 stage 2: flip the ABP readers to Greek identity (code deploy)
 
+## ★ STAGE 2 CLOSED — receipt 2 issued 2026-07-24. Flip LIVE (commit 7b31eb4).
+- OFF-proof receipted (C7: verse payload IDENTICAL, endpoint dark). Switch ON in the
+  WSGI env; rollback stays one env line.
+- All nine checks green against JP's screenshots. Count gate PASS both ways
+  (selftest fired on a planted error; 146 changed counts all traced to
+  ~/r2s1_deriv_diff.txt, zero unexplained; Terah H8646 14→12 as G2291 exact).
+- Receipt-2 defect, fixed in-flight: step_lexicon lookup joined text against the
+  numeric base column and never matched — caught because C2's STEP tag didn't
+  render; the locked test had cloned the assumption instead of the importer's real
+  table shape. Fix 7b31eb4 + two regression checks. LESSON: fixture = the
+  importer's CREATE TABLE, verified against real rows, never re-derived.
+- Follow-up (cosmetic): STEP tag placement — docs/tickets/TICKET_step_tag_placement.md.
+- Held for stage 3: Word study ABP branch flip (receipt-0 ruling). Flags on record:
+  Βουγαίου = TIPNR's own G9826 form (source-faithful); SEO pages mixed-keyed by design.
+
 Drafted 2026-07-24 off HANDOFF_r2_greek_names.md's stage-1 close-out. Stage 2 is a CODE
 deploy, git-revertible — no rebuild, no database swap. The words table is untouched;
 everything the readers start showing comes from the stage-1 side tables already live
