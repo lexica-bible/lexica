@@ -11,7 +11,8 @@
   render; the locked test had cloned the assumption instead of the importer's real
   table shape. Fix 7b31eb4 + two regression checks. LESSON: fixture = the
   importer's CREATE TABLE, verified against real rows, never re-derived.
-- Follow-up (cosmetic): STEP tag placement — docs/tickets/TICKET_step_tag_placement.md.
+- Follow-up (cosmetic): STEP tag placement — CLOSED 2026-07-24, receipt on d4b8958
+  (docs/tickets/TICKET_step_tag_placement.md has the final shape + the arrow ruling).
 - Held for stage 3 (two named candidates): (1) Word study ABP branch flip (receipt-0
   ruling); (2) reader interlinear tags Greek-keyed for backfilled PNs — reviewer
   addendum post-close: the in-text Strong's mode shows the Hebrew number under a

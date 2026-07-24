@@ -3,10 +3,13 @@
 ## ★ STAGE 2 CLOSED — LIVE 2026-07-24, receipt 2 issued (commit 7b31eb4). ABP
 ## proper-noun cards now carry the GREEK identity; Hebrew demoted to a labeled
 ## cross-ref line. Close-out block atop docs/PLAN_r2_stage2.md (nine checks green,
-## count gate proven both ways, 146 changed counts fully traced). Open: STEP-tag
-## placement (cosmetic ticket); stage-3 candidates: Word study ABP branch flip +
-## reader interlinear tags Greek-keyed for backfilled PNs (chapter feed was kept
-## out of flip scope by ruling — card G9826 over in-text H90 is by design).
+## count gate proven both ways, 146 changed counts fully traced). Cosmetic thread
+## (STEP-tag placement + line formats + arrows) CLOSED 2026-07-24, receipt on d4b8958
+## — final shape + arrow ruling in docs/tickets/TICKET_step_tag_placement.md.
+## Open: stage-3 candidates ONLY (parked, scoping unparks on reviewer's call):
+## Word study ABP branch flip + reader interlinear tags Greek-keyed for backfilled
+## PNs (chapter feed was kept out of flip scope by ruling — card G9826 over in-text
+## H90 is by design) + Hebrew retirement rebuild.
 ## Rollback: delete the READER_GREEK_IDENTITY=1 line in the WSGI file + reload.
 
 ## ★ STAGE 1 LIVE — swapped 2026-07-24, reviewer-receipted. READ THIS FIRST.

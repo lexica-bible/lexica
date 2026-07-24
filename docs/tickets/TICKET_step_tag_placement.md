@@ -1,6 +1,11 @@
 # TICKET — STEP tag placement (cosmetic; reviewer follow-up from R-2 stage-2 receipt 2)
 
-Status: LANDED (2026-07-24) — awaiting JP's post-deploy C2 screenshot to close.
+Status: CLOSED (2026-07-24) — reviewer receipt on d4b8958, Agag card verified clean.
+Final shape after refinements: occurrence line reads `…× in ABP as G9826 (STEP)`;
+Hebrew cross-ref line reads `H90 · 9× — Word study` (no repeats, no trailing arrow);
+"Read in context" also dropped its arrow. ARROW RULING (carries): list/table occurrence
+links KEEP their arrow; standalone card links drop it — different attribution of the
+affordance, not an inconsistency. Commits a949ba7 → 63d82b2 → d4b8958.
 Fix: tag removed from the head band; now renders beside the G9xxx number in the body's
 ABP Occurrences line (the static branch — STEP-keyed cards always take it). Guarded so a
 lemma-only card never shows a stray tag. No CSS change; reuses `.detail-strong-alias`.
