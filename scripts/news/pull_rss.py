@@ -42,6 +42,7 @@ import feedparser
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from queries import gate_vocabulary  # noqa: E402
 from sources import SOURCES  # noqa: E402
+from dateparse import to_iso  # noqa: E402
 
 # news.db lives at the repo root, beside gather_news.py's target. This file sits
 # in scripts/news/, so go two levels up for the root.
@@ -97,13 +98,21 @@ def clean(text):
 
 
 def iso_from_entry(e):
-    """Best-effort ISO date from a feedparser entry; '' on junk."""
+    """Best-effort ISO date from a feedparser entry; '' when the entry truly has none.
+    feedparser's own parsed structs first; when it choked on the format, retry the RAW
+    date strings through the shared tolerant parser (dateparse.to_iso) — feedparser
+    keeps the raw text even when it couldn't parse it. '' is the honest "unknown"
+    marker; the app renders it as an estimated ~first-seen date."""
     st = e.get("published_parsed") or e.get("updated_parsed")
     if st:
         try:
             return datetime.fromtimestamp(calendar.timegm(st), tz=timezone.utc).isoformat()
         except Exception:
             pass
+    for key in ("published", "updated", "created", "dc_date", "date"):
+        d = to_iso(e.get(key))
+        if d:
+            return d
     return ""
 
 

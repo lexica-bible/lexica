@@ -502,7 +502,7 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False):
     sig = _corpus_sig(conn)
     if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
         return _ALL_CACHE["cards"]
-    sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
+    sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.first_seen, i.score, "
            "i.summary, i.ai_thread, i.ai_why, i.query, 'new' AS status"
            + (", i.resolved_url" if has_resolved else "")
            + (", i.event" if has_event else "")
@@ -522,6 +522,11 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False):
         card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
+                            # fs = the day WE first pulled it — the display's LAST-resort
+                            # estimated date (rendered "~fs") when the article has no real
+                            # publish date. Never used for windowing/peak/sort: an undated
+                            # article stays undated everywhere logic keys on `d`.
+                            "fs": (a["first_seen"] or "")[:10],
                             "title": a["title"], "url": a["url"],
                             "resolved": (a["resolved_url"] if has_resolved else "") or "",
                             # paywall flag so the browser's in-window face recompute
@@ -798,6 +803,78 @@ def set_status():
     finally:
         conn.close()
     return jsonify({"ok": True, "n": len(ids)})
+
+
+# The three sanctioned bulk moves. Keep All lives on the Inbox view (new→keep),
+# Dismiss All on Inbox (new→dismiss) and on Kept (keep→dismiss — the post-indexing
+# flush). Anything else (e.g. dismissed→anything in bulk) is rejected at the door.
+_BULK_TRANSITIONS = {("new", "keep"), ("new", "dismiss"), ("keep", "dismiss")}
+
+
+def _apply_bulk(conn, rid, ids, status, frm):
+    """Move every id whose CURRENT status (for THIS reviewer) is `frm` to `status`;
+    ids sitting in any other state are silently skipped (a stale client that lost a
+    race just no-ops those rows — never an error). Returns how many rows moved.
+    Re-firing the same call finds nothing left in `frm` and changes 0 — safe to
+    double-fire. Scoped to rid like every other write, so one reviewer's bulk can
+    never touch another's rows."""
+    cur = {}
+    for i in range(0, len(ids), 500):                    # stay under SQLite's variable cap
+        chunk = ids[i:i + 500]
+        qmarks = ",".join("?" for _ in chunk)
+        for r in conn.execute(
+                f"SELECT item_id, status FROM reviews "
+                f"WHERE reviewer = ? AND item_id IN ({qmarks})", [rid, *chunk]):
+            cur[r["item_id"]] = r["status"]
+    eligible = [i for i in ids if cur.get(i, "new") == frm]
+    if eligible:
+        now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        conn.executemany(
+            "INSERT INTO reviews (item_id, reviewer, status, updated) VALUES (?,?,?,?) "
+            "ON CONFLICT(item_id, reviewer) DO UPDATE SET status=excluded.status, "
+            "updated=excluded.updated",
+            [(i, rid, status, now) for i in eligible])
+        conn.commit()
+    return len(eligible)
+
+
+@bp.route("/api/news/bulk", methods=["POST"])
+@limiter.limit("120 per hour")
+def bulk_status():
+    """Bulk triage: Keep All / Dismiss All over the ids the client's ACTIVE FILTERS
+    matched. The browser holds the complete clustered feed (one /api/news/all fetch —
+    there is no server pagination), so the filter-matched set it sends IS the full
+    match, never just the rendered window. The server's job here is the guard rails:
+    the per-reviewer scope, and the from→to transition check that skips any row
+    another session already moved (stale client = skip, not error).
+
+    Body: {ids:[...], status:"keep"|"dismiss", from:"new"|"keep"}. Only the three
+    transitions in _BULK_TRANSITIONS are accepted. Returns {ok, requested, changed};
+    a re-fire finds nothing left to move and comes back changed=0."""
+    rid, can_write = _reviewer()
+    if not can_write:
+        return jsonify({"error": "not found"}), 404
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    ids = body.get("ids") or []
+    status = body.get("status")
+    frm = body.get("from")
+    if (frm, status) not in _BULK_TRANSITIONS or not isinstance(ids, list) or not ids:
+        return jsonify({"ok": False}), 400
+    ids = [int(i) for i in ids if str(i).isdigit()][:20000]
+    if not ids:
+        return jsonify({"ok": False}), 400
+    conn = news_db()
+    try:
+        _ensure_reviews(conn)
+        changed = _apply_bulk(conn, rid, ids, status, frm)
+    except sqlite3.Error:
+        return jsonify({"ok": False}), 500
+    finally:
+        conn.close()
+    return jsonify({"ok": True, "requested": len(ids), "changed": changed})
 
 
 @bp.route("/api/news/resolve", methods=["POST"])

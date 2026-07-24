@@ -48,6 +48,7 @@ jobs:
           python tests/test_prompt_contract.py
           python tests/test_written_ranges.py
           python tests/test_news_gate.py
+          python tests/test_news_bulk.py
           python tests/test_key_strongs_filter.py
           python tests/test_tipnr_roster.py
 

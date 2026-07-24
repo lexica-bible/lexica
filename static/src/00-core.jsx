@@ -288,6 +288,16 @@ const api = {
       body: JSON.stringify({ ids, status }),
     }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false }));
   },
+  // Bulk triage: move every id currently in `frm` (for this reviewer) to `status`.
+  // Rows another session already moved are skipped server-side; re-firing is a no-op.
+  newsBulk: (ids, status, frm) => {
+    const k = _newsKey();
+    return fetch(`/api/news/bulk`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ..._authHeaders(), ...(k ? { "X-News-Key": k } : {}) },
+      body: JSON.stringify({ ids, status, from: frm }),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false }));
+  },
   // Resolve-on-copy: turn shortlist face wrapper URLs into real article URLs
   // (cached server-side). dry=true resolves + returns but writes nothing.
   newsResolve: (urls, dry) => {

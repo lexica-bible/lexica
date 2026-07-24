@@ -115,6 +115,13 @@ def check_resolve_sits_on_the_write_gate(fails):
            "can_write" not in read_src, True)
 
 
+def check_bulk_sits_on_the_write_gate(fails):
+    """bulk is status's big sibling — same write gate, same rule."""
+    src = inspect.getsource(views_news.bulk_status)
+    _check(fails, "bulk gates on can_write", "can_write" in src, True)
+    _check(fails, "bulk does NOT gate on _can_read", "_can_read" not in src, True)
+
+
 def check_status_stays_on_the_write_gate(fails):
     """status was already correct — lock it so the resolve fix can't be 'matched' by
     dragging status the other way."""
@@ -129,6 +136,7 @@ def main():
                   check_read_is_not_tier_based,
                   check_reviewer_ids_stay_separate,
                   check_resolve_sits_on_the_write_gate,
+                  check_bulk_sits_on_the_write_gate,
                   check_status_stays_on_the_write_gate):
         check(fails)
         print(f"  ran {check.__name__}")

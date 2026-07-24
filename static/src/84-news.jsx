@@ -241,10 +241,15 @@ function _downloadFile(filename, text, mime) {
 // The card date shows the PEAK day only (rank + window both key on it). A single-date
 // event already collapses to that one date, so this is just "{peak}" — the old
 // "· latest Y" half is dropped (it added a second date that rarely earned the room).
+// When a story has NO real publish date at all, fall back to the day we first pulled it,
+// marked "~" so an estimated date can never pass for a real one. Display-only: windowing,
+// peak and sort all still treat the article as undated.
 function _dateRange(story) {
   const peak = (story.peak_date || "").slice(0, 10);
   const latest = (story.published || "").slice(0, 10);
-  return peak || latest || "—";
+  if (peak || latest) return peak || latest;
+  const fs = (story.members || []).map(m => (m.fs || "").slice(0, 10)).filter(Boolean).sort();
+  return fs.length ? "~" + fs[fs.length - 1] : "—";
 }
 
 // Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
@@ -601,8 +606,10 @@ function NewsView({ isMobile }) {
     return { articles, cards };
   }, [windowed, view, since, until, minScore]);
 
-  // The visible feed — filter the windowed view to the active tab, then sort. All client-side.
-  const stories = useMemo(() => {
+  // The active tab's FULL filter-matched list, sorted. `stories` (the render list) is a
+  // display slice of it; the bulk actions read the UNSLICED list, so "Keep All" means every
+  // card the current filters match — including any past the 300-card render cap.
+  const viewListAll = useMemo(() => {
     const want = { inbox: "new", kept: "keep", dismissed: "dismiss" }[view];
     const list = windowed.filter(c => {
       const isInbox = c.status !== "keep" && c.status !== "dismiss";
@@ -618,8 +625,10 @@ function NewsView({ isMobile }) {
       // is the tie-break so equal effective scores still favor the fresher card.
       list.sort((a, b) => (b.score - _stale(b.peak_date)) - (a.score - _stale(a.peak_date))
                        || (b.published + "").localeCompare(a.published + ""));
-    return list.slice(0, 300);
+    return list;
   }, [windowed, view, order]);
+  // The visible feed — a display cap only, never the scope of any action.
+  const stories = useMemo(() => viewListAll.slice(0, 300), [viewListAll]);
 
   // Feed-shape readout (right zone) — also derived. Honors the date window only (ignores
   // the score floor + thread, by design: the BURIED count is the whole point). Counts
@@ -669,6 +678,36 @@ function NewsView({ isMobile }) {
       if (d && d.ok !== false) return;
       setOverrides(o => ({ ...o, [k]: prev }));
       setFlash("Couldn't save — put it back. Try again.");
+      setTimeout(() => setFlash(""), 3000);
+    });
+  };
+
+  // Bulk triage — Keep All / Dismiss All over the ACTIVE FILTERS' full match (viewListAll,
+  // the unsliced list: date window + score floor + thread + view, never just the rendered
+  // 300). Optimistic like single-item mark: every card flips locally at once; the whole
+  // batch rolls back on a failed write. The server re-checks each row's current state and
+  // skips anything another session already moved (stale client = skip, not error), so a
+  // re-fire is harmless.
+  const bulkMark = (status) => {
+    const frm = view === "inbox" ? "new" : "keep";       // kept-view bulk = the flush to dismissed
+    const list = viewListAll;
+    if (!list.length) return;
+    const n = list.length;
+    const verb = status === "keep" ? "Keep" : "Dismiss";
+    if (!window.confirm(`${verb} all ${n} ${n === 1 ? "story" : "stories"} matching the current filters?`)) return;
+    const prev = {};
+    const next = {};
+    for (const c of list) {
+      const k = c.ids[0];
+      prev[k] = (k in overrides) ? overrides[k] : c.status;
+      next[k] = status;
+    }
+    setOverrides(o => ({ ...o, ...next }));
+    const ids = list.flatMap(c => c.ids);
+    api.newsBulk(ids, status, frm).then(d => {
+      if (d && d.ok !== false) return;
+      setOverrides(o => ({ ...o, ...prev }));
+      setFlash("Couldn't save — put them back. Try again.");
       setTimeout(() => setFlash(""), 3000);
     });
   };
@@ -871,6 +910,26 @@ function NewsView({ isMobile }) {
               onClick={doExport}>{exported ? "Exported ✓" : "Export .txt"}</button>
     </div>
   );
+  // Bulk triage buttons. Each view renders ONLY its own actions (so the plain labels are
+  // unambiguous): Inbox = Keep All + Dismiss All; Kept = Dismiss All (the post-indexing
+  // flush after Copy/Export); Dismissed = none. Secondary styling (plain .news-btn) so
+  // they never compete with the per-card buttons; write-gated like every triage control.
+  const bulkBtns = !canReview ? null
+    : view === "inbox" ? (
+      <>
+        <button className="news-btn" disabled={!viewListAll.length}
+                title="Keep every story matching the current filters"
+                onClick={() => bulkMark("keep")}>Keep All</button>
+        <button className="news-btn" disabled={!viewListAll.length}
+                title="Dismiss every story matching the current filters"
+                onClick={() => bulkMark("dismiss")}>Dismiss All</button>
+      </>
+    ) : view === "kept" ? (
+      <button className="news-btn" disabled={!viewListAll.length}
+              title="Dismiss every kept story matching the current filters — the flush after copying the shortlist"
+              onClick={() => bulkMark("dismiss")}>Dismiss All</button>
+    ) : null;
+
   // "+N outside this window" — all-time kept/dismissed minus what's in the current window.
   // Both halves come from /api/news/counts, so it's cheap; only the active view's number
   // is shown (the lists are window-scoped now, so this keeps the all-time set discoverable).
@@ -994,8 +1053,11 @@ function NewsView({ isMobile }) {
           <Icon.Refresh className={loading ? "spin" : undefined} />
         </button>
         {/* Shortlist copy + export stay Kept-only, and stay in the CENTER: they act on the
-            visible shortlist, so they belong with it, not behind a filters sheet. */}
-        {view === "kept" && <div className="news-mkept">{copyMenu}{exportMenu}</div>}
+            visible shortlist, so they belong with it, not behind a filters sheet. The bulk
+            triage buttons ride the same row (each view renders only its own, so the plain
+            labels stay unambiguous). */}
+        {view === "kept" && <div className="news-mkept">{copyMenu}{exportMenu}{bulkBtns}</div>}
+        {view === "inbox" && bulkBtns && <div className="news-mkept">{bulkBtns}</div>}
         {flash && <span className="news-flash">{flash}</span>}
       </div>
     );
@@ -1162,7 +1224,9 @@ function NewsView({ isMobile }) {
                   <div className="news-help-t">Dates</div>
                   <p>A story can run for several days. <strong>Peaked</strong> is the day it drew the
                      most coverage — the day the story is filed under; <strong>latest</strong> is its
-                     most recent article. The date window filters on the peaked day.</p>
+                     most recent article. The date window filters on the peaked day.
+                     A date shown as ~ is an estimate (when we first saw the story) — the
+                     article itself carried no publish date.</p>
                 </div>
                 <div className="news-help-sec">
                   <div className="news-help-t">Views</div>
@@ -1175,6 +1239,7 @@ function NewsView({ isMobile }) {
           )}
         </div>
         {view === "kept" && <>{copyMenu}{exportMenu}</> /* shortlist copy + export: Kept only */}
+        {bulkBtns /* bulk triage: Inbox = Keep All + Dismiss All; Kept = Dismiss All (the flush) */}
         {flash && <span className="news-flash">{flash}</span>}
       </div>
     </div>

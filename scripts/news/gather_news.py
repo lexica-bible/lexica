@@ -31,10 +31,10 @@ import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
-from email.utils import parsedate_to_datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from queries import all_searches  # noqa: E402
+from dateparse import to_iso  # noqa: E402
 
 # news.db lives at the repo root, beside notes.db/esv.db/study.db (all gitignored,
 # PA-only). This file sits in scripts/news/, so go two levels up for the root.
@@ -87,17 +87,26 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
-def iso(pubdate):
-    """Turn an RSS date string into plain ISO; fall back to empty on junk."""
-    if not pubdate:
-        return ""
-    try:
-        dt = parsedate_to_datetime(pubdate)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(timezone.utc).isoformat()
-    except Exception:
-        return ""
+# Alternate date tags a feed item may carry when <pubDate> is missing/broken.
+# Dublin Core dc:date and Atom updated both hold ISO dates; dateparse handles both.
+_ALT_DATE_TAGS = (
+    "{http://purl.org/dc/elements/1.1/}date",
+    "{http://www.w3.org/2005/Atom}updated",
+)
+
+
+def item_date(it):
+    """Publish date of a feed <item>, ISO UTC; '' when the item truly has none.
+    Tries pubDate first, then dc:date / atom:updated. An empty result is the honest
+    "unknown" marker — the app renders it as an estimated ~first-seen date."""
+    d = to_iso(it.findtext("pubDate"))
+    if d:
+        return d
+    for tag in _ALT_DATE_TAGS:
+        d = to_iso(it.findtext(tag))
+        if d:
+            return d
+    return ""
 
 
 def fetch(search):
@@ -120,7 +129,7 @@ def fetch(search):
             "title": clean(title),
             "url": link,
             "source": source,
-            "published": iso(it.findtext("pubDate")),
+            "published": item_date(it),
             "summary": clean(it.findtext("description")),
         })
     return items
