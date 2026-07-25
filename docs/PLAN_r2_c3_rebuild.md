@@ -69,15 +69,27 @@ The rebuild receipt must cite JP's OK.
 
 - Roster gate: CLEAN (baseline 4,331 exact) — importer untouched, any delta
   is unexplained and STOPS the run.
-- Rewrite counts, exact: abp-tag 3,518 rows byte-unchanged (proven by the
-  diff, not assumed) · tipnr 10,731 → the served Greek number · lemma-only
-  14,850 → `'*'` · none 3,380 keep Hebrew, untouched bytes.
+- Rewrite counts, exact — RE-DECLARED 2026-07-25 after the first trial's halt
+  (the declared shape wrongly assumed every non-abp-tag row carried Hebrew;
+  the halt fired as designed, and the live matrix below — queried by JP on
+  bible.db, every row grouped, no sampling — is now the declaration of record):
+
+      abp-tag     3,518  already Greek        -> byte-unchanged (diff-proven)
+      tipnr      10,508  from Hebrew          -> the served Greek number
+      tipnr         223  always-'*' (no Heb)  -> the served Greek number (gain)
+      lemma-only 14,515  from Hebrew          -> '*'
+      lemma-only    335  always-'*'           -> byte-unchanged (already C3-Q2)
+      none        2,853  Hebrew               -> kept (C3-Q1 exception)
+      none          527  always-'*'           -> kept as '*' (nothing to keep)
+
 - `pn_hebrew_xref`: exactly 32,479 rows; hebrew_base NULL on exactly the
-  abp-tag 3,518; class split = the stage-1 split exactly.
+  4,603 no-Hebrew rows (3,518 abp-tag + 223 + 335 + 527), empty string 0;
+  class split = the stage-1 split exactly.
 - GLOB invariant: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
   = 0 (G9xxx passes — starts with 'G').
-- compare_words vs the pre-copy: exactly 25,581 changed rows
-  (10,731 + 14,850), every one itemized to its class, zero unexplained.
+- compare_words vs the pre-copy: exactly **25,246** changed rows
+  (10,508 + 223 + 14,515), every one itemized to its class, zero unexplained.
+  (The plan's first figure, 25,581, was the wrong-assumption number.)
 - Unfindability gate (G3 condition 1, mandatory): the 14,850 enumerated
   BEFORE (Hebrew-keyed in words) and AFTER (xref home + identity lemma) —
   zero findable-before/unfindable-after. Detector control-tested on a known

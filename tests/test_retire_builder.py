@@ -39,16 +39,23 @@ def _make_db(path):
                                   (3,'1Sa',15,6,''),(4,'Mat',1,6,'');
         INSERT INTO words (id, verse_id, position, english, english_head,
                            strongs_base, strongs, is_pn) VALUES
-            (1,1,3,'Agag','Agag','H90','*',1),        -- tipnr
-            (2,2,4,'Havilah','Havilah','H2341','*',1),-- lemma-only
-            (3,3,5,'Kenite','Kenite','H7017','*',1),  -- none (kept)
+            (1,1,3,'Agag','Agag','H90','*',1),        -- tipnr (from H)
+            (2,2,4,'Havilah','Havilah','H2341','*',1),-- lemma-only (from H)
+            (3,3,5,'Kenite','Kenite','H7017','*',1),  -- none (Hebrew kept)
             (4,4,5,'David','David','G1138','1138',1), -- abp-tag
-            (5,1,5,'seized','seized','G4815','4815',0);
+            (5,1,5,'seized','seized','G4815','4815',0),
+            -- the always-'*' sub-shapes the 2026-07-25 trial halt surfaced:
+            (6,2,6,'Bougaion','Bougaion','*','*',1),  -- tipnr, never had Hebrew
+            (7,3,7,'Chous','Chous','*','*',1),        -- lemma-only, already '*'
+            (8,4,8,'Nod','Nod','*','*',1);            -- none, always '*'
         INSERT INTO pn_greek_identity VALUES
             (1,3,'G9826',NULL,'tipnr','H90'),
             (2,4,NULL,'Euilat','lemma-only','H2341'),
             (3,5,NULL,NULL,'none','H7017'),
-            (4,5,'G1138',NULL,'abp-tag',NULL);
+            (4,5,'G1138',NULL,'abp-tag',NULL),
+            (2,6,'G9917',NULL,'tipnr',NULL),
+            (3,7,NULL,'Xous','lemma-only',NULL),
+            (4,8,NULL,NULL,'none',NULL);
     """)
     c.commit()
     c.close()
@@ -56,7 +63,7 @@ def _make_db(path):
 
 def _run(dbp, *extra):
     return subprocess.run(
-        [sys.executable, SCRIPT, dbp, SPLIT, "1,1,1,1", *extra],
+        [sys.executable, SCRIPT, dbp, SPLIT, "1,2,2,2", *extra],
         capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
 
 
@@ -94,11 +101,17 @@ def main() -> int:
     check("'none' row keeps Hebrew (C3-Q1)", got[3], "H7017")
     check("abp-tag row untouched", got[4], "G1138")
     check("non-PN word untouched", got[5], "G4815")
+    check("always-'*' tipnr row -> Greek (gain)", got[6], "G9917")
+    check("always-'*' lemma-only row stays '*'", got[7], "*")
+    check("always-'*' none row stays '*'", got[8], "*")
     xref = {(v, p): (h, cl) for v, p, h, cl in c.execute(
         "SELECT verse_id, position, hebrew_base, class FROM pn_hebrew_xref")}
-    check("xref row count", len(xref), 4)
+    check("xref row count", len(xref), 7)
     check("xref none-class marker queryable", xref[(3, 5)], ("H7017", "none"))
     check("abp-tag hebrew_base is NULL (declared)", xref[(4, 5)], (None, "abp-tag"))
+    check("always-'*' rows carry NULL hebrew_base",
+          [xref[(2, 6)], xref[(3, 7)], xref[(4, 8)]],
+          [(None, "tipnr"), (None, "lemma-only"), (None, "none")])
     check("GLOB invariant clean", c.execute(
         "SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'").fetchone()[0], 0)
     c.close()

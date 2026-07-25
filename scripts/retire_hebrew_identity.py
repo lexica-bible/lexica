@@ -11,9 +11,14 @@ record (ruling condition 3 — this script derives nothing itself):
 
   class      rows     action on words.strongs_base
   abp-tag    3,518    none — VERIFIED already the Greek number
-  tipnr     10,731    <- greek_strongs (real G or STEP G9xxx)
-  lemma-only 14,850    <- '*' (C3-Q2: the existing numberless-PN convention)
-  none       3,380    none — Hebrew KEPT (C3-Q1 documented exception)
+  tipnr     10,731    <- greek_strongs (10,508 from H, 223 from '*' — a gain)
+  lemma-only 14,850    <- '*' (14,515 rewritten; 335 already '*', untouched)
+  none       3,380    none — Hebrew KEPT (2,853; the 527 always-'*' stay '*')
+
+A row's expected CURRENT value is its frozen Hebrew snapshot, or '*' where the
+snapshot records it never had one (the 2026-07-25 trial halt: the first version
+assumed every non-abp-tag row carried Hebrew; the live matrix — pasted in
+docs/PLAN_r2_c3_rebuild.md — showed 1,085 always-'*' rows across three classes).
 
 Every class also lands in the new cross-ref home `pn_hebrew_xref` (DDL below —
 JP checkpoint cleared 2026-07-25). ANY row whose current words state disagrees
@@ -94,11 +99,15 @@ def main():
     """).fetchall()
 
     updates, xref = [], []
-    n_write = {"tipnr": 0, "lemma-only": 0}
+    n_write = {"tipnr-H": 0, "tipnr-*": 0, "lemma-only": 0, "lemma-already*": 0,
+               "none-H": 0, "none-*": 0}
+    n_nullheb = 0
     for r in rows:
         cls = r["source"]
         if r["wrow"] is None:
             fail(f"identity row ({r['verse_id']},{r['position']}) has no words row.")
+        if r["hebrew_base"] is None:
+            n_nullheb += 1
         if cls == "abp-tag":
             if r["cur"] != r["greek_strongs"] or not (r["cur"] or "").startswith("G"):
                 fail(f"abp-tag row ({r['verse_id']},{r['position']}): words carries "
@@ -107,20 +116,26 @@ def main():
                 fail(f"abp-tag row ({r['verse_id']},{r['position']}) carries a "
                      f"hebrew_base {r['hebrew_base']!r} — snapshot contradiction.")
         else:
-            if r["cur"] != r["hebrew_base"]:
+            expected = r["hebrew_base"] if r["hebrew_base"] is not None else "*"
+            if r["cur"] != expected:
                 fail(f"{cls} row ({r['verse_id']},{r['position']}): words carries "
-                     f"{r['cur']!r} but the frozen Hebrew snapshot is "
-                     f"{r['hebrew_base']!r} — the column moved since stage 1.")
+                     f"{r['cur']!r} but the frozen snapshot expects {expected!r} — "
+                     f"the column moved since stage 1.")
+            was_star = r["hebrew_base"] is None
             if cls == "tipnr":
                 if not (r["greek_strongs"] or "").startswith("G"):
                     fail(f"tipnr row ({r['verse_id']},{r['position']}) has no "
                          f"Greek number ({r['greek_strongs']!r}).")
                 updates.append((r["greek_strongs"], r["wrow"]))
-                n_write["tipnr"] += 1
+                n_write["tipnr-*" if was_star else "tipnr-H"] += 1
             elif cls == "lemma-only":
-                updates.append(("*", r["wrow"]))
-                n_write["lemma-only"] += 1
-            # 'none': verified above, bytes untouched (C3-Q1).
+                if was_star:
+                    n_write["lemma-already*"] += 1   # already the C3-Q2 state
+                else:
+                    updates.append(("*", r["wrow"]))
+                    n_write["lemma-only"] += 1
+            else:  # 'none': verified above, bytes untouched (C3-Q1)
+                n_write["none-*" if was_star else "none-H"] += 1
         xref.append((r["verse_id"], r["position"], r["hebrew_base"], cls))
 
     # PN words OUTSIDE the write set (post-stage-1 drift would show here).
@@ -130,10 +145,15 @@ def main():
                         WHERE g.verse_id = w.verse_id AND g.position = w.position)
     """).fetchone()[0]
     print(f"verified {len(rows):,} rows against their classes — all consistent.")
-    print(f"planned rewrites: tipnr {n_write['tipnr']:,} -> Greek, "
-          f"lemma-only {n_write['lemma-only']:,} -> '*', "
-          f"none {EXPECT['none']:,} kept-Hebrew, abp-tag {EXPECT['abp-tag']:,} untouched")
-    print(f"pn_hebrew_xref rows to write: {len(xref):,}")
+    print(f"planned rewrites: tipnr {n_write['tipnr-H']:,} H->Greek + "
+          f"{n_write['tipnr-*']:,} '*'->Greek (gain), "
+          f"lemma-only {n_write['lemma-only']:,} H->'*' "
+          f"({n_write['lemma-already*']:,} already '*', untouched); "
+          f"kept: none {n_write['none-H']:,} Hebrew + {n_write['none-*']:,} '*', "
+          f"abp-tag {EXPECT['abp-tag']:,} untouched")
+    print(f"total rows changing: {len(updates):,}")
+    print(f"pn_hebrew_xref rows to write: {len(xref):,} "
+          f"(no-Hebrew-number rows: {n_nullheb:,})")
     print(f"is_pn words outside the write set: {orphans:,} (expected 0)")
     if orphans:
         fail("proper-noun words exist outside the stage-1 classification — "
@@ -159,12 +179,12 @@ def main():
     n_empty = conn.execute("SELECT count(*) FROM pn_hebrew_xref "
                            "WHERE hebrew_base = ''").fetchone()[0]
     print(f"\nwrote pn_hebrew_xref: {n_x:,} rows "
-          f"(NULL hebrew_base: {n_null:,}, expected {EXPECT['abp-tag']:,}; "
+          f"(no-Hebrew-number rows: {n_null:,}, expected {n_nullheb:,}; "
           f"empty-string: {n_empty:,}, expected 0)")
     print(f"applied {len(updates):,} strongs_base rewrites")
     print(f"GLOB invariant (bare-number strongs_base): {bad_glob} (expected 0)")
     ok = (bad_glob == 0 and n_x == len(xref)
-          and n_null == EXPECT["abp-tag"] and n_empty == 0)
+          and n_null == n_nullheb and n_empty == 0)
     conn.close()
     if not ok:
         fail("post-write verification failed — do NOT swap; restore the copy.")

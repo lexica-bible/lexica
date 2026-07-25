@@ -6,8 +6,12 @@ unfindable after it. Read-only. Enumerates EVERY affected row (no sampling)
 across the two databases:
 
   BEFORE db (the pre-rebuild copy): every pn_greek_identity row whose class
-  clears or rewrites the Hebrew number (tipnr + lemma-only) — each must be
-  Hebrew-findable there (words.strongs_base = its hebrew_base).
+  clears or rewrites the Hebrew number (tipnr + lemma-only) — each must match
+  its frozen snapshot there: words.strongs_base = its hebrew_base, or '*' for
+  the rows the snapshot records as never having had one (223 tipnr + 335
+  lemma-only per the 2026-07-25 live matrix — those were never Hebrew-findable,
+  so retiring Hebrew takes nothing from them; the gate still requires their
+  identity to survive).
 
   AFTER db (the rebuilt test copy): each of those same rows must still be
   reachable BOTH ways —
@@ -85,11 +89,12 @@ def main():
     fails_before = fails_after = 0
     examples = []
     for r in rows:
-        if r["before_base"] != r["hebrew_base"]:
+        expected = r["hebrew_base"] if r["hebrew_base"] is not None else "*"
+        if r["before_base"] != expected:
             fails_before += 1
             if len(examples) < 10:
                 examples.append(f"BEFORE ({r['verse_id']},{r['position']}): "
-                                f"words {r['before_base']!r} != snapshot {r['hebrew_base']!r}")
+                                f"words {r['before_base']!r} != snapshot {expected!r}")
             continue
         probs = check_after(a, r["verse_id"], r["position"], r["hebrew_base"],
                             r["source"], r["greek_strongs"], r["greek_lemma"],
