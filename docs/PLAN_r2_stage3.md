@@ -273,10 +273,17 @@ new-fact finding — post-retirement strongs_base carries G9xxx the main lexicon
 join can't see). Rides the code-first wave.
 
 **Gates and constraints (all standing):**
-- Changed builder → trial-then-apply BINDS (import_tipnr.py:719 is the rewrite
-  site; build_pn_greek_identity snapshot re-sourced from the Q2 home;
+- Changed builder → trial-then-apply BINDS (rewrite site AMENDED 2026-07-25 by
+  reviewer ruling, docs/PLAN_r2_c3_rebuild.md deviation block: the rewrite
+  lives in the dedicated `scripts/retire_hebrew_identity.py`, NOT
+  import_tipnr.py:719 — import_tipnr untouched and not run; roster gate fires
+  unconditionally on trial AND apply; the script consumes the stage-1 identity
+  table's classification as the one write set of record, any disagreement
+  halts. build_pn_greek_identity snapshot re-sourced from the Q2 home;
   build_entity_binding re-run with tipnr_entities.bases extended to Greek keys
   or ABP fuzzy binds floor).
+- JP TABLE CHECKPOINT CLEARED 2026-07-25: DDL approved on plain-English intent
+  (technical shape reviewer-vetted) — cite in the rebuild receipt.
 - Roster-freeze gate: check_roster_regression.py CLEAN before import.
 - Copy-first into a test db; own backup; the pre-rebuild known-good file kept.
 - **Unfindability gate (G3 condition 1, mandatory):** the 14,850 enumerated

@@ -150,14 +150,32 @@ def main():
         hits = [g for (t, g) in scrape.get((slug, ch, vs), []) if t == tok]
         return hits[0] if len(hits) == 1 else None     # multi or none -> refuse
 
+    # Candidate-3 (docs/PLAN_r2_c3_rebuild.md): after the retirement rewrite,
+    # words.strongs_base no longer carries the Hebrew snapshot (it moved to
+    # pn_hebrew_xref) and tipnr-class rows carry their Greek number natively —
+    # so a re-run must source Hebrew AND the abp-tag/tipnr distinction from the
+    # Q2 home, not re-derive them from the rewritten column (a rewritten G9xxx
+    # row misread as native abp-tag would falsify the classification of record).
+    # Pre-retirement (table absent): empty map, behavior byte-identical.
+    xref = {}
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                    "AND name='pn_hebrew_xref'").fetchone():
+        for r in conn.execute("SELECT verse_id, position, hebrew_base, class "
+                              "FROM pn_hebrew_xref"):
+            xref[(r["verse_id"], r["position"])] = (r["hebrew_base"], r["class"])
+        print(f"pn_hebrew_xref loaded (post-retirement re-run): {len(xref):,} rows")
+
     rows, split = [], {"abp-tag": 0, "tipnr": 0, "lemma-only": 0, "none": 0}
     scrape_used = scrape_refused = 0
     for w in words:
         base = w["strongs_base"] or ""
-        heb = base if base.startswith("H") else None
+        xr = xref.get((w["verse_id"], w["position"]))
+        heb = xr[0] if xr else (base if base.startswith("H") else None)
         greek, source = None, None
         lemma = w["lemma"] or w["surface_form"]   # dictionary form, else printed Greek
-        if base.startswith("G"):
+        if base.startswith("G") and xr and xr[1] == "tipnr":
+            greek, source = base, "tipnr"         # retirement wrote the served number
+        elif base.startswith("G"):
             greek, source = base, "abp-tag"
         else:
             nm = er.norm_name(w["label"] or "")
