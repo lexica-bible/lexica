@@ -115,7 +115,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 
 ## Open word-study / data issues (low priority, none gating)
 - **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
-  per reviewer ruling 2026-07-25).** θεός G2316 ≈ 6.5s live / 155KB payload; measured ~4s in a console
+  per reviewer ruling 2026-07-25).** **BASELINE TO BEAT (reviewer condition): the LIVE numbers —
+  6.5s / 155KB on G2316** (3× curl-verified post-fix 2026-07-25; console figures below are diagnosis
+  context only, production is the bar). Measured ~4s in a console
   process with READER_GREEK_FLIPS fully OFF, so NOT a stage-3 cost (the flip's own path is 0.3s —
   G9826 — after the indexed-union + zero-tipnr-peek fixes, commits 2eb2d710 + 0c22ecba). The cost is
   the profile building everything in one round-trip for a 4,500-occurrence word: ~8 ABP aggregate

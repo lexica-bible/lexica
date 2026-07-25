@@ -1113,9 +1113,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
+        {/* G2-R1 cosmetic ruling: both identity lines read as one species —
+            identity number BOLD and quietly linked in the card's own ink
+            (.occ-link--id), count secondary, no blue, no arrow, no destination
+            label. */}
         {greekId.greek_strongs ? (
-          <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            <b>{greekId.greek_count}</b>× in ABP as {greekId.greek_strongs}
+          <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
+            {greekId.greek_count}× in ABP as <b>{greekId.greek_strongs}</b>
             {greekId.step && <span className="detail-strong-alias"> (STEP)</span>}
           </button>
         ) : (
@@ -1131,10 +1135,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "hebCrossRef": return (
       <section key="hebCrossRef" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
-        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
-          {/* Header already says "Hebrew Cross-Reference" — the line stays terse
-              (reviewer refinement on TICKET_step_tag_placement follow-up). */}
-          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}× — Word study</> : <> · Word study</>}
+        <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
+          {/* Header already says "Hebrew Cross-Reference" — the line stays terse.
+              "— Word study" dropped (G2-R1 cosmetic ruling): the receipt-0 label
+              existed because Word study was Hebrew-keyed while the card went
+              Greek; G2 removed that contradiction, so the label's reason expired.
+              The number itself is the link, same treatment as the ABP line. */}
+          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}×</> : null}
         </button>
       </section>
     );
