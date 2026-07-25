@@ -1119,7 +1119,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             destination label. */}
         {greekId.greek_strongs ? (
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            <b>{greekId.greek_strongs}</b> · {greekId.greek_count}×
+            {greekId.greek_count}× · <b>{greekId.greek_strongs}</b>
           </button>
         ) : (
           <div className="occ-link occ-link--static">
@@ -1140,7 +1140,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               existed because Word study was Hebrew-keyed while the card went
               Greek; G2 removed that contradiction, so the label's reason expired.
               The number itself is the link, same treatment as the ABP line. */}
-          <b>{greekId.hebrew_base}</b>{greekId.hebrew_count ? <> · {greekId.hebrew_count}×</> : null}
+          {greekId.hebrew_count ? <>{greekId.hebrew_count}× · </> : null}<b>{greekId.hebrew_base}</b>
         </button>
       </section>
     );
