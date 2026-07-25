@@ -624,7 +624,10 @@ const idiomHdr=lexica&&lexica.kind==="idiom"?lexica:null;// R-2 flip: with a Gre
 // C1 — Δαυίδ up top, the name on the gloss line) and lemma-only cards add the
 // honest state line below. greekId null (switch OFF / none-bucket) leaves every
 // value exactly as before.
-const giLemma=greekId&&greekId.lemma||"";const hero={he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.translit||(giLemma?greekId.translit:""),standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
+const giLemma=greekId&&greekId.lemma||"";// Hebrew-flash fix, hero leg: while the identity fetch is pending the HEADLINE
+// holds blank (nbsp keeps the line height) instead of painting the English
+// name and swapping to the Greek form a beat later. Paints once on resolve.
+const hero=greekIdPending?{he:false,noGloss:true,script:" ",translit:"",standaloneGloss:"",morph:""}:{he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.translit||(giLemma?greekId.translit:""),standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
 // it differs from the headword lemma (indeclinable words can coincide → skip it). For an
 // idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
 // redundant + mangled-looking next to the authored lemma, so drop it.

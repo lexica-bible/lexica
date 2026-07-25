@@ -713,7 +713,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // honest state line below. greekId null (switch OFF / none-bucket) leaves every
   // value exactly as before.
   const giLemma = (greekId && greekId.lemma) || "";
-  const hero = {
+  // Hebrew-flash fix, hero leg: while the identity fetch is pending the HEADLINE
+  // holds blank (nbsp keeps the line height) instead of painting the English
+  // name and swapping to the Greek form a beat later. Paints once on resolve.
+  const hero = greekIdPending ? {
+    he: false, noGloss: true, script: " ", translit: "", standaloneGloss: "", morph: "",
+  } : {
     he: isHebrew,
     noGloss: isPN && !entry.greek && !isHebrew && !giLemma,
     script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || giLemma || nameOrGloss)),
