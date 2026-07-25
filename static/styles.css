@@ -1403,11 +1403,10 @@ input { font-family: inherit; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
-/* PN-card identity lines (JP final ruling 2026-07-25 + presence fix): format is
-   `9× G9826` — no dot, no partial bold, no underline, standard link blue. The
-   WHOLE line carries the heavier weight the numbers had before the plain-link
-   pass (uniform, so no bold-vs-plain mismatch). Do not restyle — design-creep rule. */
-.occ-link--id { font-weight: 600; }
+/* PN-card identity lines — SETTLED BY JP 2026-07-25, do not restyle (design-creep
+   rule): `9× G9826` / `9× H90`, standard link blue, weight 500 (the base link
+   weight, same voice as Read in context), no dot, no bold, no underline. */
+.occ-link--id { font-weight: 500; }
 
 /* ---- Extracted from inline styles ---- */
 .detail-greek--he { font-family: var(--f-serif); text-align: left; }
