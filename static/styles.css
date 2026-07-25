@@ -1403,11 +1403,11 @@ input { font-family: inherit; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
-/* Identity lines on the PN card (G2-R1 cosmetic ruling): quiet link in the card's
-   own ink — no blue (web-default fights the card typography), no arrow, no
-   destination label. Emphasis lands on the identity NUMBER (bold); counts and
-   provenance tags stay secondary. Hover keeps the base underline affordance. */
-.occ-link--id { color: var(--ink); font-weight: 400; }
+/* Identity lines on the PN card (G2-R1 cosmetic ruling, color REVERTED by JP):
+   links keep the standard blue (--ai via base .occ-link); the ruling's surviving
+   pieces are structural — no arrow, no destination label, emphasis on the
+   identity NUMBER (bold), counts/provenance tags secondary. */
+.occ-link--id { font-weight: 400; }
 .occ-link--id b { font-weight: 600; }
 
 /* ---- Extracted from inline styles ---- */
