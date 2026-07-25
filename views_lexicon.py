@@ -325,12 +325,20 @@ def _abp_strongs_filter(conn, num, sid):
     # pn_greek_identity read repoints to words.strongs_base inside the Hebrew
     # retirement rebuild (candidate 3) — same class as the cross-ref count repoint.
     if _core.READER_GREEK_FLIPS and sid.startswith("G") and "." not in num and _pngi_ready(conn):
-        inner = pred.replace("w.", "w1.")
-        pred = (f"w.rowid IN (SELECT w1.rowid FROM words w1 WHERE {inner} "
-                f"UNION SELECT w2.rowid FROM pn_greek_identity pg JOIN words w2 "
-                f"ON w2.verse_id = pg.verse_id AND w2.position = pg.position "
-                f"WHERE pg.greek_strongs = ? AND pg.source = 'tipnr')")
-        params = params + [sid]
+        # Peek first (indexed, instant): almost every Greek number has ZERO
+        # tipnr identity rows — for those the union adds nothing but cost
+        # (measured ~1.7s per profile on θεός-class words), so return the plain
+        # indexed predicate and only name-numbers with real identity rows pay
+        # for the union.
+        if conn.execute(
+            "SELECT 1 FROM pn_greek_identity WHERE greek_strongs = ? "
+            "AND source = 'tipnr' LIMIT 1", (sid,)).fetchone():
+            inner = pred.replace("w.", "w1.")
+            pred = (f"w.rowid IN (SELECT w1.rowid FROM words w1 WHERE {inner} "
+                    f"UNION SELECT w2.rowid FROM pn_greek_identity pg JOIN words w2 "
+                    f"ON w2.verse_id = pg.verse_id AND w2.position = pg.position "
+                    f"WHERE pg.greek_strongs = ? AND pg.source = 'tipnr')")
+            params = params + [sid]
     return pred, params
 
 
