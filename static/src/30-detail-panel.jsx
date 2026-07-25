@@ -1120,7 +1120,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         {greekId.greek_strongs ? (
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
             <b>{greekId.greek_strongs}</b> · {greekId.greek_count}×
-            {greekId.step && <span className="detail-strong-alias"> (STEP)</span>}
           </button>
         ) : (
           <div className="occ-link occ-link--static">
@@ -1301,8 +1300,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 lemma-only keeps the neutral PN tag — never the Hebrew number (that
                 moved to the cross-ref section). STEP tag per ruling S2-Q2. */}
             <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : entry.strongs}</span>
-            {/* STEP tag moved to the body occurrence line beside the number
-                (TICKET_step_tag_placement — read as breadcrumb up here). */}
+            {/* JP-ruled 2026-07-25 (supersedes TICKET_step_tag_placement's body
+                placement): STEP tag lives HERE beside the header number,
+                hoverable explanation; the occurrence line below stays bare
+                (NUMBER · COUNT×). */}
+            {greekId && greekId.step && greekId.greek_strongs && (
+              <span className="detail-strong-alias"
+                title="Extended number from the STEP Bible project — beyond standard Strong's numbering"> (STEP)</span>
+            )}
             {aliasNote && (
               <span className="detail-strong-alias">
                 {aliasNote.direction === "to_abp"
