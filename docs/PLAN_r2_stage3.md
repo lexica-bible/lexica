@@ -196,9 +196,14 @@ All visual/style changes — colors, link treatments, typography, spacing — re
 JP's explicit approval on the SPECIFIC change before build. The reviewer may
 propose; nothing visual ships without JP's yes. Same shelf as "JP runs all PA
 commands." (Origin: the reviewer ruled an ink-colored link treatment; JP's actual
-ask was format alignment, and the color change shipped without his OK. Ruled
-format: both PN-card identity lines read `[NUMBER bold] · [COUNT]× [qualifier]`,
-standard blue links.)
+ask was format alignment, and the color change shipped without his OK.)
+
+**FINAL identity-line state (JP, 2026-07-25 — SETTLED, do not restyle):**
+`9× G9826` / `9× H90` — no dot, no bold, no underline; whole line a plain blue
+link with hover-underline, the panel's one link voice ("Read in context /
+Interlinear"). STEP tag lives in the card HEADER with a hover explanation.
+**Anti-design-creep rule:** this line went through five styling passes in one
+night; the settled state wins over any future "improvement" unless JP asks.
 
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 

@@ -1403,12 +1403,8 @@ input { font-family: inherit; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
-/* Identity lines on the PN card (G2-R1 cosmetic ruling, color REVERTED by JP):
-   links keep the standard blue (--ai via base .occ-link); the ruling's surviving
-   pieces are structural — no arrow, no destination label, emphasis on the
-   identity NUMBER (bold), counts/provenance tags secondary. */
-.occ-link--id { font-weight: 400; }
-.occ-link--id b { font-weight: 600; }
+/* .occ-link--id RETIRED (JP final ruling 2026-07-25): the PN-card identity lines
+   use plain .occ-link — one link voice on the whole panel, no special casing. */
 
 /* ---- Extracted from inline styles ---- */
 .detail-greek--he { font-family: var(--f-serif); text-align: left; }

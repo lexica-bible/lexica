@@ -1113,13 +1113,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
-        {/* JP-ruled format (2026-07-25): BOTH identity lines read the same
-            pattern — [NUMBER bold] · [COUNT]× [qualifier/tag]. Standard blue
-            link (color is JP's call, standing rule below), no arrow, no
-            destination label. */}
+        {/* FINAL STATE, JP-ruled 2026-07-25 (do not restyle — design-creep rule):
+            both identity lines are `COUNT× NUMBER` — no dot, no bold, no
+            underline; plain blue link, hover-underline only, matching the
+            "Read in context / Interlinear" link voice. Identity emphasis lives
+            in the card header (G9826 (STEP)), not here. */}
         {greekId.greek_strongs ? (
-          <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            {greekId.greek_count}× · <b>{greekId.greek_strongs}</b>
+          <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
+            {`${greekId.greek_count}× ${greekId.greek_strongs}`}
           </button>
         ) : (
           <div className="occ-link occ-link--static">
@@ -1134,13 +1135,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "hebCrossRef": return (
       <section key="hebCrossRef" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
-        <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
-          {/* Header already says "Hebrew Cross-Reference" — the line stays terse.
-              "— Word study" dropped (G2-R1 cosmetic ruling): the receipt-0 label
-              existed because Word study was Hebrew-keyed while the card went
-              Greek; G2 removed that contradiction, so the label's reason expired.
-              The number itself is the link, same treatment as the ABP line. */}
-          {greekId.hebrew_count ? <>{greekId.hebrew_count}× · </> : null}<b>{greekId.hebrew_base}</b>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
+          {/* FINAL STATE, JP-ruled 2026-07-25 — twin of the ABP line above:
+              `COUNT× NUMBER`, plain blue link, no dot/bold/underline. The old
+              "— Word study" label's reason expired with G2. */}
+          {greekId.hebrew_count ? `${greekId.hebrew_count}× ${greekId.hebrew_base}` : greekId.hebrew_base}
         </button>
       </section>
     );
