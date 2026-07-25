@@ -114,6 +114,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
+  per reviewer ruling 2026-07-25).** θεός G2316 ≈ 6.5s live / 155KB payload; measured ~4s in a console
+  process with READER_GREEK_FLIPS fully OFF, so NOT a stage-3 cost (the flip's own path is 0.3s —
+  G9826 — after the indexed-union + zero-tipnr-peek fixes, commits 2eb2d710 + 0c22ecba). The cost is
+  the profile building everything in one round-trip for a 4,500-occurrence word: ~8 ABP aggregate
+  passes + the 6,000-cap default verse list + a 155KB JSON ship. Fix directions when picked up:
+  trim default_verses for mega-words (first N + lazy rest), collapse the aggregate passes into one
+  grouped read, or cache hot profiles. Hebrew feels faster because heb.db is smaller and H-numbers
+  skip half the passes. code: views_lexicon.py lexicon_profile / _all_books_verses.
 - **Jacob-class name cards (sized 2026-07-11): 694 occurrences (~2% of 32,002 name words) are
   unbound + ambiguous-name → AI-only fallback card** (found via Ἰακώβ Gen 29:32: several people
   share the name, the name-lookup rightly declines to guess, no verse-bind exists to break the tie,
