@@ -96,6 +96,32 @@ def scope_tier(name, ambiguous, person_ids, place_ids):
     return 2
 
 
+def occ_base_parts(conn):
+    """(base_col, join, has_xref) for the occurrence query's guard number.
+
+    Candidate-3 xref-sourced guard (reviewer ruling 2026-07-25,
+    docs/PLAN_r2_c3_rebuild.md drift block): post-retirement the number the
+    bind guard consumed lives in pn_hebrew_xref, not strongs_base — a word
+    with an xref row presents its FROZEN Hebrew number (byte-for-byte the
+    pre-retirement guard value; no new binds, no lost binds). NULL-hebrew
+    rows reconstruct exactly too: a tipnr-class row with no Hebrew was '*'
+    pre-retirement (the 223 gain rows — presenting their NEW Greek number
+    here would fire novel binds, excluded by the ruling; locked-test-caught),
+    every other NULL-hebrew class kept its stored value unchanged.
+    Table absent -> today's SQL exactly (the wave's dormancy guard). The
+    Greek-key bases extension is PARKED by the same ruling — a capability
+    change, its own future candidate."""
+    has_xref = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                            "AND name='pn_hebrew_xref'").fetchone() is not None
+    if not has_xref:
+        return "w.strongs_base", "", False
+    return ("CASE WHEN x.hebrew_base IS NOT NULL THEN x.hebrew_base "
+            "WHEN x.class = 'tipnr' THEN '*' "
+            "ELSE w.strongs_base END",
+            "LEFT JOIN pn_hebrew_xref x ON x.verse_id = w.verse_id "
+            "AND x.position = w.position", True)
+
+
 def main():
     print(f"{'[APPLY] ' if APPLY else '[DRY-RUN] '}build_entity_binding -> {DB}\n")
     ents = er.parse_tipnr(load_tipnr())
@@ -112,16 +138,20 @@ def main():
 
     has_pn = "is_pn" in {r[1] for r in conn.execute("PRAGMA table_info(words)")}
     pn_where = "w.is_pn = 1" if has_pn else "w.strongs_base = '*'"
+    base_col, xref_join, has_xref = occ_base_parts(conn)
     occ_rows = conn.execute(f"""
         SELECT v.book AS book, v.chapter AS ch, v.verse AS vs,
                COALESCE(NULLIF(w.english_head,''), w.english) AS label,
-               w.strongs_base AS base
+               {base_col} AS base
         FROM words w JOIN verses v ON v.id = w.verse_id
+        {xref_join}
         WHERE {pn_where}
           AND COALESCE(NULLIF(w.english_head,''), w.english) IS NOT NULL
           AND COALESCE(NULLIF(w.english_head,''), w.english) != ''
     """).fetchall()
-    print(f"Proper-noun occurrences in the text: {len(occ_rows):,}\n")
+    print(f"Proper-noun occurrences in the text: {len(occ_rows):,}"
+          + ("  (guard numbers xref-sourced)" if has_xref else ""))
+    print()
 
     # ── bind every Tier-1/Tier-2 occurrence, group to (book,ch,vs,name) ─────────
     # A binding is decided per occurrence; we then collapse to one row per

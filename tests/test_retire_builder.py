@@ -116,6 +116,29 @@ def main() -> int:
         "SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'").fetchone()[0], 0)
     c.close()
 
+    # Binder xref-sourced guard (reviewer ruling 2026-07-25): the PRODUCTION
+    # occ_base_parts, both branches. Post-apply, every word must present its
+    # PRE-retirement guard number byte-for-byte.
+    sys.path.insert(0, os.path.join(ROOT, "scripts"))
+    import build_entity_binding as beb
+
+    def _guard_numbers(dbpath):
+        c2 = sqlite3.connect(dbpath)
+        base_col, xref_join, has_xref = beb.occ_base_parts(c2)
+        got = {i: b for i, b in c2.execute(
+            f"SELECT w.id, {base_col} FROM words w {xref_join} WHERE w.is_pn = 1")}
+        c2.close()
+        return got, has_xref
+
+    pre = os.path.join(tmp, "retire_pre.db")
+    _make_db(pre)                     # a fresh pre-retirement copy
+    pre_nums, pre_x = _guard_numbers(pre)
+    check("binder guard: table absent -> stored numbers, no join", pre_x, False)
+    post_nums, post_x = _guard_numbers(dbp)   # the applied copy
+    check("binder guard: table present -> xref branch", post_x, True)
+    check("binder guard numbers byte-identical pre vs post (all PN words)",
+          post_nums, pre_nums)
+
     # HALT controls — each detector fired on a known positive
     r = _run(dbp, "--apply")
     check("second run on same copy HALTS", r.returncode != 0, True)

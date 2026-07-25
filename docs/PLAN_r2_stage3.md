@@ -280,8 +280,16 @@ join can't see). Rides the code-first wave.
   unconditionally on trial AND apply; the script consumes the stage-1 identity
   table's classification as the one write set of record, any disagreement
   halts. build_pn_greek_identity snapshot re-sourced from the Q2 home;
-  build_entity_binding re-run with tipnr_entities.bases extended to Greek keys
-  or ABP fuzzy binds floor).
+  binder AMENDED 2026-07-25 by reviewer ruling (docs/PLAN_r2_c3_rebuild.md
+  drift block): the charter's "bases extended to Greek keys or fuzzy binds
+  floor" alternatives are BOTH set aside for a ruled third path —
+  build_entity_binding sources each word's guard number from the Q2 home
+  (frozen Hebrew, byte-for-byte the pre-retirement guard value; NULL-hebrew
+  tipnr rows reconstruct their old '*'), pass bar = line-for-line identity
+  with the pre-copy dry-run incl. both hand-check text files. The Greek-key
+  bases extension is PARKED BY RULING as its own future candidate (capability
+  change — would fire novel binds mid-rebuild), adjacent to the gentilic
+  backfill; recorded, not dropped.)
 - JP TABLE CHECKPOINT CLEARED 2026-07-25: DDL approved on plain-English intent
   (technical shape reviewer-vetted) — cite in the rebuild receipt.
 - Roster-freeze gate: check_roster_regression.py CLEAN before import.
