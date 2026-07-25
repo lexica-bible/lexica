@@ -1119,7 +1119,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             destination label. */}
         {greekId.greek_strongs ? (
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            <b>{greekId.greek_strongs}</b> · {greekId.greek_count}× in ABP
+            <b>{greekId.greek_strongs}</b> · {greekId.greek_count}×
             {greekId.step && <span className="detail-strong-alias"> (STEP)</span>}
           </button>
         ) : (
