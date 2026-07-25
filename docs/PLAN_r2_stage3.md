@@ -336,10 +336,20 @@ exact SQL, proven byte-level in the locked test):**
   phase-2 simulated retirement fires every repoint; 'none' rows reachable both
   ways count once) — added to BOTH CI lists.
 
-**Next:** dormant-proof deploy (dashboard Reload + 5× curl sweep + before/after
-diff on an existing surface — the G2 deviation's lesson, this time captured) →
-receipt → rebuild lane opens per G4 (JP's Q2 table checkpoint rides at the DDL
-or the trial run, his pick; receipt cites it).
+**W1-C3 RECEIPT ISSUED (reviewer, 2026-07-25): code-first dormant wave, commit
+4dac41c7, CLEAR.** Evidence: chapter-feed diff IDENTICAL + 5× sweep on the
+ruled dashboard Reload (first pass rode deploy.sh's `touch` — deviation caught
+pre-receipt, cured by re-running on the standard, recorded not waived;
+deploy.sh:63 fix queued as its own task); second surface H90 count = the
+receipted 9; /word/G9826 dark at 404 (STEP path table-gated inert); locked
+test 25/25 on both CI lists; class-D H-page sizing item STRUCK as
+wrong-at-sizing with code cites (views_seo.py :537/:568/:602 under the
+:515/:550/:581 Greek-branch guards); completeness claim on record (complete
+A–G + STEP-fallback; only at-swap change = AI prompt + cache tag, by design).
+**Rebuild lane OPEN under G4** — run plan: docs/PLAN_r2_c3_rebuild.md
+(declared expectations + the one deviation for ruling: rewrite site as a new
+dedicated builder, import_tipnr untouched). JP's table checkpoint still open,
+clears at his word on the DDL in that plan; rebuild receipt cites it.
 
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 
