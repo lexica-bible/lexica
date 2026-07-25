@@ -324,7 +324,8 @@ def _abp_strongs_filter(conn, num, sid):
     # G4-MUST-TOUCH (stage-3 charter, G3 ruling condition 2): this
     # pn_greek_identity read repoints to words.strongs_base inside the Hebrew
     # retirement rebuild (candidate 3) — same class as the cross-ref count repoint.
-    if _core.READER_GREEK_FLIPS and sid.startswith("G") and "." not in num and _pngi_ready(conn):
+    if (_core.READER_GREEK_FLIPS and sid.startswith("G") and "." not in num
+            and _pngi_ready(conn) and not _core.pn_xref_ready(conn)):
         # Peek first (indexed, instant): almost every Greek number has ZERO
         # tipnr identity rows — for those the union adds nothing but cost
         # (measured ~1.7s per profile on θεός-class words), so return the plain
@@ -339,6 +340,21 @@ def _abp_strongs_filter(conn, num, sid):
                     f"ON w2.verse_id = pg.verse_id AND w2.position = pg.position "
                     f"WHERE pg.greek_strongs = ? AND pg.source = 'tipnr')")
             params = params + [sid]
+    # Candidate-3 dormant repoint (core.py block comment): post-retirement an
+    # H-keyed ABP read misses the backfilled proper-noun rows (their Hebrew
+    # number moved to pn_hebrew_xref), so the cross-ref home is unioned back in
+    # — the S2-Q4 unfindability bar. Same rowid-IN + peek shape as the G union
+    # above (the G2 perf lesson); `none`-class rows are reachable both ways and
+    # count once (rowid UNION dedupes). Pre-rebuild: table absent, no change.
+    if (sid.startswith("H") and "." not in num and _core.pn_xref_ready(conn)
+            and conn.execute("SELECT 1 FROM pn_hebrew_xref WHERE hebrew_base = ? LIMIT 1",
+                             (sid,)).fetchone()):
+        inner = pred.replace("w.", "w1.")
+        pred = (f"w.rowid IN (SELECT w1.rowid FROM words w1 WHERE {inner} "
+                f"UNION SELECT w2.rowid FROM pn_hebrew_xref x JOIN words w2 "
+                f"ON w2.verse_id = x.verse_id AND w2.position = x.position "
+                f"WHERE x.hebrew_base = ?)")
+        params = params + [sid]
     return pred, params
 
 
@@ -353,8 +369,11 @@ def _step_lexicon_row(conn, snum):
     (G9xxx name numbers). step_lexicon keys: estrong = padded TEXT ('G0007G'),
     base = plain NUMBER — join on the number, never the text (the receipt-2
     lesson). Returns the row or None; None whenever the switch is off or the
-    table isn't built (deploy-safe: the profile 404s exactly as before)."""
-    if not _core.READER_GREEK_FLIPS:
+    table isn't built (deploy-safe: the profile 404s exactly as before).
+    Post-retirement (pn_hebrew_xref exists) this answers regardless of the
+    switch — words.strongs_base then carries G9xxx as serving truth, and the
+    switch no longer means Hebrew-everywhere (the G5 switch-semantics record)."""
+    if not (_core.READER_GREEK_FLIPS or _core.pn_xref_ready(conn)):
         return None
     if not conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name='step_lexicon'"
@@ -922,13 +941,16 @@ def lexicon_english():
             gkey = "COALESCE(dl.strongs, w.strongs_base)" if ready else "w.strongs_base"
             lem  = "COALESCE(dl.lemma, l.lemma)"          if ready else "l.lemma"
             tr   = "COALESCE(dl.translit, l.translit)"    if ready else "l.translit"
+            # Candidate-3 dormant repoint (core.py block comment): post-retirement
+            # G9xxx bases enter this finder band (LIKE 'G%'), lemma via step_lexicon.
+            lem, tr, _sg, sl_join = _core.step_lemma_cols(conn, lem, tr)
             abp_rows = conn.execute(f"""
                 SELECT {gkey} AS sbase,
                        {lem} AS lemma, {tr} AS translit,
                        COUNT(*) AS cnt
                 FROM words w
                 LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-                {dl_join}
+                {dl_join} {sl_join}
                 {_abp_join}
                 WHERE {abp_col} = ? COLLATE NOCASE
                   AND w.strongs_base IS NOT NULL

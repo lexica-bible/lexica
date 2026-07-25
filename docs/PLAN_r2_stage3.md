@@ -290,6 +290,57 @@ join can't see). Rides the code-first wave.
   (READER_GREEK_FLIPS OFF no longer means Hebrew-everywhere — expected, not a
   defect).
 
+## CANDIDATE-3 CODE-FIRST WAVE — BUILT (2026-07-25), dormant, pre-deploy
+
+**Q2 table shape RULED (reviewer, 2026-07-25, this session):** per-word table
+`pn_hebrew_xref(verse_id, position, hebrew_base, class)` — hebrew_base NULL
+(declared, never '') for always-Greek abp-tag rows; `class` ∈ abp-tag | tipnr |
+lemma-only | none, with 'none' doubling as the machine-visible kept-Hebrew
+exception marker (C3-Q1 condition a); the gentilic/people-class Greek backfill
+candidate is the named consumer that retires those rows (condition b) — both
+recorded in the reference DDL comment (tests/test_c3_dormant.py `_retire`,
+which the rebuild lane must land byte-for-shape). Greek number deliberately NOT
+copied in (one fact, one home). Reviewer reversed the older Greek-keyed
+side-table recommendation on the record, reason: consumer access is per-word or
+per-H-number, both served directly. **OUTSTANDING GATE: NEW TABLE = JP
+checkpoint — the table lands in NO database (test copies of the rebuild run
+included) until JP's checkpoint clears; the rebuild receipt must cite it.**
+
+**What shipped (all gated on `core.pn_xref_ready` — table absent = today's
+exact SQL, proven byte-level in the locked test):**
+- core.py: `pn_xref_ready` + `step_lemma_cols` (STEP G9xxx lemma/translit/gloss
+  COALESCE, MIN(estrong) pick, join can't duplicate rows) + `h_abp_predicate`
+  (H-keyed ABP reads union the xref home; rowid-IN + peek, the G2 perf shape)
+  + `pn_xref_parts` (tipnr type-badge join through the xref home).
+- views_library.py (A): both feeds get step COALESCE + xref'd tipnr key.
+- views_lexicon.py (B): `_abp_strongs_filter` H-union (serves every profile/
+  count/gloss/verse-list/corpus-fallback path — all 8 call sites); the old
+  G-side pn_greek_identity union retires when xref exists (repoint per the
+  G4-MUST-TOUCH marker, no double count); `_step_lexicon_row` answers
+  post-retirement regardless of READER_GREEK_FLIPS (G5 semantics); English
+  finder band gets the step COALESCE (G9xxx bases enter via LIKE 'G%').
+- views_metav.py (C): /api/strongs-count?by=base + the card's hebrew_count
+  repointed via h_abp_predicate (kills the §6 silent zero).
+- views_seo.py (D): chapter feed step COALESCE; /word/G9xxx serves from
+  step_lexicon (C3-Q3, not switch-gated — serving truth). H pages confirmed to
+  read heb.db/KJV, not ABP words — no repoint needed (checked, not assumed).
+- ai.py (E): cited-verse fetch step COALESCE; `_AI_PN_RETIREMENT_ADDENDUM`
+  appended to the built prompt ONLY when xref exists, with matching `pnx=1`
+  cache-fingerprint tag — today's prompt AND fingerprint byte-identical; the
+  search cache refreshes once, exactly at the swap.
+- core.py word_gloss_cols (F): no-op with reason — a retired row's Hebrew gloss
+  key correctly stops resolving (identity is Greek now); step gloss arrives via
+  the feed COALESCE.
+- Frontend (G): zero edits — behavior flips by data; G5 re-receipt covers.
+- Locked test tests/test_c3_dormant.py (25 checks: phase-1 dormancy byte-level,
+  phase-2 simulated retirement fires every repoint; 'none' rows reachable both
+  ways count once) — added to BOTH CI lists.
+
+**Next:** dormant-proof deploy (dashboard Reload + 5× curl sweep + before/after
+diff on an existing surface — the G2 deviation's lesson, this time captured) →
+receipt → rebuild lane opens per G4 (JP's Q2 table checkpoint rides at the DDL
+or the trial run, his pick; receipt cites it).
+
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 
 **Invariance-proof DEVIATION (accepted, recorded, not waived):** the deploy

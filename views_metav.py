@@ -10,6 +10,7 @@ from flask import Blueprint, jsonify, request
 from core import (
     db, db_ro, _anthropic, log,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
+    h_abp_predicate,
 )
 from entity_resolution import book_num, norm_name, is_people_group
 
@@ -550,11 +551,23 @@ def strongs_count_route(strongs_base):
     col = "strongs_base" if request.args.get("by") == "base" else "strongs"
     conn = db()
     try:
-        row = conn.execute(
-            f"SELECT COUNT(*) AS cnt FROM words WHERE {col} = ?"
-            " AND english IS NOT NULL AND english != ''",
-            (strongs_base,),
-        ).fetchone()
+        if col == "strongs_base" and strongs_base.startswith("H"):
+            # Candidate-3 dormant repoint (core.py block comment): post-retirement
+            # a backfilled PN's Hebrew number lives in pn_hebrew_xref, not
+            # strongs_base — the helper unions it back in; pre-rebuild it returns
+            # the plain match and this is today's count exactly.
+            pred, params = h_abp_predicate(conn, strongs_base)
+            row = conn.execute(
+                f"SELECT COUNT(*) AS cnt FROM words w WHERE {pred}"
+                " AND w.english IS NOT NULL AND w.english != ''",
+                params,
+            ).fetchone()
+        else:
+            row = conn.execute(
+                f"SELECT COUNT(*) AS cnt FROM words WHERE {col} = ?"
+                " AND english IS NOT NULL AND english != ''",
+                (strongs_base,),
+            ).fetchone()
     finally:
         conn.close()
     return jsonify({"count": row["cnt"] if row else 0})
@@ -625,10 +638,14 @@ def _greek_identity_payload(conn, verse_id, position):
     if r["hebrew_base"] and "words" in have:
         # The cross-ref line carries its OWN count (S2-Q4: nothing findable
         # before becomes unfindable) — same shape as /api/strongs-count?by=base.
+        # Candidate-3 dormant repoint: h_abp_predicate unions pn_hebrew_xref in
+        # once the retirement lands (this count would silently zero otherwise —
+        # the §6 collision); pre-rebuild it's the plain match, today's number.
+        _hpred, _hparams = h_abp_predicate(conn, r["hebrew_base"])
         heb_count = conn.execute(
-            "SELECT count(*) FROM words WHERE strongs_base = ? "
-            "AND english IS NOT NULL AND english != ''",
-            (r["hebrew_base"],)).fetchone()[0]
+            f"SELECT count(*) FROM words w WHERE {_hpred} "
+            "AND w.english IS NOT NULL AND w.english != ''",
+            _hparams).fetchone()[0]
     return {
         "greek_strongs": gs,
         "lemma": lemma,

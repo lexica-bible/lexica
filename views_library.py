@@ -11,7 +11,8 @@ import re
 from flask import Blueprint, jsonify
 
 import core as _core
-from core import db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols
+from core import (db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols,
+                  step_lemma_cols, pn_xref_parts)
 
 bp = Blueprint("library", __name__)
 
@@ -81,13 +82,20 @@ def verse_words(book, chapter, verse):
         has_dotted = conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
         ).fetchone() is not None
-        lem_sel = "COALESCE(dl.lemma, l.lemma) AS lemma"          if has_dotted else "l.lemma"
-        tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
+        lem_expr = "COALESCE(dl.lemma, l.lemma)"       if has_dotted else "l.lemma"
+        tr_expr  = "COALESCE(dl.translit, l.translit)" if has_dotted else "l.translit"
         dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
                    if has_dotted else "")
         # Plain-meaning lemma gloss (scripts/build_word_gloss.py); replaces the KJV-ized
         # l.kjv_def. Falls back to l.kjv_def until that table is built (deploy-safe).
         gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
+        # Candidate-3 dormant repoints (core.py block comment): STEP lemma fallback
+        # for post-retirement G9xxx bases + the tipnr type-badge join through the
+        # cross-ref home. Pre-rebuild both return today's SQL untouched.
+        lem_expr, tr_expr, gloss_sel, sl_join = step_lemma_cols(conn, lem_expr, tr_expr, gloss_sel)
+        lem_sel = f"{lem_expr} AS lemma"
+        tr_sel  = f"{tr_expr} AS translit"
+        xr_join, t_key = pn_xref_parts(conn)
         gid_sel, gid_join = _greek_flip_parts(conn)
         wrows = conn.execute(
             f"""SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
@@ -97,8 +105,8 @@ def verse_words(book, chapter, verse):
                       t.entity_type AS pn_type, t.entity_types AS pn_types{gid_sel}
                FROM words w
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-               {dl_join} {wg_join}
-               LEFT JOIN tipnr t ON t.strongs = w.strongs_base
+               {dl_join} {wg_join} {sl_join} {xr_join}
+               LEFT JOIN tipnr t ON t.strongs = {t_key}
                {gid_join}
                WHERE w.verse_id = ?
                ORDER BY w.position""",
@@ -252,12 +260,17 @@ def chapter_text(book, chapter):
         has_dotted = conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
         ).fetchone() is not None
-        lem_sel = "COALESCE(dl.lemma, l.lemma) AS lemma"          if has_dotted else "l.lemma"
-        tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
+        lem_expr = "COALESCE(dl.lemma, l.lemma)"       if has_dotted else "l.lemma"
+        tr_expr  = "COALESCE(dl.translit, l.translit)" if has_dotted else "l.translit"
         dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
                    if has_dotted else "")
         # Plain-meaning lemma gloss over l.kjv_def (deploy-safe; see verse_words).
         gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
+        # Candidate-3 dormant repoints — see verse_words / core.py block comment.
+        lem_expr, tr_expr, gloss_sel, sl_join = step_lemma_cols(conn, lem_expr, tr_expr, gloss_sel)
+        lem_sel = f"{lem_expr} AS lemma"
+        tr_sel  = f"{tr_expr} AS translit"
+        xr_join, t_key = pn_xref_parts(conn)
         gid_sel, gid_join = _greek_flip_parts(conn)
         rows = conn.execute(
             f"""SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
@@ -269,8 +282,8 @@ def chapter_text(book, chapter):
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-               {dl_join} {wg_join}
-               LEFT JOIN tipnr t ON t.strongs = w.strongs_base
+               {dl_join} {wg_join} {sl_join} {xr_join}
+               LEFT JOIN tipnr t ON t.strongs = {t_key}
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                {surf_join}
                {gid_join}

@@ -26,7 +26,8 @@ from xml.sax.saxutils import escape
 
 from flask import Blueprint, render_template, abort, redirect, Response
 
-from core import db_ro, heb_db, _KJV_BOOK_ID, dotted_lexicon_cols
+from core import (db_ro, heb_db, _KJV_BOOK_ID, dotted_lexicon_cols,
+                  step_lemma_cols, pn_xref_ready)
 
 bp = Blueprint("seo", __name__)
 
@@ -154,6 +155,9 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
     conn = db_ro()
     try:
         lem, tr, dl = dotted_lexicon_cols(conn)
+        # Candidate-3 dormant repoint (core.py block comment): STEP lemma fallback
+        # for post-retirement G9xxx bases; pre-rebuild returns the inputs untouched.
+        lem, tr, _sg, sl_join = step_lemma_cols(conn, lem, tr)
         rows = conn.execute(
             f"""SELECT v.verse, v.text AS prose, w.english, w.english_head, w.strongs_base,
                       {lem} AS lemma, {tr} AS translit, w.italic, w.bracket_id, w.greek_pos,
@@ -163,7 +167,7 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-               {dl}
+               {dl} {sl_join}
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                WHERE v.book = ? AND v.chapter = ?
                ORDER BY v.verse, w.position""",
@@ -481,9 +485,27 @@ def _word_profile(strongs: str):
         else:
             row = conn.execute("SELECT lemma, translit, strongs_def, kjv_def FROM lexicon WHERE strongs = ?", (num,)).fetchone()
             if not row:
-                return None
-            lemma, translit = row["lemma"] or "", row["translit"] or ""
-            definition = _TAG_RE.sub("", row["strongs_def"] or row["kjv_def"] or "").strip()
+                # Candidate-3 (C3-Q3 ruling: SEO follows serving truth): once the
+                # retirement lands, words.strongs_base carries STEP-extended G9xxx
+                # name numbers the main lexicon lacks — resolve them from
+                # step_lexicon (same MIN(estrong) pick as Word study) so their
+                # /word pages serve. Dormant pre-rebuild: table gate fails, the
+                # page 404s exactly as today. Not switch-gated — a public page's
+                # identity is data truth, not a reader-flip preference.
+                srow = None
+                if pn_xref_ready(conn) and conn.execute(
+                        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='step_lexicon'"
+                ).fetchone():
+                    srow = conn.execute(
+                        "SELECT lemma, translit, gloss FROM step_lexicon WHERE base = ? "
+                        "ORDER BY estrong LIMIT 1", (int(num),)).fetchone()
+                if not srow:
+                    return None
+                lemma, translit = srow["lemma"] or "", srow["translit"] or ""
+                definition = (srow["gloss"] or "").strip()
+            else:
+                lemma, translit = row["lemma"] or "", row["translit"] or ""
+                definition = _TAG_RE.sub("", row["strongs_def"] or row["kjv_def"] or "").strip()
             lang = "Greek"
         # occurrence counts per book. A HEBREW word comes from the real Hebrew OT
         # (heb.db) — fall back to the KJV tagging only when heb.db isn't loaded or

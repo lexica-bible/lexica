@@ -480,6 +480,84 @@ def word_gloss_join(conn, strongs_col, alias="wg"):
     return sel, join
 
 
+# ── R-2 candidate 3 (Hebrew retirement) — dormant serving repoints ────────────
+# The rebuild moves a backfilled proper noun's Hebrew number OUT of
+# words.strongs_base (which then carries the Greek identity, incl. STEP G9xxx)
+# and INTO the cross-ref home `pn_hebrew_xref` (one row per PN word):
+#   pn_hebrew_xref(verse_id, position, hebrew_base, class)
+#     hebrew_base: the moved Hebrew number; NULL (declared, never '') for the
+#                  3,518 always-Greek abp-tag rows, which never had one.
+#     class:       abp-tag | tipnr | lemma-only | none. 'none' IS the ruled
+#                  machine-visible kept-Hebrew exception (C3-Q1): those rows
+#                  ALSO still carry Hebrew in words.strongs_base, until the
+#                  gentilic/people-class Greek backfill candidate retires them.
+# Everything below gates on the table EXISTING (the G1 table-existence guard
+# pattern, per the charter's code-first run-shape ruling): before the rebuild
+# lands, each helper returns today's exact SQL — the code ships dormant and
+# self-activates at the swap. docs/PLAN_r2_stage3.md, candidate-3 charter.
+
+
+def pn_xref_ready(conn) -> bool:
+    """True once the Hebrew-retirement rebuild's cross-ref home exists."""
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_hebrew_xref'"
+    ).fetchone() is not None
+
+
+def step_lemma_cols(conn, base_lemma, base_translit, base_gloss=None,
+                    base_col="w.strongs_base"):
+    """STEP-extended lemma/translit/gloss fallback for feeds that join the main
+    lexicon on strongs_base: post-retirement that column carries G9xxx name
+    numbers the main lexicon lacks (NULL lemma without this). Wraps the caller's
+    existing column expressions in a COALESCE over step_lexicon and returns
+    (lemma_expr, translit_expr, gloss_expr, join). One row per base via
+    MIN(estrong) — same pick as Word study's _step_lexicon_row — so the LEFT
+    JOIN can never duplicate word rows. Dormant (xref or step_lexicon absent):
+    returns the inputs untouched + no join, SQL byte-identical to today."""
+    if not pn_xref_ready(conn) or not conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='step_lexicon'"
+    ).fetchone():
+        return base_lemma, base_translit, base_gloss, ""
+    join = (f"LEFT JOIN (SELECT base, lemma, translit, gloss, MIN(estrong) "
+            f"FROM step_lexicon GROUP BY base) sl "
+            f"ON {base_col} GLOB 'G*' AND sl.base = CAST(substr({base_col}, 2) AS INTEGER)")
+    return (f"COALESCE({base_lemma}, sl.lemma)",
+            f"COALESCE({base_translit}, sl.translit)",
+            (f"COALESCE({base_gloss}, sl.gloss)" if base_gloss else base_gloss),
+            join)
+
+
+def h_abp_predicate(conn, sid, alias="w"):
+    """(pred, params) picking ABP `words` rows for an H-prefixed base.
+    Post-retirement the backfilled PN rows no longer carry the Hebrew number in
+    strongs_base, so an H-keyed ABP read unions the cross-ref home back in —
+    the S2-Q4 bar (nothing findable becomes unfindable). rowid-IN keeps both
+    arms on their indexes (the G2 perf shape); the peek skips the union for
+    H-numbers with no name rows. Dormant: plain strongs_base match."""
+    plain = (f"{alias}.strongs_base = ?", [sid])
+    if not sid.startswith("H") or not pn_xref_ready(conn):
+        return plain
+    if conn.execute("SELECT 1 FROM pn_hebrew_xref WHERE hebrew_base = ? LIMIT 1",
+                    (sid,)).fetchone() is None:
+        return plain
+    return (f"{alias}.rowid IN (SELECT w1.rowid FROM words w1 WHERE w1.strongs_base = ? "
+            f"UNION SELECT w2.rowid FROM pn_hebrew_xref x JOIN words w2 "
+            f"ON w2.verse_id = x.verse_id AND w2.position = x.position "
+            f"WHERE x.hebrew_base = ?)", [sid, sid])
+
+
+def pn_xref_parts(conn):
+    """(join, tipnr_key) for the reader feeds' PN type-badge join: the `tipnr`
+    table keys HEBREW numbers, so post-retirement the join goes through the
+    cross-ref home (COALESCE keeps native-Hebrew and non-PN rows on the direct
+    key). Dormant: no join, today's key."""
+    if not pn_xref_ready(conn):
+        return "", "w.strongs_base"
+    return ("LEFT JOIN pn_hebrew_xref x ON x.verse_id = w.verse_id "
+            "AND x.position = w.position",
+            "COALESCE(x.hebrew_base, w.strongs_base)")
+
+
 def _clean_gloss(s: str | None) -> str | None:
     """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
     if not s:

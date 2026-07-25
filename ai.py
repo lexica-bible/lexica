@@ -31,6 +31,7 @@ from core import (
     log, db, db_ro, heb_db, _anthropic, limiter, _FUNCTION_STRONGS,
     _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
+    step_lemma_cols, pn_xref_ready,
 )
 from views_lsj import _lsj_concept_lookup
 from views_lexicon import _greek_cognates, _norm_lemma, _HEB_FUNCTION_STRONGS
@@ -370,6 +371,28 @@ TRANSLATION COMPARISON queries:
 
 _AI_SYSTEM_BUILT: str | None = None
 
+# Candidate-3 (core.py block comment): once the Hebrew retirement lands, the
+# prompt's strongs_base facts need this addendum. Appended in _get_ai_system
+# ONLY when pn_hebrew_xref exists, so today's built prompt — and, via the
+# matching pnx tag in _get_ai_cache_ver, today's cache fingerprint — stays
+# byte-identical until the swap (then the search category refreshes once,
+# exactly when the data's semantics change).
+_AI_PN_RETIREMENT_ADDENDUM = """
+
+─── PROPER-NOUN KEYS (Hebrew retirement) ────────────────────────────────────
+ABP proper-noun rows now carry their GREEK identity in strongs_base: a real
+G-number, a STEP-extended name number (G9xxx — not present in the lexicon
+table, so l.lemma is NULL for those), or '*' when no scheme numbers the name.
+The Hebrew number those rows previously carried lives in the side table
+  pn_hebrew_xref(verse_id, position, hebrew_base, class)
+To find ABP occurrences for a Hebrew NAME number, match BOTH homes:
+  WHERE w.strongs_base = 'H90'
+     OR w.id IN (SELECT w2.id FROM words w2 JOIN pn_hebrew_xref x
+                 ON x.verse_id = w2.verse_id AND x.position = w2.position
+                 WHERE x.hebrew_base = 'H90')
+Ordinary (non-name) words and all KJV/Hebrew tables are unchanged.\
+"""
+
 
 def _get_ai_system() -> str:
     global _AI_SYSTEM_BUILT
@@ -398,6 +421,12 @@ def _get_ai_system() -> str:
         .replace("@@CORPUS_LIST@@", corpus_list)
         .replace("@@SCHEMA_BOOKS@@", schema_books)
     )
+    conn = db()
+    try:
+        if pn_xref_ready(conn):
+            _AI_SYSTEM_BUILT += _AI_PN_RETIREMENT_ADDENDUM
+    finally:
+        conn.close()
     log.debug("Built AI system prompt for books: %s", abbrevs)
     return _AI_SYSTEM_BUILT
 
@@ -538,6 +567,9 @@ def _get_verse_ref_re() -> re.Pattern:
 def _fetch_verse_words(conn, verse_id: int) -> list[dict]:
     """Return the full word list for a verse, used when fetching cited/primary verses."""
     lem, tr, dl = dotted_lexicon_cols(conn)
+    # Candidate-3 dormant repoint (core.py block comment): STEP lemma fallback for
+    # post-retirement G9xxx bases; pre-rebuild returns the inputs untouched.
+    lem, tr, _sg, sl_join = step_lemma_cols(conn, lem, tr)
     wrows = conn.execute(
         f"""SELECT w.strongs_base, w.strongs, w.english, w.english_head, w.greek_pos,
                   w.bracket_id, w.italic, w.is_pn,
@@ -545,7 +577,7 @@ def _fetch_verse_words(conn, verse_id: int) -> list[dict]:
                   {lem} AS lemma, {tr} AS translit, l.strongs_def, l.kjv_def, l.derivation
            FROM words w
            LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-           {dl}
+           {dl} {sl_join}
            WHERE w.verse_id = ?
              AND w.english IS NOT NULL AND w.english != ''
              AND w.strongs_base != '*'
@@ -1602,11 +1634,17 @@ def _get_ai_cache_ver() -> str:
         abbrevs = ",".join(
             r[0] for r in conn.execute("SELECT abbrev FROM books ORDER BY id").fetchall()
         )
+        # Candidate-3: 'pnx=1' enters the fingerprint the moment the retirement
+        # lands (the prompt addendum + the data's key semantics change together),
+        # refreshing only the search category then — today's fingerprint is
+        # byte-identical (dormant proof).
+        pnx = "pnx=1" if pn_xref_ready(conn) else ""
     finally:
         conn.close()
-    _ai_cache_ver = ai_fingerprint(
-        "search", _AI_SYSTEM_TMPL, _CURATION_SYSTEM, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
-    )
+    parts = [_AI_SYSTEM_TMPL, _CURATION_SYSTEM, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"]
+    if pnx:
+        parts.append(pnx)
+    _ai_cache_ver = ai_fingerprint("search", *parts)
     return _ai_cache_ver
 
 

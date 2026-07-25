@@ -54,6 +54,7 @@ jobs:
           python tests/test_pn_greek_identity.py
           python tests/test_reader_greek_flips.py
           python tests/test_ws_greek_flips.py
+          python tests/test_c3_dormant.py
 
   frontend:
     runs-on: ubuntu-latest
