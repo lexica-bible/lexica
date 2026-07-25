@@ -231,6 +231,65 @@ explicit approval (block above); deploys of serving code = dashboard Reload +
 2. Candidate-3 sizing under the G3 ruling (Option B state, unfindability gate,
 must-touch grep from code).
 
+## CANDIDATE-3 CHARTER — Hebrew retirement rebuild (FROZEN 2026-07-25, reviewer-ruled)
+
+The rebuild section of record. Sizing evidence: docs/R2_stage3_c3_sizing.md
+(A–H must-touch list, enumerated from code — the edit-sizing basis; grep-before-
+you-size satisfied there).
+
+**Write set (per the sizing's row-class table):**
+- abp-tag 3,518: unchanged — proven by the diff gate, not assumed.
+- tipnr 10,731: strongs_base ← the served Greek number (real G or STEP G9xxx).
+- lemma-only 14,850: strongs_base ← `'*'` (**C3-Q2 ruled**: the existing
+  no-number convention; every click/tag/count gate already handles it; G3-B by
+  construction).
+- none 3,380: **KEEP Hebrew (C3-Q1 ruled, documented exception)** with two bound
+  conditions: (a) the exception is MACHINE-VISIBLE — a scope marker consumers can
+  query directly ("which rows are the retained-Hebrew exception"), via a
+  source/class column on the Q2 home or the identity table's bucket; (b) the
+  named end state is the **gentilic/people-class Greek backfill candidate**
+  (adjacent to parked pile U) — that candidate retires this exception when it
+  lands. **Expectation correction (reviewer's own record):** the post-G1 note
+  that the rebuild would stop the Hebrew fallback for these words was WRONG —
+  they keep printing Hebrew until the backfill candidate lands; that is the
+  stated user-visible expectation.
+- ALL classes: the Hebrew number moves to the Q2 cross-ref home (NEW TABLE = JP
+  checkpoint before it lands).
+
+**C3-Q3 (ruled): SEO follows serving truth, no special casing.** G9xxx pages
+join the /word list (STEP-fallback lemma resolution); H-number pages persist
+(the Hebrew corpus is untouched, H-numbers stay legitimate identities there);
+no removals, no redirects; any H-page content previously fed by a now-cleared
+ABP row draws from the Q2 home like every consumer.
+
+**Run shape (ruled): code first, dormant.** ALL serving-code repoints (sizing
+classes A–F + the STEP-fallback class below) ship BEFORE the swap, gated on the
+Q2 table's existence (the G1 table-existence guard pattern). No gap where
+Hebrew-keyed pages serve zeros; the swap activates already-deployed code.
+
+**STEP-fallback generalization (its own must-touch class, ruled in scope):**
+every lemma-displaying feed gets the card's step_lexicon COALESCE (the sizing's
+new-fact finding — post-retirement strongs_base carries G9xxx the main lexicon
+join can't see). Rides the code-first wave.
+
+**Gates and constraints (all standing):**
+- Changed builder → trial-then-apply BINDS (import_tipnr.py:719 is the rewrite
+  site; build_pn_greek_identity snapshot re-sourced from the Q2 home;
+  build_entity_binding re-run with tipnr_entities.bases extended to Greek keys
+  or ABP fuzzy binds floor).
+- Roster-freeze gate: check_roster_regression.py CLEAN before import.
+- Copy-first into a test db; own backup; the pre-rebuild known-good file kept.
+- **Unfindability gate (G3 condition 1, mandatory):** the 14,850 enumerated
+  before (Hebrew-keyed) and after (Q2 home + lemma); zero
+  findable-before/unfindable-after. S2-Q4 bar.
+- compare_words itemized to zero unexplained; strongs_base GLOB invariant
+  (G9xxx passes — verified in sizing); health_check; cert_invariants;
+  two-derivations re-run.
+- G5 rides after: both flips (G1 reader tags, G2 Word study) re-receipted
+  against the rewritten tables + the switch-semantics change recorded
+  (READER_GREEK_FLIPS OFF no longer means Hebrew-everywhere — expected, not a
+  defect).
+
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 
 **Invariance-proof DEVIATION (accepted, recorded, not waived):** the deploy
