@@ -1113,13 +1113,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
-        {/* G2-R1 cosmetic ruling: both identity lines read as one species —
-            identity number BOLD and quietly linked in the card's own ink
-            (.occ-link--id), count secondary, no blue, no arrow, no destination
-            label. */}
+        {/* JP-ruled format (2026-07-25): BOTH identity lines read the same
+            pattern — [NUMBER bold] · [COUNT]× [qualifier/tag]. Standard blue
+            link (color is JP's call, standing rule below), no arrow, no
+            destination label. */}
         {greekId.greek_strongs ? (
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            {greekId.greek_count}× in ABP as <b>{greekId.greek_strongs}</b>
+            <b>{greekId.greek_strongs}</b> · {greekId.greek_count}× in ABP
             {greekId.step && <span className="detail-strong-alias"> (STEP)</span>}
           </button>
         ) : (

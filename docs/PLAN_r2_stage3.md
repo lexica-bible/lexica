@@ -190,6 +190,16 @@ still opens the Hebrew-keyed page → receipt → clear.
 can answer — both are behind READER_GREEK_FLIPS, deployed together in one
 commit, so no window where the link 404s.
 
+## STANDING RULE (JP, 2026-07-25) — visual changes need JP's explicit approval
+
+All visual/style changes — colors, link treatments, typography, spacing — require
+JP's explicit approval on the SPECIFIC change before build. The reviewer may
+propose; nothing visual ships without JP's yes. Same shelf as "JP runs all PA
+commands." (Origin: the reviewer ruled an ink-colored link treatment; JP's actual
+ask was format alignment, and the color change shipped without his OK. Ruled
+format: both PN-card identity lines read `[NUMBER bold] · [COUNT]× [qualifier]`,
+standard blue links.)
+
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 
 **Invariance-proof DEVIATION (accepted, recorded, not waived):** the deploy
