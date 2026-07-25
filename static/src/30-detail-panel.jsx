@@ -344,14 +344,23 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // null and the card renders exactly as before. ABP reader only: KJV/BSB/Hebrew
   // clicks stay Hebrew-keyed (ruling S2-Q4 / Q4).
   const [greekId, setGreekId] = useState(null);
+  // FRAME-0 rule (Hebrew-flash fix, 2026-07-25): the identity fetch gets a pending
+  // flag that starts TRUE whenever the fetch WILL run, so the card holds its
+  // identity-dependent parts neutral instead of painting the stored Hebrew state
+  // and swapping when the Greek identity lands (the flash JP reported). Same
+  // pattern as bdbLoading/lexicaLoading. Resolves fast either way: identity,
+  // 'none', or a 404 when the switch is off — then the old card paints once.
+  const giWillFetch = !!(entry && isPN && !entry.isKjv && !entry.isBsb && !entry.isHeb && !entry.isExtra
+    && entry.position !== null && entry.position !== undefined && entry.book);
+  const [greekIdPending, setGreekIdPending] = useState(giWillFetch);
   useEffect(() => {
     setGreekId(null);
-    if (!entry || !isPN || entry.isKjv || entry.isBsb || entry.isHeb || entry.isExtra) return;
-    if (entry.position === null || entry.position === undefined || !entry.book) return;
+    if (!giWillFetch) { setGreekIdPending(false); return; }
+    setGreekIdPending(true);
     let cancelled = false;
     api.pnGreekIdentity(entry.book, entry.chapter, entry.verse, entry.position)
-      .then(d => { if (!cancelled && d && !d.error) setGreekId(d); })
-      .catch(() => {});
+      .then(d => { if (!cancelled) { if (d && !d.error) setGreekId(d); setGreekIdPending(false); } })
+      .catch(() => { if (!cancelled) setGreekIdPending(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
 
@@ -756,7 +765,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // not the identity — the BDB block (the Hebrew identity presentation) gives way to
   // the quiet cross-ref section below; Word study by the Hebrew number stays one
   // click away there (nothing findable before becomes unfindable).
-  if (isHebrewWord && !greekId) sections.push("bdb");
+  if (isHebrewWord && !greekId && !greekIdPending) sections.push("bdb");
   // metavType "person" suppresses the definition (a real proper-noun person has no useful
   // lexical entry). θεός (G2316) is no longer special-cased here: it now skips metaV entirely
   // (see the lookup gate above), so its Lexica entry leads as the definition like any word.
@@ -780,18 +789,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     sections.push("greekIdOcc");
     if (greekId.hebrew_base) sections.push("hebCrossRef");
   }
-  if (!greekId && !isHebrewWord && (!isPN || boundOcc) && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  if (!greekId && !greekIdPending && !isHebrewWord && (!isPN || boundOcc) && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   // Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
   // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
   // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
   if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
   if (entry.isBsb && !isPN && !isHebrew && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
-  if (!greekId && !entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
+  if (!greekId && !greekIdPending && !entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
   // A Hebrew word shows occurrences only for the text being read (Hebrew OT / KJV / BSB, or ABP
   // via its Hebrew base for a backfilled proper noun); each opens that source in Word study,
   // where the full cross-Bible breakdown lives.
-  if (!greekId && isHebrewWord && activeText === "abp" && abpBaseCount !== null && abpBaseCount > 0) sections.push("hebrewAbpOcc");
+  if (!greekId && !greekIdPending && isHebrewWord && activeText === "abp" && abpBaseCount !== null && abpBaseCount > 0) sections.push("hebrewAbpOcc");
   if (isHebrewWord && activeText === "heb" && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
   if (isHebrewWord && activeText === "kjv" && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   if (isHebrewWord && activeText === "bsb" && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
@@ -1298,7 +1307,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {/* R-2 flip: a served Greek identity is the header number (C1/C2/C2a);
                 lemma-only keeps the neutral PN tag — never the Hebrew number (that
                 moved to the cross-ref section). STEP tag per ruling S2-Q2. */}
-            <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : entry.strongs}</span>
+            <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : (greekIdPending ? "PN" : entry.strongs)}</span>
             {/* JP-ruled 2026-07-25 (supersedes TICKET_step_tag_placement's body
                 placement): STEP tag lives HERE beside the header number,
                 hoverable explanation; the occurrence line below stays bare
