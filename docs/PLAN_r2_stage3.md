@@ -205,6 +205,32 @@ Interlinear"). STEP tag lives in the card HEADER with a hover explanation.
 **Anti-design-creep rule:** this line went through five styling passes in one
 night; the settled state wins over any future "improvement" unless JP asks.
 
+## G2 — CLEAR (receipt G2-R1, reviewer, 2026-07-25)
+
+Receipt basis: five-check bundle screenshots + JP live eyeball on the final card
+state. Three JP flags fixed and verified inside the gate: occurrence-list
+highlight (gold via g_id), arrow dropped, perf split resolved (G2 regression
+fixed twice — index-friendly union 2eb2d710 + zero-tipnr peek 0c22ecba, flip
+path 0.3s live; residual mega-word slowness pre-existing, ticketed in TODO.md).
+Invariance deviation + substitute evidence on file below.
+
+**CARD SETTLED STATE (JP visual rulings, final — reopen ONLY on JP's word):**
+- Header: `G9826 (STEP)` — STEP tag beside the header number, hover explains
+  ("Extended number from the STEP Bible project — beyond standard Strong's").
+- Identity lines: `9× G9826` / `9× H90` — count first, no dot, no bold, no
+  underline, no arrows, no destination labels; whole line a plain blue link,
+  weight 500 (the panel's one link voice, same as Read in context), hover-
+  underline only. Settled after five styling passes — anti-design-creep rule
+  applies.
+
+Standing rules confirmed in force (both in this doc): visual changes = JP
+explicit approval (block above); deploys of serving code = dashboard Reload +
+5× curl sweep (G2 deploy record below).
+
+**NEXT (queue):** 1. Hebrew-flash trace (CC, ticketed-or-worse classification).
+2. Candidate-3 sizing under the G3 ruling (Option B state, unfindability gate,
+must-touch grep from code).
+
 ## G2 deploy record (2026-07-24) — deviation + lesson, reviewer-ruled
 
 **Invariance-proof DEVIATION (accepted, recorded, not waived):** the deploy

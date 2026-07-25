@@ -1,5 +1,17 @@
 # HANDOFF — R-2 Greek-name migration (open a fresh session from this doc)
 
+## ★★ STAGE 3 IN FLIGHT — read docs/PLAN_r2_stage3.md FIRST (the charter).
+## G1 CLEAR (reader tags Greek-keyed, receipt G1-R2) + G2 CLEAR (Word study
+## answers STEP identities, receipt G2-R1) — both live behind READER_GREEK_FLIPS
+## (second switch, separate from READER_GREEK_IDENTITY; rollback = its WSGI line).
+## G3 RULED: Option B (lemma-only cells cleared at retirement; Hebrew moves to
+## the Q2 cross-ref home). Card visual state SETTLED BY JP — do not restyle
+## (PLAN_r2_stage3.md "CARD SETTLED STATE" + the standing visual-approval rule).
+## Deploy rule: dashboard Reload + 5× curl sweep, never bare touch.
+## NEXT: (1) Hebrew-flash trace (classification), (2) candidate-3 sizing
+## (G4/G5 gates: trial-then-apply, roster gate, must-touch grep, re-receipt of
+## both flips post-rebuild).
+
 ## ★ STAGE 2 CLOSED — LIVE 2026-07-24, receipt 2 issued (commit 7b31eb4). ABP
 ## proper-noun cards now carry the GREEK identity; Hebrew demoted to a labeled
 ## cross-ref line. Close-out block atop docs/PLAN_r2_stage2.md (nine checks green,
