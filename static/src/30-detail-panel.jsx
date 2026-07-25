@@ -1119,7 +1119,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             "Read in context / Interlinear" link voice. Identity emphasis lives
             in the card header (G9826 (STEP)), not here. */}
         {greekId.greek_strongs ? (
-          <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
+          <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
             {`${greekId.greek_count}× ${greekId.greek_strongs}`}
           </button>
         ) : (
@@ -1135,7 +1135,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "hebCrossRef": return (
       <section key="hebCrossRef" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
-        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
+        <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
           {/* FINAL STATE, JP-ruled 2026-07-25 — twin of the ABP line above:
               `COUNT× NUMBER`, plain blue link, no dot/bold/underline. The old
               "— Word study" label's reason expired with G2. */}

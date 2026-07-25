@@ -1403,8 +1403,11 @@ input { font-family: inherit; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
-/* .occ-link--id RETIRED (JP final ruling 2026-07-25): the PN-card identity lines
-   use plain .occ-link — one link voice on the whole panel, no special casing. */
+/* PN-card identity lines (JP final ruling 2026-07-25 + presence fix): format is
+   `9× G9826` — no dot, no partial bold, no underline, standard link blue. The
+   WHOLE line carries the heavier weight the numbers had before the plain-link
+   pass (uniform, so no bold-vs-plain mismatch). Do not restyle — design-creep rule. */
+.occ-link--id { font-weight: 600; }
 
 /* ---- Extracted from inline styles ---- */
 .detail-greek--he { font-family: var(--f-serif); text-align: left; }
