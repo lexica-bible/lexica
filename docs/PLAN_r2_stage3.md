@@ -222,7 +222,10 @@ Invariance deviation + substitute evidence on file below.
   (the panel's one link voice, same as Read in context), hover-underline only.
   **AMENDED BY JP 2026-07-26 (unified count-line standard): the COUNT is bold**
   — matches every other occurrence-count line; rest of the ruling stands.
-  Anti-design-creep rule still applies.
+  Anti-design-creep rule still applies. **The format has ONE owner: the shared
+  `CountLine` component (static/src/20-shared-components.jsx) — every count
+  line (card occ links, identity lines, Word-study headers, frequency) renders
+  through it; future count lines use it, never hand-rolled markup.**
 
 Standing rules confirmed in force (both in this doc): visual changes = JP
 explicit approval (block above); deploys of serving code = dashboard Reload +

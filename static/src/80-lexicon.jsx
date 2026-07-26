@@ -661,7 +661,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               {firstGloss && <span className="detail-gloss">{firstGloss}</span>}
             </div>
           )}
-          <div className="detail-morph"><b>{occCount}</b>× in {corpusName}</div>
+          <div className="detail-morph"><CountLine n={occCount} label={"in " + corpusName}/></div>
         </div>
       </div>
 
@@ -813,8 +813,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {profile ? (
             <>
               <div className="wm-occhead">
-                <span className="wm-occ-count">{selectedBook && selBookCount != null ? selBookCount : occCount}×</span>
-                <span className="wm-occ-lbl">in {selectedBook ? selBookName : corpusName}</span>
+                <CountLine n={selectedBook && selBookCount != null ? selBookCount : occCount}
+                  label={"in " + (selectedBook ? selBookName : corpusName)}
+                  nClass="wm-occ-count" lblClass="wm-occ-lbl"/>
                 <span className="wm-occ-meta">{tLabel} · {profileCorpus.toUpperCase()}</span>
               </div>
               {occList}

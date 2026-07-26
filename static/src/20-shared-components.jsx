@@ -6,6 +6,23 @@
 // drop into an empty slot. Widths / spacing / over-header behavior live once in the
 // .zshell* / .zinspect CSS.
 // ============================================================
+// THE occurrence-count line (JP-approved standard 2026-07-26): `{count}× {label}`
+// — bold count, × attached to it (never a space before), space after. One span,
+// so a gapped-flex parent can't split a phantom space in between the count and
+// the text (the 2026-07-26 screenshot bug — flex gap rendered "8249 × in ABP").
+// label examples: "in ABP", "in Hebrew OT", "G9826", "in current results".
+// The two-class form (nClass/lblClass) exists ONLY for the mobile Word-study
+// header, which renders the count and label as its two styled spans (the space
+// after × comes from the parent's flex gap there) — same standard, same rules.
+// EVERY count line renders through this component; don't hand-roll new ones.
+function CountLine({ n, label, nClass, lblClass }) {
+  if (nClass || lblClass) {
+    return <><span className={nClass}>{n}×</span><span className={lblClass}>{label}</span></>;
+  }
+  return <span><b>{n}</b>× {label}</span>;
+}
+
+
 function ZoneEmpty({ icon, title, sub }) {
   return (
     <div className="zempty">
