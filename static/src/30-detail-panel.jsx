@@ -1090,21 +1090,25 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="abpOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">{entry.isExtra ? "Occurrences in Scripture" : "ABP Occurrences"}</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs_raw, "abp")}>
-          <b>{abpCount}</b>× in ABP <Icon.ArrowRight/>
+          {/* One span per line: .occ-link is a gapped flex row, so a bare text
+              node after the <b> count picked up the 6px gap as a phantom space
+              before the × (JP screenshot, 2026-07-26). Count-line standard:
+              `{count}× in {corpus}`, no space before ×. */}
+          <span><b>{abpCount}</b>× in ABP</span><Icon.ArrowRight/>
         </button>
       </section>
     );
     case "extraOcc": return (
       <section key="extraOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">In the {entry.extraBookName || "text"}</span></h4>
-        <div className="occ-link occ-link--static"><b>{extraCount}</b>× in {entry.extraBookName || "this text"}</div>
+        <div className="occ-link occ-link--static"><span><b>{extraCount}</b>× in {entry.extraBookName || "this text"}</span></div>
       </section>
     );
     case "kjvOcc": return (
       <section key="kjvOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">KJV Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "kjv")}>
-          <b>{kjvCount}</b>× in KJV <Icon.ArrowRight/>
+          <span><b>{kjvCount}</b>× in KJV</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1112,7 +1116,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="bsbOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">BSB Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "bsb")}>
-          <b>{bsbCount}</b>× in BSB <Icon.ArrowRight/>
+          <span><b>{bsbCount}</b>× in BSB</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1138,7 +1142,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </button>
         ) : (
           <div className="occ-link occ-link--static">
-            <b>{greekId.greek_count}</b>× in ABP (this form)
+            <span><b>{greekId.greek_count}</b>× in ABP (this form)</span>
           </div>
         )}
       </section>
@@ -1161,7 +1165,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="pnOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNameSearch(extractProperName(entry.gloss))}>
-          <b>{pnCount}</b>× in ABP <Icon.ArrowRight/>
+          <span><b>{pnCount}</b>× in ABP</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1169,7 +1173,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebrewAbpOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "abp")}>
-          <b>{abpBaseCount}</b>× in ABP <Icon.ArrowRight/>
+          <span><b>{abpBaseCount}</b>× in ABP</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1177,7 +1181,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebrewOtOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew OT Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "heb")}>
-          <b>{hebCount}</b>× in Hebrew OT <Icon.ArrowRight/>
+          <span><b>{hebCount}</b>× in Hebrew OT</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1185,7 +1189,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebrewKjvOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">KJV Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "kjv")}>
-          <b>{kjvCount}</b>× in KJV <Icon.ArrowRight/>
+          <span><b>{kjvCount}</b>× in KJV</span><Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -1193,7 +1197,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebrewBsbOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">BSB Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "bsb")}>
-          <b>{bsbCount}</b>× in BSB <Icon.ArrowRight/>
+          <span><b>{bsbCount}</b>× in BSB</span><Icon.ArrowRight/>
         </button>
       </section>
     );
