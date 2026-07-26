@@ -180,6 +180,34 @@ def backup_checks(bdir):
                     swept, f"{damaged} damaged" if damaged else "all intact"))
 
 
+# ── Disk-usage guard (reviewer-ruled 2026-07-26, retention policy in ops.md) ──
+# The 98%-full incident arrived silently; this makes it a nightly line. Usage =
+# du over $HOME (what PA meters); quota from DISK_QUOTA_GB env else the Dev-tier
+# default. WARN at 85%; at 95% it is an ERR whose text states the REMEDY, not
+# just the number (reviewer condition).
+def disk_check(quota_gb=None):
+    import subprocess
+    home = os.path.expanduser("~")
+    try:
+        quota_gb = float(quota_gb or os.environ.get("DISK_QUOTA_GB", 5))
+        used = int(subprocess.check_output(
+            ["du", "-sb", home], stderr=subprocess.DEVNULL).split()[0])
+        pct = used / (quota_gb * 1024**3) * 100
+    except Exception as e:
+        results.append(("ERR ", "disk usage", "-", str(e)[:60]))
+        return
+    detail = f"{used / 1024**3:.2f} GB of {quota_gb:.0f} GB ({pct:.0f}%)"
+    if pct >= 95:
+        results.append(("ERR ", "disk usage CRITICAL", 1,
+                        detail + " — apply the retention policy (docs/claude/ops.md): "
+                        "compress/delete superseded bible_pre_* fallbacks first"))
+    elif pct >= 85:
+        results.append(("WARN", "disk usage high", 1,
+                        detail + " — retention policy due soon (docs/claude/ops.md)"))
+    else:
+        results.append(("OK  ", "disk usage", 0, detail))
+
+
 # ── --backup-controls: the durable proof-of-fire (Session 5) ─────────────────
 # The live known positive (the 07-02 corrupt gz) rotates out eventually; this
 # mode is the permanent control, same pattern as cert_invariants --controls:
@@ -225,6 +253,9 @@ if CONTROLS:
 if "--no-backup-check" not in sys.argv:
     backup_checks(next((a.split("=", 1)[1] for a in sys.argv
                         if a.startswith("--backup-dir=")), "~/db_backups"))
+
+if "--no-disk-check" not in sys.argv:
+    disk_check()
 
 # ── print report ─────────────────────────────────────────────────────────────
 report_lines = [f"=== bible.db health check: {DB} ===", ""]

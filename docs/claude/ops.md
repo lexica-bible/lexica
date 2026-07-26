@@ -86,6 +86,24 @@ security, rebuild procedure.
   `--only-warn` = mails ONLY on a failed check. Task's mail keys + `OWNER_EMAIL` in
   `~/bible-db/.env`. Memory `project_email_smtp`.
 
+## DISK RETENTION POLICY (reviewer-ruled 2026-07-26 — the permanent fix for the
+## recurring 98%-full incidents; nothing here is optional)
+1. **Rebuild fallbacks (`bible_pre_*`): exactly ONE per receipted rebuild** — the
+   swap-adjacent copy. Uncompressed until the rebuild's receipt chain closes + 7
+   days; gzip after; DELETE when the next receipted swap's fallback exists with
+   green gates. (Current rollback of record: `bible_pre_r2c3_swap.db`.) This is a
+   hand-run policy applied at rebuild close-outs, not automated.
+2. **The nightly backup job backs up LIVE dbs ONLY** — `backup_db.py` skips
+   `bible_pre_*`, `*_test*`, `*.new*` (patterns in the script cite this ruling; do
+   not re-broaden). Backing up a fallback was the leak: every rebuild's 410M copy
+   silently gained a second 410M nightly duplicate.
+3. **Stray journal fragments** (`-wal`/`-shm`/`-journal` leftovers in bible-db or
+   db_backups) are deletable as a class on sight.
+4. **Disk guard in health_check** (`disk_check`): WARN ≥85%, ERR ≥95% with the
+   remedy named in the line. Quota via `DISK_QUOTA_GB` env (default 5).
+5. Applied 2026-07-26: both superseded fallbacks + their backup duplicates +
+   strays deleted (~1.2G); post-swap bible.db backup verified same day.
+
 ## Backups — `scripts/backup_db.py` (2026-06-28)
 The live dbs are PA-only + not in git, and a careless session has blanked bible.db.
 `backup_db.py` is the floor: a daily, VERIFIED, rotating backup of EVERY live db

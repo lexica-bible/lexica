@@ -50,6 +50,16 @@ from pathlib import Path
 _SKIP_SUFFIX = (".bak", ".new", ".blank")
 _SKIP_CONTAIN = ("-wal", "-shm", "-journal")
 
+# RETENTION POLICY (reviewer-ruled 2026-07-26, recorded in docs/claude/ops.md):
+# the nightly job backs up LIVE databases ONLY. Manual rebuild fallbacks
+# (bible_pre_*) and build/test copies are already copies — backing up a backup
+# was the leak that recurringly filled the disk (a 410M fallback gained its own
+# 410M nightly duplicate). Do NOT "helpfully" re-broaden these patterns; the
+# fallbacks' own retention (keep one per receipted rebuild, compress after
+# receipt-close + 7 days) is a HAND-run policy in ops.md, not this job's scope.
+_SKIP_PREFIX = ("bible_pre_",)
+_SKIP_CONTAIN = _SKIP_CONTAIN + ("_test",)
+
 # Per-db retention override: bible.db copies are ~270-400 MB each and dominate
 # the pile; JP-ruled 2026-07-16 keep 3 (the newest good copy is never deleted
 # by _rotate regardless, and the standing rule stands: never delete the only
@@ -65,6 +75,8 @@ def discover_dbs(src: Path) -> list[Path]:
         if any(n.endswith(s) for s in _SKIP_SUFFIX):
             continue
         if any(c in n for c in _SKIP_CONTAIN):
+            continue
+        if any(n.startswith(pre) for pre in _SKIP_PREFIX):
             continue
         out.append(p)
     return out
