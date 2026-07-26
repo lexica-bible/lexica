@@ -438,6 +438,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     : groupings.filter(g => language === "greek" ? g.strongs[0] === "G" : g.strongs[0] === "H");
 
   const isHeb = profile && profile.strongs[0] === "H";
+  // Occurrence-count line standard (JP-approved 2026-07-26): `{count}× in {corpus}`,
+  // no space before ×, count in the bolder weight — matches the word card's lines.
+  const corpusName = { abp: "ABP", heb: "Hebrew OT", kjv: "KJV", bsb: "BSB" }[profileCorpus]
+    || profileCorpus.toUpperCase();
   const occCount = !profile ? 0 : (testament === "all"
     ? profile.total
     : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0));
@@ -657,7 +661,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               {firstGloss && <span className="detail-gloss">{firstGloss}</span>}
             </div>
           )}
-          <div className="detail-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
+          <div className="detail-morph"><b>{occCount}</b>× in {corpusName}</div>
         </div>
       </div>
 
@@ -809,8 +813,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {profile ? (
             <>
               <div className="wm-occhead">
-                <span className="wm-occ-count">{selectedBook && selBookCount != null ? selBookCount : occCount}</span>
-                <span className="wm-occ-lbl">{selectedBook ? "in " + selBookName : (occCount === 1 ? "occurrence" : "occurrences")}</span>
+                <span className="wm-occ-count">{selectedBook && selBookCount != null ? selBookCount : occCount}×</span>
+                <span className="wm-occ-lbl">in {selectedBook ? selBookName : corpusName}</span>
                 <span className="wm-occ-meta">{tLabel} · {profileCorpus.toUpperCase()}</span>
               </div>
               {occList}
