@@ -506,17 +506,26 @@ app.py matches.
   shared with the audit; bare `-im` excluded — collides with Ephraim/Miriam). A hyphenated click
   ("Beth-el") RETRIES hyphen-blind against `pn_binding` (bind keyed on english_head "bethel").
   Full record: memory `project_metav_expansion`.
-- **Bound-card occurrences:** these PNs carry a real Strong's on `strongs_base` but a bare
-  `strongs='*'` (TIPNR backfilled the number), so the bound card un-gates the standard
-  occurrence sections and the ABP count comes from `/api/strongs-count/<n>?by=base`. OT names
-  key to HEBREW on purpose — TIPNR's Greek form is a STEP-extended number (G9827) our lexicon
-  lacks and ABP never uses; the ABP Greek occurrences still surface via the Hebrew base.
-  **The "don't re-pitch a pure Greek re-key" rule is SUPERSEDED (JP ruling R-2, 2026-07-16):**
-  the Greek-name identity migration is approved as DIRECTION — its own staged rebuild AFTER
-  the head-word rebuild, designed in `docs/DESIGN_greek_name_identity.md` (five open JP
-  rulings inside; do not build until they land). The Hebrew-key stopgap stays live until then.
-  (The old "Appears N×" TIPNR ref-list was tried + removed — it listed verse pointers, some
-  without the word.) Full record + build order: memory `project_entity_resolution_rebuild`.
+- **PN identity POST-RETIREMENT (R-2 complete, live 2026-07-26):** ABP proper-noun rows carry
+  their GREEK identity in `strongs_base` — a real G-number, a STEP-extended G9xxx (main lexicon
+  lacks these; lemma via `step_lexicon`, `base` is a NUMBER key), or `'*'` when no scheme
+  numbers the name (14,850 lemma-only + always-'*' rows). `strongs` stays bare `'*'` on
+  backfills. EXCEPTION (C3-Q1, machine-visible): 3,380 'none'-class rows KEEP their Hebrew
+  number until the gentilic/people-class Greek backfill candidate lands.
+- **`pn_hebrew_xref` — the Hebrew cross-ref home (Q2, one fact one home):** one row per PN word
+  `(verse_id, position, hebrew_base, class)`; `hebrew_base` NULL (never '') for the 4,603
+  rows that never had one; `class` ∈ abp-tag|tipnr|lemma-only|none, `'none'` IS the queryable
+  kept-Hebrew exception marker. EVERY H-keyed ABP read goes through it: `core.h_abp_predicate`
+  (counts), `core.pn_xref_parts` (tipnr type-badge join), `core.step_lemma_cols` (G9xxx lemma
+  COALESCE), `_abp_strongs_filter`'s H union, the binder's guard number
+  (`build_entity_binding.occ_base_parts` — reconstructs pre-retirement values byte-for-byte;
+  tipnr NULL-hebrew rows present `'*'`, never their new G, or novel binds fire), and the audit
+  instruments (two-derivations, cert #4). All of these are table-existence-gated (absent →
+  pre-retirement SQL) — that dormancy pattern is why the swap needed no deploy.
+  A words rebuild MUST re-create this table (retire_hebrew_identity.py is the writer; the
+  identity builder re-sources `hebrew_base`/classes from it, never from the rewritten column).
+  Full record + receipt chain: docs/PLAN_r2_c3_rebuild.md; memory
+  `project_entity_resolution_rebuild`.
 - CRITICAL: the lexicon join `l.strongs_g = w.strongs_base` structurally prevents a Hebrew
   H-number matching a Greek row (the old SUBSTR+LIKE guard let H121 slip → bogus G121 lemma
   broke Hebrew-PN metaV). Applies to BOTH chapter_text and verse_words.

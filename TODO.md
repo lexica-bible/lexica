@@ -113,6 +113,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
   fix if the filter is reused at scale.
 
+## R-2 residue (ticketed at close, 2026-07-26 — none blocking, JP raises)
+- **Gentilic/people-class Greek backfill** — the named candidate that retires the 3,380
+  kept-Hebrew ('none'-class) rows in pn_hebrew_xref (C3-Q1 condition b). Adjacent to pile U.
+- **Binder Greek-key bases extension — PARKED BY RULING** (would fire novel binds; own gates
+  when raised). Record: PLAN_r2_stage3.md charter amendment.
+- **Lemma-only Word-study key type** — numberless PN identities can't open Word study (card
+  keeps the static count). New key/URL shape = own candidate (held out of G2 by ruling).
+- **Backup freshness must flip under 25h post-quota-cleanup** — glance at the next nightly
+  email; a second failure is real I/O, investigate first.
+
 ## Open word-study / data issues (low priority, none gating)
 - **cert check #7 place-as-person mirror binds (ebal ×1/5, jeshua ×10/1, judah ×1/1,
   uzza ×5/2) — PRE-EXISTING ON LIVE, ticketed by reviewer ruling 2026-07-25 (candidate-3

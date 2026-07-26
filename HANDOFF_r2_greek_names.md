@@ -1,16 +1,27 @@
-# HANDOFF — R-2 Greek-name migration (open a fresh session from this doc)
+# HANDOFF — R-2 Greek-name migration — ★ COMPLETE, ALL THREE STAGES LIVE ★
 
-## ★★ STAGE 3 IN FLIGHT — read docs/PLAN_r2_stage3.md FIRST (the charter).
-## G1 CLEAR (reader tags Greek-keyed, receipt G1-R2) + G2 CLEAR (Word study
-## answers STEP identities, receipt G2-R1) — both live behind READER_GREEK_FLIPS
-## (second switch, separate from READER_GREEK_IDENTITY; rollback = its WSGI line).
-## G3 RULED: Option B (lemma-only cells cleared at retirement; Hebrew moves to
-## the Q2 cross-ref home). Card visual state SETTLED BY JP — do not restyle
-## (PLAN_r2_stage3.md "CARD SETTLED STATE" + the standing visual-approval rule).
-## Deploy rule: dashboard Reload + 5× curl sweep, never bare touch.
-## NEXT: (1) Hebrew-flash trace (classification), (2) candidate-3 sizing
-## (G4/G5 gates: trial-then-apply, roster gate, must-touch grep, re-receipt of
-## both flips post-rebuild).
+## ★★★ R-2 CLOSED 2026-07-26. Hebrew retirement (candidate 3) swapped live.
+## Receipt chain: W1-C3 (code-first dormant wave, 4dac41c7) → R1-C3 (rebuild
+## on test copy, full-green battery) → G5-R1 (both flips re-receipted against
+## the retired data). Six rulings on record in docs/PLAN_r2_c3_rebuild.md +
+## the stage-3 charter: JP table checkpoint (cleared on intent) · dedicated
+## retirement builder (import_tipnr untouched) · binder xref-sourced guard
+## (Greek-key extension PARKED) · count re-declaration 25,581→25,246 · the
+## two instrument xref updates · cert #7 pre-existing disposition (TODO.md).
+## Two halts, both resolved to standard (declared-expectation falsification;
+## binder drift) — run record in docs/PLAN_r2_c3_rebuild.md.
+## ⚠ SWITCH SEMANTICS (recorded, expected): post-rebuild, READER_GREEK_FLIPS
+## OFF no longer means Hebrew-everywhere — words.strongs_base itself now
+## carries the Greek identity. Rollback of the retirement is the saved db copy
+## (~/bible-db/bible_pre_r2c3_swap.db, one move back + Reload), NOT a switch.
+## What live serves now: ABP PN rows Greek-keyed (real G / STEP G9xxx / '*'
+## for numberless); Hebrew numbers in `pn_hebrew_xref` (per-word cross-ref
+## home; class column, 'none' = the 3,380 kept-Hebrew exception awaiting the
+## gentilic backfill candidate). Deploy rule stands: dashboard Reload + 5×
+## curl sweep, never bare touch. Card visual state SETTLED — do not restyle.
+## Open residue (ticketed, none blocking): cert #7 mirror binds (TODO.md) ·
+## gentilic/people-class Greek backfill · binder Greek-key extension (parked
+## by ruling) · lemma-only Word-study key type · backup freshness <25h check.
 
 ## ★ STAGE 2 CLOSED — LIVE 2026-07-24, receipt 2 issued (commit 7b31eb4). ABP
 ## proper-noun cards now carry the GREEK identity; Hebrew demoted to a labeled

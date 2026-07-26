@@ -10,6 +10,12 @@ security, rebuild procedure.
   venv path is missing), and reloads the site ONLY if tests pass. A loader hiccup warns but
   never blocks the reload, so adding a book just needs a normal deploy.
 - Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
+- **RELOAD RULE (G2 stale-worker lesson, reviewer-ruled 2026-07-24):** for any deploy that
+  changes SERVING code, the PythonAnywhere dashboard **Reload button** is the standard — a
+  `touch` reload once left a half-refreshed worker mix live (old code 404ing, mixed state
+  500ing, while a console run of the same code+data was clean). The 5× repeated-curl sweep on
+  a changed endpoint is part of DEPLOY VERIFICATION, not incident response. (deploy.sh:63
+  still uses `touch` — fix queued as its own task.)
 - PA git is `pull.rebase false`, `merge.autoedit no` (no prompts). The database is NOT in git —
   managed directly on PA.
 - Installing BY HAND after a requirements change: on PA, `workon bible-env` THEN

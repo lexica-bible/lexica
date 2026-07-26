@@ -126,7 +126,17 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
-8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; touch wsgi.
+8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; then the
+   PythonAnywhere dashboard Reload button + 5× curl sweep (the G2 stale-worker rule — never bare touch).
+8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
+   HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
+   import_tipnr (still on the test copy, before the gates): `scripts/retire_hebrew_identity.py <db>`
+   (dry-run then --apply; NOTE its hard-coded expected class split — a words rebuild that shifts PN
+   rows will need a reviewed re-declaration, that halt is by design) → `scripts/build_pn_greek_identity.py
+   <db> --apply` → `scripts/build_entity_binding.py <db> --apply` (xref-sourced guard numbers) →
+   gates: `scripts/audit_unfindability.py <pre> <db>` + `scripts/audit_two_derivations.py <db>`.
+   Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
+   but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
 9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
    leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
