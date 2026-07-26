@@ -114,6 +114,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **cert check #7 place-as-person mirror binds (ebal ×1/5, jeshua ×10/1, judah ×1/1,
+  uzza ×5/2) — PRE-EXISTING ON LIVE, ticketed by reviewer ruling 2026-07-25 (candidate-3
+  battery disposition).** Fails identically on the untouched pre-rebuild copy
+  bible_pre_r2c3_2026-07-25.db — the retirement neither caused nor touched it; the C3
+  rebuild receipt carries it as the documented pre-existing exception. Shape: a name
+  renders a fuzzy-PERSON bind and an exact-PLACE bind (the Cushi mirror,
+  cert_invariants check 7). Adjacent to parked pile-U / person-place work — its own
+  review when raised, not a rider on any rebuild.
 - **Hebrew-flash on ABP PN card open — CLASSIFIED 2026-07-25 (JP report, mid-G2): render-order
   defect, frontend-only, FRAME-0 class.** The card mounts with the stored Hebrew state (H-number
   header, BDB section, Hebrew counts) while the per-click Greek-identity fetch is in flight, then
