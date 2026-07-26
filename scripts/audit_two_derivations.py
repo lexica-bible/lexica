@@ -32,10 +32,25 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
 conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 conn.row_factory = sqlite3.Row
 
+# Candidate-3 (reviewer ruling 2026-07-25, docs/PLAN_r2_c3_rebuild.md battery
+# block): post-retirement the Hebrew-keyed derivation lives in pn_hebrew_xref,
+# not words.strongs_base — reading the retired column would measure the
+# retirement itself, not disagreement (the 2026-07-25 battery run proved it:
+# 353 false DIFFs). xref rows with a Hebrew number correspond one-to-one to the
+# pre-retirement Hebrew-keyed words, so the derivation is unchanged in meaning.
+# Table absent -> today's read exactly (the wave's dormancy pattern).
+HAS_XREF = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                        "AND name='pn_hebrew_xref'").fetchone() is not None
+
 # ── Part 1: the two derivations, diffed ─────────────────────────────────────
-heb_counts = {r["strongs_base"]: r["n"] for r in conn.execute(
-    "SELECT strongs_base, count(*) AS n FROM words "
-    "WHERE is_pn=1 AND strongs_base LIKE 'H%' GROUP BY strongs_base")}
+if HAS_XREF:
+    heb_counts = {r["hebrew_base"]: r["n"] for r in conn.execute(
+        "SELECT hebrew_base, count(*) AS n FROM pn_hebrew_xref "
+        "WHERE hebrew_base IS NOT NULL GROUP BY hebrew_base")}
+else:
+    heb_counts = {r["strongs_base"]: r["n"] for r in conn.execute(
+        "SELECT strongs_base, count(*) AS n FROM words "
+        "WHERE is_pn=1 AND strongs_base LIKE 'H%' GROUP BY strongs_base")}
 
 pair_counts = defaultdict(int)   # (hebrew_base, greek_strongs) -> words
 greek_counts = defaultdict(int)  # greek_strongs -> words
@@ -81,25 +96,40 @@ def control(label, ok, detail):
 
 
 def word_base(book, ch, vs, like):
-    row = conn.execute("""
+    """(words value, xref hebrew_base or None, label) for one control word."""
+    xsel = ", x.hebrew_base AS xh" if HAS_XREF else ", NULL AS xh"
+    xjoin = ("LEFT JOIN pn_hebrew_xref x ON x.verse_id = w.verse_id "
+             "AND x.position = w.position" if HAS_XREF else "")
+    row = conn.execute(f"""
         SELECT w.strongs_base AS b,
-               COALESCE(NULLIF(w.english_head,''), w.english) AS label
+               COALESCE(NULLIF(w.english_head,''), w.english) AS label{xsel}
         FROM words w JOIN verses v ON v.id = w.verse_id
+        {xjoin}
         WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.is_pn=1
           AND lower(COALESCE(NULLIF(w.english_head,''), w.english)) LIKE ?
     """, (book, ch, vs, like)).fetchone()
-    return (row["b"], row["label"]) if row else (None, None)
+    return (row["b"], row["xh"], row["label"]) if row else (None, None, None)
 
 
 # Number controls — the three known positives + the must-not + the no-change.
-for label, bk, ch, vs, like, want in [
-    ("N1 maacha @ 2Ch 11:21 -> H4601",        "2Ch", 11, 21, "maacha%", "H4601"),
-    ("N2 shetharboznai @ Ezr 5:3 -> H8370",   "Ezr",  5,  3, "shethar%", "H8370"),
-    ("N3 jiphthahel @ Jos 19:14 -> H3317",    "Jos", 19, 14, "jiphthah%", "H3317"),
-    ("N5 NO-CHANGE abia @ 1Ch 3:10 -> H29",   "1Ch",  3, 10, "abia%", "H29"),
+# Post-retirement (HAS_XREF) each asserts the ruled DUAL-HOME state: the Hebrew
+# number intact in the xref, the words cell at its class's declared value
+# (Maacah lemma-only -> '*'; Abijah tipnr -> G7; the two kept-Hebrew rows
+# unchanged). Pre-retirement: today's single-home assertion exactly.
+for label, bk, ch, vs, like, want, post in [
+    ("N1 maacha @ 2Ch 11:21 -> H4601",        "2Ch", 11, 21, "maacha%", "H4601", "*"),
+    ("N2 shetharboznai @ Ezr 5:3 -> H8370",   "Ezr",  5,  3, "shethar%", "H8370", "H8370"),
+    ("N3 jiphthahel @ Jos 19:14 -> H3317",    "Jos", 19, 14, "jiphthah%", "H3317", "H3317"),
+    ("N5 NO-CHANGE abia @ 1Ch 3:10 -> H29",   "1Ch",  3, 10, "abia%", "H29", "G7"),
 ]:
-    b, lab = word_base(bk, ch, vs, like)
-    control(label, b == want, f"found {lab!r} base={b}" if lab else "WORD NOT FOUND at verse")
+    b, xh, lab = word_base(bk, ch, vs, like)
+    if HAS_XREF:
+        ok = (b == post and xh == want)
+        detail = f"found {lab!r} words={b} xref={xh}" if lab else "WORD NOT FOUND at verse"
+    else:
+        ok = (b == want)
+        detail = f"found {lab!r} base={b}" if lab else "WORD NOT FOUND at verse"
+    control(label, ok, detail)
 
 bad = conn.execute("""
     SELECT count(*) FROM words

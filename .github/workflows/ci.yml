@@ -56,6 +56,7 @@ jobs:
           python tests/test_ws_greek_flips.py
           python tests/test_c3_dormant.py
           python tests/test_retire_builder.py
+          python tests/test_c3_instruments.py
 
   frontend:
     runs-on: ubuntu-latest

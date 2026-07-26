@@ -117,9 +117,39 @@ def check_corrections(conn, expected_active=None) -> list:
         if len(hits) != 1:
             problems.append(f"{key}: {len(hits)} matching slot(s), expected exactly 1")
         elif not _cellmatch(hits[0]["val"], c["corrected_value"]):
+            if _correction_moved_to_xref(conn, c, hits[0]["val"]):
+                continue     # certified value intact in its post-retirement home
             problems.append(f"{key}: reads {hits[0]['val']!r}, certified value is "
                             f"{c['corrected_value']!r} (source was {c['source_value']!r})")
     return problems
+
+
+def _correction_moved_to_xref(conn, c, cell_val) -> bool:
+    """Candidate-3 (reviewer ruling 2026-07-25, docs/PLAN_r2_c3_rebuild.md
+    battery block): the Hebrew retirement moves a proper noun's Hebrew number
+    from words.strongs_base into pn_hebrew_xref. A certified strongs_base
+    correction on such a word still HOLDS when the xref row carries the
+    certified Hebrew number AND the words cell shows its class's declared
+    post-retirement value ('*' for lemma-only, a G-number for tipnr). A
+    kept-Hebrew ('none') row gets no exemption — its mismatch is real. Table
+    absent -> False, today's check exactly (the wave's dormancy pattern)."""
+    if c["field"] != "strongs_base":
+        return False
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                        "AND name='pn_hebrew_xref'").fetchone():
+        return False
+    row = conn.execute("""
+        SELECT x.hebrew_base AS h, x.class AS cls
+        FROM pn_hebrew_xref x JOIN verses v ON v.id = x.verse_id
+        WHERE v.book=? AND v.chapter=? AND v.verse=? AND x.position=?
+    """, (c["book"], c["chapter"], c["verse"], c["position"])).fetchone()
+    if row is None or not _cellmatch(row["h"], c["corrected_value"]):
+        return False
+    if row["cls"] == "lemma-only":
+        return cell_val == "*"
+    if row["cls"] == "tipnr":
+        return bool(cell_val) and cell_val.startswith("G")
+    return False
 
 
 def check_person_place_binding(conn) -> list:
