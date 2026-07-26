@@ -1403,9 +1403,9 @@ input { font-family: inherit; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
-/* PN-card identity lines — SETTLED BY JP 2026-07-25, do not restyle (design-creep
-   rule): `9× G9826` / `9× H90`, standard link blue, weight 500 (the base link
-   weight, same voice as Read in context), no dot, no bold, no underline. */
+/* PN-card identity lines — SETTLED BY JP 2026-07-25, AMENDED BY JP 2026-07-26
+   (unified count-line standard): `9× G9826` with the COUNT bold; rest of the
+   ruling stands — standard link blue, base weight 500, no dot, no underline. */
 .occ-link--id { font-weight: 500; }
 
 /* ---- Extracted from inline styles ---- */

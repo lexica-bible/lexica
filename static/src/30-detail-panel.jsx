@@ -1131,14 +1131,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "greekIdOcc": return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
-        {/* FINAL STATE, JP-ruled 2026-07-25 (do not restyle — design-creep rule):
-            both identity lines are `COUNT× NUMBER` — no dot, no bold, no
-            underline; plain blue link, hover-underline only, matching the
-            "Read in context / Interlinear" link voice. Identity emphasis lives
-            in the card header (G9826 (STEP)), not here. */}
+        {/* SETTLED STATE, amended by JP 2026-07-26: the COUNT is bold to match
+            the unified count-line standard (`{count}× …`, bold count) — the
+            rest of the 2026-07-25 ruling stands: no dot, no underline, plain
+            blue link, hover-underline only. Identity emphasis stays in the
+            card header (G9826 (STEP)). */}
         {greekId.greek_strongs ? (
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
-            {`${greekId.greek_count}× ${greekId.greek_strongs}`}
+            <span><b>{greekId.greek_count}</b>× {greekId.greek_strongs}</span>
           </button>
         ) : (
           <div className="occ-link occ-link--static">
@@ -1154,10 +1154,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="hebCrossRef" className="sec">
         <h4 className="sec-head"><span className="sec-t">Hebrew Cross-Reference</span></h4>
         <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.hebrew_base, "abp")}>
-          {/* FINAL STATE, JP-ruled 2026-07-25 — twin of the ABP line above:
-              `COUNT× NUMBER`, plain blue link, no dot/bold/underline. The old
-              "— Word study" label's reason expired with G2. */}
-          {greekId.hebrew_count ? `${greekId.hebrew_count}× ${greekId.hebrew_base}` : greekId.hebrew_base}
+          {/* SETTLED STATE, amended by JP 2026-07-26 — twin of the ABP line
+              above: count bold per the unified count-line standard; the rest
+              of the 2026-07-25 ruling stands (plain blue link, no dot, no
+              underline). */}
+          {greekId.hebrew_count
+            ? <span><b>{greekId.hebrew_count}</b>× {greekId.hebrew_base}</span>
+            : greekId.hebrew_base}
         </button>
       </section>
     );

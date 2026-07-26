@@ -217,11 +217,12 @@ Invariance deviation + substitute evidence on file below.
 **CARD SETTLED STATE (JP visual rulings, final — reopen ONLY on JP's word):**
 - Header: `G9826 (STEP)` — STEP tag beside the header number, hover explains
   ("Extended number from the STEP Bible project — beyond standard Strong's").
-- Identity lines: `9× G9826` / `9× H90` — count first, no dot, no bold, no
-  underline, no arrows, no destination labels; whole line a plain blue link,
-  weight 500 (the panel's one link voice, same as Read in context), hover-
-  underline only. Settled after five styling passes — anti-design-creep rule
-  applies.
+- Identity lines: `9× G9826` / `9× H90` — count first, no dot, no underline,
+  no arrows, no destination labels; whole line a plain blue link, weight 500
+  (the panel's one link voice, same as Read in context), hover-underline only.
+  **AMENDED BY JP 2026-07-26 (unified count-line standard): the COUNT is bold**
+  — matches every other occurrence-count line; rest of the ruling stands.
+  Anti-design-creep rule still applies.
 
 Standing rules confirmed in force (both in this doc): visual changes = JP
 explicit approval (block above); deploys of serving code = dashboard Reload +
