@@ -116,6 +116,41 @@ The rebuild receipt must cite JP's OK.
    5× sweep anyway (workers hold open db handles) → live checks → G5
    re-receipt of both flips + the switch-semantics record.
 
+## RUN RECORD — trial COMPLETE, battery FULL GREEN (2026-07-25/26, awaiting receipt)
+
+All numbers below pasted by JP from PA; nothing sampled.
+
+1. Roster gate CLEAN (4,331 exact). 2. Retirement dry-run matched the
+re-declared expectation line for line; apply wrote 25,246 rewrites + 32,479
+xref rows (4,603 no-Hebrew, 0 empty-string), GLOB 0, self-verified.
+(First trial HALTED on the wrong-assumption declaration — discipline worked;
+matrix pulled read-only, re-declared, reviewer-accepted. On the record above.)
+3. Identity re-run split IDENTICAL to stage 1 (3,518/10,731/14,850/3,380),
+Q2-sourced. 4. Binder drift −752 renders HALTED, itemized to the fuzzy/
+number-only guard classes, ruled fix = xref-sourced guard numbers; re-run
+LINE-FOR-LINE identical to the pre-copy baseline (14,830/68/885, every tier
+class) + both hand-check files byte-identical. 5. compare_words: exactly
+25,246 differing rows, itemized lemma-only 14,515 + tipnr 10,731, zero
+other-column drift. 6. Unfindability gate: control fired, 25,581 rows in
+scope, 0/0 — PASS. 7. health_check fully green (26 STEP extended numbers
+recognized as expected). 8. Two-derivations: instruments ruled stale →
+xref-sourced update (locked test, sabotage controls); post-fix full-output
+diff vs the pre-copy run = ONLY the db-path header + the four dual-home
+control detail lines (all PASS both sides); controls 10/10.
+9. cert_invariants 6/7; #7 (ebal/jeshua/judah/uzza mirror binds) fails
+IDENTICALLY on the untouched pre-copy → dispositioned pre-existing by ruling,
+ticketed in TODO.md, carried as the documented exception.
+
+**Receipt citations owed (per reviewer):** JP table checkpoint (cleared on
+intent) · builder-deviation ruling (dedicated retirement script) ·
+binder-guard ruling (xref-sourced, Greek-key extension parked) ·
+expectation re-declaration (25,581→25,246) · the two instrument rulings ·
+#7 pre-existing disposition.
+
+**After receipt:** swap (one reversible move, pre-copy kept), dashboard
+Reload + 5× sweep, live checks, G5 re-receipt of both flips +
+switch-semantics record.
+
 ## G5 reminder (rides after the swap)
 
 READER_GREEK_FLIPS OFF no longer means Hebrew-everywhere — expected, recorded,
