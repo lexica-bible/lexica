@@ -59,8 +59,27 @@ if echo "$changed" | grep -qx "requirements.txt"; then
   echo "    packages updated."
 fi
 
-echo "==> Reloading the live site..."
-touch /var/www/www_lexica_bible_wsgi.py
+# G2 stale-worker ruling (docs/claude/ops.md): the dashboard Reload is the standard
+# for serving-code deploys — a `touch` reload once left a half-refreshed worker mix
+# live. The API reload below is the dashboard button's exact equivalent (same full
+# worker restart). PA sets API_TOKEN in every console once a token exists
+# (Account -> API Token); without one we STOP and say so rather than silently touch.
+echo "==> Reloading the live site (dashboard-equivalent API reload)..."
+if [ -n "$API_TOKEN" ]; then
+  code=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+    -H "Authorization: Token $API_TOKEN" \
+    "https://www.pythonanywhere.com/api/v0/user/appssanding720/webapps/www.lexica.bible/reload/")
+  if [ "$code" = "200" ]; then
+    echo "    reloaded (API — all workers restarted together)."
+  else
+    echo "    !! API reload returned HTTP $code — press the dashboard Reload button"
+    echo "       by hand before trusting this deploy (do NOT rely on touch)."
+  fi
+else
+  echo "    !! No API_TOKEN in this console. Create one (Account -> API Token),"
+  echo "       reopen the console, and re-run — or press the dashboard Reload"
+  echo "       button by hand NOW. Deploy is NOT reloaded yet."
+fi
 
 # Warm the fresh workers so the first REAL visitor doesn't eat the ~13s cold-start.
 # PA boots each worker on its FIRST hit, so the warm-up requests must arrive AT ONCE.
@@ -75,6 +94,14 @@ for i in $(seq 1 12); do
 done
 wait
 echo "    warmed."
+
+# The 5x repeated-curl worker sweep is part of DEPLOY VERIFICATION (same G2
+# ruling), not incident response — every worker must answer 200.
+echo "==> Worker sweep (5x, all must be 200):"
+for i in 1 2 3 4 5; do
+  curl -s -o /dev/null -m 60 -w "%{http_code} " https://www.lexica.bible/
+done
+echo
 
 echo "==> Done. Site reloaded."
 echo "    (Reminder: after a words-table REBUILD, run health_check.py by hand —"

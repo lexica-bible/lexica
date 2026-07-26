@@ -1,0 +1,46 @@
+# TICKET — cert check #7: four place-as-person mirror binds (pre-existing on live)
+
+Opened 2026-07-26 per the reviewer's candidate-3 battery disposition. Evidence of
+pre-existence: check #7 fails IDENTICALLY on the untouched pre-rebuild copy
+(bible_pre_r2c3_2026-07-25.db) — same four names, same counts — so live carried
+this before the retirement and the rebuild neither caused nor touched it.
+
+## The finding (cert_invariants.py check 7, both-directions form)
+
+A name must not render a FUZZY match to one section AND an EXACT match to the
+other. Four names trip the place-as-person direction (fuzzy-PERSON + exact-PLACE):
+
+    ebal    1 fuzzy-person  /  5 exact-place
+    jeshua  10 fuzzy-person /  1 exact-place
+    judah   1 fuzzy-person  /  1 exact-place
+    uzza    5 fuzzy-person  /  2 exact-place
+
+## Why this shape is suspicious, not proven wrong
+
+The Cushi precedent (cert Session 4) was this pattern's mirror: the FUZZY bind
+was the wrong one (a man rendering a place card). But the reverse inference is
+not automatic here — e.g. jeshua's 10 fuzzy-person binds may be REAL people
+(Jeshua the priest via a spelling variant) coexisting legitimately with the
+place Jeshua (Neh 11:26). The check flags coexistence; it does not adjudicate it.
+
+## Proposed handling (for reviewer ruling BEFORE any build)
+
+1. **Evidence pass first (read-only):** dump the four names' fuzzy-person render
+   rows (book ch:vs, entity bound, stored number) + the exact-place rows, and
+   check each fuzzy-person bind against TIPNR at the attested verse — is the
+   bound person entity the right referent there? Per-row verdicts, no sampling.
+2. **Candidate fix if rows prove wrong:** the SYMMETRIC guard —
+   entity_resolution.py's fuzzy path already skips a PLACE candidate when an
+   exact-spelling PERSON entity carries the same stored number
+   (`person_same_num`, the Cushi fix, :749–753); mirror it: skip a PERSON
+   fuzzy-candidate when an exact-spelling PLACE entity carries the same number.
+   Same safe direction (can only floor, never mis-bind). Blast radius = at most
+   the 17 fuzzy-person rows above.
+3. **If rows prove RIGHT:** the fix is a check-7 refinement (an allowlist with
+   per-name reasons, or a sharper predicate), not a binder change — a green
+   check must mean something, so today's standing red can't just be accepted.
+
+Binder changes are trial-then-apply (dry-run must reproduce current counts
+except the itemized rows); cert #7 must go green (or be sharpened) either way.
+
+Status: OPEN — awaiting reviewer ruling on the evidence pass + fix direction.

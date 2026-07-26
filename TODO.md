@@ -131,7 +131,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   rebuild receipt carries it as the documented pre-existing exception. Shape: a name
   renders a fuzzy-PERSON bind and an exact-PLACE bind (the Cushi mirror,
   cert_invariants check 7). Adjacent to parked pile-U / person-place work — its own
-  review when raised, not a rider on any rebuild.
+  review when raised, not a rider on any rebuild. **Ticket opened 2026-07-26:
+  docs/tickets/TICKET_cert7_mirror_binds.md (evidence pass + symmetric-guard candidate,
+  awaiting reviewer ruling before any build).**
 - **Hebrew-flash on ABP PN card open — CLASSIFIED 2026-07-25 (JP report, mid-G2): render-order
   defect, frontend-only, FRAME-0 class.** The card mounts with the stored Hebrew state (H-number
   header, BDB section, Hebrew counts) while the per-click Greek-identity fetch is in flight, then
