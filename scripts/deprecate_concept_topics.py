@@ -19,7 +19,7 @@ Backs up study.db first (SQLite online .backup — safe on a live db). Dry-run b
     python scripts/deprecate_concept_topics.py --apply    # back up, then soft-delete
     python scripts/deprecate_concept_topics.py --undo --apply   # bring them all back (deleted=0)
 
-After --apply, reload the site: touch /var/www/www_lexica_bible_wsgi.py
+After --apply, reload the site: bash ~/bible-db/scripts/deploy.sh (API reload + sweep — G2 rule)
 """
 import argparse
 import json
@@ -111,7 +111,7 @@ def main():
             conn.execute(q, [new_deleted, now, *chunk])
         conn.commit()
         print("%s applied to %d rows." % (action, len(targets)))
-        print("Reload the site: touch /var/www/www_lexica_bible_wsgi.py")
+        print("Reload the site: bash ~/bible-db/scripts/deploy.sh  (API reload + sweep — G2 rule)")
     finally:
         conn.close()
 

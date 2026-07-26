@@ -32,7 +32,7 @@ RESTORE (under stress, the short version):
   python3 scripts/backup_db.py --list          # pick the stamp you want
   gunzip -c ~/db_backups/bible.db.<stamp>.db.gz > ~/bible-db/bible.db.new   # (or cp if raw)
   cd ~/bible-db && mv bible.db bible.db.bak-$(date +%F) && rm -f bible.db-wal bible.db-shm \\
-      && mv bible.db.new bible.db && touch /var/www/www_lexica_bible_wsgi.py
+      && mv bible.db.new bible.db && bash ~/bible-db/scripts/deploy.sh   # API reload + sweep (never bare touch — G2 rule)
 
 PA scheduled task (daily, same idea as health_check):
   cd ~/bible-db && python3 scripts/backup_db.py >> ~/db_backups/backup.log 2>&1

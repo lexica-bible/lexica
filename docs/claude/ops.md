@@ -9,13 +9,16 @@ security, rebuild procedure.
   pull changed `requirements.txt` (a failed install stops the deploy; bare-`pip` fallback if the
   venv path is missing), and reloads the site ONLY if tests pass. A loader hiccup warns but
   never blocks the reload, so adding a book just needs a normal deploy.
-- Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
+- Manual fallback: `cd ~/bible-db && git pull`, then a proper reload (below) — NOT a bare touch.
 - **RELOAD RULE (G2 stale-worker lesson, reviewer-ruled 2026-07-24):** for any deploy that
-  changes SERVING code, the PythonAnywhere dashboard **Reload button** is the standard — a
-  `touch` reload once left a half-refreshed worker mix live (old code 404ing, mixed state
-  500ing, while a console run of the same code+data was clean). The 5× repeated-curl sweep on
-  a changed endpoint is part of DEPLOY VERIFICATION, not incident response. (deploy.sh:63
-  still uses `touch` — fix queued as its own task.)
+  changes SERVING code, the dashboard-Reload-equivalent is the standard — a `touch` reload
+  once left a half-refreshed worker mix live (old code 404ing, mixed state 500ing, while a
+  console run of the same code+data was clean). The 5× repeated-curl sweep on a changed
+  endpoint is part of DEPLOY VERIFICATION, not incident response. **deploy.sh implements
+  both since 2026-07-26** (PA API reload — the button's exact equivalent — + built-in sweep).
+  The API token: PA injects `API_TOKEN` into consoles opened AFTER the token exists
+  (Account → API Token) — an already-open console won't have it; reopen. Without a token
+  deploy.sh stops loudly and says to press the dashboard button by hand.
 - PA git is `pull.rebase false`, `merge.autoedit no` (no prompts). The database is NOT in git —
   managed directly on PA.
 - Installing BY HAND after a requirements change: on PA, `workon bible-env` THEN
@@ -26,7 +29,7 @@ security, rebuild procedure.
   sets them with `os.environ['KEY'] = '...'`, and those lines MUST sit ABOVE the app import
   (module-level reads like `GOOGLE_CLIENT_ID = os.environ.get(...)` run at import).
   `core.load_dotenv()` doesn't reliably find a `.env` under the PA web app. Edit the WSGI, then
-  reload (touch it). Keys set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`,
+  reload (deploy.sh's API reload, or the dashboard button). Keys set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`,
   `OWNER_EMAIL`, mail keys `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` + `MAIL_FROM` +
   `SITE_URL` (+ optional `FCBH_API_KEY`, `MAIL_REPLY_TO`). Outbound mail goes through **Resend**
   (relay `smtp.resend.com:587`, user `resend`, pass = a Resend API key, From

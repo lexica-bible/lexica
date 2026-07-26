@@ -28,7 +28,7 @@ back to the OLD substring over-match — the documented fix was asleep. `scripts
 (additive, re-runnable, adds column + index + fills, touches nothing else) puts it back:
 ```
 python3 scripts/add_lemma_plain.py bible.db --apply   # on PA
-touch /var/www/www_lexica_bible_wsgi.py               # reload — per-worker "no column" memory resets
+bash ~/bible-db/scripts/deploy.sh                     # reload (API + sweep) — per-worker "no column" memory resets; never bare touch (G2 rule)
 ```
 This is step 0 of step 0. It wakes word-study's exact-match AND gives corpus the key to reuse.
 (Update memory once confirmed — the doc claim is currently false.)

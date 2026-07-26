@@ -369,7 +369,7 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"\n  Built into: {target}   (live {bible_db} untouched)")
     print(f"  Run the dependent builders against the COPY, then swap — REVERSIBLE:")
     print(f"      mv {bible_db} {bible_db}.bak-$(date +%F) && rm -f {bible_db}-wal {bible_db}-shm \\")
-    print(f"        && mv {target} {bible_db} && touch /var/www/www_lexica_bible_wsgi.py")
+    print(f"        && mv {target} {bible_db} && bash ~/bible-db/scripts/deploy.sh  # API reload + sweep, never bare touch (G2 rule)")
 
 
 def run_test(bible_db: str, scrape_db: str, book: str = "genesis", chapter: int = 1) -> None:

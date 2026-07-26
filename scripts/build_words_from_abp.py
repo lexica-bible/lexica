@@ -1659,7 +1659,7 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"      python3 scripts/audit_split_flip.py {target}     # must read 0")
     print(f"\n  Then swap it in — REVERSIBLE, one mv undoes it:")
     print(f"      mv {bible_db} {bible_db}.bak-$(date +%F) && rm -f {bible_db}-wal {bible_db}-shm \\")
-    print(f"        && mv {target} {bible_db} && touch /var/www/www_lexica_bible_wsgi.py")
+    print(f"        && mv {target} {bible_db} && bash ~/bible-db/scripts/deploy.sh  # API reload + sweep, never bare touch (G2 rule)")
 
 
 def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,

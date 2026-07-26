@@ -200,7 +200,8 @@ conserving tool calls; the focus notes below are about context quality, not rati
 ## Deployment quick reference (full detail: docs/claude/ops.md)
 - Preferred: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs invariant tests, loads only
   touched non-canon books, pip-installs on a requirements change, reloads only if tests pass.
-- Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
+- Reload = deploy.sh's API reload (dashboard-equivalent, all workers together) + its built-in
+  5× sweep. NEVER bare `touch` for serving code — stale-worker mix (G2 rule, ops.md).
 - **Env vars/secrets live in the WSGI file, NOT a `.env`** — `os.environ[...]` lines ABOVE the
   app import in `/var/www/www_lexica_bible_wsgi.py`. The nightly `health_check.py` task can't
   see the WSGI env; its mail keys live in a gitignored `~/bible-db/.env`.

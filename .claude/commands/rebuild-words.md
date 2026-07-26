@@ -126,8 +126,9 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
-8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; then the
-   PythonAnywhere dashboard Reload button + 5× curl sweep (the G2 stale-worker rule — never bare touch).
+8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; then
+   `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
+   built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch).
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
    import_tipnr (still on the test copy, before the gates): `scripts/retire_hebrew_identity.py <db>`

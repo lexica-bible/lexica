@@ -389,7 +389,7 @@ def apply(bible_db, scrape_db):
     print(f"  python3 scripts/health_check.py {bible_db}                                        # 0 new warnings")
     print(f"  sqlite3 {bible_db} \"SELECT chapter,count(*) FROM verses WHERE book='Heb' GROUP BY chapter\"  # Heb -> 13 chapters")
     print(f"  # 4. Reload:")
-    print(f"  touch /var/www/www_lexica_bible_wsgi.py")
+    print(f"  bash ~/bible-db/scripts/deploy.sh   # API reload + sweep (never bare touch — G2 rule)")
     print("\nUndo (reversible): delete the 25 Heb 13 verse rows + their words; the side")
     print("tables rebuild clean on their next run.")
 
