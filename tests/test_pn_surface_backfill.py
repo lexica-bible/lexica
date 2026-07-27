@@ -87,6 +87,16 @@ def _make_bible(path):
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
           VALUES (10,1,'Moses','Moses','G3475','*',1);
 
+        -- v11: compound numbered cell — slot must get the bare name word.
+        INSERT INTO verses VALUES (11,'Mat',10,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (11,1,'and Judah','Judah','G2455','*',1);
+
+        -- v12: two-capitals compound — must refuse (no guessing the name word).
+        INSERT INTO verses VALUES (12,'Mat',11,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (12,1,'Jesus','Jesus','G2424','*',1);
+
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
@@ -137,7 +147,12 @@ def _make_scrape(path):
           -- Mat 9:1 — BOTH a name row and a numbered row for Moses with
           -- different forms; the name row must win.
           ('matthew',9,1,1,NULL,'Μωυσής','Moses'),
-          ('matthew',9,1,2,'3475','Μωυσέως','Moses');
+          ('matthew',9,1,2,'3475','Μωυσέως','Moses'),
+          -- Mat 10:1 — compound numbered cell: only the capitalized name word
+          -- is stored, never the connector (the 'Ιούδας δε' live catch).
+          ('matthew',10,1,1,'2455','Ιούδας δε','And Judah'),
+          -- Mat 11:1 — compound with TWO capitalized words: skipped, refuses.
+          ('matthew',11,1,1,'2424','Ιησούς Χριστός','Jesus Christ');
     """)
     c.commit()
     c.close()
@@ -172,15 +187,20 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 13 PN slots total: 9 new + 3 refused + 1 already (v5 pairs but its slot is
-    # already present -> counted 'already', not new). Arithmetic must close.
+    # 15 PN slots total: 10 new + 4 refused + 1 already (v5 pairs but its slot
+    # is already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 13 (must equal 13)" in r.stdout.replace(",", ""), True)
+          "= 15 (must equal 15)" in r.stdout.replace(",", ""), True)
+    check("compound extraction + skip both counted",
+          "compound name-word extracted 1" in r.stdout
+          and "compound skipped 1" in r.stdout, True)
     check("blank-label control FIRES", "blank-label" in r.stdout, True)
     check("edge-trim counter reports the dirty form",
           "edge-trimmed 1" in r.stdout, True)
     check("ambiguity control FIRES", "ambiguous : 1" in r.stdout.replace("  ", " "), True)
-    check("no-match control FIRES", "no-match : 1" in r.stdout.replace("  ", " "), True)
+    # no-match = 2: the Melchizedek control + the two-capitals compound (its
+    # skipped row leaves the Jesus slot with nothing to match).
+    check("no-match control FIRES", "no-match : 2" in r.stdout.replace("  ", " "), True)
 
     # apply
     r = _run(dbp, bhp, "--apply")
@@ -202,7 +222,9 @@ def main() -> int:
     check("cause-C: hyphen-blind Tubalcain paired", rows.get((8, 1)), "Θοβέλ")
     check("cause-B: blank-label slot got NO row", (9, 1) in rows, False)
     check("name row WINS over numbered row", rows.get((10, 1)), "Μωυσής")
-    check("total rows = 1 pre-existing + 9 new", len(rows), 10)
+    check("compound cell stores the bare name word", rows.get((11, 1)), "Ιούδας")
+    check("two-capitals compound refused, NO row", (12, 1) in rows, False)
+    check("total rows = 1 pre-existing + 10 new", len(rows), 11)
     c.close()
 
     if fails:

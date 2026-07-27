@@ -147,7 +147,7 @@ def main():
     # Scrape NAME rows: blank Strong's + Greek present, printed order preserved.
     scrape = defaultdict(list)
     numbered = defaultdict(list)
-    cleaned = dropped_empty = 0
+    cleaned = dropped_empty = compound_split = compound_skipped = 0
     bh = sqlite3.connect(f"file:{args.bh}?mode=ro", uri=True)
     for b, c, v, strongs, greek, english in bh.execute(
             "SELECT book, chapter, verse, strongs, greek, english FROM bh_words "
@@ -165,13 +165,27 @@ def main():
             continue
         if form != greek:
             cleaned += 1
+        if not is_name_row and len(form.split()) > 1:
+            # Compound cell ("And Judah" = 'Ιούδας δε'): our build splits the
+            # connector into its own slot, so storing the compound would print
+            # δε twice on the line (Mat-1 spot-check catch, 2026-07-28 dry-run).
+            # Keep ONLY the name word — the exactly-one-capitalized word —
+            # else skip the row (never guess which word is the name).
+            caps = [w for w in form.split() if w[:1].isupper()]
+            if len(caps) != 1:
+                compound_skipped += 1
+                continue
+            form = caps[0]
+            compound_split += 1
         (scrape if is_name_row else numbered)[(b, c, v)].append(
             (_name_token(english), form))
     bh.close()
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
           f"across {len(scrape):,} verses; numbered capitalized rows: "
           f"{sum(len(v) for v in numbered.values()):,} "
-          f"(edge-trimmed {cleaned:,}; dropped letterless {dropped_empty:,})")
+          f"(edge-trimmed {cleaned:,}; dropped letterless {dropped_empty:,}; "
+          f"compound name-word extracted {compound_split:,}, "
+          f"compound skipped {compound_skipped:,})")
 
     # Every proper-noun slot, grouped per verse, position order.
     verses = defaultdict(list)
