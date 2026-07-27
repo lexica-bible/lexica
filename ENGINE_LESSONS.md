@@ -1455,3 +1455,23 @@ both drifting from the doc.
     list, not the one surface the lane was built for. *(fix beddba6c, receipt on the exact
     surface; two banked rules this weekend for two caught misses — #87's re-prove-the-pass
     and this)*
+
+## Added at the batch-one post-R-2 re-verify (2026-07-27; JP-ruled in)
+
+> ⚠ LEDGER NOTE: numbers 87 and 88 exist TWICE above (head-word rebuild 2026-07-16 lane vs the
+> PN-surface 2026-07-28 sections) and 89 was already taken by the 2026-07-16 lane — so this
+> lesson banks as 90, not the 89 the ruling named. The duplicate 87/88 pair is flagged for a
+> naming ruling; the banked texts are untouched here. (Caught while banking this very lesson —
+> the ledger's own numbering is a derived tally too.)
+
+90. **A count written into docs during a ship session is not a receipt — the table is. Derived
+    tallies decay; re-count from the database at point of use, never carry a number forward.**
+    The docs said 88 live definition cards; the table says 85. Mechanism located, not just
+    resolved: the "None"-trio session numbered three REDRAWS of already-live cards as additions
+    ("#86/#87/#88"), and the inflated tally was then trusted for twelve days, surfacing only when
+    a fire-proof expected 88 rows and got 85. Before-state receipts: G2588 live since the
+    2026-07-03 frequency Batch One (AUDIT 341/1058); the 2026-07-14 ruling names all three as
+    live cards to REDRAW (AUDIT 7773). Same class as the earlier 19→18 batch-3 tally slip —
+    second occurrence is what earned the standing rule. Signature to watch: any ship note that
+    increments a count on a REDRAW. *(batch-one re-verify, 2026-07-27; pasted PA counts; 85
+    canonical)*
