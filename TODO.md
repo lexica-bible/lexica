@@ -1274,6 +1274,15 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
   (G2588/G4172/G3624) are DONE 2026-07-15 (cards 85→88, zero spend — record in
   `AUDIT_lexica_rollout.md`, top entry). Rules unchanged from JP's 2026-07-14 ruling: lazily, a few
   per session at most, development first, full current gate battery, no shortcuts.
+  **GATE on the REMAINDER dips (reviewer-promoted 2026-07-27, batch-one re-verify):** before the
+  first batch drawn from the remainder, RE-RANK the occ≥2 target list — it was computed pre-R-2;
+  name slots now wear Greek numbers, so counts moved. The re-rank must EXCLUDE PN/name numbers
+  (incl. any STEP G9xxx; PN-card minting is its own deferred ticket). Not blocking the verse-short
+  dip.
+  **G1484 (ἔθνος) FLOOR MOVED (2026-07-27 re-verify, pasted PA output):** its pool gained 23
+  R-2-converted name slots (only live card affected; all 87 others clean). The #30 floor-diff
+  NOT-RUN waiver is DEAD for G1484 — any redraw of it reads the actual floor-diff, per-word
+  ruling owed at that time.
 - **Repair-leg gotcha (cost a revert 2026-07-15, ENGINE_LESSONS #83):** if drafts are repaired and
   waiting to ship, SHIP THEM BEFORE committing any prompt edit — a prompt edit stales every cached
   draw at commit time and `--from-draw` refuses a stale draw. Spec-first governs authorization order,
