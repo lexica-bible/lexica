@@ -96,3 +96,19 @@ The old standalone Search tab and `/api/search` are GONE (route + KJV helpers + 
 `api.search` frontend helper deleted, commit 6eaec4e). **views_search.py hosts ONLY
 `/api/text-search`.** Live search = Library in-text search (`/api/text-search`) + Word study
 (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). Don't wire new work to `/api/search`.
+
+## Lemma-keyed entry for numberless PN identities — `PN:<form>` (2026-07-28)
+The ~14,850 lemma-only PN identities (real Greek name-form, no Strong's number in any
+scheme) open Word study via a `PN:<greek_lemma>` key through the SAME
+profile/verses routes (`views_lexicon._pn_lemma_rows` = the ONE derivation, identical to
+the card's static count in views_metav's lemma-only branch — PARITY list==count is a
+locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
+- **Key namespace**: `PN:` prefix, checked BEFORE the number regex in profile/verses —
+  never mint another key shape that could collide with the `[GH]\d+(\.\d+)?` space.
+- The profile answers with `strongs: "PN:<form>"` + `name_form: true`; the frontend
+  displays "PN" in the header and gates Ask/corpus toggles off `name_form` — the full
+  key must keep flowing through `profile.strongs` (book rail / verses / testament
+  re-fetches all key off it; displaying it raw was the only change).
+- List is LEMMA-WIDE (every occurrence of the printed form) per the all-Edens ruling;
+  identity disambiguation stays on the reader cards. The header state line says so.
+- `?lex=PN:<form>` works as a URL entry (90-app reads `lex` verbatim).

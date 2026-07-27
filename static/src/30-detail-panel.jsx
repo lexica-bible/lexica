@@ -1127,8 +1127,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     // identity links into Word study by that Greek number — STEP-extended included
     // (G2 flip: Word study answers for G9xxx via step_lexicon + the identity
     // union, behind the same READER_GREEK_FLIPS switch, deployed together so the
-    // link never lands on a 404). Lemma-only stays a static count (number-keyed
-    // Word study can't key a stored form — G2 holdout, reviewer-confirmed).
+    // link never lands on a 404). Lemma-only links via the PN:<form> key
+    // (lane #3, 2026-07-28 — the old static-count G2 holdout is retired).
     // No trailing arrow on the link: standalone card link (JP flag at G2-R1,
     // per the standing arrow ruling — list links keep arrows, card links don't).
     case "greekIdOcc": return (

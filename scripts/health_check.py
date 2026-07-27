@@ -119,14 +119,16 @@ check("distinct H-bases with NO bdb entry",
          WHERE strongs_base NOT IN (SELECT strongs_id FROM bdb)""",
       expect_zero=False)
 
-# ── abp_surface floor (2026-07-11 backfill) ─────────────────────────────────
-# 359,288 = builder rows (345,437) + the pairing-rule backfill (13,851). A
-# build_abp_surface.py re-run WITHOUT re-running backfill_abp_surface.py drops
+# ── abp_surface floor (2026-07-11 backfill + 2026-07-27/28 PN passes) ────────
+# 389,409 = builder rows (345,437) + the pairing-rule backfill (13,851) + the
+# Phase-6 PN printed-Greek passes (29,092 + 285 + 744 = 30,121). A
+# build_abp_surface.py re-run WITHOUT re-running backfill_abp_surface.py AND
+# backfill_pn_surface.py drops
 # the table back to ~345k and silently reverts 13,851 recovered printed forms —
 # this makes that loud instead of invisible. Raise the floor if the count grows.
-check("abp_surface rows BELOW floor 359288  [backfill reverted?]",
-      "SELECT CASE WHEN count(*) < 359288 THEN 359288 - count(*) ELSE 0 END FROM abp_surface",
-      note="shortfall vs floor; fix = backfill_abp_surface.py + build_abp_translit.py")
+check("abp_surface rows BELOW floor 389409  [a backfill reverted?]",
+      "SELECT CASE WHEN count(*) < 389409 THEN 389409 - count(*) ELSE 0 END FROM abp_surface",
+      note="shortfall vs floor; fix = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py")
 
 # ── verses ───────────────────────────────────────────────────────────────────
 check("verses with zero words  [parse failure]",

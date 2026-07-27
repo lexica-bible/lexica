@@ -124,10 +124,10 @@ function groupForGreekMode(words) {
 // print as a word's main Greek line. Order is FIXED and load-bearing —
 //   1. inflected  — the printed ABP surface form (abp_surface), when stored
 //   2. lemma      — the dictionary form (lexicon join)
-//   3. name       — the English proper-noun name, capitalized (PNs carry NO Greek:
-//                   no inflected, no lemma; the ABP source DOES print Φαραώ etc.,
-//                   but those were never ingested — a Phase-6 backfill will fill
-//                   `inflected` for PNs and slot in at step 1 with ZERO change here)
+//   3. name       — the English proper-noun name, capitalized. Since the Phase-6
+//                   PN backfill (2026-07-27/28) most name slots carry `inflected`
+//                   and resolve at step 1; this step now serves only the 2,358
+//                   stamped residue (TICKET_pn_lemma_residue.md)
 //   4. none       — nothing to show (the ~477 empty '*' tokens stay invisible)
 // Returns { text, kind }. The chain-order test pins this precedence so the future
 // PN backfill can't drift it.

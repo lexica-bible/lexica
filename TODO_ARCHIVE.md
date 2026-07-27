@@ -6,6 +6,27 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-27/28 — The Greek PN weekend arc — ALL CLOSED, receipts on live
+
+One weekend, five closes (full records in docs/tickets/ + ENGINE_LESSONS #87–88):
+- **Phase-6 PN printed Greek (lane #1):** 29,092 name slots gained ABP's printed Greek on the
+  interlinear line (backfill_pn_surface.py, name-token pairing, refuse-on-doubt).
+- **Residue recovery (lane #2):** +285 +744 across two proven passes (numbered-row +
+  fold-class rules); residue FINAL at **2,358**, stamped with its defining query in
+  TICKET_pn_lemma_residue.md — only shrinks for a named reason; needs a new source.
+- **Lemma-keyed Word study (lane #3):** numberless PN cards' occurrence line links via the
+  PN:<form> key; PARITY (list length == card count) locked in CI. Cainan 85/85 receipt.
+- **Hebrew-flash + Canaan flash:** both FRAME-0 fixes verified by frame-recorder; the
+  'in this verse' line joined the greekIdPending hold.
+- **Chip-view Greek line:** second renderer of abp_surface never read `inflected` — fixed
+  (lemma → inflected fallback); the two-modes-disagree test = renderer gap, never residue.
+- **cert #7 mirror binds:** all 17 fuzzy-person rows adjudicated RIGHT vs pinned TIPNR;
+  check 7 sharpened with a count-pinned allowlist + control 7b. 7/7 green live.
+- abp_surface floor RAISED 359,288 → **389,409** (health_check + rebuild-words step 9 now
+  include backfill_pn_surface.py). Deferred by ruling: TICKET_lexica_pn_numbers.md.
+
+---
+
 ## 2026-07-16 — Person/clan card display nits (R-1 post-swap eyeball) — DONE, JP confirmed
 
 Two display-only fixes in `static/src/30-detail-panel.jsx` (commit `3ee0d18`): (a) the TIPNR

@@ -116,28 +116,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 ## R-2 residue (ticketed at close, 2026-07-26 — none blocking, JP raises)
 - **Gentilic/people-class Greek backfill** — the named candidate that retires the 3,380
   kept-Hebrew ('none'-class) rows in pn_hebrew_xref (C3-Q1 condition b). Adjacent to pile U.
+  Related but distinct: the 2,358 PN printed-Greek residue (TICKET_pn_lemma_residue.md,
+  stamped 2026-07-28 — scrape-based recovery CLOSED by ruling; needs a new source).
 - **Binder Greek-key bases extension — PARKED BY RULING** (would fire novel binds; own gates
   when raised). Record: PLAN_r2_stage3.md charter amendment.
-- **Lemma-only Word-study key type** — numberless PN identities can't open Word study (card
-  keeps the static count). New key/URL shape = own candidate (held out of G2 by ruling).
 - **Backup freshness must flip under 25h post-quota-cleanup** — glance at the next nightly
   email; a second failure is real I/O, investigate first.
+- **Lexica-minted PN numbers — DEFERRED by ruling** (TICKET_lexica_pn_numbers.md): revisit
+  only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
-- **cert check #7 place-as-person mirror binds — CLOSED 2026-07-27 (7/7 green live).**
-  Reviewer-ruled evidence pass: all 17 fuzzy-person rows for ebal/jeshua/judah/uzza
-  verified RIGHT against pinned TIPNR per-row (KJV spelling variants of real people
-  coexisting with real same-named places; zero mis-binds, binder untouched). Fix =
-  check 7 sharpened: count-pinned adjudicated allowlist (mirror direction only) — any
-  new bind for those names re-fires; control 7b proves the allowlist can't blind.
-  Full record + citations: docs/tickets/TICKET_cert7_mirror_binds.md.
-- **Hebrew-flash on ABP PN card open — DONE + VERIFIED LIVE 2026-07-26.** Fix landed as
-  designed (commits f08ce2e1 + ed28b2ff): `greekIdPending` starts TRUE whenever the identity
-  fetch will run, holding header + all identity-dependent sections neutral until it resolves
-  (FRAME-0 / two-source rule). Verified on live with the MutationObserver frame-recorder on
-  a fresh Agag (1Sa 15:32) click: hold frames show header "PN" with zero Hebrew content
-  (no H-number/BDB/Hebrew counts); first identity paint is already Greek (G9826 Βουγαίου);
-  the TIPNR person block then adds on top — no Hebrew frame at any point.
 - **Jer 9:23 word order: "Let not the boast wise man" (should be "the wise man boast") — CLASSIFIED
   2026-07-25, source-typo class, corrections-door fix.** Reported by JP from reading. Root cause is
   the SOURCE's own bracket order digits: first bracket reads `[2boast 1the 2wise man]` (duplicate 2,
@@ -289,15 +277,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 - **Badge / verification-token unification (design backlog).** Two families — provenance badges (metaV/
   TIPNR/"Matched to this verse") vs verification marks ("✓ N/N verified"); rule now in `docs/design.md`.
   Converge instances opportunistically, no sweep.
-- **Phase-6: PN Greek surface-form backfill — DONE + LIVE 2026-07-27.** 29,092 of 32,479
-  name slots now carry ABP's printed Greek on the interlinear line (backfill_pn_surface.py,
-  name-token pairing + order-pairing, refuse-on-doubt; locked test in pre-commit + CI).
-  **Lane #2 recovery CLOSED 2026-07-28: +744 (numbered-row/hyphen rules) +285 (fold
-  class) = 30,121/32,479 = 92.7% reading Greek; residue FINAL at 2,358 (scrape-side
-  dead ends 2,298 + blank-no-star 57 + ambiguous 6 − 3), stamped with its defining
-  query in TICKET_pn_lemma_residue.md.** A different Greek source for the dead ends
-  is its own future decision, not this lane. Lane #3 (lemma-open Word study,
-  TICKET_lemma_word_study.md, scoped + ruling held) is next.
 - **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
   lemma — by-design skips of the cautious G1473→G846 retag (it refuses to guess reflexives + no-morph
   cells). Consistent with the build. Future cleanup only. code: the g1473_gloss_retag fold in

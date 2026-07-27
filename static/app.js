@@ -751,8 +751,8 @@ const defnLoading=(lexicaLoading||lsjLoading)&&!lexica;return/*#__PURE__*/React.
 // identity links into Word study by that Greek number — STEP-extended included
 // (G2 flip: Word study answers for G9xxx via step_lexicon + the identity
 // union, behind the same READER_GREEK_FLIPS switch, deployed together so the
-// link never lands on a 404). Lemma-only stays a static count (number-keyed
-// Word study can't key a stored form — G2 holdout, reviewer-confirmed).
+// link never lands on a 404). Lemma-only links via the PN:<form> key
+// (lane #3, 2026-07-28 — the old static-count G2 holdout is retired).
 // No trailing arrow on the link: standalone card link (JP flag at G2-R1,
 // per the standing arrow ruling — list links keep arrows, card links don't).
 case"greekIdOcc":return/*#__PURE__*/React.createElement("section",{key:"greekIdOcc",className:"sec"},/*#__PURE__*/React.createElement("h4",{className:"sec-head"},/*#__PURE__*/React.createElement("span",{className:"sec-t"},"ABP Occurrences")),greekId.greek_strongs?/*#__PURE__*/React.createElement("button",{className:"occ-link occ-link--id",onClick:()=>onNavigateToLexicon&&onNavigateToLexicon(greekId.greek_strongs,"abp")},/*#__PURE__*/React.createElement(CountLine,{n:greekId.greek_count,label:greekId.greek_strongs})):greekId.lemma&&onNavigateToLexicon?/*#__PURE__*//* Lemma-only identity (Q3): Word study now opens by the stored form
@@ -1482,10 +1482,10 @@ function groupForGreekMode(words){const groups=[];let cur=null;for(const w of wo
 // print as a word's main Greek line. Order is FIXED and load-bearing —
 //   1. inflected  — the printed ABP surface form (abp_surface), when stored
 //   2. lemma      — the dictionary form (lexicon join)
-//   3. name       — the English proper-noun name, capitalized (PNs carry NO Greek:
-//                   no inflected, no lemma; the ABP source DOES print Φαραώ etc.,
-//                   but those were never ingested — a Phase-6 backfill will fill
-//                   `inflected` for PNs and slot in at step 1 with ZERO change here)
+//   3. name       — the English proper-noun name, capitalized. Since the Phase-6
+//                   PN backfill (2026-07-27/28) most name slots carry `inflected`
+//                   and resolve at step 1; this step now serves only the 2,358
+//                   stamped residue (TICKET_pn_lemma_residue.md)
 //   4. none       — nothing to show (the ~477 empty '*' tokens stay invisible)
 // Returns { text, kind }. The chain-order test pins this precedence so the future
 // PN backfill can't drift it.

@@ -143,10 +143,12 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
    `scripts/backfill_abp_surface.py <db> --bh bh_scrape.db --apply` — the surface builder writes
    only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
-   find and health_check FLOORS the table at 359,288, so a rebuild without the backfill trips the
-   floor (it did, 2026-07-16 — the guard caught it; this step was missing here). THEN re-run
+   find. THEN `scripts/backfill_pn_surface.py <db> --bh bh_scrape.db --apply` — the Phase-6 PN
+   printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; the interlinear Greek line for
+   names reads from these). health_check FLOORS the table at 389,409, so a rebuild missing either
+   backfill trips the floor (the 2026-07-16 miss is why the guard exists). THEN re-run
    `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
-   SBL style from the lexicon, 'h' from the lemma) — it covers the backfilled rows too.
+   SBL style from the lexicon, 'h' from the lemma) — it covers all backfilled rows too.
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory
