@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""
+test_pn_surface_backfill.py — locks backfill_pn_surface.py (Phase-6 PN printed
+Greek) BEFORE it ever touches PA. Fixture tables mirror the REAL builders'
+CREATE TABLE shapes (words: build_words_from_abp via the vetted c3_dormant
+mirror; abp_surface: build_abp_surface.py:299; bh_words: scrape_biblehub_abp.py:164
+— the fixture-shape lesson from the R-2 receipt-2 defect).
+
+Covers the four pairing rules + both refusal controls + the never-overwrite
+guard + the closing arithmetic. Controls MUST fire: a zero-refusal run on the
+seeded ambiguity would void the suite.
+"""
+import os
+import sqlite3
+import subprocess
+import sys
+import tempfile
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPT = os.path.join(ROOT, "scripts", "backfill_pn_surface.py")
+
+# Spawned script prints Greek; Windows pipes default to cp1252 — force UTF-8
+# (same fix as test_retire_builder / test_c3_instruments, 2026-07-26).
+_ENV = dict(os.environ, PYTHONIOENCODING="utf-8")
+
+
+def _make_bible(path):
+    c = sqlite3.connect(path)
+    c.executescript("""
+        CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT,
+                             verse INT, text TEXT);
+        CREATE TABLE words (id INTEGER PRIMARY KEY, verse_id INT, position INT,
+                            english TEXT, english_head TEXT, strongs_base TEXT,
+                            strongs TEXT, is_pn INT, italic INT DEFAULT 0,
+                            italic_words TEXT, greek_pos TEXT, bracket_id INT,
+                            morph TEXT, smcap_words TEXT, lemma TEXT);
+        CREATE TABLE abp_surface (
+          verse_id INTEGER, position INTEGER, form TEXT, translit TEXT,
+          PRIMARY KEY (verse_id, position));
+
+        -- v1 Mat 1:2 shape: TWO Isaacs (identical printed form) + one Judah.
+        INSERT INTO verses VALUES (1,'Mat',1,2,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (1,3,'Isaac,','Isaac','G2464','G2464',1),
+                 (1,4,'and Isaac','Isaac','G2464','G2464',1),
+                 (1,13,'Judah','Judah','G2455','G2455',1),
+                 (1,0,'begat','','G1080','G1080',0);          -- non-PN: must never gain a row
+
+        -- v2: order-pairing (two same-token slots, DIFFERENT forms, counts equal).
+        INSERT INTO verses VALUES (2,'Mat',1,16,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (2,1,'Jacob','Jacob','G2384','G2384',1),
+                 (2,4,'of Jacob','Jacob','G2384','G2384',1);
+
+        -- v3: ambiguity refusal control (2 scrape hits, differing forms, 1 slot).
+        INSERT INTO verses VALUES (3,'Mat',2,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (3,2,'Herod','Herod','G2264','G2264',1);
+
+        -- v4: no-match refusal control (name absent from scrape).
+        INSERT INTO verses VALUES (4,'Mat',3,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (4,1,'Zorobabel','Zorobabel','*','*',1);
+
+        -- v5: never-overwrite guard (surface row already present for the slot).
+        INSERT INTO verses VALUES (5,'Mat',4,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (5,1,'David','David','G1138','G1138',1);
+        INSERT INTO abp_surface VALUES (5,1,'PRE-EXISTING','');
+    """)
+    c.commit()
+    c.close()
+
+
+def _make_scrape(path):
+    c = sqlite3.connect(path)
+    c.executescript("""
+        CREATE TABLE bh_words (
+            id INTEGER PRIMARY KEY, book TEXT NOT NULL, chapter INTEGER NOT NULL,
+            verse INTEGER NOT NULL, position INTEGER NOT NULL, strongs TEXT,
+            greek TEXT, english TEXT, italic_words TEXT NOT NULL DEFAULT '',
+            smcap_words TEXT NOT NULL DEFAULT '', greek_pos INTEGER);
+        -- Mat 1:2 — two Isaac name rows, SAME form; one Judah; a numbered row
+        -- that must be ignored (name pairing reads blank-Strong's rows only).
+        INSERT INTO bh_words (book,chapter,verse,position,strongs,greek,english) VALUES
+          ('matthew',1,2,1,NULL,'Ισαακ','Isaac'),
+          ('matthew',1,2,3,NULL,'Ισαακ','and Isaac'),
+          ('matthew',1,2,7,NULL,'Ιουδαν','Judah'),
+          ('matthew',1,2,0,'1080','εγεννησε','begat'),
+          -- Mat 1:16 — two Jacob rows, DIFFERENT forms (nominative then genitive):
+          ('matthew',1,16,0,NULL,'Ιακωβ','Jacob'),
+          ('matthew',1,16,2,NULL,'Ιακωβου','of Jacob'),
+          -- Mat 2:1 — two Herod rows, DIFFERENT forms, but only ONE slot: refuse.
+          ('matthew',2,1,1,NULL,'Ηρωδου','Herod'),
+          ('matthew',2,1,5,NULL,'Ηρωδης','Herod'),
+          -- Mat 4:1 — David row for the never-overwrite slot.
+          ('matthew',4,1,1,NULL,'Δαυιδ','David');
+    """)
+    c.commit()
+    c.close()
+
+
+def _run(dbp, bhp, *extra):
+    return subprocess.run(
+        [sys.executable, SCRIPT, dbp, "--bh", bhp, *extra],
+        capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
+
+
+def main() -> int:
+    fails = []
+
+    def check(desc, got, want):
+        if got != want:
+            fails.append(f"  FAIL: {desc}\n        got {got!r}, want {want!r}")
+        else:
+            print(f"  ok: {desc}")
+
+    tmp = tempfile.mkdtemp()
+    dbp = os.path.join(tmp, "bible.db")
+    bhp = os.path.join(tmp, "bh.db")
+    _make_bible(dbp)
+    _make_scrape(bhp)
+
+    # dry-run writes nothing
+    r = _run(dbp, bhp)
+    check("dry-run exit 0", r.returncode, 0)
+    check("dry-run announces itself", "DRY RUN" in r.stdout, True)
+    c = sqlite3.connect(dbp)
+    check("dry-run wrote nothing",
+          c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
+    c.close()
+    # 8 PN slots total: 5 new + 2 refused + 1 already (v5 pairs but its slot is
+    # already present -> counted 'already', not new). Arithmetic must close.
+    check("arithmetic line closes on the slot total",
+          "= 8 (must equal 8)" in r.stdout.replace(",", ""), True)
+    check("ambiguity control FIRES", "ambiguous : 1" in r.stdout.replace("  ", " "), True)
+    check("no-match control FIRES", "no-match : 1" in r.stdout.replace("  ", " "), True)
+
+    # apply
+    r = _run(dbp, bhp, "--apply")
+    check("apply exit 0", r.returncode, 0)
+    c = sqlite3.connect(dbp)
+    rows = dict(((vid, pos), form) for vid, pos, form, _t in
+                c.execute("SELECT * FROM abp_surface"))
+    check("both Isaacs got the (identical) form",
+          (rows.get((1, 3)), rows.get((1, 4))), ("Ισαακ", "Ισαακ"))
+    check("Judah paired", rows.get((1, 13)), "Ιουδαν")
+    check("order-pairing: k-th slot to k-th printed form",
+          (rows.get((2, 1)), rows.get((2, 4))), ("Ιακωβ", "Ιακωβου"))
+    check("ambiguous slot got NO row", (3, 2) in rows, False)
+    check("no-match slot got NO row", (4, 1) in rows, False)
+    check("existing row NOT overwritten", rows.get((5, 1)), "PRE-EXISTING")
+    check("non-PN slot untouched", (1, 0) in rows, False)
+    check("total rows = 1 pre-existing + 5 new", len(rows), 6)
+    c.close()
+
+    if fails:
+        print("\n".join(fails))
+        return 1
+    print("\nAll PN-surface backfill checks passed.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
