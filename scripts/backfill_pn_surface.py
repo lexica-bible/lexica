@@ -58,8 +58,9 @@ def clean_form(s):
 
 def pair_verse(slots, hits):
     """slots = [(position, token)] in position order; hits = [(token, form)] in
-    printed order. Returns ({position: form}, refused_count, cause_counts)."""
-    out, causes = {}, defaultdict(int)
+    printed order. Returns ({position: form}, refused_count, cause_counts,
+    refused_slots as [(position, token, cause)])."""
+    out, causes, refused_slots = {}, defaultdict(int), []
     by_tok_slots = defaultdict(list)
     for pos, tok in slots:
         by_tok_slots[tok].append(pos)
@@ -72,6 +73,7 @@ def pair_verse(slots, hits):
         if not forms:
             refused += len(positions)
             causes["no-match"] += len(positions)
+            refused_slots += [(p, tok, "no-match") for p in positions]
         elif len(set(forms)) == 1:
             for pos in positions:
                 out[pos] = forms[0]
@@ -81,7 +83,8 @@ def pair_verse(slots, hits):
         else:
             refused += len(positions)
             causes["ambiguous"] += len(positions)
-    return out, refused, causes
+            refused_slots += [(p, tok, "ambiguous") for p in positions]
+    return out, refused, causes, refused_slots
 
 
 def main():
@@ -89,6 +92,10 @@ def main():
     ap.add_argument("db", help="path to bible.db (on PA)")
     ap.add_argument("--bh", required=True, help="bh_scrape.db (same source the identity build used)")
     ap.add_argument("--apply", action="store_true", help="write the rows (default: dry-run)")
+    ap.add_argument("--dump-refused", metavar="FILE",
+                    help="write every refused slot (tab-separated: book ch vs pos cause "
+                         "label token | the verse's scrape name-slots) for the lane-#2 "
+                         "by-cause classification")
     args = ap.parse_args()
 
     con = sqlite3.connect(args.db)
@@ -123,7 +130,7 @@ def main():
 
     # Every proper-noun slot, grouped per verse, position order.
     verses = defaultdict(list)
-    meta = {}
+    meta, labels = {}, {}
     for r in con.execute("""
         SELECT w.verse_id, w.position,
                COALESCE(NULLIF(w.english_head,''), w.english) AS label,
@@ -133,6 +140,7 @@ def main():
         ORDER BY w.verse_id, w.position"""):
         verses[r["verse_id"]].append((r["position"], _name_token(r["label"])))
         meta[r["verse_id"]] = (r["book"], r["chapter"], r["verse"])
+        labels[(r["verse_id"], r["position"])] = r["label"]
     total_pn = sum(len(v) for v in verses.values())
     print(f"proper-noun slots: {total_pn:,} across {len(verses):,} verses\n")
 
@@ -142,15 +150,23 @@ def main():
     per_book_refused = defaultdict(int)
     mat1_sample = []
 
+    dump = open(args.dump_refused, "w", encoding="utf-8", newline="\n") \
+        if args.dump_refused else None
+
     for vid, slots in verses.items():
         book, ch, vs = meta[vid]
         slug = ABBREV_TO_SLUG.get(book)
         hits = scrape.get((slug, ch, vs), []) if slug else []
-        paired, refused, causes = pair_verse(slots, hits)
+        paired, refused, causes, refused_slots = pair_verse(slots, hits)
         refused_total += refused
         per_book_refused[book] += refused
         for k, n in causes.items():
             causes_total[k] += n
+        if dump and refused_slots:
+            scrape_side = " ".join(f"{t}={f}" for t, f in hits) or "(no name rows)"
+            for pos, tok, cause in refused_slots:
+                dump.write(f"{book}\t{ch}\t{vs}\t{pos}\t{cause}\t"
+                           f"{labels.get((vid, pos), '')}\t{tok}\t{scrape_side}\n")
         for pos, form in paired.items():
             if (vid, pos) in existing:
                 already += 1
@@ -176,6 +192,10 @@ def main():
     print("\n  Matthew 1 spot-check (verse, position, form):")
     for vs, pos, form in mat1_sample:
         print(f"    1:{vs:<3} pos {pos:<3} {form}")
+    if dump:
+        dump.close()
+        print(f"\n  refused-slot dump written: {args.dump_refused} "
+              f"({refused_total:,} lines)")
 
     if not args.apply:
         print("\n  DRY RUN — nothing written. Add --apply to write.\n")
