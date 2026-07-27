@@ -97,5 +97,6 @@ re-fires the check with a counts-MOVED note. Control 7b proves the allowlist
 can't blind: an allowlisted name at moved counts FIRES, at audited counts stays
 quiet; the cushi/zorahite positives still fire. --controls run green locally.
 
-Status: FIXED pending live green — JP runs check 7 on PA; ticket closes on a
-7/7 green run.
+Status: CLOSED 2026-07-27 — live PA run: --controls ALL FIRED (incl. 7b:
+ebal-at-moved-counts fires, judah-at-audited-counts quiet) and the real suite
+7/7 green on bible.db ("CERTIFIED STATE HOLDS"). Output pasted by JP.

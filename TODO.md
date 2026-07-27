@@ -124,16 +124,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   email; a second failure is real I/O, investigate first.
 
 ## Open word-study / data issues (low priority, none gating)
-- **cert check #7 place-as-person mirror binds (ebal ×1/5, jeshua ×10/1, judah ×1/1,
-  uzza ×5/2) — PRE-EXISTING ON LIVE, ticketed by reviewer ruling 2026-07-25 (candidate-3
-  battery disposition).** Fails identically on the untouched pre-rebuild copy
-  bible_pre_r2c3_2026-07-25.db — the retirement neither caused nor touched it; the C3
-  rebuild receipt carries it as the documented pre-existing exception. Shape: a name
-  renders a fuzzy-PERSON bind and an exact-PLACE bind (the Cushi mirror,
-  cert_invariants check 7). Adjacent to parked pile-U / person-place work — its own
-  review when raised, not a rider on any rebuild. **Ticket opened 2026-07-26:
-  docs/tickets/TICKET_cert7_mirror_binds.md (evidence pass + symmetric-guard candidate,
-  awaiting reviewer ruling before any build).**
+- **cert check #7 place-as-person mirror binds — CLOSED 2026-07-27 (7/7 green live).**
+  Reviewer-ruled evidence pass: all 17 fuzzy-person rows for ebal/jeshua/judah/uzza
+  verified RIGHT against pinned TIPNR per-row (KJV spelling variants of real people
+  coexisting with real same-named places; zero mis-binds, binder untouched). Fix =
+  check 7 sharpened: count-pinned adjudicated allowlist (mirror direction only) — any
+  new bind for those names re-fires; control 7b proves the allowlist can't blind.
+  Full record + citations: docs/tickets/TICKET_cert7_mirror_binds.md.
 - **Hebrew-flash on ABP PN card open — DONE + VERIFIED LIVE 2026-07-26.** Fix landed as
   designed (commits f08ce2e1 + ed28b2ff): `greekIdPending` starts TRUE whenever the identity
   fetch will run, holding header + all identity-dependent sections neutral until it resolves
