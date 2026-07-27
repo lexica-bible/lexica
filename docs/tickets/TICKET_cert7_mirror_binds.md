@@ -57,4 +57,17 @@ place Jeshua (Neh 11:26). The check flags coexistence; it does not adjudicate it
 Binder changes are trial-then-apply (dry-run must reproduce current counts
 except the itemized rows); cert #7 must go green (or be sharpened) either way.
 
-Status: OPEN — awaiting reviewer ruling on the evidence pass + fix direction.
+## Ruling (reviewer, 2026-07-26, forwarded by JP) — APPROVED AS WRITTEN
+
+Evidence pass first, read-only, per-row against TIPNR, no sampling — then fork on
+the verdicts: rows wrong → mirror the Cushi guard (`person_same_num` symmetric,
+entity_resolution.py :749–753 shape); rows right → sharpen check 7 with per-name
+allowlist reasons. Trial-then-apply on any binder change: dry-run reproduces
+today's counts except the itemized rows; check 7 green or sharpened either way.
+
+**Added condition:** each per-row verdict must CITE the TIPNR entity at the verse,
+not just a yes/no — so if the outcome is the allowlist, the reasons are already
+written.
+
+Status: RULED — evidence pass in progress (read-only dump from PA, then per-row
+adjudication against the pinned tipnr/TIPNR.txt).
