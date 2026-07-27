@@ -181,9 +181,34 @@ def check_person_place_binding(conn) -> list:
             out.append(f"{r['name']}: {r['fp']} fuzzy-place AND {r['ep']} exact-person "
                        f"render(s) (person-as-place mis-bind, the Cushi shape)")
         if r["fpe"] and r["epl"]:
+            adj = _MIRROR_ADJUDICATED.get(r["name"])
+            if adj and (r["fpe"], r["epl"]) == adj[:2]:
+                continue  # verified coexistence at exactly the audited counts
+            note = (f" [ADJUDICATED at {adj[0]}/{adj[1]} but counts MOVED — a new "
+                    f"bind needs its own verdict]" if adj else "")
             out.append(f"{r['name']}: {r['fpe']} fuzzy-person AND {r['epl']} exact-place "
-                       f"render(s) (place-as-person mis-bind, the mirror shape)")
+                       f"render(s) (place-as-person mis-bind, the mirror shape){note}")
     return out
+
+
+# Adjudicated mirror-shape coexistences (reviewer ruling 2026-07-26, evidence table in
+# docs/tickets/TICKET_cert7_mirror_binds.md): every fuzzy-person row for these names was
+# checked against pinned tipnr/TIPNR.txt at its verse — each is a REAL person (a KJV
+# spelling variant of the entity's head name) legitimately coexisting with a real
+# same-named place. Pinned to the audited counts (fuzzy-person, exact-place): any NEW
+# bind for one of these names re-fires the check and needs its own verdict.
+_MIRROR_ADJUDICATED = {
+    "ebal":   (1, 5,  "1Ch 1:22 = Obal@Gen.10.28-1Ch (KJV spells him Ebal, TIPNR "
+                      "Spelled-row); places = Mount Ebal x5"),
+    "jeshua": (10, 1, "Ezr 2:2/3:2/3:8/4:3/5:2 + Neh 7:7/12:1/12:7/12:10/12:26 = "
+                      "Joshua@Ezr.2.2-Zec the high priest (Jeshua = ESV/KJV spelling, "
+                      "TIPNR Named+Aramaic rows); place = the village Jeshua@Neh.11.26"),
+    "judah":  (1, 1,  "Mrk 6:3 = Jude@Mat.13.55-Jud (KJV 'Juda', TIPNR same-form row); "
+                      "place = Judea@Ezr.9.9-1Th"),
+    "uzza":   (5, 2,  "1Ch 6:29 = Uzzah@1Ch.6.29 the Levite; 1Ch 13:7/9/10/11 = "
+                      "Uzzah@2Sa.6.3-1Ch at the ark (both 'Uzza' in KJV, TIPNR Named "
+                      "rows); place = the garden of Uzza@2Ki.21.18"),
+}
 
 
 def check_manifest() -> list:
@@ -294,21 +319,35 @@ def run_controls() -> int:
         results.append(("4 corrections (must NAME the row)", bool(bad) and named, bad))
 
         # control 7: BOTH directions must fire — the Cushi shape (fuzzy-place +
-        # exact-person) AND the mirror (fuzzy-person + exact-place, cert Session 6).
+        # exact-person) AND the mirror (fuzzy-person + exact-place, cert Session 6) —
+        # AND the adjudicated allowlist must not blind the check: an allowlisted name
+        # seeded at counts OTHER than its audited pair ('ebal' at 1/1, audited 1/5)
+        # must fire with the counts-MOVED note, while one seeded at exactly its
+        # audited pair ('judah' at 1/1) must stay quiet.
         conn.executescript("""
           CREATE TABLE pn_binding(name TEXT, entity_uniq TEXT, kind TEXT, render INT);
           CREATE TABLE tipnr_entities(uniq TEXT, section TEXT);
           INSERT INTO tipnr_entities VALUES ('Cush@x','place'),('Cushi@y','person'),
-                                            ('Zorah@p','person'),('Zorah@q','place');
+                                            ('Zorah@p','person'),('Zorah@q','place'),
+                                            ('Obal@e','person'),('EbalMt@e','place'),
+                                            ('Jude@j','person'),('Judea@j','place');
           INSERT INTO pn_binding VALUES ('cushi','Cush@x','fuzzy',1),
                                         ('cushi','Cushi@y','exact',1),
                                         ('zorahite','Zorah@p','fuzzy',1),
-                                        ('zorahite','Zorah@q','exact',1);
+                                        ('zorahite','Zorah@q','exact',1),
+                                        ('ebal','Obal@e','fuzzy',1),
+                                        ('ebal','EbalMt@e','exact',1),
+                                        ('judah','Jude@j','fuzzy',1),
+                                        ('judah','Judea@j','exact',1);
         """)
         conn.commit()
         bad = check_person_place_binding(conn)
         both = any("Cushi shape" in b for b in bad) and any("mirror shape" in b for b in bad)
+        moved_fires = any(b.startswith("ebal:") and "counts MOVED" in b for b in bad)
+        pinned_quiet = not any(b.startswith("judah:") for b in bad)
         results.append(("7 person/place binding (both directions)", both, bad))
+        results.append(("7b allowlist: moved counts FIRE, audited counts stay quiet",
+                        moved_fires and pinned_quiet, [b for b in bad if b.startswith("ebal:")]))
         conn.close()
 
     print("== cert_invariants CONTROLS (each check must FIRE on seeded bad input) ==")

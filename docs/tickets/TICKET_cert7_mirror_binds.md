@@ -69,5 +69,33 @@ today's counts except the itemized rows; check 7 green or sharpened either way.
 not just a yes/no — so if the outcome is the allowlist, the reasons are already
 written.
 
-Status: RULED — evidence pass in progress (read-only dump from PA, then per-row
-adjudication against the pinned tipnr/TIPNR.txt).
+## Evidence pass (2026-07-27) — all 17 fuzzy-person rows RIGHT
+
+Full binding dump pulled from live PA (read-only, every render row for the four
+names). All 17 fuzzy-person rows adjudicated against the pinned tipnr/TIPNR.txt,
+per-row, entity cited (reviewer condition):
+
+| Rows | Bound entity | TIPNR citation | Verdict |
+|---|---|---|---|
+| ebal 1Ch 1:22 | Obal@Gen.10.28-1Ch | line 18510: Spelled-row "Obal =ESV,NIV; Ebal =KJV", ref 1Ch.1.22 | RIGHT |
+| jeshua Ezr 2:2, 3:2, 3:8, 4:3; Neh 7:7, 12:1, 12:7, 12:10, 12:26 | Joshua@Ezr.2.2-Zec | line 14256: Named-row "Jeshua =ESV,KJV", refs list = exactly these nine | RIGHT |
+| jeshua Ezr 5:2 | Joshua@Ezr.2.2-Zec | line 14257: Aramaic-row, ref Ezr.5.2 | RIGHT |
+| judah Mrk 6:3 | Jude@Mat.13.55-Jud | line 14542: same-form row "Judas =ESV,NIV; Juda =KJV", ref Mrk.6.3 | RIGHT |
+| uzza 1Ch 6:29 | Uzzah@1Ch.6.29 | line 24043: Named-row "Uzzah =ESV,NIV; Uzza =KJV", ref 1Ch.6.29 | RIGHT |
+| uzza 1Ch 13:7, 9, 10, 11 | Uzzah@2Sa.6.3-1Ch | line 24051: Named-row, refs = exactly these four | RIGHT |
+
+The exact-place partners are all real places (Mount Ebal, the village
+Jeshua@Neh.11.26, Judea@Ezr.9.9-1Th, the garden Uzza@2Ki.21.18) — genuine
+person-and-place coexistence, zero mis-binds. Binder untouched per the ruling.
+
+## Outcome: check 7 sharpened (option 3)
+
+`_MIRROR_ADJUDICATED` in scripts/cert_invariants.py: the four names allowlisted
+for the mirror direction only, PINNED to the audited counts (1/5, 10/1, 1/1,
+5/2) with the per-row reasons above — any NEW bind for one of these names
+re-fires the check with a counts-MOVED note. Control 7b proves the allowlist
+can't blind: an allowlisted name at moved counts FIRES, at audited counts stays
+quiet; the cushi/zorahite positives still fire. --controls run green locally.
+
+Status: FIXED pending live green — JP runs check 7 on PA; ticket closes on a
+7/7 green run.
