@@ -58,5 +58,6 @@ card's static line becomes a link when a lemma exists; Word-study header shows
 PN + the honest name-form state line; Ask/corpus toggles gated; book rail +
 OT/NT tabs work. Locked test test_pn_lemma_wordstudy.py includes the PARITY
 check (list length == card count, both production paths) in pre-commit + CI.
-CLOSES on the live parity receipt after deploy: click a numberless card's
-"N× in ABP (this form)" link — the list length must equal N.
+CLOSED 2026-07-28 on the live parity receipt (JP, Χαναάν / Cainan 1Ch 1): card
+85× → list 85 across 15 books, one paint no flash, honest state line present,
+number-only controls absent. The parity gate stays locked in CI permanently.
