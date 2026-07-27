@@ -72,12 +72,17 @@ def _resolve(positions, forms):
     return None
 
 
-def pair_verse(slots, name_hits, num_hits=()):
+def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
     """slots = [(position, token)] in position order; name_hits = the scrape's
     NAME rows [(token, form)] in printed order; num_hits = the scrape's NUMBERED
     rows, tried ONLY when the name pool has nothing for a token (lane-#2 cause A:
     famous names carry their Strong's number on the scrape page, so they never
-    appear as name rows). Token comparison is compact (hyphen-blind, cause C).
+    appear as name rows). star_hits = extracted name words from compound rows
+    whose Strong's string contains '*' — the fold class (cause B): ABP prints
+    "Cain fretted" as one cell tagged 3076-3588-*, our build splits the '*' into
+    a LABEL-LESS name slot, so blank slots pair with star rows in order when
+    counts agree (Gen 4:5 probe, 2026-07-28). Token comparison is compact
+    (hyphen-blind, cause C).
     Returns ({position: form}, refused_count, cause_counts, refused_slots)."""
     out, causes, refused_slots = {}, defaultdict(int), []
     by_tok_slots = defaultdict(list)
@@ -87,15 +92,21 @@ def pair_verse(slots, name_hits, num_hits=()):
             by_tok_slots[compact(tok)].append(pos)
         else:
             blank.append(pos)                      # cause B: no usable label
+    refused = 0
     if blank:
-        causes["blank-label"] += len(blank)
-        refused_slots += [(p, "", "blank-label") for p in blank]
+        star_forms = [f for _t, f in star_hits]
+        if star_forms and len(star_forms) == len(blank):
+            for pos, form in zip(blank, star_forms):   # both sides in order
+                out[pos] = form
+        else:
+            refused += len(blank)
+            causes["blank-label"] += len(blank)
+            refused_slots += [(p, "", "blank-label") for p in blank]
     pool_name, pool_num = defaultdict(list), defaultdict(list)
     for tok, form in name_hits:
         pool_name[compact(tok)].append(form)
     for tok, form in num_hits:
         pool_num[compact(tok)].append(form)
-    refused = len(blank)
     for tok, positions in by_tok_slots.items():
         forms = pool_name.get(tok, [])
         if forms:
@@ -147,6 +158,7 @@ def main():
     # Scrape NAME rows: blank Strong's + Greek present, printed order preserved.
     scrape = defaultdict(list)
     numbered = defaultdict(list)
+    starred = defaultdict(list)
     cleaned = dropped_empty = compound_split = compound_skipped = 0
     bh = sqlite3.connect(f"file:{args.bh}?mode=ro", uri=True)
     for b, c, v, strongs, greek, english in bh.execute(
@@ -177,12 +189,19 @@ def main():
                 continue
             form = caps[0]
             compound_split += 1
-        (scrape if is_name_row else numbered)[(b, c, v)].append(
-            (_name_token(english), form))
+        if not is_name_row and "*" in strongs:
+            # Fold-class row (cause B): the '*' in the compound tag IS the name
+            # marker our build split into a label-less slot — own pool, paired
+            # by order against the verse's blank slots, never by token.
+            starred[(b, c, v)].append((_name_token(english), form))
+        else:
+            (scrape if is_name_row else numbered)[(b, c, v)].append(
+                (_name_token(english), form))
     bh.close()
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
           f"across {len(scrape):,} verses; numbered capitalized rows: "
-          f"{sum(len(v) for v in numbered.values()):,} "
+          f"{sum(len(v) for v in numbered.values()):,}; star-compound rows: "
+          f"{sum(len(v) for v in starred.values()):,} "
           f"(edge-trimmed {cleaned:,}; dropped letterless {dropped_empty:,}; "
           f"compound name-word extracted {compound_split:,}, "
           f"compound skipped {compound_skipped:,})")
@@ -217,7 +236,8 @@ def main():
         slug = ABBREV_TO_SLUG.get(book)
         hits = scrape.get((slug, ch, vs), []) if slug else []
         nhits = numbered.get((slug, ch, vs), []) if slug else []
-        paired, refused, causes, refused_slots = pair_verse(slots, hits, nhits)
+        shits = starred.get((slug, ch, vs), []) if slug else []
+        paired, refused, causes, refused_slots = pair_verse(slots, hits, nhits, shits)
         refused_total += refused
         per_book_refused[book] += refused
         for k, n in causes.items():

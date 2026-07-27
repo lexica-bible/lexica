@@ -97,6 +97,19 @@ def _make_bible(path):
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
           VALUES (12,1,'Jesus','Jesus','G2424','*',1);
 
+        -- v13: fold class (cause B) — LABEL-LESS name slot pairs with the
+        -- verse's star-compound row ('Cain fretted' = 3076-3588-*), in order.
+        INSERT INTO verses VALUES (13,'Mat',12,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (13,2,NULL,NULL,'*','*',1);
+
+        -- v14: fold count-mismatch control — TWO blank slots, ONE star row:
+        -- both must refuse (order-pairing needs equal counts).
+        INSERT INTO verses VALUES (14,'Mat',13,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (14,1,NULL,NULL,'*','*',1),
+                 (14,4,NULL,NULL,'*','*',1);
+
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
@@ -152,7 +165,12 @@ def _make_scrape(path):
           -- is stored, never the connector (the 'Ιούδας δε' live catch).
           ('matthew',10,1,1,'2455','Ιούδας δε','And Judah'),
           -- Mat 11:1 — compound with TWO capitalized words: skipped, refuses.
-          ('matthew',11,1,1,'2424','Ιησούς Χριστός','Jesus Christ');
+          ('matthew',11,1,1,'2424','Ιησούς Χριστός','Jesus Christ'),
+          -- Mat 12:1 — star-compound row (the fold class): '*' in the tag,
+          -- one capitalized word to extract.
+          ('matthew',12,1,1,'3076-3588-*','ελύπησε τον Καϊν','Cain fretted'),
+          -- Mat 13:1 — ONE star row for a two-blank-slot verse: count mismatch.
+          ('matthew',13,1,1,'2036-*','είπεν Αδάμ','Adam said');
     """)
     c.commit()
     c.close()
@@ -187,12 +205,16 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 15 PN slots total: 10 new + 4 refused + 1 already (v5 pairs but its slot
+    # 18 PN slots total: 11 new + 6 refused + 1 already (v5 pairs but its slot
     # is already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 15 (must equal 15)" in r.stdout.replace(",", ""), True)
+          "= 18 (must equal 18)" in r.stdout.replace(",", ""), True)
+    # blank-label = 3: the no-star control (v9) + both count-mismatch slots (v14).
+    check("blank-label controls FIRE (no-star + count-mismatch)",
+          "blank-label: 3" in r.stdout, True)
+    # extracted = 3: the Judah compound + the two star-compound rows.
     check("compound extraction + skip both counted",
-          "compound name-word extracted 1" in r.stdout
+          "compound name-word extracted 3" in r.stdout
           and "compound skipped 1" in r.stdout, True)
     check("blank-label control FIRES", "blank-label" in r.stdout, True)
     check("edge-trim counter reports the dirty form",
@@ -224,7 +246,11 @@ def main() -> int:
     check("name row WINS over numbered row", rows.get((10, 1)), "Μωυσής")
     check("compound cell stores the bare name word", rows.get((11, 1)), "Ιούδας")
     check("two-capitals compound refused, NO row", (12, 1) in rows, False)
-    check("total rows = 1 pre-existing + 10 new", len(rows), 11)
+    check("fold class: blank slot gets the star row's name word",
+          rows.get((13, 2)), "Καϊν")
+    check("fold count-mismatch: both blank slots refused, NO rows",
+          ((14, 1) in rows, (14, 4) in rows), (False, False))
+    check("total rows = 1 pre-existing + 11 new", len(rows), 12)
     c.close()
 
     if fails:
