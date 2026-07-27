@@ -56,34 +56,70 @@ def clean_form(s):
     return "".join(chars)
 
 
-def pair_verse(slots, hits):
-    """slots = [(position, token)] in position order; hits = [(token, form)] in
-    printed order. Returns ({position: form}, refused_count, cause_counts,
-    refused_slots as [(position, token, cause)])."""
+def compact(tok):
+    """Hyphen/apostrophe-blind token key ('tubalcain' == 'tubal-cain') — the
+    binder's compact-compare lesson (entity_resolution), match-key only, the
+    stored form is untouched."""
+    return (tok or "").replace("-", "").replace("'", "")
+
+
+def _resolve(positions, forms):
+    """The three safe rules on one token group. None = ambiguous."""
+    if len(set(forms)) == 1:
+        return {pos: forms[0] for pos in positions}
+    if len(forms) == len(positions):
+        return dict(zip(positions, forms))
+    return None
+
+
+def pair_verse(slots, name_hits, num_hits=()):
+    """slots = [(position, token)] in position order; name_hits = the scrape's
+    NAME rows [(token, form)] in printed order; num_hits = the scrape's NUMBERED
+    rows, tried ONLY when the name pool has nothing for a token (lane-#2 cause A:
+    famous names carry their Strong's number on the scrape page, so they never
+    appear as name rows). Token comparison is compact (hyphen-blind, cause C).
+    Returns ({position: form}, refused_count, cause_counts, refused_slots)."""
     out, causes, refused_slots = {}, defaultdict(int), []
     by_tok_slots = defaultdict(list)
+    blank = []
     for pos, tok in slots:
-        by_tok_slots[tok].append(pos)
-    by_tok_hits = defaultdict(list)
-    for tok, form in hits:
-        by_tok_hits[tok].append(form)
-    refused = 0
+        if compact(tok):
+            by_tok_slots[compact(tok)].append(pos)
+        else:
+            blank.append(pos)                      # cause B: no usable label
+    if blank:
+        causes["blank-label"] += len(blank)
+        refused_slots += [(p, "", "blank-label") for p in blank]
+    pool_name, pool_num = defaultdict(list), defaultdict(list)
+    for tok, form in name_hits:
+        pool_name[compact(tok)].append(form)
+    for tok, form in num_hits:
+        pool_num[compact(tok)].append(form)
+    refused = len(blank)
     for tok, positions in by_tok_slots.items():
-        forms = by_tok_hits.get(tok, [])
+        forms = pool_name.get(tok, [])
+        if forms:
+            got = _resolve(positions, forms)
+            if got is None:
+                refused += len(positions)
+                causes["ambiguous"] += len(positions)
+                refused_slots += [(p, tok, "ambiguous") for p in positions]
+            else:
+                out.update(got)
+            continue
+        forms = pool_num.get(tok, [])
         if not forms:
             refused += len(positions)
             causes["no-match"] += len(positions)
             refused_slots += [(p, tok, "no-match") for p in positions]
-        elif len(set(forms)) == 1:
-            for pos in positions:
-                out[pos] = forms[0]
-        elif len(forms) == len(positions):
-            for pos, form in zip(positions, forms):
-                out[pos] = form
-        else:
+            continue
+        got = _resolve(positions, forms)
+        if got is None:
             refused += len(positions)
-            causes["ambiguous"] += len(positions)
-            refused_slots += [(p, tok, "ambiguous") for p in positions]
+            causes["ambiguous-numbered"] += len(positions)
+            refused_slots += [(p, tok, "ambiguous-numbered") for p in positions]
+        else:
+            out.update(got)
     return out, refused, causes, refused_slots
 
 
@@ -110,22 +146,31 @@ def main():
 
     # Scrape NAME rows: blank Strong's + Greek present, printed order preserved.
     scrape = defaultdict(list)
+    numbered = defaultdict(list)
     cleaned = dropped_empty = 0
     bh = sqlite3.connect(f"file:{args.bh}?mode=ro", uri=True)
-    for b, c, v, greek, english in bh.execute(
-            "SELECT book, chapter, verse, greek, english FROM bh_words "
-            "WHERE (strongs IS NULL OR strongs='') AND greek IS NOT NULL AND greek != '' "
-            "ORDER BY rowid"):
+    for b, c, v, strongs, greek, english in bh.execute(
+            "SELECT book, chapter, verse, strongs, greek, english FROM bh_words "
+            "WHERE greek IS NOT NULL AND greek != '' ORDER BY rowid"):
+        is_name_row = not strongs
+        if not is_name_row:
+            # NUMBERED rows (cause A: famous names carry their number on the
+            # scrape page). Cheap prefilter: only rows whose English contains a
+            # capitalized word can be a name — the token match still decides.
+            if not english or not any(w[:1].isupper() for w in english.split()):
+                continue
         form = clean_form(greek)
         if not form:
             dropped_empty += 1        # no letters left — never a usable form
             continue
         if form != greek:
             cleaned += 1
-        scrape[(b, c, v)].append((_name_token(english), form))
+        (scrape if is_name_row else numbered)[(b, c, v)].append(
+            (_name_token(english), form))
     bh.close()
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
-          f"across {len(scrape):,} verses "
+          f"across {len(scrape):,} verses; numbered capitalized rows: "
+          f"{sum(len(v) for v in numbered.values()):,} "
           f"(edge-trimmed {cleaned:,}; dropped letterless {dropped_empty:,})")
 
     # Every proper-noun slot, grouped per verse, position order.
@@ -157,13 +202,15 @@ def main():
         book, ch, vs = meta[vid]
         slug = ABBREV_TO_SLUG.get(book)
         hits = scrape.get((slug, ch, vs), []) if slug else []
-        paired, refused, causes, refused_slots = pair_verse(slots, hits)
+        nhits = numbered.get((slug, ch, vs), []) if slug else []
+        paired, refused, causes, refused_slots = pair_verse(slots, hits, nhits)
         refused_total += refused
         per_book_refused[book] += refused
         for k, n in causes.items():
             causes_total[k] += n
         if dump and refused_slots:
-            scrape_side = " ".join(f"{t}={f}" for t, f in hits) or "(no name rows)"
+            scrape_side = (" ".join(f"{t}={f}" for t, f in hits) or "(no name rows)") \
+                + " || " + (" ".join(f"{t}={f}" for t, f in nhits) or "(no numbered rows)")
             for pos, tok, cause in refused_slots:
                 dump.write(f"{book}\t{ch}\t{vs}\t{pos}\t{cause}\t"
                            f"{labels.get((vid, pos), '')}\t{tok}\t{scrape_side}\n")

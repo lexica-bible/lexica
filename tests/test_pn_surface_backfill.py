@@ -67,6 +67,26 @@ def _make_bible(path):
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
           VALUES (6,1,'Melchizedek','Melchizedek','*','*',1);
 
+        -- v7: cause-A recovery — David exists in scrape only as a NUMBERED row.
+        INSERT INTO verses VALUES (7,'Mat',6,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (7,1,'David','David','G1138','*',1);
+
+        -- v8: cause-C hyphen — our cell 'Tubalcain', scrape 'Tubal-cain' name row.
+        INSERT INTO verses VALUES (8,'Mat',7,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (8,1,'Tubalcain','Tubalcain','*','*',1);
+
+        -- v9: cause-B blank label — must refuse as blank-label, never pair.
+        INSERT INTO verses VALUES (9,'Mat',8,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (9,1,NULL,NULL,'*','*',1);
+
+        -- v10: name row WINS over numbered row for the same token (pool order).
+        INSERT INTO verses VALUES (10,'Mat',9,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (10,1,'Moses','Moses','G3475','*',1);
+
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
@@ -104,7 +124,20 @@ def _make_scrape(path):
           ('matthew',4,1,1,NULL,'Δαυιδ','David'),
           -- Mat 3:1 — dirt-trim assertion target: Zorobabel gets a dirty form
           -- (was the no-match control; that control moved to Mat 5:1).
-          ('matthew',3,1,1,NULL,'΄ Ζοροβαβελ ','Zorobabel');
+          ('matthew',3,1,1,NULL,'΄ Ζοροβαβελ ','Zorobabel'),
+          -- Mat 6:1 — David as a NUMBERED row only (cause-A recovery) + a
+          -- numbered common word that must never enter the name pools.
+          ('matthew',6,1,1,'1138','Δαβίδ','David'),
+          ('matthew',6,1,2,'1080','εγεννησε','begat'),
+          -- Mat 7:1 — hyphen variant name row.
+          ('matthew',7,1,1,NULL,'Θοβέλ','Tubal-cain'),
+          -- Mat 8:1 — a perfectly good scrape row; the blank-label slot must
+          -- still refuse (control: blank never pairs even when a row exists).
+          ('matthew',8,1,1,NULL,'Καϊν','Cain'),
+          -- Mat 9:1 — BOTH a name row and a numbered row for Moses with
+          -- different forms; the name row must win.
+          ('matthew',9,1,1,NULL,'Μωυσής','Moses'),
+          ('matthew',9,1,2,'3475','Μωυσέως','Moses');
     """)
     c.commit()
     c.close()
@@ -139,10 +172,11 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 9 PN slots total: 6 new + 2 refused + 1 already (v5 pairs but its slot is
+    # 13 PN slots total: 9 new + 3 refused + 1 already (v5 pairs but its slot is
     # already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 9 (must equal 9)" in r.stdout.replace(",", ""), True)
+          "= 13 (must equal 13)" in r.stdout.replace(",", ""), True)
+    check("blank-label control FIRES", "blank-label" in r.stdout, True)
     check("edge-trim counter reports the dirty form",
           "edge-trimmed 1" in r.stdout, True)
     check("ambiguity control FIRES", "ambiguous : 1" in r.stdout.replace("  ", " "), True)
@@ -164,7 +198,11 @@ def main() -> int:
     check("no-match slot got NO row", (6, 1) in rows, False)
     check("existing row NOT overwritten", rows.get((5, 1)), "PRE-EXISTING")
     check("non-PN slot untouched", (1, 0) in rows, False)
-    check("total rows = 1 pre-existing + 6 new", len(rows), 7)
+    check("cause-A: numbered-row David recovered", rows.get((7, 1)), "Δαβίδ")
+    check("cause-C: hyphen-blind Tubalcain paired", rows.get((8, 1)), "Θοβέλ")
+    check("cause-B: blank-label slot got NO row", (9, 1) in rows, False)
+    check("name row WINS over numbered row", rows.get((10, 1)), "Μωυσής")
+    check("total rows = 1 pre-existing + 9 new", len(rows), 10)
     c.close()
 
     if fails:
