@@ -15,6 +15,20 @@ other. Four names trip the place-as-person direction (fuzzy-PERSON + exact-PLACE
     judah   1 fuzzy-person  /  1 exact-place
     uzza    5 fuzzy-person  /  2 exact-place
 
+Defining query (verbatim from cert_invariants.py check 7, the production detector —
+the four names are the rows where fpe > 0 AND epl > 0):
+
+    WITH r AS (SELECT b.name, b.kind, e.section
+               FROM pn_binding b JOIN tipnr_entities e ON e.uniq = b.entity_uniq
+               WHERE b.render = 1)
+    SELECT name,
+           SUM(kind='fuzzy' AND section='place')  AS fp,
+           SUM(kind='exact' AND section='person') AS ep,
+           SUM(kind='fuzzy' AND section='person') AS fpe,
+           SUM(kind='exact' AND section='place')  AS epl
+    FROM r GROUP BY name
+    HAVING (fp > 0 AND ep > 0) OR (fpe > 0 AND epl > 0)
+
 ## Why this shape is suspicious, not proven wrong
 
 The Cushi precedent (cert Session 4) was this pattern's mirror: the FUZZY bind
