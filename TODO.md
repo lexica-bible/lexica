@@ -1279,10 +1279,12 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
   name slots now wear Greek numbers, so counts moved. The re-rank must EXCLUDE PN/name numbers
   (incl. any STEP G9xxx; PN-card minting is its own deferred ticket). Not blocking the verse-short
   dip.
-  **G1484 (ἔθνος) FLOOR MOVED (2026-07-27 re-verify, pasted PA output):** its pool gained 23
-  R-2-converted name slots (only live card affected; all 87 others clean). The #30 floor-diff
-  NOT-RUN waiver is DEAD for G1484 — any redraw of it reads the actual floor-diff, per-word
-  ruling owed at that time.
+  **G1484 (ἔθνος) FLOOR MOVED (2026-07-27 re-verify, pasted PA output):** 23 "greeks" name
+  slots now share its pool — 6 OT slots CERTAIN-new (ex-H1471), 17 NT star slots pre-R-2 state
+  unproven (xref lists ALL name slots, so listing ≠ changed); exact delta = the floor-diff at
+  redraw. Only live card affected; join soundness 32,479=32,479 and OT coverage 10,462=10,462
+  both proven on pasted output. The #30 floor-diff NOT-RUN waiver is DEAD for G1484 — any
+  redraw of it reads the actual floor-diff, per-word ruling owed at that time.
 - **Repair-leg gotcha (cost a revert 2026-07-15, ENGINE_LESSONS #83):** if drafts are repaired and
   waiting to ship, SHIP THEM BEFORE committing any prompt edit — a prompt edit stales every cached
   draw at commit time and `--from-draw` refuses a stale draw. Spec-first governs authorization order,
