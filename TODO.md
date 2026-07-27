@@ -1285,6 +1285,19 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
   redraw. Only live card affected; join soundness 32,479=32,479 and OT coverage 10,462=10,462
   both proven on pasted output. The #30 floor-diff NOT-RUN waiver is DEAD for G1484 — any
   redraw of it reads the actual floor-diff, per-word ruling owed at that time.
+  **TALLY CORRECTION (2026-07-27, DB-counted on pasted output): live cards = 85, not 88.** The
+  handoff's "cards 85 → 88" (2026-07-15 c) was a slip — the `"None"` trio were REDRAWS of
+  already-live cards (all three confirmed present), which replace rows, never add them. Same
+  class as the earlier 19→18 slip. 85 is the authoritative count until a genuinely NEW word ships.
+  Receipts (reviewer-ruled CLOSED 2026-07-27): trio rows pasted present; before-state = AUDIT
+  lines 341/1058 (G2588 live since batch one) + 7773 (2026-07-14 ruling names all three as LIVE
+  cards to REDRAW); slip origin = the ship session numbering redraws "#86/#87/#88" as additions.
+  **Lesson candidate HELD for JP:** card-count claims in docs are not receipts — the table is.
+  Decide with JP: new #89 or fold into an existing bar.
+  **BATCH ONE (verse-short dip) CLEARED TO SEND — reviewer's conditions met on pasted output
+  2026-07-27:** check 1 fired (G1484 only), join 32,479=32,479, coverage 10,462=10,462, check 2
+  empty with fire-proof covering all 85 rows. Unchanged prompt, stamp `lexica:f8c77bf889f6`,
+  full gate battery, few per session.
 - **Repair-leg gotcha (cost a revert 2026-07-15, ENGINE_LESSONS #83):** if drafts are repaired and
   waiting to ship, SHIP THEM BEFORE committing any prompt edit — a prompt edit stales every cached
   draw at commit time and `--from-draw` refuses a stale draw. Spec-first governs authorization order,
