@@ -292,10 +292,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 - **Phase-6: PN Greek surface-form backfill — DONE + LIVE 2026-07-27.** 29,092 of 32,479
   name slots now carry ABP's printed Greek on the interlinear line (backfill_pn_surface.py,
   name-token pairing + order-pairing, refuse-on-doubt; locked test in pre-commit + CI).
-  Remainder = 3,387 refusals (3,381 no-match — the known hold-out class, lane #2 /
-  TICKET_pn_lemma_residue.md — + 6 ambiguous). Full record + gate receipts:
-  docs/tickets/TICKET_pn_surface_phase6.md. Lane #3 (lemma-open Word study for the
-  numberless identities' inactive occurrence links) is next per reviewer sequence.
+  **Lane #2 recovery CLOSED 2026-07-28: +744 (numbered-row/hyphen rules) +285 (fold
+  class) = 30,121/32,479 = 92.7% reading Greek; residue FINAL at 2,358 (scrape-side
+  dead ends 2,298 + blank-no-star 57 + ambiguous 6 − 3), stamped with its defining
+  query in TICKET_pn_lemma_residue.md.** A different Greek source for the dead ends
+  is its own future decision, not this lane. Lane #3 (lemma-open Word study,
+  TICKET_lemma_word_study.md, scoped + ruling held) is next.
 - **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
   lemma — by-design skips of the cautious G1473→G846 retag (it refuses to guess reflexives + no-morph
   cells). Consistent with the build. Future cleanup only. code: the g1473_gloss_retag fold in

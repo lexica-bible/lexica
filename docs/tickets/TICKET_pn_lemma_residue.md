@@ -5,16 +5,25 @@ after the G1 fix (unbound name-path words gained the name's agreed Greek number,
 absorbed 1,650 of the refused rows into 'tipnr' — the meter moved for a named reason). Pull, not push — pick up after
 stage 1 lands, or alongside Pile P (possessive/plural cells), which likely shares causes.
 
-**LANE-#2 OPENING NUMBER (post-Phase-6, live census 2026-07-27): 3,387 name slots
-still without printed Greek** = 3,381 pairing no-matches (this ticket's class) + 6
-ambiguous (same-token count mismatch, backfill_pn_surface.py refusals). Defining query
-verbatim (must only shrink for a named reason):
+**LANE #2 CLOSED 2026-07-28 — scrape-based recovery COMPLETE, residue FINAL: 2,358.**
+Opening number was 3,387 (census 2026-07-27). Three recovery passes, each
+trial-then-apply with closing arithmetic, all locked in tests/test_pn_surface_backfill.py:
+  cause A (name numbered on the scrape page + hyphen-blind compare): +744
+  cause B (fold class: '*' in the compound tag ↔ label-less slot, order-paired): +285
+  (the compound-cell guard and the dual-role precedence rule — lesson 87 — landed
+  along the way; the Mat-1 spot list and the already-present counter each caught one
+  would-be defect pre-apply)
+Final residue classification: 2,298 scrape-side dead ends (the page has no Greek for
+the name in that verse — honest end of THIS source; a different source is a separate
+decision, not this lane), 57 blank-label slots with no/unmatched star row, 6 ambiguous
+(same-token count mismatch), minus 3 slots already written under the earlier stricter
+rule. Defining query verbatim (must only shrink for a named reason):
 
     SELECT COUNT(*) AS total_pn, SUM(s.verse_id IS NULL) AS still_missing
     FROM words w
     LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position
     WHERE w.is_pn = 1;
-    -- live 2026-07-27: 32479 | 3387
+    -- live 2026-07-28 (FINAL): 32479 | 2358   (30,121 = 92.7% reading Greek)
 
 ## What it is
 
