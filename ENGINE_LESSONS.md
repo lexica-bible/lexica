@@ -1421,3 +1421,20 @@ both drifting from the doc.
     of one fact, and their diff was sitting there unasked. Caught at the import_tipnr spot-
     check print (Jesus→G912 visible in the run output) — one screen line, read, saved the swap.
     *(head-word rebuild run, 2026-07-16; bible.db.new discarded, live untouched)*
+
+## Added by the PN-surface lane-#2 session (2026-07-28; reviewer-ruled standing)
+
+87. **A backfill pass that adds a matching rule must reproduce every previously-applied
+    slot's verdict from scratch — proven by the already-present counter landing EXACTLY on
+    the applied total.** The fold-class pass rerouted star-compound rows out of the numbered
+    token pool into their own pool; recovery still looked good (277 new), but already-present
+    read 29,547 against 29,833 written — 286 slots that had EARNED their Greek under pass 2
+    would refuse on any from-scratch re-run, a silent loss armed for the next words rebuild
+    (rows only survive today because the writer never overwrites). no-match rose by exactly
+    286 — the closing arithmetic named the class before any row was written. Fix shape:
+    additive rules EXTEND pools, never reroute; when a row serves two roles, precedence is
+    explicit (labeled slots claim star rows via the token phase; blank slots take only
+    unclaimed ones) and the regression is a locked test control. Same family as #69: every
+    path that writes must prove what the prior path proved — here, every PASS must re-prove
+    what the prior pass proved, and the already-present counter is that proof, not
+    bookkeeping. *(dry-run-only catch; no live row was ever wrong)*
