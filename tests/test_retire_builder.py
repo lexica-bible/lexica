@@ -61,10 +61,15 @@ def _make_db(path):
     c.close()
 
 
+# The builder prints em-dashes; on Windows a piped child defaults to cp1252,
+# so force its output to UTF-8 to match the encoding we read with.
+_ENV = dict(os.environ, PYTHONIOENCODING="utf-8")
+
+
 def _run(dbp, *extra):
     return subprocess.run(
         [sys.executable, SCRIPT, dbp, SPLIT, "1,2,2,2", *extra],
-        capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
+        capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
 
 
 def main() -> int:
@@ -147,7 +152,7 @@ def main() -> int:
     dbp2 = os.path.join(tmp, "retire_split.db")
     _make_db(dbp2)
     r = subprocess.run([sys.executable, SCRIPT, dbp2, SPLIT, "9,9,9,9"],
-                       capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
+                       capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
     check("wrong class split HALTS", r.returncode != 0, True)
 
     dbp3 = os.path.join(tmp, "retire_drift.db")

@@ -134,16 +134,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   review when raised, not a rider on any rebuild. **Ticket opened 2026-07-26:
   docs/tickets/TICKET_cert7_mirror_binds.md (evidence pass + symmetric-guard candidate,
   awaiting reviewer ruling before any build).**
-- **Hebrew-flash on ABP PN card open — CLASSIFIED 2026-07-25 (JP report, mid-G2): render-order
-  defect, frontend-only, FRAME-0 class.** The card mounts with the stored Hebrew state (H-number
-  header, BDB section, Hebrew counts) while the per-click Greek-identity fetch is in flight, then
-  swaps to Greek — the flash IS that swap. Reader tags can't flash (identity rides the chapter feed
-  itself). Fix shape, per the established two-source rule ("hold a block neutral until ALL its
-  lookups resolve" — the bdbLoading/lexicaLoading precedents): a greekIdLoading flag started TRUE
-  whenever the fetch will run (ABP PN click, position present), holding the header + identity-
-  dependent sections neutral until the identity (or its absence) resolves; switch-OFF/404 resolves
-  to today's card. code: 30-detail-panel.jsx:346-356 (the ungated fetch), :759/:783-794 (sections
-  keyed on `!greekId` — these paint the Hebrew state during the in-flight window), :1301 (header).
+- **Hebrew-flash on ABP PN card open — DONE + VERIFIED LIVE 2026-07-26.** Fix landed as
+  designed (commits f08ce2e1 + ed28b2ff): `greekIdPending` starts TRUE whenever the identity
+  fetch will run, holding header + all identity-dependent sections neutral until it resolves
+  (FRAME-0 / two-source rule). Verified on live with the MutationObserver frame-recorder on
+  a fresh Agag (1Sa 15:32) click: hold frames show header "PN" with zero Hebrew content
+  (no H-number/BDB/Hebrew counts); first identity paint is already Greek (G9826 Βουγαίου);
+  the TIPNR person block then adds on top — no Hebrew frame at any point.
 - **Jer 9:23 word order: "Let not the boast wise man" (should be "the wise man boast") — CLASSIFIED
   2026-07-25, source-typo class, corrections-door fix.** Reported by JP from reading. Root cause is
   the SOURCE's own bracket order digits: first bracket reads `[2boast 1the 2wise man]` (duplicate 2,

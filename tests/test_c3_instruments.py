@@ -67,10 +67,15 @@ def _make_db(path):
     c.close()
 
 
+# Spawned scripts print em-dashes; on Windows a piped child defaults to cp1252,
+# so force its output to UTF-8 to match the encoding we read with.
+_ENV = dict(os.environ, PYTHONIOENCODING="utf-8")
+
+
 def _audit(dbp):
     return subprocess.run(
         [sys.executable, os.path.join(ROOT, "scripts", "audit_two_derivations.py"), dbp],
-        capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
+        capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
 
 
 def main() -> int:
@@ -98,7 +103,7 @@ def main() -> int:
     rr = subprocess.run(
         [sys.executable, os.path.join(ROOT, "scripts", "retire_hebrew_identity.py"),
          post, "--expect-split", "1,1,1,2", "--apply"],
-        capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
+        capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
     check("retirement applied on the instrument fixture", rr.returncode, 0)
     r = _audit(post)
     check("audit post: exit 0 (dual-home controls pass)", r.returncode, 0)
