@@ -1294,7 +1294,9 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
   cards to REDRAW); slip origin = the ship session numbering redraws "#86/#87/#88" as additions.
   **Lesson RULED IN by JP 2026-07-27, banked as ENGINE_LESSONS #90** (not #89 — that number and
   the 87/88 pair were already used by the 2026-07-16 head-word lane; the PN weekend's 87/88 are
-  DUPLICATES — naming ruling owed on that pair, texts untouched).
+  DUPLICATES — naming RULED 2026-07-27: texts stay, cite-as notes added at each ("#87/#88
+  (rebuild lane)" vs "(PN lane)"); new lessons take the next free number checked against the
+  FILE at write time. CLOSED.)
   **BATCH ONE (verse-short dip) CLEARED TO SEND — reviewer's conditions met on pasted output
   2026-07-27:** check 1 fired (G1484 only), join 32,479=32,479, coverage 10,462=10,462, check 2
   empty with fire-proof covering all 85 rows. Unchanged prompt, stamp `lexica:f8c77bf889f6`,

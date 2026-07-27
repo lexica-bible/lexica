@@ -1355,6 +1355,8 @@ both drifting from the doc.
     beats another model call) — here the deterministic lever was a commit order, not a tool.
     *(audit: legacy "None" trio, 2026-07-15; 500a754 → 1b5499e → 45c5e02)*
 
+> ⚠ duplicate number — cite this one as **#87 (rebuild lane)**; the PN lane's #87 is further down.
+
 87. **A replica of a mechanism is not the mechanism; reconciliation checkers must call the
     production code path, not re-implement it.** (Reviewer-worded, 2026-07-16.) The alias
     batch's count reconciliation ("1,296 → 1,075 resolvable + 221 documented, unexplained 0")
@@ -1365,6 +1367,8 @@ both drifting from the doc.
     simulation vs the landed loader (the 93-vs-149 hijack fingerprint) and the replica ladder
     vs the real ladder. Both times the divergence of copy from original was itself the
     finding. *(head-word rebuild run, 2026-07-16; leave-list re-cut with pile P)*
+
+> ⚠ duplicate number — cite this one as **#88 (rebuild lane)**; the PN lane's #88 is further down.
 
 88. **A runnable command in the same message as its approval request defeats the gate even
     when the fix is right.** Posted the ladder-fix adjudication packet WITH the import_tipnr
@@ -1424,6 +1428,8 @@ both drifting from the doc.
 
 ## Added by the PN-surface lane-#2 session (2026-07-28; reviewer-ruled standing)
 
+> ⚠ duplicate number — cite this one as **#87 (PN lane)**; the rebuild lane's #87 is further up.
+
 87. **A backfill pass that adds a matching rule must reproduce every previously-applied
     slot's verdict from scratch — proven by the already-present counter landing EXACTLY on
     the applied total.** The fold-class pass rerouted star-compound rows out of the numbered
@@ -1440,6 +1446,8 @@ both drifting from the doc.
     bookkeeping. *(dry-run-only catch; no live row was ever wrong)*
 
 ## Added at the chip-view Greek-line miss (2026-07-28; reviewer-ruled standing)
+
+> ⚠ duplicate number — cite this one as **#88 (PN lane)**; the rebuild lane's #88 is further up.
 
 88. **When a data lane changes what a display table serves, the close-out enumerates EVERY
     renderer that reads that table and verifies each one.** Phase-6 filled abp_surface for
@@ -1458,11 +1466,12 @@ both drifting from the doc.
 
 ## Added at the batch-one post-R-2 re-verify (2026-07-27; JP-ruled in)
 
-> ⚠ LEDGER NOTE: numbers 87 and 88 exist TWICE above (head-word rebuild 2026-07-16 lane vs the
-> PN-surface 2026-07-28 sections) and 89 was already taken by the 2026-07-16 lane — so this
-> lesson banks as 90, not the 89 the ruling named. The duplicate 87/88 pair is flagged for a
-> naming ruling; the banked texts are untouched here. (Caught while banking this very lesson —
-> the ledger's own numbering is a derived tally too.)
+> ⚠ LEDGER NOTE (ruled 2026-07-27): numbers 87 and 88 exist TWICE (head-word rebuild 2026-07-16
+> lane vs the PN-surface sections) and 89 was taken by the 2026-07-16 lane — so this lesson banks
+> as 90. RULING: texts stay as-is; each duplicate carries a cite-as note ("#87 (rebuild lane)" /
+> "#87 (PN lane)", same for 88). Going forward, a new lesson takes the next truly-free number
+> CHECKED AGAINST THIS FILE at write time, never against memory — #90 applied to the notebook
+> itself. (Collision caught while banking this very lesson.)
 
 90. **A count written into docs during a ship session is not a receipt — the table is. Derived
     tallies decay; re-count from the database at point of use, never carry a number forward.**
