@@ -1438,3 +1438,20 @@ both drifting from the doc.
     path that writes must prove what the prior path proved — here, every PASS must re-prove
     what the prior pass proved, and the already-present counter is that proof, not
     bookkeeping. *(dry-run-only catch; no live row was ever wrong)*
+
+## Added at the chip-view Greek-line miss (2026-07-28; reviewer-ruled standing)
+
+88. **When a data lane changes what a display table serves, the close-out enumerates EVERY
+    renderer that reads that table and verifies each one.** Phase-6 filled abp_surface for
+    29k+ name slots and the close verified the faithful Greek-first interlinear — but the
+    chip view's small Greek line is a SECOND renderer of the same table, reads only the
+    dictionary form, and shipped unverified: the new printed forms were invisible there
+    (JP's 1Ch-1 screenshots caught it; two modes disagreeing on identical data = renderer
+    gap, never residue — residue is blank in BOTH). Same class as the stale batch-one
+    prompt: a surface-enumeration gap. Fix precedence when converging renderers: keep the
+    working source first, add the new one as fallback, so every previously-correct cell is
+    byte-identical. Grep for every consumer of the changed field (`w.inflected` /
+    `abp_surface` here) BEFORE calling the lane closed — the verify list is the reader
+    list, not the one surface the lane was built for. *(fix beddba6c, receipt on the exact
+    surface; two banked rules this weekend for two caught misses — #87's re-prove-the-pass
+    and this)*
