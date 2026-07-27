@@ -1138,6 +1138,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon && onNavigateToLexicon(greekId.greek_strongs, "abp")}>
             <CountLine n={greekId.greek_count} label={greekId.greek_strongs}/>
           </button>
+        ) : greekId.lemma && onNavigateToLexicon ? (
+          /* Lemma-only identity (Q3): Word study now opens by the stored form
+             via the PN: key (lane #3, TICKET_lemma_word_study.md) — the list is
+             the SAME derivation as this count, so the numbers must match. */
+          <button className="occ-link occ-link--id" onClick={() => onNavigateToLexicon("PN:" + greekId.lemma, "abp")}>
+            <CountLine n={greekId.greek_count} label="in ABP (this form)"/>
+          </button>
         ) : (
           <div className="occ-link occ-link--static">
             <CountLine n={greekId.greek_count} label="in ABP (this form)"/>

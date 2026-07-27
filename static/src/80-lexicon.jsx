@@ -119,7 +119,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   useEffect(() => {
     setLexica(null);
     const sn = profile && profile.strongs;
-    if (!sn || sn === "*") return;
+    if (!sn || sn === "*" || profile.name_form) return;   // numberless name-form: no entry to fetch
     let cancelled = false;
     api.lexica(sn)
       .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
@@ -662,6 +662,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             </div>
           )}
           <div className="detail-morph"><CountLine n={occCount} label={"in " + corpusName}/></div>
+          {/* Numberless name-form (lemma-keyed entry): the honest state line the
+              ruling requires — lemma-wide list, identity stays on the reader card. */}
+          {profile.name_form && (
+            <div className="detail-morph">Name-form — no Strong's number. Listing every occurrence of this printed form.</div>
+          )}
         </div>
       </div>
 
@@ -874,7 +879,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
              its mono type (the typography-scope ruling: geometry unifies, title type belongs to
              the card family; same call as the Library word card's .detail-head badge). The
              `.wm-sh-card` class carries ONLY that type override, nothing structural. */
-          <Sheet className="wm-sh-card" title={profile ? profile.strongs : "Word card"} onClose={() => setSheet(null)}>
+          <Sheet className="wm-sh-card" title={profile ? (profile.name_form ? "PN" : profile.strongs) : "Word card"} onClose={() => setSheet(null)}>
             <div className="wm-card">{renderWordCardInner()}</div>
           </Sheet>
         )}
@@ -902,7 +907,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 ))}
               </div>
             </div>
-            {profile && onAskWord && (
+            {profile && onAskWord && !profile.name_form && (
               <div className="mode-sec">
                 <div className="mode-lbl">Go deeper</div>
                 <button className="wm-jump" onClick={() => { setSheet(null); onAskWord(profile.strongs, profile.lemma, profile.translit); }}>
@@ -987,7 +992,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
               </button>
             </form>
-            {profile && onAskWord && (
+            {profile && onAskWord && !profile.name_form && (
               <button type="button" className="searchbar-ask" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
                 <Icon.Sparkle/><span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
               </button>
@@ -1154,7 +1159,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           <div className="detail-head">
             {/* Badge + numbering crosswalk glued as one unit — same treatment as the Library card. */}
             <span className="detail-strong-wrap">
-              <span className="detail-strong-head">{profile.strongs}</span>
+              <span className="detail-strong-head">{profile.name_form ? "PN" : profile.strongs}</span>
               {/* G2 flip: STEP-extended number served via step_lexicon — quiet
                   source tag, same style as the reader card (S2-Q2). */}
               {profile.step && <span className="detail-strong-alias"> (STEP)</span>}

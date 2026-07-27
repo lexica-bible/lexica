@@ -1126,8 +1126,79 @@ def lexicon_english():
             _heb_state["conn"].close()
 
 
+# ── Lemma-keyed Word study for NUMBERLESS proper-noun identities ─────────────
+# ~14,850 PN identities are lemma-only (real Greek name-form, no Strong's number
+# in any scheme — the honest Q3 state). Their card link carries a "PN:<form>"
+# key through the same profile/verses plumbing (ruled 2026-07-28, ticket
+# TICKET_lemma_word_study.md). The list is LEMMA-WIDE — every occurrence of the
+# printed form, same as the June "all Edens" occurrence ruling; identity
+# disambiguation stays on the reader cards.
+
+_PN_KEY = "PN:"
+
+
+def _pn_lemma_rows(conn, lemma, testament="all"):
+    """Occurrence keys for a numberless name-form — the SAME derivation the word
+    card's static count uses (views_metav._greek_identity_payload, the lemma-only
+    branch): pn_greek_identity rows sharing the stored form with NO number.
+    Canonical order; verses join supplies the keys."""
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                        "AND name='pn_greek_identity'").fetchone():
+        return []
+    rows = conn.execute(f"""
+        SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse
+        FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id
+        WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
+        ORDER BY {_BOOK_RANK_SQL}, v.chapter, v.verse
+    """, (lemma,)).fetchall()
+    if testament in ("ot", "nt"):
+        keep = (lambda bid: bid <= 39) if testament == "ot" else (lambda bid: bid >= 40)
+        rows = [r for r in rows if keep(_KJV_BOOK_ID.get(r["book"], 999))]
+    return rows
+
+
+def _pn_lemma_profile(lemma):
+    lemma = lemma.strip()
+    if not lemma:
+        return jsonify({"error": "invalid"}), 400
+    conn = db_ro()
+    try:
+        occ = _pn_lemma_rows(conn, lemma)
+        if not occ:
+            return jsonify({"error": "not found"}), 404
+        _NT = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
+               "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
+        book_meta = {r["abbrev"]: {"name": r["name"], "testament": "NT" if r["abbrev"] in _NT else "OT"}
+                     for r in conn.execute("SELECT abbrev, name FROM books").fetchall()}
+        book_counts = {}
+        for r in occ:
+            book_counts[r["book"]] = book_counts.get(r["book"], 0) + 1
+        books = [{"book": b, "name": book_meta.get(b, {}).get("name", b),
+                  "testament": book_meta.get(b, {}).get("testament", ""), "count": c}
+                 for b, c in sorted(book_counts.items(), key=lambda x: -x[1])]
+        dv = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]}
+              for r in occ[:_ALL_VERSES_CAP]]
+        # Same payload keys as a numbered profile so the frontend machinery is
+        # unchanged; name_form drives the honest state line + gated extras.
+        return jsonify({"strongs": f"{_PN_KEY}{lemma}", "name_form": True,
+                        "lemma": lemma, "translit": "", "definition": "",
+                        "derivation": "", "related": [], "total": len(occ),
+                        "books": books, "corpus": "abp", "glosses": [],
+                        "abp_glosses": [], "kjv_glosses": [], "heb_glosses": [],
+                        "bsb_glosses": [], "has_abp": True, "has_kjv": False,
+                        "has_heb": False, "has_bsb": False, "alias_note": None,
+                        "default_verses": dv,
+                        "default_truncated": len(occ) > _ALL_VERSES_CAP})
+    except Exception:
+        return jsonify({"error": "Server error"}), 500
+    finally:
+        conn.close()
+
+
 @bp.route("/api/lexicon/profile/<strongs>")
 def lexicon_profile(strongs):
+    if strongs.strip().startswith(_PN_KEY):
+        return _pn_lemma_profile(strongs.strip()[len(_PN_KEY):])
     m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', strongs.strip())
     if not m:
         return jsonify({"error": "invalid"}), 400
@@ -1567,6 +1638,24 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
 
 @bp.route("/api/lexicon/verses/<strongs>/<book>")
 def lexicon_verses(strongs, book):
+    if strongs.strip().startswith(_PN_KEY):
+        # Numberless name-form key: same occurrence set as the profile; the book
+        # rail and OT/NT tabs narrow it. No renderings (glosses stay empty).
+        lemma = strongs.strip()[len(_PN_KEY):].strip()
+        testament = request.args.get("testament", "all").strip().lower()
+        if testament not in ("all", "ot", "nt"):
+            testament = "all"
+        conn = db_ro()
+        try:
+            occ = _pn_lemma_rows(conn, lemma, testament)
+            if book != "all":
+                occ = [r for r in occ if r["book"] == book]
+            vout = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]}
+                    for r in occ[:_ALL_VERSES_CAP]]
+            return jsonify({"verses": vout, "glosses": [],
+                            "truncated": len(occ) > _ALL_VERSES_CAP})
+        finally:
+            conn.close()
     m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', strongs.strip())
     if not m:
         return jsonify([])
