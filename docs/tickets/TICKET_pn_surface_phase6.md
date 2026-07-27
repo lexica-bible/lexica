@@ -50,4 +50,11 @@ arithmetic-closes checks) — green locally, wired into pre-commit + CI.
 3. --apply, then build_abp_translit.py for the new rows, then standard reload +
    sweep. Post-apply re-run of the census must show missing = the refusal count.
 
-Status: BUILT + test-locked, awaiting the PA dry-run.
+Status: **APPLIED + LIVE 2026-07-27.** Dry-run and apply matched exactly:
+359,288 → 388,380 (delta 29,092; refused 3,387 = 3,381 no-match + 6 ambiguous;
+arithmetic closed on 32,479; already-present 0; edge-trim cleaned 243 forms —
+the '΄ Αχαζ' class — letterless 0). Matthew-1 spot list clean both runs.
+Translit re-run filled all 388,380; deploy.sh reload. Live verification:
+/api/chapter/Mat/1 serves inflected "Αβραάμ" + translit on the Abraham name
+slot — the interlinear Greek line reads Greek with zero UI change.
+Post-apply census expectation: missing = 3,387 (the lane-#2 remainder).

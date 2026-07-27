@@ -289,12 +289,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 - **Badge / verification-token unification (design backlog).** Two families — provenance badges (metaV/
   TIPNR/"Matched to this verse") vs verification marks ("✓ N/N verified"); rule now in `docs/design.md`.
   Converge instances opportunistically, no sweep.
-- **Phase-6: PN Greek surface-form backfill for interlinear mode** (deferred, not a bug). In the new
-  interlinear reading mode (2026-07-04) proper nouns show their capitalized English name on the Greek line
-  because ABP prints Φαραώ/Νεχαώ etc. but those forms were never ingested (no lexicon join for `*` PNs → no
-  `abp_surface` row). Backfill `abp_surface.form` for PN tokens so the Greek line shows the real Greek; it
-  slots into the `greekLineForWord` chain at step 1 (inflected) with ZERO UI change. Needs cert-style
-  position-alignment verification when it runs. Full record: memory `project_reading_modes`.
+- **Phase-6: PN Greek surface-form backfill — DONE + LIVE 2026-07-27.** 29,092 of 32,479
+  name slots now carry ABP's printed Greek on the interlinear line (backfill_pn_surface.py,
+  name-token pairing + order-pairing, refuse-on-doubt; locked test in pre-commit + CI).
+  Remainder = 3,387 refusals (3,381 no-match — the known hold-out class, lane #2 /
+  TICKET_pn_lemma_residue.md — + 6 ambiguous). Full record + gate receipts:
+  docs/tickets/TICKET_pn_surface_phase6.md. Lane #3 (lemma-open Word study for the
+  numberless identities' inactive occurrence links) is next per reviewer sequence.
 - **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
   lemma — by-design skips of the cautious G1473→G846 retag (it refuses to guess reflexives + no-morph
   cells). Consistent with the build. Future cleanup only. code: the g1473_gloss_retag fold in
