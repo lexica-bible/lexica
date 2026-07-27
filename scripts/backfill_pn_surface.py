@@ -240,7 +240,9 @@ def main():
     print("== backfill_pn_surface ==")
     print(f"  existing abp_surface rows : {before:,}")
     print(f"  NEW rows to add           : {len(new_rows):,}")
-    print(f"  already-present skips     : {already:,}   (guard; census said 0 expected)")
+    print(f"  already-present skips     : {already:,}   (guard: rows written by "
+          f"earlier passes, never overwritten — equals the prior passes' total "
+          f"minus any slot whose verdict changed under later rules)")
     print(f"  refusals                  : {refused_total:,}")
     for k in sorted(causes_total):
         print(f"      {k:10}: {causes_total[k]:,}")
