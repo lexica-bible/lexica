@@ -94,7 +94,9 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
             blank.append(pos)                      # cause B: no usable label
     refused = 0
     if blank:
-        star_forms = [f for _t, f in star_hits]
+        # Only star rows whose token matches NO labeled slot in this verse are
+        # free for blank pairing — the others belong to the token phase.
+        star_forms = [f for t, f in star_hits if compact(t) not in by_tok_slots]
         if star_forms and len(star_forms) == len(blank):
             for pos, form in zip(blank, star_forms):   # both sides in order
                 out[pos] = form
@@ -191,12 +193,17 @@ def main():
             compound_split += 1
         if not is_name_row and "*" in strongs:
             # Fold-class row (cause B): the '*' in the compound tag IS the name
-            # marker our build split into a label-less slot — own pool, paired
-            # by order against the verse's blank slots, never by token.
+            # marker our build split into a label-less slot. Star rows serve
+            # BOTH roles: they stay in the numbered token pool (pass-2 proved
+            # matches like 'And Judah' -> a labeled slot — removing them cost
+            # 286 already-written slots on the 2026-07-28 dry-run, caught by
+            # the already-present arithmetic), AND pair_verse offers the ones
+            # whose token matches no labeled slot to the verse's blank slots.
             starred[(b, c, v)].append((_name_token(english), form))
+        if is_name_row:
+            scrape[(b, c, v)].append((_name_token(english), form))
         else:
-            (scrape if is_name_row else numbered)[(b, c, v)].append(
-                (_name_token(english), form))
+            numbered[(b, c, v)].append((_name_token(english), form))
     bh.close()
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
           f"across {len(scrape):,} verses; numbered capitalized rows: "

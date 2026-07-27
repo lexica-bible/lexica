@@ -110,6 +110,14 @@ def _make_bible(path):
           VALUES (14,1,NULL,NULL,'*','*',1),
                  (14,4,NULL,NULL,'*','*',1);
 
+        -- v15: dual-role star row — its token matches a LABELED slot, so the
+        -- labeled slot wins it via the token phase and the blank slot refuses
+        -- (the 286-slot regression control, 2026-07-28 dry-run catch).
+        INSERT INTO verses VALUES (15,'Mat',14,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (15,1,'and Judah','Judah','G2455','*',1),
+                 (15,5,NULL,NULL,'*','*',1);
+
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
@@ -170,7 +178,9 @@ def _make_scrape(path):
           -- one capitalized word to extract.
           ('matthew',12,1,1,'3076-3588-*','ελύπησε τον Καϊν','Cain fretted'),
           -- Mat 13:1 — ONE star row for a two-blank-slot verse: count mismatch.
-          ('matthew',13,1,1,'2036-*','είπεν Αδάμ','Adam said');
+          ('matthew',13,1,1,'2036-*','είπεν Αδάμ','Adam said'),
+          -- Mat 14:1 — dual-role star row: token 'judah' matches the labeled slot.
+          ('matthew',14,1,1,'*-1161','Ιούδας δε','And Judah');
     """)
     c.commit()
     c.close()
@@ -205,16 +215,17 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 18 PN slots total: 11 new + 6 refused + 1 already (v5 pairs but its slot
+    # 20 PN slots total: 12 new + 7 refused + 1 already (v5 pairs but its slot
     # is already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 18 (must equal 18)" in r.stdout.replace(",", ""), True)
-    # blank-label = 3: the no-star control (v9) + both count-mismatch slots (v14).
-    check("blank-label controls FIRE (no-star + count-mismatch)",
-          "blank-label: 3" in r.stdout, True)
-    # extracted = 3: the Judah compound + the two star-compound rows.
+          "= 20 (must equal 20)" in r.stdout.replace(",", ""), True)
+    # blank-label = 4: the no-star control (v9) + both count-mismatch slots
+    # (v14) + the dual-role verse's blank (v15, its star row consumed by token).
+    check("blank-label controls FIRE (no-star + count-mismatch + consumed)",
+          "blank-label: 4" in r.stdout, True)
+    # extracted = 4: the Judah compound + the three star-compound rows.
     check("compound extraction + skip both counted",
-          "compound name-word extracted 3" in r.stdout
+          "compound name-word extracted 4" in r.stdout
           and "compound skipped 1" in r.stdout, True)
     check("blank-label control FIRES", "blank-label" in r.stdout, True)
     check("edge-trim counter reports the dirty form",
@@ -250,7 +261,11 @@ def main() -> int:
           rows.get((13, 2)), "Καϊν")
     check("fold count-mismatch: both blank slots refused, NO rows",
           ((14, 1) in rows, (14, 4) in rows), (False, False))
-    check("total rows = 1 pre-existing + 11 new", len(rows), 12)
+    check("dual-role star row: LABELED slot wins it via token match",
+          rows.get((15, 1)), "Ιούδας")
+    check("dual-role verse: blank slot refused, star row consumed",
+          (15, 5) in rows, False)
+    check("total rows = 1 pre-existing + 12 new", len(rows), 13)
     c.close()
 
     if fails:
