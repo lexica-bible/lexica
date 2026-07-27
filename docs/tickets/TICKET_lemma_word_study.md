@@ -51,4 +51,12 @@ says "every occurrence of this printed form" so the page never implies one perso
   greek_lemma ORDER BY 2 DESC LIMIT 10`), click through, list length = card count.
 - Chrome desktop check (standing rule) + mobile sheet unaffected (no new card).
 
-Status: SCOPED — awaiting ruling on the collision recommendation + build go.
+Status: BUILT 2026-07-28 (commit 66d4c45b) — JP go + collision ruling as scoped.
+Shipped shape: PN:<form> key through the existing profile/verses endpoints
+(views_lexicon._pn_lemma_rows = the ONE derivation, same as the card's count);
+card's static line becomes a link when a lemma exists; Word-study header shows
+PN + the honest name-form state line; Ask/corpus toggles gated; book rail +
+OT/NT tabs work. Locked test test_pn_lemma_wordstudy.py includes the PARITY
+check (list length == card count, both production paths) in pre-commit + CI.
+CLOSES on the live parity receipt after deploy: click a numberless card's
+"N× in ABP (this form)" link — the list length must equal N.
