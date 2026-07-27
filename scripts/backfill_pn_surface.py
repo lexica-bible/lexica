@@ -36,11 +36,24 @@ import argparse
 import os
 import sqlite3
 import sys
+import unicodedata
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_abp_surface import ABBREV_TO_SLUG
 from build_pn_greek_identity import _name_token
+
+
+def clean_form(s):
+    """Trim scrape dirt off the EDGES of a printed form (stray standalone accent
+    marks, spaces — the '΄ Αχαζ' case, Mat 1:9 dry-run). Interior characters are
+    kept untouched; a form with no letters at all comes back empty (refused)."""
+    chars = list(s or "")
+    while chars and not unicodedata.category(chars[0]).startswith("L"):
+        chars.pop(0)
+    while chars and not unicodedata.category(chars[-1]).startswith("L"):
+        chars.pop()
+    return "".join(chars)
 
 
 def pair_verse(slots, hits):
@@ -90,15 +103,23 @@ def main():
 
     # Scrape NAME rows: blank Strong's + Greek present, printed order preserved.
     scrape = defaultdict(list)
+    cleaned = dropped_empty = 0
     bh = sqlite3.connect(f"file:{args.bh}?mode=ro", uri=True)
     for b, c, v, greek, english in bh.execute(
             "SELECT book, chapter, verse, greek, english FROM bh_words "
             "WHERE (strongs IS NULL OR strongs='') AND greek IS NOT NULL AND greek != '' "
             "ORDER BY rowid"):
-        scrape[(b, c, v)].append((_name_token(english), greek))
+        form = clean_form(greek)
+        if not form:
+            dropped_empty += 1        # no letters left — never a usable form
+            continue
+        if form != greek:
+            cleaned += 1
+        scrape[(b, c, v)].append((_name_token(english), form))
     bh.close()
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
-          f"across {len(scrape):,} verses")
+          f"across {len(scrape):,} verses "
+          f"(edge-trimmed {cleaned:,}; dropped letterless {dropped_empty:,})")
 
     # Every proper-noun slot, grouped per verse, position order.
     verses = defaultdict(list)

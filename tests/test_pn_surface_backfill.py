@@ -57,10 +57,15 @@ def _make_bible(path):
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
           VALUES (3,2,'Herod','Herod','G2264','G2264',1);
 
-        -- v4: no-match refusal control (name absent from scrape).
+        -- v4: edge-trim case — scrape form carries leading accent-mark dirt.
         INSERT INTO verses VALUES (4,'Mat',3,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
           VALUES (4,1,'Zorobabel','Zorobabel','*','*',1);
+
+        -- v6: no-match refusal control (name absent from scrape).
+        INSERT INTO verses VALUES (6,'Mat',5,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (6,1,'Melchizedek','Melchizedek','*','*',1);
 
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
@@ -93,8 +98,13 @@ def _make_scrape(path):
           -- Mat 2:1 — two Herod rows, DIFFERENT forms, but only ONE slot: refuse.
           ('matthew',2,1,1,NULL,'Ηρωδου','Herod'),
           ('matthew',2,1,5,NULL,'Ηρωδης','Herod'),
-          -- Mat 4:1 — David row for the never-overwrite slot.
-          ('matthew',4,1,1,NULL,'Δαυιδ','David');
+          -- Mat 4:1 — David row for the never-overwrite slot; leading scrape
+          -- dirt (standalone accent + space, the live '΄ Αχαζ' case) must be
+          -- edge-trimmed even though this slot ends up an 'already' skip.
+          ('matthew',4,1,1,NULL,'Δαυιδ','David'),
+          -- Mat 3:1 — dirt-trim assertion target: Zorobabel gets a dirty form
+          -- (was the no-match control; that control moved to Mat 5:1).
+          ('matthew',3,1,1,NULL,'΄ Ζοροβαβελ ','Zorobabel');
     """)
     c.commit()
     c.close()
@@ -129,10 +139,12 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 8 PN slots total: 5 new + 2 refused + 1 already (v5 pairs but its slot is
+    # 9 PN slots total: 6 new + 2 refused + 1 already (v5 pairs but its slot is
     # already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 8 (must equal 8)" in r.stdout.replace(",", ""), True)
+          "= 9 (must equal 9)" in r.stdout.replace(",", ""), True)
+    check("edge-trim counter reports the dirty form",
+          "edge-trimmed 1" in r.stdout, True)
     check("ambiguity control FIRES", "ambiguous : 1" in r.stdout.replace("  ", " "), True)
     check("no-match control FIRES", "no-match : 1" in r.stdout.replace("  ", " "), True)
 
@@ -148,10 +160,11 @@ def main() -> int:
     check("order-pairing: k-th slot to k-th printed form",
           (rows.get((2, 1)), rows.get((2, 4))), ("Ιακωβ", "Ιακωβου"))
     check("ambiguous slot got NO row", (3, 2) in rows, False)
-    check("no-match slot got NO row", (4, 1) in rows, False)
+    check("dirty form stored TRIMMED", rows.get((4, 1)), "Ζοροβαβελ")
+    check("no-match slot got NO row", (6, 1) in rows, False)
     check("existing row NOT overwritten", rows.get((5, 1)), "PRE-EXISTING")
     check("non-PN slot untouched", (1, 0) in rows, False)
-    check("total rows = 1 pre-existing + 5 new", len(rows), 6)
+    check("total rows = 1 pre-existing + 6 new", len(rows), 7)
     c.close()
 
     if fails:
