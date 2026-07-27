@@ -5,6 +5,17 @@ after the G1 fix (unbound name-path words gained the name's agreed Greek number,
 absorbed 1,650 of the refused rows into 'tipnr' — the meter moved for a named reason). Pull, not push — pick up after
 stage 1 lands, or alongside Pile P (possessive/plural cells), which likely shares causes.
 
+**LANE-#2 OPENING NUMBER (post-Phase-6, live census 2026-07-27): 3,387 name slots
+still without printed Greek** = 3,381 pairing no-matches (this ticket's class) + 6
+ambiguous (same-token count mismatch, backfill_pn_surface.py refusals). Defining query
+verbatim (must only shrink for a named reason):
+
+    SELECT COUNT(*) AS total_pn, SUM(s.verse_id IS NULL) AS still_missing
+    FROM words w
+    LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position
+    WHERE w.is_pn = 1;
+    -- live 2026-07-27: 32479 | 3387
+
 ## What it is
 
 `build_pn_greek_identity.py` pairs a proper-noun word to its printed Greek in
