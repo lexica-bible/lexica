@@ -731,7 +731,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // it differs from the headword lemma (indeclinable words can coincide → skip it). For an
   // idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
   // redundant + mangled-looking next to the authored lemma, so drop it.
-  const heroForm = (!idiomHdr && heroInflected && heroInflected !== hero.script) ? heroInflected : "";
+  // FRAME-0: joins the greekIdPending hold — since Phase-6 name slots carry a
+  // printed form, this line painted during the pending window and then deduped
+  // away when the identity landed with form == lemma (the Canaan flash, JP
+  // report 2026-07-28). Settled behavior unchanged: a differing inflected form
+  // still shows; an identical one is still (correctly) not repeated.
+  const heroForm = (!greekIdPending && !idiomHdr && heroInflected && heroInflected !== hero.script) ? heroInflected : "";
   // The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
   // an inflected "in this verse" line, that english belongs next to the FORM it actually
   // translates — not glued to the dictionary lemma above. Relocate it down whenever there's
