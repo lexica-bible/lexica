@@ -126,16 +126,18 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
-- **Jer 9:23 word order: "Let not the boast wise man" (should be "the wise man boast") — CLASSIFIED
-  2026-07-25, source-typo class, corrections-door fix.** Reported by JP from reading. Root cause is
-  the SOURCE's own bracket order digits: first bracket reads `[2boast 1the 2wise man]` (duplicate 2,
-  missing 3) while its two parallel siblings correctly read `[3boast 1the 2strong man]` /
-  `[3boast 1the 2rich man]` (abp_texts/abp_ot_texts/abp_jeremiah.txt:252). The build faithfully
-  reordered by the defective digits; live verses.text confirms clause 1 wrong, clauses 2-3 correct.
-  NOT a parser or reader bug — belongs to the `abp_corrections` door (L2/L10 class): JP checks the
-  official ABP app for the verse first (confirm-source rule), then a correction row lands via the
-  standard door + pin bump. Also fix the chip/interlinear order the same way (one correction covers
-  both — they read the same stored order). Not stage-3 scope; cert/corpus lane.
+- **Jer 9:23 word order — CLOSED 2026-07-28, applied live via the corrections door.** Source
+  order-digit typo (duplicate 2, missing 3) CONFIRMED in the official ABP app's own display
+  (unaffected there — it renders digits raw; only our resolver executes them). Two rows
+  [JER9:23]: greek_pos 2→3 on pos 4 + verses.text clause 1; pin 28→30; reviewer-approved on
+  pasted receipts; verified by data reads + live interlinear screenshot (³καυχάσθω now matches
+  siblings). Reason text on the rows carries the full story.
+- **Follow-up (approved for queue, own dry-run + verdict): mark the 6 Cushi rows SUPERSEDED.**
+  Their words-cell target moved to pn_hebrew_xref in R-2 (proof pasted 2026-07-28: all six slots
+  `*` + H3569 alive in the xref); apply loud-skips them by design ("regraft, do not force"), so
+  zero write hazard — this is flag hygiene only, and silencing a door's report deserves its own
+  small ruling. Template note: the marker-permutation sweep inherits tonight's pattern
+  (precondition-pinned rows, intent evidence per flagged group, same door).
 - **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
   per reviewer ruling 2026-07-25).** **BASELINE TO BEAT (reviewer condition): the LIVE numbers —
   6.5s / 155KB on G2316** (3× curl-verified post-fix 2026-07-25; console figures below are diagnosis
