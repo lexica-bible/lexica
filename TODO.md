@@ -132,6 +132,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   [JER9:23]: greek_pos 2→3 on pos 4 + verses.text clause 1; pin 28→30; reviewer-approved on
   pasted receipts; verified by data reads + live interlinear screenshot (³καυχάσθω now matches
   siblings). Reason text on the rows carries the full story.
+- **Bracket-digit sweep RUN 2026-07-28 (scripts/scan_bracket_digits.py; full report
+  docs/tickets/bracket_digit_sweep.txt). TRIAGE OPEN: 47 groups.** Corpus-wide check of ABP's
+  order digits, built on the PRODUCTION parser + ledger (no replicas). Fire-proofs: --control
+  flags Jer 9:23 [2,1,2] AND the report's "reads" rendering reproduces both known garbles
+  verbatim ("the boast wise man" / "a great. multitude"). Severity by MECHANISM
+  (reorder_english.py sorts by digit, missing→999): GAP/OVER (260) = benign, relative order
+  preserved; DUPLICATE (16) + MIXED (33) = real ambiguity, minus 2 corrected-live → 47 to
+  triage. Each: read the "reads" line, rule (a) source typo → corrections door individually
+  with intent evidence, (b) tolerated by design, (c) ambiguous → park. Caveat on record:
+  well-formed-but-wrong numbering is mechanically invisible — this catches the malformed
+  class only.
 - **Follow-up (approved for queue, own dry-run + verdict): mark the 6 Cushi rows SUPERSEDED.**
   Their words-cell target moved to pn_hebrew_xref in R-2 (proof pasted 2026-07-28: all six slots
   `*` + H3569 alive in the xref); apply loud-skips them by design ("regraft, do not force"), so

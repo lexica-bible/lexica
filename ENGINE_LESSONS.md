@@ -1473,6 +1473,17 @@ both drifting from the doc.
 > CHECKED AGAINST THIS FILE at write time, never against memory — #90 applied to the notebook
 > itself. (Collision caught while banking this very lesson.)
 
+91. **Two fixes of the same defect class is the ceiling; a third instance triggers enumeration
+    of the WHOLE class before any further spot fix.** (#88's list-every-reader rule promoted to
+    a meta-rule about when to stop spot-fixing.) Proven on FRAME-0: two flash bugs were each
+    patched at their own spot; the third (sons-of-Noah headline) triggered the ruled
+    enumeration, which found the class was EIGHT wide, not three — including a false "No
+    cross-references found." assertion and a stale-previous-word correctness flash nobody had
+    reported. The lesson passed its own pre-registered test (bar was "stronger if enumeration
+    finds more than the three known") before it was written. Enumerate → classify → one shared
+    fix — the survey is usually a cheap code-read; the third spot-fix is never cheap, it just
+    bills later. *(FRAME-0 audit, 2026-07-28; AUDIT_frame0.md; JP-ruled in)*
+
 90. **A count written into docs during a ship session is not a receipt — the table is. Derived
     tallies decay; re-count from the database at point of use, never carry a number forward.**
     The docs said 88 live definition cards; the table says 85. Mechanism located, not just
