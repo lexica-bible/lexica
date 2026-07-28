@@ -4,7 +4,9 @@
 function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch, overviewBack, backLabel = "Overview", onOpenStudy }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // FRAME-0 (audit site 4): start loading ON when a source is set, so the first
+  // frame never says "No cross-references found." before the lookup starts.
+  const [loading, setLoading] = useState(() => !!source);
   const [abpTexts, setAbpTexts] = useState({});
   const [studies, setStudies] = useState([]);   // published concept studies that cite this verse
   const showAbp = translation === "abp" || translation === "parallel";
@@ -51,7 +53,10 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
     return () => { cancelled = true; };
   }, [refs, showAbp]);
 
-  const verseText = (ref) => showAbp ? (abpTexts[ref.ref] || ref.text) : ref.text;
+  // FRAME-0 (audit site 6): in ABP/parallel mode, hold the line blank until the ABP
+  // text lands — never serve the KJV text and swap it out (JP ruling 2026-07-28:
+  // nothing paints before the final data). undefined = still loading.
+  const verseText = (ref) => showAbp ? (abpTexts[ref.ref] ?? "") : ref.text;
 
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
   const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;

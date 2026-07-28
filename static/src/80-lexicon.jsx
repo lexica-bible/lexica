@@ -75,19 +75,28 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // so the all-books effect below skips the redundant re-fetch for exactly that one state and
   // still fires for any real filter change. Cleared once consumed.
   const seededVersesSig = useRef(null);
-  const [lsjEntry, setLsjEntry] = useState(null);
+  // FRAME-0 (audit site 2): lsjEntry uses the undefined-means-loading sentinel —
+  // undefined = not resolved yet, null = resolved with no LSJ match. The Definition
+  // block holds "Loading…" until resolution instead of painting the plain Strong's
+  // def and swapping (JP ruling 2026-07-28: nothing paints before the final data).
+  const [lsjEntry, setLsjEntry] = useState(undefined);
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
 
   // Reset the curated LSJ definition whenever the focused word changes.
-  useEffect(() => { setLsjEntry(null); setLsjSummary(null); }, [profile?.strongs]);
+  useEffect(() => { setLsjEntry(/^G/i.test(profile?.strongs || "") ? undefined : null); setLsjSummary(null); }, [profile?.strongs]);
 
   // Fetch the LSJ entry + AI-curated summary for the focused Greek word (Haiku,
   // cached). Hebrew keeps its BDB definition. The /api/lsj endpoint auto-falls
   // back to strongs_def when there's no LSJ match.
   useEffect(() => {
-    if (!profile || !/^G/i.test(profile.strongs) || lsjEntry || lsjLoading) return;
+    // FRAME-0 (audit site 2): the old `|| lsjEntry || lsjLoading` guard read this
+    // commit's (stale) values — after a word change it could see the PREVIOUS word's
+    // entry and skip the fetch, which under the new hold would freeze "Loading…".
+    // The effect runs exactly once per strongs change and cancels on unmount/change,
+    // so the guard needs no state checks.
+    if (!profile || !/^G/i.test(profile.strongs)) return;
     let cancelled = false;
     setLsjLoading(true);
     api.lsj(profile.lemma || "", profile.strongs.replace(/^[GH]/i, ""))
@@ -111,15 +120,19 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // Verse-grounded Lexica entry, keyed by the FULL Strong's number (profile.strongs keeps the
   // dotted ".N"). Same fetch the Library word card makes (30-detail-panel); when present it
   // REPLACES the LSJ/BDB body with the shared LexicaBody / StructuralBody / idiom note so the two
-  // surfaces can't drift. Quiet by design (JP's call): NO loading gate — the LSJ/gloss body shows
-  // immediately and the Lexica body swaps in when this lands, no spinner container. A word with no
-  // entry 404s → null → the card is exactly as before. The numbering crosswalk (alias_note) rides
-  // this same response but its header badge is a separate queue item, not wired here.
-  const [lexica, setLexica] = useState(null);
+  // surfaces can't drift.
+  // RULING HISTORY: the original call here (JP, Lexica-card rollout) was quiet-by-design —
+  // NO loading gate, the LSJ/gloss body showed immediately and the Lexica body swapped in
+  // when this landed. RE-RULED 2026-07-28 (JP, FRAME-0 audit site 2): nothing paints before
+  // the final data — the Definition block now HOLDS until this resolves, matching the
+  // Library card (30-detail-panel lexicaLoading). undefined = still loading, null = no entry.
+  // The numbering crosswalk (alias_note) rides this same response but its header badge is a
+  // separate queue item, not wired here.
+  const [lexica, setLexica] = useState(undefined);
   useEffect(() => {
-    setLexica(null);
     const sn = profile && profile.strongs;
-    if (!sn || sn === "*" || profile.name_form) return;   // numberless name-form: no entry to fetch
+    if (!sn || sn === "*" || profile.name_form) { setLexica(null); return; }   // numberless name-form: no entry to fetch (resolve, don't hold)
+    setLexica(undefined);
     let cancelled = false;
     api.lexica(sn)
       .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
@@ -508,7 +521,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         <span className="glsenses-l">
           <b>{visibleGroupings.length}</b> {visibleGroupings.length === 1 ? "word" : "words"} rendered “{query.trim()}”
         </span>
-        {!glOpen && profile && (
+        {!glOpen && profile && !loading && (  /* FRAME-0 (site 3): no previous-word identity mid-lookup */
           <span className="glsenses-cur">
             <span className={"glsenses-cur-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
             <span className="glsenses-cur-tr">{profile.translit}{occCount ? ` · ${occCount}` : ""}</span>
@@ -622,7 +635,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         <span className="glsenses-l">
           <b>{matches.length}</b> {matches.length === 1 ? "match" : "matches"} for “{query.trim()}”
         </span>
-        {!glOpen && profile && (
+        {!glOpen && profile && !loading && (  /* FRAME-0 (site 3): no previous-word identity mid-lookup */
           <span className="glsenses-cur">
             <span className={"glsenses-cur-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
             <span className="glsenses-cur-tr">{profile.translit}{occCount ? ` · ${occCount}` : ""}</span>
@@ -649,7 +662,12 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   );
 
   // The word card body (hero + LSJ/BDB + ABP/KJV renderings + derivation + cognates).
-  const renderWordCardInner = () => !profile ? null : (
+  // FRAME-0 (audit site 3): while a NEW lookup is in flight the card body shows
+  // "Searching…" instead of the PREVIOUS word (wrong-word flash on cognate clicks /
+  // reader handoffs). The kept matches/groupings back-list is deliberate and untouched.
+  const renderWordCardInner = () => !profile ? null : loading ? (
+    <div className="wm-searching"><span className="wm-searching-spin"/>Searching…</div>
+  ) : (
     <>
       <div className="detail-hero">
         <div className="detail-hero-id">
@@ -679,38 +697,46 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         // GREEK ONLY: Library never renders LexicaBody for a Hebrew word (it gets the BDB section
         // instead — 30-detail-panel pushes "bdb", never "lsj", for Hebrew). Gate the same way so a
         // Hebrew number with an entry keeps its BDB definition and the two surfaces don't diverge.
-        const lex = /^G/i.test(profile.strongs) ? lexica : null;
+        const gk = /^G/i.test(profile.strongs);
+        const lex = gk && lexica ? lexica : null;
         const idiom = !!(lex && lex.kind === "idiom");
         const structural = !!(lex && lex.kind === "structural");
+        // FRAME-0 (audit site 2, JP re-ruling 2026-07-28): hold the whole block on
+        // "Loading…" until the FINAL body is known — the Lexica lookup unresolved
+        // (undefined), or resolved-empty with the LSJ lookup still unresolved. No
+        // interim plain-def or LSJ paint that then swaps.
+        const defPending = gk && (lexica === undefined || (!lex && (lsjLoading || lsjEntry === undefined)));
         return (
         <section className="sec">
           <h4 className="sec-head">
             <span className="sec-t">{structural ? "Function" : idiom ? "Phrase" : "Definition"}</span>
-            {idiom
+            {defPending
+              ? null
+              : idiom
               ? <span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span>
               : structural
               ? <span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span>
               : lex
               ? <span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span>
-              : !/^G/i.test(profile.strongs)
+              : !gk
               ? <span className="bdb-badge">Strong's</span>
-              : (!lsjLoading && lsjEntry)
+              : lsjEntry
                 ? <span className="lsj-badge" title={lsjSummary && lsjSummary.override ? "Lexica editorial gloss — plain biblical sense foregrounded" : undefined}>{(lsjSummary && lsjSummary.override) ? "Lexica" : lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
                 : null}
           </h4>
-          {idiom
+          {defPending
+            ? <div className="lsj-def lsj-def--loading">Loading…</div>
+            : idiom
             ? <div className="gram"><p className="gram-fn"><b>{lex.phrase}</b> — {lex.note}</p></div>
             : structural
             ? <StructuralBody data={lex} lsjEntry={lsjEntry} />
             : lex
             ? <LexicaBody lexica={lex} lsjEntry={lsjEntry} />
-            : !/^G/i.test(profile.strongs)
+            : !gk
             ? <p className="lsj">{profile.definition}</p>
-            : lsjLoading
-              ? <div className="lsj-def lsj-def--loading">Loading…</div>
-              : !lsjEntry
-                ? <p className="lsj">{profile.definition}</p>
-                : <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />}
+            : !lsjEntry
+              ? <p className="lsj">{profile.definition}</p>
+              : <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />}
         </section>
         );
       })()}
@@ -800,7 +826,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     );
     return (
       <div className="wm">
-        {profile && (
+        {profile && !loading && (  /* FRAME-0 (site 3): strip hides mid-lookup, no previous-word flash */
           <button className="wm-ctx" onClick={() => setSheet("card")} aria-label="Open word card">
             <span className={"wm-ctx-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
             <span className="wm-ctx-meta">
@@ -815,7 +841,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {error && <p className="lexicon-error">{error}</p>}
           {groupings && renderSenses()}
           {matches && renderMatches()}
-          {profile ? (
+          {profile && !loading ? (  /* FRAME-0 (site 3): occurrence list waits out the lookup too */
             <>
               <div className="wm-occhead">
                 <CountLine n={selectedBook && selBookCount != null ? selBookCount : occCount}

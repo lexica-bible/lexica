@@ -97,7 +97,9 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // instead of flashing the loading line again.
   const key = book + "/" + chapter;
   const [data, setData] = useState(() => SummaryPanel._cache[key] || null);
-  const [loading, setLoading] = useState(false);
+  // FRAME-0 (audit site 5): start loading ON when a fetch is certain, so the first
+  // frame shows the loading line — never a premature "No overview available".
+  const [loading, setLoading] = useState(() => !!(book && chapter) && !SummaryPanel._cache[key]);
 
   useEffect(() => {
     if (!book || !chapter) return;
@@ -196,7 +198,9 @@ function cleanPlaceComment(text) {
 
 function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch, onReadInContext, onNameSearch, onNavigateToLexicon, overviewBack, backLabel = "Overview" }) {
   const [verseText, setVerseText] = useState("");
-  const [verseLoading, setVerseLoading] = useState(false);
+  // FRAME-0 (audit site 7): start loading ON when the verse fetch will run at mount
+  // (same condition as the fetch effect), so the quote never paints "—" first.
+  const [verseLoading, setVerseLoading] = useState(() => !!(entry && !entry.isExtra));
   const [abpCount, setAbpCount] = useState(null);
   const [extraCount, setExtraCount] = useState(null);
   const [showInterlinear, setShowInterlinear] = useState(false);
@@ -578,7 +582,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [bdbLoading, setBdbLoading] = useState(!!isHebrewWord);
   useEffect(() => {
     setBdbEntry(null);
-    if (!isHebrewWord || !entry.strongs) return;
+    // FRAME-0 (audit site 1): clear the flag on the no-fetch path — a stuck
+    // loading hold would blank the hero forever, worse than the flash it fixes.
+    if (!isHebrewWord || !entry.strongs) { setBdbLoading(false); return; }
     let cancelled = false;
     setBdbLoading(true);
     api.bdb(entry.strongs)
@@ -589,15 +595,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
   // English verse text for the quote — BSB for BSB words, else KJV (KJV mode, a
   // Hebrew word, or a place card). Held in kjvVerseText; the source is picked here.
-  const [kjvVerseText, setKjvVerseText] = useState("");
+  // FRAME-0 (audit site 7): undefined = still loading (the 52-ask-corpus sentinel
+  // pattern); "" = resolved-empty. The quote line shows "Loading…" while undefined
+  // instead of painting "—" and swapping.
+  const [kjvVerseText, setKjvVerseText] = useState(undefined);
   useEffect(() => {
-    setKjvVerseText("");
-    if (!entry || (!entry.isKjv && !entry.isBsb && !isHebrew && !(metavType === "place" && !isPN))) return;
+    if (!entry || (!entry.isKjv && !entry.isBsb && !isHebrew && !(metavType === "place" && !isPN))) { setKjvVerseText(""); return; }
+    setKjvVerseText(undefined);
     let cancelled = false;
     const fetchVerse = entry.isBsb ? api.bsbVerse : api.kjvVerse;
     fetchVerse(entry.book, entry.chapter, entry.verse)
       .then(d => { if (!cancelled) setKjvVerseText(d.text || ""); })
-      .catch(() => {});
+      .catch(() => { if (!cancelled) setKjvVerseText(""); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
 
@@ -716,7 +725,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // Hebrew-flash fix, hero leg: while the identity fetch is pending the HEADLINE
   // holds blank (nbsp keeps the line height) instead of painting the English
   // name and swapping to the Greek form a beat later. Paints once on resolve.
-  const hero = greekIdPending ? {
+  // FRAME-0 (audit site 1): the Hebrew hero used to paint the English gloss in the
+  // big headword slot while the BDB lookup ran, then swap to Hebrew (the "sons of
+  // Noah" instance). Same hold as greekIdPending: blank until the real data lands.
+  const hero = (greekIdPending || (isHebrewWord && bdbLoading)) ? {
     he: false, noGloss: true, script: " ", translit: "", standaloneGloss: "", morph: "",
   } : {
     he: isHebrew,
@@ -1234,7 +1246,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </h4>
         <blockquote className="dverse">
           <span className="dverse-n">{entry.verse}</span>
-          {useKjvText ? (kjvVerseText || "—") : (verseLoading ? "Loading…" : verseText || "—")}
+          {useKjvText ? (kjvVerseText === undefined ? "Loading…" : (kjvVerseText || "—")) : (verseLoading ? "Loading…" : verseText || "—")}
         </blockquote>
         {showInterlinear && (
           <div className="interlinear">

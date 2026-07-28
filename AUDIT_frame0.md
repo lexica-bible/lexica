@@ -59,10 +59,18 @@ and "fetch starts" is unguarded, and whatever fallback expression sits in the sl
 - 90-app.jsx:118 `libTranslation` not restored at app level (Library restores its own) — a
   brief wrong value flows upward, no visible text swap found.
 
-## Step 3 (next): one shared hold pattern applied to the flagged sites — smallest edit per
-site, using the existing vocabulary above; NO refactor of card rendering (ruled). #2's
-quiet-by-design comment needs JP's re-confirmation first. Receipts stay frame-capture
-(element boxes when captures won't paint).
+## Step 3 — DONE 2026-07-28 (all 8 fixed in one commit; live receipts after JP deploys)
+JP RE-RULED site #2 (2026-07-28, overriding the quiet-by-design call, now the STANDING
+PRINCIPLE): **nothing paints before the final data** — no interim content, no swaps; a
+brief blank or "Loading…" over any text that will change. Word study Definition now
+holds like the Library card; the :114-area comment records the old ruling as history.
+Fixes as proposed (flag-starts-on / one-condition holds / undefined-sentinel), plus one
+forced extra: site #2's old LSJ fetch guard read stale values (`|| lsjEntry || lsjLoading`)
+and could skip a fetch after a word change — harmless under swap-in, but a freeze under
+the new hold — so the guard dropped its state checks (the fetch already cancels properly).
+Site #1 got the no-stick release on the no-fetch path (a stuck hold is worse than a flash).
+Adjacent, observed, NOT touched (scope): the desktop word-study header's Strong's badge
+(80-lexicon.jsx ~:1162) still shows the previous number mid-lookup — not in the audit's 8.
 
 ## Meta-lesson consequence
 The parked candidate ("two fixes of the same class is the ceiling; the third instance triggers

@@ -14,7 +14,10 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   const [kjvVerses, setKjvVerses] = useState([]);
   const [bsbVerses, setBsbVerses] = useState([]);
   const [esvVerses, setEsvVerses] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // FRAME-0 (audit site 8): start ON so the reading pane's first frame says
+  // "Loading…" instead of sitting blank; the chapter effect clears it on its
+  // skip paths (non-canon / chronological load via their own effects + flags).
+  const [loading, setLoading] = useState(true);
   const [kjvLoading, setKjvLoading] = useState(false);
   const [bsbLoading, setBsbLoading] = useState(false);
   const [esvLoading, setEsvLoading] = useState(false);
@@ -436,7 +439,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   }, [selBook && selBook.abbrev, selChapter, corpus]);
 
   useEffect(() => {
-    if (!selBook || nonCanon || chronoOn) return;   // non-canon + chronological load via their own effects below
+    if (!selBook || nonCanon || chronoOn) { setLoading(false); return; }   // non-canon + chronological load via their own effects below (FRAME-0: release the seeded flag so it can't stick)
     let cancelled = false;
     setLoading(true);
     setVerses([]);
