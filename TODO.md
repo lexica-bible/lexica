@@ -1269,6 +1269,21 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 - Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
   `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
 
+## Reader toggles — FUTURE LANE (reconstructed 2026-07-28; details to be re-ruled before build)
+Two SEPARATE display toggles (a reader may want either without the other — one is MORE literal,
+the other LESS):
+1. **Name switch:** show "Yahweh" where the text actually carries the divine name (H3068) vs
+   "Lord" where it's genuinely lord/master (H136 Adonai). Pure tag lookup, mechanical, no
+   guessing — the Strong's numbers already distinguish them. Cheap half.
+2. **Readability layer:** smooth stock ABP phrasings into more natural English as a display-only,
+   off-switchable option; stored text NEVER edited. JP-ruled requirement (2026-07-28): smoothings
+   are HAND-AUTHORED and stored as data (phrase → rendering pairs, inspectable) — never
+   model-generated at display time; same doctrine as the contested-register forks. Open design
+   questions (why it parked): which phrases, who authors, how on-screen text stays traceable to
+   the stored text.
+Parked BEHIND batch one + the FRAME-0 audit; nothing waits on it. (Idea previously lived only in
+conversation — banked per #90's spirit: files are the record, memory isn't.)
+
 ## FRAME-0 audit — OPEN LANE (reviewer-ruled 2026-07-27; runs parallel to batch one, does not block it)
 Three instances of one class: Hebrew-flash, Canaan flash, and the "sons of Noah" card headline
 flash — components painting frame zero with fallback/wrong content before real data lands. The
