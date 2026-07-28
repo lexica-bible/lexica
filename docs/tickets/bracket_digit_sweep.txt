@@ -417,4 +417,69 @@
   Tit 2:15 group 0 OVER digits=[2, 4, 1]
   Tit 3:14 group 0 OVER digits=[2, 1, 3, 4, 5, 8, 9, 7]
 
+== TRIAGE — DUPLICATE pass, 2026-07-28 (JP-ruled conditions met; see session record) ==
+DUPLICATEs: 15 total -> 8 DOOR + 6 SKIP + 1 PARK. Tick: 8+6+1=15. 32 MIXED untouched. 15+32=47.
+INTENT WITNESS: all 15 checked against the OFFICIAL ABP APP (apostolicbibleapp.com/Chapters/
+<Book> <ch>.html, fetched 2026-07-28) — a CORRECTED edition vs our e-Sword-era stream. Three
+witness classes: APP-CORRECTED (app shows fixed digits = exact intent) · APP-SAME (typo still
+upstream, Jer 9:23 class, intent by inference) · APP-PARALLEL (intent from a corrected twin).
+
+DOOR x8:
+  Mar 16:17  APP-CORRECTED [3languages 1they shall speak 2new] -> "they shall speak" 3->1
+  Job 39:13  APP-CORRECTED [4conceive 1 the stork 2and 3feathers] -> "should conceive" 2->4
+  Exo 32:3   APP-CORRECTED [4removed 1all 2the 3people 5the 7ear-rings 6gold] -> 2nd "the" 4->5,
+             "gold" 5->6, "ear-rings" 6->7 ("all the people removed the gold ear-rings")
+  1Sa 17:8   APP-CORRECTED [3not 2I 1Am] -> "not" 2->3 (intended "Am I not", ours "Am not I" —
+             a real deviation, moved here from SKIP)
+  Jer 3:7    APP-PARALLEL: app 3:7 has same typo, but app 3:8 twin reads
+             [4feared not 1the 2covenant-breaker 3Judah] -> "Judah" 1->3
+  2Ch 10:13  APP-SAME [2abandoned 1king 2Rehoboam] -> "abandoned" 2->3 (inference)
+  1Sa 9:3    APP-SAME [6were lost ... 6of Saul] -> "were lost" 6->7 (inference)
+  Rev 11:1   APP-SAME [2stood 1the 2angel] -> "stood" 2->3 (inference; verb sorts last,
+             Jer 9:23 'boast' pattern — earlier "angel 2->3" note was wrong, corrected)
+
+SKIP x6 (reading correct; tie-break proof above stands):
+  1Sa 29:1   APP-SAME dup — reading correct in both editions
+  Ezr 9:1    app corrected to [3,4,5,1,2]; ours reads IDENTICALLY by tie — latent only
+  Pro 26:11  app corrected ("evil" 3->4); reading identical — latent only
+  Mat 25:2   app corrected ("them" 1->2); reading identical — latent only
+  Rom 16:17  app corrected (full renumber 2..12); reading identical — latent only
+  Ezr 10:3   MOVED from door: production floats trailing "!" to group end, so it reads
+             "let it be according to the law!" — correct. The sweep's 'reads' line lacks the
+             punct float; misleading here. App carries the same dup 3.
+
+STANDING NOTES (JP-ruled 2026-07-28):
+  - The 6 skips' protection = spec-guaranteed stable sort + ORDER BY position feed + the
+    committed-baseline port test. If EITHER sort implementation is ever replaced, this
+    protection must be RE-PROVEN before the skips stay skips.
+  - SWEEP-TOOL CAVEAT: the report's 'reads:' line does NOT apply production's trailing-
+    punctuation float (cost one wrong bin, Ezr 10:3). The 32 MIXED must be read against
+    LIVE rendering, not the 'reads:' line.
+
+PARK x1:
+  Act 10:28  app splits the clause into TWO groups ([3to me 1God 2showed] + [3common 4or
+             5unclean 1to call 2a man], "not" outside both); ours is one 9-member group —
+             mapping needs a multi-digit renumber, deserves its own small ruling.
+
+SKIP x6 — tie-break resolves to the CORRECT English reading; digit typo is latent only.
+Tie-break proof (JP condition 1): the word feed is explicit `ORDER BY v.verse, w.position`
+(views_library.py:291), and the group sort is `[...words].sort((a,b) => (a.greek_pos ?? 999)
+- (b.greek_pos ?? 999))` (56-library-order-logic.jsx:28) — JS Array.sort stability is a
+language-spec guarantee (ES2019+), and the Python port's sorted() stability is likewise a
+documented language guarantee (reorder_english.py:27 states the pairing). Port fidelity is
+pinned by tests/test_reorder_port.py against the committed JS baseline. So equal digits always
+resolve in source-position order — by guarantee, not incidental behavior. No secondary sort
+KEY exists; the guarantee is spec-level stability + the explicit position-ordered feed.
+  1Sa 17:8   SKIP — reads "Am not I" (KJV-matching); tie 2/2 resolves correctly
+  1Sa 29:1   SKIP — reads "the Philistines gathered"; tie 1/1 resolves correctly
+  Ezr 9:1    SKIP — reads "the rulers approached to me"; tie 1/1 resolves correctly
+  Pro 26:11  SKIP — reads "returning to his own evil"; tie 3/3 resolves correctly
+  Mat 25:2   SKIP — reads "of them were"; tie 1/1 resolves correctly
+  Rom 16:17  SKIP — reads "making, the discords and the obstacles..."; tie 2/2 resolves correctly
+
+DOOR-candidate x9 (garbled reading; correction rows draft AFTER JP confirms intent in the
+official ABP app — matches / doesn't / ambiguous per verse; Exo 32:3 + Ezr 10:3 need the
+app's full clause word-by-word): 1Sa 9:3 · 2Ch 10:13 · Jer 3:7 · Rev 11:1 · Mar 16:17 ·
+Act 10:28 · Job 39:13 · Exo 32:3 · Ezr 10:3
+
 Caveats (ruled): clean digits do NOT prove correct order — this sweep catches the malformed class only. Source-level scan; live fixes go through the corrections door per flagged group, with intent evidence, individually. 'reads:' executes the digits with the production sort semantics for eyeball triage — the live db may already differ where other build passes intervened.

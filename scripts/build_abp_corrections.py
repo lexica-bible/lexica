@@ -121,6 +121,43 @@ _DAN433_REASON = ("ABP tags the feminine-dative 'αὐτῇ' (αὐτός, G846)
                   "(OG-vs-Theodotion divergence) left the row unanchored — blank lemma/morph, so the "
                   "corpus-wide αὐτός→G846 correction never reached it. L5.")
 
+# Bracket-digit sweep DUPLICATE pass reasons (2026-07-28). Triage record + witness evidence:
+# docs/tickets/bracket_digit_sweep.txt. All app reads fetched from apostolicbibleapp.com
+# /Chapters/<Book> <ch>.html the same day.
+_BD_1SA93_REASON = ("Bracket-digit sweep: '[6were lost 1the 2donkeys 3of Kish 4the 5father "
+                    "6of Saul]' — duplicate 6, missing 7. APP-SAME (official app carries the "
+                    "identical typo). Intent by inference: verb sorts last, Jer 9:23 pattern. "
+                    "'were lost' 6->7 -> 'the donkeys of Kish the father of Saul were lost'.")
+_BD_1SA178_REASON = ("Bracket-digit sweep: '[2not 2I 1Am]' — duplicate 2, missing 3. "
+                     "APP-CORRECTED: official app reads '[3not 2I 1Am]' = 'Am I not'. Live "
+                     "reads 'Am not I' (tie luck, readable but deviant). 'not' 2->3.")
+_BD_2CH1013_REASON = ("Bracket-digit sweep: '[2abandoned 1king 2Rehoboam]' — duplicate 2, "
+                      "missing 3. APP-SAME. Intent by inference (verb last, Jer 9:23 "
+                      "pattern): 'abandoned' 2->3 -> 'king Rehoboam abandoned'.")
+_BD_EXO323_REASON = ("Bracket-digit sweep: '[4removed 1all 2the 3people 4the 6ear-rings "
+                     "5gold]' — duplicate 4. APP-CORRECTED: official app reads '[4removed "
+                     "1all 2the 3people 5the 7ear-rings 6gold]'. Digit rows ONLY: live "
+                     "verses.text already reads 'the gold ear-rings' (fixed by a later build "
+                     "pass) but stored digits still garble chip/interlinear order. 2nd 'the' "
+                     "4->5, 'ear-rings' 6->7, 'gold' 5->6.")
+_BD_JER37_REASON = ("Bracket-digit sweep: '[4saw 5her breach-of-contract 1the "
+                    "2covenant-breaker 1Judah]' — duplicate 1, missing 3. APP-PARALLEL: app "
+                    "3:7 carries the same typo, but the app's own 3:8 twin reads '[4feared "
+                    "not 1the 2covenant-breaker 3Judah]'. 'Judah' 1->3 -> 'the "
+                    "covenant-breaker Judah saw her breach-of-contract'.")
+_BD_JOB3913_REASON = ("Bracket-digit sweep: '[2conceive 1the stork 2and 3feathers]' — "
+                      "duplicate 2, missing 4. APP-CORRECTED: official app reads "
+                      "'[4conceive 1the stork 2and 3feathers]'. 'conceive' 2->4 -> 'the "
+                      "stork and feathers conceive?'.")
+_BD_MAR1617_REASON = ("Bracket-digit sweep: '[3languages 3they shall speak 2new]' — "
+                      "duplicate 3, missing 1. APP-CORRECTED: official app reads "
+                      "'[3languages 1they shall speak 2new]' = 'they shall speak new "
+                      "languages'. Live reads 'new languages they shall speak' (readable "
+                      "but deviant from source intent). 'they shall speak' 3->1.")
+_BD_REV111_REASON = ("Bracket-digit sweep: '[2stood 1the 2angel]' — duplicate 2, missing 3. "
+                     "APP-SAME. Intent by inference (verb last, Jer 9:23 pattern): 'stood' "
+                     "2->3 -> 'the angel stood,' (trailing comma floats to group end).")
+
 # (book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref)
 ENTRIES = [
     ("2Sa", 18, 21,  4, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
@@ -154,6 +191,65 @@ ENTRIES = [
     ("Act",  7,  3, 20, "greek_pos",    None,    "1",    _ACT73_REASON,   "S10-act7:3"),
     # Jer 9:23 pos 4 'boast' — source order-digit typo (duplicate 2, missing 3), word side
     ("Jer",  9, 23,  4, "greek_pos",    "2",     "3",    _JER923_REASON,  "JER9:23"),
+    # ---- Bracket-digit sweep, DUPLICATE pass (2026-07-28; docs/tickets/bracket_digit_sweep.txt).
+    # Witness classes per row: APP-CORRECTED = the official ABP app (apostolicbibleapp.com,
+    # fetched 2026-07-28) shows FIXED digits = exact intent; APP-SAME = app carries the same
+    # typo (Jer 9:23 class), intent by inference; APP-PARALLEL = intent from a corrected twin.
+    ("1Sa",  9,  3,  1, "greek_pos",    "6",     "7",    _BD_1SA93_REASON,   "BD-1Sa9:3"),
+    ("1Sa",  9,  3, -1, "verses.text",
+     "And the donkeys of Kish the father were lost of Saul. And Kish said to Saul his son, "
+     "Take with yourself one of the servant-lads, and rise up and go and seek the donkeys!",
+     "And the donkeys of Kish the father of Saul were lost. And Kish said to Saul his son, "
+     "Take with yourself one of the servant-lads, and rise up and go and seek the donkeys!",
+     _BD_1SA93_REASON, "BD-1Sa9:3"),
+    ("1Sa", 17,  8, 18, "greek_pos",    "2",     "3",    _BD_1SA178_REASON,  "BD-1Sa17:8"),
+    ("1Sa", 17,  8, -1, "verses.text",
+     "And he stood and yelled out to the battle array of Israel, and said to them, Why are "
+     "you come forth to deploy for battle right opposite us? Am not I a Philistine, and you "
+     "are Hebrews of Saul? Choose for yourselves a man, and let him come down to me!",
+     "And he stood and yelled out to the battle array of Israel, and said to them, Why are "
+     "you come forth to deploy for battle right opposite us? Am I not a Philistine, and you "
+     "are Hebrews of Saul? Choose for yourselves a man, and let him come down to me!",
+     _BD_1SA178_REASON, "BD-1Sa17:8"),
+    ("2Ch", 10, 13,  7, "greek_pos",    "2",     "3",    _BD_2CH1013_REASON, "BD-2Ch10:13"),
+    ("2Ch", 10, 13, -1, "verses.text",
+     "And the king answered them hard; and king abandoned Rehoboam the counsel of the elders.",
+     "And the king answered them hard; and king Rehoboam abandoned the counsel of the elders.",
+     _BD_2CH1013_REASON, "BD-2Ch10:13"),
+    # Exo 32:3 — digit rows ONLY: live verses.text already reads correctly ("the gold
+    # ear-rings"), fixed by a later build pass, but the stored digits still garble the
+    # word-order surfaces (chips/interlinear). No prose row — its precondition can't match.
+    ("Exo", 32,  3,  5, "greek_pos",    "4",     "5",    _BD_EXO323_REASON,  "BD-Exo32:3"),
+    ("Exo", 32,  3,  6, "greek_pos",    "6",     "7",    _BD_EXO323_REASON,  "BD-Exo32:3"),
+    ("Exo", 32,  3,  8, "greek_pos",    "5",     "6",    _BD_EXO323_REASON,  "BD-Exo32:3"),
+    ("Jer",  3,  7, 21, "greek_pos",    "1",     "3",    _BD_JER37_REASON,   "BD-Jer3:7"),
+    ("Jer",  3,  7, -1, "verses.text",
+     "And I said after her committing harlotry all these things, Turn to me! And she turned "
+     "not. And the Judah covenant-breaker saw her breach-of-contract.",
+     "And I said after her committing harlotry all these things, Turn to me! And she turned "
+     "not. And the covenant-breaker Judah saw her breach-of-contract.",
+     _BD_JER37_REASON, "BD-Jer3:7"),
+    ("Job", 39, 13,  5, "greek_pos",    "2",     "4",    _BD_JOB3913_REASON, "BD-Job39:13"),
+    ("Job", 39, 13, -1, "verses.text",
+     "The wing delighting ostriches; but should the stork conceive and feathers?",
+     "The wing delighting ostriches; but should the stork and feathers conceive?",
+     _BD_JOB3913_REASON, "BD-Job39:13"),
+    # Mar 16:17 — readable-but-deviant live ("new languages they shall speak"); included per
+    # reviewer lean (app gives exact intended digits); JP may pull it at the dry-run gate.
+    ("Mar", 16, 17, 13, "greek_pos",    "3",     "1",    _BD_MAR1617_REASON, "BD-Mar16:17"),
+    ("Mar", 16, 17, -1, "verses.text",
+     "And signs to these believing shall follow closely; in my name they shall cast out "
+     "demons; new languages they shall speak;",
+     "And signs to these believing shall follow closely; in my name they shall cast out "
+     "demons; they shall speak new languages;",
+     _BD_MAR1617_REASON, "BD-Mar16:17"),
+    ("Rev", 11,  1,  7, "greek_pos",    "2",     "3",    _BD_REV111_REASON,  "BD-Rev11:1"),
+    ("Rev", 11,  1, -1, "verses.text",
+     "And was given to me a reed measure likened to a rod. And the stood angel, saying, "
+     "Arise and measure the temple of God, and the altar, and the ones doing obeisance in it!",
+     "And was given to me a reed measure likened to a rod. And the angel stood, saying, "
+     "Arise and measure the temple of God, and the altar, and the ones doing obeisance in it!",
+     _BD_REV111_REASON, "BD-Rev11:1"),
     # Jer 9:23 prose — the same typo executed into verses.text (clause 1 only)
     ("Jer",  9, 23, -1, "verses.text",
      "Thus says the LORD, Let not the boast wise man in his wisdom! And let not the strong "
