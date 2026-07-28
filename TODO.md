@@ -1275,12 +1275,14 @@ the other LESS):
 1. **Name switch:** show "Yahweh" where the text actually carries the divine name (H3068) vs
    "Lord" where it's genuinely lord/master (H136 Adonai). Pure tag lookup, mechanical, no
    guessing — the Strong's numbers already distinguish them. Cheap half.
-2. **Readability layer:** smooth stock ABP phrasings into more natural English as a display-only,
+2. **Readability layer — ABP ONLY** (KJV/BSB are already natural English, no smoothing layer;
+   JP-scoped 2026-07-28): smooth stock ABP phrasings into more natural English as a display-only,
    off-switchable option; stored text NEVER edited. JP-ruled requirement (2026-07-28): smoothings
    are HAND-AUTHORED and stored as data (phrase → rendering pairs, inspectable) — never
    model-generated at display time; same doctrine as the contested-register forks. Open design
    questions (why it parked): which phrases, who authors, how on-screen text stays traceable to
-   the stored text.
+   the stored text. Name-switch scope (everywhere tagged text displays, or reader only) = pin at
+   the re-rule.
 Parked BEHIND batch one + the FRAME-0 audit; nothing waits on it. (Idea previously lived only in
 conversation — banked per #90's spirit: files are the record, memory isn't.)
 
