@@ -1284,6 +1284,10 @@ two fixes so far were spot fixes; the class lives in more places. Lane shape (ru
    screenshots — element boxes are the fallback evidence).
 Starter clue: the "sons of Noah" big-type flash suggests the card headline slot briefly holds the
 English span before the Hebrew headword lands — card header goes first on the list.
+**PARKED lesson candidate — bank ONLY when this audit closes:** "two fixes of the same class is
+the ceiling; the third instance triggers enumeration of the whole class, not a third fix" (#88
+promoted to a meta-rule). Strength depends on the audit's own result: only the 3 known spots =
+weak, 5+ = strong. Number checked against ENGINE_LESSONS at write time (per #90's ledger note).
 
 ## Lexica def-engine — small open tickets
 - **Legacy redraw order — next dip = the 24 VERSE-SHORT cards.** The 3 `"None"`-marker cards
