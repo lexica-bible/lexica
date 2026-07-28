@@ -43,7 +43,7 @@ from apply_abp_corrections import cellmatch as _cellmatch  # number-safe compare
 PINS = {
     "words": 626309,  # S11: +4 vs Session-3 pin = the (P2) _split_numbered splits (Dan 4:1, Isa 10:23, Luk 8:28, Pro 3:15), verified by per-verse word-count diff vs live
     "verses": 31237,  # read from live at suite landing 2026-07-04
-    "abp_corrections_active": 28,  # Cushi x6 + Jer 49:13 x2 + L2 (1Sa 6:11) x4 + L10 (Mal 3:6) x4 + L5 (Dan 4:33) x2 + S9-f prose x5 + Mat 20:29 greek_pos x1 + Act 7:3 x4  (S11 rebuild)
+    "abp_corrections_active": 30,  # Cushi x6 + Jer 49:13 x2 + L2 (1Sa 6:11) x4 + L10 (Mal 3:6) x4 + L5 (Dan 4:33) x2 + S9-f prose x5 + Mat 20:29 greek_pos x1 + Act 7:3 x4 + Jer 9:23 x2 (order-digit typo, 2026-07-28)
 }
 
 

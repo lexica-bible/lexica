@@ -98,6 +98,20 @@ _MAT2029_REASON = ("S10 word-side. Mat 20:29 bracket '[multitudeG3793 1a great]'
                    "floats to it). Its own bracket; the only mixed numbered/un-numbered case in "
                    "the feed. Mirrors the Mat 20:29 prose Tier B row (S9 f).")
 
+_JER923_REASON = ("Jer 9:23 clause 1: ABP's own order digits carry a typo — '[2boast 1the "
+                  "2wise man]' (duplicate 2, missing 3) while the two parallel clauses read "
+                  "'[3boast 1the 2strong man]' / '[3boast 1the 2rich man]' correctly. CONFIRMED "
+                  "in the official ABP app (apostolicbibleapp.com, JP screenshot 2026-07-28): "
+                  "same defective digits in its Greek display; the app is unaffected because it "
+                  "renders digits raw (readers reorder mentally) and its independent gloss line "
+                  "reads the correct order — only a resolver like our build executes them, "
+                  "yielding 'Let not the boast wise man'. Intent beyond doubt from the two "
+                  "correctly-marked siblings + the app's own gloss. Digit-only fix: 'boast' "
+                  "greek_pos 2->3; wording untouched (our eSword edition prints 'wise man', the "
+                  "app 'wise one' — edition difference, out of scope). Word row + prose row "
+                  "together fix reading text, chips, and interlinear (all read the same stored "
+                  "order). Reported by JP from reading, classified 2026-07-25.")
+
 _DAN433_REASON = ("ABP tags the feminine-dative 'αὐτῇ' (αὐτός, G846) with ἐγώ's number G1473 at "
                   "Dan 4:33 pos 1 ('αὐτῇ τῇ ὥρᾳ' = 'in that very hour', Theodotion). Decided by "
                   "MORPHOLOGY, not a breathing eyeball: a dative slot agreeing with τῇ ὥρᾳ spelled "
@@ -138,6 +152,15 @@ ENTRIES = [
     ("Act",  7,  3, 19, "greek_pos",    None,    "2",    _ACT73_REASON,   "S10-act7:3"),
     ("Act",  7,  3, 20, "bracket_id",   None,    "1",    _ACT73_REASON,   "S10-act7:3"),
     ("Act",  7,  3, 20, "greek_pos",    None,    "1",    _ACT73_REASON,   "S10-act7:3"),
+    # Jer 9:23 pos 4 'boast' — source order-digit typo (duplicate 2, missing 3), word side
+    ("Jer",  9, 23,  4, "greek_pos",    "2",     "3",    _JER923_REASON,  "JER9:23"),
+    # Jer 9:23 prose — the same typo executed into verses.text (clause 1 only)
+    ("Jer",  9, 23, -1, "verses.text",
+     "Thus says the LORD, Let not the boast wise man in his wisdom! And let not the strong "
+     "man boast in his strength! And let not the rich man boast in his riches!",
+     "Thus says the LORD, Let not the wise man boast in his wisdom! And let not the strong "
+     "man boast in his strength! And let not the rich man boast in his riches!",
+     _JER923_REASON, "JER9:23"),
 ]
 
 
