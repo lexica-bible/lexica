@@ -162,6 +162,11 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   zero write hazard — this is flag hygiene only, and silencing a door's report deserves its own
   small ruling. Template note: the marker-permutation sweep inherits tonight's pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
+- **Vocative "O" absorbed as head word — CLASS OPEN (JP sighting Jer 15:5; ticket
+  docs/tickets/vocative_head_words.txt).** ~1,240 slots ("O Jerusalem" x15, "O LORD" x367...);
+  root cause one line (_head_word skips only the/a/an); fix shape proposed in ticket, NOT
+  ruled. Parked behind the bracket-digit MIXED batch. #91 enumeration done source-side;
+  live count read still owed.
 - **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
   per reviewer ruling 2026-07-25).** **BASELINE TO BEAT (reviewer condition): the LIVE numbers —
   6.5s / 155KB on G2316** (3× curl-verified post-fix 2026-07-25; console figures below are diagnosis

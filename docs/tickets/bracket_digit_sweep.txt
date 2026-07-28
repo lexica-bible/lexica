@@ -450,6 +450,10 @@ SKIP x6 (reading correct; tie-break proof above stands):
              punct float; misleading here. App carries the same dup 3.
 
 STANDING NOTES (JP-ruled 2026-07-28):
+  - PROCESS (flagged on the DUPLICATE close): the lane order is dry-run paste -> JP/reviewer
+    VERDICT -> apply commands. Handing apply commands in the same breath as the dry-run
+    reading is the erosion path even when the dry-run is clean. MIXED pass onward: STOP at
+    the dry-run paste, wait for the verdict.
   - The 6 skips' protection = spec-guaranteed stable sort + ORDER BY position feed + the
     committed-baseline port test. If EITHER sort implementation is ever replaced, this
     protection must be RE-PROVEN before the skips stay skips.

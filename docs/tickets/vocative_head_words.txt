@@ -1,0 +1,31 @@
+VOCATIVE "O" ABSORBED AS HEAD WORD — CLASS TICKET (opened 2026-07-28, JP sighting Jer 15:5)
+
+SIGHTING: Jer 15:5 PN card for Jerusalem shows head word "O". Source slot is one piece:
+"O Jerusalem?G*" — the word itself is fine; the head picker chose "O".
+
+ROOT CAUSE (one line, found same session): build_words_from_abp.py _head_word() skips only
+_ARTICLES = {"the","a","an"} (line 28) — the vocative particle "O" is not in the skip set,
+and it is the first word, so it wins the head for every "O <word>" slot.
+
+CLASS SIZE (#91 enumeration, source-side scan 2026-07-28, grep on abp_texts):
+  115  "O <ProperName>"G* slots (~40 names: Israel 35, Jerusalem 15, Jacob 8, Judah 7,
+       Zion 7, Job 3, ... full uniq -c in session record)
+  1125 "O <word>"G<number> slots (O LORD 367, O son 136, O Lord 93, O king 34, ...)
+  ~1240 total slots whose english begins "O ".
+  NOTE: ~200 slots whose english is EXACTLY "O" (article τω glossed "O", OG3588) are NOT
+  in this class — a lone "O" has no better head and the picker's fallback keeps it.
+
+LIVE CONFIRMATION still owed (load-path rule): source scan ≠ live table. PA read:
+  sqlite3 ~/bible-db/bible.db "SELECT count(*) FROM words WHERE english LIKE 'O %' AND english_head='O';"
+
+FIX SHAPE (proposed, NOT ruled):
+  1. Add "o" to _ARTICLES in build_words_from_abp.py _head_word() — skip-only-if-more-words
+     semantics already correct (pick() falls back to words[0] when everything is skipped,
+     so a lone "O" keeps its head). Build-side, takes effect on next rebuild.
+  2. A targeted live backfill of english_head for the ~1,240 rows, own script, dry-run
+     first, control-tested on Jer 15:5 before trusting.
+  Impact check before ruling: english_head feeds the English-word search key and card
+  heads — confirm no reader depends on 'O' heads (unlikely; 'O' is unsearchable noise).
+
+STATUS: OPEN — parked behind the bracket-digit MIXED batch. Not folded into that lane
+(different defect class: head-word derivation, not order digits).
