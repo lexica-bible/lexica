@@ -143,6 +143,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   with intent evidence, (b) tolerated by design, (c) ambiguous → park. Caveat on record:
   well-formed-but-wrong numbering is mechanically invisible — this catches the malformed
   class only.
+  **Triage discipline (reviewer-ruled 2026-07-28):** verdict per row, three bins — real typo →
+  door, precondition-pinned, one at a time · SKIP with one-line reason · PARKED, never guessed;
+  NO bulk applies. Arithmetic ticks against 47 every session (list can't silently shrink/grow).
+  The 16 DUPLICATEs first (visible garbles); the 33 MIXED second (subtler, word sinks to
+  phrase-end). Accumulated verdicts go through the door in one dry-run/apply cycle, pin moving
+  by exactly the row count — the Jer 9:23 pattern, wider.
 - **Follow-up (approved for queue, own dry-run + verdict): mark the 6 Cushi rows SUPERSEDED.**
   Their words-cell target moved to pn_hebrew_xref in R-2 (proof pasted 2026-07-28: all six slots
   `*` + H3569 alive in the xref); apply loud-skips them by design ("regraft, do not force"), so
