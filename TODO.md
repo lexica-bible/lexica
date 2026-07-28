@@ -1269,22 +1269,29 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 - Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
   `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
 
-## Reader toggles — FUTURE LANE (reconstructed 2026-07-28; details to be re-ruled before build)
-Two SEPARATE display toggles (a reader may want either without the other — one is MORE literal,
-the other LESS):
-1. **Name switch:** show "Yahweh" where the text actually carries the divine name (H3068) vs
-   "Lord" where it's genuinely lord/master (H136 Adonai). Pure tag lookup, mechanical, no
-   guessing — the Strong's numbers already distinguish them. Cheap half.
-2. **Readability layer — ABP ONLY** (KJV/BSB are already natural English, no smoothing layer;
-   JP-scoped 2026-07-28): smooth stock ABP phrasings into more natural English as a display-only,
-   off-switchable option; stored text NEVER edited. JP-ruled requirement (2026-07-28): smoothings
-   are HAND-AUTHORED and stored as data (phrase → rendering pairs, inspectable) — never
-   model-generated at display time; same doctrine as the contested-register forks. Open design
-   questions (why it parked): which phrases, who authors, how on-screen text stays traceable to
-   the stored text. Name-switch scope (everywhere tagged text displays, or reader only) = pin at
-   the re-rule.
-Parked BEHIND batch one + the FRAME-0 audit; nothing waits on it. (Idea previously lived only in
-conversation — banked per #90's spirit: files are the record, memory isn't.)
+## Reader display layers — ABP overrides + divine name — FUTURE LANE (parked)
+RECOVERED 2026-07-28 from the 2026-07-12 design chat ("Creating an improved Greek LXX/NT
+translation") — design was developed, never ticketed. Supersedes the same-day reconstructed
+two-toggle sketch.
+**Mechanism:** ONE shared span-override table; stored ABP text NEVER edited; every override
+hand-ruled and auditable, tagged by class so the toggles operate independently.
+1. **Toggle 1 — Lexica corrections (sense overrides).** Spans where ABP is arguably WRONG or
+   inconsistent, not merely literal. Could arguably default ON someday — JP's ruling at build time.
+2. **Toggle 2 — smooth reading (readability overrides). ABP ONLY.** Off by default, literal
+   always one tap away. Grammar-class driven, not ad hoc: articular infinitives ("in the to be
+   him" → "while he was"), substantival participles ("the ones being sick" → "those who were
+   sick"), stacked genitive chains, δέ rendered as endless "And…", Greek-order fronted objects,
+   plus the added-English-filler subclass ("son being twenty and three years old" → "son of
+   twenty and three years" — subtraction beats ABP's paraphrase; "old" has no lemma behind it).
+   Workflow: JP rules a PATTERN once → CC generates the spans mechanically (each still stored
+   individually) → JP spot-checks a sample. **Hard bar: zero lemma loss — every English word on
+   screen maps to a Greek word.** Design caveat preserved: ABP's woodenness IS its concordance
+   transparency; smoothing is a mode, never a replacement.
+3. **Toggle 3 — divine name display.** Show "Yahweh" where the text carries the name (tag-driven,
+   H3068 vs H136 Adonai). Separate thread from 1–2 in the record (July 24 discussion). Related
+   regardless of this toggle: AI-synthesis prose drifts Yahweh/YHWH/LORD and needs one ruled
+   convention (already banked under "AI verse synthesis revisit").
+Details re-ruled before build. Parked BEHIND batch one + the FRAME-0 audit; nothing waits on it.
 
 ## FRAME-0 audit — OPEN LANE (reviewer-ruled 2026-07-27; runs parallel to batch one, does not block it)
 Three instances of one class: Hebrew-flash, Canaan flash, and the "sons of Noah" card headline
