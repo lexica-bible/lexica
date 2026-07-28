@@ -163,11 +163,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   The 16 DUPLICATEs first (visible garbles); the 33 MIXED second (subtler, word sinks to
   phrase-end). Accumulated verdicts go through the door in one dry-run/apply cycle, pin moving
   by exactly the row count — the Jer 9:23 pattern, wider.
-- **Follow-up (approved for queue, own dry-run + verdict): mark the 6 Cushi rows SUPERSEDED.**
-  Their words-cell target moved to pn_hebrew_xref in R-2 (proof pasted 2026-07-28: all six slots
-  `*` + H3569 alive in the xref); apply loud-skips them by design ("regraft, do not force"), so
-  zero write hazard — this is flag hygiene only, and silencing a door's report deserves its own
-  small ruling. Template note: the marker-permutation sweep inherits tonight's pattern
+- **Cushi supersede — DONE 2026-07-28 23:56 PA.** The 6 rows marked status='superseded'
+  (JP receipt: changes()=6; proof run: 51 active · already-applied 51 · LOUD-SKIPPED 0).
+  Guard untouched — the loud-skip code path survives for any future drifted row (it fired
+  6x the same evening, proven detector); the seeder's dup check now matches ANY status so
+  a ruled row can't resurrect (9fef4501). Rows stay in the table as the ruling record.
+  Template note (kept): the marker-permutation sweep inherits the bracket-digit pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
 - **Vocative "O" absorbed as head word — CLASS OPEN (JP sighting Jer 15:5; ticket
   docs/tickets/vocative_head_words.txt).** ~1,240 slots ("O Jerusalem" x15, "O LORD" x367...);
