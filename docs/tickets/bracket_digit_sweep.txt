@@ -424,7 +424,8 @@ INTENT WITNESS: all 15 checked against the OFFICIAL ABP APP (apostolicbibleapp.c
 witness classes: APP-CORRECTED (app shows fixed digits = exact intent) · APP-SAME (typo still
 upstream, Jer 9:23 class, intent by inference) · APP-PARALLEL (intent from a corrected twin).
 
-DOOR x8:
+DOOR x8 — ALL APPLIED LIVE 2026-07-28 21:45 PA (pin 30->47, applied 17 = 10 digit + 7 prose;
+JP receipts pasted in session; the 6 Cushi loud-skips fired as designed, unrelated):
   Mar 16:17  APP-CORRECTED [3languages 1they shall speak 2new] -> "they shall speak" 3->1
   Job 39:13  APP-CORRECTED [4conceive 1 the stork 2and 3feathers] -> "should conceive" 2->4
   Exo 32:3   APP-CORRECTED [4removed 1all 2the 3people 5the 7ear-rings 6gold] -> 2nd "the" 4->5,

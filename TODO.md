@@ -126,8 +126,21 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
-- **Bracket-digit sweep RUN 2026-07-28 (scripts/scan_bracket_digits.py; full report
-  docs/tickets/bracket_digit_sweep.txt). TRIAGE OPEN: 47 groups.** Corpus-wide check of ABP's
+- **Bracket-digit sweep TRIAGE: DUPLICATE pass CLOSED 2026-07-28 — remaining: 32 MIXED.**
+  All 15 DUPLICATEs ruled (8 door APPLIED LIVE, pin 30->47, applied 17 = 10 digit + 7 prose /
+  6 skip / 1 park Act 10:28); full verdicts + witness evidence in
+  docs/tickets/bracket_digit_sweep.txt. Tick: 8+6+1=15, 15+32=47 ✓.
+  **Upgrades banked for the MIXED pass:** (1) the OFFICIAL ABP APP is a plain website —
+  apostolicbibleapp.com/Chapters/<Book> <ch>.html — CC reads it directly, no JP eyeballs
+  needed; it is a CORRECTED edition (witness classes APP-CORRECTED / APP-SAME / APP-PARALLEL).
+  (2) SWEEP-TOOL CAVEAT: the report's 'reads:' line lacks production's punctuation float —
+  read MIXED candidates against LIVE rendering (cost one wrong bin, Ezr 10:3, caught pre-door).
+  (3) Skip protection = spec-stable sort + ORDER BY position feed + committed port test
+  (JP-accepted as pinned); RE-PROVE if either sort implementation is ever replaced.
+  Same discipline for the 32 MIXED: verdict per row, three bins, no bulk applies, arithmetic
+  ticks every session, door batches move the pin by exact row count.
+- ORIGINAL SWEEP RECORD (kept for the MIXED pass): sweep RUN 2026-07-28
+  (scripts/scan_bracket_digits.py; full report docs/tickets/bracket_digit_sweep.txt). Corpus-wide check of ABP's
   order digits, built on the PRODUCTION parser + ledger (no replicas). Fire-proofs: --control
   flags Jer 9:23 [2,1,2] AND the report's "reads" rendering reproduces both known garbles
   verbatim ("the boast wise man" / "a great. multitude"). Severity by MECHANISM
