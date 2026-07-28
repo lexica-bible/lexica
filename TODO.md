@@ -1269,6 +1269,22 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 - Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
   `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
 
+## FRAME-0 audit — OPEN LANE (reviewer-ruled 2026-07-27; runs parallel to batch one, does not block it)
+Three instances of one class: Hebrew-flash, Canaan flash, and the "sons of Noah" card headline
+flash — components painting frame zero with fallback/wrong content before real data lands. The
+two fixes so far were spot fixes; the class lives in more places. Lane shape (ruled):
+1. ENUMERATE, don't hunt (#88 pattern applied to the first paint): list every component that
+   renders data-dependent text (interlinear line, chips, word-study card header, IN THIS VERSE
+   block, person panel, …) and answer: what does it paint on frame zero, before its data resolves?
+   Code-reading only, zero spend.
+2. Classify each: blank/skeleton (fine) · stale-but-correct (fine) · wrong/fallback first (flash bug).
+3. ONE fix pattern for all flagged: generalize the existing `greekIdPending`-style hold
+   (static/src/30-detail-panel.jsx) into a small shared helper — no refactor of card rendering.
+4. Receipts = frame capture, per the established format (caveat: harness hidden tab won't paint
+   screenshots — element boxes are the fallback evidence).
+Starter clue: the "sons of Noah" big-type flash suggests the card headline slot briefly holds the
+English span before the Hebrew headword lands — card header goes first on the list.
+
 ## Lexica def-engine — small open tickets
 - **Legacy redraw order — next dip = the 24 VERSE-SHORT cards.** The 3 `"None"`-marker cards
   (G2588/G4172/G3624) are DONE 2026-07-15 (cards 85→88, zero spend — record in
