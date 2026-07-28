@@ -475,8 +475,12 @@ all (stronger). Only the 8 luck-correct skips (and the 6 DUPLICATE-pass skips) l
 the stable-sort guarantee and its re-prove-if-replaced condition. Grand total 47 = 8 applied + 5 door-drafted + 2 park
 (Act 10:28, Num 19:2) + 32 skip.
 
-DOOR x5 (all APP-CORRECTED witness, single digit + prose each; drafted as BD-* rows,
-pin 47->57 at apply):
+DOOR x5 — ALL APPLIED LIVE 2026-07-28 23:03 PA (pin 47->57, applied 10 = 5 digit + 5 prose;
+JP receipts pasted in session; 6 Cushi loud-skips fired as designed).
+TRIAGE COMPLETE: all 47 ruled — 13 applied live (8 DUP + 5 MIXED) · 32 skipped with pinned
+reasons · 2 parked (Act 10:28 structural, Num 19:2 gloss mismatch). Lane closes; the parks
+wait for their own rulings.
+The 5 (all APP-CORRECTED witness, single digit + prose each):
   1Sa 21:11  'this Is not David' -> 'Is this not David'  ('Is' 2->1)
   2Sa 16:18  'serving to him I will be' -> 'I will be serving to him'  ('I will be' 2->1)
   Mic 1:13   'the head of sin is' -> 'is the head of sin'  ('is' 3->1)

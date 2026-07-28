@@ -126,7 +126,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
-- **Bracket-digit sweep TRIAGE: DUPLICATE pass CLOSED 2026-07-28 — remaining: 32 MIXED.**
+- **Bracket-digit sweep TRIAGE COMPLETE 2026-07-28 — all 47 ruled, lane CLOSED.**
+  13 applied live through the door (8 DUPLICATE pin 30->47 + 5 MIXED pin 47->57) · 32
+  skipped with pinned reasons · 2 PARKED still open: Act 10:28 (app splits the clause in
+  two groups — structural remap, own ruling) and Num 19:2 (our gloss 'is not' vs app 'has
+  not' — no clean digit mapping). Full record docs/tickets/bracket_digit_sweep.txt.
+  MIXED headline: BH digit-fill had already repaired 18/24 source-side candidates on live —
+  read-against-live discipline caught it (18 skips hold REAL digits, no tie-break reliance).
+  (Superseded original entry follows for context:)
   All 15 DUPLICATEs ruled (8 door APPLIED LIVE, pin 30->47, applied 17 = 10 digit + 7 prose /
   6 skip / 1 park Act 10:28); full verdicts + witness evidence in
   docs/tickets/bracket_digit_sweep.txt. Tick: 8+6+1=15, 15+32=47 ✓.
