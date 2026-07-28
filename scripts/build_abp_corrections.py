@@ -158,6 +158,28 @@ _BD_REV111_REASON = ("Bracket-digit sweep: '[2stood 1the 2angel]' — duplicate 
                      "APP-SAME. Intent by inference (verb last, Jer 9:23 pattern): 'stood' "
                      "2->3 -> 'the angel stood,' (trailing comma floats to group end).")
 
+# Bracket-digit sweep MIXED pass reasons (2026-07-28, second batch). Live re-bin collapsed
+# 24 source-side door candidates to 5: the BH digit-fill already fixed 18 on live (ticket).
+# All 5 are APP-CORRECTED witness: the official app shows the exact intended digit.
+_BD_1SA2111_REASON = ("Bracket-digit sweep MIXED: live digits [3not 2this 2Is] tie 'this' "
+                      "before 'Is' -> prose 'this Is not David'. APP-CORRECTED: app reads "
+                      "[3not 2this 1Is] = 'Is this not David'. 'Is' 2->1.")
+_BD_2SA1618_REASON = ("Bracket-digit sweep MIXED: live digits [2serving to him 2I will be] "
+                      "tie -> 'serving to him I will be'. APP-CORRECTED: app reads "
+                      "[2serving to him 1I will be] = 'I will be serving to him'. "
+                      "'I will be' 2->1.")
+_BD_MIC113_REASON = ("Bracket-digit sweep MIXED: live digits [2the head 3of sin 3is] -> "
+                     "'the head of sin is'. APP-CORRECTED: app reads [2the head 3of sin "
+                     "1is] = 'is the head of sin'. 'is' 3->1.")
+_BD_NEH1243_REASON = ("Bracket-digit sweep MIXED: live digits [2gladness 2with great;] tie "
+                      "-> 'gladness with great;'. APP-CORRECTED: app reads [2gladness "
+                      "1with great] = 'with great gladness'. 'with great;' 2->1 (the "
+                      "trailing ';' floats to group end).")
+_BD_PSA1161_REASON = ("Bracket-digit sweep MIXED: live digits [2shall listen to 2the LORD] "
+                      "tie -> 'that shall listen to the LORD the voice'. APP-CORRECTED "
+                      "(app Ps 116:2, LXX verse offset): [2shall listen to 1 the LORD] = "
+                      "'that the LORD shall listen to the voice'. 'the LORD' 2->1.")
+
 # (book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref)
 ENTRIES = [
     ("2Sa", 18, 21,  4, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
@@ -244,6 +266,46 @@ ENTRIES = [
      "demons; they shall speak new languages;",
      _BD_MAR1617_REASON, "BD-Mar16:17"),
     ("Rev", 11,  1,  7, "greek_pos",    "2",     "3",    _BD_REV111_REASON,  "BD-Rev11:1"),
+    # ---- MIXED pass batch (2026-07-28, second): 5 verses, single-digit + prose each.
+    ("1Sa", 21, 11,  9, "greek_pos",    "2",     "1",    _BD_1SA2111_REASON, "BD-1Sa21:11"),
+    ("1Sa", 21, 11, -1, "verses.text",
+     "And the servants of Achish said to him, this Is not David the king of the land? Did "
+     "not the women joining in a dance to this one taking the lead, saying, Saul struck his "
+     "thousands, and David his ten thousands?",
+     "And the servants of Achish said to him, Is this not David the king of the land? Did "
+     "not the women joining in a dance to this one taking the lead, saying, Saul struck his "
+     "thousands, and David his ten thousands?",
+     _BD_1SA2111_REASON, "BD-1Sa21:11"),
+    ("2Sa", 16, 18, 21, "greek_pos",    "2",     "1",    _BD_2SA1618_REASON, "BD-2Sa16:18"),
+    ("2Sa", 16, 18, -1, "verses.text",
+     "And Hushai said to Absalom, No, but following after whoever the LORD chooses, and "
+     "this people, and every man of Israel. serving to him I will be and I shall sit down "
+     "with him.",
+     "And Hushai said to Absalom, No, but following after whoever the LORD chooses, and "
+     "this people, and every man of Israel. I will be serving to him and I shall sit down "
+     "with him.",
+     _BD_2SA1618_REASON, "BD-2Sa16:18"),
+    ("Mic",  1, 13,  8, "greek_pos",    "3",     "1",    _BD_MIC113_REASON,  "BD-Mic1:13"),
+    ("Mic",  1, 13, -1, "verses.text",
+     "even noise of chariots and ones riding. Dwelling Lachish the head of sin is to the "
+     "daughter of Zion; for in you they found the impious deeds of Israel.",
+     "even noise of chariots and ones riding. Dwelling Lachish is the head of sin to the "
+     "daughter of Zion; for in you they found the impious deeds of Israel.",
+     _BD_MIC113_REASON, "BD-Mic1:13"),
+    ("Neh", 12, 43, 16, "greek_pos",    "2",     "1",    _BD_NEH1243_REASON, "BD-Neh12:43"),
+    ("Neh", 12, 43, -1, "verses.text",
+     "And they sacrificed in that day great sacrifices, and they were glad. For God "
+     "gladdened them gladness with great; and their wives and their children were glad; "
+     "and the gladness in Jerusalem was heard from far off.",
+     "And they sacrificed in that day great sacrifices, and they were glad. For God "
+     "gladdened them with great gladness; and their wives and their children were glad; "
+     "and the gladness in Jerusalem was heard from far off.",
+     _BD_NEH1243_REASON, "BD-Neh12:43"),
+    ("Psa", 116, 1,  3, "greek_pos",    "2",     "1",    _BD_PSA1161_REASON, "BD-Psa116:1"),
+    ("Psa", 116, 1, -1, "verses.text",
+     "I loved that shall listen to the LORD the voice of my supplication.",
+     "I loved that the LORD shall listen to the voice of my supplication.",
+     _BD_PSA1161_REASON, "BD-Psa116:1"),
     ("Rev", 11,  1, -1, "verses.text",
      "And was given to me a reed measure likened to a rod. And the stood angel, saying, "
      "Arise and measure the temple of God, and the altar, and the ones doing obeisance in it!",

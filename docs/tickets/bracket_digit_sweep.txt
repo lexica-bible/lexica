@@ -461,7 +461,28 @@ STANDING NOTES (JP-ruled 2026-07-28):
     punctuation float (cost one wrong bin, Ezr 10:3). The 32 MIXED must be read against
     LIVE rendering, not the 'reads:' line.
 
-PARK x1:
+== TRIAGE — MIXED pass, 2026-07-28 (live re-bin) ==
+HEADLINE FINDING: the live db's BH digit-fill (Mat 20:29 mechanism: an unnumbered bracket
+word takes BH's greek_pos) already REPAIRED 18 of the 24 source-side door candidates —
+their live digits + prose read correctly. Source-side triage over-predicted; the JP-ruled
+read-against-live discipline caught it. The MIXED class survives live ONLY where the BH
+fill produced a TIE whose stable-sort outcome is the WRONG order.
+MIXED bins (32): 5 DOOR + 1 PARK + 26 SKIP (8 luck-correct from the first pass + 18
+live-repaired). Tick: 5+1+26=32. Grand total 47 = 8 applied + 5 door-drafted + 2 park
+(Act 10:28, Num 19:2) + 32 skip.
+
+DOOR x5 (all APP-CORRECTED witness, single digit + prose each; drafted as BD-* rows,
+pin 47->57 at apply):
+  1Sa 21:11  'this Is not David' -> 'Is this not David'  ('Is' 2->1)
+  2Sa 16:18  'serving to him I will be' -> 'I will be serving to him'  ('I will be' 2->1)
+  Mic 1:13   'the head of sin is' -> 'is the head of sin'  ('is' 3->1)
+  Neh 12:43  'gladness with great;' -> 'with great gladness;'  ('with great' 2->1)
+  Psa 116:1  'that shall listen to the LORD the voice' -> 'that the LORD shall listen to
+             the voice'  ('the LORD' 2->1; app is Ps 116:2 — LXX verse offset)
+
+PARK x2 now:
+  Num 19:2   our gloss 'is not' vs app 'has not' — no clean digit mapping onto our slots;
+             live 'which a blemish is not on it' is awkward but parseable. Own ruling.
   Act 10:28  app splits the clause into TWO groups ([3to me 1God 2showed] + [3common 4or
              5unclean 1to call 2a man], "not" outside both); ours is one 9-member group —
              mapping needs a multi-digit renumber, deserves its own small ruling.
