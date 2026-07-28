@@ -126,12 +126,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
-- **Jer 9:23 word order — CLOSED 2026-07-28, applied live via the corrections door.** Source
-  order-digit typo (duplicate 2, missing 3) CONFIRMED in the official ABP app's own display
-  (unaffected there — it renders digits raw; only our resolver executes them). Two rows
-  [JER9:23]: greek_pos 2→3 on pos 4 + verses.text clause 1; pin 28→30; reviewer-approved on
-  pasted receipts; verified by data reads + live interlinear screenshot (³καυχάσθω now matches
-  siblings). Reason text on the rows carries the full story.
 - **Bracket-digit sweep RUN 2026-07-28 (scripts/scan_bracket_digits.py; full report
   docs/tickets/bracket_digit_sweep.txt). TRIAGE OPEN: 47 groups.** Corpus-wide check of ABP's
   order digits, built on the PRODUCTION parser + ledger (no replicas). Fire-proofs: --control
@@ -1348,22 +1342,11 @@ weak, 5+ = strong. Number checked against ENGINE_LESSONS at write time (per #90'
   redraw. Only live card affected; join soundness 32,479=32,479 and OT coverage 10,462=10,462
   both proven on pasted output. The #30 floor-diff NOT-RUN waiver is DEAD for G1484 — any
   redraw of it reads the actual floor-diff, per-word ruling owed at that time.
-  **TALLY CORRECTION (2026-07-27, DB-counted on pasted output): live cards = 85, not 88.** The
-  handoff's "cards 85 → 88" (2026-07-15 c) was a slip — the `"None"` trio were REDRAWS of
-  already-live cards (all three confirmed present), which replace rows, never add them. Same
-  class as the earlier 19→18 slip. 85 is the authoritative count until a genuinely NEW word ships.
-  Receipts (reviewer-ruled CLOSED 2026-07-27): trio rows pasted present; before-state = AUDIT
-  lines 341/1058 (G2588 live since batch one) + 7773 (2026-07-14 ruling names all three as LIVE
-  cards to REDRAW); slip origin = the ship session numbering redraws "#86/#87/#88" as additions.
-  **Lesson RULED IN by JP 2026-07-27, banked as ENGINE_LESSONS #90** (not #89 — that number and
-  the 87/88 pair were already used by the 2026-07-16 head-word lane; the PN weekend's 87/88 are
-  DUPLICATES — naming RULED 2026-07-27: texts stay, cite-as notes added at each ("#87/#88
-  (rebuild lane)" vs "(PN lane)"); new lessons take the next free number checked against the
-  FILE at write time. CLOSED.)
   **BATCH ONE (verse-short dip) CLEARED TO SEND — reviewer's conditions met on pasted output
   2026-07-27:** check 1 fired (G1484 only), join 32,479=32,479, coverage 10,462=10,462, check 2
-  empty with fire-proof covering all 85 rows. Unchanged prompt, stamp `lexica:f8c77bf889f6`,
-  full gate battery, few per session.
+  empty with fire-proof covering all 85 rows (live cards = 85, DB-counted; "88" was a docs
+  tally slip, closed record in TODO_ARCHIVE + memory + ENGINE_LESSONS #90). Unchanged prompt,
+  stamp `lexica:f8c77bf889f6`, full gate battery, few per session.
 - **Repair-leg gotcha (cost a revert 2026-07-15, ENGINE_LESSONS #83):** if drafts are repaired and
   waiting to ship, SHIP THEM BEFORE committing any prompt edit — a prompt edit stales every cached
   draw at commit time and `--from-draw` refuses a stale draw. Spec-first governs authorization order,

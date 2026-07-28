@@ -6,6 +6,25 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-28 — Jer 9:23 fixed live + batch-one re-verify + tally correction — ALL CLOSED
+
+- **Jer 9:23 "Let not the boast wise man" — FIXED LIVE via the corrections door.** ABP's OWN
+  order-digit typo (duplicate 2, missing 3; confirmed in the official app's display, which is
+  unaffected because it renders digits raw — only our resolver executes them). Two rows
+  [JER9:23]: greek_pos 2→3 pos 4 + verses.text clause 1; pin 28→30; apply receipts 2/22/6
+  (applied / already / Cushi loud-skips); verified by data reads + live interlinear screenshot.
+  Spawned the corpus-wide bracket-digit sweep (47-item triage, OPEN in TODO) + lesson #91.
+  Lesson: the official app can carry a defect invisibly — display-raw vs resolve is the split.
+- **Batch-one (defs) re-verify post-R-2 — CLOSED, batch APPROVED.** Only G1484 (ἔθνος) pool
+  moved (6 OT ex-H1471 slots certain-new; floor-diff waiver dead for that word). Join + coverage
+  proofs pasted (32,479=32,479 · 10,462=10,462). Prompt untouched, stamp pinned.
+- **Live-cards tally corrected 88→85** (docs slip: the None trio were REDRAWS numbered as
+  additions "#86–#88"; before-state receipts AUDIT 341/1058/7773; 19→18 precedent). Lesson #90
+  banked + the lesson-ledger's own 87/88 duplicate numbering fixed with cite-as notes.
+- **Cushi corrections door flags EXPLAINED:** all 6 rows' target moved to pn_hebrew_xref in R-2
+  (proof: slots `*` + H3569 alive in xref); apply loud-skips by design. Supersede-marking
+  follow-up remains OPEN in TODO.
+
 ## 2026-07-27/28 — The Greek PN weekend arc — ALL CLOSED, receipts on live
 
 One weekend, five closes (full records in docs/tickets/ + ENGINE_LESSONS #87–88):

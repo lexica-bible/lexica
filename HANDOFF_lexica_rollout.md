@@ -1,5 +1,28 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> # ⇒ SESSION 2026-07-28: BATCH ONE (VERSE-SHORT DIP) IS APPROVED TO SEND. PROMPT UNTOUCHED. ⇐
+> **THE RE-VERIFY IS CLOSED (reviewer-ruled on pasted PA output).** Post-R-2 / post-PN-weekend
+> delta check of the whole card table: **only `G1484` ἔθνος moved** — 23 "greeks" name slots now
+> share its pool (6 OT ex-H1471 CERTAIN-new; 17 NT star slots unproven-changed; exact delta = the
+> floor-diff at redraw). **The #30 floor-diff NOT-RUN waiver is DEAD for G1484** — if it comes up,
+> read the real diff. All other cards clean: join 32,479=32,479 · OT coverage 10,462=10,462 ·
+> STEP-number check empty with a fire-proof reading every row.
+> **SEND TERMS (standing):** unchanged prompt, **stamp `lexica:f8c77bf889f6` pinned** (stamp test
+> run green this session), full gate battery, a few cards per session per the 2026-07-14 lazy
+> ruling. Spend happens with JP at the wheel. **GATE on the REMAINDER dips (not the verse-short
+> dip): re-rank the occ≥2 list post-R-2 with PN/G9xxx excluded** — pre-R-2 counts are stale.
+> **⚠ TALLY CORRECTION — LIVE CARDS = 85, NOT 88.** The banner below ("CARDS 85 → 88") is the
+> slip itself: the None trio were REDRAWS numbered as additions. DB is the count
+> (ENGINE_LESSONS #90; #91 = third-instance-triggers-enumeration, banked same session).
+> **Also this session (corpus lane, full records TODO/TODO_ARCHIVE):** Jer 9:23 order-digit typo
+> fixed live through the corrections door (pin 28→30) · bracket-digit sweep built on the
+> production parser, double fire-proofed → **47-item triage OPEN** (docs/tickets/
+> bracket_digit_sweep.txt; discipline in TODO) · FRAME-0 audit ran → **8 flash sites, one root
+> cause** (AUDIT_frame0.md), fixes ready · Cushi supersede-marking queued · reader-display-layers
+> future lane banked (recovered 2026-07-12 design).
+>
+> ---
+>
 > # ⇒ SESSION 2026-07-15 (c): THE "None" TRIO IS SHIPPED — CARDS 85 → 88, ZERO MODEL SPEND. ⇐
 > **THE PULL IS DONE. `G2588` καρδία · `G4172` πόλις · `G3624` οἶκος ARE LIVE** on the current engine,
 > shipped from their own repaired drafts ("using reviewed draw … no model call" on all three tails).
