@@ -182,6 +182,11 @@ _BD_PSA1161_REASON = ("Bracket-digit sweep MIXED: live digits [2shall listen to 
 
 # (book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref)
 ENTRIES = [
+    # Cushi x6 — SUPERSEDED 2026-07-28 (lane 3): R-2 moved the Hebrew identity to
+    # pn_hebrew_xref (all six slots '*' + H3569 alive in the xref, JP proof pasted
+    # 2026-07-28); the words-cell target no longer exists. Rows stay in the table with
+    # status='superseded' as the ruling record; the seeder's any-status dup check keeps
+    # them from resurrecting. Kept here as the historical seed, do not delete.
     ("2Sa", 18, 21,  4, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
     ("2Sa", 18, 21, 12, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
     ("2Sa", 18, 22, 19, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
@@ -394,9 +399,12 @@ def main():
 
         dup = None
         if has_table or args.apply:
+            # ANY status blocks re-insertion — a row ruled 'superseded'/'retired' must stay
+            # ruled; matching only 'active' would resurrect the 6 Cushi rows on every run
+            # (lane-3 supersede, 2026-07-28).
             dup = conn.execute(
                 """SELECT 1 FROM abp_corrections WHERE book=? AND chapter=? AND verse=?
-                   AND position=? AND field=? AND status='active'""",
+                   AND position=? AND field=?""",
                 (book, ch, vs, pos, field)).fetchone()
         if dup:
             print(f"  == {key}: active row already present — not duplicated. [{tag}]")
