@@ -1,31 +1,37 @@
-VOCATIVE "O" ABSORBED AS HEAD WORD — CLASS TICKET (opened 2026-07-28, JP sighting Jer 15:5)
+VOCATIVE "O" AS THE DISPLAYED NAME — CLASS TICKET (opened 2026-07-28, JP sighting Jer 15:5;
+RE-SCOPED 2026-07-29 on the live read; FIX SHIPPED same session)
 
-SIGHTING: Jer 15:5 PN card for Jerusalem shows head word "O". Source slot is one piece:
-"O Jerusalem?G*" — the word itself is fine; the head picker chose "O".
+SIGHTING: Jer 15:5 word card for Jerusalem shows "O" on the English name line (headword
+Ιερουσαλήμ itself correct). Reproduced live 2026-07-29 before fixing.
 
-ROOT CAUSE (one line, found same session): build_words_from_abp.py _head_word() skips only
-_ARTICLES = {"the","a","an"} (line 28) — the vocative particle "O" is not in the skip set,
-and it is the first word, so it wins the head for every "O <word>" slot.
+ROOT CAUSE — CORRECTED HISTORY (#90 re-read earned its keep, third time that session):
+  * ORIGINAL claim (2026-07-28, WRONG): build-side _head_word() skips only the/a/an, so
+    "O" wins english_head for every "O <word>" slot; class sized ~1,240 from a SOURCE
+    scan. Wrong on BOTH axes — wrong count (live: 1,520 rows begin "O ") and wrong LAYER:
+    the live english_head data is CLEAN ("jerusalem", "LORD", "son", ...; JP live paste
+    2026-07-29). A later build pass re-cleans heads; the ticket's build-side reasoning was
+    never checked against the load path. Zero data repair needed.
+  * REAL root cause (proven live): frontend display picker extractProperName()
+    (static/src/00-core.jsx:417) takes the first capitalized word of the English not in
+    _PN_STOP — "O" was not in the stop list, so "O Jerusalem?" -> "O".
+  * HALF THE DEFECT IS NOT COSMETIC: the same extracted name feeds the person/place
+    identity lookups, so a vocative name slot queried "O" and came back empty — the
+    card's "no Strong's mapping" state on such slots may be THIS defect, not the data.
 
-CLASS SIZE (#91 enumeration, source-side scan 2026-07-28, grep on abp_texts):
-  115  "O <ProperName>"G* slots (~40 names: Israel 35, Jerusalem 15, Jacob 8, Judah 7,
-       Zion 7, Job 3, ... full uniq -c in session record)
-  1125 "O <word>"G<number> slots (O LORD 367, O son 136, O Lord 93, O king 34, ...)
-  ~1240 total slots whose english begins "O ".
-  NOTE: ~200 slots whose english is EXACTLY "O" (article τω glossed "O", OG3588) are NOT
-  in this class — a lone "O" has no better head and the picker's fallback keeps it.
+FIX (one word + comment, 00-core.jsx): "O" added to _PN_STOP. Collision-proofed by JP
+live reads before the edit: english_head='O' count 0 · is_pn bare-"O" count 0. Edge
+stated: ~200 article slots glossed exactly "O" now extract NO name instead of "O" —
+every consumer is a name path, so empty is the honest value there.
 
-LIVE CONFIRMATION still owed (load-path rule): source scan ≠ live table. PA read:
-  sqlite3 ~/bible-db/bible.db "SELECT count(*) FROM words WHERE english LIKE 'O %' AND english_head='O';"
+BLAST RADIUS — the ten call sites, all through the one function (static/src):
+  30-detail-panel.jsx :343 (gentilic test) · :376 (identity lookup name) · :478 ·
+  :513 · :516 · :566 (entity/name resolution paths) · :705 (card properName) ·
+  :854 (click name) · :1192 (name-search occ link) · 00-core.jsx:417 (the definition)
 
-FIX SHAPE (proposed, NOT ruled):
-  1. Add "o" to _ARTICLES in build_words_from_abp.py _head_word() — skip-only-if-more-words
-     semantics already correct (pick() falls back to words[0] when everything is skipped,
-     so a lone "O" keeps its head). Build-side, takes effect on next rebuild.
-  2. A targeted live backfill of english_head for the ~1,240 rows, own script, dry-run
-     first, control-tested on Jer 15:5 before trusting.
-  Impact check before ruling: english_head feeds the English-word search key and card
-  heads — confirm no reader depends on 'O' heads (unlikely; 'O' is unsearchable noise).
+RECEIPTS OWED POST-DEPLOY (reviewer-ruled):
+  1. Jer 15:5 card name line reads "Jerusalem" (known positive).
+  2. EXPLICIT identity-lookup check on that card — if "no Strong's mapping" persists,
+     that is a FINDING with a second cause: gets its own ticket line, not absorbed.
+  3. One at-scale sample: an "O LORD" slot (480 instances) renders correctly.
 
-STATUS: OPEN — parked behind the bracket-digit MIXED batch. Not folded into that lane
-(different defect class: head-word derivation, not order digits).
+STATUS: fix committed, awaiting deploy + live receipts.

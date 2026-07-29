@@ -413,7 +413,11 @@ const api = {
 };
 
 // Extract proper noun name from a multi-word gloss, skipping function words
-const _PN_STOP = new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our"]);
+// "O" added 2026-07-29 (JP sighting Jer 15:5): the vocative particle in "O Jerusalem"
+// was winning the name pick and also feeding the person/place identity lookups as the
+// name. Collision-proofed live: zero words carry head 'O', zero PN slots are bare "O"
+// (docs/tickets/vocative_head_words.txt).
+const _PN_STOP = new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our","O"]);
 function extractProperName(gloss) {
   if (!gloss) return "";
   const clean = gloss.replace(/[^a-zA-Z\s'-]/g, "").trim();
