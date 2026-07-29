@@ -45,7 +45,9 @@ DB = sys.argv[1] if len(sys.argv) > 1 else "bible.db"
 conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 conn.row_factory = sqlite3.Row
 
-EXPECT_SLOTS, EXPECT_BINDS = 32479, 14898
+# EXPECT_BINDS = render=1 rows (what serves cards) — the banked bracket 2026-07-29.
+# The earlier 14,898 read counted the whole table (14,830 render + 68 hot).
+EXPECT_SLOTS, EXPECT_BINDS = 32479, 14830
 
 # ── frontend mirrors ─────────────────────────────────────────────────────────
 _PN_STOP = {"And","But","Or","The","A","An","In","Of","To","For","With","From",
