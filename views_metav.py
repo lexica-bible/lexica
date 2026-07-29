@@ -234,6 +234,12 @@ def metav_person(name):
                      (death_year IS NOT NULL) DESC
             LIMIT 1
         """, (name, name)).fetchone()
+        # Sole-referent label (TICKET_pn_label_confidence): an EXACT name/alias hit that
+        # clears the multi-referent guard below is, by construction, the only person of
+        # this name in our records (metaV + TIPNR) — the card may say so confidently.
+        # A FUZZY hit never earns it: the served person's own name isn't the clicked
+        # name (Archite -> Archippus), so "only person of this name" would be false.
+        exact_hit = row is not None
         # Fallback: fuzzy prefix match for Greek vowel suffixes on Hebrew names
         # e.g. "Methusaela" → matches "Methusael" (length ±2, first 5+ chars match)
         if not row and len(name) >= 5:
@@ -275,6 +281,7 @@ def metav_person(name):
 
     if not card:
         return jsonify({"error": "not found"}), 404
+    card["sole_referent"] = exact_hit
     return jsonify(card)
 
 
@@ -392,6 +399,19 @@ def metav_place(name):
             JOIN metav_place_aliases a ON a.place_id = p.place_id
             WHERE a.alias = ? COLLATE NOCASE
         """, (name, name)).fetchall()
+        # Sole-referent label (TICKET_pn_label_confidence): confident only when exactly
+        # one place carries this name in BOTH sources we hold — one metav_places
+        # referent, and no second TIPNR place entity under the surface name (mirrors the
+        # person guard's TIPNR leg; table-existence-gated like it).
+        sole = len({r["place_id"] for r in rows}) == 1
+        if sole and conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                                 "AND name='tipnr_entities'").fetchone():
+            n_tipnr = conn.execute(
+                "SELECT COUNT(*) FROM tipnr_entities WHERE section='place' "
+                "AND (head = ? COLLATE NOCASE OR uniq LIKE ?)",
+                (name, name + "@%")).fetchone()[0]
+            if n_tipnr > 1:
+                sole = False
     finally:
         conn.close()
 
@@ -412,6 +432,7 @@ def metav_place(name):
         "lon":       lon,
         "ambiguous": ambiguous,
         "strongs_g": row["strongs_g"] or "",
+        "sole_referent": sole,
     })
 
 

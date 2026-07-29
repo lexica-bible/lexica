@@ -1022,9 +1022,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </div>
         ) : null}
         {/* Contract §4 state 2: this card is a NAME lookup (it only renders when no
-            verse-bind exists) — say so, in the same voice as the AI block's caveat. */}
+            verse-bind exists) — say so, in the same voice as the AI block's caveat.
+            TICKET_pn_label_confidence (JP-ruled copy, 2026-07-29): when the server says
+            the name has exactly ONE referent in our records (sole_referent — exact-match
+            only, fuzzy never earns it), the label carries that confidence instead of
+            reading like a guess. Gentilic person cards ("People / Clan") keep the hedge —
+            "only person of this name" misdescribes a people-group. */}
         {metavData && (
-          <p className="detail-ai-caveat">Matched by name — not checked against this verse.</p>
+          <p className="detail-ai-caveat">{
+            metavData.sole_referent && (metavType === "place" || !isGentilic)
+              ? `Matched by name — the only ${metavType === "place" ? "place" : "person"} of this name in our records.`
+              : "Matched by name — not checked against this verse."
+          }</p>
         )}
         </>}
       </section>

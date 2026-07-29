@@ -1,6 +1,12 @@
 # TICKET — Split "Matched by name" label by name-ownership confidence
 
-Filed 2026-07-29 (JP handover, post-census verdict). Status: OPEN, unstarted.
+Filed 2026-07-29 (JP handover, post-census verdict).
+Status: BUILT 2026-07-29 (JP ruled copy option 1) — awaiting live acceptance receipts
+post-deploy. Copy shipped: "Matched by name — the only person/place of this name in
+our records." Confident label fires ONLY on exact-match sole referents (server-computed
+`sole_referent`: person = exact hit that cleared the multi-referent guard; place = one
+metav_places referent AND ≤1 TIPNR place entity); fuzzy matches and gentilic
+People/Clan cards keep the hedged label.
 
 ## Context
 PN-card census (scripts/audit_pn_card_census.py, commit 8bdda27d, reviewer verdict
