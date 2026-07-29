@@ -28,10 +28,21 @@ BLAST RADIUS — the ten call sites, all through the one function (static/src):
   :513 · :516 · :566 (entity/name resolution paths) · :705 (card properName) ·
   :854 (click name) · :1192 (name-search occ link) · 00-core.jsx:417 (the definition)
 
-RECEIPTS OWED POST-DEPLOY (reviewer-ruled):
-  1. Jer 15:5 card name line reads "Jerusalem" (known positive).
-  2. EXPLICIT identity-lookup check on that card — if "no Strong's mapping" persists,
-     that is a FINDING with a second cause: gets its own ticket line, not absorbed.
-  3. One at-scale sample: an "O LORD" slot (480 instances) renders correctly.
+RECEIPTS — ALL THREE IN, live 2026-07-29 (bundle v=1785298385 confirmed):
+  1. Jer 15:5 name line reads "Jerusalem" (was "O"). Known positive fixed. ✓
+  2. Identity-lookup check — SPLIT RESULT. The name-keyed lookups HEALED: the card now
+     carries "Biblical Place" and "Liddell-Scott-Jones" sections that were ABSENT
+     pre-fix (pre-fix section list captured same session: ABP Occurrences / Hebrew
+     Cross-Reference / Verse only). But "ABP-only form — no Strong's mapping" PERSISTS.
+  3. "O LORD" at scale: card fully correct — κύριος headword, "lord, master" plain
+     gloss, in-verse form κύριε rendered "O LORD" in the right slot. ✓
 
-STATUS: fix committed, awaiting deploy + live receipts.
+FINDING (second cause, own line per ruling — NOT absorbed): the "no Strong's mapping"
+line is SERVER-side — the Jer 15:5 slot's served identity is src "lemma-only" with an
+empty Strong's (star name slot, no Greek number bound). Plausibly the ruled R-2 honest
+state for an unproven star slot, but Ιερουσαλήμ has a real Greek number (G2419) in the
+lexicon, so whether this slot SHOULD bind it is an R-2 identity question, not a display
+one. Needs its own small ruling; do not fold into this ticket's fix.
+
+STATUS: CLOSED 2026-07-29 (display fix live, receipts above). Open residue = the
+server-side identity finding line, awaiting its own ruling.

@@ -170,11 +170,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   a ruled row can't resurrect (9fef4501). Rows stay in the table as the ruling record.
   Template note (kept): the marker-permutation sweep inherits the bracket-digit pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **Vocative "O" absorbed as head word — CLASS OPEN (JP sighting Jer 15:5; ticket
-  docs/tickets/vocative_head_words.txt).** ~1,240 slots ("O Jerusalem" x15, "O LORD" x367...);
-  root cause one line (_head_word skips only the/a/an); fix shape proposed in ticket, NOT
-  ruled. Parked behind the bracket-digit MIXED batch. #91 enumeration done source-side;
-  live count read still owed.
+- **Vocative "O" — CLOSED 2026-07-29 (ticket docs/tickets/vocative_head_words.txt).**
+  The class collapsed on the live read: stored heads were CLEAN (original ticket wrong on
+  count AND layer); real defect = the frontend name picker ("O" missing from _PN_STOP,
+  one-word fix, ten call sites through one function). Receipts live: Jer 15:5 "Jerusalem",
+  place/LSJ sections healed, "O LORD" correct at scale. **Open residue, own ruling owed:
+  the served identity for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number
+  while G2419 exists in the lexicon — R-2 identity question, ticket FINDING line.**
 - **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
   per reviewer ruling 2026-07-25).** **BASELINE TO BEAT (reviewer condition): the LIVE numbers —
   6.5s / 155KB on G2316** (3× curl-verified post-fix 2026-07-25; console figures below are diagnosis
