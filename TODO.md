@@ -144,6 +144,21 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   errata list compiles from that ticket once these two are ruled or formally deferred.
   Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
+- **PN-card verification census — QUEUED (reviewer-briefed 2026-07-29, read-only, runs
+  BEFORE the definitions spend).** Bracket read live 2026-07-29: 32,479 PN slots vs 14,898
+  verse-verified pn_binding pairs — the unverified ~half either shows "Matched by name —
+  not checked against this verse" (30-detail-panel.jsx, provenance contract §4 state 2) or
+  no person/place card. Census splits that half: (a) label-showing · (b) no card · (c)
+  per-name AMBIGUITY ranking (names mapping to multiple TIPNR people — the several-
+  Jeremiahs risk). CONDITIONS (carried from the 2026-07-28/29 session): known positive per
+  bin (a Jer-15:5-style label card + a known multi-person name like Jeremiah/Shimei must
+  appear in the ranking) · the 32,479/14,898 bracket RE-DERIVED by the script itself ·
+  the script's per-slot name extraction SPOT-CHECKED against live cards before bulk
+  numbers are trusted (it reimplements card logic — the risky part). DECISION it feeds:
+  mostly single-person names → label is honest under-information, lane stays parked cheap;
+  ambiguous names dominate → accuracy problem, real promotion case for the parked
+  Greek-name identity lane (which stays PARKED regardless; five rulings pending; census =
+  its step-zero evidence). NOTHING GETS BUILT in the census session.
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
