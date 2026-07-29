@@ -1,0 +1,34 @@
+ACCENT-DIVERGENCE FALSE "IN THIS VERSE" — CLASS TICKET (JP sighting 2026-07-29,
+Νῶε G3575, 1Ch 1:4; JP's two-source theory CONFIRMED)
+
+DEFECT: the word card's "IN THIS VERSE" section (real-inflection display) fired whenever
+the in-verse form differed from the headword by RAW string compare. The two come from
+different sources — headword = lexicon lemma (fully pointed: Νῶε), in-verse form =
+abp_surface scrape (stripped-down: Νώε) — so pure editorial divergence fired a section
+meant for case endings. An indeclinable name can never truly inflect: every fire on one
+is false by definition (the known-positive logic).
+
+CLASS SIZE (scan_accent_divergence.py, control-tested on the sighting, JP run 2026-07-29):
+371,946 lemma+surface pairs -> identical 2,111 · ACCENT-ONLY 4,250 (PN 4,079 / non-PN 171)
+· letter-differ 365,585 (real inflection — the section itself is worth keeping).
+Noise is THREE shapes, not one: accents (Νῶε/Νώε), BREATHING MARKS (Ἄγαβος/Αγαβος),
+CASE (Χριστιανός/χριστιανός).
+
+*** STANDING DATA CHARACTERISTIC (the #91 generalization, reviewer-ruled): the
+abp_surface scrape is systematically stripped-down Greek — no breathings, lowercased
+names, simplified accents — while lemmas are fully pointed. ANY future feature comparing
+lemma-layer to surface-layer text MUST compare accent-insensitively (greekFold,
+00-core.jsx) or it inherits this same 4,250-row false-fire class. ***
+
+FIX (shipped): greekFold() helper in 00-core.jsx — COMPARE-ONLY (no display path calls
+it; rendered text keeps real accents and real sigma shapes; the fold only decides
+whether the section fires). Folds accents/breathings via mark-stripping, case via
+lowercase, final/medial sigma as one letter (positional variants of the same letter —
+correct for MATCHING only, which is the only use). One changed line at the
+30-detail-panel.jsx heroForm gate; the translit sub-line lives inside that gate.
+
+RECEIPTS OWED POST-DEPLOY (4, reviewer-ruled):
+  1. Νῶε 1Ch 1:4 — section gone (accent shape)
+  2. Ἄγαβος or Χριστιανός — section gone (breathing/case shapes witnessed live)
+  3. ἄκρον (non-PN sample) — section gone
+  4. One REAL inflection still fires (e.g. κύριος/κύριε) — the feature survives

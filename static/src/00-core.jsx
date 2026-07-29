@@ -418,6 +418,15 @@ const api = {
 // name. Collision-proofed live: zero words carry head 'O', zero PN slots are bare "O"
 // (docs/tickets/vocative_head_words.txt).
 const _PN_STOP = new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our","O"]);
+// greekFold — COMPARE-ONLY accent-insensitive key (never used to transform displayed
+// text; every renderer keeps the real accents/sigmas). Drops accent + breathing marks,
+// ignores case, treats final/medial sigma as one letter. Exists because the abp_surface
+// scrape is systematically stripped-down Greek (no breathings, lowercased names) while
+// lemmas are fully pointed — raw equality between the two layers false-fires (the
+// Νῶε/Νώε "IN THIS VERSE" class, 4,250 slots; docs/tickets/accent_divergence.txt).
+function greekFold(s) {
+  return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/ς/g, "σ");
+}
 function extractProperName(gloss) {
   if (!gloss) return "";
   const clean = gloss.replace(/[^a-zA-Z\s'-]/g, "").trim();

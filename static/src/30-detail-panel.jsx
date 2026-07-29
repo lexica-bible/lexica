@@ -748,7 +748,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // away when the identity landed with form == lemma (the Canaan flash, JP
   // report 2026-07-28). Settled behavior unchanged: a differing inflected form
   // still shows; an identical one is still (correctly) not repeated.
-  const heroForm = (!greekIdPending && !idiomHdr && heroInflected && heroInflected !== hero.script) ? heroInflected : "";
+  // Accent-divergence fix (JP sighting Νῶε/Νώε 1Ch 1:4, 2026-07-29): the surface form and
+  // the lemma come from two sources whose accents/breathings/case legitimately differ
+  // (abp_surface is stripped-down Greek). Compare FOLDED (greekFold, compare-only) so the
+  // section fires only when the LETTERS differ — real inflection, never editorial noise.
+  // What renders is still the raw forms, real accents and all.
+  const heroForm = (!greekIdPending && !idiomHdr && heroInflected && greekFold(heroInflected) !== greekFold(hero.script)) ? heroInflected : "";
   // The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
   // an inflected "in this verse" line, that english belongs next to the FORM it actually
   // translates — not glued to the dictionary lemma above. Relocate it down whenever there's

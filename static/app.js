@@ -64,7 +64,13 @@ pnGreekIdentity:(book,chapter,verse,pos)=>fetch(`/api/pn/greek-identity?book=${e
 // was winning the name pick and also feeding the person/place identity lookups as the
 // name. Collision-proofed live: zero words carry head 'O', zero PN slots are bare "O"
 // (docs/tickets/vocative_head_words.txt).
-const _PN_STOP=new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our","O"]);function extractProperName(gloss){if(!gloss)return"";const clean=gloss.replace(/[^a-zA-Z\s'-]/g,"").trim();const proper=clean.split(/\s+/).find(w=>/^[A-Z]/.test(w)&&!_PN_STOP.has(w));return proper||"";}// ============================================================
+const _PN_STOP=new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our","O"]);// greekFold — COMPARE-ONLY accent-insensitive key (never used to transform displayed
+// text; every renderer keeps the real accents/sigmas). Drops accent + breathing marks,
+// ignores case, treats final/medial sigma as one letter. Exists because the abp_surface
+// scrape is systematically stripped-down Greek (no breathings, lowercased names) while
+// lemmas are fully pointed — raw equality between the two layers false-fires (the
+// Νῶε/Νώε "IN THIS VERSE" class, 4,250 slots; docs/tickets/accent_divergence.txt).
+function greekFold(s){return(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ς/g,"σ");}function extractProperName(gloss){if(!gloss)return"";const clean=gloss.replace(/[^a-zA-Z\s'-]/g,"").trim();const proper=clean.split(/\s+/).find(w=>/^[A-Z]/.test(w)&&!_PN_STOP.has(w));return proper||"";}// ============================================================
 // DATA SHAPING
 // ============================================================
 // ---- Canonical Strong's-number handling (single source of truth) --------
@@ -661,7 +667,12 @@ const hero=greekIdPending||isHebrewWord&&bdbLoading?{he:false,noGloss:true,scrip
 // away when the identity landed with form == lemma (the Canaan flash, JP
 // report 2026-07-28). Settled behavior unchanged: a differing inflected form
 // still shows; an identical one is still (correctly) not repeated.
-const heroForm=!greekIdPending&&!idiomHdr&&heroInflected&&heroInflected!==hero.script?heroInflected:"";// The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
+// Accent-divergence fix (JP sighting Νῶε/Νώε 1Ch 1:4, 2026-07-29): the surface form and
+// the lemma come from two sources whose accents/breathings/case legitimately differ
+// (abp_surface is stripped-down Greek). Compare FOLDED (greekFold, compare-only) so the
+// section fires only when the LETTERS differ — real inflection, never editorial noise.
+// What renders is still the raw forms, real accents and all.
+const heroForm=!greekIdPending&&!idiomHdr&&heroInflected&&greekFold(heroInflected)!==greekFold(hero.script)?heroInflected:"";// The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
 // an inflected "in this verse" line, that english belongs next to the FORM it actually
 // translates — not glued to the dictionary lemma above. Relocate it down whenever there's
 // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
