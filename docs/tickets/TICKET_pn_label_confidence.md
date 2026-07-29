@@ -1,8 +1,12 @@
 # TICKET — Split "Matched by name" label by name-ownership confidence
 
 Filed 2026-07-29 (JP handover, post-census verdict).
-Status: BUILT 2026-07-29 (JP ruled copy option 1) — awaiting live acceptance receipts
-post-deploy. Copy shipped: "Matched by name — the only person/place of this name in
+Status: **CLOSED 2026-07-29** — built (commit 074339cf), deployed by JP, all five
+acceptance checks passed LIVE same night: Seth sole_referent=true (confident person
+label) · Jerusalem sole=true (place variant) · Zibeon/Cainan/Dishon still declined ·
+Adam @ 1Ch 1:1 bound unchanged · chip/prose parity structural (one shared label line,
+one server flag) with live bundle carrying both strings. Fuzzy control: Archite →
+sole=false, hedge retained. Copy shipped: "Matched by name — the only person/place of this name in
 our records." Confident label fires ONLY on exact-match sole referents (server-computed
 `sole_referent`: person = exact hit that cleared the multi-referent guard; place = one
 metav_places referent AND ≤1 TIPNR place entity); fuzzy matches and gentilic

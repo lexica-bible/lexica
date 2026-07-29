@@ -157,9 +157,8 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   15,920 > 14,830 binds is expected: a bind is keyed verse+name, so every repeat of a
   name in a verse rides the same bind row (~1,090 repeats). Tool:
   scripts/audit_pn_card_census.py (read-only, controls built in). Follow-ups filed:
-  - **Label-confidence split ticket (JP handover 2026-07-29):**
-    docs/tickets/TICKET_pn_label_confidence.md — single-referent bin-(a) cards get a
-    confident label, wording = JP's call, app-side only.
+  - **Label-confidence split — SHIPPED + CLOSED same night (074339cf, JP copy option 1,
+    five live acceptance receipts):** docs/tickets/TICKET_pn_label_confidence.md.
   - **Chip-vs-prose click inconsistency (small standalone ticket, reviewer thread 1):**
     87 slots classify differently depending on click path — chip mode keys the card on
     english_head-first, prose mode on english-first (pnClickPayload vs 59c chip
