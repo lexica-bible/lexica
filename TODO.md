@@ -137,57 +137,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   both: when the Library search box is handed GREEK characters it returns a bare
   "No matches" — which reads as "this word isn't in the Bible" rather than "this search
   is English-only." It should say so (reviewer-ruled note 2026-07-29).
-- **Bracket-digit sweep TRIAGE COMPLETE 2026-07-28 — all 47 ruled, lane CLOSED.**
-  13 applied live through the door (8 DUPLICATE pin 30->47 + 5 MIXED pin 47->57) · 32
-  skipped with pinned reasons · 2 PARKED still open: Act 10:28 (app splits the clause in
-  two groups — structural remap, own ruling) and Num 19:2 (our gloss 'is not' vs app 'has
-  not' — no clean digit mapping). Full record docs/tickets/bracket_digit_sweep.txt.
-  MIXED headline: BH digit-fill had already repaired 18/24 source-side candidates on live —
-  read-against-live discipline caught it (18 skips hold REAL digits, no tie-break reliance).
-  (Superseded original entry follows for context:)
-  All 15 DUPLICATEs ruled (8 door APPLIED LIVE, pin 30->47, applied 17 = 10 digit + 7 prose /
-  6 skip / 1 park Act 10:28); full verdicts + witness evidence in
-  docs/tickets/bracket_digit_sweep.txt. Tick: 8+6+1=15, 15+32=47 ✓.
-  **Upgrades banked for the MIXED pass:** (1) the OFFICIAL ABP APP is a plain website —
-  apostolicbibleapp.com/Chapters/<Book> <ch>.html — CC reads it directly, no JP eyeballs
-  needed; it is a CORRECTED edition (witness classes APP-CORRECTED / APP-SAME / APP-PARALLEL).
-  (2) SWEEP-TOOL CAVEAT: the report's 'reads:' line lacks production's punctuation float —
-  read MIXED candidates against LIVE rendering (cost one wrong bin, Ezr 10:3, caught pre-door).
-  (3) Skip protection = spec-stable sort + ORDER BY position feed + committed port test
-  (JP-accepted as pinned); RE-PROVE if either sort implementation is ever replaced.
-  Same discipline for the 32 MIXED: verdict per row, three bins, no bulk applies, arithmetic
-  ticks every session, door batches move the pin by exact row count.
-- ORIGINAL SWEEP RECORD (kept for the MIXED pass): sweep RUN 2026-07-28
-  (scripts/scan_bracket_digits.py; full report docs/tickets/bracket_digit_sweep.txt). Corpus-wide check of ABP's
-  order digits, built on the PRODUCTION parser + ledger (no replicas). Fire-proofs: --control
-  flags Jer 9:23 [2,1,2] AND the report's "reads" rendering reproduces both known garbles
-  verbatim ("the boast wise man" / "a great. multitude"). Severity by MECHANISM
-  (reorder_english.py sorts by digit, missing→999): GAP/OVER (260) = benign, relative order
-  preserved; DUPLICATE (16) + MIXED (33) = real ambiguity, minus 2 corrected-live → 47 to
-  triage. Each: read the "reads" line, rule (a) source typo → corrections door individually
-  with intent evidence, (b) tolerated by design, (c) ambiguous → park. Caveat on record:
-  well-formed-but-wrong numbering is mechanically invisible — this catches the malformed
-  class only.
-  **Triage discipline (reviewer-ruled 2026-07-28):** verdict per row, three bins — real typo →
-  door, precondition-pinned, one at a time · SKIP with one-line reason · PARKED, never guessed;
-  NO bulk applies. Arithmetic ticks against 47 every session (list can't silently shrink/grow).
-  The 16 DUPLICATEs first (visible garbles); the 33 MIXED second (subtler, word sinks to
-  phrase-end). Accumulated verdicts go through the door in one dry-run/apply cycle, pin moving
-  by exactly the row count — the Jer 9:23 pattern, wider.
-- **Cushi supersede — DONE 2026-07-28 23:56 PA.** The 6 rows marked status='superseded'
-  (JP receipt: changes()=6; proof run: 51 active · already-applied 51 · LOUD-SKIPPED 0).
-  Guard untouched — the loud-skip code path survives for any future drifted row (it fired
-  6x the same evening, proven detector); the seeder's dup check now matches ANY status so
-  a ruled row can't resurrect (9fef4501). Rows stay in the table as the ruling record.
-  Template note (kept): the marker-permutation sweep inherits the bracket-digit pattern
+- **Bracket-digit sweep: 2 PARKED verses, own rulings owed** (lane otherwise CLOSED
+  2026-07-28/29, record docs/tickets/bracket_digit_sweep.txt + TODO_ARCHIVE): Act 10:28
+  (official app splits the clause into TWO bracket groups vs our one — structural remap) ·
+  Num 19:2 (our gloss 'is not' vs app 'has not' — no clean digit mapping). The Van der Pool
+  errata list compiles from that ticket once these two are ruled or formally deferred.
+  Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **Vocative "O" — CLOSED 2026-07-29 (ticket docs/tickets/vocative_head_words.txt).**
-  The class collapsed on the live read: stored heads were CLEAN (original ticket wrong on
-  count AND layer); real defect = the frontend name picker ("O" missing from _PN_STOP,
-  one-word fix, ten call sites through one function). Receipts live: Jer 15:5 "Jerusalem",
-  place/LSJ sections healed, "O LORD" correct at scale. **Open residue, own ruling owed:
-  the served identity for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number
-  while G2419 exists in the lexicon — R-2 identity question, ticket FINDING line.**
+- **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
+  for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
+  number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
+  FINDING line in docs/tickets/vocative_head_words.txt.
 - **Word-study profile slow on mega-frequency Greek words (pre-existing, ticketed out of R-2 stage 3
   per reviewer ruling 2026-07-25).** **BASELINE TO BEAT (reviewer condition): the LIVE numbers —
   6.5s / 155KB on G2316** (3× curl-verified post-fix 2026-07-25; console figures below are diagnosis
@@ -1344,26 +1304,6 @@ hand-ruled and auditable, tagged by class so the toggles operate independently.
    regardless of this toggle: AI-synthesis prose drifts Yahweh/YHWH/LORD and needs one ruled
    convention (already banked under "AI verse synthesis revisit").
 Details re-ruled before build. Parked BEHIND batch one + the FRAME-0 audit; nothing waits on it.
-
-## FRAME-0 audit — OPEN LANE (reviewer-ruled 2026-07-27; runs parallel to batch one, does not block it)
-Three instances of one class: Hebrew-flash, Canaan flash, and the "sons of Noah" card headline
-flash — components painting frame zero with fallback/wrong content before real data lands. The
-two fixes so far were spot fixes; the class lives in more places. Lane shape (ruled):
-1. ENUMERATE, don't hunt (#88 pattern applied to the first paint): list every component that
-   renders data-dependent text (interlinear line, chips, word-study card header, IN THIS VERSE
-   block, person panel, …) and answer: what does it paint on frame zero, before its data resolves?
-   Code-reading only, zero spend.
-2. Classify each: blank/skeleton (fine) · stale-but-correct (fine) · wrong/fallback first (flash bug).
-3. ONE fix pattern for all flagged: generalize the existing `greekIdPending`-style hold
-   (static/src/30-detail-panel.jsx) into a small shared helper — no refactor of card rendering.
-4. Receipts = frame capture, per the established format (caveat: harness hidden tab won't paint
-   screenshots — element boxes are the fallback evidence).
-Starter clue: the "sons of Noah" big-type flash suggests the card headline slot briefly holds the
-English span before the Hebrew headword lands — card header goes first on the list.
-**PARKED lesson candidate — bank ONLY when this audit closes:** "two fixes of the same class is
-the ceiling; the third instance triggers enumeration of the whole class, not a third fix" (#88
-promoted to a meta-rule). Strength depends on the audit's own result: only the 3 known spots =
-weak, 5+ = strong. Number checked against ENGINE_LESSONS at write time (per #90's ledger note).
 
 ## Lexica def-engine — small open tickets
 - **Legacy redraw order — next dip = the 24 VERSE-SHORT cards.** The 3 `"None"`-marker cards

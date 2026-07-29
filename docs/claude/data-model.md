@@ -100,7 +100,11 @@ the lemma by ENDING (no echo lines) → ~58% of words show a line (post-backfill
 aligner fails where ABP's printed ENGLISH order (words.position) diverges from the scrape's Greek
 order (bracket reorders, postpositive particles); the backfill pairs failed slots with leftover
 scrape tokens by Strong's number within the verse, refusing on any count mismatch. Re-run it (then
-translit) after any build_abp_surface re-run. Characterizer = `scripts/audit_surface_coverage.py`
+translit) after any build_abp_surface re-run. **Stripped-Greek characteristic (2026-07-29):
+despite the builder's strip_marks guard, 4,250 stored forms differ from their lemma ONLY by
+accents/breathings/case (scripts/scan_accent_divergence.py) — any lemma-vs-surface compare
+must fold (frontend: greekFold in 00-core.jsx, compare-only; docs/tickets/accent_divergence.txt).**
+Characterizer = `scripts/audit_surface_coverage.py`
 (read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
 Hebrew-numbered OT name slots that can never match Greek, the PN backfill's bucket). Mode-three
 interlinear's Greek line falls back form→lemma→name (`greekLineForWord`, 56-library-order-logic);

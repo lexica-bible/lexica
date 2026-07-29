@@ -739,6 +739,25 @@ Full per-feature history in memory (each block names its file). Standing rules +
   never shifts layout. Fonts load **`display=optional`, NOT `swap`** (templates/index.html) —
   kills the mobile toolbar reload flash. Don't switch back.
 
+### First-paint rule (JP standing ruling 2026-07-28, FRAME-0 lane)
+**Nothing paints before the final data** — no interim content that later swaps, no
+fallback-first expressions. Hold blank or "Loading…" until the real value is known.
+Vocabulary (reuse, don't invent): seed the loading flag ON at creation when a fetch is
+certain (`useState(() => willFetch)`), `undefined`-means-loading sentinels, and the
+`greekIdPending`-style hero hold (30-detail-panel.jsx). Two traps: (1) every seeded/held
+flag needs a RELEASE on its no-fetch path or it sticks worse than the flash it fixes;
+(2) a fetch-effect guard that reads its own state can see the stale value after a word
+change and skip the fetch — freeze under a hold. Full record: AUDIT_frame0.md (8 sites,
+one root cause). Verifying flashes on the hidden harness tab: rAF doesn't fire and timers
+clamp — use fixed setTimeout snapshots + artificially delayed fetches, not polling.
+
+### Greek compare rule (2026-07-29, accent-divergence lane)
+`abp_surface` (and the scrape layer generally) is systematically STRIPPED-DOWN Greek —
+no breathing marks, lowercased names, divergent accents — while lexicon lemmas are fully
+pointed. **Any lemma-vs-surface text comparison must use `greekFold()` (00-core.jsx),
+COMPARE-ONLY** (never to transform displayed text); raw equality inherits a ~4,250-row
+false-fire/false-miss class. Record: docs/tickets/accent_divergence.txt.
+
 ### Render modes (memory `project_reading_modes`)
 THREE ABP reading modes, `viewMode` = chip|prose|interlinear (2026-07-04; a 3-way
 Chip·Interlinear·Prose control, Interlinear ABP-only).

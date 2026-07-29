@@ -6,6 +6,47 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-28/29 — five lanes closed with receipts (bracket digits · FRAME-0 · Cushi · vocative-O · accent divergence)
+
+- **Bracket-digit sweep TRIAGE COMPLETE — all 47 ruled.** 13 applied live through the door
+  (8 DUPLICATE, pin 30→47, then 5 MIXED, pin 47→57) · 32 skipped with pinned reasons · 2
+  parked (still open in TODO). Full verdicts + witness evidence:
+  docs/tickets/bracket_digit_sweep.txt. The keepers:
+  - The OFFICIAL ABP APP is a plain website (apostolicbibleapp.com/Chapters/<Book> <ch>.html)
+    — CC reads it directly; it's a CORRECTED edition. Witness classes: APP-CORRECTED (exact
+    intended digits) / APP-SAME (typo upstream, Jer 9:23 class, inference) / APP-PARALLEL.
+  - MIXED headline: the BH digit-fill had already repaired 18/24 source-side door candidates
+    ON LIVE — the read-against-live discipline caught it before 18 dead-precondition rows
+    were drafted. Those 18 skips hold REAL digits (no tie-break reliance); only the
+    luck-correct skips lean on the stable-sort proof (re-prove if either sort is replaced).
+  - Sweep-tool caveat: the report's 'reads:' line lacks production's punctuation float
+    (cost one wrong bin, Ezr 10:3, caught pre-door).
+  - Two process notes logged in the ticket (apply-before-verdict, both harmless): the lane
+    order is dry-run paste → verdict → apply commands, and commands stay OUT OF REACH until
+    the verdict lands.
+- **FRAME-0 flash lane CLOSED — 8/8 fixed, deployed, live-verified** (AUDIT_frame0.md).
+  JP STANDING RULING (re-ruled site #2, overriding the old quiet-by-design call): nothing
+  paints before the final data — no interim content, no swaps; hold blank/"Loading…".
+  Receipts captured under artificially slowed fetches (hidden-tab rAF doesn't fire; timers
+  clamp — snapshots, not polling). #91 banked on this lane's own result (8 wide, not 3).
+- **Cushi supersede DONE.** 6 rows status='superseded' (changes()=6; proof run 51 active ·
+  0 loud-skips). Guard untouched (fired 6× same evening — proven detector); seeder dup-check
+  now matches ANY status so a ruled row can't resurrect.
+- **Vocative-O CLOSED (JP sighting Jer 15:5).** Class collapsed on the live read: stored
+  heads were CLEAN — original ticket wrong on count AND layer. Real defect: frontend name
+  picker ("O" missing from _PN_STOP; one word, ten call sites through one function). Bonus
+  heal: place/LSJ lookups had been silently querying the name "O". Record:
+  docs/tickets/vocative_head_words.txt (open residue = star-slot G-number question, in TODO).
+- **Accent-divergence CLOSED (JP sighting + JP two-source theory, Νῶε/Νώε 1Ch 1:4).**
+  greekFold COMPARE-ONLY helper (00-core.jsx); "IN THIS VERSE" fires on letters, not marks.
+  4,250 false fires killed (4,079 PN / 171 non-PN), 365,585 real inflections kept. Standing
+  data characteristic: abp_surface is systematically stripped-down Greek — ANY lemma-vs-
+  surface compare must fold (docs/tickets/accent_divergence.txt). Scan:
+  scripts/scan_accent_divergence.py (control-tested on the sighting).
+- Session-wide lesson (three catches in one night): a source-side scan or code-read is NOT
+  the live state — the load-path re-read killed two wrong root causes (vocative-O layer,
+  MIXED over-prediction) and re-binned Ezr 10:3.
+
 ## 2026-07-28 — Jer 9:23 fixed live + batch-one re-verify + tally correction — ALL CLOSED
 
 - **Jer 9:23 "Let not the boast wise man" — FIXED LIVE via the corrections door.** ABP's OWN
