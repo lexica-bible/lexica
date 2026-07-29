@@ -144,21 +144,30 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   errata list compiles from that ticket once these two are ruled or formally deferred.
   Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **PN-card verification census — QUEUED (reviewer-briefed 2026-07-29, read-only, runs
-  BEFORE the definitions spend).** Bracket read live 2026-07-29: 32,479 PN slots vs 14,898
-  verse-verified pn_binding pairs — the unverified ~half either shows "Matched by name —
-  not checked against this verse" (30-detail-panel.jsx, provenance contract §4 state 2) or
-  no person/place card. Census splits that half: (a) label-showing · (b) no card · (c)
-  per-name AMBIGUITY ranking (names mapping to multiple TIPNR people — the several-
-  Jeremiahs risk). CONDITIONS (carried from the 2026-07-28/29 session): known positive per
-  bin (a Jer-15:5-style label card + a known multi-person name like Jeremiah/Shimei must
-  appear in the ranking) · the 32,479/14,898 bracket RE-DERIVED by the script itself ·
-  the script's per-slot name extraction SPOT-CHECKED against live cards before bulk
-  numbers are trusted (it reimplements card logic — the risky part). DECISION it feeds:
-  mostly single-person names → label is honest under-information, lane stays parked cheap;
-  ambiguous names dominate → accuracy problem, real promotion case for the parked
-  Greek-name identity lane (which stays PARKED regardless; five rulings pending; census =
-  its step-zero evidence). NOTHING GETS BUILT in the census session.
+- **PN-card verification census — CLOSED 2026-07-29 (reviewer verdict: accepted, identity
+  lane stays parked, nothing promoted, nothing built).** All conditions met: bracket
+  re-derived, three controls PASS, 11-slot live spot-check clean (incl. the risky
+  fuzzy-match quality bar and ambiguity-decline paths). Result: 32,479 slots = 15,920
+  verified · 12,352 label-card (8,730 person / 3,622 place) · 4,207 no card (3,862
+  unknown names / 345 no usable name). Ambiguity SMALL: 624 unbound slots across 156
+  multi-referent names vs 15,590 single-owner (~25:1) — label is honest
+  under-information, and the 624 substantially overlap the Jacob-class ticket below.
+  **Bracket BANKED (corrected): 32,479 slots / 14,830 card-serving binds (render=1 —
+  the measure readers see; 14,898 = total pn_binding rows incl. 68 hot).** Bound slots
+  15,920 > 14,830 binds is expected: a bind is keyed verse+name, so every repeat of a
+  name in a verse rides the same bind row (~1,090 repeats). Tool:
+  scripts/audit_pn_card_census.py (read-only, controls built in). Follow-ups filed:
+  - **Label-confidence split ticket (JP handover 2026-07-29):**
+    docs/tickets/TICKET_pn_label_confidence.md — single-referent bin-(a) cards get a
+    confident label, wording = JP's call, app-side only.
+  - **Chip-vs-prose click inconsistency (small standalone ticket, reviewer thread 1):**
+    87 slots classify differently depending on click path — chip mode keys the card on
+    english_head-first, prose mode on english-first (pnClickPayload vs 59c chip
+    onClick). Same slot, different card. Fix = one shared raw-label order.
+  - **340 identity slots with no matching words row (reviewer thread 2, diagnostic
+    only):** pn_greek_identity rows whose (verse_id, position) has no words row. NOT
+    proven same population as the 345 no-name slots (340 ≠ 345). One read-only
+    diagnostic someday; no urgency.
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
