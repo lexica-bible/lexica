@@ -14,12 +14,20 @@
 > **⚠ TALLY CORRECTION — LIVE CARDS = 85, NOT 88.** The banner below ("CARDS 85 → 88") is the
 > slip itself: the None trio were REDRAWS numbered as additions. DB is the count
 > (ENGINE_LESSONS #90; #91 = third-instance-triggers-enumeration, banked same session).
-> **Also this session (corpus lane, full records TODO/TODO_ARCHIVE):** Jer 9:23 order-digit typo
-> fixed live through the corrections door (pin 28→30) · bracket-digit sweep built on the
-> production parser, double fire-proofed → **47-item triage OPEN** (docs/tickets/
-> bracket_digit_sweep.txt; discipline in TODO) · FRAME-0 audit ran → **8 flash sites, one root
-> cause** (AUDIT_frame0.md), fixes ready · Cushi supersede-marking queued · reader-display-layers
-> future lane banked (recovered 2026-07-12 design).
+> **SESSION 2026-07-28/29 (corpus + frontend lanes) — ALL FOUR LANES CLOSED WITH RECEIPTS:**
+> bracket-digit triage 47/47 ruled (13 fixed live via the door, pin 30→47→57; 32 skipped with
+> pinned proof; 2 parked: Act 10:28, Num 19:2) · FRAME-0 8/8 fixed + deployed + live-verified
+> (**JP standing ruling: nothing paints before the final data**) · Cushi 6 rows superseded
+> (guard intact, seeder can't resurrect) · vocative-O caught/re-scoped/fixed (one word in
+> _PN_STOP; live heads were CLEAN — display-layer defect; place/LSJ lookups healed as a bonus).
+> **Queued rulings:** the two sweep parks · Jer 15:5-class star-slot G-number question
+> (vocative_head_words.txt FINDING) · Van der Pool errata compilation (after parks resolve).
+> **Key tools banked:** official ABP app is a plain website (apostolicbibleapp.com/Chapters/
+> <Book> <ch>.html) — CC reads it directly, corrected edition, three witness classes. Two
+> apply-before-verdict process notes logged (bracket_digit_sweep.txt). **NEXT: batch one
+> (verse-short dip) as its own fresh session — terms in the banner above, stamp f8c77bf889f6.**
+> Earlier 2026-07-28 record: Jer 9:23 order-digit typo fixed live through the corrections door
+> (pin 28→30) · reader-display-layers future lane banked (recovered 2026-07-12 design).
 >
 > ---
 >
