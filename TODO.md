@@ -126,6 +126,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Greek text search over the ABP Greek line — FEATURE QUESTION (JP hit it 2026-07-29
+  searching κύριε in Library).** The Library in-text search is English-only by design
+  (views_search.py, verses.text); a Greek query can never hit — not a defect, a missing
+  door. If ever built: (a) it MUST compare accent-insensitively both sides (greekFold /
+  the abp_surface stripped-Greek characteristic, docs/tickets/accent_divergence.txt) or
+  it inherits the 4,250-row false-miss class; (b) related but separate: Word-study search
+  doesn't resolve INFLECTED forms to their headword (κύριε -> κύριος needs morphology
+  lookup — big). Neither is queued; JP raises.
 - **Bracket-digit sweep TRIAGE COMPLETE 2026-07-28 — all 47 ruled, lane CLOSED.**
   13 applied live through the door (8 DUPLICATE pin 30->47 + 5 MIXED pin 47->57) · 32
   skipped with pinned reasons · 2 PARKED still open: Act 10:28 (app splits the clause in

@@ -27,8 +27,10 @@ lowercase, final/medial sigma as one letter (positional variants of the same let
 correct for MATCHING only, which is the only use). One changed line at the
 30-detail-panel.jsx heroForm gate; the translit sub-line lives inside that gate.
 
-RECEIPTS OWED POST-DEPLOY (4, reviewer-ruled):
-  1. Νῶε 1Ch 1:4 — section gone (accent shape)
-  2. Ἄγαβος or Χριστιανός — section gone (breathing/case shapes witnessed live)
-  3. ἄκρον (non-PN sample) — section gone
-  4. One REAL inflection still fires (e.g. κύριος/κύριε) — the feature survives
+RECEIPTS — ALL FOUR IN (2026-07-29): #1-#3 confirmed by JP's OWN EYES post-deploy
+(Νῶε · Ἄγαβος · ἄκρον — all clean); #4 CC live: κύριος card at an "O LORD" verse still
+shows "in this verse κύριε" — real inflection survives the fold. Built-bundle functional
+test 6/6 rode the commit. STATUS: CLOSED.
+ADJACENT (scoped same session, NOT this class): Library text-search misses Greek queries
+because it is English-only BY DESIGN — a missing feature, not an accent defect; banked in
+TODO with the fold requirement attached should it ever be built.
