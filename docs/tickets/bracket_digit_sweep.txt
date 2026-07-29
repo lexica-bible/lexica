@@ -454,6 +454,12 @@ STANDING NOTES (JP-ruled 2026-07-28):
     VERDICT -> apply commands. Handing apply commands in the same breath as the dry-run
     reading is the erosion path even when the dry-run is clean. MIXED pass onward: STOP at
     the dry-run paste, wait for the verdict.
+  - PROCESS #2 (Cushi close, same class, reviewer-logged): the mark command was RUN before
+    the verdict — the gate was posted correctly ("awaiting the verdict before you run
+    either") and walked through anyway. Second apply-before-verdict of the session. No harm
+    (write matched its own prediction), but the gate exists precisely for changes that look
+    trivial. Standing: commands stay out of reach until the verdict lands — post the
+    EXPECTED picture, not the paste-ready command, when a verdict is still owed.
   - The 6 skips' protection = spec-guaranteed stable sort + ORDER BY position feed + the
     committed-baseline port test. If EITHER sort implementation is ever replaced, this
     protection must be RE-PROVEN before the skips stay skips.
