@@ -90,7 +90,8 @@ for r in conn.execute("SELECT book, chapter, verse, name FROM pn_binding WHERE r
 
 # ── metaV name-path lookups, computed once per distinct name ────────────────
 def person_row_exists(name):
-    """metav_person: exact name/alias match, then the fuzzy prefix fallback."""
+    """metav_person: exact name/alias match, then the fuzzy prefix fallback.
+    (Superseded by best_person_card below — kept for the control path.)"""
     r = conn.execute("""
         SELECT 1 FROM (
             SELECT p.person_id, p.birth_year, p.death_year FROM metav_people p
@@ -118,18 +119,36 @@ def person_row_exists(name):
     return False, False
 
 def best_person_card(name):
-    """The row metav_person would serve (exact then fuzzy, bio-first ordering),
-    for the personOk gate: birth/death year or >=2 relationships."""
+    """The row metav_person would serve (exact, then hyphen-blind compact, then
+    fuzzy — 2026-07-29 lane-1/3 fix mirrored), for the personOk gate. Returns
+    (row, guard_name): the multi-referent guard runs on the MATCHED canonical
+    spelling for a compact hit, on the requested name otherwise."""
+    guard_name = name
     row = conn.execute("""
         SELECT * FROM (
-            SELECT p.person_id, p.birth_year, p.death_year FROM metav_people p
+            SELECT p.person_id, p.name, p.birth_year, p.death_year FROM metav_people p
             WHERE p.name = ? COLLATE NOCASE
             UNION
-            SELECT p.person_id, p.birth_year, p.death_year FROM metav_people p
+            SELECT p.person_id, p.name, p.birth_year, p.death_year FROM metav_people p
             JOIN metav_people_aliases a ON a.person_id = p.person_id
             WHERE a.alias = ? COLLATE NOCASE)
         ORDER BY (birth_year IS NOT NULL) DESC, (death_year IS NOT NULL) DESC
         LIMIT 1""", (name, name)).fetchone()
+    if not row:
+        cn = compact(name)
+        if cn:
+            row = conn.execute("""
+                SELECT * FROM (
+                    SELECT p.person_id, p.name, p.birth_year, p.death_year FROM metav_people p
+                    WHERE REPLACE(REPLACE(p.name,'-',''),' ','') = ? COLLATE NOCASE
+                    UNION
+                    SELECT p.person_id, p.name, p.birth_year, p.death_year FROM metav_people p
+                    JOIN metav_people_aliases a ON a.person_id = p.person_id
+                    WHERE REPLACE(REPLACE(a.alias,'-',''),' ','') = ? COLLATE NOCASE)
+                ORDER BY (birth_year IS NOT NULL) DESC, (death_year IS NOT NULL) DESC
+                LIMIT 1""", (cn, cn)).fetchone()
+            if row:
+                guard_name = row["name"]
     if not row and len(name) >= 5:
         prefix = name[:max(5, len(name) - 2)]
         row = conn.execute("""
@@ -143,7 +162,7 @@ def best_person_card(name):
             ORDER BY (birth_year IS NOT NULL) DESC, (death_year IS NOT NULL) DESC
             LIMIT 1""", (f"{prefix}%", len(name)-2, len(name)+2,
                          f"{prefix}%", len(name)-2, len(name)+2)).fetchone()
-    return row
+    return row, guard_name
 
 _multi_cache = {}
 def name_is_multi_referent(name):
@@ -169,12 +188,25 @@ def _multi_referent_raw(name):
     return n > 1
 
 def place_card_exists(name):
-    return conn.execute("""
+    hit = conn.execute("""
         SELECT 1 FROM metav_places p WHERE p.name = ? COLLATE NOCASE
         UNION
         SELECT 1 FROM metav_places p
         JOIN metav_place_aliases a ON a.place_id = p.place_id
         WHERE a.alias = ? COLLATE NOCASE LIMIT 1""", (name, name)).fetchone() is not None
+    if hit:
+        return True
+    cn = compact(name)  # hyphen-blind fallback, mirrored from the place endpoint
+    if not cn:
+        return False
+    return conn.execute("""
+        SELECT 1 FROM metav_places p
+        WHERE REPLACE(REPLACE(p.name,'-',''),' ','') = ? COLLATE NOCASE
+        UNION
+        SELECT 1 FROM metav_places p
+        JOIN metav_place_aliases a ON a.place_id = p.place_id
+        WHERE REPLACE(REPLACE(a.alias,'-',''),' ','') = ? COLLATE NOCASE
+        LIMIT 1""", (cn, cn)).fetchone() is not None
 
 def rel_count(pid):
     return conn.execute(
@@ -190,9 +222,9 @@ def name_card(name):
         return _card_cache[name]
     out = ""
     if name and len(name) >= 2 and name not in _DIVINE_SKIP:
-        prow = best_person_card(name)
+        prow, guard_name = best_person_card(name)
         person_ok = False
-        if prow is not None and not name_is_multi_referent(name):
+        if prow is not None and not name_is_multi_referent(guard_name):
             person_ok = bool(prow["birth_year"] or prow["death_year"]
                              or rel_count(prow["person_id"]) >= 2)
         if person_ok:
@@ -227,7 +259,9 @@ jer36 = er.book_num("Jer")
 for r in rows:
     bk = er.book_num(r["book"])
     raw_chip = r["english_head"] or r["english"] or ""
-    raw_prose = r["english"] or r["english_head"] or ""
+    # lane-1 fix 2026-07-29: pnClickPayload now uses english_head-first too, so the
+    # prose mirror matches production and the sensitivity count certifies 0.
+    raw_prose = r["english_head"] or r["english"] or ""
     name = extract_proper_name(pn_click_name(raw_chip))
 
     def classify(nm, bkey):

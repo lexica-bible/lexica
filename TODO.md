@@ -159,14 +159,31 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   scripts/audit_pn_card_census.py (read-only, controls built in). Follow-ups filed:
   - **Label-confidence split — SHIPPED + CLOSED same night (074339cf, JP copy option 1,
     five live acceptance receipts):** docs/tickets/TICKET_pn_label_confidence.md.
-  - **Chip-vs-prose click inconsistency (small standalone ticket, reviewer thread 1):**
-    87 slots classify differently depending on click path — chip mode keys the card on
-    english_head-first, prose mode on english-first (pnClickPayload vs 59c chip
-    onClick). Same slot, different card. Fix = one shared raw-label order.
-  - **340 identity slots with no matching words row (reviewer thread 2, diagnostic
-    only):** pn_greek_identity rows whose (verse_id, position) has no words row. NOT
-    proven same population as the 345 no-name slots (340 ≠ 345). One read-only
-    diagnostic someday; no urgency.
+  - **Chip-vs-prose click inconsistency — FIXED 2026-07-29 (lane 1), receipts pending
+    deploy.** Dump proved 3 patterns: prose passed the whole English phrase (name pick
+    hijacked by "I"/"Then"/"Blind"; chip agreed with verified binds 14–0), plus
+    hyphen-spelling splits both directions (bethhoron vs Beth-horon; Bath-sheba vs
+    Bathsheba). Fix = pnClickPayload english_head-first (one shared order) + hyphen-
+    blind fallback on /api/metav/person + /place (same retry /entity has had since the
+    Beth-el fix; without it the unification would have LOST ~60 working place cards).
+    Census script mirrors both. NOTE: fallback = new lookup step, flagged to reviewer
+    (JP-authorized "do it all" 2026-07-29).
+  - **340 identity slots with no words row — DIAGNOSED 2026-07-29 (lane 2), fix
+    verdict OWED.** All 340: source class 'none', position-hole INSIDE an otherwise
+    normal verse (words rows exist, that position missing) — NOT the same population
+    as the 345 no-name slots. Reads as the none-class rows stamped from a stale
+    position map; cert-adjacent, no fix without reviewer verdict. Heavy books: Joh 73,
+    Act 33, Mat 30. Dump tool: scripts/audit_pn_lanes.py lane 2.
+  - **Unknown-name class census — DONE 2026-07-29 (lane 3):** 3,862 no-card slots =
+    1,232 names → compact-match 2,770 / gentilic 565 / absent 527. BUT the compact
+    class is mostly NOT alias gaps: Paul 147, Elisha 83, Pilate 45, Esther 44 match
+    metaV EXACTLY and are rejected by the bio quality bar (no dates, <2 kin → no
+    skeleton card, AI note serves instead — deliberate gate). Loosening that bar =
+    design decision, PARKED unraised. The hyphen slice shipped with lane 1. Multi-
+    referent names in the list (jesus/mary/jacob) = Jacob-class, untouched.
+  - **"Field" oddity (flag only, out of scope):** capitalized common word 'field'
+    (Isa 29:17 al.) serves a metaV PLACE card via name match — pre-existing quirk
+    surfaced by the lane-1 dump; not touched.
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
@@ -193,6 +210,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   a hand-ruled disambiguation list for the famous few. Sizing tool (read-only, control-tested):
   `scripts/audit_pn_fallback_size.py`. code: build_entity_binding.py tiers; 30-detail-panel.jsx
   metav effect (the ambiguous-name decline is CORRECT — don't "fix" it by guessing).
+  **SCOPE REFRESH 2026-07-29 (lane 4, read-only):** census definition (identity slots,
+  metaV+TIPNR multi test) = 624 slots / 156 names; the 2026-07-11 definition re-run tonight
+  = 591 (694→591 = the data moved since July; 591 vs 624 = definitional). Ease scoring
+  (audit_pn_lanes.py lane 4, books-spanned + candidate counts): ONE-BOOK flags on
+  artaxerxes (19 slots, all Est, 2 candidates), joseph (11 slots, 1 book, 11 candidates),
+  saul (8, 1 book, 3) — zero-research-resolvable HINTS only, reviewer-gated, never bind on
+  the flag alone. Widest spread: gilead 38 slots/10 books, jesus 38/11. Worst ambiguity:
+  azariah (24 metaV candidates over 9 slots).
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked

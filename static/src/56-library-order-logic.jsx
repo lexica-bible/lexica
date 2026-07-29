@@ -149,7 +149,11 @@ function greekLineForWord(w) {
 function pnClickPayload(w, greekText) {
   const isPN = !!(w.is_pn || w.strongs_base === "*");
   if (!isPN) return null;
-  const raw = w.english || w.english_head || greekText || "";
+  // english_head FIRST (2026-07-29 lane-1 fix): the chip path already keys on it and
+  // agreed with the verified binds 14-0 in the divergence dump; `english` here can be
+  // a whole rendered phrase ("I should gain the Jews;") whose first capital hijacks
+  // the name pick. Head-first makes chip and prose clicks hand the panel ONE name.
+  const raw = w.english_head || w.english || greekText || "";
   const pnName = (raw && !raw.includes(" ")) ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
   return { isPN: true, pnName, gloss: pnName };
 }

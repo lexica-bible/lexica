@@ -240,6 +240,36 @@ def metav_person(name):
         # A FUZZY hit never earns it: the served person's own name isn't the clicked
         # name (Archite -> Archippus), so "only person of this name" would be false.
         exact_hit = row is not None
+        guard_name = name
+        # Hyphen-blind fallback (lane-1/3 fix 2026-07-29): ABP word cells store names
+        # unhyphenated ("bethhoron") while metaV spells them "Beth-horon" (and the
+        # reverse: clicked "Bath-sheba" vs metaV "Bathsheba"). Same-name-different-
+        # spelling, so it ranks WITH the exact tier — the multi-referent guard and the
+        # sole-referent label then run on the MATCHED canonical spelling. Mirrors the
+        # hyphen-blind retry /api/metav/entity has done since the Beth-el fix.
+        if not row:
+            cn = name.replace("-", "").replace(" ", "")
+            if cn:
+                row = conn.execute("""
+                    SELECT * FROM (
+                        SELECT p.person_id, p.name, p.surname, p.gender,
+                               p.birth_year, p.death_year, p.birth_place, p.death_place
+                        FROM metav_people p
+                        WHERE REPLACE(REPLACE(p.name,'-',''),' ','') = ? COLLATE NOCASE
+                        UNION
+                        SELECT p.person_id, p.name, p.surname, p.gender,
+                               p.birth_year, p.death_year, p.birth_place, p.death_place
+                        FROM metav_people p
+                        JOIN metav_people_aliases a ON a.person_id = p.person_id
+                        WHERE REPLACE(REPLACE(a.alias,'-',''),' ','') = ? COLLATE NOCASE
+                    )
+                    ORDER BY (birth_year IS NOT NULL) DESC,
+                             (death_year IS NOT NULL) DESC
+                    LIMIT 1
+                """, (cn, cn)).fetchone()
+                if row:
+                    exact_hit = True
+                    guard_name = row["name"]
         # Fallback: fuzzy prefix match for Greek vowel suffixes on Hebrew names
         # e.g. "Methusaela" → matches "Methusael" (length ±2, first 5+ chars match)
         if not row and len(name) >= 5:
@@ -272,7 +302,7 @@ def metav_person(name):
         # name, decline to serve any single bio — the frontend then shows Strong's +
         # occurrences (+ its verse-scoped AI note), the honest card. A single-referent
         # name (David) is unaffected and still serves its rich card here.
-        if _name_is_multi_referent(conn, name):
+        if _name_is_multi_referent(conn, guard_name):
             return jsonify({"ambiguous": True}), 200
 
         card = _person_card(conn, row["person_id"])
@@ -399,6 +429,26 @@ def metav_place(name):
             JOIN metav_place_aliases a ON a.place_id = p.place_id
             WHERE a.alias = ? COLLATE NOCASE
         """, (name, name)).fetchall()
+        # Hyphen-blind fallback (lane-1/3 fix 2026-07-29, same shape as the person
+        # endpoint): "Bethhoron" click finds the "Beth-horon" place row. Exact tier
+        # missed entirely, so the compact match IS the match; the sole/TIPNR checks
+        # below then run on the matched canonical spelling.
+        tipnr_name = name
+        if not rows:
+            cn = name.replace("-", "").replace(" ", "")
+            if cn:
+                rows = conn.execute("""
+                    SELECT p.place_id, p.name, p.comment, p.lat, p.lon, p.strongs_g
+                    FROM metav_places p
+                    WHERE REPLACE(REPLACE(p.name,'-',''),' ','') = ? COLLATE NOCASE
+                    UNION
+                    SELECT p.place_id, p.name, p.comment, p.lat, p.lon, p.strongs_g
+                    FROM metav_places p
+                    JOIN metav_place_aliases a ON a.place_id = p.place_id
+                    WHERE REPLACE(REPLACE(a.alias,'-',''),' ','') = ? COLLATE NOCASE
+                """, (cn, cn)).fetchall()
+                if rows:
+                    tipnr_name = rows[0]["name"]
         # Sole-referent label (TICKET_pn_label_confidence): confident only when exactly
         # one place carries this name in BOTH sources we hold — one metav_places
         # referent, and no second TIPNR place entity under the surface name (mirrors the
@@ -409,7 +459,7 @@ def metav_place(name):
             n_tipnr = conn.execute(
                 "SELECT COUNT(*) FROM tipnr_entities WHERE section='place' "
                 "AND (head = ? COLLATE NOCASE OR uniq LIKE ?)",
-                (name, name + "@%")).fetchone()[0]
+                (tipnr_name, tipnr_name + "@%")).fetchone()[0]
             if n_tipnr > 1:
                 sole = False
     finally:

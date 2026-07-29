@@ -1526,7 +1526,11 @@ function greekLineForWord(w){const inf=(w.inflected||"").trim();if(inf)return{te
 // null for a non-PN. The name is CAPITALIZED (a single word) — english_head is
 // stored lowercased, and a lowercase name misses the entity bind and drops the
 // click to the lexeme card. Shared so chip mode + mode three route identically.
-function pnClickPayload(w,greekText){const isPN=!!(w.is_pn||w.strongs_base==="*");if(!isPN)return null;const raw=w.english||w.english_head||greekText||"";const pnName=raw&&!raw.includes(" ")?raw.charAt(0).toUpperCase()+raw.slice(1):raw;return{isPN:true,pnName,gloss:pnName};}// PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
+function pnClickPayload(w,greekText){const isPN=!!(w.is_pn||w.strongs_base==="*");if(!isPN)return null;// english_head FIRST (2026-07-29 lane-1 fix): the chip path already keys on it and
+// agreed with the verified binds 14-0 in the divergence dump; `english` here can be
+// a whole rendered phrase ("I should gain the Jews;") whose first capital hijacks
+// the name pick. Head-first makes chip and prose clicks hand the panel ONE name.
+const raw=w.english_head||w.english||greekText||"";const pnName=raw&&!raw.includes(" ")?raw.charAt(0).toUpperCase()+raw.slice(1):raw;return{isPN:true,pnName,gloss:pnName};}// PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
 // Interlinear toggles (either one forces chip). So clicking Prose always works: it
 // SNAPSHOTS whatever toggles are on, unticks both, and switches to prose; the next
 // switch AWAY from prose restores the snapshot. A MANUAL toggle touch discards the
