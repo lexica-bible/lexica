@@ -330,6 +330,45 @@ def main():
               + (f" {lc_replaced}" if lc_replaced else ""))
         print()
 
+    # ── witness binds, verse-offset (scripts/verse_offset_witness.tsv,
+    # reviewer-ruled 2026-07-30, pile-3 closure) ────────────────────────────────
+    # Same TIPNR entity displaced by exactly ONE verse seam (Greek/Hebrew list
+    # versification split), no competing candidate on either side. Narrow by
+    # ruling; same loud-failure contract as the other witness lanes.
+    voff_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "verse_offset_witness.tsv")
+    vo_new = vo_same = 0
+    vo_replaced = []
+    if os.path.isfile(voff_path):
+        known_uniq = {e["uniq"] for e in ents}
+        with open(voff_path, encoding="utf-8") as fh:
+            for ln in fh:
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
+                if uniq not in known_uniq:
+                    raise ValueError(f"verse-offset witness: unknown entity {uniq!r}")
+                bk = er.book_num(bk_s)
+                if bk is None:
+                    raise ValueError(f"verse-offset witness: unknown book {bk_s!r}")
+                key = (bk, int(ch), int(vs), er.norm_name(nm))
+                prev = group.get(key)
+                if prev and prev[0] == "render":
+                    if prev[1] == uniq:
+                        vo_same += 1
+                        continue
+                    raise ValueError(f"verse-offset witness: {key} already renders {prev[1]}, "
+                                     f"TSV says {uniq} -- resolve before building")
+                if prev:
+                    vo_replaced.append((key, prev[0]))
+                tier = scope_tier(er.norm_name(nm), ambiguous, person_ids, place_ids)
+                group[key] = ("render", uniq, "witness", "verse-offset", tier)
+                vo_new += 1
+        print(f"Witness verse-offset: {vo_new} new render binds, {vo_same} already-agreeing, "
+              f"{len(vo_replaced)} replaced floor/HOT rows"
+              + (f" {vo_replaced}" if vo_replaced else ""))
+        print()
+
     # ── report ──────────────────────────────────────────────────────────────
     def report_tier(t, title):
         s = stat[t]

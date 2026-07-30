@@ -1,0 +1,8 @@
+# verse-offset witness rows (kind='witness', rule='verse-offset').
+# Class ruled 2026-07-30 (LANE_C_pile3_brief.md verdict): bind permitted ONLY where
+# the ABP token and the Hebrew record are the same TIPNR entity displaced by exactly
+# one verse seam, with no competing candidate on either side of the seam.
+# Does NOT generalize: multi-verse offsets and two-candidate seams (bunni Neh 10:14
+# = Bani-v14/Bunni-v15, ruled unbound) come back individually.
+# Columns: name<TAB>book<TAB>chapter<TAB>verse<TAB>entity_uniq<TAB>class<TAB>note
+hodijah	Neh	10	12	Hodiah@Neh.10.13	verse-offset	one-verse offset: Hebrew v13 name folded into ABP v12; spelling matches TIPNR named form (Hodijah=KJV); no competing candidate at the seam

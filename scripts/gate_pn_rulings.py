@@ -68,6 +68,18 @@ if os.path.isfile(lanec):
             continue
         nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
         expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "witness", "context-run")
+n_laneC = len(expected) - n_ruled - n_laneA
+# verse-offset witness (scripts/verse_offset_witness.tsv, reviewer-ruled
+# 2026-07-30, pile-3 closure): same TIPNR entity displaced by exactly ONE verse
+# seam, no competing candidate on either side. Narrow by ruling — multi-verse
+# offsets and two-candidate seams come back individually, never through this file.
+voff = os.path.join(os.path.dirname(os.path.abspath(__file__)), "verse_offset_witness.tsv")
+if os.path.isfile(voff):
+    for ln in open(voff, encoding="utf-8"):
+        if ln.startswith("#") or not ln.strip():
+            continue
+        nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
+        expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "witness", "verse-offset")
 # Lane C demoted keys (LANE_C_adjudication.md): a witness bind at any of these,
 # in either file, is a regression — they may only ever land via the Lane B
 # spelling flow (kind='ruled') or the compound lane, never as Lane C witness.
@@ -75,8 +87,8 @@ for nm, bk_s, ch, vs in (("joshua","Neh",8,7), ("heber","1Ch",8,22),
                          ("jehiel","2Ch",35,9), ("jeiel","2Ch",35,8),
                          ("rapha","1Ch",8,37), ("jair","1Ch",2,53)):
     forbidden.add((er.book_num(bk_s), ch, vs, er.norm_name(nm)))
-print(f"expected: {n_ruled} ruled + {n_laneA} lane-A + "
-      f"{len(expected) - n_ruled - n_laneA} lane-C = {len(expected)} "
+print(f"expected: {n_ruled} ruled + {n_laneA} lane-A + {n_laneC} lane-C + "
+      f"{len(expected) - n_ruled - n_laneA - n_laneC} verse-offset = {len(expected)} "
       f"(+{len(forbidden)} demoted keys forbidden as witness)")
 
 q = "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding"

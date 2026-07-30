@@ -1,5 +1,34 @@
 # Lane C pile-3 closure brief (for reviewer verdict, 2026-07-30)
 
+**VERDICT LANDED 2026-07-30 (pasted reviewer text, verbatim):**
+> **jair 1Ch 2:53 — demotion stands, final.** Compound place-name fragment; TIPNR
+> covers the verse under Kiriath-jearim. Person bind was never live.
+> **gilead Jos 22:11 — unbound, approved.** Contested reading; no evidence forces
+> one referent. Unbound is the honest state.
+> **eleazar Ezr 8:16 — unbound, approved.** TIPNR declines the bind itself ("only
+> mentioned at 8:33"). Binding would import a claim the source doesn't make —
+> exactly what the standing rulings forbid.
+> **bunni Neh 10:14 — unbound, approved.** Verse-seam sits between two distinct
+> TIPNR men and the page can't discriminate. Sole-spelling is candidacy, not
+> identity — CC applied the rule correctly.
+> **hodijah Neh 10:12 — bind approved, with the new class ruled narrowly.** The
+> evidence chain is complete: same name, TIPNR coverage, KJV spelling match, and a
+> mechanical one-verse offset rather than an identity judgment. Class definition
+> I'm ruling in: *one-verse-offset witness — bind permitted only where the ABP
+> token and the Hebrew record are the same TIPNR entity displaced by exactly one
+> verse seam, with no competing candidate on either side of the seam.* Bunni fails
+> that last clause; hodijah passes it. The class does not generalize to multi-verse
+> offsets or to seams with two candidates — those come back individually.
+> Condition: since this adds a pinned evidence class, the gate's class list gets
+> the new row before the build, and the gate's control re-runs before its PASS
+> counts (checker-edited-mid-arc rule applies).
+> Then the standing chain: JP checkpoint, scratch build, control-first gates,
+> swap, reload, served-layer capture on hodijah's card.
+
+Implementation (same day): gate class row + scripts/verse_offset_witness.tsv +
+build block + card sentence all landed in git; ship gated on JP checkpoint and
+the control-first chain below.
+
 Context: Lane C shipped 2026-07-30 (201 context-run witness rows live, gates A/B/C
 passed, served checks 6/6). Four held slots remain, each pre-routed in
 LANE_C_adjudication.md pile 3. This brief asks for a final ruling on each so the

@@ -959,6 +959,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               identification follows the surrounding passage, where only this{" "}
               {be.section === "place" ? "place" : "person"} appears.
             </p>
+          : be.rule === "verse-offset"
+          // rule='verse-offset' (pile-3 closure, 2026-07-30): same entity one verse
+          // seam over — the Greek and Hebrew split the list differently. Sentence
+          // pending JP verbatim approval before deploy.
+          ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
+              ABP's Greek text reads {witnessName} here. The Greek and Hebrew texts divide this
+              list at different verse breaks; the reference index lists this name at the
+              neighboring verse.
+            </p>
           : <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
               ABP's Greek text reads {witnessName} here. The reference index does not list this
               name at this verse; the identification follows ABP's reading.

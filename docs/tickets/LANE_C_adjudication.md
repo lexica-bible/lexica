@@ -76,7 +76,16 @@ Propose: land as spelling-equiv rows (Lane B doctrine), NOT context-run.
   the verse). The screen proposed Rosh@Gen.46.21-1Ch, Benjamin's son — wrong
   man by nine generations.
 
-## Pile 3 — HELD residue (4 slots), each routed
+## Pile 3 — CLOSED 2026-07-30 (reviewer verdict in LANE_C_pile3_brief.md)
+jair = demotion final (compound lane) · gilead Jos 22:11 = unbound permanent
+(contested reading) · eleazar Ezr 8:16 = unbound permanent (unresolved
+identification) · bunni Neh 10:14 = unbound permanent (AMBIGUOUS — Bani-v14/
+Bunni-v15 seam, fails the one-candidate clause) · hodijah Neh 10:12 (Lane B
+leftover, ruled with the set) = BIND APPROVED under the new narrowly-ruled
+verse-offset class (scripts/verse_offset_witness.tsv; ship gated on JP
+checkpoint + control-first chain). Original routes kept below for the record.
+
+## Pile 3 — HELD residue (4 slots), each routed (historical)
 - **jair 1Ch 2:53** — compound fragment, the Gilboa shape: ABP renders
   Kiriath-jearim as "the city of Jair"; the token is a piece of the place name,
   not Jair the Manassite (the screen's candidate). Route: compound lane
