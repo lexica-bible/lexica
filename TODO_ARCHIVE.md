@@ -39,6 +39,13 @@ few "leave it alone" verdicts worth keeping.
   benjamin, manasseh) land CORRECTLY on TIPNR's merged patriarch records — TIPNR files
   tribe under founder, so the metonymy worry dissolves by data-model fact, not context
   judgment.
+- **Post-ship catch (JP eyeball, fixed same day):** the witness card sentence filled in
+  the BOUND ENTITY's name where it must show the CLICKED word — jacob Isa 42:1 read
+  "ABP's Greek text reads Israel here" (false; ABP prints Ἰακώβ there). Invisible in
+  Lane A because there the two names always coincided; Lane C's merged-record binds
+  (jacob→Israel) exposed it. Fix: both witness templates use clickName. Lesson: a
+  sentence template proven on one lane isn't proven on the next — re-eyeball every
+  claim-bearing string on the class that can first make it false.
 - **Rollback:** bible.db.pre_laneC (pre_laneB deletable after soak).
 
 ## 2026-07-30 — Lane B SHIPPED: 39 spelling rulings (28 spelling-equiv + 11 tipnr-merged-form)
