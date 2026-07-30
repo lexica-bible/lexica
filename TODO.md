@@ -221,11 +221,22 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   via `scripts/pn_hand_rulings.tsv` + loader + gate_pn_rulings.py — full record in
   TODO_ARCHIVE.md (incl. the 28-row "binder floored, human ruled" census and the
   HOT-replacement stop-and-look rule). Denominator COMMITTED: the 591 word-slot
-  definition; 81 keys resolved, remaining work = the middle pile (joseph 11, mary 16,
-  elijah 15, pharaoh 9), the hard pile (gilead, judah, hadad, joash, azariah), and
-  class 3 (supplied-subject, 58 slots: docs/tickets/TICKET_supplied_subject_binds.md,
-  scoping only). Rollback: bible.db.pre_rulings (soak, JP's call). A words rebuild
-  re-lands the rulings automatically (TSV is read by every build run).**
+  definition; 81 keys resolved. Rollback: bible.db.pre_rulings (soak, JP's call;
+  pre_tipnr_widen only useful in combination — pre_rulings is the live rollback).
+  A words rebuild re-lands the rulings automatically (TSV is read by every build run).**
+  **MIDDLE PILE CLOSED 2026-07-30 (null result, reviewer-accepted): ZERO rulable slots.**
+  joseph 11 / elijah 15 / pharaoh 9 = supplied-subject (covered by NO candidate — class-3
+  census now 93, ticket updated). mary = NEW CLASS "same-verse same-name multi" (8 verses /
+  16 slots, two Marys standing in one verse): un-partitionable at the verse+name key BY
+  CONSTRUCTION — current decline correct, fix needs word-position-level binding, PARKED
+  with the multi-entity card lane (25-name flip list). **DRILL PROCEDURE (standing):
+  candidate count is a property of the NAME; slot class is a property of the VERSES —
+  dump the verses before assuming the failure mode. Mutual-exclusivity pre-flight
+  (any verse claimed by 2+ candidates → un-partitionable, pre-flag) is PERMANENT —
+  fired on first contact (mary).** Remaining: the hard-pile drill (gilead, judah, hadad,
+  joash, azariah + the census tail) — prediction ON RECORD (falsifiable): mostly
+  supplied-subject with maybe partial partitions; if it lands, the full 591 is classified
+  and the board flips from rulings to MECHANISMS (class-3 design pass + same-verse multi).
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked

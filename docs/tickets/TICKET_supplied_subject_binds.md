@@ -11,8 +11,22 @@ source text, and here it doesn't. The verse-bound render rule (corroboration) is
 therefore structurally unreachable; these slots floor forever under the current
 mechanism.
 
-## Census (easy pile only — WILL GROW when the middle/hard piles are drilled)
-58 slots:
+## Census — 93 slots (updated 2026-07-30 after the middle-pile drill; hard pile pending)
+**This class is now the DOMINANT unresolved population and grows with each drill —
+strengthens the case for this design pass being the next mechanism work once the
+hard pile closes the census (reviewer note 2026-07-30).**
+
+Middle-pile additions (each verse verified covered-by-NO-candidate against the
+pinned TIPNR file — the same checks that landed 81 verified binds return zero here):
+- **joseph (11):** Gen 37:36, Gen 39:11, Gen 39:23, Gen 42:24, Gen 44:1, Gen 44:17,
+  Gen 45:24, Gen 46:5, Gen 47:22, Gen 47:3, Gen 50:6 — patriarch narrative, ABP
+  supplies the name where the Hebrew has a pronoun (jacob's exact pattern; the 11
+  metaV candidates were never the issue)
+- **elijah (15):** 1Ki 17:2, 17:5, 17:8, 17:10, 17:11, 17:19, 17:20, 18:18, 18:33,
+  18:43, 19:3, 19:6, 19:10, 19:14, 2Ki 2:10
+- **pharaoh (9):** 1Sa 10:18, Exo 2:6, 2:22, 3:18, 3:19, 12:31, 14:6, 18:9, Gen 41:26
+
+Easy-pile originals, 58 slots:
 - **jesus (38):** 1Co 16:22, 1Co 5:5, 2Ti 4:22, Act 19:10, Act 3:26, Act 5:41,
   Act 8:37, Act 9:29, Eph 3:14, Eph 3:9, Gal 6:15, Joh 4:46, Joh 6:14, Joh 8:21,
   Luk 10:41, Luk 13:2, Luk 22:63, Luk 23:43, Mar 11:11, Mar 11:14, Mar 1:41,
