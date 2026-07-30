@@ -525,7 +525,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     ]).then(([pd, ld]) => {
       if (cancelled) return;
       const personOk = !pd.error && (pd.birth_year || pd.death_year || pd.relationships?.length >= 2);
+      // SLIM person card (Paul-class, JP option A 2026-07-29): an exact single-owner
+      // match that fails the bio bar used to serve NOTHING (Paul, Pilate, Esther —
+      // 2,218 slots). Serve a reduced card instead. Guards: sole_referent (exact-tier
+      // only — the Archite fuzzy rejection is certified and must survive), and NO
+      // place row (so every slot that shows a place card today keeps it — the slim
+      // card fills true no-card slots only).
+      const slimOk = !personOk && !pd.error && !pd.ambiguous && pd.sole_referent === true && ld.error;
       if (personOk) setMetavPersonData(pd);
+      else if (slimOk) setMetavPersonData({ ...pd, _slim: true });
       if (!ld.error) setMetavPlaceData(ld);
       // Default tab (only matters when BOTH person+place exist). Prefer the
       // word's OWN proper-noun type from tipnr — pn_types is a SET ('person',
@@ -559,7 +567,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     setAiDescLoading(false);
     if (boundLoading || boundEntity) return;   // a verified bind replaces the AI blurb
     if (metavLoading) return;
-    if (metavData && metavType === "person" && !isGentilic) return; // rich person bio replaces AI; groups still get the summary
+    if (metavData && metavType === "person" && !isGentilic && !metavData._slim) return; // rich person bio replaces AI; groups + SLIM cards still get the summary
     if (metavData && metavType === "place" && metavData.strongs_g?.length > 0) return; // place has LSJ via strongs_g
     if (isHebrew) return; // BDB covers Hebrew words
     if (!isPN) return; // only for proper nouns
@@ -866,8 +874,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                        : /group/i.test(be.desc || "") ? "Group"
                        : /\b(angel|monster)\b/i.test(be.desc || "") ? "Being"
                        : "Reference";
+      // Header unification (JP ruling 2026-07-29): ONE card family, so the bound card
+      // titles match the name-path card ("Biblical Person"/"Biblical Place", not the
+      // bare "Person"/"Place" this path grew on its own). Densities and badges differ;
+      // the family name doesn't.
       const label = peopleClan ? "People / Clan"
-                  : be.section === "place" ? "Place" : be.section === "person" ? "Person" : otherLabel;
+                  : be.section === "place" ? "Biblical Place" : be.section === "person" ? "Biblical Person" : otherLabel;
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
       // but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
@@ -995,7 +1007,31 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
-            <MetavPersonBody data={metavData} withEponym={!isGentilic} />
+            {metavData._slim ? (
+              /* SLIM body (Paul-class): only what metaV/TIPNR actually hold — gender
+                 tag, the lone family link if any, a TIPNR one-liner when the server
+                 attaches one. The AI note renders as its own section (gate above),
+                 and the shared caveat below carries the confident sole-referent
+                 label. Deliberately sparser than the full card — it must not imply
+                 completeness. */
+              <div className="metav-person--slim">
+                {metavData.gender && (
+                  <div className="metav-meta">
+                    <span className="metav-tag">{metavData.gender === "M" ? "Male" : "Female"}</span>
+                  </div>
+                )}
+                {metavData.tipnr_desc && <p className="detail-p detail-p--meta">{metavData.tipnr_desc}</p>}
+                {(metavData.relationships || []).slice(0, 1).map(r => (
+                  <div key={r.id} className="metav-rel-row">
+                    <span className="metav-rel-label">{
+                      r.type === "father" ? "Father" : r.type === "mother" ? "Mother"
+                      : r.type === "spouseOrConcubine" ? "Spouse" : r.type === "child" ? "Child"
+                      : r.type === "sibling" ? "Sibling" : "Kin"}</span>
+                    <span className="metav-rel-names">{r.name}</span>
+                  </div>
+                ))}
+              </div>
+            ) : <MetavPersonBody data={metavData} withEponym={!isGentilic} />}
           </div>
         ) : metavType === "place" && metavData ? (
           <div className="metav-place">
