@@ -1,6 +1,8 @@
 # DRILL SHEET — Lane C doctrine round (303 multi-candidate witness slots)
 
-Status: **REVIEWER VERDICT LANDED 2026-07-30 — approved with hardenings:**
+Status: **SHIPPED 2026-07-30 — see LANE_C_adjudication.md for the audit record
+(201 live / 5 rerouted / 4 held).** Verdict history below.
+**REVIEWER VERDICT LANDED 2026-07-30 — approved with hardenings:**
 1. The chapter filter is candidacy ONLY, structurally: no slot lands on the filter
    alone; the per-name run audit is the identity step, the filter just orders work.
 2. Type sanity is BIDIRECTIONAL + compound-aware: candidate type must match token

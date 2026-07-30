@@ -1,5 +1,9 @@
 # LANE C — per-name context-run adjudication (210 census candidates, 2026-07-30)
 
+**STATUS: SHIPPED 2026-07-30.** Verdict signed, gates A/B/C PASS (+206 rows exactly,
+roster byte-identical), swap + reload done, 6/6 served checks. Only the 4 held slots
+below remain open. Rollback: bible.db.pre_laneC.
+
 For reviewer verdict BEFORE any evidence row lands. Audit ran per the hardened
 standard (DRILL_lane_c.md): the frozen census's 210 PASS-candidates, per-name run
 audit as the identity step. **Every one of the 210 slots was eyeballed against the

@@ -6,6 +6,41 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Lane C SHIPPED: 201 context-run witness binds (multi-candidate names)
+
+- **Live:** 201 binds, kind='witness' rule='context-run', with the reviewer's distinct
+  card sentence ("Several people share this name; the identification follows the
+  surrounding passage…"). Big runs: jesus 38, judah 20, jacob 16, elijah 15, joseph 11,
+  pharaoh 8 (per-era records matched slot-by-slot). Total live: 207 ruled + 210 witness.
+- **Method:** all 210 frozen-census candidates eyeballed against the ABP verse text —
+  no sampling (the genre-crossing 15 names / 102 slots required it; the single-genre
+  runs were included anyway). Control re-run first (Gilboa negatives must-fail, census
+  re-diffed byte-identical) before any read counted.
+- **Catches (the lane's justification):** 5 wrong proposed identities where TIPNR had
+  the right person at the verse under a different spelling — joshua Neh 8:7 -> Jeshua
+  the Levite (screen passed only because son-of-Nun sits at Neh 8:17: candidacy ≠
+  evidence, the textbook chapter-filter violation), heber 1Ch 8:22 -> Eber (TIPNR's own
+  "Heber =KJV" note), rapha 1Ch 8:37 -> Raphah (screen proposed Rosh, 9 generations
+  off), and the 2Ch 35:8/9 Jehiel/Jeiel SWAPPED PAIR (ABP prints the two spellings
+  opposite the Hebrew; the screen crossed them). All 5 landed via Lane B spelling-equiv
+  (TSV 202->207). jair 1Ch 2:53 = another Gilboa-shape compound fragment ("city of
+  Jair" = Kiriath-jearim) -> compound lane.
+- **Held (4, routed, nothing shipped):** gilead Jos 22:11 (ABP "Gilead of Jordan" vs
+  Hebrew geliloth — contested reading) · eleazar Ezr 8:16 (8:16=8:33 is an ID claim
+  TIPNR doesn't make) · bunni Neh 10:14 (offset class, cross-check with hodijah) ·
+  jair above.
+- **Hard guards now standing:** gate_pn_rulings pins each row's evidence class (ruled
+  class / sole-entity / context-run — a row can't silently change class) and
+  hard-forbids the 6 demoted keys as witness binds forever.
+- **Gate arc:** dry-run verdicted; first real gate run correctly FAILED on an empty
+  scratch copy (the apply step had been skipped — the gate caught it); after apply:
+  A/B/C PASS, +206 rows exactly, roster byte-identical; 6/6 served checks post-reload.
+- **Metonymy verdict worth keeping:** tribe/kingdom/nation uses (judah, jacob->Israel,
+  benjamin, manasseh) land CORRECTLY on TIPNR's merged patriarch records — TIPNR files
+  tribe under founder, so the metonymy worry dissolves by data-model fact, not context
+  judgment.
+- **Rollback:** bible.db.pre_laneC (pre_laneB deletable after soak).
+
 ## 2026-07-30 — Lane B SHIPPED: 39 spelling rulings (28 spelling-equiv + 11 tipnr-merged-form)
 
 - **Live:** 202 ruled + 9 witness binds. The Lane-A wrong-referent slots now serve their
