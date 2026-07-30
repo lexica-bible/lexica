@@ -944,6 +944,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // PERSON-thin, PEOPLE/CLAN, and a coordinate-less place alike.
       const thin = !richPerson && !hasMap && !placeNote && ((line ? 1 : 0) + factItems.length) <= 1;
       const chipOwnLine = peopleClan || (be.section !== "person" && be.section !== "place");
+      // "The hero carries the name" only holds when the entity's name IS the clicked
+      // word. When they differ (Saul @ Act 7:58 -> entity "Paul") the differing name is
+      // the card's most informative line — the thin branch must keep it too (JP
+      // sighting 2026-07-30; the full branch already did this).
+      const nameEchoesHeroEarly = properName && heroName.toLowerCase() === properName.toLowerCase();
       if (thin) {
         const first = factItems[0];
         const opener = line
@@ -955,6 +960,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         return (
           <section key="boundEntity" className="sec pnbound">
             <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
+            {!nameEchoesHeroEarly && !peopleClan && <div className="pnbound-name">{heroName}</div>}
             <div className="pnbound-thinrow">
               {opener}
               {/* People/Clan + every 'other'-type card (Deity/Group/Being/Reference):
@@ -969,7 +975,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // The hero above already headlines the clicked name; when the entity's name is
       // the same word, a second "Shaul" directly under the title reads as a stutter.
       // Keep the row only when it differs (a spelling variant is real information).
-      const nameEchoesHero = properName && heroName.toLowerCase() === properName.toLowerCase();
+      const nameEchoesHero = nameEchoesHeroEarly;
       return (
         <section key="boundEntity" className="sec pnbound">
           {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
