@@ -246,14 +246,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   adjacency compounds (~41, Ramoth/Jabish Gilead — own evidence pass, natural batch 3) ·
   witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
   word-position binding (~118 same-verse multi).**
-- **Place-card raw fields (cosmetic, flagged at batch-2 close-out, non-blocking):**
-  Ezion-geber ruled card shows `area: ">"` (TIPNR place-record parse artifact?) and
-  desc = just the name. When picked up: (1) size it — 
-  `sqlite3 -readonly ~/bible-db/bible.db "SELECT count(*) FROM tipnr_entities WHERE
-  section='place' AND area != '' AND area NOT GLOB '[A-Za-z]*'"` (one record vs a
-  place-parser class); (2) likely fix = card template place-fallback (suppress empty/junk
-  area, lean on the summary line) rather than data surgery. JP eyeball of the rendered
-  Geber 1Ki 9:26 card = the screenshot for this ticket.
+- **Place-card raw fields (cosmetic, flagged + SIZED at batch-2 close-out, non-blocking):**
+  `area: ">"` on **959 place records** (JP-counted 2026-07-30) — a place-parser CLASS:
+  TIPNR place rows use a different column layout than person rows and the area read
+  lands on a structural '>' marker, not text. Affects any served place card that prints
+  area (Ezion-geber the found case; also desc=name on places — TIPNR places carry no
+  person-style era line). Fix directions when picked up: parser-side (read the right
+  column for section='place' in entity_resolution.parse_tipnr, then re-run the widened
+  --apply through the gate arc) AND/OR display fallback (suppress non-alphabetic area,
+  lean on summary). Check FIRST how long-bound place cards (pre-widening) have rendered
+  area — if the reader already suppresses it, this may be invisible today. JP eyeball of
+  Geber 1Ki 9:26 rendered = the screenshot.
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
