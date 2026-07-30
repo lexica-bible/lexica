@@ -276,18 +276,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Jos 22:11 contested-reading, eleazar Ezr 8:16 unresolved-ID, bunni Neh 10:14
   offset w/ hodijah cross-check). Rollback = bible.db.pre_laneC; pre_laneB
   deletable after soak.**
-- **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
-  Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
-  when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads
-  ENGLISH while the interlinear in the SAME verse prints Ἀδάρ — the Greek form exists
-  in the text, the token just isn't wired to a Greek identity (likely R-2 residue:
-  H-numbered tokens with no STEP Greek mapping stayed on the Hebrew path). Doctrine:
-  ABP-primary → header should be Greek wherever ABP attests one; English headers
-  shrink over time, not an end state. **Next step = count PN tokens whose header
-  falls back to English while a Greek surface exists in the same verse** — handful
-  vs a backfill lane. Sits naturally beside the breathing-mark cleanup (same
-  identity table). Note the Ἀδάρ/Ἀδερ per-verse spelling variance = the "IN THIS
-  VERSE" slot's job, already handled correctly on Pharaoh.
+- **Greek-header coverage gap (SIZED 2026-07-30 — a BACKFILL LANE, design pass owed):**
+  header design = ABP's Greek form when mapped, English fallback when not. Live count
+  (JP-run, pn_greek_identity × abp_surface): source='none' = 3,380 tokens, of which
+  **2,587 (77%) have a Greek surface in the same verse** — headline names (israel 495,
+  egypt 96 + Αιγύπτιος 288 no-number gentilics, jerusalem 85, bethel 61, levites 49…),
+  all H-numbered = R-2 residue confirmed (H-tokens with no STEP Greek mapping stayed
+  on the Hebrew path). NOT a hand list. **Design question for the reviewer before any
+  build: the verse surfaces are INFLECTED (Αίγυπτον), so a new 'surface-derived'
+  identity layer needs a headword-form rule (e.g. most-frequent surface across the
+  name's occurrences, or nominative selection) — the header can't copy the verse form
+  raw.** Fix = 4th source layer in build_pn_greek_identity + rebuild of its table
+  through a mini gate. Sits beside the stray-breathing cleanup (same builder, do in
+  one pass). Ἀδάρ/Ἀδερ per-verse variance stays the "IN THIS VERSE" slot's job.
 - **Stray-breathing Greek name forms (cosmetic, SIZED 2026-07-30, non-blocking):**
   90 distinct `pn_greek_identity.greek_lemma` values carry a leading standalone mark +
   space ("΄ Αδερ" — JP screenshot, Ben-hadad card header). Pattern: ALL are names with
