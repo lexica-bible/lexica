@@ -190,6 +190,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   - **"Field" oddity (flag only, out of scope):** capitalized common word 'field'
     (Isa 29:17 al.) serves a metaV PLACE card via name match — pre-existing quirk
     surfaced by the lane-1 dump; not touched.
+  - **TIPNR import coverage question (flagged 2026-07-30, slim-card Part-1 diagnosis):**
+    18 of the top-20 bio-bar names (Nebuchadnezzar, Pilate, Esther, Elisha-the-prophet…)
+    are ABSENT from our imported tipnr_entities — even a substring probe finds nothing
+    (audit_tipnr_name_reach.py). TIPNR the source almost certainly has them; the import
+    may keep a subset. Sits behind the FROZEN-roster tripwire (check_roster_regression
+    gate) — own reviewer question before any import change; NOT a lookup bug (probe
+    proved that), so no app-side fix pending.
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.

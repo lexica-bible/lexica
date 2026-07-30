@@ -306,6 +306,18 @@ def metav_person(name):
             return jsonify({"ambiguous": True}), 200
 
         card = _person_card(conn, row["person_id"])
+        # TIPNR one-liner for the slim card (Part 1 diagnosis 2026-07-29): attached
+        # only when EXACTLY ONE TIPNR person entity carries this name — the top-20
+        # probe proved most are absent from the imported table (not a keying bug),
+        # so this genuinely reaches Paul-class names that have one, nothing more.
+        if card and conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                                 "AND name='tipnr_entities'").fetchone():
+            trow = conn.execute(
+                "SELECT COUNT(*), MIN(descr) FROM tipnr_entities WHERE section='person' "
+                "AND (head = ? COLLATE NOCASE OR uniq LIKE ?)",
+                (guard_name, guard_name + "@%")).fetchone()
+            if trow[0] == 1 and trow[1]:
+                card["tipnr_desc"] = trow[1].replace("(?)", "").split("=")[0].strip()
     finally:
         conn.close()
 
