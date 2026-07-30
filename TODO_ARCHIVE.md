@@ -6,6 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — TIPNR scope-widening (diagnosis → scratch run → swap → close-out, all reviewer-verdicted)
+
+- **Root cause (accepted verdict): design scoping outgrown, not a bug.** The entity-card
+  table only ever stored entities actually used by a verse bind; Tier-3 names (one entity,
+  metaV row exists — the Elisha/Nebuchadnezzar/Pilate/Esther class) were skipped by the
+  original Issue-2 design, so 18 of the top-20 slim-card names had no one-liner. Parser and
+  source file exonerated with controls first (Elijah 4 / Paul 1).
+- **Fix shipped:** `build_entity_binding.py --apply` now writes ALL parsed entities
+  (full roster), binding logic untouched. Table 2,355 → 4,247 (+1,892, exactly as
+  pre-registered), refs 31,975, split 3,132 person / 1,013 place / 102 other.
+- **Gate arc (the method record):** 9 reviewer-final gates, all pre-registered numbers.
+  Detector control ran FIRST (gate script live-vs-live: counts must FAIL, identity checks
+  must PASS) — reviewer flagged this as standing method. pn_binding proven byte-identical
+  (14,898 rows); full-diff superset on all 2,355 old rows, 0 changed. Gate tool:
+  `scripts/gate_tipnr_scope_widen.py`.
+- **Guard-flip class, caught PRE-swap:** the ambiguity guard's TIPNR signal
+  (views_metav.py `_name_is_multi_referent`) saw the fuller table and flipped exactly 25
+  names from a single rich bio to the honest decline. Source-verified as genuinely distinct
+  people → ruled CORRECTIONS (the starved table had been blinding the guard; live was
+  serving one person's bio for two-person names). Pre-registered as the complete flip set;
+  post-swap capture confirmed 25/25, no 26th. The 25 are parked in TODO.md as the future
+  multi-entity-card candidate lane.
+- **Stale-worker lesson (standing):** first post-swap capture had one worker still holding
+  the old file (Achsah served stale). Post-swap served-layer captures are only valid AFTER
+  the deploy.sh worker reload — baked into the gate script's header.
+- **Rollback:** `bible.db.pre_tipnr_widen` retained for soak; delete at JP's call.
+
+---
+
 ## 2026-07-29/30 — PN census → confident labels → four lanes → Paul-class slim card (one night, all receipted)
 
 - **PN-card verification census CLOSED** (reviewer verdict: accepted, identity lane stays

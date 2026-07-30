@@ -5,6 +5,11 @@
 Automates gates 3, 4, 5, 9. Gates 1/2/6 run separately (procedure in TODO.md);
 gates 7/8 are post-swap served-layer checks.
 
+STANDING METHOD (reviewer, 2026-07-30 close-out): post-swap served-layer captures are
+only valid AFTER the deploy.sh worker reload — workers keep the OLD file open across a
+file move, so a pre-reload capture mixes stale answers (Achsah episode). Order is always:
+swap -> reload -> capture.
+
   gate 3  every live tipnr_entities row survives BYTE-IDENTICAL in scratch (full
           diff, all 10 columns, no sampling)
   gate 4  pn_binding byte-identical live vs scratch — ANY diff = FAIL (abort, not warn)

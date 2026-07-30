@@ -144,38 +144,23 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   errata list compiles from that ticket once these two are ruled or formally deferred.
   Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **TIPNR scope-widening — DIAGNOSED, verdict ACCEPTED 2026-07-30, ready for a scratch run.**
-  Cause = intentional scoping now outgrown, NOT a bug: `build_entity_binding.py --apply`
-  line ~293 writes only entities USED by a Tier-1/2 render bind (`used = {render}`); Tier 3
-  (unambiguous name WITH a metaV row — exactly the Elisha/Nebuchadnezzar/Pilate/Esther class)
-  is skipped by design, so its entities never land in tipnr_entities. Parser exonerated with
-  controls: local parse of pinned tipnr/TIPNR.txt = **4,247 entities (3,132 person / 1,013
-  place / 102 other)**, all 18 missing names = one clean entity each, Elijah 4 / Paul 1.
-  Nothing shipped is suspect — this is a widening, not a repair; no re-cert triggered.
-  **Fix shape:** on --apply write ALL parsed entities instead of `used`; pn_binding logic
-  untouched. **LIVE COUNT PINNED (JP-run 2026-07-30): tipnr_entities = 2,355 → recoverable
-  = exactly 1,892 (4,247 − 2,355). Pre-registered expectation for the scratch run: new
-  table = 4,247 rows, +1,892 vs live.**
-  **GATES (reviewer-final, scratch copy only, swap = one reversible move):**
-  1. Live db never written; scratch copy only.
-  2. check_roster_regression.py clean before AND after — any diff = abort (change shouldn't
-     touch the roster at all).
-  3. Superset gate: every current tipnr_entities row survives byte-identical (FULL diff, no
-     sampling) — existing bound cards must not move.
-  4. **pn_binding byte-identical old vs new — ABORT on any diff, never warn** (load-bearing:
-     this gate is what makes "binding logic untouched" falsifiable).
-  5. New count = 4,247 AND the person/place/other split = 3,132/1,013/102 (total alone can
-     match while composition drifts).
-  6. audit_tipnr_name_reach.py re-run: all 18 names hit T1; Elijah still 4, Paul still 1.
-  7. Served-layer control set in ONE run (live /api/metav/person, not table peeks):
-     Elijah attaches NO tipnr_desc (multi-entity negative) · Elisha attaches EXACTLY one
-     (formerly-missing positive) · plus one name in TIPNR with NO metaV person row — must
-     NOT start attaching descriptions to cards that shouldn't have the slot (the one new
-     failure surface: entities never reachable before are now reachable by name).
-  8. Sample of existing bound-card /api/metav/entity responses byte-same before/after.
-  9. tipnr_entity_refs growth counted against the parse's total ref count before swap.
-  Payoff unchanged: slim-card one-liners free (tipnr_desc slot wired) · shrinks the 527
-  absent-name list · may shrink the Jacob-class 624 — run BEFORE hand-ruling Jacob-class.
+- **25-name disambiguation-candidate lane (PARKED, banked from the TIPNR widening close-out
+  2026-07-30).** These 25 names each have ONE metaV person but 2+ real TIPNR people, so the
+  guard now correctly declines their unbound card ({"ambiguous":true}) — source-verified
+  genuinely distinct people (Nahum the prophet vs Nahum in Luke 3:25's line, two Salomes,
+  two Achsahs…). They are the natural first customers of a future multi-entity card
+  treatment (same territory as Elijah's 4): Achsah, Alemeth, Asriel, Calcol, Eder, Hakkoz,
+  Hanniel, Harbona, Hotham, Ishmaiah, Izhar, Jaasiel, Jekamiah, Joiada, Joshaphat, Mahlah,
+  Mehetabel, Nahum, Palti, Rab-saris, Salome, Sharezer, Shemer, Zattu, Zerubbabel.
+  Wait for JP to raise it.
+- **Old-db soak (JP's call):** `~/bible-db/bible.db.pre_tipnr_widen` retained per reviewer
+  ruling; cleared for deletion after a few days of live traffic.
+- *(TIPNR scope-widening SHIPPED + lane CLOSED 2026-07-30, reviewer close-out approved:
+  tipnr_entities 2,355 → 4,247 (+1,892 exactly as pre-registered), 18 Paul-class names now
+  serve descriptions, 25 latent confident-wrong cards corrected to honest declines,
+  pn_binding byte-identical, zero regressions on certified cards. Full record →
+  TODO_ARCHIVE.md. Standing method addition: post-swap served-layer captures are only
+  valid AFTER a worker reload — baked into scripts/gate_tipnr_scope_widen.py.)*
 - **340 identity slots with no words row (lane-2 2026-07-29, DIAGNOSED, fix DEFERRED by
   reviewer ruling).** All 340: source class 'none', position-hole INSIDE an otherwise
   normal verse — NOT the 345 no-name slots. Reads as none-class rows stamped from a stale

@@ -148,6 +148,14 @@ floor = no row → Fix A); `tipnr_entities` = the entity's own card content (uni
 gender/area/descr/summary/bases/parents+offspring, kin for PERSONS only); `tipnr_entity_refs` =
 its reference list. Served by `/api/metav/entity` → the `.pnbound` card. Re-run `--apply` after
 a words rebuild (re-tiers from live metaV each run). Memory `project_entity_resolution_rebuild`.
+**FULL ROSTER since 2026-07-30 (scope widening, reviewer close-out approved):** tipnr_entities
+holds ALL 4,247 parsed entities (3,132 person / 1,013 place / 102 other; refs 31,975), not just
+bind-used ones — the slim-card `tipnr_desc` slot reads it by name. pn_binding logic UNCHANGED
+(proven byte-identical in the gate run). Side effect, ruled a CORRECTION: the multi-referent
+guard's TIPNR signal now sees the full roster, so 25 names with one metaV person but 2+ real
+TIPNR people flipped to the honest decline (list in TODO.md, parked as a future
+disambiguation lane). Gate tool for any re-run: `scripts/gate_tipnr_scope_widen.py` (detector
+control live-vs-live FIRST; post-swap captures only valid AFTER the worker reload).
 
 ### tipnr_metav_link
 Cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).
@@ -491,8 +499,8 @@ app.py matches.
   MATCHED canonical spelling); `/person` returns `sole_referent` (true only on exact/compact
   hits — fuzzy-prefix hits never earn it, that's the confident-label + slim-card gate) and
   `tipnr_desc` (TIPNR one-liner, attached ONLY when exactly one TIPNR person entity carries the
-  name — most Paul-class names are ABSENT from the imported table, an import-coverage question
-  in TODO.md, NOT a keying bug: audit_tipnr_name_reach.py proved it); `/place` returns
+  name — served for the full roster since the 2026-07-30 scope widening; the earlier "Paul-class
+  names absent" gap was the bind-used-only table, RESOLVED, see the tipnr_entities section); `/place` returns
   `sole_referent` (one metav place_id AND ≤1 TIPNR place entity — two Beth-horons correctly
   stay hedged).
 - **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click first asks
