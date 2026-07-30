@@ -1,0 +1,10 @@
+# greek_header_pins.txt — exact-form controls for gate_greek_header.py gate C
+# (pinned at verdict time from the 2026-07-30 receipt; formats:
+#   uniform|<name>|<exact headword>   ·   verse-form|<name>)
+# zion = the largest uniform name (326× Σιών, one spelling corpus-wide).
+# abner = the verse-form specimen (Αβενήρ×90 / Αβεννήρ×8 — stays per-verse under
+# ruling (b); every fallback row must equal its own page form).
+# hadad (the founding specimen, 5 spellings) is the gate's built-in control:
+# all rows Greek-headed, no English left.
+uniform|zion|Σιών
+verse-form|abner

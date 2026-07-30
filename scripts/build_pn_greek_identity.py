@@ -62,10 +62,14 @@ def is_nominative(morph):
 # NFC-composed. Applies to stored header values only — transliterations and the
 # abp_surface table are untouched (the gate's byte-unchanged post-check).
 _DETACHED_MARKS = "΄´ʼʽʹ᾽᾿῾‘’'`"
+# Live-data identification 2026-07-30: the stray prefix is U+0384 (Greek tonos)
+# + U+00A0 (non-breaking space). The first repair pass required a plain space
+# and fixed 0 rows; the separator now accepts both space kinds.
+_SEPARATORS = "  "
 _GREEK_VOWELS = "αεηιουωΑΕΗΙΟΥΩ"
 
 def fix_detached_breathing(s):
-    if not s or len(s) < 3 or s[0] not in _DETACHED_MARKS or s[1] != " ":
+    if not s or len(s) < 3 or s[0] not in _DETACHED_MARKS or s[1] not in _SEPARATORS:
         return s
     rest = s[2:]
     for i, ch in enumerate(rest):
