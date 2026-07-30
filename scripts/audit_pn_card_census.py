@@ -233,8 +233,34 @@ def name_card(name):
             out = "person"
         elif place_card_exists(name):
             out = "place"
+        # SLIM card (Paul-class, live 2026-07-30): exact/compact single-owner hit that
+        # fails the bio bar, with no place card -> reduced person card. Fuzzy tier
+        # never slims (prow with guard_name == requested name AND no exact/compact hit
+        # is indistinguishable here, so mirror the server: sole flag = exact/compact).
+        elif prow is not None and not name_is_multi_referent(guard_name) \
+                and guard_name is not None and _sole_tier(name):
+            out = "person-slim"
     _card_cache[name] = out
     return out
+
+def _sole_tier(name):
+    """True when the person hit came from the exact or compact tier (the server's
+    sole_referent condition) — i.e. NOT only reachable by fuzzy prefix."""
+    if conn.execute("""
+        SELECT 1 FROM metav_people WHERE name = ? COLLATE NOCASE
+        UNION SELECT 1 FROM metav_people_aliases WHERE alias = ? COLLATE NOCASE
+        LIMIT 1""", (name, name)).fetchone():
+        return True
+    cn = compact(name)
+    if not cn:
+        return False
+    return conn.execute("""
+        SELECT 1 FROM metav_people
+        WHERE REPLACE(REPLACE(name,'-',''),' ','') = ? COLLATE NOCASE
+        UNION
+        SELECT 1 FROM metav_people_aliases
+        WHERE REPLACE(REPLACE(alias,'-',''),' ','') = ? COLLATE NOCASE
+        LIMIT 1""", (cn, cn)).fetchone() is not None
 
 # ── walk every slot ──────────────────────────────────────────────────────────
 rows = conn.execute("""
