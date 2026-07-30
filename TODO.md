@@ -234,13 +234,20 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   dump the verses before assuming the failure mode. Mutual-exclusivity pre-flight
   (any verse claimed by 2+ candidates → un-partitionable, pre-flag) is PERMANENT —
   fired on first contact (mary).**
-  **CENSUS CLOSED 2026-07-30 (hard pile + coda, reviewer-approved — certificate + full
-  record in TODO_ARCHIVE.md): the 591 fully classified — 81 ruled/live · ~118 same-verse
-  same-name multi (word-position lane) · ~397 covered-by-none in 4 itemized sub-classes
-  (TICKET_supplied_subject_binds.md). RULINGS EXHAUSTED; board = MECHANISMS: (1) class-3
-  design pass — sub-class itemization first, compound-name fragments are NOT
-  supplied-subject; (2) word-position binding for the same-verse multi class. Banked
-  single-row ruling candidate for a future batch: Psa 34:0 abimelech → Achish.**
+  **CENSUS CLOSED 2026-07-30; ITEMIZATION COMPLETE (reviewer-verdicted): the class-3
+  "translator-supplied" hypothesis is FALSIFIED — 392/392 remainder slots print the name
+  in ABP's own text AND carry italic=0 (real words of ABP's Greek, full-population check
+  via scripts/audit_witness_italic.py). Class renamed WITNESS-DIVERGENCE (ABP's LXX/TR
+  base attests names TIPNR's Hebrew/critical base lacks); census artifact
+  docs/tickets/class3_witness_slots.txt; correction owned in the ticket.**
+  **RULINGS BATCH 2 STAGED (reviewer-approved, expected delta = 60):** 59 compound-
+  fragment rows (hadad→the three Ben-hadads ref-partitioned, obed→Obed-edom 15,
+  geber→Ezion-geber, baal→Baal-zebub…) + abimelech Psa 34:0→Achish (lxx-naming) appended
+  to pn_hand_rulings.tsv (now 141 rows, validated: entities known, no dup keys). Same
+  gate arc as batch 1 (gate_pn_rulings.py reads the TSV — control first). Adjacency
+  compounds (~41, Ramoth/Jabish Gilead) = own evidence pass, batch-3 candidate.
+  Remaining mechanisms: witness-divergence design pass (~392, doctrine question restated
+  in the ticket) · word-position binding (~118 same-verse multi).**
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked

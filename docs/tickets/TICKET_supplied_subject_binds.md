@@ -1,79 +1,46 @@
-# TICKET — supplied-subject name slots (class 3, scoping only — NO build)
+# TICKET — witness-divergence name slots (class 3, scoping only — NO build)
 
-Opened 2026-07-30 from the Jacob-class easy-pile drill (reviewer ruling: open as
-scoping, keep out of the hand-rulings gate arc entirely).
+Opened 2026-07-30 as "supplied-subject binds"; **RENAMED after the itemization
+falsified the founding assumption** (correction owned in the record, reviewer-
+accepted): the original description said "ABP names the subject where the
+underlying text has a pronoun." Measurement says otherwise — see below.
 
-## The class
-ABP names the subject where the underlying text has a pronoun ("he answered" →
-"Jesus answered"; Gen 29:32 names Jacob where the Hebrew doesn't). No reference
-list can ever corroborate these — TIPNR's refs track where the NAME occurs in the
-source text, and here it doesn't. The verse-bound render rule (corroboration) is
-therefore structurally unreachable; these slots floor forever under the current
-mechanism.
+## What the class actually is (itemization + Greek-token check, 2026-07-30)
+**392 slots, census in `docs/tickets/class3_witness_slots.txt`.** For every one:
+- the clicked name is PRINTED in ABP's own text (392/392, full scan of the
+  pre-build source), and
+- the word row is **italic=0 — a real word of ABP's Greek base, NOT a translator
+  addition** (392/392, `scripts/audit_witness_italic.py` on the live table;
+  spot sample also showed the Greek directly: Ιακώβ Gen 29:32, Ιησούς Mat 14:14,
+  Γωγ Amo 7:1), and
+- no TIPNR candidate's reference list covers the verse — because TIPNR's refs
+  follow a different base text (Hebrew MT / critical NT) that lacks the name
+  there (LXX and TR-family witnesses genuinely read these names).
 
-## Census — CLOSED 2026-07-30: ~397 covered-by-none slots (the dominant class)
-Full-tail drill (140 names / 406 slots) added 304 covered-by-none slots. **REQUIRED
-ITEMIZATION STEP (reviewer-mandated): "covered by no candidate ref-list" is the
-MEASUREMENT; the CAUSE splits into four sub-classes that must be itemized before any
-mechanism design — do NOT inherit them under one label:**
-  (a) pronoun-supplied narrative — the verified jacob/joseph pattern, the bulk;
-  (b) **compound-name fragments** (gilead's 1Ki 22/2Ki 8-9 Ramoth-gilead contexts):
-      the name IS in the source, keyed to a place entity — NOT supplied-subject; may
-      be resolvable by a compound-aware rule, or correct as-is if the click should
-      serve the place. Different mechanism from pronoun resolution.
-  (c) **LXX-witness attributions/insertions** (reviewer-ruled 2026-07-30: the former
-      (c) and (d) are ONE phenomenon — the LXX-only flag established by the Cainan
-      rulings covers the whole family). Superscriptions Psa 34:0/51:0/55:0/71:0/
-      137:0/138:0/146:0/148:0 (coda-verified negative: WS1 +1 lands the right title
-      verse but TIPNR refs carry the HEBREW title names; ours are LXX additions) +
-      body insertions (Est 3:13 class). **Near-miss BANKED as the first row of a
-      future rulings batch: Psa 34:0 "abimelech" → Achish@1Sa.21.10-Psa — TIPNR's own
-      Psa 34:1 refs include Achish (it resolves the title's Abimelech = Achish of
-      Gath), the artaxerxes→Ahasuerus shape, evidence class lxx-naming. Declined in
-      the coda only because it fails the name-reachable bar — evidence attached,
-      ruling not lost.**
-Related but SEPARATE lane: same-verse same-name multi (~118 slots, 22 tail names +
-mary) — word-position binding, parked with the multi-entity card territory.
+So the class is **witness-divergence**: ABP's primary text attests a name that
+TIPNR's reference base doesn't list at that verse. The "translator-supplied
+pronoun" class has ZERO members.
 
-Middle-pile additions (each verse verified covered-by-NO-candidate against the
-pinned TIPNR file — the same checks that landed 81 verified binds return zero here):
-- **joseph (11):** Gen 37:36, Gen 39:11, Gen 39:23, Gen 42:24, Gen 44:1, Gen 44:17,
-  Gen 45:24, Gen 46:5, Gen 47:22, Gen 47:3, Gen 50:6 — patriarch narrative, ABP
-  supplies the name where the Hebrew has a pronoun (jacob's exact pattern; the 11
-  metaV candidates were never the issue)
-- **elijah (15):** 1Ki 17:2, 17:5, 17:8, 17:10, 17:11, 17:19, 17:20, 18:18, 18:33,
-  18:43, 19:3, 19:6, 19:10, 19:14, 2Ki 2:10
-- **pharaoh (9):** 1Sa 10:18, Exo 2:6, 2:22, 3:18, 3:19, 12:31, 14:6, 18:9, Gen 41:26
+## The doctrine question for the design pass (restated with true size)
+**When ABP's own Greek attests a name that TIPNR's base text lacks, does the
+primary text's reading suffice to bind, given the referent is contextually
+unambiguous?** The Cainan rulings (5 rows) and the batch-2 abimelech row already
+answered yes at small scale with the LXX-only flag. At ~392 slots the right shape
+is a per-slot witness-flag MECHANISM, not hand rulings — that is the design
+pass's actual subject. Card wording for witness-dependent binds is part of the
+design (provenance contract territory).
 
-Easy-pile originals, 58 slots:
-- **jesus (38):** 1Co 16:22, 1Co 5:5, 2Ti 4:22, Act 19:10, Act 3:26, Act 5:41,
-  Act 8:37, Act 9:29, Eph 3:14, Eph 3:9, Gal 6:15, Joh 4:46, Joh 6:14, Joh 8:21,
-  Luk 10:41, Luk 13:2, Luk 22:63, Luk 23:43, Mar 11:11, Mar 11:14, Mar 1:41,
-  Mar 5:13, Mar 5:19, Mat 13:36, Mat 13:51, Mat 14:14, Mat 14:22, Mat 14:25,
-  Mat 15:30, Mat 17:11, Mat 17:20, Mat 22:37, Mat 8:29, Mat 8:5, Mat 8:7,
-  Mat 9:12, Rev 14:4, Rom 16:24
-- **jacob (16):** Gen 29:23, Gen 29:25, Gen 29:32, Gen 29:33, Gen 29:7,
-  Gen 30:23, Gen 30:29, Gen 30:3, Gen 32:8, Gen 35:16, Gen 35:8, Gen 45:26,
-  Gen 48:1, Gen 48:9, Isa 42:1, Mal 3:7
-- **residues from ruled names (4):** Est 3:13 (artaxerxes — the LXX decree
-  insertion; carries the LXX-only flag when ruled), Hag 2:21 (shealtiel),
-  1Ki 22:17, 1Ki 22:19 (micaiah)
-
-Evidence: every slot verified uncovered by EVERY TIPNR candidate's reference list
-(local cross-check against the pinned tipnr/TIPNR.txt, 2026-07-30).
-
-## Design questions (touch the verse-grounding doctrine — reviewer pass required)
-1. Is ABP's supplied name itself the authority (it IS the primary text), or does a
-   bind need independent narrative-flow evidence (nearest corroborated occurrence
-   of the same name in the surrounding passage)?
-2. What does the card SAY when the name is translator/LXX-supplied — does the
-   provenance contract need a "supplied subject" label class?
-3. Interaction with the italics convention (translator additions) — are these
-   slots marked italic in the data, and should the card lean on that?
-4. Mechanism shape if approved: a narrative-context rule in the binder (new kind,
-   own render rule) vs. extending pn_hand_rulings.tsv with a supplied-subject
-   evidence class. The former scales, the latter stays auditable per-verse.
+## Resolved out of this ticket (2026-07-30)
+- 59 strict compound-fragment slots (Ben-hadad, Obed-edom, Ezion-geber…) →
+  **rulings batch 2** with abimelech→Achish (see pn_hand_rulings.tsv).
+- 9 Psalm-superscription slots → part of this class (LXX title attributions);
+  abimelech ruled, the rest await the design pass.
+- Adjacency compounds (~41: "Ramoth Gilead" / "Jabish Gilead" printed as two
+  words, entity keyed under the FIRST word — Ramoth@Gen.31.47-Hos covers the
+  sample 6/6): **own evidence pass required before ruling** (bar: adjacent token
+  forms the attested compound AND the first-word entity's refs cover the verse;
+  per-slot evidence; near-misses named). Batch 3 candidate.
 
 ## Status
-PARKED — scoping only. No mechanism, no binds, no card changes until a reviewer
-design pass answers the questions above.
+PARKED — design pass waits for JP to raise it. Related-but-separate:
+same-verse same-name multi (~118 slots) = word-position binding lane.

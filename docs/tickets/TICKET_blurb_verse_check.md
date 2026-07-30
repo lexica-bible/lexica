@@ -38,6 +38,19 @@ hand-adjudicated to validate the checker before scale) · review-what-ships on
 cached draws · detector control proving the checker can fail · checked-state
 stored in the db, not derived.
 
+## EXPANDED SCOPE (JP + reviewer 2026-07-30 — same lane, bigger deployment target)
+JP wants the verse-specific AI summary on ALL PN cards (people/places/groups),
+not just AI-only cards — it's the one layer no reference source provides
+(narrative context: "this is the moment Stephen is being stoned"). Ruled valid.
+Shape: **cert first** (this ticket's mechanism is the prerequisite — unverified
+prose must not sit on certified cards without earning the verse-checked state),
+then **generation-from-bound-facts** (feed the blurb generator the certified
+entity: verse + TIPNR record + kind='ruled' identity — ground truth in, better
+prose out; the rulings arcs are literally this feature's input layer), rolled
+out by entity class with sampling like the definition batches. Cost model =
+definition engine (pennies per blurb, one-time, rebuild-stamped).
+
 ## Sequencing
-Behind the current Lexica-dictionary batch work (it borrows that tooling).
-Independent of the Jacob-class piles. Waits for a batch slot + JP raising it.
+Behind the current Lexica-dictionary batch work (it borrows that tooling) AND
+rulings batch 2. SCOPED-NOT-STARTED — no blurb generation until the cert
+mechanism exists. Waits for a batch slot + JP raising it.
