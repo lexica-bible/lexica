@@ -288,18 +288,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   names in docs/tickets/greek_header_split.txt — famous ones upgradeable to a single
   headword a few rows at a time via scripts/greek_header_nominatives.tsv, no deadline).
 - **Adonai-card follow-ups (banked 2026-07-30, from JP+reviewer eyeball of the live
-  verse-form class):** (1) WORDING contradiction on the no-number PN card: subtitle
-  "ABP-only form — no Strong's mapping" sits above a 132× H136 Hebrew xref — subtitle
-  means "no GREEK number"; wording fix, visual change = JP approval on the specific
-  text. (2) UPSTREAM NOTE: adonai (H136, divine title) rides the proper-noun lane
+  verse-form class):** (1) WORDING — DONE 2026-07-30, JP-approved exact text: subtitle
+  now "ABP-only form — no Greek Strong's number" (30-detail-panel.jsx; old text falsely
+  denied the Hebrew mapping shown below it). (2) UPSTREAM NOTE: adonai (H136, divine title) rides the proper-noun lane
   (is_pn=1) while the card's own AI blurb calls it "a title for God" — the blurb and
   the lane classification disagree; leave in-lane per the header ruling, revisit as an
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
-  visual register — the disclaimer carries the whole load. (4) CHEAP AUDIT queued:
-  pull cards where the ABP-form count EXCEEDS the Hebrew-number count (Hebrew>ABP is
-  the normal pattern — form-filter/translation-choice/versification; the other
-  direction would surface real counting bugs). Reviewer-framed; read-only.
+  visual register — the disclaimer carries the whole load. (4) AUDIT RUN 2026-07-30
+  (read-only, PA): 50 identities where ABP count > Hebrew-xref count. Book split shows
+  the bulk is NT rows (no Hebrew number = correct) + 619 of the OT excess is the '*'
+  no-number class (ruled honest state). REMAINING: ~130-row OT tail across named
+  identities (top: G2536×14, G1478×8, G3475×6) — each is an OT proper-noun word with
+  no Hebrew number under an identity that usually has one; spot-check pending.
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this

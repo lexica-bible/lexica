@@ -1472,9 +1472,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div className="detail-gloss">{heroTopGloss}</div>
             )}
             {/* R-2 flip, ruling S2-Q3: a lemma-only identity states its status
-                honestly — the printed form has no number in any scheme. */}
+                honestly — the printed form has no GREEK number (a Hebrew cross-ref may
+                still exist below; wording per JP 2026-07-30). */}
             {greekId && !greekId.greek_strongs && (
-              <div className="detail-morph">ABP-only form — no Strong's mapping</div>
+              <div className="detail-morph">ABP-only form — no Greek Strong's number</div>
             )}
           </div>
           {(heroForm || hero.morph) && (
