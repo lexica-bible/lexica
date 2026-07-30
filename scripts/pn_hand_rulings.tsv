@@ -146,3 +146,25 @@ obed	2Sa	6	11	Obed-edom@2Sa.6.10-2Ch	compound-fragment	clicked word is a compone
 obed	2Sa	6	12	Obed-edom@2Sa.6.10-2Ch	compound-fragment	clicked word is a component of the attested compound 'obed-edom'; this entity's TIPNR ref-range covers the verse, no other compound entity claims it	
 sheba	1Ki	10	4	Queen_of_Sheba@1Ki.10.1-Luk	compound-fragment	clicked word is a component of the attested compound 'of sheba'; this entity's TIPNR ref-range covers the verse, no other compound entity claims it	
 abimelech	Psa	34	0	Achish@1Sa.21.10-Psa	lxx-naming	TIPNR's own Psa 34:1 refs include Achish - it resolves the title's Abimelech to Achish of Gath (the artaxerxes-Ahasuerus shape); slot is the verse-0 superscription served at 34:1 via WS1	LXX-only
+gad	Num	33	45	Dibon@Num.21.30-Jer	adjacency-compound	verse text reads 'dibon'+'gad' adjacent in text order = TIPNR attested combined form of Dibon@Num.21.30-Jer; entity refs cover the verse	
+gad	Num	33	46	Dibon@Num.21.30-Jer	adjacency-compound	verse text reads 'dibon'+'gad' adjacent in text order = TIPNR attested combined form of Dibon@Num.21.30-Jer; entity refs cover the verse	
+gilead	1Ch	10	11	Jabesh@Jdg.21.8-1Ch	adjacency-compound	verse text reads 'jabesh'+'gilead' adjacent in text order = TIPNR attested combined form of Jabesh@Jdg.21.8-1Ch; entity refs cover the verse	
+gilead	1Ki	22	12	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	15	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	20	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	29	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	3	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	4	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	1Ki	22	6	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	11	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	14	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	19	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	2	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	28	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	18	5	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ch	22	5	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ki	8	28	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ki	8	29	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ki	9	1	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ki	9	14	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+gilead	2Ki	9	4	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
