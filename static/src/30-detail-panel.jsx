@@ -372,8 +372,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [pnCount, setPnCount] = useState(null);
   useEffect(() => {
     setPnCount(null);
-    if (!entry.gloss) return;
-    const name = extractProperName(entry.gloss);
+    if (!entry.pnName && !entry.gloss) return;
+    const name = extractProperName(entry.pnName || entry.gloss);   // Part-3: same precedence as the lookups
     if (!name || name.length < 2) return;
     let cancelled = false;
     api.pnCount(name)
@@ -710,7 +710,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // place: a `hero` block and an ordered `sections` list. The return below is
   // dumb: it renders `hero`, then `sections.map(renderSection)` — no decisions.
   // --------------------------------------------------------------------------
-  const properName = extractProperName(entry.gloss);
+  // pnName FIRST (Part-3 fix 2026-07-29, Mat 23:26 "Blind"): the lookups were unified
+  // on the resolved name in lane 1 but the TITLE still read the raw gloss, whose first
+  // capital can be a stray sentence word ("Blind Pharisee," -> "Blind"). One precedence
+  // everywhere: the word the bind resolved on is the word the header shows.
+  const properName = extractProperName(entry.pnName || entry.gloss);
   const nameOrGloss = (isPN || metavData) ? properName : entry.gloss;
   const trimTail = (s) => stripArticles((s)?.replace(/[.,;:!?—-]+$/, "").trim());
   // The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
@@ -1239,7 +1243,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "pnOcc": return (
       <section key="pnOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
-        <button className="occ-link" onClick={() => onNameSearch(extractProperName(entry.gloss))}>
+        <button className="occ-link" onClick={() => onNameSearch(extractProperName(entry.pnName || entry.gloss))}>
           <CountLine n={pnCount} label="in ABP"/><Icon.ArrowRight/>
         </button>
       </section>
