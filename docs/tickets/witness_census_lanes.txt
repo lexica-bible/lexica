@@ -256,7 +256,10 @@ B|barsabas|Act|1|23|0
 C|joses|Act|4|36|2
 C|eliezer|Exo|2|22|11
 C|miriam|Exo|6|20|2
-A|malchiah|Ezr|10|25|Malchiah@Jer.21.1-
+# DEMOTED from lane A 2026-07-30 (gate stop-and-look, scratchA run): Ezr 10:25 names
+# TWO Malchiahs (binder HOT row) — sole-entity-under-this-spelling is not sole-referent
+# in the verse. Belongs to the word-position lane.
+H|malchiah|Ezr|10|25|Malchiah@Jer.21.1-
 C|ishmael|Gen|21|11|6
 A|hadar|Gen|25|15|Hadad@Gen.36.39-1Ch
 C|shechem|Gen|35|5|4
