@@ -257,8 +257,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
   Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
   TICKET_blurb_verse_check.md. Remaining lanes (parked for JP to raise):
-  witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
-  word-position binding (~118 same-verse multi) · jabish spelling ruling (above).**
+  word-position binding (~118 same-verse multi, + malchiah Ezr 10:25) · jabish spelling
+  ruling (above).**
+  **WITNESS LANE A SHIPPED 2026-07-30 (9 binds, kind='witness', card sentence live) after
+  an 11-bind wrong-referent ship caught + corrected same session — record + standing
+  referent-screen rule in TODO_ARCHIVE.md and DRILL_witness_divergence.md. Next in the
+  reviewer-verdicted lane order: Lane B spelling-equiv infrastructure (46 slots + the 11
+  demoted), then Lane C (~303). Delete bible.db.pre_witnessA2 on PA (contains the wrong
+  binds; the real rollback is pre_witnessA).**
 - **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
   Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
   when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads

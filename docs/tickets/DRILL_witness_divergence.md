@@ -10,6 +10,21 @@ HAND RULINGS — they live in pn_hand_rulings.tsv with a new evidence-class tag
 CONDITION: the exact card sentence for witness binds is drafted in the Lane A ticket
 and JP approves it BEFORE Lane A builds.
 
+## LANE A SHIPPED 2026-07-30 — 9 binds live, after a caught-and-corrected wrong-referent ship
+Final: kind='witness' binds at Job 1:13/16/17/18 (Job@Job.1.1-Jas) + Gen 36:20/24/29,
+1Ch 1:38/40 (Zibeon@Gen.36.2-1Ch), each carrying the JP-approved card sentence.
+**INCIDENT (owned):** the first Lane A ship (20 binds) used the sole-SPELLING test as if
+it established the referent; 11 binds pointed at the WRONG person (sarah Num 26:46 =
+Serah Asher's daughter, koz = Hakkoz, shuah = Shua/Shuhah, hadar = Hadad-son-of-Ishmael,
+joanna = Joanan, sheva = Seraiah, job Gen 46:13 = Jashub, michal 2Sa 21:8 = contested
+Merab reading). Caught by the post-swap curl (Sarah), confirmed by a full referent screen,
+corrected same session (demoted lane X, gate extended: demoted keys FORBIDDEN as witness).
+**STANDING RULE EARNED: lane-A eligibility requires the REFERENT screen — no other TIPNR
+entity of ANY spelling may cover the verse. Sole-spelling proves candidacy, never identity.**
+The 11 demoted slots are lane-B-shape spelling collisions; each needs a hand ruling
+(spelling-equiv, TSV lane) to its TRUE referent. Malchiah Ezr 10:25 separately demoted
+(two Malchiahs in the verse — word-position lane).
+
 ## PRODUCTION-MATCHER CENSUS (step 1, done 2026-07-30)
 Re-run with the binder's own map (er.parse_tipnr + er.build_indexes on the pinned
 TIPNR). Frozen artifact: `docs/tickets/witness_census_lanes.txt` (370 slots).

@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Witness Lane A SHIPPED (9 binds) after a caught wrong-referent ship (11 corrected same session)
+
+- **Live:** kind='witness' — a FIRST-CLASS bind type (reviewer-verdicted) — at Job 1:13-18
+  (Job of Uz, his own book) and the Seir genealogy (Zibeon, Gen 36 + 1Ch 1). Cards carry the
+  JP-approved sentence verbatim: "ABP's Greek text reads {Name} here. The reference index
+  does not list this name at this verse; the identification follows ABP's reading."
+  (Both prior drafts REJECTED for asserting an unproven manuscript cause.)
+- **THE INCIDENT (the record's point):** the first ship bound 20 slots on the sole-SPELLING
+  test; 11 served the WRONG PERSON (Abraham's Sarah on Asher's daughter Serah, the Luke-8
+  Joanna on a male ancestor, Job of Uz on Issachar's son, etc.). Sole-spelling proves a name
+  has one candidate — it never proves the verse's referent. Caught on the post-swap curl
+  (Num 26:46 looked wrong), confirmed with a full any-spelling coverage screen, demoted,
+  rebuilt, re-gated, re-swapped inside the same session. ~15 minutes of wrong cards live.
+- **STANDING RULE:** lane-A eligibility = the referent screen (no other TIPNR entity of ANY
+  spelling covers the verse) + gate invariant (demoted keys FORBIDDEN as witness in either
+  file — the class cannot silently recur). Also earned: Malchiah Ezr 10:25 demoted (verse
+  names two Malchiahs — word-position lane), caught by the gate's stop-and-look on 'hot'.
+- **Rollback:** bible.db.pre_witnessA (pre-witness, clean 163-rulings state); pre_witnessA2
+  contains the 11 wrong binds — delete it, it is not a rollback anyone wants. pre_rulings2/3
+  deleted at the disk-quota stop.
+- **Next in lane order (reviewer-verdicted):** B-rulings infrastructure (spelling-equiv tag
+  in the TSV) → Lane B 46 slots + the 11 demoted spelling-collisions → Lane C ~303.
+
+---
+
 ## 2026-07-30 — Rulings batch 3 SHIPPED (22 adjacency-compound binds; evidence pass)
 
 - **Live:** 163 hand-ruled binds total (+22). Clicking "Gilead" in the Ramoth-gilead
