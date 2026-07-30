@@ -40,6 +40,11 @@ design (provenance contract territory).
   sample 6/6): **own evidence pass required before ruling** (bar: adjacent token
   forms the attested compound AND the first-word entity's refs cover the verse;
   per-slot evidence; near-misses named). Batch 3 candidate.
+  **DISPLAY HALF (JP + reviewer 2026-07-30, from the Ezion-Geber screenshot):
+  adjacent PN tokens that bind to the SAME entity should render as ONE clickable
+  chip — today "Ezion" + "Geber" are two chips serving one card. One entity =
+  one clickable thing. Belongs to this lane (same shape as the batch-3 slots);
+  fold into the evidence pass's design.**
 
 ## Status
 PARKED — design pass waits for JP to raise it. Related-but-separate:
