@@ -47,9 +47,15 @@ bad_added = [k for k in added if k not in expected
              or added[k][4] != expected[k][0] or added[k][5] != "ruled" or added[k][7] != 1]
 missing = [k for k in expected if k not in added and k not in lrows]
 
-okA = (len(added) == len(expected) and not bad_added and not removed
-       and not changed and not missing)
-print(f"gate A: {'PASS' if okA else 'FAIL'} — added {len(added)} (expect {len(expected)}), "
+# A ruled key already live in the OLD file adds nothing (batch-1 rows on a batch-2
+# run) — the bar is: every TSV key landed (live-or-added), every ADDED key is a TSV
+# key with correct content, nothing removed, nothing modified. (The original
+# added==len(expected) form was only right when live held zero rulings; it FAILed
+# spuriously on batch 2 — 2026-07-30.)
+already_live = sum(1 for k in expected if k in lrows)
+okA = not (bad_added or removed or changed or missing)
+print(f"gate A: {'PASS' if okA else 'FAIL'} — TSV keys {len(expected)} "
+      f"(already live {already_live}, newly added {len(added)}), "
       f"wrong-content {len(bad_added)}, removed {len(removed)}, modified {len(changed)}, "
       f"unlanded rulings {len(missing)}")
 if not okA:
