@@ -109,7 +109,8 @@ C|teman|Eze|47|19|2
 C|teman|Eze|48|28|2
 C|teman|Jos|12|3|2
 C|teman|Jos|13|4|2
-A|job|Gen|46|13|Job@Job.1.1-Jas
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Jashub@Gen.46.13-1Ch covers the verse (Issachar's son, Greek spells him Job)
+X|job|Gen|46|13|Job@Job.1.1-Jas
 A|job|Job|1|13|Job@Job.1.1-Jas
 A|job|Job|1|16|Job@Job.1.1-Jas
 A|job|Job|1|17|Job@Job.1.1-Jas
@@ -145,9 +146,12 @@ C|gog|Num|24|7|2
 C|jeremiah|Jer|25|14|8
 C|jeremiah|Jer|36|18|8
 C|jeremiah|Lam|1|1|8
-A|shuah|1Ch|4|11|Shuah@Gen.25.2-1Ch
-A|shuah|Gen|38|12|Shuah@Gen.25.2-1Ch
-A|shuah|Gen|38|2|Shuah@Gen.25.2-1Ch
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Shuhah@1Ch.4.11 covers the verse
+X|shuah|1Ch|4|11|Shuah@Gen.25.2-1Ch
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Shua@Gen.38.2-1Ch covers the verse (Judah's father-in-law)
+X|shuah|Gen|38|12|Shuah@Gen.25.2-1Ch
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Shua@Gen.38.2-1Ch covers the verse
+X|shuah|Gen|38|2|Shuah@Gen.25.2-1Ch
 C|heber|1Ch|5|13|4
 C|heber|1Ch|8|22|4
 C|heber|Luk|3|35|4
@@ -209,8 +213,10 @@ C|amnon|2Sa|13|14|2
 C|amnon|2Sa|13|16|2
 C|tamar|2Sa|13|16|4
 C|tamar|Gen|38|26|4
-A|koz|Ezr|2|61|Koz@1Ch.4.8
-A|koz|Neh|7|63|Koz@1Ch.4.8
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Hakkoz@Ezr.2.61-Neh covers the verse
+X|koz|Ezr|2|61|Koz@1Ch.4.8
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Hakkoz@Ezr.2.61-Neh covers the verse
+X|koz|Neh|7|63|Koz@1Ch.4.8
 C|eleazar|Ezr|8|16|8
 C|eleazar|Num|36|1|8
 C|noah|Gen|7|16|2
@@ -250,8 +256,10 @@ C|ahimelech|1Sa|21|6|3
 C|jehoram|2Ch|23|1|2
 C|jotham|2Ch|27|8|3
 C|mephibosheth|2Sa|19|26|2
-A|sheva|2Sa|20|25|Sheva@1Ch.2.49
-A|michal|2Sa|21|8|Michal@1Sa.14.49-1Ch
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Seraiah@2Sa.8.17-1Ch covers the verse (Sheva = the scribe's variant name)
+X|sheva|2Sa|20|25|Sheva@1Ch.2.49
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Merab@1Sa.14.49-2Sa covers the verse (contested Michal/Merab reading - own ruling owed)
+X|michal|2Sa|21|8|Michal@1Sa.14.49-1Ch
 B|barsabas|Act|1|23|0
 C|joses|Act|4|36|2
 C|eliezer|Exo|2|22|11
@@ -261,7 +269,8 @@ C|miriam|Exo|6|20|2
 # in the verse. Belongs to the word-position lane.
 H|malchiah|Ezr|10|25|Malchiah@Jer.21.1-
 C|ishmael|Gen|21|11|6
-A|hadar|Gen|25|15|Hadad@Gen.36.39-1Ch
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Hadad@Gen.25.15-1Ch covers the verse (Ishmael's son, not the Edomite king)
+X|hadar|Gen|25|15|Hadad@Gen.36.39-1Ch
 C|shechem|Gen|35|5|4
 C|heman|Gen|36|22|3
 C|machir|Gen|46|20|2
@@ -273,14 +282,16 @@ B|pashur|Jer|38|1|0
 C|jephunneh|Jos|15|14|2
 C|jamin|Jos|17|7|3
 B|zacharias|Luk|3|2|0
-A|joanna|Luk|3|27|Joanna@Luk.8.3-
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Joanan@Luk.3.27 covers the verse (male ancestor in the genealogy)
+X|joanna|Luk|3|27|Joanna@Luk.8.3-
 C|jehoiada|Neh|3|6|4
 C|harim|Neh|10|4|5
 B|hodijah|Neh|10|12|0
 C|bunni|Neh|10|14|3
 C|beor|Num|24|22|2
 C|shelah|Num|26|19|3
-A|sarah|Num|26|46|Sarah@Gen.11.29-1Pe
+# DEMOTED from lane A 2026-07-30 (referent-collision screen): Serah@Gen.46.17-1Ch covers the verse (Asher's daughter)
+X|sarah|Num|26|46|Sarah@Gen.11.29-1Pe
 C|jacob|Gen|29|23|2
 C|jacob|Gen|29|25|2
 C|jacob|Gen|29|32|2
