@@ -942,7 +942,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // arrangement (not a per-branch fix): drop the name echo (the hero above carries
       // it), promote the single body line, tuck the badge inline on its baseline. Covers
       // PERSON-thin, PEOPLE/CLAN, and a coordinate-less place alike.
-      const thin = !richPerson && !hasMap && !placeNote && ((line ? 1 : 0) + factItems.length) <= 1;
+      // kind='witness' (Lane A, 2026-07-30): the bind rests on ABP's own text, not a
+      // TIPNR verse listing — the card must SAY so. Sentence JP-approved verbatim
+      // 2026-07-30 (claims only bound facts; no manuscript-cause assertion).
+      const witnessNote = be.kind === "witness"
+        ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
+            ABP's Greek text reads {be.name} here. The reference index does not list this
+            name at this verse; the identification follows ABP's reading.
+          </p>
+        : null;
+      const thin = !richPerson && !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + factItems.length) <= 1;
       const chipOwnLine = peopleClan || (be.section !== "person" && be.section !== "place");
       // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
       // rule): every person/place section opens with the ENTITY's name in bold. The
@@ -992,6 +1001,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             : be.ambiguous
               ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Several places share this name — map hidden to avoid a wrong location.</p>
               : null)}
+          {witnessNote}
           <div className="pnbound-badge">Matched to this verse</div>
         </section>
       );

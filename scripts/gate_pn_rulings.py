@@ -2,7 +2,8 @@
 """gate_pn_rulings.py — pre-swap gates for the Jacob-class hand-rulings arc
 (reviewer-approved 2026-07-30). READ-ONLY on BOTH database files.
 
-Expected delta is read from scripts/pn_hand_rulings.tsv itself (81 rows at approval):
+Expected delta = scripts/pn_hand_rulings.tsv (kind='ruled') + lane-A rows of
+docs/tickets/witness_census_lanes.txt (kind='witness', since 2026-07-30):
   gate A  pn_binding: scratch = live + EXACTLY the ruled keys, nothing else changed —
           every new row has kind='ruled' and the TSV's entity; an extra bind (the
           82nd), a lost row, or a modified row = FAIL/abort.
@@ -29,14 +30,29 @@ if len(sys.argv) != 3:
 live = sqlite3.connect(f"file:{sys.argv[1]}?mode=ro", uri=True)
 scr = sqlite3.connect(f"file:{sys.argv[2]}?mode=ro", uri=True)
 
+# expected delta = hand rulings (kind='ruled') + witness lane A (kind='witness').
+# The two classes are pinned SEPARATELY: an added row must carry its own class's
+# kind — a ruled row can never silently become witness or vice versa (reviewer
+# verdict 2026-07-30, the free invariant of the first-class bind type).
 tsv = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pn_hand_rulings.tsv")
-expected = {}
+expected = {}   # key -> (uniq, kind)
 for ln in open(tsv, encoding="utf-8"):
     if ln.startswith("#") or ln.startswith("name\t") or not ln.strip():
         continue
     nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
-    expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, ev)
-print(f"TSV expected ruled binds: {len(expected)}")
+    expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "ruled")
+n_ruled = len(expected)
+wit = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                   "docs", "tickets", "witness_census_lanes.txt")
+if os.path.isfile(wit):
+    for ln in open(wit, encoding="utf-8"):
+        if ln.startswith("#") or not ln.strip():
+            continue
+        lane, nm, bk_s, ch, vs, detail = ln.rstrip("\n").split("|")[:6]
+        if lane != "A":
+            continue
+        expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (detail, "witness")
+print(f"expected: {n_ruled} ruled + {len(expected) - n_ruled} witness = {len(expected)}")
 
 q = "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding"
 lrows = {(r[0], r[1], r[2], r[3]): r for r in live.execute(q)}
@@ -47,7 +63,8 @@ added = {k: srows[k] for k in srows if k not in lrows}
 removed = [k for k in lrows if k not in srows]
 changed = [k for k in lrows if k in srows and srows[k] != lrows[k]]
 bad_added = [k for k in added if k not in expected
-             or added[k][4] != expected[k][0] or added[k][5] != "ruled" or added[k][7] != 1]
+             or added[k][4] != expected[k][0] or added[k][5] != expected[k][1]
+             or added[k][7] != 1]
 missing = [k for k in expected if k not in added and k not in lrows]
 
 # A ruled key already live in the OLD file adds nothing (batch-1 rows on a batch-2

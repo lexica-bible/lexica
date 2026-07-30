@@ -246,6 +246,50 @@ def main():
               + (f" {ruled_replaced}" if ruled_replaced else ""))
         print()
 
+    # ── witness binds, Lane A (docs/tickets/witness_census_lanes.txt, reviewer-
+    # approved 2026-07-30) ──────────────────────────────────────────────────────
+    # Sole-entity names ABP's own Greek attests at verses the TIPNR reference base
+    # doesn't list. kind='witness' is a FIRST-CLASS bind type (never a flag on
+    # 'ruled') so the evidence classes stay partitioned forever. Same loud-failure
+    # contract as rulings: unknown entity/book, or a conflict with a binder render
+    # for a DIFFERENT entity, aborts the build. Only lane-A rows are consumed.
+    witness_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                "docs", "tickets", "witness_census_lanes.txt")
+    wit_new = wit_same = 0
+    wit_replaced = []
+    if os.path.isfile(witness_path):
+        known_uniq = {e["uniq"] for e in ents}
+        with open(witness_path, encoding="utf-8") as fh:
+            for ln in fh:
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                lane, nm, bk_s, ch, vs, detail = ln.rstrip("\n").split("|")[:6]
+                if lane != "A":
+                    continue
+                uniq = detail
+                if uniq not in known_uniq:
+                    raise ValueError(f"witness lane A: unknown entity {uniq!r}")
+                bk = er.book_num(bk_s)
+                if bk is None:
+                    raise ValueError(f"witness lane A: unknown book {bk_s!r}")
+                key = (bk, int(ch), int(vs), er.norm_name(nm))
+                prev = group.get(key)
+                if prev and prev[0] == "render":
+                    if prev[1] == uniq:
+                        wit_same += 1
+                        continue
+                    raise ValueError(f"witness lane A: {key} already renders {prev[1]}, "
+                                     f"lane A says {uniq} -- resolve before building")
+                if prev:
+                    wit_replaced.append((key, prev[0]))
+                tier = scope_tier(er.norm_name(nm), ambiguous, person_ids, place_ids)
+                group[key] = ("render", uniq, "witness", "sole-entity", tier)
+                wit_new += 1
+        print(f"Witness lane A: {wit_new} new render binds, {wit_same} already-agreeing, "
+              f"{len(wit_replaced)} replaced floor/HOT rows"
+              + (f" {wit_replaced}" if wit_replaced else ""))
+        print()
+
     # ── report ──────────────────────────────────────────────────────────────
     def report_tier(t, title):
         s = stat[t]
