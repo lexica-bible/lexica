@@ -26,6 +26,14 @@ proven class, not a hypothetical. Sweep at the time: 187 cached, exactly 1 bad.
 Standing fragility note: Psalm-title clicks (verse 0) are a known-fragile surface —
 any frontend change touching verse references gets a verse-0 spot check.
 
+**Specimen #2 (same card, regenerated blurb, 2026-07-30):** nearly-perfect prose with
+ONE wrong claim — called the king "Abimelech, king of Gerar" (the Genesis figure);
+1 Samuel 21 names him Achish of Gath, and the card's OWN certified layer serves
+Achish/Philistia. A confident, mostly-right paragraph whose single unverified
+assertion CONTRADICTS the certified data on the same card — the exact claim-level
+failure this cert catches. Best evidence yet for generation-from-bound-facts: a
+blurb fed the Achish record could not have written "Gerar."
+
 ## The check (borrows the Lexica-dictionary definition-engine tooling)
 - **Claim decomposition:** each blurb makes discrete claims (Stephen is a deacon;
   he is being stoned; he calls on Jesus). Every claim needs a corroboration
