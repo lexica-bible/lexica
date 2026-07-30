@@ -218,13 +218,14 @@ def main():
     print(f"hand-table nominatives loaded: {len(hand)}")
 
     inv = defaultdict(list)          # norm name -> [(form bytes, morph-or-None)]
+    _valid_key = re.compile(r"^[a-z]").match   # kills label-fragment leaks (", no")
     for w in words:
         nm = er.norm_name(w["label"] or "")
-        if nm and w["surface_form"]:
+        if nm and _valid_key(nm) and w["surface_form"]:
             inv[nm].append((fix_detached_breathing(w["surface_form"]), w["morph"]))
     for (b, c, v), slots in scrape.items():
         for tok, greek in slots:
-            if tok:
+            if tok and _valid_key(tok):
                 inv[tok].append((fix_detached_breathing(greek), None))
 
     _hw_cache = {}
@@ -299,8 +300,15 @@ def main():
                         hw, _cls = headword(nm)
                         if hw:
                             lemma, source = hw, "surface"
+                        elif w["surface_form"]:
+                            # Ruling (b), JP 2026-07-30: an UNRESOLVED name keeps
+                            # today's behavior — the verse's OWN printed form heads
+                            # the card (always ABP-attested, never contradicts the
+                            # page; per-name uniformity arrives via hand-table rows
+                            # incrementally, no deadline).
+                            lemma, source = norm_lemma(w["surface_form"]), "lemma-only"
                         else:
-                            lemma, source = None, "none"  # honest English fallback
+                            lemma, source = None, "none"  # no Greek anywhere — English
         split[source] += 1
         rows.append((w["verse_id"], w["position"], greek, lemma, source, heb))
 

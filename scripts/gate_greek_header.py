@@ -6,16 +6,19 @@ This lane touches PRESENTATION only (the pn_greek_identity table). The gates:
   gate A  identity untouched: pn_binding, tipnr_entities byte-identical;
           words/verses/abp_surface row counts unchanged (translit byte-check is
           implied by abp_surface identity). ANY identity delta = automatic stop.
-  gate B  pn_greek_identity delta is EXACTLY the ruled shape: same keys; every
-          greek_strongs unchanged; per-row allowed changes only:
+  gate B  pn_greek_identity delta is EXACTLY the ruled shape (ruling (b),
+          JP 2026-07-30): same keys; every greek_strongs unchanged; per-row
+          allowed changes only:
             unchanged row
-            breathing repair (old value has the detached mark+space prefix and
-              new == fix_detached_breathing(old))
-            none       -> surface   (a new disciplined headword)
-            lemma-only -> surface   (surface-derived value re-disciplined)
-            lemma-only -> none      (bent/unresolvable form honestly dropped)
-          Anything else (a strongs change, abp-tag/tipnr source change, a
-          none -> lemma-only, a changed headword outside the classes) = FAIL.
+            breathing repair (new == fix_detached_breathing(old), old != new)
+            -> surface     (a new disciplined per-name headword, any prior source
+                            except abp-tag/tipnr)
+            a lemma value that EQUALS the verse's own abp_surface form (breathing-
+              repaired) — the (b) page-attested fallback; source may become
+              lemma-only from none, or stay put
+            lemma-only -> none  (gentilic-class drop — counted, JP eyeballs the total)
+          Anything else (a strongs change, an abp-tag/tipnr source change, a
+          header that matches neither the page nor the repair) = FAIL.
   gate C  controls: hadad must FLIP to source='surface' in the scratch copy
           (the founding specimen), and every pin in
           docs/tickets/greek_header_pins.txt (name|expected-form, filled at
@@ -66,9 +69,11 @@ if not okA:
 q = "SELECT verse_id, position, greek_strongs, greek_lemma, source FROM pn_greek_identity"
 lrows = {(r[0], r[1]): (r[2], r[3], r[4]) for r in live.execute(q)}
 srows = {(r[0], r[1]): (r[2], r[3], r[4]) for r in scr.execute(q)}
+surf = {(r[0], r[1]): r[2] for r in scr.execute(
+    "SELECT verse_id, position, form FROM abp_surface")}
 bad = []
-counts = {"unchanged": 0, "breathing": 0, "none->surface": 0,
-          "lemma-only->surface": 0, "lemma-only->none": 0}
+counts = {"unchanged": 0, "breathing": 0, "->surface (headword)": 0,
+          "page-attested fallback": 0, "gentilic drop": 0}
 if set(lrows) != set(srows):
     bad.append(("KEYSET", len(set(lrows) ^ set(srows)), "keys added/removed"))
 for k in set(lrows) & set(srows):
@@ -79,12 +84,14 @@ for k in set(lrows) & set(srows):
         counts["unchanged"] += 1; continue
     if ls == ss and ll and sl == fix_detached_breathing(ll) and sl != ll:
         counts["breathing"] += 1; continue
-    tr = f"{ls}->{ss}"
-    if tr in ("none->surface", "lemma-only->surface") and sl:
-        counts[tr] += 1; continue
-    if tr == "lemma-only->none" and not sl:
-        counts[tr] += 1; continue
-    bad.append((k, tr, f"lemma {ll!r} -> {sl!r} outside the ruled classes"))
+    page = fix_detached_breathing(surf.get(k) or "")
+    if ss == "surface" and ls not in ("abp-tag", "tipnr") and sl:
+        counts["->surface (headword)"] += 1; continue
+    if sl and sl == page and ss in ("lemma-only", "abp-tag", "tipnr") and ls != "surface":
+        counts["page-attested fallback"] += 1; continue
+    if ss == "none" and not sl and ls == "lemma-only":
+        counts["gentilic drop"] += 1; continue
+    bad.append((k, f"{ls}->{ss}", f"lemma {ll!r} -> {sl!r} outside the ruled classes"))
 okB = not bad
 print(f"gate B: {'PASS' if okB else 'FAIL'} — " +
       ", ".join(f"{k} {v:,}" for k, v in counts.items())
@@ -109,20 +116,39 @@ okC &= hadad is not None
 
 pins = os.path.join(_HERE, "..", "docs", "tickets", "greek_header_pins.txt")
 if os.path.isfile(pins):
+    # Pin kinds (one per line):
+    #   uniform|<name>|<exact form>   every source='surface' row for the name
+    #                                 carries exactly this headword
+    #   verse-form|<name>             every fallback row for the name equals its
+    #                                 verse's own printed form (ruling (b))
     for ln in open(pins, encoding="utf-8"):
         if ln.startswith("#") or not ln.strip():
             continue
-        nm, expect = ln.rstrip("\n").split("|")[:2]
-        got = scr.execute(
-            "SELECT DISTINCT g.greek_lemma FROM pn_greek_identity g "
+        parts = ln.rstrip("\n").split("|")
+        kind, nm = parts[0], parts[1]
+        rows_q = scr.execute(
+            "SELECT g.verse_id, g.position, g.greek_lemma, g.source "
+            "FROM pn_greek_identity g "
             "JOIN words w ON w.verse_id=g.verse_id AND w.position=g.position "
-            "WHERE g.source='surface' "
-            "AND lower(COALESCE(NULLIF(w.english_head,''), w.english)) = ?",
+            "WHERE lower(COALESCE(NULLIF(w.english_head,''), w.english)) = ?",
             (nm.lower(),)).fetchall()
-        vals = sorted({r[0] for r in got})
-        ok = vals == [expect]
+        if kind == "uniform":
+            expect = parts[2]
+            vals = sorted({r[2] for r in rows_q if r[3] == "surface"})
+            ok = vals == [expect]
+            print(f"gate C: pin uniform {nm} = {expect!r}: "
+                  f"{'PASS' if ok else f'FAIL (got {vals})'}")
+        elif kind == "verse-form":
+            fb = [r for r in rows_q if r[3] == "lemma-only"]
+            miss = [r for r in fb
+                    if r[2] != fix_detached_breathing(surf.get((r[0], r[1])) or "")]
+            ok = bool(fb) and not miss
+            print(f"gate C: pin verse-form {nm}: {len(fb)} fallback rows, "
+                  f"{'PASS' if ok else f'FAIL ({len(miss)} mismatch / none found)'}")
+        else:
+            ok = False
+            print(f"gate C: pin UNKNOWN KIND {kind!r}: FAIL")
         okC &= ok
-        print(f"gate C: pin {nm} = {expect!r}: {'PASS' if ok else f'FAIL (got {vals})'}")
 else:
     print("gate C: no pins file yet (docs/tickets/greek_header_pins.txt) — "
           "pins land at verdict time from the receipt")
