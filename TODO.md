@@ -181,11 +181,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
     1,232 names → compact-match 2,770 / gentilic 565 / absent 527. BUT the compact
     class is mostly NOT alias gaps: Paul 147, Elisha 83, Pilate 45, Esther 44 match
     metaV EXACTLY and are rejected by the bio quality bar (no dates, <2 kin → no
-    skeleton card, AI note serves instead — deliberate gate). Reviewer ruling: log as
-    a REAL design question — current outcome is arguably backwards (most-mentioned NT
-    figure cardless while obscure single-mention names get full cards). Options when
-    raised: reduced name-only card for exact matches failing the bio bar, or enrich
-    the top-N entries. Reviewer-gated, PARKED. The hyphen slice shipped with lane 1. Multi-
+    skeleton card, AI note serves instead — deliberate gate). **RESOLVED 2026-07-30:
+    slim card SHIPPED (JP option A) + all receipts green** — census a:person-slim
+    2,218 exact, BOUND stable, six-eyeball pass. Riders shipped same arc: header
+    unification (Biblical Person/Place everywhere) · NAME ALWAYS SHOWS rule (JP
+    ruling 2026-07-30, REVERSES the 2026-07-16 differs-only stutter rule — every
+    person/place/group section opens with the bold entity name; Saul→Paul,
+    Simon→Peter visible) · ALL chip click sites route through pnClickPayload (the
+    'Blind'/'Then' hero-gloss class killed at the producer; no hand-rolled PN
+    payloads remain — grep pnName: finds none) · slim tag-row spacing. TIPNR
+    one-liner wired (exact-single-hit only; import-coverage gap = own flag above). The hyphen slice shipped with lane 1. Multi-
     referent names in the list (jesus/mary/jacob) = Jacob-class, untouched.
   - **"Field" oddity (flag only, out of scope):** capitalized common word 'field'
     (Isa 29:17 al.) serves a metaV PLACE card via name match — pre-existing quirk

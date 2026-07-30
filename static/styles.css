@@ -2925,6 +2925,9 @@ input { font-family: inherit; }
 .metav-ts-b.on { color: var(--ink); }
 .metav-ts-sep { color: var(--ink-4); margin: 0 3px; }
 .metav-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Slim card (Paul-class): no description line above the tag row, so it needs its own
+   gap under the bold name (full cards get the spacing from the line between). */
+.metav-person--slim .metav-meta { margin-top: 8px; }
 .metav-tag {
   font-size: 11px;
   padding: 3px 8px;
