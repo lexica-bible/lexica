@@ -44,15 +44,19 @@ for ln in open(tsv, encoding="utf-8"):
 n_ruled = len(expected)
 wit = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                    "docs", "tickets", "witness_census_lanes.txt")
+forbidden = set()   # demoted lanes (H/X): a witness bind here is a defect
 if os.path.isfile(wit):
     for ln in open(wit, encoding="utf-8"):
         if ln.startswith("#") or not ln.strip():
             continue
         lane, nm, bk_s, ch, vs, detail = ln.rstrip("\n").split("|")[:6]
-        if lane != "A":
-            continue
-        expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (detail, "witness")
-print(f"expected: {n_ruled} ruled + {len(expected) - n_ruled} witness = {len(expected)}")
+        key = (er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))
+        if lane == "A":
+            expected[key] = (detail, "witness")
+        elif lane in ("H", "X"):
+            forbidden.add(key)
+print(f"expected: {n_ruled} ruled + {len(expected) - n_ruled} witness = {len(expected)} "
+      f"(+{len(forbidden)} demoted keys forbidden as witness)")
 
 q = "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding"
 lrows = {(r[0], r[1], r[2], r[3]): r for r in live.execute(q)}
@@ -73,13 +77,21 @@ missing = [k for k in expected if k not in added and k not in lrows]
 # added==len(expected) form was only right when live held zero rulings; it FAILed
 # spuriously on batch 2 — 2026-07-30.)
 already_live = sum(1 for k in expected if k in lrows)
-okA = not (bad_added or removed or changed or missing)
+# A demoted key's stale witness row may be REMOVED (that is the correction), and its
+# key may legitimately reappear as a floor/HOT rebuild artifact — but NEVER as a
+# witness bind, in either file. Everything else keeps the strict no-removal bar.
+bad_removed = [k for k in removed
+               if not (k in forbidden and lrows[k][5] == "witness")]
+stale_witness = [k for k in forbidden if k in srows and srows[k][5] == "witness"]
+changed = [k for k in changed
+           if not (k in forbidden and lrows[k][5] == "witness")]
+okA = not (bad_added or bad_removed or changed or missing or stale_witness)
 print(f"gate A: {'PASS' if okA else 'FAIL'} — TSV keys {len(expected)} "
       f"(already live {already_live}, newly added {len(added)}), "
-      f"wrong-content {len(bad_added)}, removed {len(removed)}, modified {len(changed)}, "
-      f"unlanded rulings {len(missing)}")
+      f"wrong-content {len(bad_added)}, removed {len(bad_removed)}, modified {len(changed)}, "
+      f"unlanded rulings {len(missing)}, demoted-still-witness {len(stale_witness)}")
 if not okA:
-    for k in (bad_added + removed + changed + missing)[:8]:
+    for k in (bad_added + bad_removed + changed + missing + stale_witness)[:8]:
         print(f"    problem key: {k}")
     fails.append("A")
 
