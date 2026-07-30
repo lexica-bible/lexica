@@ -1,0 +1,87 @@
+# pn_hand_rulings.tsv - hand-ruled verse binds for ambiguous names (Jacob-class easy pile)
+# Reviewer-approved 2026-07-30. Consumed by build_entity_binding.py --apply.
+# Every row: evidence class pre-registered + one-line rationale (citable from this file).
+# flags: LXX-only = name present in the Greek witness, absent from the Hebrew (a future
+# Hebrew-parallel view must know these binds are witness-dependent).
+name	book	chapter	verse	entity_uniq	evidence_class	rationale	flags
+zerubbabel	1Ch	3	19	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	2	2	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	3	2	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	3	8	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	4	2	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	4	3	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Ezr	5	2	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	1	1	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	1	12	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	1	14	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	2	2	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	2	21	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	2	23	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Hag	2	4	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Mat	1	12	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Mat	1	13	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Neh	12	1	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Neh	12	47	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Neh	7	7	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Zec	4	10	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Zec	4	6	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Zec	4	7	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Zec	4	9	Zerubbabel@1Ch.3.19-Mat	ref-partition	TIPNR ref-range covers all non-Luke occurrences; zero overlap with the Luke-genealogy entity	
+zerubbabel	Luk	3	27	Zerubbabel@Luk.3.27	ref-partition	Luke-genealogy entity's own sole reference; TIPNR models Luke's line as a distinct person (parent Shealtiel-of-Neri vs Pedaiah)	
+artaxerxes	Est	10	3	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	1	1	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	1	10	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	1	17	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	1	2	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	1	9	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	2	16	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	2	21	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	3	1	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	3	12	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	3	6	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	3	7	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	3	8	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	6	2	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	8	1	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	8	12	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+artaxerxes	Est	9	20	Ahasuerus@Ezr.4.6-Dan	lxx-naming	LXX Esther names the king Artaxerxes throughout where the Hebrew has Ahasuerus (Xerxes I); TIPNR's own Artaxerxes (Longimanus, Ezr/Neh) covers zero Esther references	
+cainan	Gen	5	10	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	Gen	5	12	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	Gen	5	13	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	Gen	5	14	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	Gen	5	9	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	Luk	3	37	Kenan@Gen.5.9-Luk	ref-partition	Antediluvian Kenan (LXX/ABP spelling Cainan); TIPNR ref-range covers the Gen 5 genealogy and Luk 3:37	
+cainan	1Ch	1	18	Cainan@Luk.3.36	lxx-naming	Second Cainan, son of Arphaxad: present in the LXX genealogies (Gen 10-11, 1Ch 1) and Luk 3:36, absent from the Hebrew text - LXX-ONLY witness, bind is witness-dependent	LXX-only
+cainan	Gen	10	22	Cainan@Luk.3.36	lxx-naming	Second Cainan, son of Arphaxad: present in the LXX genealogies (Gen 10-11, 1Ch 1) and Luk 3:36, absent from the Hebrew text - LXX-ONLY witness, bind is witness-dependent	LXX-only
+cainan	Gen	10	24	Cainan@Luk.3.36	lxx-naming	Second Cainan, son of Arphaxad: present in the LXX genealogies (Gen 10-11, 1Ch 1) and Luk 3:36, absent from the Hebrew text - LXX-ONLY witness, bind is witness-dependent	LXX-only
+cainan	Gen	11	12	Cainan@Luk.3.36	lxx-naming	Second Cainan, son of Arphaxad: present in the LXX genealogies (Gen 10-11, 1Ch 1) and Luk 3:36, absent from the Hebrew text - LXX-ONLY witness, bind is witness-dependent	LXX-only
+cainan	Gen	11	13	Cainan@Luk.3.36	lxx-naming	Second Cainan, son of Arphaxad: present in the LXX genealogies (Gen 10-11, 1Ch 1) and Luk 3:36, absent from the Hebrew text - LXX-ONLY witness, bind is witness-dependent	LXX-only
+izhar	1Ch	23	12	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	23	18	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	24	22	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	26	23	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	6	18	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	6	2	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	1Ch	6	38	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	Exo	6	18	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	Exo	6	21	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+izhar	Num	16	1	Izhar@Exo.6.18-1Ch	ref-partition	The Levite (Kohath's son) covers all ten occurrences; the other Izhar (1Ch 4:7) claims none	
+micaiah	1Ki	22	13	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	14	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	15	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	24	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	25	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	26	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	28	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	8	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	1Ki	22	9	Micaiah@1Ki.22.8-2Ch	ref-partition	The prophet's ref-range covers the 1Ki 22 narrative occurrences	
+micaiah	Jer	36	11	Micaiah@Jer.36.11-	ref-partition	Jer 36:11 is this entity's own reference	
+shealtiel	Ezr	3	2	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Ezr	3	8	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Ezr	5	2	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Hag	1	1	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Hag	1	12	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Hag	1	14	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Hag	2	2	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Hag	2	23	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	
+shealtiel	Neh	12	1	Shealtiel@1Ch.3.17-Mat	ref-partition	Main entity (Jehoiachin's line) covers all but Hag 2:21; the Luke-genealogy Shealtiel (son of Neri) claims none of these	

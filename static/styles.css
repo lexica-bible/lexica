@@ -2949,6 +2949,12 @@ input { font-family: inherit; }
 }
 .metav-rels { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .metav-rel-row { display: flex; gap: 8px; font-size: 13px; }
+/* Slim card: the TIPNR one-liner (.detail-p--meta) carries no bottom margin, so a
+   kin row directly after it sat tight (Timothy "Child Eunice", JP 2026-07-30).
+   Adjacent-sibling rule, same shape as the tag-row fix: space appears ONLY when a
+   rel row immediately follows the one-liner — cards without kin (Pilate) and the
+   full layout (David, rows wrapped in .metav-rels) are untouched by construction. */
+.detail-p--meta + .metav-rel-row { margin-top: 8px; }
 .metav-rel-label {
   min-width: 60px;
   font-weight: 600;

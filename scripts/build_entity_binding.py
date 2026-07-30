@@ -207,6 +207,45 @@ def main():
                 heads = sorted({ents[i]["head"] for i in b.candidates})
                 hot_dump.append((nm, r["book"], r["ch"], r["vs"], heads))
 
+    # ── hand rulings (pn_hand_rulings.tsv, reviewer-approved 2026-07-30) ────────
+    # Jacob-class easy-pile rulings land as NORMAL render binds (kind='ruled',
+    # rule=evidence class) so guard/cards/clicks see them with no special-casing.
+    # Loud failure on: unknown entity, unknown book, or a conflict with a binder
+    # render for a DIFFERENT entity (never silently overrule the binder).
+    rulings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "pn_hand_rulings.tsv")
+    ruled_new = ruled_same = 0
+    ruled_replaced = []
+    if os.path.isfile(rulings_path):
+        known_uniq = {e["uniq"] for e in ents}
+        with open(rulings_path, encoding="utf-8") as fh:
+            for ln in fh:
+                if ln.startswith("#") or ln.startswith("name\t") or not ln.strip():
+                    continue
+                nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
+                if uniq not in known_uniq:
+                    raise ValueError(f"pn_hand_rulings: unknown entity {uniq!r}")
+                bk = er.book_num(bk_s)
+                if bk is None:
+                    raise ValueError(f"pn_hand_rulings: unknown book {bk_s!r}")
+                key = (bk, int(ch), int(vs), er.norm_name(nm))
+                prev = group.get(key)
+                if prev and prev[0] == "render":
+                    if prev[1] == uniq:
+                        ruled_same += 1
+                        continue
+                    raise ValueError(f"pn_hand_rulings: {key} already renders {prev[1]}, "
+                                     f"ruling says {uniq} -- resolve before building")
+                if prev:
+                    ruled_replaced.append((key, prev[0]))
+                tier = scope_tier(er.norm_name(nm), ambiguous, person_ids, place_ids)
+                group[key] = ("render", uniq, "ruled", ev, tier)
+                ruled_new += 1
+        print(f"Hand rulings: {ruled_new} new render binds, {ruled_same} already-agreeing, "
+              f"{len(ruled_replaced)} replaced floor/HOT rows"
+              + (f" {ruled_replaced}" if ruled_replaced else ""))
+        print()
+
     # ── report ──────────────────────────────────────────────────────────────
     def report_tier(t, title):
         s = stat[t]
