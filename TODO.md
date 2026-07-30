@@ -246,6 +246,18 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   adjacency compounds (~41, Ramoth/Jabish Gilead — own evidence pass, natural batch 3) ·
   witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
   word-position binding (~118 same-verse multi).**
+- **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
+  Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
+  when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads
+  ENGLISH while the interlinear in the SAME verse prints Ἀδάρ — the Greek form exists
+  in the text, the token just isn't wired to a Greek identity (likely R-2 residue:
+  H-numbered tokens with no STEP Greek mapping stayed on the Hebrew path). Doctrine:
+  ABP-primary → header should be Greek wherever ABP attests one; English headers
+  shrink over time, not an end state. **Next step = count PN tokens whose header
+  falls back to English while a Greek surface exists in the same verse** — handful
+  vs a backfill lane. Sits naturally beside the breathing-mark cleanup (same
+  identity table). Note the Ἀδάρ/Ἀδερ per-verse spelling variance = the "IN THIS
+  VERSE" slot's job, already handled correctly on Pharaoh.
 - **Stray-breathing Greek name forms (cosmetic, SIZED 2026-07-30, non-blocking):**
   90 distinct `pn_greek_identity.greek_lemma` values carry a leading standalone mark +
   space ("΄ Αδερ" — JP screenshot, Ben-hadad card header). Pattern: ALL are names with

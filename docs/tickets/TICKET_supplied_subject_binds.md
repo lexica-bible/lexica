@@ -45,6 +45,15 @@ design (provenance contract territory).
   chip — today "Ezion" + "Geber" are two chips serving one card. One entity =
   one clickable thing. Belongs to this lane (same shape as the batch-3 slots);
   fold into the evidence pass's design.**
+  **BATCH-3 VERDICT (approved 2026-07-30) — grain pre-registration:** the adjacency
+  test matches the VERSE TEXT's adjacent token, a weaker evidence source than
+  batches 1–2's TIPNR-attested spellings. Operationalized bar: the token pair, IN
+  TEXT ORDER, corresponds to a TIPNR entity's attested compound form under the
+  established normalization — any pair needing looser matching (reordering, skipped
+  article "Ramoth of Gilead", partial form) = NAMED RESIDUE, not the batch. Mary-
+  class check: where BOTH tokens are PN-flagged (Ezion/Geber shape), confirm the
+  ruling binds the clicked slot without disturbing the partner slot; the pairs list
+  must note which partners are PN slots (those are the chip-merge candidates).
 
 ## Status
 PARKED — design pass waits for JP to raise it. Related-but-separate:
