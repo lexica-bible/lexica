@@ -24,6 +24,8 @@ import os
 import re
 import sqlite3
 import sys
+import unicodedata
+from collections import defaultdict
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
@@ -39,6 +41,43 @@ APPLY = "--apply" in sys.argv
 BH = next((sys.argv[i + 1] for i, a in enumerate(sys.argv)
            if a == "--bh" and i + 1 < len(sys.argv)),
           os.path.expanduser("~/bible-db/bh_scrape.db"))
+
+
+# ── Greek-header discipline (DRILL_greek_header_backfill.md, JP-ruled 2026-07-30) ──
+
+# = audit_order_mismatch.is_nominative VERBATIM (that file executes at import time so
+# it cannot be imported here; if a third user appears, extract to a shared module).
+def is_nominative(morph):
+    m = (morph or "").strip()
+    if not m:
+        return False
+    if "." in m:
+        return m.split(".", 1)[1].lstrip("123")[:1] == "N"
+    parts = m.split("-")
+    return len(parts) >= 2 and parts[1].lstrip("123")[:1] == "N"
+
+
+# Stray-breathing repair (reviewer-final fix shape): a value stored as a DETACHED
+# mark + space ("΄ Αδερ") becomes the combined rough breathing on the first vowel,
+# NFC-composed. Applies to stored header values only — transliterations and the
+# abp_surface table are untouched (the gate's byte-unchanged post-check).
+_DETACHED_MARKS = "΄´ʼʽʹ᾽᾿῾‘’'`"
+_GREEK_VOWELS = "αεηιουωΑΕΗΙΟΥΩ"
+
+def fix_detached_breathing(s):
+    if not s or len(s) < 3 or s[0] not in _DETACHED_MARKS or s[1] != " ":
+        return s
+    rest = s[2:]
+    for i, ch in enumerate(rest):
+        if ch in _GREEK_VOWELS:
+            return unicodedata.normalize("NFC", rest[:i + 1] + "̔" + rest[i + 1:])
+    return rest
+
+
+def accent_fold(s):
+    """Comparison key only (display always keeps ABP bytes): lowercase, accents off."""
+    return "".join(ch for ch in unicodedata.normalize("NFD", (s or "").lower())
+                   if not unicodedata.combining(ch))
 
 
 def _name_token(s):
@@ -111,7 +150,7 @@ def main():
                  "AND s.position = w.position") if have_surface else ""
     surf_col = "s.form" if have_surface else "NULL"
     words = conn.execute(f"""
-        SELECT w.verse_id, w.position, w.strongs_base, w.lemma,
+        SELECT w.verse_id, w.position, w.strongs_base, w.lemma, w.morph,
                {surf_col} AS surface_form,
                COALESCE(NULLIF(w.english_head,''), w.english) AS label,
                v.book, v.chapter, v.verse
@@ -140,15 +179,9 @@ def main():
     else:
         print(f"NOTE: scrape db not found at {BH} — lemma layer limited to words.lemma/abp_surface")
 
-    def scrape_greek(book, ch, vs, label):
-        tok = _name_token(label)
-        if not tok:
-            return None
-        slug = ABBREV_TO_SLUG.get(book)
-        if not slug:
-            return None
-        hits = [g for (t, g) in scrape.get((slug, ch, vs), []) if t == tok]
-        return hits[0] if len(hits) == 1 else None     # multi or none -> refuse
+    # (per-verse scrape picking retired 2026-07-30 — the scrape now feeds the
+    # per-NAME headword inventory below instead; raw per-verse forms are inflected
+    # and may no longer become headers directly, per the JP-ruled discipline.)
 
     # Candidate-3 (docs/PLAN_r2_c3_rebuild.md): after the retirement rewrite,
     # words.strongs_base no longer carries the Hebrew snapshot (it moved to
@@ -165,14 +198,75 @@ def main():
             xref[(r["verse_id"], r["position"])] = (r["hebrew_base"], r["class"])
         print(f"pn_hebrew_xref loaded (post-retirement re-run): {len(xref):,} rows")
 
-    rows, split = [], {"abp-tag": 0, "tipnr": 0, "lemma-only": 0, "none": 0}
-    scrape_used = scrape_refused = 0
+    # ── Headword discipline pre-pass (JP-ruled 2026-07-30, DRILL_greek_header_backfill) ─
+    # Per NAME, one nominative headword in ABP's own orthography, or nothing:
+    #   indeclinable  every attested form BYTE-identical -> that form is the headword
+    #   declinable    forms vary -> the nominative-morph occurrences must agree on ONE
+    #                 byte-exact form (populated morph only); disagreement or accent
+    #                 variance NEVER auto-picks (no majority vote) -> hand table
+    #   hand table    scripts/greek_header_nominatives.tsv (pre-registered, ABP-cited)
+    #   UNRESOLVED    stays English (fallback is honest; a guessed form is not)
+    # Inventory sources: abp_surface + the bh scrape (both ABP's own printed text).
+    hand = {}
+    hand_path = os.path.join(_HERE, "greek_header_nominatives.tsv")
+    if os.path.isfile(hand_path):
+        for ln in open(hand_path, encoding="utf-8"):
+            if ln.startswith("#") or not ln.strip():
+                continue
+            nm_h, form_h = ln.rstrip("\n").split("\t")[:2]
+            hand[er.norm_name(nm_h)] = form_h
+    print(f"hand-table nominatives loaded: {len(hand)}")
+
+    inv = defaultdict(list)          # norm name -> [(form bytes, morph-or-None)]
+    for w in words:
+        nm = er.norm_name(w["label"] or "")
+        if nm and w["surface_form"]:
+            inv[nm].append((fix_detached_breathing(w["surface_form"]), w["morph"]))
+    for (b, c, v), slots in scrape.items():
+        for tok, greek in slots:
+            if tok:
+                inv[tok].append((fix_detached_breathing(greek), None))
+
+    _hw_cache = {}
+    def headword(nm):
+        """-> (form|None, class) for a name; cached."""
+        if nm in _hw_cache:
+            return _hw_cache[nm]
+        occ = inv.get(nm)
+        if not occ:
+            r = (None, "no-surface")
+        else:
+            forms = {f for f, _ in occ}
+            if len(forms) == 1:
+                r = (next(iter(forms)), "indeclinable")
+            elif len({accent_fold(f) for f in forms}) == 1:
+                r = (hand[nm], "hand-table") if nm in hand else (None, "UNRESOLVED-accent-variance")
+            else:
+                noms = {f for f, m in occ if m and is_nominative(m)}
+                if len(noms) == 1:
+                    r = (next(iter(noms)), "declinable-morph")
+                elif nm in hand:
+                    r = (hand[nm], "hand-table")
+                else:
+                    r = (None, "UNRESOLVED-nom-disagree" if noms else "UNRESOLVED-no-nominative")
+        _hw_cache[nm] = r
+        return r
+
+    rows, split = [], {"abp-tag": 0, "tipnr": 0, "lemma-only": 0, "surface": 0, "none": 0}
+    excluded_numberless = 0
+    breathing_fixed = {}             # old value -> new value (receipt)
+
+    def norm_lemma(val):
+        fixed = fix_detached_breathing(val)
+        if val and fixed != val:
+            breathing_fixed[val] = fixed
+        return fixed
     for w in words:
         base = w["strongs_base"] or ""
         xr = xref.get((w["verse_id"], w["position"]))
         heb = xr[0] if xr else (base if base.startswith("H") else None)
         greek, source = None, None
-        lemma = w["lemma"] or w["surface_form"]   # dictionary form, else printed Greek
+        lemma = norm_lemma(w["lemma"] or w["surface_form"])  # numbered rows: as before (+breathing fix)
         if base.startswith("G") and xr and xr[1] == "tipnr":
             greek, source = base, "tipnr"         # retirement wrote the served number
         elif base.startswith("G"):
@@ -188,26 +282,49 @@ def main():
                     greek, source = name_g[nm], "tipnr"
                 elif nm and lookup.get(nm, {}).get("g"):
                     greek, source = lookup[nm]["g"], "tipnr"
+                elif w["lemma"]:
+                    lemma = norm_lemma(w["lemma"])   # a REAL dictionary lemma stands
+                    source = "lemma-only"
                 else:
-                    if not lemma:
-                        lemma = scrape_greek(w["book"], w["chapter"], w["verse"], w["label"])
-                        if lemma:
-                            scrape_used += 1
-                        else:
-                            scrape_refused += 1
-                    if lemma:
-                        source = "lemma-only"
+                    # No number, no dictionary lemma: the DISCIPLINED headword or
+                    # nothing (JP pre-rulings 1/2/4). Numberless tokens ('*' — the
+                    # Αἰγύπτιος gentilic class) are EXCLUDED from the lane entirely.
+                    if not base or base == "*":
+                        if w["surface_form"]:
+                            excluded_numberless += 1
+                        lemma, source = None, "none"
                     else:
-                        source = "none"       # no number, no lemma — counted, not hidden
+                        hw, _cls = headword(nm)
+                        if hw:
+                            lemma, source = hw, "surface"
+                        else:
+                            lemma, source = None, "none"  # honest English fallback
         split[source] += 1
         rows.append((w["verse_id"], w["position"], greek, lemma, source, heb))
 
     print("identity split:")
-    for k in ("abp-tag", "tipnr", "lemma-only", "none"):
+    for k in ("abp-tag", "tipnr", "lemma-only", "surface", "none"):
         print(f"  {k:10} {split[k]:,}")
-    print(f"  (lemma via scrape: {scrape_used:,} matched; {scrape_refused:,} refused "
-          f"— no clean one-to-one name match in the verse; refused rows are the "
-          f"'none' bucket's residue, visible, not guessed)")
+    print(f"  (numberless tokens excluded from the surface lane: {excluded_numberless:,} "
+          f"— gentilic-class ruling; breathing-repaired stored values: {len(breathing_fixed):,})")
+    print()
+
+    # ── RECEIPT (written on EVERY run, before any write): the per-name split +
+    # breathing list, for the audit's spot-check (JP-required 2026-07-30).
+    receipt = os.path.join(_HERE, "..", "docs", "tickets", "greek_header_split.txt")
+    with open(receipt, "w", encoding="utf-8", newline="\n") as f:
+        f.write("# greek_header_split.txt — headword-discipline receipt "
+                "(generated by build_pn_greek_identity.py; regenerate, don't edit)\n"
+                "# name | class | occurrences-in-inventory | chosen headword ('' = stays English)\n")
+        for nm in sorted(_hw_cache):
+            hw, cls = _hw_cache[nm]
+            f.write(f"{nm}|{cls}|{len(inv.get(nm, []))}|{hw or ''}\n")
+        f.write("\n# breathing repairs (old -> new), stored header values only:\n")
+        for old, new in sorted(breathing_fixed.items()):
+            f.write(f"# {old} -> {new}\n")
+    n_unres = sum(1 for hw, cls in _hw_cache.values() if cls.startswith("UNRESOLVED"))
+    print(f"receipt written: {receipt}  (names classified: {len(_hw_cache):,}, "
+          f"UNRESOLVED: {n_unres:,} — candidates for the hand table)")
     print()
 
     if not APPLY:

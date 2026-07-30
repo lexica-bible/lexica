@@ -1,7 +1,17 @@
 # DRILL SHEET — Greek-header backfill (source='none' lane) + breathing cleanup
 
-Status: DRAFT 2026-07-30, JP pre-rulings baked in (JP is the reviewer of record for
-this lane). ONE open item below; everything else is ruled and a quick confirm.
+Status: **RULED 2026-07-30 — both open items closed by JP (reviewer of record), BUILT,
+awaiting dry-run receipt.** Item 1 = (b) corpus nominative with (a) hand table as its
+residue, tightened: the auto-pick requires POPULATED morph and byte-agreement among the
+nominative occurrences — any disagreement (incl. accent variance beyond folding) drops
+to the hand table, no majority vote. Item 2 = the 288 gentilics EXCLUDED (adjectives;
+micro-lane later if wanted). JP addition: the mechanical split writes a RECEIPT
+(docs/tickets/greek_header_split.txt — name, class, count, chosen form) before any
+write, for the audit's spot-check. Build: build_pn_greek_identity.py (headword
+discipline + breathing repair + source='surface' layer), gate_greek_header.py
+(identity untouched / ruled delta shape / hadad-must-flip + pins), hand table =
+scripts/greek_header_nominatives.tsv, pins = docs/tickets/greek_header_pins.txt
+(filled at verdict time from the receipt).
 Sizing (live, JP-run 2026-07-30): pn_greek_identity source='none' = 3,380 tokens;
 **2,587 have a Greek surface in the same verse** (israel 495, egypt 96, jerusalem 85,
 bethel 61, levites 49 …), all H-numbered — R-2 residue (H-tokens with no STEP Greek
