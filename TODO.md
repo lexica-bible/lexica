@@ -289,6 +289,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   raw.** Fix = 4th source layer in build_pn_greek_identity + rebuild of its table
   through a mini gate. Sits beside the stray-breathing cleanup (same builder, do in
   one pass). Ἀδάρ/Ἀδερ per-verse variance stays the "IN THIS VERSE" slot's job.
+- **Adonai-card follow-ups (banked 2026-07-30, from JP+reviewer eyeball of the live
+  verse-form class):** (1) WORDING contradiction on the no-number PN card: subtitle
+  "ABP-only form — no Strong's mapping" sits above a 132× H136 Hebrew xref — subtitle
+  means "no GREEK number"; wording fix, visual change = JP approval on the specific
+  text. (2) UPSTREAM NOTE: adonai (H136, divine title) rides the proper-noun lane
+  (is_pn=1) while the card's own AI blurb calls it "a title for God" — the blurb and
+  the lane classification disagree; leave in-lane per the header ruling, revisit as an
+  is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
+  lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
+  visual register — the disclaimer carries the whole load. (4) CHEAP AUDIT queued:
+  pull cards where the ABP-form count EXCEEDS the Hebrew-number count (Hebrew>ABP is
+  the normal pattern — form-filter/translation-choice/versification; the other
+  direction would surface real counting bugs). Reviewer-framed; read-only.
 - **Stray-breathing Greek name forms (cosmetic, SIZED 2026-07-30, non-blocking):**
   90 distinct `pn_greek_identity.greek_lemma` values carry a leading standalone mark +
   space ("΄ Αδερ" — JP screenshot, Ben-hadad card header). Pattern: ALL are names with
