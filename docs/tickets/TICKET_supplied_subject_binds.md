@@ -21,14 +21,17 @@ mechanism design — do NOT inherit them under one label:**
       the name IS in the source, keyed to a place entity — NOT supplied-subject; may
       be resolvable by a compound-aware rule, or correct as-is if the click should
       serve the place. Different mechanism from pronoun resolution.
-  (c) **LXX-only superscription attributions** (coda-verified 2026-07-30, negative
-      result, pre-registration held): Psa 34:0/51:0/55:0/71:0/137:0/138:0/146:0/148:0
-      — the WS1 +1 map lands the right title verse but TIPNR's refs carry the HEBREW
-      title names; ours are the LXX's added attributions. **Near-miss flagged:
-      Psa 34:0 "abimelech" → TIPNR's own Psa 34:1 refs include Achish (TIPNR resolves
-      the title's Abimelech = Achish of Gath) — the artaxerxes→Ahasuerus shape, a
-      clean single-row lxx-naming ruling candidate for a future batch.**
-  (d) LXX insertions (Est 3:13 class) — same phenomenon as (c).
+  (c) **LXX-witness attributions/insertions** (reviewer-ruled 2026-07-30: the former
+      (c) and (d) are ONE phenomenon — the LXX-only flag established by the Cainan
+      rulings covers the whole family). Superscriptions Psa 34:0/51:0/55:0/71:0/
+      137:0/138:0/146:0/148:0 (coda-verified negative: WS1 +1 lands the right title
+      verse but TIPNR refs carry the HEBREW title names; ours are LXX additions) +
+      body insertions (Est 3:13 class). **Near-miss BANKED as the first row of a
+      future rulings batch: Psa 34:0 "abimelech" → Achish@1Sa.21.10-Psa — TIPNR's own
+      Psa 34:1 refs include Achish (it resolves the title's Abimelech = Achish of
+      Gath), the artaxerxes→Ahasuerus shape, evidence class lxx-naming. Declined in
+      the coda only because it fails the name-reachable bar — evidence attached,
+      ruling not lost.**
 Related but SEPARATE lane: same-verse same-name multi (~118 slots, 22 tail names +
 mary) — word-position binding, parked with the multi-entity card territory.
 
