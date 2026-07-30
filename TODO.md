@@ -240,14 +240,20 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   via scripts/audit_witness_italic.py). Class renamed WITNESS-DIVERGENCE (ABP's LXX/TR
   base attests names TIPNR's Hebrew/critical base lacks); census artifact
   docs/tickets/class3_witness_slots.txt; correction owned in the ticket.**
-  **RULINGS BATCH 2 STAGED (reviewer-approved, expected delta = 60):** 59 compound-
-  fragment rows (hadad→the three Ben-hadads ref-partitioned, obed→Obed-edom 15,
-  geber→Ezion-geber, baal→Baal-zebub…) + abimelech Psa 34:0→Achish (lxx-naming) appended
-  to pn_hand_rulings.tsv (now 141 rows, validated: entities known, no dup keys). Same
-  gate arc as batch 1 (gate_pn_rulings.py reads the TSV — control first). Adjacency
-  compounds (~41, Ramoth/Jabish Gilead) = own evidence pass, batch-3 candidate.
-  Remaining mechanisms: witness-divergence design pass (~392, doctrine question restated
-  in the ticket) · word-position binding (~118 same-verse multi).**
+  **RULINGS BATCH 2 SHIPPED + CLOSED 2026-07-30 (reviewer close-out approved, record in
+  TODO_ARCHIVE.md): 141 binds live, spot-checks 4/4, zero regressions. Sole rollback =
+  bible.db.pre_rulings2 (soak, JP's call). Remaining lanes (all parked for JP to raise):
+  adjacency compounds (~41, Ramoth/Jabish Gilead — own evidence pass, natural batch 3) ·
+  witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
+  word-position binding (~118 same-verse multi).**
+- **Place-card raw fields (cosmetic, flagged at batch-2 close-out, non-blocking):**
+  Ezion-geber ruled card shows `area: ">"` (TIPNR place-record parse artifact?) and
+  desc = just the name. When picked up: (1) size it — 
+  `sqlite3 -readonly ~/bible-db/bible.db "SELECT count(*) FROM tipnr_entities WHERE
+  section='place' AND area != '' AND area NOT GLOB '[A-Za-z]*'"` (one record vs a
+  place-parser class); (2) likely fix = card template place-fallback (suppress empty/junk
+  area, lean on the summary line) rather than data surgery. JP eyeball of the rendered
+  Geber 1Ki 9:26 card = the screenshot for this ticket.
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked

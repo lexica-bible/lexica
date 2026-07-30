@@ -6,6 +6,34 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Rulings batch 2 SHIPPED (59 compounds + abimelech→Achish; reviewer close-out approved)
+
+- **Live:** 141 hand-ruled binds total (81 easy-pile + 60 batch-2). Batch 2 = the strict
+  compound-fragment class (clicking the bare component now serves the compound's entity):
+  hadad→the three Ben-hadads ref-partitioned (1Ki 20:1 spot-check served Ben-hadad
+  son-of-Tabrimmon, the correct partition member), obed→Obed-edom 15, geber→Ezion-geber
+  (a PLACE card with map coords — the rulings machinery handles place entities unmodified,
+  matters for future compound batches), baal→Baal-zebub 4, jair→Havvoth-jair, etc., plus
+  abimelech Psa 34:0→Achish (the superscription-coda near-miss, served on the WS1 verse-0
+  path, LXX-only flagged). Render rows 14,911 → 14,971.
+- **Gate arc:** control fired pre- and post-checker-fix; all gates PASS (81 live + 60
+  added, no 61st, entity table + refs byte-stable); zero HOT replacements (stop-and-look
+  silent); served spot-checks 4/4 correct with kind='ruled', Elijah/David byte-same.
+- **TEMPLATE RULE EARNED (reviewer): any checker edit mid-arc requires the control re-run
+  BEFORE the fixed checker's PASS counts.** Cause: gate A's "added == TSV total" was
+  batch-1-only arithmetic — FAILed spuriously at 81-already-live while its own detail
+  line proved the data right. Fixed to the batch-independent invariant (every TSV key
+  landed; nothing extra/lost/changed), control re-armed, then re-gated. In the gate
+  script header.
+- **Quota cleanup (reviewer-ruled):** deleted pre_tipnr_widen + truncated scratch + the
+  stale R-2 rollback bible_pre_r2c3_swap.db (3 certified arcs had landed on top — a
+  "rollback" that would erase verified work isn't one; nightly db_backups is the disaster
+  net). pre_rulings deleted at swap; **sole rollback = bible.db.pre_rulings2.**
+- **Cosmetic flagged (non-blocking, TODO):** Ezion-geber card area='>' + desc=name —
+  place-record raw fields; sizing query + display-fallback direction in TODO.
+
+---
+
 ## 2026-07-30 — Jacob-class census CLOSED: middle + hard piles + coda (reviewer close-out approved)
 
 - **Final classification of the 591 unbound-ambiguous slots:** 81 ruled + live (easy pile)

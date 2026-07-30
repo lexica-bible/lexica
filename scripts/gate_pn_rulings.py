@@ -10,9 +10,12 @@ Expected delta is read from scripts/pn_hand_rulings.tsv itself (81 rows at appro
   gate C  tipnr_entity_refs row count unchanged.
 
 CONTROL (run FIRST, audit-tools-must-fail): point both arguments at the LIVE file —
-gate A must FAIL (0 new rows vs the TSV's expected set), gates B/C must PASS.
+gate A must FAIL (unlanded > 0 vs the TSV's expected set), gates B/C must PASS.
 STANDING METHOD: post-swap served-layer captures are only valid AFTER the deploy.sh
 worker reload (swap -> reload -> capture).
+STANDING METHOD (batch-2 lesson, reviewer-ruled): ANY checker edit mid-arc requires
+the control re-run BEFORE the fixed checker's PASS counts — the detector-control
+discipline applies to the detector itself.
 
 Usage: python3 scripts/gate_pn_rulings.py <live.db> <scratch.db>
 """
