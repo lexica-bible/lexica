@@ -246,6 +246,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   adjacency compounds (~41, Ramoth/Jabish Gilead — own evidence pass, natural batch 3) ·
   witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
   word-position binding (~118 same-verse multi).**
+- **Stray-breathing Greek name forms (cosmetic, SIZED 2026-07-30, non-blocking):**
+  90 distinct `pn_greek_identity.greek_lemma` values carry a leading standalone mark +
+  space ("΄ Αδερ" — JP screenshot, Ben-hadad card header). Pattern: ALL are names with
+  rough breathing (h-sound: Heber/Hanan/Hadar class) — the source stores the breathing
+  detached. App convention is accent-only Greek (no breathing), so fix = strip the stray
+  "mark+space" prefix AT THE BUILDER (build_pn_greek_identity lemma inputs: words.lemma /
+  abp_surface / bh scrape — trace which feeds it first) + one scoped live cleanup through
+  a mini gate (count 90 before, 0 after, sample byte-checks). The Greek itself is CORRECT
+  (LXX genuinely names Ben-hadad "son of Ader") — only the floating tick is wrong.
+- **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
+  superscription clicks dropped the verse ref, model asked "which one?" and it cached;
+  the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this
+  failure class is exactly what the verse-check would catch.
 - **Place-card raw fields (cosmetic, flagged + SIZED at batch-2 close-out, non-blocking):**
   `area: ">"` on **959 place records** (JP-counted 2026-07-30) — a place-parser CLASS:
   TIPNR place rows use a different column layout than person rows and the area read
