@@ -249,8 +249,10 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   ways). Gates A/B/C PASS after control-fail; zero HOT replacements; served spot-checks
   4/4 kind='ruled' (incl. batch-2 geber unchanged). Rollbacks: bible.db.pre_rulings3
   (this batch) + pre_rulings2 (kept for soak, JP deletes on his timing). NAMED RESIDUE:
-  9 "Jabish Gilead" verses (ABP spells Jabish where TIPNR only has Jabesh — spelling
-  ruling owed, ABP itself uses both spellings: 1Ch 10:11 prints Jabesh) + gilead
+  9 "Jabish Gilead" verses (ABP spells Jabish where TIPNR only has Jabesh; ABP itself
+  uses both spellings — 1Ch 10:11 prints Jabesh. CONSISTENCY fix only, not coverage:
+  JP live-checked 2026-07-30 that the Jabish token carries H3003 and already serves the
+  Jabesh-gilead card; only the Gilead half of those verses is unruled) + gilead
   1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing, not adjacent). CHIP-MERGE candidate list =
   exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
   Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in

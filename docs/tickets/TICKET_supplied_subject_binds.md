@@ -61,7 +61,11 @@ jabesh+gilead 1 (1Ch 10:11) → Jabesh@Jdg.21.8-1Ch, dibon+gad 2 → Dibon@Num.2
 Tools: scripts/dump_adjacency_ctx.py (PA neighbor dump, all 392 slots) +
 scripts/check_adjacency_pairs.py (local vs pinned TIPNR, control-tested). NAMED RESIDUE:
 9 "Jabish Gilead" verses (ABP spelling vs TIPNR's Jabesh — spelling ruling owed; ABP
-itself prints Jabesh at 1Ch 10:11) + gilead 1Ch 10:12 / 2Ch 18:3 ("of Gilead" shapes).
+itself prints Jabesh at 1Ch 10:11). **Downgraded to a CONSISTENCY fix (JP live check
+2026-07-30): the Jabish token carries H3003 and already serves the Jabesh-gilead card
+via the Strong's path, map and all — the compound is reachable through the first word;
+only the Gilead half sits unruled. Not a coverage gap.** Also gilead 1Ch 10:12 /
+2Ch 18:3 ("of Gilead" shapes).
 The 22 (all PN partners) ARE the chip-merge candidate list for the display half above.
 Witness-divergence remainder after batch 3: ~290 slots.
 
