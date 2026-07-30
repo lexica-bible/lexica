@@ -1,0 +1,498 @@
+# CONTROL OK: gilead 1Ch 10:12 -> COMPOUND-ROUTE (Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 13:10 within 1 verse)
+# CONTROL OK: gilead 1Sa 31:11 -> COMPOUND-ROUTE (Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 9:31 within 1 verse)
+# Lane C hardened screen — 303 slots, 95 names. PASS-candidate = audit input, NEVER a bind.
+
+== jesus (38 slots, genres: acts/epistles/gospels/rev) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Mat 8:5  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Capernaum@Mat.4.13-Jhn']
+   PASS-candidate  Mat 8:7  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 8:29  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 9:12  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 13:36  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 13:51  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 14:14  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 14:22  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 14:25  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 15:30  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 17:11  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Elijah@1Ki.17.1-Jas']
+   PASS-candidate  Mat 17:20  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mat 22:37  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mar 1:41  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mar 5:13  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mar 5:19  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Mar 11:11  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Bethany@Mat.21.17-Jhn', 'Jerusalem@Gen.14.18-Rev']
+   PASS-candidate  Mar 11:14  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Luk 10:41  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Martha@Luk.10.38-Jhn']
+   PASS-candidate  Luk 13:2  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Galilee@Jos.12.23-Act']
+   PASS-candidate  Luk 22:63  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Luk 23:43  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Joh 4:46  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Capernaum@Mat.4.13-Jhn', 'Galilee@Jos.12.23-Act', 'Kanah@Jos.19.28-Jhn']
+   PASS-candidate  Joh 6:14  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Joh 8:21  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Act 3:26  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Act 5:41  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Act 8:37  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Philip@Act.6.5-']
+   PASS-candidate  Act 9:29  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Greece@Isa.66.19-Act']
+   PASS-candidate  Act 19:10  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Javan@Gen.10.2-Col', 'Judah@Gen.29.35-Rev', 'Asia@Act.2.9-Rev']
+   PASS-candidate  Rom 16:24  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  1Co 5:5  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Satan@Deu.13.13-Rev']
+   PASS-candidate  1Co 16:22  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Maranatha@1Co.16.22']
+   PASS-candidate  Gal 6:15  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Eph 3:9  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  Eph 3:14  Jesus@Isa.7.14-Rev [person]
+   PASS-candidate  2Ti 4:22  Jesus@Isa.7.14-Rev [person] | other-entities-at-verse: ['Nero@Php.4.22-2Ti', 'Paul@Act.7.58-2Pe', 'Timothy@Act.16.1-Heb', 'Ephesus@Act.18.19-Rev', 'Rome@Jhn.11.48-Phm']
+   PASS-candidate  Rev 14:4  Jesus@Isa.7.14-Rev [person]
+
+== judah (21 slots, genres: history/prophets/wisdom) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  2Sa 1:12  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jonathan@1Sa.13.2-1Ch', 'Saul@1Sa.9.2-Act']
+   PASS-candidate  2Sa 24:2  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Joab@1Sa.26.6-Psa', 'Beersheba@Gen.21.14-Amo', 'Dan@Gen.14.14-Amo']
+   PASS-candidate  1Ki 4:19  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Amorites@Gen.10.16-Amo', 'Geber@1Ki.4.19', 'Og@Num.21.33-Psa', 'Sihon@Num.21.21-Jer', 'Uri@1Ki.4.19', 'Bashan@Num.21.33-Zec', 'Gilead@Gen.31.21-Zec']
+   PASS-candidate  1Ki 22:5  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehoshaphat@1Ki.15.24-Mat']
+   PASS-candidate  1Ki 22:18  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehoshaphat@1Ki.15.24-Mat']
+   PASS-candidate  1Ki 22:30  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehoshaphat@1Ki.15.24-Mat']
+   PASS-candidate  1Ki 22:32  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehoshaphat@1Ki.15.24-Mat']
+   PASS-candidate  2Ki 3:12  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehoshaphat@1Ki.15.24-Mat', 'Edom@Gen.32.3-Mal']
+   PASS-candidate  2Ch 14:1  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Abijah@1Ki.14.31-Mat', 'Asa@1Ki.15.8-Mat', 'David@Rut.4.17-Rev']
+   PASS-candidate  2Ch 19:3  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Asherah@Exo.34.13-Mic']
+   PASS-candidate  2Ch 21:2  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Azariah@2Ch.21.2', 'Azariahu@2Ch.21.2', 'Israel@Gen.25.26-Rev', 'Jehiel@2Ch.21.2', 'Jehoshaphat@1Ki.15.24-Mat', 'Michael@2Ch.21.2', 'Shephatiah@2Ch.21.2', 'Zechariah@2Ch.21.2']
+   PASS-candidate  2Ch 31:5  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+   PASS-candidate  2Ch 34:32  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Benjamin@Gen.35.18-Rev', 'Jerusalem@Gen.14.18-Rev']
+   PASS-candidate  2Ch 36:14  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Jerusalem@Gen.14.18-Rev']
+   ZERO            Ezr 3:9  
+   PASS-candidate  Psa 108:9  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Edom@Gen.32.3-Mal', 'Moab@Gen.19.37b-Zep', 'Philistia@Gen.21.32-Zec']
+   PASS-candidate  Jer 13:13  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['David@Rut.4.17-Rev', 'Jerusalem@Gen.14.18-Rev']
+   PASS-candidate  Jer 34:1  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Jeremiah@2Ch.35.25-Mat', 'Nebuchadnezzar@2Ki.24.1-Dan', 'Babylon@Gen.10.10-Rev', 'Jerusalem@Gen.14.18-Rev']
+   PASS-candidate  Hos 1:4  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jehu@1Ki.19.16-Hos', 'Jezreel@Hos.1.4', 'Jezreel@Jos.19.18-Hos']
+   PASS-candidate  Hos 6:10  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Ephraim@Gen.41.52-Zec', 'Israel@Gen.25.26-Rev']
+   PASS-candidate  Hag 1:12  Judah@Gen.29.35-Rev [person] | other-entities-at-verse: ['Haggai@Ezr.5.1-Hag', 'Jehozadak@1Ch.6.14-Zec', 'Joshua@Ezr.2.2-Zec', 'Shealtiel@1Ch.3.17-Mat', 'Zerubbabel@1Ch.3.19-Mat']
+
+== jacob (16 slots, genres: law/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Gen 29:7  Israel@Gen.25.26-Rev [person]
+   PASS-candidate  Gen 29:23  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Leah@Gen.29.16-Rut']
+   PASS-candidate  Gen 29:25  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Laban@Gen.24.29-', 'Leah@Gen.29.16-Rut', 'Rachel@Gen.29.6-Mat']
+   PASS-candidate  Gen 29:32  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Leah@Gen.29.16-Rut', 'Reuben@Gen.29.32-Rev']
+   PASS-candidate  Gen 29:33  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Simeon@Gen.29.33-Rev']
+   PASS-candidate  Gen 30:3  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Bilhah@Gen.29.29-1Ch']
+   PASS-candidate  Gen 30:23  Israel@Gen.25.26-Rev [person]
+   PASS-candidate  Gen 30:29  Israel@Gen.25.26-Rev [person]
+   PASS-candidate  Gen 32:8  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Esau@Gen.25.25-Heb']
+   PASS-candidate  Gen 35:8  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Deborah@Gen.35.8', 'Rebekah@Gen.22.23-Rom', 'Allon-bacuth@Gen.35.8', 'Bethel@Gen.12.8-Zec']
+   PASS-candidate  Gen 35:16  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Rachel@Gen.29.6-Mat', 'Bethel@Gen.12.8-Zec', 'Bethlehem@Gen.35.16-Jhn']
+   PASS-candidate  Gen 45:26  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Joseph@Gen.30.24-Rev', 'Egypt@Gen.12.10-Rev']
+   PASS-candidate  Gen 48:1  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Ephraim@Gen.41.52-Zec', 'Joseph@Gen.30.24-Rev', 'Manasseh@Gen.41.51-Rev']
+   PASS-candidate  Gen 48:9  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['Joseph@Gen.30.24-Rev']
+   PASS-candidate  Isa 42:1  Israel@Gen.25.26-Rev [person]
+   PASS-candidate  Mal 3:7  Israel@Gen.25.26-Rev [person] | other-entities-at-verse: ['LORD@Gen.1.1-Rev']
+
+== elijah (15 slots, genres: history)
+   PASS-candidate  1Ki 17:2  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 17:5  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Cherith@1Ki.17.3-', 'Jordan@Gen.13.10-Jhn']
+   PASS-candidate  1Ki 17:8  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 17:10  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Zarephath@1Ki.17.9-Luk']
+   PASS-candidate  1Ki 17:11  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 17:19  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 17:20  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 18:18  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Baal@Num.25.3-Rom']
+   PASS-candidate  1Ki 18:33  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 18:43  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 19:3  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Judah@Gen.29.35-Rev', 'Beersheba@Gen.21.14-Amo']
+   PASS-candidate  1Ki 19:6  Elijah@1Ki.17.1-Jas [person]
+   PASS-candidate  1Ki 19:10  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'LORD@Gen.1.1-Rev']
+   PASS-candidate  1Ki 19:14  Elijah@1Ki.17.1-Jas [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'LORD@Gen.1.1-Rev']
+   PASS-candidate  2Ki 2:10  Elijah@1Ki.17.1-Jas [person]
+
+== gilead (13 slots, genres: history/law) GENRE-CROSSING(every-slot audit)
+   ZERO            Gen 46:20  
+   PASS-candidate  Jos 22:11  Gilead@Gen.31.21-Zec [place] | other-entities-at-verse: ['Gad@Gen.30.11-Rev', 'Israel@Gen.25.26-Rev', 'Manasseh@Gen.41.51-Rev', 'Reuben@Gen.29.32-Rev', 'Canaan@Gen.10.18-Act', 'Jordan@Gen.13.10-Jhn']
+   COMPOUND-ROUTE  Jdg 21:8  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 7:21 within 1 verse
+   COMPOUND-ROUTE  Jdg 21:9  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 7:21 within 1 verse
+   COMPOUND-ROUTE  Jdg 21:10  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 7:21 within 1 verse
+   COMPOUND-ROUTE  Jdg 21:12  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 7:21 within 1 verse
+   COMPOUND-ROUTE  Jdg 21:14  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 7:21 within 1 verse
+   COMPOUND-ROUTE  1Sa 11:1  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 9:11 within 1 verse
+   COMPOUND-ROUTE  1Sa 11:9  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 9:11 within 1 verse
+   COMPOUND-ROUTE  1Sa 31:11  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 9:31 within 1 verse
+   COMPOUND-ROUTE  2Sa 21:12  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 10:21 within 1 verse
+   COMPOUND-ROUTE  1Ch 10:12  Jabesh-gilead (Jabesh@Jdg.21.8-1Ch) covers 13:10 within 1 verse
+   COMPOUND-ROUTE  2Ch 18:3  Ramoth-gilead (Ramoth@Gen.31.47-Hos) covers 14:18 within 1 verse
+
+== joseph (11 slots, genres: law)
+   PASS-candidate  Gen 37:36  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Pharaoh@Gen.37.36-Act', 'Potiphar@Gen.37.36-', 'Egypt@Gen.12.10-Rev', 'Midian@Gen.36.35-Act']
+   PASS-candidate  Gen 39:11  Joseph@Gen.30.24-Rev [person]
+   PASS-candidate  Gen 39:23  Joseph@Gen.30.24-Rev [person]
+   PASS-candidate  Gen 42:24  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Simeon@Gen.29.33-Rev']
+   PASS-candidate  Gen 44:1  Joseph@Gen.30.24-Rev [person]
+   PASS-candidate  Gen 44:17  Joseph@Gen.30.24-Rev [person]
+   PASS-candidate  Gen 45:24  Joseph@Gen.30.24-Rev [person]
+   PASS-candidate  Gen 46:5  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Pharaoh@Gen.37.36-Act', 'Beersheba@Gen.21.14-Amo']
+   PASS-candidate  Gen 47:3  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Pharaoh@Gen.37.36-Act']
+   PASS-candidate  Gen 47:22  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Pharaoh@Gen.37.36-Act']
+   PASS-candidate  Gen 50:6  Joseph@Gen.30.24-Rev [person] | other-entities-at-verse: ['Pharaoh@Gen.37.36-Act']
+
+== pharaoh (9 slots, genres: history/law) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Gen 41:26  Pharaoh@Gen.37.36-Act [person]
+   PASS-candidate  Exo 2:6  Pharaoh@Exo.1.11-Heb [person] | other-entities-at-verse: ['Hebrews@Gen.14.13-Heb']
+   PASS-candidate  Exo 2:22  Pharaoh@Exo.1.11-Heb [person] | other-entities-at-verse: ['Gershom@Exo.2.22-1Ch']
+   PASS-candidate  Exo 3:18  Pharaoh@Exo.3.10-Rom [person] | other-entities-at-verse: ['Hebrews@Gen.14.13-Heb', 'Israel@Gen.25.26-Rev', 'Egypt@Gen.12.10-Rev']
+   PASS-candidate  Exo 3:19  Pharaoh@Exo.3.10-Rom [person] | other-entities-at-verse: ['Egypt@Gen.12.10-Rev']
+   PASS-candidate  Exo 12:31  Pharaoh@Exo.3.10-Rom [person] | other-entities-at-verse: ['Aaron@Exo.4.14-Heb', 'Israel@Gen.25.26-Rev', 'Moses@Exo.2.10-Rev']
+   PASS-candidate  Exo 14:6  Pharaoh@Exo.3.10-Rom [person]
+   PASS-candidate  Exo 18:9  Pharaoh@Exo.3.10-Rom [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jethro@Exo.2.18-Num', 'Egypt@Gen.12.10-Rev']
+   ZERO            1Sa 10:18  
+
+== saul (8 slots, genres: history)
+   PASS-candidate  1Sa 14:22  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Ephraim@Gen.41.52-Zec', 'Israel@Gen.25.26-Rev', 'Philistia@Gen.21.32-Zec']
+   PASS-candidate  1Sa 15:17  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Samuel@1Sa.1.20-Heb']
+   PASS-candidate  1Sa 15:27  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Samuel@1Sa.1.20-Heb']
+   PASS-candidate  1Sa 15:30  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+   PASS-candidate  1Sa 18:26  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['David@Rut.4.17-Rev']
+   PASS-candidate  1Sa 19:22  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['David@Rut.4.17-Rev', 'Samuel@1Sa.1.20-Heb', 'Mizpah@Jos.18.26-Jhn', 'Naioth@1Sa.19.18-', 'Secu@1Sa.19.22']
+   PASS-candidate  1Sa 22:16  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Ahimelech@1Sa.14.3-Psa']
+   PASS-candidate  1Sa 28:11  Saul@1Sa.9.2-Act [person] | other-entities-at-verse: ['Samuel@1Sa.1.20-Heb']
+
+== joshua (7 slots, genres: epistles/history) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Jos 8:24  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Ai@Gen.12.8-Isa']
+   PASS-candidate  Jos 8:32  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Moses@Exo.2.10-Rev']
+   PASS-candidate  Jos 9:26  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+   PASS-candidate  Jos 18:11  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Benjamin@Gen.35.18-Rev', 'Joseph@Gen.30.24-Rev', 'Judah@Gen.29.35-Rev']
+   PASS-candidate  Jos 21:12  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Caleb@Num.13.6-1Ch', 'Jephunneh@Num.13.6-1Ch']
+   PASS-candidate  Neh 8:7  Joshua@Exo.17.9-Heb [person] | other-entities-at-verse: ['Akkub@Neh.8.7', 'Azariah@Neh.8.7', 'Bani@Neh.8.7-', 'Hanan@Neh.8.7-', 'Hodiah@Neh.8.7-Neh', 'Jamin@Neh.8.7', 'Jeshua@Ezr.2.40-Neh', 'Jozabad@Neh.8.7', 'Kelita@Neh.8.7-', 'Levi@Gen.29.34-Rev', 'Maaseiah@Neh.8.7', 'Pelaiah@Neh.8.7-', 'Shabbethai@Neh.8.7', 'Sherebiah@Ezr.8.18-Neh']
+   ZERO            Col 4:11  
+
+== aram (7 slots, genres: gospels/prophets) GENRE-CROSSING(every-slot audit)
+   ZERO            Isa 7:1  
+   ZERO            Isa 7:2  
+   ZERO            Isa 7:5  
+   ZERO            Isa 7:8  
+   ZERO            Mat 1:3  
+   ZERO            Mat 1:4  
+   ZERO            Luk 3:33  
+
+== jehu (5 slots, genres: history)
+   PASS-candidate  2Ki 9:25  Jehu@1Ki.19.16-Hos [person] | other-entities-at-verse: ['Ahab@1Ki.16.28-Mic', 'Bidkar@2Ki.9.25', 'Naboth@1Ki.21.1-2Ki', 'Jezreel@Jos.19.18-Hos']
+   PASS-candidate  2Ki 9:34  Jehu@1Ki.19.16-Hos [person]
+   PASS-candidate  2Ki 10:6  Jehu@1Ki.19.16-Hos [person] | other-entities-at-verse: ['Jezreel@Jos.19.18-Hos']
+   PASS-candidate  2Ki 10:15  Jehu@1Ki.19.16-Hos [person] | other-entities-at-verse: ['Jonadab@2Ki.10.15-Jer', 'Rechab@2Ki.10.15-Jer']
+   PASS-candidate  2Ki 10:22  Jehu@1Ki.19.16-Hos [person] | other-entities-at-verse: ['Baal@Num.25.3-Rom']
+
+== cushi (5 slots, genres: history)
+   ZERO            2Sa 18:21  
+   ZERO            2Sa 18:22  
+   ZERO            2Sa 18:23  
+   ZERO            2Sa 18:31  
+   ZERO            2Sa 18:32  
+
+== teman (5 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   ZERO            Jos 12:3  
+   ZERO            Jos 13:4  
+   ZERO            Eze 20:46  
+   ZERO            Eze 47:19  
+   ZERO            Eze 48:28  
+
+== hadad (4 slots, genres: history)
+   PASS-candidate  1Ki 11:18  Hadad@1Ki.11.14- [person] | other-entities-at-verse: ['Pharaoh@1Ki.3.1-Sng', 'Egypt@Gen.12.10-Rev', 'Midian@Gen.36.35-Act', 'Paran@Gen.21.21-1Ki']
+   PASS-candidate  1Ki 11:20  Hadad@1Ki.11.14- [person] | other-entities-at-verse: ['Genubath@1Ki.11.20', 'Pharaoh@1Ki.3.1-Sng', 'Tahpenes@1Ki.11.19-']
+   PASS-candidate  1Ki 11:22  Hadad@1Ki.11.14- [person] | other-entities-at-verse: ['Pharaoh@1Ki.3.1-Sng']
+   ZERO            1Ki 20:22  
+
+== ezra (4 slots, genres: history)
+   ZERO            1Ch 4:17  
+   PASS-candidate  Neh 8:8  Ezra@Ezr.7.1-Neh [person]
+   PASS-candidate  Neh 8:15  Ezra@Ezr.7.1-Neh [person] | other-entities-at-verse: ['Jerusalem@Gen.14.18-Rev']
+   ZERO            Neh 9:6  
+
+== penuel (4 slots, genres: history)
+   ZERO            Jdg 8:8  
+   ZERO            Jdg 8:9  
+   ZERO            Jdg 8:17  
+   ZERO            1Ki 12:25  
+
+== jeroboam (4 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  2Ki 23:16  Jeroboam@1Ki.11.26-2Ch [person] | other-entities-at-verse: ['Josiah@1Ki.13.2-Mat']
+   PASS-candidate  2Ch 11:15  Jeroboam@1Ki.11.26-2Ch [person]
+   ZERO            2Ch 15:8  
+   ZERO            Hos 10:14  
+
+== hezekiah (4 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  2Ki 18:18  Hezekiah@2Ki.16.20-Mat [person] | other-entities-at-verse: ['Asaph@2Ki.18.18-Isa', 'Eliakim@2Ki.18.18-Isa', 'Hilkiah@2Ki.18.18-Isa', 'Joah@2Ki.18.18-Isa', 'Shebna@2Ki.18.18-Isa']
+   PASS-candidate  2Ki 20:2  Hezekiah@2Ki.16.20-Mat [person]
+   PASS-candidate  2Ch 32:5  Hezekiah@2Ki.16.20-Mat [person] | other-entities-at-verse: ['David@Rut.4.17-Rev', 'Millo@2Sa.5.9-Isa']
+   PASS-candidate  Isa 38:21  Hezekiah@2Ki.16.20-Mat [person] | other-entities-at-verse: ['Isaiah@2Ki.19.2-Rom']
+
+== joab (3 slots, genres: history)
+   PASS-candidate  2Sa 11:19  Joab@1Sa.26.6-Psa [person]
+   PASS-candidate  2Sa 18:17  Joab@1Sa.26.6-Psa [person] | other-entities-at-verse: ['Absalom@2Sa.3.3-Psa', 'Israel@Gen.25.26-Rev']
+   PASS-candidate  2Sa 18:23  Joab@1Sa.26.6-Psa [person] | other-entities-at-verse: ['Ahimaaz@2Sa.15.27-1Ch', 'Cush@Gen.2.13-Act']
+
+== gog (3 slots, genres: law/prophets) GENRE-CROSSING(every-slot audit)
+   ZERO            Num 24:7  
+   PASS-candidate  Eze 38:17  Gog@Ezk.38.2-Rev [place] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'LORD@Gen.1.1-Rev']
+   ZERO            Amo 7:1  
+
+== jeremiah (3 slots, genres: prophets)
+   PASS-candidate  Jer 25:14  Jeremiah@2Ch.35.25-Mat [person]
+   PASS-candidate  Jer 36:18  Jeremiah@2Ch.35.25-Mat [person] | other-entities-at-verse: ['Baruch@Jer.32.12-']
+   ZERO            Lam 1:1  
+
+== heber (3 slots, genres: gospels/history) GENRE-CROSSING(every-slot audit)
+   ZERO            1Ch 5:13  
+   PASS-candidate  1Ch 8:22  Heber@1Ch.8.17 [person] | other-entities-at-verse: ['Eber@1Ch.8.22', 'Eliel@1Ch.8.22', 'Ishpan@1Ch.8.22']
+   ZERO            Luk 3:35  
+
+== jehiel (3 slots, genres: history)
+   ZERO            1Ch 9:35  
+   ZERO            1Ch 11:44  
+   PASS-candidate  2Ch 35:9  Jehiel@2Ch.35.8 [person] | other-entities-at-verse: ['Conaniah@2Ch.31.12-', 'Hashabiah@2Ch.35.9', 'Jeiel@2Ch.35.9', 'Jozabad@2Ch.35.9', 'Levi@Gen.29.34-Rev', 'Nethanel@2Ch.35.9', 'Shemaiah@2Ch.35.9', 'Passover@Exo.12.11-Heb']
+
+== baana (3 slots, genres: history)
+   ZERO            2Sa 4:5  
+   ZERO            1Ch 9:43  
+   ZERO            Neh 7:7  
+
+== jonathan (3 slots, genres: history)
+   PASS-candidate  1Sa 20:2  Jonathan@1Sa.13.2-1Ch [person]
+   PASS-candidate  1Sa 31:12  Jonathan@1Sa.13.2-1Ch [person] | other-entities-at-verse: ['Saul@1Sa.9.2-Act', 'Beth-shean@Jos.17.11-1Ch', 'Jabesh@Jdg.21.8-1Ch']
+   ZERO            2Sa 19:24  
+
+== naaman (3 slots, genres: history)
+   PASS-candidate  2Ki 5:8  Naaman@2Ki.5.1-Luk [person] | other-entities-at-verse: ['Elisha@1Ki.19.16-Luk', 'Israel@Gen.25.26-Rev']
+   PASS-candidate  2Ki 5:14  Naaman@2Ki.5.1-Luk [person] | other-entities-at-verse: ['Jordan@Gen.13.10-Jhn']
+   PASS-candidate  2Ki 5:19  Naaman@2Ki.5.1-Luk [person]
+
+== simeon (3 slots, genres: acts/law/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Gen 34:14  Simeon@Gen.29.33-Rev [person]
+   ZERO            Zec 12:13  
+   ZERO            Act 15:14  
+
+== mordecai (3 slots, genres: history)
+   PASS-candidate  Est 2:23  Mordecai@Est.2.5- [person]
+   PASS-candidate  Est 3:7  Mordecai@Est.2.5- [person] | other-entities-at-verse: ['Ahasuerus@Ezr.4.6-Dan', 'Haman@Est.3.1-', 'Abib@Exo.13.4-Est', 'Adar@Ezr.6.15-Est', 'Purim@Est.3.7-']
+   PASS-candidate  Est 9:25  Mordecai@Est.2.5- [person] | other-entities-at-verse: ['Judah@Gen.29.35-Rev']
+
+== baal (2 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   ZERO            1Ch 4:33  
+   PASS-candidate  Jer 2:28  Baal@Num.25.3-Rom [other] | other-entities-at-verse: ['Judah@Gen.29.35-Rev']
+
+== joash (2 slots, genres: history)
+   PASS-candidate  2Ch 24:21  Joash@2Ki.11.2-2Ch [person]
+   MULTI           2Ch 25:20  ['Joash@2Ki.11.2-2Ch', 'Joash@2Ki.13.9-Amo']
+
+== azariah (2 slots, genres: history)
+   MULTI           1Ch 6:10  ['Uzziah@1Ch.6.24-', 'Azariah@1Ch.6.13-Ezr', 'Azariah@1Ch.6.9-Ezr', 'Azariah@1Ki.4.2-1Ch']
+   MULTI           1Ch 6:11  ['Uzziah@1Ch.6.24-', 'Azariah@1Ch.6.13-Ezr', 'Azariah@1Ch.6.9-Ezr', 'Azariah@1Ki.4.2-1Ch']
+
+== jair (2 slots, genres: history)
+   PASS-candidate  1Ch 2:53  Jair@Num.32.41-1Ch [person] | other-entities-at-verse: ['Ithrites@2Sa.23.38-1Ch', 'Mishraites@1Ch.2.53', 'Puthites@1Ch.2.53', 'Shumathites@1Ch.2.53', 'Zorathites@1Ch.2.53-', 'Eshtaol@Jos.15.33-1Ch', 'Kiriath-jearim@Jos.9.17-Jer']
+   ZERO            1Ch 20:5  
+
+== uriah (2 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  1Ki 15:6  Uriah@2Sa.11.3-Mat [person] | other-entities-at-verse: ['Jeroboam@1Ki.11.26-2Ch', 'Rehoboam@1Ki.11.43-Mat']
+   ZERO            Isa 21:8  
+
+== asa (2 slots, genres: history)
+   PASS-candidate  1Ki 15:15  Asa@1Ki.15.8-Mat [person]
+   ZERO            1Ch 8:38  
+
+== benaiah (2 slots, genres: history)
+   ZERO            1Ch 9:32  
+   MULTI           1Ch 11:23  ['Benaiah@2Sa.23.30-1Ch', 'Benaiah@2Sa.8.18-1Ch']
+
+== ahaz (2 slots, genres: history/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  1Ch 9:41  Ahaz@1Ch.8.35- [person] | other-entities-at-verse: ['Melech@1Ch.8.35-', 'Micah@2Sa.9.12-1Ch', 'Pithon@1Ch.8.35-', 'Tarea@1Ch.8.35-']
+   ZERO            Jer 22:15  
+
+== benjamin (2 slots, genres: history)
+   PASS-candidate  Jdg 5:13  Benjamin@Gen.35.18-Rev [person]
+   PASS-candidate  1Ki 12:20  Benjamin@Gen.35.18-Rev [person] | other-entities-at-verse: ['David@Rut.4.17-Rev', 'Israel@Gen.25.26-Rev', 'Jeroboam@1Ki.11.26-2Ch', 'Judah@Gen.29.35-Rev']
+
+== omri (2 slots, genres: history)
+   PASS-candidate  1Ki 16:24  Omri@1Ki.16.16-Mic [person] | other-entities-at-verse: ['Shemer@1Ki.16.24', 'Samaria@1Ki.13.32-Act']
+   ZERO            2Ki 9:31  
+
+== ahab (2 slots, genres: history)
+   PASS-candidate  1Ki 20:15  Ahab@1Ki.16.28-Mic [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+   PASS-candidate  1Ki 22:52  Ahab@1Ki.16.28-Mic [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Jeroboam@1Ki.11.26-2Ch', 'Nebat@1Ki.11.26-2Ch']
+
+== ahijah (2 slots, genres: history)
+   ZERO            1Sa 14:3  
+   ZERO            1Sa 14:18  
+
+== josiah (2 slots, genres: history)
+   PASS-candidate  2Ki 22:9  Josiah@1Ki.13.2-Mat [person] | other-entities-at-verse: ['Shaphan@2Ki.22.3-Jer']
+   PASS-candidate  2Ch 36:4  Josiah@1Ki.13.2-Mat [person] | other-entities-at-verse: ['Jehoahaz@2Ki.23.30-2Ch', 'Jehoiakim@2Ki.23.34-Dan', 'Judah@Gen.29.35-Rev', 'Neco@2Ki.23.29-Jer', 'Egypt@Gen.12.10-Rev', 'Jerusalem@Gen.14.18-Rev']
+
+== ahaziah (2 slots, genres: history)
+   PASS-candidate  2Ki 1:3  Ahaziah@1Ki.22.40-2Ch [person] | other-entities-at-verse: ['Baal-zebub@2Ki.1.2-', 'Elijah@1Ki.17.1-Jas', 'Israel@Gen.25.26-Rev', 'Ekron@Jos.13.3-Zec', 'Samaria@1Ki.13.32-Act', 'Tishbe@1Ki.17.1-2Ki']
+   PASS-candidate  2Ki 1:17  Ahaziah@1Ki.22.40-2Ch [person] | other-entities-at-verse: ['Elijah@1Ki.17.1-Jas', 'Jehoram@1Ki.22.50-Mat', 'Jehoshaphat@1Ki.15.24-Mat', 'Joram@2Ki.1.17-2Ch', 'Judah@Gen.29.35-Rev']
+
+== hebron (2 slots, genres: history)
+   PASS-candidate  2Sa 2:13  Hebron@Gen.13.18-Neh [place] | other-entities-at-verse: ['David@Rut.4.17-Rev', 'Joab@1Sa.26.6-Psa', 'Zeruiah@1Sa.26.6-1Ch', 'Gibeon@Jos.9.3-Ezk']
+   PASS-candidate  2Sa 3:12  Hebron@Gen.13.18-Neh [place] | other-entities-at-verse: ['Abner@1Sa.14.50-1Ch', 'David@Rut.4.17-Rev', 'Israel@Gen.25.26-Rev']
+
+== amnon (2 slots, genres: history)
+   PASS-candidate  2Sa 13:14  Amnon@2Sa.3.2-1Ch [person]
+   PASS-candidate  2Sa 13:16  Amnon@2Sa.3.2-1Ch [person]
+
+== tamar (2 slots, genres: history/law) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Gen 38:26  Tamar@Gen.38.6-Mat [person] | other-entities-at-verse: ['Judah@Gen.29.35-Rev', 'Shelah@Gen.38.5-1Ch']
+   PASS-candidate  2Sa 13:16  Tamar@2Sa.13.1-1Ch [person]
+
+== eleazar (2 slots, genres: history/law) GENRE-CROSSING(every-slot audit)
+   ZERO            Num 36:1  
+   PASS-candidate  Ezr 8:16  Eleazar@Ezr.8.33 [person] | other-entities-at-verse: ['Ariel@Ezr.8.16', 'Eliezer@Ezr.8.16', 'Elnathan@Ezr.8.16a', 'Elnathan@Ezr.8.16b', 'Elnathan@Ezr.8.16c', 'Jarib@Ezr.8.16', 'Joiarib@Ezr.8.16', 'Meshullam@Ezr.8.16', 'Nathan@Ezr.8.16', 'Shemaiah@Ezr.8.16', 'Zechariah@Ezr.8.16']
+
+== noah (2 slots, genres: law)
+   PASS-candidate  Gen 7:16  Noah@Gen.5.29-2Pe [person]
+   PASS-candidate  Gen 9:12  Noah@Gen.5.29-2Pe [person]
+
+== levi (2 slots, genres: law/prophets) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Gen 34:14  Levi@Gen.29.34-Rev [person]
+   ZERO            Jer 31:14  
+
+== ehud (2 slots, genres: history)
+   PASS-candidate  Jdg 3:18  Ehud@Jdg.3.15-1Ch [person]
+   PASS-candidate  Jdg 3:19  Ehud@Jdg.3.15-1Ch [person] | other-entities-at-verse: ['Gilgal@Deu.11.30-Mic']
+
+== manasseh (2 slots, genres: history/law) GENRE-CROSSING(every-slot audit)
+   PASS-candidate  Num 34:13  Manasseh@Gen.41.51-Rev [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev', 'Moses@Exo.2.10-Rev']
+   ZERO            Jdg 18:30  
+
+== maaseiah (2 slots, genres: prophets)
+   ZERO            Jer 32:12  
+   ZERO            Jer 51:59  
+
+== elihu (2 slots, genres: wisdom)
+   PASS-candidate  Job 32:17  Elihu@Job.32.2- [person]
+   ZERO            Job 38:1  
+
+== caleb (2 slots, genres: history)
+   PASS-candidate  Jos 15:15  Caleb@Num.13.6-1Ch [person] | other-entities-at-verse: ['Debir@Jos.10.38-1Ch']
+   PASS-candidate  Jos 15:19  Caleb@Num.13.6-1Ch [person] | other-entities-at-verse: ['Negeb@Gen.12.9-Zec']
+
+== micaiah (2 slots, genres: history)
+   PASS-candidate  1Ki 22:17  Micaiah@1Ki.22.8-2Ch [person] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+   PASS-candidate  1Ki 22:19  Micaiah@1Ki.22.8-2Ch [person]
+
+== simon (1 slots, genres: law)
+   ZERO            Deu 33:6  
+
+== jeiel (1 slots, genres: history)
+   PASS-candidate  2Ch 35:8  Jeiel@2Ch.35.9 [person] | other-entities-at-verse: ['Hilkiah@2Ki.22.4-Jer', 'Jehiel@2Ch.35.8', 'Levi@Gen.29.34-Rev', 'Zechariah@2Ch.35.8', 'Passover@Exo.12.11-Heb']
+
+== ner (1 slots, genres: history)
+   ZERO            2Sa 4:12  
+
+== amram (1 slots, genres: history)
+   ZERO            1Ch 1:41  
+
+== assir (1 slots, genres: history)
+   ZERO            1Ch 3:17  
+
+== carmi (1 slots, genres: history)
+   ZERO            1Ch 4:1  
+
+== amminadab (1 slots, genres: history)
+   ZERO            1Ch 6:22  
+
+== rapha (1 slots, genres: history)
+   PASS-candidate  1Ch 8:37  Rosh@Gen.46.21-1Ch [person] | other-entities-at-verse: ['Azel@1Ch.8.37-', 'Binea@1Ch.8.37-', 'Eleasah@1Ch.8.37-', 'Moza@1Ch.8.36-', 'Raphah@1Ch.8.37-']
+
+== jehoshaphat (1 slots, genres: history)
+   ZERO            1Ch 15:24  
+
+== hanun (1 slots, genres: history)
+   PASS-candidate  1Ch 19:1  Hanun@2Sa.10.1-1Ch [person] | other-entities-at-verse: ['Nahash@2Sa.10.2-1Ch', 'Ammon@Gen.19.38-Zep']
+
+== kore (1 slots, genres: history)
+   PASS-candidate  1Ch 26:19  Kore@1Ch.9.19- [person] | other-entities-at-verse: ['Korah@Exo.6.21-Jud', 'Merari@Gen.46.11-Ezr']
+
+== elon (1 slots, genres: history)
+   ZERO            1Ki 4:9  
+
+== baanah (1 slots, genres: history)
+   ZERO            1Ki 4:16  
+
+== elah (1 slots, genres: history)
+   ZERO            1Ki 4:18  
+
+== hiram (1 slots, genres: history)
+   PASS-candidate  1Ki 9:13  Hiram@2Sa.5.11-2Ch [person] | other-entities-at-verse: ['Cabul@1Ki.9.13']
+
+== obadiah (1 slots, genres: history)
+   PASS-candidate  1Ki 18:9  Obadiah@1Ki.18.3- [person] | other-entities-at-verse: ['Ahab@1Ki.16.28-Mic']
+
+== elkanah (1 slots, genres: history)
+   PASS-candidate  1Sa 1:5  Elkanah@1Sa.1.1-1Ch [person] | other-entities-at-verse: ['Hannah@1Sa.1.2-']
+
+== nahash (1 slots, genres: history)
+   PASS-candidate  1Sa 11:10  Nahash@1Sa.11.1- [person] | other-entities-at-verse: ['Jabesh@Jdg.21.8-1Ch']
+
+== ahimelech (1 slots, genres: history)
+   PASS-candidate  1Sa 21:6  Ahimelech@1Sa.14.3-Psa [person]
+
+== jehoram (1 slots, genres: history)
+   ZERO            2Ch 23:1  
+
+== jotham (1 slots, genres: history)
+   PASS-candidate  2Ch 27:8  Jotham@2Ki.15.5-Mat [person] | other-entities-at-verse: ['Jerusalem@Gen.14.18-Rev']
+
+== mephibosheth (1 slots, genres: history)
+   PASS-candidate  2Sa 19:26  Mephibosheth@2Sa.4.4-1Ch [person]
+
+== joses (1 slots, genres: acts)
+   ZERO            Act 4:36  
+
+== eliezer (1 slots, genres: law)
+   ZERO            Exo 2:22  
+
+== miriam (1 slots, genres: law)
+   ZERO            Exo 6:20  
+
+== ishmael (1 slots, genres: law)
+   ZERO            Gen 21:11  
+
+== shechem (1 slots, genres: law)
+   PASS-candidate  Gen 35:5  Shechem@Gen.12.6-Act [place] | other-entities-at-verse: ['Israel@Gen.25.26-Rev']
+
+== heman (1 slots, genres: law)
+   ZERO            Gen 36:22  
+
+== machir (1 slots, genres: law)
+   ZERO            Gen 46:20  
+
+== deborah (1 slots, genres: history)
+   PASS-candidate  Jdg 4:6  Deborah@Jdg.4.4- [person] | other-entities-at-verse: ['Abinoam@Jdg.4.6-', 'Barak@Jdg.4.6-Heb', 'Israel@Gen.25.26-Rev', 'Naphtali@Gen.30.8-Rev', 'Zebulun@Gen.30.20-Rev', 'Kedesh@Jos.12.22-1Ch', 'Tabor_Mount@Jos.19.22-Hos']
+
+== sisera (1 slots, genres: history)
+   PASS-candidate  Jdg 4:19  Sisera@Jdg.4.2-Psa [person]
+
+== ebed (1 slots, genres: history)
+   PASS-candidate  Jdg 9:36  Ebed@Jdg.9.26- [person] | other-entities-at-verse: ['Gaal@Jdg.9.26-', 'Zebul@Jdg.9.28-']
+
+== shallum (1 slots, genres: prophets)
+   PASS-candidate  Jer 32:8  Shallum@Jer.32.7 [person] | other-entities-at-verse: ['Benjamin@Gen.35.18-Rev', 'Hanamel@Jer.32.7-', 'Anathoth@Jos.21.18-Jer']
+
+== jephunneh (1 slots, genres: history)
+   PASS-candidate  Jos 15:14  Jephunneh@Num.13.6-1Ch [person] | other-entities-at-verse: ['Ahiman@Num.13.22-Jdg', 'Anak@Num.13.22-Jdg', 'Caleb@Num.13.6-1Ch', 'Sheshai@Num.13.22-Jdg', 'Talmai@Num.13.22-Jdg']
+
+== jamin (1 slots, genres: history)
+   ZERO            Jos 17:7  
+
+== jehoiada (1 slots, genres: history)
+   ZERO            Neh 3:6  
+
+== harim (1 slots, genres: history)
+   MULTI           Neh 10:4  ['Rehum@Ezr.2.2-Neh', 'Harim@Neh.10.27']
+
+== bunni (1 slots, genres: history)
+   PASS-candidate  Neh 10:14  Bunni@Neh.10.15 [person] | other-entities-at-verse: ['Bani@Neh.10.14', 'Elam@Neh.10.14', 'Pahath-moab@Neh.10.14', 'Parosh@Neh.10.14', 'Zattu@Neh.10.14']
+
+== beor (1 slots, genres: law)
+   PASS-candidate  Num 24:22  Beor@Num.22.5-2Pe [person] | other-entities-at-verse: ['Assyria@Gen.2.14-Zec', 'Kain@Num.24.22-Jos']
+
+== shelah (1 slots, genres: law)
+   PASS-candidate  Num 26:19  Shelah@Gen.38.5-1Ch [person] | other-entities-at-verse: ['Er@Gen.38.3-1Ch', 'Judah@Gen.29.35-Rev', 'Onan@Gen.38.4-1Ch', 'Canaan@Gen.10.18-Act']
+
+== shealtiel (1 slots, genres: prophets)
+   PASS-candidate  Hag 2:21  Shealtiel@1Ch.3.17-Mat [person] | other-entities-at-verse: ['Judah@Gen.29.35-Rev', 'Zerubbabel@1Ch.3.19-Mat']
+
+# totals: {'PASS-candidate': 210, 'ZERO': 77, 'COMPOUND-ROUTE': 11, 'MULTI': 5}
