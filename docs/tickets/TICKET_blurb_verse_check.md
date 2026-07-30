@@ -16,6 +16,16 @@ Pin the exact serving population: how many cached blurbs exist, how many slots c
 request one (the AI-only card population: Tier-3 name-path + fall-through slots).
 Census with the standing read-only pattern.
 
+## First live specimen (2026-07-30, JP-caught): CONFIRMED failure class
+The cached Psa 34:0 "Abimelech" blurb was the model ASKING for the verse reference
+instead of summarizing ("Could you provide the book, chapter, and verse?") — served
+to readers as content. Trigger: missing verse context (a frontend truthiness bug
+dropped verse 0; fixed same day, 00-core.jsx). **The cert's checker must test for
+interrogative-shaped output explicitly** — "model asks instead of answers" is now a
+proven class, not a hypothetical. Sweep at the time: 187 cached, exactly 1 bad.
+Standing fragility note: Psalm-title clicks (verse 0) are a known-fragile surface —
+any frontend change touching verse references gets a verse-0 spot check.
+
 ## The check (borrows the Lexica-dictionary definition-engine tooling)
 - **Claim decomposition:** each blurb makes discrete claims (Stephen is a deacon;
   he is being stoned; he calls on Jesus). Every claim needs a corroboration

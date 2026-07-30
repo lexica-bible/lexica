@@ -253,8 +253,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   detached. App convention is accent-only Greek (no breathing), so fix = strip the stray
   "mark+space" prefix AT THE BUILDER (build_pn_greek_identity lemma inputs: words.lemma /
   abp_surface / bh scrape — trace which feeds it first) + one scoped live cleanup through
-  a mini gate (count 90 before, 0 after, sample byte-checks). The Greek itself is CORRECT
-  (LXX genuinely names Ben-hadad "son of Ader") — only the floating tick is wrong.
+  a mini gate. **FIX SHAPE (reviewer-final): pre-registered list of the 90 · transform
+  stated = detached mark + space → combined rough breathing on the vowel, NFC-composed ·
+  post-check transliterations UNCHANGED (they derive from the h-sound either way — a
+  translit diff means the transform went wrong) · verify display path AND search
+  normalizer agree with the new stored form (the γῆ accent-folding lesson: search is
+  where composed-vs-decomposed mismatches bite).** The Greek itself is CORRECT (LXX
+  genuinely names Ben-hadad "son of Ader") — only the floating tick is wrong. Source-
+  convention class, not corruption (translit layer already shows "Hadad" right).
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this
