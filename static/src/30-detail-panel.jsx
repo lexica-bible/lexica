@@ -944,11 +944,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // PERSON-thin, PEOPLE/CLAN, and a coordinate-less place alike.
       const thin = !richPerson && !hasMap && !placeNote && ((line ? 1 : 0) + factItems.length) <= 1;
       const chipOwnLine = peopleClan || (be.section !== "person" && be.section !== "place");
-      // "The hero carries the name" only holds when the entity's name IS the clicked
-      // word. When they differ (Saul @ Act 7:58 -> entity "Paul") the differing name is
-      // the card's most informative line — the thin branch must keep it too (JP
-      // sighting 2026-07-30; the full branch already did this).
-      const nameEchoesHeroEarly = properName && heroName.toLowerCase() === properName.toLowerCase();
+      // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
+      // rule): every person/place section opens with the ENTITY's name in bold. The
+      // old rule suppressed it when it matched the clicked word ("stutter"), but on
+      // Greek-headed cards that left no prominent English name at all, and the
+      // conditional read as randomness. Header = the clicked FORM, this line = the
+      // REFERENT; when they coincide that's information, not noise.
       if (thin) {
         const first = factItems[0];
         const opener = line
@@ -960,7 +961,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         return (
           <section key="boundEntity" className="sec pnbound">
             <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
-            {!nameEchoesHeroEarly && !peopleClan && <div className="pnbound-name">{heroName}</div>}
+            <div className="pnbound-name">{heroName}</div>
             <div className="pnbound-thinrow">
               {opener}
               {/* People/Clan + every 'other'-type card (Deity/Group/Being/Reference):
@@ -972,17 +973,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </section>
         );
       }
-      // The hero above already headlines the clicked name; when the entity's name is
-      // the same word, a second "Shaul" directly under the title reads as a stutter.
-      // Keep the row only when it differs (a spelling variant is real information).
-      const nameEchoesHero = nameEchoesHeroEarly;
       return (
         <section key="boundEntity" className="sec pnbound">
           {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
               sources — the badge credits both. CONDITIONAL on the data actually shown
               (richPerson), never on the card variant: a TIPNR-only card stays "TIPNR". */}
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
-          {!nameEchoesHero && <div className="pnbound-name">{heroName}</div>}
+          <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
@@ -1017,6 +1014,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
+            {/* NAME ALWAYS SHOWS (JP ruling 2026-07-30) — same line as the bound card. */}
+            {metavData.name && <div className="pnbound-name">{metavData.name}</div>}
             {metavData._slim ? (
               /* SLIM body (Paul-class): only what metaV/TIPNR actually hold — gender
                  tag, the lone family link if any, a TIPNR one-liner when the server
@@ -1056,6 +1055,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
+            {/* NAME ALWAYS SHOWS (JP ruling 2026-07-30) — same line as the bound card. */}
+            {metavData.name && <div className="pnbound-name">{metavData.name}</div>}
             {cleanPlaceComment(metavData.comment) && <p className="detail-p detail-p--meta">{cleanPlaceComment(metavData.comment)}</p>}
             {metavData.lat && metavData.lon
               ? <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />
