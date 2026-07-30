@@ -264,9 +264,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   referent-screen rule in TODO_ARCHIVE.md and DRILL_witness_divergence.md. **LANE B SHIPPED
   2026-07-30 (39 rulings live: 28 spelling-equiv + 11 tipnr-merged-form, TSV=202; gate
   5/5 served checks; record in TODO_ARCHIVE). Remaining: pile-3 residue (20 named slots,
-  routes in LANE_B_adjudication.md) + Lane C ~303 multi-candidate (parked for JP; needs
-  its own doctrine round). Rollback = bible.db.pre_laneB; pre_witnessA deletable after
-  soak.**
+  routes in LANE_B_adjudication.md). Rollback = bible.db.pre_laneB; pre_witnessA
+  deletable after soak.**
+  **LANE C CHARTERED 2026-07-30 (doctrine verdicted, screen built, census FROZEN —
+  audit NOT started, opens in a FRESH session by design, JP + reviewer ruling: the
+  auditor must read slots against the census charter, independent of build memory).**
+  Charter: docs/tickets/DRILL_lane_c.md (hardened standard + approved context-run card
+  sentence) + docs/tickets/lane_c_census.txt (210 audit candidates / 11 compound-routed
+  / 5 multi->word-position residue / 77 nothing-nearby; genre-crossing names incl.
+  jesus-38 = every-slot audit, narrative runs sample like Lane B). Screen tool
+  scripts/screen_lane_c.py re-runs its Gilboa known-negative control on every run.
+  Compound lane gained the 11 swept slots; word-position lane gained the 5 multi.
 - **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
   Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
   when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads
