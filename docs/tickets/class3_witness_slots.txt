@@ -1,5 +1,5 @@
 # class-3 witness-divergence slot census (392 rows, itemization 2026-07-30)
-# name|book|chapter|verse — every slot: clicked name present in ABP text,
+# name|book|chapter|verse â€” every slot: clicked name present in ABP text,
 # no TIPNR candidate ref covers the verse, not compound-(b), not superscription-(c).
 gilead|1Ch|10|11
 gilead|1Ch|10|12
