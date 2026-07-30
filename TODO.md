@@ -144,18 +144,38 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   errata list compiles from that ticket once these two are ruled or formally deferred.
   Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **TIPNR import-coverage diagnosis — NEXT UP on the PN board (JP + reviewer 2026-07-30;
-  fresh-session brief, reviewer-authored, READ-ONLY).** 18 of the top-20 slim-card names
-  (Nebuchadnezzar, Pilate, Esther, Elisha-the-prophet…) are ABSENT from imported
-  tipnr_entities — a 4-tier probe incl. substring proved genuinely absent, NOT mis-keyed
-  (scripts/audit_tipnr_name_reach.py; controls Elijah/Paul). Diagnose WHY: import-script
-  filter? source-file subset? parse failure on certain entry formats (cf. the cert arc's
-  mixed-block parser bug — same source family)? intentional scoping now outgrown? Output:
-  cause + estimated recoverable entity count + proposed gate-check list for a future
-  scratch-copy re-import. No writes, no roster changes, FROZEN-roster tripwire stays armed
-  (check_roster_regression). Payoff order: upgrades slim-card one-liners for free (server
-  tipnr_desc slot already wired) · shrinks the 527 absent-name list · may add binds that
-  shrink the Jacob-class 624 — run BEFORE hand-ruling Jacob-class names.
+- **TIPNR scope-widening — DIAGNOSED, verdict ACCEPTED 2026-07-30, ready for a scratch run.**
+  Cause = intentional scoping now outgrown, NOT a bug: `build_entity_binding.py --apply`
+  line ~293 writes only entities USED by a Tier-1/2 render bind (`used = {render}`); Tier 3
+  (unambiguous name WITH a metaV row — exactly the Elisha/Nebuchadnezzar/Pilate/Esther class)
+  is skipped by design, so its entities never land in tipnr_entities. Parser exonerated with
+  controls: local parse of pinned tipnr/TIPNR.txt = **4,247 entities (3,132 person / 1,013
+  place / 102 other)**, all 18 missing names = one clean entity each, Elijah 4 / Paul 1.
+  Nothing shipped is suspect — this is a widening, not a repair; no re-cert triggered.
+  **Fix shape:** on --apply write ALL parsed entities instead of `used`; pn_binding logic
+  untouched. **PRE-STEP (JP, before scratch run): pin the live count so recoverable is an
+  exact pre-registered number, not an estimate —
+  `sqlite3 -readonly ~/bible-db/bible.db "SELECT count(*) FROM tipnr_entities"`.**
+  **GATES (reviewer-final, scratch copy only, swap = one reversible move):**
+  1. Live db never written; scratch copy only.
+  2. check_roster_regression.py clean before AND after — any diff = abort (change shouldn't
+     touch the roster at all).
+  3. Superset gate: every current tipnr_entities row survives byte-identical (FULL diff, no
+     sampling) — existing bound cards must not move.
+  4. **pn_binding byte-identical old vs new — ABORT on any diff, never warn** (load-bearing:
+     this gate is what makes "binding logic untouched" falsifiable).
+  5. New count = 4,247 AND the person/place/other split = 3,132/1,013/102 (total alone can
+     match while composition drifts).
+  6. audit_tipnr_name_reach.py re-run: all 18 names hit T1; Elijah still 4, Paul still 1.
+  7. Served-layer control set in ONE run (live /api/metav/person, not table peeks):
+     Elijah attaches NO tipnr_desc (multi-entity negative) · Elisha attaches EXACTLY one
+     (formerly-missing positive) · plus one name in TIPNR with NO metaV person row — must
+     NOT start attaching descriptions to cards that shouldn't have the slot (the one new
+     failure surface: entities never reachable before are now reachable by name).
+  8. Sample of existing bound-card /api/metav/entity responses byte-same before/after.
+  9. tipnr_entity_refs growth counted against the parse's total ref count before swap.
+  Payoff unchanged: slim-card one-liners free (tipnr_desc slot wired) · shrinks the 527
+  absent-name list · may shrink the Jacob-class 624 — run BEFORE hand-ruling Jacob-class.
 - **340 identity slots with no words row (lane-2 2026-07-29, DIAGNOSED, fix DEFERRED by
   reviewer ruling).** All 340: source class 'none', position-hole INSIDE an otherwise
   normal verse — NOT the 345 no-name slots. Reads as none-class rows stamped from a stale
