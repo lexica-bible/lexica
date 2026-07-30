@@ -103,16 +103,20 @@ if not okB:
 
 # ── gate C — controls + pinned exact forms ───────────────────────────────────
 okC = True
-hadad = scr.execute(
-    "SELECT g.source, g.greek_lemma FROM pn_greek_identity g "
+# The founding specimen. Receipt 2026-07-30 proved hadad is NOT uniform (5 ABP
+# spellings), so under ruling (b) its correct outcome is the VERSE-FORM class:
+# every hadad row Greek-headed (no 'none' left), each header = its own page form.
+had = scr.execute(
+    "SELECT sum(CASE WHEN g.source='none' OR g.greek_lemma IS NULL OR g.greek_lemma='' "
+    "THEN 1 ELSE 0 END), count(*) FROM pn_greek_identity g "
     "JOIN words w ON w.verse_id=g.verse_id AND w.position=g.position "
     "JOIN verses v ON v.id=g.verse_id "
     "WHERE v.book='1Ki' AND v.chapter=11 AND w.is_pn=1 "
-    "AND lower(COALESCE(NULLIF(w.english_head,''), w.english)) LIKE '%hadad%' "
-    "AND g.source='surface' LIMIT 1").fetchone()
-print(f"gate C: hadad 1Ki 11 flips to source='surface': {'YES' if hadad else 'NO'}"
-      + (f" ({hadad[1]})" if hadad else ""))
-okC &= hadad is not None
+    "AND lower(COALESCE(NULLIF(w.english_head,''), w.english)) LIKE '%hadad%'").fetchone()
+ok_had = had and had[1] and not had[0]
+print(f"gate C: hadad 1Ki 11 all Greek-headed: "
+      f"{'YES' if ok_had else f'NO ({had[0]} of {had[1]} still English)'}")
+okC &= bool(ok_had)
 
 pins = os.path.join(_HERE, "..", "docs", "tickets", "greek_header_pins.txt")
 if os.path.isfile(pins):
