@@ -377,7 +377,10 @@ const api = {
   metavPerson: (name) =>
     fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
   metavAiDescription: (name, book, chapter, verse, translation) => {
-    const q = (book && chapter && verse)
+    // verse 0 is a REAL verse (Psalm superscriptions) — a bare truthiness test dropped
+    // the reference there, generating the verse-less "which one do you mean?" blurb
+    // (cached pn:abimelech, JP-caught 2026-07-30)
+    const q = (book && chapter != null && verse != null && verse !== "")
       ? `?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`
         + (translation ? `&translation=${encodeURIComponent(translation)}` : "") : "";
     return fetch(`/api/metav/ai-description/${encodeURIComponent(name)}${q}`).then(r => r.json());
