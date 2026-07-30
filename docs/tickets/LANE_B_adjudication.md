@@ -1,5 +1,14 @@
 # LANE B — spelling-equiv adjudication (57 slots, 2026-07-30)
 
+**VERDICT LANDED 2026-07-30:** pile 1 approved on a 5/5 sample audit (sarah/hadar
+known-positives + 3 random, all with TIPNR verse-coverage True); pile 2 approved with
+the TIPNR citation as the per-row gate, own tag tipnr-merged-form; shamer 1Ch 7:34
+held then CLEARED (TIPNR raw line 22724: 'Shemer|Shomer@1Ch.7.32-' with 'Shamer =KJV'
+at 1Ch.7.34 — the form sits inside Shomer's own record). **39 rows appended to
+pn_hand_rulings.tsv (28 spelling-equiv + 11 tipnr-merged-form; the draft's '27+10'
+labels were miscounts of the same enumerated slots — lists were authoritative,
+labels corrected).** TSV total 202.
+
 For reviewer verdict BEFORE any TSV row lands. Evidence per slot = TIPNR's own
 reference coverage at the verse (TIPNR asserts WHO is there) + the ABP spelling
 being a variant of that entity's name. Screen tool output in the session record;

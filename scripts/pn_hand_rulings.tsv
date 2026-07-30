@@ -168,3 +168,42 @@ gilead	2Ki	8	29	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth
 gilead	2Ki	9	1	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
 gilead	2Ki	9	14	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
 gilead	2Ki	9	4	Ramoth@Gen.31.47-Hos	adjacency-compound	verse text reads 'ramoth'+'gilead' adjacent in text order = TIPNR attested combined form of Ramoth@Gen.31.47-Hos; entity refs cover the verse	
+shechaniah	1Ch	24	11	Shecaniah@1Ch.24.11	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	1Ch	3	21	Shecaniah@1Ch.3.21-	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	1Ch	3	22	Shecaniah@1Ch.3.21-	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	Ezr	10	2	Shecaniah@Ezr.10.2-Neh	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	Ezr	8	3	Shecaniah@Ezr.8.3	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	Ezr	8	5	Shecaniah@Ezr.8.5	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	Neh	3	29	Shecaniah@Ezr.10.2-Neh	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+shechaniah	Neh	6	18	Shecaniah@Neh.6.18	spelling-equiv	ABP Shechaniah = TIPNR Shecaniah (ch/c romanization); the record's own refs cover the verse	
+michaiah	2Ch	17	7	Micaiah@2Ch.17.7	spelling-equiv	ABP Michaiah = TIPNR Micaiah (KJV h-spelling); the record's own refs cover the verse	
+michaiah	2Ki	22	12	Micaiah@2Ki.22.12-2Ch	spelling-equiv	ABP Michaiah = TIPNR Micaiah (KJV h-spelling); the record's own refs cover the verse	
+michaiah	Neh	12	41	Micaiah@Neh.12.41	spelling-equiv	ABP Michaiah = TIPNR Micaiah (KJV h-spelling); the record's own refs cover the verse	
+micha	2Sa	9	12	Micah@2Sa.9.12-1Ch	spelling-equiv	ABP Micha = TIPNR Micah/Mica (same Hebrew name); the record's own refs cover the verse	
+micha	Neh	10	11	Mica@Neh.10.11	spelling-equiv	ABP Micha = TIPNR Micah/Mica (same Hebrew name); the record's own refs cover the verse	
+micha	Neh	11	17	Mica@1Ch.9.15-Neh	spelling-equiv	ABP Micha = TIPNR Micah/Mica (same Hebrew name); the record's own refs cover the verse	
+micha	Neh	11	22	Mica@Neh.11.22-	spelling-equiv	ABP Micha = TIPNR Micah/Mica (same Hebrew name); the record's own refs cover the verse	
+shuah	Gen	38	2	Shua@Gen.38.2-1Ch	spelling-equiv	ABP Shuah = TIPNR Shua (Judah's father-in-law); record refs cover the verse	
+shuah	Gen	38	12	Shua@Gen.38.2-1Ch	spelling-equiv	ABP Shuah = TIPNR Shua (Judah's father-in-law); record refs cover the verse	
+shuah	1Ch	4	11	Shuhah@1Ch.4.11	spelling-equiv	ABP Shuah = TIPNR Shuhah; record refs cover the verse	
+shamer	1Ch	6	46	Shemer@1Ch.6.46	spelling-equiv	TIPNR record 'Shemer =ESV,NIV; Shamer =KJV' at 1Ch.6.46 - ABP's Shamer is the record's own KJV form	
+shamer	1Ch	7	34	Shomer@1Ch.7.32-	spelling-equiv	TIPNR line 'Shemer|Shomer@1Ch.7.32-' ('Shemer =ESV; Shomer =NIV; Shamer =KJV') refs 1Ch.7.34 - the Shamer form at this verse sits inside Shomer's own record	
+sacar	1Ch	26	4	Sachar@1Ch.26.4	spelling-equiv	ABP Sacar = TIPNR Sachar; the record's own refs cover the verse	
+koz	Ezr	2	61	Hakkoz@Ezr.2.61-Neh	spelling-equiv	ABP Koz = TIPNR Hakkoz (Hebrew article ha-); record refs cover the verse	
+koz	Neh	7	63	Hakkoz@Ezr.2.61-Neh	spelling-equiv	ABP Koz = TIPNR Hakkoz (Hebrew article ha-); record refs cover the verse	
+juda	Luk	3	26	Joda@Luk.3.26	spelling-equiv	ABP (TR) Juda = TIPNR Joda (critical-text genealogy form); record refs cover the verse	
+hadar	Gen	25	15	Hadad@Gen.25.15-1Ch	spelling-equiv	TIPNR record lists spelling 'Hadar' at Gen.25.15 itself (Ishmael's son, d/r variance)	
+zacharias	Luk	3	2	Zechariah@Luk.1.5-	spelling-equiv	ABP Zacharias (Greek form) = TIPNR Zechariah the Baptist's father; record refs cover the verse	
+joanna	Luk	3	27	Joanan@Luk.3.27	spelling-equiv	ABP (TR) Joanna = TIPNR Joanan (genealogy ancestor, male); record refs cover the verse	
+sarah	Num	26	46	Serah@Gen.46.17-1Ch	spelling-equiv	ABP Sarah = TIPNR Serah (Asher's daughter); record refs include Num.26.46	
+sacar	1Ch	11	35	Sharar@2Sa.23.33-1Ch	tipnr-merged-form	parallel hero lists: MT reads Sacar in 1Ch 11:35, Sharar in 2Sa 23:33; TIPNR one-man record covers both verses	
+sheva	2Sa	20	25	Seraiah@2Sa.8.17-1Ch	tipnr-merged-form	David's scribe: 2Sa 8:17 Seraiah = 2Sa 20:25 Sheva; TIPNR's merged record covers the verse	
+azareel	1Ch	25	18	Uzziel@1Ch.25.4-	tipnr-merged-form	same list names the son Uzziel (v.4) and Azarel (v.18); TIPNR's record covers 1Ch.25.18	
+jesiah	1Ch	23	20	Isshiah@1Ch.23.20-	tipnr-merged-form	ABP Jesiah = TIPNR Isshiah (same Hebrew name, KJV form); record covers the verse	
+job	Gen	46	13	Jashub@Gen.46.13-1Ch	tipnr-merged-form	Issachar's son - NOT Job of Uz (whose witness binds serve in Job 1); TIPNR's Jashub record lists the form 'Yob' at Gen.46.13, where ABP prints Job	
+jonas	Joh	21	15	John@Mat.16.17-Jhn	tipnr-merged-form	Peter's father: ABP's TR base reads Ionas where the critical text reads Ioannou; TIPNR's own record merges the forms (form 'Jonah' at Mat.16.17) and covers Joh.21.15-17	
+jonas	Joh	21	16	John@Mat.16.17-Jhn	tipnr-merged-form	Peter's father: ABP's TR base reads Ionas where the critical text reads Ioannou; TIPNR's own record merges the forms (form 'Jonah' at Mat.16.17) and covers Joh.21.15-17	
+jonas	Joh	21	17	John@Mat.16.17-Jhn	tipnr-merged-form	Peter's father: ABP's TR base reads Ionas where the critical text reads Ioannou; TIPNR's own record merges the forms (form 'Jonah' at Mat.16.17) and covers Joh.21.15-17	
+barsabas	Act	1	23	Joseph@Act.1.23	tipnr-merged-form	the clicked word is this Joseph's surname Barsabbas (single-b ABP spelling); TIPNR's record covers the verse	
+maachah	1Ki	2	39	Maoch@1Sa.27.2-1Ki	tipnr-merged-form	Achish's father: 1Sa 27:2 Maoch = 1Ki 2:39 Maacah; TIPNR's merged record covers the verse	
+maachah	1Ch	19	6	Aram-maacah@1Ch.19.6	tipnr-merged-form	the kingdom Maacah - TIPNR's Aram-maacah record carries the name and covers the verse	
