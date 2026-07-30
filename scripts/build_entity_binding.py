@@ -290,8 +290,13 @@ def main():
 
     # ── --apply: write the three side tables (never touch words/verses) ────────
     print("\nWriting side tables...")
-    used = {v[1] for v in group.values() if v[0] == "render"}
+    # Scope widening (JP + reviewer green-lit 2026-07-30): write ALL parsed entities,
+    # not only those consumed by a render bind — the slim-card tipnr_desc slot reads
+    # this table by name, so Tier-3 entities (Elisha class) must exist here too.
+    # pn_binding logic above is UNTOUCHED; gate 4 of the scratch-run gate list asserts
+    # it byte-identical (scripts/gate_tipnr_scope_widen.py).
     by_uniq = {e["uniq"]: e for e in ents}
+    used = set(by_uniq)
     w = sqlite3.connect(DB)
     try:
         w.execute("DROP TABLE IF EXISTS pn_binding")
