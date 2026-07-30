@@ -153,9 +153,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   place / 102 other)**, all 18 missing names = one clean entity each, Elijah 4 / Paul 1.
   Nothing shipped is suspect — this is a widening, not a repair; no re-cert triggered.
   **Fix shape:** on --apply write ALL parsed entities instead of `used`; pn_binding logic
-  untouched. **PRE-STEP (JP, before scratch run): pin the live count so recoverable is an
-  exact pre-registered number, not an estimate —
-  `sqlite3 -readonly ~/bible-db/bible.db "SELECT count(*) FROM tipnr_entities"`.**
+  untouched. **LIVE COUNT PINNED (JP-run 2026-07-30): tipnr_entities = 2,355 → recoverable
+  = exactly 1,892 (4,247 − 2,355). Pre-registered expectation for the scratch run: new
+  table = 4,247 rows, +1,892 vs live.**
   **GATES (reviewer-final, scratch copy only, swap = one reversible move):**
   1. Live db never written; scratch copy only.
   2. check_roster_regression.py clean before AND after — any diff = abort (change shouldn't
