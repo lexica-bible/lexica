@@ -276,19 +276,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Jos 22:11 contested-reading, eleazar Ezr 8:16 unresolved-ID, bunni Neh 10:14
   offset w/ hodijah cross-check). Rollback = bible.db.pre_laneC; pre_laneB
   deletable after soak.**
-- **Greek-header coverage gap (SIZED 2026-07-30 — a BACKFILL LANE, design pass owed):**
-  header design = ABP's Greek form when mapped, English fallback when not. Live count
-  (JP-run, pn_greek_identity × abp_surface): source='none' = 3,380 tokens, of which
-  **2,587 (77%) have a Greek surface in the same verse** — headline names (israel 495,
-  egypt 96 + Αιγύπτιος 288 no-number gentilics, jerusalem 85, bethel 61, levites 49…),
-  all H-numbered = R-2 residue confirmed (H-tokens with no STEP Greek mapping stayed
-  on the Hebrew path). NOT a hand list. **Design question for the reviewer before any
-  build: the verse surfaces are INFLECTED (Αίγυπτον), so a new 'surface-derived'
-  identity layer needs a headword-form rule (e.g. most-frequent surface across the
-  name's occurrences, or nominative selection) — the header can't copy the verse form
-  raw.** Fix = 4th source layer in build_pn_greek_identity + rebuild of its table
-  through a mini gate. Sits beside the stray-breathing cleanup (same builder, do in
-  one pass). Ἀδάρ/Ἀδερ per-verse variance stays the "IN THIS VERSE" slot's job.
+- **Greek-header backfill: SHIPPED 2026-07-30** (with the stray-breathing class,
+  one lane). ~18,700 name tokens now head Greek: uniform names (1,693) carry one
+  corpus-wide headword (source='surface'); varying names keep each verse's own
+  printed form (ruling (b) — page-attested, never contradicts the page); gentilics
+  excluded via is_people_group; no-form rows stay honest English. Breathing junk
+  ('΄ Αδερ') died by replacement (new build never stores raw scrape values); the
+  repair transform stays as input guard. Record + lessons: TODO_ARCHIVE 2026-07-30;
+  drill = docs/tickets/DRILL_greek_header_backfill.md. Rollback bible.db.pre_greekhdr
+  (pre_laneC deletable after soak). OPEN residue: hand-table polish (870 UNRESOLVED
+  names in docs/tickets/greek_header_split.txt — famous ones upgradeable to a single
+  headword a few rows at a time via scripts/greek_header_nominatives.tsv, no deadline).
 - **Adonai-card follow-ups (banked 2026-07-30, from JP+reviewer eyeball of the live
   verse-form class):** (1) WORDING contradiction on the no-number PN card: subtitle
   "ABP-only form — no Strong's mapping" sits above a 132× H136 Hebrew xref — subtitle
@@ -302,21 +300,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   pull cards where the ABP-form count EXCEEDS the Hebrew-number count (Hebrew>ABP is
   the normal pattern — form-filter/translation-choice/versification; the other
   direction would surface real counting bugs). Reviewer-framed; read-only.
-- **Stray-breathing Greek name forms (cosmetic, SIZED 2026-07-30, non-blocking):**
-  90 distinct `pn_greek_identity.greek_lemma` values carry a leading standalone mark +
-  space ("΄ Αδερ" — JP screenshot, Ben-hadad card header). Pattern: ALL are names with
-  rough breathing (h-sound: Heber/Hanan/Hadar class) — the source stores the breathing
-  detached. App convention is accent-only Greek (no breathing), so fix = strip the stray
-  "mark+space" prefix AT THE BUILDER (build_pn_greek_identity lemma inputs: words.lemma /
-  abp_surface / bh scrape — trace which feeds it first) + one scoped live cleanup through
-  a mini gate. **FIX SHAPE (reviewer-final): pre-registered list of the 90 · transform
-  stated = detached mark + space → combined rough breathing on the vowel, NFC-composed ·
-  post-check transliterations UNCHANGED (they derive from the h-sound either way — a
-  translit diff means the transform went wrong) · verify display path AND search
-  normalizer agree with the new stored form (the γῆ accent-folding lesson: search is
-  where composed-vs-decomposed mismatches bite).** The Greek itself is CORRECT (LXX
-  genuinely names Ben-hadad "son of Ader") — only the floating tick is wrong. Source-
-  convention class, not corruption (translit layer already shows "Hadad" right).
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this

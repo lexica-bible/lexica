@@ -1,7 +1,9 @@
 # DRILL SHEET — Greek-header backfill (source='none' lane) + breathing cleanup
 
-Status: **RULED 2026-07-30 — both open items closed by JP (reviewer of record), BUILT,
-awaiting dry-run receipt.** Item 1 = (b) corpus nominative with (a) hand table as its
+Status: **SHIPPED 2026-07-30.** Gates A/B/C PASS (32,479 rows reconcile: 12,234
+unchanged + 4,062 headword + 14,649 page-attested + 1,525 gentilic drop + 9
+bind-derived), served checks + JP card eyeballs (hadad Αδάρ verse-form / zion Σιών
+uniform) all green. Rollback: bible.db.pre_greekhdr. Record: TODO_ARCHIVE 2026-07-30. Item 1 = (b) corpus nominative with (a) hand table as its
 residue, tightened: the auto-pick requires POPULATED morph and byte-agreement among the
 nominative occurrences — any disagreement (incl. accent variance beyond folding) drops
 to the hand table, no majority vote. Item 2 = the 288 gentilics EXCLUDED (adjectives;

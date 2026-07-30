@@ -6,6 +6,37 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Greek-header backfill SHIPPED (+ breathing cleanup, one lane)
+
+- **Live:** pn_greek_identity rebuilt 32,479 rows — 4,062 uniform headwords
+  (source='surface', one byte-identical form corpus-wide, zion→Σιών class), 14,649
+  page-attested rows (each verse's own printed form heads the card; hadad/Αδάρ class),
+  1,525 gentilic drops (is_people_group ruling), 9 bind-derived numbers (Lane B/C binds
+  catching up in the derived table), rest unchanged. Served + card-eyeballed.
+- **Two design assumptions FALSIFIED by dry run** (the receipts did their job):
+  (1) "numberless = gentilic" excluded ~15k legit names — post-retirement, plain
+  numbers aren't on the word row; fix = the production people-group predicate, never a
+  proxy. (2) "corpus nominative covers declinables" — the grammar column is blank on
+  OT names; the morph route barely fires.
+- **Ruling (b) (JP, decisive):** unresolved names keep each verse's own printed form —
+  uniformity never at the cost of a ~10,000-token Greek→English regression; the hand
+  table (scripts/greek_header_nominatives.tsv) is incremental polish, no deadline.
+  No-form rows stay English (honest beats guessed). ABP's spelling beats standard
+  transliteration everywhere.
+- **Receipt evidence:** ABP spells many names multiple ways at the letter level
+  (Αβενήρ×90/Αβεννήρ×8); accent-only variance is rare; label-grouping can mix
+  lookalike names (Αχιμέλεχ inside abimelech) — why no-majority-vote stood.
+- **Breathing class died by replacement:** the "΄ Αδερ" junk (U+0384 + NBSP — the
+  first repair matched plain space and fixed 0) lived only in old stored headers from
+  per-verse scrape picks; the new build stores page forms, so it vanished. Transform
+  kept as input guard.
+- **Gate lessons:** a DERIVED table's gate must allow upstream-shipped facts to arrive
+  (bind-derived numbers) — "never changes" was wrong; a control specimen can change
+  CLASS mid-arc when evidence lands (hadad uniform→verse-form) — re-aim the control,
+  re-run it (checker-edit discipline followed, control re-failed before PASS counted).
+- **Rollback:** bible.db.pre_greekhdr (pre_laneC deletable after soak;
+  pre_witnessA/pre_laneB deleted for quota 2026-07-30).
+
 ## 2026-07-30 — Lane C SHIPPED: 201 context-run witness binds (multi-candidate names)
 
 - **Live:** 201 binds, kind='witness' rule='context-run', with the reviewer's distinct
