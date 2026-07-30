@@ -1092,7 +1092,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           ? <div className="lsj-def lsj-def--loading">Looking up…</div>
           : <>
               <p className="detail-p detail-p--meta">{renderInlineMd(aiDescription)}</p>
-              <p className="detail-ai-caveat">AI summary for this reference — not verse-checked.</p>
+              <p className="detail-ai-caveat">AI-written summary — claims not verified against the verse text.</p>
             </>
         }
       </section>

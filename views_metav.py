@@ -334,7 +334,9 @@ def metav_ai_description(name):
     SCOPED to the clicked occurrence (book/chapter/verse query params) so a shared
     name resolves to the figure at THAT reference, not a same-named one in another
     testament (the Cushi-in-Zephaniah -> Acts bug). Cached PER reference for the same
-    reason. Still ungrounded model prose — the frontend labels it 'not verse-checked'."""
+    reason. Still ungrounded model prose — the frontend labels it "claims not verified
+    against the verse text" (reworded 2026-07-30; verse-check cert lane =
+    docs/tickets/TICKET_blurb_verse_check.md)."""
     if not _anthropic:
         return jsonify({"error": "AI not available"}), 503
 

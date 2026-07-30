@@ -6,6 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Jacob-class easy pile: hand-rulings arc (81 binds, reviewer close-out approved)
+
+- **Shipped:** `scripts/pn_hand_rulings.tsv` (81 rows, machine-generated from verified
+  TIPNR-coverage runs; every row = name/ref/entity/evidence-class/rationale, LXX-only flag
+  on the 5 second-Cainan rows) + loader in build_entity_binding.py (kind='ruled', loud-fail
+  on any conflict with a binder render) + `scripts/gate_pn_rulings.py` (delta pinned to the
+  TSV: an 82nd bind = abort). Names: zerubbabel 24, artaxerxes 17 (→Ahasuerus, LXX-Esther
+  naming), cainan 11, izhar 10, micaiah 10, shealtiel 9. Render rows 14,830 → 14,911.
+- **Gate run:** detector control fired (live-vs-live gate A FAIL, 81 unlanded), real run
+  A/B/C all PASS — exactly 81 added, 0 removed/modified, entity table + refs byte-stable.
+  Post-swap (after reload, per standing method): Elijah-bound + David-name-path byte-same;
+  Zerubbabel Ezr 5:2 / Artaxerxes Est 3:1 / Cainan Gen 11:12 all serve the ruled person
+  (Cainan = son-of-Arphaxad, the witness-dependent bind, confirmed).
+- **BANKED FINDING — "binder floored, human ruled" census (reviewer-flagged):** 28 of the
+  81 ruled keys overrode an explicit binder floor (no stored row, so on-disk delta stayed
+  purely additive): all 17 artaxerxes Est slots + all 11 cainan slots (Gen 5:9,10,12,13,14 ·
+  Gen 10:22,24 · Gen 11:12,13 · 1Ch 1:18 · Luk 3:37). Zero HOT replacements occurred.
+  **STANDING RULE: a future rulings batch that REPLACES a HOT row is a stop-and-look —
+  that's a hand-check-pending row being silently overridden.**
+- **Source-duplicate hypothesis refuted:** TIPNR's Luke-genealogy twins (Zerubbabel,
+  Shealtiel) carry different fathers — distinct persons by design; merge off, the guard
+  flips stand as corrections.
+- Class 3 (supplied-subject, 58 slots: jesus 38 + jacob 16 + 4 residues) = scoping ticket
+  docs/tickets/TICKET_supplied_subject_binds.md, NO build. Middle/hard piles still open in
+  TODO.md. Rollback file: `bible.db.pre_rulings`.
+- Same deploy: Timothy slim-card spacing fix confirmed by JP (David/Pilate/Esther unchanged).
+
+---
+
 ## 2026-07-30 — TIPNR scope-widening (diagnosis → scratch run → swap → close-out, all reviewer-verdicted)
 
 - **Root cause (accepted verdict): design scoping outgrown, not a bug.** The entity-card

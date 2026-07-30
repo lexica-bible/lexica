@@ -157,6 +157,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   2026-07-30): FIXED via adjacent-sibling rule `.detail-p--meta + .metav-rel-row` in
   styles.css — space only when a kin row follows, Pilate/David untouched by construction.
   Rides the next deploy; eyeball set Timothy / David / Pilate / Esther.)*
+- **AI blurb verse-check cert (SCOPED, not started — JP + reviewer 2026-07-30):** make
+  "verse-checked" a state a blurb can EARN. Ticket with the check design, two open doctrine
+  questions (cross-reference attestation; failure policy) and the cert template:
+  docs/tickets/TICKET_blurb_verse_check.md. Sequenced BEHIND the Lexica-dictionary batch
+  work (borrows its tooling); waits for JP to raise it. Interim reword SHIPPED same day:
+  caveat now reads "AI-written summary — claims not verified against the verse text"
+  (rides next deploy).
 - **Old-db soak (JP's call):** `~/bible-db/bible.db.pre_tipnr_widen` retained per reviewer
   ruling; cleared for deletion after a few days of live traffic.
 - *(TIPNR scope-widening SHIPPED + lane CLOSED 2026-07-30, reviewer close-out approved:
@@ -210,22 +217,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   saul (8, 1 book, 3) — zero-research-resolvable HINTS only, reviewer-gated, never bind on
   the flag alone. Widest spread: gilead 38 slots/10 books, jesus 38/11. Worst ambiguity:
   azariah (24 metaV candidates over 9 slots).
-  **EASY PILE STAGED 2026-07-30 (reviewer-approved, awaiting JP checkpoint + scratch run).**
-  Denominator COMMITTED: the 591 word-slot definition (what readers click); census 179/708
-  is context only. Post-widening re-size: class steady at 591; newcomers zerubbabel 25 /
-  micaiah 12 / izhar 10 / shealtiel 10 = the guard-flip class surfacing here (mv=1, tp≥2).
-  Source-duplicate hypothesis REFUTED at parent level (Luke-genealogy twins have different
-  fathers in TIPNR — distinct persons by design; merge off, guard flips stand).
-  **Rulings file `scripts/pn_hand_rulings.tsv` — 81 rows, machine-generated from the
-  verified coverage runs**, every row = name/ref/entity/evidence-class/rationale (+LXX-only
-  flag on the 5 second-Cainan rows): zerubbabel 24, artaxerxes 17 (→Ahasuerus, LXX Esther
-  naming), cainan 11, izhar 10, micaiah 10, shealtiel 9. Loader in build_entity_binding.py
-  (kind='ruled', loud fail on conflict). Gate tool `scripts/gate_pn_rulings.py`: expected
-  delta = EXACTLY the TSV's 81 rows (an 82nd bind = abort), tipnr_entities byte-identical,
-  refs count unchanged; detector control (live-vs-live, gate A must FAIL) first; post-swap
-  captures only after reload. **Class 3 (supplied-subject, 58 slots incl. jesus 38 +
-  jacob 16): SCOPING ONLY — docs/tickets/TICKET_supplied_subject_binds.md, design
-  questions for a reviewer pass, NO build, out of this gate arc.**
+  **EASY PILE SHIPPED 2026-07-30 (reviewer close-out approved): 81 hand-ruled binds LIVE
+  via `scripts/pn_hand_rulings.tsv` + loader + gate_pn_rulings.py — full record in
+  TODO_ARCHIVE.md (incl. the 28-row "binder floored, human ruled" census and the
+  HOT-replacement stop-and-look rule). Denominator COMMITTED: the 591 word-slot
+  definition; 81 keys resolved, remaining work = the middle pile (joseph 11, mary 16,
+  elijah 15, pharaoh 9), the hard pile (gilead, judah, hadad, joash, azariah), and
+  class 3 (supplied-subject, 58 slots: docs/tickets/TICKET_supplied_subject_binds.md,
+  scoping only). Rollback: bible.db.pre_rulings (soak, JP's call). A words rebuild
+  re-lands the rulings automatically (TSV is read by every build run).**
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
