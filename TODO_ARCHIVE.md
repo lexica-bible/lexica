@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Rulings batch 3 SHIPPED (22 adjacency-compound binds; evidence pass)
+
+- **Live:** 163 hand-ruled binds total (+22). Clicking "Gilead" in the Ramoth-gilead
+  verses (20), "Gilead" at 1Ch 10:11 (Jabesh-gilead), and "Gad" at Num 33:45-46
+  (Dibon-gad station) now serves the compound place card, kind='ruled'.
+- **Evidence:** full 392-slot verse-prose neighbor dump on PA (dump_adjacency_ctx.py,
+  read-only) cross-checked locally vs pinned TIPNR combined forms
+  (check_adjacency_pairs.py). Checker control-tested both ways BEFORE use (known
+  positive fired, negatives residued). Only exact text-order pairs matching an
+  attested combined form with verse coverage made the batch, per the pre-registered
+  grain.
+- **Gate arc:** control gate live-vs-live FAILed naming exactly the 22 (detector
+  proven), real gate A/B/C PASS (141 live + 22 added, nothing else moved), zero HOT
+  replacements, served spot-checks 4/4 post-reload incl. batch-2 geber unchanged.
+- **Rollbacks:** bible.db.pre_rulings3 (this batch); pre_rulings2 kept for soak.
+- **Named residue:** 9 "Jabish Gilead" verses = ABP spelling vs TIPNR Jabesh (spelling
+  ruling owed — ABP prints BOTH spellings, Jabesh at 1Ch 10:11); gilead 1Ch 10:12 +
+  2Ch 18:3 ("of Gilead", not adjacent). Everything else in the census has no compound
+  neighbor.
+- **Rode along:** blurb-cert specimen #3 (Num 33:45 Gad "tribal territory" blurb
+  contradicts the new Dibon-gad bind — check must re-run when a BIND changes);
+  chip-merge display half now has its exact 22-slot candidate list (all partners PN).
+
+---
+
 ## 2026-07-30 — Rulings batch 2 SHIPPED (59 compounds + abimelech→Achish; reviewer close-out approved)
 
 - **Live:** 141 hand-ruled binds total (81 easy-pile + 60 batch-2). Batch 2 = the strict

@@ -241,11 +241,22 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   base attests names TIPNR's Hebrew/critical base lacks); census artifact
   docs/tickets/class3_witness_slots.txt; correction owned in the ticket.**
   **RULINGS BATCH 2 SHIPPED + CLOSED 2026-07-30 (reviewer close-out approved, record in
-  TODO_ARCHIVE.md): 141 binds live, spot-checks 4/4, zero regressions. Sole rollback =
-  bible.db.pre_rulings2 (soak, JP's call). Remaining lanes (all parked for JP to raise):
-  adjacency compounds (~41, Ramoth/Jabish Gilead — own evidence pass, natural batch 3) ·
+  TODO_ARCHIVE.md): 141 binds live, spot-checks 4/4, zero regressions.**
+  **RULINGS BATCH 3 SHIPPED + CLOSED 2026-07-30 (adjacency compounds, evidence pass under
+  the pre-registered grain): 163 binds live (+22: ramoth+gilead 20, jabesh+gilead 1,
+  dibon+gad 2). Full 392-slot neighbor dump (scripts/dump_adjacency_ctx.py) cross-checked
+  vs pinned TIPNR combined forms (scripts/check_adjacency_pairs.py, control-tested both
+  ways). Gates A/B/C PASS after control-fail; zero HOT replacements; served spot-checks
+  4/4 kind='ruled' (incl. batch-2 geber unchanged). Rollbacks: bible.db.pre_rulings3
+  (this batch) + pre_rulings2 (kept for soak, JP deletes on his timing). NAMED RESIDUE:
+  9 "Jabish Gilead" verses (ABP spells Jabish where TIPNR only has Jabesh — spelling
+  ruling owed, ABP itself uses both spellings: 1Ch 10:11 prints Jabesh) + gilead
+  1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing, not adjacent). CHIP-MERGE candidate list =
+  exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
+  Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
+  TICKET_blurb_verse_check.md. Remaining lanes (parked for JP to raise):
   witness-divergence design pass (~290 after compounds, doctrine question in the ticket) ·
-  word-position binding (~118 same-verse multi).**
+  word-position binding (~118 same-verse multi) · jabish spelling ruling (above).**
 - **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
   Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
   when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads

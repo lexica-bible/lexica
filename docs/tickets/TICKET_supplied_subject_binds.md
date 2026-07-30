@@ -55,6 +55,16 @@ design (provenance contract territory).
   ruling binds the clicked slot without disturbing the partner slot; the pairs list
   must note which partners are PN slots (those are the chip-merge candidates).
 
+## Batch 3 SHIPPED 2026-07-30 (adjacency compounds, closed)
+22 binds live under the pre-registered grain: ramoth+gilead 20 → Ramoth@Gen.31.47-Hos,
+jabesh+gilead 1 (1Ch 10:11) → Jabesh@Jdg.21.8-1Ch, dibon+gad 2 → Dibon@Num.21.30-Jer.
+Tools: scripts/dump_adjacency_ctx.py (PA neighbor dump, all 392 slots) +
+scripts/check_adjacency_pairs.py (local vs pinned TIPNR, control-tested). NAMED RESIDUE:
+9 "Jabish Gilead" verses (ABP spelling vs TIPNR's Jabesh — spelling ruling owed; ABP
+itself prints Jabesh at 1Ch 10:11) + gilead 1Ch 10:12 / 2Ch 18:3 ("of Gilead" shapes).
+The 22 (all PN partners) ARE the chip-merge candidate list for the display half above.
+Witness-divergence remainder after batch 3: ~290 slots.
+
 ## Status
 PARKED — design pass waits for JP to raise it. Related-but-separate:
 same-verse same-name multi (~118 slots) = word-position binding lane.
