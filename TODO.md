@@ -201,7 +201,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
     (audit_tipnr_name_reach.py). TIPNR the source almost certainly has them; the import
     may keep a subset. Sits behind the FROZEN-roster tripwire (check_roster_regression
     gate) — own reviewer question before any import change; NOT a lookup bug (probe
-    proved that), so no app-side fix pending.
+    proved that), so no app-side fix pending. **NEXT UP on the PN board (JP + reviewer,
+    2026-07-30) — fresh-session brief, reviewer-authored:** read-only diagnosis of WHY
+    the imported tipnr_entities lacks Paul-class entries — import-script filter?
+    source-file subset? parse failure on certain entry formats (cf. the mixed-block
+    parser bug from the cert arc — same source family)? intentional scoping now
+    outgrown? Output: the cause + estimated recoverable entity count + proposed
+    gate-check list for a future scratch-copy re-import. No writes, no roster changes,
+    tripwire stays armed. Payoff order: upgrades slim-card one-liners for free (slot
+    wired), shrinks the 527 absent list, may add binds that shrink the Jacob-class 624
+    — run BEFORE hand-ruling Jacob-class names. Evidence tool:
+    scripts/audit_tipnr_name_reach.py (top-20 probe, 2026-07-30 output in git log).
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
