@@ -207,3 +207,9 @@ jonas	Joh	21	17	John@Mat.16.17-Jhn	tipnr-merged-form	Peter's father: ABP's TR ba
 barsabas	Act	1	23	Joseph@Act.1.23	tipnr-merged-form	the clicked word is this Joseph's surname Barsabbas (single-b ABP spelling); TIPNR's record covers the verse	
 maachah	1Ki	2	39	Maoch@1Sa.27.2-1Ki	tipnr-merged-form	Achish's father: 1Sa 27:2 Maoch = 1Ki 2:39 Maacah; TIPNR's merged record covers the verse	
 maachah	1Ch	19	6	Aram-maacah@1Ch.19.6	tipnr-merged-form	the kingdom Maacah - TIPNR's Aram-maacah record carries the name and covers the verse	
+# Lane C reroutes (LANE_C_adjudication.md pile 2, reviewer-approved 2026-07-30)
+joshua	Neh	8	7	Jeshua@Ezr.2.40-Neh	spelling-equiv	ABP Joshua = TIPNR Jeshua (Levite, son of Azaniah); the record's own refs cover Neh 8:7 - Lane C reroute, NOT Joshua son of Nun	
+heber	1Ch	8	22	Eber@1Ch.8.22	spelling-equiv	ABP Heber = TIPNR Eber (TIPNR's own line: 'Eber =ESV,NIV; Heber =KJV'); son of Shashak, record covers the verse - Lane C reroute	
+jehiel	2Ch	35	9	Jeiel@2Ch.35.9	spelling-equiv	ABP prints Jehiel where the Hebrew has Jeiel (swapped pair with 35:8); TIPNR's Jeiel record is only at this verse - Lane C reroute	
+jeiel	2Ch	35	8	Jehiel@2Ch.35.8	spelling-equiv	ABP prints Jeiel where the Hebrew has Jehiel (swapped pair with 35:9); TIPNR's Jehiel record is only at this verse - Lane C reroute	
+rapha	1Ch	8	37	Raphah@1Ch.8.37-	spelling-equiv	ABP Rapha = TIPNR Raphah (son of Binea, Saul's line); record covers the verse - Lane C reroute, NOT Rosh son of Benjamin	
