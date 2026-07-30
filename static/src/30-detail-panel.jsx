@@ -948,15 +948,19 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // rule='context-run' (Lane C, 2026-07-30): multi-candidate name, identity fixed
       // by the per-name run audit. DISTINCT sentence, reviewer-proposed + JP-approved
       // verbatim ({person/place} filled from the entity's own section).
+      // The sentence claims what ABP PRINTS, so it must show the CLICKED word — never
+      // the bound entity's display name, which can differ (jacob -> Israel record;
+      // "ABP reads Israel here" was false — caught served, 2026-07-30).
+      const witnessName = clickName || be.name;
       const witnessNote = be.kind === "witness"
         ? (be.rule === "context-run"
           ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
-              ABP's Greek text reads {be.name} here. Several people share this name; the
+              ABP's Greek text reads {witnessName} here. Several people share this name; the
               identification follows the surrounding passage, where only this{" "}
               {be.section === "place" ? "place" : "person"} appears.
             </p>
           : <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
-              ABP's Greek text reads {be.name} here. The reference index does not list this
+              ABP's Greek text reads {witnessName} here. The reference index does not list this
               name at this verse; the identification follows ABP's reading.
             </p>)
         : null;
