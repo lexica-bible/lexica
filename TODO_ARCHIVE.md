@@ -6,6 +6,36 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Jacob-class census CLOSED: middle + hard piles + coda (reviewer close-out approved)
+
+- **Final classification of the 591 unbound-ambiguous slots:** 81 ruled + live (easy pile)
+  · same-verse same-name multi ≈118 slots (mary 16 + 22 tail names / 102 — genealogy lists
+  genuinely naming two like-named people in one verse, the Dishon pattern; un-partitionable
+  at the verse+name key BY CONSTRUCTION; fix = word-position binding, parked with the
+  multi-entity card lane) · covered-by-none ≈397 slots in four itemized sub-classes
+  (TICKET_supplied_subject_binds.md). Rulings EXHAUSTED — remaining work is mechanisms.
+- **THE CENSUS'S CERTIFICATE (reviewer: bank verbatim):** "Across all 140 tail names, not
+  one verse was claimed by exactly one candidate. At first glance that looks like a bug;
+  it's actually the binder's completeness showing — these are all metaV-ambiguous names
+  (Tier 1, the binder RAN on them), so any slot where exactly one candidate's ref-list
+  matched was already bound and never appears in an unbound dump. What remains is, by
+  construction, only the two things the automatic binder can't do: verses where no
+  ref-list contains the name, and verses where two same-named people stand together. The
+  easy pile was different precisely because those names were Tier-3 (binder skipped) —
+  which is why single-claimed slots existed there to rule. The drill has now rediscovered
+  the binder's own boundary from the outside, independently."
+- **Middle pile (null result):** joseph 11/elijah 15/pharaoh 9 all supplied-subject —
+  joseph's 11 candidates were never the issue (Gen 37-50 narrative, jacob's pattern).
+  Standing drill lesson: **candidate count is a property of the NAME; slot class is a
+  property of the VERSES.** Mutual-exclusivity pre-flight promoted PERMANENT (fired on
+  first contact: mary, 8/8 verses claimed by 2+ candidates).
+- **Psalm-superscription coda (negative, pre-registration held):** WS1 +1 lands the right
+  title verses but TIPNR refs carry the HEBREW title names; the clicked names are LXX-only
+  attributions. Near-miss banked: Psa 34:0 abimelech → Achish (TIPNR's own resolution),
+  single-row lxx-naming candidate for a future rulings batch.
+
+---
+
 ## 2026-07-30 — Jacob-class easy pile: hand-rulings arc (81 binds, reviewer close-out approved)
 
 - **Shipped:** `scripts/pn_hand_rulings.tsv` (81 rows, machine-generated from verified

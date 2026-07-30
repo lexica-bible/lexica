@@ -11,10 +11,26 @@ source text, and here it doesn't. The verse-bound render rule (corroboration) is
 therefore structurally unreachable; these slots floor forever under the current
 mechanism.
 
-## Census — 93 slots (updated 2026-07-30 after the middle-pile drill; hard pile pending)
-**This class is now the DOMINANT unresolved population and grows with each drill —
-strengthens the case for this design pass being the next mechanism work once the
-hard pile closes the census (reviewer note 2026-07-30).**
+## Census — CLOSED 2026-07-30: ~397 covered-by-none slots (the dominant class)
+Full-tail drill (140 names / 406 slots) added 304 covered-by-none slots. **REQUIRED
+ITEMIZATION STEP (reviewer-mandated): "covered by no candidate ref-list" is the
+MEASUREMENT; the CAUSE splits into four sub-classes that must be itemized before any
+mechanism design — do NOT inherit them under one label:**
+  (a) pronoun-supplied narrative — the verified jacob/joseph pattern, the bulk;
+  (b) **compound-name fragments** (gilead's 1Ki 22/2Ki 8-9 Ramoth-gilead contexts):
+      the name IS in the source, keyed to a place entity — NOT supplied-subject; may
+      be resolvable by a compound-aware rule, or correct as-is if the click should
+      serve the place. Different mechanism from pronoun resolution.
+  (c) **LXX-only superscription attributions** (coda-verified 2026-07-30, negative
+      result, pre-registration held): Psa 34:0/51:0/55:0/71:0/137:0/138:0/146:0/148:0
+      — the WS1 +1 map lands the right title verse but TIPNR's refs carry the HEBREW
+      title names; ours are the LXX's added attributions. **Near-miss flagged:
+      Psa 34:0 "abimelech" → TIPNR's own Psa 34:1 refs include Achish (TIPNR resolves
+      the title's Abimelech = Achish of Gath) — the artaxerxes→Ahasuerus shape, a
+      clean single-row lxx-naming ruling candidate for a future batch.**
+  (d) LXX insertions (Est 3:13 class) — same phenomenon as (c).
+Related but SEPARATE lane: same-verse same-name multi (~118 slots, 22 tail names +
+mary) — word-position binding, parked with the multi-entity card territory.
 
 Middle-pile additions (each verse verified covered-by-NO-candidate against the
 pinned TIPNR file — the same checks that landed 81 verified binds return zero here):
