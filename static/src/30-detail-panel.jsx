@@ -962,7 +962,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           : be.rule === "verse-offset"
           // rule='verse-offset' (pile-3 closure, 2026-07-30): same entity one verse
           // seam over — the Greek and Hebrew split the list differently. Sentence
-          // pending JP verbatim approval before deploy.
+          // JP-approved verbatim 2026-07-30.
           ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
               ABP's Greek text reads {witnessName} here. The Greek and Hebrew texts divide this
               list at different verse breaks; the reference index lists this name at the
@@ -1176,6 +1176,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</span></>
             : lsjEntry && lsjEntry.source === "abp_ext"
               ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
+            : lsjEntry && lsjEntry.source === "strongs"
+              /* Strong's fallback (views_lsj.py serves it when no LSJ/abp_ext entry
+                 exists) must NOT wear the LSJ header — mislabeled source + the
+                 silent-fallback rule. Label JP-approved 2026-07-30. */
+              ? <><span className="sec-t">Strong's Dictionary</span><span className="lsj-badge" title="No LSJ entry for this word — this is the Strong's dictionary definition">Strong's</span></>
               : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
         {defnLoading ? (
