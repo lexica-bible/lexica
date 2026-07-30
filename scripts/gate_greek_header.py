@@ -76,9 +76,16 @@ counts = {"unchanged": 0, "breathing": 0, "->surface (headword)": 0,
           "page-attested fallback": 0, "gentilic drop": 0}
 if set(lrows) != set(srows):
     bad.append(("KEYSET", len(set(lrows) ^ set(srows)), "keys added/removed"))
+counts["bind-derived number"] = 0
 for k in set(lrows) & set(srows):
     (lg, ll, ls), (sg, sl, ss) = lrows[k], srows[k]
     if lg != sg:
+        # A number may APPEAR (never change or vanish) when it is bind-derived:
+        # gate A proves pn_binding identical in both files, so a None->G row is
+        # the stale live header table catching up with an already-shipped bind
+        # (2026-07-30: 8× Saul from Lane C + 1× Zacharias from Lane B).
+        if lg is None and sg and ss == "tipnr":
+            counts["bind-derived number"] += 1; continue
         bad.append((k, f"{lg}->{sg}", "greek_strongs CHANGED")); continue
     if (ll, ls) == (sl, ss):
         counts["unchanged"] += 1; continue
@@ -106,16 +113,23 @@ okC = True
 # The founding specimen. Receipt 2026-07-30 proved hadad is NOT uniform (5 ABP
 # spellings), so under ruling (b) its correct outcome is the VERSE-FORM class:
 # every hadad row Greek-headed (no 'none' left), each header = its own page form.
+# A hadad row may stay English ONLY where the page itself prints no Greek form
+# at that position (the honest no-data state, ruling 4). Rows WITH a page form
+# must all be Greek-headed.
 had = scr.execute(
-    "SELECT sum(CASE WHEN g.source='none' OR g.greek_lemma IS NULL OR g.greek_lemma='' "
-    "THEN 1 ELSE 0 END), count(*) FROM pn_greek_identity g "
+    "SELECT sum(CASE WHEN (g.source='none' OR g.greek_lemma IS NULL OR g.greek_lemma='') "
+    "           AND s.form IS NOT NULL AND s.form != '' THEN 1 ELSE 0 END), "
+    "       sum(CASE WHEN g.source!='none' AND g.greek_lemma IS NOT NULL "
+    "           AND g.greek_lemma != '' THEN 1 ELSE 0 END), count(*) "
+    "FROM pn_greek_identity g "
     "JOIN words w ON w.verse_id=g.verse_id AND w.position=g.position "
     "JOIN verses v ON v.id=g.verse_id "
+    "LEFT JOIN abp_surface s ON s.verse_id=g.verse_id AND s.position=g.position "
     "WHERE v.book='1Ki' AND v.chapter=11 AND w.is_pn=1 "
     "AND lower(COALESCE(NULLIF(w.english_head,''), w.english)) LIKE '%hadad%'").fetchone()
-ok_had = had and had[1] and not had[0]
-print(f"gate C: hadad 1Ki 11 all Greek-headed: "
-      f"{'YES' if ok_had else f'NO ({had[0]} of {had[1]} still English)'}")
+ok_had = had and had[2] and had[1] and had[0] == 0
+print(f"gate C: hadad 1Ki 11 — Greek-headed {had[1]}/{had[2]}, "
+      f"English-despite-page-form {had[0]} (must be 0): {'PASS' if ok_had else 'FAIL'}")
 okC &= bool(ok_had)
 
 pins = os.path.join(_HERE, "..", "docs", "tickets", "greek_header_pins.txt")
