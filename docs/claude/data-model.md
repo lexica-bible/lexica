@@ -156,7 +156,7 @@ guard's TIPNR signal now sees the full roster, so 25 names with one metaV person
 TIPNR people flipped to the honest decline (list in TODO.md, parked as a future
 disambiguation lane). Gate tool for any re-run: `scripts/gate_tipnr_scope_widen.py` (detector
 control live-vs-live FIRST; post-swap captures only valid AFTER the worker reload).
-**HAND RULINGS (live 2026-07-30, batches 1+2+3 = 163 binds; + 9 kind='witness' lane-A binds from docs/tickets/witness_census_lanes.txt, same gate):** `scripts/pn_hand_rulings.tsv`
+**HAND RULINGS (live 2026-07-30, batches 1+2+3 + Lane B = 202 binds (evidence classes incl. spelling-equiv + tipnr-merged-form); + 9 kind='witness' lane-A binds from docs/tickets/witness_census_lanes.txt, same gate):** `scripts/pn_hand_rulings.tsv`
 (repo-versioned; name/ref/entity/evidence-class/rationale per row) is consumed by EVERY
 `build_entity_binding.py` run — ruled binds land as normal pn_binding rows (kind='ruled')
 and re-land automatically on rebuild. Gate: `scripts/gate_pn_rulings.py` (delta pinned to

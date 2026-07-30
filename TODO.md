@@ -261,10 +261,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   ruling (above).**
   **WITNESS LANE A SHIPPED 2026-07-30 (9 binds, kind='witness', card sentence live) after
   an 11-bind wrong-referent ship caught + corrected same session — record + standing
-  referent-screen rule in TODO_ARCHIVE.md and DRILL_witness_divergence.md. Next in the
-  reviewer-verdicted lane order: Lane B spelling-equiv infrastructure (46 slots + the 11
-  demoted), then Lane C (~303). Delete bible.db.pre_witnessA2 on PA (contains the wrong
-  binds; the real rollback is pre_witnessA).**
+  referent-screen rule in TODO_ARCHIVE.md and DRILL_witness_divergence.md. **LANE B SHIPPED
+  2026-07-30 (39 rulings live: 28 spelling-equiv + 11 tipnr-merged-form, TSV=202; gate
+  5/5 served checks; record in TODO_ARCHIVE). Remaining: pile-3 residue (20 named slots,
+  routes in LANE_B_adjudication.md) + Lane C ~303 multi-candidate (parked for JP; needs
+  its own doctrine round). Rollback = bible.db.pre_laneB; pre_witnessA deletable after
+  soak.**
 - **Greek-header coverage gap (SIZING WANTED — reviewer-framed 2026-07-30, from JP's
   Hadad/H1908 card):** header design = ABP's Greek form when mapped, English fallback
   when not (Pharaoh card = correct: Φαραώ over H6547). But the Hadad token heads

@@ -6,6 +6,29 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 — Lane B SHIPPED: 39 spelling rulings (28 spelling-equiv + 11 tipnr-merged-form)
+
+- **Live:** 202 ruled + 9 witness binds. The Lane-A wrong-referent slots now serve their
+  TRUE people via hand rulings (sarah->Serah, koz->Hakkoz, jonas->John Peter's father,
+  job Gen 46:13 -> Jashub NOT-Job-of-Uz, hadar->Hadad son of Ishmael, sheva->Seraiah...).
+- **Method:** referent screen applied by construction (every bind targets an entity TIPNR
+  itself places AT the verse); pile-1 approved on a 5/5 sample audit; pile-2 gated on
+  per-row TIPNR citations (the merged-form record line); shamer 1Ch 7:34 held then cleared
+  on the raw record line. Two evidence tags kept partitioned per reviewer verdict.
+- **Gate arc:** control FAILed naming the 39, real gate PASS (172+39, 0 modified/removed),
+  HOT stable at 68, served spot-checks 5/5 (both new classes + witness + ruled unchanged).
+- **Count-label lesson:** the draft doc's pile labels said 27+10 while its own lists
+  enumerated 28+11 — lists were authoritative, labels corrected in the landed doc. A
+  quoted count is still my claim; count the list, not the label.
+- **Rollback:** bible.db.pre_laneB. (pre_witnessA2 deleted per verdict; pre_witnessA
+  deletable once Lane B soaks.)
+- **Remaining witness-divergence residue:** 20 named slots in LANE_B_adjudication.md
+  pile 3 (contested readings incl. bashemath x6 + michal/Merab, 2 TIPNR parallel-passage
+  gaps, pashur word-position, maachah compound, hodijah versification, 4 unresolved) +
+  Lane C ~303 multi-candidate slots (parked, needs its own doctrine round).
+
+---
+
 ## 2026-07-30 — Witness Lane A SHIPPED (9 binds) after a caught wrong-referent ship (11 corrected same session)
 
 - **Live:** kind='witness' — a FIRST-CLASS bind type (reviewer-verdicted) — at Job 1:13-18
