@@ -1,6 +1,24 @@
 # DRILL SHEET — Lane C doctrine round (303 multi-candidate witness slots)
 
-Status: DRAFT FOR REVIEWER VERDICT (2026-07-30). Design only — no rows, no build.
+Status: **REVIEWER VERDICT LANDED 2026-07-30 — approved with hardenings:**
+1. The chapter filter is candidacy ONLY, structurally: no slot lands on the filter
+   alone; the per-name run audit is the identity step, the filter just orders work.
+2. Type sanity is BIDIRECTIONAL + compound-aware: candidate type must match token
+   usage AND the slot must have no unexamined compound adjacency (1Ch 10:12 gilead
+   is a Jabesh-gilead fragment — route compound fragments to the compound lane;
+   Lane C must not eat them).
+3. Per-name audit sampling: long-run narrative names land as runs after a Lane-B
+   style sample; names whose slots cross books/genres (jacob-the-man vs Isaiah's
+   Jacob-the-nation) get EVERY slot eyeballed — metonymic uses are where
+   one-candidate-in-chapter lies. Genre-crossing flag goes in the census.
+4. Card sentence DISTINCT from Lane A (different evidence, different sentence),
+   reviewer-proposed: "ABP's Greek text reads {Name} here. Several people share
+   this name; the identification follows the surrounding passage, where only this
+   {person/place} appears." Served under kind='witness', tag context-run.
+5. The 5 multi-in-chapter slots (two Joashes, Azariah genealogy) = named residue
+   with the word-position class; don't force them.
+Build order: hardened screen (Gilboa known-negative must FAIL first) -> per-name
+census with genre-crossing flags -> audit plan -> JP checkpoint -> build.
 Parent: DRILL_witness_divergence.md (lane order verdict) + LANE_B_adjudication.md.
 
 ## The pile

@@ -41,6 +41,15 @@ Gad" — but the batch-3 ruling binds this occurrence into the station name Dibo
 certified bind — same claim-level class as specimen #2, and evidence the check must
 re-run when a BIND changes, not only when the blurb is generated.
 
+**Name-divergence mention (JP + reviewer 2026-07-30, banked for the cert arc):** the
+blurb may mention a name divergence IF AND ONLY IF a bind row supplies it as a bound
+fact (the ruling's rationale carries the TIPNR citation — e.g. "this verse's Sarah is
+Serah, Asher's daughter"). Model restates, never researches; unruled names get NOTHING
+(speculating a manuscript cause is the 'translator-supplied' mistake as AI output).
+Feature = a prompt-input pipe from pn_binding + ruling rationales into the blurb
+generator; the verse-check gate must then verify blurb claims against the BIND, not
+just the verse text (this also re-fires when a bind changes — specimen #3's fix path).
+
 ## The check (borrows the Lexica-dictionary definition-engine tooling)
 - **Claim decomposition:** each blurb makes discrete claims (Stephen is a deacon;
   he is being stoned; he calls on Jesus). Every claim needs a corroboration
