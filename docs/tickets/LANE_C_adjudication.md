@@ -7,7 +7,22 @@ ABP verse text** (abp_texts/ diagnosis dump; genre-crossing names required it, a
 the single-genre runs were cheap to include — no sampling shortcuts taken).
 Reroute claims below were each re-verified against TIPNR's own raw records.
 
+**CONTROL RECEIPT (run 2026-07-30, this session, before verdict):** screen re-run
+clean; both Gilboa known-negatives correctly FAILED as candidates
+(`# CONTROL OK: gilead 1Ch 10:12 -> COMPOUND-ROUTE` · `# CONTROL OK: gilead
+1Sa 31:11 -> COMPOUND-ROUTE`); the script hard-aborts if either ever passes
+(screen_lane_c.py:90). Full re-run output diffed byte-identical to the frozen
+census — the audit read the output of a checker whose control fires.
+
 Result: **201 approved / 6 wrong-identity reroutes / 3 held.**
+
+**Genre-crossing subset of the 201 (every-slot audited, per hardening 3):**
+15 names / 102 slots — jesus 38 · judah 20 · jacob 16 · pharaoh 8 · joshua 5 ·
+hezekiah 4 · jeroboam 2 · tamar 2 · gog 1 · simeon 1 · baal 1 · uriah 1 ·
+ahaz 1 · levi 1 · manasseh 1. (heber, eleazar, gilead also carried the flag but
+their flagged slots are in piles 2/3, not the 201.) The remaining 99 slots are
+single-genre narrative runs — also read slot-by-slot, exceeding the
+sample-per-name minimum.
 
 ## Pile 1 — approved context-runs (201 slots, 56 names) — propose: land as
 kind='witness', tag context-run, approved card sentence
@@ -72,6 +87,21 @@ Propose: land as spelling-equiv rows (Lane B doctrine), NOT context-run.
   ABP's "sons of Bunni" sits where the Hebrew list splits Bani (v14) / Bunni
   (v15); TIPNR's Bunni@Neh.10.15 is at the neighbor verse. Route: offset class,
   check with hodijah at ruling time.
+
+## DEMOTED KEYS — barred from Lane C permanently (reviewer-required log)
+These five slot keys are demoted out of this lane; any future Lane C pass that
+proposes a context-run bind for one of them is a regression. They may only land
+via the Lane B spelling flow with the entity shown:
+```
+joshua|Neh|8|7    -> Jeshua@Ezr.2.40-Neh   (spelling-equiv)
+heber|1Ch|8|22    -> Eber@1Ch.8.22          (spelling-equiv, TIPNR: "Heber =KJV")
+jehiel|2Ch|35|9   -> Jeiel@2Ch.35.9         (spelling-equiv, swapped pair)
+jeiel|2Ch|35|8    -> Jehiel@2Ch.35.8        (spelling-equiv, swapped pair)
+rapha|1Ch|8|37    -> Raphah@1Ch.8.37-       (spelling-equiv)
+```
+(The sixth reroute, jair 1Ch 2:53, is demoted to the COMPOUND lane — Gilboa
+class — listed in pile 3.) All six keys are also hard-excluded in the DRAFT-TSV
+generator, so regeneration can never re-admit them.
 
 ## Standing state
 - Census stays FROZEN; screen control (Gilboa must-fail) untouched.
