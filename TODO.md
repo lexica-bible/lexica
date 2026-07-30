@@ -144,74 +144,29 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   errata list compiles from that ticket once these two are ruled or formally deferred.
   Template note: the marker-permutation sweep, if ever run, inherits the sweep pattern
   (precondition-pinned rows, intent evidence per flagged group, same door).
-- **PN-card verification census — CLOSED 2026-07-29 (reviewer verdict: accepted, identity
-  lane stays parked, nothing promoted, nothing built).** All conditions met: bracket
-  re-derived, three controls PASS, 11-slot live spot-check clean (incl. the risky
-  fuzzy-match quality bar and ambiguity-decline paths). Result: 32,479 slots = 15,920
-  verified · 12,352 label-card (8,730 person / 3,622 place) · 4,207 no card (3,862
-  unknown names / 345 no usable name). Ambiguity SMALL: 624 unbound slots across 156
-  multi-referent names vs 15,590 single-owner (~25:1) — label is honest
-  under-information, and the 624 substantially overlap the Jacob-class ticket below.
-  **Bracket BANKED (corrected): 32,479 slots / 14,830 card-serving binds (render=1 —
-  the measure readers see; 14,898 = total pn_binding rows incl. 68 hot).** Bound slots
-  15,920 > 14,830 binds is expected: a bind is keyed verse+name, so every repeat of a
-  name in a verse rides the same bind row (~1,090 repeats). Tool:
-  scripts/audit_pn_card_census.py (read-only, controls built in). Follow-ups filed:
-  - **Label-confidence split — SHIPPED + CLOSED same night (074339cf, JP copy option 1,
-    five live acceptance receipts):** docs/tickets/TICKET_pn_label_confidence.md.
-  - **Chip-vs-prose click inconsistency — FIXED + CLOSED 2026-07-29 (lane 1, scope
-    deviation ratified by reviewer; deploy-gate receipts all green: sensitivity 0,
-    BOUND stable at 15,920, bin b→a shift exactly the +50/−50 hyphen class,
-    Beth-horon/Bath-sheba/Pharisee live checks + Seth/Jerusalem no-regression).** Dump proved 3 patterns: prose passed the whole English phrase (name pick
-    hijacked by "I"/"Then"/"Blind"; chip agreed with verified binds 14–0), plus
-    hyphen-spelling splits both directions (bethhoron vs Beth-horon; Bath-sheba vs
-    Bathsheba). Fix = pnClickPayload english_head-first (one shared order) + hyphen-
-    blind fallback on /api/metav/person + /place (same retry /entity has had since the
-    Beth-el fix; without it the unification would have LOST ~60 working place cards).
-    Census script mirrors both. NOTE: fallback = new lookup step, flagged to reviewer
-    (JP-authorized "do it all" 2026-07-29).
-  - **340 identity slots with no words row — DIAGNOSED 2026-07-29 (lane 2), fix
-    DEFERRED by reviewer ruling.** All 340: source class 'none', position-hole INSIDE
-    an otherwise normal verse — NOT the same population as the 345 no-name slots.
-    Reads as the none-class rows stamped from a stale position map. RULING: cert
-    territory — when picked up it gets the scratch-db + pre-registered-gates
-    treatment, NEVER a live patch. Clue for the diagnosis: NT-heavy skew (Joh 73,
-    Act 33, Mat 30). Dump tool: scripts/audit_pn_lanes.py lane 2.
-  - **Unknown-name class census — DONE 2026-07-29 (lane 3):** 3,862 no-card slots =
-    1,232 names → compact-match 2,770 / gentilic 565 / absent 527. BUT the compact
-    class is mostly NOT alias gaps: Paul 147, Elisha 83, Pilate 45, Esther 44 match
-    metaV EXACTLY and are rejected by the bio quality bar (no dates, <2 kin → no
-    skeleton card, AI note serves instead — deliberate gate). **RESOLVED 2026-07-30:
-    slim card SHIPPED (JP option A) + all receipts green** — census a:person-slim
-    2,218 exact, BOUND stable, six-eyeball pass. Riders shipped same arc: header
-    unification (Biblical Person/Place everywhere) · NAME ALWAYS SHOWS rule (JP
-    ruling 2026-07-30, REVERSES the 2026-07-16 differs-only stutter rule — every
-    person/place/group section opens with the bold entity name; Saul→Paul,
-    Simon→Peter visible) · ALL chip click sites route through pnClickPayload (the
-    'Blind'/'Then' hero-gloss class killed at the producer; no hand-rolled PN
-    payloads remain — grep pnName: finds none) · slim tag-row spacing. TIPNR
-    one-liner wired (exact-single-hit only; import-coverage gap = own flag above). The hyphen slice shipped with lane 1. Multi-
-    referent names in the list (jesus/mary/jacob) = Jacob-class, untouched.
-  - **"Field" oddity (flag only, out of scope):** capitalized common word 'field'
-    (Isa 29:17 al.) serves a metaV PLACE card via name match — pre-existing quirk
-    surfaced by the lane-1 dump; not touched.
-  - **TIPNR import coverage question (flagged 2026-07-30, slim-card Part-1 diagnosis):**
-    18 of the top-20 bio-bar names (Nebuchadnezzar, Pilate, Esther, Elisha-the-prophet…)
-    are ABSENT from our imported tipnr_entities — even a substring probe finds nothing
-    (audit_tipnr_name_reach.py). TIPNR the source almost certainly has them; the import
-    may keep a subset. Sits behind the FROZEN-roster tripwire (check_roster_regression
-    gate) — own reviewer question before any import change; NOT a lookup bug (probe
-    proved that), so no app-side fix pending. **NEXT UP on the PN board (JP + reviewer,
-    2026-07-30) — fresh-session brief, reviewer-authored:** read-only diagnosis of WHY
-    the imported tipnr_entities lacks Paul-class entries — import-script filter?
-    source-file subset? parse failure on certain entry formats (cf. the mixed-block
-    parser bug from the cert arc — same source family)? intentional scoping now
-    outgrown? Output: the cause + estimated recoverable entity count + proposed
-    gate-check list for a future scratch-copy re-import. No writes, no roster changes,
-    tripwire stays armed. Payoff order: upgrades slim-card one-liners for free (slot
-    wired), shrinks the 527 absent list, may add binds that shrink the Jacob-class 624
-    — run BEFORE hand-ruling Jacob-class names. Evidence tool:
-    scripts/audit_tipnr_name_reach.py (top-20 probe, 2026-07-30 output in git log).
+- **TIPNR import-coverage diagnosis — NEXT UP on the PN board (JP + reviewer 2026-07-30;
+  fresh-session brief, reviewer-authored, READ-ONLY).** 18 of the top-20 slim-card names
+  (Nebuchadnezzar, Pilate, Esther, Elisha-the-prophet…) are ABSENT from imported
+  tipnr_entities — a 4-tier probe incl. substring proved genuinely absent, NOT mis-keyed
+  (scripts/audit_tipnr_name_reach.py; controls Elijah/Paul). Diagnose WHY: import-script
+  filter? source-file subset? parse failure on certain entry formats (cf. the cert arc's
+  mixed-block parser bug — same source family)? intentional scoping now outgrown? Output:
+  cause + estimated recoverable entity count + proposed gate-check list for a future
+  scratch-copy re-import. No writes, no roster changes, FROZEN-roster tripwire stays armed
+  (check_roster_regression). Payoff order: upgrades slim-card one-liners for free (server
+  tipnr_desc slot already wired) · shrinks the 527 absent-name list · may add binds that
+  shrink the Jacob-class 624 — run BEFORE hand-ruling Jacob-class names.
+- **340 identity slots with no words row (lane-2 2026-07-29, DIAGNOSED, fix DEFERRED by
+  reviewer ruling).** All 340: source class 'none', position-hole INSIDE an otherwise
+  normal verse — NOT the 345 no-name slots. Reads as none-class rows stamped from a stale
+  position map. RULING: cert territory — scratch-db + pre-registered gates when picked up,
+  NEVER a live patch. Clue: NT-heavy skew (Joh 73, Act 33, Mat 30). Tool:
+  scripts/audit_pn_lanes.py lane 2.
+- **"Field" oddity (flag only):** capitalized common word 'field' (Isa 29:17 al.) serves a
+  metaV PLACE card via name match — pre-existing quirk surfaced by the lane-1 dump.
+- *(PN census + confident-label + four-lane + Paul-class slim-card arc CLOSED 2026-07-29/30
+  with all receipts — record in TODO_ARCHIVE.md + memory project_pn_card_confidence;
+  standing rules in docs/claude/frontend.md + data-model.md.)*
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.

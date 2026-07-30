@@ -782,6 +782,31 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   prose/toggle reducer (`libViewTransition`) all live in shared
   **`static/src/56-library-order-logic.jsx`** (browser globals + Node `module.exports`),
   Node-tested by `tests/test_library_order.js` + `tests/test_render_markup.js`.
+- **`pnClickPayload` is the ONLY producer of PN click fields (hard rule, 2026-07-30).** Every
+  click site that sends `isPN`/`pnName`/`gloss` spreads `...pnClickPayload(w)` — never hand-roll
+  those fields. Three hand-rolled copies drifted (raw phrase or lowercase head as pnName → the
+  detail panel titled "Blind"/"Then", or silently skipped the entity lookup because
+  `extractProperName` needs a capital). `grep pnName:` over static/src must stay EMPTY. The
+  payload is english_head-first (agreed with verified binds 14–0 in the 2026-07-29 divergence
+  dump; `english` can be a whole rendered phrase).
+- **PN card family rules (JP rulings 2026-07-29/30):** ONE family, two densities. Headers:
+  "Biblical Person"/"Biblical Place" on BOTH the verse-bound TIPNR card and the name-path metaV
+  card (bound card's bare "Person"/"Place" was drift, unified). **NAME ALWAYS SHOWS:** every
+  person/place/group section opens with the entity's name bold (`.pnbound-name`) — this REVERSED
+  the 2026-07-16 differs-only "stutter" rule (on Greek-headed cards suppression left no prominent
+  English name; header = clicked FORM, this line = REFERENT). Don't re-add echo suppression.
+  **SLIM card** (Paul-class, 2,218 slots): name-path person card when the exact/hyphen-blind
+  match is sole-referent (`sole_referent` from the server; fuzzy NEVER slims — the
+  Archite→Archippus rejection is certified) but fails the bio bar AND no place row exists —
+  renders name + gender tag + lone kin link + optional server `tipnr_desc` + the AI note (aidesc
+  gate passes `_slim` through) + the confident label. Label copy (JP option 1): "Matched by
+  name — the only person/place of this name in our records." — sole-referent cards only, all
+  others keep "Matched by name — not checked against this verse."
+- **Census = the card-logic certification tool:** `scripts/audit_pn_card_census.py` MIRRORS the
+  live card decision (payload, lookups, bins incl. a:person-slim). Any ship that changes card
+  logic updates the mirror in the same commit, then re-runs on PA: BOUND must not move,
+  relocations must balance exactly. Banked bracket: 32,479 slots / 14,830 render binds (14,898
+  total rows incl. 68 hot — count render=1, it's what readers see).
 - **Bracket trail punctuation must land on a chip that RENDERS** (Jer 46:15 class, fixed
   2026-07-11): chip mode lifts a group's clause mark and re-emits it after the group's last
   member — but a label-less folded pronoun/article sorts LAST (no order digit) and its chip is

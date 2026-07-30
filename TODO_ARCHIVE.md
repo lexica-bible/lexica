@@ -6,6 +6,33 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-29/30 — PN census → confident labels → four lanes → Paul-class slim card (one night, all receipted)
+
+- **PN-card verification census CLOSED** (reviewer verdict: accepted, identity lane stays
+  parked). 32,479 slots = 15,920 verified · label-cards · no-cards; unverified half ~25:1
+  single-owner names → label = honest under-information, not a wrong-person risk. Bracket
+  BANKED: 32,479 / 14,830 render binds (14,898 total rows incl. 68 hot — always count
+  render=1). Bound slots > bind rows is expected (verse+name key, ~1,090 repeated-name
+  slots). Tool: scripts/audit_pn_card_census.py — it MIRRORS production card logic and is
+  the standing certification instrument.
+- **Confident label SHIPPED** (074339cf, JP copy option 1): sole-referent name cards say
+  "the only person/place of this name in our records"; fuzzy/gentilic/multi keep the hedge.
+  Ticket: docs/tickets/TICKET_pn_label_confidence.md.
+- **Lane 1 (chip-vs-prose 87 slots) FIXED:** pnClickPayload english_head-first + hyphen-blind
+  fallback on /person + /place (scope deviation ratified — without it ~60 place cards
+  regressed). Receipts: sensitivity 0, BOUND stable, +50/−50 exact balance.
+- **Lane 3 → Paul-class slim card SHIPPED** (JP option A): 2,218 slots relocated exactly,
+  six-eyeball pass. The "compact-match" class was NOT alias gaps — the bio quality bar
+  rejecting skeleton entries; option B (fill data to pass a gate) rejected as backwards.
+- **Riders:** header unification (Biblical Person/Place both card paths) · NAME ALWAYS SHOWS
+  (JP 2026-07-30, reversed the 2026-07-16 differs-only rule) · ALL chip sites through
+  pnClickPayload (killed the "Blind"/"Then" hero class at the producer; a Part-3
+  consumer-side fix alone had NOT been enough — lesson in memory) · slim tag spacing ·
+  TIPNR one-liner (exact-single-hit only).
+- Open follow-ups stayed in TODO.md: TIPNR import-coverage diagnosis (NEXT UP) · lane-2 340
+  stale rows (deferred, cert treatment) · Field quirk · Jacob-class (scope refreshed 624/156).
+  Lessons + tripwires: memory project_pn_card_confidence.
+
 ## 2026-07-28/29 — five lanes closed with receipts (bracket digits · FRAME-0 · Cushi · vocative-O · accent divergence)
 
 - **Bracket-digit sweep TRIAGE COMPLETE — all 47 ruled.** 13 applied live through the door

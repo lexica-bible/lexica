@@ -485,6 +485,16 @@ app.py matches.
   (name OR alias) OR
   several TIPNR person entities under the surface name; the metaV+alias leg is PRIMARY.
   Single-referent names (David) still serve rich. `_name_is_multi_referent` in views_metav.py.
+  **2026-07-29/30 additions (all in views_metav.py):** `/person` + `/place` gained the
+  hyphen-blind compact fallback (`REPLACE` both sides — "Bethhoron"↔"Beth-horon",
+  "Bath-sheba"↔"Bathsheba"; a compact hit ranks WITH the exact tier and the guard runs on the
+  MATCHED canonical spelling); `/person` returns `sole_referent` (true only on exact/compact
+  hits — fuzzy-prefix hits never earn it, that's the confident-label + slim-card gate) and
+  `tipnr_desc` (TIPNR one-liner, attached ONLY when exactly one TIPNR person entity carries the
+  name — most Paul-class names are ABSENT from the imported table, an import-coverage question
+  in TODO.md, NOT a keying bug: audit_tipnr_name_reach.py proved it); `/place` returns
+  `sole_referent` (one metav place_id AND ≤1 TIPNR place entity — two Beth-horons correctly
+  stay hedged).
 - **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click first asks
   `GET /api/metav/entity/<name>?book=&chapter=&verse=` for the verse-CORRECT TIPNR entity (from
   `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name +
