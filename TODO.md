@@ -295,12 +295,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   the lane classification disagree; leave in-lane per the header ruling, revisit as an
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
-  visual register — the disclaimer carries the whole load. (4) AUDIT RUN 2026-07-30
-  (read-only, PA): 50 identities where ABP count > Hebrew-xref count. Book split shows
-  the bulk is NT rows (no Hebrew number = correct) + 619 of the OT excess is the '*'
-  no-number class (ruled honest state). REMAINING: ~130-row OT tail across named
-  identities (top: G2536×14, G1478×8, G3475×6) — each is an OT proper-noun word with
-  no Hebrew number under an identity that usually has one; spot-check pending.
+  visual register — the disclaimer carries the whole load. (4) AUDIT CLOSED CLEAN
+  2026-07-30 (read-only, PA, full row dump eyeballed): NO counting bugs. ABP>Hebrew
+  excess fully classified — NT rows (no Hebrew = correct) · 619 '*' no-number rows
+  (ruled honest state) · 131-row named OT tail = LXX-only names (Cainan genealogy ×14),
+  supplied subjects (David/Moses/Solomon class), superscription verse-0, gentilic
+  forms, all genuinely Hebrew-less on the page. One editorial note BANKED, not a bug:
+  Isa 7:14 Immanuel heads as G2424/Jesus because TIPNR itself files Isa 7:14 under its
+  Jesus entity (TIPNR.txt:13065; ABP prints G* there, number is bind-derived per the
+  gate ruling). If a reader-surprise complaint ever lands, that's the record.
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this
