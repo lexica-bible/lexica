@@ -2925,9 +2925,13 @@ input { font-family: inherit; }
 .metav-ts-b.on { color: var(--ink); }
 .metav-ts-sep { color: var(--ink-4); margin: 0 3px; }
 .metav-meta { display: flex; flex-wrap: wrap; gap: 6px; }
-/* Slim card (Paul-class): no description line above the tag row, so it needs its own
-   gap under the bold name (full cards get the spacing from the line between). */
-.metav-person--slim .metav-meta { margin-top: 8px; }
+/* Tag-row breathing room, GENERAL rule (2026-07-30, replaced the slim-only patch):
+   the real condition was never the card variant — it's "no description line between
+   the bold name and the tags" (Seth: full card, no one-liner, same crowding). The
+   adjacent-sibling selector encodes exactly that; cards WITH a description line
+   between (Adam) are untouched by construction. */
+.pnbound-name + .metav-meta,
+.pnbound-name + .metav-person--slim .metav-meta { margin-top: 8px; }
 .metav-tag {
   font-size: 11px;
   padding: 3px 8px;
