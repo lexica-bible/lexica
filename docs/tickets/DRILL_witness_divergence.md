@@ -1,7 +1,42 @@
 # DRILL SHEET — witness-divergence design pass (~370 slots)
 
-Status: DRAFT FOR REVIEWER VERDICT (2026-07-30). Scoping + design only — NO build
-until the verdict lands and JP checkpoints the mechanism (new-field rule applies).
+Status: **REVIEWER VERDICT LANDED 2026-07-30** — (1) doctrine answered once on Lane A,
+which ships FIRST and ALONE; lane order = doctrine → A → B-rulings-infrastructure →
+B → C. (2) kind='witness' as a first-class bind type (not a flag) — keeps evidence
+classes partitioned, wording keys off type, gate gains a free invariant (ruled and
+witness rows can never silently trade places). (3) Lane-B spelling equivalences are
+HAND RULINGS — they live in pn_hand_rulings.tsv with a new evidence-class tag
+(spelling-equiv), NOT in the witness file; one file governs "JP ruled this."
+CONDITION: the exact card sentence for witness binds is drafted in the Lane A ticket
+and JP approves it BEFORE Lane A builds.
+
+## PRODUCTION-MATCHER CENSUS (step 1, done 2026-07-30)
+Re-run with the binder's own map (er.parse_tipnr + er.build_indexes on the pinned
+TIPNR). Frozen artifact: `docs/tickets/witness_census_lanes.txt` (370 slots).
+**Lane A: 10 names / 21 slots** (zibeon 5, job 5, shuah 3, koz 2, sheva/michal/
+malchiah/hadar/joanna/sarah 1 each — the production map moved sheva + hadar IN vs
+the proxy: hadar is an attested Hadad spelling; juda moved OUT to Lane B).
+**Lane B: 16 names / 46 slots** (shechaniah 9, michaiah 7, bashemath 6, micha 4…).
+**Lane C: 95 names / 303 slots** (jesus 38, judah 21, jacob 16, elijah 15…).
+
+## LANE A TICKET (build-ready once JP approves the card sentence)
+The 21 slots, each: the name has exactly ONE TIPNR entity anywhere in the corpus,
+ABP's own Greek prints the name at the verse (italic=0, certified in the class-3
+itemization), and that entity's reference list lacks the verse only because its
+base text differs. Bind = the sole entity, kind='witness'.
+- Evidence file: the frozen Lane-A rows of witness_census_lanes.txt (name/ref/
+  entity), consumed by the binder like the rulings TSV; re-lands on rebuild.
+- Gate: gate_pn_rulings pattern — delta pinned to the Lane-A rows, control first,
+  entities/refs byte-stable, zero HOT replacements, served spot-checks incl. one
+  unchanged ruled bind.
+- **CARD SENTENCE (JP approval owed — two options, pick or edit):**
+  - Option 1 (fuller): "ABP's Greek text reads {Name} here. The reference index
+    follows a base text that does not include the name at this verse; the
+    identification follows ABP's own reading."
+  - Option 2 (tighter): "Named here in ABP's Greek text; reference editions based
+    on other manuscripts lack the name at this verse."
+  Placement: the sourced line on the .pnbound card, same slot the LXX-only
+  precedents describe; no new visual treatment (quiet-design; wording only).
 Parent: TICKET_supplied_subject_binds.md. Census: class3_witness_slots.txt minus the
 22 batch-3 adjacency binds = 370 slots / 121 names.
 
