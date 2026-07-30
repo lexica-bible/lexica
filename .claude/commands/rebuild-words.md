@@ -29,6 +29,10 @@ COPY-FIRST, ALWAYS — build on a `cp bible.db bible_test.db` copy; the live bib
 one rebuilt (DELETE only ever hits the copy). The build also makes its own `bible.db.bak`.
 
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
+   (Full-rebuild fallbacks keep this receipted naming — ops.md retention item 1. But
+   ordinary ARC ships use the single overwritten `bible.db.rollback` name, ops.md item 6;
+   and before DELETING any old copy, check the newest nightly in ~/db_backups is stamped
+   AFTER the last swap — the nightly runs ~13:30 UTC and does not cover an evening ship.)
 2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
    correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live

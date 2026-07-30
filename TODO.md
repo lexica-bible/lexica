@@ -272,10 +272,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   wrong-identity catches rerouted to Lane B spelling (incl. the 2Ch 35:8/9
   Jehiel/Jeiel swapped pair; TSV 202->207), 4 held with routes, 6 demoted keys
   hard-forbidden in gate_pn_rulings. Record: docs/tickets/LANE_C_adjudication.md +
-  TODO_ARCHIVE. Remaining Lane C residue: 4 held slots (jair->compound, gilead
-  Jos 22:11 contested-reading, eleazar Ezr 8:16 unresolved-ID, bunni Neh 10:14
-  offset w/ hodijah cross-check). Rollback = bible.db.pre_laneC; pre_laneB
-  deletable after soak.**
+  TODO_ARCHIVE. **PILE-3 RESIDUE CLOSED 2026-07-30 (LANE C RESIDUE = ZERO):**
+  reviewer verdict + full receipt chain in LANE_C_pile3_brief.md — jair demotion
+  final, gilead/eleazar/bunni unbound permanent (bunni upgraded to ambiguous:
+  Bani-v14/Bunni-v15 seam), hodijah Neh 10:12 SHIPPED as the first bind of the
+  narrowly-ruled verse-offset class (kind='witness' rule='verse-offset',
+  scripts/verse_offset_witness.tsv, distinct JP-approved card sentence, served
+  capture green). Rollback = bible.db.rollback (single-name rule, ops.md item 6);
+  deep = bible.db.pre_greekhdr until a nightly postdates the evening ships.
+  Word-position lane (~118) UNPARKED per JP's ordering — next in the card-work
+  queue after greek-header polish + chip-merge.**
 - **Greek-header backfill: SHIPPED 2026-07-30** (with the stray-breathing class,
   one lane). ~18,700 name tokens now head Greek: uniform names (1,693) carry one
   corpus-wide headword (source='surface'); varying names keep each verse's own
@@ -304,6 +310,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Isa 7:14 Immanuel heads as G2424/Jesus because TIPNR itself files Isa 7:14 under its
   Jesus entity (TIPNR.txt:13065; ABP prints G* there, number is bind-derived per the
   gate ruling). If a reader-surprise complaint ever lands, that's the record.
+- **JP side-notes 2026-07-30:** (1) LSJ header mislabel — FIXED + DEPLOYED same
+  day: Strong's-fallback entries (views_lsj source='strongs') now head "Strong's
+  Dictionary" with own badge, never the LSJ header (mislabeled source +
+  silent-fallback rule; label JP-approved). (2) OPEN: Hebrew OT prose-mode
+  English "looks bolder" than chip mode — desktop-Chrome live check found the
+  two modes byte-identical in computed font/weight/size/color, so it's either
+  phone-specific rendering or a different comparison pair (e.g. ABP chips with
+  Interlinear on, which grays English to ink-2). Needs JP's screenshot or the
+  names of the two screens compared.
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this

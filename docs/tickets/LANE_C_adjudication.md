@@ -82,8 +82,10 @@ jair = demotion final (compound lane) · gilead Jos 22:11 = unbound permanent
 identification) · bunni Neh 10:14 = unbound permanent (AMBIGUOUS — Bani-v14/
 Bunni-v15 seam, fails the one-candidate clause) · hodijah Neh 10:12 (Lane B
 leftover, ruled with the set) = BIND APPROVED under the new narrowly-ruled
-verse-offset class (scripts/verse_offset_witness.tsv; ship gated on JP
-checkpoint + control-first chain). Original routes kept below for the record.
+verse-offset class (scripts/verse_offset_witness.tsv) — SHIPPED 2026-07-30,
+served capture green (receipt chain in LANE_C_pile3_brief.md). Rollback naming
+note: pre_laneB/pre_laneC deleted under the single-rollback rule (ops.md
+item 6); current rollback = bible.db.rollback, deep = bible.db.pre_greekhdr. Original routes kept below for the record.
 
 ## Pile 3 — HELD residue (4 slots), each routed (historical)
 - **jair 1Ch 2:53** — compound fragment, the Gilboa shape: ABP renders

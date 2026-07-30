@@ -25,9 +25,17 @@
 > Then the standing chain: JP checkpoint, scratch build, control-first gates,
 > swap, reload, served-layer capture on hodijah's card.
 
-Implementation (same day): gate class row + scripts/verse_offset_witness.tsv +
-build block + card sentence all landed in git; ship gated on JP checkpoint and
-the control-first chain below.
+**SHIPPED 2026-07-30, full chain receipted:** control re-run first (gate A
+FAILed on exactly the hodijah key vs live — checker-edit condition met) →
+scratch build (`Witness verse-offset: 1 new render binds`, all other lanes
+re-landed identically) → gates A/B/C PASS (newly added 1, nothing else moved) →
+swap (rollback = bible.db.rollback under the new single-name rule; pre_greekhdr
+retained as deep rollback until a nightly postdates the evening ships) →
+deploy.sh reload (5×200) → served capture: /api/metav/entity/hodijah at
+Neh 10:12 returns uniq=Hodiah@Neh.10.13, kind=witness, rule=verse-offset.
+Card sentence + Strong's-fallback header label JP-approved and live in the same
+deploy. LANE C RESIDUE = ZERO; word-position lane (~118) unparks per JP's
+2026-07-30 ordering.
 
 Context: Lane C shipped 2026-07-30 (201 context-run witness rows live, gates A/B/C
 passed, served checks 6/6). Four held slots remain, each pre-routed in

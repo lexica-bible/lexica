@@ -106,6 +106,18 @@ security, rebuild procedure.
    remedy named in the line. Quota via `DISK_QUOTA_GB` env (default 5).
 5. Applied 2026-07-26: both superseded fallbacks + their backup duplicates +
    strays deleted (~1.2G); post-swap bible.db backup verified same day.
+6. **ARC ROLLBACK COPIES — single-name rule (JP-approved 2026-07-30, after 5
+   quota hits in one day):** the per-ship rollback copy is only ever
+   `bible.db.rollback` — each ship OVERWRITES it, never mints a new
+   `bible.db.pre_<arc>` name (that naming pattern is retired; four of them
+   stacked up in one week and blew the quota mid-swap). Deeper history = the
+   nightly verified copies. **PRECONDITION for dropping an old copy: the newest
+   nightly bible.db copy in `~/db_backups` must be STAMPED AFTER the last swap**
+   (`ls -lh ~/db_backups | grep bible`) — the nightly runs ~13:30 UTC, so an
+   evening ship's state is NOT covered until the next day; if the nightly is
+   older, the previous arc copy stays as the deep rollback until a nightly
+   captures the current state (reviewer-sequenced 2026-07-30: deleting
+   pre_greekhdr before that check would have left no path back past two arcs).
 
 ## Backups — `scripts/backup_db.py` (2026-06-28)
 The live dbs are PA-only + not in git, and a careless session has blanked bible.db.
