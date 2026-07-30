@@ -688,6 +688,15 @@ else.
   buttons take the component bare.
 - Before adding a glyph, grep the set for the FUNCTION, not the shape.
 
+## Verse 0 is a REAL verse (standing gotcha, 2026-07-30)
+Psalm superscriptions live at verse 0. Any JS truthiness test on a verse number
+(`book && chapter && verse`) silently drops it — that bug made the AI-blurb fetch go
+verse-less on Psalm-title clicks, the model asked "which one do you mean?", and the
+non-answer got cached and served (pn:abimelech incident). Rule: verse checks compare
+against null/empty, never bare truthiness; any frontend change touching verse
+references gets a verse-0 spot check. First specimen + cert linkage:
+docs/tickets/TICKET_blurb_verse_check.md.
+
 ## Library tab
 Full per-feature history in memory (each block names its file). Standing rules + gotchas here.
 

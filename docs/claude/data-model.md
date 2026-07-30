@@ -156,6 +156,11 @@ guard's TIPNR signal now sees the full roster, so 25 names with one metaV person
 TIPNR people flipped to the honest decline (list in TODO.md, parked as a future
 disambiguation lane). Gate tool for any re-run: `scripts/gate_tipnr_scope_widen.py` (detector
 control live-vs-live FIRST; post-swap captures only valid AFTER the worker reload).
+**HAND RULINGS (live 2026-07-30, batches 1+2 = 141 binds):** `scripts/pn_hand_rulings.tsv`
+(repo-versioned; name/ref/entity/evidence-class/rationale per row) is consumed by EVERY
+`build_entity_binding.py` run — ruled binds land as normal pn_binding rows (kind='ruled')
+and re-land automatically on rebuild. Gate: `scripts/gate_pn_rulings.py` (delta pinned to
+the TSV; control first; a batch that replaces a HOT row = stop-and-look).
 
 ### tipnr_metav_link
 Cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).
