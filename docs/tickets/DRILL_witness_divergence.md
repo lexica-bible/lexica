@@ -29,14 +29,14 @@ base text differs. Bind = the sole entity, kind='witness'.
 - Gate: gate_pn_rulings pattern — delta pinned to the Lane-A rows, control first,
   entities/refs byte-stable, zero HOT replacements, served spot-checks incl. one
   unchanged ruled bind.
-- **CARD SENTENCE (JP approval owed — two options, pick or edit):**
-  - Option 1 (fuller): "ABP's Greek text reads {Name} here. The reference index
-    follows a base text that does not include the name at this verse; the
-    identification follows ABP's own reading."
-  - Option 2 (tighter): "Named here in ABP's Greek text; reference editions based
-    on other manuscripts lack the name at this verse."
-  Placement: the sourced line on the .pnbound card, same slot the LXX-only
-  precedents describe; no new visual treatment (quiet-design; wording only).
+- **CARD SENTENCE — JP-APPROVED VERBATIM 2026-07-30 (both drafts REJECTED for
+  asserting an unproven manuscript cause; approved wording claims only bound
+  facts):** "ABP's Greek text reads {Name} here. The reference index does not
+  list this name at this verse; the identification follows ABP's reading."
+  Upgrade path: a per-name ruling with attested witness evidence (e.g. LXX-vs-MT)
+  may carry a stronger sentence; the class default stays at what is proven.
+  Placement: muted meta line on the .pnbound card above the badge, both variants
+  (thin defers to full so the sentence always shows); no new visual treatment.
 Parent: TICKET_supplied_subject_binds.md. Census: class3_witness_slots.txt minus the
 22 batch-3 adjacency binds = 370 slots / 121 names.
 
