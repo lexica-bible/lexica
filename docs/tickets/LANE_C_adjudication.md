@@ -14,7 +14,8 @@ clean; both Gilboa known-negatives correctly FAILED as candidates
 (screen_lane_c.py:90). Full re-run output diffed byte-identical to the frozen
 census — the audit read the output of a checker whose control fires.
 
-Result: **201 approved / 6 wrong-identity reroutes / 3 held.**
+Result: **201 approved / 5 reroutes to Lane B spelling / 4 held (incl. jair's
+demotion to the compound lane)** — matches the piles below one-for-one.
 
 **Genre-crossing subset of the 201 (every-slot audited, per hardening 3):**
 15 names / 102 slots — jesus 38 · judah 20 · jacob 16 · pharaoh 8 · joshua 5 ·
@@ -99,8 +100,8 @@ jehiel|2Ch|35|9   -> Jeiel@2Ch.35.9         (spelling-equiv, swapped pair)
 jeiel|2Ch|35|8    -> Jehiel@2Ch.35.8        (spelling-equiv, swapped pair)
 rapha|1Ch|8|37    -> Raphah@1Ch.8.37-       (spelling-equiv)
 ```
-(The sixth reroute, jair 1Ch 2:53, is demoted to the COMPOUND lane — Gilboa
-class — listed in pile 3.) All six keys are also hard-excluded in the DRAFT-TSV
+(jair 1Ch 2:53 is NOT a Lane B reroute — it is a demotion to the COMPOUND lane,
+Gilboa class, listed in pile 3.) All six keys are also hard-excluded in the DRAFT-TSV
 generator, so regeneration can never re-admit them.
 
 ## Standing state

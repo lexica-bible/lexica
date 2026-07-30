@@ -1,7 +1,8 @@
-# lane_c_context_runs_DRAFT.tsv - Lane C per-slot evidence file, DRAFT PENDING REVIEWER VERDICT
-# NOT consumed by any build. Generated from the FROZEN census (docs/tickets/lane_c_census.txt)
-# minus the 9 audit exclusions listed in docs/tickets/LANE_C_adjudication.md.
-# On approval: rows land as kind='witness', evidence tag context-run, via the gate_pn_rulings flow.
+# lane_c_context_runs.tsv - Lane C per-slot evidence file (201 context-run binds)
+# REVIEWER-APPROVED 2026-07-30 (docs/tickets/LANE_C_adjudication.md pile 1).
+# Generated from the FROZEN census minus the 9 audit exclusions; 6 demoted keys
+# hard-excluded in the generator. Consumed by build_entity_binding.py as
+# kind='witness', rule='context-run'; gated by gate_pn_rulings.py.
 jesus	Mat	8	5	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
 jesus	Mat	8	7	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
 jesus	Mat	8	29	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)

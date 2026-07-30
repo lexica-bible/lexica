@@ -290,6 +290,46 @@ def main():
               + (f" {wit_replaced}" if wit_replaced else ""))
         print()
 
+    # ── witness binds, Lane C context-runs (scripts/lane_c_context_runs.tsv,
+    # reviewer-approved 2026-07-30) ─────────────────────────────────────────────
+    # Multi-candidate names where the per-name run audit fixed the identity
+    # (LANE_C_adjudication.md pile 1). Same kind='witness' as Lane A — the verse
+    # is still witness-attested — but rule='context-run' keeps the evidence class
+    # partitioned (distinct card sentence keys off it). Same loud-failure contract.
+    lanec_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              "lane_c_context_runs.tsv")
+    lc_new = lc_same = 0
+    lc_replaced = []
+    if os.path.isfile(lanec_path):
+        known_uniq = {e["uniq"] for e in ents}
+        with open(lanec_path, encoding="utf-8") as fh:
+            for ln in fh:
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
+                if uniq not in known_uniq:
+                    raise ValueError(f"lane C context-run: unknown entity {uniq!r}")
+                bk = er.book_num(bk_s)
+                if bk is None:
+                    raise ValueError(f"lane C context-run: unknown book {bk_s!r}")
+                key = (bk, int(ch), int(vs), er.norm_name(nm))
+                prev = group.get(key)
+                if prev and prev[0] == "render":
+                    if prev[1] == uniq:
+                        lc_same += 1
+                        continue
+                    raise ValueError(f"lane C context-run: {key} already renders {prev[1]}, "
+                                     f"lane C says {uniq} -- resolve before building")
+                if prev:
+                    lc_replaced.append((key, prev[0]))
+                tier = scope_tier(er.norm_name(nm), ambiguous, person_ids, place_ids)
+                group[key] = ("render", uniq, "witness", "context-run", tier)
+                lc_new += 1
+        print(f"Witness lane C: {lc_new} new render binds, {lc_same} already-agreeing, "
+              f"{len(lc_replaced)} replaced floor/HOT rows"
+              + (f" {lc_replaced}" if lc_replaced else ""))
+        print()
+
     # ── report ──────────────────────────────────────────────────────────────
     def report_tier(t, title):
         s = stat[t]

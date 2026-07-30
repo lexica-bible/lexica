@@ -535,7 +535,7 @@ def metav_entity(name):
             return jsonify({"error": "not found"}), 404
         nm = norm_name(name)
         b = conn.execute(
-            "SELECT entity_uniq, kind, tier FROM pn_binding "
+            "SELECT entity_uniq, kind, rule, tier FROM pn_binding "
             "WHERE book=? AND chapter=? AND verse=? AND name=? AND render=1 LIMIT 1",
             (bk, int(ch), int(vs), nm)).fetchone()
         if not b:
@@ -546,7 +546,7 @@ def metav_entity(name):
             compact = lambda s: (s or "").replace("-", "").replace(" ", "")
             cn = compact(nm)
             cand = [r for r in conn.execute(
-                "SELECT entity_uniq, kind, tier, name FROM pn_binding "
+                "SELECT entity_uniq, kind, rule, tier, name FROM pn_binding "
                 "WHERE book=? AND chapter=? AND verse=? AND render=1",
                 (bk, int(ch), int(vs))) if compact(r["name"]) == cn]
             if len(cand) == 1:
@@ -617,6 +617,9 @@ def metav_entity(name):
         "people_group":   is_people_group(name),
         "head_is_people": is_people_group(disp),
         "kind":      b["kind"] or "",
+        # rule = the evidence class within the kind (witness: 'sole-entity' Lane A
+        # vs 'context-run' Lane C) — the card sentence keys off it.
+        "rule":      b["rule"] or "",
         "tier":      b["tier"],
         # Rich MetaV person card when the bound person is cross-linked and adds real
         # bio (else null -> the frontend keeps the thin TIPNR facts). Gated above by

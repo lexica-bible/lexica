@@ -3,7 +3,10 @@
 (reviewer-approved 2026-07-30). READ-ONLY on BOTH database files.
 
 Expected delta = scripts/pn_hand_rulings.tsv (kind='ruled') + lane-A rows of
-docs/tickets/witness_census_lanes.txt (kind='witness', since 2026-07-30):
+docs/tickets/witness_census_lanes.txt (kind='witness', rule='sole-entity') +
+scripts/lane_c_context_runs.tsv (kind='witness', rule='context-run', since the
+2026-07-30 Lane C verdict). The 6 Lane-C demoted keys are hard-forbidden as
+witness binds in either file (LANE_C_adjudication.md demoted-keys log):
   gate A  pn_binding: scratch = live + EXACTLY the ruled keys, nothing else changed —
           every new row has kind='ruled' and the TSV's entity; an extra bind (the
           82nd), a lost row, or a modified row = FAIL/abort.
@@ -30,17 +33,19 @@ if len(sys.argv) != 3:
 live = sqlite3.connect(f"file:{sys.argv[1]}?mode=ro", uri=True)
 scr = sqlite3.connect(f"file:{sys.argv[2]}?mode=ro", uri=True)
 
-# expected delta = hand rulings (kind='ruled') + witness lane A (kind='witness').
-# The two classes are pinned SEPARATELY: an added row must carry its own class's
-# kind — a ruled row can never silently become witness or vice versa (reviewer
-# verdict 2026-07-30, the free invariant of the first-class bind type).
+# expected delta = hand rulings (kind='ruled') + witness lane A (kind='witness',
+# rule='sole-entity') + witness lane C (kind='witness', rule='context-run').
+# The classes are pinned SEPARATELY: an added row must carry its own class's
+# kind AND rule — a ruled row can never silently become witness, and a lane-A
+# row can never silently become a context-run or vice versa (reviewer verdicts
+# 2026-07-30, the free invariant of the first-class bind type).
 tsv = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pn_hand_rulings.tsv")
-expected = {}   # key -> (uniq, kind)
+expected = {}   # key -> (uniq, kind, rule)
 for ln in open(tsv, encoding="utf-8"):
     if ln.startswith("#") or ln.startswith("name\t") or not ln.strip():
         continue
     nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
-    expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "ruled")
+    expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "ruled", ev)
 n_ruled = len(expected)
 wit = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                    "docs", "tickets", "witness_census_lanes.txt")
@@ -52,10 +57,26 @@ if os.path.isfile(wit):
         lane, nm, bk_s, ch, vs, detail = ln.rstrip("\n").split("|")[:6]
         key = (er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))
         if lane == "A":
-            expected[key] = (detail, "witness")
+            expected[key] = (detail, "witness", "sole-entity")
         elif lane in ("H", "X"):
             forbidden.add(key)
-print(f"expected: {n_ruled} ruled + {len(expected) - n_ruled} witness = {len(expected)} "
+n_laneA = len(expected) - n_ruled
+lanec = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lane_c_context_runs.tsv")
+if os.path.isfile(lanec):
+    for ln in open(lanec, encoding="utf-8"):
+        if ln.startswith("#") or not ln.strip():
+            continue
+        nm, bk_s, ch, vs, uniq, ev = ln.rstrip("\n").split("\t")[:6]
+        expected[(er.book_num(bk_s), int(ch), int(vs), er.norm_name(nm))] = (uniq, "witness", "context-run")
+# Lane C demoted keys (LANE_C_adjudication.md): a witness bind at any of these,
+# in either file, is a regression — they may only ever land via the Lane B
+# spelling flow (kind='ruled') or the compound lane, never as Lane C witness.
+for nm, bk_s, ch, vs in (("joshua","Neh",8,7), ("heber","1Ch",8,22),
+                         ("jehiel","2Ch",35,9), ("jeiel","2Ch",35,8),
+                         ("rapha","1Ch",8,37), ("jair","1Ch",2,53)):
+    forbidden.add((er.book_num(bk_s), ch, vs, er.norm_name(nm)))
+print(f"expected: {n_ruled} ruled + {n_laneA} lane-A + "
+      f"{len(expected) - n_ruled - n_laneA} lane-C = {len(expected)} "
       f"(+{len(forbidden)} demoted keys forbidden as witness)")
 
 q = "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding"
@@ -68,7 +89,7 @@ removed = [k for k in lrows if k not in srows]
 changed = [k for k in lrows if k in srows and srows[k] != lrows[k]]
 bad_added = [k for k in added if k not in expected
              or added[k][4] != expected[k][0] or added[k][5] != expected[k][1]
-             or added[k][7] != 1]
+             or added[k][6] != expected[k][2] or added[k][7] != 1]
 missing = [k for k in expected if k not in added and k not in lrows]
 
 # A ruled key already live in the OLD file adds nothing (batch-1 rows on a batch-2

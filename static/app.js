@@ -786,7 +786,10 @@ if(showArea&&!peopleClan)factItems.push({lbl:be.section==="place"?"Region":"Trib
 // kind='witness' (Lane A, 2026-07-30): the bind rests on ABP's own text, not a
 // TIPNR verse listing — the card must SAY so. Sentence JP-approved verbatim
 // 2026-07-30 (claims only bound facts; no manuscript-cause assertion).
-const witnessNote=be.kind==="witness"?/*#__PURE__*/React.createElement("p",{className:"detail-p detail-p--meta",style:{color:"var(--ink-4)",fontStyle:"italic"}},"ABP's Greek text reads ",be.name," here. The reference index does not list this name at this verse; the identification follows ABP's reading."):null;const thin=!richPerson&&!hasMap&&!placeNote&&!witnessNote&&(line?1:0)+factItems.length<=1;const chipOwnLine=peopleClan||be.section!=="person"&&be.section!=="place";// NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
+// rule='context-run' (Lane C, 2026-07-30): multi-candidate name, identity fixed
+// by the per-name run audit. DISTINCT sentence, reviewer-proposed + JP-approved
+// verbatim ({person/place} filled from the entity's own section).
+const witnessNote=be.kind==="witness"?be.rule==="context-run"?/*#__PURE__*/React.createElement("p",{className:"detail-p detail-p--meta",style:{color:"var(--ink-4)",fontStyle:"italic"}},"ABP's Greek text reads ",be.name," here. Several people share this name; the identification follows the surrounding passage, where only this"," ",be.section==="place"?"place":"person"," appears."):/*#__PURE__*/React.createElement("p",{className:"detail-p detail-p--meta",style:{color:"var(--ink-4)",fontStyle:"italic"}},"ABP's Greek text reads ",be.name," here. The reference index does not list this name at this verse; the identification follows ABP's reading."):null;const thin=!richPerson&&!hasMap&&!placeNote&&!witnessNote&&(line?1:0)+factItems.length<=1;const chipOwnLine=peopleClan||be.section!=="person"&&be.section!=="place";// NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
 // rule): every person/place section opens with the ENTITY's name in bold. The
 // old rule suppressed it when it matched the clicked word ("stutter"), but on
 // Greek-headed cards that left no prominent English name at all, and the
