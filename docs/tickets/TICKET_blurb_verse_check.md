@@ -34,6 +34,13 @@ assertion CONTRADICTS the certified data on the same card — the exact claim-le
 failure this cert catches. Best evidence yet for generation-from-bound-facts: a
 blurb fed the Achish record could not have written "Gerar."
 
+**Specimen #3 (Num 33:45 Γάδ, reviewer-flagged at the batch-3 checkpoint, 2026-07-30):**
+the G1045 card's AI blurb reads the occurrence as "region or territory of the tribe of
+Gad" — but the batch-3 ruling binds this occurrence into the station name Dibon-gad
+(Dibon@Num.21.30-Jer), not a tribal reference. A blurb contradicted by the card's own
+certified bind — same claim-level class as specimen #2, and evidence the check must
+re-run when a BIND changes, not only when the blurb is generated.
+
 ## The check (borrows the Lexica-dictionary definition-engine tooling)
 - **Claim decomposition:** each blurb makes discrete claims (Stephen is a deacon;
   he is being stoned; he calls on Jesus). Every claim needs a corroboration
