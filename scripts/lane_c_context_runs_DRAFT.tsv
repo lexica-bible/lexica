@@ -1,0 +1,205 @@
+# lane_c_context_runs_DRAFT.tsv - Lane C per-slot evidence file, DRAFT PENDING REVIEWER VERDICT
+# NOT consumed by any build. Generated from the FROZEN census (docs/tickets/lane_c_census.txt)
+# minus the 9 audit exclusions listed in docs/tickets/LANE_C_adjudication.md.
+# On approval: rows land as kind='witness', evidence tag context-run, via the gate_pn_rulings flow.
+jesus	Mat	8	5	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	8	7	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	8	29	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	9	12	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	13	36	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	13	51	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	14	14	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	14	22	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	14	25	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	15	30	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	17	11	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	17	20	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mat	22	37	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mar	1	41	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mar	5	13	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mar	5	19	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mar	11	11	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Mar	11	14	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Luk	10	41	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Luk	13	2	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Luk	22	63	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Luk	23	43	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Joh	4	46	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Joh	6	14	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Joh	8	21	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Act	3	26	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Act	5	41	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Act	8	37	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Act	9	29	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Act	19	10	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Rom	16	24	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	1Co	5	5	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	1Co	16	22	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Gal	6	15	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Eph	3	9	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Eph	3	14	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	2Ti	4	22	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+jesus	Rev	14	4	Jesus@Isa.7.14-Rev	context-run	NT narrative/epistles; one Jesus-of-Nazareth candidate active per chapter (every-slot audit)
+judah	2Sa	1	12	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Sa	24	2	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	1Ki	4	19	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	1Ki	22	5	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	1Ki	22	18	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	1Ki	22	30	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	1Ki	22	32	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ki	3	12	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	14	1	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	19	3	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	21	2	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	31	5	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	34	32	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	2Ch	36	14	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Psa	108	9	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Jer	13	13	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Jer	34	1	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Hos	1	4	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Hos	6	10	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+judah	Hag	1	12	Judah@Gen.29.35-Rev	context-run	tribe/kingdom uses; TIPNR files tribe+kingdom under the patriarch's merged record (every-slot audit)
+jacob	Gen	29	7	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	29	23	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	29	25	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	29	32	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	29	33	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	30	3	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	30	23	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	30	29	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	32	8	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	35	8	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	35	16	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	45	26	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	48	1	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Gen	48	9	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Isa	42	1	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+jacob	Mal	3	7	Israel@Gen.25.26-Rev	context-run	the patriarch (Gen) and the nation (Isa/Mal); TIPNR merges Jacob under the renamed Israel record (every-slot audit)
+elijah	1Ki	17	2	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	5	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	8	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	10	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	11	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	19	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	17	20	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	18	18	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	18	33	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	18	43	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	19	3	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	19	6	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	19	10	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	1Ki	19	14	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+elijah	2Ki	2	10	Elijah@1Ki.17.1-Jas	context-run	narrative run 1Ki 17-2Ki 2; only Elijah the Tishbite in these chapters
+joseph	Gen	37	36	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	39	11	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	39	23	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	42	24	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	44	1	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	44	17	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	45	24	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	46	5	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	47	3	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	47	22	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+joseph	Gen	50	6	Joseph@Gen.30.24-Rev	context-run	narrative run Gen 37-50; only the patriarch
+pharaoh	Gen	41	26	Pharaoh@Gen.37.36-Act	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	2	6	Pharaoh@Exo.1.11-Heb	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	2	22	Pharaoh@Exo.1.11-Heb	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	3	18	Pharaoh@Exo.3.10-Rom	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	3	19	Pharaoh@Exo.3.10-Rom	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	12	31	Pharaoh@Exo.3.10-Rom	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	14	6	Pharaoh@Exo.3.10-Rom	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+pharaoh	Exo	18	9	Pharaoh@Exo.3.10-Rom	context-run	TIPNR's per-era Pharaoh records; each slot matched to its narrative Pharaoh (every-slot audit)
+saul	1Sa	14	22	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	15	17	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	15	27	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	15	30	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	18	26	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	19	22	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	22	16	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+saul	1Sa	28	11	Saul@1Sa.9.2-Act	context-run	narrative run 1Sa 14-28; only king Saul
+joshua	Jos	8	24	Joshua@Exo.17.9-Heb	context-run	conquest narrative; only Joshua son of Nun (Neh 8:7 EXCLUDED - different man)
+joshua	Jos	8	32	Joshua@Exo.17.9-Heb	context-run	conquest narrative; only Joshua son of Nun (Neh 8:7 EXCLUDED - different man)
+joshua	Jos	9	26	Joshua@Exo.17.9-Heb	context-run	conquest narrative; only Joshua son of Nun (Neh 8:7 EXCLUDED - different man)
+joshua	Jos	18	11	Joshua@Exo.17.9-Heb	context-run	conquest narrative; only Joshua son of Nun (Neh 8:7 EXCLUDED - different man)
+joshua	Jos	21	12	Joshua@Exo.17.9-Heb	context-run	conquest narrative; only Joshua son of Nun (Neh 8:7 EXCLUDED - different man)
+jehu	2Ki	9	25	Jehu@1Ki.19.16-Hos	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jehu	2Ki	9	34	Jehu@1Ki.19.16-Hos	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jehu	2Ki	10	6	Jehu@1Ki.19.16-Hos	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jehu	2Ki	10	15	Jehu@1Ki.19.16-Hos	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jehu	2Ki	10	22	Jehu@1Ki.19.16-Hos	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hadad	1Ki	11	18	Hadad@1Ki.11.14-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hadad	1Ki	11	20	Hadad@1Ki.11.14-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hadad	1Ki	11	22	Hadad@1Ki.11.14-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ezra	Neh	8	8	Ezra@Ezr.7.1-Neh	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ezra	Neh	8	15	Ezra@Ezr.7.1-Neh	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jeroboam	2Ki	23	16	Jeroboam@1Ki.11.26-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jeroboam	2Ch	11	15	Jeroboam@1Ki.11.26-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hezekiah	2Ki	18	18	Hezekiah@2Ki.16.20-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hezekiah	2Ki	20	2	Hezekiah@2Ki.16.20-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hezekiah	2Ch	32	5	Hezekiah@2Ki.16.20-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hezekiah	Isa	38	21	Hezekiah@2Ki.16.20-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+joab	2Sa	11	19	Joab@1Sa.26.6-Psa	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+joab	2Sa	18	17	Joab@1Sa.26.6-Psa	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+joab	2Sa	18	23	Joab@1Sa.26.6-Psa	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+gog	Eze	38	17	Gog@Ezk.38.2-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jeremiah	Jer	25	14	Jeremiah@2Ch.35.25-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jeremiah	Jer	36	18	Jeremiah@2Ch.35.25-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jonathan	1Sa	20	2	Jonathan@1Sa.13.2-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jonathan	1Sa	31	12	Jonathan@1Sa.13.2-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+naaman	2Ki	5	8	Naaman@2Ki.5.1-Luk	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+naaman	2Ki	5	14	Naaman@2Ki.5.1-Luk	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+naaman	2Ki	5	19	Naaman@2Ki.5.1-Luk	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+simeon	Gen	34	14	Simeon@Gen.29.33-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+mordecai	Est	2	23	Mordecai@Est.2.5-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+mordecai	Est	3	7	Mordecai@Est.2.5-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+mordecai	Est	9	25	Mordecai@Est.2.5-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+baal	Jer	2	28	Baal@Num.25.3-Rom	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+joash	2Ch	24	21	Joash@2Ki.11.2-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+uriah	1Ki	15	6	Uriah@2Sa.11.3-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+asa	1Ki	15	15	Asa@1Ki.15.8-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahaz	1Ch	9	41	Ahaz@1Ch.8.35-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+benjamin	Jdg	5	13	Benjamin@Gen.35.18-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+benjamin	1Ki	12	20	Benjamin@Gen.35.18-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+omri	1Ki	16	24	Omri@1Ki.16.16-Mic	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahab	1Ki	20	15	Ahab@1Ki.16.28-Mic	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahab	1Ki	22	52	Ahab@1Ki.16.28-Mic	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+josiah	2Ki	22	9	Josiah@1Ki.13.2-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+josiah	2Ch	36	4	Josiah@1Ki.13.2-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahaziah	2Ki	1	3	Ahaziah@1Ki.22.40-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahaziah	2Ki	1	17	Ahaziah@1Ki.22.40-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hebron	2Sa	2	13	Hebron@Gen.13.18-Neh	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hebron	2Sa	3	12	Hebron@Gen.13.18-Neh	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+amnon	2Sa	13	14	Amnon@2Sa.3.2-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+amnon	2Sa	13	16	Amnon@2Sa.3.2-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+tamar	Gen	38	26	Tamar@Gen.38.6-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+tamar	2Sa	13	16	Tamar@2Sa.13.1-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+noah	Gen	7	16	Noah@Gen.5.29-2Pe	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+noah	Gen	9	12	Noah@Gen.5.29-2Pe	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+levi	Gen	34	14	Levi@Gen.29.34-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ehud	Jdg	3	18	Ehud@Jdg.3.15-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ehud	Jdg	3	19	Ehud@Jdg.3.15-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+manasseh	Num	34	13	Manasseh@Gen.41.51-Rev	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+elihu	Job	32	17	Elihu@Job.32.2-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+caleb	Jos	15	15	Caleb@Num.13.6-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+caleb	Jos	15	19	Caleb@Num.13.6-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+micaiah	1Ki	22	17	Micaiah@1Ki.22.8-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+micaiah	1Ki	22	19	Micaiah@1Ki.22.8-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hanun	1Ch	19	1	Hanun@2Sa.10.1-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+kore	1Ch	26	19	Kore@1Ch.9.19-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+hiram	1Ki	9	13	Hiram@2Sa.5.11-2Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+obadiah	1Ki	18	9	Obadiah@1Ki.18.3-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+elkanah	1Sa	1	5	Elkanah@1Sa.1.1-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+nahash	1Sa	11	10	Nahash@1Sa.11.1-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ahimelech	1Sa	21	6	Ahimelech@1Sa.14.3-Psa	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jotham	2Ch	27	8	Jotham@2Ki.15.5-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+mephibosheth	2Sa	19	26	Mephibosheth@2Sa.4.4-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+shechem	Gen	35	5	Shechem@Gen.12.6-Act	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+deborah	Jdg	4	6	Deborah@Jdg.4.4-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+sisera	Jdg	4	19	Sisera@Jdg.4.2-Psa	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+ebed	Jdg	9	36	Ebed@Jdg.9.26-	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+shallum	Jer	32	8	Shallum@Jer.32.7	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+jephunneh	Jos	15	14	Jephunneh@Num.13.6-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+beor	Num	24	22	Beor@Num.22.5-2Pe	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+shelah	Num	26	19	Shelah@Gen.38.5-1Ch	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
+shealtiel	Hag	2	21	Shealtiel@1Ch.3.17-Mat	context-run	per-name run audit 2026-07-30: only this candidate in the chapter and the passage context names this one
