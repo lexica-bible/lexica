@@ -352,8 +352,10 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   sentences (kind='witness', 3 variants) are explanation prose above the seal,
   not match-state — listed for JP, untouched. Awaiting JP's served yes on Seth
   @ 1Ch 1:1.
-- **Tag hover-warrant standard — WRITE PHASE BUILT 2026-07-30, awaiting JP's yes
-  on shipped text + popover look.** JP-approved sentence set shipped verbatim
+- **Tag hover-warrant standard — SHIPPED + JP-CONFIRMED 2026-07-31** (desktop
+  hover clean white card / no black box / no I-beam; far-right flip stays on
+  screen; phone tap-open + tap-away close — all checked on live). TSK addition
+  not vetoed, stands. Ledger below is the standing record. JP-approved sentence set shipped verbatim
   (inventory + per-row verdicts in session; two verifications resolved: binds are
   MIXED so no "explicitly"; Ask-corpus synthesis IS pass-2 grounded so its label
   warrants "from the passages cited below" ONLY in the grounded state). Shared
