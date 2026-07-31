@@ -84,6 +84,112 @@ def accent_fold(s):
                    if not unicodedata.combining(ch))
 
 
+# ── Strict name-match inheritance (JP-signed predicate 2026-07-31,
+# docs/tickets/PREDICATE_g707_name_match.md — the G707 fix) ──────────────────
+# TIPNR files multi-named entities as one record but puts each number on its own
+# row WITH the printed names that number belongs to. A slot may inherit a Greek
+# number ONLY if its own printed name is one TIPNR attaches to that number.
+
+_SUMMARY_STRONG = re.compile(r'<strong="(G\d+)[^"]*">([^<]+)</strong>')
+
+def parse_number_forms(lines):
+    """Per record: which printed names each GREEK number attaches to.
+    Sources: the record's own head line, each '– Named'/'– Greek'/'– (same
+    form...)' row (number in col 2, names in col 1's alt-part and col 3's
+    version list; '[ ]' = the record's head name), and the summary's
+    <strong="G...">Name</strong> pairs. '– Total' rows are EXCLUDED — they pool
+    every name with every number, which is the conflation being fixed.
+    Returns (ent_forms: uniq -> {G -> names}, glob_forms: G -> names)."""
+    ent_forms, glob_forms = {}, defaultdict(set)
+    cur_uniq, head = None, None
+    excluded = False
+
+    _STOP = {"of", "the", "and", "a", "an", "or"}
+
+    def attach(g, name):
+        # TIPNR decorates some names ("Sinai_Mount", "(Mount )Sinai",
+        # "Sergius/ Paulus") — clean to plain words, and for a multi-word form
+        # also attach each real word so the single-word slot label still
+        # matches ("Sinai" ∈ "Mount Sinai"). Checker-caught 2026-07-31: without
+        # this, Sinai lost its own G4614.
+        if not (cur_uniq and g):
+            return
+        cleaned = re.sub(r"[()_/]", " ", name)
+        names = {er.norm_name(cleaned)}
+        toks = [t for t in cleaned.split() if er.norm_name(t) not in _STOP]
+        if len(toks) > 1:
+            names |= {er.norm_name(t) for t in toks if len(t) > 2}
+        for nm in names:
+            if nm:
+                ent_forms.setdefault(cur_uniq, {}).setdefault(g, set()).add(nm)
+                glob_forms[g].add(nm)
+
+    for line in lines:
+        if line.startswith("$=========="):
+            excluded = "excluded" in line.lower()
+            cur_uniq = None
+            continue
+        if not line.strip() or excluded:
+            continue
+        stripped = line.lstrip()
+        if stripped[:1] in ("=", "‖", "#", "*", "@") \
+                or stripped.startswith(("UnifiedName", "UniqueName")):
+            continue
+        is_sub = line[0] in (" ", "\t") or stripped.startswith("–")
+        parts = line.split("\t")
+        if not is_sub:
+            f0 = parts[0].strip()
+            head_nm = er.norm_name(f0.split("@")[0]) if "@" in f0 else ""
+            if not head_nm or " " in head_nm:
+                cur_uniq = None
+                continue
+            cur_uniq, head = f0.split("=")[0].strip(), head_nm
+            b = er.norm_base(f0.split("=", 1)[1]) if "=" in f0 else ""
+            if b.startswith("G"):
+                attach(b, head)
+            if len(parts) > 7:
+                for g, nm in _SUMMARY_STRONG.findall(parts[7]):
+                    attach(er.norm_base(g), nm)
+        else:
+            if not cur_uniq or stripped.startswith("– Total"):
+                continue
+            g = er.norm_base(parts[2].split("«")[0]) \
+                if len(parts) > 2 and "«" in parts[2] else ""
+            if not g.startswith("G"):
+                continue
+            if len(parts) > 1 and "@" in parts[1]:
+                attach(g, parts[1].split("@")[0].split("|")[0])
+            if len(parts) > 3 and parts[3].strip():
+                for tok in parts[3].split(";"):
+                    nmtok = tok.split("=")[0].strip()
+                    if nmtok in ("[ ]", "[]"):
+                        attach(g, head)
+                    elif re.match(r"^[A-Za-z]", nmtok):
+                        attach(g, nmtok)
+    return ent_forms, glob_forms
+
+
+_MK_CACHE = {}
+
+def _match_keys(name):
+    """A name's comparison keys: norm + the binder's variant/alias expansion +
+    compact (hyphen/space-stripped) copies, all accent-folded."""
+    if name in _MK_CACHE:
+        return _MK_CACHE[name]
+    n = er.norm_name(re.sub(r"[()_/]", " ", name)).strip()
+    ks = {n} | er.name_variants(n)
+    ks |= {k.replace("-", "").replace(" ", "") for k in set(ks)}
+    r = {accent_fold(k) for k in ks if k}
+    _MK_CACHE[name] = r
+    return r
+
+
+def name_matches(slot_name, forms):
+    """True when the slot's printed name is one TIPNR attaches to the number."""
+    sk = _match_keys(slot_name)
+    return any(sk & _match_keys(f) for f in forms)
+
+
 def _name_token(s):
     """A word's name label reduced to a bare lowercase token ('of Raamah,' -> 'raamah')."""
     s = re.sub(r"[^a-z' -]", " ", (s or "").lower())
@@ -114,6 +220,10 @@ def main():
             multi_g += 1
     print(f"entities with exactly one Greek number: {len(ent_g):,} "
           f"(multi-Greek entities, no guess: {multi_g:,})")
+
+    ent_forms, glob_forms = parse_number_forms(tipnr_lines)
+    print(f"per-number name rows parsed: {len(glob_forms):,} Greek numbers "
+          f"across {len(ent_forms):,} records (strict name-match gate ON)")
 
     # UNBOUND words (incl. the binder's deliberate name-path tier: David, Moses...):
     # the name's own Greek number, IF every entity carrying that spelling agrees on
@@ -259,6 +369,7 @@ def main():
 
     rows, split = [], {"abp-tag": 0, "tipnr": 0, "lemma-only": 0, "surface": 0, "none": 0}
     excluded_gentilic = 0
+    gated = defaultdict(int)         # per-name tally of inheritances the gate refused
     breathing_fixed = {}             # old value -> new value (receipt)
 
     def norm_lemma(val):
@@ -280,14 +391,24 @@ def main():
             nm = er.norm_name(w["label"] or "")
             bk = er.book_num(w["book"])
             uniq = binds.get((bk, w["chapter"], w["verse"], nm)) if bk is not None else None
+            # Candidate numbers in the original preference order, each behind the
+            # strict name-match gate: the number only lands if TIPNR attaches it
+            # to the slot's own printed name (bound lane checks the entity's own
+            # rows; the two fallback lanes check the corpus-wide map).
+            cands = []
             if uniq and uniq in ent_g:
-                greek, source = ent_g[uniq], "tipnr"
-            else:
-                if nm and nm in name_g:                 # unbound word: the name's own number
-                    greek, source = name_g[nm], "tipnr"
-                elif nm and lookup.get(nm, {}).get("g"):
-                    greek, source = lookup[nm]["g"], "tipnr"
-                elif w["lemma"]:
+                cands.append((ent_g[uniq], ent_forms.get(uniq, {}).get(ent_g[uniq], ())))
+            if nm and nm in name_g:                     # unbound word: the name's own number
+                cands.append((name_g[nm], glob_forms.get(name_g[nm], ())))
+            if nm and lookup.get(nm, {}).get("g"):
+                cands.append((lookup[nm]["g"], glob_forms.get(lookup[nm]["g"], ())))
+            for g_cand, forms in cands:
+                if name_matches(nm, forms):
+                    greek, source = g_cand, "tipnr"
+                    break
+                gated[f"{nm}→{g_cand}"] += 1
+            if greek is None:
+                if w["lemma"]:
                     lemma = norm_lemma(w["lemma"])   # a REAL dictionary lemma stands
                     source = "lemma-only"
                 else:
@@ -321,6 +442,10 @@ def main():
         print(f"  {k:10} {split[k]:,}")
     print(f"  (gentilic tokens excluded from the surface lane: {excluded_gentilic:,} "
           f"— people-group ruling; breathing-repaired stored values: {len(breathing_fixed):,})")
+    print(f"name-match gate refused {sum(gated.values()):,} slot inheritances "
+          f"across {len(gated):,} name→number pairs:")
+    for pair, n in sorted(gated.items(), key=lambda t: -t[1]):
+        print(f"  GATED {pair} ×{n}")
     print()
 
     # ── RECEIPT (written on EVERY run, before any write): the per-name split +

@@ -56,6 +56,7 @@ python tests/test_news_bulk.py >/dev/null
 python tests/test_key_strongs_filter.py >/dev/null
 python tests/test_tipnr_roster.py >/dev/null
 python tests/test_pn_greek_identity.py >/dev/null
+python tests/test_pn_name_match.py >/dev/null
 python tests/test_reader_greek_flips.py >/dev/null
 python tests/test_ws_greek_flips.py >/dev/null
 python tests/test_c3_dormant.py >/dev/null
