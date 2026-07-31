@@ -268,10 +268,11 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   construction. Merge scope = batch-3 both-halves binds (ramoth-gilead 20,
   dibon-gad 2, jabesh-gilead 1Ch 10:11) + Ezion/Geber class. Accepted notes:
   second slot loses its own highlight/note-anchor in chip mode; interlinear
-  never merges (faithful view). FOLLOW-UP (non-blocking, JP query pending):
-  does TIPNR carry a distinct Dibon-gad entity? If yes, small receipted
-  re-ruling of the dibon+gad bind; if no, card is honest to source (kin to the
-  banked compound-number admission ticket).**
+  never merges (faithful view). FOLLOW-UP RESOLVED (JP query 2026-07-31):
+  TIPNR has two Dibon records (Dibon@Neh.11.25 Judah town · Dibon@Num.21.30-Jer
+  Moabite) and NO distinct Dibon-gad entity — the batch-3 bind is the best the
+  source offers, card honest to source. A distinct Dibon-gad identity arrives
+  only via the banked compound-number admission ticket.**
   **Chip-merge display verdicts SHIPPED 2026-07-31 (JP-ruled):** merged chip's
   Strong's tag = UNION of both halves' recorded tags (never a compound number
   the slots don't record — admission discipline, the egypt principle); count
