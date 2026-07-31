@@ -1,5 +1,17 @@
 # Greek-header hand-table — batch 1 record (JP-approved 2026-07-30)
 
+**SHIPPED 2026-07-30 (early 07-31 UTC), full chain receipted:** control run
+FAILED on exactly the six batch pins vs live (`got []` ×6, hadad/zion/abner
+PASS — the fresh control, since the shipped hadad control now passes on live) →
+scratch build (`hand-table nominatives loaded: 6`) → gates A/B/C PASS
+(`->surface (headword) 77`, all else 0; all nine pins PASS) → pre-swap
+name-scope proof: the 77 flipped rows are EXACTLY the six headwords (Οχοζίας 40
+· Ασκαλών 12 · Αραβία 12 · Αστάρτη 5 · Αντιλίβανον 5 · Οζίας 3) → swap
+(rollback = bible.db.rollback) → deploy reload 5×200 → served capture: 2Ki 1:3
+(page prints Οχοζίου) serves lemma Οχοζίας source=surface, hebrew H274 intact.
+UNRESOLVED pool now 864 (was 870). Session note: one git divergence on PA
+(stale local receipt commit) fixed by fetch+reset+checkout mid-arc.
+
 Six names upgraded from per-verse forms to one ABP-cited headword via
 scripts/greek_header_nominatives.tsv. Classification verified against the
 bh_scrape name-slot rows (full per-verse dump pasted in-session): every

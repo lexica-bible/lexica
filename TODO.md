@@ -290,9 +290,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   ('΄ Αδερ') died by replacement (new build never stores raw scrape values); the
   repair transform stays as input guard. Record + lessons: TODO_ARCHIVE 2026-07-30;
   drill = docs/tickets/DRILL_greek_header_backfill.md. Rollback bible.db.pre_greekhdr
-  (pre_laneC deletable after soak). OPEN residue: hand-table polish (870 UNRESOLVED
-  names in docs/tickets/greek_header_split.txt — famous ones upgradeable to a single
-  headword a few rows at a time via scripts/greek_header_nominatives.tsv, no deadline).
+  (pre_laneC deletable after soak). OPEN residue: hand-table polish — BATCH 1
+  SHIPPED 2026-07-30 (6 headwords: ahaziah/antilebanon/arabia/ashkelon/ashtoreth/
+  azaziah, 77 rows; receipt chain docs/tickets/greek_header_batch1.md; batch pins
+  double as each batch's fresh gate control since hadad now passes on live). 864
+  UNRESOLVED remain (receipt file greek_header_split.txt is PA-only, regenerated
+  each build — pull candidates by paste). Batch discipline proven: declension-only
+  names with page-attested dictionary form; real spelling variance stays per-verse
+  (ruling b); abner/absalom PINNED verse-form — not upgradeable without a reviewer
+  re-ruling of the pin. Next batches same flow, no deadline.
 - **Adonai-card follow-ups (banked 2026-07-30, from JP+reviewer eyeball of the live
   verse-form class):** (1) WORDING — DONE 2026-07-30, JP-approved exact text: subtitle
   now "ABP-only form — no Greek Strong's number" (30-detail-panel.jsx; old text falsely
