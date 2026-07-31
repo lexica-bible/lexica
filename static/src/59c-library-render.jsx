@@ -25,11 +25,20 @@ const LibRender = (function () {
   };
   // Chip/prose tag: today's logic (full dotted 'G'+strongs, else strongs_base)
   // unless the flip overrides.
-  const abpChipStrongsTag = (w) => {
+  const chipTagOne = (w) => {
     const o = greekTagOverride(w);
     if (o !== undefined) return o;
     if (!w.strongs_base || w.strongs_base === "*") return null;
     return (w.strongs && w.strongs !== "*") ? "G" + w.strongs : w.strongs_base;
+  };
+  // Merged compound chip (JP verdict 2026-07-31): UNION of both halves' own
+  // recorded tags — surfaces only what the slots already carry (Dibon+Gad shows
+  // G1045 from the second slot; numberless pairs stay untagged). Never a
+  // compound Strong's number the slots don't record.
+  const abpChipStrongsTag = (w) => {
+    const t1 = chipTagOne(w);
+    const t2 = w.pn_merge_partner ? chipTagOne(w.pn_merge_partner) : null;
+    return t2 ? (t1 ? t1 + " " + t2 : t2) : t1;
   };
   // ABP-interlinear tag: strongs_base VERBATIM (the documented mode-three rule)
   // unless the flip overrides.

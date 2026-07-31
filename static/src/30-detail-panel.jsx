@@ -1276,7 +1276,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     // (lane #3, 2026-07-28 — the old static-count G2 holdout is retired).
     // No trailing arrow on the link: standalone card link (JP flag at G2-R1,
     // per the standing arrow ruling — list links keep arrows, card links don't).
-    case "greekIdOcc": return (
+    case "greekIdOcc":
+      // Merged compound card (JP verdict 2026-07-31, count option c): DROP the
+      // occurrence line — it counts the FIRST slot's form only, and a precise-
+      // looking wrong number is worse than none. (Also keeps the PN:<joined-lemma>
+      // link from minting a key no page answers.) Banked end state: the pair's
+      // co-occurrence count, to land with the next touch of this server code.
+      if (entry.pnMergePos != null) return null;
+      return (
       <section key="greekIdOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         {/* SETTLED STATE, amended by JP 2026-07-26: the COUNT is bold to match

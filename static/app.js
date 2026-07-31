@@ -848,7 +848,12 @@ const defnLoading=(lexicaLoading||lsjLoading)&&!lexica;return/*#__PURE__*/React.
 // (lane #3, 2026-07-28 — the old static-count G2 holdout is retired).
 // No trailing arrow on the link: standalone card link (JP flag at G2-R1,
 // per the standing arrow ruling — list links keep arrows, card links don't).
-case"greekIdOcc":return/*#__PURE__*/React.createElement("section",{key:"greekIdOcc",className:"sec"},/*#__PURE__*/React.createElement("h4",{className:"sec-head"},/*#__PURE__*/React.createElement("span",{className:"sec-t"},"ABP Occurrences")),greekId.greek_strongs?/*#__PURE__*/React.createElement("button",{className:"occ-link occ-link--id",onClick:()=>onNavigateToLexicon&&onNavigateToLexicon(greekId.greek_strongs,"abp")},/*#__PURE__*/React.createElement(CountLine,{n:greekId.greek_count,label:greekId.greek_strongs})):greekId.lemma&&onNavigateToLexicon?/*#__PURE__*//* Lemma-only identity (Q3): Word study now opens by the stored form
+case"greekIdOcc":// Merged compound card (JP verdict 2026-07-31, count option c): DROP the
+// occurrence line — it counts the FIRST slot's form only, and a precise-
+// looking wrong number is worse than none. (Also keeps the PN:<joined-lemma>
+// link from minting a key no page answers.) Banked end state: the pair's
+// co-occurrence count, to land with the next touch of this server code.
+if(entry.pnMergePos!=null)return null;return/*#__PURE__*/React.createElement("section",{key:"greekIdOcc",className:"sec"},/*#__PURE__*/React.createElement("h4",{className:"sec-head"},/*#__PURE__*/React.createElement("span",{className:"sec-t"},"ABP Occurrences")),greekId.greek_strongs?/*#__PURE__*/React.createElement("button",{className:"occ-link occ-link--id",onClick:()=>onNavigateToLexicon&&onNavigateToLexicon(greekId.greek_strongs,"abp")},/*#__PURE__*/React.createElement(CountLine,{n:greekId.greek_count,label:greekId.greek_strongs})):greekId.lemma&&onNavigateToLexicon?/*#__PURE__*//* Lemma-only identity (Q3): Word study now opens by the stored form
              via the PN: key (lane #3, TICKET_lemma_word_study.md) — the list is
              the SAME derivation as this count, so the numbers must match. */React.createElement("button",{className:"occ-link occ-link--id",onClick:()=>onNavigateToLexicon("PN:"+greekId.lemma,"abp")},/*#__PURE__*/React.createElement(CountLine,{n:greekId.greek_count,label:"in ABP (this form)"})):/*#__PURE__*/React.createElement("div",{className:"occ-link occ-link--static"},/*#__PURE__*/React.createElement(CountLine,{n:greekId.greek_count,label:"in ABP (this form)"})));// R-2 flip: the Hebrew number, demoted to a quiet cross-reference with its own
 // count — the OT-number path stays findable (Word study by the Hebrew number;
@@ -1609,8 +1614,13 @@ return{isPN:true,pnName,gloss:pnName,...(w.pn_merge_pos!=null?{pnMergePos:w.pn_m
 // tripwire; the entity is keyed under the first word). Binds don't move, the
 // partner slot's data is untouched (Mary-class rule); prose + interlinear
 // (faithful as-printed) modes never call this. Same-bracket only.
-function mergePnChipPairs(words){const out=[];for(const w of words){const prev=out[out.length-1];if(w.pn_merge&&prev&&prev.is_pn&&prev.position===w.position-1&&prev.bracket_id===w.bracket_id){out[out.length-1]={...prev,english:((prev.english||prev.english_head||"")+" "+(w.english||w.english_head||"")).trim(),lemma:[prev.lemma,w.lemma].filter(Boolean).join(" "),inflected:[prev.inflected,w.inflected].filter(Boolean).join(" "),pn_merge_pos:w.position// partner slot — the card joins both headwords for display
-};continue;}out.push(w);}return out;}// PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
+function mergePnChipPairs(words){const out=[];for(const w of words){const prev=out[out.length-1];if(w.pn_merge&&prev&&prev.is_pn&&prev.position===w.position-1&&prev.bracket_id===w.bracket_id){out[out.length-1]={...prev,english:((prev.english||prev.english_head||"")+" "+(w.english||w.english_head||"")).trim(),lemma:[prev.lemma,w.lemma].filter(Boolean).join(" "),inflected:[prev.inflected,w.inflected].filter(Boolean).join(" "),pn_merge_pos:w.position,// partner slot — the card joins both headwords for display
+// Union tag rule (JP verdict 2026-07-31): the chip's Strong's tag unions
+// BOTH halves' own recorded tags — never a compound number the slots
+// don't record (that's a data admission, banked ticket). Partner fields
+// kept so the renderer can compute the second half's tag (Dibon+Gad:
+// G1045 rides the second slot and must not silently drop).
+pn_merge_partner:{strongs_base:w.strongs_base,strongs:w.strongs,g_id:w.g_id}};continue;}out.push(w);}return out;}// PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
 // Interlinear toggles (either one forces chip). So clicking Prose always works: it
 // SNAPSHOTS whatever toggles are on, unticks both, and switches to prose; the next
 // switch AWAY from prose restores the snapshot. A MANUAL toggle touch discards the
@@ -1907,7 +1917,11 @@ const LibRender=function(){// R-2 stage 3 flip #2 (docs/PLAN_r2_stage3.md): when
 // renders byte-identically to before.
 const greekTagOverride=w=>{if(!w.g_id)return undefined;if(w.strongs&&w.strongs!=="*")return undefined;return w.g_id.strongs||null;};// Chip/prose tag: today's logic (full dotted 'G'+strongs, else strongs_base)
 // unless the flip overrides.
-const abpChipStrongsTag=w=>{const o=greekTagOverride(w);if(o!==undefined)return o;if(!w.strongs_base||w.strongs_base==="*")return null;return w.strongs&&w.strongs!=="*"?"G"+w.strongs:w.strongs_base;};// ABP-interlinear tag: strongs_base VERBATIM (the documented mode-three rule)
+const chipTagOne=w=>{const o=greekTagOverride(w);if(o!==undefined)return o;if(!w.strongs_base||w.strongs_base==="*")return null;return w.strongs&&w.strongs!=="*"?"G"+w.strongs:w.strongs_base;};// Merged compound chip (JP verdict 2026-07-31): UNION of both halves' own
+// recorded tags — surfaces only what the slots already carry (Dibon+Gad shows
+// G1045 from the second slot; numberless pairs stay untagged). Never a
+// compound Strong's number the slots don't record.
+const abpChipStrongsTag=w=>{const t1=chipTagOne(w);const t2=w.pn_merge_partner?chipTagOne(w.pn_merge_partner):null;return t2?t1?t1+" "+t2:t2:t1;};// ABP-interlinear tag: strongs_base VERBATIM (the documented mode-three rule)
 // unless the flip overrides.
 const abpInterStrongsTag=w=>{const o=greekTagOverride(w);if(o!==undefined)return o;return w.strongs_base&&w.strongs_base!=="*"?w.strongs_base:null;};const joinProse=words=>{const tokens=words.map(w=>w.english).filter(Boolean);return tokens.reduce((acc,tok,i)=>{if(i===0)return tok;return /^[.,;:?!—)]/.test(tok)?acc+tok:acc+" "+tok;},"");};const renderProseWords=(ctx,v,opts={})=>{const{selChapter,hiClass}=ctx;// tightSpace: emit the inter-word space OUTSIDE the word's span. The reader leaves it
 // INSIDE (default) so a multi-word highlight paints as one continuous bar; the

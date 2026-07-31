@@ -181,6 +181,12 @@ function mergePnChipPairs(words) {
         lemma: [prev.lemma, w.lemma].filter(Boolean).join(" "),
         inflected: [prev.inflected, w.inflected].filter(Boolean).join(" "),
         pn_merge_pos: w.position,   // partner slot — the card joins both headwords for display
+        // Union tag rule (JP verdict 2026-07-31): the chip's Strong's tag unions
+        // BOTH halves' own recorded tags — never a compound number the slots
+        // don't record (that's a data admission, banked ticket). Partner fields
+        // kept so the renderer can compute the second half's tag (Dibon+Gad:
+        // G1045 rides the second slot and must not silently drop).
+        pn_merge_partner: { strongs_base: w.strongs_base, strongs: w.strongs, g_id: w.g_id },
       };
       continue;
     }

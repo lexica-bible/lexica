@@ -267,6 +267,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   ramoth-gilead verse + NEGATIVE control (adjacent different-entity PN chips,
   e.g. the Bani/Bunni seam, must NOT merge) + the merged chip's CLICK path,
   not just its look.**
+  **Chip-merge display verdicts SHIPPED 2026-07-31 (JP-ruled):** merged chip's
+  Strong's tag = UNION of both halves' recorded tags (never a compound number
+  the slots don't record — admission discipline, the egypt principle); count
+  line DROPPED on merged cards (option c). Two BANKED tickets from the same
+  ruling: (1) compound-number DATA admission — Strong's Hebrew has real
+  compound entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages +
+  xref layer, land as recorded links with receipts, THEN chips wear them;
+  (2) pair co-occurrence count — the honest count-line end state, lands with
+  the next touch of the identity-serving code.
   Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
   TICKET_blurb_verse_check.md. Remaining lanes (parked for JP to raise):
   word-position binding (~118 same-verse multi, + malchiah Ezr 10:25) · jabish spelling
