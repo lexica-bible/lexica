@@ -84,7 +84,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
         <section className="sec">
           <h4 className="sec-head">
             <span className="sec-t">The connection</span>
-            <span className="lsj-badge lsj-badge--accent">AI</span>
+            <WarrantTag cls="lsj-badge lsj-badge--accent" warrant="AI-written summary — claims not verified against the verse text.">AI</WarrantTag>
           </h4>
           {loading ? (
             <p className="xref-synthesis-loading">Selecting relevant passages…</p>
@@ -101,7 +101,9 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
       <section className="sec">
         <h4 className="sec-head">
           <span className="sec-t">Related passages</span>
-          <span className="lsj-badge">TSK</span>
+          {/* Inventory addition (flagged for JP): TSK missed in the ruled table — same
+              citation family as TIPNR/MetaV, so it takes the source-warrant pattern. */}
+          <WarrantTag cls="lsj-badge" warrant="TSK — Treasury of Scripture Knowledge; source of these cross-references.">TSK</WarrantTag>
         </h4>
         {loading ? (
           <div className="lib-loading">Loading…</div>

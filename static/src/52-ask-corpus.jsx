@@ -421,7 +421,12 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selec
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
         <div className="ac-answer">
-          <div className="ac-syn-tag">Synthesis</div>
+          {/* Warrant follows the state (JP-approved 2026-07-30): grounded answers cite
+              their passages, so the label says so; an ungrounded answer must NOT claim
+              citations — its loud warning block below carries the caveat instead. */}
+          {turn.grounded === false
+            ? <div className="ac-syn-tag">Synthesis</div>
+            : <div><WarrantTag cls="ac-syn-tag" warrant="AI-synthesized from the passages cited below.">Synthesis</WarrantTag></div>}
           {turn.grounded === false && (
             <div className="ac-ungrounded" role="note">
               <b>No direct occurrences found.</b> The corpus search turned up no verse that actually

@@ -131,13 +131,13 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
           the summary panel had NO source label at all; audit 2026-07-16 check A+F). */}
       {!loading && bookText && (
         <div className="detail-section">
-          <div className="detail-h">About<span className="lsj-badge lsj-badge--accent">AI</span></div>
+          <div className="detail-h">About<WarrantTag cls="lsj-badge lsj-badge--accent" warrant="AI-written summary — claims not verified against the verse text.">AI</WarrantTag></div>
           <p className="detail-p">{renderInlineMd(bookText)}</p>
         </div>
       )}
       {!loading && chapText && (
         <div className="detail-section last">
-          <div className="detail-h">This chapter<span className="lsj-badge lsj-badge--accent">AI</span></div>
+          <div className="detail-h">This chapter<WarrantTag cls="lsj-badge lsj-badge--accent" warrant="AI-written summary — claims not verified against the verse text.">AI</WarrantTag></div>
           <p className="detail-p">{renderInlineMd(chapText)}</p>
         </div>
       )}
@@ -979,7 +979,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // person/place section — below tags, dates and relation rows — reading as the
       // provenance seal on the whole block. It's a claim about the card's bind, not
       // a modifier of the description. TIPNR badge stays in the section header.
-      const matchState = <div className="pnbound-badge">Matched to this verse</div>;
+      // Warrant wording (JP-approved 2026-07-30): "bound to this specific verse" —
+      // NOT "explicitly": binds are MIXED (binder tiers + hand rulings + witness),
+      // verified before wording shipped.
+      const kindWord = be.section === "place" ? "place" : be.section === "person" ? "person" : "name";
+      const matchState = (
+        <div><WarrantTag cls="pnbound-badge"
+          warrant={`This ${kindWord} is bound to this specific verse in our records.`}>
+          Matched to this verse</WarrantTag></div>
+      );
+      const tipnrWarrant = `TIPNR — Tyndale Individualised Proper Names with all References; source of this card's ${kindWord} data.`;
+      const bothWarrant = `TIPNR (Tyndale proper-name reference) + MetaV verse data — sources of this card's ${kindWord} data.`;
       // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
       // rule): every person/place section opens with the ENTITY's name in bold. The
       // old rule suppressed it when it matched the clicked word ("stutter"), but on
@@ -996,7 +1006,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             : null;
         return (
           <section key="boundEntity" className="sec pnbound">
-            <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
+            <h4 className="sec-head"><span className="sec-t">{label}</span><WarrantTag cls="bdb-badge" warrant={tipnrWarrant}>TIPNR</WarrantTag></h4>
             <div className="pnbound-name">{heroName}</div>
             {opener && <div className="pnbound-thinrow">{opener}</div>}
             {matchState}
@@ -1008,7 +1018,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
               sources — the badge credits both. CONDITIONAL on the data actually shown
               (richPerson), never on the card variant: a TIPNR-only card stays "TIPNR". */}
-          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
+          <h4 className="sec-head"><span className="sec-t">{label}</span><WarrantTag cls="bdb-badge" warrant={richPerson ? bothWarrant : tipnrWarrant}>{richPerson ? "MetaV/TIPNR" : "TIPNR"}</WarrantTag></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
@@ -1043,7 +1053,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                   <button className={"metav-ts-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
                 </span>
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
-              <span className="lsj-badge">metaV</span>
+              <WarrantTag cls="lsj-badge" warrant="MetaV — verse-level Bible reference data; source of this card's data.">metaV</WarrantTag>
             </h4>
             {/* NAME ALWAYS SHOWS (JP ruling 2026-07-30) — same line as the bound card. */}
             {metavData.name && <div className="pnbound-name">{metavData.name}</div>}
@@ -1084,7 +1094,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                   <button className={"metav-ts-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
                 </span>
               ) : <span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span>}
-              <span className="lsj-badge">metaV</span>
+              <WarrantTag cls="lsj-badge" warrant="MetaV — verse-level Bible reference data; source of this card's data.">metaV</WarrantTag>
             </h4>
             {/* NAME ALWAYS SHOWS (JP ruling 2026-07-30) — same line as the bound card. */}
             {metavData.name && <div className="pnbound-name">{metavData.name}</div>}
@@ -1114,9 +1124,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             look as strong as the checked one — converting it is JP's call. */}
         {metavData && (
           metavData.sole_referent && (metavType === "place" || !isGentilic)
-            ? <div className="pnbound-badge"
-                title={`Matched by name — the only ${metavType === "place" ? "place" : "person"} of this name in our records.`}>
-                Matched by name</div>
+            ? <div><WarrantTag cls="pnbound-badge"
+                warrant={`Matched by name — the only ${metavType === "place" ? "place" : "person"} of this name in our records.`}>
+                Matched by name</WarrantTag></div>
             : <p className="detail-ai-caveat">Matched by name — not checked against this verse.</p>
         )}
         </>}
@@ -1124,7 +1134,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     );
     case "aidesc": return (
       <section key="aidesc" className="sec">
-        <h4 className="sec-head"><span className="sec-t">{metavType === "place" ? "Biblical Place" : "Biblical Reference"}</span><span className="lsj-badge lsj-badge--accent">AI</span></h4>
+        <h4 className="sec-head"><span className="sec-t">{metavType === "place" ? "Biblical Place" : "Biblical Reference"}</span><WarrantTag cls="lsj-badge lsj-badge--accent" warrant="AI-written summary — claims not verified against the verse text.">AI</WarrantTag></h4>
         {aiDescLoading
           ? <div className="lsj-def lsj-def--loading">Looking up…</div>
           : <>
@@ -1136,7 +1146,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     );
     case "bdb": return (
       <section key="bdb" className="sec">
-        <h4 className="sec-head"><span className="sec-t">Strong's Hebrew</span><span className="bdb-badge">Strong's</span></h4>
+        {/* The table is named `bdb` but holds STRONG'S HEBREW, not Brown-Driver-Briggs —
+            the warrant must say Strong's (standing trap, data-model.md). */}
+        <h4 className="sec-head"><span className="sec-t">Strong's Hebrew</span><WarrantTag cls="bdb-badge" warrant="Strong's Hebrew dictionary.">Strong's</WarrantTag></h4>
         {bdbLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
         ) : bdbEntry ? (
@@ -1172,21 +1184,21 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {defnLoading
             ? <span className="sec-t">Definition</span>
             : idiom
-            ? <><span className="sec-t">Phrase</span><span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span></>
+            ? <><span className="sec-t">Phrase</span><WarrantTag cls="lsj-badge" warrant="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</WarrantTag></>
             : structural
-            ? <><span className="sec-t">Function</span><span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span></>
+            ? <><span className="sec-t">Function</span><WarrantTag cls="lsj-badge" warrant="Structural word — its grammatical function, not a sense list">Grammar</WarrantTag></>
             : lexica
-            ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span></>
+            ? <><span className="sec-t">Definition</span><WarrantTag cls="lsj-badge" warrant="Lexica dictionary — defined from the Bible's own usage">Lexica</WarrantTag></>
             : lsjSummary && lsjSummary.override
-            ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</span></>
+            ? <><span className="sec-t">Definition</span><WarrantTag cls="lsj-badge" warrant="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</WarrantTag></>
             : lsjEntry && lsjEntry.source === "abp_ext"
-              ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
+              ? <><span className="sec-t">ABP Extended</span><WarrantTag cls="abp-badge" warrant="Apostolic Bible Polyglot extended lexicon entry.">ABP EXT</WarrantTag></>
             : lsjEntry && lsjEntry.source === "strongs"
               /* Strong's fallback (views_lsj.py serves it when no LSJ/abp_ext entry
                  exists) must NOT wear the LSJ header — mislabeled source + the
                  silent-fallback rule. Label JP-approved 2026-07-30. */
-              ? <><span className="sec-t">Strong's Dictionary</span><span className="lsj-badge" title="No LSJ entry for this word — this is the Strong's dictionary definition">Strong's</span></>
-              : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
+              ? <><span className="sec-t">Strong's Dictionary</span><WarrantTag cls="lsj-badge" warrant="No LSJ entry for this word — this is the Strong's dictionary definition">Strong's</WarrantTag></>
+              : <><span className="sec-t">Liddell-Scott-Jones</span><WarrantTag cls="lsj-badge" warrant="Liddell-Scott-Jones — classical Greek lexicon.">LSJ</WarrantTag></>}
         </h4>
         {defnLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
@@ -1345,7 +1357,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="verse" className="sec">
         <h4 className="sec-head">
           <span className="sec-t">Verse — {entry.ref}</span>
-          <span className="lsj-badge">{entry.isBsb ? "BSB" : useKjvText ? "KJV" : "ABP"}</span>
+          <WarrantTag cls="lsj-badge"
+            warrant={entry.isBsb ? "BSB — Berean Standard Bible, the translation shown."
+              : useKjvText ? "KJV — King James Version, the translation shown."
+              : "ABP — Apostolic Bible Polyglot, the translation shown."}>
+            {entry.isBsb ? "BSB" : useKjvText ? "KJV" : "ABP"}</WarrantTag>
         </h4>
         <blockquote className="dverse">
           <span className="dverse-n">{entry.verse}</span>

@@ -15,6 +15,30 @@
 // header, which renders the count and label as its two styled spans (the space
 // after × comes from the parent's flex gap there) — same standard, same rules.
 // EVERY count line renders through this component; don't hand-roll new ones.
+// ── Tag warrant (JP ruling 2026-07-30, tag hover-warrant standard) ──────────
+// A claim/citation tag explains itself on inspection: desktop shows the warrant
+// as native hover text; touch taps the tag to toggle a small popover with the
+// SAME sentence (title is hover-only, so without this half the surface never
+// sees the warrant). Tap-away dismisses. STANDING RULE: warrant tags are
+// NON-NAVIGATING only — a tag that navigates puts its warrant on the
+// destination instead; a datum tag (Male, POS, counts) gets no warrant at all.
+function WarrantTag({ cls, warrant, children }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [open]);
+  return (
+    <span className="warrant-wrap" ref={ref}>
+      <span className={cls} title={warrant} onClick={() => setOpen(o => !o)}>{children}</span>
+      {open && <span className="warrant-pop" role="note">{warrant}</span>}
+    </span>
+  );
+}
+
 function CountLine({ n, label, nClass, lblClass }) {
   if (nClass || lblClass) {
     return <><span className={nClass}>{n}×</span><span className={lblClass}>{label}</span></>;

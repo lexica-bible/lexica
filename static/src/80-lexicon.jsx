@@ -713,15 +713,18 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             {defPending
               ? null
               : idiom
-              ? <span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span>
+              ? <WarrantTag cls="lsj-badge" warrant="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</WarrantTag>
               : structural
-              ? <span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span>
+              ? <WarrantTag cls="lsj-badge" warrant="Structural word — its grammatical function, not a sense list">Grammar</WarrantTag>
               : lex
-              ? <span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span>
+              ? <WarrantTag cls="lsj-badge" warrant="Lexica dictionary — defined from the Bible's own usage">Lexica</WarrantTag>
               : !gk
-              ? <span className="bdb-badge">Strong's</span>
+              ? <WarrantTag cls="bdb-badge" warrant="Strong's Hebrew dictionary.">Strong's</WarrantTag>
               : lsjEntry
-                ? <span className="lsj-badge" title={lsjSummary && lsjSummary.override ? "Lexica editorial gloss — plain biblical sense foregrounded" : undefined}>{(lsjSummary && lsjSummary.override) ? "Lexica" : lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
+                ? <WarrantTag cls="lsj-badge" warrant={(lsjSummary && lsjSummary.override) ? "Lexica editorial gloss — plain biblical sense foregrounded"
+                    : lsjEntry.source === "strongs" ? "No LSJ entry for this word — this is the Strong's dictionary definition"
+                    : lsjEntry.source === "abp_ext" ? "Apostolic Bible Polyglot extended lexicon entry."
+                    : "Liddell-Scott-Jones — classical Greek lexicon."}>{(lsjSummary && lsjSummary.override) ? "Lexica" : lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</WarrantTag>
                 : null}
           </h4>
           {defPending
