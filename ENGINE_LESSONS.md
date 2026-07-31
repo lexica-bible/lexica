@@ -1495,3 +1495,13 @@ both drifting from the doc.
     second occurrence is what earned the standing rule. Signature to watch: any ship note that
     increments a count on a REDRAW. *(batch-one re-verify, 2026-07-27; pasted PA counts; 85
     canonical)*
+
+## Added at the issue-log session (2026-07-31b; G1093 manual correction)
+- **#92 — A SHAPE CLAIM IS NOT AN ATTESTED SENSE.** G1093 γῆ sense-3 headline said "the
+  physical globe" — a cosmological shape claim no occurrence attests. V7 wrote it once in
+  85 cards; the corpus sweep (globe/sphere/spherical/planet/orb) found no second instance
+  ("sphere" elsewhere = domain sense, legitimate). Fixed via fix_lexica_raw old→new swap,
+  gate re-ran 39/39. Signature to watch in future draws: physical-cosmology vocabulary
+  (globe, sphere-as-shape, planet, orb, hemisphere) in sense headlines — the engine should
+  describe usage ("the whole earth in contrast to heaven"), never the referent's geometry.
+  *(JP sighting; reviewer-approved wording; zero model spend, prompt untouched)*
