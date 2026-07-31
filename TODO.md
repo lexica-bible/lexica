@@ -367,7 +367,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   lean on summary). Check FIRST how long-bound place cards (pre-widening) have rendered
   area — if the reader already suppresses it, this may be invisible today. JP eyeball of
   Geber 1Ki 9:26 rendered = the screenshot.
-- **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
+- **Genealogy-of-Jesus map (BANKED 2026-07-30, JP-raised — future feature, no
+  build/design yet; nothing on the current queue moves for this).** The
+  "Genealogy of Jesus" attribute tag on person cards becomes clickable,
+  navigating to a lineage map: Adam → David → Jesus as a walkable graph, each
+  node linking to its PN card. Data likely already present via MetaV/TIPNR
+  parent/child relations. Design questions named now, resolved at scoping:
+  (1) the Matthew 1 / Luke 3 fork after David — the map must show BOTH attested
+  lines over the shared ancestor pool (structurally an argument-graph-shaped
+  artifact); (2) edge receipts — each parent→child link cites its attesting
+  verse(s) (1Ch genealogies, Mat 1, Luk 3), same receipt discipline as the rest
+  of the site; (3) taxonomy note — the tag converts datum → NAVIGATING under
+  the recorded warrant rule, so any warrant lives on the destination page, not
+  a tooltip. Own design proposal when JP raises it. (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
   upgrade: per-occurrence sense from a rulings-style pattern list on the neighboring words ("king of",
