@@ -255,18 +255,23 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Jabesh-gilead card; only the Gilead half of those verses is unruled) + gilead
   1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing, not adjacent). CHIP-MERGE candidate list =
   exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
-  **CHIP-MERGE BUILT 2026-07-31 (e3e802ff, JP verdict PASS; awaiting deploy +
-  served checks):** server marks the second word of an adjacent same-entity PN
-  pair (derived from pn_binding at read time, chapter + verse-words feeds,
-  deploy-safe); reader folds the pair into ONE chip in CHIP MODE ONLY — english
-  shows both words, Greek line keeps both printed tokens, english_head stays
-  the FIRST word's name so pnClickPayload's entity lookup is byte-unchanged.
-  Known display notes (accepted, display-only): the folded second slot's
-  own highlight/note-anchor position disappears in chip mode (the pair is one
-  chip). Served check set (JP condition): Ezion-geber 1Ki 9:26 + one
-  ramoth-gilead verse + NEGATIVE control (adjacent different-entity PN chips,
-  e.g. the Bani/Bunni seam, must NOT merge) + the merged chip's CLICK path,
-  not just its look.**
+  **CHIP-MERGE SHIPPED + CLOSED 2026-07-31 (JP screenshots + reviewer PASS;
+  commits e3e802ff → 12675846):** adjacent same-entity PN pairs render as ONE
+  chip (chip mode only; server marker from pn_binding, book keyed by NUMBER —
+  the inert-feature bug caught by JP's test drive, receipted). Card hero =
+  IDENTITY JOIN ONLY (per-slot fields barred after the Dibon half-join catch);
+  translit both-or-blank; sub-line joined (pnDisplay, lookup keys untouched);
+  chip Strong's tag = UNION of recorded halves (Dibon+Gad G1045 restored);
+  count line dropped on merged cards. NEGATIVE CONTROL PROVEN LIVE: 1Ki 4:13
+  Ramoth/Gilead = two entities (fort vs region), correctly unmerged one verse
+  from twenty merged — the trigger discriminates by observation, not just
+  construction. Merge scope = batch-3 both-halves binds (ramoth-gilead 20,
+  dibon-gad 2, jabesh-gilead 1Ch 10:11) + Ezion/Geber class. Accepted notes:
+  second slot loses its own highlight/note-anchor in chip mode; interlinear
+  never merges (faithful view). FOLLOW-UP (non-blocking, JP query pending):
+  does TIPNR carry a distinct Dibon-gad entity? If yes, small receipted
+  re-ruling of the dibon+gad bind; if no, card is honest to source (kin to the
+  banked compound-number admission ticket).**
   **Chip-merge display verdicts SHIPPED 2026-07-31 (JP-ruled):** merged chip's
   Strong's tag = UNION of both halves' recorded tags (never a compound number
   the slots don't record — admission discipline, the egypt principle); count
