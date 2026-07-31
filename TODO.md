@@ -299,33 +299,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   names with page-attested dictionary form; real spelling variance stays per-verse
   (ruling b); abner/absalom PINNED verse-form — not upgradeable without a reviewer
   re-ruling of the pin. Next batches same flow, no deadline.
-- **Adonai-card follow-ups (banked 2026-07-30, from JP+reviewer eyeball of the live
-  verse-form class):** (1) WORDING — DONE 2026-07-30, JP-approved exact text: subtitle
-  now "ABP-only form — no Greek Strong's number" (30-detail-panel.jsx; old text falsely
-  denied the Hebrew mapping shown below it). (2) UPSTREAM NOTE: adonai (H136, divine title) rides the proper-noun lane
-  (is_pn=1) while the card's own AI blurb calls it "a title for God" — the blurb and
-  the lane classification disagree; leave in-lane per the header ruling, revisit as an
+- **Adonai-card residue (items 1+4 closed 2026-07-30 — record in TODO_ARCHIVE, incl.
+  the Isa 7:14 Immanuel-heads-as-Jesus pre-filed answer):** (2) UPSTREAM NOTE: adonai
+  (H136, divine title) rides the proper-noun lane (is_pn=1) while its own AI blurb
+  calls it "a title for God" — leave in-lane per the header ruling, revisit as an
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
-  visual register — the disclaimer carries the whole load. (4) AUDIT CLOSED CLEAN
-  2026-07-30 (read-only, PA, full row dump eyeballed): NO counting bugs. ABP>Hebrew
-  excess fully classified — NT rows (no Hebrew = correct) · 619 '*' no-number rows
-  (ruled honest state) · 131-row named OT tail = LXX-only names (Cainan genealogy ×14),
-  supplied subjects (David/Moses/Solomon class), superscription verse-0, gentilic
-  forms, all genuinely Hebrew-less on the page. One editorial note BANKED, not a bug:
-  Isa 7:14 Immanuel heads as G2424/Jesus because TIPNR itself files Isa 7:14 under its
-  Jesus entity (TIPNR.txt:13065; ABP prints G* there, number is bind-derived per the
-  gate ruling). If a reader-surprise complaint ever lands, that's the record.
-- **JP side-notes 2026-07-30:** (1) LSJ header mislabel — FIXED + DEPLOYED same
-  day: Strong's-fallback entries (views_lsj source='strongs') now head "Strong's
-  Dictionary" with own badge, never the LSJ header (mislabeled source +
-  silent-fallback rule; label JP-approved). (2) Hebrew "bolder English" — ROOT CAUSED
-  2026-07-30 (live measurement, Gen 1 + Psa 9, all toggle combos): size/weight
-  identical everywhere (18px/400); the effect is the DELIBERATE ink-2 dimming of
-  the English line while the Interlinear toggle is on (.lib-interlinear-on
-  .lib-iw-english). JP's chip screenshot had the layer on (dimmed), prose had it
-  off (full ink) — toggle state, not mode. Pending JP's one-tap confirm; if the
-  dimming reads too strong on phone, that's a design-tweak ruling, not a bug.
+  visual register — the disclaimer carries the whole load.
+- **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
+  one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
+  effect was the deliberate English dimming while Interlinear is on). If the dimming
+  reads too strong on his phone, that's a design-tweak ruling, not a bug.
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this

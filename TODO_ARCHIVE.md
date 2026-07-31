@@ -6,6 +6,47 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-30 (late) — Card-work night: Adonai lane closed · Lane C residue ZERO · hand-table batch 1 · single-rollback rule
+
+- **Adonai-card items 1+4 CLOSED.** (1) No-number PN subtitle now "ABP-only form —
+  no Greek Strong's number" (JP-approved; old text falsely denied the Hebrew mapping
+  shown below it). (4) ABP-count-exceeds-Hebrew audit closed CLEAN — no counting
+  bugs; excess = NT rows + '*' class + a 131-row OT tail that is all LXX-only names
+  (Cainan ×14), supplied subjects, verse-0 superscriptions, gentilic forms. Banked,
+  not a bug: **Isa 7:14 Immanuel heads as G2424/Jesus because TIPNR itself files
+  Isa 7:14 under its Jesus entity** (TIPNR.txt:13065; ABP prints G* there) — the
+  pre-filed answer if a reader ever asks. Items 2+3 stay banked in TODO.
+- **Lane C pile-3 CLOSED, residue zero** (verdict + receipt chain in
+  docs/tickets/LANE_C_pile3_brief.md): jair demotion final · gilead/eleazar unbound ·
+  bunni unbound (upgraded to AMBIGUOUS — ABP's token sits on the Bani-v14/Bunni-v15
+  Hebrew verse seam; sole-spelling = candidacy, never identity) · hodijah Neh 10:12
+  SHIPPED as the first **verse-offset** witness bind (narrow class: same entity,
+  exactly one verse seam, no competing candidate either side; feed =
+  scripts/verse_offset_witness.tsv; distinct JP-approved card sentence). Word-position
+  lane (~118) unparked.
+- **Greek-header hand-table batch 1 SHIPPED** (receipt docs/tickets/
+  greek_header_batch1.md): 6 declension-only headwords, 77 rows, scope-proved
+  pre-swap. LESSON: **a shipped control stops firing** — the hadad gate control now
+  PASSES on live, so each batch's own pins must serve as the fresh FAIL-on-live
+  control.
+- **Three UI fixes deployed same night:** subtitle rewording · verse-offset card
+  sentence · LSJ header mislabel (Strong's-fallback text was wearing the LSJ header —
+  now "Strong's Dictionary" with own badge; silent-fallback rule).
+- **Single-rollback rule permanent** (5 quota hits in one day): one overwritten
+  `bible.db.rollback` per ship; verify-the-nightly-is-newer before deleting any old
+  copy (ops.md item 6). LESSON: the nightly runs ~13:30 UTC — an evening ship is NOT
+  covered until next day; an unchecked same-day delete would have dropped the only
+  path back past two arcs.
+- **Hebrew "bolder English" root-caused:** deliberate dimming of the English line
+  while Interlinear is on — toggle state differed between JP's two screenshots;
+  size/weight identical everywhere (live-measured). Pending JP's one-tap confirm.
+- Session mechanics lessons: PA is PULL-ONLY — never hand JP a commit/push command
+  for PA (a stale local commit from one broke fast-forward pulls mid-arc; fix =
+  fetch + reset + checkout). Verdict guard adopted: every gate verdict quotes the
+  pre-registered expected picture beside the actual output.
+- Rollbacks tonight: bible.db.rollback (current) · bible.db.pre_greekhdr (deep —
+  verify-then-delete after the next nightly).
+
 ## 2026-07-30 — Greek-header backfill SHIPPED (+ breathing cleanup, one lane)
 
 - **Live:** pn_greek_identity rebuilt 32,479 rows — 4,062 uniform headwords
