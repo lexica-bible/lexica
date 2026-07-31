@@ -379,12 +379,36 @@ leave a bare `"the"`: **226 new defects manufactured while fixing old ones.** Th
 defined in ONE place and shared with the S-predicate, not duplicated, or the two drift apart
 again exactly as they had here.
 
-**RULING 5 — the 14 interleaved rows go to curated handling, same as lane B.** Their
-neighbours were read, not assumed: **12 of the 14 have two residue blocks and one blank
-slot.** `Heb 2:10 "is the whole,"` needs `is` to go one way and `whole` the other, and only
-G3956 on the right is blank — no correct mechanical answer *exists*, so any pass output is
-wrong by construction. Only `1Ki 3:23` and `Deu 8:11` have two blanks, and those still need a
-per-block direction call, which is judgment.
+**RULING 5 — the STRADDLE rows go to curated handling, same as lane B. 25 rows, not 14 —
+corrected below, and the build ruled this once already.**
+
+First draft of this ruling excluded 14 rows on the test "is the residue contiguous". That
+test is too loose, and `build_words_from_abp.py:868` already carries the right one, written
+for the 2026-07-05 (P1) defect in `_redistribute_pronoun_compounds`: English moves between
+two slots ONLY when the kept words sit **entirely before** or **entirely after** the moved
+run. Kept words on BOTH sides of the moved run is a straddle — *"two slots can't hold both
+positions"* — and the pass leaves the phrase whole.
+
+`"the same things"` and `"for indeed the"` have perfectly contiguous residue and still fail:
+the article's own words sit either side of it, so no two-slot arrangement reproduces the
+source reading order. The contiguity test would have written 11 of those. **Same defect
+class as (P1), caught before it shipped rather than after.**
+
+The neighbour evidence stands and points the same way: of the rows the contiguity test did
+catch, **12 of 14 have two residue blocks and one blank slot** — `Heb 2:10 "is the whole,"`
+needs `is` one way and `whole` the other with only G3956 blank, so no correct mechanical
+answer *exists*. `1Ki 3:23` and `Deu 8:11` have two blanks and still need a per-block
+direction call, which is judgment, not mechanics.
+
+**Use the build's test, not a new one.** 25 rows out: bin R 24, bin D 1 (`Jer 25:6`).
+
+**RULING 7 — a slot whose English is ENTIRELY residue moves whole, and the article is left
+with no English (373 rows).** The pronoun pass refuses this case (`if not keep_idx:
+continue`) because a pronoun always renders in English. An article frequently does not —
+untranslated G3588 slots are ordinary throughout the corpus — and if none of the English on
+the slot is the article's own, all of it belongs to the neighbour. Flagged explicitly rather
+than folded in silently: it is 29% of the pass, and it is the one rule here with no build
+precedent to lean on.
 
 **RULING 6 — the 8 star rows split 6 / 2, on semantics not scheduling.** Only two carry a
 name: `Gen 22:21 'Huz'`, `Isa 46:13 'to Israel'`. The other six are possessives and function
@@ -394,37 +418,52 @@ a permanent exclusion, not a scheduling hold. The named two are held for a post-
 landing per §7's separate-landings rule. This is TODO ②'s pinned lesson holding: the
 discriminator is **whether the carrier holds a name**, never adjacency.
 
-**WRITE TARGET — 1,303.** Every exclusion is enforceable from the manifest's own fields (the
-reason string for the star rows, the word pattern for the interleaved), so the pass's scope
-is derivable and re-checkable, never a hand-carried list.
+**WRITE TARGET — 1,292.** Every exclusion is enforceable from the manifest's own fields (the
+reason string for the star rows, the word classes for the straddles), so the pass's scope is
+derivable and re-checkable, never a hand-carried list.
 
 ```
   1325  lane A
-   -14  interleaved        -> curated
+   -25  straddle           -> curated (the build's own (P1) test, not contiguity)
     -6  star, no name      -> excluded on their own terms, permanently
     -2  star, named        -> held for post-PN-star landing
   ----
-  1303  the pass
+  1292  the pass           = bin R 1,025 + bin D 267
 ```
 
-**EXPECTED PICTURE — pre-registered, and the corrected arithmetic.** The 22 excluded rows are
-NOT all in bin D: 13 of the 14 interleaved are bin R (only `Jer 25:6` is D), and all 8 star
-rows are D — so 9 excluded rows sit in D and 13 in R.
+Shape census under the build's test, all 1,325 rows — this replaces the earlier
+prefix/suffix/middle/interleaved buckets, which split on the wrong question:
+
+```
+   869  OK - the moved run leads         "but to the ones"   -> move "but", keep "the ones"
+   373  WHOLE slot moves (ruling 7)      "his own"           -> article left blank
+    58  OK - article's own words lead    "with our own"      -> keep "with", move "our own"
+    25  STRADDLE - skip (ruling 5)       "the same things"   -> keep either side of the move
+```
+
+**EXPECTED PICTURE — pre-registered.** The 33 excluded rows are NOT all proven defects:
+24 of the 25 straddles are bin R, all 8 star rows are bin D.
 
 ```
                  before      after a correct fix
-  bin P               1      ~1,304   (1 + the 1,303 written)
-  bin R           1,049         ~13   (the interleaved R rows - NOT ~0)
-  bin D           1,639      ~1,372   (lane B 1,363 + the 9 excluded)
+  bin P               1      ~1,293   (1 + the 1,292 written)
+  bin R           1,049         ~24   (the straddle R rows - NOT ~0)
+  bin D           1,639      ~1,372   (lane B 1,363 + Jer 25:6 + the 8 star)
   lane A          1,325          ~0
   lane B          1,363       1,363   UNCHANGED - if this moves, the pass overreached
-                                      total 1,304 + 13 + 1,372 = 2,689 carriers
+                                      total 1,293 + 24 + 1,372 = 2,689 carriers
 ```
 
-**bin R landing at ~0 is now a FAILURE, not a success** — it means the pass ate the
-interleaved rows it was told to leave alone. The earlier draft of this picture said R → ~0
-and D → ~1,385; both were wrong, and they were wrong because they assumed every excluded row
-was already a proven defect.
+**bin R landing at ~0 is a FAILURE, not a success** — it means the pass ate straddle rows it
+was told to leave alone.
+
+**TWO SUPERSEDED DRAFTS OF THIS PICTURE, both recorded so the error class stays visible:**
+the first said R → ~0 / D → ~1,385, wrong because it assumed every excluded row was already a
+proven defect; the second said 1,303 written / R → ~13, wrong because it excluded on residue
+contiguity instead of the build's straddle test and would have written 11 (P1)-class rows.
+Neither was caught by arithmetic — the totals balanced both times. The first was caught by
+reading which bin each excluded row actually sits in, the second by reading the build's
+existing pass before writing a new one.
 
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
