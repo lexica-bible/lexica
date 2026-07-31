@@ -2,6 +2,13 @@
 
 HELD FOR A CERT-STYLE SESSION — no data written. See TODO "PN-STAR MERGED-VERB CLASS".
 
+> **THE 145 BELOW IS SUPERSEDED (2026-07-31, detector-gap session).** It catalogues ONE
+> orientation. Revised count: **4,996** — class A 2,237 (this list's orientation, which
+> contains all 145) + class B 2,759 (the Mat 26:1 orientation, invisible to this list).
+> Live detector: `scripts/audit_pn_star_verb_merge.py` (predicate written down in its
+> header, three controls, HALTs when one goes silent). The fix session opens against that
+> script's output, NOT against the list below. Detail: `docs/tickets/TICKET_detector_gap.md`.
+
 Mechanism: ABP source attaches a verb/content word English to the adjacent proper-noun
 star chunk ("scourging Jesus,G* G5417"), and _split_compounds (build_words_from_abp.py,
 star-slot skip) never redistributes it — the words table carries the verb on the name
