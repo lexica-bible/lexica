@@ -157,8 +157,12 @@ function pnClickPayload(w, greekText) {
   const pnName = (raw && !raw.includes(" ")) ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
   // pnMergePos (chip-merge follow-on, JP 2026-07-31): the merged chip's partner
   // slot, display-join only — pnName stays the FIRST word's name (the lookup key).
+  // pnDisplay = the pair's joined DISPLAY name ("Ezion Geber") for the card's
+  // English line; every lookup still keys off pnName (single-producer rule).
+  const pnDisplay = (w.pn_merge_pos != null && w.english)
+    ? w.english.replace(/[\s,.:;!?'"–\-]+$/, "") : undefined;
   return { isPN: true, pnName, gloss: pnName,
-           ...(w.pn_merge_pos != null ? { pnMergePos: w.pn_merge_pos } : {}) };
+           ...(w.pn_merge_pos != null ? { pnMergePos: w.pn_merge_pos, pnDisplay } : {}) };
 }
 
 // CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND
@@ -178,7 +182,11 @@ function mergePnChipPairs(words) {
         && prev.bracket_id === w.bracket_id) {
       out[out.length - 1] = { ...prev,
         english: ((prev.english || prev.english_head || "") + " " + (w.english || w.english_head || "")).trim(),
-        lemma: [prev.lemma, w.lemma].filter(Boolean).join(" "),
+        // Per-half BEST form (lemma, else the printed form): a star slot has no
+        // dictionary lemma, and joining raw lemmas made the Dibon+Gad chip's
+        // Greek line read "Γάδ" alone — half a name (JP catch 2026-07-31). The
+        // rule: each half shows exactly what its single chip showed.
+        lemma: [prev.lemma || prev.inflected, w.lemma || w.inflected].filter(Boolean).join(" "),
         inflected: [prev.inflected, w.inflected].filter(Boolean).join(" "),
         pn_merge_pos: w.position,   // partner slot — the card joins both headwords for display
         // Union tag rule (JP verdict 2026-07-31): the chip's Strong's tag unions

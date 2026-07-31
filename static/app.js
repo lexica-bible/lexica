@@ -561,7 +561,9 @@ const giWillFetch=!!(entry&&isPN&&!entry.isKjv&&!entry.isBsb&&!entry.isHeb&&!ent
 // DISPLAYED headword/translit ("Γασιών Γαβέρ"), so the card's hero matches the
 // one-chip pair (JP 2026-07-31). Counts/source stay the FIRST word's — the
 // lookup key and payload are unchanged; join fails soft to the first identity.
-const p1=api.pnGreekIdentity(entry.book,entry.chapter,entry.verse,entry.position);const p2=entry.pnMergePos!=null?api.pnGreekIdentity(entry.book,entry.chapter,entry.verse,entry.pnMergePos).catch(()=>null):Promise.resolve(null);Promise.all([p1,p2]).then(([d,d2])=>{if(cancelled)return;if(d&&!d.error){if(d2&&!d2.error&&d2.lemma&&d.lemma){d={...d,lemma:d.lemma+" "+d2.lemma,translit:[d.translit,d2.translit].filter(Boolean).join(" ")};}setGreekId(d);}setGreekIdPending(false);}).catch(()=>{if(!cancelled)setGreekIdPending(false);});return()=>{cancelled=true;};},[entry&&entry.id]);// PN occurrence count (by name, for strongs='*' entries)
+const p1=api.pnGreekIdentity(entry.book,entry.chapter,entry.verse,entry.position);const p2=entry.pnMergePos!=null?api.pnGreekIdentity(entry.book,entry.chapter,entry.verse,entry.pnMergePos).catch(()=>null):Promise.resolve(null);Promise.all([p1,p2]).then(([d,d2])=>{if(cancelled)return;if(d&&!d.error){if(d2&&!d2.error&&d2.lemma&&d.lemma){// Translit joins ONLY when both halves have one — a half-translit
+// ("Gád" under Δαιβών Γάδ) is the frankenstein row (JP 2026-07-31).
+d={...d,lemma:d.lemma+" "+d2.lemma,translit:d.translit&&d2.translit?d.translit+" "+d2.translit:""};}setGreekId(d);}setGreekIdPending(false);}).catch(()=>{if(!cancelled)setGreekIdPending(false);});return()=>{cancelled=true;};},[entry&&entry.id]);// PN occurrence count (by name, for strongs='*' entries)
 const[pnCount,setPnCount]=useState(null);useEffect(()=>{setPnCount(null);if(!entry.pnName&&!entry.gloss)return;const name=extractProperName(entry.pnName||entry.gloss);// Part-3: same precedence as the lookups
 if(!name||name.length<2)return;let cancelled=false;api.pnCount(name).then(d=>{if(!cancelled)setPnCount(d.count??null);}).catch(()=>{});return()=>{cancelled=true;};},[entry&&entry.id]);// KJV occurrence count for Hebrew words
 const[kjvCount,setKjvCount]=useState(null);useEffect(()=>{setKjvCount(null);if(!entry.strongs||!isHebrewWord&&!entry.isKjv)return;// KJV cross-link: KJV words + ANY Hebrew word (incl. proper nouns)
@@ -690,7 +692,10 @@ const giLemma=greekId&&greekId.lemma||"";// Hebrew-flash fix, hero leg: while th
 // FRAME-0 (audit site 1): the Hebrew hero used to paint the English gloss in the
 // big headword slot while the BDB lookup ran, then swap to Hebrew (the "sons of
 // Noah" instance). Same hold as greekIdPending: blank until the real data lands.
-const hero=greekIdPending||isHebrewWord&&bdbLoading?{he:false,noGloss:true,script:" ",translit:"",standaloneGloss:"",morph:""}:{he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.translit||(giLemma?greekId.translit:""),standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
+const hero=greekIdPending||isHebrewWord&&bdbLoading?{he:false,noGloss:true,script:" ",translit:"",standaloneGloss:"",morph:""}:{he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,// MERGED compound card (JP sweep verdict 2026-07-31): the IDENTITY JOIN is
+// the ONLY hero source — per-slot word fields (entry.greek/translit, joined
+// naively at the chip) produced half-names ("Γάδ" hero, "Gád · Dibon" row).
+script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.pnMergePos!=null?giLemma||nameOrGloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.pnMergePos!=null?giLemma?greekId.translit:"":entry.translit||(giLemma?greekId.translit:""),standaloneGloss:trimTail(isPN||metavData?entry.pnDisplay||properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
 // it differs from the headword lemma (indeclinable words can coincide → skip it). For an
 // idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
 // redundant + mangled-looking next to the authored lemma, so drop it.
@@ -1605,7 +1610,9 @@ function pnClickPayload(w,greekText){const isPN=!!(w.is_pn||w.strongs_base==="*"
 // the name pick. Head-first makes chip and prose clicks hand the panel ONE name.
 const raw=w.english_head||w.english||greekText||"";const pnName=raw&&!raw.includes(" ")?raw.charAt(0).toUpperCase()+raw.slice(1):raw;// pnMergePos (chip-merge follow-on, JP 2026-07-31): the merged chip's partner
 // slot, display-join only — pnName stays the FIRST word's name (the lookup key).
-return{isPN:true,pnName,gloss:pnName,...(w.pn_merge_pos!=null?{pnMergePos:w.pn_merge_pos}:{})};}// CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND
+// pnDisplay = the pair's joined DISPLAY name ("Ezion Geber") for the card's
+// English line; every lookup still keys off pnName (single-producer rule).
+const pnDisplay=w.pn_merge_pos!=null&&w.english?w.english.replace(/[\s,.:;!?'"–\-]+$/,""):undefined;return{isPN:true,pnName,gloss:pnName,...(w.pn_merge_pos!=null?{pnMergePos:w.pn_merge_pos,pnDisplay}:{})};}// CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND
 // word of an adjacent same-entity PN pair (pn_merge, derived from pn_binding —
 // "Ezion"+"Geber" one entity => one clickable chip). Fold it into the previous
 // word for CHIP display only: english shows both words, the Greek line keeps
@@ -1614,7 +1621,11 @@ return{isPN:true,pnName,gloss:pnName,...(w.pn_merge_pos!=null?{pnMergePos:w.pn_m
 // tripwire; the entity is keyed under the first word). Binds don't move, the
 // partner slot's data is untouched (Mary-class rule); prose + interlinear
 // (faithful as-printed) modes never call this. Same-bracket only.
-function mergePnChipPairs(words){const out=[];for(const w of words){const prev=out[out.length-1];if(w.pn_merge&&prev&&prev.is_pn&&prev.position===w.position-1&&prev.bracket_id===w.bracket_id){out[out.length-1]={...prev,english:((prev.english||prev.english_head||"")+" "+(w.english||w.english_head||"")).trim(),lemma:[prev.lemma,w.lemma].filter(Boolean).join(" "),inflected:[prev.inflected,w.inflected].filter(Boolean).join(" "),pn_merge_pos:w.position,// partner slot — the card joins both headwords for display
+function mergePnChipPairs(words){const out=[];for(const w of words){const prev=out[out.length-1];if(w.pn_merge&&prev&&prev.is_pn&&prev.position===w.position-1&&prev.bracket_id===w.bracket_id){out[out.length-1]={...prev,english:((prev.english||prev.english_head||"")+" "+(w.english||w.english_head||"")).trim(),// Per-half BEST form (lemma, else the printed form): a star slot has no
+// dictionary lemma, and joining raw lemmas made the Dibon+Gad chip's
+// Greek line read "Γάδ" alone — half a name (JP catch 2026-07-31). The
+// rule: each half shows exactly what its single chip showed.
+lemma:[prev.lemma||prev.inflected,w.lemma||w.inflected].filter(Boolean).join(" "),inflected:[prev.inflected,w.inflected].filter(Boolean).join(" "),pn_merge_pos:w.position,// partner slot — the card joins both headwords for display
 // Union tag rule (JP verdict 2026-07-31): the chip's Strong's tag unions
 // BOTH halves' own recorded tags — never a compound number the slots
 // don't record (that's a data admission, banked ticket). Partner fields

@@ -375,8 +375,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         if (cancelled) return;
         if (d && !d.error) {
           if (d2 && !d2.error && d2.lemma && d.lemma) {
+            // Translit joins ONLY when both halves have one — a half-translit
+            // ("Gád" under Δαιβών Γάδ) is the frankenstein row (JP 2026-07-31).
             d = { ...d, lemma: d.lemma + " " + d2.lemma,
-                  translit: [d.translit, d2.translit].filter(Boolean).join(" ") };
+                  translit: (d.translit && d2.translit) ? d.translit + " " + d2.translit : "" };
           }
           setGreekId(d);
         }
@@ -763,9 +765,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   } : {
     he: isHebrew,
     noGloss: isPN && !entry.greek && !isHebrew && !giLemma,
-    script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || giLemma || nameOrGloss)),
-    translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit : (entry.translit || (giLemma ? greekId.translit : ""))),
-    standaloneGloss: trimTail((isPN || metavData) ? properName
+    // MERGED compound card (JP sweep verdict 2026-07-31): the IDENTITY JOIN is
+    // the ONLY hero source — per-slot word fields (entry.greek/translit, joined
+    // naively at the chip) produced half-names ("Γάδ" hero, "Gád · Dibon" row).
+    script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss)
+      : (entry.pnMergePos != null ? (giLemma || nameOrGloss) : (entry.greek || giLemma || nameOrGloss))),
+    translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit
+      : (entry.pnMergePos != null ? (giLemma ? greekId.translit : "")
+        : (entry.translit || (giLemma ? greekId.translit : "")))),
+    standaloneGloss: trimTail((isPN || metavData) ? (entry.pnDisplay || properName)
       : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
     morph: morphLine,
   };
