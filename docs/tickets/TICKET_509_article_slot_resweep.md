@@ -3,6 +3,8 @@
 Opened 2026-07-31 (charter: `docs/handoffs/HANDOFF_2026-07-31_next_cc.md`).
 **Status: CLOSED 2026-07-31** — count revised, no data written, no DB read.
 The fix session now opens against the revised list below.
+**Fix session opened 2026-07-31: both session-open rulings are recorded in §6a/§6b
+(awaiting JP's confirm). Nothing built, nothing written until he confirms.**
 
 Detector: `scripts/audit_article_slot_carrier.py` — READ-ONLY, predicate stated in
 full in its header, six controls + a red-first block + an old-predicate replay, HALTs
@@ -168,14 +170,16 @@ to 11 high. 89 → 92 strings, over-count risk 11 → 0.
 Four per-control row checks (1Ki 9:26, Mat 20:22, 2Sa 12:9, Gen 22:21) print with the
 run — `python3 scripts/audit_article_slot_carrier.py`.
 
-## 6. DECIDE AT SESSION OPEN — before any predicate is written (JP, 2026-07-31)
+## 6. DECIDE AT SESSION OPEN — the two questions, and the rulings
 
-**One lane or two?** Bin D splits ~1,054 function-word rows vs ~585 content-word rows,
+The questions as asked (JP, 2026-07-31):
+
+**Q1 — one lane or two?** Bin D splits ~1,054 function-word rows vs ~585 content-word rows,
 and the repair SOURCE differs: conjunction/copula/pronoun numbers for the first, nouns for
 the second. Lumping them risks a pass tuned for one class silently mangling the other.
 Rule this before writing a predicate, not after.
 
-**Expect the shipped-row count to land well under 2,662, and do NOT read that as
+**Q2 — expect the shipped-row count to land well under 2,662, and do NOT read that as
 shortfall.** Part of the population closes by RULING, not by writing — the 1Co 1:25 class
 is ABP printing supplied English over the bare article, a display decision. Declare up
 front how many rows are expected to close each way.
@@ -183,6 +187,94 @@ front how many rows are expected to close each way.
 **Parked, deliberately not run now:** the row-by-row diff behind the 26-row gap in §4b.
 Both readings leave the same ~2,662 rows in scope, so it buys nothing today. Run it only
 if the session wants to know whether extending the lexicon path is worth it.
+
+---
+
+### 6a. RULING 1 — TWO lanes, split on ORIGIN, not on word class (recorded 2026-07-31)
+
+**Two lanes, yes. But the fault line the charter named — function word vs content word —
+is the WRONG axis, and splitting on it would cause the exact mangling it was written to
+prevent.** The real question per row is: *is there an empty slot the English can go back
+onto?* That is structural and decidable from the source; word class is not.
+
+The word-class axis cuts straight across both repairs — four rows, source-verified:
+
+```
+  Act 20:15  'and'      FUNCTION  ... andG3588 G1161 another day ...   G1161 present, BLANK -> fill it
+  1Co  4:20  'is the'   FUNCTION  ... 1is theG3588 2kingdomG932 ...    no Greek copula at all -> nothing to write
+  Num  7:25  'brought'  CONTENT   brought G3588 his gift;G1435         verb number absent -> curated write
+  Luk  6:15  'son of'   CONTENT   theG3588 son of G3588 Alphaeus,G*    'son of' supplied -> nothing to write
+```
+
+A word-class lane would put `'and'` (fill) and `'is the'` (no-op) through the same pass,
+and separate `'and'` from `'brought'`, which take the same repair. The origin axis puts
+each repair in exactly one lane.
+
+**LANE A — mechanical redistribution. 1,325 source rows (bin D 276 · bin R 1,049).**
+The carrier slot has an adjacent BLANK slot holding a real number (1,317) or a star (8).
+The word's own number is already in the verse and its slot is empty, so the repair is
+build-side redistribution onto that slot — the `_split_compounds` /
+`_redistribute_pronoun_compounds` family, no lexicon needed. **All of bin R is in this
+lane**, which is why the lexicon could touch R rows at all. Composition: 957
+conjunction/pronoun · 289 content · 79 other.
+
+**LANE B — per-row triage. 1,363 rows, all bin D.**
+No blank neighbour anywhere. There is nothing to fill, so no automated pass runs here.
+Each row closes either by RULING (ABP supplied English — no Greek word exists) or by a
+curated data write (the number is genuinely absent from the source, e.g. `1Sa 2:25`
+"against the LORD", where the parallel clause in the same verse numbers its `εἰς` as G1519
+and this one does not). Composition:
+
+```
+  401  copula supplied      'is the' / 'was the' / 'are the'
+  204  genealogy supplied   'son of' / 'the son of'   (Luk 3 / apostle-list class)
+  141  possessive supplied  'his' / 'their' / 'her'
+   94  preposition          'against the' / 'concerning'  — MIXED, needs eyes
+  176  conjunction/pronoun  MIXED, needs eyes
+  309  content word         'the borders' 33 · 'the places' 25 · 'brought' 10 · … — needs eyes
+   38  mixed function words
+```
+
+The first three families (746 rows) are supplied-by-construction: the Greek has no copula,
+no "son", no possessive pronoun to carry the English. **That is a structural expectation
+plus a source spot-check on 6 rows, NOT a per-row proof** — no lane-B row is declared
+closed until it has been looked at.
+
+**Consequence for the fix session: lane A is written first and alone.** Lane B does not
+get a predicate at all; it gets a reviewed list.
+
+### 6b. RULING 2 — declared split: ~1,300 close by writing, ~1,360 by ruling
+
+Declared before any predicate is written, so the end-of-session count is measured against
+this and not against 2,662:
+
+```
+  close by WRITING (lane A build fix)   1,325 source rows
+                                        1,299-1,325 live  (the §4b 26-row gap sits in bin R,
+                                                            i.e. inside lane A, and is parked)
+  close by RULING or curated write      1,363 rows (lane B)
+     of which expected RULING, no write   ~746 supplied (copula/genealogy/possessive)
+     of which needs eyes before a call    ~617
+  ---------------------------------------------------------------
+  TOTAL accounted                        2,688 source / ~2,662 live
+```
+
+**So the shipped-row count is expected to land near 1,300, not 2,662, and a lane-B row that
+closes with no data written is a CORRECT outcome, not a miss.** Anything that ships beyond
+~1,325 means lane B rows were written without the row-level review this ruling requires —
+treat that as a red flag, not as progress.
+
+Two things pinned with the ruling:
+
+- **The 8 dotted rows are individual, never batched.** G3588.2 ×7 ('oboli', Exo 30:13 /
+  Eze 45:12 …) and G3588.1 ×1 may be legitimate ABP dotted assignments carrying real
+  content — the standing dotted-number rule applies. Inspect each; do not fold into either
+  lane's pass.
+- **Lane assignment is reproducible from the committed detector, not from scratch files.**
+  First build step after these rulings are confirmed: land a `--lanes` reporting flag on
+  `scripts/audit_article_slot_carrier.py` that prints the A/B split from the same predicate
+  the counts come from, with all existing controls still green. Until that flag exists, the
+  1,325 / 1,363 numbers above are this session's finding, not a re-runnable artifact.
 
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 

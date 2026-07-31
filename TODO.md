@@ -752,13 +752,17 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   diff against it either).
   Any fix = build-side redistribution for star slots + rebuild; regression pin
   `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
-  ⚠ **TWO RULINGS OWED AT SESSION OPEN, before any predicate is written (JP 2026-07-31):**
-  (1) **one lane or two?** The article-slot class forks ~1,054 function-word rows (repair =
-  conjunction/copula/pronoun numbers) vs ~585 content-word rows (repair = nouns); a pass
-  tuned for one can silently mangle the other. (2) **Declare up front how many rows close by
-  RULING vs by writing** — the 1Co 1:25 class is ABP printing supplied English over the bare
-  article, a display decision, so the shipped count will land well under 2,662 and that is
-  NOT shortfall.
+  ⚠ **BOTH SESSION-OPEN RULINGS RECORDED 2026-07-31** (awaiting JP confirm) —
+  `docs/tickets/TICKET_509_article_slot_resweep.md` §6a/§6b. (1) TWO lanes, split on
+  ORIGIN not word class: lane A = adjacent BLANK numbered/star slot exists, 1,325 rows
+  (all of bin R + 276 of D), mechanical build-side redistribution; lane B = no blank
+  neighbour, 1,363 rows, per-row triage only, no predicate. The function/content axis is
+  wrong — `'and'` (Act 20:15, fill) and `'is the'` (1Co 4:20, nothing to write) are both
+  function words; `'brought'` (Num 7:25, write) and `'son of'` (Luk 6:15, supplied) are
+  both content. (2) DECLARED SPLIT: ~1,300 close by writing, ~1,363 by ruling/curated
+  call — **a ship near 1,300 is on target; a ship above ~1,325 means lane-B rows were
+  written without review.** 8 dotted rows (G3588.2 ×7, G3588.1 ×1) inspected individually,
+  never batched.
   ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the
   article (1Co 1:25 "the wisdom"), NOT number drops — sort display treatment vs data fix per
   spot. Same-family non-star case: Mat 28:13 "His disciples" (G3101 carries "His", following
