@@ -340,12 +340,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   whether other Greek-headed name chips show Greek in chip mode (if none do,
   it's a lane-wide render gap, not a Hiram bug). Page-attested-empty = a
   documented finding, not a fix.
-- **Double comma "of his servants,," 1Ki 9:27 (JP sighting 2026-07-31):** shows
-  in the chip AND in verses.text prose ("servants,, people") — likely STORED
-  text, i.e. a data fix: byte-exact `--old` string from a PA dump of the built
-  verses.text (never abp_texts/), abp_corrections door if it's a real ABP
-  deviation vs a build artifact. Sweep candidate: count `,,` occurrences
-  corpus-wide before ruling one verse.
+- **Double comma "of his servants,," 1Ki 9:27 — SOURCE-ATTESTED (JP checked
+  eSword 2026-07-31): ABP itself prints the double comma.** Our text is
+  faithful; NOT a build artifact, NOT a fix on our side without a ruling
+  (fidelity doctrine — we match the page). Disposition: Van der Pool errata
+  candidate — goes on the errata list the dataset-publication ticket compiles
+  (alongside the accent-typo + stray-mark classes). If JP ever wants it
+  normalized in OUR text, that's an abp_corrections ruling, source-attested
+  deviation class, not a silent cleanup. Optional sizing when convenient:
+  corpus-wide `,,` count to see if it's a class or a one-off.
 - **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
   JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
   KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
