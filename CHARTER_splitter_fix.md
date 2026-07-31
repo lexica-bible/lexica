@@ -2,7 +2,7 @@
 
 **STATUS: CLOSED 2026-07-09 — polarity A SHIPPED (607 helper rows untagged, live + folded into
 the builder); polarity B DEFERRED to its own ticket per reviewer Ruling 8 (878-case evidence
-list, hand-review-only). All acceptance checks passed; record in AUDIT_lexica_rollout.md
+list, hand-review-only). All acceptance checks passed; record in docs/audits/AUDIT_lexica_rollout.md
 (splitter-fix session entry) + TODO.md ticket. Calibration UNPAUSED.**
 
 **CORRECTION (2026-07-09, reviewer Ruling 23): the G977 acceptance target below reads "37
@@ -66,8 +66,8 @@ on both halves) — the discriminator must separate them.
 ## Context pointers
 - Ticket (full history, 3 exhibits, detection heuristic, downstream surfaces):
   TODO.md "Helper-word double-tag class".
-- Session-3 log + audit entries for G2008/G977 (occ corrections): HANDOFF_lexica_rollout.md +
-  AUDIT_lexica_rollout.md.
+- Session-3 log + audit entries for G2008/G977 (occ corrections): docs/handoffs/HANDOFF_lexica_rollout.md +
+  docs/audits/AUDIT_lexica_rollout.md.
 - eSword verification precedent: confirm any surprising layout against eSword/ABP app only
   (2026-06-07 Act 19:4 lesson; memory feedback_confirm_source_never_guess).
 - 731-pair sizing query is in the batch-3 session-3 chat log; rebuild it from the ticket text.

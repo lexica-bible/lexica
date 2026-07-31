@@ -244,7 +244,7 @@ def test_collocation_cited_or_not():
 
 
 # ── FLAG gate: PMI-5.0 floor + neighbor stoplist (round-2 audit, 2026-07-03) ──────────────────────
-# Pins the two sanity cases the flag policy was decided on (AUDIT_lexica_rollout.md): σάββατον under
+# Pins the two sanity cases the flag policy was decided on (docs/audits/AUDIT_lexica_rollout.md): σάββατον under
 # ἡμέρα SURVIVES (tight, above the floor, not stoplisted), οὕτω under ποιέω DIES (stoplisted), and a
 # 4<PMI<5 neighbor DIES on the floor (proving the flag cutoff moved from 4.0 to 5.0). The gate can't
 # change again without these passing.

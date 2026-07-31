@@ -2,7 +2,7 @@
 
 Written 2026-07-10 (step-4 session). One page. Working premise: your hours are variable —
 decisions get batched when you're away; everything works normally when you're present.
-The rules behind every line here are in HANDOFF_lexica_rollout.md + AUDIT_lexica_rollout.md —
+The rules behind every line here are in docs/handoffs/HANDOFF_lexica_rollout.md + docs/audits/AUDIT_lexica_rollout.md —
 this page is how to DRIVE, not the law itself.
 
 ## How decisions reach you (amended 2026-07-10, your standing rules)
@@ -54,4 +54,4 @@ this page is how to DRIVE, not the law itself.
   the final 10 run with the new #30 placement check live — that check is now BUILT and tested.
 - Next in order: you rule the step-4 list → step-5 control fire (one word under V8) → the
   final 10 → GREEN activates → layout session. The full ordered roadmap with "needs JP" marks:
-  HANDOFF_lexica_rollout.md, ROADMAP block.
+  docs/handoffs/HANDOFF_lexica_rollout.md, ROADMAP block.

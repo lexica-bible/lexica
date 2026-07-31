@@ -107,10 +107,10 @@ PA=15. Full narrative: memory `project_reassembly_diff`.
 
 **This is the SINGLE canonical S9 charter — the one source of truth.** It consolidates the TWO prior
 docs into one file:
-- `HANDOFF_cert_session9.md` — the prior canonical S9 handoff (Session 8 scope + the 2026-07-05
+- `docs/handoffs/HANDOFF_cert_session9.md` — the prior canonical S9 handoff (Session 8 scope + the 2026-07-05
   merged diagnosis). This charter is that document, carried forward verbatim, plus the consolidation
   layer below. **SUPERSEDED → pointer only.**
-- `AUDIT_reassembly_rebuild.md` — the reassembly-diff raw diagnosis + rebuild plan (2026-07-04); its
+- `docs/audits/AUDIT_reassembly_rebuild.md` — the reassembly-diff raw diagnosis + rebuild plan (2026-07-04); its
   findings/counts/family-table/render-trace/rebuild plan are folded in here as diffs (P)/(e)/(f)/(g).
   **SUPERSEDED → pointer only** (kept for raw diagnosis history).
 
@@ -125,7 +125,7 @@ Everything you need to run the rebuild is in THIS file.
 ## Frame (unchanged, governs all audit sessions)
 Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects as a versioned overlay
 (`abp_corrections`, 18 rows). Certification COMPLETE since Session 3; every session extends the perimeter,
-never re-opens it. Full record: `AUDIT_abp_certification.md`. Standing witness for source readings = the
+never re-opens it. Full record: `docs/audits/AUDIT_abp_certification.md`. Standing witness for source readings = the
 official ABP app (apostolicbibleapp.com).
 
 ## Architecture A — PINNED (the oracle stays independent)
@@ -578,7 +578,7 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 
 ## Consolidation layer (added 2026-07-05 when the two docs merged into this charter)
 Everything above is the prior canonical handoff verbatim. The items below were folded in from
-`AUDIT_reassembly_rebuild.md` (the tool explainer) or resolved fresh during consolidation.
+`docs/audits/AUDIT_reassembly_rebuild.md` (the tool explainer) or resolved fresh during consolidation.
 
 ### What the audit tools measure (from the reassembly memo — keep for a fresh reader)
 - `scripts/audit_reassembly_diff.py` rebuilds each verse from its word rows and diffs against
@@ -609,7 +609,7 @@ Read-only unless noted. All present in git:
 The original Session-8 scope listed Door-3 as "seven uncertified build-reorder passes." The passes are:
 `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
 `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix` (enumerated in
-`AUDIT_abp_certification.md` ~line 46). **An earlier draft of this bridge claimed (P) covers all seven —
+`docs/audits/AUDIT_abp_certification.md` ~line 46). **An earlier draft of this bridge claimed (P) covers all seven —
 that is WRONG and is corrected here (verified against the pass list 2026-07-05):**
 - **(P) certifies P1+P2 ONLY** — `_redistribute_pronoun_compounds` (P1, gated by
   `enumerate_redistributions.py`, self-controls Gen 3:15 + Gen 7:1) and `_split_numbered` (P2, gated by the

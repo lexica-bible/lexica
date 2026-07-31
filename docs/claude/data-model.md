@@ -176,7 +176,7 @@ adds a `metav` rich-card field via ONE join (gated: `section='person'` + NOT `is
 `Pharaoh@Exo.1.11` correctly UNLINKED) — do NOT widen the link-build title check, it'd delete
 good links. Built by `scripts/build_metav_person_index.py` (MetaV CSVs → staging
 `metav_index.db`, PA-only) + `scripts/build_person_metav_link.py --apply`; re-run BOTH after a
-words rebuild. Memory `project_metav_person_link`; spec `HANDOFF_metav_person_link.md`.
+words rebuild. Memory `project_metav_person_link`; spec `docs/handoffs/HANDOFF_metav_person_link.md`.
 
 ### word_gloss
 Plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
@@ -253,7 +253,7 @@ model call). Full record + the V3 prompt-lock: memory `project_lexica_dictionary
 PA-only; draws a word N×, per-verse SUPPORT+COMPANY tells a fold from a hole) — it certifies
 PROMPT stability, NOT the written draw (the `--apply` citation gate does that), so a reviewer
 re-run before a write is OPTIONAL once the prompt is diff-locked. 3-tier ship-gate + cutoff
-occ ≥ 2 (splitter split3): memory `project_lexica_dictionary` + `AUDIT_lexica_rollout.md`.
+occ ≥ 2 (splitter split3): memory `project_lexica_dictionary` + `docs/audits/AUDIT_lexica_rollout.md`.
 
 **θεός G2316 + κύριος G2962** are membership-only forks (no `pin_core`, the sarx/ekklesia
 pattern) — loaded-referent words that shipped pure-engine in batch 1, then were hand-forked. Fork

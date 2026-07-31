@@ -14,7 +14,7 @@
 > gate). Ruling under the standing delegation, reviewer-adjudicated: no word ships via
 > repair this session; the three parks stand; a revised acceptance path (repair +
 > targeted prose-defect handling, or fresh rolls for the squeeze class) is
-> NEXT-design-pass scope, not this doc's. Full record: AUDIT_lexica_rollout.md,
+> NEXT-design-pass scope, not this doc's. Full record: docs/audits/AUDIT_lexica_rollout.md,
 > "V10 ACCEPTANCE TEST" entry.
 
 Drafted at the batch-5 run-session-2 pivot (2026-07-12, commit 169ac3a). Rulings applied

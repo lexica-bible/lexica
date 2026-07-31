@@ -62,7 +62,7 @@ Run log + declared expectations: docs/PLAN_r2_stage1.md.
 
 Written 2026-07-16 at JP's ask, consolidating: `docs/DESIGN_greek_name_identity.md`
 (direction approved by JP, R-2 ruling 2026-07-16 — design only, no build yet),
-the provenance audit (`AUDIT_provenance_sweep.md`), and the R-1 parked piles
+the provenance audit (`docs/audits/AUDIT_provenance_sweep.md`), and the R-1 parked piles
 (`docs/tickets/alias_leave_list.txt`). Authorities unchanged; this doc ADDS nothing to
 them except consolidation and the ruling questions phrased for chat.
 

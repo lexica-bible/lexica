@@ -3,7 +3,7 @@ occurrence must be cited under a sense; trimming is a ship defect (floor-legal o
 
 MUST-FAIL FIXTURE PROVENANCE (reviewer condition, on the record): the trimmed fixture
 below pins the SHAPE and the NAMED ABSENTEE (Jdg 21:2) from the G2805 d1 park entry
-(AUDIT_lexica_rollout.md, G2805 RE-PARKED: d1 = 34/39, 5 uncited incl. 10/10 Jdg 21:2).
+(docs/audits/AUDIT_lexica_rollout.md, G2805 RE-PARKED: d1 = 34/39, 5 uncited incl. 10/10 Jdg 21:2).
 It is NOT the cached d1 raw — that lives in the PA-side draw cache and is deliberately
 not in CI (CC-never-touches-PA boundary). If JP later wants the real raw as a second
 fixture, that's additive, his call.

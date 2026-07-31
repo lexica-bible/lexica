@@ -8,7 +8,7 @@ brackets unreordered). Touches no database.
 WHY THIS SCRIPT EXISTS
 ----------------------
 The 2026-07-31 issue-log session scoped this class at 145 spots but its sweep was
-never committed — only the hit list in AUDIT_pn_star_verb_merge.md survived. That
+never committed — only the hit list in docs/audits/AUDIT_pn_star_verb_merge.md survived. That
 list is anchored on "star-slot English" (the doc's own column header), so it can
 only ever represent the orientation where the STAR chunk carries the merged
 English. JP found Mat 26:1 ("Jesus finishedG5055 G3588 G*"), where the merge runs

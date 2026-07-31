@@ -9,7 +9,7 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## ABP corpus certification audit — ARC CLOSED (Tier A certified + live)
-S1–S11 record → AUDIT_abp_certification.md + CHARTER_cert_session9.md + AUDIT_entity_seam.md +
+S1–S11 record → docs/audits/AUDIT_abp_certification.md + CHARTER_cert_session9.md + docs/audits/AUDIT_entity_seam.md +
 memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open leftovers only:
 - **verify_prose_leak.py "Tier B applied" mode** — parser-only check FAILs-that-isn't on the 5
   Tier-B prose verses when run against a finished scratch; next rebuild shouldn't re-derive this.
@@ -237,7 +237,7 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   pinned two-derivation list, folded into the builder as `_strip_helper_double_tag`, locked by
   tests/test_helper_double_tag.py (CI + pre-commit). Exhibits (Jud 1:9, Rth 2:16, Job 18:13) clean;
   361 structural matches correctly LEFT ALONE (legit doubles + split renderings = the A-review
-  pile). Full record: AUDIT_lexica_rollout.md splitter-fix entry + CHARTER_splitter_fix.md.
+  pile). Full record: docs/audits/AUDIT_lexica_rollout.md splitter-fix entry + CHARTER_splitter_fix.md.
   Standing acceptance rule: any related fix re-checks "no helper-word chips" on the exhibit words
   (chips + search highlighting read the words table), not just corrected rows.
 - **Splitter polarity B — English-pooled-on-function-word rows (follow-up ticket, hand-review
@@ -296,7 +296,7 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
 - **Dan 1:6 trio — hand-resolve the alias-record residual.** Azariah/Hananiah/Mishael @Dan.1.6 all score
   0.00 (below_floor) because MetaV tags their Daniel verses to the Babylonian-name alias records (Shadrach/
   Meshach/Abednego), not the Hebrew-name records — a known-SAFE residual, not ambiguity. Diagnosis + hand-
-  resolve steps are in `HANDOFF_metav_person_link.md`; pick the person_id + write it into the residual notes.
+  resolve steps are in `docs/handoffs/HANDOFF_metav_person_link.md`; pick the person_id + write it into the residual notes.
 - **Badge / verification-token unification (design backlog).** Two families — provenance badges (metaV/
   TIPNR/"Matched to this verse") vs verification marks ("✓ N/N verified"); rule now in `docs/design.md`.
   Converge instances opportunistically, no sweep.
@@ -422,7 +422,7 @@ CONTRACT"; story + the News-fixture and `.filters-sep` write-ups → TODO_ARCHIV
 **Shell's MOBILE collapse: News + Ask-corpus + Notes shipped; Study is the last consumer and is
 DEPRIORITIZED (JP ruling 2026-07-15) — copy the three landed commits IF it ever returns; do NOT
 queue it.** Gotchas live in `docs/claude/frontend.md` → "Shell's MOBILE collapse". Opener
-`HANDOFF_study_mobile.md` stays banked.
+`docs/handoffs/HANDOFF_study_mobile.md` stays banked.
 - **PARKED (JP 2026-07-15, not released) — swap the DESKTOP Ask-corpus strip's hand-inlined plus to
   `Icon.Plus`.** `Icon.Plus` was added 2026-07-15 for the mobile bar and retired the mobile inline
   copy; the desktop strip (`52-ask-corpus.jsx`, the `.ac-strip-new` button) still draws its own by
@@ -458,7 +458,7 @@ queue it.** Gotchas live in `docs/claude/frontend.md` → "Shell's MOBILE collap
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
 - **R-2 parked candidates (the migration itself is COMPLETE + LIVE 2026-07-26 — memory
-  project_entity_resolution_rebuild; the old "open from HANDOFF_r2_greek_names.md" opener is
+  project_entity_resolution_rebuild; the old "open from docs/handoffs/HANDOFF_r2_greek_names.md" opener is
   SPENT).** Reviewer-parked, pull not push, recorded in docs/tickets/alias_leave_list.txt pile
   comments: gentilic Group rows binding their own Group entities (hittites pile U) · per-reign
   Pharaoh link disambiguation (pile V) · ladder possessive-strip ("Aaron's," class, pile P) ·
@@ -466,7 +466,7 @@ queue it.** Gotchas live in `docs/claude/frontend.md` → "Shell's MOBILE collap
   lookup H/G fill-gains reverted for byte-identity (NT name words still ride the Hebrew fallback —
   a real future improvement, per-word review needed).
 - **pn_binding hand-check — DONE at class level (audit 2026-07-16, reviewer-accepted;
-  `AUDIT_provenance_sweep.md` §4).** All 1,310 rows bucketed; nothing is a live bug. The one
+  `docs/audits/AUDIT_provenance_sweep.md` §4).** All 1,310 rows bucketed; nothing is a live bug. The one
   recoverable class — **352 spelling-variant rows (abia→abijah class)** — queues into R-2's
   variant batch, per-pair eyeball + roster-freeze check required. Everything else stays
   floored by ruling (groups, adonai title, wrong-candidate protection, true ambiguity).
@@ -480,7 +480,7 @@ queue it.** Gotchas live in `docs/claude/frontend.md` → "Shell's MOBILE collap
 - **Descriptor-of-individual gentilics — CLOSED by audit ruling (2026-07-16, reviewer-accepted):**
   no binder change; the tier genuinely doesn't support these binds today (numonly evidence).
   Revisit ONLY if R-2's group-entity work (pile U) creates a better target. Ruling record:
-  docs/tickets/TICKET_gentilic_binding.md + AUDIT_provenance_sweep.md §5.
+  docs/tickets/TICKET_gentilic_binding.md + docs/audits/AUDIT_provenance_sweep.md §5.
 - **5 known-red tests on clean master, unticketed** — tests/test_lexica_draw_cache.py fails 5
   tests on any machine without the live DB (sqlite: no such table). Confirmed on clean master
   2026-07-16 (twice). Either the tests gain a skip-without-DB guard or a fixture; unticketed
@@ -640,7 +640,7 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   137.1 goat-under-Aenon ×74). Remedy design (stub entry? hold-out-without-entry?) = its own
   conversation (the V7 window came and went without it — still open, not forgotten).
 - **⚠ HOLD-OUT FLAGS (do NOT floor before this lands or a manual hold-out is placed):** δοξάζω G1392,
-  διώκω G1377, δόξα G1391. Mirrored in `HANDOFF_lexica_rollout.md`.
+  διώκω G1377, δόξα G1391. Mirrored in `docs/handoffs/HANDOFF_lexica_rollout.md`.
 - **Inverse-direction audit** — nobody has checked the existing dotted_lexicon the OTHER way: dotted
   rows that ARE on the list but map to the wrong entry, or bare rows that should have been dotted in
   the source. dotted_lexicon precedent says this direction has had defects.
@@ -851,7 +851,7 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 - **Lexica dictionary — verse-grounded word defs (Sonnet engine; LSJ display-only).** Public since
   the pilot; live cards 85 (DB-counted — the table is the count). **Current law + queue =
-  `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + Queue); authority = `AUDIT_lexica_rollout.md`;
+  `docs/handoffs/HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + Queue); authority = `docs/audits/AUDIT_lexica_rollout.md`;
   design backlog = `ENGINE_LESSONS.md`. The batch chronicle (phases, batch 3–5 sessions, V8
   promotion, δίκτυον/δόμα rulings, N=6-7, count 7/15, draw-cache ship) lives in those docs +
   TODO_ARCHIVE 2026-07-31 consolidation — do NOT re-derive it from here.**
@@ -967,7 +967,7 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 ## Ask the corpus — open items
 Retrieval is Strong's-keyed SQL (occurrence lists can't be wrong); the leak was only in the prose, now
 heavily guarded. Full record: memory `project_ai_search_architecture` + `project_ai_synthesis_quality`.
-- **FULL AUDIT DONE 2026-07-02 — decision doc = `AUDIT_ask_corpus.md` (repo root).** Order = A → deploy +
+- **FULL AUDIT DONE 2026-07-02 — decision doc = `docs/audits/AUDIT_ask_corpus.md` (repo root).** Order = A → deploy +
   acceptance → B → D → C → E. **Banner comes down after batches A+B verified live.**
   - **BATCH A SHIPPED 2026-07-02 (commit 559283f, `_CACHE_CODE_VER`→42, 99 tests green).** F1 mixed-signal
     scope (both OT+NT / both greek+hebrew now answer both, not collapse to one), F2 book-aware pick-parse
@@ -1010,7 +1010,7 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
 - **Tier 1 semantic cache — scope fold SHIPPED 2026-07-03 (`_CACHE_CODE_VER`→47).** The exact-repeat
   cache already existed + was free; the one hole (punctuation-strip vs O.T./N.T. scope detection collided
   "fire O.T." with "fire o t") is closed — detected scope is folded into the cache key (`_scope_tag`),
-  `tests/test_cache_key_scope.py`. **Tier 2 = NO-GO** at current volume (see AUDIT_ask_corpus.md). STILL
+  `tests/test_cache_key_scope.py`. **Tier 2 = NO-GO** at current volume (see docs/audits/AUDIT_ask_corpus.md). STILL
   OPEN: the OPTIONAL filler-strip normalizer (fold "what does X mean" → "X") — MUST reuse
   `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
   mixed-signal rule (one value per axis = scope, two = unset — never strip a scope word). code: ai.py.
@@ -1157,7 +1157,7 @@ Details re-ruled before build. Parked BEHIND batch one + the FRAME-0 audit; noth
 ## Lexica def-engine — small open tickets
 - **Legacy redraw order — next dip = the 24 VERSE-SHORT cards.** The 3 `"None"`-marker cards
   (G2588/G4172/G3624) are DONE 2026-07-15 (cards 85→88, zero spend — record in
-  `AUDIT_lexica_rollout.md`, top entry). Rules unchanged from JP's 2026-07-14 ruling: lazily, a few
+  `docs/audits/AUDIT_lexica_rollout.md`, top entry). Rules unchanged from JP's 2026-07-14 ruling: lazily, a few
   per session at most, development first, full current gate battery, no shortcuts.
   **GATE on the REMAINDER dips (reviewer-promoted 2026-07-27, batch-one re-verify):** before the
   first batch drawn from the remainder, RE-RANK the occ≥2 target list — it was computed pre-R-2;

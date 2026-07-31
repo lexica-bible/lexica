@@ -15,13 +15,13 @@ diagnosis landed). Don't open it on the low/medium census seat.
 
 ~~**This is the SINGLE canonical S9 charter — the one source of truth.** It now fully absorbs the
 reassembly-diff arc (findings, adjudication, rebuild plan) that used to live in
-`AUDIT_reassembly_rebuild.md`. That file is **SUPERSEDED** (kept for its raw diagnosis history only;
+`docs/audits/AUDIT_reassembly_rebuild.md`. That file is **SUPERSEDED** (kept for its raw diagnosis history only;
 its header points here). Everything you need to run the rebuild is in THIS file.~~
 
 ## Frame (unchanged, governs all audit sessions)
 Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects as a versioned overlay
 (`abp_corrections`, 18 rows). Certification COMPLETE since Session 3; every session extends the perimeter,
-never re-opens it. Full record: `AUDIT_abp_certification.md`. Standing witness for source readings = the
+never re-opens it. Full record: `docs/audits/AUDIT_abp_certification.md`. Standing witness for source readings = the
 official ABP app (apostolicbibleapp.com).
 
 ## Architecture A — PINNED (the oracle stays independent)

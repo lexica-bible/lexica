@@ -168,7 +168,7 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   the source/corrected cols. `apply_abp_corrections.py --only {words,verses}` gives TWO apply points
   in finish_rebuild: prose at step 4b (BEFORE split-flip, its oracle), words at step 7 (`--only
   words`). The 5 (f) prose rows seed from `AUDIT_tierB_f_proposed.json` at the S9 rebuild — live's
-  table is still 18 until that swap.** Full record: `AUDIT_abp_certification.md`.
+  table is still 18 until that swap.** Full record: `docs/audits/AUDIT_abp_certification.md`.
 - `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for `—` in
   `words.english` + `verses.text` (double hyphen only; Beer-sheba safe). FOLDED 2026-07-03: runs
   as a tail step of finish_rebuild.sh (after fix_split_merges — a "--" precondition there must
@@ -176,8 +176,8 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
 - `cert_manifest.py build|verify` + `cert_reparse_harness.py` — the ABP-certification feed pin
   (74 files, SHA-256, committed as `cert_manifest.json`) and the Tier A re-parse harness (full
   production build into `bible.db.new`, row-diff vs live, reports cert_report_summary.txt /
-  cert_deltas.tsv). Read-only on live. Records: `AUDIT_abp_certification.md` +
-  `AUDIT_abp_invariants.md`.
+  cert_deltas.tsv). Read-only on live. Records: `docs/audits/AUDIT_abp_certification.md` +
+  `docs/audits/AUDIT_abp_invariants.md`.
 - `cert_invariants.py [db]` / `--controls` — the runnable ABP invariant suite (Tier A CERTIFIED
   end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 7 checks: row pins
   (words 626,309 / verses 31,237 — the suite's own pin; an older "626,305" here was the

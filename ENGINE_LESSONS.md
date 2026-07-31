@@ -1,7 +1,7 @@
 # ENGINE_LESSONS.md — what the definition engine v2 should do differently
 
 Design-level lessons only. This file is NOT:
-- `AUDIT_lexica_rollout.md` (WHAT happened, per word — the authority on saga detail), or
+- `docs/audits/AUDIT_lexica_rollout.md` (WHAT happened, per word — the authority on saga detail), or
 - the standing rules in `CLAUDE.md` / memory (HOW we operate the current engine).
 
 It is the **v2 design backlog**: one entry per lesson, each pointing to its audit-doc entry for the
@@ -9,7 +9,7 @@ evidence. It grows by HABIT — add a line the moment a design-level finding is 
 Nothing here is scheduled work; it's the "if we rebuild the engine, change these" list.
 
 **Verification rule (standing):** every line that NAMES A WORD as evidence gets its citation checked
-against `AUDIT_lexica_rollout.md` before commit — not just dedupe-checked. The doc outranks recall,
+against `docs/audits/AUDIT_lexica_rollout.md` before commit — not just dedupe-checked. The doc outranks recall,
 including the author's. This file is written at the abstraction level where conflation happens: on
 2026-07-07 alone that guard caught the double-shelf production record and ἅγιον's regime classification
 both drifting from the doc.
@@ -1482,7 +1482,7 @@ both drifting from the doc.
     reported. The lesson passed its own pre-registered test (bar was "stronger if enumeration
     finds more than the three known") before it was written. Enumerate → classify → one shared
     fix — the survey is usually a cheap code-read; the third spot-fix is never cheap, it just
-    bills later. *(FRAME-0 audit, 2026-07-28; AUDIT_frame0.md; JP-ruled in)*
+    bills later. *(FRAME-0 audit, 2026-07-28; docs/audits/AUDIT_frame0.md; JP-ruled in)*
 
 90. **A count written into docs during a ship session is not a receipt — the table is. Derived
     tallies decay; re-count from the database at point of use, never carry a number forward.**

@@ -3,7 +3,7 @@
 STANDING RULE (audit tools must fail): every detector proves it fires on a KNOWN POSITIVE from
 the archived defect record before any of its zeros is trusted. These are those positives:
 
-  rendering-claim lint  — ἁμαρτία G266 pull-1 (AUDIT_lexica_rollout.md ~line 1341: gloss note
+  rendering-claim lint  — ἁμαρτία G266 pull-1 (docs/audits/AUDIT_lexica_rollout.md ~line 1341: gloss note
                           claimed the 2Co 5:21 rendering was "sin"; ABP's words-table rendering
                           is "sin offering" — self-refuting within the card) and οὐρανός G3772
                           attempt-1 (~line 569: note claimed capitalized "Heaven" was editorial;
@@ -216,7 +216,7 @@ def test_dynamic_budget_curve():
 
 # ── #30 floor-vs-ship placement diff (un-parked step 4, 2026-07-10) ──────────────────────────
 # Control positives are the three BANKED break records + the banked clean negative
-# (AUDIT_lexica_rollout.md: G1119 γόνυ pull-1 · G3538 νίπτω pull-1 · G2657 κατανοέω hinted
+# (docs/audits/AUDIT_lexica_rollout.md: G1119 γόνυ pull-1 · G3538 νίπτω pull-1 · G2657 κατανοέω hinted
 # draw-1 — the hard class · G1350 δίκτυον ruled-legal fold). PINNED facts (verse identities,
 # floor shapes, tallies) are from the audit doc; the OTHER cluster members are synthetic
 # scaffolding sized to the banked cluster shapes — the detector reads structure, not corpus.

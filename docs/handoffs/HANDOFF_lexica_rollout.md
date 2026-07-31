@@ -665,7 +665,7 @@
 > BUILD — PROCESS BREACH, CORRECTIVE LEDGER".
 
 Fresh-session handoff for continuing the frequency rollout. **The audit doc
-`AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,
+`docs/audits/AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,
 `d7695eb`, `91f74da`, `a06a90b`, `81cd58a`). This file is the rule-state + task-state summary;
 where they seem to differ, the doc wins (lesson banked from a πολύς/G80 conflation this session —
 trust the doc, not chat memory).
@@ -1017,12 +1017,12 @@ Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry
 BATCH-3 SESSION 3 — continue shadow calibration.
 State source of truth: close commit 4c7bcc9 ("batch-3 session-2 close"). Do not trust any number in
 this handoff over the docs at that commit.
-READ FIRST, in order: (1) HANDOFF_lexica_rollout.md — "HANDOFF PROCEDURE" block, then the BATCH-3
-SESSION 2 LOG block (the running record), then Queue item 4; (2) AUDIT_lexica_rollout.md — session-2
+READ FIRST, in order: (1) docs/handoffs/HANDOFF_lexica_rollout.md — "HANDOFF PROCEDURE" block, then the BATCH-3
+SESSION 2 LOG block (the running record), then Queue item 4; (2) docs/audits/AUDIT_lexica_rollout.md — session-2
 entries (G3900, G2965, G4808, G956 + SESSION 2 CLOSE); (3) ENGINE_LESSONS.md #33–#37 + the #32 update
 (+ #30–#32 if not already known).
 Opening check (clearing procedure): `git log --oneline -3` shows 4c7bcc9; `grep -c "BATCH-3 SESSION 2
-LOG" HANDOFF_lexica_rollout.md` returns ≥1; `grep -c "^37\." ENGINE_LESSONS.md` returns 1. All pass =
+LOG" docs/handoffs/HANDOFF_lexica_rollout.md` returns ≥1; `grep -c "^37\." ENGINE_LESSONS.md` returns 1. All pass =
 cleared, proceed; a failed check = rule-9 caveat, not a hold.
 State per the session-2 close at 4c7bcc9 (pointers, not restatements): batch 10 shipped / 2 escapes /
 2 parked / count 2/15 / streak 0; remaining 6 GREEN (ταμεῖον G5009 · βιβρώσκω G977 · διανοίγω G1272 ·
@@ -1176,8 +1176,8 @@ Study's return. Status detail: STATE.md Study line.)
 ## Audit CORRECTIVE-COMMIT SESSION CLOSED entry = the record, incl. the session's own
 ## ledger items + two standing-rule candidates for the build session's open.)
 (1) The working tree at C:\Users\JP\projects\bible-db holds the reviewer-affirmed
-corrective edits UNCOMMITTED (AUDIT_lexica_rollout.md, DESIGN_v11_acceptance.md,
-HANDOFF_lexica_rollout.md; on top of a9d518b). The diff was reviewed and
+corrective edits UNCOMMITTED (docs/audits/AUDIT_lexica_rollout.md, DESIGN_v11_acceptance.md,
+docs/handoffs/HANDOFF_lexica_rollout.md; on top of a9d518b). The diff was reviewed and
 receipt-confirmed in the reviewer chat 2026-07-12 (fourth delivery attempt).
 (2) One reviewer-flagged defect before commit: the SPENT V11 DESIGN PASS opener
 block's gate-shape line must read "V9/V10". DISK CHECK AT TERMINATION: line already
@@ -1400,7 +1400,7 @@ with delegation notes; JP touchpoints = paste-ready commands, screenshots, ship/
 notices only.
 READ FIRST, in order: (1) DESIGN_v10_repair.md STATUS block + the doc in full (the
 mechanism is BUILT + LIVE at 36dab20 and stays; the acceptance criterion FAILED AS
-WRITTEN); (2) AUDIT_lexica_rollout.md — V10 ACCEPTANCE TEST entry IN FULL (the
+WRITTEN); (2) docs/audits/AUDIT_lexica_rollout.md — V10 ACCEPTANCE TEST entry IN FULL (the
 mechanism/criterion split ruling, all six defects with classes, the three standing
 sub-rules, the housekeeping lock) + G227 RE-PARKED (THIRD); (3) ENGINE_LESSONS.md #50;
 (4) V9_PILE.md tail (fallback shape on record: two-stage roster draw = the V11-class
@@ -1464,7 +1464,7 @@ READ FIRST, in order: (1) DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6, conta
 in session-close 3696cc5 — mechanism,
 gate story, pre-set adjudication rules, ruled repair-prompt wording incl. the headline
 clause, acceptance test + staleness fallback, build order); (2) this handoff — the run
-session 2 STATE UPDATE chain above; (3) AUDIT_lexica_rollout.md — G1390 RE-PARKED (the
+session 2 STATE UPDATE chain above; (3) docs/audits/AUDIT_lexica_rollout.md — G1390 RE-PARKED (the
 pure squeeze park) + G227 RE-PARKED (SECOND) + G162 RE-PARKED entries; (4) V9_PILE.md
 tail (V10 charter seed + hint-echo leak + dash-expansion CHECK-FIRST items).
 Opening check: `git log --oneline -1` = d04b6e6 or a descendant · `python
@@ -1510,7 +1510,7 @@ BATCH 5 RUN SESSION 2 — V9 resume, word 1 = ἀληθής G227 (both retry tri
 #28 landed b1995e4/f1514ae, coverage fix landed d764bc7 + PROMOTED). ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (amendments 1–6) + the V9
 DESIGN PASS CLOSE RECORD above; (2) DESIGN_v9_lines.md IN FULL (the two lines + RULINGS);
-(3) AUDIT_lexica_rollout.md — V9 DESIGN PASS session record (extended correlation table)
+(3) docs/audits/AUDIT_lexica_rollout.md — V9 DESIGN PASS session record (extended correlation table)
 + G227 RE-PARKED + G2805 RE-PARKED entries; (4) scripts/draw_hints.py header + the G227
 entry; (5) ENGINE_LESSONS.md #47–49.
 Opening check: `git log --oneline -1` = the V9-promotion close commit or a descendant ·
@@ -1596,7 +1596,7 @@ V9 DESIGN PASS — two candidate lines, NO WORD RUNS (hard gate: charter amendme
 floors, no draws, no applies, no re-entries; the batch is PAUSED until the coverage fix
 lands AND is accepted). ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — charter amendments 5+6 + the s1 CLOSE RECORD
-above; (2) AUDIT_lexica_rollout.md — G2805 RE-PARKED entry IN FULL (carries the
+above; (2) docs/audits/AUDIT_lexica_rollout.md — G2805 RE-PARKED entry IN FULL (carries the
 cross-word attractor record + correlation table pointer) + G227 RE-PARKED entry;
 (3) V9_PILE.md in full; (4) ENGINE_LESSONS.md #47-48.
 Opening check: `git log --oneline -1` = the s1 close commit or a descendant; the charter
@@ -1643,7 +1643,7 @@ tails) · the s3 queue miscount stands against the reviewer ledger (re-count, ne
 BATCH 5 RUN SESSION 1 — hinted re-entry, word 1 = ἀληθής G227. Open from docs alone;
 state source of truth = close commit 8a4dceb. ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (RULED) + BUILD SESSION 1 RECORD
-+ the BATCH 4 CLOSED record in Queue item 5; (2) AUDIT_lexica_rollout.md — BUILD SESSION 1
++ the BATCH 4 CLOSED record in Queue item 5; (2) docs/audits/AUDIT_lexica_rollout.md — BUILD SESSION 1
 entry (walk 7/7, ἀλλάσσω leave-it ruling) + the G227 PARKED entry IN FULL; (3)
 scripts/draw_hints.py header + the G227 entry; (4) DESIGN_hint_tooling.md RULINGS block;
 (5) TODO.md batch-5 prep items (standing-query key-shape audit · section-matcher sweep —
@@ -1760,10 +1760,10 @@ items, nothing missing.
 ## number in a handoff.)
 BUILD SESSION 1 — rendering-layer fix + hint tooling. Open from docs alone; state source
 of truth = close commit 506f106. ("me/I" = JP.)
-READ FIRST, in order: (1) HANDOFF_lexica_rollout.md Queue item 5 — the BATCH 4 CLOSED +
+READ FIRST, in order: (1) docs/handoffs/HANDOFF_lexica_rollout.md Queue item 5 — the BATCH 4 CLOSED +
 RUN SESSION 3 records; (2) DESIGN_hint_tooling.md IN FULL (rulings at top — all five
 ruled, build order inside); (3) TODO.md "Def-engine rendering layer" ticket; (4)
-AUDIT_lexica_rollout.md — FRAGMENT-RENDERING INVESTIGATION entry + BATCH 4 CLOSED entry;
+docs/audits/AUDIT_lexica_rollout.md — FRAGMENT-RENDERING INVESTIGATION entry + BATCH 4 CLOSED entry;
 (5) V9_PILE.md (new: #49 pipeline exhibits ×3, verbatim-quote V9-general, checker
 exhibits).
 Opening check: `git log --oneline -1` shows 506f106 or a descendant; `grep -c "RULINGS
@@ -1815,13 +1815,13 @@ open batch-5 prep items.
 ## alone. State source of truth = close commit 4094dab (δίκτυον chain close; supersedes the
 ## wrap 8ab9468 pin); do not trust any number in a handoff over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks incl. the RUN
-SESSION 2 record) + the POST-S2 STATE ADD below; (2) AUDIT_lexica_rollout.md — δίκτυον
+SESSION 2 record) + the POST-S2 STATE ADD below; (2) docs/audits/AUDIT_lexica_rollout.md — δίκτυον
 RULING CHAIN entry (top) + G227 PARKED + G2168 PARKED + FLOOR-VOID entries; (3)
 ENGINE_LESSONS.md #47–#48; (4) V9_PILE.md (carve-invention = CONFIRMED V9 EDIT ×5;
 cross-lemma misattribution = NEW class, 2 exhibits).
 Opening check: `git log --oneline -1` shows 4094dab (or a descendant); `grep -c "^48\."
 ENGINE_LESSONS.md` returns 1; `grep -c "RULING CHAIN — RUN + CLOSED"
-AUDIT_lexica_rollout.md` returns 1. A failed check = rule-9 caveat, not a hold.
+docs/audits/AUDIT_lexica_rollout.md` returns 1. A failed check = rule-9 caveat, not a hold.
 State at 8ab9468 (pointers, not restatements): count 7/15 name-true (δίκτυον† unchanged,
 chain still QUEUED) · streak 1 · V8 live (stamp `lexica:7ef8620328a9`) · straight-to-10
 standing · 4 parked on the structure-hint shelf (διαιρέω, δόμα, εὐχαριστέω, ἀληθής —
@@ -1867,7 +1867,7 @@ G2805, one at a time, no compression.
 ## alone. State source of truth = close commit 25d4a40; do not trust any number in a handoff
 ## over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks), then the BATCH-4
-RUN state below; (2) AUDIT_lexica_rollout.md — G1390 PARKED entry (top) + G1516 entry +
+RUN state below; (2) docs/audits/AUDIT_lexica_rollout.md — G1390 PARKED entry (top) + G1516 entry +
 BATCH-4 CORPUS-DEFECT FIRE entry + N=6-7 entry; (3) ENGINE_LESSONS.md #45–#46; (4) V9_PILE.md.
 State at 25d4a40 (pointers, not restatements): **COUNT 7/15 name-true — δίκτυον†, σελήνη,
 ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός** († = the queued δίκτυον contamination
@@ -2072,7 +2072,7 @@ reopen: πολύς, ἄκανθα, κύων.
 CLOSE-OUT STACK SESSION — the batch is done; this session adjudicates and synthesizes. No new
 words. State source of truth: the docs at the close commit (git log will show it as the wrap
 commit, 2026-07-10). Read first, in order: (1) this block + STANDING LAW + R1–R4 above;
-(2) AUDIT_lexica_rollout.md session-5 entries (G4061, G4645, G5281, G5009, G2657 — each has
+(2) docs/audits/AUDIT_lexica_rollout.md session-5 entries (G4061, G4645, G5281, G5009, G2657 — each has
 watch, floor adjudication, pull ledger, rulings, ship record); (3) ENGINE_LESSONS.md #38–#41.
 **1. FINAL STATE (do not re-derive; 18 RULED by JP session 6, 2026-07-10 — see the audit doc's
 FINAL-TALLY CORRECTION entry):** batch-3 = **18 shipped / 2 escapes (γόνυ, νίπτω — both
@@ -2983,7 +2983,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 3. Ship the first passer: `build_lexica_def.py --apply --word G#### --from-draw KEY8` (KEY8 printed
    by the draw; no model call on apply).
 4. Post-ship: confirm `no model call`, gate pass, stamp current, senses on disk match.
-5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
+5. Log the word in `docs/audits/AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
 - **BATCH-2 ACTIVE WORK CLOSED 2026-07-08 — 17 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία — ἁμαρτία since
@@ -3316,7 +3316,7 @@ feeds it). Item text kept below as the historical bank.
 - **Gloss_notes assertion-verification (NEW, οὐρανός 2026-07-07).** New defect class: gloss_notes can make
   plausible-but-false factual claims about the translation (the citation gate checks refs, not assertions).
   Standing manual check adopted (spot-verify translation-practice claims before ship); mechanizable
-  position-check probe is a retro candidate. Full record: `AUDIT_lexica_rollout.md` apparatus-findings block.
+  position-check probe is a retro candidate. Full record: `docs/audits/AUDIT_lexica_rollout.md` apparatus-findings block.
 - **Substitution-probe (NEW).** Bare headword-substitution with no signature collocate (Luk 15:18 "sinned
   against heaven") is invisible to reviewer/gates/collocations. "Kingdom of heaven" is NOT blind (βασιλεία
   collocate catches it). Minor; decide if a probe is worth building across the whole rollout.
@@ -3329,7 +3329,7 @@ feeds it). Item text kept below as the historical bank.
 - `scripts/rank_lexica_candidates.py` (candidate list; `--skip-built`, OBL/STRC/FUNC flags)
 - `scripts/check_draw_citations.py` (prose-fix sweep — run after any Tier B corpus prose fix)
 - `contested_register.py` (fork words — excluded from rollout) · `scripts/build_word_gloss.py`
-  (header gloss OVERRIDES) · `AUDIT_lexica_rollout.md` (the authority) · `docs/claude/ai.md`
+  (header gloss OVERRIDES) · `docs/audits/AUDIT_lexica_rollout.md` (the authority) · `docs/claude/ai.md`
   (the Tier B prose-fix → draw-sweep standing rule) · `ENGINE_LESSONS.md` (design-level v2 backlog —
   one line per lesson, grows by habit; distinct from the audit doc's per-word saga)
 - **Locking tests (run under pytest or as plain scripts; both in CI + pre-commit):**

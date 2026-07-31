@@ -5,7 +5,7 @@ Notes `7c9dd93`). Study is the last tab on the OLD single-column mobile branch
 (`.study-view .study-mobile`, `static/src/55-study.jsx`).
 
 **TWO GATES BEFORE ANY BUILDING — both can stop this session dead:**
-1. **News's bar must be verified-by-shape first** (`HANDOFF_news_fixture.md`). Study cites News
+1. **News's bar must be verified-by-shape first** (`docs/handoffs/HANDOFF_news_fixture.md`). Study cites News
    as its reference pattern; a reference must be verified before it is cited.
 2. **Study is admin-gated and DOWN FROM PUBLIC** (JP ruling 2026-07-10, standing): its priority
    follows Study's return from conceptual-stage hold. It is **tracked, not ordered**. JP's
@@ -24,7 +24,7 @@ mode-following slot, the cross-tab reuse rule); "WORD STUDY IS THE VISUAL REFERE
 the Notes + Ask-corpus arcs in TODO_ARCHIVE.md.
 
 PREREQUISITE — HARD GATE: if News's bar is not yet verified-by-shape, STOP and run
-HANDOFF_news_fixture.md first. Study cites News as its reference pattern, and the reference must
+docs/handoffs/HANDOFF_news_fixture.md first. Study cites News as its reference pattern, and the reference must
 be verified before it is cited. This is not a preference and not a "should" — do not proceed
 past it under momentum.
 

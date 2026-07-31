@@ -80,7 +80,7 @@ MAX_EXAMPLES  = 6    # example refs shown per flagged collocation.
 PMI_MIN = 4.0
 
 # ── Collocation FLAG gate (adopted 2026-07-03 from the round-2 flag audit; full rationale in
-# AUDIT_lexica_rollout.md, batch-two-prep item 7). The stored `collocations` list stays COMPLETE at
+# docs/audits/AUDIT_lexica_rollout.md, batch-two-prep item 7). The stored `collocations` list stays COMPLETE at
 # tightness >= PMI_MIN (4.0) for reference; a collocation only becomes an advisory FLAG (the
 # reader-facing rollup) at a HIGHER bar: tightness >= FLAG_PMI_MIN AND the neighbor is not a
 # flag-stoplisted function word. 5.0 held after reading the batch's near-miss band — dropping to 4.5

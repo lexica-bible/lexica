@@ -12,7 +12,7 @@
 # ============================ FRAME CORRECTION (2026-07-24, same day) ============================
 # The verdicts below were argued on the NUMBER axis (import_tipnr's match ladder). Checked against
 # the source bucket afterward: pn_binding_numonly.txt rows are "number-matched, name didn't match,
-# floored" (AUDIT_provenance_sweep.md section 4) - these words already HAVE numbers; what they lack
+# floored" (docs/audits/AUDIT_provenance_sweep.md section 4) - these words already HAVE numbers; what they lack
 # is the ENTITY BIND, and the binder (entity_resolution.py) keeps its OWN separate VARIANT_ALIASES
 # and does NOT read scripts/tipnr_alias_variants.py. Two consequences, stated plainly:
 #  - The 11 ACCEPT reasons overstated: 10 of 11 already resolve to the SAME number via

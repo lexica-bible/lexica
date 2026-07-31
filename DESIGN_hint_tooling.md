@@ -74,7 +74,7 @@ card's prose into a draw. Constraint hints stay on the right side of that line b
 
 ## The roster class (path (c)) — a DISTINCT legal class
 
-Added by PATH (c) DESIGN — CLOSED (AUDIT_lexica_rollout.md, 2026-07-13; reviewer-adjudicated
+Added by PATH (c) DESIGN — CLOSED (docs/audits/AUDIT_lexica_rollout.md, 2026-07-13; reviewer-adjudicated
 under JP's standing delegation). The AUDIT entry is the source of truth; this section names
 the class so the hand-carve ban above stays unambiguous.
 
@@ -115,7 +115,7 @@ DRAW_HINTS = {
       "Cite every reference under exactly ONE sense; a verse carrying two senses (e.g. 1Ch 5:21 persons+property) is stated as a named dual, never silently listed twice.",
     ],
     "jobs": [],            # optional stable-jobs lines (existing mechanism's content)
-    "provenance": "AUDIT_lexica_rollout.md G162 PARKED entry, 2026-07-12; JP batch-close ruling",
+    "provenance": "docs/audits/AUDIT_lexica_rollout.md G162 PARKED entry, 2026-07-12; JP batch-close ruling",
   },
   ...
 }

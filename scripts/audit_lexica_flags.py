@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """audit_lexica_flags.py — READ-ONLY. Inspect the uncited-collocation flags across the built Lexica
 entries and score them against the ADOPTED flag gate (PMI floor + neighbor stoplist + mutual dedup;
-the share cap was dropped — see AUDIT_lexica_rollout.md batch-two-prep #7). Prints every flag with
+the share cap was dropped — see docs/audits/AUDIT_lexica_rollout.md batch-two-prep #7). Prints every flag with
 its columns, the survivors, the near-misses (fail exactly one threshold), and the σάββατον/οὕτω
 sanity pair. Writes NOTHING.
 

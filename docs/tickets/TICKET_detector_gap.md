@@ -78,7 +78,7 @@ state. Read-only checks for JP in the session hand-off.
 
 ## The finding
 JP spotted Mat 26:1 ("Jesus finished") as a PN-star merged-verb case. It is NOT in
-AUDIT_pn_star_verb_merge.md's catalogued 145 — the doc's only Matthew-26 entry is 26:4.
+docs/audits/AUDIT_pn_star_verb_merge.md's catalogued 145 — the doc's only Matthew-26 entry is 26:4.
 So the sweep's list is INCOMPLETE and must not be treated as the full population: fixing
 off the 145 (or the 509 article-slot set) as-is would close the ticket with the same
 class still live at every slot the detector never saw.
@@ -114,6 +114,6 @@ from the doc's lines and getting a control hit (Mat 26:4). Every "not found" in 
 re-sweep needs the same control-hit proof — a zero without a fired control is not a zero.
 
 ## Pointers
-- AUDIT_pn_star_verb_merge.md — mechanism, the 145 list, detector control history.
+- docs/audits/AUDIT_pn_star_verb_merge.md — mechanism, the 145 list, detector control history.
 - tests/test_pn_star_verb_merge.py — regression pin (flips to the split shape when fixed).
 - TODO.md "PN-STAR MERGED-VERB CLASS" — the held fix-session ticket this gates.

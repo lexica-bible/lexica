@@ -11,7 +11,7 @@ G1390 sig bc1e2f690e17 / prose_sha e29c0a75e864 (both repaired round 1,
 repair:4730e155f73d — draw-file fields `repaired`/`repair_rounds`, NOT `repair`;
 an early probe read the wrong key and printed None, which means nothing).
 Verse texts are verses.text bytes from the same consult. The six defects are the
-V10 ACCEPTANCE TEST entry's adjudicated kills (AUDIT_lexica_rollout.md).
+V10 ACCEPTANCE TEST entry's adjudicated kills (docs/audits/AUDIT_lexica_rollout.md).
 G2168 no-op control: shipped zero-defect card, sig b1c14fb6c2ef.
 
 Red-first: this file was run BEFORE the detectors existed and failed

@@ -48,7 +48,7 @@ DRAW_HINTS = {
             "state (events from surrounding chapters stay out of a verse's description).",
         ],
         "jobs": [],
-        "provenance": "AUDIT_lexica_rollout.md G1244 PARKED entry (batch-4 word 1, 2026-07-09/10) "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G1244 PARKED entry (batch-4 word 1, 2026-07-09/10) "
                       "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
     },
     "G1390": {   # δόμα — gift
@@ -73,7 +73,7 @@ DRAW_HINTS = {
                  "Exo 28:38","Eze 46:5","Eze 20:31","2Ch 31:14","Ecc 5:1"]],
             "seams": [], "float": ["Num 27:6"],
             "provenance": "floor agreement_G1390_v9_20260712-181939.json pole-affinity, sharpened anchors Mat 7:11 / Num 18:6 (2/10 clean) + modal count; count-anchored; Psa 68:18+Eph 4:8 homed A on the sharpened read (float premise falsified); ruling 2026-07-13"},
-        "provenance": "AUDIT_lexica_rollout.md G1390 PARKED entry (batch-4 word 2, 2026-07-10/11) "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G1390 PARKED entry (batch-4 word 2, 2026-07-10/11) "
                       "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Eph 4:9-11 pin: V9 floor agreement_G1390_v9_20260712-181939 (real-miss "
                       "Eph 4:9/4:10/4:11 in draw 8, passage-tail neighbor-slip) + the ruled "
@@ -91,7 +91,7 @@ DRAW_HINTS = {
             "list the verses out.",
         ],
         "jobs": [],
-        "provenance": "AUDIT_lexica_rollout.md G2168 PARKED entry (batch-4 word 3, 2026-07-10/11) "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G2168 PARKED entry (batch-4 word 3, 2026-07-10/11) "
                       "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Luk 22:18 pin: V9 floor agreement_G2168_v9_20260712-174545 (real-miss "
                       "Luk 22:18 in draws 2/6, neighbor-slip class) + the G227 Joh 8:15 pin "
@@ -125,7 +125,7 @@ DRAW_HINTS = {
             "float": ["Rom 3:4","Mar 12:14","Mat 22:16","Neh 7:2","Joh 7:18","2Co 6:8"],
             "excluded": ["Joh 8:15"],
             "provenance": "floor agreement_G227_v9_20260712-154728.json 3-anchor (Gen41:32/Joh8:13/Pro1:3) + Isa 42:3 own company (two reads converge) + modal count; membership-anchored (count soft, #30 the enforcer); ruling 2026-07-13"},
-        "provenance": "AUDIT_lexica_rollout.md G227 PARKED entry (re-selection r14, run session 2, "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G227 PARKED entry (re-selection r14, run session 2, "
                       "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Joh 8:15 pin: V9 floor agreement_G227_v9_20260712-154728 (real-miss Joh 8:15 "
                       "in draws 1/4/6/9/10, adjudicated one class, neighbor-slip) + JP add ruling "
@@ -143,7 +143,7 @@ DRAW_HINTS = {
             "seasons shall change over you' — quote one verse and name it, never blend the pair.",
         ],
         "jobs": [],
-        # PATH (c) roster — copied BYTE-FOR-BYTE from AUDIT_lexica_rollout.md "PATH (c) DESIGN —
+        # PATH (c) roster — copied BYTE-FOR-BYTE from docs/audits/AUDIT_lexica_rollout.md "PATH (c) DESIGN —
         # CLOSED" (2026-07-13; lesson #51). HOME-anchored: the #30 membership guard is the enforcer.
         "roster": {
             "floor": "agreement_G236_v9_20260712-165959.json", "count": 2,
@@ -155,7 +155,7 @@ DRAW_HINTS = {
             "seams": [{"ref":"Jer 13:23","group":2,"why":"floor 5/5 true seam; ruled transformation (V11.2 #30 park — d3 drifted it to substitution)"}],
             "float": [],
             "provenance": "floor agreement_G236_v9_20260712-165959.json modal homes + AUDIT G236 V11.2 park (Jer 13:23 #30) + draw_hints Gal 4:20/Lev 27:10 rulings; hint-1 (Isa 40:31/41:1) RETIRED into this roster; ruling 2026-07-13"},
-        "provenance": "AUDIT_lexica_rollout.md G236 PARKED entry (re-selection r15, run session 3, "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G236 PARKED entry (re-selection r15, run session 3, "
                       "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Hint (Dan-trio quote discipline) ADDED at the V11 run session (2026-07-12): "
                       "drafted in the G236 RE-PARKED entry (batch-5 run session 2), amendment-2 "
@@ -177,7 +177,7 @@ DRAW_HINTS = {
             "or not quoted; trims are marked with an ellipsis.",
         ],
         "jobs": [],
-        "provenance": "AUDIT_lexica_rollout.md G2805 PARKED entry (re-selection r16, run session 3, "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G2805 PARKED entry (re-selection r16, run session 3, "
                       "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
     },
     "G5088": {   # τίκτω — bear/give birth
@@ -187,7 +187,7 @@ DRAW_HINTS = {
             "construction, or describe the verse without quoting it.",
         ],
         "jobs": [],
-        "provenance": "AUDIT_lexica_rollout.md G5088 PARKED entry (2026-07-14) + quote-repair "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G5088 PARKED entry (2026-07-14) + quote-repair "
                       "cap-out (V11.2 cap 1, draw 79d00733 DEAD, refused repair banked "
                       "G5088_quote_refused_79d00733.json, 2026-07-15): the model normalized "
                       "ABP's 'of which ... there' to 'where' twice (draw + repair). Jer 22:26 "
@@ -203,7 +203,7 @@ DRAW_HINTS = {
             "1Ch 5:21 persons+property) is stated as a named dual, never silently listed twice.",
         ],
         "jobs": [],
-        "provenance": "AUDIT_lexica_rollout.md G162 PARKED entry (queue word 1, run session 3, "
+        "provenance": "docs/audits/AUDIT_lexica_rollout.md G162 PARKED entry (queue word 1, run session 3, "
                       "2026-07-12; hint candidates reviewer-banked in that entry); JP batch-close "
                       "ruling 2026-07-12",
     },

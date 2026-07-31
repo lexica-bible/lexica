@@ -1,6 +1,6 @@
 # PLAN — R-2 stage 1: Greek identity ADDED ALONGSIDE (Hebrew stays authoritative)
 
-Drafted 2026-07-24 under the five approved rulings (HANDOFF_r2_greek_names.md) and the
+Drafted 2026-07-24 under the five approved rulings (docs/handoffs/HANDOFF_r2_greek_names.md) and the
 reviewer's stage-1 go. Charter: purely ADDITIVE — after this run every reader, join, and
 count behaves byte-for-byte as before; the only new things are side tables and audit
 reports. The flip (stage 2) is a later code deploy; nothing here is user-visible.

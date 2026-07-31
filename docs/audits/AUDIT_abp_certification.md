@@ -87,7 +87,7 @@ inventory, consumer blast-radius map, seeded known-defect ledger. See the Sessio
 # Session 1 — invariant enumeration + re-parse harness + correction-table proposal (2026-07-03)
 
 **Deliverables landed this session:**
-- **Invariant catalog** → `AUDIT_abp_invariants.md` (S1–S17 structural + P1–P21 per-pass, each with
+- **Invariant catalog** → `docs/audits/AUDIT_abp_invariants.md` (S1–S17 structural + P1–P21 per-pass, each with
   check sketch, known-positive control, tier, and status; existing gates folded in, accepted limits
   fenced off). Runnable suite = Session 2.
 - **Feed-pin manifest tool** → `scripts/cert_manifest.py` (`build` refuses while L1-class lines exist;

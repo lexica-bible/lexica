@@ -3536,7 +3536,7 @@ the audit entries quoted line-for-line against the fixture constants; scaffoldin
 NOT corpus counts and are labeled as such in the test file) · V8 difflib output re-printed +
 would-be stamp `lexica:7ef8620328a9` + per-edit trace.
 **3. Disk pointers, verified against file:line at relay time:** WS3 noise-families→tooling =
-HANDOFF_lexica_rollout.md:511-512 (step-4 opener item 2) + this doc's STEP 3 item 6
+docs/handoffs/HANDOFF_lexica_rollout.md:511-512 (step-4 opener item 2) + this doc's STEP 3 item 6
 (":2090-2091", "noise families = fix candidates; load-bearing set stays") · ὑπομονή
 recognition-class-only = HANDOFF:509 + this doc :2064 (STEP 3 pick: "recognition-fires are
 NOT human catches") · gap-work docs authorization = HANDOFF:520 ("all JP-independent, ruled
@@ -4235,7 +4235,7 @@ pre-registration, κατανοέω) · RED remaining 2 (περιτομή, σκλ
 batch remainder.
 
 ### SPLITTER-FIX SESSION OPENING FAILS — POST-MORTEM (banked 2026-07-09; rules R1–R4 drafted
-### into HANDOFF_lexica_rollout.md SESSION-DISCIPLINE RULES)
+### into docs/handoffs/HANDOFF_lexica_rollout.md SESSION-DISCIPLINE RULES)
 **FAILS (four, splitter-fix session 2026-07-09):**
 1. **Wrong script from recall** — wrote `lexica_def.py --strongs` (wrong name AND wrong flag)
    for the floor command. ~~Self-caught before execution~~ **AMENDED 2026-07-09, reconciled
@@ -7180,7 +7180,7 @@ KILL probability, not conversion probability.
 
 **STATE: ZERO model spend. Ten neighbour suites green. Scoreboard UNCHANGED `3/10ʰ · 7/15`.** V9
 frozen and untouched; no card, roster, or floor touched. **SHELF: item 2 = the PA-side drift check
-(`TICKET_p2_guard_drift_check.md`, JP's call, written up not designed) · prose-economy (JP's
+(`docs/tickets/TICKET_p2_guard_drift_check.md`, JP's call, written up not designed) · prose-economy (JP's
 inquiry).**
 
 ---

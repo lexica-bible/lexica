@@ -365,7 +365,7 @@ UNTOUCHED and NOT forced into RightStack. ThreeZone retired.
 layout; rail = threads, center = answer, inspect = the selected answer's provenance (Key passages
 + a merged "Words in scope" list). A synthesis chip + passage rows PEEK the occurrence → fork →
 word drill (`.ac-rstack`, top:0). **Mobile now on the shell's collapse too (2026-07-15)** — see the
-collapse block below. Spec: `HANDOFF_corpus_shell.md` + memory `project_three_zone_shell`.
+collapse block below. Spec: `docs/handoffs/HANDOFF_corpus_shell.md` + memory `project_three_zone_shell`.
 
 **`.ac` carries a pre-existing `overflow-x: hidden` — SAFE CLEANUP CANDIDATE, not urgent.**
 It predates the mobile pass and masks any sideways overflow inside Ask-corpus. The scroll JP
@@ -756,7 +756,7 @@ certain (`useState(() => willFetch)`), `undefined`-means-loading sentinels, and 
 `greekIdPending`-style hero hold (30-detail-panel.jsx). Two traps: (1) every seeded/held
 flag needs a RELEASE on its no-fetch path or it sticks worse than the flash it fixes;
 (2) a fetch-effect guard that reads its own state can see the stale value after a word
-change and skip the fetch — freeze under a hold. Full record: AUDIT_frame0.md (8 sites,
+change and skip the fetch — freeze under a hold. Full record: docs/audits/AUDIT_frame0.md (8 sites,
 one root cause). Verifying flashes on the hidden harness tab: rAF doesn't fire and timers
 clamp — use fixed setTimeout snapshots + artificially delayed fetches, not polling.
 

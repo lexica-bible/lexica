@@ -21,7 +21,7 @@
   surface). No stage-2 reopen. Flags on record:
   Βουγαίου = TIPNR's own G9826 form (source-faithful); SEO pages mixed-keyed by design.
 
-Drafted 2026-07-24 off HANDOFF_r2_greek_names.md's stage-1 close-out. Stage 2 is a CODE
+Drafted 2026-07-24 off docs/handoffs/HANDOFF_r2_greek_names.md's stage-1 close-out. Stage 2 is a CODE
 deploy, git-revertible — no rebuild, no database swap. The words table is untouched;
 everything the readers start showing comes from the stage-1 side tables already live
 (`pn_greek_identity` 32,479 rows, `step_lexicon` 10,846 rows). KJV/BSB stay

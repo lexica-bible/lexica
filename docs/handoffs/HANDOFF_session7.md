@@ -41,14 +41,14 @@ check-7 both-directions.**
 
 ## Carry-forward (each already doored)
 1. **L5 — 9 source readings (async, JP).** Re-derived authoritative list (query saved verbatim in
-   `AUDIT_abp_certification.md` L5 entry). The 9 CANDIDATES: 2Ki 18:9 p9 · 2Ki 18:10 p12 · 2Ki 25:8 p9
+   `docs/audits/AUDIT_abp_certification.md` L5 entry). The 9 CANDIDATES: 2Ki 18:9 p9 · 2Ki 18:10 p12 · 2Ki 25:8 p9
    (G846 "this is") · 1Ch 27:6 p0 · Ezr 7:6 p0 (G846 "This") · Dan 4:33 p1 · Eze 36:32 p4
    (G1473) · 1Co 1:24 p1 (G846 "to these") · Mat 3:15 p9 (G3779 "for to this"). Each: read vs the
    ABP app — αὐτός/ἐγώ can legitimately render "this/same"; real mistags → correction rows via the
    L2/L10 door (dry-run → JP go → guarded apply → check 4 green).
 2. **Luke 23:38 Tier B candidate.** The word "Hebrew" now renders the Hebrews-PEOPLE card (was a
    floor) — a source-reading question (does TIPNR rightly file a language verse under the people).
-   Rides the ABP-app pass; gates nothing. Full note in `AUDIT_entity_seam.md`.
+   Rides the ABP-app pass; gates nothing. Full note in `docs/audits/AUDIT_entity_seam.md`.
 3. **`import_tipnr.py` twin bug.** Its own separate parser has the same header-first defect (line 97),
    so the `tipnr` table also types the 10 mixed places as person. MASKED for all 97 bound cards (a
    bind gates the metaV path off), so no urgency. Fix = same 3 classes in that parser; needs a words

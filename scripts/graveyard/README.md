@@ -5,7 +5,7 @@ rows; residue = exactly the 11 pre-registered live-stale verses, nothing else) p
 that a full rebuild — `build_words_from_abp.py` + `finish_rebuild.sh` + the
 `abp_corrections` table — reproduces the live corpus without any of them. Do NOT run
 them against the live db; they are kept only as historical reference for how each fix
-was first worked out. Full record: AUDIT_abp_certification.md.
+was first worked out. Full record: docs/audits/AUDIT_abp_certification.md.
 
 Why each one is here:
 

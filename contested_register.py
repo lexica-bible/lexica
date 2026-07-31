@@ -275,12 +275,12 @@ CONTESTED_VERSES = {
         "fork": "ἁμαρτία rendering fork — \"sin\" vs \"sin offering\" (LXX חַטָּאת precedent); "
                 "reviewer shelf-tally: no majority shelf (act 4 / cultic 3 / condition 2 / "
                 "double-listed 1)",
-        # VERBATIM from AUDIT_lexica_rollout.md, ἁμαρτία G266 PARKED dossier (2026-07-08):
+        # VERBATIM from docs/audits/AUDIT_lexica_rollout.md, ἁμαρτία G266 PARKED dossier (2026-07-08):
         "bar": "Branch-A consequence: ABP adjudicated the fork; the card reports the rendering; "
                "the both-ways bar operationalized = \"ABP renders with the sacrificial sense, "
                "following the LXX חַטָּאת use\" passes; \"the Greek means sin-offering here\" "
                "fails; \"simply sin, mistranslated\" also fails.",
-        "source": "AUDIT_lexica_rollout.md · ἁμαρτία G266 PARKED dossier · 2026-07-08",
+        "source": "docs/audits/AUDIT_lexica_rollout.md · ἁμαρτία G266 PARKED dossier · 2026-07-08",
     },
 }
 

@@ -4,7 +4,7 @@
 Tier B of the certification standard: a source defect is never silently fixed in place.
 Each one becomes a row here, applied at rebuild time by scripts/apply_abp_corrections.py
 (finish_rebuild.sh step 7 — the true final tail step). Schema + first entries approved
-at the Session 1/2 checkpoints (see AUDIT_abp_certification.md).
+at the Session 1/2 checkpoints (see docs/audits/AUDIT_abp_certification.md).
 
 SEED ENTRIES (adjudicated from cert harness run 1, 2026-07-04):
   * Cushi x6 — 2Sa 18, strongs_base H3570 -> H3569 (Class 2; migrates

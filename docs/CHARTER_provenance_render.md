@@ -9,7 +9,7 @@ Shaul Gen 46:10 (combined badge + own-line chip + no echo) · Gen 1 overview (AI
 Baal (plain-TIPNR negative case, then own-line chip) · Pharisee ("Group") · David Mat 1:6
 (name-path caveat line, plain metaV badge).
 
-Chartered 2026-07-16 off the audit (`AUDIT_provenance_sweep.md`); JP picked it as next.
+Chartered 2026-07-16 off the audit (`docs/audits/AUDIT_provenance_sweep.md`); JP picked it as next.
 Spec of record: `docs/PROVENANCE_CONTRACT.md`. Scope = DISPLAY code only
 (`static/src/30-detail-panel.jsx` + `views_summary.py` for the AI tag payload if needed);
 no binder, no tables, no data changes. Each item lands as its own commit; JP screenshots

@@ -30,7 +30,7 @@ def test_every_entry_names_provenance_and_one_line_hints():
     for sid, e in DRAW_HINTS.items():
         assert sid[:1] == "G" and sid[1:].isdigit(), f"{sid}: keys are G-prefixed"
         assert e.get("provenance", "").strip(), f"{sid}: provenance is REQUIRED (design doc)"
-        assert "AUDIT_lexica_rollout.md" in e["provenance"], f"{sid}: provenance must name the audit doc"
+        assert "docs/audits/AUDIT_lexica_rollout.md" in e["provenance"], f"{sid}: provenance must name the audit doc"
         assert e.get("hints"), f"{sid}: entry with no hint lines"
         for h in e["hints"]:
             assert h.strip() and "\n" not in h, f"{sid}: hints are ONE line each"

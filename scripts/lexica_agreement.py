@@ -233,7 +233,7 @@ No preamble, no restating the lemma, no closing summary.
 # ── V8 DRAFT (step 4, 2026-07-10) — a CANDIDATE, not the engine. DRAFTED, NOT FIRED: the live
 # default everywhere stays v7 until JP's step-4 ruling list returns and the step-5 control fire
 # runs (close-plan sequencing). Four edits over V7, each traceable to a ruled pile item (the
-# per-edit table is banked in AUDIT_lexica_rollout.md, STEP-4 entry):
+# per-edit table is banked in docs/audits/AUDIT_lexica_rollout.md, STEP-4 entry):
 #   A (#29) attribution register — attribute-not-adjudicate pass-shape for disputed verses
 #     (ἁμαρτία: 7 pulls, containment worked / generation never did; dossier pass-shape codified)
 #   B (#40) sub-use architecture freight — name sub-uses by job in the verses' own terms, never

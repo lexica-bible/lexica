@@ -1,6 +1,6 @@
 # R-2 stage 3 — pre-scoping evidence pass (read-only; goes to the reviewer)
 
-Written 2026-07-24 per HANDOFF_r2_greek_names.md "Stage 3 — opening context" work
+Written 2026-07-24 per docs/handoffs/HANDOFF_r2_greek_names.md "Stage 3 — opening context" work
 item 5. Every code claim below was read at the cited file/line TODAY (not carried
 from the stage-2 consumer doc — lines re-verified against current source). No code
 changed; no sequence recommendation anywhere in this doc — sequencing is the
