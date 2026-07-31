@@ -313,12 +313,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 - **JP side-notes 2026-07-30:** (1) LSJ header mislabel — FIXED + DEPLOYED same
   day: Strong's-fallback entries (views_lsj source='strongs') now head "Strong's
   Dictionary" with own badge, never the LSJ header (mislabeled source +
-  silent-fallback rule; label JP-approved). (2) OPEN: Hebrew OT prose-mode
-  English "looks bolder" than chip mode — desktop-Chrome live check found the
-  two modes byte-identical in computed font/weight/size/color, so it's either
-  phone-specific rendering or a different comparison pair (e.g. ABP chips with
-  Interlinear on, which grays English to ink-2). Needs JP's screenshot or the
-  names of the two screens compared.
+  silent-fallback rule; label JP-approved). (2) Hebrew "bolder English" — ROOT CAUSED
+  2026-07-30 (live measurement, Gen 1 + Psa 9, all toggle combos): size/weight
+  identical everywhere (18px/400); the effect is the DELIBERATE ink-2 dimming of
+  the English line while the Interlinear toggle is on (.lib-interlinear-on
+  .lib-iw-english). JP's chip screenshot had the layer on (dimmed), prose had it
+  off (full ink) — toggle state, not mode. Pending JP's one-tap confirm; if the
+  dimming reads too strong on phone, that's a design-tweak ruling, not a bug.
 - **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
   superscription clicks dropped the verse ref, model asked "which one?" and it cached;
   the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this
