@@ -306,6 +306,11 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
+- **Word-study name-form lane: no in-verse highlight (JP-raised 2026-07-30,
+  screenshot: Ωδουίας from the Neh 8:7 hodijah card):** the occurrence list finds
+  the verses (Neh 8:7, 9:5) but "Hodijah" isn't highlighted in the prose. Likely
+  the highlighter keys off an English rendering the name-form (no-Strong's) lane
+  doesn't supply. Diagnose in the word-study finder result render before fixing.
 - **Card provenance-tag placement (JP-raised 2026-07-30, next session, visuals =
   JP approval):** the source tag (TIPNR badge etc.) moves to sit UNDER the
   description line — not beside it, not in the section header — so description →
