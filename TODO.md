@@ -730,25 +730,50 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **PN-STAR MERGED-VERB CLASS — GATED on docs/tickets/TICKET_detector_gap.md (2026-07-31):
-  the catalogued 145 is INCOMPLETE (Mat 26:1 "Jesus finished" G5055 missed — content-number-
-  first shape). Detector patch + control-fired re-sweep + revised count come BEFORE any fix
-  session; do not fix off the 145/509 lists as-is.**
-  ABP source attaches a verb/content word's English to the adjacent proper-noun star chunk
-  ("scourging Jesus,G* G5417" Mat 27:26; "calls ElijahG* G5455" Mat 27:47), and
-  `_split_compounds` skips star slots — so the built words table puts the verb on the name's
-  chip and leaves the verb's own G-number slot blank. **145 spots corpus-wide** (scan:
-  scratchpad scan_pn_verb_merge.py logic, detector control-fired on both known positives;
-  top books Acts 26, Isaiah 14, Matthew 8). Same family non-star case: Mat 28:13 "His
-  disciples" (G3101 carries "His"; the following G1473 slot is blank — "His" is real Greek,
-  NOT a translator italic). Any fix = build-side redistribution for star slots + rebuild;
-  regression pin lives in `tests/test_pn_star_verb_merge.py` (flip it to the split shape
-  when the fix lands). NO data writes done.
-  **Subpattern B added 2026-07-31b (1Ki 9:26 "the city" G3588):** content noun on a bare
-  ARTICLE slot with no number of its own — 509 candidates corpus-wide (951 raw minus the
-  legit "the thing(s)" article rendering); list appended to the same audit file. ⚠ Mixed
-  origins: some are ABP-attested supplied English over the article (1Co 1:25 "the wisdom"),
-  NOT number drops — the cert session must sort display treatment vs data fix per spot.
+- **① 509 ARTICLE-SLOT RE-SWEEP — NEXT UP, own session. Charter seed:
+  `docs/handoffs/HANDOFF_2026-07-31_next_cc.md`.** The 509 list has the SAME mirror blind
+  spot the star-verb sweep had, plus an exclusion rule that is both wholesale and
+  inconsistent — so it is NOT fixable-against as it stands. Evidence: `Act 19:4 'Jesus the'`
+  IS in the list (control hit), while `Mat 20:22` ("JesusG3588 G* said,G2036" — Jesus on the
+  article slot, name's own star blank), `2Sa 12:9 'Uriah'` and `Gen 22:21 'Huz'` are absent
+  despite being the same shape and the same user-visible defect (card heads with the article
+  ὁ instead of the word clicked). Its stated "adjacent-empty-slot cases EXCLUDED" rule drops
+  **3,564** article slots wholesale yet Act 19:4 survived it anyway. Deliverable: a detector
+  built like `scripts/audit_pn_star_verb_merge.py` — predicate in the header, read-only,
+  source-side, ≥3 controls incl. a known miss AND a known hit, red-first proof, HALT path
+  proven live. Must resolve the 3,564 explicitly: take them in with a written rationale, or
+  bin them as a reported class. Nothing silently dropped.
+
+- **② PN-STAR MERGED-VERB FIX SESSION — GATED on ① (both lists final first).**
+  Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
+  star chunk, and `_split_compounds` skips star slots — so the built words table puts the
+  verb on the name's chip and leaves the other slot blank. **The class runs in BOTH
+  orientations**, and the old 145 catalogued only one:
+  - class A — star carries the English (`scourging Jesus,G* G5417`, Mat 27:26)
+  - class B — the number carries it, star left empty (`Jesus finishedG5055 G3588 G*`,
+    Mat 26:1) — the orientation the old sweep was structurally blind to
+  **Revised count 4,996** (A 2,237 · B 2,759 = B1 roster-pinned 2,668 + B2 roster-silent 91).
+  Detector `scripts/audit_pn_star_verb_merge.py`, three controls fired, halt path proven;
+  close-out in `docs/tickets/TICKET_detector_gap.md`. **The 145 is SUPERSEDED, not adjusted —
+  never diff against it**: its predicate was never committed, is unrecoverable, and dropped
+  structurally identical rows inconsistently (`'this Moses'` out, `'these Galileans'` in).
+  All 145 old rows are contained in class A (145/145 checked). Both PA spot-checks passed —
+  Mat 26:1 and Mat 20:22 confirm live state matches the source scan, no drift.
+  Fix session runs against **A + B1 (4,905) + the revised article-slot list together**.
+  Any fix = build-side redistribution for star slots + rebuild; regression pin
+  `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
+  ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the
+  article (1Co 1:25 "the wisdom"), NOT number drops — sort display treatment vs data fix per
+  spot. Same-family non-star case: Mat 28:13 "His disciples" (G3101 carries "His", following
+  G1473 blank — "His" is real Greek, NOT a translator italic). NO data writes done.
+  **Lesson, do not rebuild the reverted guard:** adjacency is NOT the discriminator for class-B
+  false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
+  a genuine merge. Whether the carrier holds a name is the discriminator.
+
+- **③ B2 EYEBALL PASS (91 rows)** — rides with ② or precedes it. Roster-silent residue: real
+  merges the pinned TIPNR misses (Bath-sheba, Bezaleel, gentilics like Sadducees/Romans)
+  mixed with bracket-position artifacts that are NOT defects (`1Sa 25:42 "rose upG450 G*
+  1Abigail],G*"` — the name IS printed, on its own star). Reported, never silently dropped.
 
 - **SAME-NAME / RENAMED DROPS (opened 2026-07-31 at the G707 ship — allowlist design
   question, own session).** 358 slots ruled correct-to-drop today (text-first) but carrying
@@ -766,8 +791,8 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   parent file). Repo grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL
   guards), so the crumbs are historical/ad-hoc; check their file dates, then delete.
 
-- **7/30 RECLASSIFICATION CATCH-UP (opened 2026-07-31, gated — its own session, do NOT fold
-  into other ships).** The Greek-header-discipline rebuild (2026-07-30) rewrote
+- **④ 7/30 RECLASSIFICATION CATCH-UP (opened 2026-07-31, gated — its own session, do NOT fold
+  into other ships). Queue position: after the ①–③ PN-star chain.** The Greek-header-discipline rebuild (2026-07-30) rewrote
   pn_greek_identity but the retirement copy-step NEVER re-ran, so live words/xref still
   serve the older classification. Census (this session's scratch, vs the frozen C3 xref):
   ~7.6k slots churn among lemma-only/surface/none (byte-neutral in words today, xref class

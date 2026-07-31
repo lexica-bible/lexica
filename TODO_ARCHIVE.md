@@ -6,6 +6,59 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-31 — PN-star detector gap CLOSED · count revised 145 → 4,996 · docs reorg
+
+Receipts: commits `8cad7ba3` (detector gap) + `b914be98` (docs reorg); close-out written into
+`docs/tickets/TICKET_detector_gap.md`; hand-offs
+`docs/handoffs/HANDOFF_2026-07-31_reviewer.md` + `docs/handoffs/HANDOFF_2026-07-31_next_cc.md`.
+**No data written, no database read by CC.**
+
+- **TICKET_detector_gap CLOSED.** JP found Mat 26:1 ("Jesus finished") missing from the
+  catalogued 145. Cause was NOT the ticket's hypothesis (ordering / intervening G3588) —
+  that was the symptom. The real cause sits a layer up: the sweep is anchored on *which slot
+  carries the English*, and this class mirrors that. `Mat 26:1 "Jesus finishedG5055 G3588 G*"`
+  puts the merged English on the NUMBER slot with the star blank, so no shape of that verse
+  is expressible in a list whose own column header is "star-slot English" — it could not be
+  reported whatever the predicate was.
+- **The sweep script was NEVER COMMITTED.** `5dc96a50` landed only the regression test and
+  the hit list; nothing in the repo, working tree, or stash. Ticket step 1 ("read the sweep's
+  predicate") was therefore impossible as written — recorded honestly rather than faked.
+- **Its predicate is unrecoverable AND demonstrably ad hoc.** Behavioural recovery attempted
+  and abandoned: the structural core gives ~247 rows vs the documented 145, and the ~100
+  dropped are structurally identical to rows kept (`'this Moses'` out / `'these Galileans'`
+  in; `'of Israel,'` out / `'of Israel, no.'` in). **145 is SUPERSEDED, not adjusted — never
+  diff against it.**
+- **New detector `scripts/audit_pn_star_verb_merge.py`** — read-only, source-side, predicate
+  written out in the header. Three controls FIRED (Mat 26:1 class B, Mat 27:26 G5417,
+  Mat 27:47 G5455). Red-first both directions: class A alone returns **0** at Mat 26:1, and
+  re-declaring 26:1 as class A makes the run HALT — halt path executed and observed, not
+  assumed.
+- **Revised count 4,996** — class A 2,237 · class B 2,759 (B1 roster-pinned 2,668, B2
+  roster-silent 91, reported not dropped). All 145 old rows contained in class A, 145/145.
+- **Both PA spot-checks passed** — Mat 26:1 (slot 3 G5055 "Jesus finished", slot 5 star
+  blank) and Mat 20:22 (slot 2 G3588 "Jesus", slot 3 star blank). Live state matches the
+  source scan, no drift; both defect classes real in served data.
+- **509 article-slot list found to have the SAME blind spot**, control-backed: `Act 19:4`
+  present (control hit), `Mat 20:22` / `2Sa 12:9` / `Gen 22:21` absent despite identical
+  shape. Its "adjacent-empty-slot EXCLUDED" rule drops 3,564 article slots wholesale and was
+  not applied consistently. Re-sweep chartered as the next session (TODO ①).
+- **GUARD WRITTEN AND REVERTED — the lesson worth keeping.** A guard skipping an empty star
+  whose nearest printed neighbour is itself a star looked right and cut 165 rows, but source
+  check showed it killed genuine merges (`Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is
+  directly adjacent and IS a merge; `2Sa 11:6 "Joab sentG649 G* G3588 UriahG*"` merges Joab
+  while Uriah is a different name). **Adjacency is not the discriminator; whether the carrier
+  holds a name is.** Replaced by a pinned-TIPNR roster test with the residue reported as B2.
+- **DOCS REORG (`b914be98`).** 21 files `git mv`'d — 11 handoffs → `docs/handoffs/`, 9 audits
+  → `docs/audits/`, 1 stray ticket → `docs/tickets/`. Root keeps README, TODO.md,
+  TODO_ARCHIVE.md, ENGINE_LESSONS.md, CLAUDE.md. 99 references rewritten across 36 files;
+  link check 181/181 minus one **pre-existing** broken pointer
+  (`docs/tickets/DRILL_greek_header_backfill.md` → `greek_header_split.txt`, never existed at
+  any commit — noted, not fixed). TODO_ARCHIVE left as written: it is a log, not a pointer
+  list. ~11 root files (`CHARTER_*`, `DESIGN_*`, `REVIEW_*`, `STATE.md`, …) were out of
+  scope; `entity_resolution_rebuild.md` looks orphaned. Flagged for JP: nine provenance
+  strings in `scripts/draw_hints.py` were path-prefixed (stored citation text; substring test
+  still passes).
+
 ## 2026-07-31 (overnight) — Two UI tickets · warrant-tag standard · batch 2 · chip-merge, all SHIPPED
 
 - **Ticket 1 (word-study name-form highlight) CLOSED.** Real cause ≠ the ticket's
