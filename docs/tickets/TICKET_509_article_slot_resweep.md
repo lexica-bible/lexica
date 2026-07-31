@@ -168,7 +168,23 @@ to 11 high. 89 → 92 strings, over-count risk 11 → 0.
 Four per-control row checks (1Ki 9:26, Mat 20:22, 2Sa 12:9, Gen 22:21) print with the
 run — `python3 scripts/audit_article_slot_carrier.py`.
 
-## 6. STANDING WARNINGS FOR THE FIX SESSION
+## 6. DECIDE AT SESSION OPEN — before any predicate is written (JP, 2026-07-31)
+
+**One lane or two?** Bin D splits ~1,054 function-word rows vs ~585 content-word rows,
+and the repair SOURCE differs: conjunction/copula/pronoun numbers for the first, nouns for
+the second. Lumping them risks a pass tuned for one class silently mangling the other.
+Rule this before writing a predicate, not after.
+
+**Expect the shipped-row count to land well under 2,662, and do NOT read that as
+shortfall.** Part of the population closes by RULING, not by writing — the 1Co 1:25 class
+is ABP printing supplied English over the bare article, a display decision. Declare up
+front how many rows are expected to close each way.
+
+**Parked, deliberately not run now:** the row-by-row diff behind the 26-row gap in §4b.
+Both readings leave the same ~2,662 rows in scope, so it buys nothing today. Run it only
+if the session wants to know whether extending the lexicon path is worth it.
+
+## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English
   printed over the bare article (1Co 1:25 "the wisdom"/"the strength" — the Greek has no
