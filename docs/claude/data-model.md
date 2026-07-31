@@ -565,6 +565,22 @@ app.py matches.
 - The words table is rebuilt from `bh_scrape.db` — see `/rebuild-words` + the words section.
 - Do NOT add conjugated manuscript forms — the audience are non-Greek readers (standing rule).
 
+## Article slots (G3588) — two facts any audit of the words table needs
+- **A blank article slot is NORMAL, not a defect.** `G3588` legitimately carries no English
+  in a great many rows, and `_redistribute_article_slot` deliberately leaves it bare when the
+  whole gloss belonged to the neighbour. Never treat "article row with no English" as a hole
+  to fill. (Ruling 7, `docs/tickets/TICKET_509_article_slot_resweep.md` §6e.)
+- **The article's OWN English is defined ONCE, in the build:** `ARTICLE_OWN_ENGLISH` +
+  `ARTICLE_SUBSTANTIVAL` in `scripts/build_words_from_abp.py`. Import them; never restate the
+  list. The audit script used to carry its own copy and it disagreed with the same script's
+  substantival rule — a fix built on the narrower set would have manufactured 226 defects
+  while repairing others. `one/ones/thing(s)` IS the article's English.
+- **Built row N is source token N.** `build_verse_words` returns exactly one row per source
+  token — verified across all 27,266 verses holding an article slot, zero mismatches. The
+  row's NUMBER may legitimately change at build time (the pronoun retag rewrites G1473→846 in
+  10,046 places), so any audit matching built output back to source must key on POSITION.
+  Matching on `(verse, English)` is unsafe: a verse can carry the same slot English twice.
+
 ## Two-ending adjectives
 Two-ending Greek adjectives (masc & fem share one form) show "Masculine/Feminine" on the
 word-study card when the morph source never resolves them — `decodeMorph` (00-core.jsx) checks

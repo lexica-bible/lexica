@@ -746,25 +746,26 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   structurally identical rows inconsistently (`'this Moses'` out, `'these Galileans'` in).
   All 145 old rows are contained in class A (145/145 checked). Both PA spot-checks passed —
   Mat 26:1 and Mat 20:22 confirm live state matches the source scan, no drift.
-  Fix session runs against **A + B1 (4,905) + the revised article-slot list together**
-  (article-slot: **~2,662 live**, confirmed on PA 2026-07-31 —
-  `docs/tickets/TICKET_509_article_slot_resweep.md`; the old 509 is superseded, never
-  diff against it either).
+  ⛔ **NEVER FOLDED WITH THE ARTICLE-SLOT FIX — corrected 2026-07-31.** An earlier line here
+  said the fix session runs against A + B1 + the article-slot list *together*. It does not.
+  Both passes redistribute English between slots and both touch star slots, so landing them
+  in one rebuild makes any bin movement unattributable — the exact ambiguity the article-slot
+  session spent itself eliminating at the row level. **One change, one rebuild, a full
+  detector run between.** No folding, whatever the queue pressure.
   Any fix = build-side redistribution for star slots + rebuild; regression pin
   `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
   ⚠ **BOTH SESSION-OPEN RULINGS CONFIRMED BY JP 2026-07-31; `--lanes` LANDED** (lane
   derived inside the detector's own token walk, 6 lane controls fired, second halt path
   `--prove-halt-lanes` proven, all prior counts unchanged) —
   `docs/tickets/TICKET_509_article_slot_resweep.md` §6a/§6b. (1) TWO lanes, split on
-  ORIGIN not word class: lane A = adjacent BLANK numbered/star slot exists, 1,325 rows
-  (all of bin R + 276 of D), mechanical build-side redistribution; lane B = no blank
-  neighbour, 1,363 rows, per-row triage only, no predicate. The function/content axis is
-  wrong — `'and'` (Act 20:15, fill) and `'is the'` (1Co 4:20, nothing to write) are both
-  function words; `'brought'` (Num 7:25, write) and `'son of'` (Luk 6:15, supplied) are
-  both content. (2) DECLARED SPLIT: ~1,300 close by writing, ~1,363 by ruling/curated
-  call — **a ship near 1,300 is on target; a ship above ~1,325 means lane-B rows were
-  written without review.** 8 dotted rows (G3588.2 ×7, G3588.1 ×1) inspected individually,
-  never batched.
+  ORIGIN not word class: lane A = adjacent BLANK numbered/star slot exists, mechanical
+  build-side redistribution; lane B = no blank neighbour, per-row triage only, no
+  predicate. The function/content axis is wrong — `'and'` (Act 20:15, fill) and `'is the'`
+  (1Co 4:20, nothing to write) are both function words; `'brought'` (Num 7:25, write) and
+  `'son of'` (Luk 6:15, supplied) are both content. **Lane totals are now 1,312 / 1,376,
+  NOT the 1,325 / 1,363 first recorded** — the lane fold (§6g) moved 13 mis-laned rows
+  whose blank neighbour was itself another `G3588`. 8 dotted rows (G3588.2 ×7, G3588.1 ×1)
+  inspected individually, never batched.
   ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the
   article (1Co 1:25 "the wisdom"), NOT number drops — sort display treatment vs data fix per
   spot. Same-family non-star case: Mat 28:13 "His disciples" (G3101 carries "His", following
@@ -772,6 +773,31 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   **Lesson, do not rebuild the reverted guard:** adjacency is NOT the discriminator for class-B
   false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
   a genuine merge. Whether the carrier holds a name is the discriminator.
+
+- **④ LANE A FILL — PASS WRITTEN AND GATED, WAITING ON THE REBUILD (2026-07-31).**
+  `_redistribute_article_slot` (build_words_from_abp.py) is live in the build and closes
+  **1,240 rows**. Nothing has touched the database — the next step is `/rebuild-words`
+  against a scratch build, walked step by step with the expected number stated before each
+  check. Full record `docs/tickets/TICKET_509_article_slot_resweep.md` §6e–§6h.
+  - **Expected live drop is ~1,448, NOT the charter's ~1,363.** That older figure assumed
+    every lane-A row would be written; 72 remain by ruling. Live now 2,662 (JP, §4b).
+  - **Pinned lane-A set: `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed**
+    (`docs/audits/MANIFEST_lane_a_article_slot.txt`). Two earlier hashes are superseded and
+    kept in the file; the first keyed rows by (verse, English), which is not a row identity.
+  - **Remaining 72, all by ruling:** 25 straddle · 8 star · 38 bracketed · 1 neighbour-filled.
+  - **Gate that matters: lane B must hold at 1,376 and no lane-B row may appear in bin P.**
+    A run that "fixes" more than lane A has eaten rows it was never allowed to touch.
+  - Standing: re-run `import_tipnr.py` after the rebuild, `strongs_base` check back to 0.
+
+- **⑤ BRACKETED ARTICLE-SLOT ROWS (38) — OPEN RULING, own cycle, own controls.** Sized
+  2026-07-31 and deliberately NOT folded into ④. 20 are whole-slot moves where the word
+  takes the emptied slot's own position (cheap); **18 are partial moves that need a NEW
+  position inside an ordering that already exists** — `1Pe 4:2` is the witness, an 11-slot
+  bracket group whose positions run to 9. That is a second ruling about bracket ordering
+  stacked on the first, so the class is not contained whatever the code diff looks like.
+  **Do not split off the easy 20** — a rule that fires on half a class for positional
+  convenience is one nobody can restate later. Motivating exhibit: `1Co 3:8` repairs one
+  `'his own'` onto G2398 and leaves its bracketed twin, inconsistent within one verse.
 
 - **③ B2 EYEBALL PASS (91 rows)** — rides with ② or precedes it. Roster-silent residue: real
   merges the pinned TIPNR misses (Bath-sheba, Bezaleel, gentilics like Sadducees/Romans)
