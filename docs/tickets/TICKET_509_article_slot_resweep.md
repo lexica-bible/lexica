@@ -603,6 +603,36 @@ the repair means reassigning `greek_pos` across a group that already carries an 
 39 stay refused whichever way it goes, so the scratch build does not wait on it — unless the
 ruling lands first, in which case one rebuild serves both.
 
+### 6h. THE BRACKETED CLASS SIZED — NOT contained, and it is 38, not 39
+
+**Decision rule stated BEFORE the sizing, so the outcome could not be argued into whichever
+answer was convenient:** contained → folds into this rebuild; real work → the rebuild goes
+now with the class refused, and the ruling lands in its own cycle.
+
+**Count correction first: the class is 38.** The lane fold moved one of the original 39 to
+lane B (it carried an article neighbour as well as a bracket). Refusals are now
+**38 bracketed + 1 neighbour-filled = 39**, and 25 straddle + 8 star + 39 = 72 remaining.
+
+```
+   20  whole slot moves    the word takes the emptied slot's OWN position - order untouched
+   18  PARTIAL moves       need a NEW position inside an ordering that already exists
+        of which 13 target a slot INSIDE the same bracket, 5 outside it
+```
+
+**The second decision exists, so it is not contained.** `1Pe 4:2` is the deciding shape: an
+11-slot bracket group whose positions run to 9. Moving part of `'the remaining'` into it
+requires choosing where in that sequence the word sits — a ruling about bracket ordering
+semantics, stacked on top of the ruling about which words move. `1Co 15:28 'all things,'` has
+the same problem in a 3-slot group. Code-diff size is irrelevant to this: the question is a
+second ruling, and second rulings do not ride along inside a pass.
+
+The 20 whole-slot rows genuinely ARE cheap. **Not split off anyway** — shipping the easy half
+produces a rule that fires on 20 rows for a reason nobody can restate afterwards, which is
+the failure mode this ticket exists to avoid.
+
+**CALL: the scratch rebuild proceeds with all 39 refused.** 1,240 written rows do not wait on
+39. The bracket class becomes its own ruling with its own controls.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English
