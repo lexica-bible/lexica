@@ -314,14 +314,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   views_lexicon now sends that slot with each listed verse ("position"), and VerseRow
   lights it via a new hiPositions prop merged into the same citedPositions machinery.
   Numbered lanes untouched (prop absent). Parity test still green.
-- **Card provenance placement — REWORKED after JP rejection of the first build
-  (03369cfc moved BOTH badge and match-state under the description; wrong).**
-  Final spec + build: TIPNR / MetaV/TIPNR badge RESTORED to the section header
-  exactly as before; ONLY "Matched to this verse" sits under the description
-  (was bottom of card). Header → description → match-state. `.pnbound-prov`
-  badge-row CSS removed. Awaiting JP's served yes on the Neh 8:7 hodijah card.
-  (Scope check done same night: Neh 8:7 hodijah binds its OWN entity
-  Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
+- **Card provenance placement — CURRENT SPEC = JP amendment 2026-07-30 (third
+  pass; prior placements SUPERSEDED, not options).** Match-state ("Matched to
+  this verse" + variants) renders LAST in the Biblical Person/Place section —
+  below description, tags, dates, and relation rows — the provenance seal on the
+  whole block (it's a claim about the card's bind, not a description modifier).
+  TIPNR / MetaV/TIPNR badge stays in the section header (9d2570b5 restore, do
+  not touch). Under-description CSS removed. History: build 1 (03369cfc, badge +
+  state under description) REJECTED; build 2 (9d2570b5, state under description)
+  superseded by this amendment. Awaiting JP's served yes on the Adam card G76 @
+  1Ch 1:1 (full row set: tags + dates + relations).
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming

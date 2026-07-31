@@ -974,10 +974,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </p>)
         : null;
       const thin = !richPerson && !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + factItems.length) <= 1;
-      // Match-state placement (JP verdict 2026-07-30, second pass): the source tag
-      // (TIPNR badge) stays in the section header where it always was; ONLY the
-      // "Matched to this verse" line moved — it sits directly UNDER the description
-      // line instead of at the bottom of the card. Header → description → match-state.
+      // Match-state placement (JP amendment 2026-07-30, third pass — supersedes the
+      // under-description slot): "Matched to this verse" is the LAST element of the
+      // person/place section — below tags, dates and relation rows — reading as the
+      // provenance seal on the whole block. It's a claim about the card's bind, not
+      // a modifier of the description. TIPNR badge stays in the section header.
       const matchState = <div className="pnbound-badge">Matched to this verse</div>;
       // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
       // rule): every person/place section opens with the ENTITY's name in bold. The
@@ -1010,7 +1011,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
-          {matchState}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">
@@ -1023,6 +1023,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Several places share this name — map hidden to avoid a wrong location.</p>
               : null)}
           {witnessNote}
+          {matchState}
         </section>
       );
     }

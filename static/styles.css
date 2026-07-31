@@ -3016,12 +3016,6 @@ input { font-family: inherit; }
   color: var(--ink-2);
 }
 .pnbound-thinrow .pnbound-badge { margin-top: 0; }
-/* Match-state under the description (JP verdict 2026-07-30): the badge stays in the
-   section header; only "Matched to this verse" sits directly beneath the description. */
-.pnbound-desc + .pnbound-badge,
-.pnbound-thinrow + .pnbound-badge { margin-top: 0; margin-bottom: 12px; }
-.pnbound-desc { margin-bottom: 4px; }
-.pnbound-thinrow { margin-bottom: 4px; }
 
 /* ── Leaflet mini-map ────────────────────────────────────────── */
 .metav-leaflet-map {
