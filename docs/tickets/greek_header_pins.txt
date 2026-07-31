@@ -18,3 +18,13 @@ uniform|arabia|Αραβία
 uniform|ashkelon|Ασκαλών
 uniform|ashtoreth|Αστάρτη
 uniform|azaziah|Οζίας
+# batch 2 hand-table pins (JP-approved 2026-07-31, receipt greek_header_batch2.md).
+# Same control role: must FAIL on live-vs-live, PASS on the scratch (batch-1 pins
+# now pass on live and can no longer fire).
+uniform|cyrus|Κύρος
+uniform|damascus|Δαμασκός
+uniform|darius|Δαρείος
+uniform|dinah|Δίνα
+uniform|berechiah|Βαραχίας
+uniform|coniah|Ιεχονίας
+uniform|cononiah|Χωνενίας
