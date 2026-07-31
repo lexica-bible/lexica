@@ -331,10 +331,21 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
 - **Hiram 1Ki 9:27: no Greek above the chip in ABP chip view (JP sighting
-  2026-07-31, morning queue).** DIAGNOSE BEFORE TOUCHING: check the slot's
-  stored Greek (bh_scrape name-slot row + words/abp_surface for that
-  verse-position) — scrape gap vs render skip vs page-attested oddity. If the
-  page genuinely prints nothing there, that's a documented finding, not a fix.
+  2026-07-31, morning queue).** SCREENSHOT REFINEMENT: the card header serves
+  Χειράμ (identity layer HAS a form) while the chip's Greek line is blank — so
+  likely NOT a scrape gap: chip Greek reads w.lemma||w.inflected, and
+  abp_surface skips name slots (the documented 30,126-slot gap); the identity
+  form may simply not reach the chip render lane. DIAGNOSE BEFORE TOUCHING:
+  confirm bh_scrape row + words/abp_surface for that verse-position, then
+  whether other Greek-headed name chips show Greek in chip mode (if none do,
+  it's a lane-wide render gap, not a Hiram bug). Page-attested-empty = a
+  documented finding, not a fix.
+- **Double comma "of his servants,," 1Ki 9:27 (JP sighting 2026-07-31):** shows
+  in the chip AND in verses.text prose ("servants,, people") — likely STORED
+  text, i.e. a data fix: byte-exact `--old` string from a PA dump of the built
+  verses.text (never abp_texts/), abp_corrections door if it's a real ABP
+  deviation vs a build artifact. Sweep candidate: count `,,` occurrences
+  corpus-wide before ruling one verse.
 - **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
   JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
   KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
