@@ -1,4 +1,4 @@
-"""V11.2 DRAW-CACHE HISTORY controls (DESIGN_v11_acceptance.md V11.2 ruling 5, RULED
+"""V11.2 DRAW-CACHE HISTORY controls (docs/DESIGN_v11_acceptance.md V11.2 ruling 5, RULED
 2026-07-12; rides in the quote-repair build session). A repair mechanism that rewrites
 raws makes preserved draw history load-bearing — the ELEVATED evidence-cost record
 (V11.1 paid for its absence twice: the d1 raws were unrecoverable) travels with this

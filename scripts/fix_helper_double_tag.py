@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 One-time live-table patch for the polarity-A helper double-tag defect
-(CHARTER_splitter_fix.md). The permanent fix is the builder rule
+(docs/CHARTER_splitter_fix.md). The permanent fix is the builder rule
 (_strip_helper_double_tag in build_words_from_abp.py); this script applies the
 same strip to the CURRENT bible.db so the fix doesn't wait for a full rebuild.
 

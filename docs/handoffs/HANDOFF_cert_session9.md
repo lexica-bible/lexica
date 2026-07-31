@@ -1,6 +1,6 @@
 # ABP Corpus Certification — Session 9 handoff
 
-> **SUPERSEDED 2026-07-05 → see `CHARTER_cert_session9.md` (the single canonical S9 charter).**
+> **SUPERSEDED 2026-07-05 → see `docs/CHARTER_cert_session9.md` (the single canonical S9 charter).**
 > This document's content was carried forward VERBATIM into that charter (which adds a consolidation
 > layer: the reassembly-tool explainer, the tooling-inventory paths, the seven-passes→(P) bridge, and
 > the David/H1732 diagnostic result). Kept for history; do NOT govern the rebuild from here.
@@ -11,7 +11,7 @@
 words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into (P) 2026-07-05 after the
 diagnosis landed). Don't open it on the low/medium census seat.
 
-> **[ANNOTATED 2026-07-08: the paragraph below described THIS file before 2026-07-05; the "single canonical charter" role moved to `CHARTER_cert_session9.md` — see the SUPERSEDED header at top. Kept struck for history.]**
+> **[ANNOTATED 2026-07-08: the paragraph below described THIS file before 2026-07-05; the "single canonical charter" role moved to `docs/CHARTER_cert_session9.md` — see the SUPERSEDED header at top. Kept struck for history.]**
 
 ~~**This is the SINGLE canonical S9 charter — the one source of truth.** It now fully absorbs the
 reassembly-diff arc (findings, adjudication, rebuild plan) that used to live in

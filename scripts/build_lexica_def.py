@@ -574,7 +574,7 @@ def _occ_lines(ctx):
 def _roster_lines(roster):
     """PATH (c) ROSTER injection (PATH (c) DESIGN — CLOSED, AUDIT 2026-07-13). Soft-explicit draw
     context: the floor's OWN repeated-review consensus — how many senses, and which verses group —
-    read BACK to the draw (never hand-invented; see DESIGN_hint_tooling.md's roster class). Rides
+    read BACK to the draw (never hand-invented; see docs/DESIGN_hint_tooling.md's roster class). Rides
     the user message after the occurrences (and any STRUCTURE/CONSTRAINT CHECK); frozen V9 prompt
     untouched. Fixes count + grouping only; the seam verses fold into their ruled home group. The
     closing boundary sentence is RULED VERBATIM — do not reword it."""
@@ -643,7 +643,7 @@ def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=N
                      "show. The review names the JOBS, not their wording, count, or internal sub-uses — "
                      "granularity and carving remain yours to draw from the evidence.")
     if constraints:
-        # CONSTRAINT-HINT CHANNEL (DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Pre-registered
+        # CONSTRAINT-HINT CHANNEL (docs/DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Pre-registered
         # one-line constraints from a parked word's ruling record (draw_hints.py, provenance-cited).
         # Rides in the user message AFTER the occurrences (and after any STRUCTURE CHECK) — frozen
         # system prompt untouched. Fact/discipline/ceiling only, NEVER a preferred sense, count,
@@ -854,7 +854,7 @@ def cited_refs(text):
 
 
 def coverage_gate(fed_refs, senses_block):
-    """V9 COVERAGE GATE (JP-ruled 2026-07-12, DESIGN_v9_lines.md): every FED occurrence must
+    """V9 COVERAGE GATE (JP-ruled 2026-07-12, docs/DESIGN_v9_lines.md): every FED occurrence must
     appear as a citation in the SENSES block — trimming is a ship defect (floor-legal only,
     never ship license; the G2805 clarification moved into code). Scanned by the production
     ref_spans (never a copy), so range-interior and comma/semicolon tail refs count (#28).
@@ -1879,7 +1879,7 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
         "structure_hint_why": ("escalation mechanism (cap-out): a prior review's certified stable-jobs list "
                                "passed as draw CONTEXT to prevent burying/merging a distinct job; frozen "
                                "prompt untouched, names jobs not carving") if hint else "",
-        # CONSTRAINT hints (--hints; DESIGN_hint_tooling.md, JP-ruled 2026-07-12). The exact lines
+        # CONSTRAINT hints (--hints; docs/DESIGN_hint_tooling.md, JP-ruled 2026-07-12). The exact lines
         # injected + their register provenance, so the draw self-documents what it saw. Part of
         # sig (they ride in the user message), so a hint change forces a fresh draw.
         "draw_hints": constraints or [],
@@ -1897,12 +1897,12 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
                        "untouched, fixes count/grouping only, never the wording") if roster else "",
         # --no-hints override on a registered word (ruling 1's logged escape hatch); "" = normal run.
         "no_hints_reason": no_hints_reason or "",
-        # V10 REPAIR PASS stamps (DESIGN_v10_repair.md): a repaired draw is visibly repaired
+        # V10 REPAIR PASS stamps (docs/DESIGN_v10_repair.md): a repaired draw is visibly repaired
         # everywhere the record is read. [] / 0 / "" = the draw never needed repair.
         "repaired":          (repair or {}).get("refs", []),
         "repair_rounds":     (repair or {}).get("rounds", 0),
         "repair_prompt_ver": (repair or {}).get("prompt_ver", ""),
-        "repair_why": ("coverage repair pass (DESIGN_v10_repair.md): the coverage gate's named "
+        "repair_why": ("coverage repair pass (docs/DESIGN_v10_repair.md): the coverage gate's named "
                        "absentees fed back with their verse texts in ONE bounded repair call; "
                        "structure guard held (headlines unchanged, citations superset); every "
                        "gate re-ran fresh on the repaired card") if repair else "",
@@ -1934,7 +1934,7 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-# V10 COVERAGE REPAIR PASS (DESIGN_v10_repair.md, CLOSED at d04b6e6; JP-ruled wording under the
+# V10 COVERAGE REPAIR PASS (docs/DESIGN_v10_repair.md, CLOSED at d04b6e6; JP-ruled wording under the
 # standing delegation 2026-07-12). On a coverage-gate failure at the REVIEW pass (--dry-run
 # --repair), ONE bounded repair call feeds the card its own gate refusal: the named absentees,
 # each with its verse text in the SAME feed shape as the original occurrences (_occ_lines — one
@@ -2035,7 +2035,7 @@ def coverage_repair(raw, fed_keys, ctx, call_model, max_rounds=2):
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-# V11.2 QUOTE-REPAIR PASS (DESIGN_v11_acceptance.md V11.2 ruling 1, RULED 2026-07-12; prompt +
+# V11.2 QUOTE-REPAIR PASS (docs/DESIGN_v11_acceptance.md V11.2 ruling 1, RULED 2026-07-12; prompt +
 # choices reviewer-receipted at the quote-repair build session). On a verbatim-quote-gate REFUSE
 # at the review pass, ONE bounded model repair call — never a hand edit (the edited-draw refusal
 # is untouched), never a deterministic byte-splice (rejected: surrounding prose can claim things
@@ -2264,7 +2264,7 @@ def assemble(conn, sid, lemma, translit, raw):
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-# V11 PROSE-DEFECT DETECTORS (DESIGN_v11_acceptance.md, ruled 2026-07-12).
+# V11 PROSE-DEFECT DETECTORS (docs/DESIGN_v11_acceptance.md, ruled 2026-07-12).
 # Probe 1 = verbatim-quote GATE (blocks; --force-gate-bypass = the adjudicated bypass).
 # Probe 2 = named-subject WARN (adjudication; an open warn blocks apply).
 # Scanner 3 = identity-claim WARN (same open-warn rule).
@@ -2420,7 +2420,7 @@ _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
 
 
 def probe_norm(s):
-    """The RULED normalization (DESIGN_v11_acceptance.md table): quotes/apostrophes (row 1),
+    """The RULED normalization (docs/DESIGN_v11_acceptance.md table): quotes/apostrophes (row 1),
     whitespace collapse (row 2), '...' == '…' (row 3), en/em/double-hyphen dashes equal (row 4).
     Anything not listed = strict byte match. Applied to BOTH sides of every comparison."""
     for _a, _b in _NORM_CHARS.items():
@@ -2920,7 +2920,7 @@ def probe2_names(raw, verse_texts, extra_whitelist=(), known_names=None, context
 # peter present, votive/active/applying absent. Any failure → None → NO demotion (the
 # guard degrading must always fail toward the human, never silently widen demotion).
 #
-# LOUDNESS (DESIGN_p2_guard_loudness.md, reviewer-ruled 2026-07-14). The degrade stays — the
+# LOUDNESS (docs/DESIGN_p2_guard_loudness.md, reviewer-ruled 2026-07-14). The degrade stays — the
 # FAILURE DIRECTION IS UNCHANGED and must stay unchanged — but it no longer happens in silence.
 # The defect it cures: the loader's ERROR and probe2_names' LEGITIMATE `known_names=None`
 # ("demotion off by choice") were the SAME BYTE, so a dead guard arrived wearing the contract's
@@ -3132,7 +3132,7 @@ def validate_entry(entry, conn=None, fed_ctx=None):
                 f"sense: {', '.join(uncited)}. Every fed occurrence must appear in the senses "
                 f"block (trimming is a defect — V9 ruling 2026-07-12). Fix the raw, or pass "
                 f"--force-gate-bypass \"reason\".")
-    # V11 PROSE PROBES (DESIGN_v11_acceptance.md, ruled 2026-07-12). Own live lookups for
+    # V11 PROSE PROBES (docs/DESIGN_v11_acceptance.md, ruled 2026-07-12). Own live lookups for
     # EVERY card-cited ref — never the fed sample (it cannot cover Range/gloss-note/repair-
     # integrated refs). No connection = loud NOT RUN, the coverage-gate convention.
     raw = entry.get("raw") or ""
@@ -3154,7 +3154,7 @@ def validate_entry(entry, conn=None, fed_ctx=None):
                                        extra_whitelist=(entry.get("lemma"), entry.get("translit")),
                                        known_names=_p2_corpus_names(conn),
                                        context_texts=fed_ctx)
-        # A dead guard is a NOT-RUN, never a silent degrade (DESIGN_p2_guard_loudness.md).
+        # A dead guard is a NOT-RUN, never a silent degrade (docs/DESIGN_p2_guard_loudness.md).
         # Rides the existing class: printed below, stored, and blocks apply. "" when healthy.
         guard_nr = _p2_guard_notrun(conn)
         if guard_nr:
@@ -3389,7 +3389,7 @@ def main():
                          "is stored in the entry (audit.bypass_reason) so a bypassed row is "
                          "self-documenting. Only stamped on a word whose gate actually failed.")
     ap.add_argument("--adjudicate-warns", metavar="NOTE",
-                    help="V11 (DESIGN_v11_acceptance.md): record the reviewer adjudication for "
+                    help="V11 (docs/DESIGN_v11_acceptance.md): record the reviewer adjudication for "
                          "OPEN probe-2/scanner-3 warns and probe NOT-RUN items; without it an "
                          "apply with open items is REFUSED. Stamped into audit.warns_adjudicated "
                          "so a shipped row self-documents the ruling.")
@@ -3435,11 +3435,11 @@ def main():
     ap.add_argument("--hints", action="store_true",
                     help="inject the word's pre-registered CONSTRAINT hints (draw_hints.py) into the "
                          "draw context as a CONSTRAINT CHECK after the occurrences — parked-word "
-                         "re-entry mechanism (DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Frozen "
+                         "re-entry mechanism (docs/DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Frozen "
                          "prompt untouched; lines + provenance logged on the draw; part of the draw "
                          "signature. Refuses a word with no register entry.")
     ap.add_argument("--repair", action="store_true",
-                    help="V10 COVERAGE REPAIR PASS (DESIGN_v10_repair.md): on a coverage-gate "
+                    help="V10 COVERAGE REPAIR PASS (docs/DESIGN_v10_repair.md): on a coverage-gate "
                          "failure, feed the card its own named absentees (verse texts, original "
                          "feed shape) in ONE bounded repair call; the repaired raw replaces the "
                          "draw and re-runs every gate fresh. Cap 2 rounds; structure guard "
@@ -3447,7 +3447,7 @@ def main():
                          "REVIEW pass only (--dry-run) — the repaired draw is cached for review "
                          "and a later --apply ships those reviewed bytes.")
     ap.add_argument("--quote-repair", action="store_true",
-                    help="V11.2 QUOTE-REPAIR PASS (DESIGN_v11_acceptance.md ruling 1): on a "
+                    help="V11.2 QUOTE-REPAIR PASS (docs/DESIGN_v11_acceptance.md ruling 1): on a "
                          "verbatim-quote-gate failure, feed the card the gate's own fail lines "
                          "plus every card-cited verse's stored bytes in ONE bounded repair call "
                          "(cap 1 round). Spans-only guard: anything changed outside quotation "
@@ -3582,7 +3582,7 @@ def main():
             ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
             print(f"  occurrences {len(occs)} | {len(gset)} renderings | fed {len(ctx)} ({ot} OT / {len(ctx)-ot} NT)")
 
-            # ── CONSTRAINT-HINT REGISTER (draw_hints.py; DESIGN_hint_tooling.md, JP-ruled
+            # ── CONSTRAINT-HINT REGISTER (draw_hints.py; docs/DESIGN_hint_tooling.md, JP-ruled
             # 2026-07-12). Refuse-when-forgotten is the DEFAULT (ruling 1): a registered word
             # re-entering without its banked hints is almost certainly an operator mistake.
             pmap = phrase_map(occs)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Read-only finder for the helper-word double-tag defect class (splitter ticket,
-CHARTER_splitter_fix.md). WRITES NOTHING. Sorts every candidate into three
+docs/CHARTER_splitter_fix.md). WRITES NOTHING. Sorts every candidate into three
 buckets and dry-runs the classification so JP can eyeball it before any fix.
 
 The defect (two polarities, one root = ABP multi-word English spanning slots):

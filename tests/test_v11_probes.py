@@ -1,4 +1,4 @@
-"""V11 prose-defect detectors (DESIGN_v11_acceptance.md, ruled 2026-07-12):
+"""V11 prose-defect detectors (docs/DESIGN_v11_acceptance.md, ruled 2026-07-12):
 probe 1 = verbatim-quote GATE · probe 2 = named-subject WARN · scanner 3 =
 identity-claim WARN · open-warn-blocks-apply (GATE CONDITION).
 
@@ -475,7 +475,7 @@ def main():
     # label — semicolon and bare colon EXCLUDED (byte-forced: Korah + Sabean classes).
     # Demotion only when a corpus-name guard set is supplied AND the token is not in it;
     # known_names=None = no demotion (fail toward the human). Card bytes = REAL surviving
-    # d2 raws (V111_CONSULT.md one-time consult); [completion] marks where the banked
+    # d2 raws (docs/V111_CONSULT.md one-time consult); [completion] marks where the banked
     # excerpt's 120-char window cut a word and the obvious tail was restored. Verse bytes
     # = live reads, same session. Guard fixture set mirrors the live control run on PA:
     # korah/solomon/laban/jesus/peter ARE words-table name-marked heads; votive/active/
@@ -704,7 +704,7 @@ def main():
     named = sorted({w.split('"')[1] for w in warns})
     assert named == ["Applying", "Solomon"], (warns, notrun)   # degrade ADDS, never removes
 
-    # ═══ GUARD LOUDNESS — a guard-load failure must SPEAK (DESIGN_p2_guard_loudness.md;
+    # ═══ GUARD LOUDNESS — a guard-load failure must SPEAK (docs/DESIGN_p2_guard_loudness.md;
     # reviewer-ruled 2026-07-14) ═══════════════════════════════════════════════════════════════
     # A guard-load failure IS a not-run: the demotion check did not run. It rides the RULED
     # probe2_notrun class — loud on stderr (:2903-2904), stored (:2898), BLOCKS apply via

@@ -1,6 +1,6 @@
 # V11.1 one-time PA consult — banked bytes (2026-07-12)
 
-Read-only consult per DESIGN_v11_acceptance.md fixture rule. Source: the four surviving
+Read-only consult per docs/DESIGN_v11_acceptance.md fixture rule. Source: the four surviving
 draw files on PA (`~/bible-db/draws/G*.json` — each holds the word's LAST draw, d2;
 d1 raws overwritten, the known draw-cache-history loss). Two artifacts, both JP-run,
 pasted verbatim into the session and copied here byte-for-byte:

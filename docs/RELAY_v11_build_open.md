@@ -6,7 +6,7 @@
 - `git log --oneline -1` → 35dfe67 (WRAP corrective-commit close-out — descendant of 4962c32). PASS.
 - `python tests/test_repair_pass.py` → "test_repair_pass: ok". PASS.
 - `python tests/test_coverage_gate.py` → "test_coverage_gate: all assertions passed". PASS.
-- Required reads done in order: DESIGN_v11_acceptance.md in full (STATUS + true sequence
+- Required reads done in order: docs/DESIGN_v11_acceptance.md in full (STATUS + true sequence
   first), audit CORRECTION entry + CORRECTIVE-COMMIT CLOSED entry + V10 ACCEPTANCE TEST
   entry, ENGINE_LESSONS #48–#50.
 
@@ -19,7 +19,7 @@ CC recommendation: ADOPT BOTH as written.
 2. **Commit-message shape:** every commit-message proposal carries a short subject line
    + blank line + body, at proposal time. Rationale: two one-paragraph messages
    (a9d518b, 4962c32) break `--oneline` readability; cheap to fix at the source.
-This package itself follows candidate 1 (it is on disk at RELAY_v11_build_open.md).
+This package itself follows candidate 1 (it is on disk at docs/RELAY_v11_build_open.md).
 
 ## C. STEP-2 CODE-READ GATE — probe-1 code claims verified against
 ## scripts/build_lexica_def.py ON DISK (head 35dfe67). Raw findings:

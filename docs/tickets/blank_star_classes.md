@@ -1,7 +1,7 @@
 # Blank star-row classes — the 477 rows, classified (2026-07-16)
 
 Generated from the live-db dump (blank English on a `strongs='*'` row) plus the cell
-immediately before each. Classification per `REVIEW_rc2_rereview.md`; reviewer-approved
+immediately before each. Classification per `docs/REVIEW_rc2_rereview.md`; reviewer-approved
 dispositions:
 
 - **CAP (148 rows)** — capitalized non-roster name LEADS the previous cell. FIXED by the

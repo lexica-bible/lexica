@@ -1,4 +1,4 @@
-"""V11.2 QUOTE-REPAIR PASS controls (DESIGN_v11_acceptance.md V11.2 ruling 1, RULED
+"""V11.2 QUOTE-REPAIR PASS controls (docs/DESIGN_v11_acceptance.md V11.2 ruling 1, RULED
 2026-07-12; built under JP's standing delegation, reviewer receipt in the session
 record). All db-free and model-free (the model is a mock — CI never calls the API):
 

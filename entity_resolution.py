@@ -7,7 +7,7 @@ any future caller can't drift apart. Pure logic, no database (like argmap.py): i
 fed TIPNR entities + a list of proper-noun occurrences and decides, per occurrence,
 which TIPNR entity it binds to and whether that bind may RENDER.
 
-Design is fixed by entity_resolution_rebuild.md (Issue 2) — do not re-open here.
+Design is fixed by docs/entity_resolution_rebuild.md (Issue 2) — do not re-open here.
 Objective: rendered-and-correct with ZERO confident-wrong. A wrong bind (real bio
 under the wrong entity) is weighted a LOSS, so the engine floors rather than guesses.
 

@@ -292,7 +292,7 @@
 > drawn FOR THE PURPOSE of clearing C1 is lever 12 with a fresh timestamp and is dead on the same
 > reasoning.** **STILL UNVERIFIED, not upgraded:** the old *"~10 draws agreed"* on
 > Ezr 6:11 is a PLACEMENT claim; this read reports COUNT. It points the same way — that is not evidence.
-> **COST OF THE ENTIRE ANSWER: ZERO.** Full record: `DESIGN_g236_part2_mechanism.md` + AUDIT "G236 PART 2
+> **COST OF THE ENTIRE ANSWER: ZERO.** Full record: `docs/DESIGN_g236_part2_mechanism.md` + AUDIT "G236 PART 2
 > — MECHANISM KILLED ON THE FLOOR'S OWN BYTES". The history that produced this verdict follows. ▼
 >
 > **G236 PART 2 (historical — the state this REPLACES).** Pitched as "a repair,
@@ -328,7 +328,7 @@
 > in substance (it re-scores until the floor agrees with the ruled direction, then claims the roster's
 > defense). **THE CONFLATION STANDS: a ruled fix DIRECTION (narrow third home) is not a fix MECHANISM.**
 >
-> **DESIGN PASS DONE (zero spend, doc-only) = `DESIGN_g236_part2_mechanism.md`.** 12 levers enumerated,
+> **DESIGN PASS DONE (zero spend, doc-only) = `docs/DESIGN_g236_part2_mechanism.md`.** 12 levers enumerated,
 > 11 dead, **1 standing: ROSTER REVISION.** Its legality turns on a distinction CC first got WRONG
 > (reviewer-caught): **floor-DERIVED ≠ floor-CONSENSUS.** A placement in 1 of 10 draws is in the floor and
 > is not consensus — reading it back is minority-shopping in the roster's clothes. **CRITERION
@@ -1110,7 +1110,7 @@ POST-GREEN POINTER (not a roadmap item — JP ruling, in-chat 2026-07-10): **Sea
 "Build A"** stays parked at TODO.md:594 until after GREEN activation; it enters this roadmap
 then by JP ruling, not before. (Context ruled with it: the Study tab — where Seams display —
 is down from public, conceptual stage; Study-on-mobile is tracked-but-unordered, DEPENDENT on
-Study's return. Status detail: STATE.md Study line.)
+Study's return. Status detail: docs/STATE.md Study line.)
 10. **Human-review-dial decision** — JUDGMENT, LAST — only after #30 and #40 have track
     records (step-3 cost-lever order). **MECHANISM BANKED (JP, 2026-07-10, via reviewer
     relay):** dump N shipped entries to text → fresh-chat batch review against the ruled
@@ -1176,7 +1176,7 @@ Study's return. Status detail: STATE.md Study line.)
 ## Audit CORRECTIVE-COMMIT SESSION CLOSED entry = the record, incl. the session's own
 ## ledger items + two standing-rule candidates for the build session's open.)
 (1) The working tree at C:\Users\JP\projects\bible-db holds the reviewer-affirmed
-corrective edits UNCOMMITTED (docs/audits/AUDIT_lexica_rollout.md, DESIGN_v11_acceptance.md,
+corrective edits UNCOMMITTED (docs/audits/AUDIT_lexica_rollout.md, docs/DESIGN_v11_acceptance.md,
 docs/handoffs/HANDOFF_lexica_rollout.md; on top of a9d518b). The diff was reviewed and
 receipt-confirmed in the reviewer chat 2026-07-12 (fourth delivery attempt).
 (2) One reviewer-flagged defect before commit: the SPENT V11 DESIGN PASS opener
@@ -1209,7 +1209,7 @@ run/design decision, path (c) roster draw is the standing next-pass RECOMMENDATI
 trigger unfired). ("me/I" = JP.) STANDING DELEGATION LIVE, same terms.
 READ FIRST, in order: (1) audit V11 RUN SESSION entry + the four PARKED AT CAP entries
 (the ticket bank with priorities + all artifact exhibits live there); (2)
-DESIGN_v11_acceptance.md (versioning rules: whitelist/pattern changes RULED, stamps on
+docs/DESIGN_v11_acceptance.md (versioning rules: whitelist/pattern changes RULED, stamps on
 the draw record); (3) ENGINE_LESSONS #48-51.
 Opening check: git log -1 = the run-close commit or descendant · three suites green ·
 diff-vs-close-entry check (NOT optional) · R1 raw reposts receipt-confirmed both sides.
@@ -1265,7 +1265,7 @@ FIRED. ("me/I" = JP.) STANDING DELEGATION IS LIVE: no decision questions to JP;
 CC+reviewer recommendations apply as rulings with delegation notes; JP touchpoints =
 paste-ready commands, screenshots, ship/park notices.
 READ FIRST, in order: (1) audit V11 BUILD SESSION entry + V10 ACCEPTANCE TEST entry
-(each word's pre-clear material lives there); (2) DESIGN_v11_acceptance.md — the
+(each word's pre-clear material lives there); (2) docs/DESIGN_v11_acceptance.md — the
 acceptance path split, the ruled normalization table + implementation notes, the
 falsifier; (3) the park entries for G1390 / G227 / G162 + G236's kill set;
 (4) ENGINE_LESSONS #48–#51.
@@ -1332,7 +1332,7 @@ applies, re-entries) until mechanism acceptance (all controls green). ("me/I" = 
 STANDING DELEGATION IS LIVE (memory feedback_no_questions_standing_delegation): no
 decision questions to JP; CC+reviewer recommendations apply as rulings with delegation
 notes; JP touchpoints = paste-ready commands, screenshots, ship/park notices.
-READ FIRST, in order: (1) DESIGN_v11_acceptance.md IN FULL — STATUS = DESIGN AFFIRMED
+READ FIRST, in order: (1) docs/DESIGN_v11_acceptance.md IN FULL — STATUS = DESIGN AFFIRMED
 at the real reviewer review, TRUE-SEQUENCE correction on record (read the audit
 CORRECTION entry FIRST); the probe-1 code claims are UNVERIFIED — step 2 is a
 code-read gate, not a coding step; the open-warn control is a GATE CONDITION;
@@ -1398,12 +1398,12 @@ hard gate shape as the V9/V10 design passes. ("me/I" = JP.) STANDING DELEGATION 
 (memory feedback_no_questions_standing_delegation): recommendations apply as rulings
 with delegation notes; JP touchpoints = paste-ready commands, screenshots, ship/park
 notices only.
-READ FIRST, in order: (1) DESIGN_v10_repair.md STATUS block + the doc in full (the
+READ FIRST, in order: (1) docs/DESIGN_v10_repair.md STATUS block + the doc in full (the
 mechanism is BUILT + LIVE at 36dab20 and stays; the acceptance criterion FAILED AS
 WRITTEN); (2) docs/audits/AUDIT_lexica_rollout.md — V10 ACCEPTANCE TEST entry IN FULL (the
 mechanism/criterion split ruling, all six defects with classes, the three standing
 sub-rules, the housekeeping lock) + G227 RE-PARKED (THIRD); (3) ENGINE_LESSONS.md #50;
-(4) V9_PILE.md tail (fallback shape on record: two-stage roster draw = the V11-class
+(4) docs/V9_PILE.md tail (fallback shape on record: two-stage roster draw = the V11-class
 candidate if repair-plus-prose-handling is rejected).
 Opening check: `git log --oneline -1` = f654dbb or a descendant · `python
 tests/test_repair_pass.py` prints ok · `python tests/test_coverage_gate.py` ok ·
@@ -1460,12 +1460,12 @@ re-entries) until the build is accepted; the acceptance test IS the first word w
 feedback_no_questions_standing_delegation + the handoff block above): no decision
 questions to JP — CC+reviewer recommendations apply as rulings with a delegation note.
 JP's only touchpoints: paste-ready commands, render screenshots, ship/park notices.**
-READ FIRST, in order: (1) DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6, contained
+READ FIRST, in order: (1) docs/DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6, contained
 in session-close 3696cc5 — mechanism,
 gate story, pre-set adjudication rules, ruled repair-prompt wording incl. the headline
 clause, acceptance test + staleness fallback, build order); (2) this handoff — the run
 session 2 STATE UPDATE chain above; (3) docs/audits/AUDIT_lexica_rollout.md — G1390 RE-PARKED (the
-pure squeeze park) + G227 RE-PARKED (SECOND) + G162 RE-PARKED entries; (4) V9_PILE.md
+pure squeeze park) + G227 RE-PARKED (SECOND) + G162 RE-PARKED entries; (4) docs/V9_PILE.md
 tail (V10 charter seed + hint-echo leak + dash-expansion CHECK-FIRST items).
 Opening check: `git log --oneline -1` = d04b6e6 or a descendant · `python
 tests/test_coverage_gate.py` ok · `python tests/test_draw_hints.py` ok · R1: raw
@@ -1509,7 +1509,7 @@ directions — the session's discipline frayed at the edges when pace rose; open
 BATCH 5 RUN SESSION 2 — V9 resume, word 1 = ἀληθής G227 (both retry triggers SATISFIED:
 #28 landed b1995e4/f1514ae, coverage fix landed d764bc7 + PROMOTED). ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (amendments 1–6) + the V9
-DESIGN PASS CLOSE RECORD above; (2) DESIGN_v9_lines.md IN FULL (the two lines + RULINGS);
+DESIGN PASS CLOSE RECORD above; (2) docs/DESIGN_v9_lines.md IN FULL (the two lines + RULINGS);
 (3) docs/audits/AUDIT_lexica_rollout.md — V9 DESIGN PASS session record (extended correlation table)
 + G227 RE-PARKED + G2805 RE-PARKED entries; (4) scripts/draw_hints.py header + the G227
 entry; (5) ENGINE_LESSONS.md #47–49.
@@ -1575,7 +1575,7 @@ You are the reviewer chat for Lexica batch-5 run session 2 (V9 resume). First ac
 R1-verify the V9-promotion close commit on disk (raw output REPOSTED, never referenced —
 your predecessor caught a reference-not-repost slip at the design-pass open; it's on
 the ledger). State you inherit: **V9 PROMOTED + LIVE** (stamp `lexica:f27027b50754`;
-two lines: coverage-is-total + quotes-are-verbatim; DESIGN_v9_lines.md RULINGS = the
+two lines: coverage-is-total + quotes-are-verbatim; docs/DESIGN_v9_lines.md RULINGS = the
 authority) · coverage gate BLOCKS ships (must-fail-proven at d764bc7 — the zero is
 trustable) · batch UNPAUSED (amendment-6 condition met at promotion) · count 7/15
 FINAL + UNTOUCHABLE (the committed pairing) · hinted scoreboard 0/7 · hint mechanism
@@ -1598,7 +1598,7 @@ lands AND is accepted). ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — charter amendments 5+6 + the s1 CLOSE RECORD
 above; (2) docs/audits/AUDIT_lexica_rollout.md — G2805 RE-PARKED entry IN FULL (carries the
 cross-word attractor record + correlation table pointer) + G227 RE-PARKED entry;
-(3) V9_PILE.md in full; (4) ENGINE_LESSONS.md #47-48.
+(3) docs/V9_PILE.md in full; (4) ENGINE_LESSONS.md #47-48.
 Opening check: `git log --oneline -1` = the s1 close commit or a descendant; the charter
 shows amendment 6; `python tests/test_ref_tail_expansion.py` prints ok. PLUS the standing
 PA-currency check BEFORE anything fires PA-side: JP posts PA's `git log --oneline -1`,
@@ -1645,7 +1645,7 @@ state source of truth = close commit 8a4dceb. ("me/I" = JP.)
 READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (RULED) + BUILD SESSION 1 RECORD
 + the BATCH 4 CLOSED record in Queue item 5; (2) docs/audits/AUDIT_lexica_rollout.md — BUILD SESSION 1
 entry (walk 7/7, ἀλλάσσω leave-it ruling) + the G227 PARKED entry IN FULL; (3)
-scripts/draw_hints.py header + the G227 entry; (4) DESIGN_hint_tooling.md RULINGS block;
+scripts/draw_hints.py header + the G227 entry; (4) docs/DESIGN_hint_tooling.md RULINGS block;
 (5) TODO.md batch-5 prep items (standing-query key-shape audit · section-matcher sweep —
 BOTH are "before batch 5" items: decide/run them at open, before any word fires).
 Opening check: `git log --oneline -1` shows 8a4dceb or a descendant; `python
@@ -1761,13 +1761,13 @@ items, nothing missing.
 BUILD SESSION 1 — rendering-layer fix + hint tooling. Open from docs alone; state source
 of truth = close commit 506f106. ("me/I" = JP.)
 READ FIRST, in order: (1) docs/handoffs/HANDOFF_lexica_rollout.md Queue item 5 — the BATCH 4 CLOSED +
-RUN SESSION 3 records; (2) DESIGN_hint_tooling.md IN FULL (rulings at top — all five
+RUN SESSION 3 records; (2) docs/DESIGN_hint_tooling.md IN FULL (rulings at top — all five
 ruled, build order inside); (3) TODO.md "Def-engine rendering layer" ticket; (4)
 docs/audits/AUDIT_lexica_rollout.md — FRAGMENT-RENDERING INVESTIGATION entry + BATCH 4 CLOSED entry;
-(5) V9_PILE.md (new: #49 pipeline exhibits ×3, verbatim-quote V9-general, checker
+(5) docs/V9_PILE.md (new: #49 pipeline exhibits ×3, verbatim-quote V9-general, checker
 exhibits).
 Opening check: `git log --oneline -1` shows 506f106 or a descendant; `grep -c "RULINGS
-(JP, 2026-07-12)" DESIGN_hint_tooling.md` = 1; the audit doc's BATCH 4 CLOSED entry
+(JP, 2026-07-12)" docs/DESIGN_hint_tooling.md` = 1; the audit doc's BATCH 4 CLOSED entry
 exists. Failed check = rule-9 caveat, not a hold. R1 debt from s3: verify bff58fb +
 506f106 on disk and relay raw output to the reviewer first thing.
 State: count 7/15 name-true FINAL (batch closed by JP ruling; δίκτυον rebuilt clean,
@@ -1795,7 +1795,7 @@ names · bank on reviewer relay · big output → file · exact-or-dotted both c
 You are the reviewer chat for Lexica BUILD SESSION 1 (post-batch-4). Everything ruled
 is in the repo at close commit 506f106 — CC reads and relays; your first act =
 R1-verify 506f106 AND bff58fb on disk (raw git log, owed from s3's close) and read
-DESIGN_hint_tooling.md in full — your s3 predecessor concurred on the SUMMARY only;
+docs/DESIGN_hint_tooling.md in full — your s3 predecessor concurred on the SUMMARY only;
 the full-doc read is yours, and your amendments (scoreboard marker + hint-provenance
 verification at re-entry pre-reg) are already ruled in. State you inherit: batch 4
 CLOSED at 7/15 name-true final, streak 2, dagger off (δίκτυον rebuilt clean; its live
@@ -1817,7 +1817,7 @@ open batch-5 prep items.
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks incl. the RUN
 SESSION 2 record) + the POST-S2 STATE ADD below; (2) docs/audits/AUDIT_lexica_rollout.md — δίκτυον
 RULING CHAIN entry (top) + G227 PARKED + G2168 PARKED + FLOOR-VOID entries; (3)
-ENGINE_LESSONS.md #47–#48; (4) V9_PILE.md (carve-invention = CONFIRMED V9 EDIT ×5;
+ENGINE_LESSONS.md #47–#48; (4) docs/V9_PILE.md (carve-invention = CONFIRMED V9 EDIT ×5;
 cross-lemma misattribution = NEW class, 2 exhibits).
 Opening check: `git log --oneline -1` shows 4094dab (or a descendant); `grep -c "^48\."
 ENGINE_LESSONS.md` returns 1; `grep -c "RULING CHAIN — RUN + CLOSED"
@@ -1868,7 +1868,7 @@ G2805, one at a time, no compression.
 ## over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks), then the BATCH-4
 RUN state below; (2) docs/audits/AUDIT_lexica_rollout.md — G1390 PARKED entry (top) + G1516 entry +
-BATCH-4 CORPUS-DEFECT FIRE entry + N=6-7 entry; (3) ENGINE_LESSONS.md #45–#46; (4) V9_PILE.md.
+BATCH-4 CORPUS-DEFECT FIRE entry + N=6-7 entry; (3) ENGINE_LESSONS.md #45–#46; (4) docs/V9_PILE.md.
 State at 25d4a40 (pointers, not restatements): **COUNT 7/15 name-true — δίκτυον†, σελήνη,
 ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός** († = the queued δίκτυον contamination
 ruling chain, JP's, 4 steps, counted until ruled) · **streak 1** (verified vs item 6's
@@ -1927,7 +1927,7 @@ caught on both sides of this desk; count names, not labels.
 
 ## STEP-5 SESSION — CC OPENER BLOCK (RAN + CLOSED 2026-07-10 — all five charter jobs delivered:
 ## G2665 shipped+live on draw 3, V8 PROMOTED (JP KEEP), count 6/15 (JP BOOK), #30 fire classes
-## banked `7689884`, V9_PILE.md established. Record = audit doc STEP 5 entry; commits fa18656 /
+## banked `7689884`, docs/V9_PILE.md established. Record = audit doc STEP 5 entry; commits fa18656 /
 ## 7689884 / f631194 / the close commit. This block is HISTORY; resume point = Queue item 5
 ## (batch-4 selection). The reviewer-chat inheritance block below is likewise closed.)
 ## (original text follows)
@@ -1971,7 +1971,7 @@ CLOSED 12/12 in-chat 2026-07-10 — verify the handoff's STEP-4 RULINGS — CLOS
 then the gate is open** (item 2 approved the TEST FIRE only; promotion is a separate ruling).
 Also since your predecessor: lesson #42 ADOPTED into ENGINE_LESSONS (six catches enumerated) ·
 two standing process rules (ask JP live in plain terms; batched lists = genuine absences only)
-· Study/Seams marked down-from-public (status only, STATE.md) · Build A = post-GREEN pointer.
+· Study/Seams marked down-from-public (status only, docs/STATE.md) · Build A = post-GREEN pointer.
 **Your enforcement posture (unchanged):** committed wording governs · R1 commands verified on
 disk · R2 designated instruments · R3 holds block, unaccounted output auto-opens one · R4
 handoffs carry verbatim commands · #38 delta accounting · derived numbers are claims — count
@@ -2262,7 +2262,7 @@ earn peer shelves is the floor's call, not this note's — attested = follow it.
 
 ## BATCH-3 SESSION 3 LOG (2026-07-09) — CLOSED. **CALIBRATION PAUSED at close (JP ruling): the
 ## splitter double-tag data fix runs FIRST, in its own dedicated session — charter =
-## CHARTER_splitter_fix.md (no-write gate + acceptance checks are IN the charter, ruled verbatim).**
+## docs/CHARTER_splitter_fix.md (no-write gate + acceptance checks are IN the charter, ruled verbatim).**
 **Close state: 3 shipped this session (ἐπιτιμάω · διανοίγω · βιβρώσκω, all LIVE) · streak 0 ·
 βιβρώσκω COUNT PENDING JP (3 options, audit doc G977 entry; CC recommends 3/15 + intervention-tally
 data point) · next-word decision (κατανοέω vs RED) travels with that ruling · GREEN remaining 3:
@@ -3111,7 +3111,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    stale 18,339/12,692 label → 18,384/12,718 · prune stray worktree `.claude/worktrees/keen-goodall-f3e661/`
    (all detail: TODO.md S11 follow-ups). The other three S11 follow-ups are ALREADY DONE: G1096 redraw (shipped
    from-draw at batch-2 open), `--from-draw` ship path (`c4617d0`), citation-sweep rule (codified in
-   `docs/claude/ai.md`). Detail: `CHARTER_cert_session9.md` top banner + memory `project_abp_certification`.
+   `docs/claude/ai.md`). Detail: `docs/CHARTER_cert_session9.md` top banner + memory `project_abp_certification`.
 2. ~~V7 engine window~~ **CLOSED 2026-07-08** (`b8cbe7c` / `5831175` / `c7f8620`): all 11 pile items ruled,
    retro list closed, tiering law + calibration pins + rollout sequence on the record. Detail: the
    "V7 WINDOW — CLOSED" block in this handoff. Display tickets (sense-anchoring markers, note ordering)
@@ -3140,7 +3140,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    `lexica:7ef8620328a9`; swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα shipped+live
    (draw 3; draws 1–2 rejected, defect classes on record) · #30 fire classes BANKED (`7689884`)
    · first `audit.floor_diff` stored write · COUNT 6/15 name-true (δίκτυον, σελήνη, ὑπομονή,
-   ταμεῖον, κάλαμος, καταπέτασμα; BOOK ruled by JP) · V9_PILE.md established. Full record:
+   ταμεῖον, κάλαμος, καταπέτασμα; BOOK ruled by JP) · docs/V9_PILE.md established. Full record:
    audit doc STEP 5 entry. **BATCH-4 SELECTION DONE 2026-07-10: roster of 10 APPROVED
    rank-true (διαιρέω G1244 · δόμα G1390 · εἰρηνικός G1516 · αἰχμαλωτεύω G162 · ἡσυχάζω G2270
    · μερίζω G3307 · παραπορεύομαι G3899 · σιωπάω G4623 · ἐκλύω G1590 · ἐπανίσταμαι G1881;
@@ -3240,7 +3240,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    G1881 — the in-chat "4 remain / max 11" was a miscount, corrected in the audit
    entry; ruling unaffected; reviewer logged the same miscount against its own ledger).
    Record = audit doc BATCH 4 CLOSED entry.** **HINT TOOLING DESIGNED + FULLY RULED
-   same session: `DESIGN_hint_tooling.md` (bff58fb, rulings folded in at the close
+   same session: `docs/DESIGN_hint_tooling.md` (bff58fb, rulings folded in at the close
    commit) — constraint-hint register (draw_hints.py, provenance-carrying, JP-approved
    edits only) + `--hints` injection after the occurrences, frozen prompt + floors +
    gates untouched. JP RULED ALL FIVE: refuse-when-notes-forgotten YES · hinted ships
@@ -3346,9 +3346,9 @@ PATH (C) DESIGN SESSION — rule the re-entry mechanism for the four parked word
 that V11.1 landed all five detector tickets and FIRED all four retry triggers. This is
 a DESIGN session: no word runs, no draws, no floors; output = a ruled design (fresh
 draws under the upgraded battery vs path (c) two-stage roster draw), stamped in
-DESIGN_v11_acceptance.md or a successor doc. ("me/I" = JP.) STANDING DELEGATION LIVE.
+docs/DESIGN_v11_acceptance.md or a successor doc. ("me/I" = JP.) STANDING DELEGATION LIVE.
 READ FIRST, in order: (1) audit V11.1 BUILD SESSION entry (the five tickets + ledger +
-trigger status) and the four PARKED AT CAP entries; (2) DESIGN_v11_acceptance.md §"The
+trigger status) and the four PARKED AT CAP entries; (2) docs/DESIGN_v11_acceptance.md §"The
 three candidate paths" (path (c) DEFERRED-not-killed rationale) + the falsifier ruling
 in the V11 RUN SESSION entry (0-for-3 = YIELD problem; path (c) = standing next-pass
 RECOMMENDATION, G236's record its best exhibit); (3) ENGINE_LESSONS #48-52.
@@ -3391,7 +3391,7 @@ you rule it in; demand bytes for any file-content claim; no word runs, draws, or
 floors this session.
 
 ## V11.2 CLOSE (2026-07-12): the path (c) design-session blocks above are SPENT —
-## V11.2 RULED and stamped in DESIGN_v11_acceptance.md (see audit PATH (C) DESIGN
+## V11.2 RULED and stamped in docs/DESIGN_v11_acceptance.md (see audit PATH (C) DESIGN
 ## SESSION entry). The blocks below are the live pair.
 
 ## QUOTE-REPAIR BUILD SESSION — CC OPENER BLOCK (paste into the new CC session;
@@ -3402,10 +3402,10 @@ cap 1 round; full battery after per lesson #50 b) + the draw-cache history ticke
 (rides by ruling 5; ELEVATED evidence-cost record travels). BUILD ONLY: no word runs,
 draws, or floors; the run session (order G236 → G162 → G1390 → G227) comes after this
 session closes ruled. ("me/I" = JP.) STANDING DELEGATION LIVE.
-READ FIRST, in order: (1) DESIGN_v11_acceptance.md V11.2 successor section (the seven
+READ FIRST, in order: (1) docs/DESIGN_v11_acceptance.md V11.2 successor section (the seven
 rulings + build order — the authority); (2) audit PATH (C) DESIGN SESSION entry +
 V11.1 BUILD SESSION entry (detector state p2wl:v2/norm:v2/meta:v1/scan3:v2); (3) the
-V10 repair design (DESIGN_v10_repair.md) — the pattern being extended — and
+V10 repair design (docs/DESIGN_v10_repair.md) — the pattern being extended — and
 ENGINE_LESSONS #48–52.
 Build items: (1) quote-repair prompt drafted + own stamp, shown in full before commit;
 red-first fixtures from the five banked kills (Pro 18:16 G1390-d2 · 1Jn 2:8 G227-d2 ·
@@ -3431,7 +3431,7 @@ the review block and STOPS; no commit until the reviewer's receipt is in CC's co
 You are the reviewer chat for the quote-repair build session. Everything ruled is in
 the repo — CC reads and relays; your first act = R1-verify the V11.2 close commit on
 disk (raw reposts, receipt confirmed) and reconcile CC's opening summary against the
-V11.2 section of DESIGN_v11_acceptance.md + the audit PATH (C) DESIGN SESSION entry.
+V11.2 section of docs/DESIGN_v11_acceptance.md + the audit PATH (C) DESIGN SESSION entry.
 State you inherit: V11.2 RULED — quote-repair pass adopted (model pass, spans-only
 guard, cap 1, full battery after), fresh-draws-alone rejected, path (c) deferred with
 the sharpened placement-drift trigger, "G236 = path (c) exhibit" SUPERSEDED, full-feed
@@ -3454,7 +3454,7 @@ path-(c) word). One gate, one command, in order — the normal full per-word pat
 each word ships or parks on its own record. G236 sits OUTSIDE the falsifier count
 (ruled). Mechanism = FRESH draws under the upgraded battery PLUS the quote-repair
 pass (ruling 2: fresh draws alone rejected). ("me/I" = JP.) STANDING DELEGATION LIVE.
-READ FIRST, in order: (1) DESIGN_v11_acceptance.md V11.2 successor section (the
+READ FIRST, in order: (1) docs/DESIGN_v11_acceptance.md V11.2 successor section (the
 seven rulings — the authority); (2) audit QUOTE-REPAIR BUILD SESSION entry (what is
 live: quote-repair pass + draw-cache history) + the four PARKED AT CAP entries
 (pre-clear material, watch items, per-word kill records); (3) ENGINE_LESSONS #48–53
@@ -3517,7 +3517,7 @@ record — no bundling.
 ## conclusion); PREREQUISITE = a preserved breach byte-sample (the repair-bytes-preservation
 ## ticket ships before/with the review). Then path (c) design for G236, G1390, G227 (scoped per
 ## word). Full docket = the 9-ticket list in the audit CLOSE entry. Authorities = AUDIT_lexica_
-## rollout.md (V11.2 RUN entries + CLOSE) + DESIGN_v11_acceptance.md (V11.2 rulings).
+## rollout.md (V11.2 RUN entries + CLOSE) + docs/DESIGN_v11_acceptance.md (V11.2 rulings).
 
 ## F1–F3 BUILT + ON PA (2026-07-13, commit a58a4b5): the quote-repair output-contract fix is
 ## DONE — F1 card-only contract + F2 no-op channel (QUOTE_REPAIR_PROMPT), F3 anchor-wall

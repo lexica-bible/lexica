@@ -1,4 +1,4 @@
-"""Constraint-hint register + injection tests (DESIGN_hint_tooling.md, JP-ruled 2026-07-12).
+"""Constraint-hint register + injection tests (docs/DESIGN_hint_tooling.md, JP-ruled 2026-07-12).
 
 Guards: (1) every draw_hints.py entry carries provenance naming its audit-doc ruling record
 (the register is the machine-readable copy; the audit entry is the source of truth); (2) the

@@ -1,4 +1,4 @@
-"""V10 coverage REPAIR PASS controls (DESIGN_v10_repair.md, CLOSED at d04b6e6; built under
+"""V10 coverage REPAIR PASS controls (docs/DESIGN_v10_repair.md, CLOSED at d04b6e6; built under
 JP's standing delegation 2026-07-12). Three ruled controls, all db-free and model-free
 (the model is a mock — CI never calls the API):
 

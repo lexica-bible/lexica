@@ -3,7 +3,7 @@
 # WHAT: the exact 31 (verse | host) phrase-gloss rows the S11 rebuild ADDED to the
 # fix-(g) under-distribution detector (scripts/audit_phrase_gloss_underdist.py), on top
 # of its frozen baseline of 671 flagged rows on the pre-S11 live db (the deferred
-# "not+verb" negation class — CHARTER_cert_session9.md lines 390-399).
+# "not+verb" negation class — docs/CHARTER_cert_session9.md lines 390-399).
 #
 # WHY THEY ARE NOT REGRESSIONS: the (P1) pronoun fix consolidates a straddled verb-phrase
 # WHOLE onto its pronoun slot and leaves the verb slot blank, so the reading matches the
@@ -17,7 +17,7 @@
 #   - 30 are pre-S11 word-order SURVIVORS (AUDIT_reassembly_survivors.txt) that (P1)
 #     drove to reading-correct — verified by a survivor-membership test (comm, 30/31).
 #   - Mat 12:14 is NOT a survivor. It is the blank-Strong's-fill / expected-diff verse
-#     pre-registered independently at CHARTER_cert_session9.md line 466 (columns
+#     pre-registered independently at docs/CHARTER_cert_session9.md line 466 (columns
 #     english/english_head/greek_pos/bracket_id). Its rows were inspected directly: the
 #     verb "should destroy" consolidated onto the G846 slot, the G622 slot left blank,
 #     reassembly clean. Two independent confirmations, not the survivor story.

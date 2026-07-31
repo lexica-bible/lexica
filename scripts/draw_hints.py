@@ -1,6 +1,6 @@
 """draw_hints.py — the pre-registered CONSTRAINT-hint register for parked-word re-entry.
 
-Design + all five rulings: DESIGN_hint_tooling.md (JP, 2026-07-12, "go with all recs").
+Design + all five rulings: docs/DESIGN_hint_tooling.md (JP, 2026-07-12, "go with all recs").
 Hand-curated, same pattern as the CONTESTED register. Each entry:
 
   hints:      one-line pre-registered constraints, three legal classes ONLY —
@@ -23,7 +23,7 @@ Hand-curated, same pattern as the CONTESTED register. Each entry:
                  float:[refs], excluded:[refs], provenance}
               Injected only under the --roster flag (soft-explicit draw context; frozen
               V9 prompt untouched); enforced post-draw by #30 membership + the #55
-              sense-count guard. See DESIGN_hint_tooling.md's floor-consensus class.
+              sense-count guard. See docs/DESIGN_hint_tooling.md's floor-consensus class.
   provenance: which park entry / ruling each entry encodes. The audit entry is the
               source of truth; this file is the machine-readable copy. A CI test
               (tests/test_draw_hints.py) asserts every entry names one.

@@ -66,5 +66,5 @@ mismatch. Two plausible homes:
 current fixture and an incomplete name index are different problems; this check would only tell
 us the fixture still matches the corpus, not that the corpus is right.
 
-**Related:** `DESIGN_p2_guard_loudness.md` (the adjacent ticket — making the guard's *failure*
+**Related:** `docs/DESIGN_p2_guard_loudness.md` (the adjacent ticket — making the guard's *failure*
 visible; different problem, same seam) · AUDIT "#71 KNOWN-SET TICKET" · ENGINE_LESSONS #71/#72.

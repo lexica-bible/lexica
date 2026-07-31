@@ -1,6 +1,6 @@
 # Reassembly-diff — findings + rebuild plan (2026-07-04)
 
-> **SUPERSEDED 2026-07-05 → see `CHARTER_cert_session9.md` (the single canonical S9 charter).**
+> **SUPERSEDED 2026-07-05 → see `docs/CHARTER_cert_session9.md` (the single canonical S9 charter).**
 > Its adjudicated findings, count table, family table, render-trace, and rebuild plan are folded
 > into the charter as diffs (P)/(e)/(f)/(g), and its tool explainer is preserved there. This file is
 > kept ONLY as the raw diagnosis history — do NOT govern the rebuild from here.
@@ -13,9 +13,9 @@
 READ-ONLY audit complete. No data writes yet. This memo is the decision doc; nothing
 changes until it's approved.
 
-## CANONICAL CHARTER = `CHARTER_cert_session9.md` (this arc is S9 diffs (P)/(e)/(f)/(g))
+## CANONICAL CHARTER = `docs/CHARTER_cert_session9.md` (this arc is S9 diffs (P)/(e)/(f)/(g))
 Do NOT rebuild for this alone, and do NOT open S9 from this file. **The single canonical
-Session-9 charter is `CHARTER_cert_session9.md`** — it governs the physical rebuild
+Session-9 charter is `docs/CHARTER_cert_session9.md`** — it governs the physical rebuild
 (batching contract, per-column attribution, gate block). This doc is the TECHNICAL
 BACKING for its diffs (P) build_words slotting, (e) paren float, (f) the leaks,
 (g) phrase-gloss under-distribution. Read the charter first; come here for the detail.

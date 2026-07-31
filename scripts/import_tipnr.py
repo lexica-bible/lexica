@@ -737,7 +737,7 @@ def main():
     # Runs AFTER commit: the rebuild work is saved and complete before anything can be reported.
     # SEVERITY (JP-ruled): drift NEVER fails or aborts the rebuild — the rebuild is not wrong, the
     # FIXTURE is stale. The nonzero exit is a VERDICT, not an abort: finish_rebuild.sh collects it
-    # and refuses to print "done", so the flag cannot scroll past. See DESIGN_p2_guard_drift_check.md.
+    # and refuses to print "done", so the flag cannot scroll past. See docs/DESIGN_p2_guard_drift_check.md.
     from check_p2_guard_fixture import check_guard_fixture
     fixture_ok, fixture_lines = check_guard_fixture(conn)
     conn.close()

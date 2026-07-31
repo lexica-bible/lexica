@@ -102,11 +102,15 @@ precede it, your call — but they are a reported class, not a residue to quietl
    JP-checkpointed.
 3. **WAL-crumb cleanup** — small, zero-risk. Orphan 0-byte `-wal`/`-shm` files in
    `~/bible-db`; no script opens WAL, so they are historical. Check dates, delete.
-4. **Possible second reorg pass** — ~11 root files were out of the first pass's scope
-   (`CHARTER_*`, `DESIGN_*`, `REVIEW_*`, `RELAY_v11_build_open.md`, `STATE.md`,
-   `V9_PILE.md`, `V111_CONSULT.md`, `JP_QUICKREF_lexica.md`, `FEATURES.md`, `CREDITS.md`,
-   `entity_resolution_rebuild.md`). `entity_resolution_rebuild.md` looks orphaned —
-   lowercase, no family. Also open: the pre-existing broken pointer
+4. **Second reorg pass — DONE 2026-07-31**, same day. The remaining 19 root docs
+   (`CHARTER_*`, `DESIGN_*`, `REVIEW_*`, `RELAY_v11_build_open`, `STATE`, `V9_PILE`,
+   `V111_CONSULT`, `JP_QUICKREF_lexica`, `FEATURES`, `entity_resolution_rebuild`) moved to
+   `docs/`, joining the same-family files already there. Six spent alias-session dumps
+   deleted (JP ruling: history keeps them). Root is now app files + README, TODO.md,
+   TODO_ARCHIVE.md, ENGINE_LESSONS.md, CLAUDE.md, CREDITS.md.
+   **Correction on record:** `entity_resolution_rebuild.md` was called "likely orphaned" at
+   first — it is NOT; it carries 3 references including `entity_resolution.py`'s header.
+   Still open: the pre-existing broken pointer
    `docs/tickets/DRILL_greek_header_backfill.md` → `docs/tickets/greek_header_split.txt`
    (that file never existed at any commit).
 

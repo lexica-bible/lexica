@@ -244,7 +244,7 @@ reads it) — which is why the p2wl:v2 guard fixture drift check is chained ther
 automatically, standalone run included. The claim it checks is single-sourced in
 `scripts/check_p2_guard_fixture.py`, which OWNS it (the probe-2 test imports it — never a second
 copy). **Drift ≠ a broken rebuild: it means the FIXTURE is stale.** Paste the run's findings in,
-re-date `FIXTURE_VERIFIED`, re-run the probe-2 tests. Detail: `DESIGN_p2_guard_drift_check.md`.
+re-date `FIXTURE_VERIFIED`, re-run the probe-2 tests. Detail: `docs/DESIGN_p2_guard_drift_check.md`.
 
 ## Rate limiting / security (2026-06-07 pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide `300/min` per endpoint per IP; paid

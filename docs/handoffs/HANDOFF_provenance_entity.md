@@ -10,8 +10,8 @@ Supersedes the earlier 8488ba3 handoff. Session closed clean; wrap ran (living d
 updated). This is the pick-up sheet.
 
 ## 1. REBUILD: READY TO RUN — the next session's whole job
-All three review gates cleared (payloads `REVIEW_rebuild_precode.md` / `REVIEW_rc2_rereview.md`
-/ `REVIEW_alias_batch.md`, verdicts pasted + logged) **and gate zero cleared** (JP dashboard
+All three review gates cleared (payloads `docs/REVIEW_rebuild_precode.md` / `docs/REVIEW_rc2_rereview.md`
+/ `docs/REVIEW_alias_batch.md`, verdicts pasted + logged) **and gate zero cleared** (JP dashboard
 paste: 1.1 GB free). Every approved change is LANDED in code with controls green:
 - **RC-1** scoped star-slot head pick (6d7a6ee) — name beats trailing common word, star slots only.
 - **RC-2** capitalized-lead splitter fallback (098a742) — red-first fixture in

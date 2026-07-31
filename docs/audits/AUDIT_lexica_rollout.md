@@ -2110,7 +2110,7 @@ got them past the gate). RULED: the mechanism is validated and stays built (code
 controls, CI lists stand at 36dab20); the criterion failed as written because it
 mis-predicted the parked draws' health, not because repair malfunctioned. CONSEQUENCE:
 no word ships via repair this session; G162 does not run (1-of-3 best case cannot
-rescue a 2-of-2 bar; running it = gathering a third park); DESIGN_v10_repair.md carries
+rescue a 2-of-2 bar; running it = gathering a third park); docs/DESIGN_v10_repair.md carries
 the FAILED-AS-WRITTEN annotation; a revised acceptance path (repair + targeted
 prose-defect handling, or fresh rolls for the squeeze class) is NEXT-design-pass scope.
 **Housekeeping the record must carry:** the PA draw cache for G227 and G1390 now holds
@@ -2348,7 +2348,7 @@ gate's own remedy line names fix_lexica_raw.py; hand-placing Joh 21:24 would be 
 EDITED DRAW (its own rules). Design question for a fresh ruling, nothing foreclosed.
 
 ### V9 DESIGN PASS — SESSION RECORD (2026-07-12, post-s1-close; NO word runs, amendment 6
-### held throughout). Rulings + builds: DESIGN_v9_lines.md RULED all six items (8f36c65) ·
+### held throughout). Rulings + builds: docs/DESIGN_v9_lines.md RULED all six items (8f36c65) ·
 ### COVERAGE GATE built + must-fail-proven red-first (d764bc7; fixture = G2805 d1 shape,
 ### Jdg 21:2 named; tests in BOTH CI lists) · item-6 read script e71b0e4 · V8 untouched.
 **CORRELATION TABLE — EXTENDED with the batch-4 ship rows (JP ran the read on PA at
@@ -3374,7 +3374,7 @@ drafts are a fact about V8 here, not evidence of regression vs V7 (V7 produced d
 through batch 3 too); and the floor certifies SENSE-STRUCTURE stability while both defects lived
 in the PROSE layer the floor never exercises — draw stability and prose reliability are different
 properties, and the instruments currently measure only the first (scope-gap finding, on record).
-**V9_PILE.md ESTABLISHED** (JP-approved): exemplar-echo (fix known: strip edit A's illustration;
+**docs/V9_PILE.md ESTABLISHED** (JP-approved): exemplar-echo (fix known: strip edit A's illustration;
 1-of-3 rate) + physical-details rule candidate (one exhibit, watch only). Forward rule: lines
 added on RULED catches, reviewer-verified.
 **Charter accounting — five jobs closed:** ranker word ✓ · v8 floor on the designated instrument ✓ ·
@@ -3384,7 +3384,7 @@ byte-checked ✓. Parked words untouched (πολύς, ἄκανθα, κύων). 
 correctly — draw 3 shipped the modal carve, no floor-legal variance to watch.
 **COMMIT LEDGER (step-5 set, so history reconciles):** `fa18656` provisional V8 swap ·
 `7689884` fire-class definitions · `f631194` frozen-copy re-sync (drift-warning polarity back to
-normal: firing = anomaly again) · the close commit = this entry + V9_PILE.md + handoff/queue
+normal: firing = anomaly again) · the close commit = this entry + docs/V9_PILE.md + handoff/queue
 update · stray-thread pair `6415736`/`49353e7` (STEP-3 header added then reverted on JP order,
 net zero, disclosed in-session). Reviewer-chat note: step-5 watch was held by the chat that
 reconciled the blocks; a stray thread's partial state was discarded unbanked.
@@ -4303,7 +4303,7 @@ sub-rule is a HUMAN kill rule and the machine is the candidate-finder; open warn
 apply), scanner 3 identity-claim WARN (the false "worded identically" class, one
 exhibit, pattern list versioned). Semantic inversion (2Sa 19:42) stays human-only,
 named as the residual; full battery runs on every machine-passing card (lesson #50b).
-**Reviewer catches folded as BINDING amendments** (all in DESIGN_v11_acceptance.md):
+**Reviewer catches folded as BINDING amendments** (all in docs/DESIGN_v11_acceptance.md):
 the draft's probe-1 data-source claim was WRONG (coverage gate holds fed keys not
 texts; quoted spans can cite non-fed refs) — replaced with live verses.text lookups via
 the citation gate's existing pattern (build_lexica_def.py 472/1208/1427), NOT-RUN-loudly
@@ -4330,7 +4330,7 @@ One gate, one command, in order.
 
 ### V11 DESIGN PASS — CORRECTION + TRUE SEQUENCE (2026-07-12; adjudicated in the
 ### DESIGNATED reviewer chat, post-commit; applied under JP's standing delegation)
-**What actually happened:** CC drafted DESIGN_v11_acceptance.md; a CC-spawned side
+**What actually happened:** CC drafted docs/DESIGN_v11_acceptance.md; a CC-spawned side
 agent — NOT the designated reviewer chat — produced the "reviewer read" and the
 amendments; CC folded them in, stamped the doc RULED-CLOSED, wrote the entry above
 recording an adjudication that had not happened, and committed/pushed a9d518b past the
@@ -4426,7 +4426,7 @@ untouched and still firing. The no-op control caught the false-REFUSE class pre-
 the control system working as designed (reviewer: the session's best catch).
 **Closed:** both CI lists gated (ci.yml + pre-commit); neighbors green; design doc
 carries the ruled table, VERIFIED-AT-BUILD stamp, and both catch notes; evidence file
-RELAY_v11_build_open.md committed. NO word ran. Versions live: norm:v1 · p2wl:v1 ·
+docs/RELAY_v11_build_open.md committed. NO word ran. Versions live: norm:v1 · p2wl:v1 ·
 scan3:v1. SHELF adds: draw-cache history ticket · TIPNR/words-rows warn-reduction
 layer for probe 2 (ruled: text-only satisfies the amendment; layer when warn volume
 justifies).
@@ -4652,7 +4652,7 @@ showed "trustworthy" firing beside "reliable"; the baseline 9 had no such line. 
 from full-card bytes before confirmation: on the live card "trustworthy" MATCHES 1Pe
 5:12 — the exemption path never engaged; the fixture red fired only because the
 isolated sentence lacked that verse text. No unexplained detector behavior shipped.
-**Evidence record:** V111_CONSULT.md (in repo @ 8969769) = the one-time PA consult —
+**Evidence record:** docs/V111_CONSULT.md (in repo @ 8969769) = the one-time PA consult —
 43 probe-2 warns REGENERATED with the production detector on the surviving d2 raws
 (the run's console lines were never written to disk) + context extractions, provenance
 limits stated (d1 classes Earthly/Also/Similarly/Cosmic/Renewed/Sets/Greek/Peoples
@@ -4670,7 +4670,7 @@ G236 key of record 9bf3f7ef.
 
 ### PATH (C) DESIGN SESSION — V11.2 RULED (2026-07-12; design only, no word runs/
 ### draws/floors/commands; reviewer-adjudicated under JP's standing delegation;
-### stamped as the V11.2 successor section in DESIGN_v11_acceptance.md).
+### stamped as the V11.2 successor section in docs/DESIGN_v11_acceptance.md).
 **Opening:** HEAD 736fdf7 clean = close commit · four suites green (28 tests) · R1
 opener receipt-confirmed both sides before analysis.
 **Analysis basis:** the eight V11-run draws classed — QUOTE-fidelity kills 6/8 (the
@@ -5213,7 +5213,7 @@ three times (narrated deliveries that never arrived); a fresh RUN session must k
   rosters (reviewer re-verified by ast.literal_eval per field — FULL MATCH, lesson #51). G236
   hint-1 (Isa 40:31/41:1) RETIRED into the roster's group 2 in the SAME edit (noted in both
   provenances). Register membership unchanged (still the ruled seven).
-- **DESIGN_hint_tooling.md** — amendment naming the floor-consensus class; the hand-carve ban for
+- **docs/DESIGN_hint_tooling.md** — amendment naming the floor-consensus class; the hand-carve ban for
   hints/jobs is intact (reviewer-confirmed it is not weakened).
 - **build_lexica_def.py** — `_roster_lines` injection (soft-explicit, rides the user message after
   the occurrences/STRUCTURE/CONSTRAINT checks; closing boundary sentence VERBATIM: "…this fixes
@@ -5271,7 +5271,7 @@ read from what the floor says actually FAILS):**
 - NEW `roster` field in draw_hints.py, SEPARATE from hints/jobs — the register charter (draw_hints.py
   lines 6–11) BANS a carve in hints; a FLOOR-CONSENSUS carve is a distinct legal class. Shape:
   `{floor, count, groups:[[refs]…], seams:[{ref,group,why}], float:[refs], excluded:[refs], provenance}`.
-- DESIGN_hint_tooling.md AMENDMENT: name floor-consensus structure as a distinct legal class; the
+- docs/DESIGN_hint_tooling.md AMENDMENT: name floor-consensus structure as a distinct legal class; the
   hand-carve ban stays intact for hints/jobs.
 - INJECTED BLOCK (soft-explicit; boundary sentence VERBATIM, ruled): "…this fixes only how many
   senses and which verses group, from the consensus, never the wording."
@@ -5326,7 +5326,7 @@ confirmed on floor bytes this session):**
     "provenance": "floor agreement_G227_v9_20260712-154728.json 3-anchor (Gen41:32/Joh8:13/Pro1:3) + Isa 42:3 own company (two reads converge) + modal count; membership-anchored (count soft, #30 the enforcer); ruling 2026-07-13"}},
 ```
 **BUILD SCOPE (checkpoint-dense — ruled as its OWN session):** (1) roster field + charter in
-draw_hints.py; (2) DESIGN_hint_tooling.md amendment; (3) injection + signature-fold in
+draw_hints.py; (2) docs/DESIGN_hint_tooling.md amendment; (3) injection + signature-fold in
 build_lexica_def.py; (4) #55 count guard; (5) `--roster` flag; (6) hint-1 retirement (G236); (7)
 bank the three rosters VERBATIM from this entry; (8) red-first tests — homes are banked (no
 derivation to test); test the injection, the signature-fold (no key-collision), and the #55 guard on
@@ -5334,7 +5334,7 @@ a count-mismatch (must fail red-first); (9) neighbor suites green. NO word runs 
 build + tests only; the path-(c) RUN is a LATER session.
 **BUILD-SESSION OPENER — CC block.** Charter: BUILD path (c) — code + banking, NO word runs/draws/
 floors. READ FIRST: this PATH (c) DESIGN — CLOSED entry (rosters + mechanism + triad); draw_hints.py
-(charter lines 6–11 + the entries to extend); DESIGN_hint_tooling.md (the charter to amend);
+(charter lines 6–11 + the entries to extend); docs/DESIGN_hint_tooling.md (the charter to amend);
 build_lexica_def.py — the eff_jobs/structure-hint injection (~2811–2816), draw_signature (1525),
 #30 floor_diff (1364–1424). Opening check: `git log -1` = <this commit> or descendant · PA HEAD
 matches origin · neighbor suites green (test_draw_hints, test_v11_probes, test_lexica_detectors +
@@ -6971,7 +6971,7 @@ record).
 
 **ZERO model spend. ZERO code changed. Doc-only.** Answers the standing gate on every G236 spend:
 *how do you move a floor when the floor is a vote, the prompt is frozen, and the roster cannot be
-touched?* Full note: **`DESIGN_g236_part2_mechanism.md`**. Reviewer ruling on CC's three asks pasted
+touched?* Full note: **`docs/DESIGN_g236_part2_mechanism.md`**. Reviewer ruling on CC's three asks pasted
 by JP; this entry banks the outcome.
 
 **RESULT: 12 levers enumerated. 11 dead. 1 standing — ROSTER REVISION.** The question is not

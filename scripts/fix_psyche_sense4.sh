@@ -1,7 +1,7 @@
 #!/bin/bash
 # fix_psyche_sense4.sh — the JP-ruled 2026-07-11 G5590 psyche sense-4 overclaim fix.
 # Six exact swaps via fix_lexica_raw.py (each aborts unless its text occurs exactly once).
-# Dry-run by default; pass --apply to write. Record: V9_PILE.md sense-header-overclaim entry.
+# Dry-run by default; pass --apply to write. Record: docs/V9_PILE.md sense-header-overclaim entry.
 # Ruling: sense 4 recut to Mat 10:28 attested scope; 1Co 15:45 -> sense 1 (quotes Gen 2:7);
 # Mar 8:36 RULED sense-1 life-as-stake (8:35 wordplay); Range + gloss-note restatements swept.
 set -e

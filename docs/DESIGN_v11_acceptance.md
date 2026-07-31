@@ -84,7 +84,7 @@ field for the τόπος/ἔργον-style artifact edge cases). Anchoring rule 
 quote matches exactly one of a multi-ref parenthetical, that ref must be the primary
 anchor (catches defect 5).
 Implementation surface *(VERIFIED-AT-BUILD, 2026-07-12 — the step-2 code-read gate ran
-and PASSED, reviewer receipt-confirmed; reference: RELAY_v11_build_open.md §C. All four
+and PASSED, reviewer receipt-confirmed; reference: docs/RELAY_v11_build_open.md §C. All four
 claims confirmed against the file on disk, with one upgrade: ctx carries only the FED
 sample's texts, so own lookups are not merely conservative but REQUIRED — the fed set
 can never cover Range/gloss-note/repair-integrated refs. Data source ruled: conn param
@@ -95,7 +95,7 @@ build_lexica_def.py 472/1208/1427 — the connection is already in hand at the c
 on a pass with no DB in reach the probe announces NOT RUN loudly, same convention as the
 coverage gate, never a silent skip. Runs on PA where the script runs.
 **Normalization table — RULED (build session 2026-07-12, reviewer-adjudicated under
-the standing delegation; evidence RELAY_v11_build_open.md §§E–H). NORM_VER = norm:v1.
+the standing delegation; evidence docs/RELAY_v11_build_open.md §§E–H). NORM_VER = norm:v1.
 Anything not listed = strict byte match, both sides normalized identically:**
 | Row | Treatment | Basis |
 |---|---|---|
@@ -313,7 +313,7 @@ command, in order — the normal full per-word path, each word ships or parks on
 own record.
 
 ## Ruling 7 — this stamp
-Stamped as a successor section in DESIGN_v11_acceptance.md; the affirmed V11 design
+Stamped as a successor section in docs/DESIGN_v11_acceptance.md; the affirmed V11 design
 text above is untouched as record.
 
 ## Build order (next session, before any run)

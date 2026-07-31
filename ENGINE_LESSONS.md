@@ -719,7 +719,7 @@ both drifting from the doc.
     tag, never the header's semantic claim. → two rules: (a) V9 candidate = header-attestation
     check (every load-bearing header property traceable to ≥1 cited verse that carries it);
     (b) any wording fix must SWEEP every restatement — header, Range, gloss notes — or the card
-    contradicts itself one screen below the fix. Full class + before/after pair: V9_PILE.md
+    contradicts itself one screen below the fix. Full class + before/after pair: docs/V9_PILE.md
     sense-header-overclaim entry (fixed @ 341f493, gate 39/39). *(2026-07-11)*
 
 50. **A machine-gate kill leaves the hand-check battery UNRUN — "otherwise the word's best card"

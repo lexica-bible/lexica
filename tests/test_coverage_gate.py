@@ -1,4 +1,4 @@
-"""V9 coverage gate (JP-ruled 2026-07-12, DESIGN_v9_lines.md RULINGS block): every FED
+"""V9 coverage gate (JP-ruled 2026-07-12, docs/DESIGN_v9_lines.md RULINGS block): every FED
 occurrence must be cited under a sense; trimming is a ship defect (floor-legal only).
 
 MUST-FAIL FIXTURE PROVENANCE (reviewer condition, on the record): the trimmed fixture

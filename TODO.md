@@ -9,7 +9,7 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## ABP corpus certification audit — ARC CLOSED (Tier A certified + live)
-S1–S11 record → docs/audits/AUDIT_abp_certification.md + CHARTER_cert_session9.md + docs/audits/AUDIT_entity_seam.md +
+S1–S11 record → docs/audits/AUDIT_abp_certification.md + docs/CHARTER_cert_session9.md + docs/audits/AUDIT_entity_seam.md +
 memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open leftovers only:
 - **verify_prose_leak.py "Tier B applied" mode** — parser-only check FAILs-that-isn't on the 5
   Tier-B prose verses when run against a finished scratch; next rebuild shouldn't re-derive this.
@@ -237,7 +237,7 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   pinned two-derivation list, folded into the builder as `_strip_helper_double_tag`, locked by
   tests/test_helper_double_tag.py (CI + pre-commit). Exhibits (Jud 1:9, Rth 2:16, Job 18:13) clean;
   361 structural matches correctly LEFT ALONE (legit doubles + split renderings = the A-review
-  pile). Full record: docs/audits/AUDIT_lexica_rollout.md splitter-fix entry + CHARTER_splitter_fix.md.
+  pile). Full record: docs/audits/AUDIT_lexica_rollout.md splitter-fix entry + docs/CHARTER_splitter_fix.md.
   Standing acceptance rule: any related fix re-checks "no helper-word chips" on the exhibit words
   (chips + search highlighting read the words table), not just corrected rows.
 - **Splitter polarity B — English-pooled-on-function-word rows (follow-up ticket, hand-review
@@ -813,7 +813,7 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   **WATCH the first live run, do NOT assume it** — a wrapper that refuses to say `done` when it
   should would be a new false alarm in the highest-stakes procedure here. **Do NOT rebuild just to
   test this** — that inverts the reason for the check (JP, 2026-07-14). Full record: AUDIT "GUARD
-  FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD" + `DESIGN_p2_guard_drift_check.md`.
+  FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD" + `docs/DESIGN_p2_guard_drift_check.md`.
 
 - **PROSE-ECONOMY DESIGN TICKET (JP's own inquiry, banked — zero-spend, fresh-head design work).**
   The only item on the zero-spend shelf. Not pre-decided, not pre-pitched.

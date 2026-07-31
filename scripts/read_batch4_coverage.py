@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """READ-ONLY correlation read — batch-4 shipped cards vs fed-coverage (V9 ruling item 6,
-DESIGN_v9_lines.md; JP runs on PA). One row per shipped card: SID, card length, fed count,
+docs/DESIGN_v9_lines.md; JP runs on PA). One row per shipped card: SID, card length, fed count,
 cited count, absentees by name. NO writes: bible.db opened read-only, draw files read-only,
 no model call, no gate refusal — a report, not a gate.
 

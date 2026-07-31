@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Locking tests for the helper double-tag strip (splitter charter,
-CHARTER_splitter_fix.md): the _strip_helper_double_tag build pass + the shared
+docs/CHARTER_splitter_fix.md): the _strip_helper_double_tag build pass + the shared
 helper_ok screen. Synthetic 13-element rows, no bible.db (PA-only).
 
 The canonical cases are the three charter exhibits plus the two wrong-call

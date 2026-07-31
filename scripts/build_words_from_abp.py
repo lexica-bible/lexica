@@ -387,7 +387,7 @@ _CARRY_FW = frozenset({
 })
 
 
-# ── Helper double-tag strip (splitter charter, CHARTER_splitter_fix.md) ───────
+# ── Helper double-tag strip (splitter charter, docs/CHARTER_splitter_fix.md) ───────
 # When ABP glues a helper word onto a bracketed verb ("May [2reproachG2008"),
 # _emit_words peels the helper back outside the bracket but keeps the verb's
 # Strong's on it — two rows, one tag (Jud 1:9 / Job 18:13 / Job 3:4). That

@@ -1,6 +1,6 @@
 # REVIEW PAYLOAD — RC-2 re-review (blank star rows: trace results + rescoped fix)
 
-Follow-up to `REVIEW_rebuild_precode.md` Change 2. The approval was conditional on a trace
+Follow-up to `docs/REVIEW_rebuild_precode.md` Change 2. The approval was conditional on a trace
 confirming the 477 blank rows fail at the roster lookup; the trace was run and the picture
 is MORE SPECIFIC than the original claim, so per the verdict's own terms it comes back.
 RC-1 and retention are applied and pushed (commit 6d7a6ee); nothing RC-2 has been edited.

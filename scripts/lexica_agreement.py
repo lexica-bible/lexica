@@ -361,7 +361,7 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 No preamble, no restating the lemma, no closing summary.
 """
 
-# V9 (promoted 2026-07-12, JP ruling via the reviewer chat; DESIGN_v9_lines.md RULINGS
+# V9 (promoted 2026-07-12, JP ruling via the reviewer chat; docs/DESIGN_v9_lines.md RULINGS
 # block) = V8 + exactly the two adopted lines, spliced at the end of the Constraints
 # block. Built from the frozen v8 copy + a frozen literal of the lines, so the sync
 # check below stays a REAL byte-comparison: if the v8 copy, this literal, the splice
@@ -389,7 +389,7 @@ def _check_prompt_sync():
     """Loud if our frozen copy of the LIVE engine has drifted from build_lexica_def.VERSE_PROMPT.
     This is the invariant that matters: the reviewer must draw under the SAME prompt the build
     ships, or it isn't measuring the live engine. The frozen copy is v9 since the 2026-07-12
-    promotion (DESIGN_v9_lines.md rulings); v7 and v8 are historical and intentionally differ."""
+    promotion (docs/DESIGN_v9_lines.md rulings); v7 and v8 are historical and intentionally differ."""
     if V9_PROMPT.strip() != B.VERSE_PROMPT.strip():
         print("WARNING: the v9 copy here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must "
               "be byte-identical so the reviewer measures the live engine. Re-sync before trusting "
