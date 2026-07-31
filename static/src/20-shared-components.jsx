@@ -22,19 +22,43 @@
 // sees the warrant). Tap-away dismisses. STANDING RULE: warrant tags are
 // NON-NAVIGATING only — a tag that navigates puts its warrant on the
 // destination instead; a datum tag (Male, POS, counts) gets no warrant at all.
+// ONE presentation for both input classes (JP defect verdict 2026-07-30): the
+// custom popover is the only rendering — NO native title (the unstyleable black
+// browser tooltip fired alongside it, ba129bbc defect). Hover opens it after a
+// short delay and mouseleave closes (desktop); tap opens and tap-away dismisses
+// (touch). The popover measures itself before paint and flips left/up when the
+// right/bottom viewport edge would clip it — a clipped warrant is a defect.
 function WarrantTag({ cls, warrant, children }) {
   const [open, setOpen] = useState(false);
+  const [flip, setFlip] = useState(null);   // {r, up} once measured, per open
   const ref = useRef(null);
+  const popRef = useRef(null);
+  const hoverT = useRef(null);
   useEffect(() => {
     if (!open) return;
     const away = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener("pointerdown", away);
     return () => document.removeEventListener("pointerdown", away);
   }, [open]);
+  useLayoutEffect(() => {
+    if (!open || flip !== null || !popRef.current) return;
+    const r = popRef.current.getBoundingClientRect();
+    setFlip({ r: r.right > window.innerWidth - 8, up: r.bottom > window.innerHeight - 8 });
+  }, [open, flip]);
+  useEffect(() => () => clearTimeout(hoverT.current), []);
+  const show = () => { clearTimeout(hoverT.current); hoverT.current = setTimeout(() => setOpen(true), 150); };
+  const hide = () => { clearTimeout(hoverT.current); setOpen(false); setFlip(null); };
   return (
-    <span className="warrant-wrap" ref={ref}>
-      <span className={cls} title={warrant} onClick={() => setOpen(o => !o)}>{children}</span>
-      {open && <span className="warrant-pop" role="note">{warrant}</span>}
+    <span className="warrant-wrap" ref={ref}
+      onMouseEnter={show} onMouseLeave={hide}
+      onClick={() => { clearTimeout(hoverT.current); setOpen(true); }}>
+      <span className={cls}>{children}</span>
+      {open && (
+        <span ref={popRef} role="note"
+          className={"warrant-pop" + (flip && flip.r ? " warrant-pop--r" : "") + (flip && flip.up ? " warrant-pop--up" : "")}
+          style={flip === null ? { visibility: "hidden" } : undefined}>
+          {warrant}</span>
+      )}
     </span>
   );
 }

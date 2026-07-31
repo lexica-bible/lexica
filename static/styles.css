@@ -1841,8 +1841,10 @@ input { font-family: inherit; }
 /* Tag warrant popover (JP ruling 2026-07-30): tap a claim/citation tag to read the
    same sentence desktop shows on hover. Semantic notice (bounded exception), shared
    radius, hairline border — no new pill, the tag itself is unchanged. */
-.warrant-wrap { position: relative; display: inline-block; }
+.warrant-wrap { position: relative; display: inline-block; cursor: default; }
+.warrant-wrap > :first-child { cursor: default; user-select: none; }
 .warrant-pop {
+  user-select: none; cursor: default;
   position: absolute; top: calc(100% + 6px); left: 0; z-index: 40;
   min-width: 180px; max-width: 260px;
   background: var(--bg); border: 1px solid var(--rule); border-radius: var(--radius);
@@ -1851,6 +1853,9 @@ input { font-family: inherit; }
   font-family: var(--f-sans); font-weight: 400; letter-spacing: 0;
   text-transform: none; white-space: normal; text-align: left;
 }
+/* Viewport-collision flips — must sit AFTER the base rule to win the tie. */
+.warrant-pop--r { left: auto; right: 0; }
+.warrant-pop--up { top: auto; bottom: calc(100% + 6px); }
 
 /* BDB (Hebrew) sidebar */
 .bdb-badge {
