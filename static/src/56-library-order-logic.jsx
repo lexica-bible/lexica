@@ -158,6 +158,33 @@ function pnClickPayload(w, greekText) {
   return { isPN: true, pnName, gloss: pnName };
 }
 
+// CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND
+// word of an adjacent same-entity PN pair (pn_merge, derived from pn_binding —
+// "Ezion"+"Geber" one entity => one clickable chip). Fold it into the previous
+// word for CHIP display only: english shows both words, the Greek line keeps
+// both printed tokens — but english_head stays the FIRST word's name, because
+// pnClickPayload keys the entity lookup on it (the standing single-producer
+// tripwire; the entity is keyed under the first word). Binds don't move, the
+// partner slot's data is untouched (Mary-class rule); prose + interlinear
+// (faithful as-printed) modes never call this. Same-bracket only.
+function mergePnChipPairs(words) {
+  const out = [];
+  for (const w of words) {
+    const prev = out[out.length - 1];
+    if (w.pn_merge && prev && prev.is_pn && prev.position === w.position - 1
+        && prev.bracket_id === w.bracket_id) {
+      out[out.length - 1] = { ...prev,
+        english: ((prev.english || prev.english_head || "") + " " + (w.english || w.english_head || "")).trim(),
+        lemma: [prev.lemma, w.lemma].filter(Boolean).join(" "),
+        inflected: [prev.inflected, w.inflected].filter(Boolean).join(" "),
+      };
+      continue;
+    }
+    out.push(w);
+  }
+  return out;
+}
+
 // PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
 // Interlinear toggles (either one forces chip). So clicking Prose always works: it
 // SNAPSHOTS whatever toggles are on, unticks both, and switches to prose; the next
@@ -210,5 +237,5 @@ function libViewTransition(state, action) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, mergePnChipPairs };
 }

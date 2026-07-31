@@ -13,6 +13,7 @@ from flask import Blueprint, jsonify
 import core as _core
 from core import (db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols,
                   step_lemma_cols, pn_xref_parts)
+from entity_resolution import norm_name as er_norm_name
 
 bp = Blueprint("library", __name__)
 
@@ -112,6 +113,29 @@ def verse_words(book, chapter, verse):
                ORDER BY w.position""",
             (row["id"],),
         ).fetchall()
+        # Chip-merge signal (JP-approved 2026-07-31): two ADJACENT proper-noun words
+        # whose recorded binds resolve to the SAME entity (Ezion+Geber, Ramoth+Gilead)
+        # render as ONE chip. Display-only marker derived from pn_binding — the source
+        # of truth — at read time; binds don't move, the partner slot's data is
+        # untouched (Mary-class rule). Trigger is exact: both names bound, same
+        # entity key, positions consecutive. Absent table -> no markers (deploy-safe).
+        merge_pos = set()
+        if any(w["is_pn"] for w in wrows) and conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_binding'"
+        ).fetchone():
+            bmap = {r["name"]: r["entity_uniq"] for r in conn.execute(
+                "SELECT name, entity_uniq FROM pn_binding "
+                "WHERE book=? AND chapter=? AND verse=? AND render=1",
+                (book, chapter, verse))}
+            if bmap:
+                prev = None
+                for w in wrows:
+                    ent = None
+                    if w["is_pn"]:
+                        ent = bmap.get(er_norm_name(w["english_head"] or w["english"] or ""))
+                    if ent and prev and prev["ent"] == ent and w["position"] == prev["pos"] + 1:
+                        merge_pos.add(w["position"])
+                    prev = {"pos": w["position"], "ent": ent} if ent else None
     finally:
         conn.close()
     return jsonify({
@@ -126,6 +150,7 @@ def verse_words(book, chapter, verse):
                 "pn_type":     w["pn_type"],
                 "pn_types":    w["pn_types"],
                 "is_content":  w["strongs_base"] not in _FUNCTION_STRONGS,
+                **({"pn_merge": True} if w["position"] in merge_pos else {}),
                 **_gid_field(w, bool(gid_sel)),
             }
             for w in wrows
@@ -291,6 +316,16 @@ def chapter_text(book, chapter):
                ORDER BY v.verse, w.position""",
             (book, chapter),
         ).fetchall()
+        # Chip-merge signal (JP-approved 2026-07-31) — same marker as verse_words:
+        # adjacent same-entity PN pair -> the SECOND word carries pn_merge and the
+        # reader folds it into the first chip. Derived from pn_binding at read time;
+        # display-only, binds untouched. Absent table -> no markers (deploy-safe).
+        brows = conn.execute(
+            "SELECT verse, name, entity_uniq FROM pn_binding "
+            "WHERE book=? AND chapter=? AND render=1", (book, chapter),
+        ).fetchall() if conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_binding'"
+        ).fetchone() else []
     finally:
         conn.close()
     verses: dict[int, dict] = {}
@@ -314,6 +349,20 @@ def chapter_text(book, chapter):
             "inflected_translit": (r["surface_translit"] if has_surface else "") or "",
             **_gid_field(r, bool(gid_sel)),
         })
+    if brows:
+        bmap: dict[int, dict] = {}
+        for b in brows:
+            bmap.setdefault(b["verse"], {})[b["name"]] = b["entity_uniq"]
+        for vn, vd in verses.items():
+            vb = bmap.get(vn)
+            if not vb:
+                continue
+            prev = None
+            for w in vd["words"]:
+                ent = vb.get(er_norm_name(w["english_head"] or w["english"] or "")) if w.get("is_pn") else None
+                if ent and prev and prev["ent"] == ent and w["position"] == prev["pos"] + 1:
+                    w["pn_merge"] = True
+                prev = {"pos": w["position"], "ent": ent} if ent else None
     return jsonify([
         {
             "verse": v,

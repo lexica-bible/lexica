@@ -343,7 +343,8 @@ const LibRender = (function () {
     let content;
     {
       const sortedWords = [...v.words].filter(w => w.english || w.kjv_def || w.strongs_base === "*").sort((a, b) => a.position - b.position);
-      const groups = groupForGreekMode(sortedWords);
+      // One entity = one chip (chip mode only; prose/interlinear untouched).
+      const groups = groupForGreekMode(mergePnChipPairs(sortedWords));
       content = groups.map((g, gi) => {
         if (!g.isBracket) {
           return chip(g.word, `g${gi}`);
