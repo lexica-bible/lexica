@@ -974,7 +974,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </p>)
         : null;
       const thin = !richPerson && !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + factItems.length) <= 1;
-      const chipOwnLine = peopleClan || (be.section !== "person" && be.section !== "place");
+      // Provenance-tag placement (JP spec 2026-07-30): the source tag sits UNDER the
+      // description line — not beside it, not up in the section header — stacked with
+      // the match-state so description → tag + match-state read as ONE provenance
+      // unit. Same row on thin and full cards; no new pill, existing badge classes.
+      const provRow = (tag) => (
+        <div className="pnbound-prov">
+          <span className="bdb-badge">{tag}</span>
+          <span className="pnbound-badge">Matched to this verse</span>
+        </div>
+      );
       // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
       // rule): every person/place section opens with the ENTITY's name in bold. The
       // old rule suppressed it when it matched the clicked word ("stutter"), but on
@@ -991,16 +1000,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             : null;
         return (
           <section key="boundEntity" className="sec pnbound">
-            <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
+            <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
             <div className="pnbound-name">{heroName}</div>
-            <div className="pnbound-thinrow">
-              {opener}
-              {/* People/Clan + every 'other'-type card (Deity/Group/Being/Reference):
-                  badge on its own line, matching the full PERSON card (JP eyeball +
-                  reviewer ruling 2026-07-16 — inline it crowds the description). */}
-              {!chipOwnLine && <span className="pnbound-badge">Matched to this verse</span>}
-            </div>
-            {chipOwnLine && <div className="pnbound-badge">Matched to this verse</div>}
+            {opener && <div className="pnbound-thinrow">{opener}</div>}
+            {provRow("TIPNR")}
           </section>
         );
       }
@@ -1009,9 +1012,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
               sources — the badge credits both. CONDITIONAL on the data actually shown
               (richPerson), never on the card variant: a TIPNR-only card stays "TIPNR". */}
-          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
+          <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
+          {provRow(richPerson ? "MetaV/TIPNR" : "TIPNR")}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">
@@ -1024,7 +1028,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Several places share this name — map hidden to avoid a wrong location.</p>
               : null)}
           {witnessNote}
-          <div className="pnbound-badge">Matched to this verse</div>
         </section>
       );
     }

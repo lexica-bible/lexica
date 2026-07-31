@@ -2,7 +2,7 @@
 // SHARED VERSE ROW — used by both Search (CorpusGroup) and the Lexicon tab.
 // Lazy-loads its own words; highlights any word whose Strong's is in citedStrongs.
 // ============================================================
-function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache, hideRef }) {
+function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache, hideRef, hiPositions }) {
   const [words, setWords] = useState(null);
   const [kjvText, setKjvText] = useState(null);
   const [hebWords, setHebWords] = useState(null);
@@ -159,6 +159,9 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
                                 || (w.g_id && w.g_id.strongs && (citedStrongs.has(w.g_id.strongs) || citedStrongs.has(strongsBare(w.g_id.strongs))))).map(w => w.position)
               : []
           );
+          // Numberless name-form lane (PN:<form> word study): no Strong's to match,
+          // so the caller hands the name's own word slot(s) to light directly.
+          if (hiPositions) hiPositions.forEach(p => citedPositions.add(p));
           const proseCtx = {
             selChapter: chapter,
             hiClass: (vs, pos) => citedPositions.has(pos) ? " corpus-hit" : "",

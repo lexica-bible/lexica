@@ -813,7 +813,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               allResults={[]} onWordClick={onWordClick}
               onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
               textMode={profileCorpus === "kjv" ? "kjv" : profileCorpus === "heb" ? "heb" : profileCorpus === "bsb" ? "bsb" : "greek"}
-              primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}/>
+              primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}
+              hiPositions={v.position != null ? [v.position] : undefined}/>
             );
           })}
           {verseList.length > visibleCount && (
@@ -1148,6 +1149,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                         primaryStrongs={null}
                         citedStrongs={citedStrongs}
                         kjvCache={{}}
+                        hiPositions={v.position != null ? [v.position] : undefined}
                       />
                       );
                     })}

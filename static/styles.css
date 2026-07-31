@@ -3016,6 +3016,18 @@ input { font-family: inherit; }
   color: var(--ink-2);
 }
 .pnbound-thinrow .pnbound-badge { margin-top: 0; }
+/* Provenance unit (JP spec 2026-07-30): source tag + match-state stacked directly
+   UNDER the description line — one baseline row, reusing the existing badge classes. */
+.pnbound-prov {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.pnbound-prov .pnbound-badge { margin-top: 0; }
+.pnbound-desc { margin-bottom: 4px; }
+.pnbound-thinrow { margin-bottom: 4px; }
 
 /* ── Leaflet mini-map ────────────────────────────────────────── */
 .metav-leaflet-map {

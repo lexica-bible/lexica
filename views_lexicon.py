@@ -1146,7 +1146,8 @@ def _pn_lemma_rows(conn, lemma, testament="all"):
                         "AND name='pn_greek_identity'").fetchone():
         return []
     rows = conn.execute(f"""
-        SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse
+        SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse,
+               p.position AS position
         FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id
         WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
         ORDER BY {_BOOK_RANK_SQL}, v.chapter, v.verse
@@ -1176,7 +1177,11 @@ def _pn_lemma_profile(lemma):
         books = [{"book": b, "name": book_meta.get(b, {}).get("name", b),
                   "testament": book_meta.get(b, {}).get("testament", ""), "count": c}
                  for b, c in sorted(book_counts.items(), key=lambda x: -x[1])]
-        dv = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]}
+        # position = the name's own word slot in that verse (pn_greek_identity's
+        # key); a numberless form has no Strong's for the highlighter to match,
+        # so the verse row lights this slot instead.
+        dv = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
+               "position": r["position"]}
               for r in occ[:_ALL_VERSES_CAP]]
         # Same payload keys as a numbered profile so the frontend machinery is
         # unchanged; name_form drives the honest state line + gated extras.
@@ -1650,7 +1655,8 @@ def lexicon_verses(strongs, book):
             occ = _pn_lemma_rows(conn, lemma, testament)
             if book != "all":
                 occ = [r for r in occ if r["book"] == book]
-            vout = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]}
+            vout = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
+                     "position": r["position"]}
                     for r in occ[:_ALL_VERSES_CAP]]
             return jsonify({"verses": vout, "glosses": [],
                             "truncated": len(occ) > _ALL_VERSES_CAP})
