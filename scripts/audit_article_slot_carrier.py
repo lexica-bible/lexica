@@ -170,6 +170,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, ROOT)
 
 from build_words_from_abp import (  # noqa: E402
+    ARTICLE_OWN_ENGLISH, ARTICLE_SUBSTANTIVAL,
     _VERSE_RE, build_verse_words, iter_source_tokens, parse_abp_line,
 )
 
@@ -179,15 +180,14 @@ AUDIT_DOC = os.path.join(ROOT, "docs", "audits", "AUDIT_pn_star_verb_merge.md")
 
 ARTICLE_BASE = "3588"
 
-# The article's own English: the article word plus the case words English needs
-# when the article stands in an oblique case with no preposition of its own.
-ARTICLE_ENGLISH = frozenset({
-    "the", "of", "to", "for", "in", "with", "by", "from", "at", "on",
-    "unto", "into", "upon", "a", "an", "o",
-})
+# The article's own English. RULING 4 (2026-07-31): ONE definition, owned by the
+# BUILD and imported here — this file used to carry its own copy, and it disagreed
+# with the bin-S predicate two lines below about whether "one/ones/thing(s)" counts.
+# A fix built on the narrower set would have manufactured 226 new defects.
+ARTICLE_ENGLISH = ARTICLE_OWN_ENGLISH
 
 # τό / τά / ὁ standing alone as a substantive. ABP's own rendering, not a drop.
-SUBSTANTIVAL = frozenset({"one", "ones", "thing", "things"})
+SUBSTANTIVAL = ARTICLE_SUBSTANTIVAL      # ruling 4: same one definition, from the build
 
 _WORD_RE = re.compile(r"[A-Za-z][A-Za-z'\-]*")
 
@@ -299,18 +299,30 @@ def source_carriers(raw):
         if set(r) <= SUBSTANTIVAL:
             subst.append(eng)
         else:
-            carriers.append((eng,) + lane_of(toks, i))
+            carriers.append((i, eng) + lane_of(toks, i))
     return carriers, subst
 
 
 def built_carriers(line, lex):
-    """Carrier English still sitting on an article slot AFTER the production build."""
+    """Carrier English still on an article slot AFTER the build, KEYED BY SLOT.
+
+    Returns {slot position -> english}. Position, never English text: a verse can
+    carry the same article-slot English twice (Mar 14:24 'the blood', Rom 3:1
+    'is the', Psa 40:5 'concerning'), and matching on text cannot tell the two
+    apart. That ambiguity made a WORKING pass look like it had eaten three lane-B
+    rows — the repair was credited to the wrong copy. (verse, English) was never a
+    row identity. Certified safe: over all 27,266 verses holding an article slot,
+    the build returns exactly one row per source token, so row k IS source token k.
+    The row's NUMBER may legitimately change at build time (the pronoun retag
+    rewrites G1473 -> 846 in 10,046 places), which is the second reason to key on
+    position rather than on anything the build is entitled to rewrite.
+    """
     parsed = parse_abp_line(line)
     if not parsed:
-        return []
+        return {}
     _bk, _ch, _vs, abp_words = parsed
-    out = []
-    for row in build_verse_words(list(abp_words), [], lex):
+    out = {}
+    for k, row in enumerate(build_verse_words(list(abp_words), [], lex)):
         # row: pos, english, english_head, strongs, strongs_base, ...
         if row[4] != ARTICLE_BASE:
             continue
@@ -319,14 +331,16 @@ def built_carriers(line, lex):
             continue
         r = residue(eng)
         if r and not set(r) <= SUBSTANTIVAL:
-            out.append((eng, "G" + (row[3] or ARTICLE_BASE)))
+            out[k] = eng
     return out
 
 
 def sweep(dirs=None):
     """Full sweep. Returns (bins, lanes, whys, subst_count, slot_totals).
 
-    bins  maps 'P'/'R'/'D' -> list of (fn, bk, ch, vs, english, dotted_number).
+    bins  maps 'P'/'R'/'D' -> list of (fn, bk, ch, vs, english, dotted_number,
+    slot) - slot being the SOURCE TOKEN INDEX, which is the row's only real
+    identity: (verse, English) repeats within a verse and cannot be matched back.
     lanes maps the same keys -> list of 'A'/'B', INDEX-ALIGNED with bins. Kept
     parallel rather than widened into the row tuple so the controls, the
     containment count and --list keep reading the same 6-field row they always
@@ -351,21 +365,19 @@ def sweep(dirs=None):
             continue
 
         line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
-        plain = collections.Counter(e for e, _n in built_carriers(line, None))
-        maxed = collections.Counter(e for e, _n in built_carriers(line, maxlex))
+        plain = built_carriers(line, None)        # slot position -> english
+        maxed = built_carriers(line, maxlex)
 
-        for eng, lane, why in carriers:
+        # Matched SLOT BY SLOT. The old multiset match on English text credited a
+        # repair to whichever copy came first, which is how a correct pass read as
+        # a lane-B breach on Mar 14:24 / Rom 3:1 / Psa 40:5.
+        for slot, eng, lane, why in carriers:
             dotted = "G" + ARTICLE_BASE
-            if plain[eng] > 0:
-                plain[eng] -= 1
-                if maxed[eng] > 0:
-                    maxed[eng] -= 1
-                    b = "D"
-                else:
-                    b = "R"
+            if slot in plain:
+                b = "D" if slot in maxed else "R"
             else:
                 b = "P"
-            bins[b].append((fn, bk, ch, vs, eng, dotted))
+            bins[b].append((fn, bk, ch, vs, eng, dotted, slot))
             lanes[b].append(lane)
             whys[b].append(why)
     return bins, lanes, whys, subst_total, totals
@@ -478,12 +490,23 @@ def doc_rows():
 
 # ── controls ──────────────────────────────────────────────────────────────────
 
+# TWO CONTROLS FLIPPED D -> P, and the flip IS the fix landing. Mat 20:22 'Jesus'
+# and 2Sa 12:9 'Uriah' are lane-A rows; _redistribute_article_slot (build_words_
+# from_abp.py) now hands their English back to the empty slot beside them, so the
+# build reaches rows it demonstrably could not reach before. Pre-registered in
+# TICKET_509 §6e and in the fill charter — flipped in the SAME commit as the build
+# change, never by loosening the predicate and never by deleting a control.
+#
+# Gen 22:21 'Huz' did NOT flip, and that is the sharper result: the charter
+# predicted all three would move. 'Huz' sits beside a blank '*' STAR slot, and
+# ruling 6 refuses star targets, so it stays a proven defect. It is now the
+# control that PROVES the star refusal, not just a lane-A positive.
 CONTROLS = [
     # (book, ch, vs, english on the article slot, expected bin, why)
-    ("1Ki", 9, 26, "the city", "D", "the old sweep's own control positive"),
-    ("Mat", 20, 22, "Jesus", "D", "known MISS from the 509, live-confirmed on PA"),
-    ("2Sa", 12, 9, "Uriah", "D", "known MISS from the 509"),
-    ("Gen", 22, 21, "Huz", "D", "IN the 509 (charter called it a miss - it is not)"),
+    ("1Ki", 9, 26, "the city", "D", "lane B - nothing to fill, the pass must not touch it"),
+    ("Mat", 20, 22, "Jesus", "P", "lane A - REPAIRED by _redistribute_article_slot"),
+    ("2Sa", 12, 9, "Uriah", "P", "lane A - REPAIRED by _redistribute_article_slot"),
+    ("Gen", 22, 21, "Huz", "D", "lane A but STAR-adjacent - ruling 6 refuses it, stays D"),
     ("Act", 19, 4, "Jesus the", "P", "in the 509, but the build repairs it"),
     ("1Co", 1, 28, "the things", "S", "NEGATIVE control: legitimate substantival"),
 ]
@@ -493,7 +516,7 @@ def run_controls(bins, controls=CONTROLS, verbose=True):
     """Every control must land in its declared bin. True only if all do."""
     placed = {}
     for b, rows in bins.items():
-        for _fn, bk, ch, vs, eng, _n in rows:
+        for _fn, bk, ch, vs, eng, _n, _slot in rows:
             placed.setdefault((bk, ch, vs, eng), set()).add(b)
 
     ok = True
@@ -531,7 +554,7 @@ def run_red_first(bins, verbose=True):
     old = collections.Counter((r[1], r[2], r[3], r[4]) for r in reproduce_old()[1])
     new = set()
     for rows in bins.values():
-        for _fn, bk, ch, vs, eng, _n in rows:
+        for _fn, bk, ch, vs, eng, _n, _slot in rows:
             new.add((bk, ch, vs, eng))
     ok = True
     for bk, ch, vs, eng, want_old in RED_FIRST:
@@ -577,7 +600,7 @@ def run_lane_controls(bins, lanes, controls=LANE_CONTROLS, verbose=True):
     """Every lane control must land in its declared lane. True only if all do."""
     placed = {}
     for b, rows in bins.items():
-        for idx, (_fn, bk, ch, vs, eng, _n) in enumerate(rows):
+        for idx, (_fn, bk, ch, vs, eng, _n, _slot) in enumerate(rows):
             placed.setdefault((bk, ch, vs, eng), set()).add(lanes[b][idx])
 
     ok = True
@@ -724,18 +747,20 @@ def lane_manifest(bins, lanes, whys, lane):
     instead of arithmetic that a compensating pair of errors could satisfy.
 
     Bin P is excluded, matching print_lanes: the build already repaired those, so
-    they are in no repair lane. Duplicate rows are KEPT (a verse can carry the
-    same English twice); the list is a multiset, exactly as the bins are.
+    they are in no repair lane. Each row carries its SOURCE SLOT INDEX, which is
+    what makes this a manifest rather than a tally: a verse can carry the same
+    article-slot English twice (Mar 14:24 'the blood'), and without the slot those
+    two rows are indistinguishable — the first pinned hash had exactly that hole.
     """
     rows = []
     for b in ("R", "D"):
         for idx, ln in enumerate(lanes[b]):
             if ln != lane:
                 continue
-            _fn, bk, ch, vs, eng, dotted = bins[b][idx]
-            rows.append((bk, int(ch), int(vs), eng, dotted, b, whys[b][idx]))
+            _fn, bk, ch, vs, eng, dotted, slot = bins[b][idx]
+            rows.append((bk, int(ch), int(vs), slot, eng, dotted, b, whys[b][idx]))
     rows.sort()
-    lines = ["%-4s %3d:%-3d  %-28s  %-10s  bin %s  %s" % r for r in rows]
+    lines = ["%-4s %3d:%-3d slot %-3d  %-28s  %-10s  bin %s  %s" % r for r in rows]
     digest = hashlib.sha256("\n".join(lines).encode("utf-8")).hexdigest()
     return rows, lines, digest
 
@@ -743,11 +768,11 @@ def lane_manifest(bins, lanes, whys, lane):
 def print_manifest(bins, lanes, whys, lane):
     """Print one lane's manifest: every row, the per-bin tally, and the hash."""
     rows, lines, digest = lane_manifest(bins, lanes, whys, lane)
-    per_bin = collections.Counter(r[5] for r in rows)
-    per_why = collections.Counter(r[6] for r in rows)
+    per_bin = collections.Counter(r[6] for r in rows)
+    per_why = collections.Counter(r[7] for r in rows)
 
     print("LANE %s MANIFEST - the pinned row list, not a count" % lane)
-    print("  book  ch:vs    english                       number      bin  why")
+    print("  book  ch:vs   slot     english                       number      bin  why")
     for ln in lines:
         print("  " + ln)
     print()
@@ -912,8 +937,8 @@ def main():
     if args.bin:
         print()
         print("--- bin %s (%d rows) ---" % (args.bin, len(bins[args.bin])))
-        for fn, bk, ch, vs, eng, n in bins[args.bin]:
-            print("(%r, %r, %d, %d, %r, %r)" % (fn, bk, ch, vs, eng, n))
+        for fn, bk, ch, vs, eng, n, slot in bins[args.bin]:
+            print("(%r, %r, %d, %d, %r, %r, %d)" % (fn, bk, ch, vs, eng, n, slot))
     return 0
 
 

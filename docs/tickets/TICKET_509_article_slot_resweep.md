@@ -465,6 +465,88 @@ Neither was caught by arithmetic — the totals balanced both times. The first w
 reading which bin each excluded row actually sits in, the second by reading the build's
 existing pass before writing a new one.
 
+### 6f. THE PASS LANDED — and the gate fired first, on the MEASUREMENT
+
+`_redistribute_article_slot` (build_words_from_abp.py) implements rulings 3–7. The first run
+with it in place read as a **lane-B breach: 1,363 → 1,360**, three rows the pass was forbidden
+to touch sitting in bin P. Under the charter that is halt-and-do-not-ship.
+
+**It was the detector, not the pass.** `sweep()` matched built rows back to source rows by
+ENGLISH TEXT, and (verse, English) is not a row identity:
+
+```
+  Mar 14:24  'the blood'   on TWO article slots - token 8 (blank G1473 beside it -> lane A)
+                           and token 12 (no blank neighbour -> lane B)
+  Rom  3:1   'is the'      tokens 2 and 8
+  Psa 40:5   'concerning'  tokens 7 and 11
+```
+
+In all three the pass repaired the lane-A copy and left the lane-B copy alone — verified on
+the built rows, not sampled. But with one copy surviving, a text match cannot tell WHICH, so
+the repair was credited to the first and the survivor booked as the other. **A correct pass
+read as over-reach.**
+
+**Fixed by keying on the slot, certified before it was believed.** `built_carriers` now
+returns `{slot position -> english}` and `sweep()` matches slot by slot. Two things had to be
+proven first, and both were:
+
+```
+  row k IS source token k   0 row-count mismatches over all 27,266 verses holding
+                            an article slot (the build returns one row per source token)
+  the NUMBER is not usable  10,046 index mismatches, all the pronoun retag G1473 -> 846
+                            doing its job - so the key must be position, not the number
+```
+
+**PASS-DISABLED REPLAY — the only thing that could make any of this trustworthy.** With the
+new attribution and the one pass switched off, the pre-fix picture reproduces exactly:
+
+```
+  carriers 2,689 · S 4,654 · bin P 1 / R 1,049 / D 1,639
+  LANE A 1,325 · LANE B 1,363 · bin P: A 1 / B 0 · all pre-fix controls FIRED
+  lane-A row set re-derived in the ORIGINAL line format hashes to
+  e0ff71f85f8e...dc62332 — IDENTICAL to the pin. The rewrite changed how rows are
+  MATCHED, not which rows exist.
+```
+
+Manifest re-pinned slot-keyed: **`8737a6f222cd03e26affe63d3dfe57635d50478b86fd854ee84a80870ecbbec2`**,
+same 1,325 rows. The old hash stays in the file and here as superseded.
+
+**RE-READ OF THE FIX RUN, with attribution that works — the gate PASSES:**
+
+```
+                 before      after      expected      verdict
+  bin P               1      1,241        ~1,293      52 short - all refusals, counted below
+  bin R           1,049         24           ~24      EXACT
+  bin D           1,639      1,424        ~1,372      the same 52
+  lane B          1,363      1,363         1,363      HELD - bin P: A 1,241 / B 0
+  lane A          1,325         85            ~0      = 25 straddle + 8 star + 52 refused
+```
+
+All 12 controls fired. Mat 20:22 'Jesus' and 2Sa 12:9 'Uriah' flipped D → P; **Gen 22:21
+'Huz' did NOT**, because it is star-adjacent and ruling 6 refuses stars. The charter predicted
+all three would flip — ruling 6 is now proven by a control that predates it.
+
+**THE 52 REFUSALS, keyed by slot** (the earlier 39/12/5 was itself measured by the broken
+matcher; "neighbour filled" was really 1, not 5):
+
+```
+    39  the article slot is already inside a bracket        1Co 3:8 slot 10 'his own'
+    12  the blank neighbour is ANOTHER ARTICLE              1Ti 6:3 slot 7 'the words'
+     1  the neighbour is no longer empty at build time      Pro 15:19 slot 6 'ways of the'
+```
+
+* **The 12 — correct refusal, permanent.** A blank `G3588` is not the word's own number.
+  Writing "words" onto a second article slot is not repair, it is relocating the defect.
+  The lane-A predicate is source-side and counts any real number, so lane A was mildly
+  over-broad here; these rows are lane B in substance.
+* **The 1 — correct refusal, and it fixes this pass's ORDER permanently.** An earlier pass
+  fills that slot, so this pass must run after it, always.
+* **The 39 — OPEN, not defaulted either way.** `1Co 3:8` carries `'his own'` twice: the
+  unbracketed one is repaired onto `G2398`, the bracketed one is left. That is inconsistent
+  WITHIN a verse, which is an argument for extending — but moving English inside an existing
+  bracket means reassigning `greek_pos` across a group that already has an order, which is a
+  different and larger question. Ruled separately, with the bracket semantics in front of us.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English

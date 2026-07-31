@@ -811,6 +811,48 @@ _ENGLISH_PRONOUN_WORDS = frozenset({
     "they", "them", "their", "theirs", "themselves", "same",
 })
 
+# ── The article's OWN English — ONE definition, shared (ruling 4, 2026-07-31) ──
+#
+# Two sets used to state this, and they disagreed: the audit script's residue()
+# stripped only the article-word set, while its own bin-S predicate counted
+# "one/ones/thing(s)" as the article's English too. Building a pass on the
+# narrower set would have dragged "one" off "But the one" and left a bare "the" —
+# 226 NEW defects while fixing old ones. Defined here, in the build, and IMPORTED
+# by scripts/audit_article_slot_carrier.py so the two cannot drift apart again.
+#
+# ARTICLE_OWN_ENGLISH: the article word plus the case words English needs when the
+# article stands in an oblique case with no preposition of its own.
+ARTICLE_OWN_ENGLISH = frozenset({
+    "the", "of", "to", "for", "in", "with", "by", "from", "at", "on",
+    "unto", "into", "upon", "a", "an", "o",
+})
+# ARTICLE_SUBSTANTIVAL: τό/τά/ὁ standing alone as a substantive. Also the
+# article's own English — it is what bin S IS.
+ARTICLE_SUBSTANTIVAL = frozenset({"one", "ones", "thing", "things"})
+ARTICLE_STAYS = ARTICLE_OWN_ENGLISH | ARTICLE_SUBSTANTIVAL
+
+_SLOT_NORM = re.compile(r"[^\w]")
+
+
+def _slot_order(keep_idx: list, move_idx: list):
+    """(keep_gpos, move_gpos) for a two-slot English move, or None to REFUSE.
+
+    Extracted verbatim from _redistribute_pronoun_compounds, where it was written
+    for the 2026-07-05 (P1) defect, so both passes decide this the same way rather
+    than each carrying a copy. THE RULE: English may be split across two slots only
+    when the kept words sit entirely BEFORE or entirely AFTER the moved run. Kept
+    words on BOTH sides is a STRADDLE — two slots cannot hold three positions — and
+    the caller must leave the phrase whole. The old hard-coded verb-first ordering
+    flipped both non-after cases; that was the 204-verse (P1) defect.
+    """
+    if not keep_idx or not move_idx:
+        return None
+    if max(keep_idx) < min(move_idx):
+        return 1, 2          # kept word(s) lead  ("his hand", "with our own")
+    if min(keep_idx) > max(move_idx):
+        return 2, 1          # moved run leads    ("will give heed to your", "But the")
+    return None              # straddle           ("I beheld you", "the same things")
+
 
 def _redistribute_pronoun_compounds(rows: list) -> None:
     """Symptom #2: ABP bundles a verb's English onto a PRONOUN slot, leaving the
@@ -865,12 +907,10 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
             continue
 
         # order the two slots by SOURCE position (see docstring); straddle -> leave whole
-        if max(keep_idx) < min(move_idx):
-            keep_gpos, move_gpos = 1, 2          # kept pronoun leads ("his hand")
-        elif min(keep_idx) > max(move_idx):
-            keep_gpos, move_gpos = 2, 1          # verb leads ("will give heed to your")
-        else:
+        order = _slot_order(keep_idx, move_idx)
+        if order is None:
             continue                             # straddle ("I beheld you") -> leave whole
+        keep_gpos, move_gpos = order
 
         keep_eng = " ".join(words[k] for k in keep_idx)
         move_eng = " ".join(words[k] for k in move_idx)
@@ -882,6 +922,122 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
         rows[i] = (ri[0], keep_eng, _head_word(keep_eng), ri[3], ri[4],
                    keep_gpos, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
         # verb gets the moved phrase; greek_pos by source order
+        rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
+                   move_gpos, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
+
+
+def article_slot_split(eng: str):
+    """(keep_idx, move_idx) over eng.split() — which words are the article's OWN.
+
+    Punctuation-insensitive, so "(for" and "things," classify as their bare words.
+    Exposed (no underscore) because the audit script reports on the real split
+    rather than modelling it.
+    """
+    keep_idx, move_idx = [], []
+    for gi, word in enumerate((eng or "").split()):
+        norm = _SLOT_NORM.sub("", word).lower()
+        (keep_idx if norm in ARTICLE_STAYS else move_idx).append(gi)
+    return keep_idx, move_idx
+
+
+def _redistribute_article_slot(rows: list) -> None:
+    """LANE A of the article-slot re-sweep: a word's English riding the bare
+    article's slot, while the word's OWN slot sits beside it empty.
+
+    Clicking that word served the article's card (ὁ/ἡ/τό) instead of its own —
+    1Ki 9:26 "the city" is the archetype of the class, though that row is lane B
+    (nothing to fill). Lane A is the repairable half: the number is already in the
+    verse with a blank slot, so the English is handed back to it.
+
+    THE RULE IS WORD CLASS, NEVER POSITION (ruling 3, 2026-07-31). The census over
+    all 1,325 lane-A rows: 869 moved-run-leads, 373 whole-slot, 58 kept-words-lead,
+    25 straddle. Prefix is not the rule, it is the rule's most common consequence —
+    456 rows sit off it. So: move the words that are not the article's own, keep the
+    ones that are, wherever they sit.
+
+    WHAT IT REFUSES, and why each refusal is a ruling and not a guess:
+      * STRADDLE — kept words either side of the moved run ("the same things",
+        "for indeed the"). _slot_order refuses; two slots cannot hold three
+        positions. 25 rows. Contiguous residue is NOT the test: 11 of these have
+        it and are still wrong. Same defect class as (P1).
+      * A '*' STAR NEIGHBOUR — 8 rows. A star slot is a PROPER-NOUN slot, and six
+        of the eight carry possessives or function words ('his', 'so as', 'with
+        his'), which are wrong to write there on their own terms. The two that DO
+        carry a name (Gen 22:21 'Huz', Isa 46:13 'to Israel') are held for a
+        landing after the PN-star merged-verb fix. This also leaves
+        _split_pn_article_lump sole owner of the "Jesus the" + blank-star shape.
+      * A BRACKETED slot either side — the bracket already groups that English.
+      * A neighbour that is itself an article, or has no real number.
+
+    WHOLE-SLOT MOVES leave the article with NO English (ruling 7, 373 rows). The
+    pronoun pass refuses that case because a pronoun always renders in English; an
+    article often does not, and a bare G3588 is an ordinary state throughout the
+    corpus. If none of the English is the article's own, all of it belongs to the
+    neighbour. Counted separately in the audit's --plan so the ruling stays
+    revisitable instead of dissolving into the pass total.
+
+    Partial moves put the pair in a NEW 2-word bracket with greek_pos by SOURCE
+    order, exactly as _redistribute_pronoun_compounds does — the established
+    mechanism for one English phrase spread across two Greek slots. Whole moves
+    need no bracket: only one slot ends up holding text.
+
+    Runs BESIDE the pronoun pass, before _split_compounds, so it sees the original
+    bundled gloss. Touches english/english_head/greek_pos/bracket_id ONLY — never
+    strongs/strongs_base/is_pn.
+
+    Row tuple (13 elts): 0:pos 1:eng 2:head 3:strongs 4:sbase 5:gpos 6:bid
+                         7:italic 8:iw 9:sw 10:abp_pos 11:morph 12:lemma
+    """
+    existing = [r[6] for r in rows if r[6] is not None]
+    next_bid = (max(existing) + 1) if existing else 1
+
+    for i, r in enumerate(rows):
+        if r[4] != _ARTICLE_BASE or r[6] is not None:
+            continue
+        eng = (r[1] or "").strip()
+        if not eng:
+            continue
+        keep_idx, move_idx = article_slot_split(eng)
+        if not move_idx:
+            continue                       # wholly the article's own English
+        if keep_idx and _slot_order(keep_idx, move_idx) is None:
+            continue                       # STRADDLE -> leave the phrase whole
+
+        j = None
+        for cand in (i - 1, i + 1):
+            if not (0 <= cand < len(rows)):
+                continue
+            n = rows[cand]
+            if (n[1] or "").strip():
+                continue                   # neighbour must be EMPTY
+            sb = n[4]
+            if not sb or sb in ("*", "") or sb == _ARTICLE_BASE:
+                continue                   # star refused (ruling 6); no self-moves
+            if n[6] is not None:
+                continue                   # already bracketed -> defer
+            j = cand
+            break
+        if j is None:
+            continue
+
+        words = eng.split()
+        move_eng = " ".join(words[k] for k in move_idx)
+        ri, rj = rows[i], rows[j]
+
+        if not keep_idx:
+            # RULING 7: the whole slot belongs to the neighbour; article goes bare.
+            rows[i] = (ri[0], None, None, ri[3], ri[4], ri[5], ri[6],
+                       ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
+            rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
+                       rj[5], rj[6], rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
+            continue
+
+        keep_gpos, move_gpos = _slot_order(keep_idx, move_idx)
+        keep_eng = " ".join(words[k] for k in keep_idx)
+        bid = next_bid
+        next_bid += 1
+        rows[i] = (ri[0], keep_eng, _head_word(keep_eng), ri[3], ri[4],
+                   keep_gpos, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
         rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
                    move_gpos, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
 
@@ -1433,6 +1589,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         pos += 1
 
     _redistribute_pronoun_compounds(rows)
+    _redistribute_article_slot(rows)   # lane A: article-slot English handed back
     if lex:
         _split_compounds(rows, lex)
         _fix_backwards_pairing(rows, lex)
