@@ -339,7 +339,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   confirm bh_scrape row + words/abp_surface for that verse-position, then
   whether other Greek-headed name chips show Greek in chip mode (if none do,
   it's a lane-wide render gap, not a Hiram bug). Page-attested-empty = a
-  documented finding, not a fix.
+  documented finding, not a fix. MORNING SWEEP (JP): bible-wide count of
+  PN chips with NO Greek line in chip mode (read-only), so the fix scopes to
+  the class, not the sighting.
 - **Double comma "of his servants,," 1Ki 9:27 — SOURCE-ATTESTED (JP checked
   eSword 2026-07-31): ABP itself prints the double comma.** Our text is
   faithful; NOT a build artifact, NOT a fix on our side without a ruling
@@ -347,8 +349,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   candidate — goes on the errata list the dataset-publication ticket compiles
   (alongside the accent-typo + stray-mark classes). If JP ever wants it
   normalized in OUR text, that's an abp_corrections ruling, source-attested
-  deviation class, not a silent cleanup. Optional sizing when convenient:
-  corpus-wide `,,` count to see if it's a class or a one-off.
+  deviation class, not a silent cleanup. MORNING SWEEP (JP): bible-wide `,,`
+  count (one read-only sqlite line on verses.text) — class or one-off — feeds
+  the errata list either way.
 - **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
   JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
   KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
