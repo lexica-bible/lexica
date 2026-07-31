@@ -442,19 +442,40 @@ def run_old_control(verbose=True):
 
 def article_only_renderings(dirs=None):
     """Every English string an article slot carries that this predicate treats as
-    the article's OWN (article-only or substantival). Generated from the same
-    residue() call the sweep uses, so the live query cannot drift from it."""
+    the article's OWN (article-only or substantival).
+
+    Generated from the same residue() call the sweep uses — NOT from OLD_STOP, which
+    only ever serves reproduce_old() and the D reporting split. So the live query
+    cannot drift from the predicate that produced the counts.
+
+    Collected from the SOURCE tokens *and* from the BUILT rows under both lexicon
+    settings. Source alone is not enough: the build's repair passes mint article-own
+    renderings the source never shows ('things,', 'things.', 'the one in' — 11 rows
+    corpus-wide), and every one of those missing from the list would be miscounted as
+    a defect by the live query.
+    """
     seen = set()
-    for _fn, _bk, _ch, _vs, raw in iter_source_lines(dirs):
+
+    def keep(eng):
+        eng = (eng or "").strip()
+        if not eng:
+            return
+        r = residue(eng)
+        if not r or set(r) <= SUBSTANTIVAL:
+            seen.add(eng.lower())
+
+    maxlex = MaxLex()
+    for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
         for t in iter_source_tokens(raw):
-            if t["sbase"] != "G" + ARTICLE_BASE:
-                continue
-            eng = (t["eng"] or "").strip()
-            if not eng:
-                continue
-            r = residue(eng)
-            if not r or set(r) <= SUBSTANTIVAL:
-                seen.add(eng.lower())
+            if t["sbase"] == "G" + ARTICLE_BASE:
+                keep(t["eng"])
+        parsed = parse_abp_line("(%s %d:%d)  %s" % (bk, ch, vs, raw))
+        if not parsed:
+            continue
+        for lex in (None, maxlex):
+            for row in build_verse_words(list(parsed[3]), [], lex):
+                if row[4] == ARTICLE_BASE:
+                    keep(row[1])
     return sorted(seen)
 
 
