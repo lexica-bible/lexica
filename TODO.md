@@ -735,10 +735,16 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   red-first block + an exact replay of the old predicate, HALT proven live via
   `--prove-halt`). Close-out: `docs/tickets/TICKET_509_article_slot_resweep.md`.
   **Revised population 2,688 — SUPERSEDES 509**: bin D **1,639 proven** (the build
-  demonstrably cannot reach them) + bin R **1,049 pending a live check** (lexicon-
-  dependent). Bin S 4,654 substantival "the one/thing(s)" rows are legitimate, not a
-  defect. All 509 old rows accounted for: 508 → D, 1 → P (`Act 19:4`, which
-  `_split_pn_article_lump` already repairs). No data written, no DB read.
+  demonstrably cannot reach them) + bin R **1,049 lexicon-dependent**. Bin S 4,654
+  substantival "the one/thing(s)" rows are legitimate, not a defect. All 509 old rows
+  accounted for: 508 → D, 1 → P (`Act 19:4`, which `_split_pn_article_lump` already
+  repairs). No data written.
+  **LIVE CHECK LANDED (JP, 2026-07-31): 2,662** — 26 below the no-repair ceiling of
+  2,688, so the lexicon repairs ~26 of the 1,049 and bin R is essentially all real.
+  **The fix session's list is ~2,662.** `1Ki 9:26` confirms live ("the city" still on
+  G3588) and the sizing query does not over-match ("the" / "of the" on the same verse
+  correctly excluded). GATE MET — count declared, controls green, halt proven, live
+  state confirmed.
   **Three charter premises were wrong and are corrected in the ticket:** the old predicate
   IS recoverable (replay matches 951/951 row-for-row); its exclusion WAS applied
   consistently (it keys on a blank *numbered* neighbour, which is why star-adjacent
@@ -764,9 +770,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   All 145 old rows are contained in class A (145/145 checked). Both PA spot-checks passed —
   Mat 26:1 and Mat 20:22 confirm live state matches the source scan, no drift.
   Fix session runs against **A + B1 (4,905) + the revised article-slot list together**
-  (article-slot: bin D **1,639** proven, plus bin R **1,049** once JP's live sizing check
-  resolves it — `docs/tickets/TICKET_509_article_slot_resweep.md`; the old 509 is
-  superseded, never diff against it either).
+  (article-slot: **~2,662 live**, confirmed on PA 2026-07-31 —
+  `docs/tickets/TICKET_509_article_slot_resweep.md`; the old 509 is superseded, never
+  diff against it either).
   Any fix = build-side redistribution for star slots + rebuild; regression pin
   `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
   ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the

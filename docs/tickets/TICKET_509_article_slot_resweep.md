@@ -123,18 +123,50 @@ as bin D (the build repairs it, so a working detector must refuse):
   exit 1
 ```
 
+## 4b. LIVE CHECK — RUN AND LANDED (JP, 2026-07-31): **2,662**
+
+```
+sizing count on the live words table   2,662
+   floor  (real lexicon repairs every R row)   1,639
+   ceiling(real lexicon repairs none)          2,688
+```
+
+**Bin R is essentially all real.** The live figure sits 26 below the ceiling, so the
+lexicon repairs ~26 of the 1,049 — not a thousand. **The fix session's list is ~2,662**,
+and bin D (1,639) is inside it by construction.
+
+Caveat on record: the 26-row gap is the best reading of the difference, not a row-by-row
+proof — a few could be rows the built table renders slightly differently rather than rows
+the lexicon actually repaired. It does not move the fix list either way.
+
+Archetype row check, `1Ki 9:26`, live:
+
+```
+9|3588|G3588|the city        <- the defect, still live
+14|3588|G3588|the            <- legitimate article carrier, correctly NOT counted
+17|3588|G3588|of the         <- likewise
+```
+
+So the sizing query is not over-matching legitimate article carriers.
+
+**GATE MET.** Revised count declared, controls green, halt proven, live state confirmed.
+The fix session may open.
+
 ## 5. NOT DONE, DELIBERATELY
 
-No data written, no fix, no DB read (CC cannot query bible.db). **A source-side scan is
-not live state** — bin R in particular is unresolved until the live check runs. The
-detector prints the read-only `sqlite3` lines for JP, including a sizing query whose
-`NOT IN` list is generated from the run's own predicate so it cannot drift from it:
+No data written, no fix, no DB read by CC (CC cannot query bible.db — the live check in
+§4b was JP's step). The detector prints the read-only `sqlite3` lines, including the
+sizing query whose `NOT IN` list is generated from the run's own predicate so it cannot
+drift from it.
 
-- expect ~**1,639** live if the real lexicon repairs every R row
-- expect ~**2,688** if it repairs none
+That list is collected from the source tokens **and** the built rows under both lexicon
+settings, not source alone: the build's repair passes mint three article-own renderings
+the source never shows (`'things,'`, `'things.'`, `'the one in'` — 11 rows corpus-wide),
+and each one missing would have been miscounted as a defect, reading the live number up
+to 11 high. 89 → 92 strings, over-count risk 11 → 0.
 
-Plus four per-control row checks (1Ki 9:26, Mat 20:22, 2Sa 12:9, Gen 22:21) — run
-`python3 scripts/audit_article_slot_carrier.py` to print them.
+Four per-control row checks (1Ki 9:26, Mat 20:22, 2Sa 12:9, Gen 22:21) print with the
+run — `python3 scripts/audit_article_slot_carrier.py`.
 
 ## 6. STANDING WARNINGS FOR THE FIX SESSION
 

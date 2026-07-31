@@ -170,7 +170,8 @@ TOTAL: 145
 ## Subpattern B — content word on an ARTICLE slot with no number of its own (1Ki 9:26 class, added 2026-07-31b)
 
 > **THE 951 / 509 BELOW IS SUPERSEDED (2026-07-31, article-slot re-sweep).** Revised
-> population: **2,688** — bin D 1,639 proven + bin R 1,049 pending a live check. All 509
+> population: **2,688** source-side — bin D 1,639 proven + bin R 1,049 lexicon-dependent;
+> **live count confirmed on PA: 2,662**, so bin R is essentially all real. All 509
 > old rows are accounted for (508 in D, 1 in P — `Act 19:4`, which the build already
 > repairs). Live detector: `scripts/audit_article_slot_carrier.py` (predicate in its
 > header, six controls + red-first block + an exact replay of the old predicate, HALTs

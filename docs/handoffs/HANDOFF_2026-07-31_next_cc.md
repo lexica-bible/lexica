@@ -11,8 +11,10 @@
 > the row — which is why star-adjacent `Act 19:4` survived it); and `Gen 22:21 "Huz"` is IN
 > the 509, not a known miss. Everything below the DOWNSTREAM QUEUE heading still stands.
 >
-> **Gate status for the fix session:** met for bin D. Bin R stays open until JP runs the
-> read-only sizing line the detector prints (a source-side scan is not live state).
+> **Gate MET.** JP's live sizing check landed at **2,662** (26 below the no-repair ceiling
+> of 2,688), so bin R is essentially all real and the fix session's list is **~2,662**.
+> `1Ki 9:26` confirms live. Count declared, controls green, halt proven, live state
+> confirmed — the fix session may open.
 
 Read `CLAUDE.md` first, then this file, then
 `docs/tickets/TICKET_detector_gap.md` (the close-out that produced this charter) and
