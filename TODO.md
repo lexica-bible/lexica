@@ -306,18 +306,24 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
-- **Word-study name-form lane: no in-verse highlight (JP-raised 2026-07-30,
-  screenshot: Ωδουίας from the Neh 8:7 hodijah card):** the occurrence list finds
-  the verses (Neh 8:7, 9:5) but "Hodijah" isn't highlighted in the prose. Likely
-  the highlighter keys off an English rendering the name-form (no-Strong's) lane
-  doesn't supply. Diagnose in the word-study finder result render before fixing.
-- **Card provenance-tag placement (JP-raised 2026-07-30, next session, visuals =
-  JP approval):** the source tag (TIPNR badge etc.) moves to sit UNDER the
-  description line — not beside it, not in the section header — so description →
-  tag + match-state read as one stacked provenance unit. Placement only, no new
-  pill. Build then show JP code + served screenshot for yes before ship.
-  (Scope check done same night: Neh 8:7 hodijah binds its OWN entity
-  Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
+- **Word-study name-form lane: no in-verse highlight — BUILT 2026-07-30 (03369cfc),
+  awaiting JP's served check.** Root cause (traced, not the guessed one): the verse-row
+  highlighter matches ONLY by Strong's number (citedStrongs in 50-corpus-results.jsx),
+  and a PN:<form> page has no number, so nothing can ever light. Fix: the name-form
+  occurrence rows (pn_greek_identity) already store the name's word slot per verse —
+  views_lexicon now sends that slot with each listed verse ("position"), and VerseRow
+  lights it via a new hiPositions prop merged into the same citedPositions machinery.
+  Numbered lanes untouched (prop absent). Parity test still green.
+- **Card provenance-tag placement — BUILT 2026-07-30 (03369cfc), awaiting JP's
+  visual yes on the served card.** Bound person/place cards (30-detail-panel.jsx
+  pnbound, thin + full): TIPNR / MetaV/TIPNR tag moved OUT of the section header
+  to a `.pnbound-prov` row directly under the description, on one baseline with
+  "Matched to this verse" — description → tag + match-state as one stacked unit.
+  No new pill/colors; existing badge classes reused; bottom-of-card match-state
+  line retired (it moved up into the unit). NOTE for the yes/no: the metaV-only
+  card and other sections still carry their header badges — same treatment there
+  is a follow-on call, not assumed. (Scope check done same night: Neh 8:7 hodijah
+  binds its OWN entity Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
