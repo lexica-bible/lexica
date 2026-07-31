@@ -1127,7 +1127,34 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   origins: some are ABP-attested supplied English over the article (1Co 1:25 "the wisdom"),
   NOT number drops — the cert session must sort display treatment vs data fix per spot.
 
-- **ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class — found 2026-07-31b, held for a gated
+- **SAME-NAME / RENAMED DROPS (opened 2026-07-31 at the G707 ship — allowlist design
+  question, own session).** 358 slots ruled correct-to-drop today (text-first) but carrying
+  a defensible same-name/renamed link; verbatim list = docs/tickets/G707_diff_report.md
+  Group B. Names: edom(Esau), abram(Abraham), azariah(Uzziah), shallum(Jehoiachin),
+  jerubbaal+jerubbesheth(Gideon), belteshazzar(Daniel), sheshbazzar(Zerubbabel),
+  jedidiah(Solomon) · ashdod(Azotus), horeb(Sinai), ephrath(Bethlehem), lod(Lydda),
+  jetur(Ituraea), on(Heliopolis), rakkath(Tiberias), shiloah(Siloam), judah(Judea) ·
+  spelling variants molech(Moloch), kanah(Cana), babel/babylonia/babylonian,
+  ezrahite/izrahite(Zerah), gehenna(G1067). Acco/Ptolemais never served (nothing dropped).
+  Any allowlist = cert-#7-style curated machinery, JP-checkpointed, red-first gates.
+
+- **WAL-crumb cleanup (small, zero-risk).** Orphan 0-byte -wal/-shm companion files sit in
+  ~/bible-db (bible_test.db-wal, bible_test_scratch.db-*, proseonly.db-* — two with no
+  parent file). Repo grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL
+  guards), so the crumbs are historical/ad-hoc; check their file dates, then delete.
+
+- ~~**ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class)**~~ — **CLOSED, SHIPPED + LIVE
+  2026-07-31.** Strict name-match gate in build_pn_greek_identity (predicate
+  docs/tickets/PREDICATE_g707_name_match.md, JP-signed); targeted ship (ruling b) via
+  scripts/ship_g707_targeted.py — 524 slots to the honest no-number state, everything else
+  byte-identical (words diff 524 exact, xref diff 524 exact, removal-only census 0).
+  Post-swap receipts: live G707 = arimathea|4, served /api/strongs-count/G707 = 4 after
+  worker reload. Diff report docs/tickets/G707_diff_report.md (cross-name 166 /
+  ticket-referred 358); regression tests/test_pn_name_match.py in BOTH CI lists; the
+  removal-only check is a DATABASE-side gate (lives in ship script preconditions, not the
+  code-only test list — CI has no db). Catch-up + same-name follow-ups = their own tickets
+  above. Original ticket detail preserved below for the record.
+  **(original ticket)** ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class — found 2026-07-31b, held for a gated
   session).** TIPNR merges multi-named places/people into one entity; when that entity carries
   exactly ONE Greek number, `build_pn_greek_identity` stamps EVERY occurrence with it — so
   Mizpah/Mizpeh/Ramah OT verses serve G707 (Arimathea) and highlight in that word study

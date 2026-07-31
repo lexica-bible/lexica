@@ -140,6 +140,11 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    rows will need a reviewed re-declaration, that halt is by design) → `scripts/build_pn_greek_identity.py
    <db> --apply` → `scripts/build_entity_binding.py <db> --apply` (xref-sourced guard numbers) →
    gates: `scripts/audit_unfindability.py <pre> <db>` + `scripts/audit_two_derivations.py <db>`.
+   **G707 gate (2026-07-31):** build_pn_greek_identity now applies strict name-match
+   inheritance (removal-only; tests/test_pn_name_match.py). retire_hebrew_identity's
+   hard-coded EXPECT split is STALE since the 7/30 header rebuild — a re-run HALTS until
+   the reviewed re-declaration lands (TODO: "7/30 RECLASSIFICATION CATCH-UP"). Run the
+   removal-only census (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
 9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
