@@ -730,19 +730,23 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **① 509 ARTICLE-SLOT RE-SWEEP — NEXT UP, own session. Charter seed:
-  `docs/handoffs/HANDOFF_2026-07-31_next_cc.md`.** The 509 list has the SAME mirror blind
-  spot the star-verb sweep had, plus an exclusion rule that is both wholesale and
-  inconsistent — so it is NOT fixable-against as it stands. Evidence: `Act 19:4 'Jesus the'`
-  IS in the list (control hit), while `Mat 20:22` ("JesusG3588 G* said,G2036" — Jesus on the
-  article slot, name's own star blank), `2Sa 12:9 'Uriah'` and `Gen 22:21 'Huz'` are absent
-  despite being the same shape and the same user-visible defect (card heads with the article
-  ὁ instead of the word clicked). Its stated "adjacent-empty-slot cases EXCLUDED" rule drops
-  **3,564** article slots wholesale yet Act 19:4 survived it anyway. Deliverable: a detector
-  built like `scripts/audit_pn_star_verb_merge.py` — predicate in the header, read-only,
-  source-side, ≥3 controls incl. a known miss AND a known hit, red-first proof, HALT path
-  proven live. Must resolve the 3,564 explicitly: take them in with a written rationale, or
-  bin them as a reported class. Nothing silently dropped.
+- **① 509 ARTICLE-SLOT RE-SWEEP — CLOSED 2026-07-31.** Detector
+  `scripts/audit_article_slot_carrier.py` (predicate in the header, six controls +
+  red-first block + an exact replay of the old predicate, HALT proven live via
+  `--prove-halt`). Close-out: `docs/tickets/TICKET_509_article_slot_resweep.md`.
+  **Revised population 2,688 — SUPERSEDES 509**: bin D **1,639 proven** (the build
+  demonstrably cannot reach them) + bin R **1,049 pending a live check** (lexicon-
+  dependent). Bin S 4,654 substantival "the one/thing(s)" rows are legitimate, not a
+  defect. All 509 old rows accounted for: 508 → D, 1 → P (`Act 19:4`, which
+  `_split_pn_article_lump` already repairs). No data written, no DB read.
+  **Three charter premises were wrong and are corrected in the ticket:** the old predicate
+  IS recoverable (replay matches 951/951 row-for-row); its exclusion WAS applied
+  consistently (it keys on a blank *numbered* neighbour, which is why star-adjacent
+  Act 19:4 survived — exactly 3,564 rows dropped, reproduced to the row); and
+  `Gen 22:21 'Huz'` is IN the 509, not a miss. The real faults are scope: the 3,564
+  exclusion rests on an unproven redistribution theory (now taken IN and answered by
+  running the production build), English function words were stoplisted out, and the
+  build was never checked.
 
 - **② PN-STAR MERGED-VERB FIX SESSION — GATED on ① (both lists final first).**
   Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
@@ -759,7 +763,10 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   structurally identical rows inconsistently (`'this Moses'` out, `'these Galileans'` in).
   All 145 old rows are contained in class A (145/145 checked). Both PA spot-checks passed —
   Mat 26:1 and Mat 20:22 confirm live state matches the source scan, no drift.
-  Fix session runs against **A + B1 (4,905) + the revised article-slot list together**.
+  Fix session runs against **A + B1 (4,905) + the revised article-slot list together**
+  (article-slot: bin D **1,639** proven, plus bin R **1,049** once JP's live sizing check
+  resolves it — `docs/tickets/TICKET_509_article_slot_resweep.md`; the old 509 is
+  superseded, never diff against it either).
   Any fix = build-side redistribution for star slots + rebuild; regression pin
   `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
   ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the

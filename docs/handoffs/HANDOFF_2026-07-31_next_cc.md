@@ -1,5 +1,19 @@
 # HAND-OFF 2026-07-31 → next CC session — 509 ARTICLE-SLOT RE-SWEEP (charter seed)
 
+> **CHARTER DISCHARGED 2026-07-31.** Detector `scripts/audit_article_slot_carrier.py`;
+> close-out `docs/tickets/TICKET_509_article_slot_resweep.md`. Revised population **2,688**
+> (bin D 1,639 proven + bin R 1,049 pending JP's live sizing check). Controls green, red-first
+> asserted on every run, HALT proven live.
+>
+> **Three premises below are WRONG — read the ticket, not this file, for the facts:** the old
+> predicate IS recoverable (replay matches 951/951 row-for-row); the exclusion WAS applied
+> consistently (it keys on a blank *numbered* neighbour — exactly 3,564 rows, reproduced to
+> the row — which is why star-adjacent `Act 19:4` survived it); and `Gen 22:21 "Huz"` is IN
+> the 509, not a known miss. Everything below the DOWNSTREAM QUEUE heading still stands.
+>
+> **Gate status for the fix session:** met for bin D. Bin R stays open until JP runs the
+> read-only sizing line the detector prints (a source-side scan is not live state).
+
 Read `CLAUDE.md` first, then this file, then
 `docs/tickets/TICKET_detector_gap.md` (the close-out that produced this charter) and
 `docs/audits/AUDIT_pn_star_verb_merge.md` (superseded 145 list + the 509 list, both flagged

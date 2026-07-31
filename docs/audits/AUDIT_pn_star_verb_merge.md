@@ -169,6 +169,19 @@ TOTAL: 145
 
 ## Subpattern B — content word on an ARTICLE slot with no number of its own (1Ki 9:26 class, added 2026-07-31b)
 
+> **THE 951 / 509 BELOW IS SUPERSEDED (2026-07-31, article-slot re-sweep).** Revised
+> population: **2,688** — bin D 1,639 proven + bin R 1,049 pending a live check. All 509
+> old rows are accounted for (508 in D, 1 in P — `Act 19:4`, which the build already
+> repairs). Live detector: `scripts/audit_article_slot_carrier.py` (predicate in its
+> header, six controls + red-first block + an exact replay of the old predicate, HALTs
+> when one goes silent). The fix session opens against that script's output, NOT the list
+> below. Detail: `docs/tickets/TICKET_509_article_slot_resweep.md`.
+>
+> The list below IS still exactly reproducible — `reproduce_old()` matches it 951/951,
+> row-for-row — so do not treat it as unrecoverable. Its faults are scope: it excluded
+> 3,564 rows on an unproven redistribution theory, stoplisted English function words
+> riding the article slot, and never checked the build.
+
 A content noun rides the bare-article G3588 slot and has NO Greek number anywhere in the
 verse ("the city G3588" 1Ki 9:26 — the card then heads with the article ὁ instead of the
 noun). Detector control-fired on 1Ki 9:26 before the count was trusted. NOTE: this class
