@@ -279,7 +279,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   line DROPPED on merged cards (option c). Two BANKED tickets from the same
   ruling: (1) compound-number DATA admission — Strong's Hebrew has real
   compound entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages +
-  xref layer, land as recorded links with receipts, THEN chips wear them;
+  xref layer, land as recorded links with receipts, THEN chips wear them.
+  SCOPE NOTE (JP 2026-07-31): includes the CARD-level number for every merged
+  pair, Greek side too — Dibon Gad's card should carry G1045 up top once
+  admitted (chip already shows it via the union rule; the card header is the
+  admission's job), and Ezion/Ramoth get their compound H-numbers. Not
+  Hebrew-side-only, not Ezion/Ramoth-only;
   (2) pair co-occurrence count — the honest count-line end state, lands with
   the next touch of the identity-serving code.
   Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
