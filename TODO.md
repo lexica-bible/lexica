@@ -330,6 +330,11 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
+- **Hiram 1Ki 9:27: no Greek above the chip in ABP chip view (JP sighting
+  2026-07-31, morning queue).** DIAGNOSE BEFORE TOUCHING: check the slot's
+  stored Greek (bh_scrape name-slot row + words/abp_surface for that
+  verse-position) — scrape gap vs render skip vs page-attested oddity. If the
+  page genuinely prints nothing there, that's a documented finding, not a fix.
 - **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
   JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
   KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
