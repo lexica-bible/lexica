@@ -547,6 +547,62 @@ matcher; "neighbour filled" was really 1, not 5):
   bracket means reassigning `greek_pos` across a group that already has an order, which is a
   different and larger question. Ruled separately, with the bracket semantics in front of us.
 
+### 6g. LANE FOLD + THE ORDERING CONSTRAINT — both landed, both controlled
+
+**RULING 8 — a blank neighbour that is ITSELF a G3588 does not make a row lane A.** Those
+rows were MIS-LANED, not correctly-laned-then-refused: handing "words" from one article to
+the next article relocates the defect — the reader still gets the article's card. `lane_of`
+now requires a non-article number, so the lane definition tells the truth instead of leaving
+the pass to decline what the split should never have offered.
+
+**13 rows move, not the 12 the built-row count suggested** — that count was measured on the
+built rows and merged two causes; the source-side test is the lane's own question and finds
+one more.
+
+```
+             before fold    after fold
+  LANE A          1,325         1,312   (bin D 263 + bin R 1,049)
+  LANE B          1,363         1,376
+  bins            UNCHANGED — P 1 / R 1,049 / D 1,639. The fold re-labels lanes, never bins.
+```
+
+New lane control, because a new rule with no control certifies nothing:
+`1Ti 6:3 'the words' -> lane B`. It would have FAILED before this change and passes after —
+red-first on its own rule. All 13 controls fire.
+
+**The pass still refuses these too.** Belt and braces: `_redistribute_article_slot` is not
+allowed to depend on the lane split being right.
+
+**RULING 9 — the pass's ORDER in the chain is load-bearing, and is now recorded in the build
+itself, not only here.** `_redistribute_article_slot` writes only into a slot that is still
+empty, so it must run AFTER every pass that fills one. `Pro 15:19` slot 6 `'ways of the'` is
+the pinned witness: blank neighbour in the SOURCE, filled by build time, correctly declined.
+Move the call earlier and rows like it start being written into occupied slots silently.
+
+**MANIFEST RE-PINNED — third and current:**
+
+```
+  dd0f35a5edc4fb99c9b240efbb8d960e4d18476ec04cb2c135d478fa225ee4bf   1,312 rows, slot-keyed
+  8737a6f2...0ecbbec2   superseded — 1,325 rows, slot-keyed, before the fold
+  e0ff71f8...dc62332    superseded — 1,325 rows, keyed by (verse, English), not a row identity
+```
+
+**LIVE-PROOF FIGURE RESTATED — §4b's expected drop is NOT ~1,363.** That figure assumed every
+lane-A row would be written. 72 remain by ruling (25 straddle + 8 star + 39 bracketed), so
+the source-side D+R after the fix is **1,448**, and the live sizing count should land near
+that rather than at 1,363. Pinned here BEFORE the scratch build, per the verdict gate.
+
+```
+  live now (JP, §4b)   2,662
+  live after rebuild   ~1,448      D 1,424 + R 24
+```
+
+**ONE OPEN RULING REMAINS: the 39 bracketed rows**, with `1Co 3:8` as the exhibit — one
+`'his own'` repaired onto G2398, its bracketed twin left. Inconsistent within a verse, but
+the repair means reassigning `greek_pos` across a group that already carries an order. The
+39 stay refused whichever way it goes, so the scratch build does not wait on it — unless the
+ruling lands first, in which case one rebuild serves both.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English

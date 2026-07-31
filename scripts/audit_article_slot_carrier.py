@@ -267,7 +267,17 @@ def lane_of(toks, i):
         t = toks[j]
         if (t["eng"] or "").strip():
             continue
-        if (t["sbase"] or "") not in ("*", ""):
+        sb = t["sbase"] or ""
+        if sb == "G" + ARTICLE_BASE:
+            # A blank slot that is ITSELF an article is not this word's own number.
+            # Handing "words" from one G3588 to the next G3588 relocates the defect
+            # instead of repairing it — the reader still gets the article's card.
+            # These rows were MIS-LANED, not correctly-laned-then-refused, so the
+            # lane definition is corrected here rather than left to the pass to
+            # decline. _redistribute_article_slot still refuses them too; the pass
+            # is not allowed to depend on the lane split being right.
+            continue
+        if sb not in ("*", ""):
             return LANE_A, "blank numbered slot adjacent"
         star = True
     if star:
@@ -593,6 +603,8 @@ LANE_CONTROLS = [
      "the star sub-case: blank G* beside it, not a numbered slot"),
     ("1Ki", 9, 26, "the city", LANE_B,
      "the archetype: 'city' is supplied, no slot to fill"),
+    ("1Ti", 6, 3, "the words", LANE_B,
+     "blank slot beside it is ANOTHER G3588 - not this word's own number"),
 ]
 
 

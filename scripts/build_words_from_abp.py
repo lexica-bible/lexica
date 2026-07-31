@@ -1589,6 +1589,13 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         pos += 1
 
     _redistribute_pronoun_compounds(rows)
+    # ORDER IS LOAD-BEARING: _redistribute_article_slot must run AFTER any pass that
+    # fills a blank slot, because it only writes into a slot that is still empty. Pro
+    # 15:19 slot 6 'ways of the' is the pinned witness — its neighbour is blank in the
+    # SOURCE but filled by build time, so the pass correctly declines it. Move this
+    # call earlier in the chain and rows like it silently start being written into
+    # slots that already hold English. Verified refusal, not a theory: the audit
+    # counts it by slot (TICKET_509 §6f).
     _redistribute_article_slot(rows)   # lane A: article-slot English handed back
     if lex:
         _split_compounds(rows, lex)

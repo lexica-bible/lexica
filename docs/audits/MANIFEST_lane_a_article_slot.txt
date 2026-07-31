@@ -1,13 +1,19 @@
 PINNED 2026-07-31, BEFORE any build-side write. Lane A of the article-slot
-re-sweep: 1,325 rows (bin D 276 + bin R 1,049; 1,317 numbered-slot + 8 star).
+re-sweep. CURRENT PIN: 1,312 rows, slot-keyed, AFTER the lane fold below.
 
-RE-PINNED the same day, SLOT-KEYED. The first pin identified a row by
+TWO SUPERSEDED PINS, both kept so the corrections stay visible:
+  e0ff71f8...dc62332  1,325 rows, keyed by (verse, English) - NOT a row identity
+  8737a6f2...0ecbbec2  1,325 rows, slot-keyed, before the lane fold
+
+LANE FOLD (2026-07-31): a blank neighbour that is ITSELF a G3588 is not the
+word's own number - handing English from one article to the next relocates the
+defect. 13 rows were MIS-LANED and move to lane B: 1,325 -> 1,312 / 1,363 -> 1,376.
+Control: 1Ti 6:3 'the words' wants lane B.
+
+SLOT-KEYED. The first pin identified a row by
 (verse, English), which is not a row identity: Mar 14:24 carries 'the blood'
 on TWO article slots, Rom 3:1 'is the' on two, Psa 40:5 'concerning' on two.
 Each row now carries its SOURCE SLOT INDEX and the hash covers it.
-Superseded hash (same 1,325 rows, no slot field):
-  e0ff71f85f8e3dbac22a674378125900ad8edf30049508377ea227e17dc62332
-
 WHY IT IS PINNED: the fix reclassifies the rows it repairs (lane A -> bin P),
 so this membership exists only before the fix lands. Regenerate the PRE-FIX
 state by disabling the one pass:
@@ -113,11 +119,9 @@ LANE A MANIFEST - the pinned row list, not a count
   1Ti    5:6   slot 0    But the one                   G3588       bin R  blank numbered slot adjacent
   1Ti    6:1   slot 6    their own                     G3588       bin D  blank numbered slot adjacent
   1Ti    6:2   slot 0    And the ones                  G3588       bin R  blank numbered slot adjacent
-  1Ti    6:3   slot 7    the words                     G3588       bin D  blank numbered slot adjacent
   1Ti    6:9   slot 0    But the ones                  G3588       bin R  blank numbered slot adjacent
   1Ti    6:13  slot 7    all things,                   G3588       bin R  blank numbered slot adjacent
   2Ch   10:10  slot 37   small                         G3588       bin D  blank numbered slot adjacent
-  2Ch   13:6   slot 4    son of                        G3588       bin D  blank numbered slot adjacent
   2Ch   25:13  slot 8    so as                         G3588       bin D  blank star slot adjacent
   2Ch   26:19  slot 8    was the                       G3588       bin D  blank numbered slot adjacent
   2Ch   34:21  slot 36   concerning the                G3588       bin D  blank numbered slot adjacent
@@ -132,8 +136,6 @@ LANE A MANIFEST - the pinned row list, not a count
   2Co    6:13  slot 0    but the                       G3588       bin R  blank numbered slot adjacent
   2Co    7:10  slot 10   but the                       G3588       bin R  blank numbered slot adjacent
   2Co    8:9   slot 17   by his                        G3588       bin R  blank numbered slot adjacent
-  2Co    8:15  slot 2    The one gathering             G3588       bin D  blank numbered slot adjacent
-  2Co    8:15  slot 8    the one gathering             G3588       bin D  blank numbered slot adjacent
   2Co    8:16  slot 2    be to                         G3588       bin D  blank numbered slot adjacent
   2Co    8:19  slot 15   which is                      G3588       bin D  blank numbered slot adjacent
   2Co    9:10  slot 0    And the one                   G3588       bin R  blank numbered slot adjacent
@@ -162,7 +164,6 @@ LANE A MANIFEST - the pinned row list, not a count
   2Ti    2:22  slot 0    But the                       G3588       bin R  blank numbered slot adjacent
   2Ti    2:23  slot 0    But the                       G3588       bin R  blank numbered slot adjacent
   2Ti    4:3   slot 13   their own                     G3588       bin D  blank numbered slot adjacent
-  2Ti    4:8   slot 3    is the                        G3588       bin D  blank numbered slot adjacent
   2Ti    4:17  slot 0    But the                       G3588       bin R  blank numbered slot adjacent
   3Jn    1:11  slot 14   but the one                   G3588       bin R  blank numbered slot adjacent
   Act    1:1   slot 0    Indeed the                    G3588       bin R  blank numbered slot adjacent
@@ -212,7 +213,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Act   17:32  slot 7    and some                      G3588       bin R  blank numbered slot adjacent
   Act   18:5   slot 6    both                          G3588       bin D  blank numbered slot adjacent
   Act   18:6   slot 21   now on                        G3588       bin R  blank numbered slot adjacent
-  Act   19:1   slot 3    the fact                      G3588       bin D  blank numbered slot adjacent
   Act   19:12  slot 19   and the                       G3588       bin R  blank numbered slot adjacent
   Act   20:15  slot 7    and                           G3588       bin D  blank numbered slot adjacent
   Act   20:18  slot 21   all the                       G3588       bin D  blank numbered slot adjacent
@@ -340,7 +340,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Exo   14:31  slot 10   against the                   G3588       bin D  blank numbered slot adjacent
   Exo   15:19  slot 19   But the                       G3588       bin R  blank numbered slot adjacent
   Exo   16:1   slot 21   And on the                    G3588       bin R  blank numbered slot adjacent
-  Exo   16:4   slot 19   the bread                     G3588       bin D  blank numbered slot adjacent
   Exo   16:26  slot 3    but the                       G3588       bin R  blank numbered slot adjacent
   Exo   16:29  slot 38   during the                    G3588       bin D  blank numbered slot adjacent
   Exo   16:31  slot 16   And the                       G3588       bin R  blank numbered slot adjacent
@@ -388,7 +387,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Eze   22:30  slot 18   so as to not                  G3588       bin R  blank numbered slot adjacent
   Eze   30:25  slot 6    and the                       G3588       bin R  blank numbered slot adjacent
   Eze   34:19  slot 4    the things trampled           G3588       bin D  blank numbered slot adjacent
-  Eze   45:17  slot 43   the offerings                 G3588       bin D  blank numbered slot adjacent
   Eze   48:13  slot 0    And to the                    G3588       bin R  blank numbered slot adjacent
   Eze   48:15  slot 0    But concerning the            G3588       bin R  blank numbered slot adjacent
   Eze   48:19  slot 0    And the ones                  G3588       bin R  blank numbered slot adjacent
@@ -432,7 +430,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Gen   19:11  slot 0    And the                       G3588       bin R  blank numbered slot adjacent
   Gen   20:16  slot 0    And to                        G3588       bin R  blank numbered slot adjacent
   Gen   22:21  slot 0    Huz                           G3588       bin D  blank star slot adjacent
-  Gen   23:8   slot 27   the son                       G3588       bin D  blank numbered slot adjacent
   Gen   24:2   slot 14   his things,                   G3588       bin R  blank numbered slot adjacent
   Gen   24:13  slot 8    and the                       G3588       bin R  blank numbered slot adjacent
   Gen   24:16  slot 0    And the                       G3588       bin R  blank numbered slot adjacent
@@ -493,7 +490,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Hab    2:4   slot 9    but the                       G3588       bin R  blank numbered slot adjacent
   Hab    2:5   slot 0    But the                       G3588       bin R  blank numbered slot adjacent
   Hab    2:20  slot 0    But the                       G3588       bin R  blank numbered slot adjacent
-  Hag    2:4   slot 10   son of                        G3588       bin D  blank numbered slot adjacent
   Heb    1:3   slot 12   the whole                     G3588       bin R  blank numbered slot adjacent
   Heb    2:8   slot 11   all things,                   G3588       bin R  blank numbered slot adjacent
   Heb    2:8   slot 22   all things                    G3588       bin D  blank numbered slot adjacent
@@ -949,7 +945,6 @@ LANE A MANIFEST - the pinned row list, not a count
   Mar   16:6   slot 0    And he                        G3588       bin R  blank numbered slot adjacent
   Mar   16:16  slot 5    but the one                   G3588       bin R  blank numbered slot adjacent
   Mar   16:19  slot 0    So then                       G3588       bin R  blank numbered slot adjacent
-  Mat    1:6   slot 15   the wife                      G3588       bin D  blank numbered slot adjacent
   Mat    1:18  slot 0    And the                       G3588       bin R  blank numbered slot adjacent
   Mat    2:5   slot 0    And they                      G3588       bin R  blank numbered slot adjacent
   Mat    2:9   slot 0    And they,                     G3588       bin R  blank numbered slot adjacent
@@ -1096,13 +1091,11 @@ LANE A MANIFEST - the pinned row list, not a count
   Num   14:9   slot 25   and the                       G3588       bin R  blank numbered slot adjacent
   Num   14:33  slot 0    But                           G3588       bin D  blank numbered slot adjacent
   Num   14:44  slot 8    But the                       G3588       bin R  blank numbered slot adjacent
-  Num   22:16  slot 10   the son                       G3588       bin D  blank numbered slot adjacent
   Num   22:30  slot 27   And                           G3588       bin D  blank numbered slot adjacent
   Num   25:14  slot 0    And the                       G3588       bin R  blank numbered slot adjacent
   Num   26:11  slot 0    But the                       G3588       bin R  blank numbered slot adjacent
   Num   26:59  slot 0    And the                       G3588       bin R  blank numbered slot adjacent
   Num   32:11  slot 5    (the men                      G3588       bin D  blank numbered slot adjacent
-  Num   35:8   slot 11   the ones having               G3588       bin D  blank numbered slot adjacent
   Oba    1:18  slot 11   but the                       G3588       bin R  blank numbered slot adjacent
   Php    1:17  slot 0    But the ones                  G3588       bin R  blank numbered slot adjacent
   Php    2:18  slot 0    And likewise                  G3588       bin R  blank numbered slot adjacent
@@ -1345,10 +1338,10 @@ LANE A MANIFEST - the pinned row list, not a count
   Zec   14:2   slot 29   and the                       G3588       bin R  blank numbered slot adjacent
   Zep    3:5   slot 0    But the                       G3588       bin R  blank numbered slot adjacent
 
-  rows in lane A                  :  1325
-    of which bin D                :   276
+  rows in lane A                  :  1312
+    of which bin D                :   263
     of which bin R                :  1049
-    blank numbered slot adjacent  :  1317
+    blank numbered slot adjacent  :  1304
     blank star slot adjacent      :     8
 
-  SHA-256 of the sorted list        : 8737a6f222cd03e26affe63d3dfe57635d50478b86fd854ee84a80870ecbbec2
+  SHA-256 of the sorted list        : dd0f35a5edc4fb99c9b240efbb8d960e4d18476ec04cb2c135d478fa225ee4bf
