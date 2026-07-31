@@ -29,13 +29,23 @@ adonijah + artaxerxes near-misses blocked by page-attested variant rows).
    the xref):** cononiah + chenaniah both print Χωνενίας (chenaniah stays
    per-verse — its own forms vary); coniah + jeconiah share the Ιεχον- forms
    (jeconiah is its own UNRESOLVED key, later slice).
-4. **EGYPT HELD — its admission condition failed as stated.** JP's ruling admitted
-   egypt conditional on the form census showing "no seventh form hiding". It did:
-   beyond the split line's six forms the scrape shows Αίγυπτε ×1 (clean vocative)
-   plus four damaged singletons (Αίγυπτου, Αιγύπτον, Αιγύπτωου, Αιγύπου) and the
-   stray-mark shape `΄ Αιγυπτος` ×3. All same stem — likely still typo-class —
-   but that is a re-ruling, not a met condition. Await JP's call on the refined
-   dump (command in session).
+4. **EGYPT HELD — JP-RULED 2026-07-31, final for this batch.** The refined dump
+   surfaced TWO rows where ABP's page prints the GENTILIC (a different word, not
+   a case form) under an "Egypt" label: Deu 28:27 Αιγυπτίω · Isa 19:23 Αιγύπτιοι.
+   Ruling: hold — the adonijah precedent (rejected at 38/40 clean) applies a
+   fortiori; admitting egypt would make the admission standard ratio-dependent.
+   The standard is PAGE-ATTESTATION, never "what the entity is" (that reframe
+   was proposed and rejected). Nonconforming-row documentation for the future
+   mechanism (11 rows):
+   - typo class (7): `΄ Αιγυπτος` 1Sa 6:6 · 1Sa 12:8 · Nah 3:9; Αίγυπτου
+     Heb 11:27; Αιγύπτον Jer 46:2; Αιγύπτωου Jer 44:12; Αιγύπου Gen 41:30
+   - clean vocative (1, no issue): Αίγυπτε Psa 135:9
+   - different-word gentilic rows (2, the blockers): Deu 28:27 · Isa 19:23
+   - remaining rows: clean Αίγυπτος/Αιγύπτου/Αίγυπτον/Αιγύπτω declensions
+   **BANKED MECHANISM (JP 2026-07-31, own scoped proposal when raised):
+   per-row exclusion in the hand table — name admitted, listed slots excepted,
+   exceptions receipted with addresses. Would recover egypt (~1,189 rows),
+   adonijah (38), artaxerxes on the same terms. Not this batch.**
 5. **DISCOVERY (standing, affects future batches):** greek_header_split.txt CAPS
    its per-name form list (~6 forms). For high-count names the split line is NOT
    the full form inventory — admission needs the bh_scrape census (egypt is the

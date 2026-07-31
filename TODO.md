@@ -299,6 +299,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   names with page-attested dictionary form; real spelling variance stays per-verse
   (ruling b); abner/absalom PINNED verse-form — not upgradeable without a reviewer
   re-ruling of the pin. Next batches same flow, no deadline.
+  **BATCH 2 LANDED 2026-07-31 (apply chain pending):** slice 1–150 = verified
+  NULL (all variance/accent/gentilic-mixed); slice 151–300 = 7 admitted
+  (cyrus/damascus/darius/dinah/berechiah/coniah/cononiah, receipts in
+  greek_header_batch2.md), egypt HELD by JP ruling (2 gentilic-printed rows,
+  adonijah precedent — page-attestation standard is never ratio-dependent).
+  BANKED: per-row-exclusion hand-table mechanism (own scoped proposal; would
+  recover egypt ~1,189 + adonijah 38 + artaxerxes). DISCOVERY: the split
+  file caps each name's form list (~6) — big-name admission needs the
+  bh_scrape census, not the split line.
 - **Adonai-card residue (items 1+4 closed 2026-07-30 — record in TODO_ARCHIVE, incl.
   the Isa 7:14 Immanuel-heads-as-Jesus pre-filed answer):** (2) UPSTREAM NOTE: adonai
   (H136, divine title) rides the proper-noun lane (is_pn=1) while its own AI blurb
@@ -367,6 +376,27 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   lean on summary). Check FIRST how long-bound place cards (pre-widening) have rendered
   area — if the reader already suppresses it, this may be invisible today. JP eyeball of
   Geber 1Ki 9:26 rendered = the screenshot.
+- **Dataset publication with receipts (BANKED 2026-07-31, JP-raised — future
+  project, post-completion of the Greek PN work; no build, no scoping yet;
+  nothing on any queue moves).** When the Greek name/place/group work completes,
+  publish the corpus as likely the most accurate full-Greek-Bible proper-name
+  dataset in existence — the cert chain is the credibility asset, not just the
+  data. Framing recorded now: (1) LAYERED LICENSING — original work (bind
+  tables, identity xrefs, corrections, cert receipts, admission briefs)
+  publishes freely, likely CC BY-SA where derived from TIPNR/MetaV (both
+  CC BY-SA); ABP text is Van der Pool's (permission pending) so the default
+  shape is STANDOFF annotation — verse address + word position + our data,
+  keyed to the text without shipping the text; publication does NOT block on
+  ABP permission, shape upgrades if it lands. (2) ERRATA FILED UPSTREAM,
+  separately — MetaV/TIPNR/Tyndale corrections as issues/PRs against their
+  sources (Tyndale STEP data is on GitHub), each already receipted; ABP
+  scrape-vs-print findings (accent-typo class, stray-mark class) compile as a
+  Van der Pool errata list. (3) REPO SHAPE: data + receipts/ (cert briefs,
+  batch admission files, ruling records — much already exists as ticket/brief
+  markdown) + a methodology doc; the batch-1/2 admission rules and the
+  verdict-gate discipline are its draft. (4) TRIGGER: JP raises when the PN
+  work is done or ABP permission resolves, whichever makes the shape decision
+  live.
 - **Genealogy-of-Jesus map (BANKED 2026-07-30, JP-raised — future feature, no
   build/design yet; nothing on the current queue moves for this).** The
   "Genealogy of Jesus" attribute tag on person cards becomes clickable,
