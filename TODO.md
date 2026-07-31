@@ -1121,6 +1121,11 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   NOT a translator italic). Any fix = build-side redistribution for star slots + rebuild;
   regression pin lives in `tests/test_pn_star_verb_merge.py` (flip it to the split shape
   when the fix lands). NO data writes done.
+  **Subpattern B added 2026-07-31b (1Ki 9:26 "the city" G3588):** content noun on a bare
+  ARTICLE slot with no number of its own — 509 candidates corpus-wide (951 raw minus the
+  legit "the thing(s)" article rendering); list appended to the same audit file. ⚠ Mixed
+  origins: some are ABP-attested supplied English over the article (1Co 1:25 "the wisdom"),
+  NOT number drops — the cert session must sort display treatment vs data fix per spot.
 
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps

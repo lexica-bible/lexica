@@ -673,7 +673,10 @@ const sn=entry&&(entry.strongs_raw||entry.strongs_base);if(!sn||sn==="*"){setLex
 // on the resolved name in lane 1 but the TITLE still read the raw gloss, whose first
 // capital can be a stray sentence word ("Blind Pharisee," -> "Blind"). One precedence
 // everywhere: the word the bind resolved on is the word the header shows.
-const properName=extractProperName(entry.pnName||entry.gloss);const nameOrGloss=isPN||metavData?properName:entry.gloss;const trimTail=s=>stripArticles(s?.replace(/[.,;:!?—-]+$/,"").trim());// The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
+const properName=extractProperName(entry.pnName||entry.gloss);const nameOrGloss=isPN||metavData?properName:entry.gloss;// trimPunct: tail punctuation only. trimTail (punct + leading-article strip) is for
+// NAME displays; the in-verse gloss must stay VERBATIM — stripArticles was eating
+// real wording ("His disciples" → "disciples", Mat 28:13, JP sighting 2026-07-31).
+const trimPunct=s=>s?.replace(/[.,;:!?—-]+$/,"").trim();const trimTail=s=>stripArticles(trimPunct(s));// The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
 // when the reading text carries one: the Hebrew OT reader (entry.inflected = the
 // pointed word) and BSB (entry.inflected = the Berean-tables original word) set it at
 // the click. The dictionary form (lemma) stays the BIG headword for EVERY text, so the
@@ -695,7 +698,7 @@ const giLemma=greekId&&greekId.lemma||"";// Hebrew-flash fix, hero leg: while th
 const hero=greekIdPending||isHebrewWord&&bdbLoading?{he:false,noGloss:true,script:" ",translit:"",standaloneGloss:"",morph:""}:{he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,// MERGED compound card (JP sweep verdict 2026-07-31): the IDENTITY JOIN is
 // the ONLY hero source — per-slot word fields (entry.greek/translit, joined
 // naively at the chip) produced half-names ("Γάδ" hero, "Gád · Dibon" row).
-script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.pnMergePos!=null?giLemma||nameOrGloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.pnMergePos!=null?giLemma?greekId.translit:"":entry.translit||(giLemma?greekId.translit:""),standaloneGloss:trimTail(isPN||metavData?entry.pnDisplay||properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
+script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.pnMergePos!=null?giLemma||nameOrGloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.pnMergePos!=null?giLemma?greekId.translit:"":entry.translit||(giLemma?greekId.translit:""),standaloneGloss:isPN||metavData?trimTail(entry.pnDisplay||properName):trimPunct(entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
 // it differs from the headword lemma (indeclinable words can coincide → skip it). For an
 // idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
 // redundant + mangled-looking next to the authored lemma, so drop it.

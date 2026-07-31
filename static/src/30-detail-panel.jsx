@@ -736,7 +736,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // everywhere: the word the bind resolved on is the word the header shows.
   const properName = extractProperName(entry.pnName || entry.gloss);
   const nameOrGloss = (isPN || metavData) ? properName : entry.gloss;
-  const trimTail = (s) => stripArticles((s)?.replace(/[.,;:!?—-]+$/, "").trim());
+  // trimPunct: tail punctuation only. trimTail (punct + leading-article strip) is for
+  // NAME displays; the in-verse gloss must stay VERBATIM — stripArticles was eating
+  // real wording ("His disciples" → "disciples", Mat 28:13, JP sighting 2026-07-31).
+  const trimPunct = (s) => (s)?.replace(/[.,;:!?—-]+$/, "").trim();
+  const trimTail = (s) => stripArticles(trimPunct(s));
   // The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
   // when the reading text carries one: the Hebrew OT reader (entry.inflected = the
   // pointed word) and BSB (entry.inflected = the Berean-tables original word) set it at
@@ -773,8 +777,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit
       : (entry.pnMergePos != null ? (giLemma ? greekId.translit : "")
         : (entry.translit || (giLemma ? greekId.translit : "")))),
-    standaloneGloss: trimTail((isPN || metavData) ? (entry.pnDisplay || properName)
-      : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
+    standaloneGloss: (isPN || metavData) ? trimTail(entry.pnDisplay || properName)
+      : trimPunct(entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss),
     morph: morphLine,
   };
   // The small "in this verse" line shows the inflected form — only when we have one AND
