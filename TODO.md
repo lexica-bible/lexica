@@ -316,14 +316,24 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
-- **Word-study name-form lane: no in-verse highlight — BUILT 2026-07-30 (03369cfc),
-  awaiting JP's served check.** Root cause (traced, not the guessed one): the verse-row
-  highlighter matches ONLY by Strong's number (citedStrongs in 50-corpus-results.jsx),
-  and a PN:<form> page has no number, so nothing can ever light. Fix: the name-form
-  occurrence rows (pn_greek_identity) already store the name's word slot per verse —
-  views_lexicon now sends that slot with each listed verse ("position"), and VerseRow
-  lights it via a new hiPositions prop merged into the same citedPositions machinery.
-  Numbered lanes untouched (prop absent). Parity test still green.
+- *(Word-study name-form highlight: CLOSED 2026-07-31. Fix 03369cfc (PN: lane
+  sends the name's word slot, VerseRow lights it); JP approved the served render,
+  then the four-lane sweep (Greek/HEB/KJV/BSB) confirmed ALL lanes light —
+  structure pass. Full record: the lanes table in-session; highlighter matches by
+  Strong's number everywhere except the name-form lane's slot number.)*
+- **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
+  JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
+  KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
+  Gen 6:3 highlights `"My Spirit` incl. the opening quote; NOTE the renderer puts
+  trailing punctuation INSIDE the span by construction (50-corpus-results.jsx
+  `{w.word}{w.punc}` inside the highlighted span) — likely the mechanism, sweep
+  quotes/commas/periods at span edges. (2) suspect span targets — Gen 7:22
+  highlights only `of` ("the breath of life", content words unlit): diagnose
+  whether BSB word-alignment data is off for that verse or the renderer picks the
+  wrong slot; same check for Gen 26:35 `they brought` (if alignment genuinely
+  maps רוח there, document, don't "fix"). (3) multi-word spans ("in the breeze",
+  "the breath") plausibly correct full-phrase renderings — verify vs alignment
+  data, not presumed defects. Render-layer, no data writes expected.
 - **Card provenance placement — CURRENT SPEC = JP amendment 2026-07-30 (third
   pass; prior placements SUPERSEDED, not options).** Match-state ("Matched to
   this verse" + variants) renders LAST in the Biblical Person/Place section —
