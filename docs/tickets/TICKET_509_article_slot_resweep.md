@@ -326,6 +326,106 @@ classifier must refuse):
 Exit codes checked on every mode: `--prove-halt` 1 · `--prove-halt-lanes` 1 · `--controls` 0
 · `--list D` 0 · `--old` 0. Still read-only, still no DB read, no data written.
 
+### 6d. `--manifest` LANDED (2026-07-31) — lane A pinned by identity, not by count
+
+A count has no identity. The fix reclassifies every row it repairs (lane A → bin P), so
+lane A's membership exists **only before the write** and cannot be reconstructed after.
+`--manifest A|B` prints the lane's full row list plus a SHA-256 over it, so the post-fix
+check is set identity — "the build touched exactly these rows" — instead of arithmetic that
+a compensating pair of errors could satisfy.
+
+Reporting only: `lane_of` and the bin predicate untouched. `lane_of`'s own reason string is
+now carried out of `sweep()` beside the lane letter (same index alignment, same rationale)
+so the manifest separates numbered-slot rows from star rows without a second token walk —
+a second walk would be a *copy* of the predicate, not the predicate.
+
+```
+  docs/audits/MANIFEST_lane_a_article_slot.txt
+  sha256 e0ff71f85f8e3dbac22a674378125900ad8edf30049508377ea227e17dc62332
+  1,325 rows = bin D 276 + bin R 1,049 = 1,317 numbered-slot + 8 star
+```
+
+Regression baseline identical across the change: lane A 1,325 · lane B 1,363 · P 1 · replay
+951/509 row-for-row · all six bin controls, six lane controls and four red-first checks
+FIRED · `--prove-halt` and `--prove-halt-lanes` both still exit 1.
+
+### 6e. RULINGS 3–5 — the fix predicate (recorded 2026-07-31, before any predicate was written)
+
+**Open call "direction" was NOT a ruling — it was already decided and only needed reading.**
+`lane_of` tests both sides (`i-1` and `i+1`) and the lane controls prove both shapes are in
+scope: `Act 20:15 'and'` on a numbered slot, `Gen 22:21 'Huz'` on a star. Read out, not ruled.
+
+**RULING 3 — the move is decided by WORD CLASS, never by position.** The shape census over
+all 1,325 lane-A rows:
+
+```
+   869  residue is a clean PREFIX     "But the"         XA
+   373  whole slot is residue         "his own"         XX
+    58  residue is a clean SUFFIX     "by his"          AX
+    11  residue is a clean MIDDLE     "for indeed the"  AXA
+    14  INTERLEAVED                   "is the whole,"   XAX
+```
+
+Prefix is not the rule, it is the rule's most common consequence — 456 rows sit off it. One
+formulation covers all four clean shapes with no position logic: **move the words that are
+not the article's own English, leave the ones that are, wherever they sit.**
+
+**RULING 4 — the stays-set is ARTICLE_ENGLISH *plus* substantival, defined once.** 226
+lane-A rows carry `one/ones/thing/things` (`"But the one"`, `"all things,"`,
+`"but to the ones"`). The detector's own predicate already says those ARE the article's
+English — that is what bin S is — but `residue()` strips only `ARTICLE_ENGLISH` and hands
+back `['but', 'one']`. A pass built on the narrower set would drag `one` off the article and
+leave a bare `"the"`: **226 new defects manufactured while fixing old ones.** The set must be
+defined in ONE place and shared with the S-predicate, not duplicated, or the two drift apart
+again exactly as they had here.
+
+**RULING 5 — the 14 interleaved rows go to curated handling, same as lane B.** Their
+neighbours were read, not assumed: **12 of the 14 have two residue blocks and one blank
+slot.** `Heb 2:10 "is the whole,"` needs `is` to go one way and `whole` the other, and only
+G3956 on the right is blank — no correct mechanical answer *exists*, so any pass output is
+wrong by construction. Only `1Ki 3:23` and `Deu 8:11` have two blanks, and those still need a
+per-block direction call, which is judgment.
+
+**RULING 6 — the 8 star rows split 6 / 2, on semantics not scheduling.** Only two carry a
+name: `Gen 22:21 'Huz'`, `Isa 46:13 'to Israel'`. The other six are possessives and function
+words — `'his'`, `'so as'`, `'with his'`, `'even by the'`, `'Is'`, `'his'`. A star slot is a
+PROPER-NOUN slot, so those six are wrong to write regardless of what the PN-star work does:
+a permanent exclusion, not a scheduling hold. The named two are held for a post-PN-star
+landing per §7's separate-landings rule. This is TODO ②'s pinned lesson holding: the
+discriminator is **whether the carrier holds a name**, never adjacency.
+
+**WRITE TARGET — 1,303.** Every exclusion is enforceable from the manifest's own fields (the
+reason string for the star rows, the word pattern for the interleaved), so the pass's scope
+is derivable and re-checkable, never a hand-carried list.
+
+```
+  1325  lane A
+   -14  interleaved        -> curated
+    -6  star, no name      -> excluded on their own terms, permanently
+    -2  star, named        -> held for post-PN-star landing
+  ----
+  1303  the pass
+```
+
+**EXPECTED PICTURE — pre-registered, and the corrected arithmetic.** The 22 excluded rows are
+NOT all in bin D: 13 of the 14 interleaved are bin R (only `Jer 25:6` is D), and all 8 star
+rows are D — so 9 excluded rows sit in D and 13 in R.
+
+```
+                 before      after a correct fix
+  bin P               1      ~1,304   (1 + the 1,303 written)
+  bin R           1,049         ~13   (the interleaved R rows - NOT ~0)
+  bin D           1,639      ~1,372   (lane B 1,363 + the 9 excluded)
+  lane A          1,325          ~0
+  lane B          1,363       1,363   UNCHANGED - if this moves, the pass overreached
+                                      total 1,304 + 13 + 1,372 = 2,689 carriers
+```
+
+**bin R landing at ~0 is now a FAILURE, not a success** — it means the pass ate the
+interleaved rows it was told to leave alone. The earlier draft of this picture said R → ~0
+and D → ~1,385; both were wrong, and they were wrong because they assumed every excluded row
+was already a proven defect.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English
