@@ -1,4 +1,22 @@
-# Greek-header hand-table — batch 2 record (JP-approved 2026-07-31, apply chain pending)
+# Greek-header hand-table — batch 2 record (SHIPPED 2026-07-31)
+
+**SHIPPED 2026-07-31, full chain receipted:** control run FAILED on exactly the
+seven batch-2 pins vs live (`got []` ×7; hadad/zion/abner + all six batch-1
+pins PASS — the fresh control) → scratch build (`hand-table nominatives
+loaded: 13`) → gates A/B/C PASS (`->surface (headword) 134`, all else 0; all
+16 pins PASS) → pre-swap scope proof: the 134 flipped rows are EXACTLY the
+seven headwords (Δαμασκός 63 · Δαρείος 24 · Κύρος 24 · Δίνα 10 · Βαραχίας 8 ·
+Ιεχονίας 3 · Χωνενίας 2), all source=surface → swap (rollback =
+bible.db.rollback) → deploy reload 5×200 → served captures (post-reload, API):
+Ezr 1:1 cyrus pos 5 + 19 = lemma Κύρος source=surface H3566 intact; Act 9:2
+damascus pos 5 = Δαμασκός source=surface H1834 intact. UNRESOLVED pool now
+857 (was 864).
+
+**METHOD REFINEMENT (JP-ruled at verdict):** flip counts land BELOW the raw
+census because numbered slots are already Greek-headed by abp-tag/tipnr and
+gate-B-barred from the hand table — future batches predict size from a
+NUMBERLESS-slot count, not the raw census (batch-1 names matched their census
+only because they had no numbers anywhere).
 
 Seven names admitted from the UNRESOLVED slice 151–300 (JP paste 2026-07-31) under
 the batch-1 rule: every printed form the SAME stem declined, headword printed on

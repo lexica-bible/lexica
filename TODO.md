@@ -299,7 +299,8 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   names with page-attested dictionary form; real spelling variance stays per-verse
   (ruling b); abner/absalom PINNED verse-form — not upgradeable without a reviewer
   re-ruling of the pin. Next batches same flow, no deadline.
-  **BATCH 2 LANDED 2026-07-31 (apply chain pending):** slice 1–150 = verified
+  **BATCH 2 SHIPPED 2026-07-31 (full receipt chain in greek_header_batch2.md;
+  134 rows live, served captures green, UNRESOLVED 864→857):** slice 1–150 = verified
   NULL (all variance/accent/gentilic-mixed); slice 151–300 = 7 admitted
   (cyrus/damascus/darius/dinah/berechiah/coniah/cononiah, receipts in
   greek_header_batch2.md), egypt HELD by JP ruling (2 gentilic-printed rows,
