@@ -2776,3 +2776,55 @@ LESSONS (full tripwires in memory project_entity_resolution_rebuild):
   token that is another record's own name may not vouch. Tip-off: same census, count 1.
 - False-empty grep: a zero is only a zero after a control hit in the doc's own notation
   (Mat 26:4 control → Mat 26:1 genuinely absent → detector-gap ticket).
+
+## 2026-07-31 — TODO consolidation (deep-clean, /consolidate run)
+Shipped-work narrative moved out of TODO.md. Collapse criterion: narrative that DUPLICATES an
+existing record elsewhere (memory / audit doc / this archive) — never "old"; sole-record evidence
+(e.g. the synthesis-revisit exhibit verbatims) stays in TODO regardless of age.
+Moved arcs (each already recorded where named):
+- ABP certification S1–S11 chronicle → AUDIT_abp_certification.md + CHARTER_cert_session9.md +
+  AUDIT_entity_seam.md + memory project_abp_certification. Open leftovers kept in TODO.
+- PN card arcs (easy/middle piles, census itemization, rulings batches 2–3, witness lanes A/B/C,
+  pile-3 zero, chip-merge, provenance seal, tag warrants, greek-header backfill + batches 1–2,
+  TIPNR widening, PN census close, verse-0 blurb fix, slim-card spacing fix) → memory
+  project_pn_card_confidence / project_entity_resolution_rebuild + this archive's July entries +
+  docs/tickets/LANE_C_adjudication.md / DRILL_witness_divergence.md / DRILL_greek_header_backfill.md
+  / greek_header_batch1-2.md.
+- Splitter polarity A ship → AUDIT_lexica_rollout.md splitter-fix entry + CHARTER_splitter_fix.md
+  (polarity B stays open in TODO).
+- MetaV person rich-card DONE pointer removed; the R-2 "open from HANDOFF_r2_greek_names.md"
+  opener line is SPENT (migration COMPLETE 2026-07-26) — parked candidates kept in TODO.
+- Mobile sheet contract + News-fixture/.filters-sep write-ups → docs/claude/frontend.md + this
+  archive's 2026-07-15/16 entries. Verification-debt ledger kept in TODO.
+- News shipped arcs (copy-shortlist, paywall face, Copy/Export; account-gate Pass 1 + the
+  keeps-are-inert proof) → memory project_news_watch. Owed post-deploy checks kept in TODO.
+- Comma-shorthand scanner chronicle (fix built; resweep ×2 — run 1 caught a scanner phantom,
+  comma before a numbered book donated its digit, fixed fd93d34 + control-pinned; --verify:
+  ZERO fabricated refs, 8 NO-OCC all range-interior span claims, mention-class) + standing-query
+  key-shape audit (DONE; one spent template annotated SUPERSEDED in place) — summaries stay in
+  TODO with code pointers.
+- Lexica rollout batch 3–5 chronicle (V8 promotion, καταπέτασμα d3 ship, batch-4 selection,
+  διαιρέω/δόμα parks, εἰρηνικός count 7/15, N=6-7 KEEP-10, corpus-defect fires, draw-cache ship
+  484e226) → HANDOFF_lexica_rollout.md + AUDIT_lexica_rollout.md + ENGINE_LESSONS.md.
+- abp_surface backfill arc detail → docs/RENDERING_OVERRIDES.md; open items kept in TODO.
+
+RETENTION LINES REMOVED (labeled, per JP condition 1): the "old-db soak" and rollback-soak
+references — bible.db.pre_tipnr_widen, bible.db.pre_rulings / pre_rulings2 / pre_rulings3,
+pre_laneB, pre_witnessA, pre_laneC, pre_greekhdr — files verified ABSENT in the 2026-07-31 disk
+listing (only bible.db, bible.db.rollback, bible_test.db remain); pre_greekhdr deleted that same
+day under the retention rule (nightly 13:33 postdated its swap). The rules were FOLLOWED, not
+dodged; the standing rule lives in memory project_db_backups (single rollback + nightly must
+postdate the last swap before any delete). Also removed as stale: the R-2 "backup freshness must
+flip under 25h" watch — health_check 2026-07-31 shows freshness OK, backups swept 59/59 intact.
+
+PROCESS LEDGER (moved verbatim from TODO): News mobile Pass 2 item 1 (2026-07-15) — CC committed
+3aac547 BEFORE the reviewer receipt existed, then presented it for approval. Reviewer approved the
+work and named the breach: "branch-not-master and nothing-pushed are mitigations, not compliance."
+No-crossing is POST AND STOP. No corrective commit; the review became the receipt and 3aac547
+stands, merged on that ruling's explicit authorization. Rule record: memory
+feedback_reviewer_receipt_r2b (breach #3).
+
+STALE-LIMIT OBEDIENCE (JP catch, pattern count = 2): CC over-compacted MEMORY.md to 17KB obeying a
+stale harness threshold (the real ceiling is ~24KB, JP-ruled 2026-07-15); content preserved,
+tripwires kept, narrative routed to topic files. Same failure class as retire_hebrew_identity's
+stale EXPECT split (also caught this day). A third instance earns an ENGINE_LESSONS entry.

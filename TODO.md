@@ -8,111 +8,20 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## ABP corpus certification audit — TIER A CERTIFIED END TO END (full record `AUDIT_abp_certification.md` + memory `project_abp_certification`)
-Sessions 1-3 DONE 2026-07-03/04. Live bible.db IS pinned source (74-file hash manifest) + faithful parser
-(re-parse+diff certified) + versioned correction table (`abp_corrections`, 18 rows) + invariant suite green
-(`cert_invariants.py`, 7/7, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
-retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `_sort_brackets` deleted.
-Session 4 DONE: Cushi person-as-place binding floored (see archive), check 7 added, render count reconciled.
-Session 5 DONE: TIPNR pinned (manifest 75, binder proven byte-identical); nightly backup damage-check +
-durable self-test; L2/L10 correction rows landed (source-attested via the official ABP app, table 8->16,
-suite green at pin 16); two-source seam doc written (`AUDIT_entity_seam.md`).
-Session 6 DONE 2026-07-04: 97-card section-label defect FIXED + live (`parse_tipnr` types each entity from
-its OWN row, not the block header — 8 places flipped person→place, 3 EXCLUDED entities stopped binding,
-net −13 render, loud-fail raise on unknown type under a mixed header); mirror census re-run on clean labels
-(P1=0, valid); check 7 hardened to BOTH directions (mirror leg + control); L5 discrepancy explained
-(closure a, no drift). Cert 7/7 green, pin 16. Full record `AUDIT_entity_seam.md` + `HANDOFF_session7.md`.
-Session 7 DONE 2026-07-04: **L5 CLOSED** — all 9 candidates read vs the ABP app (JP verse-pasted): 8 clean
-(αὐτός/ἐγώ/οὕτως legitimately render "this/these"), 1 real mistag fixed — Dan 4:33 pos 1 αὐτῇ (αὐτός)
-mis-numbered as ἐγώ, corrected G1473→G846 (decided by dative agreement with ὥρᾳ + αυτ- spelling, not a
-breathing eyeball; escaped Path C = blank-lemma unanchored, Daniel-4 OG/Theod. divergence). Two `abp_corrections`
-rows added via the L2/L10 door (table 16→18), applied live, **pin bumped 16→18, cert 7/7 green**. Luke 23:38
-carry-forward closed (language reference = binder artifact, no row). Full record in `AUDIT_abp_certification.md`
-L5 batch-two entry.
-Carry-forwards:
-**Session 8 DONE 2026-07-04: Door 1 (Path-C census) CLOSED + Door 2 (import_tipnr twin) FIXED+proven.
-Both queued for one Session-9 rebuild. Full charter = `CHARTER_cert_session9.md`
-(consolidates the old `HANDOFF_cert_session9.md` + `AUDIT_reassembly_rebuild.md`, both now superseded).**
-**PRE-REBUILD FIXES COMMITTED 2026-07-05: (P) gated green (ddffb0f); (b) dry-run-proven (96bb662);
-(e) paren float shipped (6e1deed); (f) content-other parser (b62ab8f) + 5 Tier B rows staged
-(`AUDIT_tierB_f_proposed.json`); (g) DEFERRED, detector floor 671 in gate (a76df6a). SESSION 9 PROPER
-opens as its OWN fresh session: first step = assemble the combined-rebuild plan → JP approves → build.**
-
-**★ SESSION 9 (2026-07-06) — rebuild ran, BLOCKED at the gate by split-flip over-fire. SUPERSEDED — S10 fixed it in code, S11 ran + swapped (see "SESSION 11 DONE" below). Kept only for the diagnosis history. ★**
-The plan was approved and the combined rebuild built + finalized on a throwaway `bible.db.new` (live
-never touched). **P1/P2/(e)/(f)/(b) all verified GREEN:** P1 drove the 208 pronoun survivors to ZERO,
-content-other = 0, funcword detector trusted-zero (fired 0→93 on a pass-off build, then 0 on the real
-one), invariants + audits + health all pass, five pass-controls frozen (1Ch 13:10 / Act 19:4 / 1Sa 5:2
-/ Jdg 8:19 oath / Lev 10:18 funcword). **(f) shipped a NEW prose path on `abp_corrections`** (committed
-b196b9a): `field='verses.text'`, `position=-1` sentinel, two apply points in finish_rebuild (prose at
-step 4b before split-flip, words at step 7); `verify_prose_leak.py` is the gate check;
-`cert_prose_leak_diff.json` grew 13→15 (2 live-stale caps heals, Tier A).
-**BLOCKER — v2 word-order = 180, not 0.** Root cause proven: **`fix_split_flip` over-fires** — it
-swaps "noun, the" → "the noun" even when the "the" belongs to the FOLLOWING noun (Jer 48:1: "…of the
-forces, the God…" → wrongly "…the forces, God"). Rebuild with split-flip OFF → word-order **180→5**
-(175 caused by split-flip; the 5 residual = Mat 21:19 / Mat 20:29 / Job 24:19 / 1Ch 22:15 — 4 of the
-5 Tier B verses whose WORDS still need a fix — PLUS Act 7:3, a separate case never in Tier B; Job 24:18
-is NOT residual, its words reassemble clean). `audit_split_flip` reads 0 because it shares the fixer's own flawed assumption; the independent
-v2 oracle caught it. The charter's "a clean rebuild cures the article-fronting for free" was WRONG —
-that diagnosis ran on a no-tail build. punct = 240 with AND without split-flip (split-flip is
-punct-neutral; 240-vs-260 is a separate open item).
-**★★ SESSION 10 DONE 2026-07-06 — the S9 blocker + the 5 residual RESOLVED IN CODE (5 commits); SHIPPED via
-the S11 rebuild below.** Canonical = `CHARTER_cert_session9.md`.
-- `49f09c6` split-flip SCOPED (two clean-text guards) + `audit_split_flip --control`; pre-registered to fire
-  on **0** in the rebuild (all 175 were false positives) — if it fires on any, STOP + adjudicate.
-- `7fe9271` Option A malformed-bracket build fix (Mat 21:19 / 1Ch 22:15 / Job 24:19); `scan_malformed_
-  brackets.py` pre-registers EXACTLY 3; control green.
-- `a011695` Fix A number-safe correction comparator (`cellmatch`) — needed by greek_pos rows; 18 live rows
-  re-verify identically (dry-run 0 skips).
-- `0ce6f06` Mat 20:29 word row (greek_pos 1→2); `9eff6da` Act 7:3 word rows (option B, reorder metadata).
-**★★ SESSION 11 DONE 2026-07-06 — REBUILT + GATED + SWAPPED + CERTIFIED LIVE. ★★** The combined rebuild
-ran, passed every charter gate line by its own instrument, swapped to live, re-certified 7/7, dependent
-builders re-run, site reloaded. `abp_corrections` 28, words 626309, phrase-gloss allowlist 31 frozen
-(`AUDIT_phrase_gloss_allowlist.txt`), punct settled at 240 (no new). Carry-forwards (Path-C residue,
-import_tipnr twin, Door-3 five-pass controls) all shipped in this rebuild. Rollback = `bible_pre_cert_
-s11_20260706.db`; old live = `bible_old_live_20260706.db`. Full record → memory `project_abp_certification`
-(S11 banner + lessons). **The certification arc is CLOSED.**
-
-**S11 FOLLOW-UPS — 4 of 6 CLOSED (verified 2026-07-08, see archive): `--from-draw` shipped (`c4617d0`),
-G1096 redraw shipped at batch-2 open, citation-sweep rule codified in `docs/claude/ai.md`, stray worktree
-pruned. Still open:**
-- **`verify_prose_leak.py` needs a "Tier B applied" mode/warning** — it's a parser-only check; run against a
-  finished scratch (Tier B layered on the 5 prose verses) it FAILs-that-isn't on exactly those 5. Next
-  rebuild shouldn't re-derive this.
-- **`lint_split_wrong_slot.py` stale label** — its `RECONCILE … (sizing: 18,339/12,692)` is a hardcoded
-  literal; bump to **18,384/12,718** (the real post-S11 scope; both harnesses agree on it).
-Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
-- **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
-  Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
-  `abp_surface` (ABP's own Greek — refines the old "no our-data detector" claim to BLANK-form slots only).
-  Corpus-wide raw ~3,577 is **VOID as a count** — a MIX of real pronoun mistags + subject/possessive FOLD
-  slots (blank-english, correctly-placed but mis-numbered; NOT `abp_surface` misalignment — placement is
-  RELIABLE), proportions unknown until the per-slot fix pass.
-  → FIX QUEUED (Session 9): Path C `abp_surface` fallback (form→Strong's table for the closed pronoun set)
-  WITH a per-slot form/english sanity gate (skip+log where they don't match; blank-form slots stay app reads).
-- **import_tipnr.py twin bug — FIXED + dry-run-proven (Session 8, commit 96bb662), NOT yet applied.**
-  Ported entity_resolution's col-8-own-type fix into `import_tipnr.parse_tipnr`; the **10** mixed-block
-  places (Beth-gader/Eshtemoa/Etam/Gedor/Gibeon/Ir-nahash/Keilah/Shechem/Tekoa/Zanoah) flip person→place,
-  independently pinned + mirror-clean + raise both ways (`scripts/dryrun_tipnr_typefix.py`). The `tipnr`
-  re-import is the Session-9 rebuild step; pre-registered Door-2 delta = exactly those 10 type changes.
-- **Door 3 — the 7 redistribution passes — RESOLVED 2026-07-05 (middle path).** L9 certified
-  `_split_compounds`; (P) now certifies P1 `_redistribute_pronoun_compounds` + P2 `_split_numbered` via their
-  gates. The OTHER 5 (`_fix_backwards_pairing`, `_split_pn_article_lump`, `_funcword_noun_relocate`,
-  `_lord_subject_split`, `_lord_oath_fix`) get NO full per-pass cert but ONE banked known-positive control each
-  + the output-level v1/v2-zero gate. Banked: 1Ch 13:10 (lord_subject), Act 19:4 (pn_article_lump), 1Sa 5:2
-  (backwards_pairing). **STILL TO PICK ON PA before the build:** one control verse each for `_lord_oath_fix`
-  (from `graveyard/fix_lord_oath.py` dry-run) + `_funcword_noun_relocate` (from `audit_funcword_wrongslot.py`).
-  See CHARTER gate block "Five-pass single-control set".
-- **POST-S9 follow-ups (surfaced this session, NOT part of the rebuild):**
-  - Phrase-gloss under-distribution (671, fix (g) deferred): adjudicate a sample of the "not+verb" class vs
-    the ABP app (defect vs ABP negation convention), then distribute the true-defect ones dual-ordering-style.
-    Detector = `scripts/audit_phrase_gloss_underdist.py`.
-  - Consolidate the trailing-clause float set — it's copy-pasted in 6 live places (build + 4 render + port);
-    unify to one shared definition so they can't drift. Repo hygiene.
-- **Stump filter leak** (noted, low priority): `lint_split_wrong_slot.py`'s stemmer stump filter misses
-  sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
-  fix if the filter is reused at scale.
-
+## ABP corpus certification audit — ARC CLOSED (Tier A certified + live)
+S1–S11 record → AUDIT_abp_certification.md + CHARTER_cert_session9.md + AUDIT_entity_seam.md +
+memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open leftovers only:
+- **verify_prose_leak.py "Tier B applied" mode** — parser-only check FAILs-that-isn't on the 5
+  Tier-B prose verses when run against a finished scratch; next rebuild shouldn't re-derive this.
+- **lint_split_wrong_slot.py stale label** — hardcoded `RECONCILE … (sizing: 18,339/12,692)`;
+  bump to 18,384/12,718 (the real post-S11 scope; both harnesses agree).
+- **Phrase-gloss under-distribution (671, fix (g) deferred):** adjudicate a sample of the
+  "not+verb" class vs the ABP app (defect vs ABP negation convention), then distribute true
+  defects dual-ordering-style. Detector = scripts/audit_phrase_gloss_underdist.py.
+- **Trailing-clause float set copy-pasted in 6 live places** (build + 4 render + port) — unify
+  to one shared definition so they can't drift. Repo hygiene.
+- **Stump filter leak** (low): lint_split_wrong_slot's stemmer stump filter misses sibling forms
+  with count <3 (sid/com/rott); fix if the filter is reused at scale.
 ## R-2 residue (ticketed at close, 2026-07-26 — none blocking, JP raises)
 - **Gentilic/people-class Greek backfill** — the named candidate that retires the 3,380
   kept-Hebrew ('none'-class) rows in pn_hebrew_xref (C3-Q1 condition b). Adjacent to pile U.
@@ -120,8 +29,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   stamped 2026-07-28 — scrape-based recovery CLOSED by ruling; needs a new source).
 - **Binder Greek-key bases extension — PARKED BY RULING** (would fire novel binds; own gates
   when raised). Record: PLAN_r2_stage3.md charter amendment.
-- **Backup freshness must flip under 25h post-quota-cleanup** — glance at the next nightly
-  email; a second failure is real I/O, investigate first.
 - **Lexica-minted PN numbers — DEFERRED by ruling** (TICKET_lexica_pn_numbers.md): revisit
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
@@ -153,10 +60,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Hanniel, Harbona, Hotham, Ishmaiah, Izhar, Jaasiel, Jekamiah, Joiada, Joshaphat, Mahlah,
   Mehetabel, Nahum, Palti, Rab-saris, Salome, Sharezer, Shemer, Zattu, Zerubbabel.
   Wait for JP to raise it.
-- *(Slim-card one-liner spacing (Timothy "Child Eunice" tight under the TIPNR line, JP
-  2026-07-30): FIXED via adjacent-sibling rule `.detail-p--meta + .metav-rel-row` in
-  styles.css — space only when a kin row follows, Pilate/David untouched by construction.
-  Rides the next deploy; eyeball set Timothy / David / Pilate / Esther.)*
 - **AI blurb verse-check cert (SCOPED, not started — JP + reviewer 2026-07-30):** make
   "verse-checked" a state a blurb can EARN. Ticket with the check design, two open doctrine
   questions (cross-reference attestation; failure policy) and the cert template:
@@ -164,14 +67,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   work (borrows its tooling); waits for JP to raise it. Interim reword SHIPPED same day:
   caveat now reads "AI-written summary — claims not verified against the verse text"
   (rides next deploy).
-- **Old-db soak (JP's call):** `~/bible-db/bible.db.pre_tipnr_widen` retained per reviewer
-  ruling; cleared for deletion after a few days of live traffic.
-- *(TIPNR scope-widening SHIPPED + lane CLOSED 2026-07-30, reviewer close-out approved:
-  tipnr_entities 2,355 → 4,247 (+1,892 exactly as pre-registered), 18 Paul-class names now
-  serve descriptions, 25 latent confident-wrong cards corrected to honest declines,
-  pn_binding byte-identical, zero regressions on certified cards. Full record →
-  TODO_ARCHIVE.md. Standing method addition: post-swap served-layer captures are only
-  valid AFTER a worker reload — baked into scripts/gate_tipnr_scope_widen.py.)*
 - **340 identity slots with no words row (lane-2 2026-07-29, DIAGNOSED, fix DEFERRED by
   reviewer ruling).** All 340: source class 'none', position-hole INSIDE an otherwise
   normal verse — NOT the 345 no-name slots. Reads as none-class rows stamped from a stale
@@ -180,9 +75,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   scripts/audit_pn_lanes.py lane 2.
 - **"Field" oddity (flag only):** capitalized common word 'field' (Isa 29:17 al.) serves a
   metaV PLACE card via name match — pre-existing quirk surfaced by the lane-1 dump.
-- *(PN census + confident-label + four-lane + Paul-class slim-card arc CLOSED 2026-07-29/30
-  with all receipts — record in TODO_ARCHIVE.md + memory project_pn_card_confidence;
-  standing rules in docs/claude/frontend.md + data-model.md.)*
 - **Star-slot G-number question (vocative-O residue, own ruling owed):** the served identity
   for star name slots like Jer 15:5 Ιερουσαλήμ is lemma-only/no-number while a real Greek
   number (G2419) exists in the lexicon — an R-2 identity-rules question, NOT display.
@@ -198,131 +90,41 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   trim default_verses for mega-words (first N + lazy rest), collapse the aggregate passes into one
   grouped read, or cache hot profiles. Hebrew feels faster because heb.db is smaller and H-numbers
   skip half the passes. code: views_lexicon.py lexicon_profile / _all_books_verses.
-- **Jacob-class name cards (sized 2026-07-11): 694 occurrences (~2% of 32,002 name words) are
-  unbound + ambiguous-name → AI-only fallback card** (found via Ἰακώβ Gen 29:32: several people
-  share the name, the name-lookup rightly declines to guess, no verse-bind exists to break the tie,
-  reader gets the unverified AI blurb with no genealogy). Low volume but high-visibility names:
-  gilead 38, jesus 38, hadad 30, judah 26, jehoram 21, jacob 17, mary 16, elijah 15, joseph 12,
-  saul 10 (full top-20 in the audit output). Coverage otherwise healthy: 15,893/32,002 bound.
-  Fix direction when picked up: extend the binder's verse-corroboration for these names (why did
-  Gen 29:32 Jacob floor? — the patriarch is TIPNR's Israel@Gen.25.26-Rev record, alias-keyed), or
-  a hand-ruled disambiguation list for the famous few. Sizing tool (read-only, control-tested):
-  `scripts/audit_pn_fallback_size.py`. code: build_entity_binding.py tiers; 30-detail-panel.jsx
-  metav effect (the ambiguous-name decline is CORRECT — don't "fix" it by guessing).
-  **SCOPE REFRESH 2026-07-29 (lane 4, read-only):** census definition (identity slots,
-  metaV+TIPNR multi test) = 624 slots / 156 names; the 2026-07-11 definition re-run tonight
-  = 591 (694→591 = the data moved since July; 591 vs 624 = definitional). Ease scoring
-  (audit_pn_lanes.py lane 4, books-spanned + candidate counts): ONE-BOOK flags on
-  artaxerxes (19 slots, all Est, 2 candidates), joseph (11 slots, 1 book, 11 candidates),
-  saul (8, 1 book, 3) — zero-research-resolvable HINTS only, reviewer-gated, never bind on
-  the flag alone. Widest spread: gilead 38 slots/10 books, jesus 38/11. Worst ambiguity:
-  azariah (24 metaV candidates over 9 slots).
-  **EASY PILE SHIPPED 2026-07-30 (reviewer close-out approved): 81 hand-ruled binds LIVE
-  via `scripts/pn_hand_rulings.tsv` + loader + gate_pn_rulings.py — full record in
-  TODO_ARCHIVE.md (incl. the 28-row "binder floored, human ruled" census and the
-  HOT-replacement stop-and-look rule). Denominator COMMITTED: the 591 word-slot
-  definition; 81 keys resolved. Rollback: bible.db.pre_rulings (soak, JP's call;
-  pre_tipnr_widen only useful in combination — pre_rulings is the live rollback).
-  A words rebuild re-lands the rulings automatically (TSV is read by every build run).**
-  **MIDDLE PILE CLOSED 2026-07-30 (null result, reviewer-accepted): ZERO rulable slots.**
-  joseph 11 / elijah 15 / pharaoh 9 = supplied-subject (covered by NO candidate — class-3
-  census now 93, ticket updated). mary = NEW CLASS "same-verse same-name multi" (8 verses /
-  16 slots, two Marys standing in one verse): un-partitionable at the verse+name key BY
-  CONSTRUCTION — current decline correct, fix needs word-position-level binding, PARKED
-  with the multi-entity card lane (25-name flip list). **DRILL PROCEDURE (standing):
-  candidate count is a property of the NAME; slot class is a property of the VERSES —
-  dump the verses before assuming the failure mode. Mutual-exclusivity pre-flight
-  (any verse claimed by 2+ candidates → un-partitionable, pre-flag) is PERMANENT —
-  fired on first contact (mary).**
-  **CENSUS CLOSED 2026-07-30; ITEMIZATION COMPLETE (reviewer-verdicted): the class-3
-  "translator-supplied" hypothesis is FALSIFIED — 392/392 remainder slots print the name
-  in ABP's own text AND carry italic=0 (real words of ABP's Greek, full-population check
-  via scripts/audit_witness_italic.py). Class renamed WITNESS-DIVERGENCE (ABP's LXX/TR
-  base attests names TIPNR's Hebrew/critical base lacks); census artifact
-  docs/tickets/class3_witness_slots.txt; correction owned in the ticket.**
-  **RULINGS BATCH 2 SHIPPED + CLOSED 2026-07-30 (reviewer close-out approved, record in
-  TODO_ARCHIVE.md): 141 binds live, spot-checks 4/4, zero regressions.**
-  **RULINGS BATCH 3 SHIPPED + CLOSED 2026-07-30 (adjacency compounds, evidence pass under
-  the pre-registered grain): 163 binds live (+22: ramoth+gilead 20, jabesh+gilead 1,
-  dibon+gad 2). Full 392-slot neighbor dump (scripts/dump_adjacency_ctx.py) cross-checked
-  vs pinned TIPNR combined forms (scripts/check_adjacency_pairs.py, control-tested both
-  ways). Gates A/B/C PASS after control-fail; zero HOT replacements; served spot-checks
-  4/4 kind='ruled' (incl. batch-2 geber unchanged). Rollbacks: bible.db.pre_rulings3
-  (this batch) + pre_rulings2 (kept for soak, JP deletes on his timing). NAMED RESIDUE:
-  9 "Jabish Gilead" verses (ABP spells Jabish where TIPNR only has Jabesh; ABP itself
-  uses both spellings — 1Ch 10:11 prints Jabesh. CONSISTENCY fix only, not coverage:
-  JP live-checked 2026-07-30 that the Jabish token carries H3003 and already serves the
-  Jabesh-gilead card; only the Gilead half of those verses is unruled) + gilead
-  1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing, not adjacent). CHIP-MERGE candidate list =
-  exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
-  *(CHIP-MERGE SHIPPED + CLOSED 2026-07-31 — full record TODO_ARCHIVE
-  2026-07-31; standing rules in docs/claude/frontend.md → "Chip-merge". Two
-  BANKED tickets survive it, JP raises:)*
-  **(1) Compound-number DATA admission:** Strong's Hebrew has real compound
-  entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages + xref
-  layer, land as recorded links with receipts, THEN chips/cards wear them.
-  SCOPE (JP 2026-07-31): card-level number for EVERY merged pair, Greek side
-  too — Dibon Gad's card carries G1045 up top once admitted (chip already
-  shows it via the union rule); not Hebrew-side-only, not Ezion/Ramoth-only.
-  TIPNR has NO distinct Dibon-gad entity (JP query) — a distinct identity
-  arrives only through this door.
-  **(2) Pair co-occurrence count** — the honest count-line end state for
-  merged cards (line currently dropped); lands with the next touch of the
-  identity-serving code.
-  Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
-  TICKET_blurb_verse_check.md. Remaining lanes (parked for JP to raise):
-  word-position binding (~118 same-verse multi, + malchiah Ezr 10:25) · jabish spelling
-  ruling (above).**
-  **WITNESS LANE A SHIPPED 2026-07-30 (9 binds, kind='witness', card sentence live) after
-  an 11-bind wrong-referent ship caught + corrected same session — record + standing
-  referent-screen rule in TODO_ARCHIVE.md and DRILL_witness_divergence.md. **LANE B SHIPPED
-  2026-07-30 (39 rulings live: 28 spelling-equiv + 11 tipnr-merged-form, TSV=202; gate
-  5/5 served checks; record in TODO_ARCHIVE). Remaining: pile-3 residue (20 named slots,
-  routes in LANE_B_adjudication.md). Rollback = bible.db.pre_laneB; pre_witnessA
-  deletable after soak.**
-  **LANE C SHIPPED 2026-07-30 (201 context-run binds live, kind='witness'
-  rule='context-run', distinct card sentence; gate 206-row delta clean, 6/6 served
-  checks post-reload). All 210 census candidates eyeballed vs ABP text; 5
-  wrong-identity catches rerouted to Lane B spelling (incl. the 2Ch 35:8/9
-  Jehiel/Jeiel swapped pair; TSV 202->207), 4 held with routes, 6 demoted keys
-  hard-forbidden in gate_pn_rulings. Record: docs/tickets/LANE_C_adjudication.md +
-  TODO_ARCHIVE. **PILE-3 RESIDUE CLOSED 2026-07-30 (LANE C RESIDUE = ZERO):**
-  reviewer verdict + full receipt chain in LANE_C_pile3_brief.md — jair demotion
-  final, gilead/eleazar/bunni unbound permanent (bunni upgraded to ambiguous:
-  Bani-v14/Bunni-v15 seam), hodijah Neh 10:12 SHIPPED as the first bind of the
-  narrowly-ruled verse-offset class (kind='witness' rule='verse-offset',
-  scripts/verse_offset_witness.tsv, distinct JP-approved card sentence, served
-  capture green). Rollback = bible.db.rollback (single-name rule, ops.md item 6);
-  deep = bible.db.pre_greekhdr until a nightly postdates the evening ships.
-  Word-position lane (~118) UNPARKED per JP's ordering — next in the card-work
-  queue after greek-header polish + chip-merge.**
-- **Greek-header backfill: SHIPPED 2026-07-30** (with the stray-breathing class,
-  one lane). ~18,700 name tokens now head Greek: uniform names (1,693) carry one
-  corpus-wide headword (source='surface'); varying names keep each verse's own
-  printed form (ruling (b) — page-attested, never contradicts the page); gentilics
-  excluded via is_people_group; no-form rows stay honest English. Breathing junk
-  ('΄ Αδερ') died by replacement (new build never stores raw scrape values); the
-  repair transform stays as input guard. Record + lessons: TODO_ARCHIVE 2026-07-30;
-  drill = docs/tickets/DRILL_greek_header_backfill.md. Rollback bible.db.pre_greekhdr
-  (pre_laneC deletable after soak). OPEN residue: hand-table polish — BATCH 1
-  SHIPPED 2026-07-30 (6 headwords: ahaziah/antilebanon/arabia/ashkelon/ashtoreth/
-  azaziah, 77 rows; receipt chain docs/tickets/greek_header_batch1.md; batch pins
-  double as each batch's fresh gate control since hadad now passes on live). 864
-  UNRESOLVED remain (receipt file greek_header_split.txt is PA-only, regenerated
-  each build — pull candidates by paste). Batch discipline proven: declension-only
-  names with page-attested dictionary form; real spelling variance stays per-verse
-  (ruling b); abner/absalom PINNED verse-form — not upgradeable without a reviewer
-  re-ruling of the pin. Next batches same flow, no deadline.
-  **BATCH 2 SHIPPED 2026-07-31 (full receipt chain in greek_header_batch2.md;
-  134 rows live, served captures green, UNRESOLVED 864→857):** slice 1–150 = verified
-  NULL (all variance/accent/gentilic-mixed); slice 151–300 = 7 admitted
-  (cyrus/damascus/darius/dinah/berechiah/coniah/cononiah, receipts in
-  greek_header_batch2.md), egypt HELD by JP ruling (2 gentilic-printed rows,
-  adonijah precedent — page-attestation standard is never ratio-dependent).
-  BANKED: per-row-exclusion hand-table mechanism (own scoped proposal; would
-  recover egypt ~1,189 + adonijah 38 + artaxerxes). DISCOVERY: the split
-  file caps each name's form list (~6) — big-name admission needs the
-  bh_scrape census, not the split line.
+- **Jacob-class name cards — OPEN LANES ONLY.** Shipped arcs 2026-07-29/31 (easy pile 81 binds,
+  middle-pile null, census itemization, rulings batches 2–3 +163, witness lanes A/B/C, pile-3
+  residue zero, chip-merge) are recorded in TODO_ARCHIVE + memory project_pn_card_confidence +
+  docs/tickets/LANE_C_adjudication.md + docs/tickets/DRILL_witness_divergence.md — do NOT
+  re-derive from here. Census denominator COMMITTED: 591 word-slots / 156 names (2026-07-29).
+  Still open:
+  - **Word-position binding lane (~118 same-verse same-name multi slots + malchiah Ezr 10:25 +
+    the mary class, 8 verses/16 slots)** — un-partitionable at the verse+name key BY
+    CONSTRUCTION; needs word-position-level binding. UNPARKED per JP's ordering — next in the
+    card-work queue.
+  - **Jabish spelling ruling** — 9 "Jabish Gilead" verses (ABP spells Jabish; the token already
+    carries H3003 and serves the Jabesh-gilead card; only the Gilead half unruled) + gilead
+    1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing). Consistency fix, not coverage.
+  - **Chip-merge banked tickets (JP raises): (1) compound-number DATA admission** — Strong's
+    Hebrew has real compound entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages +
+    xref layer, land as recorded links with receipts, THEN chips/cards wear them. SCOPE (JP
+    2026-07-31): card-level number for EVERY merged pair, Greek side too (Dibon Gad G1045);
+    TIPNR has NO distinct Dibon-gad entity — a distinct identity arrives only through this door.
+    **(2) Pair co-occurrence count** — the honest count-line for merged cards; lands with the
+    next touch of the identity-serving code.
+  - Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
+    docs/tickets/TICKET_blurb_verse_check.md.
+  - **DRILL (standing):** candidate count is a property of the NAME; slot class is a property of
+    the VERSES — dump the verses before assuming the failure mode. Mutual-exclusivity pre-flight
+    (any verse claimed by 2+ candidates → un-partitionable, pre-flag) is PERMANENT (fired on mary).
+- **Greek-header hand-table polish (backfill arc SHIPPED 2026-07-30/31 — record TODO_ARCHIVE +
+  docs/tickets/DRILL_greek_header_backfill.md; batch receipts greek_header_batch1.md /
+  greek_header_batch2.md).** 857 UNRESOLVED names remain (receipt file greek_header_split.txt is
+  PA-only, regenerated each build — pull candidates by paste). Batch discipline proven:
+  declension-only names with a page-attested dictionary form; real spelling variance stays
+  per-verse (ruling b); abner/absalom + EGYPT PINNED verse-form (page-attestation is never
+  ratio-dependent; egypt has 2 gentilic-printed rows). BANKED: per-row-exclusion hand-table
+  mechanism (own scoped proposal; would recover egypt ~1,189 + adonijah 38 + artaxerxes).
+  DISCOVERY: the split file caps each name's form list (~6) — big-name admission needs the
+  bh_scrape census, not the split line. Next batches same flow, no deadline.
 - **Adonai-card residue (items 1+4 closed 2026-07-30 — record in TODO_ARCHIVE, incl.
   the Isa 7:14 Immanuel-heads-as-Jesus pre-filed answer):** (2) UPSTREAM NOTE: adonai
   (H136, divine title) rides the proper-noun lane (is_pn=1) while its own AI blurb
@@ -365,23 +167,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   maps רוח there, document, don't "fix"). (3) multi-word spans ("in the breeze",
   "the breath") plausibly correct full-phrase renderings — verify vs alignment
   data, not presumed defects. Render-layer, no data writes expected.
-- *(Provenance-seal arc + "Matched by name" pill: CLOSED 2026-07-31, JP-approved
-  served. Standing spec: match-state = LAST element of the person/place section
-  (the seal); badge stays in the header; hedged name-match stays prose. Full
-  record + taxonomy: TODO_ARCHIVE 2026-07-31.)*
-- *(Tag hover-warrant standard: SHIPPED + JP-CONFIRMED 2026-07-31 — record in
-  TODO_ARCHIVE; standing rules in docs/claude/frontend.md → "Tag warrants".
-  Deferred by ruling, JP raises: hedged name-match pill conversion · Contested
-  fork-header hover (ruled no) · Study-tab tags (wait for Study) ·
-  ac-prov-contested left title-only.)*
+- *(Provenance-seal arc + "Matched by name" pill + tag hover-warrant standard: CLOSED/SHIPPED
+  2026-07-31 — records in TODO_ARCHIVE; standing rules docs/claude/frontend.md. Deferred by
+  ruling, JP raises: hedged name-match pill conversion · Contested fork-header hover (ruled no) ·
+  Study-tab tags (wait for Study) · ac-prov-contested left title-only.)*
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
   reads too strong on his phone, that's a design-tweak ruling, not a bug.
-- **Verse-0 blurb class: FIXED + DEPLOYED 2026-07-30** (00-core.jsx truthiness bug —
-  superscription clicks dropped the verse ref, model asked "which one?" and it cached;
-  the one bad row of 187 deleted, regenerates grounded). Feeds the cert ticket: this
-  failure class is exactly what the verse-check would catch.
 - **Place-card raw fields (cosmetic, flagged + SIZED at batch-2 close-out, non-blocking):**
   `area: ">"` on **959 place records** (JP-counted 2026-07-30) — a place-parser CLASS:
   TIPNR place rows use a different column layout than person rows and the area read
@@ -426,7 +219,8 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   verse(s) (1Ch genealogies, Mat 1, Luk 3), same receipt discipline as the rest
   of the site; (3) taxonomy note — the tag converts datum → NAVIGATING under
   the recorded warrant rule, so any warrant lives on the destination page, not
-  a tooltip. Own design proposal when JP raises it. (banked candidate — JP option (b), 2026-07-11).** Shipped fix
+  a tooltip. Own design proposal when JP raises it.
+- **Eponym both-senses card upgrade (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
   upgrade: per-occurrence sense from a rulings-style pattern list on the neighboring words ("king of",
@@ -438,51 +232,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Israel/Judah "most later mentions" quantifier becomes a counted fact ("most" ruled KEPT meanwhile —
   Genesis-confined man vs kingdom-dominated Kings/Chronicles/Jeremiah; "often" would misinform).
   code: static/src/30-detail-panel.jsx EPONYM_LINES.
-- **Helper-word double-tag class (periphrastic verb renderings)** (logged 2026-07-09, batch-3
-  session 3, found via Jud 1:9 during G2008 ἐπιτιμάω). ABP two-word verb renderings like
-  "May … reproach" store as TWO word rows both carrying the same Strong's — verified Jud 1:9
-  (rows 556002 "May" + 556003 "reproach", both 2008). Sized read-only: **731 adjacent same-tag
-  pairs** where the first word is may/shall/will/did/do/does/let. Effects: inflates occurrence
-  counts (Jud 1:9 read as a double; real table = 37 verses / 38 occ, single true double Zec 3:2),
-  and the helper word can surface as a phantom "rendering" in word-study/dictionary feeds.
-  **DECIDING QUESTION ANSWERED (JP, eSword + ABP app, 2026-07-09): BUILD ARTIFACT.** eSword tags
-  only "reproach" (`May [2reproachG2008` — "May" bare); the ABP app shows "May [2reproach" as ONE
-  chunk under the single Greek word επιτιμήσαι. Our splitter broke the chunk into two rows and both
-  inherited the tag. Fix = build-rule (splitter family, cf. af8e296), folds into the next words
-  rebuild per the settled build-folded-fixes pattern; NOT a live-table patch, NOT mid-calibration.
-  Sizing query in the batch-3 session-3 log context; dictionary-side guard = any
-  renderings claim for an affected word is checked against real occurrences (G2008 watch banked).
-  **SECOND EXHIBIT (same session, inverse shape): Rth 2:16** — "you shall not reproach" sits
-  entirely on the NEGATION row (pos 14, tagged 3756 οὐκ) and the verb row is BLANK (pos 15,
-  tagged 2008). Jud 1:9 = tag duplicated onto the helper; Rth 2:16 = English assigned wholly to
-  the first word of a two-word span. One root: the splitter's handling of multi-word English
-  spanning two Greek words. The 731-pair sweep catches the Jud shape only; the Rth shape needs
-  its own sweep (blank-English rows whose PRECEDING row's English ends in a verb-phrase — or
-  simply: blank-tagged rows adjacent to a multi-word chunk). Both shapes, one build-rule fix.
-  **THIRD EXHIBIT (same session): Job 18:13** — "And may" + "be devoured" both tagged 977 (Jud-1:9
-  shape). G977 occ table corrected to 39 uses / 37 verses (Isa 51:8 the sole true double — verified
-  two genuine content renderings). **DETECTION HEURISTIC (reviewer, banked): the dictionary card's
-  own gloss notes have now defused this defect class twice unprompted** (G2008 + G977 both grew a
-  "may = optative grammar, not a rendering" bullet) — a gloss-note bullet flagging a bare helper
-  word as a "rendering" is a free per-word detector for this ticket; grep shipped cards' gloss
-  notes for helper-word bullets when the fix window opens.
-  **DOWNSTREAM SURFACES (reviewer, G977 render):** the "ABP RENDERS AS" chips and the search-result
-  word highlighting read straight from the words table, so they show the double-tag too ("may 1"
-  chip; Job 18:13 highlights both words). Fix acceptance check must include "no helper-word chips"
-  on the three exhibit words (Jud 1:9, Rth 2:16, Job 18:13), not just corrected word rows.
-  **ESCALATED 2026-07-09 (JP): fix NOW in a dedicated session, not a maintenance window —
-  calibration paused behind it. Charter with no-write gate + acceptance checks:
-  `CHARTER_splitter_fix.md`.**
-  **POLARITY A FIXED + LIVE 2026-07-09 (splitter-fix session; charter CLOSED).** 607 helper rows
-  untagged (tag blanked, English kept as plain text) via `fix_helper_double_tag.py` against the
-  pinned `splitter_a_expected.tsv` — a list proven by TWO independent derivations (stored table
-  vs raw ABP source) diffing EMPTY under one shared screen (`helper_ok`, now IN the builder as
-  `_strip_helper_double_tag`, locked by `tests/test_helper_double_tag.py` in CI + pre-commit).
-  All acceptance checks passed: exhibit rows/renders clean (no helper chips, no PN mislabel),
-  G2008 38 occ/37 verses + G977 39/38 (charter's "37" for G977 was a drafting miscount — see
-  charter correction note), invariants green, both stale gloss bullets deleted via fix_lexica_raw.
-  361 structural matches correctly LEFT ALONE (legit doubles + split renderings, the A-review
-  pile). Full record: AUDIT_lexica_rollout.md splitter-fix entry.
+- **Helper-word double-tag class — POLARITY A FIXED + LIVE 2026-07-09.** ABP two-word verb
+  renderings split into two rows both carrying the verb's number; 607 helper rows untagged via the
+  pinned two-derivation list, folded into the builder as `_strip_helper_double_tag`, locked by
+  tests/test_helper_double_tag.py (CI + pre-commit). Exhibits (Jud 1:9, Rth 2:16, Job 18:13) clean;
+  361 structural matches correctly LEFT ALONE (legit doubles + split renderings = the A-review
+  pile). Full record: AUDIT_lexica_rollout.md splitter-fix entry + CHARTER_splitter_fix.md.
+  Standing acceptance rule: any related fix re-checks "no helper-word chips" on the exhibit words
+  (chips + search highlighting read the words table), not just corrected rows.
 - **Splitter polarity B — English-pooled-on-function-word rows (follow-up ticket, hand-review
   only)** (filed 2026-07-09 from the splitter-fix session, reviewer Ruling 8). The Rth 2:16 shape:
   a multi-word English phrase parked on a FUNCTION word's row while the adjacent content word's
@@ -525,8 +282,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   short. Either shares the `tipnr_metav_link` table (kind='place'). Nothing is wrong today — the interim Eden
   guard keeps the 86 SAFE, they just decline the map. memory `project_metav_person_link` /
   `project_metav_expansion` / `project_entity_resolution_rebuild`.
-- **MetaV person rich-card serving — DONE + LIVE 2026-07-05** (moved to TODO_ARCHIVE). Left three parked
-  follow-ups below.
 - **Nave's retirement (DECIDED, scoped; own task, after S9).** Remove Nave's: study.db name-topic data +
   the name-path sidebar section (`naveTopical` + `/api/study/for-name` wiring) + the `/credits` line if
   listed. Rationale: tradition-provenance topical curation (interpretive verdicts as headings); finding-aid
@@ -650,55 +405,24 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 ---
 
 ## Three-zone shell — remaining consumers
-The shared frame (`Shell` + `RightStack` in `static/src/22-shell.jsx`) is done; Ask-corpus, Notes, Seam
-index, and News right-rail all shipped on it 2026-07-01. **Status note (JP, 2026-07-10): the Seam index
-consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which JP has taken down from
-public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
-`project_three_zone_shell` + `HANDOFF_corpus_shell.md`.
+The shared frame (`Shell` + `RightStack`, `static/src/22-shell.jsx`) is done; Ask-corpus, Notes,
+Seam index, News all shipped on it. Seam index is OFFSTAGE (rides the hidden Study tab). Record:
+memory `project_three_zone_shell`.
 
-**MOBILE SHEET CONTRACT — COMPLETE 2026-07-16, all 5 frames dead.** One shared `Sheet`
-(`20-shared-components.jsx`) owns height/header/radius/layer/gesture for every mobile card;
-`.mpick` stands as the sole sanctioned exception. `.zsheet` `05dbd6f` · `.detail-sheet` `86e04e5`
-· `.msheet` `cf086b2` · `.wm-sheet` `54eb853` (Word study, on the lexicon fixture `3b69089` —
-which also reclassified News Options Panel→Menu, JP's carryover). Spec + the step-4 record:
-**`docs/claude/frontend.md` → "THE MOBILE SHEET CONTRACT"**. Full story → TODO_ARCHIVE.
-**Small open ledger from the pass (verification debt, not scheduled work):**
-- News' selected why-head inside its sheet — never measured (default band 36.8 is; the SELECTED
-  state carries a `‹ Watch` control, expect ~42.4 per the band-with-control ruling).
-- Day-intro card — needs chronological mode in the harness; shares the chapter-overview code path
-  (measured 716/48/764) but that's inference, not measurement.
-- Keyboard-lift — the old `.wm-sheet` per-card lift died as a fork (ruled 2026-07-16); if a sheet
-  should ever rise above the on-screen keyboard, it's a SHELL-level ruling for all cards. Needs a
-  real phone; the harness can't shrink visualViewport.
+**MOBILE SHEET CONTRACT — COMPLETE 2026-07-16** (spec `docs/claude/frontend.md` → "THE MOBILE SHEET
+CONTRACT"; story + the News-fixture and `.filters-sep` write-ups → TODO_ARCHIVE). Small open ledger
+(verification debt, not scheduled work):
+- News' selected why-head inside its sheet — never measured (expect ~42.4 per the
+  band-with-control ruling).
+- Day-intro card — needs chronological mode in the harness (shares the chapter-overview code path;
+  inference, not measurement).
+- Keyboard-lift — if a sheet should ever rise above the on-screen keyboard, that's a SHELL-level
+  ruling for all cards; needs a real phone.
 
-**Shell's MOBILE collapse has THREE consumers: News + Ask-corpus + Notes (all 2026-07-15). Study is
-the last one un-migrated and is DEPRIORITIZED — copy these three IF it ever comes back, but nothing
-here schedules it** (see the ruling below). The gotchas they paid for (bar collision, `100dvh`
-pinning, scroll-box clearance, the BARE-sheet `scrollRef` trap + the case its fallback can't rescue,
-bottom-bar icon size, zones-not-verbs **+ its one bought-out exception**, the two ways to clear the
-bar, the doubled panel header, the flex/auto-margin shrink, and from Notes: the permanent gray, the
-mode-following list glyph, `.zcenter-m`'s default nested scroll box, occlusion by hit test, the
-baseline A/B) are standing frontend detail, so they live in
-**`docs/claude/frontend.md` → "Shell's MOBILE collapse"**, not here.
-
-Left to do (**Study is DEPRIORITIZED and stays parked — JP ruling 2026-07-15. It is NOT a live tab,
-it needs work, and it is low on the list. Do NOT queue it as next-up.** It waits for JP to RAISE it,
-not for a go on the existing queue order — so a session finding the queue empty should not reach for
-it. Its opener `HANDOFF_study_mobile.md` stays banked for whenever that happens. The news-fixture
-opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index pass is
-**`HANDOFF_memory_consolidate.md`**, on JP's call):
-- ~~**Harness: add a News feed fixture**~~ — **DONE 2026-07-15 (`b2fa9be`).** `/api/news/meta` +
-  `/api/news/all` shaped from `views_news.py`, per field (and only those two: of the seven news
-  helpers in `00-core.jsx`, NewsView calls four, and only these two run at mount — `newsList`/
-  `newsCounts`/`newsShape` have zero call sites app-wide). News's `.zbar` rendered and measured at
-  an asserted 375px, so the icon matrix is now **verified by drawn shape end to end**: News reads
-  Hash / Panel / Filter exactly as ruled, and the Panel row is byte-identical across four bars.
-  The reasoned-from-components reading was right all along — it was still unverified, which was
-  the whole point. Lessons (the elastic viewport; fixture dates that must be relative to the
-  clock) are in `docs/claude/frontend.md`. **Study's collapse is no longer blocked on this.**
-- ~~**Close the `.filters-sep` open verification**~~ — **DONE 2026-07-16** with the lexicon fixture,
-  exactly as planned (bundled, nearly free): 1×14, `--rule-2`, detector control-tested both ways.
-  Record in `docs/claude/frontend.md`; story in TODO_ARCHIVE.
+**Shell's MOBILE collapse: News + Ask-corpus + Notes shipped; Study is the last consumer and is
+DEPRIORITIZED (JP ruling 2026-07-15) — copy the three landed commits IF it ever returns; do NOT
+queue it.** Gotchas live in `docs/claude/frontend.md` → "Shell's MOBILE collapse". Opener
+`HANDOFF_study_mobile.md` stays banked.
 - **PARKED (JP 2026-07-15, not released) — swap the DESKTOP Ask-corpus strip's hand-inlined plus to
   `Icon.Plus`.** `Icon.Plus` was added 2026-07-15 for the mobile bar and retired the mobile inline
   copy; the desktop strip (`52-ask-corpus.jsx`, the `.ac-strip-new` button) still draws its own by
@@ -733,16 +457,14 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
-- **R-2 Greek-name migration — NOW UNBLOCKED, HANDOFF READY: open the session from
-  `HANDOFF_r2_greek_names.md`** (consolidates the design, the five chat-ready rulings, the
-  variant batch + conditions, the parked piles, and the session-open checklist). Own staged
-  rebuild; `docs/DESIGN_greek_name_identity.md`; five JP rulings pending. Related parked candidates from the R-1 run (reviewer-parked, pull
-  not push, all recorded in `docs/tickets/alias_leave_list.txt` pile comments):
-  gentilic Group rows binding their own Group entities (hittites pile U) · per-reign Pharaoh
-  link disambiguation (pile V) · ladder possessive-strip ("Aaron's," class, pile P) ·
-  vocative-aware peel (Isa 41:14 "O Israel") · josua/shapan/meramoth micro alias batch
-  (canonical keys exist) · the 178 lookup H/G fill-gains reverted for byte-identity (NT name
-  words still ride the Hebrew fallback — a real future improvement, per-word review needed).
+- **R-2 parked candidates (the migration itself is COMPLETE + LIVE 2026-07-26 — memory
+  project_entity_resolution_rebuild; the old "open from HANDOFF_r2_greek_names.md" opener is
+  SPENT).** Reviewer-parked, pull not push, recorded in docs/tickets/alias_leave_list.txt pile
+  comments: gentilic Group rows binding their own Group entities (hittites pile U) · per-reign
+  Pharaoh link disambiguation (pile V) · ladder possessive-strip ("Aaron's," class, pile P) ·
+  vocative-aware peel (Isa 41:14 "O Israel") · josua/shapan/meramoth micro alias batch · the 178
+  lookup H/G fill-gains reverted for byte-identity (NT name words still ride the Hebrew fallback —
+  a real future improvement, per-word review needed).
 - **pn_binding hand-check — DONE at class level (audit 2026-07-16, reviewer-accepted;
   `AUDIT_provenance_sweep.md` §4).** All 1,310 rows bucketed; nothing is a live bug. The one
   recoverable class — **352 spelling-variant rows (abia→abijah class)** — queues into R-2's
@@ -780,81 +502,28 @@ opener that ran before it, `HANDOFF_news_fixture.md`, is spent. The memory-index
   the mobile bottom nav (admin) + the News inspect looks balanced without cramping the `.news-bar` row.
   (The Ask-corpus provenance rail was checked in Chrome 2026-07-01 — fine.)
 
-**Copy-shortlist wrapper resolution** (SHIPPED 2026-07-01, two loose ends; memory `project_news_watch`):
-1. Deploy the web app (reload) so the copy-to-face button + `POST /api/news/resolve` go live.
-2. Archive backfill is draining — `resolve_backfill_all.py` chunked into `daily.sh` (~1000/night under
-   Google's ~1,300 clamp), ~5,700 wrappers left, self-terminates (~a week). No action unless a stable
-   failing remainder persists → then the PARKED `resolve_attempts`/`resolve_failed` marker.
-3. Post-deploy check: News → Kept → Copy shortlist shows "Resolving…" then pastes clean article links,
-   not `news.google.com/rss/...` wrappers.
-
-**Paywall-aware face selection + 🔒 badge** (SHIPPED 2026-07-02; memory `project_news_watch`):
-1. Needs a normal CODE deploy (backend `_pick_face` penalty + `pw` per member; frontend badge).
-2. Post-deploy spot-check (still OWED — no mixed cluster in the window at ship time): find a cluster
-   with a paywalled outlet (WaPo/NYT/…) + a free/wire source, confirm the FREE one is the card face and
-   the paywalled one shows 🔒 down in the inspect sources. Then switch presets windowed ↔ Max on that
-   cluster and confirm the face stays non-paywalled in both. Unit tests cover the logic; this is the
-   only human check left.
-
-**Copy/Export shortlist + card-link formats** (SHIPPED 2026-07-02; memory `project_news_watch`):
-1. Needs a normal CODE deploy — the feed read now carries `i.summary` (fills the copy "description" +
-   CSV description) AND `i.resolved_url` per face/member (makes the card/article CLICK open the real
-   article instead of the Google wrapper). Both degrade safely without the deploy (blank desc / wrapper
-   click that still redirects).
-2. Post-deploy check: News → Kept → Copy shortlist (3 formats) + Export (Markdown / CSV) download; a card
-   title click lands on the real outlet, not `news.google.com/rss/...`; date window label stays put
-   across refresh ("Last 7d" doesn't creep to 8d); right inspect divider lines up with the navy header
-   edge when a card is selected; single-source card reads "1 source" (no "· peaked"); the scoring lens
-   now lives in the ⓘ popover, not on each card.
-
 ---
 
-**PROCESS LEDGER — News mobile Pass 2 item 1 (2026-07-15).** CC committed `3aac547` BEFORE the reviewer
-receipt existed, then presented it for approval. Reviewer approved the work and named the breach:
-**"branch-not-master and nothing-pushed are mitigations, not compliance."** No-crossing is POST AND STOP —
-at a gated step the commit waits for the pasted receipt regardless of where it lands or whether it moved.
-Disposition: no corrective commit; the review became the receipt and 3aac547 stands, merged on that same
-ruling's explicit authorization. Rule record: memory `feedback_reviewer_receipt_r2b` (breach #3).
+**News shipped arcs (copy-shortlist resolution · paywall-aware face + 🔒 badge · Copy/Export
+formats — all SHIPPED 2026-07-01/02; records in memory project_news_watch). OWED post-deploy human
+checks only:**
+- Copy shortlist pastes clean article links (not news.google wrappers); a card title click lands on
+  the real outlet; archive backfill self-terminates — investigate only a stable failing remainder.
+- Paywall spot-check: a mixed cluster shows the FREE outlet as card face, 🔒 on the paywalled
+  source, stable across windowed ↔ Max presets.
+(The process ledger — the 3aac547 receipt breach — moved to TODO_ARCHIVE; the rule lives in memory
+feedback_reviewer_receipt_r2b.)
 
-## News watch — account gate (Pass 1 SHIPPED 2026-07-15 `69a7156`, one item open)
-The tab was admin-only (+ Tudor's `/?news=<key>` share link). It now reads for ANY signed-in account —
-auth-only, deliberately NOT tier-based. Writes (keep/dismiss) stay admin/share-key. Audit finding folded
-into the same commit: `/api/news/resolve` was a WRITE sitting on the READ gate (it caches into
-`items.resolved_url` + fetches outbound) — invisible while reads were admin-only, because every reader
-was also a writer; opening reads is what pulls the two gates apart. Moved to `_reviewer()` → `can_write`.
-Gates locked + control-tested by `tests/test_news_gate.py` (in CI + the pre-commit hook).
-- **Plain-account view CONFIRMED LIVE by JP 2026-07-15** — the `readOnly` path (grayed Keep/Dismiss) had
-  never executed before this commit (every reader was also a writer, so it was dead code). Now exercised
-  on the real site. Pass 1 has nothing unproven left. Follow-on: the grayed pair costs too much row on a
-  phone — parked as the first Pass-2 item under News-on-mobile.
-- Rulings logged: **gray, don't hide** the reader's Keep/Dismiss — reviewer ruled hide, JP superseded
-  (a grayed control + "Read-only" tooltip isn't broken, it tells a reader the feed is a curated watch;
-  matches `feedback_gray_dont_hide`). Kept/Dismissed tabs reading zero for a reader: **leave them**, same
-  reasoning. Raw inbox to readers: **approved** (JP) — no curated/published feed build.
-- **KEEPS ARE INERT — checked 2026-07-15, write it down because the intuitive story is wrong.** Nothing
-  in the nightly cron reads the review rows. The scorer selects on `WHERE score IS NULL` (id/title/source/
-  summary only — `scripts/news/score_news.py:207`); gather / pull_rss / group_news / resolve_new_faces
-  never mention the table (`scripts/news/daily.sh` is the whole cron). The ONLY reader anywhere is
-  `scripts/news/resolve_dry.py:75`, a hand-run read-only diagnostic that borrows kept stories as a
-  sample — not in the cron. **So keeps train nothing. They are bookmarks.** Two consequences: (1) the
-  mobile hide is a SPACE argument only — no contamination principle behind it; (2) reader keeps could not
-  pollute the scorer even if readers could write them. Do not re-argue this from memory — memory will
-  reach for "keeps train the scorer" because that's the intuitive story. It's wrong.
-  *(How it got asked: the Pass-1 audit proved Flask can't TRIGGER scoring; that had been quietly carrying
-  a second, never-checked claim that the cron CONSUMES keeps. Different claims. Memory
-  `feedback_verify_before_claiming` part 8 — proven adjacent is not proven.)*
-- **Reader bookmarks — small ticket, not scheduled.** Cheaper than it looks now that keeps are known
-  inert: the review table is ALREADY per-person (`(item_id, reviewer)`), and `_reviewer()` already keeps
-  identities structurally apart (`u<uid>` admin / `k<keytag>` share key). Giving a plain account its own
-  id is close to the whole feature. Nothing feeds the scorer, so a reader's keeps stay private notes.
+## News watch — account gate (Pass 1 SHIPPED 2026-07-15 `69a7156`; record + the KEEPS-ARE-INERT
+proof in memory project_news_watch; gates locked by tests/test_news_gate.py)
+Open tickets:
+- **Grayed Keep/Dismiss costs too much row on a phone** — first Pass-2 item under News-on-mobile.
+- **Reader bookmarks (small, not scheduled):** the review table is already per-person and keeps
+  feed nothing (inert) — giving a plain account its own id is close to the whole feature.
   code: views_news.py `_reviewer()` + `set_status`
-- Share key (`/?news=<key>`, one holder = Tudor) untouched. Retirement is not ticketed.
-- **Shareable News link — own ticket, NOT Pass 2** (reviewer 2026-07-15). Nothing to "fix": there is no
-  News URL and no login page (the app is one page at `/`; log-in is an in-page popup), so the return-to
-  problem the original prompt assumed does not exist. The funnel works — no account, no tab; make an
-  account, tab appears. What's missing is a deep link (`/?view=news`, ideally per-story) that survives
-  signup. Real value later; not launch-blocking, and don't bolt routing onto the mobile pass.
-  code: static/src/90-app.jsx (the `?news=`/`?b=`/`?lex=` deep-link effect is the pattern to copy)
+- **Shareable News deep link (`/?view=news`, ideally per-story) that survives signup** — own
+  ticket, NOT Pass 2. code: static/src/90-app.jsx (`?news=`/`?b=`/`?lex=` pattern to copy)
+- Share key (`/?news=<key>`, one holder = Tudor) untouched; retirement not ticketed.
 
 ---
 
@@ -1012,61 +681,17 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   **+ disclaimer-as-cite artifact (ὀφθαλμός 2026-07-08, ENGINE_LESSONS #11 update):** a cross-reference that
   points AWAY from its own shelf ("Eze 1:18 handled under Sense 1") counts as a cite → false double-shelf fire.
   Same family: ref scanners must distinguish citing from mentioning.
-- **Comma-shorthand citation scanner (ENGINE_LESSONS #28, V8 pile — the stronger fix is detector-layer).**
-  Extend the ref scanner to expand "Rom 1:1, 4" / "Lev 21:10, 21:12" tails using the preceding book+chapter,
-  so the citation gate + double-shelf detector stop being blind to them (4/4 χριστός draws emitted the class;
-  d1's Act 2:36 double-shelf was invisible because of it). A resweep after the fix retro-covers shipped cards.
-  Batch-4 evidence keeps mounting: two more UNSEEN-REAL sets caught only by the mandatory manual tail check
-  (εἰρηνικός ×5, ἀληθής Job 42:8 hiding a double-shelf behind a "42:7–8" range).
-  **BATCH-5 s1 ADDS (2026-07-12, G227 hinted re-entry — 3 exhibits + a behavioral proof + the
-  exposure sweep):** all three G227 draws wrote "Job 42:7–8" with 42:8 never individually counted
-  (draw arithmetic 37/39 → 34/39 → 38/39, 42:8 the constant absentee), CONFIRMING from behavior that
-  the citation gate excludes range-dash tails from its denominator ("N/N pass" with the tail missing).
-  Draw 2 also emitted bare sub-refs "(8:14)…(8:17)" (the δόμα "At 8:16" class) — same scanner family.
-  JP exposure sweep on live cards (GLOB digit–dash–digit in senses_block): **17 of 77 cards carry
-  range forms** (G2962 G2983 G2992 G3624 G935 G3735 G5547 G1119 G4582 G2779 G2563 G3900 G4808 G956
-  G1272 G4061 G2657) — candidates, not confirmed misses; the post-fix resweep adjudicates them.
-  The fix is scanner-side only (frozen prompt untouched, no regression surface). G227's re-park
-  retry-trigger = this fix landing (JP ruling pending at write time).
-  **FIX BUILT (batch-5 s1, same day): `ref_spans()` tail expansion + `refused_tails()` loud-refusal
-  channel (reviewer merge condition — a refused range prints REFUSED-TAIL at the gate + in the
-  resweep, never silent); six consumers unified on the one scanner (gate, coverage, per-sense,
-  LXX ×2, double-shelf via grounding reader, gloss-note claims); tests w/ old-scanner control
-  fires in both CI lists; resweep tool = scripts/audit_range_tails.py (read-only, PA).
-  FOLLOW-THROUGH OWED per JP ruling + reviewer record note: resweep output → per-card ticket
-  lines, AND any card with a genuine uncited verse gets a known-issue bullet on the LIVE card
-  (δίκτυον precedent), not just a ticket line. Bare "(8:14)" sub-refs stay OUT of scope
-  (book-less numbers = phantom territory) — manual-check class, unchanged.
-  **RESWEEP RUN ×2 (2026-07-12): run 1 caught a scanner PHANTOM (comma before a numbered book
-  donated its digit — "Jas 1:12, 1Pe 1:6" invented Jas 1:1; fixed fd93d34, control test pinned).
-  Run 2 CLEAN = fix ACCEPTED vs the real stored shapes (all banked exhibits recovered: εἰρηνικός
-  Gen 42 chain + 1Ch 16:2, καταπέτασμα Exo 26 cluster, χριστός Rom 1:4 + Lev 21:12).
-  ROSTER: 31 of 77 cards carry newly counted citations (195 refs) — G1119 G1151 G1272 G1344
-  G1516 G1577 G2008 G25 G2563 G2657 G2665 G2779 G2983 G3538 G3624 G3735 G3788 G3900 G4061
-  G4582 G4645 G4808 G5009 G5281 G5456 G5484 G5547 G758 G935 G956 G977. These refs were always
-  READER-VISIBLE but shipped UNVERIFIED (the gate never checked them). NEXT: `--verify` pass
-  (audit_range_tails.py) classifies each vs the corpus — OCC clean / NO-OCC needs eyes /
-  NO-VERSE = hard problem → ticket line + live-card bullet per the ruling. Zero REFUSED-TAIL
-  lines in either run.**
-  **--verify ADJUDICATED (same day, reviewer-ordered before the G2805 floor): ZERO NO-VERSE
-  (no fabricated refs in the shipped corpus). 8 NO-OCC, ALL range-interior sweep (διανοίγω
-  2Ki 6:18-19 · καταπέτασμα Exo 26:32/36 · παράπτωμα Rom 5:19 · βασιλεύς 1Pe 2:14-16) —
-  span claims, not wrong content; mention-class, NO live-card bullets (δίκτυον precedent =
-  wrong content, distinct). Remaining 187 refs = clean OCC. RETRO ITEM CLOSED. G227's
-  park retry-trigger (#28 fix landed + accepted) = SATISFIED, noted in the park entry.**
-  code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
-- **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
-  template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent
-  session-6 verbatim-commands block carried the bare-prefix occ-table template (`LIKE '####%'` —
-  the '227%' slip's exact shape); now annotated SUPERSEDED in place, never rewritten (historical
-  record kept). All rule statements (data-model corollary, s3/batch-5 opener clauses) already carry
-  the three shapes correctly; no other template misuses a key. Original ticket: three key-shape
-  slips in one night (bare-prefix '227%' sweep; bare-number checks against the G-prefixed
-  dotted_lexicon, twice — a DEAD check that read as clean through three words). One-time audit:
-  every standing query template in the docs/procedures checked against the ACTUAL stored key
-  shape of the table it reads (words = bare; dotted_lexicon = G-prefixed; lexicon.strongs_g /
-  words.strongs_base = G-prefixed; kjv_strongs = prefixed). Cheap; would have caught all three.
-  Sibling of the section-matcher sweep below.
+- **Comma-shorthand citation scanner — FIX BUILT + ACCEPTED + RETRO CLOSED (2026-07-12; the full
+  chronicle → TODO_ARCHIVE 2026-07-31 consolidation).** `ref_spans()` tail expansion + loud
+  REFUSED-TAIL channel; six consumers unified on the one scanner; resweep ran ×2 (a scanner
+  phantom caught + pinned, fd93d34); --verify adjudicated ZERO fabricated refs, 8 NO-OCC all
+  range-interior span claims (mention-class, no live-card bullets). STANDING: bare book-less
+  sub-refs "(8:14)" stay OUT of scope — manual-check class.
+  code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`; resweep tool scripts/audit_range_tails.py
+- **Standing-query key-shape audit — DONE (2026-07-12):** every doc query template checked against
+  the ACTUAL stored key shapes (words = bare; dotted_lexicon / lexicon.strongs_g / words.
+  strongs_base = G-prefixed; kjv_strongs = prefixed); one spent template annotated SUPERSEDED in
+  place. The rule survives in the docs' own annotated templates.
 - **Def-engine rendering layer — BUILT (build session 1, 2026-07-12; two follow-ups owed).**
   The fix shipped: occurrences carry `words.english` + `italic_words` alongside the head; the draw's
   here-tag shows the full slot phrase (added words named); fragment-risk heads (never standing alone)
@@ -1086,16 +711,11 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   notes — likely misdiagnosed parked-phrase artifacts (refusals correct); JP PA read.
   Record: audit doc FRAGMENT-RENDERING INVESTIGATION + BUILD SESSION 1 entries.
   code: scripts/build_lexica_def.py occurrences/phrase_map/check_rendering_claim/_grounding_refs
-- **Section-matcher shape-conformance sweep — RUN (batch-5 s1 open, 2026-07-12).** Sweep test built:
-  tests/test_section_matcher_sweep.py (in BOTH CI lists) — every handled label/sense-header variant
-  pinned, plus PINNED GAPS (not endorsed, each a JP call if a draw ever produces one): singular
-  "Sense:" label not a header (accepting it is NOT one-line — colon is optional, so bare "sense"
-  would turn prose lines into headers) · heading/bullet label forms not headers · bold paren
-  numbering "**1) x**" collapses to the loud one-sense fallback · bare-label-word-opens-section
-  hazard pinned as chosen. No matcher change made (splitter edits = checkpoint-class). Original ticket: two reader
-  gaps landed in ONE session on the first one-job word (#47 unnumbered one-sense card scored 0; singular
-  "Gloss note:" label leaked the note into Range). Sweep `_SECTION_RE` + `_sense_spans` against every label/
-  shape variant the house style permits, so the next legal variant is found by test, not by a live floor.
+- **Section-matcher sweep — RUN; test landed (tests/test_section_matcher_sweep.py, BOTH CI
+  lists).** PINNED GAPS remain deliberate (each a JP call if a draw ever produces one): singular
+  "Sense:" not a header · heading/bullet label forms not headers · bold paren numbering collapses
+  to the loud one-sense fallback · bare-label-word-opens-section hazard pinned as chosen. No
+  matcher change made (splitter edits = checkpoint-class).
   code: scripts/build_lexica_def.py `_SECTION_RE`/`_sense_spans`/`sense_split_mode`
 Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
 a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
@@ -1229,103 +849,33 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   and opens the graph by id (the `studyPending`/`openEntry` plumbing exists for the metaV sidebar).
   code: static/src/90-app.jsx, 30-detail-panel.jsx, 20-shared-components.jsx
 
-- **Lexica dictionary — verse-grounded word defs (Sonnet engine; LSJ display-only).** Pilot + full-build
-  BATCH 1 are PUBLIC (~18 cards, `LEXICA_ADMIN_ONLY=False`); contested words hand-pinned; θεός/κύριος
-  forked; the rare-word stress test is GREEN. **FREQUENCY ROLLOUT STARTED — its own BATCH ONE DONE + LIVE
-  2026-07-03** (26 calibration words: top-20 content + 6 extension; ran as a checkpointed apply loop, not
-  the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
-  pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
-  batch-two prep list = `AUDIT_lexica_rollout.md`.**
-  **STATUS (2026-07-10, step-5 session): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes
-  / 2 parked (18 RULED — the docs' earlier "19" was a propagated tally slip, audit doc FINAL-TALLY
-  CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags ·
-  **STEP 5 RAN + CLOSED 2026-07-10: V8 PROMOTED LIVE (JP KEEP; stamp `lexica:7ef8620328a9`;
-  swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα SHIPPED on draw 3 (draws 1–2 rejected,
-  defect classes on record) · COUNT 6/15 name-true (JP BOOK) · #30 LIVE + fire classes BANKED
-  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. **BATCH-4 SELECTION
-  DONE 2026-07-10: roster of 10 APPROVED (διαιρέω, δόμα, εἰρηνικός, αἰχμαλωτεύω, ἡσυχάζω,
-  μερίζω, παραπορεύομαι, σιωπάω, ἐκλύω, ἐπανίσταμαι) · poetry trigger retired-as-rule /
-  kept-as-label · N=6-7 paper replay approved (no live change until JP sees the report) ·
-  record = audit doc BATCH-4 SELECTION entry.** **WORD 1 διαιρέω PARKED (3 defect-class
-  draws, pre-set rule; floor stable, defects all drafting-layer; re-openable via the
-  structure-hint path; count 6/15 unchanged, nine words / nine owed, spare consumed).
-  N=6-7 RAN + RULED: KEEP 10 (checker `c8d32fd` zero-cost, exact-match bar failed honestly,
-  re-open = scale phase w/ pre-registered bar; audit doc N=6-7 entry). Item-5 re-open armed
-  (δόμα's FRESH post-fix 3-run decides).** **CORPUS-DEFECT FIRE (audit doc entry): δόμα
-  DATA-BLOCKED (no-entry dotted 1390.1; spent 3-run VOID, not an escalation) · δίκτυον
-  reader-facing contamination on a counted ship (JP 4-step ruling chain owed: fix → classify
-  vs source → card disposition → count membership) · fix ticket = 3 dotted_lexicon entries
-  (1390.1, 1350.1, 1350.2) via the builder, CC designs / JP checkpointed · no-entry dotted =
-  contaminant by default at every pre-pull · ranker occ = ceilings until the 86-number
-  no-entry class is triaged (the builder's own `no_entry` bucket count; existing ticket, now
-  upgraded: it bit a counted ship).**
-  **εἰρηνικός SHIPPED + COUNTED → COUNT 7/15 (first zero-reject word of the calibration;
-  UNSEEN-REAL ×6, manual tail check load-bearing; streak 1). δόμα PARKED (3 defect-class
-  draws on clean data incl. the first live citation-gate BLOCK; 19 draws by name). ITEM 5
-  re-opened + re-ruled: STRAIGHT-TO-10 for the remaining words, 3-run retired this batch.
-  εὐχαριστέω G2168 enters by re-selection (7 words for 8 owed). Carve-invention = the V9
-  case, ×4 with edit direction banked.**
-  NEXT = εὐχαριστέω screens → eight queued words, straight-to-10, #30 live → GREEN
-  activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
-  #30's unseen channel, see ENGINE_LESSONS #44 — plus the structure-hint experiment)
-  + /consolidate
-  still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's
-  STRUCT_BACKFILL list so they print flagged (flag-only, proposed at batch-4 selection).** JP's
-  hours variable (relocation) — batch decisions when he's away, work normally when he's present
-  (handoff AVAILABILITY CONSTRAINT); silence = pending.
-  Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + `## Queue`);
-  authority = `AUDIT_lexica_rollout.md` (G1390 PARKED entry on top); design
-  backlog = `ENGINE_LESSONS.md` (46). The paragraph below is HISTORY
-  (early batch-2), kept for pointers only.**
-  Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
-  RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
-  `--runs 3`→10 on wobble; redraw cap 3; escalation trigger ARMED (3rd content-wall → mechanism decision to
-  JP). Prep done that session: ranker-skips-built, ἅγιον gloss check. **Banked follow-ups (detail in the
-  handoff):** (a) double-shelf detector BUILT + live in the audit path, flag-only — PA control owed
-  (`--resplit --word G39 --dry-run` must fire on 1Jn 2:20 senses [1,4]) before ἔθνος; (b) word-study card
-  header GREEK half DONE (`7bee235`, leads with word_gloss), HEBREW half queued (needs an API field, own
-  checkpoint; the `bdb` table is Strong's Hebrew — label it so); (c) θεός G2316 sense-1 "B" — add προσκυνέω/
-  λατρεύω via a Matt 4:10 citation (completeness, not a fix; CONTESTED → own checkpoint, JP's go).
-  **DRAW CACHE (#1) DONE + LIVE 2026-07-03 (commit 484e226):**
-  `--dry-run` saves the reviewed draw to `~/bible-db/draws/G####.json`, `--apply` ships it byte-for-byte with no
-  model call (validity = hash of the full model input; stale→redraw, edited→hard refuse; `--require-cache` default
-  under `--all`); kills the reviewed≠shipped class (πρόσωπον/δίδωμι/πατήρ). Tests + E2E-proven on G25. Remaining
-  batch-two headline items: the **PRE-SORT / PIPELINE driver** (scoped, not built — one driver sorts a G-number
-  list into the 3 tiers, runs 1-2 gate-before-build, hands 3 to JP; signals = freq + fork-membership +
-  polysemy proxy + loaded-referent); **sampling rate** (100% eyeball register/loaded + SENSE STRUCTURE,
-  ~1-in-5 rest); **structural backfill** (οὕτω G3779, ἕως G2193, ἰδού G2400, εἷς G1520 + the 8 oblique
-  pronouns); **ἅγιον G39 gloss check** before build; ranker checks stamps upfront; ai.py↔build `_norm_book`
-  cross-comments (bare "Jud" disagrees by design). (Batch One register/adjudication calls all ruled
-  2026-07-03: πατήρ ships the 3-sense draw; υἱός + πατήρ no fork — see `AUDIT_lexica_rollout.md`.) Open sub-items:
-  - Point `lexica_agreement.per_sense` at the new `_sense_spans` (still bold-only → a plain draw reads as
-    a phantom sense-count wobble at batch scale).
+- **Lexica dictionary — verse-grounded word defs (Sonnet engine; LSJ display-only).** Public since
+  the pilot; live cards 85 (DB-counted — the table is the count). **Current law + queue =
+  `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + Queue); authority = `AUDIT_lexica_rollout.md`;
+  design backlog = `ENGINE_LESSONS.md`. The batch chronicle (phases, batch 3–5 sessions, V8
+  promotion, δίκτυον/δόμα rulings, N=6-7, count 7/15, draw-cache ship) lives in those docs +
+  TODO_ARCHIVE 2026-07-31 consolidation — do NOT re-derive it from here.**
+  NEXT = εὐχαριστέω screens → eight queued words, straight-to-10, #30 live → GREEN activation.
+  PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's STRUCT_BACKFILL list (flag-only).
+  JP's hours variable — batch decisions when he's away, work normally when present; silence =
+  pending.
+  Open sub-items (standing):
+  - Point `lexica_agreement.per_sense` at the new `_sense_spans` (still bold-only → a plain draw
+    reads as a phantom sense-count wobble at batch scale).
   - Re-check the 80% / min-4 LXX-provenance cutoff at scale (tuned on 18 words).
-  - Step 4 significance judge — voting sees that something VARIED, not whether it MATTERS (same blind spot
-    as the citation gate, one layer up). Human eyes now; a model pass is unproven.
+  - Step-4 significance judge — voting sees THAT something varied, not whether it MATTERS; human
+    eyes now, a model pass unproven.
   - Verbs + Hebrew first-batches = separate tracks.
-  - **Seam next-stage ("Build A") — feed design undecided.** Today's pipeline is hand-authored register →
-    engine attaches forks → seams auto-display (so the shipped browse IS harvested, but its upstream is
-    hand-curated — both, not either). Open question: does anything BESIDES a hand-forked word ever propose a
-    seam? i.e. does engine output (freight flags, thin contested senses) generate seam CANDIDATES into a
-    triage queue (harvest + Keep/Dismiss curation), or does the register stay the only gate for full forks?
-    JP rules before any build. Batch One produced the first test cases either way (freight flags on plain
-    words — impute, hearken/heed; λόγος sense 5 thin; the υἱός "looks like a fork, isn't one" ruling).
-  - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
-    node for — add one via add_study_graph_salvation.py so the link lands.
-  - **Coverage engine (piece A/B) SHIPPED 2026-07-02** (`lexica_coverage.py`; memory `project_lexica_dictionary`).
-    Piece A collocation pre-check (token-level PMI, `PMI_MIN=4.0`, warn-only build hook) + piece B
-    `coverage_audit` field populated on all built entries (38, via the 2026-07-03 `--resplit --all`).
-    **FLAG GATE shipped 2026-07-03** (commit 967ce57; `AUDIT_lexica_rollout.md` #7): the "phrases-not-senses"
-    filter for the uncited-collocation lists is DONE — the advisory flag now fires only at PMI ≥ 5.0 + a
-    neighbor stoplist (οὕτω/ὅσος) + report-time mutual dedup; a share cap was tried and dropped (0 drops on
-    frequent words, inverts on the rare tail). 163→73 flags across the 26; `scripts/audit_lexica_flags.py`
-    inspects it. Remaining follow-ups: wire `coverage_audit` to the card UI (stored data only now); eyeball
-    G166/aionios sense 4 (flagged thin); piece A could FORCE a missed collocation into the draw at build
-    (warn-only today). Piece C (stratified sampling) DEFERRED — first evidence logged: huios+anthrōpos
+  - **Seam next-stage ("Build A") — feed design undecided:** does anything besides a hand-forked
+    word ever propose a seam (engine candidates into a triage queue), or does the register stay
+    the only gate? JP rules before any build.
+  - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how`
+    has no node for — add one via add_study_graph_salvation.py.
+  - Coverage engine follow-ups (pieces A/B SHIPPED; flag gate tuned 163→73,
+    scripts/audit_lexica_flags.py): wire `coverage_audit` to the card UI (stored-only today);
+    eyeball G166 sense 4 (flagged thin); piece A could FORCE a missed collocation into the draw
+    (warn-only today). Piece C (stratified sampling) DEFERRED — first evidence: huios+anthrōpos
     OT-generic vs NT-title conflation.
-  (Manual CONTENT edits — batch-2 G2316 sense 4 + G5207 sense 5/believers, and batch-3 G5207 sense 6
-   "Son of Man" idiom + G2316 Psa 82 into senses 3/4 — all SHIPPED + LIVE; audit A1/C3 + the θεός metaV fix
-   too. Archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
   code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
 
 - **Verse-aware gloss-note flag on word cards (design-scoping first, NO build — parked; draw cache is now done, so unblocked whenever JP wants it; not batch-two-blocking).**
@@ -1569,27 +1119,16 @@ page + the crawlable SEO footer.
 
 ---
 
-## abp_surface backfill arc (2026-07-11) — DONE except two queued follow-ups
-Pairing-rule backfill SHIPPED + verified on PA: 13,851 recovered printed forms written
-(rows 345,437→359,288, delta exact vs pre-registered audit counts 13,851/4,736/62), translit
-refilled (full deterministic recompute — that's the builder's design, 359,288 = all rows, not a leak).
-True divergence residual ≈ 0.65% of content slots (absent 2,494 + consumed 1,483); the scary
-34,103 "no partner" bucket was 30,126 Hebrew-numbered OT name slots (PN backfill's bucket).
-**RULED (JP): NO fallback marker in mode-three interlinear** — residual too small; view-1 lemma
-line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_surface_coverage.py`
-(read-only characterizer w/ recovery measurement + no_partner breakdown) +
-`scripts/backfill_abp_surface.py` (new-rows-only, dry-run default). Design bank:
-`docs/RENDERING_OVERRIDES.md`.
-- **QUEUED — versification map for the 148 off-by-one verses** (989 verse_missing slots; every
-  affected verse has a populated scrape neighbor). GATED on eyeball review of neighbor content —
-  a wrong map stores real-looking Greek from the WRONG verse (dotted-cousin failure shape). Slow path.
-- **QUEUED — ἔπω-class tag-synonym rulings table** (parked): "absent" residual is hotspot-shaped,
-  G2036 ἔπω alone = 457 of 2,494; each synonym pair (ἔπω↔λέγω etc.) = ONE JP ruling applied
-  corpus-wide via an explicit mapping table — NEVER fuzzy matching. One ruling ≈ 18% of residual.
-- Standing: PN printed-Greek backfill (the Phase-6 `inflected`-for-PNs slot in `greekLineForWord`)
-  now also owns the 30,126 Hebrew-numbered name slots + the 2,810 '*' slots.
+## abp_surface backfill arc — DONE 2026-07-11 (13,851 recovered printed forms, delta exact vs
+pre-registration; record → TODO_ARCHIVE consolidation; design bank docs/RENDERING_OVERRIDES.md).
+Open:
+- **Versification map for the 148 off-by-one verses** (989 verse_missing slots) — GATED on eyeball
+  review of neighbor content (a wrong map stores real-looking Greek from the WRONG verse). Slow path.
+- **ἔπω-class tag-synonym rulings table** — the "absent" residual is hotspot-shaped (G2036 ἔπω =
+  457 of 2,494); each synonym pair (ἔπω↔λέγω etc.) = ONE JP ruling applied corpus-wide via an
+  explicit mapping table — NEVER fuzzy matching. One ruling ≈ 18% of residual.
 - Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
-  `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
+  `build_abp_translit.py` (fold the backfill into the builder if a rebuild recurs).
 
 ## Reader display layers — ABP overrides + divine name — FUTURE LANE (parked)
 RECOVERED 2026-07-28 from the 2026-07-12 design chat ("Creating an improved Greek LXX/NT
