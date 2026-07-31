@@ -30,7 +30,14 @@ own pages — inside ruling (b), nothing imported, nothing majority-voted.
    headword, this is the answer, recorded in advance.
 
 ## Byte-check result
-(pending JP paste)
+2Ki 1:3 = `1|Οχοζίου` (run by JP 2026-07-30): stored bytes CLEAN — the garbling
+was console-side. Condition 1 satisfied.
+
+## Control note
+The shipped hadad control now PASSES on live, so it can no longer fire as a
+control. This batch's fresh detector control = the six batch pins added to
+greek_header_pins.txt: they must FAIL on live-vs-live (no surface rows for
+these names yet) and PASS on the scratch.
 
 ## Apply chain (standing)
 Hand table rows landed in git → JP byte check → scratch rebuild

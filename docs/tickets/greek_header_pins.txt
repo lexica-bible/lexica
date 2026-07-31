@@ -8,3 +8,13 @@
 # all rows Greek-headed, no English left.
 uniform|zion|Σιών
 verse-form|abner
+# batch 1 hand-table pins (JP-approved 2026-07-30, receipt greek_header_batch1.md).
+# Control role: these six must FAIL on live-vs-live (no surface rows yet) and
+# PASS on the scratch — the batch's fresh detector control, since the shipped
+# hadad control now passes on live and can no longer fire.
+uniform|ahaziah|Οχοζίας
+uniform|antilebanon|Αντιλίβανον
+uniform|arabia|Αραβία
+uniform|ashkelon|Ασκαλών
+uniform|ashtoreth|Αστάρτη
+uniform|azaziah|Οζίας
