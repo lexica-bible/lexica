@@ -1150,6 +1150,23 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   allowlist (Lod/Lydda, Acco/Ptolemais, Ashdod/Azotus — cert #7 machinery fits this shape).
   Entity records/map pins stay intact either way — this governs ONLY number inheritance
   onto verse slots.
+  **Gated session progress (2026-07-31, this session):** predicate JP-signed
+  (docs/tickets/PREDICATE_g707_name_match.md); gate BUILT + proven on scratch (524 leaver
+  slots, removal-only census 0, targeted-ship ruling (b)); ship via
+  scripts/ship_g707_targeted.py — dry-run → JP verdict → apply → swap still pending.
+
+- **7/30 RECLASSIFICATION CATCH-UP (opened 2026-07-31, gated — its own session, do NOT fold
+  into other ships).** The Greek-header-discipline rebuild (2026-07-30) rewrote
+  pn_greek_identity but the retirement copy-step NEVER re-ran, so live words/xref still
+  serve the older classification. Census (this session's scratch, vs the frozen C3 xref):
+  ~7.6k slots churn among lemma-only/surface/none (byte-neutral in words today, xref class
+  stale), **9 slots would GAIN a served Greek number** — saul ×8 (1Sa 14:22, 15:17, 15:27,
+  15:30, 18:26, 19:22, 22:16, 28:11 → G4549) + zacharias ×1 (Luk 3:2 → G2197) — from binds
+  added after C3 (hand-rulings/scope-widen). Held OUT of the G707 targeted ship by the
+  removal-only rule. This session also DEFERRED here: retire_hebrew_identity's hard-coded
+  EXPECT class split re-declaration (declare once, from this session's final shape — JP
+  ruling). A full re-retire needs its own red-first gates; the G707 session's census
+  machinery (ship_g707_targeted.py preconditions) is the template.
 
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
