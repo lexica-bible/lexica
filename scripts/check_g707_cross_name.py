@@ -49,10 +49,13 @@ def main():
     flagged = []
     for uniq, (e, g) in ent_g.items():
         forms = ent_forms.get(uniq, {}).get(g, set())
-        # er.parse_tipnr's spellings include mined junk (version tags, pipe
-        # compounds) that no slot ever prints — filter to real name shapes.
+        # er.parse_tipnr's spellings include mined junk (version tags, source
+        # sigla, pipe compounds) that no slot ever prints — filter to real
+        # name shapes so the flagged count is real names only.
+        _junk = ("niv", "kjv", "esv", "lxx", "tr", "na", "leb",
+                 "qere", "ketiv", "alt tag of previous")
         loose = sorted(s for s in e["spellings"]
-                       if "|" not in s and s not in ("niv", "kjv", "esv", "lxx")
+                       if "|" not in s and s not in _junk
                        and not name_matches(s, forms))
         if loose:
             flagged.append((uniq, g, sorted(forms), loose))
