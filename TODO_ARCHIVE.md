@@ -2750,3 +2750,29 @@ Live as rebuild #6. Rollback: `bible_pre_morph_20260604.db`. (Memory: project_pr
 - Hebrew names route to the people/places view with the Hebrew dictionary stacked below; clans
   (the "-ites") are labeled "People / Clan". When a name has no data, a short AI blurb fills in
   (text-first, cached).
+
+## 2026-07-31 — ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class) — SHIPPED + LIVE
+Strict name-match gate in build_pn_greek_identity (predicate JP-signed,
+docs/tickets/PREDICATE_g707_name_match.md); targeted ship (ruling b) via
+scripts/ship_g707_targeted.py — 524 slots to the honest no-number state, everything else
+byte-identical to live (words diff 524 exact, xref diff 524 exact, removal-only census 0).
+Post-swap receipts: live G707 = arimathea|4 AND served /api/strongs-count/G707 = {"count":4}
+after worker reload; health_check 0 warnings. Diff report docs/tickets/G707_diff_report.md
+(cross-name 166 / same-name ticket-referred 358); regression tests/test_pn_name_match.py in
+both CI lists. Follow-ups spun out as their own TODO tickets: 7/30 reclassification catch-up
+(incl. retire EXPECT re-declaration + saul×8/zacharias×1 gainers), same-name/renamed drops
+(358), WAL-crumb cleanup, detector gap (docs/tickets/TICKET_detector_gap.md).
+LESSONS (full tripwires in memory project_entity_resolution_rebuild):
+- What looked true: import_tipnr resets PN slots on a re-run. Actually: it fills ONLY
+  empty-'*' slots and re-breaks hand fixes (Cushi). Tip-off: JP's re-established red check
+  showed G707 still on mizpah after "reset". Frozen xref snapshot = the restore path.
+- What looked true: a dry-run on the scratch tests the gate. Actually: on a retired copy
+  the builder re-reads its own old numbers (re-run mode) — gate never consulted. Tip-off:
+  0 refused on a known-bad copy (red-first discipline).
+- What looked true: gating a lane and falling through to the next is harmless. Actually:
+  fall-through MINTED numbers live never served (sheba G938, judah G2455). Tip-off: the
+  generalized removal-only census (C2) ≠ 0. Gate the ONE candidate the old rule would pick.
+- What looked true: a split-out word from "Queen of Sheba" may vouch for G938. Actually: a
+  token that is another record's own name may not vouch. Tip-off: same census, count 1.
+- False-empty grep: a zero is only a zero after a control hit in the doc's own notation
+  (Mat 26:4 control → Mat 26:1 genuinely absent → detector-gap ticket).

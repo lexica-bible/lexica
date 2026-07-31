@@ -1110,7 +1110,10 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **PN-STAR MERGED-VERB CLASS (data-class, held for a cert-style session — found 2026-07-31).**
+- **PN-STAR MERGED-VERB CLASS — GATED on docs/tickets/TICKET_detector_gap.md (2026-07-31):
+  the catalogued 145 is INCOMPLETE (Mat 26:1 "Jesus finished" G5055 missed — content-number-
+  first shape). Detector patch + control-fired re-sweep + revised count come BEFORE any fix
+  session; do not fix off the 145/509 lists as-is.**
   ABP source attaches a verb/content word's English to the adjacent proper-noun star chunk
   ("scourging Jesus,G* G5417" Mat 27:26; "calls ElijahG* G5455" Mat 27:47), and
   `_split_compounds` skips star slots — so the built words table puts the verb on the name's
@@ -1142,45 +1145,6 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   ~/bible-db (bible_test.db-wal, bible_test_scratch.db-*, proseonly.db-* — two with no
   parent file). Repo grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL
   guards), so the crumbs are historical/ad-hoc; check their file dates, then delete.
-
-- ~~**ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class)**~~ — **CLOSED, SHIPPED + LIVE
-  2026-07-31.** Strict name-match gate in build_pn_greek_identity (predicate
-  docs/tickets/PREDICATE_g707_name_match.md, JP-signed); targeted ship (ruling b) via
-  scripts/ship_g707_targeted.py — 524 slots to the honest no-number state, everything else
-  byte-identical (words diff 524 exact, xref diff 524 exact, removal-only census 0).
-  Post-swap receipts: live G707 = arimathea|4, served /api/strongs-count/G707 = 4 after
-  worker reload. Diff report docs/tickets/G707_diff_report.md (cross-name 166 /
-  ticket-referred 358); regression tests/test_pn_name_match.py in BOTH CI lists; the
-  removal-only check is a DATABASE-side gate (lives in ship script preconditions, not the
-  code-only test list — CI has no db). Catch-up + same-name follow-ups = their own tickets
-  above. Original ticket detail preserved below for the record.
-  **(original ticket)** ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class — found 2026-07-31b, held for a gated
-  session).** TIPNR merges multi-named places/people into one entity; when that entity carries
-  exactly ONE Greek number, `build_pn_greek_identity` stamps EVERY occurrence with it — so
-  Mizpah/Mizpeh/Ramah OT verses serve G707 (Arimathea) and highlight in that word study
-  (JP sighting, G707: 51 occ = mizpah 17 / ramah 16 / mizpeh 14 / arimathea 4). Source `G*`
-  everywhere — the number is OURS via the tipnr layer, not ABP's. Local TIPNR sweep matching
-  the production one-Greek-number rule: **52 entities, ~588 foreign-named OT verse refs.**
-  Buckets differ: same-name Greek spellings (Elias/Elijah, Noe/Noah, Roboam) are fine;
-  same-place-renamed (Lod/Lydda, Acco/Ptolemais, Ashdod/Azotus) defensible; CROSS-NAME
-  conflations mislead (Mizpah→Arimathea, Megiddo→G717 Armageddon, Sheba→G3558 "queen of the
-  South", Jehoiada→G914 Barachiah, Caphtor→Crete, Sepharad→Sardis). Candidate fix: name-level
-  gate in build_pn_greek_identity (inherit only when the slot's printed name family matches
-  the name TIPNR attaches the Greek number to) → rebuild pn_greek_identity + retirement chain,
-  gated. Blast radius: word-study occurrence lists AND card ABP-occurrence counts. cert #7
-  allowlist unrelated (that was wrong-entity binds; here the bind is right, the inheritance
-  rule is the lever). Sweep list in the session log 2026-07-31b.
-  **Reviewer rulings at close (2026-07-31b):** (1) Ramah's 16 drop too — text-first, the
-  number reflects what the verse PRINTS, not the entity graph; the PN definition engine
-  later explains the Ramathaim→Arimathea link in prose. (2) OPEN DESIGN QUESTION for the
-  gated session: strict name-match everywhere, or name-match + a curated same-place-renamed
-  allowlist (Lod/Lydda, Acco/Ptolemais, Ashdod/Azotus — cert #7 machinery fits this shape).
-  Entity records/map pins stay intact either way — this governs ONLY number inheritance
-  onto verse slots.
-  **Gated session progress (2026-07-31, this session):** predicate JP-signed
-  (docs/tickets/PREDICATE_g707_name_match.md); gate BUILT + proven on scratch (524 leaver
-  slots, removal-only census 0, targeted-ship ruling (b)); ship via
-  scripts/ship_g707_targeted.py — dry-run → JP verdict → apply → swap still pending.
 
 - **7/30 RECLASSIFICATION CATCH-UP (opened 2026-07-31, gated — its own session, do NOT fold
   into other ships).** The Greek-header-discipline rebuild (2026-07-30) rewrote
