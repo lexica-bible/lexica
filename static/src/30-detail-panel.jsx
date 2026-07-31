@@ -1106,12 +1106,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             only, fuzzy never earns it), the label carries that confidence instead of
             reading like a guess. Gentilic person cards ("People / Clan") keep the hedge —
             "only person of this name" misdescribes a people-group. */}
+        {/* Match-state unification (JP amendment 2026-07-30, Seth card): the CONFIDENT
+            name-match renders as the same pill as "Matched to this verse" — one
+            element, one treatment, text "Matched by name"; the full disambiguation
+            sentence survives as hover text. The HEDGED state ("not checked against
+            this verse") deliberately stays prose: a pill would make the weak claim
+            look as strong as the checked one — converting it is JP's call. */}
         {metavData && (
-          <p className="detail-ai-caveat">{
-            metavData.sole_referent && (metavType === "place" || !isGentilic)
-              ? `Matched by name — the only ${metavType === "place" ? "place" : "person"} of this name in our records.`
-              : "Matched by name — not checked against this verse."
-          }</p>
+          metavData.sole_referent && (metavType === "place" || !isGentilic)
+            ? <div className="pnbound-badge"
+                title={`Matched by name — the only ${metavType === "place" ? "place" : "person"} of this name in our records.`}>
+                Matched by name</div>
+            : <p className="detail-ai-caveat">Matched by name — not checked against this verse.</p>
         )}
         </>}
       </section>

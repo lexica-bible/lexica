@@ -322,8 +322,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   TIPNR / MetaV/TIPNR badge stays in the section header (9d2570b5 restore, do
   not touch). Under-description CSS removed. History: build 1 (03369cfc, badge +
   state under description) REJECTED; build 2 (9d2570b5, state under description)
-  superseded by this amendment. Awaiting JP's served yes on the Adam card G76 @
-  1Ch 1:1 (full row set: tags + dates + relations).
+  superseded by this amendment. Adam-card placement APPROVED by JP 2026-07-30
+  (net arc effect: match-state card-bottom → section-bottom, badge untouched).
+  FOLLOW-ON (same night, Seth card G4589 @ 1Ch 1:1): confident name-match note
+  converted to the SAME pill ("Matched by name", full sentence as hover text,
+  same seal slot). The HEDGED state ("Matched by name — not checked against
+  this verse") kept as prose ON PURPOSE — a pill would make the weak claim read
+  as strong as the checked one; converting it is JP's call. Witness-note italic
+  sentences (kind='witness', 3 variants) are explanation prose above the seal,
+  not match-state — listed for JP, untouched. Awaiting JP's served yes on Seth
+  @ 1Ch 1:1.
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
