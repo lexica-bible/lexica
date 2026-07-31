@@ -112,3 +112,8 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
 - List is LEMMA-WIDE (every occurrence of the printed form) per the all-Edens ruling;
   identity disambiguation stays on the reader cards. The header state line says so.
 - `?lex=PN:<form>` works as a URL entry (90-app reads `lex` verbatim).
+- **In-verse highlight (2026-07-31):** the verse-row highlighter matches by
+  Strong's number everywhere EXCEPT this lane — a PN: page has no number, so
+  the profile/verses rows carry each occurrence's `position` (the name's own
+  word slot from pn_greek_identity) and VerseRow lights it via `hiPositions`.
+  Numbered lanes never receive the prop.

@@ -986,3 +986,42 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   AuthModal). Wiring in 60-library.jsx + 90-app.jsx. Notes tab: text search + filters
   (All/Bookmarks/Highlights/Notes) + sort (Recent/Reference) + collapsible group-by-book +
   Journal toggle. Export/Import buttons dropped from UI (store/sync code stays).
+
+## Tag warrants (site-wide standard, JP-ruled 2026-07-31)
+Principle: hover text where a tag ASSERTS or CITES (there's a warrant to show);
+nothing where it states a datum (Male, POS, counts, refmarks). One component:
+`WarrantTag` (20-shared-components.jsx) — desktop hover + touch tap-toggle
+popover (`.warrant-pop`), SAME sentence both, NO native `title` (the black
+browser tooltip double-rendered alongside the popover, first-ship defect).
+Popover flips left/up at viewport edges (measured before paint).
+- **Warrant tags are NON-NAVIGATING only** — a tag that navigates puts its
+  warrant on the destination instead. Datum tags get nothing.
+- Sentence register: name the source + "source of this card's … data" for
+  citations; no completeness claims ("every proper name" was rejected). AI
+  badges carry the caveat verbatim ("claims not verified against the verse
+  text"); Ask-corpus Synthesis warrants its citation grounding ONLY in the
+  grounded state (ungrounded shows the loud inline warning instead — a hover
+  claiming citations that don't exist is a false warrant).
+- Match-state pills: pill = verdict, prose = hedge. Verified bind (verse or
+  unique-name) → pill with warrant; unverified name match → italic prose ON
+  PURPOSE (a pill would upgrade the weak claim's register).
+
+## Chip-merge (adjacent same-entity PN pair = one chip, JP-ruled 2026-07-31)
+Server (views_library, chapter + verse-words feeds) marks the SECOND word
+`pn_merge` when both adjacent slots' pn_binding rows point at ONE entity —
+⚠ pn_binding keys book by NUMBER (er_book_num), the abbrev matched nothing and
+shipped an inert feature once. Reader folds in CHIP MODE ONLY
+(mergePnChipPairs, 56-library-order-logic.jsx); prose + interlinear (faithful
+as-printed) never fold. Rules, each bought by a served defect:
+- **english_head stays the FIRST word's name** — pnClickPayload keys the entity
+  lookup on it (single-producer tripwire); display joins ride `english` +
+  `pnDisplay` only.
+- **Merged card hero renders ONLY from the identity join** (both slots'
+  /api/pn/greek-identity, joined) — per-slot word fields half-join around a
+  star slot's missing lemma ("Γάδ" hero). Translit joins both-or-blank.
+- **Chip Strong's tag = UNION of both halves' recorded tags** — never a
+  compound number the slots don't record (admission discipline). Occurrence
+  line dropped on merged cards (first-form count would mislabel).
+- Chip Greek line joins per-half best form (lemma, else printed form).
+- Negative control proven live: 1Ki 4:13 Ramoth(fort)/Gilead(region) = two
+  entities, correctly unmerged one verse from twenty merged.

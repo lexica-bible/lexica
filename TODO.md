@@ -255,38 +255,20 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Jabesh-gilead card; only the Gilead half of those verses is unruled) + gilead
   1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing, not adjacent). CHIP-MERGE candidate list =
   exactly these 22 (all partners are PN chips) — feeds the display half in the ticket.
-  **CHIP-MERGE SHIPPED + CLOSED 2026-07-31 (JP screenshots + reviewer PASS;
-  commits e3e802ff → 12675846):** adjacent same-entity PN pairs render as ONE
-  chip (chip mode only; server marker from pn_binding, book keyed by NUMBER —
-  the inert-feature bug caught by JP's test drive, receipted). Card hero =
-  IDENTITY JOIN ONLY (per-slot fields barred after the Dibon half-join catch);
-  translit both-or-blank; sub-line joined (pnDisplay, lookup keys untouched);
-  chip Strong's tag = UNION of recorded halves (Dibon+Gad G1045 restored);
-  count line dropped on merged cards. NEGATIVE CONTROL PROVEN LIVE: 1Ki 4:13
-  Ramoth/Gilead = two entities (fort vs region), correctly unmerged one verse
-  from twenty merged — the trigger discriminates by observation, not just
-  construction. Merge scope = batch-3 both-halves binds (ramoth-gilead 20,
-  dibon-gad 2, jabesh-gilead 1Ch 10:11) + Ezion/Geber class. Accepted notes:
-  second slot loses its own highlight/note-anchor in chip mode; interlinear
-  never merges (faithful view). FOLLOW-UP RESOLVED (JP query 2026-07-31):
-  TIPNR has two Dibon records (Dibon@Neh.11.25 Judah town · Dibon@Num.21.30-Jer
-  Moabite) and NO distinct Dibon-gad entity — the batch-3 bind is the best the
-  source offers, card honest to source. A distinct Dibon-gad identity arrives
-  only via the banked compound-number admission ticket.**
-  **Chip-merge display verdicts SHIPPED 2026-07-31 (JP-ruled):** merged chip's
-  Strong's tag = UNION of both halves' recorded tags (never a compound number
-  the slots don't record — admission discipline, the egypt principle); count
-  line DROPPED on merged cards (option c). Two BANKED tickets from the same
-  ruling: (1) compound-number DATA admission — Strong's Hebrew has real
-  compound entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages +
-  xref layer, land as recorded links with receipts, THEN chips wear them.
-  SCOPE NOTE (JP 2026-07-31): includes the CARD-level number for every merged
-  pair, Greek side too — Dibon Gad's card should carry G1045 up top once
-  admitted (chip already shows it via the union rule; the card header is the
-  admission's job), and Ezion/Ramoth get their compound H-numbers. Not
-  Hebrew-side-only, not Ezion/Ramoth-only;
-  (2) pair co-occurrence count — the honest count-line end state, lands with
-  the next touch of the identity-serving code.
+  *(CHIP-MERGE SHIPPED + CLOSED 2026-07-31 — full record TODO_ARCHIVE
+  2026-07-31; standing rules in docs/claude/frontend.md → "Chip-merge". Two
+  BANKED tickets survive it, JP raises:)*
+  **(1) Compound-number DATA admission:** Strong's Hebrew has real compound
+  entries (H6100 Ezion-geber, H7433 Ramoth-gilead); verify vs pages + xref
+  layer, land as recorded links with receipts, THEN chips/cards wear them.
+  SCOPE (JP 2026-07-31): card-level number for EVERY merged pair, Greek side
+  too — Dibon Gad's card carries G1045 up top once admitted (chip already
+  shows it via the union rule); not Hebrew-side-only, not Ezion/Ramoth-only.
+  TIPNR has NO distinct Dibon-gad entity (JP query) — a distinct identity
+  arrives only through this door.
+  **(2) Pair co-occurrence count** — the honest count-line end state for
+  merged cards (line currently dropped); lands with the next touch of the
+  identity-serving code.
   Blurb specimen #3 (Num 33:45 Γάδ tribal blurb vs Dibon-gad bind) banked in
   TICKET_blurb_verse_check.md. Remaining lanes (parked for JP to raise):
   word-position binding (~118 same-verse multi, + malchiah Ezr 10:25) · jabish spelling
@@ -348,11 +330,6 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
-- *(Word-study name-form highlight: CLOSED 2026-07-31. Fix 03369cfc (PN: lane
-  sends the name's word slot, VerseRow lights it); JP approved the served render,
-  then the four-lane sweep (Greek/HEB/KJV/BSB) confirmed ALL lanes light —
-  structure pass. Full record: the lanes table in-session; highlighter matches by
-  Strong's number everywhere except the name-form lane's slot number.)*
 - **Highlight span boundaries wrong in translation text modes (BANKED 2026-07-31,
   JP served review H7307 BSB — PRE-EXISTING class, deferred by JP's call; check
   KJV too).** Three observations, diagnose before fixing: (1) punctuation bleed —
@@ -366,43 +343,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   maps רוח there, document, don't "fix"). (3) multi-word spans ("in the breeze",
   "the breath") plausibly correct full-phrase renderings — verify vs alignment
   data, not presumed defects. Render-layer, no data writes expected.
-- **Card provenance placement — CURRENT SPEC = JP amendment 2026-07-30 (third
-  pass; prior placements SUPERSEDED, not options).** Match-state ("Matched to
-  this verse" + variants) renders LAST in the Biblical Person/Place section —
-  below description, tags, dates, and relation rows — the provenance seal on the
-  whole block (it's a claim about the card's bind, not a description modifier).
-  TIPNR / MetaV/TIPNR badge stays in the section header (9d2570b5 restore, do
-  not touch). Under-description CSS removed. History: build 1 (03369cfc, badge +
-  state under description) REJECTED; build 2 (9d2570b5, state under description)
-  superseded by this amendment. Adam-card placement APPROVED by JP 2026-07-30
-  (net arc effect: match-state card-bottom → section-bottom, badge untouched).
-  FOLLOW-ON (same night, Seth card G4589 @ 1Ch 1:1): confident name-match note
-  converted to the SAME pill ("Matched by name", full sentence as hover text,
-  same seal slot). The HEDGED state ("Matched by name — not checked against
-  this verse") kept as prose ON PURPOSE — a pill would make the weak claim read
-  as strong as the checked one; converting it is JP's call. Witness-note italic
-  sentences (kind='witness', 3 variants) are explanation prose above the seal,
-  not match-state — listed for JP, untouched. Awaiting JP's served yes on Seth
-  @ 1Ch 1:1.
-- **Tag hover-warrant standard — SHIPPED + JP-CONFIRMED 2026-07-31** (desktop
-  hover clean white card / no black box / no I-beam; far-right flip stays on
-  screen; phone tap-open + tap-away close — all checked on live). TSK addition
-  not vetoed, stands. Ledger below is the standing record. JP-approved sentence set shipped verbatim
-  (inventory + per-row verdicts in session; two verifications resolved: binds are
-  MIXED so no "explicitly"; Ask-corpus synthesis IS pass-2 grounded so its label
-  warrants "from the passages cited below" ONLY in the grounded state). Shared
-  `WarrantTag` (20-shared-components.jsx): desktop native hover + tap-toggle
-  popover (`.warrant-pop`, quiet notice, shared radius), same sentence both.
-  STANDING RULE recorded: warrant tags are NON-NAVIGATING only — a navigating
-  tag puts its warrant on the destination; datum tags (Male, POS, counts, refs)
-  get nothing. Covered: match-state pills, TIPNR/MetaV/both, metaV, AI ×4,
-  Strong's Hebrew (bdb-is-Strong's trap honored), Idiom/Grammar/Lexica/LSJ/
-  ABP EXT/Strong's-fallback, verse-source ABP/KJV/BSB, Synthesis (state-gated).
-  FLAGGED ADDITION for JP veto: TSK badge (crossref panel) — missed in the
-  inventory, same citation family, warrant added. Deferred by ruling: Contested
-  fork header (no hover), ABP/KJV finder line labels (datum), Study-tab tags
-  (until Study raised), ac-prov-contested (already has title; sits in a
-  navigating row — left as-is). (record in TODO_ARCHIVE), pending JP's
+- *(Provenance-seal arc + "Matched by name" pill: CLOSED 2026-07-31, JP-approved
+  served. Standing spec: match-state = LAST element of the person/place section
+  (the seal); badge stays in the header; hedged name-match stays prose. Full
+  record + taxonomy: TODO_ARCHIVE 2026-07-31.)*
+- *(Tag hover-warrant standard: SHIPPED + JP-CONFIRMED 2026-07-31 — record in
+  TODO_ARCHIVE; standing rules in docs/claude/frontend.md → "Tag warrants".
+  Deferred by ruling, JP raises: hedged name-match pill conversion · Contested
+  fork-header hover (ruled no) · Study-tab tags (wait for Study) ·
+  ac-prov-contested left title-only.)*
+- **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
   reads too strong on his phone, that's a design-tweak ruling, not a bug.

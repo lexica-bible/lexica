@@ -144,7 +144,9 @@ The Issue-2 entity-binding tables (PA-only, NOT in git; rebuilt by
 `scripts/build_entity_binding.py --apply`, which writes ONLY these, never words/verses).
 `pn_binding(book,chapter,verse,name,entity_uniq,kind,rule,render,hot,tier)` keyed
 (book,ch,vs,name) maps a PN occurrence → its verse-correct TIPNR entity (render=1 rows only; a
-floor = no row → Fix A); `tipnr_entities` = the entity's own card content (uniq/head/section/
+floor = no row → Fix A); **⚠ `book` is a NUMBER (er.book_num), not the abbrev — an
+abbrev-keyed query matches nothing and fails silently (chip-merge shipped inert once,
+2026-07-31); `tipnr_entities` = the entity's own card content (uniq/head/section/
 gender/area/descr/summary/bases/parents+offspring, kin for PERSONS only); `tipnr_entity_refs` =
 its reference list. Served by `/api/metav/entity` → the `.pnbound` card. Re-run `--apply` after
 a words rebuild (re-tiers from live metaV each run). Memory `project_entity_resolution_rebuild`.

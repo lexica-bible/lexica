@@ -6,6 +6,52 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-31 (overnight) — Two UI tickets · warrant-tag standard · batch 2 · chip-merge, all SHIPPED
+
+- **Ticket 1 (word-study name-form highlight) CLOSED.** Real cause ≠ the ticket's
+  guess: the verse-row highlighter matches ONLY by Strong's number, and a PN: page
+  has none — fix sends the name's word slot with each listed verse (views_lexicon
+  "position") and VerseRow lights it (hiPositions). Four-lane sweep (Greek/HEB/KJV/
+  BSB) JP-confirmed all gold. Pre-existing span-boundary defect class banked as its
+  own TODO ticket (punc-inside-span mechanism lead recorded there).
+- **Provenance-seal arc CLOSED after 3 passes** (net effect: match-state moved
+  card-bottom → SECTION-bottom seal; TIPNR badge stayed in the header; pass 1
+  rejected, pass 2 superseded — placements are supersessions, not options). Plus
+  the confident name-match note converted to the same pill ("Matched by name",
+  sentence as hover); HEDGED state stays prose ON PURPOSE (a pill would upgrade an
+  unverified claim's register). Final taxonomy: verified bind (verse or unique
+  name) → pill · unverified name match → prose · witness explanations → prose
+  above the seal.
+- **Tag hover-warrant standard SHIPPED site-wide + JP-confirmed** (principle:
+  hover text where a tag asserts/cites, nothing where it states a datum; full
+  inventory + per-row verdicts in-session; sentences JP-approved verbatim).
+  Shared WarrantTag = desktop hover + tap popover, ONE presentation (native
+  title killed after the double-render defect), viewport flip, cursor fixed.
+  TSK badge = flagged inventory miss, admitted, stands.
+- **Greek-header batch 2 SHIPPED** (receipt docs/tickets/greek_header_batch2.md):
+  slice 1–150 verified NULL; 7 admitted from 151–300 (cyrus/damascus/darius/
+  dinah/berechiah/coniah/cononiah, 134 rows); egypt HELD by JP ruling (2 gentilic-
+  printed rows block under page-attestation; adonijah precedent — the standard is
+  never ratio-dependent; "what the entity is" reframe proposed and REJECTED).
+  LESSONS: split file CAPS its form list (~6) — big names need the bh_scrape
+  census; flip counts predict from NUMBERLESS slots, not raw census (numbered
+  slots are gate-B-barred). Banked: per-row-exclusion mechanism (recovers egypt
+  ~1,189 + adonijah 38 + artaxerxes).
+- **Chip-merge SHIPPED + CLOSED** (adjacent same-entity PN pair = one chip; full
+  record in TODO.md entry + memory). Inert-feature bug caught by JP's test drive:
+  pn_binding keys book by NUMBER, the abbrev query matched nothing. Negative
+  control proven LIVE at 1Ki 4:13 (Ramoth fort vs Gilead region — correctly
+  unmerged one verse from 20 merged). Merged-card defects fixed as ONE sweep
+  after three one-at-a-time leaks (hero half-join around a star slot's missing
+  lemma; frankenstein translit; sub-line = lookup key leaking to display). Rule:
+  merged hero renders ONLY from the identity join. Dibon-gad entity question
+  resolved: TIPNR has no distinct Dibon-gad record — bind honest to source.
+- Rollbacks: bible.db.rollback = pre-batch-2 (single-rollback rule);
+  bible.db.pre_greekhdr = deep copy, delete only after a nightly postdates the
+  2026-07-30 evening ships (verify-then-delete, on TODO).
+
+---
+
 ## 2026-07-30 (late) — Card-work night: Adonai lane closed · Lane C residue ZERO · hand-table batch 1 · single-rollback rule
 
 - **Adonai-card items 1+4 CLOSED.** (1) No-number PN subtitle now "ABP-only form —
