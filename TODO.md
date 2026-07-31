@@ -1127,6 +1127,23 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   origins: some are ABP-attested supplied English over the article (1Co 1:25 "the wisdom"),
   NOT number drops — the cert session must sort display treatment vs data fix per spot.
 
+- **ENTITY-LEVEL GREEK-NUMBER INHERITANCE (G707 class — found 2026-07-31b, held for a gated
+  session).** TIPNR merges multi-named places/people into one entity; when that entity carries
+  exactly ONE Greek number, `build_pn_greek_identity` stamps EVERY occurrence with it — so
+  Mizpah/Mizpeh/Ramah OT verses serve G707 (Arimathea) and highlight in that word study
+  (JP sighting, G707: 51 occ = mizpah 17 / ramah 16 / mizpeh 14 / arimathea 4). Source `G*`
+  everywhere — the number is OURS via the tipnr layer, not ABP's. Local TIPNR sweep matching
+  the production one-Greek-number rule: **52 entities, ~588 foreign-named OT verse refs.**
+  Buckets differ: same-name Greek spellings (Elias/Elijah, Noe/Noah, Roboam) are fine;
+  same-place-renamed (Lod/Lydda, Acco/Ptolemais, Ashdod/Azotus) defensible; CROSS-NAME
+  conflations mislead (Mizpah→Arimathea, Megiddo→G717 Armageddon, Sheba→G3558 "queen of the
+  South", Jehoiada→G914 Barachiah, Caphtor→Crete, Sepharad→Sardis). Candidate fix: name-level
+  gate in build_pn_greek_identity (inherit only when the slot's printed name family matches
+  the name TIPNR attaches the Greek number to) → rebuild pn_greek_identity + retirement chain,
+  gated. Blast radius: word-study occurrence lists AND card ABP-occurrence counts. cert #7
+  allowlist unrelated (that was wrong-entity binds; here the bind is right, the inheritance
+  rule is the lever). Sweep list in the session log 2026-07-31b.
+
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
   only (no db, no network). JP's **next real `/rebuild-words`** is the acceptance run: the chain
