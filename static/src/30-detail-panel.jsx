@@ -1008,7 +1008,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // Warrant wording (JP-approved 2026-07-30): "bound to this specific verse" —
       // NOT "explicitly": binds are MIXED (binder tiers + hand rulings + witness),
       // verified before wording shipped.
-      const kindWord = be.section === "place" ? "place" : be.section === "person" ? "person" : "name";
+      // Entity-type aware (issue-log 2026-07-31): a PEOPLE/CLAN card said "This
+      // person is bound…" (G2455 Jews). peopleClan → "group"; sentence unchanged.
+      const kindWord = be.section === "place" ? "place"
+        : peopleClan ? "group"
+        : be.section === "person" ? "person" : "name";
       const matchState = (
         <div><WarrantTag cls="pnbound-badge"
           warrant={`This ${kindWord} is bound to this specific verse in our records.`}>

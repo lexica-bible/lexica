@@ -826,7 +826,9 @@ const witnessName=clickName||be.name;const witnessNote=be.kind==="witness"?be.ru
 // Warrant wording (JP-approved 2026-07-30): "bound to this specific verse" —
 // NOT "explicitly": binds are MIXED (binder tiers + hand rulings + witness),
 // verified before wording shipped.
-const kindWord=be.section==="place"?"place":be.section==="person"?"person":"name";const matchState=/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement(WarrantTag,{cls:"pnbound-badge",warrant:`This ${kindWord} is bound to this specific verse in our records.`},"Matched to this verse"));const tipnrWarrant=`TIPNR — Tyndale Individualised Proper Names with all References; source of this card's ${kindWord} data.`;const bothWarrant=`TIPNR (Tyndale proper-name reference) + MetaV verse data — sources of this card's ${kindWord} data.`;// NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
+// Entity-type aware (issue-log 2026-07-31): a PEOPLE/CLAN card said "This
+// person is bound…" (G2455 Jews). peopleClan → "group"; sentence unchanged.
+const kindWord=be.section==="place"?"place":peopleClan?"group":be.section==="person"?"person":"name";const matchState=/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement(WarrantTag,{cls:"pnbound-badge",warrant:`This ${kindWord} is bound to this specific verse in our records.`},"Matched to this verse"));const tipnrWarrant=`TIPNR — Tyndale Individualised Proper Names with all References; source of this card's ${kindWord} data.`;const bothWarrant=`TIPNR (Tyndale proper-name reference) + MetaV verse data — sources of this card's ${kindWord} data.`;// NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
 // rule): every person/place section opens with the ENTITY's name in bold. The
 // old rule suppressed it when it matched the clicked word ("stutter"), but on
 // Greek-headed cards that left no prominent English name at all, and the

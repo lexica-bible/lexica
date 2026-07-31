@@ -3044,6 +3044,11 @@ input { font-family: inherit; }
   margin-top: 12px;
   border: 1px solid var(--rule);
   overflow: hidden;
+  /* Contain Leaflet's internal panes (z-index 200–700): without an own z-index
+     they join the card's stacking order and cover the warrant popover (z 40) —
+     METAV tag tooltip hidden under the map, G707 mobile (issue-log 2026-07-31). */
+  position: relative;
+  z-index: 0;
 }
 /* Inline SVG map pin (divIcon) — replaces Leaflet's stock PNG marker so there is
    no external image to block/404, and the pin matches the site's navy.

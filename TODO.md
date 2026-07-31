@@ -1105,6 +1105,23 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 ## Word cards / lexicon — open items
 
+- **PN DEFINITION ENGINE (banked 2026-07-31 issue-log session — no work yet).** Lexica-style
+  AI blurb for all places, people, and groups, in the context of the verse being viewed —
+  same verse-grounded discipline as the word definition engine. Scope AFTER the current
+  def-engine calibration completes.
+
+- **PN-STAR MERGED-VERB CLASS (data-class, held for a cert-style session — found 2026-07-31).**
+  ABP source attaches a verb/content word's English to the adjacent proper-noun star chunk
+  ("scourging Jesus,G* G5417" Mat 27:26; "calls ElijahG* G5455" Mat 27:47), and
+  `_split_compounds` skips star slots — so the built words table puts the verb on the name's
+  chip and leaves the verb's own G-number slot blank. **145 spots corpus-wide** (scan:
+  scratchpad scan_pn_verb_merge.py logic, detector control-fired on both known positives;
+  top books Acts 26, Isaiah 14, Matthew 8). Same family non-star case: Mat 28:13 "His
+  disciples" (G3101 carries "His"; the following G1473 slot is blank — "His" is real Greek,
+  NOT a translator italic). Any fix = build-side redistribution for star slots + rebuild;
+  regression pin lives in `tests/test_pn_star_verb_merge.py` (flip it to the split shape
+  when the fix lands). NO data writes done.
+
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
   only (no db, no network). JP's **next real `/rebuild-words`** is the acceptance run: the chain
