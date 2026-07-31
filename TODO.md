@@ -306,6 +306,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   is_pn classification question. (3) PROVENANCE SEAM (long-term, provenance-contract
   lane): AI-authored summary sits directly above verified TIPNR/METAV data in one
   visual register — the disclaimer carries the whole load.
+- **Card provenance-tag placement (JP-raised 2026-07-30, next session, visuals =
+  JP approval):** the source tag (TIPNR badge etc.) moves to sit UNDER the
+  description line — not beside it, not in the section header — so description →
+  tag + match-state read as one stacked provenance unit. Placement only, no new
+  pill. Build then show JP code + served screenshot for yes before ship.
+  (Scope check done same night: Neh 8:7 hodijah binds its OWN entity
+  Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
