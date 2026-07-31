@@ -151,12 +151,14 @@ against the source on six rows, never a per-row proof. No row closes on it.
   python3 scripts/audit_article_slot_carrier.py --lanes      # + the A/B split
   python3 scripts/audit_article_slot_carrier.py --old        # old-predicate replay
   python3 scripts/audit_article_slot_carrier.py --list D     # print one bin
+  python3 scripts/audit_article_slot_carrier.py --manifest A # one lane's rows + hash
   python3 scripts/audit_article_slot_carrier.py --prove-halt # halt path, live
   python3 scripts/audit_article_slot_carrier.py --prove-halt-lanes  # ditto, lanes
 """
 import argparse
 import ast
 import collections
+import hashlib
 import io
 import os
 import re
@@ -276,9 +278,12 @@ def lane_of(toks, i):
 def source_carriers(raw):
     """Carrier + substantival rows of one verse, from the source tokens.
 
-    Returns (carriers, substantival): carriers as (english, lane), substantival
-    as english. The lane is read off the SAME token walk the carrier itself came
-    from, so lane membership can never drift from the predicate that produced it.
+    Returns (carriers, substantival): carriers as (english, lane, why),
+    substantival as english. The lane AND its reason are read off the SAME token
+    walk the carrier itself came from, so lane membership can never drift from
+    the predicate that produced it. The reason rides along so the manifest can
+    separate the numbered-slot rows from the star rows without a second pass
+    over the tokens (a second pass would be a copy of the predicate, not it).
     """
     carriers, subst = [], []
     toks = list(iter_source_tokens(raw))
@@ -294,7 +299,7 @@ def source_carriers(raw):
         if set(r) <= SUBSTANTIVAL:
             subst.append(eng)
         else:
-            carriers.append((eng, lane_of(toks, i)[0]))
+            carriers.append((eng,) + lane_of(toks, i))
     return carriers, subst
 
 
@@ -319,7 +324,7 @@ def built_carriers(line, lex):
 
 
 def sweep(dirs=None):
-    """Full sweep. Returns (bins, lanes, subst_count, slot_totals).
+    """Full sweep. Returns (bins, lanes, whys, subst_count, slot_totals).
 
     bins  maps 'P'/'R'/'D' -> list of (fn, bk, ch, vs, english, dotted_number).
     lanes maps the same keys -> list of 'A'/'B', INDEX-ALIGNED with bins. Kept
@@ -327,9 +332,13 @@ def sweep(dirs=None):
     containment count and --list keep reading the same 6-field row they always
     did; alignment is by construction (both appended in the same step), never by
     re-matching rows afterwards.
+    whys  maps the same keys -> lane_of's own reason string, same alignment and
+    for the same reason: --manifest needs the numbered/star distinction, and it
+    has to be the predicate's own answer rather than a re-derivation of it.
     """
     bins = {"P": [], "R": [], "D": []}
     lanes = {"P": [], "R": [], "D": []}
+    whys = {"P": [], "R": [], "D": []}
     subst_total = 0
     totals = collections.Counter()
     maxlex = MaxLex()
@@ -345,7 +354,7 @@ def sweep(dirs=None):
         plain = collections.Counter(e for e, _n in built_carriers(line, None))
         maxed = collections.Counter(e for e, _n in built_carriers(line, maxlex))
 
-        for eng, lane in carriers:
+        for eng, lane, why in carriers:
             dotted = "G" + ARTICLE_BASE
             if plain[eng] > 0:
                 plain[eng] -= 1
@@ -358,7 +367,8 @@ def sweep(dirs=None):
                 b = "P"
             bins[b].append((fn, bk, ch, vs, eng, dotted))
             lanes[b].append(lane)
-    return bins, lanes, subst_total, totals
+            whys[b].append(why)
+    return bins, lanes, whys, subst_total, totals
 
 
 # ── lane-B families (RULING 2, 2026-07-31) ────────────────────────────────────
@@ -703,6 +713,59 @@ def print_lanes(bins, lanes):
     print()
 
 
+def lane_manifest(bins, lanes, whys, lane):
+    """The rows of one repair lane, in a fixed order, plus the hash pinning them.
+
+    WHY THIS EXISTS: the lane split is a COUNT, and a count has no identity. The
+    build-side fix reclassifies the rows it repairs (lane A -> bin P), so the
+    pre-fix membership of lane A exists only BEFORE the fix lands and cannot be
+    reconstructed after. Pinning the sorted row list and its hash turns the
+    post-fix check into set identity - 'the build touched exactly these rows' -
+    instead of arithmetic that a compensating pair of errors could satisfy.
+
+    Bin P is excluded, matching print_lanes: the build already repaired those, so
+    they are in no repair lane. Duplicate rows are KEPT (a verse can carry the
+    same English twice); the list is a multiset, exactly as the bins are.
+    """
+    rows = []
+    for b in ("R", "D"):
+        for idx, ln in enumerate(lanes[b]):
+            if ln != lane:
+                continue
+            _fn, bk, ch, vs, eng, dotted = bins[b][idx]
+            rows.append((bk, int(ch), int(vs), eng, dotted, b, whys[b][idx]))
+    rows.sort()
+    lines = ["%-4s %3d:%-3d  %-28s  %-10s  bin %s  %s" % r for r in rows]
+    digest = hashlib.sha256("\n".join(lines).encode("utf-8")).hexdigest()
+    return rows, lines, digest
+
+
+def print_manifest(bins, lanes, whys, lane):
+    """Print one lane's manifest: every row, the per-bin tally, and the hash."""
+    rows, lines, digest = lane_manifest(bins, lanes, whys, lane)
+    per_bin = collections.Counter(r[5] for r in rows)
+    per_why = collections.Counter(r[6] for r in rows)
+
+    print("LANE %s MANIFEST - the pinned row list, not a count" % lane)
+    print("  book  ch:vs    english                       number      bin  why")
+    for ln in lines:
+        print("  " + ln)
+    print()
+    print("  rows in lane %s                  : %5d" % (lane, len(rows)))
+    for b in sorted(per_bin):
+        print("    of which bin %s                : %5d" % (b, per_bin[b]))
+    for w in sorted(per_why):
+        print("    %-30s: %5d" % (w, per_why[w]))
+    print()
+    print("  SHA-256 of the sorted list        : %s" % digest)
+    print("  Pin this hash BEFORE the fix. After the fix, a lane-%s row that is"
+          % lane)
+    print("  still in lane %s must be in this list, and the rows that left must"
+          % lane)
+    print("  be exactly the ones the build now reports in bin P.")
+    print()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--controls", action="store_true",
@@ -713,13 +776,15 @@ def main():
                     help="print every row of one bin")
     ap.add_argument("--lanes", action="store_true",
                     help="print the A/B repair-lane split and the lane-B families")
+    ap.add_argument("--manifest", choices=[LANE_A, LANE_B],
+                    help="print one lane's full row list + the hash that pins it")
     ap.add_argument("--prove-halt", action="store_true",
                     help="break a bin control on purpose and show the run halt")
     ap.add_argument("--prove-halt-lanes", action="store_true",
                     help="break a LANE control on purpose and show the run halt")
     args = ap.parse_args()
 
-    bins, lanes, subst, totals = sweep()
+    bins, lanes, whys, subst, totals = sweep()
 
     lane_controls = LANE_CONTROLS
     if args.prove_halt_lanes:
@@ -790,6 +855,9 @@ def main():
 
     if args.lanes:
         print_lanes(bins, lanes)
+
+    if args.manifest:
+        print_manifest(bins, lanes, whys, args.manifest)
 
     # Containment, counted as a MULTISET so a verse holding the same English twice
     # cannot be double-credited (that inflated an earlier draft past 509).
