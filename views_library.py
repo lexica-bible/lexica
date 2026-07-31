@@ -13,7 +13,7 @@ from flask import Blueprint, jsonify
 import core as _core
 from core import (db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols,
                   step_lemma_cols, pn_xref_parts)
-from entity_resolution import norm_name as er_norm_name
+from entity_resolution import norm_name as er_norm_name, book_num as er_book_num
 
 bp = Blueprint("library", __name__)
 
@@ -123,10 +123,12 @@ def verse_words(book, chapter, verse):
         if any(w["is_pn"] for w in wrows) and conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_binding'"
         ).fetchone():
+            # pn_binding keys book by NUMBER (the 2026-07-31 inert-feature bug:
+            # the abbrev matched nothing, so the flag never fired anywhere).
             bmap = {r["name"]: r["entity_uniq"] for r in conn.execute(
                 "SELECT name, entity_uniq FROM pn_binding "
                 "WHERE book=? AND chapter=? AND verse=? AND render=1",
-                (book, chapter, verse))}
+                (er_book_num(book), chapter, verse))}
             if bmap:
                 prev = None
                 for w in wrows:
@@ -322,7 +324,7 @@ def chapter_text(book, chapter):
         # display-only, binds untouched. Absent table -> no markers (deploy-safe).
         brows = conn.execute(
             "SELECT verse, name, entity_uniq FROM pn_binding "
-            "WHERE book=? AND chapter=? AND render=1", (book, chapter),
+            "WHERE book=? AND chapter=? AND render=1", (er_book_num(book), chapter),
         ).fetchall() if conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='pn_binding'"
         ).fetchone() else []
