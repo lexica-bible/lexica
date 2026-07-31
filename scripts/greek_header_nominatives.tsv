@@ -1,0 +1,16 @@
+# greek_header_nominatives.tsv — pre-registered hand-table headwords, ABP-cited.
+# Consumed by build_pn_greek_identity.py (name<TAB>headword; norm_name-keyed).
+# Discipline (DRILL_greek_header_backfill.md + batch-1 verdict 2026-07-30):
+# a row is admissible ONLY when every printed form of the name is the SAME stem
+# in a different grammatical case AND the headword itself is printed on ABP's
+# own pages (verse receipts in docs/tickets/greek_header_batch1.md). No imported
+# spellings, no majority votes over real spelling differences — those names
+# stay per-verse under ruling (b).
+#
+# Batch 1 (JP-approved 2026-07-30, receipt = greek_header_batch1.md):
+ahaziah	Οχοζίας
+antilebanon	Αντιλίβανον
+arabia	Αραβία
+ashkelon	Ασκαλών
+ashtoreth	Αστάρτη
+azaziah	Οζίας
