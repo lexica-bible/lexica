@@ -1143,6 +1143,13 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   gated. Blast radius: word-study occurrence lists AND card ABP-occurrence counts. cert #7
   allowlist unrelated (that was wrong-entity binds; here the bind is right, the inheritance
   rule is the lever). Sweep list in the session log 2026-07-31b.
+  **Reviewer rulings at close (2026-07-31b):** (1) Ramah's 16 drop too — text-first, the
+  number reflects what the verse PRINTS, not the entity graph; the PN definition engine
+  later explains the Ramathaim→Arimathea link in prose. (2) OPEN DESIGN QUESTION for the
+  gated session: strict name-match everywhere, or name-match + a curated same-place-renamed
+  allowlist (Lod/Lydda, Acco/Ptolemais, Ashdod/Azotus — cert #7 machinery fits this shape).
+  Entity records/map pins stay intact either way — this governs ONLY number inheritance
+  onto verse slots.
 
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
