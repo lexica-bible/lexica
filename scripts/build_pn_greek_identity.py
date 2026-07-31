@@ -402,11 +402,18 @@ def main():
                 cands.append((name_g[nm], glob_forms.get(name_g[nm], ())))
             if nm and lookup.get(nm, {}).get("g"):
                 cands.append((lookup[nm]["g"], glob_forms.get(lookup[nm]["g"], ())))
-            for g_cand, forms in cands:
+            # Gate ONLY the candidate the ungated rule would have picked (the
+            # first). A refused candidate means NO number — never fall through
+            # to a later lane: the gate may only ever REMOVE an inheritance,
+            # never mint one the old rule didn't grant. (D1 receipts 2026-07-31:
+            # fall-through granted sheba@1Ki.10.4 G938 and judah@Ezr.9.9 G2455,
+            # numbers live never served.)
+            if cands:
+                g_cand, forms = cands[0]
                 if name_matches(nm, forms):
                     greek, source = g_cand, "tipnr"
-                    break
-                gated[f"{nm}→{g_cand}"] += 1
+                else:
+                    gated[f"{nm}→{g_cand}"] += 1
             if greek is None:
                 if w["lemma"]:
                     lemma = norm_lemma(w["lemma"])   # a REAL dictionary lemma stands
