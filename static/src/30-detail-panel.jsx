@@ -974,16 +974,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </p>)
         : null;
       const thin = !richPerson && !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + factItems.length) <= 1;
-      // Provenance-tag placement (JP spec 2026-07-30): the source tag sits UNDER the
-      // description line — not beside it, not up in the section header — stacked with
-      // the match-state so description → tag + match-state read as ONE provenance
-      // unit. Same row on thin and full cards; no new pill, existing badge classes.
-      const provRow = (tag) => (
-        <div className="pnbound-prov">
-          <span className="bdb-badge">{tag}</span>
-          <span className="pnbound-badge">Matched to this verse</span>
-        </div>
-      );
+      // Match-state placement (JP verdict 2026-07-30, second pass): the source tag
+      // (TIPNR badge) stays in the section header where it always was; ONLY the
+      // "Matched to this verse" line moved — it sits directly UNDER the description
+      // line instead of at the bottom of the card. Header → description → match-state.
+      const matchState = <div className="pnbound-badge">Matched to this verse</div>;
       // NAME ALWAYS SHOWS (JP ruling 2026-07-30, reversing the 2026-07-16 differs-only
       // rule): every person/place section opens with the ENTITY's name in bold. The
       // old rule suppressed it when it matched the clicked word ("stutter"), but on
@@ -1000,10 +995,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             : null;
         return (
           <section key="boundEntity" className="sec pnbound">
-            <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
+            <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
             <div className="pnbound-name">{heroName}</div>
             {opener && <div className="pnbound-thinrow">{opener}</div>}
-            {provRow("TIPNR")}
+            {matchState}
           </section>
         );
       }
@@ -1012,10 +1007,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {/* Contract §1 (audit B): when the rich MetaV body renders, the card blends two
               sources — the badge credits both. CONDITIONAL on the data actually shown
               (richPerson), never on the card variant: a TIPNR-only card stays "TIPNR". */}
-          <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
+          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">{richPerson ? "MetaV/TIPNR" : "TIPNR"}</span></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
-          {provRow(richPerson ? "MetaV/TIPNR" : "TIPNR")}
+          {matchState}
           {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">

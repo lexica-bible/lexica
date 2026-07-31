@@ -314,16 +314,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   views_lexicon now sends that slot with each listed verse ("position"), and VerseRow
   lights it via a new hiPositions prop merged into the same citedPositions machinery.
   Numbered lanes untouched (prop absent). Parity test still green.
-- **Card provenance-tag placement — BUILT 2026-07-30 (03369cfc), awaiting JP's
-  visual yes on the served card.** Bound person/place cards (30-detail-panel.jsx
-  pnbound, thin + full): TIPNR / MetaV/TIPNR tag moved OUT of the section header
-  to a `.pnbound-prov` row directly under the description, on one baseline with
-  "Matched to this verse" — description → tag + match-state as one stacked unit.
-  No new pill/colors; existing badge classes reused; bottom-of-card match-state
-  line retired (it moved up into the unit). NOTE for the yes/no: the metaV-only
-  card and other sections still carry their header badges — same treatment there
-  is a follow-on call, not assumed. (Scope check done same night: Neh 8:7 hodijah
-  binds its OWN entity Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
+- **Card provenance placement — REWORKED after JP rejection of the first build
+  (03369cfc moved BOTH badge and match-state under the description; wrong).**
+  Final spec + build: TIPNR / MetaV/TIPNR badge RESTORED to the section header
+  exactly as before; ONLY "Matched to this verse" sits under the description
+  (was bottom of card). Header → description → match-state. `.pnbound-prov`
+  badge-row CSS removed. Awaiting JP's served yes on the Neh 8:7 hodijah card.
+  (Scope check done same night: Neh 8:7 hodijah binds its OWN entity
+  Hodiah@Neh.8.7-Neh — the verse-offset bind did NOT bleed.)
 - **Hebrew "bolder English" — root-caused (record in TODO_ARCHIVE), pending JP's
   one-tap confirm:** chip mode + Interlinear OFF should match prose exactly (the
   effect was the deliberate English dimming while Interlinear is on). If the dimming
