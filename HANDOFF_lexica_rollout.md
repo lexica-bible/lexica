@@ -1,5 +1,14 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **2026-07-31 — WARRANTED MANUAL CORRECTION, G1093 γῆ sense 3 (JP sighting, reviewer-approved).**
+> Headline "…the physical globe…" carried a cosmological shape claim with no attested lexical
+> basis. Fixed via `fix_lexica_raw.py` (dry-run verdict → apply): now "The inhabited world as a
+> whole — the whole earth in contrast to heaven or sea". Body + verse lists untouched; citation
+> gate re-ran 39/39; glance list rebuilt from the same text so both surfaces agree. Corpus-wide
+> sweep of all 85 cards for globe/sphere/spherical/planet/orb: this was the ONLY shape claim
+> ("sphere" elsewhere = domain sense, kept; "orb" hits = "absorb" substrings). Zero model spend,
+> prompt untouched, stamp unchanged.
+
 > # ⇒ SESSION 2026-07-28: BATCH ONE (VERSE-SHORT DIP) IS APPROVED TO SEND. PROMPT UNTOUCHED. ⇐
 > **THE RE-VERIFY IS CLOSED (reviewer-ruled on pasted PA output).** Post-R-2 / post-PN-weekend
 > delta check of the whole card table: **only `G1484` ἔθνος moved** — 23 "greeks" name slots now
