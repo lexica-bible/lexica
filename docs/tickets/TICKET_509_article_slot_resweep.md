@@ -276,6 +276,56 @@ Two things pinned with the ruling:
   the counts come from, with all existing controls still green. Until that flag exists, the
   1,325 / 1,363 numbers above are this session's finding, not a re-runnable artifact.
 
+### 6c. `--lanes` LANDED (JP confirmed both rulings 2026-07-31) — read-only, still green
+
+The lane is now derived inside `sweep()`, off the **same token walk that produces the
+bins**, and carried in a list index-aligned with them — never re-matched to rows afterwards,
+so it cannot drift from the predicate. Every earlier number reproduced unchanged on the same
+run: carriers 2,689 · S 4,654 · P 1 / R 1,049 / D 1,639 · D split 585/1,054 · containment
+508/0/1/0 · old replay 951 raw / 509 filtered row-for-row MATCH.
+
+```
+  LANE A  blank slot adjacent - mechanical redistribution   1325   (D 276 · R 1049)
+  LANE B  no blank slot - per-row triage, NO pass           1363   (D 1363 · R 0)
+          bin P excluded from both (the build already fixed it): A 1 / B 0
+
+  LANE B families - reporting only, nothing closes on them:
+       401  copula supplied (is/was/are/be)
+       309  content word (noun/verb) - needs eyes
+       204  genealogy supplied (son/daughter of)
+       176  conjunction/pronoun - MIXED, needs eyes
+       141  possessive supplied (his/their/...)
+        94  preposition - MIXED, needs eyes
+        38  mixed function words - needs eyes
+       746  supplied-by-construction  ·  617 need eyes on the row
+```
+
+**The lane classifier got its own controls** (certification rule — a classifier never fired
+on a known positive certifies nothing), chosen to CROSS the word-class line in both
+directions so the classifier breaks loudly if it ever drifts back onto word class:
+
+```
+  lane Act 20:15  'and'       want A  lane A  FIRED   function word, blank G1161 -> fill
+  lane 1Co  4:20  'is the'    want B  lane B  FIRED   function word, no Greek copula
+  lane Num  7:25  'brought'   want B  lane B  FIRED   content word, number absent
+  lane Luk  6:15  'son of'    want B  lane B  FIRED   content word, supplied English
+  lane Gen 22:21  'Huz'       want A  lane A  FIRED   the star sub-case (blank G*)
+  lane 1Ki  9:26  'the city'  want B  lane B  FIRED   the archetype, no slot to fill
+```
+
+**Second halt path demonstrated live, not assumed.** `--prove-halt-lanes` re-declares
+Act 20:15 'and' as lane B (its G1161 neighbour is blank and present, so a working
+classifier must refuse):
+
+```
+  lane Act 20:15 'and'  want B  lane A  SILENT
+  HALT: a control went silent - the predicate changed. Do not trust any count from this run.
+  exit 1
+```
+
+Exit codes checked on every mode: `--prove-halt` 1 · `--prove-halt-lanes` 1 · `--controls` 0
+· `--list D` 0 · `--old` 0. Still read-only, still no DB read, no data written.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English

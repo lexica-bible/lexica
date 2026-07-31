@@ -752,7 +752,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   diff against it either).
   Any fix = build-side redistribution for star slots + rebuild; regression pin
   `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
-  ⚠ **BOTH SESSION-OPEN RULINGS RECORDED 2026-07-31** (awaiting JP confirm) —
+  ⚠ **BOTH SESSION-OPEN RULINGS CONFIRMED BY JP 2026-07-31; `--lanes` LANDED** (lane
+  derived inside the detector's own token walk, 6 lane controls fired, second halt path
+  `--prove-halt-lanes` proven, all prior counts unchanged) —
   `docs/tickets/TICKET_509_article_slot_resweep.md` §6a/§6b. (1) TWO lanes, split on
   ORIGIN not word class: lane A = adjacent BLANK numbered/star slot exists, 1,325 rows
   (all of bin R + 276 of D), mechanical build-side redistribution; lane B = no blank

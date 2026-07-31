@@ -121,11 +121,38 @@ A run that loses ANY control HALTS instead of reporting a count.
 --prove-halt breaks one control on purpose so the halt path is demonstrated,
 not assumed.
 
+REPAIR LANES (--lanes; ruling recorded 2026-07-31, ticket §6a/§6b)
+-----------------------------------------------------------------
+The fix session's lane split is derived HERE, from the same token walk that
+produces the bins, so a re-sweep re-derives lane membership instead of trusting
+a list that has gone stale. The lane question is structural:
+
+    LANE A  a blank slot sits beside the carrier already holding this word's
+            number (or a blank star) -> the build can hand the English back to
+            it. Mechanical redistribution. 1,325 rows: all 1,049 of bin R plus
+            276 of bin D.
+    LANE B  nothing blank either side -> there is no slot to fill, so no pass
+            runs. Each row closes by RULING (ABP supplied English, no Greek word
+            exists) or by a curated write (the number is absent from the source).
+            1,363 rows, all bin D.
+
+Word class is NOT the discriminator and a lane keyed on it would put a fill and
+a no-op through the same pass: Act 20:15 'and' (function) is a fill while 1Co
+4:20 'is the' (function) has no Greek copula to write, and Num 7:25 'brought'
+(content) is a write while Luk 6:15 'son of' (content) is supplied. Those four
+are LANE_CONTROLS, chosen to cross the word-class line in both directions, so
+the classifier breaks loudly if it ever drifts back onto word class.
+
+The lane-B family table is REPORTING ONLY - a class-level expectation checked
+against the source on six rows, never a per-row proof. No row closes on it.
+
   python3 scripts/audit_article_slot_carrier.py              # full sweep
   python3 scripts/audit_article_slot_carrier.py --controls   # controls only
+  python3 scripts/audit_article_slot_carrier.py --lanes      # + the A/B split
   python3 scripts/audit_article_slot_carrier.py --old        # old-predicate replay
   python3 scripts/audit_article_slot_carrier.py --list D     # print one bin
   python3 scripts/audit_article_slot_carrier.py --prove-halt # halt path, live
+  python3 scripts/audit_article_slot_carrier.py --prove-halt-lanes  # ditto, lanes
 """
 import argparse
 import ast
@@ -209,13 +236,53 @@ def iter_source_lines(dirs=None):
                                int(m.group(3)), m.group(4))
 
 
+# ── repair lanes (RULING 1, 2026-07-31) ───────────────────────────────────────
+#
+# The lane a carrier row falls in is decided by ONE structural question: is there
+# an empty slot beside it that already holds the word's own number? That is the
+# thing that decides the repair. Word class (function vs content) does NOT: see
+# the four source-verified rows in LANE_CONTROLS below, where both classes appear
+# on both sides.
+
+LANE_A = "A"   # a blank slot sits beside it -> mechanical redistribution
+LANE_B = "B"   # nothing to fill -> per-row triage, ruling or curated write
+
+
+def lane_of(toks, i):
+    """(lane, why) for the carrier slot at token index i.
+
+    A blank neighbour holding a REAL number is lane A - the word's number is
+    already in the verse with an empty slot, so the build can hand the English
+    back to it. A blank star neighbour is also lane A (same shape, star target).
+    Nothing blank either side is lane B: there is no slot to fill, so the row
+    closes by ruling (ABP supplied English) or by a curated write (the number is
+    genuinely absent from the source). Never by a pass.
+    """
+    star = False
+    for j in (i - 1, i + 1):
+        if not (0 <= j < len(toks)):
+            continue
+        t = toks[j]
+        if (t["eng"] or "").strip():
+            continue
+        if (t["sbase"] or "") not in ("*", ""):
+            return LANE_A, "blank numbered slot adjacent"
+        star = True
+    if star:
+        return LANE_A, "blank star slot adjacent"
+    return LANE_B, "no blank slot adjacent"
+
+
 def source_carriers(raw):
     """Carrier + substantival rows of one verse, from the source tokens.
 
-    Returns (carriers, substantival) as lists of (english, dotted_number).
+    Returns (carriers, substantival): carriers as (english, lane), substantival
+    as english. The lane is read off the SAME token walk the carrier itself came
+    from, so lane membership can never drift from the predicate that produced it.
     """
     carriers, subst = [], []
-    for t in iter_source_tokens(raw):
+    toks = list(iter_source_tokens(raw))
+    for i, t in enumerate(toks):
         if t["sbase"] != "G" + ARTICLE_BASE:
             continue
         eng = (t["eng"] or "").strip()
@@ -227,7 +294,7 @@ def source_carriers(raw):
         if set(r) <= SUBSTANTIVAL:
             subst.append(eng)
         else:
-            carriers.append(eng)
+            carriers.append((eng, lane_of(toks, i)[0]))
     return carriers, subst
 
 
@@ -252,11 +319,17 @@ def built_carriers(line, lex):
 
 
 def sweep(dirs=None):
-    """Full sweep. Returns (bins, subst_count, slot_totals).
+    """Full sweep. Returns (bins, lanes, subst_count, slot_totals).
 
-    bins maps 'P'/'R'/'D' -> list of (fn, bk, ch, vs, english, dotted_number).
+    bins  maps 'P'/'R'/'D' -> list of (fn, bk, ch, vs, english, dotted_number).
+    lanes maps the same keys -> list of 'A'/'B', INDEX-ALIGNED with bins. Kept
+    parallel rather than widened into the row tuple so the controls, the
+    containment count and --list keep reading the same 6-field row they always
+    did; alignment is by construction (both appended in the same step), never by
+    re-matching rows afterwards.
     """
     bins = {"P": [], "R": [], "D": []}
+    lanes = {"P": [], "R": [], "D": []}
     subst_total = 0
     totals = collections.Counter()
     maxlex = MaxLex()
@@ -272,18 +345,61 @@ def sweep(dirs=None):
         plain = collections.Counter(e for e, _n in built_carriers(line, None))
         maxed = collections.Counter(e for e, _n in built_carriers(line, maxlex))
 
-        for eng in carriers:
+        for eng, lane in carriers:
             dotted = "G" + ARTICLE_BASE
             if plain[eng] > 0:
                 plain[eng] -= 1
                 if maxed[eng] > 0:
                     maxed[eng] -= 1
-                    bins["D"].append((fn, bk, ch, vs, eng, dotted))
+                    b = "D"
                 else:
-                    bins["R"].append((fn, bk, ch, vs, eng, dotted))
+                    b = "R"
             else:
-                bins["P"].append((fn, bk, ch, vs, eng, dotted))
-    return bins, subst_total, totals
+                b = "P"
+            bins[b].append((fn, bk, ch, vs, eng, dotted))
+            lanes[b].append(lane)
+    return bins, lanes, subst_total, totals
+
+
+# ── lane-B families (RULING 2, 2026-07-31) ────────────────────────────────────
+#
+# Reporting only, and a CLASS-LEVEL expectation, not a per-row proof. The first
+# three families are supplied-by-construction: the Greek has no copula, no "son",
+# no possessive pronoun for the English to have fallen off. Spot-checked against
+# the source on 1Co 4:20, 1Co 10:26, Act 12:7, Joh 5:5, Luk 6:15, Mar 1:19 only.
+# Every other family needs eyes on the row. NOTHING here closes a row.
+
+_FAM_IGNORE = ARTICLE_ENGLISH | SUBSTANTIVAL
+_COPULA = frozenset("is are was were be am being been".split())
+_POSSESS = frozenset("his her their its your my our him them".split())
+_SONOF = frozenset("son sons daughter daughters".split())
+_PREP = frozenset("""against concerning about during among belonging than
+throughout toward towards over after before according beside around through
+within without""".split())
+_CONJ = frozenset("""and but or also even then so if that which who when
+because indeed yet this these those there what as not no some all both""".split())
+
+FAMILIES = [
+    ("copula supplied (is/was/are/be)", _COPULA),
+    ("possessive supplied (his/their/...)", _POSSESS),
+    ("genealogy supplied (son/daughter of)", _SONOF),
+    ("preposition - MIXED, needs eyes", _PREP),
+    ("conjunction/pronoun - MIXED, needs eyes", _CONJ),
+]
+SUPPLIED_FAMILIES = frozenset(f[0] for f in FAMILIES[:3])
+
+
+def family_of(eng):
+    """Which lane-B family this English falls in. Reporting only."""
+    r = set(residue(eng, _FAM_IGNORE))
+    if not r:
+        return "article's own English"
+    for name, words in FAMILIES:
+        if r <= words:
+            return name
+    if r <= (_COPULA | _POSSESS | _PREP | _CONJ):
+        return "mixed function words - needs eyes"
+    return "content word (noun/verb) - needs eyes"
 
 
 # ── the old predicate, replayed ───────────────────────────────────────────────
@@ -424,6 +540,51 @@ def run_red_first(bins, verbose=True):
     return ok
 
 
+# The lane split gets its own controls, same rule as the bins: a classifier that
+# has never been fired on a known positive certifies nothing. These four are the
+# rows the lane ruling was decided on, read out of the ABP source by hand, and
+# they are chosen to CROSS the word-class line in both directions - two function
+# words landing in different lanes, two content words landing in different lanes.
+# If word class ever became the discriminator again, this set breaks.
+LANE_CONTROLS = [
+    # (book, ch, vs, english, expected lane, why)
+    ("Act", 20, 15, "and", LANE_A,
+     "FUNCTION word, G1161 present and BLANK beside it -> fill it"),
+    ("1Co", 4, 20, "is the", LANE_B,
+     "FUNCTION word, no Greek copula anywhere -> nothing to write"),
+    ("Num", 7, 25, "brought", LANE_B,
+     "CONTENT word, verb number absent from the source -> curated write"),
+    ("Luk", 6, 15, "son of", LANE_B,
+     "CONTENT word, 'son of' is supplied English -> nothing to write"),
+    ("Gen", 22, 21, "Huz", LANE_A,
+     "the star sub-case: blank G* beside it, not a numbered slot"),
+    ("1Ki", 9, 26, "the city", LANE_B,
+     "the archetype: 'city' is supplied, no slot to fill"),
+]
+
+
+def run_lane_controls(bins, lanes, controls=LANE_CONTROLS, verbose=True):
+    """Every lane control must land in its declared lane. True only if all do."""
+    placed = {}
+    for b, rows in bins.items():
+        for idx, (_fn, bk, ch, vs, eng, _n) in enumerate(rows):
+            placed.setdefault((bk, ch, vs, eng), set()).add(lanes[b][idx])
+
+    ok = True
+    for bk, ch, vs, eng, want, why in controls:
+        got = placed.get((bk, ch, vs, eng), set())
+        fired = want in got
+        if verbose:
+            print("  lane    %-3s %3d:%-3d %-12r want %s  %-26s %s"
+                  % (bk, ch, vs, eng, want,
+                     ("lane " + ",".join(sorted(got))) if got else "NOT FOUND",
+                     "FIRED " if fired else "SILENT"))
+            print("      %s" % why)
+        if not fired:
+            ok = False
+    return ok
+
+
 def run_old_control(verbose=True):
     """The old-predicate replay must still reproduce the committed list exactly."""
     raw, filt = reproduce_old()
@@ -490,6 +651,58 @@ def live_sizing_sql(dirs=None):
 
 # ── report ────────────────────────────────────────────────────────────────────
 
+def print_lanes(bins, lanes):
+    """The A/B repair-lane split (RULING 1) and the lane-B families (RULING 2)."""
+    per = collections.Counter()
+    for b in ("P", "R", "D"):
+        for lane in lanes[b]:
+            per[(b, lane)] += 1
+    a_total = sum(n for (b, lane), n in per.items() if lane == LANE_A and b != "P")
+    b_total = sum(n for (b, lane), n in per.items() if lane == LANE_B and b != "P")
+
+    print("REPAIR LANES (ruling 2026-07-31 - the lane is 'is there a blank slot")
+    print("beside it holding this word's number?', NOT function-vs-content)")
+    print("  LANE A  blank slot adjacent - mechanical redistribution : %5d"
+          % a_total)
+    print("            of which bin D                               : %5d"
+          % per[("D", LANE_A)])
+    print("            of which bin R                               : %5d"
+          % per[("R", LANE_A)])
+    print("  LANE B  no blank slot - per-row triage, NO pass         : %5d"
+          % b_total)
+    print("            of which bin D                               : %5d"
+          % per[("D", LANE_B)])
+    print("            of which bin R                               : %5d"
+          % per[("R", LANE_B)])
+    if per[("P", LANE_A)] or per[("P", LANE_B)]:
+        print("  (bin P is excluded from both - the build already repaired it: "
+              "A %d / B %d)" % (per[("P", LANE_A)], per[("P", LANE_B)]))
+    print()
+    print("  DECLARED SPLIT: ~%d close by WRITING (lane A), ~%d by RULING or a"
+          % (a_total, b_total))
+    print("  curated write (lane B). A ship ABOVE %d means lane-B rows were"
+          % a_total)
+    print("  written without the row-level review - that is the alarm, not "
+          "progress.")
+    print()
+
+    fam = collections.Counter()
+    for b in ("D", "R"):
+        for idx, lane in enumerate(lanes[b]):
+            if lane == LANE_B:
+                fam[family_of(bins[b][idx][4])] += 1
+    supplied = sum(n for k, n in fam.items() if k in SUPPLIED_FAMILIES)
+    print("  LANE B families (reporting only - a CLASS expectation spot-checked")
+    print("  on 6 source rows, NEVER a per-row proof; nothing here closes a row):")
+    for k, n in fam.most_common():
+        print("     %5d  %s" % (n, k))
+    print("     -----")
+    print("     %5d  supplied-by-construction (the top three families)"
+          % supplied)
+    print("     %5d  need eyes on the row before any call" % (b_total - supplied))
+    print()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--controls", action="store_true",
@@ -498,11 +711,26 @@ def main():
                     help="replay the old predicate and show where its rows land")
     ap.add_argument("--list", dest="bin", choices=["P", "R", "D"],
                     help="print every row of one bin")
+    ap.add_argument("--lanes", action="store_true",
+                    help="print the A/B repair-lane split and the lane-B families")
     ap.add_argument("--prove-halt", action="store_true",
-                    help="break a control on purpose and show the run halt")
+                    help="break a bin control on purpose and show the run halt")
+    ap.add_argument("--prove-halt-lanes", action="store_true",
+                    help="break a LANE control on purpose and show the run halt")
     args = ap.parse_args()
 
-    bins, subst, totals = sweep()
+    bins, lanes, subst, totals = sweep()
+
+    lane_controls = LANE_CONTROLS
+    if args.prove_halt_lanes:
+        # Re-declare the Act 20:15 'and' control as lane B. Its G1161 neighbour is
+        # blank and present, so a working classifier MUST refuse.
+        lane_controls = [c if not (c[0] == "Act" and c[4] == LANE_A)
+                         else ("Act", 20, 15, "and", LANE_B,
+                               "DELIBERATELY BROKEN (--prove-halt-lanes)")
+                         for c in LANE_CONTROLS]
+        print("--prove-halt-lanes: Act 20:15 'and' re-declared lane B. "
+              "Expect a HALT.\n")
 
     controls = CONTROLS
     if args.prove_halt:
@@ -517,12 +745,13 @@ def main():
     ok = run_controls(bins, controls)
     ok = run_old_control() and ok
     ok = run_red_first(bins) and ok
+    ok = run_lane_controls(bins, lanes, lane_controls) and ok
     print()
     if not ok:
         print("HALT: a control went silent - the predicate changed. "
               "Do not trust any count from this run.")
         return 1
-    if args.prove_halt:
+    if args.prove_halt or args.prove_halt_lanes:
         print("HALT PATH FAILED: the broken control still passed. "
               "The detector is not certifying anything.")
         return 1
@@ -558,6 +787,9 @@ def main():
     print("     English function word on it          : %5d   (same click-defect, "
           "different repair)" % len(d_function))
     print()
+
+    if args.lanes:
+        print_lanes(bins, lanes)
 
     # Containment, counted as a MULTISET so a verse holding the same English twice
     # cannot be double-credited (that inflated an earlier draft past 509).
