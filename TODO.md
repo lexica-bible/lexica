@@ -730,31 +730,8 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **① 509 ARTICLE-SLOT RE-SWEEP — CLOSED 2026-07-31.** Detector
-  `scripts/audit_article_slot_carrier.py` (predicate in the header, six controls +
-  red-first block + an exact replay of the old predicate, HALT proven live via
-  `--prove-halt`). Close-out: `docs/tickets/TICKET_509_article_slot_resweep.md`.
-  **Revised population 2,688 — SUPERSEDES 509**: bin D **1,639 proven** (the build
-  demonstrably cannot reach them) + bin R **1,049 lexicon-dependent**. Bin S 4,654
-  substantival "the one/thing(s)" rows are legitimate, not a defect. All 509 old rows
-  accounted for: 508 → D, 1 → P (`Act 19:4`, which `_split_pn_article_lump` already
-  repairs). No data written.
-  **LIVE CHECK LANDED (JP, 2026-07-31): 2,662** — 26 below the no-repair ceiling of
-  2,688, so the lexicon repairs ~26 of the 1,049 and bin R is essentially all real.
-  **The fix session's list is ~2,662.** `1Ki 9:26` confirms live ("the city" still on
-  G3588) and the sizing query does not over-match ("the" / "of the" on the same verse
-  correctly excluded). GATE MET — count declared, controls green, halt proven, live
-  state confirmed.
-  **Three charter premises were wrong and are corrected in the ticket:** the old predicate
-  IS recoverable (replay matches 951/951 row-for-row); its exclusion WAS applied
-  consistently (it keys on a blank *numbered* neighbour, which is why star-adjacent
-  Act 19:4 survived — exactly 3,564 rows dropped, reproduced to the row); and
-  `Gen 22:21 'Huz'` is IN the 509, not a miss. The real faults are scope: the 3,564
-  exclusion rests on an unproven redistribution theory (now taken IN and answered by
-  running the production build), English function words were stoplisted out, and the
-  build was never checked.
-
-- **② PN-STAR MERGED-VERB FIX SESSION — GATED on ① (both lists final first).**
+- **② PN-STAR MERGED-VERB FIX SESSION — GATE MET 2026-07-31, ready to open.** (① the
+  509 article-slot re-sweep is CLOSED — archive 2026-07-31; both lists are final.)
   Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
   star chunk, and `_split_compounds` skips star slots — so the built words table puts the
   verb on the name's chip and leaves the other slot blank. **The class runs in BOTH

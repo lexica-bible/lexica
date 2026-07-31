@@ -6,6 +6,55 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-31 — 509 article-slot re-sweep CLOSED · 509 → 2,662 live-confirmed
+
+Receipts: commits `8e148ac5` (detector + close-out), `dae0d214` (live list fix), `5dcf6d93`
+(live result), `6920d8a1` (fix-session rulings). Close-out
+`docs/tickets/TICKET_509_article_slot_resweep.md`; detector
+`scripts/audit_article_slot_carrier.py`. **No data written, no database read by CC** — the
+live check was JP's step.
+
+- **The charter was wrong on three counts, and testing them WAS the work.** It said the old
+  509's rule was unrecoverable and inconsistently applied, and named `Gen 22:21 "Huz"` a
+  known miss. All three fell to cheap checks against the previous session's own committed hit
+  list: the rule reproduces **951/951 row-for-row**; it was applied consistently (it keys on a
+  blank slot holding a REAL number — a blank `G*` star never tripped it, which is why the
+  "inconsistent" example survived — dropping exactly **3,564** rows, reproduced to the unit);
+  and Huz is row 669, a known HIT. Lesson banked in memory
+  `feedback_verify_before_claiming` Part 10: a charter's premises are inherited claims.
+- **What the 509 was really guilty of: SCOPE, not consistency.** It excluded 3,564 rows on an
+  unproven theory about what the build redistributes, stoplisted English function words
+  riding the article slot, and — the big one — **never checked the build**. `Act 19:4
+  "Jesus the"` sat in the 509 while `_split_pn_article_lump` had been repairing it all along.
+- **Method that settled it: don't model the build, RUN it.** Every candidate verse is
+  re-assembled by the production `build_verse_words` twice — no lexicon, then a MAXIMAL one
+  (empty definition for the article, universal for every other slot, so no real lexicon can
+  move more off G3588). Rows fall out as already-repaired / lexicon-dependent /
+  proven-unreachable on the build's own evidence, and the intersection is a FLOOR. This
+  replaced a first instinct to re-implement the build's eligibility gates in the audit — the
+  second-copy trap, one level up. Memory: `feedback_audit_tools_must_fail`.
+- **Numbers.** Source-side population 2,688 (proven 1,639 + lexicon-dependent 1,049;
+  already-repaired 1; legitimate substantival "the one/thing(s)" 4,654, not defects).
+  **Live count on PA: 2,662** — 26 below the no-repair ceiling, so the lexicon repairs ~26 of
+  the 1,049 and the fix list is ~2,662. All 509 old rows accounted for (508 proven, 1
+  repaired, none lost). The old 509 is SUPERSEDED — never diff against it.
+- **JP caught a real gap in the live check.** The sizing query's exclusion list was generated
+  from the predicate (verified — not the old stoplist leaking in), but from SOURCE strings
+  only; the build mints three renderings the source never shows (`'things,'`, `'things.'`,
+  `'the one in'` — 11 rows), each of which would have read as a defect. Fixed by collecting
+  from source AND built rows. Rule: "generated, not copied" is necessary, not sufficient —
+  generated from WHICH LAYER is the question.
+- **Parked deliberately:** the row-by-row diff behind the 26-row gap. Both readings leave the
+  same ~2,662 rows in scope, so it buys nothing now.
+- **Two rulings owed at the fix session's open** (in the ticket's "decide at session open"
+  block, ahead of everything else): (1) one lane or two for the ~1,054 function-word rows vs
+  ~585 content-word rows — the repair sources differ and a pass tuned for one can mangle the
+  other; (2) a written rule for which shapes close by RULING (the 1Co 1:25 class, ABP
+  printing supplied English over a bare article) vs by data fix — so the shipped count landing
+  well under 2,662 reads as expected, not as shortfall.
+
+---
+
 ## 2026-07-31 — PN-star detector gap CLOSED · count revised 145 → 4,996 · docs reorg
 
 Receipts: commits `8cad7ba3` (detector gap) + `b914be98` (docs reorg); close-out written into
