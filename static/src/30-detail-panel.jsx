@@ -362,8 +362,26 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     if (!giWillFetch) { setGreekIdPending(false); return; }
     setGreekIdPending(true);
     let cancelled = false;
-    api.pnGreekIdentity(entry.book, entry.chapter, entry.verse, entry.position)
-      .then(d => { if (!cancelled) { if (d && !d.error) setGreekId(d); setGreekIdPending(false); } })
+    // Merged compound chip (pnMergePos): fetch BOTH slots' identities and join the
+    // DISPLAYED headword/translit ("Γασιών Γαβέρ"), so the card's hero matches the
+    // one-chip pair (JP 2026-07-31). Counts/source stay the FIRST word's — the
+    // lookup key and payload are unchanged; join fails soft to the first identity.
+    const p1 = api.pnGreekIdentity(entry.book, entry.chapter, entry.verse, entry.position);
+    const p2 = entry.pnMergePos != null
+      ? api.pnGreekIdentity(entry.book, entry.chapter, entry.verse, entry.pnMergePos).catch(() => null)
+      : Promise.resolve(null);
+    Promise.all([p1, p2])
+      .then(([d, d2]) => {
+        if (cancelled) return;
+        if (d && !d.error) {
+          if (d2 && !d2.error && d2.lemma && d.lemma) {
+            d = { ...d, lemma: d.lemma + " " + d2.lemma,
+                  translit: [d.translit, d2.translit].filter(Boolean).join(" ") };
+          }
+          setGreekId(d);
+        }
+        setGreekIdPending(false);
+      })
       .catch(() => { if (!cancelled) setGreekIdPending(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);

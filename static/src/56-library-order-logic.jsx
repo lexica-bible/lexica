@@ -155,7 +155,10 @@ function pnClickPayload(w, greekText) {
   // the name pick. Head-first makes chip and prose clicks hand the panel ONE name.
   const raw = w.english_head || w.english || greekText || "";
   const pnName = (raw && !raw.includes(" ")) ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
-  return { isPN: true, pnName, gloss: pnName };
+  // pnMergePos (chip-merge follow-on, JP 2026-07-31): the merged chip's partner
+  // slot, display-join only — pnName stays the FIRST word's name (the lookup key).
+  return { isPN: true, pnName, gloss: pnName,
+           ...(w.pn_merge_pos != null ? { pnMergePos: w.pn_merge_pos } : {}) };
 }
 
 // CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND
@@ -177,6 +180,7 @@ function mergePnChipPairs(words) {
         english: ((prev.english || prev.english_head || "") + " " + (w.english || w.english_head || "")).trim(),
         lemma: [prev.lemma, w.lemma].filter(Boolean).join(" "),
         inflected: [prev.inflected, w.inflected].filter(Boolean).join(" "),
+        pn_merge_pos: w.position,   // partner slot — the card joins both headwords for display
       };
       continue;
     }
