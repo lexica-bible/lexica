@@ -106,6 +106,32 @@ def parse_number_forms(lines):
 
     _STOP = {"of", "the", "and", "a", "an", "or"}
 
+    # Pass 1 — every record's own head name (cleaned), so a word split out of a
+    # multi-word form can be refused when it is really ANOTHER record's name:
+    # 'Sheba' from "Queen of Sheba" must not vouch for G938 (F1 receipt
+    # 2026-07-31, sheba@1Ki.10.4 G3558->G938); 'Sinai' from "Mount Sinai" is
+    # the record's own name and stands.
+    heads = {}
+    _excl = False
+    for line in lines:
+        if line.startswith("$=========="):
+            _excl = "excluded" in line.lower()
+            continue
+        if not line.strip() or _excl:
+            continue
+        s = line.lstrip()
+        if s[:1] in ("=", "‖", "#", "*", "@") \
+                or s.startswith(("UnifiedName", "UniqueName")) \
+                or line[0] in (" ", "\t") or s.startswith("–"):
+            continue
+        f0 = line.split("\t")[0].strip()
+        if "@" not in f0:
+            continue
+        h = er.norm_name(f0.split("@")[0])
+        if h and " " not in h:
+            hk = er.norm_name(re.sub(r"[()_/]", " ", h)).strip()
+            heads.setdefault(hk, set()).add(f0.split("=")[0].strip())
+
     def attach(g, name):
         # TIPNR decorates some names ("Sinai_Mount", "(Mount )Sinai",
         # "Sergius/ Paulus") — clean to plain words, and for a multi-word form
@@ -118,7 +144,11 @@ def parse_number_forms(lines):
         names = {er.norm_name(cleaned)}
         toks = [t for t in cleaned.split() if er.norm_name(t) not in _STOP]
         if len(toks) > 1:
-            names |= {er.norm_name(t) for t in toks if len(t) > 2}
+            for t in (er.norm_name(t) for t in toks if len(t) > 2):
+                # refuse a token that is another record's own name (see pass 1)
+                if heads.get(t, set()) - {cur_uniq}:
+                    continue
+                names.add(t)
         for nm in names:
             if nm:
                 ent_forms.setdefault(cur_uniq, {}).setdefault(g, set()).add(nm)

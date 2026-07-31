@@ -57,6 +57,19 @@ def test_g2_same_name_greek_dress_keeps_its_number():
             f"{uniq}: {nm} must keep {g} — predicate too strict"
 
 
+def test_decorated_and_split_name_rules():
+    # Sinai keeps its own number though TIPNR decorates it ("Sinai_Mount",
+    # "(Mount )Sinai") — the checker-caught too-strict drop of 2026-07-31.
+    assert name_matches("sinai", ENT_FORMS["Sinai@Exo.3.1-Gal"]["G4614"]), \
+        "sinai must keep G4614 (decorated-name handling broke)"
+    # A word split out of a multi-word form must NOT vouch for the number when
+    # it is another record's own name: 'Sheba' from "Queen of Sheba" (F1
+    # receipt: sheba@1Ki.10.4 would have swapped G3558->G938).
+    assert not name_matches(
+        "sheba", ENT_FORMS["Queen_of_Sheba@1Ki.10.1-Luk"]["G938"]), \
+        "sheba must not vouch for G938 (split-token over-attach returned)"
+
+
 def test_control_pooled_forms_would_match():
     e = next(x for x in ENTS if x["uniq"] == "Mizpah@Jos.18.26-Jhn")
     assert name_matches("mizpah", e["spellings"]), \
@@ -79,6 +92,7 @@ def test_worst_cross_names_gated():
 if __name__ == "__main__":
     test_g1_mizpah_record_g707_is_arimathea_only()
     test_g2_same_name_greek_dress_keeps_its_number()
+    test_decorated_and_split_name_rules()
     test_control_pooled_forms_would_match()
     test_worst_cross_names_gated()
     print("test_pn_name_match: all checks passed")
