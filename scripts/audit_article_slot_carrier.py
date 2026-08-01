@@ -697,13 +697,13 @@ def article_only_renderings(dirs=None):
     return sorted(seen)
 
 
-def live_sizing_sql(dirs=None):
-    """A read-only one-liner JP can run on PA to size the class in the LIVE table."""
+def live_sizing_sql(dirs=None, db="~/bible-db/bible.db"):
+    """A read-only one-liner JP can run on PA to size the class in a words table."""
     vals = ", ".join("'%s'" % s.replace("'", "''")
                      for s in article_only_renderings(dirs))
-    return ("  sqlite3 ~/bible-db/bible.db \"SELECT count(*) FROM words "
+    return ("  sqlite3 %s \"SELECT count(*) FROM words "
             "WHERE strongs_base='G3588' AND english IS NOT NULL "
-            "AND trim(lower(english)) NOT IN (%s);\"" % vals)
+            "AND trim(lower(english)) NOT IN (%s);\"" % (db, vals))
 
 
 # ── report ────────────────────────────────────────────────────────────────────
@@ -1001,6 +1001,10 @@ def main():
     ap.add_argument("--plan", action="store_true",
                     help="ruling-10 sizing: the pass's writes + typed refusals "
                          "on the real attestation map (pre-register BEFORE a rebuild)")
+    ap.add_argument("--sizing-sql", metavar="DBPATH",
+                    help="print ONLY the read-only sizing one-liner targeting "
+                         "DBPATH (list regenerated from this code's predicate), "
+                         "then exit — no sweep")
     ap.add_argument("--corrected", action="store_true",
                     help="with --plan: apply the build's Rahlfs/TAGNT pronoun "
                          "corrections before the pass (PA only — reproduces the "
@@ -1010,6 +1014,10 @@ def main():
     ap.add_argument("--prove-halt-lanes", action="store_true",
                     help="break a LANE control on purpose and show the run halt")
     args = ap.parse_args()
+
+    if args.sizing_sql:
+        print(live_sizing_sql(db=args.sizing_sql))
+        return 0
 
     bins, lanes, whys, subst, totals = sweep()
 
