@@ -891,7 +891,11 @@ def print_plan(dirs=None, corrected=False):
     _flag_log = []
     for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
         carriers, _subst = source_carriers(raw)
-        if not carriers:
+        # The carriers-only skip is a SPEED shortcut valid on the raw layer
+        # only: a pronoun correction can create a pass candidate on a verse
+        # the raw scan sees no carrier in, so corrected mode walks every
+        # verse (the 8/1 reconciliation's last-2-entries hypothesis).
+        if not carriers and not corrected:
             continue
         line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
         log = []
