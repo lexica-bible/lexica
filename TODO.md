@@ -785,14 +785,17 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   `docs/audits/PLAN_ruling10_article_slot.txt`; branch-proven controls (incl. ruling 6's
   first real coverage, red-firsted) `tests/test_article_slot_attestation.py` (10/10; in
   both CI lists).
-  - **Pinned sizing (source-side, real map): writes 929 · lane B 1,376 HELD · bins
-    P 930 / R 240 / D 1,519 · refusals typed (unattested 309, article 12, star 11,
-    ambiguous 0) · threshold-only revisit list 102.** P = pre-pass 1 + 929 writes; lane A
-    929 + 383 residual = 1,312 pin ✓.
+  - **Pinned sizing — RE-PINNED 2026-08-01 at the ride (§6k, corrected layer): writes 923 ·
+    refusals 411 (unattested 388, article 12, star 11) — the build's own line, reproduced
+    to the digit by `--plan --corrected` on PA.** The raw-layer 929/332 stands as the
+    source-side record; the −6 are named G1473 possessive flips (pronoun corrections made
+    the neighbour number stop vouching — conservative), +1 Rom 8:26 empty-moved candidate
+    refused twice. Lane B 1,376 HELD · threshold-only 102 unchanged.
   - **NEXT (its own rebuild cycle, NOT this session):** rebuild rides AFTER the 7/30
     reclassification catch-up unblocks step 8b (do not talk past it with --expect-split).
-    Expected live sizing after that rebuild, pre-registered: **1,519–1,759** vs pre-rebuild
-    baseline **2,670** — compare by member where it matters.
+    Expected live sizing after that rebuild, pre-registered: **1,525–1,765** (re-pinned +6
+    at §6k, 2026-08-01; was 1,519–1,759) vs pre-rebuild baseline **2,670** — compare by
+    member where it matters.
   - **Still parked until that rebuild:** the carrier-gap attribution + pass-disabled replay.
     `bible_test.db` on PA is the HALTED scratch (old pass) — evidence only, never swap.
   - **Old 1,240 "closed" rows: SUBSUMED, ruled 2026-08-01.** A rebuild re-derives every row
