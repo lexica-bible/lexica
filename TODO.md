@@ -795,6 +795,10 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
     baseline **2,670** — compare by member where it matters.
   - **Still parked until that rebuild:** the carrier-gap attribution + pass-disabled replay.
     `bible_test.db` on PA is the HALTED scratch (old pass) — evidence only, never swap.
+  - **Old 1,240 "closed" rows: SUBSUMED, ruled 2026-08-01.** A rebuild re-derives every row
+    from source, so the 929/332 accounting IS their re-audit — no old write can persist into
+    a new build. The ONLY copy of the old writes is bible_test.db itself, where they remain
+    departure-counted only, which is exactly why it never swaps.
   - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — the pass shifts no
     positions. Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
 
