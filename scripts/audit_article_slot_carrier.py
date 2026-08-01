@@ -815,7 +815,7 @@ def print_manifest(bins, lanes, whys, lane):
     print()
 
 
-def print_plan(dirs=None):
+def print_plan(dirs=None, corrected=False):
     """RULING-10 SIZING — what the rewritten pass writes and refuses, per carrier,
     on the real attestation map. Run and PINNED BEFORE any rebuild (verdict-gate
     discipline: the expected picture exists before the build that must match it).
@@ -824,21 +824,79 @@ def print_plan(dirs=None):
     'unattested (threshold-only)' itemizes carriers whose moved words are all
     attested at min_verses=1 but not at 2 — the data that would revisit the
     threshold, per §6j point 2.
+
+    TWO COUNTING BASES, both printed (2026-08-01 build-line reconciliation):
+    the per-carrier view above, AND a per-ENTRY tally matching the build's own
+    counters exactly (the build counts every logged decision — a carrier that
+    writes one neighbour and refuses the other is 1 write + 1 refusal there,
+    and 'star+unattested' entries land in their separate reason lines).
+
+    corrected=True (PA ONLY — needs the Rahlfs/TAGNT files): applies the SAME
+    pronoun corrections the real build applies before the pass, mirroring
+    run()'s flow line for line. The 2026-08-01 build-line mismatch (923 written
+    vs the pinned 929) is layer drift: this sizing measured the pass on RAW
+    source lines while the build runs it on corrected verses. Corrected mode
+    exists to reproduce the build's numbers member-by-member, read-only.
     """
+    rahlfs = tagnt = None
+    if corrected:
+        from build_words_from_abp import (RahlfsLXX, TAGNTSource, correct_verse,
+                                          apply_pronoun_corrections,
+                                          RAHLFS_DIR, TAGNT_FILES)
+        if RahlfsLXX and RAHLFS_DIR.is_dir():
+            rahlfs = RahlfsLXX(RAHLFS_DIR)
+        if TAGNTSource and all(p.is_file() for p in TAGNT_FILES):
+            tagnt = TAGNTSource([str(p) for p in TAGNT_FILES])
+        if not (rahlfs and tagnt):
+            print("HALT: --corrected needs the Rahlfs + TAGNT files "
+                  "(~/LXX-Rahlfs-1935, ~/TAGNT_*.txt — PA only). Without both, "
+                  "this mode would silently measure the uncorrected layer again.")
+            sys.exit(1)
+        print("corrected mode: Rahlfs + TAGNT loaded — pass measured on the "
+              "SAME layer the real build runs it on.\n")
     ren = build_attestation_map(dirs)
     ren1 = build_attestation_map(dirs, min_verses=1)
+    print("  attestation map: %d attested numbers\n" % len(ren))
     outcomes = collections.Counter()
+    entry_writes = 0
+    entry_refusals = collections.Counter()
     target_bases = collections.Counter()
     thresh_only = []
     writes = []
     refused = []
+    _flag_log = []
     for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
         carriers, _subst = source_carriers(raw)
         if not carriers:
             continue
         line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
         log = []
-        built_carriers(line, None, ren, log)
+        if corrected:
+            parsed = parse_abp_line(line)
+            if not parsed:
+                continue
+            abp_words = parsed[3]
+            src = bnum = None
+            if rahlfs.booknum(bk):                    # OT → Rahlfs
+                src, bnum = rahlfs, rahlfs.booknum(bk)
+            elif tagnt.booknum(bk):                   # NT → TAGNT
+                src, bnum = tagnt, tagnt.booknum(bk)
+            if src:
+                corrs = correct_verse([w[1] for w in abp_words],
+                                      src.verse(bnum, ch, vs),
+                                      [w[0] for w in abp_words])
+                abp_words = apply_pronoun_corrections(
+                    abp_words, corrs, _flag_log, f"{bk} {ch}:{vs}")
+            for _row in build_verse_words(list(abp_words), [], None,
+                                          ren=ren, article_refusals=log):
+                pass
+        else:
+            built_carriers(line, None, ren, log)
+        for _c, _n, _b, reason, _m in log:
+            if reason == "WRITTEN":
+                entry_writes += 1
+            else:
+                entry_refusals[reason] += 1
         per = {}
         for cpos, npos, nbase, reason, moved in log:
             per.setdefault(cpos, []).append((npos, nbase, reason, moved))
@@ -861,11 +919,19 @@ def print_plan(dirs=None):
                     thresh_only.append((bk, ch, vs, cpos, nbase,
                                         " ".join(moved)))
 
-    print("RULING-10 PLAN — the pass's decision record on the real map")
+    print("RULING-10 PLAN — the pass's decision record on the real map%s"
+          % (" (CORRECTED layer)" if corrected else ""))
     print("  (per carrier slot that reached the neighbour test; a carrier")
     print("   with no blank candidate logs nothing and appears in no line)")
     for k, n in outcomes.most_common():
         print("    %6d  %s" % (n, k))
+    print()
+    print("  PER-ENTRY tally (the build's own counting basis — its Results")
+    print("  line must match THESE numbers, not the per-carrier view):")
+    print("    %6d  written" % entry_writes)
+    print("    %6d  refusals (%s)" % (
+        sum(entry_refusals.values()),
+        ", ".join("%s %d" % (r, n) for r, n in entry_refusals.most_common())))
     print()
     print("  WRITE TARGETS (base -> writes):")
     for base, n in target_bases.most_common(15):
@@ -905,6 +971,10 @@ def main():
     ap.add_argument("--plan", action="store_true",
                     help="ruling-10 sizing: the pass's writes + typed refusals "
                          "on the real attestation map (pre-register BEFORE a rebuild)")
+    ap.add_argument("--corrected", action="store_true",
+                    help="with --plan: apply the build's Rahlfs/TAGNT pronoun "
+                         "corrections before the pass (PA only — reproduces the "
+                         "real build line, read-only)")
     ap.add_argument("--prove-halt", action="store_true",
                     help="break a bin control on purpose and show the run halt")
     ap.add_argument("--prove-halt-lanes", action="store_true",
@@ -987,7 +1057,7 @@ def main():
         print_manifest(bins, lanes, whys, args.manifest)
 
     if args.plan:
-        print_plan()
+        print_plan(corrected=args.corrected)
 
     # Containment, counted as a MULTISET so a verse holding the same English twice
     # cannot be double-credited (that inflated an earlier draft past 509).
