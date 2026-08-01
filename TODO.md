@@ -857,7 +857,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   oracle-gated xref handling) · new `scripts/restore_frozen_pn.py` (hand-fix-zone restore
   before the retirement, declared 363) · `/rebuild-words` 8b rewritten with the chain order +
   pre-registered serving deltas (+9 gainers incl. saul ×8 → G4549 + zacharias ×1 → G2197 ·
-  2,190 H→'*' · 1,575 '*'→H) · locks tests/test_retire_reclass.py (both CI lists). Step 8b is
+  2,190 H→'*' · 1,523 '*'→H [amended at the ride — the 1,575 first declared was a GROUP BY-less
+  read's total; 52 are never-had gentilics]) · locks tests/test_retire_reclass.py (both CI
+  lists). Step 8b is
   UNBLOCKED — the article-slot (ruling 10) rebuild ride may open.
 
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**

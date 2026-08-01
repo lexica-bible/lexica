@@ -167,10 +167,16 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       docs/tickets/RECLASS_catchup_declaration.md): abp-tag 3,518 · tipnr 10,216 ·
       lemma-only 12,066 · surface 4,326 · none 2,353. Any other split, or a sixth class, HALTS
       by design — stop and re-declare, never --expect-split past it.
-      **PRE-REGISTERED serving deltas vs pre-rebuild live (compare by member where it matters):**
+      **PRE-REGISTERED serving deltas vs pre-rebuild live (compare by member where it matters —
+      all three groups LANDED EXACT on the 8/1 ride):**
       +9 slots gain Greek (saul ×8 → G4549, zacharias ×1 → G2197 — members in the receipt) ·
-      2,190 slots Hebrew→'*' (1,524 lemma-only + 666 surface churn) · 1,575 slots '*'→Hebrew
-      (none-class churn). Anything outside these three groups at the serving column = HALT.
+      2,190 slots Hebrew→'*' (1,524 lemma-only + 666 surface churn) · **1,523** slots
+      '*'→Hebrew (none-class churn; was declared 1,575 — that read lacked its GROUP BY and
+      counted the group total; 52 of the group are never-had-a-number gentilics that stay '*',
+      receipt amended). Anything outside these three groups at the serving column = HALT.
+      **TRAP: a delta-group pre-registration comes from a GROUP BY'd read with the query text
+      committed beside the number — a bare aggregate wears an arbitrary label, and a number
+      without its derivation cannot be re-checked.**
    3. `scripts/build_pn_greek_identity.py <db> --apply` → `scripts/build_entity_binding.py <db>
       --apply` (xref-sourced guard numbers) → gates: `scripts/audit_unfindability.py <pre> <db>` +
       `scripts/audit_two_derivations.py <db>`.

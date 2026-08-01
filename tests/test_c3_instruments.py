@@ -54,10 +54,14 @@ def _make_db(path):
             (3,3,4,'Jiphthahel','Jiphthahel','H3317','*',1),
             (4,4,5,'Abia','Abia','H29','*',1),
             (5,5,6,'David','David','G1138','1138',1);
+        -- Classes mirror the 7/30 reclassification as re-pinned 2026-08-01
+        -- (RECLASS_catchup_declaration.md): shetharboznai none->surface,
+        -- jiphthahel none->lemma-only; the audit's N2/N3 controls now expect
+        -- the retired '*' state for both.
         INSERT INTO pn_greek_identity VALUES
             (1,2,NULL,'Mocha','lemma-only','H4601'),
-            (2,3,NULL,NULL,'none','H8370'),
-            (3,4,NULL,NULL,'none','H3317'),
+            (2,3,NULL,'Sathrabouzane','surface','H8370'),
+            (3,4,NULL,'Iephthael','lemma-only','H3317'),
             (4,5,'G7',NULL,'tipnr','H29'),
             (5,6,'G1138',NULL,'abp-tag',NULL);
         -- book_num('2Ch') = 14 (KJV numbering used by the binder)
@@ -102,7 +106,7 @@ def main() -> int:
     _make_db(post)
     rr = subprocess.run(
         [sys.executable, os.path.join(ROOT, "scripts", "retire_hebrew_identity.py"),
-         post, "--expect-split", "1,1,1,0,2", "--apply"],  # 5-class order (2026-08-01): abp-tag,tipnr,lemma-only,surface,none
+         post, "--expect-split", "1,1,2,1,0", "--apply"],  # 5-class order (2026-08-01): abp-tag,tipnr,lemma-only,surface,none
         capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
     check("retirement applied on the instrument fixture", rr.returncode, 0)
     r = _audit(post)

@@ -76,14 +76,38 @@ Hebrew was moved out at the first retirement):
 
 All 1,575 carry a real frozen Hebrew number — at the rebuild they regain it
 (fresh import refills it; class 'none' keeps it).
+**[WRONG — see the amended deltas section below. The query above has no
+GROUP BY, so "has-H|1575" is the group TOTAL under an arbitrary label; the
+true split is 1,523 has-H + 52 never-had.]**
 
 ## PRE-REGISTERED serving deltas for the rebuild (vs live today)
+## — AMENDED AT THE RIDE, 2026-08-01: star→H is 1,523, NOT 1,575
 
 - **+9** slots gain a served Greek number (the members above, saul/zacharias).
+  **CLOSED AT THE RIDE:** the retirement's "208 '*'→Greek" was against the
+  fresh-import copy; the live-vs-copy member diff returned exactly these 9
+  (7 from '*', 2 from H7586) — the other 199 land byte-identical to live.
 - **2,190** slots move Hebrew → no-number ('*'): 1,524 now classed lemma-only
   + 666 now classed surface. Hebrew stays reachable via the cross-ref.
-- **1,575** slots move no-number → Hebrew (the none-class churn above).
-- Everything else byte-identical at the serving column.
+  **CONFIRMED EXACT at the ride.**
+- **1,523** slots move no-number → Hebrew. The follow-up read above says
+  "has-H|1575" — that read was WRONG: the query lacked its GROUP BY, so the
+  1,575 is the group's TOTAL wearing an arbitrary label. True split: 1,523
+  with a Hebrew number + **52 that never had one** (gentilics — Philistines,
+  Amorite, Benjamite, Phoenicians…), which have nothing to regain and stay
+  '*' on both sides. Proven at the ride by the discriminating read
+  `SELECT CASE WHEN hebrew_base IS NULL … FROM pn_greek_identity WHERE
+  source='none' GROUP BY 1` → null 169 / set 2,184 (169 = the old 117
+  always-star + these 52; 2,184 = 661 + 1,523) — matching the retirement's
+  own counters, which were right all along.
+- Everything else byte-identical at the serving column. **Ride census landed
+  exactly: H→star 2,190 · star→H 1,523 · other 9.**
+
+**STANDING TRAP (cost two numbers in one day):** a delta-group
+pre-registration must come from a GROUP BY'd read with the query text
+committed beside the number. A bare aggregate wears an arbitrary label
+("has-H|1575"), and a number carried without its derivation (the "357
+hand-fix census") cannot be re-checked — same failure, two dressings.
 
 ## What landed in code (same commit)
 

@@ -113,13 +113,18 @@ def word_base(book, ch, vs, like):
 
 # Number controls — the three known positives + the must-not + the no-change.
 # Post-retirement (HAS_XREF) each asserts the ruled DUAL-HOME state: the Hebrew
-# number intact in the xref, the words cell at its class's declared value
-# (Maacah lemma-only -> '*'; Abijah tipnr -> G7; the two kept-Hebrew rows
-# unchanged). Pre-retirement: today's single-home assertion exactly.
+# number intact in the xref, the words cell at its class's declared value.
+# CLASSES RE-PINNED 2026-08-01 per the 7/30 reclassification (declaration:
+# docs/tickets/RECLASS_catchup_declaration.md; verified per-row on the 8/1
+# rebuild copy): maacha lemma-only→surface (post '*', unchanged value),
+# shetharboznai none→surface (post H8370→'*'), jiphthahel none→lemma-only
+# (post H3317→'*'); abia stays tipnr (G7). A future class churn updates these
+# DELIBERATELY, with the new declaration cited — never by loosening the check.
+# Pre-retirement: today's single-home assertion exactly.
 for label, bk, ch, vs, like, want, post in [
     ("N1 maacha @ 2Ch 11:21 -> H4601",        "2Ch", 11, 21, "maacha%", "H4601", "*"),
-    ("N2 shetharboznai @ Ezr 5:3 -> H8370",   "Ezr",  5,  3, "shethar%", "H8370", "H8370"),
-    ("N3 jiphthahel @ Jos 19:14 -> H3317",    "Jos", 19, 14, "jiphthah%", "H3317", "H3317"),
+    ("N2 shetharboznai @ Ezr 5:3 -> H8370",   "Ezr",  5,  3, "shethar%", "H8370", "*"),
+    ("N3 jiphthahel @ Jos 19:14 -> H3317",    "Jos", 19, 14, "jiphthah%", "H3317", "*"),
     ("N5 NO-CHANGE abia @ 1Ch 3:10 -> H29",   "1Ch",  3, 10, "abia%", "H29", "G7"),
 ]:
     b, xh, lab = word_base(bk, ch, vs, like)
