@@ -69,16 +69,38 @@ def check_after(a, vid, pos, heb, cls, greek, lemma, words_base):
     return out
 
 
+def check_before_retired(bconn, vid, pos, heb, before_base):
+    """Retired-shape BEFORE-findability: the Hebrew number reachable in
+    EITHER home (xref, or still in words for rows live serves the old way).
+    Returns a problem string or None."""
+    if heb is None:
+        return None
+    bx = bconn.execute("SELECT hebrew_base FROM pn_hebrew_xref "
+                       "WHERE verse_id=? AND position=?", (vid, pos)).fetchone()
+    in_xref = bx is not None and bx["hebrew_base"] == heb
+    in_words = before_base == heb
+    if in_xref or in_words:
+        return None
+    return (f"Hebrew {heb!r} in neither home (words {before_base!r}, "
+            f"xref {bx['hebrew_base'] if bx else 'NO ROW'!r})")
+
+
 def main():
     b, a = ro(BEFORE), ro(AFTER)
 
-    # ── CONTROL: the checker must fail a known-missing row ──────────────────
+    # ── CONTROLS: both checkers must fail a known-missing row ───────────────
     ctl = check_after(a, -1, -1, "H0000", "tipnr", "G0000", None, None)
     if not ctl:
-        print("CONTROL FAILED: the detector did not fire on a synthetic missing "
-              "row — audit aborted, zero would be meaningless.")
+        print("CONTROL FAILED: the after-detector did not fire on a synthetic "
+              "missing row — audit aborted, zero would be meaningless.")
         sys.exit(2)
-    print(f"control: detector fires on a planted missing row ({len(ctl)} finding(s)) — OK\n")
+    print(f"control: after-detector fires on a planted missing row ({len(ctl)} finding(s)) — OK")
+    ctl_b = check_before_retired(b, -1, -1, "H0000", "*")
+    if ctl_b is None:
+        print("CONTROL FAILED: the before-detector did not fire on a synthetic "
+              "missing row — audit aborted, zero would be meaningless.")
+        sys.exit(2)
+    print("control: before-detector fires on a planted missing row — OK\n")
 
     retired_before = b.execute(
         "SELECT 1 FROM sqlite_master WHERE name='pn_hebrew_xref'").fetchone() is not None
@@ -102,26 +124,17 @@ def main():
     examples = []
     for r in rows:
         if retired_before:
-            # BEFORE-findability asks ONE question: was the Hebrew number
-            # reachable before — in the xref (retired rows) OR still in the
-            # words cell (rows live serves the OLD way because the 7/30
-            # reclassification's copy-step never ran there; the 2,190
-            # H-carrying churn rows are exactly this, stale-but-findable).
-            # The identity SHAPE is the AFTER contract, not a before demand.
-            if r["hebrew_base"] is not None:
-                bx = b.execute("SELECT hebrew_base FROM pn_hebrew_xref "
-                               "WHERE verse_id=? AND position=?",
-                               (r["verse_id"], r["position"])).fetchone()
-                in_xref = bx is not None and bx["hebrew_base"] == r["hebrew_base"]
-                in_words = r["before_base"] == r["hebrew_base"]
-                if not (in_xref or in_words):
-                    fails_before += 1
-                    if len(examples) < 10:
-                        examples.append(
-                            f"BEFORE ({r['verse_id']},{r['position']}): Hebrew "
-                            f"{r['hebrew_base']!r} in neither home (words "
-                            f"{r['before_base']!r}, xref "
-                            f"{bx['hebrew_base'] if bx else 'NO ROW'!r})")
+            # BEFORE-findability asks ONE question (identity SHAPE is the
+            # AFTER contract): was the Hebrew reachable — xref, or still in
+            # words for rows live serves the OLD way (the 2,190 H-carrying
+            # churn rows the 7/30 copy-step never reached: stale-but-findable).
+            prob_b = check_before_retired(b, r["verse_id"], r["position"],
+                                          r["hebrew_base"], r["before_base"])
+            if prob_b:
+                fails_before += 1
+                if len(examples) < 10:
+                    examples.append(f"BEFORE ({r['verse_id']},{r['position']}): "
+                                    + prob_b)
         else:
             expected = r["hebrew_base"] if r["hebrew_base"] is not None else "*"
             if r["before_base"] != expected:
