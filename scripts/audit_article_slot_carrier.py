@@ -163,6 +163,7 @@ import hashlib
 import io
 import os
 import re
+import sqlite3
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -706,6 +707,48 @@ def live_sizing_sql(dirs=None, db="~/bible-db/bible.db"):
             "AND trim(lower(english)) NOT IN (%s);\"" % (db, vals))
 
 
+def live_diff(copydb, livedb, dirs=None):
+    """MEMBER-level defect-set comparison (the swap's set-equality instrument,
+    2026-08-01). The sizing COUNT is only the tripwire — this names every row
+    that entered or left the defect set between live and the rebuilt copy, and
+    shows what number live holds at each new entrant (a correction that moves
+    a slot's number onto G3588 pulls the row INTO the count without any new
+    defect existing — the third face of the corrected-layer drift this ride
+    already paid for twice). Read-only on both databases."""
+    own = set(article_only_renderings(dirs))
+
+    def defects(path):
+        c = sqlite3.connect("file:%s?mode=ro" % os.path.expanduser(path), uri=True)
+        rows = {(v, p): e for v, p, e in c.execute(
+            "SELECT verse_id, position, english FROM words "
+            "WHERE strongs_base='G3588' AND english IS NOT NULL")
+            if (e or "").strip().lower() not in own}
+        return c, rows
+
+    ca, A = defects(copydb)    # rebuilt copy
+    cb, B = defects(livedb)    # live
+    print("defect-set sizes: copy %d · live %d" % (len(A), len(B)))
+    only_copy = sorted(A.keys() - B.keys())
+    only_live = sorted(B.keys() - A.keys())
+    print("rows only in the COPY's set (new entrants): %d" % len(only_copy))
+    print("rows only in LIVE's set (left the set / repaired): %d" % len(only_live))
+
+    ent = collections.Counter()
+    for v, p in only_copy:
+        lw = cb.execute("SELECT strongs_base, english FROM words "
+                        "WHERE verse_id=? AND position=?", (v, p)).fetchone()
+        ent[(lw[0] if lw else "NO-ROW", A[(v, p)].strip().lower())] += 1
+    print("\nNEW ENTRANTS grouped by (live's number at that slot, english), top 40:")
+    for (base, eng), n in ent.most_common(40):
+        print("  %6d  live=%-8s %r" % (n, base, eng))
+
+    left = collections.Counter(B[k].strip().lower() for k in only_live)
+    print("\nLEFT THE SET (live english), top 40:")
+    for eng, n in left.most_common(40):
+        print("  %6d  %r" % (n, eng))
+    ca.close(); cb.close()
+
+
 # ── report ────────────────────────────────────────────────────────────────────
 
 def print_lanes(bins, lanes):
@@ -1001,6 +1044,10 @@ def main():
     ap.add_argument("--plan", action="store_true",
                     help="ruling-10 sizing: the pass's writes + typed refusals "
                          "on the real attestation map (pre-register BEFORE a rebuild)")
+    ap.add_argument("--live-diff", nargs=2, metavar=("COPYDB", "LIVEDB"),
+                    help="member-level defect-set diff between a rebuilt copy "
+                         "and live (the swap's set-equality instrument); "
+                         "read-only, then exit — no sweep")
     ap.add_argument("--sizing-sql", metavar="DBPATH",
                     help="print ONLY the read-only sizing one-liner targeting "
                          "DBPATH (list regenerated from this code's predicate), "
@@ -1017,6 +1064,9 @@ def main():
 
     if args.sizing_sql:
         print(live_sizing_sql(db=args.sizing_sql))
+        return 0
+    if args.live_diff:
+        live_diff(args.live_diff[0], args.live_diff[1])
         return 0
 
     bins, lanes, whys, subst, totals = sweep()
