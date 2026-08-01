@@ -705,6 +705,124 @@ mints them). A size check would have missed this; only the member diff caught it
 the 444-vs-1,240 gap, and the pass-disabled replay that would attribute it. Live is ~15 days of
 code drift behind the scratch, so live-vs-built was never a clean before/after of the pass alone.
 
+### 6j. RULING 10 — THE POSITIVE PREDICATE (recorded 2026-08-01, BEFORE the code was
+### rewritten; applied under JP's standing delegation, 2026-07-12)
+
+**The open design question was "how do we decide, from the source, that the blank
+neighbour's number is THIS word's own?" — answered here, explicitly, before coding.**
+
+**First, what the source CANNOT tell us.** The flat ABP text has no structural marker
+separating a genuinely-untranslated bare number from a number whose English pooled onto the
+token before it. Both print identically: a Strong's number preceded by whitespace.
+`his eyes?G3788 G1473` (English pooled, the G1473→846 slot's 'his' lives on G3788) and
+`of the LORD,G2962 G3588` (the article genuinely bare) are the same shape. So "was this
+slot blank in the source" is NOT a usable predicate — Mat 20:22's G1161 is blank at parse
+time and its English still lives elsewhere ("And answering" on G611). Checked against the
+source lines directly, not inferred.
+
+**THE RULING: the write requires ATTESTATION — every moved word must be a rendering the
+ABP source itself prints on the target's number, somewhere in the corpus.**
+
+1. **The attestation map is harvested from the source's own printed pairs.** Over the whole
+   ABP source, every token that carries English AND a real Strong's number contributes: each
+   word of that English (normalized the same way `article_slot_split` normalizes —
+   punctuation stripped, lowercased) is recorded as attested for that number's BASE.
+   Built by `build_attestation_map` in the build itself; the audit imports it, never copies it.
+2. **A (base, word) pair counts as attested only when it appears in ≥2 DISTINCT VERSES.**
+   The harvest inherits the corpus's own defects (the article-carrier class itself, splitter
+   polarity B's pooled phrases), so a single occurrence may itself be a defect. Two distinct
+   verses can still both be wrong, but the cost asymmetry rules the threshold: a false
+   REFUSAL leaves the row exactly as live has served it for months (status quo, curated
+   lanes still open to it); a false WRITE mints a brand-new wrong card. Bias strict.
+   The sizing report itemizes rows refused ONLY by the threshold so the ruling stays
+   revisitable with data instead of by taste.
+3. **The pass tests EVERY moved word, not the head.** `_head_word` picks the first
+   non-article word, so "his eyes" heads as 'his' — head-matching would let any possessive
+   or function word ride a coincidence. All moved words must be attested for the target
+   number, or the write refuses. (The moved run is by construction the non-ARTICLE_STAYS
+   words, so there is always at least one word to test.)
+4. **Base, not dotted — with the standing audit rule's required reason stated:** attestation
+   evidence per dotted variant is too sparse to key on, and the risk this predicate guards —
+   handing English to a neighbouring slot that is a DIFFERENT WORD — turns on the base
+   identity, not on sense subdivisions of the same base. The dotted rule's failure mode
+   (content living only under a dotted form) cannot produce a false write here, only a
+   false refusal.
+5. **No attestation map, no writes.** `ren=None` leaves the pass inert. The rebuild's run()
+   always builds the map; a caller that forgets gets zero writes, never unvetted ones.
+6. **Every refusal is LOUD and typed** (star / article / bracketed / occupied / unattested /
+   threshold-only), surfaced by the build and by the audit's sizing, so "what a passing
+   gate still permits" is a printed list, not a hope.
+
+**Both halt witnesses fall to the same rule, checked against the map's own logic:**
+`2Sa 12:9` — 'uriah' is not an attested rendering of G846 (αὐτός), refuse; the star at 14
+is refused by ruling 6. `Mat 20:22` — 'jesus' is not attested for G1161 (δέ), refuse; the
+star is refused by ruling 6. The legitimate repair survives: `1Co 3:8` 'his own' → G2398
+writes iff 'his' and 'own' are both corpus-attested for ἴδιος — which the sizing run below
+verifies on the real map, not by assertion.
+
+**RULING 6 GETS ITS FIRST REAL CONTROLS — branch-proven, not position-coincident.**
+`2Sa 12:9` is exactly the shape §6i demanded (blank real number on one side, blank star on
+the other, name in the moved run): the rewritten pass must log a typed refusal for BOTH
+neighbours — 'unattested' for the G846 side, 'star' for the star side — and the log entry
+is emitted BY the branch, so a passing control proves the branch ran. Red-first: the same
+fixture with 'uriah' hand-inserted into the map's G846 entry must make the pass WRITE —
+proving the attestation check, not slot geometry, is what refuses. Locked in
+tests/test_article_slot_attestation.py; fixtures are the verbatim source lines, verified
+against abp_texts before use.
+
+**What this ruling does NOT reopen:** rulings 3–5 and 7–9 stand (word-class split, shared
+stays-set, straddle test, whole-slot moves, article-neighbour lane fold, pass order). The
+38 bracketed rows stay refused (⑤, own cycle). The 444-vs-1,240 attribution and the
+pass-disabled replay stay parked until a rebuild runs with this rule in place.
+
+**AMENDMENTS LANDED THE SAME SESSION, from the sizing's own evidence — recorded as changes,
+not silently folded into the ruling above:**
+
+* **Harvest = SINGLE-WORD tokens ONLY (one-to-one page attributions).** The first draft
+  harvested every word of every (english, number) pair. Its own sample caught the failure:
+  `Mat 7:3` — carrier `'but the'` between blank G1473 (σου, 'your' pooled on 'of your
+  brother') and blank G1161 (δέ) — wrote 'but' onto the PRONOUN, because pooled tokens like
+  "but heG1473" attested 'but' under G1473 in 293 verses. A pooled token's attribution is
+  exactly the ambiguity this pass repairs, so it proves nothing. Measured discriminator:
+  'but'→G1161 single-token 366 vs 'but'→G1473 single-token 1.
+* **Threshold ≥5 distinct verses, set from measurement, not taste:** defect singles reach 4
+  ('and'→G1473 = 4), real pairs checked sit 15–55,023. The --plan itemizes every refusal
+  that would pass at ≥1 (102 rows) so the floor stays revisitable with data.
+* **Ambiguity guard:** when BOTH neighbours attest the moved words, the evidence cannot
+  pick a slot — refuse both, typed 'ambiguous', never a positional coin-flip. On the real
+  map this fires 0 times (protective, branch-proven in the unit tests).
+* **Layer coherence, stated because it bit the first test draft:** the pass runs BEFORE the
+  G1473→846 pronoun retag, so at pass time the 2Sa 12:9 neighbour is still G1473 — and the
+  harvest uses source numbers too. Map and pass speak the same layer by construction.
+
+**THE SIZING — run locally on the real map and PINNED BEFORE any rebuild (full decision
+record committed: `docs/audits/PLAN_ruling10_article_slot.txt` — every write, every
+refusal, every threshold-only row, no capped samples).** All 13 audit controls +
+old-replay + red-first fired; tests/test_article_slot_attestation.py 10/10.
+
+```
+  carriers 2,689 · bin S 4,654                    (unchanged — the predicate didn't move)
+  bins   P 930 / R 240 / D 1,519                  P = the pre-pass 1 + the 929 writes ✓
+  lane A residual 383 (D 143 + R 240)             was 1,312; 929 written + 383 = 1,312 ✓
+  lane B 1,376                                    HELD — the pass touched none of it
+  writes 929                                      G1161 824 · G3956 25 · G5037 21 ·
+                                                  G3303 17 · G3767 14 · G1473 6 · rest ≤4
+  refusals: unattested 309 · article 12 · star 9 · star+unattested 2 · ambiguous 0
+  threshold-only (single-attested 1–4 verses)     102 — the ≥5 floor's revisit list
+```
+
+Rare-target writes eyeballed against the source, not just counted: 'god'→G2316 (θεός blank
+beside an article carrying 'God'), 'now'→G3568, 'mine'/'my'→G1699, 'glorify'→G1392,
+'his'/'their'→G1473 (271 one-to-one 'his' attestations) — all the number's own word.
+The old broken pass wrote 1,241; this one writes 929 and can say why for every refused row.
+
+**EXPECTED LIVE PICTURE AFTER A FUTURE REBUILD (pre-registered per the verdict gate):**
+the live sizing query (NOT-IN list regenerated by this run) should land between **1,519**
+(real lexicon repairs every R row) and **1,759** (repairs none), against the pre-rebuild
+baseline **2,670**. Compare by MEMBER where it matters, not by count (§6i lesson).
+NO rebuild this session — the swap is blocked by step 8b's stale retirement split
+regardless (the 7/30 catch-up session's ruling; do not talk past it with --expect-split).
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English

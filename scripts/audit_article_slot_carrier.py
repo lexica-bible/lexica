@@ -152,6 +152,7 @@ against the source on six rows, never a per-row proof. No row closes on it.
   python3 scripts/audit_article_slot_carrier.py --old        # old-predicate replay
   python3 scripts/audit_article_slot_carrier.py --list D     # print one bin
   python3 scripts/audit_article_slot_carrier.py --manifest A # one lane's rows + hash
+  python3 scripts/audit_article_slot_carrier.py --plan       # ruling-10 write/refusal sizing
   python3 scripts/audit_article_slot_carrier.py --prove-halt # halt path, live
   python3 scripts/audit_article_slot_carrier.py --prove-halt-lanes  # ditto, lanes
 """
@@ -171,7 +172,8 @@ sys.path.insert(0, ROOT)
 
 from build_words_from_abp import (  # noqa: E402
     ARTICLE_OWN_ENGLISH, ARTICLE_SUBSTANTIVAL,
-    _VERSE_RE, build_verse_words, iter_source_tokens, parse_abp_line,
+    _VERSE_RE, build_attestation_map, build_verse_words, iter_source_tokens,
+    parse_abp_line,
 )
 
 ABP_DIRS = [os.path.join(ROOT, "abp_texts", "abp_nt_texts"),
@@ -313,7 +315,7 @@ def source_carriers(raw):
     return carriers, subst
 
 
-def built_carriers(line, lex):
+def built_carriers(line, lex, ren=None, refusals=None):
     """Carrier English still on an article slot AFTER the build, KEYED BY SLOT.
 
     Returns {slot position -> english}. Position, never English text: a verse can
@@ -332,7 +334,8 @@ def built_carriers(line, lex):
         return {}
     _bk, _ch, _vs, abp_words = parsed
     out = {}
-    for k, row in enumerate(build_verse_words(list(abp_words), [], lex)):
+    for k, row in enumerate(build_verse_words(list(abp_words), [], lex,
+                                              ren=ren, article_refusals=refusals)):
         # row: pos, english, english_head, strongs, strongs_base, ...
         if row[4] != ARTICLE_BASE:
             continue
@@ -366,6 +369,10 @@ def sweep(dirs=None):
     subst_total = 0
     totals = collections.Counter()
     maxlex = MaxLex()
+    # RULING 10: the build's own attestation map — the pass writes only what it
+    # vets, so the audit must re-assemble with the same map or its bins describe
+    # a pass that does not exist. Imported builder, never a copy.
+    ren = build_attestation_map(dirs)
 
     for fn, bk, ch, vs, raw in iter_source_lines(dirs):
         carriers, subst = source_carriers(raw)
@@ -375,8 +382,8 @@ def sweep(dirs=None):
             continue
 
         line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
-        plain = built_carriers(line, None)        # slot position -> english
-        maxed = built_carriers(line, maxlex)
+        plain = built_carriers(line, None, ren)   # slot position -> english
+        maxed = built_carriers(line, maxlex, ren)
 
         # Matched SLOT BY SLOT. The old multiset match on English text credited a
         # repair to whichever copy came first, which is how a correct pass read as
@@ -500,23 +507,27 @@ def doc_rows():
 
 # ── controls ──────────────────────────────────────────────────────────────────
 
-# TWO CONTROLS FLIPPED D -> P, and the flip IS the fix landing. Mat 20:22 'Jesus'
-# and 2Sa 12:9 'Uriah' are lane-A rows; _redistribute_article_slot (build_words_
-# from_abp.py) now hands their English back to the empty slot beside them, so the
-# build reaches rows it demonstrably could not reach before. Pre-registered in
-# TICKET_509 §6e and in the fill charter — flipped in the SAME commit as the build
-# change, never by loosening the predicate and never by deleting a control.
+# THE TWO P-FLIPS OF §6f ARE WITHDRAWN — they were the HALT witnesses (§6i).
+# Mat 20:22 'Jesus' and 2Sa 12:9 'Uriah' did leave the article slot, but landed
+# on numbers that are NOT the word's own (G1161/δέ, G846/αὐτός) — bin P counted
+# departures, not landings. Under RULING 10 (§6j) the pass refuses both: 'jesus'
+# is not an attested rendering of G1161 nor 'uriah' of G846, and their star
+# neighbours are refused by ruling 6. Both controls return to D, and D is the
+# CORRECT verdict — an unrepaired defect honestly reported beats a wrong card.
+# The branch-level proof (each refusal logged BY the branch that refused, plus
+# the red-first showing a permissive map WOULD write) lives in
+# tests/test_article_slot_attestation.py.
 #
-# Gen 22:21 'Huz' did NOT flip, and that is the sharper result: the charter
-# predicted all three would move. 'Huz' sits beside a blank '*' STAR slot, and
-# ruling 6 refuses star targets, so it stays a proven defect. It is now the
-# control that PROVES the star refusal, not just a lane-A positive.
+# Gen 22:21 'Huz' stays D, but it is NOT the ruling-6 control (§6i): it sits at
+# slot 0 with no second neighbour, so it refused for want of an alternative.
+# 2Sa 12:9 — blank star one side, blank real number the other — is the shape
+# that actually exercises the star branch, and its typed refusal log proves it.
 CONTROLS = [
     # (book, ch, vs, english on the article slot, expected bin, why)
     ("1Ki", 9, 26, "the city", "D", "lane B - nothing to fill, the pass must not touch it"),
-    ("Mat", 20, 22, "Jesus", "P", "lane A - REPAIRED by _redistribute_article_slot"),
-    ("2Sa", 12, 9, "Uriah", "P", "lane A - REPAIRED by _redistribute_article_slot"),
-    ("Gen", 22, 21, "Huz", "D", "lane A but STAR-adjacent - ruling 6 refuses it, stays D"),
+    ("Mat", 20, 22, "Jesus", "D", "HALT witness - ruling 10 refuses G1161, ruling 6 the star"),
+    ("2Sa", 12, 9, "Uriah", "D", "HALT witness - ruling 10 refuses G846, ruling 6 the star"),
+    ("Gen", 22, 21, "Huz", "D", "star-adjacent at slot 0 - refused, but NOT ruling 6's proof"),
     ("Act", 19, 4, "Jesus the", "P", "in the 509, but the build repairs it"),
     ("1Co", 1, 28, "the things", "S", "NEGATIVE control: legitimate substantival"),
 ]
@@ -671,6 +682,7 @@ def article_only_renderings(dirs=None):
             seen.add(eng.lower())
 
     maxlex = MaxLex()
+    ren = build_attestation_map(dirs)     # ruling 10: mirror the real pass
     for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
         for t in iter_source_tokens(raw):
             if t["sbase"] == "G" + ARTICLE_BASE:
@@ -679,7 +691,7 @@ def article_only_renderings(dirs=None):
         if not parsed:
             continue
         for lex in (None, maxlex):
-            for row in build_verse_words(list(parsed[3]), [], lex):
+            for row in build_verse_words(list(parsed[3]), [], lex, ren=ren):
                 if row[4] == ARTICLE_BASE:
                     keep(row[1])
     return sorted(seen)
@@ -803,6 +815,81 @@ def print_manifest(bins, lanes, whys, lane):
     print()
 
 
+def print_plan(dirs=None):
+    """RULING-10 SIZING — what the rewritten pass writes and refuses, per carrier,
+    on the real attestation map. Run and PINNED BEFORE any rebuild (verdict-gate
+    discipline: the expected picture exists before the build that must match it).
+
+    Outcomes are per CARRIER (a carrier can log refusals for both neighbours);
+    'unattested (threshold-only)' itemizes carriers whose moved words are all
+    attested at min_verses=1 but not at 2 — the data that would revisit the
+    threshold, per §6j point 2.
+    """
+    ren = build_attestation_map(dirs)
+    ren1 = build_attestation_map(dirs, min_verses=1)
+    outcomes = collections.Counter()
+    target_bases = collections.Counter()
+    thresh_only = []
+    writes = []
+    refused = []
+    for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
+        carriers, _subst = source_carriers(raw)
+        if not carriers:
+            continue
+        line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
+        log = []
+        built_carriers(line, None, ren, log)
+        per = {}
+        for cpos, npos, nbase, reason, moved in log:
+            per.setdefault(cpos, []).append((npos, nbase, reason, moved))
+        for cpos, entries in sorted(per.items()):
+            reasons = {e[2] for e in entries}
+            if "WRITTEN" in reasons:
+                outcomes["WRITTEN"] += 1
+                for npos, nbase, reason, moved in entries:
+                    if reason == "WRITTEN":
+                        target_bases[nbase] += 1
+                        writes.append((bk, ch, vs, cpos, nbase,
+                                       " ".join(moved)))
+                continue
+            outcomes["+".join(sorted(reasons))] += 1
+            for npos, nbase, reason, moved in entries:
+                refused.append((bk, ch, vs, cpos, reason, nbase or "*",
+                                " ".join(moved)))
+                if reason == "unattested" and moved and \
+                        all(w in ren1.get(nbase, ()) for w in moved):
+                    thresh_only.append((bk, ch, vs, cpos, nbase,
+                                        " ".join(moved)))
+
+    print("RULING-10 PLAN — the pass's decision record on the real map")
+    print("  (per carrier slot that reached the neighbour test; a carrier")
+    print("   with no blank candidate logs nothing and appears in no line)")
+    for k, n in outcomes.most_common():
+        print("    %6d  %s" % (n, k))
+    print()
+    print("  WRITE TARGETS (base -> writes):")
+    for base, n in target_bases.most_common(15):
+        print("    %6d  G%s" % (n, base))
+    print()
+    print("  THRESHOLD-ONLY refusals (single-token attested, but below the >=5")
+    print("  distinct-verse floor — the threshold's own revisit list, §6j): %d"
+          % len(thresh_only))
+    for row in thresh_only:
+        print("    %-4s %3d:%-3d slot %-3d  -> G%-6s  %r" % row)
+    print()
+    # FULL lists, deliberately — a capped sample is a silent cap on a receipt.
+    print("  REFUSALS (every candidate the pass vetoed): %d" % len(refused))
+    for row in refused:
+        print("    %-4s %3d:%-3d slot %-3d  %-10s  G%-6s  %r" % row)
+    print()
+    print("  WRITES (the full decision record): %d" % len(writes))
+    for row in writes:
+        print("    %-4s %3d:%-3d slot %-3d  -> G%-6s  %r" % row)
+    print()
+    print("  TOTAL WRITES: %d" % len(writes))
+    return writes, outcomes, thresh_only
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--controls", action="store_true",
@@ -815,6 +902,9 @@ def main():
                     help="print the A/B repair-lane split and the lane-B families")
     ap.add_argument("--manifest", choices=[LANE_A, LANE_B],
                     help="print one lane's full row list + the hash that pins it")
+    ap.add_argument("--plan", action="store_true",
+                    help="ruling-10 sizing: the pass's writes + typed refusals "
+                         "on the real attestation map (pre-register BEFORE a rebuild)")
     ap.add_argument("--prove-halt", action="store_true",
                     help="break a bin control on purpose and show the run halt")
     ap.add_argument("--prove-halt-lanes", action="store_true",
@@ -895,6 +985,9 @@ def main():
 
     if args.manifest:
         print_manifest(bins, lanes, whys, args.manifest)
+
+    if args.plan:
+        print_plan()
 
     # Containment, counted as a MULTISET so a verse holding the same English twice
     # cannot be double-credited (that inflated an earlier draft past 509).

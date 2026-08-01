@@ -774,34 +774,29 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
   a genuine merge. Whether the carrier holds a name is the discriminator.
 
-- **④ LANE A FILL — ⛔ HALTED ON THE SCRATCH REBUILD (2026-08-01). The pass needs a RULE
-  CHANGE, not a tweak.** The rebuild ran clean (all four build pins exact, `finish_rebuild
-  done`) and the built rows showed `_redistribute_article_slot` writing English onto numbers
-  that are **not the word's own**. NO SWAP. `bible_test.db` kept as evidence; live never
-  written. Full record `docs/tickets/TICKET_509_article_slot_resweep.md` §6i.
-  - **Clean witness `2Sa 12:9`** — positions identical live vs built, only the English moved:
-    'Uriah' went from `G3588` onto `G846` (αὐτός) while the star slot beside it stayed empty.
-  - **`Mat 20:22` is the deeper read:** an earlier step emptied `G1161`, and the pass took
-    that blank as "δέ's English is missing" and handed it 'Jesus'. So "empty neighbour" means
-    *not-this-word's-number* OR *merged-elsewhere* — lane A's premise is unsound as written.
-  - **The gate was measuring the wrong thing: bin P counted DEPARTURES, not LANDINGS.** 1,241
-    proved rows left the article slot, never that they arrived anywhere correct.
-  - **FIX = a positive predicate:** the neighbour's number must be *this word's own* number or
-    the write refuses. Ruling 8 closed this for article neighbours only. Not a longer skip-list.
-  - **Ruling 6 has ZERO verified coverage.** `Gen 22:21` refused because it sits at slot 0 with
-    no second neighbour — coincidence, not the rule. The rewritten pass needs a control with a
-    blank star AND a blank real number.
-  - **Suspect set UNSIZED** — the proxy shape was voided by its own red-first check (249 on
-    live where ~0 was pre-registered). Sizing is owed to the fix session.
-  - **Parked until the rule is rewritten:** the 444-vs-1,240 carrier gap and the pass-disabled
-    replay that would attribute it. Live is ~15 days of code drift behind, so live-vs-built was
-    never a clean before/after of the pass alone.
-  - **Baseline correction: pre-rebuild live is 2,670, not §4b's 2,662.** The sizing list is
-    generated from the BUILT rows, so the pass moved the list itself — same size (92),
-    different members. Compare lists by MEMBER, never by count.
-  - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — direct evidence the pass
-    shifted no positions. Strongest no-shift signal from the run.
-  - Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
+- **④ LANE A FILL — RULE REWRITTEN 2026-08-01 (RULING 10); halt on SHIPPING stands until a
+  rebuild proves it.** The 8/1 halt (pass wrote English onto numbers not the word's own —
+  witnesses 2Sa 12:9 'Uriah'→G846, Mat 20:22 'Jesus'→G1161; bin P counted departures, not
+  landings) is answered by a POSITIVE PREDICATE, coded + controlled + sized the same day:
+  every moved word must be a rendering ABP itself prints on the target's number —
+  SINGLE-WORD page attributions only, ≥5 distinct verses, ambiguity (both neighbours
+  attested) refused. Full ruling + amendments + measured picture:
+  `docs/tickets/TICKET_509_article_slot_resweep.md` §6j; decision record
+  `docs/audits/PLAN_ruling10_article_slot.txt`; branch-proven controls (incl. ruling 6's
+  first real coverage, red-firsted) `tests/test_article_slot_attestation.py` (10/10; in
+  both CI lists).
+  - **Pinned sizing (source-side, real map): writes 929 · lane B 1,376 HELD · bins
+    P 930 / R 240 / D 1,519 · refusals typed (unattested 309, article 12, star 11,
+    ambiguous 0) · threshold-only revisit list 102.** P = pre-pass 1 + 929 writes; lane A
+    929 + 383 residual = 1,312 pin ✓.
+  - **NEXT (its own rebuild cycle, NOT this session):** rebuild rides AFTER the 7/30
+    reclassification catch-up unblocks step 8b (do not talk past it with --expect-split).
+    Expected live sizing after that rebuild, pre-registered: **1,519–1,759** vs pre-rebuild
+    baseline **2,670** — compare by member where it matters.
+  - **Still parked until that rebuild:** the carrier-gap attribution + pass-disabled replay.
+    `bible_test.db` on PA is the HALTED scratch (old pass) — evidence only, never swap.
+  - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — the pass shifts no
+    positions. Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
 
 - **④b REBUILD-CHECKLIST PINS UNVERIFIED / CONTRADICTED (opened 2026-08-01, rides the next
   rebuild — do NOT rebuild just to check these).** The 8/1 scratch run couldn't confirm several

@@ -14,6 +14,7 @@ Run on PythonAnywhere:
     python scripts/build_words_from_abp.py --test [--book Gen] [--chapter 1] [--verse 1]
 """
 
+import collections
 import re
 import sys
 import shutil
@@ -834,6 +835,58 @@ ARTICLE_STAYS = ARTICLE_OWN_ENGLISH | ARTICLE_SUBSTANTIVAL
 _SLOT_NORM = re.compile(r"[^\w]")
 
 
+def build_attestation_map(sources=None, min_verses=5):
+    """RULING 10 (TICKET_509 §6j, 2026-08-01): base -> words ABP itself prints on it.
+
+    Harvested from SINGLE-WORD English tokens ONLY — the attributions the page
+    itself makes one-to-one. A multi-word token ("and heG1473", "his eyes?G3788")
+    is a pooled attribution: which word belongs to which number is exactly the
+    ambiguity this pass exists to repair, so pooled tokens prove nothing and are
+    not harvested. Measured 2026-08-01: pooled harvest attested 'but'->G1473 in
+    293 verses (all pooling defects — the single-token count is 1) and would have
+    written δέ's 'but' onto a pronoun in Mat 7:3; single-token harvest reads
+    'but'->G1161 at 366 and 'but'->G1473 at 1.
+
+    A (base, word) pair counts only when it appears in >= min_verses DISTINCT
+    VERSES. Default 5, set from the same measurement: defect singles reach 4
+    ('and'->G1473), while every real pair checked sits at 15–55,000. The cost
+    asymmetry rules the bias: a false refusal is the live status quo, a false
+    write is a brand-new wrong card. The audit's --plan itemizes refusals that
+    would pass at min_verses=1, so the threshold stays revisitable with data.
+
+    BASE, not dotted, with the standing dotted-rule's reason stated: per-dotted
+    evidence is too sparse to key on, and the guarded risk (English handed to a
+    DIFFERENT WORD's slot) turns on base identity, not sense subdivisions — a
+    dotted-only rendering can only cause a false refusal here, never a false write.
+
+    SOURCE-layer numbers on both sides: the pass runs before the G1473->846
+    pronoun retag, and so does this harvest, so map and pass speak the same layer.
+
+    Returns {bare_base: frozenset(words)}. Owned by the BUILD; the audit script
+    imports this function rather than carrying a copy (ruling-4 discipline).
+    """
+    seen = {}                                    # (base, word) -> set of verse keys
+    for abbrev, chapter, verse, abp_words in iter_verses(*(sources or _abp_sources())):
+        vkey = (abbrev, chapter, verse)
+        for w in abp_words:
+            english, raw_strongs = w[0], w[1]
+            if not english or not raw_strongs or raw_strongs == "G*":
+                continue
+            base = raw_strongs[1:].split(".")[0]
+            if not base:
+                continue
+            norms = [n for n in (_SLOT_NORM.sub("", word).lower()
+                                 for word in english.split()) if n]
+            if len(norms) != 1:
+                continue          # pooled attribution — proves nothing, not harvested
+            seen.setdefault((base, norms[0]), set()).add(vkey)
+    ren = {}
+    for (base, norm), verses in seen.items():
+        if len(verses) >= min_verses:
+            ren.setdefault(base, set()).add(norm)
+    return {base: frozenset(words) for base, words in ren.items()}
+
+
 def _slot_order(keep_idx: list, move_idx: list):
     """(keep_gpos, move_gpos) for a two-slot English move, or None to REFUSE.
 
@@ -940,9 +993,32 @@ def article_slot_split(eng: str):
     return keep_idx, move_idx
 
 
-def _redistribute_article_slot(rows: list) -> None:
+def _redistribute_article_slot(rows: list, ren=None, refusals=None) -> None:
     """LANE A of the article-slot re-sweep: a word's English riding the bare
     article's slot, while the word's OWN slot sits beside it empty.
+
+    ⚡ RULING 10 (TICKET_509 §6j, 2026-08-01) — THE POSITIVE PREDICATE. The
+    2026-08-01 scratch rebuild proved the original neighbour test unsound: a blank
+    neighbour can mean "not this word's number" (2Sa 12:9 — 'Uriah' written onto
+    G846/αὐτός) or "its English was merged elsewhere" (Mat 20:22 — 'Jesus' written
+    onto a δέ emptied by pooling). The write now requires ATTESTATION: EVERY moved
+    word must be a rendering the ABP source itself prints on the target's number
+    elsewhere in the corpus (>= 2 distinct verses), per the `ren` map from
+    build_attestation_map. All words, never the head — _head_word picks the first
+    non-article word, so possessives would ride coincidences. No map (ren=None)
+    means NO WRITES: the safe failure is inertness, never an unvetted write.
+
+    Every refusal is typed into `refusals` (list of (carrier_pos, neighbour_pos,
+    neighbour_base, reason)) so the build and the audit can print what a passing
+    run still refused — the §6i lesson that a gate must say what it permits.
+    Reasons: 'star' (ruling 6), 'article' (ruling 8), 'bracketed' (⑤, own cycle),
+    'unattested' (ruling 10), 'ambiguous' (ruling 10: BOTH neighbours attest the
+    moved words, so the evidence cannot pick a slot — refuse rather than
+    coin-flip); each WRITE is logged to the same list as 'WRITTEN',
+    so the log is the pass's full decision record. A FILLED neighbour is not a
+    candidate and is not logged — only blank-slot candidates it vetoed are. The
+    audit's sizing separately itemizes rows refused ONLY by the >=2-verse
+    threshold, so the threshold stays revisitable with data.
 
     Clicking that word served the article's card (ὁ/ἡ/τό) instead of its own —
     1Ki 9:26 "the city" is the archetype of the class, though that row is lane B
@@ -991,6 +1067,13 @@ def _redistribute_article_slot(rows: list) -> None:
     existing = [r[6] for r in rows if r[6] is not None]
     next_bid = (max(existing) + 1) if existing else 1
 
+    def refuse(carrier_pos, n_pos, n_base, reason, moved=()):
+        # (carrier_pos, neighbour_pos, neighbour_base, reason, moved_norms) — the
+        # moved words ride along so the audit's --plan can re-test 'unattested'
+        # entries against a min_verses=1 map (the threshold-only itemization).
+        if refusals is not None:
+            refusals.append((carrier_pos, n_pos, n_base, reason, tuple(moved)))
+
     for i, r in enumerate(rows):
         if r[4] != _ARTICLE_BASE or r[6] is not None:
             continue
@@ -1003,26 +1086,50 @@ def _redistribute_article_slot(rows: list) -> None:
         if keep_idx and _slot_order(keep_idx, move_idx) is None:
             continue                       # STRADDLE -> leave the phrase whole
 
-        j = None
+        words = eng.split()
+        moved_norms = [w for w in
+                       (_SLOT_NORM.sub("", words[k]).lower() for k in move_idx) if w]
+
+        vetted = []
         for cand in (i - 1, i + 1):
             if not (0 <= cand < len(rows)):
                 continue
             n = rows[cand]
             if (n[1] or "").strip():
-                continue                   # neighbour must be EMPTY
+                continue                   # filled -> not a candidate (not logged)
             sb = n[4]
-            if not sb or sb in ("*", "") or sb == _ARTICLE_BASE:
-                continue                   # star refused (ruling 6); no self-moves
+            if not sb or sb in ("*", ""):
+                refuse(r[0], n[0], sb, "star", moved_norms)        # ruling 6
+                continue
+            if sb == _ARTICLE_BASE:
+                refuse(r[0], n[0], sb, "article", moved_norms)     # ruling 8
+                continue
             if n[6] is not None:
-                continue                   # already bracketed -> defer
-            j = cand
-            break
-        if j is None:
+                refuse(r[0], n[0], sb, "bracketed", moved_norms)   # ⑤ own cycle
+                continue
+            # RULING 10 — the positive predicate: EVERY moved word must be an
+            # ABP-attested rendering of THIS neighbour's number (single-word
+            # page attributions, >=5 distinct verses, per the ren map), or the
+            # write refuses. No map, no writes.
+            attested = (ren or {}).get(sb, frozenset())
+            if not moved_norms or any(w not in attested for w in moved_norms):
+                refuse(r[0], n[0], sb, "unattested", moved_norms)  # ruling 10
+                continue
+            vetted.append(cand)
+        if not vetted:
             continue
+        if len(vetted) > 1:
+            # BOTH neighbours attest the moved words — the evidence cannot say
+            # which slot owns them, and a coin-flip is not a repair. Refuse both.
+            for cand in vetted:
+                refuse(r[0], rows[cand][0], rows[cand][4], "ambiguous", moved_norms)
+            continue
+        j = vetted[0]
 
-        words = eng.split()
         move_eng = " ".join(words[k] for k in move_idx)
         ri, rj = rows[i], rows[j]
+
+        refuse(ri[0], rj[0], rj[4], "WRITTEN", moved_norms)
 
         if not keep_idx:
             # RULING 7: the whole slot belongs to the neighbour; article goes bare.
@@ -1490,7 +1597,8 @@ def _star_name_heads(rows: list) -> None:
             rows[i] = r[:2] + (new_head,) + r[3:]
 
 
-def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
+def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
+                      ren: dict = None, article_refusals: list = None) -> list:
     """
     Combine ABP word list with BH metadata.
     Bracket groups and reading order within brackets come from ABP position
@@ -1596,7 +1704,9 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     # call earlier in the chain and rows like it silently start being written into
     # slots that already hold English. Verified refusal, not a theory: the audit
     # counts it by slot (TICKET_509 §6f).
-    _redistribute_article_slot(rows)   # lane A: article-slot English handed back
+    # ren = build_attestation_map()'s ruling-10 map; None leaves the pass INERT
+    # (zero writes) — the safe failure is inertness, never an unvetted write.
+    _redistribute_article_slot(rows, ren, article_refusals)   # lane A hand-back
     if lex:
         _split_compounds(rows, lex)
         _fix_backwards_pairing(rows, lex)
@@ -1710,6 +1820,12 @@ def run(bible_db: str, scrape_db: str) -> None:
     bh_index = load_bh_verse_index(scrape)
     print(f"BH verse keys: {len(bh_index):,}\n")
 
+    print("Building ruling-10 attestation map (article-slot pass) …")
+    ren = build_attestation_map()
+    print(f"  attested numbers: {len(ren):,}\n")
+    article_refusals: list = []
+    article_writes = 0
+
     rahlfs = None
     if RahlfsLXX and RAHLFS_DIR.is_dir():
         print("Loading Rahlfs-1935 for pronoun correction …")
@@ -1753,7 +1869,14 @@ def run(bible_db: str, scrape_db: str) -> None:
             abp_words = apply_pronoun_corrections(
                 abp_words, corrs, flag_log, f"{abbrev} {chapter}:{verse}")
 
-        word_rows = build_verse_words(abp_words, bh_rows, lex)
+        verse_log: list = []
+        word_rows = build_verse_words(abp_words, bh_rows, lex,
+                                      ren=ren, article_refusals=verse_log)
+        for entry in verse_log:
+            if entry[3] == "WRITTEN":
+                article_writes += 1
+            else:
+                article_refusals.append((abbrev, chapter, verse) + entry)
 
         main.executemany(
             "INSERT INTO words"
@@ -1812,6 +1935,10 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"\n── Results ─────────────────────────────────────────────")
     print(f"  Words inserted: {inserted:,}")
     print(f"  Verses skipped: {skipped:,}")
+    reasons = collections.Counter(e[6] for e in article_refusals)
+    print(f"  Article-slot pass (ruling 10): {article_writes:,} written, "
+          f"{len(article_refusals):,} refusals "
+          f"({', '.join('%s %d' % (k, n) for k, n in reasons.most_common())})")
     print(f"\n  Built into: {target}   (live {bible_db} untouched)")
     print(f"\n  NEXT — run the dependent builders against the COPY, then swap it in.")
     print(f"  This rebuild CLEARED is_pn / proper-noun Strong's, so import_tipnr is required:")
@@ -1849,6 +1976,10 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
         print("TAGNT: loaded for NT pronoun correction\n")
     flag_log = []
 
+    print("Building ruling-10 attestation map (article-slot pass) …")
+    test_ren = build_attestation_map()
+    print(f"  attested numbers: {len(test_ren):,}\n")
+
     slug   = ABBREV_TO_SLUG.get(book_abbrev, book_abbrev.lower())
     verses = {}
     for abbrev, ch, vs, words in iter_verses(*_abp_sources()):
@@ -1876,7 +2007,7 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
                                   [w[0] for w in abp_words])
             abp_words = apply_pronoun_corrections(
                 abp_words, corrs, flag_log, f"{book_abbrev} {chapter}:{vs}")
-        word_rows = build_verse_words(abp_words, bh_rows, lex)
+        word_rows = build_verse_words(abp_words, bh_rows, lex, ren=test_ren)
 
         print(f"{book_abbrev} {chapter}:{vs}")
         for (p, eng, head, sn, sb, gpos, bid, italic, iw, sw, morph, lemma) in word_rows:
