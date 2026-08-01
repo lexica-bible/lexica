@@ -770,14 +770,31 @@ def predict_vs(copydb, dirs=None):
             if row[4] == ARTICLE_BASE and is_defect(row[1]):
                 predicted.add((bk, ch, vs, row[0]))
 
+    # The SQL-list predicate (what the sizing one-liner counts) reproduced in
+    # the same pass, so its count and the residue-predicate count are BRIDGED
+    # by named members, never left as two unexplained figures (JP ruling).
+    own_list = set(article_only_renderings(dirs))
     actual = set()
+    sql_cnt = 0
+    bridge = []
     for bk, ch, vs, pos, eng in cc.execute(
             "SELECT v.book, v.chapter, v.verse, w.position, w.english "
             "FROM words w JOIN verses v ON v.id = w.verse_id "
             "WHERE w.strongs_base = ?", ("G" + ARTICLE_BASE,)):  # DB stores the G prefix; build rows are bare
-        if is_defect(eng):
+        d = is_defect(eng)
+        if d:
             actual.add((bk, ch, vs, pos))
+        if eng is not None and (eng or "").strip().lower() not in own_list:
+            sql_cnt += 1
+            if not d:
+                bridge.append((bk, ch, vs, pos, (eng or "").strip()))
     cc.close()
+    print("sizing-SQL count reproduced on the copy: %d "
+          "(residue-predicate count below; the difference is the rows the "
+          "bare-derived NOT-IN list never enumerated)" % sql_cnt)
+    for m in bridge[:20]:
+        print("   BRIDGE %-4s %3d:%-3d pos %-3d  %r  (article-own by residue, "
+              "absent from the list)" % m)
 
     # DECLARED ALLOWANCE (2026-08-01 ride, every member attributed to a named
     # pinned step the per-verse prediction deliberately does not model):
