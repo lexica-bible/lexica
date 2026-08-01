@@ -839,10 +839,16 @@ def print_plan(dirs=None, corrected=False):
     exists to reproduce the build's numbers member-by-member, read-only.
     """
     rahlfs = tagnt = None
+    corr_lex = None
+    bh_index = {}
+    slug_of = {}
     if corrected:
+        import sqlite3
         from build_words_from_abp import (RahlfsLXX, TAGNTSource, correct_verse,
                                           apply_pronoun_corrections,
-                                          RAHLFS_DIR, TAGNT_FILES)
+                                          RAHLFS_DIR, TAGNT_FILES,
+                                          load_lexicon, load_bh_verse_index,
+                                          ABBREV_TO_SLUG)
         if RahlfsLXX and RAHLFS_DIR.is_dir():
             rahlfs = RahlfsLXX(RAHLFS_DIR)
         if TAGNTSource and all(p.is_file() for p in TAGNT_FILES):
@@ -852,8 +858,26 @@ def print_plan(dirs=None, corrected=False):
                   "(~/LXX-Rahlfs-1935, ~/TAGNT_*.txt — PA only). Without both, "
                   "this mode would silently measure the uncorrected layer again.")
             sys.exit(1)
-        print("corrected mode: Rahlfs + TAGNT loaded — pass measured on the "
-              "SAME layer the real build runs it on.\n")
+        # The real build also runs with the lexicon + the scrape rows loaded —
+        # 2 refusal entries proved lexicon/scrape-dependent on the 8/1
+        # reconciliation run (409/386 bare vs the build's 411/388). Read-only.
+        db_path = os.path.expanduser("~/bible-db/bible.db")
+        bh_path = os.path.expanduser("~/bible-db/bh_scrape.db")
+        for p in (db_path, bh_path):
+            if not os.path.exists(p):
+                print("HALT: --corrected needs %s (read-only) to mirror the "
+                      "build's inputs." % p)
+                sys.exit(1)
+        _c = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
+        corr_lex = load_lexicon(_c)
+        _c.close()
+        _s = sqlite3.connect("file:%s?mode=ro" % bh_path, uri=True)
+        bh_index = load_bh_verse_index(_s)
+        _s.close()
+        slug_of = ABBREV_TO_SLUG
+        print("corrected mode: Rahlfs + TAGNT + lexicon (%d) + BH index (%d) "
+              "loaded — pass measured on the SAME layer, same inputs, as the "
+              "real build.\n" % (len(corr_lex), len(bh_index)))
     ren = build_attestation_map(dirs)
     ren1 = build_attestation_map(dirs, min_verses=1)
     print("  attestation map: %d attested numbers\n" % len(ren))
@@ -887,7 +911,9 @@ def print_plan(dirs=None, corrected=False):
                                       [w[0] for w in abp_words])
                 abp_words = apply_pronoun_corrections(
                     abp_words, corrs, _flag_log, f"{bk} {ch}:{vs}")
-            for _row in build_verse_words(list(abp_words), [], None,
+            slug = slug_of.get(bk)
+            bh_rows = bh_index.get((slug, ch, vs), []) if slug else []
+            for _row in build_verse_words(list(abp_words), bh_rows, corr_lex,
                                           ren=ren, article_refusals=log):
                 pass
         else:
