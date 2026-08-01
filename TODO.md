@@ -774,8 +774,21 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
   a genuine merge. Whether the carrier holds a name is the discriminator.
 
-- **④ LANE A FILL — RULE REWRITTEN 2026-08-01 (RULING 10); halt on SHIPPING stands until a
-  rebuild proves it.** The 8/1 halt (pass wrote English onto numbers not the word's own —
+- **④ LANE A FILL — SHIPPED + LIVE 2026-08-01 (the ruling-10 rebuild ride swapped the same
+  evening; deploy 5×200, health 0/0, surface 389,412 ≥ floor).** Ride record: ticket §6k
+  (build line 923/411 reproduced by --plan --corrected) + §6l (window superseded by
+  --predict-vs member set-equality, PASSED with the named 15-member tail allowance).
+  Serving deltas landed exact: +9 gainers · 2,190 H→'*' · 1,523 '*'→H · 144 article-slot
+  repairs · 0 entrants; compare_words 6,919 fully attributed (5,582 raw classed + 1,337
+  bracket-renumber cascade, attributed BY CONTAINMENT — pool 9,505 — not member-proof).
+  Rollback = bible_pre_ruling10_20260801.db (NAME REUSED deliberately: the morning's
+  same-named file was a deleted space-duplicate; THIS one is the real pre-swap live) +
+  bible.db.rollback (7/31) — BOTH held until the next nightly lands clean and verified.
+  OWED: JP's live-eyes spot checks (1Sa 15:17 saul→G4549 card · a Philistines-class name
+  reaching Hebrew via the xref · Gen 1/Mat 1 normal · 1Co 1:18 renders right).
+  **UNPARKED by the rebuild (were waiting on it):** the carrier-gap attribution + the
+  pass-disabled replay — both now measurable against the live pass.
+  History below kept for the record: The 8/1 halt (pass wrote English onto numbers not the word's own —
   witnesses 2Sa 12:9 'Uriah'→G846, Mat 20:22 'Jesus'→G1161; bin P counted departures, not
   landings) is answered by a POSITIVE PREDICATE, coded + controlled + sized the same day:
   every moved word must be a rendering ABP itself prints on the target's number —
@@ -808,19 +821,16 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — the pass shifts no
     positions. Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
 
-- **④b REBUILD-CHECKLIST PINS UNVERIFIED / CONTRADICTED (opened 2026-08-01, rides the next
-  rebuild — do NOT rebuild just to check these).** The 8/1 scratch run couldn't confirm several
-  `/rebuild-words` figures, and contradicted one:
-  - **`fix_split_flip` repaired 1 (Joh 14:26), not the pinned "175 verses / 196 pairs
-    regenerate on every rebuild".** Unexplained. Candidate worth testing: a 7/31 build change
-    means the class mostly never mints now — benign if so, but it is a guess until measured.
-    **The closing gate `audit_split_flip.py` = 0 was NEVER RUN** (the halt landed first).
-  - **`fix_split_merges` 237 never verified against its pin** — lost to console scroll, and a
-    re-run reports "nothing to do" so it cannot be recovered from this build.
-  - **`import_tipnr` "31,392 matched" not captured** (same scroll loss). What IS known:
-    `is_pn=1` reads **32,479 on live AND on the built copy** — identical, so nothing regressed,
-    but 31,392 and 32,479 are different measures and the checklist line is unconfirmed.
-  - Step 6 audits, `compare_words.py`, and the step 8b retirement chain were all never reached.
+- **④b REBUILD-CHECKLIST PINS — ALL VERIFIED at the 8/1 ride, CLOSED.** import_tipnr matched
+  **31,392 exact** · fix_split_merges **237/0 exact** · fix_split_flip **re-declared 1**
+  (175/196 stopped being true when the 7/31 build changes stopped minting the class; two
+  independent 8/1 builds agree; pin updated in finish_rebuild.sh) · `audit_split_flip.py = 0`
+  on the finished copy · step 6 audits green (bracket genuine 2 = the known pair,
+  FUNCTION-anchor 0, WRONG-SLOT REPAIRABLE 0, REPAIRABLE-NOUN 0, G2316 0, tier-2 92.20%,
+  tier-1 A1 **177** — logged as the new figure vs the old ≈176) · compare_words attributed in
+  full · the 8b chain ran end-to-end. Also closed the same evening: **the finish_rebuild.sh
+  ACCEPTANCE RUN** (first real run printed the honest `done`; the wrapper's verdict logic is
+  proven live).
 
 - **⑤ BRACKETED ARTICLE-SLOT ROWS (38) — OPEN RULING, own cycle, own controls.** Sized
   2026-07-31 and deliberately NOT folded into ④. 20 are whole-slot moves where the word
@@ -865,16 +875,11 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   lists). Step 8b is
   UNBLOCKED — the article-slot (ruling 10) rebuild ride may open.
 
-- **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
-  `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps
-  only (no db, no network). JP's **next real `/rebuild-words`** is the acceptance run: the chain
-  should print `== finish_rebuild done ==`, and the p2wl:v2 guard fixture drift check should fire
-  automatically inside `import_tipnr` (its verified sole writer of `is_pn=1`). **`done` ⇒ the arc
-  closes. A named-failures banner ⇒ DO NOT SWAP, read the step's own output.**
-  **WATCH the first live run, do NOT assume it** — a wrapper that refuses to say `done` when it
-  should would be a new false alarm in the highest-stakes procedure here. **Do NOT rebuild just to
-  test this** — that inverts the reason for the check (JP, 2026-07-14). Full record: AUDIT "GUARD
-  FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD" + `docs/DESIGN_p2_guard_drift_check.md`.
+- **ACCEPTANCE RUN — CLOSED 2026-08-01 (the ruling-10 ride was the first real run).**
+  `finish_rebuild.sh` printed the honest `== finish_rebuild done ==` on real steps, and the
+  p2wl:v2 guard fixture check fired inside import_tipnr with `[OK] still matches the corpus`.
+  Arc closed as designed. Record: AUDIT "GUARD FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD"
+  + `docs/DESIGN_p2_guard_drift_check.md`.
 
 - **PROSE-ECONOMY DESIGN TICKET (JP's own inquiry, banked — zero-spend, fresh-head design work).**
   The only item on the zero-spend shelf. Not pre-decided, not pre-pitched.
