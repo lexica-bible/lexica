@@ -95,17 +95,17 @@ All 1,575 carry a real frozen Hebrew number — at the rebuild they regain it
   only. 'surface' rows write xref class 'lemma-only' (G707 ship precedent —
   'surface' is not a cross-ref class).
 - `restore_frozen_pn.py` (new, chain step BEFORE the retirement): puts
-  import_tipnr's drift back to the frozen record (hand-fix zone; declared
-  363 = 357 census + 6 Cushi — a differing dry-run halts for a look).
-  **Where the 363 splits:** the 6 are the 2Sa 18 Cushi slots (David's
-  runner) — a fresh import writes H3570, the frozen record and the hand fix
-  say H3569 (fix_cushi_strongs.py history; also noted in
-  G707_diff_report.md). The 357 are the OTHER hand-fix-zone slots the
-  G707-session row-by-row mismatch census counted (fresh-import value vs
-  frozen record; that census is where "357 hand-fix-zone + Cushi 6" was
-  first recorded — memory project_entity_resolution_rebuild). The dry-run
-  prints every member, so the 363 is re-derivable at the ride, not taken
-  on faith.
+  import_tipnr's drift back to the frozen record.
+  **RE-DECLARED AT THE 8/1 RIDE — declared count is 6, was 363.** The ride's
+  full-population dry-run (28,961 slots, real fresh build) found exactly the
+  6 Cushi slots (2Sa 18, H3570 → H3569) and nothing else; the 1,085
+  still-'*' slots after import match the frozen record's always-'*' count
+  to the row. The "357 hand-fix-zone" half of the first declaration was
+  ported from the memory line about the G707-session census without
+  verifying what that census compared — whatever it measured, it was not
+  fresh-import drift, and the full-population instrument outranks it. The
+  dry-run prints every member each ride, so the count is re-derived at use,
+  never carried on trust.
 - Locks: `tests/test_retire_reclass.py` (5 cases, red-first on the sixth
   class / broken oracle / wrong restore count), in both CI lists;
   `test_retire_builder.py` updated to five-value splits.

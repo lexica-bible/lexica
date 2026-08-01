@@ -17,9 +17,15 @@ their Greek number straight from the build and are never touched):
   expected = hebrew_base, or '*' where the frozen record says the slot never
   had one; any words slot not at its expected value is set to it.
 
-Declared expectation: 363 slots restored (the 2026-07-31 G707-session census:
-357 hand-fix-zone slots + the 6 Cushi slots). A different count HALTS —
-look before overriding (--expect N; the census may legitimately move if
+Declared expectation: 6 slots (the 2Sa 18 Cushi class, H3570 -> H3569).
+RE-DECLARED at the 8/1 ride from this script's own full-population dry-run
+on the real fresh build: 28,961 slots checked, exactly the 6 Cushi differed.
+The first declaration said 363 ("357 hand-fix-zone + 6 Cushi") — the 357 was
+ported from a memory line about the G707-session census without verifying
+what that census compared; it was never fresh-import drift. Evidence of
+agreement everywhere else: the 1,085 still-'*' slots after import match the
+frozen record's always-'*' count to the row. A different count HALTS —
+look before overriding (--expect N; the set may legitimately move if
 import_tipnr/TIPNR.txt changed under the roster-freeze rule).
 
 Usage (PA, JP runs, on the rebuild copy AFTER finish_rebuild.sh):
@@ -34,7 +40,7 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible_test.db"))
 APPLY = "--apply" in sys.argv
 
-EXPECT = 363
+EXPECT = 6
 for i, a in enumerate(sys.argv):
     if a == "--expect" and i + 1 < len(sys.argv):
         EXPECT = int(sys.argv[i + 1])

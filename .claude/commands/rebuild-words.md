@@ -155,10 +155,11 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
    import_tipnr (still on the test copy, before the gates), IN THIS ORDER:
    1. `scripts/restore_frozen_pn.py <db>` (dry-run then --apply) — puts import_tipnr's drift back
-      to the frozen record (hand-fix zone; Cushi H3569 comes back as H3570 on a fresh import).
-      Declared restore count **363** (357 census + 6 Cushi); a different count HALTS — read the
-      member list before any override. Replaces the old "re-run fix_cushi_strongs" note: the
-      frozen record covers it.
+      to the frozen record. Declared restore count **6** (the 2Sa 18 Cushi class, H3570→H3569 —
+      RE-DECLARED at the 8/1 ride from the full-population dry-run on a real fresh build; the
+      first declaration of 363 carried a mis-ported "357 hand-fix-zone" census figure that was
+      never fresh-import drift). A different count HALTS — read the member list before any
+      override. Replaces the old "re-run fix_cushi_strongs" note: the frozen record covers it.
    2. `scripts/retire_hebrew_identity.py <db> --fresh-rebuild` (dry-run then --apply). The copy
       carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
       byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds

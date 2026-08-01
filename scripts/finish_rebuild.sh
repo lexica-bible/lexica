@@ -73,8 +73,11 @@ fi
 run python3 scripts/fix_emdash.py            "${DB}" --apply
 
 # 6) Split-flip repair — the "Kenites the" stranded-determiner class from the
-#    proper-noun slot producer (_split_compounds' source-order fix doesn't cover it;
-#    cert run 1: 175 verses / 196 pairs regenerate on every rebuild). Swaps POSITION
+#    proper-noun slot producer (_split_compounds' source-order fix doesn't cover it).
+#    PIN RE-DECLARED 2026-08-01: expect 1 flip / 1 verse per rebuild — the old
+#    "cert run 1: 175 verses / 196 pairs" stopped being true when the 7/31 build
+#    changes stopped minting the class; confirmed on two independent 8/1 builds.
+#    Swaps POSITION
 #    values only, never text, looping to convergence. ORDER IS LOAD-BEARING: after
 #    ALL pinned patches (fix_split_merges targets absolute positions) and after
 #    fix_emdash (the detector compares words to verses.text — dash tokens must
