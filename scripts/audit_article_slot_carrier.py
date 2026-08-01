@@ -707,6 +707,95 @@ def live_sizing_sql(dirs=None, db="~/bible-db/bible.db"):
             "AND trim(lower(english)) NOT IN (%s);\"" % (db, vals))
 
 
+def predict_vs(copydb, dirs=None):
+    """THE SWAP CONDITION (2026-08-01, replaces the count window as the ruling
+    check — the window's bins were measured on the bare layer and mispredicted
+    live by ~770 rows; fourth layer-drift figure of the ride).
+
+    Re-derives the expected leftover defect set on the TRUE layer — pronoun
+    corrections + real lexicon + BH rows, exactly the build's inputs — keyed
+    (book, chapter, verse, position), then requires MEMBER EQUALITY against
+    the rebuilt copy's actual article-slot rows. Membership uses the same
+    residue()/SUBSTANTIVAL predicate on both sides (no SQL NOT-IN list layer).
+    PA only; read-only on every input."""
+    import sqlite3 as _sq
+    from build_words_from_abp import (RahlfsLXX, TAGNTSource, correct_verse,
+                                      apply_pronoun_corrections,
+                                      RAHLFS_DIR, TAGNT_FILES,
+                                      load_lexicon, load_bh_verse_index,
+                                      ABBREV_TO_SLUG)
+    rahlfs = RahlfsLXX(RAHLFS_DIR) if (RahlfsLXX and RAHLFS_DIR.is_dir()) else None
+    tagnt = (TAGNTSource([str(p) for p in TAGNT_FILES])
+             if (TAGNTSource and all(p.is_file() for p in TAGNT_FILES)) else None)
+    if not (rahlfs and tagnt):
+        print("HALT: needs Rahlfs + TAGNT (PA only).")
+        sys.exit(1)
+    cc = _sq.connect("file:%s?mode=ro" % os.path.expanduser(copydb), uri=True)
+    corr_lex = load_lexicon(cc)
+    bs = _sq.connect("file:%s?mode=ro" % os.path.expanduser("~/bible-db/bh_scrape.db"), uri=True)
+    bh_index = load_bh_verse_index(bs)
+    bs.close()
+    ren = build_attestation_map(dirs)
+    print("inputs: lexicon %d · BH keys %d · attested numbers %d\n"
+          % (len(corr_lex), len(bh_index), len(ren)))
+
+    def is_defect(eng):
+        eng = (eng or "").strip()
+        if not eng:
+            return False
+        r = residue(eng)
+        return bool(r) and not set(r) <= SUBSTANTIVAL
+
+    predicted = set()
+    _flag = []
+    for _fn, bk, ch, vs, raw in iter_source_lines(dirs):
+        parsed = parse_abp_line("(%s %d:%d)  %s" % (bk, ch, vs, raw))
+        if not parsed:
+            continue
+        abp_words = parsed[3]
+        src = bnum = None
+        if rahlfs.booknum(bk):
+            src, bnum = rahlfs, rahlfs.booknum(bk)
+        elif tagnt.booknum(bk):
+            src, bnum = tagnt, tagnt.booknum(bk)
+        if src:
+            corrs = correct_verse([w[1] for w in abp_words],
+                                  src.verse(bnum, ch, vs),
+                                  [w[0] for w in abp_words])
+            abp_words = apply_pronoun_corrections(abp_words, corrs, _flag,
+                                                  f"{bk} {ch}:{vs}")
+        slug = ABBREV_TO_SLUG.get(bk)
+        bh_rows = bh_index.get((slug, ch, vs), []) if slug else []
+        for row in build_verse_words(list(abp_words), bh_rows, corr_lex, ren=ren):
+            if row[4] == ARTICLE_BASE and is_defect(row[1]):
+                predicted.add((bk, ch, vs, row[0]))
+
+    actual = set()
+    for bk, ch, vs, pos, eng in cc.execute(
+            "SELECT v.book, v.chapter, v.verse, w.position, w.english "
+            "FROM words w JOIN verses v ON v.id = w.verse_id "
+            "WHERE w.strongs_base = ?", ("G" + ARTICLE_BASE,)):  # DB stores the G prefix; build rows are bare
+        if is_defect(eng):
+            actual.add((bk, ch, vs, pos))
+    cc.close()
+
+    print("predicted leftover defect rows (true layer): %d" % len(predicted))
+    print("actual rows in the rebuilt copy            : %d" % len(actual))
+    miss = sorted(predicted - actual)
+    extra = sorted(actual - predicted)
+    print("predicted but ABSENT from the copy: %d" % len(miss))
+    for m in miss[:40]:
+        print("   MISS  %s %d:%d pos %d" % m)
+    print("in the copy but NOT predicted: %d" % len(extra))
+    for m in extra[:40]:
+        print("   EXTRA %s %d:%d pos %d" % m)
+    if miss or extra:
+        print("\nSET-EQUALITY: FAIL — do not swap; name every member first.")
+        sys.exit(1)
+    print("\nSET-EQUALITY: PASS — the copy's defect set IS the predicted set, "
+          "member for member.")
+
+
 def live_diff(copydb, livedb, dirs=None):
     """MEMBER-level defect-set comparison (the swap's set-equality instrument,
     2026-08-01). The sizing COUNT is only the tripwire — this names every row
@@ -1044,6 +1133,10 @@ def main():
     ap.add_argument("--plan", action="store_true",
                     help="ruling-10 sizing: the pass's writes + typed refusals "
                          "on the real attestation map (pre-register BEFORE a rebuild)")
+    ap.add_argument("--predict-vs", metavar="COPYDB",
+                    help="THE SWAP CONDITION: re-derive the expected leftover "
+                         "set on the true layer (corrections + lexicon + BH) "
+                         "and require member equality with COPYDB (PA only)")
     ap.add_argument("--live-diff", nargs=2, metavar=("COPYDB", "LIVEDB"),
                     help="member-level defect-set diff between a rebuilt copy "
                          "and live (the swap's set-equality instrument); "
@@ -1067,6 +1160,9 @@ def main():
         return 0
     if args.live_diff:
         live_diff(args.live_diff[0], args.live_diff[1])
+        return 0
+    if args.predict_vs:
+        predict_vs(args.predict_vs)
         return 0
 
     bins, lanes, whys, subst, totals = sweep()
