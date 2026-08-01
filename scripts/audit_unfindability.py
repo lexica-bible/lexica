@@ -102,14 +102,26 @@ def main():
     examples = []
     for r in rows:
         if retired_before:
-            probs_b = check_after(b, r["verse_id"], r["position"], r["hebrew_base"],
-                                  r["source"], r["greek_strongs"], r["greek_lemma"],
-                                  r["before_base"])
-            if probs_b:
-                fails_before += 1
-                if len(examples) < 10:
-                    examples.append(f"BEFORE ({r['verse_id']},{r['position']}): "
-                                    + "; ".join(probs_b))
+            # BEFORE-findability asks ONE question: was the Hebrew number
+            # reachable before — in the xref (retired rows) OR still in the
+            # words cell (rows live serves the OLD way because the 7/30
+            # reclassification's copy-step never ran there; the 2,190
+            # H-carrying churn rows are exactly this, stale-but-findable).
+            # The identity SHAPE is the AFTER contract, not a before demand.
+            if r["hebrew_base"] is not None:
+                bx = b.execute("SELECT hebrew_base FROM pn_hebrew_xref "
+                               "WHERE verse_id=? AND position=?",
+                               (r["verse_id"], r["position"])).fetchone()
+                in_xref = bx is not None and bx["hebrew_base"] == r["hebrew_base"]
+                in_words = r["before_base"] == r["hebrew_base"]
+                if not (in_xref or in_words):
+                    fails_before += 1
+                    if len(examples) < 10:
+                        examples.append(
+                            f"BEFORE ({r['verse_id']},{r['position']}): Hebrew "
+                            f"{r['hebrew_base']!r} in neither home (words "
+                            f"{r['before_base']!r}, xref "
+                            f"{bx['hebrew_base'] if bx else 'NO ROW'!r})")
         else:
             expected = r["hebrew_base"] if r["hebrew_base"] is not None else "*"
             if r["before_base"] != expected:
