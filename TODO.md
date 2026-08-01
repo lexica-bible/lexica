@@ -793,9 +793,12 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
     refused twice. Lane B 1,376 HELD · threshold-only 102 unchanged.
   - **NEXT (its own rebuild cycle, NOT this session):** rebuild rides AFTER the 7/30
     reclassification catch-up unblocks step 8b (do not talk past it with --expect-split).
-    Expected live sizing after that rebuild, pre-registered: **1,525–1,765** (re-pinned +6
-    at §6k, 2026-08-01; was 1,519–1,759) vs pre-rebuild baseline **2,670** — compare by
-    member where it matters.
+    ~~Expected live sizing 1,525–1,765~~ **SUPERSEDED at the ride (§6l): the window's bins
+    were bare-layer; live had already repaired most write sites (1Co 1:18 witness). Ruling
+    check = `--predict-vs` member set-equality (PASSED on the 8/1 copy: predicted 2,533,
+    actual 2,520, residue = the declared 15-member tail allowance, all named). Copy sized
+    2,526 (SQL list) / 2,520 (residue) vs baseline 2,670; live-delta = 144 departures,
+    0 entrants.
   - **Still parked until that rebuild:** the carrier-gap attribution + pass-disabled replay.
     `bible_test.db` on PA is the HALTED scratch (old pass) — evidence only, never swap.
   - **Old 1,240 "closed" rows: SUBSUMED, ruled 2026-08-01.** A rebuild re-derives every row

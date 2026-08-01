@@ -177,6 +177,12 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       **TRAP: a delta-group pre-registration comes from a GROUP BY'd read with the query text
       committed beside the number — a bare aggregate wears an arbitrary label, and a number
       without its derivation cannot be re-checked.**
+      **TRAP (four casualties on the 8/1 ride — flipped writes, audit refusals, the sizing
+      window, the sizing bins): any figure asserted about a post-correction artifact must be
+      derived THROUGH the correction layer with the same inputs the build uses (Rahlfs/TAGNT
+      + lexicon + BH), and the derivation command committed with the figure. The article-slot
+      swap check is `audit_article_slot_carrier.py --predict-vs <copy>` — member set-equality
+      with a named tail allowance; counts are tripwires, the member set rules (§6l).**
    3. `scripts/build_pn_greek_identity.py <db> --apply` → `scripts/build_entity_binding.py <db>
       --apply` (xref-sourced guard numbers) → gates: `scripts/audit_unfindability.py <pre> <db>` +
       `scripts/audit_two_derivations.py <db>`.
