@@ -5,6 +5,15 @@ The S2-Q4 bar: nothing findable before the Hebrew retirement may become
 unfindable after it. Read-only. Enumerates EVERY affected row (no sampling)
 across the two databases:
 
+  REWRITE TRAIL (2026-08-01, two revisions in one ride — the reasoning matters
+  more than the diff): revision 1 (9bbc8ed7 predecessor 6d05aab7) taught the
+  BEFORE leg the retired shape but pinned it to the NEW class contract — wrong,
+  because live is knowingly mid-migration (the 2,190 churn rows still carry
+  Hebrew in words; that staleness is the reason the rebuild exists). Revision 2
+  (9bbc8ed7) re-pointed BEFORE at the only question the gate owns — WAS THE
+  HEBREW FINDABLE, in either home — leaving the identity-shape demands entirely
+  on the AFTER leg. 5a0f3124 added the before-leg's own planted-row control.
+
   BEFORE db — TWO SHAPES, auto-detected (2026-08-01, the 8/1 ride):
   * PRE-RETIREMENT shape (no pn_hebrew_xref — the original C3 flow): every
     scoped row must match its frozen snapshot in words: strongs_base = its
