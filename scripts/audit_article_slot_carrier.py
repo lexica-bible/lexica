@@ -779,21 +779,55 @@ def predict_vs(copydb, dirs=None):
             actual.add((bk, ch, vs, pos))
     cc.close()
 
+    # DECLARED ALLOWANCE (2026-08-01 ride, every member attributed to a named
+    # pinned step the per-verse prediction deliberately does not model):
+    # fix_idios_own (finish-tail patch — relocates the 'own' phrase onto the
+    # empty ἴδιος slot; these are exactly the G2398-unattested refusals the
+    # ruling-10 pass correctly declined, repaired by the hand patch instead)
+    # + apply_blank_strongs_fills (the documented 5-row numberless-"G." fill:
+    # Act 24:8 'bidding'→G2753 splits its slot; Mat 12:14 'And the'→G3588
+    # MINTS an article slot carrying non-own English). A residue differing
+    # from this list BY ONE MEMBER is a FAIL.
+    ALLOWED_MISS = {
+        ("1Co", 3, 8, 10): "fix_idios_own",
+        ("1Co", 4, 12, 3): "fix_idios_own",
+        ("1Co", 7, 4, 15): "fix_idios_own",
+        ("1Co", 11, 21, 2): "fix_idios_own",
+        ("1Co", 14, 35, 7): "fix_idios_own",
+        ("1Co", 15, 38, 12): "fix_idios_own",
+        ("1Ti", 3, 5, 3): "fix_idios_own",
+        ("1Ti", 4, 2, 4): "fix_idios_own",
+        ("1Ti", 6, 1, 6): "fix_idios_own",
+        ("2Pe", 2, 22, 10): "fix_idios_own",
+        ("2Ti", 4, 3, 13): "fix_idios_own",
+        ("Heb", 4, 10, 16): "fix_idios_own",
+        ("Heb", 7, 27, 11): "fix_idios_own",
+        ("Act", 24, 8, 0): "blank-G. fill (bidding->G2753 slot split)",
+    }
+    ALLOWED_EXTRA = {
+        ("Mat", 12, 14, 0): "blank-G. fill (And the->G3588, minted slot)",
+    }
+
     print("predicted leftover defect rows (true layer): %d" % len(predicted))
     print("actual rows in the rebuilt copy            : %d" % len(actual))
     miss = sorted(predicted - actual)
     extra = sorted(actual - predicted)
-    print("predicted but ABSENT from the copy: %d" % len(miss))
+    print("predicted but ABSENT from the copy: %d (declared allowance %d)"
+          % (len(miss), len(ALLOWED_MISS)))
     for m in miss[:40]:
-        print("   MISS  %s %d:%d pos %d" % m)
-    print("in the copy but NOT predicted: %d" % len(extra))
+        print("   MISS  %-4s %3d:%-3d pos %-3d  %s"
+              % (m + (ALLOWED_MISS.get(m, "*** NOT IN THE ALLOWANCE ***"),)))
+    print("in the copy but NOT predicted: %d (declared allowance %d)"
+          % (len(extra), len(ALLOWED_EXTRA)))
     for m in extra[:40]:
-        print("   EXTRA %s %d:%d pos %d" % m)
-    if miss or extra:
-        print("\nSET-EQUALITY: FAIL — do not swap; name every member first.")
+        print("   EXTRA %-4s %3d:%-3d pos %-3d  %s"
+              % (m + (ALLOWED_EXTRA.get(m, "*** NOT IN THE ALLOWANCE ***"),)))
+    if set(miss) != set(ALLOWED_MISS) or set(extra) != set(ALLOWED_EXTRA):
+        print("\nSET-EQUALITY: FAIL — the residue is not the declared allowance, "
+              "member for member; do not swap.")
         sys.exit(1)
-    print("\nSET-EQUALITY: PASS — the copy's defect set IS the predicted set, "
-          "member for member.")
+    print("\nSET-EQUALITY: PASS — the copy's defect set is the predicted set "
+          "plus exactly the declared 15-member tail allowance.")
 
 
 def live_diff(copydb, livedb, dirs=None):
