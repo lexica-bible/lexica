@@ -566,6 +566,11 @@ app.py matches.
 - Do NOT add conjugated manuscript forms — the audience are non-Greek readers (standing rule).
 
 ## Article slots (G3588) — two facts any audit of the words table needs
+- ⛔ **`_redistribute_article_slot` is HALTED (2026-08-01) — do not treat its output as correct.**
+  It writes English onto a blank neighbour without checking the neighbour's number is that
+  word's own, so it moved names onto δέ/αὐτός slots (`2Sa 12:9` 'Uriah'→G846, star still empty).
+  The facts below still hold; the pass's *correctness* does not.
+  Record: `docs/tickets/TICKET_509_article_slot_resweep.md` §6i.
 - **A blank article slot is NORMAL, not a defect.** `G3588` legitimately carries no English
   in a great many rows, and `_redistribute_article_slot` deliberately leaves it bare when the
   whole gloss belonged to the neighbour. Never treat "article row with no English" as a hole

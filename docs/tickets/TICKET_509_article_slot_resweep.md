@@ -633,6 +633,78 @@ the failure mode this ticket exists to avoid.
 **CALL: the scratch rebuild proceeds with all 39 refused.** 1,240 written rows do not wait on
 39. The bracket class becomes its own ruling with its own controls.
 
+### 6i. THE SCRATCH REBUILD RAN — AND HALTED THE PASS. Bin P counted DEPARTURES, not LANDINGS
+
+The rebuild ran clean end to end (build exact on all four pins, `finish_rebuild done`), and the
+built rows then showed the pass writing English onto numbers that are **not the word's own**.
+**HALT ratified 2026-08-01. No swap. `bible_test.db` kept as evidence; live never written.**
+
+**THE CLEAN WITNESS — `2Sa 12:9`, positions identical live vs built, only the English moved:**
+
+```
+  live   12|G846 |(empty)   13|G3588|Uriah     14|*|(empty)
+  built  12|G846 |Uriah     13|G3588|(empty)   14|*|(empty)
+```
+
+αὐτός is not Uriah. Uriah's slot is the star at 14, still empty. The reader who clicked "Uriah"
+got the article's card before and gets the pronoun's card now — a different wrong card, not a
+repair.
+
+**`Mat 20:22` says something worse — "empty" has a SECOND meaning.** Live reads `0|G1161|And`;
+the built row reads `0|G611|And answering` with G1161 emptied by an earlier step. The pass then
+read that blank δέ as "δέ's English is missing" and handed it 'Jesus'. So a blank neighbour can
+mean **the number isn't this word's** (2Sa 12:9) *or* **its English was merged elsewhere**
+(Mat 20:22). Lane A's premise — "the word's own number is already in the verse and its slot is
+empty" — is unsound as written, not merely under-gated.
+
+**THE CHARTER-LEVEL FAULT: `bin P` COUNTED DEPARTURES, NOT LANDINGS.** Every gate in §6f–§6g
+asked "is this row still on the article slot?" and none asked "did it arrive anywhere correct?"
+1,241 is a count of rows that left. It was never a count of good repairs, and no amount of
+re-running it would have said so. The neighbour fall-through at `build_words_from_abp.py:1007`
+is only where the fault surfaces.
+
+**THE FIX IS A POSITIVE PREDICATE, NOT A LONGER SKIP-LIST.** The pass must require that the
+blank neighbour's number is **this word's own** number before writing, and refuse otherwise.
+Ruling 8 already closed exactly this hole for article neighbours (`G3588` beside `G3588`); it
+is open for every other number. A skip-list approach would keep enumerating the ways a
+neighbour can be wrong; the predicate states the one way it can be right.
+
+**RULING 6 HAS ZERO VERIFIED COVERAGE — `Gen 22:21` was a COINCIDENCE, not a control.** It sits
+at slot 0, so `(i-1, i+1)` had no second neighbour to fall through to. It refused for want of an
+alternative, not because the rule protects names. Every "the star refusal is proven" claim in
+§6f/§6g rests on it and is withdrawn. **The rewritten pass needs a control carrying a blank star
+AND a blank real number** — the shape `Mat 20:22` and `2Sa 12:9` actually have.
+
+**SUSPECT SET UNSIZED.** A proxy shape (filled slot → emptied article → still-empty star) was
+tried and **voided by its own red-first check**: it read 249 on live where the pre-registration
+said ~0. A bare article slot is ordinary (34,791 live), so the shape is a common corpus pattern,
+not the pass's signature. Reported as unsized rather than as the 251 it would have claimed.
+
+**MEASURED THIS RUN (all on the scratch, live read-only throughout):**
+
+```
+  build            626,305 / skipped 0 / flagged 6,882 / split 2,436   ALL EXACT
+  prefix invariant                                    0                PASS
+  is_pn rows            32,479 built = 32,479 live                     IDENTICAL
+  idios 'own' on G3588  unbracketed 0 · bracketed 2                    the pass DOES work
+                                                                       where its premise holds
+  bare G3588            35,114 built vs 34,791 live  (+323)            ruling 7 whole-slot moves
+  article carriers      2,226 built vs 2,670 live    (-444)            expected -1,240 — OPEN
+  pinned corrections    LOUD-SKIPPED 0                                 fixed-slot patches all
+                                                                       landed: the pass shifted
+                                                                       NO positions
+```
+
+**THE PRE-REBUILD BASELINE IS 2,670, NOT §4b's 2,662.** The two were never comparable: the live
+sizing list is generated from the BUILT rows, and the pass changed them, so the list itself
+moved — same size (92), different members. `'things,'`/`'things.'` left it (5+3 = the whole +8,
+itemized) and `'for the thing'`/`'in;'` joined it (0 rows in a pre-rebuild table, since the pass
+mints them). A size check would have missed this; only the member diff caught it.
+
+**PARKED UNTIL THE RULE IS REWRITTEN** — counting a broken pass's writes buys nothing:
+the 444-vs-1,240 gap, and the pass-disabled replay that would attribute it. Live is ~15 days of
+code drift behind the scratch, so live-vs-built was never a clean before/after of the pass alone.
+
 ## 7. STANDING WARNINGS FOR THE FIX SESSION
 
 - **The article-slot class MIXES origins.** Some rows are ABP-attested *supplied* English

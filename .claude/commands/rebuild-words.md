@@ -26,7 +26,25 @@ full 14-patch chain) and the new single pass produced a BYTE-IDENTICAL words tab
 `project_architecture_rework`.
 
 COPY-FIRST, ALWAYS — build on a `cp bible.db bible_test.db` copy; the live bible.db is never the
-one rebuilt (DELETE only ever hits the copy). The build also makes its own `bible.db.bak`.
+one rebuilt (DELETE only ever hits the copy).
+
+**STEP 0 — `git pull` ON PA FIRST, and PROVE the change is in the file.** PA is pull-only and
+can sit many commits behind. A build from a stale checkout runs perfectly and produces a words
+table with the fix missing — a clean-looking no-op that poisons every downstream check.
+`grep -n <new function> scripts/build_words_from_abp.py` before building; matching line numbers
+against the local repo double as file-identity proof. (2026-08-01: PA was 7 commits behind and
+the pass wasn't there. Caught only because a traceback's line number didn't match the repo's.)
+
+**TEE EVERY LONG RUN — `2>&1 | tee run.log | tail -60`.** The build and `finish_rebuild.sh`
+print per-step counts that are pinned in this checklist, and a bare `| tail` throws them away.
+They are NOT recoverable: the steps settle, so a re-run reports "nothing to do". (2026-08-01:
+`fix_split_merges` 237 and `import_tipnr`'s matched count were both lost this way.)
+
+**THE BUILD'S FIRST ARGUMENT IS THE SOURCE, and it builds into `<source>.new`** — so
+`... bible_test.db bh_scrape.db` makes a SECOND 412MB copy. Two copies plus the working file can
+exceed the PA quota; `df -h ~` is useless here (it shows the shared filer, not the quota — the
+dashboard has the real number). A `disk I/O error` on the very first snapshot write, leaving a
+0-byte `.new`, is out-of-space, not corruption.
 
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
    (Full-rebuild fallbacks keep this receipted naming — ops.md retention item 1. But

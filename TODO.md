@@ -774,20 +774,48 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
   a genuine merge. Whether the carrier holds a name is the discriminator.
 
-- **④ LANE A FILL — PASS WRITTEN AND GATED, WAITING ON THE REBUILD (2026-07-31).**
-  `_redistribute_article_slot` (build_words_from_abp.py) is live in the build and closes
-  **1,240 rows**. Nothing has touched the database — the next step is `/rebuild-words`
-  against a scratch build, walked step by step with the expected number stated before each
-  check. Full record `docs/tickets/TICKET_509_article_slot_resweep.md` §6e–§6h.
-  - **Expected live drop is ~1,448, NOT the charter's ~1,363.** That older figure assumed
-    every lane-A row would be written; 72 remain by ruling. Live now 2,662 (JP, §4b).
-  - **Pinned lane-A set: `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed**
-    (`docs/audits/MANIFEST_lane_a_article_slot.txt`). Two earlier hashes are superseded and
-    kept in the file; the first keyed rows by (verse, English), which is not a row identity.
-  - **Remaining 72, all by ruling:** 25 straddle · 8 star · 38 bracketed · 1 neighbour-filled.
-  - **Gate that matters: lane B must hold at 1,376 and no lane-B row may appear in bin P.**
-    A run that "fixes" more than lane A has eaten rows it was never allowed to touch.
-  - Standing: re-run `import_tipnr.py` after the rebuild, `strongs_base` check back to 0.
+- **④ LANE A FILL — ⛔ HALTED ON THE SCRATCH REBUILD (2026-08-01). The pass needs a RULE
+  CHANGE, not a tweak.** The rebuild ran clean (all four build pins exact, `finish_rebuild
+  done`) and the built rows showed `_redistribute_article_slot` writing English onto numbers
+  that are **not the word's own**. NO SWAP. `bible_test.db` kept as evidence; live never
+  written. Full record `docs/tickets/TICKET_509_article_slot_resweep.md` §6i.
+  - **Clean witness `2Sa 12:9`** — positions identical live vs built, only the English moved:
+    'Uriah' went from `G3588` onto `G846` (αὐτός) while the star slot beside it stayed empty.
+  - **`Mat 20:22` is the deeper read:** an earlier step emptied `G1161`, and the pass took
+    that blank as "δέ's English is missing" and handed it 'Jesus'. So "empty neighbour" means
+    *not-this-word's-number* OR *merged-elsewhere* — lane A's premise is unsound as written.
+  - **The gate was measuring the wrong thing: bin P counted DEPARTURES, not LANDINGS.** 1,241
+    proved rows left the article slot, never that they arrived anywhere correct.
+  - **FIX = a positive predicate:** the neighbour's number must be *this word's own* number or
+    the write refuses. Ruling 8 closed this for article neighbours only. Not a longer skip-list.
+  - **Ruling 6 has ZERO verified coverage.** `Gen 22:21` refused because it sits at slot 0 with
+    no second neighbour — coincidence, not the rule. The rewritten pass needs a control with a
+    blank star AND a blank real number.
+  - **Suspect set UNSIZED** — the proxy shape was voided by its own red-first check (249 on
+    live where ~0 was pre-registered). Sizing is owed to the fix session.
+  - **Parked until the rule is rewritten:** the 444-vs-1,240 carrier gap and the pass-disabled
+    replay that would attribute it. Live is ~15 days of code drift behind, so live-vs-built was
+    never a clean before/after of the pass alone.
+  - **Baseline correction: pre-rebuild live is 2,670, not §4b's 2,662.** The sizing list is
+    generated from the BUILT rows, so the pass moved the list itself — same size (92),
+    different members. Compare lists by MEMBER, never by count.
+  - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — direct evidence the pass
+    shifted no positions. Strongest no-shift signal from the run.
+  - Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
+
+- **④b REBUILD-CHECKLIST PINS UNVERIFIED / CONTRADICTED (opened 2026-08-01, rides the next
+  rebuild — do NOT rebuild just to check these).** The 8/1 scratch run couldn't confirm several
+  `/rebuild-words` figures, and contradicted one:
+  - **`fix_split_flip` repaired 1 (Joh 14:26), not the pinned "175 verses / 196 pairs
+    regenerate on every rebuild".** Unexplained. Candidate worth testing: a 7/31 build change
+    means the class mostly never mints now — benign if so, but it is a guess until measured.
+    **The closing gate `audit_split_flip.py` = 0 was NEVER RUN** (the halt landed first).
+  - **`fix_split_merges` 237 never verified against its pin** — lost to console scroll, and a
+    re-run reports "nothing to do" so it cannot be recovered from this build.
+  - **`import_tipnr` "31,392 matched" not captured** (same scroll loss). What IS known:
+    `is_pn=1` reads **32,479 on live AND on the built copy** — identical, so nothing regressed,
+    but 31,392 and 32,479 are different measures and the checklist line is unconfirmed.
+  - Step 6 audits, `compare_words.py`, and the step 8b retirement chain were all never reached.
 
 - **⑤ BRACKETED ARTICLE-SLOT ROWS (38) — OPEN RULING, own cycle, own controls.** Sized
   2026-07-31 and deliberately NOT folded into ④. 20 are whole-slot moves where the word
