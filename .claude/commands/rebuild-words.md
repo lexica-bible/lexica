@@ -153,16 +153,29 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch).
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
-   import_tipnr (still on the test copy, before the gates): `scripts/retire_hebrew_identity.py <db>`
-   (dry-run then --apply; NOTE its hard-coded expected class split — a words rebuild that shifts PN
-   rows will need a reviewed re-declaration, that halt is by design) → `scripts/build_pn_greek_identity.py
-   <db> --apply` → `scripts/build_entity_binding.py <db> --apply` (xref-sourced guard numbers) →
-   gates: `scripts/audit_unfindability.py <pre> <db>` + `scripts/audit_two_derivations.py <db>`.
-   **G707 gate (2026-07-31):** build_pn_greek_identity now applies strict name-match
-   inheritance (removal-only; tests/test_pn_name_match.py). retire_hebrew_identity's
-   hard-coded EXPECT split is STALE since the 7/30 header rebuild — a re-run HALTS until
-   the reviewed re-declaration lands (TODO: "7/30 RECLASSIFICATION CATCH-UP"). Run the
-   removal-only census (ship_g707_targeted.py preconditions) before any swap.
+   import_tipnr (still on the test copy, before the gates), IN THIS ORDER:
+   1. `scripts/restore_frozen_pn.py <db>` (dry-run then --apply) — puts import_tipnr's drift back
+      to the frozen record (hand-fix zone; Cushi H3569 comes back as H3570 on a fresh import).
+      Declared restore count **363** (357 census + 6 Cushi); a different count HALTS — read the
+      member list before any override. Replaces the old "re-run fix_cushi_strongs" note: the
+      frozen record covers it.
+   2. `scripts/retire_hebrew_identity.py <db> --fresh-rebuild` (dry-run then --apply). The copy
+      carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
+      byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds
+      the xref. Declared five-class split (2026-08-01 re-declaration, receipt
+      docs/tickets/RECLASS_catchup_declaration.md): abp-tag 3,518 · tipnr 10,216 ·
+      lemma-only 12,066 · surface 4,326 · none 2,353. Any other split, or a sixth class, HALTS
+      by design — stop and re-declare, never --expect-split past it.
+      **PRE-REGISTERED serving deltas vs pre-rebuild live (compare by member where it matters):**
+      +9 slots gain Greek (saul ×8 → G4549, zacharias ×1 → G2197 — members in the receipt) ·
+      2,190 slots Hebrew→'*' (1,524 lemma-only + 666 surface churn) · 1,575 slots '*'→Hebrew
+      (none-class churn). Anything outside these three groups at the serving column = HALT.
+   3. `scripts/build_pn_greek_identity.py <db> --apply` → `scripts/build_entity_binding.py <db>
+      --apply` (xref-sourced guard numbers) → gates: `scripts/audit_unfindability.py <pre> <db>` +
+      `scripts/audit_two_derivations.py <db>`.
+   **G707 gate (2026-07-31):** build_pn_greek_identity applies strict name-match inheritance
+   (removal-only; tests/test_pn_name_match.py). Run the removal-only census
+   (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
 9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`

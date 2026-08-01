@@ -102,7 +102,7 @@ def main() -> int:
     _make_db(post)
     rr = subprocess.run(
         [sys.executable, os.path.join(ROOT, "scripts", "retire_hebrew_identity.py"),
-         post, "--expect-split", "1,1,1,2", "--apply"],
+         post, "--expect-split", "1,1,1,0,2", "--apply"],  # 5-class order (2026-08-01): abp-tag,tipnr,lemma-only,surface,none
         capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
     check("retirement applied on the instrument fixture", rr.returncode, 0)
     r = _audit(post)

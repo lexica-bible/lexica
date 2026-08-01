@@ -847,18 +847,15 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   parent file). Repo grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL
   guards), so the crumbs are historical/ad-hoc; check their file dates, then delete.
 
-- **④ 7/30 RECLASSIFICATION CATCH-UP (opened 2026-07-31, gated — its own session, do NOT fold
-  into other ships). Queue position: after the ①–③ PN-star chain.** The Greek-header-discipline rebuild (2026-07-30) rewrote
-  pn_greek_identity but the retirement copy-step NEVER re-ran, so live words/xref still
-  serve the older classification. Census (this session's scratch, vs the frozen C3 xref):
-  ~7.6k slots churn among lemma-only/surface/none (byte-neutral in words today, xref class
-  stale), **9 slots would GAIN a served Greek number** — saul ×8 (1Sa 14:22, 15:17, 15:27,
-  15:30, 18:26, 19:22, 22:16, 28:11 → G4549) + zacharias ×1 (Luk 3:2 → G2197) — from binds
-  added after C3 (hand-rulings/scope-widen). Held OUT of the G707 targeted ship by the
-  removal-only rule. This session also DEFERRED here: retire_hebrew_identity's hard-coded
-  EXPECT class split re-declaration (declare once, from this session's final shape — JP
-  ruling). A full re-retire needs its own red-first gates; the G707 session's census
-  machinery (ship_g707_targeted.py preconditions) is the template.
+- **④ 7/30 RECLASSIFICATION CATCH-UP — DONE 2026-08-01 (code + declaration landed; the data
+  change itself rides the next rebuild).** Full record + JP's pasted live reads:
+  `docs/tickets/RECLASS_catchup_declaration.md`. Landed: retire_hebrew_identity re-declared
+  from live (five classes incl. 'surface', typed branch, sixth-class halt, --fresh-rebuild
+  oracle-gated xref handling) · new `scripts/restore_frozen_pn.py` (hand-fix-zone restore
+  before the retirement, declared 363) · `/rebuild-words` 8b rewritten with the chain order +
+  pre-registered serving deltas (+9 gainers incl. saul ×8 → G4549 + zacharias ×1 → G2197 ·
+  2,190 H→'*' · 1,575 '*'→H) · locks tests/test_retire_reclass.py (both CI lists). Step 8b is
+  UNBLOCKED — the article-slot (ruling 10) rebuild ride may open.
 
 - **ACCEPTANCE RUN OWED (opened 2026-07-14, zero-spend, no action until JP rebuilds anyway).**
   `finish_rebuild.sh`'s clean path has NEVER run with real steps — it was proven with stubbed steps

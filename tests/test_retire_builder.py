@@ -10,6 +10,9 @@ Fixture mirrors the real table shapes. Covers:
   * HALT detectors control-tested on known positives (certification rule —
     a detector that never fired proves nothing): class-split mismatch,
     words-vs-snapshot disagreement, second run on the same copy
+Updated 2026-08-01 for the five-class re-declaration (splits gain a 5th
+'surface' slot, 0 in this fixture); the surface/fresh-rebuild/restore locks
+live in tests/test_retire_reclass.py.
 Run:  python tests/test_retire_builder.py
 """
 import os
@@ -68,7 +71,7 @@ _ENV = dict(os.environ, PYTHONIOENCODING="utf-8")
 
 def _run(dbp, *extra):
     return subprocess.run(
-        [sys.executable, SCRIPT, dbp, SPLIT, "1,2,2,2", *extra],
+        [sys.executable, SCRIPT, dbp, SPLIT, "1,2,2,0,2", *extra],
         capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
 
 
@@ -151,7 +154,7 @@ def main() -> int:
 
     dbp2 = os.path.join(tmp, "retire_split.db")
     _make_db(dbp2)
-    r = subprocess.run([sys.executable, SCRIPT, dbp2, SPLIT, "9,9,9,9"],
+    r = subprocess.run([sys.executable, SCRIPT, dbp2, SPLIT, "9,9,9,9,9"],
                        capture_output=True, text=True, encoding="utf-8", cwd=ROOT, env=_ENV)
     check("wrong class split HALTS", r.returncode != 0, True)
 

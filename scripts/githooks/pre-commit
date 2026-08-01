@@ -62,6 +62,7 @@ python tests/test_reader_greek_flips.py >/dev/null
 python tests/test_ws_greek_flips.py >/dev/null
 python tests/test_c3_dormant.py >/dev/null
 python tests/test_retire_builder.py >/dev/null
+python tests/test_retire_reclass.py >/dev/null
 python tests/test_c3_instruments.py >/dev/null
 python tests/test_pn_surface_backfill.py >/dev/null
 python tests/test_pn_lemma_wordstudy.py >/dev/null

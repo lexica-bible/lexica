@@ -24,10 +24,28 @@ Every class also lands in the new cross-ref home `pn_hebrew_xref` (DDL below —
 JP checkpoint cleared 2026-07-25). ANY row whose current words state disagrees
 with its identity-table class HALTS the run (condition 3: halt, not skip).
 
+RE-DECLARED 2026-08-01 (the 7/30 reclassification catch-up, JP-run live reads
+2026-08-01, receipt docs/tickets/RECLASS_catchup_declaration.md): the 7/30
+Greek-header rebuild rewrote pn_greek_identity — five classes now (a new
+'surface' class: the identity is a page-attested printed-Greek headword with
+NO Greek number). 'surface' gets the lemma-only treatment on words ('*' —
+no number to serve) and lands in the cross-ref as class 'lemma-only' (the
+G707 ship precedent: 'surface' is not a cross-ref class; the binder treats
+hebrew-carrying rows identically). It is a TYPED branch with its own count
+assertion — any class outside the five named HALTS.
+
+--fresh-rebuild (the rebuild-chain mode, step 8b): a rebuild copy of live
+already carries pn_hebrew_xref. The flag verifies the identity table is a
+byte-for-byte carrier of the frozen Hebrew record (every row's hebrew_base
+identical to the xref's — the check-4 oracle gate, 0 mismatches or HALT),
+then drops the stale xref copy so this run can rebuild it. Without the
+flag, an existing xref still halts.
+
 Usage (PA, JP runs):
   python3 scripts/retire_hebrew_identity.py ~/bible-db/bible_test.db            # dry-run
   python3 scripts/retire_hebrew_identity.py ~/bible-db/bible_test.db --apply
-  (--expect-split a,b,c,d overrides the declared class counts — TEST FIXTURES ONLY)
+  (--fresh-rebuild on the rebuild chain; --expect-split a,b,c,d,e overrides the
+   declared class counts — TEST FIXTURES ONLY)
 """
 import os
 import sqlite3
@@ -36,14 +54,19 @@ import sys
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible.db"))
 APPLY = "--apply" in sys.argv
+FRESH = "--fresh-rebuild" in sys.argv
 
-# Declared expectations (docs/PLAN_r2_c3_rebuild.md) — the run REFUSES to start
-# if the identity table's class split is not exactly this.
-EXPECT = {"abp-tag": 3518, "tipnr": 10731, "lemma-only": 14850, "none": 3380}
+# Declared expectations — the run REFUSES to start if the identity table's
+# class split is not exactly this. Declared ONCE from the live table
+# (JP-run read 2026-08-01; receipt docs/tickets/RECLASS_catchup_declaration.md;
+# supersedes the 2026-07-25 four-class declaration from PLAN_r2_c3_rebuild.md).
+EXPECT = {"abp-tag": 3518, "tipnr": 10216, "lemma-only": 12066,
+          "surface": 4326, "none": 2353}
 for i, a in enumerate(sys.argv):
     if a == "--expect-split" and i + 1 < len(sys.argv):
         vals = [int(x) for x in sys.argv[i + 1].split(",")]
-        EXPECT = dict(zip(("abp-tag", "tipnr", "lemma-only", "none"), vals))
+        EXPECT = dict(zip(("abp-tag", "tipnr", "lemma-only", "surface",
+                           "none"), vals))
 
 DDL = """
 CREATE TABLE pn_hebrew_xref (
@@ -79,11 +102,44 @@ def main():
         fail("pn_greek_identity absent — the write set of record does not exist here.")
     if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
                     "AND name='pn_hebrew_xref'").fetchone():
-        fail("pn_hebrew_xref already exists — this run is single-shot per copy; "
-             "start from a fresh copy of the pre-rebuild db.")
+        if not FRESH:
+            fail("pn_hebrew_xref already exists — this run is single-shot per copy; "
+                 "start from a fresh copy of the pre-rebuild db, or pass "
+                 "--fresh-rebuild on the rebuild chain (step 8b).")
+        # Oracle gate (check 4): drop the stale xref ONLY if the identity table
+        # carries the frozen Hebrew record byte-for-byte. A nonzero here means
+        # the xref copy is the sole carrier of the frozen record — do NOT drop.
+        n_oracle = conn.execute("""
+            SELECT count(*) FROM pn_greek_identity g
+            JOIN pn_hebrew_xref x
+              ON x.verse_id = g.verse_id AND x.position = g.position
+            WHERE g.hebrew_base IS NOT x.hebrew_base
+        """).fetchone()[0]
+        n_only_xref = conn.execute("""
+            SELECT count(*) FROM pn_hebrew_xref x
+            WHERE NOT EXISTS (SELECT 1 FROM pn_greek_identity g
+                              WHERE g.verse_id = x.verse_id
+                                AND g.position = x.position)
+        """).fetchone()[0]
+        print(f"fresh-rebuild oracle gate: hebrew_base mismatches "
+              f"{n_oracle} (must be 0), xref rows outside the identity table "
+              f"{n_only_xref} (must be 0)")
+        if n_oracle or n_only_xref:
+            fail("the identity table is NOT a byte-for-byte carrier of the "
+                 "frozen Hebrew record — the stale xref stays; stop and look.")
+        drop_stale = True
+        print("oracle gate clean — the stale xref will be dropped and rebuilt "
+              "at write time (dry-run leaves it in place).")
+    else:
+        drop_stale = False
 
     split = {r["source"]: r["c"] for r in conn.execute(
         "SELECT source, count(*) AS c FROM pn_greek_identity GROUP BY source")}
+    unknown = sorted(set(split) - set(EXPECT))
+    if unknown:
+        fail(f"unknown identity class(es) {unknown} — this script names its "
+             "classes; a new class needs its own typed branch + a reviewed "
+             "re-declaration (the 'surface' door does not open twice).")
     print("identity class split:", {k: split.get(k, 0) for k in EXPECT})
     if {k: split.get(k, 0) for k in EXPECT} != EXPECT:
         fail(f"class split differs from the declared expectation {EXPECT} — "
@@ -100,7 +156,8 @@ def main():
 
     updates, xref = [], []
     n_write = {"tipnr-H": 0, "tipnr-*": 0, "lemma-only": 0, "lemma-already*": 0,
-               "none-H": 0, "none-*": 0}
+               "surface": 0, "surface-already*": 0, "none-H": 0, "none-*": 0}
+    n_class = {k: 0 for k in EXPECT}
     n_nullheb = 0
     for r in rows:
         cls = r["source"]
@@ -134,9 +191,24 @@ def main():
                 else:
                     updates.append(("*", r["wrow"]))
                     n_write["lemma-only"] += 1
-            else:  # 'none': verified above, bytes untouched (C3-Q1)
+            elif cls == "surface":
+                # TYPED branch (2026-08-01 re-declaration): page-attested
+                # printed-Greek headword, no Greek NUMBER — words gets '*'
+                # like lemma-only; the xref class written below is
+                # 'lemma-only' (ship precedent — not a cross-ref class).
+                if was_star:
+                    n_write["surface-already*"] += 1
+                else:
+                    updates.append(("*", r["wrow"]))
+                    n_write["surface"] += 1
+            elif cls == "none":  # verified above, bytes untouched (C3-Q1)
                 n_write["none-*" if was_star else "none-H"] += 1
-        xref.append((r["verse_id"], r["position"], r["hebrew_base"], cls))
+            else:
+                fail(f"row ({r['verse_id']},{r['position']}) carries unhandled "
+                     f"class {cls!r} — no typed branch; stop and re-declare.")
+        n_class[cls] += 1
+        xref.append((r["verse_id"], r["position"], r["hebrew_base"],
+                     "lemma-only" if cls == "surface" else cls))
 
     # PN words OUTSIDE the write set (post-stage-1 drift would show here).
     orphans = conn.execute("""
@@ -145,10 +217,20 @@ def main():
                         WHERE g.verse_id = w.verse_id AND g.position = w.position)
     """).fetchone()[0]
     print(f"verified {len(rows):,} rows against their classes — all consistent.")
+    # Class conservation: declared N = handled N, remainder 0, per class.
+    for k in EXPECT:
+        rem = EXPECT[k] - n_class[k]
+        print(f"  class {k}: declared {EXPECT[k]:,}, handled {n_class[k]:,}, "
+              f"remaining {rem}")
+        if rem != 0:
+            fail(f"class {k}: {rem} row(s) declared but not handled — "
+                 "class conservation broken.")
     print(f"planned rewrites: tipnr {n_write['tipnr-H']:,} H->Greek + "
           f"{n_write['tipnr-*']:,} '*'->Greek (gain), "
           f"lemma-only {n_write['lemma-only']:,} H->'*' "
-          f"({n_write['lemma-already*']:,} already '*', untouched); "
+          f"({n_write['lemma-already*']:,} already '*', untouched), "
+          f"surface {n_write['surface']:,} H->'*' "
+          f"({n_write['surface-already*']:,} already '*', untouched); "
           f"kept: none {n_write['none-H']:,} Hebrew + {n_write['none-*']:,} '*', "
           f"abp-tag {EXPECT['abp-tag']:,} untouched")
     print(f"total rows changing: {len(updates):,}")
@@ -164,6 +246,10 @@ def main():
         conn.close()
         return
 
+    if drop_stale:
+        conn.execute("DROP TABLE pn_hebrew_xref")
+        print("stale pn_hebrew_xref dropped (rebuild copy) — rebuilding it "
+              "from the identity table.")
     conn.execute(DDL)
     conn.executemany("INSERT INTO pn_hebrew_xref VALUES (?,?,?,?)", xref)
     conn.execute("CREATE INDEX idx_pnx_heb ON pn_hebrew_xref(hebrew_base)")
