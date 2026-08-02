@@ -774,63 +774,15 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
   a genuine merge. Whether the carrier holds a name is the discriminator.
 
-- **④ LANE A FILL — SHIPPED + LIVE 2026-08-01 (the ruling-10 rebuild ride swapped the same
-  evening; deploy 5×200, health 0/0, surface 389,412 ≥ floor).** Ride record: ticket §6k
-  (build line 923/411 reproduced by --plan --corrected) + §6l (window superseded by
-  --predict-vs member set-equality, PASSED with the named 15-member tail allowance).
-  Serving deltas landed exact: +9 gainers · 2,190 H→'*' · 1,523 '*'→H · 144 article-slot
-  repairs · 0 entrants; compare_words 6,919 fully attributed (5,582 raw classed + 1,337
-  bracket-renumber cascade, attributed BY CONTAINMENT — pool 9,505 — not member-proof).
-  Rollback = bible_pre_ruling10_20260801.db (NAME REUSED deliberately: the morning's
-  same-named file was a deleted space-duplicate; THIS one is the real pre-swap live) +
-  bible.db.rollback (7/31) — BOTH held until the next nightly lands clean and verified.
-  OWED: JP's live-eyes spot checks (1Sa 15:17 saul→G4549 card · a Philistines-class name
-  reaching Hebrew via the xref · Gen 1/Mat 1 normal · 1Co 1:18 renders right).
-  **UNPARKED by the rebuild (were waiting on it):** the carrier-gap attribution + the
-  pass-disabled replay — both now measurable against the live pass.
-  History below kept for the record: The 8/1 halt (pass wrote English onto numbers not the word's own —
-  witnesses 2Sa 12:9 'Uriah'→G846, Mat 20:22 'Jesus'→G1161; bin P counted departures, not
-  landings) is answered by a POSITIVE PREDICATE, coded + controlled + sized the same day:
-  every moved word must be a rendering ABP itself prints on the target's number —
-  SINGLE-WORD page attributions only, ≥5 distinct verses, ambiguity (both neighbours
-  attested) refused. Full ruling + amendments + measured picture:
-  `docs/tickets/TICKET_509_article_slot_resweep.md` §6j; decision record
-  `docs/audits/PLAN_ruling10_article_slot.txt`; branch-proven controls (incl. ruling 6's
-  first real coverage, red-firsted) `tests/test_article_slot_attestation.py` (10/10; in
-  both CI lists).
-  - **Pinned sizing — RE-PINNED 2026-08-01 at the ride (§6k, corrected layer): writes 923 ·
-    refusals 411 (unattested 388, article 12, star 11) — the build's own line, reproduced
-    to the digit by `--plan --corrected` on PA.** The raw-layer 929/332 stands as the
-    source-side record; the −6 are named G1473 possessive flips (pronoun corrections made
-    the neighbour number stop vouching — conservative), +1 Rom 8:26 empty-moved candidate
-    refused twice. Lane B 1,376 HELD · threshold-only 102 unchanged.
-  - **NEXT (its own rebuild cycle, NOT this session):** rebuild rides AFTER the 7/30
-    reclassification catch-up unblocks step 8b (do not talk past it with --expect-split).
-    ~~Expected live sizing 1,525–1,765~~ **SUPERSEDED at the ride (§6l): the window's bins
-    were bare-layer; live had already repaired most write sites (1Co 1:18 witness). Ruling
-    check = `--predict-vs` member set-equality (PASSED on the 8/1 copy: predicted 2,533,
-    actual 2,520, residue = the declared 15-member tail allowance, all named). Copy sized
-    2,526 (SQL list) / 2,520 (residue) vs baseline 2,670; live-delta = 144 departures,
-    0 entrants.
-  - **Still parked until that rebuild:** the carrier-gap attribution + pass-disabled replay.
-    `bible_test.db` on PA is the HALTED scratch (old pass) — evidence only, never swap.
-  - **Old 1,240 "closed" rows: SUBSUMED, ruled 2026-08-01.** A rebuild re-derives every row
-    from source, so the 929/332 accounting IS their re-audit — no old write can persist into
-    a new build. The ONLY copy of the old writes is bible_test.db itself, where they remain
-    departure-counted only, which is exactly why it never swaps.
-  - Inherit: **LOUD-SKIPPED 0** on the pinned fixed-slot corrections — the pass shifts no
-    positions. Pin still good: lane-A set `dd0f35a5…225ee4bf`, 1,312 rows, slot-keyed.
+- *(④ article-slot lane A + ④b checklist pins + the finish_rebuild acceptance run:
+  ALL CLOSED 2026-08-01 — the ruling-10 rebuild ride shipped + verified the same evening.
+  Full record: TODO_ARCHIVE "2026-08-01/02 — ruling-10 rebuild ride" + ticket §6j–§6l +
+  memory project_article_slot_lane_a. Do not re-derive from here.)*
 
-- **④b REBUILD-CHECKLIST PINS — ALL VERIFIED at the 8/1 ride, CLOSED.** import_tipnr matched
-  **31,392 exact** · fix_split_merges **237/0 exact** · fix_split_flip **re-declared 1**
-  (175/196 stopped being true when the 7/31 build changes stopped minting the class; two
-  independent 8/1 builds agree; pin updated in finish_rebuild.sh) · `audit_split_flip.py = 0`
-  on the finished copy · step 6 audits green (bracket genuine 2 = the known pair,
-  FUNCTION-anchor 0, WRONG-SLOT REPAIRABLE 0, REPAIRABLE-NOUN 0, G2316 0, tier-2 92.20%,
-  tier-1 A1 **177** — logged as the new figure vs the old ≈176) · compare_words attributed in
-  full · the 8b chain ran end-to-end. Also closed the same evening: **the finish_rebuild.sh
-  ACCEPTANCE RUN** (first real run printed the honest `done`; the wrapper's verdict logic is
-  proven live).
+- **UNPARKED by the 8/1 rebuild (were waiting on it; own session when JP raises):** the
+  **carrier-gap attribution** + the **pass-disabled replay** — both only mean something
+  measured against the NOW-LIVE ruling-10 pass. Context: ticket §6j; the leftover defect
+  set of record = `--predict-vs` (2,520 rows, member-derivable any time).
 
 - **⑤ BRACKETED ARTICLE-SLOT ROWS (38) — OPEN RULING, own cycle, own controls.** Sized
   2026-07-31 and deliberately NOT folded into ④. 20 are whole-slot moves where the word
@@ -863,23 +815,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   parent file). Repo grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL
   guards), so the crumbs are historical/ad-hoc; check their file dates, then delete.
 
-- **④ 7/30 RECLASSIFICATION CATCH-UP — DONE 2026-08-01 (code + declaration landed; the data
-  change itself rides the next rebuild).** Full record + JP's pasted live reads:
-  `docs/tickets/RECLASS_catchup_declaration.md`. Landed: retire_hebrew_identity re-declared
-  from live (five classes incl. 'surface', typed branch, sixth-class halt, --fresh-rebuild
-  oracle-gated xref handling) · new `scripts/restore_frozen_pn.py` (hand-fix-zone restore
-  before the retirement, declared 363) · `/rebuild-words` 8b rewritten with the chain order +
-  pre-registered serving deltas (+9 gainers incl. saul ×8 → G4549 + zacharias ×1 → G2197 ·
-  2,190 H→'*' · 1,523 '*'→H [amended at the ride — the 1,575 first declared was a GROUP BY-less
-  read's total; 52 are never-had gentilics]) · locks tests/test_retire_reclass.py (both CI
-  lists). Step 8b is
-  UNBLOCKED — the article-slot (ruling 10) rebuild ride may open.
-
-- **ACCEPTANCE RUN — CLOSED 2026-08-01 (the ruling-10 ride was the first real run).**
-  `finish_rebuild.sh` printed the honest `== finish_rebuild done ==` on real steps, and the
-  p2wl:v2 guard fixture check fired inside import_tipnr with `[OK] still matches the corpus`.
-  Arc closed as designed. Record: AUDIT "GUARD FIXTURE DRIFT CHECK CHAINED INTO THE REBUILD"
-  + `docs/DESIGN_p2_guard_drift_check.md`.
+- *(④ 7/30 reclassification catch-up + the finish_rebuild ACCEPTANCE RUN: CLOSED 2026-08-01 —
+  records in TODO_ARCHIVE "2026-08-01/02 — ruling-10 rebuild ride" +
+  `docs/tickets/RECLASS_catchup_declaration.md`.)*
 
 - **PROSE-ECONOMY DESIGN TICKET (JP's own inquiry, banked — zero-spend, fresh-head design work).**
   The only item on the zero-spend shelf. Not pre-decided, not pre-pitched.

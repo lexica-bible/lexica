@@ -103,7 +103,10 @@ security, rebuild procedure.
 3. **Stray journal fragments** (`-wal`/`-shm`/`-journal` leftovers in bible-db or
    db_backups) are deletable as a class on sight.
 4. **Disk guard in health_check** (`disk_check`): WARN ≥85%, ERR ≥95% with the
-   remedy named in the line. Quota via `DISK_QUOTA_GB` env (default 5).
+   remedy named in the line. Quota via `DISK_QUOTA_GB` env (default 10 — JP
+   upgraded PA storage to 10 GB on 2026-08-01 after the 5 GB cap broke a build
+   snapshot AND the nightly bible.db backup on the same day; the "free space"
+   line a script prints is the shared filer, never the quota).
 5. Applied 2026-07-26: both superseded fallbacks + their backup duplicates +
    strays deleted (~1.2G); post-swap bible.db backup verified same day.
 6. **ARC ROLLBACK COPIES — single-name rule (JP-approved 2026-07-30, after 5

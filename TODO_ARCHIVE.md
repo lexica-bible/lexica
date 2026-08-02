@@ -6,6 +6,46 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-01/02 — RULING-10 REBUILD RIDE: lane A shipped+live, catch-up landed, all pins verified
+
+One day, one ride, four closed arcs. Full technical records: TICKET_509 §6j–§6l ·
+RECLASS_catchup_declaration.md · memory project_article_slot_lane_a /
+project_entity_resolution_rebuild / project_db_backups.
+
+- **7/30 reclassification catch-up (its own gate, ran first):** retire_hebrew_identity
+  re-declared once from JP's live reads (5 classes incl. 'surface' — typed branch,
+  sixth-class halt, --fresh-rebuild oracle-gated xref handling); new restore_frozen_pn.py
+  (frozen-record restore before retirement — real drift = the 6 Cushi slots ONLY; the
+  "357 hand-fix census" figure was mis-ported and died on the full-population dry-run);
+  locks tests/test_retire_reclass.py.
+- **The ride:** build → finish_rebuild (FIRST real acceptance run — honest `done`, p2 guard
+  [OK]) → restore 6 → retire (25,900 rewrites, class conservation 5/5) → identity re-derived
+  byte-stable → binder 15,316 = live exact → gates → swap → surface/translit/norm rebuilds →
+  health 0/0. Serving deltas landed exact: +9 gainers (saul ×8 G4549, zacharias G2197) ·
+  2,190 H→'*' · 1,523 '*'→H · 144 article-slot repairs · 0 entrants.
+- **Every halt was a measurement wrong about a correct build (four in one ride):** the
+  929-write pin (per-carrier basis + raw layer → re-pinned 923/411 via --plan --corrected);
+  the two audit-refusal deltas (bare inputs); the 1,525–1,765 live window (bare-layer bins —
+  SUPERSEDED by --predict-vs member set-equality with a named 15-member tail allowance:
+  idios ×13 + blank-G fills ×2); the 1,575 star→H pre-registration (GROUP BY-less read's
+  total; true 1,523 + 52 never-had gentilics). Two standing traps written into
+  /rebuild-words from these; four instruments now committed (--plan --corrected,
+  --sizing-sql, --live-diff, --predict-vs).
+- **Instrument fixes:** audit_unfindability BEFORE leg re-pointed at findability-in-either-home
+  (rewrite trail in its header; both legs now cover all rows, planted controls on each);
+  audit_two_derivations N2/N3 controls re-pinned to the reclassified classes.
+- **Old 1,240 broken writes:** subsumed by the rebuild's own re-derivation, gone with the
+  scratch. Split-flip pin re-declared 175/196 → 1 (7/31 build change stopped minting).
+  Tier-1 A1 new figure 177 (was ≈176). compare_words 6,919 = 5,582 raw fully classed +
+  1,337 bracket-renumber cascade (attributed by containment, pool 9,505).
+- **Backups/quota sidebar:** the 5 GB quota broke the build snapshot AND the 8/1 nightly in
+  one day; JP upgraded to 10 GB; carriers were deleted a day early (22:21) but the swap
+  ruling's required 21:31 verified backup carried the gap — discipline upstream, not luck.
+  8/2 nightly verified clean; single-rollback rule back in force. health_check hardened:
+  rotation-race vanished files ≠ damage; quota default 10.
+- **JP live-eyes: all four spot checks passed** (saul→G4549 card · Philistines-class ·
+  Gen 1/Mat 1 · 1Co 1:18 repair site).
+
 ## 2026-07-31 — 509 article-slot re-sweep CLOSED · 509 → 2,662 live-confirmed
 
 Receipts: commits `8e148ac5` (detector + close-out), `dae0d214` (live list fix), `5dcf6d93`
