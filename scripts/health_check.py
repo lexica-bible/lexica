@@ -165,6 +165,8 @@ def backup_checks(bdir):
             bc.close()
         except Exception as e:
             qc = f"unreadable: {e}"
+        if qc != "ok" and not p.exists():
+            continue        # rotation race: the copy was deleted mid-sweep, not damaged
         swept += 1
         if qc != "ok":
             damaged += 1
@@ -175,6 +177,11 @@ def backup_checks(bdir):
             with gzip.open(p, "rb") as f:
                 while f.read(1 << 20):
                     pass
+        except FileNotFoundError:
+            # Rotation race, not damage: the backup job deleted this copy
+            # between our directory listing and the read (fired 2026-08-02 —
+            # four freshly-rotated esv copies read as DAMAGED). Skip quietly.
+            swept -= 1
         except Exception as e:
             damaged += 1
             results.append(("WARN", f"backup DAMAGED (gz): {p.name}", 1, str(e)[:60]))
@@ -191,7 +198,9 @@ def disk_check(quota_gb=None):
     import subprocess
     home = os.path.expanduser("~")
     try:
-        quota_gb = float(quota_gb or os.environ.get("DISK_QUOTA_GB", 5))
+        # Default = the account's real quota (JP upgraded PA storage to 10 GB
+        # 2026-08-01 after the 5 GB cap broke a build and a nightly backup).
+        quota_gb = float(quota_gb or os.environ.get("DISK_QUOTA_GB", 10))
         used = int(subprocess.check_output(
             ["du", "-sb", home], stderr=subprocess.DEVNULL).split()[0])
         pct = used / (quota_gb * 1024**3) * 100
