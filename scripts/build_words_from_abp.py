@@ -834,6 +834,77 @@ ARTICLE_STAYS = ARTICLE_OWN_ENGLISH | ARTICLE_SUBSTANTIVAL
 
 _SLOT_NORM = re.compile(r"[^\w]")
 
+# ── Lane ② (PN-star merged-verb): the pinned name roster + ONE splitter ────────
+#
+# Owned by the BUILD; scripts/audit_pn_star_verb_merge.py imports these rather
+# than carrying copies (ruling-4 discipline). Predicate record:
+# docs/tickets/TICKET_pn_star_fix.md (reviewer-ruled 2026-08-02).
+
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))   # repo root
+    from entity_resolution import norm_name as _norm_name, parse_tipnr as _parse_tipnr
+except ImportError:                       # audit-only environments
+    _norm_name = _parse_tipnr = None
+
+_TIPNR_TXT = Path(__file__).parent.parent / "tipnr" / "TIPNR.txt"
+
+
+def load_name_roster():
+    """Name tokens from the PINNED vendored TIPNR (no database needed).
+
+    MEASURED HAZARD (census 2026-08-02): TIPNR spelling PARTS include common
+    English words — 'the', 'new', 'mount', 'queen' — so roster membership alone
+    NEVER classifies a word as a name; pn_star_split adds the capitalization
+    and stays-word legs.
+    """
+    if _parse_tipnr is None:
+        raise RuntimeError("entity_resolution unavailable — no roster")
+    import io
+    with io.open(_TIPNR_TXT, encoding="utf-8", errors="replace") as f:
+        ents = _parse_tipnr(f.read().splitlines())
+    names = set()
+    for e in ents:
+        for sp in (e.get("spellings") or [e.get("head")]):
+            if not sp:
+                continue
+            for part in re.split(r"[-\s]+", sp):
+                n = _norm_name(part)
+                if len(n) > 2:
+                    names.add(n)
+    return names
+
+
+def _cap_printed(word):
+    """First alphabetic character is printed uppercase."""
+    for ch in word:
+        if ch.isalpha():
+            return ch.isupper()
+    return False
+
+
+def pn_star_split(eng, names):
+    """(name_idx, other_idx) over eng.split() — which words are the NAME's own.
+
+    A word counts as a name ONLY when all three legs hold:
+      (a) its normalized form is in the pinned TIPNR roster,
+      (b) it is printed capitalized (ABP prints proper nouns capitalized;
+          a lowercase roster collision like 'the' never classifies), and
+      (c) it is not an ARTICLE_STAYS word — sentence-initial 'The'/'Of' pass
+          leg (b) and 'the' sits in the roster, so caps alone cannot carry it
+          (amendment recorded in TICKET_pn_star_fix.md).
+    Exposed (no underscore): the audit sizes on the real split — one splitter,
+    never two.
+    """
+    name_idx, other_idx = [], []
+    for gi, word in enumerate((eng or "").split()):
+        bare = _SLOT_NORM.sub("", word)
+        is_name = (bool(bare) and _norm_name is not None
+                   and bare.lower() not in ARTICLE_STAYS
+                   and _cap_printed(word)
+                   and _norm_name(bare) in names)
+        (name_idx if is_name else other_idx).append(gi)
+    return name_idx, other_idx
+
 
 def build_attestation_map(sources=None, min_verses=5):
     """RULING 10 (TICKET_509 §6j, 2026-08-01): base -> words ABP itself prints on it.
@@ -1147,6 +1218,188 @@ def _redistribute_article_slot(rows: list, ren=None, refusals=None) -> None:
                    keep_gpos, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
         rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
                    move_gpos, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
+
+
+def _redistribute_pn_star_merge(rows: list, ren=None, names=None,
+                                refusals=None) -> None:
+    """Lane ② — the PN-star merged-verb class, BOTH orientations (predicate
+    reviewer-ruled 2026-08-02, docs/tickets/TICKET_pn_star_fix.md; detector
+    scripts/audit_pn_star_verb_merge.py, 4,996 source-side rows).
+
+    ABP glues a proper-noun star chunk and an adjacent content word's English
+    into one cell; _split_compounds skips star slots, so the build never
+    redistributed it:
+
+      Class A — the STAR carries the merged English, a numbered neighbour is
+        blank: Mat 27:26 "scourging Jesus,G* G5417". Split: roster-name words
+        stay on the star; the moved run goes to the blank neighbour, gated by
+        RULING-10 ATTESTATION (every moved word page-attested for that number,
+        >=5 distinct verses) — same gate, same map as the article pass.
+      Class B — the NUMBER carries it, the star sits empty: Mat 26:1
+        "Jesus finishedG5055 G3588 G*". A star has no number to attest against,
+        so the evidence runs NEGATIVE: every moved word must be (a) a pinned-
+        roster name, (b) printed capitalized, (c) NOT an ARTICLE_STAYS word
+        (all three via pn_star_split), and (d) NOT page-attested for the
+        CARRIER's number — a word ABP itself prints on that number elsewhere
+        ("of DavidG1138") is no evidence of a merge. Leg (d) is what keeps
+        roster collisions ('the', 'new', 'mount', 'queen') off name chips.
+        KEPT words stay unexamined by ruling (2026-08-02): they make no new
+        claim — they stay on the slot they already occupied.
+
+    Adjacency is NOT the discriminator (Gen 23:19 "Abraham entombedG2290 G*
+    SarahG*" is adjacent AND genuine — the reverted-guard lesson); whether the
+    carrier holds a name is, and the gates above are what "holds a name" means.
+
+    Straddles refuse (_slot_order — two slots cannot hold three positions).
+    Writes use the pronoun-pass mechanism verbatim: a NEW 2-slot bracket,
+    greek_pos by source (English) order. In class B every slot between carrier
+    and star is blank by construction (the carrier walk crosses only blank
+    slots), so the pair renders clean even when non-adjacent.
+
+    ren=None or names=None leaves the pass INERT — with no attestation map
+    class B's negative gate (d) cannot be checked, so the safe failure is zero
+    writes, never unvetted ones. Every decision is typed into `refusals` as
+    (class, carrier_pos, neighbour_pos, neighbour_base, reason, moved_norms):
+    WRITTEN / no-name / all-names / straddle / bracketed / star / star-carrier
+    / unattested / ambiguous / carrier-attested-name. 'no-name' rows are the
+    B2/gentilic residue — lane ③'s eyeball list, reported never dropped.
+
+    Runs AFTER _redistribute_article_slot (both write only into still-blank
+    slots; order pins which pass wins a shared candidate) and BEFORE
+    _split_compounds (must see the original bundled gloss). Touches
+    english/english_head/greek_pos/bracket_id ONLY — never
+    strongs/strongs_base/is_pn; the star keeps its '*' for import_tipnr.
+
+    Row tuple (13 elts): 0:pos 1:eng 2:head 3:strongs 4:sbase 5:gpos 6:bid
+                         7:italic 8:iw 9:sw 10:abp_pos 11:morph 12:lemma
+    """
+    if ren is None or names is None:
+        return
+    existing = [r[6] for r in rows if r[6] is not None]
+    next_bid = (max(existing) + 1) if existing else 1
+
+    def log(cls, c_pos, n_pos, n_base, reason, moved=()):
+        if refusals is not None:
+            refusals.append((cls, c_pos, n_pos, n_base, reason, tuple(moved)))
+
+    def norms(words, idxs):
+        return [w for w in (_SLOT_NORM.sub("", words[k]).lower() for k in idxs)
+                if w]
+
+    def write_pair(keep_i, move_j, keep_idx, move_idx, words):
+        nonlocal next_bid
+        keep_gpos, move_gpos = _slot_order(keep_idx, move_idx)
+        keep_eng = " ".join(words[k] for k in keep_idx)
+        move_eng = " ".join(words[k] for k in move_idx)
+        bid = next_bid
+        next_bid += 1
+        ri, rj = rows[keep_i], rows[move_j]
+        rows[keep_i] = (ri[0], keep_eng, _head_word(keep_eng), ri[3], ri[4],
+                        keep_gpos, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
+        rows[move_j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
+                        move_gpos, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
+
+    for i in range(len(rows)):
+        r = rows[i]
+        if r[4] != "*":
+            continue
+        eng = (r[1] or "").strip()
+
+        if eng:
+            # ── class A: the star carries the merged English ──
+            if " " not in eng:
+                continue
+            if r[6] is not None:
+                log("A", r[0], None, "", "bracketed")
+                continue
+            words = eng.split()
+            name_idx, other_idx = pn_star_split(eng, names)
+            moved_norms = norms(words, other_idx)
+            if not name_idx:
+                log("A", r[0], None, "", "no-name", moved_norms)
+                continue
+            if not other_idx:
+                log("A", r[0], None, "", "all-names")
+                continue
+            if _slot_order(name_idx, other_idx) is None:
+                log("A", r[0], None, "", "straddle", moved_norms)
+                continue
+            vetted = []
+            for cand in (i - 1, i + 1):
+                if not (0 <= cand < len(rows)):
+                    continue
+                n = rows[cand]
+                if (n[1] or "").strip():
+                    continue                    # filled -> not a candidate
+                sb = n[4]
+                if not sb or sb in ("*", ""):
+                    log("A", r[0], n[0], sb, "star", moved_norms)
+                    continue
+                if n[6] is not None:
+                    log("A", r[0], n[0], sb, "bracketed", moved_norms)
+                    continue
+                attested = ren.get(sb, frozenset())
+                if not moved_norms or any(w not in attested for w in moved_norms):
+                    log("A", r[0], n[0], sb, "unattested", moved_norms)
+                    continue
+                vetted.append(cand)
+            if not vetted:
+                continue
+            if len(vetted) > 1:
+                for cand in vetted:
+                    log("A", r[0], rows[cand][0], rows[cand][4], "ambiguous",
+                        moved_norms)
+                continue
+            j = vetted[0]
+            log("A", r[0], rows[j][0], rows[j][4], "WRITTEN", moved_norms)
+            write_pair(i, j, name_idx, other_idx, words)
+            continue
+
+        # ── class B: the star is empty; the nearest English is the carrier ──
+        if r[6] is not None:
+            continue            # bracketed star (1Sa 25:42 shape) — ⑤/artifact land
+        left = i - 1
+        while left >= 0 and not (rows[left][1] or "").strip():
+            left -= 1
+        right = i + 1
+        while right < len(rows) and not (rows[right][1] or "").strip():
+            right += 1
+        c = None
+        if left >= 0 and " " in (rows[left][1] or "").strip():
+            c = left
+        elif right < len(rows) and " " in (rows[right][1] or "").strip():
+            c = right
+        if c is None:
+            continue                            # no multi-word carrier: not the class
+        carrier = rows[c]
+        ceng = (carrier[1] or "").strip()
+        csb = carrier[4]
+        if not csb or csb in ("*", ""):
+            log("B", carrier[0], r[0], csb, "star-carrier")
+            continue                            # chained stars: class A owns the English
+        if carrier[6] is not None:
+            log("B", carrier[0], r[0], csb, "bracketed")
+            continue
+        words = ceng.split()
+        name_idx, other_idx = pn_star_split(ceng, names)
+        moved_norms = norms(words, name_idx)
+        if not name_idx:
+            log("B", carrier[0], r[0], csb, "no-name")       # B2 residue, lane ③
+            continue
+        if not other_idx:
+            log("B", carrier[0], r[0], csb, "all-names", moved_norms)
+            continue
+        if _slot_order(other_idx, name_idx) is None:
+            log("B", carrier[0], r[0], csb, "straddle", moved_norms)
+            continue
+        attested = ren.get(csb, frozenset())
+        if any(w in attested for w in moved_norms):
+            # the page itself prints this word on the carrier's number — the
+            # legitimate-genitive / roster-collision refusal (gate (d))
+            log("B", carrier[0], r[0], csb, "carrier-attested-name", moved_norms)
+            continue
+        log("B", carrier[0], r[0], csb, "WRITTEN", moved_norms)
+        write_pair(c, i, other_idx, name_idx, words)
 
 
 # ── Folded post-build repairs (the former fix_*.py chain) ──────────────────────
@@ -1598,7 +1851,8 @@ def _star_name_heads(rows: list) -> None:
 
 
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
-                      ren: dict = None, article_refusals: list = None) -> list:
+                      ren: dict = None, article_refusals: list = None,
+                      names: set = None, pn_star_refusals: list = None) -> list:
     """
     Combine ABP word list with BH metadata.
     Bracket groups and reading order within brackets come from ABP position
@@ -1707,6 +1961,11 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
     # ren = build_attestation_map()'s ruling-10 map; None leaves the pass INERT
     # (zero writes) — the safe failure is inertness, never an unvetted write.
     _redistribute_article_slot(rows, ren, article_refusals)   # lane A hand-back
+    # Lane ② (PN-star merged-verb, both orientations). AFTER the article pass —
+    # both write only into still-blank slots, so run order pins which pass wins
+    # a shared candidate — and BEFORE _split_compounds (original bundled gloss).
+    # ren+names both required; either missing leaves the pass INERT (zero writes).
+    _redistribute_pn_star_merge(rows, ren, names, pn_star_refusals)
     if lex:
         _split_compounds(rows, lex)
         _fix_backwards_pairing(rows, lex)
@@ -1826,6 +2085,12 @@ def run(bible_db: str, scrape_db: str) -> None:
     article_refusals: list = []
     article_writes = 0
 
+    print("Loading pinned TIPNR name roster (PN-star pass, lane ②) …")
+    names = load_name_roster()
+    print(f"  roster tokens: {len(names):,}\n")
+    pn_star_refusals: list = []
+    pn_star_writes = collections.Counter()      # per class, per DECISION
+
     rahlfs = None
     if RahlfsLXX and RAHLFS_DIR.is_dir():
         print("Loading Rahlfs-1935 for pronoun correction …")
@@ -1870,13 +2135,20 @@ def run(bible_db: str, scrape_db: str) -> None:
                 abp_words, corrs, flag_log, f"{abbrev} {chapter}:{verse}")
 
         verse_log: list = []
+        star_log: list = []
         word_rows = build_verse_words(abp_words, bh_rows, lex,
-                                      ren=ren, article_refusals=verse_log)
+                                      ren=ren, article_refusals=verse_log,
+                                      names=names, pn_star_refusals=star_log)
         for entry in verse_log:
             if entry[3] == "WRITTEN":
                 article_writes += 1
             else:
                 article_refusals.append((abbrev, chapter, verse) + entry)
+        for entry in star_log:
+            if entry[4] == "WRITTEN":
+                pn_star_writes[entry[0]] += 1
+            else:
+                pn_star_refusals.append((abbrev, chapter, verse) + entry)
 
         main.executemany(
             "INSERT INTO words"
@@ -1939,6 +2211,13 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"  Article-slot pass (ruling 10): {article_writes:,} written, "
           f"{len(article_refusals):,} refusals "
           f"({', '.join('%s %d' % (k, n) for k, n in reasons.most_common())})")
+    star_reasons = collections.Counter(
+        "%s/%s" % (e[3], e[7]) for e in pn_star_refusals)
+    print(f"  PN-star pass (lane 2): "
+          f"A {pn_star_writes['A']:,} + B {pn_star_writes['B']:,} written "
+          f"(per DECISION — the sizing plan also prints per SLOT), "
+          f"{len(pn_star_refusals):,} refusals "
+          f"({', '.join('%s %d' % (k, n) for k, n in star_reasons.most_common())})")
     print(f"\n  Built into: {target}   (live {bible_db} untouched)")
     print(f"\n  NEXT — run the dependent builders against the COPY, then swap it in.")
     print(f"  This rebuild CLEARED is_pn / proper-noun Strong's, so import_tipnr is required:")
@@ -1979,6 +2258,7 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
     print("Building ruling-10 attestation map (article-slot pass) …")
     test_ren = build_attestation_map()
     print(f"  attested numbers: {len(test_ren):,}\n")
+    test_names = load_name_roster()
 
     slug   = ABBREV_TO_SLUG.get(book_abbrev, book_abbrev.lower())
     verses = {}
@@ -2007,7 +2287,8 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
                                   [w[0] for w in abp_words])
             abp_words = apply_pronoun_corrections(
                 abp_words, corrs, flag_log, f"{book_abbrev} {chapter}:{vs}")
-        word_rows = build_verse_words(abp_words, bh_rows, lex, ren=test_ren)
+        word_rows = build_verse_words(abp_words, bh_rows, lex, ren=test_ren,
+                                      names=test_names)
 
         print(f"{book_abbrev} {chapter}:{vs}")
         for (p, eng, head, sn, sb, gpos, bid, italic, iw, sw, morph, lemma) in word_rows:

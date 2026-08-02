@@ -1,7 +1,54 @@
 # TICKET — lane ②: PN-star merged-verb FIX predicate (proposed, pre-code)
 
-Opened 2026-08-02. Status: **PREDICATE PROPOSED — awaiting reviewer ruling; NO code, NO
-data writes.** Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
+Opened 2026-08-02. Status: **RULED + PASS CODED (2026-08-02) — no data writes; the
+rebuild is its own later ride.** Reviewer ruling, same day: predicate approved both
+parts; decision point concurred (kept-word attestation NOT required — a kept word makes
+no new claim; refusal/kept lists stay itemized for after-the-fact sampling); one added
+control requirement — the legitimate-genitive negative, named below.
+
+## WHAT LANDED (2026-08-02, this commit)
+
+- `_redistribute_pn_star_merge` in `build_words_from_abp.py` — the pass exactly as
+  ruled; runs after the article pass, before `_split_compounds`; inert without both the
+  attestation map and the roster; every decision typed. Build prints its line per
+  DECISION and notes the sizing plan owes per-SLOT too.
+- `load_name_roster` + `pn_star_split` moved INTO the build; the detector imports them
+  (ruling 4 — one roster, one splitter, no drift).
+- **Splitter amendment (recorded as a change):** a word in `ARTICLE_STAYS` never
+  classifies as a name even when capitalized — sentence-initial 'The' passes the caps
+  leg and 'the' sits in the roster, so caps+roster alone could move 'The' onto a star.
+- **THE NAMED GENITIVE CONTROL** (reviewer requirement):
+  `test_class_b_legitimate_genitive_refuses` — the real Mat 26:1 line with 'jesus'
+  hand-attested on the carrier's number must refuse, typed 'carrier-attested-name',
+  branch-run. No corpus B row has a name riding its own number beside an empty star
+  (grep over the full B list, 2026-08-02), so the branch is proven on a hand map.
+- **PINNED FINDING:** on the REAL harvest no name is attested under its own number
+  ('jesus'/G2424, 'david'/G1138, 'israel'/G2474 all absent — ABP prints proper nouns on
+  G* stars, so the single-token harvest never sees them). Gate (d) is therefore
+  PROTECTIVE on today's corpus: it fires on roster-collision words, not on real names.
+  Pinned by `test_real_map_names_not_attested_finding` so a harvest change surfaces as
+  an environment change, not a silent behavior shift.
+- Controls: `tests/test_pn_star_merge_fix.py`, 12/12, added to BOTH CI lists. Verbatim
+  fixtures: Mat 27:26 (A write + red), Mat 26:1 (B write + no-roster red + genitive
+  red), Gen 23:19 (adjacent genuine merge writes — the reverted adjacency guard stays
+  dead), Act 5:3 (straddle), Act 7:28 ('the' never moves). Old parser-level pin
+  unchanged (the SOURCE stays merged forever; the split is downstream).
+- Detector `--list` crash fixed (the B2 print used the wrong fields — the eyeball list
+  for lane ③ was never printable). Detector re-run after the roster move: 4,996
+  unchanged, all three controls fired.
+
+## STILL OWED before the rebuild ride (in order)
+
+1. **Sizing instrument:** the audit grows `--plan` (run the REAL pass per verse, both
+   counting bases, every refusal itemized) and `--plan --corrected` (the
+   `audit_article_slot_carrier.py` mirror — Rahlfs/TAGNT + lexicon + BH), run on PA.
+2. **Pre-registered member-level expected picture** pinned from the corrected plan,
+   derivation command committed with the figures; swap condition = member set-equality
+   with a NAMED tail allowance derived fresh for this lane.
+3. Lane ③ (B2 91-row eyeball) — the detector's B2 list, per-row, reported never
+   dropped.
+
+## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
 `scripts/audit_pn_star_verb_merge.py` (4,996: A 2,237 · B 2,759 = B1 2,668 + B2 91;
 re-run 2026-08-02 on this tree, all three controls fired, counts unchanged).
 Precedent inherited whole: ruling 10 (`TICKET_509_article_slot_resweep.md` §6j–§6l) —

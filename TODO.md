@@ -730,7 +730,12 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **② PN-STAR MERGED-VERB FIX SESSION — GATE MET 2026-07-31, ready to open.** (① the
+- **② PN-STAR MERGED-VERB FIX SESSION — OPENED 2026-08-02; PREDICATE RULED + PASS
+  CODED, controls 12/12 (docs/tickets/TICKET_pn_star_fix.md is the record — predicate,
+  ruling, named genitive control, pinned no-name-attestation finding). STILL OWED
+  before the rebuild ride: the sizing `--plan`/`--plan --corrected` instrument, the
+  PA-derived member-level pre-registration, and lane ③'s B2 eyeball (detector `--list`
+  crash fixed — the eyeball list prints now).** (① the
   509 article-slot re-sweep is CLOSED — archive 2026-07-31; both lists are final.)
   Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
   star chunk, and `_split_compounds` skips star slots — so the built words table puts the

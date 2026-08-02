@@ -9,8 +9,12 @@ in the issue report; data fix deferred to a cert-style session).
 
 This test pins two things at the PARSER level:
   1. The verb's Strong's number is never lost — its slot must exist.
-  2. The current merged state: the star slot's English still carries the verb.
-     When the data fix lands, flip assertion (2) to expect the split.
+  2. The SOURCE's merged state: the star chunk's English carries the verb.
+     This stays true forever — the source is what it is. The FIX (lane ②,
+     2026-08-02) is a build pass (_redistribute_pn_star_merge) that splits the
+     pair downstream of this parse; its red-first controls live in
+     tests/test_pn_star_merge_fix.py. If THIS test fails, the parser or the
+     source changed — that is upstream of the fix and needs its own look.
 """
 import io
 import os

@@ -73,27 +73,16 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, ROOT)
 
 from build_words_from_abp import (  # noqa: E402
-    _STRONGS_RE, _VERSE_RE, _emit_words, iter_source_tokens,
+    _STRONGS_RE, _VERSE_RE, _emit_words, iter_source_tokens, load_name_roster,
 )
-from entity_resolution import norm_name, parse_tipnr  # noqa: E402
-
-TIPNR_TXT = os.path.join(ROOT, "tipnr", "TIPNR.txt")
+from entity_resolution import norm_name  # noqa: E402
 
 
 def name_roster():
-    """Name tokens from the PINNED vendored TIPNR (no database needed)."""
-    with io.open(TIPNR_TXT, encoding="utf-8", errors="replace") as f:
-        ents = parse_tipnr(f.read().splitlines())
-    names = set()
-    for e in ents:
-        for sp in (e.get("spellings") or [e.get("head")]):
-            if not sp:
-                continue
-            for part in re.split(r"[-\s]+", sp):
-                n = norm_name(part)
-                if len(n) > 2:
-                    names.add(n)
-    return names
+    """The pinned TIPNR roster — owned by the BUILD since the lane-② fix landed
+    (load_name_roster in build_words_from_abp); imported, never copied, so the
+    detector's B1/B2 split and the fix pass can't drift apart (ruling 4)."""
+    return load_name_roster()
 
 
 def holds_a_name(eng, names):
@@ -286,7 +275,7 @@ def main():
         print("\n--- B2 residue (mixed: real merges the roster missed + "
               "placeholder artifacts) ---")
         for h in b2:
-            print("(%r, %r, %d, %d, %r, %r)" % (h[2], h[3], h[4], h[5], h[5], h[6]))
+            print("(%r, %d, %d, %r, %r)" % (h[2], h[3], h[4], h[5], h[6]))
 
     if args.list or args.cls:
         print()
