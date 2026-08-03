@@ -60,6 +60,10 @@ dotted-number audit rule.
   python3 scripts/audit_pn_star_verb_merge.py            # full sweep
   python3 scripts/audit_pn_star_verb_merge.py --controls # controls only
   python3 scripts/audit_pn_star_verb_merge.py --class B  # one orientation
+  python3 scripts/audit_pn_star_verb_merge.py --plan     # FIX-PASS sizing (raw layer)
+  python3 scripts/audit_pn_star_verb_merge.py --plan --corrected   # PA only: the
+      build's real layer (Rahlfs/TAGNT corrections + lexicon + BH) — the mode the
+      pre-registered expected picture derives from (the 8/1 four-casualty trap)
 """
 import argparse
 import io
@@ -196,6 +200,211 @@ def sweep(dirs=None):
     return hits
 
 
+def iter_raw_lines(dirs=None):
+    """(filename, abbrev, chapter, verse, raw_text) per ABP source line."""
+    for d in (dirs or ABP_DIRS):
+        for fn in sorted(os.listdir(d)):
+            if not fn.endswith(".txt"):
+                continue
+            with io.open(os.path.join(d, fn), encoding="utf-8",
+                         errors="replace") as f:
+                for line in f:
+                    m = _VERSE_RE.match(line.strip())
+                    if m:
+                        yield (fn, m.group(1), int(m.group(2)),
+                               int(m.group(3)), m.group(4))
+
+
+# Plan-mode controls: the three known rows must REACH the pass and log the
+# right class (any typed reason — whether they write is the real map's call,
+# asserted by the unit tests on hand maps, not hardcoded here).
+_PLAN_CONTROLS = {("Mat", 26, 1): "B", ("Mat", 27, 26): "A", ("Mat", 27, 47): "A"}
+
+
+def print_plan(dirs=None, corrected=False):
+    """LANE-② SIZING — the fix pass's full decision record on the real
+    attestation map + roster (TICKET_pn_star_fix.md "still owed" item 1).
+    Runs _redistribute_pn_star_merge itself via build_verse_words — the audit
+    reports on the REAL pass, never a model of it.
+
+    TWO COUNTING BASES, both printed (the 8/1 build-line lesson): per DECISION
+    (the build's own Results-line basis — every logged entry counts) and per
+    SLOT (one line per star/carrier slot, refusal reasons joined).
+
+    Verses with no 'G*' in the raw text are skipped in BOTH modes — stars come
+    only from the source; the pronoun corrections retag G1473 numbers and can
+    change a carrier's number or a gate result, but never mint or remove a
+    star slot.
+
+    corrected=True (PA ONLY): mirrors run()'s flow line for line —
+    Rahlfs/TAGNT pronoun corrections + lexicon + BH rows — so every figure
+    derives THROUGH the correction layer. HALTs if any input is missing
+    rather than silently measuring the raw layer again. The pre-registered
+    expected picture pins from THIS mode's output, member-level.
+    """
+    from build_words_from_abp import (build_attestation_map, build_verse_words,
+                                      load_name_roster, parse_abp_line)
+    rahlfs = tagnt = None
+    corr_lex = None
+    bh_index = {}
+    slug_of = {}
+    if corrected:
+        import sqlite3
+        from build_words_from_abp import (RahlfsLXX, TAGNTSource, correct_verse,
+                                          apply_pronoun_corrections,
+                                          RAHLFS_DIR, TAGNT_FILES,
+                                          load_lexicon, load_bh_verse_index,
+                                          ABBREV_TO_SLUG)
+        if RahlfsLXX and RAHLFS_DIR.is_dir():
+            rahlfs = RahlfsLXX(RAHLFS_DIR)
+        if TAGNTSource and all(p.is_file() for p in TAGNT_FILES):
+            tagnt = TAGNTSource([str(p) for p in TAGNT_FILES])
+        if not (rahlfs and tagnt):
+            print("HALT: --corrected needs the Rahlfs + TAGNT files (PA only). "
+                  "Without both, this mode would silently measure the "
+                  "uncorrected layer again.")
+            return 1
+        db_path = os.path.expanduser("~/bible-db/bible.db")
+        bh_path = os.path.expanduser("~/bible-db/bh_scrape.db")
+        for p in (db_path, bh_path):
+            if not os.path.exists(p):
+                print("HALT: --corrected needs %s (read-only) to mirror the "
+                      "build's inputs." % p)
+                return 1
+        _c = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
+        corr_lex = load_lexicon(_c)
+        _c.close()
+        _s = sqlite3.connect("file:%s?mode=ro" % bh_path, uri=True)
+        bh_index = load_bh_verse_index(_s)
+        _s.close()
+        slug_of = ABBREV_TO_SLUG
+        print("corrected mode: Rahlfs + TAGNT + lexicon (%d) + BH index (%d) "
+              "loaded — same layer, same inputs as the real build.\n"
+              % (len(corr_lex), len(bh_index)))
+    import collections
+    ren = build_attestation_map(dirs and None)
+    ren1 = build_attestation_map(dirs and None, min_verses=1)
+    names = load_name_roster()
+    print("  attestation map: %d numbers · roster: %d tokens\n"
+          % (len(ren), len(names)))
+
+    entry_writes = collections.Counter()          # per class, per DECISION
+    entry_refusals = collections.Counter()        # (class, reason)
+    slot_outcomes = collections.Counter()         # per SLOT
+    target_bases = collections.Counter()          # class-A write targets
+    writes, refused, thresh_only, lex_backed = [], [], [], []
+    control_seen = {}
+    _flag_log = []
+
+    for _fn, bk, ch, vs, raw in iter_raw_lines(dirs):
+        if "G*" not in raw:
+            continue
+        line = "(%s %d:%d)  %s" % (bk, ch, vs, raw)
+        parsed = parse_abp_line(line)
+        if not parsed:
+            continue
+        abp_words = parsed[3]
+        bh_rows = []
+        lex = None
+        if corrected:
+            src = bnum = None
+            if rahlfs.booknum(bk):
+                src, bnum = rahlfs, rahlfs.booknum(bk)
+            elif tagnt.booknum(bk):
+                src, bnum = tagnt, tagnt.booknum(bk)
+            if src:
+                corrs = correct_verse([w[1] for w in abp_words],
+                                      src.verse(bnum, ch, vs),
+                                      [w[0] for w in abp_words])
+                abp_words = apply_pronoun_corrections(
+                    abp_words, corrs, _flag_log, f"{bk} {ch}:{vs}")
+            slug = slug_of.get(bk)
+            bh_rows = bh_index.get((slug, ch, vs), []) if slug else []
+            lex = corr_lex
+        log = []
+        build_verse_words(list(abp_words), bh_rows, lex, ren=ren,
+                          names=names, pn_star_refusals=log)
+        if (bk, ch, vs) in _PLAN_CONTROLS and log:
+            control_seen.setdefault((bk, ch, vs), set()).update(
+                e[0] for e in log)
+        for cls, cpos, npos, nbase, reason, moved in log:
+            if reason == "WRITTEN":
+                entry_writes[cls] += 1
+                writes.append((cls, bk, ch, vs, cpos, nbase or "*",
+                               " ".join(moved)))
+                if cls == "A":
+                    target_bases[nbase] += 1
+            else:
+                entry_refusals[(cls, reason)] += 1
+                refused.append((cls, bk, ch, vs, cpos, reason, nbase or "*",
+                                " ".join(moved)))
+                if cls == "A" and reason == "unattested" and moved and \
+                        all(w in ren1.get(nbase, ()) for w in moved):
+                    thresh_only.append((bk, ch, vs, cpos, nbase,
+                                        " ".join(moved)))
+                if lex is not None and cls == "A" and reason == "unattested" \
+                        and moved and \
+                        all(w in lex.get(nbase, set()) for w in moved):
+                    lex_backed.append((bk, ch, vs, cpos, nbase,
+                                       " ".join(moved)))
+        per = {}
+        for cls, cpos, npos, nbase, reason, moved in log:
+            per.setdefault((cls, cpos), set()).add(reason)
+        for (cls, _cpos), reasons in per.items():
+            slot_outcomes[(cls, "WRITTEN" if "WRITTEN" in reasons
+                           else "+".join(sorted(reasons)))] += 1
+
+    ok = True
+    print("PLAN CONTROLS (each known row must reach the pass, right class):")
+    for (bk, ch, vs), want in sorted(_PLAN_CONTROLS.items()):
+        got = control_seen.get((bk, ch, vs), set())
+        mark = "FIRED " if want in got else "SILENT"
+        print("  %-3s %2d:%-3d want class %s  %s" % (bk, ch, vs, want, mark))
+        if want not in got:
+            ok = False
+    if not ok:
+        print("\nHALT: a plan control went silent — the pass or the peel "
+              "changed. Do not trust any figure from this run.")
+        return 1
+
+    print("\nLANE-② PLAN — the fix pass's decision record%s"
+          % (" (CORRECTED layer)" if corrected else " (RAW layer — sizing "
+             "only; the pinned picture derives from --corrected on PA)"))
+    print("\n  PER-DECISION tally (the build's Results-line basis):")
+    print("    written   A %d · B %d" % (entry_writes["A"], entry_writes["B"]))
+    print("    refusals  %d:" % sum(entry_refusals.values()))
+    for (cls, reason), n in entry_refusals.most_common():
+        print("      %6d  %s/%s" % (n, cls, reason))
+    print("\n  PER-SLOT view (one line per star/carrier slot):")
+    for (cls, outcome), n in slot_outcomes.most_common():
+        print("    %6d  %s/%s" % (n, cls, outcome))
+    print("\n  CLASS-A WRITE TARGETS (base -> writes):")
+    for base, n in target_bases.most_common(15):
+        print("    %6d  G%s" % (n, base))
+    print("\n  THRESHOLD-ONLY class-A refusals (attested at 1 verse, below the")
+    print("  >=5 floor — the threshold's revisit list): %d" % len(thresh_only))
+    for row in thresh_only:
+        print("    %-4s %3d:%-3d slot %-3d  -> G%-6s  %r" % row)
+    print("\n  LEXICON-BACKED class-A 'unattested' rows (every moved word in the")
+    print("  target's lexicon definition — the OTHER legal evidence source; the")
+    print("  banked rare-number question's sizing, TICKET_pn_star_fix.md):")
+    if lex is None:
+        print("    n/a — lexicon is PA-only; run --plan --corrected there")
+    else:
+        print("    %d rows:" % len(lex_backed))
+        for row in lex_backed:
+            print("    %-4s %3d:%-3d slot %-3d  -> G%-6s  %r" % row)
+    print("\n  REFUSALS (every decision the pass vetoed): %d" % len(refused))
+    for row in refused:
+        print("    %s %-4s %3d:%-3d slot %-3d  %-22s G%-6s  %r" % row)
+    print("\n  WRITES (the full decision record): %d" % len(writes))
+    for row in writes:
+        print("    %s %-4s %3d:%-3d slot %-3d  G%-6s  %r" % row)
+    print("\n  TOTAL WRITES: %d (A %d + B %d)"
+          % (len(writes), entry_writes["A"], entry_writes["B"]))
+    return 0
+
+
 # ── controls ──────────────────────────────────────────────────────────────────
 
 CONTROLS = [
@@ -233,7 +442,16 @@ def main():
     ap.add_argument("--class", dest="cls", choices=["A", "B"],
                     help="report one orientation only")
     ap.add_argument("--list", action="store_true", help="print every hit row")
+    ap.add_argument("--plan", action="store_true",
+                    help="run the FIX PASS itself and print its full decision "
+                         "record (both counting bases, every write/refusal)")
+    ap.add_argument("--corrected", action="store_true",
+                    help="with --plan: measure on the build's real layer "
+                         "(Rahlfs/TAGNT + lexicon + BH — PA only)")
     args = ap.parse_args()
+
+    if args.plan:
+        return print_plan(corrected=args.corrected)
 
     hits = sweep()
 

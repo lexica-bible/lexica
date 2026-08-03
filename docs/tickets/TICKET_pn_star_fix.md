@@ -37,16 +37,46 @@ control requirement — the legitimate-genitive negative, named below.
   for lane ③ was never printable). Detector re-run after the roster move: 4,996
   unchanged, all three controls fired.
 
+## SIZING (item 1) — LANDED 2026-08-02
+
+`--plan` / `--plan --corrected` added to the detector; the plan runs
+`_redistribute_pn_star_merge` ITSELF via build_verse_words (the real pass, never a
+model). Plan controls: the three known rows must reach the pass with the right class or
+the run HALTs. RAW-layer record committed: `docs/audits/PLAN_pn_star_fix_raw.txt` —
+**A 1,507 + B 2,552 written (per decision)**; full refusal itemization inside. The plan
+logs a typed decision for EVERY multi-word star, so its lines are a SUPERSET of the
+detector's 4,996 — reconcile by member, never by count.
+
+**TWO FINDINGS from the raw run (both walked to source):**
+
+1. **Bracketed members are typed-refused and deferred** (A/bracketed 1,324 slots +
+   B/bracketed 18): the source brackets them (`Mat 27:47 "[2calls ElijahG* G5455
+   1This one]"` — flagship #2 itself), and a move inside an existing bracket ordering
+   is the ⑤-family second ruling. The detector's population includes them; the fix
+   pass repairs the UNBRACKETED subset. Deliberate, loud, own cycle.
+2. **RARE-NUMBER CLASS-A GAP — the flagship refuses.** `Mat 27:26 'scourging'` is
+   A/unattested on the real map: φραγελλόω (G5417) prints twice in the whole corpus
+   (here + Mar 15:15 'having been scourged,' — pooled, never a single token), so page
+   attestation CANNOT exist for it at any threshold. Rare verbs systematically refuse
+   class-A moves. **BANKED REVIEWER QUESTION (not decided):** admit the LEXICON
+   definition as the evidence source for A/unattested rows (the same evidence
+   `_split_compounds` already redistributes by on non-star slots) — sized by the
+   corrected plan's new "LEXICON-BACKED class-A unattested" itemization (lexicon is
+   PA-only, so the number comes from the `--corrected` run). Threshold-only list
+   (attested 1–4 verses): 28 rows, mostly function-word noise — the ≥5 floor looks
+   right; the real gap is 0-attested rare numbers.
+
 ## STILL OWED before the rebuild ride (in order)
 
-1. **Sizing instrument:** the audit grows `--plan` (run the REAL pass per verse, both
-   counting bases, every refusal itemized) and `--plan --corrected` (the
-   `audit_article_slot_carrier.py` mirror — Rahlfs/TAGNT + lexicon + BH), run on PA.
-2. **Pre-registered member-level expected picture** pinned from the corrected plan,
+1. **The `--plan --corrected` run on PA** (read-only; JP pastes output back) —
+   `cd ~/bible-db && git pull && PYTHONIOENCODING=utf-8 python3
+   scripts/audit_pn_star_verb_merge.py --plan --corrected | tee plan_pn_star_corrected.txt`
+2. **Pre-registered member-level expected picture** pinned from that corrected plan,
    derivation command committed with the figures; swap condition = member set-equality
-   with a NAMED tail allowance derived fresh for this lane.
-3. Lane ③ (B2 91-row eyeball) — the detector's B2 list, per-row, reported never
-   dropped.
+   with a NAMED tail allowance derived fresh for this lane. The rare-number question
+   above resolves BEFORE the pin (a predicate change after pinning re-derives the pin).
+3. Lane ③ (B2 91-row eyeball) — worked against the pinned corrected-plan list, not the
+   detector's live output (sequencing ruled 2026-08-02: sizing scopes the eyeball).
 
 ## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
 `scripts/audit_pn_star_verb_merge.py` (4,996: A 2,237 · B 2,759 = B1 2,668 + B2 91;
