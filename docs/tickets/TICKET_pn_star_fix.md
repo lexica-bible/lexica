@@ -66,17 +66,56 @@ detector's 4,996 — reconcile by member, never by count.
    (attested 1–4 verses): 28 rows, mostly function-word noise — the ≥5 floor looks
    right; the real gap is 0-attested rare numbers.
 
+## THE PIN — PRE-REGISTERED EXPECTED PICTURE (corrected layer, PA, 2026-08-02)
+
+Derivation: `python3 scripts/audit_pn_star_verb_merge.py --plan --corrected`, run on PA
+2026-08-02 03:08 UTC against the build's real inputs (Rahlfs + TAGNT + lexicon 5,523 +
+BH index 31,089); full member record = `plan_pn_star_corrected.txt` on PA (regenerable
+by the same command; raw-layer twin committed at `docs/audits/PLAN_pn_star_fix_raw.txt`,
+LF endings). All three plan controls FIRED.
+
+**PINNED BUILD LINE (per decision — the build's own Results basis):**
+
+    PN-star pass: A 1,505 + B 2,552 written · 3,161 refusals
+    (A/bracketed 1,324 · A/no-name 760 · A/straddle 462 · A/unattested 335 ·
+     B/no-name 88 · B/straddle 83 · A/ambiguous 82 · B/bracketed 18 ·
+     A/all-names 5 · A/star 3 · B/star-carrier 1)
+
+Per-slot view and class-A write targets (G3588 1,320 · G1161 139 · G1063 9, rest ≤6)
+in the PA file. The next rebuild's Results line must match these NUMBERS and the
+member set must match the PA file BY MEMBER; the tail allowance for the ride is
+derived fresh at the ride (named members only), per the inherited trap.
+
+**RAW→CORRECTED delta — fully attributed, member-level (diff pasted 2026-08-02, both
+files diffed on PA with --strip-trailing-cr):**
+- Bulk: same refusal, truer pronoun number after correction (G1473 → G846/G4675/G4771/
+  G5216/G3450/G2257 …) — behavior identical, layer relabel only. Same for several
+  class-B writes ('jesus'/'pilate'/'sarah' members, count unchanged at 2,552).
+- 3 raw 'ambiguous' rows RESOLVE to writes (corrections break the two-neighbour tie):
+  1Ki 8:26 'to'→G3588 · 1Ki 8:41 'this'→G3778 · Gen 25:5 'to'→G3588.
+- 5 raw writes FLIP to refusals on the truer number: Mat 27:2 'to' · 1Ki 2:1 'to' ·
+  2Ch 36:4 'to' · Exo 2:21 'to' · Gen 40:4 'them to' (all G846-family neighbours).
+- Net class A: 1,507 − 5 + 3 = 1,505 ✓; ambiguous 88 − 6 = 82 ✓ (3 pairs, both sides).
+- 2 raw refusal rows vanish (Hos 4:15, Isa 41:8 'o'→G1161 candidates reshaped by
+  correction) offset by new unattested entries for the 5 flipped members: 329 → 335 ✓.
+
+**RARE-NUMBER QUESTION — CLOSED BY THE SIZING, recommendation to reviewer: REJECT the
+lexicon fallback.** The corrected run's lexicon-backed itemization = 22 rows, and they
+are dominated by connector scraps ('of', 'in', 'and', 'at', 'a certain') that should
+NOT move; it does not rescue Mat 27:26 ('scourging' absent — G5417's lexicon entry
+doesn't carry it either). The rare-number rows stay loud typed refusals (status quo,
+live-served today); any future repair is a hand-reviewed per-row lane (splitter-B
+precedent), never an evidence-rule loosening. Threshold-only list: 16 rows on the
+corrected layer, function-word noise — the ≥5 floor stands.
+
 ## STILL OWED before the rebuild ride (in order)
 
-1. **The `--plan --corrected` run on PA** (read-only; JP pastes output back) —
-   `cd ~/bible-db && git pull && PYTHONIOENCODING=utf-8 python3
-   scripts/audit_pn_star_verb_merge.py --plan --corrected | tee plan_pn_star_corrected.txt`
-2. **Pre-registered member-level expected picture** pinned from that corrected plan,
-   derivation command committed with the figures; swap condition = member set-equality
-   with a NAMED tail allowance derived fresh for this lane. The rare-number question
-   above resolves BEFORE the pin (a predicate change after pinning re-derives the pin).
-3. Lane ③ (B2 91-row eyeball) — worked against the pinned corrected-plan list, not the
-   detector's live output (sequencing ruled 2026-08-02: sizing scopes the eyeball).
+1. Reviewer receipt on the rare-number recommendation above (JP pastes the block).
+2. Lane ③ (B2 91-row eyeball) — worked against the pinned corrected-plan list on PA,
+   not the detector's live output (sequencing ruled 2026-08-02: sizing scopes the
+   eyeball). The B/no-name rows in the plan = 88; the detector's B2 = 91 (its splitter
+   has no caps/stays legs) — the eyeball reconciles the two lists BY MEMBER first.
+3. The rebuild ride (`/rebuild-words` as amended 8/1), verdict-gated against the pin.
 
 ## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
 `scripts/audit_pn_star_verb_merge.py` (4,996: A 2,237 · B 2,759 = B1 2,668 + B2 91;

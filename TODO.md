@@ -730,12 +730,16 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **② PN-STAR MERGED-VERB FIX SESSION — OPENED 2026-08-02; PREDICATE RULED + PASS
-  CODED, controls 12/12 (docs/tickets/TICKET_pn_star_fix.md is the record — predicate,
-  ruling, named genitive control, pinned no-name-attestation finding). STILL OWED
-  before the rebuild ride: the sizing `--plan`/`--plan --corrected` instrument, the
-  PA-derived member-level pre-registration, and lane ③'s B2 eyeball (detector `--list`
-  crash fixed — the eyeball list prints now).** (① the
+- **② PN-STAR MERGED-VERB FIX SESSION — PASS CODED + SIZED + PINNED 2026-08-02
+  (docs/tickets/TICKET_pn_star_fix.md is the record: predicate, ruling, controls
+  12/12, sizing instrument, and THE PIN — corrected-layer build line A 1,505 +
+  B 2,552 written / 3,161 refusals, member file plan_pn_star_corrected.txt on PA,
+  raw→corrected delta fully attributed).** STILL OWED, in order: reviewer receipt on
+  the rare-number recommendation (reject lexicon fallback — 22 connector-scrap rows,
+  doesn't rescue Mat 27:26) → lane ③ B2 eyeball AGAINST THE PINNED LIST (88 plan
+  no-name rows vs detector's 91 — reconcile by member first) → the rebuild ride,
+  verdict-gated against the pin. Bracketed members (A 1,324 + B 18) typed-refused,
+  deferred to the ⑤-family bracket ruling. (① the
   509 article-slot re-sweep is CLOSED — archive 2026-07-31; both lists are final.)
   Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
   star chunk, and `_split_compounds` skips star slots — so the built words table puts the
