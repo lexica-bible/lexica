@@ -736,9 +736,11 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   B 2,552 written / 3,161 refusals, member file plan_pn_star_corrected.txt on PA,
   raw→corrected delta fully attributed).** STILL OWED, in order: reviewer receipt on
   the rare-number recommendation (reject lexicon fallback — 22 connector-scrap rows,
-  doesn't rescue Mat 27:26) → lane ③ B2 eyeball AGAINST THE PINNED LIST (88 plan
-  no-name rows vs detector's 91 — reconcile by member first) → the rebuild ride,
-  verdict-gated against the pin. Bracketed members (A 1,324 + B 18) typed-refused,
+  doesn't rescue Mat 27:26 — REJECTED by receipt 2026-08-02) → lane ③ B2 eyeball
+  against the CANONICAL 100-row list (re-based detector B2 under the shared
+  splitter, `--class B --list`; reconciliation 27/27 attributed, +2 late collision
+  finds, 5 Bath-shebas auto-repaired) → the rebuild ride, verdict-gated against
+  the pin. Bracketed members (A 1,324 + B 18) typed-refused,
   deferred to the ⑤-family bracket ruling. (① the
   509 article-slot re-sweep is CLOSED — archive 2026-07-31; both lists are final.)
   Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun

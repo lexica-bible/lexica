@@ -137,16 +137,28 @@ the fix pass itself was never exposed.)
   Jer 30:9 · Jer 43:6 · Jos 13:8, +2): the pass's walk finds no multi-word carrier
   after the earlier redistribution passes — nothing written, live state stands.
 
-**LANE-③ EYEBALL LIST, member-pinned: 98 rows = the plan's 88 B/no-name + the 10
-detector-only rows the plan never logged** (silent + other-type members above, minus
-the 5 repaired Bath-shebas). The eyeball adjudicates each: real merge the roster
-misses (gentilics — Sadducees/Romans/Ethiopians class) vs bracket-position artifact
-(1Sa 25:42 — the name IS printed on its own star). Reported, never dropped; any
-repair is hand-per-row, JP-checkpointed.
+**SHARED-SPLITTER FOLLOW-UP (reviewer, same receipt) — DONE 2026-08-02:** the
+detector's `holds_a_name` now classifies with the fix pass's own three-leg splitter
+(was: raw-roster regex, the check the collision fooled). Controls re-fired, A/B totals
+unchanged (2,237/2,759, TOTAL 4,996); **B1/B2 split re-based: 2,659/100 (supersedes
+2,668/91)**. Every membership move attributed: 14 collision rows B1→B2 (the 12 from
+the reconciliation + 2 more the old check hid the same way — `2Sa 14:4 'Tekoahite
+woman'`, `Lev 24:10 'Israelitish woman'`) and the 5 Bath-shebas B2→B1 (real names,
+auto-repaired by the pass). Net 91 → 100.
+
+**LANE-③ EYEBALL LIST — CANONICAL: the re-based detector's B2, 100 rows / 98 verses
+(`--class B --list` prints it).** Union-checked 2026-08-02: the plan's B/no-name
+verses are a STRICT SUBSET of this list (86 ⊂ 98 — the 12 extra verses are the
+silent/bracketed/collision members already attributed above), so one list, one
+source. The earlier "98 rows" union figure is superseded by this derivation. The
+eyeball adjudicates each row: real merge the roster misses (gentilics —
+Sadducees/Romans/Ethiopians class) vs bracket-position artifact (1Sa 25:42 — the
+name IS printed on its own star). Reported, never dropped; any repair is
+hand-per-row, JP-checkpointed.
 
 ## STILL OWED before the rebuild ride (in order)
 
-1. Lane ③ eyeball pass over the 98-row pinned list above — own session.
+1. Lane ③ eyeball pass over the 100-row canonical list above — own session.
 2. The rebuild ride (`/rebuild-words` as amended 8/1), verdict-gated against the pin.
 
 ## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =

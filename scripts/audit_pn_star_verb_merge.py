@@ -78,8 +78,8 @@ sys.path.insert(0, ROOT)
 
 from build_words_from_abp import (  # noqa: E402
     _STRONGS_RE, _VERSE_RE, _emit_words, iter_source_tokens, load_name_roster,
+    pn_star_split,
 )
-from entity_resolution import norm_name  # noqa: E402
 
 
 def name_roster():
@@ -90,8 +90,14 @@ def name_roster():
 
 
 def holds_a_name(eng, names):
-    return any(norm_name(t) in names
-               for t in re.findall(r"[A-Za-z][A-Za-z'\-]*", eng))
+    """SHARED SPLITTER since 2026-08-02 (reviewer follow-up at the reconciliation
+    receipt): the old raw-roster check here was fooled by the exact collision
+    the fix pass gates against — 'the Jews killed' counted B1 via 'the', and
+    hyphenated 'Bath-sheba' missed a real roster name. Classify with the fix
+    pass's own three-leg splitter so the B1/B2 reporting split can't overstate
+    or understate the class again. B1/B2 figures BEFORE this change (2,668/91)
+    are superseded; the lane-③ eyeball list stays the member-pinned 98."""
+    return bool(pn_star_split(eng, names)[0])
 
 ABP_DIRS = [os.path.join(ROOT, "abp_texts", "abp_nt_texts"),
             os.path.join(ROOT, "abp_texts", "abp_ot_texts")]
