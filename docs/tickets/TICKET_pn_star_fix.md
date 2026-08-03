@@ -108,14 +108,46 @@ live-served today); any future repair is a hand-reviewed per-row lane (splitter-
 precedent), never an evidence-rule loosening. Threshold-only list: 16 rows on the
 corrected layer, function-word noise — the ≥5 floor stands.
 
+## RECEIPT (reviewer, 2026-08-02): lexicon fallback REJECTED per recommendation;
+## ≥5 floor STANDS. Pin accepted.
+
+**FOR THE RECORD, not a change (reviewer's note): `Mat 27:26` — the verse that NAMED
+this class — ships still merged after this pass.** That is correct behavior, not a
+miss: the predicate refusing it proves the evidence gate is real. It sits in the
+hand-review lane with its refusal typed (A/unattested, G5417).
+
+## 88-vs-91 MEMBER RECONCILIATION — DONE 2026-08-02 (all 27 deltas attributed;
+## derivation: the reconcile script run against sweep() + the committed raw plan)
+
+**Plan-only 12** (plan no-name, detector said B1): ALL one class — the detector's
+`holds_a_name` counted them B1 via the 'the'/'my' ROSTER COLLISION ('the Ethiopians
+fled.', 'the Jews killed', 'my son'…); no word passes the fix splitter's three legs.
+The plan's no-name is the TRUER classification — these are gentilic/roster-silent
+rows and belong in the eyeball pile. (The hazard bit the detector's reporting split;
+the fix pass itself was never exposed.)
+
+**Detector-only 15**, three classes:
+- **Bath-sheba ×5 REPAIRED by the pass** (1Ki 1:15, 1:16, 1:31, 2:18, 2:19): the
+  detector's tokenizer keeps the hyphen ('Bath-sheba' ∉ roster → B2), the fix
+  splitter strips it ('bathsheba' ∈ roster) — the pass WRITES all five. The expected
+  "roster misses Bath-sheba" eyeball row class turns out auto-repaired.
+- **Logged under other types** (1Sa 24:5 B/bracketed · 2Ch 31:5, 2Ki 18:16
+  A/bracketed): bracket-deferred, already counted in the pin.
+- **Silent at pass time** (1Sa 11:15 'was glad' · 1Sa 25:42 · 2Ch 32:25 · Jdg 5:26 ·
+  Jer 30:9 · Jer 43:6 · Jos 13:8, +2): the pass's walk finds no multi-word carrier
+  after the earlier redistribution passes — nothing written, live state stands.
+
+**LANE-③ EYEBALL LIST, member-pinned: 98 rows = the plan's 88 B/no-name + the 10
+detector-only rows the plan never logged** (silent + other-type members above, minus
+the 5 repaired Bath-shebas). The eyeball adjudicates each: real merge the roster
+misses (gentilics — Sadducees/Romans/Ethiopians class) vs bracket-position artifact
+(1Sa 25:42 — the name IS printed on its own star). Reported, never dropped; any
+repair is hand-per-row, JP-checkpointed.
+
 ## STILL OWED before the rebuild ride (in order)
 
-1. Reviewer receipt on the rare-number recommendation above (JP pastes the block).
-2. Lane ③ (B2 91-row eyeball) — worked against the pinned corrected-plan list on PA,
-   not the detector's live output (sequencing ruled 2026-08-02: sizing scopes the
-   eyeball). The B/no-name rows in the plan = 88; the detector's B2 = 91 (its splitter
-   has no caps/stays legs) — the eyeball reconciles the two lists BY MEMBER first.
-3. The rebuild ride (`/rebuild-words` as amended 8/1), verdict-gated against the pin.
+1. Lane ③ eyeball pass over the 98-row pinned list above — own session.
+2. The rebuild ride (`/rebuild-words` as amended 8/1), verdict-gated against the pin.
 
 ## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
 `scripts/audit_pn_star_verb_merge.py` (4,996: A 2,237 · B 2,759 = B1 2,668 + B2 91;
