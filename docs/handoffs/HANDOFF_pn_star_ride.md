@@ -1,5 +1,13 @@
 # HANDOFF — lane ②: PN-star merged-verb fix session (the Mat 27/28 class)
 
+> **LANE ② CLOSED 2026-08-02 — this opener is SPENT.** Predicate ruled, pass coded
+> (controls 12/12), expected picture pinned through the corrected layer, receipts
+> recorded, detector re-based on the shared splitter. The living record is
+> `docs/tickets/TICKET_pn_star_fix.md`. NEXT: lane ③'s eyeball over the CANONICAL
+> 100-row list (`audit_pn_star_verb_merge.py --class B --list`, the B2 block), then
+> the rebuild ride verdict-gated on the pin. Open those from the ticket, not from
+> the text below (kept for history).
+
 Written 2026-08-02 at the close of the ruling-10 ride. Read CLAUDE.md first, then
 TODO.md item ② (the charter — both session-open rulings already JP-confirmed),
 then `docs/tickets/TICKET_detector_gap.md` + `docs/tickets/TICKET_509_article_slot_resweep.md`
