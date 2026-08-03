@@ -158,8 +158,16 @@ hand-per-row, JP-checkpointed.
 
 ## STILL OWED before the rebuild ride (in order)
 
-1. Lane ③ eyeball pass over the 100-row canonical list above — own session.
+1. ~~Lane ③ eyeball pass~~ **DONE 2026-08-03** — all 100 rows adjudicated against
+   abp_texts, record = `docs/audits/LANE3_b2_dispositions.md` (+ verbatim list and
+   per-row source evidence beside it). Result: 71 genuine repair candidates
+   (gentilic 22 · roster-silent name 41 · possessive 8), 28 artifacts (name on its
+   own star 13 · name never printed in English 15), 1 judgment call (Gen 35:18
+   Ben-oni). No writes made; every repair stays hand-per-row, JP-checkpointed —
+   a SEPARATE lane, not part of the ②-ride.
 2. The rebuild ride (`/rebuild-words` as amended 8/1), verdict-gated against the pin.
+   The eyeball's repair candidates do NOT alter the pin — they are future hand
+   repairs, not build-pass changes.
 
 ## The defect, restated Charter = TODO ② (both session-open rulings JP-confirmed 7/31). Detector =
 `scripts/audit_pn_star_verb_merge.py` (4,996: A 2,237 · B 2,759 = B1 2,668 + B2 91;

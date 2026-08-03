@@ -1,0 +1,299 @@
+--- row   1 | Act 2:10 | carrier G1927 | english: 'Romans emigrating here,'
+    (Act 2:10)  both PhrygiaG* G5037 andG2532 Pamphylia,G* Egypt,G* andG2532 theG3588 partsG3313 G3588 of LibyaG* of the oneG3588 aboutG2596 Cyrene,G* andG2532 theG3588 Romans emigrating here,G1927 G* both JewsG* G5037 andG2532 converts,G4339
+
+--- row   2 | Act 14:2 | carrier G544 | english: 'Jews having resisted persuasion,'
+    (Act 14:2)  But theG3588 G1161 Jews having resisted persuasion,G544 G* roused upG1892 andG2532 afflictedG2559 theG3588 soulsG5590 of theG3588 nationsG1484 againstG2596 theG3588 brethren.G80
+
+--- row   3 | Heb 11:24 | carrier G2364 | english: "of Pharaoh's daughter,"
+    (Heb 11:24)  By beliefG4102 Moses,G* [2greatG3173 1having become],G1096 deniedG720 to be calledG3004 sonG5207 of Pharaoh's daughter,G2364 G*
+
+--- row   4 | Luk 1:12 | carrier G5015 | english: 'Zacharias was disturbed'
+    (Luk 1:12)  AndG2532 Zacharias was disturbedG5015 G* seeing him,G1492 andG2532 fearG5401 fellG1968 uponG1909 him.G1473
+
+--- row   5 | Luk 1:18 | carrier G2036 | english: 'Zacharias said'
+    (Luk 1:18)  AndG2532 Zacharias saidG2036 G* toG4314 theG3588 angel,G32 ByG2596 what thing G5100 shall I knowG1097 this,G3778 for IG1473 G1063 amG1510.2.1 an old man,G4246 andG2532 G3588 my wifeG1135 G1473 is advancedG4260 inG1722 G3588 her days?G2250 G1473
+
+--- row   6 | Luk 17:32 | carrier G1135 | english: "Lot's wife!"
+    (Luk 17:32)  RememberG3421 G3588 Lot's wife!G1135 G*
+
+--- row   7 | Mar 12:18 | carrier G2064 | english: 'Sadducees came'
+    (Mar 12:18)  AndG2532 Sadducees cameG2064 G* toG4314 him,G1473 the ones whoG3748 sayG3004 a resurrectionG386 notG3361 to be.G1510.1 AndG2532 they askedG1905 him,G1473 saying,G3004
+
+--- row   8 | Mat 9:11 | carrier G1492,G3588 | english: 'the Pharisees seeing,'
+    (Mat 9:11)  AndG2532 the Pharisees seeing,G1492 G3588 G* saidG2036 to G3588 his disciples,G3101 G1473 WhyG1302 withG3326 theG3588 tax collectorsG5057 andG2532 sinnersG268 does [3eatG2068 G3588 2teacherG1320 1your]?G1473
+
+--- row   9 | Mat 12:41 | carrier G435 | english: 'Ninevite men'
+    (Mat 12:41)  Ninevite menG435 G* shall rise upG450 inG1722 theG3588 judgmentG2920 withG3326 G3588 this generationG1074 G3778 andG2532 shall condemnG2632 it,G1473 forG3754 they repentedG3340 atG1519 theG3588 proclamationG2782 of Jonah;G* andG2532 behold,G2400 a greater thanG4183 JonahG* is here.G5602
+
+--- row  10 | 1Ch 1:50 | carrier G599 | english: 'Baal-hanan died,'
+    (1Ch 1:50)  AndG2532 Baal-hanan died,G599 G* andG2532 reignedG936 instead ofG473 him,G1473 Hadad.G* AndG2532 the nameG3686 G3588 of his cityG4172 G1473 was Pai.G* AndG2532 the nameG3686 G3588 of his wifeG1135 was Mehetabel,G* daughterG2364 of Matred,G* daughter ofG2364 Mezahab.G*
+
+--- row  11 | 1Ch 10:13 | carrier G1905 | english: 'he asked'
+    (1Ch 10:13)  AndG2532 Saul diedG599 G* inG1722 G3588 his lawless deedsG458 G1473 whichG3739 he acted lawlesslyG457.1 againstG1722 the LORD,G2962 againstG2596 theG3588 wordG3056 of the LORD,G2962 becauseG1360 he did notG3756 keepG5442 it,G1473 andG2532 becauseG3754 he askedG1905 G* [2byG1722 3the oneG3588 4who delivers oraclesG1447.1 G3588 1to inquire].G1567
+
+--- row  12 | 1Ch 19:7 | carrier G4172 | english: 'their cities,'
+    (1Ch 19:7)  AndG2532 they hiredG3409 for themselvesG1438 twoG1417 andG2532 thirtyG5144 thousandG5505 chariots,G716 andG2532 theG3588 kingG935 of MaachahG* andG2532 G3588 his people.G2992 G1473 AndG2532 they cameG2064 andG2532 campedG3924.2 beforeG1715 Medeba.G* AndG2532 theG3588 sonsG5207 of AmmonG* gathered togetherG4863 from out ofG1537 G3588 their cities,G4172 G* andG2532 they cameG2064 toG1519 G3588 wage war.G4170
+
+--- row  13 | 1Ch 21:9 | carrier G3708,G3588 | english: "David's seer,"
+    (1Ch 21:9)  AndG2532 the LORD spokeG2980 G2962 toG4314 Gad,G* G3588 David's seer,G3708 G3588 G* saying,G3004
+
+--- row  14 | 1Ki 15:8 | carrier G2837 | english: 'Abijam slept'
+    (1Ki 15:8)  AndG2532 Abijam sleptG2837 G* withG3326 G3588 his fathers.G3962 G1473 AndG2532 they entombed him G2290 inG1722 the cityG4172 of David.G* AndG2532 [3reignedG936 1AsaG* 2his son]G5207 G1473 instead ofG473 him.G1473
+
+--- row  15 | 1Ki 15:29 | carrier G1401 | english: 'of his servant'
+    (1Ki 15:29)  AndG2532 it came to passG1096 asG5613 he reigned,G936 he struckG3960 the entireG3650 G3588 houseG3624 of Jeroboam;G* andG2532 he left notG3756 G5275 anyG3956 that breathedG4157 G3588 of Jeroboam,G* untilG2193 G3588 utterly destroyingG1842 him,G1473 (according toG2596 theG3588 sayingG4487 of the LORD,G2962 whichG3739 he spokeG2980 byG1722 the handG5495 of his servantG1401 G* AhijahG* theG3588 Shilonite,)G*
+
+--- row  16 | 1Ki 19:6 | carrier G1914 | english: 'he looked.'
+    (1Ki 19:6)  AndG2532 he looked.G1914 G* AndG2532 behold,G2400 byG4314 his headG2776 G1473 was a cake baked in hot ashesG1470.1 of oaten bread,G3653.2 andG2532 a jarG2578.2 of water.G5204 AndG2532 Elijah rose upG450 G* andG2532 ateG2068 andG2532 drank.G4095 AndG2532 he returnedG1994 and went to bed.G2837
+
+--- row  17 | 1Sa 11:15 | carrier G2165 | english: 'was glad'
+    (1Sa 11:15)  AndG2532 [4wentG4198 1allG3956 2theG3588 3people]G2992 untoG1519 Gilgal;G* andG2532 Samuel anointedG5548 G* Saul thereG1563 G3588 G* asG1519 kingG935 beforeG1799 the LORD G2962 inG1722 Gilgal.G* AndG2532 he sacrificedG2380 thereG1563 sacrifice offerings G2378 andG2532 peace offerings G1516 beforeG1799 the LORD.G2962 AndG2532 [2was gladG2165 G* 3thereG1563 1Saul]G* andG2532 allG3956 the menG435 of IsraelG* greatly.G4970
+
+--- row  18 | 1Sa 14:50 | carrier G1135 | english: "of Saul's wife"
+    (1Sa 14:50)  AndG2532 the nameG3686 G3588 of Saul's wifeG1135 G* was AhinoamG* daughterG2364 of Ahimaaz.G* AndG2532 the nameG3686 to G3588 his commander-in-chiefG751.2 G1473 was AbnerG* sonG5207 of Ner,G* sonG5207 of a member of the familyG3609 of Saul.G*
+
+--- row  19 | 1Sa 24:5 | carrier G2588 | english: "David's heart"
+    (1Sa 24:5)  AndG2532 it came to passG1096 afterG3326 these things,G3778 thatG2532 [2struckG3960 1David's heart]G2588 G* him,G1473 forG3754 he removedG851 theG3588 borderG4419 G3588 of his double garment.G1361.4 G1473
+
+--- row  20 | 1Sa 24:17 | carrier G2036 | english: 'he said'
+    (1Sa 24:17)  AndG2532 he saidG2036 G* toG4314 David,G* You are righteousG1342 G1473 overG5228 me,G1473 forG3754 youG1473 recompensedG467 to meG1473 good things,G18 but IG1473 G1161 recompensedG467 to youG1473 evils.G2556
+
+--- row  21 | 1Sa 25:42 | carrier G450 | english: 'rose up'
+    (1Sa 25:42)  AndG2532 [2hastenedG5035.1 3andG2532 4rose upG450 G* 1Abigail],G* andG2532 mountedG1910 uponG1909 theG3588 donkey,G3688 andG2532 fiveG4002 of her young womenG2877 G1473 followedG190 her.G1473 AndG2532 she wentG4198 afterG3694 theG3588 servantsG32 of David,G* andG2532 becameG1096 to himG1473 forG1519 a wife.G1135
+
+--- row  22 | 2Ch 14:12 | carrier G5343 | english: 'the Ethiopians fled.'
+    (2Ch 14:12)  AndG2532 the LORD struckG3960 G2962 theG3588 EthiopiansG* beforeG1726 Asa,G* andG2532 beforeG1726 Judah,G* andG2532 the Ethiopians fled.G5343 G*
+
+--- row  23 | 2Ch 15:8 | carrier G2722 | english: 'he took control of'
+    (2Ch 15:8)  AndG2532 inG1722 G3588 Asa hearingG191 G3588 G* G3588 of these words,G3056 G3778 andG2532 theG3588 prophecyG4394 of OdedG* theG3588 prophet,G4396 thatG2532 he prevailed,G2729 andG2532 cast outG1544 theG3588 loathsome thingsG4360.1 ofG575 allG3956 theG3588 landG1093 of JudahG* andG2532 Benjamin,G* andG2532 fromG575 theG3588 citiesG4172 whichG3739 he took control ofG2722 G* fromG575 Jeroboam,G* fromG1722 the mountainsG3735 of Ephraim.G* AndG2532 he dedicatedG1457 theG3588 altarG2379 of the LORD,G2962 whichG3739 wasG1510.7.3 in front ofG1715 theG3588 templeG3485 of the LORD.G2962
+
+--- row  24 | 2Ch 18:13 | carrier G2036 | english: 'Michaiah said,'
+    (2Ch 18:13)  AndG2532 Michaiah said,G2036 G* As the LORD lives,G2198 G2962 thatG3754 whatG3739 everG302 God should sayG2036 G3588 G2316 toG4314 me,G1473 itG1473 I shall speak.G2980
+
+--- row  25 | 2Ch 18:16 | carrier G2036 | english: 'Michaiah said,'
+    (2Ch 18:16)  AndG2532 Michaiah said,G2036 G* I seeG1492 G3588 IsraelG* allG3956 being scatteredG1289 inG1722 theG3588 mountains,G3735 asG5613 sheepG4263 in whichG3739 there is noG3756 G1510.2.3 shepherd.G4166 AndG2532 the LORD said,G2036 G2962 [2have noG3756 G2192 3leaderG2233 1These].G3778 Let them [2returnG390 1each]G1538 toG1519 G3588 his houseG3624 G1473 inG1722 peace.G1515
+
+--- row  26 | 2Ch 18:18 | carrier G2036 | english: 'Michaiah said,'
+    (2Ch 18:18)  AndG2532 Michaiah said,G2036 G* It is notG3756 so.G3779 HearG191 the wordG3056 of the LORD!G2962 I beheldG1492 theG3588 LORD G2962 sittingG2521 uponG1909 his throne,G2362 G1473 andG2532 allG3956 the forceG1411 of theG3588 heavenG3772 stood besideG3936 atG1537 his rightG1188 G1473 andG2532 atG1537 his left.G710 G1473
+
+--- row  27 | 2Ch 18:24 | carrier G2036 | english: 'Michaiah said,'
+    (2Ch 18:24)  AndG2532 Michaiah said,G2036 G* Behold,G2400 youG1473 shall seeG3708 inG1722 G3588 that dayG2250 G1565 inG1722 whichG3739 you shall enterG1525 closetG5009 byG1537 closetG5009 G3588 to hide.G2633.1
+
+--- row  28 | 2Ch 18:27 | carrier G2036 | english: 'Michaiah said,'
+    (2Ch 18:27)  AndG2532 Michaiah said,G2036 G* IfG1437 by returning,G1994 you should returnG1994 inG1722 peace,G1515 [2did notG3756 3speakG2980 1 the LORD]G2962 byG1722 me.G1473 AndG2532 he said,G2036 HearkenG191 all peoples!G2992 G3956
+
+--- row  29 | 2Ch 31:5 | carrier G4121 | english: 'were superabundant'
+    (2Ch 31:5)  AndG2532 asG5613 he assignedG4367 theG3588 word,G3056 [4were superabundantG4121 G* 1theG3588 2sonsG5207 3of Israel]G* in first-fruitG536 of grain,G4621 andG2532 wine,G3631 andG2532 olive oil,G1637 andG2532 honey,G3192 andG2532 everyG3956 offspringG1081 of the field.G68 AndG2532 [7a tenthG1925.1 8of allG3956 9inG1519 10multitudeG4128 6broughtG5342 1theG3588 2sonsG5207 3of IsraelG* 4andG2532 5Judah].G*
+
+--- row  30 | 2Ch 32:25 | carrier G467 | english: 'he recompensed'
+    (2Ch 32:25)  AndG2532 [2 rendered notG3756 3according toG2596 4theG3588 5recompenseG468 6whichG3739 7he recompensedG467 G* 8to himG1473 1Hezekiah];G* butG235 he exaltedG5312 G3588 his heart.G2588 G1473 AndG2532 [2cameG1096 3uponG1909 4himG1473 1wrath],G3709 andG2532 uponG1909 Judah,G* andG2532 Jerusalem.G*
+
+--- row  31 | 2Ch 34:15 | carrier G611 | english: 'Helkiah responded'
+    (2Ch 34:15)  AndG2532 Helkiah respondedG611 G* andG2532 saidG2036 toG4314 ShaphanG* theG3588 scribe,G1122 [2 the scrollG975 3of the lawG3551 1I found]G2147 inG1722 theG3588 houseG3624 of the LORD.G2962 AndG2532 Helkiah gaveG1325 G* theG3588 scrollG975 G3588 to Shaphan.G*
+
+--- row  32 | 2Ch 34:15 | carrier G1325 | english: 'Helkiah gave'
+    (2Ch 34:15)  AndG2532 Helkiah respondedG611 G* andG2532 saidG2036 toG4314 ShaphanG* theG3588 scribe,G1122 [2 the scrollG975 3of the lawG3551 1I found]G2147 inG1722 theG3588 houseG3624 of the LORD.G2962 AndG2532 Helkiah gaveG1325 G* theG3588 scrollG975 G3588 to Shaphan.G*
+
+--- row  33 | 2Ch 34:22 | carrier G4198 | english: 'Helkiah went,'
+    (2Ch 34:22)  AndG2532 Helkiah went,G4198 G* andG2532 the ones whoG3739 toldG2036 theG3588 king,G935 toG4314 HuldahG* theG3588 prophetess,G4398 wifeG1135 of Shallum,G* sonG5207 of Tikvath,G* sonG5207 of HazrahG* theG3588 keeper of the cloaks;G2440.1 andG2532 sheG3778 dweltG2730 inG1722 JerusalemG* inG1722 the second section.G3144.1 AndG2532 they spokeG2980 to herG1473 according toG2596 these things.G3778
+
+--- row  34 | 2Ki 7:15 | carrier G4495,G3588 | english: 'the Syrians tossed'
+    (2Ki 7:15)  AndG2532 they wentG4198 afterG3694 themG1473 untoG2193 theG3588 Jordan.G* AndG2532 behold,G2400 allG3956 theG3588 wayG3598 was fullG4134 of clothesG2441 andG2532 items,G4632 whichG3739 the Syrians tossedG4495 G3588 G* inG1722 G3588 their being distraught.G2284 G1473 AndG2532 [3returnedG654 1theG3588 2messengers],G32 andG2532 announcedG312 to theG3588 king.G935
+
+--- row  35 | 2Ki 18:16 | carrier G4792.1 | english: 'cut off'
+    (2Ki 18:16)  InG1722 G3588 that timeG2540 G1565 [4cut offG4792.1 G* 1HezekiahG* G3588 2kingG935 3of Judah]G* theG3588 doorsG2374 of theG3588 templeG3485 of the LORD,G2962 andG2532 theG3588 supportsG4741 whichG3739 [5gildedG5558 1HezekiahG* 2theG3588 3kingG935 4of Judah],G* andG2532 gaveG1325 themG1473 to theG3588 kingG935 of the Assyrians.G*
+
+--- row  36 | 2Ki 22:9 | carrier G1525 | english: 'Shapan entered'
+    (2Ki 22:9)  AndG2532 Shapan enteredG1525 G* to G3588 kingG935 Josiah.G* AndG2532 he turnedG1994 to theG3588 kingG935 for a word,G3056 andG2532 said,G2036 [2castG5560.9 G3588 1Your servants]G1401 G1473 theG3588 silverG694 beingG3588 foundG2147 inG1722 the houseG3624 of the LORD,G2962 andG2532 they putG1325 itG1473 inG1909 the handG5495 of the onesG3588 doingG4160 theG3588 worksG2041 G3588 being ordainedG2525 inG1722 the houseG3624 of the LORD.G2962
+
+--- row  37 | 2Sa 3:15 | carrier G649 | english: 'Ishbosheth sent,'
+    (2Sa 3:15)  AndG2532 Ishbosheth sent,G649 G* andG2532 tookG2983 herG1473 fromG3844 G3588 her husband,G435 G1473 fromG3844 PhaltielG* sonG5207 of Laish.G*
+
+--- row  38 | 2Sa 10:16 | carrier G649 | english: 'Hadarezer sent,'
+    (2Sa 10:16)  AndG2532 Hadarezer sent,G649 G* andG2532 gathered togetherG4863 theG3588 SyrianG* G3588 fromG1537 theG3588 other sideG4008 of theG3588 river.G4215 AndG2532 they cameG3854 untoG1519 Helam.G* AndG2532 ShobachG* theG3588 commander-in-chiefG751.2 G3588 of HadarezerG* was in front ofG1715 them.G1473
+
+--- row  39 | 2Sa 14:4 | carrier G1135,G3588 | english: 'Tekoahite woman'
+    (2Sa 14:4)  AndG2532 [3enteredG1525 1theG3588 2Tekoahite woman]G1135 G3588 G* toG4314 theG3588 king,G935 andG2532 she fellG4098 uponG1909 her faceG4383 G1473 toG1519 theG3588 ground,G1093 andG2532 she did obeisanceG4352 to him.G1473 AndG2532 she said,G2036 Deliver,G4982 O king,G935 deliver!G4982
+
+--- row  40 | 2Sa 15:30 | carrier G2776 | english: 'his head'
+    (2Sa 15:30)  AndG2532 DavidG* ascendedG305 uponG1909 theG3588 ascentG306.1 of theG3588 olive groves,G1636 ascendingG305 andG2532 weeping,G2799 andG2532 G3588 his headG2776 G* being covered over,G1943 andG2532 heG1473 wentG4198 barefoot.G504.1 AndG2532 allG3956 theG3588 people,G2992 the oneG3588 withG3326 him,G1473 [3coveredG1943 1eachG1538 2man]G435 G3588 his head.G2776 G1473 AndG2532 they ascended --G305 ascendingG305 andG2532 weeping.G2799
+
+--- row  41 | 2Sa 19:37 | carrier G5207 | english: 'my son'
+    (2Sa 19:37)  ReturnG654 indeedG1211 G3588 your servant!G1401 G1473 andG2532 I shall dieG599 inG1722 G3588 my city,G4172 G1473 byG3844 theG3588 burying-placeG5028 G3588 of my fatherG3962 G1473 andG2532 G3588 of my mother.G3384 G1473 AndG2532 behold,G2400 G3588 your servantG1401 G1473 ChimhamG* G3588 my sonG5207 G* shall pass overG1224 withG3326 G3588 my masterG2962 G1473 theG3588 king;G935 andG2532 you shall doG4160 for himG1473 theG3588 pleasing thing G701 beforeG1799 you.G1473
+
+--- row  42 | Est 4:12 | carrier G518 | english: 'Hatach reported'
+    (Est 4:12)  AndG2532 Hatach reportedG518 G* to G3588 MordecaiG* allG3956 theG3588 wordsG3056 of Esther.G*
+
+--- row  43 | Est 9:6 | carrier G615,G3588 | english: 'the Jews killed'
+    (Est 9:6)  AndG2532 inG1722 ShushanG* theG3588 cityG4172 the Jews killedG615 G3588 G* [2menG435 1five hundred] --G4001
+
+--- row  44 | Est 9:12 | carrier G622,G3588 | english: 'The Jews destroyed'
+    (Est 9:12)  [4saidG2036 1AndG1161 2theG3588 3king]G935 toG4314 Esther,G* The Jews destroyedG622 G3588 G* inG1722 ShushanG* [2menG435 1five hundred]G4001 inG1722 theG3588 city;G4172 and inG1722 G1161 theG3588 place round about,G4066 howG4459 do you imagineG3633 they were treated?G5530 WhatG5100 thenG3767 do you still petition,G515 G2089 forG2532 it will beG1510.8.3 yours?G1473
+
+--- row  45 | Exo 36:1 | carrier G4160 | english: 'Bezaleel prepared,'
+    (Exo 36:1)  AndG2532 Bezaleel prepared,G4160 G* andG2532 Aholiab,G* andG2532 allG3956 wiseG4680 G3588 in thought,G1271 in whomG3739 was givenG1325 wisdomG4678 andG2532 higher knowledgeG1989.1 forG1722 themG1473 to perceiveG4920 to doG4160 allG3956 theG3588 worksG2041 [2forG2596 3theG3588 4holies,G39 1being fit],G2520 according toG2596 allG3956 as much asG3745 the LORD ordered.G4929 G2962
+
+--- row  46 | Exo 37:1 | carrier G4160 | english: 'Bezaleel made'
+    (Exo 37:1)  AndG2532 Bezaleel madeG4160 G* theG3588 arkG2787 fromG1537 [2woodG3586 1incorruptible];G767.1 twoG1417 cubitsG4083 andG2532 a halfG2255 was theG3588 length,G3372 andG2532 a cubitG4083 andG2532 a halfG2255 was theG3588 width,G4114 andG2532 a cubitG4083 andG2532 a halfG2255 was theG3588 height.G5311
+
+--- row  47 | Eze 23:5 | carrier G1608,G3588 | english: 'Aholah fornicated'
+    (Eze 23:5)  AndG2532 Aholah fornicatedG1608 G3588 G* fromG575 me,G1473 andG2532 dotedG2007 uponG1909 G3588 her lovers,G2036.3 G1473 uponG1909 theG3588 AssyriansG* G3588 being nextG1448 to her;G1473
+
+--- row  48 | Eze 26:2 | carrier G2036 | english: 'Sor said'
+    (Eze 26:2)  O sonG5207 of man,G444 becauseG446.2 Sor saidG2036 G* againstG1909 Jerusalem,G* Well done,G2103.1 she was broken;G4937 she had destroyedG622 theG3588 nations;G1484 she was turnedG1994 toG4314 me --G1473 she that was G3588 fullG4134 was made desolate.G2049
+
+--- row  49 | Eze 35:5 | carrier G1096 | english: 'you became'
+    (Eze 35:5)  BecauseG473 G3588 you becameG1096 G* [2enemyG2190 1an eternal],G166 andG2532 sat in placeG1455.2 against theG3588 houseG3624 of IsraelG* withG1722 treachery,G1388 byG1722 the handG5495 of enemiesG2190 with a sword,G3162 inG1722 timeG2540 of iniquity,G93 atG1909 the last.G2078
+
+--- row  50 | Ezr 2:63 | carrier G2036 | english: 'Tirshatha spoke'
+    (Ezr 2:63)  AndG2532 Tirshatha spokeG2036 G* to themG1473 G3588 to notG3361 eatG2068 fromG575 theG3588 holyG39 of theG3588 holiesG39 untilG2193 [2should rise upG450 1a priest]G2409 with theG3588 lightsG5461 andG2532 theG3588 perfections.G5046
+
+--- row  51 | Gen 5:9 | carrier G2198 | english: 'Enos lived'
+    (Gen 5:9)  AndG2532 Enos livedG2198 G* [3yearsG2094 1a hundredG1540 2ninety],G1767.3 andG2532 he procreatedG1080 G3588 Cainan.G*
+
+--- row  52 | Gen 5:10 | carrier G2198 | english: 'Enos lived'
+    (Gen 5:10)  AndG2532 Enos livedG2198 G* afterG3326 G3588 his procreatingG1080 G1473 G3588 Cainan,G* fifteenG4002.1 yearsG2094 andG2532 seven hundred,G2035.1 andG2532 he procreatedG1080 sonsG5207 andG2532 daughters.G2364
+
+--- row  53 | Gen 5:15 | carrier G2198 | english: 'Mahalaleel lived'
+    (Gen 5:15)  AndG2532 Mahalaleel livedG2198 G* fiveG4002 andG2532 sixtyG1835 andG2532 a hundredG1540 years,G2094 andG2532 he procreatedG1080 G3588 Jared.G*
+
+--- row  54 | Gen 5:16 | carrier G2198 | english: 'Mahalaleel lived'
+    (Gen 5:16)  AndG2532 Mahalaleel livedG2198 G* afterG3326 G3588 his procreatingG1080 G1473 G3588 Jared,G* [4yearsG2094 1thirtyG5144 2andG2532 3seven hundred],G2035.1 andG2532 he procreatedG1080 sonsG5207 andG2532 daughters.G2364
+
+--- row  55 | Gen 11:14 | carrier G2198 | english: 'Salah lived'
+    (Gen 11:14)  AndG2532 Salah livedG2198 G* a hundredG1540 thirtyG5144 years,G2094 andG2532 he procreatedG1080 G3588 Eber.G*
+
+--- row  56 | Gen 11:15 | carrier G2198 | english: 'Salah lived'
+    (Gen 11:15)  AndG2532 Salah livedG2198 G* afterG3326 G3588 his procreatingG1080 G1473 G3588 Eber,G* three hundredG5145 thirtyG5144 years,G2094 andG2532 he procreatedG1080 sonsG5207 andG2532 daughters,G2364 andG2532 he died.G599
+
+--- row  57 | Gen 11:21 | carrier G1080 | english: 'his procreating'
+    (Gen 11:21)  AndG2532 Reu livedG2198 G* afterG3326 G3588 his procreatingG1080 G* G3588 SerugG* two hundredG1250 sevenG2033 years,G2094 andG2532 he procreatedG1080 sonsG5207 andG2532 daughters,G2364 andG2532 he died.G599
+
+--- row  58 | Gen 26:20 | carrier G91 | english: 'for they wronged'
+    (Gen 26:20)  AndG2532 [4did combatG3164 1theG3588 2shepherdsG4166 3of Gerar]G* withG3326 theG3588 shepherdsG4166 of Isaac,G* maintainingG5335 [4theirsG1473 3to beG1510.1 1theG3588 2water].G5204 AndG2532 they calledG2564 theG3588 nameG3686 of theG3588 well,G5421 Injustice,G93 G* for they wrongedG91 G1063 him.G1473
+
+--- row  59 | Gen 35:18 | carrier G3601 | english: 'of my Grief;'
+    (Gen 35:18)  And it came to passG1096 G1161 inG1722 G3588 her letting goG863 G1473 theG3588 soul,G5590 for she was dying,G599 G1063 she calledG2564 G3588 his name,G3686 G1473 SonG5207 of my Grief;G3601 G* G3588 butG1161 the fatherG3962 calledG2564 G3588 his name,G3686 G1473 Benjamin.G*
+
+--- row  60 | Gen 46:26 | carrier G5207 | english: "of Jacob's sons --"
+    (Gen 46:26)  And allG3956 G1161 theG3588 soulsG5590 G3588 enteringG1525 withG3326 JacobG* intoG1519 Egypt --G* the ones G3588 coming forthG1831 from out ofG1537 G3588 his thighs,G3382 G1473 separate fromG5565 theG3588 wivesG1135 of Jacob's sons --G5207 G* allG3956 soulsG5590 were sixty-six.G1835.2
+
+--- row  61 | Gen 50:23 | carrier G3382 | english: "Joseph's thighs."
+    (Gen 50:23)  AndG2532 Joseph sawG1492 G* Ephraim'sG* childrenG3813 untoG2193 the thirdG5154 generation.G1074 AndG2532 theG3588 sonsG5207 of Machir,G* theG3588 sonG5207 of Manasseh,G* were bornG5088 uponG1909 Joseph's thighs.G3382 G*
+
+--- row  62 | Isa 19:2 | carrier G1892 | english: 'Egyptians shall be roused'
+    (Isa 19:2)  AndG2532 Egyptians shall be rousedG1892 G* againstG1909 Egyptians,G* andG2532 [2shall wage war againstG4170 1 every man]G444 G3588 his brother,G80 G1473 andG2532 every manG444 against G3588 his neighbor;G4139 G1473 cityG4172 againstG1909 city,G4172 andG2532 abodeG3551.1 againstG1909 abode.G3551.1
+
+--- row  63 | Isa 30:31 | carrier G2274 | english: 'the Assyrians shall be vanquished,'
+    (Isa 30:31)  For byG1223 G1063 theG3588 voiceG5456 of the LORD G2962 the Assyrians shall be vanquished,G2274 G* even by theG3588 calamityG4127 in whichG3739 G302 he should strikeG3960 them.G1473
+
+--- row  64 | Jer 20:1 | carrier G191 | english: 'Pashur heard'
+    (Jer 20:1)  AndG2532 Pashur heardG191 G* (theG3588 sonG5207 of ImmerG* theG3588 priest,G2409 andG2532 this oneG3778 wasG1510.7.3 being ordainedG2525 leaderG2233 of the houseG3624 of the LORD)G2962 G3588 JeremiahG* prophesyingG4395 G3588 these words.G3056 G3778
+
+--- row  65 | Jer 20:3 | carrier G1806 | english: 'Pashur led out'
+    (Jer 20:3)  AndG2532 it came to passG1096 in theG3588 next morning,G839 andG2532 Pashur led outG1806 G* G3588 JeremiahG* fromG1537 theG3588 dungeon.G2674.1 AndG2532 [2saidG2036 3to himG1473 1Jeremiah],G* [3notG3780 5PashurG* 2calledG2564 1 the LORD G2962 G3588 4your name],G3686 G1473 but instead,G237.1 Refugee.G3351.1
+
+--- row  66 | Jer 22:28 | carrier G821 | english: 'Coniah is disgraced'
+    (Jer 22:28)  Coniah is disgracedG821 G* asG5613 a vesselG4632 whichG3739 there is noG3756 G1510.2.3 needG5532 of;G1473 forG3754 he was cast forthG1610.1 andG2532 castG1544 intoG1519 a landG1093 whichG3739 he did notG3756 know.G1492
+
+--- row  67 | Jer 24:5 | carrier G599.3 | english: 'Jews being resettled'
+    (Jer 24:5)  ThusG3592 saysG3004 the LORD G2962 G3588 GodG2316 of Israel,G* AsG5613 G3588 [2figsG4810 G3588 1these better],G5543 G3778 soG3779 shall I recognizeG1921 theG3588 Jews being resettledG599.3 G* whomG3739 I have sent outG1821 ofG1537 G3588 this placeG5117 G3778 intoG1519 the landG1093 of the ChaldeansG* forG1519 good.G18
+
+--- row  68 | Jer 26:21 | carrier G191 | english: 'Urijah heard'
+    (Jer 26:21)  AndG2532 [7heardG191 G3588 1kingG935 2JehoiakimG* 3andG2532 4allG3956 5theG3588 6rulers]G758 allG3956 G3588 his words,G3056 G1473 andG2532 soughtG2212 to killG615 him.G1473 AndG2532 Urijah heardG191 G* andG2532 fearedG5399 andG2532 fledG5343 andG2532 enteredG1525 intoG1519 Egypt.G*
+
+--- row  69 | Jer 30:9 | carrier G935 | english: 'their king'
+    (Jer 30:9)  AndG2532 they shall workG2038 to theG3588 LORD G2962 their God;G2316 G1473 andG2532 G3588 [2DavidG* 3their kingG935 G* 1I will raise up]G450 to them.G1473
+
+--- row  70 | Jer 38:8 | carrier G1831 | english: 'Ebed-melech went forth'
+    (Jer 38:8)  AndG2532 Ebed-melech went forthG1831 G* fromG575 theG3588 houseG3624 of the king,G935 andG2532 he spokeG2980 toG4314 theG3588 king,G935 andG2532 said,G2036
+
+--- row  71 | Jer 38:11 | carrier G2983 | english: 'Ebed-melech took'
+    (Jer 38:11)  AndG2532 Ebed-melech tookG2983 G* theG3588 men,G444 andG2532 he enteredG1525 intoG1519 theG3588 houseG3614 of theG3588 king,G935 theG3588 subterranean part,G5260.2 andG2532 he tookG2983 from thereG1564 oldG3820 ragsG4470 andG2532 oldG3820 rough cords;G4979 andG2532 he tossedG4495 themG1473 toG4314 JeremiahG* inG1519 theG3588 pit.G2978.1
+
+--- row  72 | Jer 43:6 | carrier G2641 | english: 'left behind'
+    (Jer 43:6)  theG3588 mightyG1415 men,G435 andG2532 theG3588 women,G1135 andG2532 theG3588 infantsG3516 remaining,G3062 andG2532 theG3588 daughtersG2364 of theG3588 king,G935 andG2532 theG3588 soulsG5590 whichG3739 [4left behindG2641 G* 1Nabuzar-adanG* 2theG3588 3chief guard]G749.3 withG3326 GedaliahG* sonG5207 of Ahikam,G* andG2532 JeremiahG* theG3588 prophet,G4396 andG2532 BaruchG* sonG5207 of Neriah.G*
+
+--- row  73 | Jer 49:1 | carrier G3880 | english: 'Milcom inherit'
+    (Jer 49:1)  To theG3588 sonsG5207 of Ammon,G* thusG3779 saidG2036 the LORD,G2962 [2noG3361 3sonsG5207 1Are there]G3756 G1510.2.6 inG1722 Israel?G* orG2228 [3inheritingG3880 2no oneG3756 1is there]G1510.2.3 of them?G1473 Why didG1302 Milcom inheritG3880 G* G3588 Gad,G* andG2532 G3588 their peopleG2992 G1473 [2inG1722 3their citiesG4172 G1473 1dwell]?G1774
+
+--- row  74 | Jer 49:3 | carrier G3643.4 | english: 'Ai was destroyed.'
+    (Jer 49:3)  Shout,G214 O Heshbon!G* forG3754 Ai was destroyed.G3643.4 G* Cry out,G2896 O daughtersG2364 of Rabbah!G* Gird onG4024 sackcloths!G4526 Be possessed,G1952.2 andG2532 lamentG2875 overG1909 Milcom!G* ForG3754 inG1722 resettlementG599.2 [4shall proceedG897.2 G3588 1his priestsG2409 G1473 2andG2532 G3588 3his rulers]G758 G1473 together.G260
+
+--- row  75 | Jer 50:16 | carrier G3162 | english: 'of the Grecian sword.'
+    (Jer 50:16)  Utterly destroyG1842 the seedG4690 from out ofG1537 Babylon!G* the one holdingG2722 the sickleG1407 inG1722 the timeG2540 of harvest,G2326 fromG575 in frontG4383 of the Grecian sword.G3162 G* EachG1538 untoG1519 G3588 his peopleG2992 G1473 shall return,G654 andG2532 eachG1538 untoG1519 G3588 his landG1093 G1473 shall flee.G5343
+
+--- row  76 | Jer 51:1 | carrier G2730 | english: 'Chaldeans dwelling there'
+    (Jer 51:1)  ThusG3592 saysG3004 the LORD,G2962 Behold,G2400 IG1473 awakenG1825 againstG1909 Babylon,G* andG2532 againstG1909 theG3588 Chaldeans dwelling there G2730 G* [3windG417 2burningG2742 1an utterly destroying].G1311
+
+--- row  77 | Jer 51:24 | carrier G2730 | english: 'Chaldeans dwelling there'
+    (Jer 51:24)  AndG2532 I will recompenseG467 to G3588 BabylonG* andG2532 to allG3956 theG3588 Chaldeans dwelling there G2730 G* allG3956 G3588 their evilsG2549 G1473 whichG3739 they didG4160 againstG1909 ZionG* beforeG2596 your eyes,G3788 G1473 saysG3004 the LORD.G2962
+
+--- row  78 | Jer 51:41 | carrier G234.1 | english: 'Sheshach is captured,'
+    (Jer 51:41)  O howG4459 Sheshach is captured,G234.1 G* andG2532 [6is huntedG2340 1theG3588 2boastingG2745 3of allG3956 4theG3588 5earth].G1093 O howG4459 Babylon becameG1096 G* forG1519 extinctionG854 amongG1722 theG3588 nations.G1484
+
+--- row  79 | Job 1:15 | carrier G1968 | english: 'Sabeans fell upon'
+    (Job 1:15)  AndG2532 Sabeans fell uponG1968 G* andG2532 capturedG162 them,G1473 andG2532 theG3588 servantsG3816 they killedG615 byG1722 swords.G3162 [4escapedG4982 1AndG1161 2IG1473 3alone],G3441 and I cameG2064 G3588 to reportG518 to you.G1473
+
+--- row  80 | Job 42:10 | carrier G1715 | english: "Job's before,"
+    (Job 42:10)  And theG3588 G1161 LORD G2962 increasedG837 G3588 Job.G* [3making a vowG2172 1AndG1161 2of his]G1473 andG2532 because of being G4012 G3588 his friendsG5384 G1473 he forgaveG863 to themG1473 theG3588 sin.G266 [4gaveG1325 1AndG1161 2theG3588 3 LORD]G2962 double,G1362 as much asG3745 wasG1510.7.3 Job's before,G1715 G* byG1519 doubling.G1361.3
+
+--- row  81 | Jos 5:15 | carrier G4160 | english: 'Josua did'
+    (Jos 5:15)  AndG2532 [4saysG3004 1theG3588 2commander-in-chiefG751.2 3 of the LORD]G2962 toG4314 Joshua,G* UntieG3089 G3588 your sandalG5266 G1473 fromG1537 G3588 your feet!G4228 G1473 for theG3588 G1063 placeG5117 uponG1909 whichG3739 you standG2476 uponG1909 itG1473 is holy.G39 G1510.2.3 AndG2532 Josua didG4160 G* thus.G3779
+
+--- row  82 | Jos 13:8 | carrier G1473 | english: 'to them'
+    (Jos 13:8)  To the onesG3588 withG3326 him,G1473 to G3588 ReubenG* andG2532 to G3588 Gad,G* they receivedG2983 their inheritanceG2817 G1473 whichG3739 [2gaveG1325 G* 3to themG1473 1Moses]G* onG1722 theG3588 other sideG4008 of theG3588 Jordan;G* according toG2596 the risingG395 of the sunG2246 [5grantedG1325 6to themG1473 1MosesG* 2theG3588 3servantG3816 4 of the LORD],G2962
+
+--- row  83 | Jos 22:34 | carrier G2028 | english: 'he named'
+    (Jos 22:34)  AndG2532 he namedG2028 G* G3588 [3for ReubenG* 4andG2532 G3588 5for GadG* 1theG3588 2shrine].G1041 AndG2532 they saidG2036 that,G3754 It is a testimonyG3142 G1510.2.3 in the midstG303.1 of them,G1473 thatG3754 the LORD G2962 heG1473 [2their GodG2316 G1473 1is].G1510.2.3
+
+--- row  84 | Jdg 1:6 | carrier G5343 | english: 'Adoni-bezek fled;'
+    (Jdg 1:6)  AndG2532 Adoni-bezek fled;G5343 G* andG2532 they pursuedG2614 afterG3694 him,G1473 andG2532 tookG2983 him,G1473 andG2532 cut offG609 theG3588 thumbsG206.1 G3588 of his hands,G5495 G1473 andG2532 theG3588 big toesG206.1 G3588 of his feet.G4228 G1473
+
+--- row  85 | Jdg 1:7 | carrier G2036 | english: 'Adoni-bezek said,'
+    (Jdg 1:7)  AndG2532 Adoni-bezek said,G2036 G* SeventyG1440 kingsG935 theG3588 thumbsG206.1 G3588 of their hands,G5495 G1473 andG2532 theG3588 big toesG206.1 G3588 of their feetG4228 G1473 being cut offG609 wereG1510.7.6 collected togetherG4816 G3588 underneathG5270 G3588 my table.G5132 G1473 AsG2531 thenG3767 I did,G4160 soG3779 [2recompensedG467 3to meG1473 G3588 1God].G2316 AndG2532 they ledG71 himG1473 untoG1519 Jerusalem,G* andG2532 he diedG599 there.G1563
+
+--- row  86 | Jdg 5:26 | carrier G4973.2 | english: 'with a hammer'
+    (Jdg 5:26)  G3588 [2her handG5495 3forG1519 4a pegG3956.1 1She stretched out],G1614 G1473 andG2532 her rightG1188 G1473 forG1519 the hammerG4973.1 of a laborer;G2872 andG2532 she struck [2with a hammerG4973.2 G* 1Sisera];G* she nailedG1335.2 his head;G2776 G1473 yes,G2532 she struck,G3960 she nailedG1335.2 his temple.G2924.7 G1473
+
+--- row  87 | Jdg 8:15 | carrier G3854 | english: 'he came'
+    (Jdg 8:15)  AndG2532 he cameG3854 G* toG4314 theG3588 rulersG758 of Succoth.G* AndG2532 he saidG2036 to them,G1473 Behold,G2400 ZebahG* andG2532 Zalmunna,G* byG1223 whomG3739 you beratedG3679 me,G1473 saying,G3004 Not is G3361 the handG5495 of ZebahG* andG2532 ZalmunnaG* nowG3568 inG1722 your hand,G5495 G1473 thatG3754 we will giveG1325 [2 to G3588 3your menG435 G1473 G3588 4faintingG1590 1bread loaves].G740
+
+--- row  88 | Jdg 9:21 | carrier G80 | english: 'his brother.'
+    (Jdg 9:21)  AndG2532 Jotham ran awayG590.2 andG2532 fled,G5343 andG2532 wentG4198 untoG1519 Beer,G* andG2532 dweltG2730 thereG1563 away fromG575 the faceG4383 of AbimelechG* G3588 his brother.G80 G*
+
+--- row  89 | Jdg 10:9 | carrier G2346 | english: 'they afflicted'
+    (Jdg 10:9)  AndG2532 [4passed overG1224 1theG3588 2sonsG5207 3of Ammon]G* theG3588 JordanG* to wage warG1606.2 evenG2532 againstG1722 G3588 JudahG* andG2532 Benjamin,G* andG2532 againstG1722 theG3588 houseG3624 of Ephraim;G* andG2532 they afflictedG2346 G* theG3588 sonsG5207 of IsraelG* exceedingly.G4970
+
+--- row  90 | Jdg 11:16 | carrier G306.1 | english: 'their ascending'
+    (Jdg 11:16)  InG1722 G3588 their ascendingG306.1 G* from out ofG1537 Egypt,G* it is that G235 Israel wentG4198 G* inG1722 theG3588 wildernessG2048 untoG2193 [2seaG2281 1 the red],G2063 andG2532 cameG2064 toG2193 Kadesh.G*
+
+--- row  91 | Jdg 16:19 | carrier G2838.1 | english: 'she rested'
+    (Jdg 16:19)  AndG2532 she restedG2838.1 G* himG1473 betweenG303.1 G3588 her knees.G1119 G1473 AndG2532 she calledG2564 theG3588 barber,G2891.2 andG2532 he shavedG3587 theG3588 sevenG2033 curlsG1007.1 G3588 of his head;G2776 G1473 andG2532 it beganG756 to humbleG5013 him,G1473 andG2532 [2leftG868 G3588 1his strength]G2479 G1473 fromG575 him.G1473
+
+--- row  92 | Lev 24:10 | carrier G1135 | english: 'of an Israelitish woman,'
+    (Lev 24:10)  AndG2532 [3went forthG1831 1a sonG5207 2of an Israelitish woman],G1135 G* andG2532 heG3778 wasG1510.7.3 a sonG5207 of an Egyptian man G* amongG1722 theG3588 sonsG5207 of Israel.G* AndG2532 they did combatG3164 inG1722 theG3588 camp --G3925 the oneG3588 ofG1537 theG3588 Israelitish woman G* andG2532 theG3588 [2manG444 G3588 1Israelite].G*
+
+--- row  93 | Neh 3:21 | carrier G2902 | english: 'Meramoth repaired,'
+    (Neh 3:21)  AndG2532 afterG3326 himG1473 Meramoth repaired,G2902 G* sonG5207 of UriahG* sonG5207 of KosG* [2measured section G3358 1a second],G1208 fromG575 the doorG2374 of the houseG3624 of EliashibG* untoG2193 the completionG4930 of the houseG3624 of Eliashib.G*
+
+--- row  94 | Neh 7:65 | carrier G2036 | english: 'Arthasastha said'
+    (Neh 7:65)  AndG2532 Arthasastha saidG2036 G* to them,G1473 thatG2443 they should notG3361 eatG2068 fromG575 theG3588 holyG39 G3588 of holiesG39 untilG2193 [2should rise upG450 1a priest]G2409 to theG3588 lightsG5461 andG2532 theG3588 perfections.G5050
+
+--- row  95 | Num 22:30 | carrier G3688 | english: 'your donkey,'
+    (Num 22:30)  AndG2532 [3saysG3004 1theG3588 2donkey]G3688 G3588 to Balaam,G* Am I notG3756 G1473 G3588 your donkey,G3688 G* uponG1909 whichG3739 you mountedG1910 fromG575 your youth,G3503 G1473 untilG2193 G3588 today'sG4594 day?G2250 Have G3361 [2to neglectG5246.1 3by overlookingG5237 1I acted]G4160 youG1473 thus?G3779 AndG3588 G1161 he said,G2036 No!G3780
+
+--- row  96 | Num 25:8 | carrier G444,G3588 | english: 'Israelitish man'
+    (Num 25:8)  he enteredG1525 afterG3694 theG3588 Israelitish manG444 G3588 G* intoG1519 theG3588 furnace,G2575 andG2532 he piercedG606.1 bothG297 theG3588 G5037 Israelitish man,G444 G3588 G* andG2532 theG3588 womanG1135 throughG1223 G3588 her womb;G3388 G1473 andG2532 [3ceasedG3973 1theG3588 2calamity]G4127 fromG575 theG3588 sonsG5207 of Israel.G*
+
+--- row  97 | Num 25:8 | carrier G444,G3588 | english: 'Israelitish man,'
+    (Num 25:8)  he enteredG1525 afterG3694 theG3588 Israelitish manG444 G3588 G* intoG1519 theG3588 furnace,G2575 andG2532 he piercedG606.1 bothG297 theG3588 G5037 Israelitish man,G444 G3588 G* andG2532 theG3588 womanG1135 throughG1223 G3588 her womb;G3388 G1473 andG2532 [3ceasedG3973 1theG3588 2calamity]G4127 fromG575 theG3588 sonsG5207 of Israel.G*
+
+--- row  98 | Num 25:14 | carrier G444,G3588 | english: 'Israelitish man'
+    (Num 25:14)  And theG3588 G1161 nameG3686 of theG3588 Israelitish manG444 G3588 G* G3588 being struck,G4141 whoG3739 was strickenG4141 withG3326 theG3588 Midianitish woman,G* was ZimriG* sonG5207 of Salu,G* rulerG758 of the houseG3624 of the familyG3965 of Simeon.G*
+
+--- row  99 | Num 25:15 | carrier G1135,G3588 | english: 'of the Midianitish woman'
+    (Num 25:15)  AndG2532 the nameG3686 G3588 of the Midianitish womanG1135 G3588 G* G3588 being struck,G4141 was Cozbi,G* daughterG2364 of Zur,G* a rulerG758 of the nationG1484 of Ommoth;G* [2of the houseG3624 3of the familyG3965 1it is]G1510.2.3 of the onesG3588 of Midian.G*
+
+--- row 100 | Psa 115:1 | carrier G1656 | english: 'your mercy'
+    (Psa 115:1)  NotG3361 to us,G1473 O LORD,G2962 notG3361 to us,G1473 but onlyG237.1 to G3588 your nameG3686 G1473 giveG1325 glory,G1391 because ofG1909 G3588 your mercyG1656 G* andG2532 G3588 your truth!G225 G1473
