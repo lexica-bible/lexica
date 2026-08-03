@@ -6,6 +6,33 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-02 — lane ② PN-star merged-verb FIX SESSION: closed complete
+
+Full record = `docs/tickets/TICKET_pn_star_fix.md` (predicate, ruling, controls, pin,
+receipts, reconciliation) + memory `project_pn_star_fix`. One session: predicate written
+pre-code and reviewer-ruled → pass coded (`_redistribute_pn_star_merge`, controls 12/12,
+both CI lists) → sized raw + corrected → expected picture PINNED (A 1,505 + B 2,552 /
+3,161 typed refusals) → receipts (lexicon fallback REJECTED on its own sizing — 22
+connector-scrap rows, doesn't rescue Mat 27:26; ≥5 floor stands) → 27/27 member
+reconciliation → detector re-based on the shared splitter (B1/B2 → 2,659/100).
+No data written; the fix lands at the ②-ride.
+
+- **Design spine:** class A gated by ruling-10 attestation; class B runs the evidence
+  NEGATIVE (roster + capitalized + not-a-stays-word + never-attested-on-carrier) because
+  a star has no number to attest against — and the pinned finding proved that was the
+  only coherent shape (NO name is attested under its own number on the real harvest;
+  ABP prints names on stars).
+- **The roster-collision hazard earned its keep on real data:** the detector's own B1/B2
+  reporting fell for 'the'-in-the-roster (14 rows) and hyphen tokenization (5 Bath-shebas,
+  auto-repaired by the pass) — the fix classified correctly where its counter was fooled.
+  Cure = ONE shared splitter, detector imports the build's (no second list to drift).
+- **Honest note (reviewer-recorded):** Mat 27:26 — the verse that NAMED the class —
+  ships still merged: correct behavior (φραγελλόω prints twice, never single-token; no
+  evidence can exist), typed refusal, hand-review lane if ever repaired.
+- Bracketed members (A 1,324 + B 18) typed-refused, deferred to the ⑤-family bracket
+  ruling. Detector `--list` B2 print crash fixed in passing (lane ③'s list was never
+  printable before).
+
 ## 2026-08-01/02 — RULING-10 REBUILD RIDE: lane A shipped+live, catch-up landed, all pins verified
 
 One day, one ride, four closed arcs. Full technical records: TICKET_509 §6j–§6l ·

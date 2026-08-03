@@ -730,60 +730,17 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   same verse-grounded discipline as the word definition engine. Scope AFTER the current
   def-engine calibration completes.
 
-- **② PN-STAR MERGED-VERB FIX SESSION — PASS CODED + SIZED + PINNED 2026-08-02
-  (docs/tickets/TICKET_pn_star_fix.md is the record: predicate, ruling, controls
-  12/12, sizing instrument, and THE PIN — corrected-layer build line A 1,505 +
-  B 2,552 written / 3,161 refusals, member file plan_pn_star_corrected.txt on PA,
-  raw→corrected delta fully attributed).** STILL OWED, in order: reviewer receipt on
-  the rare-number recommendation (reject lexicon fallback — 22 connector-scrap rows,
-  doesn't rescue Mat 27:26 — REJECTED by receipt 2026-08-02) → lane ③ B2 eyeball
-  against the CANONICAL 100-row list (re-based detector B2 under the shared
-  splitter, `--class B --list`; reconciliation 27/27 attributed, +2 late collision
-  finds, 5 Bath-shebas auto-repaired) → the rebuild ride, verdict-gated against
-  the pin. Bracketed members (A 1,324 + B 18) typed-refused,
-  deferred to the ⑤-family bracket ruling. (① the
-  509 article-slot re-sweep is CLOSED — archive 2026-07-31; both lists are final.)
-  Mechanism: ABP source attaches a verb/content word's English to the adjacent proper-noun
-  star chunk, and `_split_compounds` skips star slots — so the built words table puts the
-  verb on the name's chip and leaves the other slot blank. **The class runs in BOTH
-  orientations**, and the old 145 catalogued only one:
-  - class A — star carries the English (`scourging Jesus,G* G5417`, Mat 27:26)
-  - class B — the number carries it, star left empty (`Jesus finishedG5055 G3588 G*`,
-    Mat 26:1) — the orientation the old sweep was structurally blind to
-  **Revised count 4,996** (A 2,237 · B 2,759 = B1 roster-pinned 2,668 + B2 roster-silent 91).
-  Detector `scripts/audit_pn_star_verb_merge.py`, three controls fired, halt path proven;
-  close-out in `docs/tickets/TICKET_detector_gap.md`. **The 145 is SUPERSEDED, not adjusted —
-  never diff against it**: its predicate was never committed, is unrecoverable, and dropped
-  structurally identical rows inconsistently (`'this Moses'` out, `'these Galileans'` in).
-  All 145 old rows are contained in class A (145/145 checked). Both PA spot-checks passed —
-  Mat 26:1 and Mat 20:22 confirm live state matches the source scan, no drift.
-  ⛔ **NEVER FOLDED WITH THE ARTICLE-SLOT FIX — corrected 2026-07-31.** An earlier line here
-  said the fix session runs against A + B1 + the article-slot list *together*. It does not.
-  Both passes redistribute English between slots and both touch star slots, so landing them
-  in one rebuild makes any bin movement unattributable — the exact ambiguity the article-slot
-  session spent itself eliminating at the row level. **One change, one rebuild, a full
-  detector run between.** No folding, whatever the queue pressure.
-  Any fix = build-side redistribution for star slots + rebuild; regression pin
-  `tests/test_pn_star_verb_merge.py` (flip to the split shape when the fix lands).
-  ⚠ **BOTH SESSION-OPEN RULINGS CONFIRMED BY JP 2026-07-31; `--lanes` LANDED** (lane
-  derived inside the detector's own token walk, 6 lane controls fired, second halt path
-  `--prove-halt-lanes` proven, all prior counts unchanged) —
-  `docs/tickets/TICKET_509_article_slot_resweep.md` §6a/§6b. (1) TWO lanes, split on
-  ORIGIN not word class: lane A = adjacent BLANK numbered/star slot exists, mechanical
-  build-side redistribution; lane B = no blank neighbour, per-row triage only, no
-  predicate. The function/content axis is wrong — `'and'` (Act 20:15, fill) and `'is the'`
-  (1Co 4:20, nothing to write) are both function words; `'brought'` (Num 7:25, write) and
-  `'son of'` (Luk 6:15, supplied) are both content. **Lane totals are now 1,312 / 1,376,
-  NOT the 1,325 / 1,363 first recorded** — the lane fold (§6g) moved 13 mis-laned rows
-  whose blank neighbour was itself another `G3588`. 8 dotted rows (G3588.2 ×7, G3588.1 ×1)
-  inspected individually, never batched.
-  ⚠ The article-slot class MIXES origins: some are ABP-attested supplied English over the
-  article (1Co 1:25 "the wisdom"), NOT number drops — sort display treatment vs data fix per
-  spot. Same-family non-star case: Mat 28:13 "His disciples" (G3101 carries "His", following
-  G1473 blank — "His" is real Greek, NOT a translator italic). NO data writes done.
-  **Lesson, do not rebuild the reverted guard:** adjacency is NOT the discriminator for class-B
-  false positives — `Gen 23:19 "Abraham entombedG2290 G* SarahG*"` is directly adjacent and IS
-  a genuine merge. Whether the carrier holds a name is the discriminator.
+- *(② PN-STAR MERGED-VERB FIX SESSION: **CLOSED 2026-08-02** — predicate ruled, pass
+  coded (controls 12/12), pin derived through the corrected layer, receipts recorded,
+  detector re-based on the shared splitter. THE RECORD = `docs/tickets/TICKET_pn_star_fix.md`
+  — open lane ③ and the rebuild ride from there, never from here. Session story:
+  TODO_ARCHIVE "2026-08-02 — lane ② fix session".)*
+
+- **②-RIDE — PN-star rebuild ride (NOT YET RUN; own cycle, `/rebuild-words` as amended
+  8/1).** Verdict-gated against the PIN in TICKET_pn_star_fix.md: build line A 1,505 +
+  B 2,552 written / 3,161 typed refusals; member file `plan_pn_star_corrected.txt` on PA
+  (regenerable: `--plan --corrected`). Member set-equality + a NAMED tail allowance
+  derived fresh at the ride. Sequenced AFTER lane ③'s eyeball.
 
 - *(④ article-slot lane A + ④b checklist pins + the finish_rebuild acceptance run:
   ALL CLOSED 2026-08-01 — the ruling-10 rebuild ride shipped + verified the same evening.
@@ -805,10 +762,14 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   convenience is one nobody can restate later. Motivating exhibit: `1Co 3:8` repairs one
   `'his own'` onto G2398 and leaves its bracketed twin, inconsistent within one verse.
 
-- **③ B2 EYEBALL PASS (91 rows)** — rides with ② or precedes it. Roster-silent residue: real
-  merges the pinned TIPNR misses (Bath-sheba, Bezaleel, gentilics like Sadducees/Romans)
-  mixed with bracket-position artifacts that are NOT defects (`1Sa 25:42 "rose upG450 G*
-  1Abigail],G*"` — the name IS printed, on its own star). Reported, never silently dropped.
+- **③ B2 EYEBALL PASS — CANONICAL LIST 100 rows / 98 verses (re-pinned 2026-08-02;
+  supersedes the old 91).** One source: `audit_pn_star_verb_merge.py --class B --list`,
+  the B2 block (shared-splitter classification; derivation + 27/27 reconciliation in
+  TICKET_pn_star_fix.md). Roster-silent residue: real merges the pinned TIPNR misses
+  (gentilics — Sadducees/Romans/Ethiopians; Bath-sheba turned out AUTO-REPAIRED) mixed
+  with bracket-position artifacts that are NOT defects (`1Sa 25:42` — the name IS
+  printed, on its own star). Per-row adjudication, reported never dropped; any repair
+  is hand-per-row, JP-checkpointed. Runs BEFORE the ②-ride.
 
 - **SAME-NAME / RENAMED DROPS (opened 2026-07-31 at the G707 ship — allowlist design
   question, own session).** 358 slots ruled correct-to-drop today (text-first) but carrying
