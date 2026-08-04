@@ -25,8 +25,7 @@ actual repair comes from a PA dump of the built rows, not from these lines.
 - **ARTIFACT-no-name** — NOT a repairable merge: no name word appears in the
   English of the clause at all (ABP left the word untranslated or used a
   pronoun); there is nothing to move. Live state stands.
-- **JUDGMENT** — flagged for JP: a translated name is involved; whether anything
-  should move is a per-row human call.
+- **RULED-ARTIFACT** — was flagged as a judgment call; ruled by JP (see the row).
 
 ## Tally
 
@@ -37,7 +36,7 @@ actual repair comes from a PA dump of the built rows, not from these lines.
 | MERGE-possessive | 8 |
 | ARTIFACT-own-star | 13 |
 | ARTIFACT-no-name | 15 |
-| JUDGMENT | 1 |
+| RULED-ARTIFACT (Gen 35:18, JP-ruled 2026-08-03) | 1 |
 | **Total** | **100** |
 
 Repair candidates total **71 rows / 69 verses** (2Ch 34:15 and Num 25:8 carry two
@@ -108,7 +107,7 @@ relevant span.
 | 56 | Gen 11:15 | G2198 | Salah lived | MERGE-name | same pattern |
 | 57 | Gen 11:21 | G1080 | his procreating | ARTIFACT-no-name | `his procreatingG1080 G* G3588 SerugG*` — parallel verses put G1473 here; no name English on carrier; Serug has own star |
 | 58 | Gen 26:20 | G91 | for they wronged | ARTIFACT-own-star | `Injustice,G93 G* for they wrongedG91 G1063` — the name (translated "Injustice") sits with its own star |
-| 59 | Gen 35:18 | G3601 | of my Grief; | JUDGMENT | `SonG5207 of my Grief;G3601 G*` — Ben-oni rendered as translation; whether "of my Grief" belongs to the star is a human call |
+| 59 | Gen 35:18 | G3601 | of my Grief; | RULED-ARTIFACT | `SonG5207 of my Grief;G3601 G*` — JP ruling 2026-08-03 (applied per standing delegation): artifact, no repair. ABP translates the name Ben-oni rather than transliterating it; no roster-shaped token exists to move, and moving the translated phrase would invent a rendering the source never printed. Kin to ARTIFACT-no-name. Transliterating translated names would be a new feature lane, not this defect. |
 | 60 | Gen 46:26 | G5207 | of Jacob's sons -- | MERGE-possessive | `of Jacob's sons --G5207 G*` |
 | 61 | Gen 50:23 | G3382 | Joseph's thighs. | MERGE-possessive | `Joseph's thighs.G3382 G*` |
 | 62 | Isa 19:2 | G1892 | Egyptians shall be roused | MERGE-gentilic | `Egyptians shall be rousedG1892 G*` |
@@ -159,8 +158,11 @@ relevant span.
    (8 — each needs an English-wording call: the star would read "Pharaoh's" /
    "Lot's", which is how ABP itself prints possessive names elsewhere, e.g.
    `Ephraim'sG*` in Gen 50:23).
-2. **Row 59 (Gen 35:18)** is the one true judgment call — the name Ben-oni is
-   printed only as its translation "Son of my Grief".
+   **Possessive wording default (JP, 2026-08-03): the moved word keeps the
+   apostrophe-s exactly as printed** — source fidelity, no made-up base form.
+   Decided once; the per-row checkpoint only overrides exceptions.
+2. **Row 59 (Gen 35:18)** — ruled artifact, no repair (see the row for the
+   reason). Closed.
 3. The ARTIFACT rows (28) confirm the handoff's expectation: the empty star either
    sits beside a name that already has its own star, or beside a clause where ABP
    never printed the name in English. Nothing to repair; import_tipnr fills the
