@@ -75,15 +75,19 @@ def main():
             continue
         mtoks = moved.split()
         gbase = "G" + base
+        # A verse can hold the same number twice (Jdg 11:17 G649 x2), so every
+        # leg keys on the PLAN'S SLOT (+/- a small window for the blank-slot
+        # walk), never on the number alone — the repeated-key trap.
+        near = [r for r in rows if abs(r[0] - slot) <= 6]
         if cls == "A":
-            hit = [r for r in rows if r[2] == gbase and r[3] == mtoks]
-            sub = [r for r in rows if r[2] == gbase and
+            hit = [r for r in near if r[2] == gbase and r[3] == mtoks]
+            sub = [r for r in near if r[2] == gbase and
                    all(t in r[3] for t in mtoks)]
         else:
-            still = [r for r in rows if r[2] == gbase and
+            still = [r for r in near if r[2] == gbase and r[0] == slot and
                      all(t in r[3] for t in mtoks)]
-            landed = [r for r in rows if r[2] != gbase and r[3] == mtoks]
-            landed_sub = [r for r in rows if r[2] != gbase and
+            landed = [r for r in near if r[2] != gbase and r[3] == mtoks]
+            landed_sub = [r for r in near if r[2] != gbase and
                           all(t in r[3] for t in mtoks)]
             hit = landed if not still else []
             sub = landed_sub if not still else []
