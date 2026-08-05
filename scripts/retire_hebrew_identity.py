@@ -45,7 +45,11 @@ Usage (PA, JP runs):
   python3 scripts/retire_hebrew_identity.py ~/bible-db/bible_test.db            # dry-run
   python3 scripts/retire_hebrew_identity.py ~/bible-db/bible_test.db --apply
   (--fresh-rebuild on the rebuild chain; --expect-split a,b,c,d,e overrides the
-   declared class counts — TEST FIXTURES ONLY)
+   declared class counts — TEST FIXTURES ONLY;
+   --rebaseline <attribution-file> WITH --fresh-rebuild replaces the oracle
+   byte-for-byte gate after a geometry-moving build pass, reviewer-ruled
+   2026-08-05 — the identity table must have been RE-DERIVED on this copy
+   first, and the class split is still re-declared in code)
 """
 import os
 import sqlite3
@@ -55,6 +59,21 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible.db"))
 APPLY = "--apply" in sys.argv
 FRESH = "--fresh-rebuild" in sys.argv
+# --rebaseline <attribution-file> (reviewer-ruled 2026-08-05, lane-② ride):
+# when a build pass has LEGITIMATELY moved name slots, the identity table is
+# re-derived from the new geometry (build_pn_greek_identity on the ride copy)
+# and can no longer match the old xref byte-for-byte — the oracle gate would
+# refuse forever. This mode replaces that gate with the ride's member-level
+# attribution record (cross_restore_vs_plan.py output; zero unattributed
+# members is the admission standard, checked by the HUMANS on the ride, not
+# here). The file must exist and be non-empty; it is named in the run output
+# so the change record travels with the artifact. Valid only WITH
+# --fresh-rebuild. The class-split expectation below still applies and is
+# re-declared in code, never overridden.
+REBASELINE = None
+for _i, _a in enumerate(sys.argv):
+    if _a == "--rebaseline" and _i + 1 < len(sys.argv):
+        REBASELINE = sys.argv[_i + 1]
 
 # Declared expectations — the run REFUSES to start if the identity table's
 # class split is not exactly this. Declared ONCE from the live table
@@ -106,30 +125,41 @@ def main():
             fail("pn_hebrew_xref already exists — this run is single-shot per copy; "
                  "start from a fresh copy of the pre-rebuild db, or pass "
                  "--fresh-rebuild on the rebuild chain (step 8b).")
-        # Oracle gate (check 4): drop the stale xref ONLY if the identity table
-        # carries the frozen Hebrew record byte-for-byte. A nonzero here means
-        # the xref copy is the sole carrier of the frozen record — do NOT drop.
-        n_oracle = conn.execute("""
-            SELECT count(*) FROM pn_greek_identity g
-            JOIN pn_hebrew_xref x
-              ON x.verse_id = g.verse_id AND x.position = g.position
-            WHERE g.hebrew_base IS NOT x.hebrew_base
-        """).fetchone()[0]
-        n_only_xref = conn.execute("""
-            SELECT count(*) FROM pn_hebrew_xref x
-            WHERE NOT EXISTS (SELECT 1 FROM pn_greek_identity g
-                              WHERE g.verse_id = x.verse_id
-                                AND g.position = x.position)
-        """).fetchone()[0]
-        print(f"fresh-rebuild oracle gate: hebrew_base mismatches "
-              f"{n_oracle} (must be 0), xref rows outside the identity table "
-              f"{n_only_xref} (must be 0)")
-        if n_oracle or n_only_xref:
-            fail("the identity table is NOT a byte-for-byte carrier of the "
-                 "frozen Hebrew record — the stale xref stays; stop and look.")
+        if REBASELINE is not None:
+            import os.path
+            if not os.path.isfile(REBASELINE) or os.path.getsize(REBASELINE) == 0:
+                fail(f"--rebaseline record {REBASELINE!r} missing or empty — "
+                     "the attribution record must exist before the old frozen "
+                     "record may be dropped.")
+            print(f"REBASELINE MODE (ruling 2026-08-05): oracle byte-for-byte "
+                  f"gate replaced by the member attribution record "
+                  f"{REBASELINE!r}; the stale xref will be dropped and rebuilt "
+                  f"from the RE-DERIVED identity table at write time.")
+        else:
+            # Oracle gate (check 4): drop the stale xref ONLY if the identity
+            # table carries the frozen Hebrew record byte-for-byte. A nonzero
+            # means the xref copy is the sole carrier — do NOT drop.
+            n_oracle = conn.execute("""
+                SELECT count(*) FROM pn_greek_identity g
+                JOIN pn_hebrew_xref x
+                  ON x.verse_id = g.verse_id AND x.position = g.position
+                WHERE g.hebrew_base IS NOT x.hebrew_base
+            """).fetchone()[0]
+            n_only_xref = conn.execute("""
+                SELECT count(*) FROM pn_hebrew_xref x
+                WHERE NOT EXISTS (SELECT 1 FROM pn_greek_identity g
+                                  WHERE g.verse_id = x.verse_id
+                                    AND g.position = x.position)
+            """).fetchone()[0]
+            print(f"fresh-rebuild oracle gate: hebrew_base mismatches "
+                  f"{n_oracle} (must be 0), xref rows outside the identity table "
+                  f"{n_only_xref} (must be 0)")
+            if n_oracle or n_only_xref:
+                fail("the identity table is NOT a byte-for-byte carrier of the "
+                     "frozen Hebrew record — the stale xref stays; stop and look.")
+            print("oracle gate clean — the stale xref will be dropped and rebuilt "
+                  "at write time (dry-run leaves it in place).")
         drop_stale = True
-        print("oracle gate clean — the stale xref will be dropped and rebuilt "
-              "at write time (dry-run leaves it in place).")
     else:
         drop_stale = False
 

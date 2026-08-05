@@ -24,9 +24,18 @@ The first declaration said 363 ("357 hand-fix-zone + 6 Cushi") — the 357 was
 ported from a memory line about the G707-session census without verifying
 what that census compared; it was never fresh-import drift. Evidence of
 agreement everywhere else: the 1,085 still-'*' slots after import match the
-frozen record's always-'*' count to the row. A different count HALTS —
-look before overriding (--expect N; the set may legitimately move if
-import_tipnr/TIPNR.txt changed under the roster-freeze rule).
+frozen record's always-'*' count to the row. A different count HALTS.
+
+SUPERSEDED 2026-08-05 (lane-② ride, reviewer-ruled): the "6" figure is itself
+stale — the member derivation split it 5 clean renumbers + 3 Cushi-verse
+position churn, entangled with 2,520 slots the PN-star pass legitimately
+moved (attribution: scripts/cross_restore_vs_plan.py, zero unattributed).
+The Cushi hand fix is now NAME-keyed (scripts/apply_cushi_namekeyed.py) and
+the frozen record was re-baselined to the new geometry. The next ride's
+expectation must be RE-DECLARED from its own dry-run against the NEW record.
+The --expect override is REMOVED (same ruling): the one thing the 2026-08-05
+HALT proved is that an override must never absorb a geometry change — a
+count mismatch here always ends in a member-level attribution, never a flag.
 
 Usage (PA, JP runs, on the rebuild copy AFTER finish_rebuild.sh):
   python3 scripts/restore_frozen_pn.py ~/bible-db/bible_test.db           # dry-run
@@ -41,9 +50,15 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
 APPLY = "--apply" in sys.argv
 
 EXPECT = 6
-for i, a in enumerate(sys.argv):
-    if a == "--expect" and i + 1 < len(sys.argv):
-        EXPECT = int(sys.argv[i + 1])
+# TEST FIXTURES ONLY (the sanctioned --expect-split pattern): the harness sets
+# the declared figure for synthetic dbs via env, never via a runtime flag.
+if os.environ.get("RESTORE_EXPECT_FIXTURE"):
+    EXPECT = int(os.environ["RESTORE_EXPECT_FIXTURE"])
+if "--expect" in sys.argv:
+    print("HALT: --expect was removed (reviewer ruling 2026-08-05) — a count "
+          "mismatch is attributed by member (cross_restore_vs_plan.py) and the "
+          "declared figure re-declared in code, never overridden at run time.")
+    sys.exit(1)
 
 
 def fail(msg):
@@ -86,8 +101,9 @@ def main():
         print(f"  ({vid},{pos}) {head or '?'}: {cur!r} -> {exp!r}")
     if len(fixes) != EXPECT:
         fail(f"restore count {len(fixes)} != declared {EXPECT} — the drift "
-             "set moved since the census; look at the member list above "
-             "before overriding with --expect.")
+             "set moved since the census; attribute the member list above "
+             "(scripts/cross_restore_vs_plan.py) and re-declare in code — "
+             "there is no runtime override.")
 
     if not APPLY:
         print("\n[DRY RUN] No changes written. Re-run with --apply.")

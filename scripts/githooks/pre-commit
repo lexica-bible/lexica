@@ -50,6 +50,7 @@ python tests/test_helper_double_tag.py >/dev/null
 python tests/test_article_slot_attestation.py >/dev/null
 python tests/test_pn_star_verb_merge.py >/dev/null
 python tests/test_pn_star_merge_fix.py >/dev/null
+python tests/test_cushi_namekeyed.py >/dev/null
 python tests/test_context_feed.py >/dev/null
 python tests/test_prompt_contract.py >/dev/null
 python tests/test_written_ranges.py >/dev/null

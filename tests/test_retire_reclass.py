@@ -65,11 +65,16 @@ def make_db(path, rows=FIXTURE, with_xref=False, xref_break=False):
     conn.close()
 
 
-def run(script, db, *flags):
+def run(script, db, *flags, expect=None):
+    # restore_frozen_pn's declared figure is set via the fixture ENV hook —
+    # the --expect runtime flag was removed (reviewer ruling 2026-08-05).
+    env = dict(os.environ)
+    if expect is not None:
+        env["RESTORE_EXPECT_FIXTURE"] = str(expect)
     return subprocess.run(
         [sys.executable, script, db, "--expect-split", SPLIT, *flags]
         if script == RETIRE else [sys.executable, script, db, *flags],
-        capture_output=True, text=True)
+        capture_output=True, text=True, env=env)
 
 
 def words_val(db, vid, pos):
@@ -151,15 +156,39 @@ def t5_restore_frozen(tmp):
               "H3570" if (v, p) == (1, 2) else ("*" if (v, p) == (1, 5) else w))
              for v, p, g, s, h, w in FIXTURE]
     make_db(db, drift)   # (1,2) hand-fix re-broken; (1,5) import missed it
-    r = run(RESTORE, db, "--expect", "1")
+    r = run(RESTORE, db, expect=1)
     assert r.returncode != 0, "wrong declared count must HALT (red)"
-    r = run(RESTORE, db, "--expect", "2", "--apply")
+    r = run(RESTORE, db, "--expect", "1")
+    assert r.returncode != 0 and "--expect was removed" in r.stdout, \
+        "the removed runtime flag must HALT loudly (ruling 2026-08-05)"
+    r = run(RESTORE, db, "--apply", expect=2)
     assert r.returncode == 0, f"restore failed:\n{r.stdout}{r.stderr}"
     assert words_val(db, 1, 2) == "H7586"
     assert words_val(db, 1, 5) == "H2"
     r = run(RETIRE, db, "--apply")
     assert r.returncode == 0, "retire must run clean after the restore"
     print("T5 restore_frozen_pn + chain order: PASS")
+
+
+def t6_rebaseline_mode(tmp):
+    # ruling 2026-08-05: --rebaseline (with --fresh-rebuild) replaces the
+    # oracle byte-for-byte gate with the ride's attribution record.
+    db = os.path.join(tmp, "t6.db")
+    make_db(db, with_xref=True, xref_break=True)   # oracle WOULD refuse
+    rec = os.path.join(tmp, "attribution.log")
+    r = run(RETIRE, db, "--fresh-rebuild", "--rebaseline", rec)
+    assert r.returncode != 0 and "missing or empty" in r.stdout, \
+        "a missing attribution record must HALT (red)"
+    with open(rec, "w") as f:
+        f.write("2528 members, zero unattributed (fixture)\n")
+    r = run(RETIRE, db, "--fresh-rebuild", "--rebaseline", rec, "--apply")
+    assert r.returncode == 0, f"rebaseline apply failed:\n{r.stdout}{r.stderr}"
+    assert "REBASELINE MODE" in r.stdout
+    conn = sqlite3.connect(db)
+    n = conn.execute("SELECT count(*) FROM pn_hebrew_xref").fetchone()[0]
+    conn.close()
+    assert n == len(FIXTURE), "xref must be rebuilt from the re-derived table"
+    print("T6 rebaseline mode (red + green): PASS")
 
 
 def main():
@@ -169,7 +198,8 @@ def main():
         t3_fresh_rebuild_broken_oracle_halts(tmp)
         t4_fresh_rebuild_clean(tmp)
         t5_restore_frozen(tmp)
-    print("\nall retire-reclass locks PASS (5/5)")
+        t6_rebaseline_mode(tmp)
+    print("\nall retire-reclass locks PASS (6/6)")
 
 
 if __name__ == "__main__":
