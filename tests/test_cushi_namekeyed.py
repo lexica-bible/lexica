@@ -19,12 +19,18 @@ def _mkdb(path):
     conn = sqlite3.connect(path)
     conn.execute("CREATE TABLE words (verse_id INT, position INT,"
                  " english TEXT, english_head TEXT, strongs_base TEXT)")
+    conn.execute("CREATE TABLE verses (id INT, book TEXT, chapter INT)")
+    conn.executemany("INSERT INTO verses VALUES (?,?,?)", [
+        (10, "2Sa", 18), (11, "2Sa", 18), (12, "2Sa", 18),
+        (13, "2Sa", 18), (20, "Zep", 1),
+    ])
     rows = [
         (10, 3, "Cushi", "Cushi", "H3570"),        # clean, frozen position
         (11, 16, "Cushi,", "Cushi", "H3570"),       # moved position (churn row)
         (10, 12, "did obeisance", "obeisance", "H3570"),  # non-name: REFUSE
         (12, 5, "Cushi", "Cushi", "H3569"),         # already right: not a member
         (13, 2, "took", "took", "G2983"),           # unrelated
+        (20, 4, "Cushi,", "Cushi", "H3570"),        # Zep 1:1 — LEGIT H3570, REFUSE
     ]
     conn.executemany("INSERT INTO words VALUES (?,?,?,?,?)", rows)
     conn.commit()
@@ -56,6 +62,12 @@ class CushiNameKeyed(unittest.TestCase):
         members = fix.find_members(self.conn)
         self.assertIn((11, 16), {(m[1], m[2]) for m in members})
 
+    def test_control_other_cushi_person_refused(self):
+        # the OTHER Cushi (Zep 1:1 / Jer 36:14 class) is genuinely H3570 —
+        # the 2Sa 18 scope must refuse him
+        members = fix.find_members(self.conn)
+        self.assertNotIn((20, 4), {(m[1], m[2]) for m in members})
+
     def test_apply_writes_only_members(self):
         members = fix.find_members(self.conn)
         self.conn.executemany(
@@ -67,6 +79,7 @@ class CushiNameKeyed(unittest.TestCase):
         self.assertEqual(state[(10, 3)], "H3569")
         self.assertEqual(state[(11, 16)], "H3569")
         self.assertEqual(state[(10, 12)], "H3570")   # refused slot untouched
+        self.assertEqual(state[(20, 4)], "H3570")    # the other Cushi untouched
         self.assertEqual(state[(13, 2)], "G2983")
         # settles: a second pass finds nothing
         self.assertEqual(fix.find_members(self.conn), [])
