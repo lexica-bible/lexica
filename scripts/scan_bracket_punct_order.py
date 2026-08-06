@@ -19,7 +19,8 @@ import re
 import sqlite3
 import sys
 
-TRAIL = re.compile(r"[,;]$")
+TRAIL = re.compile(r"[,;:.!?·]$")   # broad — the per-mark tag lets the diff
+                                    # derive the fix's exact mark inventory
 
 
 def main():
@@ -44,9 +45,10 @@ def main():
                     not re.search(r"[,;:.!?]$", last[4].strip()):
                 hits += 1
                 bk, ch, vs = r[0], r[1], r[2]
-                print("  %s %d:%d bracket %s: %r displays before %r"
-                      % (bk, ch, vs, bid, r[4], last[4]))
-    print("\ntotal mid-bracket trailing-comma members: %d" % hits)
+                mark = r[4].strip()[-1]
+                print("  [%s] %s %d:%d bracket %s: %r displays before %r"
+                      % (mark, bk, ch, vs, bid, r[4], last[4]))
+    print("\ntotal mid-bracket trailing-mark members: %d" % hits)
 
 
 if __name__ == "__main__":
