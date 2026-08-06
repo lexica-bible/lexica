@@ -15,6 +15,7 @@ Read-only.
 """
 import json
 import os
+import re
 import sqlite3
 import sys
 
@@ -32,10 +33,18 @@ def verse_rows(conn, book, ch, vs):
         (book, ch, vs)).fetchall()
 
 
+TRAIL_RE = re.compile(r"[.,;:!?·)]+$")
+
+
 def display_seq(rows):
-    """The reader's rendered order (56-library-order-logic.jsx): within a
-    bracket group sort by greek_pos ascending (missing -> end); non-bracket
-    words keep position order. Returns the sequence of English cells."""
+    """The reader's FULL prose render (getEnglishOrderWords,
+    56-library-order-logic.jsx): within a bracket group, strip trailing
+    clause punctuation from every member (position order), reorder by
+    greek_pos ascending (missing -> end), then re-attach the collected
+    punctuation to the display-last English-carrying chip. Non-bracket words
+    keep position order. Modeling the reorder WITHOUT the punctuation float
+    manufactured a phantom 626-member class — the float is part of the
+    render."""
     out, i, n = [], 0, len(rows)
     while i < n:
         pos, eng, _sb, bid, _gp = rows[i]
@@ -49,8 +58,26 @@ def display_seq(rows):
         while j < n and rows[j][3] == bid:
             group.append(rows[j])
             j += 1
-        group.sort(key=lambda r: r[4] if r[4] is not None else 999)
-        out.extend(r[1] for r in group if r[1])
+        trailing = ""
+        cleaned = []
+        for r in group:
+            e = (r[1] or "").strip()
+            if e and TRAIL_RE.sub("", e) == "":
+                trailing += e
+                continue
+            m = TRAIL_RE.search(e)
+            if m:
+                trailing += m.group()
+                e = e[:m.start()].rstrip()
+            cleaned.append((r[0], e, r[2], r[3], r[4]))
+        cleaned.sort(key=lambda r: r[4] if r[4] is not None else 999)
+        if trailing and cleaned:
+            li = len(cleaned) - 1
+            while li > 0 and not (cleaned[li][1] or "").strip():
+                li -= 1
+            cleaned[li] = cleaned[li][:1] + ((cleaned[li][1] or "") + trailing,) \
+                + cleaned[li][2:]
+        out.extend(r[1] for r in cleaned if r[1])
         i = j
     return out
 
