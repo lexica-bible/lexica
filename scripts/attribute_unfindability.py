@@ -58,19 +58,21 @@ def main():
     ref = {vid: (bk, ch, vs) for vid, bk, ch, vs in
            a.execute("SELECT id, book, chapter, verse FROM verses")}
 
-    # AFTER-side name slots: is_pn words joined to their xref rows, per verse
-    after_names = collections.defaultdict(list)
-    for vid, pos, eng in a.execute(
-            "SELECT w.verse_id, w.position, w.english FROM words w "
-            "JOIN pn_hebrew_xref x ON x.verse_id = w.verse_id "
-            "AND x.position = w.position WHERE w.is_pn = 1"):
-        after_names[vid].append((pos, toks(eng)))
-
-    before_eng = {}
-    for vid, pos in fails:
-        r = b.execute("SELECT english FROM words WHERE verse_id=? AND position=?",
-                      (vid, pos)).fetchone()
-        before_eng[(vid, pos)] = r[0] if r else None
+    # Identity-level findability (v2 — the position-blind form): a name that
+    # was findable BEFORE carried a Hebrew number in the old record; it stays
+    # findable iff that number exists somewhere in the SAME verse's NEW record
+    # (class A keeps its slot, class B moves — both covered; blank before-
+    # cells too, since the match is by number not by text). A before-row with
+    # no number never had a findable Hebrew identity — nothing to lose.
+    before_heb = {}
+    for vid, pos, hb in b.execute(
+            "SELECT verse_id, position, hebrew_base FROM pn_greek_identity"):
+        before_heb[(vid, pos)] = hb
+    after_hebs = collections.defaultdict(set)
+    for vid, hb in a.execute(
+            "SELECT verse_id, hebrew_base FROM pn_hebrew_xref "
+            "WHERE hebrew_base IS NOT NULL"):
+        after_hebs[vid].add(hb)
 
     buckets = collections.Counter()
     residue = []
@@ -78,26 +80,21 @@ def main():
         vref = ref.get(vid)
         in_plan = vref in plan_verses
         cushi = vref and vref[0] == "2Sa" and vref[1] == 18
-        name_toks = toks(before_eng.get((vid, pos)))
-        found = False
-        for apos, atoks in after_names.get(vid, ()):
-            if apos != pos and name_toks and all(
-                    t in name_toks for t in atoks) and atoks:
-                found = True
-                break
-            # the name may have been merged with a verb BEFORE ('died Saul'):
-            # accept when the after-slot's tokens are a subset of the before cell
-            if apos != pos and atoks and set(atoks) <= set(name_toks):
-                found = True
-                break
+        hb = before_heb.get((vid, pos))
+        if hb is None:
+            found, why = True, "no-number-before"
+        elif cushi and hb in ("H3569", "H3570"):
+            found, why = ("H3569" in after_hebs.get(vid, set())), "cushi"
+        else:
+            found, why = (hb in after_hebs.get(vid, set())), "number-in-verse"
         if (in_plan or cushi) and found:
-            buckets["MOVED-FOUND"] += 1
+            buckets["MOVED-FOUND (%s)" % why] += 1
         elif in_plan or cushi:
             buckets["MOVED-BUT-NOT-FOUND"] += 1
-            residue.append((vid, pos, vref, before_eng.get((vid, pos)), "not-found"))
+            residue.append((vid, pos, vref, hb, "not-found"))
         else:
             buckets["OUTSIDE-WRITE-SET"] += 1
-            residue.append((vid, pos, vref, before_eng.get((vid, pos)), "no-plan-verse"))
+            residue.append((vid, pos, vref, hb, "no-plan-verse"))
 
     print("\nattribution:")
     for k, n in buckets.most_common():
