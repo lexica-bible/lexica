@@ -410,7 +410,15 @@ def main():
     for w in words:
         base = w["strongs_base"] or ""
         xr = xref.get((w["verse_id"], w["position"]))
-        heb = xr[0] if xr else (base if base.startswith("H") else None)
+        # Hebrew snapshot precedence (lane-② ride fix, 2026-08-05): a CURRENT
+        # 'H' on the words row always wins — on the rebuild chain the words
+        # column carries the fresh import and the xref is the STALE old-geometry
+        # record (Dan 11:1 'Cyrus': old xref said the star never had a number,
+        # the moved name now carries H3566 — xref-first froze NULL and the
+        # retirement would have blanked the identity). Post-retirement re-runs
+        # are unchanged: words carry 'H' only on kept-Hebrew rows, where the
+        # xref agrees by construction.
+        heb = base if base.startswith("H") else (xr[0] if xr else None)
         greek, source = None, None
         lemma = norm_lemma(w["lemma"] or w["surface_form"])  # numbered rows: as before (+breathing fix)
         if base.startswith("G") and xr and xr[1] == "tipnr":
