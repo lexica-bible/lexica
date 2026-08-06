@@ -38,6 +38,7 @@ from build_abp_surface import ABBREV_TO_SLUG   # the ONE ABP-abbrev -> scrape-sl
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible.db"))
 APPLY = "--apply" in sys.argv
+IGNORE_XREF = "--ignore-xref" in sys.argv
 BH = next((sys.argv[i + 1] for i, a in enumerate(sys.argv)
            if a == "--bh" and i + 1 < len(sys.argv)),
           os.path.expanduser("~/bible-db/bh_scrape.db"))
@@ -334,8 +335,17 @@ def main():
     # Q2 home, not re-derive them from the rewritten column (a rewritten G9xxx
     # row misread as native abp-tag would falsify the classification of record).
     # Pre-retirement (table absent): empty map, behavior byte-identical.
+    # --ignore-xref (lane-② ride, reviewer-ruled re-baseline 2026-08-05): a
+    # REBUILD copy is pre-retirement words WITH live's stale xref still in the
+    # file — the post-retirement branches then classify fresh rows through the
+    # old geometry's classes (a native G-tag classed 'tipnr' with a '*'
+    # snapshot; Dan 11:1's moved Cyrus frozen NULL). The capture mode treats
+    # the stale table as absent and derives everything from current state.
     xref = {}
-    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+    if IGNORE_XREF:
+        print("capture mode (--ignore-xref): stale pn_hebrew_xref treated as "
+              "absent — all classes derived from the copy's current state.")
+    elif conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
                     "AND name='pn_hebrew_xref'").fetchone():
         for r in conn.execute("SELECT verse_id, position, hebrew_base, class "
                               "FROM pn_hebrew_xref"):
