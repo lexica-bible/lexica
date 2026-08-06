@@ -204,7 +204,9 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
    find. THEN `scripts/backfill_pn_surface.py <db> --bh bh_scrape.db --apply` — the Phase-6 PN
    printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; the interlinear Greek line for
-   names reads from these). health_check FLOORS the table at 389,409, so a rebuild missing either
+   names reads from these). health_check FLOORS the table at 389,244 (re-declared at the
+   2026-08-05 ②-ride: −165 vs the old 389,409, names-on-own-slots churn — see
+   TICKET_pn_star_fix.md), so a rebuild missing either
    backfill trips the floor (the 2026-07-16 miss is why the guard exists). THEN re-run
    `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
    SBL style from the lexicon, 'h' from the lemma) — it covers all backfilled rows too.

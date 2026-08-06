@@ -59,11 +59,18 @@ check("same (verse,position) with DIFFERENT data  [misalignment]",
            GROUP BY verse_id, position
            HAVING count(DISTINCT COALESCE(strongs_base,'')||'|'||COALESCE(english,'')) > 1)""")
 
-check("fragmented (non-contiguous) brackets",
-      """SELECT count(*) FROM (
-           SELECT verse_id,bracket_id FROM words WHERE bracket_id IS NOT NULL
-           GROUP BY verse_id,bracket_id
-           HAVING (max(position)-min(position)+1)!=count(*))""")
+# RE-DECLARED 2026-08-05 (lane-② ride): 190 non-contiguous brackets are the
+# EXPECTED class-B PN-star pairs bridging blank slots (carrier + star with a
+# bare G3588-class slot between — TICKET_pn_star_fix.md; structurally proven:
+# every bridged cell blank, live-pre-ride count 0, members in the write set;
+# the reader groups bracket chips by id regardless of gaps). The check now
+# reports the EXCESS over that declared population.
+check("fragmented (non-contiguous) brackets beyond the declared 190 (lane-② B-gap class)",
+      """SELECT CASE WHEN n > 190 THEN n - 190 ELSE 0 END FROM (
+           SELECT count(*) AS n FROM (
+             SELECT verse_id,bracket_id FROM words WHERE bracket_id IS NOT NULL
+             GROUP BY verse_id,bracket_id
+             HAVING (max(position)-min(position)+1)!=count(*)))""")
 
 check("bracketed words missing greek_pos (+gloss)",
       """SELECT count(*) FROM words WHERE bracket_id IS NOT NULL
@@ -120,14 +127,16 @@ check("distinct H-bases with NO bdb entry",
       expect_zero=False)
 
 # ── abp_surface floor (2026-07-11 backfill + 2026-07-27/28 PN passes) ────────
-# 389,409 = builder rows (345,437) + the pairing-rule backfill (13,851) + the
-# Phase-6 PN printed-Greek passes (29,092 + 285 + 744 = 30,121). A
-# build_abp_surface.py re-run WITHOUT re-running backfill_abp_surface.py AND
-# backfill_pn_surface.py drops
-# the table back to ~345k and silently reverts 13,851 recovered printed forms —
-# this makes that loud instead of invisible. Raise the floor if the count grows.
-check("abp_surface rows BELOW floor 389409  [a backfill reverted?]",
-      "SELECT CASE WHEN count(*) < 389409 THEN 389409 - count(*) ELSE 0 END FROM abp_surface",
+# FLOOR RE-DECLARED 2026-08-05 (lane-② ride): 389,244 = builder rows (346,111 —
+# +674 vs the old 345,437: names moved onto their own slots now match printed
+# forms) + the pairing-rule backfill (13,183) + the PN printed-Greek passes
+# (29,950). Net −165 vs the old 389,409 floor, fully attributed to the moved
+# name slots (TICKET_pn_star_fix.md). The guard's purpose is unchanged: a
+# build_abp_surface.py re-run WITHOUT both backfills drops the table to ~346k
+# and silently reverts the recovered forms — this makes that loud. Raise the
+# floor if the count grows.
+check("abp_surface rows BELOW floor 389244  [a backfill reverted?]",
+      "SELECT CASE WHEN count(*) < 389244 THEN 389244 - count(*) ELSE 0 END FROM abp_surface",
       note="shortfall vs floor; fix = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py")
 
 # ── verses ───────────────────────────────────────────────────────────────────
