@@ -64,10 +64,12 @@ def main():
     # (class A keeps its slot, class B moves — both covered; blank before-
     # cells too, since the match is by number not by text). A before-row with
     # no number never had a findable Hebrew identity — nothing to lose.
-    before_heb = {}
-    for vid, pos, hb in b.execute(
-            "SELECT verse_id, position, hebrew_base FROM pn_greek_identity"):
+    before_heb, before_cls = {}, {}
+    for vid, pos, hb, src in b.execute(
+            "SELECT verse_id, position, hebrew_base, source "
+            "FROM pn_greek_identity"):
         before_heb[(vid, pos)] = hb
+        before_cls[(vid, pos)] = src
     after_hebs = collections.defaultdict(set)
     for vid, hb in a.execute(
             "SELECT verse_id, hebrew_base FROM pn_hebrew_xref "
@@ -99,6 +101,19 @@ def main():
     print("\nattribution:")
     for k, n in buckets.most_common():
         print("  %6d  %s" % (n, k))
+    # bucket x BEFORE-class cross-tab (reviewer condition 2026-08-05): a
+    # "no-number-before" member must sit in a no-number lane of the OLD
+    # record; a numbered before-class showing up there means the parser
+    # dropped something.
+    xtab = collections.Counter()
+    for vid, pos in fails:
+        hb = before_heb.get((vid, pos))
+        cls = before_cls.get((vid, pos), "?")
+        lane = "no-number-before" if hb is None else "numbered"
+        xtab[(lane, cls)] += 1
+    print("\nbucket x before-class cross-tab:")
+    for (lane, cls), n in sorted(xtab.items()):
+        print("  %6d  %-18s %s" % (n, lane, cls))
     if residue:
         print("\nRESIDUE (full list — HALT material):")
         for vid, pos, vref, eng, why in residue:
