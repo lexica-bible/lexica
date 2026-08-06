@@ -64,12 +64,18 @@ def main():
     # (class A keeps its slot, class B moves — both covered; blank before-
     # cells too, since the match is by number not by text). A before-row with
     # no number never had a findable Hebrew identity — nothing to lose.
-    before_heb, before_cls = {}, {}
-    for vid, pos, hb, src in b.execute(
-            "SELECT verse_id, position, hebrew_base, source "
+    before_heb, before_cls, before_grk = {}, {}, {}
+    for vid, pos, hb, src, gk in b.execute(
+            "SELECT verse_id, position, hebrew_base, source, greek_strongs "
             "FROM pn_greek_identity"):
         before_heb[(vid, pos)] = hb
         before_cls[(vid, pos)] = src
+        before_grk[(vid, pos)] = gk
+    after_grks = collections.defaultdict(set)
+    for vid, gk in a.execute(
+            "SELECT verse_id, greek_strongs FROM pn_greek_identity "
+            "WHERE greek_strongs IS NOT NULL"):
+        after_grks[vid].add(gk)
     after_hebs = collections.defaultdict(set)
     for vid, hb in a.execute(
             "SELECT verse_id, hebrew_base FROM pn_hebrew_xref "
@@ -83,7 +89,14 @@ def main():
         in_plan = vref in plan_verses
         cushi = vref and vref[0] == "2Sa" and vref[1] == 18
         hb = before_heb.get((vid, pos))
-        if hb is None:
+        if hb is None and before_cls.get((vid, pos)) == "tipnr":
+            # tipnr is Greek-numbered even with no Hebrew snapshot (the
+            # '223 from *' subset) — its findable thing is the GREEK number,
+            # which must survive in the verse's new record.
+            gk = before_grk.get((vid, pos))
+            found = bool(gk) and gk in after_grks.get(vid, set())
+            why = "greek-in-verse"
+        elif hb is None:
             found, why = True, "no-number-before"
         elif cushi and hb in ("H3569", "H3570"):
             found, why = ("H3569" in after_hebs.get(vid, set())), "cushi"
