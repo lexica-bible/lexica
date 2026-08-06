@@ -25,10 +25,34 @@ FIXES = json.load(open(os.path.join(HERE, "split_merge_fixes.json"),
 
 def verse_rows(conn, book, ch, vs):
     return conn.execute(
-        "SELECT w.position, w.english, w.strongs_base FROM words w "
+        "SELECT w.position, w.english, w.strongs_base, w.bracket_id,"
+        " w.greek_pos FROM words w "
         "JOIN verses v ON v.id = w.verse_id "
         "WHERE v.book=? AND v.chapter=? AND v.verse=? ORDER BY w.position",
         (book, ch, vs)).fetchall()
+
+
+def display_seq(rows):
+    """The reader's rendered order (56-library-order-logic.jsx): within a
+    bracket group sort by greek_pos ascending (missing -> end); non-bracket
+    words keep position order. Returns the sequence of English cells."""
+    out, i, n = [], 0, len(rows)
+    while i < n:
+        pos, eng, _sb, bid, _gp = rows[i]
+        if bid is None:
+            if eng:
+                out.append(eng)
+            i += 1
+            continue
+        j = i
+        group = []
+        while j < n and rows[j][3] == bid:
+            group.append(rows[j])
+            j += 1
+        group.sort(key=lambda r: r[4] if r[4] is not None else 999)
+        out.extend(r[1] for r in group if r[1])
+        i = j
+    return out
 
 
 def main():
@@ -48,14 +72,23 @@ def main():
             skips.append((book, ch, vs, entries))
 
     print(f"skipped verses: {len(skips)} of {len(FIXES)}")
+    same = diff = 0
     for book, ch, vs, entries in skips:
-        print(f"\n== {book} {ch}:{vs}  (patch wanted: "
-              + " | ".join(f"pos{e['new_pos']}={e['new_eng']!r}" for e in entries)
-              + ")")
-        for tag, conn in (("LIVE", lc), ("RIDE", rc)):
-            cells = " · ".join(f"{p}:{e!r}" for p, e, _s in
-                               verse_rows(conn, book, ch, vs) if e)
-            print(f"  {tag}: {cells}")
+        lrows = verse_rows(lc, book, ch, vs)
+        rrows = verse_rows(rc, book, ch, vs)
+        lseq, rseq = display_seq(lrows), display_seq(rrows)
+        verdict = "DISPLAY-EQUAL" if lseq == rseq else "DISPLAY-DIFFERS"
+        if lseq == rseq:
+            same += 1
+        else:
+            diff += 1
+        print(f"\n== {book} {ch}:{vs}  {verdict}")
+        if lseq != rseq:
+            print(f"  LIVE renders: {' '.join(lseq)}")
+            print(f"  RIDE renders: {' '.join(rseq)}")
+            print(f"  RIDE cells: " + " · ".join(
+                f"{p}:{e!r}(b{b},g{g})" for p, e, _s, b, g in rrows if e))
+    print(f"\nverdicts: DISPLAY-EQUAL {same} · DISPLAY-DIFFERS {diff}")
 
 
 if __name__ == "__main__":
