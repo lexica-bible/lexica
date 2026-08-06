@@ -340,15 +340,30 @@ so it was RE-BASELINED from the ride copy. Rulings applied:
   genuinely-H3570 man — red control locks the refusal).
 - retire_hebrew_identity --rebaseline <attribution-file> mode (with
   --fresh-rebuild) replaces the oracle byte-for-byte gate; T6 lock.
-- NEW declared split (re-declared from identity_rebase2.log, ride copy):
-  abp-tag 3,658 · tipnr 10,249 · lemma-only 12,166 · surface 3,951 ·
-  none 2,454 (total 32,478). The −1 vs the old 32,479: Dan 11:1 — the old
-  geometry double-marked merged 'of Cyrus' (name number on 'of' + bare star);
-  the new marks 'Cyrus' once on its own slot.
-- RIDE-CAUGHT DEFECT (fixed pre-capture): build_pn_greek_identity froze the
-  STALE xref's Hebrew over the words row's current H — every moved slot whose
-  old row said no-number got a NULL snapshot (Dan 11:1 H3566, the Zec 9:3
-  star class). Current-H now wins; zero-check on the artifact reads 0.
+- NEW declared split — RULING RECEIPT (take three ACCEPTED 2026-08-05):
+  **abp-tag 3,671 · tipnr 10,236 · lemma-only 12,166 · surface 3,951 ·
+  none 2,454 (total 32,478)**, derivation identity_capture.log
+  (build_pn_greek_identity --ignore-xref on the ride copy). The −1 vs the
+  old 32,479: Dan 11:1 — the old geometry double-marked merged 'of Cyrus'
+  (name number on 'of' + bare star); the new marks 'Cyrus' once on its own
+  slot. TAKE-TWO FIGURES VOID (abp-tag 3,658 · tipnr 10,249 — derived
+  through the stale-xref branches); the 13-row delta = native-G-tag names
+  the stale record filed under tipnr: 2Ti 4:20 Trophimus G5161 (the HALT's
+  own row) · Act 9:27 Barnabas · Act 15:38 Paul · Act 18:8 Crispus ·
+  Act 25:1 Festus · Gen 25:27 + 37:3 Jacob · Joh 8:59 Jesus · Joh 11:20 +
+  20:11 Mary · Joh 20:24 Thomas · Joh 21:7 Simon · Mat 23:26 Pharisee.
+- TWO RIDE-CAUGHT DEFECTS (both fixed pre-capture, same root — the identity
+  builder's post-retirement branches consumed the STALE xref on a
+  pre-retirement copy):
+  1. Hebrew snapshot froze the stale xref's value over the words row's
+     current H — every moved slot whose old row said no-number got a NULL
+     snapshot (Dan 11:1 H3566, the Zec 9:3 star class).
+  2. Classification routed native G-tag rows through the stale record's
+     class (the 13 above; surfaced as the retire HALT at (24588,4)).
+  **STANDING RULE (reviewer-ruled): baseline capture on a pre-retirement
+  copy runs build_pn_greek_identity --ignore-xref — the ONLY correct mode;
+  the stale record must never feed a capture.** Zero-checks at the artifact:
+  no-snapshot-with-H 0 · snapshot-disagrees-with-words 0.
 
 ## Pointers
 - `docs/handoffs/HANDOFF_pn_star_ride.md` — the lane-2 opener this executes.

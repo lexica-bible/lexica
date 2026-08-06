@@ -76,16 +76,19 @@ for _i, _a in enumerate(sys.argv):
         REBASELINE = sys.argv[_i + 1]
 
 # Declared expectations — the run REFUSES to start if the identity table's
-# class split is not exactly this. RE-DECLARED 2026-08-05 (lane-② ride
-# re-baseline, reviewer-ruled; derivation identity_rebase2.log on the ride
-# copy, change record TICKET_pn_star_fix.md): the PN-star pass moved names
-# onto their star slots, so the identity re-derivation shifted the lanes —
-# the −1 total is Dan 11:1, whose merged 'of Cyrus' was double-marked in the
-# old geometry and marks once in the new. Supersedes the 2026-08-01 five-class
-# declaration (abp-tag 3,518 · tipnr 10,216 · lemma-only 12,066 ·
-# surface 4,326 · none 2,353, total 32,479; receipt
+# class split is not exactly this. RE-DECLARED 2026-08-05 take THREE (lane-②
+# ride re-baseline, reviewer-ruled accepted; derivation identity_capture.log,
+# build_pn_greek_identity --ignore-xref CAPTURE MODE on the ride copy —
+# the ONLY correct mode for baseline capture on a pre-retirement copy; change
+# record TICKET_pn_star_fix.md): the PN-star pass moved names onto their star
+# slots. −1 total = Dan 11:1 (old geometry double-marked merged 'of Cyrus').
+# Take-two figures (abp-tag 3,658 · tipnr 10,249) are VOID — derived through
+# the stale-xref branches; the 13-row delta is the native-G-tag class
+# (Trophimus G5161 et al.), named member-for-member in the ticket.
+# Supersedes the 2026-08-01 declaration (abp-tag 3,518 · tipnr 10,216 ·
+# lemma-only 12,066 · surface 4,326 · none 2,353, total 32,479; receipt
 # docs/tickets/RECLASS_catchup_declaration.md).
-EXPECT = {"abp-tag": 3658, "tipnr": 10249, "lemma-only": 12166,
+EXPECT = {"abp-tag": 3671, "tipnr": 10236, "lemma-only": 12166,
           "surface": 3951, "none": 2454}
 for i, a in enumerate(sys.argv):
     if a == "--expect-split" and i + 1 < len(sys.argv):
