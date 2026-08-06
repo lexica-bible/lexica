@@ -77,6 +77,9 @@ def main():
         lrows = verse_rows(lc, book, ch, vs)
         rrows = verse_rows(rc, book, ch, vs)
         lseq, rseq = display_seq(lrows), display_seq(rrows)
+        # verdict on the RENDERED STRING — live may carve the same words into
+        # different cells (Mat 1:2), which is not a display difference
+        lseq, rseq = " ".join(lseq).split(), " ".join(rseq).split()
         verdict = "DISPLAY-EQUAL" if lseq == rseq else "DISPLAY-DIFFERS"
         if lseq == rseq:
             same += 1
