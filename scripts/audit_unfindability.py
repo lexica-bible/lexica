@@ -48,6 +48,7 @@ if len(sys.argv) < 3:
     print(__doc__)
     sys.exit(2)
 BEFORE, AFTER = sys.argv[1], sys.argv[2]
+LIST_ALL = "--list" in sys.argv
 
 
 def ro(path):
@@ -158,7 +159,10 @@ def main():
                             after_base.get((r["verse_id"], r["position"])))
         if probs:
             fails_after += 1
-            if len(examples) < 10:
+            # --list (lane-② ride): print EVERY failing member — 10 samples
+            # cannot carry a member-level attribution (10 of a class is not
+            # the class).
+            if LIST_ALL or len(examples) < 10:
                 examples.append(f"AFTER ({r['verse_id']},{r['position']}): " + "; ".join(probs))
 
     print(f"findable-before check failures: {fails_before:,} (expected 0)")
