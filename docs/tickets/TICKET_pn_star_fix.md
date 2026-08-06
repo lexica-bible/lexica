@@ -365,6 +365,23 @@ so it was RE-BASELINED from the ride copy. Rulings applied:
   the stale record must never feed a capture.** Zero-checks at the artifact:
   no-snapshot-with-H 0 · snapshot-disagrees-with-words 0.
 
+## UNFINDABILITY GATE SUPERSESSION (2026-08-05, reviewer-ruled)
+
+The gate FAILed at 2,049 findable-after members — all keyed on the OLD slot
+layout (third instance of the position-keyed-measurement family this ride:
+frozen record, identity-builder stale branches, this gate). Superseded by
+member-level attribution (`scripts/attribute_unfindability.py` v4 against
+`unfind_full.log`, both regenerable on PA — audit `--list` + the instrument;
+records unfind_attr4.log): 1,811 Hebrew number present in the verse's new
+record · 207 true no-number lanes (201 lemma-only + 6 surface) · 30
+Hebrew-null tipnr members matched by their GREEK number in the verse ·
+1 Cushi → H3569. Zero residue, zero outside the write set. After-state
+independently proven: retirement row-verify 32,478/32,478 · two-derivations
+10/10 · both snapshot zero-checks 0.
+**RECORDED OBLIGATION: audit_unfindability gets a geometry-aware mode
+(identity-level matching, the v4 logic) BEFORE the next ride that moves
+name slots — named pre-req in /rebuild-words.**
+
 ## Pointers
 - `docs/handoffs/HANDOFF_pn_star_ride.md` — the lane-2 opener this executes.
 - `docs/tickets/TICKET_detector_gap.md` — detector close-out, the 4,996.

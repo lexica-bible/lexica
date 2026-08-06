@@ -185,6 +185,12 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       with a named tail allowance; counts are tripwires, the member set rules (§6l).**
    3. `scripts/build_pn_greek_identity.py <db> --apply` → `scripts/build_entity_binding.py <db>
       --apply` (xref-sourced guard numbers) → gates: `scripts/audit_unfindability.py <pre> <db>` +
+      **PRE-REQ (reviewer-ruled 2026-08-05, TICKET_pn_star_fix.md): before any ride whose
+      build pass MOVES name slots, audit_unfindability needs a geometry-aware mode
+      (identity-level matching per attribute_unfindability.py v4) — position-keyed, it
+      fails on exactly the moved class (2,049 on the ② ride, all attributed, 0 real).
+      Baseline capture on a pre-retirement copy = build_pn_greek_identity --ignore-xref,
+      the ONLY correct mode (stale-xref branches misclassify; two defects, ticket).** +
       `scripts/audit_two_derivations.py <db>`.
    **G707 gate (2026-07-31):** build_pn_greek_identity applies strict name-match inheritance
    (removal-only; tests/test_pn_name_match.py). Run the removal-only census
