@@ -382,6 +382,24 @@ independently proven: retirement row-verify 32,478/32,478 · two-derivations
 (identity-level matching, the v4 logic) BEFORE the next ride that moves
 name slots — named pre-req in /rebuild-words.**
 
+## PUNCT "CLASS" REVERSAL (2026-08-05, reviewer-ruled — mechanism fix WITHDRAWN)
+
+The 626-member "display-order trailing-comma class" (and its 18 "removed"
+mirror members) was a PHANTOM: the renderer floats bracket punctuation to the
+display-correct chip at render time (getEnglishOrderWords in
+56-library-order-logic.jsx + chip mode's own lift in 59c), so data-cell mark
+placement is invisible at every render path. Proof: Luk 23:13 fixture (both
+copies render "And Pilate, having called together") + all 30 split_merges
+skip verses DISPLAY-EQUAL vs live under the render-modeling lister
+(list_split_merge_skips.py v4, split_skips4.log).
+**TRAP (hard): scan_bracket_punct_order.py is a DATA-LAYOUT observer and must
+NEVER be cited as display evidence — its 7,303/6,695 members measure cell
+arrangement the renderer erases. Any punctuation gate on a future ride is the
+render-modeling lister, not the scanner.**
+Lesson: an adjudicator must model the FULL render path, not the layer it
+reads — the ride's fourth stale-layer measurement (frozen record, identity
+builder branches, unfindability gate, the adjudicator itself).
+
 ## Pointers
 - `docs/handoffs/HANDOFF_pn_star_ride.md` — the lane-2 opener this executes.
 - `docs/tickets/TICKET_detector_gap.md` — detector close-out, the 4,996.
