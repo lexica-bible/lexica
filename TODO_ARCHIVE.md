@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-05 — the ②-RIDE: PN-star rebuild SHIPPED + LIVE
+
+Full record = `docs/tickets/TICKET_pn_star_fix.md` (ride sections: re-baseline receipts,
+take-three declaration, unfindability supersession, punct-class reversal) + memory
+`project_pn_star_fix`. The pin (A 1,505 + B 2,552 / 3,161 typed) held digit-for-digit
+through TWO builds; member check 4,057 exact pre AND post tail (tail allowance = the
+empty set); swap + deploy clean (5×200, health 0/0); served reads confirmed — Mat 26:1
+Jesus own chip, Gen 23:19 Abraham/Sarah own chips, **Mat 27:26 STILL MERGED (legal
+refusal, its repair is lane ③'s hand work)**.
+
+The ride's real story: FOUR stale-layer measurements, all caught by member attribution
+before any write — (1) the frozen PN record (position-keyed vs moved names → RE-BASELINED,
+`--expect` removed, Cushi fix name-keyed + 2Sa-18-scoped); (2) the identity builder's
+stale-xref branches (→ `--ignore-xref` capture mode, two defects fixed pre-capture);
+(3) the unfindability gate (2,049 failures = the moved class, superseded on full
+attribution; geometry-aware mode now owed); (4) our own punct adjudicator (the phantom
+626 — the renderer re-floats bracket punctuation; scanner = data-layout only, hard trap
+in the ticket). Re-declared pins: surface floor 389,244 · fragmented brackets 190 ·
+five-class split abp-tag 3,671 / tipnr 10,236 / lemma-only 12,166 / surface 3,951 /
+none 2,454. Also: a finished `bible_test.db.new` VANISHED unexplained mid-ride (no
+other session, no script does it) — the rename-off-`.new` defense is standing.
+Rollbacks on disk: `bible_pre_pnstar_20260803.db` (pre-build) +
+`bible_pre_pnstar_swap_20260805.db` (pre-swap); single-rollback rule resumes after the
+next clean nightly.
+
 ## 2026-08-02 — lane ② PN-star merged-verb FIX SESSION: closed complete
 
 Full record = `docs/tickets/TICKET_pn_star_fix.md` (predicate, ruling, controls, pin,

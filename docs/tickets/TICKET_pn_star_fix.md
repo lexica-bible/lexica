@@ -1,7 +1,9 @@
 # TICKET — lane ②: PN-star merged-verb FIX predicate (proposed, pre-code)
 
-Opened 2026-08-02. Status: **RULED + PASS CODED (2026-08-02) — no data writes; the
-rebuild is its own later ride.** Reviewer ruling, same day: predicate approved both
+Opened 2026-08-02. Status: **CLOSED — SHIPPED + LIVE 2026-08-05 (the ②-ride; swap
+verdict PASS, JP-confirmed served reads; ride sections below). Open residue = lane ③'s
+71 hand repairs + the geometry-aware unfindability mode (TODO.md).**
+Original 2026-08-02 status: RULED + PASS CODED. Reviewer ruling, same day: predicate approved both
 parts; decision point concurred (kept-word attestation NOT required — a kept word makes
 no new claim; refusal/kept lists stay itemized for after-the-fact sampling); one added
 control requirement — the legitimate-genitive negative, named below.

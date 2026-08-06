@@ -736,11 +736,21 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   — open lane ③ and the rebuild ride from there, never from here. Session story:
   TODO_ARCHIVE "2026-08-02 — lane ② fix session".)*
 
-- **②-RIDE — PN-star rebuild ride (NOT YET RUN; own cycle, `/rebuild-words` as amended
-  8/1).** Verdict-gated against the PIN in TICKET_pn_star_fix.md: build line A 1,505 +
-  B 2,552 written / 3,161 typed refusals; member file `plan_pn_star_corrected.txt` on PA
-  (regenerable: `--plan --corrected`). Member set-equality + a NAMED tail allowance
-  derived fresh at the ride. Sequenced AFTER lane ③'s eyeball.
+- *(②-RIDE — PN-star rebuild ride: **SHIPPED + LIVE 2026-08-05.** Pin held ×2, member
+  check 4,057 exact pre+post tail, frozen record re-baselined (reviewer receipts), swap
+  + deploy clean, three served reads confirmed incl. Mat 27:26 STILL MERGED by ruling.
+  Record = TICKET_pn_star_fix.md ride sections + TODO_ARCHIVE "2026-08-05 — ②-ride" +
+  memory project_pn_star_fix. Do not re-open.)*
+
+- **Geometry-aware unfindability mode (reviewer-ruled OBLIGATION, before the next ride
+  that MOVES name slots):** audit_unfindability.py needs identity-level matching (the
+  attribute_unfindability.py v4 logic) — position-keyed, it fails on exactly the moved
+  class (2,049 on the ②-ride, all attributed, 0 real). Named pre-req in /rebuild-words.
+
+- **split_merges JSON: 29 superseded keys (small, next regen).** The PN-star pass now
+  fixes 29 of the 237 patch verses upstream (they skip on precondition; all 30 content-
+  adjudicated DISPLAY-EQUAL to live, split_skips4.log). A future graft/regen can retire
+  those keys; harmless meanwhile. code: scripts/split_merge_fixes.json
 
 - *(④ article-slot lane A + ④b checklist pins + the finish_rebuild acceptance run:
   ALL CLOSED 2026-08-01 — the ruling-10 rebuild ride shipped + verified the same evening.
@@ -762,14 +772,12 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   convenience is one nobody can restate later. Motivating exhibit: `1Co 3:8` repairs one
   `'his own'` onto G2398 and leaves its bracketed twin, inconsistent within one verse.
 
-- **③ B2 EYEBALL PASS — CANONICAL LIST 100 rows / 98 verses (re-pinned 2026-08-02;
-  supersedes the old 91).** One source: `audit_pn_star_verb_merge.py --class B --list`,
-  the B2 block (shared-splitter classification; derivation + 27/27 reconciliation in
-  TICKET_pn_star_fix.md). Roster-silent residue: real merges the pinned TIPNR misses
-  (gentilics — Sadducees/Romans/Ethiopians; Bath-sheba turned out AUTO-REPAIRED) mixed
-  with bracket-position artifacts that are NOT defects (`1Sa 25:42` — the name IS
-  printed, on its own star). Per-row adjudication, reported never dropped; any repair
-  is hand-per-row, JP-checkpointed. Runs BEFORE the ②-ride.
+- **③ HAND-REPAIR LANE — 71 adjudicated candidates (eyeball pass DONE 2026-08-03;
+  record `docs/audits/LANE3_b2_dispositions.md`).** 71 genuine repairs (gentilic 22 ·
+  roster-silent name 41 · possessive 8; possessive keeps apostrophe-s as printed,
+  JP-ruled) + 29 artifacts closed. **Mat 27:26 belongs to this hand lane too** (legal
+  A/unattested refusal, φραγελλόω too rare for page evidence). Every repair is
+  hand-per-row, JP-checkpointed; waits for JP to raise.
 
 - **SAME-NAME / RENAMED DROPS (opened 2026-07-31 at the G707 ship — allowlist design
   question, own session).** 358 slots ruled correct-to-drop today (text-first) but carrying
