@@ -76,11 +76,17 @@ for _i, _a in enumerate(sys.argv):
         REBASELINE = sys.argv[_i + 1]
 
 # Declared expectations — the run REFUSES to start if the identity table's
-# class split is not exactly this. Declared ONCE from the live table
-# (JP-run read 2026-08-01; receipt docs/tickets/RECLASS_catchup_declaration.md;
-# supersedes the 2026-07-25 four-class declaration from PLAN_r2_c3_rebuild.md).
-EXPECT = {"abp-tag": 3518, "tipnr": 10216, "lemma-only": 12066,
-          "surface": 4326, "none": 2353}
+# class split is not exactly this. RE-DECLARED 2026-08-05 (lane-② ride
+# re-baseline, reviewer-ruled; derivation identity_rebase2.log on the ride
+# copy, change record TICKET_pn_star_fix.md): the PN-star pass moved names
+# onto their star slots, so the identity re-derivation shifted the lanes —
+# the −1 total is Dan 11:1, whose merged 'of Cyrus' was double-marked in the
+# old geometry and marks once in the new. Supersedes the 2026-08-01 five-class
+# declaration (abp-tag 3,518 · tipnr 10,216 · lemma-only 12,066 ·
+# surface 4,326 · none 2,353, total 32,479; receipt
+# docs/tickets/RECLASS_catchup_declaration.md).
+EXPECT = {"abp-tag": 3658, "tipnr": 10249, "lemma-only": 12166,
+          "surface": 3951, "none": 2454}
 for i, a in enumerate(sys.argv):
     if a == "--expect-split" and i + 1 < len(sys.argv):
         vals = [int(x) for x in sys.argv[i + 1].split(",")]

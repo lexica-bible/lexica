@@ -326,6 +326,30 @@ Sequencing stands: fix session now → its OWN rebuild ride (`/rebuild-words` as
 8/1) → full detector run between. Never folds with ⑤ (38 bracketed rows) or anything
 else. Roster frozen — any TIPNR change runs `check_roster_regression.py` first.
 
+## ②-RIDE RE-BASELINE RECORD (2026-08-05, reviewer-ruled, logged as delegation)
+
+The ride HALTed restore_frozen_pn at 2,528 vs declared 6 — attributed to the
+member (cross_restore_vs_plan.py, zero unattributed): 2,469 B-write verses +
+51 A-write verses + 8 Cushi-verse rows (5 clean renumbers + 3 position churn).
+The frozen PN record is position-keyed and the pass legitimately moved names,
+so it was RE-BASELINED from the ride copy. Rulings applied:
+- restore_frozen_pn --expect REMOVED (an override must never absorb a
+  geometry change); declared-6 superseded (fixture env hook for tests).
+- Cushi hand fix now NAME-keyed AND 2Sa-18-scoped (apply_cushi_namekeyed.py,
+  8 applied on the ride copy; Zep 1:1 / Jer 36:14 'Cushi' is a DIFFERENT,
+  genuinely-H3570 man — red control locks the refusal).
+- retire_hebrew_identity --rebaseline <attribution-file> mode (with
+  --fresh-rebuild) replaces the oracle byte-for-byte gate; T6 lock.
+- NEW declared split (re-declared from identity_rebase2.log, ride copy):
+  abp-tag 3,658 · tipnr 10,249 · lemma-only 12,166 · surface 3,951 ·
+  none 2,454 (total 32,478). The −1 vs the old 32,479: Dan 11:1 — the old
+  geometry double-marked merged 'of Cyrus' (name number on 'of' + bare star);
+  the new marks 'Cyrus' once on its own slot.
+- RIDE-CAUGHT DEFECT (fixed pre-capture): build_pn_greek_identity froze the
+  STALE xref's Hebrew over the words row's current H — every moved slot whose
+  old row said no-number got a NULL snapshot (Dan 11:1 H3566, the Zec 9:3
+  star class). Current-H now wins; zero-check on the artifact reads 0.
+
 ## Pointers
 - `docs/handoffs/HANDOFF_pn_star_ride.md` — the lane-2 opener this executes.
 - `docs/tickets/TICKET_detector_gap.md` — detector close-out, the 4,996.
