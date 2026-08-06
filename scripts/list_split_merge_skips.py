@@ -64,7 +64,7 @@ def main():
     for key, entries in FIXES.items():
         book, rest = key.split(" ", 1)
         ch, vs = (int(x) for x in rest.split(":"))
-        rows = {p: (e or "") for p, e, _s in verse_rows(rc, book, ch, vs)}
+        rows = {r[0]: (r[1] or "") for r in verse_rows(rc, book, ch, vs)}
         applied = all(
             (en.get("new_eng") or "") == rows.get(en["new_pos"], "\0")
             for en in entries)
