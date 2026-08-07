@@ -21,10 +21,17 @@ paints every same-name slot in the verse, which may be wrong for one of them.
 The charter's ~118 were unbound-only; this bucket is sizing input for the
 mechanism design, kept apart.
 
-CONTROLS (fail-first rule): the known positive malchiah Ezr 10:25 (two
-Malchiahs in the verse — DRILL_witness_divergence demotion record) must appear,
-and the known-bound jesus Mat 8:5 must NOT. Either failing => exit 2, stop and
-look.
+THIRD BUCKET — variant-spelling pair CANDIDATES (2026-08-07 control finding):
+Ezr 10:25 prints its two same-named men as "Malchiah" AND "Malchijah" — two
+spellings, so the same-normalized-name predicate can never group them. Verses
+holding >= 2 UNBOUND multi-referent slots whose different names are spelling-
+near (SequenceMatcher ratio >= 0.80) are reported as HAND-REVIEW candidates,
+never members. This is why TODO lists malchiah beside the ~118, not inside it.
+
+CONTROLS (fail-first rule; re-keyed 2026-08-07 — the first key was wrong, it
+expected malchiah inside the lane): (1) the malchiah/malchijah pair must land
+in the variant-spelling bucket; (2) mary Mat 27:61 (July anchor) must be in
+the lane; (3) known-bound jesus Mat 8:5 must NOT. Any failing => exit 2.
 
 Mirror functions copied from scripts/audit_pn_lanes.py (itself mirroring
 audit_pn_card_census.py, commit 8bdda27d). READ-ONLY.
@@ -32,6 +39,7 @@ Usage: python3 scripts/census_wordpos_multi.py [bible.db]
 """
 import sys, os, re, sqlite3
 from collections import defaultdict, Counter
+from difflib import SequenceMatcher
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import entity_resolution as er
@@ -123,12 +131,24 @@ for r in rows:
     groups[(r["book"], bk, r["ch"], r["vs"], nm)].append(r["position"])
 
 lane, painted = [], []       # unbound multi-groups / bound-painted multi-groups
+singles = defaultdict(list)  # verse -> its UNBOUND single-slot names (bucket-C feed)
 for key, positions in sorted(groups.items()):
-    if len(positions) < 2:
-        continue
     ab, bk, ch, vs, nm = key
     state = bind_state(nm, bk, ch, vs)
+    if len(positions) < 2:
+        if state == "unbound":
+            singles[(ab, ch, vs)].append((nm, positions[0]))
+        continue
     (lane if state == "unbound" else painted).append((ab, ch, vs, nm, sorted(positions)))
+
+# bucket C — variant-spelling pair candidates among a verse's unbound singles
+variant = []
+for (ab, ch, vs), names in sorted(singles.items()):
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            (n1, p1), (n2, p2) = names[i], names[j]
+            if n1 != n2 and SequenceMatcher(None, n1, n2).ratio() >= 0.80:
+                variant.append((ab, ch, vs, n1, p1, n2, p2))
 
 # ── report ──────────────────────────────────────────────────────────────────
 n_slots = sum(len(p) for *_, p in lane)
@@ -154,14 +174,23 @@ print(f"{pn_slots} slots / {len(painted)} groups — a render bind exists and pa
 for ab, ch, vs, nm, p in painted:
     print(f"  {ab} {ch}:{vs}  {nm:20s} p{p}")
 
+print(f"\n═══ BUCKET C — variant-spelling pair CANDIDATES (hand review, not members) ═══")
+print(f"{len(variant)} pairs — two UNBOUND multi-referent slots in one verse, "
+      f"different but spelling-near names")
+for ab, ch, vs, n1, p1, n2, p2 in variant:
+    print(f"  {ab} {ch}:{vs}  {n1} p{p1}  ~  {n2} p{p2}")
+
 # ── controls (fail-first) ───────────────────────────────────────────────────
-pos_ok = any(ab == "Ezr" and ch == 10 and vs == 25 and nm == "malchiah"
-             for ab, ch, vs, nm, _ in lane)
-neg_ok = not any(ab == "Mat" and ch == 8 and vs == 5 and nm == "jesus"
-                 for ab, ch, vs, nm, _ in lane + painted)
+c1 = any(ab == "Ezr" and ch == 10 and vs == 25 and {n1, n2} == {"malchiah", "malchijah"}
+         for ab, ch, vs, n1, _, n2, _ in variant)
+c2 = any(ab == "Mat" and ch == 27 and vs == 61 and nm == "mary"
+         for ab, ch, vs, nm, _ in lane)
+c3 = not any(ab == "Mat" and ch == 8 and vs == 5 and nm == "jesus"
+             for ab, ch, vs, nm, _ in lane + painted)
 print("\n═══ CONTROLS ═══")
-print(f"known positive malchiah Ezr 10:25 present : {'OK' if pos_ok else 'CONTROL FAIL'}")
-print(f"known negative jesus Mat 8:5 absent       : {'OK' if neg_ok else 'CONTROL FAIL'}")
-if not (pos_ok and neg_ok):
+print(f"malchiah/malchijah Ezr 10:25 in bucket C : {'OK' if c1 else 'CONTROL FAIL'}")
+print(f"mary Mat 27:61 in the lane               : {'OK' if c2 else 'CONTROL FAIL'}")
+print(f"jesus Mat 8:5 absent                     : {'OK' if c3 else 'CONTROL FAIL'}")
+if not (c1 and c2 and c3):
     print("CONTROL FAIL — census output is NOT trustworthy; stop and look.")
     sys.exit(2)

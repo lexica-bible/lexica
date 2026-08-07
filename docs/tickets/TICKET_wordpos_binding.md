@@ -50,6 +50,52 @@ Run on PA:
 cd ~/bible-db && PYTHONIOENCODING=utf-8 python3 scripts/census_wordpos_multi.py bible.db
 ```
 
+## What the ~118 was counting (July close-out language, quoted per reviewer)
+TODO_ARCHIVE 2026-07-30: "same-verse same-name multi ≈118 slots (mary 16 + 22
+tail names / 102 — genealogy lists genuinely naming two like-named people in
+one verse, the Dishon pattern; un-partitionable at the verse+name key BY
+CONSTRUCTION; fix = word-position binding)". So 118 = 16 mary + 102 across 22
+other names, all UNBOUND, verse grain. The bound-painted class was NOT in it
+(the census walked an unbound dump). Whether variant-spelling pairs
+(malchiah-class) were inside the 102 is not recoverable — no member list was
+kept; TODO's phrasing ("~118 ... + malchiah Ezr 10:25 + the mary class")
+lists malchiah BESIDE the figure, which fits it being outside.
+
+## First-run post-mortem (2026-08-07, run 1: CONTROL FAIL, verdict withheld)
+- **Control failure walked down (diagnostic triad, JP-run):** Ezr 10:25 prints
+  the two same-named men as "Malchiah" (p10) AND "Malchijah" (p16) — different
+  spellings, both is_pn, both identity slots, both DECLINED by the binder
+  (pn_binding rule='multi', render=0), malchiah = 9 metaV people. The census
+  groups by identical normalized name, so a variant-spelling pair can never
+  group. Census logic sound for what it counts; the CONTROL was mis-keyed
+  (expected malchiah inside the lane). Fix: bucket C (below) + re-keyed
+  controls (pair in bucket C · mary Mat 27:61 in lane · jesus Mat 8:5 absent).
+- **BUCKET C added:** verses holding ≥2 unbound multi-referent single slots
+  whose different names are spelling-near (SequenceMatcher ≥ 0.80) — HAND-
+  REVIEW candidates, never members. The malchiah-class home.
+- **Pre-registration error, owned (reviewer point 2):** I pre-registered that
+  azariah/joash "should NOT appear". Wrong conflation: DRILL_lane_c's "5
+  multi-in-chapter slots (two Joashes, Azariah genealogy) = named residue with
+  the word-position class" counts lane-C slots with several CANDIDATES in the
+  chapter — a different set from verses printing the name twice (1Ch 6:9
+  Azariah begat Azariah; 2Ki 14:1 Joash of Judah + Joash of Israel in one
+  sentence). Those ARE Dishon-pattern members; the census over-includes
+  nothing here. R3's frame corrects to: the lane-C 5 stay out only where they
+  are chapter-grain, not by name.
+- **Run-1 lane figure 96** (mary 16 ✓ anchor). 96 vs 118: −22, not yet
+  attributable member-by-member (no July list); candidate explanations = the
+  8/5 rebuild + 8/7 repairs moving slots into bound/painted state, definitional
+  drift in the July count, and variant-spelling pairs sitting outside the
+  predicate. Run 2 (with bucket C) is the number the verdict runs on.
+
+## FOLLOW-ON TICKET (reviewer point 4, out of this lane's scope)
+The bound-painted bucket (run 1: 1,470 slots / 713 groups — one verse-level
+bind paints every same-name slot in the verse) is correct where the repeated
+name is the same referent (Saul/Joseph/Pharaoh narrative repetition — most of
+the list) and wrong where it isn't. Auditing those 713 groups for wrong paints
+is its OWN lane — a bind created on a known multi-referent verse is where a
+wrong paint would hide. Not folded here.
+
 ## Diff frame (what the fresh census is checked against)
 No frozen member-by-member list exists, so the diff runs against the charter's
 NAMED members + aggregates; the fresh output then becomes the frozen list:
@@ -57,9 +103,9 @@ NAMED members + aggregates; the fresh output then becomes the frozen list:
   8/7 repairs, not waved through)
 - mary: 16 slots / 8 verses expected
 - malchiah Ezr 10:25 present (also the control)
-- ~22 tail names besides mary, genealogy-heavy
-- azariah/joash/benaiah/harim should NOT appear at verse grain (they are
-  chapter-grain residue) — if one does, that's a finding to walk down
+- ~22 tail names besides mary, genealogy-heavy (run 1: 27 — azariah/joash
+  verse-level pairs are legitimate members, see post-mortem)
+- malchiah/malchijah Ezr 10:25 in bucket C (control)
 CENSUS OUTPUT + DIFF VERDICT: (pending JP's PA run — paste below)
 
 ## DECIDE AT SESSION OPEN — open questions for the reviewer
