@@ -177,7 +177,25 @@ with the contiguity check shown; (4) member-level pre-registration format for
 the 47 groups. Dry-runs JP-run, verdicts per row, display evidence from the
 render-modeling lister only.
 
+## DESIGN VERDICT (reviewer, 2026-08-07): PASS, all four sections, 3 codicils
+Design = docs/tickets/DESIGN_wordpos_binding.md (codicils written into it at
+their sections, verbatim-anchored). Reviewer's binding codicils:
+- **C1 (list-structure):** slot order is candidacy only; the TIPNR
+  parent/offspring agreement is the load-bearing identity evidence and must be
+  QUOTED, or the row is refused at verdict "regardless of how obvious it looks."
+- **C2 (control (a) gap, named openly):** the automated gates are
+  position-integrity gates; entity-correctness has exactly one gate — the
+  reviewer's per-row verdict. Two green checks ≠ identity assurance.
+- **C3 (freeze semantics):** ratification applies to the FILLED prereg file,
+  not just the template. Two reviewer rounds remain in order: prereg
+  ratification (tranches allowed — mary 8 + joash 5 first front-loads the
+  hardest evidence), then per-row dry-run verdicts. Controls build in
+  parallel; red-first before the full dry-run regardless.
+"Approved to proceed. Next deliverable: the filled wordpos_prereg_20260807.txt,
+all 47 groups plus appendix, evidence quotes from JP-run dumps of live rows."
+
 ## Status
 GATE PHASE CLOSED — census frozen (wordpos_census_20260807.txt), R1–R4 ruled.
-**DESIGN PASS UNPARKED** — next chunk of work, opens against this ticket
-(baseline file + rulings + design bar above are the full charter).
+DESIGN RATIFIED (PASS + C1–C3 above). **OPEN WORK: fill the prereg file from
+JP-run live dumps (dump tool: scripts/dump_wordpos_lane.py) + build controls
+(a)–(e) in parallel; prereg goes back to the reviewer before any dry-run.**

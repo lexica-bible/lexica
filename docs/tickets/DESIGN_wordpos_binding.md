@@ -113,6 +113,11 @@ printed ABP text or TIPNR record line that carries the discrimination):
   name twice (1Ch 6:9 azariah p4/p6), slot order IS the father/son partition,
   each side then matched to the TIPNR entity whose own parent/offspring line
   agrees. The quote must show BOTH the structure and the TIPNR agreement.
+  **CODICIL 1 (reviewer, design verdict 2026-08-07, binding):** order is
+  CANDIDACY only; the TIPNR kin agreement is the load-bearing identity half. A
+  list-structure row whose quote shows only the begat-grammar, without the
+  entity's own parent/offspring line quoted, is refused at verdict regardless
+  of how obvious it looks.
 - **locative-syntax** — the slot sits in place-grammar ("he had Gilead and
   Bashan") while the other is a person; carries the person/place pairs.
 - **tipnr-ref-partition** — the two entities' own reference lists split cleanly
@@ -147,6 +152,12 @@ must each catch it red-first:
 - the adjudication re-derivation — a checker script re-reads the printed verse
   and refuses any row whose evidence_quote does not appear adjacent to the
   ruled slot's position. The wrong row must be REFUSED with the reason printed.
+
+  **CODICIL 2 (reviewer, design verdict 2026-08-07, binding):** the automated
+  gates here are POSITION-INTEGRITY gates only — they catch a quote at the
+  wrong slot, not a wrong entity with a genuinely adjacent quote. Entity
+  correctness has exactly ONE gate: the reviewer's per-row verdict. Two green
+  automated checks are never identity assurance.
 
 **(b) Stale-name row MUST FAIL.** A control row keying position p with a name
 the live words row does not carry (e.g. `joash` at a position whose stored head
@@ -211,6 +222,14 @@ Rules of the format:
   counted in the 96 (R4).
 - The file is frozen at ratification; any change after that is a new reviewer
   round, not an edit.
+- **CODICIL 3 (reviewer, design verdict 2026-08-07, binding):** "frozen at
+  ratification" means ratification of the FILLED file — the template is
+  approved with this design, but the file carrying the 47 groups' actual
+  proposals and quotes returns to the reviewer as its own gate before any
+  dry-run. Two reviewer rounds remain, in order: prereg ratification, then
+  per-row dry-run verdicts. Tranche submission is allowed (ratified per
+  tranche); controls (a)–(e) may be built in parallel but run red-first
+  before the full dry-run regardless.
 
 ## Build/ship order (for scale, after design ratification)
 prereg file → reviewer ratifies → adjudication fills the TSV group-by-group
