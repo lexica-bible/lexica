@@ -149,7 +149,35 @@ recommendation applies as the ruling):
 - **R4 — mary class + malchiah fold-in.** TODO.md already folds them in.
   Recommendation: confirm — same predicate catches both, no special-casing.
 
+## RULINGS BANKED (reviewer, 2026-08-07 — gate phase CLOSED)
+- **R1 RATIFIED.** The predicate IS the lane membership definition (the 07-30
+  frame re-run against live). Codicil: "same normalized name" has a known
+  blind spot (variant spellings), proven singular by Ezr 10:25; covered by
+  the bucket-C appendix, NOT by widening the predicate.
+- **R2 RATIFIED — painted bucket OUT of this lane.** Risk classes differ: the
+  96 are unbound (users get nothing today; a fix can only add), the 1,470 are
+  bound (users get something, possibly wrong; changes can break working
+  displays). Follow-on lane stands; discovery-time carve-out in force.
+- **R3 RATIFIED as amended.** GRAIN, not name, decides membership.
+  Azariah/joash verse-level pairs are in the 96. Chapter-grain cases stay out
+  unless the mechanism covers them free — and that is a scope-extension
+  question that RETURNS TO THE REVIEWER, never an automatic fold-in.
+- **R4 RATIFIED as amended.** Mary in the 96 via the normal predicate;
+  malchiah/malchijah = bucket-C appendix member (adjudicated with the lane,
+  flagged in evidence, not counted in the 96).
+
+## DESIGN BAR (reviewer-set, quoted — build to this, don't discover it)
+The design paste must show: (1) the partition mechanism — how a slot's
+position maps to a referent, and where that mapping lives in the data layout;
+(2) sole-spelling satisfied — per-referent identity evidence quoted PER SLOT,
+with the person/place pairs (gilead, jezreel, penuel, haran) handled by a
+model that does NOT assume two-people; (3) red-first controls — at minimum a
+deliberately wrong-referent row that must FAIL, and a bracket-adjacent case
+with the contiguity check shown; (4) member-level pre-registration format for
+the 47 groups. Dry-runs JP-run, verdicts per row, display evidence from the
+render-modeling lister only.
+
 ## Status
-OPEN — census command handed to JP; verdict owed on the paste before any
-predicate or design work. Design pass (the actual word-position binding
-mechanism + card wording) is gated behind the confirmed census + rulings.
+GATE PHASE CLOSED — census frozen (wordpos_census_20260807.txt), R1–R4 ruled.
+**DESIGN PASS UNPARKED** — next chunk of work, opens against this ticket
+(baseline file + rulings + design bar above are the full charter).

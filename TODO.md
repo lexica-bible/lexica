@@ -116,9 +116,12 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   - **Word-position binding lane (~118 same-verse same-name multi slots + malchiah Ezr 10:25 +
     the mary class, 8 verses/16 slots)** — un-partitionable at the verse+name key BY
     CONSTRUCTION; needs word-position-level binding. UNPARKED per JP's ordering — next in the
-    card-work queue. **Lane ticket opened 2026-08-07: docs/tickets/TICKET_wordpos_binding.md**
-    (census tool scripts/census_wordpos_multi.py built; PA run + verdict pending; R1–R4
-    reviewer rulings open).
+    card-work queue. **Gate phase CLOSED 2026-08-07: docs/tickets/TICKET_wordpos_binding.md**
+    — census FROZEN at 96 slots / 47 groups / 28 names (wordpos_census_20260807.txt; the old
+    ~118 is retired), R1–R4 ruled, Ezr 10:25 = bucket-C appendix member. DESIGN PASS is the
+    open work; the reviewer's design bar is in the ticket. NEW FOLLOW-ON LANE banked there
+    too: 1,470 bound-painted same-name slots (one bind paints 2+ same-name words in a verse
+    — audit for wrong paints; discovery-time carve-out in force).
   - **Jabish spelling ruling** — 9 "Jabish Gilead" verses (ABP spells Jabish; the token already
     carries H3003 and serves the Jabesh-gilead card; only the Gilead half unruled) + gilead
     1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing). Consistency fix, not coverage.
