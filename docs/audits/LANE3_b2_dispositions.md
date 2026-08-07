@@ -150,6 +150,48 @@ relevant span.
 | 99 | Num 25:15 | G1135,G3588 | of the Midianitish woman | MERGE-gentilic | `of the Midianitish womanG1135 G3588 G*` |
 | 100 | Psa 115:1 | G1656 | your mercy | ARTIFACT-no-name | `your mercyG1656 G*` — no name in English |
 
+## LIVE-STATE RE-SCOPE (2026-08-06, reviewer-accepted — supersedes the 71-row lane size)
+
+The 71 candidates above were adjudicated against SOURCE lines. Diffing the list
+against the LIVE table (dump_lane3_rows.py, all 70 verses, pasted 2026-08-06)
+showed **55 of the 71 rows already repaired in live** — the name sits on its own
+star slot, the carrier keeps only its own English, no bracket. Mechanism
+attributed: the **subject-name fold** (`scripts/fix_pn_subject_merge.py`, the
+settled Subj-fold arc folded into the build), whose write shape (name on the
+lower position, no bracket) matches all 55 exactly. Eliminations receipted: the
+②-pass REFUSED these rows (committed plan file, e.g. `B 2Ch 18:13 no-name`) and
+always writes brackets; `_split_compounds` refuses star targets;
+`restore_frozen_pn` touches numbers only. Belt-and-braces receipt: the same dump
+against `bible_pre_pnstar_20260803.db` (5-verse sample — 2Ch 18:13, Act 14:2,
+Luk 1:12, Gen 5:9, Act 2:10) shows the same splits pre-ride, so this predates
+the ②-ride.
+
+**Reconciliation (reviewer-required):** closed 55 = gentilic 12 + name 40 +
+possessive 3; still-merged 16 = gentilic 10 + name 1 + possessive 5;
+55 + 16 = 71 ✓ (22/41/8 by class ✓).
+
+**CLOSED — already repaired by the subject-name fold, verified against the live
+dump 2026-08-06 + rollback sample:**
+- Gentilic (12): Act 2:10 · Act 14:2 · Mar 12:18 · Mat 12:41 · 2Ki 7:15 ·
+  Est 9:6 · Est 9:12 · Isa 19:2 · Jer 24:5 · Jer 51:1 · Jer 51:24 · Job 1:15
+- Name (40): Luk 1:12 · Luk 1:18 · 1Ch 1:50 · 1Ki 15:8 · 2Ch 18:13 · 2Ch 18:16 ·
+  2Ch 18:18 · 2Ch 18:24 · 2Ch 18:27 · 2Ch 34:15 (both rows) · 2Ch 34:22 ·
+  2Ki 22:9 · 2Sa 3:15 · 2Sa 10:16 · Est 4:12 · Exo 36:1 · Exo 37:1 · Eze 26:2 ·
+  Ezr 2:63 · Gen 5:9 · Gen 5:10 · Gen 5:15 · Gen 5:16 · Gen 11:14 · Gen 11:15 ·
+  Jer 20:1 · Jer 20:3 · Jer 22:28 · Jer 26:21 · Jer 38:8 · Jer 38:11 · Jer 49:1 ·
+  Jer 49:3 · Jer 51:41 · Jos 5:15 · Jdg 1:6 · Jdg 1:7 · Neh 3:21 · Neh 7:65
+- Possessive (3): Luk 17:32 · Gen 50:23 · Job 42:10
+
+**STILL MERGED IN LIVE — the hand lane's real scope (16 rows / 15 verses):**
+- Gentilic (10): Mat 9:11 · 2Ch 14:12 · 2Sa 14:4 · Isa 30:31 · Jer 50:16 ·
+  Lev 24:10 · Num 25:8 (×2) · Num 25:14 · Num 25:15
+- Name (1): Eze 23:5
+- Possessive (5): Heb 11:24 · 1Ch 21:9 · 1Sa 14:50 · 1Sa 24:5 · Gen 46:26
+
+The survivors are exactly the shapes the fold cannot reach: name mid-cell, an
+intervening blank article slot, inside an existing bracket, or possessive
+("X's") wording. Mat 27:26 stays its own separate item (A/unattested).
+
 ## Notes for the repair lane (all JP-checkpointed, hand-per-row)
 
 1. **The 71 repair candidates split three ways** and probably want three passes of

@@ -402,6 +402,18 @@ Lesson: an adjudicator must model the FULL render path, not the layer it
 reads — the ride's fourth stale-layer measurement (frozen record, identity
 builder branches, unfindability gate, the adjudicator itself).
 
+## LANE-③ LIVE-STATE RE-SCOPE (2026-08-06, reviewer-accepted) + STANDING NOTE
+
+The 71 hand-repair candidates were source-layer findings; diffing against the
+live table showed 55 already repaired by the subject-name fold
+(fix_pn_subject_merge.py) — closure record + reconciliation in
+LANE3_b2_dispositions.md. The hand lane's real scope is 16 rows / 15 verses
+(+ Mat 27:26). Rollback-copy sample confirmed the splits predate the ②-ride.
+**STANDING NOTE (the ride's stale-layer family, fifth instance): any future
+defect lane must diff its candidate list against the LIVE table before scoping —
+the detector reads abp_texts, and the build's folded repair chain (Subj-fold et
+al.) fixes classes the source still shows broken.**
+
 ## Pointers
 - `docs/handoffs/HANDOFF_pn_star_ride.md` — the lane-2 opener this executes.
 - `docs/tickets/TICKET_detector_gap.md` — detector close-out, the 4,996.
