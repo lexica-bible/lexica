@@ -38,6 +38,8 @@ VERSES = [
 conn = sqlite3.connect(DB)
 conn.row_factory = sqlite3.Row
 
+print("# COLUMNS: position\tenglish\tenglish_head\tstrongs\tstrongs_base"
+      "\tgreek_pos\tbracket_id\tis_pn")
 missing = 0
 for ref in VERSES:
     book, rest = ref.rsplit(" ", 1)
