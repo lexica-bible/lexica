@@ -286,10 +286,10 @@ GROUP  1Ch 7:20  tahath  slots p9, p16
        Eladah); entity parents "Eleadah@1Ch.7.20", offspring "Zabad@1Ch.7.21"
   fallback outcome if evidence fails: floor
 
-GROUP  1Ch 12:20  jozabad  slots p17, p23  [ORDER-ONLY — reviewer rules]
+GROUP  1Ch 12:20  jozabad  slots p17, p23  [RULED: source-order-filing]
   expected partition: two entities (person / person)
-  p17  proposed: Jozabad@1Ch.12.20a   class: list-structure (C1 SHORTFALL)
-  p23  proposed: Jozabad@1Ch.12.20b   class: list-structure (C1 SHORTFALL)
+  p17  proposed: Jozabad@1Ch.12.20a   class: source-order-filing
+  p23  proposed: Jozabad@1Ch.12.20b   class: source-order-filing
        quote: "Adnah, and Jozabad, and Jediael, and Michael, and Jozabad, and
        Elihu" (p15-p25); claimants at 13|12|20: exactly Jozabad@1Ch.12.20a +
        b, NO kin on either entity ("+" both). The a/b suffixes ARE the
@@ -298,10 +298,16 @@ GROUP  1Ch 12:20  jozabad  slots p17, p23  [ORDER-ONLY — reviewer rules]
        itself partitions by this order. Reviewer refusal floors both.
   fallback outcome if evidence fails: floor
 
-GROUP  1Ch 16:5  jeiel  slots p8, p23  [FLAGGED — cross-verse parallel]
+GROUP  1Ch 16:5  jeiel  slots p8, p23  [RULED: FLOOR both — reviewer refusal]
   expected partition: two entities (person / person)
-  p8   proposed: Jaaziel@1Ch.15.18-   class: tipnr-ref-partition
-  p23  proposed: Jeiel@1Ch.15.18-    class: tipnr-ref-partition
+  p8   RULED: FLOOR  (was proposed Jaaziel@1Ch.15.18-)
+  p23  RULED: FLOOR  (was proposed Jeiel@1Ch.15.18-)
+  REVIEWER RULING (2026-08-07, verbatim intent): the cross-verse parallel to
+  1Ch 15:18 is real scholarship but outside every pinned class, and TIPNR did
+  NOT file these singers by position in 16:5 — the a/b assignment was CC's
+  inference from a different verse's list order, exactly what Codicil 1
+  exists to stop. A future `parallel-list` class would be a design amendment
+  proposed separately. Original analysis kept below for that future round:
        quote p8: "his second Zachariah, and Jeiel, and Shemiramoth, and
        Jehiel," (p4-p12); quote p23: "and Jeiel with instruments," (p22-p25).
        Claimants at 13|16|5 under this name-shape: Jaaziel@1Ch.15.18-,
@@ -487,10 +493,10 @@ GROUP  Ezr 8:11  bebai  slots p3, p6
        Ezr-2 returnee list — is Ezr.2.11-Neh
   fallback outcome if evidence fails: floor
 
-GROUP  Ezr 8:16  elnathan  slots p10, p27  [ORDER-ONLY — reviewer rules]
+GROUP  Ezr 8:16  elnathan  slots p10, p27  [RULED: source-order-filing]
   expected partition: two of THREE order-minted entities
-  p10  proposed: Elnathan@Ezr.8.16a   class: list-structure (C1 SHORTFALL)
-  p27  proposed: Elnathan@Ezr.8.16c   class: list-structure (C1 SHORTFALL)
+  p10  proposed: Elnathan@Ezr.8.16a   class: source-order-filing
+  p27  proposed: Elnathan@Ezr.8.16c   class: source-order-filing
        quote: "and to Elnathan, and to Jarib to Elnatham, ... and to
        Elnathan, ones perceiving." (p8-p28). Claimants at 15|8|16 include
        Elnathan a/b/c, all kinless — the source's order filing again.
@@ -619,11 +625,11 @@ GROUP  Ezr 10:25  malchiah/malchijah  slots p10, p16  [APPENDIX; ORDER-ONLY —
   reviewer rules]
   expected partition: two entities (person / person)
   p10  proposed: Malchijah@Ezr.10.25a   class: variant-spelling +
-       list-structure (C1 SHORTFALL)
+       source-order-filing
        quote: "Ramiah, and Jeziah, and Malchiah, and Miamin," (p6-p12);
        printed "Malchiah"
   p16  proposed: Malchijah@Ezr.10.25b   class: variant-spelling +
-       list-structure (C1 SHORTFALL)
+       source-order-filing
        quote: "and Eleazar, and Malchijah, and Benaiah." (p13-p18); printed
        "Malchijah"
   Exhaustive: exactly Malchijah@Ezr.10.25a + b claim 15|10|25 (Jer's Malchiah
@@ -633,10 +639,19 @@ GROUP  Ezr 10:25  malchiah/malchijah  slots p10, p16  [APPENDIX; ORDER-ONLY —
   floors both.
   fallback outcome if evidence fails: floor
 
-# ── end tranche 2 (33 groups + appendix / 68 slots proposed as: 1 explicit
-# floor (dishon p5) · 8 order-only/flagged slots pending the reviewer's C1
-# ruling (jozabad ×2, elnathan ×2, malchijah ×2, jeiel ×2) · 6 cushi slots
-# flagged place/gentilic · the rest evidence-carried) ──
+# ── end tranche 2 ──
+#
+# ═══ RATIFIED + FROZEN (reviewer, 2026-08-07; Codicil 3 satisfied) ═══════════
+# Tranche 1: all 28 slots as proposed (incl. Joh 19:25 p16 leftover row).
+# Tranche 2: ratified with rulings — order-only six BOUND under the NEW pinned
+# class `source-order-filing` (conditions in DESIGN_wordpos_binding.md);
+# jeiel 1Ch 16:5 FLOORED both (cross-verse parallel refused per C1); cushi ×6
+# BOUND place/gentilic; judah BOUND people-reading; name-equations accepted;
+# simon-the-tanner row CONDITIONAL on the Simon@Act.8.13- refs read (before
+# dry-run; no tanner span => back to reviewer).
+# FINAL TALLY: 96 lane + 2 appendix = 95 bound-proposed / 3 floored
+# (dishon 1Ch 1:41 p5 · jeiel 1Ch 16:5 p8 + p23).
+# This file is FROZEN. Any change = a new reviewer round.
 # DISCOVERIES AT ADJUDICATION (recorded per rider 3 pattern; none are
 # bound-painted carve-outs): Elnatham Ezr 8:16 p15 in-verse variant spelling ·
 # TIPNR equations: Laadan=Libni, Penuel=Peniel, Pashur=Pashhur,

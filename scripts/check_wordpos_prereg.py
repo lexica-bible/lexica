@@ -18,9 +18,11 @@ evidence_quote rationale flags — tab-separated, # comments):
      referent_kind (person->person; place|place/gentilic->place; group->
      person or other) — the rider-2 kind check
   R4 QUOTE gate (control (a), position-integrity half): the quote's tokens,
-     ellipses removed, appear in the verse's printed word stream in order,
-     AND the slot's own printed head appears among the quote's tokens —
-     a quote that never touches the ruled slot REFUSES the row
+     ellipses removed, appear IN ORDER in the verse — in the storage word
+     stream OR in verses.text prose (quotes are verbatim ABP prose; storage
+     order can differ, e.g. "did obeisance to Cushi" stores verb-first) —
+     AND the slot's own printed head appears among the quote's tokens; a
+     quote that never touches the ruled slot REFUSES the row
   R5 DUPLICATE gate (control (a)): two rows in one verse proposing the SAME
      entity must both carry the same-referent flag, else REFUSED
 Per verse:
@@ -109,10 +111,12 @@ def check_row(row, verse_rows_cache):
     q = re.sub(r"\.\.\.|…", " ", row["evidence_quote"])
     qtok = tokens(q)
     vtok = [t for r in rows for t in tokens(r["english"])]
+    ptok = tokens(v["text"])
     if not qtok:
         return False, "R4 empty quote"
-    if not subsequence(qtok, vtok):
-        return False, "R4 QUOTE: tokens not found in verse word stream in order"
+    if not (subsequence(qtok, vtok) or subsequence(qtok, ptok)):
+        return False, ("R4 QUOTE: tokens not found in order in either the "
+                       "word stream or the prose")
     head = compact(slot["english_head"])
     if head and head not in [compact(t) for t in qtok]:
         return False, (f"R4 QUOTE-ADJACENCY: slot's own word "

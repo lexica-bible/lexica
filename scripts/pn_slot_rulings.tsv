@@ -1,0 +1,105 @@
+# pn_slot_rulings.tsv - per-slot hand rulings for the word-position binding lane.
+# Built 1:1 from the FROZEN prereg (docs/tickets/wordpos_prereg_20260807.txt,
+# reviewer-ratified 2026-08-07; design DESIGN_wordpos_binding.md, codicils C1-C3).
+# 95 rows = 93 lane slots + 2 appendix (3 slots floored in the prereg get NO row:
+# dishon 1Ch 1:41 p5, jeiel 1Ch 16:5 p8 + p23 - a floor is the ABSENCE of a row).
+# name = the printed english_head AT the slot (the staleness tripwire).
+# Dry-run gate: scripts/check_wordpos_prereg.py (position-integrity only, C2);
+# entity correctness = the reviewer's per-row verdict on the prereg, already given.
+# simon-tanner row (Act 10:32 p14) is CONDITIONAL on the Simon@Act.8.13- refs read.
+name	book	chapter	verse	position	entity_uniq	referent_kind	evidence_class	evidence_quote	rationale	flags
+mary	Mat	27	56	3	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary the Magdalene,	epithet; refs 40|27|56
+mary	Mat	27	56	7	Mary@Mat.27.56-Jhn	person	epithet-in-verse	Mary the ... of James and Joses ... mother,	offspring James/Joses per entity record; refs 40|27|56
+mary	Mat	27	61	3	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary the Magdalene,	epithet; refs 40|27|61
+mary	Mat	27	61	9	Mary@Mat.27.56-Jhn	person	tipnr-ref-partition	and the other Mary,	exhaustive-exclusive: only Magdalene + this entity list 40|27|61; named slot takes Magdalene
+mary	Mat	28	1	9	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary the Magdalene,	epithet; refs 40|28|1
+mary	Mat	28	1	15	Mary@Mat.27.56-Jhn	person	tipnr-ref-partition	and the other Mary,	exhaustive-exclusive partition; named slot takes Magdalene
+mary	Mar	15	40	10	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary Magdalene,	epithet; refs 41|15|40
+mary	Mar	15	40	13	Mary@Mat.27.56-Jhn	person	epithet-in-verse	Mary the one of James the less and Joses mother,	offspring James/Joses; refs 41|15|40
+mary	Mar	15	47	2	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary the Magdalene	epithet; refs 41|15|47
+mary	Mar	15	47	6	Mary@Mat.1.16-Act	person	tipnr-ref-partition	and Mary of Joses	TIPNR files 41|15|47 under Jesus' mother (Joses in offspring); adjacent verses assign the parallel epithet to a different entity	mar-15-47-tension
+mary	Mar	16	1	4	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	Mary the Magdalene,	epithet; refs 41|16|1
+mary	Mar	16	1	8	Mary@Mat.27.56-Jhn	person	epithet-in-verse	Mary the one of James,	offspring James; refs 41|16|1
+mary	Luk	24	10	4	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	the Magdalene — Mary,	epithet precedes name; refs 42|24|10
+mary	Luk	24	10	8	Mary@Mat.27.56-Jhn	person	epithet-in-verse	Mary of James,	offspring James; refs 42|24|10
+mary	Joh	19	25	16	Mary@Mat.27.56-Jhn	person	tipnr-ref-partition	Mary the one of Klopas,	leftover logic, ratified: no separate Klopas-Mary in TIPNR; only Magdalene + this entity list 43|19|25
+mary	Joh	19	25	21	Mary_Magdalene@Mat.27.56-Jhn	person	epithet-in-verse	and Mary the Magdalene.	epithet; refs 43|19|25
+joash	2Ki	13	10	7	Joash@2Ki.11.2-2Ch	person	epithet-in-verse	of Joash king of Judah,	Judah-line kin: parents Ahaziah, offspring Amaziah; refs 12|13|10
+joash	2Ki	13	10	11	Joash@2Ki.13.9-Amo	person	kin-in-verse	Joash son of Jehoahaz reigned over Israel	parents Jehoahaz@2Ki.10.35-2Ch; refs 12|13|10
+joash	2Ki	14	1	3	Joash@2Ki.13.9-Amo	person	kin-in-verse	of Joash son of Jehoahaz king of Israel,	parents Jehoahaz; refs 12|14|1
+joash	2Ki	14	1	12	Joash@2Ki.11.2-2Ch	person	kin-in-verse	Amaziah son of Joash king of Judah	offspring Amaziah@2Ki.12.21-2Ch; refs 12|14|1
+joash	2Ki	14	13	4	Joash@2Ki.11.2-2Ch	person	kin-in-verse	Amaziah son of Joash son of Ahaziah king of Judah	double kin: offspring Amaziah AND parents Ahaziah; refs 12|14|13
+joash	2Ki	14	13	10	Joash@2Ki.13.9-Amo	person	epithet-in-verse	Joash king of Israel seized	Israel-line kin: parents Jehoahaz, offspring Jeroboam; refs 12|14|13
+joash	2Ki	14	17	4	Joash@2Ki.11.2-2Ch	person	kin-in-verse	Amaziah son of Joash king of Judah	offspring Amaziah; refs 12|14|17
+joash	2Ki	14	17	11	Joash@2Ki.13.9-Amo	person	kin-in-verse	Joash son of Jehoahaz king of Israel	parents Jehoahaz; refs 12|14|17
+joash	2Ki	14	23	5	Joash@2Ki.11.2-2Ch	person	kin-in-verse	of Amaziah son of Joash king of Judah,	offspring Amaziah; refs 12|14|23
+joash	2Ki	14	23	11	Joash@2Ki.13.9-Amo	person	kin-in-verse	Jeroboam son of Joash	offspring Jeroboam@2Ki.13.13-Amo; refs 12|14|23
+joash	2Ch	25	25	5	Joash@2Ki.11.2-2Ch	person	kin-in-verse	Amaziah the son of Joash king of Judah	offspring Amaziah; refs 14|25|25
+joash	2Ch	25	25	11	Joash@2Ki.13.9-Amo	person	kin-in-verse	of Joash the son of Jehoahaz king of Israel	parents Jehoahaz; refs 14|25|25
+dishon	1Ch	1	41	2	Dishon@Gen.36.25-1Ch	person	kin-in-verse	The sons of Anah — Dishon.	parents Anah@Gen.36.2-1Ch
+dishon	1Ch	1	41	8	Dishon@Gen.36.21-1Ch	person	kin-in-verse	And the sons of Dishon — Amram, and Eshban, and Ithran, and Cheran.	offspring Eshban/Ithran/Cheran (Amram~Hemdan, LXX form)
+jekamiah	1Ch	2	41	4	Jekamiah@1Ch.2.41	person	kin-in-verse	Shallum procreated Jekamiah,	parents Shallum@1Ch.2.40-; sole claimant	same-referent
+jekamiah	1Ch	2	41	6	Jekamiah@1Ch.2.41	person	kin-in-verse	Jekamiah procreated Elishama.	offspring Elishama@1Ch.2.41	same-referent
+gazez	1Ch	2	46	13	Gazez@1Ch.2.46a	person	kin-in-verse	Ephah the concubine of Caleb bore Haran, and Moza, and Gazez.	parents Caleb + Ephah
+gazez	1Ch	2	46	18	Gazez@1Ch.2.46b	person	kin-in-verse	And Haran procreated Gazez.	parents Haran@1Ch.2.46
+azariah	1Ch	6	9	4	Azariah@1Ki.4.2-1Ch	person	kin-in-verse	Ahimaaz engendered Azariah,	parents Ahimaaz@2Sa.15.27-1Ch	same-referent
+azariah	1Ch	6	9	6	Azariah@1Ki.4.2-1Ch	person	kin-in-verse	and Azariah engendered Johanan.	offspring Johanan@1Ch.6.9-	same-referent
+azariah	1Ch	6	10	4	Azariah@1Ch.6.9-Ezr	person	kin-in-verse	Johanan engendered Azariah —	parents Johanan; priest descr matches	same-referent,versification-offset
+azariah	1Ch	6	10	7	Azariah@1Ch.6.9-Ezr	person	kin-in-verse	he is Azariah who officiated as priest	the verse's own equation with p4	same-referent,versification-offset
+tahath	1Ch	7	20	9	Tahath@1Ch.7.20a	person	list-structure	and Bered his son, and Tahath his son, Eladah his son	chain after Bered; parents Bered AND offspring Eleadah quoted
+tahath	1Ch	7	20	16	Tahath@1Ch.7.20b	person	list-structure	Eladah his son, and Tahath his son,	chain after Eladah; parents Eleadah, offspring Zabad
+jozabad	1Ch	12	20	17	Jozabad@1Ch.12.20a	person	source-order-filing	Adnah, and Jozabad, and Jediael, and Michael, and Jozabad, and Elihu	source's own a/b order filing; exhaustive claimants, no kin exists
+jozabad	1Ch	12	20	23	Jozabad@1Ch.12.20b	person	source-order-filing	Adnah, and Jozabad, and Jediael, and Michael, and Jozabad, and Elihu	source's own a/b order filing
+shelomoth	1Ch	24	22	3	Shelomith@1Ch.23.18-	person	kin-in-verse	and to Izhar — Shelomoth;	parents Izhar@Exo.6.18-1Ch; sole claimant	same-referent,spelling-shelomith
+shelomoth	1Ch	24	22	6	Shelomith@1Ch.23.18-	person	kin-in-verse	to the sons of Shelomoth — Jahath;	offspring Jahath@1Ch.24.22	same-referent,spelling-shelomith
+laadan	1Ch	26	21	1	Libni@Exo.6.17-1Ch	person	kin-in-verse	The sons of Laadan, the sons to Gershon — to Laadan,	TIPNR equates Ladan=Libni (Gershon's son); sole person claimant	same-referent,ladan-libni-equation
+laadan	1Ch	26	21	5	Libni@Exo.6.17-1Ch	person	kin-in-verse	The sons of Laadan, the sons to Gershon — to Laadan,	TIPNR equates Ladan=Libni	same-referent,ladan-libni-equation
+shemer	1Ki	16	24	8	Shemer@1Ki.16.24	person	epithet-in-verse	from Shemer the lord of the mountain	sole claimant, minted at this verse	same-referent
+shemer	1Ki	16	24	31	Shemer@1Ki.16.24	person	epithet-in-verse	the name of Shemer the lord of the mountain — Samaria.	identical epithet, same narrative	same-referent
+azariah	2Ch	23	1	13	Azariah@2Ch.23.1a	person	kin-in-verse	Azariah son of Jehoram,	parents Jeroham@2Ch.23.1 (ABP prints LXX form Jehoram)	spelling-jeroham
+azariah	2Ch	23	1	23	Azariah@2Ch.23.1b	person	kin-in-verse	and Azariah son of Obed,	parents Obed@2Ch.23.1
+azariah	2Ch	29	12	12	Azariah@2Ch.29.12a	person	kin-in-verse	and Joel the son of Azariah,	offspring Joel@2Ch.29.12
+azariah	2Ch	29	12	27	Azariah@2Ch.29.12b	person	kin-in-verse	and Azariah the son of Jehalelel;	parents Jehallelel@2Ch.29.12
+joah	2Ch	29	12	36	Joah@2Ch.29.12a	person	kin-in-verse	Joah the son of Zimmah,	parents Zimmah@2Ch.29.12
+joah	2Ch	29	12	44	Joah@2Ch.29.12b	person	kin-in-verse	and Eden the son of Joah;	offspring Eden@2Ch.29.12
+uzzah	2Sa	6	8	10	Uzzah@2Sa.6.3-1Ch	person	tipnr-ref-partition	the LORD cut severance with Uzzah.	sole Uzzah claimant at 10|6|8; ark narrative (parents Abinadab)	same-referent
+uzzah	2Sa	6	8	17	Uzzah@2Sa.6.3-1Ch	person	tipnr-ref-partition	he called that place, Severance of Uzzah,	same man commemorated; sole claimant	same-referent
+cushi	2Sa	18	21	4	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	And Joab said to Cushi, Go, announce to the king	TIPNR reads the runner as the Cushite, filed under Cush; sole claimant	same-referent,gentilic-reading
+cushi	2Sa	18	21	13	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	And Cushi did obeisance to Joab, and he ran.	sole claimant	same-referent,gentilic-reading
+cushi	2Sa	18	31	3	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	And behold, Cushi came.	sole claimant at 10|18|31	same-referent,gentilic-reading
+cushi	2Sa	18	31	8	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	And Cushi said to the king,	sole claimant	same-referent,gentilic-reading
+cushi	2Sa	18	32	6	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	the king said to Cushi,	sole claimant at 10|18|32	same-referent,gentilic-reading
+cushi	2Sa	18	32	16	Cush@Gen.2.13-Act	place/gentilic	tipnr-ref-partition	And Cushi said, Let be as that young man,	sole claimant	same-referent,gentilic-reading
+james	Act	1	13	14	James@Mat.4.21-Act	person	tipnr-ref-partition	both Peter, and James, and John,	remainder of the exhaustive three-James claimant set (p25/p33 taken by kin); Zebedee trio adjacency
+james	Act	1	13	25	James@Mat.10.3-Act	person	kin-in-verse	James of Alphaeus,	parents Alphaeus@Mat.10.3-Act
+james	Act	1	13	33	James@Luk.6.16-Act	person	kin-in-verse	and Jude of James.	offspring Judas@Mat.10.3-Act
+simon	Act	10	32	6	Peter@Mat.4.18-2Pe	person	epithet-in-verse	call for Simon who is called Peter!	epithet in verse; Peter claims 44|10|32
+simon	Act	10	32	14	Simon@Act.8.13-	person	tipnr-ref-partition	the house of Simon, a tanner,	remainder after Peter epithet; sole other claimant	tanner-refs-conditional
+barzillai	Ezr	2	61	11	Barzillai@Ezr.2.61-Neh	person	tipnr-ref-partition	sons of Barzillai who took from the daughters of Barzillai the Gileadite a wife	remainder after the Gileadite epithet; minted at this verse
+barzillai	Ezr	2	61	17	Barzillai@2Sa.17.27-Neh	person	epithet-in-verse	the daughters of Barzillai the Gileadite	the Gileadite = David's compatriot of 2Sa 17:27; claims 15|2|61
+barzillai	Neh	7	63	9	Barzillai@Ezr.2.61-Neh	person	tipnr-ref-partition	sons of Barzillai, which took of the daughters	remainder after the Gileadite epithet
+barzillai	Neh	7	63	14	Barzillai@2Sa.17.27-Neh	person	epithet-in-verse	the daughters of Barzillai the Gileadite	Gileadite epithet; claims 16|7|63
+bebai	Ezr	8	11	3	Bebai@Ezr.2.11-Neh	person	tipnr-ref-partition	From the sons of Bebai —	returnee-clan header; remainder after p6 kin
+bebai	Ezr	8	11	6	Bebai@Ezr.8.11	person	kin-in-verse	Zechariah son of Bebai,	offspring Zechariah@Ezr.8.11
+elnathan	Ezr	8	16	10	Elnathan@Ezr.8.16a	person	source-order-filing	and to Elnathan, and to Jarib	source's a/b/c order filing (p15 Elnatham = b, variant spelling, not a lane slot)
+elnathan	Ezr	8	16	27	Elnathan@Ezr.8.16c	person	source-order-filing	and to Elnathan, ones perceiving.	source's a/b/c order filing
+haran	Gen	11	31	11	Haran@Gen.11.26-	person	kin-in-verse	Lot the son of Haran,	offspring Lot@Gen.11.27-2Pe; parents Terah
+haran	Gen	11	31	43	Haran@Gen.11.31-Act	place	locative-syntax	And they came unto Haran and dwelt there.	movement verb + unto + dwelt; place minted at this verse
+machir	Gen	46	20	32	Machir@Gen.50.23-1Ch	person	kin-in-verse	the sons of Manasseh whom Sura the concubine bore to him — Machir.	parents Manasseh; sole claimant	same-referent
+machir	Gen	46	20	33	Machir@Gen.50.23-1Ch	person	kin-in-verse	And Machir procreated Gilead.	offspring Gilead@Num.26.29-1Ch	same-referent
+jezreel	Hos	1	4	10	Jezreel@Hos.1.4	person	kin-in-verse	Call his name Jezreel!	the child named; parents Hosea + Gomer
+jezreel	Hos	1	4	19	Jezreel@Jos.19.18-Hos	place	locative-syntax	I will avenge the blood of Jezreel	the massacre at the place; place claims 28|1|4
+penuel	Jdg	8	8	4	Peniel@Gen.32.30-1Ki	place	locative-syntax	he ascended from there to Penuel,	movement + to; sole claimant (person Penuels claim neither)	same-referent,spelling-peniel
+penuel	Jdg	8	8	16	Peniel@Gen.32.30-1Ki	place	locative-syntax	And the men of Penuel answered	men of <place>; sole claimant	same-referent,spelling-peniel
+pashur	Jer	38	1	8	Pashhur@Jer.38.1	person	kin-in-verse	and Gedaliah son of Pashur,	offspring Gedaliah@Jer.38.1	spelling-pashhur
+pashur	Jer	38	1	14	Pashhur@Jer.21.1-	person	kin-in-verse	and Pashur son of Malchiah,	parents Malchiah@Jer.21.1- (who also claims 24|38|1)	spelling-pashhur
+judah	Jer	40	15	28	Judah@Gen.29.35-Rev	group	tipnr-ref-partition	should scatter all Judah, the ones being brought together to you	people not territory; patriarch entity = TIPNR's gentilic model	same-referent,people-reading
+judah	Jer	40	15	37	Judah@Gen.29.35-Rev	group	tipnr-ref-partition	they shall destroy the rest of Judah.	same collective referent	same-referent,people-reading
+gilead	Jos	17	1	16	Gilead@Num.26.29-1Ch	person	kin-in-verse	to Machir first-born of Manasseh, father of Gilead.	parents Machir@Gen.50.23-1Ch
+gilead	Jos	17	1	23	Gilead@Gen.31.21-Zec	place	locative-syntax	he was a man of war in Gilead and in the Bashan area.	in + paired with Bashan
+judas	Luk	6	16	0	Judas@Mat.10.3-Act	person	kin-in-verse	Judas of James,	parents James@Luk.6.16-Act
+judas	Luk	6	16	3	Judas@Mat.10.4-Act	person	epithet-in-verse	and Judas Iscariot, who also became the betrayer.	the betrayer apostle; parents Simon (Iscariot's father)
+gilead	Num	26	29	11	Gilead@Num.26.29-1Ch	person	kin-in-verse	and Machir procreated Gilead;	parents Machir@Gen.50.23-1Ch	same-referent
+gilead	Num	26	29	13	Gilead@Num.26.29-1Ch	person	list-structure	to Gilead, the people the Gileadites;	parallel to "to Machir, the people the Machirites" (person founder); offspring = the clan heads	same-referent
+malchiah	Ezr	10	25	10	Malchijah@Ezr.10.25a	person	source-order-filing	Ramiah, and Jeziah, and Malchiah, and Miamin,	appendix; source's a/b order filing	variant-spelling
+malchijah	Ezr	10	25	16	Malchijah@Ezr.10.25b	person	source-order-filing	and Eleazar, and Malchijah, and Benaiah.	appendix; source's a/b order filing	variant-spelling

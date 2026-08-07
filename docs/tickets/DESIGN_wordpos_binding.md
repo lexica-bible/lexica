@@ -124,6 +124,17 @@ printed ABP text or TIPNR record line that carries the discrimination):
   and this slot's role sits in exactly one (the zerubbabel class, per-slot).
 - **variant-spelling** (appendix only) — Ezr 10:25; spelling itself is part of
   the evidence and is quoted.
+- **source-order-filing** (reviewer-pinned at prereg ratification,
+  2026-08-07) — TIPNR minted order-suffixed entities (a/b/c) for that exact
+  verse, and binding slot-order to them faithfully serves the SOURCE'S own
+  partition (the same principle as Mar 15:47 / Cushi), not our geometric
+  inference. Usable ONLY where ALL THREE hold: (a) the source minted
+  order-suffixed entities for that exact verse; (b) the claimant set is
+  exhaustive-exclusive; (c) no kin exists on any candidate to check or
+  contradict. Loosening any condition requires a new ruling. (Contrast:
+  jeiel 1Ch 16:5 — a cross-verse parallel-list inference is NOT this class
+  and was floored; a future `parallel-list` class would be its own design
+  amendment.)
 
 A slot no class can carry gets outcome **floor** — it stays unbound, honestly,
 with the group still pre-registered (that IS an allowed verdict; forcing 96/96

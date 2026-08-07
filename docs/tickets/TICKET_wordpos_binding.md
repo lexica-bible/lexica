@@ -223,5 +223,20 @@ Jos 17:1); penuel + Num-26:29 gilead resolved single-kind; 4 order-only
 pairs (jozabad, elnathan, malchijah appendix, jeiel) flagged pending the
 reviewer's C1 ruling; cushi ×3 verses flagged (TIPNR reads it as the
 gentilic under the land Cush); 1 explicit floor (dishon 1Ch 1:41 p5).
-**OPEN: reviewer ratification of both tranches; then controls (a)–(e)
-red-first; then TSV + dry-run.**
+**PREREG RATIFIED + FROZEN (reviewer, 2026-08-07).** T1 all 28 as proposed;
+T2 ratified with rulings: order-only six BOUND under NEW pinned class
+`source-order-filing` (3 conditions, in the design doc) · jeiel 1Ch 16:5
+FLOORED both (cross-verse parallel refused per C1; `parallel-list` would be
+a separate design amendment) · cushi ×6 + judah BOUND per source's gentilic
+model · name-equations accepted · simon-tanner CONDITIONAL on the
+Simon@Act.8.13- refs read. Final: 95 bound-proposed / 3 floored.
+**CONTROLS RED-FIRST: PASS (JP-run 2026-08-07).** Expected: 6/6 pinned
+behaviors, four deliberate-bad REFUSED with reasons; actual: exactly that
+(R5 duplicate · R4 adjacency · R2 stale-name · R3 kind mismatch), exit 0.
+Harness patch after the run: quote gate accepts prose order OR storage
+order (Cushi-class quotes are prose-ordered; storage puts the verb first) —
+controls unchanged, re-proven at dry-run since the gate moved.
+**OPEN: (1) JP: Simon@Act.8.13- refs read (tanner-span condition);
+(2) full dry-run of scripts/pn_slot_rulings.tsv (95 rows, built from the
+frozen file) via check_wordpos_prereg.py; (3) reviewer per-row verdicts;
+(4) build pn_slot_binding writer + serve path per the ratified design.**
