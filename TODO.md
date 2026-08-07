@@ -40,6 +40,11 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   Needs a read-only census, dry-run, reviewer ruling.
   code: scripts/lane3_star_gapfix.json (the fix shape) · groupForGreekMode in
   static/src/56-library-order-logic.jsx (the grouping rule)
+- **Possessive PN card header shows the head-form ("Davids"):** the card's form-name line
+  title-cases `english_head` — a normalized lookup key (lowercased, punctuation stripped),
+  not display text — so `David's` renders "Davids". Verse text + bio panel are correct;
+  fix is display-layer only: render the PN entry's canonical name (person card → "David")
+  or re-title-case the raw english, never the head. Words-table data is correct and closed.
 - **Gentilic PN cards read as places:** MetaV name-match maps a people-word to its region
   (Assyrians → Assyria map pin). Reviewer-ruled keep, but the card should say
   "people of [region]" rather than presenting as a place. Polish, not a defect.
