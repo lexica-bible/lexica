@@ -52,11 +52,11 @@ for ref in VERSES:
     print(f"=== {ref} === (verse_id {v['id']})")
     print(f"TEXT\t{v['text']}")
     for w in conn.execute(
-            "SELECT position, greek, english, english_head, strongs, strongs_base,"
+            "SELECT position, english, english_head, strongs, strongs_base,"
             " greek_pos, bracket_id, is_pn FROM words WHERE verse_id=?"
             " ORDER BY position", (v["id"],)):
         print("\t".join(str(w[c]) if w[c] is not None else ""
-                        for c in ("position", "greek", "english", "english_head",
+                        for c in ("position", "english", "english_head",
                                   "strongs", "strongs_base", "greek_pos",
                                   "bracket_id", "is_pn")))
     print()
