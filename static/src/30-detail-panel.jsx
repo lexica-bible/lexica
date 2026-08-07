@@ -504,7 +504,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     bindPendingRef.current = true;
     let cancelled = false;
     setBoundLoading(true);
-    api.metavEntity(bn, entry.book, entry.chapter, entry.verse)
+    api.metavEntity(bn, entry.book, entry.chapter, entry.verse, entry.position)
       .then(d => { if (!cancelled) setBoundEntity(d && d.bound ? d : null); })
       .catch(() => {})
       .finally(() => { bindPendingRef.current = false; if (!cancelled) setBoundLoading(false); });

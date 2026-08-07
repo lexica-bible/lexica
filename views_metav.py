@@ -522,6 +522,7 @@ def metav_entity(name):
     book = (request.args.get("book") or "").strip()
     ch = (request.args.get("chapter") or "").strip()
     vs = (request.args.get("verse") or "").strip()
+    pos = (request.args.get("pos") or "").strip()
     bk = book_num(book)
     if not (bk and ch.isdigit() and vs.isdigit()):
         return jsonify({"error": "need book/chapter/verse"}), 400
@@ -530,14 +531,33 @@ def metav_entity(name):
     try:
         have = {r[0] for r in conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
-            "('pn_binding','tipnr_entities','tipnr_entity_refs','tipnr_metav_link')")}
+            "('pn_binding','tipnr_entities','tipnr_entity_refs','tipnr_metav_link',"
+            "'pn_slot_binding')")}
         if {"pn_binding", "tipnr_entities"} - have:
             return jsonify({"error": "not found"}), 404
         nm = norm_name(name)
-        b = conn.execute(
-            "SELECT entity_uniq, kind, rule, tier FROM pn_binding "
-            "WHERE book=? AND chapter=? AND verse=? AND name=? AND render=1 LIMIT 1",
-            (bk, int(ch), int(vs), nm)).fetchone()
+        # Word-position slot bind FIRST (the wordpos lane, design ratified
+        # 2026-08-07): a ruled slot at this exact word position serves its own
+        # per-slot entity — the only path that can tell two same-named people
+        # (or a person from a place) apart inside one verse. Name must still
+        # compact-match (staleness tripwire mirrors the landing guard). No
+        # pos / no table / no row -> the verse-grain lookup below, byte-same.
+        b = None
+        if pos.isdigit() and "pn_slot_binding" in have:
+            compact = lambda s: (s or "").lower().replace("-", "").replace(" ", "")
+            sb = conn.execute(
+                "SELECT name, entity_uniq, kind FROM pn_slot_binding "
+                "WHERE book=? AND chapter=? AND verse=? AND position=? "
+                "AND render=1 LIMIT 1",
+                (bk, int(ch), int(vs), int(pos))).fetchone()
+            if sb and compact(sb["name"]) == compact(nm):
+                b = {"entity_uniq": sb["entity_uniq"], "kind": sb["kind"],
+                     "rule": "slot-ruled", "tier": None}
+        if b is None:
+            b = conn.execute(
+                "SELECT entity_uniq, kind, rule, tier FROM pn_binding "
+                "WHERE book=? AND chapter=? AND verse=? AND name=? AND render=1 LIMIT 1",
+                (bk, int(ch), int(vs), nm)).fetchone()
         if not b:
             # The reader click can carry the hyphenated surface ("Beth-el") while the
             # binding was keyed on english_head ("bethel") — a surface-form mismatch, not

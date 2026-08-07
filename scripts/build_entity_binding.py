@@ -500,6 +500,21 @@ def main():
     finally:
         w.close()
 
+    # Word-position slot binds (DESIGN_wordpos_binding.md §1, same-run rule):
+    # re-land scripts/pn_slot_rulings.tsv so slot binds re-derive on every
+    # rebuild exactly like the hand-rulings TSV. land() runs its own guards
+    # (stale-name, kind, precedence, duplicates) and refuses-and-reports;
+    # a refusal here leaves those slots on the Fix-A floor, never wrong.
+    try:
+        from build_slot_binding import land as _slot_land
+        print("Landing word-position slot binds (pn_slot_rulings.tsv):")
+        _slot_land(DB, apply=True)
+    except FileNotFoundError:
+        print("  (no pn_slot_rulings.tsv — slot binds skipped)")
+    except Exception as e:
+        print(f"  !! SLOT-BIND LANDING FAILED ({e}) — pn_slot_binding NOT "
+              f"rewritten; investigate before trusting slot cards")
+
 
 if __name__ == "__main__":
     main()

@@ -387,8 +387,11 @@ const api = {
   },
   metavPlace: (name) =>
     fetch(`/api/metav/place/${encodeURIComponent(name)}`).then(r => r.json()),
-  metavEntity: (name, book, chapter, verse) =>
-    fetch(`/api/metav/entity/${encodeURIComponent(name)}?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`).then(r => r.json()),
+  // pos (optional) = the clicked word's slot number — lets the server serve a
+  // per-slot bind on same-name multi verses (wordpos lane, 2026-08-07);
+  // omitted/absent -> verse-grain behavior unchanged.
+  metavEntity: (name, book, chapter, verse, pos) =>
+    fetch(`/api/metav/entity/${encodeURIComponent(name)}?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}${pos !== null && pos !== undefined ? `&pos=${pos}` : ""}`).then(r => r.json()),
   // R-2 stage 2: Greek identity for an ABP proper-noun click. Server switch OFF
   // (or a 'none'-bucket word) answers 404 -> null here -> today's card, unchanged.
   pnGreekIdentity: (book, chapter, verse, pos) =>
