@@ -236,7 +236,17 @@ behaviors, four deliberate-bad REFUSED with reasons; actual: exactly that
 Harness patch after the run: quote gate accepts prose order OR storage
 order (Cushi-class quotes are prose-ordered; storage puts the verb first) —
 controls unchanged, re-proven at dry-run since the gate moved.
-**OPEN: (1) JP: Simon@Act.8.13- refs read (tanner-span condition);
-(2) full dry-run of scripts/pn_slot_rulings.tsv (95 rows, built from the
-frozen file) via check_wordpos_prereg.py; (3) reviewer per-row verdicts;
-(4) build pn_slot_binding writer + serve path per the ratified design.**
+**DRY-RUN VERDICT: PASS (2026-08-07, JP-run, expected-vs-actual recorded in
+session).** Controls 6/6 re-proven after the R4 prose-order patch · simon
+tanner condition SATISFIED (refs 9:43/10:6/10:17/10:32) · 95/95 rows PASS ·
+contiguity 46/48 then 48/48 after a walked-down repair: 2Sa 18:31 p7 +
+18:32 p15 were LIVE interior-blank bracket defects (the lane-③ class,
+pre-existing — chip/interlinear mis-ordered those verses before this lane);
+state-guarded bid marks JP-applied, harness re-run ALL PASS.
+**MECHANISM BUILT (same day):** build_slot_binding.py (guards G1-G4,
+all-or-nothing apply; auto re-lands from build_entity_binding --apply) ·
+/api/metav/entity pos param, slot-bind-first serve · frontend sends
+entry.position. **OPEN: (1) reviewer per-row verdicts on the dry-run paste;
+(2) then JP: build_slot_binding dry-run → --apply → deploy; (3) live
+display verification in all three render modes on the bracket-adjacent
+work list (printed by the harness).**
