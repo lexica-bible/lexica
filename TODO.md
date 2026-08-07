@@ -32,6 +32,18 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
 - **Lexica-minted PN numbers — DEFERRED by ruling** (TICKET_lexica_pn_numbers.md): revisit
   only if a concrete need survives a few weeks of lemma-keyed Word study.
 
+## Lane-③ close-out residue (2026-08-07, reviewer-queued — own cycles, JP raises)
+- **②-pass gap census (chip/interlinear ordering):** the PN-star pass's 194 cross-blank
+  B-writes left the interior blank slot OUTSIDE the new bracket; chip/interlinear group
+  only consecutive same-bracket runs, so those verses likely mis-order there today
+  (lane-③'s gap-fix proved the mechanism + the one-column fix; prose unaffected).
+  Needs a read-only census, dry-run, reviewer ruling.
+  code: scripts/lane3_star_gapfix.json (the fix shape) · groupForGreekMode in
+  static/src/56-library-order-logic.jsx (the grouping rule)
+- **Gentilic PN cards read as places:** MetaV name-match maps a people-word to its region
+  (Assyrians → Assyria map pin). Reviewer-ruled keep, but the card should say
+  "people of [region]" rather than presenting as a place. Polish, not a defect.
+
 ## Open word-study / data issues (low priority, none gating)
 - **Greek text search over the ABP Greek line — FEATURE QUESTION (JP hit it 2026-07-29
   searching κύριε in Library).** The Library in-text search is English-only by design

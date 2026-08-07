@@ -1,5 +1,5 @@
 {
- "_comment": "Lane-3 batch 2 (proposed 2026-08-07): Eze 23:5 (roster-silent name), the 5 possessives (apostrophe-s kept as printed, JP ruling 2026-08-03), and Mat 27:26 (class-A flagship; per-row evidence = Mar 15:15 prints G5417's own English beside a Jesus star). Interior blank slots are bracket MEMBERS (the contiguity rule). Guards pinned to the live dump 2026-08-06.",
+ "_comment": "Lane-3 batch 2 (applied 2026-08-07, reviewer-approved per row): Eze 23:5 (roster-silent name), the 5 possessives (apostrophe-s kept as printed, JP ruling 2026-08-03), and Mat 27:26 (class-A flagship). Mat 27:26 per-row evidence, quoted verbatim from abp_texts/abp_nt_texts/abp_mark.txt (Mar 15:15): 'AndG2532 he delivered upG3860 G3588 Jesus,G* having been scourged,G5417' - the page itself prints G5417's own English on its own slot beside a Jesus star; the automated pass refused only because a 2-occurrence verb can never meet the >=5-verse attestation floor. Interior blank slots are bracket MEMBERS (the contiguity rule). Guards pinned to the live dump 2026-08-06.",
  "Eze 23:5": {
   "new_bids": [1],
   "join_bids": [],

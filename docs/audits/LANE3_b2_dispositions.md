@@ -192,6 +192,37 @@ The survivors are exactly the shapes the fold cannot reach: name mid-cell, an
 intervening blank article slot, inside an existing bracket, or possessive
 ("X's") wording. Mat 27:26 stays its own separate item (A/unattested).
 
+## REPAIR LEDGER (2026-08-07 — the hand lane EXECUTED, reviewer verdict-gated per row)
+
+All 16 survivors + Mat 27:26 repaired live via the pinned re-runnable patches
+(`scripts/fix_lane3_star_merges.py` + three fixes files; house 2-slot/bracket
+shape, english/english_head/greek_pos/bracket_id only, numbers and positions
+never touched; every apply preceded by a pasted dry-run with prose-render and
+contiguity checks, reviewer verdict per row):
+
+1. `lane3_star_fixes.json` — the 10 gentilics (9 verses; Num 25:8 ×2). Applied
+   2026-08-07, 0 skipped.
+2. `lane3_star_gapfix.json` — follow-up: the gentilic batch left interior blank
+   slots OUTSIDE four verses' brackets; chip/interlinear group only CONSECUTIVE
+   same-bracket runs (`groupForGreekMode`), so those verses mis-ordered there
+   (prose unaffected — it groups across gaps). JP's app check caught it; five
+   gap slots got the bracket mark (the build's own interior-blank-member shape).
+   The dry-run now carries a standing CONTIGUITY CHECK so the class is caught
+   mechanically.
+3. `lane3_star_fixes2.json` — Eze 23:5 + the 5 possessives (apostrophe-s as
+   printed) + Mat 27:26 ('scourging' → G5417; per-row page evidence Mar 15:15,
+   quoted verbatim in the file's header). Applied 2026-08-07, 0 skipped.
+
+Re-run order after any future words rebuild: fixes → gapfix → fixes2 (each is
+state-guarded; a skip means already-applied or state drifted — read the reason).
+
+**Queued out of this lane (reviewer-ruled):**
+- ②-pass gap census: the pass's 194 cross-blank B-writes share the unmarked
+  interior-blank geometry, so those live verses likely mis-order in
+  chip/interlinear today. Own census + dry-run + ruling; same one-column fix.
+- Gentilic PN cards read as places (Assyrians → Assyria map); polish to
+  "people of [region]" wording. TODO item, not a defect.
+
 ## Notes for the repair lane (all JP-checkpointed, hand-per-row)
 
 1. **The 71 repair candidates split three ways** and probably want three passes of
