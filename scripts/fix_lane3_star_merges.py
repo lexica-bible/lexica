@@ -19,9 +19,61 @@ Usage (PA, JP runs):
   python3 scripts/fix_lane3_star_merges.py ~/bible-db/bible.db --apply
 """
 import json
+import re
 import sqlite3
 import sys
 from pathlib import Path
+
+_TRAIL = re.compile(r"[.,;:!?·)]+$")
+
+
+def prose(rows):
+    """Faithful port of the reader's getEnglishOrderWords
+    (static/src/56-library-order-logic.jsx lines 33-87): bracket members are
+    grouped by id ACROSS gaps, trailing clause punctuation floats to the
+    group's display-last English-carrying word, groups reorder by greek_pos
+    (stable, missing -> end) and render at the first member's spot. NOTE:
+    list_split_merge_skips.display_seq walks brackets contiguously and would
+    MIS-model a bracket with a blank slot inside its span; this port follows
+    the production function. Cross-proven against the real Node module on the
+    lane-3 after-states (see the lane-3 session record)."""
+    groups = {}
+    for r in rows:
+        b = r["bracket_id"]
+        if b is not None:
+            groups.setdefault(b, []).append(
+                {"english": r["english"], "greek_pos": r["greek_pos"]})
+    for b, ws in groups.items():
+        trailing, cleaned = "", []
+        for w in ws:
+            e = (w["english"] or "").strip()
+            if e and _TRAIL.sub("", e) == "":
+                trailing += e
+                continue
+            m = _TRAIL.search(e)
+            if m:
+                cleaned.append({**w, "english": e[:m.start()].rstrip()})
+                trailing += m.group()
+            else:
+                cleaned.append(w)
+        cleaned.sort(key=lambda w: w["greek_pos"] if w["greek_pos"] is not None else 999)
+        if trailing and cleaned:
+            li = len(cleaned) - 1
+            while li > 0 and not (cleaned[li]["english"] or "").strip():
+                li -= 1
+            cleaned[li] = {**cleaned[li],
+                           "english": (cleaned[li]["english"] or "") + trailing}
+        groups[b] = cleaned
+    out, seen = [], set()
+    for r in rows:
+        b = r["bracket_id"]
+        if b is None:
+            if (r["english"] or "").strip():
+                out.append(r["english"].strip())
+        elif b not in seen:
+            seen.add(b)
+            out.extend(w["english"] for w in groups[b] if (w["english"] or "").strip())
+    return " ".join(out)
 
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")), "bible.db")
 APPLY = "--apply" in sys.argv
@@ -47,7 +99,7 @@ applied = skipped = 0
 for verse, spec in FIXES.items():
     book, rest = verse.rsplit(" ", 1)
     ch, vs = rest.split(":")
-    v = conn.execute("SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+    v = conn.execute("SELECT id, text FROM verses WHERE book=? AND chapter=? AND verse=?",
                      (book, int(ch), int(vs))).fetchone()
     if v is None:
         print(f"SKIP {verse}: verse not found"); skipped += 1; continue
@@ -99,6 +151,12 @@ for verse, spec in FIXES.items():
     print(f"\n=== {verse} === ({len(plan)} cell edits)")
     print("  BEFORE:"); print(fmt(rows))
     print("  AFTER:");  print(fmt(after))
+    p_before, p_after = prose(rows), prose(after)
+    print(f"  PROSE BEFORE: {p_before}")
+    print(f"  PROSE AFTER:  {p_after}")
+    print(f"  verses.text:  {v['text']}")
+    print(f"  render check: prose unchanged by the edit -> "
+          f"{'PASS' if p_before == p_after else 'FAIL'}")
 
     if APPLY:
         for rid, op in plan:
