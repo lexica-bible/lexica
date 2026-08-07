@@ -6,7 +6,22 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## 2026-08-05 — the ②-RIDE: PN-star rebuild SHIPPED + LIVE
+## 2026-08-07 — Word-position lane GATE PHASE closed (census frozen + R1–R4 ruled)
+
+Full record = `docs/tickets/TICKET_wordpos_binding.md` (assembled charter — the lane
+never had a ticket or member list) + frozen baseline `docs/tickets/
+wordpos_census_20260807.txt`. The prose ~118 re-derived against live per the
+stale-census rule: **96 slots / 47 groups / 28 names is the number of record** (−22
+explained to the reviewer's accepted degraded standard — no July list ever existed;
+this baseline permanently closes that gap). Run-1 control failure correctly walked
+down: mis-keyed control (charter prose said "two Malchiahs"; Ezr 10:25 prints
+Malchiah AND Malchijah) — exposed the variant-spelling sub-class, exactly ONE pair
+corpus-wide, now the lane's bucket-C appendix member. Pre-registration error owned:
+azariah/joash verse-level pairs ARE Dishon-pattern members (grain decides, not name —
+R3 as amended). NEW LANE BANKED (ruled OUT of wordpos, different risk class): 1,470
+bound-painted same-name slots — one verse-level bind paints 2+ same-name words,
+wrong-paint audit owed; discovery-time carve-out in force. No DB writes all session.
+Design pass opens from the ticket alone (reviewer's design bar quoted there).
 
 Full record = `docs/tickets/TICKET_pn_star_fix.md` (ride sections: re-baseline receipts,
 take-three declaration, unfindability supersession, punct-class reversal) + memory
