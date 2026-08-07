@@ -77,7 +77,10 @@ def prose(rows):
 
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")), "bible.db")
 APPLY = "--apply" in sys.argv
-FIXES = json.loads((Path(__file__).parent / "lane3_star_fixes.json").read_text(encoding="utf-8"))
+FIXES_FILE = "lane3_star_fixes.json"
+if "--fixes" in sys.argv:
+    FIXES_FILE = sys.argv[sys.argv.index("--fixes") + 1]
+FIXES = json.loads((Path(__file__).parent / FIXES_FILE).read_text(encoding="utf-8"))
 FIXES.pop("_comment", None)
 
 conn = sqlite3.connect(DB)
@@ -157,6 +160,20 @@ for verse, spec in FIXES.items():
     print(f"  verses.text:  {v['text']}")
     print(f"  render check: prose unchanged by the edit -> "
           f"{'PASS' if p_before == p_after else 'FAIL'}")
+    # Contiguity check (chip/interlinear trap, 2026-08-07): groupForGreekMode
+    # walks CONSECUTIVE same-bracket runs, so every slot inside a bracket's
+    # position span must carry that bracket's mark — the build's own shape
+    # (blank members, no reading number). A gap splits the run and chip /
+    # interlinear reorder each fragment alone.
+    spans = {}
+    for r in after:
+        if r["bracket_id"] is not None:
+            lo, hi = spans.get(r["bracket_id"], (r["position"], r["position"]))
+            spans[r["bracket_id"]] = (min(lo, r["position"]), max(hi, r["position"]))
+    gaps = [(b, r["position"]) for b, (lo, hi) in spans.items()
+            for r in after if lo < r["position"] < hi and r["bracket_id"] != b]
+    print(f"  contiguity check: "
+          f"{'PASS' if not gaps else 'FAIL ' + str(gaps)}")
 
     if APPLY:
         for rid, op in plan:

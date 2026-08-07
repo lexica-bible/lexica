@@ -1,0 +1,37 @@
+{
+ "_comment": "Lane-3 follow-up (2026-08-07): the gentilic batch left the blank slot INSIDE four verses' new/joined brackets without the bracket mark; chip/interlinear group only consecutive same-bracket runs, so those verses mis-ordered there (prose was unaffected). This sets the bracket mark on the five gap slots — nothing else changes. Runs AFTER lane3_star_fixes.json in the repair chain.",
+ "2Sa 14:4": {
+  "new_bids": [],
+  "join_bids": [1],
+  "ops": [
+   {"pos": 4, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 1}
+  ]
+ },
+ "Num 25:8": {
+  "new_bids": [],
+  "join_bids": [2, 3],
+  "ops": [
+   {"pos": 4, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2},
+   {"pos": 15, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 3}
+  ]
+ },
+ "Num 25:14": {
+  "new_bids": [],
+  "join_bids": [2],
+  "ops": [
+   {"pos": 5, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2}
+  ]
+ },
+ "Num 25:15": {
+  "new_bids": [],
+  "join_bids": [2],
+  "ops": [
+   {"pos": 4, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2}
+  ]
+ }
+}

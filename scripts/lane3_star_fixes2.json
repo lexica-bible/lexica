@@ -1,0 +1,79 @@
+{
+ "_comment": "Lane-3 batch 2 (proposed 2026-08-07): Eze 23:5 (roster-silent name), the 5 possessives (apostrophe-s kept as printed, JP ruling 2026-08-03), and Mat 27:26 (class-A flagship; per-row evidence = Mar 15:15 prints G5417's own English beside a Jesus star). Interior blank slots are bracket MEMBERS (the contiguity rule). Guards pinned to the live dump 2026-08-06.",
+ "Eze 23:5": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 1, "sbase": "G1608", "old_eng": "Aholah fornicated", "old_gpos": null, "old_bid": null,
+    "new_eng": "fornicated", "new_head": "fornicated", "new_gpos": 2, "new_bid": 1},
+   {"pos": 2, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 1},
+   {"pos": 3, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Aholah", "new_head": "aholah", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "Heb 11:24": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 7, "sbase": "G2364", "old_eng": "of Pharaoh's daughter,", "old_gpos": null, "old_bid": null,
+    "new_eng": "daughter,", "new_head": "daughter", "new_gpos": 2, "new_bid": 2},
+   {"pos": 8, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of Pharaoh's", "new_head": "pharaohs", "new_gpos": 1, "new_bid": 2}
+  ]
+ },
+ "1Ch 21:9": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 6, "sbase": "G3708", "old_eng": "David's seer,", "old_gpos": null, "old_bid": null,
+    "new_eng": "seer,", "new_head": "seer", "new_gpos": 2, "new_bid": 2},
+   {"pos": 7, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2},
+   {"pos": 8, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "David's", "new_head": "davids", "new_gpos": 1, "new_bid": 2}
+  ]
+ },
+ "1Sa 14:50": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 3, "sbase": "G1135", "old_eng": "of Saul's wife", "old_gpos": null, "old_bid": null,
+    "new_eng": "wife", "new_head": "wife", "new_gpos": 2, "new_bid": 1},
+   {"pos": 4, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of Saul's", "new_head": "sauls", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "1Sa 24:5": {
+  "new_bids": [],
+  "join_bids": [1],
+  "ops": [
+   {"pos": 5, "sbase": "G3960", "old_eng": "struck", "old_gpos": 2, "old_bid": 1,
+    "new_eng": "struck", "new_head": "struck", "new_gpos": 3, "new_bid": 1},
+   {"pos": 6, "sbase": "G2588", "old_eng": "David's heart", "old_gpos": 1, "old_bid": 1,
+    "new_eng": "heart", "new_head": "heart", "new_gpos": 2, "new_bid": 1},
+   {"pos": 7, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "David's", "new_head": "davids", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "Gen 46:26": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 19, "sbase": "G5207", "old_eng": "of Jacob's sons —", "old_gpos": null, "old_bid": null,
+    "new_eng": "sons —", "new_head": "sons", "new_gpos": 2, "new_bid": 1},
+   {"pos": 20, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of Jacob's", "new_head": "jacobs", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "Mat 27:26": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 7, "sbase": "G2424", "old_eng": "scourging Jesus,", "old_gpos": null, "old_bid": null,
+    "new_eng": "Jesus,", "new_head": "jesus", "new_gpos": 2, "new_bid": 1},
+   {"pos": 8, "sbase": "G5417", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "scourging", "new_head": "scourging", "new_gpos": 1, "new_bid": 1}
+  ]
+ }
+}
