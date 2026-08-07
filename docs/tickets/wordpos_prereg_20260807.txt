@@ -7,7 +7,8 @@
 # any dry-run; frozen only at ratification of the FILLED content.
 #
 # TRANCHE 1 (submitted for ratification): mary 8 groups + joash 6 groups.
-# Tranche 2 (remaining 33 groups + appendix): to follow.
+# TRANCHE 2 (submitted for ratification): remaining 33 groups + appendix.
+# ALL 47 GROUPS + APPENDIX NOW FILLED — 96 lane slots + 2 appendix slots.
 #
 # Classes per the ratified design: epithet-in-verse | kin-in-verse |
 # list-structure | locative-syntax | tipnr-ref-partition | variant-spelling.
@@ -195,3 +196,449 @@ GROUP  2Ch 25:25  joash  slots p5, p11
   fallback outcome if evidence fails: floor
 
 # ── end tranche 1 (14 groups / 28 slots; 0 floored, 1 flagged: Mar 15:47 p6) ──
+
+## ═══ TRANCHE 2 (33 groups + Ezr 10:25 appendix) ═════════════════════════════
+# Evidence: JP-run re-dump (fixed near-match rosters, 2026-08-07) + JP-run
+# per-verse claims read (every tipnr_entity_refs row landing on a tranche-2
+# lane verse — the exhaustive claimant set per verse, quoted below as
+# "claimants"). Ref cites use book numbers 1=Gen 4=Num 6=Jos 7=Jdg 10=2Sa
+# 11=1Ki 13=1Ch 14=2Ch 15=Ezr 16=Neh 24=Jer 28=Hos 42=Luk 44=Act.
+# SAME-REFERENT groups: several census groups turn out to be ONE person named
+# twice (X begat Y, Y begat Z chains; narrative repeats). Both slots then bind
+# the same entity with the design's same-referent flag — the census predicate
+# (name multi-referent corpus-wide) was still correct to include them.
+# ORDER-ONLY rows (jozabad, elnathan, malchijah appendix): TIPNR minted a/b(/c)
+# entities purely by order-in-verse, no kin on either side. Proposed as
+# list-structure WITH AN OPEN C1 SHORTFALL FLAG — order is candidacy, and the
+# only "identity" content is the source's own positional filing. Reviewer
+# rules whether that filing is admissible evidence; refusal floors the slots.
+
+GROUP  1Ch 1:41  dishon  slots p2, p5, p8
+  expected partition: two entities (person / person), three slots
+  p2   proposed: Dishon@Gen.36.25-1Ch   class: kin-in-verse
+       quote: "The sons of Anah — Dishon." (p0-p2); entity parents:
+       "Anah@Gen.36.2-1Ch"; claimants at 13|1|41 include both Dishons
+  p5   proposed: FLOOR
+       quote: "And the sons of Dishon." (p3-p5) — a dangling clause with no
+       children printed at it (ABP/LXX doubles the phrase); no in-verse
+       discriminator between the two Dishons. Floored, honestly.
+  p8   proposed: Dishon@Gen.36.21-1Ch   class: kin-in-verse
+       quote: "And the sons of Dishon — Amram, and Eshban, and Ithran, and
+       Cheran." (p6-p15); entity offspring: "Hemdan, Eshban, Ithran, Cheran
+       @Gen.36.26-1Ch" (Amram~Hemdan = ABP/LXX form of the first son)
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 2:41  jekamiah  slots p4, p6  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (X-begat-Y-begat-Z chain)
+  p4   proposed: Jekamiah@1Ch.2.41   class: kin-in-verse
+       quote: "Shallum procreated Jekamiah," (p1-p4); entity parents:
+       "Shallum@1Ch.2.40-"
+  p6   proposed: Jekamiah@1Ch.2.41   class: kin-in-verse
+       quote: "Jekamiah procreated Elishama." (p6-p9); entity offspring:
+       "Elishama@1Ch.2.41"
+  corroboration: the ONLY Jekamiah claiming 13|2|41
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 2:46  gazez  slots p13, p18
+  expected partition: two entities (person / person)
+  p13  proposed: Gazez@1Ch.2.46a   class: kin-in-verse
+       quote: "Ephah the concubine of Caleb bore Haran, and Moza, and Gazez."
+       (p1-p13); entity parents: "Caleb@1Ch.2.9- + Ephah@1Ch.2.46"
+  p18  proposed: Gazez@1Ch.2.46b   class: kin-in-verse
+       quote: "And Haran procreated Gazez." (p14-p18); entity parents:
+       "Haran@1Ch.2.46"
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 6:9  azariah  slots p4, p6  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (chain)
+  p4   proposed: Azariah@1Ki.4.2-1Ch   class: kin-in-verse
+       quote: "Ahimaaz engendered Azariah," (p1-p4); entity parents:
+       "Ahimaaz@2Sa.15.27-1Ch"
+  p6   proposed: Azariah@1Ki.4.2-1Ch   class: kin-in-verse
+       quote: "and Azariah engendered Johanan." (p5-p9); entity offspring:
+       "Johanan@1Ch.6.9-"
+  note: Azariah@1Ch.6.9-Ezr ALSO claims 13|6|9 — that is 6:10's man (parents
+  Johanan), claiming here via the known 1Ch-6 versification offset; his kin
+  contradicts both slots' printed kin, so he is excluded on evidence.
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 6:10  azariah  slots p4, p7  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (appositive: "he is Azariah")
+  p4   proposed: Azariah@1Ch.6.9-Ezr   class: kin-in-verse
+       quote: "Johanan engendered Azariah —" (p1-p4); entity parents:
+       "Johanan@1Ch.6.9-"; entity descr "Priest ..." matches "he is Azariah
+       who officiated as priest"
+  p7   proposed: Azariah@1Ch.6.9-Ezr   class: kin-in-verse
+       quote: "he is Azariah who officiated as priest in the house which
+       Solomon built" (p5-p15) — the verse's own equation of p7 with p4
+  FLAG: the entity's ref list carries 13|6|9, not 6:10 (versification offset,
+  same as the note above) — ref corroboration is off-by-one here, stated.
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 7:20  tahath  slots p9, p16
+  expected partition: two entities (person / person)
+  p9   proposed: Tahath@1Ch.7.20a   class: list-structure
+       quote: "and Bered his son, and Tahath his son, Eladah his son" (p5-p12
+       chain: after Bered, before Eladah); entity parents "Bered@1Ch.7.20" AND
+       offspring "Eleadah@1Ch.7.20" — C1 satisfied, kin quoted both directions
+  p16  proposed: Tahath@1Ch.7.20b   class: list-structure
+       quote: "Eladah his son, and Tahath his son," (p12-p17 chain: after
+       Eladah); entity parents "Eleadah@1Ch.7.20", offspring "Zabad@1Ch.7.21"
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 12:20  jozabad  slots p17, p23  [ORDER-ONLY — reviewer rules]
+  expected partition: two entities (person / person)
+  p17  proposed: Jozabad@1Ch.12.20a   class: list-structure (C1 SHORTFALL)
+  p23  proposed: Jozabad@1Ch.12.20b   class: list-structure (C1 SHORTFALL)
+       quote: "Adnah, and Jozabad, and Jediael, and Michael, and Jozabad, and
+       Elihu" (p15-p25); claimants at 13|12|20: exactly Jozabad@1Ch.12.20a +
+       b, NO kin on either entity ("+" both). The a/b suffixes ARE the
+       source's order-in-verse filing — the only identity content available.
+       Per C1 order alone is candidacy; proposed only because the source
+       itself partitions by this order. Reviewer refusal floors both.
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 16:5  jeiel  slots p8, p23  [FLAGGED — cross-verse parallel]
+  expected partition: two entities (person / person)
+  p8   proposed: Jaaziel@1Ch.15.18-   class: tipnr-ref-partition
+  p23  proposed: Jeiel@1Ch.15.18-    class: tipnr-ref-partition
+       quote p8: "his second Zachariah, and Jeiel, and Shemiramoth, and
+       Jehiel," (p4-p12); quote p23: "and Jeiel with instruments," (p22-p25).
+       Claimants at 13|16|5 under this name-shape: Jaaziel@1Ch.15.18-,
+       Jehiel@1Ch.15.18-, Jeiel@1Ch.15.18- (three singer entities). The
+       printed jehiel at p12 (not a lane slot) takes Jehiel; the remaining
+       TWO entities partition the two lane slots. Assignment rests on the
+       1Ch 15:18 PARALLEL LIST (Zechariah, JAAZIEL, Shemiramoth, Jehiel —
+       matching p6-p12's order, putting Jaaziel at p8) — CROSS-VERSE evidence,
+       outside the in-verse classes; flagged for the reviewer's ruling.
+  fallback outcome if evidence fails: floor (both)
+
+GROUP  1Ch 24:22  shelomoth  slots p3, p6  [SAME-REFERENT]
+  expected partition: ONE entity, both slots
+  p3   proposed: Shelomith@1Ch.23.18-   class: kin-in-verse
+       quote: "and to Izhar — Shelomoth;" (p0-p3); entity parents:
+       "Izhar@Exo.6.18-1Ch"
+  p6   proposed: Shelomith@1Ch.23.18-   class: kin-in-verse
+       quote: "to the sons of Shelomoth — Jahath;" (p4-p7); entity offspring:
+       "Jahath@1Ch.24.22"
+  note: printed "Shelomoth", entity headword "Shelomith" — TIPNR's spelling
+  of the same man (sole claimant at 13|24|22 with matching kin both ways).
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ch 26:21  laadan  slots p1, p5  [SAME-REFERENT; FLAGGED — TIPNR
+  equates Ladan with Libni]
+  expected partition: ONE entity, both slots
+  p1   proposed: Libni@Exo.6.17-1Ch   class: kin-in-verse
+       quote: "The sons of Laadan, the sons to Gershon — to Laadan," (p0-p5);
+       entity = Gershon's son line (parents per TIPNR's Gershon genealogy)
+  p5   proposed: Libni@Exo.6.17-1Ch   class: kin-in-verse (same quote)
+  FLAG: NO Ladan/Laadan entity claims 13|26|21 — the claimants are Gershon,
+  Jehiel@1Ch.6.20-, and Libni@Exo.6.17-1Ch. TIPNR files Laadan AS Libni
+  (a known name-equation in the sources). Proposed per the spine; if the
+  reviewer rejects the equation, both slots floor.
+  fallback outcome if evidence fails: floor
+
+GROUP  1Ki 16:24  shemer  slots p8, p31  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (narrative repeat)
+  p8   proposed: Shemer@1Ki.16.24   class: epithet-in-verse
+       quote: "from Shemer the lord of the mountain" (p7-p12)
+  p31  proposed: Shemer@1Ki.16.24   class: epithet-in-verse
+       quote: "after the name of Shemer the lord of the mountain — Samaria."
+       (p29-p36) — identical epithet, same purchase narrative
+  corroboration: the ONLY Shemer claiming 11|16|24 (entity minted at this verse)
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ch 23:1  azariah  slots p13, p23
+  expected partition: two entities (person / person)
+  p13  proposed: Azariah@2Ch.23.1a   class: kin-in-verse
+       quote: "Azariah son of Jehoram," (p13-p15); entity parents:
+       "Jeroham@2Ch.23.1" (ABP prints the LXX form "Jehoram" for Jeroham —
+       spelling variant, noted)
+  p23  proposed: Azariah@2Ch.23.1b   class: kin-in-verse
+       quote: "and Azariah son of Obed," (p21-p25); entity parents:
+       "Obed@2Ch.23.1"
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ch 29:12  azariah  slots p12, p27
+  expected partition: two entities (person / person)
+  p12  proposed: Azariah@2Ch.29.12a   class: kin-in-verse
+       quote: "and Joel the son of Azariah," (p8-p12); entity offspring:
+       "Joel@2Ch.29.12"
+  p27  proposed: Azariah@2Ch.29.12b   class: kin-in-verse
+       quote: "and Azariah the son of Jehalelel;" (p26-p30); entity parents:
+       "Jehallelel@2Ch.29.12"
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ch 29:12  joah  slots p36, p44
+  expected partition: two entities (person / person)
+  p36  proposed: Joah@2Ch.29.12a   class: kin-in-verse
+       quote: "Joah the son of Zimmah," (p36-p39); entity parents:
+       "Zimmah@2Ch.29.12"
+  p44  proposed: Joah@2Ch.29.12b   class: kin-in-verse
+       quote: "and Eden the son of Joah;" (p40-p44); entity offspring:
+       "Eden@2Ch.29.12"
+  fallback outcome if evidence fails: floor
+
+GROUP  2Sa 6:8  uzzah  slots p10, p17  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (the man, then the place named
+  after the event about him — the second slot is still the MAN's name inside
+  the place-name phrase "Severance of Uzzah")
+  p10  proposed: Uzzah@2Sa.6.3-1Ch   class: tipnr-ref-partition
+       quote: "the LORD cut severance with Uzzah." (p5-p10); sole Uzzah
+       claimant at 10|6|8 (exhaustive); entity parents "Abinadab@1Sa.7.1-1Ch"
+       = the ark narrative's Uzzah
+  p17  proposed: Uzzah@2Sa.6.3-1Ch   class: tipnr-ref-partition
+       quote: "he called that place, Severance of Uzzah," (p11-p17) — the
+       same man commemorated; sole claimant
+  fallback outcome if evidence fails: floor
+
+GROUP  2Sa 18:21  cushi  slots p4, p13  [SAME-REFERENT; FLAGGED — TIPNR reads
+  "Cushi" as the gentilic "the Cushite", filed under Cush]
+  expected partition: ONE referent, both slots — and it is NOT a person
+  entity: the sole claimant at 10|18|21 is Cush@Gen.2.13-Act [place]
+  (neither Cushi person — Jer.36.14, Zep.1.1 — claims any 2Sa-18 verse).
+  p4   proposed: Cush@Gen.2.13-Act (referent_kind place/gentilic)
+       class: tipnr-ref-partition
+       quote: "And Joab said to Cushi, Go, announce to the king" (p0-p8)
+  p13  proposed: Cush@Gen.2.13-Act (same)   class: tipnr-ref-partition
+       quote: "And Cushi did obeisance to Joab, and he ran." (p11-p17)
+  FLAG: ABP prints "Cushi" as a name; TIPNR reads the runner as an unnamed
+  Cushite and files these refs under the land/people Cush. Rider-2 case:
+  the referent model must not force a person. Reviewer rules bind-vs-floor.
+  fallback outcome if evidence fails: floor
+
+GROUP  2Sa 18:31  cushi  slots p3, p8  [SAME-REFERENT; same FLAG as 18:21]
+  p3 / p8  proposed: Cush@Gen.2.13-Act (place/gentilic)
+       class: tipnr-ref-partition; sole claimant at 10|18|31
+       quotes: "And behold, Cushi came." (p0-p4) · "And Cushi said to the
+       king," (p5-p10)
+  fallback outcome if evidence fails: floor
+
+GROUP  2Sa 18:32  cushi  slots p6, p16  [SAME-REFERENT; same FLAG as 18:21]
+  p6 / p16  proposed: Cush@Gen.2.13-Act (place/gentilic)
+       class: tipnr-ref-partition; sole claimant at 10|18|32
+       quotes: "the king said to Cushi," (p1-p6) · "And Cushi said, Let be as
+       that young man," (p13-p20)
+  fallback outcome if evidence fails: floor
+
+GROUP  Act 1:13  james  slots p14, p25, p33
+  expected partition: three entities (person / person / person)
+  p25  proposed: James@Mat.10.3-Act   class: kin-in-verse
+       quote: "James of Alphaeus," (p25-p26); entity parents:
+       "Alphaeus@Mat.10.3-Act"
+  p33  proposed: James@Luk.6.16-Act   class: kin-in-verse
+       quote: "and Jude of James." (p31-p33); entity offspring:
+       "Judas@Mat.10.3-Act" — the James named as Jude's father
+  p14  proposed: James@Mat.4.21-Act   class: tipnr-ref-partition
+       quote: "both Peter, and James, and John," (p10-p16 — the Zebedee trio
+       adjacency). Exhaustive-exclusive: exactly THREE James entities claim
+       44|1|13 (Luk.6.16-Act, Mat.10.3-Act, Mat.4.21-Act); p25 and p33 are
+       taken by their printed kin; the remainder is Mat.4.21-Act (parents
+       "Zebedee@Mat.4.21-Jhn + Salome@Mat.20.20-Mrk")
+  fallback outcome if evidence fails: floor
+
+GROUP  Act 10:32  simon  slots p6, p14
+  expected partition: two entities (person / person)
+  p6   proposed: Peter@Mat.4.18-2Pe   class: epithet-in-verse
+       quote: "call for Simon who is called Peter!" (p5-p9); Peter claims
+       44|10|32
+  p14  proposed: Simon@Act.8.13-   class: tipnr-ref-partition
+       quote: "lodges in the house of Simon, a tanner," (p11-p15).
+       Exhaustive-exclusive: claimants at 44|10|32 are Peter + Simon@Act.8.13-
+       only; p6 is taken by the "called Peter" epithet; the remainder — the
+       tanner — is Simon@Act.8.13-. FLAG: the tanner sitting under an
+       Act-8.13-minted record is TIPNR's filing (odd-looking uniq, noted);
+       if the reviewer wants it verified, a refs read of Simon@Act.8.13-
+       should show the 9:43-10:32 tanner span.
+  fallback outcome if evidence fails: floor
+
+GROUP  Ezr 2:61  barzillai  slots p11, p17
+  expected partition: two entities (person / person)
+  p17  proposed: Barzillai@2Sa.17.27-Neh   class: epithet-in-verse
+       quote: "the daughters of Barzillai the Gileadite" (p15-p19); entity
+       descr: "David's compatriot ..." — the Gileadite of 2Sa 17:27; claims
+       15|2|61
+  p11  proposed: Barzillai@Ezr.2.61-Neh   class: tipnr-ref-partition
+       quote: "sons of Barzillai who took from the daughters of Barzillai the
+       Gileadite a wife" (p10-p20). Exhaustive-exclusive: exactly two
+       Barzillai entities claim 15|2|61; the Gileadite epithet takes p17; the
+       remainder — the priest-line man named for his father-in-law — is
+       Ezr.2.61-Neh (minted at this verse)
+  fallback outcome if evidence fails: floor
+
+GROUP  Neh 7:63  barzillai  slots p9, p14
+  (same structure and same two claimants at 16|7|63 as Ezr 2:61)
+  p14  proposed: Barzillai@2Sa.17.27-Neh   class: epithet-in-verse
+       quote: "the daughters of Barzillai the Gileadite" (p13-p16)
+  p9   proposed: Barzillai@Ezr.2.61-Neh   class: tipnr-ref-partition
+       quote: "sons of Barzillai, which took of the daughters ..." (p8-p17);
+       remainder after the Gileadite epithet takes p14
+  fallback outcome if evidence fails: floor
+
+GROUP  Ezr 8:11  bebai  slots p3, p6
+  expected partition: two entities (person / person)
+  p6   proposed: Bebai@Ezr.8.11   class: kin-in-verse
+       quote: "Zechariah son of Bebai," (p4-p6); entity offspring:
+       "Zechariah@Ezr.8.11"
+  p3   proposed: Bebai@Ezr.2.11-Neh   class: tipnr-ref-partition
+       quote: "From the sons of Bebai —" (p0-p3, the returnee-clan header).
+       Exhaustive-exclusive: exactly two Bebai entities claim 15|8|11; p6 is
+       taken by the printed kin; the remainder — the clan ancestor of the
+       Ezr-2 returnee list — is Ezr.2.11-Neh
+  fallback outcome if evidence fails: floor
+
+GROUP  Ezr 8:16  elnathan  slots p10, p27  [ORDER-ONLY — reviewer rules]
+  expected partition: two of THREE order-minted entities
+  p10  proposed: Elnathan@Ezr.8.16a   class: list-structure (C1 SHORTFALL)
+  p27  proposed: Elnathan@Ezr.8.16c   class: list-structure (C1 SHORTFALL)
+       quote: "and to Elnathan, and to Jarib to Elnatham, ... and to
+       Elnathan, ones perceiving." (p8-p28). Claimants at 15|8|16 include
+       Elnathan a/b/c, all kinless — the source's order filing again.
+       NOTE + DISCOVERY: the verse's MIDDLE Elnathan prints as "ELNATHAM"
+       (p15, different normalized name) — an in-verse variant spelling the
+       census same-name predicate correctly could not group; it is the b-slot
+       under the order reading. Recorded here as a bucket-C-style appendix
+       candidate found at adjudication (rider-1 pattern); p15 is NOT a lane
+       slot and gets no row.
+  fallback outcome if evidence fails: floor (both)
+
+GROUP  Gen 11:31  haran  slots p11, p43  [PERSON/PLACE PAIR]
+  expected partition: two entities (PERSON / PLACE)
+  p11  proposed: Haran@Gen.11.26- (person)   class: kin-in-verse
+       quote: "Lot the son of Haran," (p9-p11); entity offspring:
+       "Lot@Gen.11.27-2Pe" (also parents "Terah@Gen.11.24-Luk" — Terah is
+       the verse's subject); claims 1|11|31
+  p43  proposed: Haran@Gen.11.31-Act (place)   class: locative-syntax
+       quote: "And they came unto Haran and dwelt there." (p40-p46) —
+       movement-verb + "unto" + "dwelt there"; the place entity (minted at
+       this verse) claims 1|11|31
+  fallback outcome if evidence fails: floor
+
+GROUP  Gen 46:20  machir  slots p32, p33  [SAME-REFERENT]
+  expected partition: ONE entity, both slots (chain; ABP/LXX extension of the
+  verse — the genealogy is in the Greek witness)
+  p32  proposed: Machir@Gen.50.23-1Ch   class: kin-in-verse
+       quote: "were born the sons of Manasseh whom Sura the concubine bore to
+       him — Machir." (p21-p32); entity parents: "Manasseh@Gen.41.51-Rev +
+       Aramitess@1Ch.7.14"
+  p33  proposed: Machir@Gen.50.23-1Ch   class: kin-in-verse
+       quote: "And Machir procreated Gilead." (p33-p37); entity offspring
+       incl. "Gilead@Num.26.29-1Ch"
+  corroboration: sole Machir claimant at 1|46|20
+  fallback outcome if evidence fails: floor
+
+GROUP  Hos 1:4  jezreel  slots p10, p19  [PERSON/PLACE PAIR]
+  expected partition: two entities (PERSON / PLACE)
+  p10  proposed: Jezreel@Hos.1.4 (person)   class: kin-in-verse
+       quote: "Call his name Jezreel!" (p6-p10) — the child being named;
+       entity parents: "Hosea@Hos.1.1-Rom + Gomer@Hos.1.3"; claims 28|1|4
+  p19  proposed: Jezreel@Jos.19.18-Hos (place)   class: locative-syntax
+       quote: "I will avenge the blood of Jezreel on the house of Judah"
+       (p15-p23) — the massacre AT the place (claimant set at 28|1|4 also
+       includes Jehu, the actor of that history; the place entity claims)
+  fallback outcome if evidence fails: floor
+
+GROUP  Jdg 8:8  penuel  slots p4, p16  [SAME-REFERENT — both slots the PLACE]
+  expected partition: ONE entity, both slots; census flagged this as a
+  possible person/place pair — adjudication says both are the place
+  p4   proposed: Peniel@Gen.32.30-1Ki (place)   class: locative-syntax
+       quote: "he ascended from there to Penuel," (p1-p4)
+  p16  proposed: Peniel@Gen.32.30-1Ki (place)   class: locative-syntax
+       quote: "And the men of Penuel answered" (p11-p16)
+  corroboration: sole claimant at 7|8|8 (with Succoth); the two Penuel PERSON
+  entities (1Ch.4.4, 1Ch.8.25) claim neither. Entity headword "Peniel" =
+  TIPNR's spelling of the same place (variant noted).
+  fallback outcome if evidence fails: floor
+
+GROUP  Jer 38:1  pashur  slots p8, p14
+  expected partition: two entities (person / person)
+  p8   proposed: Pashhur@Jer.38.1   class: kin-in-verse
+       quote: "and Gedaliah son of Pashur," (p5-p8); entity offspring:
+       "Gedaliah@Jer.38.1"
+  p14  proposed: Pashhur@Jer.21.1-   class: kin-in-verse
+       quote: "and Pashur son of Malchiah," (p13-p16); entity parents:
+       "Malchiah@Jer.21.1-" (who also claims 24|38|1)
+  note: printed "Pashur", entity headwords "Pashhur" — TIPNR spelling
+  (the variant that exposed the exact-match roster bug). Both claim 24|38|1.
+  fallback outcome if evidence fails: floor
+
+GROUP  Jer 40:15  judah  slots p28, p37  [SAME-REFERENT; FLAGGED — referent is
+  the PEOPLE, not an individual]
+  expected partition: ONE collective referent, both slots
+  p28  proposed: Judah@Gen.29.35-Rev (person entity standing for the people —
+       TIPNR's gentilic model)   class: tipnr-ref-partition
+       quote: "should scatter all Judah, the ones being brought together to
+       you" (p26-p32) — people, not territory ("the ones ... brought
+       together")
+  p37  proposed: Judah@Gen.29.35-Rev (same)   class: tipnr-ref-partition
+       quote: "they shall destroy the rest of Judah." (p33-p37)
+  corroboration: claimants at 24|40|15 under this name = the patriarch entity
+  + Judea [place]; the printed text is about persons gathered/destroyed, so
+  the people-reading (patriarch entity, People/Clan render path) is proposed
+  over the territory. Rider-2 case: one referent, zero "two people".
+  fallback outcome if evidence fails: floor
+
+GROUP  Jos 17:1  gilead  slots p16, p23  [PERSON/PLACE PAIR]
+  expected partition: two entities (PERSON / PLACE)
+  p16  proposed: Gilead@Num.26.29-1Ch (person)   class: kin-in-verse
+       quote: "to Machir first-born of Manasseh, father of Gilead." (p11-p16);
+       entity parents: "Machir@Gen.50.23-1Ch"
+  p23  proposed: Gilead@Gen.31.21-Zec (place)   class: locative-syntax
+       quote: "he was a man of war in Gilead and in the Bashan area." (p17-p27)
+       — "in" + paired with Bashan [place]
+  corroboration: both entities claim 6|17|1
+  fallback outcome if evidence fails: floor
+
+GROUP  Luk 6:16  judas  slots p0, p3
+  expected partition: two entities (person / person)
+  p0   proposed: Judas@Mat.10.3-Act   class: kin-in-verse
+       quote: "Judas of James," (p0-p1); entity parents:
+       "James@Luk.6.16-Act" (who also claims 42|6|16)
+  p3   proposed: Judas@Mat.10.4-Act   class: epithet-in-verse
+       quote: "and Judas Iscariot, who also became the betrayer." (p2-p8);
+       entity parents "Simon@Jhn.6.71-" (Iscariot's father) — the betrayer
+       apostle; claims 42|6|16
+  fallback outcome if evidence fails: floor
+
+GROUP  Num 26:29  gilead  slots p11, p13  [SAME-REFERENT]
+  expected partition: ONE entity (the person; census flagged possible
+  person/place — adjudication: both slots are the clan founder)
+  p11  proposed: Gilead@Num.26.29-1Ch (person)   class: kin-in-verse
+       quote: "and Machir procreated Gilead;" (p7-p11); entity parents:
+       "Machir@Gen.50.23-1Ch"
+  p13  proposed: Gilead@Num.26.29-1Ch (person)   class: list-structure
+       quote: "to Gilead, the people the Gileadites;" (p12-p16) — exactly
+       parallel to "to Machir, the people the Machirites" (p2-p6), where
+       Machir is the PERSON clan-founder; entity offspring = the clan heads
+       ("Abiezer, Helek, Asriel, Shechem, Shemida, Hepher" — Num 26:30-32,
+       the next verses' clans). The place also claims 4|26|29; the parallel
+       construction decides person.
+  fallback outcome if evidence fails: floor
+
+GROUP  Ezr 10:25  malchiah/malchijah  slots p10, p16  [APPENDIX; ORDER-ONLY —
+  reviewer rules]
+  expected partition: two entities (person / person)
+  p10  proposed: Malchijah@Ezr.10.25a   class: variant-spelling +
+       list-structure (C1 SHORTFALL)
+       quote: "Ramiah, and Jeziah, and Malchiah, and Miamin," (p6-p12);
+       printed "Malchiah"
+  p16  proposed: Malchijah@Ezr.10.25b   class: variant-spelling +
+       list-structure (C1 SHORTFALL)
+       quote: "and Eleazar, and Malchijah, and Benaiah." (p13-p18); printed
+       "Malchijah"
+  Exhaustive: exactly Malchijah@Ezr.10.25a + b claim 15|10|25 (Jer's Malchiah
+  does not); both kinless — the a/b order filing again. NOTE: ABP's two
+  spellings do NOT map to any kin difference in the source; the order reading
+  aligns a=first=Malchiah(p10), b=second=Malchijah(p16). Reviewer refusal
+  floors both.
+  fallback outcome if evidence fails: floor
+
+# ── end tranche 2 (33 groups + appendix / 68 slots proposed as: 1 explicit
+# floor (dishon p5) · 8 order-only/flagged slots pending the reviewer's C1
+# ruling (jozabad ×2, elnathan ×2, malchijah ×2, jeiel ×2) · 6 cushi slots
+# flagged place/gentilic · the rest evidence-carried) ──
+# DISCOVERIES AT ADJUDICATION (recorded per rider 3 pattern; none are
+# bound-painted carve-outs): Elnatham Ezr 8:16 p15 in-verse variant spelling ·
+# TIPNR equations: Laadan=Libni, Penuel=Peniel, Pashur=Pashhur,
+# Shelomoth=Shelomith · 1Ch-6 versification offset shifts Azariah refs ·
+# TIPNR files 2Sa-18 "Cushi" under the land Cush (gentilic reading).

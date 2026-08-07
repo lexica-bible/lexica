@@ -214,6 +214,14 @@ all 47 groups plus appendix, evidence quotes from JP-run dumps of live rows."
 
 ## Status
 GATE PHASE CLOSED — census frozen (wordpos_census_20260807.txt), R1–R4 ruled.
-DESIGN RATIFIED (PASS + C1–C3 above). **OPEN WORK: fill the prereg file from
-JP-run live dumps (dump tool: scripts/dump_wordpos_lane.py) + build controls
-(a)–(e) in parallel; prereg goes back to the reviewer before any dry-run.**
+DESIGN RATIFIED (PASS + C1–C3 above). **PREREG FULLY FILLED (both tranches,
+2026-08-07)** from JP-run dumps: re-run dump (fixed rosters) + per-verse
+claims read (every entity-ref row landing on a lane verse). Headline facts:
+12 groups are SAME-REFERENT (one person named twice — chains/repeats); 3
+person-vs-place pairs bound as mixed kinds (haran, jezreel Hos 1:4, gilead
+Jos 17:1); penuel + Num-26:29 gilead resolved single-kind; 4 order-only
+pairs (jozabad, elnathan, malchijah appendix, jeiel) flagged pending the
+reviewer's C1 ruling; cushi ×3 verses flagged (TIPNR reads it as the
+gentilic under the land Cush); 1 explicit floor (dishon 1Ch 1:41 p5).
+**OPEN: reviewer ratification of both tranches; then controls (a)–(e)
+red-first; then TSV + dry-run.**
