@@ -1,5 +1,9 @@
 # HANDOFF — lane ③ hand-repair session (71 candidates + Mat 27:26)
 
+> **CLOSED 2026-08-07 — lane executed in full, 72/72 dispositioned, reviewer
+> signed off.** Ledger + re-run order: `docs/audits/LANE3_b2_dispositions.md`
+> ("REPAIR LEDGER"). Do not re-open; this file is history only.
+
 Written 2026-08-05 at the ②-ride wrap. The ride is CLOSED (pin held ×2, swapped, live,
 healthy) — do NOT re-open it. This session is the separate hand lane it left behind.
 

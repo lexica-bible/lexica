@@ -29,6 +29,13 @@ The displayed Greek lemma is joined live from `lexicon` via
 replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay
 G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` added
 rebuild #6 (~78% populated; further fill scrapped — memory `project_abp_morph_gap`).
+**Bracket contiguity invariant (2026-08-07, lane ③):** every slot inside a bracket's
+position span must carry that bracket_id — interior BLANK slots included (bid set, no
+greek_pos). Chip/interlinear group only CONSECUTIVE same-bid runs (`groupForGreekMode`),
+so an unmarked interior blank splits the group and mis-orders those modes while PROSE
+STAYS CORRECT (prose groups by bid across gaps) — a prose check alone will not catch it.
+Any hand edit that brackets across a blank slot marks the blank too;
+`fix_lane3_star_merges.py`'s dry-run contiguity check is the mechanical guard.
 
 **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE
 gloss is parked whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head`
