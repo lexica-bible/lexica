@@ -118,6 +118,17 @@ Known lane facts from the list: mary 16/8 verses (July anchor exact) · joash 12
 gilead/jezreel/penuel groups may be person-vs-place pairs, not two people —
 per-slot adjudication will sort kind, not the census.
 
+## CENSUS RATIFIED (reviewer, 2026-08-07) — with three riders
+1. Ezr 10:25 (bucket C) is a flagged APPENDIX member of this lane's per-slot
+   work — adjudicated with the rest, variant-spelling status in evidence; it
+   does NOT wait for a future lane.
+2. Person/place shared-name pairs (gilead, jezreel, penuel, haran Gen 11:31,
+   shechem-adjacent) are still multi-referent; the design must NOT assume
+   "two referents" means "two people" anywhere in its data model.
+3. Bound-painted follow-on carve-out: a wrongly-painted neighbor discovered
+   during per-slot work on the 96 is recorded in the follow-on ticket AT
+   DISCOVERY TIME, not re-derived later.
+
 ## DECIDE AT SESSION OPEN — open questions for the reviewer
 The charter carries no explicit banked rulings (no prior ticket), so these are
 the open questions, with recommendations (standing delegation: CC+reviewer
