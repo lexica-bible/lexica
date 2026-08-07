@@ -1,0 +1,103 @@
+{
+ "_comment": "Lane-3 hand repairs (TICKET_pn_star_fix.md hand lane; dispositions docs/audits/LANE3_b2_dispositions.md). Gentilic batch of 10, reviewer-approved 2026-08-06 row by row. Every op is guarded by position + strongs_base + current english/greek_pos/bracket_id from the live dump (lane3_rows.txt, 2026-08-06); new_bids must be unused in the verse, join_bids must exist. Writes english / english_head / greek_pos / bracket_id ONLY.",
+ "Mat 9:11": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 1, "sbase": "G1492", "old_eng": "the Pharisees seeing,", "old_gpos": null, "old_bid": null,
+    "new_eng": "seeing,", "new_head": "seeing", "new_gpos": 3, "new_bid": 2},
+   {"pos": 2, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "the", "new_head": null, "new_gpos": 1, "new_bid": 2},
+   {"pos": 3, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Pharisees", "new_head": "pharisees", "new_gpos": 2, "new_bid": 2}
+  ]
+ },
+ "2Ch 14:12": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 11, "sbase": "G5343", "old_eng": "the Ethiopians fled.", "old_gpos": null, "old_bid": null,
+    "new_eng": "fled.", "new_head": "fled", "new_gpos": 2, "new_bid": 2},
+   {"pos": 12, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "the Ethiopians", "new_head": "ethiopians", "new_gpos": 1, "new_bid": 2}
+  ]
+ },
+ "2Sa 14:4": {
+  "new_bids": [],
+  "join_bids": [1],
+  "ops": [
+   {"pos": 1, "sbase": "G1525", "old_eng": "entered", "old_gpos": 3, "old_bid": 1,
+    "new_eng": "entered", "new_head": "entered", "new_gpos": 4, "new_bid": 1},
+   {"pos": 3, "sbase": "G1135", "old_eng": "Tekoahite woman", "old_gpos": 2, "old_bid": 1,
+    "new_eng": "woman", "new_head": "woman", "new_gpos": 3, "new_bid": 1},
+   {"pos": 5, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Tekoahite", "new_head": "tekoahite", "new_gpos": 2, "new_bid": 1}
+  ]
+ },
+ "Isa 30:31": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 5, "sbase": "G2274", "old_eng": "the Assyrians shall be vanquished,", "old_gpos": null, "old_bid": null,
+    "new_eng": "shall be vanquished,", "new_head": "vanquished", "new_gpos": 2, "new_bid": 1},
+   {"pos": 6, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "the Assyrians", "new_head": "assyrians", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "Jer 50:16": {
+  "new_bids": [1],
+  "join_bids": [],
+  "ops": [
+   {"pos": 11, "sbase": "G3162", "old_eng": "of the Grecian sword.", "old_gpos": null, "old_bid": null,
+    "new_eng": "sword.", "new_head": "sword", "new_gpos": 2, "new_bid": 1},
+   {"pos": 12, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of the Grecian", "new_head": "grecian", "new_gpos": 1, "new_bid": 1}
+  ]
+ },
+ "Lev 24:10": {
+  "new_bids": [],
+  "join_bids": [1],
+  "ops": [
+   {"pos": 1, "sbase": "G1831", "old_eng": "went forth", "old_gpos": 3, "old_bid": 1,
+    "new_eng": "went forth", "new_head": "forth", "new_gpos": 4, "new_bid": 1},
+   {"pos": 3, "sbase": "G1135", "old_eng": "of an Israelitish woman,", "old_gpos": 2, "old_bid": 1,
+    "new_eng": "woman,", "new_head": "woman", "new_gpos": 3, "new_bid": 1},
+   {"pos": 4, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of an Israelitish", "new_head": "israelitish", "new_gpos": 2, "new_bid": 1}
+  ]
+ },
+ "Num 25:8": {
+  "new_bids": [2, 3],
+  "join_bids": [],
+  "ops": [
+   {"pos": 3, "sbase": "G444", "old_eng": "Israelitish man", "old_gpos": null, "old_bid": null,
+    "new_eng": "man", "new_head": "man", "new_gpos": 2, "new_bid": 2},
+   {"pos": 5, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Israelitish", "new_head": "israelitish", "new_gpos": 1, "new_bid": 2},
+   {"pos": 14, "sbase": "G444", "old_eng": "Israelitish man,", "old_gpos": null, "old_bid": null,
+    "new_eng": "man,", "new_head": "man", "new_gpos": 2, "new_bid": 3},
+   {"pos": 16, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Israelitish", "new_head": "israelitish", "new_gpos": 1, "new_bid": 3}
+  ]
+ },
+ "Num 25:14": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 4, "sbase": "G444", "old_eng": "Israelitish man", "old_gpos": null, "old_bid": null,
+    "new_eng": "man", "new_head": "man", "new_gpos": 2, "new_bid": 2},
+   {"pos": 6, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "Israelitish", "new_head": "israelitish", "new_gpos": 1, "new_bid": 2}
+  ]
+ },
+ "Num 25:15": {
+  "new_bids": [2],
+  "join_bids": [],
+  "ops": [
+   {"pos": 3, "sbase": "G1135", "old_eng": "of the Midianitish woman", "old_gpos": null, "old_bid": null,
+    "new_eng": "woman", "new_head": "woman", "new_gpos": 2, "new_bid": 2},
+   {"pos": 5, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": "of the Midianitish", "new_head": "midianitish", "new_gpos": 1, "new_bid": 2}
+  ]
+ }
+}
