@@ -1,0 +1,60 @@
+# FROZEN BASELINE — word-position binding lane census, 2026-08-07 run 2
+# scripts/census_wordpos_multi.py on live bible.db (JP-run, controls 3/3 OK;
+# verdict PASS recorded in TICKET_wordpos_binding.md). This file IS the member
+# list the July ~118 never had. Lane figure: 96 slots / 47 groups / 46 verses /
+# 28 names. Bucket C: 1 pair (the only one in the corpus).
+#
+# lane members (book ch:vs  name  positions):
+1Ch 1:41  dishon    p[2, 5, 8]
+1Ch 2:41  jekamiah  p[4, 6]
+1Ch 2:46  gazez     p[13, 18]
+1Ch 6:9   azariah   p[4, 6]
+1Ch 6:10  azariah   p[4, 7]
+1Ch 7:20  tahath    p[9, 16]
+1Ch 12:20 jozabad   p[17, 23]
+1Ch 16:5  jeiel     p[8, 23]
+1Ch 24:22 shelomoth p[3, 6]
+1Ch 26:21 laadan    p[1, 5]
+1Ki 16:24 shemer    p[8, 31]
+2Ch 23:1  azariah   p[13, 23]
+2Ch 25:25 joash     p[5, 11]
+2Ch 29:12 azariah   p[12, 27]
+2Ch 29:12 joah      p[36, 44]
+2Ki 13:10 joash     p[7, 11]
+2Ki 14:1  joash     p[3, 12]
+2Ki 14:13 joash     p[4, 10]
+2Ki 14:17 joash     p[4, 11]
+2Ki 14:23 joash     p[5, 11]
+2Sa 6:8   uzzah     p[10, 17]
+2Sa 18:21 cushi     p[4, 13]
+2Sa 18:31 cushi     p[3, 8]
+2Sa 18:32 cushi     p[6, 16]
+Act 1:13  james     p[14, 25, 33]
+Act 10:32 simon     p[6, 14]
+Ezr 2:61  barzillai p[11, 17]
+Ezr 8:11  bebai     p[3, 6]
+Ezr 8:16  elnathan  p[10, 27]
+Gen 11:31 haran     p[11, 43]
+Gen 46:20 machir    p[32, 33]
+Hos 1:4   jezreel   p[10, 19]
+Jdg 8:8   penuel    p[4, 16]
+Jer 38:1  pashur    p[8, 14]
+Jer 40:15 judah     p[28, 37]
+Joh 19:25 mary      p[16, 21]
+Jos 17:1  gilead    p[16, 23]
+Luk 6:16  judas     p[0, 3]
+Luk 24:10 mary      p[4, 8]
+Mar 15:40 mary      p[10, 13]
+Mar 15:47 mary      p[2, 6]
+Mar 16:1  mary      p[4, 8]
+Mat 27:56 mary      p[3, 7]
+Mat 27:61 mary      p[3, 9]
+Mat 28:1  mary      p[9, 15]
+Neh 7:63  barzillai p[9, 14]
+Num 26:29 gilead    p[11, 13]
+#
+# bucket C — variant-spelling pair (hand review, not a lane member):
+Ezr 10:25  malchiah p10 ~ malchijah p16
+#
+# bound-painted bucket: 1470 slots / 713 groups (follow-on lane, list NOT
+# frozen here — regenerate from the script; it changes with every bind batch).

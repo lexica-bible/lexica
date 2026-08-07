@@ -106,7 +106,17 @@ NAMED members + aggregates; the fresh output then becomes the frozen list:
 - ~22 tail names besides mary, genealogy-heavy (run 1: 27 — azariah/joash
   verse-level pairs are legitimate members, see post-mortem)
 - malchiah/malchijah Ezr 10:25 in bucket C (control)
-CENSUS OUTPUT + DIFF VERDICT: (pending JP's PA run — paste below)
+CENSUS VERDICT (2026-08-07, run 2): **PASS — CONFIRMED, frozen.**
+Expected vs actual: lane unchanged from run 1 (96/47/28, mary 16 ✓) — identical;
+malchiah/malchijah in bucket C ✓ (and it is the ONLY variant-spelling pair in
+the corpus); controls 3/3 OK. 96 vs July ~118 = −22, direction consistent with
+the 8/5 rebuild + 8/7 repairs; member-by-member attribution impossible (no July
+list) per the accepted degraded gate. **Frozen member list:
+docs/tickets/wordpos_census_20260807.txt — the lane's baseline from here on.**
+Known lane facts from the list: mary 16/8 verses (July anchor exact) · joash 12
+· azariah 8 · 1Ch 1:41 dishon is a THREE-slot verse (as is Act 1:13 james) ·
+gilead/jezreel/penuel groups may be person-vs-place pairs, not two people —
+per-slot adjudication will sort kind, not the census.
 
 ## DECIDE AT SESSION OPEN — open questions for the reviewer
 The charter carries no explicit banked rulings (no prior ticket), so these are
