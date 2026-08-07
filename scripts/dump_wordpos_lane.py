@@ -14,6 +14,7 @@ Never writes anything. Usage (PA):
   cd ~/bible-db && PYTHONIOENCODING=utf-8 python3 scripts/dump_wordpos_lane.py bible.db
 """
 import sys, os, re, sqlite3
+from difflib import SequenceMatcher
 
 DB = sys.argv[1] if len(sys.argv) > 1 else "bible.db"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -36,14 +37,30 @@ groups.append(("Ezr", 10, 25, "malchiah/malchijah", [10, 16]))
 compact = lambda s: re.sub(r"[^a-z]", "", (s or "").lower())
 
 def tipnr_candidates(name):
+    """Reviewer rider (2026-08-07, tranche-1 ratification round): exact-name
+    match is BANNED for lane rosters — it missed Mary_Magdalene (underscore
+    key) and returned 0 candidates for pashur/laadan (TIPNR spells them
+    Pashhur/Ladan). Match = compact-exact OR either-way prefix OR
+    spelling-near (SequenceMatcher >= 0.80, the census bucket-C threshold).
+    Over-inclusion is fine (rosters are candidate pools, never members);
+    each match prints its match kind so a fuzzy hit is visibly fuzzy."""
     out = []
     for want in name.split("/"):
         cw = compact(want)
         for r in conn.execute(
                 "SELECT uniq, section, descr, parents, offspring "
                 "FROM tipnr_entities"):
-            if compact(r["uniq"].split("@")[0]) == cw:
-                out.append(r)
+            ce = compact(r["uniq"].split("@")[0])
+            if ce == cw:
+                kind = "exact"
+            elif ce.startswith(cw) or cw.startswith(ce):
+                kind = "prefix"
+            elif SequenceMatcher(None, ce, cw).ratio() >= 0.80:
+                kind = "near"
+            else:
+                continue
+            if r["uniq"] not in [o[0]["uniq"] for o in out]:
+                out.append((r, kind))
     return out
 
 for bk, ch, vs, name, ps in groups:
@@ -68,8 +85,8 @@ for bk, ch, vs, name, ps in groups:
               f"{w['is_pn']}  {w['italic']}{mark}")
     cands = tipnr_candidates(name)
     print(f"  TIPNR candidates under this name: {len(cands)}")
-    for c in cands:
-        print(f"    {c['uniq']}  [{c['section'] or '?'}]")
+    for c, kind in cands:
+        print(f"    {c['uniq']}  [{c['section'] or '?'}]  ({kind})")
         if c["descr"]:
             print(f"      descr:     {c['descr']}")
         if c["parents"]:

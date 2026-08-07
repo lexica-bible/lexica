@@ -194,6 +194,24 @@ their sections, verbatim-anchored). Reviewer's binding codicils:
 "Approved to proceed. Next deliverable: the filled wordpos_prereg_20260807.txt,
 all 47 groups plus appendix, evidence quotes from JP-run dumps of live rows."
 
+## TRANCHE-1 PROVISIONAL FINDINGS (reviewer, 2026-08-07 — ratification pends
+## on the filled file pasted verbatim; "I ratify the file, not the summary")
+- Joash six: expect clean ratification (kin-in-verse, textbook).
+- Magdalene slots accepted. **RIDER (banked, tool fixed same day):** any
+  candidate roster in this lane must be derived by prefix/near match, never
+  exact-name match — 2nd exact-match miss (Malchijah was 1st, Mary_Magdalene
+  2nd; tranche-2 dump then showed pashur/laadan at 0 candidates = misses 3+4,
+  TIPNR spells them Pashhur/Ladan — fix uses the census 0.80 near-matcher).
+  Tranche 2 fills only from a re-run dump with the fixed rosters.
+- Other-Mary rows: valid as tipnr-ref-partition ONLY because the partition is
+  exhaustive and exclusive in the source — rows must show BOTH memberships
+  (done).
+- Mar 15:47 ruling: propose per source, flag stands strengthened with
+  "adjacent verses assign the parallel epithet to a different entity";
+  rejection floors the slot (ratified failure mode).
+- Joh 19:25 p16: leftover-logic row must say so + exhaustive quote (done);
+  reviewer rules on sight.
+
 ## Status
 GATE PHASE CLOSED — census frozen (wordpos_census_20260807.txt), R1–R4 ruled.
 DESIGN RATIFIED (PASS + C1–C3 above). **OPEN WORK: fill the prereg file from

@@ -42,9 +42,12 @@ GROUP  Mat 27:61  mary  slots p3, p9
   p3   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
        quote: "Mary the Magdalene," (p3-p5); entity refs list 40|27|61
   p9   proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
-       quote: "and the other Mary," (p6-p9) — no name-epithet; exactly TWO
-       candidates list 40|27|61 (Magdalene + Mary@Mat.27.56-Jhn); the named
-       slot p3 takes Magdalene, the remainder partitions to Mary@Mat.27.56-Jhn
+       quote: "and the other Mary," (p6-p9) — no name-epithet. Exhaustive and
+       exclusive partition (both memberships shown, per the reviewer's
+       provisional finding): Mary_Magdalene@Mat.27.56-Jhn lists 40|27|61 AND
+       Mary@Mat.27.56-Jhn lists 40|27|61; NO other Mary record lists it
+       (Mat.1.16-Act / Act.12.12 / Luk.10.39-Jhn / Rom.16.6 all absent). The
+       named slot p3 takes Magdalene; the remainder is Mary@Mat.27.56-Jhn
   fallback outcome if evidence fails: floor
 
 GROUP  Mat 28:1  mary  slots p9, p15
@@ -52,8 +55,10 @@ GROUP  Mat 28:1  mary  slots p9, p15
   p9   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
        quote: "Mary the Magdalene," (p9-p11); entity refs list 40|28|1
   p15  proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
-       quote: "and the other Mary," (p12-p15); exactly two candidates list
-       40|28|1; named slot takes Magdalene, remainder partitions as above
+       quote: "and the other Mary," (p12-p15). Exhaustive and exclusive:
+       Mary_Magdalene@Mat.27.56-Jhn lists 40|28|1 AND Mary@Mat.27.56-Jhn
+       lists 40|28|1; no other Mary record lists it. Named slot p9 takes
+       Magdalene; the remainder is Mary@Mat.27.56-Jhn
   fallback outcome if evidence fails: floor
 
 GROUP  Mar 15:40  mary  slots p10, p13
@@ -70,13 +75,15 @@ GROUP  Mar 15:47  mary  slots p2, p6
   p2   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
        quote: "Mary the Magdalene" (p2-p4); entity refs list 41|15|47
   p6   proposed: Mary@Mat.1.16-Act   class: tipnr-ref-partition
-       quote: "and Mary of Joses" (p5-p7). FLAGGED for reviewer attention:
+       quote: "and Mary of Joses" (p5-p7). FLAGGED (reviewer's provisional
+       ruling 2026-08-07: propose per source, flag stands strengthened):
        TIPNR files 41|15|47 under Mary@Mat.1.16-Act (Jesus' mother, offspring
-       incl. "Joses@Mat.13.55-Mrk") and NOT under Mary@Mat.27.56-Jhn — the
-       identity spine's own partition, though the parallel verses (15:40, 16:1)
-       sit with the other Mary. Proposed per the spine; kin also agrees
-       (Joses in her offspring line). If the reviewer rejects the spine's
-       call here, outcome flips to floor, not to the other Mary.
+       incl. "Joses@Mat.13.55-Mrk") and NOT under Mary@Mat.27.56-Jhn.
+       ADJACENT VERSES ASSIGN THE PARALLEL EPITHET TO A DIFFERENT ENTITY
+       (15:40 "Joses mother" and 16:1 sit with Mary@Mat.27.56-Jhn) — this
+       flag is how the row is found if TIPNR is ever corrected upstream.
+       Proposed per the spine; kin also agrees (Joses in her offspring line).
+       Rejection floors the slot (ratified as this row's failure mode).
   fallback outcome if evidence fails: floor
 
 GROUP  Mar 16:1  mary  slots p4, p8
@@ -101,10 +108,14 @@ GROUP  Luk 24:10  mary  slots p4, p8
 GROUP  Joh 19:25  mary  slots p16, p21
   expected partition: two entities (person / person)
   p16  proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
-       quote: "Mary the one of Klopas," (p16-p19); exactly two candidates list
-       43|19|25 (Magdalene + Mary@Mat.27.56-Jhn); the Magdalene epithet sits
-       at p21, so p16 partitions to Mary@Mat.27.56-Jhn (TIPNR's own filing of
-       the Clopas Mary)
+       quote: "Mary the one of Klopas," (p16-p19). Assigned on the leftover
+       logic, stated as such (reviewer to rule): TIPNR has NO separate
+       Klopas-linked Mary entity; exhaustive-exclusive partition:
+       Mary_Magdalene@Mat.27.56-Jhn lists 43|19|25 AND Mary@Mat.27.56-Jhn
+       lists 43|19|25; no other Mary record lists it. The Magdalene epithet
+       sits at p21, so p16 partitions to Mary@Mat.27.56-Jhn — i.e. TIPNR
+       files the Clopas Mary as that entity. If the reviewer finds the
+       leftover logic insufficient here, floor is the outcome.
   p21  proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
        quote: "and Mary the Magdalene." (p20-p23); entity refs list 43|19|25
   fallback outcome if evidence fails: floor
