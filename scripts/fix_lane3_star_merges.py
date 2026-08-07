@@ -24,6 +24,9 @@ import sqlite3
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from bracket_contiguity import bracket_gaps  # THE shared classifier (one copy)
+
 _TRAIL = re.compile(r"[.,;:!?·)]+$")
 
 
@@ -160,18 +163,10 @@ for verse, spec in FIXES.items():
     print(f"  verses.text:  {v['text']}")
     print(f"  render check: prose unchanged by the edit -> "
           f"{'PASS' if p_before == p_after else 'FAIL'}")
-    # Contiguity check (chip/interlinear trap, 2026-08-07): groupForGreekMode
-    # walks CONSECUTIVE same-bracket runs, so every slot inside a bracket's
-    # position span must carry that bracket's mark — the build's own shape
-    # (blank members, no reading number). A gap splits the run and chip /
-    # interlinear reorder each fragment alone.
-    spans = {}
-    for r in after:
-        if r["bracket_id"] is not None:
-            lo, hi = spans.get(r["bracket_id"], (r["position"], r["position"]))
-            spans[r["bracket_id"]] = (min(lo, r["position"]), max(hi, r["position"]))
-    gaps = [(b, r["position"]) for b, (lo, hi) in spans.items()
-            for r in after if lo < r["position"] < hi and r["bracket_id"] != b]
+    # Contiguity check (chip/interlinear trap, 2026-08-07): the classifier
+    # moved to scripts/bracket_contiguity.py (2026-08-07, wordpos lane) so the
+    # wordpos controls import THE SAME check — logic byte-identical.
+    gaps = bracket_gaps(after)
     print(f"  contiguity check: "
           f"{'PASS' if not gaps else 'FAIL ' + str(gaps)}")
 
