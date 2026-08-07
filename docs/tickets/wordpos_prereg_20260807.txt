@@ -1,0 +1,186 @@
+# PRE-REGISTRATION — word-position binding lane (design ratified 2026-08-07,
+# DESIGN_wordpos_binding.md §4; codicils C1-C3 in force). Baseline =
+# wordpos_census_20260807.txt (96 slots / 47 groups + Ezr 10:25 appendix).
+# Evidence source: JP-run live dumps (scripts/dump_wordpos_lane.py, 2026-08-07)
+# + JP-run tipnr_entities/tipnr_entity_refs reads (same session, pasted).
+# Per C3: this file returns to the reviewer for ratification per tranche BEFORE
+# any dry-run; frozen only at ratification of the FILLED content.
+#
+# TRANCHE 1 (submitted for ratification): mary 8 groups + joash 6 groups.
+# Tranche 2 (remaining 33 groups + appendix): to follow.
+#
+# Classes per the ratified design: epithet-in-verse | kin-in-verse |
+# list-structure | locative-syntax | tipnr-ref-partition | variant-spelling.
+# C1: kin/offspring agreement must be QUOTED from the entity's own record.
+# C2: these proposals carry position-integrity evidence; entity correctness is
+# decided only by the reviewer's per-row verdict.
+# Ref-list corroboration below cites tipnr_entity_refs rows (book numbers:
+# 12=2Ki 14=2Ch 40=Mat 41=Mar 42=Luk 43=Joh).
+
+## ── mary (8 groups) ─────────────────────────────────────────────────────────
+# Candidate pool (all NT Marys, from the JP-run roster read):
+#   Mary_Magdalene@Mat.27.56-Jhn — refs include ALL eight lane verses
+#   Mary@Mat.27.56-Jhn ("the other Mary"; offspring "James@Mat.10.3-Act,
+#     Joses@Mat.27.56-Mrk, Matthew@Mat.9.9-Act") — refs: Mat 27:56, 27:61,
+#     28:1, Mar 15:40, 16:1, Luk 24:10, Joh 19:25 (NOT Mar 15:47)
+#   Mary@Mat.1.16-Act (Jesus' mother; offspring incl. "James@Mat.13.55-Jud,
+#     Joses@Mat.13.55-Mrk") — refs include Mar 15:47
+#   Mary@Act.12.12 / Mary@Luk.10.39-Jhn / Mary@Rom.16.6 — no lane verse in
+#     any of their ref lists (excluded for every group below)
+
+GROUP  Mat 27:56  mary  slots p3, p7
+  expected partition: two entities (person / person)
+  p3   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the Magdalene," (p3-p5); entity refs list 40|27|56
+  p7   proposed: Mary@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the ... of James and Joses ... mother," (p7-p13); entity's
+       own offspring line: "James@Mat.10.3-Act, Joses@Mat.27.56-Mrk"; refs 40|27|56
+  fallback outcome if evidence fails: floor
+
+GROUP  Mat 27:61  mary  slots p3, p9
+  expected partition: two entities (person / person)
+  p3   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the Magdalene," (p3-p5); entity refs list 40|27|61
+  p9   proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
+       quote: "and the other Mary," (p6-p9) — no name-epithet; exactly TWO
+       candidates list 40|27|61 (Magdalene + Mary@Mat.27.56-Jhn); the named
+       slot p3 takes Magdalene, the remainder partitions to Mary@Mat.27.56-Jhn
+  fallback outcome if evidence fails: floor
+
+GROUP  Mat 28:1  mary  slots p9, p15
+  expected partition: two entities (person / person)
+  p9   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the Magdalene," (p9-p11); entity refs list 40|28|1
+  p15  proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
+       quote: "and the other Mary," (p12-p15); exactly two candidates list
+       40|28|1; named slot takes Magdalene, remainder partitions as above
+  fallback outcome if evidence fails: floor
+
+GROUP  Mar 15:40  mary  slots p10, p13
+  expected partition: two entities (person / person)
+  p10  proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary Magdalene," (p10-p11); entity refs list 41|15|40
+  p13  proposed: Mary@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the one of James the less and Joses mother," (p13-p21);
+       entity offspring: "James@Mat.10.3-Act, Joses@Mat.27.56-Mrk"; refs 41|15|40
+  fallback outcome if evidence fails: floor
+
+GROUP  Mar 15:47  mary  slots p2, p6
+  expected partition: two entities (person / person)
+  p2   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the Magdalene" (p2-p4); entity refs list 41|15|47
+  p6   proposed: Mary@Mat.1.16-Act   class: tipnr-ref-partition
+       quote: "and Mary of Joses" (p5-p7). FLAGGED for reviewer attention:
+       TIPNR files 41|15|47 under Mary@Mat.1.16-Act (Jesus' mother, offspring
+       incl. "Joses@Mat.13.55-Mrk") and NOT under Mary@Mat.27.56-Jhn — the
+       identity spine's own partition, though the parallel verses (15:40, 16:1)
+       sit with the other Mary. Proposed per the spine; kin also agrees
+       (Joses in her offspring line). If the reviewer rejects the spine's
+       call here, outcome flips to floor, not to the other Mary.
+  fallback outcome if evidence fails: floor
+
+GROUP  Mar 16:1  mary  slots p4, p8
+  expected partition: two entities (person / person)
+  p4   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the Magdalene," (p4-p6); entity refs list 41|16|1
+  p8   proposed: Mary@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary the one of James," (p8-p11); entity offspring:
+       "James@Mat.10.3-Act"; refs list 41|16|1
+  fallback outcome if evidence fails: floor
+
+GROUP  Luk 24:10  mary  slots p4, p8
+  expected partition: two entities (person / person)
+  p4   proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "the Magdalene — Mary," (p2-p4, epithet precedes the name);
+       entity refs list 42|24|10
+  p8   proposed: Mary@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "Mary of James," (p8-p9); entity offspring:
+       "James@Mat.10.3-Act"; refs list 42|24|10
+  fallback outcome if evidence fails: floor
+
+GROUP  Joh 19:25  mary  slots p16, p21
+  expected partition: two entities (person / person)
+  p16  proposed: Mary@Mat.27.56-Jhn   class: tipnr-ref-partition
+       quote: "Mary the one of Klopas," (p16-p19); exactly two candidates list
+       43|19|25 (Magdalene + Mary@Mat.27.56-Jhn); the Magdalene epithet sits
+       at p21, so p16 partitions to Mary@Mat.27.56-Jhn (TIPNR's own filing of
+       the Clopas Mary)
+  p21  proposed: Mary_Magdalene@Mat.27.56-Jhn   class: epithet-in-verse
+       quote: "and Mary the Magdalene." (p20-p23); entity refs list 43|19|25
+  fallback outcome if evidence fails: floor
+
+## ── joash (6 groups) ────────────────────────────────────────────────────────
+# Candidate pool: 8 TIPNR Joash entities; only two are kings and only two list
+# any lane verse in refs:
+#   Joash@2Ki.11.2-2Ch — king of JUDAH line: parents "Ahaziah@2Ki.8.24-2Ch +
+#     Zibiah@2Ki.12.1-2Ch", offspring "Amaziah@2Ki.12.21-2Ch"
+#   Joash@2Ki.13.9-Amo — king of ISRAEL line: parents "Jehoahaz@2Ki.10.35-2Ch",
+#     offspring "Jeroboam@2Ki.13.13-Amo"
+# Every lane verse below appears in BOTH kings' ref lists (the verses name both
+# men) — refs corroborate presence but never discriminate; the kin printed
+# beside each slot does (C1: entity kin line quoted per row).
+
+GROUP  2Ki 13:10  joash  slots p7, p11
+  expected partition: two entities (person / person)
+  p7   proposed: Joash@2Ki.11.2-2Ch   class: epithet-in-verse
+       quote: "of Joash king of Judah," (p7-p9); entity's Judah-line kin:
+       parents "Ahaziah@2Ki.8.24-2Ch", offspring "Amaziah@2Ki.12.21-2Ch";
+       refs list 12|13|10
+  p11  proposed: Joash@2Ki.13.9-Amo   class: kin-in-verse
+       quote: "Joash son of Jehoahaz reigned over Israel" (p11-p15); entity
+       parents: "Jehoahaz@2Ki.10.35-2Ch"; refs list 12|13|10
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ki 14:1  joash  slots p3, p12
+  expected partition: two entities (person / person)
+  p3   proposed: Joash@2Ki.13.9-Amo   class: kin-in-verse
+       quote: "of Joash son of Jehoahaz king of Israel," (p3-p7); entity
+       parents: "Jehoahaz@2Ki.10.35-2Ch"; refs list 12|14|1
+  p12  proposed: Joash@2Ki.11.2-2Ch   class: kin-in-verse
+       quote: "Amaziah son of Joash king of Judah" (p10-p14); entity
+       offspring: "Amaziah@2Ki.12.21-2Ch"; refs list 12|14|1
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ki 14:13  joash  slots p4, p10
+  expected partition: two entities (person / person)
+  p4   proposed: Joash@2Ki.11.2-2Ch   class: kin-in-verse
+       quote: "Amaziah son of Joash son of Ahaziah king of Judah" (p2-p8);
+       entity offspring "Amaziah@2Ki.12.21-2Ch" AND parents
+       "Ahaziah@2Ki.8.24-2Ch" — double kin agreement; refs list 12|14|13
+  p10  proposed: Joash@2Ki.13.9-Amo   class: epithet-in-verse
+       quote: "Joash king of Israel seized" (p10-p12); entity's Israel-line
+       kin: parents "Jehoahaz@2Ki.10.35-2Ch", offspring
+       "Jeroboam@2Ki.13.13-Amo"; refs list 12|14|13
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ki 14:17  joash  slots p4, p11
+  expected partition: two entities (person / person)
+  p4   proposed: Joash@2Ki.11.2-2Ch   class: kin-in-verse
+       quote: "Amaziah son of Joash king of Judah" (p2-p6); entity offspring:
+       "Amaziah@2Ki.12.21-2Ch"; refs list 12|14|17
+  p11  proposed: Joash@2Ki.13.9-Amo   class: kin-in-verse
+       quote: "Joash son of Jehoahaz king of Israel" (p11-p15); entity
+       parents: "Jehoahaz@2Ki.10.35-2Ch"; refs list 12|14|17
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ki 14:23  joash  slots p5, p11
+  expected partition: two entities (person / person)
+  p5   proposed: Joash@2Ki.11.2-2Ch   class: kin-in-verse
+       quote: "of Amaziah son of Joash king of Judah," (p3-p7); entity
+       offspring: "Amaziah@2Ki.12.21-2Ch"; refs list 12|14|23
+  p11  proposed: Joash@2Ki.13.9-Amo   class: kin-in-verse
+       quote: "Jeroboam son of Joash" (p9-p11); entity offspring:
+       "Jeroboam@2Ki.13.13-Amo"; refs list 12|14|23
+  fallback outcome if evidence fails: floor
+
+GROUP  2Ch 25:25  joash  slots p5, p11
+  expected partition: two entities (person / person)
+  p5   proposed: Joash@2Ki.11.2-2Ch   class: kin-in-verse
+       quote: "Amaziah the son of Joash king of Judah" (p2-p7); entity
+       offspring: "Amaziah@2Ki.12.21-2Ch"; refs list 14|25|25
+  p11  proposed: Joash@2Ki.13.9-Amo   class: kin-in-verse
+       quote: "of Joash the son of Jehoahaz king of Israel" (p11-p16); entity
+       parents: "Jehoahaz@2Ki.10.35-2Ch"; refs list 14|25|25
+  fallback outcome if evidence fails: floor
+
+# ── end tranche 1 (14 groups / 28 slots; 0 floored, 1 flagged: Mar 15:47 p6) ──
