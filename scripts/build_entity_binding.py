@@ -508,7 +508,7 @@ def main():
     try:
         from build_slot_binding import land as _slot_land
         print("Landing word-position slot binds (pn_slot_rulings.tsv):")
-        _slot_land(DB, apply=True)
+        _slot_land(DB, apply=True, strict=False)
     except FileNotFoundError:
         print("  (no pn_slot_rulings.tsv — slot binds skipped)")
     except Exception as e:

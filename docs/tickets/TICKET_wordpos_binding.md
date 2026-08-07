@@ -246,7 +246,23 @@ state-guarded bid marks JP-applied, harness re-run ALL PASS.
 **MECHANISM BUILT (same day):** build_slot_binding.py (guards G1-G4,
 all-or-nothing apply; auto re-lands from build_entity_binding --apply) ·
 /api/metav/entity pos param, slot-bind-first serve · frontend sends
-entry.position. **OPEN: (1) reviewer per-row verdicts on the dry-run paste;
-(2) then JP: build_slot_binding dry-run → --apply → deploy; (3) live
-display verification in all three render modes on the bracket-adjacent
-work list (printed by the harness).**
+entry.position. **PER-ROW VERDICTS: APPROVE, all 95 (reviewer, 2026-08-07). APPLY
+AUTHORIZED**, ordered: writer dry-run (expect 95/0/0) → reviewer one-line
+match verdict → --apply (expect exactly 95) → deploy → 3-mode click-through
+(mary/joash first) + negative checks (Dishon p5 still floors; a David click
+byte-identical).
+**Governance notes banked (reviewer, verbatim intent):**
+- The 2Sa 18:31/18:32 blank-bid repair is RETROACTIVELY RATIFIED — but it
+  skipped the proposal→dry-run→verdict→apply sequence and should have gone
+  to the reviewer first; on the record. The two verses join the lane-③
+  "unmarked interior blank" defect-class record as confirmed members 18-19
+  (see project_pn_star_fix — ②'s cross-blank census). Evidence of record =
+  the green harness re-run, NOT the "1" from SELECT changes() (it counts
+  only the last statement).
+- BACKUP FLAG: a live write landed 23:09 2026-08-07 — per the standing
+  single-rollback rule, no rollback copy is deleted until a clean nightly
+  (~13:30 UTC) postdates it.
+**Writer codicil EXECUTED:** manual --apply stays all-or-nothing (first
+landing); the rebuild hook now lands PER-ROW with loud "!! REFUSED" lines +
+a catch-up-ticket banner in the rebuild log (strict=False) — a stale row
+floors its own slot only, never silently, never the other 94.

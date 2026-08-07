@@ -59,9 +59,14 @@ def read_tsv(path=TSV):
     return rows
 
 
-def land(db_path, apply=False, tsv=TSV):
-    """Validate every TSV row against the live db; write pn_slot_binding when
-    apply=True AND every guard passed. Returns (landed, refused)."""
+def land(db_path, apply=False, tsv=TSV, strict=True):
+    """Validate every TSV row against the live db; write pn_slot_binding.
+    strict=True (manual --apply): ALL-OR-NOTHING — any guard refusal blocks
+    the whole write (the first-landing bar).
+    strict=False (the build_entity_binding rebuild hook): PER-ROW — good rows
+    land, refused rows are LOUDLY reported in the rebuild log and stay on the
+    Fix-A floor (reviewer codicil at apply authorization, 2026-08-07: rebuild
+    refusals must be loud, never silent). Returns (landed, refused)."""
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
@@ -108,17 +113,21 @@ def land(db_path, apply=False, tsv=TSV):
             plan.append((bk, ch, vs, pos, r["name"].lower(), r["entity_uniq"],
                          "slot-ruled", r["evidence_class"], 1, r["flags"]))
         for r, why in refused:
-            print(f"  REFUSED {r['book']} {r['chapter']}:{r['verse']} "
+            print(f"  !! REFUSED {r['book']} {r['chapter']}:{r['verse']} "
                   f"p{r['position']} {r['name']}: {why}")
         print(f"slot rulings: {len(plan)} landable, {len(refused)} refused"
               f" of {len(rows)}")
         if not apply:
             print("dry-run only — no write.")
             return len(plan), len(refused)
-        if refused:
+        if refused and strict:
             print("APPLY REFUSED: guards fired — fix or re-freeze first "
-                  "(all-or-nothing).")
+                  "(all-or-nothing at first landing).")
             return 0, len(refused)
+        if refused:
+            print(f"  !! {len(refused)} slot ruling(s) REFUSED on this rebuild "
+                  f"— those slots are back on the Fix-A floor. Open a catch-up "
+                  f"ticket; do NOT ignore this.")
         conn.execute("DROP TABLE IF EXISTS pn_slot_binding")
         conn.execute("""CREATE TABLE pn_slot_binding(
             book INTEGER, chapter INTEGER, verse INTEGER, position INTEGER,
