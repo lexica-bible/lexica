@@ -127,6 +127,22 @@ Joram@2Ki.1.17-2Ch (son of Ahab). Evidence class throughout: kin-in-verse
 Fallback per row if refused: floor stays as-is (verse-grain paint), never a second
 guess in-flight.
 
+**REVIEWER VERDICT (2026-08-08, banked verbatim — all 7 changes + all 5 keeps
+APPROVED):** "Row 1 — 2Ch 22:6 p2 → ISRAEL: APPROVED. The role clause stands on its
+own, but it's also corroborated inside the same verse: the wounded king being visited
+is named at p34 as 'Jehoram son of Ahab... for he was infirm.' … Row 4 — 2Ki 1:17
+p11 → ISRAEL: APPROVED. … the verse's whole point is that these are two different
+Jehorams. TIPNR first-naming the Israel entity at this exact verse seals it. …
+Row 6 — 2Ki 8:16 p4 → ISRAEL: APPROVED. This one's actually patronym+title on the
+slot itself … All 7 changes approved, all 5 explicit keeps approved. Fallback
+accepted as stated for any row that fails at apply time — floor, no second guess."
+CORRECTION per reviewer: the role-clause pair is 2Ch 22:6 p2 and **2Ki 8:29 p4**
+(2Ki 8:16 p4 carries a patronym on the slot itself) — labels above and in the TSV
+rationale now match the ruling.
+STAGED: 7 rows appended to scripts/pn_slot_rulings.tsv (KEEP slots get no row per
+lane doctrine — verse-grain paint already serves Judah correctly there).
+Next: JP dry-run → verdict (expected beside actual) → apply.
+
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
