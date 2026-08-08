@@ -162,6 +162,18 @@ Joram@2Ki.1.17-2Ch "king of Northern Israel, son of Ahab and Jezebel"
 Mary Mat 27:61 pos3/pos9 both slot-ruled to their own entities — no regression.
 No deploy needed (serve path live since the wordpos lane; data-only change).
 
+## Batch 4 — ADJUDICATED 2026-08-08 (groups 301-400, 2Ki 22:8 → Est 3:3)
+Evidence + rosters: receipts_boundpainted_batch4.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
+- Same-referent narrative repeats throughout (Joab ×~15, Amnon, Uriah ×5, Daniel ×7,
+  Shaphan, Mephibosheth, Saul-of-Gibeah runs, Jesus ×5, Judah/Benjamin/Levi/Gad
+  patriarch folds, Hebron/Shechem places). 2Ki 23:35 pharaoh ×3 correctly carries the
+  per-reign Neco@2Ki.23.29-Jer entity. 2Sa 18:21 joab sits beside the wordpos lane's
+  cushi slot-binds with no collision.
+- KEEP-WITH-NOTE (accepted name-equation class, both slots one man in each):
+  Act 9:4/22:7/26:14 "Saul, Saul" → Paul@Act.7.58-2Pe · Act 7:8 jacob →
+  Israel@Gen.25.26-Rev · Est 1:1 artaxerxes (LXX name) → Ahasuerus@Ezr.4.6-Dan.
+
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
