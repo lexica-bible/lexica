@@ -148,7 +148,19 @@ CORRECTION per reviewer: the role-clause pair is 2Ch 22:6 p2 and **2Ki 8:29 p4**
 rationale now match the ruling.
 STAGED: 7 rows appended to scripts/pn_slot_rulings.tsv (KEEP slots get no row per
 lane doctrine — verse-grain paint already serves Judah correctly there).
-Next: JP dry-run → verdict (expected beside actual) → apply.
+
+**APPLIED + LIVE-VERIFIED 2026-08-08 — batch-3 fixes CLOSED.**
+Dry-run arc: run 1 FAIL (G3 refused all 7 — guard chartered for unbound verses;
+this lane corrects bound ones) → paint-override mechanism designed, reviewer
+APPROVED with conditions 1+2 (banked above) → run 2 FAIL (G4 same-entity pairs
+unflagged; flags grounded in the verdict's own one-referent finding) → run 3
+PASS (7 OVERRIDE lines, 102/0). JP backup taken (bible.db.pre_boundpainted_b3)
+→ --apply: 7 OVERRIDEs, `pn_slot_binding written: 102 rows` → table read shows
+exactly the 7 jehoram rows → LIVE serve verified via API: 2Ki 8:16 pos4 =
+Joram@2Ki.1.17-2Ch "king of Northern Israel, son of Ahab and Jezebel"
+(slot-ruled), pos10 = Jehoram of Judah rich card (verse-grain, byte-same path);
+Mary Mat 27:61 pos3/pos9 both slot-ruled to their own entities — no regression.
+No deploy needed (serve path live since the wordpos lane; data-only change).
 
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
