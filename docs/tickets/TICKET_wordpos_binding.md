@@ -1,5 +1,13 @@
 # TICKET — word-position binding lane (same-verse same-name multi slots)
-# ═══ SHIPPED + LIVE 2026-08-08 — LANE CLOSED ═══
+# ═══ SHIPPED + LIVE 2026-08-08 — LANE CLOSED (reviewer close-out banked) ═══
+# REVIEWER CLOSE-OUT (2026-08-08, after JP-run in-app checks on screenshot
+# evidence, all four PASS): Mat 27:61 two distinct Mary cards · 2Ki 14:1 both
+# Joash kings (Judah rich card) · Dishon 1Ch 1:41 middle slot = floor,
+# generic fallback only · David unchanged ("Matched by name"). "Lane is
+# CLOSED." Standing guards inherited: precedence rule, stale-name tripwire,
+# kind check, shared bracket-contiguity classifier. BACKUP FLAG SUPERSEDED:
+# rollback copies persist until a clean nightly postdates the 00:31 apply
+# (not the earlier 23:09 marker).
 # 95 slot binds applied (exactly 95 written, JP-run) + serve path deployed
 # (deploy.sh clean, 5x200). LIVE VERIFICATION (in-app, JP-observed via CC's
 # browser session): API — Mat 27:61 pos=3 → Mary_Magdalene / pos=9 →
