@@ -16,6 +16,11 @@ land, leaving that slot on today's honest Fix-A floor):
   G3 PRECEDENCE: no render=1 pn_binding row may exist for (book, ch, vs,
      name) — slot grain lands only where verse grain declines. A collision is
      a STOP-AND-LOOK (the gate_pn_rulings hot-row rule applied here).
+     EXCEPTION (reviewer-approved 2026-08-08, bound-painted audit lane): a row
+     flagged `paint-override` may land OVER an existing verse-grain bind — the
+     marker is valid ONLY on a row whose ruling entry references a banked
+     reviewer verdict (never on CC's own authority), and every override prints
+     a loud OVERRIDE line naming old paint -> new entity (self-auditing output).
   G4 duplicate entity within one verse requires the same-referent flag on
      every such row.
 Any refusal prints the row + reason; --apply REFUSES TO WRITE if any guard
@@ -103,8 +108,19 @@ def land(db_path, apply=False, tsv=TSV, strict=True):
             hit = next((h for h in hits
                         if compact(h["name"]) == compact(r["name"])), None)
             if hit:
-                refused.append((r, f"G3 PRECEDENCE: verse-grain render bind "
-                                   f"exists ({hit['entity_uniq']}) — STOP-AND-LOOK")); continue
+                # paint-override: reviewer-approved correction of a verse-grain
+                # paint (bound-painted audit lane). Valid ONLY on a row whose
+                # ruling entry references a banked reviewer verdict — condition 1
+                # of the 2026-08-08 approval; every override prints old -> new
+                # so the pasted dry-run output is self-auditing (condition 2).
+                if "paint-override" in (r["flags"] or ""):
+                    print(f"  OVERRIDE {r['book']} {r['chapter']}:{r['verse']} "
+                          f"p{r['position']} {r['name']}: verse-grain paint "
+                          f"{hit['entity_uniq']} -> slot {r['entity_uniq']} "
+                          f"(reviewer-approved)")
+                else:
+                    refused.append((r, f"G3 PRECEDENCE: verse-grain render bind "
+                                       f"exists ({hit['entity_uniq']}) — STOP-AND-LOOK")); continue
             key = (bk, ch, vs, r["entity_uniq"])
             same = "same-referent" in (r["flags"] or "")
             if key in seen and not (same and seen[key]):

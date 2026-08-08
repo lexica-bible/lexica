@@ -39,6 +39,13 @@ a change can break a working display. Risk posture is therefore stricter than th
   attached to the group's record.**
 - **Codicil 2** — automated gates are position-integrity only; entity correctness has
   exactly one gate: the reviewer's per-row verdict.
+- **paint-override marker (STANDING RULE, reviewer conditions 1+2, 2026-08-08):**
+  a slot-ruling row may land OVER an existing verse-grain bind ONLY when flagged
+  `paint-override`, and the marker is valid ONLY on a row whose ruling entry
+  references a banked reviewer verdict — never on CC's own authority. Every
+  override prints a loud OVERRIDE line naming old paint -> new entity, so the
+  pasted dry-run output is self-auditing. Default G3 behavior (refuse on
+  collision) is unchanged for unflagged rows.
 
 ## Refusal discipline
 Anything that trips a guard or lands ambiguous goes on the **loud-refusal list** below
