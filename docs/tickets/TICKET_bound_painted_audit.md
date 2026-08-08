@@ -79,6 +79,19 @@ zero writes** — no slot binds proposed, so no dry-run/apply cycle for this bat
   1Ki 11:18/11:20 pharaoh — per-reign Pharaoh disambiguation is the PARKED pile V
   (out-of-scope flag line only; both slots same referent within each verse).
 
+## Batch 2 — ADJUDICATED 2026-08-08 (groups 101-200, 1Ki 15:22 → 1Ti 1:1)
+Evidence + rosters: receipts_boundpainted_batch2.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0 on PA and local). Verdict: **100 KEEP / 0 flagged, zero writes.**
+- All groups are one referent repeated: narrative repeats (Saul ×~40, Jonathan,
+  Ahab/Elijah/Obadiah/Jehoshaphat runs, Agag, Michal, Ahimelech, Eliab, Jesus ×5),
+  tribe refs on the patriarch entity (1Sa 9:1 benjamin), Baal the deity twice in
+  one verse (1Ki 16:32, 18:26 — kind 'other', correct).
+- KEEP-WITH-NOTE: 1Ki 20:33 hadad — ABP prints Ben-hadad as "son of Hadad"; both
+  slots are that one compound reference, painted Ben-hadad@1Ki.15.18-Jer. TIPNR
+  carries ONE Ben-hadad entity spanning the Asa-era and Ahab-era kings (the I/II
+  split is a scholarly question TIPNR doesn't make), so no rival candidate —
+  TIPNR equation stands, same class as the batch-1 Obed-edom note.
+
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
