@@ -189,7 +189,25 @@ flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
   filing (binds may point at non-person entities, standing tripwire); both slots
   one referent either way.
 
+## Batch 6 — ADJUDICATED 2026-08-08 (groups 501-600, Gen 46:2 → Joh 1:42)
+Evidence + rosters: receipts_boundpainted_batch6.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0). Verdict: **99 KEEP / 1 flagged (below), zero writes.**
+- Same-referent keeps: Jacob/Joseph/Pharaoh Gen 46-50 runs, "Jacob, Jacob!" doubles,
+  Jeremiah/Baruch/Job runs, Judah kingdom folds, Jdg 9 Shechem-the-city groups
+  (9:6/9:20/9:23/9:26), Gilead region groups (Jdg 10-12). Referent-aware wins
+  verified: Abimelech = Gideon's son @Jdg.8.31-2Sa (not the Gerar kings) · Joash =
+  Gideon's father @Jdg.6.11- · Micah = the Judges figure @Jdg.17.1- · Ishmael
+  Jer 41:9 = the assassin @2Ki.25.23-Jer (not Abraham's son) · Seraiah @Jer.51.59
+  own entity · pashur→Pashhur accepted equation. Gen 46:20 manasseh sits beside the
+  wordpos Machir slot-binds with no collision.
+
 ## Loud-refusal list
+- **Jdg 9:28 shechem p[12, 30]** (batch 6) — both slots painted the CITY
+  (Shechem@Gen.12.6-Act). p30 sits in "the men of Hamor, father of Shechem" — in
+  Genesis Hamor is the father of Shechem THE MAN (TIPNR entity Shechem@Gen.33.19-,
+  correctly used at Gen 34:26), so a real rival entity exists; commentators split
+  between the man and the city-founder idiom (p12 "son of Shechem" = citizen-of-city
+  reading). Genuine ambiguity — refused, JP/reviewer to rule.
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
   Gilead@Gen.31.21-Zec (region). RULED (reviewer + JP, 2026-08-08): p4's paint is
