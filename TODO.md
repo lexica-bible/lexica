@@ -113,15 +113,17 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   docs/tickets/LANE_C_adjudication.md + docs/tickets/DRILL_witness_divergence.md — do NOT
   re-derive from here. Census denominator COMMITTED: 591 word-slots / 156 names (2026-07-29).
   Still open:
-  - **Word-position binding lane (~118 same-verse same-name multi slots + malchiah Ezr 10:25 +
-    the mary class, 8 verses/16 slots)** — un-partitionable at the verse+name key BY
-    CONSTRUCTION; needs word-position-level binding. UNPARKED per JP's ordering — next in the
-    card-work queue. **Gate phase CLOSED 2026-08-07: docs/tickets/TICKET_wordpos_binding.md**
-    — census FROZEN at 96 slots / 47 groups / 28 names (wordpos_census_20260807.txt; the old
-    ~118 is retired), R1–R4 ruled, Ezr 10:25 = bucket-C appendix member. DESIGN PASS is the
-    open work; the reviewer's design bar is in the ticket. NEW FOLLOW-ON LANE banked there
-    too: 1,470 bound-painted same-name slots (one bind paints 2+ same-name words in a verse
-    — audit for wrong paints; discovery-time carve-out in force).
+  - **Word-position binding lane — SHIPPED + LIVE 2026-08-08** (whole arc in
+    docs/tickets/TICKET_wordpos_binding.md; design DESIGN_wordpos_binding.md; frozen prereg
+    wordpos_prereg_20260807.txt). 95 per-slot binds live (pn_slot_binding, built from
+    scripts/pn_slot_rulings.tsv; re-lands automatically on binder rebuilds, loud refusals),
+    3 honest floors (dishon 1Ch 1:41 p5 · jeiel 1Ch 16:5 p8+p23). /api/metav/entity pos
+    param serves slot-first; verified live in chip + interlinear on mary Mat 27:61 + joash
+    2Ki 14:1 (prose words are non-clickable by design). Two Marys / two Joashes now serve
+    their own cards from one verse. FOLLOW-ON LANES still open: 1,470 bound-painted
+    same-name slots (audit for wrong paints; discovery-time carve-out in force) · Elnatham
+    Ezr 8:16 p15 in-verse variant (bucket-C appendix candidate) · chapter-grain 5 (R3:
+    returns to the reviewer, never auto-folds).
   - **Jabish spelling ruling** — 9 "Jabish Gilead" verses (ABP spells Jabish; the token already
     carries H3003 and serves the Jabesh-gilead card; only the Gilead half unruled) + gilead
     1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing). Consistency fix, not coverage.

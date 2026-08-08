@@ -1,4 +1,15 @@
 # TICKET — word-position binding lane (same-verse same-name multi slots)
+# ═══ SHIPPED + LIVE 2026-08-08 — LANE CLOSED ═══
+# 95 slot binds applied (exactly 95 written, JP-run) + serve path deployed
+# (deploy.sh clean, 5x200). LIVE VERIFICATION (in-app, JP-observed via CC's
+# browser session): API — Mat 27:61 pos=3 → Mary_Magdalene / pos=9 →
+# Mary@Mat.27.56 (two cards, one verse); Dishon 1Ch 1:41 pos=5 → floor;
+# David w/ and w/o pos → byte-identical 404 (name path unchanged); Uzzah
+# 2Sa 6:8 p17 → slot-ruled. DISPLAY — chip + interlinear modes both route
+# per-slot (mary p3/p9 ✓, joash 2Ki 14:1 p3=Israel king / p12=Judah king w/
+# full rich card ✓ — a bracket-adjacent verse); PROSE words are
+# non-clickable BY DESIGN (pre-existing; prose text = verses.text,
+# untouched). Remaining open work lives in TODO.md follow-on lanes only.
 
 Opened 2026-08-07 at lane unpark (JP's ordering — next in the card-work queue,
 TODO.md). **Census-first charter: nothing is designed and no data is written
