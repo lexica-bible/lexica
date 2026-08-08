@@ -92,6 +92,41 @@ flags; verified 100/0 on PA and local). Verdict: **100 KEEP / 0 flagged, zero wr
   split is a scholarly question TIPNR doesn't make), so no rival candidate —
   TIPNR equation stands, same class as the batch-1 Obed-edom note.
 
+## Batch 3 — ADJUDICATED 2026-08-08 (groups 201-300, 2Ch 4:11 → 2Ki 22:8)
+Evidence + rosters: receipts_boundpainted_batch3.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0). Verdict: **95 KEEP / 5 WRONG-PAINT groups (7 slots) —
+proposals below, NO writes until reviewer verdict + dry-run (Codicil 2 + verdict gate).**
+- KEEP basis: same-referent repeats (Hezekiah ×7, Elijah, Jehu, Baal ×6, Jezreel the
+  city ×4, Judah kingdom folds, Shaphan, Jehoiada, Ahaziah-of-JUDAH ×6 incl. 2Ki 9:23
+  and 10:13). The verse-grain binder was referent-aware where a verse holds only ONE
+  of the two same-named kings: 2Ch 22:5/22:7, 2Ki 8:28, 9:14, 9:16, 9:21 all correctly
+  carry Joram-of-ISRAEL; 2Ch 4:11 correctly the craftsman Hiram; Joash 2Ki 13:13/13:25
+  correctly Israel's Joash; urijah→Uriah is the accepted name-equation class.
+- The 5 wrong-paint groups are all MIXED verses — both Jehorams present, one paint:
+
+### PROPOSED slot binds (batch 3) — awaiting reviewer per-row verdict, then dry-run
+Entities: JUDAH = Jehoram@1Ki.22.50-Mat (son of Jehoshaphat) · ISRAEL =
+Joram@2Ki.1.17-2Ch (son of Ahab). Evidence class throughout: kin-in-verse
+(the epithet printed adjacent to the slot). Rosters: in the batch-3 receipt.
+1. **2Ch 22:6 jehoram p[2,28,34]** painted JUDAH. Propose: p2 → ISRAEL (the king
+   wounded at Ramoth, treated in Jezreel — continues 22:5's Israel narrative);
+   p28 KEEP JUDAH ("Ahaziah son of Jehoram, king of Judah"); p34 → ISRAEL
+   ("Jehoram son of Ahab in Jezreel").
+2. **2Ki 1:17 jehoram p[11,27]** painted JUDAH. Propose: p11 → ISRAEL ("Jehoram
+   the brother of Ahaziah reigned instead of him" — TIPNR first-names this entity
+   at this very verse); p27 KEEP JUDAH ("Jehoram son of Jehoshaphat king of Judah").
+3. **2Ki 8:16 jehoram p[4,10]** painted JUDAH. Propose: p4 → ISRAEL ("Jehoram son
+   of Ahab king of Israel"); p10 KEEP JUDAH ("Jehoram son of Jehoshaphat king of
+   Judah reigned").
+4. **2Ki 8:25 jehoram p[4,12]** painted JUDAH. Propose: p4 → ISRAEL ("Jehoram son
+   of Ahab king of Israel"); p12 KEEP JUDAH ("Ahaziah son of Jehoram king of Judah").
+5. **2Ki 8:29 jehoram p[4,31,38]** painted JUDAH. Propose: p4 → ISRAEL ("king
+   Jehoram returned to be treated in Jezreel" — the Ramoth-wounded king; parallel
+   of 2Ch 22:6); p31 KEEP JUDAH ("Ahaziah son of Jehoram king of Judah");
+   p38 → ISRAEL ("Jehoram son of Ahab in Jezreel").
+Fallback per row if refused: floor stays as-is (verse-grain paint), never a second
+guess in-flight.
+
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
