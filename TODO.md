@@ -113,17 +113,14 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   docs/tickets/LANE_C_adjudication.md + docs/tickets/DRILL_witness_divergence.md — do NOT
   re-derive from here. Census denominator COMMITTED: 591 word-slots / 156 names (2026-07-29).
   Still open:
-  - **Word-position binding lane — SHIPPED + LIVE 2026-08-08** (whole arc in
-    docs/tickets/TICKET_wordpos_binding.md; design DESIGN_wordpos_binding.md; frozen prereg
-    wordpos_prereg_20260807.txt). 95 per-slot binds live (pn_slot_binding, built from
-    scripts/pn_slot_rulings.tsv; re-lands automatically on binder rebuilds, loud refusals),
-    3 honest floors (dishon 1Ch 1:41 p5 · jeiel 1Ch 16:5 p8+p23). /api/metav/entity pos
-    param serves slot-first; verified live in chip + interlinear on mary Mat 27:61 + joash
-    2Ki 14:1 (prose words are non-clickable by design). Two Marys / two Joashes now serve
-    their own cards from one verse. FOLLOW-ON LANES still open: 1,470 bound-painted
-    same-name slots (audit for wrong paints; discovery-time carve-out in force) · Elnatham
-    Ezr 8:16 p15 in-verse variant (bucket-C appendix candidate) · chapter-grain 5 (R3:
-    returns to the reviewer, never auto-folds).
+  - **Word-position binding lane: CLOSED 8/8 → TODO_ARCHIVE.** Follow-on lanes open:
+    - **Bound-painted audit** — 1,470 slots / 713 groups where one verse-level bind
+      paints 2+ same-name words (wrong paints hide here; discovery-time carve-out in
+      force; list regenerates from census_wordpos_multi.py, changes with bind batches).
+    - **Elnatham Ezr 8:16 p15** — in-verse variant-spelling appendix candidate
+      (bucket-C pattern; found at wordpos adjudication).
+    - **Chapter-grain 5** (azariah/joash/benaiah/harim) — per R3, any fold-in RETURNS
+      TO THE REVIEWER; never automatic.
   - **Jabish spelling ruling** — 9 "Jabish Gilead" verses (ABP spells Jabish; the token already
     carries H3003 and serves the Jabesh-gilead card; only the Gilead half unruled) + gilead
     1Ch 10:12 / 2Ch 18:3 ("of Gilead" phrasing). Consistency fix, not coverage.

@@ -34,8 +34,9 @@ position span must carry that bracket_id — interior BLANK slots included (bid 
 greek_pos). Chip/interlinear group only CONSECUTIVE same-bid runs (`groupForGreekMode`),
 so an unmarked interior blank splits the group and mis-orders those modes while PROSE
 STAYS CORRECT (prose groups by bid across gaps) — a prose check alone will not catch it.
-Any hand edit that brackets across a blank slot marks the blank too;
-`fix_lane3_star_merges.py`'s dry-run contiguity check is the mechanical guard.
+Any hand edit that brackets across a blank slot marks the blank too. THE
+classifier is `scripts/bracket_contiguity.py` (one copy — imported by
+fix_lane3_star_merges.py AND check_wordpos_prereg.py; never re-implement it).
 
 **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE
 gloss is parked whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head`
@@ -170,6 +171,25 @@ control live-vs-live FIRST; post-swap captures only valid AFTER the worker reloa
 `build_entity_binding.py` run — ruled binds land as normal pn_binding rows (kind='ruled')
 and re-land automatically on rebuild. Gate: `scripts/gate_pn_rulings.py` (delta pinned to
 the TSV; control first; a batch that replaces a HOT row = stop-and-look).
+
+### pn_slot_binding — word-position slot binds (2026-08-08, lane closed)
+Per-SLOT identity for same-name multi verses (two Marys in one verse), PA-only, keyed
+`(book_num, chapter, verse, position)` — deliberately a SEPARATE table beside pn_binding
+(a position column inside it would let LIMIT-1 verse-grain reads paint whole verses).
+Source of truth = repo `scripts/pn_slot_rulings.tsv` (95 rows; a floored slot = NO row;
+`name` = the printed english_head AT the slot — the staleness tripwire). Written by
+`scripts/build_slot_binding.py` (guards G1-G4: stale-name refuse · entity+referent-kind
+check (rows may point at PLACE/group entities — Cushi = the land Cush, Judah = the people
+via the patriarch) · precedence: lands only where verse grain declines, collision =
+stop-and-look · duplicates need the same-referent flag). Manual `--apply` is
+all-or-nothing; `build_entity_binding.py --apply` re-lands it automatically PER-ROW with
+loud `!! REFUSED` lines (a stale row floors only itself, never silently). Served by
+`/api/metav/entity?...&pos=` — slot bind FIRST with compact name match; no pos/table/row
+→ verse-grain byte-same. Frontend sends `entry.position` (pnClickPayload untouched).
+PROSE-mode words are NON-CLICKABLE by design — PN click paths are chip + interlinear only.
+Read-only checker: `scripts/check_wordpos_prereg.py` (position-integrity gates R1-R6 +
+`--controls` red-first; entity correctness is reviewer-verdict territory, Codicil 2).
+Full arc + rulings: docs/tickets/TICKET_wordpos_binding.md; memory `project_wordpos_binding`.
 
 ### tipnr_metav_link
 Cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).

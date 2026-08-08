@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-08 — Word-position binding lane SHIPPED + LIVE + CLOSED (reviewer close-out)
+
+Whole arc in one day, census→shipped: design ratified (+C1-C3), prereg filled from
+JP-run live dumps, both tranches ratified + FROZEN, controls red-first (6/6), dry-run
+PASS (95/95), apply exactly 95, deploy, four JP-run in-app checks PASS on screenshots.
+Result: **95 per-slot binds live (`pn_slot_binding`, rule='slot-ruled'), 3 honest
+floors** (Dishon 1Ch 1:41 p5 · Jeiel 1Ch 16:5 p8+p23). Two Marys / two Joashes now
+serve their own cards from one verse; person-vs-place pairs (Haran/Jezreel/Gilead)
+bind mixed kinds. Rulings durable in `scripts/pn_slot_rulings.tsv`; rebuilds re-land
+per-row with loud refusals. Records: `docs/tickets/TICKET_wordpos_binding.md` +
+`DESIGN_wordpos_binding.md` + frozen `wordpos_prereg_20260807.txt`; memory
+`project_wordpos_binding`. Lessons of record: exact-match candidate rosters banned
+(4 misses in one lane); prose-mode words are non-clickable by design; a defect found
+mid-lane inherits the lane's gate (2Sa bracket repair sequence-skip, retroactively
+ratified); TIPNR files 2Sa-18 "Cushi" under the LAND Cush. Side repair: 2Sa 18:31 p7 +
+18:32 p15 interior blanks bracket-marked (lane-③ class members, live defects fixed).
+Backup marker: rollback copies persist until a clean nightly postdates the 00:31 apply.
+
 ## 2026-08-07 — Word-position lane GATE PHASE closed (census frozen + R1–R4 ruled)
 
 Full record = `docs/tickets/TICKET_wordpos_binding.md` (assembled charter — the lane
