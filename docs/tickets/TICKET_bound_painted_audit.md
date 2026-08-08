@@ -46,8 +46,17 @@ for JP/reviewer review — never a best-guess write. Verdict gate applies throug
 JP-run dry-run paste → verdict (expected beside actual) → apply.
 
 ## Status
-- [ ] Fresh census run on PA (JP) — painted-bucket list pasted, controls OK
-- [ ] Worklist frozen from that paste; batches cut
+- [x] Fresh census run on PA (JP, 2026-08-08) — all 3 controls OK; counts match the
+      parked sizing exactly (1,470 slots / 713 groups; lane figure 96/47/46/28
+      unchanged, so the 8/8 apply moved nothing). Bucket C = the malchiah pair only.
+- [x] Worklist frozen: docs/tickets/boundpainted_worklist_20260808.txt (713 lines,
+      1,470 slots — counts re-verified against the header). PENDING: JP's byte-level
+      diff of the repo file vs his PA census file (transcription check).
+- Batch plan: file order, 100 groups per batch (batch 8 = 13). Checkpoint to JP
+  after each batch; verdict gate on anything that would write.
+- Evidence dump per batch: scripts/dump_boundpainted_batch.py (read-only; prose +
+  slot rows + the paint row w/ referent kind + existing slot binds + near-match
+  roster per group).
 - [ ] Batch adjudication (rosters attached per group)
 - [ ] Loud-refusal list → review
 - [ ] Dry-run → verdicts → apply → deploy → 3-mode verification
