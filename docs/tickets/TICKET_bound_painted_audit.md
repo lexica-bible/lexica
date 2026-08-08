@@ -61,8 +61,37 @@ JP-run dry-run paste → verdict (expected beside actual) → apply.
 - [ ] Loud-refusal list → review
 - [ ] Dry-run → verdicts → apply → deploy → 3-mode verification
 
+## Batch 1 — ADJUDICATED 2026-08-08 (groups 1-100, 1Ch 1:18 → 1Ki 15:18 asa)
+Evidence + rosters: receipts_boundpainted_batch1.txt (JP-run dump, 100 groups,
+0 red flags from the script; byte-verified vs PA). Verdict: **98 KEEP / 2 FLAGGED,
+zero writes** — no slot binds proposed, so no dry-run/apply cycle for this batch.
+- KEEP basis: every kept group's slots are the same referent repeated in one verse
+  (genealogy chains "X fathered N, and N fathered Y"; narrative repeats of one
+  actor; tribe/kingdom refs riding the patriarch entity per the eponym doctrine).
+  Notable correct pairs where TWO entities of one name exist and the verse-grain
+  binds already picked the right one per verse: the two Amariahs (1Ch 6:7 vs 6:11),
+  the two Zadok lines (6:8 vs 6:12), Hiram the king (1Ki 5:1/9:11) vs Hiram the
+  craftsman (7:40), Levite Kish 1Ch 24:29 (not Saul's father).
+- KEEP-WITH-NOTE (no action, recorded): 1Ch 16:38 obed — a two-Obed-edom reading
+  exists (musician vs gatekeeper son of Jeduthun) but TIPNR carries ONE entity, so
+  no rival candidate; TIPNR equation stands. · 1Ki 4:5 nathan — traditional reading
+  is the same Nathan fathering both officers; no positive evidence of two. ·
+  1Ki 11:18/11:20 pharaoh — per-reign Pharaoh disambiguation is the PARKED pile V
+  (out-of-scope flag line only; both slots same referent within each verse).
+
 ## Loud-refusal list
-(empty)
+- **1Ch 6:26 elkanah p[0, 1]** — prose reads "Elkanah — Elkanah his son, Zophai
+  his son": the descending-chain reading makes p0 and p1 a FATHER AND SON both
+  named Elkanah (the Kohathite line has several); the one paint
+  (Elkanah@1Ch.6.26-) may be wrong for one slot. KJV reads it resumptively
+  ("As for Elkanah: the sons of Elkanah"), so the referent split is contested —
+  ambiguous, refused, JP/reviewer to rule.
+- **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
+  Gilead" (the city) while p12 is the REGION Gilead; both painted
+  Gilead@Gen.31.21-Zec (region). If TIPNR carries a Ramoth-gilead entity, p4's
+  paint is wrong-referent. Different-referent evidence is positive here, but the
+  fix shape (slot bind vs compound treatment — chip-merge ticket territory)
+  needs a ruling. Refused, JP/reviewer to rule.
 
 ## Carve-outs discovered this lane
-(none yet)
+(none yet — batch 1 surfaced no wrongly-painted neighbors outside its own groups)

@@ -1,0 +1,4123 @@
+═══ BOUND-PAINTED BATCH 1 (groups 1-100 of 713) ═══
+
+── 1Ch 1:18  cainan  p[4, 6] ──────────────────────────────
+  prose: And Arphaxad procreated Cainan, and Cainan procreated Shelah, and Shelah procreated Eber.
+  slot p  4: english='Cainan,' head='cainan' strongs=*
+  slot p  6: english='Cainan' head='cainan' strongs=*
+  PAINT: bind name='cainan' -> Cainan@Luk.3.36 (referent kind: person)
+  roster:
+    TIPNR person Anan@Neh.10.26
+    TIPNR person Cain@Gen.4.1-Jud
+    TIPNR person Cainan@Luk.3.36
+    TIPNR place  Canaan@Gen.10.18-Act
+    TIPNR person Canaan@Gen.9.18-1Ch
+    metav person 255 Anan
+    metav person 533 Cain
+    metav person 534 Cainan
+    metav person 535 Cainan
+    metav person 914 Canaan
+    metav alias  255 Anan
+    metav alias  533 Cain
+    metav alias  534 Cainan
+    metav alias  535 Cainan
+    metav alias  914 Canaan
+
+── 1Ch 1:18  shelah  p[9, 11] ──────────────────────────────
+  prose: And Arphaxad procreated Cainan, and Cainan procreated Shelah, and Shelah procreated Eber.
+  slot p  9: english='Shelah,' head='shelah' strongs=*
+  slot p 11: english='Shelah' head='shelah' strongs=*
+  PAINT: bind name='shelah' -> Shelah@Gen.10.24-Luk (referent kind: person)
+  roster:
+    TIPNR person Asharelah@1Ch.25.2-
+    TIPNR person Elah@1Ch.4.15
+    TIPNR person Elah@1Ch.9.8
+    TIPNR person Elah@1Ki.16.6-
+    TIPNR person Elah@2Ki.15.30-
+    TIPNR person Elah@Gen.36.41-1Ch
+    TIPNR person Helah@1Ch.4.5-
+    TIPNR place  Helbah@Jdg.1.31
+    TIPNR place  Sela@Jdg.1.36-Isa
+    TIPNR other  Selah@Psa.3.2-Hab
+    TIPNR person Shelah@Gen.10.24-Luk
+    TIPNR person Shelah@Gen.38.5-1Ch
+    TIPNR place  Shelah@Neh.2.14-Jhn
+    TIPNR person Shelemiah@Ezr.10.39
+    TIPNR person Shelemiah@Ezr.10.41
+    TIPNR person Shelemiah@Jer.36.14
+    TIPNR person Shelemiah@Jer.36.26
+    TIPNR person Shelemiah@Jer.37.13
+    TIPNR person Shelemiah@Jer.37.3-
+    TIPNR person Shelemiah@Neh.13.13
+    TIPNR person Shelemiah@Neh.3.30
+    TIPNR place  Shephelah@Deu.1.7-Zec
+    TIPNR person Shuthelah@1Ch.7.21
+    TIPNR person Shuthelah@Num.26.35-1Ch
+    metav person 1043 Elah
+    metav person 1044 Elah
+    metav person 1045 Elah
+    metav person 1046 Elah
+    metav person 1047 Elah
+    metav person 1048 Elah
+    metav person 1478 Helah
+    metav person 2593 Shelah
+    metav person 2594 Shelemiah
+    metav person 2595 Shelemiah
+    metav person 2596 Shelemiah
+    metav person 2597 Shelemiah
+    metav person 2598 Shelemiah
+    metav person 2599 Shelemiah
+    metav person 2600 Shelemiah
+    metav person 2601 Shelemiah
+    metav person 2666 Sherah
+    metav person 2734 Shuthelah
+    metav person 2735 Shuthelah
+    metav alias  1043 Elah
+    metav alias  1044 Elah
+    metav alias  1045 Elah
+    metav alias  1046 Elah
+    metav alias  1047 Elah
+    metav alias  1048 Elah
+    metav alias  1478 Helah
+    metav alias  2593 Shelah
+    metav alias  2594 Shelemiah
+    metav alias  2595 Shelemiah
+    metav alias  2596 Shelemiah
+    metav alias  2597 Shelemiah
+    metav alias  2598 Shelemiah
+    metav alias  2599 Shelemiah
+    metav alias  2600 Shelemiah
+    metav alias  2601 Shelemiah
+    metav alias  2666 Sherah
+    metav alias  2734 Shuthelah
+    metav alias  2735 Shuthelah
+    metav alias  2013 Shelemiah
+    metav alias  2455 Shelah
+
+── 1Ch 2:3  er  p[2, 20] ──────────────────────────────
+  prose: Sons of Judah — Er, and Onan, and Shelah. These three were born to him from the daughter of Shua the Canaanitess. And Er the first-born of Judah was wicked before the LORD, and he killed him.
+  slot p  2: english='Er,' head='er' strongs=*
+  slot p 20: english='Er' head='er' strongs=*
+  PAINT: bind name='er' -> Er@Gen.38.3-1Ch (referent kind: person)
+  roster:
+    TIPNR person Er@1Ch.4.21
+    TIPNR person Er@Gen.38.3-1Ch
+    TIPNR person Er@Luk.3.28
+    TIPNR person Eran@Num.26.36
+    TIPNR person Erastus@Act.19.22-2Ti
+    TIPNR place  Erech@Gen.10.10-Ezr
+    TIPNR person Eri@Gen.46.16-Num
+    TIPNR person Ner@1Sa.14.50-1Ch
+    TIPNR place  Zer@Jos.19.35
+    metav person 1209 Er
+    metav person 1210 Er
+    metav person 1211 Er
+    metav person 1212 Eran
+    metav person 1213 Erastus
+    metav person 1214 Eri
+    metav person 2181 Ner
+    metav alias  1209 Er
+    metav alias  1210 Er
+    metav alias  1211 Er
+    metav alias  1212 Eran
+    metav alias  1213 Erastus
+    metav alias  1214 Eri
+    metav alias  2181 Ner
+    metav alias  23 Ner
+
+── 1Ch 2:3  judah  p[1, 23] ──────────────────────────────
+  prose: Sons of Judah — Er, and Onan, and Shelah. These three were born to him from the daughter of Shua the Canaanitess. And Er the first-born of Judah was wicked before the LORD, and he killed him.
+  slot p  1: english='of Judah —' head='judah' strongs=*
+  slot p 23: english='of Judah' head='judah' strongs=*
+  PAINT: bind name='judah' -> Judah@Gen.29.35-Rev (referent kind: person)
+  roster:
+    TIPNR person Judah@Ezr.10.23
+    TIPNR person Judah@Gen.29.35-Rev
+    TIPNR person Judah@Luk.3.30
+    TIPNR person Judah@Neh.11.9
+    TIPNR person Judah@Neh.12.36
+    TIPNR person Judah@Neh.12.8-
+    TIPNR person Judas@Act.15.22-
+    TIPNR person Judas@Act.5.37
+    TIPNR person Judas@Act.9.11
+    TIPNR person Judas@Mat.10.3-Act
+    TIPNR person Judas@Mat.10.4-Act
+    TIPNR place  Judea@Ezr.9.9-1Th
+    metav person 1749 Juda
+    metav person 1750 Juda
+    metav person 1751 Judah
+    metav person 1752 Judah
+    metav person 1753 Judah
+    metav person 1754 Judah
+    metav person 1755 Judah
+    metav person 1757 Judas
+    metav person 1758 Judas
+    metav person 1759 Judas
+    metav person 1760 Judas
+    metav alias  1749 Juda
+    metav alias  1750 Juda
+    metav alias  1751 Judah
+    metav alias  1752 Judah
+    metav alias  1753 Judah
+    metav alias  1754 Judah
+    metav alias  1755 Judah
+    metav alias  1756 Judas
+    metav alias  1757 Judas
+    metav alias  1758 Judas
+    metav alias  1759 Judas
+    metav alias  1542 Judah
+    metav alias  1751 Judas
+    metav alias  1756 Juda
+    metav alias  1751 Juda
+    metav alias  1815 Judas
+    metav alias  1760 Judas
+
+── 1Ch 2:10  amminadab  p[4, 6] ──────────────────────────────
+  prose: And Ram procreated Amminadab; and Amminadab procreated Nahshon, ruler of the house of Judah.
+  slot p  4: english='Amminadab;' head='amminadab' strongs=*
+  slot p  6: english='Amminadab' head='amminadab' strongs=*
+  PAINT: bind name='amminadab' -> Amminadab@Exo.6.23-Luk (referent kind: person)
+  roster:
+    TIPNR person Abinadab@1Ki.4.11
+    TIPNR person Abinadab@1Sa.14.49-1Ch
+    TIPNR person Abinadab@1Sa.16.8-1Ch
+    TIPNR person Abinadab@1Sa.7.1-1Ch
+    TIPNR person Ahinadab@1Ki.4.14
+    TIPNR person Amminadab@1Ch.15.10-
+    TIPNR person Amminadab@Exo.6.23-Luk
+    TIPNR person Amminadib@Sng.6.12
+    metav person 43 Abinadab
+    metav person 44 Abinadab
+    metav person 45 Abinadab
+    metav person 641 Abinadab
+    metav person 151 Ahinadab
+    metav person 228 Amminadab
+    metav person 229 Amminadab
+    metav alias  43 Abinadab
+    metav alias  44 Abinadab
+    metav alias  45 Abinadab
+    metav alias  151 Ahinadab
+    metav alias  228 Amminadab
+    metav alias  229 Amminadab
+    metav alias  228 Aminadab
+    metav alias  641 Abinadab
+    metav alias  658 Amminadab
+
+── 1Ch 2:11  salma  p[4, 6] ──────────────────────────────
+  prose: and Nahshon procreated Salma; and Salma procreated Boaz;
+  slot p  4: english='Salma;' head='salma' strongs=*
+  slot p  6: english='Salma' head='salma' strongs=*
+  PAINT: bind name='salma' -> Salmon@Rut.4.20-Luk (referent kind: person)
+  roster:
+    TIPNR place  Salim@Jhn.3.23
+    TIPNR person Salma@1Ch.2.51-
+    TIPNR person Shalmai@Ezr.2.46-Neh
+    TIPNR person Shama@1Ch.11.44
+    metav person 2455 Salah
+    metav person 2462 Salma
+    metav person 2528 Shalmai
+    metav person 2530 Shama
+    metav alias  2455 Salah
+    metav alias  2462 Salma
+    metav alias  2528 Shalmai
+    metav alias  2530 Shama
+    metav alias  2455 Sala
+    metav alias  2463 Salma
+    metav alias  2529 Shalman
+
+── 1Ch 2:12  obed  p[4, 6] ──────────────────────────────
+  prose: and Boaz procreated Obed; and Obed procreated Jesse;
+  slot p  4: english='Obed;' head='obed' strongs=*
+  slot p  6: english='Obed' head='obed' strongs=*
+  PAINT: bind name='obed' -> Obed@Rut.4.17-Luk (referent kind: person)
+  roster:
+    TIPNR person Obed-edom@2Sa.6.10-2Ch
+    TIPNR person Obed@1Ch.11.47
+    TIPNR person Obed@1Ch.2.37-
+    TIPNR person Obed@1Ch.26.7
+    TIPNR person Obed@2Ch.23.1
+    TIPNR person Obed@Rut.4.17-Luk
+    metav person 2228 Obed
+    metav person 2229 Obed
+    metav person 2230 Obed
+    metav person 2231 Obed
+    metav person 2232 Obed
+    metav alias  2228 Obed
+    metav alias  2229 Obed
+    metav alias  2230 Obed
+    metav alias  2231 Obed
+    metav alias  2232 Obed
+
+── 1Ch 2:17  amasa  p[4, 7] ──────────────────────────────
+  prose: And Abigail bore Amasa; and the father of Amasa was Jether the Ishmeelite.
+  slot p  4: english='Amasa;' head='amasa' strongs=*
+  slot p  7: english='of Amasa' head='amasa' strongs=*
+  PAINT: bind name='amasa' -> Amasa@2Sa.17.25-1Ch (referent kind: person)
+  roster:
+    TIPNR place  Amana@Sng.4.8
+    TIPNR person Amasa@2Ch.28.12
+    TIPNR person Amasa@2Sa.17.25-1Ch
+    TIPNR person Amasai@1Ch.12.18
+    TIPNR person Amasai@1Ch.15.24
+    TIPNR person Amasai@1Ch.6.25-
+    TIPNR person Amasai@2Ch.29.12
+    TIPNR person Amasiah@2Ch.17.16
+    TIPNR person Massa@Gen.25.14-1Ch
+    metav person 207 Amasa
+    metav person 208 Amasa
+    metav person 209 Amasai
+    metav person 210 Amasai
+    metav person 211 Amasai
+    metav person 212 Amasai
+    metav person 213 Amasiah
+    metav person 1945 Massa
+    metav alias  207 Amasa
+    metav alias  208 Amasa
+    metav alias  209 Amasai
+    metav alias  210 Amasai
+    metav alias  211 Amasai
+    metav alias  212 Amasai
+    metav alias  213 Amasiah
+    metav alias  1945 Massa
+    metav alias  1870 Amashai
+
+── 1Ch 2:20  uri  p[4, 6] ──────────────────────────────
+  prose: And Hur procreated Uri. And Uri procreated Bezaleel.
+  slot p  4: english='Uri.' head='uri' strongs=*
+  slot p  6: english='Uri' head='uri' strongs=*
+  PAINT: bind name='uri' -> Uri@Exo.31.2-2Ch (referent kind: person)
+  roster:
+    TIPNR person Huri@1Ch.5.14
+    TIPNR person Ur@1Ch.11.35
+    TIPNR place  Ur@Gen.11.28-Neh
+    TIPNR person Uri@1Ki.4.19
+    TIPNR person Uri@Exo.31.2-2Ch
+    TIPNR person Uri@Ezr.10.24
+    TIPNR person Uriah@2Ki.16.10-Isa
+    TIPNR person Uriah@2Sa.11.3-Mat
+    TIPNR person Uriah@Ezr.8.33-Neh
+    TIPNR person Uriah@Jer.26.20-
+    TIPNR person Uriah@Neh.8.4
+    TIPNR person Uriel@1Ch.15.5-
+    TIPNR person Uriel@1Ch.6.24-
+    TIPNR person Uriel@2Ch.13.2
+    TIPNR other  Urim@Exo.28.30-Neh
+    metav person 1576 Huri
+    metav person 2893 Ur
+    metav person 2895 Uri
+    metav person 2896 Uri
+    metav person 2897 Uri
+    metav person 2898 Uriah
+    metav person 2900 Uriel
+    metav person 2901 Uriel
+    metav person 2902 Uriel
+    metav person 2899 Urijah
+    metav person 2903 Urijah
+    metav person 2904 Urijah
+    metav person 2905 Urijah
+    metav alias  1576 Huri
+    metav alias  2893 Ur
+    metav alias  2895 Uri
+    metav alias  2896 Uri
+    metav alias  2897 Uri
+    metav alias  2898 Uriah
+    metav alias  2899 Uriah
+    metav alias  2900 Uriel
+    metav alias  2901 Uriel
+    metav alias  2902 Uriel
+    metav alias  2903 Urijah
+    metav alias  2904 Urijah
+    metav alias  2905 Urijah
+    metav alias  2898 Urias
+    metav alias  2899 Urijah
+    metav alias  2903 Uriah
+
+── 1Ch 2:24  hezron  p[4, 12] ──────────────────────────────
+  prose: And after the dying of Hezron, Caleb came into Ephratah. And the wife of Hezron was Abiah, and she bore to him Ashur father of Tekoa.
+  slot p  4: english='of Hezron,' head='hezron' strongs=*
+  slot p 12: english='of Hezron' head='hezron' strongs=*
+  PAINT: bind name='hezron' -> Hezron@Gen.46.12-Luk (referent kind: person)
+  roster:
+    TIPNR person Hebron@1Ch.2.42-
+    TIPNR person Hebron@Exo.6.18-1Ch
+    TIPNR place  Hebron@Gen.13.18-Neh
+    TIPNR person Hezion@1Ki.15.18
+    TIPNR person Hezro@2Sa.23.35-1Ch
+    TIPNR person Hezron@Gen.46.12-Luk
+    TIPNR person Hezron@Gen.46.9-1Ch
+    metav person 1475 Hebron
+    metav person 1476 Hebron
+    metav person 1515 Hezion
+    metav person 1519 Hezron
+    metav person 1520 Hezron
+    metav alias  1475 Hebron
+    metav alias  1476 Hebron
+    metav alias  1515 Hezion
+    metav alias  1519 Hezron
+    metav alias  1520 Hezron
+    metav alias  1518 Hezro
+
+── 1Ch 2:28  shammai  p[4, 9] ──────────────────────────────
+  prose: And the sons of Onam were — Shammai, and Jada. And the sons of Shammai — Nadab and Abishur.
+  slot p  4: english='Shammai,' head='shammai' strongs=*
+  slot p  9: english='of Shammai —' head='shammai' strongs=*
+  PAINT: bind name='shammai' -> Shammai@1Ch.2.28- (referent kind: person)
+  roster:
+    TIPNR person Shalmai@Ezr.2.46-Neh
+    TIPNR person Shama@1Ch.11.44
+    TIPNR person Shamma@1Ch.7.37
+    TIPNR person Shammah@2Sa.23.11
+    TIPNR person Shammah@2Sa.23.25-1Ch
+    TIPNR person Shammah@2Sa.23.33-1Ch
+    TIPNR person Shammah@Gen.36.13-1Ch
+    TIPNR person Shammai@1Ch.2.28-
+    TIPNR person Shammai@1Ch.2.44-
+    TIPNR person Shammai@1Ch.4.17
+    TIPNR person Shammua@2Sa.5.14-1Ch
+    TIPNR person Shammua@Neh.12.18
+    TIPNR person Shammua@Num.13.4
+    metav person 2528 Shalmai
+    metav person 2530 Shama
+    metav person 2537 Shamma
+    metav person 2538 Shammah
+    metav person 2539 Shammah
+    metav person 2540 Shammah
+    metav person 2700 Shammah
+    metav person 2542 Shammai
+    metav person 2543 Shammai
+    metav person 2544 Shammai
+    metav person 2545 Shammua
+    metav person 2546 Shammua
+    metav person 2547 Shammua
+    metav alias  2528 Shalmai
+    metav alias  2530 Shama
+    metav alias  2537 Shamma
+    metav alias  2538 Shammah
+    metav alias  2539 Shammah
+    metav alias  2540 Shammah
+    metav alias  2541 Shammah
+    metav alias  2542 Shammai
+    metav alias  2543 Shammai
+    metav alias  2544 Shammai
+    metav alias  2545 Shammua
+    metav alias  2546 Shammua
+    metav alias  2624 Shammua
+    metav alias  2700 Shammah
+    metav alias  2547 Shammua
+
+── 1Ch 2:31  ishi  p[3, 6] ──────────────────────────────
+  prose: And the sons of Appaim — Ishi. And the sons of Ishi — Sheshan. And the sons of Sheshan — Ahlai.
+  slot p  3: english='Ishi.' head='ishi' strongs=*
+  slot p  6: english='of Ishi —' head='ishi' strongs=*
+  PAINT: bind name='ishi' -> Ishi@1Ch.2.31 (referent kind: person)
+  roster:
+    TIPNR person Ishi@1Ch.2.31
+    TIPNR person Ishi@1Ch.4.20
+    TIPNR person Ishi@1Ch.4.42
+    TIPNR person Ishi@1Ch.5.24
+    TIPNR person Ishvi@Gen.46.17-1Ch
+    TIPNR person Kishi@1Ch.6.44-
+    TIPNR person Nimshi@1Ki.19.16-2Ch
+    metav person 623 Ishi
+    metav person 624 Ishi
+    metav person 625 Ishi
+    metav person 626 Ishi
+    metav person 627 Ishiah
+    metav person 628 Ishijah
+    metav person 1788 Kishi
+    metav person 2207 Nimshi
+    metav alias  623 Ishi
+    metav alias  624 Ishi
+    metav alias  625 Ishi
+    metav alias  626 Ishi
+    metav alias  627 Ishiah
+    metav alias  628 Ishijah
+    metav alias  641 Ishui
+    metav alias  1788 Kishi
+    metav alias  2207 Nimshi
+    metav alias  648 Ishuai
+
+── 1Ch 2:32  jether  p[5, 10] ──────────────────────────────
+  prose: And the sons of Jada brother of Shammai — Jether and Jonathan; and Jether died not having children.
+  slot p  5: english='Jether' head='jether' strongs=*
+  slot p 10: english='Jether' head='jether' strongs=*
+  PAINT: bind name='jether' -> Jether@1Ch.2.32 (referent kind: person)
+  roster:
+    TIPNR person Esther@Est.2.7-
+    TIPNR place  Ether@Jos.15.42-
+    TIPNR person Gether@Gen.10.23-1Ch
+    TIPNR person Jeatherai@1Ch.6.21-
+    TIPNR person Jesher@1Ch.2.18
+    TIPNR person Jether@1Ch.2.32
+    TIPNR person Jether@1Ch.4.17
+    TIPNR person Jether@2Sa.17.25-1Ch
+    TIPNR person Jether@Jdg.8.20
+    TIPNR person Jethro@Exo.2.18-Num
+    metav person 1343 Esther
+    metav person 1308 Gether
+    metav person 889 Jesher
+    metav person 654 Jether
+    metav person 906 Jether
+    metav person 907 Jether
+    metav person 908 Jether
+    metav person 909 Jether
+    metav person 2431 Jethro
+    metav alias  889 Jesher
+    metav alias  906 Jether
+    metav alias  907 Jether
+    metav alias  908 Jether
+    metav alias  909 Jether
+    metav alias  1308 Gether
+    metav alias  654 Jether
+    metav alias  1343 Esther
+    metav alias  2431 Jethro
+
+── 1Ch 2:36  nathan  p[4, 6] ──────────────────────────────
+  prose: And Attai procreated Nathan, and Nathan procreated Zabad,
+  slot p  4: english='Nathan,' head='nathan' strongs=*
+  slot p  6: english='Nathan' head='nathan' strongs=*
+  PAINT: bind name='nathan' -> Nathan@1Ch.2.36 (referent kind: person)
+  roster:
+    TIPNR person Dathan@Num.16.1-Psa
+    TIPNR person Elnathan@2Ki.24.8
+    TIPNR person Elnathan@Ezr.8.16a
+    TIPNR person Elnathan@Ezr.8.16b
+    TIPNR person Elnathan@Ezr.8.16c
+    TIPNR person Elnathan@Jer.26.22-
+    TIPNR person Jonathan@1Ch.2.32-
+    TIPNR person Jonathan@1Ch.27.25
+    TIPNR person Jonathan@1Sa.13.2-1Ch
+    TIPNR person Jonathan@2Sa.15.27-1Ki
+    TIPNR person Jonathan@2Sa.23.32-1Ch
+    TIPNR person Jonathan@Ezr.10.15
+    TIPNR person Jonathan@Ezr.8.6
+    TIPNR person Jonathan@Jdg.18.30
+    TIPNR person Jonathan@Jer.37.15-
+    TIPNR person Jonathan@Jer.40.8
+    TIPNR person Jonathan@Neh.12.14
+    TIPNR person Jonathan@Neh.12.35
+    TIPNR person Nathan-melech@2Ki.23.11
+    TIPNR person Nathan@1Ch.2.36
+    TIPNR person Nathan@2Sa.23.36-1Ch
+    TIPNR person Nathan@2Sa.5.14-Luk
+    TIPNR person Nathan@2Sa.7.2-Psa
+    TIPNR person Nathan@Ezr.10.39
+    TIPNR person Nathan@Ezr.8.16
+    TIPNR person Nathanael@Jhn.1.45-
+    metav person 982 Dathan
+    metav person 1177 Elnathan
+    metav person 1178 Elnathan
+    metav person 1179 Elnathan
+    metav person 1180 Elnathan
+    metav person 1181 Elnathan
+    metav person 1691 Jonathan
+    metav person 1692 Jonathan
+    metav person 1693 Jonathan
+    metav person 1694 Jonathan
+    metav person 1695 Jonathan
+    metav person 1696 Jonathan
+    metav person 1697 Jonathan
+    metav person 1699 Jonathan
+    metav person 1700 Jonathan
+    metav person 1701 Jonathan
+    metav person 1702 Jonathan
+    metav person 2152 Nathan
+    metav person 2153 Nathan
+    metav person 2154 Nathan
+    metav person 2155 Nathan
+    metav person 2156 Nathan
+    metav person 2157 Nathan
+    metav person 2159 Nathan-melech
+    metav person 2158 Nathanael
+    metav alias  982 Dathan
+    metav alias  1177 Elnathan
+    metav alias  1178 Elnathan
+    metav alias  1179 Elnathan
+    metav alias  1180 Elnathan
+    metav alias  1181 Elnathan
+    metav alias  1691 Jonathan
+    metav alias  1692 Jonathan
+    metav alias  1693 Jonathan
+    metav alias  1694 Jonathan
+    metav alias  1695 Jonathan
+    metav alias  1696 Jonathan
+    metav alias  1697 Jonathan
+    metav alias  1698 Jonathan
+    metav alias  1699 Jonathan
+    metav alias  1700 Jonathan
+    metav alias  1701 Jonathan
+    metav alias  1702 Jonathan
+    metav alias  2152 Nathan
+    metav alias  2153 Nathan
+    metav alias  2154 Nathan
+    metav alias  2155 Nathan
+    metav alias  2156 Nathan
+    metav alias  2157 Nathan
+    metav alias  2158 Nathanael
+    metav alias  1688 Jonathan
+    metav alias  2159 Nathan-melech
+
+── 1Ch 2:38  jehu  p[4, 6] ──────────────────────────────
+  prose: and Obed procreated Jehu, and Jehu procreated Azariah,
+  slot p  4: english='Jehu,' head='jehu' strongs=*
+  slot p  6: english='Jehu' head='jehu' strongs=*
+  PAINT: bind name='jehu' -> Jehu@1Ch.2.38 (referent kind: person)
+  roster:
+    TIPNR person Jehu@1Ch.12.3
+    TIPNR person Jehu@1Ch.2.38
+    TIPNR person Jehu@1Ch.4.35
+    TIPNR person Jehu@1Ki.16.1-2Ch
+    TIPNR person Jehu@1Ki.19.16-Hos
+    TIPNR person Jehubbah@1Ch.7.34
+    TIPNR person Jehucal@Jer.37.3-
+    TIPNR place  Jehud@Jos.19.45
+    TIPNR person Jehudi@Jer.36.14-
+    TIPNR person Jehudijah@1Ch.4.18
+    TIPNR person Jehuel@2Ch.29.14
+    TIPNR person Jeshua@1Ch.24.11-Neh
+    TIPNR person Jeshua@2Ch.31.15
+    TIPNR person Jeshua@Ezr.2.40-Neh
+    TIPNR person Jeshua@Ezr.2.6-Neh
+    TIPNR person Jeshua@Ezr.8.33
+    TIPNR place  Jeshua@Neh.11.26
+    TIPNR person Jeshua@Neh.12.24
+    TIPNR person Jeshua@Neh.3.19
+    metav person 816 Jehu
+    metav person 817 Jehu
+    metav person 818 Jehu
+    metav person 819 Jehu
+    metav person 820 Jehu
+    metav person 821 Jehubbah
+    metav person 823 Jehudi
+    metav person 824 Jehudijah
+    metav person 825 Jehush
+    metav person 892 Jeshua
+    metav person 894 Jeshua
+    metav person 895 Jeshua
+    metav person 896 Jeshua
+    metav person 897 Jeshua
+    metav person 898 Jeshua
+    metav person 899 Jeshua
+    metav alias  816 Jehu
+    metav alias  817 Jehu
+    metav alias  818 Jehu
+    metav alias  819 Jehu
+    metav alias  820 Jehu
+    metav alias  821 Jehubbah
+    metav alias  822 Jehucal
+    metav alias  823 Jehudi
+    metav alias  824 Jehudijah
+    metav alias  825 Jehush
+    metav alias  892 Jeshua
+    metav alias  893 Jeshua
+    metav alias  894 Jeshua
+    metav alias  895 Jeshua
+    metav alias  896 Jeshua
+    metav alias  897 Jeshua
+    metav alias  898 Jeshua
+    metav alias  899 Jeshua
+    metav alias  1727 Jeshua
+    metav alias  899 Jeshua
+
+── 1Ch 2:39  helez  p[4, 6] ──────────────────────────────
+  prose: and Azariah procreated Helez, and Helez procreated Eleasah,
+  slot p  4: english='Helez,' head='helez' strongs=*
+  slot p  6: english='Helez' head='helez' strongs=*
+  PAINT: bind name='helez' -> Helez@1Ch.2.39 (referent kind: person)
+  roster:
+    TIPNR person Heleb@2Sa.23.29-1Ch
+    TIPNR person Helek@Num.26.30-Jos
+    TIPNR person Helez@1Ch.2.39
+    TIPNR person Helez@2Sa.23.26-1Ch
+    metav person 1480 Heleb
+    metav person 1481 Helek
+    metav person 1479 Helem
+    metav person 1482 Helez
+    metav person 1483 Helez
+    metav alias  1480 Heleb
+    metav alias  1481 Helek
+    metav alias  1482 Helez
+    metav alias  1483 Helez
+    metav alias  1479 Helem
+    metav alias  1480 Heled
+    metav alias  1562 Helem
+
+── 1Ch 2:46  haran  p[7, 15] ──────────────────────────────
+  prose: And Ephah the concubine of Caleb bore Haran, and Moza, and Gazez. And Haran procreated Gazez.
+  slot p  7: english='Haran,' head='haran' strongs=*
+  slot p 15: english='Haran' head='haran' strongs=*
+  PAINT: bind name='haran' -> Haran@1Ch.2.46 (referent kind: person)
+  slot-bind exists: p13 gazez -> Gazez@1Ch.2.46a
+  slot-bind exists: p18 gazez -> Gazez@1Ch.2.46b
+  roster:
+    TIPNR person Aran@Gen.36.28-1Ch
+    TIPNR person Arnan@1Ch.3.21
+    TIPNR person Haman@Est.3.1-
+    TIPNR person Hanan@1Ch.11.43
+    TIPNR person Hanan@1Ch.8.23
+    TIPNR person Hanan@1Ch.8.38-
+    TIPNR person Hanan@Ezr.2.46-Neh
+    TIPNR person Hanan@Jer.35.4
+    TIPNR person Hanan@Neh.10.22
+    TIPNR person Hanan@Neh.10.26
+    TIPNR person Hanan@Neh.13.13
+    TIPNR person Hanan@Neh.8.7-
+    TIPNR place  Hara@1Ch.5.26
+    TIPNR person Haran@1Ch.2.46
+    TIPNR person Haran@1Ch.23.9
+    TIPNR person Haran@Gen.11.26-
+    TIPNR place  Haran@Gen.11.31-Act
+    TIPNR place  Hauran@Ezk.47.16-
+    TIPNR place  Paran@Gen.21.21-1Ki
+    metav person 288 Aran
+    metav person 310 Arnan
+    metav person 1360 Haman
+    metav person 1370 Hanan
+    metav person 1371 Hanan
+    metav person 1372 Hanan
+    metav person 1373 Hanan
+    metav person 1374 Hanan
+    metav person 1375 Hanan
+    metav person 1376 Hanan
+    metav person 1377 Hanan
+    metav person 1378 Hanan
+    metav person 1407 Haran
+    metav person 1408 Haran
+    metav person 1409 Haran
+    metav alias  288 Aran
+    metav alias  310 Arnan
+    metav alias  1360 Haman
+    metav alias  1370 Hanan
+    metav alias  1371 Hanan
+    metav alias  1372 Hanan
+    metav alias  1373 Hanan
+    metav alias  1374 Hanan
+    metav alias  1375 Hanan
+    metav alias  1376 Hanan
+    metav alias  1377 Hanan
+    metav alias  1378 Hanan
+    metav alias  1407 Haran
+    metav alias  1408 Haran
+    metav alias  1409 Haran
+    metav alias  2841 Thara
+
+── 1Ch 3:19  zerubbabel  p[3, 8] ──────────────────────────────
+  prose: And the sons of Pedaiah — Zerubbabel, and Shimei. And the sons of Zerubbabel — Meshullam, and Hananiah, and Shelomith their sister,
+  slot p  3: english='Zerubbabel,' head='zerubbabel' strongs=*
+  slot p  8: english='of Zerubbabel —' head='zerubbabel' strongs=*
+  PAINT: bind name='zerubbabel' -> Zerubbabel@1Ch.3.19-Mat (referent kind: person)
+  roster:
+    TIPNR place  Zer@Jos.19.35
+    TIPNR person Zerubbabel@1Ch.3.19-Mat
+    TIPNR person Zerubbabel@Luk.3.27
+    metav person 3054 Zerubbabel
+    metav alias  3054 Zerubbabel
+
+── 1Ch 3:22  shemaiah  p[3, 6] ──────────────────────────────
+  prose: And the sons of Shechaniah — Shemaiah. And the sons of Shemaiah — Hattush, and Igeal, and Bariah, and Neariah, and Shaphat — six.
+  slot p  3: english='Shemaiah.' head='shemaiah' strongs=*
+  slot p  6: english='of Shemaiah —' head='shemaiah' strongs=*
+  PAINT: bind name='shemaiah' -> Shemaiah@1Ch.3.22 (referent kind: person)
+  roster:
+    TIPNR person Ishmaiah@1Ch.12.4
+    TIPNR person Ishmaiah@1Ch.27.19
+    TIPNR person Semachiah@1Ch.26.7
+    TIPNR person Seraiah@1Ch.4.13-
+    TIPNR person Seraiah@1Ch.4.35
+    TIPNR person Seraiah@2Ki.25.18-Jer
+    TIPNR person Seraiah@2Ki.25.23-Jer
+    TIPNR person Seraiah@2Sa.8.17-1Ch
+    TIPNR person Seraiah@Ezr.2.2-Neh
+    TIPNR person Seraiah@Jer.36.26
+    TIPNR person Seraiah@Jer.51.59-
+    TIPNR person Sheariah@1Ch.8.38-
+    TIPNR person Shebaniah@1Ch.15.24
+    TIPNR person Shebaniah@Neh.10.12
+    TIPNR person Shebaniah@Neh.10.4-
+    TIPNR person Shebaniah@Neh.9.4-
+    TIPNR person Shecaniah@1Ch.24.11
+    TIPNR person Shecaniah@1Ch.3.21-
+    TIPNR person Shecaniah@2Ch.31.15
+    TIPNR person Shecaniah@Ezr.10.2-Neh
+    TIPNR person Shecaniah@Ezr.8.3
+    TIPNR person Shecaniah@Ezr.8.5
+    TIPNR person Shecaniah@Neh.6.18
+    TIPNR person Shehariah@1Ch.8.26
+    TIPNR person Shelemiah@Ezr.10.39
+    TIPNR person Shelemiah@Ezr.10.41
+    TIPNR person Shelemiah@Jer.36.14
+    TIPNR person Shelemiah@Jer.36.26
+    TIPNR person Shelemiah@Jer.37.13
+    TIPNR person Shelemiah@Jer.37.3-
+    TIPNR person Shelemiah@Neh.13.13
+    TIPNR person Shelemiah@Neh.3.30
+    TIPNR person Shem@Gen.5.32-Luk
+    TIPNR person Shema@1Ch.2.43-
+    TIPNR person Shema@1Ch.5.8
+    TIPNR person Shema@1Ch.8.13
+    TIPNR place  Shema@Jos.15.26
+    TIPNR person Shema@Neh.8.4
+    TIPNR person Shemaah@1Ch.12.3
+    TIPNR person Shemaiah@1Ch.15.8-
+    TIPNR person Shemaiah@1Ch.24.6
+    TIPNR person Shemaiah@1Ch.26.4-
+    TIPNR person Shemaiah@1Ch.3.22
+    TIPNR person Shemaiah@1Ch.4.37
+    TIPNR person Shemaiah@1Ch.5.4
+    TIPNR person Shemaiah@1Ch.9.14-Neh
+    TIPNR person Shemaiah@1Ch.9.16-Neh
+    TIPNR person Shemaiah@1Ki.12.22-2Ch
+    TIPNR person Shemaiah@2Ch.17.8
+    TIPNR person Shemaiah@2Ch.29.14
+    TIPNR person Shemaiah@2Ch.31.15
+    TIPNR person Shemaiah@2Ch.35.9
+    TIPNR person Shemaiah@Ezr.10.21
+    TIPNR person Shemaiah@Ezr.10.31
+    TIPNR person Shemaiah@Ezr.8.13
+    TIPNR person Shemaiah@Ezr.8.16
+    TIPNR person Shemaiah@Jer.26.20
+    TIPNR person Shemaiah@Jer.29.24-
+    TIPNR person Shemaiah@Jer.36.12
+    TIPNR person Shemaiah@Neh.10.8-
+    TIPNR person Shemaiah@Neh.12.35
+    TIPNR person Shemaiah@Neh.12.36
+    TIPNR person Shemaiah@Neh.12.42
+    TIPNR person Shemaiah@Neh.3.29
+    TIPNR person Shemaiah@Neh.6.10
+    TIPNR person Shemariah@1Ch.12.5
+    TIPNR person Shemariah@2Ch.11.19
+    TIPNR person Shemariah@Ezr.10.32
+    TIPNR person Shemariah@Ezr.10.41
+    TIPNR person Shemida@Num.26.32-1Ch
+    metav person 636 Ishmaiah
+    metav person 643 Ismaiah
+    metav person 2487 Semachiah
+    metav person 2494 Seraiah
+    metav person 2495 Seraiah
+    metav person 2496 Seraiah
+    metav person 2497 Seraiah
+    metav person 2498 Seraiah
+    metav person 2499 Seraiah
+    metav person 2500 Seraiah
+    metav person 2531 Shamariah
+    metav person 2565 Sheariah
+    metav person 2572 Shebaniah
+    metav person 2573 Shebaniah
+    metav person 2574 Shebaniah
+    metav person 2575 Shebaniah
+    metav person 2581 Shecaniah
+    metav person 2582 Shecaniah
+    metav person 2592 Shehariah
+    metav person 2594 Shelemiah
+    metav person 2595 Shelemiah
+    metav person 2596 Shelemiah
+    metav person 2597 Shelemiah
+    metav person 2598 Shelemiah
+    metav person 2599 Shelemiah
+    metav person 2600 Shelemiah
+    metav person 2601 Shelemiah
+    metav person 2613 Shem
+    metav person 2614 Shema
+    metav person 2615 Shema
+    metav person 2616 Shema
+    metav person 2617 Shema
+    metav person 2618 Shemaah
+    metav person 2619 Shemaiah
+    metav person 2620 Shemaiah
+    metav person 2621 Shemaiah
+    metav person 2622 Shemaiah
+    metav person 2623 Shemaiah
+    metav person 2624 Shemaiah
+    metav person 2625 Shemaiah
+    metav person 2626 Shemaiah
+    metav person 2627 Shemaiah
+    metav person 2628 Shemaiah
+    metav person 2629 Shemaiah
+    metav person 2630 Shemaiah
+    metav person 2631 Shemaiah
+    metav person 2632 Shemaiah
+    metav person 2633 Shemaiah
+    metav person 2634 Shemaiah
+    metav person 2635 Shemaiah
+    metav person 2636 Shemaiah
+    metav person 2637 Shemaiah
+    metav person 2638 Shemaiah
+    metav person 2639 Shemaiah
+    metav person 2640 Shemaiah
+    metav person 2641 Shemaiah
+    metav person 2642 Shemaiah
+    metav person 2643 Shemaiah
+    metav person 2644 Shemaiah
+    metav person 2645 Shemariah
+    metav person 2646 Shemariah
+    metav person 2647 Shemariah
+    metav person 2650 Shemida
+    metav alias  636 Ishmaiah
+    metav alias  643 Ismaiah
+    metav alias  2487 Semachiah
+    metav alias  2493 Seraiah
+    metav alias  2494 Seraiah
+    metav alias  2495 Seraiah
+    metav alias  2496 Seraiah
+    metav alias  2497 Seraiah
+    metav alias  2498 Seraiah
+    metav alias  2499 Seraiah
+    metav alias  2500 Seraiah
+    metav alias  2531 Shamariah
+    metav alias  2565 Sheariah
+    metav alias  2572 Shebaniah
+    metav alias  2573 Shebaniah
+    metav alias  2574 Shebaniah
+    metav alias  2575 Shebaniah
+    metav alias  2581 Shecaniah
+    metav alias  2582 Shecaniah
+    metav alias  2592 Shehariah
+    metav alias  2594 Shelemiah
+    metav alias  2595 Shelemiah
+    metav alias  2596 Shelemiah
+    metav alias  2597 Shelemiah
+    metav alias  2598 Shelemiah
+    metav alias  2599 Shelemiah
+    metav alias  2600 Shelemiah
+    metav alias  2601 Shelemiah
+    metav alias  2613 Shem
+    metav alias  2614 Shema
+    metav alias  2615 Shema
+    metav alias  2616 Shema
+    metav alias  2617 Shema
+    metav alias  2618 Shemaah
+    metav alias  2619 Shemaiah
+    metav alias  2620 Shemaiah
+    metav alias  2621 Shemaiah
+    metav alias  2622 Shemaiah
+    metav alias  2623 Shemaiah
+    metav alias  2624 Shemaiah
+    metav alias  2625 Shemaiah
+    metav alias  2626 Shemaiah
+    metav alias  2627 Shemaiah
+    metav alias  2628 Shemaiah
+    metav alias  2629 Shemaiah
+    metav alias  2630 Shemaiah
+    metav alias  2631 Shemaiah
+    metav alias  2632 Shemaiah
+    metav alias  2633 Shemaiah
+    metav alias  2634 Shemaiah
+    metav alias  2635 Shemaiah
+    metav alias  2636 Shemaiah
+    metav alias  2637 Shemaiah
+    metav alias  2638 Shemaiah
+    metav alias  2639 Shemaiah
+    metav alias  2640 Shemaiah
+    metav alias  2641 Shemaiah
+    metav alias  2642 Shemaiah
+    metav alias  2643 Shemaiah
+    metav alias  2644 Shemaiah
+    metav alias  2645 Shemariah
+    metav alias  2646 Shemariah
+    metav alias  2647 Shemariah
+    metav alias  2650 Shemida
+    metav alias  2013 Shelemiah
+    metav alias  2650 Shemidah
+
+── 1Ch 4:2  jahath  p[6, 8] ──────────────────────────────
+  prose: and Reaiah son of Shobal procreated Jahath; and Jahath procreated Ahumai, and Lahad. These are the genealogies of Zorathites.
+  slot p  6: english='Jahath;' head='jahath' strongs=*
+  slot p  8: english='Jahath' head='jahath' strongs=*
+  PAINT: bind name='jahath' -> Jahath@1Ch.4.2 (referent kind: person)
+  roster:
+    TIPNR person Jahath@1Ch.23.10-
+    TIPNR person Jahath@1Ch.24.22
+    TIPNR person Jahath@1Ch.4.2
+    TIPNR person Jahath@2Ch.34.12
+    TIPNR person Mahath@2Ch.29.12
+    TIPNR person Mahath@2Ch.31.13
+    TIPNR person Nahath@2Ch.31.13
+    TIPNR person Nahath@Gen.36.13-1Ch
+    TIPNR person Tahath@1Ch.6.24-
+    TIPNR person Tahath@1Ch.7.20a
+    TIPNR person Tahath@1Ch.7.20b
+    TIPNR place  Tahath@Num.33.26-
+    metav person 690 Jahath
+    metav person 692 Jahath
+    metav person 693 Jahath
+    metav person 694 Jahath
+    metav person 150 Mahath
+    metav person 1891 Mahath
+    metav person 1892 Mahath
+    metav person 2140 Nahath
+    metav person 2146 Nahath
+    metav person 2876 Nahath
+    metav person 2814 Tahath
+    metav person 2815 Tahath
+    metav person 2816 Tahath
+    metav alias  690 Jahath
+    metav alias  691 Jahath
+    metav alias  692 Jahath
+    metav alias  693 Jahath
+    metav alias  694 Jahath
+    metav alias  1891 Mahath
+    metav alias  1892 Mahath
+    metav alias  2140 Nahath
+    metav alias  2814 Tahath
+    metav alias  2815 Tahath
+    metav alias  2816 Tahath
+    metav alias  150 Mahath
+    metav alias  1823 Jahath
+    metav alias  2146 Nahath
+    metav alias  2876 Nahath
+    metav alias  2146 Nahath
+
+── 1Ch 4:15  elah  p[6, 11] ──────────────────────────────
+  prose: And the sons of Caleb the son of Jephunneh- Iru, Elah, and Naan. And the sons of Elah — Kenaz.
+  slot p  6: english='Elah,' head='elah' strongs=*
+  slot p 11: english='of Elah —' head='elah' strongs=*
+  PAINT: bind name='elah' -> Elah@1Ch.4.15 (referent kind: person)
+  roster:
+    TIPNR person Eglah@2Sa.3.5-1Ch
+    TIPNR person Ela@1Ki.4.18
+    TIPNR person Elah@1Ch.4.15
+    TIPNR person Elah@1Ch.9.8
+    TIPNR person Elah@1Ki.16.6-
+    TIPNR person Elah@2Ki.15.30-
+    TIPNR person Elah@Gen.36.41-1Ch
+    TIPNR place  Elah_Valley@1Sa.17.2-
+    TIPNR person Elasah@Ezr.10.22
+    TIPNR person Elasah@Jer.29.3
+    TIPNR place  Elath@Deu.2.8-2Ch
+    TIPNR person Eldaah@Gen.25.4-1Ch
+    TIPNR person Elijah@1Ch.8.27
+    TIPNR person Elijah@1Ki.17.1-Jas
+    TIPNR person Elijah@Ezr.10.21
+    TIPNR person Elijah@Ezr.10.26
+    TIPNR person Helah@1Ch.4.5-
+    TIPNR place  Helbah@Jdg.1.31
+    TIPNR person Joelah@1Ch.12.7
+    TIPNR place  Keilah@Jos.15.44-Neh
+    TIPNR other  Selah@Psa.3.2-Hab
+    TIPNR person Shelah@Gen.10.24-Luk
+    TIPNR person Shelah@Gen.38.5-1Ch
+    TIPNR place  Shelah@Neh.2.14-Jhn
+    TIPNR person Telah@1Ch.7.25
+    TIPNR place  Zelzah@1Sa.10.2
+    metav person 1036 Eglah
+    metav person 1042 Eladah
+    metav person 1043 Elah
+    metav person 1044 Elah
+    metav person 1045 Elah
+    metav person 1046 Elah
+    metav person 1047 Elah
+    metav person 1048 Elah
+    metav person 1055 Elasah
+    metav person 1056 Elasah
+    metav person 1057 Eldaah
+    metav person 1081 Eliah
+    metav person 1082 Eliah
+    metav person 1131 Elijah
+    metav person 1132 Elijah
+    metav person 1478 Helah
+    metav person 1661 Joelah
+    metav person 2593 Shelah
+    metav person 2835 Telah
+    metav alias  436 Belah
+    metav alias  1036 Eglah
+    metav alias  1042 Eladah
+    metav alias  1043 Elah
+    metav alias  1044 Elah
+    metav alias  1045 Elah
+    metav alias  1046 Elah
+    metav alias  1047 Elah
+    metav alias  1048 Elah
+    metav alias  1055 Elasah
+    metav alias  1056 Elasah
+    metav alias  1057 Eldaah
+    metav alias  1081 Eliah
+    metav alias  1082 Eliah
+    metav alias  1131 Elijah
+    metav alias  1132 Elijah
+    metav alias  1478 Helah
+    metav alias  1661 Joelah
+    metav alias  2593 Shelah
+    metav alias  2835 Telah
+    metav alias  2455 Shelah
+
+── 1Ch 4:17  jether  p[3, 11] ──────────────────────────────
+  prose: And the sons of Ezra — Jether, and Mered, and Epher, and Jalon. And Jether engendered Miriam, and Shammai, and Ishbah the father of Eshtemoa.
+  slot p  3: english='Jether,' head='jether' strongs=*
+  slot p 11: english='Jether' head='jether' strongs=*
+  PAINT: bind name='jether' -> Jether@1Ch.4.17 (referent kind: person)
+  roster:
+    TIPNR person Esther@Est.2.7-
+    TIPNR place  Ether@Jos.15.42-
+    TIPNR person Gether@Gen.10.23-1Ch
+    TIPNR person Jeatherai@1Ch.6.21-
+    TIPNR person Jesher@1Ch.2.18
+    TIPNR person Jether@1Ch.2.32
+    TIPNR person Jether@1Ch.4.17
+    TIPNR person Jether@2Sa.17.25-1Ch
+    TIPNR person Jether@Jdg.8.20
+    TIPNR person Jethro@Exo.2.18-Num
+    metav person 1343 Esther
+    metav person 1308 Gether
+    metav person 889 Jesher
+    metav person 654 Jether
+    metav person 906 Jether
+    metav person 907 Jether
+    metav person 908 Jether
+    metav person 909 Jether
+    metav person 2431 Jethro
+    metav alias  889 Jesher
+    metav alias  906 Jether
+    metav alias  907 Jether
+    metav alias  908 Jether
+    metav alias  909 Jether
+    metav alias  1308 Gether
+    metav alias  654 Jether
+    metav alias  1343 Esther
+    metav alias  2431 Jethro
+
+── 1Ch 6:4  phinehas  p[4, 6] ──────────────────────────────
+  prose: And Eleazar engendered Phinehas, and Phinehas engendered Abishua,
+  slot p  4: english='Phinehas,' head='phinehas' strongs=*
+  slot p  6: english='Phinehas' head='phinehas' strongs=*
+  PAINT: bind name='phinehas' -> Phinehas@Exo.6.25-Psa (referent kind: person)
+  roster:
+    TIPNR person Phinehas@1Sa.1.3-
+    TIPNR person Phinehas@Exo.6.25-Psa
+    TIPNR person Phinehas@Ezr.8.33
+    metav person 2349 Phinehas
+    metav person 2350 Phinehas
+    metav person 2351 Phinehas
+    metav alias  2349 Phinehas
+    metav alias  2350 Phinehas
+    metav alias  2351 Phinehas
+
+── 1Ch 6:5  bukki  p[3, 4] ──────────────────────────────
+  prose: Abishua engendered Bukki, Bukki engendered Uzzi,
+  slot p  3: english='Bukki,' head='bukki' strongs=*
+  slot p  4: english='Bukki' head='bukki' strongs=*
+  PAINT: bind name='bukki' -> Bukki@1Ch.6.5-Ezr (referent kind: person)
+  roster:
+    TIPNR person Bukki@1Ch.6.5-Ezr
+    TIPNR person Bukki@Num.34.22
+    TIPNR person Bukkiah@1Ch.25.4-
+    metav person 522 Bukki
+    metav person 523 Bukki
+    metav person 524 Bukkiah
+    metav alias  522 Bukki
+    metav alias  523 Bukki
+    metav alias  524 Bukkiah
+
+── 1Ch 6:6  zerahiah  p[3, 5] ──────────────────────────────
+  prose: Uzzi engendered Zerahiah, and Zerahiah engendered Meraioth,
+  slot p  3: english='Zerahiah,' head='zerahiah' strongs=*
+  slot p  5: english='Zerahiah' head='zerahiah' strongs=*
+  PAINT: bind name='zerahiah' -> Zerahiah@1Ch.6.6-Neh (referent kind: person)
+  roster:
+    TIPNR person Beraiah@1Ch.8.21
+    TIPNR person Izrahiah@1Ch.7.3
+    TIPNR person Jezrahiah@Neh.12.42
+    TIPNR person Meraiah@Neh.12.12
+    TIPNR person Seraiah@1Ch.4.13-
+    TIPNR person Seraiah@1Ch.4.35
+    TIPNR person Seraiah@2Ki.25.18-Jer
+    TIPNR person Seraiah@2Ki.25.23-Jer
+    TIPNR person Seraiah@2Sa.8.17-1Ch
+    TIPNR person Seraiah@Ezr.2.2-Neh
+    TIPNR person Seraiah@Jer.36.26
+    TIPNR person Seraiah@Jer.51.59-
+    TIPNR place  Zer@Jos.19.35
+    TIPNR person Zerah@1Ch.6.21-
+    TIPNR person Zerah@2Ch.14.9
+    TIPNR person Zerah@Gen.36.13-1Ch
+    TIPNR person Zerah@Gen.36.33-1Ch
+    TIPNR person Zerah@Gen.38.30-Mat
+    TIPNR person Zerah@Gen.46.10-1Ch
+    TIPNR person Zerahiah@1Ch.6.6-Neh
+    TIPNR person Zerahiah@Ezr.8.4
+    TIPNR person Zeruiah@1Sa.26.6-1Ch
+    metav person 470 Beraiah
+    metav person 659 Izrahiah
+    metav person 1611 Jezrahiah
+    metav person 2002 Meraiah
+    metav person 2494 Seraiah
+    metav person 2495 Seraiah
+    metav person 2496 Seraiah
+    metav person 2497 Seraiah
+    metav person 2498 Seraiah
+    metav person 2499 Seraiah
+    metav person 2500 Seraiah
+    metav person 2984 Zerah
+    metav person 3043 Zerah
+    metav person 3044 Zerah
+    metav person 3045 Zerah
+    metav person 3046 Zerah
+    metav person 3102 Zerah
+    metav person 3047 Zerahiah
+    metav person 3048 Zerahiah
+    metav person 3055 Zeruiah
+    metav alias  469 Berachiah
+    metav alias  470 Beraiah
+    metav alias  659 Izrahiah
+    metav alias  1611 Jezrahiah
+    metav alias  2002 Meraiah
+    metav alias  2493 Seraiah
+    metav alias  2494 Seraiah
+    metav alias  2495 Seraiah
+    metav alias  2496 Seraiah
+    metav alias  2497 Seraiah
+    metav alias  2498 Seraiah
+    metav alias  2499 Seraiah
+    metav alias  2500 Seraiah
+    metav alias  3043 Zerah
+    metav alias  3044 Zerah
+    metav alias  3045 Zerah
+    metav alias  3046 Zerah
+    metav alias  3047 Zerahiah
+    metav alias  3048 Zerahiah
+    metav alias  3055 Zeruiah
+    metav alias  2984 Zerah
+    metav alias  3102 Zerah
+
+── 1Ch 6:7  amariah  p[4, 6] ──────────────────────────────
+  prose: and Maraioth engendered Amariah, and Amariah engendered Ahitub,
+  slot p  4: english='Amariah,' head='amariah' strongs=*
+  slot p  6: english='Amariah' head='amariah' strongs=*
+  PAINT: bind name='amariah' -> Amariah@1Ch.6.7- (referent kind: person)
+  roster:
+    TIPNR person Amariah@1Ch.23.19-
+    TIPNR person Amariah@1Ch.6.11-Ezr
+    TIPNR person Amariah@1Ch.6.7-
+    TIPNR person Amariah@2Ch.19.11
+    TIPNR person Amariah@2Ch.31.15
+    TIPNR person Amariah@Ezr.10.42
+    TIPNR person Amariah@Neh.10.3-
+    TIPNR person Amariah@Neh.11.4
+    TIPNR person Amariah@Zep.1.1
+    TIPNR person Amasiah@2Ch.17.16
+    TIPNR person Amaziah@1Ch.4.34
+    TIPNR person Amaziah@1Ch.6.45
+    TIPNR person Amaziah@2Ki.12.21-2Ch
+    TIPNR person Amaziah@Amo.7.10-
+    TIPNR person Azariah@1Ch.2.38-
+    TIPNR person Azariah@1Ch.2.8
+    TIPNR person Azariah@1Ch.6.13-Ezr
+    TIPNR person Azariah@1Ch.6.9-Ezr
+    TIPNR person Azariah@1Ki.4.2-1Ch
+    TIPNR person Azariah@1Ki.4.5
+    TIPNR person Azariah@2Ch.15.1
+    TIPNR person Azariah@2Ch.21.2
+    TIPNR person Azariah@2Ch.23.1a
+    TIPNR person Azariah@2Ch.23.1b
+    TIPNR person Azariah@2Ch.26.17-
+    TIPNR person Azariah@2Ch.28.12
+    TIPNR person Azariah@2Ch.29.12a
+    TIPNR person Azariah@2Ch.29.12b
+    TIPNR person Azariah@2Ch.31.10-
+    TIPNR person Azariah@Dan.1.6-
+    TIPNR person Azariah@Neh.3.23-
+    TIPNR person Azariah@Neh.7.7-
+    TIPNR person Azariah@Neh.8.7
+    TIPNR person Azariahu@2Ch.21.2
+    TIPNR person Gemariah@Jer.29.3
+    TIPNR person Gemariah@Jer.36.10-
+    TIPNR place  Marah@Exo.15.23-Num
+    TIPNR place  Samaria@1Ki.13.32-Act
+    metav person 198 Amariah
+    metav person 199 Amariah
+    metav person 200 Amariah
+    metav person 201 Amariah
+    metav person 202 Amariah
+    metav person 203 Amariah
+    metav person 204 Amariah
+    metav person 205 Amariah
+    metav person 206 Amariah
+    metav person 213 Amasiah
+    metav person 214 Amaziah
+    metav person 215 Amaziah
+    metav person 216 Amaziah
+    metav person 217 Amaziah
+    metav person 373 Azariah
+    metav person 374 Azariah
+    metav person 376 Azariah
+    metav person 377 Azariah
+    metav person 378 Azariah
+    metav person 379 Azariah
+    metav person 380 Azariah
+    metav person 381 Azariah
+    metav person 382 Azariah
+    metav person 383 Azariah
+    metav person 384 Azariah
+    metav person 385 Azariah
+    metav person 386 Azariah
+    metav person 539 Azariah
+    metav person 540 Azariah
+    metav person 541 Azariah
+    metav person 542 Azariah
+    metav person 543 Azariah
+    metav person 544 Azariah
+    metav person 545 Azariah
+    metav person 2925 Azariah
+    metav person 1295 Gemariah
+    metav person 1296 Gemariah
+    metav person 2531 Shamariah
+    metav alias  198 Amariah
+    metav alias  199 Amariah
+    metav alias  200 Amariah
+    metav alias  201 Amariah
+    metav alias  202 Amariah
+    metav alias  203 Amariah
+    metav alias  204 Amariah
+    metav alias  205 Amariah
+    metav alias  206 Amariah
+    metav alias  213 Amasiah
+    metav alias  214 Amaziah
+    metav alias  215 Amaziah
+    metav alias  216 Amaziah
+    metav alias  217 Amaziah
+    metav alias  373 Azariah
+    metav alias  374 Azariah
+    metav alias  375 Azariah
+    metav alias  376 Azariah
+    metav alias  377 Azariah
+    metav alias  378 Azariah
+    metav alias  379 Azariah
+    metav alias  380 Azariah
+    metav alias  381 Azariah
+    metav alias  382 Azariah
+    metav alias  383 Azariah
+    metav alias  384 Azariah
+    metav alias  385 Azariah
+    metav alias  386 Azariah
+    metav alias  539 Azariah
+    metav alias  540 Azariah
+    metav alias  541 Azariah
+    metav alias  542 Azariah
+    metav alias  543 Azariah
+    metav alias  544 Azariah
+    metav alias  545 Azariah
+    metav alias  1295 Gemariah
+    metav alias  1296 Gemariah
+    metav alias  2531 Shamariah
+    metav alias  2925 Azariah
+    metav alias  121 Azariah
+    metav alias  667 Azariah
+
+── 1Ch 6:8  zadok  p[4, 6] ──────────────────────────────
+  prose: and Ahitub engendered Zadok, and Zadok engendered Ahimaaz,
+  slot p  4: english='Zadok,' head='zadok' strongs=*
+  slot p  6: english='Zadok' head='zadok' strongs=*
+  PAINT: bind name='zadok' -> Zadok@2Sa.8.17-Ezk (referent kind: person)
+  roster:
+    TIPNR person Zadok@1Ch.6.12-Neh
+    TIPNR person Zadok@2Ki.15.33-2Ch
+    TIPNR person Zadok@2Sa.8.17-Ezk
+    TIPNR person Zadok@Mat.1.14
+    TIPNR person Zadok@Neh.10.21
+    TIPNR person Zadok@Neh.13.13
+    TIPNR person Zadok@Neh.3.29
+    TIPNR person Zadok@Neh.3.4
+    metav person 2973 Zadok
+    metav person 2974 Zadok
+    metav person 2975 Zadok
+    metav person 2976 Zadok
+    metav person 2977 Zadok
+    metav person 2978 Zadok
+    metav person 2979 Zadok
+    metav alias  2973 Zadok
+    metav alias  2974 Zadok
+    metav alias  2975 Zadok
+    metav alias  2976 Zadok
+    metav alias  2977 Zadok
+    metav alias  2978 Zadok
+    metav alias  2979 Zadok
+
+── 1Ch 6:11  amariah  p[4, 6] ──────────────────────────────
+  prose: And Azariah engendered Amariah, and Amariah engendered Ahitub,
+  slot p  4: english='Amariah,' head='amariah' strongs=*
+  slot p  6: english='Amariah' head='amariah' strongs=*
+  PAINT: bind name='amariah' -> Amariah@1Ch.6.11-Ezr (referent kind: person)
+  roster:
+    TIPNR person Amariah@1Ch.23.19-
+    TIPNR person Amariah@1Ch.6.11-Ezr
+    TIPNR person Amariah@1Ch.6.7-
+    TIPNR person Amariah@2Ch.19.11
+    TIPNR person Amariah@2Ch.31.15
+    TIPNR person Amariah@Ezr.10.42
+    TIPNR person Amariah@Neh.10.3-
+    TIPNR person Amariah@Neh.11.4
+    TIPNR person Amariah@Zep.1.1
+    TIPNR person Amasiah@2Ch.17.16
+    TIPNR person Amaziah@1Ch.4.34
+    TIPNR person Amaziah@1Ch.6.45
+    TIPNR person Amaziah@2Ki.12.21-2Ch
+    TIPNR person Amaziah@Amo.7.10-
+    TIPNR person Azariah@1Ch.2.38-
+    TIPNR person Azariah@1Ch.2.8
+    TIPNR person Azariah@1Ch.6.13-Ezr
+    TIPNR person Azariah@1Ch.6.9-Ezr
+    TIPNR person Azariah@1Ki.4.2-1Ch
+    TIPNR person Azariah@1Ki.4.5
+    TIPNR person Azariah@2Ch.15.1
+    TIPNR person Azariah@2Ch.21.2
+    TIPNR person Azariah@2Ch.23.1a
+    TIPNR person Azariah@2Ch.23.1b
+    TIPNR person Azariah@2Ch.26.17-
+    TIPNR person Azariah@2Ch.28.12
+    TIPNR person Azariah@2Ch.29.12a
+    TIPNR person Azariah@2Ch.29.12b
+    TIPNR person Azariah@2Ch.31.10-
+    TIPNR person Azariah@Dan.1.6-
+    TIPNR person Azariah@Neh.3.23-
+    TIPNR person Azariah@Neh.7.7-
+    TIPNR person Azariah@Neh.8.7
+    TIPNR person Azariahu@2Ch.21.2
+    TIPNR person Gemariah@Jer.29.3
+    TIPNR person Gemariah@Jer.36.10-
+    TIPNR place  Marah@Exo.15.23-Num
+    TIPNR place  Samaria@1Ki.13.32-Act
+    metav person 198 Amariah
+    metav person 199 Amariah
+    metav person 200 Amariah
+    metav person 201 Amariah
+    metav person 202 Amariah
+    metav person 203 Amariah
+    metav person 204 Amariah
+    metav person 205 Amariah
+    metav person 206 Amariah
+    metav person 213 Amasiah
+    metav person 214 Amaziah
+    metav person 215 Amaziah
+    metav person 216 Amaziah
+    metav person 217 Amaziah
+    metav person 373 Azariah
+    metav person 374 Azariah
+    metav person 376 Azariah
+    metav person 377 Azariah
+    metav person 378 Azariah
+    metav person 379 Azariah
+    metav person 380 Azariah
+    metav person 381 Azariah
+    metav person 382 Azariah
+    metav person 383 Azariah
+    metav person 384 Azariah
+    metav person 385 Azariah
+    metav person 386 Azariah
+    metav person 539 Azariah
+    metav person 540 Azariah
+    metav person 541 Azariah
+    metav person 542 Azariah
+    metav person 543 Azariah
+    metav person 544 Azariah
+    metav person 545 Azariah
+    metav person 2925 Azariah
+    metav person 1295 Gemariah
+    metav person 1296 Gemariah
+    metav person 2531 Shamariah
+    metav alias  198 Amariah
+    metav alias  199 Amariah
+    metav alias  200 Amariah
+    metav alias  201 Amariah
+    metav alias  202 Amariah
+    metav alias  203 Amariah
+    metav alias  204 Amariah
+    metav alias  205 Amariah
+    metav alias  206 Amariah
+    metav alias  213 Amasiah
+    metav alias  214 Amaziah
+    metav alias  215 Amaziah
+    metav alias  216 Amaziah
+    metav alias  217 Amaziah
+    metav alias  373 Azariah
+    metav alias  374 Azariah
+    metav alias  375 Azariah
+    metav alias  376 Azariah
+    metav alias  377 Azariah
+    metav alias  378 Azariah
+    metav alias  379 Azariah
+    metav alias  380 Azariah
+    metav alias  381 Azariah
+    metav alias  382 Azariah
+    metav alias  383 Azariah
+    metav alias  384 Azariah
+    metav alias  385 Azariah
+    metav alias  386 Azariah
+    metav alias  539 Azariah
+    metav alias  540 Azariah
+    metav alias  541 Azariah
+    metav alias  542 Azariah
+    metav alias  543 Azariah
+    metav alias  544 Azariah
+    metav alias  545 Azariah
+    metav alias  1295 Gemariah
+    metav alias  1296 Gemariah
+    metav alias  2531 Shamariah
+    metav alias  2925 Azariah
+    metav alias  121 Azariah
+    metav alias  667 Azariah
+
+── 1Ch 6:12  zadok  p[4, 6] ──────────────────────────────
+  prose: and Ahitub engendered Zadok, and Zadok engendered Shallum,
+  slot p  4: english='Zadok,' head='zadok' strongs=*
+  slot p  6: english='Zadok' head='zadok' strongs=*
+  PAINT: bind name='zadok' -> Zadok@1Ch.6.12-Neh (referent kind: person)
+  roster:
+    TIPNR person Zadok@1Ch.6.12-Neh
+    TIPNR person Zadok@2Ki.15.33-2Ch
+    TIPNR person Zadok@2Sa.8.17-Ezk
+    TIPNR person Zadok@Mat.1.14
+    TIPNR person Zadok@Neh.10.21
+    TIPNR person Zadok@Neh.13.13
+    TIPNR person Zadok@Neh.3.29
+    TIPNR person Zadok@Neh.3.4
+    metav person 2973 Zadok
+    metav person 2974 Zadok
+    metav person 2975 Zadok
+    metav person 2976 Zadok
+    metav person 2977 Zadok
+    metav person 2978 Zadok
+    metav person 2979 Zadok
+    metav alias  2973 Zadok
+    metav alias  2974 Zadok
+    metav alias  2975 Zadok
+    metav alias  2976 Zadok
+    metav alias  2977 Zadok
+    metav alias  2978 Zadok
+    metav alias  2979 Zadok
+
+── 1Ch 6:14  seraiah  p[4, 6] ──────────────────────────────
+  prose: and Azariah engendered Seraiah, and Seraiah engendered Jehozadak,
+  slot p  4: english='Seraiah,' head='seraiah' strongs=*
+  slot p  6: english='Seraiah' head='seraiah' strongs=*
+  PAINT: bind name='seraiah' -> Seraiah@2Ki.25.18-Jer (referent kind: person)
+  roster:
+    TIPNR person Beraiah@1Ch.8.21
+    TIPNR person Meraiah@Neh.12.12
+    TIPNR person Serah@Gen.46.17-1Ch
+    TIPNR person Seraiah@1Ch.4.13-
+    TIPNR person Seraiah@1Ch.4.35
+    TIPNR person Seraiah@2Ki.25.18-Jer
+    TIPNR person Seraiah@2Ki.25.23-Jer
+    TIPNR person Seraiah@2Sa.8.17-1Ch
+    TIPNR person Seraiah@Ezr.2.2-Neh
+    TIPNR person Seraiah@Jer.36.26
+    TIPNR person Seraiah@Jer.51.59-
+    TIPNR person Sheariah@1Ch.8.38-
+    TIPNR person Shemaiah@1Ch.15.8-
+    TIPNR person Shemaiah@1Ch.24.6
+    TIPNR person Shemaiah@1Ch.26.4-
+    TIPNR person Shemaiah@1Ch.3.22
+    TIPNR person Shemaiah@1Ch.4.37
+    TIPNR person Shemaiah@1Ch.5.4
+    TIPNR person Shemaiah@1Ch.9.14-Neh
+    TIPNR person Shemaiah@1Ch.9.16-Neh
+    TIPNR person Shemaiah@1Ki.12.22-2Ch
+    TIPNR person Shemaiah@2Ch.17.8
+    TIPNR person Shemaiah@2Ch.29.14
+    TIPNR person Shemaiah@2Ch.31.15
+    TIPNR person Shemaiah@2Ch.35.9
+    TIPNR person Shemaiah@Ezr.10.21
+    TIPNR person Shemaiah@Ezr.10.31
+    TIPNR person Shemaiah@Ezr.8.13
+    TIPNR person Shemaiah@Ezr.8.16
+    TIPNR person Shemaiah@Jer.26.20
+    TIPNR person Shemaiah@Jer.29.24-
+    TIPNR person Shemaiah@Jer.36.12
+    TIPNR person Shemaiah@Neh.10.8-
+    TIPNR person Shemaiah@Neh.12.35
+    TIPNR person Shemaiah@Neh.12.36
+    TIPNR person Shemaiah@Neh.12.42
+    TIPNR person Shemaiah@Neh.3.29
+    TIPNR person Shemaiah@Neh.6.10
+    TIPNR person Zerahiah@1Ch.6.6-Neh
+    TIPNR person Zerahiah@Ezr.8.4
+    metav person 470 Beraiah
+    metav person 2002 Meraiah
+    metav person 2492 Serah
+    metav person 2494 Seraiah
+    metav person 2495 Seraiah
+    metav person 2496 Seraiah
+    metav person 2497 Seraiah
+    metav person 2498 Seraiah
+    metav person 2499 Seraiah
+    metav person 2500 Seraiah
+    metav person 2565 Sheariah
+    metav person 2619 Shemaiah
+    metav person 2620 Shemaiah
+    metav person 2621 Shemaiah
+    metav person 2622 Shemaiah
+    metav person 2623 Shemaiah
+    metav person 2624 Shemaiah
+    metav person 2625 Shemaiah
+    metav person 2626 Shemaiah
+    metav person 2627 Shemaiah
+    metav person 2628 Shemaiah
+    metav person 2629 Shemaiah
+    metav person 2630 Shemaiah
+    metav person 2631 Shemaiah
+    metav person 2632 Shemaiah
+    metav person 2633 Shemaiah
+    metav person 2634 Shemaiah
+    metav person 2635 Shemaiah
+    metav person 2636 Shemaiah
+    metav person 2637 Shemaiah
+    metav person 2638 Shemaiah
+    metav person 2639 Shemaiah
+    metav person 2640 Shemaiah
+    metav person 2641 Shemaiah
+    metav person 2642 Shemaiah
+    metav person 2643 Shemaiah
+    metav person 2644 Shemaiah
+    metav person 3047 Zerahiah
+    metav person 3048 Zerahiah
+    metav alias  470 Beraiah
+    metav alias  2002 Meraiah
+    metav alias  2492 Serah
+    metav alias  2493 Seraiah
+    metav alias  2494 Seraiah
+    metav alias  2495 Seraiah
+    metav alias  2496 Seraiah
+    metav alias  2497 Seraiah
+    metav alias  2498 Seraiah
+    metav alias  2499 Seraiah
+    metav alias  2500 Seraiah
+    metav alias  2565 Sheariah
+    metav alias  2619 Shemaiah
+    metav alias  2620 Shemaiah
+    metav alias  2621 Shemaiah
+    metav alias  2622 Shemaiah
+    metav alias  2623 Shemaiah
+    metav alias  2624 Shemaiah
+    metav alias  2625 Shemaiah
+    metav alias  2626 Shemaiah
+    metav alias  2627 Shemaiah
+    metav alias  2628 Shemaiah
+    metav alias  2629 Shemaiah
+    metav alias  2630 Shemaiah
+    metav alias  2631 Shemaiah
+    metav alias  2632 Shemaiah
+    metav alias  2633 Shemaiah
+    metav alias  2634 Shemaiah
+    metav alias  2635 Shemaiah
+    metav alias  2636 Shemaiah
+    metav alias  2637 Shemaiah
+    metav alias  2638 Shemaiah
+    metav alias  2639 Shemaiah
+    metav alias  2640 Shemaiah
+    metav alias  2641 Shemaiah
+    metav alias  2642 Shemaiah
+    metav alias  2643 Shemaiah
+    metav alias  2644 Shemaiah
+    metav alias  3047 Zerahiah
+    metav alias  3048 Zerahiah
+
+── 1Ch 6:26  elkanah  p[0, 1] ──────────────────────────────
+  prose: Elkanah — Elkanah his son, Zophai his son, and Nahath his son,
+  slot p  0: english='Elkanah —' head='elkanah' strongs=*
+  slot p  1: english='Elkanah' head='elkanah' strongs=*
+  PAINT: bind name='elkanah' -> Elkanah@1Ch.6.26- (referent kind: person)
+  roster:
+    TIPNR person Elkanah@1Ch.12.6
+    TIPNR person Elkanah@1Ch.15.23
+    TIPNR person Elkanah@1Ch.6.25-
+    TIPNR person Elkanah@1Ch.6.26-
+    TIPNR person Elkanah@1Ch.9.16
+    TIPNR person Elkanah@1Sa.1.1-1Ch
+    TIPNR person Elkanah@2Ch.28.7
+    TIPNR person Elkanah@Exo.6.24-1Ch
+    TIPNR place  Kanah@Jos.16.8-
+    TIPNR place  Kanah@Jos.19.28-Jhn
+    metav person 1167 Elkanah
+    metav person 1168 Elkanah
+    metav person 1169 Elkanah
+    metav person 1170 Elkanah
+    metav person 1171 Elkanah
+    metav person 1172 Elkanah
+    metav person 1173 Elkanah
+    metav person 1174 Elkanah
+    metav alias  1167 Elkanah
+    metav alias  1168 Elkanah
+    metav alias  1169 Elkanah
+    metav alias  1170 Elkanah
+    metav alias  1171 Elkanah
+    metav alias  1172 Elkanah
+    metav alias  1173 Elkanah
+    metav alias  1174 Elkanah
+
+── 1Ch 6:39  asaph  p[4, 10] ──────────────────────────────
+  prose: And his brother Asaph, the one standing at his right. Asaph son of Berachiah, son of Shimea,
+  slot p  4: english='Asaph,' head='asaph' strongs=*
+  slot p 10: english='Asaph' head='asaph' strongs=*
+  PAINT: bind name='asaph' -> Asaph@1Ch.6.39-Psa (referent kind: person)
+  roster:
+    TIPNR person Asa@1Ch.9.16
+    TIPNR person Asa@1Ki.15.8-Mat
+    TIPNR person Asaph@1Ch.6.39-Psa
+    TIPNR person Asaph@1Ch.9.15-Neh
+    TIPNR person Asaph@2Ki.18.18-Isa
+    TIPNR person Asaph@Neh.2.8
+    TIPNR person Asnah@Ezr.2.50
+    TIPNR person Saph@2Sa.21.18-1Ch
+    metav person 318 Asa
+    metav person 319 Asa
+    metav person 329 Asaph
+    metav person 330 Asaph
+    metav person 331 Asaph
+    metav person 332 Asaph
+    metav person 345 Asnah
+    metav alias  318 Asa
+    metav alias  319 Asa
+    metav alias  329 Asaph
+    metav alias  330 Asaph
+    metav alias  331 Asaph
+    metav alias  332 Asaph
+    metav alias  345 Asnah
+    metav alias  2471 Saph
+    metav alias  19 Asaph
+
+── 1Ch 7:2  tola  p[2, 20] ──────────────────────────────
+  prose: And the sons of Tola — Uzzi, and Raphaiah, and Jeriel, and Jahmai, and Jibsam, and Shemuel, rulers according to the house of their families. To Tola were mighty ones in strength according to their generations; their number in the days of David — twenty and two thousand and six hundred.
+  slot p  2: english='of Tola —' head='tola' strongs=*
+  slot p 20: english='Tola' head='tola' strongs=*
+  PAINT: bind name='tola' -> Tola@Gen.46.13-1Ch (referent kind: person)
+  roster:
+    TIPNR person Tola@Gen.46.13-1Ch
+    TIPNR person Tola@Jdg.10.1
+    TIPNR place  Tolad@1Ch.4.29
+    metav person 2878 Tola
+    metav person 2879 Tola
+    metav alias  2878 Tola
+    metav alias  2879 Tola
+
+── 1Ch 7:8  becher  p[2, 23] ──────────────────────────────
+  prose: And the sons of Becher — Zemira, and Joash, and Eliezer, and Elioenai, and Omri, and Jerimoth, and Abiah, and Anathoth, and Alameth — all these were sons of Becher.
+  slot p  2: english='of Becher —' head='becher' strongs=*
+  slot p 23: english='of Becher.' head='becher' strongs=*
+  PAINT: bind name='becher' -> Becher@Gen.46.21-1Ch (referent kind: person)
+  roster:
+    TIPNR person Becher@Gen.46.21-1Ch
+    TIPNR person Becher@Num.26.35
+    TIPNR place  Beer@Num.21.16
+    TIPNR person Zecher@1Ch.8.31-
+    metav person 423 Becher
+    metav person 424 Becher
+    metav alias  423 Becher
+    metav alias  424 Becher
+
+── 1Ch 7:10  bilhan  p[3, 6] ──────────────────────────────
+  prose: And the sons of Jediael — Bilhan, and the sons of Bilhan — Jeush, and Benjamin, and Ehud, and Chenaanah, and Zethan, and Tharshish, and Ahishahar.
+  slot p  3: english='Bilhan,' head='bilhan' strongs=*
+  slot p  6: english='of Bilhan —' head='bilhan' strongs=*
+  PAINT: bind name='bilhan' -> Bilhan@1Ch.7.10 (referent kind: person)
+  roster:
+    TIPNR place  Bilhah@1Ch.4.29
+    TIPNR person Bilhah@Gen.29.29-1Ch
+    TIPNR person Bilhan@1Ch.7.10
+    TIPNR person Bilhan@Gen.36.27-1Ch
+    TIPNR person Bilshan@Ezr.2.2-Neh
+    metav person 502 Bilhah
+    metav person 503 Bilhan
+    metav person 504 Bilhan
+    metav person 505 Bilshan
+    metav alias  502 Bilhah
+    metav alias  503 Bilhan
+    metav alias  504 Bilhan
+    metav alias  505 Bilshan
+
+── 1Ch 8:33  kish  p[4, 6] ──────────────────────────────
+  prose: And Ner engendered Kish, and Kish engendered Saul, and Saul engendered Jonathan, and Malchishua, and Abinadab, and Esh-baal.
+  slot p  4: english='Kish,' head='kish' strongs=*
+  slot p  6: english='Kish' head='kish' strongs=*
+  PAINT: bind name='kish' -> Kish@1Sa.9.1-Act (referent kind: person)
+  roster:
+    TIPNR person Kish@1Ch.23.21-
+    TIPNR person Kish@1Sa.9.1-Act
+    TIPNR person Kish@2Ch.29.12
+    TIPNR person Kish@Est.2.5
+    TIPNR person Kishi@1Ch.6.44-
+    TIPNR place  Kishion@Jos.19.20-1Ch
+    TIPNR place  Kishon@Jdg.4.7-Psa
+    metav person 1784 Kish
+    metav person 1785 Kish
+    metav person 1786 Kish
+    metav person 1787 Kish
+    metav person 1788 Kishi
+    metav alias  1784 Kish
+    metav alias  1785 Kish
+    metav alias  1786 Kish
+    metav alias  1787 Kish
+    metav alias  1788 Kishi
+
+── 1Ch 8:33  saul  p[9, 11] ──────────────────────────────
+  prose: And Ner engendered Kish, and Kish engendered Saul, and Saul engendered Jonathan, and Malchishua, and Abinadab, and Esh-baal.
+  slot p  9: english='Saul,' head='saul' strongs=*
+  slot p 11: english='Saul' head='saul' strongs=*
+  PAINT: bind name='saul' -> Saul@1Sa.9.2-Act (referent kind: person)
+  roster:
+    TIPNR person Samuel@1Sa.1.20-Heb
+    TIPNR person Saul@1Sa.9.2-Act
+    TIPNR person Shaul@1Ch.6.24-
+    TIPNR person Shaul@Gen.36.37-1Ch
+    TIPNR person Shaul@Gen.46.10-1Ch
+    metav person 2469 Samuel
+    metav person 2478 Saul
+    metav person 2477 Shaul
+    metav person 2562 Shaul
+    metav person 2563 Shaul
+    metav alias  2469 Samuel
+    metav alias  2477 Saul
+    metav alias  2478 Saul
+    metav alias  2479 Saul
+    metav alias  2562 Shaul
+    metav alias  2563 Shaul
+    metav alias  2477 Shaul
+
+── 1Ch 8:36  zimri  p[15, 17] ──────────────────────────────
+  prose: And Ahaz engendered Jehoadah; and Jehoadah engendered Alemeth, and Azmaveth, and Zimri; and Zimri engendered Moza;
+  slot p 15: english='Zimri;' head='zimri' strongs=*
+  slot p 17: english='Zimri' head='zimri' strongs=*
+  PAINT: bind name='zimri' -> Zimri@1Ch.8.36- (referent kind: person)
+  roster:
+    TIPNR person Imri@1Ch.9.4
+    TIPNR person Imri@Neh.3.2
+    TIPNR person Zimri@1Ch.8.36-
+    TIPNR person Zimri@1Ki.16.9-2Ki
+    TIPNR place  Zimri@Jer.25.25
+    TIPNR person Zimri@Num.25.14
+    metav person 604 Imri
+    metav person 605 Imri
+    metav person 2754 Simri
+    metav person 3087 Zimri
+    metav person 3088 Zimri
+    metav person 3089 Zimri
+    metav alias  604 Imri
+    metav alias  605 Imri
+    metav alias  2754 Simri
+    metav alias  3087 Zimri
+    metav alias  3088 Zimri
+    metav alias  3089 Zimri
+    metav alias  2954 Zimri
+
+── 1Ch 9:17  shallum  p[3, 14] ──────────────────────────────
+  prose: And the gatekeepers — Shallum, and Akkub, and Talmon, and Ahiman, and their brethren. Shallum was the ruler.
+  slot p  3: english='Shallum,' head='shallum' strongs=*
+  slot p 14: english='Shallum' head='shallum' strongs=*
+  PAINT: bind name='shallum' -> Shallum@1Ch.9.17-Neh (referent kind: person)
+  roster:
+    TIPNR person Sallu@1Ch.9.7
+    TIPNR person Sallu@Neh.11.7
+    TIPNR person Sallu@Neh.12.7-
+    TIPNR person Shallum@1Ch.2.40-
+    TIPNR person Shallum@1Ch.3.15
+    TIPNR person Shallum@1Ch.4.25
+    TIPNR person Shallum@1Ch.6.12-Neh
+    TIPNR person Shallum@1Ch.9.17-Neh
+    TIPNR person Shallum@2Ch.28.12
+    TIPNR person Shallum@2Ki.15.10-
+    TIPNR person Shallum@2Ki.22.14-2Ch
+    TIPNR person Shallum@Ezr.10.24
+    TIPNR person Shallum@Ezr.10.42
+    TIPNR person Shallum@Jer.32.7
+    TIPNR person Shallum@Jer.35.4
+    TIPNR person Shallum@Neh.3.12
+    TIPNR person Shallum@Neh.3.15
+    metav person 2459 Sallu
+    metav person 2460 Sallu
+    metav person 2461 Sallu
+    metav person 2514 Shallum
+    metav person 2515 Shallum
+    metav person 2517 Shallum
+    metav person 2518 Shallum
+    metav person 2519 Shallum
+    metav person 2520 Shallum
+    metav person 2521 Shallum
+    metav person 2522 Shallum
+    metav person 2523 Shallum
+    metav person 2524 Shallum
+    metav person 2525 Shallum
+    metav person 2526 Shallum
+    metav person 2527 Shallun
+    metav alias  2459 Sallu
+    metav alias  2460 Sallu
+    metav alias  2461 Sallu
+    metav alias  2514 Shallum
+    metav alias  2515 Shallum
+    metav alias  2516 Shallum
+    metav alias  2517 Shallum
+    metav alias  2518 Shallum
+    metav alias  2519 Shallum
+    metav alias  2520 Shallum
+    metav alias  2521 Shallum
+    metav alias  2522 Shallum
+    metav alias  2523 Shallum
+    metav alias  2524 Shallum
+    metav alias  2525 Shallum
+    metav alias  2526 Shallum
+    metav alias  2527 Shallun
+    metav alias  2677 Shallum
+
+── 1Ch 9:39  kish  p[4, 6] ──────────────────────────────
+  prose: And Ner engendered Kish, and Kish engendered Saul, and Saul engendered Jonathan, and Malchishua, and Abinadab, and Esh-baal.
+  slot p  4: english='Kish,' head='kish' strongs=*
+  slot p  6: english='Kish' head='kish' strongs=*
+  PAINT: bind name='kish' -> Kish@1Sa.9.1-Act (referent kind: person)
+  roster:
+    TIPNR person Kish@1Ch.23.21-
+    TIPNR person Kish@1Sa.9.1-Act
+    TIPNR person Kish@2Ch.29.12
+    TIPNR person Kish@Est.2.5
+    TIPNR person Kishi@1Ch.6.44-
+    TIPNR place  Kishion@Jos.19.20-1Ch
+    TIPNR place  Kishon@Jdg.4.7-Psa
+    metav person 1784 Kish
+    metav person 1785 Kish
+    metav person 1786 Kish
+    metav person 1787 Kish
+    metav person 1788 Kishi
+    metav alias  1784 Kish
+    metav alias  1785 Kish
+    metav alias  1786 Kish
+    metav alias  1787 Kish
+    metav alias  1788 Kishi
+
+── 1Ch 9:39  saul  p[9, 11] ──────────────────────────────
+  prose: And Ner engendered Kish, and Kish engendered Saul, and Saul engendered Jonathan, and Malchishua, and Abinadab, and Esh-baal.
+  slot p  9: english='Saul,' head='saul' strongs=*
+  slot p 11: english='Saul' head='saul' strongs=*
+  PAINT: bind name='saul' -> Saul@1Sa.9.2-Act (referent kind: person)
+  roster:
+    TIPNR person Samuel@1Sa.1.20-Heb
+    TIPNR person Saul@1Sa.9.2-Act
+    TIPNR person Shaul@1Ch.6.24-
+    TIPNR person Shaul@Gen.36.37-1Ch
+    TIPNR person Shaul@Gen.46.10-1Ch
+    metav person 2469 Samuel
+    metav person 2478 Saul
+    metav person 2477 Shaul
+    metav person 2562 Shaul
+    metav person 2563 Shaul
+    metav alias  2469 Samuel
+    metav alias  2477 Saul
+    metav alias  2478 Saul
+    metav alias  2479 Saul
+    metav alias  2562 Shaul
+    metav alias  2563 Shaul
+    metav alias  2477 Shaul
+
+── 1Ch 9:42  zimri  p[15, 17] ──────────────────────────────
+  prose: And Ahaz engendered Jarah; and Jarah engendered Alemeth, and Azmaveth, and Zimri; and Zimri engendered Moza;
+  slot p 15: english='Zimri;' head='zimri' strongs=*
+  slot p 17: english='Zimri' head='zimri' strongs=*
+  PAINT: bind name='zimri' -> Zimri@1Ch.8.36- (referent kind: person)
+  roster:
+    TIPNR person Imri@1Ch.9.4
+    TIPNR person Imri@Neh.3.2
+    TIPNR person Zimri@1Ch.8.36-
+    TIPNR person Zimri@1Ki.16.9-2Ki
+    TIPNR place  Zimri@Jer.25.25
+    TIPNR person Zimri@Num.25.14
+    metav person 604 Imri
+    metav person 605 Imri
+    metav person 2754 Simri
+    metav person 3087 Zimri
+    metav person 3088 Zimri
+    metav person 3089 Zimri
+    metav alias  604 Imri
+    metav alias  605 Imri
+    metav alias  2754 Simri
+    metav alias  3087 Zimri
+    metav alias  3088 Zimri
+    metav alias  3089 Zimri
+    metav alias  2954 Zimri
+
+── 1Ch 10:2  saul  p[5, 24] ──────────────────────────────
+  prose: And the Philistines pursued after Saul, and after his sons; and the Philistines struck Jonathan, and Abinadab, and Malchi-shua, sons of Saul.
+  slot p  5: english='Saul,' head='saul' strongs=*
+  slot p 24: english='of Saul.' head='saul' strongs=*
+  PAINT: bind name='saul' -> Saul@1Sa.9.2-Act (referent kind: person)
+  roster:
+    TIPNR person Samuel@1Sa.1.20-Heb
+    TIPNR person Saul@1Sa.9.2-Act
+    TIPNR person Shaul@1Ch.6.24-
+    TIPNR person Shaul@Gen.36.37-1Ch
+    TIPNR person Shaul@Gen.46.10-1Ch
+    metav person 2469 Samuel
+    metav person 2478 Saul
+    metav person 2477 Shaul
+    metav person 2562 Shaul
+    metav person 2563 Shaul
+    metav alias  2469 Samuel
+    metav alias  2477 Saul
+    metav alias  2478 Saul
+    metav alias  2479 Saul
+    metav alias  2562 Shaul
+    metav alias  2563 Shaul
+    metav alias  2477 Shaul
+
+── 1Ch 11:3  hebron  p[10, 19] ──────────────────────────────
+  prose: And all the elders of Israel came to the king in Hebron. And king David ordained with them a covenant in Hebron before the LORD. And they anointed David for king over Israel, according to the word of the LORD through the hand of Samuel.
+  slot p 10: english='Hebron.' head='hebron' strongs=*
+  slot p 19: english='Hebron' head='hebron' strongs=*
+  PAINT: bind name='hebron' -> Hebron@Gen.13.18-Neh (referent kind: place)
+  roster:
+    TIPNR person Hebron@1Ch.2.42-
+    TIPNR person Hebron@Exo.6.18-1Ch
+    TIPNR place  Hebron@Gen.13.18-Neh
+    TIPNR place  Hebron_Valley@Gen.37.14
+    TIPNR place  Helbon@Ezk.27.18
+    TIPNR person Hezron@Gen.46.12-Luk
+    TIPNR person Hezron@Gen.46.9-1Ch
+    metav person 1475 Hebron
+    metav person 1476 Hebron
+    metav person 1519 Hezron
+    metav person 1520 Hezron
+    metav alias  1475 Hebron
+    metav alias  1476 Hebron
+    metav alias  1519 Hezron
+    metav alias  1520 Hezron
+
+── 1Ch 12:19  saul  p[12, 38] ──────────────────────────────
+  prose: And some from Manasseh joined with David in the coming of the Philistines against Saul for war. And David did not help them, for in counsel it came to pass from the commandants of the Philistines, saying, With our heads he will return to his master Saul.
+  slot p 12: english='Saul' head='saul' strongs=*
+  slot p 38: english='Saul.' head='saul' strongs=*
+  PAINT: bind name='saul' -> Saul@1Sa.9.2-Act (referent kind: person)
+  roster:
+    TIPNR person Samuel@1Sa.1.20-Heb
+    TIPNR person Saul@1Sa.9.2-Act
+    TIPNR person Shaul@1Ch.6.24-
+    TIPNR person Shaul@Gen.36.37-1Ch
+    TIPNR person Shaul@Gen.46.10-1Ch
+    metav person 2469 Samuel
+    metav person 2478 Saul
+    metav person 2477 Shaul
+    metav person 2562 Shaul
+    metav person 2563 Shaul
+    metav alias  2469 Samuel
+    metav alias  2477 Saul
+    metav alias  2478 Saul
+    metav alias  2479 Saul
+    metav alias  2562 Shaul
+    metav alias  2563 Shaul
+    metav alias  2477 Shaul
+
+── 1Ch 12:20  manasseh  p[14, 31] ──────────────────────────────
+  prose: And they sent him away. And in David going to Ziklag, some joined with him from Manasseh — Adnah, and Jozabad, and Jediael, and Michael, and Jozabad, and Elihu, and Zilthai — chiefs of thousands of Manasseh.
+  slot p 14: english='Manasseh —' head='manasseh' strongs=*
+  slot p 31: english='Manasseh.' head='manasseh' strongs=*
+  PAINT: bind name='manasseh' -> Manasseh@Gen.41.51-Rev (referent kind: person)
+  slot-bind exists: p17 jozabad -> Jozabad@1Ch.12.20a
+  slot-bind exists: p23 jozabad -> Jozabad@1Ch.12.20b
+  roster:
+    TIPNR person Manasseh@2Ki.20.21-Mat
+    TIPNR person Manasseh@Ezr.10.30
+    TIPNR person Manasseh@Ezr.10.33
+    TIPNR person Manasseh@Gen.41.51-Rev
+    metav person 1928 Manasseh
+    metav person 1929 Manasseh
+    metav person 1930 Manasseh
+    metav person 1931 Manasseh
+    metav person 1932 Manasseh
+    metav alias  1928 Manasseh
+    metav alias  1929 Manasseh
+    metav alias  1930 Manasseh
+    metav alias  1931 Manasseh
+    metav alias  1932 Manasseh
+    metav alias  1928 Manasses
+    metav alias  1930 Manasses
+
+── 1Ch 12:29  saul  p[7, 19] ──────────────────────────────
+  prose: And from the sons of Benjamin, of the brethren of Saul — three thousand. And yet most of them kept the guard of the house of Saul.
+  slot p  7: english='of Saul —' head='saul' strongs=*
+  slot p 19: english='of Saul.' head='saul' strongs=*
+  PAINT: bind name='saul' -> Saul@1Sa.9.2-Act (referent kind: person)
+  roster:
+    TIPNR person Samuel@1Sa.1.20-Heb
+    TIPNR person Saul@1Sa.9.2-Act
+    TIPNR person Shaul@1Ch.6.24-
+    TIPNR person Shaul@Gen.36.37-1Ch
+    TIPNR person Shaul@Gen.46.10-1Ch
+    metav person 2469 Samuel
+    metav person 2478 Saul
+    metav person 2477 Shaul
+    metav person 2562 Shaul
+    metav person 2563 Shaul
+    metav alias  2469 Samuel
+    metav alias  2477 Saul
+    metav alias  2478 Saul
+    metav alias  2479 Saul
+    metav alias  2562 Shaul
+    metav alias  2563 Shaul
+    metav alias  2477 Shaul
+
+── 1Ch 13:14  obed  p[8, 22] ──────────────────────────────
+  prose: And the ark of God stayed in the household of Obed Edom in his house three months. And the LORD blessed the house of Obed Edom, and all of his.
+  slot p  8: english='of Obed' head='obed' strongs=*
+  slot p 22: english='of Obed' head='obed' strongs=*
+  PAINT: bind name='obed' -> Obed-edom@2Sa.6.10-2Ch (referent kind: person)
+  roster:
+    TIPNR person Obed-edom@2Sa.6.10-2Ch
+    TIPNR person Obed@1Ch.11.47
+    TIPNR person Obed@1Ch.2.37-
+    TIPNR person Obed@1Ch.26.7
+    TIPNR person Obed@2Ch.23.1
+    TIPNR person Obed@Rut.4.17-Luk
+    metav person 2228 Obed
+    metav person 2229 Obed
+    metav person 2230 Obed
+    metav person 2231 Obed
+    metav person 2232 Obed
+    metav alias  2228 Obed
+    metav alias  2229 Obed
+    metav alias  2230 Obed
+    metav alias  2231 Obed
+    metav alias  2232 Obed
+
+── 1Ch 14:11  baal  p[3, 34] ──────────────────────────────
+  prose: And he ascended into Baal Perazim. And David struck them there. And David said, God cut through my enemies by my hand as a severance of water. On account of this he called the name of that place — Severance of Baal Perazim.
+  slot p  3: english='Baal' head='baal' strongs=*
+  slot p 34: english='Baal' head='baal' strongs=*
+  PAINT: bind name='baal' -> Baal-perazim@2Sa.5.20-1Ch (referent kind: place)
+  roster:
+    TIPNR other  Baal-berith@Jdg.8.33-
+    TIPNR person Baal-hanan@1Ch.27.28
+    TIPNR person Baal-hanan@Gen.36.38-1Ch
+    TIPNR place  Baal-hazor@2Sa.13.23
+    TIPNR place  Baal-meon@Num.32.3-Ezk
+    TIPNR place  Baal-perazim@2Sa.5.20-1Ch
+    TIPNR place  Baal-shalishah@2Ki.4.42
+    TIPNR place  Baal-tamar@Jdg.20.33
+    TIPNR person Baal-zebub@2Ki.1.2-
+    TIPNR place  Baal-zephon@Exo.14.2-Num
+    TIPNR person Baal@1Ch.5.5
+    TIPNR person Baal@1Ch.8.30-
+    TIPNR other  Baal@Num.25.3-Rom
+    TIPNR place  Baalah@Jos.15.29
+    TIPNR place  Baalah_Mount@Jos.15.11
+    TIPNR place  Baalath-beer@Jos.15.24-1Ch
+    TIPNR place  Baalath@1Ki.9.18-2Ch
+    TIPNR place  Baalath@Jos.19.44
+    TIPNR person Baalis@Jer.40.14
+    metav person 573 Baal
+    metav person 574 Baal
+    metav person 575 Baal
+    metav person 576 Baalhanan
+    metav person 577 Baalhanan
+    metav person 578 Baalis
+    metav person 579 Baalzebub
+    metav alias  573 Baal
+    metav alias  574 Baal
+    metav alias  575 Baal
+    metav alias  578 Baalis
+    metav alias  573 Baal-peor
+    metav alias  576 Baal-hanan
+    metav alias  577 Baal-hanan
+    metav alias  579 Baal-zebub
+
+── 1Ch 16:5  asaph  p[0, 31] ──────────────────────────────
+  prose: Asaph the ruler, and his second Zachariah, and Jeiel, and Shemiramoth, and Jehiel, and Mattithiah, and Eliab, and Benaiah, and Obed Edom, and Jeiel with instruments, with stringed instruments and lutes; and Asaph with cymbals sounding out loud.
+  slot p  0: english='Asaph' head='asaph' strongs=*
+  slot p 31: english='Asaph' head='asaph' strongs=*
+  PAINT: bind name='asaph' -> Asaph@1Ch.6.39-Psa (referent kind: person)
+  roster:
+    TIPNR person Asa@1Ch.9.16
+    TIPNR person Asa@1Ki.15.8-Mat
+    TIPNR person Asaph@1Ch.6.39-Psa
+    TIPNR person Asaph@1Ch.9.15-Neh
+    TIPNR person Asaph@2Ki.18.18-Isa
+    TIPNR person Asaph@Neh.2.8
+    TIPNR person Asnah@Ezr.2.50
+    TIPNR person Saph@2Sa.21.18-1Ch
+    metav person 318 Asa
+    metav person 319 Asa
+    metav person 329 Asaph
+    metav person 330 Asaph
+    metav person 331 Asaph
+    metav person 332 Asaph
+    metav person 345 Asnah
+    metav alias  318 Asa
+    metav alias  319 Asa
+    metav alias  329 Asaph
+    metav alias  330 Asaph
+    metav alias  331 Asaph
+    metav alias  332 Asaph
+    metav alias  345 Asnah
+    metav alias  2471 Saph
+    metav alias  19 Asaph
+
+── 1Ch 16:38  obed  p[1, 11] ──────────────────────────────
+  prose: And Obed Edom and his brethren — sixty and eight. And Obed Edom son of Jeduthun and Hosah were as gatekeepers.
+  slot p  1: english='Obed' head='obed' strongs=*
+  slot p 11: english='Obed' head='obed' strongs=*
+  PAINT: bind name='obed' -> Obed-edom@2Sa.6.10-2Ch (referent kind: person)
+  roster:
+    TIPNR person Obed-edom@2Sa.6.10-2Ch
+    TIPNR person Obed@1Ch.11.47
+    TIPNR person Obed@1Ch.2.37-
+    TIPNR person Obed@1Ch.26.7
+    TIPNR person Obed@2Ch.23.1
+    TIPNR person Obed@Rut.4.17-Luk
+    metav person 2228 Obed
+    metav person 2229 Obed
+    metav person 2230 Obed
+    metav person 2231 Obed
+    metav person 2232 Obed
+    metav alias  2228 Obed
+    metav alias  2229 Obed
+    metav alias  2230 Obed
+    metav alias  2231 Obed
+    metav alias  2232 Obed
+
+── 1Ch 16:42  jeduthun  p[5, 20] ──────────────────────────────
+  prose: And with them Heman and Jeduthun with trumpets and cymbals to sound out loud, and instruments for the odes of God. And the sons of Jeduthun were at the gate.
+  slot p  5: english='Jeduthun' head='jeduthun' strongs=*
+  slot p 20: english='of Jeduthun' head='jeduthun' strongs=*
+  PAINT: bind name='jeduthun' -> Jeduthun@1Ch.6.44-Psa (referent kind: person)
+  roster:
+    TIPNR person Jeduthun@1Ch.6.44-Psa
+    TIPNR person Jeduthun@1Ch.9.16-Neh
+    metav person 762 Jeduthun
+    metav person 1224 Jeduthun
+    metav alias  762 Jeduthun
+    metav alias  1224 Jeduthun
+
+── 1Ch 19:2  hanun  p[6, 38] ──────────────────────────────
+  prose: And David said, I will do an act of kindness with Hanun son of Nahash, as his father performed kindness with me. And David sent messengers to comfort him because of his father. And the servants of David came into the land of the sons of Ammon to Hanun, to comfort him.
+  slot p  6: english='Hanun' head='hanun' strongs=*
+  slot p 38: english='Hanun,' head='hanun' strongs=*
+  PAINT: bind name='hanun' -> Hanun@2Sa.10.1-1Ch (referent kind: person)
+  roster:
+    TIPNR person Hanan@1Ch.11.43
+    TIPNR person Hanan@1Ch.8.23
+    TIPNR person Hanan@1Ch.8.38-
+    TIPNR person Hanan@Ezr.2.46-Neh
+    TIPNR person Hanan@Jer.35.4
+    TIPNR person Hanan@Neh.10.22
+    TIPNR person Hanan@Neh.10.26
+    TIPNR person Hanan@Neh.13.13
+    TIPNR person Hanan@Neh.8.7-
+    TIPNR person Hanun@2Sa.10.1-1Ch
+    TIPNR person Hanun@Neh.3.13
+    TIPNR person Hanun@Neh.3.30
+    metav person 1370 Hanan
+    metav person 1371 Hanan
+    metav person 1372 Hanan
+    metav person 1373 Hanan
+    metav person 1374 Hanan
+    metav person 1375 Hanan
+    metav person 1376 Hanan
+    metav person 1377 Hanan
+    metav person 1378 Hanan
+    metav person 1404 Hanun
+    metav person 1405 Hanun
+    metav person 1406 Hanun
+    metav alias  1370 Hanan
+    metav alias  1371 Hanan
+    metav alias  1372 Hanan
+    metav alias  1373 Hanan
+    metav alias  1374 Hanan
+    metav alias  1375 Hanan
+    metav alias  1376 Hanan
+    metav alias  1377 Hanan
+    metav alias  1378 Hanan
+    metav alias  1404 Hanun
+    metav alias  1405 Hanun
+    metav alias  1406 Hanun
+
+── 1Ch 19:15  joab  p[19, 30] ──────────────────────────────
+  prose: And the sons of Ammon beheld that the Syrians fled, and they fled even themselves from in front of Abishai, and from in front of Joab his brother. And they came into the city. And Joab went to Jerusalem.
+  slot p 19: english='Joab' head='joab' strongs=*
+  slot p 30: english='Joab' head='joab' strongs=*
+  PAINT: bind name='joab' -> Joab@1Sa.26.6-Psa (referent kind: person)
+  roster:
+    TIPNR person Joab@1Ch.4.14
+    TIPNR person Joab@1Sa.26.6-Psa
+    TIPNR person Joab@Ezr.2.6-Neh
+    TIPNR person Joab@Ezr.8.9
+    TIPNR person Job@Job.1.1-Jas
+    TIPNR person Jobab@1Ch.8.18
+    TIPNR person Jobab@1Ch.8.9
+    TIPNR person Jobab@Gen.10.29-1Ch
+    TIPNR person Jobab@Gen.36.33-1Ch
+    TIPNR person Jobab@Jos.11.1
+    metav person 1617 Joab
+    metav person 1618 Joab
+    metav person 1619 Joab
+    metav person 1620 Joab
+    metav person 1639 Job
+    metav person 1640 Jobab
+    metav person 1641 Jobab
+    metav person 1642 Jobab
+    metav person 1643 Jobab
+    metav person 1644 Jobab
+    metav alias  1617 Joab
+    metav alias  1618 Joab
+    metav alias  1619 Joab
+    metav alias  1620 Joab
+    metav alias  1638 Job
+    metav alias  1639 Job
+    metav alias  1640 Jobab
+    metav alias  1641 Jobab
+    metav alias  1642 Jobab
+    metav alias  1643 Jobab
+    metav alias  1644 Jobab
+
+── 1Ch 20:1  joab  p[13, 38] ──────────────────────────────
+  prose: And it came to pass in the year going out, in the exiting of the kings for war, that Joab led all the force of the military, and ruined the place of the sons of Ammon, and came and besieged Rabbah. And David settled in Jerusalem. And Joab struck Rabbah, and razed it.
+  slot p 13: english='Joab' head='joab' strongs=*
+  slot p 38: english='Joab' head='joab' strongs=*
+  PAINT: bind name='joab' -> Joab@1Sa.26.6-Psa (referent kind: person)
+  roster:
+    TIPNR person Joab@1Ch.4.14
+    TIPNR person Joab@1Sa.26.6-Psa
+    TIPNR person Joab@Ezr.2.6-Neh
+    TIPNR person Joab@Ezr.8.9
+    TIPNR person Job@Job.1.1-Jas
+    TIPNR person Jobab@1Ch.8.18
+    TIPNR person Jobab@1Ch.8.9
+    TIPNR person Jobab@Gen.10.29-1Ch
+    TIPNR person Jobab@Gen.36.33-1Ch
+    TIPNR person Jobab@Jos.11.1
+    metav person 1617 Joab
+    metav person 1618 Joab
+    metav person 1619 Joab
+    metav person 1620 Joab
+    metav person 1639 Job
+    metav person 1640 Jobab
+    metav person 1641 Jobab
+    metav person 1642 Jobab
+    metav person 1643 Jobab
+    metav person 1644 Jobab
+    metav alias  1617 Joab
+    metav alias  1618 Joab
+    metav alias  1619 Joab
+    metav alias  1620 Joab
+    metav alias  1638 Job
+    metav alias  1639 Job
+    metav alias  1640 Jobab
+    metav alias  1641 Jobab
+    metav alias  1642 Jobab
+    metav alias  1643 Jobab
+    metav alias  1644 Jobab
+
+── 1Ch 21:4  joab  p[7, 10] ──────────────────────────────
+  prose: But the saying of the king prevailed over Joab. And Joab went forth, and went unto all Israel, and went up unto Jerusalem.
+  slot p  7: english='Joab.' head='joab' strongs=*
+  slot p 10: english='Joab,' head='joab' strongs=*
+  PAINT: bind name='joab' -> Joab@1Sa.26.6-Psa (referent kind: person)
+  roster:
+    TIPNR person Joab@1Ch.4.14
+    TIPNR person Joab@1Sa.26.6-Psa
+    TIPNR person Joab@Ezr.2.6-Neh
+    TIPNR person Joab@Ezr.8.9
+    TIPNR person Job@Job.1.1-Jas
+    TIPNR person Jobab@1Ch.8.18
+    TIPNR person Jobab@1Ch.8.9
+    TIPNR person Jobab@Gen.10.29-1Ch
+    TIPNR person Jobab@Gen.36.33-1Ch
+    TIPNR person Jobab@Jos.11.1
+    metav person 1617 Joab
+    metav person 1618 Joab
+    metav person 1619 Joab
+    metav person 1620 Joab
+    metav person 1639 Job
+    metav person 1640 Jobab
+    metav person 1641 Jobab
+    metav person 1642 Jobab
+    metav person 1643 Jobab
+    metav person 1644 Jobab
+    metav alias  1617 Joab
+    metav alias  1618 Joab
+    metav alias  1619 Joab
+    metav alias  1620 Joab
+    metav alias  1638 Job
+    metav alias  1639 Job
+    metav alias  1640 Jobab
+    metav alias  1641 Jobab
+    metav alias  1642 Jobab
+    metav alias  1643 Jobab
+    metav alias  1644 Jobab
+
+── 1Ch 23:10  shimei  p[2, 12] ──────────────────────────────
+  prose: And sons of Shimei — Jahath, and Zizah, and Jeush, and Beriah. These are sons of Shimei — four.
+  slot p  2: english='of Shimei —' head='shimei' strongs=*
+  slot p 12: english='of Shimei —' head='shimei' strongs=*
+  PAINT: bind name='shimei' -> Shimei@Exo.6.17-Zec (referent kind: person)
+  roster:
+    TIPNR person Shimea@1Ch.6.30
+    TIPNR person Shimea@1Ch.6.39
+    TIPNR person Shimei@1Ch.27.27
+    TIPNR person Shimei@1Ch.3.19
+    TIPNR person Shimei@1Ch.4.26-
+    TIPNR person Shimei@1Ch.5.4
+    TIPNR person Shimei@1Ch.6.29
+    TIPNR person Shimei@1Ch.6.42-
+    TIPNR person Shimei@1Ch.8.21
+    TIPNR person Shimei@1Ki.1.8-
+    TIPNR person Shimei@2Ch.29.14
+    TIPNR person Shimei@2Ch.31.12-
+    TIPNR person Shimei@2Sa.16.5-1Ki
+    TIPNR person Shimei@Est.2.5
+    TIPNR person Shimei@Exo.6.17-Zec
+    TIPNR person Shimei@Ezr.10.23
+    TIPNR person Shimei@Ezr.10.33
+    TIPNR person Shimei@Ezr.10.38
+    TIPNR person Shimri@1Ch.11.45
+    TIPNR person Shimri@1Ch.26.10
+    TIPNR person Shimri@1Ch.4.37
+    TIPNR person Shimri@2Ch.29.13
+    metav person 2680 Shimea
+    metav person 2681 Shimea
+    metav person 691 Shimei
+    metav person 2233 Shimei
+    metav person 2684 Shimei
+    metav person 2685 Shimei
+    metav person 2686 Shimei
+    metav person 2687 Shimei
+    metav person 2688 Shimei
+    metav person 2689 Shimei
+    metav person 2690 Shimei
+    metav person 2691 Shimei
+    metav person 2692 Shimei
+    metav person 2693 Shimei
+    metav person 2694 Shimei
+    metav person 2695 Shimei
+    metav person 2696 Shimei
+    metav person 2699 Shimei
+    metav person 2698 Shimhi
+    metav person 2703 Shimri
+    metav person 2704 Shimri
+    metav person 2705 Shimri
+    metav alias  2680 Shimea
+    metav alias  2681 Shimea
+    metav alias  2684 Shimei
+    metav alias  2685 Shimei
+    metav alias  2686 Shimei
+    metav alias  2687 Shimei
+    metav alias  2688 Shimei
+    metav alias  2689 Shimei
+    metav alias  2690 Shimei
+    metav alias  2691 Shimei
+    metav alias  2692 Shimei
+    metav alias  2693 Shimei
+    metav alias  2694 Shimei
+    metav alias  2695 Shimei
+    metav alias  2696 Shimei
+    metav alias  2698 Shimhi
+    metav alias  2699 Shimi
+    metav alias  2703 Shimri
+    metav alias  2704 Shimri
+    metav alias  2705 Shimri
+    metav alias  691 Shimei
+    metav alias  2233 Shimei
+    metav alias  2547 Shimea
+    metav alias  2699 Shimei
+    metav alias  2700 Shimei
+
+── 1Ch 23:17  eliezer  p[4, 12] ──────────────────────────────
+  prose: And there were sons to Eliezer — Rehabiah the ruler. But there were no other sons to Eliezer. And the sons of Rehabiah increased in stature.
+  slot p  4: english='to Eliezer —' head='eliezer' strongs=*
+  slot p 12: english='sons to Eliezer' head='eliezer' strongs=*
+  PAINT: bind name='eliezer' -> Eliezer@Exo.18.4-1Ch (referent kind: person)
+  roster:
+    TIPNR person Eli@1Sa.1.3-1Ki
+    TIPNR person Eliezer@1Ch.15.24
+    TIPNR person Eliezer@1Ch.27.16
+    TIPNR person Eliezer@1Ch.7.8
+    TIPNR person Eliezer@2Ch.20.37
+    TIPNR person Eliezer@Exo.18.4-1Ch
+    TIPNR person Eliezer@Ezr.10.18
+    TIPNR person Eliezer@Ezr.10.23
+    TIPNR person Eliezer@Ezr.10.31
+    TIPNR person Eliezer@Ezr.8.16
+    TIPNR person Eliezer@Gen.15.2
+    TIPNR person Eliezer@Luk.3.29
+    metav person 1072 Eli
+    metav person 1113 Eliezer
+    metav person 1114 Eliezer
+    metav person 1115 Eliezer
+    metav person 1116 Eliezer
+    metav person 1117 Eliezer
+    metav person 1118 Eliezer
+    metav person 1119 Eliezer
+    metav person 1120 Eliezer
+    metav person 1121 Eliezer
+    metav person 1122 Eliezer
+    metav person 1123 Eliezer
+    metav alias  1072 Eli
+    metav alias  1113 Eliezer
+    metav alias  1114 Eliezer
+    metav alias  1115 Eliezer
+    metav alias  1116 Eliezer
+    metav alias  1117 Eliezer
+    metav alias  1118 Eliezer
+    metav alias  1119 Eliezer
+    metav alias  1120 Eliezer
+    metav alias  1121 Eliezer
+    metav alias  1122 Eliezer
+    metav alias  1123 Eliezer
+
+── 1Ch 23:21  mahli  p[2, 6] ──────────────────────────────
+  prose: The sons of Merari — Mahli and Mushi. The sons of Mahli — Eleazar and Kish.
+  slot p  2: english='Mahli' head='mahli' strongs=*
+  slot p  6: english='of Mahli —' head='mahli' strongs=*
+  PAINT: bind name='mahli' -> Mahli@Exo.6.19-Ezr (referent kind: person)
+  roster:
+    TIPNR person Ahlai@1Ch.11.41
+    TIPNR person Ahlai@1Ch.2.31
+    TIPNR person Machi@Num.13.15
+    TIPNR person Mahli@1Ch.6.47-
+    TIPNR person Mahli@Exo.6.19-Ezr
+    TIPNR person Mahol@1Ki.4.31
+    metav person 166 Ahlai
+    metav person 167 Ahlai
+    metav person 1876 Machi
+    metav person 1889 Mahli
+    metav person 1896 Mahli
+    metav person 1898 Mahol
+    metav alias  166 Ahlai
+    metav alias  167 Ahlai
+    metav alias  1876 Machi
+    metav alias  1889 Mahali
+    metav alias  1896 Mahli
+    metav alias  1898 Mahol
+    metav alias  1889 Mahli
+
+── 1Ch 24:4  eleazar  p[3, 18] ──────────────────────────────
+  prose: And more sons of Eleazar were found as rulers of the mighty ones than of the sons of Ithamar. And he divided them to the sons of Eleazar for rulers for the houses of the families — sixteen. And to the sons of Ithamar according to the houses of their families — eight.
+  slot p  3: english='of Eleazar' head='eleazar' strongs=*
+  slot p 18: english='of Eleazar' head='eleazar' strongs=*
+  PAINT: bind name='eleazar' -> Eleazar@Exo.6.23-Ezr (referent kind: person)
+  roster:
+    TIPNR person Eleazar@1Ch.23.21-
+    TIPNR person Eleazar@1Sa.7.1
+    TIPNR person Eleazar@2Sa.23.9-1Ch
+    TIPNR person Eleazar@Exo.6.23-Ezr
+    TIPNR person Eleazar@Ezr.10.25
+    TIPNR person Eleazar@Ezr.8.33
+    TIPNR person Eleazar@Mat.1.15
+    TIPNR person Eleazar@Neh.12.42
+    metav person 1062 Eleazar
+    metav person 1063 Eleazar
+    metav person 1064 Eleazar
+    metav person 1065 Eleazar
+    metav person 1066 Eleazar
+    metav person 1067 Eleazar
+    metav person 1068 Eleazar
+    metav person 1069 Eleazar
+    metav alias  1062 Eleazar
+    metav alias  1063 Eleazar
+    metav alias  1064 Eleazar
+    metav alias  1065 Eleazar
+    metav alias  1066 Eleazar
+    metav alias  1067 Eleazar
+    metav alias  1068 Eleazar
+    metav alias  1069 Eleazar
+
+── 1Ch 24:20  shubael  p[9, 12] ──────────────────────────────
+  prose: And to the sons of Levi remaining; to the sons of Amram — Shubael; to the sons of Shubael — Jehdeiah;
+  slot p  9: english='Shubael;' head='shubael' strongs=*
+  slot p 12: english='of Shubael —' head='shubael' strongs=*
+  PAINT: bind name='shubael' -> Shebuel@1Ch.23.16- (referent kind: person)
+  roster:
+    TIPNR person Shual@1Ch.7.36-
+    TIPNR place  Shual@1Sa.13.17
+    metav person 2579 Shubael
+    metav person 2580 Shubael
+    metav alias  2730 Shual
+    metav alias  2579 Shubael
+    metav alias  2580 Shubael
+
+── 1Ch 24:25  isshiah  p[3, 6] ──────────────────────────────
+  prose: The brother of Michah — Isshiah; to the son of Isshiah — Zechariah.
+  slot p  3: english='Isshiah;' head='isshiah' strongs=*
+  slot p  6: english='of Isshiah —' head='isshiah' strongs=*
+  PAINT: bind name='isshiah' -> Isshiah@1Ch.23.20- (referent kind: person)
+  roster:
+    TIPNR person Ishmaiah@1Ch.12.4
+    TIPNR person Ishmaiah@1Ch.27.19
+    TIPNR person Isshiah@1Ch.12.6
+    TIPNR person Isshiah@1Ch.23.20-
+    TIPNR person Isshiah@1Ch.24.21-
+    TIPNR person Isshiah@1Ch.7.3
+    TIPNR person Isshijah@Ezr.10.31
+    metav person 627 Ishiah
+    metav person 628 Ishijah
+    metav person 636 Ishmaiah
+    metav person 901 Isshiah
+    metav alias  627 Ishiah
+    metav alias  628 Ishijah
+    metav alias  636 Ishmaiah
+    metav alias  647 Isshiah
+    metav alias  901 Isshiah
+
+── 1Ch 24:29  kish  p[1, 4] ──────────────────────────────
+  prose: To Kish — the sons of Kish — Jerahmeel.
+  slot p  1: english='Kish —' head='kish' strongs=*
+  slot p  4: english='of Kish —' head='kish' strongs=*
+  PAINT: bind name='kish' -> Kish@1Ch.23.21- (referent kind: person)
+  roster:
+    TIPNR person Kish@1Ch.23.21-
+    TIPNR person Kish@1Sa.9.1-Act
+    TIPNR person Kish@2Ch.29.12
+    TIPNR person Kish@Est.2.5
+    TIPNR person Kishi@1Ch.6.44-
+    TIPNR place  Kishion@Jos.19.20-1Ch
+    TIPNR place  Kishon@Jdg.4.7-Psa
+    metav person 1784 Kish
+    metav person 1785 Kish
+    metav person 1786 Kish
+    metav person 1787 Kish
+    metav person 1788 Kishi
+    metav alias  1784 Kish
+    metav alias  1785 Kish
+    metav alias  1786 Kish
+    metav alias  1787 Kish
+    metav alias  1788 Kishi
+
+── 1Ch 25:2  asaph  p[1, 10, 12] ──────────────────────────────
+  prose: The sons of Asaph — Zaccur and Joseph, and Nethaniah, and Asarelah; the sons of Asaph being next to Asaph the prophet, being next to the king.
+  slot p  1: english='of Asaph —' head='asaph' strongs=*
+  slot p 10: english='of Asaph' head='asaph' strongs=*
+  slot p 12: english='Asaph' head='asaph' strongs=*
+  PAINT: bind name='asaph' -> Asaph@1Ch.6.39-Psa (referent kind: person)
+  roster:
+    TIPNR person Asa@1Ch.9.16
+    TIPNR person Asa@1Ki.15.8-Mat
+    TIPNR person Asaph@1Ch.6.39-Psa
+    TIPNR person Asaph@1Ch.9.15-Neh
+    TIPNR person Asaph@2Ki.18.18-Isa
+    TIPNR person Asaph@Neh.2.8
+    TIPNR person Asnah@Ezr.2.50
+    TIPNR person Saph@2Sa.21.18-1Ch
+    metav person 318 Asa
+    metav person 319 Asa
+    metav person 329 Asaph
+    metav person 330 Asaph
+    metav person 331 Asaph
+    metav person 332 Asaph
+    metav person 345 Asnah
+    metav alias  318 Asa
+    metav alias  319 Asa
+    metav alias  329 Asaph
+    metav alias  330 Asaph
+    metav alias  331 Asaph
+    metav alias  332 Asaph
+    metav alias  345 Asnah
+    metav alias  2471 Saph
+    metav alias  19 Asaph
+
+── 1Ch 25:3  jeduthun  p[1, 3, 18] ──────────────────────────────
+  prose: To Jeduthun — the sons of Jeduthun were Gedaliah, and Zeri, and Jeshaiah, and Hashabiah, and Mattithiah — six, along with their father Jeduthun, prophesying with the lute, in acknowledgment and praise to the LORD.
+  slot p  1: english='To Jeduthun —' head='jeduthun' strongs=*
+  slot p  3: english='of Jeduthun' head='jeduthun' strongs=*
+  slot p 18: english='Jeduthun,' head='jeduthun' strongs=*
+  PAINT: bind name='jeduthun' -> Jeduthun@1Ch.6.44-Psa (referent kind: person)
+  roster:
+    TIPNR person Jeduthun@1Ch.6.44-Psa
+    TIPNR person Jeduthun@1Ch.9.16-Neh
+    metav person 762 Jeduthun
+    metav person 1224 Jeduthun
+    metav alias  762 Jeduthun
+    metav alias  1224 Jeduthun
+
+── 1Ch 25:4  heman  p[1, 3] ──────────────────────────────
+  prose: To Heman — the sons of Heman — Bukkiah, and Mattaniah, and Uzziel, and Shebuel, and Jerimoth, and Hananiah, and Hanani, and Eliathah, and Giddalti, and Romamti-ezer, and Joshbekashah, and Mallothi, and Hothir, and Mahazioth.
+  slot p  1: english='To Heman —' head='heman' strongs=*
+  slot p  3: english='of Heman —' head='heman' strongs=*
+  PAINT: bind name='heman' -> Heman@1Ch.6.33-2Ch (referent kind: person)
+  roster:
+    TIPNR person Haman@Est.3.1-
+    TIPNR person Hemam@Gen.36.22-1Ch
+    TIPNR person Heman@1Ch.2.6
+    TIPNR person Heman@1Ch.6.33-2Ch
+    TIPNR person Heman@1Ki.4.31-Psa
+    TIPNR person Hemdan@Gen.36.26-1Ch
+    TIPNR person Shema@1Ch.2.43-
+    TIPNR person Shema@1Ch.5.8
+    TIPNR person Shema@1Ch.8.13
+    TIPNR place  Shema@Jos.15.26
+    TIPNR person Shema@Neh.8.4
+    TIPNR person Teman@Gen.36.11-Job
+    TIPNR place  Teman@Jer.49.7-Hab
+    metav person 1360 Haman
+    metav person 1488 Heman
+    metav person 1489 Heman
+    metav person 1490 Heman
+    metav person 1492 Hemdan
+    metav person 2614 Shema
+    metav person 2615 Shema
+    metav person 2616 Shema
+    metav person 2617 Shema
+    metav person 2838 Teman
+    metav person 2839 Teman
+    metav alias  1360 Haman
+    metav alias  1487 Hemam
+    metav alias  1488 Heman
+    metav alias  1489 Heman
+    metav alias  1490 Heman
+    metav alias  1492 Hemdan
+    metav alias  2614 Shema
+    metav alias  2615 Shema
+    metav alias  2616 Shema
+    metav alias  2617 Shema
+    metav alias  2838 Teman
+    metav alias  2839 Teman
+
+── 1Ch 25:5  heman  p[4, 20] ──────────────────────────────
+  prose: All these were sons to Heman the seer to the king in words of God, to raise up high the horn. And God gave to Heman fourteen sons and three daughters.
+  slot p  4: english='Heman' head='heman' strongs=*
+  slot p 20: english='Heman' head='heman' strongs=*
+  PAINT: bind name='heman' -> Heman@1Ch.6.33-2Ch (referent kind: person)
+  roster:
+    TIPNR person Haman@Est.3.1-
+    TIPNR person Hemam@Gen.36.22-1Ch
+    TIPNR person Heman@1Ch.2.6
+    TIPNR person Heman@1Ch.6.33-2Ch
+    TIPNR person Heman@1Ki.4.31-Psa
+    TIPNR person Hemdan@Gen.36.26-1Ch
+    TIPNR person Shema@1Ch.2.43-
+    TIPNR person Shema@1Ch.5.8
+    TIPNR person Shema@1Ch.8.13
+    TIPNR place  Shema@Jos.15.26
+    TIPNR person Shema@Neh.8.4
+    TIPNR person Teman@Gen.36.11-Job
+    TIPNR place  Teman@Jer.49.7-Hab
+    metav person 1360 Haman
+    metav person 1488 Heman
+    metav person 1489 Heman
+    metav person 1490 Heman
+    metav person 1492 Hemdan
+    metav person 2614 Shema
+    metav person 2615 Shema
+    metav person 2616 Shema
+    metav person 2617 Shema
+    metav person 2838 Teman
+    metav person 2839 Teman
+    metav alias  1360 Haman
+    metav alias  1487 Hemam
+    metav alias  1488 Heman
+    metav alias  1489 Heman
+    metav alias  1490 Heman
+    metav alias  1492 Hemdan
+    metav alias  2614 Shema
+    metav alias  2615 Shema
+    metav alias  2616 Shema
+    metav alias  2617 Shema
+    metav alias  2838 Teman
+    metav alias  2839 Teman
+
+── 1Ch 26:8  obed  p[3, 22] ──────────────────────────────
+  prose: All these were sons of Obed Edom, they and their sons, and their brethren doing mightily in the work — sixty two to Obed Edom.
+  slot p  3: english='of Obed' head='obed' strongs=*
+  slot p 22: english='Obed' head='obed' strongs=*
+  PAINT: bind name='obed' -> Obed-edom@2Sa.6.10-2Ch (referent kind: person)
+  roster:
+    TIPNR person Obed-edom@2Sa.6.10-2Ch
+    TIPNR person Obed@1Ch.11.47
+    TIPNR person Obed@1Ch.2.37-
+    TIPNR person Obed@1Ch.26.7
+    TIPNR person Obed@2Ch.23.1
+    TIPNR person Obed@Rut.4.17-Luk
+    metav person 2228 Obed
+    metav person 2229 Obed
+    metav person 2230 Obed
+    metav person 2231 Obed
+    metav person 2232 Obed
+    metav alias  2228 Obed
+    metav alias  2229 Obed
+    metav alias  2230 Obed
+    metav alias  2231 Obed
+    metav alias  2232 Obed
+
+── 1Ch 28:4  judah  p[24, 31] ──────────────────────────────
+  prose: And the LORD God of Israel chose by me from out of all the house of my father to be king over Israel into the eon, and for Judah to take up the crown; and of the house of Judah, the house of my father. And among the sons of my father, in me he wanted me to become king over all Israel.
+  slot p 24: english='Judah' head='judah' strongs=*
+  slot p 31: english='of Judah,' head='judah' strongs=*
+  PAINT: bind name='judah' -> Judah@Gen.29.35-Rev (referent kind: person)
+  roster:
+    TIPNR person Judah@Ezr.10.23
+    TIPNR person Judah@Gen.29.35-Rev
+    TIPNR person Judah@Luk.3.30
+    TIPNR person Judah@Neh.11.9
+    TIPNR person Judah@Neh.12.36
+    TIPNR person Judah@Neh.12.8-
+    TIPNR person Judas@Act.15.22-
+    TIPNR person Judas@Act.5.37
+    TIPNR person Judas@Act.9.11
+    TIPNR person Judas@Mat.10.3-Act
+    TIPNR person Judas@Mat.10.4-Act
+    TIPNR place  Judea@Ezr.9.9-1Th
+    metav person 1749 Juda
+    metav person 1750 Juda
+    metav person 1751 Judah
+    metav person 1752 Judah
+    metav person 1753 Judah
+    metav person 1754 Judah
+    metav person 1755 Judah
+    metav person 1757 Judas
+    metav person 1758 Judas
+    metav person 1759 Judas
+    metav person 1760 Judas
+    metav alias  1749 Juda
+    metav alias  1750 Juda
+    metav alias  1751 Judah
+    metav alias  1752 Judah
+    metav alias  1753 Judah
+    metav alias  1754 Judah
+    metav alias  1755 Judah
+    metav alias  1756 Judas
+    metav alias  1757 Judas
+    metav alias  1758 Judas
+    metav alias  1759 Judas
+    metav alias  1542 Judah
+    metav alias  1751 Judas
+    metav alias  1756 Juda
+    metav alias  1751 Juda
+    metav alias  1815 Judas
+    metav alias  1760 Judas
+
+── 1Co 1:2  jesus  p[11, 23] ──────────────────────────────
+  prose: to the assembly of God, to the one being in Corinth, having been sanctified in Christ Jesus, chosen holy ones, with all the ones calling upon the name of our Lord Jesus Christ in every place, both theirs and ours.
+  slot p 11: english='Jesus,' head='jesus' strongs=*
+  slot p 23: english='Jesus' head='jesus' strongs=*
+  PAINT: bind name='jesus' -> Jesus@Isa.7.14-Rev (referent kind: person)
+  roster:
+    TIPNR person Jesse@Rut.4.17-Rom
+    TIPNR person Jesus@Isa.7.14-Rev
+    TIPNR person Jeush@1Ch.23.10-
+    TIPNR person Jeush@1Ch.7.10
+    TIPNR person Jeush@1Ch.8.39
+    TIPNR person Jeush@2Ch.11.19
+    TIPNR person Jeush@Gen.36.5-1Ch
+    metav person 903 Jesse
+    metav person 904 Jesus
+    metav person 905 Jesus
+    metav person 913 Jeush
+    metav person 1601 Jeush
+    metav person 1602 Jeush
+    metav person 1603 Jeush
+    metav alias  903 Jesse
+    metav alias  904 Jesus
+    metav alias  905 Jesus Christ
+    metav alias  913 Jeush
+    metav alias  1601 Jeush
+    metav alias  1602 Jeush
+    metav alias  1603 Jeush
+    metav alias  648 Jesui
+    metav alias  1727 Jesus
+    metav alias  905 Jesus
+
+── 1Co 5:4  jesus  p[6, 20] ──────────────────────────────
+  prose: in the name of our Lord Jesus Christ, having brought together you and my spirit, with the power, of the one of our Lord Jesus Christ,
+  slot p  6: english='Jesus' head='jesus' strongs=*
+  slot p 20: english='Jesus' head='jesus' strongs=*
+  PAINT: bind name='jesus' -> Jesus@Isa.7.14-Rev (referent kind: person)
+  roster:
+    TIPNR person Jesse@Rut.4.17-Rom
+    TIPNR person Jesus@Isa.7.14-Rev
+    TIPNR person Jeush@1Ch.23.10-
+    TIPNR person Jeush@1Ch.7.10
+    TIPNR person Jeush@1Ch.8.39
+    TIPNR person Jeush@2Ch.11.19
+    TIPNR person Jeush@Gen.36.5-1Ch
+    metav person 903 Jesse
+    metav person 904 Jesus
+    metav person 905 Jesus
+    metav person 913 Jeush
+    metav person 1601 Jeush
+    metav person 1602 Jeush
+    metav person 1603 Jeush
+    metav alias  903 Jesse
+    metav alias  904 Jesus
+    metav alias  905 Jesus Christ
+    metav alias  913 Jeush
+    metav alias  1601 Jeush
+    metav alias  1602 Jeush
+    metav alias  1603 Jeush
+    metav alias  648 Jesui
+    metav alias  1727 Jesus
+    metav alias  905 Jesus
+
+── 1Co 12:3  jesus  p[11, 17] ──────────────────────────────
+  prose: Therefore I make known to you, that no one speaking in spirit of God says, Jesus is anathema; and no one is able to say, Lord Jesus, except by holy spirit.
+  slot p 11: english='Jesus;' head='jesus' strongs=*
+  slot p 17: english='Jesus,' head='jesus' strongs=*
+  PAINT: bind name='jesus' -> Jesus@Isa.7.14-Rev (referent kind: person)
+  roster:
+    TIPNR person Jesse@Rut.4.17-Rom
+    TIPNR person Jesus@Isa.7.14-Rev
+    TIPNR person Jeush@1Ch.23.10-
+    TIPNR person Jeush@1Ch.7.10
+    TIPNR person Jeush@1Ch.8.39
+    TIPNR person Jeush@2Ch.11.19
+    TIPNR person Jeush@Gen.36.5-1Ch
+    metav person 903 Jesse
+    metav person 904 Jesus
+    metav person 905 Jesus
+    metav person 913 Jeush
+    metav person 1601 Jeush
+    metav person 1602 Jeush
+    metav person 1603 Jeush
+    metav alias  903 Jesse
+    metav alias  904 Jesus
+    metav alias  905 Jesus Christ
+    metav alias  913 Jeush
+    metav alias  1601 Jeush
+    metav alias  1602 Jeush
+    metav alias  1603 Jeush
+    metav alias  648 Jesui
+    metav alias  1727 Jesus
+    metav alias  905 Jesus
+
+── 1Ki 2:28  joab  p[5, 9, 21] ──────────────────────────────
+  prose: And the report came unto Joab son of Zeruiah; for Joab was leaning after Adonijah, but he did not turn aside after Solomon. And Joab fled to the tent of the LORD, and held the horns of the altar.
+  slot p  5: english='Joab' head='joab' strongs=*
+  slot p  9: english='Joab' head='joab' strongs=*
+  slot p 21: english='Joab' head='joab' strongs=*
+  PAINT: bind name='joab' -> Joab@1Sa.26.6-Psa (referent kind: person)
+  roster:
+    TIPNR person Joab@1Ch.4.14
+    TIPNR person Joab@1Sa.26.6-Psa
+    TIPNR person Joab@Ezr.2.6-Neh
+    TIPNR person Joab@Ezr.8.9
+    TIPNR person Job@Job.1.1-Jas
+    TIPNR person Jobab@1Ch.8.18
+    TIPNR person Jobab@1Ch.8.9
+    TIPNR person Jobab@Gen.10.29-1Ch
+    TIPNR person Jobab@Gen.36.33-1Ch
+    TIPNR person Jobab@Jos.11.1
+    metav person 1617 Joab
+    metav person 1618 Joab
+    metav person 1619 Joab
+    metav person 1620 Joab
+    metav person 1639 Job
+    metav person 1640 Jobab
+    metav person 1641 Jobab
+    metav person 1642 Jobab
+    metav person 1643 Jobab
+    metav person 1644 Jobab
+    metav alias  1617 Joab
+    metav alias  1618 Joab
+    metav alias  1619 Joab
+    metav alias  1620 Joab
+    metav alias  1638 Job
+    metav alias  1639 Job
+    metav alias  1640 Jobab
+    metav alias  1641 Jobab
+    metav alias  1642 Jobab
+    metav alias  1643 Jobab
+    metav alias  1644 Jobab
+
+── 1Ki 2:30  benaiah  p[2, 28] ──────────────────────────────
+  prose: And Benaiah came to Joab in the tent of the LORD, and he said to him, Thus says the king, Come forth! And Joab said, I do not go forth, for here I shall die. And Benaiah returned and said to the king, saying, Thus Joab has spoken, and thus he answered me.
+  slot p  2: english='Benaiah' head='benaiah' strongs=*
+  slot p 28: english='Benaiah' head='benaiah' strongs=*
+  PAINT: bind name='benaiah' -> Benaiah@2Sa.8.18-1Ch (referent kind: person)
+  roster:
+    TIPNR person Bealiah@1Ch.12.5
+    TIPNR person Ben@1Ch.15.18
+    TIPNR person Benaiah@1Ch.15.18-
+    TIPNR person Benaiah@1Ch.27.34
+    TIPNR person Benaiah@1Ch.4.36
+    TIPNR person Benaiah@2Ch.20.14
+    TIPNR person Benaiah@2Ch.31.13
+    TIPNR person Benaiah@2Sa.23.30-1Ch
+    TIPNR person Benaiah@2Sa.8.18-1Ch
+    TIPNR person Benaiah@Ezk.11.1-
+    TIPNR person Benaiah@Ezr.10.25
+    TIPNR person Benaiah@Ezr.10.30
+    TIPNR person Benaiah@Ezr.10.35
+    TIPNR person Benaiah@Ezr.10.43
+    TIPNR person Beraiah@1Ch.8.21
+    metav person 419 Bealiah
+    metav person 438 Ben
+    metav person 439 Benaiah
+    metav person 440 Benaiah
+    metav person 441 Benaiah
+    metav person 442 Benaiah
+    metav person 443 Benaiah
+    metav person 444 Benaiah
+    metav person 445 Benaiah
+    metav person 446 Benaiah
+    metav person 447 Benaiah
+    metav person 448 Benaiah
+    metav person 449 Benaiah
+    metav person 450 Benaiah
+    metav person 470 Beraiah
+    metav alias  419 Bealiah
+    metav alias  438 Ben
+    metav alias  439 Benaiah
+    metav alias  440 Benaiah
+    metav alias  441 Benaiah
+    metav alias  442 Benaiah
+    metav alias  443 Benaiah
+    metav alias  444 Benaiah
+    metav alias  445 Benaiah
+    metav alias  446 Benaiah
+    metav alias  447 Benaiah
+    metav alias  448 Benaiah
+    metav alias  449 Benaiah
+    metav alias  450 Benaiah
+    metav alias  470 Beraiah
+
+── 1Ki 2:30  joab  p[4, 20, 36] ──────────────────────────────
+  prose: And Benaiah came to Joab in the tent of the LORD, and he said to him, Thus says the king, Come forth! And Joab said, I do not go forth, for here I shall die. And Benaiah returned and said to the king, saying, Thus Joab has spoken, and thus he answered me.
+  slot p  4: english='Joab' head='joab' strongs=*
+  slot p 20: english='Joab,' head='joab' strongs=*
+  slot p 36: english='Joab,' head='joab' strongs=*
+  PAINT: bind name='joab' -> Joab@1Sa.26.6-Psa (referent kind: person)
+  roster:
+    TIPNR person Joab@1Ch.4.14
+    TIPNR person Joab@1Sa.26.6-Psa
+    TIPNR person Joab@Ezr.2.6-Neh
+    TIPNR person Joab@Ezr.8.9
+    TIPNR person Job@Job.1.1-Jas
+    TIPNR person Jobab@1Ch.8.18
+    TIPNR person Jobab@1Ch.8.9
+    TIPNR person Jobab@Gen.10.29-1Ch
+    TIPNR person Jobab@Gen.36.33-1Ch
+    TIPNR person Jobab@Jos.11.1
+    metav person 1617 Joab
+    metav person 1618 Joab
+    metav person 1619 Joab
+    metav person 1620 Joab
+    metav person 1639 Job
+    metav person 1640 Jobab
+    metav person 1641 Jobab
+    metav person 1642 Jobab
+    metav person 1643 Jobab
+    metav person 1644 Jobab
+    metav alias  1617 Joab
+    metav alias  1618 Joab
+    metav alias  1619 Joab
+    metav alias  1620 Joab
+    metav alias  1638 Job
+    metav alias  1639 Job
+    metav alias  1640 Jobab
+    metav alias  1641 Jobab
+    metav alias  1642 Jobab
+    metav alias  1643 Jobab
+    metav alias  1644 Jobab
+
+── 1Ki 2:38  shimei  p[2, 22] ──────────────────────────────
+  prose: And Shimei said to the king, The thing is good which you have spoken, O my master, O king, thus shall your servant do. And Shimei settled in Jerusalem three years.
+  slot p  2: english='Shimei' head='shimei' strongs=*
+  slot p 22: english='Shimei' head='shimei' strongs=*
+  PAINT: bind name='shimei' -> Shimei@2Sa.16.5-1Ki (referent kind: person)
+  roster:
+    TIPNR person Shimea@1Ch.6.30
+    TIPNR person Shimea@1Ch.6.39
+    TIPNR person Shimei@1Ch.27.27
+    TIPNR person Shimei@1Ch.3.19
+    TIPNR person Shimei@1Ch.4.26-
+    TIPNR person Shimei@1Ch.5.4
+    TIPNR person Shimei@1Ch.6.29
+    TIPNR person Shimei@1Ch.6.42-
+    TIPNR person Shimei@1Ch.8.21
+    TIPNR person Shimei@1Ki.1.8-
+    TIPNR person Shimei@2Ch.29.14
+    TIPNR person Shimei@2Ch.31.12-
+    TIPNR person Shimei@2Sa.16.5-1Ki
+    TIPNR person Shimei@Est.2.5
+    TIPNR person Shimei@Exo.6.17-Zec
+    TIPNR person Shimei@Ezr.10.23
+    TIPNR person Shimei@Ezr.10.33
+    TIPNR person Shimei@Ezr.10.38
+    TIPNR person Shimri@1Ch.11.45
+    TIPNR person Shimri@1Ch.26.10
+    TIPNR person Shimri@1Ch.4.37
+    TIPNR person Shimri@2Ch.29.13
+    metav person 2680 Shimea
+    metav person 2681 Shimea
+    metav person 691 Shimei
+    metav person 2233 Shimei
+    metav person 2684 Shimei
+    metav person 2685 Shimei
+    metav person 2686 Shimei
+    metav person 2687 Shimei
+    metav person 2688 Shimei
+    metav person 2689 Shimei
+    metav person 2690 Shimei
+    metav person 2691 Shimei
+    metav person 2692 Shimei
+    metav person 2693 Shimei
+    metav person 2694 Shimei
+    metav person 2695 Shimei
+    metav person 2696 Shimei
+    metav person 2699 Shimei
+    metav person 2698 Shimhi
+    metav person 2703 Shimri
+    metav person 2704 Shimri
+    metav person 2705 Shimri
+    metav alias  2680 Shimea
+    metav alias  2681 Shimea
+    metav alias  2684 Shimei
+    metav alias  2685 Shimei
+    metav alias  2686 Shimei
+    metav alias  2687 Shimei
+    metav alias  2688 Shimei
+    metav alias  2689 Shimei
+    metav alias  2690 Shimei
+    metav alias  2691 Shimei
+    metav alias  2692 Shimei
+    metav alias  2693 Shimei
+    metav alias  2694 Shimei
+    metav alias  2695 Shimei
+    metav alias  2696 Shimei
+    metav alias  2698 Shimhi
+    metav alias  2699 Shimi
+    metav alias  2703 Shimri
+    metav alias  2704 Shimri
+    metav alias  2705 Shimri
+    metav alias  691 Shimei
+    metav alias  2233 Shimei
+    metav alias  2547 Shimea
+    metav alias  2699 Shimei
+    metav alias  2700 Shimei
+
+── 1Ki 2:39  shimei  p[9, 19] ──────────────────────────────
+  prose: And it came to pass after three years, that two servants of Shimei ran away to Achish son of Maachah king of Gath. And they reported to Shimei, saying, Behold, your servants are in Gath.
+  slot p  9: english='of Shimei' head='shimei' strongs=*
+  slot p 19: english='Shimei,' head='shimei' strongs=*
+  PAINT: bind name='shimei' -> Shimei@2Sa.16.5-1Ki (referent kind: person)
+  roster:
+    TIPNR person Shimea@1Ch.6.30
+    TIPNR person Shimea@1Ch.6.39
+    TIPNR person Shimei@1Ch.27.27
+    TIPNR person Shimei@1Ch.3.19
+    TIPNR person Shimei@1Ch.4.26-
+    TIPNR person Shimei@1Ch.5.4
+    TIPNR person Shimei@1Ch.6.29
+    TIPNR person Shimei@1Ch.6.42-
+    TIPNR person Shimei@1Ch.8.21
+    TIPNR person Shimei@1Ki.1.8-
+    TIPNR person Shimei@2Ch.29.14
+    TIPNR person Shimei@2Ch.31.12-
+    TIPNR person Shimei@2Sa.16.5-1Ki
+    TIPNR person Shimei@Est.2.5
+    TIPNR person Shimei@Exo.6.17-Zec
+    TIPNR person Shimei@Ezr.10.23
+    TIPNR person Shimei@Ezr.10.33
+    TIPNR person Shimei@Ezr.10.38
+    TIPNR person Shimri@1Ch.11.45
+    TIPNR person Shimri@1Ch.26.10
+    TIPNR person Shimri@1Ch.4.37
+    TIPNR person Shimri@2Ch.29.13
+    metav person 2680 Shimea
+    metav person 2681 Shimea
+    metav person 691 Shimei
+    metav person 2233 Shimei
+    metav person 2684 Shimei
+    metav person 2685 Shimei
+    metav person 2686 Shimei
+    metav person 2687 Shimei
+    metav person 2688 Shimei
+    metav person 2689 Shimei
+    metav person 2690 Shimei
+    metav person 2691 Shimei
+    metav person 2692 Shimei
+    metav person 2693 Shimei
+    metav person 2694 Shimei
+    metav person 2695 Shimei
+    metav person 2696 Shimei
+    metav person 2699 Shimei
+    metav person 2698 Shimhi
+    metav person 2703 Shimri
+    metav person 2704 Shimri
+    metav person 2705 Shimri
+    metav alias  2680 Shimea
+    metav alias  2681 Shimea
+    metav alias  2684 Shimei
+    metav alias  2685 Shimei
+    metav alias  2686 Shimei
+    metav alias  2687 Shimei
+    metav alias  2688 Shimei
+    metav alias  2689 Shimei
+    metav alias  2690 Shimei
+    metav alias  2691 Shimei
+    metav alias  2692 Shimei
+    metav alias  2693 Shimei
+    metav alias  2694 Shimei
+    metav alias  2695 Shimei
+    metav alias  2696 Shimei
+    metav alias  2698 Shimhi
+    metav alias  2699 Shimi
+    metav alias  2703 Shimri
+    metav alias  2704 Shimri
+    metav alias  2705 Shimri
+    metav alias  691 Shimei
+    metav alias  2233 Shimei
+    metav alias  2547 Shimea
+    metav alias  2699 Shimei
+    metav alias  2700 Shimei
+
+── 1Ki 2:40  shimei  p[2, 21] ──────────────────────────────
+  prose: And Shimei rose up, and saddled his donkey, and went unto Gath to Achish to seek after his servants. And Shimei went and led his servants from Gath.
+  slot p  2: english='Shimei,' head='shimei' strongs=*
+  slot p 21: english='Shimei' head='shimei' strongs=*
+  PAINT: bind name='shimei' -> Shimei@2Sa.16.5-1Ki (referent kind: person)
+  roster:
+    TIPNR person Shimea@1Ch.6.30
+    TIPNR person Shimea@1Ch.6.39
+    TIPNR person Shimei@1Ch.27.27
+    TIPNR person Shimei@1Ch.3.19
+    TIPNR person Shimei@1Ch.4.26-
+    TIPNR person Shimei@1Ch.5.4
+    TIPNR person Shimei@1Ch.6.29
+    TIPNR person Shimei@1Ch.6.42-
+    TIPNR person Shimei@1Ch.8.21
+    TIPNR person Shimei@1Ki.1.8-
+    TIPNR person Shimei@2Ch.29.14
+    TIPNR person Shimei@2Ch.31.12-
+    TIPNR person Shimei@2Sa.16.5-1Ki
+    TIPNR person Shimei@Est.2.5
+    TIPNR person Shimei@Exo.6.17-Zec
+    TIPNR person Shimei@Ezr.10.23
+    TIPNR person Shimei@Ezr.10.33
+    TIPNR person Shimei@Ezr.10.38
+    TIPNR person Shimri@1Ch.11.45
+    TIPNR person Shimri@1Ch.26.10
+    TIPNR person Shimri@1Ch.4.37
+    TIPNR person Shimri@2Ch.29.13
+    metav person 2680 Shimea
+    metav person 2681 Shimea
+    metav person 691 Shimei
+    metav person 2233 Shimei
+    metav person 2684 Shimei
+    metav person 2685 Shimei
+    metav person 2686 Shimei
+    metav person 2687 Shimei
+    metav person 2688 Shimei
+    metav person 2689 Shimei
+    metav person 2690 Shimei
+    metav person 2691 Shimei
+    metav person 2692 Shimei
+    metav person 2693 Shimei
+    metav person 2694 Shimei
+    metav person 2695 Shimei
+    metav person 2696 Shimei
+    metav person 2699 Shimei
+    metav person 2698 Shimhi
+    metav person 2703 Shimri
+    metav person 2704 Shimri
+    metav person 2705 Shimri
+    metav alias  2680 Shimea
+    metav alias  2681 Shimea
+    metav alias  2684 Shimei
+    metav alias  2685 Shimei
+    metav alias  2686 Shimei
+    metav alias  2687 Shimei
+    metav alias  2688 Shimei
+    metav alias  2689 Shimei
+    metav alias  2690 Shimei
+    metav alias  2691 Shimei
+    metav alias  2692 Shimei
+    metav alias  2693 Shimei
+    metav alias  2694 Shimei
+    metav alias  2695 Shimei
+    metav alias  2696 Shimei
+    metav alias  2698 Shimhi
+    metav alias  2699 Shimi
+    metav alias  2703 Shimri
+    metav alias  2704 Shimri
+    metav alias  2705 Shimri
+    metav alias  691 Shimei
+    metav alias  2233 Shimei
+    metav alias  2547 Shimea
+    metav alias  2699 Shimei
+    metav alias  2700 Shimei
+
+── 1Ki 3:1  pharaoh  p[12, 19] ──────────────────────────────
+  prose: And the kingdom solidified in the hand of Solomon. And Solomon contracted a marriage with Pharaoh king of Egypt. And he took the daughter of Pharaoh, and he brought her into the city of David, until he completed building his house, and the house of the LORD at first, and the wall of Jerusalem round about.
+  slot p 12: english='Pharaoh' head='pharaoh' strongs=*
+  slot p 19: english='of Pharaoh,' head='pharaoh' strongs=*
+  PAINT: bind name='pharaoh' -> Pharaoh@1Ki.3.1-Sng (referent kind: person)
+  roster:
+    TIPNR place  Parah@Jos.18.23
+    TIPNR person Pharaoh@1Ch.4.18
+    TIPNR person Pharaoh@1Ki.3.1-Sng
+    TIPNR person Pharaoh@2Ki.18.21-Isa
+    TIPNR person Pharaoh@Exo.1.11-Heb
+    TIPNR person Pharaoh@Exo.3.10-Rom
+    TIPNR person Pharaoh@Gen.12.15-
+    TIPNR person Pharaoh@Gen.37.36-Act
+    TIPNR person Pharaoh@Jer.25.19
+    metav person 2328 Pharaoh
+    metav person 2329 Pharaoh
+    metav person 2330 Pharaoh
+    metav person 2331 Pharaoh
+    metav person 2332 Pharaoh
+    metav person 2333 Pharaoh
+    metav person 2334 Pharaoh
+    metav person 2335 Pharaoh
+    metav person 2336 Pharaoh
+    metav person 2337 Pharaoh-nechoh
+    metav person 2339 Pharosh
+    metav alias  2328 Pharaoh
+    metav alias  2329 Pharaoh
+    metav alias  2330 Pharaoh
+    metav alias  2331 Pharaoh
+    metav alias  2332 Pharaoh
+    metav alias  2333 Pharaoh
+    metav alias  2334 Pharaoh
+    metav alias  2335 Pharaoh
+    metav alias  2336 Pharaoh
+    metav alias  2339 Pharosh
+    metav alias  2336 Pharaoh-hophra
+    metav alias  2337 Pharaoh-nechoh
+
+── 1Ki 4:5  nathan  p[3, 10] ──────────────────────────────
+  prose: and Azariah son of Nathan was over the ones being placed in charge; and Zabud son of Nathan was companion of the king;
+  slot p  3: english='of Nathan' head='nathan' strongs=*
+  slot p 10: english='of Nathan' head='nathan' strongs=*
+  PAINT: bind name='nathan' -> Nathan@2Sa.7.2-Psa (referent kind: person)
+  roster:
+    TIPNR person Dathan@Num.16.1-Psa
+    TIPNR person Elnathan@2Ki.24.8
+    TIPNR person Elnathan@Ezr.8.16a
+    TIPNR person Elnathan@Ezr.8.16b
+    TIPNR person Elnathan@Ezr.8.16c
+    TIPNR person Elnathan@Jer.26.22-
+    TIPNR person Jonathan@1Ch.2.32-
+    TIPNR person Jonathan@1Ch.27.25
+    TIPNR person Jonathan@1Sa.13.2-1Ch
+    TIPNR person Jonathan@2Sa.15.27-1Ki
+    TIPNR person Jonathan@2Sa.23.32-1Ch
+    TIPNR person Jonathan@Ezr.10.15
+    TIPNR person Jonathan@Ezr.8.6
+    TIPNR person Jonathan@Jdg.18.30
+    TIPNR person Jonathan@Jer.37.15-
+    TIPNR person Jonathan@Jer.40.8
+    TIPNR person Jonathan@Neh.12.14
+    TIPNR person Jonathan@Neh.12.35
+    TIPNR person Nathan-melech@2Ki.23.11
+    TIPNR person Nathan@1Ch.2.36
+    TIPNR person Nathan@2Sa.23.36-1Ch
+    TIPNR person Nathan@2Sa.5.14-Luk
+    TIPNR person Nathan@2Sa.7.2-Psa
+    TIPNR person Nathan@Ezr.10.39
+    TIPNR person Nathan@Ezr.8.16
+    TIPNR person Nathanael@Jhn.1.45-
+    metav person 982 Dathan
+    metav person 1177 Elnathan
+    metav person 1178 Elnathan
+    metav person 1179 Elnathan
+    metav person 1180 Elnathan
+    metav person 1181 Elnathan
+    metav person 1691 Jonathan
+    metav person 1692 Jonathan
+    metav person 1693 Jonathan
+    metav person 1694 Jonathan
+    metav person 1695 Jonathan
+    metav person 1696 Jonathan
+    metav person 1697 Jonathan
+    metav person 1699 Jonathan
+    metav person 1700 Jonathan
+    metav person 1701 Jonathan
+    metav person 1702 Jonathan
+    metav person 2152 Nathan
+    metav person 2153 Nathan
+    metav person 2154 Nathan
+    metav person 2155 Nathan
+    metav person 2156 Nathan
+    metav person 2157 Nathan
+    metav person 2159 Nathan-melech
+    metav person 2158 Nathanael
+    metav alias  982 Dathan
+    metav alias  1177 Elnathan
+    metav alias  1178 Elnathan
+    metav alias  1179 Elnathan
+    metav alias  1180 Elnathan
+    metav alias  1181 Elnathan
+    metav alias  1691 Jonathan
+    metav alias  1692 Jonathan
+    metav alias  1693 Jonathan
+    metav alias  1694 Jonathan
+    metav alias  1695 Jonathan
+    metav alias  1696 Jonathan
+    metav alias  1697 Jonathan
+    metav alias  1698 Jonathan
+    metav alias  1699 Jonathan
+    metav alias  1700 Jonathan
+    metav alias  1701 Jonathan
+    metav alias  1702 Jonathan
+    metav alias  2152 Nathan
+    metav alias  2153 Nathan
+    metav alias  2154 Nathan
+    metav alias  2155 Nathan
+    metav alias  2156 Nathan
+    metav alias  2157 Nathan
+    metav alias  2158 Nathanael
+    metav alias  1688 Jonathan
+    metav alias  2159 Nathan-melech
+
+── 1Ki 4:13  gilead  p[4, 12] ──────────────────────────────
+  prose: The son of Geber in Ramoth Gilead — of this one were cities of Jair son of Manasseh in Gilead; to this one was a piece of measured out land, Argob in Bashan — sixty cities, great and walled and bars of brass.
+  slot p  4: english='Gilead —' head='gilead' strongs=*
+  slot p 12: english='Gilead;' head='gilead' strongs=*
+  PAINT: bind name='gilead' -> Gilead@Gen.31.21-Zec (referent kind: place)
+  roster:
+    TIPNR person Gilead@1Ch.5.14
+    TIPNR place  Gilead@Gen.31.21-Zec
+    TIPNR person Gilead@Jdg.11.1-
+    TIPNR person Gilead@Num.26.29-1Ch
+    metav person 1317 Gilead
+    metav person 1318 Gilead
+    metav person 1319 Gilead
+    metav alias  1317 Gilead
+    metav alias  1318 Gilead
+    metav alias  1319 Gilead
+
+── 1Ki 5:1  hiram  p[2, 25] ──────────────────────────────
+  prose: And Hiram king of Tyre sent his servants to Solomon; for he heard that they anointed him for king in place of David his father. For Hiram was loving David all the days.
+  slot p  2: english='Hiram' head='hiram' strongs=*
+  slot p 25: english='Hiram' head='hiram' strongs=*
+  PAINT: bind name='hiram' -> Hiram@2Sa.5.11-2Ch (referent kind: person)
+  roster:
+    TIPNR person Ahiam@2Sa.23.33-1Ch
+    TIPNR person Ahira@Num.1.15-
+    TIPNR person Ahiram@Gen.46.21-1Ch
+    TIPNR person Hirah@Gen.38.1-
+    TIPNR person Hiram@1Ki.7.13-2Ch
+    TIPNR person Hiram@2Sa.5.11-2Ch
+    TIPNR person Horam@Jos.10.33
+    TIPNR person Iram@Gen.36.43-1Ch
+    TIPNR person Piram@Jos.10.3
+    metav person 129 Ahiam
+    metav person 157 Ahira
+    metav person 158 Ahiram
+    metav person 1531 Hirah
+    metav person 1532 Hiram
+    metav person 1533 Hiram
+    metav person 1551 Horam
+    metav person 1569 Huram
+    metav person 1575 Huram
+    metav person 612 Iram
+    metav person 2361 Piram
+    metav alias  129 Ahiam
+    metav alias  157 Ahira
+    metav alias  158 Ahiram
+    metav alias  612 Iram
+    metav alias  1531 Hirah
+    metav alias  1532 Hiram
+    metav alias  1533 Hiram
+    metav alias  1551 Horam
+    metav alias  1575 Huram
+    metav alias  2361 Piram
+    metav alias  1532 Huram
+    metav alias  1533 Huram
+    metav alias  1569 Huram
+
+── 1Ki 5:11  hiram  p[4, 24] ──────────────────────────────
+  prose: And Solomon gave to Hiram twenty thousand cors of wheat, and food to his house, and twenty baths of olive oil being pounded. According to this Solomon gave to Hiram yearly.
+  slot p  4: english='Hiram' head='hiram' strongs=*
+  slot p 24: english='Hiram' head='hiram' strongs=*
+  PAINT: bind name='hiram' -> Hiram@2Sa.5.11-2Ch (referent kind: person)
+  roster:
+    TIPNR person Ahiam@2Sa.23.33-1Ch
+    TIPNR person Ahira@Num.1.15-
+    TIPNR person Ahiram@Gen.46.21-1Ch
+    TIPNR person Hirah@Gen.38.1-
+    TIPNR person Hiram@1Ki.7.13-2Ch
+    TIPNR person Hiram@2Sa.5.11-2Ch
+    TIPNR person Horam@Jos.10.33
+    TIPNR person Iram@Gen.36.43-1Ch
+    TIPNR person Piram@Jos.10.3
+    metav person 129 Ahiam
+    metav person 157 Ahira
+    metav person 158 Ahiram
+    metav person 1531 Hirah
+    metav person 1532 Hiram
+    metav person 1533 Hiram
+    metav person 1551 Horam
+    metav person 1569 Huram
+    metav person 1575 Huram
+    metav person 612 Iram
+    metav person 2361 Piram
+    metav alias  129 Ahiam
+    metav alias  157 Ahira
+    metav alias  158 Ahiram
+    metav alias  612 Iram
+    metav alias  1531 Hirah
+    metav alias  1532 Hiram
+    metav alias  1533 Hiram
+    metav alias  1551 Horam
+    metav alias  1575 Huram
+    metav alias  2361 Piram
+    metav alias  1532 Huram
+    metav alias  1533 Huram
+    metav alias  1569 Huram
+
+── 1Ki 7:40  hiram  p[2, 13] ──────────────────────────────
+  prose: And Hiram made the kettles, and the tongs, and the bowls. And Hiram completed making all the works which he made for king Solomon in the house of the LORD —
+  slot p  2: english='Hiram' head='hiram' strongs=*
+  slot p 13: english='Hiram' head='hiram' strongs=*
+  PAINT: bind name='hiram' -> Hiram@1Ki.7.13-2Ch (referent kind: person)
+  roster:
+    TIPNR person Ahiam@2Sa.23.33-1Ch
+    TIPNR person Ahira@Num.1.15-
+    TIPNR person Ahiram@Gen.46.21-1Ch
+    TIPNR person Hirah@Gen.38.1-
+    TIPNR person Hiram@1Ki.7.13-2Ch
+    TIPNR person Hiram@2Sa.5.11-2Ch
+    TIPNR person Horam@Jos.10.33
+    TIPNR person Iram@Gen.36.43-1Ch
+    TIPNR person Piram@Jos.10.3
+    metav person 129 Ahiam
+    metav person 157 Ahira
+    metav person 158 Ahiram
+    metav person 1531 Hirah
+    metav person 1532 Hiram
+    metav person 1533 Hiram
+    metav person 1551 Horam
+    metav person 1569 Huram
+    metav person 1575 Huram
+    metav person 612 Iram
+    metav person 2361 Piram
+    metav alias  129 Ahiam
+    metav alias  157 Ahira
+    metav alias  158 Ahiram
+    metav alias  612 Iram
+    metav alias  1531 Hirah
+    metav alias  1532 Hiram
+    metav alias  1533 Hiram
+    metav alias  1551 Horam
+    metav alias  1575 Huram
+    metav alias  2361 Piram
+    metav alias  1532 Huram
+    metav alias  1533 Huram
+    metav alias  1569 Huram
+
+── 1Ki 9:11  hiram  p[0, 28] ──────────────────────────────
+  prose: Hiram the king of Tyre assisted Solomon with timbers of cedars, and with timbers of pines, and in gold, and in all his want. Then king Solomon gave to Hiram twenty cities in the land of Galilee.
+  slot p  0: english='Hiram' head='hiram' strongs=*
+  slot p 28: english='Hiram' head='hiram' strongs=*
+  PAINT: bind name='hiram' -> Hiram@2Sa.5.11-2Ch (referent kind: person)
+  roster:
+    TIPNR person Ahiam@2Sa.23.33-1Ch
+    TIPNR person Ahira@Num.1.15-
+    TIPNR person Ahiram@Gen.46.21-1Ch
+    TIPNR person Hirah@Gen.38.1-
+    TIPNR person Hiram@1Ki.7.13-2Ch
+    TIPNR person Hiram@2Sa.5.11-2Ch
+    TIPNR person Horam@Jos.10.33
+    TIPNR person Iram@Gen.36.43-1Ch
+    TIPNR person Piram@Jos.10.3
+    metav person 129 Ahiam
+    metav person 157 Ahira
+    metav person 158 Ahiram
+    metav person 1531 Hirah
+    metav person 1532 Hiram
+    metav person 1533 Hiram
+    metav person 1551 Horam
+    metav person 1569 Huram
+    metav person 1575 Huram
+    metav person 612 Iram
+    metav person 2361 Piram
+    metav alias  129 Ahiam
+    metav alias  157 Ahira
+    metav alias  158 Ahiram
+    metav alias  612 Iram
+    metav alias  1531 Hirah
+    metav alias  1532 Hiram
+    metav alias  1533 Hiram
+    metav alias  1551 Horam
+    metav alias  1575 Huram
+    metav alias  2361 Piram
+    metav alias  1532 Huram
+    metav alias  1533 Huram
+    metav alias  1569 Huram
+
+── 1Ki 9:16  pharaoh  p[0, 25] ──────────────────────────────
+  prose: Pharaoh king of Egypt ascended and first took Gezer, and he burnt it by fire, and the Canaanite dwelling in the city he put to death, and Pharaoh gave it as a dowry to his daughter — to the wife of Solomon.
+  slot p  0: english='Pharaoh' head='pharaoh' strongs=*
+  slot p 25: english='Pharaoh' head='pharaoh' strongs=*
+  PAINT: bind name='pharaoh' -> Pharaoh@1Ki.3.1-Sng (referent kind: person)
+  roster:
+    TIPNR place  Parah@Jos.18.23
+    TIPNR person Pharaoh@1Ch.4.18
+    TIPNR person Pharaoh@1Ki.3.1-Sng
+    TIPNR person Pharaoh@2Ki.18.21-Isa
+    TIPNR person Pharaoh@Exo.1.11-Heb
+    TIPNR person Pharaoh@Exo.3.10-Rom
+    TIPNR person Pharaoh@Gen.12.15-
+    TIPNR person Pharaoh@Gen.37.36-Act
+    TIPNR person Pharaoh@Jer.25.19
+    metav person 2328 Pharaoh
+    metav person 2329 Pharaoh
+    metav person 2330 Pharaoh
+    metav person 2331 Pharaoh
+    metav person 2332 Pharaoh
+    metav person 2333 Pharaoh
+    metav person 2334 Pharaoh
+    metav person 2335 Pharaoh
+    metav person 2336 Pharaoh
+    metav person 2337 Pharaoh-nechoh
+    metav person 2339 Pharosh
+    metav alias  2328 Pharaoh
+    metav alias  2329 Pharaoh
+    metav alias  2330 Pharaoh
+    metav alias  2331 Pharaoh
+    metav alias  2332 Pharaoh
+    metav alias  2333 Pharaoh
+    metav alias  2334 Pharaoh
+    metav alias  2335 Pharaoh
+    metav alias  2336 Pharaoh
+    metav alias  2339 Pharosh
+    metav alias  2336 Pharaoh-hophra
+    metav alias  2337 Pharaoh-nechoh
+
+── 1Ki 10:22  tarshish  p[2, 22] ──────────────────────────────
+  prose: For a ship of Tarshish belonged to king Solomon upon the sea with the ships of Hiram. One ship came to the king every three years out of Tarshish with gold and silver, and turned and hewn stones.
+  slot p  2: english='of Tarshish' head='tarshish' strongs=*
+  slot p 22: english='Tarshish' head='tarshish' strongs=*
+  PAINT: bind name='tarshish' -> Tarshish@1Ki.10.22-Jon (referent kind: place)
+  roster:
+    TIPNR person Tarshish@1Ch.7.10
+    TIPNR place  Tarshish@1Ki.10.22-Jon
+    TIPNR person Tarshish@Est.1.14
+    TIPNR person Tarshish@Gen.10.4-1Ch
+    metav person 2828 Tarshish
+    metav person 2829 Tarshish
+    metav person 2847 Tharshish
+    metav alias  2828 Tarshish
+    metav alias  2829 Tarshish
+    metav alias  2847 Tharshish
+
+── 1Ki 11:17  hadad  p[2, 19] ──────────────────────────────
+  prose: And Hadad ran away, he and the Edomite men of the servants of his father with him. And they entered into Egypt. And Hadad was a small boy.
+  slot p  2: english='Hadad,' head='hadad' strongs=*
+  slot p 19: english='Hadad' head='hadad' strongs=*
+  PAINT: bind name='hadad' -> Hadad@1Ki.11.14- (referent kind: person)
+  roster:
+    TIPNR place  Hadad-rimmon@Zec.12.11
+    TIPNR person Hadad@1Ki.11.14-
+    TIPNR person Hadad@Gen.25.15-1Ch
+    TIPNR person Hadad@Gen.36.35-1Ch
+    TIPNR person Hadad@Gen.36.39-1Ch
+    TIPNR person Hadadezer@2Sa.8.3-1Ch
+    TIPNR place  Hadid@Ezr.2.33-Neh
+    TIPNR person Henadad@Ezr.3.9-Neh
+    TIPNR person Henadad@Neh.3.18
+    TIPNR person Henadad@Neh.3.24
+    metav person 1338 Hadad
+    metav person 1339 Hadad
+    metav person 1342 Hadad
+    metav person 1341 Hadar
+    metav person 1493 Henadad
+    metav person 1494 Henadad
+    metav person 1495 Henadad
+    metav alias  1338 Hadad
+    metav alias  1339 Hadad
+    metav alias  1340 Hadadezer
+    metav alias  1341 Hadar
+    metav alias  1342 Hadar
+    metav alias  1493 Henadad
+    metav alias  1494 Henadad
+    metav alias  1495 Henadad
+    metav alias  1341 Hadad
+    metav alias  1342 Hadad
+
+── 1Ki 11:18  pharaoh  p[16, 23] ──────────────────────────────
+  prose: And they rose up out of Midian, and came into Paran. And they took men with themselves, and they came to Pharaoh king of Egypt. And Hadad entered to Pharaoh. And he gave to him a house, and ordered bread loaves for him, and gave land to him.
+  slot p 16: english='Pharaoh' head='pharaoh' strongs=*
+  slot p 23: english='Pharaoh.' head='pharaoh' strongs=*
+  PAINT: bind name='pharaoh' -> Pharaoh@1Ki.3.1-Sng (referent kind: person)
+  roster:
+    TIPNR place  Parah@Jos.18.23
+    TIPNR person Pharaoh@1Ch.4.18
+    TIPNR person Pharaoh@1Ki.3.1-Sng
+    TIPNR person Pharaoh@2Ki.18.21-Isa
+    TIPNR person Pharaoh@Exo.1.11-Heb
+    TIPNR person Pharaoh@Exo.3.10-Rom
+    TIPNR person Pharaoh@Gen.12.15-
+    TIPNR person Pharaoh@Gen.37.36-Act
+    TIPNR person Pharaoh@Jer.25.19
+    metav person 2328 Pharaoh
+    metav person 2329 Pharaoh
+    metav person 2330 Pharaoh
+    metav person 2331 Pharaoh
+    metav person 2332 Pharaoh
+    metav person 2333 Pharaoh
+    metav person 2334 Pharaoh
+    metav person 2335 Pharaoh
+    metav person 2336 Pharaoh
+    metav person 2337 Pharaoh-nechoh
+    metav person 2339 Pharosh
+    metav alias  2328 Pharaoh
+    metav alias  2329 Pharaoh
+    metav alias  2330 Pharaoh
+    metav alias  2331 Pharaoh
+    metav alias  2332 Pharaoh
+    metav alias  2333 Pharaoh
+    metav alias  2334 Pharaoh
+    metav alias  2335 Pharaoh
+    metav alias  2336 Pharaoh
+    metav alias  2339 Pharosh
+    metav alias  2336 Pharaoh-hophra
+    metav alias  2337 Pharaoh-nechoh
+
+── 1Ki 11:20  pharaoh  p[20, 27, 32] ──────────────────────────────
+  prose: And the sister of Tahpenes bore to him, to Hadad, Genubath her son. And Tahpenes nourished him in the midst of the house of Pharaoh. And Genubath was in the house of Pharaoh in the midst of the sons of Pharaoh.
+  slot p 20: english='of Pharaoh.' head='pharaoh' strongs=*
+  slot p 27: english='of Pharaoh' head='pharaoh' strongs=*
+  slot p 32: english='of Pharaoh.' head='pharaoh' strongs=*
+  PAINT: bind name='pharaoh' -> Pharaoh@1Ki.3.1-Sng (referent kind: person)
+  roster:
+    TIPNR place  Parah@Jos.18.23
+    TIPNR person Pharaoh@1Ch.4.18
+    TIPNR person Pharaoh@1Ki.3.1-Sng
+    TIPNR person Pharaoh@2Ki.18.21-Isa
+    TIPNR person Pharaoh@Exo.1.11-Heb
+    TIPNR person Pharaoh@Exo.3.10-Rom
+    TIPNR person Pharaoh@Gen.12.15-
+    TIPNR person Pharaoh@Gen.37.36-Act
+    TIPNR person Pharaoh@Jer.25.19
+    metav person 2328 Pharaoh
+    metav person 2329 Pharaoh
+    metav person 2330 Pharaoh
+    metav person 2331 Pharaoh
+    metav person 2332 Pharaoh
+    metav person 2333 Pharaoh
+    metav person 2334 Pharaoh
+    metav person 2335 Pharaoh
+    metav person 2336 Pharaoh
+    metav person 2337 Pharaoh-nechoh
+    metav person 2339 Pharosh
+    metav alias  2328 Pharaoh
+    metav alias  2329 Pharaoh
+    metav alias  2330 Pharaoh
+    metav alias  2331 Pharaoh
+    metav alias  2332 Pharaoh
+    metav alias  2333 Pharaoh
+    metav alias  2334 Pharaoh
+    metav alias  2335 Pharaoh
+    metav alias  2336 Pharaoh
+    metav alias  2339 Pharosh
+    metav alias  2336 Pharaoh-hophra
+    metav alias  2337 Pharaoh-nechoh
+
+── 1Ki 11:21  hadad  p[1, 22] ──────────────────────────────
+  prose: And Hadad heard in Egypt that David had gone to sleep with his fathers, and that Joab the ruler of the military had died. And Hadad said to Pharaoh, Send me, and I will return unto my land.
+  slot p  1: english='Hadad' head='hadad' strongs=*
+  slot p 22: english='Hadad' head='hadad' strongs=*
+  PAINT: bind name='hadad' -> Hadad@1Ki.11.14- (referent kind: person)
+  roster:
+    TIPNR place  Hadad-rimmon@Zec.12.11
+    TIPNR person Hadad@1Ki.11.14-
+    TIPNR person Hadad@Gen.25.15-1Ch
+    TIPNR person Hadad@Gen.36.35-1Ch
+    TIPNR person Hadad@Gen.36.39-1Ch
+    TIPNR person Hadadezer@2Sa.8.3-1Ch
+    TIPNR place  Hadid@Ezr.2.33-Neh
+    TIPNR person Henadad@Ezr.3.9-Neh
+    TIPNR person Henadad@Neh.3.18
+    TIPNR person Henadad@Neh.3.24
+    metav person 1338 Hadad
+    metav person 1339 Hadad
+    metav person 1342 Hadad
+    metav person 1341 Hadar
+    metav person 1493 Henadad
+    metav person 1494 Henadad
+    metav person 1495 Henadad
+    metav alias  1338 Hadad
+    metav alias  1339 Hadad
+    metav alias  1340 Hadadezer
+    metav alias  1341 Hadar
+    metav alias  1342 Hadar
+    metav alias  1493 Henadad
+    metav alias  1494 Henadad
+    metav alias  1495 Henadad
+    metav alias  1341 Hadad
+    metav alias  1342 Hadad
+
+── 1Ki 11:22  hadad  p[4, 22] ──────────────────────────────
+  prose: And Pharaoh said to Hadad, What do you lack with me, that behold, you seek to go forth into your land? And Hadad said to him, Not one thing, but by sending you shall send me.
+  slot p  4: english='Hadad,' head='hadad' strongs=*
+  slot p 22: english='Hadad,' head='hadad' strongs=*
+  PAINT: bind name='hadad' -> Hadad@1Ki.11.14- (referent kind: person)
+  roster:
+    TIPNR place  Hadad-rimmon@Zec.12.11
+    TIPNR person Hadad@1Ki.11.14-
+    TIPNR person Hadad@Gen.25.15-1Ch
+    TIPNR person Hadad@Gen.36.35-1Ch
+    TIPNR person Hadad@Gen.36.39-1Ch
+    TIPNR person Hadadezer@2Sa.8.3-1Ch
+    TIPNR place  Hadid@Ezr.2.33-Neh
+    TIPNR person Henadad@Ezr.3.9-Neh
+    TIPNR person Henadad@Neh.3.18
+    TIPNR person Henadad@Neh.3.24
+    metav person 1338 Hadad
+    metav person 1339 Hadad
+    metav person 1342 Hadad
+    metav person 1341 Hadar
+    metav person 1493 Henadad
+    metav person 1494 Henadad
+    metav person 1495 Henadad
+    metav alias  1338 Hadad
+    metav alias  1339 Hadad
+    metav alias  1340 Hadadezer
+    metav alias  1341 Hadar
+    metav alias  1342 Hadar
+    metav alias  1493 Henadad
+    metav alias  1494 Henadad
+    metav alias  1495 Henadad
+    metav alias  1341 Hadad
+    metav alias  1342 Hadad
+
+── 1Ki 11:29  ahijah  p[14, 29] ──────────────────────────────
+  prose: And it came to pass in that time that Jeroboam came forth out of Jerusalem, and Ahijah the Shilonite the prophet found him in the way; and Ahijah separated him from the way. And Ahijah was wearing a new cloak, and both were alone in the plain.
+  slot p 14: english='Ahijah' head='ahijah' strongs=*
+  slot p 29: english='Ahijah' head='ahijah' strongs=*
+  PAINT: bind name='ahijah' -> Ahijah@1Ki.11.29-2Ch (referent kind: person)
+  roster:
+    TIPNR person Abijah@1Ch.24.10-Luk
+    TIPNR person Abijah@1Ch.7.8
+    TIPNR person Abijah@1Ki.14.1
+    TIPNR person Abijah@1Ki.14.31-Mat
+    TIPNR person Abijah@1Sa.8.2-1Ch
+    TIPNR person Abijah@Neh.10.7-
+    TIPNR person Ahi@1Ch.5.15
+    TIPNR person Ahi@1Ch.7.34
+    TIPNR person Ahiah@Neh.10.26
+    TIPNR person Ahijah@1Ch.11.36
+    TIPNR person Ahijah@1Ch.2.25
+    TIPNR person Ahijah@1Ch.26.20
+    TIPNR person Ahijah@1Ch.8.7
+    TIPNR person Ahijah@1Ki.11.29-2Ch
+    TIPNR person Ahijah@1Ki.15.27-2Ki
+    TIPNR person Ahijah@1Ki.4.3
+    TIPNR person Aphiah@1Sa.9.1
+    TIPNR person Malchijah@1Ch.24.9
+    TIPNR person Malchijah@1Ch.6.40
+    TIPNR person Malchijah@1Ch.9.12-Neh
+    TIPNR person Malchijah@Ezr.10.25a
+    TIPNR person Malchijah@Ezr.10.25b
+    TIPNR person Malchijah@Ezr.10.31
+    TIPNR person Malchijah@Neh.10.3
+    TIPNR person Malchijah@Neh.12.42
+    TIPNR person Malchijah@Neh.3.11
+    TIPNR person Malchijah@Neh.3.14
+    TIPNR person Malchijah@Neh.3.31
+    TIPNR person Malchijah@Neh.8.4
+    metav person 14 Abijah
+    metav person 35 Abijah
+    metav person 36 Abijah
+    metav person 37 Abijah
+    metav person 38 Abijah
+    metav person 124 Ahi
+    metav person 125 Ahi
+    metav person 127 Ahiah
+    metav person 128 Ahiah
+    metav person 135 Ahijah
+    metav person 136 Ahijah
+    metav person 137 Ahijah
+    metav person 138 Ahijah
+    metav person 139 Ahijah
+    metav person 140 Ahijah
+    metav person 178 Ajah
+    metav person 274 Aphiah
+    metav person 1909 Malchijah
+    metav person 1910 Malchijah
+    metav person 1911 Malchijah
+    metav person 1912 Malchijah
+    metav person 1913 Malchijah
+    metav person 1914 Malchijah
+    metav alias  35 Abijah
+    metav alias  36 Abijah
+    metav alias  37 Abijah
+    metav alias  124 Ahi
+    metav alias  125 Ahi
+    metav alias  126 Ahiah
+    metav alias  127 Ahiah
+    metav alias  128 Ahiah
+    metav alias  135 Ahijah
+    metav alias  136 Ahijah
+    metav alias  137 Ahijah
+    metav alias  138 Ahijah
+    metav alias  139 Ahijah
+    metav alias  140 Ahijah
+    metav alias  178 Ajah
+    metav alias  274 Aphiah
+    metav alias  1909 Malchijah
+    metav alias  1910 Malchijah
+    metav alias  1911 Malchijah
+    metav alias  1912 Malchijah
+    metav alias  1913 Malchijah
+    metav alias  1914 Malchijah
+    metav alias  14 Abijah
+    metav alias  38 Abijah
+
+── 1Ki 12:1  shechem  p[6, 9] ──────────────────────────────
+  prose: And king Rehoboam went to Shechem, for all Israel came unto Shechem to give him reign.
+  slot p  6: english='Shechem,' head='shechem' strongs=*
+  slot p  9: english='Shechem' head='shechem' strongs=*
+  PAINT: bind name='shechem' -> Shechem@Gen.12.6-Act (referent kind: place)
+  roster:
+    TIPNR person Shechem@1Ch.7.19
+    TIPNR place  Shechem@Gen.12.6-Act
+    TIPNR person Shechem@Gen.33.19-
+    TIPNR person Shechem@Num.26.31-Jos
+    metav person 2588 Shechem
+    metav person 2589 Shechem
+    metav person 2590 Shechem
+    metav alias  2588 Shechem
+    metav alias  2589 Shechem
+    metav alias  2590 Shechem
+
+── 1Ki 12:23  judah  p[6, 11] ──────────────────────────────
+  prose: Speak to Rehoboam son of Solomon king of Judah, and to all the house of Judah and Benjamin, and to the rest of the people! saying,
+  slot p  6: english='of Judah,' head='judah' strongs=*
+  slot p 11: english='of Judah' head='judah' strongs=*
+  PAINT: bind name='judah' -> Judah@Gen.29.35-Rev (referent kind: person)
+  roster:
+    TIPNR person Judah@Ezr.10.23
+    TIPNR person Judah@Gen.29.35-Rev
+    TIPNR person Judah@Luk.3.30
+    TIPNR person Judah@Neh.11.9
+    TIPNR person Judah@Neh.12.36
+    TIPNR person Judah@Neh.12.8-
+    TIPNR person Judas@Act.15.22-
+    TIPNR person Judas@Act.5.37
+    TIPNR person Judas@Act.9.11
+    TIPNR person Judas@Mat.10.3-Act
+    TIPNR person Judas@Mat.10.4-Act
+    TIPNR place  Judea@Ezr.9.9-1Th
+    metav person 1749 Juda
+    metav person 1750 Juda
+    metav person 1751 Judah
+    metav person 1752 Judah
+    metav person 1753 Judah
+    metav person 1754 Judah
+    metav person 1755 Judah
+    metav person 1757 Judas
+    metav person 1758 Judas
+    metav person 1759 Judas
+    metav person 1760 Judas
+    metav alias  1749 Juda
+    metav alias  1750 Juda
+    metav alias  1751 Judah
+    metav alias  1752 Judah
+    metav alias  1753 Judah
+    metav alias  1754 Judah
+    metav alias  1755 Judah
+    metav alias  1756 Judas
+    metav alias  1757 Judas
+    metav alias  1758 Judas
+    metav alias  1759 Judas
+    metav alias  1542 Judah
+    metav alias  1751 Judas
+    metav alias  1756 Juda
+    metav alias  1751 Juda
+    metav alias  1815 Judas
+    metav alias  1760 Judas
+
+── 1Ki 14:2  jeroboam  p[5, 15] ──────────────────────────────
+  prose: And Jeroboam said to his wife, Rise up and change that they shall not know that you are the wife of Jeroboam, and go unto Shiloh! Behold, Ahijah the prophet is there, he spoke unto me to reign over this people.
+  slot p  5: english='Jeroboam,' head='jeroboam' strongs=*
+  slot p 15: english='of Jeroboam,' head='jeroboam' strongs=*
+  PAINT: bind name='jeroboam' -> Jeroboam@1Ki.11.26-2Ch (referent kind: person)
+  roster:
+    TIPNR person Jeroboam@1Ki.11.26-2Ch
+    TIPNR person Jeroboam@2Ki.13.13-Amo
+    TIPNR person Jeroham@1Ch.12.7
+    TIPNR person Jeroham@1Ch.27.22
+    TIPNR person Jeroham@1Ch.8.27
+    TIPNR person Jeroham@1Ch.9.12-Neh
+    TIPNR person Jeroham@1Ch.9.8
+    TIPNR person Jeroham@1Sa.1.1-1Ch
+    TIPNR person Jeroham@2Ch.23.1
+    metav person 872 Jeroboam
+    metav person 873 Jeroboam
+    metav person 874 Jeroham
+    metav person 875 Jeroham
+    metav person 876 Jeroham
+    metav person 877 Jeroham
+    metav person 878 Jeroham
+    metav person 879 Jeroham
+    metav person 880 Jeroham
+    metav alias  872 Jeroboam
+    metav alias  873 Jeroboam
+    metav alias  874 Jeroham
+    metav alias  875 Jeroham
+    metav alias  876 Jeroham
+    metav alias  877 Jeroham
+    metav alias  878 Jeroham
+    metav alias  879 Jeroham
+    metav alias  880 Jeroham
+    metav alias  2412 Roboam
+
+── 1Ki 14:10  jeroboam  p[8, 11, 24] ──────────────────────────────
+  prose: On account of this behold, I bring evil to the house of Jeroboam, and I will utterly destroy of Jeroboam the one urinating against a wall, the one coming and the one being left behind in Israel. And I shall choose over the house of Jeroboam as one chooses the dung unto finishing it.
+  slot p  8: english='of Jeroboam,' head='jeroboam' strongs=*
+  slot p 11: english='of Jeroboam' head='jeroboam' strongs=*
+  slot p 24: english='of Jeroboam' head='jeroboam' strongs=*
+  PAINT: bind name='jeroboam' -> Jeroboam@1Ki.11.26-2Ch (referent kind: person)
+  roster:
+    TIPNR person Jeroboam@1Ki.11.26-2Ch
+    TIPNR person Jeroboam@2Ki.13.13-Amo
+    TIPNR person Jeroham@1Ch.12.7
+    TIPNR person Jeroham@1Ch.27.22
+    TIPNR person Jeroham@1Ch.8.27
+    TIPNR person Jeroham@1Ch.9.12-Neh
+    TIPNR person Jeroham@1Ch.9.8
+    TIPNR person Jeroham@1Sa.1.1-1Ch
+    TIPNR person Jeroham@2Ch.23.1
+    metav person 872 Jeroboam
+    metav person 873 Jeroboam
+    metav person 874 Jeroham
+    metav person 875 Jeroham
+    metav person 876 Jeroham
+    metav person 877 Jeroham
+    metav person 878 Jeroham
+    metav person 879 Jeroham
+    metav person 880 Jeroham
+    metav alias  872 Jeroboam
+    metav alias  873 Jeroboam
+    metav alias  874 Jeroham
+    metav alias  875 Jeroham
+    metav alias  876 Jeroham
+    metav alias  877 Jeroham
+    metav alias  878 Jeroham
+    metav alias  879 Jeroham
+    metav alias  880 Jeroham
+    metav alias  2412 Roboam
+
+── 1Ki 14:13  jeroboam  p[13, 29] ──────────────────────────────
+  prose: And all Israel shall lament him, and entomb him, for this one only shall enter of Jeroboam to the tomb, for there shall be found in him a good word concerning the LORD God of Israel among the house of Jeroboam.
+  slot p 13: english='Jeroboam' head='jeroboam' strongs=*
+  slot p 29: english='of Jeroboam.' head='jeroboam' strongs=*
+  PAINT: bind name='jeroboam' -> Jeroboam@1Ki.11.26-2Ch (referent kind: person)
+  roster:
+    TIPNR person Jeroboam@1Ki.11.26-2Ch
+    TIPNR person Jeroboam@2Ki.13.13-Amo
+    TIPNR person Jeroham@1Ch.12.7
+    TIPNR person Jeroham@1Ch.27.22
+    TIPNR person Jeroham@1Ch.8.27
+    TIPNR person Jeroham@1Ch.9.12-Neh
+    TIPNR person Jeroham@1Ch.9.8
+    TIPNR person Jeroham@1Sa.1.1-1Ch
+    TIPNR person Jeroham@2Ch.23.1
+    metav person 872 Jeroboam
+    metav person 873 Jeroboam
+    metav person 874 Jeroham
+    metav person 875 Jeroham
+    metav person 876 Jeroham
+    metav person 877 Jeroham
+    metav person 878 Jeroham
+    metav person 879 Jeroham
+    metav person 880 Jeroham
+    metav alias  872 Jeroboam
+    metav alias  873 Jeroboam
+    metav alias  874 Jeroham
+    metav alias  875 Jeroham
+    metav alias  876 Jeroham
+    metav alias  877 Jeroham
+    metav alias  878 Jeroham
+    metav alias  879 Jeroham
+    metav alias  880 Jeroham
+    metav alias  2412 Roboam
+
+── 1Ki 15:17  judah  p[6, 20] ──────────────────────────────
+  prose: And Baasha king of Israel ascended against Judah, and he built Ramah, so as not to be going forth and entering to Asa king of Judah.
+  slot p  6: english='Judah,' head='judah' strongs=*
+  slot p 20: english='of Judah.' head='judah' strongs=*
+  PAINT: bind name='judah' -> Judah@Gen.29.35-Rev (referent kind: person)
+  roster:
+    TIPNR person Judah@Ezr.10.23
+    TIPNR person Judah@Gen.29.35-Rev
+    TIPNR person Judah@Luk.3.30
+    TIPNR person Judah@Neh.11.9
+    TIPNR person Judah@Neh.12.36
+    TIPNR person Judah@Neh.12.8-
+    TIPNR person Judas@Act.15.22-
+    TIPNR person Judas@Act.5.37
+    TIPNR person Judas@Act.9.11
+    TIPNR person Judas@Mat.10.3-Act
+    TIPNR person Judas@Mat.10.4-Act
+    TIPNR place  Judea@Ezr.9.9-1Th
+    metav person 1749 Juda
+    metav person 1750 Juda
+    metav person 1751 Judah
+    metav person 1752 Judah
+    metav person 1753 Judah
+    metav person 1754 Judah
+    metav person 1755 Judah
+    metav person 1757 Judas
+    metav person 1758 Judas
+    metav person 1759 Judas
+    metav person 1760 Judas
+    metav alias  1749 Juda
+    metav alias  1750 Juda
+    metav alias  1751 Judah
+    metav alias  1752 Judah
+    metav alias  1753 Judah
+    metav alias  1754 Judah
+    metav alias  1755 Judah
+    metav alias  1756 Judas
+    metav alias  1757 Judas
+    metav alias  1758 Judas
+    metav alias  1759 Judas
+    metav alias  1542 Judah
+    metav alias  1751 Judas
+    metav alias  1756 Juda
+    metav alias  1751 Juda
+    metav alias  1815 Judas
+    metav alias  1760 Judas
+
+── 1Ki 15:18  asa  p[2, 37] ──────────────────────────────
+  prose: And Asa took all the silver and the gold being found in the treasuries of the house of the LORD, and in the treasuries of the house of the king; and he put them into the hands of his servants. And king Asa sent them to the son of Hadad, son of Tabrimon, son of Hezion, king of Syria, the one dwelling in Damascus, saying,
+  slot p  2: english='Asa' head='asa' strongs=*
+  slot p 37: english='Asa' head='asa' strongs=*
+  PAINT: bind name='asa' -> Asa@1Ki.15.8-Mat (referent kind: person)
+  roster:
+    TIPNR person Asa@1Ch.9.16
+    TIPNR person Asa@1Ki.15.8-Mat
+    TIPNR person Asahel@2Ch.17.8
+    TIPNR person Asahel@2Ch.31.13
+    TIPNR person Asahel@2Sa.2.18-1Ch
+    TIPNR person Asahel@Ezr.10.15
+    TIPNR person Asaiah@1Ch.15.6-
+    TIPNR person Asaiah@1Ch.4.36
+    TIPNR person Asaiah@1Ch.6.30
+    TIPNR person Asaiah@1Ch.9.5
+    TIPNR person Asaiah@2Ki.22.12-2Ch
+    TIPNR person Asaph@1Ch.6.39-Psa
+    TIPNR person Asaph@1Ch.9.15-Neh
+    TIPNR person Asaph@2Ki.18.18-Isa
+    TIPNR person Asaph@Neh.2.8
+    TIPNR person Asarel@1Ch.4.16
+    TIPNR place  Asia@Act.2.9-Rev
+    metav person 318 Asa
+    metav person 319 Asa
+    metav person 320 Asahel
+    metav person 321 Asahel
+    metav person 322 Asahel
+    metav person 323 Asahel
+    metav person 324 Asahiah
+    metav person 325 Asaiah
+    metav person 326 Asaiah
+    metav person 327 Asaiah
+    metav person 328 Asaiah
+    metav person 329 Asaph
+    metav person 330 Asaph
+    metav person 331 Asaph
+    metav person 332 Asaph
+    metav person 333 Asareel
+    metav alias  318 Asa
+    metav alias  319 Asa
+    metav alias  320 Asahel
+    metav alias  321 Asahel
+    metav alias  322 Asahel
+    metav alias  323 Asahel
+    metav alias  324 Asahiah
+    metav alias  325 Asaiah
+    metav alias  326 Asaiah
+    metav alias  327 Asaiah
+    metav alias  328 Asaiah
+    metav alias  329 Asaph
+    metav alias  330 Asaph
+    metav alias  331 Asaph
+    metav alias  332 Asaph
+    metav alias  333 Asareel
+    metav alias  334 Asarelah
+    metav alias  324 Asaiah
+    metav alias  19 Asaph
