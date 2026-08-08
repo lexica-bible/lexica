@@ -201,6 +201,20 @@ flags; verified 100/0). Verdict: **99 KEEP / 1 flagged (below), zero writes.**
   own entity · pashur→Pashhur accepted equation. Gen 46:20 manasseh sits beside the
   wordpos Machir slot-binds with no collision.
 
+## Batch 7 — ADJUDICATED 2026-08-08 (groups 601-700, Joh 4:50 → Num 23:23)
+Evidence + rosters: receipts_boundpainted_batch7.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
+- NT narrative repeats (Jesus ×~14, Peter, John the Baptist, Herod = Antipas
+  @Mat.14.1-Act on all three verses, James = Zebedee's), Joshua ×~20, Numbers-2
+  tribal camps + Mic/Mal/Num Jacob-Judah nation folds, Miriam/Abiram/Eleazar.
+- Mat 1 genealogy pairs all correct royal-line entities — its joram = the JUDAH
+  Jehoram@1Ki.22.50-Mat (consistent with the batch-3 slot fixes), abia→Abijah,
+  salathiel→Shealtiel, late-genealogy names on their own Mat.1.x entities.
+- Jos 17:1 manasseh sits beside the wordpos person-vs-region gilead slot binds
+  (p16 Gilead@Num.26.29 the man / p23 the region) — no collision.
+- KEEP-WITH-NOTE (accepted equation class): Neh 12:11 jonathan →
+  Johanan@Neh.12.11- (TIPNR files the high-priest line under Johanan).
+
 ## Loud-refusal list
 - **Jdg 9:28 shechem p[12, 30]** (batch 6) — both slots painted the CITY
   (Shechem@Gen.12.6-Act). p30 sits in "the men of Hamor, father of Shechem" — in
