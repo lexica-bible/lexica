@@ -325,8 +325,18 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
                       {Array.from({ length: b.chapters }, (_, i) => i + 1).map(n => (
                         <button
                           key={n}
-                          className={"ch-chip" + (n === selChapter ? " on" : "")}
-                          onClick={() => { setSelChapter(n); if (isOverlay) onClose(); }}
+                          className={"ch-chip" + (active && n === selChapter ? " on" : "")}
+                          onClick={() => {
+                            // The grid can be open under a book the reader has since left
+                            // (a jump/search moved selBook; the accordion doesn't follow).
+                            // A chip click must carry ITS book, not assume the current one —
+                            // same one-tap (book, chapter) handoff the mobile picker's onDone
+                            // does — or it retargets the old book's chapter and the chip
+                            // highlight (chapter number alone) lights in two books at once.
+                            if (!(selBook && b.abbrev === selBook.abbrev)) setSelBook(b);
+                            setSelChapter(n);
+                            if (isOverlay) onClose();
+                          }}
                         >{n}</button>
                       ))}
                     </div>
