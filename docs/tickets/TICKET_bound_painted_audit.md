@@ -215,6 +215,25 @@ flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
 - KEEP-WITH-NOTE (accepted equation class): Neh 12:11 jonathan →
   Johanan@Neh.12.11- (TIPNR files the high-priest line under Johanan).
 
+## Batch 8 — ADJUDICATED 2026-08-08 (groups 701-713, Num 26:12 → Zep 2:7)
+Evidence + rosters: receipts_boundpainted_batch8.txt (JP-run dump, 13 groups, 0 red
+flags). Verdict: **13 KEEP / 0 flagged, zero writes.** Census tribal lists +
+Jesus ×3 + Judah folds. Per-verse referent care confirmed again: Ard@Num.26.40
+(Bela's son — distinct from Gen.46.21's Ard, Benjamin's son) · Naaman@Num.26.40-1Ch
+(not the Syrian) · Jair@Num.32.41 (not the judge) · Ram@Rut.4.19 (not Jerahmeel's
+brother). Machir group beside two Gilead slot-binds, no collision.
+
+## ═══ AUDIT PHASE COMPLETE 2026-08-08 — all 713 groups adjudicated ═══
+**Final tally: 706 KEEP · 5 groups FIXED (7 slots, applied + live-verified,
+batch 3's mixed-Jehoram verses) · 2 flags OPEN on the loud-refusal list below
+(1Ki 4:13 gilead — compound-name class, ships with that lane; Jdg 9:28 shechem —
+city-vs-man, reviewer ruling owed).** Every batch receipt archived
+(receipts_boundpainted_batch1-8.txt) with rosters attached per group; every
+batch checkpointed to JP; zero best-guess writes. Elnatham Ezr 8:16 p15 appendix
+candidate and the chapter-grain 5 remain PARKED per charter (untouched).
+Mechanism legacy: the paint-override marker (reviewer conditions 1+2) is now a
+standing part of the slot-binding guard stack.
+
 ## Loud-refusal list
 - **Jdg 9:28 shechem p[12, 30]** (batch 6) — both slots painted the CITY
   (Shechem@Gen.12.6-Act). p30 sits in "the men of Hamor, father of Shechem" — in

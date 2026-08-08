@@ -114,9 +114,13 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   re-derive from here. Census denominator COMMITTED: 591 word-slots / 156 names (2026-07-29).
   Still open:
   - **Word-position binding lane: CLOSED 8/8 → TODO_ARCHIVE.** Follow-on lanes open:
-    - **Bound-painted audit** — 1,470 slots / 713 groups where one verse-level bind
-      paints 2+ same-name words (wrong paints hide here; discovery-time carve-out in
-      force; list regenerates from census_wordpos_multi.py, changes with bind batches).
+    - **Bound-painted audit — AUDIT COMPLETE 2026-08-08** (all 713 groups / 1,470
+      slots adjudicated in 8 batches; 706 keep, 5 groups FIXED live — the
+      mixed-Jehoram verses, 7 slot rulings via the new reviewer-gated
+      paint-override marker). Record: docs/tickets/TICKET_bound_painted_audit.md
+      + receipts_boundpainted_batch1-8.txt. RESIDUE OPEN: 2 loud-refusal flags
+      awaiting rulings — 1Ki 4:13 gilead (compound-name class, ships with that
+      lane) · Jdg 9:28 shechem (city vs the Gen 34 man, reviewer ruling owed).
     - **Elnatham Ezr 8:16 p15** — in-verse variant-spelling appendix candidate
       (bucket-C pattern; found at wordpos adjudication).
     - **Chapter-grain 5** (azariah/joash/benaiah/harim) — per R3, any fold-in RETURNS
