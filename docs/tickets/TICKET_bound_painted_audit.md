@@ -174,6 +174,21 @@ flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
   Act 9:4/22:7/26:14 "Saul, Saul" → Paul@Act.7.58-2Pe · Act 7:8 jacob →
   Israel@Gen.25.26-Rev · Est 1:1 artaxerxes (LXX name) → Ahasuerus@Ezr.4.6-Dan.
 
+## Batch 5 — ADJUDICATED 2026-08-08 (groups 401-500, Est 3:4 → Gen 45:27)
+Evidence + rosters: receipts_boundpainted_batch5.txt (JP-run dump, 100 groups, 0 red
+flags; verified 100/0). Verdict: **100 KEEP / 0 flagged, zero writes.**
+- Same-referent throughout: Mordecai, Jacob runs (Israel entity fold), Joseph runs,
+  Sarah ×5, Noah ×3, Gen 36 Edomite genealogies (aholibamah→Oholibamah equation;
+  Anah verses consistent with the wordpos Dishon ruling's parent chain).
+- Verified referent-aware verse-grain work: Pharaohs PER-REIGN correct (Exo 2:15
+  oppression-era @Exo.1.11 · Exo 7-18 exodus @Exo.3.10 · Gen 12:15 Abraham's ·
+  Gen 40-45 Joseph's @Gen.37.36 · Eze 32:31 Hophra) · Cain-line vs Seth-line Enoch
+  (Gen 4:17 vs 5:22) and Lamech split correctly · Haran person (Gen 11:27) vs Haran
+  the city (Gen 11:32, place kind) · Gen 34:26 Shechem the MAN (@Gen.33.19-).
+- NOTE (no action): Gog @Ezk.38.2-Rev carries referent kind 'place' — TIPNR's own
+  filing (binds may point at non-person entities, standing tripwire); both slots
+  one referent either way.
+
 ## Loud-refusal list
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
