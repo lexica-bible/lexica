@@ -80,18 +80,24 @@ zero writes** — no slot binds proposed, so no dry-run/apply cycle for this bat
   (out-of-scope flag line only; both slots same referent within each verse).
 
 ## Loud-refusal list
-- **1Ch 6:26 elkanah p[0, 1]** — prose reads "Elkanah — Elkanah his son, Zophai
-  his son": the descending-chain reading makes p0 and p1 a FATHER AND SON both
-  named Elkanah (the Kohathite line has several); the one paint
-  (Elkanah@1Ch.6.26-) may be wrong for one slot. KJV reads it resumptively
-  ("As for Elkanah: the sons of Elkanah"), so the referent split is contested —
-  ambiguous, refused, JP/reviewer to rule.
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
-  Gilead@Gen.31.21-Zec (region). If TIPNR carries a Ramoth-gilead entity, p4's
-  paint is wrong-referent. Different-referent evidence is positive here, but the
-  fix shape (slot bind vs compound treatment — chip-merge ticket territory)
-  needs a ruling. Refused, JP/reviewer to rule.
+  Gilead@Gen.31.21-Zec (region). RULED (reviewer + JP, 2026-08-08): p4's paint is
+  wrong, but do NOT one-off it — tagged as a known member of the COMPOUND-NAME
+  class; the fix ships with the compound-number/chip-merge lane (TODO.md, JP
+  raises) so the fix shape stays uniform. Stays flagged, no write here.
+
+## Resolved flags (batch 1)
+- **1Ch 6:26 elkanah p[0, 1] — KEEP with contested-reading note (evidence-ruled
+  2026-08-08, reviewer's roster test).** TIPNR carries TWO Elkanahs in the
+  neighborhood but files exactly ONE at verse 6:26: Elkanah@1Ch.6.26- (H0511J,
+  son of Ahimoth, father of Zophai; refs 6:26+6:35 — TIPNR.txt:6932). The
+  neighboring Elkanah@1Ch.6.25- (H0511I, son of Shaul, father of Amasai) lists
+  refs 6:25+6:36 — verse 26 NOT among them. So the source reads the doubled name
+  resumptively (KJV "As for Elkanah: the sons of Elkanah — Zophai"), not as a
+  father-son chain: one referent, both slots, current paint correct. The chain
+  reading stays recorded here as the contested alternative; revisit only if the
+  referent authority changes.
 
 ## Carve-outs discovered this lane
 (none yet — batch 1 surfaced no wrongly-painted neighbors outside its own groups)
