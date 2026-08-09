@@ -224,10 +224,9 @@ Jesus ×3 + Judah folds. Per-verse referent care confirmed again: Ard@Num.26.40
 brother). Machir group beside two Gilead slot-binds, no collision.
 
 ## ═══ AUDIT PHASE COMPLETE 2026-08-08 — all 713 groups adjudicated ═══
-**Final tally: 706 KEEP · 5 groups FIXED (7 slots, applied + live-verified,
-batch 3's mixed-Jehoram verses) · 2 flags OPEN on the loud-refusal list below
-(1Ki 4:13 gilead — compound-name class, ships with that lane; Jdg 9:28 shechem —
-city-vs-man, reviewer ruling owed).** Every batch receipt archived
+**Final tally (post Jdg 9:28 ruling, LANE FULLY CLOSED 2026-08-08): 707 KEEP ·
+5 groups FIXED (7 slots, applied + live-verified, batch 3's mixed-Jehoram verses) ·
+1 flag PARKED with the compound-name lane (1Ki 4:13 gilead).** Every batch receipt archived
 (receipts_boundpainted_batch1-8.txt) with rosters attached per group; every
 batch checkpointed to JP; zero best-guess writes. Elnatham Ezr 8:16 p15 appendix
 candidate and the chapter-grain 5 remain PARKED per charter (untouched).
@@ -235,12 +234,6 @@ Mechanism legacy: the paint-override marker (reviewer conditions 1+2) is now a
 standing part of the slot-binding guard stack.
 
 ## Loud-refusal list
-- **Jdg 9:28 shechem p[12, 30]** (batch 6) — both slots painted the CITY
-  (Shechem@Gen.12.6-Act). p30 sits in "the men of Hamor, father of Shechem" — in
-  Genesis Hamor is the father of Shechem THE MAN (TIPNR entity Shechem@Gen.33.19-,
-  correctly used at Gen 34:26), so a real rival entity exists; commentators split
-  between the man and the city-founder idiom (p12 "son of Shechem" = citizen-of-city
-  reading). Genuine ambiguity — refused, JP/reviewer to rule.
 - **1Ki 4:13 gilead p[4, 12]** — p4 sits inside the compound place name "Ramoth
   Gilead" (the city) while p12 is the REGION Gilead; both painted
   Gilead@Gen.31.21-Zec (region). RULED (reviewer + JP, 2026-08-08): p4's paint is
@@ -248,7 +241,17 @@ standing part of the slot-binding guard stack.
   class; the fix ships with the compound-number/chip-merge lane (TODO.md, JP
   raises) so the fix shape stays uniform. Stays flagged, no write here.
 
-## Resolved flags (batch 1)
+## Resolved flags
+- **Jdg 9:28 shechem p[12, 30] — KEEP the city paint with contested-reading note
+  (reviewer verdict 2026-08-08, evidence-ruled by the Elkanah-standard ref-list
+  test).** TIPNR files BOTH tokens of this verse (Jdg.9.28a + 9.28b) on the CITY's
+  ref list (Shechem@Gen.12.6-Act, TIPNR.txt:33477); the MAN's list
+  (Shechem@Gen.33.19-, :21560) covers Gen 33:19 + Gen 34 only. The Hamor record
+  (:8514) faced the exact ambiguity and distinguishes "father of H7927H [the man];
+  founder of H7927G [the city]" — 9:28 filed under founder-of-city. CONTESTED
+  ALTERNATIVE on record: Gaal's speech as Hivite-ancestry rhetoric pointing at the
+  Genesis man (the reviewer's literary lean, overruled by the source's own filing,
+  applied symmetrically with Elkanah). Actionable if TIPNR ever refiles; no write.
 - **1Ch 6:26 elkanah p[0, 1] — KEEP with contested-reading note (evidence-ruled
   2026-08-08, reviewer's roster test).** TIPNR carries TWO Elkanahs in the
   neighborhood but files exactly ONE at verse 6:26: Elkanah@1Ch.6.26- (H0511J,

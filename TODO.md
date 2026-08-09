@@ -118,9 +118,10 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
       slots adjudicated in 8 batches; 706 keep, 5 groups FIXED live — the
       mixed-Jehoram verses, 7 slot rulings via the new reviewer-gated
       paint-override marker). Record: docs/tickets/TICKET_bound_painted_audit.md
-      + receipts_boundpainted_batch1-8.txt. RESIDUE OPEN: 2 loud-refusal flags
-      awaiting rulings — 1Ki 4:13 gilead (compound-name class, ships with that
-      lane) · Jdg 9:28 shechem (city vs the Gen 34 man, reviewer ruling owed).
+      + receipts_boundpainted_batch1-8.txt. FULLY CLOSED same day: Jdg 9:28
+      shechem ruled KEEP (TIPNR ref-list test; contested note on record) → final
+      707 keep / 5 fixed / 1 flag parked with the compound-name lane
+      (1Ki 4:13 gilead — ships with that lane's fix, no one-off).
     - **Elnatham Ezr 8:16 p15** — in-verse variant-spelling appendix candidate
       (bucket-C pattern; found at wordpos adjudication).
     - **Chapter-grain 5** (azariah/joash/benaiah/harim) — per R3, any fold-in RETURNS
