@@ -84,15 +84,31 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   **THIRD INSTANCE of one trap** — already fixed at two other emit sites, with the lesson
   written down both times: `:740-744` (search) and `:1007-1008` ("emit a CLEAN nav, don't
   spread ...nav").
-- **OPEN — the Word Study leg of the same sighting (reviewer UNFOLDED it from the γῆ class
-  2026-08-09; read-only, propose before any change).** JP pasted **Γαλιλαίας** — the inflected
-  SURFACE form, not the lexical Γαλιλαία — into Word study, and its ABP tab looked grey. The
-  Library leg above just proved "looks grey" ≠ "is off", so establish WHICH of three states it
-  was before adopting any diagnosis: genuinely disabled · merely unselected · enabled but with
-  an empty result set. Then: does a surface-form search miss ABP's index, and is that the γῆ
-  diacritic class or something else? **JP's expectation, stated: he should be able to navigate
-  to ABP from that screen even when the result set differs.** Do not inherit the γῆ diagnosis
-  by analogy — different screen, different code.
+- **OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.**
+  NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
+  leg's unselected-pill illusion either — Word study's tabs carry a REAL disabled state, in
+  two separate sets: the search-scope tabs (`80-lexicon.jsx:1053`, `_comboOK` — can only gray
+  ABP when the language filter is Hebrew, so never for a Greek word) and the word-card tabs
+  (`:1117`, `!profile.has_abp` — a real data check).
+  **THE FINDING (JP-run, read-only):** `has_abp` asks whether any ABP word carries the NUMBER.
+  For G1056 Galilee: **0 ABP rows** vs 63 KJV. But ABP prints Galilee **73 times** — and every
+  one of those rows carries `strongs='*'` AND an EMPTY `lemma`. So the tab is honest about the
+  number and wrong about the text, and **both doors are currently shut**: the number door
+  (nothing under G1056) and the by-form `PN:<lemma>` door (`views_lexicon.py:1188`, which keys
+  on a lemma these rows don't have). JP's expectation stands and is right — he should be able
+  to reach ABP for a word ABP plainly contains.
+  **THE ONE CHECK LEFT:** the reader's PN card DOES display Γαλιλαίας, so the form must live in
+  the identity table rather than in `words`. If `pn_greek_identity` carries it, the fix is
+  ROUTING (the ABP tab opens the by-form view instead of graying) — display-layer. If it does
+  not, this is an entity-data ticket and the tab stays gray honestly until the data exists.
+  **Paste-form correction, so nobody re-derives it:** the code returns a flat "No matches" for
+  the inflected Γαλιλαίας (stored key `γαλιλαια`; the query folds to `γαλιλαιασ`, and neither
+  the exact nor the substring band bridges that — the definition-text theory was checked and
+  came back empty). Since JP DID get KJV verses, the search that ran was the dictionary form
+  Γαλιλαία, which was on screen in the KJV card. Everything observed fits that path.
+  **Second-order, same family as the Library Greek-search item below:** the inflected paste
+  would have returned a bare "No matches" for a word that is all over the Gospels — which
+  reads as "this word isn't in the Bible" rather than "type the dictionary form".
 
 ## PN entity-data follow-ons (2026-08-09, from the panel-ticket eyeball — data, not display)
 - **Joram/Israel is TIPNR-only** — the card is honest and now correctly shaped, just thin
