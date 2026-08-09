@@ -68,8 +68,20 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   unselected tabs that still read as clickable. **Do NOT "fix" it by graying for real**, and
   it is a visual change, so it needs JP's yes on the specific change.
   code: static/src/59b-library-nav.jsx:178
+- **REPRO CORRECTED (JP, 2026-08-09 post-deploy — the write-ups below compressed a step).**
+  The PN card has NO Library link: every occurrence link on it goes to WORD STUDY
+  (`30-detail-panel.jsx:1383-1505`, all `onNavigateToLexicon`). The real chain is
+  **PN card → "63× in KJV" → Word study (KJV) → click a verse in its list → Library, KJV** —
+  it is WORD STUDY'S verse list that bakes the translation in (`90-app.jsx:476`), not the card.
+  Exactly what JP reported first time; the compression was CC's. Mechanism and fix unaffected.
+  **Found while mapping it: a SECOND site bakes a translation into a Library jump** — opening a
+  shared link carrying a version (`90-app.jsx:302`). So the same snap-back would have hit a
+  shared KJV link followed by a version switch. Fixing at the RE-EMIT rather than per-caller
+  covers it without having known it was there — worth remembering when the consumed-jump
+  refactor picks this up (it must handle both entry points, and any third).
 - The trace, kept because it is the third instance of one trap: **the tab click is overwritten,
-  not ignored — and nothing is disabled.** Repro: PN card →
+  not ignored — and nothing is disabled.** Repro (per the correction above, the first hop is
+  Word study): PN card →
   a KJV occurrence link (G1056 "63× in KJV") → lands in Library at Mat 2:22 KJV → click ABP →
   snaps back. Hard refresh frees it (JP confirmed), so nothing is persisted.
   THE LOOP, all five steps read: (1) the link bakes `translation:"kjv"` into the jump
