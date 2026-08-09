@@ -49,6 +49,45 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   (Assyrians → Assyria map pin). Reviewer-ruled keep, but the card should say
   "people of [region]" rather than presenting as a place. Polish, not a defect.
 
+## Library translation-tab sync (JP sighting 2026-08-09, TRACED — fix proposed, not built)
+- **The tab click is overwritten, not ignored — and nothing is disabled.** Repro: PN card →
+  a KJV occurrence link (G1056 "63× in KJV") → lands in Library at Mat 2:22 KJV → click ABP →
+  snaps back. Hard refresh frees it (JP confirmed), so nothing is persisted.
+  THE LOOP, all five steps read: (1) the link bakes `translation:"kjv"` into the jump
+  (`90-app.jsx:476`) — deliberate, that link SHOULD land in KJV; (2) Library's nav effect
+  applies it (`60-library.jsx:382`); (3) the ABP click really does fire (`pickBible`, :661 —
+  the button has NO disabled state); (4) the version-switch re-scroll effect (:263-266) fires
+  on `[translation]` and, because the jump carries a `highlight`, re-emits `{...n}` — spreading
+  the OLD jump, still holding `"kjv"`; (5) new jump object → the nav effect re-runs and
+  re-applies KJV. Explains every observed fact: link-jumps only (nothing else puts a
+  translation in the jump), highlight required (step 4's guard — so plain book/chapter
+  navigation does NOT reproduce), and refresh curing it.
+  **THIRD INSTANCE of one trap** — already fixed at two other emit sites, with the lesson
+  written down both times: `:740-744` (search) and `:1007-1008` ("emit a CLEAN nav, don't
+  spread ...nav"). PROPOSED FIX (one line, JP's go owed): at :265 drop the stale `translation`
+  when re-arming the scroll, and `extern` with it — `extern` rides along the same way and
+  would re-force canonical order on every version switch while reading chronologically
+  (latent today, same family). BIGGER SHAPE, own pass: treat a jump's translation as a
+  ONE-SHOT instruction consumed once applied, so no later re-send can re-assert it — that
+  cures all three sites, but it touches the load-bearing nav effect.
+- **"Greyed" was the unselected pill, not a disabled control** (JP + reviewer both read it as
+  disabled). `.seg-b`'s selected state is a white pill, so unselected tabs read dim beside it —
+  ABP and HEB were both live the whole time. Not a bug; flagged because two readers in a row
+  mis-read an enabled control as unavailable, which is a legibility question for JP's eye.
+  Do NOT "fix" it by graying for real. code: static/src/59b-library-nav.jsx:178
+- **Word study's greyed ABP tab (folded here, NOT yet traced):** the reviewer folded this into
+  the γῆ diacritic class (ABP keys the surface form Γαλιλαίας, the lexicon keys the lemma
+  Γαλιλαία → G1056). Plausible, but it is a DIFFERENT surface with different code and the
+  Library sighting just proved that "looks grey" ≠ "is disabled". Check which it is before
+  inheriting the diagnosis.
+
+## PN entity-data follow-ons (2026-08-09, from the panel-ticket eyeball — data, not display)
+- **Joram/Israel is TIPNR-only** — the card is honest and now correctly shaped, just thin
+  (no MetaV kin/tribe). Candidate for the entity-data backfill bucket, explicitly OUT of
+  scope of the display tickets by ruling.
+- **Israel place-entity question:** the person card serves nation/land mentions. Same bucket;
+  related to the eponym both-senses work already banked below.
+
 ## Open word-study / data issues (low priority, none gating)
 - **Greek text search over the ABP Greek line — FEATURE QUESTION (JP hit it 2026-07-29
   searching κύριε in Library).** The Library in-text search is English-only by design
