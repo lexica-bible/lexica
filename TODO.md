@@ -81,14 +81,21 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   on a lemma these rows don't have). JP's expectation stands and is right — he should be able
   to reach ABP for a word ABP plainly contains.
   **THE DOOR EXISTS, AND IT HAS A TRAP — the reason the routing fix is BLOCKED, not queued.**
-  `pn_greek_identity` does carry the place name, numberless: **5 distinct forms across 72 rows**
-  (JP-run 2026-08-09) — Γαλιλαίας 37 · Γαλιλαίαν 20 · Γαλιλαία 13 · Γαλιλαάν 1 · Γαλιλαίς 1.
+  `pn_greek_identity` does carry the place name, numberless: **6 distinct forms across 73 rows**
+  (re-verified JP-run 2026-08-09) — Γαλιλαίας 37 · Γαλιλαίαν 20 · Γαλιλαία 13 · Γαλιλαάν 1 ·
+  Γαλιλίαν 1 · Γαλιλαίς 1.
   (Sibling check: the GENTILIC Γαλιλαῖος "Galilean" DOES carry G1057 — only the place name is
-  numberless, consistent with the rest of the PN pattern. Minor unchased discrepancy, logged
-  not papered over: `words` shows 73 numberless `%Galilee%` rows against these 72.)
+  numberless, consistent with the rest of the PN pattern.)
+  **CORRECTED 2026-08-09 — the old figure here was 5 forms / 72 rows with a one-row gap logged
+  as unexplained. The gap was a SHORT COUNT, not a hole: the 72 missed Γαλιλίαν (Mar 14:28).**
+  Proven three ways — no Galilee word row lacks an identity row · membership checked, not just
+  totals (0 rows point at a non-Galil form, 73 point at one) · the bh_scrape page census
+  reproduces 73 independently (13+20+37+3). Do NOT re-derive from the old numbers.
+  Exclusion so no later sweep re-counts it: **Γαλιλώθ (Jos 18:18) is Geliloth, a different
+  place** — it only ever showed up because a check used a "Γαλιλ" prefix.
   **They are stored PER INFLECTED FORM, not folded under one name.** `_pn_lemma_rows`
   (`views_lexicon.py:1140`) matches `greek_lemma = ?` exactly, so a by-form view keyed on
-  Γαλιλαία returns **13 of 72** — and nothing on screen would say the other 59 exist. So a
+  Γαλιλαία returns **13 of 73** — and nothing on screen would say the other 60 exist. So a
   naive "make the ABP tab open the by-form view" fix trades a gray tab for a WRONG COUNT:
   gray says nothing, a wrong count says something false. Reviewer-endorsed hold.
   **Paste-form correction, so nobody re-derives it:** the code returns a flat "No matches" for
@@ -105,6 +112,21 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   item (see the Greek-search bullet below, part b). Two separate tickets would each solve half
   and leave the wrong-count trap live, so they are ONE ticket: fold first, route second. Only
   once folding exists can the ABP tab honestly open a name's ABP occurrences.
+  **STATE 2026-08-09: the fold mechanism EXISTS and needs no new morphology.** Names fold
+  through the ruled Greek-header hand table (`scripts/greek_header_nominatives.tsv`, two
+  shipped batches with page receipts); Galilee's morph is blank on all 73 rows, so the
+  builder's automatic picker can never resolve it and the hand table is the only door.
+  **Batch 3 (galilee → Γαλιλαία) is DRAFTED AND HELD AT CHECKPOINT — commit 7ed55e38,
+  record `docs/tickets/greek_header_batch3.md`.** Nothing built or swapped. Acceptance test
+  for the rebuild: the pin FAILS on live, PASSES on a scratch build, exactly **73 rows** flip
+  to Γαλιλαία (all numberless, source=surface), zero identity change — anything other than 73
+  is a STOP. The κύριε half has its own door: ABP's own printed forms already sit under G2962
+  (κύριε 663 · κυρίου 2422 · κυρίω 832 · κύριον 591), so it needs no form-stripper either —
+  but matching MUST ignore accents both ways (reuse the existing normalizer, don't write a
+  second one; accent-variant rows like κυριω are in the data).
+  **Size of the class, scoped as a FOLLOW-ON, not this ticket: 871 names** are scattered
+  across more than one form. Galilee + κύριε ship as the proof pair, batch 3's record is the
+  template, and routing stays held until the pair is folded and re-counted.
 - **~~Interim honest-grey label~~ — DECLINED by JP 2026-08-09. Do NOT re-pitch it.** The proposal
   was to say WHY the tab is gray ("ABP prints this name without a Strong's number") instead of
   leaving a dead gray button. CC and the reviewer both recommended yes; JP ruled to skip the
