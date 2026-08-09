@@ -8,6 +8,25 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
+## LIVE REGRESSION — glued name headers, from the 8/8 ride (opened 2026-08-09)
+**Full record: `docs/tickets/glued_name_headers` → docs/tickets/TICKET_glued_name_headers.md.**
+Found by the batch-3 control gate, not by a reader. Between the 8/5 copy and today the header
+table lost **375 folded rows across 13 names**, gained **101 rows with no Greek header at all**,
+and the glued-row class went **30 → 144** (a verb joined to a name by a non-breaking space:
+`απέδρα Αδάρ`, `ην Νώε`). Zion is the clean proof — 168 folded rows before, zero now, because it
+picked up ONE glued row. Attribution is by elimination (no code changed; the only live write in
+the window is the 8/8 wordpos apply, which re-runs the header build).
+- Two classes, **do not flatten**: the 114 NEW glued rows from the ride, and **11 glued `surface`
+  rows that are OLD** (same count before and after) — those poison a name's header everywhere it
+  appears, so they are the worse half.
+- Detector: `greek_lemma LIKE '%'||char(160)||'%'`. **A plain-space search reads 0 against rows
+  you can see** — this lane already learned that in July (commit 5a533f9b) and it bit again.
+  Any count fires on 1Ki 11:17 slot 2 first or it isn't trusted.
+- Blocks greek-header batch 3 (galilee), which is drafted and correct but unverifiable until the
+  gate is green.
+- Standing fix already landed: `/rebuild-words` step 8.3 now says to RUN gate_greek_header and
+  read gate C after the header build — nothing checked it, which is why this sat live for a day.
+
 ## ABP corpus certification audit — ARC CLOSED (Tier A certified + live)
 S1–S11 record → docs/audits/AUDIT_abp_certification.md + docs/CHARTER_cert_session9.md + docs/audits/AUDIT_entity_seam.md +
 memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open leftovers only:
@@ -117,7 +136,9 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   shipped batches with page receipts); Galilee's morph is blank on all 73 rows, so the
   builder's automatic picker can never resolve it and the hand table is the only door.
   **Batch 3 (galilee → Γαλιλαία) is DRAFTED AND HELD AT CHECKPOINT — commit 7ed55e38,
-  record `docs/tickets/greek_header_batch3.md`.** Nothing built or swapped. Acceptance test
+  record `docs/tickets/greek_header_batch3.md`. BLOCKED behind the glued-header regression
+  below — the admission is correct, it just can't be VERIFIED against a broken baseline.**
+  Nothing built or swapped. Acceptance test
   for the rebuild: the pin FAILS on live, PASSES on a scratch build, exactly **73 rows** flip
   to Γαλιλαία (all numberless, source=surface), zero identity change — anything other than 73
   is a STOP. The κύριε half has its own door: ABP's own printed forms already sit under G2962

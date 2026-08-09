@@ -192,6 +192,13 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       Baseline capture on a pre-retirement copy = build_pn_greek_identity --ignore-xref,
       the ONLY correct mode (stale-xref branches misclassify; two defects, ticket).** +
       `scripts/audit_two_derivations.py <db>`.
+      **THEN GATE THE HEADER RESULT — added 2026-08-09 after it shipped broken and sat live
+      for a day (TICKET_glued_name_headers.md): `scripts/gate_greek_header.py <pre-copy> <db>`
+      and READ GATE C. Re-running the header build is not the same as it coming out right.
+      A pin that used to pass and now FAILS means the rebuild pushed two-word compound slots
+      (verb glued to a name, joined by U+00A0) into the name-form inventory — one such row
+      drops a whole name off its folded header. The 8/8 ride cost 375 folded rows, 13 names,
+      and +101 rows with no header at all, entirely unnoticed.**
    **G707 gate (2026-07-31):** build_pn_greek_identity applies strict name-match inheritance
    (removal-only; tests/test_pn_name_match.py). Run the removal-only census
    (ship_g707_targeted.py preconditions) before any swap.
