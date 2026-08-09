@@ -105,10 +105,12 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   item (see the Greek-search bullet below, part b). Two separate tickets would each solve half
   and leave the wrong-count trap live, so they are ONE ticket: fold first, route second. Only
   once folding exists can the ABP tab honestly open a name's ABP occurrences.
-- **JP DECISION PENDING — interim honest-grey label.** Keep the tab gray but say WHY
-  ("ABP prints this name without a Strong's number") instead of a dead gray button. Same
-  information cost as gray, but it stops the next reader taking it for broken — it fooled JP
-  AND the reviewer in one session. Reviewer endorses; it is a visible change, so it ships only
+- **~~Interim honest-grey label~~ — DECLINED by JP 2026-08-09. Do NOT re-pitch it.** The proposal
+  was to say WHY the tab is gray ("ABP prints this name without a Strong's number") instead of
+  leaving a dead gray button. CC and the reviewer both recommended yes; JP ruled to skip the
+  interim and go straight to the folding ticket, which replaces it anyway. Recorded so a future
+  session doesn't re-derive the idea and re-offer it. Original reasoning, for the record: it
+  ships only
   on JP's yes, and it does NOT wait on the fold if he wants it sooner.
 
 ## PN entity-data follow-ons (2026-08-09, from the panel-ticket eyeball — data, not display)
