@@ -63,6 +63,17 @@ from the fairness gate, and it's supposed to interrupt reading. That's the
 bar: nothing else gets a pill without the same justification. (Fitting that
 the fairness gate is the one thing allowed to shout.)
 
+**Rows state, chips assert** (reviewer rule, 2026-08-09 — the PN person panel). A
+chip is a claim made loudly enough that a reader takes it as settled; a labeled row
+just reports what a field holds. So a value only earns a chip when it is *known* to
+be the thing the chip says. Worked case: TIPNR's `area` on a person is "Tribe of
+Judah" ~1,150 times but a region or a period ~400 times (Edom, Early Patriarch,
+Egypt), and sometimes carries an explicit "(?)" — so only the literal "Tribe of X",
+unmarked, becomes a chip; everything else stays a row. The split is by **value**,
+never by which table the record came from. Same reason a place never wears a
+"Tribe of Simeon" chip: on a place that value is territory, and the chip would read
+as identity.
+
 ### 5. Emphasis budget
 Every screen gets a small number of loud elements. Before adding visual weight
 to anything, name the meaning it carries. "Grouping" → use a small-caps header
