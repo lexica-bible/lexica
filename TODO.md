@@ -74,11 +74,24 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   **PN card → "63× in KJV" → Word study (KJV) → click a verse in its list → Library, KJV** —
   it is WORD STUDY'S verse list that bakes the translation in (`90-app.jsx:476`), not the card.
   Exactly what JP reported first time; the compression was CC's. Mechanism and fix unaffected.
-  **Found while mapping it: a SECOND site bakes a translation into a Library jump** — opening a
-  shared link carrying a version (`90-app.jsx:302`). So the same snap-back would have hit a
-  shared KJV link followed by a version switch. Fixing at the RE-EMIT rather than per-caller
-  covers it without having known it was there — worth remembering when the consumed-jump
-  refactor picks this up (it must handle both entry points, and any third).
+  **A SECOND site bakes a translation into a Library jump: the `/?b=&c=&t=` deep link
+  (`90-app.jsx:294-303`).** Chain, read end to end (each link verified, not inferred):
+  `_render_chapter` (`views_seo.py:412`) renders `seo/chapter.html` with
+  `reader_url=_reader_link(abbrev, chapter, text)` (`:442` → `:371`, `/?b=&c=&t=<text>`); the
+  template prints it as a real link, "Open in the interactive reader →"
+  (`templates/seo/chapter.html:25`); per-text pages exist (`/read/<slug>/<ch>/kjv`, `:424`),
+  so a KJV chapter page's link carries `t=kjv`; `90-app.jsx:296-302` reads it and sets it on
+  the jump. So the reachable case is REAL: land on a `/read/.../kjv` page → "Open in the
+  interactive reader" → Library on KJV → switch to ABP → snap-back. Fixed by the same
+  one-liner because it strips at the RE-EMIT rather than per-caller.
+  Why the parameters are never visible: `:303` wipes them off the URL immediately after
+  reading, which is why the address bar only ever reads `lexica.bible`.
+  **NOT verified, do not repeat as fact:** how many such pages exist or whether the per-text
+  variants are indexed. CC quoted "~18-19k" from a TODO_ARCHIVE note about the sitemap's TOTAL
+  URL count and wrongly attached it to these links — corrected here after JP called out the
+  assumption. CC also first called these "shared links"; there is no share button involved.
+  The consumed-jump refactor must handle BOTH entry points — Word study's verse list and this
+  one — and check for a third rather than assuming two.
 - The trace, kept because it is the third instance of one trap: **the tab click is overwritten,
   not ignored — and nothing is disabled.** Repro (per the correction above, the first hop is
   Word study): PN card →
