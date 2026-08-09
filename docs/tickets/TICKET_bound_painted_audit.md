@@ -241,6 +241,26 @@ standing part of the slot-binding guard stack.
   class; the fix ships with the compound-number/chip-merge lane (TODO.md, JP
   raises) so the fix shape stays uniform. Stays flagged, no write here.
 
+## LESSONS BANKED AT CLOSE (reviewer-authored 2026-08-08 — standing law for
+## future correction lanes; also in memory feedback_correction_lane_lessons)
+1. **Expected pictures walk EVERY guard, not just the new logic.** Both dry-run
+   fails were rows predicted on their merits without simulating the full guard
+   stack (G3's opposite-lane assumption; G4's missing flag). Walk each row
+   through every guard on paper before posting the picture.
+2. **Correction lanes invert creation-lane assumptions — audit inherited guards
+   for the inversion AT CHARTER TIME.** Any lane correcting existing data opens
+   with: which standing guards assume the data is absent?
+3. **Run the referent authority's per-token ref-list test BEFORE escalating a
+   flag** — it ruled Elkanah and Shechem, once each direction, by grep. The flag
+   paste arrives with that evidence attached (the Shechem paste is the template).
+4. **Negative-space verification is evidence.** Confirming the single-Jehoram
+   neighbor verses were already right bounded the blast radius — belongs in
+   every fix proposal.
+5. **Overrides: loud, marked, externally authorized — never default.** The
+   paint-override shape (explicit marker + structurally-required banked reviewer
+   verdict + self-auditing output line) is the reusable pattern for any
+   guard-bypass mechanism.
+
 ## Resolved flags
 - **Jdg 9:28 shechem p[12, 30] — KEEP the city paint with contested-reading note
   (reviewer verdict 2026-08-08, evidence-ruled by the Elkanah-standard ref-list
