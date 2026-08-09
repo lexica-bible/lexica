@@ -6,6 +6,51 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-09 — Library translation-tab snap-back FIXED + verified live (third bite of one trap)
+
+**The bug JP hit:** a link landed him in Library on KJV; clicking ABP put him straight back on
+KJV. A hard refresh cured it. Two surface reads were wrong and both got corrected by tracing:
+the tab was never *disabled* (Library's tabs have no disabled state at all — the selected tab
+is a white pill, so its neighbours merely LOOK grey), and the click was never *ignored*. It
+fired and lost a race.
+
+**The loop, all five steps read:** a link bakes `translation:"kjv"` into the jump (deliberate —
+that link should land in KJV) → the nav effect applies it → the ABP click really does fire →
+the version-switch re-scroll effect re-emits the jump to restore the reader's marked verse, and
+spread the WHOLE old jump, `"kjv"` still on it → the nav effect re-runs and re-applies KJV.
+Explains every symptom: only after a link jump, only when a verse is highlighted (so plain
+book/chapter browsing never showed it), and refresh curing it because the jump is rebuilt clean.
+
+**THE PART WORTH REMEMBERING: the rule was ALREADY WRITTEN DOWN and was violated anyway.**
+`docs/claude/frontend.md` said "never spread the old `nav` bag into a new one" — but phrased as
+a warning about *the page-turn bug*, so the next author checked whether they were turning a page
+rather than whether they were re-emitting. A rule named after a symptom only catches that
+symptom. It is now reworded as a property of the field (a jump's `translation` is a ONE-TIME
+instruction) and, more to the point, ENFORCED rather than documented: one shared pure function
+`navAfterVersionSwitch` (`56-library-order-logic.jsx`) instead of a third hand-rolled strip.
+Gated in `tests/test_library_order.js` (4 cases + a CONTROL pinning the pre-fix behaviour) and
+fault-injected — restoring the carry-forward in the real source turns it red, source restored
+byte-identical after. Verified live by JP post-deploy: ABP holds, highlight held at Mat 2:22.
+
+**Two producers, both must be handled by the queued consumed-jump refactor** (own session — it
+touches the load-bearing nav effect): Word study's verse list (`90-app.jsx:476`) and the SEO
+reader deep link `/?b=&c=&t=` (`:296-302`), which comes from the "Open in the interactive
+reader" link on `/read/<book>/<ch>/<text>` pages (`views_seo.py:_reader_link` →
+`templates/seo/chapter.html:25`). That second one is a real public path nobody knew about —
+fixing at the re-emit rather than per-caller covered it for free. `:303` wipes the parameters
+off the URL right after reading, which is why the address bar only ever shows `lexica.bible`.
+
+**Process record, kept because JP paid for it:** CC asserted three things this session without
+reading them — the repro path ("PN card → Library"; the PN card has no Library link at all, the
+real first hop is Word study), a column name (`lemma`, actually `greek_lemma`, which burned one
+of JP's PA commands), and the whole SEO deep-link chain off a single grep line, including a
+page count borrowed from an unrelated note. JP caught all three; the third with heat, correctly.
+The tell: an inference that arrives WITH a file:line reads exactly like a finding. Rule now in
+memory `feedback_verify_before_claiming`: a cited file:line is one you opened, a claim spanning
+N files needs N reads, and numbers get re-derived or dropped.
+
+---
+
 ## 2026-08-09 — PN panel: two display tickets SHIPPED (form-vs-person note · one person body)
 
 Display-only, no DB writes, no lane. Both landed together because they are the same

@@ -49,14 +49,10 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   (Assyrians → Assyria map pin). Reviewer-ruled keep, but the card should say
   "people of [region]" rather than presenting as a place. Polish, not a defect.
 
-## Library translation-tab sync — FIXED 2026-08-09 (record below; Word Study leg still open)
-- **SHIPPED:** the stale one-time `translation`/`extern` are stripped when a version switch
-  re-arms the scroll. One shared pure function `navAfterVersionSwitch`
-  (`56-library-order-logic.jsx`), called from `60-library.jsx:265` — deliberately NOT a third
-  hand-rolled strip. Gated in `tests/test_library_order.js` (4 cases + a CONTROL), and
-  fault-injected: restoring the pre-fix carry-forward in the real source turns the gate red on
-  "a stale translation must not ride the re-emit", source restored byte-identical after.
-  **Owed: JP's live re-check of the original repro after deploy.**
+## Library translation-tab sync — SHIPPED + VERIFIED LIVE 2026-08-09 → TODO_ARCHIVE
+Full record (the five-step loop, the fault-injected gate, the corrected repro, the second
+producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md` →
+"Navigation / jumps". Only the open residue stays here:
 - **QUEUED, own session (reviewer-approved 2026-08-09): the consumed-jump refactor.** Treat a
   jump's `translation` as a one-time instruction that is CONSUMED once applied, so no later
   re-send from anywhere can re-assert it. That is the real cure for all three sites (search
@@ -68,47 +64,9 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   unselected tabs that still read as clickable. **Do NOT "fix" it by graying for real**, and
   it is a visual change, so it needs JP's yes on the specific change.
   code: static/src/59b-library-nav.jsx:178
-- **REPRO CORRECTED (JP, 2026-08-09 post-deploy — the write-ups below compressed a step).**
-  The PN card has NO Library link: every occurrence link on it goes to WORD STUDY
-  (`30-detail-panel.jsx:1383-1505`, all `onNavigateToLexicon`). The real chain is
-  **PN card → "63× in KJV" → Word study (KJV) → click a verse in its list → Library, KJV** —
-  it is WORD STUDY'S verse list that bakes the translation in (`90-app.jsx:476`), not the card.
-  Exactly what JP reported first time; the compression was CC's. Mechanism and fix unaffected.
-  **A SECOND site bakes a translation into a Library jump: the `/?b=&c=&t=` deep link
-  (`90-app.jsx:294-303`).** Chain, read end to end (each link verified, not inferred):
-  `_render_chapter` (`views_seo.py:412`) renders `seo/chapter.html` with
-  `reader_url=_reader_link(abbrev, chapter, text)` (`:442` → `:371`, `/?b=&c=&t=<text>`); the
-  template prints it as a real link, "Open in the interactive reader →"
-  (`templates/seo/chapter.html:25`); per-text pages exist (`/read/<slug>/<ch>/kjv`, `:424`),
-  so a KJV chapter page's link carries `t=kjv`; `90-app.jsx:296-302` reads it and sets it on
-  the jump. So the reachable case is REAL: land on a `/read/.../kjv` page → "Open in the
-  interactive reader" → Library on KJV → switch to ABP → snap-back. Fixed by the same
-  one-liner because it strips at the RE-EMIT rather than per-caller.
-  Why the parameters are never visible: `:303` wipes them off the URL immediately after
-  reading, which is why the address bar only ever reads `lexica.bible`.
-  **NOT verified, do not repeat as fact:** how many such pages exist or whether the per-text
-  variants are indexed. CC quoted "~18-19k" from a TODO_ARCHIVE note about the sitemap's TOTAL
-  URL count and wrongly attached it to these links — corrected here after JP called out the
-  assumption. CC also first called these "shared links"; there is no share button involved.
-  The consumed-jump refactor must handle BOTH entry points — Word study's verse list and this
-  one — and check for a third rather than assuming two.
-- The trace, kept because it is the third instance of one trap: **the tab click is overwritten,
-  not ignored — and nothing is disabled.** Repro (per the correction above, the first hop is
-  Word study): PN card →
-  a KJV occurrence link (G1056 "63× in KJV") → lands in Library at Mat 2:22 KJV → click ABP →
-  snaps back. Hard refresh frees it (JP confirmed), so nothing is persisted.
-  THE LOOP, all five steps read: (1) the link bakes `translation:"kjv"` into the jump
-  (`90-app.jsx:476`) — deliberate, that link SHOULD land in KJV; (2) Library's nav effect
-  applies it (`60-library.jsx:382`); (3) the ABP click really does fire (`pickBible`, :661 —
-  the button has NO disabled state); (4) the version-switch re-scroll effect (:263-266) fires
-  on `[translation]` and, because the jump carries a `highlight`, re-emits `{...n}` — spreading
-  the OLD jump, still holding `"kjv"`; (5) new jump object → the nav effect re-runs and
-  re-applies KJV. Explains every observed fact: link-jumps only (nothing else puts a
-  translation in the jump), highlight required (step 4's guard — so plain book/chapter
-  navigation does NOT reproduce), and refresh curing it.
-  **THIRD INSTANCE of one trap** — already fixed at two other emit sites, with the lesson
-  written down both times: `:740-744` (search) and `:1007-1008` ("emit a CLEAN nav, don't
-  spread ...nav").
+- **OPEN, 30 seconds, never done: map the REST of the PN card's outbound links.** Today only
+  the occurrence links were checked (all go to Word study, `30-detail-panel.jsx:1383-1505`).
+  Nobody has confirmed where the others go. Read-only.
 - **OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.**
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
   leg's unselected-pill illusion either — Word study's tabs carry a REAL disabled state, in

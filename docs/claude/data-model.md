@@ -156,7 +156,16 @@ floor = no row → Fix A); **⚠ `book` is a NUMBER (er.book_num), not the abbre
 abbrev-keyed query matches nothing and fails silently (chip-merge shipped inert once,
 2026-07-31); `tipnr_entities` = the entity's own card content (uniq/head/section/
 gender/area/descr/summary/bases/parents+offspring, kin for PERSONS only); `tipnr_entity_refs` =
-its reference list. Served by `/api/metav/entity` → the `.pnbound` card. Re-run `--apply` after
+its reference list.
+**⚠ `area` IS MIXED CONTENT — it is NOT a tribe field, on persons or places.** Counted on PA
+2026-08-09 over person rows: ~1,150 read "Tribe of X", but ~400 read a REGION or a PERIOD
+instead (Early Patriarch 142, Edom 72, Israel 29, Canaan 19, Egypt 18, Sinai, Arabia, Ammon,
+Syria, Moab, Mesopotamia, Persia, Assyria, Midian…), some carry TIPNR's "(?)" uncertainty
+marker, and 1,639 are the empty-breadcrumb ">". The card labeled every one of them "Tribe"
+until 2026-08-09 and so printed "Tribe: Egypt". Any consumer must branch on the VALUE
+(literal "Tribe of X" only), never assume the column's meaning. Places are worse: `area: ">"`
+on 959 place rows is an open parser item (TODO.md). Doctrine for rendering it — a chip
+ASSERTS, a labeled row merely STATES — lives in `docs/design.md` §4. Served by `/api/metav/entity` → the `.pnbound` card. Re-run `--apply` after
 a words rebuild (re-tiers from live metaV each run). Memory `project_entity_resolution_rebuild`.
 **FULL ROSTER since 2026-07-30 (scope widening, reviewer close-out approved):** tipnr_entities
 holds ALL 4,247 parsed entities (3,132 person / 1,013 place / 102 other; refs 31,975), not just
