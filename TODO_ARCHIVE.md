@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-08 — Bound-painted audit lane FULLY CLOSED (same-day arc, all 713 groups)
+
+The wordpos follow-on: every verse where ONE verse-level bind painted 2+ same-name
+words, audited per-slot. Fresh census (controls OK, sizing unchanged at 1,470/713),
+worklist frozen + byte-diffed vs PA, 8 JP-run evidence batches with mandatory
+near-match rosters, per-batch checkpoints, zero best-guess writes. **Final: 707 keep ·
+5 groups FIXED live (7 slots — the mixed-Jehoram verses 2Ch 22:6, 2Ki 1:17/8:16/8:25/
+8:29, each verse holding BOTH kings named Jehoram under one paint; reviewer-approved
+per-row, applied via the NEW `paint-override` G3 exception, live-verified) · 1 flag
+riding the compound-name lane (1Ki 4:13).** Flag rulings both KEEP by the TIPNR
+ref-list test (1Ch 6:26 elkanah, Jdg 9:28 shechem — the test overruled the reviewer's
+own literary lean on the second, which is the standard working). Quiet win: the audit
+repeatedly CONFIRMED verse-grain binds already split hard same-name cases correctly
+(per-reign Pharaohs, two Zadoks/Amariahs/Hirams/Ards, Cain-vs-Seth lines) — confidence
+in the whole PN layer. 5 reviewer-banked correction-lane lessons = memory
+`feedback_correction_lane_lessons` + the ticket. Record:
+docs/tickets/TICKET_bound_painted_audit.md + receipts_boundpainted_batch1-8.txt.
+Same session: Library sidebar nav-desync fixed + live (orphaned chapter grid sent
+chapter-only; chips now carry their book — memory `project_nav_reconcile`).
+Rollback marker: ~/db_backups/bible.db.pre_boundpainted_b3 (deletable after the
+first nightly past 2026-08-08 ~17:22).
+
 ## 2026-08-08 — Word-position binding lane SHIPPED + LIVE + CLOSED (reviewer close-out)
 
 Whole arc in one day, census→shipped: design ratified (+C1-C3), prereg filled from

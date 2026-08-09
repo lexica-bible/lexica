@@ -176,12 +176,16 @@ the TSV; control first; a batch that replaces a HOT row = stop-and-look).
 Per-SLOT identity for same-name multi verses (two Marys in one verse), PA-only, keyed
 `(book_num, chapter, verse, position)` — deliberately a SEPARATE table beside pn_binding
 (a position column inside it would let LIMIT-1 verse-grain reads paint whole verses).
-Source of truth = repo `scripts/pn_slot_rulings.tsv` (95 rows; a floored slot = NO row;
+Source of truth = repo `scripts/pn_slot_rulings.tsv` (102 rows; a floored slot = NO row;
 `name` = the printed english_head AT the slot — the staleness tripwire). Written by
 `scripts/build_slot_binding.py` (guards G1-G4: stale-name refuse · entity+referent-kind
 check (rows may point at PLACE/group entities — Cushi = the land Cush, Judah = the people
 via the patriarch) · precedence: lands only where verse grain declines, collision =
-stop-and-look · duplicates need the same-referent flag). Manual `--apply` is
+stop-and-look — EXCEPT a row flagged `paint-override`, which lands OVER an existing
+verse-grain bind printing a loud OVERRIDE old->new line; the marker is valid ONLY on a
+row whose ruling entry references a banked reviewer verdict, never on CC's own authority
+(reviewer conditions 1+2, 2026-08-08, bound-painted lane) · duplicates need the
+same-referent flag). Manual `--apply` is
 all-or-nothing; `build_entity_binding.py --apply` re-lands it automatically PER-ROW with
 loud `!! REFUSED` lines (a stale row floors only itself, never silently). Served by
 `/api/metav/entity?...&pos=` — slot bind FIRST with compact name match; no pos/table/row
@@ -190,6 +194,10 @@ PROSE-mode words are NON-CLICKABLE by design — PN click paths are chip + inter
 Read-only checker: `scripts/check_wordpos_prereg.py` (position-integrity gates R1-R6 +
 `--controls` red-first; entity correctness is reviewer-verdict territory, Codicil 2).
 Full arc + rulings: docs/tickets/TICKET_wordpos_binding.md; memory `project_wordpos_binding`.
+Bound-painted audit (all 713 painted multi-groups adjudicated, 7 slot fixes live via
+paint-override): docs/tickets/TICKET_bound_painted_audit.md — its 5 banked
+correction-lane lessons (memory `feedback_correction_lane_lessons`) are standing law
+for any future lane that corrects existing data.
 
 ### tipnr_metav_link
 Cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).

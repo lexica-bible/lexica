@@ -113,15 +113,13 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   docs/tickets/LANE_C_adjudication.md + docs/tickets/DRILL_witness_divergence.md — do NOT
   re-derive from here. Census denominator COMMITTED: 591 word-slots / 156 names (2026-07-29).
   Still open:
-  - **Word-position binding lane: CLOSED 8/8 → TODO_ARCHIVE.** Follow-on lanes open:
-    - **Bound-painted audit — AUDIT COMPLETE 2026-08-08** (all 713 groups / 1,470
-      slots adjudicated in 8 batches; 706 keep, 5 groups FIXED live — the
-      mixed-Jehoram verses, 7 slot rulings via the new reviewer-gated
-      paint-override marker). Record: docs/tickets/TICKET_bound_painted_audit.md
-      + receipts_boundpainted_batch1-8.txt. FULLY CLOSED same day: Jdg 9:28
-      shechem ruled KEEP (TIPNR ref-list test; contested note on record) → final
-      707 keep / 5 fixed / 1 flag parked with the compound-name lane
-      (1Ki 4:13 gilead — ships with that lane's fix, no one-off).
+  - **Word-position binding lane: CLOSED 8/8 → TODO_ARCHIVE. Bound-painted audit:
+    FULLY CLOSED 8/8 → TODO_ARCHIVE** (707 keep / 5 fixed live / 1 flag riding the
+    compound-name lane; record docs/tickets/TICKET_bound_painted_audit.md).
+    Follow-on lanes still open:
+    - **1Ki 4:13 gilead p4** — ruled wrong-paint (Ramoth-Gilead compound component
+      painted as the region) but ships ONLY with the compound-name/chip-merge lane,
+      no one-off (reviewer+JP 8/8).
     - **Elnatham Ezr 8:16 p15** — in-verse variant-spelling appendix candidate
       (bucket-C pattern; found at wordpos adjudication).
     - **Chapter-grain 5** (azariah/joash/benaiah/harim) — per R3, any fold-in RETURNS
