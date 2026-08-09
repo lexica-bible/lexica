@@ -28,3 +28,6 @@ uniform|dinah|Δίνα
 uniform|berechiah|Βαραχίας
 uniform|coniah|Ιεχονίας
 uniform|cononiah|Χωνενίας
+# batch 3 pin (receipt greek_header_batch3.md). Same control role: must FAIL on
+# live-vs-live (nothing folded yet) and PASS on the scratch.
+uniform|galilee|Γαλιλαία
