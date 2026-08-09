@@ -6,6 +6,63 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-09 — PN panel: two display tickets SHIPPED (form-vs-person note · one person body)
+
+Display-only, no DB writes, no lane. Both landed together because they are the same
+misread from two directions: the panel let the reader take *provenance* and *the word
+form* for facts about the person.
+
+**1. What the Strong's number is attached to.** The card leads with `G2496`, the hero
+prints `Ἰωράμ`, the person block sits under both — so the number reads as identifying
+the PERSON. It doesn't: it numbers the written NAME, which both kings Jehoram carry
+because both are spelled that way, and the "51× G2496" line counts that form across
+everyone bearing it. One line now sits in the hero's existing status slot (same slot,
+same muted style as "ABP-only form" — no new structure):
+`G2496 numbers the name form Ἰωράμ — the person this verse names is below.`
+Wording JP-approved verbatim: it states what the number DOES attach to, because the
+earlier draft's "not the person" read as though the two were unrelated. Renders on
+every name card with a real number and an identity block, not just shared-form ones.
+RULED omissions, not coverage holes: a header reading `PN` has no number to clarify,
+and a hero showing the English name isn't showing a "form". Zone LABELS were proposed
+and **ruled out** — the upper zone is the shared hero used by every word card, so
+labeling it forces either a nonsense heading on non-PN cards or a names-only fork.
+
+**2. One person body, any source.** The body branched on WHICH TABLE held the record:
+MetaV-linked people got chips + born/died + labeled kin rows; TIPNR-only people
+(Joram, the Israel king) got plain text rows and no chips at all. Now one template —
+chips → born/died → labeled rows — with absent fields simply omitted. Affects **331
+TIPNR-only bound person entities** (vs 1,644 linked). The source badge stays: that is
+provenance's job, never the layout's.
+- **TIPNR gender was already being served and thrown away** (`/api/metav/entity` has
+  always carried it) — surfacing it is display, not enrichment.
+- **`area` is NOT a tribe field, and the card was mislabeling it.** PA count 2026-08-09
+  over person rows: ~1,150 read "Tribe of X" but ~400 read a region or a period
+  (Early Patriarch 142, Edom 72, Israel 29, Canaan 19, Egypt 18, Sinai, Arabia, Ammon,
+  Syria, Moab, Mesopotamia, Persia, Assyria, Midian). Every one of those rendered as
+  "Tribe: Egypt". Split is by VALUE, never by source: literal "Tribe of X" → chip,
+  everything else → labeled "Area"/"Region" row. Reviewer's rule: **rows state, chips
+  assert** — which is also why a `(?)` value stays a row, and why a PLACE never chips
+  its area. (The 959 place records with `area: ">"` are a separate open parser item.)
+- The sparse-card (`thin`) test now counts RENDERED FIELDS; it used to carry
+  `!richPerson`, so it could only ever fire on one source — the same source-branching
+  the ticket deletes, relocated into the detector.
+- `.pnbound-facts` / `.pnbound-lbl` DELETED — they were a near-copy of
+  `.metav-rels`/`.metav-rel-label` that existed only to serve the second branch.
+- Out of scope by ruling and untouched: backfilling TIPNR-only entities with richer
+  data, and the name-path SLIM card (a deliberately sparser variant with its own
+  ruling — it must not imply completeness).
+
+Locked by `tests/test_person_body.js` (30 assertions, added to CI + pre-commit), which
+runs the SHIPPED helpers out of the built bundle rather than a copy. **Control-tested
+four ways** — gender chip removed, "Tribe" mislabel restored, every area chipped,
+sentence reworded — each went red on the right assertions. What it does NOT cover, so
+nobody reads more into a green run: the `thin` formula itself (inside the component)
+and the pixels. **Owed: JP's eyeball after deploy** on a TIPNR-only card, a linked one
+and a People/Clan one — the only spacing change is a sparse card's single line, which
+the new `.pnbound-thinrow .metav-rels` reset holds at its old 6px.
+
+---
+
 ## 2026-08-08 — Bound-painted audit lane FULLY CLOSED (same-day arc, all 713 groups)
 
 The wordpos follow-on: every verse where ONE verse-level bind painted 2+ same-name

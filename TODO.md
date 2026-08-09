@@ -204,7 +204,12 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   TIPNR place rows use a different column layout than person rows and the area read
   lands on a structural '>' marker, not text. Affects any served place card that prints
   area (Ezion-geber the found case; also desc=name on places — TIPNR places carry no
-  person-style era line). Fix directions when picked up: parser-side (read the right
+  person-style era line). **PERSON-SIDE COUNTERPART MEASURED 2026-08-09** (see
+  TODO_ARCHIVE, PN-panel display tickets): person rows' `area` is ~1,150 "Tribe of X"
+  vs ~400 regions/periods (Early Patriarch, Edom, Egypt, Sinai…) — i.e. the column is
+  mixed by design on the person side too, not just broken on the place side. The card
+  no longer labels those "Tribe"; a parser pass should treat both sides as one
+  question. Fix directions when picked up: parser-side (read the right
   column for section='place' in entity_resolution.parse_tipnr, then re-run the widened
   --apply through the gate arc) AND/OR display fallback (suppress non-alphabetic area,
   lean on summary). Check FIRST how long-bound place cards (pre-widening) have rendered

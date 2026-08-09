@@ -94,4 +94,5 @@ jobs:
           node tests/test_chrono_reconcile.js
           node tests/test_library_order.js
           node tests/test_render_markup.js
+          node tests/test_person_body.js
           node tests/smoke_app.js

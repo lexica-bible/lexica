@@ -75,5 +75,6 @@ node tests/test_note_inspect.js >/dev/null
 node tests/test_chrono_reconcile.js >/dev/null
 node tests/test_library_order.js >/dev/null
 node tests/test_render_markup.js >/dev/null
+node tests/test_person_body.js >/dev/null
 node tests/smoke_app.js >/dev/null
 echo "pre-commit: all checks passed."

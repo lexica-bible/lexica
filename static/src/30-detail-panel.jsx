@@ -38,10 +38,166 @@ const EPONYM_LINES = {
   "Zebulun":  "Jacob's son — later mentions often name the tribe and its territory.",
 };
 
+// ONE IDENTITY BODY FOR EVERY PERSON/PLACE CARD, WHATEVER THE SOURCE (ticket
+// "one renderer for Biblical Person regardless of source", 2026-08-09).
+// The body used to branch on WHICH TABLE held the record: a MetaV-linked person got
+// chips + born/died + labeled kin rows, while a TIPNR-only person (Joram, the Israel
+// king) got plain text rows and no chips at all — so the same kind of fact looked like
+// two different kinds of fact depending on provenance the reader can't see. Now every
+// card fills this one shape and a field the source doesn't carry is simply ABSENT —
+// no placeholder, no second layout. Field order is fixed everywhere:
+//   chips -> born/died -> labeled rows.
+// The source badge (TIPNR / MetaV+TIPNR) is untouched: provenance is the badge's job,
+// never the layout's.
+function IdentityBody({ chips, born, rows }) {
+  chips = chips || []; rows = rows || [];
+  if (!chips.length && !born && !rows.length) return null;
+  return (
+    <>
+      {chips.length > 0 && (
+        <div className="metav-meta">
+          {chips.map(c => (
+            <span key={c.text} className={"metav-tag" + (c.gold ? " metav-tag-gold" : "")}>{c.text}</span>
+          ))}
+        </div>
+      )}
+      {born && (
+        <p className="detail-p detail-p--meta" style={{fontSize:"13px"}}>
+          {born.birth_year && <span>Born: {born.birth_year}{born.birth_place ? `, ${born.birth_place}` : ""}</span>}
+          {born.birth_year && born.death_year && " · "}
+          {born.death_year && <span>Died: {born.death_year}{born.death_place ? `, ${born.death_place}` : ""}</span>}
+        </p>
+      )}
+      {rows.length > 0 && (
+        <div className="metav-rels">
+          {rows.map(r => (
+            <div key={r.label} className="metav-rel-row">
+              <span className="metav-rel-label">{r.label}</span>
+              <span className="metav-rel-names">{r.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+// The kin-row label set — MetaV's wording, and now the ONE set. The bound card's own
+// rows used to say "Parents" beside MetaV's "Parent" for the same relation.
+const REL_ROWS = [
+  { types: ["child"],                    label: "Parent"   },
+  { types: ["father","mother"],          label: "Children" },
+  { types: ["spouseOrConcubine"],        label: "Spouse"   },
+  { types: ["sibling","halfSiblingSameFather","halfSiblingSameMother"], label: "Siblings" },
+];
+
+// MetaV person record -> the shared body shape. Relationship rows list every name, no
+// truncation: names are the point of the panel, and the corpus-wide worst case (David,
+// 21 children) is ~8 lines — not enough to earn a collapse (measured on PA 2026-07-11).
+function metavBody(d) {
+  const groups = d.groups || [];
+  return {
+    chips: [
+      ...(d.gender ? [{ text: d.gender === "M" ? "Male" : "Female" }] : []),
+      ...groups.filter(g => g.startsWith("Tribe")).map(g => ({ text: g })),
+      ...(groups.includes("Genealogy of Jesus") ? [{ text: "Genealogy of Jesus", gold: true }] : []),
+    ],
+    born: (d.birth_year || d.death_year) ? d : null,
+    rows: REL_ROWS.map(({ types, label }) => {
+      const matching = (d.relationships || []).filter(r => types.includes(r.type));
+      return matching.length ? { label, value: matching.map(r => r.name).join(", ") } : null;
+    }).filter(Boolean),
+  };
+}
+
+// TIPNR text carries a "(?)" uncertainty marker; strip it for display. ONE copy,
+// shared by the card and by tipnrBody below — the value is read in four places.
+const cleanTipnr = s => (s || "").replace(/\s*\(\?\)/g, "").trim();
+// The clicked word is a people-group (gentilic) bound to its eponymous ancestor (a
+// PERSON entity) — TIPNR models peoples that way.
+const isPeopleClan = be => be.section === "person" && !!be.people_group;
+
+// TIPNR entity -> the SAME body shape metavBody returns. This is the half of the
+// unification that used to be a second layout: these facts rendered as plain text
+// rows with no chips while a MetaV-linked person got the chip treatment.
+//
+// GENDER is not new data — the entity payload has always carried it (views_metav.py);
+// this card just never rendered it, so a TIPNR-only person lost a fact we already
+// held. Surfacing it is DISPLAY of the existing payload, not entity enrichment
+// (which stays out of scope by ruling).
+//
+// ⚠ AREA IS NOT A TRIBE FIELD — measured on PA 2026-08-09 across tipnr_entities'
+// person rows: ~1,150 read "Tribe of X", but ~400 read a REGION or a PERIOD instead
+// (Early Patriarch 142, Edom 72, Israel 29, Canaan 19, Egypt 18, Sinai, Arabia,
+// Ammon, Syria, Moab, Mesopotamia, Persia, Assyria, Midian …). The card labeled
+// every one of them "Tribe", which was simply wrong for those; fixed here, since
+// unifying the body forced the label to be decided anyway.
+// The split is by VALUE, never by source: only a value that literally says "Tribe of
+// X" is promoted to a CHIP, everything else stays a labeled ROW — rows state, chips
+// assert (reviewer ruling, pre-approved 2026-08-09). A "(?)" value stays a row for
+// that same reason: cleanTipnr drops the marker for display, so an uncertain tribe
+// must not then be asserted as a chip. A PLACE never chips its area — a place's
+// Geo-area is the territory it sits in, and a bare "Tribe of Simeon" chip there
+// would read as identity.
+// `line` is the descriptor already rendered above the body: an area the description
+// already names isn't repeated (Eden: "…in Mesopotamia").
+function tipnrBody(be, line) {
+  const peopleClan = isPeopleClan(be);
+  // often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks so an empty
+  // geo-area shows NO row at all.
+  const area = cleanTipnr(be.area).replace(/^[>\s]+|[>\s]+$/g, "");
+  const showArea = !!area && !(line && line.toLowerCase().includes(area.toLowerCase()));
+  const areaIsTribe = be.section === "person" && !peopleClan
+    && /^tribe of\b/i.test(area) && !/\(\?\)/.test(be.area || "");
+  return {
+    chips: [
+      ...(be.section === "person" && !peopleClan && (be.gender === "M" || be.gender === "F")
+          ? [{ text: be.gender === "M" ? "Male" : "Female" }] : []),
+      ...(showArea && areaIsTribe ? [{ text: area }] : []),
+    ],
+    born: null,
+    rows: [
+      // A group card drops the ancestor's individual kin and his tribe — they assert
+      // links the collective may not carry; Lineage is the honest ancestry instead.
+      // It now wears a label like every other row: an unlabeled row was itself a
+      // second layout, which is what this unification deletes.
+      ...(peopleClan && !be.head_is_people
+          ? [{ label: "Lineage", value: `Descended from ${be.name}` }] : []),
+      ...(be.section === "person" && !peopleClan && be.parents && be.parents.length > 0
+          ? [{ label: "Parent", value: be.parents.join(", ") }] : []),
+      ...(be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0
+          ? [{ label: "Children", value: be.offspring.join(", ") }] : []),
+      ...(showArea && !peopleClan && !areaIsTribe
+          ? [{ label: be.section === "place" ? "Region" : "Area", value: area }] : []),
+    ],
+  };
+}
+
+// How many elements a body will actually render — the input to the sparse-card test.
+// A `function` declaration on purpose: the bundle's consts are lexical and invisible
+// to tests/test_person_body.js, which must exercise the SHIPPED helper, never a copy.
+function bodyFieldCount(b) { return b.chips.length + (b.born ? 1 : 0) + b.rows.length; }
+
+// ── WHAT THE NUMBER IS ATTACHED TO ──────────────────────────────────────────────
+// The card leads with the Strong's number, the hero prints the Greek/Hebrew form,
+// and the person block sits under both — so a reader can reasonably take the number
+// as identifying the PERSON. It doesn't: G2496 is the number for the written name
+// Ἰωράμ, which BOTH kings Jehoram carry because both are spelled that way, and the
+// occurrence line under it ("51× G2496") counts that FORM across everyone bearing it.
+// WORDING APPROVED VERBATIM (JP, 2026-08-09): it states the positive rather than a
+// denial — "not the person" read as though the two were unrelated. Don't reword it.
+// Returns "" when the card can't carry the claim honestly:
+//   * no identity block under it (nothing for "below" to point at),
+//   * no real number — a header reading "PN" has nothing to clarify. RULED a
+//     deliberate omission, not a coverage hole (reviewer, 2026-08-09),
+//   * no script form in the hero (it falls back to the English name, and that is
+//     not what a Strong's number numbers).
+function scopeNoteText(strongs, form, kind) {
+  if (!kind || !form || !/^[GH]\d/.test(strongs || "")) return "";
+  return `${strongs} numbers the name form ${form} — the ${kind} this verse names is below.`;
+}
+
 function MetavPersonBody({ data, withEponym }) {
-  // Relationship rows list every name, no truncation: names are the point of the
-  // panel, and the corpus-wide worst case (David, 21 children) is ~8 lines — not
-  // enough to earn a collapse (measured on PA 2026-07-11).
   if (!data) return null;
   // Eponym opener on the name-path card. Parentage guard keeps namesakes plain:
   // only the record whose parents are Israel/Jacob (the 12 sons) or Joseph
@@ -54,39 +210,7 @@ function MetavPersonBody({ data, withEponym }) {
     <>
       {eponym && <p className="pnbound-desc">{eponym}</p>}
       {eponym && <div className="detail-h">The man</div>}
-      <div className="metav-meta">
-        {data.gender && <span className="metav-tag">{data.gender === "M" ? "Male" : "Female"}</span>}
-        {data.groups.filter(g => g.startsWith("Tribe")).map(g => (
-          <span key={g} className="metav-tag">{g}</span>
-        ))}
-        {data.groups.includes("Genealogy of Jesus") && <span className="metav-tag metav-tag-gold">Genealogy of Jesus</span>}
-      </div>
-      {(data.birth_year || data.death_year) && (
-        <p className="detail-p detail-p--meta" style={{fontSize:"13px"}}>
-          {data.birth_year && <span>Born: {data.birth_year}{data.birth_place ? `, ${data.birth_place}` : ""}</span>}
-          {data.birth_year && data.death_year && " · "}
-          {data.death_year && <span>Died: {data.death_year}{data.death_place ? `, ${data.death_place}` : ""}</span>}
-        </p>
-      )}
-      {data.relationships.length > 0 && (
-        <div className="metav-rels">
-          {[
-            { types: ["child"],                    label: "Parent"   },
-            { types: ["father","mother"],          label: "Children" },
-            { types: ["spouseOrConcubine"],        label: "Spouse"   },
-            { types: ["sibling","halfSiblingSameFather","halfSiblingSameMother"], label: "Siblings" },
-          ].map(({ types, label }) => {
-            const matching = data.relationships.filter(r => types.includes(r.type));
-            if (!matching.length) return null;
-            return (
-              <div key={label} className="metav-rel-row">
-                <span className="metav-rel-label">{label}</span>
-                <span className="metav-rel-names">{matching.map(r => r.name).join(", ")}</span>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <IdentityBody {...metavBody(data)} />
     </>
   );
 }
@@ -817,6 +941,28 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // there's no transliteration.
   const heroInlineGloss = !!(hero.translit && heroTopGloss && !hero.noGloss);
 
+  // The form-vs-person scope note (sentence + its guards: scopeNoteText, top of this
+  // file). It renders in the hero's existing status slot — the same slot and muted
+  // style as the "ABP-only form" line — so it costs no new structure and no layout
+  // change. `headerStrongs` is SHARED with the header badge below, so the note can
+  // never name a different number than the one printed on screen.
+  const headerStrongs = greekId ? (greekId.greek_strongs || "PN") : (greekIdPending ? "PN" : entry.strongs);
+  // The noun the sentence ends on: the bound card's own kind, else the name-path
+  // card's. TIPNR 'other' records (deities, months, constellations) have no natural
+  // noun here — "the one this verse names" is true of every kind, so they get that
+  // rather than being dropped. Shows on EVERY name card with a real number and an
+  // identity block, not only the shared-form ones: the distinction is always true.
+  const scopeKind = boundEntity
+    ? (boundEntity.section === "place" ? "place"
+       : boundEntity.people_group ? "group"
+       : boundEntity.section === "person" ? "person" : "one")
+    : (metavType === "person" && metavData) ? (isGentilic ? "group" : "person")
+    : (metavType === "place" && metavData) ? "place" : "";
+  // The sentence calls the hero a "name form", so the hero must actually be printing
+  // a script form — never the English-name fallback `nameOrGloss`.
+  const heroIsScriptForm = !!(idiomHdr || (isHebrew ? bdbEntry?.lemma : (entry.greek || giLemma)));
+  const scopeNote = scopeNoteText(headerStrongs, heroIsScriptForm ? hero.script : "", scopeKind);
+
   // Verse + place sections show an English reading text (not ABP) for Hebrew /
   // KJV-mode / BSB-mode / place words. BSB pulls BSB text; the rest pull KJV.
   const useKjvText = entry.isKjv || entry.isBsb || isHebrew || (metavType === "place" && !isPN);
@@ -884,10 +1030,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         return <section key="boundEntity" className="sec pnbound"><div className="lsj-def lsj-def--loading">Looking up…</div></section>;
       if (!boundEntity) return null;
       const be = boundEntity;
-      // C: the clicked word is a people-group (gentilic) bound to its eponymous ancestor
-      // (a PERSON entity) — TIPNR models peoples that way. Render "People / Clan" and drop
-      // the ancestor's individual kin, so "the Jews" never shows Judah's own parents.
-      const peopleClan = be.section === "person" && be.people_group;
+      // C: a people-group click renders "People / Clan" and drops the ancestor's
+      // individual kin, so "the Jews" never shows Judah's own parents. (Predicate
+      // shared with tipnrBody — one definition, top of this file.)
+      const peopleClan = isPeopleClan(be);
       // A bound person cross-linked to its rich MetaV record (David-style badges /
       // born-died / kin) — served on be.metav only when it clears the bio bar AND the
       // People/Clan gate (the server nulls it for a gentilic; !peopleClan double-guards
@@ -914,7 +1060,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // the family name doesn't.
       const label = peopleClan ? "People / Clan"
                   : be.section === "place" ? "Biblical Place" : be.section === "person" ? "Biblical Person" : otherLabel;
-      const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
+      const clean = cleanTipnr;   // drops TIPNR's "(?)" uncertainty marker
       // TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
       // but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
       // string ("Mount Paran= in Paran (…)"). Cut the cross-ref tail at '=', drop a trailing
@@ -939,35 +1085,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         && /jacob's son|joseph's son|patriarchs|renamed/i.test(descText || "")
         ? EPONYM_LINES[be.name] : null;
       if (eponym) line = eponym;
-      // area (Geo-area) is often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks
-      // so an empty geo-area shows NO row; real values (e.g. "Tribe of Simeon") stay as a label.
-      const area = clean(be.area).replace(/^[>\s]+|[>\s]+$/g, "");
-      // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
-      const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
       // The entity's verses are no longer listed here — the standard occurrence controls
       // below ("× in ABP / Hebrew OT / KJV / BSB") show the real word in each verse, which
       // supersedes the old TIPNR ref-list (it listed verse pointers, some without the word).
       const hasMap = be.section === "place" && be.lat && be.lon;
       const placeNote = be.section === "place" && !hasMap && be.ambiguous;
-      // Body rows under the name: the labeled kin / region facts (the descriptor `line`
-      // is the row above them). Built as DATA so we can count them — a card whose whole
-      // body is <=1 row reads as a floating name echo + orphan row + stranded badge (the
-      // Levites / Pharaoh-at-Exo-3 shape). `plain` = render the value with no label
-      // ("Descended from Levi" needs no "Lineage:" tag; it only ever appears thin).
-      const factItems = [];
-      if (peopleClan && !be.head_is_people)
-        factItems.push({ lbl: "Lineage", val: `Descended from ${be.name}`, plain: true });
-      if (be.section === "person" && !peopleClan && be.parents && be.parents.length > 0)
-        factItems.push({ lbl: "Parents", val: be.parents.join(", ") });
-      if (be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0)
-        factItems.push({ lbl: "Children", val: be.offspring.join(", ") });
-      // hide the ancestor's "Tribe of …" on a group card — it asserts a tribe link the
-      // collective may not carry; the Lineage line already gives the honest ancestry.
-      if (showArea && !peopleClan)
-        factItems.push({ lbl: be.section === "place" ? "Region" : "Tribe", val: area });
-      const factRow = (f, i) => (
-        <div key={i}>{f.plain ? f.val : <><span className="pnbound-lbl">{f.lbl}</span> {f.val}</>}</div>
-      );
+      // THE CARD BODY — one shape, either source (both builders + IdentityBody are at
+      // the top of this file). Built as DATA so it can be COUNTED: a card whose whole
+      // body is <=1 element reads as a floating name echo + orphan row + stranded
+      // badge (the Levites / Pharaoh-at-Exo-3 shape); see `thin` below.
+      const body = richPerson ? metavBody(be.metav) : tipnrBody(be, line);
+      const bodyCount = bodyFieldCount(body);
       // THIN = a sparse non-rich card with no map / note to anchor the badge. One shared
       // arrangement (not a per-branch fix): drop the name echo (the hero above carries
       // it), promote the single body line, tuck the badge inline on its baseline. Covers
@@ -1003,7 +1131,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               name at this verse; the identification follows ABP's reading.
             </p>)
         : null;
-      const thin = !richPerson && !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + factItems.length) <= 1;
+      // The test counts RENDERED FIELDS and never the source (reviewer ruling
+      // 2026-08-09). It used to carry `!richPerson`, so a sparse card could only ever
+      // be detected as sparse on ONE source — the same source-branching this ticket
+      // deletes, relocated into the detector.
+      const thin = !hasMap && !placeNote && !witnessNote && ((line ? 1 : 0) + bodyCount) <= 1;
       // Match-state placement (JP amendment 2026-07-30, third pass — supersedes the
       // under-description slot): "Matched to this verse" is the LAST element of the
       // person/place section — below tags, dates and relation rows — reading as the
@@ -1031,18 +1163,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // conditional read as randomness. Header = the clicked FORM, this line = the
       // REFERENT; when they coincide that's information, not noise.
       if (thin) {
-        const first = factItems[0];
-        const opener = line
-          ? <span>{line}</span>
-          : first
-            ? <span>{first.plain ? first.val
-                      : <><span className="pnbound-lbl">{first.lbl}</span> {first.val}</>}</span>
-            : null;
+        // Sparse ARRANGEMENT, same template: promote the one element we have onto a
+        // single row under the name. `thin` caps the count at 1, so `line` and the
+        // body can never both be present here.
+        const opener = line ? <span>{line}</span> : <IdentityBody {...body} />;
         return (
           <section key="boundEntity" className="sec pnbound">
             <h4 className="sec-head"><span className="sec-t">{label}</span><WarrantTag cls="bdb-badge" warrant={tipnrWarrant}>TIPNR</WarrantTag></h4>
             <div className="pnbound-name">{heroName}</div>
-            {opener && <div className="pnbound-thinrow">{opener}</div>}
+            {(line || bodyCount > 0) && <div className="pnbound-thinrow">{opener}</div>}
             {matchState}
           </section>
         );
@@ -1055,12 +1184,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <h4 className="sec-head"><span className="sec-t">{label}</span><WarrantTag cls="bdb-badge" warrant={richPerson ? bothWarrant : tipnrWarrant}>{richPerson ? "MetaV/TIPNR" : "TIPNR"}</WarrantTag></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
-          {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
-          {richPerson ? <MetavPersonBody data={be.metav} /> : (
-          <div className="pnbound-facts">
-            {factItems.map(factRow)}
-          </div>
-          )}
+          {eponym && bodyCount > 0 && <div className="detail-h">The man</div>}
+          <IdentityBody {...body} />
           {be.section === "place" && (be.lat && be.lon
             ? <LeafletMap lat={be.lat} lon={be.lon} name={be.name} />
             : be.ambiguous
@@ -1501,7 +1626,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {/* R-2 flip: a served Greek identity is the header number (C1/C2/C2a);
                 lemma-only keeps the neutral PN tag — never the Hebrew number (that
                 moved to the cross-ref section). STEP tag per ruling S2-Q2. */}
-            <span className="detail-strong-head">{greekId ? (greekId.greek_strongs || "PN") : (greekIdPending ? "PN" : entry.strongs)}</span>
+            <span className="detail-strong-head">{headerStrongs}</span>
             {/* JP-ruled 2026-07-25 (supersedes TICKET_step_tag_placement's body
                 placement): STEP tag lives HERE beside the header number,
                 hoverable explanation; the occurrence line below stays bare
@@ -1553,6 +1678,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {greekId && !greekId.greek_strongs && (
               <div className="detail-morph">ABP-only form — no Greek Strong's number</div>
             )}
+            {/* Form-vs-person scope note — see `scopeNote` above. Same slot and same
+                muted style as the line above it; the two are mutually exclusive (that
+                one needs NO number, this one needs a real one). */}
+            {scopeNote && <div className="detail-morph detail-scopenote">{scopeNote}</div>}
           </div>
           {(heroForm || hero.morph) && (
             <div className={"detail-hero-occ" + (heroForm ? "" : " detail-hero-occ--tight")}>
