@@ -81,6 +81,53 @@ that step: after `build_pn_greek_identity.py --apply`, run `gate_greek_header.py
 <db>` and read gate C. A pin that used to pass and now fails means the rebuild moved name
 slots into the header inventory.
 
+## REPAIR ATTEMPT 2026-08-09 — the fix works, but a SECOND defect blocks it
+Rebuilt the header table on a copy against today's form table (live untouched).
+
+**What went right — the repair is proven:**
+- Gate C **fully green**, including the three names that caught this: hadad 9/12 with
+  English-despite-page-form **0**, zion PASS, abner PASS. Gate A PASS.
+- Galilee changed **exactly 73** rows, and glued came out **exactly 30**. Batch 3 is
+  validated as far as it can be without shipping.
+
+**What blocks it — gate B FAIL, 218 violations, all of one shape: a header that exists
+today would come out EMPTY.** Enumerated: 256 rows lose their value; **172 of them are
+currently CLEAN and correct** (`Αδάμ` Gen 3:12, `Λωτ` Gen 13:14, `Εβραίος` Gen 39:17) —
+only 84 were glued. **252 of the 256 have NOTHING in today's tables to build from:** no
+lemma on the word, no printed form for that slot.
+
+### The second defect: the form table lost name-slot coverage
+`abp_surface` holds NO rows for name slots by construction — `backfill_pn_surface.py`
+adds them, keyed by verse_id+position. **The 8/8 ride moved name slots, so the backfilled
+forms sit at the old slot numbers.** Name slots with no printed form:
+**2,361 (pre-8/5) → 2,528 (live), +167.**
+
+So the 8/8 ride broke TWO things. The first framing in this ticket — "rebuild the header
+against a fresh form table" — is WRONG: the form table is itself missing coverage, and a
+header rebuild on today's inputs DESTROYS 172 good headers. **Live is currently better
+than a fresh build for those rows.**
+
+### Numbers that do NOT reconcile — recorded, not smoothed
+- **218 (gate) vs 256 (enumeration).** The gate allows 40 as gentilic drops → 258, which
+  is 2 more than 256. The two sets are not the same set; the 2 are unpinned.
+- **+167 newly-uncovered slots vs 252 rows with nothing to build from** — leaves ~85 rows
+  whose slot was ALREADY uncovered on 8/5 while live still carries a header. Live's header
+  table predates both backups, so it holds values from a state neither file shows. No
+  further explanation is offered because none is proven.
+- **Folded rows came out 4,408** against the expected 4,326 + 73 = 4,399. **+9 unexplained.**
+
+### Repair order now needed (NEEDS A RULING — it breaks this lane's own gate)
+1. Restore the form table's name-slot coverage: re-run `backfill_pn_surface.py`, then
+   `build_abp_translit.py` for the new rows (per that script's own docstring).
+2. THEN rebuild the header table.
+3. **Gate A requires `abp_surface` byte-identical** — step 1 breaks it by construction.
+   Either gate A is re-scoped for this lane (compare only pre-existing rows) or the form
+   repair runs as its own lane with `audit_surface_coverage.py` as its gate. Reviewer call.
+4. Re-check the +9 and the 2 unpinned rows against the repaired build before any swap.
+
+Scratch copy `bible.db.hdrfix` is reproducible from the same command; deleting it loses
+nothing. **Live has not been touched at any point.**
+
 ## Blocks
 `greek_header_batch3.md` (galilee → Γαλιλαία). The batch-3 admission is unaffected and stays
 correct; it cannot be VERIFIED until the gate is green again, because the acceptance test is

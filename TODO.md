@@ -22,6 +22,19 @@ the window is the 8/8 wordpos apply, which re-runs the header build).
 - Detector: `greek_lemma LIKE '%'||char(160)||'%'`. **A plain-space search reads 0 against rows
   you can see** — this lane already learned that in July (commit 5a533f9b) and it bit again.
   Any count fires on 1Ki 11:17 slot 2 first or it isn't trusted.
+- **SECOND DEFECT from the same ride, found by the repair attempt 2026-08-09: the printed-form
+  table lost name-slot coverage (2,361 → 2,528 slots with no form, +167).** `abp_surface` has no
+  name-slot rows by construction — `backfill_pn_surface.py` adds them BY SLOT NUMBER, and the ride
+  moved the slots. Consequence: **a header rebuild on today's inputs DESTROYS 172 good headers**
+  (Αδάμ, Λωτ, Εβραίος …) because 252 of 256 blanked rows have no lemma and no form to rebuild
+  from. Live is currently BETTER than a fresh build for those rows. Repair order is now: restore
+  form coverage (backfill_pn_surface + build_abp_translit) → then the header rebuild → and that
+  breaks this lane's own gate A (form table must be byte-identical), so it needs a ruling.
+- **The repair itself IS proven** (rebuild on a copy, live untouched): gate C fully green —
+  hadad 9/12 with 0 English-despite-page-form, zion and abner back — and **galilee changed
+  exactly 73, glued exactly 30**, both as predicted.
+- Three numbers recorded as NOT reconciling: 218 (gate) vs 256 (enumeration), the ~85 rows whose
+  slot was already uncovered on 8/5, and folded rows 4,408 vs the expected 4,399 (+9).
 - Blocks greek-header batch 3 (galilee), which is drafted and correct but unverifiable until the
   gate is green.
 - Standing fix already landed: `/rebuild-words` step 8.3 now says to RUN gate_greek_header and
