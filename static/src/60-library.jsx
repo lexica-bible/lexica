@@ -262,7 +262,10 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   const firstTransRef = useRef(true);
   useEffect(() => {
     if (firstTransRef.current) { firstTransRef.current = false; return; }
-    onNavChange?.(n => (n && n.highlight != null) ? { ...n, scroll: true, instant: true } : n);
+    // Strip the stale one-time `translation`/`extern` before re-emitting — see
+    // navAfterVersionSwitch (56-library-order-logic.jsx) for why spreading the whole
+    // old jump here snapped the reader back to a link's Bible.
+    onNavChange?.(navAfterVersionSwitch);
   }, [translation]);
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => { planSaveAll(planProg); NotesStore.schedulePlanSync(); }, [planProg]);

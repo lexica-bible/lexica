@@ -254,6 +254,32 @@ function libViewTransition(state, action) {
   return s;
 }
 
+// ── A JUMP'S `translation` IS A ONE-TIME INSTRUCTION, NOT A STANDING STATE ──────
+// Switching Bible version re-arms the "scroll back to the verse you marked" step by
+// re-emitting the current jump. The jump MUST be stripped first. A jump that arrived
+// from a link — a PN card's "63× in KJV" occurrence link, say — carries
+// `translation: "kjv"`, meaning "land me in KJV" ONCE. Re-sending it whole makes the
+// nav effect apply KJV all over again, a beat after the reader clicked ABP. So the
+// tab click is NOT ignored: it fires, and then loses a race it should win.
+// (JP sighting 2026-08-09: PN card → "63× in KJV" → Library at Mat 2:22 → click ABP →
+// snaps back. A hard refresh cured it, because the jump is rebuilt without the
+// translation. Needs a `highlight` to reproduce, which is why plain book/chapter
+// navigation never showed it.)
+// `extern` is stripped for the same reason: it would re-force canonical order on every
+// version switch while reading chronologically. Latent today, identical family.
+//
+// THIRD INSTANCE OF ONE TRAP — the other two are already fixed and commented in
+// 60-library.jsx: `jumpToHit` stopped baking `translation` into a search jump, and
+// `turnPage` hand-builds a clean jump. Both learned "don't let a stale jump ride
+// along"; this is the same lesson at the version-switch site, now in one shared,
+// tested function instead of a third hand-rolled copy.
+// Returns the SAME object when there is nothing to re-arm, so React skips the update.
+function navAfterVersionSwitch(n) {
+  if (!n || n.highlight == null) return n;
+  const { translation, extern, ...rest } = n;
+  return { ...rest, scroll: true, instant: true };
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, mergePnChipPairs };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, mergePnChipPairs, navAfterVersionSwitch };
 }

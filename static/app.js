@@ -1733,7 +1733,27 @@ if(state.viewMode==="prose"&&(s.showStrongs||s.showInterlinear))s.viewMode="chip
 if(state.showStrongs||state.showInterlinear){s.proseSnap={showStrongs:!!state.showStrongs,showInterlinear:!!state.showInterlinear};s.showStrongs=false;s.showInterlinear=false;}else{s.proseSnap=null;}}else if(mode==="interlinear"&&!wasInterlinear){// Entering mode three: the full faithful stack is the front door — both
 // companion lines ON. Clear any prose snapshot (we're setting fresh state,
 // not returning to the pre-prose chip toggles).
-s.showStrongs=true;s.showInterlinear=true;s.proseSnap=null;}else if(mode!=="prose"&&wasProse&&state.proseSnap){s.showStrongs=!!state.proseSnap.showStrongs;s.showInterlinear=!!state.proseSnap.showInterlinear;s.proseSnap=null;}s.viewMode=mode;return s;}return s;}if(typeof module!=="undefined"&&module.exports){module.exports={getEnglishOrderWords,groupForGreekMode,orderBracketGroupWords,lastRenderedIndex,greekLineForWord,pnClickPayload,libViewTransition,mergePnChipPairs};}// ============================================================
+s.showStrongs=true;s.showInterlinear=true;s.proseSnap=null;}else if(mode!=="prose"&&wasProse&&state.proseSnap){s.showStrongs=!!state.proseSnap.showStrongs;s.showInterlinear=!!state.proseSnap.showInterlinear;s.proseSnap=null;}s.viewMode=mode;return s;}return s;}// ── A JUMP'S `translation` IS A ONE-TIME INSTRUCTION, NOT A STANDING STATE ──────
+// Switching Bible version re-arms the "scroll back to the verse you marked" step by
+// re-emitting the current jump. The jump MUST be stripped first. A jump that arrived
+// from a link — a PN card's "63× in KJV" occurrence link, say — carries
+// `translation: "kjv"`, meaning "land me in KJV" ONCE. Re-sending it whole makes the
+// nav effect apply KJV all over again, a beat after the reader clicked ABP. So the
+// tab click is NOT ignored: it fires, and then loses a race it should win.
+// (JP sighting 2026-08-09: PN card → "63× in KJV" → Library at Mat 2:22 → click ABP →
+// snaps back. A hard refresh cured it, because the jump is rebuilt without the
+// translation. Needs a `highlight` to reproduce, which is why plain book/chapter
+// navigation never showed it.)
+// `extern` is stripped for the same reason: it would re-force canonical order on every
+// version switch while reading chronologically. Latent today, identical family.
+//
+// THIRD INSTANCE OF ONE TRAP — the other two are already fixed and commented in
+// 60-library.jsx: `jumpToHit` stopped baking `translation` into a search jump, and
+// `turnPage` hand-builds a clean jump. Both learned "don't let a stale jump ride
+// along"; this is the same lesson at the version-switch site, now in one shared,
+// tested function instead of a third hand-rolled copy.
+// Returns the SAME object when there is nothing to re-arm, so React skips the update.
+function navAfterVersionSwitch(n){if(!n||n.highlight==null)return n;const{translation,extern,...rest}=n;return{...rest,scroll:true,instant:true};}if(typeof module!=="undefined"&&module.exports){module.exports={getEnglishOrderWords,groupForGreekMode,orderBracketGroupWords,lastRenderedIndex,greekLineForWord,pnClickPayload,libViewTransition,mergePnChipPairs,navAfterVersionSwitch};}// ============================================================
 // CHRONOLOGICAL RECONCILE — pure passage-lookup logic, factored OUT of LibraryView so ONE
 // copy is used by both the app (60-library.jsx: passageForRef + the reader-position
 // reconcile) and the Node unit test (tests/test_chrono_reconcile.js). No React here —
@@ -2250,7 +2270,10 @@ useEffect(()=>{if(!selBook&&corpus==="bible")return;// nothing settled yet
 try{localStorage.setItem("lexica.lib.v1",JSON.stringify({corpus,book:selBook?selBook.abbrev:null,chapter:selChapter,translation,orderMode,chronoPos,compareSel,highlight:nav?.highlight??null}));}catch(e){}},[corpus,selBook,selChapter,translation,orderMode,chronoPos,compareSel,nav?.highlight]);// Re-scroll to the placeholder verse when you switch Bible version, so you land back
 // on the verse you marked instead of the top of the chapter. Skip the first render
 // (the version is just being restored); only real switches re-arm the scroll.
-const firstTransRef=useRef(true);useEffect(()=>{if(firstTransRef.current){firstTransRef.current=false;return;}onNavChange?.(n=>n&&n.highlight!=null?{...n,scroll:true,instant:true}:n);},[translation]);// Persist reading-plan progress + the Eras/Days choice.
+const firstTransRef=useRef(true);useEffect(()=>{if(firstTransRef.current){firstTransRef.current=false;return;}// Strip the stale one-time `translation`/`extern` before re-emitting — see
+// navAfterVersionSwitch (56-library-order-logic.jsx) for why spreading the whole
+// old jump here snapped the reader back to a link's Bible.
+onNavChange?.(navAfterVersionSwitch);},[translation]);// Persist reading-plan progress + the Eras/Days choice.
 useEffect(()=>{planSaveAll(planProg);NotesStore.schedulePlanSync();},[planProg]);// Pull account-synced plan progress back in: when a sync folds the server's copy into
 // localStorage, NotesStore notifies — re-read it, but only swap state if it actually
 // changed (so a no-op notify doesn't loop back into another push).

@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, navAfterVersionSwitch } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -328,6 +328,51 @@ test("lastRenderedIndex walks the trail back past label-less chips (Jer 46:15)",
   assert.strictEqual(lastRenderedIndex(headOnly), 1, "english_head-only chip still renders");
   // an all-empty group degrades to index 0 (nothing renders anyway — no crash)
   assert.strictEqual(lastRenderedIndex([{ english: "", english_head: "" }]), 0);
+});
+
+// ── Version-switch re-arm: the jump must not carry a link's Bible forward ───────
+// The bug (JP, 2026-08-09): PN card → "63× in KJV" → Library at Mat 2:22 KJV → click
+// ABP → snaps back to KJV. The click was never ignored; the version switch re-emitted
+// the whole old jump, `translation: "kjv"` still on it, and the nav effect re-applied
+// it a beat later. THIRD site of one trap, hence a gate and not a comment.
+test("version switch strips the jump's one-time translation (the snap-back bug)", () => {
+  const jump = { book: "Mat", chapter: 2, highlight: 22, scroll: true, extern: true, translation: "kjv" };
+  const out = navAfterVersionSwitch(jump);
+  assert.ok(!("translation" in out), "a stale translation must not ride the re-emit");
+  assert.ok(!("extern" in out), "nor extern — it would re-force canonical order in chrono");
+  // everything the re-arm actually needs survives
+  assert.strictEqual(out.book, "Mat");
+  assert.strictEqual(out.chapter, 2);
+  assert.strictEqual(out.highlight, 22);
+  assert.strictEqual(out.scroll, true);
+  assert.strictEqual(out.instant, true);
+  // the input is not mutated — the caller hands this to a state setter
+  assert.strictEqual(jump.translation, "kjv", "must not mutate the jump it was given");
+});
+
+test("version switch is a no-op with no marked verse (returns the SAME object)", () => {
+  // No highlight = nothing to scroll back to. Returning the same object lets React
+  // skip the update entirely — that is why plain book/chapter navigation never showed
+  // the bug, and the identity check is what pins that behaviour.
+  const jump = { book: "Mat", chapter: 2, highlight: null, translation: "kjv" };
+  assert.strictEqual(navAfterVersionSwitch(jump), jump);
+  assert.strictEqual(navAfterVersionSwitch(null), null);
+  assert.strictEqual(navAfterVersionSwitch(undefined), undefined);
+});
+
+test("version switch leaves an ordinary jump's fields alone", () => {
+  const jump = { book: "Joh", chapter: 3, highlight: 16 };
+  assert.deepStrictEqual(navAfterVersionSwitch(jump),
+    { book: "Joh", chapter: 3, highlight: 16, scroll: true, instant: true });
+});
+
+// CONTROL — the assertions above must be able to FAIL. This is the pre-fix behaviour
+// (spread the whole jump), and it has to trip the very checks that now pass.
+test("CONTROL: the pre-fix carry-forward trips these assertions", () => {
+  const carryForward = n => (n && n.highlight != null) ? { ...n, scroll: true, instant: true } : n;
+  const out = carryForward({ book: "Mat", chapter: 2, highlight: 22, extern: true, translation: "kjv" });
+  assert.strictEqual(out.translation, "kjv", "control: the old code DID carry the Bible forward");
+  assert.strictEqual(out.extern, true, "control: and extern with it");
 });
 
 console.log(`\n${n} tests passed.`);

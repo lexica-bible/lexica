@@ -49,8 +49,27 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   (Assyrians → Assyria map pin). Reviewer-ruled keep, but the card should say
   "people of [region]" rather than presenting as a place. Polish, not a defect.
 
-## Library translation-tab sync (JP sighting 2026-08-09, TRACED — fix proposed, not built)
-- **The tab click is overwritten, not ignored — and nothing is disabled.** Repro: PN card →
+## Library translation-tab sync — FIXED 2026-08-09 (record below; Word Study leg still open)
+- **SHIPPED:** the stale one-time `translation`/`extern` are stripped when a version switch
+  re-arms the scroll. One shared pure function `navAfterVersionSwitch`
+  (`56-library-order-logic.jsx`), called from `60-library.jsx:265` — deliberately NOT a third
+  hand-rolled strip. Gated in `tests/test_library_order.js` (4 cases + a CONTROL), and
+  fault-injected: restoring the pre-fix carry-forward in the real source turns the gate red on
+  "a stale translation must not ride the re-emit", source restored byte-identical after.
+  **Owed: JP's live re-check of the original repro after deploy.**
+- **QUEUED, own session (reviewer-approved 2026-08-09): the consumed-jump refactor.** Treat a
+  jump's `translation` as a one-time instruction that is CONSUMED once applied, so no later
+  re-send from anywhere can re-assert it. That is the real cure for all three sites (search
+  jump, page turn, version switch), each of which currently strips by hand at its own emit
+  point. Kept out of the papercut fix on purpose — it touches the load-bearing nav effect.
+- **LOW-PRIORITY UI LEGIBILITY (JP decides if/when):** unselected translation tabs read as
+  disabled. `.seg-b`'s selected state is a white pill, so the others look greyed beside it —
+  it fooled JP AND the reviewer in the same session, so it will fool a visitor. Wanted:
+  unselected tabs that still read as clickable. **Do NOT "fix" it by graying for real**, and
+  it is a visual change, so it needs JP's yes on the specific change.
+  code: static/src/59b-library-nav.jsx:178
+- The trace, kept because it is the third instance of one trap: **the tab click is overwritten,
+  not ignored — and nothing is disabled.** Repro: PN card →
   a KJV occurrence link (G1056 "63× in KJV") → lands in Library at Mat 2:22 KJV → click ABP →
   snaps back. Hard refresh frees it (JP confirmed), so nothing is persisted.
   THE LOOP, all five steps read: (1) the link bakes `translation:"kjv"` into the jump
@@ -64,22 +83,16 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   navigation does NOT reproduce), and refresh curing it.
   **THIRD INSTANCE of one trap** — already fixed at two other emit sites, with the lesson
   written down both times: `:740-744` (search) and `:1007-1008` ("emit a CLEAN nav, don't
-  spread ...nav"). PROPOSED FIX (one line, JP's go owed): at :265 drop the stale `translation`
-  when re-arming the scroll, and `extern` with it — `extern` rides along the same way and
-  would re-force canonical order on every version switch while reading chronologically
-  (latent today, same family). BIGGER SHAPE, own pass: treat a jump's translation as a
-  ONE-SHOT instruction consumed once applied, so no later re-send can re-assert it — that
-  cures all three sites, but it touches the load-bearing nav effect.
-- **"Greyed" was the unselected pill, not a disabled control** (JP + reviewer both read it as
-  disabled). `.seg-b`'s selected state is a white pill, so unselected tabs read dim beside it —
-  ABP and HEB were both live the whole time. Not a bug; flagged because two readers in a row
-  mis-read an enabled control as unavailable, which is a legibility question for JP's eye.
-  Do NOT "fix" it by graying for real. code: static/src/59b-library-nav.jsx:178
-- **Word study's greyed ABP tab (folded here, NOT yet traced):** the reviewer folded this into
-  the γῆ diacritic class (ABP keys the surface form Γαλιλαίας, the lexicon keys the lemma
-  Γαλιλαία → G1056). Plausible, but it is a DIFFERENT surface with different code and the
-  Library sighting just proved that "looks grey" ≠ "is disabled". Check which it is before
-  inheriting the diagnosis.
+  spread ...nav").
+- **OPEN — the Word Study leg of the same sighting (reviewer UNFOLDED it from the γῆ class
+  2026-08-09; read-only, propose before any change).** JP pasted **Γαλιλαίας** — the inflected
+  SURFACE form, not the lexical Γαλιλαία — into Word study, and its ABP tab looked grey. The
+  Library leg above just proved "looks grey" ≠ "is off", so establish WHICH of three states it
+  was before adopting any diagnosis: genuinely disabled · merely unselected · enabled but with
+  an empty result set. Then: does a surface-form search miss ABP's index, and is that the γῆ
+  diacritic class or something else? **JP's expectation, stated: he should be able to navigate
+  to ABP from that screen even when the result set differs.** Do not inherit the γῆ diagnosis
+  by analogy — different screen, different code.
 
 ## PN entity-data follow-ons (2026-08-09, from the panel-ticket eyeball — data, not display)
 - **Joram/Israel is TIPNR-only** — the card is honest and now correctly shaped, just thin
