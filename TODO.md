@@ -97,10 +97,17 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   (nothing under G1056) and the by-form `PN:<lemma>` door (`views_lexicon.py:1188`, which keys
   on a lemma these rows don't have). JP's expectation stands and is right — he should be able
   to reach ABP for a word ABP plainly contains.
-  **THE ONE CHECK LEFT:** the reader's PN card DOES display Γαλιλαίας, so the form must live in
-  the identity table rather than in `words`. If `pn_greek_identity` carries it, the fix is
-  ROUTING (the ABP tab opens the by-form view instead of graying) — display-layer. If it does
-  not, this is an entity-data ticket and the tab stays gray honestly until the data exists.
+  **THE DOOR EXISTS, AND IT HAS A TRAP — the reason the routing fix is BLOCKED, not queued.**
+  `pn_greek_identity` does carry the place name, numberless: **5 distinct forms across 72 rows**
+  (JP-run 2026-08-09) — Γαλιλαίας 37 · Γαλιλαίαν 20 · Γαλιλαία 13 · Γαλιλαάν 1 · Γαλιλαίς 1.
+  (Sibling check: the GENTILIC Γαλιλαῖος "Galilean" DOES carry G1057 — only the place name is
+  numberless, consistent with the rest of the PN pattern. Minor unchased discrepancy, logged
+  not papered over: `words` shows 73 numberless `%Galilee%` rows against these 72.)
+  **They are stored PER INFLECTED FORM, not folded under one name.** `_pn_lemma_rows`
+  (`views_lexicon.py:1140`) matches `greek_lemma = ?` exactly, so a by-form view keyed on
+  Γαλιλαία returns **13 of 72** — and nothing on screen would say the other 59 exist. So a
+  naive "make the ABP tab open the by-form view" fix trades a gray tab for a WRONG COUNT:
+  gray says nothing, a wrong count says something false. Reviewer-endorsed hold.
   **Paste-form correction, so nobody re-derives it:** the code returns a flat "No matches" for
   the inflected Γαλιλαίας (stored key `γαλιλαια`; the query folds to `γαλιλαιασ`, and neither
   the exact nor the substring band bridges that — the definition-text theory was checked and
@@ -109,6 +116,17 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   **Second-order, same family as the Library Greek-search item below:** the inflected paste
   would have returned a bare "No matches" for a word that is all over the Gospels — which
   reads as "this word isn't in the Bible" rather than "type the dictionary form".
+- **MERGED TICKET (reviewer-approved 2026-08-09): inflected-form folding, THEN routing —
+  a hard dependency in that order.** Folding the inflected forms of one word under a single
+  identity is the SAME job as the long-standing "Word study doesn't resolve κύριε → κύριος"
+  item (see the Greek-search bullet below, part b). Two separate tickets would each solve half
+  and leave the wrong-count trap live, so they are ONE ticket: fold first, route second. Only
+  once folding exists can the ABP tab honestly open a name's ABP occurrences.
+- **JP DECISION PENDING — interim honest-grey label.** Keep the tab gray but say WHY
+  ("ABP prints this name without a Strong's number") instead of a dead gray button. Same
+  information cost as gray, but it stops the next reader taking it for broken — it fooled JP
+  AND the reviewer in one session. Reviewer endorses; it is a visible change, so it ships only
+  on JP's yes, and it does NOT wait on the fold if he wants it sooner.
 
 ## PN entity-data follow-ons (2026-08-09, from the panel-ticket eyeball — data, not display)
 - **Joram/Israel is TIPNR-only** — the card is honest and now correctly shaped, just thin
@@ -125,7 +143,11 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   the abp_surface stripped-Greek characteristic, docs/tickets/accent_divergence.txt) or
   it inherits the 4,250-row false-miss class; (b) related but separate: Word-study search
   doesn't resolve INFLECTED forms to their headword (κύριε -> κύριος needs morphology
-  lookup — big). Neither is queued; JP raises. (c) Cheap UX honesty fix, independent of
+  lookup — big). **(b) IS NOW MERGED with the Word Study greyed-ABP ticket above
+  (reviewer 2026-08-09)** — the numberless proper-noun forms (Γαλιλαίας/Γαλιλαίαν/Γαλιλαία,
+  5 forms / 72 rows for Galilee alone) need the same folding, and the ABP-tab routing fix is
+  BLOCKED behind it because unfolded routing would report 13 of 72 as if complete. One
+  ticket, folding first. Neither is queued; JP raises. (c) Cheap UX honesty fix, independent of
   both: when the Library search box is handed GREEK characters it returns a bare
   "No matches" — which reads as "this word isn't in the Bible" rather than "this search
   is English-only." It should say so (reviewer-ruled note 2026-07-29).
