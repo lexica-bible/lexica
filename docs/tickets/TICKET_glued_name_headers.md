@@ -128,6 +128,33 @@ than a fresh build for those rows.**
 Scratch copy `bible.db.hdrfix` is reproducible from the same command; deleting it loses
 nothing. **Live has not been touched at any point.**
 
+## FORM-LANE SCOPING (2026-08-09) — the backfill CANNOT fix this
+Dry-run of `backfill_pn_surface.py` against live: **NEW rows to add = 0.** Refusals 2,543
+(no-match 2,488 · blank-label 49 · ambiguous 6); arithmetic closes (0 + 2,543 + 29,935 =
+32,478). **Re-running it restores nothing**, because it only reads scrape rows with a BLANK
+Strong's number — numbered names (Jesus G2424, Paul, Peter) were never in its reach. Those
+slots get their printed form from the main `build_abp_surface.py` aligner, which rebuilds
+the whole table. So the form lane is a REBUILD-class job (form table + both backfills +
+`build_abp_translit.py`), gated by `audit_surface_coverage.py`, as its own charter.
+
+### No words-table escalation — hypothesis raised and REFUTED
+Suspected the ride had stripped lemmas off numbered name rows. **Wrong:** is_pn rows with
+no lemma = 32,479 (pre-8/5) vs 32,478 (live) — i.e. ALL of them, in both files. Proper-noun
+rows never carry a lemma; the builder's own comment says so. The words table is fine.
+
+### Live's headers are NOT a restore set — the premise reversed
+Joh 4:13 slot 2 is the proof: in the pre-8/5 copy that slot was a starred word with no
+English; today it is G2424 "Jesus". The slots really moved. Live's header for it
+(`Ιησούς`) was read from the form table DURING the 8/8 chain, before that table was
+rebuilt — the same stale read that produced `απέδρα Αδάρ`. The clean-looking values are
+right by luck, not by derivation, so restoring them wholesale would launder a bad read
+into the record. **Captured as EVIDENCE only:**
+`docs/tickets/receipt_headers_no_source_20260809.txt` — 417 rows (157 surface · 146
+abp-tag · 69 tipnr · 45 lemma-only), regeneration command in its header.
+Decomposition against the rebuild, exact: every abp-tag (146) and tipnr (69) row blanks,
+plus 40 of 45 lemma-only and 1 of 157 surface = **256**, matching the blanked count to the
+row. The surviving 161 are headed from the per-NAME form list, not from their own slot.
+
 ## Blocks
 `greek_header_batch3.md` (galilee → Γαλιλαία). The batch-3 admission is unaffected and stays
 correct; it cannot be VERIFIED until the gate is green again, because the acceptance test is

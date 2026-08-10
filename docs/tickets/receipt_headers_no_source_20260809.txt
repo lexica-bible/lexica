@@ -1,0 +1,441 @@
+# receipt — live header rows with NO derivable source, captured 2026-08-09
+#
+# WHAT: every pn_greek_identity row where live carries a Greek header but today's
+# tables hold nothing to rebuild it from — no lemma on the word, no printed form
+# for that slot. A fresh header build blanks all of these.
+#
+# STATUS — READ THIS BEFORE USING IT: these values are EVIDENCE, NOT A RESTORE SET.
+# They were read from the form table DURING the 8/8 chain, before that table was
+# rebuilt (the step 8.3-before-step-9 ordering defect, TICKET_glued_name_headers.md).
+# Some are plainly wrong (a verb joined to the name by U+00A0: "απέδρα Αδάρ",
+# "ην Νώε"). The clean-looking ones ("Ιησούς" on a Jesus slot) are right by luck,
+# not by derivation — the same stale read produced both. Restoring them wholesale
+# would be laundering a bad read into the record.
+#
+# Captured because a form-table rebuild would otherwise be the event that discovers
+# they were the only copy (reviewer ruling 2026-08-09).
+#
+# Regenerate from live:
+#   sqlite3 -readonly ~/bible-db/bible.db "SELECT v.book||'|'||v.chapter||'|'||v.verse||'|'||g.position||'|'||lower(COALESCE(NULLIF(w.english_head,''),w.english))||'|'||g.greek_lemma||'|'||g.source FROM pn_greek_identity g JOIN words w ON w.verse_id=g.verse_id AND w.position=g.position JOIN verses v ON v.id=g.verse_id LEFT JOIN abp_surface s ON s.verse_id=g.verse_id AND s.position=g.position WHERE COALESCE(g.greek_lemma,'')<>'' AND COALESCE(w.lemma,'')='' AND s.verse_id IS NULL ORDER BY v.id, g.position;"
+#
+# NOTE: the PA paste carried one blank line after the 1Sa 7:17 row. Left as-is
+# rather than silently closed — regenerate if an exact count matters.
+#
+# columns: book|chapter|verse|slot|name|stored header|source
+Gen|3|12|3|adam|Αδάμ|tipnr
+Gen|5|9|1|enos|Ενώς|surface
+Gen|5|10|1|enos|Ενώς|surface
+Gen|5|32|2|noah|ην Νώε|tipnr
+Gen|9|26|10|canaan|έσται Χαναάν|lemma-only
+Gen|11|30|2|sarai|ην Σάρα|tipnr
+Gen|12|5|2|abram|έλαβεν ΄ Αβραμ|lemma-only
+Gen|13|14|10|lot|Λωτ|tipnr
+Gen|14|5|6|chedorlaomer|Χοδολλογομόρ|surface
+Gen|25|27|6|esau|ην Ησαύ|tipnr
+Gen|31|22|11|jacob|απέδρα Ιακώβ|abp-tag
+Gen|39|17|14|hebrew|Εβραίος|tipnr
+Gen|41|12|7|hebrew|Εβραίος|tipnr
+Gen|47|11|2|joseph|κατώκισεν Ιωσήφ|tipnr
+Gen|47|12|2|joseph|εσιτομέτρει Ιωσήφ|tipnr
+Exo|4|25|2|zipporah|Σεπφώραν|surface
+Exo|17|11|15|amalek|Αμαλήκ|surface
+Exo|17|13|2|joshua|ετρέψατο Ιησούς|tipnr
+Exo|18|10|2|jethro|είπεν Ιοθώρ|lemma-only
+Exo|30|8|3|aaron|εξάπτη Ααρών|tipnr
+Lev|8|19|7|moses|προσέχεε Μωυσής|tipnr
+Lev|8|24|40|moses|προσέχεε Μωυσής|tipnr
+Lev|24|10|22|israelitish|Ισραηλίτιδος|surface
+Num|12|15|2|miriam|Μαριάμ|surface
+Num|12|15|15|miriam|Μαριάμ|surface
+Num|13|30|2|caleb|κατεσιώπησε Χαλέβ|lemma-only
+Num|16|15|2|moses|εβαρυθύμησε Μωυσής|tipnr
+Num|21|25|2|israel|έλαβεν Ισραήλ|lemma-only
+Num|21|25|9|israel|κατώκησεν|lemma-only
+Num|24|18|2|edom|έσται Εδώμ|lemma-only
+Deu|4|45|11|moses|ελάλησε Μωυσης|tipnr
+Jos|4|4|2|joshua|ανακαλεσάμενος Ιησούς|tipnr
+Jos|5|4|7|joshua|Ιησούς|tipnr
+Jos|6|8|4|joshua|είπεν Ιησούς|tipnr
+Jos|8|19|3|joshua|Ιησούς|tipnr
+Jos|8|28|2|joshua|ενεπύρισεν Ιησούς|tipnr
+Jos|13|32|3|moses|κατεκληρονόμησε Μωυσής|tipnr
+Jos|14|14|4|hebron|Χεβρών|surface
+Jos|17|11|2|manasseh|έσται Μανασσή|tipnr
+Jos|18|8|8|joshua|Ιησούς|tipnr
+Jos|24|19|3|joshua|Ιησούς|tipnr
+Jdg|1|6|1|adonibezek|Αδωνιβεζέκ|surface
+Jdg|1|7|1|adonibezek|Αδωνιβεζέκ|surface
+Jdg|1|32|3|asher|Ασήρ|tipnr
+Jdg|4|18|2|jael|Ιαήλ|surface
+Jdg|4|22|8|jael|Ιαήλ|surface
+Jdg|6|31|2|joash|Ιωάς|surface
+Jdg|9|16|12|abimelech|Αβιμέλεχ|lemma-only
+Jdg|9|39|2|gaal|Γαάλ|surface
+Jdg|9|41|7|zebul|Ζεβούλ|surface
+Jdg|12|10|2|ibzan|Εβεσάν|surface
+Jdg|13|8|2|manoah|Μανώε|surface
+Jdg|13|12|2|manoah|Μανώε|surface
+Jdg|13|15|2|manoah|Μανώε|surface
+Jdg|13|17|2|manoah|Μανώε|surface
+Jdg|13|22|2|manoah|Μανώε|surface
+Jdg|16|6|2|delilah|Δαλιλά|surface
+Jdg|16|10|2|delilah|Δαλιλά|surface
+Jdg|16|12|2|delilah|Δαλιλά|surface
+Jdg|16|13|2|delilah|Δαλιλά|surface
+Jdg|16|14|8|delilah|Δαλιλά|surface
+Jdg|16|18|2|delilah|Δαλιλά|surface
+Jdg|16|20|2|delilah|Δαλιλά|surface
+Jdg|16|29|2|samson|περιέλαβε Σαμψών|tipnr
+Rth|1|8|2|naomi|Νοομί|surface
+Rth|1|11|2|naomi|Νοομί|surface
+Rth|1|14|10|orpah|Ορφά|surface
+Rth|1|15|2|naomi|Νοομί|surface
+Rth|1|22|2|naomi|Νοομί|surface
+Rth|2|22|2|naomi|Νοομί|surface
+Rth|4|16|2|naomi|Νοομί|surface
+1Sa|4|15|2|eli|ην Ηλί|lemma-only
+1Sa|7|6|29|samuel|εδίκαζε Σαμουήλ|tipnr
+1Sa|7|10|2|samuel|ην Σαμουήλ|tipnr
+1Sa|7|15|2|samuel|εδίκαζε  Σαμουήλ|tipnr
+1Sa|7|17|17|israel|Ισραήλ|lemma-only
+1Sa|14|41|11|saul|κατακληρούται Σαούλ|tipnr
+1Sa|15|2|9|amalek|Αμαλήκ|surface
+1Sa|17|21|7|israel|παρετάξαντο Ισραήλ|lemma-only
+1Sa|17|42|2|goliath|Γολιάθ|surface
+1Sa|18|14|2|david|ην Δαυίδ|tipnr
+1Sa|19|13|3|michal|Μελχόλ|lemma-only
+1Sa|20|1|2|david|απέδρα Δαυίδ|tipnr
+1Sa|20|34|2|jonathan|ανεπήδησεν Ιωναθάν|lemma-only
+1Sa|20|37|11|jonathan|ηκόντιζεν Ιωναθάν|lemma-only
+1Sa|25|10|2|nabal|ανεπήδησε Ναβάλ|lemma-only
+1Sa|26|3|2|saul|παρενέβαλε Σαούλ|tipnr
+1Sa|28|8|2|saul|ηλλοιώθη  Σαούλ|tipnr
+2Sa|3|15|1|ishbosheth|Ισβόσεθ|surface
+2Sa|3|27|3|abner|Αβενήρ|lemma-only
+2Sa|5|2|5|saul|όντος Σαούλ|tipnr
+2Sa|6|6|8|uzzah|Οζά|surface
+2Sa|8|4|2|david|προκατελάβετο Δαυίδ|tipnr
+2Sa|8|10|2|toi|Θοού|surface
+2Sa|8|15|8|david|ην Δαυίδ|tipnr
+2Sa|9|3|20|ziba|Σιβά|surface
+2Sa|9|4|9|ziba|Σιβά|surface
+2Sa|9|11|2|ziba|Σιβά|surface
+2Sa|10|17|18|syria|παρετάξατο Συρία|lemma-only
+2Sa|13|6|2|amnon|Αμνών|surface
+2Sa|13|6|13|amnon|Αμνών|surface
+2Sa|13|9|14|amnon|Αμνών|surface
+2Sa|13|34|2|absalom|απέδρα Αβεσαλώμ|lemma-only
+2Sa|13|35|2|jonadab|Ιωναδάβ|surface
+2Sa|15|6|18|absalom|ιδιοποιείτο Αβεσαλώμ|lemma-only
+2Sa|16|3|13|ziba|Σιβά|surface
+2Sa|16|18|2|hushai|Χουσί|surface
+2Sa|16|21|2|ahithophel|Αχιτόφελ|surface
+2Sa|17|1|2|ahithophel|Αχιτόφελ|surface
+2Sa|17|6|16|ahithophel|Αχιτόφελ|surface
+2Sa|17|7|2|hushai|Χουσί|surface
+2Sa|17|7|12|ahithophel|Αχιτόφελ|surface
+2Sa|17|8|2|hushai|Χουσί|surface
+2Sa|17|26|2|absalom|παρενέβαλεν Αβεσαλώμ|lemma-only
+2Sa|19|30|2|mephibosheth|Μεφιβόσεθ|surface
+2Sa|24|20|2|araunah|διέκυψεν Ορνά|lemma-only
+1Ki|1|9|2|adonijah|εθυσίασεν Αδωνίας|lemma-only
+1Ki|1|15|2|bathsheba|Βηρσαβεαί|surface
+1Ki|1|16|2|bathsheba|Βηρσαβεαί|surface
+1Ki|1|31|2|bathsheba|Βηρσαβεαί|surface
+1Ki|2|18|2|bathsheba|Βηρσαβεαί|surface
+1Ki|2|19|2|bathsheba|Βηρσαβεαί|surface
+1Ki|5|10|2|hiram|ην Χειράμ|lemma-only
+1Ki|7|48|3|solomon|Σολομών|tipnr
+1Ki|11|28|3|jeroboam|Ιεροβοάμ|surface
+1Ki|12|3|7|jeroboam|Ιεροβοάμ|surface
+1Ki|12|12|2|jeroboam|Ιεροβοάμ|surface
+1Ki|12|20|8|jeroboam|Ιεροβοάμ|surface
+1Ki|12|25|2|jeroboam|Ιεροβοάμ|surface
+1Ki|12|26|2|jeroboam|Ιεροβοάμ|surface
+1Ki|12|32|2|jeroboam|Ιεροβοάμ|surface
+1Ki|14|20|5|jeroboam|Ιεροβοάμ|surface
+1Ki|15|8|1|abijam|Αβιά|surface
+1Ki|15|21|4|baasha|Βαασά|surface
+1Ki|15|22|21|baasha|Βαασά|surface
+1Ki|16|6|2|baasha|Βαασά|surface
+1Ki|21|3|2|naboth|Ναβούθ|surface
+1Ki|21|14|6|naboth|Ναβούθ|surface
+1Ki|22|49|2|ahaziah|Οχοζίας|surface
+1Ki|22|51|1|ahaziah|Οχοζίας|surface
+1Ki|22|51|15|ahaziah|Οχοζίας|surface
+1Ki|22|52|26|jeroboam|Ιεροβοάμ|surface
+1Ki|22|52|28|nebat|Ναβάτ|surface
+2Ki|1|2|2|ahaziah|Οχοζίας|surface
+2Ki|4|27|17|gehazi|Γιεζί|surface
+2Ki|5|21|2|gehazi|Γιεζί|surface
+2Ki|5|22|2|gehazi|Γιεζί|surface
+2Ki|8|5|34|gehazi|Γιεζί|surface
+2Ki|8|5|47|elisha|εζωπύρησεν Ελισεαί|tipnr
+2Ki|8|9|2|hazael|Αζαήλ|surface
+2Ki|8|12|2|hazael|Αζαήλ|surface
+2Ki|8|13|2|hazael|Αζαήλ|surface
+2Ki|8|15|24|hazael|Αζαήλ|surface
+2Ki|9|29|8|ahaziah|Οχοζίας|surface
+2Ki|12|2|2|joash|Ιωάς|surface
+2Ki|12|4|2|joash|Ιωάς|surface
+2Ki|13|13|2|joash|Ιωάς|surface
+2Ki|13|13|16|joash|Ιωάς|surface
+2Ki|14|16|2|joash|Ιωάς|surface
+2Ki|14|29|2|jeroboam|Ιεροβοάμ|surface
+2Ki|15|16|2|menahem|Μαναήμ|surface
+2Ki|15|22|2|menahem|Μαναήμ|surface
+2Ki|19|15|3|hezekiah|Εζεκίας|tipnr
+2Ki|20|1|5|hezekiah|ηρρώστησεν Εζεκίας|tipnr
+2Ki|20|4|2|isaiah|ην Ησαϊας|tipnr
+2Ki|23|16|43|jeroboam|Ιεροβοάμ|surface
+1Ch|1|45|2|jobab|Ιωβάβ|surface
+1Ch|1|46|2|husham|Ασόμ|surface
+1Ch|1|48|2|samlah|Σαμλά|surface
+1Ch|2|19|2|azubah|Αζουβά|surface
+1Ch|4|18|29|mered|Μαράδ|surface
+1Ch|13|5|2|david|εξεκκλησίασε Δαυίδ|tipnr
+1Ch|15|25|2|david|ην Δαυίδ|tipnr
+1Ch|18|4|2|david|προκατελάβετο Δαυίδ|tipnr
+1Ch|19|14|2|joab|παρετάξατο Ιωάβ|lemma-only
+1Ch|19|17|23|syria|παρατάσσεται Σύρος|lemma-only
+1Ch|21|28|8|david|Δαυίδ|tipnr
+1Ch|23|11|2|jahath|ην Ιεέθ|lemma-only
+1Ch|27|33|1|ahithophel|Αχιτόφελ|surface
+1Ch|27|34|2|ahithophel|Αχιτόφελ|surface
+1Ch|28|1|2|david|εξεκκλησίασε Δαυίδ|tipnr
+2Ch|5|2|2|solomon|εξεκκλησίασε Σολομών|tipnr
+2Ch|8|17|2|solomon|ώχετο Σολομών|tipnr
+2Ch|10|3|7|jeroboam|Ιεροβοάμ|surface
+2Ch|10|12|2|jeroboam|Ιεροβοάμ|surface
+2Ch|11|15|17|jeroboam|Ιεροβοάμ|surface
+2Ch|13|3|2|abijah|παρετάξατο Αβία|tipnr
+2Ch|16|5|5|baasha|Βαασά|surface
+2Ch|16|6|20|baasha|Βαασά|surface
+2Ch|16|12|2|asa|εμαλακίσθη Ασά|tipnr
+2Ch|17|12|2|jehoshaphat|ην Ιωσαφάτ|tipnr
+2Ch|21|9|2|jehoram|ώχετο Ιωράμ|tipnr
+2Ch|24|2|2|joash|Ιωάς|surface
+2Ch|25|22|2|judah|ετροπώθη Ιούδας|tipnr
+2Ch|32|24|5|hezekiah|ηρρώστησεν  Εζεκίας|tipnr
+2Ch|35|7|2|josiah|απήρξατο Ιωσίας|tipnr
+Ezr|1|11|13|sheshbazzar|Σασαβασάρ|surface
+Neh|4|1|4|sanballat|Σαναβαλάτ|surface
+Neh|4|7|4|sanballat|Σαναβαλάτ|surface
+Neh|6|1|5|sanballat|Σαναβαλάτ|surface
+Neh|7|65|1|arthasastha|Αρθασασθά|surface
+Est|1|13|8|vashti|Αστί|surface
+Est|1|16|3|memucan|Μεμουχάν|lemma-only
+Est|1|21|16|memucan|Μεμουχά|lemma-only
+Est|2|8|19|esther|Εσθήρ|surface
+Est|2|11|6|mordecai|Μαρδοχαίος|lemma-only
+Est|2|16|2|esther|Εσθήρ|surface
+Est|3|5|2|haman|Αμάν|surface
+Est|3|12|14|haman|Αμάν|surface
+Est|4|7|12|haman|Αμάν|surface
+Est|4|12|1|hatach|Αθάχ|surface
+Est|4|15|2|esther|Εσθήρ|surface
+Est|5|1|9|esther|Εσθήρ|surface
+Est|5|4|1|esther|Εσθήρ|surface
+Est|5|12|2|haman|Αμάν|surface
+Est|6|11|1|haman|Αμάν|surface
+Est|6|13|2|haman|Αμάν|surface
+Est|6|14|14|esther|Εσθήρ|surface
+Est|7|6|1|esther|Εσθήρ|surface
+Est|7|10|2|haman|Αμάν|surface
+Est|8|2|14|esther|Εσθήρ|surface
+Est|8|5|2|esther|Εσθήρ|surface
+Est|9|13|2|esther|Εσθήρ|surface
+Psa|51|0|17|bathsheba|Βηρσαβεαί|surface
+Psa|56|0|21|gath|Γεθ|surface
+Psa|71|0|5|jonadab|Ιωναδάβ|surface
+Psa|106|30|2|phinehas|Φινεές|surface
+Psa|144|0|5|goliath|Γολιάθ|surface
+Isa|13|19|2|babylon|έσται Βαβυλών|tipnr
+Isa|19|24|4|israel|έσται Ισραήλ|lemma-only
+Isa|20|1|4|tartan|Θαρθάν|surface
+Isa|23|15|22|tyre|έσται Τύρος|lemma-only
+Isa|33|9|5|lebanon|Λίβανος|lemma-only
+Isa|46|1|3|dagon|Δαγών|surface
+Isa|65|18|12|jerusalem|αγαλλίαμα Ιερουσαλήμ|lemma-only
+Jer|13|19|11|judah|αποικίσθη Ιούδας|tipnr
+Jer|14|2|2|judea|Ιουδαία|tipnr
+Jer|22|28|0|coniah|Ιεχονίας|surface
+Jer|28|11|29|jeremiah|ώχετο Ιερεμίας|tipnr
+Jer|29|1|32|nebuchadnezzar|απώκισε Ναβουχοδονόσορ|lemma-only
+Jer|37|14|15|irijah|Ιαρουϊας|surface
+Jer|38|8|1|ebedmelech|Αβδεμέλεχ|surface
+Jer|38|11|1|ebedmelech|Αβδεμέλεχ|surface
+Jer|47|5|5|ashkelon|Ασκαλών|surface
+Jer|48|1|16|kiriathaim|Καριαθαϊμ|surface
+Jer|48|5|2|luhith|Λουήθ|surface
+Jer|48|15|1|moab|ώλετο Μωαβ|lemma-only
+Jer|48|18|12|moab|ώλετο Μωάβ|lemma-only
+Jer|48|20|12|moab|ώλετο Μωάβ|lemma-only
+Jer|48|26|8|moab|επικρούσει  Μωάβ|lemma-only
+Jer|48|41|1|kerioth|Καριώθ|surface
+Jer|49|17|3|edom|Ιδουμαία|lemma-only
+Jer|49|24|1|damascus|Δαμασκός|surface
+Jer|50|2|17|babylon|εάλωκε Βαβυλών|tipnr
+Jer|50|2|21|merodach|Μαρωδόχ|surface
+Jer|51|37|2|babylon|έσται Βαβυλών|tipnr
+Jer|51|41|1|sheshach|Σησάχ|surface
+Lam|1|17|1|zion|διεπέτασε Σιών|lemma-only
+Eze|24|24|2|ezekiel|έσται Ιεζεκιήλ|lemma-only
+Eze|25|12|7|edom|Ιδουμαία|lemma-only
+Dan|5|29|2|belshazzar|Βαλτάσαρ|surface
+Dan|6|2|7|daniel|ην Δανιήλ|tipnr
+Dan|6|3|2|daniel|ην Δανιήλ|tipnr
+Hos|7|11|2|ephraim|ην Εφραϊμ|tipnr
+Hos|9|16|1|ephraim|επόνεσεν Εφραϊμ|tipnr
+Hos|11|9|13|ephraim|Εφραϊμ|tipnr
+Joe|3|17|16|jerusalem|έσται Ιερουσαλήμ|lemma-only
+Amo|7|11|7|jeroboam|Ιεροβοάμ|surface
+Zep|2|6|2|crete|έσται Κρήτη|tipnr
+Zec|7|7|17|jerusalem|ην Ιερουσαλήμ|lemma-only
+Act|1|1|12|jesus|Ιησούς|abp-tag
+Act|8|14|9|samaria|Σαμάρεια|lemma-only
+Act|10|25|5|peter|Πέτρον|abp-tag
+Act|10|46|12|peter|Πέτρος|abp-tag
+Act|12|6|12|peter|Πέτρος|abp-tag
+Act|13|25|4|john|Ιωάννης|abp-tag
+Act|14|11|7|paul|Παύλος|abp-tag
+Act|18|1|5|paul|Παύλος|abp-tag
+Act|18|14|9|gallio|Γαλλίων|abp-tag
+Act|19|21|6|paul|Παύλος|abp-tag
+Act|21|18|5|paul|Παύλος|abp-tag
+Act|23|10|10|paul|Παύλος|abp-tag
+Act|23|24|6|paul|Παύλον|abp-tag
+Act|24|24|6|felix|Φήλιξ|abp-tag
+Act|25|19|18|paul|Παύλος|abp-tag
+Act|25|24|3|festus|Φήστος|abp-tag
+Act|27|9|19|paul|Παύλος|abp-tag
+Act|27|21|7|paul|Παύλος|abp-tag
+Act|27|31|2|paul|Παύλος|abp-tag
+Act|27|33|8|paul|Παύλος|abp-tag
+Act|28|15|19|paul|Παύλος|abp-tag
+Joh|1|28|9|john|ην Ιωάννης|abp-tag
+Joh|1|29|4|john|Ιωάννης|abp-tag
+Joh|1|35|5|john|Ιωάννης|abp-tag
+Joh|1|47|2|jesus|Ιησούς|abp-tag
+Joh|1|48|8|jesus|Ιησούς|abp-tag
+Joh|2|19|2|jesus|Ιησούς|abp-tag
+Joh|2|22|24|jesus|Ιησούς|abp-tag
+Joh|3|3|2|jesus|Ιησούς|abp-tag
+Joh|3|5|2|jesus|Ιησούς|abp-tag
+Joh|3|22|4|jesus|Ιησούς|abp-tag
+Joh|4|13|2|jesus|Ιησούς|abp-tag
+Joh|4|54|6|jesus|Ιησούς|abp-tag
+Joh|5|1|9|jesus|Ιησούς|abp-tag
+Joh|6|1|4|jesus|Ιησούς|abp-tag
+Joh|6|29|2|jesus|Ιησούς|abp-tag
+Joh|7|1|3|jesus|Ιησούς|abp-tag
+Joh|7|6|4|jesus|Ιησούς|abp-tag
+Joh|7|14|7|jesus|Ιησούς|abp-tag
+Joh|7|21|2|jesus|Ιησούς|abp-tag
+Joh|7|37|11|jesus|Ιησούς|abp-tag
+Joh|8|20|5|jesus|Ιησούς|abp-tag
+Joh|9|3|2|jesus|Ιησούς|abp-tag
+Joh|9|35|2|jesus|Ιησούς|abp-tag
+Joh|9|39|3|jesus|Ιησούς|abp-tag
+Joh|10|23|3|jesus|Ιησούς|abp-tag
+Joh|10|40|11|john|ην Ιωάννης|abp-tag
+Joh|11|32|8|jesus|Ιησούς|abp-tag
+Joh|11|35|2|jesus|Ιησούς|abp-tag
+Joh|11|39|2|jesus|Ιησούς|abp-tag
+Joh|11|45|15|jesus|Ιησούς|abp-tag
+Joh|11|46|14|jesus|Ιησούς|abp-tag
+Joh|11|51|16|jesus|Ιησούς|abp-tag
+Joh|12|1|13|lazarus|ην Λάζαρος|abp-tag
+Joh|12|12|13|jesus|Ιησούς|abp-tag
+Joh|12|16|13|jesus|Ιησούς|abp-tag
+Joh|12|30|2|jesus|Ιησούς|abp-tag
+Joh|12|35|4|jesus|Ιησούς|abp-tag
+Joh|12|36|15|jesus|Ιησούς|abp-tag
+Joh|13|1|8|jesus|Ιησούς|abp-tag
+Joh|13|26|2|jesus|Ιησούς|abp-tag
+Joh|13|31|4|jesus|Ιησούς|abp-tag
+Joh|14|23|2|jesus|Ιησούς|abp-tag
+Joh|17|1|3|jesus|Ιησούς|abp-tag
+Joh|18|2|13|jesus|Ιησούς|abp-tag
+Joh|18|8|2|jesus|Ιησούς|abp-tag
+Joh|18|27|4|peter|Πέτρος|abp-tag
+Joh|18|31|4|pilate|Πιλάτος|abp-tag
+Joh|18|35|2|pilate|Πιλάτος|abp-tag
+Joh|18|36|2|jesus|Ιησούς|abp-tag
+Joh|18|37|4|pilate|Πιλάτος|abp-tag
+Joh|18|37|11|jesus|Ιησούς|abp-tag
+Joh|19|1|4|pilate|Πιλάτος|abp-tag
+Joh|19|8|4|pilate|Πιλάτος|abp-tag
+Joh|19|10|4|pilate|Πιλάτος|abp-tag
+Joh|19|11|2|jesus|Ιησούς|abp-tag
+Joh|19|12|4|pilate|Πιλάτος|abp-tag
+Joh|19|13|10|jesus|Ιησούν|abp-tag
+Joh|19|20|18|jesus|Ιησούς|abp-tag
+Joh|19|22|2|pilate|Πιλάτος|abp-tag
+Joh|19|28|4|jesus|Ιησούς|abp-tag
+Joh|20|2|15|jesus|Ιησούς|abp-tag
+Joh|20|19|26|jesus|Ιησούς|abp-tag
+Joh|20|24|16|jesus|Ιησούς|abp-tag
+Joh|20|28|3|thomas|Θωμάς|abp-tag
+Joh|20|30|8|jesus|Ιησούς|abp-tag
+Joh|21|7|8|jesus|Ιησούς|abp-tag
+Joh|21|14|5|jesus|Ιησούς|abp-tag
+Joh|21|17|10|peter|Πέτρος|abp-tag
+Joh|21|20|10|jesus|Ιησούς|abp-tag
+Joh|21|25|8|jesus|Ιησούς|abp-tag
+Luk|3|16|2|john|Ιωάννης|abp-tag
+Luk|4|8|5|jesus|Ιησούς|abp-tag
+Luk|4|14|3|jesus|Ιησούς|abp-tag
+Luk|8|45|3|jesus|Ιησούς|abp-tag
+Luk|8|45|13|peter|Πέτρος|abp-tag
+Luk|9|33|10|peter|Πέτρος|abp-tag
+Luk|9|36|8|jesus|Ιησούς|abp-tag
+Luk|9|43|16|jesus|Ιησούς|abp-tag
+Luk|22|55|12|peter|Πέτρος|abp-tag
+Luk|24|15|11|jesus|Ιησούς|abp-tag
+Luk|24|36|6|jesus|Ιησούς|abp-tag
+Mar|1|14|8|jesus|Ιησούς|abp-tag
+Mar|2|8|4|jesus|Ιησους|abp-tag
+Mar|2|17|3|jesus|Ιησούς|abp-tag
+Mar|8|1|14|jesus|Ιησούς|abp-tag
+Mar|8|27|3|jesus|Ιησούς|abp-tag
+Mar|9|2|6|jesus|Ιησούς|abp-tag
+Mar|10|28|3|peter|Πέτρος|abp-tag
+Mar|10|49|3|jesus|Ιησούς|abp-tag
+Mar|11|6|7|jesus|Ιησούς|abp-tag
+Mar|11|15|7|jesus|Ιησούς|abp-tag
+Mar|12|41|3|jesus|Ιησούς|abp-tag
+Mar|14|18|7|jesus|Ιησούς|abp-tag
+Mar|14|22|5|jesus|Ιησούς|abp-tag
+Mar|14|66|3|peter|Πέτρου|abp-tag
+Mar|14|72|8|peter|Πέτρος|abp-tag
+Mar|15|5|9|pilate|Πιλάτον|abp-tag
+Mar|15|34|7|jesus|Ιησούς|abp-tag
+Mat|3|16|3|jesus|Ιησούς|abp-tag
+Mat|4|17|4|jesus|Ιησούς|abp-tag
+Mat|7|28|5|jesus|Ιησούς|abp-tag
+Mat|8|13|3|jesus|Ιησούς|abp-tag
+Mat|8|14|3|jesus|Ιησούς|abp-tag
+Mat|9|2|11|jesus|Ιησούς|abp-tag
+Mat|9|4|3|jesus|Ιησούς|abp-tag
+Mat|9|19|3|jesus|Ιησούς|abp-tag
+Mat|9|23|3|jesus|Ιησούς|abp-tag
+Mat|9|35|3|jesus|Ισηούς|abp-tag
+Mat|10|5|5|jesus|Ιησούς|abp-tag
+Mat|11|1|5|jesus|Ιησούς|abp-tag
+Mat|11|7|5|jesus|Ιησούς|abp-tag
+Mat|11|25|6|jesus|Ιησούς|abp-tag
+Mat|12|1|6|jesus|Ιησούς|abp-tag
+Mat|12|40|3|jonah|ην Ιωνάς|tipnr
+Mat|13|1|7|jesus|Ιησούς|abp-tag
+Mat|13|34|4|jesus|Ιησούς|abp-tag
+Mat|16|21|4|jesus|Ιησούς|abp-tag
+Mat|17|1|6|jesus|Ιησούς|abp-tag
+Mat|18|2|3|jesus|Ιησούς|abp-tag
+Mat|19|1|5|jesus|Ιησούς|abp-tag
+Mat|21|12|3|jesus|Ιησούς|abp-tag
+Mat|26|1|5|jesus|Ιησούς|abp-tag
+Mat|26|26|5|jesus|Ιησούς|abp-tag
+Mat|26|55|6|jesus|Ιησούς|abp-tag
+Mat|26|75|3|peter|Πέτρος|abp-tag
+Mat|27|46|7|jesus|Ιησούς|abp-tag

@@ -35,6 +35,19 @@ the window is the 8/8 wordpos apply, which re-runs the header build).
   exactly 73, glued exactly 30**, both as predicted.
 - Three numbers recorded as NOT reconciling: 218 (gate) vs 256 (enumeration), the ~85 rows whose
   slot was already uncovered on 8/5, and folded rows 4,408 vs the expected 4,399 (+9).
+- **The form lane is REBUILD-class, not a re-run.** `backfill_pn_surface.py` dry-run adds
+  **0 rows** — it only reads scrape rows with no Strong's number, so numbered names (Jesus,
+  Paul, Peter) were never in its reach. Those come from the main `build_abp_surface.py`, which
+  rebuilds the whole table. Needs its own charter: form table + both backfills +
+  build_abp_translit, gated by audit_surface_coverage.py. **Gate A is NOT re-scoped** (reviewer
+  2026-08-09) — the header lane re-runs unchanged afterwards.
+- **Words table is FINE — hypothesis raised and refuted.** Suspected the ride stripped lemmas
+  off numbered name rows; in fact proper-noun rows have never carried a lemma (32,479 vs 32,478
+  blank, i.e. all of them, in both files). No escalation.
+- **Live's headers are NOT a restore set.** They were read from the form table mid-chain, before
+  it was rebuilt — the same stale read that produced `απέδρα Αδάρ`. Clean-looking ones are right
+  by luck. Captured as EVIDENCE only:
+  `docs/tickets/receipt_headers_no_source_20260809.txt` (417 rows, regeneration command inside).
 - Blocks greek-header batch 3 (galilee), which is drafted and correct but unverifiable until the
   gate is green.
 - Standing fix already landed: `/rebuild-words` step 8.3 now says to RUN gate_greek_header and
