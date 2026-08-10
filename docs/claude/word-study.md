@@ -112,6 +112,24 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
 - List is LEMMA-WIDE (every occurrence of the printed form) per the all-Edens ruling;
   identity disambiguation stays on the reader cards. The header state line says so.
 - `?lex=PN:<form>` works as a URL entry (90-app reads `lex` verbatim).
+- **How a name FOLDS to one header (standing).** `pn_greek_identity.greek_lemma` is per
+  occurrence, not per name. One folded header (`source='surface'`) only happens when every
+  printed form of the name is byte-identical, or the name is in the receipted hand table
+  `scripts/greek_header_nominatives.tsv` (page-cited, batch records
+  `docs/tickets/greek_header_batch*.md`). **Proper-noun rows never carry `words.lemma`** — all
+  32,478 are blank, by design — so the header comes from the printed-form table or the hand
+  table, never from a dictionary lemma. Admission rule: every printed form the SAME stem
+  declined AND the headword printed on ABP's own pages; one clean page receipt is enough
+  (reviewer 2026-08-09), ambiguous forms carry no weight.
+- **TRIPWIRE — two-word name values are joined by U+00A0, not a space.** `greek_lemma LIKE
+  '% %'` reads **0** against rows you can see. Use `LIKE '%'||char(160)||'%'`, and fire it on
+  a known row first (1Ki 11:17 slot 2). This lane has now learned it twice — commit
+  `5a533f9b` (July) and again 2026-08-09.
+- **TRIPWIRE — that detector finds a CLASS, not a defect.** Of 144 two-word values, 27 are
+  genuine compound names (Βαάλ Ερμών Baal-hermon, Γασιών Γαβέρ Ezion-geber, Αππίου Φόρου
+  Appii Forum, both Αρειον Πάγον Areopagus rows) and must stay. Adjudicate on the ENGLISH
+  column: a name reads as a place, a defect reads as a sentence ("And Herod" = `Ηρώδης δε`).
+  Known-bad and parked: Act 12:19, Act 13:1, Jos 12:23.
 - **In-verse highlight (2026-07-31):** the verse-row highlighter matches by
   Strong's number everywhere EXCEPT this lane — a PN: page has no number, so
   the profile/verses rows carry each occurrence's `position` (the name's own

@@ -49,7 +49,16 @@ the window is the 8/8 wordpos apply, which re-runs the header build).
   by luck. Captured as EVIDENCE only:
   `docs/tickets/receipt_headers_no_source_20260809.txt` (417 rows, regeneration command inside).
 - Blocks greek-header batch 3 (galilee), which is drafted and correct but unverifiable until the
-  gate is green.
+  gate is green. **Next session's opener = `docs/handoffs/HANDOFF_form_lane.md`** (charter to
+  WRITE, not run). Memory: `project_greek_header_fold`.
+- **FOLLOW-ON, filed not folded: the particle pair + Nephedor.** Act 12:19 `Ηρώδης δε` ("And
+  Herod") and Act 13:1 `Μαναήν τε` are a connective glued to the name; Jos 12:23
+  `του Ναφαθδώρ` is the article glued on. The first two come from the FORM table, so they
+  survive a header rebuild by design — parked and named rather than absorbed into the
+  legitimate set. Dispositioned in `TICKET_glued_name_headers.md`.
+- **FOLLOW-ON: pin the 27 legitimate compound names as a gate allowlist** with their verses, or
+  every future gate run re-argues them. `Βαρώθ  Χαμααμ` (Jer 41:17) must be pinned with its
+  exact bytes — it carries TWO non-breaking spaces, byte-verified.
 - Standing fix already landed: `/rebuild-words` step 8.3 now says to RUN gate_greek_header and
   read gate C after the header build — nothing checked it, which is why this sat live for a day.
 
