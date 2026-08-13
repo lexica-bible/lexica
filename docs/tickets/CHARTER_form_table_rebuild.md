@@ -65,7 +65,24 @@ set difference against a pre-8/5 backup (live's own history can't produce it).
 **Reviewer pin 3 (2026-08-12): the reference backup is PRE-REGISTERED here — named by JP
 BEFORE the diff runs, never chosen after seeing live's numbers.**
 
-> **PINNED BACKUP: `~/db_backups/bible_ride.db.20260806-133032.db`** (Aug 6 nightly —
+> **PIN FAILED — STOP RECORDED 2026-08-13 (JP-run reads).** Self-check results, all with
+> the identical 0a predicate: Aug 6 ride file **2,659** · Aug 5 ride file (unpacked)
+> **2,659** · live **2,528**. Live matching the banked 2,528 proves the predicate is the
+> banked one, so the files are truly not the baseline: **the copy that read 2,361 has
+> rotated out of `~/db_backups`** (pre-8/5 bible.db entries are info-slips only). Also
+> on record and unexplained: the 8/5/8/6 copies read WORSE than live — the banked
+> "2,361 until the 8/8 write" timeline is incomplete. Step 0d is BLOCKED pending a
+> reviewer ruling on the recommendation below.
+>
+> **CC recommendation to the reviewer:** re-pin the baseline to the Aug 6 ride file
+> (2,659) and redefine F3's arrivals list as "slots covered on 8/6, uncovered live" —
+> the loss across the 8/8 ride specifically, which is this lane's defect. Keep the F1
+> ceiling at ≤ 2,361 unchanged (it's the banked pre-8/5 figure and the full rebuild is
+> expected to beat every one of these numbers). Add 2,659 to the reconciliation table
+> as its own row. The 2,659-vs-2,528 improvement between 8/6 and live gets pinned as a
+> fourth open number, not absorbed.
+>
+> Superseded pin, kept for the record: `~/db_backups/bible_ride.db.20260806-133032.db` (Aug 6 nightly —
 > pinned 2026-08-12 from JP's `ls -l ~/db_backups/` paste). Why this one: it predates the
 > 8/8 00:31 live write (the moment the damage landed) and is already uncompressed. The
 > directory holds NO plain bible.db backup older than Aug 10 (June/July entries are
