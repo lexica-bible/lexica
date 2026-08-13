@@ -61,9 +61,16 @@ If the control row reads 0, the probe is void, not a clean count — settle the 
 byte with `hex()` on a row you can see before reporting anything.
 
 0d. **Member list of the lost slots (the landings check depends on this).** The +167 is a
-set difference against a pre-8/5 backup (live's own history can't produce it). Using the
-pre-8/5 copy that settled the dating (memory `project_db_backups`; JP picks the exact file
-in `~/db_backups/`):
+set difference against a pre-8/5 backup (live's own history can't produce it).
+**Reviewer pin 3 (2026-08-12): the reference backup is PRE-REGISTERED here — named by JP
+BEFORE the diff runs, never chosen after seeing live's numbers.**
+
+> **PINNED BACKUP: `___________________` (date: ______) — TO BE FILLED BY JP; Step 0d is
+> BLOCKED until this line carries a filename.** Candidate list comes from
+> `ls -l ~/db_backups/` (the pre-8/5 copy that settled the dating, memory
+> `project_db_backups`).
+
+Then:
 ```
 sqlite3 ~/bible-db/bible.db "ATTACH '<pre-8/5 backup path>' AS pre; CREATE TEMP TABLE lost AS SELECT w.verse_id, w.position FROM words w WHERE w.is_pn=1 AND NOT EXISTS(SELECT 1 FROM abp_surface s WHERE s.verse_id=w.verse_id AND s.position=w.position) AND EXISTS(SELECT 1 FROM pre.abp_surface p WHERE p.verse_id=w.verse_id AND p.position=w.position); SELECT count(*) FROM lost; .mode tabs
 .once /tmp/formlane_lost_slots.tsv
@@ -122,7 +129,11 @@ PYTHONIOENCODING=utf-8 python3 ~/bible-db/scripts/build_abp_translit.py ~/bible-
 A passing gate must be asked what it still permits — F3 and F4 are the landings checks,
 not just departures.
 - **F1 — coverage floor:** name slots with no printed form (0a query against the copy)
-  **≤ 2,361**. Lower is better; higher is a stop.
+  **≤ 2,361**. **Direction, stated once so nobody re-derives it wrong (reviewer pin 1,
+  2026-08-12): 2,361 is the count of name slots WITHOUT a printed form as of 8/5 — a
+  missing-slots metric, so LOWER is better and the gate is at-or-below.** A "coverage"
+  reading (≥) is the inverted one; the handoff's own line is "no printed form: 2,361
+  (pre-8/5) → 2,528 (live)". Higher than 2,361 is a stop.
 - **F2 — table floor:** `abp_surface` total **≥ 389,244** (0b against the copy).
 - **F3 — landings, member-level:** every key in the Step-0d lost-slots list has a row in
   the copy's `abp_surface`. Count of misses = 0, or each miss enumerated with its verse
@@ -139,6 +150,23 @@ not just departures.
 - **F7 — detector certification:** before trusting any zero in F1–F5, the probe fires on
   a known positive in the same command (the 0c pattern). A zero from a probe that never
   fired is not a zero.
+
+## Reconciliation table — the adjacent figures, one row each (reviewer pin 2, 2026-08-12)
+Four figures sit near each other in the record and are NOT the same thing. Each Step-0 /
+gate read lands in its row; any two rows that should be equal and aren't is a stop.
+
+| Figure | What it counts | Layer / table | Produced by (8/9) | Feeds |
+|---|---|---|---|---|
+| **2,361** | name slots with NO printed form, pre-8/5 | words.is_pn=1 with no abp_surface row | 0a-shaped read on the pre-8/5 backup | F1 ceiling |
+| **2,528** | same metric, live today | same | 0a-shaped read on live 8/9; re-pinned by Step 0a | F1 baseline |
+| **~167** | the member list: slots covered pre-8/5, uncovered live (2,528 − 2,361 if no other churn) | same, set difference vs the pinned backup | Step 0d | F3 arrivals list |
+| **256** | rows a fresh HEADER rebuild would blank today | pn_greek_identity (header lane, enumeration) | header-lane enumeration 8/9 | header lane; open no. 1 |
+| **172** | the subset of those 256 that are currently correct | same | same enumeration | header lane context only |
+| **218** | gate B violations | gate_greek_header's own count | gate B run 8/9 | open no. 1 (218+40 allowed = 258 vs 256 → 2 rows unpinned) |
+| **~85** | blanked rows whose slot was ALREADY uncovered on 8/5 yet live still heads them | pn_greek_identity vs abp_surface history | 8/9 backup comparison | open no. 3 |
+
+Note the family split: the first three are FORM-table counts (this lane's gate); the last
+four are HEADER-table counts (the next lane) and never substitute for an F1/F3 read.
 
 ## Pin the three open numbers here (during verification, not quietly closed)
 1. **218 (gate B) vs 256 (enumeration), 2 rows unpinned** — while the copy and live are
