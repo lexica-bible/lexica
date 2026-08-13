@@ -64,7 +64,7 @@ def load(path):
 def pre_form(path, book, ch, vs, token):
     """Evidence for hand-verification: the baseline's stored forms on this group."""
     con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    out = []
+    out, all_slots = [], []
     for pos, label, form in con.execute("""
         SELECT w.position, COALESCE(NULLIF(w.english_head,''), w.english), s.form
         FROM words w JOIN verses v ON v.id = w.verse_id
@@ -73,8 +73,10 @@ def pre_form(path, book, ch, vs, token):
                                         (book, ch, vs)):
         if _name_token(label) == token:
             out.append((pos, label, form))
+        all_slots.append((pos, label, form))
     con.close()
-    return out
+    # No token match (label drift): show the verse's whole name roster instead.
+    return out if out else all_slots
 
 
 def main():
@@ -97,9 +99,19 @@ def main():
     # the charter's 0a read does, so the banked figures are re-derived, not inherited.
     unc_live = sum(1 for g in live.values() for _, cov, _ in g if not cov)
     unc_base = sum(1 for g in base.values() for _, cov, _ in g if not cov)
+    n_live = sum(len(g) for g in live.values())
+    n_base = sum(len(g) for g in base.values())
     total_net = unc_live - unc_base
+    roster_delta = n_live - n_base
     print(f"uncovered name slots: live={unc_live:,}  baseline={unc_base:,}  "
           f"net={total_net:+,} (totals-derived, method-independent)")
+    print(f"name-slot roster:     live={n_live:,}  baseline={n_base:,}  "
+          f"delta={roster_delta:+,}")
+    # Identity (pinned 2026-08-13, second field run): coverage-diff net =
+    # uncovered net + roster shrink. The first +168-vs-+167 'leak' was actually
+    # the roster being one slot smaller live (32,478 vs 32,479, the known 8/8
+    # ride change) — coverage moves and roster moves are separate books.
+    expect_diff_net = total_net + (n_base - n_live)
 
     # VERSE-FIRST accounting (redesigned 2026-08-13 after the first field run):
     # name labels themselves DRIFTED between the files — the wordpos lane filled
@@ -165,10 +177,22 @@ def main():
     for k in sorted(buckets):
         print(f"  {k:22s}: {buckets[k]:,}")
 
+    # Enumerate the roster delta so the +/-1 class is named, never absorbed.
+    roster_verses = []
+    for vkey in sorted(set(by_verse_live) | set(by_verse_base)):
+        na = sum(len(s) for _, s in by_verse_base.get(vkey, []))
+        nb = sum(len(s) for _, s in by_verse_live.get(vkey, []))
+        if na != nb:
+            roster_verses.append((vkey, na, nb))
+    if roster_verses:
+        print(f"\nroster-changed verses ({len(roster_verses)}):")
+        for (bk, ch, vs), na, nb in roster_verses[:20]:
+            print(f"  {bk} {ch}:{vs}  baseline slots={na}  live slots={nb}")
+
     ok = True
-    if lost - gained != total_net:
-        print("\nSTOP: the verse-level diff does not reconcile with the files' own "
-              f"totals ({lost - gained:+,} vs {total_net:+,}) — the key is leaking.")
+    if lost - gained != expect_diff_net:
+        print("\nSTOP: coverage-diff net does not reconcile with totals + roster "
+              f"delta ({lost - gained:+,} vs {expect_diff_net:+,}) — the key is leaking.")
         ok = False
     if total_net != args.expect_net:
         print(f"\nSTOP: totals net {total_net:+,} != pre-registered {args.expect_net:+,}.")
