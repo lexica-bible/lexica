@@ -252,10 +252,16 @@ not just departures.
   reading (≥) is the inverted one; the handoff's own line is "no printed form: 2,361
   (pre-8/5) → 2,528 (live)". Higher than 2,361 is a stop.
 - **F2 — table floor:** `abp_surface` total **≥ 389,244** (0b against the copy).
-- **F3 — landings, member-level:** every key in the Step-0d lost-slots list has a row in
-  the copy's `abp_surface`. Count of misses = 0, or each miss enumerated with its verse
-  and English before any verdict. "The total went down" is a departure count; this is the
-  arrival count.
+- **F3 — landings, FORM-KEYED (reviewer condition 1 at differ sign-off, 2026-08-13):**
+  for every row of the certified arrivals list (172 rows,
+  `~/db_evidence/formlane_arrivals.tsv`), the SAME form must return at its verse —
+  each verse's `missing_forms_at_verse` column re-appears byte-identical in the rebuilt
+  copy's covered forms at that verse (Σολομών back at 1Ki 7:48, not just "something at
+  1Ki 7:48"). A rebuild that fills the slots with WRONG forms must read red. Count of
+  misses = 0, or each miss enumerated with verse + expected form before any verdict.
+- **F3b — roster frozen:** post-rebuild name-slot roster = **32,478**, matching live —
+  the rebuild repairs coverage, not roster (the −1 at Dan 11:1 is a pinned pre-existing
+  fact it inherits). Any roster change is a STOP.
 - **F4 — allowlist survives:** all 27 pinned compound rows still present byte-identical
   (Jer 41:17 checked by `hex()`). A missing legitimate compound is a defect of the fix.
 - **F5 — audit diff:** `audit_surface_coverage.py` on the copy; its built-in stored-count
@@ -295,6 +301,15 @@ four are HEADER-table counts (the next lane) and never substitute for an F1/F3 r
   copy, check whether those slots now carry forms; either way, write down what live's
   heads were resting on. Live's headers stay NON-restore evidence
   (`docs/tickets/receipt_headers_no_source_20260809.txt`).
+
+## Sign-off conditions (reviewer, at differ certification)
+1. F3 is form-keyed as written above; the arrivals TSV carries the expected forms
+   (regenerated with the `missing_forms_at_verse` column — same command, same control,
+   numbers must repeat identically or the regeneration is a stop).
+2. **The F5 audit-mismatch decomposition and the 30-member check may ride with the
+   dry-run stage but MUST be closed (evidence or enumerated gap) BEFORE the
+   re-run-vs-swap checkpoint** — that ruling depends on the audit diff being fully
+   explained.
 
 ## Checkpoint → landing on live
 Gate F green is a CHECKPOINT, not a go: results (gate output + the three pinned numbers)

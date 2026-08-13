@@ -38,25 +38,25 @@ import argparse
 import os
 import sqlite3
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_pn_greek_identity import _name_token
 
 
 def load(path):
-    """(book, ch, vs, token) -> list of (position, covered, english_label)."""
+    """(book, ch, vs, token) -> list of (position, covered, english_label, form)."""
     con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     con.execute("PRAGMA busy_timeout=30000")
     groups = defaultdict(list)
-    for book, ch, vs, pos, label, cov in con.execute("""
+    for book, ch, vs, pos, label, form in con.execute("""
         SELECT v.book, v.chapter, v.verse, w.position,
-               COALESCE(NULLIF(w.english_head,''), w.english),
-               EXISTS(SELECT 1 FROM abp_surface s
-                      WHERE s.verse_id=w.verse_id AND s.position=w.position)
+               COALESCE(NULLIF(w.english_head,''), w.english), s.form
         FROM words w JOIN verses v ON v.id = w.verse_id
+        LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position
         WHERE w.is_pn = 1"""):
-        groups[(book, ch, vs, _name_token(label))].append((pos, bool(cov), label or ""))
+        groups[(book, ch, vs, _name_token(label))].append(
+            (pos, form is not None, label or "", form or ""))
     con.close()
     return groups
 
@@ -97,8 +97,8 @@ def main():
 
     # Internal totals control: recompute each file's own uncovered count the same way
     # the charter's 0a read does, so the banked figures are re-derived, not inherited.
-    unc_live = sum(1 for g in live.values() for _, cov, _ in g if not cov)
-    unc_base = sum(1 for g in base.values() for _, cov, _ in g if not cov)
+    unc_live = sum(1 for g in live.values() for _, cov, _, _ in g if not cov)
+    unc_base = sum(1 for g in base.values() for _, cov, _, _ in g if not cov)
     n_live = sum(len(g) for g in live.values())
     n_base = sum(len(g) for g in base.values())
     total_net = unc_live - unc_base
@@ -130,13 +130,14 @@ def main():
         by_verse_base[(bk, ch, vs)].append((tok, slots))
 
     lost_members = []          # (book, ch, vs, token, live_pos, english, bucket)
+    missing_forms = {}         # vkey -> the baseline forms this verse lost (byte-exact)
     lost = gained = 0
     buckets = defaultdict(int)
     for vkey in sorted(set(by_verse_live) | set(by_verse_base)):
         a = dict(by_verse_base.get(vkey, []))   # token -> slots (baseline)
         b = dict(by_verse_live.get(vkey, []))   # token -> slots (live)
-        ca = sum(1 for s in a.values() for _, c, _ in s if c)
-        cb = sum(1 for s in b.values() for _, c, _ in s if c)
+        ca = sum(1 for s in a.values() for _, c, _, _ in s if c)
+        cb = sum(1 for s in b.values() for _, c, _, _ in s if c)
         d = ca - cb
         if d == 0:
             continue
@@ -145,17 +146,23 @@ def main():
             buckets["gained_verses"] += 1
             continue
         lost += d
+        # F3 is FORM-KEYED (reviewer condition 1, 2026-08-13): arrival means the
+        # SAME form returns, not just any row. Record which baseline forms this
+        # verse lost — covered-forms multiset difference, pairing-free.
+        fb = Counter(f for s in a.values() for _, c, _, f in s if c)
+        fl = Counter(f for s in b.values() for _, c, _, f in s if c)
+        missing_forms[vkey] = sorted((fb - fl).elements())
         # attribute within the verse: only tokens present on BOTH sides with the
         # same slot count are clean; '' (label-less) is never clean.
         attributed = set()
         for tok in sorted(set(a) & set(b)):
             if not tok or len(a[tok]) != len(b[tok]):
                 continue
-            dt = (sum(1 for _, c, _ in a[tok] if c)
-                  - sum(1 for _, c, _ in b[tok] if c))
+            dt = (sum(1 for _, c, _, _ in a[tok] if c)
+                  - sum(1 for _, c, _, _ in b[tok] if c))
             if dt <= 0:
                 continue
-            uncov = [(p, e) for p, c, e in b[tok] if not c]
+            uncov = [(p, e) for p, c, e, _ in b[tok] if not c]
             bucket = "token" if len(b[tok]) == 1 else "token_multi"
             for p, e in uncov[:dt]:
                 lost_members.append((*vkey, tok, p, e, bucket))
@@ -166,7 +173,7 @@ def main():
         if residue > 0:
             buckets["label_drift"] += residue
             for tok, slots in b.items():
-                for p, c, e in slots:
+                for p, c, e, _ in slots:
                     if not c and p not in attributed:
                         lost_members.append((*vkey, tok, p, e, "drift_candidate"))
             buckets["drift_candidate_rows"] = \
@@ -220,9 +227,11 @@ def main():
 
     if args.out:
         with open(args.out, "w", encoding="utf-8", newline="\n") as f:
-            f.write("book\tchapter\tverse\ttoken\tlive_position\tenglish\tbucket\n")
+            f.write("book\tchapter\tverse\ttoken\tlive_position\tenglish\tbucket"
+                    "\tmissing_forms_at_verse\n")
             for m in lost_members:
-                f.write("\t".join(str(x) for x in m) + "\n")
+                forms = "|".join(missing_forms.get((m[0], m[1], m[2]), []))
+                f.write("\t".join(str(x) for x in m) + "\t" + forms + "\n")
         print(f"\narrivals list written: {args.out} ({len(lost_members):,} rows)")
 
     sys.exit(0 if ok else 1)
