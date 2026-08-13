@@ -193,6 +193,32 @@ verified in the bytes). Gate F4 checks these rows survive byte-identical.
 begins post-rebuild, where below-floor means the rebuild dropped rows. The floor's
 meaning changes across the rebuild boundary.
 
+## Differ CERTIFIED (JP-run 2026-08-13) — the F3 arrivals list exists
+`diff_form_coverage.py` (committed, read-only) ran with control `1Ki:7:48:solomon` —
+FOUND, no STOP, exit clean. The certification package for the reviewer:
+- **Totals: net +167 exactly** (2,528 live / 2,361 baseline), re-derived in-run.
+- **Full identity closed, every piece named:** 171 lost − 3 gained = +168 coverage
+  moves; 168 − 1 roster shrink = +167 uncovered net. The roster −1 is Dan 11:1
+  (baseline slot 6, blank-label and UNCOVERED, so it contributes zero coverage loss —
+  adjudicated by direct read of both files' rows).
+- **Control substitution, disclosed:** the ruling asked for a zion/hadad control; the
+  lost class contains neither (grep of the full list — their form rows survived; the
+  8/9 zion/hadad damage was in the HEADER table, a different layer). Substitute
+  control 1Ki 7:48 Solomon hand-verified by two direct reads: baseline slot 3 =
+  `Σολομών`, live = NO ROW.
+- **Empty-token bucket: exactly 1 row** (1Sa 11:15 slot 29) — reviewer's leak
+  prediction refuted by enumeration; hand-adjudicated as a GENUINE lost row (baseline
+  slot 29 = `Σαούλ` covered, live slot 29 blank + uncovered). No form-key machinery
+  built for a bucket of one.
+- **Zero rows token-attributed — all 172 are `drift_candidate`.** Cause: the baseline's
+  labels are blank precisely where its forms sit (the wordpos lane filled 340 → 129
+  blanks AFTER the baseline was cut), so clean token matches almost never exist. The
+  arrivals list is therefore ALL candidates: 172 rows for 171 losses (one verse lists
+  an extra uncovered slot alongside the lost one). F3 checks every row and enumerates
+  any that don't arrive, with the one-extra composition stated up front.
+- **Arrivals list:** `~/db_evidence/formlane_arrivals.tsv` (172 rows; reproducible
+  exactly from the committed script + the two pinned evidence files + the control).
+
 ## Steps 1–3 — the rebuild, on a copy, never live
 1. Copy (on PA): `cp ~/bible-db/bible.db ~/bible-db/bible_formlane.db` — plus confirm the
    most recent nightly backup predates nothing we'd need back (single-rollback rule,
