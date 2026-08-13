@@ -65,10 +65,15 @@ set difference against a pre-8/5 backup (live's own history can't produce it).
 **Reviewer pin 3 (2026-08-12): the reference backup is PRE-REGISTERED here — named by JP
 BEFORE the diff runs, never chosen after seeing live's numbers.**
 
-> **PINNED BACKUP: `___________________` (date: ______) — TO BE FILLED BY JP; Step 0d is
-> BLOCKED until this line carries a filename.** Candidate list comes from
-> `ls -l ~/db_backups/` (the pre-8/5 copy that settled the dating, memory
-> `project_db_backups`).
+> **PINNED BACKUP: `~/db_backups/bible_ride.db.20260806-133032.db`** (Aug 6 nightly —
+> pinned 2026-08-12 from JP's `ls -l ~/db_backups/` paste). Why this one: it predates the
+> 8/8 00:31 live write (the moment the damage landed) and is already uncompressed. The
+> directory holds NO plain bible.db backup older than Aug 10 (June/July entries are
+> info-slips only); `bible.db.pre_boundpainted_b3` (Aug 8 17:22) POSTDATES the 00:31
+> write and is ruled out. **Self-check before the diff runs:** the 0a-shaped no-form
+> count on this file must read **2,361** (the banked pre-damage figure). Any other
+> number → the pin is wrong; fall back to `bible_ride.db.20260805-133029.db.gz`
+> (unpack to a scratch copy, same self-check) and stop if that misses too.
 
 Then:
 ```
