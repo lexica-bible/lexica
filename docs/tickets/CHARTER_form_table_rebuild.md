@@ -137,7 +137,52 @@ Keep the full output; gate F diffs the rebuilt copy's run against it.
   backfill_pn_surface pairs), not slot-keyed. That differ is a small read-only script
   to be written and control-tested on a known moved verse BEFORE the rebuild runs;
   F3 stays blocked on it.** Reviewer sees this pause before anything else moves.
-- 0e / 0f: pending.
+- **0e: DONE — the banked 27 REPRODUCES member-for-member.** The live dump (144 rows,
+  with English) splits: 27 legitimate compound names (Αβί Αλβών/Abi-albon … Φαάτ Μωάβ/
+  Pahath-moab, incl. all four Tiglath-pileser spellings and both Areopagus rows) · 3
+  parked defects (Act 12:19 `Ηρώδης δε`, Act 13:1 `Μαναήν τε`, Jos 12:23 `του
+  Ναφαθδώρ`) · 114 sentence-shaped glued rows (verb + name: `ην Νώε` "was Noah",
+  `απέδρα Δαυίδ` "David fled"). The allowlist FILE still needs byte-exact capture on PA
+  (hex column) — a chat paste is not a byte source; command in the allowlist section.
+- **0f: DONE — and the audit's own control FIRED: stored 346,111 vs live rows 389,244
+  (** MISMATCH **).** Reading of record: the audit re-runs only the strict aligner; the
+  two backfills (2026-07-11 and 07-27) have added rows since the control was written,
+  so a mismatch is now EXPECTED on any backfilled table — including the rebuilt copy at
+  gate time. **But "expected" is not "verified": before F5 can rely on this audit, the
+  ~43k difference must be DECOMPOSED — stored + backfill_abp rows + backfill_pn rows +
+  (any translit-only rows) must equal the live total, itemized from the applies' own
+  printed counts, not estimated.** Live baseline gap picture pinned: content slots
+  609,420 · stored 346,111 · echo 224,565 · GAP 38,744 (verse_missing 988 / unaligned
+  20,164 / anchor_mismatch 17,591 / empty_form 1) · pn bucket 16,889. Full output held
+  by JP; gate F5 diffs the copy's run against these numbers.
+
+## The verse-keyed differ (reviewer-ruled 2026-08-13) — pre-registrations
+The 264/395/−131 result proved slot numbers are meaningless across the ride. CC writes a
+small READ-ONLY compare script; its list feeds F3 only after all four registrations hold:
+1. **Control first:** before the full count means anything, the differ must FIND a known
+   covered-then-lost slot from the 8/9 evidence (a zion or hadad row the record shows
+   covered pre-8/5 and uncovered live). The detector names its class or it doesn't count.
+2. **Key pinned in the script:** verse + name identity (Strong's number or name token),
+   never position — with a header comment citing today's 264/395/−131 as the reason, so
+   nobody re-derives a slot-keyed diff later.
+3. **Expected picture: net lost-minus-gained = 167 EXACTLY** (the totals guarantee it,
+   method-independent). Gross figures are unknown and recorded as found. Any other net
+   is a STOP.
+4. **Ambiguity bucket, not guesses:** same name twice in one verse (the ~118-slot
+   multi-referent class from the wordpos lane) goes into its own bucket — hand-adjudicated
+   if small, enumerated as a named F3 gap if unresolvable, never smoothed.
+
+## The 1,964 two-word forms (reviewer-ruled): scope read before the rebuild
+One read: how many of the 1,964 sit on `is_pn=1` slots vs not. Pre-registered prediction:
+the large majority are NON-name slots where the NBSP join is ABP's ordinary page
+formatting — out of this lane's scope by definition, and the gate says so explicitly. Any
+name-slot residue beyond the 27 allowlist + 3 parked rows gets enumerated. The lane
+repairs name-slot coverage; it does not adjudicate the whole table's typography.
+
+## Floor note (reviewer-ruled)
+389,244 exactly-at means the floor is a tautology against today's live; its real work
+begins post-rebuild, where below-floor means the rebuild dropped rows. The floor's
+meaning changes across the rebuild boundary.
 
 ## Steps 1–3 — the rebuild, on a copy, never live
 1. Copy (on PA): `cp ~/bible-db/bible.db ~/bible-db/bible_formlane.db` — plus confirm the
