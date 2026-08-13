@@ -77,7 +77,7 @@ BEFORE the diff runs, never chosen after seeing live's numbers.**
 
 Then:
 ```
-sqlite3 ~/bible-db/bible.db "ATTACH '<pre-8/5 backup path>' AS pre; CREATE TEMP TABLE lost AS SELECT w.verse_id, w.position FROM words w WHERE w.is_pn=1 AND NOT EXISTS(SELECT 1 FROM abp_surface s WHERE s.verse_id=w.verse_id AND s.position=w.position) AND EXISTS(SELECT 1 FROM pre.abp_surface p WHERE p.verse_id=w.verse_id AND p.position=w.position); SELECT count(*) FROM lost; .mode tabs
+sqlite3 ~/bible-db/bible.db "ATTACH '/home/appssanding720/db_backups/bible_ride.db.20260806-133032.db' AS pre; CREATE TEMP TABLE lost AS SELECT w.verse_id, w.position FROM words w WHERE w.is_pn=1 AND NOT EXISTS(SELECT 1 FROM abp_surface s WHERE s.verse_id=w.verse_id AND s.position=w.position) AND EXISTS(SELECT 1 FROM pre.abp_surface p WHERE p.verse_id=w.verse_id AND p.position=w.position); SELECT count(*) FROM lost; .mode tabs
 .once /tmp/formlane_lost_slots.tsv
 SELECT verse_id, position FROM lost;"
 ```
