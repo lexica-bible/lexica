@@ -101,37 +101,73 @@ def main():
     print(f"uncovered name slots: live={unc_live:,}  baseline={unc_base:,}  "
           f"net={total_net:+,} (totals-derived, method-independent)")
 
-    lost_members = []          # (book, ch, vs, token, live_pos, english, bucket)
-    gained = 0
-    buckets = defaultdict(int)
-    for key in sorted(set(live) | set(base), key=lambda k: (k[0], k[1], k[2], k[3])):
-        a, b = base.get(key, []), live.get(key, [])
-        ca, cb = sum(1 for _, c, _ in a if c), sum(1 for _, c, _ in b if c)
-        if not a or not b or len(a) != len(b):
-            bucket = "roster_changed"
-        elif len(a) == 1:
-            bucket = "single"
-        else:
-            bucket = "multi"
-        d = ca - cb                      # coverage this group lost (negative = gained)
-        if d > 0:
-            buckets["lost_" + bucket] += d
-            uncovered_live = [(p, e) for p, c, e in b if not c]
-            for p, e in uncovered_live[:d] if bucket != "single" else uncovered_live:
-                lost_members.append((*key, p, e, bucket))
-        elif d < 0:
-            gained += -d
-            buckets["gained_" + bucket] += -d
+    # VERSE-FIRST accounting (redesigned 2026-08-13 after the first field run):
+    # name labels themselves DRIFTED between the files — the wordpos lane filled
+    # ~211 blank labels (340 -> 129), so a token that reads '' in the baseline
+    # reads 'saul' live and token-keyed groups leak (first run: +168 vs +167).
+    # A verse cannot drift, so LOST/GAINED are counted per verse (coverage is a
+    # count; no cross-file pairing needed) and reconcile with the totals by
+    # construction. Tokens are used only to ATTRIBUTE members within a lost
+    # verse; whatever tokens can't cleanly attribute lands in 'label_drift' as
+    # CANDIDATES (every uncovered live name slot of that verse), never guessed.
+    by_verse_live = defaultdict(list)
+    by_verse_base = defaultdict(list)
+    for (bk, ch, vs, tok), slots in live.items():
+        by_verse_live[(bk, ch, vs)].append((tok, slots))
+    for (bk, ch, vs, tok), slots in base.items():
+        by_verse_base[(bk, ch, vs)].append((tok, slots))
 
-    lost = sum(v for k, v in buckets.items() if k.startswith("lost_"))
-    print(f"\nlost coverage (group-level): {lost:,}   gained: {gained:,}   "
+    lost_members = []          # (book, ch, vs, token, live_pos, english, bucket)
+    lost = gained = 0
+    buckets = defaultdict(int)
+    for vkey in sorted(set(by_verse_live) | set(by_verse_base)):
+        a = dict(by_verse_base.get(vkey, []))   # token -> slots (baseline)
+        b = dict(by_verse_live.get(vkey, []))   # token -> slots (live)
+        ca = sum(1 for s in a.values() for _, c, _ in s if c)
+        cb = sum(1 for s in b.values() for _, c, _ in s if c)
+        d = ca - cb
+        if d == 0:
+            continue
+        if d < 0:
+            gained += -d
+            buckets["gained_verses"] += 1
+            continue
+        lost += d
+        # attribute within the verse: only tokens present on BOTH sides with the
+        # same slot count are clean; '' (label-less) is never clean.
+        attributed = set()
+        for tok in sorted(set(a) & set(b)):
+            if not tok or len(a[tok]) != len(b[tok]):
+                continue
+            dt = (sum(1 for _, c, _ in a[tok] if c)
+                  - sum(1 for _, c, _ in b[tok] if c))
+            if dt <= 0:
+                continue
+            uncov = [(p, e) for p, c, e in b[tok] if not c]
+            bucket = "token" if len(b[tok]) == 1 else "token_multi"
+            for p, e in uncov[:dt]:
+                lost_members.append((*vkey, tok, p, e, bucket))
+                attributed.add(p)
+                buckets["attributed_" + bucket] += 1
+        residue = d - sum(1 for m in lost_members
+                          if (m[0], m[1], m[2]) == vkey and m[6].startswith("token"))
+        if residue > 0:
+            buckets["label_drift"] += residue
+            for tok, slots in b.items():
+                for p, c, e in slots:
+                    if not c and p not in attributed:
+                        lost_members.append((*vkey, tok, p, e, "drift_candidate"))
+            buckets["drift_candidate_rows"] = \
+                sum(1 for m in lost_members if m[6] == "drift_candidate")
+
+    print(f"\nlost coverage (verse-level): {lost:,}   gained: {gained:,}   "
           f"diff-net: {lost - gained:+,}")
     for k in sorted(buckets):
         print(f"  {k:22s}: {buckets[k]:,}")
 
     ok = True
     if lost - gained != total_net:
-        print("\nSTOP: the group-level diff does not reconcile with the files' own "
+        print("\nSTOP: the verse-level diff does not reconcile with the files' own "
               f"totals ({lost - gained:+,} vs {total_net:+,}) — the key is leaking.")
         ok = False
     if total_net != args.expect_net:
