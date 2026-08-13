@@ -65,36 +65,30 @@ set difference against a pre-8/5 backup (live's own history can't produce it).
 **Reviewer pin 3 (2026-08-12): the reference backup is PRE-REGISTERED here — named by JP
 BEFORE the diff runs, never chosen after seeing live's numbers.**
 
-> **PIN FAILED — STOP RECORDED 2026-08-13 (JP-run reads).** Self-check results, all with
-> the identical 0a predicate: Aug 6 ride file **2,659** · Aug 5 ride file (unpacked)
-> **2,659** · live **2,528**. Live matching the banked 2,528 proves the predicate is the
-> banked one, so the files are truly not the baseline: **the copy that read 2,361 has
-> rotated out of `~/db_backups`** (pre-8/5 bible.db entries are info-slips only). Also
-> on record and unexplained: the 8/5/8/6 copies read WORSE than live — the banked
-> "2,361 until the 8/8 write" timeline is incomplete. Step 0d is BLOCKED pending a
-> reviewer ruling on the recommendation below.
+> **PINNED BACKUP (final, self-check PASSED 2026-08-13):
+> `~/bible-db/bible_pre_pnstar_swap_20260805.db` — reads exactly 2,361** under the 0a
+> predicate (JP-run; its sibling `bible_pre_pnstar_20260803.db` also reads 2,361 and is
+> the spare). These are the SAME files the 8/9 session measured 2,361 on
+> (`TICKET_glued_name_headers.md` names them) — hand-made pre-swap copies in
+> `~/bible-db/`, never in the rotation directory. Step 0d is UNBLOCKED.
 >
-> **CC recommendation to the reviewer:** re-pin the baseline to the Aug 6 ride file
-> (2,659) and redefine F3's arrivals list as "slots covered on 8/6, uncovered live" —
-> the loss across the 8/8 ride specifically, which is this lane's defect. Keep the F1
-> ceiling at ≤ 2,361 unchanged (it's the banked pre-8/5 figure and the full rebuild is
-> expected to beat every one of these numbers). Add 2,659 to the reconciliation table
-> as its own row. The 2,659-vs-2,528 improvement between 8/6 and live gets pinned as a
-> fourth open number, not absorbed.
+> **Provenance record of the detour (2026-08-12/13), kept so nobody re-walks it:** the
+> first pin tried the nightly `bible_ride.db` copies; both read **2,659** while live
+> read the banked **2,528** under the same predicate (proving the method, condemning
+> the files). Reviewer ruled a provenance read before any re-pin; the ticket + info
+> slips settled it: `bible_ride.db` is a DIFFERENT LINEAGE (the 8/5 ride's own working
+> copy — its identity-table counts differ from the baseline family), so its 2,659 is a
+> fact about that copy, not a missing chapter in the live timeline. Ride files ruled
+> out; no fourth open number needed.
 >
-> Superseded pin, kept for the record: `~/db_backups/bible_ride.db.20260806-133032.db` (Aug 6 nightly —
-> pinned 2026-08-12 from JP's `ls -l ~/db_backups/` paste). Why this one: it predates the
-> 8/8 00:31 live write (the moment the damage landed) and is already uncompressed. The
-> directory holds NO plain bible.db backup older than Aug 10 (June/July entries are
-> info-slips only); `bible.db.pre_boundpainted_b3` (Aug 8 17:22) POSTDATES the 00:31
-> write and is ruled out. **Self-check before the diff runs:** the 0a-shaped no-form
-> count on this file must read **2,361** (the banked pre-damage figure). Any other
-> number → the pin is wrong; fall back to `bible_ride.db.20260805-133029.db.gz`
-> (unpack to a scratch copy, same self-check) and stop if that misses too.
+> **Standing rule (reviewer, 2026-08-13): rotation is a proven evidence-destroyer.**
+> Any file a session banks a figure from is copied OUT of rotation's reach the same
+> session, into `~/db_evidence/` (create it once). For this lane:
+> `mkdir -p ~/db_evidence && cp -p ~/bible-db/bible_pre_pnstar_swap_20260805.db ~/bible-db/bible_pre_pnstar_20260803.db ~/db_evidence/`
 
 Then:
 ```
-sqlite3 ~/bible-db/bible.db "ATTACH '/home/appssanding720/db_backups/bible_ride.db.20260806-133032.db' AS pre; CREATE TEMP TABLE lost AS SELECT w.verse_id, w.position FROM words w WHERE w.is_pn=1 AND NOT EXISTS(SELECT 1 FROM abp_surface s WHERE s.verse_id=w.verse_id AND s.position=w.position) AND EXISTS(SELECT 1 FROM pre.abp_surface p WHERE p.verse_id=w.verse_id AND p.position=w.position); SELECT count(*) FROM lost; .mode tabs
+sqlite3 ~/bible-db/bible.db "ATTACH '/home/appssanding720/bible-db/bible_pre_pnstar_swap_20260805.db' AS pre; CREATE TEMP TABLE lost AS SELECT w.verse_id, w.position FROM words w WHERE w.is_pn=1 AND NOT EXISTS(SELECT 1 FROM abp_surface s WHERE s.verse_id=w.verse_id AND s.position=w.position) AND EXISTS(SELECT 1 FROM pre.abp_surface p WHERE p.verse_id=w.verse_id AND p.position=w.position); SELECT count(*) FROM lost; .mode tabs
 .once /tmp/formlane_lost_slots.tsv
 SELECT verse_id, position FROM lost;"
 ```
