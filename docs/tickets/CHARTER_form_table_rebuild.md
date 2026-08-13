@@ -179,6 +179,15 @@ formatting — out of this lane's scope by definition, and the gate says so expl
 name-slot residue beyond the 27 allowlist + 3 parked rows gets enumerated. The lane
 repairs name-slot coverage; it does not adjudicate the whole table's typography.
 
+**RESULT (JP-run 2026-08-13): prediction confirmed — 30 of 1,964 on name slots, 1,934
+out of scope.** 30 equals 27 + 3 in COUNT; same-size-isn't-same-list, so membership is
+assumed-pending one read (dump the 30 with refs, compare to the allowlist + parked refs)
+before the gate treats name-slot NBSP as fully accounted for.
+
+**Allowlist PINNED: `docs/tickets/compound_names_allowlist.tsv`** — 27 rows, Greek
+decoded from the PA hex capture (byte-exact; 28 NBSP total, Jer 41:17's double NBSP
+verified in the bytes). Gate F4 checks these rows survive byte-identical.
+
 ## Floor note (reviewer-ruled)
 389,244 exactly-at means the floor is a tautology against today's live; its real work
 begins post-rebuild, where below-floor means the rebuild dropped rows. The floor's
