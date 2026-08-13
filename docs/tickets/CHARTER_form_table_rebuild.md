@@ -118,6 +118,27 @@ PYTHONIOENCODING=utf-8 python3 ~/bible-db/scripts/audit_surface_coverage.py ~/bi
 ```
 Keep the full output; gate F diffs the rebuilt copy's run against it.
 
+## Step 0 results (JP-run 2026-08-13) — pinned
+- **0a: live no-form = 2,528** — matches the banked figure exactly; predicate proven.
+  Baseline files both read **2,361** (self-check passed; pin final).
+- **0b: abp_surface total = 389,244 — exactly AT the floor**, not above it. Recorded as
+  exactly-at.
+- **0c: control fired (144), count valid: 1,964 two-word forms in abp_surface itself.**
+  Previously unmeasured; the adjudicated compound/defect split so far covers only the
+  144 HEADER values. The 1,964 form-table members are unadjudicated — the gate treats
+  them as a class to characterize in F5, not as defects.
+- **0d: SLOT DRIFT CONFIRMED — position-keyed diff across the two files is INVALID.**
+  Lost (covered pre, uncovered live, at live's slot numbers) = **264**; gained (mirror
+  read) = **395**; 264 − 395 = −131 ≠ +167, so the numbers don't reconcile as net churn
+  — the 8/8 ride renumbered word slots, and slot N in one file is not slot N in the
+  other. Both 264 and 395 are artifacts of key drift, NOT member lists. **The
+  pre-registered pause fires: the arrivals list must be built verse-keyed (book/
+  chapter/verse + name token, same-name multiplicity handled the way
+  backfill_pn_surface pairs), not slot-keyed. That differ is a small read-only script
+  to be written and control-tested on a known moved verse BEFORE the rebuild runs;
+  F3 stays blocked on it.** Reviewer sees this pause before anything else moves.
+- 0e / 0f: pending.
+
 ## Steps 1–3 — the rebuild, on a copy, never live
 1. Copy (on PA): `cp ~/bible-db/bible.db ~/bible-db/bible_formlane.db` — plus confirm the
    most recent nightly backup predates nothing we'd need back (single-rollback rule,
