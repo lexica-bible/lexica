@@ -411,3 +411,28 @@ position); the 15-below-floor gap closes partially or fully from the same class.
 
 **Sequence:** reviewer signs the rule + bridge choice → script change with a locked test
 (3 controls firing) → dry-run on the copy → verdict → apply → translit → gate F.
+
+## Amended dry-run — pre-registration MET, deviation decomposed to zero (2026-08-13)
+Instrument pre-registered **1,902** bridge adds; dry-run reported **1,902 exactly**.
+NEW rows **31,836** = 29,935 + 1,902 bridged − 6 blank slots whose glued row the bridge
+claimed (one-claim rule; members: 1Ch 10:13/22, 1Ki 19:6/2, 2Ch 15:8/34, Exo 35:4/14,
+Gen 11:21/6, Jdg 11:16/3) + 5 blank slots UNLOCKED (bridge consumption made star-row
+counts match; members: 1Sa 11:15/29, 1Sa 19:1/17, 1Sa 24:7/16, 2Ch 32:30/21,
+2Ki 21:16/23). Every unit of the −1 named. Arithmetic closes to 32,478.
+- **Predicted end-state:** refusals **642** (blank-label 50 · ambiguous 6 ·
+  bridge-ambiguous 189 · bridge-fail 131 · no-match 266) — far BELOW the 2,361 ceiling:
+  the bridge also repaired ~1,700 never-covered slots, not just the lost class.
+- **Arrivals: 164 of 172** (163 bridged + 1Sa 11:15/29 via the unlocked blank path).
+  The 8 not covered are ALL bridge-fail, per-member with cause: Gen 39:17 & 41:12
+  ("hebrew" = people-word, correctly refused) · Est 1:21 Μεμουχά + Act 18:14 Γαλλίων
+  (no standalone attestation in-book) · Mar 2:8 unaccented Ιησους · Mat 9:35 Ισηούς
+  (scrape letter-swap typo) · Mar 14:66 Πέτρου (declined form unattested) · Act 8:14
+  Σαμάρεια (form variant unattested). F3 reads 164 form-keyed arrivals + these 8 as the
+  enumerated gap, each carrying its reason — per the reviewer's per-member ruling.
+- **Independence note (reviewer, at script clearance):** instrument-equals-dry-run
+  proves consistency, not correctness — they share the engine. Independent verification
+  is gate F's form-match of the arrivals against the safeguarded baseline list, which
+  shares no code with the pass.
+Evidence: `~/db_evidence/formlane_refused2.tsv` + `formlane_bridge_predicted.tsv`.
+AWAITING the reviewer's apply verdict; then translit → gate F (incl. the F5
+decomposition line: 346,111 + 13,183 + 31,836 = 391,130 predicted total, ≥ floor).
