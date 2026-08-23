@@ -366,3 +366,48 @@ item needing reviewer design sign-off, dry-run, and its own controls (1Ki 7:48 S
 must become an add; Gen 4:8 two-Cains must still refuse). Evidence files:
 `~/db_evidence/formlane_refused.tsv` (2,543) + `formlane_arrivals.tsv` (172).
 Nothing written past backfill 1; live untouched.
+
+## Rule amendment DRAFT (reviewer-approved to draft, 2026-08-13) — NOT yet in the script
+**Corrected provenance (belongs in the record):** the pre-8/5 coverage of these slots was
+NOT made by name-token pairing. It came through `backfill_pn_surface.py`'s blank-label
+path (`0816bf78`: a verse's label-less name slots pair IN ORDER with star-compound scrape
+cells). The 8/8 wordpos lane filled the labels; a labeled slot leaves that path and the
+glued cell (`made=Σολομών`) can't match a name token → refused. Script unchanged since
+7/27; the data changed shape; a guard written for blanks inverted.
+
+**The rule (one sentence):** a LABELED name slot may take its form from a glued
+(star-compound) scrape cell only when the cell's single extracted capitalized name word
+matches the slot's label — via the same hyphen-blind token compare the pass already uses,
+with the Greek↔English bridge taken from the slot's known identity — and refuse-on-doubt
+is retained for every other case. Strictly MORE evidence per match than the 7/27 coverage
+had (the blank path had order only; this has order-free name agreement).
+
+**Design dependency to settle BEFORE coding (flagged, not assumed):** the Greek↔English
+bridge. The glued cell's English is the VERB ("made"), not the name, so "extracted name
+word matches the label" needs a source that says Σολομών ↔ solomon. Candidates, in order
+of preference: (a) the scrape's own standalone name rows elsewhere in the SAME BOOK
+(`name=Σολομών` cells — self-contained, no table dependency); (b) `pn_greek_identity`
+— REJECTED as the primary source: it was built FROM the form table, and its live copy is
+the stale read this arc is repairing (circular). Reviewer picks (a) or names another.
+
+**Controls, pre-registered, both directions:**
+- POSITIVE: 1Ki 7:48 slot 3 `solomon` ← `made=Σολομών` becomes an ADD (form must equal
+  the safeguarded baseline form byte-for-byte).
+- NEGATIVE: Gen 4:8 — two `cain` slots (2, 22), one glued `said=Καϊν` + `up=Καϊν` pair
+  — must STILL REFUSE (same-name multiplicity; the rule never order-guesses).
+- THIRD: 1Sa 11:15 slot 29 (label-less on today's data) — the surviving blank path
+  handles it or it refuses; the rule must state which, and the dry-run must show the two
+  paths never both claim one slot (guard: a slot written once, counted once).
+
+**Pre-registered count (derived BEFORE the amended dry-run, from the refused dump, not
+guessed):** the amended adds = refused `no-match` rows where the verse holds exactly one
+refused labeled slot AND the glued cells hold exactly one capitalized Greek name word
+(1:1 by count) AND that word bridges to the label. The count is taken from
+`~/db_evidence/formlane_refused.tsv` by a read-only script next session, posted with its
+command, and the dry-run must land on it exactly. Prediction (to TEST, not bank):
+≈171 of the 172 arrivals qualify; refusals fall from 2,543 to ≈2,372 (still 11 over
+the 2,361 ceiling — those 11 get enumerated per-member, per the reviewer's ceiling
+position); the 15-below-floor gap closes partially or fully from the same class.
+
+**Sequence:** reviewer signs the rule + bridge choice → script change with a locked test
+(3 controls firing) → dry-run on the copy → verdict → apply → translit → gate F.
