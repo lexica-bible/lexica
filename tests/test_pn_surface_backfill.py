@@ -118,6 +118,37 @@ def _make_bible(path):
           VALUES (15,1,'and Judah','Judah','G2455','*',1),
                  (15,5,NULL,NULL,'*','*',1);
 
+        -- BRIDGE RULE CONTROLS (2026-08-13, reviewer-signed; charter
+        -- CHARTER_form_table_rebuild.md). The 8/8 wordpos lane filled blank
+        -- labels, moving ~172 slots off the blank-label path; a LABELED slot may
+        -- now take a glued star cell's name word only when a same-book standalone
+        -- cell attests form -> label.
+        -- v15 POSITIVE (1Ki 7:48 shape): labeled 'Solomon', glued 'made=Σολομών',
+        --     standalone Σολομών/Solomon elsewhere in the book -> ADD.
+        INSERT INTO verses VALUES (16,'Mat',15,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (16,3,'Solomon','Solomon','*','*',1);
+        -- v16 NEGATIVE (Gen 4:8 shape): TWO 'Cain' slots, two glued cells -> the
+        --     rule must not order-guess: bridge-ambiguous, NO rows.
+        INSERT INTO verses VALUES (17,'Mat',16,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (17,2,'Cain','Cain','*','*',1),
+                 (17,22,'Cain','Cain','*','*',1);
+        -- v17 BRIDGE-NEGATIVE: labeled 'Abel', glued cell carries Καϊν (a real
+        --     name, attested in-book, but NOT this slot's label) -> bridge-fail.
+        --     Same-verse presence must never stand in for agreement.
+        INSERT INTO verses VALUES (18,'Mat',17,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (18,5,'Abel','Abel','*','*',1);
+        -- v18 ONE-CLAIM: a LABEL-LESS slot and a labeled 'Seth' slot share one
+        --     glued 'said=Αδάμ' cell. Αδάμ bridges to 'adam', not 'seth', so the
+        --     bridge declines; the blank path then takes the row ONCE. Seth refuses
+        --     (bridge-fail). The two paths never both claim a slot or a row.
+        INSERT INTO verses VALUES (19,'Mat',18,1,'...');
+        INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
+          VALUES (19,4,'','','*','*',1),
+                 (19,9,'Seth','Seth','*','*',1);
+
         -- v5: never-overwrite guard (surface row already present for the slot).
         INSERT INTO verses VALUES (5,'Mat',4,1,'...');
         INSERT INTO words (verse_id,position,english,english_head,strongs_base,strongs,is_pn)
@@ -180,7 +211,17 @@ def _make_scrape(path):
           -- Mat 13:1 — ONE star row for a two-blank-slot verse: count mismatch.
           ('matthew',13,1,1,'2036-*','είπεν Αδάμ','Adam said'),
           -- Mat 14:1 — dual-role star row: token 'judah' matches the labeled slot.
-          ('matthew',14,1,1,'*-1161','Ιούδας δε','And Judah');
+          ('matthew',14,1,1,'*-1161','Ιούδας δε','And Judah'),
+          -- BRIDGE controls: glued star cells whose English is the VERB.
+          ('matthew',15,1,1,'4160-*','εποίησε Σολομών','Solomon made'),
+          ('matthew',16,1,1,'2036-*','είπε Καϊν','Cain said'),
+          ('matthew',16,1,2,'305-*','ανέβη Καϊν','Cain rose up'),
+          ('matthew',17,1,1,'615-*','απέκτεινε Καϊν','Cain killed'),
+          ('matthew',18,1,1,'2036-*','είπεν Αδάμ','Adam said'),
+          -- same-book STANDALONE attestations the bridge reads (Mat 8:1 already
+          -- attests Καϊν/Cain); verses 20-21 have no words rows on purpose.
+          ('matthew',20,1,1,NULL,'Σολομών','Solomon'),
+          ('matthew',21,1,1,NULL,'Αδάμ','Adam');
     """)
     c.commit()
     c.close()
@@ -215,17 +256,17 @@ def main() -> int:
     check("dry-run wrote nothing",
           c.execute("SELECT count(*) FROM abp_surface").fetchone()[0], 1)
     c.close()
-    # 20 PN slots total: 12 new + 7 refused + 1 already (v5 pairs but its slot
+    # 26 PN slots total: 14 new + 11 refused + 1 already (bridge controls added 6 slots, 2026-08-13) (v5 pairs but its slot
     # is already present -> counted 'already', not new). Arithmetic must close.
     check("arithmetic line closes on the slot total",
-          "= 20 (must equal 20)" in r.stdout.replace(",", ""), True)
+          "= 26 (must equal 26)" in r.stdout.replace(",", ""), True)
     # blank-label = 4: the no-star control (v9) + both count-mismatch slots
     # (v14) + the dual-role verse's blank (v15, its star row consumed by token).
     check("blank-label controls FIRE (no-star + count-mismatch + consumed)",
           "blank-label: 4" in r.stdout, True)
-    # extracted = 4: the Judah compound + the three star-compound rows.
+    # extracted = 9: the Judah compound + three star rows + five bridge-control glued cells.
     check("compound extraction + skip both counted",
-          "compound name-word extracted 4" in r.stdout
+          "compound name-word extracted 9" in r.stdout
           and "compound skipped 1" in r.stdout, True)
     check("blank-label control FIRES", "blank-label" in r.stdout, True)
     check("edge-trim counter reports the dirty form",
@@ -234,6 +275,10 @@ def main() -> int:
     # no-match = 2: the Melchizedek control + the two-capitals compound (its
     # skipped row leaves the Jesus slot with nothing to match).
     check("no-match control FIRES", "no-match : 2" in r.stdout.replace("  ", " "), True)
+    flat = r.stdout.replace("  ", " ")
+    check("bridge: positive counted as an add", "bridge adds (glued cell, same-book attested): 1" in r.stdout, True)
+    check("bridge-ambiguous control FIRES (two Cains)", "bridge-ambiguous: 2" in r.stdout, True)
+    check("bridge-fail control FIRES (Abel/Kain + Seth/Adam)", "bridge-fail: 2" in r.stdout, True)
 
     # apply
     r = _run(dbp, bhp, "--apply")
@@ -265,7 +310,13 @@ def main() -> int:
           rows.get((15, 1)), "Ιούδας")
     check("dual-role verse: blank slot refused, star row consumed",
           (15, 5) in rows, False)
-    check("total rows = 1 pre-existing + 12 new", len(rows), 13)
+    check("BRIDGE positive: Solomon took the glued cell's name word",
+          rows.get((16, 3)), "Σολομών")
+    check("BRIDGE negative: neither Cain slot got a row", (17, 2) in rows or (17, 22) in rows, False)
+    check("BRIDGE bridge-negative: Abel did NOT take Kain", (18, 5) in rows, False)
+    check("ONE-CLAIM: blank slot took the star row via the blank path", rows.get((19, 4)), "Αδάμ")
+    check("ONE-CLAIM: Seth refused, row not claimed twice", (19, 9) in rows, False)
+    check("total rows = 1 pre-existing + 14 new", len(rows), 15)
     c.close()
 
     if fails:

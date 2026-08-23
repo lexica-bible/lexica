@@ -72,7 +72,7 @@ def _resolve(positions, forms):
     return None
 
 
-def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
+def pair_verse(slots, name_hits, num_hits=(), star_hits=(), bridge=None):
     """slots = [(position, token)] in position order; name_hits = the scrape's
     NAME rows [(token, form)] in printed order; num_hits = the scrape's NUMBERED
     rows, tried ONLY when the name pool has nothing for a token (lane-#2 cause A:
@@ -83,7 +83,20 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
     a LABEL-LESS name slot, so blank slots pair with star rows in order when
     counts agree (Gen 4:5 probe, 2026-07-28). Token comparison is compact
     (hyphen-blind, cause C).
-    Returns ({position: form}, refused_count, cause_counts, refused_slots)."""
+    bridge = {printed_form: {compact tokens}} built from the SAME BOOK's standalone
+    name cells (2026-08-13 rule, reviewer-signed): a LABELED slot that no pool
+    serves may take a glued star cell's extracted name word only when the bridge
+    attests that exact form for the slot's label. Why: the 8/8 wordpos lane filled
+    blank labels, which moved ~172 slots off the blank-label path that had covered
+    them on 7/27 (glued cell 'made=Σολομών' enters the pools under the VERB token).
+    Scope: same-book standalone cells only, exact form agreement, no generated
+    inflection; declensional variants count only if a standalone cell attests them.
+    Refuse-on-doubt kept: >1 slot for the token or >1 distinct candidate form ->
+    'bridge-ambiguous'; glued cells present but none attested -> 'bridge-fail'
+    (distinct from 'no-match' = no glued cell at all). A star row is claimed ONCE:
+    by the token phase, else the bridge, else the blank path - never twice.
+    Returns ({position: form}, refused_count, cause_counts, refused_slots,
+             bridged_positions)."""
     out, causes, refused_slots = {}, defaultdict(int), []
     by_tok_slots = defaultdict(list)
     blank = []
@@ -92,11 +105,34 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
             by_tok_slots[compact(tok)].append(pos)
         else:
             blank.append(pos)                      # cause B: no usable label
+    pool_name, pool_num = defaultdict(list), defaultdict(list)
+    for tok, form in name_hits:
+        pool_name[compact(tok)].append(form)
+    for tok, form in num_hits:
+        pool_num[compact(tok)].append(form)
+    # BRIDGE pass - decided before the blank path so a star row is never claimed
+    # twice. Only tokens the name and numbered pools cannot serve are eligible;
+    # only star rows NOT already owned by a labeled slot's token are candidates.
+    bridge = bridge or {}
+    used_star, bridged = set(), {}
+    for tok, positions in by_tok_slots.items():
+        if pool_name.get(tok) or pool_num.get(tok):
+            continue
+        cands = [i for i, (t, f) in enumerate(star_hits)
+                 if compact(t) not in by_tok_slots and tok in bridge.get(f, ())]
+        if not cands:
+            continue
+        if len(positions) == 1 and len({star_hits[i][1] for i in cands}) == 1:
+            bridged[tok] = star_hits[cands[0]][1]
+            used_star.add(cands[0])
+        else:
+            bridged[tok] = None                    # doubt present -> refuse
     refused = 0
     if blank:
-        # Only star rows whose token matches NO labeled slot in this verse are
-        # free for blank pairing — the others belong to the token phase.
-        star_forms = [f for t, f in star_hits if compact(t) not in by_tok_slots]
+        # Only star rows whose token matches NO labeled slot in this verse, and
+        # that the bridge did not claim, are free for blank pairing.
+        star_forms = [f for i, (t, f) in enumerate(star_hits)
+                      if compact(t) not in by_tok_slots and i not in used_star]
         if star_forms and len(star_forms) == len(blank):
             for pos, form in zip(blank, star_forms):   # both sides in order
                 out[pos] = form
@@ -104,11 +140,7 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
             refused += len(blank)
             causes["blank-label"] += len(blank)
             refused_slots += [(p, "", "blank-label") for p in blank]
-    pool_name, pool_num = defaultdict(list), defaultdict(list)
-    for tok, form in name_hits:
-        pool_name[compact(tok)].append(form)
-    for tok, form in num_hits:
-        pool_num[compact(tok)].append(form)
+    bridged_positions = set()
     for tok, positions in by_tok_slots.items():
         forms = pool_name.get(tok, [])
         if forms:
@@ -122,9 +154,19 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
             continue
         forms = pool_num.get(tok, [])
         if not forms:
+            if tok in bridged and bridged[tok] is not None:
+                out[positions[0]] = bridged[tok]
+                bridged_positions.add(positions[0])
+                continue
+            if tok in bridged:
+                cause = "bridge-ambiguous"
+            elif star_hits:
+                cause = "bridge-fail"          # glued cell present, not attested
+            else:
+                cause = "no-match"             # no glued cell at all
             refused += len(positions)
-            causes["no-match"] += len(positions)
-            refused_slots += [(p, tok, "no-match") for p in positions]
+            causes[cause] += len(positions)
+            refused_slots += [(p, tok, cause) for p in positions]
             continue
         got = _resolve(positions, forms)
         if got is None:
@@ -133,7 +175,51 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=()):
             refused_slots += [(p, tok, "ambiguous-numbered") for p in positions]
         else:
             out.update(got)
-    return out, refused, causes, refused_slots
+    return out, refused, causes, refused_slots, bridged_positions
+
+
+def load_scrape(bh_path):
+    """All scrape pools in one place (shared with count_bridge_candidates.py so no
+    second copy drifts): name rows, numbered rows, star rows, the per-book bridge,
+    and the cleaning counters."""
+    scrape = defaultdict(list)
+    numbered = defaultdict(list)
+    starred = defaultdict(list)
+    bridge = defaultdict(lambda: defaultdict(set))   # book -> form -> {tokens}
+    stats = dict(cleaned=0, dropped_empty=0, compound_split=0, compound_skipped=0)
+    bh = sqlite3.connect(f"file:{bh_path}?mode=ro", uri=True)
+    for b, c, v, strongs, greek, english in bh.execute(
+            "SELECT book, chapter, verse, strongs, greek, english FROM bh_words "
+            "WHERE greek IS NOT NULL AND greek != '' ORDER BY rowid"):
+        is_name_row = not strongs
+        if not is_name_row:
+            # NUMBERED rows (cause A). Cheap prefilter: a capitalized English word.
+            if not english or not any(w[:1].isupper() for w in english.split()):
+                continue
+        form = clean_form(greek)
+        if not form:
+            stats["dropped_empty"] += 1
+            continue
+        if form != greek:
+            stats["cleaned"] += 1
+        if not is_name_row and len(form.split()) > 1:
+            # Compound cell: keep ONLY the exactly-one capitalized name word.
+            caps = [w for w in form.split() if w[:1].isupper()]
+            if len(caps) != 1:
+                stats["compound_skipped"] += 1
+                continue
+            form = caps[0]
+            stats["compound_split"] += 1
+        if not is_name_row and "*" in strongs:
+            # Fold-class row (cause B) - dual role, see pair_verse.
+            starred[(b, c, v)].append((_name_token(english), form))
+        if is_name_row:
+            scrape[(b, c, v)].append((_name_token(english), form))
+            bridge[b][form].add(compact(_name_token(english)))
+        else:
+            numbered[(b, c, v)].append((_name_token(english), form))
+    bh.close()
+    return scrape, numbered, starred, bridge, stats
 
 
 def main():
@@ -157,54 +243,9 @@ def main():
     existing = set((r[0], r[1]) for r in con.execute("SELECT verse_id, position FROM abp_surface"))
     before = len(existing)
 
-    # Scrape NAME rows: blank Strong's + Greek present, printed order preserved.
-    scrape = defaultdict(list)
-    numbered = defaultdict(list)
-    starred = defaultdict(list)
-    cleaned = dropped_empty = compound_split = compound_skipped = 0
-    bh = sqlite3.connect(f"file:{args.bh}?mode=ro", uri=True)
-    for b, c, v, strongs, greek, english in bh.execute(
-            "SELECT book, chapter, verse, strongs, greek, english FROM bh_words "
-            "WHERE greek IS NOT NULL AND greek != '' ORDER BY rowid"):
-        is_name_row = not strongs
-        if not is_name_row:
-            # NUMBERED rows (cause A: famous names carry their number on the
-            # scrape page). Cheap prefilter: only rows whose English contains a
-            # capitalized word can be a name — the token match still decides.
-            if not english or not any(w[:1].isupper() for w in english.split()):
-                continue
-        form = clean_form(greek)
-        if not form:
-            dropped_empty += 1        # no letters left — never a usable form
-            continue
-        if form != greek:
-            cleaned += 1
-        if not is_name_row and len(form.split()) > 1:
-            # Compound cell ("And Judah" = 'Ιούδας δε'): our build splits the
-            # connector into its own slot, so storing the compound would print
-            # δε twice on the line (Mat-1 spot-check catch, 2026-07-28 dry-run).
-            # Keep ONLY the name word — the exactly-one-capitalized word —
-            # else skip the row (never guess which word is the name).
-            caps = [w for w in form.split() if w[:1].isupper()]
-            if len(caps) != 1:
-                compound_skipped += 1
-                continue
-            form = caps[0]
-            compound_split += 1
-        if not is_name_row and "*" in strongs:
-            # Fold-class row (cause B): the '*' in the compound tag IS the name
-            # marker our build split into a label-less slot. Star rows serve
-            # BOTH roles: they stay in the numbered token pool (pass-2 proved
-            # matches like 'And Judah' -> a labeled slot — removing them cost
-            # 286 already-written slots on the 2026-07-28 dry-run, caught by
-            # the already-present arithmetic), AND pair_verse offers the ones
-            # whose token matches no labeled slot to the verse's blank slots.
-            starred[(b, c, v)].append((_name_token(english), form))
-        if is_name_row:
-            scrape[(b, c, v)].append((_name_token(english), form))
-        else:
-            numbered[(b, c, v)].append((_name_token(english), form))
-    bh.close()
+    scrape, numbered, starred, bridge, st = load_scrape(args.bh)
+    cleaned, dropped_empty = st["cleaned"], st["dropped_empty"]
+    compound_split, compound_skipped = st["compound_split"], st["compound_skipped"]
     print(f"scrape name-slot rows: {sum(len(v) for v in scrape.values()):,} "
           f"across {len(scrape):,} verses; numbered capitalized rows: "
           f"{sum(len(v) for v in numbered.values()):,}; star-compound rows: "
@@ -229,7 +270,7 @@ def main():
     total_pn = sum(len(v) for v in verses.values())
     print(f"proper-noun slots: {total_pn:,} across {len(verses):,} verses\n")
 
-    new_rows, already, refused_total = [], 0, 0
+    new_rows, already, refused_total, bridged_total = [], 0, 0, 0
     causes_total = defaultdict(int)
     per_book_new = defaultdict(int)
     per_book_refused = defaultdict(int)
@@ -244,7 +285,9 @@ def main():
         hits = scrape.get((slug, ch, vs), []) if slug else []
         nhits = numbered.get((slug, ch, vs), []) if slug else []
         shits = starred.get((slug, ch, vs), []) if slug else []
-        paired, refused, causes, refused_slots = pair_verse(slots, hits, nhits, shits)
+        paired, refused, causes, refused_slots, bpos = pair_verse(
+            slots, hits, nhits, shits, bridge.get(slug, {}) if slug else {})
+        bridged_total += len(bpos)
         refused_total += refused
         per_book_refused[book] += refused
         for k, n in causes.items():
@@ -270,6 +313,7 @@ def main():
     print(f"  already-present skips     : {already:,}   (guard: rows written by "
           f"earlier passes, never overwritten — equals the prior passes' total "
           f"minus any slot whose verdict changed under later rules)")
+    print(f"  bridge adds (glued cell, same-book attested): {bridged_total:,}")
     print(f"  refusals                  : {refused_total:,}")
     for k in sorted(causes_total):
         print(f"      {k:10}: {causes_total[k]:,}")
