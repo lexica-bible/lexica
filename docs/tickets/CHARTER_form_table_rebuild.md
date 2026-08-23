@@ -454,3 +454,25 @@ decomposition line: 346,111 + 13,183 + 31,836 = 391,130 predicted total, ≥ flo
 Copy chain complete: builder → backfill 1 → bridge-amended backfill 2 → translit.
 NEXT: the landing checkpoint (re-run-vs-swap) — reviewer's pre-stated lean is re-run
 against live since the audit diff is fully explained; decision owed at checkpoint.
+
+## LANDED ON LIVE — LANE CLOSED (2026-08-23)
+The identical sequence re-ran against live and reproduced the copy to the row:
+346,111 → +13,183 → bridge 1,902 / +31,836 → **391,130**, romanizations filled. Gate F
+re-run in full on live: ALL GREEN — F1 **642** · F2 391,130 · F3 PASS (exactly the 8
+enumerated) · F3b 32,478 · F4 PASS (27/27 byte-exact) · F6 untouched · F7 control fired.
+**New banked reference figures: no-form = 642 (replaces 2,361) · table = 391,130 (the
+floor should be re-declared to this at the next health_check touch).** The 8 enumerated
+members stay in this ticket with their classes (2 people-words → gentilic follow-up ·
+3 no-attestation gaps · 2 variant forms → hand-table door · 1 scrape typo → corrections
+lane). Rollback paths until the 8/24 nightly: today's pre-landing nightly
+(`bible.db.20260823-133031.db`) + the gated copy (`bible_formlane.db`, safeguarded to
+`~/db_evidence/`). Nothing deleted before the 8/24 nightly (single-rollback rule).
+
+**DATING CORRECTION:** entries above from "Rule amendment DRAFT" onward are stamped
+2026-08-13 but that work ran **2026-08-23** (the session spans both dates; the earlier
+entries' 8/12–8/13 stamps are correct). Numbers unaffected.
+
+**UNBLOCKED DOWNSTREAM (next session):** header repair re-runs UNCHANGED on this
+baseline (`build_pn_greek_identity.py <copy> --apply` + `gate_greek_header.py`,
+acceptance unchanged: zion 168/168 · glued = 30 exactly · gate C green) → batch 3
+galilee (exactly 73) → ABP-tab routing.

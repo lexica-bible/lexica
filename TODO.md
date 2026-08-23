@@ -1,3 +1,9 @@
+
+- **Form lane LANDED 8/23 (CHARTER_form_table_rebuild.md): abp_surface rebuilt live — no-form 2,528 → 642, table 391,130.** Header repair now unblocked. Follow-ups filed:
+  - Teach `audit_surface_coverage.py`'s stored-vs-live control the backfill sum (its MISMATCH warning is now a permanent false alarm on any backfilled table; the decomposition is in the charter).
+  - Re-declare the health_check `abp_surface` floor 389,244 → 391,130.
+  - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots (people-word carried as name) — joins the existing 8/7 gentilic follow-up.
+  - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66 variant forms = hand-table door candidates.
 # TODO
 
 Open work only. Finished and scrapped items (with the gory details) are in [TODO_ARCHIVE.md](TODO_ARCHIVE.md).
