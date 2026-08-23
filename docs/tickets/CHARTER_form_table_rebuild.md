@@ -436,3 +436,21 @@ counts match; members: 1Sa 11:15/29, 1Sa 19:1/17, 1Sa 24:7/16, 2Ch 32:30/21,
 Evidence: `~/db_evidence/formlane_refused2.tsv` + `formlane_bridge_predicted.tsv`.
 AWAITING the reviewer's apply verdict; then translit → gate F (incl. the F5
 decomposition line: 346,111 + 13,183 + 31,836 = 391,130 predicted total, ≥ floor).
+
+## GATE F — GREEN (JP-run 2026-08-13, all on the copy)
+- **F1** no-form **642** (≤ 2,361 — the ceiling question dissolved; 642 is the new
+  banked figure) · **F2** total **391,130** (≥ 389,244) · **F3b** roster 32,478 ·
+  **F6** words 626,309 / verses 31,237 untouched · **F7** nbsp forms 1,964 (unchanged
+  from live; control fired at 144).
+- **F3 PASS (the independent check):** 172 arrival rows across 169 verses; every
+  missing baseline form returned byte-identical EXCEPT exactly the 8 enumerated
+  bridge-fail members — no unexpected miss, no unexpected verse.
+- **F4 PASS:** all 27 allowlist compounds present as stored forms, byte-exact.
+- **F5 CLOSED:** audit on the copy = the live baseline class-for-class (stored
+  346,111 · verse_missing 988 · unaligned 20,164 · anchor_mismatch 17,591 ·
+  empty_form 1). The audit's control mismatch is the backfills by construction:
+  391,130 − 346,111 = 45,019 = 13,183 + 31,836 exactly. **The old chain's +15 floor
+  gap is SUPERSEDED by the corrected chain — closed, not lingering.**
+Copy chain complete: builder → backfill 1 → bridge-amended backfill 2 → translit.
+NEXT: the landing checkpoint (re-run-vs-swap) — reviewer's pre-stated lean is re-run
+against live since the audit diff is fully explained; decision owed at checkpoint.
