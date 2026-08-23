@@ -340,3 +340,29 @@ Header repair re-runs UNCHANGED on the repaired baseline: `build_pn_greek_identi
 <copy> --apply` + `gate_greek_header.py <live> <copy>`; acceptance zion 168/168 ·
 hadad ≥9/12 · 4,326 folded / 1,718 names · glued **= 30 exactly** · gate C green · 114
 stale rows cleared. Then batch 3 (galilee, exactly 73). Then routing.
+
+## STOP at backfill 2 dry-run (2026-08-13) — the chain as chartered cannot land the arrivals
+Copy state: builder 346,111 → backfill 1 applied → **359,294**. Backfill 2 HELD at dry-run:
+adds 29,935 / refusals 2,543 (arithmetic closes to 32,478). Two predicted gate breaches:
+- **F1:** final no-form would be 2,543 vs ceiling ≤ 2,361 (+182).
+- **F2:** table would land 389,229 — **15 below floor** (reviewer restatement).
+- **F3: 171 of the 172 arrivals are in the REFUSED set** (the 172nd is the empty-token
+  row the join can't key). Cause = `no-match (no name rows)` for all 171: the scrape
+  glues the name to a verb (`made=Σολομών`), no standalone name cell exists.
+
+**Mechanism (read from the script's own history, unchanged since 2026-07-27):** commit
+`0816bf78` pairs a verse's LABEL-LESS name slots with star-compound scrape rows in
+order — that is how the baseline got Σολομών at 1Ki 7:48 with a blank label. The 8/8
+wordpos lane then FILLED those labels (340 → 129 blanks). A labeled slot leaves the
+compound-recovery path and goes through token pairing, which finds no name row and
+refuses. **Filling the labels switched off the form recovery for the same slots** —
+correction-lane lesson 2 (a guard written for absent data inverts when the data
+arrives). Not script drift, not slot drift: a rule interaction.
+
+**Consequence:** re-running the existing chain cannot restore the 172. The fix is a rule
+change in `backfill_pn_surface.py` (let the compound pool also serve LABELED slots whose
+token matches the compound's extracted name word, refuse-on-doubt kept) — a NEW charter
+item needing reviewer design sign-off, dry-run, and its own controls (1Ki 7:48 Solomon
+must become an add; Gen 4:8 two-Cains must still refuse). Evidence files:
+`~/db_evidence/formlane_refused.tsv` (2,543) + `formlane_arrivals.tsv` (172).
+Nothing written past backfill 1; live untouched.
