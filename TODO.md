@@ -8,7 +8,23 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## Greek header arc — form lane LANDED 8/23; header lane held at gate B (open)
+## Greek header arc — gate B ENUMERATED + AMENDED 8/24; re-run then land (open)
+**8/24: the enumeration ran and every row was accounted** (full record appended to
+`docs/handoffs/HANDOFF_gateB_enumeration.md`): 19 violations = 13 glued cures + 6 of
+the form lane's 8 pinned bridge-fail members; glued arithmetic closed exactly
+(144 = 30 kept + 20 blanked + 94 replaced); zero unexplained clean casualties.
+Reviewer approved the three-part amendment — SHIPPED with locked tests
+(`tests/test_gate_greek_header.py`, in both CI lists): two pinned per-member lists,
+NBSP glued-cure class with the 20/94/30/16 numbers pinned, gentilic door re-keyed to
+`er.is_people_group`. Batch 3 CLOSED as landed-via-rebuild (receipt: class
+`hand-table`, 73 rows Γαλιλαία); 875 replaces 871 as the multi-form-names figure.
+**NEXT: JP re-runs the gate (expect ALL GREEN, violations 0), then the landing
+checkpoint → swap → deploy → served checks → ABP-tab routing.**
+- New follow-up (ruling 3, 8/24): the **20 glued-blanked rows** previously showed a
+  (garbage) word-hint and now show English — decide downstream whether any deserve a
+  real header (hand-table door). Members = the 13 + 7 in the 8/24 session record.
+
+## (superseded 8/24 — kept for context) form lane LANDED 8/23; header lane held at gate B
 **Form lane DONE+LIVE 2026-08-23** (`docs/tickets/CHARTER_form_table_rebuild.md`):
 abp_surface rebuilt on live via the bridge rule — no-form 2,528 → **642**, table
 **391,130**, gate F green incl. the independent byte-check (172 arrivals, 8 enumerated

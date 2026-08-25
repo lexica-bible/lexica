@@ -68,6 +68,7 @@ python tests/test_retire_reclass.py >/dev/null
 python tests/test_c3_instruments.py >/dev/null
 python tests/test_pn_surface_backfill.py >/dev/null
 python tests/test_pn_lemma_wordstudy.py >/dev/null
+python tests/test_gate_greek_header.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_ac_cited_set.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null

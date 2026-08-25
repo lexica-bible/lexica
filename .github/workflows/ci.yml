@@ -65,6 +65,7 @@ jobs:
           python tests/test_c3_instruments.py
           python tests/test_pn_surface_backfill.py
           python tests/test_pn_lemma_wordstudy.py
+          python tests/test_gate_greek_header.py
 
   frontend:
     runs-on: ubuntu-latest

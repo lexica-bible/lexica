@@ -36,7 +36,10 @@ import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_HERE, ".."))
 from build_pn_greek_identity import fix_detached_breathing   # the ONE transform
+import entity_resolution as er   # is_people_group — the build's OWN people-word
+                                 # check (one classifier, never a second copy)
 
 args = sys.argv[1:]
 dump_path = None
@@ -72,14 +75,52 @@ if not okA:
     fails.append("A")
 
 # ── gate B — the pn_greek_identity delta shape ───────────────────────────────
+# AMENDED BY RULING 2026-08-24 (HANDOFF_gateB_enumeration.md — the 8/23 abort
+# enumerated; reviewer approved three changes):
+#   1. two PINNED per-member lists with an expected outcome per member — the
+#      form lane's 8 enumerated bridge-fail slots (6 were the visible violators;
+#      Samaria left via the old gentilic door; Est 1:21 improved through the
+#      ->surface headword class, now pinned to that exact outcome) and the 8
+#      ruled no-form blanks (5 bridge-claimed blank slots from the charter's −1
+#      accounting + 3 star slots with no form and no dictionary entry, incl.
+#      Num 21:25/9 whose live value was a verb — defective, cure).
+#   2. a glued-cure class keyed to the NBSP probe, sub-buckets PINNED for this
+#      landing: live glued 144 = 30 kept (27 compounds + 3 parked) + 20 blanked
+#      + 94 replaced with real values. Re-pin on any future lane.
+#   3. the gentilic-drop door re-keyed to er.is_people_group — the old door was
+#      shape-only and passed a place-name and 7 glued defects unflagged.
+PINNED_BRIDGE_FAIL = {
+    ("Gen", 39, 17, 14): "blank",   # "hebrew" people-word — refusal ruled correct
+    ("Gen", 41, 12, 7):  "blank",   # "hebrew" people-word — refusal ruled correct
+    ("Mar", 2, 8, 4):    "blank",   # unaccented Ιησους — no attestation
+    ("Mat", 9, 35, 3):   "blank",   # Ισηούς scrape letter-swap typo — corrections lane
+    ("Mar", 14, 66, 3):  "blank",   # Πέτρου declined form unattested — hand-table door
+    ("Act", 18, 14, 9):  "blank",   # Γαλλίων — no standalone attestation in-book
+    ("Act", 8, 14, 9):   "blank",   # Σαμάρεια form variant unattested — hand-table door
+    ("Est", 1, 21, 16):  ("Μεμουχάν", "surface"),  # bridge repair IMPROVED it
+}
+PINNED_NOFORM_BLANK = {             # ruled losses: slot has no form in the
+    ("1Ch", 10, 13, 22): "blank",   # repaired table and no dictionary entry —
+    ("1Ki", 19, 6, 2):   "blank",   # 5 bridge-claimed blank slots (one-claim
+    ("Exo", 35, 4, 14):  "blank",   # rule, charter's −1 accounting; the 6th,
+    ("Gen", 11, 21, 6):  "blank",   # 2Ch 15:8/34, was already blank both sides)
+    ("Jdg", 11, 16, 3):  "blank",
+    ("1Sa", 14, 50, 4):  "blank",   # "of Saul's" star slot, NO-FORM
+    ("Heb", 11, 24, 8):  "blank",   # "of Pharaoh's" star slot, NO-FORM
+    ("Num", 21, 25, 9):  "blank",   # live value was κατώκησεν (a verb) — cure
+}
 q = "SELECT verse_id, position, greek_strongs, greek_lemma, source FROM pn_greek_identity"
 lrows = {(r[0], r[1]): (r[2], r[3], r[4]) for r in live.execute(q)}
 srows = {(r[0], r[1]): (r[2], r[3], r[4]) for r in scr.execute(q)}
 surf = {(r[0], r[1]): r[2] for r in scr.execute(
     "SELECT verse_id, position, form FROM abp_surface")}
+vref = {r[0]: (r[1], r[2], r[3]) for r in
+        live.execute("SELECT id, book, chapter, verse FROM verses")}
 bad = []
-counts = {"unchanged": 0, "breathing": 0, "->surface (headword)": 0,
+counts = {"unchanged": 0, "pinned ruled loss": 0, "glued cure (blanked)": 0,
+          "glued cure (replaced)": 0, "breathing": 0, "->surface (headword)": 0,
           "page-attested fallback": 0, "gentilic drop": 0}
+glued_kept = 0
 if set(lrows) != set(srows):
     bad.append(("KEYSET", len(set(lrows) ^ set(srows)), "keys added/removed"))
 counts["bind-derived number"] = 0
@@ -94,7 +135,28 @@ for k in set(lrows) & set(srows):
             counts["bind-derived number"] += 1; continue
         bad.append((k, f"{lg}->{sg}", "greek_strongs CHANGED")); continue
     if (ll, ls) == (sl, ss):
-        counts["unchanged"] += 1; continue
+        counts["unchanged"] += 1
+        if ll and "\xa0" in ll:
+            glued_kept += 1
+        continue
+    refk = (*vref.get(k[0], ("?", 0, 0)), k[1])
+    pin = PINNED_BRIDGE_FAIL.get(refk, PINNED_NOFORM_BLANK.get(refk))
+    if pin is not None:
+        ok_pin = (not sl) if pin == "blank" else ((sl, ss) == pin)
+        if ok_pin:
+            counts["pinned ruled loss"] += 1; continue
+        bad.append((k, f"{ls}->{ss}",
+                    f"PINNED member {refk} deviated: expected {pin!r}, "
+                    f"got {sl!r}/{ss!r}"))
+        continue
+    if ll and "\xa0" in ll:                       # glued live value — cure class
+        if not sl:
+            counts["glued cure (blanked)"] += 1; continue
+        if "\xa0" not in sl:
+            counts["glued cure (replaced)"] += 1; continue
+        bad.append((k, f"{ls}->{ss}",
+                    f"glued value {ll!r} changed to ANOTHER glued value {sl!r}"))
+        continue
     if ls == ss and ll and sl == fix_detached_breathing(ll) and sl != ll:
         counts["breathing"] += 1; continue
     page = fix_detached_breathing(surf.get(k) or "")
@@ -103,12 +165,32 @@ for k in set(lrows) & set(srows):
     if sl and sl == page and ss in ("lemma-only", "abp-tag", "tipnr") and ls != "surface":
         counts["page-attested fallback"] += 1; continue
     if ss == "none" and not sl and ls == "lemma-only":
-        counts["gentilic drop"] += 1; continue
+        lblrow = live.execute(
+            "SELECT COALESCE(NULLIF(english_head,''), english) FROM words "
+            "WHERE verse_id=? AND position=?", k).fetchone()
+        lbl = (lblrow[0] if lblrow else "") or ""
+        if er.is_people_group(er.norm_name(lbl)) or er.is_people_group(lbl):
+            counts["gentilic drop"] += 1; continue
+        bad.append((k, f"{ls}->{ss}",
+                    f"dropped to none but label {lbl!r} is not a people-word"))
+        continue
     bad.append((k, f"{ls}->{ss}", f"lemma {ll!r} -> {sl!r} outside the ruled classes"))
+# Numeric pins (ruling 3) — armed only on a real transition run (a live-vs-live
+# control has zero changed rows and must still PASS). Baseline pins for the
+# 2026-08 header landing; re-pin on any future lane.
+n_changed = len(set(lrows) & set(srows)) - counts["unchanged"]
+if n_changed:
+    for label, got, exp in (("pinned ruled loss", counts["pinned ruled loss"], 16),
+                            ("glued cure (blanked)", counts["glued cure (blanked)"], 20),
+                            ("glued cure (replaced)", counts["glued cure (replaced)"], 94),
+                            ("glued kept as-is", glued_kept, 30)):
+        if got != exp:
+            bad.append(("PIN", label, f"expected {exp}, got {got}"))
 okB = not bad
 print(f"gate B: {'PASS' if okB else 'FAIL'} — " +
       ", ".join(f"{k} {v:,}" for k, v in counts.items())
       + (f"; VIOLATIONS {len(bad)}" if bad else ""))
+print(f"    glued kept as-is (inside unchanged): {glued_kept}")
 for b in bad[:8]:
     print(f"    problem: {b}")
 if not okB:
@@ -128,8 +210,7 @@ if dump_path is not None:
     ctrl_ok = bool(ctrl and ctrl[0] and "\xa0" in ctrl[0])
     print(f"dump control 1Ki 11:17 slot 2: live lemma = {ctrl[0] if ctrl else None!r} — "
           f"NBSP probe {'FIRED' if ctrl_ok else 'DID NOT FIRE — dump VOID'}")
-    ref = {r[0]: (r[1], r[2], r[3]) for r in
-           live.execute("SELECT id, book, chapter, verse FROM verses")}
+    ref = vref
     n_nbsp = n_clean = 0
     with open(dump_path, "w", encoding="utf-8", newline="\n") as f:
         f.write("# gate-B full problem dump (gate_greek_header.py --dump) — "
