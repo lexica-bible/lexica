@@ -15,7 +15,7 @@ the form lane's 8 pinned bridge-fail members; glued arithmetic closed exactly
 (144 = 30 kept + 20 blanked + 94 replaced); zero unexplained clean casualties.
 Reviewer approved the three-part amendment — SHIPPED with locked tests
 (`tests/test_gate_greek_header.py`, in both CI lists): two pinned per-member lists,
-NBSP glued-cure class with the 20/94/30/16 numbers pinned, gentilic door re-keyed to
+NBSP glued-cure class with the 20/94/30/17 numbers pinned, gentilic door re-keyed to
 `er.is_people_group`. Batch 3: the hand-table admission STANDS — the tsv row did
 the folding inside the rebuild (receipt class `hand-table`, 73 rows Γαλιλαία,
 146 = 2×73 occurrence double-count accounted); 875-vs-871: the 4 to be NAMED by
@@ -43,7 +43,9 @@ incl. the batch-3-may-be-superseded adjudication and the 875-vs-871 read).
     MISMATCH warning is now a permanent false alarm on any backfilled table).
   - Re-declare the health_check `abp_surface` floor 389,244 → **391,130**.
   - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots — joins the 8/7 gentilic
-    follow-up.
+    follow-up. **8/24 add: "midianitish" (Num 25:15) is a people-word
+    `er.is_people_group` does not recognize** — predicate gap, fix belongs to that
+    follow-up (changing it changes builder output, so never mid-lane).
   - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66
     variant forms = hand-table door candidates.
 - Disk thinning (after the 8/24 nightly verifies): `bible_test.db` (Aug 4 — JP rules),

@@ -70,12 +70,16 @@ commit `9da1afb5`): 19 violations, NBSP control fired on 1Ki 11:17 slot 2.
 - **Glued arithmetic closed exactly** (inventory reconciliation, pre-reg 2):
   live glued 144 = 30 kept (27 allowlist compounds + 3 parked) + 20 blanked +
   94 replaced with real values. 20 + 94 = 114 = the sentence-glued defect family.
-- **The gentilic-drop 21 enumerated**: 5 real people-words (Ethiopians, Tekoahite,
-  Assyrians, Grecian, Midianitish) · 7 glued · Σαμάρεια · 5 bridge-claimed blank
-  slots (the charter's −1 accounting; the 6th, 2Ch 15:8/34, was already blank in
-  BOTH files — nothing to lose) · 3 star slots with NO-FORM + no dictionary entry
-  (1Sa 14:50/4 "of Saul's", Heb 11:24/8 "of Pharaoh's", Num 21:25/9 whose live
-  value was the verb κατώκησεν — defective, cure).
+- **The gentilic-drop 21 enumerated**: 4 predicate-confirmed people-words
+  (Ethiopians, Tekoahite, Assyrians, Grecian) · 7 glued · Σαμάρεια · 5
+  bridge-claimed blank slots (the charter's −1 accounting; the 6th, 2Ch 15:8/34,
+  was already blank in BOTH files — nothing to lose) · 4 star slots with NO-FORM
+  + no dictionary entry (1Sa 14:50/4 "of Saul's", Heb 11:24/8 "of Pharaoh's",
+  Num 21:25/9 whose live value was the verb κατώκησεν — defective, cure — and
+  Num 25:15/5 "of the Midianitish", first re-run's one violation: a people-word
+  to the eye but NOT to `er.is_people_group`, so the build blanked it via the
+  no-form path — pinned as the 9th no-form member; the predicate gap goes to the
+  gentilic follow-up, never widened mid-lane).
 
 ## Ride-alongs closed
 - **Batch 3: THE HAND-TABLE ADMISSION STANDS** (JP wording ruling 8/24 — not
@@ -108,11 +112,14 @@ synthetic files; in BOTH CI lists):
    predicate, imported, never copied. Expected gentilic-drop count drops 21 → 5.
 
 ## Expected picture for the amended re-run (post before running — verdict gate)
-Gates A and C unchanged-green. Gate B **PASS**: violations 0 · unchanged 30,007
-(glued kept 30 inside it) · pinned ruled loss 16 · glued blanked 20 · glued
-replaced 94 · gentilic drop 5 · `->surface` + page-attested together **2,336**
-(their individual split moves because the 94 + Est 1:21 left those buckets —
-recorded as found) · bind-derived 0. Changed-row total must still be 2,471.
+First re-run 8/24: everything matched EXCEPT one violation — Num 25:15/5, my
+eyeball "people-word" classification vs the predicate's refusal; adjudicated to
+the pinned no-form list (see the 21 enumeration above). Individual split landed
+`->surface` 451 + page-attested 1,885 = 2,336 as predicted.
+Second re-run expected: gates A and C unchanged-green. Gate B **PASS**:
+violations 0 · unchanged 30,007 (glued kept 30 inside it) · **pinned ruled loss
+17** · glued blanked 20 · glued replaced 94 · **gentilic drop 4** · `->surface`
+451 · page-attested 1,885 · bind-derived 0. Changed-row total 2,471.
 Any other number: STOP, enumerate, no auto-green.
 
 ## Follow-up filed (ruling 3)

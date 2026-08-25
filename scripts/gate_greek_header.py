@@ -108,6 +108,12 @@ PINNED_NOFORM_BLANK = {             # ruled losses: slot has no form in the
     ("1Sa", 14, 50, 4):  "blank",   # "of Saul's" star slot, NO-FORM
     ("Heb", 11, 24, 8):  "blank",   # "of Pharaoh's" star slot, NO-FORM
     ("Num", 21, 25, 9):  "blank",   # live value was κατώκησεν (a verb) — cure
+    ("Num", 25, 15, 5):  "blank",   # "of the Midianitish" — a people-word to the
+                                    # eye but NOT to er.is_people_group, so the
+                                    # build blanked it via the no-form path, not
+                                    # the gentilic one; NO-FORM slot. Predicate
+                                    # gap flagged to the gentilic follow-up —
+                                    # never widened mid-lane (shared with build).
 }
 q = "SELECT verse_id, position, greek_strongs, greek_lemma, source FROM pn_greek_identity"
 lrows = {(r[0], r[1]): (r[2], r[3], r[4]) for r in live.execute(q)}
@@ -180,7 +186,7 @@ for k in set(lrows) & set(srows):
 # 2026-08 header landing; re-pin on any future lane.
 n_changed = len(set(lrows) & set(srows)) - counts["unchanged"]
 if n_changed:
-    for label, got, exp in (("pinned ruled loss", counts["pinned ruled loss"], 16),
+    for label, got, exp in (("pinned ruled loss", counts["pinned ruled loss"], 17),
                             ("glued cure (blanked)", counts["glued cure (blanked)"], 20),
                             ("glued cure (replaced)", counts["glued cure (replaced)"], 94),
                             ("glued kept as-is", glued_kept, 30)):
