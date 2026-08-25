@@ -6,6 +6,19 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-08-23 — Glued name headers / form-table lane (the 8/8-ride regression): form lane LANDED, header lane held at its own gate
+The 8/9-opened LIVE REGRESSION entry closes. Full records: `docs/tickets/TICKET_glued_name_headers.md`,
+`docs/tickets/CHARTER_form_table_rebuild.md` (the whole verified ride), memory `project_greek_header_fold`.
+What closed: the form table was rebuilt live (builder + both backfills + a NEW reviewer-signed bridge rule
+in backfill_pn_surface.py: labeled name slots take a glued star cell's name word on same-book standalone
+attestation, refuse-on-doubt, 4 locked controls). no-form 2,528 → 642 (old 2,361 reference SUPERSEDED —
+the bridge also repaired ~1,700 never-covered slots); table 391,130. The three unreconciled numbers from
+8/9 were superseded by the corrected chain (+15 floor gap closed; 218/256 and +9 belong to the header
+lane's enumeration). ROOT LESSON (memory `feedback_correction_lane_lessons` rule 6): the 8/8 wordpos lane
+IMPROVING labels silently inverted the backfill's blank-label guard — zero shared code; only the dry-run
+caught it. The header repair stays OPEN at gate B (see TODO) — the gate held the door against its own
+stale ruled classes, which is the system working.
+
 ## 2026-08-09 — Library translation-tab snap-back FIXED + verified live (third bite of one trap)
 
 **The bug JP hit:** a link landed him in Library on KJV; clicking ABP put him straight back on

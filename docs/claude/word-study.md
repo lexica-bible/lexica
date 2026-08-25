@@ -127,9 +127,19 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
   `5a533f9b` (July) and again 2026-08-09.
 - **TRIPWIRE — that detector finds a CLASS, not a defect.** Of 144 two-word values, 27 are
   genuine compound names (Βαάλ Ερμών Baal-hermon, Γασιών Γαβέρ Ezion-geber, Αππίου Φόρου
-  Appii Forum, both Αρειον Πάγον Areopagus rows) and must stay. Adjudicate on the ENGLISH
+  Appii Forum, both Αρειον Πάγον Areopagus rows) and must stay — pinned byte-exact (hex
+  column) in `docs/tickets/compound_names_allowlist.tsv` since the form lane; gates check
+  the file, never re-argue the members. Adjudicate on the ENGLISH
   column: a name reads as a place, a defect reads as a sentence ("And Herod" = `Ηρώδης δε`).
   Known-bad and parked: Act 12:19, Act 13:1, Jos 12:23.
+- **Form-table state (2026-08-23, form lane landed):** `abp_surface` serves 391,130 forms;
+  name slots with no printed form = **642** (the old 2,361 reference superseded). Name-slot
+  coverage includes the BRIDGE rule in `backfill_pn_surface.py`: a labeled name slot may take
+  a glued star cell's extracted name word only on same-book standalone attestation (exact
+  form, refuse-on-doubt; cause codes bridge-fail/bridge-ambiguous distinct from no-match).
+  Why: glued scrape cells ("made=Σολομών") enter the pools under the VERB's English, and the
+  8/8 label fill moved ~172 slots off the blank-label path that had covered them. Full
+  record: `docs/tickets/CHARTER_form_table_rebuild.md`.
 - **In-verse highlight (2026-07-31):** the verse-row highlighter matches by
   Strong's number everywhere EXCEPT this lane — a PN: page has no number, so
   the profile/verses rows carry each occurrence's `position` (the name's own

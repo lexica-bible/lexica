@@ -1,9 +1,3 @@
-
-- **Form lane LANDED 8/23 (CHARTER_form_table_rebuild.md): abp_surface rebuilt live — no-form 2,528 → 642, table 391,130.** Header repair now unblocked. Follow-ups filed:
-  - Teach `audit_surface_coverage.py`'s stored-vs-live control the backfill sum (its MISMATCH warning is now a permanent false alarm on any backfilled table; the decomposition is in the charter).
-  - Re-declare the health_check `abp_surface` floor 389,244 → 391,130.
-  - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots (people-word carried as name) — joins the existing 8/7 gentilic follow-up.
-  - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66 variant forms = hand-table door candidates.
 # TODO
 
 Open work only. Finished and scrapped items (with the gory details) are in [TODO_ARCHIVE.md](TODO_ARCHIVE.md).
@@ -14,59 +8,28 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## LIVE REGRESSION — glued name headers, from the 8/8 ride (opened 2026-08-09)
-**Full record: `docs/tickets/glued_name_headers` → docs/tickets/TICKET_glued_name_headers.md.**
-Found by the batch-3 control gate, not by a reader. Between the 8/5 copy and today the header
-table lost **375 folded rows across 13 names**, gained **101 rows with no Greek header at all**,
-and the glued-row class went **30 → 144** (a verb joined to a name by a non-breaking space:
-`απέδρα Αδάρ`, `ην Νώε`). Zion is the clean proof — 168 folded rows before, zero now, because it
-picked up ONE glued row. Attribution is by elimination (no code changed; the only live write in
-the window is the 8/8 wordpos apply, which re-runs the header build).
-- Two classes, **do not flatten**: the 114 NEW glued rows from the ride, and **11 glued `surface`
-  rows that are OLD** (same count before and after) — those poison a name's header everywhere it
-  appears, so they are the worse half.
-- Detector: `greek_lemma LIKE '%'||char(160)||'%'`. **A plain-space search reads 0 against rows
-  you can see** — this lane already learned that in July (commit 5a533f9b) and it bit again.
-  Any count fires on 1Ki 11:17 slot 2 first or it isn't trusted.
-- **SECOND DEFECT from the same ride, found by the repair attempt 2026-08-09: the printed-form
-  table lost name-slot coverage (2,361 → 2,528 slots with no form, +167).** `abp_surface` has no
-  name-slot rows by construction — `backfill_pn_surface.py` adds them BY SLOT NUMBER, and the ride
-  moved the slots. Consequence: **a header rebuild on today's inputs DESTROYS 172 good headers**
-  (Αδάμ, Λωτ, Εβραίος …) because 252 of 256 blanked rows have no lemma and no form to rebuild
-  from. Live is currently BETTER than a fresh build for those rows. Repair order is now: restore
-  form coverage (backfill_pn_surface + build_abp_translit) → then the header rebuild → and that
-  breaks this lane's own gate A (form table must be byte-identical), so it needs a ruling.
-- **The repair itself IS proven** (rebuild on a copy, live untouched): gate C fully green —
-  hadad 9/12 with 0 English-despite-page-form, zion and abner back — and **galilee changed
-  exactly 73, glued exactly 30**, both as predicted.
-- Three numbers recorded as NOT reconciling: 218 (gate) vs 256 (enumeration), the ~85 rows whose
-  slot was already uncovered on 8/5, and folded rows 4,408 vs the expected 4,399 (+9).
-- **The form lane is REBUILD-class, not a re-run.** `backfill_pn_surface.py` dry-run adds
-  **0 rows** — it only reads scrape rows with no Strong's number, so numbered names (Jesus,
-  Paul, Peter) were never in its reach. Those come from the main `build_abp_surface.py`, which
-  rebuilds the whole table. Needs its own charter: form table + both backfills +
-  build_abp_translit, gated by audit_surface_coverage.py. **Gate A is NOT re-scoped** (reviewer
-  2026-08-09) — the header lane re-runs unchanged afterwards.
-- **Words table is FINE — hypothesis raised and refuted.** Suspected the ride stripped lemmas
-  off numbered name rows; in fact proper-noun rows have never carried a lemma (32,479 vs 32,478
-  blank, i.e. all of them, in both files). No escalation.
-- **Live's headers are NOT a restore set.** They were read from the form table mid-chain, before
-  it was rebuilt — the same stale read that produced `απέδρα Αδάρ`. Clean-looking ones are right
-  by luck. Captured as EVIDENCE only:
-  `docs/tickets/receipt_headers_no_source_20260809.txt` (417 rows, regeneration command inside).
-- Blocks greek-header batch 3 (galilee), which is drafted and correct but unverifiable until the
-  gate is green. **Next session's opener = `docs/handoffs/HANDOFF_form_lane.md`** (charter to
-  WRITE, not run). Memory: `project_greek_header_fold`.
-- **FOLLOW-ON, filed not folded: the particle pair + Nephedor.** Act 12:19 `Ηρώδης δε` ("And
-  Herod") and Act 13:1 `Μαναήν τε` are a connective glued to the name; Jos 12:23
-  `του Ναφαθδώρ` is the article glued on. The first two come from the FORM table, so they
-  survive a header rebuild by design — parked and named rather than absorbed into the
-  legitimate set. Dispositioned in `TICKET_glued_name_headers.md`.
-- **FOLLOW-ON: pin the 27 legitimate compound names as a gate allowlist** with their verses, or
-  every future gate run re-argues them. `Βαρώθ  Χαμααμ` (Jer 41:17) must be pinned with its
-  exact bytes — it carries TWO non-breaking spaces, byte-verified.
-- Standing fix already landed: `/rebuild-words` step 8.3 now says to RUN gate_greek_header and
-  read gate C after the header build — nothing checked it, which is why this sat live for a day.
+## Greek header arc — form lane LANDED 8/23; header lane held at gate B (open)
+**Form lane DONE+LIVE 2026-08-23** (`docs/tickets/CHARTER_form_table_rebuild.md`):
+abp_surface rebuilt on live via the bridge rule — no-form 2,528 → **642**, table
+**391,130**, gate F green incl. the independent byte-check (172 arrivals, 8 enumerated
+misses with causes). Allowlist pinned: `docs/tickets/compound_names_allowlist.tsv`.
+**Header repair re-ran on the new baseline: gate C FULLY GREEN (hadad 12/12, galilee
+already folds to Γαλιλαία) but gate B ABORTED the landing** — its ruled transition
+classes predate the better table; problem rows look like known-bad glued headers dying,
+unproven until enumerated. **Next session's opener =
+`docs/handoffs/HANDOFF_gateB_enumeration.md`** (4 reviewer pre-registrations inside,
+incl. the batch-3-may-be-superseded adjudication and the 875-vs-871 read).
+`~/bible-db/bible_hdrlane.db` kept for diagnosis.
+- Form-lane follow-ups (filed 8/23):
+  - Teach `audit_surface_coverage.py`'s stored-vs-live control the backfill sum (its
+    MISMATCH warning is now a permanent false alarm on any backfilled table).
+  - Re-declare the health_check `abp_surface` floor 389,244 → **391,130**.
+  - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots — joins the 8/7 gentilic
+    follow-up.
+  - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66
+    variant forms = hand-table door candidates.
+- Disk thinning (after the 8/24 nightly verifies): `bible_test.db` (Aug 4 — JP rules),
+  one of the two in-repo pre_pnstar copies (evidence twins stay in `~/db_evidence/`).
 
 ## ABP corpus certification audit — ARC CLOSED (Tier A certified + live)
 S1–S11 record → docs/audits/AUDIT_abp_certification.md + docs/CHARTER_cert_session9.md + docs/audits/AUDIT_entity_seam.md +
