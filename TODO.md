@@ -16,8 +16,10 @@ the form lane's 8 pinned bridge-fail members; glued arithmetic closed exactly
 Reviewer approved the three-part amendment — SHIPPED with locked tests
 (`tests/test_gate_greek_header.py`, in both CI lists): two pinned per-member lists,
 NBSP glued-cure class with the 20/94/30/16 numbers pinned, gentilic door re-keyed to
-`er.is_people_group`. Batch 3 CLOSED as landed-via-rebuild (receipt: class
-`hand-table`, 73 rows Γαλιλαία); 875 replaces 871 as the multi-form-names figure.
+`er.is_people_group`. Batch 3: the hand-table admission STANDS — the tsv row did
+the folding inside the rebuild (receipt class `hand-table`, 73 rows Γαλιλαία,
+146 = 2×73 occurrence double-count accounted); 875-vs-871: the 4 to be NAMED by
+regenerating the receipt on the pre-landing backup (same classifier, dry-run).
 **NEXT: JP re-runs the gate (expect ALL GREEN, violations 0), then the landing
 checkpoint → swap → deploy → served checks → ABP-tab routing.**
 - New follow-up (ruling 3, 8/24): the **20 glued-blanked rows** previously showed a

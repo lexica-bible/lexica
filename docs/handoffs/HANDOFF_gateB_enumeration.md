@@ -78,11 +78,16 @@ commit `9da1afb5`): 19 violations, NBSP control fired on 1Ki 11:17 slot 2.
   value was the verb κατώκησεν — defective, cure).
 
 ## Ride-alongs closed
-- **Batch 3 = LANDED-VIA-REBUILD, NOT superseded.** Receipt line:
+- **Batch 3: THE HAND-TABLE ADMISSION STANDS** (JP wording ruling 8/24 — not
+  "superseded", not "landed-via-rebuild"). Receipt line:
   `galilee|hand-table|146|Γαλιλαία|morph:0|…` — the committed tsv row did the
   folding inside the rebuild (blank morphs + 6 forms mean only the hand table can
   resolve it, confirmed by code read). Copy: Γαλιλαία / surface / **73 exactly**.
   The tsv galilee row is LOAD-BEARING — never remove it.
+  **146-vs-73 accounted:** the receipt's occurrence count feeds from BOTH sources
+  the builder inventories — the built word rows AND the page scrape — so every
+  occurrence counts twice: 74=2×37 · 40=2×20 · 26=2×13 · the three slips 2=2×1
+  each; 146 = 2×73, matching batch 3's independent page census (13+20+37+3).
 - **875 replaces 871.** Same class (multi-form names, no safe pick) re-measured on
   the better table: 54 accent-variance + 821 no-nominative. The old 871 was a count
   only (no member list banked), so growth-by-4 is unprovable member-wise — recorded
