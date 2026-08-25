@@ -38,10 +38,16 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 from build_pn_greek_identity import fix_detached_breathing   # the ONE transform
 
-if len(sys.argv) != 3:
-    sys.exit("usage: gate_greek_header.py <live.db> <scratch.db>")
-live = sqlite3.connect(f"file:{sys.argv[1]}?mode=ro", uri=True)
-scr = sqlite3.connect(f"file:{sys.argv[2]}?mode=ro", uri=True)
+args = sys.argv[1:]
+dump_path = None
+if "--dump" in args:
+    i = args.index("--dump")
+    dump_path = args[i + 1]
+    del args[i:i + 2]
+if len(args) != 2:
+    sys.exit("usage: gate_greek_header.py <live.db> <scratch.db> [--dump <out.tsv>]")
+live = sqlite3.connect(f"file:{args[0]}?mode=ro", uri=True)
+scr = sqlite3.connect(f"file:{args[1]}?mode=ro", uri=True)
 fails = []
 
 # ── gate A — identity layer untouched ────────────────────────────────────────
@@ -107,6 +113,53 @@ for b in bad[:8]:
     print(f"    problem: {b}")
 if not okB:
     fails.append("B")
+
+# ── optional gate-B full enumeration (HANDOFF_gateB_enumeration.md) ──────────
+# Dumps EVERY problem row from the gate's own classifier (never a second copy),
+# tagged with the NBSP glued-value probe on the LIVE lemma. Read-only.
+if dump_path is not None:
+    # CONTROL FIRST (audit-tools-must-fail): the NBSP probe must FIRE on the
+    # known glued row (1Ki 11:17 slot 2) before any per-row flag is trusted.
+    ctrl = live.execute(
+        "SELECT g.greek_lemma FROM pn_greek_identity g "
+        "JOIN verses v ON v.id=g.verse_id "
+        "WHERE v.book='1Ki' AND v.chapter=11 AND v.verse=17 AND g.position=2"
+    ).fetchone()
+    ctrl_ok = bool(ctrl and ctrl[0] and "\xa0" in ctrl[0])
+    print(f"dump control 1Ki 11:17 slot 2: live lemma = {ctrl[0] if ctrl else None!r} — "
+          f"NBSP probe {'FIRED' if ctrl_ok else 'DID NOT FIRE — dump VOID'}")
+    ref = {r[0]: (r[1], r[2], r[3]) for r in
+           live.execute("SELECT id, book, chapter, verse FROM verses")}
+    n_nbsp = n_clean = 0
+    with open(dump_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("# gate-B full problem dump (gate_greek_header.py --dump) — "
+                "live_nbsp NBSP = glued live value (class-a candidate), "
+                "CLEAN = class-b candidate, adjudicate before anything moves\n")
+        f.write("ref\tpos\tenglish\tlive_lemma\tlive_source\t"
+                "scr_lemma\tscr_source\tlive_nbsp\tnote\n")
+        for only, keys in (("only-in-live", set(lrows) - set(srows)),
+                           ("only-in-scratch", set(srows) - set(lrows))):
+            for k in sorted(keys):
+                b_, c_, v_ = ref.get(k[0], ("?", 0, 0))
+                f.write(f"{b_} {c_}:{v_}\t{k[1]}\t\t\t\t\t\t\tKEYSET {only}\n")
+        for k, trans, msg in bad:
+            if not isinstance(k, tuple):
+                continue                      # keyset summary — enumerated above
+            lg, ll, ls = lrows[k]
+            sg, sl, ss = srows.get(k, (None, None, None))
+            eng = live.execute(
+                "SELECT COALESCE(NULLIF(english_head,''), english) FROM words "
+                "WHERE verse_id=? AND position=?", k).fetchone()
+            b_, c_, v_ = ref.get(k[0], ("?", 0, 0))
+            glued = bool(ll and "\xa0" in ll)
+            n_nbsp += glued
+            n_clean += not glued
+            f.write(f"{b_} {c_}:{v_}\t{k[1]}\t{eng[0] if eng else ''}\t"
+                    f"{ll or ''}\t{ls or ''}\t{sl or ''}\t{ss or ''}\t"
+                    f"{'NBSP' if glued else 'CLEAN'}\t{msg}\n")
+    print(f"dump: {len(bad)} problem rows -> {dump_path}; "
+          f"live-NBSP (glued) {n_nbsp}, live-CLEAN {n_clean}"
+          + ("" if ctrl_ok else "  [VOID — control did not fire]"))
 
 # ── gate C — controls + pinned exact forms ───────────────────────────────────
 okC = True
