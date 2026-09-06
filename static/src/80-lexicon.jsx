@@ -685,6 +685,13 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {profile.name_form && (
             <div className="detail-morph">Name-form — no Strong's number. Listing every occurrence of this printed form.</div>
           )}
+          {/* ABP-tab routing (CHARTER_abp_tab_routing.md): a number whose ABP rows are
+              starred routes through its folded Greek header; the line ties the count to
+              the header and says the KJV tab's count is a different layer (pre-reg 3).
+              Wording JP-ruled 2026-09-06. */}
+          {profile.abp_header && profileCorpus === "abp" && (
+            <div className="detail-morph">ABP prints this name without a Strong's number. Its {profile.total} occurrences are listed here under the header {profile.abp_header}. The KJV tab's count is KJV's own tagging and is not this number.</div>
+          )}
         </div>
       </div>
 

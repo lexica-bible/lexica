@@ -12,13 +12,10 @@ holds genuinely-open work and parked ideas only.
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
 served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
 146/73/63 line receipted (full close-out: HANDOFF_gateB_enumeration.md).
-- **ABP-TAB ROUTING is now the open lane** — the arc's original goal; the folding it
-  waited on is live. JP raises it on his timeline. **Opener =
-  `docs/handoffs/HANDOFF_abp_tab_routing.md`** (5 pre-registrations + the
-  housekeeping-first checklist).
-- Housekeeping after tomorrow's nightly (first backup postdating the 15:56 swap):
-  delete the two 431MB scratch copies (`bible_hdrlane.db`, `bible_formlane.db` in
-  ~/bible-db) — they ride every nightly (~860MB/day).
+- **ABP-TAB ROUTING SHIPPED 9/6** (6 numbers route; record `CHARTER_abp_tab_routing.md`;
+  follow-ups a–d under the closed word-study entry below). Deploy + served check = JP.
+- Housekeeping DONE 9/6 16:22 (scratch copies deleted — a step before the nightly, bounded:
+  the 15:39 copy is the swap rollback until a post-swap nightly lands; manual-backup hold until then).
 
 ## (superseded by the 9/6 landing) gate B ENUMERATED + AMENDED 8/24
 **8/24: the enumeration ran and every row was accounted** (full record appended to
@@ -130,7 +127,19 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
 - **OPEN, 30 seconds, never done: map the REST of the PN card's outbound links.** Today only
   the occurrence links were checked (all go to Word study, `30-detail-panel.jsx:1383-1505`).
   Nobody has confirmed where the others go. Read-only.
-- **OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.**
+- **~~OPEN — Word Study's greyed ABP tab on a name~~ — SHIPPED 2026-09-06 (ABP-tab routing, record `docs/tickets/CHARTER_abp_tab_routing.md`).** A grey Greek number routes through its folded
+  header only when the header lane vetted it (`surface` rows only, one stored value, one lexicon owner):
+  Galilee 73 · Damascus 63 · Arabia 12 · Salem 4 · Euroclydon 1 · Abaddon 1. Profile field `abp_header`
+  (JP-approved) drives the ruled state line. Locked `tests/test_abp_tab_bridge.py`. Served check =
+  galilee ABP 73 / KJV 63, one held name (Israel) still grey. **FOLLOW-UPS filed here, not this lane:**
+  (a) Zion 168+1 and Aram 12+5 — header lane folds the lemma-only residual, then they route with no
+  code change; (b) Israel 2,584 / Jerusalem 753 — HELD, route only via the header lane's `surface`
+  class, never a lemma-only door (reviewer-refused 9/6); (c) **MIXED 47** — numbers whose tab opens
+  today but whose header also sits on numberless rows (Nathanael 14, Hosea 10…): today's count is
+  short; own lane, inventory = `scripts/audit_abp_tab_bridge.py`, ruling on same-header pulls
+  deferred to it; (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule.
+  Diagnosis history below kept for the record:
+- ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
   leg's unselected-pill illusion either — Word study's tabs carry a REAL disabled state, in
   two separate sets: the search-scope tabs (`80-lexicon.jsx:1053`, `_comboOK` — can only gray

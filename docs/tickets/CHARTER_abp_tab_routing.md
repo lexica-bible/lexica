@@ -107,3 +107,10 @@ Hebrew route (already open).
 - Locked test (fixture, fires on the positive first): bridged 73-shaped number routes ·
   lemma-only residual refuses · collision pair refuses · MIXED number untouched ·
   parity with `_pn_lemma_rows`. Added to BOTH CI lists.
+
+## BUILT 2026-09-06 (field `abp_header` JP-approved; wording JP-ruled)
+`views_lexicon._header_bridge` + `_bridge_if_grey`; profile/verses/all-books wired;
+state line in `80-lexicon.jsx` (shared card body → desktop + mobile). Locked
+`tests/test_abp_tab_bridge.py` (positive first, every refusal, parity) in both CI lists.
+Served check (JP, after deploy): galilee ABP tab ON = 73 with the state line, KJV tab 63 ·
+damascus 63 · Israel stays grey · a MIXED name (Nathanael) unchanged.

@@ -1158,6 +1158,71 @@ def _pn_lemma_rows(conn, lemma, testament="all"):
     return rows
 
 
+def _header_bridge(conn, snum):
+    """ABP-tab routing (CHARTER_abp_tab_routing.md, reviewer-ruled 2026-09-06): the
+    folded Greek header a Strong's number may route its ABP tab through when the
+    words table carries no row for the number (starred name slots). Returns the
+    byte-exact stored header, or None. A number bridges ONLY when ALL of:
+      * its lexicon lemma, folded like lemma_plain (production _norm_lemma), reaches
+        numberless identity rows whose source is 'surface' — the disciplined
+        one-header-per-name class the header lane vetted;
+      * NO 'lemma-only' row folds to the same key (a per-verse residual means the
+        header does not cover every printed form: Zion 168+1, Aram 12+5 — refused
+        until the header lane folds them; the 13-of-73 Galilee trap is this class);
+      * exactly ONE stored value (the by-form door matches byte-exact);
+      * the key is owned by exactly ONE lexicon number (γαζα G1047/G1048 and ηλι
+        G2241/G2242 collide — refused).
+    Deploy-safe: any table absent -> None (today's grey tab)."""
+    have = {r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+        "('lexicon','pn_greek_identity')")}
+    if len(have) < 2:
+        return None
+    lex = conn.execute("SELECT lemma FROM lexicon WHERE strongs = ?", (str(snum),)).fetchone()
+    if not lex or not lex["lemma"]:
+        return None
+    key = _norm_lemma(lex["lemma"])
+    if not key:
+        return None
+    # Collision refusal: fold every lexicon lemma the same way (lemma_plain when
+    # present is the same fold, but computing it here keeps the rule independent
+    # of whether add_lemma_plain.py has run).
+    owners = 0
+    if _has_lemma_plain(conn, "lexicon"):
+        owners = conn.execute("SELECT count(*) FROM lexicon WHERE lemma_plain = ?", (key,)).fetchone()[0]
+    else:
+        owners = sum(1 for r in conn.execute("SELECT lemma FROM lexicon WHERE lemma IS NOT NULL")
+                     if _norm_lemma(r["lemma"]) == key)
+    if owners != 1:
+        return None
+    # Every numberless stored header folding to the key, with its source mix.
+    hits = {}
+    for r in conn.execute(
+            "SELECT greek_lemma, source, count(*) AS c FROM pn_greek_identity "
+            "WHERE greek_strongs IS NULL AND greek_lemma IS NOT NULL AND greek_lemma != '' "
+            "GROUP BY greek_lemma, source"):
+        if _norm_lemma(r["greek_lemma"]) == key:
+            hits.setdefault(r["greek_lemma"], {})[r["source"]] = r["c"]
+    if len(hits) != 1:
+        return None
+    header, srcs = next(iter(hits.items()))
+    if set(srcs) != {"surface"}:
+        return None
+    return header
+
+
+def _bridge_if_grey(conn, num, snum, sid, is_heb):
+    """The bridge only ever opens a tab that is grey today: Greek number, base
+    (undotted) key, and the production ABP predicate finds NO words row. MIXED
+    numbers (rows exist) and every ordinary word are untouched by construction."""
+    if is_heb or "." in num:
+        return None
+    pred, params = _abp_strongs_filter(conn, num, sid)
+    if conn.execute(f"SELECT 1 FROM words w WHERE {pred} LIMIT 1", params).fetchone():
+        return None
+    return _header_bridge(conn, snum)
+
+
 def _pn_lemma_profile(lemma):
     lemma = lemma.strip()
     if not lemma:
@@ -1301,7 +1366,11 @@ def lexicon_profile(strongs):
         # to a text that actually carries the number, mirroring the Hebrew heb→kjv fallback.
         # Only fires when ABP is genuinely empty (the ABP toggle is grayed then anyway), so an
         # explicit ABP pick on a word that HAS ABP rows is untouched.
-        if corpus == "abp" and not is_diff:
+        # ABP-tab routing (CHARTER_abp_tab_routing.md): a starred name with no number
+        # on its words rows may route through its folded Greek header instead —
+        # then the fallback must NOT fire, or the tab would land on KJV anyway.
+        abp_header = None if (is_diff or is_step) else _bridge_if_grey(conn, num, snum, sid, is_heb)
+        if corpus == "abp" and not is_diff and not abp_header:
             _ap, _apar = _abp_strongs_filter(conn, num, sid)
             if conn.execute(f"SELECT 1 FROM words w WHERE {_ap} LIMIT 1", _apar).fetchone() is None:
                 if conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone():
@@ -1315,6 +1384,13 @@ def lexicon_profile(strongs):
         abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
 
         def _abp_book_counts():  # ABP interlinear: strongs_base in words→verses
+            if abp_header:
+                # Bridged name: the PN: page's own derivation, so this tab and
+                # that page agree by construction (locked parity test).
+                out = {}
+                for r in _pn_lemma_rows(conn, abp_header):
+                    out[r["book"]] = out.get(r["book"], 0) + 1
+                return out
             pred, params = _abp_strongs_filter(conn, num, sid)
             rows = conn.execute(f"""
                 SELECT v.book AS book, COUNT(*) AS cnt
@@ -1337,6 +1413,8 @@ def lexicon_profile(strongs):
             return out
 
         def _abp_gloss_rows():
+            if abp_header:
+                return []   # starred rows carry no English head to fold (as on the PN: page)
             pred, params = _abp_strongs_filter(conn, num, sid)
             # Render list = the token's OWN head (english_head), NOT raw english. Raw parks
             # ABP's whole phrase gloss on one slot, which the normalizer then mis-heads into
@@ -1418,7 +1496,7 @@ def lexicon_profile(strongs):
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
         # have ABP/words rows) keep ABP enabled. A dotted different-word is ABP-only.
         _hp, _hpar = _abp_strongs_filter(conn, num, sid)
-        has_abp = conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
+        has_abp = bool(abp_header) or conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         has_bsb = False if is_diff else (_bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
@@ -1433,12 +1511,13 @@ def lexicon_profile(strongs):
             _tt = "all"
         _vcorpus = "kjv" if (corpus == "all" and is_heb) else "abp" if corpus == "all" else corpus
         default_verses, default_truncated = _all_books_verses(
-            conn, _vcorpus, num, snum, sid, is_heb, is_func, "", _tt, _ALL_VERSES_CAP)
+            conn, _vcorpus, num, snum, sid, is_heb, is_func, "", _tt, _ALL_VERSES_CAP,
+            abp_header=abp_header)
         # Numbering crosswalk (word-study card header) — same shared helper the word card uses,
         # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
         # "step" rides only when TRUE so every pre-existing profile payload stays
         # byte-identical across the G2 deploy (the invariance proof).
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated, **({"abp_header": abp_header} if abp_header else {})})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:
@@ -1528,7 +1607,8 @@ def lexicon_books(strongs):
         conn.close()
 
 
-def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, cap):
+def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, cap,
+                      abp_header=None):
     """Cross-book occurrence list for the word-study 'All books' default: every verse that
     carries the target Strong's, in canonical order, each tagged with its book abbrev.
     Returns (verses, truncated). Lightweight keys only — the frontend's VerseRow re-fetches
@@ -1606,6 +1686,17 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
                 ab = abbrev_by_id.get(r["book_id"])
                 if ab:
                     out.append({"book": ab, "chapter": r["chapter"], "verse": r["verse"]})
+        return out[:cap], len(out) > cap
+
+    # ABP, bridged name (ABP-tab routing): the folded header's own rows, carrying
+    # the name's word slot so the verse row lights it (no number to match on).
+    # No renderings exist for starred rows, so a ?gloss filter matches nothing.
+    if abp_header:
+        if gloss:
+            return [], False
+        rows = _pn_lemma_rows(conn, abp_header, testament)
+        out = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
+                "position": r["position"]} for r in rows]
         return out[:cap], len(out) > cap
 
     # ABP (default): the words table joined to verses.
@@ -1687,10 +1778,23 @@ def lexicon_verses(strongs, book):
             testament = request.args.get("testament", "all").strip().lower()
             if testament not in ("all", "ot", "nt"):
                 testament = "all"
+            _hdr = _bridge_if_grey(conn, num, snum, sid, is_heb) if corpus == "abp" else None
             vout, truncated = _all_books_verses(
-                conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, _ALL_VERSES_CAP)
+                conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, _ALL_VERSES_CAP,
+                abp_header=_hdr)
             conn.close()
             return jsonify({"verses": vout, "glosses": [], "truncated": truncated})
+        if corpus == "abp":
+            _hdr = _bridge_if_grey(conn, num, snum, sid, is_heb)
+            if _hdr:
+                # Bridged name, one book: the same rows the All-books list serves,
+                # narrowed to the book, each carrying the name's word slot for the
+                # highlighter. VerseRow re-fetches the verse text by key.
+                occ = [r for r in _pn_lemma_rows(conn, _hdr) if r["book"] == book]
+                conn.close()
+                return jsonify({"verses": [{"chapter": r["chapter"], "verse": r["verse"],
+                                            "position": r["position"]} for r in occ],
+                                "glosses": []})
         if corpus == "heb":
             # Real Hebrew OT: which verses in this book carry the word (the frontend's
             # VerseRow re-fetches each verse's Hebrew words from /api/hebrew to display
