@@ -18,8 +18,16 @@ Reviewer approved the three-part amendment — SHIPPED with locked tests
 NBSP glued-cure class with the 20/94/30/17 numbers pinned, gentilic door re-keyed to
 `er.is_people_group`. Batch 3: the hand-table admission STANDS — the tsv row did
 the folding inside the rebuild (receipt class `hand-table`, 73 rows Γαλιλαία,
-146 = 2×73 occurrence double-count accounted); 875-vs-871: the 4 to be NAMED by
-regenerating the receipt on the pre-landing backup (same classifier, dry-run).
+146 = 2×73 occurrence double-count accounted); 875-vs-871: CLOSED 9/6 by ruling —
+**871 retired as unreproducible, the 4 permanently unnamed** (two-layer incident:
+cleanup deleted the fallback old-table copies, then a manual backup run rotated out
+the 8/23 copy — full write-up in HANDOFF_gateB_enumeration.md, error shared).
+**9/6: gate re-run ALL GREEN on the amended board (every pinned number exact);
+backup outage since 8/25 found + fixed (quota, not I/O); SWAP APPROVED by JP** —
+rollback = the 9/6 verified backup of current live, single-rollback discipline.
+NEW TRIPWIRE: bible.db retention is 3 copies — before any MANUAL backup run, check
+nothing in the retention window is load-bearing. After landing: delete the two
+431MB scratch copies from ~/bible-db (they ride every nightly, ~860MB/day).
 **NEXT: JP re-runs the gate (expect ALL GREEN, violations 0), then the landing
 checkpoint → swap → deploy → served checks → ABP-tab routing.**
 - New follow-up (ruling 3, 8/24): the **20 glued-blanked rows** previously showed a

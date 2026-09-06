@@ -96,6 +96,27 @@ commit `9da1afb5`): 19 violations, NBSP control fired on 1Ki 11:17 slot 2.
   the better table: 54 accent-variance + 821 no-nominative. The old 871 was a count
   only (no member list banked), so growth-by-4 is unprovable member-wise — recorded
   as a re-measure, not a collision.
+  **RULED CLOSED 2026-09-06: 871 RETIRED AS UNREPRODUCIBLE — the 4 are permanently
+  unnamed.** The plan (regenerate the old-table receipt from the 8/23 backup via a
+  dry-run) was destroyed by a two-layer miss the same day, before it ran:
+  (1) the 9/6 disk cleanup deleted the two pre-pn-star copies after adjudicating
+  them "unusable as rollbacks" — true, but they were ALSO the last fallback source
+  of the OLD form table, a role nobody checked; (2) a manual `backup_db.py` run
+  (fixing the 12-day backup outage) then ROTATED OUT the 8/23 pre-landing copy —
+  bible.db keeps only 3 copies, and neither CC nor JP checked the retention window
+  against a job about to run by hand. JP's gunzip-t condition guarded corruption,
+  not rotation — the actual kill vector. Error shared, both layers on record.
+  The receipt-diff that then ran compared the new receipt to itself (875 = 875,
+  no differences) — VOID, and the bogus OLD/NEW receipt files were deleted so no
+  future session reads them as an old-table receipt.
+  **What this does NOT touch:** the header landing. Its rollback is the 9/6
+  verified backup of CURRENT live (exists, verified end-to-end the same day —
+  the backup outage itself was quota wearing a "disk I/O error" label, closed by
+  experiment). The 8/23 copy was the FORM lane's rollback; that window closed
+  with twelve stable live days.
+  **New tripwire (JP-ruled): rotation depth 3 is a NAMED HAZARD — before any
+  MANUAL backup run, check that nothing inside the retention window is still
+  load-bearing.** Filed as a tripwire, not a rule change.
 
 ## The amendment (reviewer-approved, SHIPPED same session)
 Three changes to gate B, all in `scripts/gate_greek_header.py`, locked by
