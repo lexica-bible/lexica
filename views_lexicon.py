@@ -493,6 +493,14 @@ def _render_glosses_all(conn, snums):
             WHERE w.strongs_base IN ({ph}) GROUP BY {gkey}""", bases).fetchall():
             if r["gkey"] in out:
                 out[r["gkey"]]["abp_total"] = r["cnt"]
+        # ABP-tab routing: a bridged name has no words row, so the two reads above
+        # leave its ABP line empty while its study page says 73 — the card must
+        # carry the same header + count (reviewer ruling 2026-09-06).
+        for s in greek:
+            if s in out and out[s].get("abp_total") is None:
+                _bl = _bridge_line(conn, s)
+                if _bl:
+                    out[s]["abp_header"], out[s]["abp_total"] = _bl
 
     # KJV (G+H keys) and BSB — both key off the full G/H-prefixed strongs.
     ph = ",".join("?" * len(snums))
@@ -1104,7 +1112,14 @@ def lexicon_english():
         results = []
         def _emit(rows):
             for r in rows:
-                results.append({"strongs": r["sbase"], "lemma": r["lemma"] or "",
+                # ABP-tab routing: bridged name -> the card's ABP line carries the
+                # header + the study page's count (no renderings exist to fold).
+                _bl = (_bridge_line(conn, r["sbase"])
+                       if r["sbase"].startswith("G") and abp_tot.get(r["sbase"]) is None else None)
+                if _bl:
+                    abp_tot[r["sbase"]] = _bl[1]
+                results.append({**({"abp_header": _bl[0]} if _bl else {}),
+                                "strongs": r["sbase"], "lemma": r["lemma"] or "",
                                 "translit": r["translit"] or "", "count": r["cnt"],
                                 "abp_glosses": _fold(abp_gmap, r["sbase"]),
                                 "heb_glosses": _fold(hebdb_gmap, r["sbase"]),
@@ -1221,6 +1236,19 @@ def _bridge_if_grey(conn, num, snum, sid, is_heb):
     if conn.execute(f"SELECT 1 FROM words w WHERE {pred} LIMIT 1", params).fetchone():
         return None
     return _header_bridge(conn, snum)
+
+
+def _bridge_line(conn, sbase):
+    """Results-card companion of the bridge: for a base G key ('G1056') with no words
+    row, (header, count) — the count being the SAME derivation the study page
+    serves (_pn_lemma_rows), so card and page agree by construction. None otherwise."""
+    if not sbase.startswith("G") or "." in sbase:
+        return None
+    snum = sbase[1:]
+    hdr = _bridge_if_grey(conn, snum, snum, sbase, False)
+    if not hdr:
+        return None
+    return hdr, len(_pn_lemma_rows(conn, hdr))
 
 
 def _pn_lemma_profile(lemma):

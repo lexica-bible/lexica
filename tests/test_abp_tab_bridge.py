@@ -62,7 +62,8 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     except Exception:
         pass
-    from views_lexicon import _header_bridge, _bridge_if_grey, _pn_lemma_rows, _all_books_verses
+    from views_lexicon import (_header_bridge, _bridge_if_grey, _pn_lemma_rows, _all_books_verses,
+                               _bridge_line)
 
     c = _fixture()
     fails = []
@@ -92,6 +93,13 @@ def main():
     check("a rendering filter matches nothing on starred rows",
           _all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "galilee", "all",
                             6000, abp_header="Γαλιλαία"), ([], False))
+
+    # results card (reviewer ruling 9/6): same header + same count as the study page
+    check("CARD: bridged number's ABP line = (header, study-page count)",
+          _bridge_line(c, "G1056"), ("Γαλιλαία", len(pn)))
+    check("CARD: refused number gets no line", _bridge_line(c, "G4622"), None)
+    check("CARD: MIXED number gets no line (its own rows count)", _bridge_line(c, "G1802"), None)
+    check("CARD: Hebrew / dotted keys never", (_bridge_line(c, "H1056"), _bridge_line(c, "G1056.2")), (None, None))
 
     # refusals
     check("REFUSED: surface + lemma-only residual (Zion/Aram shape)", _header_bridge(c, "4622"), None)

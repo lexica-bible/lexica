@@ -114,3 +114,22 @@ state line in `80-lexicon.jsx` (shared card body → desktop + mobile). Locked
 `tests/test_abp_tab_bridge.py` (positive first, every refusal, parity) in both CI lists.
 Served check (JP, after deploy): galilee ABP tab ON = 73 with the state line, KJV tab 63 ·
 damascus 63 · Israel stays grey · a MIXED name (Nathanael) unchanged.
+
+## Served check round 1 (JP, 2026-09-06) + rulings
+Galilee 73 + state line PASS (KJV tab 63 = receipt; the sidebar's "galilee 62" is KJV's
+second rendering "for" ×1 not listed — display finding, OUTSIDE this lane, filed in TODO) ·
+Damascus 63 PASS · Israel grey PASS (H3478 carries ABP = Hebrew route, expected) ·
+Nathanael 6 unchanged (follow-up c) · Hadad 45 PASS.
+**Ruling: the results card must agree with the page.** G1056's card showed no ABP line
+while the page said 73 (starred rows have no renderings to fold). Fixed: `_bridge_line`
+(same header + `_pn_lemma_rows` count) feeds both emitters (English finder, Greek
+lookup) as `abp_header` + `abp_total`; both cards render "ABP Γαλιλαία 73" in the
+existing line style. Absent field = card unchanged. Locked in the test.
+**Hadad lighting (finding, NOT this lane):** on the H1908 page only some verse rows
+light the name; the Αδάρ name-form page lights all 12. This lane's diff never enters
+a Hebrew path (`_bridge_if_grey` returns None on `is_heb` before any read; every new
+branch is gated on that result) — so the pattern predates the deploy. Hypothesis to
+test, not a verdict: the numbered All-books view carries no slot, so the verse row
+lights by matching H1908 on the words it fetches; rows whose Hebrew number was retired
+into pn_hebrew_xref no longer carry it on the word, so the LIST finds them (predicate
+union) but the ROW can't light them. Filed under the hadad hard case in TODO.
