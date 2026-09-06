@@ -137,7 +137,14 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   class, never a lemma-only door (reviewer-refused 9/6); (c) **MIXED 47** — numbers whose tab opens
   today but whose header also sits on numberless rows (Nathanael 14, Hosea 10…): today's count is
   short; own lane, inventory = `scripts/audit_abp_tab_bridge.py`, ruling on same-header pulls
-  deferred to it; (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule.
+  deferred to it; (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule;
+  (e) **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62, the card's
+  "galilee, for" line and the KJV tab say 63) — display finding, own item;
+  (f) **H1908 hadad page lights only some verse rows** (1Ki 11:18/19/21 lit; Gen 25:15, 36:35,
+  36:36, 1Ki 11:14, 11:17 not) while the Αδάρ name-form page lights all 12 — predates the routing
+  deploy (no Hebrew path touched). Hypothesis to test: numbered All-books rows light by matching
+  the number on the fetched words, and retired rows (number moved to pn_hebrew_xref) no longer
+  carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
   Diagnosis history below kept for the record:
 - ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
