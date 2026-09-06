@@ -500,7 +500,7 @@ def _render_glosses_all(conn, snums):
             if s in out and out[s].get("abp_total") is None:
                 _bl = _bridge_line(conn, s)
                 if _bl:
-                    out[s]["abp_header"], out[s]["abp_total"] = _bl
+                    out[s]["abp_glosses"], out[s]["abp_total"] = _bl[2], _bl[1]
 
     # KJV (G+H keys) and BSB — both key off the full G/H-prefixed strongs.
     ph = ",".join("?" * len(snums))
@@ -1118,10 +1118,9 @@ def lexicon_english():
                        if r["sbase"].startswith("G") and abp_tot.get(r["sbase"]) is None else None)
                 if _bl:
                     abp_tot[r["sbase"]] = _bl[1]
-                results.append({**({"abp_header": _bl[0]} if _bl else {}),
-                                "strongs": r["sbase"], "lemma": r["lemma"] or "",
+                results.append({"strongs": r["sbase"], "lemma": r["lemma"] or "",
                                 "translit": r["translit"] or "", "count": r["cnt"],
-                                "abp_glosses": _fold(abp_gmap, r["sbase"]),
+                                "abp_glosses": _bl[2] if _bl else _fold(abp_gmap, r["sbase"]),
                                 "heb_glosses": _fold(hebdb_gmap, r["sbase"]),
                                 "kjv_glosses": _fold(kjv_gmap, r["sbase"]),
                                 "bsb_glosses": _fold(bsb_gmap, r["sbase"]),
@@ -1238,17 +1237,35 @@ def _bridge_if_grey(conn, num, snum, sid, is_heb):
     return _header_bridge(conn, snum)
 
 
+def _bridged_gloss_rows(conn, header):
+    """ABP's own English for a bridged name — the printed word on each starred
+    slot (english_head, the token's OWN head), counted per rendering. Same shape
+    as the numbered `_abp_gloss_rows`, so every card/page fold treats it alike:
+    the convention is the ENGLISH rendering with a count (galilee 73), never the
+    Greek on a card (JP, 2026-09-06)."""
+    return conn.execute("""
+        SELECT COALESCE(NULLIF(w.english_head,''), w.english) AS gloss, COUNT(*) AS cnt
+        FROM pn_greek_identity p JOIN words w
+          ON w.verse_id = p.verse_id AND w.position = p.position
+        WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
+          AND w.english IS NOT NULL AND w.english != '' AND w.english != '*'
+        GROUP BY COALESCE(NULLIF(w.english_head,''), w.english)
+    """, (header,)).fetchall()
+
+
 def _bridge_line(conn, sbase):
     """Results-card companion of the bridge: for a base G key ('G1056') with no words
-    row, (header, count) — the count being the SAME derivation the study page
-    serves (_pn_lemma_rows), so card and page agree by construction. None otherwise."""
+    row, (header, count, renderings) — count and renderings from the SAME rows the
+    study page serves (_pn_lemma_rows / _bridged_gloss_rows), so card and page agree
+    by construction. None otherwise."""
     if not sbase.startswith("G") or "." in sbase:
         return None
     snum = sbase[1:]
     hdr = _bridge_if_grey(conn, snum, snum, sbase, False)
     if not hdr:
         return None
-    return hdr, len(_pn_lemma_rows(conn, hdr))
+    glosses = _fold_glosses(((r["gloss"], r["cnt"]) for r in _bridged_gloss_rows(conn, hdr)), limit=8)
+    return hdr, len(_pn_lemma_rows(conn, hdr)), glosses
 
 
 def _pn_lemma_profile(lemma):
@@ -1442,7 +1459,7 @@ def lexicon_profile(strongs):
 
         def _abp_gloss_rows():
             if abp_header:
-                return []   # starred rows carry no English head to fold (as on the PN: page)
+                return _bridged_gloss_rows(conn, abp_header)   # ABP's printed English, per convention
             pred, params = _abp_strongs_filter(conn, num, sid)
             # Render list = the token's OWN head (english_head), NOT raw english. Raw parks
             # ABP's whole phrase gloss on one slot, which the normalizer then mis-heads into
@@ -1721,8 +1738,23 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
     # No renderings exist for starred rows, so a ?gloss filter matches nothing.
     if abp_header:
         if gloss:
-            return [], False
-        rows = _pn_lemma_rows(conn, abp_header, testament)
+            # Rendering chip: filter on the slot's OWN printed head, same compare
+            # as the numbered branch (_normalize_gloss), same rows as the list.
+            rows = conn.execute(f"""
+                SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse,
+                       p.position AS position,
+                       COALESCE(NULLIF(w.english_head,''), w.english) AS head
+                FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id
+                JOIN words w ON w.verse_id = p.verse_id AND w.position = p.position
+                WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
+                ORDER BY {_BOOK_RANK_SQL}, v.chapter, v.verse
+            """, (abp_header,)).fetchall()
+            if testament in ("ot", "nt"):
+                keep = (lambda bid: bid <= 39) if testament == "ot" else (lambda bid: bid >= 40)
+                rows = [r for r in rows if keep(_KJV_BOOK_ID.get(r["book"], 999))]
+            rows = [r for r in rows if _normalize_gloss(r["head"] or "", is_func=is_func) == gloss]
+        else:
+            rows = _pn_lemma_rows(conn, abp_header, testament)
         out = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
                 "position": r["position"]} for r in rows]
         return out[:cap], len(out) > cap

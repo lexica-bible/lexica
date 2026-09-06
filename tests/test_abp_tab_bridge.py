@@ -28,7 +28,7 @@ def _fixture():
     c.executescript("""
         CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT);
         CREATE TABLE words (id INTEGER PRIMARY KEY, verse_id INT, position INT,
-                            strongs TEXT, strongs_base TEXT, english TEXT);
+                            strongs TEXT, strongs_base TEXT, english TEXT, english_head TEXT);
         CREATE TABLE lexicon (strongs TEXT PRIMARY KEY, lemma TEXT, lemma_plain TEXT);
         CREATE TABLE pn_greek_identity (
             verse_id INT, position INT, greek_strongs TEXT, greek_lemma TEXT,
@@ -41,7 +41,9 @@ def _fixture():
             ('4540','Σαμάρεια','σαμαρεια'),      -- two stored values -> refused
             ('2241','ἠλί','ηλι'), ('2242','Ἡλί','ηλι'),   -- collision -> refused
             ('1802','Ἐνώχ','ενωχ');              -- MIXED: has a words row
-        INSERT INTO words VALUES (1, 4, 3, '1802', 'G1802', 'Enoch');
+        INSERT INTO words VALUES (1, 4, 3, '1802', 'G1802', 'Enoch', 'Enoch'),
+            -- the starred Galilee slots: ABP's printed English, no number
+            (2, 3, 2, '*', NULL, 'Galilee', 'Galilee'), (3, 1, 5, '*', NULL, 'Galilee', 'Galilee'), (4, 2, 4, '*', NULL, 'Galilee', 'Galilee');
         INSERT INTO pn_greek_identity VALUES
             (3, 2, NULL, 'Γαλιλαία', 'surface', NULL),
             (1, 5, NULL, 'Γαλιλαία', 'surface', NULL),
@@ -90,13 +92,16 @@ def main():
     check("testament narrows the bridged list",
           len(_all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "", "nt",
                                 6000, abp_header="Γαλιλαία")[0]), 2)
-    check("a rendering filter matches nothing on starred rows",
-          _all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "galilee", "all",
+    check("an unattested rendering filters to nothing",
+          _all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "zzz", "all",
                             6000, abp_header="Γαλιλαία"), ([], False))
 
     # results card (reviewer ruling 9/6): same header + same count as the study page
-    check("CARD: bridged number's ABP line = (header, study-page count)",
-          _bridge_line(c, "G1056"), ("Γαλιλαία", len(pn)))
+    check("CARD: bridged number's ABP line = (header, study-page count, ENGLISH renderings)",
+          _bridge_line(c, "G1056"), ("Γαλιλαία", len(pn), [{"gloss": "galilee", "count": 3}]))
+    check("rendering chip filters the bridged list on the printed head",
+          len(_all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "galilee", "all",
+                                6000, abp_header="Γαλιλαία")[0]), 3)
     check("CARD: refused number gets no line", _bridge_line(c, "G4622"), None)
     check("CARD: MIXED number gets no line (its own rows count)", _bridge_line(c, "G1802"), None)
     check("CARD: Hebrew / dotted keys never", (_bridge_line(c, "H1056"), _bridge_line(c, "G1056.2")), (None, None))

@@ -555,11 +555,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                     {g.abp_glosses && g.abp_glosses.length > 0 && (
                       <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(g.abp_glosses)}</span>{g.abp_total != null && <span className="glrow-n">{g.abp_total}</span>}</span>
                     )}
-                    {/* Bridged name (ABP-tab routing): no renderings to fold — the line
-                        shows the Greek header with the study page's own count. */}
-                    {!(g.abp_glosses && g.abp_glosses.length) && g.abp_header && (
-                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_header}</span>{g.abp_total != null && <span className="glrow-n">{g.abp_total}</span>}</span>
-                    )}
                     {g.heb_glosses && g.heb_glosses.length > 0 && (
                       <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(g.heb_glosses)}</span>{g.heb_total != null && <span className="glrow-n">{g.heb_total}</span>}</span>
                     )}
@@ -610,9 +605,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               Falls back to the plain gloss for a row with no renderings. */}
           {m.abp_glosses && m.abp_glosses.length > 0 && (
             <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(m.abp_glosses)}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
-          )}
-          {!(m.abp_glosses && m.abp_glosses.length) && m.abp_header && (
-            <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{m.abp_header}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
           )}
           {m.heb_glosses && m.heb_glosses.length > 0 && (
             <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(m.heb_glosses)}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>

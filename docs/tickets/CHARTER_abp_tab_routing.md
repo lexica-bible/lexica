@@ -133,3 +133,19 @@ test, not a verdict: the numbered All-books view carries no slot, so the verse r
 lights by matching H1908 on the words it fetches; rows whose Hebrew number was retired
 into pn_hebrew_xref no longer carry it on the word, so the LIST finds them (predicate
 union) but the ROW can't light them. Filed under the hadad hard case in TODO.
+
+## Served check round 2 (JP) — CORRECTED card ruling
+JP: the card showed the GREEK header; the convention is the English rendering with a
+count. Corrected ruling (reviewer): the card's ABP line for a bridged number shows the
+ENGLISH rendering from those ABP rows (galilee 73, damascus 63) like every other card;
+the Greek header lives ONLY in the study page's state line. Built: `_bridged_gloss_rows`
+(the printed head on each starred slot) feeds both cards' `abp_glosses` AND the study
+page's "ABP renders as" section, and the rendering chip filters the bridged list on the
+same head (previously returned nothing). No Greek on any card. Locked in the test.
+Abdon (Hebrew number, no Greek number) = the unresolved check answered: nothing for the
+bridge to touch. The 14-vs-8 gap (six ABP Abdon rows under no Hebrew number) is a
+Hebrew-side finding, filed separately.
+**JP ruling (new lane, NOT this one): an H-number search must show NO ABP results.** The
+Hebrew feed into the ABP tab was never his intent; the hadad/abishai controls in this
+charter validated behaviour that should not exist. Scoped in
+`docs/tickets/CHARTER_hebrew_abp_reversal.md`; the routing lane closes on the two cards.
