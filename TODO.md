@@ -8,7 +8,16 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## Greek header arc — gate B ENUMERATED + AMENDED 8/24; re-run then land (open)
+## Greek header arc — LANDED LIVE 9/6; served eyeball + routing remain (open)
+**9/6 15:56: header table APPLIED TO LIVE** — 32,478 rows, post-apply gate reads
+live = copy exactly (all unchanged, 30 glued compounds intact), deploy reloaded 5×200.
+Rollback = the 9/6 15:43 verified backup (pre-swap). **Waits: (a) JP's served spot
+checks (hadad 1Ki 11 Greek-headed / zion Σιών / galilee Γαλιλαία ×73); (b) nothing
+deleted — incl. the two 431MB scratch copies — until a backup stamped AFTER 15:56
+lands (tomorrow's nightly, single-rollback rule). Then: ABP-tab ROUTING, the arc's
+original goal.**
+
+## (superseded by the 9/6 landing) gate B ENUMERATED + AMENDED 8/24
 **8/24: the enumeration ran and every row was accounted** (full record appended to
 `docs/handoffs/HANDOFF_gateB_enumeration.md`): 19 violations = 13 glued cures + 6 of
 the form lane's 8 pinned bridge-fail members; glued arithmetic closed exactly
