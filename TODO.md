@@ -12,6 +12,10 @@ holds genuinely-open work and parked ideas only.
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
 served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
 146/73/63 line receipted (full close-out: HANDOFF_gateB_enumeration.md).
+- **NEW LANE (JP-ruled 9/6): NO ABP results for a Hebrew number — reversal of the unintended
+  Hebrew feed** (June TIPNR stopgap numbers on ABP name slots, preserved by July's S2-Q4 bar).
+  Charter + inventory command + surfaces list: `docs/tickets/CHARTER_hebrew_abp_reversal.md`.
+  Own deploy AFTER the routing lane closes. Hadad/abishai routing controls RETIRED.
 - **ABP-TAB ROUTING SHIPPED 9/6** (6 numbers route; record `CHARTER_abp_tab_routing.md`;
   follow-ups a–d under the closed word-study entry below). Deploy + served check = JP.
 - Housekeeping DONE 9/6 16:22 (scratch copies deleted — a step before the nightly, bounded:
