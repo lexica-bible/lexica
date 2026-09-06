@@ -143,6 +143,20 @@ violations 0 · unchanged 30,007 (glued kept 30 inside it) · **pinned ruled los
 451 · page-attested 1,885 · bind-derived 0. Changed-row total 2,471.
 Any other number: STOP, enumerate, no auto-green.
 
+## ARC CLOSED 2026-09-06 — landed, served, signed off
+Applied to live 15:56 (32,478 rows); post-apply gate: live = copy EXACT (all
+unchanged, 30 glued compounds intact), A/B/C green; deployed, 5×200.
+**Served eyeball (JP):** zion confirmed (uniform Σιών) · galilee fold confirmed
+(one Γαλιλαία header, gentilic split off as G1057) · hadad confirmed IN ABP
+(better than the pre-routing expectation). ABP tab still grey by design — routing
+is the NEXT lane.
+**The 146/73/63 line (last receipt):** 146 = the build receipt's occurrence count
+= each of the 73 ABP rows counted twice (word table + independent page scrape;
+74/40/26 + 3 slips, all exactly double the page census) · 73 = ABP printed rows
+both testaments, the gate-C pin · 63 = KJV's own G1056 tagging in KJV's own text
+(read receipted 9/6: `G1056|63`, no dotted variants) — a different translation on
+a different layer, correctly shown on the KJV tab; no rule equates it to 73.
+
 ## Follow-up filed (ruling 3)
 The 20 glued-blanked rows previously showed a garbage word-hint and now show
 English — whether any deserve a REAL header is a downstream hand-table question,

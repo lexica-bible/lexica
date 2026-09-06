@@ -8,14 +8,17 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## Greek header arc — LANDED LIVE 9/6; served eyeball + routing remain (open)
-**9/6 15:56: header table APPLIED TO LIVE** — 32,478 rows, post-apply gate reads
-live = copy exactly (all unchanged, 30 glued compounds intact), deploy reloaded 5×200.
-Rollback = the 9/6 15:43 verified backup (pre-swap). **Waits: (a) JP's served spot
-checks (hadad 1Ki 11 Greek-headed / zion Σιών / galilee Γαλιλαία ×73); (b) nothing
-deleted — incl. the two 431MB scratch copies — until a backup stamped AFTER 15:56
-lands (tomorrow's nightly, single-rollback rule). Then: ABP-tab ROUTING, the arc's
-original goal.**
+## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
+**Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
+served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
+146/73/63 line receipted (full close-out: HANDOFF_gateB_enumeration.md).
+- **ABP-TAB ROUTING is now the open lane** — the arc's original goal; the folding it
+  waited on is live. JP raises it on his timeline. **Opener =
+  `docs/handoffs/HANDOFF_abp_tab_routing.md`** (5 pre-registrations + the
+  housekeeping-first checklist).
+- Housekeeping after tomorrow's nightly (first backup postdating the 15:56 swap):
+  delete the two 431MB scratch copies (`bible_hdrlane.db`, `bible_formlane.db` in
+  ~/bible-db) — they ride every nightly (~860MB/day).
 
 ## (superseded by the 9/6 landing) gate B ENUMERATED + AMENDED 8/24
 **8/24: the enumeration ran and every row was accounted** (full record appended to
