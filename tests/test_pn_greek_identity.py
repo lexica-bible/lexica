@@ -89,7 +89,9 @@ def main() -> int:
     check("numbered: not STEP", p["step"], False)
     check("numbered: count by Greek number (2 rows)", p["greek_count"], 2)
     check("numbered: hebrew cross-ref carried", p["hebrew_base"], "H1732")
-    check("numbered: hebrew count skips empty-English rows", p["hebrew_count"], 2)
+    # JP ruling 2026-09-06 (CHARTER_hebrew_abp_reversal.md): no ABP count for a
+    # Hebrew number — the cross-ref carries the number only.
+    check("numbered: hebrew cross-ref carries NO ABP count (reversal)", p["hebrew_count"], None)
 
     # STEP-extended (C2 shape)
     p = _greek_identity_payload(c, 2, 7)

@@ -743,7 +743,11 @@ def _greek_identity_payload(conn, verse_id, position):
             "WHERE greek_lemma = ? AND greek_strongs IS NULL",
             (lemma,)).fetchone()[0] if lemma else 0
     heb_count = None
-    if r["hebrew_base"] and "words" in have:
+    # JP ruling 2026-09-06 (CHARTER_hebrew_abp_reversal.md): the cross-ref line
+    # carries the Hebrew number only — no ABP count for a Hebrew number. The
+    # S2-Q4 "own count" read below is retired; kept under a dead switch so the
+    # shape is on record, never served.
+    if False and r["hebrew_base"] and "words" in have:
         # The cross-ref line carries its OWN count (S2-Q4: nothing findable
         # before becomes unfindable) — same shape as /api/strongs-count?by=base.
         # Candidate-3 dormant repoint: h_abp_predicate unions pn_hebrew_xref in

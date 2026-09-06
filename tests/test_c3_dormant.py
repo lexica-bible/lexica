@@ -215,7 +215,10 @@ def main() -> int:
         check("P2: both-homes 'none' row counts ONCE", n["count"], 1)
 
         p = json.loads(client.get("/api/lexicon/profile/H90?corpus=abp").get_data(as_text=True))
-        check("P2: H Word-study ABP total via xref union", p.get("total"), 1)
+        # AMENDED by JP ruling 2026-09-06 (CHARTER_hebrew_abp_reversal.md): a Hebrew
+        # number serves NO ABP results in Word study — the S2-Q4 "findable via the
+        # union" pin here is retired; the union still feeds /api/strongs-count above.
+        check("P2 (reversed): H Word-study never serves ABP", (p.get("has_abp"), p.get("corpus") != "abp"), (False, True))
 
         r = client.get("/api/lexicon/profile/G9826")
         check("P2: G9xxx profile answers with flips OFF (G5 semantics)",

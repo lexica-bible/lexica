@@ -43,3 +43,30 @@ pinned behaviour nobody ruled in — **retired**, they validate nothing.
 
 Order (reviewer): the routing lane closes on its two cards first; this lane is a separate
 deploy so each served check reads clean.
+
+## Inventory (JP-run 9/6 17:17)
+357 Hebrew numbers still on ABP words rows (2,289 rows, the kept-Hebrew class) ·
+2,280 Hebrew numbers reach ABP through pn_hebrew_xref (32,478 rows). ≈2,300 Hebrew
+numbers open an ABP tab today. Presentation: GREY (standing rule; JP did not object).
+
+## BUILT on branch `hebrew-abp-reversal` (merge AFTER the routing lane's card check)
+- Word study: `has_abp` False for every H-number; a requested/defaulted `corpus=abp`
+  resolves to the Hebrew default (HEB, else KJV); All-books + one-book lists return
+  empty under ABP for an H-number. The `_abp_strongs_filter` H-arm and
+  `h_abp_predicate` stay (still feed `/api/strongs-count`, a data instrument, and the
+  audit scripts) — no consumer routes an H-number to the ABP tab any more.
+- Results cards: `_top_glosses_abp` folds Greek keys only (a Hebrew row never gets an
+  ABP line; `_totals_abp` already was Greek-only).
+- Reader card (VISUAL — JP's yes needed on the specific change):
+  (1) "Hebrew Cross-Reference" shows the Hebrew number as a plain link to Word study's
+      HEB tab, no ABP count (was "N H1908" → ABP tab);
+  (2) a Hebrew-numbered word read in ABP (no Greek identity, e.g. Eden H5731) shows
+      "Hebrew OT Occurrences → N in Hebrew OT" (the same line the Hebrew reader shows)
+      instead of "N in ABP" → ABP tab. The old count fetch + section are removed.
+- Tests: new `tests/test_hebrew_abp_reversal.py` (real routes, positive-first: the fixture
+  holds H90 ABP rows, tab reads grey; Greek unchanged; cross-ref count None) in both CI
+  lists; two pins amended BY RULING: test_pn_greek_identity `hebrew_count` 2→None,
+  test_c3_dormant "H Word-study ABP total via xref union" → never serves ABP.
+- Served check (after its own deploy): hadad H1908 → ABP tab grey, HEB tab home ·
+  abishai H52 grey · a Greek word unchanged · galilee still 73 · an ABP reader click on
+  a Hebrew-numbered name shows the Hebrew OT line.

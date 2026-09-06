@@ -765,7 +765,10 @@ def lexicon_english():
         # snums are GROUPING keys: a base 'G4521' or a dotted different-word 'G4521.2'.
         # Filter the (indexed) strongs_base by the BASE of each key, then GROUP BY the
         # gkey so a dotted different-word's renderings split off from its base's.
-        bases = sorted({sn.split(".")[0] for sn in snums})
+        # Greek keys only: a Hebrew number's card carries no ABP line (reversal ruling).
+        bases = sorted({sn.split(".")[0] for sn in snums if sn.startswith("G")})
+        if not bases:
+            return {}
         placeholders = ",".join("?" * len(bases))
         ready = _dotted_ready(conn)
         dl_join = "LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs" if ready else ""
@@ -1402,6 +1405,12 @@ def lexicon_profile(strongs):
         corpus = request.args.get("corpus", _heb_default if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
             corpus = _heb_default if is_heb else "abp"
+        # JP ruling 2026-09-06 (CHARTER_hebrew_abp_reversal.md): a Hebrew number
+        # shows NO ABP results — the ABP tab is grey and never the served corpus.
+        # The June TIPNR stopgap put Hebrew numbers on ABP name slots and July's
+        # S2-Q4 union kept feeding them back; neither was ruled in. HEB is home.
+        if is_heb and corpus == "abp":
+            corpus = _heb_default
         if corpus == "heb" and not has_heb:  # asked for heb but heb.db lacks this number
             corpus = "kjv"
         if is_diff:          # ABP-only added word — no KJV side to toggle to
@@ -1541,7 +1550,7 @@ def lexicon_profile(strongs):
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
         # have ABP/words rows) keep ABP enabled. A dotted different-word is ABP-only.
         _hp, _hpar = _abp_strongs_filter(conn, num, sid)
-        has_abp = bool(abp_header) or conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
+        has_abp = (not is_heb) and (bool(abp_header) or conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None)
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         has_bsb = False if is_diff else (_bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
@@ -1663,6 +1672,9 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
     `cap` bounds the pathological function words; we fetch one extra to detect truncation."""
     over = cap + 1
     abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
+
+    if is_heb and corpus not in ("heb", "kjv", "bsb"):
+        return [], False     # no ABP list for a Hebrew number (CHARTER_hebrew_abp_reversal.md)
 
     if corpus == "heb":
         if testament == "nt" or not _heb_ready():
@@ -1832,6 +1844,9 @@ def lexicon_verses(strongs, book):
         sid = f"H{snum}" if is_heb else f"G{snum}"
         if corpus == "all":  # verse text is single-corpus; show the word's native text
             corpus = "kjv" if is_heb else "abp"
+        if is_heb and corpus == "abp":   # no ABP list for a Hebrew number (reversal ruling)
+            conn.close()
+            return jsonify({"verses": [], "glosses": []})
         if book == "all":
             # The default word-study view: list EVERY occurrence across the whole Bible,
             # canonically ordered. The book rail / OT-NT tabs / rendering chips narrow it.
