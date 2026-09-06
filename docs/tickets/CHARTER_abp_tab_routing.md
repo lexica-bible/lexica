@@ -62,3 +62,48 @@ first.
 ## Step 3 — served checks (JP, after deploy)
 galilee → ABP tab ON, 73, KJV tab 63 · zion per audit · hadad 12 · abishai per audit ·
 one LEMMA-ONLY-ONLY member stays grey.
+
+## Step 1 RESULT + RULINGS (2026-09-06, JP-run census, reviewer-ruled)
+Live: galilee PIN OK (73, 1 value) · greyed Greek numbers 187 · BRIDGE-SURFACE 8 ·
+LEMMA-ONLY-ONLY 23 (Israel 2,584, Jerusalem 753 among them) · MIXED 47 · COLLISION 2
+(γαζα G1047/G1048 · ηλι G2241/G2242). Pre-fold copy: galilee LEMMA-ONLY-ONLY, 13 rows,
+1 value — the census CANNOT see the other 60 rows; the split-form trap is handled by
+REFUSING lemma-only routing, not by detecting splits. Hadad 45 / Abishai 26 via the
+Hebrew route (already open).
+1. **Routable set = 6**: Galilee 73 · Damascus 63 · Arabia 12 · Salem 4 · Euroclydon 1 ·
+   Abaddon 1. Condition per number, locked in the test: folded lemma reaches ONLY
+   `surface` rows (lemma-only = 0), ONE stored value, key owned by exactly ONE lexicon
+   number. Zion (168+1) and Aram (12+5) FAIL lemma-only = 0 → header-lane follow-up folds
+   their residuals, then they route by the same rule with no code change.
+2. **Israel / Jerusalem: HELD, extension REFUSED.** Their signature is identical to
+   pre-fold Galilee's; "indeclinable" is knowledge from outside the census. Any future
+   routing goes through the header lane (vetted `surface` class), never a lemma-only door.
+3. **COLLISION refused** (key with >1 number never bridges) — locked in the test.
+4. **MIXED = separate follow-up** (this census is the inventory); the same-header
+   numberless-pull ruling is deferred to that lane.
+5. Housekeeping: scratch copies deleted before the nightly landed (bounded: live holds
+   the post-swap state, the 15:39 copy is the swap rollback, builder reproduces the
+   copy). The 15:39 copy stays the rollback until a post-swap nightly lands; manual
+   backup hold lifts then. It is no longer load-bearing for this lane.
+
+## Step 2 DESIGN (field checkpoint — awaiting JP's OK before it lands)
+- Backend helper `_header_bridge(conn, snum)` → the stored header or None, applying
+  rule 1 exactly (production `_norm_lemma`, `lexicon.lemma_plain` uniqueness for the
+  collision refusal). Used in `lexicon_profile`, `lexicon_verses`, `_all_books_verses`
+  for Greek numbers only, only when the production ABP predicate finds no words row.
+- When it bridges: the ABP branch (book counts, occurrence rows with `position`, total)
+  = `_pn_lemma_rows(header)` — the PN: page's own derivation, so the number's ABP tab and
+  the PN: page agree by construction (parity test extended). `has_abp` true; the silent
+  KJV fallback stops firing for these six. ABP renderings list stays empty (starred rows
+  have no English head to fold) — as on the PN: page.
+- **ONE new profile field: `abp_header` = the Greek header string**, present only when
+  bridged (absent = today's behaviour, so no other consumer changes). It drives the
+  frontend state line and nothing else.
+- Frontend (`80-lexicon.jsx`, both desktop and mobile card): tab enables via `has_abp`
+  as today; under the count, when `abp_header` is set and the ABP tab is on, one
+  `.detail-morph` line in the PN: lane's existing style — wording proposed to JP:
+  "ABP prints this name without a Strong's number — listing its 73 occurrences under
+  the header Γαλιλαία. KJV counts are KJV's own tagging." (pre-reg 3). No new chrome.
+- Locked test (fixture, fires on the positive first): bridged 73-shaped number routes ·
+  lemma-only residual refuses · collision pair refuses · MIXED number untouched ·
+  parity with `_pn_lemma_rows`. Added to BOTH CI lists.
