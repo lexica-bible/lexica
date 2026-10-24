@@ -149,3 +149,7 @@ Hebrew-side finding, filed separately.
 Hebrew feed into the ABP tab was never his intent; the hadad/abishai controls in this
 charter validated behaviour that should not exist. Scoped in
 `docs/tickets/CHARTER_hebrew_abp_reversal.md`; the routing lane closes on the two cards.
+**SUPERSEDED 10/24 (JP):** reversal WITHDRAWN. The Hebrew route is ratified under the
+each-reader-shows-its-own rule, and the hadad/abishai controls above are retroactively
+valid. Charter archived at `docs/tickets/archive/CHARTER_hebrew_abp_reversal.md`; branch
+deleted unmerged.

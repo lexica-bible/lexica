@@ -12,12 +12,13 @@ holds genuinely-open work and parked ideas only.
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
 served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
 146/73/63 line receipted (full close-out: HANDOFF_gateB_enumeration.md).
-- **NEW LANE (JP-ruled 9/6): NO ABP results for a Hebrew number — reversal of the unintended
-  Hebrew feed** (June TIPNR stopgap numbers on ABP name slots, preserved by July's S2-Q4 bar).
-  Charter + inventory command + surfaces list: `docs/tickets/CHARTER_hebrew_abp_reversal.md`.
-  Own deploy AFTER the routing lane closes. Hadad/abishai routing controls RETIRED.
+- **Hebrew route RATIFIED 10/24 (reversal withdrawn, branch deleted).** JP ruling: each reader
+  shows its own occurrences (ABP shows ABP, KJV shows KJV, Hebrew shows Hebrew), G or H key alike.
+  Hadad/abishai routing controls retroactively valid. Branch `hebrew-abp-reversal` deleted unmerged
+  (tip `73478a7a`); charter kept for the feed-origin trace at
+  `docs/tickets/archive/CHARTER_hebrew_abp_reversal.md`.
 - **ABP-TAB ROUTING SHIPPED 9/6** (6 numbers route; record `CHARTER_abp_tab_routing.md`;
-  follow-ups a–d under the closed word-study entry below). Deploy + served check = JP.
+  follow-ups a–g under the closed word-study entry below). Deploy + served check = JP.
 - Housekeeping DONE 9/6 16:22 (scratch copies deleted — a step before the nightly, bounded:
   the 15:39 copy is the swap rollback until a post-swap nightly lands; manual-backup hold until then).
 
@@ -149,6 +150,12 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   deploy (no Hebrew path touched). Hypothesis to test: numbered All-books rows light by matching
   the number on the fetched words, and retired rows (number moved to pn_hebrew_xref) no longer
   carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
+  **STAYS OPEN 10/24 as a highlighter defect** — the Hebrew route is ratified, so this needs a
+  fix, not retirement;
+  (g) **Unvetted-H census (filed 10/24).** H-numbers that reach ABP through a words row with NO
+  matching pn_hebrew_xref row at the same slot (same verse, position, number) = June-stopgap-only
+  feeds nobody vetted. Read-only count JP-run on PA. Count 0 → (g) closes. Count >0 → (g) becomes:
+  grey those until vetted, scoped before any code.
   Diagnosis history below kept for the record:
 - ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library

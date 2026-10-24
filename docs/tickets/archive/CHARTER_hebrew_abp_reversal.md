@@ -1,3 +1,5 @@
+WITHDRAWN 2026-10-24 (ruled 9/6, recorded today): Hebrew route ratified under the each-reader-shows-its-own rule. Kept for the feed-origin trace (79b657d4 / 78f44670 / 4dac41c7).
+
 # CHARTER — no ABP results for a Hebrew number (reversal, JP-ruled 2026-09-06)
 
 **Ruling (JP):** searching an H-number must show NO ABP results. The ABP tab greys for
