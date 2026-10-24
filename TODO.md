@@ -1366,9 +1366,10 @@ page + the crawlable SEO footer.
   "…© Charles Van der Pool, used with the author's knowledge. The author has stated his intention
   to place the ABP in the public domain. Its inclusion here is not an endorsement by him." — in
   CREDITS.md (95213e65) AND templates/seo/credits.html (30749ac0; the live page is the template,
-  NOT CREDITS.md — two copies, keep them in step). Served check = JP after deploy. The About
-  "built on…" sentence (70-search.jsx) was held un-polished for this wording — JP's call now
-  whether it needs anything.
+  NOT CREDITS.md — two copies, keep them in step). Served check PASSED 10/24 (live /credits shows
+  the three sentences, 17 entries, nothing else changed). About "built on…" sentence
+  (70-search.jsx:186): JP reviewed 10/24 — NO change (it names ABP and links /credits, which now
+  carries the attribution).
 - **OPTIONAL courtesy:** a thank-you note to OpenBible.info (geo place-coords) — CC BY doesn't require it.
 
 ---
