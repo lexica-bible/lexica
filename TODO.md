@@ -125,7 +125,23 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   owed before a correction script is built. Design checks owed by that script: 'none'-class
   slots carry the number in a THIRD place (words.strongs_base), and the binder reads the xref
   number as its guard — a dry run must show the binder's output unchanged or changed only as
-  expected. **CLASS COLUMN BUILT 10/24 (JP ruling).** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
+  expected.
+  **REVIEW LIST READ 10/24 (40 rows: class 6 + the 16 not KJV-backed; checked against the
+  pinned TIPNR):** (a) **7 rows KJV = stored → the stored number is RIGHT, leave alone** — TIPNR
+  numbers the same person differently from KJV: Daniel@Ezr.8.2 H1841 vs KJV H1840 (Ezr 8:2,
+  Neh 10:6) · Cushi@Zep.1.1 H3569 vs KJV H3570 (Zep 1:1 — swapping would UNDO the Cushi ruling:
+  Zep 1:1 is the genuine H3570 man) · Ezer@Neh.12.42 H5827 vs H5829 · Kerioth-hezron H7152 vs
+  "Hezron" H2696 · Havvoth-jair H2334 vs "Jair" H2971 · Ramoth vs "Gilead" H1568 (1Ki 22:3).
+  (b) 2 rows KJV gives a THIRD number, stored wrong: 1Ki 10:4 "of Sheba" stored H7652 (the 2Sa
+  20 rebel) → KJV H7614; Psa 87:4 "of Rahab" stored H7343 (the harlot) → KJV H7294 (Rahab =
+  Egypt). (c) 7 rows no KJV witness: Gen 35:5 Shechem, Num 26:19 Shelah (versification), 1Ki
+  22:4 / 22:20 / 2Ch 18:19 Gilead + 1Ch 5:23 Baal (compound class), 1Ch 2:3 Shua. (d) class 6
+  splits: **Esther 15** — ABP's Greek itself prints Αρταξέρξης (LXX) where KJV/Hebrew have
+  Ahasuerus; stored H783 matches what ABP prints, binding says Ahasuerus · **9 English-spelling
+  collisions**, KJV backs the binding on all 9 (Gen 38:2/12 Shuah H7744 → Shua H7770 · Gen 46:13
+  "Job" H347 → Jashub H3102 · Num 26:46 "Sarah" H8283 → Serah H8294 · 1Ch 4:11 Shuah → Shuhah
+  H7746 · 1Ch 8:22 Heber H2268 → Eber H5677 · 1Ch 8:37 Rapha H7497 → Raphah H7498 · 2Ch
+  35:8/9 Jeiel/Jehiel crossed, H3273 ↔ H3171). **CLASS COLUMN BUILT 10/24 (JP ruling).** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
   · 3 COMPOUND (printed one-slot / split) · 4 SAME-NAME-OTHER-REFERENT · 5 VARIANT-NUMBER · 6
   PRINTED-NAME-DIFFERS (compares ABP's English — TIPNR's production parse has no Greek) · 7
   OTHER (printed in full). Control must land in class 4 or VOID. By the rules, not by the
