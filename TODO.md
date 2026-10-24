@@ -138,6 +138,17 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   H1908 18 · H1130 25 · **H7927 64** (dry run 1's 61 + the 3 ruled Shechem rows) · H7586 404,
   Paul in Acts shows no H · G1056 still 73. Sequence: dry run 2 → one-off cp → apply on a
   COPY + binder dry-run diff → live apply → served check.
+  **STEP 3 (10/24, JP-run): copies OK (rollback `~/bible.db.pre-xref-fix-20261024`, test
+  `~/bible_xreffix_test.db`); apply on the test copy EXACT (341 changes, every count as
+  planned; re-check SWAP 0 · REMOVE 0 · LEAVE 29 · HOLD 1). BINDER DRY-RUN DIFF = STOP (live
+  untouched):** hand rulings 207 new / 0 agreeing / 154 replaced → 204 / 3 / 151 (the 3
+  Michaiah rows 2Ch 17:7, 2Ki 22:12, Neh 12:41 now bind natively the way the rulings say) ·
+  RENDER 14,430 → 14,433, fuzzy 248 → 251 · FLOOR 1,007 → 1,004 · floor reasons moved:
+  number-only 243 → 340, no-corroboration 653 → 553, number-only suspects 890 → 987. Floors
+  store no row and hand rulings still cover the same 207, so the final binding tables MAY be
+  unchanged, but the counts alone can't prove it. Next (proposed, held for JP): binder --apply
+  on a control copy (uncorrected) and on the test copy, then compare pn_binding +
+  pn_slot_binding row by row.
   **Known explanation, no lane (JP 10/24): the 841 "B" hidden-divergence rows** are Strong's
   having two numbers for one name (Levi H3878 / Levite H3881, Judah H3063 / Jew H3064,
   Hezekiah's two spellings …): the stored number is one of the entity's own on every row,
