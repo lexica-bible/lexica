@@ -150,14 +150,26 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   deploy (no Hebrew path touched). Hypothesis to test: numbered All-books rows light by matching
   the number on the fetched words, and retired rows (number moved to pn_hebrew_xref) no longer
   carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
-  **STAYS OPEN 10/24 as a highlighter defect** — the Hebrew route is ratified, so this needs a
-  fix, not retirement;
+  **FIX BUILT 10/24 — served check = JP after deploy.** Hypothesis CONFIRMED read-only first: of
+  H1908's 45 ABP words (41 verses) only 6 still carry the number on the word ('none' class); 39
+  are xref-only (stored '*'), and every lit/unlit verse on record matched that split. Fix: when
+  the Hebrew cross-ref part of `_abp_strongs_filter` is in use (`_h_xref_union_on`), both verse
+  lists (All books + one book) send `positions` = every slot that same filter matched in the
+  verse (JP-approved new field; Greek lists untouched); VerseRow lights them (both spots in
+  80-lexicon.jsx). Locked `tests/test_hebrew_xref_positions.py` (red on the unlit case first;
+  both CI lists). Served check: H1908 all 45 words lit across 41 verses (1Ki 11:21 both, 1Ki
+  11:14, Gen 25:15, 1Ki 20:33 both) · Abishai H52 count pinned first, then all lit · G1056
+  galilee unchanged at 73. Close this line on JP's served pass;
   (g) ~~Unvetted-H census~~ **CLOSED 10/24, count 0.** Checked whether any H-number reaches ABP
   through a words row with NO matching pn_hebrew_xref row at the same slot (same verse, position,
   number), i.e. a June-stopgap-only feed nobody vetted. JP-run on PA, read-only: all_h_rows 2,289 ·
   backed 2,289 · 'none'-class H rows 2,289 · unbacked numbers 0 / rows 0. Control: backed equals
   the 'none' count exactly, so the slot match works (a broken match would have reported all 2,289
   as unbacked, not 0). Every H-number feed is vetted; nothing to grey.
+  Own item (filed 10/24, NOT lane (f)): **the `PN:<form>` name-form lane sends one list entry per
+  hit**, so a verse where the name appears twice shows as two rows with the same key
+  (`_pn_lemma_rows` → `lexicon_verses` PN branch; the bridged All-books/one-book branches share
+  it). Fix shape when raised: one row per verse carrying all its slots, as lane (f) did.
   Diagnosis history below kept for the record:
 - ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library

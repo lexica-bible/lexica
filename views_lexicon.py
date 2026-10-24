@@ -346,9 +346,7 @@ def _abp_strongs_filter(conn, num, sid):
     # — the S2-Q4 unfindability bar. Same rowid-IN + peek shape as the G union
     # above (the G2 perf lesson); `none`-class rows are reachable both ways and
     # count once (rowid UNION dedupes). Pre-rebuild: table absent, no change.
-    if (sid.startswith("H") and "." not in num and _core.pn_xref_ready(conn)
-            and conn.execute("SELECT 1 FROM pn_hebrew_xref WHERE hebrew_base = ? LIMIT 1",
-                             (sid,)).fetchone()):
+    if _h_xref_union_on(conn, num, sid):
         inner = pred.replace("w.", "w1.")
         pred = (f"w.rowid IN (SELECT w1.rowid FROM words w1 WHERE {inner} "
                 f"UNION SELECT w2.rowid FROM pn_hebrew_xref x JOIN words w2 "
@@ -356,6 +354,16 @@ def _abp_strongs_filter(conn, num, sid):
                 f"WHERE x.hebrew_base = ?)")
         params = params + [sid]
     return pred, params
+
+
+def _h_xref_union_on(conn, num, sid):
+    """True when _abp_strongs_filter's Hebrew cross-ref arm is in use for this key.
+    The verse lists use the same answer to decide whether to send `positions`
+    (TODO follow-up (f)): the xref-only words store '*', so the row can only
+    light them by slot, never by number."""
+    return bool(sid.startswith("H") and "." not in num and _core.pn_xref_ready(conn)
+                and conn.execute("SELECT 1 FROM pn_hebrew_xref WHERE hebrew_base = ? LIMIT 1",
+                                 (sid,)).fetchone())
 
 
 def _pngi_ready(conn):
@@ -1761,15 +1769,24 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
 
     # ABP (default): the words table joined to verses.
     pred, pparams = _abp_strongs_filter(conn, num, sid)
+    # Hebrew key with the cross-ref arm in use: each verse also carries `positions`,
+    # every word slot this SAME filter matched there, so the row can light the
+    # xref-only words (stored '*', no number to match). Greek keys never get it.
+    with_pos = _h_xref_union_on(conn, num, sid)
     tcond = (f" AND ({_BOOK_RANK_SQL}) <= 39" if testament == "ot"
              else f" AND ({_BOOK_RANK_SQL}) >= 40" if testament == "nt" else "")
     if gloss:
         rows = conn.execute(f"""
-            SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse, w.english AS word
+            SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse, w.english AS word,
+                   w.position AS position
             FROM verses v JOIN words w ON w.verse_id = v.id
             WHERE {pred}{tcond}
             ORDER BY ({_BOOK_RANK_SQL}), v.chapter, v.verse, w.position
         """, pparams).fetchall()
+        hits = {}
+        if with_pos:
+            for r in rows:
+                hits.setdefault((r["book"], r["chapter"], r["verse"]), []).append(r["position"])
         seen, out = set(), []
         for r in rows:
             if _normalize_gloss(r["word"] or "", is_func=is_func) != gloss:
@@ -1778,9 +1795,30 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
             if key in seen:
                 continue
             seen.add(key)
-            out.append({"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]})
+            entry = {"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]}
+            if with_pos:
+                entry["positions"] = hits[key]
+            out.append(entry)
             if len(out) >= over:
                 break
+    elif with_pos:
+        rows = conn.execute(f"""
+            SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse,
+                   w.position AS position
+            FROM verses v JOIN words w ON w.verse_id = v.id
+            WHERE {pred}{tcond}
+            ORDER BY ({_BOOK_RANK_SQL}), v.chapter, v.verse, w.position
+        """, pparams).fetchall()
+        out, at = [], {}
+        for r in rows:
+            key = (r["book"], r["chapter"], r["verse"])
+            if key not in at:
+                if len(out) >= over:
+                    break
+                at[key] = {"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
+                           "positions": []}
+                out.append(at[key])
+            at[key]["positions"].append(r["position"])
     else:
         rows = conn.execute(f"""
             SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse
@@ -1953,7 +1991,7 @@ def lexicon_verses(strongs, book):
             word_rows = conn.execute(f"""
                 SELECT v.chapter, v.verse, v.text AS prose, w.english AS word,
                        COALESCE(NULLIF(w.english_head,''), w.english) AS head, w.italic,
-                       CASE WHEN {pred} THEN 1 ELSE 0 END AS hl
+                       CASE WHEN {pred} THEN 1 ELSE 0 END AS hl, w.position AS position
                 FROM verses v
                 JOIN words w ON w.verse_id = v.id
                 WHERE v.book = ? AND v.id IN (
@@ -1987,6 +2025,10 @@ def lexicon_verses(strongs, book):
         else:
             verses = {}
             head_norms = {}   # verse key -> set of normalized target HEADS (for the ?gloss filter)
+            # Same rule as the All-books list: a Hebrew key on the cross-ref arm sends
+            # each verse's matched slots so the row can light the xref-only words.
+            with_pos = _h_xref_union_on(conn, num, sid)
+            hit_pos = {}
             for r in word_rows:
                 key = (r["chapter"], r["verse"])
                 word = r["word"] or ""
@@ -1997,6 +2039,8 @@ def lexicon_verses(strongs, book):
                     verse_order.append(key)
                     head_norms[key] = set()
                 verses[key].append({"w": word, "h": hl, "i": r["italic"] or 0})   # chip shows full ABP english
+                if hl and with_pos:
+                    hit_pos.setdefault(key, []).append(r["position"])
                 if hl:
                     # Count + filter on the token's OWN head, never the phrase parked on the
                     # slot (parse_abp.HEAD_WORD_TAIL_CAVEAT).
@@ -2006,7 +2050,9 @@ def lexicon_verses(strongs, book):
                         head_norms[key].add(norm)
             if gloss:
                 verse_order = [k for k in verse_order if gloss in head_norms.get(k, ())]
-            result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k], "text": verse_prose.get(k)} for k in verse_order]
+            result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k], "text": verse_prose.get(k),
+                              **({"positions": hit_pos.get(k, [])} if with_pos else {})}
+                             for k in verse_order]
         result_glosses = sorted([{"gloss": g, "count": c} for g, c in gloss_counts.items()], key=lambda x: -x["count"])
         conn.close()
         return jsonify({"verses": result_verses, "glosses": result_glosses})
