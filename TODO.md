@@ -105,13 +105,14 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
   8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
   backfill above (that retires the genuine none→none people-class rows).
-- **Stored Hebrew number ≠ bound entity — LIVE APPLIED 2026-10-24 22:41 (341 changes, every
-  count = plan; reload 22:42, 5×200). Record: `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`.
-  `/rebuild-words` 8b step 0 (`--rebuild-step`) landed in the same commit.** Left: JP served
-  check (H1908 18 · H1130 25 · H7927 64 · H7586 404 + Paul in Acts no H · G1056 73) — close
-  this entry on it · Baal 1Ch 5:23 held (H1179 compound, confirm first) · delete scratch
-  copies `~/bible_xreffix_test.db` + `~/bible_xreffix_ctrl.db` · keep
-  `~/bible.db.pre-xref-fix-20261024` until a nightly postdates the apply. History below.
+- ~~Stored Hebrew number ≠ bound entity~~ **CLOSED 2026-10-24 — LIVE + SERVED.** Applied 22:41
+  (341 changes, every count = plan; reload 22:42, 5×200). Record:
+  `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`; `/rebuild-words` 8b step 0
+  (`--rebuild-step`) landed with it. **JP served check PASSED on the live ABP tab:** H1908 18 ·
+  H1130 25 · H7927 64 · H7928 3 · H7586 404 (Acts keeps one row, 13:21 = King Saul; the 22
+  Paul slots gone) · H2316 / H2301 1 / 1 · H5680 30 · G1056 73 unchanged. Leftovers, no lane:
+  Baal 1Ch 5:23 held (H1179 compound, confirm first) · scratch copies deleted 10/24 (JP) ·
+  keep `~/bible.db.pre-xref-fix-20261024` until a nightly postdates the apply. History below.
 - (history) **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS RUN 10/24:
   369 slots, CONTROL OK** (27,979 slots carry a stored H · 13,838 bound · 13,469 agree · 369
   mismatched · 58 stored numbers · 98 entities · KJV's number is one of the entity's on 322;
@@ -268,6 +269,12 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   deploy (no Hebrew path touched). Hypothesis to test: numbered All-books rows light by matching
   the number on the fetched words, and retired rows (number moved to pn_hebrew_xref) no longer
   carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
+  (h) **`/api/lexicon/books` has no bridge branch** (JP-spotted 10/24, predates tonight): for the
+  6 bridged names its ABP answer is empty. The page's book list comes from the profile (which
+  IS bridged), so nothing wrong shows; but clicking a rendering chip calls this endpoint to
+  narrow the books, gets nothing, and quietly shows the unnarrowed list. Fix shape: the same
+  `_bridge_if_grey` → `_pn_lemma_rows` door the verses endpoint uses. Low stakes — a bridged
+  name has essentially one rendering.
   **FIX BUILT 10/24 — served check = JP after deploy.** Hypothesis CONFIRMED read-only first: of
   H1908's 45 ABP words (41 verses) only 6 still carry the number on the word ('none' class); 39
   are xref-only (stored '*'), and every lit/unlit verse on record matched that split. Fix: when
