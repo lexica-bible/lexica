@@ -159,6 +159,7 @@ def run_pass(conn, since, apply, resolve=None, sleep=1.0, limit=None, log=print)
         d = w["delta"]
         log(f"  {r['id']:>6}  google {(r['published'] or '')[:10]:10}  page {(page or '-'):10}  "
             f"delta {('-' if d is None else d):>5}  [{how or '-'}] {action}")
+        log(f"          {link}")             # the page checked — so any row can be opened by hand
         if apply:
             sets = {k: v for k, v in w.items() if k != "delta"}
             conn.execute(f"UPDATE items SET {', '.join(k + ' = ?' for k in sets)} WHERE id = ?",
