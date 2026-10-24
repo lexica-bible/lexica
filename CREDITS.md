@@ -8,8 +8,7 @@ licenses require.
 ## Scripture texts
 
 - **Apostolic Bible Polyglot (ABP)** — the interlinear Greek Old and New Testament.
-  © Charles Van der Pool.
-  <!-- ABP permission wording: finalize after the licensing conversation. -->
+  The Apostolic Bible Polyglot © Charles Van der Pool, used with the author's knowledge. The author has stated his intention to place the ABP in the public domain. Its inclusion here is not an endorsement by him.
 - **King James Version (KJV)** — public domain.
 - **Berean Standard Bible (BSB)** — © Berean Bible (bereanbible.com), released into the
   public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
