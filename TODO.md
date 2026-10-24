@@ -126,8 +126,23 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   slots carry the number in a THIRD place (words.strongs_base), and the binder reads the xref
   number as its guard — a dry run must show the binder's output unchanged or changed only as
   expected.
-  **CORRECTION SCRIPT BUILT 10/24 (JP rulings), DRY RUN pending — nothing writes until JP
-  has read it:** `scripts/correct_xref_vs_binding.py` (shares the census's slot set, KJV
+  **DRY RUN 1 (JP-run 10/24): CONTROL OK, SWAP 303 · REMOVE 22 · LEAVE 22 · HOLD 22**, as
+  pre-registered. JP rulings on the 22 held (encoded as `HELD_RULINGS`, keyed verse + stored
+  number, never position): Hebrews ×7 H3066 → H5680 (5 OT + Luk 23:38, Php 3:5 by binding) ·
+  Shechem ×3 (Gen 35:5, Act 7:16 ×2) → H7927 · Gilead ×3 (1Ki 22:4/20, 2Ch 18:19) → H7433 ·
+  Shelah ×2 (Num 26:19 H7974, 1Ch 4:21 H8023) → H7956 · Shua 1Ch 2:3 H7774 → H7770 · Galilee
+  ×5 H1551 LEAVE (H1551 is the word Galilee) · Baal 1Ch 5:23 HOLD (Baal-hermon is H1179 —
+  confirm first). Mechanics APPROVED: removal keeps the row with an empty number · word write
+  on kept-Hebrew slots · `--rebuild-step` into /rebuild-words in the apply-receipt commit.
+  Dry run 2 expected: SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1. Served check after apply:
+  H1908 18 · H1130 25 · **H7927 64** (dry run 1's 61 + the 3 ruled Shechem rows) · H7586 404,
+  Paul in Acts shows no H · G1056 still 73. Sequence: dry run 2 → one-off cp → apply on a
+  COPY + binder dry-run diff → live apply → served check.
+  **Known explanation, no lane (JP 10/24): the 841 "B" hidden-divergence rows** are Strong's
+  having two numbers for one name (Levi H3878 / Levite H3881, Judah H3063 / Jew H3064,
+  Hezekiah's two spellings …): the stored number is one of the entity's own on every row,
+  KJV tagged the other. Not a defect — the reason an ABP and a KJV count can differ by a few.
+  **CORRECTION SCRIPT BUILT 10/24 (JP rulings):** `scripts/correct_xref_vs_binding.py` (shares the census's slot set, KJV
   resolution and classifier; rules GUARD → R1 remove no-Hebrew → R2 Esther leave → R3
   KJV-backed swap → R4 KJV third number → R5 class 7 hold → R6 variant leave → R7 hold;
   CONTROL = Gen 25:15 → H2316, 1Ch 1:30 → H2301, Zep 1:1 guard LEAVE; one transaction, every

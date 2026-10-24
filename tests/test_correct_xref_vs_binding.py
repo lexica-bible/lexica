@@ -69,10 +69,16 @@ _SLOTS = [
      "Hebrews@Gen.14.13-Heb", "Hebrew", "H5680", None),            # R5 hold
     (14, "1Ch", 26, 4, 5, "Jehohanan", "Jehohanan", "*", "H3110", "lemma-only",
      "Jehohanan@1Ch.26.3", None, None, None),                      # R6 leave
-    (15, "Gen", 35, 5, 4, "Shechem.", "Shechem", "*", "H7928", "lemma-only",
+    (15, "Gen", 12, 6, 4, "Shechem.", "Shechem", "*", "H7928", "lemma-only",
      "Shechem@Gen.12.6-Act", None, None, None),                    # R7 hold
     (16, "Num", 26, 46, 5, "Sarah.", "Sarah", "*", "H8283", "lemma-only",
      "Serah@Gen.46.17-1Ch", "Sarah", "H8294", "H9999"),            # SAFETY hold
+    (17, "Gen", 35, 5, 4, "Shechem.", "Shechem", "*", "H7928", "lemma-only",
+     "Shechem@Gen.12.6-Act", None, None, None),                    # R0 ruled swap
+    (18, "Mat", 4, 18, 8, "Galilee,", "Galilee", "*", "H1551", "lemma-only",
+     "Chinnereth@Num.34.11-Jhn", None, None, None),                # R0 ruled leave
+    (19, "1Ch", 5, 23, 13, "Baal", "Baal", "*", "H1168", "lemma-only",
+     "Hermon_Mount@Deu.3.8-Ezk", None, None, None),                # R0 ruled hold
 ]
 _ENTS = [
     ("Hadad@Gen.25.15-1Ch", "hadad", "H2301,H2316"), ("Hadad@1Ki.11.14-", "hadad", "H111,H1908"),
@@ -82,6 +88,9 @@ _ENTS = [
     ("Jashub@Gen.46.13-1Ch", "jashub", "H3102"),
     ("Egypt@Gen.12.10-Rev", "egypt", "G124,G125,H2526,H4693,H4713,H4714,H4805,H7293"),
     ("Hebrews@Gen.14.13-Heb", "hebrews", "G1445,H5680"), ("Serah@Gen.46.17-1Ch", "serah", "H8294"),
+    ("Chinnereth@Num.34.11-Jhn", "chinnereth", "G1056,G5085,H3672"),
+    ("Hermon_Mount@Deu.3.8-Ezk", "hermon",
+     "H1171,H1174,H1179,H2768,H2769,H7704,H7865,H8149,H8303"),
 ]
 
 # (book, ch, vs) -> (decision, new, rule prefix)
@@ -92,8 +101,10 @@ EXPECT = {
     ("Est", 1, 1): ("LEAVE", "", "R2"), ("Gen", 33, 18): ("SWAP", "H7927", "R3"),
     ("1Ch", 26, 3): ("SWAP", "H3076", "R3"), ("Gen", 46, 13): ("SWAP", "H3102", "R3"),
     ("Psa", 87, 4): ("SWAP", "H7294", "R4"), ("Gen", 14, 13): ("HOLD", "", "R5"),
-    ("1Ch", 26, 4): ("LEAVE", "", "R6"), ("Gen", 35, 5): ("HOLD", "", "R7"),
+    ("1Ch", 26, 4): ("LEAVE", "", "R6"), ("Gen", 12, 6): ("HOLD", "", "R7"),
     ("Num", 26, 46): ("HOLD", "", "SAFETY"),
+    ("Gen", 35, 5): ("SWAP", "H7927", "R0"), ("Mat", 4, 18): ("LEAVE", "", "R0"),
+    ("1Ch", 5, 23): ("HOLD", "", "R0"),
 }
 
 

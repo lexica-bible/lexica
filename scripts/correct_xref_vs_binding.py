@@ -11,7 +11,9 @@ apart. Every mismatched slot gets one decision; the first rule that fires wins:
 
   GUARD   KJV's number == the stored number  -> LEAVE, whatever TIPNR says
           (hard guard, before any other rule: Daniel H1840, Zep 1:1 Cushi H3570 …)
-  R1      class NO-HEBREW-ENTITY (NT slots judged by binding, like OT) -> REMOVE
+  R0      JP's per-row ruling on a row the first dry run held (HELD_RULINGS,
+          keyed by verse + stored number, never position)
+  R1     class NO-HEBREW-ENTITY (NT slots judged by binding, like OT) -> REMOVE
   R2      class PRINTED-NAME-DIFFERS and a ruled LEAVE pair -> LEAVE
           (Esther: ABP prints Αρταξέρξης; stored H783 says what ABP says)
   R3      KJV-backed (KJV's number is one of the bound entity's) and class
@@ -89,6 +91,40 @@ CHANGES = (SWAP, REMOVE)
 RULED_LEAVE = {("H783", "Ahasuerus@Ezr.4.6-Dan"):
                "ruled: ABP prints Artaxerxes (Αρταξέρξης) — stored H783 says what ABP says"}
 
+# R0 — JP's per-row rulings on the 22 rows the first dry run HELD (2026-10-24).
+# Keyed by (book, chapter, verse, stored number) — never by position, so a rebuild
+# that moves a slot keeps its ruling (the Cushi lesson); a verse with two such
+# slots (Act 7:16 Shechem) takes the ruling on both. The GUARD still runs first.
+_HEBREWS = "R0 JP ruling: 'Hebrew' carries H3066 (Jews' language) -> H5680, by the binding"
+_SHECHEM = "R0 JP ruling: Shechem bound to the town -> H7927, as the other 52"
+_GILEAD = "R0 JP ruling: Ramoth-gilead compound -> H7433, as the other 86"
+_SHELAH = "R0 JP ruling: Shelah bound to Judah's son -> H7956"
+_GALILEE = "R0 JP ruling: H1551 IS the word Galilee — leave; the sea binding is the binder's business"
+HELD_RULINGS = {
+    ("Gen", 39, 17, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Gen", 41, 12, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Exo", 2, 11, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Exo", 21, 2, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Jer", 34, 14, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Luk", 23, 38, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Php", 3, 5, "H3066"): (SWAP, "H5680", _HEBREWS),
+    ("Gen", 35, 5, "H7928"): (SWAP, "H7927", _SHECHEM),
+    ("Act", 7, 16, "H7928"): (SWAP, "H7927", _SHECHEM),
+    ("1Ki", 22, 4, "H1568"): (SWAP, "H7433", _GILEAD),
+    ("1Ki", 22, 20, "H1568"): (SWAP, "H7433", _GILEAD),
+    ("2Ch", 18, 19, "H1568"): (SWAP, "H7433", _GILEAD),
+    ("Num", 26, 19, "H7974"): (SWAP, "H7956", _SHELAH),
+    ("1Ch", 4, 21, "H8023"): (SWAP, "H7956", _SHELAH),
+    ("1Ch", 2, 3, "H7774"): (SWAP, "H7770", "R0 JP ruling: Shua -> H7770, as the other Shua rows"),
+    ("Mat", 4, 18, "H1551"): (LEAVE, None, _GALILEE),
+    ("Mat", 15, 29, "H1551"): (LEAVE, None, _GALILEE),
+    ("Mar", 1, 16, "H1551"): (LEAVE, None, _GALILEE),
+    ("Mar", 7, 31, "H1551"): (LEAVE, None, _GALILEE),
+    ("Joh", 6, 1, "H1551"): (LEAVE, None, _GALILEE),
+    ("1Ch", 5, 23, "H1168"): (HOLD, None, "R0 JP ruling: HOLD — Mount Baal-hermon is H1179; "
+                              "confirm the compound before it moves"),
+}
+
 # (book, chapter, verse, stored, expected decision, expected new number or None)
 CONTROLS = (
     ("Gen", 25, 15, "H1908", SWAP, "H2316"),
@@ -109,6 +145,9 @@ def decide(r, rclass):
     kjv, stored = r["kjv_h"], r["stored_h"]
     if kjv and kjv == stored:
         return LEAVE, None, "GUARD: KJV's number = stored number — never changed"
+    ruled = HELD_RULINGS.get((r["book"], r["chapter"], r["verse"], stored))
+    if ruled:
+        return ruled
     if rclass == audit.NOHEB:
         return REMOVE, None, "R1 no-Hebrew entity: remove the Hebrew number"
     if rclass == audit.PRINTED and (stored, r["entity"]) in RULED_LEAVE:
