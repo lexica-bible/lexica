@@ -117,8 +117,15 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   15) · variant spelling number (Jehohanan H3076 on Johanan 14). A blanket "set the entity's
   number" would write wrong or meaningless numbers on several classes — classify every row
   before choosing the mechanism. Full list: PA `~/audit_xref_vs_binding.tsv`.
-  **CLASS COLUMN BUILT 10/24 (JP ruling), re-run pending — no fix until the per-class counts
-  are on the table.** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
+  **CLASSED RUN 10/24 (JP-run, control OK in class 4, 369 of 369 classed once):** 1 NT-SLOT
+  31 (KJV-backed 0 — KJV's NT has no H) · 2 NO-HEBREW 0 · 3 COMPOUND 94, ALL split, KJV-backed
+  86 · 4 SAME-NAME 197, KJV-backed 190 · 5 VARIANT 17, KJV-backed 16 · 6 PRINTED-NAME-DIFFERS
+  24, KJV-backed 24 · 7 OTHER 6, KJV-backed 6 (five "Hebrew" slots stored H3066, which no TIPNR
+  entity owns, KJV H5680; 1Ch 4:21 "of Shelah" stored H8023, KJV H7956). Rulings per class
+  owed before a correction script is built. Design checks owed by that script: 'none'-class
+  slots carry the number in a THIRD place (words.strongs_base), and the binder reads the xref
+  number as its guard — a dry run must show the binder's output unchanged or changed only as
+  expected. **CLASS COLUMN BUILT 10/24 (JP ruling).** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
   · 3 COMPOUND (printed one-slot / split) · 4 SAME-NAME-OTHER-REFERENT · 5 VARIANT-NUMBER · 6
   PRINTED-NAME-DIFFERS (compares ABP's English — TIPNR's production parse has no Greek) · 7
   OTHER (printed in full). Control must land in class 4 or VOID. By the rules, not by the
