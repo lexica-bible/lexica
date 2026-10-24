@@ -8,6 +8,12 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
+## NEXT SESSION (JP 10/24): start with the app-HTML diff
+JP-reported, not from this repo's work: the ABP helps were bought and confirmed parseable, and
+the ABP app's HTML confirmed structured. Details live outside this session — get them from JP.
+Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
+'none'-label cleanup (rides the next identity rebuild).
+
 ## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
 served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
@@ -103,7 +109,8 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   Not traced: what (if anything) a reader sees from it; after lane (f) all such rows light
   either way. Catch-up = re-run the retirement on a copy; its declared split will no longer
   match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
-  8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
+  8/1). Live data write → full checkpoint lane, own cycle. **JP 10/24: rides the next identity
+  rebuild, no lane before then.** Don't fold with the gentilic
   backfill above (that retires the genuine none→none people-class rows).
 - ~~Stored Hebrew number ≠ bound entity~~ **CLOSED 2026-10-24 — LIVE + SERVED.** Applied 22:41
   (341 changes, every count = plan; reload 22:42, 5×200). Record:
@@ -274,7 +281,9 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   IS bridged), so nothing wrong shows; but clicking a rendering chip calls this endpoint to
   narrow the books, gets nothing, and quietly shows the unnarrowed list. Fix shape: the same
   `_bridge_if_grey` → `_pn_lemma_rows` door the verses endpoint uses. Low stakes — a bridged
-  name has essentially one rendering.
+  name has essentially one rendering. **JP-checked 10/24:** `books/G1056?corpus=kjv` IS populated
+  (John 17, Matthew 16, Luke 15 …); only ABP and the no-corpus default come back empty — (h)
+  stands as filed, nothing extra.
   **FIX BUILT 10/24 — served check = JP after deploy.** Hypothesis CONFIRMED read-only first: of
   H1908's 45 ABP words (41 verses) only 6 still carry the number on the word ('none' class); 39
   are xref-only (stored '*'), and every lit/unlit verse on record matched that split. Fix: when
@@ -285,7 +294,8 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   both CI lists). Served check: H1908 all 45 words lit across 41 verses (1Ki 11:21 both, 1Ki
   11:14, Gen 25:15, 1Ki 20:33 both) · Abishai H52 PINNED 10/24: 26 words in 25 verses (2
   numbered on the word, 24 xref-only), all lit · G1056 galilee unchanged at 73. DEPLOYED 10/24
-  (a0bbdf62, sweep 5×200). Close this line on JP's served pass;
+  (a0bbdf62, sweep 5×200). **SERVED PASS (JP-reported 10/24): Hadad 45 of 45 lit** — checked
+  before the xref correction moved H1908 to 18; Abishai not reported in that summary. CLOSED;
   (g) ~~Unvetted-H census~~ **CLOSED 10/24, count 0.** Checked whether any H-number reaches ABP
   through a words row with NO matching pn_hebrew_xref row at the same slot (same verse, position,
   number), i.e. a June-stopgap-only feed nobody vetted. JP-run on PA, read-only: all_h_rows 2,289 ·
