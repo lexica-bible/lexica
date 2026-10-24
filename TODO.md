@@ -92,6 +92,22 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   kept-Hebrew ('none'-class) rows in pn_hebrew_xref (C3-Q1 condition b). Adjacent to pile U.
   Related but distinct: the 2,358 PN printed-Greek residue (TICKET_pn_lemma_residue.md,
   stamped 2026-07-28 — scrape-based recovery CLOSED by ruling; needs a new source).
+- **Frozen 'none' class gone stale after the 8/23 form lane (found 2026-10-24, JP-run
+  read-only).** pn_hebrew_xref's class was set by `retire_hebrew_identity.py` (last run 8/6,
+  copying `pn_greek_identity.source`); identity was rebuilt after the form lane refilled
+  printed forms, the retirement was not. Frozen 'none' vs identity now: none→none **1,956**
+  words / 279 numbers · none→lemma-only **458** / 100 · none→surface **40** / 7. Total 2,454 =
+  the 8/6 declared 'none' count exactly (control). So **498 words** sit in a state the rule
+  no longer gives them: words still carry the H-number, xref still says 'none'. Example:
+  H1908 Hadad 1Ki 11:18/19/21@22/25, 1Ch 1:47/51 (identity lemma-only, forms Αδάρ/Αδάδ).
+  Not traced: what (if anything) a reader sees from it; after lane (f) all such rows light
+  either way. Catch-up = re-run the retirement on a copy; its declared split will no longer
+  match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
+  8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
+  backfill above (that retires the genuine none→none people-class rows).
+- **Gen 25:15 Χολδάδ under H1908 — to check, not verified.** ABP prints Χολδάδ ("Hadar", a son
+  of Ishmael), but it's listed under H1908 with the Edomite Hadad (lemma-only, via the June
+  TIPNR feed). Check which number KJV gives that verse before calling it a wrong match.
 - **Binder Greek-key bases extension — PARKED BY RULING** (would fire novel binds; own gates
   when raised). Record: PLAN_r2_stage3.md charter amendment.
 - **Lexica-minted PN numbers — DEFERRED by ruling** (TICKET_lexica_pn_numbers.md): revisit
@@ -158,8 +174,9 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   verse (JP-approved new field; Greek lists untouched); VerseRow lights them (both spots in
   80-lexicon.jsx). Locked `tests/test_hebrew_xref_positions.py` (red on the unlit case first;
   both CI lists). Served check: H1908 all 45 words lit across 41 verses (1Ki 11:21 both, 1Ki
-  11:14, Gen 25:15, 1Ki 20:33 both) · Abishai H52 count pinned first, then all lit · G1056
-  galilee unchanged at 73. Close this line on JP's served pass;
+  11:14, Gen 25:15, 1Ki 20:33 both) · Abishai H52 PINNED 10/24: 26 words in 25 verses (2
+  numbered on the word, 24 xref-only), all lit · G1056 galilee unchanged at 73. DEPLOYED 10/24
+  (a0bbdf62, sweep 5×200). Close this line on JP's served pass;
   (g) ~~Unvetted-H census~~ **CLOSED 10/24, count 0.** Checked whether any H-number reaches ABP
   through a words row with NO matching pn_hebrew_xref row at the same slot (same verse, position,
   number), i.e. a June-stopgap-only feed nobody vetted. JP-run on PA, read-only: all_h_rows 2,289 ·
