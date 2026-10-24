@@ -152,10 +152,12 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
   **STAYS OPEN 10/24 as a highlighter defect** — the Hebrew route is ratified, so this needs a
   fix, not retirement;
-  (g) **Unvetted-H census (filed 10/24).** H-numbers that reach ABP through a words row with NO
-  matching pn_hebrew_xref row at the same slot (same verse, position, number) = June-stopgap-only
-  feeds nobody vetted. Read-only count JP-run on PA. Count 0 → (g) closes. Count >0 → (g) becomes:
-  grey those until vetted, scoped before any code.
+  (g) ~~Unvetted-H census~~ **CLOSED 10/24, count 0.** Checked whether any H-number reaches ABP
+  through a words row with NO matching pn_hebrew_xref row at the same slot (same verse, position,
+  number), i.e. a June-stopgap-only feed nobody vetted. JP-run on PA, read-only: all_h_rows 2,289 ·
+  backed 2,289 · 'none'-class H rows 2,289 · unbacked numbers 0 / rows 0. Control: backed equals
+  the 'none' count exactly, so the slot match works (a broken match would have reported all 2,289
+  as unbacked, not 0). Every H-number feed is vetted; nothing to grey.
   Diagnosis history below kept for the record:
 - ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
   NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
