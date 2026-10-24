@@ -9,9 +9,11 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## NEXT SESSION (JP 10/24): start with the app-HTML diff
-JP-reported, not from this repo's work: the ABP helps were bought and confirmed parseable, and
-the ABP app's HTML confirmed structured. Details live outside this session — get them from JP.
-Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
+Opener: `docs/handoffs/HANDOFF_abp_source_material.md` — the purchased helps (Analytical
+Lexicon / Lexical Concordance / English-Greek Index; files on JP's machine, not in the repo),
+the symbol-font map, the app's HTML layout, and JP's pre-registered order (a) app-HTML diff →
+(b) lexicon table → (c) concordance counts (answers MIXED 47) → (d) index. No writes until
+(a) is in hand. Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
 'none'-label cleanup (rides the next identity rebuild).
 
 ## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
