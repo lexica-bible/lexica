@@ -185,11 +185,12 @@ def _alias_linked(a_names, b_names):
     return False
 
 
-def classify(r, tip):
-    """Exactly one class per row (module doc). Sets r['class'], r['printed_as'],
-    r['stored_heads']."""
+def classify(r, tip, nt_first=True):
+    """Exactly one class per row (module doc). Sets r['printed_as'],
+    r['stored_heads']. nt_first=False skips class 1 so a NT slot is judged by its
+    binding like any OT slot (correct_xref_vs_binding.py, JP ruling 10/24)."""
     r["printed_as"], r["stored_heads"] = "", ""
-    if r["_bk"] is not None and r["_bk"] >= 40:
+    if nt_first and r["_bk"] is not None and r["_bk"] >= 40:
         return NT
     if not any(b.startswith("H") for b in r["_bases"]):
         return NOHEB
@@ -224,8 +225,17 @@ def classify(r, tip):
     return OTHER
 
 
-def find_mismatches(conn):
+def find_mismatches(conn, words_only=False):
     """Return (mismatch rows, stats). Read-only."""
+    bound, stats = collect_bound(conn, words_only=words_only)
+    return [r for r in bound if not r["_agree"]], stats
+
+
+def collect_bound(conn, words_only=False):
+    """Every BOUND slot with a stored Hebrew number (agreeing ones too, flagged
+    r['_agree']), KJV attached. Read-only. words_only=True reads the stored
+    number from words.strongs_base alone (the rebuild-copy shape, where the xref
+    copy is stale) — used by correct_xref_vs_binding.py --rebuild-step."""
     have = _tables(conn)
     binds, dup_keys = {}, 0
     for b in conn.execute("SELECT book, chapter, verse, name, entity_uniq "
@@ -243,22 +253,25 @@ def find_mismatches(conn):
     form_sql = ("LEFT JOIN abp_surface s ON s.verse_id = w.verse_id "
                 "AND s.position = w.position" if "abp_surface" in have else "")
     form_col = "s.form" if "abp_surface" in have else "NULL"
+    xh_col = "NULL" if words_only else "x.hebrew_base"
+    where = ("w.strongs_base LIKE 'H%'" if words_only
+             else "x.hebrew_base IS NOT NULL OR w.strongs_base LIKE 'H%'")
     slots = conn.execute(f"""
         SELECT v.book, v.chapter, v.verse, w.position, w.english,
                COALESCE(NULLIF(w.english_head,''), w.english) AS label,
-               x.hebrew_base AS xh, w.strongs_base AS sb, {frozen_col} AS fh,
-               {form_col} AS gf
+               {xh_col} AS xh, w.strongs_base AS sb, {frozen_col} AS fh,
+               {form_col} AS gf, w.verse_id AS vid
         FROM words w JOIN verses v ON v.id = w.verse_id
         LEFT JOIN pn_hebrew_xref x ON x.verse_id = w.verse_id AND x.position = w.position
         {frozen_sql}
         {form_sql}
-        WHERE x.hebrew_base IS NOT NULL OR w.strongs_base LIKE 'H%'
+        WHERE {where}
         ORDER BY w.verse_id, w.position
     """).fetchall()
 
     stats = Counter(slots_with_h=len(slots), dup_bind_keys=dup_keys)
     out = []
-    for book, ch, vs, pos, eng, label, xh, sb, fh, gf in slots:
+    for book, ch, vs, pos, eng, label, xh, sb, fh, gf, vid in slots:
         stored = er.norm_base(xh) if xh else (er.norm_base(sb) if (sb or "").startswith("H") else "")
         if not stored:
             continue
@@ -273,19 +286,19 @@ def find_mismatches(conn):
             stats["entity_missing"] += 1
             continue
         raw_bases, bases = ents[uniq]
-        if stored in bases:
-            stats["agree"] += 1
-            continue
+        agree = stored in bases
+        stats["agree" if agree else "mismatch"] += 1
         out.append({"book": book, "chapter": ch, "verse": vs, "position": pos,
                     "english": eng, "stored_h": stored, "entity": uniq,
                     "entity_bases": raw_bases, "frozen_h": fh or "",
                     "slot_name": _slot_name(label), "greek_form": gf or "",
                     "class": "", "printed_as": "", "stored_heads": "",
-                    "_bk": bk, "_nm": nm, "_bases": bases})
+                    "_bk": bk, "_nm": nm, "_bases": bases, "_agree": agree,
+                    "_vid": vid, "_xh": er.norm_base(xh) if xh else "",
+                    "_sb": sb or "", "_fh": fh})
     _attach_kjv(conn, have, out)
     for r in out:
         r["kjv_backed"] = "yes" if r["kjv_h"] and r["kjv_h"] in r["_bases"] else "no"
-    stats["mismatch"] = len(out)
     return out, stats
 
 

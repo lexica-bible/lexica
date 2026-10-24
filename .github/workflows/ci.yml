@@ -69,6 +69,7 @@ jobs:
           python tests/test_abp_tab_bridge.py
           python tests/test_hebrew_xref_positions.py
           python tests/test_audit_xref_vs_binding.py
+          python tests/test_correct_xref_vs_binding.py
 
   frontend:
     runs-on: ubuntu-latest

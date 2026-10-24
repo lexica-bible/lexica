@@ -126,6 +126,22 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   slots carry the number in a THIRD place (words.strongs_base), and the binder reads the xref
   number as its guard — a dry run must show the binder's output unchanged or changed only as
   expected.
+  **CORRECTION SCRIPT BUILT 10/24 (JP rulings), DRY RUN pending — nothing writes until JP
+  has read it:** `scripts/correct_xref_vs_binding.py` (shares the census's slot set, KJV
+  resolution and classifier; rules GUARD → R1 remove no-Hebrew → R2 Esther leave → R3
+  KJV-backed swap → R4 KJV third number → R5 class 7 hold → R6 variant leave → R7 hold;
+  CONTROL = Gen 25:15 → H2316, 1Ch 1:30 → H2301, Zep 1:1 guard LEAVE; one transaction, every
+  update count checked; hidden-divergence list; `--rebuild-step` words-only mode). Locked
+  `tests/test_correct_xref_vs_binding.py`, both CI lists. **Open before --apply:** (1) REMOVE
+  keeps the xref row with an empty number instead of deleting it (a rebuild re-creates the
+  row anyway; a deleted 'tipnr' row would hand the binder its Greek number) — JP to confirm;
+  (2) kept-Hebrew slots get the WORD changed too (third copy) — the dry run counts them; (3)
+  class 7 OTHER (6) was not ruled — held; (4) "Hadad 45→43" will NOT hold under the compound
+  ruling: the son-of-Hadad slots bound to Ben-hadad move to H1130 too — the dry run prints
+  the real figure; (5) binder check owed: apply on a COPY, re-run build_entity_binding dry
+  run, compare; (6) the `/rebuild-words` step (`--rebuild-step` before restore_frozen_pn)
+  lands WITH the live apply, never before (a rebuild in between would have restore put the
+  old numbers back and halt); (7) copy bible.db before --apply.
   **REVIEW LIST READ 10/24 (40 rows: class 6 + the 16 not KJV-backed; checked against the
   pinned TIPNR):** (a) **7 rows KJV = stored → the stored number is RIGHT, leave alone** — TIPNR
   numbers the same person differently from KJV: Daniel@Ezr.8.2 H1841 vs KJV H1840 (Ezr 8:2,
