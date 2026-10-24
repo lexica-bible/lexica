@@ -1358,15 +1358,17 @@ admin flips the role). Memory `project_payments_donations`. Open:
 
 ---
 
-## Licensing / attributions (page LIVE 2026-07-03; ABP wording the only open item)
+## Licensing / attributions (page LIVE 2026-07-03; ABP wording DONE 2026-10-24)
 Full record — source→license map, the BY-SA share-alike bucket, the bdb-is-Strong's-Hebrew lesson:
 memory `project_licensing_attributions`. `/credits` + CREDITS.md are LIVE, linked from the App About
 page + the crawlable SEO footer.
-- **OPEN — ABP wording:** credits.html credits ABP to © Charles Van der Pool with NO permission claim
-  (an HTML-comment placeholder marks the spot). Fill in the real permission/attribution line after the
-  Van der Pool conversation — and keep the About "built on…" sentence un-polished until then, since his
-  required wording may need to fold into/near it. ABP permission = the one real licensing exposure in the
-  shipped app, a separate paid/permission question (not an attribution one).
+- ~~ABP wording~~ **DONE 2026-10-24 (JP's exact wording, per the author's 2026-07-03 email):**
+  "…© Charles Van der Pool, used with the author's knowledge. The author has stated his intention
+  to place the ABP in the public domain. Its inclusion here is not an endorsement by him." — in
+  CREDITS.md (95213e65) AND templates/seo/credits.html (30749ac0; the live page is the template,
+  NOT CREDITS.md — two copies, keep them in step). Served check = JP after deploy. The About
+  "built on…" sentence (70-search.jsx) was held un-polished for this wording — JP's call now
+  whether it needs anything.
 - **OPTIONAL courtesy:** a thank-you note to OpenBible.info (geo place-coords) — CC BY doesn't require it.
 
 ---
