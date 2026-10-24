@@ -71,6 +71,7 @@ jobs:
           python tests/test_audit_xref_vs_binding.py
           python tests/test_correct_xref_vs_binding.py
           python tests/test_page_date.py
+          python tests/test_rank_score.py
 
   frontend:
     runs-on: ubuntu-latest

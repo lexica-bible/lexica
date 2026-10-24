@@ -527,6 +527,10 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False, has_dates=False
            " FROM items i WHERE i.score IS NOT NULL "
            "ORDER BY i.score DESC, i.published DESC")
     rows = conn.execute(sel).fetchall()
+    # Per-outlet normalization, DOWNWARD ONLY, for the Inbox ORDER (scripts/news/rank.py): one
+    # GROUP BY per cache build, then each member carries `rs`. Raw `score` / `s` untouched.
+    from scripts.news.rank import outlet_stats, rank_score
+    ostats = outlet_stats(conn)
     cards = []
     for c in _group(rows, has_event):
         card = _serialize(c)                 # 'status' here is the 'new' placeholder
@@ -537,6 +541,10 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False, has_dates=False
         # or a Google News search. Stored at ingest (the query column) — pure provenance,
         # shown in the why-rail; no scoring involved.
         card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
+                            # rs = rank_score = min(score, score re-read against its OWN
+                            # outlet's 90-day curve) — rank.py. Never above s. Default-Inbox
+                            # sort key only.
+                            "rs": rank_score(a["score"] or 0, ostats.get(a["source"] or "")),
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
                             # ad = this date is an estimate (unverified Google date, or a
@@ -557,6 +565,8 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False, has_dates=False
                             "why": a["ai_why"] or "", "src": a["source"] or "?",
                             "via": ("RSS" if (a["query"] or "").startswith("rss:") else "Google News")}
                            for a in c["arts"]]
+        # the card's rank mirrors its score: the best member (score = peak member score)
+        card["rank_score"] = max((m["rs"] for m in card["members"]), default=card["score"])
         cards.append(card)
     _ALL_CACHE["sig"] = sig
     _ALL_CACHE["cards"] = cards

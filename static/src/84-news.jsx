@@ -91,6 +91,9 @@ function _windowCard(c, since, until, minScore, thread, labels) {
   };
   const face = mem.reduce((b, m) => _faceBetter(m, b) ? m : b, mem[0]);
   const score = mem.reduce((mx, m) => Math.max(mx, m.s), 0);
+  // rank_score over the same in-window members (server `rs` = min(score, per-outlet normalized),
+  // rank.py); a member without one (older server) falls back to its raw score. Sort key only.
+  const rank_score = mem.reduce((mx, m) => Math.max(mx, m.rs != null ? m.rs : m.s), 0);
   const dates = mem.map(m => (m.d || "").slice(0, 10)).filter(Boolean).sort();
   const seen = new Set(), sources = [];
   for (const m of mem.slice().sort((a, b) => (b.d || "").localeCompare(a.d || ""))) {
@@ -104,7 +107,7 @@ function _windowCard(c, since, until, minScore, thread, labels) {
     title: face.title, url: face.url, resolved_url: face.resolved || "", why: face.why, summary: face.summary || "",
     thread: face.t, thread_label: labels[face.t] || face.t || "?",
     face_pw: !!face.pw,                                 // the CURRENTLY selected face's paywall flag
-    score, peak_date: _peakDay(mem),
+    score, rank_score, peak_date: _peakDay(mem),
     published: dates.length ? dates[dates.length - 1] : (c.published || ""),
     count: mem.length, sources: sources.slice(0, 12),
   };
@@ -628,6 +631,14 @@ function NewsView({ isMobile }) {
       const isInbox = c.status !== "keep" && c.status !== "dismiss";
       return want === "new" ? isInbox : c.status === want;
     });
+    // The untouched default view: Inbox, default sort, no thread, the opening date window. Only
+    // here do the two outlet layers run — any thread / window change / other sort or tab keeps
+    // the plain raw-score order exactly as before.
+    const isDefault = view === "inbox" && order === "score" && !thread
+                      && windowKey === NEWS_DEFAULT_WINDOW;
+    // Layer 2: in the default view the sort reads rank_score (min(score, per-outlet normalized),
+    // rank.py), falling back to raw score. The card still SHOWS raw score; this is order only.
+    const key = isDefault ? (c => (c.rank_score != null ? c.rank_score : c.score)) : (c => c.score);
     if (order === "date")
       // Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
       list.sort((a, b) => (b.peak_date + "").localeCompare(a.peak_date + "") || b.score - a.score);
@@ -636,13 +647,10 @@ function NewsView({ isMobile }) {
     else
       // Default: recency-weighted score (the dock keys off the peak day). Newest published
       // is the tie-break so equal effective scores still favor the fresher card.
-      list.sort((a, b) => (b.score - _stale(b.peak_date)) - (a.score - _stale(a.peak_date))
+      list.sort((a, b) => (key(b) - _stale(b.peak_date)) - (key(a) - _stale(a.peak_date))
                        || (b.published + "").localeCompare(a.published + ""));
-    // Outlet cap — the untouched default view only (Inbox, default sort, no thread, the opening
-    // date window). Any thread / window change / other sort or tab leaves the list as sorted.
-    // Reorders the top band only: every card is still in the list (bulk actions read this).
-    const isDefault = view === "inbox" && order === "score" && !thread
-                      && windowKey === NEWS_DEFAULT_WINDOW;
+    // Layer 1: outlet cap on the top band, run AFTER the layer-2 order. Reorders the band only —
+    // every card is still in the list (the bulk actions read this one).
     return isDefault ? applyOutletCap(list, NEWS_BAND, NEWS_OUTLET_CAP) : list;
   }, [windowed, view, order, thread, windowKey]);
   // The visible feed — a display cap only, never the scope of any action.

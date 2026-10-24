@@ -2829,8 +2829,10 @@ const all=c.members||[];return{...c,face_pw:all.length>0&&all.every(m=>!!m.pw)};
 const _faceBetter=(m,b)=>{if(!!m.pw!==!!b.pw)return!m.pw;// free beats paywalled
 if(m.s!==b.s)return m.s>b.s;// then strongest
 return(m.d||"")>(b.d||"");// then newer
-};const face=mem.reduce((b,m)=>_faceBetter(m,b)?m:b,mem[0]);const score=mem.reduce((mx,m)=>Math.max(mx,m.s),0);const dates=mem.map(m=>(m.d||"").slice(0,10)).filter(Boolean).sort();const seen=new Set(),sources=[];for(const m of mem.slice().sort((a,b)=>(b.d||"").localeCompare(a.d||""))){const s=m.src||"?";if(seen.has(s))continue;seen.add(s);sources.push({source:s,url:m.url,published:(m.d||"").slice(0,10)});}return{...c,title:face.title,url:face.url,resolved_url:face.resolved||"",why:face.why,summary:face.summary||"",thread:face.t,thread_label:labels[face.t]||face.t||"?",face_pw:!!face.pw,// the CURRENTLY selected face's paywall flag
-score,peak_date:_peakDay(mem),published:dates.length?dates[dates.length-1]:c.published||"",count:mem.length,sources:sources.slice(0,12)};}// Recency dock, ported from the server's _staleness_penalty (GRACE=2, RATE=0.1, CAP=2.0),
+};const face=mem.reduce((b,m)=>_faceBetter(m,b)?m:b,mem[0]);const score=mem.reduce((mx,m)=>Math.max(mx,m.s),0);// rank_score over the same in-window members (server `rs` = min(score, per-outlet normalized),
+// rank.py); a member without one (older server) falls back to its raw score. Sort key only.
+const rank_score=mem.reduce((mx,m)=>Math.max(mx,m.rs!=null?m.rs:m.s),0);const dates=mem.map(m=>(m.d||"").slice(0,10)).filter(Boolean).sort();const seen=new Set(),sources=[];for(const m of mem.slice().sort((a,b)=>(b.d||"").localeCompare(a.d||""))){const s=m.src||"?";if(seen.has(s))continue;seen.add(s);sources.push({source:s,url:m.url,published:(m.d||"").slice(0,10)});}return{...c,title:face.title,url:face.url,resolved_url:face.resolved||"",why:face.why,summary:face.summary||"",thread:face.t,thread_label:labels[face.t]||face.t||"?",face_pw:!!face.pw,// the CURRENTLY selected face's paywall flag
+score,rank_score,peak_date:_peakDay(mem),published:dates.length?dates[dates.length-1]:c.published||"",count:mem.length,sources:sources.slice(0,12)};}// Recency dock, ported from the server's _staleness_penalty (GRACE=2, RATE=0.1, CAP=2.0),
 // keyed off the cluster's PEAK day so a stale event with a fresh straggler can't dodge it.
 function _stale(peak){const d=(peak||"").slice(0,10);if(!d)return 0;const pd=Date.parse(d+"T00:00:00Z");if(isNaN(pd))return 0;const t=new Date();const today=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate());const age=Math.round((today-pd)/86400000);return Math.min(2.0,Math.max(0,(age-2)*0.1));}function _scoreTier(score){return score>=8?"hi":score>=6?"mid":"lo";}// The ONE 🔒 marker for a hard-paywalled article (a dead-end link for a reader). Driven
 // PURELY by the server `pw` flag — the frontend never checks a domain. A missing/false flag
@@ -2967,13 +2969,17 @@ if(c.status==="keep")o.kept++;else if(c.status==="dismiss")o.dismissed++;else o.
 const collapse=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];let articles=0,cards=0;for(const c of windowed){const isInbox=c.status!=="keep"&&c.status!=="dismiss";if(!(want==="new"?isInbox:c.status===want))continue;cards++;for(const m of c.members||[]){if(!_inWindow(m.d,since,until))continue;if(minScore&&m.s<minScore)continue;articles++;}}return{articles,cards};},[windowed,view,since,until,minScore]);// The active tab's FULL filter-matched list, sorted. `stories` (the render list) is a
 // display slice of it; the bulk actions read the UNSLICED list, so "Keep All" means every
 // card the current filters match — including any past the 300-card render cap.
-const viewListAll=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];const list=windowed.filter(c=>{const isInbox=c.status!=="keep"&&c.status!=="dismiss";return want==="new"?isInbox:c.status===want;});if(order==="date")// Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
+const viewListAll=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];const list=windowed.filter(c=>{const isInbox=c.status!=="keep"&&c.status!=="dismiss";return want==="new"?isInbox:c.status===want;});// The untouched default view: Inbox, default sort, no thread, the opening date window. Only
+// here do the two outlet layers run — any thread / window change / other sort or tab keeps
+// the plain raw-score order exactly as before.
+const isDefault=view==="inbox"&&order==="score"&&!thread&&windowKey===NEWS_DEFAULT_WINDOW;// Layer 2: in the default view the sort reads rank_score (min(score, per-outlet normalized),
+// rank.py), falling back to raw score. The card still SHOWS raw score; this is order only.
+const key=isDefault?c=>c.rank_score!=null?c.rank_score:c.score:c=>c.score;if(order==="date")// Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
 list.sort((a,b)=>(b.peak_date+"").localeCompare(a.peak_date+"")||b.score-a.score);else if(order==="oldest")list.sort((a,b)=>(a.peak_date+"").localeCompare(b.peak_date+"")||b.score-a.score);else// Default: recency-weighted score (the dock keys off the peak day). Newest published
 // is the tie-break so equal effective scores still favor the fresher card.
-list.sort((a,b)=>b.score-_stale(b.peak_date)-(a.score-_stale(a.peak_date))||(b.published+"").localeCompare(a.published+""));// Outlet cap — the untouched default view only (Inbox, default sort, no thread, the opening
-// date window). Any thread / window change / other sort or tab leaves the list as sorted.
-// Reorders the top band only: every card is still in the list (bulk actions read this).
-const isDefault=view==="inbox"&&order==="score"&&!thread&&windowKey===NEWS_DEFAULT_WINDOW;return isDefault?applyOutletCap(list,NEWS_BAND,NEWS_OUTLET_CAP):list;},[windowed,view,order,thread,windowKey]);// The visible feed — a display cap only, never the scope of any action.
+list.sort((a,b)=>key(b)-_stale(b.peak_date)-(key(a)-_stale(a.peak_date))||(b.published+"").localeCompare(a.published+""));// Layer 1: outlet cap on the top band, run AFTER the layer-2 order. Reorders the band only —
+// every card is still in the list (the bulk actions read this one).
+return isDefault?applyOutletCap(list,NEWS_BAND,NEWS_OUTLET_CAP):list;},[windowed,view,order,thread,windowKey]);// The visible feed — a display cap only, never the scope of any action.
 const stories=useMemo(()=>viewListAll.slice(0,300),[viewListAll]);// Feed-shape readout (right zone) — also derived. Honors the date window only (ignores
 // the score floor + thread, by design: the BURIED count is the whole point). Counts
 // ARTICLES by each member's OWN date in the window (not the card's peak day) — so the
