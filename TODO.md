@@ -105,9 +105,18 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
   8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
   backfill above (that retires the genuine none→none people-class rows).
-- **Gen 25:15 Χολδάδ under H1908 — to check, not verified.** ABP prints Χολδάδ ("Hadar", a son
-  of Ishmael), but it's listed under H1908 with the Edomite Hadad (lemma-only, via the June
-  TIPNR feed). Check which number KJV gives that verse before calling it a wrong match.
+- **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS BUILT, run
+  pending.** Step 1 (JP-run, read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
+  occurs nowhere else; pn_binding has the RIGHT man (Hadad@Gen.25.15-1Ch, bases H2301,H2316),
+  but the stored number (xref + pn_greek_identity.hebrew_base) is H1908. 1Ch 1:30 is the same
+  man, same fault (stored H1908, KJV H2301). H2316: 0 ABP words / 0 xref rows / 1 KJV word.
+  `abp_corrections` can't carry the fix (writes words cells only; these slots read '*'), and
+  restore_frozen_pn would put H1908 back on a rebuild — only the Cushi pattern
+  (apply_cushi_namekeyed.py) survives. Census: `scripts/audit_xref_vs_binding.py` (read-only,
+  binder's own helpers, CONTROL = both known slots or exit 2/VOID; locked
+  `tests/test_audit_xref_vs_binding.py`, both CI lists). JP ruling on mechanism waits on the
+  count: 2 → defer to the next words rebuild as a Cushi-style step; more → reviewed two-copy
+  correction script, dry-run first. Expected after a fix: H1908 ABP 45 → 43 (both slots move).
 - **Binder Greek-key bases extension — PARKED BY RULING** (would fire novel binds; own gates
   when raised). Record: PLAN_r2_stage3.md charter amendment.
 - **Lexica-minted PN numbers — DEFERRED by ruling** (TICKET_lexica_pn_numbers.md): revisit
