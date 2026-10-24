@@ -583,8 +583,9 @@ app.py matches.
   their GREEK identity in `strongs_base` — a real G-number, a STEP-extended G9xxx (main lexicon
   lacks these; lemma via `step_lexicon`, `base` is a NUMBER key), or `'*'` when no scheme
   numbers the name (14,850 lemma-only + always-'*' rows). `strongs` stays bare `'*'` on
-  backfills. EXCEPTION (C3-Q1, machine-visible): 3,380 'none'-class rows KEEP their Hebrew
-  number until the gentilic/people-class Greek backfill candidate lands.
+  backfills. EXCEPTION (C3-Q1, machine-visible): the 'none'-class rows KEEP their Hebrew
+  number on the word until the gentilic/people-class Greek backfill candidate lands (2,454
+  'none' rows at the 8/6 re-declaration; 2,289 carry an H, census 10/24).
 - **`pn_hebrew_xref` — the Hebrew cross-ref home (Q2, one fact one home):** one row per PN word
   `(verse_id, position, hebrew_base, class)`; `hebrew_base` NULL (never '') for the 4,603
   rows that never had one; `class` ∈ abp-tag|tipnr|lemma-only|none, `'none'` IS the queryable
@@ -599,6 +600,17 @@ app.py matches.
   identity builder re-sources `hebrew_base`/classes from it, never from the rewritten column).
   Full record + receipt chain: docs/PLAN_r2_c3_rebuild.md; memory
   `project_entity_resolution_rebuild`.
+- **Correcting a stored Hebrew number (2026-10-24):** the number lives in up to THREE places
+  — `pn_hebrew_xref.hebrew_base`, its frozen copy `pn_greek_identity.hebrew_base` (the oracle
+  restore_frozen_pn and the --fresh-rebuild gate read), and `words.strongs_base` on
+  kept-Hebrew ('none') slots. Change them together, only through
+  `scripts/correct_xref_vs_binding.py` (dry run → verdict → --apply; one batch, every count
+  checked). `abp_corrections` CANNOT carry these (it writes words cells only; retired slots
+  read '*'), and a hand edit of one copy makes the next rebuild halt or revert. Removing a
+  number = empty `hebrew_base`, row KEPT (a missing 'tipnr' row hands the binder its Greek
+  number). Hard guard: KJV's number = stored → never changed, whatever TIPNR says. Rebuild
+  durability = /rebuild-words 8b step 0. Census: `scripts/audit_xref_vs_binding.py`. Record:
+  docs/tickets/RECORD_xref_vs_binding_fix_20261024.md.
 - CRITICAL: the lexicon join `l.strongs_g = w.strongs_base` structurally prevents a Hebrew
   H-number matching a Greek row (the old SUBSTR+LIKE guard let H121 slip → bogus G121 lemma
   broke Hebrew-PN metaV). Applies to BOTH chapter_text and verse_words.

@@ -6,6 +6,145 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-24 — Hebrew-number lanes: reversal WITHDRAWN · (f) highlighter · (g) census · 341 stored-H corrections LIVE
+
+Moved from TODO.md at the 10/24 wrap. Durable rules went to docs/claude/data-model.md
+("Correcting a stored Hebrew number") and word-study.md (positions field; each-reader rule);
+memory `project_xref_binding_fix`; record docs/tickets/RECORD_xref_vs_binding_fix_20261024.md.
+
+### Stored Hebrew number vs bound entity (the R-2 residue entry, verbatim)
+- ~~Stored Hebrew number ≠ bound entity~~ **CLOSED 2026-10-24 — LIVE + SERVED.** Applied 22:41
+  (341 changes, every count = plan; reload 22:42, 5×200). Record:
+  `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`; `/rebuild-words` 8b step 0
+  (`--rebuild-step`) landed with it. **JP served check PASSED on the live ABP tab:** H1908 18 ·
+  H1130 25 · H7927 64 · H7928 3 · H7586 404 (Acts keeps one row, 13:21 = King Saul; the 22
+  Paul slots gone) · H2316 / H2301 1 / 1 · H5680 30 · G1056 73 unchanged. Leftovers, no lane:
+  Baal 1Ch 5:23 held (H1179 compound, confirm first) · scratch copies deleted 10/24 (JP) ·
+  keep `~/bible.db.pre-xref-fix-20261024` until a nightly postdates the apply. History below.
+- (history) **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS RUN 10/24:
+  369 slots, CONTROL OK** (27,979 slots carry a stored H · 13,838 bound · 13,469 agree · 369
+  mismatched · 58 stored numbers · 98 entities · KJV's number is one of the entity's on 322;
+  14,141 slots have NO render=1 binding, so the census cannot see faults there). NOT one
+  defect class — TIPNR.txt read for the top 20: wrong man/place, same name (Gen 25:15 hadad;
+  Sheba H7652 2Sa-20 rebel on the queen's Sheba; Shechem H7928 the man on the town, 52) ·
+  compound-name component (Obed H5744 on Obed-edom 20, Gilead H1568 on Ramoth 19, Hadad
+  H1908 on Ben-hadad 18, Abel-beth-maacah, Baal-zebub) · entity with no Hebrew number (King
+  Saul's H7586 on NT Paul, 22) · ABP prints a different king (Artaxerxes H783 on Ahasuerus
+  15) · variant spelling number (Jehohanan H3076 on Johanan 14). A blanket "set the entity's
+  number" would write wrong or meaningless numbers on several classes — classify every row
+  before choosing the mechanism. Full list: PA `~/audit_xref_vs_binding.tsv`.
+  **CLASSED RUN 10/24 (JP-run, control OK in class 4, 369 of 369 classed once):** 1 NT-SLOT
+  31 (KJV-backed 0 — KJV's NT has no H) · 2 NO-HEBREW 0 · 3 COMPOUND 94, ALL split, KJV-backed
+  86 · 4 SAME-NAME 197, KJV-backed 190 · 5 VARIANT 17, KJV-backed 16 · 6 PRINTED-NAME-DIFFERS
+  24, KJV-backed 24 · 7 OTHER 6, KJV-backed 6 (five "Hebrew" slots stored H3066, which no TIPNR
+  entity owns, KJV H5680; 1Ch 4:21 "of Shelah" stored H8023, KJV H7956). Rulings per class
+  owed before a correction script is built. Design checks owed by that script: 'none'-class
+  slots carry the number in a THIRD place (words.strongs_base), and the binder reads the xref
+  number as its guard — a dry run must show the binder's output unchanged or changed only as
+  expected.
+  **DRY RUN 1 (JP-run 10/24): CONTROL OK, SWAP 303 · REMOVE 22 · LEAVE 22 · HOLD 22**, as
+  pre-registered. JP rulings on the 22 held (encoded as `HELD_RULINGS`, keyed verse + stored
+  number, never position): Hebrews ×7 H3066 → H5680 (5 OT + Luk 23:38, Php 3:5 by binding) ·
+  Shechem ×3 (Gen 35:5, Act 7:16 ×2) → H7927 · Gilead ×3 (1Ki 22:4/20, 2Ch 18:19) → H7433 ·
+  Shelah ×2 (Num 26:19 H7974, 1Ch 4:21 H8023) → H7956 · Shua 1Ch 2:3 H7774 → H7770 · Galilee
+  ×5 H1551 LEAVE (H1551 is the word Galilee) · Baal 1Ch 5:23 HOLD (Baal-hermon is H1179 —
+  confirm first). Mechanics APPROVED: removal keeps the row with an empty number · word write
+  on kept-Hebrew slots · `--rebuild-step` into /rebuild-words in the apply-receipt commit.
+  Dry run 2 expected: SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1. Served check after apply:
+  H1908 18 · H1130 25 · **H7927 64** (dry run 1's 61 + the 3 ruled Shechem rows) · H7586 404,
+  Paul in Acts shows no H · G1056 still 73. Sequence: dry run 2 → one-off cp → apply on a
+  COPY + binder dry-run diff → live apply → served check.
+  **STEP 3 (10/24, JP-run): copies OK (rollback `~/bible.db.pre-xref-fix-20261024`, test
+  `~/bible_xreffix_test.db`); apply on the test copy EXACT (341 changes, every count as
+  planned; re-check SWAP 0 · REMOVE 0 · LEAVE 29 · HOLD 1). BINDER DRY-RUN DIFF = STOP (live
+  untouched):** hand rulings 207 new / 0 agreeing / 154 replaced → 204 / 3 / 151 (the 3
+  Michaiah rows 2Ch 17:7, 2Ki 22:12, Neh 12:41 now bind natively the way the rulings say) ·
+  RENDER 14,430 → 14,433, fuzzy 248 → 251 · FLOOR 1,007 → 1,004 · floor reasons moved:
+  number-only 243 → 340, no-corroboration 653 → 553, number-only suspects 890 → 987. Floors
+  store no row and hand rulings still cover the same 207, so the final binding tables MAY be
+  unchanged, but the counts alone can't prove it. Next (proposed, held for JP): binder --apply
+  on a control copy (uncorrected) and on the test copy, then compare pn_binding +
+  pn_slot_binding row by row.
+  **Known explanation, no lane (JP 10/24): the 841 "B" hidden-divergence rows** are Strong's
+  having two numbers for one name (Levi H3878 / Levite H3881, Judah H3063 / Jew H3064,
+  Hezekiah's two spellings …): the stored number is one of the entity's own on every row,
+  KJV tagged the other. Not a defect — the reason an ABP and a KJV count can differ by a few.
+  **CORRECTION SCRIPT BUILT 10/24 (JP rulings):** `scripts/correct_xref_vs_binding.py` (shares the census's slot set, KJV
+  resolution and classifier; rules GUARD → R1 remove no-Hebrew → R2 Esther leave → R3
+  KJV-backed swap → R4 KJV third number → R5 class 7 hold → R6 variant leave → R7 hold;
+  CONTROL = Gen 25:15 → H2316, 1Ch 1:30 → H2301, Zep 1:1 guard LEAVE; one transaction, every
+  update count checked; hidden-divergence list; `--rebuild-step` words-only mode). Locked
+  `tests/test_correct_xref_vs_binding.py`, both CI lists. **Open before --apply:** (1) REMOVE
+  keeps the xref row with an empty number instead of deleting it (a rebuild re-creates the
+  row anyway; a deleted 'tipnr' row would hand the binder its Greek number) — JP to confirm;
+  (2) kept-Hebrew slots get the WORD changed too (third copy) — the dry run counts them; (3)
+  class 7 OTHER (6) was not ruled — held; (4) "Hadad 45→43" will NOT hold under the compound
+  ruling: the son-of-Hadad slots bound to Ben-hadad move to H1130 too — the dry run prints
+  the real figure; (5) binder check owed: apply on a COPY, re-run build_entity_binding dry
+  run, compare; (6) the `/rebuild-words` step (`--rebuild-step` before restore_frozen_pn)
+  lands WITH the live apply, never before (a rebuild in between would have restore put the
+  old numbers back and halt); (7) copy bible.db before --apply.
+  **REVIEW LIST READ 10/24 (40 rows: class 6 + the 16 not KJV-backed; checked against the
+  pinned TIPNR):** (a) **7 rows KJV = stored → the stored number is RIGHT, leave alone** — TIPNR
+  numbers the same person differently from KJV: Daniel@Ezr.8.2 H1841 vs KJV H1840 (Ezr 8:2,
+  Neh 10:6) · Cushi@Zep.1.1 H3569 vs KJV H3570 (Zep 1:1 — swapping would UNDO the Cushi ruling:
+  Zep 1:1 is the genuine H3570 man) · Ezer@Neh.12.42 H5827 vs H5829 · Kerioth-hezron H7152 vs
+  "Hezron" H2696 · Havvoth-jair H2334 vs "Jair" H2971 · Ramoth vs "Gilead" H1568 (1Ki 22:3).
+  (b) 2 rows KJV gives a THIRD number, stored wrong: 1Ki 10:4 "of Sheba" stored H7652 (the 2Sa
+  20 rebel) → KJV H7614; Psa 87:4 "of Rahab" stored H7343 (the harlot) → KJV H7294 (Rahab =
+  Egypt). (c) 7 rows no KJV witness: Gen 35:5 Shechem, Num 26:19 Shelah (versification), 1Ki
+  22:4 / 22:20 / 2Ch 18:19 Gilead + 1Ch 5:23 Baal (compound class), 1Ch 2:3 Shua. (d) class 6
+  splits: **Esther 15** — ABP's Greek itself prints Αρταξέρξης (LXX) where KJV/Hebrew have
+  Ahasuerus; stored H783 matches what ABP prints, binding says Ahasuerus · **9 English-spelling
+  collisions**, KJV backs the binding on all 9 (Gen 38:2/12 Shuah H7744 → Shua H7770 · Gen 46:13
+  "Job" H347 → Jashub H3102 · Num 26:46 "Sarah" H8283 → Serah H8294 · 1Ch 4:11 Shuah → Shuhah
+  H7746 · 1Ch 8:22 Heber H2268 → Eber H5677 · 1Ch 8:37 Rapha H7497 → Raphah H7498 · 2Ch
+  35:8/9 Jeiel/Jehiel crossed, H3273 ↔ H3171). **CLASS COLUMN BUILT 10/24 (JP ruling).** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
+  · 3 COMPOUND (printed one-slot / split) · 4 SAME-NAME-OTHER-REFERENT · 5 VARIANT-NUMBER · 6
+  PRINTED-NAME-DIFFERS (compares ABP's English — TIPNR's production parse has no Greek) · 7
+  OTHER (printed in full). Control must land in class 4 or VOID. By the rules, not by the
+  examples: Johanan carrying H3076 lands in 4 (TIPNR has a Johanan-headed H3076 entity), and
+  Hur carrying H1133 lands in 4 (an H1133 entity is headed "hur"). Classed list: PA
+  `~/audit_xref_vs_binding_classed.tsv`.
+  **Known blind spot (JP-filed 10/24, no lane):** the census only checks slots with a
+  render=1 binding — 14,141 slots with a stored Hebrew number have none and are not checked.
+  Step 1 (JP-run, read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
+  occurs nowhere else; pn_binding has the RIGHT man (Hadad@Gen.25.15-1Ch, bases H2301,H2316),
+  but the stored number (xref + pn_greek_identity.hebrew_base) is H1908. 1Ch 1:30 is the same
+  man, same fault (stored H1908, KJV H2301). H2316: 0 ABP words / 0 xref rows / 1 KJV word.
+  `abp_corrections` can't carry the fix (writes words cells only; these slots read '*'), and
+  restore_frozen_pn would put H1908 back on a rebuild — only the Cushi pattern
+  (apply_cushi_namekeyed.py) survives. Census: `scripts/audit_xref_vs_binding.py` (read-only,
+  binder's own helpers, CONTROL = both known slots or exit 2/VOID; locked
+  `tests/test_audit_xref_vs_binding.py`, both CI lists). JP ruling on mechanism waits on the
+  count: 2 → defer to the next words rebuild as a Cushi-style step; more → reviewed two-copy
+  correction script, dry-run first. Expected after a fix: H1908 ABP 45 → 43 (both slots move).
+
+### Routing follow-ups (f) and (g) (verbatim; (h) stays open in TODO)
+  (f) **H1908 hadad page lights only some verse rows** (1Ki 11:18/19/21 lit; Gen 25:15, 36:35,
+  36:36, 1Ki 11:14, 11:17 not) while the Αδάρ name-form page lights all 12 — predates the routing
+  deploy (no Hebrew path touched). Hypothesis to test: numbered All-books rows light by matching
+  the number on the fetched words, and retired rows (number moved to pn_hebrew_xref) no longer
+  carry it — the list finds them, the row can't light them. Fix = carry `position` for those rows.
+  **FIX BUILT 10/24 — served check = JP after deploy.** Hypothesis CONFIRMED read-only first: of
+  H1908's 45 ABP words (41 verses) only 6 still carry the number on the word ('none' class); 39
+  are xref-only (stored '*'), and every lit/unlit verse on record matched that split. Fix: when
+  the Hebrew cross-ref part of `_abp_strongs_filter` is in use (`_h_xref_union_on`), both verse
+  lists (All books + one book) send `positions` = every slot that same filter matched in the
+  verse (JP-approved new field; Greek lists untouched); VerseRow lights them (both spots in
+  80-lexicon.jsx). Locked `tests/test_hebrew_xref_positions.py` (red on the unlit case first;
+  both CI lists). Served check: H1908 all 45 words lit across 41 verses (1Ki 11:21 both, 1Ki
+  11:14, Gen 25:15, 1Ki 20:33 both) · Abishai H52 PINNED 10/24: 26 words in 25 verses (2
+  numbered on the word, 24 xref-only), all lit · G1056 galilee unchanged at 73. DEPLOYED 10/24
+  (a0bbdf62, sweep 5×200). **SERVED PASS (JP-reported 10/24): Hadad 45 of 45 lit** — checked
+  before the xref correction moved H1908 to 18; Abishai not reported in that summary. CLOSED;
+  (g) ~~Unvetted-H census~~ **CLOSED 10/24, count 0.** Checked whether any H-number reaches ABP
+  through a words row with NO matching pn_hebrew_xref row at the same slot (same verse, position,
+  number), i.e. a June-stopgap-only feed nobody vetted. JP-run on PA, read-only: all_h_rows 2,289 ·
+  backed 2,289 · 'none'-class H rows 2,289 · unbacked numbers 0 / rows 0. Control: backed equals
+  the 'none' count exactly, so the slot match works (a broken match would have reported all 2,289
+  as unbacked, not 0). Every H-number feed is vetted; nothing to grey.
+
 ## 2026-08-23 — Glued name headers / form-table lane (the 8/8-ride regression): form lane LANDED, header lane held at its own gate
 The 8/9-opened LIVE REGRESSION entry closes. Full records: `docs/tickets/TICKET_glued_name_headers.md`,
 `docs/tickets/CHARTER_form_table_rebuild.md` (the whole verified ride), memory `project_greek_header_fold`.
