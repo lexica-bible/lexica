@@ -154,6 +154,17 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
    import_tipnr (still on the test copy, before the gates), IN THIS ORDER:
+   0. **`~/.virtualenvs/bible-env/bin/python scripts/correct_xref_vs_binding.py <db> --rebuild-step`
+      (dry-run, read it, then `--rebuild-step --apply`)** — landed with the 2026-10-24 live
+      correction (record `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`). import_tipnr
+      re-writes the June stopgap numbers (Gen 25:15 back to H1908 etc.); this re-applies the
+      ruled correction to the WORD only, keyed by verse + name through the binding (never by
+      position — the Cushi lesson), so step 1 finds no drift on these slots. Expect CONTROL OK
+      and the same decisions as the 10/24 live plan (SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1)
+      unless the binding or the slot set moved — a different split is read member by member,
+      never forced. Skipping it: step 1's restore count balloons by ~341 and HALTS. At step 3
+      the binder relabels the 3 Michaiah binds (2Ch 17:7, 2Ki 22:12, Neh 12:41) `ruled` →
+      `fuzzy`, same entity — expected (row-level check, 10/24).
    1. `scripts/restore_frozen_pn.py <db>` (dry-run then --apply) — puts import_tipnr's drift back
       to the frozen record. Declared restore count **6** (the 2Sa 18 Cushi class, H3570→H3569 —
       RE-DECLARED at the 8/1 ride from the full-population dry-run on a real fresh build; the

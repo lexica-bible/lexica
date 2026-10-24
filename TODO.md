@@ -105,7 +105,14 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
   8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
   backfill above (that retires the genuine none→none people-class rows).
-- **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS RUN 10/24:
+- **Stored Hebrew number ≠ bound entity — LIVE APPLIED 2026-10-24 22:41 (341 changes, every
+  count = plan; reload 22:42, 5×200). Record: `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`.
+  `/rebuild-words` 8b step 0 (`--rebuild-step`) landed in the same commit.** Left: JP served
+  check (H1908 18 · H1130 25 · H7927 64 · H7586 404 + Paul in Acts no H · G1056 73) — close
+  this entry on it · Baal 1Ch 5:23 held (H1179 compound, confirm first) · delete scratch
+  copies `~/bible_xreffix_test.db` + `~/bible_xreffix_ctrl.db` · keep
+  `~/bible.db.pre-xref-fix-20261024` until a nightly postdates the apply. History below.
+- (history) **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS RUN 10/24:
   369 slots, CONTROL OK** (27,979 slots carry a stored H · 13,838 bound · 13,469 agree · 369
   mismatched · 58 stored numbers · 98 entities · KJV's number is one of the entity's on 322;
   14,141 slots have NO render=1 binding, so the census cannot see faults there). NOT one
