@@ -105,8 +105,19 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   match, so it halts and needs a re-declaration (precedent: RECLASS_catchup_declaration.md,
   8/1). Live data write → full checkpoint lane, own cycle. Don't fold with the gentilic
   backfill above (that retires the genuine none→none people-class rows).
-- **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS BUILT, run
-  pending.** Step 1 (JP-run, read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
+- **Stored Hebrew number ≠ bound entity (found 2026-10-24 at Gen 25:15) — CENSUS RUN 10/24:
+  369 slots, CONTROL OK** (27,979 slots carry a stored H · 13,838 bound · 13,469 agree · 369
+  mismatched · 58 stored numbers · 98 entities · KJV's number is one of the entity's on 322;
+  14,141 slots have NO render=1 binding, so the census cannot see faults there). NOT one
+  defect class — TIPNR.txt read for the top 20: wrong man/place, same name (Gen 25:15 hadad;
+  Sheba H7652 2Sa-20 rebel on the queen's Sheba; Shechem H7928 the man on the town, 52) ·
+  compound-name component (Obed H5744 on Obed-edom 20, Gilead H1568 on Ramoth 19, Hadad
+  H1908 on Ben-hadad 18, Abel-beth-maacah, Baal-zebub) · entity with no Hebrew number (King
+  Saul's H7586 on NT Paul, 22) · ABP prints a different king (Artaxerxes H783 on Ahasuerus
+  15) · variant spelling number (Jehohanan H3076 on Johanan 14). A blanket "set the entity's
+  number" would write wrong or meaningless numbers on several classes — classify every row
+  before choosing the mechanism. Full list: PA `~/audit_xref_vs_binding.tsv`. Step 1 (JP-run,
+  read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
   occurs nowhere else; pn_binding has the RIGHT man (Hadad@Gen.25.15-1Ch, bases H2301,H2316),
   but the stored number (xref + pn_greek_identity.hebrew_base) is H1908. 1Ch 1:30 is the same
   man, same fault (stored H1908, KJV H2301). H2316: 0 ABP words / 0 xref rows / 1 KJV word.
