@@ -486,25 +486,42 @@ def _staleness_penalty(published):
 _ALL_CACHE = {"sig": None, "cards": None}
 
 
-def _corpus_sig(conn):
-    r = conn.execute("SELECT COUNT(*) n, COALESCE(MAX(id), 0) mx "
-                     "FROM items WHERE score IS NOT NULL").fetchone()
-    return (r["n"], r["mx"])
+def _corpus_sig(conn, has_dates=False):
+    # The page-date check (scripts/news/date_pass.py) re-dates rows IN PLACE, which row count +
+    # newest id can't see. Each checked row moves published_src google->page or date_flag 0->1,
+    # so those two tallies grow with every re-date and bust the cache with it.
+    extra = (", COALESCE(SUM(published_src = 'page'), 0) np, COALESCE(SUM(date_flag), 0) nf"
+             if has_dates else "")
+    r = conn.execute("SELECT COUNT(*) n, COALESCE(MAX(id), 0) mx" + extra +
+                     " FROM items WHERE score IS NOT NULL").fetchone()
+    return (r["n"], r["mx"], r["np"], r["nf"]) if has_dates else (r["n"], r["mx"])
 
 
-def _all_cards(conn, has_event, has_newflag, has_resolved=False):
+def _approx_date(a, has_dates):
+    """True when this article's date must show as an estimate ("~", the same treatment as the
+    no-date fallback): a Google date the page check couldn't confirm (src 'google' + flag 1),
+    or a page date known only to the month (published_page 'YYYY-MM' — the day shown is the
+    1st, not a real day). Display only; windowing/peak/sort still use the date as stored."""
+    if not has_dates:
+        return False
+    src, flag, pp = a["published_src"], a["date_flag"], a["published_page"] or ""
+    return (src == "google" and flag == 1) or (src == "page" and len(pp) == 7)
+
+
+def _all_cards(conn, has_event, has_newflag, has_resolved=False, has_dates=False):
     """Every story card, clustered once, status-independent (cached per corpus sig). Each
     card carries a `members` list (per-article score/thread/new-flag + DATE and the article's
     own face fields) so the browser can recompute the whole card over its IN-WINDOW members
     when a date window is active — face, score, date and sources all from the in-window subset,
     so an old burst day can't bury a card that has fresh strong coverage. (See _windowCard in
     84-news.jsx.) Also feeds the feed-shape readout. No extra server call."""
-    sig = _corpus_sig(conn)
+    sig = _corpus_sig(conn, has_dates)
     if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
         return _ALL_CACHE["cards"]
     sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.first_seen, i.score, "
            "i.summary, i.ai_thread, i.ai_why, i.query, 'new' AS status"
            + (", i.resolved_url" if has_resolved else "")
+           + (", i.published_src, i.date_flag, i.published_page" if has_dates else "")
            + (", i.event" if has_event else "")
            + (", i.ai_new_flag" if has_newflag else "") +
            " FROM items i WHERE i.score IS NOT NULL "
@@ -522,6 +539,9 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False):
         card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
+                            # ad = this date is an estimate (unverified Google date, or a
+                            # month-only page date) — rendered "~d"; see _approx_date.
+                            "ad": _approx_date(a, has_dates),
                             # fs = the day WE first pulled it — the display's LAST-resort
                             # estimated date (rendered "~fs") when the article has no real
                             # publish date. Never used for windowing/peak/sort: an undated
@@ -559,7 +579,9 @@ def all_news():
     try:
         _ensure_reviews(conn)
         cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
-        cards = _all_cards(conn, "event" in cols, "ai_new_flag" in cols, "resolved_url" in cols)
+        has_dates = all(c in cols for c in ("published_src", "date_flag", "published_page"))
+        cards = _all_cards(conn, "event" in cols, "ai_new_flag" in cols, "resolved_url" in cols,
+                           has_dates)
         smap = {r["item_id"]: r["status"] for r in
                 conn.execute("SELECT item_id, status FROM reviews WHERE reviewer = ?", (rid,))}
         out = []

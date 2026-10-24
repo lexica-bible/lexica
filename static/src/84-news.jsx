@@ -7,6 +7,15 @@
 // (the feed-shape readout — "why the watch is pointed here today", FeedShape). Mobile
 // (<1100px) collapses to the original single stacked column with the why shown inline.
 // ============================================================
+
+// Outlet cap on the default Inbox top band (applyOutletCap, 83-news-logic.jsx): in the first
+// NEWS_BAND cards, at most NEWS_OUTLET_CAP share one headline outlet. Ruled 2026-10-24; no UI.
+const NEWS_BAND = 20;
+const NEWS_OUTLET_CAP = 2;
+// The window preset NewsView opens on (windowKey's initial value). The cap runs only on the
+// untouched default view, so "date window set" = anything other than this preset.
+const NEWS_DEFAULT_WINDOW = "21";
+
 function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
@@ -165,12 +174,9 @@ function cleanDescription(title, summary) {
 // draws from _shortlistFace, so changing the format logic changes it in one place.
 // ============================================================
 
-// The FACE article's own outlet, matched in members by url — NOT sources[0] (the newest-dated
-// outlet, a different article). Shared by the card meta line + copy/export so they can't drift.
-function _faceSource(s) {
-  const face = (s.members || []).find(m => m.url === s.url) || {};
-  return face.src || ((s.sources || [])[0] || {}).source || "";
-}
+// The FACE article's own outlet. ONE copy, in 83-news-logic.jsx (newsFaceSource), shared by the
+// card meta line, copy/export and the outlet cap so they can't drift.
+const _faceSource = newsFaceSource;
 
 // The link a card/article opens on click: the REAL decoded article when known (resolved_url,
 // same field copy reads), else the stored `url` — which is a Google News wrapper for the
@@ -244,10 +250,17 @@ function _downloadFile(filename, text, mime) {
 // When a story has NO real publish date at all, fall back to the day we first pulled it,
 // marked "~" so an estimated date can never pass for a real one. Display-only: windowing,
 // peak and sort all still treat the article as undated.
+// The same "~" marks a date that is itself only an estimate: every article dated on the shown
+// day carries `ad` (server _approx_date — a Google date the page check couldn't confirm, or a
+// page date known only to the month). One confirmed article on that day makes it plain.
 function _dateRange(story) {
   const peak = (story.peak_date || "").slice(0, 10);
   const latest = (story.published || "").slice(0, 10);
-  if (peak || latest) return peak || latest;
+  if (peak || latest) {
+    const day = peak || latest;
+    const onDay = (story.members || []).filter(m => (m.d || "").slice(0, 10) === day);
+    return onDay.length && onDay.every(m => m.ad) ? "~" + day : day;
+  }
   const fs = (story.members || []).map(m => (m.fs || "").slice(0, 10)).filter(Boolean).sort();
   return fs.length ? "~" + fs[fs.length - 1] : "—";
 }
@@ -469,7 +482,7 @@ function NewsWhy({ story, onBack }) {
                    onClick={(e) => e.stopPropagation()}>
                   {_lock(m.pw)}{_stripOutlet(m.title)}
                 </a>
-                <div className="news-why-artmeta">{m.src}{m.d ? " · " + m.d : ""}{m.via ? " · " + m.via : ""}</div>
+                <div className="news-why-artmeta">{m.src}{m.d ? " · " + (m.ad ? "~" : "") + m.d : ""}{m.via ? " · " + m.via : ""}</div>
               </div>
             ))}
           </div>
@@ -491,7 +504,7 @@ function NewsView({ isMobile }) {
   // preset day-counts ("7".."365"), "max" (no bounds), or "custom" (the Since/Until fields). The
   // actual from/to bounds are computed FRESH every render from windowKey + today (see `since`/
   // `until` below), so the label AND the window stay correct across a refresh + the nightly tick.
-  const [windowKey, setWindowKey] = useState(() => localStorage.getItem("lexica.news.wkey.v1") || "21");
+  const [windowKey, setWindowKey] = useState(() => localStorage.getItem("lexica.news.wkey.v1") || NEWS_DEFAULT_WINDOW);
   const [customSince, setCustomSince] = useState(() => localStorage.getItem("lexica.news.csince.v1") || "");
   const [customUntil, setCustomUntil] = useState(() => localStorage.getItem("lexica.news.cuntil.v1") || "");
   // Bounds derived at query time — never persisted. A preset = "last N days through now"; custom =
@@ -625,8 +638,13 @@ function NewsView({ isMobile }) {
       // is the tie-break so equal effective scores still favor the fresher card.
       list.sort((a, b) => (b.score - _stale(b.peak_date)) - (a.score - _stale(a.peak_date))
                        || (b.published + "").localeCompare(a.published + ""));
-    return list;
-  }, [windowed, view, order]);
+    // Outlet cap — the untouched default view only (Inbox, default sort, no thread, the opening
+    // date window). Any thread / window change / other sort or tab leaves the list as sorted.
+    // Reorders the top band only: every card is still in the list (bulk actions read this).
+    const isDefault = view === "inbox" && order === "score" && !thread
+                      && windowKey === NEWS_DEFAULT_WINDOW;
+    return isDefault ? applyOutletCap(list, NEWS_BAND, NEWS_OUTLET_CAP) : list;
+  }, [windowed, view, order, thread, windowKey]);
   // The visible feed — a display cap only, never the scope of any action.
   const stories = useMemo(() => viewListAll.slice(0, 300), [viewListAll]);
 

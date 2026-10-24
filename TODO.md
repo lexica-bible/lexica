@@ -767,6 +767,15 @@ Open tickets:
 - **Shareable News deep link (`/?view=news`, ideally per-story) that survives signup** — own
   ticket, NOT Pass 2. code: static/src/90-app.jsx (`?news=`/`?b=`/`?lex=` pattern to copy)
 - Share key (`/?news=<key>`, one holder = Tudor) untouched; retirement not ticketed.
+- **PARKED (ruling 2026-10-24, separate ruling later): Google repeats slip past the "already have
+  this link" check.** Google hands out a NEW redirect link for the same article on each pull, so
+  `items.url` (the dedupe key, INSERT OR IGNORE on url) never matches and the same article gets
+  stored again — e.g. ids 22825/23963, 5665/19745, 24147/24487 (the last pair even carries two
+  different Google dates, 2024-11-21 vs 2021-02-18). Fix direction: dedupe on `resolved_url`, or
+  on normalized title + source. code: scripts/news/gather_news.py (INSERT OR IGNORE on url).
+- **Page-date backfill — gated (built 2026-10-24, not yet run):** `scripts/backfill_page_dates.py`
+  dry run → JP pastes → verdict → `--apply` (which also adds the three date columns). Until that
+  apply, the nightly page-date check in resolve_new_faces.py skips itself.
 
 ---
 

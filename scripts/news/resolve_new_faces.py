@@ -135,7 +135,32 @@ def run():
             fail += 1                          # leave NULL — resolve-on-copy retries
         time.sleep(BASE_SLEEP)
     print(f"resolve_new_faces: resolved {ok}  failed {fail} (left NULL)")
+    _page_dates(conn, since_hours)
     conn.close()
+
+
+def _page_dates(conn, since_hours):
+    """Second stage: check tonight's Google-path rows (score >= 5) against their own page
+    date (scripts/news/date_pass.py). Windowed on first_seen — WHEN WE PULLED IT — because
+    `published` is exactly the Google date under suspicion. The older backlog is the one-shot
+    scripts/backfill_page_dates.py, not this nightly. Skips until that backfill's --apply has
+    added the three date columns, so nothing is written before JP has seen its dry run.
+    Its own try: a failure here never undoes the face resolution above."""
+    try:
+        from scripts.news.date_pass import has_columns, run_pass
+        if not has_columns(conn):
+            print("resolve_new_faces: page-date columns missing — run "
+                  "scripts/backfill_page_dates.py --apply first. Skipping date check.")
+            return
+        since = (datetime.datetime.now(datetime.timezone.utc)
+                 - datetime.timedelta(hours=since_hours)).isoformat()
+        t = run_pass(conn, since, apply=True, resolve=_resolve_with_backoff, sleep=1.0,
+                     log=lambda s: None)
+        print(f"resolve_new_faces: page dates — checked {t['rows']}: page date {t['page']} "
+              f"({t['page_flagged']} >30d off Google), month-only {t['month_only']}, "
+              f"no page date {t['no_page_date']} (flagged), no real link {t['no_link']} (retry)")
+    except Exception as e:
+        print(f"resolve_new_faces: page-date check skipped on error ({e})")
 
 
 def main():

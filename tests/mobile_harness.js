@@ -724,6 +724,35 @@ const NEWS_CARDS = [
 // off meta (:555), so they must agree — one constant above, both readers.
 const NEWS_ALL = { available: true, cards: NEWS_CARDS, labels: THREAD_LABELS };
 
+// OPT-IN alternate News feed: `node tests/mobile_harness.js <port> outletcap` (or the env var
+// NEWS_FIXTURE=outletcap) swaps the feed above for one that exercises the 2026-10-24 Inbox
+// outlet cap (applyOutletCap, 83-news-logic.jsx) and the unverified-date "~". The default run is
+// unchanged. Same producer shapes as above, plus the field that ruling added to views_news.py
+// _all_cards: member `ad` (approximate date, _approx_date). "Stand-in Dominant" holds the five highest raw scores, so
+// without the cap it would fill the top five slots; with it, two sit in the band and three
+// follow the band. One card's only article is an unverified Google date -> its date shows "~".
+if (process.env.NEWS_FIXTURE === "outletcap" || process.argv[3] === "outletcap") {
+  const one = (id, outlet, s, days, via, ad) => card({
+    ids: [id], title: `Stand-in headline ${id} — ${outlet}, raw score ${s}`,
+    url: `https://example.invalid/news/${id}`, summary: "Stand-in summary.",
+    score: s, thread: "sabbath_sunday", thread_label: THREAD_LABELS.sabbath_sunday,
+    why: "Stand-in scorer rationale.", published: _newsDay(days), peak_date: _newsDay(days),
+    count: 1, status: "new",
+    sources: [{ source: outlet, url: `https://example.invalid/news/${id}`, published: _newsDay(days) }],
+    members: [member({ s, ad: !!ad, t: "sabbath_sunday", d: _newsDay(days), src: outlet, via,
+                       title: `Stand-in headline ${id} — ${outlet}, raw score ${s}`,
+                       url: `https://example.invalid/news/${id}` })],
+  });
+  NEWS_ALL.cards = [
+    one(701, "Stand-in Dominant", 9, 1, "RSS"), one(702, "Stand-in Dominant", 9, 1, "RSS"),
+    one(703, "Stand-in Dominant", 9, 1, "RSS"), one(704, "Stand-in Dominant", 9, 2, "RSS"),
+    one(705, "Stand-in Dominant", 9, 2, "RSS"),
+    one(711, "Stand-in Wire", 8, 1, "Google News"), one(712, "Stand-in Post", 8, 2, "Google News", true),
+    one(713, "Stand-in Journal", 7, 1, "Google News"), one(714, "Stand-in Review", 7, 2, "Google News"),
+    one(715, "Stand-in Wire", 6, 1, "Google News"), one(716, "Stand-in Post", 6, 3, "Google News"),
+  ];
+}
+
 const FIXTURES = {
   "/api/auth/me": ME,
   "/api/ai-search": AI_SEARCH,
