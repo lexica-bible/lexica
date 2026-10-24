@@ -116,8 +116,18 @@ memory project_abp_certification + TODO_ARCHIVE 2026-07-31 consolidation. Open l
   Saul's H7586 on NT Paul, 22) · ABP prints a different king (Artaxerxes H783 on Ahasuerus
   15) · variant spelling number (Jehohanan H3076 on Johanan 14). A blanket "set the entity's
   number" would write wrong or meaningless numbers on several classes — classify every row
-  before choosing the mechanism. Full list: PA `~/audit_xref_vs_binding.tsv`. Step 1 (JP-run,
-  read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
+  before choosing the mechanism. Full list: PA `~/audit_xref_vs_binding.tsv`.
+  **CLASS COLUMN BUILT 10/24 (JP ruling), re-run pending — no fix until the per-class counts
+  are on the table.** Seven classes by rule, first match wins: 1 NT-SLOT · 2 NO-HEBREW-ENTITY
+  · 3 COMPOUND (printed one-slot / split) · 4 SAME-NAME-OTHER-REFERENT · 5 VARIANT-NUMBER · 6
+  PRINTED-NAME-DIFFERS (compares ABP's English — TIPNR's production parse has no Greek) · 7
+  OTHER (printed in full). Control must land in class 4 or VOID. By the rules, not by the
+  examples: Johanan carrying H3076 lands in 4 (TIPNR has a Johanan-headed H3076 entity), and
+  Hur carrying H1133 lands in 4 (an H1133 entity is headed "hur"). Classed list: PA
+  `~/audit_xref_vs_binding_classed.tsv`.
+  **Known blind spot (JP-filed 10/24, no lane):** the census only checks slots with a
+  render=1 binding — 14,141 slots with a stored Hebrew number have none and are not checked.
+  Step 1 (JP-run, read-only): Gen 25:15 "Hadar" Χολδάδ — KJV tags H2316; Χολδάδ
   occurs nowhere else; pn_binding has the RIGHT man (Hadad@Gen.25.15-1Ch, bases H2301,H2316),
   but the stored number (xref + pn_greek_identity.hebrew_base) is H1908. 1Ch 1:30 is the same
   man, same fault (stored H1908, KJV H2301). H2316: 0 ABP words / 0 xref rows / 1 KJV word.
