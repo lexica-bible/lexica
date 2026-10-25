@@ -860,11 +860,24 @@ Open tickets:
   on normalized title + source. code: scripts/news/gather_news.py (INSERT OR IGNORE on url).
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
-  existing card grouping; no scorer change. GATED behind the two mandatory clustering test fixtures
-  — do not build before they exist. Layers 1 (outlet cap) and 2 (downward-only rank_score) are
-  live; this would slot into the same Inbox Top-stories order (83-news-logic.jsx /
-  84-news.jsx viewListAll). Context: 28 of Advent Messenger's 31 recent articles sat on cards no
-  other outlet shared (2026-10-24 count).
+  existing card grouping; no scorer change. GATED behind the two mandatory clustering fixtures.
+  Layers 1 (outlet cap) and 2 (downward-only rank_score) are live; this would slot into the same
+  Inbox Top-stories order (83-news-logic.jsx / 84-news.jsx viewListAll). Context: 28 of Advent
+  Messenger's 31 recent articles sat on cards no other outlet shared (2026-10-24 count).
+  **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
+  tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
+  `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are
+  test_news_gate.py (who may read/write) and test_news_bulk.py (bulk triage). The closest match
+  is the two checks run BY HAND on a live `group_news.py --regroup` on 2026-06-29 (labeler rewrite
+  0d7387f; record in memory project_news_watch):
+    1. MERGE — the Pope Leo AI encyclical stays ONE card across hundreds of outlets (541/276 then);
+    2. SPLIT — topic buckets ("Sunday Rest Laws Debate", "Vatican Ecumenical Outreach") break into
+       their separate happenings (Poland trade ban / NJ mall lawsuit / NY Chick-fil-A bill / …).
+  They matter here because corroboration rewards multi-outlet cards: an over-merged topic bucket
+  would read as falsely well-corroborated. No written copy of the rule itself was found in the
+  repo or memory either. Before this can be built: turn both checks into runnable fixtures
+  (frozen labeled rows -> `_group` -> assert one card / separate cards) and wire them into CI +
+  pre-commit.
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
