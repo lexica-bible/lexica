@@ -82,3 +82,68 @@ spelled as two words — ου μη 3766.2, ου δε μη 3762.1 …) · split-e
 - `abp_surface_fill_census_glued.csv` — all 1,964 glued rows: partition, kept word, receiving
   slot (position, number, current form), app number + Greek, both neighbours, `receiver_in_A`.
 - `abp_surface_fill_census_leftovers.csv` — C's 130 rows.
+
+---
+
+# Step 2 — DRY RUN (read-only) — script ready, PA run pending
+
+JP rulings on the census (2026-10-24): A 3,793 → fill; 69 pronouns → fill; 33 unlisted → form
+only, lemma held; 28 English-in-Greek → held; names + the 13 → out of lane. B 182 splits go
+(the 22 name splits as their own class — app is the authority for names); 357 normalize go
+(doubled NBSP → one space); 4 conflicts + Isa 41:14 held (Dan 9:5, Eze 7:4 suspected slot
+errors); D 45 written once, both sources must agree. 1,420 unflagged: no action. Gate: dry run
+only — no copy, no apply.
+
+Script: `scripts/dryrun_abp_surface_fill.py` (opens bible.db read-only; writes only its own CSV +
+report; matching rules imported from `census_abp_surface_glued.py`, the one copy — refactor
+proved byte-identical census output, and its level logic matches the lane (b) join on 4,058/4,058).
+
+## Three things the dry run settles differently from the ruling text — each is the verdict's call
+1. **Reconciliation total.** "3,793 + 69 + 33" counts the 69 pronouns twice — 3,793 already
+   includes them (3,722 + 2 + 69). A-route fills = 3,724 + 69 + 33 = 3,826, of which 3 are held
+   (item 3), so **3,823**.
+2. **No lemma write.** abp_surface has no lemma column; the reader's lemma comes from the lexicon
+   by the slot's number; the only lemma column is `words.lemma` (a words-table column read by audits
+   and the name builder, not by the reader). The Lexicon's lemma is also unfit to store: no accents,
+   and on 296 of 3,793 rows it is not the headword we serve (ἀποκρίνω for ἀποκρίνομαι, "εσται" as
+   1510.8.3's headword, "ειδω,ειδεω,οιδα" lists, misprints like "προστασσα"; the 69 pronouns all read
+   εγω). The CSV shows served lemma / words.lemma / Lexicon lemma side by side; no new column.
+3. **App letter ἡ → ή (proposal).** The app never prints ή (U+03AE); it prints ἡ (U+1F21) in its place
+   — 274 of 286 times mid-word in the 10/24 test fetch, where no breathing can stand. The audit folds
+   accents away, so it never showed. 530 of the forms to fill carry it. Not in the JP-ruled
+   DEFECT_MAP; the dry run applies it for the fill only and control E1 measures it on every
+   same-letter surface pair (expect: app never prints ή, ours never ἡ, ours ή at ≥ 99% of the spots).
+
+## New holds found while building it
+- **Deu 4:45 pos 10/11** (name split): our glued 'ελάλησε Μωυσης' (no accent) vs the app's Μωυσής
+  — the D sources disagree, so the whole split is held (G2 fired on real data).
+- **3 app characters with no ruling:** Num 12:3 pos 5 'πρα=ς' and Pro 14:30 pos 0 'πρα=θυμος' ('='
+  where ΰ belongs — the Lexicon's text layer has the same '='); **Psa 60:0 pos 22** — the app prints the
+  name 'Ἰωάβ' on a 1473 pronoun slot (suspected slot misalignment).
+
+## Pre-registered expected picture (the script prints expected | actual)
+| Class | Expected | | Class | Expected |
+|---|---:|---|---|---:|
+| fill_resolved | 3,722 | | split_trim | 92 |
+| fill_pronoun | 69 | | split_keep | 89 |
+| fill_unlisted (lemma held) | 32 | | split_receive | 68 |
+| held_unmapped_letter | 3 | | split_receive_name | 21 |
+| held_english_in_greek | 28 | | normalize | 357 |
+| held_number_disagreement | 13 | | held_split_conflict | 4 |
+| out_of_lane_name | 191 | | held_split_ambiguous | 1 |
+| D / agree / with A-route fill / name | 45 / 44 / 39 / 6 | | held_D_disagree | 1 |
+| unflagged_glued (no action) | 1,420 | | **writes** | **4,411** = 3,873 insert + 538 update |
+
+abp_surface after an apply = 391,130 + 3,873 = **395,003**. Controls: C1 1Sa 17:57 pos 22 → normalize
+'χειρί αυτού' · C2 Gen 4:8 pos 1 → fill 'είπε' · C3 Gen 5:32 pos 1 → split_trim 'ην' · E1 above.
+Gates: G1 number + form (live number) on every Lexicon-backed write · G2 every written D row: both
+sources same bytes · G3 no slot twice (incl. a duplicate list line) · G4 no write on a held slot ·
+G5 abp_surface only, existing word slots only, 0 name-table writes · G6 written forms: no NBSP, no ἡ,
+monotonic Greek only. **Every check fired on a planted fault first** (stand-in db built from the
+exported TSVs): drift ×2, duplicate line, E1 negative, ἡ in a written form, and forced G1/G3/G4/G5.
+
+## For the apply (not now)
+- translit: 538 updated rows keep a stale translit and 3,873 new rows have none → re-run
+  `scripts/build_abp_translit.py` after.
+- `build_abp_surface.py` DROPs and rebuilds its table: a later re-run would wipe the fill unless the
+  fill is a re-runnable step after both backfills. The health-check floor (389,244) only rises.

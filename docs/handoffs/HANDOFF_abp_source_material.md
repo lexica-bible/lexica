@@ -90,6 +90,14 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
     Job 1:1 · 16 · 444 · ανἡρ → 435 · Lev 22:22 · 20 and Lev 22:23 · 15 · 3756 · ο → 3588/3739 ·
     Pro 24:13 · 8 · 4675 · ση → 4674 · Pro 24:27 · 6 · 4675 · σον → 4674 · Pro 24:27 · 15 · 3450 ·
     σοις → 4674. Source: `CENSUS_abp_surface_fill.md`.
+    **Also HELD from the fill (2026-10-24, same source):** split conflicts 2Ki 20:12 pos 19,
+    Jon 1:17 pos 9, **Eze 7:4 pos 13 + Dan 9:5 pos 14 (suspected slot errors — Dan 9:5's 4675 slot
+    holds the article 'των')** · split-ambiguous Isa 41:14 pos 3 · D sources disagree Deu 4:45
+    pos 10/11 (ours Μωυσης, app Μωυσής) · app letters with no ruling Num 12:3 pos 5 and Pro 14:30
+    pos 0 ('=' for ΰ) · **Psa 60:0 pos 22 — app prints Ἰωάβ on a 1473 slot (suspected slot
+    misalignment)** · 28 English-in-Greek cells · 33 unlisted forms: filled, LEMMA held · the
+    1,420 unflagged glued values: 23 split-eligible + 3 two-word names (Ezr 10:30, Neh 10:14
+    Φαάθ Μωάβ; Jer 39:3 Νήργελ Σαρασάρ) held for a later pass, the rest no action.
   - Edition drift: English words differ in 9,157 / 31,228 paired verses (29.3%; OT 30.6,
     NT 25.6, Psalms 17.2); order-only 3,191.
   - Defect map matched: + 2,195 · C 1,287 · П 913 · H 898 · O 608 · Q 550 · R 6 · U 4
