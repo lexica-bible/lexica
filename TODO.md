@@ -170,7 +170,7 @@ parser reference notes in its appendix). No open writes.
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
   **The fill copy stays until a re-freeze exists** — it is the frozen snapshot's only "before" side
   (rotation/single-rollback rule does not apply to it). Also on PA (10/25 live rebuild, delete
-  nothing yet): `~/rekey/pre_rebuild.db` until a nightly is dated after the 10/25 swap ·
+  nothing yet): `~/rekey/pre_rebuild.db` until a nightly dated after the 10/25 18:06 swap PASSES the backup sweep (JP ruling 10/25 — the 10/24 nightly is damaged, so "dated after" alone is not enough) ·
   `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
   deletable as their own step.
 - **Held list** — read-by-hand, no writes queued. Full rows: the handoff (lane (a)'s "Same slot,
