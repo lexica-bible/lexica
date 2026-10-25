@@ -36,13 +36,15 @@ cleanup (rides the next identity rebuild) · the fill's held list (handoff statu
 - Rollback copies: `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy is stamped after 2026-10-25 03:08 and verified.
 Filed from lane (a)/(b), not now:
-- FILED, not now — **540 same-slot number disagreements** (app vs ours, after swaps): a
-  read-by-hand list; needs the audit to write them to a TSV.
+- FILED, not now — **540 same-slot number disagreements** (app vs ours, after swaps) **+ the 13
+  the fill census added** (listed in the handoff, Isa 39:8 pos 1 = suspected misalignment): a
+  read-by-hand list; the 540 still need the audit to write them to a TSV.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
   in 29% of paired verses). No charter yet.
 - Small audit gap — **English notes typed ENTIRELY in Greek letters** ("δαγγερ" = dagger,
   "- Φορ τηε ενδ.") pass the app audit's English-font check (it looks for a Latin letter);
-  28 reached the missing-form list. Fix the check before the missing-form list feeds any write.
+  28 reached the missing-form list. The 10/25 fill HELD all 28 (class E2), so nothing wrong was
+  written — but the audit check itself still has the gap; fix it before the list feeds another write.
 
 ## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP

@@ -644,6 +644,19 @@ text and stay out of git (`abp_app_html/`, `abp_helps/` are gitignored).
   breathings are LOST in its text layer (compare folded only). It has NO proper names and files
   every personal-pronoun form (αὐτός's too) under ABP's raw 1473 — our build renumbers those,
   so join pronouns through `build_abp_surface._norm`. Join tool: `scripts/audit_lexicon_vs_missing_forms.py`.
+  **Its "lemma" column is NOT a storable headword:** accentless, dotted entries carry a FORM
+  (1510.8.3 → "εσται"), some list several ("ειδω,ειδεω,οιδα"), some are misprints ("προστασσα");
+  it differs from our served lemma on 296 of 3,793 rows checked. Use it to MATCH, never to write.
+- **App ἡ = ή.** The app never prints ή (U+03AE); it prints ἡ (U+1F21) in its place (35,921 of
+  35,981 same-letter spots are ή in our text). The audit's fold strips marks, so it never shows
+  there. NOT in DEFECT_MAP (JP-approved for the 10/25 fill only, `dryrun_abp_surface_fill.ETA_FIX`);
+  any other use of app Greek must map it. 60 spots where ours has plain η are held (could be a
+  genuine ἡ — the article, ἡμ- words).
+- **Lexical Concordance** (JP's PDF): per-number verse lists for ordinary words; **every proper
+  name entry (474) has NO verse list.** `*` after a reference = 2+ occurrences in that verse.
+  Layout notes for a parser: `docs/handoffs/HANDOFF_abp_source_material.md` lane (c).
+- **Word-study ABP tab total = word OCCURRENCES** (count of words rows by number), not verses —
+  compare a verse-list source by verses, never total to total.
 
 ## Article slots (G3588) — two facts any audit of the words table needs
 - **`_redistribute_article_slot` carries RULING 10 (2026-08-01): writes require positive
