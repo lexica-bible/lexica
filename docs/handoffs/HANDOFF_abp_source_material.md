@@ -82,6 +82,14 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   - Alignment 99.52% of our 626,309 slots (in place 94.02% + swapped 5.33% + out-of-seq
     1,055). Swaps: 32,608 of 33,364 moved ONE place (split-flip ruling; still unverified
     row by row). Same slot, different number left: 540. Psalms under the shift: 99.28%.
+    **HELD (JP 2026-10-24): the 540 + 13 number disagreements from the fill census**,
+    excluded from the abp_surface fill (verse · pos · our number · app form → Lexicon has it under):
+    dotted neighbour — Dan 5:10 · 32 · 241.3 · αλλοιούσθω → 241.2 · Exo 26:13 · 27, Exo 32:15 · 25,
+    Exo 38:15 · 6, Jos 8:33 · 16 · 1759.3 · ένθεν και ένθεν → 1759.2 · other number — 1Sa 19:3 · 27 ·
+    302 · εάν → 1437 · **Isa 39:8 · 1 · * (Ἐζεκίας) · είπεν → 2036 — SUSPECTED SLOT MISALIGNMENT** ·
+    Job 1:1 · 16 · 444 · ανἡρ → 435 · Lev 22:22 · 20 and Lev 22:23 · 15 · 3756 · ο → 3588/3739 ·
+    Pro 24:13 · 8 · 4675 · ση → 4674 · Pro 24:27 · 6 · 4675 · σον → 4674 · Pro 24:27 · 15 · 3450 ·
+    σοις → 4674. Source: `CENSUS_abp_surface_fill.md`.
   - Edition drift: English words differ in 9,157 / 31,228 paired verses (29.3%; OT 30.6,
     NT 25.6, Psalms 17.2); order-only 3,191.
   - Defect map matched: + 2,195 · C 1,287 · П 913 · H 898 · O 608 · Q 550 · R 6 · U 4
@@ -145,6 +153,9 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   postdates the 22:41 apply, then it can go.
 
 ## Also open from 10/24 (no lane)
-Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale 'none'-label cleanup (rides the
+Baal 1Ch 5:23 (H1179) · **HELD: pn_greek_identity has 30 NBSP names vs the 27 pinned**
+(audit C3 still PASSES — it checks the 27 are present; extras seen: Act 12:19 pos 0 'Ηρώδης δε',
+Act 13:1 pos 24 'Μαναήν τε'; the third was cut off by `head -8` in the 10/24 paste — re-read the
+full `~/abp_app_audit_rerun.txt` C3 block) · routing follow-up (h) · the stale 'none'-label cleanup (rides the
 next identity rebuild). Record of the 10/24 correction:
 `docs/tickets/RECORD_xref_vs_binding_fix_20261024.md`.
