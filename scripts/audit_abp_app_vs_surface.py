@@ -48,8 +48,9 @@ CONTROLS (hard stop, nothing else printed if one fails):
      flagged by the Latin census.
   C2 1Ki 11:14 our position 7 aligned to the app's 'Αδάρ', and our surface/identity
      value there folds to Αδάρ.
-  C3 NBSP detector fires on 1Ki 11:17 position 2 (pn_greek_identity value holds
-     U+00A0) and the table-wide NBSP count is > 0.
+  C3 NBSP detector fires on every one of the 27 pinned compound names
+     (docs/tickets/compound_names_allowlist.tsv, byte-exact) — SQL char(160) AND the
+     script's own test. (The handoff's 1Ki 11:17 pos 2 row was cured; info line only.)
 
 READ-ONLY (sqlite opened mode=ro). Run on PA from ~/bible-db:
   PYTHONIOENCODING=utf-8 python3 scripts/audit_abp_app_vs_surface.py \\
@@ -94,6 +95,8 @@ NT = set(BOOK_ORDER[39:])
 LATIN_MAP = {"C": "Χ", "Q": "Θ"}            # JP-specified; nothing else is mapped
 NBSP = " "
 NOTE_RE = re.compile(r"\s+-\s+(\S.*)$")      # "εποίησε - σερvεδ." inline note
+ALLOWLIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
+                         "docs", "tickets", "compound_names_allowlist.tsv")
 
 
 # ── folding ──────────────────────────────────────────────────────────────────
@@ -457,16 +460,44 @@ def main():
     if not ok2:
         fails.append("C2")
 
+    # C3 — NBSP detector on KNOWN positives. The handoff's control row (1Ki 11:17
+    # pos 2) was a glued value since CURED (live 2026-10-24: plain 'Αδάρ'), so it
+    # can no longer prove anything. The pinned 27 legitimate compound names
+    # (docs/tickets/compound_names_allowlist.tsv, hex = byte-exact, "must survive
+    # any glued-value fix") are the standing positives: every one must be found
+    # live, and BOTH the SQL char(160) count and this script's NBSP test must
+    # catch every one. NBSP rows beyond the pinned 27 are listed.
+    allow = []
+    with open(ALLOWLIST, encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("#") or line.startswith("hex\t") or not line.strip():
+                continue
+            hx, _g, bk, ch, vs, en = line.rstrip("\n").split("\t")[:6]
+            allow.append((bytes.fromhex(hx).decode("utf-8"), bk, int(ch), int(vs), en))
+    sql_nbsp = con.execute(
+        "SELECT v.book, v.chapter, v.verse, p.position, p.greek_lemma "
+        "FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id "
+        "WHERE p.greek_lemma LIKE '%'||char(160)||'%'").fetchall()
+    live = defaultdict(list)
+    for bk, ch, vs, pos, g in sql_nbsp:
+        live[(bk, ch, vs, g)].append(pos)
+    found = [a for a in allow if (a[1], a[2], a[3], a[0]) in live]
+    missing = [a for a in allow if (a[1], a[2], a[3], a[0]) not in live]
+    py_hits = sum(1 for a in found if NBSP in a[0])
+    pinned_keys = {(a[1], a[2], a[3], a[0]) for a in allow}
+    extra = [(bk, ch, vs, pos, g) for bk, ch, vs, pos, g in sql_nbsp
+             if (bk, ch, vs, g) not in pinned_keys]
+    ok3 = len(allow) == 27 and not missing and py_hits == len(allow)
+    print(f"C3 NBSP detector on the {len(allow)} pinned compound names: live+caught by SQL "
+          f"{len(found)}/{len(allow)} · caught by script {py_hits}/{len(allow)} · "
+          f"table-wide NBSP rows {len(sql_nbsp)} -> {'PASS' if ok3 else 'FAIL'}")
+    for a in missing:
+        print(f"     MISSING pinned: {a[1]} {a[2]}:{a[3]} {a[0]!r} ({a[4]})")
+    for bk, ch, vs, pos, g in extra:
+        print(f"     NBSP row beyond the pinned list: {bk} {ch}:{vs} pos {pos} {g!r}")
     o17 = ours.get(("1Ki", 11, 17))
     v17 = ident.get((o17["vid"], 2)) if o17 else None
-    n_nbsp = con.execute("SELECT count(*) FROM pn_greek_identity "
-                         "WHERE greek_lemma LIKE '%'||char(160)||'%'").fetchone()[0]
-    ok3 = bool(v17) and NBSP in v17[0] and n_nbsp > 0
-    a17 = aligned_at.get(("1Ki", 11, 17, 2))
-    print(f"C3 NBSP detector: 1Ki 11:17 pos 2 identity={v17[0] if v17 else None!r} "
-          f"codepoints={[f'U+{ord(c):04X}' for c in v17[0]] if v17 else None}; "
-          f"table-wide NBSP rows={n_nbsp}; app there={a17[0]['g'] if a17 else None!r} "
-          f"-> {'PASS' if ok3 else 'FAIL'}")
+    print(f"     (info: old control 1Ki 11:17 pos 2 now reads {v17[0] if v17 else None!r})")
     if not ok3:
         fails.append("C3")
     if fails:
