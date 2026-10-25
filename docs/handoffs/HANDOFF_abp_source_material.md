@@ -167,6 +167,20 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   `abp_helps/missing_forms_resolved.tsv` (local).
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
   This answers routing follow-up (c), the MIXED 47.
+  **Scope read 2026-10-25 (CC, local, `pdftotext` on `lexical_concordance.pdf`, 366 pp; nothing
+  built yet):** same Newport symbol font as the Lexicon (same letter map, accents lost); FIVE
+  columns per page; entry = headword + number, gloss, then references — book abbreviation on a
+  book's first reference only ("Gen 24:61 · Ex 2:5* · Est 2:9 · 4:4,16"), ranges with a dash
+  ("Lam 3:17,25–27,38"), `*` = more than once in the verse (spot-check: 10.3 ἅβρα, Exo 2:5 has it
+  twice in abp_texts — ONE entry checked). Alphabetical by headword, not number order (εἰμί's
+  forms 1488/1498/1510.x sit under it). Psalm references use OUR numbering (Ps 88:4, 63:1, 107:40
+  checked). ~8,200 heading candidates by a rough pattern (misses entry 1); 7,470 numbers shared
+  with the Lexicon. **ALL 474 proper-name entries (332 "Proper name." + 142 "Proper place name.")
+  carry NO verse list** — Nathanael 3482 and Hosea 5617 checked by number. So the concordance
+  cannot count the MIXED 47 if they are all names (list not pulled: `audit_abp_tab_bridge.py
+  --show 60`). **The ABP tab total = word occurrences (COUNT of words rows), not verses** — the
+  concordance gives verses + `*`, so the honest diff is per-number VERSE LISTS (+ `*` vs our ≥2),
+  not totals; it needs one read-only PA export of (number, verse, occurrences) at build time.
 - **(d) English-Greek Index** last.
 
 ## Tripwires to carry in (from memory / CLAUDE.md)
