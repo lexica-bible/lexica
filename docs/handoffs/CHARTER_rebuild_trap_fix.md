@@ -217,6 +217,13 @@ itself), not rebuild movement; the 7 + 1 sit where the words-level compare found
 (35 english diffs, all in the 16 lane-3 hand-repair verses — see TODO "lane-3 hand repairs not in the
 rebuild chain"; member check of the 8 owed). The motivating stress case (positions/English moving,
 the edition upgrade) was NOT exercised by this build — nothing moved.
+**RE-RUN under the agree-weak ruling (JP, PA, 2026-10-26 06:51, same copies):** every expected figure
+exact — placed **4,403** (4,050 strong + 353 weak) · unplaced **8** (reason 6 key 1 none 7 · reason 7
+1) · C1 identity 0 unplaced, weak floor 354 · placed inserts 3,865 of 3,873 · name slots unplaced 0.
+**All 8 are lane-3 repair slots** (each = one op: live English = the op's new_eng, built = its
+old_eng): Gen 46:26 p19 · Lev 24:10 p3 · 1Sa 14:50 p3 · 2Ch 14:12 p11 · Isa 30:31 p5 · Jer 50:16 p11 ·
+Heb 11:24 p7 · Mat 9:11 p2 (the reason-7 row). **Pre-registered for the G4 test:** with the lane-3
+step in the chain, the same dry run reads placed 4,411 · unplaced 0 · placed inserts 3,873 of 3,873.
 8b is left out of the dry-run sequence: it writes only `strongs_base` and name tables
 (`correct_xref_vs_binding.py:259`, `restore_frozen_pn.py:113`, `retire_hebrew_identity.py:295`),
 none of which the dry run reads. Step 8 (swap + deploy) is never part of it.
