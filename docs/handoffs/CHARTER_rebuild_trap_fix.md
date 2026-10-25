@@ -320,6 +320,17 @@ ONE copy both new scripts call (its 7 tests unchanged, all pass). PA sequence + 
 Unchanged: reason 5 still cannot fire under these keys (§6 finding). Translit = romanize(form, lemma
 of the NEW slot), then the build_abp_translit rule must change 0 rows.
 
+**Run receipts (JP, PA, 2026-10-26; expected | actual):**
+- A: HEAD `f266824a` · `key2_at` 1 · disk 7.6G (< 8.0G) · old3 copy `ok` · `delete` · 395003 — all match.
+- B snapshot: G0 PASS (4,411 = 3,873 + 538 = the CSV) · O PASS · R PASS · rows 4,411 | 4,411 ·
+  inserts/updates 3,873 / 538 | 3,873 / 538 · distinct 4,411 | 4,411 · name slots — | 22 · repeated
+  number — | 1,486 · by class fill_pronoun 42 · fill_resolved 3,710 · fill_unlisted 32 · normalize 357 ·
+  split_keep 89 · split_receive 68 · split_receive_name 21 · split_trim 92 — Lexicon-uncovered
+  32 + 357 = **389** and covered **4,022**, both = the §6 figures. 455,812 bytes, sha256
+  `d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b` → **PINNED** in
+  `restore_surface_fill.py`. Name slots 22 vs census Q6's 21: Q6 counted inserts only, so 22 should be
+  21 inserts + 1 update — check owed (awk line in the run reply), not yet confirmed.
+
 **Open, for the edition-upgrade lane (not this one):** the snapshot's old rows describe the layout it
 was taken from. After a restore that MOVES slots, the next rebuild needs a fresh snapshot of the
 restored table — and that snapshot's "before" side can no longer be the 10/25 pre-fill copy (the

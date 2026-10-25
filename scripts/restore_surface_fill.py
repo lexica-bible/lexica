@@ -60,8 +60,9 @@ import snapshot_surface_fill as snap               # noqa: E402  the file format
 
 ROWS_BASE, ROWS_AFTER = 391130, 395003
 N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
-# Pinned after the first PA snapshot (2026-10-26 lane); until then the .sha256 file alone vouches.
-SNAPSHOT_SHA256 = None
+# PINNED 2026-10-26 from the first PA snapshot (JP run, ~/rekey/old3.db = a fresh copy of live):
+# 4,411 rows (3,873 insert + 538 update), 455,812 bytes; receipt in CHARTER_rebuild_trap_fix.md §8.
+SNAPSHOT_SHA256 = "d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b"
 
 REASONS = {1: "no slot (key 2 found none)", 2: "ambiguous",
            3: "update precondition (builder form != recorded old form)",

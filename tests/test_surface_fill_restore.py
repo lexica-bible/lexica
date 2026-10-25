@@ -114,14 +114,17 @@ class Base(unittest.TestCase):
             for row in LEXICON:
                 f.write("\t".join(row) + "\n")
         self._saved = (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE,
-                       sn.N_ROWS, rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE)
+                       sn.N_ROWS, rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
+                       rs.SNAPSHOT_SHA256)
+        rs.SNAPSHOT_SHA256 = None                  # the planted snapshot is not the pinned one
         dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = 4, 1, 3, 1
         sn.N_ROWS = 4
         rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE = 2, 5, 4, 3, 1
 
     def tearDown(self):
         (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE, sn.N_ROWS,
-         rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE) = self._saved
+         rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
+         rs.SNAPSHOT_SHA256) = self._saved
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def snapshot(self, **over):
@@ -276,6 +279,13 @@ class Restore(Base):
         self.assertIn("vs pre-fill copy          0 / 0 | 1 / 1", out)
         self.assertIn("G1b builder table != pre-fill copy", out)
         self.assertEqual(digest(self.built), before)
+
+    def test_pinned_checksum_refuses_another_snapshot(self):
+        self.build()
+        rs.SNAPSHOT_SHA256 = "0" * 64
+        rc, out = self.restore()
+        self.assertEqual(rc, 1)
+        self.assertIn("FAIL  checksum = the pinned", out)
 
     def test_refuses_live_and_a_tampered_snapshot(self):
         named = os.path.join(self.tmp, "bible.db")
