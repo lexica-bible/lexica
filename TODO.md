@@ -852,12 +852,25 @@ Open tickets:
 - **Shareable News deep link (`/?view=news`, ideally per-story) that survives signup** — own
   ticket, NOT Pass 2. code: static/src/90-app.jsx (`?news=`/`?b=`/`?lex=` pattern to copy)
 - Share key (`/?news=<key>`, one holder = Tudor) untouched; retirement not ticketed.
-- **PARKED (ruling 2026-10-24, separate ruling later): Google repeats slip past the "already have
-  this link" check.** Google hands out a NEW redirect link for the same article on each pull, so
-  `items.url` (the dedupe key, INSERT OR IGNORE on url) never matches and the same article gets
-  stored again — e.g. ids 22825/23963, 5665/19745, 24147/24487 (the last pair even carries two
-  different Google dates, 2024-11-21 vs 2021-02-18). Fix direction: dedupe on `resolved_url`, or
-  on normalized title + source. code: scripts/news/gather_news.py (INSERT OR IGNORE on url).
+- **BUILT 2026-10-25, WAITING ON THE PA RUN: Google repeats slip past the "already have this
+  link" check.** Google hands out a NEW redirect link for the same article on a later pull, so
+  `items.url` (INSERT OR IGNORE on url) never matches and the same article is stored twice —
+  e.g. ids 22825/23963, 5665/19745, 24147/24487 (two different Google dates, 2024-11-21 vs
+  2021-02-18), and NewsNation "Catholic AI task force announced by US bishops" (two Inbox cards,
+  JP 2026-10-25). Two rows of one article show as two cards when the labeler gives them different
+  event labels (see the third clustering case below). FIX: same article = same REAL address
+  (`scripts/news/dedupe.py`: resolved_url for Google rows / the url for RSS rows, cleaned of
+  tracking junk, www, AMP tail). Title + outlet is NOT a merge key (recurring headlines; Google
+  dates unreliable) — `merge_dups.py` only reports title matches, as the check on the address key.
+  `merge_dups.py` merges each set into one survivor (RSS > page-verified date > scored > labeled >
+  earliest), moves Keep/Dismiss marks, copies the removed row into NEW table `items_merged`
+  (rollback copy + the ingest skip list in gather_news/pull_rss), deletes it from items. Nightly
+  step in daily.sh after resolve_new_faces; it does nothing until the first by-hand `--apply`
+  creates items_merged. Locked by tests/test_news_dedupe.py (CI + pre-commit).
+  PA steps: (1) `inspect_rows.py "catholic ai task force" --resolve` (read-only) to confirm the pair;
+  (2) `merge_dups.py` report → verdict; (3) copy news.db, then `merge_dups.py --apply`.
+  Known gap (measured by the report's section C): a Google row is matched only once its real link
+  is looked up — the nightly step does that for new rows scored 5+; below-5 rows stay unmatched.
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
   existing card grouping; no scorer change. GATED behind the two mandatory clustering fixtures.
@@ -888,6 +901,20 @@ Open tickets:
   even if the labeler drifted back to theme-lumping. Needs from PA: a frozen sample of the AI
   encyclical coverage and of the Sunday-laws bucket; both checks must pass against the CURRENT
   code before they mean anything.
+    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed) — Pope Leo XIV says the
+       death penalty is "inadmissible": two cards for one event, National Catholic Register
+       2026-10-11 (4 sources) and EWTN News (CNA) 2026-10-10 (4 sources). Expected: ONE card.
+       Read from the code: NOT the 14-day window (1 day apart) and NOT headline wording (the
+       word-overlap grouping only runs on UNLABELED rows) — two cards from dated rows a day apart
+       means the rows carry two different event labels, i.e. layer (1). Likely why:
+       group_news.py starts every run with an EMPTY list of labels (`known = []` in main), so it
+       only reuses labels it made earlier in the SAME night. A story whose coverage arrives over
+       two nights gets labeled twice from scratch, and any wording difference ("Pope Leo Death
+       Penalty Inadmissible" vs "Pope Leo XIV Death Penalty Statement") = two cards. The June
+       merge/split checks ran as ONE `--regroup` pass, so they never exercised this. Confirm on
+       PA: `inspect_rows.py "death penalty"` — the members' labels and first-pull nights. Frozen
+       sample needed: these 8 rows with their first-pull nights, labeled in two separate runs.
+       Same mechanism likely puts the NewsNation repeat pair on two cards.
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four

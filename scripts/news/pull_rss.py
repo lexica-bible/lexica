@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from queries import gate_vocabulary  # noqa: E402
 from sources import SOURCES  # noqa: E402
 from dateparse import to_iso  # noqa: E402
+from dedupe import merged_urls  # noqa: E402
 
 # news.db lives at the repo root, beside gather_news.py's target. This file sits
 # in scripts/news/, so go two levels up for the root.
@@ -144,9 +145,14 @@ def main():
         conn.executescript(SCHEMA)
         have_table = True
 
+    # Links merge_dups.py merged away count as already on the shelf (see scripts/news/dedupe.py).
+    gone = merged_urls(conn) if have_table else set()
+
     def url_seen(u):
         if not have_table:
             return False
+        if u in gone:
+            return True
         return conn.execute("SELECT 1 FROM items WHERE url=?", (u,)).fetchone() is not None
 
     now = datetime.now(timezone.utc).isoformat()

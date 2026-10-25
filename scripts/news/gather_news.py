@@ -35,6 +35,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from queries import all_searches  # noqa: E402
 from dateparse import to_iso  # noqa: E402
+from dedupe import merged_urls  # noqa: E402
 
 # news.db lives at the repo root, beside notes.db/esv.db/study.db (all gitignored,
 # PA-only). This file sits in scripts/news/, so go two levels up for the root.
@@ -147,9 +148,14 @@ def main():
         conn.execute("PRAGMA busy_timeout=5000")
         conn.executescript(SCHEMA)
 
+    # Links merge_dups.py already merged away (a Google repeat of an article we have). Without
+    # this, the same old redirect link coming back would be stored and scored all over again.
+    gone = merged_urls(conn) if conn is not None else set()
+
     now = datetime.now(timezone.utc).isoformat()
     total_seen = 0
     total_new = 0
+    total_merged = 0
     errors = 0
 
     for thread, search in searches:
@@ -165,6 +171,9 @@ def main():
         for a in articles:
             total_seen += 1
             if DRY_RUN:
+                continue
+            if a["url"] in gone:
+                total_merged += 1
                 continue
             cur = conn.execute(
                 """INSERT OR IGNORE INTO items
@@ -184,7 +193,8 @@ def main():
         conn.close()
 
     print(f"\n{'(dry run) ' if DRY_RUN else ''}saw {total_seen} articles, "
-          f"{total_new} new, {errors} search errors")
+          f"{total_new} new, {total_merged} skipped (merged-away repeats), "
+          f"{errors} search errors")
 
 
 if __name__ == "__main__":

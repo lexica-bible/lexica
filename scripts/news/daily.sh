@@ -34,6 +34,12 @@ echo "==> grouping new stories into events..."
 echo "==> resolving new-story faces (forward-fill)..."
 "$PY" scripts/news/resolve_new_faces.py || true
 
+# After the step above has looked up tonight's real article links: merge any row that is the
+# same article as one already stored (Google repeats with a new redirect link). Does nothing
+# until the first by-hand `merge_dups.py --apply` has been run (it creates items_merged).
+echo "==> merging same-article duplicates..."
+"$PY" scripts/news/merge_dups.py --apply --nightly || true
+
 # DISABLED 2026-07-05 — resolve_backfill_all.py crashed mid-flush and corrupted news.db
 # (see diagnosis). Re-enable only after the flush/connection issue is fixed. The RSS pull,
 # scoring, grouping, and forward-fill (resolve_new_faces) above are unaffected.
