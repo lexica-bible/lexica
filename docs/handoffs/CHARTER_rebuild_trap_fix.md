@@ -535,7 +535,23 @@ no reload since step 11): PASS** — θεός G2316 listed, ABP gloss `magistrat
 fold match. The 2 = Exo 22:28 + 1Sa 28:13 ("I see magistrates" G2316), both read in `abp_texts/`
 (abp_exodus.txt:609, abp_1samuel.txt:743). Also folded singular + plural on one word: δικαστής G1348
 `magistrate` 6 + `magistrates` 5; κωμάρχης G2967.1 `magistrates` 1. Before step 11 the ABP side of
-this call matched nothing (all norms blank). After-read of non-blank `english_head_norm`: _pending (JP)._
+this call matched nothing (all norms blank). After-read of non-blank `english_head_norm` (JP, PA,
+read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **Step 11 CLOSED.**
+**Step 7 (CC, served site, read-only API GETs — no word card opened, so no AI summary drawn):**
+- Eze 31:9 — `/api/verse-words/Eze/31/9` pos 15 "were jealous of" → G2206 ζηλόω (bracket 2). **PASS.**
+- 1Chr 1:1 — word row pos 0 "Adam," = `G76` Ἀδάμ, is_pn (Greek-keyed since R-2, by design); the card's
+  identity read `/api/pn/greek-identity …pos=0` = `hebrew_base H121`, source tipnr; `/api/metav/entity/Adam
+  …pos=0` = bound, exact, metaV person 78 "Adam". **PASS** (the checklist's "→ H121" is the card's
+  Hebrew line, not the word row).
+- Jer 51:41 / 25:26 — identity lemma Σεσάκ (pos 1) / Σησάχ (pos 25), both `lemma-only`, H8347 — the
+  reviewer's Sheshach ruling as served. **PASS.**
+- 1Ch 13:10 — data: pos 1 "was enraged" θυμόω + pos 2 "the LORD" κύριος, same bracket 1 (greek_pos 2 /
+  1). **Data PASS; the rendered chip NOT checked by CC** — see the loop below; JP eyeballs it.
+- **Found (out of lane, flagged):** opening `https://www.lexica.bible/?b=1Ch&c=13&t=abp` (the /read/
+  pages' deep-link shape) in CC's fresh built-in browser (no saved position, narrow/mobile layout) put
+  the reader in an endless loop — `/api/chapter/1Ch/13` and `/api/chapter/Gen/1` alternating, 56,000+
+  requests to live in a few minutes, page stuck on "Loading…". Tab closed. Not diagnosed; not yet
+  reproduced elsewhere.
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
