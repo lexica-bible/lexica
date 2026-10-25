@@ -858,9 +858,20 @@ Open tickets:
   stored again — e.g. ids 22825/23963, 5665/19745, 24147/24487 (the last pair even carries two
   different Google dates, 2024-11-21 vs 2021-02-18). Fix direction: dedupe on `resolved_url`, or
   on normalized title + source. code: scripts/news/gather_news.py (INSERT OR IGNORE on url).
-- **Page-date backfill — gated (built 2026-10-24, not yet run):** `scripts/backfill_page_dates.py`
-  dry run → JP pastes → verdict → `--apply` (which also adds the three date columns). Until that
-  apply, the nightly page-date check in resolve_new_faces.py skips itself.
+- **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
+  date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
+  byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
+  known misdates (26533/23285/23286/23784) corrected; Radar.am 26633 → 2026-05-18 (its "Pope
+  Francis" headline is the outlet's error — the text is Pope Leo XIV). The nightly check in
+  resolve_new_faces.py now runs on new pulls. Reader guards added during the dry runs (each from a
+  real page that broke it): self-contradicting pages, ambiguous <time> lists, dates after the pull,
+  a tag vs its own printed text, ambiguous day/month (01/07/2026). Records: commits 5109c1f7..0ea8dcd1.
+- **OPEN — Google redirect lookup has NO time limit in the live site (found 2026-10-25).** PA runs
+  googlenewsdecoder 0.1.7, whose gnewsdecoder() takes no timeout, so `gnews_resolve.resolve()` falls
+  back to requests calls with none. The date pass now wraps it in a hard stop, but `/api/news/resolve`
+  (Copy shortlist, a web worker) and the nightly face-fill still call it bare — one dead Google
+  connection can tie up a worker. Also: the package isn't in requirements.txt. Needs a ruling.
+  code: scripts/news/gnews_resolve.py, views_news.py resolve_urls, scripts/news/resolve_new_faces.py
 
 ---
 
