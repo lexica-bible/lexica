@@ -51,61 +51,29 @@ parser reference notes in its appendix). No open writes.
   §5. The helper audit's controls were refreshed the same day (cured A exhibits retired).
   **Precondition: PA row read of all 628** (the 20-verse read was a sample) **+ a detector for the
   454 both-inside-bracket shape** (none exists) before any write. Plus the 10 residue verses above.
-- OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
-  the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
-  one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
-  next rebuild (warning now in `/rebuild-words` step 9). **2026-10-26: census + charter done, re-key
-  ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. G1–G3 BUILT 2026-10-26**
-  (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **Copy dry
-  run PASSED 2026-10-26** (G1 395,003 exactly · 4,411 placed / 0 unplaced · floor red 3,873 / green 0 ·
-  restored table = live's row for row; checksum pinned). **Lane G1–G3 CLOSED at `1062917f`
-  (reviewer-accepted).** **WIRED 2026-10-26 (charter §9, Path A):** step 9 reads nothing live-only,
-  so step 9 + the restore (9a) + floor/oracle (9b) run on the rebuilt COPY before the swap; new step
-  1a `snapshot_surface_fill.py --check`; checklist reordered (RUN ORDER line); restore keeps its live
-  refusal. **LIVE REBUILD SWAPPED 2026-10-26 18:06 — the fill survived** (surface 0|0 vs old live ·
-  395,003 · floor GREEN; receipts charter §10; rollback `bible_pre_trapwire_swap.db`). The trap itself
-  is FIXED. **Owed: checklist steps 7, 10, 11 not yet run after the swap** (step 11 = the flagged
-  item below, now live-relevant). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
-  - CLOSED — held item 1 (21 headers + Sheshach: header follows the page) · held item 3 (gapfix
-    bracket half: `bracket_id` 0 vs live).
-  - HELD — `surface`/`lemma-only` label trace (reviewer) · header gate A/B re-scope for full rebuilds
-    (reviewer) · health_check 5 s wait false "locked" after deploys · build closing text calls a copy
-    "live" · two old `bible_pre_pnstar_*` copies (handoff items 11–13).
-  - ~~HELD — live wiring decision~~ — RESOLVED by §9 (no gap: nothing runs on live but the swap).
-  - FLAGGED — **step 11 has the old step-9 shape:** the build never writes `english_head_norm`; the
-    finder checks only that the column exists, so after a swap the ABP English finder folds on blanks
-    until step 11 runs. Check for live-only inputs (Step-0 style) and move it onto the copy before the
-    next live rebuild. Handoff held item 9.
-  - HELD — **snapshot staleness:** a restore that moves slots makes the frozen file stale for the next
-    rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy (which therefore
-    stays on PA until one exists). Gates the edition-upgrade lane.
-  - RECORD — reason 5 unreachable under the current keys (charter §6).
-  - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
-    re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
-    the builder if a rebuild recurs).
-  - DONE 2026-10-26: health-check `abp_surface` floor raised 389,244 → 395,003 (G3; proven on PA:
-    red 3,873 on the pre-fill copy + the fill-less rebuild, green 0 on the restored copy).
-- OPEN (half done 2026-10-26: fresh copy built3 read `gapfix (6, 0, 0)`; the `bracket_id` 0 vs live
-  read is the last owed line) — **fresh-copy proof of the two new gapfix entries (2Sa 18:31 p7, 18:32 p15).** Added to
-  `scripts/lane3_star_gapfix.json` after the G4 run (pin 4 → 6). The G4 copy built2 already had them
-  patched, so prove them on the next fresh rebuild copy: step 8b.2a must read `gapfix (6, 0, 0)` and
-  step 10 words `bracket_id` 0 vs live. (Lane-3-in-the-chain itself is DONE — TODO_ARCHIVE 2026-10-26.)
-- RECORD (charter G5; JP ruling 2026-10-26: 9/6 basis correct, live stale) — **live's name numbers are
-  still on the 8/5 classes; the next rebuild corrects them.** The 9/6 header landing moved 940 identity
-  rows between classes but retirement was not re-run, so live's `pn_hebrew_xref` classes and
-  proper-noun `words.strongs_base` reflect 8/5. **At the next rebuild swap expect 519 xref rows (class
-  only) and 501 strongs_base slots to change** (492 lose a Hebrew number, 9 gain one) — record the counts,
-  don't block. (JP-run read 2026-10-26, G4 test copy.)
-- HELD — **live's Greek-header table (pn_greek_identity) predates the 2026-10-25 abp_surface fill.**
-  It was built 9/6; the fill later gave name slots printed forms. Any header rebuild (a words rebuild's
-  8b.3, or a header re-run on live) therefore changes **21 rows** vs live — measured 2026-10-26 on the
-  G4 test copy `~/rekey/built2.db` (JP-run read): 12 tipnr rows gain a Greek header where live shows
-  English (Joseph ×2, Moses ×2, Joshua, Saul ×2, David ×3, Crete, Jonah); 6 none→lemma-only (Num 21:25
-  Israel, 1Sa 20:37 Jonathan, 2Sa 15:6 Absalom, Jer 48:15 / 48:20 Moab, Jer 49:3 Ai); 3
-  surface→lemma-only (Jos 12:23 'του Ναφαθδώρ'→'Ναφαθδώρ' — glued article gone; Jer 51:41 + Jer 25:26
-  Sheshach). 20 of 21 sit on a fill slot; Jer 25:26 follows from 51:41 (the fill's 'Σεσάκ' disagrees with
-  'Σησάχ', so the name loses its single headword). **Sheshach's spelling needs a content ruling before
-  any header rebuild lands on live.** Not a gate on the rebuild-trap fix (JP ruling 2026-10-26).
+- OPEN — **after the 2026-10-26 live rebuild: checklist steps 7, 10, 11 not yet run.** The rebuild
+  swapped live at 18:06 (rebuild-trap fix proven — TODO_ARCHIVE 2026-10-26; receipts charter §10;
+  rollback `~/bible-db/bible_pre_trapwire_swap.db`). Step 7 = served spot-checks (Eze 31:9, 1Chr 1:1,
+  1Ch 13:10; also Jer 51:41 Σεσάκ). Step 10 = `build_two_ending.py` paste + local app.js rebuild.
+  **Step 11 = `build_rendering_norm.py` — live-relevant:** the build never writes `english_head_norm`
+  (`build_words_from_abp.py:2154-2157`) and the finder only checks the column exists
+  (`views_lexicon.py:100-108`), so the ABP English finder may miss rebuilt words until it runs (not
+  measured). Before the NEXT rebuild: Step-0 check for live-only inputs, and move it onto the copy if
+  none. Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
+- HELD (reviewer 2026-10-26) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
+  A/B were built for the 7/30 header-only lane and ABORT on any full rebuild. Overridden for the
+  10/26 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.
+- HELD (reviewer 2026-10-26) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
+  surface → lemma-only at the swap (accepted). Trace what the label changes on the card, and whether a
+  header that matches the page should carry `surface`.
+- HELD — **snapshot staleness:** a restore that moves slots makes the frozen fill snapshot stale for
+  the next rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy (which stays
+  on PA until one exists). Gates the edition-upgrade lane.
+- RECORD — reason 5 unreachable under the re-key's current keys (rebuild-trap charter §6).
+- SMALL — `health_check.py` gives false "database is locked" in the minutes after a deploy (5 s
+  default wait; workers' warm-up writes the AI cache — ops.md) · the build's closing text calls its
+  source "live" (with a copy as source, its printed swap command would move the copy and reload the
+  site) · two old `bible_pre_pnstar_*` copies (~824 MB) beyond ops.md retention rule 1.
 - HELD (leftover, not a gate) — **header landing `->surface` 461 vs its receipt's 451 (10 rows).**
   The 2026-09-06 Greek-header landing moved 461 identity rows into class `surface` (lemma-only→surface
   421 + none→surface 40; JP-run read 2026-10-26, 9/6 formlane vs hdrlane backups in `~/db_backups`),
