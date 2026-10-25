@@ -122,14 +122,19 @@ parser reference notes in its appendix). No open writes.
   run: `_rotate` only cut a file short when the write itself failed, then left the stub, kept the raw,
   and stamped success (same on 7/2 + 7/6 — log lines 112, 181). **The uncompressed
   `bible.db.20261024-133029.db` is present and good** (quick_check ok, verses 31,237 = its .info) —
-  JP ruling: it stands as the 10/24 backup. **Fix BUILT, repo-only, NOT deployed (deploy waits for
-  JP's gate):** `backup_db.py` compresses to `.gz.part`, forces it to disk, reads it back in full,
+  JP ruling: it stands as the 10/24 backup. **Fix `61cc9bdb` DEPLOYED 10/25 (JP, PA 20:11–20:23):**
+  deploy.sh tests passed, API reload, sweep 200 ×5, HEAD 61cc9bdb; the new test passed on PA's own
+  Python; health_check: freshness OK, the one expected damaged-gz WARN, 62 swept / 1 damaged. The fix:
+  `backup_db.py` compresses to `.gz.part`, forces it to disk, reads it back in full,
   then renames; a failure removes the partial, keeps the raw, and FAILS the run (no success stamp →
   freshness alarm); a raw + .gz pair for one stamp now picks the raw. Test
-  `tests/test_backup_rotate.py` (both test lists): 25/25 on the fix, 12 FAIL on the old code. Still
-  gated: removing the damaged .gz (JP ruling — only after the raw was confirmed, separate step).
-  Note: the 10/26 nightly may itself re-compress the 10/24 raw over the bad .gz (new code: always;
-  old code: depends on folder order), and the 10/27 nightly ages the 10/24 stamp out (keep 3).
+  `tests/test_backup_rotate.py` (both test lists): 25/25 on the fix, 12 FAIL on the old code.
+  **OWED after the 10/26 13:30 UTC nightly (JP ruling: no manual delete, the nightly replaces it):**
+  read-only check — 10/24 .gz present, read-only (`-r--r--r--`), ~140–150 MB, dated 10/26 13:3x, 10/24
+  raw gone, 10/23 gone, `last_success` 10/26, log `All backups verified ok.` with no `XX`, sweep
+  `all intact`. Then update the keep-list line that calls the 10/24 nightly damaged, and check the
+  `~/rekey/pre_rebuild.db` condition (a nightly after the 18:06 swap passing the sweep). 10/27
+  nightly ages the 10/24 stamp out (keep 3).
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
