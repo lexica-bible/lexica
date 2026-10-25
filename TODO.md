@@ -54,12 +54,22 @@ parser reference notes in its appendix). No open writes.
 - OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
   the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
-  next rebuild (warning now in `/rebuild-words` step 9).
+  next rebuild (warning now in `/rebuild-words` step 9). **Census done** (`docs/handoffs/CENSUS_rebuild_trap.md`);
+  **charter written 2026-10-26** (`docs/handoffs/CHARTER_rebuild_trap_fix.md`: step 9 = live after the swap,
+  gates G0–G3, re-key decision owed — first step is a dry run on a built copy).
   - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
     re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
     the builder if a rebuild recurs).
   - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
     exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
+- OPEN — **rebuild order: the name-header build reads abp_surface before step 9 rebuilds it.**
+  `/rebuild-words` 8b.3 runs `build_pn_greek_identity.py`, which takes name-slot forms from
+  `abp_surface` joined on (verse_id, position) (`build_pn_greek_identity.py:292-305`, `:374-378`);
+  step 9 rebuilds that table later. So on a rebuild the headers come from the PRE-rebuild surface
+  table matched to the NEW positions (and, while the fill is live, from fill forms too — 2 headers
+  already equal a fill form at their slot, census §5 Q7). Same shape as the 8/8 glued-header
+  incident (`HANDOFF_form_lane.md:25`). Filed out of the rebuild-trap charter by JP ruling 10/26.
+  Read-only census first (which headers would change, by member) before any reorder.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
   in 29% of paired verses). No charter yet. Gated on the rebuild-trap fix above (JP 10/25) — its
   own item, not part of that fix.

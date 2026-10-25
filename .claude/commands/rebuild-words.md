@@ -215,12 +215,16 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
-9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
+9. **WHERE: on the LIVE `~/bible-db/bible.db`, AFTER the step-8 swap** (settled 2026-10-26,
+   `docs/handoffs/CHARTER_rebuild_trap_fix.md` §1 — this is what the 7/16 and 8/23 runs actually did;
+   `finish_rebuild.sh` and the build's closing text say the same). Until it runs, live serves the
+   pre-rebuild surface table against the new word positions.
+   RE-RUN `scripts/build_abp_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
    leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
-   `scripts/backfill_abp_surface.py <db> --bh bh_scrape.db --apply` — the surface builder writes
+   `scripts/backfill_abp_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db --apply` — the surface builder writes
    only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
-   find. THEN `scripts/backfill_pn_surface.py <db> --bh bh_scrape.db --apply` — the Phase-6 PN
+   find. THEN `scripts/backfill_pn_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
    printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; the interlinear Greek line for
    names reads from these). health_check FLOORS the table at 389,244 (re-declared at the
    2026-08-05 ②-ride: −165 vs the old 389,409, names-on-own-slots churn — see
@@ -231,7 +235,8 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    **⚠ The 2026-10-25 abp_surface FILL (4,411 writes, table 391,130 → 395,003; record
    `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above.** A rebuild
    drops it. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows) — re-landing the fill
-   after a rebuild needs its own gated step (TODO). Do not swap a rebuilt db without deciding this.
+   after a rebuild needs its own gated step (TODO; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md`).
+   Do not swap a rebuilt db without deciding this.
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory
