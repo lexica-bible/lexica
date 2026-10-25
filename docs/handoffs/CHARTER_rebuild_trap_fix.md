@@ -271,7 +271,15 @@ controls PASS (agree-strong 4,057 · agree-weak 354 = the identity floor). With 
 fill row re-keys on a same-code rebuild. Verification = a fresh copy later,
   NOT a re-run on built2 (its gapfix verses are already patched, so a mixed result is expected there).
 
-### G5 — PRE-SWAP GATE: the name-number class basis (JP ruling 2026-10-26: held, ruling required)
+### G5 — RECORD, NOT A BLOCK: expect 519 xref / 501 strongs_base changes at swap
+**JP ruling 2026-10-26: the 9/6 class basis is correct; live's 501 slots are stale.** A rebuild's 8b.2
+(re)writes them from the 9/6 classes — that is the fix, not a regression. At any rebuild swap, expect vs
+live: `pn_hebrew_xref` **519** rows changed (class only: lemma-only→none 21 · none→lemma-only 498;
+hebrew_base unchanged) and proper-noun `words.strongs_base` **501** (`H`→`*` 492 · `*`→`H` 9). Record the
+member counts at the swap; a different count is read member by member, a matching count does not block.
+(History below: first filed the same day as a pre-swap gate pending the 8/5-vs-9/6 ruling.)
+
+#### (superseded the same day) PRE-SWAP GATE: the name-number class basis
 Live's `pn_hebrew_xref` classes and its proper-noun `words.strongs_base` were last written at the 8/6
 retirement, on the **8/5** identity classes. The 9/6 Greek-header landing then moved 940 identity rows
 between classes and **retirement was never re-run**. A rebuild's 8b.2 writes from the **9/6** classes,

@@ -37,6 +37,13 @@ STAYS CORRECT (prose groups by bid across gaps) — a prose check alone will not
 Any hand edit that brackets across a blank slot marks the blank too. THE
 classifier is `scripts/bracket_contiguity.py` (one copy — imported by
 fix_lane3_star_merges.py AND check_wordpos_prereg.py; never re-implement it).
+**Hand repairs on live must ride the rebuild (standing, 2026-10-26).** A words rebuild re-derives
+every row from source, so any edit made directly on live is REVERTED unless a frozen per-row file
+re-applies it. The lane-3 repairs (three files: fixes → gapfix → fixes2) re-land at
+`/rebuild-words` step **8b.2a** (`scripts/lane3_rebuild_step.py` — after 8b.2, because fixes2 is
+pinned to a number 8b.2 restores; before 8b.3). The 2Sa 18:31/32 bracket marks (hand-applied 8/7)
+were found missing from every file by the G4 test and added to the gapfix file. **Any new hand
+repair on live goes into a frozen file the chain runs, in the same change.**
 
 **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE
 gloss is parked whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head`
@@ -115,7 +122,8 @@ must fold (frontend: greekFold in 00-core.jsx, compare-only; docs/tickets/accent
 **FILLED 2026-10-25 from the ABP app + Analytical Lexicon** (`apply_abp_surface_fill.py`: 4,411
 writes, 391,130 → 395,003 — 3,823 printed forms on slots that had none, 182 glued NBSP values split
 onto neighbour slots, 357 NBSP → plain space; record `docs/handoffs/CENSUS_abp_surface_fill.md`).
-**No builder re-creates the fill — a `build_abp_surface.py` re-run drops it** (/rebuild-words step 9).
+**No builder re-creates the fill — a `build_abp_surface.py` re-run drops it** (/rebuild-words step 9;
+fix chartered in `docs/handoffs/CHARTER_rebuild_trap_fix.md`, gates G1–G3 not yet built).
 Characterizer = `scripts/audit_surface_coverage.py`
 (read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
 Hebrew-numbered OT name slots that can never match Greek, the PN backfill's bucket). Mode-three
@@ -588,8 +596,12 @@ app.py matches.
   lacks these; lemma via `step_lexicon`, `base` is a NUMBER key), or `'*'` when no scheme
   numbers the name (14,850 lemma-only + always-'*' rows). `strongs` stays bare `'*'` on
   backfills. EXCEPTION (C3-Q1, machine-visible): the 'none'-class rows KEEP their Hebrew
-  number on the word until the gentilic/people-class Greek backfill candidate lands (2,454
-  'none' rows at the 8/6 re-declaration; 2,289 carry an H, census 10/24).
+  number on the word until the gentilic/people-class Greek backfill candidate lands. **Two bases
+  are live at once (2026-10-26):** the identity table carries the 9/6 header-landing classes ('none'
+  1,977), but live's `pn_hebrew_xref` classes and PN `strongs_base` were last written at the 8/6
+  retirement on the 8/5 classes ('none' 2,454) — retirement was not re-run after 9/6. JP ruled the
+  9/6 basis correct: the next rebuild's 8b.2 rewrites 519 xref rows (class only) + 501 word slots, an
+  expected change, not a regression (`docs/handoffs/CHARTER_rebuild_trap_fix.md` G5).
 - **`pn_hebrew_xref` — the Hebrew cross-ref home (Q2, one fact one home):** one row per PN word
   `(verse_id, position, hebrew_base, class)`; `hebrew_base` NULL (never '') for the 4,603
   rows that never had one; `class` ∈ abp-tag|tipnr|lemma-only|none, `'none'` IS the queryable

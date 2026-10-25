@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-26 — Lane-3 hand repairs now ride the rebuild (charter G4 PASSED on PA)
+The lane-3 repairs (16 verses, three frozen files) were in neither `finish_rebuild.sh` nor
+`/rebuild-words`, so a rebuild would have silently reverted them (test build vs live: exactly 35 english
++ 38 greek_pos cells, op for op the files' own edits). Now `/rebuild-words` step **8b.2a**,
+`scripts/lane3_rebuild_step.py` (a5dcb272; tests `test_lane3_rebuild_step.py`,
+`test_lane3_already_applied.py`). G4 on a fresh live copy with full 8b: words english / english_head /
+greek_pos / strongs / is_pn = live exactly; re-key dry run 4,411 placed / 0 unplaced. Record = charter §7.
+**Lessons:** (1) step placement first tried inside finish_rebuild — Mat 27:26 skipped, because its pinned
+number G2424 returns only in 8b.2 (identity class tipnr); the dry run on a copy caught it before any
+write. (2) the repair script's SKIP line read the same for "already fixed" and "state changed" — an
+explicit ALREADY check was added (7c05fa2c) so a re-run can pass honestly. (3) a THIRD file (gapfix,
+bracket marks only) was missed in the first count because the per-column compare had no bracket_id
+column — a compare blind to a column cannot clear it. (4) two more live hand edits (2Sa 18:31/32 bracket
+marks, 8/7) were in no file at all; added to gapfix (1e535824), fresh-copy proof still OPEN in TODO.
+(5) four declared figures were stale — build split 2,436→80, import_tipnr 31,392→31,649, restore
+6→8, retire class split 8/5→9/6 — each re-declared from member-level evidence (receipts in the code).
+
 ## 2026-10-25 — Concordance verse-list diff lane CLOSED (read-only; nothing written to any database)
 Census (d14a24ff) → parser + diff (10035f3e) → split-rendering class (9d4b7851) → adjudication
 (25bbcc2a). Every ordinary-word verse list in ABP's Lexical Concordance compared with our words

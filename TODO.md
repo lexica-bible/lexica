@@ -54,32 +54,24 @@ parser reference notes in its appendix). No open writes.
 - OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
   the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
-  next rebuild (warning now in `/rebuild-words` step 9). **Census done** (`docs/handoffs/CENSUS_rebuild_trap.md`);
-  **charter written 2026-10-26** (`docs/handoffs/CHARTER_rebuild_trap_fix.md`: step 9 = live after the swap,
-  gates G0–G3, re-key decision owed — first step is a dry run on a built copy).
+  next rebuild (warning now in `/rebuild-words` step 9). **2026-10-26: census + charter done, re-key
+  ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. NEXT = build gates G1–G3** — start at
+  `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (charter `CHARTER_rebuild_trap_fix.md`).
   - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
     re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
     the builder if a rebuild recurs).
   - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
     exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
-- OPEN — **lane-3 hand repairs are not in the rebuild chain — a words rebuild silently reverts them.**
-  **Promoted to charter gate G4 (2026-10-26); now `/rebuild-words` step 8b.2a
-  (`scripts/lane3_rebuild_step.py`, after retire, before the identity build) — PA test pending.** Three files,
-  ledger order: `scripts/lane3_star_fixes.json` (9 verses, 23 ops) → `lane3_star_gapfix.json` (6 verses, 7 ops since 2026-10-26 — 2Sa 18:31/32 added;
-  bracket marks only; missed in the first count) → `lane3_star_fixes2.json` (7 verses,
-  17 ops), applied on live by `fix_lane3_star_merges.py` (its docstring says it "joins the post-rebuild
-  repair chain"), were called by neither `finish_rebuild.sh` nor `/rebuild-words`. Proven 2026-10-26:
-  the re-key test build vs live differs on exactly 35 english cells, all in those 16 verses (Gen 46:26,
-  Lev 24:10, Num 25:8/14/15, 1Sa 14:50, 1Sa 24:5, 2Sa 14:4, 1Ch 21:9, 2Ch 14:12, Isa 30:31, Jer 50:16,
-  Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it
-  merged back). Must be decided before any rebuild swap. (Also 17 english_head + 38 greek_pos diffs in
-  the same compare — attribute by member when this is taken up.)
-- HELD — PRE-SWAP GATE (charter G5) — **live's name numbers are still on the 8/5 classes.** The 9/6
-  header landing moved 940 identity rows between classes but retirement was never re-run, so live's
-  `pn_hebrew_xref` classes and proper-noun `words.strongs_base` reflect 8/5. A rebuild (8b.2) writes the
-  9/6 classes and changes serving on 501 slots: 492 lose a Hebrew number (none→lemma-only), 9 gain one
-  (lemma-only→none); xref class changes on 519 rows, hebrew_base untouched (JP-run read 2026-10-26, G4
-  test copy). **Ruling required before any rebuild swap: 8/5 or 9/6 basis.**
+- OPEN — **fresh-copy proof of the two new gapfix entries (2Sa 18:31 p7, 18:32 p15).** Added to
+  `scripts/lane3_star_gapfix.json` after the G4 run (pin 4 → 6). The G4 copy built2 already had them
+  patched, so prove them on the next fresh rebuild copy: step 8b.2a must read `gapfix (6, 0, 0)` and
+  step 10 words `bracket_id` 0 vs live. (Lane-3-in-the-chain itself is DONE — TODO_ARCHIVE 2026-10-26.)
+- RECORD (charter G5; JP ruling 2026-10-26: 9/6 basis correct, live stale) — **live's name numbers are
+  still on the 8/5 classes; the next rebuild corrects them.** The 9/6 header landing moved 940 identity
+  rows between classes but retirement was not re-run, so live's `pn_hebrew_xref` classes and
+  proper-noun `words.strongs_base` reflect 8/5. **At the next rebuild swap expect 519 xref rows (class
+  only) and 501 strongs_base slots to change** (492 lose a Hebrew number, 9 gain one) — record the counts,
+  don't block. (JP-run read 2026-10-26, G4 test copy.)
 - HELD — **live's Greek-header table (pn_greek_identity) predates the 2026-10-25 abp_surface fill.**
   It was built 9/6; the fill later gave name slots printed forms. Any header rebuild (a words rebuild's
   8b.3, or a header re-run on live) therefore changes **21 rows** vs live — measured 2026-10-26 on the

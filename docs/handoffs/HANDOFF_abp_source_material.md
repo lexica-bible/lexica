@@ -3,9 +3,11 @@
 Written 2026-10-24 from JP's notes. Everything under "What JP verified" was checked by JP
 OUTSIDE CC; this session did not open these files. Re-verify any detail a step leans on.
 
+## STATUS 2026-10-26 — rebuild-trap lane in progress: census + charter done, G4 PASSED
+**The rebuild-trap lane has its own handoff now: `docs/handoffs/HANDOFF_rebuild_trap_fix.md`**
+(next = build gates G1–G3). The edition upgrade and (d) English-Greek Index stay behind it.
+
 ## STATUS 2026-10-25 (late) — Concordance verse-list diff CLOSED (read-only) · no open writes
-**Next-session first candidate: the rebuild-trap fix** (below; its own session, census first). Then
-(d) English-Greek Index.
 - **Concordance lane closed as read-only work:** 7,905 of 8,532 ordinary-word entries match our
   verse lists exactly. Record `CENSUS_abp_concordance_diff.md` (readout §1–6 + parser reference
   appendix); tools `scripts/parse_abp_concordance.py` · `concordance_handmap.tsv` (23 hand-ruled

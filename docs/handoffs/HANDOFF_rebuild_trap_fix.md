@@ -1,0 +1,48 @@
+# HANDOFF — rebuild-trap fix → next lane: build G1–G3
+
+Written 2026-10-26 at session close. The governing record is
+`docs/handoffs/CHARTER_rebuild_trap_fix.md` (gates G0–G5, rulings quoted, §6 dry run, §7 G4 test);
+the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charter in full first.
+
+## Where it stands
+- **The trap:** `/rebuild-words` step 9 runs `build_abp_surface.py`, which DROPs `abp_surface`; no
+  builder re-creates the 4,411-row 2026-10-25 fill; the health floor (389,244) sits below the pre-fill
+  391,130, so the loss is silent. Step 9 runs on the LIVE file after the swap (settled, charter §1).
+- **G4 PASSED on PA 2026-10-26** — the lane-3 hand repairs now ride the rebuild as checklist step
+  **8b.2a** (`scripts/lane3_rebuild_step.py`; after 8b.2, before 8b.3). Full run on a fresh live copy:
+  words english/english_head/greek_pos/strongs/is_pn = live exactly; re-key dry run placed 4,411 of
+  4,411 fill rows, 0 unplaced, all 3,873 inserts. Every other difference attributed row by row (§7).
+- **Re-key method RULED** (charter §3): key 2 (verse + ordinal of the full strongs) primary, key 1
+  (verse + strongs + English) cross-check; agree-strong or agree-weak (key 1 several, key 2's among
+  them) = placed. On a same-code rebuild nothing moves; the keys are only really exercised by the
+  English-line edition upgrade. The Lexicon "third witness" cannot fire under these keys (§6).
+- **Declared figures re-declared this session** (all were stale): build split 2,436 → 80 and
+  import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
+  2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
+
+## NEXT LANE — build the trap fix (charter G1–G3; G0 + G4 already defined/passed)
+Snapshot the fill (the 4,411-row diff live − `~/bible.db.pre-surface-fill-20261025`, plus each slot's
+old words row) BEFORE step 9 → step 9 rebuild + both backfills → re-key with `dryrun_rekey_fill.py`'s
+keys → re-apply (538 updates only where the builder value equals the recorded old form; 3,873 inserts
+only into empty slots; translit from the new slot's lemma) → **G1 table = 395,003 exactly** (builder
+chain must first total 391,130) · **G2 every slot placed or unplaced with a closed-list reason** ·
+**G3 health floor = 395,003, red on the pre-fill copy first**. Reasons 3/4 (need step-9 output) are
+first evaluated there. Copy-first; dry run → verdict → apply, as always.
+
+## Held items (none blocks the build; each has a TODO entry)
+1. **21 Greek headers + Sheshach** — live's header table predates the 10/25 fill; any header rebuild
+   changes 21 rows (mostly gains). Sheshach gets two spellings (Σεσάκ / Σησάχ) — content ruling first.
+2. **Header landing `->surface` 461 vs its receipt's 451** — 10 rows unattributed against
+   `HANDOFF_gateB_enumeration.md`; class totals reconcile exactly.
+3. **Fresh-copy proof of gapfix entries 5–6** (2Sa 18:31 p7, 18:32 p15) — added after the G4 run;
+   built2 already had them patched, so prove on the next fresh copy (expect `gapfix (6, 0, 0)`).
+4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it.
+5. **G5 record (not a block)** — JP ruled the 9/6 class basis correct; at any rebuild swap expect 519
+   xref rows (class only) + 501 PN `strongs_base` slots to change. Record the counts.
+
+## Files that stay on PA (do not delete)
+`~/rekey/` (old.db / built.db — first test pair; old2.db / built2.db — the G4 pair; logs + TSVs) ·
+`~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy — the snapshot's "before" side) ·
+`~/bible.db.pre-xref-fix-20261024`. Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
+receipt — leave, never commit). Note: `build_entity_binding.py` dry runs rewrite two TRACKED files
+(`scripts/pn_binding_hot.txt`, `pn_binding_numonly.txt`) — `git checkout --` them after a test run.
