@@ -63,6 +63,41 @@ parser reference notes in its appendix). No open writes.
   paste/deploy, record "unchanged"). Steps 10 + 11 RE-HOMED onto the copy in `/rebuild-words` (after
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
+- OPEN (JP 2026-10-26, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, findings
+  only so far, no fix proposed.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live sent
+  56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed.
+  **Reproduced locally, no database** (scratch harness modeled on `tests/mobile_harness.js`: real
+  committed bundle per git rev, fetch stubbed in-page, books = Gen/Exo/1Ch/Mat; each case alone in an
+  iframe from a blank page, 2.5 s): first visit, no link → 1 chapter request · returning visitor + link
+  → 2 · **first visit + link → 14,685 (phone width) / 9,171 (desktop) — loop** · bundle at
+  `bc47330c^` + link → 2 · bundle at `bc47330c` + link → 14,483 — loop. Live serves the tested bundle
+  (`static/app.js` unchanged `a1998f0e..HEAD`).
+  **DATE: introduced by `bc47330c` (2026-06-28, "keep the reader's panels + marker in step with
+  navigation") — NOT the 10/26 swap.** The loop's only inputs are the bundle, the book list and the
+  browser's saved state; the swap changed only bible.db (the book list is not rebuilt).
+  **Trigger:** a browser with no saved book list (`lexica.books.v1` — a first-ever visit) arriving
+  on a `?b=…&c=…` link — i.e. a new visitor clicking "Open in the interactive reader" on a crawlable
+  `/read/` page (`views_seo.py:_reader_link`). Returning visitors don't loop. Width doesn't matter.
+  **Mechanism (code trace, matches the repro's Gen/1 ↔ 1Ch/13 pattern):** with no cached list the
+  reader starts with no book; when `/api/books` lands it defaults to Genesis 1 (`60-library.jsx:240`)
+  in the same render where the jump effect (`:380-429`) sets 1Ch 13. The position report
+  (`:439-442`) tells App "Gen 1"; App's `handleReaderPos` (`90-app.jsx:188-192`) sees it doesn't
+  match the jump and REPLACES the jump marker with Gen 1; the jump effect follows the marker back to
+  Gen 1 while the report of 1Ch 13 replaces the marker again — each side chases the other one
+  render behind, forever, one chapter fetch per swing. Returning visitors are safe because the
+  reader reports its saved spot BEFORE App sets the jump (child effects run first), so the jump
+  arrives last and wins.
+  Not measured: how many real visitors have hit it since bc47330c went live (PA's access log would
+  show alternating `/api/chapter` bursts). Rulings: fix ships in the same deploy as step 10's paste
+  (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
+  section names this deep link as one of the two `libNav` producers.
+- HELD (JP 2026-10-26) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
+  mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
+  headers — all read through the site's read-only endpoints on 10/26) and which must be SEEN (1Ch 13:10:
+  Library, ABP, **Chip view** — the verse's own line shows the "was enraged" box, then "the LORD", in
+  one bracket; Prose reads "the LORD was enraged" — per `_lord_subject_split`,
+  `build_words_from_abp.py:1577-1584`). Also: say "card shows H121", not "→ H121" (the word row is G76
+  since R-2), and never reach the reader through a `?b=…&c=…` link until the deep-link loop is fixed.
 - HELD (JP 2026-10-26) — **`build_rendering_norm.py` loose ends** (census of steps 7/10/11):
   (a) its "recomputed N" line counts rows TOUCHED, not changed — a re-run never reads "0 to do";
   (b) the printed undo `ALTER TABLE <t> DROP COLUMN <c>` (`:17`, `:111`) does not work — SQLite refuses

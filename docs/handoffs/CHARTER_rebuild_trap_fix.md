@@ -550,8 +550,12 @@ read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **St
 - **Found (out of lane, flagged):** opening `https://www.lexica.bible/?b=1Ch&c=13&t=abp` (the /read/
   pages' deep-link shape) in CC's fresh built-in browser (no saved position, narrow/mobile layout) put
   the reader in an endless loop — `/api/chapter/1Ch/13` and `/api/chapter/Gen/1` alternating, 56,000+
-  requests to live in a few minutes, page stuck on "Loading…". Tab closed. Not diagnosed; not yet
-  reproduced elsewhere.
+  requests to live in a few minutes, page stuck on "Loading…". Tab closed. **JP opened its own lane
+  ahead of step 10; findings (reproduced locally, dated to `bc47330c` 2026-06-28 — not the swap) in
+  TODO.md "reader deep-link request loop".**
+- **JP ruling after step 7:** items 1–3 accepted on data-level checks (loop risk); 1Ch 13:10 pending
+  JP's look at the reader's Chip view. Step 10's read-only diff may run now; no paste/deploy until
+  the loop lane reports.
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
