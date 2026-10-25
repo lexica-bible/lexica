@@ -147,3 +147,14 @@ exported TSVs): drift ×2, duplicate line, E1 negative, ἡ in a written form, a
   `scripts/build_abp_translit.py` after.
 - `build_abp_surface.py` DROPs and rebuilds its table: a later re-run would wipe the fill unless the
   fill is a re-runnable step after both backfills. The health-check floor (389,244) only rises.
+
+## PA dry run 2026-10-25 (JP) — expected vs actual
+Every count line matches the pre-registered picture (4,411 writes = 3,873 insert + 538 update;
+abp_surface 391,130 → 395,003); no drift vs the 10/24 list; C1/C2/C3 PASS; G1–G6 PASS.
+**E1:** app ἡ spots 35,981 → ours ή 35,921 (99.83%), ours plain η 60, ours ἡ 0, app ή 0; 63 pairs
+skipped (lengths differ). The 60 plain-η spots are NOT in the fill (what they are is not checked —
+the real article ἡ / ἡμ- words would look like this). The fill's 530 ἡ forms checked one by one by
+shape: 410 mid-word, 119 word-initial verbs (ἤνεγκε, ἦλθε, ἤκουσεν → ήνεγκε, ήλθε, ήκουσεν), 1 with a
+second accent (Mar 8:4 δυνήσεταί, correct enclitic accent); no article, no ἡμ- word, no
+single-letter ἡ. words.lemma is empty on 1,823 of the 4,411 written slots (report only; no lemma write).
+Per-row list: `~/abp_surface_fill_dryrun.csv` on PA (6,106 rows). **Verdict owed before any apply.**
