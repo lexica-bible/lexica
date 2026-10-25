@@ -43,8 +43,10 @@ _LD_LOOSE = re.compile(r'"datePublished"\s*:\s*"([^"]+)"')
 _META = re.compile(r"<meta\b[^>]*>", re.I)
 _ATTR = re.compile(r'([\w:.-]+)\s*=\s*(?:"([^"]*)"|\'([^\']*)\')')
 _ARTICLE = re.compile(r"<article\b.*?</article>", re.I | re.S)
-_TIME = re.compile(r"<time\b[^>]*\bdatetime\s*=\s*(?:\"([^\"]*)\"|'([^']*)')", re.I)
 _LEAD_DAY = re.compile(r"^\s*(\d{4})-(\d{2})-(\d{2})")
+_WEEKDAY = re.compile(r"^\s*(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?,?\s+", re.I)
+# a <time> tag with its attributes AND its printed text (the text is a second witness)
+_TIME_FULL = re.compile(r"<time\b([^>]*)>([^<]*)", re.I)
 
 # URL segments, most specific first
 _URL_ISO = re.compile(r"(?<!\d)(\d{4})-(\d{2})-(\d{2})(?!\d)")
@@ -80,7 +82,7 @@ def _from_raw(raw):
         from dateparse import to_iso           # run as a script from scripts/news/
     except ImportError:
         from scripts.news.dateparse import to_iso
-    iso = to_iso(s)
+    iso = to_iso(s) or to_iso(_WEEKDAY.sub("", s))   # "Sun, 16 May 2021" -> "16 May 2021"
     m = _LEAD_DAY.match(iso or "")
     return _day(*m.groups()) if m else None
 
@@ -139,22 +141,44 @@ def _from_time(doc):
     six dates; the first was a sidebar story's Oct 17.)"""
     arts = _ARTICLE.findall(doc)
     region = arts[0] if len(arts) == 1 else doc
-    days = {d for d in (_from_raw(a or b) for a, b in _TIME.findall(region)) if d}
+    days = set()
+    for attr_s, text in _TIME_FULL.findall(region):
+        days |= _time_days(attr_s, text)
     return days.pop() if len(days) == 1 else None
+
+
+def _attrs(s):
+    return {k.lower(): (a if a is not None and a != "" else b) for k, a, b in _ATTR.findall(s)}
+
+
+def _time_days(attr_s, text):
+    """The days ONE <time> tag claims: its datetime attribute AND its printed text, when the text
+    is a readable full date. Two witnesses on one tag — they must agree like any others.
+    (gdnonline 20987, 2026-10-25: datetime="2017-12-05..." printed "Sun, 16 May 2021" — the
+    site's tag is broken; the printed day, matching the Kerry/COP26 Vatican visit, is right.)"""
+    out = set()
+    for raw in ((_attrs(attr_s).get("datetime") or ""), text):
+        d = _from_raw(raw)
+        if d:
+            out.add(d)
+    return out
 
 
 def _byline_days(doc):
     """Days the page marks as its PUBLISH date outside the data block: a <time> whose class says
-    'published' (WordPress 'entry-date published'), or any tag with itemprop="datePublished".
-    Used only to cross-check the other sources (see page_date_detail)."""
+    'published' (WordPress 'entry-date published') — both its datetime and its printed text — or
+    any tag with itemprop="datePublished". Used only to cross-check the other sources (see
+    page_date_detail)."""
     out = set()
-    for tag in re.findall(r"<(?:time|meta|span|div|p)\b[^>]*>", doc, re.I):
-        attrs = {k.lower(): (a if a is not None and a != "" else b) for k, a, b in _ATTR.findall(tag)}
-        cls = (attrs.get("class") or "").lower().split()
-        is_pub = ((attrs.get("itemprop") or "").strip().lower() == "datepublished"
-                  or (tag[:5].lower() == "<time" and "published" in cls))
-        if is_pub:
-            d = _from_raw(attrs.get("datetime") or attrs.get("content"))
+    for attr_s, text in _TIME_FULL.findall(doc):
+        a = _attrs(attr_s)
+        cls = (a.get("class") or "").lower().split()
+        if "published" in cls or (a.get("itemprop") or "").strip().lower() == "datepublished":
+            out |= _time_days(attr_s, text)
+    for tag in re.findall(r"<(?:meta|span|div|p)\b[^>]*>", doc, re.I):
+        a = _attrs(tag)
+        if (a.get("itemprop") or "").strip().lower() == "datepublished":
+            d = _from_raw(a.get("datetime") or a.get("content"))
             if d:
                 out.add(d)
     return out

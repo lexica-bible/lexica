@@ -139,6 +139,23 @@ def t_url_disagrees():
     assert page_date_detail("https://aleteia.org/2024/09/12/x/", html=ok) == ("2024-09-12", "jsonld")
 
 
+def t_tag_vs_its_own_text_gdn():
+    # gdnonline 20987: the byline tag's datetime says 2017-12-05, the text it prints says
+    # "Sun, 16 May 2021" (true: the Kerry/COP26 Vatican visit). The tag contradicts itself.
+    html = ('<article><span class="byline">Reuters</span>'
+            '<time class="entry-date published" datetime="2017-12-05T03:29:21+00:00">Sun, 16 May 2021</time>'
+            '<time class="updated" datetime="2017-12-05T08:36:44+00:00">Sun, 16 May 2021</time></article>')
+    assert page_date_detail("https://www.gdnonline.com/Details/945024", html=html) == (None, "conflict")
+
+
+def t_tag_and_text_agree_bbc():
+    # BBC 23277: one article, datetime and printed text agree -> that day
+    html = '<article><time dateTime="2018-01-30T00:09:14.000Z">30 January 2018</time></article>'
+    assert page_date_detail("https://www.bbc.co.uk/news/av/stories-42861144", html=html) == ("2018-01-30", "time")
+
+
+test("a date tag whose printed text disagrees with its datetime -> no date", t_tag_vs_its_own_text_gdn)
+test("a date tag whose datetime and printed text agree -> that day", t_tag_and_text_agree_bbc)
 test("page contradicts itself (data block vs printed byline) -> no date", t_conflict_ipi)
 test("data block and byline agree -> data block date", t_agree)
 test("several <time> dates and no data block -> no date (story list, not a byline)", t_ambiguous_time_nssmag)
