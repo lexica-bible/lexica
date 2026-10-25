@@ -914,7 +914,9 @@ Open tickets:
        merge/split checks ran as ONE `--regroup` pass, so they never exercised this. Confirm on
        PA: `inspect_rows.py "death penalty"` — the members' labels and first-pull nights. Frozen
        sample needed: these 8 rows with their first-pull nights, labeled in two separate runs.
-       Same mechanism likely puts the NewsNation repeat pair on two cards.
+       CONFIRMED for the NewsNation repeat pair (PA 2026-10-25): ids 26816 (first pulled 10-21,
+       label "US Bishops AI Task Force") and 27449 (first pulled 10-24, label "US Bishops Catholic
+       AI Task Force") — same article, two nights, two labels, two cards.
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
