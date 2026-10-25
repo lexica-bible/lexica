@@ -211,7 +211,8 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       with a named tail allowance; counts are tripwires, the member set rules (§6l).**
    2a. **LANE-3 HAND REPAIRS — `python3 scripts/lane3_rebuild_step.py <db>`** (added 2026-10-26,
       `docs/handoffs/CHARTER_rebuild_trap_fix.md` G4). Re-applies the three frozen lane-3 files
-      (fixes 9 → gapfix 4 → fixes2 7 verses) and judges each from its own output; **it must print
+      (fixes 9 → gapfix 6 → fixes2 7 verses; gapfix gained 2Sa 18:31/32 on 2026-10-26) and judges
+      each from its own output; **it must print
       `LANE-3 STEP: PASS`, or DO NOT go on.** Without it a rebuild silently REVERTS 16 live verses
       (Mat 9:11 "the Pharisees seeing" merges back, etc.). HERE, not in finish_rebuild.sh: fixes2 is
       pinned to Mat 27:26's `G2424`, which only returns in step 2; and step 3 below must see the

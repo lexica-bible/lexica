@@ -17,7 +17,8 @@ WHAT: runs scripts/fix_lane3_star_merges.py --apply on the three files in the le
   lane3_star_fixes.json   9 verses   contiguity FAIL tolerated ONLY on a slot listed in
                                      lane3_star_gapfix.json (same verse, same position, the
                                      bracket gapfix sets there) — read at run time
-  lane3_star_gapfix.json  4 verses   must then PASS contiguity on every verse fixes failed
+  lane3_star_gapfix.json  6 verses   must then PASS contiguity on every verse fixes failed
+                                     (4 lane-3 verses + 2Sa 18:31/32, added 2026-10-26)
   lane3_star_fixes2.json  7 verses   strict
 Each file passes only when: its count line shows all N patched (first run) or all N already
 applied (re-run), 0 skipped; no SKIP line; every render check PASS; contiguity as above. A mix
@@ -37,7 +38,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-FILES = (("lane3_star_fixes.json", 9), ("lane3_star_gapfix.json", 4), ("lane3_star_fixes2.json", 7))
+FILES = (("lane3_star_fixes.json", 9), ("lane3_star_gapfix.json", 6), ("lane3_star_fixes2.json", 7))
 FIXES, GAPFIX, FIXES2 = (f for f, _ in FILES)
 
 _VERSE = re.compile(r"^=== (.+?) === \(")

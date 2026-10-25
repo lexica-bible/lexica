@@ -1,5 +1,5 @@
 {
- "_comment": "Lane-3 follow-up (2026-08-07): the gentilic batch left the blank slot INSIDE four verses' new/joined brackets without the bracket mark; chip/interlinear group only consecutive same-bracket runs, so those verses mis-ordered there (prose was unaffected). This sets the bracket mark on the five gap slots — nothing else changes. Runs AFTER lane3_star_fixes.json in the repair chain.",
+ "_comment": "Lane-3 follow-up (2026-08-07): the gentilic batch left the blank slot INSIDE four verses' new/joined brackets without the bracket mark; chip/interlinear group only consecutive same-bracket runs, so those verses mis-ordered there (prose was unaffected). This sets the bracket mark on the five gap slots — nothing else changes. Runs AFTER lane3_star_fixes.json in the repair chain. ADDED 2026-10-26 (JP ruling, rebuild-trap G4 test): 2Sa 18:31 pos 7 + 2Sa 18:32 pos 15 — the same unmarked-interior-blank class (lane-3 confirmed members 18-19), hand-applied on live 2026-08-07 in the wordpos lane (TICKET_wordpos_binding.md:261-279) but held by no frozen file, so a rebuild dropped them. Values from a JP-run read 2026-10-26 (G4 test copy vs live): G3588, no English, no greek_pos, bracket 2 spans 6-8 / 14-16.",
  "2Sa 14:4": {
   "new_bids": [],
   "join_bids": [1],
@@ -31,6 +31,22 @@
   "join_bids": [2],
   "ops": [
    {"pos": 4, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2}
+  ]
+ },
+ "2Sa 18:31": {
+  "new_bids": [],
+  "join_bids": [2],
+  "ops": [
+   {"pos": 7, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
+    "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2}
+  ]
+ },
+ "2Sa 18:32": {
+  "new_bids": [],
+  "join_bids": [2],
+  "ops": [
+   {"pos": 15, "sbase": "G3588", "old_eng": null, "old_gpos": null, "old_bid": null,
     "new_eng": null, "new_head": null, "new_gpos": null, "new_bid": 2}
   ]
  }

@@ -26,7 +26,7 @@ import lane3_rebuild_step as st   # noqa: E402
 GAPS = st.gapfix_slots()
 FIXES_VERSES = ["Mat 9:11", "2Ch 14:12", "2Sa 14:4", "Isa 30:31", "Jer 50:16", "Lev 24:10",
                 "Num 25:8", "Num 25:14", "Num 25:15"]
-GAP_VERSES = ["2Sa 14:4", "Num 25:8", "Num 25:14", "Num 25:15"]
+GAP_VERSES = ["2Sa 14:4", "Num 25:8", "Num 25:14", "Num 25:15", "2Sa 18:31", "2Sa 18:32"]
 FIXES2_VERSES = ["Eze 23:5", "Heb 11:24", "1Ch 21:9", "1Sa 14:50", "1Sa 24:5", "Gen 46:26",
                  "Mat 27:26"]
 
@@ -70,6 +70,8 @@ class Lane3Matcher(unittest.TestCase):
     def test_gapfix_slots_read_from_the_real_file(self):
         self.assertEqual(GAPS["Num 25:8"], {(2, 4), (3, 15)})
         self.assertEqual(GAPS["2Sa 14:4"], {(1, 4)})
+        self.assertEqual(GAPS["2Sa 18:31"], {(2, 7)})
+        self.assertEqual(GAPS["2Sa 18:32"], {(2, 15)})
         self.assertEqual(sorted(GAPS), sorted(GAP_VERSES))
 
     def test_first_run_with_gapfix_slots_open_then_closed_passes(self):
@@ -94,7 +96,7 @@ class Lane3Matcher(unittest.TestCase):
         self.assertTrue(any("Num 25:8 must PASS" in p for p in probs), probs)
 
     def test_gapfix_not_reporting_a_failed_verse_fails(self):
-        gap = run_out(["2Sa 14:4", "Num 25:14", "Num 25:15"], patched=4)
+        gap = run_out(["2Sa 14:4", "Num 25:14", "Num 25:15", "2Sa 18:31", "2Sa 18:32"], patched=6)
         ok, _ = st.judge(first_run(**{st.GAPFIX: gap}), GAPS)
         self.assertFalse(ok)
 

@@ -264,7 +264,11 @@ GLOB 0) → **8b.2a LANE-3 STEP: PASS** (9/4/7 patched; re-run 0/9 · 0/4 · 0/7
 - **`pn_hebrew_xref` 519 + words `strongs_base` 501 — see G5.**
 - words `bracket_id` 2 — 2Sa 18:31 p7 + 18:32 p15, the 8/7 wordpos-lane hand repair (interior-blank
   bracket marks, `TICKET_wordpos_binding.md:261-279`), held by no frozen file → added to
-  `lane3_star_gapfix.json` (JP ruling 2026-10-26; diff pending read). Verification = a fresh copy later,
+  `lane3_star_gapfix.json` (JP ruling 2026-10-26): gapfix pin 4 → 6 verses; both slots G3588, blank,
+  bracket 2 spanning 6-8 / 14-16 (JP-run read).
+**Step 11 (re-key dry run on built2): placed 4,411 · unplaced 0 · inserts 3,873 of 3,873**, all four
+controls PASS (agree-strong 4,057 · agree-weak 354 = the identity floor). With G4 in the chain, every
+fill row re-keys on a same-code rebuild. Verification = a fresh copy later,
   NOT a re-run on built2 (its gapfix verses are already patched, so a mixed result is expected there).
 
 ### G5 — PRE-SWAP GATE: the name-number class basis (JP ruling 2026-10-26: held, ruling required)

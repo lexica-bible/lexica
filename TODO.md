@@ -65,7 +65,7 @@ parser reference notes in its appendix). No open writes.
 - OPEN — **lane-3 hand repairs are not in the rebuild chain — a words rebuild silently reverts them.**
   **Promoted to charter gate G4 (2026-10-26); now `/rebuild-words` step 8b.2a
   (`scripts/lane3_rebuild_step.py`, after retire, before the identity build) — PA test pending.** Three files,
-  ledger order: `scripts/lane3_star_fixes.json` (9 verses, 23 ops) → `lane3_star_gapfix.json` (4, 5 —
+  ledger order: `scripts/lane3_star_fixes.json` (9 verses, 23 ops) → `lane3_star_gapfix.json` (6 verses, 7 ops since 2026-10-26 — 2Sa 18:31/32 added;
   bracket marks only; missed in the first count) → `lane3_star_fixes2.json` (7 verses,
   17 ops), applied on live by `fix_lane3_star_merges.py` (its docstring says it "joins the post-rebuild
   repair chain"), were called by neither `finish_rebuild.sh` nor `/rebuild-words`. Proven 2026-10-26:
