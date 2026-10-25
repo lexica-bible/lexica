@@ -51,9 +51,9 @@ parser reference notes in its appendix). No open writes.
   §5. The helper audit's controls were refreshed the same day (cured A exhibits retired).
   **Precondition: PA row read of all 628** (the 20-verse read was a sample) **+ a detector for the
   454 both-inside-bracket shape** (none exists) before any write. Plus the 10 residue verses above.
-- OPEN — **after the 2026-10-25 live rebuild: step 11 CLOSED (354,946 normed, finder check PASS) ·
-  step 10 CLOSED (IDENTICAL, unchanged) · step 7: 3 of 4 pass on data, 1Ch 13:10 Chip-view look
-  pending JP (receipts charter §10a).** Original note: The rebuild
+- CLOSED 2026-10-25 — **after the 2026-10-25 live rebuild: step 11 CLOSED (354,946 normed, finder check
+  PASS) · step 10 CLOSED (IDENTICAL, unchanged) · step 7 CLOSED (items 1–3 on data, JP-accepted; 1Ch
+  13:10 seen by JP in Chip + Interlinear view) — receipts charter §10a.** (Archive at next /wrap.) Original note: The rebuild
   swapped live at 18:06 (rebuild-trap fix proven — TODO_ARCHIVE 2026-10-25; receipts charter §10;
   rollback `~/bible-db/bible_pre_trapwire_swap.db`). Step 7 = served spot-checks (Eze 31:9, 1Chr 1:1,
   1Ch 13:10; also Jer 51:41 Σεσάκ). Step 10 = `build_two_ending.py` paste + local app.js rebuild.
@@ -65,8 +65,9 @@ parser reference notes in its appendix). No open writes.
   paste/deploy, record "unchanged"). Steps 10 + 11 RE-HOMED onto the copy in `/rebuild-words` (after
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
-- OPEN (JP 2026-10-25, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
-  FIX DEPLOYED 10/25 19:48 (`0d5ea43a`); JP's live private-window tests pending.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
+- CLOSED 2026-10-25 — **reader deep-link request loop — LIVE DEFECT, dated + reproduced; FIX DEPLOYED
+  10/25 19:48 (`0d5ea43a`); JP's `?b=` private-window test landed on 1Ch 13 and stayed — lane closed
+  (JP).** (Archive at next /wrap.) Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
   had the browser attempt 56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed — most
   failed inside the browser and never reached PA (see the access-log read below).
   **Reproduced locally, no database** (scratch harness modeled on `tests/mobile_harness.js`: real
@@ -121,9 +122,11 @@ parser reference notes in its appendix). No open writes.
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
-  Library, ABP, **Chip view** — the verse's own line shows the "was enraged" box, then "the LORD", in
-  one bracket; Prose reads "the LORD was enraged" — per `_lord_subject_split`,
-  `build_words_from_abp.py:1577-1584`). Also: say "card shows H121", not "→ H121" (the word row is G76
+  Library, ABP — **Chip view reads "the LORD was enraged"** (English order, no bracket marks/digits since
+  2026-07-04 `9ff47f00` + `7b7fc505`); **Interlinear view reads "[²was enraged ¹the LORD]"** (ABP's
+  printed order + marks). Both SEEN by JP 10/25. CC first wrote this backwards from a pre-July build
+  comment without reading the renderer (`59c-library-render.jsx:360-395` chip, `:834` interlinear) —
+  checklist line + build comment corrected 10/25). Also: say "card shows H121", not "→ H121" (the word row is G76
   since R-2), and never reach the reader through a `?b=…&c=…` link until the deep-link loop is fixed.
 - HELD (JP 2026-10-25) — **`build_rendering_norm.py` loose ends** (census of steps 7/10/11):
   (a) its "recomputed N" line counts rows TOUCHED, not changed — a re-run never reads "0 to do";

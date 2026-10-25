@@ -564,7 +564,13 @@ read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **St
   ahead of step 10; findings (reproduced locally, dated to `bc47330c` 2026-06-28 — not the swap) in
   TODO.md "reader deep-link request loop".**
 - **JP ruling after step 7:** items 1–3 accepted on data-level checks (loop risk); 1Ch 13:10 pending
-  JP's look at the reader's Chip view. Step 10's read-only diff may run now; no paste/deploy until
+  JP's look at the reader's Chip view. **→ SEEN by JP 10/25: Chip view "the LORD was enraged", Interlinear
+  "[²was enraged ¹the LORD]" — PASS. Step 7 CLOSED.** CC's predicted chip ("<verb> · the LORD", from the
+  checklist + the pre-July `_lord_subject_split` docstring) was stale: chip mode reads in English order
+  and shows no bracket marks or digits since 2026-07-04 (`9ff47f00`, `7b7fc505`; locked by
+  `tests/test_render_markup.js`). Checklist step 7 line and the docstring corrected. **Loop lane CLOSED**
+  on JP's `?b=` private-window test (landed on 1Ch 13, stayed). **Post-swap tail complete: steps 7,
+  10, 11 all closed.** Step 10's read-only diff may run now; no paste/deploy until
   the loop lane reports.
 - **Step 10 (JP, PA, 19:10, read-only — `build_two_ending.py ~/bible-db/bible.db`, output from the
   `// AUTO-GENERATED` line diffed vs `static/src/00b-two-ending.jsx`): `IDENTICAL` → "unchanged", no

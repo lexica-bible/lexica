@@ -1579,8 +1579,9 @@ def _lord_subject_split(rows: list) -> None:
     bundled on the verb with an adjacent EMPTY, bracket-free κύριος/2962 slot: move
     'the LORD' to the κύριος slot (greek_pos 1, reads first), keep the verb on its
     slot (greek_pos 2), bind both in a NEW per-verse bracket. Positions never move,
-    so CHIP = verb · the LORD (source order, LORD clickable -> 2962) and PROSE =
-    the LORD verb. Mirrors _redistribute_pronoun_compounds. Touches english / head /
+    so the as-printed INTERLINEAR = verb · the LORD (source order, LORD clickable ->
+    2962) while PROSE and CHIP read "the LORD verb" (chip took English order and
+    dropped bracket marks 2026-07-04, 9ff47f00 / 7b7fc505). Mirrors _redistribute_pronoun_compounds. Touches english / head /
     greek_pos / bracket_id / italic / italic_words only."""
     pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
     existing = [r[6] for r in rows if r[6] is not None]

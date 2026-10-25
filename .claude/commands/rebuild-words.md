@@ -180,7 +180,10 @@ output, if any, rides the step-8 deploy).
    "≈ 176") → `audit_corpus_tier2.py bible_test.db --rahlfs
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
-   opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
+   opens metaV), LORD dual-order (1Ch 13:10 — **Chip view reads "the LORD was enraged"**: English order,
+   no bracket marks or digits since 2026-07-04 `9ff47f00` + `7b7fc505`; only the Interlinear view keeps
+   ABP's printed order "[²was enraged ¹the LORD]". Corrected 2026-10-25 — this line used to predict
+   "<verb> · the LORD" for the chip, which was the pre-July layout).
 8. Swap + deploy — **MOVED below 9b (2026-10-25):** it is the LAST step and the only live action
    (RUN ORDER line above; steps 10/11 moved before it, onto the copy). 8b below still runs on the copy, right after step 3.
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
