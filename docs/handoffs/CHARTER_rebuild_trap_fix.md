@@ -167,6 +167,25 @@ the reader; (iii) everything K2 misses as "no slot" stays unplaced (honest, not 
 before any write.
 
 ---
+## §6 The re-key dry run (built 2026-10-26; PA sequence handed to JP, NOT yet cleared)
+Script `scripts/dryrun_rekey_fill.py`, locked by `tests/test_rekey_dryrun.py` (both test lists).
+Reads `--old` (a copy of live taken before the build: fill + old positions), `--prefill`, `--built`
+(build + finish_rebuild.sh, step 9 NOT run), the approved fill CSV and the Lexicon; opens every
+database read-only; writes only a TSV report. Refuses the live path, any file named `bible.db`,
+the same file twice, and a `.db` report path. Controls before results: G0 (4,411 / 538 and = the
+CSV), V (verses identical old vs built), C1 identity (key 2 maps every row to itself; no reason
+1/2/5/7), C2 (the Lexicon witness fails a form against a neighbour's number). Reasons 3 and 4 are
+not evaluated (they need step-9 output).
+**Finding while testing — the Lexicon witness cannot fire as a third witness under these keys.**
+Both keys require the SAME full strongs, so the new slot always carries the old slot's number, and
+the agreement check reads only number + form. Agreement at the new slot is therefore identical to
+agreement at the old slot, which C1 already proves passes. Reason 5 can never be non-zero in a
+completed run; in particular the witness cannot catch a form put on the wrong occurrence of the
+same number (the key-2 silent-failure case, §3). Reported for the reviewer — no change made.
+8b is left out of the dry-run sequence: it writes only `strongs_base` and name tables
+(`correct_xref_vs_binding.py:259`, `restore_frozen_pn.py:113`, `retire_hebrew_identity.py:295`),
+none of which the dry run reads. Step 8 (swap + deploy) is never part of it.
+
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second
   derivation · any non-fill row differing from the builder chain · G3 control not red on the

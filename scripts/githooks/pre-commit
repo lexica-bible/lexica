@@ -75,6 +75,7 @@ python tests/test_audit_xref_vs_binding.py >/dev/null
 python tests/test_correct_xref_vs_binding.py >/dev/null
 python tests/test_page_date.py >/dev/null
 python tests/test_rank_score.py >/dev/null
+python tests/test_rekey_dryrun.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_ac_cited_set.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
