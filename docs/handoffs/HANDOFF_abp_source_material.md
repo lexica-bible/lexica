@@ -181,6 +181,14 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   --show 60`). **The ABP tab total = word occurrences (COUNT of words rows), not verses** — the
   concordance gives verses + `*`, so the honest diff is per-number VERSE LISTS (+ `*` vs our ≥2),
   not totals; it needs one read-only PA export of (number, verse, occurrences) at build time.
+  **MIXED 47 read 2026-10-25** (JP ran `audit_abp_tab_bridge.py --show 60`): **42 are names**
+  (no verse list in the concordance — it cannot count them) and **5 are ordinary words whose
+  folded lemma equals a name's header**: ἠλί 2241 ("my God"), φόρος 5411 (tribute; name Φόρος),
+  ἀνά 303, γάζα 1047 (treasury; place Gaza), σειρά 4577 (chain). For those 5 the concordance's
+  verse list = abp_texts' verses EXACTLY (1 / 24 / 14 / 7 / 5 verses, nothing on either side only)
+  and `*` = "2+ in the verse" on all 51 verses (4 starred, 0 mismatches) → their MIXED flag is the
+  look-alike NAME's rows, not a short count. Checked vs abp_texts (pre-build), live confirm = JP's
+  one-liner (expected 1047 7/7 · 2241 2/1 · 303 15/14 · 4577 5/5 · 5411 26/24 occurrences/verses).
 - **(d) English-Greek Index** last.
 
 ## Tripwires to carry in (from memory / CLAUDE.md)
