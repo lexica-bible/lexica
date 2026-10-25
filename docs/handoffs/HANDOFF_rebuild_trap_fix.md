@@ -60,17 +60,25 @@ first evaluated there. Copy-first; dry run → verdict → apply, as always.
    changes 21 rows (mostly gains). Sheshach gets two spellings (Σεσάκ / Σησάχ) — content ruling first.
 2. **Header landing `->surface` 461 vs its receipt's 451** — 10 rows unattributed against
    `HANDOFF_gateB_enumeration.md`; class totals reconcile exactly.
-3. **Fresh-copy proof of gapfix entries 5–6** (2Sa 18:31 p7, 18:32 p15) — added after the G4 run;
-   built2 already had them patched, so prove on the next fresh copy (expect `gapfix (6, 0, 0)`).
-4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it.
+3. **Fresh-copy proof of gapfix entries 5–6** (2Sa 18:31 p7, 18:32 p15) — HALF DONE 10/26: built3
+   read `gapfix (6, 0, 0)`; only the `bracket_id`-vs-live half is left (next fresh copy).
+4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it. Census still
+   owed; not touched by the G1–G3 lane.
+6. **Live wiring decision (NEW, reviewer 10/26)** — what live serves between the step-9 drop (391,130)
+   and the restore (395,003). Needs a ruling before the restore's live refusal comes off.
+7. **Snapshot staleness (NEW)** — a restore that MOVES slots makes the frozen file stale for the next
+   rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy. Gates the
+   edition-upgrade lane (already gated on this landing).
+8. **Reason 5 unreachable** under the current keys (charter §6) — unchanged, recorded.
 5. **G5 record (not a block)** — JP ruled the 9/6 class basis correct; at any rebuild swap expect 519
    xref rows (class only) + 501 PN `strongs_base` slots to change. Record the counts.
 
 ## Files that stay on PA (do not delete)
-`~/rekey/` logs + TSVs (the two older test pairs old/built + old2/built2 were DELETED 2026-10-26 for
-disk: PA's dashboard read 9.9 of 10 GB while `du -sh ~` read 8.4G, and the G1–G3 build hit "disk I/O
-error"; both pairs were superseded, results recorded in §6/§7; old3/built3 = the G1–G3 pair) ·
-`~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy — the snapshot's "before" side) ·
-`~/bible.db.pre-xref-fix-20261024`. Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
+(Revised 2026-10-26, reviewer-logged.) `~/rekey/` = logs + dry-run TSVs ONLY (every old/built pair
+deleted; disk 6.3G by `du` / ~7.8 GB by PA's meter — PA reads ~1.5 GB over `du`, go by the dashboard) ·
+`~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy AND the snapshot's "before" side — it
+stays past the nightly-backup condition until a re-freeze exists) · `~/bible.db.pre-xref-fix-20261024` ·
+`~/bible-db/tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv` + `.sha256` (git-ignored; a
+second copy in the local checkout; sha256 `d9435bde…` pinned in `restore_surface_fill.py` at `0c2e6cfb`). Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
 receipt — leave, never commit). Note: `build_entity_binding.py` dry runs rewrite two TRACKED files
 (`scripts/pn_binding_hot.txt`, `pn_binding_numonly.txt`) — `git checkout --` them after a test run.

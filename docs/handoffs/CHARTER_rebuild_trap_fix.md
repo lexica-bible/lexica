@@ -356,6 +356,14 @@ of the NEW slot), then the build_abp_translit rule must change 0 rows.
 **VERDICT (CC, every line read against the pre-registered figure): G1, G2, G3 PASS on a same-code
 rebuild copy; nothing written outside `~/rekey/built3.db` (+ the snapshot files).** Not yet done:
 wiring the restore onto live's step 9 (it refuses live) — its own change, next.
+**REVIEWER VERDICT (pasted by JP, 2026-10-26, quoted):** "Dry run accepted. Every figure matched
+pre-registration; G1/G1a/G1b/G3 all proven red-then-green on a fresh copy; `0|0` end-to-end oracle;
+G5 recorded and non-blocking. Lane G1–G3 is closed at 1062917f." New held items it logged: the live
+wiring decision (what live serves between the step-9 drop to 391,130 and the restore to 395,003 —
+a ruling before the live refusal comes off) · snapshot staleness after any slot-moving restore (gates
+the edition-upgrade lane) · reason 5 unreachable (§6) · the 8b.3 ordering census still owed. The
+pre-fill copy is now also the snapshot's "before" side: it stays past the nightly condition until a
+re-freeze exists.
 
 **Open, for the edition-upgrade lane (not this one):** the snapshot's old rows describe the layout it
 was taken from. After a restore that MOVES slots, the next rebuild needs a fresh snapshot of the

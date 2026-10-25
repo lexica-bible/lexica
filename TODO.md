@@ -58,9 +58,15 @@ parser reference notes in its appendix). No open writes.
   ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. G1–G3 BUILT 2026-10-26**
   (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **Copy dry
   run PASSED 2026-10-26** (G1 395,003 exactly · 4,411 placed / 0 unplaced · floor red 3,873 / green 0 ·
-  restored table = live's row for row; checksum pinned). **NEXT = wire the restore onto live's step 9**
-  (it refuses live until then) — start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`. Until it
-  lands, do not swap a rebuilt db.
+  restored table = live's row for row; checksum pinned). **Lane G1–G3 CLOSED at `1062917f`
+  (reviewer-accepted).** NEXT = wire the restore onto live's step 9 (it refuses live until then) —
+  start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`. Until it lands, do not swap a rebuilt db.
+  - HELD — **live wiring decision:** what live serves between the step-9 drop (391,130) and the
+    restore (395,003). Ruling needed before the restore's live refusal comes off.
+  - HELD — **snapshot staleness:** a restore that moves slots makes the frozen file stale for the next
+    rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy (which therefore
+    stays on PA until one exists). Gates the edition-upgrade lane.
+  - RECORD — reason 5 unreachable under the current keys (charter §6).
   - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
     re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
     the builder if a rebuild recurs).
