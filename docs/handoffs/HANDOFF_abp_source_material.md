@@ -3,7 +3,9 @@
 Written 2026-10-24 from JP's notes. Everything under "What JP verified" was checked by JP
 OUTSIDE CC; this session did not open these files. Re-verify any detail a step leans on.
 
-## STATUS 2026-10-25 — lane (1) abp_surface FILL is LIVE; next = lane (2) Lexical Concordance
+## STATUS 2026-10-25 — lane (1) abp_surface FILL LIVE · lane (2) CLOSED (MIXED 47 answered) · no open writes
+Next-session first candidate: the Concordance verse-list diff for all ordinary words (TODO; scope
+notes under lane (c) below). Then (d) English-Greek Index.
 - **Applied 2026-10-25 03:08 (PA)** by `scripts/apply_abp_surface_fill.py`: 4,411 writes
   (3,873 new printed forms + 538 changed: 92 trims, 89 split keeps, 357 NBSP → space),
   abp_surface 391,130 → **395,003**, every check PASS (written rows = the approved CSV byte for
@@ -187,8 +189,12 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   ἀνά 303, γάζα 1047 (treasury; place Gaza), σειρά 4577 (chain). For those 5 the concordance's
   verse list = abp_texts' verses EXACTLY (1 / 24 / 14 / 7 / 5 verses, nothing on either side only)
   and `*` = "2+ in the verse" on all 51 verses (4 starred, 0 mismatches) → their MIXED flag is the
-  look-alike NAME's rows, not a short count. Checked vs abp_texts (pre-build), live confirm = JP's
-  one-liner (expected 1047 7/7 · 2241 2/1 · 303 15/14 · 4577 5/5 · 5411 26/24 occurrences/verses).
+  look-alike NAME's rows, not a short count. Checked vs abp_texts (pre-build), then **CONFIRMED ON
+  LIVE 2026-10-25 03:27** (JP, read-only): expected 1047 7/7 · 2241 2/1 · 303 15/14 · 4577 5/5 ·
+  5411 26/24 (occurrences/verses) — actual identical on all five.
+  **LANE (2) CLOSED 2026-10-25 (JP ruling): answered.** The 42 names stay HELD (need another
+  source). The full ordinary-word verse-list diff is NOT part of this lane — filed as its own item
+  (TODO, first next-session candidate), with the scope notes above.
 - **(d) English-Greek Index** last.
 
 ## Tripwires to carry in (from memory / CLAUDE.md)

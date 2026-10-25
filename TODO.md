@@ -8,13 +8,24 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## NOW (JP 10/25): lane (2) — Lexical Concordance → number → verse counts (read-only)
-Opener: `docs/handoffs/HANDOFF_abp_source_material.md` (status block at the top). Lane (1)
-abp_surface FILL is LIVE 2026-10-25 (4,411 writes, 391,130 → 395,003; record
-`docs/handoffs/CENSUS_abp_surface_fill.md`). Lane (2) diffs the concordance's per-number verse
-counts against the ABP tab's totals — answers the MIXED 47 (routing follow-up c). Scope the
-parse first (page sample, pattern, expected entry count), report, then build. Then (d)
-English-Greek Index. PDFs in JP's Downloads; parse locally like `parse_abp_analytical_lexicon.py`.
+## NEXT SESSION — first candidate: Concordance verse-list diff for ALL ordinary words (read-only, own lane)
+Opener: `docs/handoffs/HANDOFF_abp_source_material.md` (status block + lane (c) scope notes).
+Done 10/25: lane (1) abp_surface FILL LIVE (4,411 writes, 391,130 → 395,003; record
+`docs/handoffs/CENSUS_abp_surface_fill.md`) · lane (2) CLOSED — MIXED 47 = 42 names (HELD: the
+Concordance has no verse lists for names; need another source) + 5 ordinary words exact on live
+(1047 7/7 · 2241 2/1 · 303 15/14 · 4577 5/5 · 5411 26/24). No open writes.
+The new lane — its own census/gate cycle, NOT a leftover of lane (2): parse
+`lexical_concordance.pdf` (JP's Downloads, 366 pp; parse locally like
+`parse_abp_analytical_lexicon.py`) and diff every non-name number's VERSE LIST against ours.
+Scope notes (10/25): same Newport symbol font as the Lexicon (same letter map, accents lost) ·
+FIVE columns per page · book abbreviation on a book's first reference only ("Gen 24:61 · Ex 2:5*
+· Est 2:9 · 4:4,16") · ranges with a dash ("25–27") · `*` = 2+ occurrences in the verse (51/51 on
+the 5 checked words) · Psalm references use our numbering · bare page numbers + running heads
+sit between entries at page breaks · alphabetical by headword, not number order · ~8,200 entries,
+7,470 numbers shared with the Lexicon · 474 name entries carry no verses. The ABP tab total counts
+OCCURRENCES, so compare verse lists (+ `*` vs our ≥2), not totals. Needs ONE read-only PA export of
+(number, verse, occurrences) from words. Controls ready: the 5 words above (exact), 10.3 ἅβρα.
+Then (d) English-Greek Index.
 Left open, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale 'none'-label
 cleanup (rides the next identity rebuild) · the fill's held list (handoff status block).
 - OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
@@ -183,7 +194,9 @@ producer) is in TODO_ARCHIVE; the standing invariant is `docs/claude/frontend.md
   class, never a lemma-only door (reviewer-refused 9/6); (c) **MIXED 47** — numbers whose tab opens
   today but whose header also sits on numberless rows (Nathanael 14, Hosea 10…): today's count is
   short; own lane, inventory = `scripts/audit_abp_tab_bridge.py`, ruling on same-header pulls
-  deferred to it; (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule;
+  deferred to it — **ANSWERED 10/25 (lane 2): 42 names HELD (the Concordance has no
+  verse lists for names) + 5 ordinary look-alike words (2241/5411/303/1047/4577) exact on live =
+  false flags; record in HANDOFF_abp_source_material.md;** (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule;
   (e) **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62, the card's
   "galilee, for" line and the KJV tab say 63) — display finding, own item;
   (h) **`/api/lexicon/books` has no bridge branch** (JP-spotted 10/24, predates tonight): for the

@@ -6,6 +6,14 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-25 — lane (2) Lexical Concordance: MIXED 47 ANSWERED, lane CLOSED
+Scope read of `lexical_concordance.pdf` (no parser built): every proper-name entry (474) carries
+no verse list, so the 42 name members of the MIXED 47 can't be counted from it (HELD, need another
+source). The other 5 are ordinary words whose lemma folds to a name header — their concordance
+verse lists equal abp_texts exactly and live words counts match (1047 7/7 · 2241 2/1 · 303 15/14 ·
+4577 5/5 · 5411 26/24) → false flags. `*` = 2+ in the verse (51/51). The full ordinary-word
+verse-list diff was split off as its own lane (TODO, next-session first candidate).
+
 ## 2026-10-25 — abp_surface FILL (lane 1) LIVE
 Census → dry run (JP-approved) → gated apply, all on 10/24–25. 4,411 writes: 3,823 printed forms
 filled where abp_surface had none (app form, Analytical Lexicon match on number + form; app ἡ→ή,
