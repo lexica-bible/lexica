@@ -54,7 +54,9 @@ first evaluated there. Copy-first; dry run → verdict → apply, as always.
    xref rows (class only) + 501 PN `strongs_base` slots to change. Record the counts.
 
 ## Files that stay on PA (do not delete)
-`~/rekey/` (old.db / built.db — first test pair; old2.db / built2.db — the G4 pair; logs + TSVs) ·
+`~/rekey/` logs + TSVs (the two older test pairs old/built + old2/built2 were DELETED 2026-10-26 for
+disk: PA's dashboard read 9.9 of 10 GB while `du -sh ~` read 8.4G, and the G1–G3 build hit "disk I/O
+error"; both pairs were superseded, results recorded in §6/§7; old3/built3 = the G1–G3 pair) ·
 `~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy — the snapshot's "before" side) ·
 `~/bible.db.pre-xref-fix-20261024`. Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
 receipt — leave, never commit). Note: `build_entity_binding.py` dry runs rewrite two TRACKED files

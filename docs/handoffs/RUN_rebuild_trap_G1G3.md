@@ -14,6 +14,9 @@ snapshot + `.sha256` in `~/bible-db/tests/fixtures/rebuild_trap/` (git-ignored).
 cd ~/bible-db && git pull && git log --oneline -1 && grep -c "def key2_at" scripts/dryrun_rekey_fill.py && du -sh ~
 ```
 Expect: the new HEAD · `1` · usage **under 8.0G** (stop if not — the run adds ~0.9 GB).
+**Disk lesson (2026-10-26):** `du -sh ~` read 8.4G while PA's dashboard read 9.9 of 10 GB — PA meters
+~1.5 GB more than `du`. Go by the DASHBOARD figure: it must leave ~1.5 GB free before block C (the
+build's copy + its working file), plus room for the nightly backup.
 ```bash
 sqlite3 -readonly ~/bible-db/bible.db ".backup '$HOME/rekey/old3.db'" && sqlite3 -readonly ~/rekey/old3.db "PRAGMA integrity_check; PRAGMA journal_mode; SELECT count(*) FROM abp_surface;"
 ```
