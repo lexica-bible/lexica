@@ -2307,7 +2307,8 @@ const match=selBook&&passageForRef(selBook.abbrev,selChapter)||chrono.passages[c
 // landing on the chapter scrolled into view — instead of snapping back to
 // wherever you last were in canonical. (Was: restore a stashed canonical spot,
 // which dropped the chrono book — the "book not kept" bug.)
-setOrderMode("canonical");if(selBook)setSelChapter(viewCh||(curPassage?curPassage.start_ch:selChapter));}};useEffect(()=>{if(!nav||!nav.book||!books.length)return;const b=books.find(b=>b.abbrev===nav.book);if(!b)return;// A verse jump can carry a translation (e.g. a KJV cross-ref) — honor it in either order.
+setOrderMode("canonical");if(selBook)setSelChapter(viewCh||(curPassage?curPassage.start_ch:selChapter));}};const jumpFromRef=useRef(null);// "book:chapter" a jump is leaving — see the position report below
+useEffect(()=>{if(!nav||!nav.book||!books.length)return;const b=books.find(b=>b.abbrev===nav.book);if(!b)return;// A verse jump can carry a translation (e.g. a KJV cross-ref) — honor it in either order.
 if(nav.translation){setTranslation(nav.translation);onTranslationChange?.(nav.translation);}if(chronoOn){// EXTERNAL jump (from Search / Lexicon / a note list — flagged `nav.extern`) → drop to
 // canonical so the reference shows in its NORMAL chapter, not dumped mid-passage. But the
 // IN-READER controls (a verse-number cross-ref, a word panel, chasing a cross-ref — all
@@ -2329,7 +2330,9 @@ if(!chronoOn&&corpus==="bible"&&selBook?.abbrev===b.abbrev&&selChapter===(nav.ch
 setOtherOpen(false);// close the "Other" picker if it was open
 // clear the old chapter's verses so the scroll-to-highlight waits for the NEW
 // chapter (otherwise it can fire on a stale same-numbered verse and burn its flag)
-setVerses([]);setKjvVerses([]);setBsbVerses([]);setSelBook(b);setSelChapter(nav.chapter||1);},[nav,books]);// ---- Keep the App-level rail + jump-marker in step with the reader -------
+setVerses([]);setKjvVerses([]);setBsbVerses([]);// Remember the spot we're jumping FROM so the position report below doesn't send it to
+// App while the jump lands (see jumpFromRef there).
+jumpFromRef.current=selBook?`${corpus!=="bible"?corpus:selBook.abbrev}:${selChapter}`:null;setSelBook(b);setSelChapter(nav.chapter||1);},[nav,books]);// ---- Keep the App-level rail + jump-marker in step with the reader -------
 // The reader's TRUE position lives here (selBook/selChapter); the cross-ref /
 // word / note cards and the gold jump-highlight live up in App. Browsing INSIDE
 // the reader (book list, chapter chip, page turn, chrono step) moves us here but
@@ -2337,7 +2340,15 @@ setVerses([]);setKjvVerses([]);setBsbVerses([]);setSelBook(b);setSelChapter(nav.
 // "panel still shows Isaiah" + highlight-bleed bugs). Report every move; App keeps
 // whatever matches the new spot (an external jump sets its card to the SAME verse
 // it lands on) and drops the rest. This is the single place that re-couples them.
-useEffect(()=>{const bid=corpus!=="bible"?corpus:selBook?selBook.abbrev:null;if(bid!=null)onReaderPos?.(bid,selChapter);},[selBook&&selBook.abbrev,selChapter,corpus]);useEffect(()=>{if(!selBook||nonCanon||chronoOn){setLoading(false);return;}// non-canon + chronological load via their own effects below (FRAME-0: release the seeded flag so it can't stick)
+//
+// While a jump is landing, DON'T report the spot it is leaving. On a first visit via a
+// /read/ deep link (`/?b=&c=`, no cached book list) the reader defaults to Genesis 1 in the
+// same render the jump effect above sends it to the link's chapter. Reporting that Gen 1
+// made App replace the jump marker with it; the jump effect then followed the marker back
+// to Gen 1 while the next report replaced it again — an endless chase, one chapter fetch
+// per swing (the 2026-10-25 live loop; since bc47330c, 2026-06-28). The first report that
+// ISN'T the old spot clears the guard, so it can never hold reports back for good.
+useEffect(()=>{const bid=corpus!=="bible"?corpus:selBook?selBook.abbrev:null;if(bid==null)return;if(jumpFromRef.current&&jumpFromRef.current===`${bid}:${selChapter}`)return;jumpFromRef.current=null;onReaderPos?.(bid,selChapter);},[selBook&&selBook.abbrev,selChapter,corpus]);useEffect(()=>{if(!selBook||nonCanon||chronoOn){setLoading(false);return;}// non-canon + chronological load via their own effects below (FRAME-0: release the seeded flag so it can't stick)
 let cancelled=false;setLoading(true);setVerses([]);api.chapter(selBook.abbrev,selChapter).then(data=>{if(!cancelled){setVerses(data);setLoading(false);}}).catch(()=>{if(!cancelled)setLoading(false);});return()=>{cancelled=true;};},[selBook&&selBook.abbrev,selChapter,corpus,chronoOn]);// Chronological span loader: fetch every chapter the current passage covers, for
 // the active text(s). One state object keyed by chapter; the render trims each
 // chapter to the passage's verse window and stitches them with chapter markers.

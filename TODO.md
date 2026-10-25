@@ -66,7 +66,7 @@ parser reference notes in its appendix). No open writes.
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
 - OPEN (JP 2026-10-25, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
-  FIX PROPOSED, held for JP's gate.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
+  FIX COMMITTED (JP gate cleared 10/25), deploy + live check pending.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
   had the browser attempt 56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed — most
   failed inside the browser and never reached PA (see the access-log read below).
   **Reproduced locally, no database** (scratch harness modeled on `tests/mobile_harness.js`: real
@@ -96,7 +96,7 @@ parser reference notes in its appendix). No open writes.
   visitor, 1 minute, 242 requests** (the latter very likely CC's own step-7 test). Per-visitor server
   volume is far below the browser's attempt count (the browser runs out of request slots first).
   Not confirmed: that the 20/Oct visitor was this loop (chapters/referrer/agent not yet read).
-  **Fix (proposed, uncommitted, held for JP's gate):** `60-library.jsx` — while a jump lands, the
+  **Fix (JP gate cleared 10/25; committed with this entry):** `60-library.jsx` — while a jump lands, the
   position report skips the spot it is leaving (`jumpFromRef`); harness: every first-visit + link case
   2 requests (phone/desktop, book list fast or 600 ms late), returning/no-link unchanged, page turns
   after landing normal; 10/10 Node gates pass. Rulings: fix ships in the same deploy as step 10's paste

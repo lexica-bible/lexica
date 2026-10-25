@@ -377,6 +377,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
     }
   };
 
+  const jumpFromRef = useRef(null);   // "book:chapter" a jump is leaving — see the position report below
   useEffect(() => {
     if (!nav || !nav.book || !books.length) return;
     const b = books.find(b => b.abbrev === nav.book);
@@ -424,6 +425,9 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
     setVerses([]);
     setKjvVerses([]);
     setBsbVerses([]);
+    // Remember the spot we're jumping FROM so the position report below doesn't send it to
+    // App while the jump lands (see jumpFromRef there).
+    jumpFromRef.current = selBook ? `${corpus !== "bible" ? corpus : selBook.abbrev}:${selChapter}` : null;
     setSelBook(b);
     setSelChapter(nav.chapter || 1);
   }, [nav, books]);
@@ -436,9 +440,20 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   // "panel still shows Isaiah" + highlight-bleed bugs). Report every move; App keeps
   // whatever matches the new spot (an external jump sets its card to the SAME verse
   // it lands on) and drops the rest. This is the single place that re-couples them.
+  //
+  // While a jump is landing, DON'T report the spot it is leaving. On a first visit via a
+  // /read/ deep link (`/?b=&c=`, no cached book list) the reader defaults to Genesis 1 in the
+  // same render the jump effect above sends it to the link's chapter. Reporting that Gen 1
+  // made App replace the jump marker with it; the jump effect then followed the marker back
+  // to Gen 1 while the next report replaced it again — an endless chase, one chapter fetch
+  // per swing (the 2026-10-25 live loop; since bc47330c, 2026-06-28). The first report that
+  // ISN'T the old spot clears the guard, so it can never hold reports back for good.
   useEffect(() => {
     const bid = corpus !== "bible" ? corpus : (selBook ? selBook.abbrev : null);
-    if (bid != null) onReaderPos?.(bid, selChapter);
+    if (bid == null) return;
+    if (jumpFromRef.current && jumpFromRef.current === `${bid}:${selChapter}`) return;
+    jumpFromRef.current = null;
+    onReaderPos?.(bid, selChapter);
   }, [selBook && selBook.abbrev, selChapter, corpus]);
 
   useEffect(() => {
