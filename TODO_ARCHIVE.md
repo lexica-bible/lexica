@@ -6,6 +6,310 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-25 — TODO consolidation: closed write-ups moved here from TODO.md
+Why: a /consolidate pass on TODO.md (1,562 lines). Every block below was already closed, shipped,
+superseded or ruled in TODO.md; it is moved here word for word under a short heading. Its open
+leftovers stayed in TODO.md (noted per block). Nothing here was judged done during the tidy.
+Also merged, not dropped: the backfill-arc rebuild note + both health-floor notes now sit under the
+TODO rebuild-trap item; the WAL-crumb + disk-thinning items became one "PA disk housekeeping" item;
+three scattered owed-check lists became one; the κύριε half of the fold-then-route ticket joined the
+Greek-search item (b). Dropped: one pointer line saying the 3aac547 receipt-breach ledger was
+already archived (it is). Already archived, so just removed from TODO: lane (1) FILL, lane (2) MIXED
+47, the Hebrew-ABP reversal (entries below dated 10/24–10/25).
+
+### Greek header arc close-out (9/6) + Hebrew route ratified (10/24). Open leftovers → TODO "Greek header / form lane — leftover follow-ups"
+## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
+**Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP
+served sign-off complete** (zion Σιών · galilee Γαλιλαία fold · hadad in ABP), the
+146/73/63 line receipted (full close-out: HANDOFF_gateB_enumeration.md).
+- **Hebrew route RATIFIED 10/24 (reversal withdrawn, branch deleted).** JP ruling: each reader
+  shows its own occurrences (ABP shows ABP, KJV shows KJV, Hebrew shows Hebrew), G or H key alike.
+  Hadad/abishai routing controls retroactively valid. Branch `hebrew-abp-reversal` deleted unmerged
+  (tip `73478a7a`); charter kept for the feed-origin trace at
+  `docs/tickets/archive/CHARTER_hebrew_abp_reversal.md`.
+- **ABP-TAB ROUTING SHIPPED 9/6** (6 numbers route; record `CHARTER_abp_tab_routing.md`;
+  follow-ups a–e + h open under the closed word-study entry below; f, g closed 10/24 →
+  TODO_ARCHIVE). Deploy + served check = JP.
+- Housekeeping DONE 9/6 16:22 (scratch copies deleted — a step before the nightly, bounded:
+  the 15:39 copy is the swap rollback until a post-swap nightly lands; manual-backup hold until then).
+
+### Gate B enumeration + amendment (8/24) — superseded by the 9/6 landing
+## (superseded by the 9/6 landing) gate B ENUMERATED + AMENDED 8/24
+**8/24: the enumeration ran and every row was accounted** (full record appended to
+`docs/handoffs/HANDOFF_gateB_enumeration.md`): 19 violations = 13 glued cures + 6 of
+the form lane's 8 pinned bridge-fail members; glued arithmetic closed exactly
+(144 = 30 kept + 20 blanked + 94 replaced); zero unexplained clean casualties.
+Reviewer approved the three-part amendment — SHIPPED with locked tests
+(`tests/test_gate_greek_header.py`, in both CI lists): two pinned per-member lists,
+NBSP glued-cure class with the 20/94/30/17 numbers pinned, gentilic door re-keyed to
+`er.is_people_group`. Batch 3: the hand-table admission STANDS — the tsv row did
+the folding inside the rebuild (receipt class `hand-table`, 73 rows Γαλιλαία,
+146 = 2×73 occurrence double-count accounted); 875-vs-871: CLOSED 9/6 by ruling —
+**871 retired as unreproducible, the 4 permanently unnamed** (two-layer incident:
+cleanup deleted the fallback old-table copies, then a manual backup run rotated out
+the 8/23 copy — full write-up in HANDOFF_gateB_enumeration.md, error shared).
+**9/6: gate re-run ALL GREEN on the amended board (every pinned number exact);
+backup outage since 8/25 found + fixed (quota, not I/O); SWAP APPROVED by JP** —
+rollback = the 9/6 verified backup of current live, single-rollback discipline.
+NEW TRIPWIRE: bible.db retention is 3 copies — before any MANUAL backup run, check
+nothing in the retention window is load-bearing. After landing: delete the two
+431MB scratch copies from ~/bible-db (they ride every nightly, ~860MB/day).
+**NEXT: JP re-runs the gate (expect ALL GREEN, violations 0), then the landing
+checkpoint → swap → deploy → served checks → ABP-tab routing.**
+- New follow-up (ruling 3, 8/24): the **20 glued-blanked rows** previously showed a
+  (garbage) word-hint and now show English — decide downstream whether any deserve a
+  real header (hand-table door). Members = the 13 + 7 in the 8/24 session record.
+
+
+### Form lane landed (8/23) — superseded 8/24 (follow-ups kept open in TODO; health floor → rebuild-trap item)
+## (superseded 8/24 — kept for context) form lane LANDED 8/23; header lane held at gate B
+**Form lane DONE+LIVE 2026-08-23** (`docs/tickets/CHARTER_form_table_rebuild.md`):
+abp_surface rebuilt on live via the bridge rule — no-form 2,528 → **642**, table
+**391,130**, gate F green incl. the independent byte-check (172 arrivals, 8 enumerated
+misses with causes). Allowlist pinned: `docs/tickets/compound_names_allowlist.tsv`.
+**Header repair re-ran on the new baseline: gate C FULLY GREEN (hadad 12/12, galilee
+already folds to Γαλιλαία) but gate B ABORTED the landing** — its ruled transition
+classes predate the better table; problem rows look like known-bad glued headers dying,
+unproven until enumerated. **Next session's opener =
+`docs/handoffs/HANDOFF_gateB_enumeration.md`** (4 reviewer pre-registrations inside,
+incl. the batch-3-may-be-superseded adjudication and the 875-vs-871 read).
+`~/bible-db/bible_hdrlane.db` kept for diagnosis.
+- Form-lane follow-ups (filed 8/23):
+  - Teach `audit_surface_coverage.py`'s stored-vs-live control the backfill sum (its
+    MISMATCH warning is now a permanent false alarm on any backfilled table).
+  - Re-declare the health_check `abp_surface` floor 389,244 → **391,130** (superseded 10/25: the fill made it 395,003 — see the NOW block; raise once the fill re-lands on rebuild).
+  - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots — joins the 8/7 gentilic
+    follow-up. **8/24 add: "midianitish" (Num 25:15) is a people-word
+    `er.is_people_group` does not recognize** — predicate gap, fix belongs to that
+    follow-up (changing it changes builder output, so never mid-lane).
+  - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66
+    variant forms = hand-table door candidates.
+- Disk thinning (after the 8/24 nightly verifies): `bible_test.db` (Aug 4 — JP rules),
+  one of the two in-repo pre_pnstar copies (evidence twins stay in `~/db_evidence/`).
+
+### Word Study greyed ABP tab on a name — 8/9 diagnosis, the merged fold-then-route ticket, interim label DECLINED; routing SHIPPED 9/6. Open follow-ups (a)(b)(d)(e)(h) + PN:<form> stay in TODO; κύριε half → TODO Greek-search item (b)
+- **~~OPEN — Word Study's greyed ABP tab on a name~~ — SHIPPED 2026-09-06 (ABP-tab routing, record `docs/tickets/CHARTER_abp_tab_routing.md`).** A grey Greek number routes through its folded
+  header only when the header lane vetted it (`surface` rows only, one stored value, one lexicon owner):
+  Galilee 73 · Damascus 63 · Arabia 12 · Salem 4 · Euroclydon 1 · Abaddon 1. Profile field `abp_header`
+  (JP-approved) drives the ruled state line. Locked `tests/test_abp_tab_bridge.py`. Served check =
+  galilee ABP 73 / KJV 63, one held name (Israel) still grey. **FOLLOW-UPS filed here, not this lane:**
+  (a) Zion 168+1 and Aram 12+5 — header lane folds the lemma-only residual, then they route with no
+  code change; (b) Israel 2,584 / Jerusalem 753 — HELD, route only via the header lane's `surface`
+  class, never a lemma-only door (reviewer-refused 9/6); (c) **MIXED 47** — numbers whose tab opens
+  today but whose header also sits on numberless rows (Nathanael 14, Hosea 10…): today's count is
+  short; own lane, inventory = `scripts/audit_abp_tab_bridge.py`, ruling on same-header pulls
+  deferred to it — **ANSWERED 10/25 (lane 2): 42 names HELD (the Concordance has no
+  verse lists for names) + 5 ordinary look-alike words (2241/5411/303/1047/4577) exact on live =
+  false flags; record in HANDOFF_abp_source_material.md;** (d) collisions γαζα G1047/G1048 · ηλι G2241/G2242 refused by rule;
+  (e) **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62, the card's
+  "galilee, for" line and the KJV tab say 63) — display finding, own item;
+  (h) **`/api/lexicon/books` has no bridge branch** (JP-spotted 10/24, predates tonight): for the
+  6 bridged names its ABP answer is empty. The page's book list comes from the profile (which
+  IS bridged), so nothing wrong shows; but clicking a rendering chip calls this endpoint to
+  narrow the books, gets nothing, and quietly shows the unnarrowed list. Fix shape: the same
+  `_bridge_if_grey` → `_pn_lemma_rows` door the verses endpoint uses. Low stakes — a bridged
+  name has essentially one rendering. **JP-checked 10/24:** `books/G1056?corpus=kjv` IS populated
+  (John 17, Matthew 16, Luke 15 …); only ABP and the no-corpus default come back empty — (h)
+  stands as filed, nothing extra.
+  Own item (filed 10/24, NOT lane (f)): **the `PN:<form>` name-form lane sends one list entry per
+  hit**, so a verse where the name appears twice shows as two rows with the same key
+  (`_pn_lemma_rows` → `lexicon_verses` PN branch; the bridged All-books/one-book branches share
+  it). Fix shape when raised: one row per verse carrying all its slots, as lane (f) did.
+  Diagnosis history below kept for the record:
+- ~~OPEN — Word Study's greyed ABP tab on a name: DIAGNOSED 2026-08-09, one check left.~~
+  NOT the γῆ diacritic class (reviewer unfolded it; the unfold was right). NOT the Library
+  leg's unselected-pill illusion either — Word study's tabs carry a REAL disabled state, in
+  two separate sets: the search-scope tabs (`80-lexicon.jsx:1053`, `_comboOK` — can only gray
+  ABP when the language filter is Hebrew, so never for a Greek word) and the word-card tabs
+  (`:1117`, `!profile.has_abp` — a real data check).
+  **THE FINDING (JP-run, read-only):** `has_abp` asks whether any ABP word carries the NUMBER.
+  For G1056 Galilee: **0 ABP rows** vs 63 KJV. But ABP prints Galilee **73 times** — and every
+  one of those rows carries `strongs='*'` AND an EMPTY `lemma`. So the tab is honest about the
+  number and wrong about the text, and **both doors are currently shut**: the number door
+  (nothing under G1056) and the by-form `PN:<lemma>` door (`views_lexicon.py:1188`, which keys
+  on a lemma these rows don't have). JP's expectation stands and is right — he should be able
+  to reach ABP for a word ABP plainly contains.
+  **THE DOOR EXISTS, AND IT HAS A TRAP — the reason the routing fix is BLOCKED, not queued.**
+  `pn_greek_identity` does carry the place name, numberless: **6 distinct forms across 73 rows**
+  (re-verified JP-run 2026-08-09) — Γαλιλαίας 37 · Γαλιλαίαν 20 · Γαλιλαία 13 · Γαλιλαάν 1 ·
+  Γαλιλίαν 1 · Γαλιλαίς 1.
+  (Sibling check: the GENTILIC Γαλιλαῖος "Galilean" DOES carry G1057 — only the place name is
+  numberless, consistent with the rest of the PN pattern.)
+  **CORRECTED 2026-08-09 — the old figure here was 5 forms / 72 rows with a one-row gap logged
+  as unexplained. The gap was a SHORT COUNT, not a hole: the 72 missed Γαλιλίαν (Mar 14:28).**
+  Proven three ways — no Galilee word row lacks an identity row · membership checked, not just
+  totals (0 rows point at a non-Galil form, 73 point at one) · the bh_scrape page census
+  reproduces 73 independently (13+20+37+3). Do NOT re-derive from the old numbers.
+  Exclusion so no later sweep re-counts it: **Γαλιλώθ (Jos 18:18) is Geliloth, a different
+  place** — it only ever showed up because a check used a "Γαλιλ" prefix.
+  **They are stored PER INFLECTED FORM, not folded under one name.** `_pn_lemma_rows`
+  (`views_lexicon.py:1140`) matches `greek_lemma = ?` exactly, so a by-form view keyed on
+  Γαλιλαία returns **13 of 73** — and nothing on screen would say the other 60 exist. So a
+  naive "make the ABP tab open the by-form view" fix trades a gray tab for a WRONG COUNT:
+  gray says nothing, a wrong count says something false. Reviewer-endorsed hold.
+  **Paste-form correction, so nobody re-derives it:** the code returns a flat "No matches" for
+  the inflected Γαλιλαίας (stored key `γαλιλαια`; the query folds to `γαλιλαιασ`, and neither
+  the exact nor the substring band bridges that — the definition-text theory was checked and
+  came back empty). Since JP DID get KJV verses, the search that ran was the dictionary form
+  Γαλιλαία, which was on screen in the KJV card. Everything observed fits that path.
+  **Second-order, same family as the Library Greek-search item below:** the inflected paste
+  would have returned a bare "No matches" for a word that is all over the Gospels — which
+  reads as "this word isn't in the Bible" rather than "type the dictionary form".
+- **MERGED TICKET (reviewer-approved 2026-08-09): inflected-form folding, THEN routing —
+  a hard dependency in that order.** Folding the inflected forms of one word under a single
+  identity is the SAME job as the long-standing "Word study doesn't resolve κύριε → κύριος"
+  item (see the Greek-search bullet below, part b). Two separate tickets would each solve half
+  and leave the wrong-count trap live, so they are ONE ticket: fold first, route second. Only
+  once folding exists can the ABP tab honestly open a name's ABP occurrences.
+  **STATE 2026-08-09: the fold mechanism EXISTS and needs no new morphology.** Names fold
+  through the ruled Greek-header hand table (`scripts/greek_header_nominatives.tsv`, two
+  shipped batches with page receipts); Galilee's morph is blank on all 73 rows, so the
+  builder's automatic picker can never resolve it and the hand table is the only door.
+  **Batch 3 (galilee → Γαλιλαία) is DRAFTED AND HELD AT CHECKPOINT — commit 7ed55e38,
+  record `docs/tickets/greek_header_batch3.md`. BLOCKED behind the glued-header regression
+  below — the admission is correct, it just can't be VERIFIED against a broken baseline.**
+  Nothing built or swapped. Acceptance test
+  for the rebuild: the pin FAILS on live, PASSES on a scratch build, exactly **73 rows** flip
+  to Γαλιλαία (all numberless, source=surface), zero identity change — anything other than 73
+  is a STOP. The κύριε half has its own door: ABP's own printed forms already sit under G2962
+  (κύριε 663 · κυρίου 2422 · κυρίω 832 · κύριον 591), so it needs no form-stripper either —
+  but matching MUST ignore accents both ways (reuse the existing normalizer, don't write a
+  second one; accent-variant rows like κυριω are in the data).
+  **Size of the class, scoped as a FOLLOW-ON, not this ticket: 871 names** are scattered
+  across more than one form. Galilee + κύριε ship as the proof pair, batch 3's record is the
+  template, and routing stays held until the pair is folded and re-counted.
+- **~~Interim honest-grey label~~ — DECLINED by JP 2026-08-09. Do NOT re-pitch it.** The proposal
+  was to say WHY the tab is gray ("ABP prints this name without a Strong's number") instead of
+  leaving a dead gray button. CC and the reviewer both recommended yes; JP ruled to skip the
+  interim and go straight to the folding ticket, which replaces it anyway. Recorded so a future
+  session doesn't re-derive the idea and re-offer it. Original reasoning, for the record: it
+  ships only
+  on JP's yes, and it does NOT wait on the fold if he wants it sooner.
+
+### Word-position + bound-painted closed lines (8/8) — follow-on lanes stay in TODO
+  - **Word-position binding lane: CLOSED 8/8 → TODO_ARCHIVE. Bound-painted audit:
+    FULLY CLOSED 8/8 → TODO_ARCHIVE** (707 keep / 5 fixed live / 1 flag riding the
+    compound-name lane; record docs/tickets/TICKET_bound_painted_audit.md).
+    Follow-on lanes still open:
+
+### Helper-word double-tag, polarity A (7/9) — its acceptance rule now rides the TODO polarity-B item
+- **Helper-word double-tag class — POLARITY A FIXED + LIVE 2026-07-09.** ABP two-word verb
+  renderings split into two rows both carrying the verb's number; 607 helper rows untagged via the
+  pinned two-derivation list, folded into the builder as `_strip_helper_double_tag`, locked by
+  tests/test_helper_double_tag.py (CI + pre-commit). Exhibits (Jud 1:9, Rth 2:16, Job 18:13) clean;
+  361 structural matches correctly LEFT ALONE (legit doubles + split renderings = the A-review
+  pile). Full record: docs/audits/AUDIT_lexica_rollout.md splitter-fix entry + docs/CHARTER_splitter_fix.md.
+  Standing acceptance rule: any related fix re-checks "no helper-word chips" on the exhibit words
+  (chips + search highlighting read the words table), not just corrected rows.
+
+### τοῦτο: the 9 null-form candidates (resolved cert Session 7)
+  The **9 null-form "this/these" candidates** under G1473/G3779/G846 (Dan 4:33, Eze 36:32, Mat 3:15, 1Ch 27:6,
+  1Co 1:24, 2Ki 18:9/18:10/25:8, Ezr 7:6) are **RESOLVED — L5 closed Session 7** (read vs ABP app: 8 clean,
+  Dan 4:33 fixed G1473→G846; see the cert section above). The ου-/αυ-initial forms (οὗτος/αὕτη) are excluded on
+  purpose — `ουτ*` collides with οὕτως G3779, `αυτ*` with αὐτός G846.
+
+### pn_binding class audit · provenance render · descriptor gentilics (7/16) — 352 variants + tooltips stay in TODO
+- **pn_binding hand-check — DONE at class level (audit 2026-07-16, reviewer-accepted;
+  `docs/audits/AUDIT_provenance_sweep.md` §4).** All 1,310 rows bucketed; nothing is a live bug. The one
+  recoverable class — **352 spelling-variant rows (abia→abijah class)** — queues into R-2's
+  variant batch, per-pair eyeball + roster-freeze check required. Everything else stays
+  floored by ruling (groups, adonai title, wrong-candidate protection, true ambiguity).
+- **Provenance render work — CLOSED COMPLETE 2026-07-16 except tooltips** (reviewer receipt;
+  `docs/CHARTER_provenance_render.md` has the full record + screenshot receipts). Shipped:
+  AI tags on summaries · name-path caveat line · conditional MetaV/TIPNR badge · Deity/Group/
+  Being/Reference headings (rulings R1–R5 final: no "pagan", Satan+Leviathan = Being) ·
+  Nave's dead code removed (data nuked on PA) · chip-on-own-line on all non-person/place
+  cards. **REMAINING: item 4 — tappable badge tooltips, ONE shared component + ONE registry
+  keyed by contract §2; own session, gated on the mobile sheet contract.**
+- **Descriptor-of-individual gentilics — CLOSED by audit ruling (2026-07-16, reviewer-accepted):**
+  no binder change; the tier genuinely doesn't support these binds today (numonly evidence).
+  Revisit ONLY if R-2's group-entity work (pile U) creates a better target. Ruling record:
+  docs/tickets/TICKET_gentilic_binding.md + docs/audits/AUDIT_provenance_sweep.md §5.
+
+### Dotted-audit closures: εἰμί anomaly · comma-shorthand scanner · key-shape audit · section-matcher sweep (7/7–7/12)
+- **εἰμί anomaly — RESOLVED (banked):** bare G1510 base_occ=1 is real — εἰμί forms are nearly all
+  dotted (1510.2.3 ×2379 etc.), not a base-extraction bug.
+- **Comma-shorthand citation scanner — FIX BUILT + ACCEPTED + RETRO CLOSED (2026-07-12; the full
+  chronicle → TODO_ARCHIVE 2026-07-31 consolidation).** `ref_spans()` tail expansion + loud
+  REFUSED-TAIL channel; six consumers unified on the one scanner; resweep ran ×2 (a scanner
+  phantom caught + pinned, fd93d34); --verify adjudicated ZERO fabricated refs, 8 NO-OCC all
+  range-interior span claims (mention-class, no live-card bullets). STANDING: bare book-less
+  sub-refs "(8:14)" stay OUT of scope — manual-check class.
+  code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`; resweep tool scripts/audit_range_tails.py
+- **Standing-query key-shape audit — DONE (2026-07-12):** every doc query template checked against
+  the ACTUAL stored key shapes (words = bare; dotted_lexicon / lexicon.strongs_g / words.
+  strongs_base = G-prefixed; kjv_strongs = prefixed); one spent template annotated SUPERSEDED in
+  place. The rule survives in the docs' own annotated templates.
+- **Section-matcher sweep — RUN; test landed (tests/test_section_matcher_sweep.py, BOTH CI
+  lists).** PINNED GAPS remain deliberate (each a JP call if a draw ever produces one): singular
+  "Sense:" not a header · heading/bullet label forms not headers · bold paren numbering collapses
+  to the loud one-sense fallback · bare-label-word-opens-section hazard pinned as chosen. No
+  matcher change made (splitter edits = checkpoint-class).
+  code: scripts/build_lexica_def.py `_SECTION_RE`/`_sense_spans`/`sense_split_mode`
+
+### Word-card closed notes: ② fix session · ②-ride · ④ article-slot lane A · ④ reclass catch-up (8/1–8/5)
+- *(② PN-STAR MERGED-VERB FIX SESSION: **CLOSED 2026-08-02** — predicate ruled, pass
+  coded (controls 12/12), pin derived through the corrected layer, receipts recorded,
+  detector re-based on the shared splitter. THE RECORD = `docs/tickets/TICKET_pn_star_fix.md`
+  — open lane ③ and the rebuild ride from there, never from here. Session story:
+  TODO_ARCHIVE "2026-08-02 — lane ② fix session".)*
+
+- *(②-RIDE — PN-star rebuild ride: **SHIPPED + LIVE 2026-08-05.** Pin held ×2, member
+  check 4,057 exact pre+post tail, frozen record re-baselined (reviewer receipts), swap
+  + deploy clean, three served reads confirmed incl. Mat 27:26 STILL MERGED by ruling.
+  Record = TICKET_pn_star_fix.md ride sections + TODO_ARCHIVE "2026-08-05 — ②-ride" +
+  memory project_pn_star_fix. Do not re-open.)*
+- *(④ article-slot lane A + ④b checklist pins + the finish_rebuild acceptance run:
+  ALL CLOSED 2026-08-01 — the ruling-10 rebuild ride shipped + verified the same evening.
+  Full record: TODO_ARCHIVE "2026-08-01/02 — ruling-10 rebuild ride" + ticket §6j–§6l +
+  memory project_article_slot_lane_a. Do not re-derive from here.)*
+- *(④ 7/30 reclassification catch-up + the finish_rebuild ACCEPTANCE RUN: CLOSED 2026-08-01 —
+  records in TODO_ARCHIVE "2026-08-01/02 — ruling-10 rebuild ride" +
+  `docs/tickets/RECLASS_catchup_declaration.md`.)*
+
+### Ask-corpus batches A/B/C + Tier 1 scope fold (7/2–7/3) — the owed acceptance checks, D/E and the normalizer stay in TODO
+- **FULL AUDIT DONE 2026-07-02 — decision doc = `docs/audits/AUDIT_ask_corpus.md` (repo root).** Order = A → deploy +
+  acceptance → B → D → C → E. **Banner comes down after batches A+B verified live.**
+  - **BATCH A SHIPPED 2026-07-02 (commit 559283f, `_CACHE_CODE_VER`→42, 99 tests green).** F1 mixed-signal
+    scope (both OT+NT / both greek+hebrew now answer both, not collapse to one), F2 book-aware pick-parse
+    ("1 John 3:1" no longer shown as John 3:1), F4 scoped-rare-word always runs pass-2, F13 follow-up
+    context drops notice-turns, F9 O.T./N.T. periods, Fix 6 divine-council hardcode removed. **JP's
+    post-deploy step:** run the #20B acceptance checks 1–5 PLUS the two mixed-signal cases now baked into
+    `tests/test_scope_detect.py` ("compare the OT and NT view of the Sabbath", "charis in greek and hebrew").
+  - **BATCH B SHIPPED 2026-07-03 (commit 7b55783 + empty-SQL nudge).** F3 schema/examples truthed up
+    (strongs_base stated as always G/H-prefixed; every example → prefixed single-match; all 3 example JOINs →
+    `l.strongs_g = w.strongs_base`; KJV-comparison join `'G'||w.strongs_base`="GG4151" → `= w.strongs_base`).
+    F12 user-typed Strong's numbers always permitted — a bare typed number pins like a typed word
+    (`_resolve_typed_strongs` + `tests/test_typed_strongs.py`, wired into CI + pre-commit). F15 pass-1 context
+    "previous turn" → "recent turns". Fingerprint auto-busted (template sha1 5446f2→45aa8c9). **Live
+    spot-checks: 4/5 passed** (co-occurrence, Hebrew, typed G4442, + others). **KJV-comparison FAILED live —
+    see the whole-book-comparison card below; Batch B didn't break it, it never worked.** Shipped a friendly
+    empty-SQL message as the immediate patch.
+  - **BATCH C (thread skeleton) — SHIPPED 2026-07-02 (commit df60d22), moved to TODO_ARCHIVE.**
+  - **BATCH D/E** — rail+failure UX (F6/F7/F8/F11) and cost+cache (Tier 1 normalizer, F14 pinned
+    short-circuit, #4 parallelize loops). Quality, not roughness.
+- **Tier 1 semantic cache — scope fold SHIPPED 2026-07-03 (`_CACHE_CODE_VER`→47).** The exact-repeat
+  cache already existed + was free; the one hole (punctuation-strip vs O.T./N.T. scope detection collided
+  "fire O.T." with "fire o t") is closed — detected scope is folded into the cache key (`_scope_tag`),
+  `tests/test_cache_key_scope.py`. **Tier 2 = NO-GO** at current volume (see docs/audits/AUDIT_ask_corpus.md). STILL
+  OPEN: the OPTIONAL filler-strip normalizer (fold "what does X mean" → "X") — MUST reuse
+  `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
+  mixed-signal rule (one value per axis = scope, two = unset — never strip a scope word). code: ai.py.
+
+### ABP credits wording (10/24) — the two-copies rule + OpenBible courtesy stay in TODO
+## Licensing / attributions (page LIVE 2026-07-03; ABP wording DONE 2026-10-24)
+Full record — source→license map, the BY-SA share-alike bucket, the bdb-is-Strong's-Hebrew lesson:
+memory `project_licensing_attributions`. `/credits` + CREDITS.md are LIVE, linked from the App About
+page + the crawlable SEO footer.
+- ~~ABP wording~~ **DONE 2026-10-24 (JP's exact wording, per the author's 2026-07-03 email):**
+  "…© Charles Van der Pool, used with the author's knowledge. The author has stated his intention
+  to place the ABP in the public domain. Its inclusion here is not an endorsement by him." — in
+  CREDITS.md (95213e65) AND templates/seo/credits.html (30749ac0; the live page is the template,
+  NOT CREDITS.md — two copies, keep them in step). Served check PASSED 10/24 (live /credits shows
+  the three sentences, 17 entries, nothing else changed). About "built on…" sentence
+  (70-search.jsx:186): JP reviewed 10/24 — NO change (it names ABP and links /credits, which now
+  carries the attribution).
+
 ## 2026-10-25 — lane (2) Lexical Concordance: MIXED 47 ANSWERED, lane CLOSED
 Scope read of `lexical_concordance.pdf` (no parser built): every proper-name entry (474) carries
 no verse list, so the 42 name members of the MIXED 47 can't be counted from it (HELD, need another
