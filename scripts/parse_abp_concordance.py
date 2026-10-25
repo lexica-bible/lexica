@@ -184,13 +184,13 @@ def parse_vlist(vs, bk, ch, page, num, raw, refs, src):
             # "Ps 2:title–9" = the SUPERSCRIPTIONS of Psalms 2 through 9 (verse 0 of each chapter),
             # not verses 0..9 — checked 2026-10-25: every such range matches abp_texts' titles.
             for c in range(ch, int(b) + 1):
-                refs.append(dict(book=bk, ch=c, vs=0, star=int(star), src=src or "title-range"))
+                refs.append(dict(book=bk, ch=c, vs=0, star=int(star), src=src or "title-range", line=raw))
             continue
         a = 0 if a in ("title", "tit") else int(a)
         b = int(b) if b else a
         for v in range(a, b + 1):
             refs.append(dict(book=bk, ch=ch, vs=v, star=int(star),
-                             src=src or ("range" if b != a else ("title" if v == 0 else ""))))
+                             src=src or ("range" if b != a else ("title" if v == 0 else "")), line=raw))
 
 
 def parse_refs(e, handmap, failures, hm_used):
@@ -308,11 +308,12 @@ def main():
                         sum(x["star"] for x in e["refs"]), " ".join(e["gloss"])[:120]])
     with open(os.path.join(OUT_DIR, "concordance_refs.tsv"), "w", encoding="utf-8", newline="\n") as f:
         w = csv.writer(f, delimiter="\t", lineterminator="\n")
-        w.writerow(["num", "keys", "alt_keys", "book", "chapter", "verse", "star", "src", "page"])
+        w.writerow(["num", "keys", "alt_keys", "book", "chapter", "verse", "star", "src", "page", "line"])
         for e in entries:
             for x in e["refs"]:
                 w.writerow([e["num"], " ".join(keys(e["num"])), " ".join(keys(e["alt"])) if e["alt"] else "",
-                            x["book"], x["ch"], x["vs"], x["star"], x["src"], e["page"]])
+                            x["book"], x["ch"], x["vs"], x["star"], x["src"], e["page"],
+                            x["line"].replace(DASH, "–")])
     with open(os.path.join(OUT_DIR, "concordance_failures.tsv"), "w", encoding="utf-8", newline="\n") as f:
         w = csv.writer(f, delimiter="\t", lineterminator="\n")
         w.writerow(["page", "entry", "raw", "why"])

@@ -167,3 +167,118 @@ outside-bracket verses listed, 0/10 both-inside-bracket verses listed.
 2026-10-25 (TODO "Split-rendering double rows"); a fix changes word rows → checkpoint first.
 List: `abp_helps/split_rendering_628.tsv`. The audit's A controls were replaced with three live
 positives from the 174 (2Ki 11:16 G2007 · Psa 69:21 G4222 · Act 13:19 G2624; B control Rth 2:16 kept).
+
+## 6. Adjudication pass (2026-10-25) — buckets (c), (b), (d)
+Read-only. Witnesses: the ABP app slot file (PA `abp_app_html/abp_app_slots.tsv`, copied to
+`abp_helps/abp_app_slots_full.tsv`, 577,994 slots), loaded/folded/Psalm-shifted with the lane-(a)
+audit's own code; the Analytical Lexicon form lists. Tool: `scripts/adjudicate_concordance_diff.py`
+(outputs `abp_helps/adj_b_pairs.tsv`, `adj_b_verses.tsv`, `adj_d_rows.tsv`). After the bucket-(c)
+hand-map rows: **7,905 of 8,532 entries match exactly**; Concordance-only 356 · ours-only 252.
+
+### (c) 11 refs to verses not in our text — 8 placed, 3 unplaced
+Placed by 5 new hand-map rows (`scripts/concordance_handmap.tsv`, now 23 rows):
+
+| Entry | Printed | Fix | Evidence |
+|---|---|---|---|
+| ἅγιος 39 | `77:41` | → `78:41` | Ps 77 has 20 verses; our only unmatched ἅγιος verse is Ps 78:41 |
+| ἐπεί 1893 | `118:136` | → `119:136` | Ps 118 has 29 verses; Ps 119:136 unmatched in ours |
+| νεανίας 3494 | `17:56,58` under 2Sa | dropped (2 refs) | repeat of `1Sa 17:56,58` already in the entry; 2Sa 17 has 29 verses |
+| παραλαμβάνω 3880 | `32:7` / `49:1*,2` after `So 8:2` | → `Jer 32:7` (49:1,2 follow) | book name missing; our unmatched rows = Jer 32:7, 49:1, 49:2 |
+| υἱός 5207 | `26:1,20,22–25` | → `22–24` | Jer 26 ends at verse 24 |
+
+Unplaced (no unmatched verse of ours anywhere in the chapter): ἀπολύω 630 "Nm 33:title" ·
+οἶκος 3624 Hos 6:14 · υἱός 5207 2Ch 1:43.
+
+### (b) Number-label disagreements — 212 verses in 102 pairs (not ~92)
+Pairing: a Concordance-only verse (number N) whose verse holds exactly ONE number M of ours that the
+Concordance does not account for there (3 more verses had 2+ candidates and stay in (d)). Ruling rule
+(JP): the Lexicon decides — the app's Greek form at the slot carrying N or M, folded, must sit in the
+Lexicon's form list for one side only. The app's own number at that slot is reported beside it.
+
+| Verdict | Verses | Pairs | Destination |
+|---|---|---|---|
+| Concordance right (matches the Lexicon) | **152** (86 in 18 repeating pairs + 66 singles) | 84 | candidate corrections → TODO held "540 + 13" item |
+| Ours right (matches the Lexicon) | **44** (42 in 5 repeating pairs + 2 singles) | 7 | Concordance print inconsistency |
+| Hold | **16** (7 in 2 repeating pairs + 9 single-verse, unsettled) | 11 | held |
+
+Repeating pairs (2+ verses):
+
+| Conc. N [Lexicon] | Ours M [Lexicon] | Verses | Verdict | App's number at the slot |
+|---|---|---|---|---|
+| 1759.2 ἔνθεν | 1759.3 ἐνθρονίζω | 28 | Concordance right | M ×28 (app = ours) |
+| 2828.1 (no Lexicon entry) | 2827.2 κλοιός | 16 | ours right | N ×16 (app = Conc.) |
+| 4761.1 στρεπτός | 4761.2 (no entry) | 13 | Concordance right | N ×13 |
+| 4951.4 σύσκιος | 4951.5 συσκοτάζω | 11 | ours right | M ×11 |
+| 1458.4 ἐγκατάλειμμα | 1458.5 (no entry) | 7 | Concordance right | N 4 / M 3 |
+| 1490.1 (no entry) | 1490 εἰ δὲ μή | 7 | ours right | N ×7 (app = Conc.) |
+| 241.2 ἀλλοιόω | 241.3 ἀλλοίωσις | 7 | Concordance right | N ×7 |
+| 4951.2 σύσκηνος | 4951.3 συσκιάζω | 5 | ours right | M ×5 |
+| 5557.1 χρυσοτορευτός | 5557.2 χρυσοχόος | 5 | hold (4 favour ours by form; 1 verse has no app slot) | N 4 / neither 1 |
+| 3864.2 παράθεσις | 3864.3 (no entry) | 4 | Concordance right | N ×4 |
+| 4951.3 συσκιάζω | 4951.4 σύσκιος | 3 | ours right | M ×3 |
+| 4992 σωτήριον | 4991 σωτηρία | 3 | Concordance right | N ×3 |
+| 1371.2 δίψα | 1373 δίψος | 2 | Concordance right | N ×2 |
+| 1510.2.3 ἐστίν | 1510.8.3 ἔσται | 2 | Concordance right | N ×2 |
+| 1510.7.3 ἦν | 1510.7.1 ἤμην | 2 | Concordance right | N ×2 |
+| 1536 εἴ τις | 1487 εἰ | 2 | Concordance right | N ×2 |
+| 1772.1 ἐννοσσεύω | 1772.2 (no entry) | 2 | Concordance right | N ×2 |
+| 2046 ἐρέω | 2036 ἔπω | 2 | Concordance right | N ×2 |
+| 2117 εὐθύς | 2112.3 εὐθής | 2 | Concordance right | N ×2 |
+| 2545 καίω | 1572 ἐκκαίω | 2 | hold (1 Conc. right; 1 verse has no app slot) | N 1 / neither 1 |
+| 3494 νεανίας | 3495 νεανίσκος | 2 | Concordance right | N ×2 |
+| 4405 πρωΐα | 4404 πρωΐ | 2 | Concordance right | N ×2 |
+| 5117.1 τορευτός | 5557.1 χρυσοτορευτός | 2 | Concordance right | N ×2 |
+| 5552 χρύσεος | 5557.1 χρυσοτορευτός | 2 | Concordance right | N ×2 |
+| 975 βιβλίον | 976 βίβλος | 2 | Concordance right | N ×2 |
+
+Sample verses (app's printed Greek → Lexicon): ἔνθεν Exo 26:13 / 32:15 / 38:15 `ένθεν και ένθεν` →
+1759.2 · κλοιός Gen 41:42 / Deu 28:48 `κλοιόν`, Jdg 8:26 `κλοιών` → 2827.2 · συσκοτάζω 1Ki 18:45
+`συνεσκότασε`, Jer 4:28 `συσκοτασάτω`, Jer 13:16 `συσκοτάσαι` → 4951.5 · ἀλλοιόω Dan 4:23
+`αλλοιωθώσιν`, Dan 5:6 / 5:9 `ηλλοιώθη` → 241.2 · χρυσοχόος Isa 40:19 `χρυσοχόος`, 46:6
+`χρυσοχόον`, Jer 10:9 `χρυσοχόων` → 5557.2. Full per-verse evidence: `adj_b_verses.tsv`.
+
+Notes:
+- **The 4951 family is a one-step shift in the Concordance:** it prints 4951.2 / .3 / .4 where the
+  Lexicon, the app and ours all use .3 / .4 / .5 (συσκιάζω / σύσκιος / συσκοτάζω).
+- **The publisher's own materials disagree on three pairs:** κλοιός (2828.1 in the Concordance and
+  the app; 2827.2 in the Lexicon and ours), εἰ δὲ μήγε (1490.1 in the Concordance and the app; the
+  Lexicon files the form under 1490, as ours), ἔνθεν (1759.2 in the Concordance and the Lexicon;
+  1759.3 in the app and ours). Ruled by the Lexicon as instructed.
+- For the 66 Concordance-right SINGLES the app + Lexicon prove the Concordance's number at that verse;
+  which of our rows carries the word there is NOT proven (a one-verse pairing could be coincidence) —
+  a row read comes before any correction.
+- Single-verse, unsettled (9): 1521 / 5557.1 Exo 37:7 (no app slot) · 2289.1 / 2311.2 Neh 12:38 ·
+  2633.1 / 1458.4 Amo 9:3 · 3441 / 3440 2Ch 18:30 (form in both lists) · 4325.5 / 1096 Lev 20:2 ·
+  4628.1 / 4629.2 Exo 36:14 · 5046 / 4134 2Ch 16:9 · 518 / 312 Eze 37:18 · 5581.1 / 5579 Jer 29:21
+  (no app slot).
+
+### (d) Residue — 292 rows, every row classified, 0 unexplained
+
+| Kind | Cause | Rows |
+|---|---|---|
+| Concordance-only (141) | Concordance print: not in source (neither the app nor ours has the number in that verse) | 51 |
+| | number disagreement missed by (b) (the app has it; ours carries a number the app lacks there, often a no-verse-list word, e.g. ἀποτίνω 661 Exo 22:11 → ours 3756 οὐ) | 30 |
+| | Concordance print: verse offset (the number sits unclaimed in ours 1–2 verses away) | 20 |
+| | our slot error (the app has it; its English is in our verse text, but our number is missing) | 16 |
+| | verse-text difference (the app has the word; our text does not, e.g. γῆ 1Pe 3:12, 1Jn 5:7) | 15 |
+| | versification (Hab 3:14 ×8, Jer 10:5 ×1 — chapters the app orders in LXX sequence; JP-ruled no renumber) | 9 |
+| Ours-only (110) | Concordance omission (the app has the number there too) | 51 |
+| | Concordance print: verse offset (the other side of the 20 above) | 20 |
+| | verse-text difference (ours has the word; the app has neither it nor a replacement number) | 21 |
+| | number disagreement missed by (b) (the app carries a number ours lacks there) | 18 |
+| `*` but ours once (18) | our slot error (the app has it 2+ as separate words, e.g. αορασία 2Ki 6:18 slots 14 + 18) | 9 |
+| | Concordance star error (the app has it once too) | 6 |
+| | Concordance print: verse merge (the 2nd occurrence is in our next/previous verse) | 3 |
+| 2+ with no `*` (23) | Concordance star error (the app has 2+ separate words, e.g. υἱός ×5 1Ch 26:25) | 13 |
+| | split rendering missed by (a) (the app has ONE slot; ours and `abp_texts` carry two) | 10 |
+
+- **Ecc 7:22 καρδία — the census's one star exception — is a verse merge, not a star error.** From
+  about v.17 the Concordance's Ecc 7 numbers run one ahead of ours (its 7:18 = our 7:17 for
+  ἀποθνῄσκω and ἀσεβέω; its 7:22 = our 7:21 for ἀκούω); its starred 7:22 for καρδία = our 7:21 + 7:22,
+  one each. The other two merges: λαμβάνω 2Ki 12:8 (+12:9), μαρτυρέω 1Jn 5:7 (+5:8). Ecc 7 (10) and Son 6 (6)
+  account for most of the 20 verse-offset pairs.
+- App split renderings are counted ONCE (neighbouring slots, same number + Greek, different English)
+  — the bucket-(a) shape exists in the app too. Caveat: Pro 5:7 ἄκυρος 207.2 — the app also tags
+  `μη` with 207.2, so that one "app has it 2+" rests on an app tagging slip.
+- Every row: `abp_helps/adj_d_rows.tsv` (kind · cause · number · verse · stars · counts · app Greek ·
+  the other number).

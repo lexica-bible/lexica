@@ -27,18 +27,37 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
     never `words`). **CLASSIFIED 2026-10-25 = split renderings** (20-verse PA row read: 20/20 one
     Greek word, two neighbouring rows, two English pieces; 0 duplicates, 0 glued splits) → own item
     "Split-rendering double rows" below.
-  - **HELD (b) — ~92 dotted-number label disagreements** (Concordance side): ἔνθεν (Concordance
-    1759.2 in 28 verses, ours files them under 1759.3, whence 1759.3's 28 ours-only) · κλοιός
-    (Concordance 2828.1 vs our 2827.2, 16) · 48 sibling-dot verses (4761.1/.2 13 · 4951.4/.5 11 ·
-    1458.4/.5 7 · 5557.1/.2 5 · 3864.2/.3 4 · 1772.1/.2 2 · 6 singles). Same family as the held
-    **540 + 13 same-slot number disagreements** (Held list below — its 13 already carry ἔνθεν 1759.3 →
-    1759.2 four times: Exo 26:13, 32:15, 38:15, Jos 8:33).
-  - **HELD (c) — 11 Concordance refs to verses not in our text** (e.g. Ps 77:41 under ἅγιος 39,
-    pairs with our Ps 78:41; ἀπολύω 630 "Num 33:title").
-  - **HELD (d) — ordinary diff residue:** 261 Concordance-only (364 − ~92 label − 11 not-in-text) ·
-    257 ours-only (28 of them are ἔνθεν's rows under 1759.3, the other side of (b)) · 18 `*`-but-once
-    (incl. Ecc 7:22 καρδία, re-checked on live: once) · 23 true 2+ with no `*` (2+ in `abp_texts` too).
-    Lists: `abp_helps/concordance_diff_live20261025_rows.tsv`.
+  - **ADJUDICATED 2026-10-25 (read-only; witness = the ABP app slot file + the Lexicon form lists;
+    tool `scripts/adjudicate_concordance_diff.py`; full record `CENSUS_abp_concordance_diff.md` §6).**
+    After (c): **7,905 / 8,532 entries exact.**
+  - **(b) number-label disagreements — 212 verses in 102 pairs** (not ~92; one Concordance-only verse
+    ↔ the one number of ours there it doesn't account for). Ruled by the Lexicon (app's printed Greek
+    in the Lexicon's form list for one side only):
+    - **Concordance right: 152 verses** (86 in 18 repeating pairs — ἔνθεν 1759.2/.3 28 · στρεπτός
+      4761.1/.2 13 · ἐγκατάλειμμα 1458.4/.5 7 · ἀλλοιόω 241.2/.3 7 · 3864.2/.3 4 · σωτήριον 4992/4991
+      3 · 12 two-verse pairs — + 66 singles) → **candidate corrections, filed under the held "540 + 13"
+      item below.** For the 66 singles, which of our rows carries the word is NOT proven — row read
+      first.
+    - **Ours right: 44 verses** (κλοιός 2828.1/2827.2 16 · the 4951 family, where the Concordance
+      runs one dotted step low — 4951.4/.5 11, .2/.3 5, .3/.4 3 · εἰ δὲ μήγε 1490.1/1490 7 · 2 singles)
+      → **Concordance print inconsistencies**, no action on our side. On κλοιός and 1490.1 the app
+      agrees with the Concordance; on ἔνθεν the app agrees with ours — the publisher's own materials
+      disagree; ruled by the Lexicon as instructed.
+    - **Hold: 16** (5557.1/.2 χρυσοχόος 5 — 4 favour ours, 1 verse has no app slot · 2545/1572 2 ·
+      9 single-verse, unsettled).
+  - **(c) 11 refs to verses not in our text — 8 placed** by 5 hand-map rows (Ps 77:41 → 78:41 ·
+    Ps 118:136 → 119:136 · νεανίας "2Sa 17:56,58" = repeat of 1Sa 17:56,58, dropped · παραλαμβάνω
+    "32:7 · 49:1,2" missing "Jer" · υἱός Jer 26 range "22–25" → "22–24") · **3 unplaced:** ἀπολύω
+    630 "Nm 33:title" · οἶκος 3624 Hos 6:14 · υἱός 5207 2Ch 1:43.
+  - **(d) residue — 292 rows, all classified, 0 unexplained:** Concordance-only 141 (not in the
+    source 51 · number disagreement missed by (b) 30 · verse offset 20 · our slot error 16 · verse-text
+    difference 15 · versification 9) · ours-only 110 (Concordance omission 51 · verse offset 20 ·
+    verse-text difference 21 · number disagreement 18) · `*`-but-once 18 (our slot error 9 ·
+    Concordance star error 6 · verse merge 3) · 2+ no `*` 23 (Concordance star error 13 · split
+    rendering missed by (a) 10). **Ecc 7:22 καρδία = a verse merge** (the Concordance's Ecc 7 runs one
+    verse ahead of ours from ~v.17; its 7:22* = our 7:21 + 7:22), not a star error. **Our-side rows
+    to look at:** 16 + 9 slot errors and the 10 extra split renderings (→ the split-rendering item);
+    the rest are Concordance-side or edition differences. Rows: `abp_helps/adj_d_rows.tsv`.
   Original lane scope: parse `lexical_concordance.pdf` (JP's Downloads, 366 pp) and diff every
   non-name number's VERSE LIST against ours.
   Scope notes (10/25, CORRECTED by the census below): same Newport symbol font as the Lexicon
@@ -130,8 +149,11 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
   different number" entry + "Also open from 10/24") and `docs/handoffs/CENSUS_abp_surface_fill.md`.
   - **540 + 13 same-slot number disagreements** (app vs ours, after swaps; the 13 are from the fill
     census; **Isa 39:8 pos 1 = suspected slot misalignment**). The 540 still need the audit to write
-    them to a TSV. Same family: the Concordance diff's held (b), ~92 dotted-number label
-    disagreements (Concordance lane above).
+    them to a TSV. **+ 152 candidate corrections from the Concordance diff (b), 2026-10-25:** verses
+    where the Concordance's number matches the Lexicon and ours doesn't (18 repeating pairs = 86
+    verses, incl. ἔνθεν 1759.3 → 1759.2 ×28 — four of which are already in the 13 — + 66 singles whose
+    row is not yet proven). List: `abp_helps/adj_b_pairs.tsv` / `adj_b_verses.tsv` (verdict
+    "concordance-right"). Checkpoint lane before any write.
   - **191 name slots with no printed form** — the Analytical Lexicon carries no proper names, so it
     resolves none of them (lane (b) join: name 0 of 191).
   - **30 vs 27 glued names** — pn_greek_identity has 30 NBSP names vs the 27 pinned (audit C3 still
