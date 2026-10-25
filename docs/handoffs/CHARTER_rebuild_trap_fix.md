@@ -331,6 +331,31 @@ of the NEW slot), then the build_abp_translit rule must change 0 rows.
   `restore_surface_fill.py`. Name slots 22 vs census Q6's 21: Q6 counted inserts only, so 22 should be
   21 inserts + 1 update — **confirmed** (JP awk read of the snapshot: 21 insert · 1 update). Checksum
   file `sha256sum -c` OK · 4,412 lines (header + 4,411).
+- (disk stop: first build attempt hit "disk I/O error" — PA dashboard 9.9/10 GB while `du` read 8.4G;
+  the two older test pairs were deleted; a CC-written cleanup line also deleted the finished first
+  build output, so the build ran twice — both runs printed identical figures.)
+- C build: words 626,305 · skipped 0 · flagged 6,882 · split 80 · PN-star A 1,505 + B 2,552 / 3,161
+  refusals — all = the pins. finish_rebuild: Matched 31,649 · corrections applied 33 / skipped 0 · done.
+- D 8b: 8b.0 CONTROL OK · SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1 · applied 341 · 8b.1 restored 8,
+  0 off record · 8b.2 split 3,671 / 10,236 / 12,182 / 4,412 / 1,977 (32,478) · 26,317 rewrites ·
+  xref 32,478 · GLOB 0 · **8b.2a LANE-3 STEP: PASS fixes (9,0,0) · gapfix (6,0,0) · fixes2 (7,0,0)** —
+  the owed fresh-copy proof of gapfix entries 5–6 (2Sa 18:31/32) · 8b.3 identity 32,478 · binding
+  render 15,378 + HOT 68 · slot binds 102 / 0 refused. All = §7.
+- **E step 9 on the copy: builder 346,111 + backfill 13,183 + PN backfill 31,836 = 391,130 = G1a.**
+- **F floor RED:** pre-fill copy shortfall **3,873** · rebuilt copy without the fill **3,873**.
+- **G restore dry:** table 391,130 · vs pre-fill copy 0 / 0 (G1b) · placed **4,411** (agree-strong
+  4,057 · agree-weak 354, all listed in `~/rekey/restore_dry3.log`) · unplaced **0** · inserts /
+  updates 3,873 / 538 · moved 0 · Lexicon pass 4,022 · uncovered 389 · every gate PASSES.
+- **H restore on the copy: G1 = 395,003 exactly** · written 4,411 = snapshot form + new-slot translit
+  (0 differ) · other rows 0 differ · new rows = the insert slots · translit rule changes 0 · quick_check
+  ok. **End-to-end oracle: restored table vs the live copy old3 = `0|0`.**
+- **I floor GREEN:** restored copy shortfall 0 · re-run: ALREADY RESTORED, 4,411 / 4,411.
+- J G5 record (expected = G4): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 · name-slot
+  `strongs_base` 501 — all = the recorded figures; not a block.
+- K snapshot second copy local: `sha256sum -c` OK · 4,412 lines · git-ignored (checked).
+**VERDICT (CC, every line read against the pre-registered figure): G1, G2, G3 PASS on a same-code
+rebuild copy; nothing written outside `~/rekey/built3.db` (+ the snapshot files).** Not yet done:
+wiring the restore onto live's step 9 (it refuses live) — its own change, next.
 
 **Open, for the edition-upgrade lane (not this one):** the snapshot's old rows describe the layout it
 was taken from. After a restore that MOVES slots, the next rebuild needs a fresh snapshot of the

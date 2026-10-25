@@ -20,6 +20,18 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
   import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
   2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
 
+## UPDATE 2026-10-26 (later) — COPY DRY RUN PASSED; next = wire the restore onto live's step 9
+JP ran the whole RUN sheet on `~/rekey/old3.db` → `built3.db`: every figure = the pre-registered one
+(receipts + verdict in charter §8). G1 395,003 exactly · G2 4,411 placed / 0 unplaced · G3 floor red
+3,873 on the pre-fill copy and the fill-less rebuild, green 0 on the restored copy · restored table =
+live's row for row (`0|0`) · gapfix (6,0,0) fresh-copy proof done · G5 519 / 21 / 501 recorded.
+Snapshot sha256 pinned in `restore_surface_fill.py`; second copy local (git-ignored).
+**Next lane:** let `restore_surface_fill.py` run on live at `/rebuild-words` step 9 (after both
+backfills + translit) — remove the live refusal by ruling, put the snapshot step before the swap in
+the checklist, and decide what live serves between the step-9 drop and the restore (charter §1
+consequence). Only then may a rebuilt db be swapped. Disk: `~/rekey/old3.db` + `built3.db` can go
+once nothing more is wanted from them (PA reads ~1.5 GB over `du`).
+
 ## UPDATE 2026-10-26 (second session) — G1–G3 BUILT; the copy dry run is owed
 Built + locally tested, NOT yet run on PA (charter **§8** has the design calls; run sheet
 `docs/handoffs/RUN_rebuild_trap_G1G3.md` has every command with its expected figure):

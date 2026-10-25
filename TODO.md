@@ -56,16 +56,18 @@ parser reference notes in its appendix). No open writes.
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
   next rebuild (warning now in `/rebuild-words` step 9). **2026-10-26: census + charter done, re-key
   ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. G1–G3 BUILT 2026-10-26**
-  (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **NEXT = JP
-  runs the copy dry run** `docs/handoffs/RUN_rebuild_trap_G1G3.md` → verdict → pin the snapshot
-  checksum in `restore_surface_fill.py` → then wire the restore onto live's step 9 (it refuses live
-  until then). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
+  (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **Copy dry
+  run PASSED 2026-10-26** (G1 395,003 exactly · 4,411 placed / 0 unplaced · floor red 3,873 / green 0 ·
+  restored table = live's row for row; checksum pinned). **NEXT = wire the restore onto live's step 9**
+  (it refuses live until then) — start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`. Until it
+  lands, do not swap a rebuilt db.
   - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
     re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
     the builder if a rebuild recurs).
-  - DONE 2026-10-26: health-check `abp_surface` floor raised 389,244 → 395,003 (G3; red/green proof
-    on PA owed in the dry run, steps F + I).
-- OPEN — **fresh-copy proof of the two new gapfix entries (2Sa 18:31 p7, 18:32 p15).** Added to
+  - DONE 2026-10-26: health-check `abp_surface` floor raised 389,244 → 395,003 (G3; proven on PA:
+    red 3,873 on the pre-fill copy + the fill-less rebuild, green 0 on the restored copy).
+- OPEN (half done 2026-10-26: fresh copy built3 read `gapfix (6, 0, 0)`; the `bracket_id` 0 vs live
+  read is the last owed line) — **fresh-copy proof of the two new gapfix entries (2Sa 18:31 p7, 18:32 p15).** Added to
   `scripts/lane3_star_gapfix.json` after the G4 run (pin 4 → 6). The G4 copy built2 already had them
   patched, so prove them on the next fresh rebuild copy: step 8b.2a must read `gapfix (6, 0, 0)` and
   step 10 words `bracket_id` 0 vs live. (Lane-3-in-the-chain itself is DONE — TODO_ARCHIVE 2026-10-26.)
