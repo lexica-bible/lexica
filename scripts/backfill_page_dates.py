@@ -38,6 +38,9 @@ def _arg(flag, default=None):
 
 
 def main():
+    # write each row as soon as it's checked (not in hidden batches) so a long run's progress is
+    # visible with `tail` / `grep -c` while it's going
+    sys.stdout.reconfigure(line_buffering=True)
     apply = "--apply" in sys.argv
     db = _arg("--db", os.path.join(ROOT, "news.db"))
     days = int(_arg("--days", 60))
@@ -60,7 +63,8 @@ def main():
     print(f"\n{'wrote' if apply else 'would write'}: {t['rows']} rows checked — "
           f"page date {t['page']} ({t['page_flagged']} more than 30 days off Google), "
           f"month-only {t['month_only']}, no page date {t['no_page_date']} (flag unverified), "
-          f"no real link {t['no_link']} (skipped, retried next run)")
+          f"no real link {t['no_link']} (skipped, retried next run), "
+          f"timed out {t['timed_out']} (skipped, retried next run)")
 
 
 if __name__ == "__main__":

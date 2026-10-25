@@ -22,6 +22,8 @@ One row's outcome (decide):
   no page date       -> published untouched, src stays 'google', flag 1 (unverified, not "wrong")
   no real link       -> nothing written; the next run tries again (a Google redirect that
                         couldn't be resolved tonight is a Google-side failure, not a finding)
+  timed out          -> nothing written; the next run tries again (a network step that ran past
+                        its hard stop — see RESOLVE_DEADLINE / PAGE_DEADLINE)
 
 Candidates = Google-path rows, score >= 5 (the ones that can reach a card), never checked
 (src 'google' and flag 0, no published_page), first pulled since `since`. A row that has been
@@ -32,6 +34,7 @@ the one-shot backfill (scripts/backfill_page_dates.py, last 60 days, dry-run fir
 """
 import time
 import datetime
+import threading
 
 try:
     from pagedate import page_date_detail            # run from scripts/news/
@@ -41,6 +44,33 @@ except ImportError:
 MIN_SCORE = 5
 DISAGREE_DAYS = 30
 NEW_COLS = ("published_page", "published_src", "date_flag")
+
+# Hard wall-clock stops per network step. Needed because the Google-redirect library on PA
+# (googlenewsdecoder 0.1.7) takes no timeout and makes requests calls with NONE — one silent
+# connection hung the first full backfill dry run for 1h45m (2026-10-25). The page fetch has its
+# own 10s socket limit, but nothing covers a stalled name lookup, so it gets a stop too. A step
+# that runs past its stop is abandoned (left running in the background, harmless) and the row is
+# skipped untouched, to be tried again next run.
+RESOLVE_DEADLINE = 90       # the lookup retries twice with 5s + 15s waits of its own
+PAGE_DEADLINE = 45
+TIMED_OUT = object()
+
+
+def with_deadline(fn, *args, secs):
+    """fn(*args), or TIMED_OUT if it hasn't returned within `secs` seconds. An exception
+    inside fn counts as None (both callers already treat None as 'nothing found')."""
+    box = {}
+
+    def run():
+        try:
+            box["v"] = fn(*args)
+        except Exception:
+            box["v"] = None
+
+    t = threading.Thread(target=run, daemon=True)
+    t.start()
+    t.join(secs)
+    return TIMED_OUT if t.is_alive() else box.get("v")
 
 
 def has_columns(conn):
@@ -120,16 +150,23 @@ def run_pass(conn, since, apply, resolve=None, sleep=1.0, limit=None, log=print)
     rows = candidates(conn, since)
     if limit:
         rows = rows[:limit]
+    log(f"  checking {len(rows)} rows")
     tally = {"rows": len(rows), "page": 0, "page_flagged": 0, "month_only": 0,
-             "no_page_date": 0, "no_link": 0}
+             "no_page_date": 0, "no_link": 0, "timed_out": 0}
     seen = {}                                   # real link -> (date, how), one fetch per link
     for r in rows:
         link = r["resolved_url"] or ""
         if not link and "news.google.com/" not in (r["url"] or ""):
             link = r["url"] or ""               # already a direct article link
         if not link and resolve is not None:
-            link = resolve(r["url"]) or ""
+            got = with_deadline(resolve, r["url"], secs=RESOLVE_DEADLINE)
             time.sleep(sleep)
+            if got is TIMED_OUT:
+                tally["timed_out"] += 1
+                log(f"  {r['id']:>6}  google {(r['published'] or '')[:10]:10}  page {'-':10}  "
+                    f"delta {'-':>5}  SKIP link lookup timed out ({RESOLVE_DEADLINE}s) (retried next run)")
+                continue
+            link = got or ""
             if link and apply:
                 conn.execute("UPDATE items SET resolved_url = ? WHERE url = ? "
                              "AND (resolved_url IS NULL OR resolved_url = '')", (link, r["url"]))
@@ -141,9 +178,18 @@ def run_pass(conn, since, apply, resolve=None, sleep=1.0, limit=None, log=print)
         if link in seen:
             page, how = seen[link]
         else:
-            page, how = page_date_detail(link)
-            seen[link] = (page, how)
+            got = with_deadline(page_date_detail, link, secs=PAGE_DEADLINE)
             time.sleep(sleep)
+            if got is TIMED_OUT:
+                # a hang past every socket limit is a stuck connection, not a finding about the
+                # page: write nothing, the row stays unchecked and is tried again next run
+                tally["timed_out"] += 1
+                log(f"  {r['id']:>6}  google {(r['published'] or '')[:10]:10}  page {'-':10}  "
+                    f"delta {'-':>5}  SKIP page fetch timed out ({PAGE_DEADLINE}s) (retried next run)")
+                log(f"          {link}")
+                continue
+            page, how = got
+            seen[link] = (page, how)
         w = decide(r["published"], page)
         if not page:
             tally["no_page_date"] += 1

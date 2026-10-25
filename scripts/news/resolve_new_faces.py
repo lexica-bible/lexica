@@ -158,7 +158,8 @@ def _page_dates(conn, since_hours):
                      log=lambda s: None)
         print(f"resolve_new_faces: page dates — checked {t['rows']}: page date {t['page']} "
               f"({t['page_flagged']} >30d off Google), month-only {t['month_only']}, "
-              f"no page date {t['no_page_date']} (flagged), no real link {t['no_link']} (retry)")
+              f"no page date {t['no_page_date']} (flagged), no real link {t['no_link']} (retry), "
+              f"timed out {t['timed_out']} (retry)")
     except Exception as e:
         print(f"resolve_new_faces: page-date check skipped on error ({e})")
 

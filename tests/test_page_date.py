@@ -131,6 +131,68 @@ def t12():
 
 
 test("page date found, >30 days off Google -> page date written, flagged", t9)
+
+
+# --- the hard stop (2026-10-25: a no-timeout Google lookup hung the first full dry run) ----
+
+import sqlite3                                                   # noqa: E402
+import time                                                      # noqa: E402
+import threading                                                 # noqa: E402
+import scripts.news.date_pass as dp                              # noqa: E402
+
+_release = threading.Event()                                     # lets the "hung" threads finish
+
+
+def _hang(*_a):
+    _release.wait(30)                                            # a call that never answers
+    return "never"
+
+
+def t_deadline():
+    t0 = time.time()
+    assert dp.with_deadline(_hang, "x", secs=0.3) is dp.TIMED_OUT
+    assert time.time() - t0 < 2
+    assert dp.with_deadline(lambda u: "ok", "x", secs=2) == "ok"
+    assert dp.with_deadline(lambda u: 1 / 0, "x", secs=2) is None   # an exception = nothing found
+
+
+def _table():
+    c = sqlite3.connect(":memory:")
+    c.row_factory = sqlite3.Row
+    c.execute("CREATE TABLE items (id INTEGER PRIMARY KEY, url TEXT, resolved_url TEXT, title TEXT, "
+              "source TEXT, published TEXT, query TEXT, first_seen TEXT, score INT)")
+    c.execute("INSERT INTO items VALUES (1, 'https://news.google.com/rss/articles/A', '', 't', 's', "
+              "'2026-10-18T12:31:23+00:00', 'q', '2026-10-20T06:00:00+00:00', 8)")
+    c.execute("INSERT INTO items VALUES (2, 'https://news.google.com/rss/articles/B', "
+              "'https://b.example/page', 't', 's', '2026-10-18T12:31:23+00:00', 'q', "
+              "'2026-10-20T06:00:00+00:00', 8)")
+    c.commit()
+    return c
+
+
+def t_hung_steps_skip_untouched():
+    saved = (dp.RESOLVE_DEADLINE, dp.PAGE_DEADLINE, dp.page_date_detail)
+    dp.RESOLVE_DEADLINE, dp.PAGE_DEADLINE, dp.page_date_detail = 0.3, 0.3, _hang
+    try:
+        c = _table()
+        t0 = time.time()
+        t = dp.run_pass(c, "2026-09-01", apply=True, resolve=_hang, sleep=0, log=lambda s: None)
+        assert time.time() - t0 < 5, "a hung step must not hold the run"
+        assert t["timed_out"] == 2 and t["page"] == 0 and t["no_page_date"] == 0, t
+        rows = c.execute("SELECT id, published, published_src, date_flag, published_page "
+                         "FROM items ORDER BY id").fetchall()
+        # both rows untouched: still Google's date, still unchecked, so the next run retries them
+        assert [tuple(r) for r in rows] == [
+            (1, "2026-10-18T12:31:23+00:00", "google", 0, None),
+            (2, "2026-10-18T12:31:23+00:00", "google", 0, None)], [tuple(r) for r in rows]
+        assert len(dp.candidates(c, "2026-09-01")) == 2
+    finally:
+        dp.RESOLVE_DEADLINE, dp.PAGE_DEADLINE, dp.page_date_detail = saved
+        _release.set()
+
+
+test("a hung network call is cut off at its hard stop", t_deadline)
+test("a hung lookup or page fetch skips the row untouched (retried next run)", t_hung_steps_skip_untouched)
 test("page date agrees with Google -> page date, not flagged", t10)
 test("no page date -> Google date kept, flagged unverified", t11)
 test("month-only page date -> keep Google's day if same month, else 1st + flag", t12)
