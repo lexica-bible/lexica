@@ -66,6 +66,15 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   - Dictionary-word fallback rows: 97.9% after fold; the misses are inflected verbs with
     no abp_surface row (είπε/ἔπω 541, εποίησε/ποιέω, έλαβε/λαμβάνω …) = interlinear shows
     the dictionary word where ABP prints a form.
+  **Audit v2 written (JP ruling 2026-10-24), numbers NOT in yet:** defect map C/Q/H/O/U/R/
+  П/+ each on its own line; lower-case-Latin cells = "English in the Greek font", excluded;
+  Psalms paired with the title shift (our v = app v+1) and reported on own lines (control
+  C4); Pro 16/24, Jer 10, Hab 3 listed with a shift only if it lines up >= 90% (in a
+  14-chapter test Pro 16 is REORDERED, not shifted — per-verse lines map it); swapped-
+  order slots = own group under the split-flip ruling (same-count verses only;
+  count-differs leftovers reported apart as "out-of-sequence"); missing printed forms →
+  `abp_app_html/missing_printed_forms.tsv` with word type from words.morph (articles and
+  pronouns are in it too, not only verbs); OT/NT headline at the top.
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
