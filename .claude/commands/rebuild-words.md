@@ -46,16 +46,19 @@ exceed the PA quota; `df -h ~` is useless here (it shows the shared filer, not t
 dashboard has the real number). A `disk I/O error` on the very first snapshot write, leaving a
 0-byte `.new`, is out-of-space, not corruption.
 
-**RUN ORDER (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — the step
-NUMBERS are labels other docs cite, not the order):**
+**RUN ORDER (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9; steps 10 + 11
+re-homed onto the copy by JP ruling after the 10/26 run, charter §10 — the step NUMBERS are labels
+other docs cite, not the order):**
 0 → 1 → **1a snapshot check** → 2 build → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
+**11 rendering norm (copy) → 10 two-ending read (copy)** →
 **9 surface rebuild (on the copy) → 9a fill restore (copy) → 9b health floor + oracle (copy)** →
-4 → 5 → 6 → 7 → **8 swap + deploy** → 10 → 11.
+4 → 5 → 6 → 7 → **8 swap + deploy**.
 Names used below: `<src>` = the fresh copy of live from step 1 (the snapshot check's source AND
 the build's source — the build opens it read-only, never writes it); `<built>` = the build's
 `<src>.new`, renamed. **Everything up to step 8 runs on copies; the swap is the only step that
-touches live `abp_surface`, and live is never served without the fill.** (Step 11 still writes
-live after the swap — a separate table, flagged in the rebuild-trap handoff, not changed here.)
+touches live `abp_surface`, and live is never served without the fill.** Nothing writes live
+after the swap: step 11 now fills the norm column on the copy, and step 10 reads the copy (its
+output, if any, rides the step-8 deploy).
 
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
    (Full-rebuild fallbacks keep this receipted naming — ops.md retention item 1. But
@@ -178,8 +181,8 @@ live after the swap — a separate table, flagged in the rebuild-trap handoff, n
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
-8. Swap + deploy — **MOVED below 9b (2026-10-26):** it is the LAST step before 10/11 and the only
-   live action (RUN ORDER line above). 8b below still runs on the copy, right after step 3.
+8. Swap + deploy — **MOVED below 9b (2026-10-26):** it is the LAST step and the only live action
+   (RUN ORDER line above; steps 10/11 moved before it, onto the copy). 8b below still runs on the copy, right after step 3.
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
    import_tipnr (still on the test copy, before the gates), IN THIS ORDER:
@@ -268,8 +271,8 @@ live after the swap — a separate table, flagged in the rebuild-trap handoff, n
    (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
-9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3, BEFORE the gates (4–7) and the step-8
-   swap** (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
+9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3 and steps 11 + 10, BEFORE the gates (4–7) and
+   the step-8 swap** (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
    §1 "live, after the swap" placement, which was practice, not a dependency). Step 9 reads nothing
    that exists only on live: the db's own `verses` / `words` / `lexicon` / `dotted_lexicon` /
    `abp_surface` (the build copies the whole db) plus `~/bible-db/bh_scrape.db` (its own file, named
@@ -312,14 +315,30 @@ live after the swap — a separate table, flagged in the rebuild-trap handoff, n
    the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
    name-slot `strongs_base` 501 (charter §7).
-10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
-   output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
-   rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory
-   `project_two_ending_gender`.
-11. RE-RUN `scripts/build_rendering_norm.py bible.db`: refills `words.english_head_norm` (the number-fold
-   column the Word-study English finder matches on). A rebuild can change english_head, so a stale norm would
-   miss singular/plural hits. Additive + reversible; also refreshes kjv/bsb `word_norm`. Memory
-   `project_lexicon_finders`.
+10. **WHERE: on `<built>`, right after step 11, before step 9** (JP ruling after the 10/26 run). RE-GENERATE
+   the two-ending adjective soften-lists: run `scripts/build_two_ending.py <built>` on PA — **always give the
+   path; with none it reads LIVE** (`build_two_ending.py:36`). It opens the file read-only and reads only
+   `words.strongs_base` + `words.morph`, `lsj`, `lexicon` — nothing live-only; it must follow 8b (8b.2
+   rewrites `strongs_base`). **Diff before any paste:** compare the output from its `// AUTO-GENERATED` line
+   down against `static/src/00b-two-ending.jsx`. Identical → no paste, no build, record "unchanged".
+   Different → paste, rebuild `app.js` LOCALLY, commit + push BEFORE step 8, so the step-8 deploy.sh pulls
+   it in with the swap (genders/tallies can shift on a rebuild). Drives the "Masculine/Feminine"
+   word-study display. Memory `project_two_ending_gender`.
+11. **WHERE: on `<built>`, right after 8b.3, before step 10 and step 9** (JP ruling after the 10/26 run —
+   same Step-0 answer as step 9: no live-only input). RE-RUN `scripts/build_rendering_norm.py <built>` —
+   **always give the path** (with none it opens `bible.db` in the current folder, live from `~/bible-db`;
+   a wrong path makes a new empty file). Refills `words.english_head_norm` (the number-fold column the
+   Word-study English finder matches on). **WHY IT IS REQUIRED, not optional:** the build empties `words`
+   but keeps the column, and its insert never fills it (`build_words_from_abp.py:2154-2157`), so every
+   rebuilt row is blank; the finder uses the column whenever it EXISTS (`views_lexicon.py:100-108`,
+   `:943-947`), so a swap without step 11 serves an ABP English finder that matches nothing (code trace; the
+   live count after the 10/26 swap is in charter §10). Each value
+   comes only from the same row's `english_head` through `number_fold.normalize` (plain text function),
+   so it must follow everything that writes `english_head` (8b.2a repairs English) — nothing after 8b.3
+   does. Also refreshes kjv/bsb `word_norm` (unchanged by a build). Running it again rewrites the same
+   values. Memory `project_lexicon_finders`.
+   **If it ever has to run on LIVE (the 10/26 exception, charter §10): never within 60 s of a reload**
+   (each worker's first-request warm-up writes bible.db, `app.py:441-469`).
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
 the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.

@@ -57,9 +57,19 @@ parser reference notes in its appendix). No open writes.
   1Ch 13:10; also Jer 51:41 Σεσάκ). Step 10 = `build_two_ending.py` paste + local app.js rebuild.
   **Step 11 = `build_rendering_norm.py` — live-relevant:** the build never writes `english_head_norm`
   (`build_words_from_abp.py:2154-2157`) and the finder only checks the column exists
-  (`views_lexicon.py:100-108`), so the ABP English finder may miss rebuilt words until it runs (not
-  measured). Before the NEXT rebuild: Step-0 check for live-only inputs, and move it onto the copy if
-  none. Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
+  (`views_lexicon.py:100-108`), so by code trace the ABP English finder matches NOTHING until it runs
+  (predicted 0 / 626,309; live read pending). **JP RULED (charter §10a):** order this run 11 → 7 → 10;
+  step 11 never within 60 s of a reload; step 10 diffed vs `00b-two-ending.jsx` first (identical → no
+  paste/deploy, record "unchanged"). Steps 10 + 11 RE-HOMED onto the copy in `/rebuild-words` (after
+  8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
+  Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
+- HELD (JP 2026-10-26) — **`build_rendering_norm.py` loose ends** (census of steps 7/10/11):
+  (a) its "recomputed N" line counts rows TOUCHED, not changed — a re-run never reads "0 to do";
+  (b) the printed undo `ALTER TABLE <t> DROP COLUMN <c>` (`:17`, `:111`) does not work — SQLite refuses
+  to drop an indexed column (`idx_words_ehnorm`); fix the text; (c) `--stats` has no change preview
+  (counts only); (d) the finder caches "column exists" per worker (`views_lexicon.py:97-108`) — after
+  any column drop, a reload is needed or the finder errors; (e) step 11 must always be given an
+  explicit path — default is `bible.db` in the current folder, and a bad path creates a new empty file.
 - HELD (reviewer 2026-10-26) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
   A/B were built for the 7/30 header-only lane and ABORT on any full rebuild. Overridden for the
   10/26 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.

@@ -499,6 +499,28 @@ Sheet `RUN_rebuild_trap_live.md`, HEAD `a1998f0e`. Receipts (expected | actual =
 health_check busy wait · the build's closing text calls its source "live" when the source is a copy ·
 `surface`/`lemma-only` label trace · two old `bible_pre_pnstar_*` rollback copies (ops.md rule 1).
 
+### §10a The post-swap tail — RECORDED EXCEPTION (JP rulings after the census, verbatim)
+- "Order this run: 11 → 7 → 10. Step 11 never runs within 60 s of a reload."
+- "Steps 10 and 11 are re-homed pre-swap in the checklist (11 on the copy after 8b, 10 reads the copy,
+  both before 9). This run is the recorded exception since rebuilt.db is live."
+- "build_rendering_norm.py opener gets the CLAUDE.md timeout + journal-mode lines before any live run."
+- "Step 10: diff script output vs current static/src/00b-two-ending.jsx before any paste; identical → no
+  paste/deploy, record "unchanged"."
+
+**Why the exception:** the 10/26 run swapped `rebuilt.db` into place before steps 10/11 ran, so there
+is no post-8b copy left to run them on (`~/rekey/pre_rebuild.db` is the OLD words). This one time, step
+11 writes live and step 10 reads live. Census basis (CC, repo-only): step 11's value per row comes only
+from that row's `english_head` through `number_fold.normalize`; the build keeps the column but never
+fills it (`build_words_from_abp.py:2111`, `:2154-2157`); the column existed on live before the swap
+(census Q2: `idx_words_ehnorm` on live `words`); the finder uses it whenever it exists
+(`views_lexicon.py:100-108`, `:943-947`) → predicted live count **0 non-blank / 626,309 rows** —
+the ABP English finder matching nothing until step 11. **Live count: PENDING (read-only PA read
+handed to JP; step 11 gated on it).**
+Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
+`busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
+`/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
+Receipts (step 11 count, step 7 spot-checks, step 10 diff): _to be recorded here._
+
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second
   derivation · any non-fill row differing from the builder chain · G3 control not red on the
