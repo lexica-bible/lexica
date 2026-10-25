@@ -12,7 +12,7 @@ const assert = require("assert");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { applyOutletCap, newsFaceSource } =
+const { applyOutletCap, newsFaceSource, newsOutletLayersApply } =
   require(path.join(__dirname, "..", "static", "src", "83-news-logic.jsx"));
 
 let n = 0;
@@ -77,6 +77,43 @@ test("ruled defaults are band 20, cap 2", () => {
   const out = applyOutletCap(many);
   assert.strictEqual(out.slice(0, 20).filter(c => newsFaceSource(c) === "Dominant").length, 2);
   assert.strictEqual(out.length, 30);
+});
+
+// --- WHEN the layers run (ruling 2026-10-25 + amendment: Top stories sort, every date window;
+// off for Newest / Oldest and for a thread other than "All threads") ---
+// The window can't return to the opening 21d preset from the picker (no 21d button, and the
+// choice is remembered), so a window bypass would have switched the cap off for good.
+const inbox = { view: "inbox", order: "score", thread: "", minScore: 5 };
+
+test("cap applies with a non-default date window (7d / 90d / 1y / Max / custom)", () => {
+  for (const windowKey of ["7", "14", "30", "90", "365", "max", "custom"]) {
+    assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey }), true, "window " + windowKey);
+  }
+  assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey: "21" }), true);   // opening preset
+});
+
+test("a thread selection bypasses the cap", () => {
+  assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey: "21", thread: "ecumenism" }), false);
+  assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey: "max", thread: "ai_moralized" }), false);
+});
+
+test("the score floor never bypasses", () => {
+  for (const minScore of [0, 5, 6, 9]) {
+    assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey: "30", minScore }), true);
+  }
+});
+
+test("Newest / Oldest sorts bypass the cap, under any window", () => {
+  for (const windowKey of ["21", "7", "max", "custom"]) {
+    assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey, order: "date" }), false);
+    assert.strictEqual(newsOutletLayersApply({ ...inbox, windowKey, order: "oldest" }), false);
+  }
+});
+
+test("the Inbox / Kept / Dismissed tab doesn't switch it off (only sort and thread do)", () => {
+  for (const view of ["inbox", "kept", "dismissed"]) {
+    assert.strictEqual(newsOutletLayersApply({ ...inbox, view, windowKey: "90" }), true, view);
+  }
 });
 
 console.log(`\n${n} passed`);

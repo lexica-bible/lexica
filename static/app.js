@@ -2797,7 +2797,13 @@ function newsFaceSource(s){const face=(s.members||[]).find(m=>m.url===s.url)||{}
 // their original relative order, then the rest of the list unchanged. Same cards, same count —
 // only the top band's order moves. A card with no known headline outlet ("" or the server's "?")
 // is its own bucket and never capped. cap == null (or band <= 0) returns the input order.
-function applyOutletCap(cards,band=20,cap=2,outletOf=newsFaceSource){if(cap==null||!(band>0)||!cards)return cards;const inBand=[],skipped=[],per=new Map();let i=0;for(;i<cards.length&&inBand.length<band;i++){const c=cards[i];const o=outletOf(c)||"";if(o&&o!=="?"){const n=per.get(o)||0;if(n>=cap){skipped.push(c);continue;}per.set(o,n+1);}inBand.push(c);}return inBand.concat(skipped,cards.slice(i));}if(typeof module!=="undefined"&&module.exports){module.exports={newsFaceSource,applyOutletCap};}// ============================================================
+function applyOutletCap(cards,band=20,cap=2,outletOf=newsFaceSource){if(cap==null||!(band>0)||!cards)return cards;const inBand=[],skipped=[],per=new Map();let i=0;for(;i<cards.length&&inBand.length<band;i++){const c=cards[i];const o=outletOf(c)||"";if(o&&o!=="?"){const n=per.get(o)||0;if(n>=cap){skipped.push(c);continue;}per.set(o,n+1);}inBand.push(c);}return inBand.concat(skipped,cards.slice(i));}// WHEN the two outlet layers run (the rank_score sort, then applyOutletCap). Ruling 2026-10-25
+// (reverses the earlier date-window bypass) + its amendment: they run whenever the sort is Top
+// stories, under EVERY date window (7d / 14d / 30d / 90d / 1y / Max / custom). They do NOT run
+// for the Newest / Oldest sorts or when a thread other than "All threads" is picked. The score
+// floor and the Inbox / Kept / Dismissed tab never switch them off. The window, floor and tab are
+// accepted and deliberately ignored, so a caller can pass its whole filter state.
+function newsOutletLayersApply({order,thread}){return order==="score"&&!thread;}if(typeof module!=="undefined"&&module.exports){module.exports={newsFaceSource,applyOutletCap,newsOutletLayersApply};}// ============================================================
 // NEWS WATCH — admin-only end-times news review (from news.db)
 // Gathered + AI-scored offline by scripts/news/; this tab reviews the result.
 //
@@ -2806,10 +2812,10 @@ function applyOutletCap(cards,band=20,cap=2,outletOf=newsFaceSource){if(cap==nul
 // (the feed-shape readout — "why the watch is pointed here today", FeedShape). Mobile
 // (<1100px) collapses to the original single stacked column with the why shown inline.
 // ============================================================
-// Outlet cap on the default Inbox top band (applyOutletCap, 83-news-logic.jsx): in the first
-// NEWS_BAND cards, at most NEWS_OUTLET_CAP share one headline outlet. Ruled 2026-10-24; no UI.
-const NEWS_BAND=20;const NEWS_OUTLET_CAP=2;// The window preset NewsView opens on (windowKey's initial value). The cap runs only on the
-// untouched default view, so "date window set" = anything other than this preset.
+// Outlet cap on the Inbox top band (applyOutletCap, 83-news-logic.jsx): in the first NEWS_BAND
+// cards, at most NEWS_OUTLET_CAP share one headline outlet. Ruled 2026-10-24; any date window
+// since 2026-10-25 (newsOutletLayersApply); no UI.
+const NEWS_BAND=20;const NEWS_OUTLET_CAP=2;// The window preset NewsView opens on when nothing is saved (windowKey's initial value).
 const NEWS_DEFAULT_WINDOW="21";function _newsDaysAgo(n){return new Date(Date.now()-n*86400000).toISOString().slice(0,10);}// Today, ISO YYYY-MM-DD — the export filename + Markdown header date.
 function _newsToday(){return new Date().toISOString().slice(0,10);}// The feed-shape "surfaced vs buried" line. FIXED analytic threshold — the scorer's
 // over-catch boundary (noise sits below 6), ported verbatim from the server's shape().
@@ -2980,17 +2986,17 @@ if(c.status==="keep")o.kept++;else if(c.status==="dismiss")o.dismissed++;else o.
 const collapse=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];let articles=0,cards=0;for(const c of windowed){const isInbox=c.status!=="keep"&&c.status!=="dismiss";if(!(want==="new"?isInbox:c.status===want))continue;cards++;for(const m of c.members||[]){if(!_inWindow(m.d,since,until))continue;if(minScore&&m.s<minScore)continue;articles++;}}return{articles,cards};},[windowed,view,since,until,minScore]);// The active tab's FULL filter-matched list, sorted. `stories` (the render list) is a
 // display slice of it; the bulk actions read the UNSLICED list, so "Keep All" means every
 // card the current filters match — including any past the 300-card render cap.
-const viewListAll=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];const list=windowed.filter(c=>{const isInbox=c.status!=="keep"&&c.status!=="dismiss";return want==="new"?isInbox:c.status===want;});// The untouched default view: Inbox, default sort, no thread, the opening date window. Only
-// here do the two outlet layers run — any thread / window change / other sort or tab keeps
-// the plain raw-score order exactly as before.
-const isDefault=view==="inbox"&&order==="score"&&!thread&&windowKey===NEWS_DEFAULT_WINDOW;// Layer 2: in the default view the sort reads rank_score (min(score, per-outlet normalized),
-// rank.py), falling back to raw score. The card still SHOWS raw score; this is order only.
-const key=isDefault?c=>c.rank_score!=null?c.rank_score:c.score:c=>c.score;if(order==="date")// Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
+const viewListAll=useMemo(()=>{const want={inbox:"new",kept:"keep",dismissed:"dismiss"}[view];const list=windowed.filter(c=>{const isInbox=c.status!=="keep"&&c.status!=="dismiss";return want==="new"?isInbox:c.status===want;});// When the two outlet layers run: Top stories sort, under ANY date window; off for Newest /
+// Oldest and for a picked thread (newsOutletLayersApply, 83-news-logic.jsx — locked by
+// tests/test_outlet_cap.js).
+const layersOn=newsOutletLayersApply({view,order,thread,windowKey,minScore});// Layer 2: the sort reads rank_score (min(score, per-outlet normalized), rank.py), falling
+// back to raw score. The card still SHOWS raw score; this is order only.
+const key=layersOn?c=>c.rank_score!=null?c.rank_score:c.score:c=>c.score;if(order==="date")// Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
 list.sort((a,b)=>(b.peak_date+"").localeCompare(a.peak_date+"")||b.score-a.score);else if(order==="oldest")list.sort((a,b)=>(a.peak_date+"").localeCompare(b.peak_date+"")||b.score-a.score);else// Default: recency-weighted score (the dock keys off the peak day). Newest published
 // is the tie-break so equal effective scores still favor the fresher card.
 list.sort((a,b)=>key(b)-_stale(b.peak_date)-(key(a)-_stale(a.peak_date))||(b.published+"").localeCompare(a.published+""));// Layer 1: outlet cap on the top band, run AFTER the layer-2 order. Reorders the band only —
 // every card is still in the list (the bulk actions read this one).
-return isDefault?applyOutletCap(list,NEWS_BAND,NEWS_OUTLET_CAP):list;},[windowed,view,order,thread,windowKey]);// The visible feed — a display cap only, never the scope of any action.
+return layersOn?applyOutletCap(list,NEWS_BAND,NEWS_OUTLET_CAP):list;},[windowed,view,order,thread,minScore,windowKey]);// The visible feed — a display cap only, never the scope of any action.
 const stories=useMemo(()=>viewListAll.slice(0,300),[viewListAll]);// Feed-shape readout (right zone) — also derived. Honors the date window only (ignores
 // the score floor + thread, by design: the BURIED count is the whole point). Counts
 // ARTICLES by each member's OWN date in the window (not the card's peak day) — so the
