@@ -876,8 +876,16 @@ Open tickets:
   They matter here because corroboration rewards multi-outlet cards: an over-merged topic bucket
   would read as falsely well-corroborated. No written copy of the rule itself was found in the
   repo or memory either. Before this can be built: turn both checks into runnable fixtures
-  (frozen labeled rows -> `_group` -> assert one card / separate cards) and wire them into CI +
-  pre-commit.
+  and wire them into CI + pre-commit. **Own session (JP 2026-10-25), fresh handoff.**
+  DECIDE FIRST — which layer the fixtures cover. Cards come from TWO layers: (1) the AI labeler
+  (group_news.py, Haiku) names each article's event — the June merge/split checks were testing
+  THIS layer; (2) views_news `_group` puts same-label rows on one card, split by date —
+  deterministic, easy to test from frozen labeled rows. A frozen-rows test covers only (2); (1)
+  is an AI call, so its fixture is a re-label run on the frozen samples compared to expected
+  cards (as done by hand in June). Corroboration reads the cards, so a (2)-only test would pass
+  even if the labeler drifted back to theme-lumping. Needs from PA: a frozen sample of the AI
+  encyclical coverage and of the Sunday-laws bucket; both checks must pass against the CURRENT
+  code before they mean anything.
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
