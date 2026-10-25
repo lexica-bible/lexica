@@ -290,6 +290,42 @@ lemma-only→none 21 + none→lemma-only 498 = 519 rows, hebrew_base identical o
 serving) or the 9/6 classes (today's identity table).** Members: rerun the step-10 read B/C on any
 rebuild copy. TODO carries the same item.
 
+## §8 G1–G3 BUILT (2026-10-26) — copy dry run handed to JP, NOT yet run
+Scripts: `scripts/snapshot_surface_fill.py` (part a, before step 9) · `scripts/restore_surface_fill.py`
+(parts a+b + G1, after step 9) · `scripts/health_check.py` floor **389,244 → 395,003** (G3). Locked by
+`tests/test_surface_fill_restore.py` (14 cases, both test lists): every reason and gate fires on a
+planted case, and the floor reads WARN 1 at 395,002 / OK 0 at 395,003 / WARN 3,873 at 391,130.
+`dryrun_rekey_fill.py` gave up its key rules (`key2_at` / `key1_at`) and its G0 check (`g0`) as the
+ONE copy both new scripts call (its 7 tests unchanged, all pass). PA sequence + every expected figure:
+`docs/handoffs/RUN_rebuild_trap_G1G3.md`.
+
+**Calls made under JP's standing delegation (2026-07-12), each stated so it can be overruled:**
+1. **Step 9 runs on the copy in this dry run — required for G1 to measure anything.** The build copies
+   the whole db, so the rebuilt copy still holds live's 395,003-row table (fill included, census §2).
+   Without step 9 the restore would find every slot already filled and G1 would read 395,003 for free.
+   This does not move the real procedure: step 9 stays post-swap on live (§1).
+2. **The frozen snapshot stays out of git.** It carries 4,411 ABP printed forms + the slots' ABP English;
+   the repo is public and ABP text is kept out of it (`abp_helps/`, `abp_app_html/` rule). It lives in
+   `tests/fixtures/rebuild_trap/` (git-ignored) on PA, with a second copy scp'd to the local checkout;
+   integrity = its `.sha256` file + a checksum pinned in `restore_surface_fill.py` after the first run.
+3. **The restore refuses the live file.** This lane proves it on copies; wiring it onto live (where
+   step 9 runs) is a separate change after this dry run's verdict.
+4. **G1b added (stricter than G1a):** with `--prefill`, the builder table must equal the pre-fill copy
+   ROW FOR ROW, not just total 391,130 — counts are tripwires, members rule. Valid only for a
+   same-code rebuild (a layout-moving rebuild drops `--prefill`).
+5. **All or nothing.** Any unplaced slot, or G1a/G1b failing, means NOTHING is written (no partial fill).
+   A table already at 395,003 with every slot holding its form reads ALREADY RESTORED; a mix fails.
+6. **End-to-end oracle in the run sheet:** the restored copy's table must equal live's (`old3`) row for
+   row, both directions `0|0` — independent of the restore's own checks.
+Unchanged: reason 5 still cannot fire under these keys (§6 finding). Translit = romanize(form, lemma
+of the NEW slot), then the build_abp_translit rule must change 0 rows.
+
+**Open, for the edition-upgrade lane (not this one):** the snapshot's old rows describe the layout it
+was taken from. After a restore that MOVES slots, the next rebuild needs a fresh snapshot of the
+restored table — and that snapshot's "before" side can no longer be the 10/25 pre-fill copy (the
+step-9 output of that rebuild would be). On a same-code rebuild nothing moves and the frozen file stays
+valid as is.
+
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second
   derivation · any non-fill row differing from the builder chain · G3 control not red on the

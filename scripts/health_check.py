@@ -135,9 +135,18 @@ check("distinct H-bases with NO bdb entry",
 # build_abp_surface.py re-run WITHOUT both backfills drops the table to ~346k
 # and silently reverts the recovered forms — this makes that loud. Raise the
 # floor if the count grows.
-check("abp_surface rows BELOW floor 389244  [a backfill reverted?]",
-      "SELECT CASE WHEN count(*) < 389244 THEN 389244 - count(*) ELSE 0 END FROM abp_surface",
-      note="shortfall vs floor; fix = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py")
+# FLOOR RAISED 2026-10-26 to 395,003 (rebuild-trap fix, CHARTER_rebuild_trap_fix.md G3, JP ruling
+# "Floor = 395,003 exactly"): the builder chain's 391,130 + the 2026-10-25 fill's 3,873 inserts.
+# The old 389,244 sat below even the pre-fill table, so a rebuild that dropped the fill passed.
+# Control (red first): the pre-fill copy and a rebuilt table without the fill both read shortfall
+# 3,873; the table with the fill restored reads 0. Shortfall 3,873 exactly = the fill is missing
+# (fix = scripts/restore_surface_fill.py); any other shortfall = a backfill reverted.
+SURFACE_FLOOR = 395003
+check(f"abp_surface rows BELOW floor {SURFACE_FLOOR}  [fill or a backfill missing?]",
+      f"SELECT CASE WHEN count(*) < {SURFACE_FLOOR} THEN {SURFACE_FLOOR} - count(*) ELSE 0 END "
+      "FROM abp_surface",
+      note="shortfall vs floor; 3873 = the 10/25 fill is missing (restore_surface_fill.py); "
+           "other = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py")
 
 # ── verses ───────────────────────────────────────────────────────────────────
 check("verses with zero words  [parse failure]",

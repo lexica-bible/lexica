@@ -55,13 +55,16 @@ parser reference notes in its appendix). No open writes.
   the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
   next rebuild (warning now in `/rebuild-words` step 9). **2026-10-26: census + charter done, re-key
-  ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. NEXT = build gates G1–G3** — start at
-  `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (charter `CHARTER_rebuild_trap_fix.md`).
+  ruled, G4 (lane-3 repairs ride the rebuild) PASSED on PA. G1–G3 BUILT 2026-10-26**
+  (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **NEXT = JP
+  runs the copy dry run** `docs/handoffs/RUN_rebuild_trap_G1G3.md` → verdict → pin the snapshot
+  checksum in `restore_surface_fill.py` → then wire the restore onto live's step 9 (it refuses live
+  until then). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
   - Same rebuild step, older note (2026-07-11 backfill arc): after any `build_abp_surface.py`
     re-run, re-run `backfill_abp_surface.py` then `build_abp_translit.py` (fold the backfill into
     the builder if a rebuild recurs).
-  - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
-    exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
+  - DONE 2026-10-26: health-check `abp_surface` floor raised 389,244 → 395,003 (G3; red/green proof
+    on PA owed in the dry run, steps F + I).
 - OPEN — **fresh-copy proof of the two new gapfix entries (2Sa 18:31 p7, 18:32 p15).** Added to
   `scripts/lane3_star_gapfix.json` after the G4 run (pin 4 → 6). The G4 copy built2 already had them
   patched, so prove them on the next fresh rebuild copy: step 8b.2a must read `gapfix (6, 0, 0)` and

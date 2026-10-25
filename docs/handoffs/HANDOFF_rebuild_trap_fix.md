@@ -20,7 +20,20 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
   import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
   2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
 
-## NEXT LANE — build the trap fix (charter G1–G3; G0 + G4 already defined/passed)
+## UPDATE 2026-10-26 (second session) — G1–G3 BUILT; the copy dry run is owed
+Built + locally tested, NOT yet run on PA (charter **§8** has the design calls; run sheet
+`docs/handoffs/RUN_rebuild_trap_G1G3.md` has every command with its expected figure):
+`scripts/snapshot_surface_fill.py` (freeze the 4,411-row diff + each slot's old words row + key-2
+ordinal; checksum beside it) · `scripts/restore_surface_fill.py` (re-key with the shared key rules,
+reasons 3/4/5 at the new slot, G1a 391,130 → G1 395,003 exactly, all or nothing; refuses live) ·
+health floor 389,244 → **395,003** · `tests/test_surface_fill_restore.py` (14 cases, both lists).
+**Next step: JP runs the RUN sheet on fresh copies (`~/rekey/old3.db` → `built3.db`), pastes the
+tails; read each against the sheet's expected figure (verdict); then pin the snapshot's sha256 in
+`restore_surface_fill.py` (`SNAPSHOT_SHA256`), then a separate change wires the restore onto live's
+step 9.** The snapshot file is git-ignored (ABP text, public repo) — after step K it exists on PA and
+locally only; never delete either copy.
+
+## (superseded) NEXT LANE — build the trap fix (charter G1–G3; G0 + G4 already defined/passed)
 Snapshot the fill (the 4,411-row diff live − `~/bible.db.pre-surface-fill-20261025`, plus each slot's
 old words row) BEFORE step 9 → step 9 rebuild + both backfills → re-key with `dryrun_rekey_fill.py`'s
 keys → re-apply (538 updates only where the builder value equals the recorded old form; 3,873 inserts

@@ -161,11 +161,15 @@ def load_csv(path, vkey):
 
 
 # ── the keys ─────────────────────────────────────────────────────────────────
-def key2(old_rows, pos, new_rows):
-    """-> ('one', new_pos) | ('none', None) | ('amb', None): the k-th slot carrying the same full
-    strongs, k = this slot's ordinal among same-number slots in the old verse."""
+def ordinal(old_rows, pos):
+    """-> (strongs, k): this slot's full strongs and its ordinal among same-number slots."""
     strongs = next(r[1] for r in old_rows if r[0] == pos)
-    k = [r[0] for r in old_rows if r[1] == strongs].index(pos)
+    return strongs, [r[0] for r in old_rows if r[1] == strongs].index(pos)
+
+
+def key2_at(strongs, k, new_rows):
+    """-> ('one', new_pos) | ('none', None) | ('amb', None): the k-th slot in the new verse
+    carrying the same full strongs. (THE key-2 rule; restore_surface_fill.py calls it too.)"""
     cands = [r[0] for r in new_rows if r[1] == strongs]
     if k >= len(cands):
         return "none", None
@@ -175,15 +179,24 @@ def key2(old_rows, pos, new_rows):
     return "one", np
 
 
-def key1(old_rows, pos, new_rows):
-    """-> ('one', new_pos) | ('none', None) | ('amb', [positions]): same full strongs + English."""
-    me = next(r for r in old_rows if r[0] == pos)
-    cands = [r[0] for r in new_rows if r[1] == me[1] and r[2] == me[2]]
+def key2(old_rows, pos, new_rows):
+    return key2_at(*ordinal(old_rows, pos), new_rows)
+
+
+def key1_at(strongs, english, new_rows):
+    """-> ('one', new_pos) | ('none', None) | ('amb', [positions]): same full strongs + English.
+    (THE key-1 rule; restore_surface_fill.py calls it too.)"""
+    cands = [r[0] for r in new_rows if r[1] == strongs and r[2] == english]
     if not cands:
         return "none", None
     if len(cands) > 1:
         return "amb", cands
     return "one", cands[0]
+
+
+def key1(old_rows, pos, new_rows):
+    me = next(r for r in old_rows if r[0] == pos)
+    return key1_at(me[1], me[2], new_rows)
 
 
 def decide(k2, k1):
@@ -250,8 +263,10 @@ def run(a, live=LIVE):
             c.close()
 
 
-def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
-    # G0 — the fill = copy-of-live minus the pre-fill copy, and it equals the approved CSV
+def g0(cold, cpre, csv_path):
+    """G0 — the fill = copy-of-live minus the pre-fill copy, and it equals the approved CSV.
+    -> (new_side, old_side, writes, ins, upd, vold). Stops on any mismatch. (THE G0 check;
+    snapshot_surface_fill.py calls it too.)"""
     say("G0  the fill diff")
     s_old, s_pre = surface(cold), surface(cpre)
     new_side = {k: v for k, v in s_old.items() if s_pre.get(k) != v}
@@ -262,7 +277,7 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
         raise Stop("G0 diff counts are not the fill's — something else changed abp_surface")
     vold = verses(cold)
     vkey = {(b, c, v): i for i, (b, c, v) in vold.items()}
-    writes = load_csv(a.csv, vkey)
+    writes = load_csv(csv_path, vkey)
     if set(writes) != set(new_side):
         raise Stop(f"G0 CSV writes {len(writes):,} slots, diff {len(new_side):,} "
                    f"({len(set(writes) ^ set(new_side)):,} differ)")
@@ -275,6 +290,11 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
             or any(s_pre.get(k, ("",))[0] != writes[k]["old_form"] for k in upd):
         raise Stop("G0 insert/update split, or the update old forms, do not match the pre-fill copy")
     say(f"    PASS — {len(writes):,} = {len(ins):,} insert + {len(upd):,} update = the approved CSV")
+    return new_side, old_side, writes, ins, upd, vold
+
+
+def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
+    new_side, old_side, writes, ins, upd, vold = g0(cold, cpre, a.csv)
 
     # V — verse ids stable between old and built
     say("V   verse table identical in --old and --built")

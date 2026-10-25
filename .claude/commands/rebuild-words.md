@@ -251,17 +251,20 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
    find. THEN `scripts/backfill_pn_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
    printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; the interlinear Greek line for
-   names reads from these). health_check FLOORS the table at 389,244 (re-declared at the
-   2026-08-05 ②-ride: −165 vs the old 389,409, names-on-own-slots churn — see
-   TICKET_pn_star_fix.md), so a rebuild missing either
-   backfill trips the floor (the 2026-07-16 miss is why the guard exists). THEN re-run
+   names reads from these). health_check FLOORS the table at **395,003** (raised 2026-10-26 from
+   389,244 — rebuild-trap charter G3: the builder chain's 391,130 + the 10/25 fill's 3,873 inserts),
+   so a rebuild missing either backfill OR the fill trips the floor (shortfall 3,873 exactly = the
+   fill is missing; the 2026-07-16 miss is why the guard exists). THEN re-run
    `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
    SBL style from the lexicon, 'h' from the lemma) — it covers all backfilled rows too.
    **⚠ The 2026-10-25 abp_surface FILL (4,411 writes, table 391,130 → 395,003; record
    `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above.** A rebuild
-   drops it. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows) — re-landing the fill
-   after a rebuild needs its own gated step (TODO; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md`).
-   Do not swap a rebuilt db without deciding this.
+   drops it. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows). The re-landing step
+   is BUILT (2026-10-26, charter G1–G3, §8): `scripts/snapshot_surface_fill.py` freezes the fill
+   from a pre-swap copy BEFORE step 9; `scripts/restore_surface_fill.py` re-keys and re-applies it
+   AFTER step 9 (table must read 391,130 first, 395,003 exactly after). **It is proven on copies
+   only and refuses the live file** — wiring it onto live (where step 9 runs) waits on the copy dry
+   run's verdict. Until then: do not swap a rebuilt db.
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory

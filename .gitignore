@@ -40,3 +40,7 @@ draws/
 abp_app_html/
 # ABP purchased helps (Analytical Lexicon etc.) parsed output; purchased text, never committed
 abp_helps/
+# Rebuild-trap frozen fill snapshot (snapshot_surface_fill.py): ABP printed Greek + ABP English,
+# ABP text, never in the public repo. PA keeps it here; a second copy sits in the local checkout.
+tests/fixtures/rebuild_trap/*.tsv
+tests/fixtures/rebuild_trap/*.sha256
