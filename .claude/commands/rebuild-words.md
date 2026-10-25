@@ -177,11 +177,11 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       first declaration of 363 carried a mis-ported "357 hand-fix-zone" census figure that was
       never fresh-import drift). A different count HALTS — read the member list before any
       override. Replaces the old "re-run fix_cushi_strongs" note: the frozen record covers it.
-      **⚠ The 6 is itself SUPERSEDED** (the script's own docstring, `restore_frozen_pn.py:29-35`,
-      lane-② ride 8/5): the frozen record was re-baselined to the new name geometry, and "the next
-      ride's expectation must be RE-DECLARED from its own dry-run against the NEW record". The code
-      still says `EXPECT = 6`; a different dry-run count is attributed member by member
-      (`cross_restore_vs_plan.py`) and re-declared in code — `--expect` was removed.
+      **RE-DECLARED 6 → 8 on 2026-10-26** (`restore_frozen_pn.py` `EXPECT`, receipt in the code
+      comment): the full 2Sa 18 Cushi set — all 8 'Cushi' slots, H3570 → H3569 — confirmed member
+      for member by the independent name-keyed fix (`apply_cushi_namekeyed.py` dry run lists the
+      same 8; Jer 36 / Zep 1 refused by design). Any other count is attributed member by member
+      and re-declared in code — `--expect` was removed.
    2. `scripts/retire_hebrew_identity.py <db> --fresh-rebuild` (dry-run then --apply). The copy
       carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
       byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds
