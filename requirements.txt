@@ -4,3 +4,4 @@ Flask-Limiter==4.1.1
 python-dotenv==1.2.2
 google-auth==2.55.0
 feedparser==6.0.12
+googlenewsdecoder==0.1.7

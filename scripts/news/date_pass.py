@@ -36,7 +36,6 @@ the one-shot backfill (scripts/backfill_page_dates.py, last 60 days, dry-run fir
 """
 import time
 import datetime
-import threading
 
 try:
     from pagedate import page_date_detail            # run from scripts/news/
@@ -55,24 +54,11 @@ NEW_COLS = ("published_page", "published_src", "date_flag")
 # skipped untouched, to be tried again next run.
 RESOLVE_DEADLINE = 90       # the lookup retries twice with 5s + 15s waits of its own
 PAGE_DEADLINE = 45
-TIMED_OUT = object()
 
-
-def with_deadline(fn, *args, secs):
-    """fn(*args), or TIMED_OUT if it hasn't returned within `secs` seconds. An exception
-    inside fn counts as None (both callers already treat None as 'nothing found')."""
-    box = {}
-
-    def run():
-        try:
-            box["v"] = fn(*args)
-        except Exception:
-            box["v"] = None
-
-    t = threading.Thread(target=run, daemon=True)
-    t.start()
-    t.join(secs)
-    return TIMED_OUT if t.is_alive() else box.get("v")
+try:
+    from deadline import with_deadline, TIMED_OUT     # run from scripts/news/  # noqa: E402
+except ImportError:
+    from scripts.news.deadline import with_deadline, TIMED_OUT  # noqa: E402
 
 
 def has_columns(conn):

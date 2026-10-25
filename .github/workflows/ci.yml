@@ -72,6 +72,7 @@ jobs:
           python tests/test_correct_xref_vs_binding.py
           python tests/test_page_date.py
           python tests/test_rank_score.py
+          python tests/test_gnews_resolve_deadline.py
           python tests/test_rekey_dryrun.py
           python tests/test_lane3_already_applied.py
           python tests/test_lane3_rebuild_step.py

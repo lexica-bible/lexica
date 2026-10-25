@@ -866,12 +866,14 @@ Open tickets:
   resolve_new_faces.py now runs on new pulls. Reader guards added during the dry runs (each from a
   real page that broke it): self-contradicting pages, ambiguous <time> lists, dates after the pull,
   a tag vs its own printed text, ambiguous day/month (01/07/2026). Records: commits 5109c1f7..0ea8dcd1.
-- **OPEN — Google redirect lookup has NO time limit in the live site (found 2026-10-25).** PA runs
-  googlenewsdecoder 0.1.7, whose gnewsdecoder() takes no timeout, so `gnews_resolve.resolve()` falls
-  back to requests calls with none. The date pass now wraps it in a hard stop, but `/api/news/resolve`
-  (Copy shortlist, a web worker) and the nightly face-fill still call it bare — one dead Google
-  connection can tie up a worker. Also: the package isn't in requirements.txt. Needs a ruling.
-  code: scripts/news/gnews_resolve.py, views_news.py resolve_urls, scripts/news/resolve_new_faces.py
+- **DONE 2026-10-25 — Google redirect lookup now has a hard time stop everywhere.** PA's
+  googlenewsdecoder 0.1.7 takes no timeout (its requests calls had none), so `gnews_resolve.resolve()`
+  — the one function every caller uses (Copy shortlist `/api/news/resolve`, nightly face-fill,
+  backfills, page-date check) — now runs the call under `scripts/news/deadline.with_deadline`
+  (RESOLVE_LIMIT 20s; past it, None). Library pinned `googlenewsdecoder==0.1.7` in requirements.txt.
+  Locked by tests/test_gnews_resolve_deadline.py (fails on the old code: it hung the full stub wait).
+  Not changed (noted only): /api/news/resolve still resolves up to 300 links one after another per
+  request, so a request with many dead links can still run long — each is capped at 20s.
 
 ---
 
