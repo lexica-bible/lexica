@@ -29,8 +29,9 @@ Snapshot sha256 pinned in `restore_surface_fill.py`; second copy local (git-igno
 **Next lane:** let `restore_surface_fill.py` run on live at `/rebuild-words` step 9 (after both
 backfills + translit) — remove the live refusal by ruling, put the snapshot step before the swap in
 the checklist, and decide what live serves between the step-9 drop and the restore (charter §1
-consequence). Only then may a rebuilt db be swapped. Disk: `~/rekey/old3.db` + `built3.db` can go
-once nothing more is wanted from them (PA reads ~1.5 GB over `du`).
+consequence). Only then may a rebuilt db be swapped. Disk: `~/rekey/old3.db` + `built3.db` DELETED
+2026-10-26 after the receipts were recorded (`du -sh ~` 6.3G after; PA's dashboard reads ~1.5 GB
+over `du`). `~/rekey/` now holds logs + TSVs only; the next lane takes fresh copies.
 
 ## UPDATE 2026-10-26 (second session) — G1–G3 BUILT; the copy dry run is owed
 Built + locally tested, NOT yet run on PA (charter **§8** has the design calls; run sheet
