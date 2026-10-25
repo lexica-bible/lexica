@@ -55,9 +55,13 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
    correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live
    pin = 626,309), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
-   `Split 2,436 merged subject-name(s)` (the folded PN-subject split incl. the RC-2
-   capitalized-lead fallback; 2,299 roster/εἰμί + 137 capfall — reconciliation record
-   `docs/tickets/blank_star_classes.md`). All four ran EXACT on the 2026-07-16 R-1 run.
+   `Split 80 merged subject-name(s)` — **re-pinned 2026-10-26** from the two lane-② ride logs
+   on PA (`~/bible-db/build_pnstar.log`, `build_pnstar2.log`) and the 10/26 re-key build, all
+   three 80. Was 2,436 before the 8/5 lane-② PN-star pass, whose class B now splits most of
+   these names off their verbs earlier in the same build (2,436 = 2,299 roster/εἰμί + 137
+   capfall, `docs/tickets/blank_star_classes.md`; still in the pre-② `run_build.log`).
+   Also pinned since 8/5: `PN-star pass: A 1,505 + B 2,552 written · 3,161 refusals`
+   (`docs/tickets/TICKET_pn_star_fix.md`).
    GATE (2026-07-16, permanent): if import_tipnr.py or tipnr/TIPNR.txt changed since the
    last run, `python3 scripts/check_roster_regression.py` must print CLEAN before
    import_tipnr runs — the roster is frozen outside reviewed re-baselines
