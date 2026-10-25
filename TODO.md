@@ -74,6 +74,16 @@ parser reference notes in its appendix). No open writes.
   Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it
   merged back). Must be decided before any rebuild swap. (Also 17 english_head + 38 greek_pos diffs in
   the same compare — attribute by member when this is taken up.)
+- HELD — **live's Greek-header table (pn_greek_identity) predates the 2026-10-25 abp_surface fill.**
+  It was built 9/6; the fill later gave name slots printed forms. Any header rebuild (a words rebuild's
+  8b.3, or a header re-run on live) therefore changes **21 rows** vs live — measured 2026-10-26 on the
+  G4 test copy `~/rekey/built2.db` (JP-run read): 12 tipnr rows gain a Greek header where live shows
+  English (Joseph ×2, Moses ×2, Joshua, Saul ×2, David ×3, Crete, Jonah); 6 none→lemma-only (Num 21:25
+  Israel, 1Sa 20:37 Jonathan, 2Sa 15:6 Absalom, Jer 48:15 / 48:20 Moab, Jer 49:3 Ai); 3
+  surface→lemma-only (Jos 12:23 'του Ναφαθδώρ'→'Ναφαθδώρ' — glued article gone; Jer 51:41 + Jer 25:26
+  Sheshach). 20 of 21 sit on a fill slot; Jer 25:26 follows from 51:41 (the fill's 'Σεσάκ' disagrees with
+  'Σησάχ', so the name loses its single headword). **Sheshach's spelling needs a content ruling before
+  any header rebuild lands on live.** Not a gate on the rebuild-trap fix (JP ruling 2026-10-26).
 - HELD (leftover, not a gate) — **header landing `->surface` 461 vs its receipt's 451 (10 rows).**
   The 2026-09-06 Greek-header landing moved 461 identity rows into class `surface` (lemma-only→surface
   421 + none→surface 40; JP-run read 2026-10-26, 9/6 formlane vs hdrlane backups in `~/db_backups`),
