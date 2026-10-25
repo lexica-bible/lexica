@@ -517,6 +517,13 @@ fills it (`build_words_from_abp.py:2111`, `:2154-2157`); the column existed on l
 the ABP English finder matching nothing until step 11. **Live count (JP, PA, read-only, 18:51):
 `0` non-blank / `626309` rows — expected 0 / 626,309, MATCH.** The column is present on live (the
 read did not error) and blank on every row. Step 11 on live gated by JP next.
+**Step 11 PRE-REG (JP, PA, read-only, 19:03 — rows the script will touch | rows with a non-space value):**
+words `354946 | 354946` · kjv_words `790685 | 790685` · bsb_words `386063 | 386063`. Expected run
+output: no "added column" line · `recomputed 354,946` / `790,685` / `386,063` · After: `354,946` /
+`790,685` / `386,063` rows normed (kjv/bsb: a surplus would be an old value on a now-blank row —
+attributed, not ignored) · distinct-renderings/keys figures FIRST READ. After-read of non-blank
+`english_head_norm`: 354,946, lower only by heads made of quote marks alone (normalize → '').
+Served check: ABP English finder "magistrate" → θεός G2316 (Exo 22:28 "magistrates").
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
