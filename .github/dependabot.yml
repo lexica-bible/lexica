@@ -8,6 +8,15 @@
 #   - npm: all @babel/* packages move as one PR — they're a matched set, and a
 #          major bump (7 -> 8) has to go together or the build breaks.
 #   - github-actions: batched together.
+#
+# Skipped on purpose (2026-10-25) — each would need a deliberate change, not a bot PR:
+#   - googlenewsdecoder: pinned at 0.1.7 (the version on PA). The hard time stop in
+#          scripts/news/gnews_resolve.py + deadline.py was built against it, and CI never
+#          installs it, so a green bot PR proves nothing. Re-pin by hand after testing.
+#   - @babel/* majors (8+): Babel 8 compiles the page code differently — the built
+#          app.js starts with an `import` line and the site loads blank.
+#   - react / react-dom majors (19+): the site loads React from its own copies in
+#          static/ (React 18). React 19 no longer ships that kind of file at all.
 version: 2
 updates:
   - package-ecosystem: "pip"
@@ -15,6 +24,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "googlenewsdecoder"
     groups:
       python-deps:
         patterns:
@@ -28,6 +39,13 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "@babel/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
     groups:
       babel:
         patterns:
