@@ -3,9 +3,28 @@
 Written 2026-10-24 from JP's notes. Everything under "What JP verified" was checked by JP
 OUTSIDE CC; this session did not open these files. Re-verify any detail a step leans on.
 
+## STATUS 2026-10-25 (late) — Concordance verse-list diff CLOSED (read-only) · no open writes
+**Next-session first candidate: the rebuild-trap fix** (below; its own session, census first). Then
+(d) English-Greek Index.
+- **Concordance lane closed as read-only work:** 7,905 of 8,532 ordinary-word entries match our
+  verse lists exactly. Record `CENSUS_abp_concordance_diff.md` (readout §1–6 + parser reference
+  appendix); tools `scripts/parse_abp_concordance.py` · `concordance_handmap.tsv` (23 hand-ruled
+  rows) · `diff_concordance_verses.py` · `adjudicate_concordance_diff.py`. Witnesses used: the PA
+  export `~/abp_words_by_verse_20261025.csv` and the app slot file (`abp_app_html/abp_app_slots.tsv`),
+  both copied down by scp into `abp_helps/` (git-ignored).
+- **Three write-class items, all DECIDED not scheduled, each its own checkpoint lane starting with a
+  PA row read** (TODO): (1) 152 Concordance-right label corrections, filed under the held 540 + 13
+  item (row unproven for the 66 singles) · (2) 25 slot errors + 10 split renderings from the residue ·
+  (3) split-rendering double rows, 628 (174 the helper audit sees, 454 nothing detects yet).
+- **The publisher's own sources disagree on some numbers:** κλοιός and εἰ δὲ μήγε — the app sides
+  with the Concordance (2828.1, 1490.1) against the Lexicon and ours (2827.2, 1490); ἔνθεν — the app
+  sides with ours (1759.3) against the Concordance and the Lexicon (1759.2). The diff's label pairs
+  were ruled by the Lexicon (JP); no single help is the authority on a number.
+- **Helper audit (`scripts/audit_helper_double_tag.py`) controls refreshed but NOT yet re-run on PA:**
+  the cured A exhibits (Jud 1:9, Job 18:13, Job 3:4) were replaced by 2Ki 11:16 G2007 · Psa 69:21
+  G4222 · Act 13:19 G2624; B control Rth 2:16 kept. Expect 4 PASS on the next run.
+
 ## STATUS 2026-10-25 — lane (1) abp_surface FILL LIVE · lane (2) CLOSED (MIXED 47 answered) · no open writes
-Next-session first candidate: the Concordance verse-list diff for all ordinary words (TODO; scope
-notes under lane (c) below). Then (d) English-Greek Index.
 - **Applied 2026-10-25 03:08 (PA)** by `scripts/apply_abp_surface_fill.py`: 4,411 writes
   (3,873 new printed forms + 538 changed: 92 trims, 89 split keeps, 357 NBSP → space),
   abp_surface 391,130 → **395,003**, every check PASS (written rows = the approved CSV byte for

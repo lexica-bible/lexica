@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-25 — Concordance verse-list diff lane CLOSED (read-only; nothing written to any database)
+Census (d14a24ff) → parser + diff (10035f3e) → split-rendering class (9d4b7851) → adjudication
+(25bbcc2a). Every ordinary-word verse list in ABP's Lexical Concordance compared with our words
+table (PA export `~/abp_words_by_verse_20261025.csv`, 434,812 number-verse rows): **7,905 of 8,532
+entries match exactly.** Record: `docs/handoffs/CENSUS_abp_concordance_diff.md` (§1–6 + appendix);
+tools `scripts/parse_abp_concordance.py`, `concordance_handmap.tsv` (23 rows), `diff_concordance_verses.py`,
+`adjudicate_concordance_diff.py`. Open results went to TODO as three write-class items (152 label
+corrections · 25 slot errors + 10 split renderings · 628 split-rendering double rows) plus a held list.
+Lessons:
+- The 10/25 scope estimates (~8,200 entries, ~7,470 shared, 5 columns) came from a rough pattern →
+  the census found 9,257 / 8,563 / 7 columns: headings come in more shapes than one regex sees (number
+  on its own line, glued, hyphen-split, bracketed second number) → the page guide-word check and the
+  Lexicon-side "is every number printed as a heading?" check caught each miss.
+- `Ps 2:title–9` read as verses 0–9 → it lists the superscriptions of Psalms 2 THROUGH 9 → Ps 2 has
+  no superscription, and the ranges matched ψαλμός's titled Psalms exactly.
+- The one star exception (Ecc 7:22 καρδία) looked like a Concordance star error → a verse merge (its
+  Ecc 7 runs one verse ahead of ours) → the Ecc 7 cluster in the verse-offset rows.
+- App "2+ occurrences" looked like real repeats → the app has split renderings too (neighbouring
+  slots, same number + Greek) → reading the slots behind the star rows.
+- The helper audit's A controls "FAILED" → they were cured by the 7/9 fix (the 607 blanked rows) →
+  replaced with three live positives from the 174.
+
 ## 2026-10-25 — TODO consolidation: closed write-ups moved here from TODO.md
 Why: a /consolidate pass on TODO.md (1,562 lines). Every block below was already closed, shipped,
 superseded or ruled in TODO.md; it is moved here word for word under a short heading. Its open

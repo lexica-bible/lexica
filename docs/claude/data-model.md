@@ -653,10 +653,27 @@ text and stay out of git (`abp_app_html/`, `abp_helps/` are gitignored).
   any other use of app Greek must map it. 60 spots where ours has plain η are held (could be a
   genuine ἡ — the article, ἡμ- words).
 - **Lexical Concordance** (JP's PDF): per-number verse lists for ordinary words; **every proper
-  name entry (474) has NO verse list.** `*` after a reference = 2+ occurrences in that verse.
-  Layout notes for a parser: `docs/handoffs/HANDOFF_abp_source_material.md` lane (c).
+  name entry (474) has NO verse list**, nor do "Proper title." gentilics, "Far & wide." common words,
+  See/Included pointers, unused words. `*` after a reference = 2+ occurrences in that verse.
+  Parser `scripts/parse_abp_concordance.py` (`pdftotext -raw` reads its 7 columns in order) — print
+  errors are fixed ONLY through `scripts/concordance_handmap.tsv`, never guessed by code. Reading
+  rules that cost a pass: Psalm `title`/`tit` = our verse 0, and **`Ps 2:title–9` = the
+  superscriptions of Psalms 2 THROUGH 9** (chapter range of titles, not verses 0–9) · headings come
+  in several shapes (number on its own line, glued on, hyphen-split headword, bracketed second
+  number `39 (40)`, Levi `3017,18` = two keys, a few with no headword: `2717`, `3203–3302`) · in
+  Ecc 7 (from ~v.17) and Son 6 its verse numbers run one ahead of ours. Diff + adjudication:
+  `scripts/diff_concordance_verses.py`, `scripts/adjudicate_concordance_diff.py`; record
+  `docs/handoffs/CENSUS_abp_concordance_diff.md`.
+- **The publisher's own sources disagree on some numbers** — e.g. κλοιός (Concordance + app 2828.1,
+  Lexicon + ours 2827.2), εἰ δὲ μήγε (Concordance + app 1490.1, Lexicon + ours 1490), ἔνθεν
+  (Concordance + Lexicon 1759.2, app + ours 1759.3). No single help is the authority on a number;
+  JP rules per case (10/25: the Lexicon decides the Concordance diff's label pairs).
 - **Word-study ABP tab total = word OCCURRENCES** (count of words rows by number), not verses —
-  compare a verse-list source by verses, never total to total.
+  compare a verse-list source by verses, never total to total. **Split renderings inflate it:**
+  one Greek word whose English ABP prints in two pieces sits on TWO words rows with the same number
+  (628 Concordance-verified verses; JP ruled a counting defect 10/25 — TODO "Split-rendering double
+  rows"). The app has the same shape (neighbouring slots, same number + Greek, different English) —
+  count those once when the app is a witness.
 
 ## Article slots (G3588) — two facts any audit of the words table needs
 - **`_redistribute_article_slot` carries RULING 10 (2026-08-01): writes require positive
