@@ -51,7 +51,9 @@ parser reference notes in its appendix). No open writes.
   §5. The helper audit's controls were refreshed the same day (cured A exhibits retired).
   **Precondition: PA row read of all 628** (the 20-verse read was a sample) **+ a detector for the
   454 both-inside-bracket shape** (none exists) before any write. Plus the 10 residue verses above.
-- OPEN — **after the 2026-10-26 live rebuild: checklist steps 7, 10, 11 not yet run.** The rebuild
+- OPEN — **after the 2026-10-26 live rebuild: step 11 CLOSED (354,946 normed, finder check PASS) ·
+  step 10 CLOSED (IDENTICAL, unchanged) · step 7: 3 of 4 pass on data, 1Ch 13:10 Chip-view look
+  pending JP (receipts charter §10a).** Original note: The rebuild
   swapped live at 18:06 (rebuild-trap fix proven — TODO_ARCHIVE 2026-10-26; receipts charter §10;
   rollback `~/bible-db/bible_pre_trapwire_swap.db`). Step 7 = served spot-checks (Eze 31:9, 1Chr 1:1,
   1Ch 13:10; also Jer 51:41 Σεσάκ). Step 10 = `build_two_ending.py` paste + local app.js rebuild.
@@ -90,7 +92,8 @@ parser reference notes in its appendix). No open writes.
   Not measured: how many real visitors have hit it since bc47330c went live (PA's access log would
   show alternating `/api/chapter` bursts). Rulings: fix ships in the same deploy as step 10's paste
   (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
-  section names this deep link as one of the two `libNav` producers.
+  section names this deep link as one of the two `libNav` producers. Step 10 came back IDENTICAL
+  (10/26) — no step-10 deploy exists, so a fix deploys on its own.
 - HELD (JP 2026-10-26) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/26) and which must be SEEN (1Ch 13:10:

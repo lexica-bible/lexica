@@ -556,6 +556,12 @@ read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **St
 - **JP ruling after step 7:** items 1–3 accepted on data-level checks (loop risk); 1Ch 13:10 pending
   JP's look at the reader's Chip view. Step 10's read-only diff may run now; no paste/deploy until
   the loop lane reports.
+- **Step 10 (JP, PA, 19:10, read-only — `build_two_ending.py ~/bible-db/bible.db`, output from the
+  `// AUTO-GENERATED` line diffed vs `static/src/00b-two-ending.jsx`): `IDENTICAL` → "unchanged", no
+  paste, no build, no deploy.** Header: classes (lemmas) two-ending 368 · three-ending 283 · no-lsj 41 ·
+  noun 68 · unknown 13; soften OT 80 words / 441 displays · NT 208 / 396 (the file's own lists count
+  80 / 208 — CC). **Step 10 CLOSED.** Consequence for the loop lane (JP ruling 3): there is no step-10
+  deploy to ride, so a loop fix deploys on its own.
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
