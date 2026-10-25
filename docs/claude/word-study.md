@@ -123,8 +123,9 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
   (reviewer 2026-08-09), ambiguous forms carry no weight.
 - **TRIPWIRE — two-word name values are joined by U+00A0, not a space.** `greek_lemma LIKE
   '% %'` reads **0** against rows you can see. Use `LIKE '%'||char(160)||'%'`, and fire it on
-  a known row first (1Ki 11:17 slot 2). This lane has now learned it twice — commit
-  `5a533f9b` (July) and again 2026-08-09.
+  known rows first — the 27 pinned compound names (`compound_names_allowlist.tsv`, read from
+  hex), NOT 1Ki 11:17 slot 2: that glued row was cured and now reads plain `Αδάρ` (live
+  2026-10-24). This lane has now learned it twice — commit `5a533f9b` (July) and again 2026-08-09.
 - **TRIPWIRE — that detector finds a CLASS, not a defect.** Of 144 two-word values, 27 are
   genuine compound names (Βαάλ Ερμών Baal-hermon, Γασιών Γαβέρ Ezion-geber, Αππίου Φόρου
   Appii Forum, both Αρειον Πάγον Areopagus rows) and must stay — pinned byte-exact (hex

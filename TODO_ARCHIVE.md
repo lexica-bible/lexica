@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-24 — ABP source material: lane (a) app diff DONE · lane (b) Analytical Lexicon numbers in
+
+Read-only throughout; nothing written to any database. Full numbers + JP rulings:
+`docs/handoffs/HANDOFF_abp_source_material.md`; per-area facts: data-model.md "ABP app witness
++ purchased helps"; traps: memory `project_abp_source_material`.
+- (a) Fetched the whole ABP app (1,189 pages, 31,238 verses) and diffed it slot by slot (audit
+  v1 → v2 on JP's ruling). App Greek vs our printed form: OT 99.63% / NT 99.75% after accents
+  + the app's font-defect map; 99.5% of our slots align; app English differs in 29% of verses
+  (newer edition). Rulings: no renumber (Pro 16/24, Jer 10, Hab 3); name header-vs-inflected
+  by design; swaps = build split-flip reorder (ruled, unverified per row).
+- (b) Parsed the Analytical Lexicon (8,584 entries, 39,539 forms, 0 unparsed; 3 controls pass);
+  it resolves 93.5% of the 4,058 slots where abp_surface has no printed form (98.1% leaving
+  out names, which the book does not carry).
+- Lessons: a cured control row (1Ki 11:17) and a cross-check sharing the main pattern →
+  memory `feedback_audit_tools_must_fail`; the site's redirect trap, R/П = Π, all-Greek English
+  notes, the gloss rule that swallowed forms → `project_abp_source_material`.
+
 ## 2026-10-24 — Hebrew-number lanes: reversal WITHDRAWN · (f) highlighter · (g) census · 341 stored-H corrections LIVE
 
 Moved from TODO.md at the 10/24 wrap. Durable rules went to docs/claude/data-model.md

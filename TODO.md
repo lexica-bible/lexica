@@ -8,17 +8,15 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## NEXT SESSION (JP 10/24): start with the app-HTML diff
-Opener: `docs/handoffs/HANDOFF_abp_source_material.md` — the purchased helps (Analytical
-Lexicon / Lexical Concordance / English-Greek Index; files on JP's machine, not in the repo),
-the symbol-font map, the app's HTML layout, and JP's pre-registered order (a) app-HTML diff →
-(b) lexicon table → (c) concordance counts (answers MIXED 47) → (d) index. No writes until
-(a) is in hand. Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
+## NEXT SESSION (JP 10/24): lane (c) — Lexical Concordance → number → verse counts
+Opener: `docs/handoffs/HANDOFF_abp_source_material.md` (lanes, numbers, rulings). Lanes (a)
+app diff and (b) Analytical Lexicon are done (record in TODO_ARCHIVE 10/24). (c) diffs the
+concordance's per-number verse counts against the ABP tab's totals — answers the MIXED 47
+(routing follow-up c). Then (d) English-Greek Index. PDFs are in JP's Downloads
+(`lexical_concordance.pdf`, `index.pdf`); parse locally like `parse_abp_analytical_lexicon.py`.
+Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
 'none'-label cleanup (rides the next identity rebuild).
-**Lane (a) DONE 10/24** (readout in the handoff). JP rulings on it:
-- Pro 16 / Jer 10 / Hab 3: ours = English numbering (our Pro 16:5 = KJV 16:5; LXX lacks
-  16:1–4); the app numbers LXX verses in sequence. NO renumber; the audit's per-verse map is
-  the record. Names headword-vs-inflected: by design, no action.
+Filed from lane (a)/(b), not now:
 - FILED, not now — **glued NBSP values in abp_surface (544)**: own small write lane, same
   shape as the August glued-name fix (census with a control first). Examples 1Sa 17:57 pos 22
   'χειρί αυτού', 'είπε Δαυίδ', 'ο δε'. Finder: `scripts/audit_abp_app_vs_surface.py` class
@@ -27,7 +25,9 @@ the symbol-font map, the app's HTML layout, and JP's pre-registered order (a) ap
   read-by-hand list; needs the audit to write them to a TSV.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
   in 29% of paired verses). No charter yet.
-**Lane (b) STARTED 10/24** — Analytical Lexicon → table.
+- Small audit gap — **English notes typed ENTIRELY in Greek letters** ("δαγγερ" = dagger,
+  "- Φορ τηε ενδ.") pass the app audit's English-font check (it looks for a Latin letter);
+  28 reached the missing-form list. Fix the check before the missing-form list feeds any write.
 
 ## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP

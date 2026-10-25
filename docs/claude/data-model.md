@@ -621,6 +621,26 @@ app.py matches.
 - The words table is rebuilt from `bh_scrape.db` — see `/rebuild-words` + the words section.
 - Do NOT add conjugated manuscript forms — the audience are non-Greek readers (standing rule).
 
+## ABP app witness + purchased helps (read-only diff sources, 2026-10-24)
+Lanes + numbers: `docs/handoffs/HANDOFF_abp_source_material.md`. Both outputs are third-party
+text and stay out of git (`abp_app_html/`, `abp_helps/` are gitignored).
+- **App** (apostolicbibleapp.com, ABP's own app): `scripts/fetch_abp_app.py` → slot TSV;
+  `scripts/audit_abp_app_vs_surface.py` diffs it vs words / abp_surface / pn_greek_identity
+  (run on PA). The site SPELL-CORRECTS missing pages ("Genesis 51" → 301 to Genesis 15), so
+  the fetch never follows redirects and checks every page's own `<title>`.
+- **App font defects** (evidence = our letter at the same spot; JP-ruled map, the one copy is
+  `DEFECT_MAP` in the audit): C→Χ Q→Θ H→Η O→Ο U→Υ R→Π П(Cyrillic)→Π +→ϊ. R and П both mean Π
+  — not visual look-alikes. English notes typed in the Greek font can be ALL Greek letters
+  ("δαγγερ" = dagger), which a Latin-letter check misses.
+- **Numbering (JP-ruled):** our Psalm titles are verse 0 = the app's verse 1. Pro 16 / 24,
+  Jer 10, Hab 3: ours follow English numbering, the app numbers LXX verses in sequence —
+  NO renumber on our side.
+- **Analytical Lexicon** (JP's purchased PDF, not in the repo): `scripts/parse_abp_analytical_lexicon.py`.
+  Entry numbers = Strong's + ABP's dotted extensions (a "5484, 85" entry = both). Accents and
+  breathings are LOST in its text layer (compare folded only). It has NO proper names and files
+  every personal-pronoun form (αὐτός's too) under ABP's raw 1473 — our build renumbers those,
+  so join pronouns through `build_abp_surface._norm`. Join tool: `scripts/audit_lexicon_vs_missing_forms.py`.
+
 ## Article slots (G3588) — two facts any audit of the words table needs
 - **`_redistribute_article_slot` carries RULING 10 (2026-08-01): writes require positive
   ATTESTATION.** The 8/1 halt (it moved names onto δέ/αὐτός slots — `2Sa 12:9` 'Uriah'→G846)

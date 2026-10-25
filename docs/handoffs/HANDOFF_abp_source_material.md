@@ -129,7 +129,8 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   number by default; a "count = 0" must check dotted variants first (CLAUDE.md audit rule).
 - **NBSP:** in our tables, two-word name values are joined by U+00A0, not a space
   (`LIKE '% %'` reads 0 on rows you can see). The app's glued slots will meet this; fire
-  the check on 1Ki 11:17 slot 2 first (word-study.md tripwire).
+  the check on the 27 pinned compound names first (word-study.md tripwire) — 1Ki 11:17
+  slot 2 was cured and no longer works as a control.
 - **Accents are lost** in the helps' text layer, so a helps lemma can only match ours after
   folding accents — never byte-exact. Byte-exact Greek comes from a PA dump of the built
   table, never from a PDF or `abp_texts/` (CLAUDE.md).
