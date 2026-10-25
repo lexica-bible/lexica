@@ -514,8 +514,9 @@ from that row's `english_head` through `number_fold.normalize`; the build keeps 
 fills it (`build_words_from_abp.py:2111`, `:2154-2157`); the column existed on live before the swap
 (census Q2: `idx_words_ehnorm` on live `words`); the finder uses it whenever it exists
 (`views_lexicon.py:100-108`, `:943-947`) → predicted live count **0 non-blank / 626,309 rows** —
-the ABP English finder matching nothing until step 11. **Live count: PENDING (read-only PA read
-handed to JP; step 11 gated on it).**
+the ABP English finder matching nothing until step 11. **Live count (JP, PA, read-only, 18:51):
+`0` non-blank / `626309` rows — expected 0 / 626,309, MATCH.** The column is present on live (the
+read did not error) and blank on every row. Step 11 on live gated by JP next.
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
