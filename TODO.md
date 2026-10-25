@@ -858,6 +858,13 @@ Open tickets:
   stored again — e.g. ids 22825/23963, 5665/19745, 24147/24487 (the last pair even carries two
   different Google dates, 2024-11-21 vs 2021-02-18). Fix direction: dedupe on `resolved_url`, or
   on normalized title + source. code: scripts/news/gather_news.py (INSERT OR IGNORE on url).
+- **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
+  score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
+  existing card grouping; no scorer change. GATED behind the two mandatory clustering test fixtures
+  — do not build before they exist. Layers 1 (outlet cap) and 2 (downward-only rank_score) are
+  live; this would slot into the same Inbox Top-stories order (83-news-logic.jsx /
+  84-news.jsx viewListAll). Context: 28 of Advent Messenger's 31 recent articles sat on cards no
+  other outlet shared (2026-10-24 count).
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
