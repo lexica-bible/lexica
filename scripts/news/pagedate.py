@@ -43,7 +43,8 @@ _LD_LOOSE = re.compile(r'"datePublished"\s*:\s*"([^"]+)"')
 _META = re.compile(r"<meta\b[^>]*>", re.I)
 _ATTR = re.compile(r'([\w:.-]+)\s*=\s*(?:"([^"]*)"|\'([^\']*)\')')
 _ARTICLE = re.compile(r"<article\b.*?</article>", re.I | re.S)
-_LEAD_DAY = re.compile(r"^\s*(\d{4})-(\d{2})-(\d{2})")
+_LEAD_DAY = re.compile(r"^\s*(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)")   # 2014-07-01 and 2014-7-1
+_NUMERIC = re.compile(r"(?<!\d)(\d{1,2})[/.](\d{1,2})[/.](\d{4})(?!\d)")
 _WEEKDAY = re.compile(r"^\s*(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?,?\s+", re.I)
 # a <time> tag with its attributes AND its printed text (the text is a second witness)
 _TIME_FULL = re.compile(r"<time\b([^>]*)>([^<]*)", re.I)
@@ -78,6 +79,20 @@ def _from_raw(raw):
     m = _LEAD_DAY.match(s)
     if m:
         return _day(*m.groups())
+    # Numeric day/month dates ("01/07/2026", "01.07.2026"): the order is only certain when one
+    # number is over 12. Both 12 or under (and different) = US vs European is a GUESS -> None.
+    # (middle-east-online 26995, 2026-10-25: "Wednesday 01/07/2026" was 1 July — Vance's Fox
+    # remarks of Tue 30 June — not 7 January; both dates were Wednesdays.)
+    m = _NUMERIC.search(s)
+    if m:
+        a, b, y = int(m.group(1)), int(m.group(2)), m.group(3)
+        if a > 12 and b <= 12:
+            return _day(y, b, a)                    # day first
+        if b > 12 and a <= 12:
+            return _day(y, a, b)                    # month first
+        if a == b:
+            return _day(y, a, b)
+        return None
     try:
         from dateparse import to_iso           # run as a script from scripts/news/
     except ImportError:

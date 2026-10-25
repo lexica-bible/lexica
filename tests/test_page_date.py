@@ -154,6 +154,29 @@ def t_tag_and_text_agree_bbc():
     assert page_date_detail("https://www.bbc.co.uk/news/av/stories-42861144", html=html) == ("2018-01-30", "time")
 
 
+def t_ambiguous_numeric_meo():
+    # middle-east-online 26995: "Wednesday 01/07/2026" was 1 July (Vance's Fox remarks of
+    # Tue 30 June 2026), not 7 January. Both numbers <= 12: the order is a guess -> no date.
+    html = '<meta property="article:published_time" content="Wednesday 01/07/2026" />'
+    assert page_date_detail("https://middle-east-online.com/en/x", html=html) == (None, None)
+    from scripts.news.pagedate import _from_raw
+    assert _from_raw("25/12/2025") == "2025-12-25"      # day > 12: certain
+    assert _from_raw("12/25/2025") == "2025-12-25"      # month first, day > 12: certain
+    assert _from_raw("05.05.2024") == "2024-05-05"      # same either way
+    assert _from_raw("03/04/2024") is None              # March 4 or 3 April: refused
+
+
+def t_catholic_com():
+    # catholic.com 27019: data block "2014-7-1" (one-digit parts) + printed "7/1/2014"
+    # (ambiguous on its own) -> the data block date, 2014-07-01
+    html = ('<script type="application/ld+json">{"@type":"Article","datePublished":"2014-7-1"}</script>'
+            '<time aria-label="Published on 7/1/2014" class="mr-2">7/1/2014</time>')
+    assert page_date_detail("https://www.catholic.com/magazine/print-edition/ordinariate",
+                            html=html) == ("2014-07-01", "jsonld")
+
+
+test("a day/month date that could read either way -> refused, never guessed", t_ambiguous_numeric_meo)
+test("one-digit ISO parts read; an ambiguous printed date doesn't override", t_catholic_com)
 test("a date tag whose printed text disagrees with its datetime -> no date", t_tag_vs_its_own_text_gdn)
 test("a date tag whose datetime and printed text agree -> that day", t_tag_and_text_agree_bbc)
 test("page contradicts itself (data block vs printed byline) -> no date", t_conflict_ipi)
