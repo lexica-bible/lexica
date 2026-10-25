@@ -22,9 +22,11 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
   The export-vs-`abp_texts` 14,922-row gap = pronoun numbering (1473 in the source vs 846/4675/3450…
   live), all under no-verse-list numbers — no effect on the diff.
   - **HELD (a) — 628 verses where our table has 2+ word rows carrying the number but `abp_texts` tags
-    it once** (of the 651 "2+, no `*`"). Cause not traced; the export has no per-row columns. Top:
-    γίνομαι 1096 19 · ἔσται 1510.8.3 14 · ποτίζω 4222 13 · γράφω 1125 10 · ἐπιτίθημι 2007 10.
-    Not the surface fill or translit (both write `abp_surface` only, never `words`).
+    it once** (of the 651 "2+, no `*`"). Top: γίνομαι 1096 19 · ἔσται 1510.8.3 14 · ποτίζω 4222 13 ·
+    γράφω 1125 10 · ἐπιτίθημι 2007 10. Not the surface fill or translit (both write `abp_surface` only,
+    never `words`). **CLASSIFIED 2026-10-25 = split renderings** (20-verse PA row read: 20/20 one
+    Greek word, two neighbouring rows, two English pieces; 0 duplicates, 0 glued splits) → own item
+    "Split-rendering double rows" below.
   - **HELD (b) — ~92 dotted-number label disagreements** (Concordance side): ἔνθεν (Concordance
     1759.2 in 28 verses, ours files them under 1759.3, whence 1759.3's 28 ours-only) · κλοιός
     (Concordance 2828.1 vs our 2827.2, 16) · 48 sibling-dot verses (4761.1/.2 13 · 4951.4/.5 11 ·
@@ -97,6 +99,17 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
     that verse of `abp_texts` (191 if shifted the LXX way); ranges 1,431/1,431 verses carry the
     number; `*` 1,315 of 1,316 starred refs have the word 2+ times, no unstarred ref does —
     **1 star exception: Ecc 7:22 καρδία (2588) starred, `abp_texts` has it once.**
+- DECIDED, not scheduled — WRITE CLASS, full checkpoint lane — **Split-rendering double rows.** 628
+  Concordance-verified verses where one Greek word carries two words rows with the same number (two
+  English pieces, e.g. 2Ki 11:16 `they put | upon` G2007; Gen 24:41 `they should | give her` G1325).
+  **174 outside-bracket** (first piece outside the bracket, no Greek position — on the helper audit's
+  A-review list) · **454 both-inside-bracket** (each piece has its own Greek position — NO detector;
+  the helper audit skips this shape by design). Counts inflate occurrences and the ≥2 check.
+  **JP ruled a counting defect 2026-10-25** (the 7/9 polarity-A record had left split renderings
+  alone as legitimate). A fix changes word rows → checkpoint before anything is written. List:
+  `abp_helps/split_rendering_628.tsv` (git-ignored; columns book · chapter · verse · strongs ·
+  headword · live_rows · shape · helper_audit_line). Evidence: `docs/handoffs/CENSUS_abp_concordance_diff.md`
+  §5. The helper audit's controls were refreshed the same day (cured A exhibits retired).
 - OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
   the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the

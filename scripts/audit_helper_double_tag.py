@@ -144,14 +144,21 @@ def main():
 
     # ---- Control test: the three charter exhibits MUST be caught (fail-loud) ----
     print("=== CONTROL TEST (detector must fire on known positives) ===")
-    def caught_a(refstr):
-        return any(r[0] == refstr for r in a_clean)
+    # CURED CONTROLS RETIRED 2026-10-25: the original A exhibits Jud 1:9 "May", Job 18:13
+    # "And may" and Job 3:4 "may" were the defect the 7/9 polarity-A fix repaired (it blanked
+    # their helper tags — the 607 empty-strongs_base rows), so they can never fire again and
+    # the control read FAILED on a correct table. Replaced with three LIVE positives of the
+    # same structural shape (helper outside the bracket, same number as the bracketed next
+    # row) from the A-REVIEW list, each also one of the 628 Concordance split-rendering
+    # verses (docs/handoffs/CENSUS_abp_concordance_diff.md). Matched on verse AND number.
+    def caught_review(refstr, st):
+        return any(r[0] == refstr and r[4] == st for r in a_review)
     def caught_b(refstr):
         return any(r[0] == refstr for r in b_cases)
     checks = [
-        ("Jud 1:9  A (May)",        caught_a("Jud 1:9")),
-        ("Job 18:13 A (And may)",   caught_a("Job 18:13")),
-        ("Job 3:4  A (may/come)",   caught_a("Job 3:4")),
+        ("2Ki 11:16 A-review (they put | upon, G2007)",          caught_review("2Ki 11:16", "2007")),
+        ("Psa 69:21 A-review (they gave | to drink, G4222)",     caught_review("Psa 69:21", "4222")),
+        ("Act 13:19 A-review (he divided | by lot, G2624)",      caught_review("Act 13:19", "2624")),
         ("Rth 2:16 B (blank verb)", caught_b("Rth 2:16")),
     ]
     ok = True

@@ -134,3 +134,36 @@ Top 20 entries by disagreement:
 
 ## 4. Ecc 7:22 καρδία (2588) — the census's one star exception
 Stands on live: the Concordance stars it; our table has 1 occurrence (same as `abp_texts`).
+
+## 5. Bucket (a) classified — split renderings (2026-10-25)
+Bucket (a) = the 628 of the 651 "2+ rows, no `*`" verses where `abp_texts` tags the word ONCE.
+Across all 628 no other number in the verse lost a row (an added row, not a renumbering); in 594
+the tagged word sits in or right after an ABP bracket group.
+
+**20-verse PA row read** (every words row carrying the number, with `abp_surface` form/translit):
+**20/20 split renderings · 0 exact duplicates · 0 glued splits.** Each verse = two neighbouring
+rows, same number, same Greek form on both (one Greek word, e.g. `δώσι` on both Gen 24:41 rows),
+two different English pieces; morph + lemma sit on exactly one of the two in 12 verses, on neither in 8 (Lev 14:39, Jdg 19:22, 2Sa 14:25, Est 2:17, Ecc 5:6, Jer 49:14, Eze 41:15, Hos 10:13).
+Two shapes, 10 each in the sample:
+
+| Shape | Sample verses (piece 1 \| piece 2) |
+|---|---|
+| Outside-bracket: first piece has no bracket and no Greek position; next row opens the bracket (the helper audit's polarity-A fingerprint) | Lev 14:39 `if \| was diffused` · Jdg 19:22 `were doing \| good` · 2Sa 14:25 `as \| praiseworthy` · 2Ki 11:16 `they put \| upon` · Ecc 5:6 `to lead \| into sin` · Eze 41:15 `columned \| porch` · Hos 10:13 `you pass over \| in silence` · Mic 7:1 `a cluster of \| grapes` · Hag 2:10 `in the \| year` · Mal 3:15 `declare \| blessed` |
+| Both-inside-bracket: each piece has its own Greek position | Gen 24:41 `they should \| give her` · Deu 4:10 `let \| hear` · Ezr 6:3 `Let \| be built` · Est 2:17 `loved \| passionately` · Psa 115:17 `shall \| praise` · Jer 49:14 `he sent \| , saying,` · 2Co 2:11 `we are \| ignorant.` · Joh 11:50 `should \| perish.` · Mar 14:4 `has \| taken place?` · Rom 15:2 `let \| please` |
+
+**Helper audit vs the 628** (`scripts/audit_helper_double_tag.py`, live PA run 2026-10-25, read-only;
+its A-review list = 362 pairs). Its three original A controls FAILED because they are cured (the 7/9
+fix blanked them — 607 empty-strongs_base rows); the list was validated instead on the sample: 10/10
+outside-bracket verses listed, 0/10 both-inside-bracket verses listed.
+
+| | Pairs |
+|---|---|
+| In the 628 AND on the audit's A-review list (outside-bracket) | 174 |
+| In the 628, NOT listed (both-inside-bracket — no detector) | 454 |
+| On the A-review list but outside the 628 | 183 (mostly function words — 3588, 3756, 3361 — with no Concordance verse list or a different star status) |
+
+**Verdict:** one class (one Greek word, two tagged rows), but the helper audit covers only 174/628
+(28%) → its own lane, the helper audit a partial detector. JP ruled it a counting defect
+2026-10-25 (TODO "Split-rendering double rows"); a fix changes word rows → checkpoint first.
+List: `abp_helps/split_rendering_628.tsv`. The audit's A controls were replaced with three live
+positives from the 174 (2Ki 11:16 G2007 · Psa 69:21 G4222 · Act 13:19 G2624; B control Rth 2:16 kept).
