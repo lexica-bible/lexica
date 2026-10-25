@@ -258,6 +258,11 @@ live after the swap — a separate table, flagged in the rebuild-trap handoff, n
       (verb glued to a name, joined by U+00A0) into the name-form inventory — one such row
       drops a whole name off its folded header. The 8/8 ride cost 375 folded rows, 13 names,
       and +101 rows with no header at all, entirely unnoticed.**
+      **On a FULL words rebuild, gates A and B ABORT by design** (they were built for the 7/30
+      header-only lane): 10/26 = 3 Michaiah binding relabels (A), the 21 header rows (B), and the
+      landing-only PIN lines. That ABORT was overridden for the **10/26 run only** — the next full
+      rebuild aborts there again and needs its OWN ruling, member by member, until A/B are
+      re-scoped (charter §10, handoff held item 12). Gate C is still read as above.
    **G707 gate (2026-07-31):** build_pn_greek_identity applies strict name-match inheritance
    (removal-only; tests/test_pn_name_match.py). Run the removal-only census
    (ship_g707_targeted.py preconditions) before any swap.
