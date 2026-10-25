@@ -76,7 +76,9 @@ wants it, all three texts change together, by ruling — not by drift.
 3. update precondition failed (the builder's value at the new slot ≠ the recorded old value);
 4. insert target is no longer empty (a builder now writes a form there);
 5. number + form agreement fails at the new slot (see the second-derivation check below);
-6. (if the decision in §3 uses two keys) the keys disagree.
+6. cross-check found no slot, or more than one (key 1 empty/ambiguous while key 2 found one slot);
+7. **key conflict** — key 2 and key 1 each found one slot, and they are different slots
+   (added by JP ruling 2026-10-26, §3).
 Placed + unplaced = 4,411, itemized by class and by reason; the unplaced list is a file, member by
 member. Plus, on every placed row:
 - **Second derivation:** every Lexicon-backed row (the classes in
@@ -88,7 +90,8 @@ member. Plus, on every placed row:
   rule, `:92-100`, `:230-236`); a following `build_abp_translit.py` run changes 0 rows.
 
 ### Part (c) — the floor
-**G3 — health_check floor = 395,003.** Control, red first: the check **fails on the pre-fill copy**
+**G3 — health_check floor = 395,003 exactly** (JP ruling 2026-10-26: "Floor = 395,003 exactly (G3
+as written)" — the "above" wording below is answered). Control, red first: the check **fails on the pre-fill copy**
 (391,130 → shortfall 3,873) and **passes on live** (395,003), both shown before the floor change is
 trusted. It must also fail on a rebuilt table that lacks the fill (that is the trap it exists for).
 **Wording flag for the reviewer:** the ruling says "above 395,003". The check fires when the count is
@@ -97,7 +100,23 @@ live today. This charter reads it as "raise it to 395,003" — the lowest floor 
 loss. Confirm or correct.
 
 ---
-## §3 Decision owed — the re-key method
+## §3 The re-key method — RULED 2026-10-26
+
+**JP ruling (quoted):** "key 2 (verse_id + ordinal of strongs within verse) primary; key 1
+(verse_id + strongs + english) runs alongside as cross-check. Both agree → placed. Disagree →
+unplaced, reason 'key conflict'. Lexicon check stays as third witness where covered. Add 'key
+conflict' to the six fixed reasons; count the Lexicon-uncovered group in the dry run."
+
+How the ruling reads in the gates: placed = key 2 and key 1 each find exactly one slot and it is
+the SAME slot, and (where the class is Lexicon-backed) number + form agree there. Reason 7 = both
+found one slot, different slots. Where key 2 finds one slot but key 1 finds none or several, that is
+not "both agree", so it is unplaced — counted as its own reason (6) so the dry run shows its size.
+**Consequence to read at the dry-run checkpoint:** a slot whose English changes cannot pass key 1,
+so under this ruling every such slot is unplaced. On a same-code rebuild that should be few; on the
+English-line edition upgrade it is the 29% case. The dry run reports reason 6 by itself so this is
+measured, not argued.
+
+**The analysis the ruling was made on (kept as the record):**
 
 Facts both candidates rest on: `verse_id` is stable across a rebuild (the build reads `verses`,
 never writes it — census §2); `position` is not (splits, merges, swaps — census §2); the old words
@@ -136,7 +155,7 @@ position order).
 **K1 ∧ K2 (both must agree; disagreement = reason 6).** Inherits K1's English blindness, so on the
 edition upgrade it places little. Listed for completeness.
 
-**K2 + the second-derivation check (CC lean, for the reviewer's ruling).** Place by K2; accept a
+**K2 + the second-derivation check (CC lean before the ruling; superseded by the ruling above).** Place by K2; accept a
 placement only if the G2 number + form agreement passes at the new slot; else unplaced (reason 5).
 That turns K2's silent failure into a loud one for the Lexicon-backed classes. What it still misses:
 (i) rows NOT in a Lexicon-backed class have no second witness — their count must be read off the
