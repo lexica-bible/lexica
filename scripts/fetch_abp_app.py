@@ -198,9 +198,10 @@ class ChapterParser(HTMLParser):
             self.td_depth += 1
         elif self.cell is not None and self.field is None:
             title = dict(attrs).get("title")
-            if "g" in cls and title is not None:
-                # textual-variant footnote: <span class="g" title="…">†</span>
-                # — a marker + hover note, NOT a Greek word. Kept in the notes file.
+            if ("g" in cls or "e" in cls) and title is not None:
+                # footnote: <span class="g"|"e" title="…">†</span> — a marker + hover
+                # note (variant: Phm 1:6; cross-ref/alt: Jas 2:3 "i.e. please."),
+                # NOT a word. Kept in the notes file, out of the Greek/English columns.
                 self.cell["n"].append(title)
                 self.field, self.field_tag, self.field_depth = "skip", tag, 1
                 return
@@ -419,7 +420,7 @@ def main():
     latin = sum(1 for r in rows if re.search(r"[A-Za-z]", r[5]))
     print()
     print(f"pages parsed: {done_pages}   verses: {len(verses)}   slots: {len(rows)}")
-    print(f"variant footnotes (†, kept out of the Greek column): {len(notes)} -> {notes_out}")
+    print(f"footnotes (†, kept out of the Greek/English columns): {len(notes)} -> {notes_out}")
     print(f"slots whose Greek holds a Latin letter: {latin}")
     per_letter = {}
     for r in rows:
