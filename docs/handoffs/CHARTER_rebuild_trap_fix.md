@@ -100,14 +100,24 @@ live today. This charter reads it as "raise it to 395,003" — the lowest floor 
 loss. Confirm or correct.
 
 ### Part (d) — the lane-3 hand repairs ride the rebuild (JP ruling 2026-10-26, promoted from TODO)
-**G4 — `finish_rebuild.sh` runs `fix_lane3_star_merges.py` on `$1` for BOTH frozen files after the
-chain** (`scripts/lane3_star_fixes.json` 9 verses / 23 ops; `scripts/lane3_star_fixes2.json` 7 / 17),
-each step passing only on its own "N verse(s) patched, 0 skipped" line with N pinned (9, 7) and no
-per-verse render/contiguity FAIL. Then step 10 vs live must read **english diff 0** (name-slot
-`strongs_base` excepted while 8b is skipped). Expected alongside, read if not: greek_pos 0 and
-english_head 0 — the two files' own edits are exactly the 35 english + 38 greek_pos cells the 10/26
-compare found (counted op by op from the files). Chain edit DRAFTED, not committed: JP reads the diff
-first. One guard not confirmable from the repo: Mat 27:26 pos 7 is pinned `strongs_base G2424`.
+**G4 — `finish_rebuild.sh` step 8 runs `fix_lane3_star_merges.py` on `$1` for ALL THREE frozen
+files, in the ledger's order** (`docs/audits/LANE3_b2_dispositions.md`): `lane3_star_fixes.json`
+(9 verses / 23 ops) → `lane3_star_gapfix.json` (4 / 5 — bracket marks only, needs fixes' brackets) →
+`lane3_star_fixes2.json` (7 / 17). **Correction 10/26:** the census and first draft named two files;
+the gapfix file was missed because it touches only `bracket_id`, a column the per-column compare did
+not check. Each file passes only on the script's own count line with N pinned (9, 4, 7): all N
+patched OR all N already applied, 0 skipped, no per-verse render/contiguity FAIL (JP ruling: a mix
+fails). The repair script gained an explicit ALREADY check (every pinned cell holds its new value)
+because its SKIP line cannot tell "already fixed" from "state changed"; locked by
+`tests/test_lane3_already_applied.py`; matcher checked on 9 fake outputs. Then step 10 vs live must
+read **english 0**, plus greek_pos 0, english_head 0 and bracket_id 0 (name-slot `strongs_base`
+excepted while 8b is skipped) — the first two files' edits are exactly the 35 english + 38 greek_pos
+cells of the 10/26 compare. Committed 2026-10-26 after JP's read.
+**Predicted limit (unverified, for the re-run test):** a SECOND full chain run re-runs `import_tipnr`
+first, which numbers every `'*'` slot that has English (`import_tipnr.py:381-387`) — including the
+name slots step 8 just filled. Any it resolves change `strongs_base`, so step 8's ALREADY check (pinned
+`'*'`) reports SKIP and the chain fails loudly. A first run is unaffected (step 8 runs after
+import_tipnr — the order the live repair had). Re-running step 8 ALONE passes via already-applied.
 
 ---
 ## §3 The re-key method — RULED 2026-10-26

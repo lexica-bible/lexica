@@ -63,9 +63,11 @@ parser reference notes in its appendix). No open writes.
   - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
     exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
 - OPEN — **lane-3 hand repairs are not in the rebuild chain — a words rebuild silently reverts them.**
-  `scripts/lane3_star_fixes.json` (9 verses, 23 ops) + `scripts/lane3_star_fixes2.json` (7 verses,
+  **Promoted to charter gate G4 (2026-10-26); chain step 8 committed, PA test pending.** Three files,
+  ledger order: `scripts/lane3_star_fixes.json` (9 verses, 23 ops) → `lane3_star_gapfix.json` (4, 5 —
+  bracket marks only; missed in the first count) → `lane3_star_fixes2.json` (7 verses,
   17 ops), applied on live by `fix_lane3_star_merges.py` (its docstring says it "joins the post-rebuild
-  repair chain"), are called by neither `finish_rebuild.sh` nor `/rebuild-words`. Proven 2026-10-26:
+  repair chain"), were called by neither `finish_rebuild.sh` nor `/rebuild-words`. Proven 2026-10-26:
   the re-key test build vs live differs on exactly 35 english cells, all in those 16 verses (Gen 46:26,
   Lev 24:10, Num 25:8/14/15, 1Sa 14:50, 1Sa 24:5, 2Sa 14:4, 1Ch 21:9, 2Ch 14:12, Isa 30:31, Jer 50:16,
   Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it

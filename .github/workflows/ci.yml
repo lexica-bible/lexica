@@ -73,6 +73,7 @@ jobs:
           python tests/test_page_date.py
           python tests/test_rank_score.py
           python tests/test_rekey_dryrun.py
+          python tests/test_lane3_already_applied.py
 
   frontend:
     runs-on: ubuntu-latest
