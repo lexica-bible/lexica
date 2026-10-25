@@ -550,7 +550,10 @@ read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **St
 - **Found (out of lane, flagged):** opening `https://www.lexica.bible/?b=1Ch&c=13&t=abp` (the /read/
   pages' deep-link shape) in CC's fresh built-in browser (no saved position, narrow/mobile layout) put
   the reader in an endless loop — `/api/chapter/1Ch/13` and `/api/chapter/Gen/1` alternating, 56,000+
-  requests to live in a few minutes, page stuck on "Loading…". Tab closed. **JP opened its own lane
+  requests ATTEMPTED by the browser in a few minutes, page stuck on "Loading…". **Corrected after the
+  access-log read:** most of those failed inside the browser (`net::ERR_INSUFFICIENT_RESOURCES`) and
+  never reached PA; the server-side count is the log's (TODO.md loop item — likely the 25/Oct
+  one-minute, 242-request line). Tab closed. **JP opened its own lane
   ahead of step 10; findings (reproduced locally, dated to `bc47330c` 2026-06-28 — not the swap) in
   TODO.md "reader deep-link request loop".**
 - **JP ruling after step 7:** items 1–3 accepted on data-level checks (loop risk); 1Ch 13:10 pending

@@ -65,9 +65,10 @@ parser reference notes in its appendix). No open writes.
   paste/deploy, record "unchanged"). Steps 10 + 11 RE-HOMED onto the copy in `/rebuild-words` (after
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
-- OPEN (JP 2026-10-26, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, findings
-  only so far, no fix proposed.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live sent
-  56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed.
+- OPEN (JP 2026-10-26, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
+  FIX PROPOSED, held for JP's gate.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
+  had the browser attempt 56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed — most
+  failed inside the browser and never reached PA (see the access-log read below).
   **Reproduced locally, no database** (scratch harness modeled on `tests/mobile_harness.js`: real
   committed bundle per git rev, fetch stubbed in-page, books = Gen/Exo/1Ch/Mat; each case alone in an
   iframe from a blank page, 2.5 s): first visit, no link → 1 chapter request · returning visitor + link
@@ -89,8 +90,16 @@ parser reference notes in its appendix). No open writes.
   render behind, forever, one chapter fetch per swing. Returning visitors are safe because the
   reader reports its saved spot BEFORE App sets the jump (child effects run first), so the jump
   arrives last and wins.
-  Not measured: how many real visitors have hit it since bc47330c went live (PA's access log would
-  show alternating `/api/chapter` bursts). Rulings: fix ships in the same deploy as step 10's paste
+  **Impact read (JP, PA, 19:35, read-only — any IP-minute with ≥100 `/api/chapter` requests over ≤2
+  chapters, counts only):** PA keeps logs back to **16/Oct only** (files .1 → .9.gz; no .8), so
+  June–mid-Oct is unmeasurable. Hits: **20/Oct — 1 visitor, 2 minutes, 423 requests · 25/Oct — 1
+  visitor, 1 minute, 242 requests** (the latter very likely CC's own step-7 test). Per-visitor server
+  volume is far below the browser's attempt count (the browser runs out of request slots first).
+  Not confirmed: that the 20/Oct visitor was this loop (chapters/referrer/agent not yet read).
+  **Fix (proposed, uncommitted, held for JP's gate):** `60-library.jsx` — while a jump lands, the
+  position report skips the spot it is leaving (`jumpFromRef`); harness: every first-visit + link case
+  2 requests (phone/desktop, book list fast or 600 ms late), returning/no-link unchanged, page turns
+  after landing normal; 10/10 Node gates pass. Rulings: fix ships in the same deploy as step 10's paste
   (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
   section names this deep link as one of the two `libNav` producers. Step 10 came back IDENTICAL
   (10/26) — no step-10 deploy exists, so a fix deploys on its own.
