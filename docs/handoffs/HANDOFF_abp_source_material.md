@@ -101,6 +101,25 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
     (εγώ/με/μου, Gen 18:27, Job 6:24) — not checked.
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
+  **Lane (b) numbers 2026-10-24 (CC, local; the PDF is JP's, output gitignored under
+  `abp_helps/`):** parser `scripts/parse_abp_analytical_lexicon.py` — 8,584 entries,
+  39,539 forms, 0 unparsed lines, 419/419 pages match an independent -raw entry count,
+  controls PASS (agcisteuw 70.4 VERB · agorasmoV 60.1 NOUN masculine · page 5 = 20).
+  Book misprints kept verbatim + counted (~30 parsing typos; 4 numbers printed on two
+  entries — 2004 ζέω and 2114 ζήτησις look like misprints of Strong's 2204/2214; 4828.2,
+  5072.1 unchecked). One entry carries two numbers ("5484, 85" χάρις = 5484 and 5485).
+  The lexicon has NO proper names, and files ALL personal-pronoun forms (αὐτός's too)
+  under ABP's raw 1473.
+  Join `scripts/audit_lexicon_vs_missing_forms.py` vs the 4,058 missing printed forms:
+  resolved under the same number 3,724 (91.77%); + under ABP's pronoun number 1473: 69 →
+  3,793 (93.47%); ex-names (book has none) 3,793 / 3,866 = 98.1%. By type: verb 99.8 ·
+  article 99.0 · noun 97.7 · adjective 100 · pronoun 92.8 · no-morph 97.4 · name 0 (191).
+  Left: dotted neighbour 5 · other number 8 · clean word not listed 33 (some look like
+  app typos — ανέστραπτεν, επίβλεψεν — unchecked) · 28 app cells that are English notes
+  typed ENTIRELY in Greek letters ("δαγγερ" = dagger, "- Φορ τηε ενδ." = For the end) —
+  the app audit's English-font check only catches cells with a Latin letter, so these
+  slipped into the missing list (audit gap, 28 cells). Per-row result:
+  `abp_helps/missing_forms_resolved.tsv` (local).
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
   This answers routing follow-up (c), the MIXED 47.
 - **(d) English-Greek Index** last.

@@ -12,10 +12,15 @@ MATCHING (all compares FOLDED — the lexicon's text layer has no accents/breath
 the app's Greek first goes through the audit's DEFECT_MAP, the one copy):
   A  same number, form listed            -> RESOLVED
   B  same number, form = the headword    -> RESOLVED (headword), counted apart
+  P  pronoun: the lexicon files every personal-pronoun form under ABP's own number
+     1473 (ἐγώ — αὐτοῦ included); our build renumbers them (846, 4771 …). Our number
+     in that family + form listed under 1473 -> RESOLVED under ABP's pronoun number
   C  same base, other dotted suffix (our 2036 vs lexicon 2036.1), form listed there
      -> dotted neighbour (dotted-number rule: never merged into A)
   D  form listed only under another number -> "form found, other number" (pairs shown)
-  E  number in the lexicon, form not listed
+  E  number in the lexicon, form not listed — split: the app cell is one clean word
+     (a real lexicon gap) / the app cell is not (E2: a note typed in the Greek font,
+     "δαγγερ" = "dagger", or two words glued)
   F  number not in the lexicon (incl. our '*' / H-number name slots)
 Lexicon numbers like "5484, 85" mean 5484 AND 5485.
 
@@ -26,12 +31,14 @@ Run locally:
 """
 import argparse
 import csv
+import re
 import os
 import sys
 from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from audit_abp_app_vs_surface import DEFECT_MAP, fold as app_fold   # the one defect map + fold
+from build_abp_surface import _norm      # production pronoun grouping (846/4771/... -> '1473')
 
 REPO = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 
@@ -101,6 +108,8 @@ def main():
             L, lemma = "A", lemma_by_num[num]
         elif num in head_by_num and fa in head_by_num[num]:
             L, lemma = "B", lemma_by_num[num]
+        elif num and _norm(base(num)) == "1473" and fa in forms_by_num.get("1473", ()):
+            L, lemma = "P", lemma_by_num["1473"]
         else:
             neigh = [n for n in nums_by_base.get(base(num), ()) if n != num and fa in forms_by_num[n]]
             if num and neigh:
@@ -109,7 +118,8 @@ def main():
                 L = "D"
                 lemma = "; ".join(f"{n} {lemma_by_num[n]}" for n in sorted(nums_by_form[fa])[:3])
             elif num in lemma_by_num:
-                L = "E"
+                clean = re.fullmatch(r"[^\W\d_]+", r["app_printed_form"].strip()) is not None
+                L = "E" if clean else "E2"
             else:
                 L = "F"
         lvl[L] += 1
@@ -128,7 +138,9 @@ def main():
              "B": "RESOLVED: same number, form = headword",
              "C": "dotted neighbour: same base, other suffix, form listed there",
              "D": "form found, but only under another number",
-             "E": "number in lexicon, form not listed",
+             "P": "RESOLVED under ABP's pronoun number 1473 (we renumber)",
+             "E": "number in lexicon, form not listed (clean word: lexicon gap)",
+             "E2": "number in lexicon, app cell is a note/glued text, not a word",
              "F": "number not in lexicon (incl. '*' / H-number name slots)"}
     print(f"lexicon: {len(lemma_by_num)} numbers · {sum(len(v) for v in forms_by_num.values())} distinct folded forms")
     print(f"numbers printed on two entries in the book (kept as printed): "
@@ -136,14 +148,17 @@ def main():
     print(f"missing printed forms: {n}")
     res = lvl["A"] + lvl["B"]
     print(f"RESOLVE RATE (A+B): {res}/{n} = {100.0 * res / n:.2f}%" if n else "no rows")
-    for L in "ABCDEF":
-        print(f"   {L} {label[L]:62} {lvl[L]:6}  ({100.0 * lvl[L] / n:.2f}%)" if n else "")
-    print("\n   by word type        total   A+B    rate     C     D     E     F")
+    resp = res + lvl["P"]
+    print(f"RESOLVE RATE incl. ABP's pronoun number (A+B+P): {resp}/{n} = {100.0 * resp / n:.2f}%")
+    for L in ("A", "B", "P", "C", "D", "E", "E2", "F"):
+        print(f"   {L:2} {label[L]:62} {lvl[L]:6}  ({100.0 * lvl[L] / n:.2f}%)" if n else "")
+    print("\n   by word type        total  A+B+P   rate     C     D     E    E2     F")
     for t, c in sorted(by_type.items(), key=lambda kv: -sum(kv[1].values())):
         tot = sum(c.values())
-        ab = c["A"] + c["B"]
-        print(f"   {t:18} {tot:6} {ab:6} {100.0 * ab / tot:6.1f}% {c['C']:5} {c['D']:5} {c['E']:5} {c['F']:5}")
-    for L in "CDEF":
+        ab = c["A"] + c["B"] + c["P"]
+        print(f"   {t:18} {tot:6} {ab:6} {100.0 * ab / tot:6.1f}% {c['C']:5} {c['D']:5} {c['E']:5}"
+              f" {c['E2']:5} {c['F']:5}")
+    for L in ("C", "D", "E", "E2", "F"):
         if not ex[L]:
             continue
         print(f"\n   top {L} ({label[L]}):")
