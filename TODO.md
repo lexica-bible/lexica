@@ -122,11 +122,17 @@ parser reference notes in its appendix). No open writes.
   Read-only census first (which headers would change, by member) before any reorder.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
   in 29% of paired verses). No charter yet. Gated on the rebuild-trap fix above (JP 10/25) — its
-  own item, not part of that fix.
+  own item, not part of that fix. **That gate CLEARED 2026-10-26** (trap fix proven on the live
+  rebuild). Still gating it: the snapshot re-freeze (a slot-moving restore makes the frozen fill
+  stale) and the header gate A/B re-scope. First scoping step (JP 10/26 close): date the app's edition.
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
-  verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go;
-  the fill copy follows the ops.md single-rollback rule from there.
+  verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
+  **The fill copy stays until a re-freeze exists** — it is the frozen snapshot's only "before" side
+  (rotation/single-rollback rule does not apply to it). Also on PA (10/26 live rebuild, delete
+  nothing yet): `~/rekey/pre_rebuild.db` until a nightly is dated after the 10/26 swap ·
+  `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
+  deletable as their own step.
 - **Held list** — read-by-hand, no writes queued. Full rows: the handoff (lane (a)'s "Same slot,
   different number" entry + "Also open from 10/24") and `docs/handoffs/CENSUS_abp_surface_fill.md`.
   - **540 + 13 same-slot number disagreements** (app vs ours, after swaps; the 13 are from the fill
