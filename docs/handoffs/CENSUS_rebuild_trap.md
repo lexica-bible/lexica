@@ -112,7 +112,7 @@ in the repo), and not a rowid issue (abp_surface carries no word id).
 
 **Does word identity survive?** No.
 - Repo schema: `words.id INTEGER PRIMARY KEY` (no AUTOINCREMENT) — `scripts/parse_abp.py:293-295`.
-  The PA definition is not in git (§5 Q1).
+  PA confirms the same: plain `INTEGER PRIMARY KEY`, no `sqlite_sequence` table (§5 results, Q1).
 - The build empties the table (`:2111`) and inserts without an `id` (`:2154-2156`), so SQLite
   hands out new ids. With this schema the numbering restarts at 1.
 - Every use of `words.rowid`/`id` found in the repo is within one run (import_tipnr
@@ -179,7 +179,7 @@ Checked each. "Position-keyed" = would point at the wrong word if a slot moves.
 | `pn_slot_binding` | book#, ch, vs, position | build_slot_binding via build_entity_binding (8b.3) | Rebuilt; a row whose printed name no longer sits at that position is refused, not mis-bound | `build_slot_binding.py:90`, `:147-152`; `build_entity_binding.py:509-511` |
 | `pn_binding`, `tipnr_entities`, `tipnr_entity_refs` | book#, ch, vs, name (not position) | build_entity_binding (8b.3) | Rebuilt | `build_entity_binding.py:464-466` |
 | `abp_corrections` (ledger) | book, ch, vs, position, field | hand-authored; applied in finish_rebuild | Not rebuilt — persists; each row fires only if the cell still holds its recorded before-value, else a loud skip | `build_abp_corrections.py:49-63`; `finish_rebuild.sh:88-96` |
-| `words.is_pn` | column | import_tipnr (3) | Blank after the insert (not in the column list) until import_tipnr | `build_words_from_abp.py:2154-2156`; `import_tipnr.py:719` |
+| `words.is_pn` | column | import_tipnr (3) | Reset to 0 after the insert (not in the column list; PA definition `is_pn INTEGER DEFAULT 0`, §5 results) until import_tipnr | `build_words_from_abp.py:2154-2156`; `import_tipnr.py:719` |
 | `words.english_head_norm` + `idx_words_ehnorm` | column | build_rendering_norm (11) | Blank after the insert until step 11 (column and index survive — table emptied, not dropped) | `build_words_from_abp.py:2154-2156`; `build_rendering_norm.py:33`, `:70-75` |
 | words indexes (repo ones + any PA-only ones) | — | — | Survive: the build empties the table with DELETE, never drops it; the backup copies indexes | `build_words_from_abp.py:2058`, `:2111` |
 | `dotted_lexicon` | Strong's number | build_dotted_lexicon | Not orphanable (not slot-keyed); reads word counts | `build_dotted_lexicon.py:99`, `:151-166`, `:220` |
@@ -260,11 +260,13 @@ SELECT name FROM sqlite_master WHERE sql LIKE '%REFERENCES%';
 -- Q4 table size (expect 395,003) and journal mode (expect delete)
 SELECT count(*) FROM abp_surface;
 PRAGMA journal_mode;
--- Q5 the fill = live minus the pre-fill copy (expect 4,411 changed/added rows, 0 removed)
+-- Q5 the fill = live minus the pre-fill copy: expect 4,411 live-not-in-copy, and 538
+--    copy-not-in-live (the OLD values of the 538 updated rows). First draft said 0 — wrong.
 ATTACH '/home/appssanding720/bible.db.pre-surface-fill-20261025' AS cp;
 SELECT count(*) FROM (SELECT * FROM main.abp_surface EXCEPT SELECT * FROM cp.abp_surface);
 SELECT count(*) FROM (SELECT * FROM cp.abp_surface EXCEPT SELECT * FROM main.abp_surface);
--- Q6 how many fill rows sit on name slots (the PN split moves those)
+-- Q6 how many fill rows sit on name slots (the PN split moves those). Covers only the
+--    3,873 NEW slots — the 538 updated slots exist on both sides and drop out of this EXCEPT.
 SELECT w.is_pn, count(*) FROM (SELECT verse_id, position FROM main.abp_surface
         EXCEPT SELECT verse_id, position FROM cp.abp_surface) f
   JOIN words w ON w.verse_id=f.verse_id AND w.position=f.position GROUP BY w.is_pn;
@@ -294,6 +296,21 @@ SELECT count(*) FROM pn_greek_identity g JOIN
 `~/abp_surface_fill_dryrun.csv`, `~/abp_surface_fill_dryrun.txt`, `~/abp_app_dump.tsv`,
 `~/bible-db/abp_helps/analytical_lexicon.tsv`, `~/bible-db/abp_app_html/missing_printed_forms.tsv`,
 `~/bible.db.pre-surface-fill-20261025` — present? sizes? dates?
+
+### Results — JP ran all of the above on PA, 2026-10-26 (PA clock 05:53–05:55), read-only
+(the SQL above, wrapped in `sqlite3 -readonly` blocks). Expected beside actual:
+
+| Q | Expected | Actual | Reading |
+|---|---|---|---|
+| Q1 | plain `INTEGER PRIMARY KEY`? | `id INTEGER PRIMARY KEY`, no AUTOINCREMENT; no `sqlite_sequence` table | After the build's DELETE, new ids start at 1. `is_pn INTEGER DEFAULT 0`; `english_head_norm TEXT` (no default) |
+| Q2 | any triggers / PA-only indexes? | **No triggers** on any of the 6 tables. words: the 5 repo indexes + `idx_words_ehnorm`; abp_surface: its key index only; pn tables: key index + the builders' own indexes | Nothing on these tables beyond what the repo creates |
+| Q3 | anything referencing words? | REFERENCES in `words` (→ verses), `cross_references`, `metav_place_aliases`, `metav_people_aliases`, `metav_people_groups`, `metav_people_relationships`; `idx_xref_verse`/`idx_xref_ref` match only because their text names `cross_references` | **Nothing references `words` or `abp_surface`** — no cascade path |
+| Q4 | 395,003 · delete | 395,003 · delete | match |
+| C | 0 · 0 · 0 | 0 · 0 · 0 | No orphans on live today |
+| Q5 | 4,411 · 538 | 4,411 · 538 | match (fill fully present) |
+| Q6 | split of the 3,873 inserts | is_pn 0: 3,852 · is_pn 1: **21** (sum 3,873 = insert count) | 21 fill inserts sit on name slots. Which fill class they are: not checked |
+| Q7 | 0? | **2** | 2 name-header values equal a fill form at the same slot. These reads don't show whether the header build ran after the fill or the values just match. Either way: on a rebuild copy, 8b.3 reads abp_surface, so fill forms would feed headers from then on |
+| E | all present | all 6 present: `abp_app_dump.tsv` 41,027,879 (10/25 02:08) · `abp_surface_fill_dryrun.csv` 749,793 (02:53) · `.txt` 3,147 (02:53) · `missing_printed_forms.tsv` 317,567 (01:16) · `analytical_lexicon.tsv` 4,319,554 (02:51) · `bible.db.pre-surface-fill-20261025` 442,687,488 (03:09) | The pre-fill copy is the only record of the table as the builders left it — load-bearing for any fix; keep |
 
 **Not answerable by a read of live** (needs a built copy, so out of this census): how many
 positions a fresh build moves relative to live, and therefore how many of the 4,411 fill keys would
