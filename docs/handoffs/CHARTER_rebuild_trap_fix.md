@@ -100,7 +100,20 @@ live today. This charter reads it as "raise it to 395,003" — the lowest floor 
 loss. Confirm or correct.
 
 ### Part (d) — the lane-3 hand repairs ride the rebuild (JP ruling 2026-10-26, promoted from TODO)
-**G4 — `finish_rebuild.sh` step 8 runs `fix_lane3_star_merges.py` on `$1` for ALL THREE frozen
+**MOVED 2026-10-26 (JP ruling, after the G4 test's step 1):** the step is `/rebuild-words` **8b.2a**,
+`scripts/lane3_rebuild_step.py <db>` — after 8b.2, before 8b.3 — and is no longer in
+`finish_rebuild.sh`. Why: the dry run on the test build SKIPPED Mat 27:26 (`strongs mismatch pos 7
+(* != G2424)`); live's `G2424` there comes from the identity table (`G2424 / tipnr`) and reaches the
+word only in 8b.2, which runs after finish_rebuild. All 16 other repaired name slots are `'*'` on live
+with no Greek number in the identity table, and their identity rows (lemma-only / none / surface) were
+built after the repairs — so 8b.3 must see the repaired words. **Bracket rule (JP ruling):** no
+pinned FAIL lines — a contiguity FAIL from the fixes file is tolerated only on a slot listed in
+`lane3_star_gapfix.json` (same verse, position and bracket; read at run time; the 10/26 dry run's 4
+FAIL verses are exactly gapfix's 5 slots); gapfix must then PASS on every such verse; any other FAIL
+fails; fixes2 strict. Matcher = `judge()` in the step script, locked by
+`tests/test_lane3_rebuild_step.py` (12 cases). Text below is the first placement, kept as the record.
+
+**G4 (first placement, superseded above) — `finish_rebuild.sh` step 8 runs `fix_lane3_star_merges.py` on `$1` for ALL THREE frozen
 files, in the ledger's order** (`docs/audits/LANE3_b2_dispositions.md`): `lane3_star_fixes.json`
 (9 verses / 23 ops) → `lane3_star_gapfix.json` (4 / 5 — bracket marks only, needs fixes' brackets) →
 `lane3_star_fixes2.json` (7 / 17). **Correction 10/26:** the census and first draft named two files;

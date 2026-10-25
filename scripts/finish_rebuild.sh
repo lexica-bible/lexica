@@ -95,32 +95,8 @@ else
   run python3 scripts/apply_abp_corrections.py "${DB}" --apply --only words
 fi
 
-# 8) Lane-3 hand repairs (CHARTER_rebuild_trap_fix.md G4). NOT /rebuild-words checklist step 8
-#    (the swap) — this is the 8th step of THIS script. The PN-star merged rows the build's own pass
-#    refuses, frozen per row in three files, run in the ledger's order fixes -> gapfix -> fixes2
-#    (docs/audits/LANE3_b2_dispositions.md). Without this step a rebuild silently REVERTS them
-#    (proven 2026-10-26 on a test rebuild: 35 english + 38 greek_pos cells in 16 verses, plus the
-#    gapfix bracket marks). Writes english/english_head/greek_pos/bracket_id only — never positions
-#    or numbers — so it may follow step 7; it must follow fix_emdash (Gen 46:26 is pinned with '—').
-#    The script exits 0 even when it SKIPS a verse, and a skip here IS the silent revert — so each
-#    file passes only on the script's own count line with N pinned per file: either all N patched
-#    (first run) or all N already applied (re-run), 0 skipped either way, and no per-verse
-#    render/contiguity FAIL. A mix of patched and already-applied, or any skip, fails.
-lane3_ok() {   # $1 = pinned verse count, $2 = the script's output
-  local want="$1" out="$2"
-  grep -qE "^APPLIED — (${want} verse\(s\) patched, 0 already applied|0 verse\(s\) patched, ${want} already applied), 0 skipped  \[DB: " <<<"$out" \
-    && ! grep -qE "render check: .*FAIL|contiguity check: FAIL" <<<"$out"
-}
-lane3() {      # $1 = pinned verse count; remaining args go to the script
-  local want="$1"; shift
-  local out rc
-  out=$(python3 scripts/fix_lane3_star_merges.py "${DB}" --apply "$@" 2>&1); rc=$?
-  printf '%s\n' "$out"
-  [ "$rc" -eq 0 ] && lane3_ok "$want" "$out"
-}
-run lane3 9                                     # scripts/lane3_star_fixes.json  (9 verses, 23 ops)
-run lane3 4 --fixes lane3_star_gapfix.json      # scripts/lane3_star_gapfix.json (4 verses, 5 ops)
-run lane3 7 --fixes lane3_star_fixes2.json      # scripts/lane3_star_fixes2.json (7 verses, 17 ops)
+# (The lane-3 hand repairs are NOT here: they need 8b.2's name numbers, so they run as
+#  /rebuild-words step 8b.2a — scripts/lane3_rebuild_step.py. JP ruling 2026-10-26.)
 
 echo
 if [ "${#PROBLEMS[@]}" -ne 0 ]; then

@@ -63,7 +63,8 @@ parser reference notes in its appendix). No open writes.
   - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
     exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
 - OPEN — **lane-3 hand repairs are not in the rebuild chain — a words rebuild silently reverts them.**
-  **Promoted to charter gate G4 (2026-10-26); chain step 8 committed, PA test pending.** Three files,
+  **Promoted to charter gate G4 (2026-10-26); now `/rebuild-words` step 8b.2a
+  (`scripts/lane3_rebuild_step.py`, after retire, before the identity build) — PA test pending.** Three files,
   ledger order: `scripts/lane3_star_fixes.json` (9 verses, 23 ops) → `lane3_star_gapfix.json` (4, 5 —
   bracket marks only; missed in the first count) → `lane3_star_fixes2.json` (7 verses,
   17 ops), applied on live by `fix_lane3_star_merges.py` (its docstring says it "joins the post-rebuild

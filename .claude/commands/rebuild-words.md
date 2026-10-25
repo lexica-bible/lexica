@@ -177,12 +177,19 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       first declaration of 363 carried a mis-ported "357 hand-fix-zone" census figure that was
       never fresh-import drift). A different count HALTS — read the member list before any
       override. Replaces the old "re-run fix_cushi_strongs" note: the frozen record covers it.
+      **⚠ The 6 is itself SUPERSEDED** (the script's own docstring, `restore_frozen_pn.py:29-35`,
+      lane-② ride 8/5): the frozen record was re-baselined to the new name geometry, and "the next
+      ride's expectation must be RE-DECLARED from its own dry-run against the NEW record". The code
+      still says `EXPECT = 6`; a different dry-run count is attributed member by member
+      (`cross_restore_vs_plan.py`) and re-declared in code — `--expect` was removed.
    2. `scripts/retire_hebrew_identity.py <db> --fresh-rebuild` (dry-run then --apply). The copy
       carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
       byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds
-      the xref. Declared five-class split (2026-08-01 re-declaration, receipt
-      docs/tickets/RECLASS_catchup_declaration.md): abp-tag 3,518 · tipnr 10,216 ·
-      lemma-only 12,066 · surface 4,326 · none 2,353. Any other split, or a sixth class, HALTS
+      the xref. Declared five-class split — **the code's figure is the authority**
+      (`retire_hebrew_identity.py:91`, re-declared 2026-08-05 take three on the lane-② ride):
+      abp-tag 3,671 · tipnr 10,236 · lemma-only 12,166 · surface 3,951 · none 2,454 (32,478).
+      (Superseded: the 2026-08-01 split 3,518 / 10,216 / 12,066 / 4,326 / 2,353, receipt
+      docs/tickets/RECLASS_catchup_declaration.md.) Any other split, or a sixth class, HALTS
       by design — stop and re-declare, never --expect-split past it.
       **PRE-REGISTERED serving deltas vs pre-rebuild live (compare by member where it matters —
       all three groups LANDED EXACT on the 8/1 ride):**
@@ -200,6 +207,15 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       + lexicon + BH), and the derivation command committed with the figure. The article-slot
       swap check is `audit_article_slot_carrier.py --predict-vs <copy>` — member set-equality
       with a named tail allowance; counts are tripwires, the member set rules (§6l).**
+   2a. **LANE-3 HAND REPAIRS — `python3 scripts/lane3_rebuild_step.py <db>`** (added 2026-10-26,
+      `docs/handoffs/CHARTER_rebuild_trap_fix.md` G4). Re-applies the three frozen lane-3 files
+      (fixes 9 → gapfix 4 → fixes2 7 verses) and judges each from its own output; **it must print
+      `LANE-3 STEP: PASS`, or DO NOT go on.** Without it a rebuild silently REVERTS 16 live verses
+      (Mat 9:11 "the Pharisees seeing" merges back, etc.). HERE, not in finish_rebuild.sh: fixes2 is
+      pinned to Mat 27:26's `G2424`, which only returns in step 2; and step 3 below must see the
+      repaired words (live's identity rows for these slots were built after the repairs). Tolerates a
+      contiguity FAIL from the fixes file only on slots the gapfix file then marks (read at run
+      time); gapfix must PASS there; fixes2 is strict; a re-run passes as "already applied".
    3. `scripts/build_pn_greek_identity.py <db> --apply` → `scripts/build_entity_binding.py <db>
       --apply` (xref-sourced guard numbers) → gates: `scripts/audit_unfindability.py <pre> <db>` +
       **PRE-REQ (reviewer-ruled 2026-08-05, TICKET_pn_star_fix.md): before any ride whose
