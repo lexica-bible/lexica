@@ -75,6 +75,30 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   count-differs leftovers reported apart as "out-of-sequence"); missing printed forms →
   `abp_app_html/missing_printed_forms.tsv` with word type from words.morph (articles and
   pronouns are in it too, not only verbs); OT/NT headline at the top.
+  **v2 full run 2026-10-24 (JP, PA; C1–C4 PASS) — lane (a) numbers in hand:**
+  - HEADLINE app Greek vs abp_surface: OT exact 87.16% · after accents 98.71% · after
+    defect map 99.63% (302,095 slots, Psalms shifted incl.); NT 89.07 / 98.94 / 99.75%
+    (87,091). Names (pn_greek_identity): OT 53.17 / 90.57 / 99.00%, NT 36.63 / 83.20 / 98.06%.
+  - Alignment 99.52% of our 626,309 slots (in place 94.02% + swapped 5.33% + out-of-seq
+    1,055). Swaps: 32,608 of 33,364 moved ONE place (split-flip ruling; still unverified
+    row by row). Same slot, different number left: 540. Psalms under the shift: 99.28%.
+  - Edition drift: English words differ in 9,157 / 31,228 paired verses (29.3%; OT 30.6,
+    NT 25.6, Psalms 17.2); order-only 3,191.
+  - Defect map matched: + 2,195 · C 1,287 · П 913 · H 898 · O 608 · Q 550 · R 6 · U 4
+    (still differs ≤ 34 per letter). English-in-Greek-font cells: 17. No unmapped letters.
+  - Versification: Pro 16 is REORDERED (ours 16:27–33 = app 16:20–26; app 16:2–9 = ours
+    16:5…16); Pro 24, Jer 10 partial one-verse offsets (best −1 = 82% / 74%); Hab 3: app 3:20
+    = ours 3:19. Per-verse map is in the run output.
+  - MISSING PRINTED FORM (no abp_surface row, app prints another form): 4,058 slots →
+    `abp_app_html/missing_printed_forms.tsv` (PA). verb 2,037 · no morph 1,582 · name 192
+    (incl. Δαυίδ vs dictionary Δαβίδ 128 — a spelling, not a missing form) · article 99 ·
+    pronoun 69 · noun 44 · other 28 · adjective 7. Top: είπε/είπεν vs ἔπω 557.
+  - NEW, OUR SIDE: 544 abp_surface forms are GLUED two-word values (NBSP) where the app
+    has one word — 'χειρί αυτού' (1Sa 17:57 pos 22), 'είπε Δαυίδ', 'ο δε', 'προσέχεε
+    Μωυσής'. Same family as the cured identity glued rows. Cause not checked. No lane yet.
+  - Remaining surface mismatches 751 + identity 291 (identity: app inflected vs our
+    header/nominative — Γαλιλαίας/Γαλιλαία — by design). A few pronoun pairs differ
+    (εγώ/με/μου, Gen 18:27, Job 6:24) — not checked.
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
