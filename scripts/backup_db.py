@@ -17,7 +17,9 @@ while the web app is writing, and it folds in the WAL. NEVER a plain cp (which w
 -wal/-shm and give a torn file). Each fresh copy is then VERIFIED with PRAGMA quick_check;
 a copy that isn't "ok" is deleted and the last good one is KEPT (a bad backup never rotates
 out a good one). Verified copies are gzipped (except the newest, kept raw for instant
-restore), set read-only (chmod 0444) as cheap hardening against deletion/overwrite, and a
+restore) - to a .part name, read back in full, then renamed, so a cut-short .gz can't
+exist; a failed compression keeps the raw copy and FAILS the run - set read-only
+(chmod 0444) as cheap hardening against deletion/overwrite, and a
 tiny <name>.<stamp>.info manifest (date, WAL mode, quick_check, table row counts) is written
 beside each so `list` is instant without decompressing.
 
@@ -43,6 +45,7 @@ import os
 import shutil
 import sqlite3
 import sys
+import zlib
 from datetime import datetime
 from pathlib import Path
 
@@ -149,11 +152,15 @@ def _stamps_for(out: Path, stem: str) -> list[tuple[str, Path]]:
     """All kept backups for a db stem, newest first: (stamp, path-to-.db-or-.db.gz)."""
     found = {}
     for p in out.glob(f"{stem}.*.db*"):
-        if p.suffix == ".info" or "-wal" in p.name or "-shm" in p.name:
+        if p.suffix in (".info", ".part") or "-wal" in p.name or "-shm" in p.name:
             continue                                  # never treat a sidecar as a backup
         # name = <stem>.<stamp>.db  or  <stem>.<stamp>.db.gz
         rest = p.name[len(stem) + 1:]
         stamp = rest.split(".db")[0]
+        # raw + .gz for one stamp = a compression the old code left half-done;
+        # the raw is the good copy, so it wins (and gets compressed again)
+        if stamp in found and found[stamp].suffix != ".gz":
+            continue
         found[stamp] = p
     return sorted(found.items(), key=lambda kv: kv[0], reverse=True)
 
@@ -209,7 +216,11 @@ def backup_all(src: Path, out: Path, keep: int, raw: int) -> int:
         print(f"  OK  {stem}: ok ({jm}), {len(counts)} tables, ~{key:,} rows in largest, "
               f"{size/1e6:.1f} MB")
         _chmod_ro(dest)
-        _rotate(out, stem, min(keep, KEEP_OVERRIDE.get(stem, keep)), raw)
+        if _rotate(out, stem, min(keep, KEEP_OVERRIDE.get(stem, keep)), raw):
+            # the new copy is good, but an older one stayed uncompressed: count it so
+            # the run fails loudly (no success stamp -> freshness alarm). The old code
+            # printed one line and stamped success (7/2, 7/6, 10/25 all went unnoticed).
+            bad += 1
 
     print()
     if bad:
@@ -224,28 +235,63 @@ def backup_all(src: Path, out: Path, keep: int, raw: int) -> int:
     return 0
 
 
-def _rotate(out: Path, stem: str, keep: int, raw: int) -> None:
+def _gzip_verified(path: Path) -> Path:
+    """Compress `path` to `<path>.gz` so a half-written file can never carry the
+    real backup name (the 2026-10-25 damaged 10/24 copy: the account filled up
+    mid-gzip and the old code left a cut-short .gz under the real name).
+    Writes to `<name>.gz.part`, forces it to disk, reads the whole thing back
+    (gzip's own checksum + length check), and only then renames it to `.gz`.
+    On any failure the partial file is removed and the error is raised; the
+    uncompressed copy is never touched here."""
+    gz = path.with_suffix(path.suffix + ".gz")
+    part = gz.with_name(gz.name + ".part")
+    try:
+        with open(path, "rb") as fi, open(part, "wb") as fout:
+            with gzip.GzipFile(filename=path.name, mode="wb", fileobj=fout) as fo:
+                shutil.copyfileobj(fi, fo)
+            fout.flush()
+            os.fsync(fout.fileno())     # surface a disk-full error NOW, not at a later close
+        with gzip.open(part, "rb") as f:
+            while f.read(1 << 20):
+                pass
+        os.replace(part, gz)
+    except BaseException:
+        _force_unlink(part)
+        raise
+    return gz
+
+
+def _rotate(out: Path, stem: str, keep: int, raw: int) -> int:
     """Keep the newest `keep` backups for this db; gzip all but the newest `raw`;
-    delete the rest (with their manifests). The newest good copy is never deleted."""
+    delete the rest (with their manifests). The newest good copy is never deleted.
+    Returns how many compressions FAILED (each one keeps its uncompressed copy)."""
+    # a .part is only ever a compression that died mid-way (killed run) - never a backup
+    for p in out.glob(f"{stem}.*.db.gz.part"):
+        _force_unlink(p)
+    failed = 0
     items = _stamps_for(out, stem)
     # gzip older verified copies (skip the newest `raw`, skip already-gz)
     for idx, (st, path) in enumerate(items):
         if idx < raw or path.suffix == ".gz":
             continue
-        gz = path.with_suffix(path.suffix + ".gz")
         try:
-            with open(path, "rb") as fi, gzip.open(gz, "wb") as fo:
-                shutil.copyfileobj(fi, fo)
-            _force_unlink(path)
-            _chmod_ro(gz)
-        except OSError as e:
-            print(f"    (gzip skipped for {path.name}: {e})")
-    # delete beyond `keep`
+            gz = _gzip_verified(path)
+        except (OSError, EOFError, zlib.error) as e:
+            print(f"  XX  {path.name}: compression FAILED ({e}) - partial removed, "
+                  "uncompressed copy kept.")
+            failed += 1
+            continue
+        _force_unlink(path)
+        _chmod_ro(gz)
+    # delete beyond `keep` - every file of that stamp (a raw + .gz pair left by the
+    # old code shares one stamp)
     items = _stamps_for(out, stem)
-    for st, path in items[keep:]:
-        for p in (path, out / f"{stem}.{st}.info"):
+    for st, _path in items[keep:]:
+        for p in (out / f"{stem}.{st}.db", out / f"{stem}.{st}.db.gz",
+                  out / f"{stem}.{st}.info"):
             if p.exists():
                 _force_unlink(p)
+    return failed
 
 
 def list_backups(out: Path) -> int:

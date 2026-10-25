@@ -128,7 +128,10 @@ The live dbs are PA-only + not in git, and a careless session has blanked bible.
 (auto-discovers `*.db` — bible/notes/study/esv/niv/heb/news/bh_scrape), kept in `~/db_backups/`
 OUTSIDE the repo so a folder-nuke can't reach them. Uses SQLite's online `.backup()` (safe on a
 live db, no torn copy), a `PRAGMA quick_check` gate (a bad copy never rotates out a good one),
-gzip + chmod 0444 on older copies, and a `.info` manifest per copy so `--list` shows row counts
+gzip + chmod 0444 on older copies (gzipped to a `.gz.part` name, read back in full, then renamed —
+a failed gzip keeps the raw copy and FAILS the run so the freshness alarm fires; the 10/25 quota
+hit had left a cut-short .gz under the real name and stamped success —
+`tests/test_backup_rotate.py`), and a `.info` manifest per copy so `--list` shows row counts
 instantly. Restore = pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with
 the reversible `mv`. **`study.db` is the one irreplaceable file** (hand-authored argument
 graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Memory

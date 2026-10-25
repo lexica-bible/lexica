@@ -115,10 +115,21 @@ parser reference notes in its appendix). No open writes.
   end-of-stream marker was reached" (the .gz is cut short). Sweep: 62 backups checked, this 1 damaged
   (the newest nightly passes; the swap rollback `bible_pre_trapwire_swap.db` is a separate file).
   bible.db keeps only 3 nightlies (`backup_db.py` `KEEP_OVERRIDE`), so one of the three is unusable.
-  Not yet known: when/why it broke (older copies are gzipped at rotation — a cut-short gzip fits an
-  interrupted compression, e.g. quota pressure) or whether it predates today (no full health report
-  was read 10/24–10/25 with backup checks on). Not diagnosed; separate lane. Never delete it to clear
-  the warning without a ruling (memory `project_db_backups` — a copy can have a second role).
+  **DIAGNOSED 10/25 (side lane, JP PA read):** the 10/25 13:30 nightly ran out of quota while
+  gzipping the 10/24 copy (`backup.log:1776` `gzip skipped … [Errno 122] Disk quota exceeded`; the
+  .gz is 107 MB vs 10/23's 147 MB, stamped 10/25 13:33, still writable = the failed path). It could
+  not predate 10/25 — the newest copy stays uncompressed until the next run. A one-off, not every
+  run: `_rotate` only cut a file short when the write itself failed, then left the stub, kept the raw,
+  and stamped success (same on 7/2 + 7/6 — log lines 112, 181). **The uncompressed
+  `bible.db.20261024-133029.db` is present and good** (quick_check ok, verses 31,237 = its .info) —
+  JP ruling: it stands as the 10/24 backup. **Fix BUILT, repo-only, NOT deployed (deploy waits for
+  JP's gate):** `backup_db.py` compresses to `.gz.part`, forces it to disk, reads it back in full,
+  then renames; a failure removes the partial, keeps the raw, and FAILS the run (no success stamp →
+  freshness alarm); a raw + .gz pair for one stamp now picks the raw. Test
+  `tests/test_backup_rotate.py` (both test lists): 25/25 on the fix, 12 FAIL on the old code. Still
+  gated: removing the damaged .gz (JP ruling — only after the raw was confirmed, separate step).
+  Note: the 10/26 nightly may itself re-compress the 10/24 raw over the bad .gz (new code: always;
+  old code: depends on folder order), and the 10/27 nightly ages the 10/24 stamp out (keep 3).
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
@@ -972,9 +983,9 @@ REST of the dotted-Strong's question, none of it gating the rollout:
 - **Draw-cache archive question** — `--force` overwrites a rejected draw under the same key (ὄρος draw-1
   2-sense reject lives only in chat). Consider archiving rejected draws so the audit trail lives in the
   machine, not the transcript.
-- **Backup-script rewrite (carry-forward, root-caused 2026-07-07):** `scripts/backup_db.py` stamps
-  success BEFORE the compression step, so a compression failure can log a "good" backup. Parked
-  post-rollout. code: scripts/backup_db.py
+- CLOSED 2026-10-25 — **Backup-script rewrite (carry-forward, root-caused 2026-07-07):** a
+  compression failure logged a "good" backup. Fixed with the damaged-10/24-backup lane (see that
+  entry): a failed compression now fails the run; `tests/test_backup_rotate.py`.
 - **Invariant #8 (carry-forward):** add a `journal_mode=delete` assertion to `cert_invariants.py`
   (7/7 → 8/8) so a WAL flip is caught by the suite, not just the session tripwire. code: scripts/cert_invariants.py
 - **Dangling-book-ref detector — tribe/place-vs-book disambiguation (GRADUATED to defect 2026-07-07, θυγάτηρ).**
