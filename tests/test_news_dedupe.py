@@ -83,6 +83,56 @@ def check_canonical(fails):
     _check(fails, "title key strips outlet",
            title_key("Catholic AI task force announced - NewsNation", "NewsNation"),
            ("newsnation", "catholic ai task force announced"))
+    # Real pairs from the 2026-10-25 PA report, section B1 — each must now be ONE key.
+    same = [
+        ("https://www.msn.com/en-us/news/insight/pope-leo-xiv-to-unveil/gm-GM66ED0EE4"
+         "?gemSnapshotKey=GM66ED0EE4-snapshot-1&uxmode=ruby",
+         "https://www.msn.com/en-us/news/insight/pope-leo-xiv-to-unveil/gm-GM66ED0EE4"
+         "?gemSnapshotKey=GM66ED0EE4-snapshot-1"),
+        ("https://www.msn.com/en-us/tv/celebrity/usha-vance-therapy-didnt-work/ar-AA25Dyd0",
+         "https://www.msn.com/en-us/tv/celebrity/usha-vance-therapy-didn-t-work/ar-AA25Dyd0"
+         "?apiversion=v2&noservercache=1&wcseo=1"),
+        ("https://www.cnn.com/2026/05/08/politics/ufo-files-pentagon-release-aliens",
+         "https://edition.cnn.com/2026/05/08/politics/ufo-files-pentagon-release-aliens"),
+        ("https://www.bbc.com/news/articles/c4g2rpn3p9ro",
+         "https://www.bbc.co.uk/news/articles/c4g2rpn3p9ro"),
+        ("https://www.philstar.com/opinion/2026/06/04/2532617/magnifica-humanitas",
+         "https://qa.philstar.com/opinion/2026/06/04/2532617/magnifica-humanitas"),
+        ("https://thehill.com/homenews/house/5880943-house-gop-ufo",
+         "https://thehill.com/homenews/house/5880943-house-gop-ufo"
+         "?amp_gsa=1&amp_js_v=a9&usqp=mq331AQIUAKwASCAAgM%3D"),
+        ("https://www.aciafrica.org/index.php/amp/news/22579/catholic-church-leaders",
+         "https://www.aciafrica.org/news/22579/catholic-church-leaders"),
+        ("https://indiatribune.com/public/index.php/false-charges-to-mob-attacks",
+         "https://indiatribune.com/public/false-charges-to-mob-attacks"),
+        ("https://spzh.eu/en/news/83531-fanar-poisk-jedinstva",
+         "https://spzh.eu/en/news/83531-fanar-poisk-jedinstva.html"),
+        ("https://thelettersfromleo.com/p/dialogue-is-a-way-of-life?action=share",
+         "https://thelettersfromleo.com/p/dialogue-is-a-way-of-life"),
+    ]
+    for a, b in same:
+        _check(fails, f"same key: {a}", canonical_url(a), canonical_url(b))
+    # ...and real different-article pairs from the same report must stay apart.
+    apart = [
+        ("https://pillarcatholic.com/p/the-friday-pillar-post-june-26-2026",
+         "https://pillarcatholic.com/p/the-friday-pillar-post-july-3-2026"),
+        ("https://www.lifesitenews.com/episodes/pagan-aztec-war-dance",
+         "https://www.lifesitenews.com/news/pagan-aztec-war-dance"),
+        ("https://www.msn.com/en-us/news/insight/pope-to-unveil/gm-GMB84A8CA2",
+         "https://www.msn.com/en-us/news/insight/pope-to-unveil/gm-GM0926245D"),
+        ("https://www.lifesitenews.com/?p=1176239&post_type=acf-field",
+         "https://www.lifesitenews.com/?p=1176227&post_type=acf-field"),
+        ("https://x.com/story.php?action=view&id=1", "https://x.com/story.php?id=1"),
+        ("https://x.com/index.php", "https://x.com/"),
+    ]
+    for a, b in apart:
+        _check(fails, f"apart: {a}", canonical_url(a) == canonical_url(b), False)
+    _check(fails, "title key keeps a dated issue",
+           title_key("The Friday Pillar Post - June 26, 2026", "The Pillar")
+           == title_key("The Friday Pillar Post - July 3, 2026", "The Pillar"), False)
+    _check(fails, "title key: feed name = Google name",
+           title_key("Pope calls for peace", "EWTN News (CNA)")
+           == title_key("Pope calls for peace - ewtnnews.com", "ewtnnews.com"), True)
 
 
 def check_known_positive_pair(fails):
@@ -109,7 +159,7 @@ def check_title_only_never_merges(fails):
     rows = _rows(c)
     plans = plan_merges(rows)
     _check(fails, "title-only: no merge", len(plans), 0)
-    diff, unknown = merge_dups.title_report(rows, plans)
+    diff, unknown = merge_dups.title_report(rows, merge_dups.make_key({}))
     _check(fails, "title-only reported (unknown address)", len(unknown), 1)
 
 
@@ -156,6 +206,55 @@ def check_apply(fails):
     _check(fails, "blank summary filled", keep["summary"], "blurb from the old row")
     _check(fails, "nothing left to merge", len(plan_merges(_rows(c))), 0)
     _check(fails, "ingest skip list", merged_urls(c), {G1})
+
+
+def check_score_carried(fails):
+    """The survivor (RSS copy, scored 3) takes the Google copy's 7 + its reasoning + label, so
+    the article doesn't drop out of the 5+ Inbox (the 2026-10-25 Vatican News death-penalty
+    case: 25161 RSS 3 / 25107 Google 7)."""
+    c = _db()
+    vn = "https://www.vaticannews.va/en/pope/news/2026-10/pope-leo-death-penalty.html"
+    _add(c, 25161, vn, title="Pope Leo XIV rejects death penalty", source="Vatican News",
+         src="rss", query="rss:Vatican News", score=3, event="")
+    _add(c, 25107, G1, resolved=vn, title="Pope Leo XIV rejects death penalty - Vatican News",
+         source="Vatican News", src="page", score=7, event="Pope Leo Death Penalty Statement")
+    c.execute("UPDATE items SET ai_why = 'google reason' WHERE id = 25107")
+    c.commit()
+    plans = plan_merges(_rows(c))
+    _check(fails, "carry: one set, RSS kept", [(p[1]["id"]) for p in plans], [25161])
+    merge_dups.apply_plans(c, plans)
+    r = c.execute("SELECT id, url, score, ai_why, event FROM items").fetchall()
+    _check(fails, "carry: survivor row",
+           [(x["id"], x["url"], x["score"], x["ai_why"], x["event"]) for x in r],
+           [(25161, vn, 7, "google reason", "Pope Leo Death Penalty Statement")])
+
+
+def check_page_check(fails):
+    """An outlet moved an article: two RSS rows, two addresses, same headline. The page's own
+    main-address tag names the other row -> merge. A tag pointing elsewhere (homepage) or no
+    tag -> no merge."""
+    a = "https://www.ewtnnews.com/world/americas/u-s-bishops-demand-justice"
+    b = "https://www.ewtnnews.com/world/us/u-s-bishops-demand-justice"
+
+    def rows():
+        c = _db()
+        for id_, u in ((11374, a), (11566, b)):
+            _add(c, id_, u, title="U.S. bishops demand justice", source="EWTN News (CNA)",
+                 src="rss", query="rss:EWTN News (CNA)", score=2)
+        return _rows(c)
+
+    def run(tag_for):
+        rs = rows()
+        alias, _tags = merge_dups.page_aliases(merge_dups.title_sets(rs), fetch=tag_for,
+                                               log=lambda s: None, sleep=0)
+        return plan_merges(rs, merge_dups.make_key(alias))
+
+    p = run(lambda u: b)
+    _check(fails, "page check merges a moved article", [(x[1]["id"], [l["id"] for l in x[2]])
+                                                        for x in p], [(11374, [11566])])
+    _check(fails, "page check ignores a homepage tag",
+           len(run(lambda u: "https://www.ewtnnews.com/")), 0)
+    _check(fails, "page check: no tag, no merge", len(run(lambda u: None)), 0)
 
 
 def check_nightly_waits(fails, tmpdir):
@@ -211,6 +310,8 @@ def main():
     check_title_only_never_merges(fails)
     check_rss_beats_google(fails)
     check_apply(fails)
+    check_score_carried(fails)
+    check_page_check(fails)
     check_nightly_waits(fails, tempfile.gettempdir())
     check_merged_urls_absent(fails)
     if fails:

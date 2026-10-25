@@ -867,10 +867,19 @@ Open tickets:
   (rollback copy + the ingest skip list in gather_news/pull_rss), deletes it from items. Nightly
   step in daily.sh after resolve_new_faces; it does nothing until the first by-hand `--apply`
   creates items_merged. Locked by tests/test_news_dedupe.py (CI + pre-commit).
-  PA steps: (1) `inspect_rows.py "catholic ai task force" --resolve` (read-only) to confirm the pair;
-  (2) `merge_dups.py` report → verdict; (3) copy news.db, then `merge_dups.py --apply`.
-  Known gap (measured by the report's section C): a Google row is matched only once its real link
-  is looked up — the nightly step does that for new rows scored 5+; below-5 rows stay unmatched.
+  PA steps: (1) `inspect_rows.py "catholic ai task force" --resolve` — DONE 2026-10-25, pair
+  confirmed (26816/27449); (2) `merge_dups.py --pages` report → verdict; (3) copy news.db, then
+  `merge_dups.py --apply --pages`; (4) `--fill-links N` in chunks, re-report, apply again.
+  First report (2026-10-25, every set read): A = 207 sets / 209 rows, all correct. Found + fixed
+  before any apply: (a) the survivor kept its OWN score — 21 articles would have dropped out of the
+  5+ Inbox (RSS copy scored lower than the Google copy) → survivor now takes the highest-scored
+  copy's AI reading + label; (b) B1 address clean-up gaps → rules from real pairs (MSN page id +
+  render switches, cnn/edition.cnn, bbc.com/.co.uk, qa.philstar, AMP viewer codes, /amp/,
+  /index.php/, .html, ?action=share) — 24 more sets, all verified same-article; (c) moved articles
+  (EWTN/Crux/Angelus section moves) → `--pages` merges when a page's own canonical tag names the
+  other row's address (tag pointing anywhere else is ignored). Report headline check no longer
+  trims " - June 26" off dated issues. Known gap (section C): 2,283 Google rows scored 5+ have no
+  real link (mostly older than the 60-day page-date backfill) → `--fill-links`.
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
   existing card grouping; no scorer change. GATED behind the two mandatory clustering fixtures.
