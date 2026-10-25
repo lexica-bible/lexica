@@ -11,6 +11,9 @@ page_date(url) tries, in order, and returns the FIRST hit:
   3. <time datetime="...">             inside <article> when the page has one, else the page
   4. the URL  a YYYY-MM-DD segment, /YYYY/MM/DD/, or /YYYY/MM/
 It returns 'YYYY-MM-DD', or 'YYYY-MM' when only a /YYYY/MM/ URL segment was found, or None.
+Two guards (2026-10-25, from the first full dry run): the page's own date sources must AGREE
+within 30 days or no date is returned (a page that contradicts itself is not a witness), and a
+<time> tag only counts when the article area carries exactly one date. See page_date_detail.
 
 The day is the page's OWN calendar day as written (the date part of '2021-12-01T00:51+02:00'
 is 2021-12-01 — what the byline prints), not a UTC conversion that could slide it a day.
@@ -129,13 +132,41 @@ def _from_meta(doc):
 
 
 def _from_time(doc):
-    m = _ARTICLE.search(doc)
-    region = m.group(0) if m else doc
-    for a, b in _TIME.findall(region):
-        d = _from_raw(a or b)
-        if d:
-            return d
-    return None
+    """The one date in the article's <time datetime> tags — ONLY when it is unambiguous. The
+    region is the page's single <article> when it has exactly one, else the whole page; if that
+    region carries more than one distinct day it's a list of stories (a "latest" box, related
+    links), not a byline, and nothing is returned. (nssmag 18052, 2026-10-25: two <article>s,
+    six dates; the first was a sidebar story's Oct 17.)"""
+    arts = _ARTICLE.findall(doc)
+    region = arts[0] if len(arts) == 1 else doc
+    days = {d for d in (_from_raw(a or b) for a, b in _TIME.findall(region)) if d}
+    return days.pop() if len(days) == 1 else None
+
+
+def _byline_days(doc):
+    """Days the page marks as its PUBLISH date outside the data block: a <time> whose class says
+    'published' (WordPress 'entry-date published'), or any tag with itemprop="datePublished".
+    Used only to cross-check the other sources (see page_date_detail)."""
+    out = set()
+    for tag in re.findall(r"<(?:time|meta|span|div|p)\b[^>]*>", doc, re.I):
+        attrs = {k.lower(): (a if a is not None and a != "" else b) for k, a, b in _ATTR.findall(tag)}
+        cls = (attrs.get("class") or "").lower().split()
+        is_pub = ((attrs.get("itemprop") or "").strip().lower() == "datepublished"
+                  or (tag[:5].lower() == "<time" and "published" in cls))
+        if is_pub:
+            d = _from_raw(attrs.get("datetime") or attrs.get("content"))
+            if d:
+                out.add(d)
+    return out
+
+
+def _spread_days(days):
+    """Largest gap in days among full 'YYYY-MM-DD' strings (0 for fewer than two)."""
+    ds = sorted(date.fromisoformat(d) for d in days if len(d) == 10)
+    return (ds[-1] - ds[0]).days if len(ds) > 1 else 0
+
+
+AGREE_DAYS = 30   # the page's own date sources must agree within this many days, or it's unverified
 
 
 def _from_url(url):
@@ -167,16 +198,36 @@ def _fetch(url, timeout=TIMEOUT):
 
 
 def page_date_detail(url, html=None, timeout=TIMEOUT):
-    """(date, how) — how is 'jsonld' | 'meta' | 'time' | 'url' | None. Never raises."""
+    """(date, how) — how is 'jsonld' | 'meta' | 'time' | 'url', or (None, 'conflict') when the
+    page contradicts itself, or (None, None). Never raises.
+
+    CROSS-CHECK: every date the page offers as its publish date — JSON-LD, the published_time
+    meta, a byline marked 'published', and a full date in the URL — must agree within
+    AGREE_DAYS. If they don't, the page is not a trustworthy witness and NO date is returned
+    (the row stays unverified). Picking one side would be guessing. (ipi.media 18094,
+    2026-10-25: JSON-LD + meta said 2021-12-17 — a repost/migration date — while the printed
+    byline said July 13, 2017, which is right.) When they agree, the ruled order picks."""
     try:
         doc = html if html is not None else _fetch(url, timeout)
+        u = _from_url(url)
         if doc:
-            for how, fn in (("jsonld", _from_jsonld), ("meta", _from_meta), ("time", _from_time)):
-                d = fn(doc)
-                if d:
-                    return d, how
-        d = _from_url(url)
-        return (d, "url") if d else (None, None)
+            j, m = _from_jsonld(doc), _from_meta(doc)
+            byline = _byline_days(doc)
+            witnesses = {d for d in (j, m) if d} | byline | ({u} if u and len(u) == 10 else set())
+            if _spread_days(witnesses) > AGREE_DAYS:
+                return None, "conflict"
+            if j:
+                return j, "jsonld"
+            if m:
+                return m, "meta"
+            if len(byline) == 1:
+                return next(iter(byline)), "time"
+            t = _from_time(doc)
+            if t:
+                if u and len(u) == 10 and _spread_days({t, u}) > AGREE_DAYS:
+                    return None, "conflict"
+                return t, "time"
+        return (u, "url") if u else (None, None)
     except Exception:
         return None, None
 

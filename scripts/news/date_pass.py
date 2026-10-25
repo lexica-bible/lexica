@@ -19,7 +19,9 @@ One row's outcome (decide):
                         same month, Google's exact day is kept (flag 0); otherwise published =
                         the 1st of that month and flag 1 — the card shows it with "~" because
                         the day is not known
-  no page date       -> published untouched, src stays 'google', flag 1 (unverified, not "wrong")
+  no page date       -> published untouched, src stays 'google', flag 1 (unverified, not "wrong").
+                        Includes a page that contradicts itself (pagedate: 'conflict') and a page
+                        date later than the day we pulled the article ('after-pull').
   no real link       -> nothing written; the next run tries again (a Google redirect that
                         couldn't be resolved tonight is a Google-side failure, not a finding)
   timed out          -> nothing written; the next run tries again (a network step that ran past
@@ -106,7 +108,7 @@ def candidates(conn, since):
     have = {r[1] for r in conn.execute("PRAGMA table_info(items)")}
     rcol = "resolved_url" if "resolved_url" in have else "NULL AS resolved_url"
     return conn.execute(
-        f"SELECT id, url, {rcol}, published, source, score, title FROM items "
+        f"SELECT id, url, {rcol}, published, first_seen, source, score, title FROM items "
         f"WHERE {' AND '.join(where)} ORDER BY id", (MIN_SCORE, since)).fetchall()
 
 
@@ -190,6 +192,13 @@ def run_pass(conn, since, apply, resolve=None, sleep=1.0, limit=None, log=print)
                 continue
             page, how = got
             seen[link] = (page, how)
+        # A page date AFTER the day we first pulled the article is impossible — the page handed
+        # us some other date. Treat it as no page date (unverified), never write it. +1 day of
+        # slack for time zones. (nssmag 18052, 2026-10-25: "2026-10-17" on a September pull.)
+        pulled = (r["first_seen"] or "")[:10]
+        if page and len(page) == 10 and pulled and _days_apart(page, pulled) is not None \
+                and page > pulled and _days_apart(page, pulled) > 1:
+            page, how = None, "after-pull"
         w = decide(r["published"], page)
         if not page:
             tally["no_page_date"] += 1
