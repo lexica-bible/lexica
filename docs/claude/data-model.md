@@ -122,8 +122,12 @@ must fold (frontend: greekFold in 00-core.jsx, compare-only; docs/tickets/accent
 **FILLED 2026-10-25 from the ABP app + Analytical Lexicon** (`apply_abp_surface_fill.py`: 4,411
 writes, 391,130 → 395,003 — 3,823 printed forms on slots that had none, 182 glued NBSP values split
 onto neighbour slots, 357 NBSP → plain space; record `docs/handoffs/CENSUS_abp_surface_fill.md`).
-**No builder re-creates the fill — a `build_abp_surface.py` re-run drops it** (/rebuild-words step 9;
-fix chartered in `docs/handoffs/CHARTER_rebuild_trap_fix.md`, gates G1–G3 not yet built).
+**No builder re-creates the fill — a `build_abp_surface.py` re-run drops it** (/rebuild-words step 9).
+It is re-landed by `scripts/restore_surface_fill.py` at step 9a from the frozen snapshot
+(checked current at step 1a, `snapshot_surface_fill.py --check`). **Step 9, 9a and the 9b floor all
+run on the rebuilt COPY, before the swap — never on live** (step 9 reads nothing that exists only on
+live; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9, 2026-10-26). Never re-run the one-shot
+`apply_abp_surface_fill.py`.
 Characterizer = `scripts/audit_surface_coverage.py`
 (read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
 Hebrew-numbered OT name slots that can never match Greek, the PN backfill's bucket). Mode-three

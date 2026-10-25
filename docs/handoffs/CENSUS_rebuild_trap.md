@@ -165,7 +165,8 @@ the build's own closing text says run the surface builder against the COPY befor
 (`build_words_from_abp.py:2224-2226`, swap `:2231-2233`); `finish_rebuild.sh:112-113` says re-run it
 "after a real swap". So whether the fill is dropped on the copy or on the live file is not settled
 by the docs. (Precisely: finish_rebuild says live-after-swap, the build text says copy, the
-checklist named no file. **Settled 2026-10-26: live, after the swap** — `CHARTER_rebuild_trap_fix.md` §1.)
+checklist named no file. **Settled 2026-10-26: live, after the swap** — `CHARTER_rebuild_trap_fix.md` §1. **Re-settled the
+same day: on the copy, before the swap** — §9; step 9 has no live-only input.)
 
 ---
 ## 3. Other tables and indexes that depend on words

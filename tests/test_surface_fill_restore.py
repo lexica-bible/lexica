@@ -190,6 +190,75 @@ class Snapshot(Base):
         self.assertFalse(os.path.exists(self.snap))
 
 
+class SnapshotCheck(Base):
+    """--check (/rebuild-words step 1a): an existing frozen file is verified against a fresh copy
+    of live, never overwritten. The stale-snapshot cases must STOP and leave the file as it was."""
+    def setUp(self):
+        super().setUp()
+        rc, out = self.snapshot()
+        assert rc == 0, out
+        self.frozen = digest(self.snap)
+
+    def edit_src(self, sql, *args):
+        c = sqlite3.connect(self.old)
+        c.execute(sql, args)
+        c.commit()
+        c.close()
+
+    def assert_stale(self, rc, out, *expect):
+        self.assertEqual(rc, 1, out)
+        self.assertIn("STALE SNAPSHOT", out)
+        for e in expect:
+            self.assertIn(e, out)
+        self.assertNotIn("SNAPSHOT CURRENT", out)
+        self.assertEqual(digest(self.snap), self.frozen)            # never overwritten
+
+    def test_matching_source_reads_current_and_writes_nothing(self):
+        before = sorted(os.listdir(os.path.dirname(self.snap)))
+        rc, out = self.snapshot(check=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("RESULT: SNAPSHOT CURRENT", out)
+        self.assertEqual(digest(self.snap), self.frozen)
+        self.assertEqual(sorted(os.listdir(os.path.dirname(self.snap))), before)
+
+    def test_matching_source_reads_current_against_the_pin(self):
+        rs.SNAPSHOT_SHA256 = self.frozen
+        rc, out = self.snapshot(check=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("= the pin in restore_surface_fill.py", out)
+
+    def test_stale_when_the_source_old_word_row_changed(self):
+        # surface table untouched (G0 passes) — only the slot's old English moved: bytes differ
+        self.edit_src("UPDATE words SET english='Word' WHERE verse_id=1 AND position=2")
+        rc, out = self.snapshot(check=True)
+        self.assert_stale(rc, out, "slot (1, 2): differs in english")
+
+    def test_stale_when_a_fill_form_changed_on_live(self):
+        self.edit_src("UPDATE abp_surface SET form='λογου' WHERE verse_id=1 AND position=2")
+        rc, out = self.snapshot(check=True)
+        self.assert_stale(rc, out, "no longer yields the frozen fill", "new_form")
+
+    def test_stale_when_the_live_table_gained_a_row(self):
+        self.edit_src("INSERT INTO abp_surface VALUES (3, 9, 'x', '')")
+        rc, out = self.snapshot(check=True)
+        self.assert_stale(rc, out, "G0 diff counts are not the fill's")
+
+    def test_refuses_a_file_that_is_not_the_pinned_one(self):
+        rs.SNAPSHOT_SHA256 = "0" * 64
+        rc, out = self.snapshot(check=True)
+        self.assert_stale(rc, out, "is not the pinned snapshot")
+
+    def test_refuses_missing_file_and_check_with_replace(self):
+        rc, out = self.snapshot(check=True, replace=True)
+        self.assertEqual(rc, 1)
+        self.assertIn("cannot be used together", out)
+        self.assertEqual(digest(self.snap), self.frozen)
+        rc, out = self.snapshot(check=True, out=os.path.join(self.tmp, "fix", "none.tsv"))
+        self.assertEqual(rc, 1)
+        self.assertIn("no frozen snapshot", out)
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "fix", "none.tsv")))
+
+
 class Restore(Base):
     def setUp(self):
         super().setUp()

@@ -4,8 +4,10 @@ restore_surface_fill.py — rebuild-trap fix, parts (a) second half + (b) + G1
 (CHARTER_rebuild_trap_fix.md §2): re-apply the frozen 2026-10-25 abp_surface fill AFTER
 /rebuild-words step 9 (builder + both backfills + translit), re-keyed onto the rebuilt words.
 
-THIS LANE: COPIES ONLY. It refuses the live database and any file named bible.db. Landing it on
-live (step 9 runs on live after the swap, charter §1) is a later, separately ruled change.
+COPIES ONLY, BY DESIGN. It refuses the live database and any file named bible.db. Under the
+2026-10-26 wiring (charter §9, Path A) step 9 and this restore (step 9a) run on the rebuilt COPY,
+BEFORE the swap — step 9 reads nothing that exists only on live — so live is never served without
+the fill and never needs this script. The refusal stays.
 
 Without --apply it is a DRY RUN: every database is opened read-only and the only file written is
 the --report TSV. With --apply it writes ONLY abp_surface, in one transaction, and only if every
@@ -81,7 +83,8 @@ def check(ok, msg):
 def check_paths(a, live):
     if dr.is_live(a.db, live):
         raise Stop(f"{a.db} is the live database (or a file named bible.db) — refused. "
-                   "This lane restores onto COPIES only.")
+                   "The restore runs on COPIES only: the rebuilt copy, before the swap "
+                   "(/rebuild-words step 9a).")
     if not os.path.isfile(real(a.db)):
         raise Stop(f"{a.db}: no such file")
     if a.prefill:

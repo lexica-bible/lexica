@@ -59,10 +59,16 @@ parser reference notes in its appendix). No open writes.
   (`snapshot_surface_fill.py` · `restore_surface_fill.py` · floor 395,003; charter §8). **Copy dry
   run PASSED 2026-10-26** (G1 395,003 exactly · 4,411 placed / 0 unplaced · floor red 3,873 / green 0 ·
   restored table = live's row for row; checksum pinned). **Lane G1–G3 CLOSED at `1062917f`
-  (reviewer-accepted).** NEXT = wire the restore onto live's step 9 (it refuses live until then) —
-  start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`. Until it lands, do not swap a rebuilt db.
-  - HELD — **live wiring decision:** what live serves between the step-9 drop (391,130) and the
-    restore (395,003). Ruling needed before the restore's live refusal comes off.
+  (reviewer-accepted).** **WIRED 2026-10-26 (charter §9, Path A):** step 9 reads nothing live-only,
+  so step 9 + the restore (9a) + floor/oracle (9b) run on the rebuilt COPY before the swap; new step
+  1a `snapshot_surface_fill.py --check`; checklist reordered (RUN ORDER line); restore keeps its live
+  refusal. NEXT = JP runs `docs/handoffs/RUN_rebuild_trap_live.md` when a rebuild is wanted (hard
+  stop after block I for the verdict). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
+  - ~~HELD — live wiring decision~~ — RESOLVED by §9 (no gap: nothing runs on live but the swap).
+  - FLAGGED — **step 11 has the old step-9 shape:** the build never writes `english_head_norm`; the
+    finder checks only that the column exists, so after a swap the ABP English finder folds on blanks
+    until step 11 runs. Check for live-only inputs (Step-0 style) and move it onto the copy before the
+    next live rebuild. Handoff held item 9.
   - HELD — **snapshot staleness:** a restore that moves slots makes the frozen file stale for the next
     rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy (which therefore
     stays on PA until one exists). Gates the edition-upgrade lane.

@@ -36,6 +36,13 @@ old word positions.
 
 The snapshot holds ABP text (printed Greek forms + ABP English): it stays OUT of the public repo
 (.gitignore) — PA keeps it in the fixture folder; a second copy goes to the local fixture folder.
+
+--check  (the /rebuild-words step 1a mode, added 2026-10-26, charter §9): the frozen file already
+exists — verify it, write NOTHING. Its .sha256 must match, it must be the snapshot pinned in
+restore_surface_fill.py (SNAPSHOT_SHA256), and re-deriving the rows from --src (a fresh copy of live)
+must give the frozen file BYTE FOR BYTE. Pass -> "SNAPSHOT CURRENT". Anything else -> STOPPED: STALE
+SNAPSHOT, naming the slots that differ; the file is never overwritten (a re-freeze is a ruling,
+--replace without --check). A missing file under --check also stops (copy the second copy back).
 """
 import argparse
 import hashlib
@@ -164,6 +171,76 @@ def build_rows(csrc, cpre, csv_path):
     return rows, len(ins), len(upd)
 
 
+def pinned():
+    """THE pin lives in restore_surface_fill.py (SNAPSHOT_SHA256) — read it from there."""
+    import restore_surface_fill as rs
+    return rs.SNAPSHOT_SHA256
+
+
+def stale_slots(frozen, fresh):
+    """-> [(slot, what differs)] between two row lists, keyed by (verse_id, position)."""
+    a = {(r["verse_id"], r["position"]): r for r in frozen}
+    b = {(r["verse_id"], r["position"]): r for r in fresh}
+    out = []
+    for k in sorted(set(a) | set(b)):
+        if k not in b:
+            out.append((k, "in the frozen file only"))
+        elif k not in a:
+            out.append((k, "in --src only"))
+        else:
+            cols = [c for c in COLUMNS if a[k][c] != b[k][c]]
+            if cols:
+                out.append((k, "differs in " + ", ".join(cols)))
+    return out
+
+
+def check_current(a, out):
+    """--check: the frozen file must equal what --src yields today, byte for byte. Writes nothing."""
+    say("=" * 78)
+    say("snapshot_surface_fill --check — READ-ONLY on every database; writes NO file")
+    for flag, p in (("--src", a.src), ("--prefill", a.prefill)):
+        say(f"  {flag:9} {real(p)}  ({os.path.getsize(real(p)):,} bytes)")
+    say(f"  frozen    {out}")
+    say("=" * 78)
+    say("F   the frozen file")
+    frozen, hexd = read_snapshot(out)                 # its .sha256 must match first
+    say(f"    sha256 {hexd}")
+    pin = pinned()
+    if pin is not None and hexd != pin:
+        raise Stop(f"STALE SNAPSHOT — {out} is not the pinned snapshot (sha256 {hexd[:16]}… != "
+                   f"pinned {pin[:16]}…) — nothing overwritten")
+    say("    PASS — checksum file matches" + (", = the pin in restore_surface_fill.py" if pin
+                                               else " (no pin set)"))
+    with open(out, "rb") as f:
+        frozen_bytes = f.read()
+    csrc, cpre = dr.ro(a.src), dr.ro(a.prefill)
+    try:
+        try:
+            rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv)
+        except Stop as e:
+            raise Stop(f"STALE SNAPSHOT — --src no longer yields the frozen fill ({e}) — "
+                       "nothing overwritten") from None
+    finally:
+        csrc.close()
+        cpre.close()
+    data = render(rows)
+    say("C   --src re-derived vs the frozen file, byte for byte")
+    if data != frozen_bytes:
+        diffs = stale_slots(frozen, rows)
+        for k, what in diffs[:20]:
+            say(f"    slot {k}: {what}")
+        raise Stop(f"STALE SNAPSHOT — {len(diffs):,} slot(s) differ between --src and the frozen "
+                   "file" + ("" if diffs else " (every row matches, the bytes do not)") +
+                   " — nothing overwritten. A re-freeze is a ruling, never a way past this")
+    say(f"    PASS — {len(rows):,} rows, identical bytes")
+    say("\nRECEIPT (expected | actual)")
+    say(f"  rows                    {N_ROWS:,} | {len(rows):,}")
+    say(f"  inserts / updates       {dr.N_INSERT:,} / {dr.N_UPDATE:,} | {n_ins:,} / {n_upd:,}")
+    say(f"  sha256                  {pin or '(no pin)'} | {hexd}")
+    say("RESULT: SNAPSHOT CURRENT — the frozen file matches --src byte for byte; nothing written")
+    return 0
+
+
 def run(a, live=dr.LIVE):
     for flag, p in (("--src", a.src), ("--prefill", a.prefill)):
         if dr.is_live(p, live):
@@ -180,9 +257,16 @@ def run(a, live=dr.LIVE):
         raise Stop(f"--out {a.out} must be a new .tsv file, not a database or an input")
     if not out.endswith(".tsv"):
         raise Stop(f"--out {a.out} must end in .tsv")
+    if a.check and a.replace:
+        raise Stop("--check and --replace cannot be used together")
+    if a.check:
+        if not os.path.isfile(out):
+            raise Stop(f"--check: no frozen snapshot at --out {a.out} — nothing to verify. Copy the "
+                       "second copy back; never re-freeze to get past this")
+        return check_current(a, out)
     if os.path.exists(out) and not a.replace:
         raise Stop(f"--out {a.out} already exists — a frozen file is not overwritten "
-                   "(pass --replace only to re-freeze by ruling)")
+                   "(pass --check to verify it against --src; --replace only to re-freeze by ruling)")
 
     say("=" * 78)
     say("snapshot_surface_fill — READ-ONLY on every database; writes only the snapshot + .sha256")
@@ -238,6 +322,9 @@ def main(argv=None, live=dr.LIVE):
         ap.add_argument(flag, required=True)
     ap.add_argument("--replace", action="store_true",
                     help="overwrite an existing snapshot (re-freeze by ruling only)")
+    ap.add_argument("--check", action="store_true",
+                    help="verify the existing frozen file against --src; write nothing "
+                         "(/rebuild-words step 1a)")
     a = ap.parse_args(argv)
     try:
         return run(a, live)

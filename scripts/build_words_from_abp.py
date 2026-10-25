@@ -2225,12 +2225,13 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"      python3 scripts/build_rendering_norm.py {target}   # english_head_norm for the Word-study number-fold")
     print(f"      # + the rest of the /rebuild-words checklist (dotted, two-ending, word_gloss)")
     print(f"      python3 scripts/audit_split_flip.py {target}     # must read 0")
+    print(f"\n  BEFORE the swap, on THIS COPY {target}: /rebuild-words 8b, then step 9 (abp_surface")
+    print(f"  rebuild + both backfills + translit), 9a restore_surface_fill.py (step 9 drops the")
+    print(f"  2026-10-25 fill; 9a puts it back) and 9b the health floor. Never step 9 on the live")
+    print(f"  {bible_db} (docs/handoffs/CHARTER_rebuild_trap_fix.md §9).")
     print(f"\n  Then swap it in — REVERSIBLE, one mv undoes it:")
     print(f"      mv {bible_db} {bible_db}.bak-$(date +%F) && rm -f {bible_db}-wal {bible_db}-shm \\")
     print(f"        && mv {target} {bible_db} && bash ~/bible-db/scripts/deploy.sh  # API reload + sweep, never bare touch (G2 rule)")
-    print(f"\n  AFTER the swap, on the LIVE {bible_db}: /rebuild-words step 9 (abp_surface rebuild +")
-    print(f"  both backfills + translit). WARNING: step 9 drops the 2026-10-25 abp_surface fill —")
-    print(f"  read step 9 and docs/handoffs/CHARTER_rebuild_trap_fix.md before running it.")
 
 
 def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,

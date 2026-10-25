@@ -46,11 +46,32 @@ exceed the PA quota; `df -h ~` is useless here (it shows the shared filer, not t
 dashboard has the real number). A `disk I/O error` on the very first snapshot write, leaving a
 0-byte `.new`, is out-of-space, not corruption.
 
+**RUN ORDER (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — the step
+NUMBERS are labels other docs cite, not the order):**
+0 → 1 → **1a snapshot check** → 2 build → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
+**9 surface rebuild (on the copy) → 9a fill restore (copy) → 9b health floor + oracle (copy)** →
+4 → 5 → 6 → 7 → **8 swap + deploy** → 10 → 11.
+Names used below: `<src>` = the fresh copy of live from step 1 (the snapshot check's source AND
+the build's source — the build opens it read-only, never writes it); `<built>` = the build's
+`<src>.new`, renamed. **Everything up to step 8 runs on copies; the swap is the only step that
+touches live `abp_surface`, and live is never served without the fill.** (Step 11 still writes
+live after the swap — a separate table, flagged in the rebuild-trap handoff, not changed here.)
+
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
    (Full-rebuild fallbacks keep this receipted naming — ops.md retention item 1. But
    ordinary ARC ships use the single overwritten `bible.db.rollback` name, ops.md item 6;
    and before DELETING any old copy, check the newest nightly in ~/db_backups is stamped
    AFTER the last swap — the nightly runs ~13:30 UTC and does not cover an evening ship.)
+1a. **SNAPSHOT CHECK — before the build, on `<src>`** (added 2026-10-26, charter §9). The
+   2026-10-25 abp_surface fill is frozen ONCE in `tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
+   (+ `.sha256`; git-ignored ABP text — on PA and in the local checkout only; sha256 pinned in
+   `restore_surface_fill.py`). Before every rebuild, prove the frozen file still describes live:
+   `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
+   It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
+   table or a fill slot's word row changed since the freeze (or the file is not the pinned one) —
+   surface it, never overwrite (a re-freeze is a ruling: `--replace`, without `--check`). `<src>`
+   must be a copy of live taken NOW; live itself is refused. A missing frozen file also stops: copy
+   the second copy back, never re-freeze to get past it.
 2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
    correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live
@@ -144,7 +165,8 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    clean [IDENTICAL] readout, compare against an OLD-WAY rebuild instead (stash the build edits,
    rebuild + run the full chain) — that isolates any genuine change introduced by a code edit.
 5. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
-6. Audits (the gates), all on bible_test.db: `health_check.py` (0 warnings) → `audit_bracket_order.py`
+6. Audits (the gates), all on bible_test.db, AFTER 9b (before step 9 the copy still carries live's
+   old surface table, so its floor line passes for free): `health_check.py` (0 warnings) → `audit_bracket_order.py`
    (CHIP genuine ≈ 2 = the known Jon 4:9 twin-bracket FPs, not garbles) → `scan_strongs_cross.py`
    (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
    `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
@@ -154,9 +176,8 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
-8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; then
-   `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
-   built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch).
+8. Swap + deploy — **MOVED below 9b (2026-10-26):** it is the LAST step before 10/11 and the only
+   live action (RUN ORDER line above). 8b below still runs on the copy, right after step 3.
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
    import_tipnr (still on the test copy, before the gates), IN THIS ORDER:
@@ -240,31 +261,50 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
-9. **WHERE: on the LIVE `~/bible-db/bible.db`, AFTER the step-8 swap** (settled 2026-10-26,
-   `docs/handoffs/CHARTER_rebuild_trap_fix.md` §1 — this is what the 7/16 and 8/23 runs actually did;
-   `finish_rebuild.sh` and the build's closing text say the same). Until it runs, live serves the
-   pre-rebuild surface table against the new word positions.
-   RE-RUN `scripts/build_abp_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
+9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3, BEFORE the gates (4–7) and the step-8
+   swap** (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
+   §1 "live, after the swap" placement, which was practice, not a dependency). Step 9 reads nothing
+   that exists only on live: the db's own `verses` / `words` / `lexicon` / `dotted_lexicon` /
+   `abp_surface` (the build copies the whole db) plus `~/bible-db/bh_scrape.db` (its own file, named
+   by `--bh`). Proven: the 10/26 copy dry run ran it on `built3` → 391,130 = G1a. It must come AFTER
+   8b: translit reads `words.strongs_base` (8b.2 rewrites it), the PN backfill reads `is_pn` + the
+   English (8b.2a repairs 16 verses). **Never run step 9 on live** — its DROP would serve a
+   fill-less table, and the restore refuses live.
+   RE-RUN `scripts/build_abp_surface.py <built> --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
    leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
-   `scripts/backfill_abp_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db --apply` — the surface builder writes
-   only form-FOUND rows (~345,437); the 2026-07-11 backfill added ~13,851 rows for forms it can't
-   find. THEN `scripts/backfill_pn_surface.py ~/bible-db/bible.db --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
-   printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; the interlinear Greek line for
-   names reads from these). health_check FLOORS the table at **395,003** (raised 2026-10-26 from
-   389,244 — rebuild-trap charter G3: the builder chain's 391,130 + the 10/25 fill's 3,873 inserts),
-   so a rebuild missing either backfill OR the fill trips the floor (shortfall 3,873 exactly = the
-   fill is missing; the 2026-07-16 miss is why the guard exists). THEN re-run
-   `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
-   SBL style from the lexicon, 'h' from the lemma) — it covers all backfilled rows too.
+   `scripts/backfill_abp_surface.py <built> --bh ~/bible-db/bh_scrape.db --apply` — the surface builder writes
+   only form-FOUND rows (~345,437; 346,111 on the 10/26 build); the 2026-07-11 backfill added ~13,851 rows for forms it can't
+   find (13,183 on 10/26). THEN `scripts/backfill_pn_surface.py <built> --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
+   printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; 31,836 on 10/26; the interlinear Greek line for
+   names reads from these). THEN `scripts/build_abp_translit.py <built>` to refill the romanization
+   (`abp_surface.translit`, same rows/keys — SBL style from the lexicon, 'h' from the lemma) — it covers
+   all backfilled rows too. **The table must now read 391,130** (same-code rebuild; G1a). A
+   different total on a same-code rebuild = STOP before 9a.
    **⚠ The 2026-10-25 abp_surface FILL (4,411 writes, table 391,130 → 395,003; record
-   `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above.** A rebuild
-   drops it. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows). The re-landing step
-   is BUILT (2026-10-26, charter G1–G3, §8): `scripts/snapshot_surface_fill.py` freezes the fill
-   from a pre-swap copy BEFORE step 9; `scripts/restore_surface_fill.py` re-keys and re-applies it
-   AFTER step 9 (table must read 391,130 first, 395,003 exactly after). **It is proven on copies
-   only and refuses the live file** — wiring it onto live (where step 9 runs) waits on the copy dry
-   run's verdict. Until then: do not swap a rebuilt db.
+   `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above** — step 9 drops
+   it; 9a puts it back. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows); never re-run it.
+9a. **RESTORE THE FILL — on `<built>`, dry run → verdict → `--apply`** (charter G1–G3 §8, wired §9).
+   `PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py <built> --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/bible.db.pre-surface-fill-20261025 --report <report.tsv>`
+   (read-only; then the same + `--apply`). Same-code expected: table before 391,130 · vs pre-fill
+   copy 0 / 0 (G1b) · placed 4,411 (agree-strong 4,057 · agree-weak 354) · unplaced 0 · inserts /
+   updates 3,873 / 538 · moved 0; after `--apply`: **G1 = 395,003 exactly** · translit rule changes 0
+   · `RESULT: RESTORED, ALL CHECKS PASS`. All or nothing: any unplaced slot or a G1a/G1b miss writes
+   NOTHING. `--prefill` (G1b) is for a same-code rebuild only — a rebuild that MOVES slots (the
+   edition upgrade) drops it, re-declares these figures, and needs a re-freeze afterwards (handoff
+   held item "snapshot staleness"). The restore refuses live by design: it only ever runs here.
+9b. **HEALTH FLOOR + ORACLE — on `<built>`.** `health_check.py <built> --no-backup-check
+   --no-disk-check`: the `abp_surface rows BELOW floor 395003` line must read `[OK  ] … : 0`
+   (floor raised 2026-10-26 from 389,244 — charter G3: builder chain 391,130 + the fill's 3,873
+   inserts; shortfall 3,873 exactly = the fill is missing; the 2026-07-16 miss is why the guard
+   exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
+   `0|0` (the end-to-end oracle; also proves live's table did not change since `<src>` was taken).
+8. **Swap + deploy (the only live action):** `mv bible.db bible_pre_<reason>_<date>.db; mv <built> bible.db`; then
+   `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
+   built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch). Live goes from
+   the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
+   swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
+   name-slot `strongs_base` 501 (charter §7).
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory

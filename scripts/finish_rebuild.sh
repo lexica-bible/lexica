@@ -112,5 +112,5 @@ if [ "${#PROBLEMS[@]}" -ne 0 ]; then
   exit 1
 fi
 echo "== finish_rebuild done. Next: audits + compare_words.py vs live, THEN swap. =="
-echo "   (positions moved in step 6 — after a real swap, re-run build_abp_surface.py"
-echo "    + build_abp_translit.py per the rebuild checklist)"
+echo "   (positions moved in step 6 — on THIS copy, before the swap: /rebuild-words 8b,"
+echo "    step 9 surface rebuild, 9a fill restore, 9b health floor; never step 9 on live)"

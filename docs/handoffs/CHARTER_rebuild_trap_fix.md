@@ -11,6 +11,8 @@ Settle first where step 9 runs (copy vs live)." 8b.3 ordering bug: its own TODO 
 
 ---
 ## §1 Ruling: where step 9 runs — on the LIVE file, after the swap
+**SUPERSEDED 2026-10-26 by §9:** step 9 has no live-only input, so it now runs on the rebuilt COPY
+before the swap (Path A). This section stays as the record of the first placement.
 
 **What the three texts said (before this charter):**
 | Text | Said | Cite |
@@ -303,13 +305,15 @@ ONE copy both new scripts call (its 7 tests unchanged, all pass). PA sequence + 
 1. **Step 9 runs on the copy in this dry run — required for G1 to measure anything.** The build copies
    the whole db, so the rebuilt copy still holds live's 395,003-row table (fill included, census §2).
    Without step 9 the restore would find every slot already filled and G1 would read 395,003 for free.
-   This does not move the real procedure: step 9 stays post-swap on live (§1).
+   This does not move the real procedure: step 9 stays post-swap on live (§1). *(Superseded §9: the
+   real procedure now runs step 9 on the copy too.)*
 2. **The frozen snapshot stays out of git.** It carries 4,411 ABP printed forms + the slots' ABP English;
    the repo is public and ABP text is kept out of it (`abp_helps/`, `abp_app_html/` rule). It lives in
    `tests/fixtures/rebuild_trap/` (git-ignored) on PA, with a second copy scp'd to the local checkout;
    integrity = its `.sha256` file + a checksum pinned in `restore_surface_fill.py` after the first run.
 3. **The restore refuses the live file.** This lane proves it on copies; wiring it onto live (where
-   step 9 runs) is a separate change after this dry run's verdict.
+   step 9 runs) is a separate change after this dry run's verdict. *(§9: wired by moving step 9 onto
+   the copy instead — the refusal stays, permanently.)*
 4. **G1b added (stricter than G1a):** with `--prefill`, the builder table must equal the pre-fill copy
    ROW FOR ROW, not just total 391,130 — counts are tripwires, members rule. Valid only for a
    same-code rebuild (a layout-moving rebuild drops `--prefill`).
@@ -370,6 +374,81 @@ was taken from. After a restore that MOVES slots, the next rebuild needs a fresh
 restored table — and that snapshot's "before" side can no longer be the 10/25 pre-fill copy (the
 step-9 output of that rebuild would be). On a same-code rebuild nothing moves and the frozen file stays
 valid as is.
+
+## §9 Wiring onto the live procedure (2026-10-26) — PATH A: step 9 + restore on the copy, before the swap
+**JP ruling (2026-10-26, quoted from the lane brief):** "a live blip during the rebuild is acceptable.
+Path is chosen by one fact you report, then you build without a further ruling" — the fact: does step
+9 read anything that exists only on live bible.db? None → Path A (reorder; step 9 + restore on the
+built copy; the restore keeps its live refusal). Exists → Path B (swap, then step 9 + restore on live
+back-to-back; refusal replaced by the sha256 pin + G1a preconditions). Option 2 (one transaction) ruled out.
+
+**Step 0 answer (CC, verbatim as delivered):** NONE — sequencing only. Step 9 is four scripts; every
+input is either a table inside the database file it is given (`verses`, `words`, `lexicon`,
+`dotted_lexicon`, `abp_surface` — `build_abp_surface.py:139-142`, `:176-181`;
+`backfill_abp_surface.py:56-62`; `backfill_pn_surface.py:243`, `:260-266`; `build_abp_translit.py:85-91`)
+or a separate file named on the command line (`--bh ~/bible-db/bh_scrape.db` — `build_abp_surface.py:117`,
+`backfill_pn_surface.py:190`). The rebuilt copy carries every one of those tables (the build copies the
+whole db, `build_words_from_abp.py:2054-2058`). No step-9 script hard-codes the live path, and the
+modules they import open nothing at import time (`lxx_align`; `build_pn_greek_identity` via
+`backfill_pn_surface.py:44` — its `DB`/`BH` defaults are strings used only in its own `main()`, which
+does not run on import). Proven in practice: the 10/26 copy dry run ran step 9 on `~/rekey/built3.db`
+and got 391,130 = G1a (§8 E). History of the placement: step 9 was appended after the swap step when
+`abp_surface` was new (`6e815b89`, 2026-06-15 — "RE-RUN … (like import_tipnr.py)", no file named, no
+reason given); the build's closing text put the surface builder + translit on the COPY before the swap
+(`3f4f5038`, 2026-06-27); `finish_rebuild.sh` said "after a real swap" (`9aac2c6d`, 2026-07-03); §1
+(`5fe687d4`) settled on live because that is what the 7/16 and 8/23 runs did — practice, not a
+dependency. The one ordering constraint is internal to the copy: step 9 must follow 8b (translit reads
+`words.strongs_base`, which 8b.2 rewrites; the PN backfill reads `is_pn` + English, which 8b.2a
+repairs) — the order the 10/26 dry run already used.
+
+**Path taken: A.** New run order (`/rebuild-words` RUN ORDER line): 0 → 1 → **1a snapshot check** → 2
+build → 3 finish → 8b.0–8b.3 (incl. 8b.2a) → **9 surface rebuild → 9a restore → 9b floor + oracle, all
+on the copy** → 4 → 5 → 6 → 7 → **8 swap** → 10 → 11. Live is never served without the fill: the
+swap replaces one 395,003-row table with another. Step numbers kept as labels (other docs cite them).
+
+**What changed (this commit):**
+- `/rebuild-words`: RUN ORDER line; new step 1a; step 9 re-written for the copy (`<built>` on every
+  command), with 9a (restore, dry run → verdict → apply) and 9b (floor + `0|0` oracle vs live); step 8
+  moved below 9b; step 6 notes it runs after 9b (before step 9 the copy's floor passes for free).
+- `scripts/snapshot_surface_fill.py --check` (step 1a): the frozen file must pass its `.sha256`, equal
+  the pin in `restore_surface_fill.py`, and equal what `--src` (a fresh copy of live) yields **byte for
+  byte**. Pass → `SNAPSHOT CURRENT`, nothing written. Else `STALE SNAPSHOT`, naming the slots that
+  differ (or the G0/O check that failed) — never overwritten; a re-freeze stays a ruling (`--replace`,
+  without `--check`). Missing file under `--check` stops too. Default mode unchanged.
+- `restore_surface_fill.py`: live refusal KEPT (docstring + message now say why: it only ever runs on
+  the copy at 9a). No logic change.
+- Print text only: `build_words_from_abp.py` closing text and `finish_rebuild.sh`'s last echo now say
+  step 9 / 9a / 9b run on the copy before the swap (were "after the swap, on live").
+- `docs/claude/data-model.md` abp_surface paragraph; census §2 pointer.
+- Tests: `tests/test_surface_fill_restore.py` +7 cases (`SnapshotCheck`): current on a matching copy
+  (writes nothing; also against the pin) · stale when a fill slot's old English changed (G0 still
+  passes — the byte compare catches it) · stale when a fill form changed (G0's CSV check) · stale when
+  live's table gained a row (G0 count) · refuses a file that is not the pinned one · refuses a missing
+  file and `--check` with `--replace`. Every stale case asserts the frozen file is byte-unchanged.
+  Existing 15 + `test_rekey_dryrun.py` 7 unchanged and green; 22 + 7 total.
+
+**Live RUN sheet:** `docs/handoffs/RUN_rebuild_trap_live.md` — same-code rebuild, every figure marked
+PRE-REG (measured 10/26), CHECKLIST (checklist figure, never measured on a rebuilt copy: step 6
+audits, full health report) or FIRST READ (8b.3 gates, word-key compare). Pre-registered from the
+dry runs: snapshot CURRENT `d9435bde…` · G1a 391,130 → G1 395,003 · placed 4,411 / unplaced 0
+(4,057 strong · 354 weak) · floor red 3,873 → green 0 · restored table vs pre-swap live `0|0` · G5
+519|519 · 21|21 · 501 · words english/english_head/greek_pos/strongs/is_pn 0 · bracket_id 0 (the owed
+half of held item 3). Hard STOP after block I (pre-swap compare) for the verdict; block J (swap) is
+the only live write.
+
+**Found while wiring (flagged, not changed):**
+- **Step 11 has the old step-9 shape.** The build never writes `words.english_head_norm` (its INSERT
+  list, `build_words_from_abp.py:2154-2157`) and the finder only checks that the column EXISTS
+  (`views_lexicon.py:100-108`), so between the swap and step 11 the ABP English finder would fold on
+  blank values for every rebuilt row. Not measured on PA. Its own check (same Step-0 question) before
+  the next live rebuild.
+- **The site writes AI caches into bible.db** (`ai_search_cache`, `core.py:341`; LSJ/ABP synthesis,
+  `views_lsj.py:467-470`). Rows written between the copy (A2) and the swap are dropped by the swap and
+  redraw on the next ask. True of every file-swap rebuild; the run sheet records the count before J.
+- 8b.3 ordering (held item 4) unchanged: 8b.3 still reads the copy's carried live surface table before
+  step 9 — the same input it had before this reorder.
+- `~/abp_surface_fill_dryrun.csv` is a G0 input of step 1a and was missing from the PA keep list —
+  added.
 
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second

@@ -7,7 +7,8 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
 ## Where it stands
 - **The trap:** `/rebuild-words` step 9 runs `build_abp_surface.py`, which DROPs `abp_surface`; no
   builder re-creates the 4,411-row 2026-10-25 fill; the health floor (389,244) sits below the pre-fill
-  391,130, so the loss is silent. Step 9 runs on the LIVE file after the swap (settled, charter §1).
+  391,130, so the loss is silent. Step 9 now runs on the rebuilt COPY before the swap (charter §9;
+  the §1 "live, after the swap" placement is superseded).
 - **G4 PASSED on PA 2026-10-26** — the lane-3 hand repairs now ride the rebuild as checklist step
   **8b.2a** (`scripts/lane3_rebuild_step.py`; after 8b.2, before 8b.3). Full run on a fresh live copy:
   words english/english_head/greek_pos/strongs/is_pn = live exactly; re-key dry run placed 4,411 of
@@ -19,6 +20,18 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
 - **Declared figures re-declared this session** (all were stale): build split 2,436 → 80 and
   import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
   2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
+
+## UPDATE 2026-10-26 (wiring lane) — PATH A BUILT; next = JP runs the live sheet (when he wants a rebuild)
+Step 0 answer: **step 9 reads nothing that exists only on live — sequencing only** (receipt + history
+verbatim in charter **§9**). So, by JP's ruling, Path A: step 9, the restore (9a) and the floor +
+oracle (9b) all run on the rebuilt COPY before the swap; the swap is the only live write and live is
+never served without the fill. The restore keeps its live refusal. New step **1a**
+`snapshot_surface_fill.py --check` proves the frozen file still matches a fresh copy of live
+(`SNAPSHOT CURRENT`) or stops (`STALE SNAPSHOT`, never overwrites). Checklist reordered (RUN ORDER
+line; numbers kept as labels). Tests 22 + 7 green (+7 new check-mode cases).
+**Next:** the live run sheet `docs/handoffs/RUN_rebuild_trap_live.md` (same-code rebuild; hard stop
+after block I for the verdict; block J = the swap). Nothing was run on PA in this lane.
+**Before the NEXT live rebuild, also look at:** step 11 has the old step-9 shape (held item 9).
 
 ## UPDATE 2026-10-26 (later) — COPY DRY RUN PASSED; next = wire the restore onto live's step 9
 JP ran the whole RUN sheet on `~/rekey/old3.db` → `built3.db`: every figure = the pre-registered one
@@ -64,8 +77,15 @@ first evaluated there. Copy-first; dry run → verdict → apply, as always.
    read `gapfix (6, 0, 0)`; only the `bracket_id`-vs-live half is left (next fresh copy).
 4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it. Census still
    owed; not touched by the G1–G3 lane.
-6. **Live wiring decision (NEW, reviewer 10/26)** — what live serves between the step-9 drop (391,130)
-   and the restore (395,003). Needs a ruling before the restore's live refusal comes off.
+6. ~~**Live wiring decision**~~ — **RESOLVED 2026-10-26 (charter §9, Path A):** there is no gap; step 9
+   and the restore run on the copy before the swap. The live refusal stays.
+9. **Step 11 has the old step-9 shape (NEW, flagged in the wiring lane)** — the build never writes
+   `words.english_head_norm` (`build_words_from_abp.py:2154-2157`) and the finder only checks the column
+   exists (`views_lexicon.py:100-108`), so between the swap and step 11 the ABP English finder folds on
+   blank values. Not measured on PA. Same Step-0 question (any live-only input?) before the next
+   live rebuild; if none, it moves onto the copy too.
+10. **AI caches live in bible.db (RECORD)** — rows written between the copy and the swap are dropped by
+   the swap (they redraw on the next ask). The live sheet records the count before the swap.
 7. **Snapshot staleness (NEW)** — a restore that MOVES slots makes the frozen file stale for the next
    rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy. Gates the
    edition-upgrade lane (already gated on this landing).
@@ -79,6 +99,8 @@ deleted; disk 6.3G by `du` / ~7.8 GB by PA's meter — PA reads ~1.5 GB over `du
 `~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy AND the snapshot's "before" side — it
 stays past the nightly-backup condition until a re-freeze exists) · `~/bible.db.pre-xref-fix-20261024` ·
 `~/bible-db/tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv` + `.sha256` (git-ignored; a
-second copy in the local checkout; sha256 `d9435bde…` pinned in `restore_surface_fill.py` at `0c2e6cfb`). Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
+second copy in the local checkout; sha256 `d9435bde…` pinned in `restore_surface_fill.py` at `0c2e6cfb`) ·
+`~/abp_surface_fill_dryrun.csv` (the approved fill CSV — a G0 input of step 1a; added to this list in
+the wiring lane). Untracked on PA: `docs/tickets/greek_header_split.txt` (a dry-run
 receipt — leave, never commit). Note: `build_entity_binding.py` dry runs rewrite two TRACKED files
 (`scripts/pn_binding_hot.txt`, `pn_binding_numonly.txt`) — `git checkout --` them after a test run.
