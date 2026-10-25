@@ -16,16 +16,59 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
   own lane: its own census/gate cycle, NOT a leftover of lane (2)).** Parse
   `lexical_concordance.pdf` (JP's Downloads, 366 pp; parse locally like
   `parse_abp_analytical_lexicon.py`) and diff every non-name number's VERSE LIST against ours.
-  Scope notes (10/25): same Newport symbol font as the Lexicon (same letter map, accents lost) ·
-  FIVE columns per page · book abbreviation on a book's first reference only ("Gen 24:61 · Ex 2:5*
-  · Est 2:9 · 4:4,16") · ranges with a dash ("25–27") · `*` = 2+ occurrences in the verse (51/51 on
-  the 5 checked words) · Psalm references use our numbering · bare page numbers + running heads
-  sit between entries at page breaks · alphabetical by headword, not number order · ~8,200 entries,
-  7,470 numbers shared with the Lexicon · 474 name entries carry no verses. The ABP tab total counts
-  OCCURRENCES, so compare verse lists (+ `*` vs our ≥2), not totals. Needs ONE read-only PA export of
-  (number, verse, occurrences) from words. Census before parser. Controls ready: the 5 ordinary
-  words exact on live (1047 7/7 · 2241 2/1 · 303 15/14 · 4577 5/5 · 5411 26/24), 10.3 ἅβρα.
-  Then (d) English-Greek Index.
+  Scope notes (10/25, CORRECTED by the census below): same Newport symbol font as the Lexicon
+  (same letter map, accents lost) · **SEVEN columns per page** (not five — 322 of 364 pages show 7
+  evenly spaced column starts; fewer only where one huge entry fills a column) · book abbreviation
+  on a book's first reference only ("Gen 24:61 · Ex 2:5* · Est 2:9 · 4:4,16") · ranges with a dash
+  ("25–27"; can wrap across lines "35–" / "37"; stars can sit on range ends "6:4*–9*") · `*` = 2+
+  occurrences in the verse · Psalm references use our numbering · **Psalm superscriptions print as
+  `title` (or `tit`) = our verse 0** ("Ps 45:title", "145:tit,21"; 304 refs; also `title*` and
+  `title–9` forms) · bare page numbers + running heads sit between entries at page breaks ·
+  alphabetical by headword, not number order. The ABP tab total counts OCCURRENCES, so compare
+  verse lists (+ `*` vs our ≥2), not totals. Needs ONE read-only PA export of (number, verse,
+  occurrences) from words. Controls ready: the 5 ordinary words exact on live (1047 7/7 · 2241 2/1 ·
+  303 15/14 · 4577 5/5 · 5411 26/24), 10.3 ἅβρα. Then (d) English-Greek Index.
+  - **CENSUS DONE 2026-10-25 (read-only; scratch scan of `pdftotext -raw`, nothing in the repo;
+    8 sample pages 1/61/92/138/179/207/271/364 checked vs `abp_texts`).** Content = pages 1–364
+    (365 back title, 366 blank). **9,255 entries** (not ~8,200; 9,256 number keys) — checks: guide
+    words agree on 362/364 pages (2 = two-spelling headwords), no number on two headings, no Lexicon
+    number printed as a heading the scan missed. **Shared with the Lexicon 8,563** (not ~7,470) of its
+    8,581 · **Concordance-only 693** (475 name keys · 88 proper titles · 94 See/Included pointers ·
+    13 unused words · 4 other no-verse · 19 real entries with verses, incl. ζέω 2204 / ζήτησις 2214
+    that the Lexicon misprints 2004/2114) · **Lexicon-only 18** (17 appear nowhere in the
+    Concordance; 5485 is printed only in brackets, "5484 (5485)").
+  - **726 entries carry NO verse list:** 474 proper names (332 "Proper name." + 142 "Proper place
+    name.") · 88 "Proper title." (gentilics: Athenian, Egyptian…) · 50 "Far & wide." (very common
+    words: ἀλλά, δέ, ἐγώ, ἀπό…) · 49 "See NNNN" pointers · 45 "Included in NNNN" · 13 "unused word" ·
+    7 other (e.g. "Compound of 3588 &", χξϛ 5516 = 600, 60, 6). 8,529 entries have verses (245,245 verse refs,
+    18,457 starred).
+  - **Heading shapes the parser must handle:** headword + number on one line (`agioV 39 (40)`) ·
+    **number on its own line** (~900 headings: `diastr´wnnumi` / `1294.2`) · **number glued on**
+    (`ageneal´oghtoV35`) · **headword hyphen-split across lines** (`allotriep´ | is- | kopoV 244`;
+    also `tessarakonta- | d´ | uo 5062.1`) · headword split at the accent mark (`Aar´ | wn 2`) ·
+    variant endings (`epis´attw, -ssw` / `1977.2`; `suneufra´inw, | -omai 4909.1`) · **bracketed
+    second number** on 14 headings (`agioV 39 (40)`, `c´ariV, -in 5484 (5485)`, `ara 686, (687)`,
+    `ap´ecw 566 (567,568)`) · **two numbers on one heading: Levi `3017,18`** · single-letter
+    entries (`V 2193.2` ϛ, `x 3577.2`, `c 5462.1`, `o 3588`, `w 1510.3`) · εἰμί forms each their own
+    entry with a "Strong NNNN" mapping line (not a heading). Not headings: "See NNNN", "Included in
+    NNNN", "Strong NNNN", section letters ("A a", "Z z"; 24).
+  - **Symbols:** accent mark = byte 0xA2 (as in the Lexicon) · dash = byte 0xAD · **`+` = ϊ, `=` = ϋ**
+    (`Aca+a 882`, `pra=V 4239` πραΰς).
+  - **Book abbreviations — 67, all map to our 66 books:** Gen Ex→Exo Lev Nm→Num Dt→Deu Jos Jdg
+    Rt→Rth 1Sa 2Sa 1Ki 2Ki 1Ch 2Ch Ezr Neh Est Job Ps→Psa Pr→Pro Ecc So→Son Is→Isa Jer Lam Eze Dan
+    Hos Jl→Joe Am→Amo Ob→Oba Jon Mi→Mic Nah Hab Zep Hag Zec Mal · Mt→Mat Mk→Mar Lk→Luk Jn→Joh Act
+    (+ `Acts` once)→Act Rm→Rom 1Co 2Co Gal Eph Phi→Php Col 1Th 2Th 1Ti 2Ti Tit Plm→Phm Heb Js→Jas
+    1P→1Pe 2P→2Pe 1Jn 2Jn 3Jn Jde→Jud Rev (targets = `abp_texts` codes; `verses.book` codes to be
+    confirmed from the export's first rows).
+  - **39 print-error refs to hand-map:** 36 unreadable lines (14 `title*`/`title–N` · 6 bare-number
+    tails of See/Included notes · 6 punctuation slips `4*.12`, `32:19 21` · 4 letter l for 1 `7:l3`,
+    `Am 2:l0`, `Lk 5:l7`, `8:l,3,8` · 3 double commas · 3 footnote marks `Ezr 6:3ftnt`, `Ezr 9:1ftnt.`,
+    `Neh 13:31ft.`) + 3 abbreviation typos (`Jdg.`, `1SA`, `Gal,`). Also 2 Psalm refs past the
+    chapter's last verse (`Ps 77:41`, `118:136` — likely misprints).
+  - **Sample results:** Psalm numbering — whole book 14,550 of 14,561 Psalm refs find the number in
+    that verse of `abp_texts` (191 if shifted the LXX way); ranges 1,431/1,431 verses carry the
+    number; `*` 1,315 of 1,316 starred refs have the word 2+ times, no unstarred ref does —
+    **1 star exception: Ecc 7:22 καρδία (2588) starred, `abp_texts` has it once.**
 - OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
   the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
   one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
