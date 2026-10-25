@@ -182,6 +182,20 @@ the agreement check reads only number + form. Agreement at the new slot is there
 agreement at the old slot, which C1 already proves passes. Reason 5 can never be non-zero in a
 completed run; in particular the witness cannot catch a form put on the wrong occurrence of the
 same number (the key-2 silent-failure case, §3). Reported for the reviewer — no change made.
+**DRY RUN RESULT (JP ran on PA 2026-10-26, steps 1–11; build = same code as live's 8/5 ride —
+build line, split 80, PN-star pin and the whole repair-chain log match the ride's logs):**
+G0 PASS (4,411 / 538 = CSV) · V PASS (31,237) · C1 PASS (key 2 self-maps 4,411/4,411; reason 6 on
+identity = 354) · C2 PASS (3,836 of 3,858 covered forms fail on a neighbour's number).
+Placed **4,050** · unplaced **361** = reason 6 "key 1 several, incl. key 2's slot" **353** + reason 6
+"key 1 none" **7** + reason 7 key conflict **1**; reasons 1/2/5 = 0. Key 2 found exactly one slot for
+all 4,411, and **no placed row moved** (positions identical on this build). Lexicon: 3,667 pass ·
+383 uncovered among placed; uncovered group overall 389 (fill_unlisted 32 · normalize 357).
+Unplaced on name slots 9. G1 preview: placed inserts 3,528 of 3,873 → G1 cannot reach 395,003.
+Reading: the 353 are the identity floor (a verse repeating the same number + English — true on live
+itself), not rebuild movement; the 7 + 1 sit where the words-level compare found English changed
+(35 english diffs, all in the 16 lane-3 hand-repair verses — see TODO "lane-3 hand repairs not in the
+rebuild chain"; member check of the 8 owed). The motivating stress case (positions/English moving,
+the edition upgrade) was NOT exercised by this build — nothing moved.
 8b is left out of the dry-run sequence: it writes only `strongs_base` and name tables
 (`correct_xref_vs_binding.py:259`, `restore_frozen_pn.py:113`, `retire_hebrew_identity.py:295`),
 none of which the dry run reads. Step 8 (swap + deploy) is never part of it.

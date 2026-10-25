@@ -62,6 +62,15 @@ parser reference notes in its appendix). No open writes.
     the builder if a rebuild recurs).
   - Health-check `abp_surface` floor is still 389,244; raise it to 395,003 once the fill step
     exists (the 8/23 plan to re-declare it at 391,130 is superseded by the fill).
+- OPEN — **lane-3 hand repairs are not in the rebuild chain — a words rebuild silently reverts them.**
+  `scripts/lane3_star_fixes.json` (9 verses, 23 ops) + `scripts/lane3_star_fixes2.json` (7 verses,
+  17 ops), applied on live by `fix_lane3_star_merges.py` (its docstring says it "joins the post-rebuild
+  repair chain"), are called by neither `finish_rebuild.sh` nor `/rebuild-words`. Proven 2026-10-26:
+  the re-key test build vs live differs on exactly 35 english cells, all in those 16 verses (Gen 46:26,
+  Lev 24:10, Num 25:8/14/15, 1Sa 14:50, 1Sa 24:5, 2Sa 14:4, 1Ch 21:9, 2Ch 14:12, Isa 30:31, Jer 50:16,
+  Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it
+  merged back). Must be decided before any rebuild swap. (Also 17 english_head + 38 greek_pos diffs in
+  the same compare — attribute by member when this is taken up.)
 - OPEN — **rebuild order: the name-header build reads abp_surface before step 9 rebuilds it.**
   `/rebuild-words` 8b.3 runs `build_pn_greek_identity.py`, which takes name-slot forms from
   `abp_surface` joined on (verse_id, position) (`build_pn_greek_identity.py:292-305`, `:374-378`);
