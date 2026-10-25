@@ -877,7 +877,9 @@ Open tickets:
   would read as falsely well-corroborated. No written copy of the rule itself was found in the
   repo or memory either. Before this can be built: turn both checks into runnable fixtures
   and wire them into CI + pre-commit. **Own session (JP 2026-10-25), fresh handoff.**
-  DECIDE FIRST — which layer the fixtures cover. Cards come from TWO layers: (1) the AI labeler
+  RULED (JP 2026-10-25): BOTH layers — layer (2) gets a normal runnable test (CI + pre-commit);
+  layer (1) gets a by-hand re-label check on the frozen samples, run before ANY clustering change.
+  Background: cards come from TWO layers: (1) the AI labeler
   (group_news.py, Haiku) names each article's event — the June merge/split checks were testing
   THIS layer; (2) views_news `_group` puts same-label rows on one card, split by date —
   deterministic, easy to test from frozen labeled rows. A frozen-rows test covers only (2); (1)
