@@ -18,12 +18,12 @@ Inputs (all explicit):
   --lexicon  abp_helps/analytical_lexicon.tsv
   --out      the per-slot report (TSV; must not be a database)
 
-Keys (JP ruling 2026-10-26):
+Keys (JP ruling 2026-10-25):
   key 2 (primary)  verse_id + full strongs + ordinal (k-th slot with that number in the verse)
   key 1 (check)    verse_id + full strongs + english (exact bytes)
   placed = key 2 finds one slot and key 1 confirms it — agree-strong (key 1 finds exactly that
   slot) or agree-weak (key 1 finds several slots, key 2's among them: the verse repeats the same
-  number + English; JP ruling 2026-10-26) — and, where the row's class is Lexicon-backed, number +
+  number + English; JP ruling 2026-10-25) — and, where the row's class is Lexicon-backed, number +
   form agree at that slot (the apply's own rule; see the charter §6 on why this cannot differ from
   the old slot under these keys).
 
@@ -213,7 +213,7 @@ def decide(k2, k1):
     if s1 == "none":
         return 6, "key 1 none"
     if s1 == "amb":
-        if p2 in p1:                    # JP ruling 2026-10-26: counts as agreement, tagged weak
+        if p2 in p1:                    # JP ruling 2026-10-25: counts as agreement, tagged weak
             return 0, "agree-weak"
         return 6, "key 1 several, not key 2's slot"
     if p1 != p2:

@@ -1,5 +1,5 @@
 """Locked tests for scripts/lane3_rebuild_step.py's matcher (rebuild step 8b.2a,
-CHARTER_rebuild_trap_fix.md G4; JP rulings 2026-10-26). Every rule fires on a planted output, using
+CHARTER_rebuild_trap_fix.md G4; JP rulings 2026-10-25). Every rule fires on a planted output, using
 the REAL gapfix slots read from scripts/lane3_star_gapfix.json:
 
   contiguity FAIL from fixes on a gapfix slot, gapfix then PASS   -> pass

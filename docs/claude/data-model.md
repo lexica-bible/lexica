@@ -37,7 +37,7 @@ STAYS CORRECT (prose groups by bid across gaps) — a prose check alone will not
 Any hand edit that brackets across a blank slot marks the blank too. THE
 classifier is `scripts/bracket_contiguity.py` (one copy — imported by
 fix_lane3_star_merges.py AND check_wordpos_prereg.py; never re-implement it).
-**Hand repairs on live must ride the rebuild (standing, 2026-10-26).** A words rebuild re-derives
+**Hand repairs on live must ride the rebuild (standing, 2026-10-25).** A words rebuild re-derives
 every row from source, so any edit made directly on live is REVERTED unless a frozen per-row file
 re-applies it. The lane-3 repairs (three files: fixes → gapfix → fixes2) re-land at
 `/rebuild-words` step **8b.2a** (`scripts/lane3_rebuild_step.py` — after 8b.2, because fixes2 is
@@ -126,7 +126,7 @@ onto neighbour slots, 357 NBSP → plain space; record `docs/handoffs/CENSUS_abp
 It is re-landed by `scripts/restore_surface_fill.py` at step 9a from the frozen snapshot
 (checked current at step 1a, `snapshot_surface_fill.py --check`). **Step 9, 9a and the 9b floor all
 run on the rebuilt COPY, before the swap — never on live** (step 9 reads nothing that exists only on
-live; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9, 2026-10-26). Never re-run the one-shot
+live; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9, 2026-10-25). Never re-run the one-shot
 `apply_abp_surface_fill.py`.
 Characterizer = `scripts/audit_surface_coverage.py`
 (read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
@@ -601,7 +601,7 @@ app.py matches.
   numbers the name (14,850 lemma-only + always-'*' rows). `strongs` stays bare `'*'` on
   backfills. EXCEPTION (C3-Q1, machine-visible): the 'none'-class rows KEEP their Hebrew
   number on the word until the gentilic/people-class Greek backfill candidate lands. **Two bases
-  are live at once (2026-10-26):** the identity table carries the 9/6 header-landing classes ('none'
+  are live at once (2026-10-25):** the identity table carries the 9/6 header-landing classes ('none'
   1,977), but live's `pn_hebrew_xref` classes and PN `strongs_base` were last written at the 8/6
   retirement on the 8/5 classes ('none' 2,454) — retirement was not re-run after 9/6. JP ruled the
   9/6 basis correct: the next rebuild's 8b.2 rewrites 519 xref rows (class only) + 501 word slots, an

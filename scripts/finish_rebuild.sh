@@ -96,7 +96,7 @@ else
 fi
 
 # (The lane-3 hand repairs are NOT here: they need 8b.2's name numbers, so they run as
-#  /rebuild-words step 8b.2a — scripts/lane3_rebuild_step.py. JP ruling 2026-10-26.)
+#  /rebuild-words step 8b.2a — scripts/lane3_rebuild_step.py. JP ruling 2026-10-25.)
 
 echo
 if [ "${#PROBLEMS[@]}" -ne 0 ]; then

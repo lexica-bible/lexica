@@ -37,7 +37,7 @@ old word positions.
 The snapshot holds ABP text (printed Greek forms + ABP English): it stays OUT of the public repo
 (.gitignore) — PA keeps it in the fixture folder; a second copy goes to the local fixture folder.
 
---check  (the /rebuild-words step 1a mode, added 2026-10-26, charter §9): the frozen file already
+--check  (the /rebuild-words step 1a mode, added 2026-10-25, charter §9): the frozen file already
 exists — verify it, write NOTHING. Its .sha256 must match, it must be the snapshot pinned in
 restore_surface_fill.py (SNAPSHOT_SHA256), and re-deriving the rows from --src (a fresh copy of live)
 must give the frozen file BYTE FOR BYTE. Pass -> "SNAPSHOT CURRENT". Anything else -> STOPPED: STALE

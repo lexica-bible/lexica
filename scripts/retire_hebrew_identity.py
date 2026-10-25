@@ -88,16 +88,16 @@ for _i, _a in enumerate(sys.argv):
 # Supersedes the 2026-08-01 declaration (abp-tag 3,518 · tipnr 10,216 ·
 # lemma-only 12,066 · surface 4,326 · none 2,353, total 32,479; receipt
 # docs/tickets/RECLASS_catchup_declaration.md).
-# RE-DECLARED 2026-10-26 (JP ruling, rebuild-trap G4 test, CHARTER_rebuild_trap_fix.md):
+# RE-DECLARED 2026-10-25 (JP ruling, rebuild-trap G4 test, CHARTER_rebuild_trap_fix.md):
 # the 2026-09-06 Greek-header landing rewrote pn_greek_identity's classes on live; the
 # 8/5 split above (abp-tag 3,671 · tipnr 10,236 · lemma-only 12,166 · surface 3,951 ·
 # none 2,454) was never re-declared after it, so a fresh rebuild copy of live HALTED here.
-# Receipt, two JP-run PA reads 2026-10-26 (member level, same 32,478 rows):
+# Receipt, two JP-run PA reads 2026-10-25 (member level, same 32,478 rows):
 #   A  9/6 bracket — ~/db_backups/bible_formlane.db.20260906-153935.db (live just before the
 #      landing: the 8/5 split) vs bible_hdrlane.db.20260906-153935.db (what landed): 940 rows
 #      changed class, 0 rows on one side only — lemma-only->none 21 · lemma-only->surface 421 ·
 #      none->lemma-only 458 · none->surface 40; nets lemma-only +16, none -477, surface +461.
-#   B  hdrlane vs live (copy of 10/26): source / greek_strongs / greek_lemma changed 0 / 0 / 0;
+#   B  hdrlane vs live (copy of 10/25): source / greek_strongs / greek_lemma changed 0 / 0 / 0;
 #      hebrew_base 341 = the 2026-10-24 xref correction (319 SWAP + 22 REMOVE), not a class.
 EXPECT = {"abp-tag": 3671, "tipnr": 10236, "lemma-only": 12182,
           "surface": 4412, "none": 1977}

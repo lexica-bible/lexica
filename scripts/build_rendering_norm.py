@@ -99,7 +99,7 @@ def main():
 
     conn = sqlite3.connect(args.db)
     conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, never WAL (CLAUDE.md, 2026-07-05)
-    conn.execute("PRAGMA busy_timeout=60000")    # wait out site writes (10/26: 5 s default hit "locked")
+    conn.execute("PRAGMA busy_timeout=60000")    # wait out site writes (10/25: 5 s default hit "locked")
     try:
         if args.stats:
             print("── Rendering-norm stats ──")

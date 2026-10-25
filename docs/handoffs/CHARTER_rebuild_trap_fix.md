@@ -1,17 +1,17 @@
 # CHARTER — rebuild-trap fix (the abp_surface fill must survive a words rebuild)
 
-2026-10-26. Docs only: no script, no PA command. Inputs: `CENSUS_rebuild_trap.md` (commits
+2026-10-25. Docs only: no script, no PA command. Inputs: `CENSUS_rebuild_trap.md` (commits
 `a7a86e44` + `8a7b5040`, PA reads A–E recorded there). Gates the English-line edition upgrade
 (`TODO.md` "edition upgrade to the app's English").
 
-**JP ruling (2026-10-26, quoted):** "the trap is DROP at build_abp_surface.py:297 plus a health
+**JP ruling (2026-10-25, quoted):** "the trap is DROP at build_abp_surface.py:297 plus a health
 floor below the pre-fill count. The fix must (a) snapshot the fill as the 4,411-row diff before
 step 9 and re-apply after, (b) re-key it across position moves, (c) raise the floor above 395,003.
 Settle first where step 9 runs (copy vs live)." 8b.3 ordering bug: its own TODO item, not here.
 
 ---
 ## §1 Ruling: where step 9 runs — on the LIVE file, after the swap
-**SUPERSEDED 2026-10-26 by §9:** step 9 has no live-only input, so it now runs on the rebuilt COPY
+**SUPERSEDED 2026-10-25 by §9:** step 9 has no live-only input, so it now runs on the rebuilt COPY
 before the swap (Path A). This section stays as the record of the first placement.
 
 **What the three texts said (before this charter):**
@@ -50,7 +50,7 @@ wants it, all three texts change together, by ruling — not by drift.
 **Snapshot = the 4,411-row diff**: live `abp_surface` EXCEPT the pre-fill copy
 `~/bible.db.pre-surface-fill-20261025` (on PA, 442,687,488 bytes, census §5 E).
 - **G0 (precondition, before anything else):** the diff reads **4,411** live-not-in-copy and **538**
-  copy-not-in-live — the 10/26 reads (census §5 results Q5). Any other pair = STOP: something
+  copy-not-in-live — the 10/25 reads (census §5 results Q5). Any other pair = STOP: something
   besides the fill has changed the table since 10/25, and the diff is no longer "the fill".
 - The snapshot must also carry, per fill slot, the OLD `words` row it was keyed to (at least
   verse_id, position, strongs, english, english_head, is_pn) — re-keying (part b) needs it, and after
@@ -80,7 +80,7 @@ wants it, all three texts change together, by ruling — not by drift.
 5. number + form agreement fails at the new slot (see the second-derivation check below);
 6. cross-check found no slot, or more than one (key 1 empty/ambiguous while key 2 found one slot);
 7. **key conflict** — key 2 and key 1 each found one slot, and they are different slots
-   (added by JP ruling 2026-10-26, §3).
+   (added by JP ruling 2026-10-25, §3).
 Placed + unplaced = 4,411, itemized by class and by reason; the unplaced list is a file, member by
 member. Plus, on every placed row:
 - **Second derivation:** every Lexicon-backed row (the classes in
@@ -92,7 +92,7 @@ member. Plus, on every placed row:
   rule, `:92-100`, `:230-236`); a following `build_abp_translit.py` run changes 0 rows.
 
 ### Part (c) — the floor
-**G3 — health_check floor = 395,003 exactly** (JP ruling 2026-10-26: "Floor = 395,003 exactly (G3
+**G3 — health_check floor = 395,003 exactly** (JP ruling 2026-10-25: "Floor = 395,003 exactly (G3
 as written)" — the "above" wording below is answered). Control, red first: the check **fails on the pre-fill copy**
 (391,130 → shortfall 3,873) and **passes on live** (395,003), both shown before the floor change is
 trusted. It must also fail on a rebuilt table that lacks the fill (that is the trap it exists for).
@@ -101,8 +101,8 @@ BELOW the floor (`scripts/health_check.py:138-140`), so a floor set strictly abo
 live today. This charter reads it as "raise it to 395,003" — the lowest floor that still catches the
 loss. Confirm or correct.
 
-### Part (d) — the lane-3 hand repairs ride the rebuild (JP ruling 2026-10-26, promoted from TODO)
-**MOVED 2026-10-26 (JP ruling, after the G4 test's step 1):** the step is `/rebuild-words` **8b.2a**,
+### Part (d) — the lane-3 hand repairs ride the rebuild (JP ruling 2026-10-25, promoted from TODO)
+**MOVED 2026-10-25 (JP ruling, after the G4 test's step 1):** the step is `/rebuild-words` **8b.2a**,
 `scripts/lane3_rebuild_step.py <db>` — after 8b.2, before 8b.3 — and is no longer in
 `finish_rebuild.sh`. Why: the dry run on the test build SKIPPED Mat 27:26 (`strongs mismatch pos 7
 (* != G2424)`); live's `G2424` there comes from the identity table (`G2424 / tipnr`) and reaches the
@@ -110,7 +110,7 @@ word only in 8b.2, which runs after finish_rebuild. All 16 other repaired name s
 with no Greek number in the identity table, and their identity rows (lemma-only / none / surface) were
 built after the repairs — so 8b.3 must see the repaired words. **Bracket rule (JP ruling):** no
 pinned FAIL lines — a contiguity FAIL from the fixes file is tolerated only on a slot listed in
-`lane3_star_gapfix.json` (same verse, position and bracket; read at run time; the 10/26 dry run's 4
+`lane3_star_gapfix.json` (same verse, position and bracket; read at run time; the 10/25 dry run's 4
 FAIL verses are exactly gapfix's 5 slots); gapfix must then PASS on every such verse; any other FAIL
 fails; fixes2 strict. Matcher = `judge()` in the step script, locked by
 `tests/test_lane3_rebuild_step.py` (12 cases). Text below is the first placement, kept as the record.
@@ -118,7 +118,7 @@ fails; fixes2 strict. Matcher = `judge()` in the step script, locked by
 **G4 (first placement, superseded above) — `finish_rebuild.sh` step 8 runs `fix_lane3_star_merges.py` on `$1` for ALL THREE frozen
 files, in the ledger's order** (`docs/audits/LANE3_b2_dispositions.md`): `lane3_star_fixes.json`
 (9 verses / 23 ops) → `lane3_star_gapfix.json` (4 / 5 — bracket marks only, needs fixes' brackets) →
-`lane3_star_fixes2.json` (7 / 17). **Correction 10/26:** the census and first draft named two files;
+`lane3_star_fixes2.json` (7 / 17). **Correction 10/25:** the census and first draft named two files;
 the gapfix file was missed because it touches only `bracket_id`, a column the per-column compare did
 not check. Each file passes only on the script's own count line with N pinned (9, 4, 7): all N
 patched OR all N already applied, 0 skipped, no per-verse render/contiguity FAIL (JP ruling: a mix
@@ -127,7 +127,7 @@ because its SKIP line cannot tell "already fixed" from "state changed"; locked b
 `tests/test_lane3_already_applied.py`; matcher checked on 9 fake outputs. Then step 10 vs live must
 read **english 0**, plus greek_pos 0, english_head 0 and bracket_id 0 (name-slot `strongs_base`
 excepted while 8b is skipped) — the first two files' edits are exactly the 35 english + 38 greek_pos
-cells of the 10/26 compare. Committed 2026-10-26 after JP's read.
+cells of the 10/25 compare. Committed 2026-10-25 after JP's read.
 **Predicted limit (unverified, for the re-run test):** a SECOND full chain run re-runs `import_tipnr`
 first, which numbers every `'*'` slot that has English (`import_tipnr.py:381-387`) — including the
 name slots step 8 just filled. Any it resolves change `strongs_base`, so step 8's ALREADY check (pinned
@@ -135,7 +135,7 @@ name slots step 8 just filled. Any it resolves change `strongs_base`, so step 8'
 import_tipnr — the order the live repair had). Re-running step 8 ALONE passes via already-applied.
 
 ---
-## §3 The re-key method — RULED 2026-10-26
+## §3 The re-key method — RULED 2026-10-25
 
 **JP ruling (quoted):** "key 2 (verse_id + ordinal of strongs within verse) primary; key 1
 (verse_id + strongs + english) runs alongside as cross-check. Both agree → placed. Disagree →
@@ -151,14 +151,14 @@ so under this ruling every such slot is unplaced. On a same-code rebuild that sh
 English-line edition upgrade it is the 29% case. The dry run reports reason 6 by itself so this is
 measured, not argued.
 
-**Second ruling, after the dry run (JP 2026-10-26):** "'key 1 several, incl. key 2's slot' =
+**Second ruling, after the dry run (JP 2026-10-25):** "'key 1 several, incl. key 2's slot' =
 agreement. Tag as agree-weak in the TSV and summary." Placed = agree-strong (key 1 finds exactly key
 2's slot) or agree-weak (key 1 finds several, key 2's among them). Reason 6 now = key 1 none, or
 several without key 2's slot. Expected on the same copies: placed 4,403 (4,050 strong + 353 weak) /
 unplaced 8.
 
-**What a same-code rebuild moves (JP ruling 2026-10-26, recorded):** on a rebuild from the same code
-and inputs as live, **zero fill slots move** (10/26 dry run: key 2 found every one of the 4,411 at its
+**What a same-code rebuild moves (JP ruling 2026-10-25, recorded):** on a rebuild from the same code
+and inputs as live, **zero fill slots move** (10/25 dry run: key 2 found every one of the 4,411 at its
 old position). So for the trap fix alone the payload is **preserve + re-apply**; the re-key keys are
 exercised for real only by a rebuild that moves positions or English — the edition upgrade.
 
@@ -213,7 +213,7 @@ the reader; (iii) everything K2 misses as "no slot" stays unplaced (honest, not 
 before any write.
 
 ---
-## §6 The re-key dry run (built 2026-10-26; PA sequence handed to JP, NOT yet cleared)
+## §6 The re-key dry run (built 2026-10-25; PA sequence handed to JP, NOT yet cleared)
 Script `scripts/dryrun_rekey_fill.py`, locked by `tests/test_rekey_dryrun.py` (both test lists).
 Reads `--old` (a copy of live taken before the build: fill + old positions), `--prefill`, `--built`
 (build + finish_rebuild.sh, step 9 NOT run), the approved fill CSV and the Lexicon; opens every
@@ -228,7 +228,7 @@ the agreement check reads only number + form. Agreement at the new slot is there
 agreement at the old slot, which C1 already proves passes. Reason 5 can never be non-zero in a
 completed run; in particular the witness cannot catch a form put on the wrong occurrence of the
 same number (the key-2 silent-failure case, §3). Reported for the reviewer — no change made.
-**DRY RUN RESULT (JP ran on PA 2026-10-26, steps 1–11; build = same code as live's 8/5 ride —
+**DRY RUN RESULT (JP ran on PA 2026-10-25, steps 1–11; build = same code as live's 8/5 ride —
 build line, split 80, PN-star pin and the whole repair-chain log match the ride's logs):**
 G0 PASS (4,411 / 538 = CSV) · V PASS (31,237) · C1 PASS (key 2 self-maps 4,411/4,411; reason 6 on
 identity = 354) · C2 PASS (3,836 of 3,858 covered forms fail on a neighbour's number).
@@ -242,7 +242,7 @@ itself), not rebuild movement; the 7 + 1 sit where the words-level compare found
 (35 english diffs, all in the 16 lane-3 hand-repair verses — see TODO "lane-3 hand repairs not in the
 rebuild chain"; member check of the 8 owed). The motivating stress case (positions/English moving,
 the edition upgrade) was NOT exercised by this build — nothing moved.
-**RE-RUN under the agree-weak ruling (JP, PA, 2026-10-26 06:51, same copies):** every expected figure
+**RE-RUN under the agree-weak ruling (JP, PA, 2026-10-25 06:51, same copies):** every expected figure
 exact — placed **4,403** (4,050 strong + 353 weak) · unplaced **8** (reason 6 key 1 none 7 · reason 7
 1) · C1 identity 0 unplaced, weak floor 354 · placed inserts 3,865 of 3,873 · name slots unplaced 0.
 **All 8 are lane-3 repair slots** (each = one op: live English = the op's new_eng, built = its
@@ -253,7 +253,7 @@ step in the chain, the same dry run reads placed 4,411 · unplaced 0 · placed i
 (`correct_xref_vs_binding.py:259`, `restore_frozen_pn.py:113`, `retire_hebrew_identity.py:295`),
 none of which the dry run reads. Step 8 (swap + deploy) is never part of it.
 
-## §7 G4 test on PA (2026-10-26, fresh copy old2 → built2, full 8b) — step 10 record
+## §7 G4 test on PA (2026-10-25, fresh copy old2 → built2, full 8b) — step 10 record
 Ran: build (log identical to the first test build) → finish_rebuild (log identical, timestamps aside) →
 8b.0 (CONTROL OK; SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1; applied 341) → 8b.1 (after re-declaring
 6→8: restored 8, 0 left) → 8b.2 (after re-declaring the class split: 26,317 rewrites, xref 32,478,
@@ -266,7 +266,7 @@ GLOB 0) → **8b.2a LANE-3 STEP: PASS** (9/4/7 patched; re-run 0/9 · 0/4 · 0/7
 - **`pn_hebrew_xref` 519 + words `strongs_base` 501 — see G5.**
 - words `bracket_id` 2 — 2Sa 18:31 p7 + 18:32 p15, the 8/7 wordpos-lane hand repair (interior-blank
   bracket marks, `TICKET_wordpos_binding.md:261-279`), held by no frozen file → added to
-  `lane3_star_gapfix.json` (JP ruling 2026-10-26): gapfix pin 4 → 6 verses; both slots G3588, blank,
+  `lane3_star_gapfix.json` (JP ruling 2026-10-25): gapfix pin 4 → 6 verses; both slots G3588, blank,
   bracket 2 spanning 6-8 / 14-16 (JP-run read).
 **Step 11 (re-key dry run on built2): placed 4,411 · unplaced 0 · inserts 3,873 of 3,873**, all four
 controls PASS (agree-strong 4,057 · agree-weak 354 = the identity floor). With G4 in the chain, every
@@ -274,7 +274,7 @@ fill row re-keys on a same-code rebuild. Verification = a fresh copy later,
   NOT a re-run on built2 (its gapfix verses are already patched, so a mixed result is expected there).
 
 ### G5 — RECORD, NOT A BLOCK: expect 519 xref / 501 strongs_base changes at swap
-**JP ruling 2026-10-26: the 9/6 class basis is correct; live's 501 slots are stale.** A rebuild's 8b.2
+**JP ruling 2026-10-25: the 9/6 class basis is correct; live's 501 slots are stale.** A rebuild's 8b.2
 (re)writes them from the 9/6 classes — that is the fix, not a regression. At any rebuild swap, expect vs
 live: `pn_hebrew_xref` **519** rows changed (class only: lemma-only→none 21 · none→lemma-only 498;
 hebrew_base unchanged) and proper-noun `words.strongs_base` **501** (`H`→`*` 492 · `*`→`H` 9). Record the
@@ -292,7 +292,7 @@ lemma-only→none 21 + none→lemma-only 498 = 519 rows, hebrew_base identical o
 serving) or the 9/6 classes (today's identity table).** Members: rerun the step-10 read B/C on any
 rebuild copy. TODO carries the same item.
 
-## §8 G1–G3 BUILT (2026-10-26) — copy dry run handed to JP, NOT yet run
+## §8 G1–G3 BUILT (2026-10-25) — copy dry run handed to JP, NOT yet run
 Scripts: `scripts/snapshot_surface_fill.py` (part a, before step 9) · `scripts/restore_surface_fill.py`
 (parts a+b + G1, after step 9) · `scripts/health_check.py` floor **389,244 → 395,003** (G3). Locked by
 `tests/test_surface_fill_restore.py` (14 cases, both test lists): every reason and gate fires on a
@@ -324,7 +324,7 @@ ONE copy both new scripts call (its 7 tests unchanged, all pass). PA sequence + 
 Unchanged: reason 5 still cannot fire under these keys (§6 finding). Translit = romanize(form, lemma
 of the NEW slot), then the build_abp_translit rule must change 0 rows.
 
-**Run receipts (JP, PA, 2026-10-26; expected | actual):**
+**Run receipts (JP, PA, 2026-10-25; expected | actual):**
 - A: HEAD `f266824a` · `key2_at` 1 · disk 7.6G (< 8.0G) · old3 copy `ok` · `delete` · 395003 — all match.
 - B snapshot: G0 PASS (4,411 = 3,873 + 538 = the CSV) · O PASS · R PASS · rows 4,411 | 4,411 ·
   inserts/updates 3,873 / 538 | 3,873 / 538 · distinct 4,411 | 4,411 · name slots — | 22 · repeated
@@ -360,7 +360,7 @@ of the NEW slot), then the build_abp_translit rule must change 0 rows.
 **VERDICT (CC, every line read against the pre-registered figure): G1, G2, G3 PASS on a same-code
 rebuild copy; nothing written outside `~/rekey/built3.db` (+ the snapshot files).** Not yet done:
 wiring the restore onto live's step 9 (it refuses live) — its own change, next.
-**REVIEWER VERDICT (pasted by JP, 2026-10-26, quoted):** "Dry run accepted. Every figure matched
+**REVIEWER VERDICT (pasted by JP, 2026-10-25, quoted):** "Dry run accepted. Every figure matched
 pre-registration; G1/G1a/G1b/G3 all proven red-then-green on a fresh copy; `0|0` end-to-end oracle;
 G5 recorded and non-blocking. Lane G1–G3 is closed at 1062917f." New held items it logged: the live
 wiring decision (what live serves between the step-9 drop to 391,130 and the restore to 395,003 —
@@ -375,8 +375,8 @@ restored table — and that snapshot's "before" side can no longer be the 10/25 
 step-9 output of that rebuild would be). On a same-code rebuild nothing moves and the frozen file stays
 valid as is.
 
-## §9 Wiring onto the live procedure (2026-10-26) — PATH A: step 9 + restore on the copy, before the swap
-**JP ruling (2026-10-26, quoted from the lane brief):** "a live blip during the rebuild is acceptable.
+## §9 Wiring onto the live procedure (2026-10-25) — PATH A: step 9 + restore on the copy, before the swap
+**JP ruling (2026-10-25, quoted from the lane brief):** "a live blip during the rebuild is acceptable.
 Path is chosen by one fact you report, then you build without a further ruling" — the fact: does step
 9 read anything that exists only on live bible.db? None → Path A (reorder; step 9 + restore on the
 built copy; the restore keeps its live refusal). Exists → Path B (swap, then step 9 + restore on live
@@ -391,7 +391,7 @@ or a separate file named on the command line (`--bh ~/bible-db/bh_scrape.db` —
 whole db, `build_words_from_abp.py:2054-2058`). No step-9 script hard-codes the live path, and the
 modules they import open nothing at import time (`lxx_align`; `build_pn_greek_identity` via
 `backfill_pn_surface.py:44` — its `DB`/`BH` defaults are strings used only in its own `main()`, which
-does not run on import). Proven in practice: the 10/26 copy dry run ran step 9 on `~/rekey/built3.db`
+does not run on import). Proven in practice: the 10/25 copy dry run ran step 9 on `~/rekey/built3.db`
 and got 391,130 = G1a (§8 E). History of the placement: step 9 was appended after the swap step when
 `abp_surface` was new (`6e815b89`, 2026-06-15 — "RE-RUN … (like import_tipnr.py)", no file named, no
 reason given); the build's closing text put the surface builder + translit on the COPY before the swap
@@ -399,7 +399,7 @@ reason given); the build's closing text put the surface builder + translit on th
 (`5fe687d4`) settled on live because that is what the 7/16 and 8/23 runs did — practice, not a
 dependency. The one ordering constraint is internal to the copy: step 9 must follow 8b (translit reads
 `words.strongs_base`, which 8b.2 rewrites; the PN backfill reads `is_pn` + English, which 8b.2a
-repairs) — the order the 10/26 dry run already used.
+repairs) — the order the 10/25 dry run already used.
 
 **Path taken: A.** New run order (`/rebuild-words` RUN ORDER line): 0 → 1 → **1a snapshot check** → 2
 build → 3 finish → 8b.0–8b.3 (incl. 8b.2a) → **9 surface rebuild → 9a restore → 9b floor + oracle, all
@@ -428,7 +428,7 @@ swap replaces one 395,003-row table with another. Step numbers kept as labels (o
   Existing 15 + `test_rekey_dryrun.py` 7 unchanged and green; 22 + 7 total.
 
 **Live RUN sheet:** `docs/handoffs/RUN_rebuild_trap_live.md` — same-code rebuild, every figure marked
-PRE-REG (measured 10/26), CHECKLIST (checklist figure, never measured on a rebuilt copy: step 6
+PRE-REG (measured 10/25), CHECKLIST (checklist figure, never measured on a rebuilt copy: step 6
 audits, full health report) or FIRST READ (8b.3 gates, word-key compare). Pre-registered from the
 dry runs: snapshot CURRENT `d9435bde…` · G1a 391,130 → G1 395,003 · placed 4,411 / unplaced 0
 (4,057 strong · 354 weak) · floor red 3,873 → green 0 · restored table vs pre-swap live `0|0` · G5
@@ -450,7 +450,14 @@ the only live write.
 - `~/abp_surface_fill_dryrun.csv` is a G0 input of step 1a and was missing from the PA keep list —
   added.
 
-## §10 LIVE REBUILD — RUN (JP, PA, 2026-10-26 16:37–18:12) — SWAPPED, every figure matched or ruled
+## §10 LIVE REBUILD — RUN (JP, PA, 2026-10-25 16:37–18:12) — SWAPPED, every figure matched or ruled
+**DATE CORRECTION (JP ruling, 2026-10-25):** every entry of this lane first written as **10/26** (the
+copy runs, rulings, the swap, the live proof, the post-swap tail receipts) happened on **2026-10-25** —
+PA's access log and both clocks read 10/25. Re-dated across this charter, HANDOFF, both RUN sheets,
+CENSUS, `/rebuild-words`, TODO/TODO_ARCHIVE, data-model/ops, script comments and CC memory; commits
+made before the correction keep "10/26" in their messages (git history is not rewritten). The
+**10/25 fill** (`abp_surface_fill_20261025`, `~/bible.db.pre-surface-fill-20261025`) was always
+correct and is unchanged — the fill and the whole trap-fix lane are the same day.
 Sheet `RUN_rebuild_trap_live.md`, HEAD `a1998f0e`. Receipts (expected | actual = match unless noted):
 - **A / A2:** inputs present, snapshot `OK` · dashboard 7.8 / 10 GB · live copy `ok` · `delete` · 395,003.
 - **B (1a, first PA run of `--check`):** G0 4,411 / 538 · O · C byte-identical · sha256 `d9435bde…` both
@@ -507,7 +514,7 @@ health_check busy wait · the build's closing text calls its source "live" when 
 - "Step 10: diff script output vs current static/src/00b-two-ending.jsx before any paste; identical → no
   paste/deploy, record "unchanged"."
 
-**Why the exception:** the 10/26 run swapped `rebuilt.db` into place before steps 10/11 ran, so there
+**Why the exception:** the 10/25 run swapped `rebuilt.db` into place before steps 10/11 ran, so there
 is no post-8b copy left to run them on (`~/rekey/pre_rebuild.db` is the OLD words). This one time, step
 11 writes live and step 10 reads live. Census basis (CC, repo-only): step 11's value per row comes only
 from that row's `english_head` through `number_fold.normalize`; the build keeps the column but never
@@ -566,7 +573,7 @@ read-only): **`354946` — expected 354,946, MATCH** (no quote-only heads). **St
   80 / 208 — CC). **Step 10 CLOSED.** Consequence for the loop lane (JP ruling 3): there is no step-10
   deploy to ride, so a loop fix deploys on its own.
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
-`busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
+`busy_timeout=60000` (was the 5 s default — the 10/25 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
 Receipts (step 11 count, step 7 spot-checks, step 10 diff): _to be recorded here._
 

@@ -51,10 +51,10 @@ parser reference notes in its appendix). No open writes.
   §5. The helper audit's controls were refreshed the same day (cured A exhibits retired).
   **Precondition: PA row read of all 628** (the 20-verse read was a sample) **+ a detector for the
   454 both-inside-bracket shape** (none exists) before any write. Plus the 10 residue verses above.
-- OPEN — **after the 2026-10-26 live rebuild: step 11 CLOSED (354,946 normed, finder check PASS) ·
+- OPEN — **after the 2026-10-25 live rebuild: step 11 CLOSED (354,946 normed, finder check PASS) ·
   step 10 CLOSED (IDENTICAL, unchanged) · step 7: 3 of 4 pass on data, 1Ch 13:10 Chip-view look
   pending JP (receipts charter §10a).** Original note: The rebuild
-  swapped live at 18:06 (rebuild-trap fix proven — TODO_ARCHIVE 2026-10-26; receipts charter §10;
+  swapped live at 18:06 (rebuild-trap fix proven — TODO_ARCHIVE 2026-10-25; receipts charter §10;
   rollback `~/bible-db/bible_pre_trapwire_swap.db`). Step 7 = served spot-checks (Eze 31:9, 1Chr 1:1,
   1Ch 13:10; also Jer 51:41 Σεσάκ). Step 10 = `build_two_ending.py` paste + local app.js rebuild.
   **Step 11 = `build_rendering_norm.py` — live-relevant:** the build never writes `english_head_norm`
@@ -65,7 +65,7 @@ parser reference notes in its appendix). No open writes.
   paste/deploy, record "unchanged"). Steps 10 + 11 RE-HOMED onto the copy in `/rebuild-words` (after
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
-- OPEN (JP 2026-10-26, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
+- OPEN (JP 2026-10-25, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
   FIX PROPOSED, held for JP's gate.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
   had the browser attempt 56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed — most
   failed inside the browser and never reached PA (see the access-log read below).
@@ -76,7 +76,7 @@ parser reference notes in its appendix). No open writes.
   `bc47330c^` + link → 2 · bundle at `bc47330c` + link → 14,483 — loop. Live serves the tested bundle
   (`static/app.js` unchanged `a1998f0e..HEAD`).
   **DATE: introduced by `bc47330c` (2026-06-28, "keep the reader's panels + marker in step with
-  navigation") — NOT the 10/26 swap.** The loop's only inputs are the bundle, the book list and the
+  navigation") — NOT the 10/25 swap.** The loop's only inputs are the bundle, the book list and the
   browser's saved state; the swap changed only bible.db (the book list is not rebuilt).
   **Trigger:** a browser with no saved book list (`lexica.books.v1` — a first-ever visit) arriving
   on a `?b=…&c=…` link — i.e. a new visitor clicking "Open in the interactive reader" on a crawlable
@@ -102,25 +102,25 @@ parser reference notes in its appendix). No open writes.
   after landing normal; 10/10 Node gates pass. Rulings: fix ships in the same deploy as step 10's paste
   (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
   section names this deep link as one of the two `libNav` producers. Step 10 came back IDENTICAL
-  (10/26) — no step-10 deploy exists, so a fix deploys on its own.
-- HELD (JP 2026-10-26) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
+  (10/25) — no step-10 deploy exists, so a fix deploys on its own.
+- HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
-  headers — all read through the site's read-only endpoints on 10/26) and which must be SEEN (1Ch 13:10:
+  headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
   Library, ABP, **Chip view** — the verse's own line shows the "was enraged" box, then "the LORD", in
   one bracket; Prose reads "the LORD was enraged" — per `_lord_subject_split`,
   `build_words_from_abp.py:1577-1584`). Also: say "card shows H121", not "→ H121" (the word row is G76
   since R-2), and never reach the reader through a `?b=…&c=…` link until the deep-link loop is fixed.
-- HELD (JP 2026-10-26) — **`build_rendering_norm.py` loose ends** (census of steps 7/10/11):
+- HELD (JP 2026-10-25) — **`build_rendering_norm.py` loose ends** (census of steps 7/10/11):
   (a) its "recomputed N" line counts rows TOUCHED, not changed — a re-run never reads "0 to do";
   (b) the printed undo `ALTER TABLE <t> DROP COLUMN <c>` (`:17`, `:111`) does not work — SQLite refuses
   to drop an indexed column (`idx_words_ehnorm`); fix the text; (c) `--stats` has no change preview
   (counts only); (d) the finder caches "column exists" per worker (`views_lexicon.py:97-108`) — after
   any column drop, a reload is needed or the finder errors; (e) step 11 must always be given an
   explicit path — default is `bible.db` in the current folder, and a bad path creates a new empty file.
-- HELD (reviewer 2026-10-26) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
+- HELD (reviewer 2026-10-25) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
   A/B were built for the 7/30 header-only lane and ABORT on any full rebuild. Overridden for the
-  10/26 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.
-- HELD (reviewer 2026-10-26) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
+  10/25 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.
+- HELD (reviewer 2026-10-25) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
   surface → lemma-only at the swap (accepted). Trace what the label changes on the card, and whether a
   header that matches the page should carry `surface`.
 - HELD — **snapshot staleness:** a restore that moves slots makes the frozen fill snapshot stale for
@@ -133,7 +133,7 @@ parser reference notes in its appendix). No open writes.
   site) · two old `bible_pre_pnstar_*` copies (~824 MB) beyond ops.md retention rule 1.
 - HELD (leftover, not a gate) — **header landing `->surface` 461 vs its receipt's 451 (10 rows).**
   The 2026-09-06 Greek-header landing moved 461 identity rows into class `surface` (lemma-only→surface
-  421 + none→surface 40; JP-run read 2026-10-26, 9/6 formlane vs hdrlane backups in `~/db_backups`),
+  421 + none→surface 40; JP-run read 2026-10-25, 9/6 formlane vs hdrlane backups in `~/db_backups`),
   but `docs/handoffs/HANDOFF_gateB_enumeration.md` §"Expected picture" receipts `->surface` 451. The
   class totals reconcile exactly; the 10 rows are unattributed against that receipt. Read the members
   against the handoff when the header lane is next touched.
@@ -143,19 +143,19 @@ parser reference notes in its appendix). No open writes.
   step 9 rebuilds that table later. So on a rebuild the headers come from the PRE-rebuild surface
   table matched to the NEW positions (and, while the fill is live, from fill forms too — 2 headers
   already equal a fill form at their slot, census §5 Q7). Same shape as the 8/8 glued-header
-  incident (`HANDOFF_form_lane.md:25`). Filed out of the rebuild-trap charter by JP ruling 10/26.
+  incident (`HANDOFF_form_lane.md:25`). Filed out of the rebuild-trap charter by JP ruling 10/25.
   Read-only census first (which headers would change, by member) before any reorder.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
   in 29% of paired verses). No charter yet. Gated on the rebuild-trap fix above (JP 10/25) — its
-  own item, not part of that fix. **That gate CLEARED 2026-10-26** (trap fix proven on the live
+  own item, not part of that fix. **That gate CLEARED 2026-10-25** (trap fix proven on the live
   rebuild). Still gating it: the snapshot re-freeze (a slot-moving restore makes the frozen fill
-  stale) and the header gate A/B re-scope. First scoping step (JP 10/26 close): date the app's edition.
+  stale) and the header gate A/B re-scope. First scoping step (JP 10/25 close): date the app's edition.
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
   **The fill copy stays until a re-freeze exists** — it is the frozen snapshot's only "before" side
-  (rotation/single-rollback rule does not apply to it). Also on PA (10/26 live rebuild, delete
-  nothing yet): `~/rekey/pre_rebuild.db` until a nightly is dated after the 10/26 swap ·
+  (rotation/single-rollback rule does not apply to it). Also on PA (10/25 live rebuild, delete
+  nothing yet): `~/rekey/pre_rebuild.db` until a nightly is dated after the 10/25 swap ·
   `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
   deletable as their own step.
 - **Held list** — read-by-hand, no writes queued. Full rows: the handoff (lane (a)'s "Same slot,

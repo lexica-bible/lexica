@@ -3,7 +3,7 @@
 Written 2026-10-24 from JP's notes. Everything under "What JP verified" was checked by JP
 OUTSIDE CC; this session did not open these files. Re-verify any detail a step leans on.
 
-## STATUS 2026-10-26 — rebuild-trap lane in progress: census + charter done, G4 PASSED
+## STATUS 2026-10-25 — rebuild-trap lane in progress: census + charter done, G4 PASSED
 **The rebuild-trap lane has its own handoff now: `docs/handoffs/HANDOFF_rebuild_trap_fix.md`**
 (next = build gates G1–G3). The edition upgrade and (d) English-Greek Index stay behind it.
 

@@ -46,8 +46,8 @@ exceed the PA quota; `df -h ~` is useless here (it shows the shared filer, not t
 dashboard has the real number). A `disk I/O error` on the very first snapshot write, leaving a
 0-byte `.new`, is out-of-space, not corruption.
 
-**RUN ORDER (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9; steps 10 + 11
-re-homed onto the copy by JP ruling after the 10/26 run, charter §10 — the step NUMBERS are labels
+**RUN ORDER (re-settled 2026-10-25, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9; steps 10 + 11
+re-homed onto the copy by JP ruling after the 10/25 run, charter §10 — the step NUMBERS are labels
 other docs cite, not the order):**
 0 → 1 → **1a snapshot check** → 2 build → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
 **11 rendering norm (copy) → 10 two-ending read (copy)** →
@@ -65,7 +65,7 @@ output, if any, rides the step-8 deploy).
    ordinary ARC ships use the single overwritten `bible.db.rollback` name, ops.md item 6;
    and before DELETING any old copy, check the newest nightly in ~/db_backups is stamped
    AFTER the last swap — the nightly runs ~13:30 UTC and does not cover an evening ship.)
-1a. **SNAPSHOT CHECK — before the build, on `<src>`** (added 2026-10-26, charter §9). The
+1a. **SNAPSHOT CHECK — before the build, on `<src>`** (added 2026-10-25, charter §9). The
    2026-10-25 abp_surface fill is frozen ONCE in `tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
    (+ `.sha256`; git-ignored ABP text — on PA and in the local checkout only; sha256 pinned in
    `restore_surface_fill.py`). Before every rebuild, prove the frozen file still describes live:
@@ -79,8 +79,8 @@ output, if any, rides the step-8 deploy).
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
    correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live
    pin = 626,309), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
-   `Split 80 merged subject-name(s)` — **re-pinned 2026-10-26** from the two lane-② ride logs
-   on PA (`~/bible-db/build_pnstar.log`, `build_pnstar2.log`) and the 10/26 re-key build, all
+   `Split 80 merged subject-name(s)` — **re-pinned 2026-10-25** from the two lane-② ride logs
+   on PA (`~/bible-db/build_pnstar.log`, `build_pnstar2.log`) and the 10/25 re-key build, all
    three 80. Was 2,436 before the 8/5 lane-② PN-star pass, whose class B now splits most of
    these names off their verbs earlier in the same build (2,436 = 2,299 roster/εἰμί + 137
    capfall, `docs/tickets/blank_star_classes.md`; still in the pre-② `run_build.log`).
@@ -116,7 +116,7 @@ output, if any, rides the step-8 deploy).
    The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
    project_blank_strongs_fill.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
-   (import_tipnr, **31,649 matched** — re-pinned 2026-10-26: the 10/26 re-key chain's log equals
+   (import_tipnr, **31,649 matched** — re-pinned 2026-10-25: the 10/25 re-key chain's log equals
    the 8/5 lane-② ride's `~/bible-db/finish_pnstar2.log` line for line, timestamps aside; was 31,392
    at the 2026-07-16 roster, before lane ② — the build CLEARS is_pn + PN
    Strong's) then the PINNED
@@ -170,18 +170,18 @@ output, if any, rides the step-8 deploy).
 5. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
 6. Audits (the gates), all on bible_test.db, AFTER 9b (before step 9 the copy still carries live's
    old surface table, so its floor line passes for free): `health_check.py` (0 warnings) → `audit_bracket_order.py`
-   (CHIP genuine **3** — re-declared 2026-10-26 from the live rebuild, where live's own copy and the
+   (CHIP genuine **3** — re-declared 2026-10-25 from the live rebuild, where live's own copy and the
    rebuild both read 3; was "≈ 2", the known Jon 4:9 twin-bracket FPs) → `scan_strongs_cross.py`
    (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
    `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
    (G2316 0) → `audit_split_flip.py bible_test.db` (**MUST be 0** — the "LORD the" determiner-flip
    guard; if non-zero the `_split_compounds` source-phrase-order fix regressed, don't swap) →
-   `audit_corpus_tier1.py` (A1 **177** — re-declared 2026-10-26, live copy and rebuild both 177; was
+   `audit_corpus_tier1.py` (A1 **177** — re-declared 2026-10-25, live copy and rebuild both 177; was
    "≈ 176") → `audit_corpus_tier2.py bible_test.db --rahlfs
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
-8. Swap + deploy — **MOVED below 9b (2026-10-26):** it is the LAST step and the only live action
+8. Swap + deploy — **MOVED below 9b (2026-10-25):** it is the LAST step and the only live action
    (RUN ORDER line above; steps 10/11 moved before it, onto the copy). 8b below still runs on the copy, right after step 3.
 8b. **R-2 RETIREMENT CHAIN (post-2026-07-26, MANDATORY after import_tipnr):** import_tipnr writes the
    HEBREW stopgap numbers; live serving is GREEK-keyed with Hebrew in `pn_hebrew_xref`. After
@@ -203,7 +203,7 @@ output, if any, rides the step-8 deploy).
       first declaration of 363 carried a mis-ported "357 hand-fix-zone" census figure that was
       never fresh-import drift). A different count HALTS — read the member list before any
       override. Replaces the old "re-run fix_cushi_strongs" note: the frozen record covers it.
-      **RE-DECLARED 6 → 8 on 2026-10-26** (`restore_frozen_pn.py` `EXPECT`, receipt in the code
+      **RE-DECLARED 6 → 8 on 2026-10-25** (`restore_frozen_pn.py` `EXPECT`, receipt in the code
       comment): the full 2Sa 18 Cushi set — all 8 'Cushi' slots, H3570 → H3569 — confirmed member
       for member by the independent name-keyed fix (`apply_cushi_namekeyed.py` dry run lists the
       same 8; Jer 36 / Zep 1 refused by design). Any other count is attributed member by member
@@ -212,7 +212,7 @@ output, if any, rides the step-8 deploy).
       carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
       byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds
       the xref. Declared five-class split — **the code's figure is the authority**
-      (`retire_hebrew_identity.py` `EXPECT`, re-declared 2026-10-26 after the 9/6 Greek-header
+      (`retire_hebrew_identity.py` `EXPECT`, re-declared 2026-10-25 after the 9/6 Greek-header
       landing; receipt in the code comment): abp-tag 3,671 · tipnr 10,236 · lemma-only 12,182 ·
       surface 4,412 · none 1,977 (32,478). (Superseded: 2026-08-05 3,671 / 10,236 / 12,166 /
       3,951 / 2,454; 2026-08-01 3,518 / 10,216 / 12,066 / 4,326 / 2,353.) **Any later rebuild of
@@ -235,9 +235,9 @@ output, if any, rides the step-8 deploy).
       + lexicon + BH), and the derivation command committed with the figure. The article-slot
       swap check is `audit_article_slot_carrier.py --predict-vs <copy>` — member set-equality
       with a named tail allowance; counts are tripwires, the member set rules (§6l).**
-   2a. **LANE-3 HAND REPAIRS — `python3 scripts/lane3_rebuild_step.py <db>`** (added 2026-10-26,
+   2a. **LANE-3 HAND REPAIRS — `python3 scripts/lane3_rebuild_step.py <db>`** (added 2026-10-25,
       `docs/handoffs/CHARTER_rebuild_trap_fix.md` G4). Re-applies the three frozen lane-3 files
-      (fixes 9 → gapfix 6 → fixes2 7 verses; gapfix gained 2Sa 18:31/32 on 2026-10-26) and judges
+      (fixes 9 → gapfix 6 → fixes2 7 verses; gapfix gained 2Sa 18:31/32 on 2026-10-25) and judges
       each from its own output; **it must print
       `LANE-3 STEP: PASS`, or DO NOT go on.** Without it a rebuild silently REVERTS 16 live verses
       (Mat 9:11 "the Pharisees seeing" merges back, etc.). HERE, not in finish_rebuild.sh: fixes2 is
@@ -262,8 +262,8 @@ output, if any, rides the step-8 deploy).
       drops a whole name off its folded header. The 8/8 ride cost 375 folded rows, 13 names,
       and +101 rows with no header at all, entirely unnoticed.**
       **On a FULL words rebuild, gates A and B ABORT by design** (they were built for the 7/30
-      header-only lane): 10/26 = 3 Michaiah binding relabels (A), the 21 header rows (B), and the
-      landing-only PIN lines. That ABORT was overridden for the **10/26 run only** — the next full
+      header-only lane): 10/25 = 3 Michaiah binding relabels (A), the 21 header rows (B), and the
+      landing-only PIN lines. That ABORT was overridden for the **10/25 run only** — the next full
       rebuild aborts there again and needs its OWN ruling, member by member, until A/B are
       re-scoped (charter §10, handoff held item 12). Gate C is still read as above.
    **G707 gate (2026-07-31):** build_pn_greek_identity applies strict name-match inheritance
@@ -272,11 +272,11 @@ output, if any, rides the step-8 deploy).
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
 9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3 and steps 11 + 10, BEFORE the gates (4–7) and
-   the step-8 swap** (re-settled 2026-10-26, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
+   the step-8 swap** (re-settled 2026-10-25, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
    §1 "live, after the swap" placement, which was practice, not a dependency). Step 9 reads nothing
    that exists only on live: the db's own `verses` / `words` / `lexicon` / `dotted_lexicon` /
    `abp_surface` (the build copies the whole db) plus `~/bible-db/bh_scrape.db` (its own file, named
-   by `--bh`). Proven: the 10/26 copy dry run ran it on `built3` → 391,130 = G1a. It must come AFTER
+   by `--bh`). Proven: the 10/25 copy dry run ran it on `built3` → 391,130 = G1a. It must come AFTER
    8b: translit reads `words.strongs_base` (8b.2 rewrites it), the PN backfill reads `is_pn` + the
    English (8b.2a repairs 16 verses). **Never run step 9 on live** — its DROP would serve a
    fill-less table, and the restore refuses live.
@@ -284,9 +284,9 @@ output, if any, rides the step-8 deploy).
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
    leaves stale forms until it's rebuilt. Read-only on words/verses. THEN
    `scripts/backfill_abp_surface.py <built> --bh ~/bible-db/bh_scrape.db --apply` — the surface builder writes
-   only form-FOUND rows (~345,437; 346,111 on the 10/26 build); the 2026-07-11 backfill added ~13,851 rows for forms it can't
-   find (13,183 on 10/26). THEN `scripts/backfill_pn_surface.py <built> --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
-   printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; 31,836 on 10/26; the interlinear Greek line for
+   only form-FOUND rows (~345,437; 346,111 on the 10/25 build); the 2026-07-11 backfill added ~13,851 rows for forms it can't
+   find (13,183 on 10/25). THEN `scripts/backfill_pn_surface.py <built> --bh ~/bible-db/bh_scrape.db --apply` — the Phase-6 PN
+   printed-Greek passes (30,121 name-slot rows, 2026-07-27/28; 31,836 on 10/25; the interlinear Greek line for
    names reads from these). THEN `scripts/build_abp_translit.py <built>` to refill the romanization
    (`abp_surface.translit`, same rows/keys — SBL style from the lexicon, 'h' from the lemma) — it covers
    all backfilled rows too. **The table must now read 391,130** (same-code rebuild; G1a). A
@@ -305,7 +305,7 @@ output, if any, rides the step-8 deploy).
    held item "snapshot staleness"). The restore refuses live by design: it only ever runs here.
 9b. **HEALTH FLOOR + ORACLE — on `<built>`.** `health_check.py <built> --no-backup-check
    --no-disk-check`: the `abp_surface rows BELOW floor 395003` line must read `[OK  ] … : 0`
-   (floor raised 2026-10-26 from 389,244 — charter G3: builder chain 391,130 + the fill's 3,873
+   (floor raised 2026-10-25 from 389,244 — charter G3: builder chain 391,130 + the fill's 3,873
    inserts; shortfall 3,873 exactly = the fill is missing; the 2026-07-16 miss is why the guard
    exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
    `0|0` (the end-to-end oracle; also proves live's table did not change since `<src>` was taken).
@@ -315,7 +315,7 @@ output, if any, rides the step-8 deploy).
    the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
    name-slot `strongs_base` 501 (charter §7).
-10. **WHERE: on `<built>`, right after step 11, before step 9** (JP ruling after the 10/26 run). RE-GENERATE
+10. **WHERE: on `<built>`, right after step 11, before step 9** (JP ruling after the 10/25 run). RE-GENERATE
    the two-ending adjective soften-lists: run `scripts/build_two_ending.py <built>` on PA — **always give the
    path; with none it reads LIVE** (`build_two_ending.py:36`). It opens the file read-only and reads only
    `words.strongs_base` + `words.morph`, `lsj`, `lexicon` — nothing live-only; it must follow 8b (8b.2
@@ -324,7 +324,7 @@ output, if any, rides the step-8 deploy).
    Different → paste, rebuild `app.js` LOCALLY, commit + push BEFORE step 8, so the step-8 deploy.sh pulls
    it in with the swap (genders/tallies can shift on a rebuild). Drives the "Masculine/Feminine"
    word-study display. Memory `project_two_ending_gender`.
-11. **WHERE: on `<built>`, right after 8b.3, before step 10 and step 9** (JP ruling after the 10/26 run —
+11. **WHERE: on `<built>`, right after 8b.3, before step 10 and step 9** (JP ruling after the 10/25 run —
    same Step-0 answer as step 9: no live-only input). RE-RUN `scripts/build_rendering_norm.py <built>` —
    **always give the path** (with none it opens `bible.db` in the current folder, live from `~/bible-db`;
    a wrong path makes a new empty file). Refills `words.english_head_norm` (the number-fold column the
@@ -332,12 +332,12 @@ output, if any, rides the step-8 deploy).
    but keeps the column, and its insert never fills it (`build_words_from_abp.py:2154-2157`), so every
    rebuilt row is blank; the finder uses the column whenever it EXISTS (`views_lexicon.py:100-108`,
    `:943-947`), so a swap without step 11 serves an ABP English finder that matches nothing (code trace; the
-   live count after the 10/26 swap is in charter §10). Each value
+   live count after the 10/25 swap is in charter §10). Each value
    comes only from the same row's `english_head` through `number_fold.normalize` (plain text function),
    so it must follow everything that writes `english_head` (8b.2a repairs English) — nothing after 8b.3
    does. Also refreshes kjv/bsb `word_norm` (unchanged by a build). Running it again rewrites the same
    values. Memory `project_lexicon_finders`.
-   **If it ever has to run on LIVE (the 10/26 exception, charter §10): never within 60 s of a reload**
+   **If it ever has to run on LIVE (the 10/25 exception, charter §10): never within 60 s of a reload**
    (each worker's first-request warm-up writes bible.db, `app.py:441-469`).
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +

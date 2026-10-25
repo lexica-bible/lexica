@@ -217,7 +217,7 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   PA-only, reversible; **re-run after any words rebuild** (re-tiers from live metaV). Binder
   logic in `entity_resolution.py`. The old `fix_cushi_strongs.py` is RETIRED — the 6 Cushi slots
   live in `abp_corrections`, applied by the rebuild tail (and `/rebuild-words` 8b.1
-  `restore_frozen_pn.py` restores the full 2Sa 18 Cushi set: 8 since 2026-10-26). Memory
+  `restore_frozen_pn.py` restores the full 2Sa 18 Cushi set: 8 since 2026-10-25). Memory
   `project_entity_resolution_rebuild`.
 - `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair (DONE+LIVE
   2026-06-30): restored missing Hebrews 13 (the ABP source file had no ch 13 → no verse rows →

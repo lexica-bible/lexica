@@ -1,6 +1,6 @@
 # HANDOFF — rebuild-trap fix → next lane: build G1–G3
 
-Written 2026-10-26 at session close. The governing record is
+Written 2026-10-25 at session close. The governing record is
 `docs/handoffs/CHARTER_rebuild_trap_fix.md` (gates G0–G5, rulings quoted, §6 dry run, §7 G4 test);
 the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charter in full first.
 
@@ -9,7 +9,7 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
   builder re-creates the 4,411-row 2026-10-25 fill; the health floor (389,244) sits below the pre-fill
   391,130, so the loss is silent. Step 9 now runs on the rebuilt COPY before the swap (charter §9;
   the §1 "live, after the swap" placement is superseded).
-- **G4 PASSED on PA 2026-10-26** — the lane-3 hand repairs now ride the rebuild as checklist step
+- **G4 PASSED on PA 2026-10-25** — the lane-3 hand repairs now ride the rebuild as checklist step
   **8b.2a** (`scripts/lane3_rebuild_step.py`; after 8b.2, before 8b.3). Full run on a fresh live copy:
   words english/english_head/greek_pos/strongs/is_pn = live exactly; re-key dry run placed 4,411 of
   4,411 fill rows, 0 unplaced, all 3,873 inserts. Every other difference attributed row by row (§7).
@@ -21,7 +21,7 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
   import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
   2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
 
-## UPDATE 2026-10-26 (live run) — REBUILD SWAPPED LIVE; the fill survived. Receipts: charter §10
+## UPDATE 2026-10-25 (live run) — REBUILD SWAPPED LIVE; the fill survived. Receipts: charter §10
 JP ran `RUN_rebuild_trap_live.md` A–K on PA; reviewer cleared A–I and the swap. Live now = the rebuilt
 db: 395,003 surface rows (restored table = old live row for row), floor GREEN, invariants 0, site
 serving. Rollback = `~/bible-db/bible_pre_trapwire_swap.db` (one move back). Rulings: header gate A/B
@@ -31,7 +31,7 @@ item 9 — live-relevant now). `~/rekey/pre_rebuild.db` (the pre-run copy of liv
 receipts are filed and a nightly postdates the swap — a separate step, never in a line naming a file
 still in use.
 
-## UPDATE 2026-10-26 (wiring lane) — PATH A BUILT; next = JP runs the live sheet (when he wants a rebuild)
+## UPDATE 2026-10-25 (wiring lane) — PATH A BUILT; next = JP runs the live sheet (when he wants a rebuild)
 Step 0 answer: **step 9 reads nothing that exists only on live — sequencing only** (receipt + history
 verbatim in charter **§9**). So, by JP's ruling, Path A: step 9, the restore (9a) and the floor +
 oracle (9b) all run on the rebuilt COPY before the swap; the swap is the only live write and live is
@@ -43,7 +43,7 @@ line; numbers kept as labels). Tests 22 + 7 green (+7 new check-mode cases).
 after block I for the verdict; block J = the swap). Nothing was run on PA in this lane.
 **Before the NEXT live rebuild, also look at:** step 11 has the old step-9 shape (held item 9).
 
-## UPDATE 2026-10-26 (later) — COPY DRY RUN PASSED; next = wire the restore onto live's step 9
+## UPDATE 2026-10-25 (later) — COPY DRY RUN PASSED; next = wire the restore onto live's step 9
 JP ran the whole RUN sheet on `~/rekey/old3.db` → `built3.db`: every figure = the pre-registered one
 (receipts + verdict in charter §8). G1 395,003 exactly · G2 4,411 placed / 0 unplaced · G3 floor red
 3,873 on the pre-fill copy and the fill-less rebuild, green 0 on the restored copy · restored table =
@@ -53,10 +53,10 @@ Snapshot sha256 pinned in `restore_surface_fill.py`; second copy local (git-igno
 backfills + translit) — remove the live refusal by ruling, put the snapshot step before the swap in
 the checklist, and decide what live serves between the step-9 drop and the restore (charter §1
 consequence). Only then may a rebuilt db be swapped. Disk: `~/rekey/old3.db` + `built3.db` DELETED
-2026-10-26 after the receipts were recorded (`du -sh ~` 6.3G after; PA's dashboard reads ~1.5 GB
+2026-10-25 after the receipts were recorded (`du -sh ~` 6.3G after; PA's dashboard reads ~1.5 GB
 over `du`). `~/rekey/` now holds logs + TSVs only; the next lane takes fresh copies.
 
-## UPDATE 2026-10-26 (second session) — G1–G3 BUILT; the copy dry run is owed
+## UPDATE 2026-10-25 (second session) — G1–G3 BUILT; the copy dry run is owed
 Built + locally tested, NOT yet run on PA (charter **§8** has the design calls; run sheet
 `docs/handoffs/RUN_rebuild_trap_G1G3.md` has every command with its expected figure):
 `scripts/snapshot_surface_fill.py` (freeze the 4,411-row diff + each slot's old words row + key-2
@@ -79,14 +79,14 @@ chain must first total 391,130) · **G2 every slot placed or unplaced with a clo
 first evaluated there. Copy-first; dry run → verdict → apply, as always.
 
 ## Held items (none blocks the build; each has a TODO entry)
-1. ~~**21 Greek headers + Sheshach**~~ — **CLOSED 2026-10-26 (live rebuild):** the 21 rows shipped at
+1. ~~**21 Greek headers + Sheshach**~~ — **CLOSED 2026-10-25 (live rebuild):** the 21 rows shipped at
    the swap; reviewer ruled Sheshach "header follows the page" (Σεσάκ Jer 51:41 · Σησάχ Jer 25:26).
-11. **`surface` vs `lemma-only` label (NEW, reviewer 10/26)** — the 2 Sheshach rows went `surface` →
+11. **`surface` vs `lemma-only` label (NEW, reviewer 10/25)** — the 2 Sheshach rows went `surface` →
    `lemma-only` at the swap (accepted). Trace what the label changes on the card, and whether a header
    that matches the page should carry `surface`.
-12. **Header gate A/B re-scope (NEW, reviewer 10/26)** — `gate_greek_header.py` A/B were built for the
+12. **Header gate A/B re-scope (NEW, reviewer 10/25)** — `gate_greek_header.py` A/B were built for the
    7/30 header-only lane and abort on any full rebuild (binding relabels, the 21 rows, landing pins).
-   ABORT was overridden for the 10/26 run only; re-scope before the next rebuild.
+   ABORT was overridden for the 10/25 run only; re-scope before the next rebuild.
 13. **Small follow-ups from the live run** — `health_check.py` waits only 5 s, so it reports false
    "locked" errors in the minutes after a deploy (site workers' warm-up writes the AI cache) · the
    build's closing text calls its source "live" when the source is a copy (its printed swap command
@@ -94,13 +94,13 @@ first evaluated there. Copy-first; dry run → verdict → apply, as always.
    copies (~824 MB) beyond ops.md rule 1.
 2. **Header landing `->surface` 461 vs its receipt's 451** — 10 rows unattributed against
    `HANDOFF_gateB_enumeration.md`; class totals reconcile exactly.
-3. ~~**Fresh-copy proof of gapfix entries 5–6**~~ — **CLOSED 2026-10-26:** gapfix (6,0,0) on built3, and
+3. ~~**Fresh-copy proof of gapfix entries 5–6**~~ — **CLOSED 2026-10-25:** gapfix (6,0,0) on built3, and
    the live rebuild's block I read `bracket_id` 0 vs live.
 4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it. Census still
    owed; not touched by the G1–G3 lane.
-6. ~~**Live wiring decision**~~ — **RESOLVED 2026-10-26 (charter §9, Path A):** there is no gap; step 9
+6. ~~**Live wiring decision**~~ — **RESOLVED 2026-10-25 (charter §9, Path A):** there is no gap; step 9
    and the restore run on the copy before the swap. The live refusal stays.
-9. **Step 11 has the old step-9 shape (flagged in the wiring lane) — NOW LIVE-RELEVANT:** the 10/26
+9. **Step 11 has the old step-9 shape (flagged in the wiring lane) — NOW LIVE-RELEVANT:** the 10/25
    swap happened and steps 10 + 11 have NOT run. The build never writes `words.english_head_norm`
    (`build_words_from_abp.py:2154-2157`) and the finder only checks the column exists
    (`views_lexicon.py:100-108`), so until step 11 runs the ABP English finder may fold on blank values.
@@ -116,7 +116,7 @@ first evaluated there. Copy-first; dry run → verdict → apply, as always.
    xref rows (class only) + 501 PN `strongs_base` slots to change. Record the counts.
 
 ## Files that stay on PA (do not delete)
-(Revised 2026-10-26, reviewer-logged.) `~/rekey/` = logs + dry-run TSVs ONLY (every old/built pair
+(Revised 2026-10-25, reviewer-logged.) `~/rekey/` = logs + dry-run TSVs ONLY (every old/built pair
 deleted; disk 6.3G by `du` / ~7.8 GB by PA's meter — PA reads ~1.5 GB over `du`, go by the dashboard) ·
 `~/bible.db.pre-surface-fill-20261025` (the only pre-fill copy AND the snapshot's "before" side — it
 stays past the nightly-backup condition until a re-freeze exists) · `~/bible.db.pre-xref-fix-20261024` ·

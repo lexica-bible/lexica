@@ -6,7 +6,7 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## 2026-10-26 — Rebuild trap FIXED: the abp_surface fill survives a words rebuild (proven live)
+## 2026-10-25 — Rebuild trap FIXED: the abp_surface fill survives a words rebuild (proven live)
 The 2026-10-25 fill (4,411 writes, 391,130 → 395,003) was dropped by `/rebuild-words` step 9's
 `DROP TABLE` and no builder re-created it; the old 389,244 floor sat below 391,130, so the loss was
 silent. Fix (record `docs/handoffs/CHARTER_rebuild_trap_fix.md`): frozen snapshot of the fill
@@ -14,7 +14,7 @@ silent. Fix (record `docs/handoffs/CHARTER_rebuild_trap_fix.md`): frozen snapsho
 nothing) · floor raised to 395,003 · lane-3 repairs as 8b.2a. **Wiring (§9):** step 9 reads nothing
 that exists only on live, so step 9, the restore (9a) and the floor + `0|0` oracle (9b) run on the
 rebuilt COPY before the swap; new step 1a `--check` proves the snapshot still matches live. **Live
-run (§10, 2026-10-26 18:06):** every pre-registered figure matched; restored table = old live row for
+run (§10, 2026-10-25 18:06):** every pre-registered figure matched; restored table = old live row for
 row; floor GREEN; rollback `bible_pre_trapwire_swap.db`. Closed with it: the 21 header rows + Sheshach
 (reviewer: header follows the page — Σεσάκ Jer 51:41, Σησάχ Jer 25:26), the gapfix fresh-copy proof
 (2Sa 18:31/32, `bracket_id` 0 vs live), the G5 record (xref 519 · identity 21 · name-slot
@@ -24,7 +24,7 @@ needed its dependency checked (there was none) · loose checklist figures (≈2 
 running the audit on the pre-rebuild copy AND the rebuild (both 3 / 177) · the header gate's A/B abort
 was another lane's gate firing out of scope — every member attributed before the override.
 
-## 2026-10-26 — Lane-3 hand repairs now ride the rebuild (charter G4 PASSED on PA)
+## 2026-10-25 — Lane-3 hand repairs now ride the rebuild (charter G4 PASSED on PA)
 The lane-3 repairs (16 verses, three frozen files) were in neither `finish_rebuild.sh` nor
 `/rebuild-words`, so a rebuild would have silently reverted them (test build vs live: exactly 35 english
 + 38 greek_pos cells, op for op the files' own edits). Now `/rebuild-words` step **8b.2a**,

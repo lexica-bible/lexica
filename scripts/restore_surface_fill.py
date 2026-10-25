@@ -5,7 +5,7 @@ restore_surface_fill.py — rebuild-trap fix, parts (a) second half + (b) + G1
 /rebuild-words step 9 (builder + both backfills + translit), re-keyed onto the rebuilt words.
 
 COPIES ONLY, BY DESIGN. It refuses the live database and any file named bible.db. Under the
-2026-10-26 wiring (charter §9, Path A) step 9 and this restore (step 9a) run on the rebuilt COPY,
+2026-10-25 wiring (charter §9, Path A) step 9 and this restore (step 9a) run on the rebuilt COPY,
 BEFORE the swap — step 9 reads nothing that exists only on live — so live is never served without
 the fill and never needs this script. The refusal stays.
 
@@ -17,7 +17,7 @@ Inputs: <db> (the rebuilt copy, step 9 done) · --snapshot (snapshot_surface_fil
 .sha256 must match) · --lexicon (abp_helps/analytical_lexicon.tsv) · --report (per-slot TSV) ·
 --prefill (optional: the pre-fill copy; on a same-code rebuild the builder output must equal it).
 
-Per slot (JP rulings 2026-10-26; THE key rules are dryrun_rekey_fill.key2_at / key1_at / decide):
+Per slot (JP rulings 2026-10-25; THE key rules are dryrun_rekey_fill.key2_at / key1_at / decide):
   key 2 (primary)  verse_id + full strongs + the snapshot's ordinal k
   key 1 (check)    verse_id + full strongs + the snapshot's old English (exact bytes)
   placed = key 2 one slot, key 1 confirms: agree-strong (key 1 = that slot) or agree-weak (key 1
@@ -62,7 +62,7 @@ import snapshot_surface_fill as snap               # noqa: E402  the file format
 
 ROWS_BASE, ROWS_AFTER = 391130, 395003
 N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
-# PINNED 2026-10-26 from the first PA snapshot (JP run, ~/rekey/old3.db = a fresh copy of live):
+# PINNED 2026-10-25 from the first PA snapshot (JP run, ~/rekey/old3.db = a fresh copy of live):
 # 4,411 rows (3,873 insert + 538 update), 455,812 bytes; receipt in CHARTER_rebuild_trap_fix.md §8.
 SNAPSHOT_SHA256 = "d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b"
 

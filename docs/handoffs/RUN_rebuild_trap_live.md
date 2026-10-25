@@ -1,7 +1,7 @@
-# RUN — the live words rebuild with the trap fix wired in (Path A, 2026-10-26)
+# RUN — the live words rebuild with the trap fix wired in (Path A, 2026-10-25)
 
 Charter: `CHARTER_rebuild_trap_fix.md` §9. Checklist: `/rebuild-words` (RUN ORDER line). This is a
-**same-code rebuild** — every expected figure below comes from the 10/26 copy runs (charter §7 G4
+**same-code rebuild** — every expected figure below comes from the 10/25 copy runs (charter §7 G4
 test, §8 G1–G3 receipts). A rebuild that changes code or moves slots (the edition upgrade) needs its
 own figures; do not use this sheet for it.
 
@@ -11,7 +11,7 @@ own figures; do not use this sheet for it.
 - Every command names its file. Live is named **once per block**, in a `LIVE=` line marked `⚠ LIVE`;
   every other path is a copy. (All audit scripts default to plain `bible.db` = live when run from
   `~/bible-db` — so every one below gets the copy path explicitly.)
-- **PRE-REG** = figure measured on the 10/26 copy runs. **CHECKLIST** = figure from `/rebuild-words`
+- **PRE-REG** = figure measured on the 10/25 copy runs. **CHECKLIST** = figure from `/rebuild-words`
   only, never measured by those runs — read line by line, a miss is attributed before going on.
   **FIRST READ** = no figure exists yet; record it.
 - Run from `~/bible-db`. Stop at the first line that misses and paste that block.
@@ -50,7 +50,7 @@ approved CSV` · O `PASS — 4,411 slots, each on one word row` · C `PASS — 4
 · rows `4,411 | 4,411` · inserts/updates
 `3,873 / 538 | 3,873 / 538` · sha256 `d9435bde… | d9435bde…` · **`RESULT: SNAPSHOT CURRENT`**.
 `STALE SNAPSHOT` = STOP and paste — something changed live's table or a fill slot's word row since
-10/26. Nothing is overwritten; a re-freeze is a ruling.
+10/25. Nothing is overwritten; a re-freeze is a ruling.
 
 ## C — steps 2 + 3: build and finish (copy only)
 ```bash
@@ -94,7 +94,7 @@ Expect (PRE-REG): identity 32,478 · binding render 15,378 + HOT 68 · slot bind
 ```bash
 python3 scripts/audit_unfindability.py ~/rekey/pre_rebuild.db ~/rekey/rebuilt.db 2>&1 | tee ~/rekey/live_8b3_unfind.log | tail -12; python3 scripts/audit_two_derivations.py ~/rekey/rebuilt.db 2>&1 | tee ~/rekey/live_8b3_twoder.log | tail -12; PYTHONIOENCODING=utf-8 python3 scripts/gate_greek_header.py ~/rekey/pre_rebuild.db ~/rekey/rebuilt.db 2>&1 | tee ~/rekey/live_8b3_header.log | tail -20
 ```
-Expect: **FIRST READ** — the 8b.3 gates were not part of either 10/26 copy run. Paste the tails;
+Expect: **FIRST READ** — the 8b.3 gates were not part of either 10/25 copy run. Paste the tails;
 read GATE C of the header gate (checklist: a pin that used to pass and now FAILS = do not go on).
 Nothing moved on this build (re-key: 0 slots moved), so the position-keyed unfindability audit is
 valid here (its geometry-aware pre-req applies only to a ride that MOVES name slots).

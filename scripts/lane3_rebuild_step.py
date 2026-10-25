@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
 lane3_rebuild_step.py — /rebuild-words step 8b.2a: re-apply the lane-3 hand repairs on a rebuild
-copy and judge the result (CHARTER_rebuild_trap_fix.md G4; JP rulings 2026-10-26).
+copy and judge the result (CHARTER_rebuild_trap_fix.md G4; JP rulings 2026-10-25).
 
 WHY: the lane-3 repairs (the PN-star merged rows the build's own pass refuses) live only as three
 frozen per-row files. A words rebuild does not re-create them, so without this step it silently
-REVERTS 16 verses on live (proven 2026-10-26 on a test rebuild: 35 english + 38 greek_pos cells,
+REVERTS 16 verses on live (proven 2026-10-25 on a test rebuild: 35 english + 38 greek_pos cells,
 plus the gapfix bracket marks).
 
 WHERE: after 8b.2 (retire_hebrew_identity) — Mat 27:26's name number G2424 only returns there, and
@@ -18,7 +18,7 @@ WHAT: runs scripts/fix_lane3_star_merges.py --apply on the three files in the le
                                      lane3_star_gapfix.json (same verse, same position, the
                                      bracket gapfix sets there) — read at run time
   lane3_star_gapfix.json  6 verses   must then PASS contiguity on every verse fixes failed
-                                     (4 lane-3 verses + 2Sa 18:31/32, added 2026-10-26)
+                                     (4 lane-3 verses + 2Sa 18:31/32, added 2026-10-25)
   lane3_star_fixes2.json  7 verses   strict
 Each file passes only when: its count line shows all N patched (first run) or all N already
 applied (re-run), 0 skipped; no SKIP line; every render check PASS; contiguity as above. A mix

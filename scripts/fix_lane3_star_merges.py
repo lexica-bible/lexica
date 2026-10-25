@@ -7,7 +7,7 @@ Applies exactly the reviewer-approved per-row edits frozen in
 scripts/lane3_star_fixes.json. Each op is pinned to verse + position +
 strongs_base + current english/greek_pos/bracket_id, so it only acts when the
 known-bad state is present — safe to re-run, and it joins the post-rebuild
-repair chain (split_merge_fixes precedent; finish_rebuild.sh step 8 since 2026-10-26,
+repair chain (split_merge_fixes precedent; finish_rebuild.sh step 8 since 2026-10-25,
 order fixes -> gapfix -> fixes2). Writes english / english_head /
 greek_pos / bracket_id ONLY; number columns and positions never move.
 A verse whose every pinned cell already holds its NEW value prints ALREADY and is
@@ -120,7 +120,7 @@ for verse, spec in FIXES.items():
     by_pos = {r["position"]: r for r in rows}
     bids = {r["bracket_id"] for r in rows if r["bracket_id"] is not None}
 
-    # Already applied (2026-10-26, rebuild chain step 8): every pinned cell already holds its
+    # Already applied (2026-10-25, rebuild chain step 8): every pinned cell already holds its
     # NEW value on the same number. Told apart from "state changed" so a re-run of the chain
     # can pass honestly — the guards below cannot tell the two apart.
     def _is_new(op):

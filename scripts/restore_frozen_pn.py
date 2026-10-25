@@ -49,9 +49,9 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           os.path.expanduser("~/bible-db/bible_test.db"))
 APPLY = "--apply" in sys.argv
 
-# RE-DECLARED 2026-10-26 (rebuild-trap G4 test, CHARTER_rebuild_trap_fix.md; JP ruling): 8.
+# RE-DECLARED 2026-10-25 (rebuild-trap G4 test, CHARTER_rebuild_trap_fix.md; JP ruling): 8.
 # A fresh rebuild copy of live (same code as live's 8/5 ride; repair chain log identical)
-# HALTED here at 8 vs the stale 6. Receipt, JP-run PA reads 2026-10-26: all 8 members are
+# HALTED here at 8 vs the stale 6. Receipt, JP-run PA reads 2026-10-25: all 8 members are
 # Cushi H3570 -> H3569 at 2Sa 18:21@4/@13, 18:22@19, 18:23@23, 18:31@3/@8, 18:32@6/@16 —
 # (a) live has exactly 8 'Cushi' slots in 2Sa 18, at those 8 positions; (b) the independent
 # name-keyed fix (apply_cushi_namekeyed.py, dry run on the same copy) lists the same 8 slots
