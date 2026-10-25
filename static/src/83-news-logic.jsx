@@ -40,14 +40,14 @@ function applyOutletCap(cards, band = 20, cap = 2, outletOf = newsFaceSource) {
   return inBand.concat(skipped, cards.slice(i));
 }
 
-// WHEN the two outlet layers run (the rank_score sort, then applyOutletCap). Ruling 2026-10-25
-// (reverses the earlier date-window bypass) + its amendment: they run whenever the sort is Top
-// stories, under EVERY date window (7d / 14d / 30d / 90d / 1y / Max / custom). They do NOT run
-// for the Newest / Oldest sorts or when a thread other than "All threads" is picked. The score
-// floor and the Inbox / Kept / Dismissed tab never switch them off. The window, floor and tab are
-// accepted and deliberately ignored, so a caller can pass its whole filter state.
-function newsOutletLayersApply({ order, thread }) {
-  return order === "score" && !thread;
+// WHEN the two outlet layers run (the rank_score sort, then applyOutletCap). Rulings 2026-10-25:
+// the INBOX tab, sorted by Top stories, with no thread picked — under EVERY date window
+// (7d / 14d / 30d / 90d / 1y / Max / custom). Kept and Dismissed are plain raw-score order under
+// every sort; Newest / Oldest and a thread other than "All threads" switch them off too. The
+// score floor never does. The window and floor are accepted and deliberately ignored, so a
+// caller can pass its whole filter state.
+function newsOutletLayersApply({ view, order, thread }) {
+  return view === "inbox" && order === "score" && !thread;
 }
 
 if (typeof module !== "undefined" && module.exports) {

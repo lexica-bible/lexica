@@ -13,8 +13,10 @@
 // since 2026-10-25 (newsOutletLayersApply); no UI.
 const NEWS_BAND = 20;
 const NEWS_OUTLET_CAP = 2;
-// The window preset NewsView opens on when nothing is saved (windowKey's initial value).
-const NEWS_DEFAULT_WINDOW = "21";
+// The window preset NewsView opens on when nothing is saved (windowKey's initial value). 30d
+// (ruling 2026-10-25, was 21d): it must be one of the picker's own presets, so the picker shows
+// the actual state and can return to it. A browser that already saved a choice keeps it.
+const NEWS_DEFAULT_WINDOW = "30";
 
 function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
@@ -890,7 +892,7 @@ function NewsView({ isMobile }) {
   );
   // Desktop top-bar compact controls: score as a plain dropdown (the 6-button segment is
   // mobile-only now), and a short label summarising the active date window for its popover
-  // button ("Last 21d" / "All dates" / "Custom range").
+  // button ("Last 30d" / "All dates" / "Custom range").
   const scoreSel = (
     <select className="news-thread-sel" value={String(minScore || "")}
             onChange={e => setMinScore(Number(e.target.value || 0))}>

@@ -33,7 +33,7 @@
 // The VALUES are illustrative; the SHAPES (field names, nesting, types) are the payload's.
 // Two values are NOT free to be illustrative, because the code computes on them rather than
 // printing them: a news thread KEY (it resolves through THREAD_LABELS) and any DATE (the feed's
-// default window is a rolling 21 days off the clock — see the News block).
+// default window is a rolling 30 days off the clock — see the News block).
 //
 // NOTES is the one fixture with NO Python producer, on purpose — the notes store is
 // browser-local (12-notes-store.jsx, localStorage "lexica.notes.v1"), so it is seeded into
@@ -563,7 +563,7 @@ const manyNotes = () => {
 // — fetch is stubbed above the network — so what actually decides is the CLIENT gate reading
 // this reply: owner|reader, then available. Hence owner+available+can_write below.
 //
-// DATES ARE RELATIVE TO TODAY, ON PURPOSE. The default window is `windowKey` "21"
+// DATES ARE RELATIVE TO TODAY, ON PURPOSE. The default window is `windowKey` "30"
 // (84-news.jsx:489) and `since` is recomputed FRESH every render from the clock
 // (`_newsDaysAgo`, :10 + :494), with the floor at score >= 5 (:496). A hardcoded date would
 // drift out of the window and this fixture would quietly render "No stories match" — a bar
@@ -637,7 +637,7 @@ const SHORT_TITLE = "Stand-in headline — short";
 //   * the view tabs  -> one card per status (new / keep / dismiss)
 //   * the 🔒 marker  -> one wholly-paywalled card (every member pw), the only way `face_pw`
 //                       comes out true on the Max preset (:71)
-//   * "+N outside"   -> the last card is KEPT but dated 40d back, outside the default 21d
+//   * "+N outside"   -> the last card is KEPT but dated 40d back, outside the default 30d
 //                       window, which is the only way `keptOutside` (:899) is non-zero
 const NEWS_CARDS = [
   card({
@@ -707,14 +707,14 @@ const NEWS_CARDS = [
                        url: "https://example.invalid/news/501", src: "Stand-in Review" })],
   }),
   card({
-    ids: [601], title: "Stand-in headline — kept, but OUTSIDE the default 21d window",
+    ids: [601], title: "Stand-in headline — kept, but OUTSIDE the default 30d window",
     url: "https://example.invalid/news/601",
     summary: "Stand-in summary — dated 40d back so the Kept tab's \"+N outside this window\" line has something to count.",
     score: 8, thread: "protestant_collapse", thread_label: THREAD_LABELS.protestant_collapse,
     why: "Stand-in scorer rationale — out-of-window kept card.",
     published: _newsDay(40), peak_date: _newsDay(40), count: 1, status: "keep",
     sources: [{ source: "Stand-in Wire", url: "https://example.invalid/news/601", published: _newsDay(40) }],
-    members: [member({ s: 8, t: "protestant_collapse", d: _newsDay(40), title: "Stand-in headline — kept, but OUTSIDE the default 21d window",
+    members: [member({ s: 8, t: "protestant_collapse", d: _newsDay(40), title: "Stand-in headline — kept, but OUTSIDE the default 30d window",
                        url: "https://example.invalid/news/601", src: "Stand-in Wire" })],
   }),
 ];

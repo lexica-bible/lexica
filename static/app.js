@@ -2797,13 +2797,13 @@ function newsFaceSource(s){const face=(s.members||[]).find(m=>m.url===s.url)||{}
 // their original relative order, then the rest of the list unchanged. Same cards, same count —
 // only the top band's order moves. A card with no known headline outlet ("" or the server's "?")
 // is its own bucket and never capped. cap == null (or band <= 0) returns the input order.
-function applyOutletCap(cards,band=20,cap=2,outletOf=newsFaceSource){if(cap==null||!(band>0)||!cards)return cards;const inBand=[],skipped=[],per=new Map();let i=0;for(;i<cards.length&&inBand.length<band;i++){const c=cards[i];const o=outletOf(c)||"";if(o&&o!=="?"){const n=per.get(o)||0;if(n>=cap){skipped.push(c);continue;}per.set(o,n+1);}inBand.push(c);}return inBand.concat(skipped,cards.slice(i));}// WHEN the two outlet layers run (the rank_score sort, then applyOutletCap). Ruling 2026-10-25
-// (reverses the earlier date-window bypass) + its amendment: they run whenever the sort is Top
-// stories, under EVERY date window (7d / 14d / 30d / 90d / 1y / Max / custom). They do NOT run
-// for the Newest / Oldest sorts or when a thread other than "All threads" is picked. The score
-// floor and the Inbox / Kept / Dismissed tab never switch them off. The window, floor and tab are
-// accepted and deliberately ignored, so a caller can pass its whole filter state.
-function newsOutletLayersApply({order,thread}){return order==="score"&&!thread;}if(typeof module!=="undefined"&&module.exports){module.exports={newsFaceSource,applyOutletCap,newsOutletLayersApply};}// ============================================================
+function applyOutletCap(cards,band=20,cap=2,outletOf=newsFaceSource){if(cap==null||!(band>0)||!cards)return cards;const inBand=[],skipped=[],per=new Map();let i=0;for(;i<cards.length&&inBand.length<band;i++){const c=cards[i];const o=outletOf(c)||"";if(o&&o!=="?"){const n=per.get(o)||0;if(n>=cap){skipped.push(c);continue;}per.set(o,n+1);}inBand.push(c);}return inBand.concat(skipped,cards.slice(i));}// WHEN the two outlet layers run (the rank_score sort, then applyOutletCap). Rulings 2026-10-25:
+// the INBOX tab, sorted by Top stories, with no thread picked — under EVERY date window
+// (7d / 14d / 30d / 90d / 1y / Max / custom). Kept and Dismissed are plain raw-score order under
+// every sort; Newest / Oldest and a thread other than "All threads" switch them off too. The
+// score floor never does. The window and floor are accepted and deliberately ignored, so a
+// caller can pass its whole filter state.
+function newsOutletLayersApply({view,order,thread}){return view==="inbox"&&order==="score"&&!thread;}if(typeof module!=="undefined"&&module.exports){module.exports={newsFaceSource,applyOutletCap,newsOutletLayersApply};}// ============================================================
 // NEWS WATCH — admin-only end-times news review (from news.db)
 // Gathered + AI-scored offline by scripts/news/; this tab reviews the result.
 //
@@ -2815,8 +2815,10 @@ function newsOutletLayersApply({order,thread}){return order==="score"&&!thread;}
 // Outlet cap on the Inbox top band (applyOutletCap, 83-news-logic.jsx): in the first NEWS_BAND
 // cards, at most NEWS_OUTLET_CAP share one headline outlet. Ruled 2026-10-24; any date window
 // since 2026-10-25 (newsOutletLayersApply); no UI.
-const NEWS_BAND=20;const NEWS_OUTLET_CAP=2;// The window preset NewsView opens on when nothing is saved (windowKey's initial value).
-const NEWS_DEFAULT_WINDOW="21";function _newsDaysAgo(n){return new Date(Date.now()-n*86400000).toISOString().slice(0,10);}// Today, ISO YYYY-MM-DD — the export filename + Markdown header date.
+const NEWS_BAND=20;const NEWS_OUTLET_CAP=2;// The window preset NewsView opens on when nothing is saved (windowKey's initial value). 30d
+// (ruling 2026-10-25, was 21d): it must be one of the picker's own presets, so the picker shows
+// the actual state and can return to it. A browser that already saved a choice keeps it.
+const NEWS_DEFAULT_WINDOW="30";function _newsDaysAgo(n){return new Date(Date.now()-n*86400000).toISOString().slice(0,10);}// Today, ISO YYYY-MM-DD — the export filename + Markdown header date.
 function _newsToday(){return new Date().toISOString().slice(0,10);}// The feed-shape "surfaced vs buried" line. FIXED analytic threshold — the scorer's
 // over-catch boundary (noise sits below 6), ported verbatim from the server's shape().
 // It is NOT the score floor (minScore, default 5) and must NEVER be coupled to it.
@@ -3051,7 +3053,7 @@ const datePresets=[[7,"7d"],[14,"14d"],[30,"30d"],[90,"90d"],[365,"1y"]];const p
 // a plain dropdown, so it never had this divergence (checked).
 const scoreSeg=/*#__PURE__*/React.createElement("div",{className:"news-presets news-score-seg"},scoreOpts.map(([v,lbl])=>/*#__PURE__*/React.createElement("button",{key:v,className:String(minScore||"")===v?"on":"",onClick:()=>setMinScore(Number(v||0))},lbl)));const sortSel=/*#__PURE__*/React.createElement("select",{className:"news-thread-sel",value:order,onChange:e=>setOrder(e.target.value)},/*#__PURE__*/React.createElement("option",{value:"score"},"Top stories"),/*#__PURE__*/React.createElement("option",{value:"date"},"Newest"),/*#__PURE__*/React.createElement("option",{value:"oldest"},"Oldest"));// Desktop top-bar compact controls: score as a plain dropdown (the 6-button segment is
 // mobile-only now), and a short label summarising the active date window for its popover
-// button ("Last 21d" / "All dates" / "Custom range").
+// button ("Last 30d" / "All dates" / "Custom range").
 const scoreSel=/*#__PURE__*/React.createElement("select",{className:"news-thread-sel",value:String(minScore||""),onChange:e=>setMinScore(Number(e.target.value||0))},scoreOpts.map(([v,lbl])=>/*#__PURE__*/React.createElement("option",{key:v,value:v},v?lbl+" score":"Any score")));// Rendered straight from the count (the source of truth), so it CAN'T drift as the clock
 // rolls. Long + short forms; the narrow-desktop bar shows the short one (.news-lbl-*).
 const dateShort=windowKey==="max"?"All":windowKey==="custom"?"Custom":windowKey+"d";const dateLabel=/*#__PURE__*/React.createElement(React.Fragment,null,/*#__PURE__*/React.createElement("span",{className:"news-lbl-long"},windowKey==="max"?"All dates":windowKey==="custom"?"Custom range":"Last "+windowKey+"d"),/*#__PURE__*/React.createElement("span",{className:"news-lbl-short"},dateShort));// Copy-shortlist: a dropdown (Link only / Title + link / Title + description + link). One
