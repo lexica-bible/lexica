@@ -186,11 +186,13 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
       carries live's stale pn_hebrew_xref; --fresh-rebuild proves the identity table is a
       byte-for-byte carrier of the frozen record (0 mismatches or HALT), then drops + rebuilds
       the xref. Declared five-class split — **the code's figure is the authority**
-      (`retire_hebrew_identity.py:91`, re-declared 2026-08-05 take three on the lane-② ride):
-      abp-tag 3,671 · tipnr 10,236 · lemma-only 12,166 · surface 3,951 · none 2,454 (32,478).
-      (Superseded: the 2026-08-01 split 3,518 / 10,216 / 12,066 / 4,326 / 2,353, receipt
-      docs/tickets/RECLASS_catchup_declaration.md.) Any other split, or a sixth class, HALTS
-      by design — stop and re-declare, never --expect-split past it.
+      (`retire_hebrew_identity.py` `EXPECT`, re-declared 2026-10-26 after the 9/6 Greek-header
+      landing; receipt in the code comment): abp-tag 3,671 · tipnr 10,236 · lemma-only 12,182 ·
+      surface 4,412 · none 1,977 (32,478). (Superseded: 2026-08-05 3,671 / 10,236 / 12,166 /
+      3,951 / 2,454; 2026-08-01 3,518 / 10,216 / 12,066 / 4,326 / 2,353.) **Any later rebuild of
+      pn_greek_identity on live changes this split — re-declare it in the same change.** Any
+      other split, or a sixth class, HALTS by design — stop and re-declare, never
+      --expect-split past it.
       **PRE-REGISTERED serving deltas vs pre-rebuild live (compare by member where it matters —
       all three groups LANDED EXACT on the 8/1 ride):**
       +9 slots gain Greek (saul ×8 → G4549, zacharias ×1 → G2197 — members in the receipt) ·

@@ -74,6 +74,12 @@ parser reference notes in its appendix). No open writes.
   Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it
   merged back). Must be decided before any rebuild swap. (Also 17 english_head + 38 greek_pos diffs in
   the same compare — attribute by member when this is taken up.)
+- HELD (leftover, not a gate) — **header landing `->surface` 461 vs its receipt's 451 (10 rows).**
+  The 2026-09-06 Greek-header landing moved 461 identity rows into class `surface` (lemma-only→surface
+  421 + none→surface 40; JP-run read 2026-10-26, 9/6 formlane vs hdrlane backups in `~/db_backups`),
+  but `docs/handoffs/HANDOFF_gateB_enumeration.md` §"Expected picture" receipts `->surface` 451. The
+  class totals reconcile exactly; the 10 rows are unattributed against that receipt. Read the members
+  against the handoff when the header lane is next touched.
 - OPEN — **rebuild order: the name-header build reads abp_surface before step 9 rebuilds it.**
   `/rebuild-words` 8b.3 runs `build_pn_greek_identity.py`, which takes name-slot forms from
   `abp_surface` joined on (verse_id, position) (`build_pn_greek_identity.py:292-305`, `:374-378`);
