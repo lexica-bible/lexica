@@ -329,7 +329,8 @@ of the NEW slot), then the build_abp_translit rule must change 0 rows.
   32 + 357 = **389** and covered **4,022**, both = the §6 figures. 455,812 bytes, sha256
   `d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b` → **PINNED** in
   `restore_surface_fill.py`. Name slots 22 vs census Q6's 21: Q6 counted inserts only, so 22 should be
-  21 inserts + 1 update — check owed (awk line in the run reply), not yet confirmed.
+  21 inserts + 1 update — **confirmed** (JP awk read of the snapshot: 21 insert · 1 update). Checksum
+  file `sha256sum -c` OK · 4,412 lines (header + 4,411).
 
 **Open, for the edition-upgrade lane (not this one):** the snapshot's old rows describe the layout it
 was taken from. After a restore that MOVES slots, the next rebuild needs a fresh snapshot of the
