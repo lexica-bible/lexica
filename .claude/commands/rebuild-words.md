@@ -92,7 +92,9 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
    project_blank_strongs_fill.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
-   (import_tipnr, 31,392 matched at the 2026-07-16 roster — the build CLEARS is_pn + PN
+   (import_tipnr, **31,649 matched** — re-pinned 2026-10-26: the 10/26 re-key chain's log equals
+   the 8/5 lane-② ride's `~/bible-db/finish_pnstar2.log` line for line, timestamps aside; was 31,392
+   at the 2026-07-16 roster, before lane ② — the build CLEARS is_pn + PN
    Strong's) then the PINNED
    data-patches that can't fold, then a final punctuation float. Each only touches its own named
    verses, safe to re-run.
