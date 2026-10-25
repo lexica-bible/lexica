@@ -57,6 +57,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections import Counter
 from html.parser import HTMLParser
 
 BASE = "https://www.apostolicbibleapp.com/"
@@ -69,9 +70,22 @@ CONTROL_CHAPTERS = [("Genesis", 25), ("1 Kings", 11)]
 _last_request = [0.0]
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Never follow a redirect. The server spell-corrects missing names: a request
+    for "Genesis 51.html" is 301-redirected to "Genesis 15.html" (and "Genesis
+    56.html" gets 300 Multiple Choices) — following it would file chapter 15 under
+    51. A 3xx is returned as its status instead (2026-10-24 PA run)."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
 def http_get(path, delay):
-    """GET BASE+path. Returns (status, bytes). 404 -> (404, b''). Waits so two
-    requests are never closer than `delay` seconds. Retries transient failures."""
+    """GET BASE+path. Returns (status, bytes); any 3xx/4xx comes back as
+    (status, b'') with no retry. Waits so two requests are never closer than
+    `delay` seconds. Retries only server errors (5xx) and network failures."""
     url = BASE + urllib.parse.quote(path)
     for attempt, backoff in enumerate((0, 5, 15, 45)):
         if backoff:
@@ -82,11 +96,11 @@ def http_get(path, delay):
         _last_request[0] = time.time()
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with _OPENER.open(req, timeout=60) as r:
                 return r.status, r.read()
         except urllib.error.HTTPError as e:
-            if e.code == 404:
-                return 404, b""
+            if e.code < 500:
+                return e.code, b""
             err = f"HTTP {e.code}"
         except (urllib.error.URLError, TimeoutError, OSError) as e:
             err = str(e)
@@ -118,20 +132,39 @@ def page_name(book, ch):
     return f"{book} {ch}.html"
 
 
+TITLE_RE = re.compile(rb"<title>\s*(.*?)\s*</title>", re.S | re.I)
+
+
+def page_title(body):
+    m = TITLE_RE.search(body or b"")
+    return m.group(1).decode("utf-8", "replace").strip() if m else None
+
+
 def get_chapter(book, ch, delay, refresh):
-    """Cached page bytes, or None if the page 404s. Raises on fetch failure."""
+    """-> (status, body). status 200 = the page exists AND its own <title> reads
+    "<Book> <n>" (checked on cached pages too — a cached page whose title is
+    wrong is deleted and re-requested). Any other status = no such page."""
     p = os.path.join(CACHE, page_name(book, ch))
+    want = f"{book} {ch}"
     if not refresh and os.path.exists(p) and os.path.getsize(p) > 0:
         with open(p, "rb") as f:
-            return f.read()
+            body = f.read()
+        if page_title(body) == want:
+            return 200, body
+        print(f"  ! cached {page_name(book, ch)} has title {page_title(body)!r} — "
+              f"discarded, re-requesting", file=sys.stderr)
+        os.remove(p)
     st, body = http_get("Chapters/" + page_name(book, ch), delay)
-    if st == 404:
-        return None
-    if st != 200 or not body:
-        raise RuntimeError(f"fetch failed: {book} {ch} (status {st})")
+    if st != 200:
+        return st, b""
+    if not body:
+        raise RuntimeError(f"fetch failed: {book} {ch} (empty 200)")
+    if page_title(body) != want:
+        raise RuntimeError(f"fetch failed: {book} {ch} page title reads "
+                           f"{page_title(body)!r}")
     with open(p, "wb") as f:
         f.write(body)
-    return body
+    return 200, body
 
 
 class ChapterParser(HTMLParser):
@@ -325,6 +358,7 @@ def main():
         probe = True
 
     rows, notes, anomalies, failures, extra = [], [], [], [], []
+    probe_end = Counter()
     zero_listed = [n for _, n, cnt in books if cnt == 0]
     done_pages = 0
 
@@ -335,12 +369,12 @@ def main():
             continue
         for c in chs:
             try:
-                body = get_chapter(name, c, delay, args.refresh)
+                st, body = get_chapter(name, c, delay, args.refresh)
             except RuntimeError as e:
                 failures.append(str(e))
                 continue
-            if body is None:
-                failures.append(f"404: {name} {c} (listed in chapters.js)")
+            if st != 200:
+                failures.append(f"HTTP {st}: {name} {c} (listed in chapters.js)")
                 continue
             r, nt, a = parse_page(name, c, body)
             rows.extend(r)
@@ -351,11 +385,15 @@ def main():
             nxt = max(chs) + 1
             while True:
                 try:
-                    body = get_chapter(name, nxt, delay, args.refresh)
+                    st, body = get_chapter(name, nxt, delay, args.refresh)
                 except RuntimeError as e:
                     failures.append(f"probe {e}")
                     break
-                if body is None:
+                if st is None or st >= 500:
+                    failures.append(f"probe {name} {nxt}: no answer (status {st})")
+                    break
+                if st != 200:
+                    probe_end[st] += 1      # 404 / 300 / 301 = no such chapter
                     break
                 extra.append(f"{name} {nxt}")
                 r, nt, a = parse_page(name, nxt, body)
@@ -395,6 +433,8 @@ def main():
     if probe:
         print(f"chapters beyond the chapters.js count that EXIST: {len(extra)}"
               + (f" -> {', '.join(extra)}" if extra else ""))
+        print("end-of-book probe answers (no such chapter): "
+              + "  ".join(f"HTTP {k}×{v}" for k, v in sorted(probe_end.items())))
     print(f"parser anomalies: {len(anomalies)}")
     for a in anomalies[:40]:
         print(f"  {a}")

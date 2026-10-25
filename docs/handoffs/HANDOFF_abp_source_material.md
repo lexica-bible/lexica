@@ -42,6 +42,8 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   stray "> 2532" number cells (Oba 1:14/18/21) · chapters.js lists the five one-chapter
   books as 0 (page is still "<Book> 1.html") · Psalm titles: our verse 0 = the app's verse 1
   (the audit's versification probe reports the shift; main numbers keep the plain key).
+  · The site SPELL-CORRECTS missing pages ("Genesis 51" → 301 to Genesis 15; "Genesis 56" →
+  300): the fetch never follows a redirect and checks every page's own title, cached ones too.
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
