@@ -15,6 +15,19 @@ the symbol-font map, the app's HTML layout, and JP's pre-registered order (a) ap
 (b) lexicon table → (c) concordance counts (answers MIXED 47) → (d) index. No writes until
 (a) is in hand. Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
 'none'-label cleanup (rides the next identity rebuild).
+**Lane (a) DONE 10/24** (readout in the handoff). JP rulings on it:
+- Pro 16 / Jer 10 / Hab 3: ours = English numbering (our Pro 16:5 = KJV 16:5; LXX lacks
+  16:1–4); the app numbers LXX verses in sequence. NO renumber; the audit's per-verse map is
+  the record. Names headword-vs-inflected: by design, no action.
+- FILED, not now — **glued NBSP values in abp_surface (544)**: own small write lane, same
+  shape as the August glued-name fix (census with a control first). Examples 1Sa 17:57 pos 22
+  'χειρί αυτού', 'είπε Δαυίδ', 'ο δε'. Finder: `scripts/audit_abp_app_vs_surface.py` class
+  "our value is a two-word NBSP value".
+- FILED, not now — **540 same-slot number disagreements** (app vs ours, after swaps): a
+  read-by-hand list; needs the audit to write them to a TSV.
+- DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
+  in 29% of paired verses). No charter yet.
+**Lane (b) STARTED 10/24** — Analytical Lexicon → table.
 
 ## Greek header arc — CLOSED 9/6 (landed + served + signed off). NEXT: ABP-tab routing
 **Header table LIVE** (32,478 rows, post-apply gate live=copy exact, 5×200), **JP

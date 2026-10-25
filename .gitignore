@@ -38,3 +38,5 @@ draws/
 
 # ABP app witness pages + flattened TSV (scripts/fetch_abp_app.py); third-party text, never committed
 abp_app_html/
+# ABP purchased helps (Analytical Lexicon etc.) parsed output; purchased text, never committed
+abp_helps/
