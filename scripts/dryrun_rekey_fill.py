@@ -21,19 +21,23 @@ Inputs (all explicit):
 Keys (JP ruling 2026-10-26):
   key 2 (primary)  verse_id + full strongs + ordinal (k-th slot with that number in the verse)
   key 1 (check)    verse_id + full strongs + english (exact bytes)
-  placed = both keys find exactly one slot, the SAME slot, and — where the row's class is
-  Lexicon-backed — number + form agree at that slot (the apply's own rule; third witness).
+  placed = key 2 finds one slot and key 1 confirms it — agree-strong (key 1 finds exactly that
+  slot) or agree-weak (key 1 finds several slots, key 2's among them: the verse repeats the same
+  number + English; JP ruling 2026-10-26) — and, where the row's class is Lexicon-backed, number +
+  form agree at that slot (the apply's own rule; see the charter §6 on why this cannot differ from
+  the old slot under these keys).
 
 Reasons (charter §2b closed list): 1 no slot (key 2 found none) · 2 ambiguous · 3 and 4 NOT
 EVALUATED here (they need the step-9 builder output, which this dry run deliberately lacks) ·
-5 number + form disagree at the new slot · 6 cross-check (key 1) found none / several ·
-7 key conflict (both found one slot, different slots).
+5 number + form disagree at the new slot · 6 cross-check (key 1) found none, or several that
+do not include key 2's slot · 7 key conflict (both found one slot, different slots).
+Every unplaced row is listed (first 100) with its old and built English.
 
 Controls, run first; a failed control STOPS before any result is printed:
   G0   copy-of-live diff = 4,411 rows / 538 rows vs the pre-fill copy, and = the approved CSV
   V    verses identical in --old and --built (verse_id is the one key part assumed stable)
   C1   identity: re-keying --old onto itself puts every row on its own slot (key 2), with no
-       reason 1/2/5/7 — so the Lexicon witness passes every covered row at its own slot
+       unplaced reason at all — so the Lexicon witness passes every covered row at its own slot
   C2   the witness can say no: a covered form tested against a neighbouring number must fail
 
 Run on PA only with the reviewed command sequence (CHARTER_rebuild_trap_fix.md §6).
@@ -57,7 +61,7 @@ REASONS = {
     1: "no slot (key 2 found none)",
     2: "ambiguous",
     5: "number + form disagree at the new slot",
-    6: "cross-check (key 1) found none / several",
+    6: "key 1 none / several without key 2's slot",
     7: "key conflict",
 }
 
@@ -196,10 +200,12 @@ def decide(k2, k1):
     if s1 == "none":
         return 6, "key 1 none"
     if s1 == "amb":
-        return 6, "key 1 several, incl. key 2's slot" if p2 in p1 else "key 1 several, not key 2's slot"
+        if p2 in p1:                    # JP ruling 2026-10-26: counts as agreement, tagged weak
+            return 0, "agree-weak"
+        return 6, "key 1 several, not key 2's slot"
     if p1 != p2:
         return 7, "both one slot, different"
-    return 0, ""
+    return 0, "agree-strong"
 
 
 def rekey(fill, old_w, new_w, cls_of, lex, covered):
@@ -293,12 +299,12 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
     say("C1  identity control (re-key --old onto itself)")
     ident = rekey(fill, old_w, old_w, cls_of, lex, covered)
     k2_self = sum(1 for r in ident if r["k2"] == ("one", r["pos"]))
-    hard = Counter(r["reason"] for r in ident if r["reason"] not in (0, 6))
-    r6_floor = sum(1 for r in ident if r["reason"] == 6)
-    say(f"    key 2 maps to itself {k2_self:,}/{len(fill):,} · reasons 1/2/5/7 on identity: "
+    hard = Counter(r["reason"] for r in ident if r["reason"])
+    weak_floor = sum(1 for r in ident if r["detail"] == "agree-weak")
+    say(f"    key 2 maps to itself {k2_self:,}/{len(fill):,} · any unplaced reason on identity: "
         f"{dict(hard) if hard else 0}")
-    say(f"    reason 6 on identity = {r6_floor:,} (key 1 several: a verse repeats number + English "
-        "— the floor reason 6 cannot go below on any build)")
+    say(f"    agree-weak on identity = {weak_floor:,} (key 1 several: a verse repeats number + "
+        "English — the floor agree-weak cannot go below on any build)")
     if k2_self != len(fill) or hard:
         raise Stop("C1 identity control failed — the keys or the witness do not do what they claim")
     say("    PASS")
@@ -329,12 +335,26 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
     unplaced = [r for r in res if r["reason"]]
     by_reason = Counter(r["reason"] for r in unplaced)
     say(f"  placed {len(placed):,} · unplaced {len(unplaced):,} · total {len(res):,} (must be 4,411)")
+    agreement = Counter(r["detail"] for r in placed)
+    say(f"    placed as agree-strong {agreement.get('agree-strong', 0):,} · "
+        f"agree-weak {agreement.get('agree-weak', 0):,}")
     for n in sorted(REASONS):
         say(f"    reason {n}  {REASONS[n]:42} {by_reason.get(n, 0):,}")
     say("    reasons 3 + 4: NOT EVALUATED — they need the step-9 builder output (not run by design)")
     for (n, d), c in sorted(Counter((r["reason"], r["detail"]) for r in unplaced
                                     if r["reason"] in (1, 2, 6, 7)).items()):
         say(f"      reason {n}: {d:42} {c:,}")
+    if unplaced:
+        new_eng = {(v, r[0]): r[2] for v, rows in new_w.items() for r in rows}
+        say(f"  UNPLACED rows (first {min(100, len(unplaced))} of {len(unplaced)}): verse · old pos · "
+            "old English → built English at key 2's slot · reason")
+        for r in unplaced[:100]:
+            b, c, v = vold[r["vid"]]
+            p2 = r["k2"][1]
+            built = repr(new_eng.get((r["vid"], p2))) if p2 is not None else "(no key-2 slot)"
+            say(f"    {b} {c}:{v} · pos {r['pos']} · {old_pos[(r['vid'], r['pos'])][2]!r} → "
+                f"{built} (pos {p2}) · reason {r['reason']} {r['detail']} · "
+                f"is_pn {old_pos[(r['vid'], r['pos'])][3]}")
     say("  per key:")
     say(f"    key 2: {dict(sorted(Counter(r['k2'][0] for r in res).items()))}")
     say(f"    key 1: {dict(sorted(Counter(r['k1'][0] for r in res).items()))}")
@@ -357,7 +377,7 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
 
     with open(real(a.out), "w", encoding="utf-8", newline="\n") as f:
         f.write("book\tchapter\tverse\told_position\tnew_position\tcls\taction\tis_pn\t"
-                "form\tkey2\tkey1\treason\tdetail\tlexicon\n")
+                "form\tkey2\tkey1\treason\tdetail\tlexicon\tagreement\n")
         for r in res:
             b, c, v = vold[r["vid"]]
             k = (r["vid"], r["pos"])
@@ -365,7 +385,8 @@ def _run(a, cold, cpre, cnew, covered, Lexicon, agree):
                 b, c, v, r["pos"], "" if r["new_pos"] is None else r["new_pos"], r["cls"],
                 writes[k]["action"], old_pos[k][3], r["form"],
                 f"{r['k2'][0]}:{r['k2'][1]}", f"{r['k1'][0]}:{r['k1'][1]}",
-                r["reason"] or "placed", r["detail"], r["lex"])) + "\n")
+                r["reason"] or "placed", r["detail"], r["lex"],
+                r["detail"].replace("agree-", "") if not r["reason"] else "")) + "\n")
     say(f"\n  per-slot report: {real(a.out)} ({len(res):,} rows)")
     say("RESULT: DRY RUN COMPLETE — nothing written to any database")
     return 0

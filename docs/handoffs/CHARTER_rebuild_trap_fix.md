@@ -99,6 +99,16 @@ BELOW the floor (`scripts/health_check.py:138-140`), so a floor set strictly abo
 live today. This charter reads it as "raise it to 395,003" — the lowest floor that still catches the
 loss. Confirm or correct.
 
+### Part (d) — the lane-3 hand repairs ride the rebuild (JP ruling 2026-10-26, promoted from TODO)
+**G4 — `finish_rebuild.sh` runs `fix_lane3_star_merges.py` on `$1` for BOTH frozen files after the
+chain** (`scripts/lane3_star_fixes.json` 9 verses / 23 ops; `scripts/lane3_star_fixes2.json` 7 / 17),
+each step passing only on its own "N verse(s) patched, 0 skipped" line with N pinned (9, 7) and no
+per-verse render/contiguity FAIL. Then step 10 vs live must read **english diff 0** (name-slot
+`strongs_base` excepted while 8b is skipped). Expected alongside, read if not: greek_pos 0 and
+english_head 0 — the two files' own edits are exactly the 35 english + 38 greek_pos cells the 10/26
+compare found (counted op by op from the files). Chain edit DRAFTED, not committed: JP reads the diff
+first. One guard not confirmable from the repo: Mat 27:26 pos 7 is pinned `strongs_base G2424`.
+
 ---
 ## §3 The re-key method — RULED 2026-10-26
 
@@ -115,6 +125,17 @@ not "both agree", so it is unplaced — counted as its own reason (6) so the dry
 so under this ruling every such slot is unplaced. On a same-code rebuild that should be few; on the
 English-line edition upgrade it is the 29% case. The dry run reports reason 6 by itself so this is
 measured, not argued.
+
+**Second ruling, after the dry run (JP 2026-10-26):** "'key 1 several, incl. key 2's slot' =
+agreement. Tag as agree-weak in the TSV and summary." Placed = agree-strong (key 1 finds exactly key
+2's slot) or agree-weak (key 1 finds several, key 2's among them). Reason 6 now = key 1 none, or
+several without key 2's slot. Expected on the same copies: placed 4,403 (4,050 strong + 353 weak) /
+unplaced 8.
+
+**What a same-code rebuild moves (JP ruling 2026-10-26, recorded):** on a rebuild from the same code
+and inputs as live, **zero fill slots move** (10/26 dry run: key 2 found every one of the 4,411 at its
+old position). So for the trap fix alone the payload is **preserve + re-apply**; the re-key keys are
+exercised for real only by a rebuild that moves positions or English — the edition upgrade.
 
 **The analysis the ruling was made on (kept as the record):**
 

@@ -26,7 +26,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import dryrun_rekey_fill as dr   # noqa: E402
 
-VERSES = [(i, "Gen", 1, i) for i in range(1, 7)]
+VERSES = [(i, "Gen", 1, i) for i in range(1, 8)]
 OLD_WORDS = [
     (1, 1, "3588", "the", 0), (1, 2, "3056", "word", 0), (1, 3, "2316", "of God", 0),
     (2, 1, "2316", "God", 0), (2, 2, "2316", "God,", 0),
@@ -34,6 +34,7 @@ OLD_WORDS = [
     (4, 1, "3056", "word", 0),
     (5, 1, "2532", "and", 0), (5, 2, "2532", "and", 0),
     (6, 1, "3588", "the", 0),
+    (7, 1, "3588", "the", 0), (7, 2, "3588", "the", 0),
 ]
 BUILT_WORDS = [
     (1, 1, "2532", "and", 0), (1, 2, "3588", "the", 0), (1, 3, "3056", "word", 0),
@@ -41,8 +42,10 @@ BUILT_WORDS = [
     (2, 1, "2316", "God,", 0), (2, 2, "2316", "God", 0),   # English swapped: keys disagree
     (3, 1, "3056", "saying", 0),                       # English changed: key 1 finds none
     (4, 1, "3057", "word", 0),                         # number changed: key 2 finds none
-    (5, 1, "2532", "and", 0), (5, 2, "2532", "and", 0),    # repeated English: key 1 several
+    (5, 1, "2532", "and", 0), (5, 2, "2532", "and", 0),    # repeated English: agree-weak
     (6, 1, "3588", "the", 0),
+    (7, 1, "3588", "the.", 0), (7, 2, "3588", "the", 0),   # key 1 several, NOT key 2's slot
+    (7, 3, "3588", "the", 0),
 ]
 # fill rows: (verse_id, position, form, cls, action, old_form)
 FILL = [
@@ -52,6 +55,7 @@ FILL = [
     (4, 1, "λόγου", "fill_resolved", "insert", ""),
     (5, 2, "και", "fill_resolved", "insert", ""),
     (6, 1, "τοῦ", "normalize_only", "update", "τω"),
+    (7, 1, "τοῦ", "fill_resolved", "insert", ""),
 ]
 LEXICON = [("3056", "λόγος", "λόγου"), ("2316", "θεός", "θεοῦ"),
            ("2532", "καί", "και"), ("3588", "ὁ", "τοῦ")]
@@ -104,7 +108,7 @@ class RekeyDryRun(unittest.TestCase):
             for row in LEXICON:
                 f.write("\t".join(row) + "\n")
         self._saved = (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE)
-        dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = 6, 1, 5, 1
+        dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = 7, 1, 6, 1
 
     def tearDown(self):
         dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = self._saved
@@ -153,10 +157,15 @@ class RekeyDryRun(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertEqual(before, [digest(x) for x in (self.old, self.pre, self.built)])
         for line in ("C1  identity control", "C2  witness negative control",
-                     "placed 2 · unplaced 4 · total 6",
+                     "agree-weak on identity = 2", "any unplaced reason on identity: 0",
+                     "placed 3 · unplaced 4 · total 7",
+                     "placed as agree-strong 2 · agree-weak 1",
                      "reason 1: key 2 none, key 1 none", "reason 6: key 1 none",
-                     "reason 6: key 1 several, incl. key 2's slot",
+                     "reason 6: key 1 several, not key 2's slot",
                      "reason 7: both one slot, different",
+                     "UNPLACED rows (first 4 of 4)",
+                     "Gen 1:3 · pos 1 · 'word' → 'saying' (pos 1) · reason 6 key 1 none",
+                     "Gen 1:4 · pos 1 · 'word' → (no key-2 slot) (pos None) · reason 1",
                      "placed rows whose position moved: 1",
                      "Lexicon-UNCOVERED group (all 4,411, by class): 1",
                      "RESULT: DRY RUN COMPLETE"):
@@ -170,12 +179,15 @@ class RekeyDryRun(unittest.TestCase):
         self.assertEqual(rows[("2", "2")]["reason"], "7")
         self.assertEqual(rows[("3", "1")]["reason"], "6")
         self.assertEqual(rows[("4", "1")]["reason"], "1")
-        self.assertEqual(rows[("5", "2")]["reason"], "6")
+        self.assertEqual((rows[("5", "2")]["reason"], rows[("5", "2")]["agreement"]),
+                         ("placed", "weak"))
+        self.assertEqual(rows[("1", "2")]["agreement"], "strong")
         self.assertEqual((rows[("6", "1")]["reason"], rows[("6", "1")]["lexicon"]),
                          ("placed", "uncovered"))
+        self.assertEqual((rows[("7", "1")]["reason"], rows[("7", "1")]["agreement"]), ("6", ""))
 
     def test_g0_stops_when_the_diff_is_not_the_fill(self):
-        dr.EXPECT_DIFF_NEW = 7
+        dr.EXPECT_DIFF_NEW = 8                 # one more than the planted fill
         rc, out = self.run_dr()
         self.assertEqual(rc, 1)
         self.assertIn("G0 diff counts are not the fill's", out)
