@@ -8,19 +8,23 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## NEXT SESSION (JP 10/24): lane (c) — Lexical Concordance → number → verse counts
-Opener: `docs/handoffs/HANDOFF_abp_source_material.md` (lanes, numbers, rulings). Lanes (a)
-app diff and (b) Analytical Lexicon are done (record in TODO_ARCHIVE 10/24). (c) diffs the
-concordance's per-number verse counts against the ABP tab's totals — answers the MIXED 47
-(routing follow-up c). Then (d) English-Greek Index. PDFs are in JP's Downloads
-(`lexical_concordance.pdf`, `index.pdf`); parse locally like `parse_abp_analytical_lexicon.py`.
-Left open from 10/24, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale
-'none'-label cleanup (rides the next identity rebuild).
+## NOW (JP 10/25): lane (2) — Lexical Concordance → number → verse counts (read-only)
+Opener: `docs/handoffs/HANDOFF_abp_source_material.md` (status block at the top). Lane (1)
+abp_surface FILL is LIVE 2026-10-25 (4,411 writes, 391,130 → 395,003; record
+`docs/handoffs/CENSUS_abp_surface_fill.md`). Lane (2) diffs the concordance's per-number verse
+counts against the ABP tab's totals — answers the MIXED 47 (routing follow-up c). Scope the
+parse first (page sample, pattern, expected entry count), report, then build. Then (d)
+English-Greek Index. PDFs in JP's Downloads; parse locally like `parse_abp_analytical_lexicon.py`.
+Left open, no lane: Baal 1Ch 5:23 (H1179) · routing follow-up (h) · the stale 'none'-label
+cleanup (rides the next identity rebuild) · the fill's held list (handoff status block).
+- OPEN — **the abp_surface fill does not survive a words rebuild.** `build_abp_surface.py` drops
+  the table and neither backfill re-creates the 4,411 fill writes; `apply_abp_surface_fill.py` is
+  one-shot (keyed to 391,130 rows). Needs a re-landable fill step in the rebuild chain before the
+  next rebuild (warning now in `/rebuild-words` step 9). Also: the health_check floor (389,244)
+  can rise to 395,003 once that step exists.
+- Rollback copies: `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
+  stay until a nightly bible.db copy is stamped after 2026-10-25 03:08 and verified.
 Filed from lane (a)/(b), not now:
-- FILED, not now — **glued NBSP values in abp_surface (544)**: own small write lane, same
-  shape as the August glued-name fix (census with a control first). Examples 1Sa 17:57 pos 22
-  'χειρί αυτού', 'είπε Δαυίδ', 'ο δε'. Finder: `scripts/audit_abp_app_vs_surface.py` class
-  "our value is a two-word NBSP value".
 - FILED, not now — **540 same-slot number disagreements** (app vs ours, after swaps): a
   read-by-hand list; needs the audit to write them to a TSV.
 - DECIDED, not scheduled — **edition upgrade to the app's English** (English words differ
@@ -85,7 +89,7 @@ incl. the batch-3-may-be-superseded adjudication and the 875-vs-871 read).
 - Form-lane follow-ups (filed 8/23):
   - Teach `audit_surface_coverage.py`'s stored-vs-live control the backfill sum (its
     MISMATCH warning is now a permanent false alarm on any backfilled table).
-  - Re-declare the health_check `abp_surface` floor 389,244 → **391,130**.
+  - Re-declare the health_check `abp_surface` floor 389,244 → **391,130** (superseded 10/25: the fill made it 395,003 — see the NOW block; raise once the fill re-lands on rebuild).
   - Gentilic `is_pn` check: Gen 39:17 & 41:12 "hebrew" slots — joins the 8/7 gentilic
     follow-up. **8/24 add: "midianitish" (Num 25:15) is a people-word
     `er.is_people_group` does not recognize** — predicate gap, fix belongs to that

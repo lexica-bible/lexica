@@ -228,6 +228,10 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
    backfill trips the floor (the 2026-07-16 miss is why the guard exists). THEN re-run
    `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
    SBL style from the lexicon, 'h' from the lemma) — it covers all backfilled rows too.
+   **⚠ The 2026-10-25 abp_surface FILL (4,411 writes, table 391,130 → 395,003; record
+   `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above.** A rebuild
+   drops it. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows) — re-landing the fill
+   after a rebuild needs its own gated step (TODO). Do not swap a rebuilt db without deciding this.
 10. RE-GENERATE the two-ending adjective soften-lists: run `scripts/build_two_ending.py` on PA, paste its
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory

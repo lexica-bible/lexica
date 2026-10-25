@@ -6,6 +6,16 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-25 — abp_surface FILL (lane 1) LIVE
+Census → dry run (JP-approved) → gated apply, all on 10/24–25. 4,411 writes: 3,823 printed forms
+filled where abp_surface had none (app form, Analytical Lexicon match on number + form; app ἡ→ή,
+530 forms) + 182 glued NBSP values split onto existing neighbour slots (92 trim, 89 keep + receive)
++ 357 normalized to one plain space. Table 391,130 → 395,003; no lemma written; translit written
+with the fill. Held list + rollback in `docs/handoffs/HANDOFF_abp_source_material.md` (status
+block); full record `docs/handoffs/CENSUS_abp_surface_fill.md`. Scripts:
+`census_abp_surface_glued.py` (rules, one copy) · `dryrun_abp_surface_fill.py` ·
+`apply_abp_surface_fill.py` (+ `--rollback`). Rebuild trap filed in TODO.
+
 ## 2026-10-24 — ABP source material: lane (a) app diff DONE · lane (b) Analytical Lexicon numbers in
 
 Read-only throughout; nothing written to any database. Full numbers + JP rulings:

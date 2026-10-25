@@ -3,6 +3,31 @@
 Written 2026-10-24 from JP's notes. Everything under "What JP verified" was checked by JP
 OUTSIDE CC; this session did not open these files. Re-verify any detail a step leans on.
 
+## STATUS 2026-10-25 — lane (1) abp_surface FILL is LIVE; next = lane (2) Lexical Concordance
+- **Applied 2026-10-25 03:08 (PA)** by `scripts/apply_abp_surface_fill.py`: 4,411 writes
+  (3,873 new printed forms + 538 changed: 92 trims, 89 split keeps, 357 NBSP → space),
+  abp_surface 391,130 → **395,003**, every check PASS (written rows = the approved CSV byte for
+  byte, all other rows = the copy, G1–G6, C1–C3, quick_check ok; the translit builder changed 0
+  rows). The 03:11 re-run was REFUSED by the preflight (already applied) — as designed.
+  Full record + rulings: `CENSUS_abp_surface_fill.md`. Apply output: `~/abp_surface_fill_apply.txt`.
+- **Rollback** (restores abp_surface only, from the copy, in one checked step):
+  `PYTHONIOENCODING=utf-8 python3 scripts/apply_abp_surface_fill.py ~/bible-db/bible.db --rollback`
+- **Keep-until rule for BOTH copies:** `~/bible.db.pre-surface-fill-20261025` (this fill) and
+  `~/bible.db.pre-xref-fix-20261024` (the 10/24 xref fix) stay until a nightly bible.db copy in
+  `~/db_backups` is stamped AFTER 2026-10-25 03:08 (`ls -lh ~/db_backups | grep bible`; nightly
+  ~13:30 UTC) and verified. Then the older copy can go; the fill copy follows the ops.md
+  single-rollback rule from there.
+- **Rebuild trap:** `build_abp_surface.py` drops and rebuilds its table, and neither backfill
+  re-creates this fill — a words rebuild (rebuild-words step 9) would silently lose the 4,411
+  writes. Re-landing it needs its own step (the apply script is one-shot, keyed to 391,130 rows).
+  Filed in TODO.
+- **Held list** (all recorded below under lane (a)'s "Same slot, different number" entry): the
+  540 + 13 number disagreements · 4 split conflicts (Dan 9:5, Eze 7:4 suspected slot errors) ·
+  Isa 41:14 ambiguous · Deu 4:45 D disagreement · 3 unmapped app letters (Psa 60:0 pos 22 suspected
+  misalignment) · 28 English-in-Greek · 33 unlisted (lemma held) · 1,420 unflagged glued (23 + 3
+  for a later pass) · the 60 plain-η spots · 1,823 empty words.lemma. Plus, next to Baal: the
+  30-vs-27 glued names.
+
 ## What JP verified (2026-10-24)
 1. **Purchased** from apostolicbible.com, order EC9378: *Analytical Lexicon* (419 pp),
    *Lexical Concordance* (366 pp), *English-Greek Index* (90 pp). Free: NT 4th ed. PDF, OT 3rd
