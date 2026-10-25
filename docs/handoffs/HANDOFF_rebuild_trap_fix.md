@@ -21,6 +21,16 @@ the code-cited census is `docs/handoffs/CENSUS_rebuild_trap.md`. Read the charte
   import_tipnr matched 31,392 → 31,649 (checklist); `restore_frozen_pn.py` EXPECT 6 → 8 (the full
   2Sa 18 Cushi set); `retire_hebrew_identity.py` class split → the 9/6 figures. Receipts in the code.
 
+## UPDATE 2026-10-26 (live run) — REBUILD SWAPPED LIVE; the fill survived. Receipts: charter §10
+JP ran `RUN_rebuild_trap_live.md` A–K on PA; reviewer cleared A–I and the swap. Live now = the rebuilt
+db: 395,003 surface rows (restored table = old live row for row), floor GREEN, invariants 0, site
+serving. Rollback = `~/bible-db/bible_pre_trapwire_swap.db` (one move back). Rulings: header gate A/B
+ABORT overridden for this run (attributed) · Sheshach follows the page. **Owed next (not run):**
+checklist steps 7 (served spot-checks), 10 (two-ending regen) and 11 (`build_rendering_norm.py`, held
+item 9 — live-relevant now). `~/rekey/pre_rebuild.db` (the pre-run copy of live) can go after the
+receipts are filed and a nightly postdates the swap — a separate step, never in a line naming a file
+still in use.
+
 ## UPDATE 2026-10-26 (wiring lane) — PATH A BUILT; next = JP runs the live sheet (when he wants a rebuild)
 Step 0 answer: **step 9 reads nothing that exists only on live — sequencing only** (receipt + history
 verbatim in charter **§9**). So, by JP's ruling, Path A: step 9, the restore (9a) and the floor +
@@ -69,21 +79,33 @@ chain must first total 391,130) · **G2 every slot placed or unplaced with a clo
 first evaluated there. Copy-first; dry run → verdict → apply, as always.
 
 ## Held items (none blocks the build; each has a TODO entry)
-1. **21 Greek headers + Sheshach** — live's header table predates the 10/25 fill; any header rebuild
-   changes 21 rows (mostly gains). Sheshach gets two spellings (Σεσάκ / Σησάχ) — content ruling first.
+1. ~~**21 Greek headers + Sheshach**~~ — **CLOSED 2026-10-26 (live rebuild):** the 21 rows shipped at
+   the swap; reviewer ruled Sheshach "header follows the page" (Σεσάκ Jer 51:41 · Σησάχ Jer 25:26).
+11. **`surface` vs `lemma-only` label (NEW, reviewer 10/26)** — the 2 Sheshach rows went `surface` →
+   `lemma-only` at the swap (accepted). Trace what the label changes on the card, and whether a header
+   that matches the page should carry `surface`.
+12. **Header gate A/B re-scope (NEW, reviewer 10/26)** — `gate_greek_header.py` A/B were built for the
+   7/30 header-only lane and abort on any full rebuild (binding relabels, the 21 rows, landing pins).
+   ABORT was overridden for the 10/26 run only; re-scope before the next rebuild.
+13. **Small follow-ups from the live run** — `health_check.py` waits only 5 s, so it reports false
+   "locked" errors in the minutes after a deploy (site workers' warm-up writes the AI cache) · the
+   build's closing text calls its source "live" when the source is a copy (its printed swap command
+   would move the copy and reload the site — never run it) · two old `bible_pre_pnstar_*` rollback
+   copies (~824 MB) beyond ops.md rule 1.
 2. **Header landing `->surface` 461 vs its receipt's 451** — 10 rows unattributed against
    `HANDOFF_gateB_enumeration.md`; class totals reconcile exactly.
-3. **Fresh-copy proof of gapfix entries 5–6** (2Sa 18:31 p7, 18:32 p15) — HALF DONE 10/26: built3
-   read `gapfix (6, 0, 0)`; only the `bracket_id`-vs-live half is left (next fresh copy).
+3. ~~**Fresh-copy proof of gapfix entries 5–6**~~ — **CLOSED 2026-10-26:** gapfix (6,0,0) on built3, and
+   the live rebuild's block I read `bracket_id` 0 vs live.
 4. **8b.3 ordering** — the identity build reads `abp_surface` before step 9 rebuilds it. Census still
    owed; not touched by the G1–G3 lane.
 6. ~~**Live wiring decision**~~ — **RESOLVED 2026-10-26 (charter §9, Path A):** there is no gap; step 9
    and the restore run on the copy before the swap. The live refusal stays.
-9. **Step 11 has the old step-9 shape (NEW, flagged in the wiring lane)** — the build never writes
-   `words.english_head_norm` (`build_words_from_abp.py:2154-2157`) and the finder only checks the column
-   exists (`views_lexicon.py:100-108`), so between the swap and step 11 the ABP English finder folds on
-   blank values. Not measured on PA. Same Step-0 question (any live-only input?) before the next
-   live rebuild; if none, it moves onto the copy too.
+9. **Step 11 has the old step-9 shape (flagged in the wiring lane) — NOW LIVE-RELEVANT:** the 10/26
+   swap happened and steps 10 + 11 have NOT run. The build never writes `words.english_head_norm`
+   (`build_words_from_abp.py:2154-2157`) and the finder only checks the column exists
+   (`views_lexicon.py:100-108`), so until step 11 runs the ABP English finder may fold on blank values.
+   Not measured on PA. Same Step-0 question (any live-only input?) before the next rebuild; if none, it
+   moves onto the copy.
 10. **AI caches live in bible.db (RECORD)** — rows written between the copy and the swap are dropped by
    the swap (they redraw on the next ask). The live sheet records the count before the swap.
 7. **Snapshot staleness (NEW)** — a restore that MOVES slots makes the frozen file stale for the next

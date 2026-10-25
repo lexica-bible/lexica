@@ -450,6 +450,55 @@ the only live write.
 - `~/abp_surface_fill_dryrun.csv` is a G0 input of step 1a and was missing from the PA keep list —
   added.
 
+## §10 LIVE REBUILD — RUN (JP, PA, 2026-10-26 16:37–18:12) — SWAPPED, every figure matched or ruled
+Sheet `RUN_rebuild_trap_live.md`, HEAD `a1998f0e`. Receipts (expected | actual = match unless noted):
+- **A / A2:** inputs present, snapshot `OK` · dashboard 7.8 / 10 GB · live copy `ok` · `delete` · 395,003.
+- **B (1a, first PA run of `--check`):** G0 4,411 / 538 · O · C byte-identical · sha256 `d9435bde…` both
+  sides · `SNAPSHOT CURRENT`.
+- **C:** build 626,305 · 0 · 6,882 · split 80 · PN-star 1,505 + 2,552 / 3,161 (article-slot pass 923 /
+  411 recorded, unpinned) · finish: import_tipnr 31,649 · corrections 33 / 0 · `done`.
+- **D (8b):** 8b.0 CONTROL OK, 369 = 319 / 22 / 27 / 1, applied 341 · 8b.1 Cushi 8 → 0 · 8b.2 classes
+  exact, 26,317 rewrites, xref 32,478, GLOB 0 · 8b.2a PASS (9,0,0) (6,0,0) (7,0,0) · 8b.3 identity 32,478,
+  render 15,378 + HOT 68, slot binds 102 / 0.
+- **8b.3 gates (first read):** unfindability PASS 0 / 0 · two-derivations 10 / 10 PASS · header gate C
+  PASS, **A + B FAIL — attributed member by member, ABORT overridden by the reviewer for this run:**
+  gate A = `pn_binding` 3 rows, the 3 Michaiah binds (2Ki 22:12, 2Ch 17:7, Neh 12:41) `ruled /
+  spelling-equiv` → `fuzzy`, same entity (checklist-predicted); `tipnr_entities` / `abp_surface`
+  byte-identical; words 626,309 + verses 31,237 both sides. Gate B = 21 header rows (the held 21): 18
+  page-attested fallbacks + 1 glued cure + 2 Sheshach violations; its 4 PIN lines (17 / 20 / 94 / 30 →
+  0 / 0 / 1 / 29) are the 9/6 landing's own counts and cannot recur on a post-landing compare (by
+  design). Root: gates A/B were built for the 7/30 header-only lane — re-scope for full rebuilds is a
+  logged follow-up.
+- **Sheshach — REVIEWER RULING:** the header follows the page — Σεσάκ at Jer 51:41 (slot 1), Σησάχ at Jer
+  25:26 (slot 25) (live had Σησάχ on both, `surface`; the rebuild carries each verse's printed form,
+  `lemma-only`). Rebuilt rows ship. **Held item 1 CLOSED on content.** Label change accepted for the
+  swap; NEW held: trace what `surface` vs `lemma-only` changes on the card, and whether a page-matching
+  header should carry `surface`.
+- **E (step 9 on the copy):** 346,111 + 13,183 + 31,836 = **391,130** (G1a).
+- **F:** floor RED 3,873 on the pre-fill copy and the rebuild.
+- **G (9a):** dry run 4,411 placed (4,057 / 354), 0 unplaced, 3,873 / 538, moved 0, G1b 0 / 0, Lexicon
+  4,022 / 389 · apply **G1 395,003 exactly**, 0 rows differ, translit rule 0, quick_check ok.
+- **H:** floor GREEN 0 · ALREADY RESTORED · GLOB 0 · full health report 0 warnings / 0 errors · tier 2
+  92.26% · six step-6 audits identical on the live copy and the rebuild: bracket genuine 3 · cross
+  function-anchor 0 · LORD REPAIRABLE 0 · REPAIRABLE-NOUN 0 · split-flip 0 · A1 177 (checklist "≈ 2" /
+  "≈ 176" were stale — re-declared to 3 / 177).
+- **I (vs live, read-only):** surface **0|0** (end-to-end oracle) · xref 519|519 · identity 21|21 · word
+  keys 0|0, 626,309 both sides · english / english_head / greek_pos / strongs / is_pn / **bracket_id 0**
+  (held item 3's bracket half CLOSED) · strongs_base 501, all name slots · AI cache 0|0|0.
+- **J (reviewer-cleared):** swap 18:06; old live → `~/bible-db/bible_pre_trapwire_swap.db` (442,912,768
+  bytes, the rollback) · deploy.sh: up to date, tests passed, API reload, sweep 200 ×5.
+- **K:** live 395,003 · quick_check ok · `delete` · floor GREEN 0 · disk 7.03 / 10 GB. First two
+  health_check runs hit `database is locked` on the words checks: each site worker's first-request
+  warm-up writes the AI cache (`app.py:430-458`) and health_check waits only Python's default 5 s
+  (`health_check.py:30`). Re-read the 4 words checks directly with a 60 s wait: bare strongs_base 0 ·
+  exact dupes 0 · misalignment 0 · fragmented over 190 0.
+- **G5 recorded at the swap:** `pn_hebrew_xref` 519 · `pn_greek_identity` 21 · name-slot `strongs_base` 501
+  moved — the 9/6 class basis (ruled correct), not a block.
+**Not done in this run:** checklist steps 7 (served spot-checks), 10 (two-ending regen) and 11
+(`build_rendering_norm.py`, the flagged after-swap item). Follow-ups logged: header gate A/B re-scope ·
+health_check busy wait · the build's closing text calls its source "live" when the source is a copy ·
+`surface`/`lemma-only` label trace · two old `bible_pre_pnstar_*` rollback copies (ops.md rule 1).
+
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second
   derivation · any non-fill row differing from the builder chain · G3 control not red on the

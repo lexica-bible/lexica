@@ -62,8 +62,15 @@ parser reference notes in its appendix). No open writes.
   (reviewer-accepted).** **WIRED 2026-10-26 (charter §9, Path A):** step 9 reads nothing live-only,
   so step 9 + the restore (9a) + floor/oracle (9b) run on the rebuilt COPY before the swap; new step
   1a `snapshot_surface_fill.py --check`; checklist reordered (RUN ORDER line); restore keeps its live
-  refusal. NEXT = JP runs `docs/handoffs/RUN_rebuild_trap_live.md` when a rebuild is wanted (hard
-  stop after block I for the verdict). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
+  refusal. **LIVE REBUILD SWAPPED 2026-10-26 18:06 — the fill survived** (surface 0|0 vs old live ·
+  395,003 · floor GREEN; receipts charter §10; rollback `bible_pre_trapwire_swap.db`). The trap itself
+  is FIXED. **Owed: checklist steps 7, 10, 11 not yet run after the swap** (step 11 = the flagged
+  item below, now live-relevant). Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md`.
+  - CLOSED — held item 1 (21 headers + Sheshach: header follows the page) · held item 3 (gapfix
+    bracket half: `bracket_id` 0 vs live).
+  - HELD — `surface`/`lemma-only` label trace (reviewer) · header gate A/B re-scope for full rebuilds
+    (reviewer) · health_check 5 s wait false "locked" after deploys · build closing text calls a copy
+    "live" · two old `bible_pre_pnstar_*` copies (handoff items 11–13).
   - ~~HELD — live wiring decision~~ — RESOLVED by §9 (no gap: nothing runs on live but the swap).
   - FLAGGED — **step 11 has the old step-9 shape:** the build never writes `english_head_norm`; the
     finder checks only that the column exists, so after a swap the ABP English finder folds on blanks

@@ -167,12 +167,14 @@ live after the swap — a separate table, flagged in the rebuild-trap handoff, n
 5. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
 6. Audits (the gates), all on bible_test.db, AFTER 9b (before step 9 the copy still carries live's
    old surface table, so its floor line passes for free): `health_check.py` (0 warnings) → `audit_bracket_order.py`
-   (CHIP genuine ≈ 2 = the known Jon 4:9 twin-bracket FPs, not garbles) → `scan_strongs_cross.py`
+   (CHIP genuine **3** — re-declared 2026-10-26 from the live rebuild, where live's own copy and the
+   rebuild both read 3; was "≈ 2", the known Jon 4:9 twin-bracket FPs) → `scan_strongs_cross.py`
    (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
    `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
    (G2316 0) → `audit_split_flip.py bible_test.db` (**MUST be 0** — the "LORD the" determiner-flip
    guard; if non-zero the `_split_compounds` source-phrase-order fix regressed, don't swap) →
-   `audit_corpus_tier1.py` (A1 ≈ 176) → `audit_corpus_tier2.py bible_test.db --rahlfs
+   `audit_corpus_tier1.py` (A1 **177** — re-declared 2026-10-26, live copy and rebuild both 177; was
+   "≈ 176") → `audit_corpus_tier2.py bible_test.db --rahlfs
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
