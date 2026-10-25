@@ -74,6 +74,12 @@ parser reference notes in its appendix). No open writes.
   Eze 23:5, Heb 11:24, Mat 9:11, Mat 27:26 — live has the name/adjective split off, the build has it
   merged back). Must be decided before any rebuild swap. (Also 17 english_head + 38 greek_pos diffs in
   the same compare — attribute by member when this is taken up.)
+- HELD — PRE-SWAP GATE (charter G5) — **live's name numbers are still on the 8/5 classes.** The 9/6
+  header landing moved 940 identity rows between classes but retirement was never re-run, so live's
+  `pn_hebrew_xref` classes and proper-noun `words.strongs_base` reflect 8/5. A rebuild (8b.2) writes the
+  9/6 classes and changes serving on 501 slots: 492 lose a Hebrew number (none→lemma-only), 9 gain one
+  (lemma-only→none); xref class changes on 519 rows, hebrew_base untouched (JP-run read 2026-10-26, G4
+  test copy). **Ruling required before any rebuild swap: 8/5 or 9/6 basis.**
 - HELD — **live's Greek-header table (pn_greek_identity) predates the 2026-10-25 abp_surface fill.**
   It was built 9/6; the fill later gave name slots printed forms. Any header rebuild (a words rebuild's
   8b.3, or a header re-run on live) therefore changes **21 rows** vs live — measured 2026-10-26 on the

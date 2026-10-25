@@ -251,6 +251,33 @@ step in the chain, the same dry run reads placed 4,411 · unplaced 0 · placed i
 (`correct_xref_vs_binding.py:259`, `restore_frozen_pn.py:113`, `retire_hebrew_identity.py:295`),
 none of which the dry run reads. Step 8 (swap + deploy) is never part of it.
 
+## §7 G4 test on PA (2026-10-26, fresh copy old2 → built2, full 8b) — step 10 record
+Ran: build (log identical to the first test build) → finish_rebuild (log identical, timestamps aside) →
+8b.0 (CONTROL OK; SWAP 319 · REMOVE 22 · LEAVE 27 · HOLD 1; applied 341) → 8b.1 (after re-declaring
+6→8: restored 8, 0 left) → 8b.2 (after re-declaring the class split: 26,317 rewrites, xref 32,478,
+GLOB 0) → **8b.2a LANE-3 STEP: PASS** (9/4/7 patched; re-run 0/9 · 0/4 · 0/7 already applied) →
+8b.3 (identity 32,478; binding render 15,378 + HOT 68; slot binds 102/0 refused).
+**Step 10 vs a fresh copy of live:** words english / english_head / greek_pos / strongs / is_pn **0**
+— G4's own gate (the lane-3 repairs survive) PASSES. Explained differences, each attributed row by row:
+- `pn_greek_identity` 21|21 — header table predates the 10/25 fill (JP ruling: explained; TODO held).
+- `pn_binding` 3|3 — the 3 Michaiah binds ruled/spelling-equiv → fuzzy, same entity (checklist-predicted).
+- **`pn_hebrew_xref` 519 + words `strongs_base` 501 — see G5.**
+- words `bracket_id` 2 — 2Sa 18:31 p7 + 18:32 p15, the 8/7 wordpos-lane hand repair (interior-blank
+  bracket marks, `TICKET_wordpos_binding.md:261-279`), held by no frozen file → added to
+  `lane3_star_gapfix.json` (JP ruling 2026-10-26; diff pending read). Verification = a fresh copy later,
+  NOT a re-run on built2 (its gapfix verses are already patched, so a mixed result is expected there).
+
+### G5 — PRE-SWAP GATE: the name-number class basis (JP ruling 2026-10-26: held, ruling required)
+Live's `pn_hebrew_xref` classes and its proper-noun `words.strongs_base` were last written at the 8/6
+retirement, on the **8/5** identity classes. The 9/6 Greek-header landing then moved 940 identity rows
+between classes and **retirement was never re-run**. A rebuild's 8b.2 writes from the **9/6** classes,
+so it changes what live serves on **501 slots** (JP-run read, G4 test copy vs fresh live copy): xref class
+lemma-only→none 21 + none→lemma-only 498 = 519 rows, hebrew_base identical on every row; words
+`H`→`*` 492 + `*`→`H` 9 = 501 (the other 18 have no Hebrew number, so `*` either way).
+**No rebuilt database is swapped live until it is ruled which basis is right — the 8/5 classes (today's
+serving) or the 9/6 classes (today's identity table).** Members: rerun the step-10 read B/C on any
+rebuild copy. TODO carries the same item.
+
 ## §4 STOP conditions
 - G0 diff ≠ 4,411 / 538 · G1a builder total ≠ 391,130 · any G2 placed row failing the second
   derivation · any non-fill row differing from the builder chain · G3 control not red on the
