@@ -44,6 +44,28 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
   (the audit's versification probe reports the shift; main numbers keep the plain key).
   · The site SPELL-CORRECTS missing pages ("Genesis 51" → 301 to Genesis 15; "Genesis 56" →
   300): the fetch never follows a redirect and checks every page's own title, cached ones too.
+  **First full run 2026-10-24 (JP, PA; controls C1–C3 PASS; C3 moved to the 27 pinned
+  compound names — the 1Ki 11:17 glued row is cured).** Fetch: 1,189 pages, 31,238 verses,
+  577,994 slots, 10 † notes, 0 parser anomalies. Readout (CC, not yet reviewed):
+  - EDITION DRIFT: English words differ in 11,142 / 31,081 verses (35.9%; OT 39.4%, NT
+    25.6%). Psalms (2,433) is the title shift, not wording — ex-Psalms ≈ 30%. Spot-checked
+    vs abp_texts: Gen 1:20 lives/souls, 1:21 whales/sea monsters, and "God beheld that it
+    was good" in 1:13 (ours) vs 1:12 (app) are ALREADY in our source text → an edition
+    difference upstream of our build, for those samples. Not every row is that (ours-only
+    "he"/"the ones" look like build additions — unverified). Versification: Psalm titles
+    (ours v0 = app v1, 146 chapters, ~96% under the shift), Pro 16 / 24:8, Jer 10, Hab 3.
+  - ALIGNMENT 90.2% overall, ≈ 94% ex-Psalms. 34,289 "same slot, different number" pairs
+    are mostly MIRROR swaps (3588↔2962 517/507, 2250↔1565 229/229, 1161↔3588) = same
+    words in a different order on one side — cause NOT checked; v1 counts them unaligned.
+  - GREEK vs abp_surface: exact 86.4%, after fold 97.7%, + C/Q 0.3%. Identity: 89.3% after
+    fold (header/dictionary forms differ by design). 506 abp_surface forms hold an NBSP.
+  - MORE APP FONT DEFECTS than C/Q, all evidence-backed by our letter at the same spot:
+    H→η 792, O→ο 614, U→υ 4, R→π 6; Cyrillic П (U+041F) for Π (Пέτρος, Пαύλος ~300+);
+    '+' for ϊ (Εφρα+μ, Αδωνα+, πρω+ ~600+); lower-case Latin = English typed in the Greek
+    font ("τηε λιvινγ"). v1 maps only C/Q, so these sit in the mismatch counts.
+  - Dictionary-word fallback rows: 97.9% after fold; the misses are inflected verbs with
+    no abp_surface row (είπε/ἔπω 541, εποίησε/ποιέω, έλαβε/λαμβάνω …) = interlinear shows
+    the dictionary word where ABP prints a form.
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
