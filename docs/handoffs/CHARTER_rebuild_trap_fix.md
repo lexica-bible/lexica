@@ -524,6 +524,18 @@ output: no "added column" line · `recomputed 354,946` / `790,685` / `386,063` �
 attributed, not ignored) · distinct-renderings/keys figures FIRST READ. After-read of non-blank
 `english_head_norm`: 354,946, lower only by heads made of quote marks alone (normalize → '').
 Served check: ABP English finder "magistrate" → θεός G2316 (Exo 22:28 "magistrates").
+**Step 11 RUN (JP gate cleared; JP, PA, 19:05–19:08, `git pull` a1998f0e → 7b4b5e95 — the new opener
+lines rode the pull — then `python scripts/build_rendering_norm.py ~/bible-db/bible.db`, no reload).
+Expected | actual:** no "added column" line | none · recomputed words `354,946 | 354,946` · kjv
+`790,685 | 790,685` · bsb `386,063 | 386,063` · After rows normed `354,946 / 790,685 / 386,063 |
+354,946 / 790,685 / 386,063` — **all MATCH**. FIRST READ (distinct renderings → keys): words 12,739 →
+10,990 · kjv 13,826 → 11,296 · bsb 100,241 → 89,295.
+**Served finder check (CC, read-only GET `www.lexica.bible/api/lexicon/english?q=magistrate&corpus=abp`,
+no reload since step 11): PASS** — θεός G2316 listed, ABP gloss `magistrates` count 2, flagged as a
+fold match. The 2 = Exo 22:28 + 1Sa 28:13 ("I see magistrates" G2316), both read in `abp_texts/`
+(abp_exodus.txt:609, abp_1samuel.txt:743). Also folded singular + plural on one word: δικαστής G1348
+`magistrate` 6 + `magistrates` 5; κωμάρχης G2967.1 `magistrates` 1. Before step 11 the ABP side of
+this call matched nothing (all norms blank). After-read of non-blank `english_head_norm`: _pending (JP)._
 Done before any live run: `build_rendering_norm.py` opener now sets `journal_mode=DELETE` +
 `busy_timeout=60000` (was the 5 s default — the 10/26 "database is locked" class). Checklist
 `/rebuild-words` re-homed: RUN ORDER `… 8b.3 → 11 → 10 → 9 → 9a → 9b → 4 → 5 → 6 → 7 → 8`.
