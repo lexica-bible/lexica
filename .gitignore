@@ -35,3 +35,6 @@ design/_mobile_preview/
 # Lexica draw cache — build_lexica_def.py's reviewed model draws (PA-only working artifacts,
 # one file per word; the dry-run pass writes them, --apply ships them verbatim)
 draws/
+
+# ABP app witness pages + flattened TSV (scripts/fetch_abp_app.py); third-party text, never committed
+abp_app_html/

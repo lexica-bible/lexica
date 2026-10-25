@@ -32,6 +32,16 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
 - **(a) App-HTML diff** vs `abp_surface` + `pn_greek_identity`, read-only, slot by slot.
   CONTROL: Gen 25:15 must show the Latin-C defect; 1Ki 11:14 pos 7 must match Αδάρ. **The
   first thing the diff must report is edition drift** (OT 3rd ed. vs the app vs NT 4th ed.).
+  **Status 2026-10-24: tools written, numbers NOT in yet** — `scripts/fetch_abp_app.py`
+  (→ `abp_app_html/abp_app_slots.tsv`, gitignored) + `scripts/audit_abp_app_vs_surface.py`
+  (read-only, JP runs on PA). Seen in a 13-chapter test fetch (CC-run, both controls PASS):
+  Latin letters go BEYOND C/Q — H (Hσαύ Esau), O (Oνήσιμον), R (Rαύλος = Παῦλος, so not a
+  look-alike); only C→Χ Q→Θ are mapped, the rest are censused with our letter at that spot ·
+  † variant footnotes are `.g` spans with a hover title (kept OUT of the Greek, written to
+  `abp_app_slots_notes.tsv`) · English notes typed in the Greek font ("εποίησε - σερvεδ.") ·
+  stray "> 2532" number cells (Oba 1:14/18/21) · chapters.js lists the five one-chapter
+  books as 0 (page is still "<Book> 1.html") · Psalm titles: our verse 0 = the app's verse 1
+  (the audit's versification probe reports the shift; main numbers keep the plain key).
 - **(b) Analytical Lexicon → a table**, using the symbol map, with a locked test. CONTROL:
   "agcisteuw" → 70.4 ἀγχιστεύω.
 - **(c) Lexical Concordance → number → verse counts**, diffed against the ABP tab's totals.
