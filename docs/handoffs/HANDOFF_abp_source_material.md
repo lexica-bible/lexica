@@ -98,6 +98,10 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
     misalignment)** · 28 English-in-Greek cells · 33 unlisted forms: filled, LEMMA held · the
     1,420 unflagged glued values: 23 split-eligible + 3 two-word names (Ezr 10:30, Neh 10:14
     Φαάθ Μωάβ; Jer 39:3 Νήργελ Σαρασάρ) held for a later pass, the rest no action.
+    **HELD (JP 2026-10-25, dry-run verdict):** the **60 plain-η spots** where the app prints ἡ and
+    our form has η with no accent (control E1 — outside the fill; likely the article ἡ / ἡμ- words,
+    not checked; the rows are in `~/abp_app_dump.tsv`, not pulled yet) · **1,823 written slots
+    with an empty words.lemma** (no lemma write in this lane).
   - Edition drift: English words differ in 9,157 / 31,228 paired verses (29.3%; OT 30.6,
     NT 25.6, Psalms 17.2); order-only 3,191.
   - Defect map matched: + 2,195 · C 1,287 · П 913 · H 898 · O 608 · Q 550 · R 6 · U 4

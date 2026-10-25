@@ -158,3 +158,28 @@ shape: 410 mid-word, 119 word-initial verbs (ἤνεγκε, ἦλθε, ἤκου
 second accent (Mar 8:4 δυνήσεταί, correct enclitic accent); no article, no ἡμ- word, no
 single-letter ἡ. words.lemma is empty on 1,823 of the 4,411 written slots (report only; no lemma write).
 Per-row list: `~/abp_surface_fill_dryrun.csv` on PA (6,106 rows). **Verdict owed before any apply.**
+
+# Step 3 — APPLY (gated) — script ready, PA run pending
+JP verdict 2026-10-25: dry run APPROVED (ἡ→ή for the 530, no lemma write, 3,823 fills, 4,411
+writes). Script `scripts/apply_abp_surface_fill.py`, one PA run, stops at the first failure:
+0 preflight (journal mode DELETE · abp_surface = 391,130 · quota room) → 1 rollback copy
+`~/bible.db.pre-surface-fill-20261025` → 2 dry-run re-run must equal the approved report + CSV,
+2b every current translit already matches the builder → 3 one transaction: writes + all checks,
+COMMIT only if all pass → 4 `build_abp_translit.py` must change 0 rows → 5 summary + rollback.
+
+Where it differs from the gate text, and why:
+- **Copy = SQLite's online copy (backup API), not `cp`.** Standing rule (ops.md, backup_db.py):
+  a plain cp of a live db can tear if the site writes mid-copy. Same file name as ruled; size and
+  integrity_check verified as ruled. (ops.md item 6 names the per-ship copy `bible.db.rollback`;
+  the dated name here is JP's explicit 10/25 instruction.)
+- **Translit is written in the same transaction** (the builder's own `romanize`), so the fill never
+  goes live with blank or stale translit; step 4 still runs the builder and asserts it changed
+  nothing. 2b (added) refuses to start if the builder would change any row outside the fill.
+- **Rollback restores the abp_surface TABLE from the copy** (one transaction, row-for-row check),
+  not a file swap — the fill touched no other table, and a swap would also throw away any other
+  writes made since the copy. Command:
+  `PYTHONIOENCODING=utf-8 python3 scripts/apply_abp_surface_fill.py ~/bible-db/bible.db --rollback`
+  Full-file restore stays available from the copy via the ops.md swap runbook.
+Tested on the padded stand-in: full apply PASS (395,003 rows, builder changed 0), re-run refused,
+rollback byte-exact, and stops with the table untouched on: tampered CSV, WAL journal, a stale
+translit, a forced failure inside the transaction (ROLLED BACK).
