@@ -66,7 +66,7 @@ parser reference notes in its appendix). No open writes.
   8b, before 9) — this run is the recorded exception. Opener lines added to `build_rendering_norm.py`.
   Start at `docs/handoffs/HANDOFF_rebuild_trap_fix.md` (held items 9, 11–13).
 - OPEN (JP 2026-10-25, ahead of step 10) — **reader deep-link request loop — LIVE DEFECT, dated + reproduced;
-  FIX COMMITTED (JP gate cleared 10/25), deploy + live check pending.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
+  FIX DEPLOYED 10/25 19:48 (`0d5ea43a`); JP's live private-window tests pending.** Found during step 7 (charter §10a): `/?b=1Ch&c=13&t=abp` on live
   had the browser attempt 56,000+ `/api/chapter` requests (1Ch/13 ↔ Gen/1) until the tab closed — most
   failed inside the browser and never reached PA (see the access-log read below).
   **Reproduced locally, no database** (scratch harness modeled on `tests/mobile_harness.js`: real
@@ -99,10 +99,25 @@ parser reference notes in its appendix). No open writes.
   **Fix (JP gate cleared 10/25; committed with this entry):** `60-library.jsx` — while a jump lands, the
   position report skips the spot it is leaving (`jumpFromRef`); harness: every first-visit + link case
   2 requests (phone/desktop, book list fast or 600 ms late), returning/no-link unchanged, page turns
-  after landing normal; 10/10 Node gates pass. Rulings: fix ships in the same deploy as step 10's paste
+  after landing normal; 10/10 Node gates pass.
+  **Deploy receipt (JP, PA, 19:48–19:59):** deploy.sh 7b4b5e95 → `0d5ea43a`, invariant tests passed,
+  API reload, sweep 200 ×5 · health_check after the 60 s wait: 0 errors, 1 warning = the damaged
+  10/24 backup (own item below; unrelated) — no "locked" lines · **bundle sha256 on PA disk AND as
+  served by `/assets/app.js` = `f939f4d0…8ce5e1` = the committed blob (CC, `git cat-file`) — MATCH.**
+  Still owed: JP's navigation-only check in a fresh private window, then his `?b=` link test in a
+  private window (cleared to run on the hash match). Rulings: fix ships in the same deploy as step 10's paste
   (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
   section names this deep link as one of the two `libNav` producers. Step 10 came back IDENTICAL
   (10/25) — no step-10 deploy exists, so a fix deploys on its own.
+- OPEN (found 2026-10-25, post-deploy health_check) — **a bible.db nightly backup is DAMAGED:**
+  `[WARN] backup DAMAGED (gz): bible.db.20261024-133029.db.gz` — "Compressed file ended before the
+  end-of-stream marker was reached" (the .gz is cut short). Sweep: 62 backups checked, this 1 damaged
+  (the newest nightly passes; the swap rollback `bible_pre_trapwire_swap.db` is a separate file).
+  bible.db keeps only 3 nightlies (`backup_db.py` `KEEP_OVERRIDE`), so one of the three is unusable.
+  Not yet known: when/why it broke (older copies are gzipped at rotation — a cut-short gzip fits an
+  interrupted compression, e.g. quota pressure) or whether it predates today (no full health report
+  was read 10/24–10/25 with backup checks on). Not diagnosed; separate lane. Never delete it to clear
+  the warning without a ruling (memory `project_db_backups` — a copy can have a second role).
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
