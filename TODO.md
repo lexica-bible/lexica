@@ -12,25 +12,51 @@ this file holds genuinely-open work and parked ideas only.
 Closed 10/25 → TODO_ARCHIVE: lane (1) abp_surface FILL (live 03:08, 4,411 writes, 391,130 → 395,003) ·
 lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open writes.
 
-- **NEXT SESSION, first candidate — Concordance verse-list diff for ALL ordinary words (read-only,
-  own lane: its own census/gate cycle, NOT a leftover of lane (2)).** Parse
-  `lexical_concordance.pdf` (JP's Downloads, 366 pp; parse locally like
-  `parse_abp_analytical_lexicon.py`) and diff every non-name number's VERSE LIST against ours.
+- **Concordance verse-list diff for ALL ordinary words (read-only, own lane) — CENSUS + PARSE + DIFF
+  DONE 2026-10-25; four held buckets below, nothing written.** Readout of record:
+  `docs/handoffs/CENSUS_abp_concordance_diff.md`. Tools: `scripts/parse_abp_concordance.py` +
+  `scripts/concordance_handmap.tsv` (18 hand-ruled print-error rows) + `scripts/diff_concordance_verses.py`;
+  outputs git-ignored in `abp_helps/`. Ours = PA export `~/abp_words_by_verse_20261025.csv`
+  (434,812 rows; name rows `*` excluded; book codes = `abp_texts` codes, checked).
+  **7,902 of 8,532 entries with verse lists match our verse lists EXACTLY** (245,065 shared verses).
+  The export-vs-`abp_texts` 14,922-row gap = pronoun numbering (1473 in the source vs 846/4675/3450…
+  live), all under no-verse-list numbers — no effect on the diff.
+  - **HELD (a) — 628 verses where our table has 2+ word rows carrying the number but `abp_texts` tags
+    it once** (of the 651 "2+, no `*`"). Cause not traced; the export has no per-row columns. Top:
+    γίνομαι 1096 19 · ἔσται 1510.8.3 14 · ποτίζω 4222 13 · γράφω 1125 10 · ἐπιτίθημι 2007 10.
+    Not the surface fill or translit (both write `abp_surface` only, never `words`).
+  - **HELD (b) — ~92 dotted-number label disagreements** (Concordance side): ἔνθεν (Concordance
+    1759.2 in 28 verses, ours files them under 1759.3, whence 1759.3's 28 ours-only) · κλοιός
+    (Concordance 2828.1 vs our 2827.2, 16) · 48 sibling-dot verses (4761.1/.2 13 · 4951.4/.5 11 ·
+    1458.4/.5 7 · 5557.1/.2 5 · 3864.2/.3 4 · 1772.1/.2 2 · 6 singles). Same family as the held
+    **540 + 13 same-slot number disagreements** (Held list below — its 13 already carry ἔνθεν 1759.3 →
+    1759.2 four times: Exo 26:13, 32:15, 38:15, Jos 8:33).
+  - **HELD (c) — 11 Concordance refs to verses not in our text** (e.g. Ps 77:41 under ἅγιος 39,
+    pairs with our Ps 78:41; ἀπολύω 630 "Num 33:title").
+  - **HELD (d) — ordinary diff residue:** 261 Concordance-only (364 − ~92 label − 11 not-in-text) ·
+    257 ours-only (28 of them are ἔνθεν's rows under 1759.3, the other side of (b)) · 18 `*`-but-once
+    (incl. Ecc 7:22 καρδία, re-checked on live: once) · 23 true 2+ with no `*` (2+ in `abp_texts` too).
+    Lists: `abp_helps/concordance_diff_live20261025_rows.tsv`.
+  Original lane scope: parse `lexical_concordance.pdf` (JP's Downloads, 366 pp) and diff every
+  non-name number's VERSE LIST against ours.
   Scope notes (10/25, CORRECTED by the census below): same Newport symbol font as the Lexicon
   (same letter map, accents lost) · **SEVEN columns per page** (not five — 322 of 364 pages show 7
   evenly spaced column starts; fewer only where one huge entry fills a column) · book abbreviation
   on a book's first reference only ("Gen 24:61 · Ex 2:5* · Est 2:9 · 4:4,16") · ranges with a dash
   ("25–27"; can wrap across lines "35–" / "37"; stars can sit on range ends "6:4*–9*") · `*` = 2+
   occurrences in the verse · Psalm references use our numbering · **Psalm superscriptions print as
-  `title` (or `tit`) = our verse 0** ("Ps 45:title", "145:tit,21"; 304 refs; also `title*` and
-  `title–9` forms) · bare page numbers + running heads sit between entries at page breaks ·
+  `title` (or `tit`) = our verse 0** ("Ps 45:title", "145:tit,21"; also `title*`) · **`Ps 2:title–9`
+  = the superscriptions of Psalms 2 THROUGH 9** (chapter range of titles, not verses 0–9 — parse
+  correction 10/25) · bare page numbers + running heads sit between entries at page breaks ·
   alphabetical by headword, not number order. The ABP tab total counts OCCURRENCES, so compare
   verse lists (+ `*` vs our ≥2), not totals. Needs ONE read-only PA export of (number, verse,
   occurrences) from words. Controls ready: the 5 ordinary words exact on live (1047 7/7 · 2241 2/1 ·
   303 15/14 · 4577 5/5 · 5411 26/24), 10.3 ἅβρα. Then (d) English-Greek Index.
   - **CENSUS DONE 2026-10-25 (read-only; scratch scan of `pdftotext -raw`, nothing in the repo;
     8 sample pages 1/61/92/138/179/207/271/364 checked vs `abp_texts`).** Content = pages 1–364
-    (365 back title, 366 blank). **9,255 entries** (not ~8,200; 9,256 number keys) — checks: guide
+    (365 back title, 366 blank). **9,255 entries** (not ~8,200; 9,256 number keys; the parser finds
+    9,257 — two entries with no headword, `2717` and `3203–3302`, that the census glued onto the
+    entry before) — checks: guide
     words agree on 362/364 pages (2 = two-spelling headwords), no number on two headings, no Lexicon
     number printed as a heading the scan missed. **Shared with the Lexicon 8,563** (not ~7,470) of its
     8,581 · **Concordance-only 693** (475 name keys · 88 proper titles · 94 See/Included pointers ·
@@ -58,9 +84,11 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
     Rt→Rth 1Sa 2Sa 1Ki 2Ki 1Ch 2Ch Ezr Neh Est Job Ps→Psa Pr→Pro Ecc So→Son Is→Isa Jer Lam Eze Dan
     Hos Jl→Joe Am→Amo Ob→Oba Jon Mi→Mic Nah Hab Zep Hag Zec Mal · Mt→Mat Mk→Mar Lk→Luk Jn→Joh Act
     (+ `Acts` once)→Act Rm→Rom 1Co 2Co Gal Eph Phi→Php Col 1Th 2Th 1Ti 2Ti Tit Plm→Phm Heb Js→Jas
-    1P→1Pe 2P→2Pe 1Jn 2Jn 3Jn Jde→Jud Rev (targets = `abp_texts` codes; `verses.book` codes to be
-    confirmed from the export's first rows).
-  - **39 print-error refs to hand-map:** 36 unreadable lines (14 `title*`/`title–N` · 6 bare-number
+    1P→1Pe 2P→2Pe 1Jn 2Jn 3Jn Jde→Jud Rev (targets = `abp_texts` codes = `verses.book` codes,
+    confirmed on the export).
+  - **39 print-error refs to hand-map** (census count; the parser needed only 18 hand-map rows —
+    the 14 title forms follow the title rule, the 6 tails are note text, 2 were headword-less
+    entries): 36 unreadable lines (14 `title*`/`title–N` · 6 bare-number
     tails of See/Included notes · 6 punctuation slips `4*.12`, `32:19 21` · 4 letter l for 1 `7:l3`,
     `Am 2:l0`, `Lk 5:l7`, `8:l,3,8` · 3 double commas · 3 footnote marks `Ezr 6:3ftnt`, `Ezr 9:1ftnt.`,
     `Neh 13:31ft.`) + 3 abbreviation typos (`Jdg.`, `1SA`, `Gal,`). Also 2 Psalm refs past the
@@ -89,7 +117,8 @@ lane (2) MIXED 47 · the Hebrew-ABP reversal lane (withdrawn 10/24). No open wri
   different number" entry + "Also open from 10/24") and `docs/handoffs/CENSUS_abp_surface_fill.md`.
   - **540 + 13 same-slot number disagreements** (app vs ours, after swaps; the 13 are from the fill
     census; **Isa 39:8 pos 1 = suspected slot misalignment**). The 540 still need the audit to write
-    them to a TSV.
+    them to a TSV. Same family: the Concordance diff's held (b), ~92 dotted-number label
+    disagreements (Concordance lane above).
   - **191 name slots with no printed form** — the Analytical Lexicon carries no proper names, so it
     resolves none of them (lane (b) join: name 0 of 191).
   - **30 vs 27 glued names** — pn_greek_identity has 30 NBSP names vs the 27 pinned (audit C3 still
