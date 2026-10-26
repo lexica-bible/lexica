@@ -14,7 +14,7 @@ USAGE (on PA, from ~/bible-db):
                                                     #   own main-address tag (network, ~1-2 s
                                                     #   a page; still writes nothing)
   python3 scripts/news/merge_dups.py --apply --pages     # do the merge (copy news.db first)
-  python3 scripts/news/merge_dups.py --fill-links 300    # look up + SAVE the real link for up to
+  python3 scripts/news/merge_dups.py --fill-links 300 [--minutes 180]   # look up + SAVE the real link for up to
                                                     #   300 Google rows scored 5+ that don't
                                                     #   have one (newest first). Saves only the
                                                     #   link — the same write the nightly step
@@ -280,10 +280,17 @@ def apply_plans(conn, plans):
 
 # ---------------------------------------------------------------- link fill
 
-def fill_links(conn, n, log=print):
+FAIL_STOP = 20              # this many lookups failing in a row = Google is throttling: stop
+
+
+def fill_links(conn, n, log=print, minutes=None, resolver=None, fail_stop=FAIL_STOP):
     """Look up and save the real link for up to n Google rows scored 5+ that have none, newest
-    first. One at a time, saved after each, so stopping it loses nothing."""
+    first. One at a time, saved after each, so stopping it loses nothing — re-run to continue.
+    Stops early after `minutes` (so a long run can't overlap the nightly job) or after
+    `fail_stop` failures in a row (Google throttling — each failure waits ~80 s in retries)."""
     from scripts.news.backfill_face_urls import _resolve_with_backoff
+    resolver = resolver or _resolve_with_backoff
+    deadline = time.time() + minutes * 60 if minutes else None
     rows = conn.execute(
         "SELECT id, url FROM items WHERE url LIKE ? AND (resolved_url IS NULL OR resolved_url = '')"
         " AND score >= 5 ORDER BY published DESC, id DESC LIMIT ?",
@@ -292,19 +299,31 @@ def fill_links(conn, n, log=print):
         "SELECT COUNT(*) FROM items WHERE url LIKE ? AND (resolved_url IS NULL OR "
         "resolved_url = '') AND score >= 5", (f"%{WRAPPER_MARK}%",)).fetchone()[0]
     log(f"fill-links: {left} Google rows scored 5+ have no real link; looking up {len(rows)}")
-    ok = 0
+    ok = tried = streak = 0
+    why = "done"
     for i, (rid, url) in enumerate(rows, 1):
-        got = _resolve_with_backoff(url)
-        time.sleep(1.0)
+        if deadline and time.time() > deadline:
+            why = f"time limit ({minutes} min) reached"
+            break
+        got = resolver(url)
+        tried += 1
+        if resolver is _resolve_with_backoff:
+            time.sleep(1.0)
         if got:
             ok += 1
+            streak = 0
             conn.execute("UPDATE items SET resolved_url = ? WHERE url = ? "
                          "AND (resolved_url IS NULL OR resolved_url = '')", (got, url))
             conn.commit()
+        else:
+            streak += 1
+            if streak >= fail_stop:
+                why = f"{fail_stop} failures in a row — Google is likely throttling; try later"
+                break
         if i % 25 == 0:
-            log(f"  {i}/{len(rows)}  found {ok}")
-    log(f"fill-links: found {ok}, not found {len(rows) - ok} (left as they were). "
-        f"Still without a link: {left - ok}")
+            log(f"  {i}/{len(rows)}  found {ok}  [{time.strftime('%H:%M')}]")
+    log(f"fill-links: stopped — {why}. Tried {tried}, found {ok}, not found {tried - ok} "
+        f"(left as they were). Still without a link: {left - ok}")
 
 
 # ---------------------------------------------------------------- report
@@ -372,7 +391,8 @@ def run():
         conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
     try:
         if fill is not None:
-            fill_links(conn, int(fill))
+            mins = _arg("--minutes")
+            fill_links(conn, int(fill), minutes=int(mins) if mins else None)
             return
         if nightly and not _has_table(conn, MERGED_TABLE):
             print("merge_dups: skipped — waiting for the first by-hand --apply "

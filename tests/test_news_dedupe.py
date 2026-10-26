@@ -257,6 +257,33 @@ def check_page_check(fails):
     _check(fails, "page check: no tag, no merge", len(run(lambda u: None)), 0)
 
 
+def check_fill_links(fails):
+    """--fill-links writes ONLY resolved_url, only on 5+ Google rows without one, and stops after
+    a run of failures (throttling) instead of grinding on."""
+    c = _db()
+    for i in range(1, 6):
+        _add(c, i, f"https://news.google.com/rss/articles/T{i}", score=7, title=f"t{i}")
+    _add(c, 9, "https://news.google.com/rss/articles/LOW", score=3, title="low")
+    c.commit()
+    before = [tuple(r) for r in c.execute("SELECT * FROM items ORDER BY id")]
+    merge_dups.fill_links(c, 100, log=lambda s: None,
+                          resolver=lambda u: "https://real.example/" + u.rsplit("/", 1)[1])
+    after = [tuple(r) for r in c.execute("SELECT * FROM items ORDER BY id")]
+    cols = [d[1] for d in c.execute("PRAGMA table_info(items)")]
+    ri = cols.index("resolved_url")
+    changed = {cols[j] for b, a in zip(before, after) for j in range(len(cols)) if b[j] != a[j]}
+    _check(fails, "fill-links touches only resolved_url", changed, {"resolved_url"})
+    _check(fails, "fill-links skips below-5 rows", after[-1][ri], None)
+    c2 = _db()
+    for i in range(1, 31):
+        _add(c2, i, f"https://news.google.com/rss/articles/F{i}", score=7, title=f"f{i}")
+    c2.commit()
+    calls = []
+    merge_dups.fill_links(c2, 100, log=lambda s: None, fail_stop=5,
+                          resolver=lambda u: calls.append(u))
+    _check(fails, "fill-links stops after a failure run", len(calls), 5)
+
+
 def check_nightly_waits(fails, tmpdir):
     path = os.path.join(tmpdir, "news_nightly_test.db")
     if os.path.exists(path):
@@ -312,6 +339,7 @@ def main():
     check_apply(fails)
     check_score_carried(fails)
     check_page_check(fails)
+    check_fill_links(fails)
     check_nightly_waits(fails, tempfile.gettempdir())
     check_merged_urls_absent(fails)
     if fails:
