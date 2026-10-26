@@ -852,7 +852,10 @@ Open tickets:
 - **Shareable News deep link (`/?view=news`, ideally per-story) that survives signup** — own
   ticket, NOT Pass 2. code: static/src/90-app.jsx (`?news=`/`?b=`/`?lex=` pattern to copy)
 - Share key (`/?news=<key>`, one holder = Tudor) untouched; retirement not ticketed.
-- **BUILT 2026-10-25, WAITING ON THE PA RUN: Google repeats slip past the "already have this
+- **APPLIED 2026-10-25 (258 rows merged, 0 sets left; nightly merge now ON) — OPEN: step (4)
+  `--fill-links` for the 2,283 unlinked Google rows scored 5+, then re-report + apply. Rollback copy
+  `~/db_backups/news.db.pre-merge-2026-10-25`; 20 review clashes all agreed (same mark both rows).
+  Google repeats slip past the "already have this
   link" check.** Google hands out a NEW redirect link for the same article on a later pull, so
   `items.url` (INSERT OR IGNORE on url) never matches and the same article is stored twice —
   e.g. ids 22825/23963, 5665/19745, 24147/24487 (two different Google dates, 2024-11-21 vs
