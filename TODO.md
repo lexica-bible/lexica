@@ -880,6 +880,15 @@ Open tickets:
   other row's address (tag pointing anywhere else is ignored). Report headline check no longer
   trims " - June 26" off dated issues. Known gap (section C): 2,283 Google rows scored 5+ have no
   real link (mostly older than the 60-day page-date backfill) → `--fill-links`.
+  Second report `--pages` (2026-10-25, every set read): A = 251 sets / 258 rows — the 207 from
+  report 1 unchanged (same survivors), +32 from the new address rules, +13 from the page check
+  (each: one page's own tag names the other row's address; ucanews' off-site tag correctly
+  ignored); 97 survivors take a higher score. VERDICT: PASS for --apply. Left unmerged on purpose
+  (B1, 39 sets): ~25 are different articles (each page names itself — numbered/weekly posts,
+  LifeSite video vs article, regional pages); 6 are EWTN slug renames ("pope-leo-xiv-…" →
+  "pope-leo-…") whose old address now 404s, so nothing can confirm them; ~8 have both pages
+  unreachable. Side note: LifeSite's RSS feed leaks CMS junk rows ("?p=…&post_type=acf-field",
+  score 0) — harmless, unticketed.
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
   existing card grouping; no scorer change. GATED behind the two mandatory clustering fixtures.
