@@ -1004,8 +1004,9 @@ Open tickets:
   gathering and Sr. Petrini's talk on an encyclical sub-label). Left as is — can't judge from the
   headline: 28514 (Eucharistic miracle), 28493 (closed-door UFO briefing), 28480/28481 (Orthodox
   commentary on a 27-row label). The older rows of those buckets predate the attempt — not touched.
-  PA steps handed over 2026-10-29: confirm afd1dff is deployed, back up news.db, preview the 8,
-  clear, verify. Strike this line when JP's paste confirms "8".
+  DONE 2026-10-29 22:40 UTC (JP, PA): afd1dff confirmed live; backup
+  `~/db_backups/news.db.pre-label-clear-2026-10-29`; preview showed exactly the 8 rows; cleared
+  8; verify 8 unlabeled. The 10-30 nightly (old code) labels them fresh.
   Attempt 1 design (kept in code behind the switch, for the record and the next try):
   `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
     1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
