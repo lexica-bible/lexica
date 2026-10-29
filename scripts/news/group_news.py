@@ -27,6 +27,7 @@ import sys
 import json
 import time
 import sqlite3
+import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -132,10 +133,131 @@ def build_client():
     return anthropic.Anthropic(api_key=key)
 
 
-def label_batch(client, rows, known):
-    known_txt = ("\n".join(f"  - {k}" for k in known)) if known else "  (none yet)"
+# ---- which past labels the NIGHTLY run shows the AI (fix for cross-night splits, 2026-10-29) ----
+# Before: every run started from an EMPTY list, so a story whose coverage came in over several
+# nights got fresh wording each night = several cards (fixture case 3, tests/test_news_clustering.py).
+# Showing ALL past labels over-fuses (the 2026-10-29 baseline: 53 other stories joined the
+# encyclical's card in one big pass). So the list is BOUNDED, per batch of headlines:
+#   1. REACH — only labels with an article published within REACH_DAYS of a headline in the batch.
+#      The card code (views_news._group) keeps one label's rows together only across gaps of
+#      <= 14 days (WINDOW_DAYS), so reusing a label from further away can't put the headline on
+#      the same card — showing it would only add fusion risk. Keyed on PUBLISHED dates, not pull
+#      nights: Google re-surfaces old stories (one Dec-2023 bill was pulled on 11 nights).
+#   2. RANK — labels sharing words with the batch's headlines first (label + its best headlines,
+#      2+ shared significant words per headline), then the most recent, then the biggest.
+#   3. CAP — at most SEED_MAX labels, each shown with one headline it was given to, so the AI
+#      judges "same happening?" by content, not by how close the label's wording sounds.
+# --regroup is unchanged: it starts empty and shows every label made in that run (one pass).
+REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
+SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
+                         # default 40-headline batch (295 unbounded was the over-fusing case)
+LOOSE_MAX = 10           # of those, at most this many weak matches (< 2 shared words)
+_HEADS_PER_LABEL = 3     # headlines per label used for the word match (best-scored)
+
+_STOP = set((
+    "the a an of to in on for and or with at by from as is are was were be been "
+    "his her its their our your s it that this these those new over amid into "
+    "after before about out up down off than then but not no will would can could"
+).split())
+
+
+def _tokens(text):
+    """Significant words of a headline or label (drops a trailing ' - Outlet')."""
+    t = re.sub(r"\s+-\s+[^-]+$", "", (text or "").lower())
+    return {w for w in re.findall(r"[a-z0-9]+", t) if len(w) >= 3 and w not in _STOP}
+
+
+def _day(published):
+    try:
+        return datetime.date.fromisoformat((published or "")[:10]).toordinal()
+    except ValueError:
+        return None
+
+
+def pool_add(pool, label, title, published, score):
+    """Remember one labeled article under its label (in memory, for picking what to show)."""
+    p = pool.setdefault(label, {"days": [], "heads": [], "n": 0})
+    d = _day(published)
+    if d is not None:
+        p["days"].append(d)
+    p["heads"].append(((score or 0), title or ""))
+    p["heads"].sort(key=lambda h: -h[0])
+    del p["heads"][_HEADS_PER_LABEL:]
+    p["n"] += 1
+    p.pop("toks", None)
+
+
+def load_pool(conn):
+    """Every labeled article already in the db, grouped by label."""
+    pool = {}
+    for r in conn.execute("SELECT event, title, published, score FROM items "
+                          "WHERE event IS NOT NULL AND event != ''"):
+        pool_add(pool, r[0], r[1], r[2], r[3])
+    return pool
+
+
+def pick_known(pool, batch, cap=SEED_MAX, days=REACH_DAYS):
+    """The bounded list of past labels to show for this batch -> (labels, {label: example headline}).
+    Matched PER HEADLINE, so a label one headline needs can't be crowded out by labels that suit
+    many: (1) every headline's single best match (most shared words, 2+), strongest first; (2) the
+    other 2+-word matches, strongest first; (3) only if room is left, labels in reach that share
+    fewer words, most recent first — a same-story headline can be worded completely differently.
+    A label counts for a headline only if one of its articles is within `days` of THAT headline."""
+    heads = []
+    for r in batch:
+        d = _day(r["published"])
+        if d is not None:                # undated headlines each get their own card anyway
+            heads.append((d, _tokens(r["title"])))
+    if not heads:
+        return [], {}
+    lo, hi = min(d for d, _ in heads) - days, max(d for d, _ in heads) + days
+    best, other, loose = [], [], {}
+    for label, p in pool.items():
+        near = [d for d in p["days"] if lo <= d <= hi]
+        if not near:
+            continue
+        if "toks" not in p:
+            p["toks"] = _tokens(label).union(*(_tokens(h) for _, h in p["heads"]))
+        last = max(p["days"])
+        for hi_, (hd, ht) in enumerate(heads):
+            if not any(abs(d - hd) <= days for d in near):
+                continue
+            s = len(ht & p["toks"])
+            if s >= 2:
+                other.append((s, last, p["n"], label, hi_))
+            else:
+                loose[label] = max(loose.get(label, (0, 0)), (last, p["n"]))
+    other.sort(key=lambda c: (-c[0], -c[1], -c[2], c[3]))
+    seen_head = set()
+    for c in other:                      # (1) each headline's best match
+        if c[4] not in seen_head:
+            seen_head.add(c[4])
+            best.append(c[3])
+    shown = []
+    for label in best + [c[3] for c in other]:
+        if len(shown) >= cap:
+            break
+        if label not in shown:
+            shown.append(label)
+    weak = 0
+    for label, _ in sorted(loose.items(), key=lambda kv: (-kv[1][0], -kv[1][1], kv[0])):
+        if len(shown) >= cap or weak >= LOOSE_MAX:
+            break
+        if label not in shown:
+            shown.append(label)
+            weak += 1
+    return shown, {k: pool[k]["heads"][0][1] for k in shown}
+
+
+def label_batch(client, rows, known, examples=None):
+    if known and examples:
+        known_txt = "\n".join(f'  - {k}   (e.g. "{examples.get(k, "")[:90]}")' for k in known)
+        head = "Existing labels already in use (each with one headline it was given to):\n"
+    else:
+        known_txt = ("\n".join(f"  - {k}" for k in known)) if known else "  (none yet)"
+        head = "Existing labels already in use:\n"
     lines = [f'id={r["id"]} | {r["title"]}' for r in rows]
-    user = ("Existing labels already in use:\n" + known_txt +
+    user = (head + known_txt +
             "\n\nGroup these headlines. Reuse a label above when it fits.\n\n" +
             "\n".join(lines))
     msg = client.messages.create(
@@ -175,7 +297,8 @@ def main():
     if not REGROUP:
         where += " AND (event IS NULL OR event = '')"
     rows = conn.execute(
-        f"SELECT id, title FROM items WHERE {where} ORDER BY score DESC, published DESC",
+        f"SELECT id, title, published, score FROM items WHERE {where} "
+        f"ORDER BY score DESC, published DESC",
         (MIN,)).fetchall()
     if not rows:
         print("nothing to group (all caught up).")
@@ -185,13 +308,20 @@ def main():
           f"(score >= {MIN}) in batches of {BATCH}")
     client = build_client()
 
-    known = []                       # running list of labels, for cross-batch consistency
+    known = []                       # labels made in THIS run (all of them shown on --regroup)
     known_set = set()
+    pool = None if REGROUP else load_pool(conn)   # nightly: past labels, shown BOUNDED (pick_known)
+    most_shown = 0
     done = 0
     for i in range(0, len(rows), BATCH):
         batch = rows[i:i + BATCH]
+        if REGROUP:
+            shown, examples = known, None
+        else:
+            shown, examples = pick_known(pool, batch)
+        most_shown = max(most_shown, len(shown))
         try:
-            labels = label_batch(client, batch, known)
+            labels = label_batch(client, batch, shown, examples)
         except Exception as e:
             print(f"  ERR  batch at {i}: {str(e)[:80]}")
             continue
@@ -201,6 +331,8 @@ def main():
                 continue
             if ev not in known_set:
                 known_set.add(ev); known.append(ev)
+            if pool is not None:
+                pool_add(pool, ev, r["title"], r["published"], r["score"])
             done += 1
             if DRY_RUN:
                 print(f"  {ev[:34]:34s} | {r['title'][:60]}")
@@ -212,7 +344,8 @@ def main():
 
     conn.close()
     print(f"\n{'(dry run) ' if DRY_RUN else ''}labeled {done} articles into "
-          f"{len(known)} events")
+          f"{len(known)} events" + ("" if REGROUP else
+                                    f" (past labels shown per call: at most {most_shown})"))
 
 
 if __name__ == "__main__":

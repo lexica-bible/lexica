@@ -12,9 +12,10 @@ reads them against the hand judgment in expected.json, with the same checks the 
   cross_night       stories scattered over cards / fused together
 Two runs per case:
   ONE PASS     every row in one run, from an empty label list (= a --regroup)
-  REAL NIGHTS  each labeling night its own run, each from an EMPTY label list — exactly what the
-               nightly group_news.py does today (rows labeled in the June-29 regroup = one night).
-               Expected today: stories split across nights. The relabeling fix must change this.
+  REAL NIGHTS  the real nightly code: group_news.main() run night by night on a scratch db (rows
+               labeled in the June-29 regroup = one night). Since 2026-10-29 that shows the
+               labeler a BOUNDED list of past labels (group_news.pick_known); the 10-29 baseline
+               was the old code, which started every night from an EMPTY list.
 Plus LABEL DRIFT vs the labels stored at freeze time: how many different labels each judged
 story got, then vs now.
 
@@ -79,6 +80,46 @@ def relabel(client, rows):
                 known.append(ev)
             out[r["id"]] = ev
     return out
+
+
+def nightly(rows):
+    """REAL NIGHTS = the real nightly code: group_news.main() run night by night on a scratch db
+    (never news.db), so whatever main() shows the labeler — today the bounded past-label list,
+    group_news.pick_known — is exactly what gets measured. Returns ({id: label}, notes)."""
+    import io
+    import sqlite3
+    import tempfile
+    from contextlib import redirect_stdout
+    fd, path = tempfile.mkstemp(suffix=".db")
+    os.close(fd)
+    keep = {k: getattr(group_news, k) for k in ("DB_PATH", "REGROUP", "DRY_RUN", "MIN")}
+    notes = []
+    try:
+        c = sqlite3.connect(path)
+        c.execute("CREATE TABLE items (id INTEGER PRIMARY KEY, title TEXT, source TEXT, "
+                  "published TEXT, first_seen TEXT, score INTEGER, event TEXT)")
+        c.commit()
+        group_news.DB_PATH, group_news.REGROUP, group_news.DRY_RUN = path, False, False
+        group_news.MIN = 5
+        for night, nrows in sorted(_nights(rows).items()):
+            c.executemany("INSERT INTO items (id, title, source, published, first_seen, score) "
+                          "VALUES (?,?,?,?,?,?)",
+                          [(r["id"], r["title"], r["source"], r["published"], r["first_seen"],
+                            r["score"]) for r in nrows])
+            c.commit()
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                group_news.main()
+            for line in buf.getvalue().splitlines():
+                if "ERR" in line or "past labels shown" in line:
+                    notes.append(f"{night}: {line.strip()}")
+        labels = {r[0]: r[1] for r in c.execute("SELECT id, event FROM items") if r[1]}
+        c.close()
+    finally:
+        for k, v in keep.items():
+            setattr(group_news, k, v)
+        os.remove(path)
+    return labels, notes
 
 
 def report(case, title, rows, new_labels, expected):
@@ -163,10 +204,13 @@ def main():
                                                   relabel(client, rows), expected)))
         if ONE_PASS_ONLY:
             continue
-        labels = {}
-        for night, nrows in sorted(_nights(rows).items()):   # each night from an empty list
-            labels.update(relabel(client, nrows))
-        summary.append((case, "real nights", report(case, "REAL NIGHTS (today's nightly behavior)",
+        labels, notes = nightly(rows)        # the real group_news.main(), night by night
+        errs = [n for n in notes if "ERR" in n]
+        most = max((int(n.rsplit(" ", 1)[1].rstrip(")")) for n in notes
+                    if "past labels shown" in n), default=0)
+        print(f"\n   (real nights: most past labels shown in one call {most}"
+              + (f"; {len(errs)} failed batches: {errs[:3]}" if errs else "") + ")")
+        summary.append((case, "real nights", report(case, "REAL NIGHTS (current nightly code)",
                                                      rows, labels, expected)))
     print("\nSUMMARY")
     for case, mode, verdict in summary:

@@ -20,11 +20,13 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
   3. CROSS-NIGHT — replays the REAL group_news.main() night by night on a scratch db, for every
      sample, with the AI swapped for a stand-in that (a) never confuses two stories, (b) reuses a
      label it is SHOWN for the same story, else (c) uses the exact wording the real labeler gave
-     that row. So the only way it can split a story is the night boundary: group_news.py starts
-     each run with an EMPTY list of known labels. The rows labeled in the June regroup count as
-     one night. Every story labeled in ONE pass is the control (must pass).
-     **KNOWN FAILURE today** for the real-nights replay — reported, not counted. When the
-     relabeling fix lands it passes, and the test then FAILS until it is taken off KNOWN_FAILING.
+     that row. So the only way it can split a story is the night boundary. The rows labeled in
+     the June regroup count as one night. Every story labeled in ONE pass is the control.
+     Was a KNOWN FAILURE (each night started from an EMPTY label list); passes since 2026-10-29,
+     when group_news.pick_known started showing each night a bounded list of past labels. Also
+     checked: the list never exceeds SEED_MAX, the rules of pick_known on made-up pools, and that
+     no clearly-other story lands on the encyclical card (+ how many were SHOWN its label — the
+     fusion exposure the live AI must resist; relabel_check.py measures that on PA).
 
 No database, no network, no AI: runs offline in CI + pre-commit.
 """
@@ -43,7 +45,8 @@ import fixture_lib as fx  # noqa: E402
 from scripts.news import group_news  # noqa: E402
 
 # Strict: a case listed here that PASSES fails the run, so the list can't go stale.
-KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
+KNOWN_FAILING = set()   # emptied 2026-10-29: the bounded label list (group_news.pick_known)
+                        # flipped all three real-nights cases
 
 
 # ---------------------------------- 1. merge ----------------------------------
@@ -156,23 +159,39 @@ def check_detectors_fire(results, frozen, expected):
 
 # ------------------- 3. cross-night: real group_news.main(), night by night -------------------
 
-def _stand_in(story_of, stored):
-    """label_batch replacement: never confuses two stories (each label carries its story); inside
-    one call a story gets one label; a known label of the same story is reused if shown, else the
-    real labeler's own wording for that row."""
-    shown = []
+_B36 = "0123456789abcdefghijklmnopqrstuvwxyz"
 
-    def label_batch(client, batch, known):
+
+def story_tag(story_of, story):
+    """A 2-character tag for a story, appended to the stand-in's labels as ' ~xx'. Two characters
+    on purpose: group_news's word match ignores words under 3 letters, so the tag can't help or
+    hurt which labels get shown — the label reads, to the matcher, as the real labeler's wording."""
+    order = sorted(set(story_of.values()))
+    n = order.index(story)
+    return " ~" + _B36[n // 36] + _B36[n % 36]
+
+
+def _stand_in(story_of, stored):
+    """label_batch replacement: never confuses two stories (each label carries its story's tag);
+    inside one call a story gets one label; a known label of the same story is reused if shown,
+    else the real labeler's own wording for that row (+ the tag)."""
+    shown = []
+    tag = {s: story_tag(story_of, s) for s in set(story_of.values())}
+
+    def label_batch(client, batch, known, examples=None):
         shown.append(len(known))
+        calls.append(([r["id"] for r in batch], list(known)))
         out, this_call = {}, {}
         for r in batch:
             s = story_of[r["id"]]
             if s not in this_call:
-                reuse = next((k for k in known if k.startswith(s + " || ")), None)
-                this_call[s] = reuse or f"{s} || {stored[r['id']]}"
+                reuse = next((k for k in known if k.endswith(tag[s])), None)
+                this_call[s] = reuse or f"{stored[r['id']]}{tag[s]}"
             out[r["id"]] = this_call[s]
         return out
 
+    calls = []                     # (batch ids, labels shown) per call, for the fusion check
+    label_batch.calls = calls
     return label_batch, shown
 
 
@@ -217,6 +236,8 @@ def replay(rows, story_of, nights):
             setattr(group_news, k, v)
         group_news.time.sleep = keep_sleep
         os.remove(path)
+    replay.last_calls = stub.calls
+    replay.most_shown = max(shown, default=0)
     return out, firsts
 
 
@@ -254,11 +275,87 @@ def check_cross_night(results, frozen, expected):
                             ["no story spans two labeling nights — the case tests nothing"]))
             continue
         labeled, firsts = replay(rows, story_of, nights)
-        ok, lines = _judge(fx.cards_of(labeled), rows, story_of, multi)
+        cards = fx.cards_of(labeled)
+        ok, lines = _judge(cards, rows, story_of, multi)
+        if replay.most_shown > group_news.SEED_MAX:
+            ok = False
+            lines.append(f"a nightly call was shown {replay.most_shown} past labels — over the "
+                         f"cap of {group_news.SEED_MAX}")
         lines.append(f"({len(spans)} stories span several labeling nights; {len(set(nights.values()))} "
-                     f"nights replayed; most labels the labeler was shown at the start of any "
-                     f"night: {max(firsts, default=0)})")
+                     f"nights replayed; most labels shown at the start of a night: "
+                     f"{max(firsts, default=0)}; most in any call: {replay.most_shown} "
+                     f"(cap {group_news.SEED_MAX}))")
         results.append((f"cross-night: {case}, real nights", ok, lines))
+        if case == "merge_encyclical":
+            check_fusion(results, rows, labeled, cards, expected, replay.last_calls)
+
+
+def check_fusion(results, rows, labeled, cards, expected, calls):
+    """Task-4 check on the encyclical replay. The stand-in never confuses two stories, so this
+    can't show whether the REAL labeler over-fuses (that's relabel_check.py on PA). What it does
+    show: (a) the shown-labels mechanism itself puts no clearly-other story on the encyclical card
+    — including the CI-pinned June mistakes; (b) EXPOSURE — how many clearly-other rows were
+    labeled in a call that was SHOWN an encyclical label: those are the rows the live AI could
+    wrongly fuse, i.e. what the PA run has to come back clean on."""
+    e = expected["merge_encyclical"]
+    m = fx.merge_picture(labeled, cards, expected)
+    pinned = {int(k) for k in e["pins"]["not_on_card"]}
+    lines, ok = [], not m["not_on"]
+    if m["not_on"]:
+        lines.append("clearly-other stories landed on the encyclical card:")
+        lines += fx.describe(m["not_on"], labeled)
+    story_of, _, _ = fx.judgment(expected, "merge_encyclical", rows)
+    enc = story_tag(story_of, fx.ENCYCLICAL)
+    nots = {int(k) for k in e["not"]}
+    exposed = set()
+    for ids, known in calls:
+        if any(k.endswith(enc) for k in known):
+            exposed |= nots & set(ids)
+    lines.append(f"(encyclical card: {len(m['core_on'])} of {m['core_total']} encyclical rows; "
+                 f"clearly-other rows on it: {len(m['not_on'])}, of the 6 CI-pinned June "
+                 f"mistakes: {len(m['not_on'] & pinned)}; clearly-other rows SHOWN an encyclical "
+                 f"label at labeling time: {len(exposed)} of {len(nots)} — the live AI's fusion "
+                 f"exposure, measured on PA by relabel_check.py)")
+    results.append(("fusion: shown labels put no other story on the encyclical card", ok, lines))
+
+
+def check_seed_rules(results):
+    """pick_known on made-up pools, one rule at a time: (1) a label with no article within
+    REACH_DAYS of a headline is never shown; (2) the cap holds; (3) weak matches (< 2 shared words)
+    are limited to LOOSE_MAX; (4) a label only ONE headline needs is shown even when many labels
+    match another headline better — the crowding that broke the first version; (5) an undated
+    batch is shown nothing; (6) every shown label comes with its example headline."""
+    g, misses = group_news, []
+    near, far = "2026-05-24", "2026-01-01"
+    batch = [{"id": 1, "title": "Pope Leo encyclical artificial intelligence disarm - X",
+              "published": "2026-06-01"},
+             {"id": 2, "title": "Bergen County judge rules on American Dream mall Sunday case - Y",
+              "published": "2026-06-01"}]
+    pool = {}
+    g.pool_add(pool, "Far Story", "Bergen County American Dream mall Sunday", far, 9)
+    for i in range(g.SEED_MAX + 10):          # many STRONG matches for headline 1 (3+ shared words)
+        g.pool_add(pool, f"Encyclical Piece {i}",      # ...that also brush headline 2 (2 words)
+                   "Pope Leo encyclical artificial intelligence Sunday mall", near, 9)
+    g.pool_add(pool, "Bergen Mall Sunday Suit", "American Dream mall Sunday lawsuit", near, 5)
+    shown, examples = g.pick_known(pool, batch)
+    if "Far Story" in shown:
+        misses.append("(1) a label with no article within reach was shown")
+    if len(shown) != g.SEED_MAX:
+        misses.append(f"(2) cap not held: {len(shown)} shown, cap {g.SEED_MAX}")
+    if "Bergen Mall Sunday Suit" not in shown:
+        misses.append("(4) the label only headline 2 needs was crowded out")
+    if any(not examples.get(k) for k in shown):
+        misses.append("(6) a shown label has no example headline")
+    weak = {}
+    g.pool_add(weak, "Strong", "American Dream mall Sunday lawsuit", near, 5)
+    for i in range(g.LOOSE_MAX + 15):
+        g.pool_add(weak, f"Weak {i}", f"unrelated filler {i}", near, 9)
+    ws, _ = g.pick_known(weak, batch)
+    if ws[:1] != ["Strong"] or len(ws) != 1 + g.LOOSE_MAX:
+        misses.append(f"(3) weak matches not limited: {len(ws)} shown, first {ws[:1]}")
+    if g.pick_known(pool, [{"id": 3, "title": "x", "published": None}])[0]:
+        misses.append("(5) an undated batch was shown labels")
+    results.append(("seed rules: reach, cap, weak limit, no crowding", not misses, misses))
 
 
 def main():
@@ -267,6 +364,7 @@ def main():
     frozen, expected = fx.load(folder)
     results = []
     check_detectors_fire(results, frozen, expected)
+    check_seed_rules(results)
     check_merge(results, frozen, expected)
     check_split(results, frozen, expected)
     check_cross_night(results, frozen, expected)

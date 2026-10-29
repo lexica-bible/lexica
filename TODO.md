@@ -966,11 +966,40 @@ Open tickets:
   House Bill 1150" for the 2018-19 repeal, "Poland ... 2023" for 2018, "Palm Sunday Mass 2025" for
   2026) — the prompt's ask for a year is guessed; relevant to the fix prompt. One run only: temperature
   0 is not guaranteed repeatable, so treat single-row differences as noise, the table as the shape.
-  STILL OWED: (a) JP verdict on the expected picture (incl. the 4 judgment calls above). The cross-night relabeling fix is
-  UNBLOCKED: its gate is the three real-nights cases flipping (then clear KNOWN_FAILING), with
-  merge + split staying green. Note for that fix: seeding EVERY past label showed the stand-in 295
-  labels on one night — the real prompt may need a narrower list (recent / same-thread); measure
-  with relabel_check, not the stand-in.
+  Expected picture: JP will not review rows by hand (2026-10-29) — the judgment STANDS as written,
+  incl. the 4 calls above (kept as judged: Pizzaballa's police incident, separate Dr. O episodes,
+  Parolin vs the pope are different happenings). Logged under the standing delegation.
+  **CROSS-NIGHT FIX — SHIPPED 2026-10-29 (code; live measurement PENDING).** `group_news.py` nightly
+  runs now show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
+    1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
+       WINDOW_DAYS) of a headline in the batch: the card code joins a label's rows only across
+       <= 14-day gaps, so a further label can't merge cards, only fuse. Published, not pull night
+       (the Dec-2023 Chick-fil-A bill was re-pulled on 11 nights over 3 months).
+    2. PER-HEADLINE MATCH — each headline's best label first (most shared words, 2+, label + its 3
+       best-scored headlines), then other 2+-word matches, then at most LOOSE_MAX = 10 weak ones.
+       First version ranked against the whole batch and crowded single-headline needs out (it
+       split the encyclical 5 ways, broke the Sunday one-pass control); the seed-rules check fails
+       on that version.
+    3. CAP SEED_MAX = 40 (one best match per headline of a 40-headline batch; vs 295 unbounded),
+       each label shown WITH one example headline so the AI judges sameness by content.
+    `--regroup` is unchanged: same prompt, byte for byte (checked against the old code).
+  Replay (stand-in AI, all frozen samples): all 3 real-nights cases PASS — encyclical 622/623 on
+  one card (the 623rd is the Jan-dated aleteia row, its own window piece by design), death penalty
+  1 card, every Sunday happening whole; KNOWN_FAILING emptied (strict, still armed). Merge + split
+  unchanged (frozen labels). Fusion with the stand-in: 0 clearly-other rows on the encyclical card
+  (incl. the 6 CI-pinned June mistakes) — but the stand-in CAN'T fuse by construction; the real
+  number is EXPOSURE: 177 of 189 clearly-other encyclical-sample rows were SHOWN an encyclical label
+  when labeled (same words + dates). Whether the live AI resists is exactly what the PA run decides.
+  relabel_check.py REAL NIGHTS now runs the real `group_news.main()` night by night on a scratch db
+  (it re-implemented the old empty-list loop before, so it would have measured the OLD code).
+  PENDING — the live run, compared to the 10-29 baseline table above: `deploy.sh`, then
+  `relabel_check.py --run` (221 calls). Pass = real nights keeps the encyclical together (baseline:
+  341/623, 27 labels) WITHOUT more clearly-other stories on its card than the baseline real nights
+  (13); Sunday split/fused and cross-night split down, fused not up. If fusion rises, revert
+  group_news.py before the next nightly. TIMING: daily.sh pulls ~06:00 UTC and the deploy makes
+  that night use the new code — measure first. Already-stored labels are untouched (only new rows
+  use the list); old split cards stay split. A `--regroup` would rewrite them but its unbounded
+  one-pass list over-fused in the baseline (53) — not run, needs its own measured decision.
   **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
   tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
   `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are
