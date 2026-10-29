@@ -922,7 +922,8 @@ Open tickets:
   standing delegation): encyclical 623 core / 189 clearly other / 106 borderline (never asserted);
   Sunday 15 multi-row happenings + 95 singles + 6 unsure; cross-night 4 happenings + 2 unsure.
   FINDING — against that judgment ALL THREE fail on the current LABELS (layer 1), never on the card
-  code: (1) the encyclical is ~100 labels now — only the June-29 regroup pass kept it on one label;
+  code: (1) the encyclical's 623 rows carry 53 different labels (corrected 10-29; "~100" first
+  written counted the whole 918-row sample, 107) — only the June-29 regroup pass kept it on one label;
   every nightly label after is new wording; (2) the June pass itself left a theme label ("European
   Work-Free Sunday Campaign", 26 rows 2012-2026) and fused 6 other stories onto the encyclical label
   (AMECEA, Carney meeting, synodality speech, ...) while putting 13 encyclical rows elsewhere (the 5
@@ -939,9 +940,33 @@ Open tickets:
       KNOWN_FAILING is cleared. PROVEN to flip: an in-memory fix (seed `known` from the db's
       labels) turned all 3 to PASS; group_news.py untouched.
     - every check fired on a doctored wrong grouping (card cut in half / fused) before trusting it.
-  STILL OWED: (a) JP verdict on the expected picture; (b) one `relabel_check.py --run` on PA as the
-  layer-1 baseline (221 Haiku calls: 30 one-pass + 191 real-nights; `--one-pass` = 30) — it re-reads
-  the same judgment with fresh labels and writes nothing. The cross-night relabeling fix is
+  **LAYER-1 BASELINE — RECORDED 2026-10-29** (JP ran `relabel_check.py --run` on PA after deploying
+  10cad8ab: 221 Haiku calls, one run, nothing written). Stored = the frozen labels through the same
+  report on the same rows. Fresh labels drift on nearly every row (new wording everywhere); what
+  matters is the grouping:
+    | sample      | measure                         | stored | fresh one pass | fresh real nights |
+    | encyclical  | encyclical rows on one card     | 374/623 | 593/623       | 341/623           |
+    | encyclical  | other stories on that card      | 6      | 53             | 13                |
+    | encyclical  | labels on the encyclical rows   | 53     | 4              | 27                |
+    | Sunday      | over-merged cards               | 1      | 2              | 1                 |
+    | Sunday      | happenings split over cards     | 16     | 7              | 13                |
+    | Sunday      | 15 multi-row happenings on ONE label | 0 | 8             | 2                 |
+    | cross-night | over-merged / split             | 0 / 3  | 1 / 0          | 0 / 2             |
+  Read: (1) the nightly split is real on the live labeler too (one pass 4 labels -> nights 27; the
+  death-penalty statement 1 label in one pass, 5 cards night by night). (2) ONE PASS OVER-MERGES:
+  53 other stories joined the encyclical card — all 6 June pins again (100, 296, 949, 2083, 2921,
+  3087) plus the May study-group/commission rows (109, 144, 663, 734, 789, 2717, 2961, 2967, 5443 seen;
+  output listed only the first 15 of 53). A fix that shows the labeler more past labels must be
+  checked for this, not just for the split. (3) Over-merges flagged vs the judgment — JUDGMENT CALLS,
+  open for JP: Palm Sunday Mass + "Pizzaballa blocked ... as Pope Leo denounces war" (15317; headline
+  carries both — candidate for `unsure`); two "Sunday Law Update with Dr. O" episodes Oct 3 + Oct 9
+  (judged separate episodes); Sunday Alliance + a Dr. O episode, same day Oct 3 (real nights);
+  Cardinal Parolin Oct 9 + the pope's Oct 10 statement (one pass; judged different speakers/days).
+  The pinned Utah + Belgium over-merge did NOT recur. (4) Fresh labels get YEARS wrong ("North Dakota
+  House Bill 1150" for the 2018-19 repeal, "Poland ... 2023" for 2018, "Palm Sunday Mass 2025" for
+  2026) — the prompt's ask for a year is guessed; relevant to the fix prompt. One run only: temperature
+  0 is not guaranteed repeatable, so treat single-row differences as noise, the table as the shape.
+  STILL OWED: (a) JP verdict on the expected picture (incl. the 4 judgment calls above). The cross-night relabeling fix is
   UNBLOCKED: its gate is the three real-nights cases flipping (then clear KNOWN_FAILING), with
   merge + split staying green. Note for that fix: seeding EVERY past label showed the stand-in 295
   labels on one night — the real prompt may need a narrower list (recent / same-thread); measure
