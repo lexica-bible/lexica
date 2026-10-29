@@ -195,10 +195,10 @@ parser reference notes in its appendix). No open writes.
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
   **Condition MET 10/29** (10/26, 10/27, 10/28 nightlies all pass the sweep) — `~/bible.db.pre-xref-fix-20261024`
-  may now be deleted (JP's step).
+  **DELETED by JP 10/29 03:06 UTC** (423M, `rm -v` confirmed; home now 6.0G by `du`).
   **The fill copy stays until a re-freeze exists** — it is the frozen snapshot's only "before" side
   (rotation/single-rollback rule does not apply to it). Also on PA (10/25 live rebuild):
-  `~/rekey/pre_rebuild.db` — **condition MET 10/29, may now be deleted (JP's step)**: three nightlies
+  `~/rekey/pre_rebuild.db` — **condition MET 10/29, DELETED by JP 10/29 03:06 UTC (423M)**: three nightlies
   dated after the 10/25 18:06 swap (10/26, 10/27, 10/28) all pass the backup sweep (JP ruling 10/25
   required a PASS, not just a later date; the damaged 10/24 copy has since aged out) ·
   `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
