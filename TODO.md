@@ -910,172 +910,23 @@ Open tickets:
   score 0) — harmless, unticketed.
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
-  existing card grouping; no scorer change. GATED behind the two mandatory clustering fixtures.
-  Layers 1 (outlet cap) and 2 (downward-only rank_score) are live; this would slot into the same
-  Inbox Top-stories order (83-news-logic.jsx / 84-news.jsx viewListAll). Context: 28 of Advent
-  Messenger's 31 recent articles sat on cards no other outlet shared (2026-10-24 count).
-  **STATUS 2026-10-29 — fixtures RUNNABLE + GATED (CI + pre-commit); expected picture awaits JP's
-  verdict.** Frozen 2026-10-29 03:47 UTC off PA (`freeze_sample.py`, read-only): 918 encyclical /
-  175 Sunday / 41 cross-night rows (score >= 5). `news.db.pre-regroup` is gone, so the June bucket
-  itself couldn't be pulled — the Sunday sample is by headline/label words. EVERY row hand-judged
-  into its happening in `expected.json` (house rule = group_news.py SYSTEM; applied under JP's
-  standing delegation): encyclical 623 core / 189 clearly other / 106 borderline (never asserted);
-  Sunday 15 multi-row happenings + 95 singles + 6 unsure; cross-night 4 happenings + 2 unsure.
-  FINDING — against that judgment ALL THREE fail on the current LABELS (layer 1), never on the card
-  code: (1) the encyclical's 623 rows carry 53 different labels (corrected 10-29; "~100" first
-  written counted the whole 918-row sample, 107) — only the June-29 regroup pass kept it on one label;
-  every nightly label after is new wording; (2) the June pass itself left a theme label ("European
-  Work-Free Sunday Campaign", 26 rows 2012-2026) and fused 6 other stories onto the encyclical label
-  (AMECEA, Carney meeting, synodality speech, ...) while putting 13 encyclical rows elsewhere (the 5
-  Vance reactions, ...); (3) the replay shows the labeler is shown 0 known labels at the start of
-  EVERY night. So the test is built per layer:
-    - merge (June-pass rows): the main label = ONE card (401 rows, 230 outlets), no other label
-      joins it — passes; the June labeler's mistakes are PINNED by id (13 + 6).
-    - split: no card fuses two happenings except the PINNED one (Utah law + a Belgium explainer,
-      12 days apart on the theme label) — passes.
-    - cross-night: real `group_news.main()` replayed night by night, AI stood in (never confuses
-      stories, reuses a label it's shown, else the real labeler's own wording). One-pass control
-      passes for all 3 samples; real nights = **KNOWN FAILURE** x3 (encyclical 64 cards, death
-      penalty 5, 14 Sunday happenings split). Strict: when it passes, the test fails until
-      KNOWN_FAILING is cleared. PROVEN to flip: an in-memory fix (seed `known` from the db's
-      labels) turned all 3 to PASS; group_news.py untouched.
-    - every check fired on a doctored wrong grouping (card cut in half / fused) before trusting it.
-  **LAYER-1 BASELINE — RECORDED 2026-10-29** (JP ran `relabel_check.py --run` on PA after deploying
-  10cad8ab: 221 Haiku calls, one run, nothing written). Stored = the frozen labels through the same
-  report on the same rows. Fresh labels drift on nearly every row (new wording everywhere); what
-  matters is the grouping:
-    | sample      | measure                         | stored | fresh one pass | fresh real nights |
-    | encyclical  | encyclical rows on one card     | 374/623 | 593/623       | 341/623           |
-    | encyclical  | other stories on that card      | 6      | 53             | 13                |
-    | encyclical  | labels on the encyclical rows   | 53     | 4              | 27                |
-    | Sunday      | over-merged cards               | 1      | 2              | 1                 |
-    | Sunday      | happenings split over cards     | 16     | 7              | 13                |
-    | Sunday      | 15 multi-row happenings on ONE label | 0 | 8             | 2                 |
-    | cross-night | over-merged / split             | 0 / 3  | 1 / 0          | 0 / 2             |
-  Read: (1) the nightly split is real on the live labeler too (one pass 4 labels -> nights 27; the
-  death-penalty statement 1 label in one pass, 5 cards night by night). (2) ONE PASS OVER-MERGES:
-  53 other stories joined the encyclical card — all 6 June pins again (100, 296, 949, 2083, 2921,
-  3087) plus the May study-group/commission rows (109, 144, 663, 734, 789, 2717, 2961, 2967, 5443 seen;
-  output listed only the first 15 of 53). A fix that shows the labeler more past labels must be
-  checked for this, not just for the split. (3) Over-merges flagged vs the judgment — JUDGMENT CALLS,
-  open for JP: Palm Sunday Mass + "Pizzaballa blocked ... as Pope Leo denounces war" (15317; headline
-  carries both — candidate for `unsure`); two "Sunday Law Update with Dr. O" episodes Oct 3 + Oct 9
-  (judged separate episodes); Sunday Alliance + a Dr. O episode, same day Oct 3 (real nights);
-  Cardinal Parolin Oct 9 + the pope's Oct 10 statement (one pass; judged different speakers/days).
-  The pinned Utah + Belgium over-merge did NOT recur. (4) Fresh labels get YEARS wrong ("North Dakota
-  House Bill 1150" for the 2018-19 repeal, "Poland ... 2023" for 2018, "Palm Sunday Mass 2025" for
-  2026) — the prompt's ask for a year is guessed; relevant to the fix prompt. One run only: temperature
-  0 is not guaranteed repeatable, so treat single-row differences as noise, the table as the shape.
-  Expected picture: JP will not review rows by hand (2026-10-29) — the judgment STANDS as written,
-  incl. the 4 calls above (kept as judged: Pizzaballa's police incident, separate Dr. O episodes,
-  Parolin vs the pope are different happenings). Logged under the standing delegation.
-  **CROSS-NIGHT FIX ATTEMPT 1 — FAILED LIVE ON FUSION, SWITCHED OFF 2026-10-29** (`NIGHTLY_SEED =
-  False` in group_news.py; nightly prompts checked identical to the pre-fix code; the 3 real-nights
-  KNOWN FAILURES restored). Live run (JP, PA, relabel_check.py --run on f655d22; output cut off
-  partway through Sunday real-nights — cross-night sample never ran, not needed for the verdict):
-    | measure                              | baseline real nights | attempt 1 real nights |
-    | encyclical rows on one card          | 341/623              | 511/623               |
-    | labels on the encyclical rows        | 27                   | 7                     |
-    | clearly-other stories on its card    | 13                   | 23  <- FAIL           |
-    | Sunday over-merged cards             | 1                    | 8   <- FAIL           |
-    | Sunday happenings split over cards   | 13                   | 1                     |
-    (one pass, the unchanged regroup path: 597/623 + 53 other vs baseline 593 + 53 — repeatable.)
-  It fixes splitting and re-creates the June THEME BUCKET: shown a label, the labeler reuses it for
-  a different happening of the same theme. Worst: "Roman Catholics Sunday Rest Legal Protection
-  Call" swallowed 8 stories over 7 weeks (Greece strike, Berlin council, Austria unions, Vatican
-  News, ...) — the 14-day reach CHAINS: each wrongly added article keeps the label in reach for the
-  next. Also "North Dakota House Bill 1150" took Utah's bill; a Dr. O episode took a German-stores
-  story; new encyclical-card joiners include the Vatican AI-guidelines rows (5251). Next design
-  must cut theme reuse, e.g. show a label only when the headline shares its DISTINCTIVE words
-  (place / institution / name — rare words, not "sunday", "rest", "pope", "ai"); let the reach run
-  from the label's FIRST articles so a label can't keep extending itself; or a second AI check
-  per reuse ("same happening as these 3 headlines?"). Gate unchanged: replay flips the 3 cases AND
-  a live relabel_check beats the baseline BOTH ways (fused not up, split down).
-  LIVE EXPOSURE: daily.sh does NOT pull code (corrected — an earlier line here said it did); the
-  code reached PA with JP's deploy before the 06:00 UTC nightly of 2026-10-29, so that night's new
-  rows were most likely labeled with the list ON. CHECKED (JP, read-only, 22:37 UTC): 252 pulled,
-  51 scored 5+, all 51 labeled; 32 of the 51 reused an older label (a strong sign the list was on).
-  Every one read: most are the same happening (UAP files 7th batch, Vance White House invitation,
-  bishops praying over Trump, Latin Mass pilgrimage, Peru visit, ...). CLEAR FUSIONS, 8 rows —
-  labels to be cleared so the old code labels them fresh (my call, standing delegation):
-  28408 28422 28452 28453 (theme label "Pope Leo XIV Papacy": election celebration, a book, two
-  profiles), 28490 28491 ("Pentagon UFO Files Release 2025", a 14-row bucket: a whistleblower
-  coalition and a contractor's model are not a files release), 28461 28462 (the June Vatican AI
-  gathering and Sr. Petrini's talk on an encyclical sub-label). Left as is — can't judge from the
-  headline: 28514 (Eucharistic miracle), 28493 (closed-door UFO briefing), 28480/28481 (Orthodox
-  commentary on a 27-row label). The older rows of those buckets predate the attempt — not touched.
-  DONE 2026-10-29 22:40 UTC (JP, PA): afd1dff confirmed live; backup
-  `~/db_backups/news.db.pre-label-clear-2026-10-29`; preview showed exactly the 8 rows; cleared
-  8; verify 8 unlabeled. The 10-30 nightly (old code) labels them fresh.
-  Attempt 1 design (kept in code behind the switch, for the record and the next try):
-  `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
-    1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
-       WINDOW_DAYS) of a headline in the batch: the card code joins a label's rows only across
-       <= 14-day gaps, so a further label can't merge cards, only fuse. Published, not pull night
-       (the Dec-2023 Chick-fil-A bill was re-pulled on 11 nights over 3 months).
-    2. PER-HEADLINE MATCH — each headline's best label first (most shared words, 2+, label + its 3
-       best-scored headlines), then other 2+-word matches, then at most LOOSE_MAX = 10 weak ones.
-       First version ranked against the whole batch and crowded single-headline needs out (it
-       split the encyclical 5 ways, broke the Sunday one-pass control); the seed-rules check fails
-       on that version.
-    3. CAP SEED_MAX = 40 (one best match per headline of a 40-headline batch; vs 295 unbounded),
-       each label shown WITH one example headline so the AI judges sameness by content.
-    `--regroup` is unchanged: same prompt, byte for byte (checked against the old code).
-  Replay (stand-in AI, all frozen samples): all 3 real-nights cases PASS — encyclical 622/623 on
-  one card (the 623rd is the Jan-dated aleteia row, its own window piece by design), death penalty
-  1 card, every Sunday happening whole; KNOWN_FAILING emptied (strict, still armed). Merge + split
-  unchanged (frozen labels). Fusion with the stand-in: 0 clearly-other rows on the encyclical card
-  (incl. the 6 CI-pinned June mistakes) — but the stand-in CAN'T fuse by construction; the real
-  number is EXPOSURE: 177 of 189 clearly-other encyclical-sample rows were SHOWN an encyclical label
-  when labeled (same words + dates). Whether the live AI resists is exactly what the PA run decides.
-  relabel_check.py REAL NIGHTS now runs the real `group_news.main()` night by night on a scratch db
-  (it re-implemented the old empty-list loop before, so it would have measured the OLD code).
-  (Live run's pass rule was: encyclical kept together WITHOUT more than the baseline's 13 other
-  stories on its card; Sunday fused not up. It failed both fusion lines — see the table above.)
-  A `--regroup` would rewrite the old split labels but its unbounded one-pass list over-fused in the
-  baseline (53) — not run, needs its own measured decision.
-  **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
-  tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
-  `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are
-  test_news_gate.py (who may read/write) and test_news_bulk.py (bulk triage). The closest match
-  is the two checks run BY HAND on a live `group_news.py --regroup` on 2026-06-29 (labeler rewrite
-  0d7387f; record in memory project_news_watch):
-    1. MERGE — the Pope Leo AI encyclical stays ONE card across hundreds of outlets (541/276 then);
-    2. SPLIT — topic buckets ("Sunday Rest Laws Debate", "Vatican Ecumenical Outreach") break into
-       their separate happenings (Poland trade ban / NJ mall lawsuit / NY Chick-fil-A bill / …).
-  They matter here because corroboration rewards multi-outlet cards: an over-merged topic bucket
-  would read as falsely well-corroborated. No written copy of the rule itself was found in the
-  repo or memory either. Before this can be built: turn both checks into runnable fixtures
-  and wire them into CI + pre-commit. **Own session (JP 2026-10-25), fresh handoff.**
-  RULED (JP 2026-10-25): BOTH layers — layer (2) gets a normal runnable test (CI + pre-commit);
-  layer (1) gets a by-hand re-label check on the frozen samples, run before ANY clustering change.
-  Background: cards come from TWO layers: (1) the AI labeler
-  (group_news.py, Haiku) names each article's event — the June merge/split checks were testing
-  THIS layer; (2) views_news `_group` puts same-label rows on one card, split by date —
-  deterministic, easy to test from frozen labeled rows. A frozen-rows test covers only (2); (1)
-  is an AI call, so its fixture is a re-label run on the frozen samples compared to expected
-  cards (as done by hand in June). Corroboration reads the cards, so a (2)-only test would pass
-  even if the labeler drifted back to theme-lumping. Needs from PA: a frozen sample of the AI
-  encyclical coverage and of the Sunday-laws bucket; both checks must pass against the CURRENT
-  code before they mean anything.
-    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed; CONFIRMED 2026-10-29
-       from the freeze: the statement got 6 labels over 6 nights, the Holy See UN call 2 over 2 —
-       the KNOWN FAILURE in tests/test_news_clustering.py) — Pope Leo XIV says the
-       death penalty is "inadmissible": two cards for one event, National Catholic Register
-       2026-10-11 (4 sources) and EWTN News (CNA) 2026-10-10 (4 sources). Expected: ONE card.
-       Read from the code: NOT the 14-day window (1 day apart) and NOT headline wording (the
-       word-overlap grouping only runs on UNLABELED rows) — two cards from dated rows a day apart
-       means the rows carry two different event labels, i.e. layer (1). Likely why:
-       group_news.py starts every run with an EMPTY list of labels (`known = []` in main), so it
-       only reuses labels it made earlier in the SAME night. A story whose coverage arrives over
-       two nights gets labeled twice from scratch, and any wording difference ("Pope Leo Death
-       Penalty Inadmissible" vs "Pope Leo XIV Death Penalty Statement") = two cards. The June
-       merge/split checks ran as ONE `--regroup` pass, so they never exercised this. Confirm on
-       PA: `inspect_rows.py "death penalty"` — the members' labels and first-pull nights. Frozen
-       sample needed: these 8 rows with their first-pull nights, labeled in two separate runs.
-       CONFIRMED for the NewsNation repeat pair (PA 2026-10-25): ids 26816 (first pulled 10-21,
-       label "US Bishops AI Task Force") and 27449 (first pulled 10-24, label "US Bishops Catholic
-       AI Task Force") — same article, two nights, two labels, two cards.
+  card grouping; no scorer change; would slot into the Inbox Top-stories order (83-news-logic.jsx /
+  84-news.jsx viewListAll). The fixtures it was gated on EXIST now (tests/test_news_clustering.py),
+  but their baseline shows the labeler still builds theme buckets — corroboration would reward a
+  falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
+  (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
+- **OPEN: cross-night split — fix attempt 2 (group_news.py).** Each nightly run starts from an EMPTY
+  label list, so a story pulled over several nights gets new wording each night = several cards
+  (encyclical: 53 labels on 623 rows). Attempt 1 (a bounded past-label list, `pick_known`, kept in
+  code behind `NIGHTLY_SEED = False`) fixed the split but FUSED: shown a label, the AI reused it for
+  other stories on the same theme (encyclical card 13 → 23 other stories, Sunday fused cards 1 → 8).
+  Ideas: show a label only when the headline shares its DISTINCTIVE words (place / institution /
+  name, not "sunday"/"pope"/"ai"); run the 14-day reach from a label's FIRST articles so it can't
+  extend itself; or a second AI check per reuse. GATE: the 3 "real nights" known failures flip in
+  the test AND a live `relabel_check.py --run` beats the 10-29 baseline BOTH ways (fused not up,
+  split down) — numbers in TODO_ARCHIVE. Side notes: fresh labels guess YEARS wrong; a `--regroup`
+  would rewrite old split labels but its one-pass list over-fused (53) — needs its own measured
+  decision. code: scripts/news/group_news.py, tests/test_news_clustering.py
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
