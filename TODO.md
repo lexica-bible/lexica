@@ -993,8 +993,19 @@ Open tickets:
   a live relabel_check beats the baseline BOTH ways (fused not up, split down).
   LIVE EXPOSURE: daily.sh does NOT pull code (corrected — an earlier line here said it did); the
   code reached PA with JP's deploy before the 06:00 UTC nightly of 2026-10-29, so that night's new
-  rows were most likely labeled with the list ON. Check first (read-only), then decide whether to
-  clear those rows' labels so the old code redoes them: see the PA steps given 2026-10-29.
+  rows were most likely labeled with the list ON. CHECKED (JP, read-only, 22:37 UTC): 252 pulled,
+  51 scored 5+, all 51 labeled; 32 of the 51 reused an older label (a strong sign the list was on).
+  Every one read: most are the same happening (UAP files 7th batch, Vance White House invitation,
+  bishops praying over Trump, Latin Mass pilgrimage, Peru visit, ...). CLEAR FUSIONS, 8 rows —
+  labels to be cleared so the old code labels them fresh (my call, standing delegation):
+  28408 28422 28452 28453 (theme label "Pope Leo XIV Papacy": election celebration, a book, two
+  profiles), 28490 28491 ("Pentagon UFO Files Release 2025", a 14-row bucket: a whistleblower
+  coalition and a contractor's model are not a files release), 28461 28462 (the June Vatican AI
+  gathering and Sr. Petrini's talk on an encyclical sub-label). Left as is — can't judge from the
+  headline: 28514 (Eucharistic miracle), 28493 (closed-door UFO briefing), 28480/28481 (Orthodox
+  commentary on a 27-row label). The older rows of those buckets predate the attempt — not touched.
+  PA steps handed over 2026-10-29: confirm afd1dff is deployed, back up news.db, preview the 8,
+  clear, verify. Strike this line when JP's paste confirms "8".
   Attempt 1 design (kept in code behind the switch, for the record and the next try):
   `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
     1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
