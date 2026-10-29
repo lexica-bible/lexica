@@ -914,6 +914,25 @@ Open tickets:
   Layers 1 (outlet cap) and 2 (downward-only rank_score) are live; this would slot into the same
   Inbox Top-stories order (83-news-logic.jsx / 84-news.jsx viewListAll). Context: 28 of Advent
   Messenger's 31 recent articles sat on cards no other outlet shared (2026-10-24 count).
+  **STATUS 2026-10-28 — fixture harness BUILT, waiting on the PA freeze (not yet a gate).**
+  `tests/test_news_clustering.py` (layer 2, offline): merge + split run the real `views_news._group`
+  on frozen rows vs hand-judged cards; case 3 runs the real `group_news.main()` night by night on a
+  scratch db with the AI stood in (consistent inside a call, reuses any label it's shown) — the
+  one-night control must pass; the two-night run is a **KNOWN FAILURE** (strict: the day it passes,
+  the test fails until it's taken off KNOWN_FAILING). `tests/fixtures/news_clustering/`:
+  `freeze_sample.py` (READ-ONLY copy of the three samples off news.db; never copies Keep/Dismiss,
+  reviews or status), `relabel_check.py` (layer 1 by hand: real labeler on the frozen headlines →
+  cards vs expected + label drift vs stored; never writes anything; without `--run` only prints the
+  AI-call count), `fixture_lib.py` (the one shared comparison). Smoke-tested on a HAND-MADE sample
+  only — every check fired on a known-wrong case. STILL OWED: (a) PA: `deploy.sh`, then
+  `~/.virtualenvs/bible-env/bin/python tests/fixtures/news_clustering/freeze_sample.py`, paste its
+  printed counts, and from PowerShell `scp appssanding720@ssh.pythonanywhere.com:news_clustering_freeze.json
+  C:\Users\JP\projects\bible-db\tests\fixtures\news_clustering\frozen.json`; (b) `expected.json` —
+  EVERY frozen row judged into its real happening, the picture posted for verdict; (c) wire the test
+  into BOTH gate lists (CI + pre-commit) — held until (a)+(b) exist, it would fail on missing files;
+  (d) one `relabel_check.py --run` on PA as the layer-1 baseline. The cross-night relabeling fix is
+  UNBLOCKED once merge + split + the one-night control pass on the real fixtures; case 3's two-night
+  run is the one that fix must flip.
   **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
   tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
   `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are
@@ -938,7 +957,8 @@ Open tickets:
   even if the labeler drifted back to theme-lumping. Needs from PA: a frozen sample of the AI
   encyclical coverage and of the Sunday-laws bucket; both checks must pass against the CURRENT
   code before they mean anything.
-    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed) — Pope Leo XIV says the
+    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed; set up 2026-10-28 as
+       the KNOWN FAILURE in tests/test_news_clustering.py, live once the freeze lands) — Pope Leo XIV says the
        death penalty is "inadmissible": two cards for one event, National Catholic Register
        2026-10-11 (4 sources) and EWTN News (CNA) 2026-10-10 (4 sources). Expected: ONE card.
        Read from the code: NOT the 14-day window (1 day apart) and NOT headline wording (the
