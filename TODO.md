@@ -142,6 +142,11 @@ parser reference notes in its appendix). No open writes.
   10/23–10/25. That is the fixed compress step working on two nights in a row, full size (the damaged
   one was 107 MB). `last_success` 2026-10-28T13:34:38; log `OK  bible.db … 443.3 MB` +
   `All backups verified ok.`, no `XX`; health_check `backups swept … 61 (all intact)`, no DAMAGED.
+  **Alert email proven end-to-end (JP inbox, 10/29):** the nightly `--email --only-warn` mail for
+  10/25 23:53 UTC carried `[WARN] backup DAMAGED (gz): bible.db.20261024-133029.db.gz` (+ the disk
+  line, 83% then) — the only nightly that could see that file. Detection, mail-on-warn, delivery all
+  work, so a silent night = clean. (Its sweep count read 55 vs 62 at the 20:2x manual run; cause not
+  traced — the count is just files present, does not touch the proof.)
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
