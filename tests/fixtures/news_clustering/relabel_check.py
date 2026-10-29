@@ -13,9 +13,10 @@ reads them against the hand judgment in expected.json, with the same checks the 
 Two runs per case:
   ONE PASS     every row in one run, from an empty label list (= a --regroup)
   REAL NIGHTS  the real nightly code: group_news.main() run night by night on a scratch db (rows
-               labeled in the June-29 regroup = one night). Since 2026-10-29 that shows the
-               labeler a BOUNDED list of past labels (group_news.pick_known); the 10-29 baseline
-               was the old code, which started every night from an EMPTY list.
+               labeled in the June-29 regroup = one night), so it measures whatever main()
+               does: an EMPTY list each night while group_news.NIGHTLY_SEED is off, the bounded
+               past-label list (pick_known) when on. The live run of 2026-10-29 with it ON
+               failed on fusion (TODO.md).
 Plus LABEL DRIFT vs the labels stored at freeze time: how many different labels each judged
 story got, then vs now.
 

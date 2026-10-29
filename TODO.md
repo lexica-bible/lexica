@@ -969,8 +969,34 @@ Open tickets:
   Expected picture: JP will not review rows by hand (2026-10-29) — the judgment STANDS as written,
   incl. the 4 calls above (kept as judged: Pizzaballa's police incident, separate Dr. O episodes,
   Parolin vs the pope are different happenings). Logged under the standing delegation.
-  **CROSS-NIGHT FIX — SHIPPED 2026-10-29 (code; live measurement PENDING).** `group_news.py` nightly
-  runs now show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
+  **CROSS-NIGHT FIX ATTEMPT 1 — FAILED LIVE ON FUSION, SWITCHED OFF 2026-10-29** (`NIGHTLY_SEED =
+  False` in group_news.py; nightly prompts checked identical to the pre-fix code; the 3 real-nights
+  KNOWN FAILURES restored). Live run (JP, PA, relabel_check.py --run on f655d22; output cut off
+  partway through Sunday real-nights — cross-night sample never ran, not needed for the verdict):
+    | measure                              | baseline real nights | attempt 1 real nights |
+    | encyclical rows on one card          | 341/623              | 511/623               |
+    | labels on the encyclical rows        | 27                   | 7                     |
+    | clearly-other stories on its card    | 13                   | 23  <- FAIL           |
+    | Sunday over-merged cards             | 1                    | 8   <- FAIL           |
+    | Sunday happenings split over cards   | 13                   | 1                     |
+    (one pass, the unchanged regroup path: 597/623 + 53 other vs baseline 593 + 53 — repeatable.)
+  It fixes splitting and re-creates the June THEME BUCKET: shown a label, the labeler reuses it for
+  a different happening of the same theme. Worst: "Roman Catholics Sunday Rest Legal Protection
+  Call" swallowed 8 stories over 7 weeks (Greece strike, Berlin council, Austria unions, Vatican
+  News, ...) — the 14-day reach CHAINS: each wrongly added article keeps the label in reach for the
+  next. Also "North Dakota House Bill 1150" took Utah's bill; a Dr. O episode took a German-stores
+  story; new encyclical-card joiners include the Vatican AI-guidelines rows (5251). Next design
+  must cut theme reuse, e.g. show a label only when the headline shares its DISTINCTIVE words
+  (place / institution / name — rare words, not "sunday", "rest", "pope", "ai"); let the reach run
+  from the label's FIRST articles so a label can't keep extending itself; or a second AI check
+  per reuse ("same happening as these 3 headlines?"). Gate unchanged: replay flips the 3 cases AND
+  a live relabel_check beats the baseline BOTH ways (fused not up, split down).
+  LIVE EXPOSURE: daily.sh does NOT pull code (corrected — an earlier line here said it did); the
+  code reached PA with JP's deploy before the 06:00 UTC nightly of 2026-10-29, so that night's new
+  rows were most likely labeled with the list ON. Check first (read-only), then decide whether to
+  clear those rows' labels so the old code redoes them: see the PA steps given 2026-10-29.
+  Attempt 1 design (kept in code behind the switch, for the record and the next try):
+  `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
     1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
        WINDOW_DAYS) of a headline in the batch: the card code joins a label's rows only across
        <= 14-day gaps, so a further label can't merge cards, only fuse. Published, not pull night
@@ -992,14 +1018,10 @@ Open tickets:
   when labeled (same words + dates). Whether the live AI resists is exactly what the PA run decides.
   relabel_check.py REAL NIGHTS now runs the real `group_news.main()` night by night on a scratch db
   (it re-implemented the old empty-list loop before, so it would have measured the OLD code).
-  PENDING — the live run, compared to the 10-29 baseline table above: `deploy.sh`, then
-  `relabel_check.py --run` (221 calls). Pass = real nights keeps the encyclical together (baseline:
-  341/623, 27 labels) WITHOUT more clearly-other stories on its card than the baseline real nights
-  (13); Sunday split/fused and cross-night split down, fused not up. If fusion rises, revert
-  group_news.py before the next nightly. TIMING: daily.sh pulls ~06:00 UTC and the deploy makes
-  that night use the new code — measure first. Already-stored labels are untouched (only new rows
-  use the list); old split cards stay split. A `--regroup` would rewrite them but its unbounded
-  one-pass list over-fused in the baseline (53) — not run, needs its own measured decision.
+  (Live run's pass rule was: encyclical kept together WITHOUT more than the baseline's 13 other
+  stories on its card; Sunday fused not up. It failed both fusion lines — see the table above.)
+  A `--regroup` would rewrite the old split labels but its unbounded one-pass list over-fused in the
+  baseline (53) — not run, needs its own measured decision.
   **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
   tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
   `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are

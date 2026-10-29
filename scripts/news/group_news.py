@@ -148,6 +148,14 @@ def build_client():
 #   3. CAP — at most SEED_MAX labels, each shown with one headline it was given to, so the AI
 #      judges "same happening?" by content, not by how close the label's wording sounds.
 # --regroup is unchanged: it starts empty and shows every label made in that run (one pass).
+#
+# STATUS: OFF. The live check (relabel_check.py --run on PA, 2026-10-29) failed on FUSION: it fixed
+# the splitting (encyclical 511/623 on one card vs 341, 7 labels vs 27) but the labeler reused shown
+# labels for DIFFERENT happenings of the same theme — 23 other stories on the encyclical card (was
+# 13), Sunday 8 fused cards (was 1; one label swallowed 8 stories over two months). With it off
+# the nightly run is exactly the old behavior (labels made earlier the same night only). Do NOT
+# turn on without a new design AND a relabel_check.py --run that beats the baseline both ways.
+NIGHTLY_SEED = False
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
                          # default 40-headline batch (295 unbounded was the over-fusing case)
@@ -310,12 +318,13 @@ def main():
 
     known = []                       # labels made in THIS run (all of them shown on --regroup)
     known_set = set()
-    pool = None if REGROUP else load_pool(conn)   # nightly: past labels, shown BOUNDED (pick_known)
+    seed = NIGHTLY_SEED and not REGROUP
+    pool = load_pool(conn) if seed else None      # nightly + ON: past labels, BOUNDED (pick_known)
     most_shown = 0
     done = 0
     for i in range(0, len(rows), BATCH):
         batch = rows[i:i + BATCH]
-        if REGROUP:
+        if not seed:
             shown, examples = known, None
         else:
             shown, examples = pick_known(pool, batch)
@@ -344,7 +353,7 @@ def main():
 
     conn.close()
     print(f"\n{'(dry run) ' if DRY_RUN else ''}labeled {done} articles into "
-          f"{len(known)} events" + ("" if REGROUP else
+          f"{len(known)} events" + ("" if not seed else
                                     f" (past labels shown per call: at most {most_shown})"))
 
 

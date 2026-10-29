@@ -22,11 +22,13 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      label it is SHOWN for the same story, else (c) uses the exact wording the real labeler gave
      that row. So the only way it can split a story is the night boundary. The rows labeled in
      the June regroup count as one night. Every story labeled in ONE pass is the control.
-     Was a KNOWN FAILURE (each night started from an EMPTY label list); passes since 2026-10-29,
-     when group_news.pick_known started showing each night a bounded list of past labels. Also
-     checked: the list never exceeds SEED_MAX, the rules of pick_known on made-up pools, and that
-     no clearly-other story lands on the encyclical card (+ how many were SHOWN its label — the
-     fusion exposure the live AI must resist; relabel_check.py measures that on PA).
+     **KNOWN FAILURE** for the real-nights replay (each night starts from an EMPTY label list).
+     A bounded past-label list (group_news.pick_known, switch NIGHTLY_SEED) flipped all three
+     here on 2026-10-29 but FAILED the live fusion check on PA, so the switch is OFF and the
+     failures are back. When a fix passes BOTH, these pass and the test then FAILS until they're
+     taken off KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
+     (when on), and that no clearly-other story lands on the encyclical card (+ how many were
+     SHOWN its label — the fusion exposure only relabel_check.py on PA can judge).
 
 No database, no network, no AI: runs offline in CI + pre-commit.
 """
@@ -45,8 +47,9 @@ import fixture_lib as fx  # noqa: E402
 from scripts.news import group_news  # noqa: E402
 
 # Strict: a case listed here that PASSES fails the run, so the list can't go stale.
-KNOWN_FAILING = set()   # emptied 2026-10-29: the bounded label list (group_news.pick_known)
-                        # flipped all three real-nights cases
+# Restored 2026-10-29: the bounded label list (group_news.pick_known) flipped all three in the
+# replay, but failed the LIVE fusion check, so group_news.NIGHTLY_SEED is OFF again.
+KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
 
 
 # ---------------------------------- 1. merge ----------------------------------
@@ -277,7 +280,7 @@ def check_cross_night(results, frozen, expected):
         labeled, firsts = replay(rows, story_of, nights)
         cards = fx.cards_of(labeled)
         ok, lines = _judge(cards, rows, story_of, multi)
-        if replay.most_shown > group_news.SEED_MAX:
+        if group_news.NIGHTLY_SEED and replay.most_shown > group_news.SEED_MAX:
             ok = False
             lines.append(f"a nightly call was shown {replay.most_shown} past labels — over the "
                          f"cap of {group_news.SEED_MAX}")
