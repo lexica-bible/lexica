@@ -914,25 +914,38 @@ Open tickets:
   Layers 1 (outlet cap) and 2 (downward-only rank_score) are live; this would slot into the same
   Inbox Top-stories order (83-news-logic.jsx / 84-news.jsx viewListAll). Context: 28 of Advent
   Messenger's 31 recent articles sat on cards no other outlet shared (2026-10-24 count).
-  **STATUS 2026-10-28 — fixture harness BUILT, waiting on the PA freeze (not yet a gate).**
-  `tests/test_news_clustering.py` (layer 2, offline): merge + split run the real `views_news._group`
-  on frozen rows vs hand-judged cards; case 3 runs the real `group_news.main()` night by night on a
-  scratch db with the AI stood in (consistent inside a call, reuses any label it's shown) — the
-  one-night control must pass; the two-night run is a **KNOWN FAILURE** (strict: the day it passes,
-  the test fails until it's taken off KNOWN_FAILING). `tests/fixtures/news_clustering/`:
-  `freeze_sample.py` (READ-ONLY copy of the three samples off news.db; never copies Keep/Dismiss,
-  reviews or status), `relabel_check.py` (layer 1 by hand: real labeler on the frozen headlines →
-  cards vs expected + label drift vs stored; never writes anything; without `--run` only prints the
-  AI-call count), `fixture_lib.py` (the one shared comparison). Smoke-tested on a HAND-MADE sample
-  only — every check fired on a known-wrong case. STILL OWED: (a) PA: `deploy.sh`, then
-  `~/.virtualenvs/bible-env/bin/python tests/fixtures/news_clustering/freeze_sample.py`, paste its
-  printed counts, and from PowerShell `scp appssanding720@ssh.pythonanywhere.com:news_clustering_freeze.json
-  C:\Users\JP\projects\bible-db\tests\fixtures\news_clustering\frozen.json`; (b) `expected.json` —
-  EVERY frozen row judged into its real happening, the picture posted for verdict; (c) wire the test
-  into BOTH gate lists (CI + pre-commit) — held until (a)+(b) exist, it would fail on missing files;
-  (d) one `relabel_check.py --run` on PA as the layer-1 baseline. The cross-night relabeling fix is
-  UNBLOCKED once merge + split + the one-night control pass on the real fixtures; case 3's two-night
-  run is the one that fix must flip.
+  **STATUS 2026-10-29 — fixtures RUNNABLE + GATED (CI + pre-commit); expected picture awaits JP's
+  verdict.** Frozen 2026-10-29 03:47 UTC off PA (`freeze_sample.py`, read-only): 918 encyclical /
+  175 Sunday / 41 cross-night rows (score >= 5). `news.db.pre-regroup` is gone, so the June bucket
+  itself couldn't be pulled — the Sunday sample is by headline/label words. EVERY row hand-judged
+  into its happening in `expected.json` (house rule = group_news.py SYSTEM; applied under JP's
+  standing delegation): encyclical 623 core / 189 clearly other / 106 borderline (never asserted);
+  Sunday 15 multi-row happenings + 95 singles + 6 unsure; cross-night 4 happenings + 2 unsure.
+  FINDING — against that judgment ALL THREE fail on the current LABELS (layer 1), never on the card
+  code: (1) the encyclical is ~100 labels now — only the June-29 regroup pass kept it on one label;
+  every nightly label after is new wording; (2) the June pass itself left a theme label ("European
+  Work-Free Sunday Campaign", 26 rows 2012-2026) and fused 6 other stories onto the encyclical label
+  (AMECEA, Carney meeting, synodality speech, ...) while putting 13 encyclical rows elsewhere (the 5
+  Vance reactions, ...); (3) the replay shows the labeler is shown 0 known labels at the start of
+  EVERY night. So the test is built per layer:
+    - merge (June-pass rows): the main label = ONE card (401 rows, 230 outlets), no other label
+      joins it — passes; the June labeler's mistakes are PINNED by id (13 + 6).
+    - split: no card fuses two happenings except the PINNED one (Utah law + a Belgium explainer,
+      12 days apart on the theme label) — passes.
+    - cross-night: real `group_news.main()` replayed night by night, AI stood in (never confuses
+      stories, reuses a label it's shown, else the real labeler's own wording). One-pass control
+      passes for all 3 samples; real nights = **KNOWN FAILURE** x3 (encyclical 64 cards, death
+      penalty 5, 14 Sunday happenings split). Strict: when it passes, the test fails until
+      KNOWN_FAILING is cleared. PROVEN to flip: an in-memory fix (seed `known` from the db's
+      labels) turned all 3 to PASS; group_news.py untouched.
+    - every check fired on a doctored wrong grouping (card cut in half / fused) before trusting it.
+  STILL OWED: (a) JP verdict on the expected picture; (b) one `relabel_check.py --run` on PA as the
+  layer-1 baseline (221 Haiku calls: 30 one-pass + 191 real-nights; `--one-pass` = 30) — it re-reads
+  the same judgment with fresh labels and writes nothing. The cross-night relabeling fix is
+  UNBLOCKED: its gate is the three real-nights cases flipping (then clear KNOWN_FAILING), with
+  merge + split staying green. Note for that fix: seeding EVERY past label showed the stand-in 295
+  labels on one night — the real prompt may need a narrower list (recent / same-thread); measure
+  with relabel_check, not the stand-in.
   **GAP in the standing rule (searched 2026-10-25): the two fixtures are NOT runnable tests.**
   tests/ has no test of the grouping code at all (views_news `_group` / `_cluster` /
   `_split_by_window` / `_pick_face`, scripts/news/group_news.py); the only news tests are
@@ -957,8 +970,9 @@ Open tickets:
   even if the labeler drifted back to theme-lumping. Needs from PA: a frozen sample of the AI
   encyclical coverage and of the Sunday-laws bucket; both checks must pass against the CURRENT
   code before they mean anything.
-    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed; set up 2026-10-28 as
-       the KNOWN FAILURE in tests/test_news_clustering.py, live once the freeze lands) — Pope Leo XIV says the
+    3. CROSS-NIGHT MERGE (added 2026-10-25, JP report; no code changed; CONFIRMED 2026-10-29
+       from the freeze: the statement got 6 labels over 6 nights, the Holy See UN call 2 over 2 —
+       the KNOWN FAILURE in tests/test_news_clustering.py) — Pope Leo XIV says the
        death penalty is "inadmissible": two cards for one event, National Catholic Register
        2026-10-11 (4 sources) and EWTN News (CNA) 2026-10-10 (4 sources). Expected: ONE card.
        Read from the code: NOT the 14-day window (1 day apart) and NOT headline wording (the
