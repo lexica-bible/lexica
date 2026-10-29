@@ -110,7 +110,7 @@ parser reference notes in its appendix). No open writes.
   (if any); never reproduce against live; `docs/claude/frontend.md` "jump's translation is ONE-TIME"
   section names this deep link as one of the two `libNav` producers. Step 10 came back IDENTICAL
   (10/25) — no step-10 deploy exists, so a fix deploys on its own.
-- OPEN (found 2026-10-25, post-deploy health_check) — **a bible.db nightly backup is DAMAGED:**
+- CLOSED 2026-10-28 (found 2026-10-25, post-deploy health_check) — **a bible.db nightly backup was DAMAGED:**
   `[WARN] backup DAMAGED (gz): bible.db.20261024-133029.db.gz` — "Compressed file ended before the
   end-of-stream marker was reached" (the .gz is cut short). Sweep: 62 backups checked, this 1 damaged
   (the newest nightly passes; the swap rollback `bible_pre_trapwire_swap.db` is a separate file).
@@ -135,6 +135,13 @@ parser reference notes in its appendix). No open writes.
   `all intact`. Then update the keep-list line that calls the 10/24 nightly damaged, and check the
   `~/rekey/pre_rebuild.db` condition (a nightly after the 18:06 swap passing the sweep). 10/27
   nightly ages the 10/24 stamp out (keep 3).
+  **CLOSED — JP PA read-only check 10/29 02:56 UTC** (run after the 10/28 nightly, so the 10/26
+  picture above was overtaken; the 10/24 copies have aged out, so they can't be checked directly).
+  On disk: `20261026` .gz 147,705,483 B stamped 10/27 13:34 and `20261027` .gz 147,707,480 B stamped
+  10/28 13:34, both `-r--r--r--`; `20261028` raw 443,256,832 B; no raw left beside either .gz; no
+  10/23–10/25. That is the fixed compress step working on two nights in a row, full size (the damaged
+  one was 107 MB). `last_success` 2026-10-28T13:34:38; log `OK  bible.db … 443.3 MB` +
+  `All backups verified ok.`, no `XX`; health_check `backups swept … 61 (all intact)`, no DAMAGED.
 - HELD (JP 2026-10-25) — **re-scope `/rebuild-words` step 7**: it is written as a rendered-site check;
   mark which items are data-checkable (Eze 31:9 binding, 1Chr 1:1 identity H121 + metaV bind, Sheshach
   headers — all read through the site's read-only endpoints on 10/25) and which must be SEEN (1Ch 13:10:
@@ -187,9 +194,13 @@ parser reference notes in its appendix). No open writes.
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
+  **Condition MET 10/29** (10/26, 10/27, 10/28 nightlies all pass the sweep) — `~/bible.db.pre-xref-fix-20261024`
+  may now be deleted (JP's step).
   **The fill copy stays until a re-freeze exists** — it is the frozen snapshot's only "before" side
-  (rotation/single-rollback rule does not apply to it). Also on PA (10/25 live rebuild, delete
-  nothing yet): `~/rekey/pre_rebuild.db` until a nightly dated after the 10/25 18:06 swap PASSES the backup sweep (JP ruling 10/25 — the 10/24 nightly is damaged, so "dated after" alone is not enough) ·
+  (rotation/single-rollback rule does not apply to it). Also on PA (10/25 live rebuild):
+  `~/rekey/pre_rebuild.db` — **condition MET 10/29, may now be deleted (JP's step)**: three nightlies
+  dated after the 10/25 18:06 swap (10/26, 10/27, 10/28) all pass the backup sweep (JP ruling 10/25
+  required a PASS, not just a later date; the damaged 10/24 copy has since aged out) ·
   `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
   deletable as their own step.
 - **Held list** — read-by-hand, no writes queued. Full rows: the handoff (lane (a)'s "Same slot,
