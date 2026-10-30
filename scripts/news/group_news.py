@@ -164,16 +164,20 @@ def build_client():
 #   3. CAP — at most SEED_MAX labels, each shown with one headline it was given to, so the AI
 #      judges "same happening?" by content, not by how close the label's wording sounds.
 # --regroup is unchanged: it starts empty and shows every label made in that run (one pass).
+#   4. REUSE CHECK (attempt 4, 2026-10-30) — when ON, every reuse of an earlier night's label is
+#      confirmed by a second call (check_reuse / confirm_reuse, below); a "no" gets a fresh label.
 #
-# STATUS: OFF. Failed the live check (relabel_check.py --run on PA) on FUSION, on both models:
+# STATUS: OFF. Attempt 4 (list + reuse check) passes the replay incl. the 12 live-fused theme
+# rows; it is checked live with `relabel_check.py --run --list-on` (scratch db only) and turned on
+# here only if that beats the bar. Earlier, the list ALONE failed the live check on FUSION:
 #   Haiku (2026-10-29): fixed the splitting (encyclical 511/623 on one card vs 341, Sunday splits
 #     13 -> 1) but reused shown labels for DIFFERENT happenings of the same theme — 23 other stories
 #     on the encyclical card (was 13), Sunday 8 fused cards (was 1).
 #   Sonnet (2026-10-30, attempt 1b): better both ways but still fuses — encyclical 578/623, 14
 #     other stories (was 13), Sunday 5 fused cards (was 1), Sunday splits 1, cross-night clean.
+#   (Attempt 2, a distinctive-words match, was stopped in the replay — TODO_ARCHIVE.)
 # With it off the nightly run is exactly the old behavior (labels made earlier the same night only).
-# Do NOT turn on without a new design (TODO.md: distinctive words) AND a relabel_check.py --run
-# that beats the baseline both ways.
+# Do NOT turn on without a relabel_check.py --run --list-on that beats the baseline both ways.
 NIGHTLY_SEED = False
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
@@ -201,13 +205,15 @@ def _day(published):
         return None
 
 
-def pool_add(pool, label, title, published, score):
-    """Remember one labeled article under its label (in memory, for picking what to show)."""
+def pool_add(pool, label, title, published, score, rid=None):
+    """Remember one labeled article under its label (in memory, for picking what to show).
+    heads = its best-scored (score, title, published, id): the example shown with the label and
+    the stored headlines the reuse check (confirm_reuse) compares a new headline against."""
     p = pool.setdefault(label, {"days": [], "heads": [], "n": 0})
     d = _day(published)
     if d is not None:
         p["days"].append(d)
-    p["heads"].append(((score or 0), title or ""))
+    p["heads"].append(((score or 0), title or "", published or "", rid))
     p["heads"].sort(key=lambda h: -h[0])
     del p["heads"][_HEADS_PER_LABEL:]
     p["n"] += 1
@@ -217,9 +223,9 @@ def pool_add(pool, label, title, published, score):
 def load_pool(conn):
     """Every labeled article already in the db, grouped by label."""
     pool = {}
-    for r in conn.execute("SELECT event, title, published, score FROM items "
+    for r in conn.execute("SELECT event, title, published, score, id FROM items "
                           "WHERE event IS NOT NULL AND event != ''"):
-        pool_add(pool, r[0], r[1], r[2], r[3])
+        pool_add(pool, r[0], r[1], r[2], r[3], r[4])
     return pool
 
 
@@ -244,7 +250,7 @@ def pick_known(pool, batch, cap=SEED_MAX, days=REACH_DAYS):
         if not near:
             continue
         if "toks" not in p:
-            p["toks"] = _tokens(label).union(*(_tokens(h) for _, h in p["heads"]))
+            p["toks"] = _tokens(label).union(*(_tokens(h[1]) for h in p["heads"]))
         last = max(p["days"])
         for hi_, (hd, ht) in enumerate(heads):
             if not any(abs(d - hd) <= days for d in near):
@@ -276,32 +282,43 @@ def pick_known(pool, batch, cap=SEED_MAX, days=REACH_DAYS):
     return shown, {k: pool[k]["heads"][0][1] for k in shown}
 
 
-def label_batch(client, rows, known, examples=None):
+def _ask(client, system, user):
+    """One call on MODEL -> the JSON array it returns. A refusal or a cut-off reply raises
+    (loud, never half-read: the caller prints ERR)."""
+    msg = client.messages.create(
+        model=MODEL, system=system, messages=[{"role": "user", "content": user}],
+        **_call_settings(MODEL),
+    )
+    if msg.stop_reason in ("refusal", "max_tokens"):
+        raise RuntimeError(f"labeler stopped early ({msg.stop_reason})")
+    # read the reply by block type: a thinking model's reply starts with a (thinking) block
+    text = "".join(b.text for b in (msg.content or []) if b.type == "text").strip() or "[]"
+    text = _FENCE.sub("", text).strip()
+    try:
+        return json.loads(text)
+    except Exception:
+        m = re.search(r"\[.*\]", text, re.DOTALL)
+        return json.loads(m.group(0)) if m else []
+
+
+def label_batch(client, rows, known, examples=None, avoid=None):
+    """avoid = labels the reuse check just turned down for these headlines (the nightly's
+    fresh-label call only); without it the request is exactly the old one."""
     if known and examples:
         known_txt = "\n".join(f'  - {k}   (e.g. "{examples.get(k, "")[:90]}")' for k in known)
         head = "Existing labels already in use (each with one headline it was given to):\n"
     else:
         known_txt = ("\n".join(f"  - {k}" for k in known)) if known else "  (none yet)"
         head = "Existing labels already in use:\n"
+    if avoid:
+        known_txt += ("\n\nThese labels were checked against these headlines and name a "
+                      "DIFFERENT happening — do NOT use them:\n" +
+                      "\n".join(f"  - {k}" for k in avoid))
     lines = [f'id={r["id"]} | {r["title"]}' for r in rows]
     user = (head + known_txt +
             "\n\nGroup these headlines. Reuse a label above when it fits.\n\n" +
             "\n".join(lines))
-    msg = client.messages.create(
-        model=MODEL, system=SYSTEM, messages=[{"role": "user", "content": user}],
-        **_call_settings(MODEL),
-    )
-    if msg.stop_reason in ("refusal", "max_tokens"):
-        # loud, never half-read: the caller prints ERR and the batch stays unlabeled for next night
-        raise RuntimeError(f"labeler stopped early ({msg.stop_reason})")
-    # read the reply by block type: a thinking model's reply starts with a (thinking) block
-    text = "".join(b.text for b in (msg.content or []) if b.type == "text").strip() or "[]"
-    text = _FENCE.sub("", text).strip()
-    try:
-        data = json.loads(text)
-    except Exception:
-        m = re.search(r"\[.*\]", text, re.DOTALL)
-        data = json.loads(m.group(0)) if m else []
+    data = _ask(client, SYSTEM, user)
     out = {}
     for d in data:
         try:
@@ -312,6 +329,101 @@ def label_batch(client, rows, known, examples=None):
         if ev:
             out[vid] = ev
     return out
+
+
+# ---- the reuse check (cross-night attempt 4, 2026-10-30) ----
+# What failed live three times: shown a past label, the labeler reuses it for the NEXT happening of
+# the same theme (two Dr. O episodes; a union's fine proposal, then its enforcement campaign). So
+# every time a nightly run puts a headline on a label from an EARLIER run, a second, narrow call
+# asks only that: same happening, or a different one on the same theme? Shown: the label's best
+# stored headlines WITH publish dates (the Dr. O episodes have word-for-word the same headline —
+# only the dates tell them apart). "yes" -> the reuse stands; "no" (or no answer, or a failed
+# call) -> the headline gets a fresh label the way the nightly always did (fresh_labels).
+# One call per reused label per batch, covering every headline in the batch that took it, each
+# answered on its own; same MODEL + settings as the labeler.
+SYSTEM_CONFIRM = """You check one grouping decision in a news feed. Each new headline below was
+put under an existing event label. Decide, for each one, whether it reports the SAME specific
+happening as the label's earlier headlines, or a DIFFERENT happening on the same theme.
+
+SAME: the same bill, lawsuit, ruling, document, report, speech, statement, meeting or
+announcement — including later phases of that one thing (its release, the reporting on its
+contents, reactions to it, hearings, votes, delays) and the same article re-published or
+carried by another outlet.
+DIFFERENT: another occasion of the same kind — another episode of a recurring show, another
+speech, message or statement, another campaign or proposal by the same group, another place
+or another year. Same people and same topic is not enough.
+Use the publish dates: the same wording days or weeks apart can be a new episode or a new
+statement; an old article re-published keeps its old date.
+
+Return ONLY a JSON array, one object per new headline, keys exactly: id, same (true or false)."""
+
+
+def confirm_reuse(client, label, stored, rows):
+    """-> {id: True if that headline is the same happening as the label's stored headlines}.
+    stored = the label's best-scored (score, title, published, id), as kept by pool_add;
+    rows = the new headlines that took the label. An id missing from the reply counts as no."""
+    def when(p):
+        return (p or "")[:10] or "date unknown"
+    seen = "\n".join(f'  - "{h[1][:120]}" ({when(h[2])})' for h in stored)
+    new = "\n".join(f'id={r["id"]} | {r["title"]} ({when(r["published"])})' for r in rows)
+    user = (f"Label: {label}\nIts earlier headlines:\n{seen}\n\n"
+            f"New headlines given this label:\n{new}")
+    out = {}
+    for d in _ask(client, SYSTEM_CONFIRM, user):
+        try:
+            out[int(d["id"])] = d.get("same") is True
+        except Exception:
+            continue
+    return out
+
+
+def check_reuse(client, batch, labels, pool, earlier):
+    """Run the reuse check on one batch's labels -> (ids turned down {id: label}, calls made).
+    earlier = labels that existed before this run (a label made tonight needs no check; one
+    from an earlier night does — whether it was on the shown list or the AI happened to write
+    the same words, which is how today's nightly already fuses some stories)."""
+    took = {}
+    for r in batch:
+        ev = labels.get(r["id"])
+        if ev in earlier:
+            took.setdefault(ev, []).append(r)
+    no, calls = {}, 0
+    for label, rs in took.items():
+        calls += 1
+        try:
+            ans = confirm_reuse(client, label, pool[label]["heads"], rs)
+        except Exception as e:
+            print(f"  ERR  reuse check on {label[:40]!r}: {str(e)[:80]} — treated as no")
+            ans = {}
+        for r in rs:
+            if not ans.get(r["id"]):
+                no[r["id"]] = label
+    return no, calls
+
+
+def fresh_labels(client, batch, labels, no, known, earlier):
+    """Re-label the headlines the reuse check turned down, the way the nightly always did: shown
+    only the labels made in THIS run (none from earlier nights), told not to use the label it
+    turned down. A reply that still names an earlier night's label leaves the headline unlabeled
+    tonight (it's retried next night) rather than fusing it unchecked. -> labels, updated."""
+    rows = [r for r in batch if r["id"] in no]
+    tonight = [k for k in known if k not in earlier]
+    for i, v in labels.items():          # + labels this batch's first call made fresh
+        if i not in no and v not in earlier and v not in tonight:
+            tonight.append(v)
+    try:
+        again = label_batch(client, rows, tonight, avoid=sorted(set(no.values())))
+    except Exception as e:
+        print(f"  ERR  fresh labels: {str(e)[:80]}")
+        again = {}
+    for r in rows:
+        ev = again.get(r["id"])
+        if ev and ev not in earlier:
+            labels[r["id"]] = ev
+        else:
+            labels.pop(r["id"], None)
+            print(f"  left unlabeled tonight (reuse turned down, no fresh label): id {r['id']}")
+    return labels
 
 
 def main():
@@ -343,8 +455,10 @@ def main():
     known_set = set()
     seed = NIGHTLY_SEED and not REGROUP
     pool = load_pool(conn) if seed else None      # nightly + ON: past labels, BOUNDED (pick_known)
+    earlier = set(pool) if seed else set()        # labels from earlier runs: reuse gets checked
     most_shown = 0
     done = 0
+    calls = checks = turned_down = refreshes = 0
     for i in range(0, len(rows), BATCH):
         batch = rows[i:i + BATCH]
         if not seed:
@@ -353,10 +467,18 @@ def main():
             shown, examples = pick_known(pool, batch)
         most_shown = max(most_shown, len(shown))
         try:
+            calls += 1
             labels = label_batch(client, batch, shown, examples)
         except Exception as e:
             print(f"  ERR  batch at {i}: {str(e)[:80]}")
             continue
+        if seed:                         # the reuse check, then fresh labels for the turned-down
+            no, n = check_reuse(client, batch, labels, pool, earlier)
+            checks += n
+            if no:
+                turned_down += len(no)
+                refreshes += 1
+                labels = fresh_labels(client, batch, labels, no, known, earlier)
         for r in batch:
             ev = labels.get(r["id"])
             if not ev:
@@ -364,7 +486,7 @@ def main():
             if ev not in known_set:
                 known_set.add(ev); known.append(ev)
             if pool is not None:
-                pool_add(pool, ev, r["title"], r["published"], r["score"])
+                pool_add(pool, ev, r["title"], r["published"], r["score"], r["id"])
             done += 1
             if DRY_RUN:
                 print(f"  {ev[:34]:34s} | {r['title'][:60]}")
@@ -378,6 +500,9 @@ def main():
     print(f"\n{'(dry run) ' if DRY_RUN else ''}labeled {done} articles into "
           f"{len(known)} events" + ("" if not seed else
                                     f" (past labels shown per call: at most {most_shown})"))
+    if seed:
+        print(f"calls: labeler {calls}, reuse checks {checks} ({turned_down} reuses turned "
+              f"down), fresh-label calls {refreshes}")
 
 
 if __name__ == "__main__":

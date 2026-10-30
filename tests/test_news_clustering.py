@@ -22,18 +22,18 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      label it is SHOWN for the same story, else (c) uses the exact wording the real labeler gave
      that row. So the only way it can split a story is the night boundary. The rows labeled in
      the June regroup count as one night. Every story labeled in ONE pass is the control.
-     A bounded past-label list (group_news.pick_known, switch NIGHTLY_SEED) flips all three real-
-     nights cases here, but FAILED the live fusion check on PA on Haiku (2026-10-29) and on Sonnet
-     (2026-10-30), so the switch is OFF: each night starts from an EMPTY label list and the three
-     are **KNOWN FAILURES**. When a fix passes BOTH, these pass and the test then FAILS until
-     they're taken off KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
-     (when on), and that no clearly-other story lands on the encyclical card (+ how many were
-     SHOWN its label — the fusion exposure only relabel_check.py on PA can judge).
-  4. THEME PAIRS — the stand-in can't fuse, so case 3 passing says nothing about what failed live
-     (an earlier label reused for the next happening of the same theme). This check asks the
-     stand-in nothing: with the past-label list forced ON, the same-theme pairs the live labeler
-     fused must never be SHOWN the earlier label. KNOWN FAILURE while the attempt-1 list is the
-     code behind the switch.
+     The replay runs the nightly with the past-label list (group_news.pick_known) AND the reuse
+     check (group_news.check_reuse) switched ON, whatever the shipped switch NIGHTLY_SEED says —
+     it stays OFF in the nightly until relabel_check.py --run --list-on passes on PA. The reuse
+     check's stand-in answers from expected.json's judgment, so it is always right: the replay
+     proves the mechanism, not the live AI's answers. With the list alone (attempts 1/1b) the
+     three passed here and FAILED live on fusion; with the list off they fail here (each night
+     starts empty). Also checked: the cap, the rules of pick_known on made-up pools, and that no
+     clearly-other story lands on the encyclical card (+ how many were SHOWN its label — the
+     fusion exposure only the live run can judge). Call counts are printed per sample.
+  4. THEME PAIRS — the 12 same-theme rows the live labeler fused: the labeler stand-in is made to
+     take the earlier label whenever it's shown (what the live AI did); the reuse check must turn
+     every one down. Built-in known positive: with the check answering yes, all 12 must fuse.
 
 No database, no network, no AI: runs offline in CI + pre-commit.
 """
@@ -54,10 +54,10 @@ from scripts.news import group_news  # noqa: E402
 # Strict: a case listed here that PASSES fails the run, so the list can't go stale.
 # Restored 2026-10-30: the bounded label list (group_news.pick_known) flips all three in the
 # replay, but failed the LIVE fusion check on Haiku AND on Sonnet, so group_news.NIGHTLY_SEED is OFF.
-KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
-# Added 2026-10-30: the attempt-1 list (still the code behind the switch) shows every theme pair.
-# A next design has to clear THIS as well as the three above before any live check.
-KNOWN_FAILING.add("theme pairs: earlier label never shown to the next happening")
+# Emptied 2026-10-30 (attempt 4): with the past-label list + reuse check on, the three real-nights
+# cases and the theme-pairs check pass in the replay. The shipped switch (group_news.NIGHTLY_SEED)
+# stays OFF until relabel_check.py --run --list-on passes on PA; the replay tests the design.
+KNOWN_FAILING = set()
 
 
 # ---------------------------------- 1. merge ----------------------------------
@@ -182,18 +182,29 @@ def story_tag(story_of, story):
     return " ~" + _B36[n // 36] + _B36[n % 36]
 
 
-def _stand_in(story_of, stored):
+def _stand_in(story_of, stored, grab=None):
     """label_batch replacement: never confuses two stories (each label carries its story's tag);
     inside one call a story gets one label; a known label of the same story is reused if shown,
-    else the real labeler's own wording for that row (+ the tag)."""
+    else the real labeler's own wording for that row (+ the tag).
+    grab = {row id: story tag}: for those rows ONLY, act like the live labeler did — if a label of
+    that (different) story is on the list, take it. That's the theme-pairs check's fusion attempt."""
     shown = []
     tag = {s: story_tag(story_of, s) for s in set(story_of.values())}
+    grab = grab or {}
 
-    def label_batch(client, batch, known, examples=None):
-        shown.append(len(known))
+    def label_batch(client, batch, known, examples=None, avoid=None):
+        if avoid is None:                 # the fresh-label call isn't a labeler call of its own
+            shown.append(len(known))
+        else:
+            label_batch.fresh += 1
         calls.append(([r["id"] for r in batch], list(known), label_batch.past))
         out, this_call = {}, {}
         for r in batch:
+            took = next((k for k in known if r["id"] in grab and k.endswith(grab[r["id"]])), None)
+            if took:
+                label_batch.grabbed.add(r["id"])
+                out[r["id"]] = took
+                continue
             s = story_of[r["id"]]
             if s not in this_call:
                 reuse = next((k for k in known if k.endswith(tag[s])), None)
@@ -204,19 +215,42 @@ def _stand_in(story_of, stored):
     calls = []                     # (batch ids, labels shown, labels that existed before this
     label_batch.calls = calls      # night) per call — for the fusion + theme-pair checks
     label_batch.past = frozenset()
+    label_batch.fresh = 0          # fresh-label calls (after a reuse was turned down)
+    label_batch.grabbed = set()    # grab rows that did take the other story's label
     return label_batch, shown
 
 
-def replay(rows, story_of, nights):
+def _judge_stand_in(story_of, always_yes=False):
+    """confirm_reuse replacement — HONEST ABOUT WHAT IT IS: it answers from the hand judgment in
+    expected.json (yes only if the new headline and the label's stored headlines are judged the
+    same happening), i.e. it is always right. So a replay with it proves the MECHANISM — a "no"
+    really blocks the reuse and the headline gets a fresh label; a "yes" keeps cross-night merges
+    — NOT that the live AI answers right. That is what relabel_check.py --run --list-on measures
+    on PA. always_yes = the reuse check doing nothing (the attempt-1 design), for known positives."""
+    def confirm_reuse(client, label, stored, rows):
+        confirm_reuse.calls += 1
+        confirm_reuse.asked += len(rows)
+        return {r["id"]: always_yes or all(story_of.get(h[3]) == story_of[r["id"]] for h in stored)
+                for r in rows}
+    confirm_reuse.calls = confirm_reuse.asked = 0
+    return confirm_reuse
+
+
+def replay(rows, story_of, nights, list_on=True, grab=None, always_yes=False):
     """Insert each night's rows into a scratch news.db and run group_news.main() after each one
-    (nightly mode: unlabeled rows only), then read back the labels it wrote."""
+    (nightly mode: unlabeled rows only), then read back the labels it wrote. list_on = the past-
+    label list + reuse check switched on (NIGHTLY_SEED) for the replay, whatever the shipped
+    setting: the switch stays OFF in the nightly until a live relabel_check passes, so this tests
+    the design. Call counts land on replay.counts."""
     stored = {r["id"]: r["event"] or f"(unlabeled #{r['id']})" for r in rows}
-    stub, shown = _stand_in(story_of, stored)
+    stub, shown = _stand_in(story_of, stored, grab)
+    judge = _judge_stand_in(story_of, always_yes)
     firsts = []                    # labels the labeler was shown at the FIRST call of each night
     fd, path = tempfile.mkstemp(suffix=".db")
     os.close(fd)
     keep = {k: getattr(group_news, k) for k in
-            ("DB_PATH", "REGROUP", "DRY_RUN", "MIN", "BATCH", "build_client", "label_batch")}
+            ("DB_PATH", "REGROUP", "DRY_RUN", "MIN", "BATCH", "build_client", "label_batch",
+             "confirm_reuse", "NIGHTLY_SEED")}
     keep_sleep = group_news.time.sleep
     try:
         c = sqlite3.connect(path)
@@ -227,6 +261,8 @@ def replay(rows, story_of, nights):
         group_news.MIN, group_news.BATCH = 5, 40
         group_news.build_client = lambda: None
         group_news.label_batch = stub
+        group_news.confirm_reuse = judge
+        group_news.NIGHTLY_SEED = list_on
         group_news.time.sleep = lambda s: None
         for night in sorted(set(nights.values())):
             first_call = len(shown)
@@ -252,6 +288,9 @@ def replay(rows, story_of, nights):
         os.remove(path)
     replay.last_calls = stub.calls
     replay.most_shown = max(shown, default=0)
+    replay.grabbed = stub.grabbed
+    replay.counts = {"nights": len(set(nights.values())), "labeler": len(shown),
+                     "checks": judge.calls, "asked": judge.asked, "fresh": stub.fresh}
     return out, firsts
 
 
@@ -291,14 +330,16 @@ def check_cross_night(results, frozen, expected):
         labeled, firsts = replay(rows, story_of, nights)
         cards = fx.cards_of(labeled)
         ok, lines = _judge(cards, rows, story_of, multi)
-        if group_news.NIGHTLY_SEED and replay.most_shown > group_news.SEED_MAX:
+        if replay.most_shown > group_news.SEED_MAX:
             ok = False
             lines.append(f"a nightly call was shown {replay.most_shown} past labels — over the "
                          f"cap of {group_news.SEED_MAX}")
-        lines.append(f"({len(spans)} stories span several labeling nights; {len(set(nights.values()))} "
-                     f"nights replayed; most labels shown at the start of a night: "
+        c = replay.counts
+        lines.append(f"({len(spans)} stories span several labeling nights; {c['nights']} nights "
+                     f"replayed; most labels shown at the start of a night: "
                      f"{max(firsts, default=0)}; most in any call: {replay.most_shown} "
-                     f"(cap {group_news.SEED_MAX}))")
+                     f"(cap {group_news.SEED_MAX}); calls: labeler {c['labeler']}, reuse checks "
+                     f"{c['checks']} ({c['asked']} headlines), fresh-label {c['fresh']})")
         results.append((f"cross-night: {case}, real nights", ok, lines))
         if case == "merge_encyclical":
             check_fusion(results, rows, labeled, cards, expected, replay.last_calls)
@@ -352,41 +393,35 @@ THEME_PAIRS = {
 THEME_ENCYCLICAL = (17063, 17071, 17131, 17143, 17162, 17315, 5251)
 
 
+THEME_CHECK = "theme pairs: earlier label never KEPT on the next happening"
+
+
 def check_theme_pairs(results, frozen, expected):
     """The direct test of what failed live: shown an earlier label, the AI reuses it for the next
-    happening of the same theme. The stand-in AI never does that, so a replay pass can't show
-    whether a past-label list invites it — this check doesn't ask the stand-in anything. It
-    replays with the past-label list switched ON (NIGHTLY_SEED forced, whatever the shipped
-    setting) and fails if the call that labels a pair's later row was SHOWN a label from an
-    earlier night that belongs to the earlier row (for the encyclical rows: any earlier-night
-    encyclical label). Shown = in that call's list, i.e. what the live AI sees, whichever headline
-    of the batch the list was picked for. Known positive: the attempt-1 list shows all of them."""
+    happening of the same theme. The labeler stand-in is made to DO exactly that for these 12 rows
+    (grab: take the other story's label whenever it's on the list), with the list + reuse check
+    on. Fails if the earlier label is still on the row at the end. Changed 2026-10-30 from "never
+    SHOWN" (attempt 2's bar): attempt 4 shows the label on purpose and checks each reuse.
+    The reuse check's stand-in answers from the hand judgment (_judge_stand_in), so a pass proves
+    a "no" blocks the reuse — not that the live AI says no; relabel_check.py measures that.
+    Built-in known positive: the same run with the reuse check answering yes every time (= the
+    attempt-1 design) must end with ALL 12 fused, or the check can't see a fusion at all.
+    A row that never got the chance to grab (label not on its list) fails as testing nothing."""
     lines, ok = [], True
-    keep = group_news.NIGHTLY_SEED
-    group_news.NIGHTLY_SEED = True
-    try:
-        for case in ("split_sunday", "merge_encyclical"):
-            rows = fx.case_rows(frozen, case)
-            by = {r["id"]: r for r in rows}
-            story_of, _, problems = fx.judgment(expected, case, rows)
-            if problems:
-                results.append(("theme pairs: earlier label never shown to the next happening",
-                                False, problems))
-                return
-            nights = {r["id"]: fx.labeling_night(r) for r in rows}
-            labeled, _ = replay(rows, story_of, nights)
-            label = {r["id"]: r["event"] for r in labeled}
-            seen = {i: (known, past) for ids, known, past in replay.last_calls for i in ids}
-            if case == "merge_encyclical":
-                enc = story_tag(story_of, fx.ENCYCLICAL)
-                for i in THEME_ENCYCLICAL:
-                    known, past = seen[i]
-                    hit = [k for k in known if k in past and k.endswith(enc)]
-                    if hit:
-                        ok = False
-                        lines.append(f"id {i} ({expected[case]['not'][str(i)]}) was shown "
-                                     f"the encyclical's label {hit[0]!r}")
-                continue
+    totals = {"grabbed": 0, "kept": 0, "blocked_fused": 0}
+    for case in ("split_sunday", "merge_encyclical"):
+        rows = fx.case_rows(frozen, case)
+        by = {r["id"]: r for r in rows}
+        story_of, _, problems = fx.judgment(expected, case, rows)
+        if problems:
+            results.append((THEME_CHECK, False, problems))
+            return
+        nights = {r["id"]: fx.labeling_night(r) for r in rows}
+        if case == "merge_encyclical":
+            enc = story_tag(story_of, fx.ENCYCLICAL)
+            targets = [(i, enc, expected[case]["not"][str(i)]) for i in THEME_ENCYCLICAL]
+        else:
+            targets = []
             for later, earlier, what in THEME_PAIRS[case]:
                 if nights[earlier] >= nights[later] or abs(
                         group_news._day(by[later]["published"])
@@ -394,15 +429,39 @@ def check_theme_pairs(results, frozen, expected):
                     ok = False
                     lines.append(f"pair {later}/{earlier} tests nothing (same night or out of reach)")
                     continue
-                known, past = seen[later]
-                if label[earlier] in known and label[earlier] in past:
+                targets.append((later, story_tag(story_of, story_of[earlier]), what))
+        grab = {i: t for i, t, _ in targets}
+        for always_yes in (False, True):
+            labeled, _ = replay(rows, story_of, nights, grab=grab, always_yes=always_yes)
+            label = {r["id"]: r["event"] or "" for r in labeled}
+            grabbed = replay.grabbed
+            for i, t, what in targets:
+                fused = label[i].endswith(t)
+                if i not in grabbed:
                     ok = False
-                    lines.append(f"{what}: shown {label[earlier]!r}")
-    finally:
-        group_news.NIGHTLY_SEED = keep
+                    if not always_yes:
+                        lines.append(f"id {i} ({what}): the earlier label was never on its list "
+                                     f"— tests nothing")
+                elif not always_yes:
+                    totals["grabbed"] += 1
+                    if fused:
+                        ok = False
+                        totals["kept"] += 1
+                        lines.append(f"id {i} ({what}): KEPT {label[i]!r}")
+                    elif not label[i]:
+                        ok = False
+                        lines.append(f"id {i} ({what}): turned down but left with NO label")
+                elif fused:
+                    totals["blocked_fused"] += 1
+                else:
+                    ok = False
+                    lines.append(f"known positive: with the reuse check answering yes, id {i} "
+                                 f"did NOT end fused — the check can't see this fusion")
     n = sum(len(v) for v in THEME_PAIRS.values()) + len(THEME_ENCYCLICAL)
-    lines.append(f"({n} same-theme rows checked, past-label list forced ON)")
-    results.append(("theme pairs: earlier label never shown to the next happening", ok, lines))
+    lines.append(f"({n} same-theme rows; {totals['grabbed']} took the earlier label, "
+                 f"{totals['kept']} kept after the reuse check; known positive: "
+                 f"{totals['blocked_fused']} of {n} fused with the check answering yes)")
+    results.append((THEME_CHECK, ok, lines))
 
 
 def check_seed_rules(results):
@@ -481,6 +540,24 @@ def check_ai_call(results):
             misses.append(f"(4) stop_reason {stop} did not raise")
         except RuntimeError:
             pass
+    # (5) the request the switch-off nightly and --regroup send is the old one, byte for byte
+    old = ("Existing labels already in use:\n  (none yet)\n\nGroup these headlines. Reuse a label "
+           "above when it fits.\n\nid=7 | headline")
+    if f.sent["messages"] != [{"role": "user", "content": old}] or f.sent["system"] != g.SYSTEM:
+        misses.append("(5) the plain labeler request changed")
+    # (6) the reuse check: same model + settings; an id left out, or anything but true, is a no
+    yes_no = [NS(type="text", text='[{"id": 7, "same": true}, {"id": 8, "same": "yes"}]')]
+    fc = Fake(yes_no)
+    ans = g.confirm_reuse(fc, "X Y Z", [(9, "old headline", "2026-10-03", 1)],
+                          [{"id": i, "title": "new", "published": "2026-10-09"} for i in (7, 8, 9)])
+    if ans != {7: True, 8: False}:
+        misses.append(f"(6) reuse-check reply misread: {ans}")
+    if fc.sent["model"] != g.MODEL or fc.sent["system"] != g.SYSTEM_CONFIRM or any(
+            fc.sent.get(k) != v for k, v in g._call_settings(g.MODEL).items()):
+        misses.append("(6) reuse check not on the labeler's model + settings")
+    if "2026-10-03" not in fc.sent["messages"][0]["content"] or \
+            "2026-10-09" not in fc.sent["messages"][0]["content"]:
+        misses.append("(6) reuse check doesn't show the publish dates")
     results.append(("AI call: one model setting, Sonnet-safe request, reply read by type",
                     not misses, misses))
 

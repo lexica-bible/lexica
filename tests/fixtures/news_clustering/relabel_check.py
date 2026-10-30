@@ -31,8 +31,12 @@ prints how many calls it WOULD make.
   ... relabel_check.py --run                          # all cases, both runs
   ... relabel_check.py --run --case split_sunday      # one case
   ... relabel_check.py --run --one-pass               # skip the (bigger) real-nights runs
+  ... relabel_check.py --run --list-on                # real nights WITH the past-label list +
+                                                      # reuse check (scratch db only; the nightly
+                                                      # itself is untouched)
 """
 import os
+import re
 import sys
 from collections import Counter
 
@@ -46,6 +50,10 @@ from scripts.news import group_news  # noqa: E402
 
 RUN = "--run" in sys.argv
 ONE_PASS_ONLY = "--one-pass" in sys.argv
+# --list-on: REAL NIGHTS runs with the past-label list + reuse check switched on (NIGHTLY_SEED)
+# in its scratch db only — the shipped nightly stays as it is. How a design is checked live
+# without the 06:00 UTC nightly ever running it (attempt 4, 2026-10-30).
+LIST_ON = "--list-on" in sys.argv
 ONLY = sys.argv[sys.argv.index("--case") + 1] if "--case" in sys.argv else None
 FOLDER = sys.argv[sys.argv.index("--fixtures") + 1] if "--fixtures" in sys.argv else HERE
 
@@ -99,7 +107,8 @@ def nightly(rows):
     from contextlib import redirect_stdout
     fd, path = tempfile.mkstemp(suffix=".db")
     os.close(fd)
-    keep = {k: getattr(group_news, k) for k in ("DB_PATH", "REGROUP", "DRY_RUN", "MIN")}
+    keep = {k: getattr(group_news, k) for k in ("DB_PATH", "REGROUP", "DRY_RUN", "MIN",
+                                                "NIGHTLY_SEED")}
     notes = []
     try:
         c = sqlite3.connect(path)
@@ -108,6 +117,8 @@ def nightly(rows):
         c.commit()
         group_news.DB_PATH, group_news.REGROUP, group_news.DRY_RUN = path, False, False
         group_news.MIN = 5
+        if LIST_ON:
+            group_news.NIGHTLY_SEED = True
         for night, nrows in sorted(_nights(rows).items()):
             c.executemany("INSERT INTO items (id, title, source, published, first_seen, score) "
                           "VALUES (?,?,?,?,?,?)",
@@ -118,7 +129,8 @@ def nightly(rows):
             with redirect_stdout(buf):
                 group_news.main()
             for line in buf.getvalue().splitlines():
-                if "ERR" in line or "past labels shown" in line:
+                if ("ERR" in line or "past labels shown" in line or line.startswith("calls:")
+                        or "left unlabeled" in line):
                     notes.append(f"{night}: {line.strip()}")
         labels = {r[0]: r[1] for r in c.execute("SELECT id, event FROM items") if r[1]}
         c.close()
@@ -185,7 +197,10 @@ def main():
         sys.exit(f"--case must be one of {fx.CASES}")
 
     total = 0
-    print(f"labeler: {group_news.MODEL}, batches of {group_news.BATCH}")
+    print(f"labeler: {group_news.MODEL}, batches of {group_news.BATCH}; real nights: past-label "
+          f"list + reuse check {'ON (--list-on)' if LIST_ON or group_news.NIGHTLY_SEED else 'OFF'}"
+          + ("; reuse-check + fresh-label calls come on top (the frozen-sample replay: ~0.6x "
+             "the real-nights labeler calls; counted live below)" if LIST_ON else ""))
     for case in cases:
         rows = fx.case_rows(frozen, case)
         _, _, problems = fx.judgment(expected, case, rows)
@@ -217,6 +232,16 @@ def main():
                     if "past labels shown" in n), default=0)
         print(f"\n   (real nights: most past labels shown in one call {most}"
               + (f"; {len(errs)} failed batches: {errs[:3]}" if errs else "") + ")")
+        tot = [0, 0, 0, 0]
+        for n in notes:
+            m = re.search(r"labeler (\d+), reuse checks (\d+) \((\d+) reuses turned down\), "
+                          r"fresh-label calls (\d+)", n)
+            if m:
+                tot = [a + int(b) for a, b in zip(tot, m.groups())]
+        unl = sum(1 for n in notes if "left unlabeled" in n)
+        if LIST_ON:
+            print(f"   (real nights calls: labeler {tot[0]}, reuse checks {tot[1]}, reuses turned "
+                  f"down {tot[2]}, fresh-label {tot[3]}; left unlabeled {unl})")
         summary.append((case, "real nights", report(case, "REAL NIGHTS (current nightly code)",
                                                      rows, labels, expected)))
     print("\nSUMMARY")

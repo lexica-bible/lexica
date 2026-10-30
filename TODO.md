@@ -915,7 +915,27 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — fix attempt 2 (group_news.py).** Each nightly run starts from an EMPTY
+- **OPEN: cross-night split — attempt 4 (list + reuse check) BUILT, AWAITING THE LIVE CHECK.**
+  Design: attempt 1's bounded list unchanged; every reuse of an earlier night's label gets a second
+  call (group_news.check_reuse/confirm_reuse, same model + settings): the new headline + the
+  label's 3 best stored headlines, all WITH publish dates -> same happening or different one on the
+  same theme; "no" (or no answer/failed call) -> a fresh-label call showing only tonight's labels,
+  told not to use the turned-down one; if it still names an earlier label the row stays unlabeled
+  tonight. One check per reused label per batch (each headline answered on its own) — one call per
+  headline would be 2.1x the labeler's calls on the encyclical sample; grouped it's 0.6x overall
+  (frozen replay: labeler 191, checks 112 covering 279 headlines), so no cap. Replay (list + check
+  ON, reuse-check stand-in answers from expected.json = always right, so it proves the MECHANISM
+  only): all 3 real-nights cases pass (encyclical 622/623, the 623rd is the Jan-dated row by
+  design); theme-pairs check reworked to "never KEPT" (the label is shown on purpose now) with the
+  labeler stand-in grabbing it every time — 12/12 turned down, all got fresh labels; with the
+  check answering yes all 12 fuse (known positive). --regroup + switch-off requests checked byte-
+  identical vs 323ae12 + pinned in the test. Switch `NIGHTLY_SEED` stays OFF: the live check runs
+  with `relabel_check.py --run --list-on` (scratch db only, nightly untouched). Bar: encyclical
+  together (up from 341/623), <=13 other stories on its card, Sunday fused cards <=1, splits down.
+  Pass -> one-line switch ON + deploy; fail -> numbers here beside the other three, switch stays
+  off. Watch live: the 15419 pair (unions' reaction to the pope's Sunday call) is a REACTION — the
+  house rule merges reactions, the hand judgment calls it a different happening.
+- **History of the cross-night item — attempt 2 and before (group_news.py).** Each nightly run starts from an EMPTY
   label list, so a story pulled over several nights gets new wording each night = several cards
   (encyclical: 53 labels on 623 rows). Attempt 1 (a bounded past-label list, `pick_known`, kept in
   code behind `NIGHTLY_SEED = False`) fixed the split but FUSED: shown a label, the AI reused it for
@@ -930,15 +950,15 @@ Open tickets:
   and can't separate same-headline episodes (Dr. O); numbers + why in TODO_ARCHIVE. Kept from it:
   a new CI check (THEME PAIRS, tests/test_news_clustering.py) — with the list forced ON, the 12
   same-theme rows the live labeler fused must never be SHOWN the earlier label; attempt 1 shows all
-  12 (KNOWN FAILURE). NEXT design must clear it in CI before any live run. Candidates: a second AI
+  12 (KNOWN FAILURE; reworked to "never KEPT" for attempt 4, above). Candidates were: a second AI
   yes/no per reuse ("same happening as these headlines?" — the only one aimed at the judgment
   itself); show each past label beside only the headline it matched (one list per batch let 31-93
   extra other-story rows see the encyclical label via a batch-mate). Any word-statistics rule
   first needs word counts from the full news.db (the frozen samples are ~70% one story) — that's
   a news.db read, JP's call. CHECK FIRST: c1a1227 (list OFF,
   Haiku) had to be deployed before the 10-30 06:00 UTC nightly; if it wasn't, that night's rows
-  were labeled with Sonnet + the list — read them as on 10-29. GATE: the 3 "real nights" known
-  failures AND the theme-pairs known failure flip in the test, AND a live `relabel_check.py --run`
+  were labeled with Sonnet + the list — read them as on 10-29. GATE: the 3 "real nights" cases AND
+  the theme-pairs check pass in the test (done for attempt 4), AND a live `relabel_check.py --run`
   beats the 10-29 baseline BOTH ways (fused not up, split down) — numbers in TODO_ARCHIVE. Side
   notes: fresh labels guess YEARS wrong; a `--regroup` would rewrite old split labels but its
   one-pass list over-fused (53) — needs its own measured decision.
