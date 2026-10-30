@@ -74,6 +74,10 @@ DB_PATH = _arg("--db", DEFAULT_DB)
 # 2026-10-29/30: Sonnet ("claude-sonnet-5-5") was tried for cross-night attempt 1b and FAILED the
 # live check (numbers at NIGHTLY_SEED below); back on Haiku, the measured nightly baseline.
 MODEL = "claude-haiku-4-5-20251001"
+# The REUSE CHECK's model (confirm_reuse, below) — separate on purpose (attempt 5, 2026-10-30):
+# Haiku's yes/no failed live both ways, so the check runs on Sonnet while the labeler stays on
+# Haiku. Only used when NIGHTLY_SEED is on. Settings follow from _call_settings like MODEL's.
+CHECK_MODEL = "claude-sonnet-5-5"
 
 
 def _call_settings(model):
@@ -167,7 +171,10 @@ def build_client():
 #   4. REUSE CHECK (attempt 4, 2026-10-30) — when ON, every reuse of an earlier night's label is
 #      confirmed by a second call (check_reuse / confirm_reuse, below); a "no" gets a fresh label.
 #
-# STATUS: OFF. Attempt 4 (list + reuse check) passed the replay incl. the 12 live-fused theme rows
+# STATUS: OFF. Attempt 5 (2026-10-30) = attempt 4 with the reuse check on CHECK_MODEL (Sonnet),
+# labeler still Haiku; live run owed. Its bar (JP): only fusions THROUGH a reused earlier-night
+# label are scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md).
+# Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
 # pairs and turned down real encyclical coverage (TODO.md). Earlier, the list ALONE failed too:
@@ -178,7 +185,7 @@ def build_client():
 #     other stories (was 13), Sunday 5 fused cards (was 1), Sunday splits 1, cross-night clean.
 #   (Attempt 2, a distinctive-words match, was stopped in the replay — TODO_ARCHIVE.)
 # With it off the nightly run is exactly the old behavior (labels made earlier the same night only).
-# Do NOT turn on without a relabel_check.py --run --list-on that beats the baseline both ways.
+# Do NOT turn on without a relabel_check.py --run --list-on that meets that bar.
 NIGHTLY_SEED = False
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
@@ -283,15 +290,16 @@ def pick_known(pool, batch, cap=SEED_MAX, days=REACH_DAYS):
     return shown, {k: pool[k]["heads"][0][1] for k in shown}
 
 
-def _ask(client, system, user):
-    """One call on MODEL -> the JSON array it returns. A refusal or a cut-off reply raises
-    (loud, never half-read: the caller prints ERR)."""
+def _ask(client, system, user, model=None):
+    """One call on `model` (default MODEL) -> the JSON array it returns. A refusal or a cut-off
+    reply raises (loud, never half-read: the caller prints ERR)."""
+    model = model or MODEL
     msg = client.messages.create(
-        model=MODEL, system=system, messages=[{"role": "user", "content": user}],
-        **_call_settings(MODEL),
+        model=model, system=system, messages=[{"role": "user", "content": user}],
+        **_call_settings(model),
     )
     if msg.stop_reason in ("refusal", "max_tokens"):
-        raise RuntimeError(f"labeler stopped early ({msg.stop_reason})")
+        raise RuntimeError(f"{model} stopped early ({msg.stop_reason})")
     # read the reply by block type: a thinking model's reply starts with a (thinking) block
     text = "".join(b.text for b in (msg.content or []) if b.type == "text").strip() or "[]"
     text = _FENCE.sub("", text).strip()
@@ -341,7 +349,8 @@ def label_batch(client, rows, known, examples=None, avoid=None):
 # only the dates tell them apart). "yes" -> the reuse stands; "no" (or no answer, or a failed
 # call) -> the headline gets a fresh label the way the nightly always did (fresh_labels).
 # One call per reused label per batch, covering every headline in the batch that took it, each
-# answered on its own; same MODEL + settings as the labeler.
+# answered on its own; on CHECK_MODEL (Sonnet since attempt 5 — attempt 4 ran it on the labeler's
+# Haiku and it failed live both ways).
 SYSTEM_CONFIRM = """You check one grouping decision in a news feed. Each new headline below was
 put under an existing event label. Decide, for each one, whether it reports the SAME specific
 happening as the label's earlier headlines, or a DIFFERENT happening on the same theme.
@@ -370,7 +379,7 @@ def confirm_reuse(client, label, stored, rows):
     user = (f"Label: {label}\nIts earlier headlines:\n{seen}\n\n"
             f"New headlines given this label:\n{new}")
     out = {}
-    for d in _ask(client, SYSTEM_CONFIRM, user):
+    for d in _ask(client, SYSTEM_CONFIRM, user, CHECK_MODEL):
         try:
             out[int(d["id"])] = d.get("same") is True
         except Exception:

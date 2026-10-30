@@ -18,7 +18,12 @@ Two runs per case:
                past-label list (pick_known) when on. The live run of 2026-10-29 with it ON on
                Haiku failed on fusion (TODO.md); so did attempt 1b, the same list on Sonnet
                (2026-10-30).
-Both runs use the labeler model group_news.MODEL (printed at the top of the output).
+Both runs use the labeler model group_news.MODEL (printed at the top of the output); with
+--list-on the reuse check runs on group_news.CHECK_MODEL.
+FUSIONS are shown in two columns (ruled JP 2026-10-30): THROUGH REUSE — a row put on an earlier
+night's label about a different story (fixture_lib.reuse_joiners), the cross-night fix's own
+decision, scored; SAME-NIGHT — different stories given one label inside one labeler run, the
+labeler's own, reported only. A STORED row (the nightly's own labels, no calls) is the baseline.
 Plus LABEL DRIFT vs the labels stored at freeze time: how many different labels each judged
 story got, then vs now.
 
@@ -110,6 +115,7 @@ def nightly(rows):
     keep = {k: getattr(group_news, k) for k in ("DB_PATH", "REGROUP", "DRY_RUN", "MIN",
                                                 "NIGHTLY_SEED")}
     notes = []
+    night_of = {}                        # {id: the night it was LABELED} (a skipped row retries)
     try:
         c = sqlite3.connect(path)
         c.execute("CREATE TABLE items (id INTEGER PRIMARY KEY, title TEXT, source TEXT, "
@@ -132,41 +138,61 @@ def nightly(rows):
                 if ("ERR" in line or "past labels shown" in line or line.startswith("calls:")
                         or "left unlabeled" in line):
                     notes.append(f"{night}: {line.strip()}")
+            for (i,) in c.execute("SELECT id FROM items WHERE event IS NOT NULL AND event != ''"):
+                night_of.setdefault(i, night)
         labels = {r[0]: r[1] for r in c.execute("SELECT id, event FROM items") if r[1]}
         c.close()
     finally:
         for k, v in keep.items():
             setattr(group_news, k, v)
         os.remove(path)
-    return labels, notes
+    return labels, notes, night_of
 
 
-def report(case, title, rows, new_labels, expected):
-    """Print the picture for one run. Returns a one-line verdict for the summary."""
+def report(case, title, rows, new_labels, expected, night_of):
+    """Print the picture for one run. Returns a one-line verdict for the summary.
+    Fusions are counted in TWO columns (ruled JP 2026-10-30): THROUGH REUSE = a row put on a
+    label from an EARLIER night, about a different story (fx.reuse_joiners) — the cross-night
+    fix's own decision, scored; SAME NIGHT = different stories given one label inside a single
+    labeler run — the labeler's own, reported, not scored against the fix. night_of = {id: the
+    night it was labeled}; a one-pass run is all one night, so everything there is same-night."""
     story_of, judged, _ = fx.judgment(expected, case, rows)
     relabeled = [dict(r, event=new_labels.get(r["id"], "")) for r in rows]
     cards = fx.cards_of(relabeled)
     print(f"\n== {case} — {title}: {len(cards)} cards")
     if case == "merge_encyclical":
+        asserted = {s for s in story_of.values() if not s.startswith("border:")}
+        joiners = fx.reuse_joiners(relabeled, night_of, story_of, asserted)
         m = fx.merge_picture(relabeled, cards, expected)
+        via, same = m["not_on"] & joiners, m["not_on"] - joiners
         print(f"   encyclical card: {len(m['target'])} rows, labels {m['target_labels'][:4]}")
         print(f"   encyclical rows on it: {len(m['core_on'])} of {m['core_total']}; "
-              f"elsewhere: {len(m['core_off'])}; clearly-other stories on it: {len(m['not_on'])}")
-        if m["not_on"]:
-            print("   other stories that joined the encyclical card:")
-            print("\n".join(fx.describe(m["not_on"], relabeled, 15)))
-        verdict = (f"{len(m['core_on'])}/{m['core_total']} encyclical rows on one card, "
-                   f"{len(m['not_on'])} other stories on it")
+              f"elsewhere: {len(m['core_off'])}; clearly-other stories on it: {len(m['not_on'])} "
+              f"= {len(via)} through reuse + {len(same)} same-night")
+        if via:
+            print("   joined THROUGH a reused earlier-night label (scored) — every one listed:")
+            print("\n".join(fx.describe(via, relabeled, len(via))))
+        if same:
+            print("   joined on the label's own night (labeler, not scored):")
+            print("\n".join(fx.describe(same, relabeled, 15)))
+        verdict = (f"{len(m['core_on'])}/{m['core_total']} encyclical rows on one card; other "
+                   f"stories on it: {len(via):3d} through reuse | {len(same):3d} same-night")
     else:
         multi = {s for s in judged if sum(1 for i in story_of if story_of[i] == s) > 1}
         om = fx.overmerged(cards, story_of, judged)
+        joiners = fx.reuse_joiners(relabeled, night_of, story_of, judged)
+        via, same = fx.split_fusions(om, joiners)
         sc = fx.scattered(cards, fx.expected_pieces(rows, story_of), multi)
-        for p in om:
-            print("   OVER-MERGE — one card, different happenings:")
-            print("\n".join(fx.describe(p, relabeled, 10)))
+        for kind, ps in (("THROUGH REUSE (scored)", via), ("SAME NIGHT (labeler, not scored)", same)):
+            for p in ps:
+                j = sorted(p & joiners)
+                print(f"   OVER-MERGE, {kind} — one card, different happenings"
+                      + (f"; joined via an earlier-night label: ids {j}" if j else "") + ":")
+                print("\n".join(fx.describe(p, relabeled, 10)))
         for s, piece, sizes in sc:
             print(f"   SPLIT: {s!r} ({len(piece)} rows) over {len(sizes)} cards, sizes {sizes[:10]}")
-        verdict = f"{len(om)} over-merged cards, {len(sc)} split happenings"
+        verdict = (f"over-merged cards: {len(via):3d} through reuse | {len(same):3d} same-night; "
+                   f"{len(sc)} split happenings")
 
     # label drift: different labels per judged multi-row story, stored vs new
     drift = []
@@ -199,8 +225,9 @@ def main():
     total = 0
     print(f"labeler: {group_news.MODEL}, batches of {group_news.BATCH}; real nights: past-label "
           f"list + reuse check {'ON (--list-on)' if LIST_ON or group_news.NIGHTLY_SEED else 'OFF'}"
-          + ("; reuse-check + fresh-label calls come on top (the frozen-sample replay: ~0.6x "
-             "the real-nights labeler calls; counted live below)" if LIST_ON else ""))
+          + (f"; reuse check on {group_news.CHECK_MODEL} — its calls + the fresh-label calls "
+             f"come on top (the frozen-sample replay: ~0.6x the real-nights labeler calls; "
+             f"counted live below)" if LIST_ON else ""))
     for case in cases:
         rows = fx.case_rows(frozen, case)
         _, _, problems = fx.judgment(expected, case, rows)
@@ -222,11 +249,16 @@ def main():
     summary = []
     for case in cases:
         rows = fx.case_rows(frozen, case)
-        summary.append((case, "one pass", report(case, "ONE PASS", rows,
-                                                  relabel(client, rows), expected)))
+        # baseline, no AI calls: the labels the live nightly (switch off) stored at freeze time
+        summary.append((case, "stored", report(
+            case, "STORED (the live nightly's own labels, switch off — no calls)", rows,
+            {r["id"]: r["event"] for r in rows if r["event"]}, expected,
+            {r["id"]: fx.labeling_night(r) for r in rows})))
+        summary.append((case, "one pass", report(case, "ONE PASS", rows, relabel(client, rows),
+                                                  expected, {r["id"]: "one" for r in rows})))
         if ONE_PASS_ONLY:
             continue
-        labels, notes = nightly(rows)        # the real group_news.main(), night by night
+        labels, notes, night_of = nightly(rows)   # the real group_news.main(), night by night
         errs = [n for n in notes if "ERR" in n]
         most = max((int(n.rsplit(" ", 1)[1].rstrip(")")) for n in notes
                     if "past labels shown" in n), default=0)
@@ -243,10 +275,15 @@ def main():
             print(f"   (real nights calls: labeler {tot[0]}, reuse checks {tot[1]}, reuses turned "
                   f"down {tot[2]}, fresh-label {tot[3]}; left unlabeled {unl})")
         summary.append((case, "real nights", report(case, "REAL NIGHTS (current nightly code)",
-                                                     rows, labels, expected)))
-    print("\nSUMMARY")
+                                                     rows, labels, expected, night_of)))
+    print("\nSUMMARY  (fusions: THROUGH REUSE = via an earlier night's label, scored | SAME-NIGHT "
+          "= inside one labeler run, reported only)")
     for case, mode, verdict in summary:
         print(f"  {case:17s} {mode:11s} {verdict}")
+    print("\nBAR for the list + reuse check (TODO.md), on the REAL NIGHTS rows: through-reuse "
+          "fusions 0 on every case (stored labels: 0); encyclical rows on its card above 341/623; "
+          "Sunday split happenings below 13; cross_night 0 split. Same-night fusions are "
+          "the labeler's, not scored here.")
 
 
 if __name__ == "__main__":

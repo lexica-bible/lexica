@@ -132,6 +132,39 @@ def scattered(produced, pieces, judged):
     return out
 
 
+def reuse_joiners(rows, night_of, story_of, asserted):
+    """Rows that JOINED an earlier night's label as a different story -> set of ids.
+    A row counts when (a) its label already existed from an EARLIER labeling night (night_of =
+    {id: the night that row was labeled}) and (b) its story is asserted and is not one that label
+    carried on any earlier night. That is a fusion made THROUGH a reused earlier-night label —
+    the decision the cross-night fix owns. Different stories given one label on the label's own
+    first night are the labeler's same-night fusion: no past label is involved, so that is not
+    this fix's to score (ruled JP 2026-10-30). Unlabeled rows are skipped."""
+    by_label = {}
+    for r in rows:
+        if r.get("event"):
+            by_label.setdefault(r["event"], []).append(r)
+    out = set()
+    for rs in by_label.values():
+        first = min(night_of[r["id"]] for r in rs)
+        seen = set()
+        for n in sorted({night_of[r["id"]] for r in rs}):
+            tonight = [r for r in rs if night_of[r["id"]] == n]
+            if n > first:
+                out |= {r["id"] for r in tonight
+                        if story_of[r["id"]] in asserted and story_of[r["id"]] not in seen}
+            seen |= {story_of[r["id"]] for r in tonight}
+    return out
+
+
+def split_fusions(cards_fused, joiners):
+    """Over-merged cards -> (through_reuse, same_night_only). A card holding any reuse joiner
+    counts as through-reuse (the reuse added a fusion, whatever else is on it); the rest were
+    fused on one night by the labeler alone."""
+    via = [p for p in cards_fused if p & joiners]
+    return via, [p for p in cards_fused if not p & joiners]
+
+
 def merge_picture(rows, produced, expected):
     """The merge case read off a set of cards: the TARGET card = the one holding the most
     encyclical rows. Returns a dict of plain sets so callers can assert or just print."""

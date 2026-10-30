@@ -33,7 +33,10 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      fusion exposure only the live run can judge). Call counts are printed per sample.
   4. THEME PAIRS — the 12 same-theme rows the live labeler fused: the labeler stand-in is made to
      take the earlier label whenever it's shown (what the live AI did); the reuse check must turn
-     every one down. Built-in known positive: with the check answering yes, all 12 must fuse.
+     every one down. Built-in known positive: with the check answering yes, all 12 must fuse —
+     and relabel_check.py's two-column fusion count must read all 12 as THROUGH REUSE.
+  5. FUSION SPLIT — the other side of that count: the stored labels' pinned fusions (made inside
+     the one June-29 pass) must read as SAME-NIGHT, none as through-reuse.
 
 No database, no network, no AI: runs offline in CI + pre-commit.
 """
@@ -246,6 +249,7 @@ def replay(rows, story_of, nights, list_on=True, grab=None, always_yes=False):
     stub, shown = _stand_in(story_of, stored, grab)
     judge = _judge_stand_in(story_of, always_yes)
     firsts = []                    # labels the labeler was shown at the FIRST call of each night
+    night_of = {}                  # {id: night it was labeled} — for fx.reuse_joiners
     fd, path = tempfile.mkstemp(suffix=".db")
     os.close(fd)
     keep = {k: getattr(group_news, k) for k in
@@ -278,6 +282,8 @@ def replay(rows, story_of, nights, list_on=True, grab=None, always_yes=False):
                 group_news.main()
             if len(shown) > first_call:
                 firsts.append(shown[first_call])
+            for (i,) in c.execute("SELECT id FROM items WHERE event IS NOT NULL AND event != ''"):
+                night_of.setdefault(i, night)    # the night it was LABELED (a skip retries later)
         c.row_factory = sqlite3.Row
         out = [dict(x) for x in c.execute("SELECT * FROM items")]
         c.close()
@@ -289,6 +295,7 @@ def replay(rows, story_of, nights, list_on=True, grab=None, always_yes=False):
     replay.last_calls = stub.calls
     replay.most_shown = max(shown, default=0)
     replay.grabbed = stub.grabbed
+    replay.night_of = night_of
     replay.counts = {"nights": len(set(nights.values())), "labeler": len(shown),
                      "checks": judge.calls, "asked": judge.asked, "fresh": stub.fresh}
     return out, firsts
@@ -408,7 +415,7 @@ def check_theme_pairs(results, frozen, expected):
     attempt-1 design) must end with ALL 12 fused, or the check can't see a fusion at all.
     A row that never got the chance to grab (label not on its list) fails as testing nothing."""
     lines, ok = [], True
-    totals = {"grabbed": 0, "kept": 0, "blocked_fused": 0}
+    totals = {"grabbed": 0, "kept": 0, "blocked_fused": 0, "read_via": 0}
     for case in ("split_sunday", "merge_encyclical"):
         rows = fx.case_rows(frozen, case)
         by = {r["id"]: r for r in rows}
@@ -431,10 +438,16 @@ def check_theme_pairs(results, frozen, expected):
                     continue
                 targets.append((later, story_tag(story_of, story_of[earlier]), what))
         grab = {i: t for i, t, _ in targets}
+        asserted = {s for s in story_of.values()
+                    if not s.startswith(("border:", "unsure:"))}
         for always_yes in (False, True):
             labeled, _ = replay(rows, story_of, nights, grab=grab, always_yes=always_yes)
             label = {r["id"]: r["event"] or "" for r in labeled}
             grabbed = replay.grabbed
+            joiners = fx.reuse_joiners(labeled, replay.night_of, story_of, asserted)
+            via, _ = fx.split_fusions(fx.overmerged(fx.cards_of(labeled), story_of, asserted),
+                                      joiners)
+            via_ids = set().union(*via) if via else set()
             for i, t, what in targets:
                 fused = label[i].endswith(t)
                 if i not in grabbed:
@@ -453,6 +466,12 @@ def check_theme_pairs(results, frozen, expected):
                         lines.append(f"id {i} ({what}): turned down but left with NO label")
                 elif fused:
                     totals["blocked_fused"] += 1
+                    if i not in joiners or i not in via_ids:    # the scored column's known positive
+                        ok = False
+                        lines.append(f"known positive: id {i} fused THROUGH a reused label but the "
+                                     f"two-column count calls it same-night")
+                    else:
+                        totals["read_via"] += 1
                 else:
                     ok = False
                     lines.append(f"known positive: with the reuse check answering yes, id {i} "
@@ -460,8 +479,46 @@ def check_theme_pairs(results, frozen, expected):
     n = sum(len(v) for v in THEME_PAIRS.values()) + len(THEME_ENCYCLICAL)
     lines.append(f"({n} same-theme rows; {totals['grabbed']} took the earlier label, "
                  f"{totals['kept']} kept after the reuse check; known positive: "
-                 f"{totals['blocked_fused']} of {n} fused with the check answering yes)")
+                 f"{totals['blocked_fused']} of {n} fused with the check answering yes, "
+                 f"{totals['read_via']} of them counted as through-reuse fusions)")
     results.append((THEME_CHECK, ok, lines))
+
+
+def check_fusion_split(results, frozen, expected):
+    """The other side of relabel_check.py's two fusion columns (through a reused earlier-night
+    label = scored; same-night = the labeler's own, reported). Known positive for SAME-NIGHT: the
+    stored labels' pinned fusions were all made inside one labeler run (the June-29 regroup) —
+    the 6 pinned other stories on the encyclical card and the pinned Sunday over-merge must read
+    as same-night, none as through-reuse. (The through-reuse side's known positive is in the
+    theme-pairs check: 12 forced fusions across nights.)"""
+    lines = []
+    rows = fx.case_rows(frozen, "merge_encyclical")
+    story_of, _, _ = fx.judgment(expected, "merge_encyclical", rows)
+    night_of = {r["id"]: fx.labeling_night(r) for r in rows}
+    asserted = {s for s in story_of.values() if not s.startswith("border:")}
+    joiners = fx.reuse_joiners(rows, night_of, story_of, asserted)
+    pinned = {int(k) for k in expected["merge_encyclical"]["pins"]["not_on_card"]}
+    on = fx.merge_picture(rows, fx.cards_of(rows), expected)["not_on"]
+    if not pinned or not pinned <= on:
+        lines.append(f"encyclical pins not on the card in the stored labels — tests nothing: "
+                     f"{sorted(pinned - on)}")
+    if on & joiners:
+        lines.append(f"stored same-night encyclical fusions read as through-reuse: "
+                     f"{sorted(on & joiners)}")
+    srows = fx.case_rows(frozen, "split_sunday")
+    sstory, sjudged, _ = fx.judgment(expected, "split_sunday", srows)
+    snight = {r["id"]: fx.labeling_night(r) for r in srows}
+    via, same = fx.split_fusions(fx.overmerged(fx.cards_of(srows), sstory, sjudged),
+                                 fx.reuse_joiners(srows, snight, sstory, sjudged))
+    want = {frozenset(c["ids"]) for c in expected["split_sunday"]["pins"]["overmerged_cards"]}
+    if not want or set(same) != want or via:
+        lines.append(f"stored Sunday over-merge not read as same-night only: via {len(via)}, "
+                     f"same-night {[sorted(p) for p in same]}, pinned {[sorted(p) for p in want]}")
+    ok = not lines
+    lines.append(f"(stored labels: {len(on)} other stories on the encyclical card, "
+                 f"{len(on & joiners)} through reuse; Sunday {len(via) + len(same)} over-merged "
+                 f"card(s), {len(via)} through reuse)")
+    results.append(("fusion split: same-night fusions not scored as through-reuse", ok, lines))
 
 
 def check_seed_rules(results):
@@ -545,20 +602,26 @@ def check_ai_call(results):
            "above when it fits.\n\nid=7 | headline")
     if f.sent["messages"] != [{"role": "user", "content": old}] or f.sent["system"] != g.SYSTEM:
         misses.append("(5) the plain labeler request changed")
-    # (6) the reuse check: same model + settings; an id left out, or anything but true, is a no
-    yes_no = [NS(type="text", text='[{"id": 7, "same": true}, {"id": 8, "same": "yes"}]')]
+    # (6) the reuse check: on CHECK_MODEL with its own settings (no temperature on Sonnet, room to
+    # think), the labeler untouched on MODEL; an id left out, or anything but true, is a no
+    yes_no = [NS(type="thinking", thinking=""),
+              NS(type="text", text='[{"id": 7, "same": true}, {"id": 8, "same": "yes"}]')]
     fc = Fake(yes_no)
     ans = g.confirm_reuse(fc, "X Y Z", [(9, "old headline", "2026-10-03", 1)],
                           [{"id": i, "title": "new", "published": "2026-10-09"} for i in (7, 8, 9)])
     if ans != {7: True, 8: False}:
         misses.append(f"(6) reuse-check reply misread: {ans}")
-    if fc.sent["model"] != g.MODEL or fc.sent["system"] != g.SYSTEM_CONFIRM or any(
-            fc.sent.get(k) != v for k, v in g._call_settings(g.MODEL).items()):
-        misses.append("(6) reuse check not on the labeler's model + settings")
+    if fc.sent["model"] != g.CHECK_MODEL or fc.sent["system"] != g.SYSTEM_CONFIRM or any(
+            fc.sent.get(k) != v for k, v in g._call_settings(g.CHECK_MODEL).items()):
+        misses.append("(6) reuse check not on CHECK_MODEL + its settings")
+    if "temperature" in fc.sent and not g.CHECK_MODEL.startswith("claude-haiku-4-5"):
+        misses.append("(6) temperature sent to a check model that refuses it")
+    if f.sent["model"] != g.MODEL or g.MODEL == g.CHECK_MODEL:
+        misses.append("(6) labeler and reuse check no longer on separate model settings")
     if "2026-10-03" not in fc.sent["messages"][0]["content"] or \
             "2026-10-09" not in fc.sent["messages"][0]["content"]:
         misses.append("(6) reuse check doesn't show the publish dates")
-    results.append(("AI call: one model setting, Sonnet-safe request, reply read by type",
+    results.append(("AI call: labeler + check model settings, Sonnet-safe, reply read by type",
                     not misses, misses))
 
 
@@ -574,6 +637,7 @@ def main():
     check_split(results, frozen, expected)
     check_cross_night(results, frozen, expected)
     check_theme_pairs(results, frozen, expected)
+    check_fusion_split(results, frozen, expected)
 
     failed = []
     for label, ok, lines in results:

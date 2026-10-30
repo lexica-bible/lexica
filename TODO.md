@@ -915,7 +915,29 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 4 (list + reuse check) FAILED LIVE ON FUSION; switch never
+- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler stays Haiku) BUILT; live
+  run owed (JP, PA: `relabel_check.py --run --list-on`). Switch `NIGHTLY_SEED` stays OFF.**
+  Change from attempt 4: only the check's model — `group_news.CHECK_MODEL = "claude-sonnet-5-5"`
+  (its own settings via _call_settings: no temperature, thinking room); the labeler `MODEL` stays
+  Haiku; the list, the check prompt and the fresh-label step are unchanged. Replay passes incl. the
+  12-row theme-pairs check (12/12 turned down; known positive 12/12 fuse with the check saying yes).
+  **NEW BAR (ruled JP 2026-10-30): only fusions made THROUGH a reused earlier-night label are
+  scored.** A same-night fusion (different stories given one label inside one labeler run — the
+  June-29 pass, the Aug 31 trio) is the labeler's, reported in its own column, not scored against
+  this fix. relabel_check.py prints both columns per run (`through reuse | same-night`) plus a free
+  STORED row (the nightly's own labels, no calls). Rule (fixture_lib.reuse_joiners): a row counts
+  as through-reuse when its label existed from an EARLIER labeling night and its story is not one
+  that label carried before; a fused card holding any such row is scored. Known positives in CI:
+  the 12 forced theme fusions all read through-reuse; the stored pinned fusions (6 June encyclical,
+  1 Sunday card) all read same-night. Bar, REAL NIGHTS rows: through-reuse fusions **0** on every
+  case (stored nightly labels: 0 — the switch-off baseline), encyclical rows on its card above
+  341/623, Sunday split happenings below 13, cross_night 0 split. Attempt 4 under the new rule
+  (read off its printout): Sunday 5 through reuse (Palm Sunday, Dr. O Jun 24/Jul 4, the pope's Aug
+  13 call, Polish, the Oct 3 card — that one also holds the same-night 24079/24082 pair) | 1 same-
+  night (Aug 31 trio); encyclical ≥1 through reuse (5443) — 1 of its 16 rows was not listed, so
+  its column is not exactly known. It fails the new bar too.
+  If attempt 5 fails live: switch stays off (nothing to revert), log the numbers here.
+- **Attempt 4 record (list + reuse check on Haiku) — FAILED LIVE ON FUSION; switch never
   turned on.** Live run (JP, PA, `relabel_check.py --run --list-on` on 8c50265, Haiku; nightly
   untouched — NIGHTLY_SEED was False throughout, nothing to revert). Real nights vs the bar:
     | measure                            | Haiku baseline | attempt 1 Haiku | attempt 4 Haiku | bar  |
@@ -940,9 +962,8 @@ Open tickets:
   READ: Haiku's yes/no doesn't track same-vs-different — wrong both ways: it approves next-event
   pairs on Sunday and turns down real encyclical coverage (202 encyclical rows off the card vs 112
   for attempt 1). Also: the bar can fail with a PERFECT check — this run had 2 same-night Sunday
-  fusions (bar <=1) and the encyclical bar rides on the June-night pass. Next, if any: the reuse
-  check on a stronger model (Sonnet) with the labeler kept on Haiku; and/or a bar that counts only
-  fusions made through an earlier night's label (JP's call — the bar is his).
+  fusions (bar <=1) and the encyclical bar rides on the June-night pass. Both next steps were
+  taken in attempt 5 (above): the check on Sonnet, and JP's new bar (through-reuse only).
   Attempt 4 design, kept in code behind the switch:
   Design: attempt 1's bounded list unchanged; every reuse of an earlier night's label gets a second
   call (group_news.check_reuse/confirm_reuse, same model + settings): the new headline + the
