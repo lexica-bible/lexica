@@ -15,15 +15,16 @@ Two runs per case:
   REAL NIGHTS  the real nightly code: group_news.main() run night by night on a scratch db (rows
                labeled in the June-29 regroup = one night), so it measures whatever main()
                does: an EMPTY list each night while group_news.NIGHTLY_SEED is off, the bounded
-               past-label list (pick_known) when on. The live run of 2026-10-29 with it ON
-               failed on fusion (TODO.md).
+               past-label list (pick_known) when on. The live run of 2026-10-29 with it ON on
+               Haiku failed on fusion (TODO.md); attempt 1b = the same list on Sonnet.
+Both runs use the labeler model group_news.MODEL (printed at the top of the output).
 Plus LABEL DRIFT vs the labels stored at freeze time: how many different labels each judged
 story got, then vs now.
 
 It NEVER writes: not news.db, not frozen.json, not expected.json. If a new picture is better
 than the stored one, that's a reviewed, by-hand edit to expected.json — never automatic.
 
-Costs Haiku calls (needs ANTHROPIC_API_KEY — see group_news.py's OPS note). Without --run it only
+Costs labeler calls on group_news.MODEL (needs ANTHROPIC_API_KEY — see group_news.py's OPS note). Without --run it only
 prints how many calls it WOULD make.
   ~/.virtualenvs/bible-env/bin/python tests/fixtures/news_clustering/relabel_check.py
   ... relabel_check.py --run                          # all cases, both runs
@@ -71,7 +72,11 @@ def relabel(client, rows):
     rows = _order(rows)
     for i in range(0, len(rows), group_news.BATCH):
         batch = rows[i:i + group_news.BATCH]
-        labels = group_news.label_batch(client, batch, known)
+        try:                         # same as main(): a failed batch is reported, not fatal
+            labels = group_news.label_batch(client, batch, known)
+        except Exception as e:
+            print(f"  ERR  one-pass batch at {i}: {str(e)[:80]}")
+            continue
         for r in batch:
             ev = labels.get(r["id"])
             if not ev:

@@ -922,7 +922,18 @@ Open tickets:
   other stories on the same theme (encyclical card 13 → 23 other stories, Sunday fused cards 1 → 8).
   Ideas: show a label only when the headline shares its DISTINCTIVE words (place / institution /
   name, not "sunday"/"pope"/"ai"); run the 14-day reach from a label's FIRST articles so it can't
-  extend itself; or a second AI check per reuse. GATE: the 3 "real nights" known failures flip in
+  extend itself; or a second AI check per reuse.
+  **ATTEMPT 1b (2026-10-29, in code, NOT yet live-checked): the same list ON (`NIGHTLY_SEED = True`)
+  with the labeler on Sonnet** (`group_news.MODEL = "claude-sonnet-5-5"`, the one model setting;
+  --regroup shares the call so it follows). JP's ruling before the Haiku check: if Haiku over-fuses,
+  rerun the same check on Sonnet. Sonnet refuses temperature 0, so it samples at the default (runs
+  can differ slightly) and thinks at effort "medium". Replay passes as at f655d22. PASS BAR for the
+  live `relabel_check.py --run`, real nights (vs Haiku baseline / Haiku+list): encyclical together
+  (on one card: 341 / 511 of 623), other stories on its card <= 13 (13 / 23), Sunday happenings
+  split < 13 (13 / 1), Sunday over-merged cards <= 1 (1 / 8), cross-night over-merged 0 and split
+  < 2 (baseline 0 / 2; the Haiku+list run never reached it). FAIL ->
+  `NIGHTLY_SEED = False`, restore KNOWN_FAILING, log Sonnet's numbers here beside Haiku's; the
+  distinctive-words design is next (own session). GATE: the 3 "real nights" known failures flip in
   the test AND a live `relabel_check.py --run` beats the 10-29 baseline BOTH ways (fused not up,
   split down) — numbers in TODO_ARCHIVE. Side notes: fresh labels guess YEARS wrong; a `--regroup`
   would rewrite old split labels but its one-pass list over-fused (53) — needs its own measured

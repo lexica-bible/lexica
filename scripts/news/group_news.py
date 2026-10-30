@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-group_news.py — let Haiku group the scored articles by the real-world EVENT.
+group_news.py — let the AI (MODEL, below) group the scored articles by the real-world EVENT.
 
 Word-matching can't tell that "Pope Leo urges AI disarmament", "Magnifica Humanitas
 discussion", and "42,000-word letter on AI" are the SAME encyclical — they share no
 distinctive words. So here the AI reads the headlines together and tags each with a
 short canonical event label. The tab then collapses everything sharing a label into
-ONE card. Haiku sees the running list of labels it's already used, so the same event
+ONE card. The AI sees the running list of labels it's already used, so the same event
 gets the same label across batches (that's what keeps it consistent).
 
 Re-runnable: only fills articles that don't have an event yet, so a nightly run just
@@ -69,7 +69,23 @@ def _arg(flag, default, cast=str):
 MIN = _arg("--min", 5, int)
 BATCH = _arg("--batch", 40, int)
 DB_PATH = _arg("--db", DEFAULT_DB)
-MODEL = "claude-haiku-4-5-20251001"
+# THE labeler model — the one place to change it (nightly, --regroup and relabel_check.py all
+# read it). The request settings follow from it in _call_settings, so a switch is this one line.
+# 2026-10-29: Haiku -> Sonnet for cross-night attempt 1b (JP ruled before the live check: if
+# Haiku over-fuses with the past-label list, rerun the same check on Sonnet).
+MODEL = "claude-sonnet-5-5"
+
+
+def _call_settings(model):
+    """Request settings for the labeler model.
+    Haiku 4.5: exactly the old call (temperature 0, max_tokens 1600).
+    Anything newer (Sonnet 5.5): temperature 0 is refused by the API there (only the default is
+    accepted), so it samples at the default — two runs can differ slightly. It thinks before
+    answering, effort "medium": the failure being measured is a judgment call (same happening vs
+    same theme). Thinking counts toward max_tokens, so the cap leaves room for it + the reply."""
+    if model.startswith("claude-haiku-4-5"):
+        return {"max_tokens": 1600, "temperature": 0}
+    return {"max_tokens": 16000, "output_config": {"effort": "medium"}}
 
 SYSTEM = """You group news headlines by the real-world EVENT each one is about, so that
 duplicate coverage of one event collapses into a single item.
@@ -149,13 +165,14 @@ def build_client():
 #      judges "same happening?" by content, not by how close the label's wording sounds.
 # --regroup is unchanged: it starts empty and shows every label made in that run (one pass).
 #
-# STATUS: OFF. The live check (relabel_check.py --run on PA, 2026-10-29) failed on FUSION: it fixed
-# the splitting (encyclical 511/623 on one card vs 341, 7 labels vs 27) but the labeler reused shown
-# labels for DIFFERENT happenings of the same theme — 23 other stories on the encyclical card (was
-# 13), Sunday 8 fused cards (was 1; one label swallowed 8 stories over two months). With it off
-# the nightly run is exactly the old behavior (labels made earlier the same night only). Do NOT
-# turn on without a new design AND a relabel_check.py --run that beats the baseline both ways.
-NIGHTLY_SEED = False
+# STATUS: ON again, on SONNET (attempt 1b, 2026-10-29) — awaiting its live check. On Haiku the live
+# check (relabel_check.py --run on PA) failed on FUSION: it fixed the splitting (encyclical 511/623
+# on one card vs 341, 7 labels vs 27) but the labeler reused shown labels for DIFFERENT happenings
+# of the same theme — 23 other stories on the encyclical card (was 13), Sunday 8 fused cards (was
+# 1; one label swallowed 8 stories over two months). JP's pre-check ruling: retry the same list on
+# Sonnet (MODEL above). If Sonnet also fuses, set this back to False (= exactly the old nightly:
+# labels made earlier the same night only) and log the numbers in TODO.md.
+NIGHTLY_SEED = True
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
                          # default 40-headline batch (295 unbounded was the over-fusing case)
@@ -269,10 +286,14 @@ def label_batch(client, rows, known, examples=None):
             "\n\nGroup these headlines. Reuse a label above when it fits.\n\n" +
             "\n".join(lines))
     msg = client.messages.create(
-        model=MODEL, max_tokens=1600, temperature=0,
-        system=SYSTEM, messages=[{"role": "user", "content": user}],
+        model=MODEL, system=SYSTEM, messages=[{"role": "user", "content": user}],
+        **_call_settings(MODEL),
     )
-    text = msg.content[0].text.strip() if msg.content else "[]"
+    if msg.stop_reason in ("refusal", "max_tokens"):
+        # loud, never half-read: the caller prints ERR and the batch stays unlabeled for next night
+        raise RuntimeError(f"labeler stopped early ({msg.stop_reason})")
+    # read the reply by block type: a thinking model's reply starts with a (thinking) block
+    text = "".join(b.text for b in (msg.content or []) if b.type == "text").strip() or "[]"
     text = _FENCE.sub("", text).strip()
     try:
         data = json.loads(text)

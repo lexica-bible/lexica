@@ -22,11 +22,10 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      label it is SHOWN for the same story, else (c) uses the exact wording the real labeler gave
      that row. So the only way it can split a story is the night boundary. The rows labeled in
      the June regroup count as one night. Every story labeled in ONE pass is the control.
-     **KNOWN FAILURE** for the real-nights replay (each night starts from an EMPTY label list).
-     A bounded past-label list (group_news.pick_known, switch NIGHTLY_SEED) flipped all three
-     here on 2026-10-29 but FAILED the live fusion check on PA, so the switch is OFF and the
-     failures are back. When a fix passes BOTH, these pass and the test then FAILS until they're
-     taken off KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
+     A bounded past-label list (group_news.pick_known, switch NIGHTLY_SEED) flips all three real-
+     nights cases here. On Haiku it FAILED the live fusion check on PA (2026-10-29); it is ON again
+     with the labeler on Sonnet (attempt 1b) pending that same live check. With the switch OFF,
+     each night starts from an EMPTY label list and the three go back on KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
      (when on), and that no clearly-other story lands on the encyclical card (+ how many were
      SHOWN its label — the fusion exposure only relabel_check.py on PA can judge).
 
@@ -47,9 +46,10 @@ import fixture_lib as fx  # noqa: E402
 from scripts.news import group_news  # noqa: E402
 
 # Strict: a case listed here that PASSES fails the run, so the list can't go stale.
-# Restored 2026-10-29: the bounded label list (group_news.pick_known) flipped all three in the
-# replay, but failed the LIVE fusion check, so group_news.NIGHTLY_SEED is OFF again.
-KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
+# Emptied again 2026-10-29 (attempt 1b): group_news.NIGHTLY_SEED back ON, labeler on Sonnet. The
+# Haiku run of the same list failed the LIVE fusion check; if Sonnet fails it too, the switch goes
+# OFF and this goes back to {f"cross-night: {c}, real nights" for c in fx.CASES}.
+KNOWN_FAILING = set()
 
 
 # ---------------------------------- 1. merge ----------------------------------
@@ -361,6 +361,47 @@ def check_seed_rules(results):
     results.append(("seed rules: reach, cap, weak limit, no crowding", not misses, misses))
 
 
+def check_ai_call(results):
+    """label_batch's request + reply reading, on a fake client (no network): (1) the model is
+    group_news.MODEL; (2) Haiku 4.5 keeps exactly the old settings, a newer model sends NO
+    temperature (Sonnet 5.5 refuses temperature 0) and leaves room for thinking; (3) the reply is
+    read by block type — a thinking block before the text is skipped; (4) a refusal or a cut-off
+    reply raises (main() prints ERR) instead of being half-read."""
+    from types import SimpleNamespace as NS
+    g, misses = group_news, []
+
+    class Fake:
+        def __init__(self, blocks, stop="end_turn"):
+            self.sent, self.reply = None, NS(content=blocks, stop_reason=stop)
+            self.messages = self
+
+        def create(self, **kw):
+            self.sent = kw
+            return self.reply
+
+    good = [NS(type="thinking", thinking=""), NS(type="text", text='[{"id": 7, "event": "X Y Z"}]')]
+    batch = [{"id": 7, "title": "headline"}]
+    f = Fake(good)
+    if g.label_batch(f, batch, []) != {7: "X Y Z"}:
+        misses.append("(3) reply after a thinking block not read")
+    if f.sent["model"] != g.MODEL:
+        misses.append(f"(1) model sent {f.sent['model']!r}, MODEL is {g.MODEL!r}")
+    if "temperature" in f.sent and not g.MODEL.startswith("claude-haiku-4-5"):
+        misses.append("(2) temperature sent to a model that refuses it")
+    if g._call_settings("claude-haiku-4-5-20251001") != {"max_tokens": 1600, "temperature": 0}:
+        misses.append("(2) Haiku settings changed from the old call")
+    if g._call_settings("claude-sonnet-5-5").get("max_tokens", 0) < 8000:
+        misses.append("(2) Sonnet max_tokens leaves no room for thinking")
+    for stop in ("refusal", "max_tokens"):
+        try:
+            g.label_batch(Fake(good, stop), batch, [])
+            misses.append(f"(4) stop_reason {stop} did not raise")
+        except RuntimeError:
+            pass
+    results.append(("AI call: one model setting, Sonnet-safe request, reply read by type",
+                    not misses, misses))
+
+
 def main():
     sys.stdout.reconfigure(errors="replace")     # headlines on a Windows console (cp1252)
     folder = sys.argv[1] if len(sys.argv) > 1 else fx.HERE
@@ -368,6 +409,7 @@ def main():
     results = []
     check_detectors_fire(results, frozen, expected)
     check_seed_rules(results)
+    check_ai_call(results)
     check_merge(results, frozen, expected)
     check_split(results, frozen, expected)
     check_cross_night(results, frozen, expected)
