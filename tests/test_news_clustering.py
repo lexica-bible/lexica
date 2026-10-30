@@ -29,6 +29,11 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      they're taken off KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
      (when on), and that no clearly-other story lands on the encyclical card (+ how many were
      SHOWN its label — the fusion exposure only relabel_check.py on PA can judge).
+  4. THEME PAIRS — the stand-in can't fuse, so case 3 passing says nothing about what failed live
+     (an earlier label reused for the next happening of the same theme). This check asks the
+     stand-in nothing: with the past-label list forced ON, the same-theme pairs the live labeler
+     fused must never be SHOWN the earlier label. KNOWN FAILURE while the attempt-1 list is the
+     code behind the switch.
 
 No database, no network, no AI: runs offline in CI + pre-commit.
 """
@@ -50,6 +55,9 @@ from scripts.news import group_news  # noqa: E402
 # Restored 2026-10-30: the bounded label list (group_news.pick_known) flips all three in the
 # replay, but failed the LIVE fusion check on Haiku AND on Sonnet, so group_news.NIGHTLY_SEED is OFF.
 KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
+# Added 2026-10-30: the attempt-1 list (still the code behind the switch) shows every theme pair.
+# A next design has to clear THIS as well as the three above before any live check.
+KNOWN_FAILING.add("theme pairs: earlier label never shown to the next happening")
 
 
 # ---------------------------------- 1. merge ----------------------------------
@@ -183,7 +191,7 @@ def _stand_in(story_of, stored):
 
     def label_batch(client, batch, known, examples=None):
         shown.append(len(known))
-        calls.append(([r["id"] for r in batch], list(known)))
+        calls.append(([r["id"] for r in batch], list(known), label_batch.past))
         out, this_call = {}, {}
         for r in batch:
             s = story_of[r["id"]]
@@ -193,8 +201,9 @@ def _stand_in(story_of, stored):
             out[r["id"]] = this_call[s]
         return out
 
-    calls = []                     # (batch ids, labels shown) per call, for the fusion check
-    label_batch.calls = calls
+    calls = []                     # (batch ids, labels shown, labels that existed before this
+    label_batch.calls = calls      # night) per call — for the fusion + theme-pair checks
+    label_batch.past = frozenset()
     return label_batch, shown
 
 
@@ -221,6 +230,8 @@ def replay(rows, story_of, nights):
         group_news.time.sleep = lambda s: None
         for night in sorted(set(nights.values())):
             first_call = len(shown)
+            stub.past = frozenset(x[0] for x in c.execute(
+                "SELECT DISTINCT event FROM items WHERE event IS NOT NULL AND event != ''"))
             c.executemany(
                 "INSERT INTO items (id, title, source, published, first_seen, score) "
                 "VALUES (?,?,?,?,?,?)",
@@ -311,7 +322,7 @@ def check_fusion(results, rows, labeled, cards, expected, calls):
     enc = story_tag(story_of, fx.ENCYCLICAL)
     nots = {int(k) for k in e["not"]}
     exposed = set()
-    for ids, known in calls:
+    for ids, known, _ in calls:
         if any(k.endswith(enc) for k in known):
             exposed |= nots & set(ids)
     lines.append(f"(encyclical card: {len(m['core_on'])} of {m['core_total']} encyclical rows; "
@@ -320,6 +331,78 @@ def check_fusion(results, rows, labeled, cards, expected, calls):
                  f"label at labeling time: {len(exposed)} of {len(nots)} — the live AI's fusion "
                  f"exposure, measured on PA by relabel_check.py)")
     results.append(("fusion: shown labels put no other story on the encyclical card", ok, lines))
+
+
+# Same theme, NEXT happening: pairs the live labeler FUSED when shown the earlier row's label
+# (cross-night attempt 1 on Haiku 2026-10-29, 1b on Sonnet 2026-10-30; TODO_ARCHIVE). Every row
+# here is hand-judged a different happening from the earlier one (expected.json), each pair is
+# within the 14-day reach and labeled on a LATER night. (later id, earlier id, what):
+THEME_PAIRS = {
+    "split_sunday": [
+        (24909, 24082, "Dr. O 'Sunday Law Update' episode Oct 9 vs Oct 3 (same headline)"),
+        (19923, 16144, "union enforcement campaign Sep 4 vs Polish union fine proposal Aug 21"),
+        (27299, 24079, "Sunday Alliance manifesto Oct 14 vs Alliance free-Sundays demand Oct 3"),
+        (15419, 14756, "European unions' reaction Aug 18 vs the pope's Sunday call Aug 13"),
+        (12472, 10368, "Greece Sunday strike Jul 27 vs Roman Catholics' Sunday-rest call Jul 14"),
+    ],
+}
+# ...and encyclical-sample rows judged OTHER happenings that joined the encyclical's label live:
+# the pope's Aug 28 machines message (Sonnet, 6 rows) and the Vatican's own AI-use guidelines
+# (Haiku). Sonnet's further "Sep/Oct AI remarks" were not recorded by id, so they're not here.
+THEME_ENCYCLICAL = (17063, 17071, 17131, 17143, 17162, 17315, 5251)
+
+
+def check_theme_pairs(results, frozen, expected):
+    """The direct test of what failed live: shown an earlier label, the AI reuses it for the next
+    happening of the same theme. The stand-in AI never does that, so a replay pass can't show
+    whether a past-label list invites it — this check doesn't ask the stand-in anything. It
+    replays with the past-label list switched ON (NIGHTLY_SEED forced, whatever the shipped
+    setting) and fails if the call that labels a pair's later row was SHOWN a label from an
+    earlier night that belongs to the earlier row (for the encyclical rows: any earlier-night
+    encyclical label). Shown = in that call's list, i.e. what the live AI sees, whichever headline
+    of the batch the list was picked for. Known positive: the attempt-1 list shows all of them."""
+    lines, ok = [], True
+    keep = group_news.NIGHTLY_SEED
+    group_news.NIGHTLY_SEED = True
+    try:
+        for case in ("split_sunday", "merge_encyclical"):
+            rows = fx.case_rows(frozen, case)
+            by = {r["id"]: r for r in rows}
+            story_of, _, problems = fx.judgment(expected, case, rows)
+            if problems:
+                results.append(("theme pairs: earlier label never shown to the next happening",
+                                False, problems))
+                return
+            nights = {r["id"]: fx.labeling_night(r) for r in rows}
+            labeled, _ = replay(rows, story_of, nights)
+            label = {r["id"]: r["event"] for r in labeled}
+            seen = {i: (known, past) for ids, known, past in replay.last_calls for i in ids}
+            if case == "merge_encyclical":
+                enc = story_tag(story_of, fx.ENCYCLICAL)
+                for i in THEME_ENCYCLICAL:
+                    known, past = seen[i]
+                    hit = [k for k in known if k in past and k.endswith(enc)]
+                    if hit:
+                        ok = False
+                        lines.append(f"id {i} ({expected[case]['not'][str(i)]}) was shown "
+                                     f"the encyclical's label {hit[0]!r}")
+                continue
+            for later, earlier, what in THEME_PAIRS[case]:
+                if nights[earlier] >= nights[later] or abs(
+                        group_news._day(by[later]["published"])
+                        - group_news._day(by[earlier]["published"])) > group_news.REACH_DAYS:
+                    ok = False
+                    lines.append(f"pair {later}/{earlier} tests nothing (same night or out of reach)")
+                    continue
+                known, past = seen[later]
+                if label[earlier] in known and label[earlier] in past:
+                    ok = False
+                    lines.append(f"{what}: shown {label[earlier]!r}")
+    finally:
+        group_news.NIGHTLY_SEED = keep
+    n = sum(len(v) for v in THEME_PAIRS.values()) + len(THEME_ENCYCLICAL)
+    lines.append(f"({n} same-theme rows checked, past-label list forced ON)")
+    results.append(("theme pairs: earlier label never shown to the next happening", ok, lines))
 
 
 def check_seed_rules(results):
@@ -413,6 +496,7 @@ def main():
     check_merge(results, frozen, expected)
     check_split(results, frozen, expected)
     check_cross_night(results, frozen, expected)
+    check_theme_pairs(results, frozen, expected)
 
     failed = []
     for label, ok, lines in results:

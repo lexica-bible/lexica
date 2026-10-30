@@ -6,7 +6,7 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## 2026-10-29 — News clustering: fixtures built + gated; cross-night fix attempt 1 FAILED live on Haiku, 1b on Sonnet 10-30 (switched off)
+## 2026-10-29 — News clustering: fixtures built + gated; cross-night fix attempt 1 FAILED live on Haiku, 1b on Sonnet 10-30 (switched off); attempt 2 (distinctive words) stopped in the replay 10-30
 Moved whole from TODO.md at the 10-29 wrap. Still open (in TODO.md): corroboration (parked) and
 the cross-night fix, attempt 2. Rollback copy from the 8-row label clear:
 `~/db_backups/news.db.pre-label-clear-2026-10-29`. Commits 58bf860, 10cad8a, b1cf83c, f655d22,
@@ -136,6 +136,45 @@ afd1dff, 1fdf5bd, f04daf2, d4e9242, c1a1227.
   setting + `_call_settings` (Haiku gets exactly the old call) and a refused or cut-off reply now
   prints ERR instead of being half-read. d4e9242 was deployed for the check; c1a1227 was pushed
   ~01:50 UTC 10-30, before the 06:00 nightly.
+  **ATTEMPT 2 — DISTINCTIVE-WORDS MATCH — STOPPED IN THE REPLAY 2026-10-30, never run live, no
+  labeler code shipped** (group_news.py reverted to c1a1227; nightly unchanged, list OFF). Brief:
+  keep attempt 1's 14-day reach + cap 40, show a past label only when the headline shares one of
+  its DISTINCTIVE words (names/places/institutions, not "pope"/"sunday"/"ai"), built from the
+  label's own stored headlines, not a hand list. Built + measured (same-night labels shown as the
+  old nightly does; the rule only added past labels):
+    - plain rarity in the corpus gets it backwards on the frozen rows: "update" 7 rows, "alliance"
+      10, "machines" 10 look rare; "magnifica" 99, "encyclical" 486 look common.
+    - rule tried: a word counts for a label when >= X of the labeled headlines using it are on
+      that label, it's in >= Y of the label's own headlines, and a once-seen word needs a second
+      word or a near-repeat headline. Replay, grid X 0.6-0.9 x Y 0.05-0.2:
+        | X       | encyclical on one card | other stories offered it on own words | Sunday split | pairs offered |
+        | 0.6-0.7 | 622/623                | 54-59                                 | 2-4          | 1             |
+        | 0.8     | 608-613/623            | 37-41                                 | 4            | 0 Sunday      |
+        | 0.9     | 425-522/623            | 0-7                                   | 4            | 0 Sunday      |
+      (cross-night sample passed at every setting; Haiku real-nights baseline was 341/623.)
+    - WHY IT CAN'T WORK AS DESIGNED (each checked, not inferred): (1) the replay's corpus is the
+      sample itself, ~70% encyclical, so "pope" (42 rows), "leo" (42), "encyclical" (29), "xiv"
+      (13) carried the other-story offers at 0.8 — the theme words pass because one story holds
+      most of their uses; (2) the opposite in production: on the labels production actually stores
+      (the frozen rows' own labels) "magnifica" sits 45% on its top label (24 labels), "humanitas"
+      46%, "inadmissible" 50%, "pope" 46%, "leo" 47% — the old nightly split already scattered
+      each story's own name, so no threshold lets the name through and keeps "pope" out; and a
+      story missed once spreads its own words further (self-defeating); (3) word rules can't
+      separate same-headline episodes (Dr. O Oct 3/Oct 9 are word-for-word identical) nor join
+      the Bergen County pair 18874/10641 (no shared word but "Sundays"); (4) one list per batch:
+      a label picked for one headline is seen by all 40 — 31-93 more other-story encyclical-sample
+      rows (by setting) saw its label only via a batch-mate.
+    - so relabel_check on PA would have measured the lopsided sample corpus, not production; no
+      live run was asked for. Nothing to revert on PA.
+  KEPT: CI check "theme pairs" (tests/test_news_clustering.py THEME_PAIRS / THEME_ENCYCLICAL):
+  replays with the list FORCED ON and fails if the call labeling a same-theme row is shown the
+  earlier row's label from an earlier night. 12 rows, all hand-judged different happenings, all
+  from the live fusions: Dr. O Oct 9/Oct 3, union enforcement campaign Sep 4/Polish fine proposal
+  Aug 21, Alliance manifesto Oct 14/Oct 3 demand, unions' reaction Aug 18/pope's Sunday call Aug
+  13, Greece strike Jul 27/Roman Catholics' call Jul 14, the 6 Aug-28 machines rows + 5251
+  (Vatican AI guidelines). Sonnet's "Sep/Oct AI remarks" weren't recorded by id — not guessed.
+  Dropped: Dr. O Aug 31/Aug 16 (15 days apart, outside reach — tests nothing). Fired on a known
+  positive: attempt 1's list shows all 12 (KNOWN FAILURE); passes on an empty list.
   Attempt 1 design (kept in code behind the switch, for the record and the next try):
   `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
     1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news

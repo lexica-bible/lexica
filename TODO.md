@@ -924,13 +924,25 @@ Open tickets:
   name, not "sunday"/"pope"/"ai"); run the 14-day reach from a label's FIRST articles so it can't
   extend itself; or a second AI check per reuse. Attempt 1b (the same list on Sonnet, 10-30) ALSO
   fused (Sunday 5 fused cards vs bar 1) — the fault is the list design, not the model; full table
-  in TODO_ARCHIVE. NEXT = the distinctive-words idea (own session). CHECK FIRST: c1a1227 (list OFF,
+  in TODO_ARCHIVE. **Attempt 2 (distinctive words, 10-30) STOPPED IN THE REPLAY — never run live,
+  no code shipped:** a word-spread rule can't tell the encyclical's own name from "pope" on the
+  labels as they stand (production's stored labels: "magnifica" 45% on its top label, "pope" 46%)
+  and can't separate same-headline episodes (Dr. O); numbers + why in TODO_ARCHIVE. Kept from it:
+  a new CI check (THEME PAIRS, tests/test_news_clustering.py) — with the list forced ON, the 12
+  same-theme rows the live labeler fused must never be SHOWN the earlier label; attempt 1 shows all
+  12 (KNOWN FAILURE). NEXT design must clear it in CI before any live run. Candidates: a second AI
+  yes/no per reuse ("same happening as these headlines?" — the only one aimed at the judgment
+  itself); show each past label beside only the headline it matched (one list per batch let 31-93
+  extra other-story rows see the encyclical label via a batch-mate). Any word-statistics rule
+  first needs word counts from the full news.db (the frozen samples are ~70% one story) — that's
+  a news.db read, JP's call. CHECK FIRST: c1a1227 (list OFF,
   Haiku) had to be deployed before the 10-30 06:00 UTC nightly; if it wasn't, that night's rows
-  were labeled with Sonnet + the list — read them as on 10-29. GATE: the 3 "real nights" known failures flip in
-  the test AND a live `relabel_check.py --run` beats the 10-29 baseline BOTH ways (fused not up,
-  split down) — numbers in TODO_ARCHIVE. Side notes: fresh labels guess YEARS wrong; a `--regroup`
-  would rewrite old split labels but its one-pass list over-fused (53) — needs its own measured
-  decision. code: scripts/news/group_news.py, tests/test_news_clustering.py
+  were labeled with Sonnet + the list — read them as on 10-29. GATE: the 3 "real nights" known
+  failures AND the theme-pairs known failure flip in the test, AND a live `relabel_check.py --run`
+  beats the 10-29 baseline BOTH ways (fused not up, split down) — numbers in TODO_ARCHIVE. Side
+  notes: fresh labels guess YEARS wrong; a `--regroup` would rewrite old split labels but its
+  one-pass list over-fused (53) — needs its own measured decision.
+  code: scripts/news/group_news.py, tests/test_news_clustering.py
 - **Page-date backfill — APPLIED 2026-10-25.** 1,828 Google rows (score >= 5, last 60 days): page
   date 1,392 (33 flagged >30d off Google — every one verified against the real page / a printed
   byline / a known event before apply), unverified 436 (show "~"), RSS 8,864 untouched. The four
