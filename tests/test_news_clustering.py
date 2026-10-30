@@ -31,10 +31,10 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      starts empty). Also checked: the cap, the rules of pick_known on made-up pools, and that no
      clearly-other story lands on the encyclical card (+ how many were SHOWN its label — the
      fusion exposure only the live run can judge). Call counts are printed per sample.
-  4. THEME PAIRS — the 12 same-theme rows the live labeler fused: the labeler stand-in is made to
+  4. THEME PAIRS — the 11 same-theme rows (12 until the 15419 ruling, 2026-10-30) the live labeler fused: the labeler stand-in is made to
      take the earlier label whenever it's shown (what the live AI did); the reuse check must turn
-     every one down. Built-in known positive: with the check answering yes, all 12 must fuse —
-     and relabel_check.py's two-column fusion count must read all 12 as THROUGH REUSE.
+     every one down. Built-in known positive: with the check answering yes, all 11 must fuse —
+     and relabel_check.py's two-column fusion count must read all 11 as THROUGH REUSE.
   5. FUSION SPLIT — the other side of that count: the stored labels' pinned fusions (made inside
      the one June-29 pass) must read as SAME-NIGHT, none as through-reuse.
 
@@ -390,7 +390,9 @@ THEME_PAIRS = {
         (24909, 24082, "Dr. O 'Sunday Law Update' episode Oct 9 vs Oct 3 (same headline)"),
         (19923, 16144, "union enforcement campaign Sep 4 vs Polish union fine proposal Aug 21"),
         (27299, 24079, "Sunday Alliance manifesto Oct 14 vs Alliance free-Sundays demand Oct 3"),
-        (15419, 14756, "European unions' reaction Aug 18 vs the pope's Sunday call Aug 13"),
+        # (15419, 14756) the European unions' reaction to the pope's Aug 13 Sunday call was here:
+        # ruled the SAME story by JP 2026-10-30 (a reaction = same happening, the house rule), so it
+        # moved into that happening in expected.json and is no longer a fusion — 11 rows now.
         (12472, 10368, "Greece Sunday strike Jul 27 vs Roman Catholics' Sunday-rest call Jul 14"),
     ],
 }
@@ -405,14 +407,14 @@ THEME_CHECK = "theme pairs: earlier label never KEPT on the next happening"
 
 def check_theme_pairs(results, frozen, expected):
     """The direct test of what failed live: shown an earlier label, the AI reuses it for the next
-    happening of the same theme. The labeler stand-in is made to DO exactly that for these 12 rows
+    happening of the same theme. The labeler stand-in is made to DO exactly that for these 11 rows
     (grab: take the other story's label whenever it's on the list), with the list + reuse check
     on. Fails if the earlier label is still on the row at the end. Changed 2026-10-30 from "never
     SHOWN" (attempt 2's bar): attempt 4 shows the label on purpose and checks each reuse.
     The reuse check's stand-in answers from the hand judgment (_judge_stand_in), so a pass proves
     a "no" blocks the reuse — not that the live AI says no; relabel_check.py measures that.
     Built-in known positive: the same run with the reuse check answering yes every time (= the
-    attempt-1 design) must end with ALL 12 fused, or the check can't see a fusion at all.
+    attempt-1 design) must end with ALL 11 fused, or the check can't see a fusion at all.
     A row that never got the chance to grab (label not on its list) fails as testing nothing."""
     lines, ok = [], True
     totals = {"grabbed": 0, "kept": 0, "blocked_fused": 0, "read_via": 0}
@@ -490,7 +492,7 @@ def check_fusion_split(results, frozen, expected):
     stored labels' pinned fusions were all made inside one labeler run (the June-29 regroup) —
     the 6 pinned other stories on the encyclical card and the pinned Sunday over-merge must read
     as same-night, none as through-reuse. (The through-reuse side's known positive is in the
-    theme-pairs check: 12 forced fusions across nights.)"""
+    theme-pairs check: 11 forced fusions across nights.)"""
     lines = []
     rows = fx.case_rows(frozen, "merge_encyclical")
     story_of, _, _ = fx.judgment(expected, "merge_encyclical", rows)

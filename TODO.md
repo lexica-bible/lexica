@@ -926,9 +926,13 @@ Open tickets:
   vs attempt 4 under the same rule: Sunday through-reuse 5 -> 2, encyclical >=1 -> 1.
   Calls: labeler 113/69/9 (Haiku), reuse checks 176/57/7 (Sonnet; 139/63/1 reuses turned down),
   fresh-label 57/31/1, "left unlabeled tonight" lines 24/36/0 (retries count again; every row had a
-  label by the end). 15419 note: the check prompt itself says reactions = SAME, the hand judgment
-  says different happening — so on that one Sonnet followed OUR rule; the rule vs the judgment is
-  JP's call (ruled same -> Sunday 1). 27299 and 12366 are clean misses.
+  label by the end). 15419: the check prompt says reactions = SAME, the hand judgment said
+  different. **RULED by JP 2026-10-30: 15419 (European unions' reaction, Aug 18) is the SAME story
+  as the pope's Aug 12-13 Sunday call** — moved into that happening in expected.json (out of
+  singles); the check prompt and the house rule stay as they are; the theme-pairs check drops that
+  pair (12 -> 11 rows). Under the ruling this run's Sunday through-reuse = 1 (27299). 17040 (also
+  on that card in attempt 4) was NOT ruled — still its own story. 27299 and 12366 are clean misses.
+  RERUN ordered by JP (same design, fixed reader); bar unchanged (0 through reuse).
   BUG FOUND + FIXED (mine, in the reply reader `_ask` -> `_read_array`): 11 Sonnet checks (2
   encyclical, 9 Sunday — the 3 shown were all the American Dream lawsuit label; that story ended
   on 2 cards, likely from these lost checks, not proven) failed
