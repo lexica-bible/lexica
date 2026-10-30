@@ -915,7 +915,35 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 4 (list + reuse check) BUILT, AWAITING THE LIVE CHECK.**
+- **OPEN: cross-night split — attempt 4 (list + reuse check) FAILED LIVE ON FUSION; switch never
+  turned on.** Live run (JP, PA, `relabel_check.py --run --list-on` on 8c50265, Haiku; nightly
+  untouched — NIGHTLY_SEED was False throughout, nothing to revert). Real nights vs the bar:
+    | measure                            | Haiku baseline | attempt 1 Haiku | attempt 4 Haiku | bar  |
+    | encyclical rows on one card        | 341/623        | 511/623         | 421/623         | up   |
+    | clearly-other stories on its card  | 13             | 23              | 16              | <=13 FAIL |
+    | Sunday over-merged cards           | 1              | 8               | 6               | <=1  FAIL |
+    | Sunday happenings split            | 13             | 1               | 4               | down |
+    | cross-night over-merged / split    | 0 / 2          | not reached     | 0 / 0           | 0 / down |
+  Reuse-check counts: encyclical 198 checks, 116 reuses turned down, 50 fresh-label calls, 27 rows
+  left unlabeled; Sunday 48 / 21 / 17 / 2; cross-night 7 / 2 / 2 / 0 (vs the replay's 112 checks
+  total). One pass (= --regroup path, no check) unchanged: encyclical 597/623 + 53 other.
+  WHERE THE FUSION CAME FROM (labeling nights read off frozen.json): encyclical — 14 of the 15
+  listed joiners were labeled on the June-29 night (one big same-night run: no past label, no
+  check — the baseline's 13 are this same set); only 5443 (Jun 30) came through an approved reuse.
+  Sunday — 2 of the 6 cards are same-night fusions the check never sees (Aug 31 trio 17366/17380/
+  17381; Oct 3 Alliance + Dr. O 24079/24082, the baseline's one); the other fusions are reuses the
+  check wrongly APPROVED: 15317 Pizzaballa onto Palm Sunday (Aug 18 night; judgment edge), Dr. O
+  8753 onto 7082 (Jul 4 vs Jun 24 episode), 15419 unions' reaction + 17040 onto the pope's Aug 13
+  Sunday call, 19923 onto Polish 16144, 27299 Alliance manifesto onto the Oct 3 card. Of the 12
+  theme rows: Dr. O Oct 9 and Greece HELD; Polish, Alliance, unions' reaction did not; the Aug 28
+  machines rows are not among the 15 listed (1 joiner unlisted).
+  READ: Haiku's yes/no doesn't track same-vs-different — wrong both ways: it approves next-event
+  pairs on Sunday and turns down real encyclical coverage (202 encyclical rows off the card vs 112
+  for attempt 1). Also: the bar can fail with a PERFECT check — this run had 2 same-night Sunday
+  fusions (bar <=1) and the encyclical bar rides on the June-night pass. Next, if any: the reuse
+  check on a stronger model (Sonnet) with the labeler kept on Haiku; and/or a bar that counts only
+  fusions made through an earlier night's label (JP's call — the bar is his).
+  Attempt 4 design, kept in code behind the switch:
   Design: attempt 1's bounded list unchanged; every reuse of an earlier night's label gets a second
   call (group_news.check_reuse/confirm_reuse, same model + settings): the new headline + the
   label's 3 best stored headlines, all WITH publish dates -> same happening or different one on the
@@ -932,9 +960,8 @@ Open tickets:
   identical vs 323ae12 + pinned in the test. Switch `NIGHTLY_SEED` stays OFF: the live check runs
   with `relabel_check.py --run --list-on` (scratch db only, nightly untouched). Bar: encyclical
   together (up from 341/623), <=13 other stories on its card, Sunday fused cards <=1, splits down.
-  Pass -> one-line switch ON + deploy; fail -> numbers here beside the other three, switch stays
-  off. Watch live: the 15419 pair (unions' reaction to the pope's Sunday call) is a REACTION — the
-  house rule merges reactions, the hand judgment calls it a different happening.
+  The 15419 pair (unions' reaction to the pope's Sunday call) is a REACTION — the house rule merges
+  reactions, the hand judgment calls it a different happening; it fused live.
 - **History of the cross-night item — attempt 2 and before (group_news.py).** Each nightly run starts from an EMPTY
   label list, so a story pulled over several nights gets new wording each night = several cards
   (encyclical: 53 labels on 623 rows). Attempt 1 (a bounded past-label list, `pick_known`, kept in

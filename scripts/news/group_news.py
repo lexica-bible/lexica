@@ -167,9 +167,10 @@ def build_client():
 #   4. REUSE CHECK (attempt 4, 2026-10-30) — when ON, every reuse of an earlier night's label is
 #      confirmed by a second call (check_reuse / confirm_reuse, below); a "no" gets a fresh label.
 #
-# STATUS: OFF. Attempt 4 (list + reuse check) passes the replay incl. the 12 live-fused theme
-# rows; it is checked live with `relabel_check.py --run --list-on` (scratch db only) and turned on
-# here only if that beats the bar. Earlier, the list ALONE failed the live check on FUSION:
+# STATUS: OFF. Attempt 4 (list + reuse check) passed the replay incl. the 12 live-fused theme rows
+# but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
+# other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
+# pairs and turned down real encyclical coverage (TODO.md). Earlier, the list ALONE failed too:
 #   Haiku (2026-10-29): fixed the splitting (encyclical 511/623 on one card vs 341, Sunday splits
 #     13 -> 1) but reused shown labels for DIFFERENT happenings of the same theme — 23 other stories
 #     on the encyclical card (was 13), Sunday 8 fused cards (was 1).
