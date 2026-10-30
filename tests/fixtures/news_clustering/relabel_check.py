@@ -60,6 +60,9 @@ ONE_PASS_ONLY = "--one-pass" in sys.argv
 # without the 06:00 UTC nightly ever running it (attempt 4, 2026-10-30).
 LIST_ON = "--list-on" in sys.argv
 ONLY = sys.argv[sys.argv.index("--case") + 1] if "--case" in sys.argv else None
+# rows the reuse check's prompt uses as worked examples (group_news.CONFIRM_EXAMPLES, attempt 6):
+# a fusion involving one is flagged — those rows overlap the scored samples (TODO.md)
+EXAMPLE_IDS = {i for e in group_news.CONFIRM_EXAMPLES for i in (e[0], e[3])}
 FOLDER = sys.argv[sys.argv.index("--fixtures") + 1] if "--fixtures" in sys.argv else HERE
 
 
@@ -175,8 +178,13 @@ def report(case, title, rows, new_labels, expected, night_of):
         if same:
             print("   joined on the label's own night (labeler, not scored):")
             print("\n".join(fx.describe(same, relabeled, 15)))
+        ex = via & EXAMPLE_IDS
+        if ex:
+            print(f"   (of the through-reuse rows, these are in the check's own prompt examples: "
+                  f"{sorted(ex)})")
         verdict = (f"{len(m['core_on'])}/{m['core_total']} encyclical rows on one card; other "
-                   f"stories on it: {len(via):3d} through reuse | {len(same):3d} same-night")
+                   f"stories on it: {len(via):3d} through reuse | {len(same):3d} same-night"
+                   + (f"  [{len(ex)} of the through-reuse are prompt-example rows]" if ex else ""))
     else:
         multi = {s for s in judged if sum(1 for i in story_of if story_of[i] == s) > 1}
         om = fx.overmerged(cards, story_of, judged)
@@ -186,13 +194,18 @@ def report(case, title, rows, new_labels, expected, night_of):
         for kind, ps in (("THROUGH REUSE (scored)", via), ("SAME NIGHT (labeler, not scored)", same)):
             for p in ps:
                 j = sorted(p & joiners)
+                ex = sorted(p & EXAMPLE_IDS)
                 print(f"   OVER-MERGE, {kind} — one card, different happenings"
-                      + (f"; joined via an earlier-night label: ids {j}" if j else "") + ":")
+                      + (f"; joined via an earlier-night label: ids {j}" if j else "")
+                      + (f"; prompt-example rows on it: {ex}" if ex else "") + ":")
                 print("\n".join(fx.describe(p, relabeled, 10)))
+        via_ex = sum(1 for p in via if p & EXAMPLE_IDS)
         for s, piece, sizes in sc:
             print(f"   SPLIT: {s!r} ({len(piece)} rows) over {len(sizes)} cards, sizes {sizes[:10]}")
         verdict = (f"over-merged cards: {len(via):3d} through reuse | {len(same):3d} same-night; "
-                   f"{len(sc)} split happenings")
+                   f"{len(sc)} split happenings"
+                   + (f"  [{via_ex} of the through-reuse cards hold prompt-example rows]"
+                      if via_ex else ""))
 
     # label drift: different labels per judged multi-row story, stored vs new
     drift = []

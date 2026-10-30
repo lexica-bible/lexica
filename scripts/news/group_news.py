@@ -177,6 +177,8 @@ def build_client():
 # twice: run 1 encyclical 1, Sunday 2 (11 checks lost to a reply-reading bug, since fixed —
 # _read_array); rerun encyclical 0, Sunday 3. Merge/split/cross-night met the bar both times. The
 # misses are mostly next-event pairs (same theme, a new statement days later) — the floor here.
+# Attempt 6 (2026-10-30): same design, the check's prompt hardened (SYSTEM_CONFIRM: later-vs-
+# reaction rule, CONFIRM_EXAMPLES, a reason before each answer); live run owed.
 # Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
@@ -375,27 +377,90 @@ def label_batch(client, rows, known, examples=None, avoid=None):
 # One call per reused label per batch, covering every headline in the batch that took it, each
 # answered on its own; on CHECK_MODEL (Sonnet since attempt 5 — attempt 4 ran it on the labeler's
 # Haiku and it failed live both ways).
+# Attempt 6 (2026-10-30): the prompt asks "same announcement or event", states that a LATER
+# statement / follow-up action / new document by the same or another actor is DIFFERENT and that
+# coverage + reactions are SAME, carries worked examples (CONFIRM_EXAMPLES), and asks for one short
+# reason before each answer. What it kept failing on: next-event pairs on Sunday.
+#
+# CONFIRM_EXAMPLES — real judged rows from tests/fixtures/news_clustering (expected.json):
+# (earlier id, earlier headline, its date, new id, new headline, its date, SAME?, why).
+# THEY OVERLAP THE SCORED SAMPLES on purpose (JP's brief, 2026-10-30): a pass on these rows is
+# weaker evidence than a pass on rows NOT here. Held out ON PURPOSE: the Alliance pair (27299
+# manifesto onto 24079 demand, the miss in both attempt-5 runs) and the 17040/17505 edge — the
+# clean test of whether the rule, not the examples, is what the check learned.
+CONFIRM_EXAMPLES = (
+    (13476, "Labor Unions and Churches Vow to Fight to Keep Sunday Work-Free", "2026-08-03",
+     14621, "Pope Leo XIV: Attendance at Sunday Mass cannot be replaced by virtual participation",
+     "2026-08-13", False,
+     "the pope's own new statement days later; it does not report or respond to the unions' vow"),
+    (24082, "Sunday Law Update with Dr. O", "2026-10-03",
+     24909, "Sunday Law Update with Dr. O", "2026-10-09", False,
+     "same show, same title, a new episode six days later"),
+    (16144, "Polish Trade Union Calls for a $1 Million Złoty Fine (US$271,172) and a 15-Year Ban "
+            "for Businesses that Operate on Sunday", "2026-08-21",
+     19923, "Trade Unions Launch Nationwide Enforcement Campaign to Report Businesses Violating "
+            "Sunday Closing Laws", "2026-09-04", False,
+     "a follow-up action (a campaign), not coverage of the fine proposal"),
+    (10368, "Roman Catholics Renew the Call for Legally Protected Sunday Rest", "2026-07-14",
+     12472, "Militant Nationwide Strike in Greece Calls for Legal Protection of Sunday as the Day "
+            "of Rest", "2026-07-27", False,
+     "another actor in another place, its own action on the same theme"),
+    (2718, "Pope Leo XIV signs his first encyclical, responds to the AI era", "2026-05-25",
+     17143, "Pope Leo XIV warns against entrusting human-life decisions to machines", "2026-08-28",
+     False, "a new message by the same pope three months later, not the encyclical"),
+    (14756, "Pope Leo XIV Calls for Sunday to be Sanctified and Urges Workers to Attend Mass on "
+            "that Day", "2026-08-13",
+     15419, "Pope Leo’s Call to Sanctify Sunday is Stirring Catholic Labor Unions in Europe to "
+            "Secure “Material Conditions” for Sunday Rest", "2026-08-18", True,
+     "the unions' reaction to that very call"),
+    (2718, "Pope Leo XIV signs his first encyclical, responds to the AI era", "2026-05-25",
+     607, "Anglicans respond to ‘Magnifica Humanitas’, the new encyclical by Pope Leo XIV",
+     "2026-06-12", True, "a reaction to the encyclical, weeks later"),
+    (2718, "Pope Leo XIV signs his first encyclical, responds to the AI era", "2026-05-25",
+     22593, "Peter Thiel slams pope’s AI encyclical as gift to Chinese Communist Party",
+     "2026-09-24", True, "a reaction to the encyclical; months later is still the same event"),
+)
+
+
+def _examples_text(examples=CONFIRM_EXAMPLES):
+    out = []
+    for _, old, od, _, new, nd, same, why in examples:
+        out.append(f'Earlier: "{old}" ({od})\nNew:     "{new}" ({nd})\n'
+                   f'-> {"SAME" if same else "DIFFERENT"}: {why}')
+    return "\n\n".join(out)
+
+
 SYSTEM_CONFIRM = """You check one grouping decision in a news feed. Each new headline below was
-put under an existing event label. Decide, for each one, whether it reports the SAME specific
-happening as the label's earlier headlines, or a DIFFERENT happening on the same theme.
+put under an existing event label. For each one, decide: is it about the SAME announcement or
+event as the label's earlier headlines, or a DIFFERENT one on the same theme? Every headline
+carries its publish date — use the dates.
 
-SAME: the same bill, lawsuit, ruling, document, report, speech, statement, meeting or
-announcement — including later phases of that one thing (its release, the reporting on its
-contents, reactions to it, hearings, votes, delays) and the same article re-published or
-carried by another outlet.
-DIFFERENT: another occasion of the same kind — another episode of a recurring show, another
-speech, message or statement, another campaign or proposal by the same group, another place
-or another year. Same people and same topic is not enough.
-Use the publish dates: the same wording days or weeks apart can be a new episode or a new
-statement; an old article re-published keeps its old date.
+SAME: coverage of that one announcement or event — the same bill, lawsuit, ruling, document,
+report, speech, statement or meeting — including its later phases (its release, reporting on its
+contents, hearings, votes, delays), the same article re-published or carried by another outlet,
+and REACTIONS to it (people or groups responding to, praising, criticizing or acting on THAT
+announcement), even weeks or months later.
+DIFFERENT: a LATER statement, a follow-up action, or a NEW document — by the same actor or by
+another actor — on the same theme: another speech, message, manifesto, campaign, proposal,
+strike, or episode of a recurring show; another place or another year. A headline announcing
+its own new statement or action is DIFFERENT unless it is responding to the earlier
+announcement. Same people, same topic and close dates are not enough.
 
-Return ONLY a JSON array, one object per new headline, keys exactly: id, same (true or false)."""
+Examples:
+
+""" + _examples_text() + """
+
+Return ONLY a JSON array, one object per new headline, keys in this order: id, reason, same.
+reason = ONE short line, written before you decide: what the new headline announces, and whether
+it is coverage of or a reaction to the earlier announcement. same = true or false."""
 
 
 def confirm_reuse(client, label, stored, rows):
     """-> {id: True if that headline is the same happening as the label's stored headlines}.
     stored = the label's best-scored (score, title, published, id), as kept by pool_add;
-    rows = the new headlines that took the label. An id missing from the reply counts as no."""
+    rows = the new headlines that took the label. An id missing from the reply counts as no.
+    The reply's per-headline "reason" (attempt 6) is there to make the model reason first; only
+    "same" is read."""
     def when(p):
         return (p or "")[:10] or "date unknown"
     seen = "\n".join(f'  - "{h[1][:120]}" ({when(h[2])})' for h in stored)

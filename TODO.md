@@ -915,9 +915,32 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler Haiku) FAILED THE BAR
-  LIVE TWICE; switch never turned on (nothing to revert). The misses are mostly next-event pairs
-  = this approach's floor.**
+- **OPEN: cross-night split — attempt 6 ("seventh round", JP 2026-10-30): the reuse check
+  HARDENED; live run owed (JP, PA: `relabel_check.py --run --list-on`). Switch stays OFF.**
+  Change = the check's prompt only (group_news.SYSTEM_CONFIRM); the list, the labeler, the model
+  split (Haiku labels, Sonnet checks) and the fresh-label step are unchanged. (1) Asks "same
+  announcement or event"; says a LATER statement, follow-up action or NEW document by the same or
+  another actor on the theme is DIFFERENT, coverage and REACTIONS (even months later) are SAME;
+  dates were already shown on every headline, now the prompt says to use them. (2) 8 worked
+  examples (group_news.CONFIRM_EXAMPLES): DIFFERENT — pope Aug 13 call vs unions/churches vow Aug
+  3 (14621/13476), Dr. O Oct 9 vs Oct 3 (24909/24082), Polish campaign vs fine proposal
+  (19923/16144), Greece strike vs Catholics' call (12472/10368), pope's Aug 28 machines message vs
+  the encyclical (17143/2718); SAME — unions' reaction 15419 vs the pope's call 14756 (the ruling),
+  Anglicans 607 and Thiel 22593 vs the encyclical 2718. (3) Reply keys id, reason, same — one
+  short reason line written before the answer; only "same" is read (fixed reader).
+  **OVERLAP (per the brief):** every example row is in the scored samples, so a pass on them is
+  weaker evidence. HELD OUT on purpose: the Alliance pair 27299/24079 (missed in BOTH attempt-5
+  runs) and the 17040/17505 edge — those are the clean test that the rule, not the examples, was
+  learned. relabel_check flags any through-reuse fusion that involves an example row
+  (`[N ... prompt-example rows]` in the summary). CI: a new check that every example is a real
+  frozen row with the right headline/date and agrees with expected.json, none held out (known
+  positives: a flipped verdict and a held-out row are both caught); the theme-pairs check gained
+  14621/13476 (12 rows again, 12/12 turned down, known positive 12/12 fuse).
+  STOP SIGNAL (JP): if Sunday still fuses next-event pairs with the dates and examples in front of
+  the check, this line stops.
+- **Attempt 5 record (reuse check on Sonnet, labeler Haiku) — FAILED THE BAR LIVE TWICE; switch
+  never turned on (nothing to revert). The misses are mostly next-event pairs = this approach's
+  floor.**
   RERUN 2026-10-30 (JP, PA, 9a00b36, fixed reader, 15419 ruled same story; same design):
     | real nights                    | stored | att.1 Haiku | att.4 Haiku chk | att.5 run 1 | att.5 rerun | bar  |
     | encyclical rows on its card    | 374    | 511         | 421             | 480         | 462         | >341 |

@@ -31,10 +31,10 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      starts empty). Also checked: the cap, the rules of pick_known on made-up pools, and that no
      clearly-other story lands on the encyclical card (+ how many were SHOWN its label — the
      fusion exposure only the live run can judge). Call counts are printed per sample.
-  4. THEME PAIRS — the 11 same-theme rows (12 until the 15419 ruling, 2026-10-30) the live labeler fused: the labeler stand-in is made to
+  4. THEME PAIRS — the 12 same-theme rows (11 after the 15419 ruling, +1 live attempt-5 miss) the live labeler fused: the labeler stand-in is made to
      take the earlier label whenever it's shown (what the live AI did); the reuse check must turn
-     every one down. Built-in known positive: with the check answering yes, all 11 must fuse —
-     and relabel_check.py's two-column fusion count must read all 11 as THROUGH REUSE.
+     every one down. Built-in known positive: with the check answering yes, all 12 must fuse —
+     and relabel_check.py's two-column fusion count must read all 12 as THROUGH REUSE.
   5. FUSION SPLIT — the other side of that count: the stored labels' pinned fusions (made inside
      the one June-29 pass) must read as SAME-NIGHT, none as through-reuse.
 
@@ -394,6 +394,8 @@ THEME_PAIRS = {
         # ruled the SAME story by JP 2026-10-30 (a reaction = same happening, the house rule), so it
         # moved into that happening in expected.json and is no longer a fusion — 11 rows now.
         (12472, 10368, "Greece Sunday strike Jul 27 vs Roman Catholics' Sunday-rest call Jul 14"),
+        # added 2026-10-30 (attempt 6): fused LIVE in the attempt-5 rerun with Sonnet checking
+        (14621, 13476, "the pope's Aug 12-13 Sunday call vs the unions/churches vow Aug 3"),
     ],
 }
 # ...and encyclical-sample rows judged OTHER happenings that joined the encyclical's label live:
@@ -407,14 +409,14 @@ THEME_CHECK = "theme pairs: earlier label never KEPT on the next happening"
 
 def check_theme_pairs(results, frozen, expected):
     """The direct test of what failed live: shown an earlier label, the AI reuses it for the next
-    happening of the same theme. The labeler stand-in is made to DO exactly that for these 11 rows
+    happening of the same theme. The labeler stand-in is made to DO exactly that for these 12 rows
     (grab: take the other story's label whenever it's on the list), with the list + reuse check
     on. Fails if the earlier label is still on the row at the end. Changed 2026-10-30 from "never
     SHOWN" (attempt 2's bar): attempt 4 shows the label on purpose and checks each reuse.
     The reuse check's stand-in answers from the hand judgment (_judge_stand_in), so a pass proves
     a "no" blocks the reuse — not that the live AI says no; relabel_check.py measures that.
     Built-in known positive: the same run with the reuse check answering yes every time (= the
-    attempt-1 design) must end with ALL 11 fused, or the check can't see a fusion at all.
+    attempt-1 design) must end with ALL 12 fused, or the check can't see a fusion at all.
     A row that never got the chance to grab (label not on its list) fails as testing nothing."""
     lines, ok = [], True
     totals = {"grabbed": 0, "kept": 0, "blocked_fused": 0, "read_via": 0}
@@ -492,7 +494,7 @@ def check_fusion_split(results, frozen, expected):
     stored labels' pinned fusions were all made inside one labeler run (the June-29 regroup) —
     the 6 pinned other stories on the encyclical card and the pinned Sunday over-merge must read
     as same-night, none as through-reuse. (The through-reuse side's known positive is in the
-    theme-pairs check: 11 forced fusions across nights.)"""
+    theme-pairs check: 12 forced fusions across nights.)"""
     lines = []
     rows = fx.case_rows(frozen, "merge_encyclical")
     story_of, _, _ = fx.judgment(expected, "merge_encyclical", rows)
@@ -607,7 +609,9 @@ def check_ai_call(results):
     # (6) the reuse check: on CHECK_MODEL with its own settings (no temperature on Sonnet, room to
     # think), the labeler untouched on MODEL; an id left out, or anything but true, is a no
     yes_no = [NS(type="thinking", thinking=""),
-              NS(type="text", text='[{"id": 7, "same": true}, {"id": 8, "same": "yes"}]')]
+              NS(type="text", text='[{"id": 7, "reason": "a reaction [to the Oct 3 call]", '
+                                   '"same": true}, {"id": 8, "reason": "new episode", '
+                                   '"same": "yes"}]')]
     fc = Fake(yes_no)
     ans = g.confirm_reuse(fc, "X Y Z", [(9, "old headline", "2026-10-03", 1)],
                           [{"id": i, "title": "new", "published": "2026-10-09"} for i in (7, 8, 9)])
@@ -623,6 +627,10 @@ def check_ai_call(results):
     if "2026-10-03" not in fc.sent["messages"][0]["content"] or \
             "2026-10-09" not in fc.sent["messages"][0]["content"]:
         misses.append("(6) reuse check doesn't show the publish dates")
+    sc = g.SYSTEM_CONFIRM
+    if "keys in this order: id, reason, same" not in sc or "Examples:" not in sc or \
+            "LATER statement" not in sc or "REACTIONS" not in sc:
+        misses.append("(6) check prompt lost the reason-first / examples / later-vs-reaction rule")
     # (7) a note after the answer is ignored even with a ']' in it (lost 11 live checks 10-30);
     # two answers raise; a plain answer and an empty reply read as before
     rd = g._read_array
@@ -641,6 +649,68 @@ def check_ai_call(results):
                     not misses, misses))
 
 
+# rows deliberately NOT in the check's examples (attempt 6): the scored misses that test whether the
+# check learned the RULE — the Alliance pair (missed in both attempt-5 runs) and the 17040/17505 edge
+HELD_OUT = {27299, 24079, 17040, 17505}
+
+
+def examples_problems(examples, frozen, expected):
+    """Each worked example in the reuse-check prompt must be REAL and agree with the hand judgment:
+    both headlines are frozen rows (outlet suffix aside) with those publish dates, both stories are
+    asserted, SAME is True exactly when expected.json puts the two rows in one story, and no
+    held-out row is used. Also: every example is actually in SYSTEM_CONFIRM."""
+    by, story, asserted = {}, {}, set()
+    for case in fx.CASES:
+        rows = fx.case_rows(frozen, case)
+        s_of, judged, _ = fx.judgment(expected, case, rows)
+        for r in rows:
+            by[r["id"]] = r
+        story.update(s_of)
+        asserted |= judged | ({s for s in s_of.values() if s.startswith("not:")}
+                              if case == "merge_encyclical" else set())
+    out = []
+    for ex in examples:
+        oid, old, od, nid, new, nd, same, _ = ex
+        for i, t, d in ((oid, old, od), (nid, new, nd)):
+            r = by.get(i)
+            if not r:
+                out.append(f"example row {i} is not a frozen row")
+                continue
+            if not (r["title"] == t or r["title"].startswith(t + " - ")) or \
+                    (r["published"] or "")[:10] != d:
+                out.append(f"example row {i}: headline/date don't match frozen.json")
+            if story[i] not in asserted:
+                out.append(f"example row {i}: its story isn't asserted in expected.json")
+            if i in HELD_OUT:
+                out.append(f"example uses held-out row {i}")
+        if oid in story and nid in story and (story[oid] == story[nid]) != same:
+            out.append(f"example {nid} vs {oid} says {'SAME' if same else 'DIFFERENT'}, "
+                       f"expected.json says the opposite")
+    return out
+
+
+def check_confirm_examples(results, frozen, expected):
+    g = group_news
+    misses = examples_problems(g.CONFIRM_EXAMPLES, frozen, expected)
+    for ex in g.CONFIRM_EXAMPLES:
+        if ex[1] not in g.SYSTEM_CONFIRM or ex[4] not in g.SYSTEM_CONFIRM:
+            misses.append(f"example {ex[3]} vs {ex[0]} is not in the check prompt")
+    # known positive: the same check must catch a flipped verdict and a held-out row
+    bad = list(g.CONFIRM_EXAMPLES)
+    bad[0] = bad[0][:6] + (not bad[0][6],) + bad[0][7:]
+    if not examples_problems(bad, frozen, expected):
+        misses.append("known positive: a flipped SAME/DIFFERENT example was not caught")
+    rows = {r["id"]: r for r in fx.case_rows(frozen, "split_sunday")}
+    held = (24079, rows[24079]["title"], rows[24079]["published"][:10],
+            27299, rows[27299]["title"], rows[27299]["published"][:10], False, "x")
+    if not examples_problems([held], frozen, expected):
+        misses.append("known positive: an example using a held-out row was not caught")
+    n_diff = sum(1 for e in g.CONFIRM_EXAMPLES if not e[6])
+    results.append(("reuse-check examples: real rows, agree with the hand judgment, none held out",
+                    not misses, misses + [f"({n_diff} DIFFERENT + {len(g.CONFIRM_EXAMPLES) - n_diff} "
+                                          f"SAME examples; held out: {sorted(HELD_OUT)})"]))
+
+
 def main():
     sys.stdout.reconfigure(errors="replace")     # headlines on a Windows console (cp1252)
     folder = sys.argv[1] if len(sys.argv) > 1 else fx.HERE
@@ -649,6 +719,7 @@ def main():
     check_detectors_fire(results, frozen, expected)
     check_seed_rules(results)
     check_ai_call(results)
+    check_confirm_examples(results, frozen, expected)
     check_merge(results, frozen, expected)
     check_split(results, frozen, expected)
     check_cross_night(results, frozen, expected)
