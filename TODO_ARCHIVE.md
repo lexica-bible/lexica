@@ -6,11 +6,11 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## 2026-10-29 — News clustering: fixtures built + gated; cross-night fix attempt 1 FAILED live (switched off)
+## 2026-10-29 — News clustering: fixtures built + gated; cross-night fix attempt 1 FAILED live on Haiku, 1b on Sonnet 10-30 (switched off)
 Moved whole from TODO.md at the 10-29 wrap. Still open (in TODO.md): corroboration (parked) and
 the cross-night fix, attempt 2. Rollback copy from the 8-row label clear:
 `~/db_backups/news.db.pre-label-clear-2026-10-29`. Commits 58bf860, 10cad8a, b1cf83c, f655d22,
-afd1dff, 1fdf5bd, f04daf2.
+afd1dff, 1fdf5bd, f04daf2, d4e9242, c1a1227.
 
 - **PARKED (2026-10-25, no code): corroboration as a rank input — Aug 14 ruling, layer 3.** At equal
   score, a card whose articles span multiple outlets ranks above a single-outlet card. Reuses the
@@ -111,6 +111,31 @@ afd1dff, 1fdf5bd, f04daf2.
   DONE 2026-10-29 22:40 UTC (JP, PA): afd1dff confirmed live; backup
   `~/db_backups/news.db.pre-label-clear-2026-10-29`; preview showed exactly the 8 rows; cleared
   8; verify 8 unlabeled. The 10-30 nightly (old code) labels them fresh.
+  **ATTEMPT 1b — the same list on SONNET — FAILED LIVE ON FUSION 2026-10-30, switched off** (JP's
+  ruling before the Haiku check: if Haiku over-fuses, rerun the same check on Sonnet). d4e9242 put
+  the list ON with `group_news.MODEL = "claude-sonnet-5-5"` (effort "medium"; Sonnet refuses
+  temperature 0, so it samples at the default — one run is one sample); JP ran `relabel_check.py
+  --run` on PA 10-30 (221 calls, no failed batches). Real nights, against the pass bar set before
+  the run:
+    | measure                            | Haiku baseline | Haiku + list | Sonnet + list | bar  |
+    | encyclical rows on one card        | 341/623        | 511/623      | 578/623       | up   |
+    | clearly-other stories on its card  | 13             | 23           | 14            | <=13 FAIL by 1 |
+    | Sunday over-merged cards           | 1              | 8            | 5             | <=1  FAIL |
+    | Sunday happenings split over cards | 13             | 1            | 1             | down |
+    | cross-night over-merged / split    | 0 / 2          | not reached  | 0 / 0         | 0 / down |
+  Sonnet one pass (= the --regroup path, list not involved): encyclical 420/623 + 10 other (Haiku
+  593 + 53); Sunday 4 over-merged / 3 split (Haiku 2 / 7); cross-night 1 / 0. Read: Sonnet fuses
+  less than Haiku with the list, but still fuses; the Sunday verdict doesn't hang on the 1-story
+  encyclical miss. Its 5 Sunday fusions are the same shape as Haiku's — a shown label reused for
+  the next instance of the same theme: 2 pairs of Dr. O "Sunday Law Update" episodes, Polish union
+  fine proposal Aug 21 + enforcement campaign Sep 4, Sunday Alliance Oct 3 + Alliance manifesto
+  Oct 14, the pope's Aug 13 Sunday call + Aug 18 European-unions reaction. The 14 encyclical
+  joiners are mostly the pope's Aug 28 "don't entrust human lives to machines" message (6 rows)
+  plus Sep/Oct AI remarks (all judged other happenings). c1a1227: back to `NIGHTLY_SEED = False`
+  and Haiku (the measured nightly); 3 real-nights KNOWN FAILURES restored. Kept: the one model
+  setting + `_call_settings` (Haiku gets exactly the old call) and a refused or cut-off reply now
+  prints ERR instead of being half-read. d4e9242 was deployed for the check; c1a1227 was pushed
+  ~01:50 UTC 10-30, before the 06:00 nightly.
   Attempt 1 design (kept in code behind the switch, for the record and the next try):
   `group_news.py` nightly runs show the labeler a BOUNDED list of past labels, chosen per batch by `pick_known`:
     1. REACH — only labels with an article PUBLISHED within 14 days (REACH_DAYS = views_news
