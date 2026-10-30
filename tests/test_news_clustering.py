@@ -621,6 +621,20 @@ def check_ai_call(results):
     if "2026-10-03" not in fc.sent["messages"][0]["content"] or \
             "2026-10-09" not in fc.sent["messages"][0]["content"]:
         misses.append("(6) reuse check doesn't show the publish dates")
+    # (7) a note after the answer is ignored even with a ']' in it (lost 11 live checks 10-30);
+    # two answers raise; a plain answer and an empty reply read as before
+    rd = g._read_array
+    if rd('[{"id": 7, "same": true}]\n\nNote: id 7 [the Oct 3 piece] is a re-run.') != \
+            [{"id": 7, "same": True}]:
+        misses.append("(7) a trailing note with ']' broke the read")
+    if rd('[{"id": 7, "event": "A"}]') != [{"id": 7, "event": "A"}] or rd("[]") != [] \
+            or rd("no answer here") != []:
+        misses.append("(7) plain / empty replies no longer read as before")
+    try:
+        rd('[{"id": 7, "same": true}]\nCorrection:\n[{"id": 7, "same": false}]')
+        misses.append("(7) a reply with two answers was read instead of raising")
+    except ValueError:
+        pass
     results.append(("AI call: labeler + check model settings, Sonnet-safe, reply read by type",
                     not misses, misses))
 

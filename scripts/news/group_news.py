@@ -172,8 +172,10 @@ def build_client():
 #      confirmed by a second call (check_reuse / confirm_reuse, below); a "no" gets a fresh label.
 #
 # STATUS: OFF. Attempt 5 (2026-10-30) = attempt 4 with the reuse check on CHECK_MODEL (Sonnet),
-# labeler still Haiku; live run owed. Its bar (JP): only fusions THROUGH a reused earlier-night
-# label are scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md).
+# labeler still Haiku. Its bar (JP): only fusions THROUGH a reused earlier-night label are
+# scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md). FAILED live,
+# close: through-reuse encyclical 1, Sunday 2 (bar 0); merge/split/cross-night all met the bar.
+# That run also lost 11 checks to a reply-reading bug, since fixed (_read_array).
 # Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
@@ -302,12 +304,33 @@ def _ask(client, system, user, model=None):
         raise RuntimeError(f"{model} stopped early ({msg.stop_reason})")
     # read the reply by block type: a thinking model's reply starts with a (thinking) block
     text = "".join(b.text for b in (msg.content or []) if b.type == "text").strip() or "[]"
-    text = _FENCE.sub("", text).strip()
+    return _read_array(_FENCE.sub("", text).strip())
+
+
+def _read_array(text):
+    """The JSON array in a reply. A note the model writes after it is ignored; a reply holding TWO
+    arrays raises (two answers — never pick one); no array at all -> [].
+    Fixed 2026-10-30: the old fallback grabbed from the first '[' to the LAST ']', so any ']' in
+    a trailing note broke the read ("Extra data") — 11 Sonnet reuse checks in the attempt-5 live
+    run were lost that way and counted as no."""
     try:
         return json.loads(text)
-    except Exception:
-        m = re.search(r"\[.*\]", text, re.DOTALL)
-        return json.loads(m.group(0)) if m else []
+    except ValueError:
+        pass
+    dec, found = json.JSONDecoder(), []
+    i = text.find("[")
+    while i >= 0:
+        try:
+            data, end = dec.raw_decode(text, i)
+        except ValueError:
+            i = text.find("[", i + 1)
+            continue
+        if isinstance(data, list):
+            found.append(data)
+        i = text.find("[", end)
+    if len(found) > 1:
+        raise ValueError(f"reply holds {len(found)} answers")
+    return found[0] if found else []
 
 
 def label_batch(client, rows, known, examples=None, avoid=None):

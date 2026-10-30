@@ -915,9 +915,30 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler stays Haiku) BUILT; live
-  run owed (JP, PA: `relabel_check.py --run --list-on`). Switch `NIGHTLY_SEED` stays OFF.**
-  Change from attempt 4: only the check's model — `group_news.CHECK_MODEL = "claude-sonnet-5-5"`
+- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler Haiku) FAILED THE NEW BAR
+  LIVE, but close; switch never turned on (nothing to revert).** Live run 2026-10-30 (JP, PA,
+  abae13d, `--run --list-on`). Through-reuse fusions (bar 0): encyclical **1** (12366, EIR
+  immigration roundtable Jul 28 — plainly wrong), Sunday **2** cards (15419 European unions'
+  reaction onto the pope's Aug 13 Sunday call; 27299 Alliance manifesto Oct 14 onto the Alliance
+  Oct 3 card), cross_night 0. The rest MET the bar: encyclical 480/623 on its card (bar >341;
+  attempt 4 421), Sunday 3 split happenings (bar <13), cross_night 0 split / 0 fused. Same-night
+  column (not scored): encyclical 14 (the June-29 set), Sunday 0. Stored row matched CI (6 | 1).
+  vs attempt 4 under the same rule: Sunday through-reuse 5 -> 2, encyclical >=1 -> 1.
+  Calls: labeler 113/69/9 (Haiku), reuse checks 176/57/7 (Sonnet; 139/63/1 reuses turned down),
+  fresh-label 57/31/1, "left unlabeled tonight" lines 24/36/0 (retries count again; every row had a
+  label by the end). 15419 note: the check prompt itself says reactions = SAME, the hand judgment
+  says different happening — so on that one Sonnet followed OUR rule; the rule vs the judgment is
+  JP's call (ruled same -> Sunday 1). 27299 and 12366 are clean misses.
+  BUG FOUND + FIXED (mine, in the reply reader `_ask` -> `_read_array`): 11 Sonnet checks (2
+  encyclical, 9 Sunday — the 3 shown were all the American Dream lawsuit label; that story ended
+  on 2 cards, likely from these lost checks, not proven) failed
+  with "Extra data" and counted as no. The old fallback read from the first '[' to the LAST ']',
+  so any ']' in a note after the answer broke it. Now: a trailing note is ignored, two answers
+  still raise. Known positive in CI (7): the old reader fails the same reply with the same error.
+  Not known: whether the live replies were notes or second answers (the latter still count as no).
+  So this run's numbers were measured WITH the bug; a rerun would differ (fewer turned down — the
+  fused count could go either way).
+  Attempt 5 design — change from attempt 4: only the check's model — `group_news.CHECK_MODEL = "claude-sonnet-5-5"`
   (its own settings via _call_settings: no temperature, thinking room); the labeler `MODEL` stays
   Haiku; the list, the check prompt and the fresh-label step are unchanged. Replay passes incl. the
   12-row theme-pairs check (12/12 turned down; known positive 12/12 fuse with the check saying yes).
@@ -936,7 +957,6 @@ Open tickets:
   13 call, Polish, the Oct 3 card — that one also holds the same-night 24079/24082 pair) | 1 same-
   night (Aug 31 trio); encyclical ≥1 through reuse (5443) — 1 of its 16 rows was not listed, so
   its column is not exactly known. It fails the new bar too.
-  If attempt 5 fails live: switch stays off (nothing to revert), log the numbers here.
 - **Attempt 4 record (list + reuse check on Haiku) — FAILED LIVE ON FUSION; switch never
   turned on.** Live run (JP, PA, `relabel_check.py --run --list-on` on 8c50265, Haiku; nightly
   untouched — NIGHTLY_SEED was False throughout, nothing to revert). Real nights vs the bar:
