@@ -923,17 +923,32 @@ Open tickets:
   Ideas: show a label only when the headline shares its DISTINCTIVE words (place / institution /
   name, not "sunday"/"pope"/"ai"); run the 14-day reach from a label's FIRST articles so it can't
   extend itself; or a second AI check per reuse.
-  **ATTEMPT 1b (2026-10-29, in code, NOT yet live-checked): the same list ON (`NIGHTLY_SEED = True`)
-  with the labeler on Sonnet** (`group_news.MODEL = "claude-sonnet-5-5"`, the one model setting;
-  --regroup shares the call so it follows). JP's ruling before the Haiku check: if Haiku over-fuses,
-  rerun the same check on Sonnet. Sonnet refuses temperature 0, so it samples at the default (runs
-  can differ slightly) and thinks at effort "medium". Replay passes as at f655d22. PASS BAR for the
-  live `relabel_check.py --run`, real nights (vs Haiku baseline / Haiku+list): encyclical together
-  (on one card: 341 / 511 of 623), other stories on its card <= 13 (13 / 23), Sunday happenings
-  split < 13 (13 / 1), Sunday over-merged cards <= 1 (1 / 8), cross-night over-merged 0 and split
-  < 2 (baseline 0 / 2; the Haiku+list run never reached it). FAIL ->
-  `NIGHTLY_SEED = False`, restore KNOWN_FAILING, log Sonnet's numbers here beside Haiku's; the
-  distinctive-words design is next (own session). GATE: the 3 "real nights" known failures flip in
+  **ATTEMPT 1b — the same list on SONNET — FAILED LIVE ON FUSION 2026-10-30, switched off** (JP's
+  ruling before the Haiku check: if Haiku over-fuses, rerun the same check on Sonnet). d4e9242 put
+  the list ON with `group_news.MODEL = "claude-sonnet-5-5"` (effort "medium"; Sonnet refuses
+  temperature 0, so it samples at the default — one run is one sample); JP ran `relabel_check.py
+  --run` on PA 10-30 (221 calls, no failed batches). Real nights, against the pass bar set before
+  the run:
+    | measure                            | Haiku baseline | Haiku + list | Sonnet + list | bar  |
+    | encyclical rows on one card        | 341/623        | 511/623      | 578/623       | up   |
+    | clearly-other stories on its card  | 13             | 23           | 14            | <=13 FAIL by 1 |
+    | Sunday over-merged cards           | 1              | 8            | 5             | <=1  FAIL |
+    | Sunday happenings split over cards | 13             | 1            | 1             | down |
+    | cross-night over-merged / split    | 0 / 2          | not reached  | 0 / 0         | 0 / down |
+  Sonnet one pass (= the --regroup path, list not involved): encyclical 420/623 + 10 other (Haiku
+  593 + 53); Sunday 4 over-merged / 3 split (Haiku 2 / 7); cross-night 1 / 0. Read: Sonnet fuses
+  less than Haiku with the list, but still fuses. The Sunday verdict doesn't hang on the 1-story
+  encyclical miss. Its 5 Sunday fusions are the same shape as Haiku's: a shown label reused for the
+  next instance of the same theme. That is 2 pairs of Dr. O "Sunday Law Update" episodes, Polish
+  union fine proposal Aug 21 + enforcement campaign Sep 4, Sunday Alliance Oct 3 + Alliance
+  manifesto Oct 14, and the pope's Aug 13 Sunday call + Aug 18 European-unions reaction. The 14
+  encyclical joiners are mostly the pope's Aug 28 "don't entrust human lives to machines" message
+  (6 rows), plus Sep/Oct AI remarks (all judged other happenings). Back to `NIGHTLY_SEED = False`
+  and Haiku (the measured nightly). The 3 real-nights KNOWN FAILURES are restored. The one-model
+  setting + `_call_settings` stays: Haiku gets exactly the old call. A refused or cut-off reply now
+  prints ERR instead of being half-read. Exposure: d4e9242 was deployed for the check; the switch-off
+  was pushed 01:5x UTC 10-30, before the 06:00 nightly — confirm it was deployed before 06:00. NEXT:
+  the distinctive-words design (own session). GATE: the 3 "real nights" known failures flip in
   the test AND a live `relabel_check.py --run` beats the 10-29 baseline BOTH ways (fused not up,
   split down) — numbers in TODO_ARCHIVE. Side notes: fresh labels guess YEARS wrong; a `--regroup`
   would rewrite old split labels but its one-pass list over-fused (53) — needs its own measured

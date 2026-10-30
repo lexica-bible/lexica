@@ -16,7 +16,8 @@ Two runs per case:
                labeled in the June-29 regroup = one night), so it measures whatever main()
                does: an EMPTY list each night while group_news.NIGHTLY_SEED is off, the bounded
                past-label list (pick_known) when on. The live run of 2026-10-29 with it ON on
-               Haiku failed on fusion (TODO.md); attempt 1b = the same list on Sonnet.
+               Haiku failed on fusion (TODO.md); so did attempt 1b, the same list on Sonnet
+               (2026-10-30).
 Both runs use the labeler model group_news.MODEL (printed at the top of the output).
 Plus LABEL DRIFT vs the labels stored at freeze time: how many different labels each judged
 story got, then vs now.

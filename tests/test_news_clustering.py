@@ -23,9 +23,10 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      that row. So the only way it can split a story is the night boundary. The rows labeled in
      the June regroup count as one night. Every story labeled in ONE pass is the control.
      A bounded past-label list (group_news.pick_known, switch NIGHTLY_SEED) flips all three real-
-     nights cases here. On Haiku it FAILED the live fusion check on PA (2026-10-29); it is ON again
-     with the labeler on Sonnet (attempt 1b) pending that same live check. With the switch OFF,
-     each night starts from an EMPTY label list and the three go back on KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
+     nights cases here, but FAILED the live fusion check on PA on Haiku (2026-10-29) and on Sonnet
+     (2026-10-30), so the switch is OFF: each night starts from an EMPTY label list and the three
+     are **KNOWN FAILURES**. When a fix passes BOTH, these pass and the test then FAILS until
+     they're taken off KNOWN_FAILING. Also checked: the rules of pick_known on made-up pools, the cap
      (when on), and that no clearly-other story lands on the encyclical card (+ how many were
      SHOWN its label — the fusion exposure only relabel_check.py on PA can judge).
 
@@ -46,10 +47,9 @@ import fixture_lib as fx  # noqa: E402
 from scripts.news import group_news  # noqa: E402
 
 # Strict: a case listed here that PASSES fails the run, so the list can't go stale.
-# Emptied again 2026-10-29 (attempt 1b): group_news.NIGHTLY_SEED back ON, labeler on Sonnet. The
-# Haiku run of the same list failed the LIVE fusion check; if Sonnet fails it too, the switch goes
-# OFF and this goes back to {f"cross-night: {c}, real nights" for c in fx.CASES}.
-KNOWN_FAILING = set()
+# Restored 2026-10-30: the bounded label list (group_news.pick_known) flips all three in the
+# replay, but failed the LIVE fusion check on Haiku AND on Sonnet, so group_news.NIGHTLY_SEED is OFF.
+KNOWN_FAILING = {f"cross-night: {c}, real nights" for c in fx.CASES}
 
 
 # ---------------------------------- 1. merge ----------------------------------

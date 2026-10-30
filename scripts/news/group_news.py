@@ -71,9 +71,9 @@ BATCH = _arg("--batch", 40, int)
 DB_PATH = _arg("--db", DEFAULT_DB)
 # THE labeler model — the one place to change it (nightly, --regroup and relabel_check.py all
 # read it). The request settings follow from it in _call_settings, so a switch is this one line.
-# 2026-10-29: Haiku -> Sonnet for cross-night attempt 1b (JP ruled before the live check: if
-# Haiku over-fuses with the past-label list, rerun the same check on Sonnet).
-MODEL = "claude-sonnet-5-5"
+# 2026-10-29/30: Sonnet ("claude-sonnet-5-5") was tried for cross-night attempt 1b and FAILED the
+# live check (numbers at NIGHTLY_SEED below); back on Haiku, the measured nightly baseline.
+MODEL = "claude-haiku-4-5-20251001"
 
 
 def _call_settings(model):
@@ -165,14 +165,16 @@ def build_client():
 #      judges "same happening?" by content, not by how close the label's wording sounds.
 # --regroup is unchanged: it starts empty and shows every label made in that run (one pass).
 #
-# STATUS: ON again, on SONNET (attempt 1b, 2026-10-29) — awaiting its live check. On Haiku the live
-# check (relabel_check.py --run on PA) failed on FUSION: it fixed the splitting (encyclical 511/623
-# on one card vs 341, 7 labels vs 27) but the labeler reused shown labels for DIFFERENT happenings
-# of the same theme — 23 other stories on the encyclical card (was 13), Sunday 8 fused cards (was
-# 1; one label swallowed 8 stories over two months). JP's pre-check ruling: retry the same list on
-# Sonnet (MODEL above). If Sonnet also fuses, set this back to False (= exactly the old nightly:
-# labels made earlier the same night only) and log the numbers in TODO.md.
-NIGHTLY_SEED = True
+# STATUS: OFF. Failed the live check (relabel_check.py --run on PA) on FUSION, on both models:
+#   Haiku (2026-10-29): fixed the splitting (encyclical 511/623 on one card vs 341, Sunday splits
+#     13 -> 1) but reused shown labels for DIFFERENT happenings of the same theme — 23 other stories
+#     on the encyclical card (was 13), Sunday 8 fused cards (was 1).
+#   Sonnet (2026-10-30, attempt 1b): better both ways but still fuses — encyclical 578/623, 14
+#     other stories (was 13), Sunday 5 fused cards (was 1), Sunday splits 1, cross-night clean.
+# With it off the nightly run is exactly the old behavior (labels made earlier the same night only).
+# Do NOT turn on without a new design (TODO.md: distinctive words) AND a relabel_check.py --run
+# that beats the baseline both ways.
+NIGHTLY_SEED = False
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
                          # default 40-headline batch (295 unbounded was the over-fusing case)
