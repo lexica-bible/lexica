@@ -915,9 +915,42 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler Haiku) FAILED THE NEW BAR
-  LIVE, but close; switch never turned on (nothing to revert).** Live run 2026-10-30 (JP, PA,
-  abae13d, `--run --list-on`). Through-reuse fusions (bar 0): encyclical **1** (12366, EIR
+- **OPEN: cross-night split — attempt 5 (reuse check on Sonnet, labeler Haiku) FAILED THE BAR
+  LIVE TWICE; switch never turned on (nothing to revert). The misses are mostly next-event pairs
+  = this approach's floor.**
+  RERUN 2026-10-30 (JP, PA, 9a00b36, fixed reader, 15419 ruled same story; same design):
+    | real nights                    | stored | att.1 Haiku | att.4 Haiku chk | att.5 run 1 | att.5 rerun | bar  |
+    | encyclical rows on its card    | 374    | 511         | 421             | 480         | 462         | >341 |
+    | encyclical through reuse       | 0      | —           | >=1             | 1           | **0**       | 0    |
+    | Sunday cards through reuse     | 0      | —           | 5               | 2 (1 ruled) | **3**       | 0 FAIL |
+    | Sunday split happenings        | 16     | 1           | 4               | 3           | 3           | <13  |
+    | cross_night fused / split      | 0 / 3  | n/a         | 0 / 0           | 0 / 0       | 0 / 0       | 0 split |
+  (att.1/att.4 encyclical/Sunday counts there are the old any-fusion bar, regraded where known;
+  attempt 1b Sonnet-list and attempt 2 words-gate are in the history entry below / TODO_ARCHIVE.)
+  The 3 fused Sunday cards, each row named (hand judgment from expected.json):
+    1. label "Pope Sunday Rest Statement", made the Aug 4 night for 13476 (Aug 3, "Labor Unions
+       and Churches Vow to Fight to Keep Sunday Work-Free", a single). On the Aug 13 night the
+       pope's Aug 12-13 Sunday-call rows (14621 14625 14718 14729 14756; then 14789 14794 15112
+       15419 on later nights) reused it and the check said yes. NEXT-EVENT PAIR (same theme, a
+       different speaker's statement 9 days later).
+    2. "Vatican Sunday Rest Warning Statement": 17040 (Aug 28, "The Catholic Church Warns that
+       Changing Thousands of Years of Sunday Rest Would Threaten Society") + 17505 (Sep 1,
+       "Vatican News: Churches Oppose the Erosion of Sunday Rest"), both singles in the judgment.
+       JUDGMENT EDGE, not settled by headlines: it may be one church statement reported 4 days
+       apart, or two. Not a clean next-event pair.
+    3. "Sunday Alliance Free Sundays Campaign": 27299 (Oct 14 Alliance manifesto) onto 24079 (Oct 3
+       Alliance demand) — NEXT-EVENT PAIR, the same row missed in run 1. (24082, Dr. O Oct 3, is
+       on that card through a same-night fusion with 24079 — the labeler's, not scored.)
+  READ: 2 of 3 are next-event pairs — same group or theme, a new statement days later — which a
+  yes/no check shown a few stored headlines keeps calling "same" on Haiku and on Sonnet: the floor
+  of this approach. Run to run Sonnet also varies (no fixed-randomness setting on it): run 1 missed
+  12366 + 27299, the rerun missed different rows except 27299 — so even a pass would be one draw.
+  Other rerun facts: reuse checks 166/48/7 (148/28/1 turned down), fresh-label 50/22/1; the 2
+  remaining reader errors were "reply holds 2 answers" (American Dream label, Sep 5-6) — refused as
+  designed, so the run-1 errors were at least partly second answers; 3 encyclical rows ended with
+  NO label (27206 27963 28244 — turned down on the last nights, no fresh label; live they would
+  retry nightly).
+  RUN 1 (abae13d, before the reader fix): Through-reuse fusions (bar 0): encyclical **1** (12366, EIR
   immigration roundtable Jul 28 — plainly wrong), Sunday **2** cards (15419 European unions'
   reaction onto the pope's Aug 13 Sunday call; 27299 Alliance manifesto Oct 14 onto the Alliance
   Oct 3 card), cross_night 0. The rest MET the bar: encyclical 480/623 on its card (bar >341;

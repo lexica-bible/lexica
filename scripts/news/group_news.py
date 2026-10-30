@@ -173,9 +173,10 @@ def build_client():
 #
 # STATUS: OFF. Attempt 5 (2026-10-30) = attempt 4 with the reuse check on CHECK_MODEL (Sonnet),
 # labeler still Haiku. Its bar (JP): only fusions THROUGH a reused earlier-night label are
-# scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md). FAILED live,
-# close: through-reuse encyclical 1, Sunday 2 (bar 0); merge/split/cross-night all met the bar.
-# That run also lost 11 checks to a reply-reading bug, since fixed (_read_array).
+# scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md). FAILED live
+# twice: run 1 encyclical 1, Sunday 2 (11 checks lost to a reply-reading bug, since fixed —
+# _read_array); rerun encyclical 0, Sunday 3. Merge/split/cross-night met the bar both times. The
+# misses are mostly next-event pairs (same theme, a new statement days later) — the floor here.
 # Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
