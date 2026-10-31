@@ -178,15 +178,18 @@ parser reference notes in its appendix). No open writes.
   pin and the 6 Cushi rows went `superseded` (30 − 6 + 27 = 51). Fix = re-pin `PINS["abp_corrections_active"]`
   30 → 51 in `scripts/cert_invariants.py` with the BD landing's receipt in the comment, then re-run the
   suite read-only (expect 7/7). Not part of the edition-upgrade lane (its own small commit).
-- HELD (reviewer 2026-10-25) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
-  A/B were built for the 7/30 header-only lane and ABORT on any full rebuild. Overridden for the
-  10/25 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.
+- RULED 10/30, DRAFTED, not applied — **header gate A/B re-scope for full rebuilds** = per-lane DECLARED
+  deltas (`--declared <json>`; words/verses counts, abp_surface/tipnr identical-or-members, pn_binding members
+  on (book, chapter, verse, name), pn_greek_identity key moves). Draft + the 10/25 worked example on REAL
+  values: `docs/handoffs/drafts/DRAFT_gate_declared.patch.md`; four checkpoint points ruled (tight key;
+  gate pinned before step 9; fixtures committed; three-case test with the change). Lands as its own commit
+  BEFORE the edition rebuild, on JP's "apply". Until then A/B still abort on a full rebuild.
 - HELD (reviewer 2026-10-25) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
   surface → lemma-only at the swap (accepted). Trace what the label changes on the card, and whether a
   header that matches the page should carry `surface`.
-- HELD — **snapshot staleness:** a restore that moves slots makes the frozen fill snapshot stale for
-  the next rebuild; a re-freeze needs a "before" side other than the 10/25 pre-fill copy (which stays
-  on PA until one exists). Gates the edition-upgrade lane.
+- RESOLVED in principle (JP 10/30) — **snapshot staleness:** the re-freeze runs AFTER the upgrade build, on
+  the copy, with pre-upgrade live as the "before" side (edition charter §6 step 9c). The 10/25 pre-fill copy
+  stays load-bearing until that new freeze passes its own `--check` against the swapped live.
 - RECORD — reason 5 unreachable under the re-key's current keys (rebuild-trap charter §6).
 - SMALL — `health_check.py` gives false "database is locked" in the minutes after a deploy (5 s
   default wait; workers' warm-up writes the AI cache — ops.md) · the build's closing text calls its
@@ -217,6 +220,9 @@ parser reference notes in its appendix). No open writes.
   snapshot re-freeze RESOLVED in principle (after the build, on the copy, before = pre-upgrade live);
   A/B re-scope = declared deltas per lane (drafted, not applied); Mark 1:9 "of the of" = our-side defect,
   fixed inside the rebuild; S9 gate block merges in (its five fixes landed S11 2026-07-06).
+  **STATE 10/31: 0b CLOSED** — feed frozen + pinned (`7bd77385…`, manifest 76 files, PA proof in charter
+  §9.8). Three threads ready, none started: Q2 build design (the build still reads bh_scrape + abp_texts);
+  apply the `--declared` gate (own commit); cert pin 30→51 (own commit). Charter §0.6–0.10 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).

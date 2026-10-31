@@ -655,6 +655,19 @@ text and stay out of git (`abp_app_html/`, `abp_helps/` are gitignored).
 - **Numbering (JP-ruled):** our Psalm titles are verse 0 = the app's verse 1. Pro 16 / 24,
   Jer 10, Hab 3: ours follow English numbering, the app numbers LXX verses in sequence —
   NO renumber on our side.
+- **The app text is the "app edition" — never "3rd/4th edition":** no page, file or PDF carries an
+  edition statement (checked 2026-10-30); the label is unsourced. Lane record:
+  `docs/handoffs/CHARTER_edition_upgrade.md`.
+- **FROZEN app-edition feed (0b, 2026-10-31):** `abp_app_html/abp_app_slots_italic.tsv` (9 columns = the
+  fetch's 7 + `italic` 0/1 + `italic_words`; 577,994 slots; sha256 `7bd77385…`, `.sha256` beside it; PA +
+  a second copy in the local checkout, gitignored). Pinned in `cert_manifest.json` (76 files since
+  2026-10-31; `cert_manifest.py` refuses to run without it). Produced by `scripts/reparse_abp_app_italic.py`
+  from the CACHED pages — no network; it STOPS on a cached page whose `<title>` ≠ its file name (stale
+  spell-corrected pages from an early test fetch sat in the cache as "Genesis 52–55"; moved to
+  `~/abp_app_html_stale/`). Never re-fetch to "refresh" the feed — the app has no version marker.
+- **`abp_texts/` + `load_abp_prose` = live `verses.text` for every verse EXCEPT the active
+  `verses.text` correction rows** (18 on 2026-10-30; `scripts/compare_prose_feed.py`, read-only, proves it).
+  So the pinned feed is a valid local stand-in for live prose outside that list — and only there.
 - **Analytical Lexicon** (JP's purchased PDF, not in the repo): `scripts/parse_abp_analytical_lexicon.py`.
   Entry numbers = Strong's + ABP's dotted extensions (a "5484, 85" entry = both). Accents and
   breathings are LOST in its text layer (compare folded only). It has NO proper names and files
