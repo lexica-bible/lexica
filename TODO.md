@@ -196,6 +196,12 @@ parser reference notes in its appendix). No open writes.
   own item, not part of that fix. **That gate CLEARED 2026-10-25** (trap fix proven on the live
   rebuild). Still gating it: the snapshot re-freeze (a slot-moving restore makes the frozen fill
   stale) and the header gate A/B re-scope. First scoping step (JP 10/25 close): date the app's edition.
+  **10/30: step 1 done (no edition marker exists anywhere — target is named "app edition"); step 2 = DRAFT
+  charter `docs/handoffs/CHARTER_edition_upgrade.md` (source, scope, gate block, declared-delta A/B
+  re-scope draft, ordering with the re-freeze as step 9c, rollback, 8 open questions). JP rulings 10/30:
+  snapshot re-freeze RESOLVED in principle (after the build, on the copy, before = pre-upgrade live);
+  A/B re-scope = declared deltas per lane (drafted, not applied); Mark 1:9 "of the of" = our-side defect,
+  fixed inside the rebuild; S9 gate block merges in (its five fixes landed S11 2026-07-06).
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.

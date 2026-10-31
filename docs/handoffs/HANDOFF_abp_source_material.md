@@ -53,8 +53,8 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
 
 ## What JP verified (2026-10-24)
 1. **Purchased** from apostolicbible.com, order EC9378: *Analytical Lexicon* (419 pp),
-   *Lexical Concordance* (366 pp), *English-Greek Index* (90 pp). Free: NT 4th ed. PDF, OT 3rd
-   ed. PDF. The files are on JP's machine, **NOT in the repo**. Licensing basis: the author's
+   *Lexical Concordance* (366 pp), *English-Greek Index* (90 pp). Free: the NT and OT text PDFs
+   (edition labels STRUCK 2026-10-30 as unsourced — no file carries one; target text is the "app edition"). The files are on JP's machine, **NOT in the repo**. Licensing basis: the author's
    email of 2026-07-03 — no grants issued to anyone, intent to release to the public domain,
    proceed with attribution + a "not an endorsement" line. **CREDITS.md line 12 is still the
    placeholder** ("finalize after the licensing conversation") — wording not written yet;
@@ -64,7 +64,7 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
    y→ψ, x→ξ, h→η). Accents are separate glyphs and are LOST. *Analytical Lexicon* layout: a
    POS + number line OPENS each entry ("NOUN masculine .... 60.1"), then "headword...gloss",
    then one line per inflected form with its parsing. JP's prototype parser on page 5 gives
-   clean rows: number, lemma, POS, gloss, forms + parsing. The NT 4th ed. PDF uses real
+   clean rows: number, lemma, POS, gloss, forms + parsing. The NT text PDF uses real
    Unicode fonts and extracts as Greek directly.
 3. **apostolicbibleapp.com** (the official ABP app — already the standing witness for
    source-reading calls, per build_abp_corrections.py): static HTML, one file per chapter at
@@ -79,7 +79,7 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
 **No writes until (a) is in hand.**
 - **(a) App-HTML diff** vs `abp_surface` + `pn_greek_identity`, read-only, slot by slot.
   CONTROL: Gen 25:15 must show the Latin-C defect; 1Ki 11:14 pos 7 must match Αδάρ. **The
-  first thing the diff must report is edition drift** (OT 3rd ed. vs the app vs NT 4th ed.).
+  first thing the diff must report is edition drift** (our text vs the app edition vs the text PDFs).
   **Status 2026-10-24: tools written, numbers NOT in yet** — `scripts/fetch_abp_app.py`
   (→ `abp_app_html/abp_app_slots.tsv`, gitignored) + `scripts/audit_abp_app_vs_surface.py`
   (read-only, JP runs on PA). Seen in a 13-chapter test fetch (CC-run, both controls PASS):
