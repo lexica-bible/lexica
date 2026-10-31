@@ -34,6 +34,11 @@ one charter for the next full words rebuild.
    the 10/25 rebuild is the suspect, check pre-swap copy for the same hit." · "Cert pin 30→51: fix as its own
    commit (pin + member list), not in the upgrade lane. Deploy rides the next deploy." · "Gen 52–55: 0b waits on
    §9.5 (b)." · "§9.5 cleared, read-only."
+9. **§9.5 rulings (JP, 2026-10-30, verbatim):** "Joh 14:26: live defect, own TODO line; fixed in the upgrade
+   rebuild as a declared row, not a live patch. (a) dates it." · "Punct 260: never a member list, so never a real
+   gate. The 241 live members become the first frozen member file; retire the 260 pin with a note. Not a
+   defect." · "Gen 52–55: move aside, not delete. Re-parse hashes must match before 0b step (1). Show 0b (1)
+   output before the manifest code change." · "§9.6 cleared."
 7. **Step-3b rulings (JP, 2026-10-30, verbatim):** "Corrections verdicts accepted (33 retire / 12 re-author /
    6 re-check). 30-vs-51 pin: item (i) reads it; if cert_invariants is red on live today, log as its own TODO
    line — a live gate failure." · "--declared checkpoints: all four as recommended (tight key; pinned before
@@ -141,8 +146,11 @@ punct-position.** The punct "allowlist" was frozen as a NUMBER only (S9 pre-regi
 OBSERVED 240 — "OPEN TENSION, do NOT treat 240 as a failure", `CHARTER_cert_session9.md:67`); no member
 file exists in the repo. **Live 2026-10-30 reads 241.** Pre-register for this lane: the live 241 members
 are dumped and FROZEN AS A FILE before the build (the first member list this class ever had), the built
-copy's set is diffed against it member by member, and the new set is frozen in the swap commit. The
-240/241-vs-260 tension stays recorded, not resolved here. **Live before (2026-10-30):** v1 bag report on live = 0 hits
+copy's set is diffed against it member by member, and the new set is frozen in the swap commit.
+**RULED 2026-10-30 (§0.9): the 260 pin is RETIRED — it was never a member list, so never a real gate; not a
+defect. The 241 live members (`~/punct_members_live_20261030.txt`, PA, 241 lines; pre-swap copy reads the same
+241) are the first frozen member file: committed as `tests/fixtures/reassembly/punct_members_live_20261030.txt`
+once copied down (§9.7 (b)). The gate for this lane = member diff against that file, nothing numeric.** **Live before (2026-10-30):** v1 bag report on live = 0 hits
 (dup-gloss 0 · content-other 0 · punct-shift 0; 12,611 bracketed verses excluded from the punct tier); both
 control sets FIRED. **The v2 order-aware run on live was NOT in the block — my omission, not data; §9.4 (b).**
 **This gate also decides open Q2:** `verses.text` and the
@@ -226,9 +234,14 @@ MEMBER list against the 29% verse set — a reason-6 slot OUTSIDE a changed-Engl
 miss, inside one is expected. Decision for JP at the dry-run verdict: restore by key 2 alone on
 reason-6 slots inside changed verses (declared), or leave them to the Analytical-Lexicon fill as a
 follow-up. Then the re-freeze (§6 9c).
-### 4.10 Mark 1:9
-Declared row: Mark 1:9 slot "of the" (τῆς, G3588) — old `english` "of the", new per the app
-edition (blank or the app's value). The row appears in the compare_words diff by name.
+### 4.10 Declared single rows — Mark 1:9 and John 14:26
+- Mark 1:9 slot "of the" (τῆς, G3588) — old `english` "of the", new per the app edition (blank or the app's
+  value). Appears in the compare_words diff by name.
+- **John 14:26 (added 2026-10-30, §0.9):** the live word-order hit — rows read `spirit holy,` (Greek order,
+  no bracket digits) where the prose reads `the holy spirit,`. Declared outcome on the built copy: v2
+  word-order 0 with Joh 14:26 clean (either the app edition's slots carry the digits, or the build's pair
+  handling places them); if the built copy still shows the hit, the lane STOPS on it — it is not carried
+  forward as "known". Member-level, not a count.
 
 ## §5 Pre-registered figures — what is known now vs what needs a PA read
 **Predictable now (local TSV + lane (a) run records):**
@@ -533,6 +546,35 @@ sha256sum abp_app_html/abp_app_slots_italic.tsv ~/abp_app_slots_italic_run1.tsv 
 ```
 If (b)'s two hashes match, 0b's step (1) may run next (the `sha256sum … > .sha256` line, §6) — still SHOW the
 output before step (2), which is the manifest code change.
+**RESULTS (JP ran 2026-10-30 03:35):**
+- **(a) the pre-swap copy (`bible_pre_trapwire_swap.db`, 10/25 13:40) reads the SAME: word-order 1 (Joh 14:26),
+  content-other 0, punct 241, total 242.** So the 10/25 rebuild did NOT introduce the hit; it predates the
+  swap. S11 certified word-order 0 on 2026-07-06, so it entered between 7/06 and 10/25 (the 7/16 head-word
+  rebuild, the 8/5 lane-② ride, the 8/8 ride, the 9/6 header landing are the rebuilds in that window — not
+  read here). The verse read: rows carry `the comforter, spirit holy,` where the prose reads `the comforter,
+  the holy spirit,` — an adjective/noun pair stored in Greek order with no bracket digits to reorder it, the
+  comma riding on the flipped word. **JP ruling: fixed in the upgrade rebuild as a DECLARED ROW (Joh 14:26,
+  the πνεῦμα/ἅγιον pair), never a live patch.** Pre-registered in §4.10 below.
+- **(a2) 241 punct members dumped** on PA; same 241 on the pre-swap copy (the count line). Frozen per §4.3.
+- **(b) stale files moved to `~/abp_app_html_stale/` (kept, not deleted — ruling); cache = 1,189 pages. Re-parse
+  on the clean cache: 1,189 pages · 577,994 slots · 0 anomalies · 4 controls PASS · 38,004 italic (6.58%) ·
+  SELF-CHECK PASS. sha256 of the re-parse output = sha256 of the first run =
+  `7bd77385a80de3c3a762b9427658dfec4163d4882f5a3ea56be10ff61436cf63` — IDENTICAL, as pre-registered.**
+  → 0b step (1) is unblocked (§9.7 (a)). **That hash is the pinned app-feed hash of this charter** (§2 "Pinned
+  hash"), to be confirmed by the `.sha256` file and the manifest entry.
+
+### 9.7 Next PA block — 0b step (1) + the punct member file. Read-only toward every database.
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) 0b step (1): write the feed's .sha256 beside it, then prove it — expected: the 7bd77385… hash, "OK"
+sha256sum abp_app_html/abp_app_slots_italic.tsv > abp_app_html/abp_app_slots_italic.tsv.sha256 && cat abp_app_html/abp_app_slots_italic.tsv.sha256 && (cd abp_app_html && sha256sum -c abp_app_slots_italic.tsv.sha256)
+ls -l abp_app_html/abp_app_slots_italic.tsv abp_app_html/abp_app_slots_italic.tsv.sha256 ~/abp_app_slots_italic_run1.tsv
+# (b) the punct member file + a sha for it (PA side); the local checkout gets a copy by scp (read-only touchpoint) and commits it
+sha256sum ~/punct_members_live_20261030.txt; head -3 ~/punct_members_live_20261030.txt
+```
+After (a)'s output is shown: 0b step (2) = the `cert_manifest.py` code change (own small commit, CC writes it,
+JP pulls), then step (3) `cert_manifest.py build` on PA (expected 75 → 76 files, 75 hashes unchanged), step (4)
+the hash pinned in §2. The feed TSV + `.sha256` also get a second copy in the local checkout (scp, read-only).
 
 **Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
 proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings

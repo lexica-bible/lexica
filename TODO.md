@@ -166,9 +166,12 @@ parser reference notes in its appendix). No open writes.
 - **LIVE DEFECT (read 2026-10-30, JP ruling: own line) — reassembly v2 on live: word-order 1 (Joh 14:26,
   `comforter,` on the wrong slot vs `verses.text`), content-other 0, punct-position 241.** S11 certified
   word-order 0; the 10/25 rebuild is the suspect — first step is the same read on `bible_pre_trapwire_swap.db`
-  (edition charter §9.6 (a)); if the copy is clean, the 10/25 build introduced it → trace the pass, fix at
-  source, ride the next rebuild (never a hand edit of live). Punct 241 vs S9's observed 240 / pre-registered
-  260 is the recorded open tension, not part of this line.
+  (done 10/30: the copy reads the SAME hit — it PREDATES 10/25, entered between the 7/06 S11 swap and 10/25;
+  rebuilds in that window: 7/16 head-word, 8/5 lane ②, 8/8 ride, 9/6 header landing — not traced). Rows read
+  `the comforter, spirit holy,` vs prose `the holy spirit,` — adjective/noun pair in Greek order, no bracket
+  digits. **JP ruling 10/30: fixed in the edition-upgrade rebuild as a DECLARED ROW (charter §4.10), never a
+  live patch.** Punct 241: the S9 "260" pin is RETIRED (never a member list — ruling 10/30); the 241 live
+  members are the first frozen member file (charter §4.3).
 - **LIVE GATE FAILURE (read 2026-10-30, JP ruling: own line) — `cert_invariants.py` on live reads 6/7:
   check 4 RED, "51 active correction row(s), pinned 30".** Every row HOLDS its value (the per-row part
   passed); only the count pin is stale: the 27 `BD-*` bracket-digit rows (13 verses) landed after the
