@@ -28,7 +28,17 @@ CONTROL FIRST (audit-tools-must-fail): run with the LIVE file as both arguments 
 gate C must FAIL (hadad still English), gates A/B must PASS. Only then run
 live vs scratch.
 
-Usage: python3 scripts/gate_greek_header.py <live.db> <scratch.db>
+Usage: python3 scripts/gate_greek_header.py <live.db> <scratch.db> [--dump <out.tsv>]
+                                            [--declared <declared_deltas.json>]
+--declared: a per-lane declaration of the EXPECTED deltas (CHARTER_edition_upgrade.md
+  §4.5, Q8 ruled 2026-10-30; checkpoints: tight key book+chapter+verse+name, run
+  before step 9, fixture committed, four-case test). Without it the gate is the
+  header-only gate above, unchanged. With it, gate A checks each table's actual
+  delta against the declaration — a count, or a member set keyed on the table's
+  key columns — and gate B accepts only the declared key moves. Undeclared =
+  FAIL, same wording as before; a declared row that shows no delta = FAIL naming
+  the row (ruled 2026-10-31). Worked example:
+  tests/fixtures/rebuild_trap/declared_deltas_20261025.json (the 10/25 rebuild).
 """
 import os
 import sqlite3
@@ -47,13 +57,71 @@ if "--dump" in args:
     i = args.index("--dump")
     dump_path = args[i + 1]
     del args[i:i + 2]
+declared = None          # None = no --declared: the header-only gate, unchanged
+if "--declared" in args:
+    import json
+    i = args.index("--declared")
+    with open(args[i + 1], encoding="utf-8") as fh:
+        declared = json.load(fh)
+    del args[i:i + 2]
+    print(f"DECLARED deltas: lane={declared.get('lane')!r} by {declared.get('declared_by')!r} "
+          f"receipt={declared.get('receipt')!r}")
 if len(args) != 2:
-    sys.exit("usage: gate_greek_header.py <live.db> <scratch.db> [--dump <out.tsv>]")
+    sys.exit("usage: gate_greek_header.py <live.db> <scratch.db> [--dump <out.tsv>] "
+             "[--declared <declared_deltas.json>]")
 live = sqlite3.connect(f"file:{args[0]}?mode=ro", uri=True)
 scr = sqlite3.connect(f"file:{args[1]}?mode=ro", uri=True)
 fails = []
 
-# ── gate A — identity layer untouched ────────────────────────────────────────
+# key columns per gate-A table — the first N of its column list. pn_binding's is
+# the TIGHT key (book, chapter, verse, name), ruled 2026-10-30: (book, name) alone
+# cannot tell two same-name binds in one book apart.
+_KEYCOLS = {"pn_binding": 4, "tipnr_entities": 1, "abp_surface": 2}
+
+
+def _declared_members(tbl, cols, l, s, want_rows):
+    """Gate-A member rule (--declared). The set of row keys that differ between
+    live and scratch must EQUAL the declared key set; each declared row's
+    `changes` columns must read [from, to] exactly on (live, scratch) and every
+    other column must be unchanged. Returns problem strings (empty = match):
+      - a differing row with no declaration  -> "undeclared row … DIFFER"
+      - a declared row with no actual delta  -> "declared row … NO DELTA" (ruled 10/31)
+      - a declared column off its from/to, or an undeclared column moving on a
+        declared row                          -> named by row and column."""
+    names = cols.split(",")
+    nkey = _KEYCOLS[tbl]
+    lmap = {r[:nkey]: r for r in l}
+    smap = {r[:nkey]: r for r in s}
+    actual = {k for k in set(lmap) | set(smap) if lmap.get(k) != smap.get(k)}
+    want = {}
+    for d in want_rows:
+        want[tuple(d[c] for c in names[:nkey])] = d
+    problems = []
+    for k in sorted(actual - set(want), key=repr):
+        problems.append(f"undeclared row {k}: DIFFER")
+    for k, d in want.items():
+        if k not in actual:
+            problems.append(f"declared row {k}: NO DELTA (live == scratch)")
+            continue
+        lr, sr = lmap.get(k), smap.get(k)
+        if lr is None or sr is None:
+            problems.append(f"declared row {k}: present on "
+                            f"{'live' if lr is not None else 'scratch'} only")
+            continue
+        changes = d.get("changes", {})
+        for c, (fv, tv) in changes.items():
+            ci = names.index(c)
+            if lr[ci] != fv or sr[ci] != tv:
+                problems.append(f"declared row {k} col {c}: live {lr[ci]!r} -> scratch "
+                                f"{sr[ci]!r}, declared {fv!r} -> {tv!r}")
+        for ci, c in enumerate(names):
+            if c not in changes and lr[ci] != sr[ci]:
+                problems.append(f"declared row {k} col {c}: {lr[ci]!r} -> {sr[ci]!r} "
+                                "changed but not declared")
+    return problems
+
+
+# ── gate A — identity layer untouched (or exactly as declared) ───────────────
 okA = True
 for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,render,hot,tier"),
                   ("tipnr_entities", "uniq,head,section,gender,area,descr,summary,bases,parents,offspring"),
@@ -61,16 +129,36 @@ for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,
     l = list(live.execute(f"SELECT {cols} FROM {tbl} ORDER BY 1,2,3,4"))
     s = list(scr.execute(f"SELECT {cols} FROM {tbl} ORDER BY 1,2,3,4"))
     same = l == s
-    okA &= same
-    print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — "
-          + ("byte-identical" if same else "DIFFER"))
+    decl = (declared or {}).get(tbl)
+    if declared is None or decl is None or "changed_rows" not in decl:
+        # today's byte rule; with --declared, "identical" (or an unmentioned
+        # table) is just a declaration of 0.
+        okA &= same
+        print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — "
+              + ("byte-identical" if same else
+                 ("DIFFER" if declared is None else "DIFFER (declared identical)")))
+    else:
+        probs = _declared_members(tbl, cols, l, s, decl["changed_rows"])
+        okA &= not probs
+        ndiff = len({r[:_KEYCOLS[tbl]] for r in set(l) ^ set(s)})
+        print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — {ndiff} row(s) differ; "
+              f"declared {len(decl['changed_rows'])} → {'MATCH' if not probs else 'MISMATCH'}")
+        for p in probs[:20]:
+            print(f"    problem: {p}")
 for tbl in ("words", "verses"):
     lc = live.execute(f"SELECT count(*) FROM {tbl}").fetchone()[0]
     sc = scr.execute(f"SELECT count(*) FROM {tbl}").fetchone()[0]
-    okA &= lc == sc
-    print(f"gate A: {tbl:15} count {lc:,} vs {sc:,}" + ("" if lc == sc else " — DIFFER"))
+    if declared is None:
+        okA &= lc == sc
+        print(f"gate A: {tbl:15} count {lc:,} vs {sc:,}" + ("" if lc == sc else " — DIFFER"))
+    else:
+        want = declared.get(tbl, {}).get("scratch_count", lc)   # omitted = must equal live
+        okA &= sc == want
+        print(f"gate A: {tbl:15} count {lc:,} vs {sc:,} (declared {want:,})"
+              + ("" if sc == want else " — DIFFERS FROM DECLARATION"))
 print(f"gate A: {'PASS' if okA else 'FAIL'} — identity layer "
-      + ("untouched" if okA else "CHANGED — automatic stop"))
+      + (("untouched" if declared is None else "as declared") if okA
+         else "CHANGED — automatic stop"))        # FAIL keeps today's wording (ruled)
 if not okA:
     fails.append("A")
 
@@ -127,8 +215,33 @@ counts = {"unchanged": 0, "pinned ruled loss": 0, "glued cure (blanked)": 0,
           "glued cure (replaced)": 0, "breathing": 0, "->surface (headword)": 0,
           "page-attested fallback": 0, "gentilic drop": 0}
 glued_kept = 0
-if set(lrows) != set(srows):
-    bad.append(("KEYSET", len(set(lrows) ^ set(srows)), "keys added/removed"))
+if declared is None:
+    if set(lrows) != set(srows):
+        bad.append(("KEYSET", len(set(lrows) ^ set(srows)), "keys added/removed"))
+else:
+    # --declared: the key-set delta must equal the declared counts, and declared
+    # key MOVES (verse_id, old pos -> new pos) are re-keyed so the per-row SHAPE
+    # rule below still compares each live header with its own successor.
+    kd = declared.get("pn_greek_identity", {})
+    only_l, only_s = set(lrows) - set(srows), set(srows) - set(lrows)
+    if (len(only_l) != kd.get("keys_only_in_live", 0)
+            or len(only_s) != kd.get("keys_only_in_scratch", 0)):
+        bad.append(("KEYSET", len(only_l | only_s),
+                    f"keys only-live {len(only_l)} / only-scratch {len(only_s)} vs declared "
+                    f"{kd.get('keys_only_in_live', 0)} / {kd.get('keys_only_in_scratch', 0)}"))
+    if kd.get("key_moves_file"):
+        moves = {}
+        with open(kd["key_moves_file"], encoding="utf-8") as fh:
+            next(fh)                                    # header line
+            for ln in fh:
+                v, p_old, p_new = ln.rstrip("\n").split("\t")[:3]
+                moves[(int(v), int(p_old))] = (int(v), int(p_new))
+        if set(moves) != only_l or set(moves.values()) != only_s:
+            bad.append(("KEYSET", len(moves),
+                        "declared key moves != actual only-live/only-scratch keys"))
+        else:
+            for k_old, k_new in moves.items():
+                lrows[k_new] = lrows.pop(k_old)
 counts["bind-derived number"] = 0
 for k in set(lrows) & set(srows):
     (lg, ll, ls), (sg, sl, ss) = lrows[k], srows[k]

@@ -1,0 +1,31 @@
+{
+  "_what": "gate_greek_header.py --declared worked example: the 2026-10-25 live rebuild written up after the fact (CHARTER_edition_upgrade.md §4.5; Q8 ruled 2026-10-30, checkpoints ruled 10/30 + the no-delta rule 10/31). Not used on 10/25; the first declaration file. Shape: changed columns as {col: [from, to]}, unchanged columns by name only (ruling 2026-10-31). pn_binding.book is a NUMBER (12 = 2Ki, 14 = 2Ch, 16 = Neh).",
+  "lane": "rebuild-trap live rebuild 2026-10-25 (worked example, written after the fact)",
+  "declared_by": "CC 2026-10-31 from CHARTER_rebuild_trap_fix.md §10 + the 10/30 two-copy read (CHARTER_edition_upgrade.md §9.4 (g), lines 497-499); names/entities from scripts/pn_hand_rulings.tsv:179-181; no live read",
+  "receipt": "docs/handoffs/CHARTER_rebuild_trap_fix.md §10; docs/handoffs/CHARTER_edition_upgrade.md §9.4 (g)",
+  "words":  {"scratch_count": 626309},
+  "verses": {"scratch_count": 31237},
+  "abp_surface":    {"identical": true},
+  "tipnr_entities": {"identical": true},
+  "pn_binding": {
+    "changed_rows": [
+      {"book": 12, "chapter": 22, "verse": 12, "name": "michaiah",
+       "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]},
+       "unchanged": ["entity_uniq", "render", "hot", "tier"],
+       "entity_uniq_note": "Micaiah@2Ki.22.12-2Ch both sides (pn_hand_rulings.tsv:180)"},
+      {"book": 14, "chapter": 17, "verse": 7, "name": "michaiah",
+       "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]},
+       "unchanged": ["entity_uniq", "render", "hot", "tier"],
+       "entity_uniq_note": "Micaiah@2Ch.17.7 both sides (pn_hand_rulings.tsv:179)"},
+      {"book": 16, "chapter": 12, "verse": 41, "name": "michaiah",
+       "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]},
+       "unchanged": ["entity_uniq", "render", "hot", "tier"],
+       "entity_uniq_note": "Micaiah@Neh.12.41 both sides (pn_hand_rulings.tsv:181)"}
+    ],
+    "note": "the 3 Michaiah binds: TWO columns moved at the 10/25 swap (kind ruled -> fuzzy AND rule spelling-equiv -> blank); the other 10 michaiah rows were already fuzzy/blank on both copies. 'blank' is recorded as \"\" here; if the live cell is NULL the gate reads it as null and this row must be re-declared before a run."
+  },
+  "pn_greek_identity": {
+    "keys_only_in_live": 0, "keys_only_in_scratch": 0, "key_moves_file": null,
+    "note": "same keys on 10/25; 21 header rows changed VALUE (18 page-attested fallbacks + 1 glued cure + 2 Sheshach surface->lemma-only) — gate-B SHAPE-rule outcomes, not key moves; the 2 Sheshach rows were accepted by ruling (TODO held item) and would still FAIL gate B on a re-run unless pinned"
+  }
+}

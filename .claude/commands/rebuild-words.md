@@ -258,7 +258,7 @@ output, if any, rides the step-8 deploy).
       the ONLY correct mode (stale-xref branches misclassify; two defects, ticket).** +
       `scripts/audit_two_derivations.py <db>`.
       **THEN GATE THE HEADER RESULT — added 2026-08-09 after it shipped broken and sat live
-      for a day (TICKET_glued_name_headers.md): `scripts/gate_greek_header.py <pre-copy> <db>`
+      for a day (TICKET_glued_name_headers.md): `scripts/gate_greek_header.py <pre-copy> <db>` — on a FULL rebuild add `--declared tests/fixtures/<lane>/declared_deltas.json` (charter edition-upgrade §4.5; worked example `tests/fixtures/rebuild_trap/declared_deltas_20261025.json`): gates A/B then check actual == declared instead of unchanged, undeclared still FAILS; run it HERE, before step 9, so abp_surface is still identical
       and READ GATE C. Re-running the header build is not the same as it coming out right.
       A pin that used to pass and now FAILS means the rebuild pushed two-word compound slots
       (verb glued to a name, joined by U+00A0) into the name-form inventory — one such row
