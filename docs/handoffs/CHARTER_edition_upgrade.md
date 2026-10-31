@@ -97,8 +97,16 @@ or DROPS a word changes the slot count on the app side. Rule to pre-register (ne
 §5): the per-verse transplant is all-or-nothing — a verse is taken from the app only where every
 slot pairs 1:1 by (position, Strong's) after the split-flip swap rule; count-differs verses are
 listed, counted, and either (i) kept on the old text and censused, or (ii) taken with a declared
-slot change. JP picks (i) or (ii) at the dry-run verdict; (ii) means positions move in those
-verses, which the fill re-key and the header build already tolerate (reason 6 / geometry mode).
+slot change.
+**MEASURED 2026-10-30 (PA, `census_count_differs.py`, first run; it reuses the audit's own loaders):**
+paired 31,228 · ours-only 9 · **count-differs 1,849 (OT 1,451 · NT 398)** = 619 where the English words
+also differ + 1,230 same-words (split/merge shape, not wording) · delta −1: 1,197 · +1: 437 · ±2: 149 ·
+|delta| ≥ 5: 40 verses (18 negative, down to −45; 22 positive, up to +24) · our slots left unpaired in
+these verses 2,325 · app sub-slots unpaired 1,290 · members `~/count_differs_members.tsv` (PA). Top books:
+Psa 182, Job 122, Eze 118, Isa 108, Jer 90, Pro 81, Lam 81.
+**Q7 RULED (JP 2026-10-30): (i)** — the 1,849 keep the OLD text in this rebuild, censused as a member list,
+taken in a follow-up lane. The |delta| ≥ 5 tail (40 verses) is censused separately: alignment failure vs
+real edit — 10 read by hand first (§9.4 (c)).
 
 ## §4 Gate block — one block, every gate pre-registered
 Standing rule for every number below: a figure asserted about the built copy is derived THROUGH the
@@ -106,7 +114,7 @@ build with the same inputs, and the derivation is committed beside the number (r
 TRAP). Controls fire on a known positive before any zero is trusted (CLAUDE.md certification rule).
 ### 4.1 The 7 certification invariants (`cert_invariants.py`, re-pinned in the swap commit)
 1 row pins — **words will CHANGE** if (ii) in §3 is chosen; declared as a delta, not "unchanged";
-`verses` 31,237 exact (no renumber); `abp_corrections_active` 30 → re-adjudicated (§4.7) · 2 split-flip
+`verses` 31,237 exact (no renumber); `abp_corrections_active` **51 on live (read 2026-10-30; the suite's PIN still says 30 — §9.4 (i))** → re-adjudicated (§4.7) · 2 split-flip
 0 · 3 em-dash 0 (the app text's `--`/`—` handling is a pre-build check) · 4 corrections overlay intact
 · 5 manifest = the NEW feed set (app feed added; §2) · 6 backup alive · 7 person/place binding. Plus
 `--controls` all fire.
@@ -119,7 +127,10 @@ declare. The lint itself must still read 0.
 green first — the port is the arbiter): **zero word-order + zero content-other + no NEW
 punct-position.** The frozen punct allowlist (260 since S11) describes the OLD prose; new prose = a
 new allowlist. Pre-register: re-count on the built copy, publish added/removed vs 260 as a member
-list, freeze the new set in the swap commit. **This gate also decides open Q2:** `verses.text` and the
+list, freeze the new set in the swap commit. **Live before (2026-10-30):** v1 bag report on live = 0 hits
+(dup-gloss 0 · content-other 0 · punct-shift 0; 12,611 bracketed verses excluded from the punct tier); both
+control sets FIRED. **The v2 order-aware run on live was NOT in the block — my omission, not data; §9.4 (b).**
+**This gate also decides open Q2:** `verses.text` and the
 word rows must still be TWO derivations of the app feed (prose via a reorder of the app slots per
 verse; rows via the build) so the diff stays an oracle — if both come from one flattening step the
 gate measures nothing.
@@ -129,6 +140,9 @@ gate measures nothing.
 both ways (the app edition may distribute phrases ABP's older text parked). Pre-register: the count
 on the built copy, member list of newly flagged and newly cleared vs live; a NEW flagged row that is
 not an app-edition wording change = stop. The deferred (g) FIX stays deferred (own pass, post-upgrade).
+**Live before (2026-10-30):** CONTROL Psa 39:1 FIRED · FLAGGED 693 · FLAGGED BEYOND allowlist 662 (gate ≤ 671)
+· NO-EVIDENCE 1,814. S11 recorded 702 / 671 / 1,785: the 10/25 rebuild moved 9 flagged rows out and 29 into
+no-evidence — cause not read; the member diff is owed before this lane re-baselines the floor (§9.4 (h)).
 ### 4.5 Declared-delta gates (the A/B re-scope — DRAFT, not applied)
 Today `gate_greek_header.py` gate A demands `pn_binding`, `tipnr_entities`, `abp_surface`
 byte-identical and `words`/`verses` counts unchanged; gate B demands `pn_greek_identity` keep the
@@ -156,10 +170,22 @@ same keys. Both ABORT on any full rebuild by design (10/25 overridden once). Dra
 - Versification map applied and printed per verse (Psalms shift, Pro 16 map, Pro 24 / Jer 10 /
   Hab 3) — the count of mapped verses must equal the lane (a) figures.
 ### 4.7 Tier B overlay re-adjudication
-`abp_corrections` has 30 active rows; several correct ENGLISH-side source defects in the OLD text
-(S9-f prose ×5, Jer 9:23 order-digit typo ×2, the bracket-order rows). Each is re-read against the
-app edition before the build: cured upstream → retire (count declared); still present → stays; new
-app-edition defects → new Tier B rows, pre-registered. The overlay is never bypassed.
+**Live read 2026-10-30: 51 active rows (not 30), 6 superseded** — 24 pre-BD rows (S9-f prose ×5, S10 Act 7:3 ×4
++ Mat 20:29 ×1, L2 ×4, L5 ×2, L10 ×4, L11 ×2, JER9:23 ×2) + 27 `BD-*` bracket-digit rows (13 verses, landed
+after the pin). **Per-row app-edition verdict (CC, 2026-10-30, every row against the 10/24 app TSV; prose rows
+through the production bracket reorder; Psa 116:1 read at the app's 116:2 under the title shift):**
+| verdict | rows | members |
+|---|---:|---|
+| CURED upstream — the app already reads the corrected text / digits / number | 33 | prose 12: 1Ch 22:15, 1Sa 17:8, 1Sa 21:11, 2Sa 16:18, Job 24:18, Job 24:19, Job 39:13, Mar 16:17, Mat 20:29, Mat 21:19, Mic 1:13, Psa 116:1 · greek_pos 11: their BD siblings + Exo 32:3 ×3 (app digits 1–7 = our corrected 5/7/6) + S10-mat2029 · slots 10: L2 ×4 (app slot = 1475.3 "of their buttocks."), L10 ×4 (app = 3756-241.2), L11 ×2 (app = 165) |
+| STILL PRESENT — the app repeats the defect (duplicate / missing bracket digit) | 12 | prose 6 + greek_pos 6: 1Sa 9:3 (6…6), 2Ch 10:13 (2…2), Jer 3:7 (1…1), Jer 9:23 (2…2; app also reads "wise one"), Neh 12:43 ("with great" carries no digit), Rev 11:1 (2…2) |
+| N/A — a Lexica-side ruling, not a source defect the app could cure | 6 | L5 Dan 4:33 ×2 (app files αὐτός under 1473, ABP's convention; our 846 stands) · S10 Act 7:3 ×4 (our split slots; the app has ONE compound slot 302-1473-1166 "I will show to you!") |
+**Consequence for the build (pre-registered):** every row's `source_value` is a PRECONDITION written against the
+OLD text. On the app feed: the 33 cured rows must be RETIRED by member (a silent precondition skip is not
+acceptable); the 12 still-present rows must be RE-AUTHORED with the app-edition `source_value` (wording may
+differ — Jer 9:23 "wise one"), same `corrected_value` where the fix still applies; the 6 N/A rows keep their
+precondition only if the build still produces the same slot (Act 7:3's split, Dan 4:33's 1473) — checked on
+the copy. New app-edition defects → new rows, pre-registered. The overlay is never bypassed. `cert_invariants`
+pin: 30 → the post-build active count, in the swap commit.
 ### 4.8 The standing chain figures that MUST be re-declared (not assumed)
 `finish_rebuild.sh` import_tipnr matched 31,649 · `Words inserted` 626,305 + 4 · `Split 80 merged
 subject-name(s)` · PN-star A 1,505 + B 2,552 · restore_frozen_pn 8 · five-class identity split
@@ -198,7 +224,16 @@ edition (blank or the app's value). The row appears in the compare_words diff by
 | † footnotes | 10 | fetch |
 | proxy drift vs `abp_texts/` (local, ex-Psalms) | 8,605 / 28,295 = 30.4% | step 1 |
 | 20-verse census | 19 wording / 1 our-side defect (Mark 1:9) / 0 app-format | step 1, spot check |
-**Need a PA read (all read-only, before any build):**
+**PA read 2026-10-30 (block §9.1) — recorded in §3 (a), §4.3/4.4 (c)(d), §4.7 (e); (b) and (f) here:**
+- (b) live `verses.text` vs `abp_texts/`: DIFFER — the 13 visible verses are ALL active correction verses
+  (S9-f / BD-*): live is the corrected text, the feed is the raw source. **JP ruling: abp_texts/ RETIRED as
+  the live stand-in for live-vs-app comparison; record, no action.** My block's `tail -40` cut the header
+  and any earlier lines (13 × 3 lines + RESULT = exactly 40) — the block, not the data; 18 prose rows are
+  active, so about 5 more DIFF lines sit above the cut. Full count: §9.4 (a).
+- (f) frozen-quote scope (Q6 redraw pass): `lexica_def` 85 rows, all 85 carry verse text; `ai_search_cache`
+  by category: summary 1,249 · xref 608 · pn 345 · chrono 136 · search 18. Which categories embed ABP verse
+  text is a code read not yet done (summaries certainly; xref / pn / chrono / search unknown).
+**Originally listed as needing a PA read:**
 - count-differs verses and their slot delta (the §3 all-or-nothing set) — the audit prints it, the
   handoff did not keep it;
 - live `verses.text` vs `abp_texts/` prose agreement (the step-1 proxy assumed they match; the
@@ -215,8 +250,15 @@ edition (blank or the app's value). The row appears in the compare_words diff by
 ## §6 Ordering — the `/rebuild-words` checklist with this lane's changes
 Step numbers are the checklist's labels; arrows are the run order.
 0 git pull on PA + prove the build code is in the file →
-**0b (NEW) freeze the app feed:** hash the fetched TSV, write `.sha256`, add to the manifest; the
-fetch is NOT re-run at build time unless JP rules a refresh (open Q5) →
+**0b (NEW) freeze the app feed** = `abp_app_html/abp_app_slots_italic.tsv` (the 9-column TSV from the
+italic re-parse — JP 10/30: "0b freezes the new TSV, not the 10/24 one"; Q5: no refetch). Steps, SHOWN for
+the gate, NOT run (§9.3): (1) on PA `sha256sum abp_app_html/abp_app_slots_italic.tsv >
+abp_app_html/abp_app_slots_italic.tsv.sha256`, a second copy of both in the local checkout; (2) a CODE
+change, own small commit: `cert_manifest.py` `feed_files()` gains one entry after the bh_scrape line —
+`files.append(("abp_app_html/abp_app_slots_italic.tsv", BASE_DIR / "abp_app_html" / "abp_app_slots_italic.tsv"))`,
+missing file = hard error like the others; (3) on PA `python3 scripts/cert_manifest.py build` — expected
+75 → 76 files, the 75 old hashes UNCHANGED (diff the json before/after), the TSV's hash = (1)'s; (4) pin that
+hash here. Before (1): the 1,193-vs-1,189 page question (§9.3) is answered →
 1 rollback copy `bible_pre_edition_upgrade_<date>.db` + `<src>` copy of live →
 1a snapshot check on `<src>` — must print SNAPSHOT CURRENT (proves live's fill is what we froze;
 unchanged by this lane) →
@@ -334,9 +376,53 @@ Re-parses the cached pages under `abp_app_html/` with the fetch's own parser (su
 every slot (keys and bytes), the controls pass (Gen 25:1 "was", Gen 25:3 "the", Psa 3 "to" ×2 italic;
 Gen 25:15 Hadar not italic), and no flag sits on an empty English cell. **Dry run 2026-10-30, local,
 on the 18 cached chapters the local checkout has (7,898 slots, same pages PA holds): SELF-CHECK PASS,
-554 italic slots (7.01%), 0 anomalies.** The full run is PA's (1,189 pages). Then 0b freezes the
-NEW TSV (with the column), not the 10/24 one.
+554 italic slots (7.01%), 0 anomalies.** **FULL PA RUN 2026-10-30 03:00 (JP): 1,193 pages re-parsed ·
+577,994 slots (= the 10/24 TSV, every key and byte) · 0 anomalies · 4 controls PASS · italic 38,004 / 577,994
+= 6.58% (local sample 7.01%) · SELF-CHECK PASS → `abp_app_html/abp_app_slots_italic.tsv` written.**
+**1,193 pages vs the fetch's 1,189:** the fetch caches ONLY a page whose own title matches its file name
+(`get_chapter`), so the 4 extra files are real chapters, not spell-corrected redirects. The fetch's
+completeness probe requests chapter N+1 after each book and, when the page exists, fetches, caches and
+PARSES it into the same rows (the "count gap" it reports). Hypothesis: 4 chapters that `chapters.js`
+undercounts, already inside the 577,994 slots. A hypothesis until §9.4 (d) names the 4 files. The re-parse
+should have printed them itself: it gains a "page files beyond chapters.js" line (anomaly-grade, not a stop)
+in the same change as the 0b code.
 ### 9.3 `--declared` gate (Q8) — DRAFT at `docs/handoffs/drafts/DRAFT_gate_declared.patch.md`
 Proposed diff + the first declaration file (the 10/25 run as the worked example). Not applied;
 checkpoint. The example's `pn_binding` from-values are quoted from charter prose and must be read from
 the 10/25 copies before the file is committed.
+
+### 9.4 Next PA block (read-only; nothing writes bible.db) — after `git pull` from `~/bible-db`
+Every item below is either a figure my §9.1 block failed to capture (a, b: my omissions) or a read the
+10/30 rulings ask for. Expected values beside each; a different figure is read, never forced.
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) the FULL prose-compare picture — expected: 18 DIFF lines (one per active verses.text row), 0 only-live/only-feed
+head -3 ~/edition_b_prose_agree.log; grep -c "^  DIFF" ~/edition_b_prose_agree.log; grep "^  DIFF" ~/edition_b_prose_agree.log
+# (b) reassembly v2 (order-aware) on live — expected: word-order 0 · content-other 0 · punct-position 260
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db --v2 2>&1 | tee ~/edition_c2_reassembly_v2.log | tail -40
+# (c) the |delta| >= 5 tail of the count-differs census — expected: 40 rows
+awk -F'\t' 'NR==1 || ($7 >= 5 || $7 <= -5)' ~/count_differs_members.tsv | tee ~/count_differs_tail.tsv
+# (d) the 4 page files beyond chapters.js — expected: 4 lines, each a "<Book> <n>.html" whose n exceeds the book's chapter count in chapters.js
+python3 - <<'PY'
+import os, re
+names = re.findall(r"\['[^']*',\s*'([^']*)',\s*(\d+)\]", open('abp_app_html/chapters.js', encoding='utf-8').read())
+cnt = {n: int(c) for n, c in names}
+for fn in sorted(os.listdir('abp_app_html')):
+    m = re.match(r'^(.*\S) (\d+)\.html$', fn)
+    if m and m.group(2) and int(m.group(2)) > max(cnt.get(m.group(1), 0), 1):
+        print('beyond chapters.js:', fn, '(listed', cnt.get(m.group(1)), ')')
+print('html files:', sum(1 for f in os.listdir('abp_app_html') if f.endswith('.html')))
+PY
+# (g) the REAL pn_binding values for the --declared example — unchanged from §9.1 (g); run if not yet run
+ls -l ~/bible-db/bible_pre_trapwire_swap.db
+sqlite3 -header -separator $'\t' ~/bible-db/bible_pre_trapwire_swap.db "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding WHERE name LIKE '%ichaiah%' ORDER BY book, chapter, verse" | tee ~/edition_g_michaiah_pre.tsv
+sqlite3 -header -separator $'\t' ~/bible-db/bible.db "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding WHERE name LIKE '%ichaiah%' ORDER BY book, chapter, verse" | tee ~/edition_g_michaiah_live.tsv
+# (h) phrase-gloss member list on live (for the 702 -> 693 diff vs S11) — expected: 693 FLAGGED refs
+python3 scripts/audit_phrase_gloss_underdist.py ~/bible-db/bible.db --dump-all > ~/edition_d_phrase_gloss_all.txt 2>&1; grep -c "" ~/edition_d_phrase_gloss_all.txt
+# (i) the certification suite on live, read-only — expected per the LOCAL pin: a RED on check 1
+#     ("51 active correction row(s), pinned 30") and 6/7 green; if it reads 7/7 the pin was moved on PA (say where)
+python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -25
+```
+(c) feeds the 10-verse hand read: once the 40 rows are in, CC picks 10 (both signs, both testaments) and
+asks for `dump_verse_words.py` on exactly those refs. (h) is a big file; paste only the counts, CC asks for
+members by ref.
