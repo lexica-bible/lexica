@@ -915,8 +915,24 @@ Open tickets:
   but their baseline shows the labeler still builds theme buckets — corroboration would reward a
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
-- **OPEN: cross-night split — attempt 6 ("seventh round", JP 2026-10-30): the reuse check
-  HARDENED. LIVE: FAILED THE BAR (3 through reuse) but the STOP SIGNAL DID NOT FIRE — no clean
+- **OPEN: cross-night split — attempt 7 ("eighth round", JP 2026-10-31): new-event rule +
+  variance. 3 live runs owed (JP, PA). Switch stays OFF.**
+  Change: one rule + one example in the check prompt — a headline reporting a NEW event (award,
+  appointment, ruling, anniversary, ceremony) that names the earlier one only as background or
+  cause is DIFFERENT; example 8967 (Liberty Medal) vs the encyclical 2718. OVERLAP: 8967 is a
+  scored row (it was attempt 6's encyclical miss), so it no longer tests anything clean; it is
+  flagged as a prompt-example row in the output. Everything else as attempt 6.
+  Measurement: 3 runs of `relabel_check.py --run --list-on --nights-only` (new flag: skips the
+  one-pass runs, which never use the check). Per run the summary now lists the through-reuse
+  joiner ids and splits off the two JUDGMENT EDGES (fixture_lib.JUDGMENT_EDGES: 17366 vs the
+  pope's call; 17505 vs 17040) as "N without the edges" — reported beside the bar, the BAR itself
+  still counts them. A card counts as edge-only only if it fuses exactly that edge's two stories
+  (CI known positives: 2 edge cards, 3 full-miss cards incl. an edge row + a third story).
+  Cost estimate (from prompt sizes, not measured; Sonnet's thinking length is the unknown): per
+  run ~256 Haiku labeler calls (~$1.5) + ~205 Sonnet checks (~$1.5-4.5) = ~$3-6; 3 runs ~$10-20.
+  DEPLOY GATE (JP's brief): all 3 runs at 0 through reuse EXCLUDING ONLY the two edges -> prepare
+  the switch-on + rollback commands and stop; JP rules on the edges. Otherwise log per run.
+- **Attempt 6 record ("seventh round", JP 2026-10-30): the reuse check HARDENED. LIVE: FAILED THE BAR (3 through reuse) but the STOP SIGNAL DID NOT FIRE — no clean
   next-event pair fused, and the held-out Alliance pair stayed apart. Switch stays OFF.**
   Live run 2026-10-31 (JP, PA, b45030b, `--run --list-on`), real nights:
     encyclical 457/623 on its card (bar >341), through reuse **1**, same-night 14 (the June set);

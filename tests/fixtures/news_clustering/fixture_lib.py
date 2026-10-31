@@ -157,6 +157,20 @@ def reuse_joiners(rows, night_of, story_of, asserted):
     return out
 
 
+# The two JUDGMENT EDGES JP has not ruled on (2026-10-31): fusions here are reported in their own
+# column so the picture with and without them is visible — the BAR still counts them. Each edge =
+# (row, a row of the other story): 17366 (a Sunday reflection piece) vs the pope's Aug 12-13 call;
+# 17505 (Vatican News, churches oppose erosion) vs 17040 (the Church warns, Aug 28).
+JUDGMENT_EDGES = ((17366, 14756), (17505, 17040))
+
+
+def edge_only(card, story_of, asserted, edges=JUDGMENT_EDGES):
+    """True if a fused card's asserted stories are exactly ONE edge's two stories (nothing else
+    fused on it). A card that also fuses any other story is a full miss, edge or not."""
+    stories = {story_of[i] for i in card if story_of.get(i) in asserted}
+    return any(stories <= {story_of.get(a), story_of.get(b)} for a, b in edges)
+
+
 def split_fusions(cards_fused, joiners):
     """Over-merged cards -> (through_reuse, same_night_only). A card holding any reuse joiner
     counts as through-reuse (the reuse added a fusion, whatever else is on it); the rest were

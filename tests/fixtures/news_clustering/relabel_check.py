@@ -39,6 +39,8 @@ prints how many calls it WOULD make.
   ... relabel_check.py --run --list-on                # real nights WITH the past-label list +
                                                       # reuse check (scratch db only; the nightly
                                                       # itself is untouched)
+  ... relabel_check.py --run --list-on --nights-only  # same, without the one-pass runs (for
+                                                      # repeat runs measuring run-to-run variance)
 """
 import os
 import re
@@ -59,6 +61,10 @@ ONE_PASS_ONLY = "--one-pass" in sys.argv
 # in its scratch db only — the shipped nightly stays as it is. How a design is checked live
 # without the 06:00 UTC nightly ever running it (attempt 4, 2026-10-30).
 LIST_ON = "--list-on" in sys.argv
+# --nights-only: skip the ONE PASS runs (the --regroup path — no past labels, no reuse check, so it
+# says nothing about the check; ~30 calls saved per run). For repeat runs that measure how much
+# the reuse check varies run to run (attempt 7, 2026-10-31). The free STORED row stays.
+NIGHTS_ONLY = "--nights-only" in sys.argv
 ONLY = sys.argv[sys.argv.index("--case") + 1] if "--case" in sys.argv else None
 # rows the reuse check's prompt uses as worked examples (group_news.CONFIRM_EXAMPLES, attempt 6):
 # a fusion involving one is flagged — those rows overlap the scored samples (TODO.md)
@@ -184,6 +190,7 @@ def report(case, title, rows, new_labels, expected, night_of):
                   f"{sorted(ex)})")
         verdict = (f"{len(m['core_on'])}/{m['core_total']} encyclical rows on one card; other "
                    f"stories on it: {len(via):3d} through reuse | {len(same):3d} same-night"
+                   + (f"\n{'':30s}through-reuse ids {sorted(via)}" if via else "")
                    + (f"  [{len(ex)} of the through-reuse are prompt-example rows]" if ex else ""))
     else:
         multi = {s for s in judged if sum(1 for i in story_of if story_of[i] == s) > 1}
@@ -202,8 +209,13 @@ def report(case, title, rows, new_labels, expected, night_of):
         via_ex = sum(1 for p in via if p & EXAMPLE_IDS)
         for s, piece, sizes in sc:
             print(f"   SPLIT: {s!r} ({len(piece)} rows) over {len(sizes)} cards, sizes {sizes[:10]}")
+        edge = [p for p in via if fx.edge_only(p, story_of, judged)]
+        joined = sorted(i for p in via for i in p & joiners)
         verdict = (f"over-merged cards: {len(via):3d} through reuse | {len(same):3d} same-night; "
                    f"{len(sc)} split happenings"
+                   + (f"\n{'':30s}through-reuse joiner ids {joined}; of the cards: "
+                      f"{len(edge)} are judgment edges only -> {len(via) - len(edge)} without "
+                      f"the edges" if via else "")
                    + (f"  [{via_ex} of the through-reuse cards hold prompt-example rows]"
                       if via_ex else ""))
 
@@ -247,7 +259,7 @@ def main():
         if problems:
             sys.exit(f"{case}: expected.json doesn't cover the frozen rows — fix it first:\n  "
                      + "\n  ".join(problems))
-        one = _calls(len(rows))
+        one = 0 if NIGHTS_ONLY else _calls(len(rows))
         nights = 0 if ONE_PASS_ONLY else sum(_calls(len(v)) for v in _nights(rows).values())
         total += one + nights
         print(f"  {case:17s} one pass {one:3d} calls"
@@ -258,6 +270,8 @@ def main():
         print("\n(no calls made — add --run to do it)")
         return
 
+    import logging
+    logging.getLogger("httpx").setLevel(logging.WARNING)   # one INFO line per AI call = noise
     client = group_news.build_client()
     summary = []
     for case in cases:
@@ -267,8 +281,9 @@ def main():
             case, "STORED (the live nightly's own labels, switch off — no calls)", rows,
             {r["id"]: r["event"] for r in rows if r["event"]}, expected,
             {r["id"]: fx.labeling_night(r) for r in rows})))
-        summary.append((case, "one pass", report(case, "ONE PASS", rows, relabel(client, rows),
-                                                  expected, {r["id"]: "one" for r in rows})))
+        if not NIGHTS_ONLY:
+            summary.append((case, "one pass", report(case, "ONE PASS", rows, relabel(client, rows),
+                                                      expected, {r["id"]: "one" for r in rows})))
         if ONE_PASS_ONLY:
             continue
         labels, notes, night_of = nightly(rows)   # the real group_news.main(), night by night

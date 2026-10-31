@@ -518,6 +518,13 @@ def check_fusion_split(results, frozen, expected):
     if not want or set(same) != want or via:
         lines.append(f"stored Sunday over-merge not read as same-night only: via {len(via)}, "
                      f"same-night {[sorted(p) for p in same]}, pinned {[sorted(p) for p in want]}")
+    # the judgment-edge column (relabel_check): only a card fusing exactly one edge's two stories
+    for card, want_edge in (({17040, 17505}, True), ({14756, 14621, 17366}, True),
+                            ({17040, 17505, 24079}, False), ({24079, 27299}, False),
+                            ({14756, 17366, 13476}, False)):
+        if fx.edge_only(frozenset(card), sstory, sjudged) != want_edge:
+            lines.append(f"judgment-edge column misreads card {sorted(card)} "
+                         f"(should be {'edge' if want_edge else 'a full miss'})")
     ok = not lines
     lines.append(f"(stored labels: {len(on)} other stories on the encyclical card, "
                  f"{len(on & joiners)} through reuse; Sunday {len(via) + len(same)} over-merged "
@@ -629,7 +636,7 @@ def check_ai_call(results):
         misses.append("(6) reuse check doesn't show the publish dates")
     sc = g.SYSTEM_CONFIRM
     if "keys in this order: id, reason, same" not in sc or "Examples:" not in sc or \
-            "LATER statement" not in sc or "REACTIONS" not in sc:
+            "LATER statement" not in sc or "REACTIONS" not in sc or "a NEW event" not in sc:
         misses.append("(6) check prompt lost the reason-first / examples / later-vs-reaction rule")
     # (7) a note after the answer is ignored even with a ']' in it (lost 11 live checks 10-30);
     # two answers raise; a plain answer and an empty reply read as before

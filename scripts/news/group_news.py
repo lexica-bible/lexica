@@ -181,6 +181,8 @@ def build_client():
 # reaction rule, CONFIRM_EXAMPLES, a reason before each answer). FAILED live (encyclical 1,
 # Sunday 2 through reuse) but no next-event pair fused and the held-out Alliance pair held; the
 # misses are 2 judgment edges + 1 different event naming the earlier one (TODO.md).
+# Attempt 7 (2026-10-31): + the new-event-naming-the-old rule and its example (8967); measured
+# over 3 live runs for run-to-run variance.
 # Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
@@ -410,6 +412,12 @@ CONFIRM_EXAMPLES = (
     (2718, "Pope Leo XIV signs his first encyclical, responds to the AI era", "2026-05-25",
      17143, "Pope Leo XIV warns against entrusting human-life decisions to machines", "2026-08-28",
      False, "a new message by the same pope three months later, not the encyclical"),
+    # attempt 7 (2026-10-31): the new-event-naming-the-old miss of attempt 6 (8967, live)
+    (2718, "Pope Leo XIV signs his first encyclical, responds to the AI era", "2026-05-25",
+     8967, "Brown: The encyclical “Magnifica Hūmānitās” crystalizes Pope Leo XIV as the 2026 "
+           "awardee of the Liberty Medal on July 3rd at The National Constitution Center",
+     "2026-07-06", False,
+     "the news is a new event (an award ceremony); the encyclical is only named as the reason"),
     (14756, "Pope Leo XIV Calls for Sunday to be Sanctified and Urges Workers to Attend Mass on "
             "that Day", "2026-08-13",
      15419, "Pope Leo’s Call to Sanctify Sunday is Stirring Catholic Labor Unions in Europe to "
@@ -446,7 +454,9 @@ DIFFERENT: a LATER statement, a follow-up action, or a NEW document — by the s
 another actor — on the same theme: another speech, message, manifesto, campaign, proposal,
 strike, or episode of a recurring show; another place or another year. A headline announcing
 its own new statement or action is DIFFERENT unless it is responding to the earlier
-announcement. Same people, same topic and close dates are not enough.
+announcement. A headline reporting a NEW event — an award, appointment, ruling, anniversary,
+ceremony — that mentions the earlier announcement only as background or as the reason for it is
+DIFFERENT: it is about the new event. Same people, same topic and close dates are not enough.
 
 Examples:
 
