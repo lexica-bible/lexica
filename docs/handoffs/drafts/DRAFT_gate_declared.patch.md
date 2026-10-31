@@ -153,29 +153,37 @@ Next: rebuild the draft diff on these rulings once §9.4 (g) gives the real `pn_
 4. A test: `tests/test_gate_declared.py` on two tiny scratch dbs — (a) no flag = today's result, (b)
    declared counts/members match → PASS, (c) one undeclared row → FAIL. Written with the change, not after.
 
-## First declaration file — the 10/25 live rebuild as the worked example
-Proposed path: `tests/fixtures/rebuild_trap/declared_deltas_20261025.json` (receipt: charter
-rebuild-trap §10, run 2026-10-25 16:37–18:12).
+## First declaration file — the 10/25 live rebuild as the worked example (REAL values, read 2026-10-30)
+Proposed path: `tests/fixtures/rebuild_trap/declared_deltas_20261025.json` (committed per ruling 3). Receipt:
+charter rebuild-trap §10 (run 2026-10-25 16:37–18:12) + the two-copy read of 2026-10-30 (`~/edition_g_michaiah_pre.tsv`
+= `bible_pre_trapwire_swap.db`, `~/edition_g_michaiah_live.tsv` = live). `pn_binding.book` is a NUMBER
+(12 = 2Ki, 14 = 2Ch, 16 = Neh); the member key is (book, chapter, verse, name) — ruling 1.
 ```json
 {
-  "lane": "rebuild-trap live rebuild 2026-10-25 (worked example, after the fact)",
-  "declared_by": "CC draft 2026-10-30 from CHARTER_rebuild_trap_fix.md §10; not used on 10/25",
-  "receipt": "docs/handoffs/CHARTER_rebuild_trap_fix.md §10 — gate A/B attributed member by member, ABORT overridden by the reviewer for that run only",
+  "lane": "rebuild-trap live rebuild 2026-10-25 (worked example, written after the fact)",
+  "declared_by": "CC 2026-10-30 from CHARTER_rebuild_trap_fix.md §10 + the 10/30 two-copy read; not used on 10/25",
+  "receipt": "docs/handoffs/CHARTER_rebuild_trap_fix.md §10; CHARTER_edition_upgrade.md §9.4 (g)",
   "words":  {"scratch_count": 626309},
   "verses": {"scratch_count": 31237},
   "abp_surface":    {"identical": true},
   "tipnr_entities": {"identical": true},
   "pn_binding": {"changed_rows": [
-    {"ref": "2Ki 22:12", "name": "Michaiah", "col": "rule", "from": "ruled / spelling-equiv", "to": "fuzzy", "note": "same entity; checklist-predicted (rebuild-words 8b.0)"},
-    {"ref": "2Ch 17:7",  "name": "Michaiah", "col": "rule", "from": "ruled / spelling-equiv", "to": "fuzzy", "note": "same entity"},
-    {"ref": "Neh 12:41", "name": "Michaiah", "col": "rule", "from": "ruled / spelling-equiv", "to": "fuzzy", "note": "same entity"}
-  ]},
+    {"book": 12, "chapter": 22, "verse": 12, "name": "michaiah", "entity_uniq": "Micaiah@2Ki.22.12-2Ch",
+     "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]}},
+    {"book": 14, "chapter": 17, "verse": 7,  "name": "michaiah", "entity_uniq": "Micaiah@2Ch.17.7",
+     "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]}},
+    {"book": 16, "chapter": 12, "verse": 41, "name": "michaiah", "entity_uniq": "Micaiah@Neh.12.41",
+     "changes": {"kind": ["ruled", "fuzzy"], "rule": ["spelling-equiv", ""]}}
+  ], "note": "same entity on both sides; render/hot/tier unchanged (1/0/1); the other 10 michaiah rows were already fuzzy/blank on both copies"},
   "pn_greek_identity": {
     "keys_only_in_live": 0, "keys_only_in_scratch": 0, "key_moves_file": null,
-    "note": "same keys on 10/25; 21 header rows changed VALUE (18 page-attested fallbacks + 1 glued cure + 2 Sheshach surface→lemma-only) — those are gate B SHAPE-rule outcomes, not key moves; the 2 Sheshach rows were accepted by ruling (TODO held item), so a re-run of this declaration would still FAIL gate B on them unless pinned"
+    "note": "same keys on 10/25; 21 header rows changed VALUE (18 page-attested fallbacks + 1 glued cure + 2 Sheshach surface->lemma-only) — gate B SHAPE-rule outcomes, not key moves; the 2 Sheshach rows were accepted by ruling (TODO held item) and would still FAIL gate B on a re-run unless pinned"
   }
 }
 ```
-**Caveat on the example:** the `pn_binding` `from` value is quoted from the charter's prose
-("`ruled / spelling-equiv` → `fuzzy`"); the exact stored strings must be read from the 10/25 copies on
-PA before this file is committed — a declaration carries real values, never paraphrase.
+**Gate-A member rule, as the diff must implement it (ruling 1):** for a table with `changed_rows`, the set of
+row KEYS that differ between live and scratch must EQUAL the declared key set (book, chapter, verse, name);
+for each declared row, every column in `changes` must read `[from, to]` exactly on (live, scratch) and every
+other column must be unchanged. A differing row with no declaration, or a declared row that did not change,
+is a FAIL that names the row. The diff text above (first draft) keys on (book, name) and is superseded on
+that point by this rule — the diff is rebuilt with the test (ruling 4) when JP says "apply".

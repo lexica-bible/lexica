@@ -169,6 +169,11 @@ same keys. Both ABORT on any full rebuild by design (10/25 overridden once). Dra
 ### 4.6 Pre-build source checks (before step 2; on the feed, not the db)
 - English column: 0 cells with Greek letters or the Greek-font classes (the 17–28 English-in-Greek
   cells are Greek-column; confirm the English column is clean — full column, not a sample).
+  **Run locally 2026-10-30 on the full 10/24 TSV (577,994 cells): Greek-letter cells 0 · footnote-marker
+  leaks 1 — 1Pe 3:12 slot 19 reads `the earth\dagger\cvnote3:10-12 See Ps. 34:12-16..` (the footnote
+  typed INLINE in the English cell, so the fetch's title-based † skip could not see it). Pre-registered
+  cleanup: strip `\dagger\cvnote…` to the end of the cell, exactly this one slot, declared by member; a
+  second such cell anywhere = stop and re-scan.**
 - `--` / em-dash and bracket-digit shapes match the parser's grammar (count of `[`, `]`, digits
   per verse balanced; the S9 (f) class — a `]` with no `[` — counted and listed before the build,
   Tier B rows written for genuine source defects, never silently tolerated).
@@ -429,9 +434,60 @@ python3 scripts/audit_phrase_gloss_underdist.py ~/bible-db/bible.db --dump-all >
 #     ("51 active correction row(s), pinned 30") and 6/7 green; if it reads 7/7 the pin was moved on PA (say where)
 python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -25
 ```
-(c) feeds the 10-verse hand read: once the 40 rows are in, CC picks 10 (both signs, both testaments) and
-asks for `dump_verse_words.py` on exactly those refs. (h) is a big file; paste only the counts, CC asks for
-members by ref.
+**RESULTS (JP ran 2026-10-30; recorded here, rulings in §0.7/§0.8):**
+- **(a) 18 DIFF lines = exactly the 18 active `verses.text` correction verses**, nothing else. So live
+  `verses.text` == the pinned feed through the parser for every verse EXCEPT the 18 corrected ones. That
+  re-admits `abp_texts/` as the live stand-in for any verse not in that list (used for (c) below); the
+  three `WARN stray bracket` lines are the known S9-(f) malformed-source verses (Mat 21:19, 1Ch 22:15,
+  Job 24:18), loud by design.
+- **(b) v2 on live — headline CUT by my `tail -40` again** (per-book tail + samples only). What is visible:
+  the per-book hit list and **a `[word-order] Joh 14:26` sample (`comforter,` displaced)** — i.e. live v2
+  word-order is NOT 0. The S11 certification left it at 0; the 10/25 rebuild is the only change since.
+  Headline + member list = §9.5 (a). Not recorded as a count until read.
+- **(c) the |delta| ≥ 5 tail = 40 verses, classified (12 read by hand, app vs the re-admitted feed):**
+  · **28 = versification pairing, not edits**: Pro 16 ×5, Pro 24 ×11, Jer 10 ×7, Hab 3 ×5 — the census pairs
+    by verse NUMBER and these chapters are the ruled no-renumber mismatches, so every pair compares two
+    different verses (Pro 16:5 −45 etc.). Alignment failure by construction; the follow-up lane takes them
+    through the audit's per-verse map, not by number.
+  · **10 = verse-boundary moves (5 pairs, equal and opposite deltas)**: text moved across a verse break in
+    the app edition — Gen 1:12/13 ("And God beheld that it was good" 13→12), Num 36:11/12 ("of the people of
+    Manasseh … became wives" 12→11), 1Ki 15:5/6 ("except in the matter of Uriah the Hittite" 6→5),
+    Eze 6:4/5 ("And I shall offer the corpses…" 4→5), 1Jn 5:7/8 ("And three are the ones witnessing upon
+    the earth" 8→7). Real edition changes of the verse boundary; our verse keys stay (no renumber), so each
+    pair is a two-verse unit in the follow-up lane.
+  · **2 = real edits**: 1Sa 17:55 ("I do not know" → "I know not"; the +6 is compound sub-slot expansion on
+    the app side, 31 app slots vs our 32 tokens) · 1Pe 3:12 (app ADDS "to utterly destroy them from the
+    earth" and carries the inline footnote leak above; "the righteous" → "just ones").
+  Verdict: no alignment failure outside the 28 known-versification chapters; the hand read found nothing
+  unexplained. Members: `~/count_differs_tail.tsv` (PA).
+- **(d) the 4 pages beyond `chapters.js` are `Genesis 52–55.html`.** Genesis has 50 chapters, so these
+  cannot be real chapters; yet the fetch caches only a page whose own `<title>` matched its name, and the
+  re-parse keyed their verses by the label inside the page and still landed on exactly 577,994 slots. So
+  they are pages the site served with a matching title whose verse labels name an existing chapter (or
+  empty pages). **Unknown until read — 0b WAITS (JP ruling: name them before 0b). §9.5 (b) reads their
+  title, verse labels and size.** Whatever they are, the frozen TSV must not carry rows from them twice.
+- **(g) real `pn_binding` values (both copies read):** the 3 Michaiah rows (book 12 = 2Ki 22:12, 14 = 2Ch 17:7,
+  16 = Neh 12:41) changed TWO columns at the 10/25 swap — `kind` `ruled` → `fuzzy` AND `rule`
+  `spelling-equiv` → blank; `entity_uniq`, `render`, `hot`, `tier` unchanged. The other 10 Michaiah rows
+  were already `fuzzy`/blank on both sides. The charter prose "`ruled / spelling-equiv` → `fuzzy`" was two
+  columns written as one. Draft example rebuilt on these (DRAFT_gate_declared.patch.md).
+- **(h)** 2,521-line dump captured on PA (`~/edition_d_phrase_gloss_all.txt`); members read on request.
+- **(i) `cert_invariants` on live: 6/7 green, check 4 RED — "51 active correction row(s), pinned 30".** Every
+  row still HOLDS its corrected value (the per-row part passed; only the count pin failed). Logged as its own
+  TODO line (live gate failure, JP ruling) — the fix is the pin in `cert_invariants.py`, re-pinned with the
+  BD-* landing's receipt, not part of this lane.
+
+### 9.5 Next PA block (read-only; cleared terms as 9.1/9.4) — after `git pull`
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) v2 headline + the word-order members — expected per S11: word-order 0 / content-other 0 / punct 260;
+#     the Joh 14:26 sample says word-order >= 1 — read the list, don't force the 0
+grep -nE "verses scanned|total hits|word-order|content-other|punct-position|dup-gloss" ~/edition_c2_reassembly_v2.log | head -12
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db --v2 --list 2>&1 | grep -E "^\s*\[word-order|^\s*\[content-other" | tee ~/edition_c2_word_order.txt
+# (b) what the 4 Genesis 52-55 pages ARE — expected: title, first/last verse label, byte size, verse-row count per file
+for n in 52 53 54 55; do f="abp_app_html/Genesis $n.html"; echo "== $f  $(stat -c %s "$f") bytes  tables: $(grep -o '<table class="tbl">' "$f" | wc -l)"; grep -o '<title>[^<]*' "$f"; grep -o 'class="verse"[^>]*>[^<]*' "$f" | sed -n '1p;$p'; done
+```
+
 **Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
 proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings
 (tight key = book + chapter + verse + name; gate pinned to run before step 9; declaration files committed

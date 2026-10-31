@@ -163,6 +163,12 @@ parser reference notes in its appendix). No open writes.
   (counts only); (d) the finder caches "column exists" per worker (`views_lexicon.py:97-108`) — after
   any column drop, a reload is needed or the finder errors; (e) step 11 must always be given an
   explicit path — default is `bible.db` in the current folder, and a bad path creates a new empty file.
+- **LIVE GATE FAILURE (read 2026-10-30, JP ruling: own line) — `cert_invariants.py` on live reads 6/7:
+  check 4 RED, "51 active correction row(s), pinned 30".** Every row HOLDS its value (the per-row part
+  passed); only the count pin is stale: the 27 `BD-*` bracket-digit rows (13 verses) landed after the
+  pin and the 6 Cushi rows went `superseded` (30 − 6 + 27 = 51). Fix = re-pin `PINS["abp_corrections_active"]`
+  30 → 51 in `scripts/cert_invariants.py` with the BD landing's receipt in the comment, then re-run the
+  suite read-only (expect 7/7). Not part of the edition-upgrade lane (its own small commit).
 - HELD (reviewer 2026-10-25) — **header gate A/B re-scope for full rebuilds.** `gate_greek_header.py`
   A/B were built for the 7/30 header-only lane and ABORT on any full rebuild. Overridden for the
   10/25 run ONLY; the next full rebuild needs its own ruling, member by member, until re-scoped.
