@@ -1,6 +1,6 @@
 # CHARTER — edition upgrade: Lexica's English line → the ABP app edition (DRAFT)
 
-**Status: DRAFT for JP, 2026-10-30. Nothing applied, nothing run on PA, no commands in this file.**
+**Status: DRAFT, §8 RULED 2026-10-30 (§0.6). Nothing applied on PA; step 3 = PA read block + italic re-parse + --declared draft.**
 Scoping record: step 1 findings (chat, 2026-10-30) + the lane (a) numbers in
 `docs/handoffs/HANDOFF_abp_source_material.md`. Supersedes nothing yet; when ruled, it becomes the
 one charter for the next full words rebuild.
@@ -22,6 +22,12 @@ one charter for the next full words rebuild.
    fixes already landed — S11 ran the combined rebuild, passed the charter gate and swapped live on
    2026-07-06 (words pin 626,309; memory `project_abp_certification`). So what merges is S9's GATE
    BLOCK (discipline + current pins) and its parked items, not its fixes.
+
+6. **§8 rulings (JP, 2026-10-30, verbatim):** "Q1 confirmed. Q2 keep two derivations; if the build can't
+   produce them independently from one feed, report, don't collapse. Q3 re-parse cached HTML on PA for
+   the <i> flag, add an italic column to the TSV before 0b; no refetch. Q4 English only. Q5 freeze
+   10/24. Q6 redraw only the 29% set, own post-swap pass. Q7 deferred to the dry-run verdict; PA read
+   sizes it first. Q8 land --declared before the rebuild, own checkpoint."
 
 ## §1 What this lane changes, in one line
 The English words Lexica prints for ABP (per-slot `words.english` / `english_head`, and the clean
@@ -251,20 +257,71 @@ manifest + allowlists + the new snapshot all re-pinned in the ONE swap commit.
   `def_json`, copied from `verses.text` at build (S9 render trace). After the swap every card quotes
   the OLD edition until redrawn. This is a blast-radius item, not a rollback item — §8 Q6.
 
-## §8 Open questions for JP
-1. **S9 reading:** confirm "S9 merges" means its gate block + parked items (phrase-gloss fix,
-   v2 wired into cert_invariants, punct allowlist) ride this rebuild — the five fixes landed S11.
-2. **Two derivations:** keep `verses.text` as an independent derivation of the app feed (prose via
-   its own reorder of the slots) so v2 stays an oracle — or accept one flattening and lose the gate?
-   Recommendation: keep two.
-3. **Italics:** the fetch does not keep the `<i>` flag as a column. Add it to the TSV (a refetch, or
-   re-parse the cached HTML — the pages are on PA) before the build, since `words.italic` is served.
-4. **Scope:** English only (this charter), or the app's slot structure too (Greek + numbers)? The
-   count-differs set (§3) decides how clean "English only" can be; read it first.
-5. **Feed refresh:** build from the 10/24 fetch as frozen, or refetch at build time? (The app has
-   no version marker; a refetch can silently move the target.) Recommendation: freeze 10/24.
-6. **Frozen quotes:** redraw policy for `lexica_def` / summaries quoting ABP verses after the swap —
-   all, only the 29%, or none (cards keep the old wording until their next natural redraw)?
-7. **Count-differs verses:** rule (i) keep old text + census, or (ii) take with declared slot moves?
-8. **Order of landing:** the A/B `--declared` change (§4.5) is a code change with a new file; land it
-   before this rebuild (own checkpoint), or ride the 10/25-style member-by-member override once more?
+## §8 Open questions — RULED 2026-10-30 (see §0.6); struck
+~~1. **S9 reading:** confirm "S9 merges" means its gate block + parked items (phrase-gloss fix,~~
+~~v2 wired into cert_invariants, punct allowlist) ride this rebuild — the five fixes landed S11.~~
+~~2. **Two derivations:** keep `verses.text` as an independent derivation of the app feed (prose via~~
+~~its own reorder of the slots) so v2 stays an oracle — or accept one flattening and lose the gate?~~
+~~Recommendation: keep two.~~
+~~3. **Italics:** the fetch does not keep the `<i>` flag as a column. Add it to the TSV (a refetch, or~~
+~~re-parse the cached HTML — the pages are on PA) before the build, since `words.italic` is served.~~
+~~4. **Scope:** English only (this charter), or the app's slot structure too (Greek + numbers)? The~~
+~~count-differs set (§3) decides how clean "English only" can be; read it first.~~
+~~5. **Feed refresh:** build from the 10/24 fetch as frozen, or refetch at build time? (The app has~~
+~~no version marker; a refetch can silently move the target.) Recommendation: freeze 10/24.~~
+~~6. **Frozen quotes:** redraw policy for `lexica_def` / summaries quoting ABP verses after the swap —~~
+~~all, only the 29%, or none (cards keep the old wording until their next natural redraw)?~~
+~~7. **Count-differs verses:** rule (i) keep old text + census, or (ii) take with declared slot moves?~~
+~~8. **Order of landing:** the A/B `--declared` change (§4.5) is a code change with a new file; land it~~
+~~before this rebuild (own checkpoint), or ride the 10/25-style member-by-member override once more?~~
+
+## §9 Step 3 (2026-10-30) — the PA read block, the italic re-parse, the --declared draft
+### 9.1 ONE read-only PA block (JP runs; every tool given the live path; nothing writes bible.db)
+Paste in order from `~/bible-db` after `git pull`. Expected values beside each; a different figure is
+READ, never forced. Outputs land in `~/` (small text files), not in the repo.
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) count-differs verses + slot delta  — expected: unknown (the audit printed a per-book
+#     column on 10/24 but no total); records the §3 set. Member TSV -> ~/count_differs_members.tsv
+python3 scripts/census_count_differs.py ~/bible-db/bible.db abp_app_html/abp_app_slots.tsv --out ~/count_differs_members.tsv 2>&1 | tee ~/edition_a_count_differs.log | tail -80
+# (b) live verses.text vs the pinned feed through load_abp_prose — expected: RESULT: AGREE, 0 diffs
+#     (any DIFF line = the step-1 proxy was off for that verse; read every line)
+python3 scripts/compare_prose_feed.py ~/bible-db/bible.db 2>&1 | tee ~/edition_b_prose_agree.log | tail -40
+# (c) reassembly on live — controls first (must FIRE), then the corpus report
+#     expected: word-order 0 · content-other 0 · punct-position 260 (the frozen S11 allowlist) · dup-gloss 0
+python3 scripts/audit_reassembly_diff.py --controls 2>&1 | tail -12
+python3 scripts/audit_reassembly_diff.py --controls --v2 2>&1 | tail -12
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db 2>&1 | tee ~/edition_c_reassembly.log | tail -40
+# (d) phrase-gloss under-distribution on live — expected: CONTROL: FIRED · FLAGGED 702 raw ·
+#     FLAGGED BEYOND allowlist 671 (S11 figures; the 10/25 rebuild may have moved them — record)
+python3 scripts/audit_phrase_gloss_underdist.py ~/bible-db/bible.db 2>&1 | tee ~/edition_d_phrase_gloss.log | tail -30
+# (e) the Tier B rows the app edition can touch — expected: 30 active rows; this lists every
+#     active row with its verse, slot, column, source value and corrected value (CC diffs each
+#     against the app TSV locally — the TSV is in the local checkout)
+sqlite3 -header -separator $'\t' ~/bible-db/bible.db "SELECT id, book, chapter, verse, position, field, source_value, corrected_value, ledger_ref, applied_at FROM abp_corrections WHERE status='active' ORDER BY book, chapter, verse, position" | tee ~/edition_e_corrections.tsv
+sqlite3 ~/bible-db/bible.db "SELECT status, count(*) FROM abp_corrections GROUP BY status"
+# (f) frozen-quote blast radius — expected: unknown, record. lexica_def rows (every card quotes
+#     verse text frozen from verses.text at build), AI cache rows by category (ver_key prefix)
+sqlite3 ~/bible-db/bible.db "SELECT count(*), sum(def_json LIKE '%\"text\"%') FROM lexica_def"
+sqlite3 ~/bible-db/bible.db "SELECT CASE WHEN instr(ver_key,':')>0 THEN substr(ver_key,1,instr(ver_key,':')-1) ELSE ver_key END AS category, count(*) FROM ai_search_cache GROUP BY 1 ORDER BY 2 DESC"
+```
+Read-only proof: `census_count_differs.py`, `compare_prose_feed.py`, `audit_reassembly_diff.py`,
+`audit_phrase_gloss_underdist.py` all open the db with `mode=ro`; the `sqlite3` lines are SELECTs.
+`compare_prose_feed.py` and `census_count_differs.py` are NEW read-only tools (this change), reusing
+the production parser / loaders — not yet run anywhere (no local db); their first run is this one.
+What CC does with the output: (a) sizes Q7 and the §3 rule; (b) confirms or retires the step-1 proxy;
+(c)/(d) become the "live before" column in §4.3 / §4.4; (e) each row gets an app-edition verdict
+(cured / still present / not applicable) in §4.7; (f) sizes the Q6 post-swap redraw pass.
+### 9.2 Italic re-parse (Q3) — `scripts/reparse_abp_app_italic.py`, NEW, no network, no db
+Re-parses the cached pages under `abp_app_html/` with the fetch's own parser (subclassed only to see
+`<i>…</i>` inside the English cell) and writes `abp_app_slots_italic.tsv` = the seven 10/24 columns +
+`italic` (0/1) + `italic_words`. Refuses to write unless the seven columns match the 10/24 TSV on
+every slot (keys and bytes), the controls pass (Gen 25:1 "was", Gen 25:3 "the", Psa 3 "to" ×2 italic;
+Gen 25:15 Hadar not italic), and no flag sits on an empty English cell. **Dry run 2026-10-30, local,
+on the 18 cached chapters the local checkout has (7,898 slots, same pages PA holds): SELF-CHECK PASS,
+554 italic slots (7.01%), 0 anomalies.** The full run is PA's (1,189 pages). Then 0b freezes the
+NEW TSV (with the column), not the 10/24 one.
+### 9.3 `--declared` gate (Q8) — DRAFT at `docs/handoffs/drafts/DRAFT_gate_declared.patch.md`
+Proposed diff + the first declaration file (the 10/25 run as the worked example). Not applied;
+checkpoint. The example's `pn_binding` from-values are quoted from charter prose and must be read from
+the 10/25 copies before the file is committed.
