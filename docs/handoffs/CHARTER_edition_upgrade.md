@@ -39,6 +39,10 @@ one charter for the next full words rebuild.
    gate. The 241 live members become the first frozen member file; retire the 260 pin with a note. Not a
    defect." · "Gen 52–55: move aside, not delete. Re-parse hashes must match before 0b step (1). Show 0b (1)
    output before the manifest code change." · "§9.6 cleared."
+10. **§9.6/9.7 rulings (JP, 2026-10-31, verbatim):** "Joh 14:26 dating accepted (7/06–10/25 window, untraced);
+   declared row stands. Punct 260 retired, 241 member file frozen. Feed hash 7bd77385 pinned." · "§9.7
+   cleared: 0b (1) writes the .sha256; no database touched. After (a) shows OK, the manifest change as its
+   own commit; show diff before JP pulls."
 7. **Step-3b rulings (JP, 2026-10-30, verbatim):** "Corrections verdicts accepted (33 retire / 12 re-author /
    6 re-check). 30-vs-51 pin: item (i) reads it; if cert_invariants is red on live today, log as its own TODO
    line — a live gate failure." · "--declared checkpoints: all four as recommended (tight key; pinned before
@@ -63,11 +67,13 @@ or it exits non-zero (Gen 25:15 "Cολδάδ" with Latin C survives verbatim; 1K
 per second with a lexica.bible user agent. Output: `abp_app_html/abp_app_slots.tsv` (book, chapter,
 verse, slot_index, strongs, greek, english — verbatim text, tabs/newlines folded). Third-party text:
 gitignored, on PA and in the local checkout (`abp_helps/abp_app_slots_full.tsv` locally).
-**Pinned hash: NONE YET.** The 10/24 TSV has no `.sha256` and is not in `cert_manifest.json`. This
-charter requires, before the build: freeze the feed as `abp_app_slots_<date>.tsv` + `.sha256` (same
-pattern as the fill snapshot), and add it to the certification manifest as a feed file. The manifest
-pins the 66 `abp_texts/` files today; the app feed joins them (or replaces the English role of
-`bh_scrape.db` — open Q2).
+**PINNED HASH (0b step (1) done 2026-10-31 03:41 on PA):** the frozen feed is
+`abp_app_html/abp_app_slots_italic.tsv` (25,526,878 bytes; 9 columns = the 10/24 seven + italic + italic_words),
+**sha256 `7bd77385a80de3c3a762b9427658dfec4163d4882f5a3ea56be10ff61436cf63`**, written beside it as
+`abp_app_slots_italic.tsv.sha256` (104 bytes). Two independent re-parses of the cache produced that same
+hash (one with the 4 stale files present, one with the cache clean). Step (2) = `cert_manifest.py` lists it
+as a required feed (commit 6d60a466); step (3) the json re-pin on PA (§9.8); step (4) = this line. A second
+copy of TSV + `.sha256` goes to the local checkout by scp (read-only touchpoint).
 **Known properties of the source that the build must handle (all from lane (a), ruled where noted):**
 - Numbering: our Psalm titles are verse 0 = the app's verse 1 (146 chapters). Pro 16 is REORDERED
   (ours 16:27–33 = app 16:20–26; app 16:2–9 = ours 16:5…16); Pro 24, Jer 10 partial one-verse
@@ -575,6 +581,51 @@ sha256sum ~/punct_members_live_20261030.txt; head -3 ~/punct_members_live_202610
 After (a)'s output is shown: 0b step (2) = the `cert_manifest.py` code change (own small commit, CC writes it,
 JP pulls), then step (3) `cert_manifest.py build` on PA (expected 75 → 76 files, 75 hashes unchanged), step (4)
 the hash pinned in §2. The feed TSV + `.sha256` also get a second copy in the local checkout (scp, read-only).
+**RESULTS (JP ran 2026-10-31 03:41):**
+- **(a) `.sha256` WRITTEN: `7bd77385…  abp_app_html/abp_app_slots_italic.tsv` (104 bytes).** The `sha256sum -c`
+  line then FAILED to open the file — my block's fault, not the file's: it `cd`'d into `abp_app_html/` and
+  the hash file names the path WITH that folder prefix, so the check looked for `abp_app_html/abp_app_html/…`.
+  The check belongs at the repo root (§9.8 (a)); expected `OK`. Sizes: run-1 copy and the frozen TSV both
+  25,526,878 bytes.
+- **(b) punct member file: 241 lines, sha256 `2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f`**
+  (`~/punct_members_live_20261030.txt`, PA). Comes down by scp and is committed as
+  `tests/fixtures/reassembly/punct_members_live_20261030.txt` (+ `.sha256`) — §9.8 (c).
+- **0b step (2) DONE as its own commit: `6d60a466`** — `scripts/cert_manifest.py` lists
+  `abp_app_html/abp_app_slots_italic.tsv` as a REQUIRED feed (missing = hard error, "copy it back from its
+  second copy, never re-fetch"), floor 74 → 75; docstring bullet added. Diff shown to JP before the pull.
+  **READ BEFORE PULLING:** `verify` compares the feed list on disk against `cert_manifest.json`; from the pull
+  until `build` re-pins, verify prints `EXTRA abp_app_html/abp_app_slots_italic.tsv (on disk, not pinned)` and
+  exits 1, which makes `cert_invariants` check 5 RED. So pull and build in the SAME sitting (§9.8), and
+  the rewritten `cert_manifest.json` must come back to git (PA is pull-only: scp the json down, CC commits it).
+
+### 9.8 Next PA block — 0b steps (1-check) and (3). `build` rewrites ONE file: `cert_manifest.json` (a text pin, not a database).
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) prove the .sha256 from the repo root — expected: "abp_app_html/abp_app_slots_italic.tsv: OK"
+sha256sum -c abp_app_html/abp_app_slots_italic.tsv.sha256
+# (b) 0b step (3): re-pin the manifest. BEFORE: keep the old json; expected build output: 76 files pinned.
+cp cert_manifest.json ~/cert_manifest_75.json && python3 scripts/cert_manifest.py build 2>&1 | tail -8
+# then prove: 75 old hashes unchanged, exactly one new entry, and verify green
+python3 - <<'PY'
+import json
+old = json.load(open('/home/appssanding720/cert_manifest_75.json'))['files']
+new = json.load(open('cert_manifest.json'))['files']
+same = sum(1 for k in old if k in new and old[k]['sha256'] == new[k]['sha256'])
+print('old entries', len(old), '· new entries', len(new), '· old hashes unchanged', same,
+      '· changed', [k for k in old if k in new and old[k]['sha256'] != new[k]['sha256']],
+      '· dropped', [k for k in old if k not in new], '· added', [k for k in new if k not in old])
+print('app feed sha256 in manifest:', new.get('abp_app_html/abp_app_slots_italic.tsv', {}).get('sha256'))
+PY
+python3 scripts/cert_manifest.py verify 2>&1 | tail -3
+python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -12      # expected: still 6/7 — check 4 (the 30→51 pin, own TODO) red, check 5 GREEN
+# (c) bring three files to the local checkout (JP, from the LOCAL machine; read-only toward PA):
+#   scp PA:~/bible-db/cert_manifest.json  ./cert_manifest.json            -> CC commits (the 76-file pin)
+#   scp PA:~/bible-db/abp_app_html/abp_app_slots_italic.tsv{,.sha256} ./abp_app_html/   (second copy; gitignored)
+#   scp PA:~/punct_members_live_20261030.txt ./tests/fixtures/reassembly/  -> CC adds .sha256 + commits
+```
+Expected picture for (b): `old entries 75 · new entries 76 · old hashes unchanged 75 · changed [] · dropped []
+· added ['abp_app_html/abp_app_slots_italic.tsv']`, the manifest sha = `7bd77385…`, verify `Baseline intact: 76
+files`. Any other picture = stop and read; `cp ~/cert_manifest_75.json cert_manifest.json` puts the old pin back.
 
 **Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
 proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings
