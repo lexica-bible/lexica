@@ -916,7 +916,33 @@ Open tickets:
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
 - **OPEN: cross-night split — attempt 6 ("seventh round", JP 2026-10-30): the reuse check
-  HARDENED; live run owed (JP, PA: `relabel_check.py --run --list-on`). Switch stays OFF.**
+  HARDENED. LIVE: FAILED THE BAR (3 through reuse) but the STOP SIGNAL DID NOT FIRE — no clean
+  next-event pair fused, and the held-out Alliance pair stayed apart. Switch stays OFF.**
+  Live run 2026-10-31 (JP, PA, b45030b, `--run --list-on`), real nights:
+    encyclical 457/623 on its card (bar >341), through reuse **1**, same-night 14 (the June set);
+    Sunday through reuse **2** cards, same-night 2, splits 3 (bar <13); cross_night 0 / 0 (clean).
+    Calls: reuse checks 151/47/7 (104/26/1 turned down), fresh-label 44/20/1; no reader errors;
+    1 encyclical row ended with NO label (27963 — also unlabeled in the attempt-5 rerun).
+  Each through-reuse fusion, named (judgment from expected.json):
+    - 8967 (Jul 6, "Brown: The encyclical 'Magnifica Hūmānitās' crystalizes Pope Leo XIV as the
+      2026 awardee of the Liberty Medal…") onto the encyclical card. Judged `not` (the Liberty Medal
+      award). NEW KIND of miss: a different event whose HEADLINE NAMES the earlier one — not a
+      next-event pair.
+    - 17366 (Aug 31, "On rest, worship and keeping Sunday holy - The Catholic Weekly", a single)
+      onto the pope's Aug 12-13 call card. A theme/reflection piece with no announcement of its own;
+      the headline can't say whether it's commentary on the pope's call. JUDGMENT EDGE, not a
+      next-event pair.
+    - 17505 (Sep 1, Vatican News "Churches Oppose the Erosion of Sunday Rest") onto 17040 (Aug 28,
+      "The Catholic Church Warns…"), the HELD-OUT edge again (fused in the attempt-5 rerun too).
+      JUDGMENT EDGE: may be one church statement reported twice.
+  Held out and HELD: 27299 Alliance manifesto stayed off 24079 (the miss of both attempt-5 runs) —
+  the clean evidence the rule was learned. In-prompt pairs (pope/unions, Dr. O, Polish, Greece)
+  also stayed apart (weaker evidence: they're the examples). Same-night, not scored: Greece strike
+  12472 + Dr. O 12471 (Jul 27), Alliance 24079 + Dr. O 24082 (Oct 3).
+  READ: the next-event failure is fixed on this sample (one run; Sonnet varies run to run). What
+  still fails is two judgment edges the headlines can't settle and one different event that names
+  the earlier one. Not changed: expected.json — re-judging edges to make the bar pass would move
+  the bar; any re-judgment is JP's ruling. A rerun on unchanged code is a re-draw (spend) = JP's.
   Change = the check's prompt only (group_news.SYSTEM_CONFIRM); the list, the labeler, the model
   split (Haiku labels, Sonnet checks) and the fresh-label step are unchanged. (1) Asks "same
   announcement or event"; says a LATER statement, follow-up action or NEW document by the same or

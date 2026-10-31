@@ -178,7 +178,9 @@ def build_client():
 # _read_array); rerun encyclical 0, Sunday 3. Merge/split/cross-night met the bar both times. The
 # misses are mostly next-event pairs (same theme, a new statement days later) — the floor here.
 # Attempt 6 (2026-10-30): same design, the check's prompt hardened (SYSTEM_CONFIRM: later-vs-
-# reaction rule, CONFIRM_EXAMPLES, a reason before each answer); live run owed.
+# reaction rule, CONFIRM_EXAMPLES, a reason before each answer). FAILED live (encyclical 1,
+# Sunday 2 through reuse) but no next-event pair fused and the held-out Alliance pair held; the
+# misses are 2 judgment edges + 1 different event naming the earlier one (TODO.md).
 # Attempt 4 (list + reuse check, all Haiku) passed the replay incl. the 12 live-fused theme rows
 # but FAILED the live check (`relabel_check.py --run --list-on`, Haiku): encyclical 421/623 with 16
 # other stories (bar <=13), Sunday 6 fused cards (bar <=1) — the Haiku yes/no approved next-event
