@@ -1,5 +1,5 @@
 {
-  "created": "2026-07-04",
+  "created": "2026-10-31",
   "note": "ABP certification feed pin (Tier A). Verify with: python3 scripts/cert_manifest.py verify",
   "files": {
     "abp_texts/abp_ot_texts/abp_1chronicles.txt": {
@@ -269,6 +269,10 @@
     "bh_scrape.db": {
       "sha256": "5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb",
       "bytes": 55865344
+    },
+    "abp_app_html/abp_app_slots_italic.tsv": {
+      "sha256": "7bd77385a80de3c3a762b9427658dfec4163d4882f5a3ea56be10ff61436cf63",
+      "bytes": 25526878
     },
     "rahlfs/07_StrongNumber/final_Strongs.csv": {
       "sha256": "7669a04267b94c7ed9ff4c77d69d30de4ba5b2adf70002f4dee79ee610377cf5",

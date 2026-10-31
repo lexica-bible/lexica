@@ -626,6 +626,19 @@ python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -12      # ex
 Expected picture for (b): `old entries 75 · new entries 76 · old hashes unchanged 75 · changed [] · dropped []
 · added ['abp_app_html/abp_app_slots_italic.tsv']`, the manifest sha = `7bd77385…`, verify `Baseline intact: 76
 files`. Any other picture = stop and read; `cp ~/cert_manifest_75.json cert_manifest.json` puts the old pin back.
+**RESULT — 0b CLOSED 2026-10-31 (JP ran §9.8 on PA; CC verified the three files in the local checkout):**
+TSV sha256 = its `.sha256` = the pinned `7bd77385…` (25,526,878 bytes) · `cert_manifest.json`: 76 entries,
+created 2026-10-31, the 75 old hashes UNCHANGED, one added (`abp_app_html/abp_app_slots_italic.tsv`, sha
+`7bd77385…`, 25,526,878 bytes) — checked against the committed 75-file version, not against prose ·
+punct member file 241 lines, sha `2b0f4cc4…` = PA's, committed with its `.sha256` under
+`tests/fixtures/reassembly/` · the TSV + its `.sha256` are gitignored (`abp_app_html/`), second copy local.
+Closing commit = the one carrying this line. **0b leaves open:** (i) the local checkout has NOT re-run
+`cert_manifest.py verify` (bh_scrape and the Rahlfs/TAGNT feeds are PA-only, so it cannot); the PA run of
+verify + `cert_invariants` after the build is the proof of record — paste it into §9.8 if not yet pasted;
+(ii) the `fetch_abp_app.py` CACHE is the only place the 1,189 raw pages live (PA + 18 locally) — the pages
+themselves are not hashed; the TSV is the frozen feed, the pages are evidence; (iii) 0b pins the feed but
+nothing yet READS it: the build takes `bh_scrape.db` + `abp_texts/`; teaching it the app feed (Q2's two
+derivations) is the next design step, not a freeze step.
 
 **Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
 proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings
