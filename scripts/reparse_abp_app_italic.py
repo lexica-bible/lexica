@@ -26,6 +26,7 @@ SELF-CHECK (the script refuses to write unless all pass):
        Psa 3     at least one "<i>to</i>" slot (the dative articles) -> italic=1
        Gen 25:15 the "Hadar," slot (Latin-C control of the fetch) -> italic=0
   3. the italic flag never appears on a slot whose English is empty.
+  4. every cached page's own <title> equals its file name (a stale spell-corrected page = STOP).
 
 Usage (on PA, from ~/bible-db):
   python3 scripts/reparse_abp_app_italic.py \
@@ -95,9 +96,20 @@ class ItalicParser(ChapterParser):
         self.i_depth = 0
 
 
+def page_title(body):
+    m = re.search(rb"<title>([^<]*)</title>", body)
+    return m.group(1).decode("utf-8", "replace").strip() if m else ""
+
+
 def parse_cached_page(book, ch, path):
     with open(path, "rb") as f:
         body = f.read()
+    # A cached file whose own <title> is not "<Book> <n>" is NOT that chapter (2026-10-30: four
+    # stale Genesis 52-55 files held Genesis 25/35/45/5 — spell-corrected pages cached by an early
+    # test fetch before the title check existed). Such a file is a STOP, never parsed into rows.
+    if page_title(body) != f"{book} {ch}":
+        raise SystemExit(f"STOP: cached {os.path.basename(path)} has title {page_title(body)!r} — "
+                         f"not this chapter; move the stale file aside and re-run")
     p = ItalicParser()
     p.feed(body.decode("utf-8-sig"))
     p.close()

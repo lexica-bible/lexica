@@ -28,6 +28,12 @@ one charter for the next full words rebuild.
    the <i> flag, add an italic column to the TSV before 0b; no refetch. Q4 English only. Q5 freeze
    10/24. Q6 redraw only the 29% set, own post-swap pass. Q7 deferred to the dry-run verdict; PA read
    sizes it first. Q8 land --declared before the rebuild, own checkpoint."
+8. **§9.4 rulings (JP, 2026-10-30, verbatim):** "Tail classification accepted. Boundary-move pairs are a unit:
+   if a later lane takes one half it takes both." · "v2 word-order on live non-zero (Joh 14:26): read as a live
+   defect until the member list says otherwise. §9.5 (a) counts it; if >0 after review, its own TODO line —
+   the 10/25 rebuild is the suspect, check pre-swap copy for the same hit." · "Cert pin 30→51: fix as its own
+   commit (pin + member list), not in the upgrade lane. Deploy rides the next deploy." · "Gen 52–55: 0b waits on
+   §9.5 (b)." · "§9.5 cleared, read-only."
 7. **Step-3b rulings (JP, 2026-10-30, verbatim):** "Corrections verdicts accepted (33 retire / 12 re-author /
    6 re-check). 30-vs-51 pin: item (i) reads it; if cert_invariants is red on live today, log as its own TODO
    line — a live gate failure." · "--declared checkpoints: all four as recommended (tight key; pinned before
@@ -131,9 +137,12 @@ declare. The lint itself must still read 0.
 ### 4.3 Word-order — reassembly v1 AND v2 at criterion
 `audit_reassembly_diff.py` (`--controls`, `--controls --v2` fire first; `tests/test_reorder_port.py`
 green first — the port is the arbiter): **zero word-order + zero content-other + no NEW
-punct-position.** The frozen punct allowlist (260 since S11) describes the OLD prose; new prose = a
-new allowlist. Pre-register: re-count on the built copy, publish added/removed vs 260 as a member
-list, freeze the new set in the swap commit. **Live before (2026-10-30):** v1 bag report on live = 0 hits
+punct-position.** The punct "allowlist" was frozen as a NUMBER only (S9 pre-registered 260; the S9 build
+OBSERVED 240 — "OPEN TENSION, do NOT treat 240 as a failure", `CHARTER_cert_session9.md:67`); no member
+file exists in the repo. **Live 2026-10-30 reads 241.** Pre-register for this lane: the live 241 members
+are dumped and FROZEN AS A FILE before the build (the first member list this class ever had), the built
+copy's set is diffed against it member by member, and the new set is frozen in the swap commit. The
+240/241-vs-260 tension stays recorded, not resolved here. **Live before (2026-10-30):** v1 bag report on live = 0 hits
 (dup-gloss 0 · content-other 0 · punct-shift 0; 12,611 bracketed verses excluded from the punct tier); both
 control sets FIRED. **The v2 order-aware run on live was NOT in the block — my omission, not data; §9.4 (b).**
 **This gate also decides open Q2:** `verses.text` and the
@@ -477,7 +486,7 @@ python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -25
   TODO line (live gate failure, JP ruling) — the fix is the pin in `cert_invariants.py`, re-pinned with the
   BD-* landing's receipt, not part of this lane.
 
-### 9.5 Next PA block (read-only; cleared terms as 9.1/9.4) — after `git pull`
+### 9.5 PA block (read-only; cleared) — RUN 2026-10-30, results below the commands
 ```
 cd ~/bible-db && git pull && git log --oneline -1
 # (a) v2 headline + the word-order members — expected per S11: word-order 0 / content-other 0 / punct 260;
@@ -487,6 +496,43 @@ python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db --v2 --list 2>&1 | 
 # (b) what the 4 Genesis 52-55 pages ARE — expected: title, first/last verse label, byte size, verse-row count per file
 for n in 52 53 54 55; do f="abp_app_html/Genesis $n.html"; echo "== $f  $(stat -c %s "$f") bytes  tables: $(grep -o '<table class="tbl">' "$f" | wc -l)"; grep -o '<title>[^<]*' "$f"; grep -o 'class="verse"[^>]*>[^<]*' "$f" | sed -n '1p;$p'; done
 ```
+**RESULTS:**
+- **(a) v2 on live: 31,237 scanned · total hits 242 · dup-gloss 0 · content-other 0 · word-order 1 ·
+  punct-position 241.** The one word-order member: **Joh 14:26 — `comforter,` sits on the wrong slot**
+  (rows vs prose). S11 certified word-order 0; the 10/25 rebuild is the only change since → **live defect
+  until the pre-swap copy says otherwise (JP ruling); own TODO line; §9.6 (a) reads the pre-swap copy.**
+  Punct 241 vs the S9 pre-registered 260 / observed 240 = the recorded open tension (§4.3), one more than
+  S9 observed — not a gate figure, recorded.
+- **(b) `Genesis 52–55.html` are STALE CACHE FILES, not chapters:** their own titles read Genesis 25, 35, 45
+  and 5 (34 / 29 / 28 / 32 verse tables; the site's spell-correction of a bad chapter number). The fetch
+  would never have cached them with today's title check, so they date from the 2026-10-24 13-chapter TEST
+  fetch, before that check existed; the production fetch never requests chapter 52+ (the probe stops at
+  51's 301), so they were never cleaned. Effect on the 10/24 TSV: none (the fetch only parses planned +
+  probe pages). Effect on the italic re-parse: it read all four, keyed their verses by the label inside the
+  page, so they overwrote Gen 25/35/45/5 with identical rows — the 577,994 total is exact, but the TSV
+  was produced from a cache with 4 stale files in it. **Pre-registered fix before 0b (§9.6 (b)):** move the
+  4 files out of the cache (JP's step; a cache file, no database), re-run the italic re-parse on 1,189 pages
+  → the new TSV must be BYTE-IDENTICAL to the current one (sha256 both). The script now STOPS on any cached
+  page whose title is not its file name (self-check 4, added 2026-10-30). Then 0b.
+
+### 9.6 Next PA block (read-only toward every database; one cache-file move, JP's step) — after `git pull`
+```
+cd ~/bible-db && git pull && git log --oneline -1
+# (a) the Joh 14:26 word-order hit on the PRE-SWAP copy (10/25 rollback of record) — expected: if the 10/25
+#     rebuild introduced it, the copy reads word-order 0 and no Joh 14:26 line; if the copy has it too, it predates 10/25
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible_pre_trapwire_swap.db --v2 2>&1 | grep -nE "verses scanned|total hits|word-order|content-other|punct-position|dup-gloss" | head -8
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible_pre_trapwire_swap.db --v2 --list 2>&1 | grep -E "^\s*\[word-order" ; echo "(end word-order list, pre-swap)"
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db --verse "Joh 14:26" 2>&1 | tail -20
+# (a2) the live punct-position MEMBER list — the first frozen member file this class gets (§4.3) — expected: 241 lines
+python3 scripts/audit_reassembly_diff.py ~/bible-db/bible.db --v2 --list 2>&1 | grep -E "^\s*\[punct-position" > ~/punct_members_live_20261030.txt; wc -l ~/punct_members_live_20261030.txt
+# (b) stale-page cleanup, then the re-parse again — JP's step (cache files only, no database):
+mkdir -p ~/abp_app_html_stale && for n in 52 53 54 55; do mv -v "abp_app_html/Genesis $n.html" ~/abp_app_html_stale/; done; ls abp_app_html/*.html | wc -l     # expected 1189
+sha256sum abp_app_html/abp_app_slots_italic.tsv; mv -v abp_app_html/abp_app_slots_italic.tsv ~/abp_app_slots_italic_run1.tsv
+python3 scripts/reparse_abp_app_italic.py 2>&1 | tail -12          # expected: 1,189 pages · 577,994 · SELF-CHECK PASS · 38,004 italic
+sha256sum abp_app_html/abp_app_slots_italic.tsv ~/abp_app_slots_italic_run1.tsv   # expected: IDENTICAL hashes
+```
+If (b)'s two hashes match, 0b's step (1) may run next (the `sha256sum … > .sha256` line, §6) — still SHOW the
+output before step (2), which is the manifest code change.
 
 **Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
 proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings

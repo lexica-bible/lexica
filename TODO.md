@@ -163,6 +163,12 @@ parser reference notes in its appendix). No open writes.
   (counts only); (d) the finder caches "column exists" per worker (`views_lexicon.py:97-108`) — after
   any column drop, a reload is needed or the finder errors; (e) step 11 must always be given an
   explicit path — default is `bible.db` in the current folder, and a bad path creates a new empty file.
+- **LIVE DEFECT (read 2026-10-30, JP ruling: own line) — reassembly v2 on live: word-order 1 (Joh 14:26,
+  `comforter,` on the wrong slot vs `verses.text`), content-other 0, punct-position 241.** S11 certified
+  word-order 0; the 10/25 rebuild is the suspect — first step is the same read on `bible_pre_trapwire_swap.db`
+  (edition charter §9.6 (a)); if the copy is clean, the 10/25 build introduced it → trace the pass, fix at
+  source, ride the next rebuild (never a hand edit of live). Punct 241 vs S9's observed 240 / pre-registered
+  260 is the recorded open tension, not part of this line.
 - **LIVE GATE FAILURE (read 2026-10-30, JP ruling: own line) — `cert_invariants.py` on live reads 6/7:
   check 4 RED, "51 active correction row(s), pinned 30".** Every row HOLDS its value (the per-row part
   passed); only the count pin is stale: the 27 `BD-*` bracket-digit rows (13 verses) landed after the
