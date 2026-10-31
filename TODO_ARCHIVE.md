@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-31 — Edition-upgrade prep: cert pin 30→51, `--declared` gate, Q2 build design (three commits, pushed, not deployed)
+- **Cert pin** `6e9d2df8`: `cert_invariants.py` `abp_corrections_active` 30 → 51 (27 BD-* rows landed after the
+  pin, 6 Cushi superseded: 30 − 6 + 27 = 51) + the first frozen corrections member list (PA dump, 51 lines, sha
+  `5b1a7595…`, punct precedent). Was the one red on live. Lesson: a count pin left behind by a later landing
+  makes a suite red while every row still holds — check the suite on live before trusting a pin from code.
+- **`--declared` gate** `c07288d6`: `gate_greek_header.py --declared <json>`; tight key (book, chapter, verse,
+  name); case 4 (declared row with NO delta = FAIL naming the row) ruled 10/31 on top of the three ruled 10/30.
+  Without the flag the gate is byte-for-byte the old one (the sibling test proves it). The draft
+  `docs/handoffs/drafts/DRAFT_gate_declared.patch.md` is history now.
+- **Q2 design** `818550ff`: `docs/handoffs/DESIGN_q2_build.md`. Two findings the charter had wrong: no step of
+  `/rebuild-words` regenerates prose today (`load_abp_prose.py` is not in the chain — ruling 7 adds it as its
+  own step), and no per-verse versification map for Pro 16 / 24, Jer 10, Hab 3 exists anywhere (the audit only
+  prints best matches). Nine rulings in DESIGN §9.
+- Session lessons (memory `project_edition_upgrade`): a brief's "before" figures and inputs are checked against
+  the charter, the charter against the code; a test written from the draft's wording, not the code written,
+  fails on the first run (case 2 footer).
+
 ## 2026-10-31 — News cross-night fix SHIPPED (attempts 4-7; switch ON)
 Moved whole from TODO.md at the ship. Open in TODO.md: nothing for this item (shipped entry +
 rollback + drift watch there). Earlier attempts 1-2: the next section. Commits from fab9b5b through

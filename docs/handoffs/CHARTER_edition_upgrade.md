@@ -1,6 +1,6 @@
 # CHARTER — edition upgrade: Lexica's English line → the ABP app edition (DRAFT)
 
-**Status: DRAFT, §8 RULED 2026-10-30 (§0.6). Nothing applied on PA; step 3 = PA read block + italic re-parse + --declared draft.**
+**Status: DRAFT, §8 RULED 2026-10-30 (§0.6). Nothing applied on PA. 0b CLOSED 10/31; cert pin 30→51 landed `6e9d2df8`; `--declared` gate landed `c07288d6` (§4.5 is no longer a draft); Q2 build design + its nine rulings = `docs/handoffs/DESIGN_q2_build.md` (`818550ff`). Next: the feed reader (DESIGN §3).**
 Scoping record: step 1 findings (chat, 2026-10-30) + the lane (a) numbers in
 `docs/handoffs/HANDOFF_abp_source_material.md`. Supersedes nothing yet; when ruled, it becomes the
 one charter for the next full words rebuild.
@@ -13,7 +13,7 @@ one charter for the next full words rebuild.
    in the 29% and the app edition reads "Nazareth of Galilee"; the NT PDF agrees). Declared as a row.
 3. **Gates A/B re-scope:** every rebuild lane pre-declares its expected count deltas (words, verses,
    abp_surface, header keys); the gates check against the declaration, not against "unchanged".
-   Drafted in §4.5; NOT applied.
+   Drafted in §4.5; LANDED 2026-10-31 as `c07288d6` (`gate_greek_header.py --declared`, four-case test).
 4. **Snapshot re-freeze moves AFTER the upgrade build, on the copy; "before" side = pre-upgrade
    live.** Recorded here as the resolution of the "snapshot staleness" blocker (TODO held item; charter
    rebuild-trap §8 "Open, for the edition-upgrade lane"). §6 step 9c.
@@ -137,7 +137,7 @@ build with the same inputs, and the derivation is committed beside the number (r
 TRAP). Controls fire on a known positive before any zero is trusted (CLAUDE.md certification rule).
 ### 4.1 The 7 certification invariants (`cert_invariants.py`, re-pinned in the swap commit)
 1 row pins — **words will CHANGE** if (ii) in §3 is chosen; declared as a delta, not "unchanged";
-`verses` 31,237 exact (no renumber); `abp_corrections_active` **51 on live (read 2026-10-30; the suite's PIN still says 30 — §9.4 (i))** → re-adjudicated (§4.7) · 2 split-flip
+`verses` 31,237 exact (no renumber); `abp_corrections_active` **51 on live (read 2026-10-30; pinned 51 since `6e9d2df8`, rides the next deploy — §9.4 (i))** → re-adjudicated (§4.7) · 2 split-flip
 0 · 3 em-dash 0 (the app text's `--`/`—` handling is a pre-build check) · 4 corrections overlay intact
 · 5 manifest = the NEW feed set (app feed added; §2) · 6 backup alive · 7 person/place binding. Plus
 `--controls` all fire.
@@ -172,7 +172,7 @@ not an app-edition wording change = stop. The deferred (g) FIX stays deferred (o
 **Live before (2026-10-30):** CONTROL Psa 39:1 FIRED · FLAGGED 693 · FLAGGED BEYOND allowlist 662 (gate ≤ 671)
 · NO-EVIDENCE 1,814. S11 recorded 702 / 671 / 1,785: the 10/25 rebuild moved 9 flagged rows out and 29 into
 no-evidence — cause not read; the member diff is owed before this lane re-baselines the floor (§9.4 (h)).
-### 4.5 Declared-delta gates (the A/B re-scope — DRAFT, not applied)
+### 4.5 Declared-delta gates (the A/B re-scope — LANDED `c07288d6` 2026-10-31; the text below is the design as drafted)
 Today `gate_greek_header.py` gate A demands `pn_binding`, `tipnr_entities`, `abp_surface`
 byte-identical and `words`/`verses` counts unchanged; gate B demands `pn_greek_identity` keep the
 same keys. Both ABORT on any full rebuild by design (10/25 overridden once). Draft change:

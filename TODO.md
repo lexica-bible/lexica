@@ -172,18 +172,13 @@ parser reference notes in its appendix). No open writes.
   digits. **JP ruling 10/30: fixed in the edition-upgrade rebuild as a DECLARED ROW (charter §4.10), never a
   live patch.** Punct 241: the S9 "260" pin is RETIRED (never a member list — ruling 10/30); the 241 live
   members are the first frozen member file (charter §4.3).
-- **LIVE GATE FAILURE (read 2026-10-30, JP ruling: own line) — `cert_invariants.py` on live reads 6/7:
-  check 4 RED, "51 active correction row(s), pinned 30".** Every row HOLDS its value (the per-row part
-  passed); only the count pin is stale: the 27 `BD-*` bracket-digit rows (13 verses) landed after the
-  pin and the 6 Cushi rows went `superseded` (30 − 6 + 27 = 51). Fix = re-pin `PINS["abp_corrections_active"]`
-  30 → 51 in `scripts/cert_invariants.py` with the BD landing's receipt in the comment, then re-run the
-  suite read-only (expect 7/7). Not part of the edition-upgrade lane (its own small commit).
-- RULED 10/30, DRAFTED, not applied — **header gate A/B re-scope for full rebuilds** = per-lane DECLARED
-  deltas (`--declared <json>`; words/verses counts, abp_surface/tipnr identical-or-members, pn_binding members
-  on (book, chapter, verse, name), pn_greek_identity key moves). Draft + the 10/25 worked example on REAL
-  values: `docs/handoffs/drafts/DRAFT_gate_declared.patch.md`; four checkpoint points ruled (tight key;
-  gate pinned before step 9; fixtures committed; three-case test with the change). Lands as its own commit
-  BEFORE the edition rebuild, on JP's "apply". Until then A/B still abort on a full rebuild.
+- **Cert pin 30→51 LANDED `6e9d2df8` (10/31), not yet deployed** — rides the next `deploy.sh`; after it,
+  `cert_invariants` on live should read 7/7 (check 4 was the only red). Frozen member list of the 51 =
+  `tests/fixtures/corrections/abp_corrections_active_live_20261031.txt` (+ `.sha256`).
+- **`gate_greek_header.py --declared` LANDED `c07288d6` (10/31)** — four-case test `tests/test_gate_declared.py`,
+  worked example `tests/fixtures/rebuild_trap/declared_deltas_20261025.json`, 8b.3 line updated. The
+  edition lane still owes ITS OWN declaration file (`tests/fixtures/edition_upgrade/declared_deltas.json`)
+  before its build; on the real copy check the Michaiah `rule` blank is `''` not NULL (fixture note).
 - HELD (reviewer 2026-10-25) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
   surface → lemma-only at the swap (accepted). Trace what the label changes on the card, and whether a
   header that matches the page should carry `surface`.
@@ -221,8 +216,12 @@ parser reference notes in its appendix). No open writes.
   A/B re-scope = declared deltas per lane (drafted, not applied); Mark 1:9 "of the of" = our-side defect,
   fixed inside the rebuild; S9 gate block merges in (its five fixes landed S11 2026-07-06).
   **STATE 10/31: 0b CLOSED** — feed frozen + pinned (`7bd77385…`, manifest 76 files, PA proof in charter
-  §9.8). Three threads ready, none started: Q2 build design (the build still reads bh_scrape + abp_texts);
-  apply the `--declared` gate (own commit); cert pin 30→51 (own commit). Charter §0.6–0.10 = every ruling.
+  §9.8). **10/31: all three threads DONE** — cert pin 30→51 `6e9d2df8`; `--declared` gate `c07288d6`; Q2
+  build design `docs/handoffs/DESIGN_q2_build.md` `818550ff` with JP's nine §9 rulings (strict pairing,
+  B = separate script via `load_abp_prose.reorder_bracket`, count-differs members frozen into the tree,
+  corrections retired as status updates on the copy, feed-only verse = stop). **NEXT: the feed reader,
+  DESIGN §3 + §9** (asserts the manifest sha; no database). Then the count-differs dump (gated PA step),
+  B's script, the lane's own `--declared` file. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).

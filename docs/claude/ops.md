@@ -169,8 +169,10 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   the S9 swap; needs scoping to genuine strands. Detail: memory `project_reassembly_diff`.**
   Memories `project_abp_certification` + `project_split_compounds_flip`.
 - `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table
-  (in bible.db; 18 rows: Cushi ×6 + Jer 49:13 ×2 + L2 1Sa 6:11 ×4 + L10 Mal 3:6 ×4 + L5
-  Dan 4:33 ×2) and its guarded apply (fires only when the cell still holds the recorded
+  (in bible.db; 57 rows = **51 active** (pinned in `cert_invariants.py`; frozen member list
+  `tests/fixtures/corrections/abp_corrections_active_live_20261031.txt` + `.sha256`, a PA dump — re-dump
+  and re-pin together whenever the active set changes) + 6 Cushi `superseded`) and its guarded apply
+  (fires only when the cell still holds the recorded
   fresh-parse value, LOUD skip otherwise, log beside the db). New source-defect corrections = new
   rows via build_abp_corrections.py (checkpoint first), never a new fix script.
   **2026-07-06 (b196b9a): the overlay now also carries PROSE (verses.text) corrections — no schema
@@ -201,7 +203,19 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   deploy-safe = passes if the tables are absent). `--controls` seeds bad input into a throwaway
   db and proves checks 1-4 + 7 fire (5-6 fired on live incidents). **RE-PIN RULE: the pins move
   ONLY in a deliberate-rebuild commit after compare_words passed — never hand-edited to force
-  green.** Memory `project_abp_certification`.
+  green.** One ruled exception (JP 2026-10-31, `6e9d2df8`): a COUNT pin left stale by a later
+  landing (the 27 BD-* rows), with every row proven HOLDING on live, is re-pinned in its own commit
+  with a frozen live member list as the receipt. Memory `project_abp_certification`.
+- `gate_greek_header.py <live> <scratch> [--declared <json>]` — the pre-swap header gate (A identity
+  tables untouched · B header-table delta shape · C controls/pins). **`--declared` (landed `c07288d6`,
+  edition-upgrade charter §4.5):** a per-lane file `tests/fixtures/<lane>/declared_deltas*.json`
+  (committed) states the EXPECTED deltas; gate A then checks actual == declared per table (counts for
+  words/verses; a member set on the tight key book+chapter+verse+name for pn_binding, with
+  `changes: {col: [from, to]}` and unchanged columns by name), gate B accepts only the declared key
+  moves. Undeclared = FAIL in today's wording; a declared row with NO delta = FAIL naming it. Without
+  the flag the gate is byte-for-byte the old one. Run at `/rebuild-words` 8b.3, BEFORE step 9 (so
+  abp_surface is still identical). Test `tests/test_gate_declared.py` (four cases); worked example
+  `tests/fixtures/rebuild_trap/declared_deltas_20261025.json` (the 10/25 Michaiah rows).
 - `fix_italic_heads.py` (`--dry-run`/`--apply`, `--strongs G####`, `--all`) — makes a slot's
   SEARCH LABEL (`words.english_head`) its OWN rendering, never a translator-added italic word
   ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable.
