@@ -10,6 +10,9 @@ build reads, plus the entity-binding feed:
   * the two TAGNT files (~, PA-only)
   * the vendored TIPNR file (tipnr/TIPNR.txt, in git — Session 5; feeds BOTH
     import_tipnr.py's proper-noun numbers in words AND build_entity_binding.py)
+  * the frozen ABP app-edition feed (abp_app_html/abp_app_slots_italic.tsv, PA + local
+    checkout, gitignored third-party text — edition-upgrade charter §2 / step 0b,
+    2026-10-31; sha256 7bd77385… pinned in the charter and in its .sha256 beside it)
 
 Usage (on PA, from ~/bible-db):
     python3 scripts/cert_manifest.py build     # write cert_manifest.json
@@ -69,6 +72,16 @@ def feed_files():
         sys.exit(f"ERROR: {bh} not found (run on PA).")
     files.append(("bh_scrape.db", bh))
 
+    # Edition-upgrade feed (docs/handoffs/CHARTER_edition_upgrade.md §2, step 0b): the ABP
+    # app's text as fetched 2026-10-24 + the italic column (re-parsed 2026-10-31). Required
+    # like every other feed — a manifest that pins fewer files than the build reads
+    # certifies nothing.
+    app = BASE_DIR / "abp_app_html" / "abp_app_slots_italic.tsv"
+    if not app.is_file():
+        sys.exit(f"ERROR: {app} not found — the frozen app-edition feed (charter 0b) is "
+                 "required; copy it back from its second copy, never re-fetch.")
+    files.append(("abp_app_html/abp_app_slots_italic.tsv", app))
+
     if not RAHLFS_DIR.is_dir():
         sys.exit(f"ERROR: Rahlfs dir missing: {RAHLFS_DIR} — feed required for the cert.")
     for rel in RAHLFS_FILES_REQUIRED:
@@ -93,9 +106,9 @@ def feed_files():
     files.append(("tipnr/TIPNR.txt", tip))
 
     # Count floor — a manifest that pins fewer files than the build reads certifies
-    # nothing. 66 ABP + bh_scrape + 4 required Rahlfs + 2 TAGNT + TIPNR = 74 minimum.
-    if len(files) < 74:
-        sys.exit(f"ERROR: only {len(files)} feed files found (< 74 floor) — a feed "
+    # nothing. 66 ABP + bh_scrape + app feed + 4 required Rahlfs + 2 TAGNT + TIPNR = 75 minimum.
+    if len(files) < 75:
+        sys.exit(f"ERROR: only {len(files)} feed files found (< 75 floor) — a feed "
                  "is missing; refusing to pin/verify a partial baseline.")
     return files
 
