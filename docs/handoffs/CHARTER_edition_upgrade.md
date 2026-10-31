@@ -632,10 +632,13 @@ created 2026-10-31, the 75 old hashes UNCHANGED, one added (`abp_app_html/abp_ap
 `7bd77385…`, 25,526,878 bytes) — checked against the committed 75-file version, not against prose ·
 punct member file 241 lines, sha `2b0f4cc4…` = PA's, committed with its `.sha256` under
 `tests/fixtures/reassembly/` · the TSV + its `.sha256` are gitignored (`abp_app_html/`), second copy local.
-Closing commit = the one carrying this line. **0b leaves open:** (i) the local checkout has NOT re-run
-`cert_manifest.py verify` (bh_scrape and the Rahlfs/TAGNT feeds are PA-only, so it cannot); the PA run of
-verify + `cert_invariants` after the build is the proof of record — paste it into §9.8 if not yet pasted;
-(ii) the `fetch_abp_app.py` CACHE is the only place the 1,189 raw pages live (PA + 18 locally) — the pages
+Closing commit = `ade78308`. **PA PROOF OF RECORD (JP ran §9.8, pasted 2026-10-31):** `.sha256` check from
+the repo root `OK` · `build`: "Pinned 76 files — feeds: ABP 66 · bh_scrape 1 · Rahlfs 5 · TAGNT 2 · TIPNR 1"
+(+ the app feed) · before/after read: `old entries 75 · new entries 76 · old hashes unchanged 75 · changed []
+· dropped [] · added ['abp_app_html/abp_app_slots_italic.tsv']` · manifest sha `7bd77385…` · `verify`:
+"Baseline intact: 76 files match the 2026-10-31 pin." · `cert_invariants` on live: 6/7 — check 5 (feed
+manifest) GREEN, check 4 RED on the known 30→51 pin only (its own TODO line). Every figure equals the
+pre-registered picture. **0b leaves open:** (i) — closed by the proof above — (ii) the `fetch_abp_app.py` CACHE is the only place the 1,189 raw pages live (PA + 18 locally) — the pages
 themselves are not hashed; the TSV is the frozen feed, the pages are evidence; (iii) 0b pins the feed but
 nothing yet READS it: the build takes `bh_scrape.db` + `abp_texts/`; teaching it the app feed (Q2's two
 derivations) is the next design step, not a freeze step.
