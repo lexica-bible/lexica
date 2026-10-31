@@ -916,7 +916,29 @@ Open tickets:
   falsely "well-corroborated" fused card. Stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`). History: TODO_ARCHIVE "2026-10-29 — News clustering".
 - **OPEN: cross-night split — attempt 7 ("eighth round", JP 2026-10-31): new-event rule +
-  variance. 3 live runs owed (JP, PA). Switch stays OFF.**
+  variance. 3 LIVE RUNS DONE — DEPLOY GATE NOT MET (run 2: 1 non-edge fusion). Switch stays OFF;
+  no deploy/rollback commands prepared.**
+  3 runs 2026-10-31 (JP, PA, 18db974, `--run --list-on --nights-only`), real nights:
+    | run | encyclical on card | encyclical via reuse | Sunday via reuse (ids)  | without the 2 edges | Sunday splits | cross_night |
+    | 1   | 489/623            | 0                    | 1 (17505 edge)          | 0                   | 3             | clean       |
+    | 2   | 503/623            | **1 (14121)**        | 1 (17505 edge)          | **1**               | 3             | clean       |
+    | 3   | 469/623            | 0                    | 2 (17366, 17505 edges)  | 0                   | 3             | clean       |
+  Bar (0 via reuse, edges counted): fails all 3. Gate (0 without the edges, all 3 runs): fails
+  on run 2 only. Merge/split/cross-night met the bar in every run; same-night 14 encyclical / 2
+  Sunday each run (the labeler's, not scored).
+  STABLE vs DRAW:
+    - 17505 onto 17040 (edge): 3 of 3 runs — and in the attempt-5 rerun and attempt 6. The check
+      calls it the same story every time; JP's ruling decides whether that's a miss.
+    - 17366 onto the pope's call (edge): 1 of 3 (+ attempt 6). A draw.
+    - 14121 (encyclical card, run 2 only): "Vatican forms AI commission ahead of historic
+      encyclical" (CoinGeek), published May 21, re-pulled Aug 9; judged `not` (the pope's AI
+      commission, May 2026). A draw. Context: the same commission story is ALREADY on the
+      encyclical card through the June-29 same-night fusion (rows 109 144 663 734 789 2717 2961
+      2967 — the labeler's, not scored), so this is a late copy of a story the one-pass labeler
+      had already fused there; the check let it join. It is the new-event-naming-the-old kind the
+      attempt-7 rule targets (a commission formed "ahead of" the encyclical).
+    - 8967 (attempt 6's miss, now a prompt example): 0 of 3 — weak evidence, it's in the prompt.
+    - No next-event pair fused in any run; the held-out Alliance pair 27299/24079 held 3 of 3.
   Change: one rule + one example in the check prompt — a headline reporting a NEW event (award,
   appointment, ruling, anniversary, ceremony) that names the earlier one only as background or
   cause is DIFFERENT; example 8967 (Liberty Medal) vs the encyclical 2718. OVERLAP: 8967 is a
