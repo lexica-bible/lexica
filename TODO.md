@@ -202,6 +202,9 @@ parser reference notes in its appendix). No open writes.
   snapshot re-freeze RESOLVED in principle (after the build, on the copy, before = pre-upgrade live);
   A/B re-scope = declared deltas per lane (drafted, not applied); Mark 1:9 "of the of" = our-side defect,
   fixed inside the rebuild; S9 gate block merges in (its five fixes landed S11 2026-07-06).
+  **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
+  role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
+  upgrade lands (charter §3 names the Greek residual buckets it would absorb).
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.

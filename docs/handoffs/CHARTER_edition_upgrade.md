@@ -304,7 +304,22 @@ sqlite3 ~/bible-db/bible.db "SELECT status, count(*) FROM abp_corrections GROUP 
 #     verse text frozen from verses.text at build), AI cache rows by category (ver_key prefix)
 sqlite3 ~/bible-db/bible.db "SELECT count(*), sum(def_json LIKE '%\"text\"%') FROM lexica_def"
 sqlite3 ~/bible-db/bible.db "SELECT CASE WHEN instr(ver_key,':')>0 THEN substr(ver_key,1,instr(ver_key,':')-1) ELSE ver_key END AS category, count(*) FROM ai_search_cache GROUP BY 1 ORDER BY 2 DESC"
+# (g) the REAL pn_binding values behind the --declared worked example (Q8 prep) — the 3 Michaiah
+#     binds, pre-swap copy vs live. pn_binding.book is a NUMBER (memory tripwire) — filter by name.
+#     expected: 3 rows each side, same entity, rule differs (pre: the ruled/spelling value; live: fuzzy)
+ls -l ~/bible-db/bible_pre_trapwire_swap.db
+sqlite3 -header -separator $'\t' ~/bible-db/bible_pre_trapwire_swap.db "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding WHERE name LIKE '%ichaiah%' ORDER BY book, chapter, verse" | tee ~/edition_g_michaiah_pre.tsv
+sqlite3 -header -separator $'\t' ~/bible-db/bible.db "SELECT book, chapter, verse, name, entity_uniq, kind, rule, render, hot, tier FROM pn_binding WHERE name LIKE '%ichaiah%' ORDER BY book, chapter, verse" | tee ~/edition_g_michaiah_live.tsv
+# (h) the italic re-parse — CLEARED for the full run (JP 2026-10-30). No network, no db.
+#     expected: 1,189 pages · 577,994 slots · SELF-CHECK PASS · italic rate near the 7.01% local sample
+python3 scripts/reparse_abp_app_italic.py --tsv abp_app_html/abp_app_slots.tsv --out abp_app_html/abp_app_slots_italic.tsv 2>&1 | tee ~/edition_h_italic.log | tail -20
 ```
+**JP clearances (2026-10-30, verbatim):** "§9.1 read block: cleared as written. (a)/(b) are first runs of
+new scripts — any surprise there is read as script behavior first, data second; say which before
+recording." · "Italic re-parse: cleared for the full PA run. Expect SELF-CHECK PASS; record the italic
+count and rate against the 7.01% local sample. 0b freezes the new TSV, not the 10/24 one." ·
+"--declared draft: read, not ruled yet. Before I rule: read the real pn_binding from-values off the
+10/25 copies on PA … then bring the four checkpoint points to me."
 Read-only proof: `census_count_differs.py`, `compare_prose_feed.py`, `audit_reassembly_diff.py`,
 `audit_phrase_gloss_underdist.py` all open the db with `mode=ro`; the `sqlite3` lines are SELECTs.
 `compare_prose_feed.py` and `census_count_differs.py` are NEW read-only tools (this change), reusing
