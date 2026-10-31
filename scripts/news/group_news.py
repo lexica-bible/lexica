@@ -171,7 +171,9 @@ def build_client():
 #   4. REUSE CHECK (attempt 4, 2026-10-30) — when ON, every reuse of an earlier night's label is
 #      confirmed by a second call (check_reuse / confirm_reuse, below); a "no" gets a fresh label.
 #
-# STATUS: OFF. Attempt 5 (2026-10-30) = attempt 4 with the reuse check on CHECK_MODEL (Sonnet),
+# STATUS: ON since 2026-10-31 (attempt 7 — see the switch below; rollback = ~/news_seed_off).
+# History of the attempts, oldest last:
+# Attempt 5 (2026-10-30) = attempt 4 with the reuse check on CHECK_MODEL (Sonnet),
 # labeler still Haiku. Its bar (JP): only fusions THROUGH a reused earlier-night label are
 # scored — 0 of them — same-night fusions reported apart (relabel_check.py, TODO.md). FAILED live
 # twice: run 1 encyclical 1, Sunday 2 (11 checks lost to a reply-reading bug, since fixed —
@@ -194,8 +196,15 @@ def build_client():
 #     other stories (was 13), Sunday 5 fused cards (was 1), Sunday splits 1, cross-night clean.
 #   (Attempt 2, a distinctive-words match, was stopped in the replay — TODO_ARCHIVE.)
 # With it off the nightly run is exactly the old behavior (labels made earlier the same night only).
-# Do NOT turn on without a relabel_check.py --run --list-on that meets that bar.
-NIGHTLY_SEED = False
+# SHIPPED ON 2026-10-31 after attempt 7's 3 live runs (no next-event or clear-miss fusion in any
+# run, with the rulings recorded in TODO_ARCHIVE). ROLLBACK without a code or data change: create
+# the file ~/news_seed_off (`touch ~/news_seed_off`) — the next nightly runs the old way (labels
+# made the same night only, no reuse check); delete it to turn the list back on. Labels already
+# written while ON stay as they are.
+SEED_OFF_FILE = os.path.expanduser("~/news_seed_off")
+NIGHTLY_SEED = not os.path.exists(SEED_OFF_FILE)
+# one line per real nightly run (live news.db only — never a test or check db): reuse drift
+REUSE_LOG = os.path.expanduser("~/news_reuse.log")
 REACH_DAYS = 14          # KEEP IN SYNC with views_news.WINDOW_DAYS
 SEED_MAX = 40            # labels shown per call: room for one best match per headline of a
                          # default 40-headline batch (295 unbounded was the over-fusing case)
@@ -570,6 +579,7 @@ def main():
     most_shown = 0
     done = 0
     calls = checks = turned_down = refreshes = 0
+    offered = left_unlabeled = 0      # the nightly drift line (end of run)
     for i in range(0, len(rows), BATCH):
         batch = rows[i:i + BATCH]
         if not seed:
@@ -584,12 +594,14 @@ def main():
             print(f"  ERR  batch at {i}: {str(e)[:80]}")
             continue
         if seed:                         # the reuse check, then fresh labels for the turned-down
+            offered += sum(1 for r in batch if labels.get(r["id"]) in earlier)
             no, n = check_reuse(client, batch, labels, pool, earlier)
             checks += n
             if no:
                 turned_down += len(no)
                 refreshes += 1
                 labels = fresh_labels(client, batch, labels, no, known, earlier)
+                left_unlabeled += sum(1 for i in no if not labels.get(i))
         for r in batch:
             ev = labels.get(r["id"])
             if not ev:
@@ -614,6 +626,18 @@ def main():
     if seed:
         print(f"calls: labeler {calls}, reuse checks {checks} ({turned_down} reuses turned "
               f"down), fresh-label calls {refreshes}")
+    if not REGROUP:
+        drift = (f"reuse check: offered {offered}, approved {offered - turned_down}, rejected "
+                 f"{turned_down} (of those, no label tonight {left_unlabeled})"
+                 if seed else f"reuse check: OFF ({SEED_OFF_FILE} present or switch off)")
+        print(drift)
+        if not DRY_RUN and os.path.abspath(DB_PATH) == os.path.abspath(DEFAULT_DB):
+            try:                                # live news.db only; never fatal
+                with open(REUSE_LOG, "a", encoding="utf-8") as f:
+                    f.write(f"{datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M} UTC  "
+                            f"labeled {done}  {drift}\n")
+            except OSError as e:
+                print(f"  (could not write {REUSE_LOG}: {e})")
 
 
 if __name__ == "__main__":

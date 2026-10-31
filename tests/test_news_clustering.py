@@ -23,8 +23,8 @@ relabel_check.py in the same folder (real AI, by hand, before any clustering cha
      that row. So the only way it can split a story is the night boundary. The rows labeled in
      the June regroup count as one night. Every story labeled in ONE pass is the control.
      The replay runs the nightly with the past-label list (group_news.pick_known) AND the reuse
-     check (group_news.check_reuse) switched ON, whatever the shipped switch NIGHTLY_SEED says —
-     it stays OFF in the nightly until relabel_check.py --run --list-on passes on PA. The reuse
+     check (group_news.check_reuse) switched ON, whatever the shipped switch NIGHTLY_SEED says
+     (ON in the nightly since 2026-10-31; off again only via ~/news_seed_off). The reuse
      check's stand-in answers from expected.json's judgment, so it is always right: the replay
      proves the mechanism, not the live AI's answers. With the list alone (attempts 1/1b) the
      three passed here and FAILED live on fusion; with the list off they fail here (each night
@@ -518,11 +518,13 @@ def check_fusion_split(results, frozen, expected):
     if not want or set(same) != want or via:
         lines.append(f"stored Sunday over-merge not read as same-night only: via {len(via)}, "
                      f"same-night {[sorted(p) for p in same]}, pinned {[sorted(p) for p in want]}")
-    # the judgment-edge column (relabel_check): only a card fusing exactly one edge's two stories
-    for card, want_edge in (({17040, 17505}, True), ({14756, 14621, 17366}, True),
-                            ({17040, 17505, 24079}, False), ({24079, 27299}, False),
-                            ({14756, 17366, 13476}, False)):
-        if fx.edge_only(frozenset(card), sstory, sjudged) != want_edge:
+    # the judgment-edge column (relabel_check): only a card fusing exactly one edge's two stories.
+    # The real edge list is empty since the 2026-10-31 rulings, so the rule is checked on a
+    # stand-in edge (the Alliance pair) to keep it able to fire if an edge is ever added.
+    stand_in = ((27299, 24079),)
+    for card, want_edge in (({24079, 27299}, True), ({24079, 27299, 24082}, False),
+                            ({17040, 17505, 24079}, False), ({14756, 13476}, False)):
+        if fx.edge_only(frozenset(card), sstory, sjudged, stand_in) != want_edge:
             lines.append(f"judgment-edge column misreads card {sorted(card)} "
                          f"(should be {'edge' if want_edge else 'a full miss'})")
     ok = not lines

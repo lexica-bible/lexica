@@ -157,11 +157,11 @@ def reuse_joiners(rows, night_of, story_of, asserted):
     return out
 
 
-# The two JUDGMENT EDGES JP has not ruled on (2026-10-31): fusions here are reported in their own
-# column so the picture with and without them is visible — the BAR still counts them. Each edge =
-# (row, a row of the other story): 17366 (a Sunday reflection piece) vs the pope's Aug 12-13 call;
-# 17505 (Vatican News, churches oppose erosion) vs 17040 (the Church warns, Aug 28).
-JUDGMENT_EDGES = ((17366, 14756), (17505, 17040))
+# JUDGMENT EDGES not yet ruled: fusions here are reported in their own column so the picture with
+# and without them is visible — the BAR still counts them. Each edge = (row, a row of the other
+# story). EMPTY since 2026-10-31: both were ruled (delegated by JP) — 17505/17040 the SAME story
+# (now one happening in expected.json), 17366 an edge excluded from scoring (now `unsure`).
+JUDGMENT_EDGES = ()
 
 
 def edge_only(card, story_of, asserted, edges=JUDGMENT_EDGES):

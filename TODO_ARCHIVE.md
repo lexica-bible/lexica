@@ -6,6 +6,252 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-10-31 — News cross-night fix SHIPPED (attempts 4-7; switch ON)
+Moved whole from TODO.md at the ship. Open in TODO.md: nothing for this item (shipped entry +
+rollback + drift watch there). Earlier attempts 1-2: the next section. Commits from fab9b5b through
+the ship commit.
+
+- **OPEN: cross-night split — attempt 7 ("eighth round", JP 2026-10-31): new-event rule +
+  variance. 3 LIVE RUNS DONE — DEPLOY GATE NOT MET (run 2: 1 non-edge fusion). Switch stays OFF;
+  no deploy/rollback commands prepared.**
+  3 runs 2026-10-31 (JP, PA, 18db974, `--run --list-on --nights-only`), real nights:
+    | run | encyclical on card | encyclical via reuse | Sunday via reuse (ids)  | without the 2 edges | Sunday splits | cross_night |
+    | 1   | 489/623            | 0                    | 1 (17505 edge)          | 0                   | 3             | clean       |
+    | 2   | 503/623            | **1 (14121)**        | 1 (17505 edge)          | **1**               | 3             | clean       |
+    | 3   | 469/623            | 0                    | 2 (17366, 17505 edges)  | 0                   | 3             | clean       |
+  Bar (0 via reuse, edges counted): fails all 3. Gate (0 without the edges, all 3 runs): fails
+  on run 2 only. Merge/split/cross-night met the bar in every run; same-night 14 encyclical / 2
+  Sunday each run (the labeler's, not scored).
+  STABLE vs DRAW:
+    - 17505 onto 17040 (edge): 3 of 3 runs — and in the attempt-5 rerun and attempt 6. The check
+      calls it the same story every time; JP's ruling decides whether that's a miss.
+    - 17366 onto the pope's call (edge): 1 of 3 (+ attempt 6). A draw.
+    - 14121 (encyclical card, run 2 only): "Vatican forms AI commission ahead of historic
+      encyclical" (CoinGeek), published May 21, re-pulled Aug 9; judged `not` (the pope's AI
+      commission, May 2026). A draw. Context: the same commission story is ALREADY on the
+      encyclical card through the June-29 same-night fusion (rows 109 144 663 734 789 2717 2961
+      2967 — the labeler's, not scored), so this is a late copy of a story the one-pass labeler
+      had already fused there; the check let it join. It is the new-event-naming-the-old kind the
+      attempt-7 rule targets (a commission formed "ahead of" the encyclical).
+    - 8967 (attempt 6's miss, now a prompt example): 0 of 3 — weak evidence, it's in the prompt.
+    - No next-event pair fused in any run; the held-out Alliance pair 27299/24079 held 3 of 3.
+  Change: one rule + one example in the check prompt — a headline reporting a NEW event (award,
+  appointment, ruling, anniversary, ceremony) that names the earlier one only as background or
+  cause is DIFFERENT; example 8967 (Liberty Medal) vs the encyclical 2718. OVERLAP: 8967 is a
+  scored row (it was attempt 6's encyclical miss), so it no longer tests anything clean; it is
+  flagged as a prompt-example row in the output. Everything else as attempt 6.
+  Measurement: 3 runs of `relabel_check.py --run --list-on --nights-only` (new flag: skips the
+  one-pass runs, which never use the check). Per run the summary now lists the through-reuse
+  joiner ids and splits off the two JUDGMENT EDGES (fixture_lib.JUDGMENT_EDGES: 17366 vs the
+  pope's call; 17505 vs 17040) as "N without the edges" — reported beside the bar, the BAR itself
+  still counts them. A card counts as edge-only only if it fuses exactly that edge's two stories
+  (CI known positives: 2 edge cards, 3 full-miss cards incl. an edge row + a third story).
+  Cost estimate (from prompt sizes, not measured; Sonnet's thinking length is the unknown): per
+  run ~256 Haiku labeler calls (~$1.5) + ~205 Sonnet checks (~$1.5-4.5) = ~$3-6; 3 runs ~$10-20.
+  DEPLOY GATE (JP's brief): all 3 runs at 0 through reuse EXCLUDING ONLY the two edges -> prepare
+  the switch-on + rollback commands and stop; JP rules on the edges. Otherwise log per run.
+- **Attempt 6 record ("seventh round", JP 2026-10-30): the reuse check HARDENED. LIVE: FAILED THE BAR (3 through reuse) but the STOP SIGNAL DID NOT FIRE — no clean
+  next-event pair fused, and the held-out Alliance pair stayed apart. Switch stays OFF.**
+  Live run 2026-10-31 (JP, PA, b45030b, `--run --list-on`), real nights:
+    encyclical 457/623 on its card (bar >341), through reuse **1**, same-night 14 (the June set);
+    Sunday through reuse **2** cards, same-night 2, splits 3 (bar <13); cross_night 0 / 0 (clean).
+    Calls: reuse checks 151/47/7 (104/26/1 turned down), fresh-label 44/20/1; no reader errors;
+    1 encyclical row ended with NO label (27963 — also unlabeled in the attempt-5 rerun).
+  Each through-reuse fusion, named (judgment from expected.json):
+    - 8967 (Jul 6, "Brown: The encyclical 'Magnifica Hūmānitās' crystalizes Pope Leo XIV as the
+      2026 awardee of the Liberty Medal…") onto the encyclical card. Judged `not` (the Liberty Medal
+      award). NEW KIND of miss: a different event whose HEADLINE NAMES the earlier one — not a
+      next-event pair.
+    - 17366 (Aug 31, "On rest, worship and keeping Sunday holy - The Catholic Weekly", a single)
+      onto the pope's Aug 12-13 call card. A theme/reflection piece with no announcement of its own;
+      the headline can't say whether it's commentary on the pope's call. JUDGMENT EDGE, not a
+      next-event pair.
+    - 17505 (Sep 1, Vatican News "Churches Oppose the Erosion of Sunday Rest") onto 17040 (Aug 28,
+      "The Catholic Church Warns…"), the HELD-OUT edge again (fused in the attempt-5 rerun too).
+      JUDGMENT EDGE: may be one church statement reported twice.
+  Held out and HELD: 27299 Alliance manifesto stayed off 24079 (the miss of both attempt-5 runs) —
+  the clean evidence the rule was learned. In-prompt pairs (pope/unions, Dr. O, Polish, Greece)
+  also stayed apart (weaker evidence: they're the examples). Same-night, not scored: Greece strike
+  12472 + Dr. O 12471 (Jul 27), Alliance 24079 + Dr. O 24082 (Oct 3).
+  READ: the next-event failure is fixed on this sample (one run; Sonnet varies run to run). What
+  still fails is two judgment edges the headlines can't settle and one different event that names
+  the earlier one. Not changed: expected.json — re-judging edges to make the bar pass would move
+  the bar; any re-judgment is JP's ruling. A rerun on unchanged code is a re-draw (spend) = JP's.
+  Change = the check's prompt only (group_news.SYSTEM_CONFIRM); the list, the labeler, the model
+  split (Haiku labels, Sonnet checks) and the fresh-label step are unchanged. (1) Asks "same
+  announcement or event"; says a LATER statement, follow-up action or NEW document by the same or
+  another actor on the theme is DIFFERENT, coverage and REACTIONS (even months later) are SAME;
+  dates were already shown on every headline, now the prompt says to use them. (2) 8 worked
+  examples (group_news.CONFIRM_EXAMPLES): DIFFERENT — pope Aug 13 call vs unions/churches vow Aug
+  3 (14621/13476), Dr. O Oct 9 vs Oct 3 (24909/24082), Polish campaign vs fine proposal
+  (19923/16144), Greece strike vs Catholics' call (12472/10368), pope's Aug 28 machines message vs
+  the encyclical (17143/2718); SAME — unions' reaction 15419 vs the pope's call 14756 (the ruling),
+  Anglicans 607 and Thiel 22593 vs the encyclical 2718. (3) Reply keys id, reason, same — one
+  short reason line written before the answer; only "same" is read (fixed reader).
+  **OVERLAP (per the brief):** every example row is in the scored samples, so a pass on them is
+  weaker evidence. HELD OUT on purpose: the Alliance pair 27299/24079 (missed in BOTH attempt-5
+  runs) and the 17040/17505 edge — those are the clean test that the rule, not the examples, was
+  learned. relabel_check flags any through-reuse fusion that involves an example row
+  (`[N ... prompt-example rows]` in the summary). CI: a new check that every example is a real
+  frozen row with the right headline/date and agrees with expected.json, none held out (known
+  positives: a flipped verdict and a held-out row are both caught); the theme-pairs check gained
+  14621/13476 (12 rows again, 12/12 turned down, known positive 12/12 fuse).
+  STOP SIGNAL (JP): if Sunday still fuses next-event pairs with the dates and examples in front of
+  the check, this line stops.
+- **Attempt 5 record (reuse check on Sonnet, labeler Haiku) — FAILED THE BAR LIVE TWICE; switch
+  never turned on (nothing to revert). The misses are mostly next-event pairs = this approach's
+  floor.**
+  RERUN 2026-10-30 (JP, PA, 9a00b36, fixed reader, 15419 ruled same story; same design):
+    | real nights                    | stored | att.1 Haiku | att.4 Haiku chk | att.5 run 1 | att.5 rerun | bar  |
+    | encyclical rows on its card    | 374    | 511         | 421             | 480         | 462         | >341 |
+    | encyclical through reuse       | 0      | —           | >=1             | 1           | **0**       | 0    |
+    | Sunday cards through reuse     | 0      | —           | 5               | 2 (1 ruled) | **3**       | 0 FAIL |
+    | Sunday split happenings        | 16     | 1           | 4               | 3           | 3           | <13  |
+    | cross_night fused / split      | 0 / 3  | n/a         | 0 / 0           | 0 / 0       | 0 / 0       | 0 split |
+  (att.1/att.4 encyclical/Sunday counts there are the old any-fusion bar, regraded where known;
+  attempt 1b Sonnet-list and attempt 2 words-gate are in the history entry below / TODO_ARCHIVE.)
+  The 3 fused Sunday cards, each row named (hand judgment from expected.json):
+    1. label "Pope Sunday Rest Statement", made the Aug 4 night for 13476 (Aug 3, "Labor Unions
+       and Churches Vow to Fight to Keep Sunday Work-Free", a single). On the Aug 13 night the
+       pope's Aug 12-13 Sunday-call rows (14621 14625 14718 14729 14756; then 14789 14794 15112
+       15419 on later nights) reused it and the check said yes. NEXT-EVENT PAIR (same theme, a
+       different speaker's statement 9 days later).
+    2. "Vatican Sunday Rest Warning Statement": 17040 (Aug 28, "The Catholic Church Warns that
+       Changing Thousands of Years of Sunday Rest Would Threaten Society") + 17505 (Sep 1,
+       "Vatican News: Churches Oppose the Erosion of Sunday Rest"), both singles in the judgment.
+       JUDGMENT EDGE, not settled by headlines: it may be one church statement reported 4 days
+       apart, or two. Not a clean next-event pair.
+    3. "Sunday Alliance Free Sundays Campaign": 27299 (Oct 14 Alliance manifesto) onto 24079 (Oct 3
+       Alliance demand) — NEXT-EVENT PAIR, the same row missed in run 1. (24082, Dr. O Oct 3, is
+       on that card through a same-night fusion with 24079 — the labeler's, not scored.)
+  READ: 2 of 3 are next-event pairs — same group or theme, a new statement days later — which a
+  yes/no check shown a few stored headlines keeps calling "same" on Haiku and on Sonnet: the floor
+  of this approach. Run to run Sonnet also varies (no fixed-randomness setting on it): run 1 missed
+  12366 + 27299, the rerun missed different rows except 27299 — so even a pass would be one draw.
+  Other rerun facts: reuse checks 166/48/7 (148/28/1 turned down), fresh-label 50/22/1; the 2
+  remaining reader errors were "reply holds 2 answers" (American Dream label, Sep 5-6) — refused as
+  designed, so the run-1 errors were at least partly second answers; 3 encyclical rows ended with
+  NO label (27206 27963 28244 — turned down on the last nights, no fresh label; live they would
+  retry nightly).
+  RUN 1 (abae13d, before the reader fix): Through-reuse fusions (bar 0): encyclical **1** (12366, EIR
+  immigration roundtable Jul 28 — plainly wrong), Sunday **2** cards (15419 European unions'
+  reaction onto the pope's Aug 13 Sunday call; 27299 Alliance manifesto Oct 14 onto the Alliance
+  Oct 3 card), cross_night 0. The rest MET the bar: encyclical 480/623 on its card (bar >341;
+  attempt 4 421), Sunday 3 split happenings (bar <13), cross_night 0 split / 0 fused. Same-night
+  column (not scored): encyclical 14 (the June-29 set), Sunday 0. Stored row matched CI (6 | 1).
+  vs attempt 4 under the same rule: Sunday through-reuse 5 -> 2, encyclical >=1 -> 1.
+  Calls: labeler 113/69/9 (Haiku), reuse checks 176/57/7 (Sonnet; 139/63/1 reuses turned down),
+  fresh-label 57/31/1, "left unlabeled tonight" lines 24/36/0 (retries count again; every row had a
+  label by the end). 15419: the check prompt says reactions = SAME, the hand judgment said
+  different. **RULED by JP 2026-10-30: 15419 (European unions' reaction, Aug 18) is the SAME story
+  as the pope's Aug 12-13 Sunday call** — moved into that happening in expected.json (out of
+  singles); the check prompt and the house rule stay as they are; the theme-pairs check drops that
+  pair (12 -> 11 rows). Under the ruling this run's Sunday through-reuse = 1 (27299). 17040 (also
+  on that card in attempt 4) was NOT ruled — still its own story. 27299 and 12366 are clean misses.
+  RERUN ordered by JP (same design, fixed reader); bar unchanged (0 through reuse).
+  BUG FOUND + FIXED (mine, in the reply reader `_ask` -> `_read_array`): 11 Sonnet checks (2
+  encyclical, 9 Sunday — the 3 shown were all the American Dream lawsuit label; that story ended
+  on 2 cards, likely from these lost checks, not proven) failed
+  with "Extra data" and counted as no. The old fallback read from the first '[' to the LAST ']',
+  so any ']' in a note after the answer broke it. Now: a trailing note is ignored, two answers
+  still raise. Known positive in CI (7): the old reader fails the same reply with the same error.
+  Not known: whether the live replies were notes or second answers (the latter still count as no).
+  So this run's numbers were measured WITH the bug; a rerun would differ (fewer turned down — the
+  fused count could go either way).
+  Attempt 5 design — change from attempt 4: only the check's model — `group_news.CHECK_MODEL = "claude-sonnet-5-5"`
+  (its own settings via _call_settings: no temperature, thinking room); the labeler `MODEL` stays
+  Haiku; the list, the check prompt and the fresh-label step are unchanged. Replay passes incl. the
+  12-row theme-pairs check (12/12 turned down; known positive 12/12 fuse with the check saying yes).
+  **NEW BAR (ruled JP 2026-10-30): only fusions made THROUGH a reused earlier-night label are
+  scored.** A same-night fusion (different stories given one label inside one labeler run — the
+  June-29 pass, the Aug 31 trio) is the labeler's, reported in its own column, not scored against
+  this fix. relabel_check.py prints both columns per run (`through reuse | same-night`) plus a free
+  STORED row (the nightly's own labels, no calls). Rule (fixture_lib.reuse_joiners): a row counts
+  as through-reuse when its label existed from an EARLIER labeling night and its story is not one
+  that label carried before; a fused card holding any such row is scored. Known positives in CI:
+  the 12 forced theme fusions all read through-reuse; the stored pinned fusions (6 June encyclical,
+  1 Sunday card) all read same-night. Bar, REAL NIGHTS rows: through-reuse fusions **0** on every
+  case (stored nightly labels: 0 — the switch-off baseline), encyclical rows on its card above
+  341/623, Sunday split happenings below 13, cross_night 0 split. Attempt 4 under the new rule
+  (read off its printout): Sunday 5 through reuse (Palm Sunday, Dr. O Jun 24/Jul 4, the pope's Aug
+  13 call, Polish, the Oct 3 card — that one also holds the same-night 24079/24082 pair) | 1 same-
+  night (Aug 31 trio); encyclical ≥1 through reuse (5443) — 1 of its 16 rows was not listed, so
+  its column is not exactly known. It fails the new bar too.
+- **Attempt 4 record (list + reuse check on Haiku) — FAILED LIVE ON FUSION; switch never
+  turned on.** Live run (JP, PA, `relabel_check.py --run --list-on` on 8c50265, Haiku; nightly
+  untouched — NIGHTLY_SEED was False throughout, nothing to revert). Real nights vs the bar:
+    | measure                            | Haiku baseline | attempt 1 Haiku | attempt 4 Haiku | bar  |
+    | encyclical rows on one card        | 341/623        | 511/623         | 421/623         | up   |
+    | clearly-other stories on its card  | 13             | 23              | 16              | <=13 FAIL |
+    | Sunday over-merged cards           | 1              | 8               | 6               | <=1  FAIL |
+    | Sunday happenings split            | 13             | 1               | 4               | down |
+    | cross-night over-merged / split    | 0 / 2          | not reached     | 0 / 0           | 0 / down |
+  Reuse-check counts: encyclical 198 checks, 116 reuses turned down, 50 fresh-label calls, 27 rows
+  left unlabeled; Sunday 48 / 21 / 17 / 2; cross-night 7 / 2 / 2 / 0 (vs the replay's 112 checks
+  total). One pass (= --regroup path, no check) unchanged: encyclical 597/623 + 53 other.
+  WHERE THE FUSION CAME FROM (labeling nights read off frozen.json): encyclical — 14 of the 15
+  listed joiners were labeled on the June-29 night (one big same-night run: no past label, no
+  check — the baseline's 13 are this same set); only 5443 (Jun 30) came through an approved reuse.
+  Sunday — 2 of the 6 cards are same-night fusions the check never sees (Aug 31 trio 17366/17380/
+  17381; Oct 3 Alliance + Dr. O 24079/24082, the baseline's one); the other fusions are reuses the
+  check wrongly APPROVED: 15317 Pizzaballa onto Palm Sunday (Aug 18 night; judgment edge), Dr. O
+  8753 onto 7082 (Jul 4 vs Jun 24 episode), 15419 unions' reaction + 17040 onto the pope's Aug 13
+  Sunday call, 19923 onto Polish 16144, 27299 Alliance manifesto onto the Oct 3 card. Of the 12
+  theme rows: Dr. O Oct 9 and Greece HELD; Polish, Alliance, unions' reaction did not; the Aug 28
+  machines rows are not among the 15 listed (1 joiner unlisted).
+  READ: Haiku's yes/no doesn't track same-vs-different — wrong both ways: it approves next-event
+  pairs on Sunday and turns down real encyclical coverage (202 encyclical rows off the card vs 112
+  for attempt 1). Also: the bar can fail with a PERFECT check — this run had 2 same-night Sunday
+  fusions (bar <=1) and the encyclical bar rides on the June-night pass. Both next steps were
+  taken in attempt 5 (above): the check on Sonnet, and JP's new bar (through-reuse only).
+  Attempt 4 design, kept in code behind the switch:
+  Design: attempt 1's bounded list unchanged; every reuse of an earlier night's label gets a second
+  call (group_news.check_reuse/confirm_reuse, same model + settings): the new headline + the
+  label's 3 best stored headlines, all WITH publish dates -> same happening or different one on the
+  same theme; "no" (or no answer/failed call) -> a fresh-label call showing only tonight's labels,
+  told not to use the turned-down one; if it still names an earlier label the row stays unlabeled
+  tonight. One check per reused label per batch (each headline answered on its own) — one call per
+  headline would be 2.1x the labeler's calls on the encyclical sample; grouped it's 0.6x overall
+  (frozen replay: labeler 191, checks 112 covering 279 headlines), so no cap. Replay (list + check
+  ON, reuse-check stand-in answers from expected.json = always right, so it proves the MECHANISM
+  only): all 3 real-nights cases pass (encyclical 622/623, the 623rd is the Jan-dated row by
+  design); theme-pairs check reworked to "never KEPT" (the label is shown on purpose now) with the
+  labeler stand-in grabbing it every time — 12/12 turned down, all got fresh labels; with the
+  check answering yes all 12 fuse (known positive). --regroup + switch-off requests checked byte-
+  identical vs 323ae12 + pinned in the test. Switch `NIGHTLY_SEED` stays OFF: the live check runs
+  with `relabel_check.py --run --list-on` (scratch db only, nightly untouched). Bar: encyclical
+  together (up from 341/623), <=13 other stories on its card, Sunday fused cards <=1, splits down.
+  The 15419 pair (unions' reaction to the pope's Sunday call) is a REACTION — the house rule merges
+  reactions, the hand judgment calls it a different happening; it fused live.
+- **History of the cross-night item — attempt 2 and before (group_news.py).** Each nightly run starts from an EMPTY
+  label list, so a story pulled over several nights gets new wording each night = several cards
+  (encyclical: 53 labels on 623 rows). Attempt 1 (a bounded past-label list, `pick_known`, kept in
+  code behind `NIGHTLY_SEED = False`) fixed the split but FUSED: shown a label, the AI reused it for
+  other stories on the same theme (encyclical card 13 → 23 other stories, Sunday fused cards 1 → 8).
+  Ideas: show a label only when the headline shares its DISTINCTIVE words (place / institution /
+  name, not "sunday"/"pope"/"ai"); run the 14-day reach from a label's FIRST articles so it can't
+  extend itself; or a second AI check per reuse. Attempt 1b (the same list on Sonnet, 10-30) ALSO
+  fused (Sunday 5 fused cards vs bar 1) — the fault is the list design, not the model; full table
+  in TODO_ARCHIVE. **Attempt 2 (distinctive words, 10-30) STOPPED IN THE REPLAY — never run live,
+  no code shipped:** a word-spread rule can't tell the encyclical's own name from "pope" on the
+  labels as they stand (production's stored labels: "magnifica" 45% on its top label, "pope" 46%)
+  and can't separate same-headline episodes (Dr. O); numbers + why in TODO_ARCHIVE. Kept from it:
+  a new CI check (THEME PAIRS, tests/test_news_clustering.py) — with the list forced ON, the 12
+  same-theme rows the live labeler fused must never be SHOWN the earlier label; attempt 1 shows all
+  12 (KNOWN FAILURE; reworked to "never KEPT" for attempt 4, above). Candidates were: a second AI
+  yes/no per reuse ("same happening as these headlines?" — the only one aimed at the judgment
+  itself); show each past label beside only the headline it matched (one list per batch let 31-93
+  extra other-story rows see the encyclical label via a batch-mate). Any word-statistics rule
+  first needs word counts from the full news.db (the frozen samples are ~70% one story) — that's
+  a news.db read, JP's call. CHECK FIRST: c1a1227 (list OFF,
+  Haiku) had to be deployed before the 10-30 06:00 UTC nightly; if it wasn't, that night's rows
+  were labeled with Sonnet + the list — read them as on 10-29. GATE: the 3 "real nights" cases AND
+  the theme-pairs check pass in the test (done for attempt 4), AND a live `relabel_check.py --run`
+  beats the 10-29 baseline BOTH ways (fused not up, split down) — numbers in TODO_ARCHIVE. Side
+  notes: fresh labels guess YEARS wrong; a `--regroup` would rewrite old split labels but its
+  one-pass list over-fused (53) — needs its own measured decision.
+  code: scripts/news/group_news.py, tests/test_news_clustering.py
+
 ## 2026-10-29 — News clustering: fixtures built + gated; cross-night fix attempt 1 FAILED live on Haiku, 1b on Sonnet 10-30 (switched off); attempt 2 (distinctive words) stopped in the replay 10-30
 Moved whole from TODO.md at the 10-29 wrap. Still open (in TODO.md): corroboration (parked) and
 the cross-night fix, attempt 2. Rollback copy from the 8-row label clear:

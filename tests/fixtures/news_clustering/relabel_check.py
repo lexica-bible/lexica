@@ -14,8 +14,9 @@ Two runs per case:
   ONE PASS     every row in one run, from an empty label list (= a --regroup)
   REAL NIGHTS  the real nightly code: group_news.main() run night by night on a scratch db (rows
                labeled in the June-29 regroup = one night), so it measures whatever main()
-               does: an EMPTY list each night while group_news.NIGHTLY_SEED is off, the bounded
-               past-label list (pick_known) when on. The live run of 2026-10-29 with it ON on
+               does: the bounded past-label list (pick_known) + reuse check while
+               group_news.NIGHTLY_SEED is on (shipped 2026-10-31), an EMPTY list each night when
+               off (~/news_seed_off present). The live run of 2026-10-29 with it ON on
                Haiku failed on fusion (TODO.md); so did attempt 1b, the same list on Sonnet
                (2026-10-30).
 Both runs use the labeler model group_news.MODEL (printed at the top of the output); with
