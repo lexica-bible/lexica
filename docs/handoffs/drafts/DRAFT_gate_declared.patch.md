@@ -133,7 +133,16 @@ Any table in the live db that the file does not mention keeps today's rule.
 ```
 (The rest of gate B — the per-row shape rule, the pinned lists, gate C — is untouched.)
 
-## Open points for the checkpoint
+## Checkpoint points — RULED 2026-10-30 (JP: "all four as recommended")
+1. Member match key = (book, chapter, verse, name) — the tight key, not (book, name).
+2. The gate runs BEFORE step 9 (pinned in `/rebuild-words` 8b.3 when this lands); `abp_surface` stays
+   `identical: true` there.
+3. Declaration files live under `tests/fixtures/<lane>/declared_deltas.json`, COMMITTED.
+4. `tests/test_gate_declared.py`, three cases (no flag = today; declared match = PASS; one undeclared row =
+   FAIL), lands in the same change.
+Next: rebuild the draft diff on these rulings once §9.4 (g) gives the real `pn_binding` values. Still NOT applied.
+
+## Open points for the checkpoint (as first drafted — superseded by the rulings above)
 1. The `pn_binding` member match above keys on (book, name). If two declared rows share a name in one
    book, tighten to (book, chapter, verse, name) — decide at review.
 2. `abp_surface` on a full rebuild: at 8b.3 the copy still carries live's table (step 9 runs later), so

@@ -28,6 +28,12 @@ one charter for the next full words rebuild.
    the <i> flag, add an italic column to the TSV before 0b; no refetch. Q4 English only. Q5 freeze
    10/24. Q6 redraw only the 29% set, own post-swap pass. Q7 deferred to the dry-run verdict; PA read
    sizes it first. Q8 land --declared before the rebuild, own checkpoint."
+7. **Step-3b rulings (JP, 2026-10-30, verbatim):** "Corrections verdicts accepted (33 retire / 12 re-author /
+   6 re-check). 30-vs-51 pin: item (i) reads it; if cert_invariants is red on live today, log as its own TODO
+   line — a live gate failure." · "--declared checkpoints: all four as recommended (tight key; pinned before
+   step 9; fixtures committed; three-case test with the change). Build the draft after (g); still not
+   applied." · "Four extra pages: name them before 0b." · "§9.4 block cleared, read-only, same terms as 9.1.
+   (b) v2 on live: expected word-order 0, content-other 0, punct 260."
 
 ## §1 What this lane changes, in one line
 The English words Lexica prints for ABP (per-slot `words.english` / `english_head`, and the clean
@@ -426,3 +432,8 @@ python3 scripts/cert_invariants.py ~/bible-db/bible.db 2>&1 | tail -25
 (c) feeds the 10-verse hand read: once the 40 rows are in, CC picks 10 (both signs, both testaments) and
 asks for `dump_verse_words.py` on exactly those refs. (h) is a big file; paste only the counts, CC asks for
 members by ref.
+**Cleared by JP 2026-10-30 (§0.7).** Order of what follows the output: (d) names the 4 pages → 0b may
+proceed; (g) → the `--declared` draft is built on the real values with the four checkpoint rulings
+(tight key = book + chapter + verse + name; gate pinned to run before step 9; declaration files committed
+under `tests/fixtures/<lane>/`; three-case test lands with the change) — still NOT applied; (i) red →
+its own TODO line (a live gate failure), not folded into this lane.
