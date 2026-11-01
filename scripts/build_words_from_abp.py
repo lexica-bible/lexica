@@ -1853,7 +1853,8 @@ def _star_name_heads(rows: list) -> None:
 
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
                       ren: dict = None, article_refusals: list = None,
-                      names: set = None, pn_star_refusals: list = None) -> list:
+                      names: set = None, pn_star_refusals: list = None,
+                      bh_match_english: list = None) -> list:
     """
     Combine ABP word list with BH metadata.
     Bracket groups and reading order within brackets come from ABP position
@@ -1868,6 +1869,12 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
 
     abp_words tuples may be 5-wide (eng, raw, abp_pos, opens, closes) or 7-wide
     (… + morph, lemma) when apply_pronoun_corrections ran first; both are accepted.
+
+    bh_match_english (edition-upgrade DESIGN §9.43): None = today's behaviour exactly.
+    When given — one English string per abp_word, same order — bh_lookup matches the
+    BibleHub row on THAT English instead of the word's own. Derivation A passes the OLD
+    English here when building the FEED row set, so greek_pos / italic_words /
+    smcap_words come from the same BibleHub rows as today (§9.29). Nothing else changes.
     """
     used: set = set()
     rows: list = []
@@ -1875,8 +1882,11 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
     bid = 0
     in_bracket = False
 
-    for w in abp_words:
+    if bh_match_english is not None and len(bh_match_english) != len(abp_words):
+        raise ValueError("bh_match_english must have one entry per abp_word")
+    for w_idx, w in enumerate(abp_words):
         english, raw_strongs, abp_pos, opens_bracket, closes_bracket = w[:5]
+        bh_eng = english if bh_match_english is None else bh_match_english[w_idx]
         w_morph = w[5] if len(w) > 5 else None     # aligned morph (None if not anchor-matched)
         w_lemma = w[6] if len(w) > 6 else None     # aligned Greek lemma (None likewise)
         if raw_strongs is None:
@@ -1894,7 +1904,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
             # internal matching against lex/bh bare keys breaks.
             strongs = raw_strongs[1:]
             sbase   = strongs.split(".")[0]
-            gpos, iw, sw = bh_lookup(bh_rows, used, sbase, normalize(english))
+            gpos, iw, sw = bh_lookup(bh_rows, used, sbase, normalize(bh_eng))
 
         # The bracket chip's superscript IS the source's ABP position number (ee84aa0:
         # "gpos superscripts show English reading order"). abp_pos is non-None only for
@@ -1992,6 +2002,316 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
     return [r[:10] + (r[11], r[12]) for r in rows]
 
 
+# ── Derivation A — app-feed English transplant (edition-upgrade DESIGN §9.17–§9.47) ──
+#
+# Two COMPLETE row-set builds per verse (§9.33): the OLD set is today's build, untouched
+# (old English, every pass); the FEED set is the same pipeline on the feed's English,
+# with BibleHub matched on the OLD English (§9.43 keyword) and the OLD set's pronoun
+# corrections applied by row index (§9.45). Compose at the end, row-aligned by position:
+#   from OLD  — position, strongs, strongs_base, morph, lemma, smcap_words, italic,
+#               italic_words (italics held, §9.23/§9.44)
+#   from FEED — english, english_head, greek_pos, bracket_id
+# Check order (§9.47, first fire takes the reason): frozen count-differs → versification
+# → untagged → markup → dash → Strong's test (swap → dotted → other) → compose
+# (rows → passdiff). Anything that does not pass keeps the OLD rows unchanged.
+
+APP_FIX_DIR = BASE_DIR / "tests" / "fixtures" / "edition_upgrade"
+APP_COUNT_DIFFERS = APP_FIX_DIR / "count_differs_chunk_20261031.tsv"
+APP_DASH_CENSUS = APP_FIX_DIR / "feed_dash_census_20261031.tsv"
+APP_MARKUP_CENSUS = APP_FIX_DIR / "feed_markup_census_20261031.tsv"
+APP_GLUE_CENSUS = APP_FIX_DIR / "feed_glue_census_20261031.tsv"
+APP_DASH_END_PIN = 4248     # §9.38: end-of-cell " -" → " --", exactly this many cells
+APP_SPACE_FOLD_PIN = 12480  # §9.42: runs of spaces folded to one, exactly this many cells
+APP_REASONS = ("swap", "dotted", "untagged", "dash", "markup", "rows", "passdiff", "other")
+_SPACE_RUN = re.compile(r" {2,}")
+
+
+def abp_source_texts(*sources) -> dict:
+    """{(abbrev, chapter, verse): verse text after the reference} from abp_texts/, read
+    exactly as iter_verses reads it (same files, same order, same _VERSE_RE)."""
+    out = {}
+    for src in (sources or _abp_sources()):
+        src = Path(src)
+        lines = []
+        if src.is_dir():
+            for txt in sorted(src.glob("*.txt")):
+                with txt.open(encoding="utf-8", errors="replace") as f:
+                    lines.extend(f)
+        else:
+            with zipfile.ZipFile(src) as z:
+                for name in sorted(z.namelist()):
+                    if name.endswith(".txt"):
+                        with z.open(name) as f:
+                            lines.extend(raw.decode("utf-8", errors="replace") for raw in f)
+        for raw in lines:
+            m = _VERSE_RE.match(raw.strip())
+            if m:
+                out[(m.group(1), int(m.group(2)), int(m.group(3)))] = m.group(4)
+    return out
+
+
+def _old_chunks(text: str):
+    """-> ([(gloss, tag), ...], trailing_untagged_text_or_None) — the Strong's spine."""
+    parts = _STRONGS_RE.split(text)
+    pairs = [(parts[i], parts[i + 1]) for i in range(0, len(parts) - 1, 2)]
+    trail = parts[-1] if parts and parts[-1].strip() else None
+    return pairs, trail
+
+
+def _load_census_slots(path, keep):
+    """{key3: lowest slot_index} for census rows where keep(row) is true. Sidecar checked."""
+    import csv as _csv
+    from abp_app_feed import verify_sidecar
+    verify_sidecar(path)
+    out = {}
+    with open(path, encoding="utf-8", newline="") as f:
+        for r in _csv.DictReader(f, delimiter="\t", quoting=_csv.QUOTE_NONE):
+            if keep(r):
+                k = (r["book"], int(r["chapter"]), int(r["verse"]))
+                s = int(r["slot_index"])
+                out[k] = min(s, out.get(k, s))
+    return out
+
+
+class AppTransplant:
+    """Holds the frozen inputs and tallies one run. Never opens a database."""
+
+    def __init__(self, src_texts: dict, count_differs=APP_COUNT_DIFFERS,
+                 feed_path=None, manifest_path=None, vclass_path=None,
+                 dash_path=APP_DASH_CENSUS, markup_path=APP_MARKUP_CENSUS,
+                 glue_path=APP_GLUE_CENSUS, dash_pin=APP_DASH_END_PIN,
+                 fold_pin=APP_SPACE_FOLD_PIN):
+        import abp_app_feed as F
+        from census_feed_dash import shapes as dash_shapes
+        from audit_abp_app_vs_surface import clean_num
+        self.F, self.clean_num = F, clean_num
+        self.src = src_texts
+        slots = F.read_slots(feed_path or F.FEED_PATH, manifest_path or F.MANIFEST_PATH)
+        self.feed = F.group_verses(slots)
+        # §9.38 / §9.42 normalizations — on the transplant side only; the reader stays verbatim.
+        self.norm, dash_fixed, folded = {}, 0, 0
+        for s in slots:
+            e = s["english"]
+            if dash_shapes(e) == {"end_space_hyphen"}:
+                e = e[:-2] + " --"
+                dash_fixed += 1
+            if "  " in e:
+                e = _SPACE_RUN.sub(" ", e)
+                folded += 1
+            self.norm[(s["abbrev"], s["chapter"], s["verse"], s["slot_index"])] = e
+        if dash_pin is not None and dash_fixed != dash_pin:
+            raise F.FeedError(f"end-of-cell ' -' cells {dash_fixed} != pinned {dash_pin}")
+        if fold_pin is not None and folded != fold_pin:
+            raise F.FeedError(f"space-folded cells {folded} != pinned {fold_pin}")
+        self.dash_fixed, self.folded = dash_fixed, folded
+        # frozen censuses: dash + markup keyed on the FEED verse, glue on OUR verse
+        self.dash_bad = _load_census_slots(dash_path, lambda r: r["shape"] != "end_space_hyphen")
+        self.markup_bad = _load_census_slots(markup_path, lambda r: True)
+        self.glue_bad = _load_census_slots(glue_path, lambda r: r["verdict"] in ("glued", "unclear"))
+        self.vclass = F.load_versification_class(vclass_path or F.VCLASS_PATH)
+        res = F.pair_keys(src_texts.keys(), self.feed.keys(), self.vclass)
+        if res["feed_only_outside"]:
+            raise F.FeedError(f"feed-only verse(s) outside the versification class: {res['feed_only_outside']}")
+        self.pairs, self.ours_only, self.feed_only = res["pairs"], res["ours_only"], res["feed_only"]
+        # §9.18: chunk-level count-differs, recomputed and diffed against the frozen file
+        self.count_differs = {k for k, ka in self.pairs.items()
+                              if len(_old_chunks(src_texts[k])[0]) != len(self.feed_chunks(ka))}
+        if count_differs is not None:
+            frozen = set(_load_census_keys(count_differs))
+            if frozen != self.count_differs:
+                raise F.FeedError(
+                    f"chunk-level count-differs ({len(self.count_differs)}) != frozen "
+                    f"({len(frozen)}): only computed {sorted(self.count_differs - frozen)[:5]}, "
+                    f"only frozen {sorted(frozen - self.count_differs)[:5]} - inputs drifted")
+        self.tally = collections.Counter()
+        self.reasons = collections.Counter()
+        self.strict_fail = []
+
+    def feed_chunks(self, ka):
+        """Feed sub-slots for one feed verse: [(strongs_part, english, slot_index)], a
+        dash-joined compound expanded one part per number, English on the first part."""
+        out = []
+        for s in self.feed[ka]:
+            parts = s["strongs"].split("-") if s["strongs"] else [""]
+            eng = self.norm[(ka[0], ka[1], ka[2], s["slot_index"])]
+            for j, p in enumerate(parts):
+                out.append((self.clean_num(p).strip(), eng if j == 0 else "", s["slot_index"]))
+        return out
+
+    def write_count_differs(self, out_path):
+        from audit_abp_app_vs_surface import BOOK_ORDER
+        rank = {b: i for i, b in enumerate(BOOK_ORDER)}
+        with open(out_path, "w", encoding="utf-8", newline="\n") as f:
+            f.write("book\tchapter\tverse\n")
+            for b, c, v in sorted(self.count_differs, key=lambda k: (rank.get(k[0], 99), k[1], k[2])):
+                f.write(f"{b}\t{c}\t{v}\n")
+
+    def _fail(self, key, reason, pos, ours, feed):
+        self.reasons[reason] += 1
+        self.strict_fail.append((key[0], key[1], key[2], pos, ours, feed, reason))
+        return "strict_fail", reason
+
+    def decide(self, key):
+        """Pre-compose outcome for OUR verse key: ('ours_only'|'count_differs'|
+        'versification'|'compose', None) or ('strict_fail', reason)."""
+        if key not in self.pairs:
+            return "ours_only", None
+        if key in self.count_differs:
+            return "count_differs", None
+        if (key[0], key[1]) in self.vclass:
+            return "versification", None
+        ka = self.pairs[key]
+        pairs, trail = _old_chunks(self.src[key])
+        fch = self.feed_chunks(ka)
+        ours = [t[1:] for _, t in pairs]
+        first_chunk = {}
+        for i, (_p, _e, si) in enumerate(fch):
+            first_chunk.setdefault(si, i)
+        if trail is not None:
+            i = len(pairs)
+            return self._fail(key, "untagged", i, trail.strip(), fch[i][0] if i < len(fch) else "")
+        hits = [first_chunk[s] for s in (self.markup_bad.get(ka), self.glue_bad.get(key)) if s is not None]
+        if hits:
+            i = min(hits)
+            return self._fail(key, "markup", i, ours[i], fch[i][0])
+        if ka in self.dash_bad:
+            i = first_chunk[self.dash_bad[ka]]
+            return self._fail(key, "dash", i, ours[i], fch[i][0])
+        feeds = [p for p, _e, _s in fch]
+        diffs = [i for i in range(len(ours)) if ours[i] != feeds[i]]
+        if not diffs:
+            return "compose", None
+        i = diffs[0]
+        swap = (len(diffs) % 2 == 0 and all(
+            diffs[j + 1] == diffs[j] + 1 and ours[diffs[j]] == feeds[diffs[j + 1]]
+            and ours[diffs[j + 1]] == feeds[diffs[j]] for j in range(0, len(diffs), 2)))
+        if swap:
+            return self._fail(key, "swap", i, ours[i], feeds[i])
+        if all(ours[d].split(".")[0] == feeds[d].split(".")[0] for d in diffs):
+            return self._fail(key, "dotted", i, ours[i], feeds[i])
+        return self._fail(key, "other", i, ours[i], feeds[i])
+
+    def apply(self, key, raw_words, corrs, old_rows, bh_rows, lex, ren=None, names=None):
+        """-> the rows to insert for this verse: the composed rows on a pass, else
+        old_rows unchanged. raw_words = parse_abp_line words BEFORE pronoun correction;
+        corrs = the OLD set's correct_verse output (None when no Rahlfs/TAGNT)."""
+        outcome, _reason = self.decide(key)
+        if outcome != "compose":
+            self.tally[outcome] += 1
+            return old_rows
+        pairs, _trail = _old_chunks(self.src[key])
+        fch = self.feed_chunks(self.pairs[key])
+        feed_words = [w for (_g, tag), (_p, eng, _s) in zip(pairs, fch) for w in _emit_words(eng, tag)]
+        if len(feed_words) != len(raw_words) or any(
+                f[1] != o[1] for f, o in zip(feed_words, raw_words)):
+            i = next((j for j, (f, o) in enumerate(zip(feed_words, raw_words)) if f[1] != o[1]),
+                     min(len(feed_words), len(raw_words)))
+            o = raw_words[i][1] if i < len(raw_words) else ""
+            f = feed_words[i][1] if i < len(feed_words) else ""
+            self.tally["strict_fail"] += 1
+            self._fail(key, "rows", i, (o or "")[1:], (f or "")[1:])
+            return old_rows
+        if corrs is not None:
+            feed_words = apply_pronoun_corrections(feed_words, corrs, [], "")
+        feed_rows = build_verse_words(feed_words, bh_rows, lex, ren=ren, article_refusals=[],
+                                      names=names, pn_star_refusals=[],
+                                      bh_match_english=[w[0] for w in raw_words])
+        bad = None
+        if len(feed_rows) != len(old_rows):
+            bad = min(len(feed_rows), len(old_rows))
+        else:
+            bad = next((k for k, (o, f) in enumerate(zip(old_rows, feed_rows))
+                        if o[0] != f[0] or o[3] != f[3] or o[4] != f[4]), None)
+        if bad is not None:
+            o = old_rows[bad][3] if bad < len(old_rows) else ""
+            f = feed_rows[bad][3] if bad < len(feed_rows) else ""
+            self.tally["strict_fail"] += 1
+            self._fail(key, "passdiff", bad, o, f)
+            return old_rows
+        composed = [(o[0], f[1], f[2], o[3], o[4], f[5], f[6], o[7], o[8], o[9], o[10], o[11])
+                    for o, f in zip(old_rows, feed_rows)]
+        self.tally["transplanted"] += 1
+        if any(o[1] != c[1] for o, c in zip(old_rows, composed)):
+            self.tally["english_changed"] += 1
+        if any(o[5] != c[5] or o[6] != c[6] for o, c in zip(old_rows, composed)):
+            self.tally["greek_pos_or_bracket_changed"] += 1
+        return composed
+
+    def report(self, out_dir=None, stamp="20261031"):
+        t = self.tally
+        print("\n-- app-feed transplant (DESIGN sec 9.17-sec 9.47) --")
+        print(f"  feed normalizations: end ' -' -> ' --' {self.dash_fixed:,} (pin {APP_DASH_END_PIN:,})"
+              f" - space-folded cells {self.folded:,} (pin {APP_SPACE_FOLD_PIN:,})")
+        print(f"  paired {len(self.pairs):,} - ours-only {len(self.ours_only)} - "
+              f"feed-only {len(self.feed_only)} (all inside the versification class)")
+        for k in ("transplanted", "count_differs", "versification", "ours_only", "strict_fail"):
+            print(f"  {k:28} {t[k]:7,}")
+        print("  strict_fail by reason: " + " - ".join(f"{r} {self.reasons[r]:,}" for r in APP_REASONS))
+        print(f"  of transplanted: english changed {t['english_changed']:,} - "
+              f"greek_pos/bracket_id changed {t['greek_pos_or_bracket_changed']:,} - "
+              f"italic + italic_words from OLD on every verse (held, sec 9.44)")
+        if out_dir:
+            out_dir = Path(out_dir).expanduser()
+            out_dir.mkdir(parents=True, exist_ok=True)
+            p = out_dir / f"strict_fail_{stamp}.tsv"
+            with open(p, "w", encoding="utf-8", newline="\n") as f:
+                f.write("book\tchapter\tverse\tfirst_diff_pos\tours_strongs\tfeed_strongs\treason\n")
+                for r in self.strict_fail:
+                    f.write("\t".join(str(x) for x in r) + "\n")
+            print(f"  strict_fail list: {len(self.strict_fail):,} rows -> {p}")
+
+
+def _load_census_keys(path):
+    import csv as _csv
+    from abp_app_feed import verify_sidecar
+    verify_sidecar(path)
+    with open(path, encoding="utf-8", newline="") as f:
+        return [(r["book"], int(r["chapter"]), int(r["verse"]))
+                for r in _csv.DictReader(f, delimiter="\t", quoting=_csv.QUOTE_NONE)]
+
+
+def _pronoun_sources():
+    """(rahlfs, tagnt) exactly as run() loads them; None where the files are absent."""
+    rahlfs = RahlfsLXX(RAHLFS_DIR) if RahlfsLXX and RAHLFS_DIR.is_dir() else None
+    tagnt = (TAGNTSource([str(p) for p in TAGNT_FILES])
+             if TAGNTSource and all(p.is_file() for p in TAGNT_FILES) else None)
+    return rahlfs, tagnt
+
+
+def _pronoun_corrections(abbrev, chapter, verse, abp_words, rahlfs, tagnt, flag_log):
+    """-> (corrected abp_words, corrs or None) — the same selection run() makes."""
+    src = bnum = None
+    if rahlfs and rahlfs.booknum(abbrev):
+        src, bnum = rahlfs, rahlfs.booknum(abbrev)
+    elif tagnt and tagnt.booknum(abbrev):
+        src, bnum = tagnt, tagnt.booknum(abbrev)
+    if not src:
+        return abp_words, None
+    corrs = correct_verse([w[1] for w in abp_words], src.verse(bnum, chapter, verse),
+                          [w[0] for w in abp_words])
+    return apply_pronoun_corrections(abp_words, corrs, flag_log, f"{abbrev} {chapter}:{verse}"), corrs
+
+
+def app_dry_run(app, verse_keys=None, bh_index=None, lex=None, ren=None, names=None,
+                rahlfs=None, tagnt=None):
+    """Run the per-verse transplant over every abp_texts verse WITHOUT writing anything.
+    verse_keys = the copy's verse keys (None = every abp_texts verse, local run)."""
+    bh_index = bh_index or {}
+    skipped = 0
+    for abbrev, chapter, verse, raw_words in iter_verses(*_abp_sources()):
+        key = (abbrev, chapter, verse)
+        if verse_keys is not None and key not in verse_keys:
+            skipped += 1
+            continue
+        slug = ABBREV_TO_SLUG.get(abbrev)
+        bh_rows = bh_index.get((slug, chapter, verse), []) if slug else []
+        words, corrs = _pronoun_corrections(abbrev, chapter, verse, raw_words, rahlfs, tagnt, [])
+        old_rows = build_verse_words(words, bh_rows, lex, ren=ren, article_refusals=[],
+                                     names=names, pn_star_refusals=[])
+        app.apply(key, raw_words, corrs, old_rows, bh_rows, lex, ren=ren, names=names)
+    return skipped
+
+
 # ── Run / test ────────────────────────────────────────────────────────────────
 
 def _prefix_base(w):
@@ -2021,7 +2341,7 @@ def _prefix_base(w):
     return tuple(w)
 
 
-def run(bible_db: str, scrape_db: str) -> None:
+def run(bible_db: str, scrape_db: str, app: "AppTransplant" = None, app_out: str = None) -> None:
     scrape = sqlite3.connect(scrape_db)
 
     cols = {r[1] for r in scrape.execute("PRAGMA table_info(bh_words)")}
@@ -2123,6 +2443,8 @@ def run(bible_db: str, scrape_db: str) -> None:
         slug      = ABBREV_TO_SLUG.get(abbrev)
         bh_rows   = bh_index.get((slug, chapter, verse), []) if slug else []
 
+        raw_words = abp_words       # pre-correction words — the app transplant's spine
+        corrs = None
         src = bnum = None
         if rahlfs and rahlfs.booknum(abbrev):           # OT → Rahlfs
             src, bnum = rahlfs, rahlfs.booknum(abbrev)
@@ -2140,6 +2462,9 @@ def run(bible_db: str, scrape_db: str) -> None:
         word_rows = build_verse_words(abp_words, bh_rows, lex,
                                       ren=ren, article_refusals=verse_log,
                                       names=names, pn_star_refusals=star_log)
+        if app is not None:         # derivation A: compose OLD + FEED sets, or keep OLD
+            word_rows = app.apply((abbrev, chapter, verse), raw_words, corrs, word_rows,
+                                  bh_rows, lex, ren=ren, names=names)
         for entry in verse_log:
             if entry[3] == "WRITTEN":
                 article_writes += 1
@@ -2219,6 +2544,8 @@ def run(bible_db: str, scrape_db: str) -> None:
           f"(per DECISION — the sizing plan also prints per SLOT), "
           f"{len(pn_star_refusals):,} refusals "
           f"({', '.join('%s %d' % (k, n) for k, n in star_reasons.most_common())})")
+    if app is not None:
+        app.report(app_out)
     print(f"\n  Built into: {target}   (live {bible_db} untouched)")
     print(f"\n  NEXT — run the dependent builders against the COPY, then swap it in.")
     print(f"  This rebuild CLEARED is_pn / proper-noun Strong's, so import_tipnr is required:")
@@ -2319,7 +2646,64 @@ def main():
     parser.add_argument("--book",    default="Gen")
     parser.add_argument("--chapter", type=int, default=1)
     parser.add_argument("--verse",   type=int, default=None)
+    # Derivation A — app-feed English transplant (edition-upgrade DESIGN §9.17–§9.47)
+    parser.add_argument("--app-feed", action="store_true",
+                        help="build with the app edition's English (composes OLD + FEED row sets)")
+    parser.add_argument("--count-differs", default=str(APP_COUNT_DIFFERS),
+                        help="frozen chunk-level count-differs file (+ .sha256)")
+    parser.add_argument("--dry-run", metavar="COPY_DB",
+                        help="app-feed dry run against a db COPY, opened read-only; writes no db")
+    parser.add_argument("--dry-run-nodb", action="store_true",
+                        help="LOCAL app-feed dry run: no db, lexicon/attestation map/names/BibleHub OFF")
+    parser.add_argument("--out", default="~/edition_upgrade_runs",
+                        help="directory for strict_fail_<date>.tsv")
+    parser.add_argument("--gen-count-differs", metavar="FILE",
+                        help="write the chunk-level count-differs keys from the frozen feed + abp_texts")
     args = parser.parse_args()
+
+    if args.gen_count_differs or args.dry_run is not None or args.dry_run_nodb or args.app_feed:
+        from abp_app_feed import FeedError
+        try:
+            src_texts = abp_source_texts()
+            if args.gen_count_differs:
+                app = AppTransplant(src_texts, count_differs=None)
+                app.write_count_differs(args.gen_count_differs)
+                print(f"chunk-level count-differs: {len(app.count_differs):,} verses "
+                      f"-> {args.gen_count_differs}")
+                return
+            app = AppTransplant(src_texts, count_differs=args.count_differs)
+            if args.dry_run is not None:
+                # <COPY_DB> is mandatory, no default — it must never fall through to live.
+                if not args.dry_run or not Path(args.dry_run).is_file():
+                    sys.exit(f"ERROR: --dry-run needs an existing copy db path, got {args.dry_run!r}")
+                con = sqlite3.connect(f"file:{args.dry_run}?mode=ro", uri=True)
+                keys = {(b, c, v) for b, c, v in con.execute("SELECT book, chapter, verse FROM verses")}
+                lex = load_lexicon(con)
+                con.close()
+                scrape = sqlite3.connect(f"file:{args.scrape_db}?mode=ro", uri=True)
+                bh_index = load_bh_verse_index(scrape)
+                scrape.close()
+                rahlfs, tagnt = _pronoun_sources()
+                skipped = app_dry_run(app, keys, bh_index, lex, build_attestation_map(),
+                                      load_name_roster(), rahlfs, tagnt)
+                print(f"DRY RUN against {args.dry_run} (read-only) - scrape {args.scrape_db} - "
+                      f"Rahlfs {'on' if rahlfs else 'OFF'} - TAGNT {'on' if tagnt else 'OFF'} - "
+                      f"verses not in the copy {skipped}")
+                app.report(args.out)
+                return
+            if args.dry_run_nodb:
+                rahlfs, tagnt = _pronoun_sources()
+                app_dry_run(app, None, None, None, None, None, rahlfs, tagnt)
+                print("LOCAL DRY RUN - no db: lexicon, attestation map, names, BibleHub OFF - "
+                      f"Rahlfs {'on' if rahlfs else 'OFF'} - TAGNT {'on' if tagnt else 'OFF'}. "
+                      "NOT the build's figures.")
+                app.report(args.out)
+                return
+        except FeedError as e:
+            print(f"STOP: {e}")
+            sys.exit(1)
+        if args.test:
+            sys.exit("ERROR: --app-feed does not combine with --test")
 
     if args.test:
         if not Path(args.scrape_db).exists():
@@ -2334,7 +2718,10 @@ def main():
                 sys.exit(1)
         print(f"bible.db:  {args.bible_db}")
         print(f"scrape db: {args.scrape_db}\n")
-        run(args.bible_db, args.scrape_db)
+        if args.app_feed:
+            run(args.bible_db, args.scrape_db, app=app, app_out=args.out)
+        else:
+            run(args.bible_db, args.scrape_db)
 
 
 if __name__ == "__main__":
