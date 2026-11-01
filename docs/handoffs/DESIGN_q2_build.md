@@ -190,7 +190,7 @@ BibleHub produces today. Non-transplanted verses (Q7 (i)) keep BibleHub italics 
 
 **Key:** `(abbrev, chapter, verse)` on both sides after `APP_TO_ABBREV`. Three classes, ruled:
 1. **Plain pairing** (everything not below): same key both sides.
-2. **Psalm titles** — "our Psalm titles are verse 0 = the app's verse 1 (146 chapters)" (charter
+2. **Psalm titles** — "our Psalm titles are verse 0 = the app's verse 1 (~~146~~ 147 chapters — corrected 2026-10-31, §9.14)" (charter
    §2): our `(Psa, ch, v)` pairs with feed `(Psa, ch, v+1)` for every chapter where our side has
    a verse 0. That is exactly the audit's rule ([audit_abp_app_vs_surface.py:12-14](../../scripts/audit_abp_app_vs_surface.py#L12),
    `psa_shift` at [:420-424](../../scripts/audit_abp_app_vs_surface.py#L420); the census reuses it,
@@ -328,7 +328,7 @@ re-declared floors, 7 spot-check incl. Gen 1:21 and Mark 1:9) and the step-9 cha
 
 ## 9. Rulings 2026-10-31 (JP, verbatim; numbered to match §7)
 1. Strict pairing: same count + same Strong's at every index after split-flip. Fail → Q7 (i). align_verse is census tooling, not called by the build.
-2. count_differs_members frozen into the tree (live dump + .sha256, punct precedent); reader re-derives from the source copy at build time, diffs against frozen, any difference = stop. Dump is a later gated PA step.
+2. count_differs_members frozen into the tree (live dump + .sha256, punct precedent); ~~reader re-derives from the source copy at build time, diffs against frozen, any difference = stop.~~ **AMENDED by §9.10 (2026-10-31):** the re-derive-and-diff is a separate gated census step on the copy before the build (`census_count_differs.py` vs the frozen file); the reader only verifies the frozen file's .sha256 and loads it. Dump is a later gated PA step.
 3. Derivation B uses load_abp_prose.reorder_bracket. The JS port (reorder_english.py) stays the v2 gate's; B shares no logic with the gate.
 4. Versification map (Pro 16 / Pro 24 / Jer 10 / Hab 3): follow-up lane; Q7 (i) holds them on old text here.
 5. Declared English rows stay informational; no english_rows section; v2 + compare_words check them.
@@ -336,3 +336,21 @@ re-declared floors, 7 spot-check incl. Gen 1:21 and Mark 1:9) and the step-9 cha
 7. B is a separate script, its own step in /rebuild-words before step 3, own process, own feed read. Independent = neither reads the other's output.
 8. Order on the copy: retire the 33 cured → B writes feed text → finish_rebuild applies remaining active. A cured row still active that loud-skips = stop, not skip.
 9. 31,237 vs 31,238 attributed on the reader's first dry run on the copy before any write; feed-only verse = stop unless in the versification class.
+
+### Feed-reader plan rulings 2026-10-31 (JP, verbatim; numbered to match the plan's Q1–Q7)
+10. Reader opens no DB, never re-derives. Re-derive-and-diff = separate gated census step on the copy before the build (census_count_differs.py vs frozen file; align_verse allowed there, it's census tooling). Reader only verifies the frozen file's .sha256 and loads it. Amend §9.2's wording to this.
+11. Versification class frozen: tests/fixtures/edition_upgrade/versification_class.json, chapters only, sourced to CHARTER:78-80 in the file. Not hardcoded.
+12. Same-count strict-rule failures: keep old text, census as strict_fail list, count reported at dry run. Not a stop.
+13. Frozen count-differs dump must be run on the pinned italic TSV on the copy (that is the §9.2 step). 1,849 remains the "before". Seven-column identity check is not a substitute.
+14. Psalm-title chapters = 147 (measured, committed abp_texts). Correct CHARTER:78 with a dated note in this commit.
+15. No committed feed slice (third-party text, rebuild_trap precedent). Tests use a synthetic feed + synthetic manifest; real-TSV tests skip when the file is absent.
+16. ops.md:189 "74 files" → docs wrap commit, not this one.
+
+**Landed with these rulings:** `scripts/abp_app_feed.py` (shared library + `--check` / `--attribute <copy>`),
+`tests/fixtures/edition_upgrade/versification_class.json`, `tests/test_abp_app_feed.py` (in ci.yml + pre-commit).
+Local `--check` on the real TSV 2026-10-31: pin OK (`7bd77385…`, 25,526,878 bytes) · 577,994 slots · 31,238
+verses · 66 books · keyed vs `abp_texts/` 31,237: Psalm shift 147 · paired 31,228 · ours-only 9 · feed-only 10
+(Pro 16 ×7, Pro 24 ×1, Jer 10 ×1, Hab 3 ×1) · outside the class 0. This is against `abp_texts/`, NOT the §9.9
+attribution (that is `--attribute` on the copy, a later gated PA step). `--attribute <copy>` opens the copy
+read-only (accepted 2026-10-31); `<copy>` is mandatory, no default, an empty or missing path = stop. The §9.12
+strict_fail list is NOT in the reader — it stays with derivation A's dry run (ruled 2026-10-31).

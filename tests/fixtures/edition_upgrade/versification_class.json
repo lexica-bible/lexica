@@ -1,0 +1,11 @@
+{
+  "ruling": "DESIGN_q2_build.md §9.11 (JP 2026-10-31): versification class frozen here, chapters only, not hardcoded.",
+  "source": "docs/handoffs/CHARTER_edition_upgrade.md:78-80 — Pro 16 REORDERED; Pro 24, Jer 10 partial one-verse offsets; Hab 3: app 3:20 = ours 3:19. JP-ruled: NO renumber on our side.",
+  "use": "A feed-only verse (feed verse with no partner on our side after the Psalm-title shift) is a STOP unless its chapter is listed here (§9.9).",
+  "chapters": [
+    ["Pro", 16],
+    ["Pro", 24],
+    ["Jer", 10],
+    ["Hab", 3]
+  ]
+}

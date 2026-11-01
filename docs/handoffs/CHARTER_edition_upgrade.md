@@ -75,7 +75,7 @@ hash (one with the 4 stale files present, one with the cache clean). Step (2) = 
 as a required feed (commit 6d60a466); step (3) the json re-pin on PA (§9.8); step (4) = this line. A second
 copy of TSV + `.sha256` goes to the local checkout by scp (read-only touchpoint).
 **Known properties of the source that the build must handle (all from lane (a), ruled where noted):**
-- Numbering: our Psalm titles are verse 0 = the app's verse 1 (146 chapters). Pro 16 is REORDERED
+- Numbering: our Psalm titles are verse 0 = the app's verse 1 (~~146~~ **147 chapters** — corrected 2026-10-31, measured on the committed `abp_texts/` by `abp_app_feed.py --check`; DESIGN §9.14). Pro 16 is REORDERED
   (ours 16:27–33 = app 16:20–26; app 16:2–9 = ours 16:5…16); Pro 24, Jer 10 partial one-verse
   offsets; Hab 3: app 3:20 = ours 3:19. **JP-ruled: NO renumber on our side** — the English is taken
   by the per-verse map from the audit's run output, our verse keys stay.
