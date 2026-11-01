@@ -224,8 +224,11 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs: A transplants 29,623 / B writes
-  16,067. **NEXT: the PA sequence brief** (copy build -> retire the 33 cured -> B -> finish_rebuild ->
-  gates), the lane's own `--declared` file, and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
+  16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–4 done on the copy
+  `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58). Order now
+  (§9.60): 5 = A dry run on the copy → 6 = SELECT + retire (cured ∩ A-eligible ∩ feed-taken field only, §9.59 — NOT
+  all 33) → 7 = B dry run → build → retired-row check (§9.61) → gates. Still owed: the lane's own `--declared`
+  file and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).
