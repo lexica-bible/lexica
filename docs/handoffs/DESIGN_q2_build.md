@@ -438,3 +438,6 @@ BibleHub/Rahlfs off): transplanted 29,623 · count_differs 704 · versification 
 untagged 0) — sums to 31,237; the 59 census verses = bracket 50 + correction 6 + count_differs 2 + markup 1.
 — **§9.19 order RATIFIED (JP 2026-10-31, with the step-1 commit `e4c0afe3`):** frozen → versification → correction →
 untagged → markup → dash → bracket → Strong's → compose.
+
+### PA sequence rulings 2026-11-01 (JP, via the ruling chat)
+58. `pn_binding.rule` blank = `''` (text, length 0), never NULL — charter §9.4 (g) "blank" means `''`. Read on the copy `bible_edupg_test_20261101.db` (step 4, log `~/edition_upgrade_runs/step4_michaiah_20261101.log`): the 3 Michaiah rows (2Ki 22:12, 2Ch 17:7, Neh 12:41) read `''` / text / length 0, and no `rule` cell in the table is NULL. The 3 rows are NOT entered in `tests/fixtures/edition_upgrade/declared_deltas.json` — live fuzzy/`''` = rebuild fuzzy/`''` (binder default `entity_resolution.py:658`, :760), so they are unchanged and a declared-but-unchanged row fails gate A (`gate_greek_header.py:102-104`); they stay in the 10/25 fixture only.

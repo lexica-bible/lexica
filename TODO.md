@@ -178,7 +178,8 @@ parser reference notes in its appendix). No open writes.
 - **`gate_greek_header.py --declared` LANDED `c07288d6` (10/31)** — four-case test `tests/test_gate_declared.py`,
   worked example `tests/fixtures/rebuild_trap/declared_deltas_20261025.json`, 8b.3 line updated. The
   edition lane still owes ITS OWN declaration file (`tests/fixtures/edition_upgrade/declared_deltas.json`)
-  before its build; on the real copy check the Michaiah `rule` blank is `''` not NULL (fixture note).
+  before its build. Michaiah `rule` blank CHECKED 11/1 on the copy: `''`, never NULL (DESIGN §9.58) —
+  the 3 rows are NOT declared in the edition file (unchanged by this rebuild).
 - HELD (reviewer 2026-10-25) — **`surface` vs `lemma-only` header label.** The 2 Sheshach rows went
   surface → lemma-only at the swap (accepted). Trace what the label changes on the card, and whether a
   header that matches the page should carry `surface`.
