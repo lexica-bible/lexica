@@ -101,7 +101,7 @@ OUTSIDE CC; this session did not open these files. Re-verify any detail a step l
     was good" in 1:13 (ours) vs 1:12 (app) are ALREADY in our source text → an edition
     difference upstream of our build, for those samples. Not every row is that (ours-only
     "he"/"the ones" look like build additions — unverified). Versification: Psalm titles
-    (ours v0 = app v1, 146 chapters, ~96% under the shift), Pro 16 / 24:8, Jer 10, Hab 3.
+    (ours v0 = app v1, 147 chapters [corrected 2026-10-31, measured; was 146], ~96% under the shift), Pro 16 / 24:8, Jer 10, Hab 3.
   - ALIGNMENT 90.2% overall, ≈ 94% ex-Psalms. 34,289 "same slot, different number" pairs
     are mostly MIRROR swaps (3588↔2962 517/507, 2250↔1565 229/229, 1161↔3588) = same
     words in a different order on one side — cause NOT checked; v1 counts them unaligned.

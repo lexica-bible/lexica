@@ -186,7 +186,8 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   as a tail step of finish_rebuild.sh (after fix_split_merges — a "--" precondition there must
   match first). Memory `project_library_bracket`.
 - `cert_manifest.py build|verify` + `cert_reparse_harness.py` — the ABP-certification feed pin
-  (74 files, SHA-256, committed as `cert_manifest.json`) and the Tier A re-parse harness (full
+  (76 files since 2026-10-31 = 75 + the app feed `abp_app_html/abp_app_slots_italic.tsv`; SHA-256,
+  committed as `cert_manifest.json`) and the Tier A re-parse harness (full
   production build into `bible.db.new`, row-diff vs live, reports cert_report_summary.txt /
   cert_deltas.tsv). Read-only on live. Records: `docs/audits/AUDIT_abp_certification.md` +
   `docs/audits/AUDIT_abp_invariants.md`.
@@ -216,6 +217,16 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   the flag the gate is byte-for-byte the old one. Run at `/rebuild-words` 8b.3, BEFORE step 9 (so
   abp_surface is still identical). Test `tests/test_gate_declared.py` (four cases); worked example
   `tests/fixtures/rebuild_trap/declared_deltas_20261025.json` (the 10/25 Michaiah rows).
+- **Edition-upgrade lane scripts (2026-10-31; code only, nothing run on PA yet; rulings = DESIGN_q2_build.md
+  §9):** `abp_app_feed.py` (the one feed reader: manifest sha+size pin; `--check`; `--attribute <copy>`
+  read-only) · `census_feed_{dash,markup,brackets}.py` (read-only feed scanners -> frozen
+  `tests/fixtures/edition_upgrade/*_census_20261031.tsv` + `.sha256`; brackets has `--control`) ·
+  `build_words_from_abp.py --app-feed` (derivation A, two-build compose; `--dry-run COPY_DB` read-only,
+  `--dry-run-nodb` local; writes `strict_fail_<date>.tsv` + `eligible_<date>.tsv` to `--out`, default
+  `~/edition_upgrade_runs`; `--gen-count-differs`) · `build_prose_from_app.py` (derivation B: `--eligible`
+  = A's file; `--dry-run COPY_DB` / `--dry-run-nodb` / `--apply COPY_DB`; refuses the live path). Tests:
+  test_abp_app_feed, test_feed_censuses, test_app_transplant (incl. the default-path fingerprint),
+  test_build_prose — all in CI + pre-commit. Console output is ASCII (cp1252-safe).
 - `fix_italic_heads.py` (`--dry-run`/`--apply`, `--strongs G####`, `--all`) — makes a slot's
   SEARCH LABEL (`words.english_head`) its OWN rendering, never a translator-added italic word
   ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable.

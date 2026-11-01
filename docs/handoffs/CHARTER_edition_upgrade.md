@@ -1,6 +1,6 @@
 # CHARTER — edition upgrade: Lexica's English line → the ABP app edition (DRAFT)
 
-**Status: DRAFT, §8 RULED 2026-10-30 (§0.6). Nothing applied on PA. 0b CLOSED 10/31; cert pin 30→51 landed `6e9d2df8`; `--declared` gate landed `c07288d6` (§4.5 is no longer a draft); Q2 build design + its nine rulings = `docs/handoffs/DESIGN_q2_build.md` (`818550ff`). Next: the feed reader (DESIGN §3).**
+**Status: DRAFT, §8 RULED 2026-10-30 (§0.6). Nothing applied on PA. 0b CLOSED 10/31; cert pin 30→51 landed `6e9d2df8`; `--declared` gate landed `c07288d6` (§4.5 is no longer a draft); Q2 build design + its nine rulings = `docs/handoffs/DESIGN_q2_build.md` (`818550ff`). Then (2026-10-31, code only, PA untouched): feed reader `0773e2ae` · feed censuses `4737662e` · derivation A `--app-feed` `8fdc46f0` + bracket/correction/eligible `e4c0afe3` · derivation B `97d87fb1` (DESIGN §9.10–9.57). Next: the PA sequence (copy build, gated).**
 Scoping record: step 1 findings (chat, 2026-10-30) + the lane (a) numbers in
 `docs/handoffs/HANDOFF_abp_source_material.md`. Supersedes nothing yet; when ruled, it becomes the
 one charter for the next full words rebuild.

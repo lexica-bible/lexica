@@ -219,9 +219,12 @@ parser reference notes in its appendix). No open writes.
   §9.8). **10/31: all three threads DONE** — cert pin 30→51 `6e9d2df8`; `--declared` gate `c07288d6`; Q2
   build design `docs/handoffs/DESIGN_q2_build.md` `818550ff` with JP's nine §9 rulings (strict pairing,
   B = separate script via `load_abp_prose.reorder_bracket`, count-differs members frozen into the tree,
-  corrections retired as status updates on the copy, feed-only verse = stop). **NEXT: the feed reader,
-  DESIGN §3 + §9** (asserts the manifest sha; no database). Then the count-differs dump (gated PA step),
-  B's script, the lane's own `--declared` file. Charter §0.6–0.10 + DESIGN §9 = every ruling.
+  corrections retired as status updates on the copy, feed-only verse = stop). **10/31 later: CODE DONE, nothing run on PA** — feed reader
+  `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
+  `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
+  derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs: A transplants 29,623 / B writes
+  16,067. **NEXT: the PA sequence brief** (copy build -> retire the 33 cured -> B -> finish_rebuild ->
+  gates), the lane's own `--declared` file, and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).
