@@ -22,11 +22,14 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import abp_app_feed as F           # noqa: E402
 import census_feed_dash as D       # noqa: E402
 import census_feed_markup as M     # noqa: E402
+import census_feed_brackets as K   # noqa: E402
 
 FIX = ROOT / "tests" / "fixtures" / "edition_upgrade"
 DASH_FILE = FIX / "feed_dash_census_20261031.tsv"
 MARKUP_FILE = FIX / "feed_markup_census_20261031.tsv"
 GLUE_FILE = FIX / "feed_glue_census_20261031.tsv"
+BRACKET_FILE = FIX / "feed_bracket_census_20261031.tsv"
+CARVEOUT_FILE = FIX / "correction_carveout_20261031.tsv"
 BS = "\\"
 
 
@@ -84,9 +87,31 @@ class MarkupClasses(unittest.TestCase):
         self.assertEqual(M.classes("600 and 66"), {"strongs_translit"})
 
 
+class BracketShapes(unittest.TestCase):
+    def test_each_class(self):
+        self.assertEqual(K.shapes("and that] went"), {"close_without_open"})
+        # the S9 (f) shape: a digit glued OUTSIDE any open bracket fires both classes
+        self.assertEqual(K.shapes("and 1that] went"), {"close_without_open", "digit_outside"})
+        self.assertEqual(K.shapes("[1a [1b]"), {"open_while_open"})
+        self.assertEqual(K.shapes("[2let 1us"), {"unclosed"})
+        self.assertEqual(K.shapes("4dried up"), {"digit_outside"})
+        self.assertEqual(K.shapes("[the 2x 1y]"), {"item_without_digit"})
+        self.assertEqual(K.shapes("[2x 2y 1z]"), {"duplicate_digit"})
+        self.assertEqual(K.shapes("[1x 3y]"), {"digit_gap"})
+
+    def test_quiet_controls(self):
+        for t in ("And God said, Let [3bring forth 1the 2earth]", "[2sea monsters 1great],",
+                  "[3each 5as 8called 6the 7Lord 1so 2let 4walk]!", "600 and 60 and 6", ""):
+            self.assertEqual(K.shapes(t), set(), t)
+
+    def test_control_fires_on_abp_texts(self):
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(K.control(), 0)
+
+
 class FrozenFiles(unittest.TestCase):
     def test_sidecars_match(self):
-        for f in (DASH_FILE, MARKUP_FILE, GLUE_FILE):
+        for f in (DASH_FILE, MARKUP_FILE, GLUE_FILE, BRACKET_FILE, CARVEOUT_FILE):
             F.verify_sidecar(f)          # raises FeedError on any mismatch
 
     def test_glue_verdicts(self):
@@ -115,6 +140,9 @@ class RealFeedRescan(unittest.TestCase):
 
     def test_dash_rescan_equals_frozen(self):
         self.assertEqual(self.rescan(D), hashlib.sha256(DASH_FILE.read_bytes()).hexdigest())
+
+    def test_bracket_rescan_equals_frozen(self):
+        self.assertEqual(self.rescan(K), hashlib.sha256(BRACKET_FILE.read_bytes()).hexdigest())
 
     def test_markup_rescan_equals_frozen(self):
         self.assertEqual(self.rescan(M), hashlib.sha256(MARKUP_FILE.read_bytes()).hexdigest())

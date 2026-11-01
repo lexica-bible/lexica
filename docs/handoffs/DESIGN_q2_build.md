@@ -339,8 +339,8 @@ re-declared floors, 7 spot-check incl. Gen 1:21 and Mark 1:9) and the step-9 cha
 3. Derivation B uses load_abp_prose.reorder_bracket. The JS port (reorder_english.py) stays the v2 gate's; B shares no logic with the gate.
 4. Versification map (Pro 16 / Pro 24 / Jer 10 / Hab 3): follow-up lane; Q7 (i) holds them on old text here.
 5. Declared English rows stay informational; no english_rows section; v2 + compare_words check them.
-6. Corrections re-adjudication = status updates on the copy after step 3; seed script untouched this lane; pin moves in the swap commit per §4.7.
-7. B is a separate script, its own step in /rebuild-words before step 3, own process, own feed read. Independent = neither reads the other's output.
+6. Corrections re-adjudication = status updates on the copy ~~after step 3~~ **before B (AMENDED by §9.50, 2026-10-31: §9.8 wins)**; seed script untouched this lane; pin moves in the swap commit per §4.7.
+7. B is a separate script, its own step in /rebuild-words before step 3, own process, own feed read. Independent = neither reads the other's output. **AMENDED by §9.48 (2026-10-31):** "neither reads the other's derived TEXT" — the eligibility decision is shared (A emits it, B consumes it); the text derivations are not.
 8. Order on the copy: retire the 33 cured → B writes feed text → finish_rebuild applies remaining active. A cured row still active that loud-skips = stop, not skip.
 9. 31,237 vs 31,238 attributed on the reader's first dry run on the copy before any write; feed-only verse = stop unless in the versification class.
 
@@ -412,3 +412,27 @@ Reason set: {swap, dotted, untagged, split, lump, rows, dash, markup, other}.
 46. Merge split and lump into one reason: passdiff. No hooks inside build_verse_words. Reason set: {swap, dotted, untagged, dash, markup, rows, passdiff, other}.
 47. Gaps 5–7 as proposed: check order frozen → versification → untagged → markup → dash → Strong's test (swap → dotted → other) → compose (rows → passdiff); first fire takes the reason; TSV columns for non-Strong's reasons as you described.
 **Amendments:** §9.33 "build_verse_words is called twice, not re-parameterized" → "called twice; one optional keyword (`bh_match_english`), default preserves today's behavior" (§9.43). §9.23 "italic flag transplants now" → nothing italic-related transplants this lane (§9.44). Reasons `split` / `lump` (§9.27/§9.28) → merged as `passdiff` (§9.46).
+
+### Derivation B plan rulings 2026-10-31 (JP, verbatim; numbered to match the B plan's Q1–Q10)
+48. A owns eligibility. A's dry run emits the eligible-verse set as a keys-only artifact (eligible_<date>.tsv in --out, with reason for ineligible); B consumes it. §9.7 amended: "neither reads the other's derived TEXT" — the eligibility decision is shared, the text derivations are not. B does not run A's row build.
+49. Yes, B may import shared code from build_words_from_abp (normalizers, decide if needed). Code, not output.
+50. §9.8 wins: retire the 33 cured rows on the copy before B runs. §9.6 amended from "after step 3" to "before B".
+51. The 6 still-present prose verses: carve-out on BOTH sides — A keeps old rows, B keeps old prose, reason correction. Re-author stays out of scope.
+52. Punct-position members on the copy build: v2 reports the member diff vs the frozen 241 instead of failing on new members; new members on transplanted verses are listed for ruling before swap; any new member on a NON-transplanted verse = fail.
+53. Yes: full bracket-shape census on the feed (scripts/census_feed_brackets.py, same pattern, frozen + .sha256), those verses → strict_fail reason bracket in A's checks too. A's check change + recount is its own commit before B.
+54. clean_verse runs unchanged on feed text; B's dry run counts each cleanup rule's fires on feed text (stray-G and stray-bracket expected 0).
+55. Write only where new prose differs; identical verses counted as unchanged, not written.
+56. Dry-run TSV path and columns as proposed.
+57. No separate backup — the copy is the throwaway. B requires an explicit path and refuses the live path (~/bible-db/bible.db) outright.
+Reason set: {swap, dotted, untagged, dash, markup, bracket, correction, rows, passdiff, other}.
+— **Landed with §9.51/§9.53 (step 1 of the B order, 2026-10-31):** `scripts/census_feed_brackets.py` (control: fires
+4/4 on the known `abp_texts/` positives Mat 21:19, 1Ch 22:15, Job 24:19, Zec 10:3) → frozen
+`tests/fixtures/edition_upgrade/feed_bracket_census_20261031.tsv` (59 feed verses / 62 rows: duplicate_digit 29 ·
+digit_gap 26 · unclosed 5 · item_without_digit 1 · open_while_open 1 · close_without_open 0 · digit_outside 0).
+The §9.51 carve-out is a frozen keys file sourced to charter §4.7 (`correction_carveout_20261031.tsv`, 6 verses) so
+A's checks stay database-free. **Placement (CC's, not in the rulings):** `correction` right after versification (so
+the 6 always read "correction" — all 6 also carry feed bracket defects), `bracket` right after dash. A's dry run now
+also writes `eligible_<date>.tsv` (book, chapter, verse, eligible 0/1, reason). Local recount (no db, lexicon/map/
+BibleHub/Rahlfs off): transplanted 29,623 · count_differs 704 · versification 32 · ours-only 9 · strict_fail 869
+(other 464 · rows 111 · passdiff 73 · dotted 61 · markup 60 · bracket 50 · dash 37 · swap 7 · correction 6 ·
+untagged 0) — sums to 31,237; the 59 census verses = bracket 50 + correction 6 + count_differs 2 + markup 1.

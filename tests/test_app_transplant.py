@@ -87,7 +87,7 @@ class Env:
     """A temp directory holding a synthetic feed, manifest, censuses and frozen files."""
 
     def __init__(self, src, feed, cd=(), dash=(), markup=(), glue=(), vclass=(("Pro", 16),),
-                 dash_pin=None, fold_pin=None):
+                 dash_pin=None, fold_pin=None, bracket=(), correction=()):
         self.tmp = _tempfile.TemporaryDirectory()
         d = Path(self.tmp.name)
         fp = d / "feed.tsv"
@@ -115,9 +115,12 @@ class Env:
         dp = frozen("dash.tsv", ["book", "chapter", "verse", "slot_index", "shape"], dash)
         kp = frozen("markup.tsv", ["book", "chapter", "verse", "slot_index", "class"], markup)
         gp = frozen("glue.tsv", ["book", "chapter", "verse", "slot_index", "feed_word", "verdict"], glue)
+        bp = frozen("bracket.tsv", ["book", "chapter", "verse", "class"], bracket)
+        cp = frozen("correction.tsv", ["book", "chapter", "verse"], correction)
         self.src = src
         self.kw = dict(feed_path=fp, manifest_path=mp, vclass_path=vp, dash_path=dp,
-                       markup_path=kp, glue_path=gp, dash_pin=dash_pin, fold_pin=fold_pin)
+                       markup_path=kp, glue_path=gp, bracket_path=bp, correction_path=cp,
+                       dash_pin=dash_pin, fold_pin=fold_pin)
 
     def app(self, count_differs="frozen"):
         return B.AppTransplant(self.src, count_differs=self.cd if count_differs == "frozen" else count_differs,
@@ -226,6 +229,31 @@ class Transplant(unittest.TestCase):
         r = self.strict_fail(GEN_SRC, GEN_FEED, glue=[("Gen", 1, 1, 3, "x", "glued")])
         self.assertEqual(r[-1], "markup")
 
+    def test_bracket_reason(self):
+        r = self.strict_fail(GEN_SRC, GEN_FEED, bracket=[("Gen", 1, 1, "unclosed")])
+        self.assertEqual(r[3:], ("", "", "", "bracket"))
+
+    def test_correction_reason_wins_over_feed_shape_checks(self):
+        r = self.strict_fail(GEN_SRC, GEN_FEED, correction=[GEN], bracket=[("Gen", 1, 1, "unclosed")],
+                             markup=[("Gen", 1, 1, 1, "camel_glue")])
+        self.assertEqual(r[-1], "correction")
+
+    def test_eligible_artifact(self):
+        k2 = ("Gen", 1, 2)
+        src = {GEN: GEN_SRC, k2: "AndG2532 thatG3754"}
+        e = self.env(src=src, feed={GEN: GEN_FEED, k2: [("3754", "that"), ("2532", "and")]})
+        app = e.app()
+        run_verse(app, src, GEN)
+        run_verse(app, src, k2)
+        import io
+        from contextlib import redirect_stdout
+        with _tempfile.TemporaryDirectory() as d, redirect_stdout(io.StringIO()):
+            app.report(d, stamp="T")
+            with open(Path(d) / "eligible_T.tsv", encoding="utf-8", newline="") as f:
+                rows = list(_csv.DictReader(f, delimiter="\t"))
+        self.assertEqual([(r["verse"], r["eligible"], r["reason"]) for r in rows],
+                         [("1", "1", ""), ("2", "0", "swap")])
+
     def test_glue_wording_passes(self):
         e = self.env(src={GEN: GEN_SRC}, feed={GEN: GEN_FEED}, glue=[("Gen", 1, 1, 4, "sky", "wording")])
         app = e.app()
@@ -303,6 +331,7 @@ class DryRunWritesNoDb(unittest.TestCase):
             self.assertFalse(Path(d, "copy.db.new").exists())
             self.assertIn("transplanted", buf.getvalue())
             self.assertTrue((out / "strict_fail_20261031.tsv").is_file())
+            self.assertTrue((out / "eligible_20261031.tsv").is_file())
 
     def test_empty_copy_path_refused(self):
         argv = sys.argv

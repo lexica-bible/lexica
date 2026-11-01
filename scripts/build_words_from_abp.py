@@ -2011,18 +2011,23 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None,
 #   from OLD  — position, strongs, strongs_base, morph, lemma, smcap_words, italic,
 #               italic_words (italics held, §9.23/§9.44)
 #   from FEED — english, english_head, greek_pos, bracket_id
-# Check order (§9.47, first fire takes the reason): frozen count-differs → versification
-# → untagged → markup → dash → Strong's test (swap → dotted → other) → compose
-# (rows → passdiff). Anything that does not pass keeps the OLD rows unchanged.
+# Check order (§9.47 + §9.51/§9.53, first fire takes the reason): frozen count-differs →
+# versification → correction (the 6 still-present prose verses, before any feed-shape check
+# so they always read "correction") → untagged → markup → dash → bracket → Strong's test
+# (swap → dotted → other) → compose (rows → passdiff). Anything that does not pass keeps the
+# OLD rows unchanged. Every verse's verdict goes to eligible_<date>.tsv (§9.48) for B.
 
 APP_FIX_DIR = BASE_DIR / "tests" / "fixtures" / "edition_upgrade"
 APP_COUNT_DIFFERS = APP_FIX_DIR / "count_differs_chunk_20261031.tsv"
 APP_DASH_CENSUS = APP_FIX_DIR / "feed_dash_census_20261031.tsv"
 APP_MARKUP_CENSUS = APP_FIX_DIR / "feed_markup_census_20261031.tsv"
 APP_GLUE_CENSUS = APP_FIX_DIR / "feed_glue_census_20261031.tsv"
+APP_BRACKET_CENSUS = APP_FIX_DIR / "feed_bracket_census_20261031.tsv"      # §9.53
+APP_CORRECTION_CARVEOUT = APP_FIX_DIR / "correction_carveout_20261031.tsv"  # §9.51, charter §4.7
 APP_DASH_END_PIN = 4248     # §9.38: end-of-cell " -" → " --", exactly this many cells
 APP_SPACE_FOLD_PIN = 12480  # §9.42: runs of spaces folded to one, exactly this many cells
-APP_REASONS = ("swap", "dotted", "untagged", "dash", "markup", "rows", "passdiff", "other")
+APP_REASONS = ("swap", "dotted", "untagged", "dash", "markup", "bracket", "correction",
+               "rows", "passdiff", "other")
 _SPACE_RUN = re.compile(r" {2,}")
 
 
@@ -2079,7 +2084,8 @@ class AppTransplant:
     def __init__(self, src_texts: dict, count_differs=APP_COUNT_DIFFERS,
                  feed_path=None, manifest_path=None, vclass_path=None,
                  dash_path=APP_DASH_CENSUS, markup_path=APP_MARKUP_CENSUS,
-                 glue_path=APP_GLUE_CENSUS, dash_pin=APP_DASH_END_PIN,
+                 glue_path=APP_GLUE_CENSUS, bracket_path=APP_BRACKET_CENSUS,
+                 correction_path=APP_CORRECTION_CARVEOUT, dash_pin=APP_DASH_END_PIN,
                  fold_pin=APP_SPACE_FOLD_PIN):
         import abp_app_feed as F
         from census_feed_dash import shapes as dash_shapes
@@ -2108,6 +2114,8 @@ class AppTransplant:
         self.dash_bad = _load_census_slots(dash_path, lambda r: r["shape"] != "end_space_hyphen")
         self.markup_bad = _load_census_slots(markup_path, lambda r: True)
         self.glue_bad = _load_census_slots(glue_path, lambda r: r["verdict"] in ("glued", "unclear"))
+        self.bracket_bad = set(_load_census_keys(bracket_path))          # FEED verse keys
+        self.correction_keep = set(_load_census_keys(correction_path))   # OUR verse keys
         self.vclass = F.load_versification_class(vclass_path or F.VCLASS_PATH)
         res = F.pair_keys(src_texts.keys(), self.feed.keys(), self.vclass)
         if res["feed_only_outside"]:
@@ -2126,6 +2134,7 @@ class AppTransplant:
         self.tally = collections.Counter()
         self.reasons = collections.Counter()
         self.strict_fail = []
+        self.verdict = {}           # our key -> '' (eligible) or the outcome / reason
 
     def feed_chunks(self, ka):
         """Feed sub-slots for one feed verse: [(strongs_part, english, slot_index)], a
@@ -2160,6 +2169,8 @@ class AppTransplant:
             return "count_differs", None
         if (key[0], key[1]) in self.vclass:
             return "versification", None
+        if key in self.correction_keep:
+            return self._fail(key, "correction", "", "", "")
         ka = self.pairs[key]
         pairs, trail = _old_chunks(self.src[key])
         fch = self.feed_chunks(ka)
@@ -2177,6 +2188,8 @@ class AppTransplant:
         if ka in self.dash_bad:
             i = first_chunk[self.dash_bad[ka]]
             return self._fail(key, "dash", i, ours[i], fch[i][0])
+        if ka in self.bracket_bad:          # verse-level class: no single slot to name
+            return self._fail(key, "bracket", "", "", "")
         feeds = [p for p, _e, _s in fch]
         diffs = [i for i in range(len(ours)) if ours[i] != feeds[i]]
         if not diffs:
@@ -2195,9 +2208,10 @@ class AppTransplant:
         """-> the rows to insert for this verse: the composed rows on a pass, else
         old_rows unchanged. raw_words = parse_abp_line words BEFORE pronoun correction;
         corrs = the OLD set's correct_verse output (None when no Rahlfs/TAGNT)."""
-        outcome, _reason = self.decide(key)
+        outcome, reason = self.decide(key)
         if outcome != "compose":
             self.tally[outcome] += 1
+            self.verdict[key] = reason or outcome
             return old_rows
         pairs, _trail = _old_chunks(self.src[key])
         fch = self.feed_chunks(self.pairs[key])
@@ -2210,6 +2224,7 @@ class AppTransplant:
             f = feed_words[i][1] if i < len(feed_words) else ""
             self.tally["strict_fail"] += 1
             self._fail(key, "rows", i, (o or "")[1:], (f or "")[1:])
+            self.verdict[key] = "rows"
             return old_rows
         if corrs is not None:
             feed_words = apply_pronoun_corrections(feed_words, corrs, [], "")
@@ -2227,10 +2242,12 @@ class AppTransplant:
             f = feed_rows[bad][3] if bad < len(feed_rows) else ""
             self.tally["strict_fail"] += 1
             self._fail(key, "passdiff", bad, o, f)
+            self.verdict[key] = "passdiff"
             return old_rows
         composed = [(o[0], f[1], f[2], o[3], o[4], f[5], f[6], o[7], o[8], o[9], o[10], o[11])
                     for o, f in zip(old_rows, feed_rows)]
         self.tally["transplanted"] += 1
+        self.verdict[key] = ""
         if any(o[1] != c[1] for o, c in zip(old_rows, composed)):
             self.tally["english_changed"] += 1
         if any(o[5] != c[5] or o[6] != c[6] for o, c in zip(old_rows, composed)):
@@ -2259,6 +2276,16 @@ class AppTransplant:
                 for r in self.strict_fail:
                     f.write("\t".join(str(x) for x in r) + "\n")
             print(f"  strict_fail list: {len(self.strict_fail):,} rows -> {p}")
+            from audit_abp_app_vs_surface import BOOK_ORDER
+            rank = {b: i for i, b in enumerate(BOOK_ORDER)}
+            q = out_dir / f"eligible_{stamp}.tsv"
+            with open(q, "w", encoding="utf-8", newline="\n") as f:
+                f.write("book\tchapter\tverse\teligible\treason\n")
+                for k in sorted(self.verdict, key=lambda k: (rank.get(k[0], 99), k[1], k[2])):
+                    r = self.verdict[k]
+                    f.write(f"{k[0]}\t{k[1]}\t{k[2]}\t{0 if r else 1}\t{r}\n")
+            print(f"  eligible list (sec 9.48, for B): {len(self.verdict):,} verses, "
+                  f"{sum(1 for r in self.verdict.values() if not r):,} eligible -> {q}")
 
 
 def _load_census_keys(path):
