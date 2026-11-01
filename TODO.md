@@ -223,15 +223,21 @@ parser reference notes in its appendix). No open writes.
   corrections retired as status updates on the copy, feed-only verse = stop). **10/31 later: CODE DONE, nothing run on PA** — feed reader
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
-  derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs: A transplants 29,623 / B writes
-  16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–4 done on the copy
-  `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58). Order now
+  derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
+  figures): A transplants 29,623 / B writes 16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–5 done on the copy
+  `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58 · **A dry run
+  = the lane's figures: transplanted 29,071 · strict_fail 1,421 · passdiff 625, §9.62**). Order now
   (§9.60): 5 = A dry run on the copy → 6 = SELECT + retire (cured ∩ A-eligible ∩ feed-taken field only, §9.59 — NOT
   all 33) → 7 = B dry run → build → retired-row check (§9.61) → gates. Still owed: the lane's own `--declared`
   file and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).
+  **FOLLOW-UP LANE (JP 11/1, §9.62, not this lane): tag-placement reconciliation** — the 604 verses where the
+  lexicon-gated passes place Strong's under different words on old vs feed English (passdiff on PA, keep old
+  rows this lane). Member list = the `passdiff` rows of PA `~/edition_upgrade_runs/strict_fail_20261031.tsv`
+  (local copy `C:\Users\JP\edition_upgrade_runs\pa\passdiff_pa_only_604.tsv`). The PA file's name is a FIXED
+  stamp in code (`build_words_from_abp.py:2257`) — a re-run of A's dry run overwrites it; keep the local copy.
 - **Rollback copies:** `~/bible.db.pre-surface-fill-20261025` + `~/bible.db.pre-xref-fix-20261024`
   stay until a nightly bible.db copy in `~/db_backups` is stamped after 2026-10-25 03:08 and
   verified (`ls -lh ~/db_backups | grep bible`; nightly ~13:30 UTC). Then the older copy can go.
