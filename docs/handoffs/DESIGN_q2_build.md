@@ -206,6 +206,12 @@ BibleHub produces today. Non-transplanted verses (Q7 (i)) keep BibleHub italics 
    keep the old text in this rebuild**, so the build needs no map for them now; the map is the
    follow-up lane's input (Q 7.4 asks where it is pinned).
 
+**Known limitation — glued notes (§9.41, 2026-10-31).** The glue census
+(`tests/fixtures/edition_upgrade/feed_glue_census_20261031.tsv`) finds a glued alternate rendering only
+where the feed word is NOT an `abp_texts/` word and splits into an old word of the SAME slot plus a
+known word, in a verse whose chunk count matches. It cannot see (a) a glue that happens to form a real
+word, or (b) a glue in a cell with no old partner. Neither is measured; both would pass the strict test.
+
 **A feed verse with no `verses` row (feed-only):** skipped and COUNTED, like the build's own
 `Verses skipped` ([build_words_from_abp.py:2117-2121](../../scripts/build_words_from_abp.py#L2117)),
 and the count is declared (charter §4.1: `verses` 31,237 exact, no renumber; the feed has 31,238
@@ -320,7 +326,8 @@ re-declared floors, 7 spot-check incl. Gen 1:21 and Mark 1:9) and the step-9 cha
 ## 8. Out of scope — stated
 - **The feed taking over the Greek / Strong's role from `abp_texts/`** — HELD, later lane
   (TODO "HOLD (JP 10/30, not this lane)"; charter §3 "This charter does not take the app's Greek or
-  numbers"). Derivation A's spine stays `abp_texts/`.
+  numbers"). Derivation A's spine stays `abp_texts/`. **Includes rebuilding the ruling-10 attestation
+  map (`build_attestation_map`, harvested from `abp_texts/`) from the feed — §9.31, 2026-10-31.**
 - **Tier B 12 re-author** (the 12 STILL-PRESENT rows' new `source_value`, §4.7) — its own change,
   Q 7.6 only fixes WHEN it lands relative to the copy build.
 - **Step 7 re-scope** (the spot-check list) — unchanged beyond the charter's two added verses.
@@ -341,7 +348,7 @@ re-declared floors, 7 spot-check incl. Gen 1:21 and Mark 1:9) and the step-9 cha
 10. Reader opens no DB, never re-derives. Re-derive-and-diff = separate gated census step on the copy before the build (census_count_differs.py vs frozen file; align_verse allowed there, it's census tooling). Reader only verifies the frozen file's .sha256 and loads it. Amend §9.2's wording to this.
 11. Versification class frozen: tests/fixtures/edition_upgrade/versification_class.json, chapters only, sourced to CHARTER:78-80 in the file. Not hardcoded.
 12. Same-count strict-rule failures: keep old text, census as strict_fail list, count reported at dry run. Not a stop.
-13. Frozen count-differs dump must be run on the pinned italic TSV on the copy (that is the §9.2 step). 1,849 remains the "before". Seven-column identity check is not a substitute.
+13. Frozen count-differs dump must be run on the pinned italic TSV on the copy (that is the §9.2 step). 1,849 remains the "before". Seven-column identity check is not a substitute. **AMENDED by §9.18 (2026-10-31):** the frozen count-differs set the BUILD uses is the chunk-level set, generated locally from the frozen feed + committed abp_texts — no PA dump. 1,849 stays the Q7 "before" for the post-build census.
 14. Psalm-title chapters = 147 (measured, committed abp_texts). Correct CHARTER:78 with a dated note in this commit.
 15. No committed feed slice (third-party text, rebuild_trap precedent). Tests use a synthetic feed + synthetic manifest; real-TSV tests skip when the file is absent.
 16. ops.md:189 "74 files" → docs wrap commit, not this one.
@@ -354,3 +361,46 @@ verses · 66 books · keyed vs `abp_texts/` 31,237: Psalm shift 147 · paired 31
 attribution (that is `--attribute` on the copy, a later gated PA step). `--attribute <copy>` opens the copy
 read-only (accepted 2026-10-31); `<copy>` is mandatory, no default, an empty or missing path = stop. The §9.12
 strict_fail list is NOT in the reader — it stays with derivation A's dry run (ruled 2026-10-31).
+
+### Derivation A plan rulings 2026-10-31 (JP, verbatim; numbered to match the A plan's Q1–Q9)
+17. Pair at chunk level on the abp_texts Strong's spine, before _emit_words.
+18. Frozen count-differs for the build = chunk-level set, generated locally by the dry run from frozen feed + committed abp_texts, committed as keys only (tests/fixtures/edition_upgrade/count_differs_chunk_<date>.tsv + .sha256). No PA dump. 1,849 remains the Q7 "before" for the post-build census. Chunk-level/frozen disagreement = stop (inputs drifted).
+19. Check order: frozen → versification → strict → strict_fail.
+20. Neighbour swaps → strict_fail, reason swap. Old text.
+21. Carry old and feed English. Greek-side passes (bh_lookup greek_pos, _fix_backwards_pairing, any pass deciding Strong's/morph/lemma from English) read OLD English. English-editing passes (_split_compounds, pronoun correction) run on feed English for strict-pass verses. BEFORE coding: classify every pass in run() into those two bins, file:line each, and report.
+22. greek_pos/bracket_id changes allowed (English-reassembly metadata). Dry run counts verses where either changed.
+23. italic flag transplants now; italic_words HELD pending a gated read of bh_scrape.db format. Dry run reports italic_words unchanged.
+24. Strict = full dotted number. Reason tag dotted.
+25. strict_fail TSV key: book, chapter, verse, first_diff_pos, ours_strongs, feed_strongs, reason ∈ {swap, dotted, footnote, untagged, other}. Path ~/edition_upgrade_runs/.
+(v) closed: 1Pe 3:12 → old text, reason footnote; the untagged trailing-gloss verse → old text, reason untagged — name that verse in your report.
+— The untagged verse is **Mal 3:6** (`abp_texts/abp_ot_texts/abp_malachi.txt`: the line ends `I change not.G3756 G`, a bare `G` with no number; the feed's last slot is `3756-241.2`).
+
+### Pass-classification rulings 2026-10-31 (JP, verbatim; numbered to match the classification Q1–Q7)
+26. Pronoun correction = Group 2, old English.
+27. _split_compounds runs on both English values; if the resulting positions differ, the verse → strict_fail reason split, old text. Positions never change on a strict-pass verse. Dry run counts it.
+28. _split_pn_article_lump decides on old English (Group 2); the English move is mirrored onto feed English. If the decision on feed English would differ → strict_fail reason lump.
+29. bh_lookup matches on old English; its greek_pos, italic_words and smcap_words are all kept as today (italic_words held per §9.23).
+30. Confirmed: _strip_helper_double_tag and _g1473_gloss_retag read old English.
+31. Attestation map stays harvested from abp_texts this lane. Rebuilding it from the feed belongs to the held "feed takes over Greek role" lane — add to §8 out of scope.
+32. Yes: add the second English column (row 13→14) and the build_verse_words parameter. New-field checkpoint: fixtures committed + test lands with the change.
+Reason set is now {swap, dotted, footnote, untagged, split, lump, other}. Mal 3:6 recorded as the untagged verse.
+**§9.32 SUPERSEDED by §9.33 (2026-10-31)** — no 14th column; build_verse_words is called twice, not re-parameterized.
+
+### Mechanism + dash rulings 2026-10-31 (JP, verbatim)
+33. §9.32 superseded. Mechanism: two complete, independent row-set builds per verse — the OLD set exactly as today (all passes, old English), and the FEED set with the same pipeline on feed English. Compose at the end, row-aligned by position: Greek-side columns (strongs, strongs_base, morph, lemma, position, smcap_words) from the OLD set; English-side (english, english_head, italic, greek_pos, bracket_id) from the FEED set; italic_words from OLD (held). No per-step interleaving. Row counts differ or any row's Strong's/position disagrees between the sets → strict_fail, old text. This replaces the 14th column; build_verse_words is called twice, not re-parameterized.
+34. New reason: rows. Covers the 120 and any compose-time misalignment. Reason set: {swap, dotted, footnote, untagged, split, lump, rows, other}.
+35. The " -" cells are the ABP clause dash with one hyphen lost in the fetch. (a) Run the §4.6 dash check on the pinned feed first as a full scan: list every cell matching bare " -" at cell end, and separately any bare " - " mid-cell or other dash shape; commit the scan as tests/fixtures/edition_upgrade/feed_dash_census_<date>.tsv (keys + shape only, no English text) + .sha256, and report counts. (b) If every hit is end-of-cell " -", the transplant step (not the reader — reader stays verbatim) normalizes " -" → " --" so fix_emdash handles it, with the count 4,248 pinned as an assertion. Any other shape → report before ruling, don't normalize it.
+   — (a) RESULT 2026-10-31 (`scripts/census_feed_dash.py`, full scan, 577,994 cells): end_space_hyphen 4,248 (each the cell's only shape) · mid_space_hyphen 34 · double_hyphen 3 · other_hyphen 12 · en/em dash 0 → 49 non-end cells, so (b) was not applied before ruling.
+
+### Dash + markup rulings 2026-10-31 (JP, verbatim)
+36. The 49 non-end dash cells: verse → strict_fail, old text, new reason dash. No per-shape cleanup this lane.
+37. Yes, full markup census: scripts/census_feed_markup.py, same shape as the dash scanner (pin check, no DB, keys + marker class only, no English text) → tests/fixtures/edition_upgrade/feed_markup_census_<date>.tsv + .sha256. Marker classes: backslash code (name the code), digit+Latin-transliteration in English, anything else non-English you find — report the class list before freezing. Those verses → strict_fail, old text, reason markup. 1Pe 3:12 moves from footnote to markup; footnote reason retired. Charter §4.6 "one footnote" gets a dated correction with the count.
+38. Yes: (b) applies to the 4,248 end-of-cell cells alone — normalize " -" → " --" in the transplant step, count pinned at 4,248, assertion fails on any other number.
+39. Yes: both scanners get a synthetic-cell test per shape, added to CI and pre-commit, one commit with both census files.
+Reason set: {swap, dotted, untagged, split, lump, rows, dash, markup, other}.
+
+### Census-freeze rulings 2026-10-31 (JP, verbatim)
+40. Marker class list frozen as found (11 classes incl. greek_letter=0). Freeze feed_markup_census_20261031.tsv + .sha256 from it. Charter §4.6 corrected: 21 backslash cells / 46 marked cells, dated.
+41. The 50 unmarked glues: freeze as their own file, tests/fixtures/edition_upgrade/feed_glue_census_20261031.tsv + .sha256, columns key + feed_word + verdict ∈ {glued, wording, unclear}. Your reading stands as the verdict: the 19 "look glued" = glued; the wording-change list = wording; 2Ki 9:8 = unclear. glued and unclear → strict_fail reason markup; wording → eligible to pass (new readings are the point of the upgrade). Record the detection gap (glue forming a real word, or no old partner) as a known limitation in DESIGN §4.
+42. Double spaces: check whether any existing pass or the insert already collapses whitespace (file:line). If yes, report and do nothing. If no, the transplant step folds runs of spaces to one, count pinned at 12,480 cells.
+   — Checked 2026-10-31: NO general collapse. `clean_english` (`build_words_from_abp.py:139-144`) strips ends only; the insert (:2153-2158) writes english as built. Only slots a pass REWRITES get single-spaced (e.g. `_split_compounds` :609/:613 via `" ".join(...)`). So the transplant step folds runs of spaces to one, 12,480 cells pinned.

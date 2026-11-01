@@ -197,6 +197,11 @@ same keys. Both ABORT on any full rebuild by design (10/25 overridden once). Dra
   typed INLINE in the English cell, so the fetch's title-based † skip could not see it). Pre-registered
   cleanup: strip `\dagger\cvnote…` to the end of the cell, exactly this one slot, declared by member; a
   second such cell anywhere = stop and re-scan.**
+  **CORRECTED 2026-10-31 (full re-scan of the pinned feed, `scripts/census_feed_markup.py`; DESIGN §9.37/§9.40):
+  not one leak — 21 cells carry backslash codes (\Gr 5, \Scap 4, \& 3, \' 3, \Engsevenbd 3, bare 2, \dagger+\cvnote
+  1 = 1Pe 3:12), 46 marked cells in all (44 verses) once Strong's+transliteration 13, glued capitals 13, `..` 14 and
+  one U+201A are counted; plus 19 glued + 1 unclear unmarked notes (glue census). All → strict_fail reason markup,
+  old text; the 1Pe 3:12 one-slot strip is retired.**
 - `--` / em-dash and bracket-digit shapes match the parser's grammar (count of `[`, `]`, digits
   per verse balanced; the S9 (f) class — a `]` with no `[` — counted and listed before the build,
   Tier B rows written for genuine source defects, never silently tolerated).
