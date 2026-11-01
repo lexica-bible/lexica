@@ -72,6 +72,7 @@ jobs:
           python tests/test_abp_app_feed.py
           python tests/test_feed_censuses.py
           python tests/test_app_transplant.py
+          python tests/test_build_prose.py
           python tests/test_abp_tab_bridge.py
           python tests/test_hebrew_xref_positions.py
           python tests/test_audit_xref_vs_binding.py

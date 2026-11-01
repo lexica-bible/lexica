@@ -436,3 +436,5 @@ also writes `eligible_<date>.tsv` (book, chapter, verse, eligible 0/1, reason). 
 BibleHub/Rahlfs off): transplanted 29,623 · count_differs 704 · versification 32 · ours-only 9 · strict_fail 869
 (other 464 · rows 111 · passdiff 73 · dotted 61 · markup 60 · bracket 50 · dash 37 · swap 7 · correction 6 ·
 untagged 0) — sums to 31,237; the 59 census verses = bracket 50 + correction 6 + count_differs 2 + markup 1.
+— **§9.19 order RATIFIED (JP 2026-10-31, with the step-1 commit `e4c0afe3`):** frozen → versification → correction →
+untagged → markup → dash → bracket → Strong's → compose.
