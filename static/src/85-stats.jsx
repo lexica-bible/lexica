@@ -220,6 +220,9 @@ function StatsChart({ byDay, spikes, today }) {
       <details className="stats-daily">
         <summary>Daily numbers</summary>
         <div className="stats-daily-rows">
+          <div className="stats-daily-row stats-daily-head">
+            <span>Day</span><span>Views</span><span>Uniques</span>
+          </div>
           {byDay.slice().reverse().map(d => (
             <div key={d.day} className="stats-daily-row">
               <span>{_sDate(d.day, true)}</span><span>{_sFmt(d.views)}</span><span>{_sFmt(d.uniques)}</span>
@@ -309,6 +312,7 @@ function StatsAccounts({ a }) {
       <div className="stats-line">
         {_sFmt(a.total)} total · {_sFmt(a.new)} new in range · {_sFmt(a.active)} active in range
       </div>
+      {a.list.length > 0 && <div className="stats-note">Emails are partly hidden — click one to show it in full.</div>}
       {a.list.length === 0 ? <div className="stats-empty">No accounts yet.</div> : (
         <div className="stats-tbl stats-tbl--accts">
           <div className="stats-tr stats-th"><span>Account</span><span>Signed up</span><span>Last seen</span></div>

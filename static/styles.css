@@ -3712,7 +3712,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .stats-spike-mark { font-size: 9px; margin-right: 6px; color: var(--ink-3); }
 .stats-daily { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
 .stats-daily summary { cursor: pointer; color: var(--ink-3); }
-.stats-daily-rows { max-height: 260px; overflow-y: auto; margin-top: 6px; }
+/* scrollbar-gutter + padding keep the last column clear of the scroll bar */
+.stats-daily-rows { max-height: 260px; overflow-y: auto; margin-top: 6px; scrollbar-gutter: stable; padding-right: 10px; }
+.stats-daily-head { position: sticky; top: 0; z-index: 1; background: var(--bg); padding: 2px 2px 6px; font-size: 11.5px; font-weight: 600; color: var(--ink-4); }
 .stats-daily-row { display: grid; grid-template-columns: 1fr 80px 80px; padding: 3px 2px; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
 .stats-daily-row span + span { text-align: right; }
 
