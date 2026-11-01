@@ -3644,22 +3644,108 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
    STATS — owner-only visitor dashboard
 ============================================================ */
 .about-owner-seg { display: inline-flex; align-self: flex-start; margin-bottom: 20px; }
-.stats-view { max-width: 760px; margin: 0 auto; padding: 4px 0 40px; }
+/* width:100% — inside About's flex column, margin:auto alone shrink-wraps to content, and the
+   chart measures its box, so the two would size each other (760px on a phone). */
+.stats-view { width: 100%; min-width: 0; max-width: 760px; margin: 0 auto; padding: 4px 0 40px; }
 .stats-title { font-family: var(--f-serif); font-size: 26px; font-weight: 600; color: var(--ink); margin: 0 0 4px; }
 .stats-sub { font-size: 13px; color: var(--ink-4); margin-bottom: 22px; }
-.stats-cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
-.stats-card { flex: 1 1 120px; min-width: 108px; background: var(--bg-2, #f0ece4); border: 1px solid var(--line, #ddd6c8); border-radius: var(--radius); padding: 14px 16px; }
-.stats-card-n { font-size: 26px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.stats-view {
+  /* Chart colors, one set per reading theme. Views = steel blue (the accent's hue), today &
+     yesterday = a deeper step of the same blue, unique visitors = a terracotta line. Checked
+     with the dataviz palette validator (lightness band, chroma, colorblind separation,
+     contrast vs the page) in light, sepia and dark — re-run it if these change. */
+  --stats-bar: oklch(0.62 0.11 240);
+  --stats-bar-now: oklch(0.45 0.11 240);
+  --stats-bar-hover: oklch(0.54 0.11 240);
+  --stats-line: oklch(0.56 0.15 32);
+}
+:root[data-theme="sepia"] .stats-view { --stats-bar: oklch(0.58 0.11 240); --stats-bar-hover: oklch(0.51 0.11 240); }
+:root[data-theme="dark"] .stats-view {
+  --stats-bar: oklch(0.58 0.11 240);
+  --stats-bar-now: oklch(0.76 0.11 240);
+  --stats-bar-hover: oklch(0.66 0.11 240);
+  --stats-line: oklch(0.66 0.14 35);
+}
+.stats-view--loading > :not(.stats-title):not(.stats-sub):not(.stats-range-seg) { opacity: 0.55; transition: opacity 0.15s; }
+.stats-range-seg { margin-bottom: 18px; }
+/* Equal-width tiles on a grid, so a short last row keeps tile size instead of stretching. */
+.stats-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.stats-cards--pair { margin-top: 4px; }
+.stats-cards--pair .stats-card { padding: 10px 16px; }
+.stats-cards--pair .stats-card-n { font-size: 20px; }
+.stats-card { min-width: 0; background: color-mix(in oklab, var(--ink) 4%, var(--bg)); border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px; }
+.stats-card-n { font-size: 26px; font-weight: 700; color: var(--ink); }
 .stats-card-l { font-size: 12px; color: var(--ink-4); margin-top: 2px; }
+.stats-delta { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.stats-note { font-size: 12.5px; color: var(--ink-4); margin: 8px 0 10px; line-height: 1.45; }
+.stats-line { font-size: 14px; color: var(--ink-2); margin: 2px 0 10px; }
+.stats-subhead { font-size: 13px; font-weight: 600; color: var(--ink-2); margin: 14px 0 4px; }
 .stats-section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: 26px 0 10px; }
-.stats-bars { display: flex; align-items: flex-end; gap: 3px; height: 120px; padding-top: 4px; border-bottom: 1px solid var(--rule); }
-.stats-bar-col { flex: 1; height: 100%; display: flex; align-items: flex-end; }
-.stats-bar { width: 100%; background: var(--gold, #b8893b); border-radius: 6px 6px 0 0; min-height: 2px; }
-.stats-refs { display: flex; flex-direction: column; }
-.stats-ref-row { display: flex; justify-content: space-between; padding: 8px 2px; border-bottom: 1px solid var(--rule); font-size: 14px; color: var(--ink); }
-.stats-ref-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.stats-ref-n { color: var(--ink-3); font-variant-numeric: tabular-nums; padding-left: 12px; }
 .stats-empty { color: var(--ink-4); font-size: 14px; padding: 18px 0; }
+
+/* Views chart (hand-rolled SVG) */
+.stats-chart-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; margin-bottom: 4px; }
+.stats-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-3); }
+.stats-key { display: inline-flex; align-items: center; gap: 6px; }
+.stats-key-bar { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--stats-bar); }
+.stats-key-bar--now { background: var(--stats-bar-now); }
+.stats-key-line { display: inline-block; width: 14px; height: 2px; border-radius: 1px; background: var(--stats-line); }
+.stats-chart-box { position: relative; width: 100%; min-width: 0; overflow: hidden; }
+.stats-chart-box svg { display: block; outline: none; }
+.stats-chart-box svg:focus-visible { box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent); border-radius: var(--radius); }
+.stats-grid { stroke: var(--rule); stroke-width: 1; }
+.stats-axis { stroke: var(--rule-2); stroke-width: 1; }
+.stats-tick { font-size: 11px; fill: var(--ink-4); font-variant-numeric: tabular-nums; font-family: var(--f-sans); }
+.stats-bar { fill: var(--stats-bar); }
+.stats-bar--now { fill: var(--stats-bar-now); }
+.stats-bar--hover { fill: var(--stats-bar-hover); }
+.stats-bar--now.stats-bar--hover { fill: color-mix(in oklab, var(--stats-bar-now) 80%, var(--ink)); }
+.stats-line { fill: none; stroke: var(--stats-line); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
+.stats-dot { fill: var(--stats-line); stroke: var(--bg); stroke-width: 2; pointer-events: none; }
+.stats-spike { fill: var(--ink-3); }
+.stats-tip { position: absolute; transform: translateX(-50%); pointer-events: none; background: var(--paper); border: 1px solid var(--rule-2); border-radius: var(--radius); padding: 6px 10px; font-size: 12px; color: var(--ink-3); white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.stats-tip-d { color: var(--ink-2); font-weight: 600; margin-bottom: 2px; }
+.stats-tip-r { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
+.stats-tip-r b { color: var(--ink); }
+.stats-spikes { margin-top: 6px; }
+.stats-spike-line { font-size: 12.5px; color: var(--ink-3); padding: 2px 0; }
+.stats-spike-mark { font-size: 9px; margin-right: 6px; color: var(--ink-3); }
+.stats-daily { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
+.stats-daily summary { cursor: pointer; color: var(--ink-3); }
+.stats-daily-rows { max-height: 260px; overflow-y: auto; margin-top: 6px; }
+.stats-daily-row { display: grid; grid-template-columns: 1fr 80px 80px; padding: 3px 2px; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.stats-daily-row span + span { text-align: right; }
+
+/* Tables (pages / referrers / accounts) — rows, hairline dividers, no boxes */
+.stats-tbl { display: flex; flex-direction: column; }
+.stats-tr { display: grid; align-items: center; gap: 10px; padding: 7px 2px; border-bottom: 1px solid var(--rule); font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; text-align: left; }
+.stats-tr > span:not(:first-child) { text-align: right; color: var(--ink-3); }
+.stats-th { font-size: 11.5px; font-weight: 600; color: var(--ink-4); padding-top: 0; }
+.stats-th > span:not(:first-child) { color: var(--ink-4); }
+.stats-tname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.stats-tbl--pages .stats-tr { grid-template-columns: minmax(0, 1fr) 64px 64px 44px 72px; }
+.stats-tbl--refs .stats-tr { grid-template-columns: minmax(0, 1fr) 64px 52px 80px; }
+.stats-tbl--refs.stats-tbl--noprior .stats-tr { grid-template-columns: minmax(0, 1fr) 64px 52px; }
+.stats-tbl--accts .stats-tr { grid-template-columns: minmax(0, 1fr) 110px 110px; }
+.stats-tr--group { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--rule); font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; }
+.stats-tr--group:hover { background: color-mix(in oklab, var(--row-accent) 7%, transparent); }
+.stats-caret { display: inline-block; width: 16px; color: var(--ink-4); font-size: 11px; }
+.stats-tr--sub { font-size: 13px; }
+.stats-tr--sub .stats-tname { padding-left: 16px; color: var(--ink-2); font-size: 12.5px; }
+.stats-spark { display: inline-block; vertical-align: middle; }
+.stats-more { align-self: flex-start; background: none; border: 0; padding: 6px 2px 6px 18px; font: inherit; font-size: 12.5px; color: var(--accent); cursor: pointer; }
+.stats-email { background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: left; }
+.stats-email:hover { color: var(--accent); }
+@media (max-width: 560px) {
+  .stats-tbl--pages .stats-tr { grid-template-columns: minmax(0, 1fr) 48px 48px 36px 64px; gap: 6px; font-size: 13px; }
+  .stats-tbl--accts .stats-tr { grid-template-columns: minmax(0, 1fr) 88px 88px; gap: 6px; font-size: 13px; }
+  .stats-tbl--refs .stats-tr { grid-template-columns: minmax(0, 1fr) 48px 40px 76px; gap: 6px; font-size: 13px; }
+  .stats-tbl--refs.stats-tbl--noprior .stats-tr { grid-template-columns: minmax(0, 1fr) 48px 40px; }
+  .stats-tname { white-space: normal; overflow-wrap: anywhere; }
+  .stats-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .stats-card { padding: 12px 14px; }
+  .stats-card-n { font-size: 22px; }
+}
 
 /* Admin — accounts & roles */
 .admin-users { display: flex; flex-direction: column; }

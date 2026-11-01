@@ -62,6 +62,50 @@ function _newsKey() {
   try { return new URLSearchParams(window.location.search).get("news") || ""; } catch (e) { return ""; }
 }
 
+// Visitor stats: where this page load LANDED. Read once, when the bundle loads —
+// before the deep-link effect in 90-app strips the query string. Only the parts the
+// Stats page groups on; a News key or reset token is reduced to a bare flag here
+// (and again on the server), so it never leaves the browser.
+const _STATS_LANDING = (() => {
+  try {
+    const p = new URLSearchParams(window.location.search);
+    const keep = [];
+    let surface;
+    if (p.has("news")) { keep.push("news"); surface = "news"; }
+    else if (p.has("reset")) { keep.push("reset"); }
+    else if (p.get("lex")) { keep.push("lex=" + p.get("lex")); surface = "lexicon"; }
+    else if (p.get("b")) {
+      keep.push("b=" + p.get("b"));
+      if (p.get("c")) keep.push("c=" + p.get("c"));
+      if (p.get("t")) keep.push("t=" + p.get("t"));
+      surface = "library";
+    }
+    if (!surface) surface = localStorage.getItem("lexica.view.v1") || "library";
+    return { path: window.location.pathname + (keep.length ? "?" + keep.join("&") : ""), surface };
+  } catch (e) { return { path: "/", surface: "library" }; }
+})();
+
+// Visitor stats: days since this browser's last visit day (-1 = first visit it
+// remembers, null = storage blocked). Only the two dates live on this device; the
+// server gets just the number, so it can count "returning" without any ID.
+function _statsVisitGap() {
+  try {
+    const today = new Date().toISOString().slice(0, 10);   // UTC, like the server's day
+    const KEY = "lexica.visit.v1";
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+    let last = s && s.last, prev = s && s.prev;
+    if (last !== today) {
+      prev = last || null;
+      last = today;
+      localStorage.setItem(KEY, JSON.stringify({ last, prev }));
+    }
+    if (!prev) return -1;
+    const g = Math.round((Date.parse(today) - Date.parse(prev)) / 86400000);
+    return g >= 1 ? g : -1;
+  } catch (e) { return null; }
+}
+
 const api = {
   aiSearch: (q, context = "") =>
     fetch(`/api/ai-search?q=${encodeURIComponent(q)}${context ? `&context=${encodeURIComponent(context)}` : ""}`, { headers: _authHeaders() }).then(r => r.json()),
@@ -225,13 +269,14 @@ const api = {
     fetch(`/api/stats/hit`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ..._authHeaders() },
-      body: JSON.stringify({ ref: document.referrer || "" }),
+      body: JSON.stringify({ ref: document.referrer || "", path: _STATS_LANDING.path,
+                             surface: _STATS_LANDING.surface, gap: _statsVisitGap() }),
     }).catch(() => {}),
   statsOwner: () =>
     fetch(`/api/stats/owner`, { headers: _authHeaders() })
       .then(r => r.json()).catch(() => ({ owner: false })),
-  stats: () =>
-    fetch(`/api/stats`, { headers: _authHeaders() })
+  stats: (range) =>
+    fetch(`/api/stats?range=${encodeURIComponent(range || "30d")}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : null).catch(() => null),
   // Admin-only: list accounts + set a role (admin page).
   adminUsers: () =>

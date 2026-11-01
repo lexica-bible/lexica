@@ -4,10 +4,14 @@
 A tiny page-view counter kept in notes.db. The browser pings /api/stats/hit once
 per page load; we store the day, a one-way DAILY hash of IP+browser (so the same
 person on the same day counts as one "unique", and the hash can't be linked across
-days or turned back into an IP), and the referring site. The owner's OWN visits are
-skipped. /api/stats returns the summary and is owner-gated (404 to everyone else).
+days or turned back into an IP), the referring site, where the load landed (app
+tab + a cleaned address), mobile/desktop, whether it was a signed-in load, and
+how many days since this browser's last visit (the browser works that out itself).
+The owner's OWN visits are skipped. /api/stats returns the summary and is
+owner-gated (404 to everyone else). Finished days are frozen into visits_daily
+and raw rows are dropped after 90 days — see stats_rollup.py.
 
-Privacy: no cookies, no raw IPs, no PII. Just counts.
+Privacy: no cookies, no raw IPs, no browser strings, no PII. Just counts.
 """
 import hashlib
 import sqlite3
@@ -16,26 +20,26 @@ from urllib.parse import urlsplit
 
 from flask import Blueprint, jsonify, request
 
+import stats_rollup as sr
 from core import notes_db, limiter
-from views_notes import is_owner
+from views_notes import is_owner, _user_for_token, _ensure_tables, OWNER_EMAIL
 
 bp = Blueprint("stats", __name__)
 
 _PEPPER = "lexica-visit-v1"   # makes the daily visitor hash not trivially reversible
+_ready = False                # tables checked once per worker
 
 
 def _ensure():
+    global _ready
+    if _ready:
+        return
     conn = notes_db()
     try:
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS visits ("
-            " id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, ts INTEGER NOT NULL,"
-            " visitor TEXT NOT NULL, ref TEXT)"
-        )
-        conn.execute("CREATE INDEX IF NOT EXISTS ix_visits_day ON visits(day)")
-        conn.commit()
+        sr.ensure(conn)
     finally:
         conn.close()
+    _ready = True
 
 
 def _client_ip():
@@ -71,16 +75,32 @@ def hit():
         return jsonify({"ok": True})          # don't count your own visits/refreshes
     _ensure()
     day = time.strftime("%Y-%m-%d", time.gmtime())
-    raw = _client_ip() + "|" + request.headers.get("User-Agent", "") + "|" + day + "|" + _PEPPER
+    ua_raw = request.headers.get("User-Agent", "")
+    raw = _client_ip() + "|" + ua_raw + "|" + day + "|" + _PEPPER
     visitor = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
-    body = request.get_json(silent=True) or {}
-    ref = _ref_host(body.get("ref") if isinstance(body, dict) else None)
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        body = {}
+    ref = _ref_host(body.get("ref"))
+    surface = sr.clean_surface(body.get("surface"))
+    path = sr.clean_path(body.get("path"))
+    gap = sr.clean_gap(body.get("gap"))
     conn = notes_db()
     try:
+        uid = _user_for_token(conn)
         conn.execute(
-            "INSERT INTO visits (day, ts, visitor, ref) VALUES (?,?,?,?)",
-            (day, int(time.time()), visitor, ref),
+            "INSERT INTO visits (day, ts, visitor, ref, surface, path, ua, acct, gap)"
+            " VALUES (?,?,?,?,?,?,?,?,?)",
+            (day, int(time.time()), visitor, ref, surface, path,
+             sr.ua_family(ua_raw), 1 if uid else 0, gap),
         )
+        if uid:
+            try:
+                conn.execute(
+                    "UPDATE users SET last_seen = ? WHERE id = ?"
+                    " AND (last_seen IS NULL OR last_seen < ?)", (day, uid, day))
+            except sqlite3.Error:
+                pass                          # column not added yet — next admin read adds it
         conn.commit()
     except sqlite3.Error:
         pass
@@ -95,53 +115,44 @@ def owner():
     return jsonify({"owner": is_owner()})
 
 
+def _accounts(conn):
+    """Every account with signup day + last-seen day (a signed-in visit or a sign-in,
+    whichever is later). Empty if no one has signed up yet."""
+    try:
+        rows = conn.execute(
+            "SELECT u.email AS email, u.created AS created, u.last_seen AS seen,"
+            " (SELECT max(created) FROM tokens t WHERE t.user_id = u.id) AS login"
+            " FROM users u").fetchall()
+    except sqlite3.Error:
+        return []
+    out = []
+    for r in rows:
+        seen = max((r["seen"] or "")[:10], (r["login"] or "")[:10]) or None
+        email = r["email"] or ""
+        out.append({"email": email, "created": (r["created"] or "")[:10] or None,
+                    "last_seen": seen,
+                    "owner": bool(OWNER_EMAIL) and email.strip().lower() == OWNER_EMAIL})
+    return out
+
+
 @bp.route("/api/stats", methods=["GET"])
 def stats():
     if not is_owner():
         return jsonify({"error": "not found"}), 404
     _ensure()
+    _ensure_tables()                          # adds users.last_seen on an older db
+    range_key = request.args.get("range", "30d")
+    if range_key not in sr.RANGES:
+        range_key = "30d"
+    today = time.strftime("%Y-%m-%d", time.gmtime())
     conn = notes_db()
     try:
-        def one(sql, args=()):
-            r = conn.execute(sql, args).fetchone()
-            return (r[0] or 0) if r else 0
-        today = time.strftime("%Y-%m-%d", time.gmtime())
-        d7 = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 6 * 86400))
-        d30 = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 29 * 86400))
-        total = one("SELECT count(*) FROM visits")
-        uniq = one("SELECT count(DISTINCT visitor) FROM visits")
-        v_today = one("SELECT count(*) FROM visits WHERE day = ?", (today,))
-        v7 = one("SELECT count(*) FROM visits WHERE day >= ?", (d7,))
-        v30 = one("SELECT count(*) FROM visits WHERE day >= ?", (d30,))
-        by_day = [
-            {"day": r["day"], "views": r["v"], "uniques": r["u"]}
-            for r in conn.execute(
-                "SELECT day, count(*) AS v, count(DISTINCT visitor) AS u FROM visits"
-                " WHERE day >= ? GROUP BY day ORDER BY day", (d30,))
-        ]
-        top_ref = [
-            {"ref": r["ref"], "n": r["n"]}
-            for r in conn.execute(
-                "SELECT ref, count(*) AS n FROM visits GROUP BY ref ORDER BY n DESC LIMIT 8")
-        ]
-        # Registered accounts (notes.db users table, created by views_notes). last_seen
-        # is the newest still-valid login token for that account, or None. Guarded in
-        # case no one has signed up yet and the table doesn't exist.
         try:
-            accounts = [
-                {"email": r["email"], "created": r["created"], "last_seen": r["last_seen"]}
-                for r in conn.execute(
-                    "SELECT u.email AS email, u.created AS created,"
-                    " (SELECT max(created) FROM tokens t WHERE t.user_id = u.id) AS last_seen"
-                    " FROM users u ORDER BY u.created DESC")
-            ]
+            sr.rollup(conn, today)
         except sqlite3.Error:
-            accounts = []
+            pass                              # busy — load_days counts unfrozen days live
+        days = sr.load_days(conn, today, sr.load_lo(today, range_key))
+        accounts = _accounts(conn)
     finally:
         conn.close()
-    return jsonify({
-        "total_views": total, "unique_visitors": uniq,
-        "today": v_today, "last7": v7, "last30": v30,
-        "by_day": by_day, "top_ref": top_ref,
-        "accounts": accounts,
-    })
+    return jsonify(sr.summarize(days, today, range_key, accounts))

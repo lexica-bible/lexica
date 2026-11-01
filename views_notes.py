@@ -134,6 +134,10 @@ def _ensure_tables():
         # header/account chrome when set. Email stays the account's identity.
         if "name" not in cols:
             conn.execute("ALTER TABLE users ADD COLUMN name TEXT NOT NULL DEFAULT ''")
+        # Last UTC day this account loaded the site signed in (added 2026-11-01) —
+        # set by the stats hit; drives "active accounts" on the Stats page.
+        if "last_seen" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN last_seen TEXT")
         conn.commit()
     finally:
         conn.close()

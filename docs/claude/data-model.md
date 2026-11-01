@@ -427,7 +427,9 @@ list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing g
     English from Lightfoot. Memory `project_noncanonical_texts` (pipeline + gitignored raw/).
 
 ## Separate DB files (NOT bible.db; all gitignored + PA-only)
-- `notes.db` — user accounts/notes/highlights/journals + `visits` (owner-only visitor stats) +
+- `notes.db` — user accounts/notes/highlights/journals + `visits` / `visits_daily` (owner-only
+  visitor stats: raw page loads kept 90 days, finished days frozen into per-day totals by
+  `stats_rollup.py` on each Stats read; `users.last_seen` = last signed-in day) +
   `password_resets` + `corpus` (saved Ask-corpus conversations, synced via `/api/corpus/sync`
   same id/newer-wins/tombstone as notes) + `ai_usage` (Ask-corpus daily spend caps; user_id 0 =
   site total). Detail: docs/claude/frontend.md (Notes/accounts).
