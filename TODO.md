@@ -228,7 +228,8 @@ parser reference notes in its appendix). No open writes.
   `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58 · **A dry run
   = the lane's figures: transplanted 29,071 · strict_fail 1,421 · passdiff 625, §9.62** · 23 retired, copy now
   active 28 / retired 23 / superseded 6 · B dry run writes 15,571; 7b = only the 5 named prose rows differ, §9.63).
-  Next: the build block outline, cleared stage by stage → build → retired-row check (§9.61/§9.63) → gates. Still owed: the lane's own `--declared`
+  Build outline A–G accepted; declaration + run rulings §9.64. Next: pre-A checks P1–P4 (read-only) → stage A
+  → build → retired-row check (§9.61/§9.63) → gates. Still owed: the lane's own `--declared`
   file and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
