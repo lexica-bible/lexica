@@ -2025,6 +2025,7 @@ APP_GLUE_CENSUS = APP_FIX_DIR / "feed_glue_census_20261031.tsv"
 APP_BRACKET_CENSUS = APP_FIX_DIR / "feed_bracket_census_20261031.tsv"      # §9.53
 APP_CORRECTION_CARVEOUT = APP_FIX_DIR / "correction_carveout_20261031.tsv"  # §9.51, charter §4.7
 APP_MERGE_PAIRS = APP_FIX_DIR / "merge_pairs_20261102.tsv"                # §9.73, frozen from PA
+APP_EDGE_SPLITS = APP_FIX_DIR / "edge_splits_20261102.tsv"                # §9.75, frozen from PA
 APP_DASH_END_PIN = 4248     # §9.38: end-of-cell " -" → " --", exactly this many cells
 APP_SPACE_FOLD_PIN = 12480  # §9.42: runs of spaces folded to one, exactly this many cells
 APP_REASONS = ("swap", "dotted", "untagged", "dash", "markup", "bracket", "correction",
@@ -2113,8 +2114,73 @@ def _restore_merge_pairs(old_rows, rows, pairs):
     return out
 
 
-def _check_merge_pairs(members, frozen, mode):
-    """Compare this run's merge-pair members with the frozen list (DESIGN §9.73).
+# ── edge splits (DESIGN §9.75) ───────────────────────────────────────────────
+# A near miss of the merge rule: the feed's merged cell is not exactly the two old cells, but
+# the blank row's OLD English sits intact at one end of it ("did not find." where the old verb
+# row read "find."). Split the feed cell at that character boundary: the end piece goes to the
+# blank row, the rest stays put. The piece is character-for-character the old English, so it
+# is also the feed's own text — no old wording is brought in and the words still match the
+# prose. Normalization: only the cells' outer whitespace is trimmed, the cut must fall on a
+# space, and the space(s) at the cut are dropped; everything else must match exactly
+# (punctuation included — "has not come" does not split against an old "come,").
+EDGE_SPLIT_HEADER = ("book", "chapter", "verse", "blank_pos", "neighbor_pos", "blank_strongs",
+                     "neighbor_strongs", "old_blank_english", "feed_neighbor_english",
+                     "split_blank_english", "split_neighbor_english")
+
+
+def _edge_piece(feed, old, right):
+    """-> (rest, piece) when `old` sits at the right (or left) end of `feed` on a space
+    boundary with something left over; else None."""
+    f, o = (feed or "").strip(), (old or "").strip()
+    if not o or len(f) <= len(o):
+        return None
+    if right and f.endswith(o) and f[-len(o) - 1] == " ":
+        rest, piece = f[:-len(o)].rstrip(), f[-len(o):]
+    elif not right and f.startswith(o) and f[len(o)] == " ":
+        rest, piece = f[len(o):].lstrip(), f[:len(o)]
+    else:
+        return None
+    return (rest, piece) if rest else None
+
+
+def _edge_splits(old_rows, rows, skip=()):
+    """-> [(blank, neighbor, rest, piece)]: rows[blank] has no English where old_rows[blank]
+    does; rows[neighbor] (adjacent, same Strong's as the old rows) ends — on the side facing
+    the blank — with exactly old_rows[blank]'s English. Rows in `skip` (merge pairs) and rows
+    already used by a split are never touched."""
+    used, out = set(skip), []
+    for b in range(len(rows)):
+        if b in used or (rows[b][1] or "").strip() or not (old_rows[b][1] or "").strip():
+            continue
+        for n in (b - 1, b + 1):
+            if n < 0 or n >= len(rows) or n in used or not (rows[n][1] or "").strip():
+                continue
+            if old_rows[b][4] != rows[b][4] or old_rows[n][4] != rows[n][4]:
+                continue
+            cut = _edge_piece(rows[n][1], old_rows[b][1], right=n < b)
+            if cut:
+                out.append((b, n) + cut)
+                used.update((b, n))
+                break
+    return out
+
+
+def _apply_edge_splits(old_rows, rows, splits):
+    """-> rows with each split made. The blank row takes the piece and its OLD english_head
+    (the piece IS its old English); the neighbor keeps the rest, headed by its old head when
+    the rest's words equal its old English, else by _head_word(rest)."""
+    out = list(rows)
+    for b, n, rest, piece in splits:
+        rb = list(out[b]); rb[1], rb[2] = piece, old_rows[b][2]; out[b] = tuple(rb)
+        rn = list(out[n])
+        same = _merge_words(rest) == _merge_words(old_rows[n][1])
+        rn[1], rn[2] = rest, (old_rows[n][2] if same else _head_word(rest))
+        out[n] = tuple(rn)
+    return out
+
+
+def _check_merge_pairs(members, frozen, mode, label="merge-pair"):
+    """Compare this run's merge-pair (or edge-split, label=) members with the frozen list (§9.73).
     mode 'nodb'  -> skipped, said out loud (no dictionary: its pairs differ from PA's by design)
     mode 'dry'   -> compared if the frozen file exists, else names the file to freeze
     mode 'build' -> the frozen file must exist and match exactly, else FeedError (STOP).
@@ -2122,23 +2188,23 @@ def _check_merge_pairs(members, frozen, mode):
     from abp_app_feed import FeedError, verify_sidecar
     frozen = Path(frozen)
     if mode == "nodb":
-        return ("merge-pair list check SKIPPED - local run without the dictionary; its pairs "
-                "differ from PA's by design (sec 9.73)")
+        return (f"{label} list check SKIPPED - local run without the dictionary; its members "
+                "differ from PA's by design (sec 9.73/9.75)")
     if not frozen.is_file():
         if mode == "build":
-            raise FeedError(f"frozen merge-pair list {frozen} not found - freeze it from the PA "
+            raise FeedError(f"frozen {label} list {frozen} not found - freeze it from the PA "
                             "dry run first (sec 9.73)")
-        return f"merge-pair list: no frozen list yet ({frozen.name}) - this run's list is the one to freeze"
+        return f"{label} list: no frozen list yet ({frozen.name}) - this run's list is the one to freeze"
     verify_sidecar(frozen)
     with open(frozen, encoding="utf-8", newline="") as f:
         lines = f.read().split("\n")
     want = [tuple(ln.split("\t")) for ln in lines[1:] if ln]
     got = [tuple(str(x) for x in m) for m in members]
     if got == want:
-        return f"merge-pair list: MATCHES the frozen {frozen.name} ({len(want):,} pairs)"
+        return f"{label} list: MATCHES the frozen {frozen.name} ({len(want):,} rows)"
     only_run = [m for m in got if m not in set(want)]
     only_frozen = [m for m in want if m not in set(got)]
-    msg = (f"merge-pair list DIFFERS from the frozen {frozen.name}: this run {len(got):,}, "
+    msg = (f"{label} list DIFFERS from the frozen {frozen.name}: this run {len(got):,}, "
            f"frozen {len(want):,}; only this run {only_run[:3]}, only frozen {only_frozen[:3]}")
     if mode == "build":
         raise FeedError(msg)
@@ -2217,6 +2283,7 @@ class AppTransplant:
         self.reasons = collections.Counter()
         self.strict_fail = []
         self.merge_members = []     # §9.73: one row per merge pair, MERGE_PAIR_HEADER order
+        self.edge_members = []      # §9.75: one row per edge split, EDGE_SPLIT_HEADER order
         self.verdict = {}           # our key -> '' (eligible) or the outcome / reason
 
     def feed_chunks(self, ka):
@@ -2338,6 +2405,15 @@ class AppTransplant:
                                            composed[b][4], composed[n][4], old_rows[b][1] or "",
                                            old_rows[n][1] or "", composed[n][1] or ""))
             composed = _restore_merge_pairs(old_rows, composed, merge)
+        splits = _edge_splits(old_rows, composed, skip={j for p in merge for j in p})   # §9.75
+        if splits:
+            self.tally["edge_splits"] += len(splits)
+            self.tally["edge_split_verses"] += 1
+            for b, n, rest, piece in splits:
+                self.edge_members.append((key[0], key[1], key[2], composed[b][0], composed[n][0],
+                                          composed[b][4], composed[n][4], old_rows[b][1] or "",
+                                          composed[n][1] or "", piece, rest))
+            composed = _apply_edge_splits(old_rows, composed, splits)
         self.tally["transplanted"] += 1
         self.verdict[key] = ""
         if any(o[1] != c[1] for o, c in zip(old_rows, composed)):
@@ -2361,6 +2437,8 @@ class AppTransplant:
               f"italic + italic_words from OLD on every verse (held, sec 9.44)")
         print(f"  merge_pairs (sec 9.73): {t['merge_pairs']:,} pairs in {t['merge_pair_verses']:,} "
               f"verses - OLD english + english_head kept on both words of each pair")
+        print(f"  edge_splits (sec 9.75): {t['edge_splits']:,} cells in {t['edge_split_verses']:,} "
+              f"verses - feed cell cut where the blank word's old English sits at its end")
         if out_dir:
             out_dir = Path(out_dir).expanduser()
             out_dir.mkdir(parents=True, exist_ok=True)
@@ -2386,10 +2464,18 @@ class AppTransplant:
                 for r in self.merge_members:
                     f.write("\t".join(str(x) for x in r) + "\n")
             print(f"  merge-pair list (sec 9.73): {len(self.merge_members):,} rows -> {m}")
+            e = out_dir / f"edge_splits_{stamp}.tsv"
+            with open(e, "w", encoding="utf-8", newline="\n") as f:
+                f.write("\t".join(EDGE_SPLIT_HEADER) + "\n")
+                for r in self.edge_members:
+                    f.write("\t".join(str(x) for x in r) + "\n")
+            print(f"  edge-split list (sec 9.75): {len(self.edge_members):,} rows -> {e}")
 
-    def check_merge_pairs(self, mode, frozen=APP_MERGE_PAIRS):
-        """Print the frozen-list check line (sec 9.73); mode 'build' raises FeedError on a miss."""
+    def check_merge_pairs(self, mode, frozen=APP_MERGE_PAIRS, edge_frozen=APP_EDGE_SPLITS):
+        """Print both frozen-list check lines (sec 9.73 merge pairs, sec 9.75 edge splits);
+        mode 'build' raises FeedError on a miss in either."""
         print("  " + _check_merge_pairs(self.merge_members, frozen, mode))
+        print("  " + _check_merge_pairs(self.edge_members, edge_frozen, mode, label="edge-split"))
 
 
 def _load_census_keys(path):

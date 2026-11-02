@@ -388,6 +388,51 @@ class MergePairs(unittest.TestCase):
         self.assertEqual(B._merge_pairs(self.OLD, feed), [])
 
 
+class EdgeSplits(unittest.TestCase):
+    """DESIGN §9.75 — character-level: the blank row's old English must sit, exactly, at the end
+    of the feed's merged cell that faces it, on a space boundary."""
+
+    def test_split_at_right_edge(self):            # 1Sa 9:4
+        old = [_row(0, "they did not", "not"), _row(1, "find.", "find", sb="2147")]
+        feed = [_row(0, "did not find.", "find", gpos=1, bid=2), _row(1, None, None, sb="2147")]
+        s = B._edge_splits(old, feed)
+        self.assertEqual(s, [(1, 0, "did not", "find.")])
+        out = B._apply_edge_splits(old, feed, s)
+        self.assertEqual(out[1][1:3], ("find.", "find"))           # the piece + its old head
+        self.assertEqual(out[0][1], "did not")                       # rest stays on the merged row
+        self.assertEqual(out[0][2], B._head_word("did not"))         # rest re-headed (words differ)
+        self.assertEqual((out[0][5], out[0][6]), (1, 2))             # everything else stays feed
+
+    def test_split_at_left_edge(self):             # 2Ki 15:1
+        old = [_row(0, "of", None, sb="3588"), _row(1, "Jeroboam", "jeroboam", sb="*")]
+        feed = [_row(0, None, None, sb="3588"), _row(1, "of Jeroboam II", "jeroboam", sb="*")]
+        self.assertEqual(B._edge_splits(old, feed), [(0, 1, "Jeroboam II", "of")])
+
+    def test_old_english_present_but_not_at_edge(self):   # 1Ki 3:7
+        old = [_row(0, "I do not"), _row(1, "know", sb="1492")]
+        feed = [_row(0, "I know not"), _row(1, None, sb="1492")]
+        self.assertEqual(B._edge_splits(old, feed), [])
+
+    def test_at_edge_but_not_character_identical(self):   # 1Sa 20:27 + whitespace + part-word
+        old = [_row(0, "he has not"), _row(1, "come,", sb="3854")]
+        self.assertEqual(B._edge_splits(old, [_row(0, "has not come"), _row(1, None, sb="3854")]), [])
+        old2 = [_row(0, "he did not"), _row(1, "turn  aside.", sb="1578")]
+        self.assertEqual(B._edge_splits(old2, [_row(0, "did not turn aside."), _row(1, None, sb="1578")]), [])
+        old3 = [_row(0, "he did not"), _row(1, "find.", sb="2147")]
+        self.assertEqual(B._edge_splits(old3, [_row(0, "did not refind."), _row(1, None, sb="2147")]), [])
+
+    def test_be_be_splits_and_merge_pairs_are_skipped(self):
+        old = [_row(0, "it will not"), _row(1, "be extinguished.", sb="4570")]
+        feed = [_row(0, "it will not be be extinguished."), _row(1, None, sb="4570")]
+        self.assertEqual(B._edge_splits(old, feed), [(1, 0, "it will not be", "be extinguished.")])
+        self.assertEqual(B._edge_splits(old, feed, skip={0, 1}), [])
+
+    def test_cut_space_dropped_outer_whitespace_trimmed(self):
+        old = [_row(0, "he did not"), _row(1, "find.", sb="2147")]
+        feed = [_row(0, " did not  find. "), _row(1, None, sb="2147")]
+        self.assertEqual(B._edge_splits(old, feed), [(1, 0, "did not", "find.")])
+
+
 class MergePairFrozenCheck(unittest.TestCase):
     MEMBERS = [("Exo", 20, 13, 1, 0, "5407", "3756", "murder.", "You shall not",
                 "You shall not murder.")]
