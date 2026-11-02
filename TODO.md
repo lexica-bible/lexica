@@ -224,11 +224,11 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
-  figures): A transplants 29,623 / B writes 16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–5 done on the copy
+  figures): A transplants 29,623 / B writes 16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–7 done on the copy
   `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58 · **A dry run
-  = the lane's figures: transplanted 29,071 · strict_fail 1,421 · passdiff 625, §9.62**). Order now
-  (§9.60): 5 = A dry run on the copy → 6 = SELECT + retire (cured ∩ A-eligible ∩ feed-taken field only, §9.59 — NOT
-  all 33) → 7 = B dry run → build → retired-row check (§9.61) → gates. Still owed: the lane's own `--declared`
+  = the lane's figures: transplanted 29,071 · strict_fail 1,421 · passdiff 625, §9.62** · 23 retired, copy now
+  active 28 / retired 23 / superseded 6 · B dry run writes 15,571; 7b = only the 5 named prose rows differ, §9.63).
+  Next: the build block outline, cleared stage by stage → build → retired-row check (§9.61/§9.63) → gates. Still owed: the lane's own `--declared`
   file and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
