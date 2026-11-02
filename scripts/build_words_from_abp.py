@@ -2024,6 +2024,7 @@ APP_MARKUP_CENSUS = APP_FIX_DIR / "feed_markup_census_20261031.tsv"
 APP_GLUE_CENSUS = APP_FIX_DIR / "feed_glue_census_20261031.tsv"
 APP_BRACKET_CENSUS = APP_FIX_DIR / "feed_bracket_census_20261031.tsv"      # §9.53
 APP_CORRECTION_CARVEOUT = APP_FIX_DIR / "correction_carveout_20261031.tsv"  # §9.51, charter §4.7
+APP_MERGE_PAIRS = APP_FIX_DIR / "merge_pairs_20261102.tsv"                # §9.73, frozen from PA
 APP_DASH_END_PIN = 4248     # §9.38: end-of-cell " -" → " --", exactly this many cells
 APP_SPACE_FOLD_PIN = 12480  # §9.42: runs of spaces folded to one, exactly this many cells
 APP_REASONS = ("swap", "dotted", "untagged", "dash", "markup", "bracket", "correction",
@@ -2061,6 +2062,87 @@ def _old_chunks(text: str):
     pairs = [(parts[i], parts[i + 1]) for i in range(0, len(parts) - 1, 2)]
     trail = parts[-1] if parts and parts[-1].strip() else None
     return pairs, trail
+
+
+# ── merge pairs (DESIGN §9.73) ───────────────────────────────────────────────
+# The app edition sometimes writes two Greek words' English on ONE word and leaves the other
+# blank (Exo 20:13: οὐ "You shall not murder.", φονεύσεις blank). The reading text is right,
+# but a click on "murder" would open οὐ — the fix_split_merges defect class. For such a pair
+# compose keeps the OLD english + english_head on both rows; the words are the same, only
+# their placement differs, so the word rows still agree with the prose (gate 3). Strict on
+# purpose: reworded, non-adjacent or different-Strong's cases are NOT pairs — they stay feed.
+_MERGE_WORD = re.compile(r"[A-Za-z']+")
+MERGE_PAIR_HEADER = ("book", "chapter", "verse", "blank_pos", "neighbor_pos", "blank_strongs",
+                     "neighbor_strongs", "old_blank_english", "old_neighbor_english",
+                     "feed_neighbor_english")
+
+
+def _merge_words(s):
+    return [w.lower() for w in _MERGE_WORD.findall(s or "")]
+
+
+def _merge_pairs(old_rows, rows):
+    """-> [(blank, neighbor)] row indexes: rows[blank] has no English where old_rows[blank]
+    does, and rows[neighbor] (adjacent) carries exactly both rows' OLD English, in position
+    order, whitespace/punctuation-normalized, with the same Strong's as the old rows."""
+    used, pairs = set(), []
+    for b in range(len(rows)):
+        if (rows[b][1] or "").strip() or not (old_rows[b][1] or "").strip():
+            continue
+        for n in (b - 1, b + 1):
+            if n < 0 or n >= len(rows) or n in used or not (rows[n][1] or "").strip():
+                continue
+            if old_rows[b][4] != rows[b][4] or old_rows[n][4] != rows[n][4]:
+                continue
+            ob, on = _merge_words(old_rows[b][1]), _merge_words(old_rows[n][1])
+            if _merge_words(rows[n][1]) == (on + ob if n < b else ob + on):
+                pairs.append((b, n))
+                used.update((b, n))
+                break
+    return pairs
+
+
+def _restore_merge_pairs(old_rows, rows, pairs):
+    """-> rows with OLD english + english_head on both rows of every pair; all else unchanged."""
+    out = list(rows)
+    for b, n in pairs:
+        for j in (b, n):
+            r = list(out[j])
+            r[1], r[2] = old_rows[j][1], old_rows[j][2]
+            out[j] = tuple(r)
+    return out
+
+
+def _check_merge_pairs(members, frozen, mode):
+    """Compare this run's merge-pair members with the frozen list (DESIGN §9.73).
+    mode 'nodb'  -> skipped, said out loud (no dictionary: its pairs differ from PA's by design)
+    mode 'dry'   -> compared if the frozen file exists, else names the file to freeze
+    mode 'build' -> the frozen file must exist and match exactly, else FeedError (STOP).
+    Returns the line to print."""
+    from abp_app_feed import FeedError, verify_sidecar
+    frozen = Path(frozen)
+    if mode == "nodb":
+        return ("merge-pair list check SKIPPED - local run without the dictionary; its pairs "
+                "differ from PA's by design (sec 9.73)")
+    if not frozen.is_file():
+        if mode == "build":
+            raise FeedError(f"frozen merge-pair list {frozen} not found - freeze it from the PA "
+                            "dry run first (sec 9.73)")
+        return f"merge-pair list: no frozen list yet ({frozen.name}) - this run's list is the one to freeze"
+    verify_sidecar(frozen)
+    with open(frozen, encoding="utf-8", newline="") as f:
+        lines = f.read().split("\n")
+    want = [tuple(ln.split("\t")) for ln in lines[1:] if ln]
+    got = [tuple(str(x) for x in m) for m in members]
+    if got == want:
+        return f"merge-pair list: MATCHES the frozen {frozen.name} ({len(want):,} pairs)"
+    only_run = [m for m in got if m not in set(want)]
+    only_frozen = [m for m in want if m not in set(got)]
+    msg = (f"merge-pair list DIFFERS from the frozen {frozen.name}: this run {len(got):,}, "
+           f"frozen {len(want):,}; only this run {only_run[:3]}, only frozen {only_frozen[:3]}")
+    if mode == "build":
+        raise FeedError(msg)
+    return msg
 
 
 def _load_census_slots(path, keep):
@@ -2134,6 +2216,7 @@ class AppTransplant:
         self.tally = collections.Counter()
         self.reasons = collections.Counter()
         self.strict_fail = []
+        self.merge_members = []     # §9.73: one row per merge pair, MERGE_PAIR_HEADER order
         self.verdict = {}           # our key -> '' (eligible) or the outcome / reason
 
     def feed_chunks(self, ka):
@@ -2246,6 +2329,15 @@ class AppTransplant:
             return old_rows
         composed = [(o[0], f[1], f[2], o[3], o[4], f[5], f[6], o[7], o[8], o[9], o[10], o[11])
                     for o, f in zip(old_rows, feed_rows)]
+        merge = _merge_pairs(old_rows, composed)           # §9.73: keep the OLD split
+        if merge:
+            self.tally["merge_pairs"] += len(merge)
+            self.tally["merge_pair_verses"] += 1
+            for b, n in merge:
+                self.merge_members.append((key[0], key[1], key[2], composed[b][0], composed[n][0],
+                                           composed[b][4], composed[n][4], old_rows[b][1] or "",
+                                           old_rows[n][1] or "", composed[n][1] or ""))
+            composed = _restore_merge_pairs(old_rows, composed, merge)
         self.tally["transplanted"] += 1
         self.verdict[key] = ""
         if any(o[1] != c[1] for o, c in zip(old_rows, composed)):
@@ -2267,6 +2359,8 @@ class AppTransplant:
         print(f"  of transplanted: english changed {t['english_changed']:,} - "
               f"greek_pos/bracket_id changed {t['greek_pos_or_bracket_changed']:,} - "
               f"italic + italic_words from OLD on every verse (held, sec 9.44)")
+        print(f"  merge_pairs (sec 9.73): {t['merge_pairs']:,} pairs in {t['merge_pair_verses']:,} "
+              f"verses - OLD english + english_head kept on both words of each pair")
         if out_dir:
             out_dir = Path(out_dir).expanduser()
             out_dir.mkdir(parents=True, exist_ok=True)
@@ -2286,6 +2380,16 @@ class AppTransplant:
                     f.write(f"{k[0]}\t{k[1]}\t{k[2]}\t{0 if r else 1}\t{r}\n")
             print(f"  eligible list (sec 9.48, for B): {len(self.verdict):,} verses, "
                   f"{sum(1 for r in self.verdict.values() if not r):,} eligible -> {q}")
+            m = out_dir / f"merge_pairs_{stamp}.tsv"
+            with open(m, "w", encoding="utf-8", newline="\n") as f:
+                f.write("\t".join(MERGE_PAIR_HEADER) + "\n")
+                for r in self.merge_members:
+                    f.write("\t".join(str(x) for x in r) + "\n")
+            print(f"  merge-pair list (sec 9.73): {len(self.merge_members):,} rows -> {m}")
+
+    def check_merge_pairs(self, mode, frozen=APP_MERGE_PAIRS):
+        """Print the frozen-list check line (sec 9.73); mode 'build' raises FeedError on a miss."""
+        print("  " + _check_merge_pairs(self.merge_members, frozen, mode))
 
 
 def _load_census_keys(path):
@@ -2518,6 +2622,17 @@ def run(bible_db: str, scrape_db: str, app: "AppTransplant" = None, app_out: str
 
     main.commit()
 
+    # §9.73: a real app-feed build must reproduce the frozen merge-pair list exactly — checked
+    # here, before any later step touches the copy. A miss is a STOP, never a warning.
+    if app is not None:
+        from abp_app_feed import FeedError
+        try:
+            app.check_merge_pairs("build")
+        except FeedError as e:
+            main.close()
+            print(f"STOP: {e}\n  The copy {target} is unfinished - do not use it.")
+            sys.exit(1)
+
     # Fill the 5 ABP words that carry a blank "G." number (Zec 9:11 etc.) — splits the merged
     # slot back out and assigns the right Strong's. Bounded + guarded; no-op if unavailable.
     if apply_blank_strongs_fills:
@@ -2717,6 +2832,7 @@ def main():
                       f"Rahlfs {'on' if rahlfs else 'OFF'} - TAGNT {'on' if tagnt else 'OFF'} - "
                       f"verses not in the copy {skipped}")
                 app.report(args.out)
+                app.check_merge_pairs("dry")
                 return
             if args.dry_run_nodb:
                 rahlfs, tagnt = _pronoun_sources()
@@ -2725,6 +2841,7 @@ def main():
                       f"Rahlfs {'on' if rahlfs else 'OFF'} - TAGNT {'on' if tagnt else 'OFF'}. "
                       "NOT the build's figures.")
                 app.report(args.out)
+                app.check_merge_pairs("nodb")
                 return
         except FeedError as e:
             print(f"STOP: {e}")

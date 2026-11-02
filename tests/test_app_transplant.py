@@ -343,5 +343,80 @@ class DryRunWritesNoDb(unittest.TestCase):
             sys.argv = argv
 
 
+def _row(pos, eng, head=None, sb="3756", gpos=None, bid=None):
+    """A words row in build order: position, english, english_head, strongs, strongs_base,
+    greek_pos, bracket_id, italic, italic_words, smcap_words, morph, lemma."""
+    return (pos, eng, head, sb, sb, gpos, bid, 0, "", "", None, None)
+
+
+class MergePairs(unittest.TestCase):
+    """DESIGN §9.73 — the four cases: merge pair / dictionary-resplit / non-matching wording /
+    no blank. OLD = Exo 20:13 as the old edition splits it; the feed folds "murder." onto οὐ."""
+    OLD = [_row(0, "You shall not", "not"), _row(1, "murder.", "murder", sb="5407")]
+
+    def test_merge_pair_restores_old_split(self):
+        feed = [_row(0, "You shall not murder.", "murder", gpos=2, bid=1),
+                _row(1, None, None, sb="5407", gpos=1, bid=1)]
+        pairs = B._merge_pairs(self.OLD, feed)
+        self.assertEqual(pairs, [(1, 0)])
+        out = B._restore_merge_pairs(self.OLD, feed, pairs)
+        self.assertEqual([(r[1], r[2]) for r in out], [("You shall not", "not"), ("murder.", "murder")])
+        self.assertEqual([(r[5], r[6]) for r in out], [(2, 1), (1, 1)])   # everything else stays feed
+
+    def test_backward_and_punctuation_normalized(self):
+        old = [_row(0, "of", sb="3588"), _row(1, "Lebanon.", sb="*")]
+        feed = [_row(0, None, sb="3588"), _row(1, "of Lebanon --", sb="*")]
+        self.assertEqual(B._merge_pairs(old, feed), [(0, 1)])
+
+    def test_dictionary_resplit_is_not_a_pair(self):
+        feed = [_row(0, "You shall not"), _row(1, "murder.", sb="5407")]
+        self.assertEqual(B._merge_pairs(self.OLD, feed), [])
+
+    def test_non_matching_wording_stays_feed(self):
+        feed = [_row(0, "You shall not kill."), _row(1, None, sb="5407")]
+        self.assertEqual(B._merge_pairs(self.OLD, feed), [])
+        reworded = [_row(0, "you shall not be be extinguished."), _row(1, None, sb="5407")]
+        old = [_row(0, "it shall not"), _row(1, "be extinguished.", sb="5407")]
+        self.assertEqual(B._merge_pairs(old, reworded), [])
+
+    def test_no_blank_is_not_a_pair(self):
+        feed = [_row(0, "You shall not murder."), _row(1, "murder.", sb="5407")]
+        self.assertEqual(B._merge_pairs(self.OLD, feed), [])
+
+    def test_different_strongs_is_not_a_pair(self):
+        feed = [_row(0, "You shall not murder."), _row(1, None, sb="5408")]
+        self.assertEqual(B._merge_pairs(self.OLD, feed), [])
+
+
+class MergePairFrozenCheck(unittest.TestCase):
+    MEMBERS = [("Exo", 20, 13, 1, 0, "5407", "3756", "murder.", "You shall not",
+                "You shall not murder.")]
+
+    def _freeze(self, d, members):
+        p = Path(d) / "merge_pairs_test.tsv"
+        lines = ["\t".join(B.MERGE_PAIR_HEADER)] + ["\t".join(str(x) for x in m) for m in members]
+        p.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+        Path(str(p) + ".sha256").write_text(
+            hashlib.sha256(p.read_bytes()).hexdigest() + "  " + p.name + "\n", encoding="utf-8")
+        return p
+
+    def test_nodb_skip_is_said_out_loud(self):
+        self.assertIn("SKIPPED", B._check_merge_pairs(self.MEMBERS, "/nonexistent.tsv", "nodb"))
+
+    def test_build_stops_without_frozen_list(self):
+        with self.assertRaises(F.FeedError):
+            B._check_merge_pairs(self.MEMBERS, "/nonexistent.tsv", "build")
+        self.assertIn("freeze", B._check_merge_pairs(self.MEMBERS, "/nonexistent.tsv", "dry"))
+
+    def test_match_and_difference(self):
+        with _tempfile.TemporaryDirectory() as d:
+            p = self._freeze(d, self.MEMBERS)
+            self.assertIn("MATCHES", B._check_merge_pairs(self.MEMBERS, p, "build"))
+            other = [self.MEMBERS[0][:9] + ("You shall not kill.",)]
+            self.assertIn("DIFFERS", B._check_merge_pairs(other, p, "dry"))
+            with self.assertRaises(F.FeedError):
+                B._check_merge_pairs(other, p, "build")
+
+
 if __name__ == "__main__":
     unittest.main()
