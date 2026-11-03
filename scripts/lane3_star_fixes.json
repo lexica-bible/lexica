@@ -38,8 +38,8 @@
   "new_bids": [1],
   "join_bids": [],
   "ops": [
-   {"pos": 5, "sbase": "G2274", "old_eng": "the Assyrians shall be vanquished,", "old_gpos": null, "old_bid": null,
-    "new_eng": "shall be vanquished,", "new_head": "vanquished", "new_gpos": 2, "new_bid": 1},
+   {"pos": 5, "sbase": "G2274", "old_eng": "the Assyrians shall be vanquished", "old_gpos": null, "old_bid": null,
+    "new_eng": "shall be vanquished", "new_head": "vanquished", "new_gpos": 2, "new_bid": 1},
    {"pos": 6, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
     "new_eng": "the Assyrians", "new_head": "assyrians", "new_gpos": 1, "new_bid": 1}
   ]
@@ -48,8 +48,8 @@
   "new_bids": [1],
   "join_bids": [],
   "ops": [
-   {"pos": 11, "sbase": "G3162", "old_eng": "of the Grecian sword.", "old_gpos": null, "old_bid": null,
-    "new_eng": "sword.", "new_head": "sword", "new_gpos": 2, "new_bid": 1},
+   {"pos": 11, "sbase": "G3162", "old_eng": "of the Grecian sword!", "old_gpos": null, "old_bid": null,
+    "new_eng": "sword!", "new_head": "sword", "new_gpos": 2, "new_bid": 1},
    {"pos": 12, "sbase": "*", "old_eng": null, "old_gpos": null, "old_bid": null,
     "new_eng": "of the Grecian", "new_head": "grecian", "new_gpos": 1, "new_bid": 1}
   ]

@@ -137,9 +137,9 @@
   {
    "sbase": "3427",
    "old_pos": 15,
-   "old_eng": "you should give to me,",
+   "old_eng": "you should give to me",
    "new_pos": 16,
-   "new_eng": "to me,",
+   "new_eng": "to me",
    "new_head": "me"
   }
  ],
@@ -185,13 +185,13 @@
    "old_pos": 7,
    "old_eng": null,
    "new_pos": 5,
-   "new_eng": "Let God",
+   "new_eng": "May God",
    "new_head": "God"
   },
   {
    "sbase": "1896",
    "old_pos": 5,
-   "old_eng": "Let God look",
+   "old_eng": "May God look",
    "new_pos": 7,
    "new_eng": "look",
    "new_head": "look"
@@ -281,9 +281,9 @@
   {
    "sbase": "3427",
    "old_pos": 8,
-   "old_eng": "they should serve me.",
+   "old_eng": "they should serve to me!",
    "new_pos": 9,
-   "new_eng": "me.",
+   "new_eng": "to me!",
    "new_head": "me"
   }
  ],
@@ -469,20 +469,20 @@
  ],
  "Jos 2:4": [
   {
+   "sbase": "3756",
+   "old_pos": 19,
+   "old_eng": "I do not know",
+   "new_pos": 19,
+   "new_eng": "I do not",
+   "new_head": null
+  },
+  {
    "sbase": "1492",
    "old_pos": 20,
    "old_eng": null,
-   "new_pos": 19,
-   "new_eng": "I know",
-   "new_head": "know"
-  },
-  {
-   "sbase": "3756",
-   "old_pos": 19,
-   "old_eng": "I know not",
    "new_pos": 20,
-   "new_eng": "not",
-   "new_head": null
+   "new_eng": "know",
+   "new_head": "know"
   }
  ],
  "Jos 2:18": [
@@ -851,13 +851,13 @@
    "old_pos": 9,
    "old_eng": null,
    "new_pos": 8,
-   "new_eng": "we shall do",
+   "new_eng": "We shall do",
    "new_head": "do"
   },
   {
    "sbase": "3779",
    "old_pos": 8,
-   "old_eng": "we shall do thus",
+   "old_eng": "We shall do thus",
    "new_pos": 9,
    "new_eng": "thus",
    "new_head": null
@@ -941,13 +941,13 @@
    "old_pos": 2,
    "old_eng": null,
    "new_pos": 1,
-   "new_eng": "shall these",
+   "new_eng": "Shall these",
    "new_head": "shall"
   },
   {
    "sbase": "3756",
    "old_pos": 1,
-   "old_eng": "shall these not",
+   "old_eng": "Shall these not",
    "new_pos": 2,
    "new_eng": "not",
    "new_head": null
@@ -1397,9 +1397,9 @@
   {
    "sbase": "1626",
    "old_pos": 2,
-   "old_eng": "they all have been blinded!",
+   "old_eng": "they all have been blinded --",
    "new_pos": 3,
-   "new_eng": "have been blinded!",
+   "new_eng": "have been blinded --",
    "new_head": "blinded"
   }
  ],
@@ -1533,18 +1533,18 @@
   {
    "sbase": "3361",
    "old_pos": 8,
-   "old_eng": null,
-   "new_pos": 7,
+   "old_eng": "should not be",
+   "new_pos": 8,
    "new_eng": "should not",
    "new_head": "should"
   },
   {
-   "sbase": "3892",
-   "old_pos": 7,
-   "old_eng": "should not be thoroughly",
-   "new_pos": 8,
-   "new_eng": "be thoroughly",
-   "new_head": "thoroughly"
+   "sbase": "953",
+   "old_pos": 9,
+   "old_eng": "profaned",
+   "new_pos": 9,
+   "new_eng": "be profaned",
+   "new_head": "profaned"
   }
  ],
  "Eze 23:47": [
@@ -2029,13 +2029,13 @@
    "old_pos": 21,
    "old_eng": null,
    "new_pos": 20,
-   "new_eng": "I show",
+   "new_eng": "I will show",
    "new_head": "show"
   },
   {
    "sbase": "302",
    "old_pos": 19,
-   "old_eng": "I show to you!",
+   "old_eng": "I will show to you!",
    "new_pos": 21,
    "new_eng": "you!",
    "new_head": null
@@ -2461,15 +2461,15 @@
    "old_pos": 15,
    "old_eng": null,
    "new_pos": 14,
-   "new_eng": "you have",
+   "new_eng": "yet you have",
    "new_head": "have"
   },
   {
    "sbase": "3756",
    "old_pos": 14,
-   "old_eng": "you have not",
+   "old_eng": "yet you have not,",
    "new_pos": 15,
-   "new_eng": "not",
+   "new_eng": "not,",
    "new_head": null
   }
  ],
@@ -2557,9 +2557,9 @@
   {
    "sbase": "3756",
    "old_pos": 3,
-   "old_eng": "you know not;",
+   "old_eng": "you know not.",
    "new_pos": 4,
-   "new_eng": "not;",
+   "new_eng": "not.",
    "new_head": null
   }
  ],
@@ -2773,9 +2773,9 @@
   {
    "sbase": "3450",
    "old_pos": 5,
-   "old_eng": "you hear me;",
+   "old_eng": "you hear me.",
    "new_pos": 6,
-   "new_eng": "me;",
+   "new_eng": "me.",
    "new_head": "me"
   }
  ],
@@ -2863,9 +2863,9 @@
   {
    "sbase": "3756",
    "old_pos": 19,
-   "old_eng": "you have no",
+   "old_eng": "you have not",
    "new_pos": 20,
-   "new_eng": "no",
+   "new_eng": "not",
    "new_head": null
   }
  ],
@@ -3061,9 +3061,9 @@
   {
    "sbase": "3756",
    "old_pos": 18,
-   "old_eng": "We have no",
+   "old_eng": "We have not",
    "new_pos": 19,
-   "new_eng": "no",
+   "new_eng": "not",
    "new_head": null
   }
  ],
@@ -3961,9 +3961,9 @@
   {
    "sbase": "3756",
    "old_pos": 9,
-   "old_eng": "you think not,",
+   "old_eng": "you think not",
    "new_pos": 10,
-   "new_eng": "not,",
+   "new_eng": "not",
    "new_head": null
   }
  ],
@@ -4033,9 +4033,9 @@
   {
    "sbase": "3165",
    "old_pos": 18,
-   "old_eng": "they shall see me.",
+   "old_eng": "they shall see me!",
    "new_pos": 19,
-   "new_eng": "me.",
+   "new_eng": "me!",
    "new_head": "me"
   }
  ],
@@ -4087,9 +4087,9 @@
   {
    "sbase": "3778",
    "old_pos": 3,
-   "old_eng": "should think this;",
+   "old_eng": "should think this.",
    "new_pos": 4,
-   "new_eng": "this;",
+   "new_eng": "this.",
    "new_head": null
   }
  ],
@@ -4169,13 +4169,13 @@
    "old_pos": 16,
    "old_eng": null,
    "new_pos": 15,
-   "new_eng": "you should be",
+   "new_eng": "You should be",
    "new_head": "should"
   },
   {
    "sbase": "302",
    "old_pos": 15,
-   "old_eng": "you should be justified",
+   "old_eng": "You should be justified",
    "new_pos": 16,
    "new_eng": "justified",
    "new_head": "justified"
