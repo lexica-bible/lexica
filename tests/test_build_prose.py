@@ -4,6 +4,7 @@ lines + temp sqlite copies only (reuses test_app_transplant's Env). No real bibl
 
 Run:  python tests/test_build_prose.py
 """
+import collections
 import csv
 import hashlib
 import io
@@ -58,9 +59,11 @@ class Prose(unittest.TestCase):
         con.execute("CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT, text TEXT)")
         for (b, c, v), t in texts.items():
             con.execute("INSERT INTO verses (book, chapter, verse, text) VALUES (?,?,?,?)", (b, c, v, t))
-        con.execute("CREATE TABLE abp_corrections (book TEXT, chapter INT, verse INT, field TEXT, status TEXT)")
-        for (b, c, v), st in corrections:
-            con.execute("INSERT INTO abp_corrections VALUES (?,?,?,?,?)", (b, c, v, "verses.text", st))
+        con.execute("CREATE TABLE abp_corrections (book TEXT, chapter INT, verse INT, field TEXT, status TEXT,"
+                    " source_value TEXT, ledger_ref TEXT)")
+        for (b, c, v), st, *rest in corrections:        # rest = (source_value, ledger_ref), optional
+            src_val, ref = (rest + [None, None])[:2]
+            con.execute("INSERT INTO abp_corrections VALUES (?,?,?,?,?,?,?)", (b, c, v, "verses.text", st, src_val, ref))
         con.commit()
         con.close()
         return p
@@ -112,6 +115,31 @@ class Prose(unittest.TestCase):
         con = sqlite3.connect(copy)
         self.assertEqual(con.execute("SELECT text FROM verses WHERE verse=1").fetchone()[0], "x")
         con.close()
+
+    def b_text(self, key):
+        """The exact text B writes for an eligible verse (before the em-dash swap)."""
+        ka = self.app.pairs[key]
+        joined = " ".join(self.app.norm[(ka[0], ka[1], ka[2], s["slot_index"])] for s in self.app.feed[ka])
+        return BP.clean_counted(joined, "t", collections.Counter())
+
+    def test_active_row_keyed_to_b_text_is_allowed_and_counted(self):      # §9.79
+        copy = self.copy_db({GEN: "x", GEN2: "y", GEN3: "z"},
+                            corrections=[(GEN, "active", self.b_text(GEN), "EU-Gen1:1")])
+        counts, _ = self.run_b(copy, apply=True)
+        self.assertEqual(counts["applied"], 2)
+        self.assertEqual((counts["corrections:matched_written"], counts["corrections:matched_written_eu"]), (1, 1))
+
+    def test_active_row_differing_by_whitespace_only_stops(self):          # §9.79: exact, not normalized
+        copy = self.copy_db({GEN: "x", GEN2: "y", GEN3: "z"},
+                            corrections=[(GEN, "active", self.b_text(GEN) + " ", "EU-Gen1:1")])
+        with self.assertRaisesRegex(FeedError, "ACTIVE verses.text correction"):
+            self.run_b(copy, apply=True)
+
+    def test_active_row_keyed_to_b_text_on_unwritten_verse_stops(self):    # B must write the verse
+        copy = self.copy_db({GEN: BP.emdash(self.b_text(GEN)), GEN2: "y", GEN3: "z"},
+                            corrections=[(GEN, "active", self.b_text(GEN), "EU-Gen1:1")])
+        with self.assertRaisesRegex(FeedError, "ACTIVE verses.text correction"):
+            self.run_b(copy, apply=True)
 
     def test_retired_correction_does_not_stop(self):
         copy = self.copy_db({GEN: "x", GEN2: "y", GEN3: "z"}, corrections=[(GEN, "retired")])

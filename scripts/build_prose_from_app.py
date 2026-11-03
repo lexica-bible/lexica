@@ -20,8 +20,11 @@ SAFETY:
   * the target is a db COPY given explicitly; the live path (~/bible-db/bible.db) is refused
     outright, as is a missing or empty path (§9.57). No default.
   * §9.8: the 33 cured correction rows are retired on the copy BEFORE B runs. An ACTIVE
-    verses.text correction row on a verse B would write = STOP (a cured row not retired).
-    The 6 still-present verses are ineligible in A (reason correction, §9.51).
+    verses.text correction row on an eligible verse = STOP (a cured row not retired) — with ONE
+    exception (§9.79): the row's source_value is EXACTLY the text B writes on that verse (the
+    edition-upgrade EU- rows, keyed to B's own output and applied after it at finish_rebuild
+    step 4b). Exact means byte-for-byte; a whitespace-only difference still stops. Matched rows
+    are counted on the summary line. The 6 still-present verses are ineligible in A (§9.51).
   * before anything is written, B re-checks every eligible verse against its own decide()
     on the same frozen inputs; a verse A marked eligible that decide() rejects = STOP
     (the eligible file came from different inputs).
@@ -118,15 +121,16 @@ def run(eligible_path, copy=None, apply=False, out_dir=None, stamp="20261031", a
     for k, (ok, _r) in eligible.items():
         if ok and app.decide(k)[0] != "compose":
             raise FeedError(f"{k}: eligible in A's file but decide() rejects it - inputs differ")
-    old, active = {}, set()
+    old, active = {}, collections.defaultdict(list)    # verse -> [(source_value, ledger_ref)]
     if copy is not None:
         con = sqlite3.connect(f"file:{copy}?mode=ro", uri=True)
         try:
             old = {(b, c, v): t for b, c, v, t in con.execute("SELECT book, chapter, verse, text FROM verses")}
             if con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='abp_corrections'").fetchone():
-                active = {(b, c, v) for b, c, v in con.execute(
-                    "SELECT book, chapter, verse FROM abp_corrections "
-                    "WHERE status='active' AND field='verses.text'")}
+                for b, c, v, src_val, ref in con.execute(
+                        "SELECT book, chapter, verse, source_value, ledger_ref FROM abp_corrections "
+                        "WHERE status='active' AND field='verses.text'"):
+                    active[(b, c, v)].append((src_val, ref))
         finally:
             con.close()
     counts, fires = collections.Counter(), collections.Counter()
@@ -136,9 +140,6 @@ def run(eligible_path, copy=None, apply=False, out_dir=None, stamp="20261031", a
             counts["kept_old:" + reason] += 1
             rows.append((k, "kept_old", reason, "", "", ""))
             continue
-        if k in active:
-            raise FeedError(f"{k}: an ACTIVE verses.text correction row on a verse B would write "
-                            f"(sec 9.8: cured rows must be retired before B)")
         ka = app.pairs[k]
         joined = " ".join(app.norm[(ka[0], ka[1], ka[2], s["slot_index"])] for s in app.feed[ka])
         new = clean_counted(joined, f"{k[0]} {k[1]}:{k[2]}", fires)
@@ -149,6 +150,18 @@ def run(eligible_path, copy=None, apply=False, out_dir=None, stamp="20261031", a
         else:
             with contextlib.redirect_stderr(io.StringIO()):
                 prev = emdash(P.clean_verse(src[k], ref=str(k)))
+        if k in active:
+            # §9.79: allowed ONLY when B writes this verse and every active row's source_value is
+            # exactly B's text (a correction keyed to B's own output); anything else is a cured
+            # row that was never retired (§9.8) - STOP, as before.
+            writes_it = emdash(new) != (prev or "")
+            if not writes_it or any(sv != new for sv, _ref in active[k]):
+                raise FeedError(f"{k}: an ACTIVE verses.text correction row on a verse B would write "
+                                f"whose source_value is not exactly B's text (sec 9.8 / 9.79: cured "
+                                f"rows must be retired before B)")
+            counts["corrections:matched_written"] += len(active[k])
+            counts["corrections:matched_written_eu"] += sum(1 for _sv, ref in active[k]
+                                                            if (ref or "").startswith("EU-"))
         if emdash(new) == (prev or ""):
             counts["unchanged"] += 1
             rows.append((k, "unchanged", "", len(prev or ""), len(new), "no"))
@@ -190,7 +203,10 @@ def report(counts, label):
           f"leaked_digit {counts['fires:leaked_digit']} - stray_bracket {counts['fires:stray_bracket']}"
           f" (expected 0 / - / 0, sec 9.54)")
     print(f"  corrections: carve-out kept {counts['corrections:carveout_kept']} - active prose rows "
-          f"on the copy {counts['corrections:active_prose_rows_on_copy']} (none may sit on a written verse)")
+          f"on the copy {counts['corrections:active_prose_rows_on_copy']} (none may sit on a written verse "
+          f"unless its source_value is exactly B's text, sec 9.79)")
+    print(f"  EU rows matched on written verses: {counts['corrections:matched_written_eu']:,} - other "
+          f"active prose rows matched: {counts['corrections:matched_written'] - counts['corrections:matched_written_eu']:,}")
     if "applied" in counts:
         print(f"  APPLIED: {counts['applied']:,} verses.text rows written")
     if "_tsv" in counts:
