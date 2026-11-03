@@ -224,13 +224,11 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
-  figures): A transplants 29,623 / B writes 16,067. **11/1 PA SEQUENCE IN PROGRESS** (logs `~/edition_upgrade_runs/`): steps 1–7 done on the copy
-  `bible_edupg_test_20261101.db` (cert 7/7 · attribution +1 = 10−9 all in class · Michaiah `''` §9.58 · **A dry run
-  = the lane's figures: transplanted 29,071 · strict_fail 1,421 · passdiff 625, §9.62** · 23 retired, copy now
-  active 28 / retired 23 / superseded 6 · B dry run writes 15,571; 7b = only the 5 named prose rows differ, §9.63).
-  Build outline A–G accepted; declaration + run rulings §9.64. Next: pre-A checks P1–P4 (read-only) → stage A
-  → build → retired-row check (§9.61/§9.63) → gates. Still owed: the lane's own `--declared`
-  file and B's step in `/rebuild-words`. Charter §0.6–0.10 + DESIGN §9 = every ruling.
+  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE B DONE 11/2 — stage C next (handoff `docs/handoffs/HANDOFF_edition_upgrade_stageC.md`).** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
+  1,578 · edge splits 90 (both frozen lists MATCH) · B APPLIED 15,571 (EU matched 118). Source copy
+  `bible_edupg_test_20261101.db` = 372 active / 23 retired / 6 superseded corrections (344 EU- rows, §9.76). Owed in
+  stage C: the lane's `declared_deltas.json` (§9.64/§9.69/§9.70), the §9.59 re-pin to 372, the §9.61/§9.63
+  retired-row check, B's step in `/rebuild-words`, Split 80 → 84 re-declare. Rulings §9.58–§9.79 = DESIGN §9.
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).
