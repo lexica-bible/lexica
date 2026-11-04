@@ -77,8 +77,9 @@ output, if any, rides the step-8 deploy).
    the second copy back, never re-freeze to get past it.
 2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
-   correction + morph. Confirm `Words inserted: 626,305` (the tail patches add 4 more; live
-   pin = 626,309), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
+   correction + morph. Confirm `Words inserted: 626,305` (the build's OWN last step, the blank-"G." fill, then
+   splits 4 slots and adds 4 rows, so the finished build's table already reads 626,309 = the live pin;
+   no tail step adds words — corrected 2026-11-04, the old note said "the tail patches add 4"), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
    `Split 80 merged subject-name(s)` — **re-pinned 2026-10-25** from the two lane-② ride logs
    on PA (`~/bible-db/build_pnstar.log`, `build_pnstar2.log`) and the 10/25 re-key build, all
    three 80. Was 2,436 before the 8/5 lane-② PN-star pass, whose class B now splits most of

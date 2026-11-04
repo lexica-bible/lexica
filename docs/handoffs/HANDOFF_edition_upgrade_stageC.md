@@ -103,6 +103,11 @@ the §9.52 punct ruling) → D 8b chain (8b.0–8b.3, lane-3 PASS with the R3 re
 604 passdiff (tag placement, §9.62) · the 117 merge-rule near misses (§9.76) · Rom 9:29 (§9.77) ·
 versification map Pro 16 / Pro 24 / Jer 10 / Hab 3 (§9 Q7, held on old text) · italic transplant
 (§9.44: italic stays OLD) · the feed's Greek column (unused this lane; carries stray notes, e.g. Gen 6:7).
+**Doubled words new in the app edition's prose (§9.84, 11/4)** — to the follow-up lane under §9.72, not this build:
+the nine slips 2Ki 14:28 "to to" · Deu 24:8 "you you" · Eze 11:12 "you you" · Jdg 20:34 "they they" · Ezr 4:15
+"this this" · Est 8:8 "with with" · Joe 2:2 "it it" · Luk 13:28 "there there" · Joh 19:21 "that that". Reviewed and
+kept (normal repeats, 14): Exo 18:18, Lev 6:12, Lev 23:21, Deu 9:26, Deu 32:39, 1Sa 3:4, 2Sa 19:4, Pro 29:16, Eze 5:7,
+Eze 30:2, Eze 40:4, Dan 8:26, Zec 2:6, Mar 6:16; plus "be be" ×2 (Lev 6:13, 2Ch 34:25), already corrected by the EU batch.
 
 ## CC rules banked this session (memory)
 - Gate on unchanged code: `git diff --quiet <commit> HEAD -- scripts tests`, never an exact HEAD.

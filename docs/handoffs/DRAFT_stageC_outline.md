@@ -407,3 +407,48 @@ behold, behold · Absalom, Absalom · Lord, Lord · you; you …); "be be" ×2 i
 Ezr 4:15 "this this" · Est 8:8 "with with" · Joe 2:2 "it it" · Luk 13:28 "there there" · Joh 19:21 "that that"
 (not each read against the Greek yet — some may be grammatical). §9.72 put real-word typos out of this lane; if any are
 to be fixed in this lane, the rows must be inserted BEFORE the tail (they change the 372 and the re-pin).
+
+---
+
+## 2026-11-04 — tail run 1 STOPPED at its own pre-check (nothing ran); TAIL v2 (HELD for re-clearance)
+
+Run 1: `before tail: words 626309 (expect 626305 …)` → `TAIL RESULT: STOP`. The copy is right, the check was wrong: the build's
+own blank-number fill adds 4 rows after the `Words inserted: 626,305` line (DESIGN §9.84 note), so a finished build reads
+626,309 and the tail adds none. v2 changes ONLY the pre-tail check (words 626,309, plus three signs the tail has not run:
+active prose rows still at their before-text 124 · verses with `--` > 0 · no `<built>.corrections.log`) and the after-tail
+words note, and writes a new log name (`stageC_tail2_…`) so run 1's log stays. Paste one block at a time (run 1's read-back
+failed because two blocks landed on one line).
+
+### Block TAIL v2 (GATE REF `61484fbc`)
+```bash
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - TAIL block v2 - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "TAIL RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "TAIL RESULT: STOP - built copy missing: $B"; exit 1; }
+[ "$(realpath "$B")" != "$(realpath ~/bible-db/bible.db)" ] || { echo "TAIL RESULT: STOP - that is the LIVE db"; exit 1; }
+T=$(git log --since=2026-10-24 --oneline -- scripts/import_tipnr.py tipnr/TIPNR.txt)
+[ -z "$T" ] || { echo "TAIL RESULT: STOP - import_tipnr.py / TIPNR.txt changed since 10/24 (roster regression gate owed): $T"; exit 1; }
+W=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words")
+A=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_corrections WHERE status='active'")
+P=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_corrections c JOIN verses v ON v.book=c.book AND v.chapter=c.chapter AND v.verse=c.verse WHERE c.status='active' AND c.field='verses.text' AND v.text=c.source_value")
+D=$(sqlite3 -readonly "$B" "SELECT count(*) FROM verses WHERE text LIKE '%--%'")
+if [ -e "$B.corrections.log" ]; then L=PRESENT; else L=none; fi
+echo "before tail: words ${W} (expect 626309 = 626,305 inserted + the build's own 4 blank-number splits) - active corrections ${A} (expect 372) - prose rows still at their before-text ${P} (expect 124) - verses with '--' ${D} (expect more than 0) - corrections log ${L} (expect none)"
+[ "$W" = 626309 ] && [ "$A" = 372 ] && [ "$P" = 124 ] && [ "$D" -gt 0 ] && [ "$L" = none ] || { echo "TAIL RESULT: STOP - the copy is not in its post-S980 pre-tail state"; exit 1; }
+ls -l "$B"
+bash scripts/finish_rebuild.sh "$B"; rc=$?
+echo "finish_rebuild exit=${rc}"
+echo "after tail: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words") (expect 626309 - no tail step adds words) - '--' left: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words WHERE english LIKE '%--%'") / verses $(sqlite3 -readonly "$B" "SELECT count(*) FROM verses WHERE text LIKE '%--%'") (expect 0 / 0)"
+echo "TAIL RESULT: RAN - finish_rebuild exit ${rc} - clearance reads each step's own lines, not the done line"
+exit $rc
+) 2>&1 | tee ~/edition_upgrade_runs/stageC_tail2_20261104.log | tail -80; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Read-back v2 (read-only)
+```bash
+for L in ~/edition_upgrade_runs/stageC_tail2_20261104.log ~/bible-db/finish_pnstar2.log; do echo "######## $L"; grep -n "^GATE REF\|^before tail\|^after tail\|TAIL RESULT\|^== \|^── \|Matched  :\|Unmatched:\|still strongs_base\|FIXTURE\|DRIFT\|pplied\|APPLYING\|SKIP\|skip\|patched\|summary:\|LOUD\|words to edit\|rows to delete\|flips to repair\|Remaining\|with '--'\|Nothing to do\|Saved\|!!\|DO NOT SWAP\|finish_rebuild" "$L" | grep -v "^[0-9]*:── Sample\|^[0-9]*:  -> \|^[0-9]*:  == "; done
+```
+Expected: as the table above (§9.83), with words 626,309 before AND after.
