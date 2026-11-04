@@ -1723,3 +1723,40 @@ exit "$r"
 Expected: controls `[FIRED]` ×6 + `ALL CONTROLS FIRED`; suite `[OK  ]` ×7 — check 1 words 626,309 / verses
 31,237, check 4 = 372 active all holding, check 3 em-dash 0 — `CERTIFIED STATE HOLDS (7/7 green)`,
 `GATE1 RESULT: 7/7 on the built copy`, exit=0.
+
+## GATE 1 ACCEPTED (11/4); C5 retired-row gate drafted, held
+
+Gate 1 (REF f8e814c2, PA HEAD 7358c8bf, `gate1_cert_20261104.log`): controls 6/6 FIRED, built copy 7/7. The first
+try stopped on the new uncommitted-edit line (three untracked `scripts/*metav_link*.txt` dumps on PA); the line is
+amended to `--untracked-files=no` for every gate from here (ruling 11/4; the three files are left alone).
+
+**C5 — §9.61/§9.63 retired-row gate.** Runs the approved `scripts/eu_retired_check.py` (§9.81, at f8e814c2) on
+`<built>`, after its own 11 tests on PA (they include failing cases: a check that cannot fire is void).
+Expected figure, from the code + §9.63's step-7b evidence: the 23 retired rows (the C3a dump's list) =
+11 `greek_pos` + 12 `verses.text`; the 5 named prose rows (ids 51 2Sa 16:18, 25 1Ch 22:15, 27 Job 24:19,
+24 Mat 21:19, 45 Mar 16:17) hold on B's feed text (derived by B's own `feed_text` from the pinned feed,
+then the em-dash swap); the other 18 hold on `corrected_value` → `PASS 23/23 HOLD (corrected_value 18 -
+feed text 5)`. Any failing row prints its full source / corrected / feed / built text. Tested in a throwaway
+checkout at f8e814c2 on a made-up db (tests green, stray file passed the code check, the check's STOP came
+through as exit 2).
+
+### Block C5 — RETIRED-ROW GATE (GATE REF f8e814c2, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=f8e814c2
+echo "GATE REF ${REF} - RETIRED-ROW GATE (sec 9.61/9.63) on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "RETIRED-ROW CHECK: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "RETIRED-ROW CHECK: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "RETIRED-ROW CHECK: STOP - missing: $B"; exit 1; }
+python3 tests/test_eu_retired_check.py; t=$?
+[ "$t" -eq 0 ] || { echo "RETIRED-ROW CHECK: STOP - the check's own tests exit $t (a check that cannot fire is void)"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/eu_retired_check.py "$B"; r=$?
+echo "check exit $r (0 PASS / 1 FAIL / 2 STOP)"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/retired_check_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: `Ran 11 tests` / `OK`; 23 `ok` lines (18 `corrected_value`, 5 `feed text` — ids 24, 25, 27, 45, 51);
+`RETIRED-ROW CHECK: PASS 23/23 HOLD (corrected_value 18 - feed text 5)`; `check exit 0`; `exit=0`.
