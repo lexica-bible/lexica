@@ -1094,3 +1094,387 @@ PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L" "$N" "$O" "$W"
 Expected: both re-runs SAME as their logs (31,592 / 734 (687); 31,649 / 683 (648)); built proof stored-only 0 /
 re-run-only 0; net = 57; every lost/gained cell EDITION-TEXT or TOKEN-SPLIT → `CHECK2 RESULT: AS EXPECTED`. Any OTHER
 or a figure off = STOP, members printed.
+
+## 2026-11-04 — CHECK 1 ran (03:59 UTC) and STOPPED on the live side; CHECK 2 rejected → CHECK 2b ruled; both HELD
+**CHECK 1 result** (`~/edition_upgrade_runs/check1_split_skips_20261104.log`): built side exact — 206 / 31 = log, 10 of 10
+samples, same reasons, eligible-now 0. Live side read 196 / 41 vs its log 208 / 29: 12 extra "skips", all "strongs mismatch"
+(Act 7:3, Exo 4:23, Eze 20:14, Gen 31:49, Isa 56:10, Jas 4:2, Job 8:10, Joh 13:8, Joh 19:15, Jos 2:4, Neh 5:12, Rom 3:4).
+**Cause = CC's draft error:** v1 read live against the patch file at `61484fbc`, but `63744245` (11/2, §9.77) re-keyed 18
+entries to the app edition's wording (e.g. Gen 31:49 "Let God" → "May God"); the 10/25 run used the file before that.
+All 12 extras are among the 18 re-keyed (checked locally against git); the other 6 re-keyed entries still matched
+(they are in live's "patched only after normalising" line). The 29 on both sides are exactly the live log's count.
+**v2:** live read against `63744245^:scripts/split_merge_fixes.json` (sha `7efa15d3…`); built unchanged. Tested: v1 on a
+synthetic live made from the old file stops the same way; v2 passes; whole block ran in a fake home.
+
+**CHECK 2 rejected** (too much machinery). **CHECK 2b** as ruled: built `*` name cells with English vs live's cell at the same
+verse + position, and the reverse; class TEXT-CHANGED / TEXT-SAME; sums a review line; stops only on gate / missing file /
+same file. 93 lines. Tested on a synthetic pair (lost changed / lost same / gained / both `*` / no live cell).
+
+### Block CHECK 1 v2 (GATE REF `61484fbc`, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - CHECK 1 v2 split-merge skips (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; L=~/bible-db/bible.db
+N=~/edition_upgrade_runs/stageC_tail3_20261104.log; O=~/bible-db/finish_pnstar2.log
+for f in "$B" "$L" "$N" "$O"; do [ -f "$f" ] || { echo "CHECK1 RESULT: STOP - missing: $f"; exit 1; }; done
+P=~/edition_upgrade_runs/check1v2_split_skips_20261104.py
+cat > "$P" <<'PY'
+"""CHECK 1 v2 (one-off, read-only): name every fix_split_merges skip on the built copy (tail v3, 11/4)
+and on live (the 10/25 run), and diff the two sets.
+
+Both databases are opened read-only. Nothing is written anywhere.
+
+Why not just re-run the step's test: the step already ran on both copies, so a PATCHED verse no
+longer holds its "before" English and fails the step's own test too. So each verse is read two
+ways and the logs check the result:
+  1. patch result present  - every entry's new_pos cell holds new_eng (punctuation and '--'/em dash
+                             normalised, since fix_bracket_punct and fix_emdash run after the patch)
+                             -> PATCHED
+  2. otherwise             - the step's own test (fix_split_merges.py lines 46-71, same queries, same
+                             order, same reason text) gives the skip reason -> SKIPPED
+  3. the step's test passes now -> ELIGIBLE-NOW (should be 0: the step would patch it today)
+Cross-checks: the counts must equal the step's own log line, and each log's 10 printed skip
+samples must be in the list.
+
+v2: each side is read against the patch file ITS run used. Built (tail v3) = the file at 61484fbc.
+Live (10/25) = the file before 63744245 (11/2, DESIGN 9.77 re-keyed 18 entries to the app edition's
+wording) - v1 read live against the re-keyed file and so miscounted those 18 (12 read as skips).
+
+Usage: python3 check1_split_skips_20261104.py <built.db> <live.db> <tail3.log> <finish_pnstar2.log>
+"""
+import hashlib
+import json
+import os
+import re
+import sqlite3
+import subprocess
+import sys
+
+BUILT, LIVE, LOG_NEW, LOG_OLD = sys.argv[1:5]
+FIXES_PATH = os.path.join(os.environ.get("CHECK_REPO") or os.path.expanduser("~/bible-db"),
+                          "scripts", "split_merge_fixes.json")
+FIXES_SHA = "eab8e565cd1dd34231254088091ffb13b93e8ec52cdbb53a8b622a1148dcc8c5"   # = 61484fbc
+EXPECT_NEW_ONLY = {"Jdg 11:7", "Rom 9:29"}    # ruling: the 10/25 29 + these two, nothing lost
+EXPECT_OLD_ONLY = set()
+EM = chr(8212)
+PUNCT = ".,;:?" + chr(33) + chr(183) + ")"      # chr(33) = exclamation mark (kept out of the paste)
+EDGE = re.compile("^[(]+|[" + re.escape(PUNCT) + "]+$")
+
+REPO = os.environ.get("CHECK_REPO") or os.path.expanduser("~/bible-db")
+OLD_SHA = "7efa15d301db3342884e20181daf26c7633c70b36874e7ca4458e26c3667323f"    # = 63744245^
+raw = open(FIXES_PATH, "rb").read()
+FIXES = json.loads(raw.decode("utf-8"))
+raw_old = subprocess.run(["git", "-C", REPO, "show", "63744245^:scripts/split_merge_fixes.json"],
+                         capture_output=True, check=True).stdout
+FIXES_OLD = json.loads(raw_old.decode("utf-8"))
+stops = []
+
+
+def norm(s):
+    s = (s or "").replace("--", EM).strip()
+    prev = None
+    while prev != s:
+        prev = s
+        s = EDGE.sub("", s).strip()
+    return " ".join(s.split())
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def step_test(conn, verse, ops):
+    """fix_split_merges.py's own guard, verbatim in effect. None = would patch now."""
+    book, rest = verse.rsplit(" ", 1)
+    ch, vs = rest.split(":")
+    r = conn.execute("SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                     (book, int(ch), int(vs))).fetchone()
+    if r is None:
+        return None, "verse not found"
+    vid = r[0]
+    for op in ops:
+        row = conn.execute(
+            "SELECT id, english, strongs_base FROM words WHERE verse_id=? AND position=?",
+            (vid, op["old_pos"])).fetchone()
+        if row is None:
+            return vid, "no row at pos %s" % op["old_pos"]
+        if row[2] != "G" + op["sbase"]:
+            return vid, "strongs mismatch pos %s (%s != G%s)" % (op["old_pos"], row[2], op["sbase"])
+        if (row[1] or "") != (op["old_eng"] or ""):
+            return vid, "english mismatch pos %s (%s)" % (op["old_pos"], repr(row[1]))
+    return vid, None
+
+
+def result_present(conn, vid, ops):
+    """(loose, strict, head) - does every new_pos cell hold the patch's result?"""
+    loose = strict = head = True
+    for op in ops:
+        rows = conn.execute(
+            "SELECT english, english_head, strongs_base FROM words WHERE verse_id=? AND position=?",
+            (vid, op["new_pos"])).fetchall()
+        pick = [r for r in rows if r[2] == "G" + op["sbase"]] or rows
+        if not pick:
+            return False, False, False
+        e, h = pick[0][0] or "", pick[0][1] or ""
+        strict &= e == (op["new_eng"] or "")
+        loose &= norm(e) == norm(op["new_eng"])
+        head &= h == (op["new_head"] or "")
+    return loose, strict, head
+
+
+def classify(path, fixes):
+    conn = ro(path)
+    out = {"PATCHED": [], "SKIPPED": {}, "ELIGIBLE-NOW": [], "loose_only": [], "head_differs": []}
+    for verse, ops in fixes.items():
+        vid, reason = step_test(conn, verse, ops)
+        if vid is not None and reason is None:
+            out["ELIGIBLE-NOW"].append(verse)
+            continue
+        if vid is not None:
+            loose, strict, head = result_present(conn, vid, ops)
+            if loose:
+                out["PATCHED"].append(verse)
+                if not strict:
+                    out["loose_only"].append(verse)
+                if not head:
+                    out["head_differs"].append(verse)
+                continue
+        out["SKIPPED"][verse] = reason
+    conn.close()
+    return out
+
+
+SAMPLE = re.compile(r"^\s{3}(\S+ \d+:\d+): (.*)$")
+COUNT = re.compile(r"(\d+) verse\(s\) patched, (\d+) skipped")
+
+
+def read_log(path):
+    """The step's own count line and its printed skip samples, from a finish_rebuild log."""
+    lines = open(path, encoding="utf-8", errors="replace").read().splitlines()
+    starts = [i for i, l in enumerate(lines) if "fix_split_merges.py" in l]
+    if not starts:
+        return None, None, []
+    i = starts[0]
+    patched = skipped = None
+    samples = []
+    j = i + 1
+    while j < len(lines) and "fix_kyrios_mistags" not in lines[j]:
+        m = COUNT.search(lines[j])
+        if m and patched is None:
+            patched, skipped = int(m.group(1)), int(m.group(2))
+        if "skip samples" in lines[j]:
+            k = j + 1
+            while k < len(lines):
+                s = SAMPLE.match(lines[k])
+                if not s:
+                    break
+                samples.append((s.group(1), s.group(2)))
+                k += 1
+        j += 1
+    return patched, skipped, samples
+
+
+def side(label, path, log, fixes):
+    res = classify(path, fixes)
+    lp, ls, samples = read_log(log)
+    sk = res["SKIPPED"]
+    print("== %s  %s" % (label, path))
+    print("   step's own log line (%s): %s patched / %s skipped" % (log, lp, ls))
+    print("   this check: patched %d - skipped %d - eligible-now %d   (of %d entries)"
+          % (len(res["PATCHED"]), len(sk), len(res["ELIGIBLE-NOW"]), len(fixes)))
+    print("   patched only after punctuation / dash normalising: %d %s"
+          % (len(res["loose_only"]), ", ".join(res["loose_only"])))
+    print("   patched but english_head differs from the patch's: %d %s"
+          % (len(res["head_differs"]), ", ".join(res["head_differs"])))
+    if res["ELIGIBLE-NOW"]:
+        print("   ELIGIBLE-NOW: " + ", ".join(res["ELIGIBLE-NOW"]))
+        stops.append("%s: %d verse(s) would patch now" % (label, len(res["ELIGIBLE-NOW"])))
+    if lp is None:
+        stops.append("%s: no fix_split_merges count line in %s" % (label, log))
+    elif (lp, ls) != (len(res["PATCHED"]), len(sk)):
+        stops.append("%s: this check %d/%d vs the log %d/%d"
+                     % (label, len(res["PATCHED"]), len(sk), lp, ls))
+    same_reason = 0
+    print("   log's skip samples (%d):" % len(samples))
+    for v, why in samples:
+        mine = sk.get(v)
+        tag = "in list, same reason" if mine == why else ("in list, reason now: " + str(mine)
+                                                         if v in sk else "NOT IN LIST")
+        same_reason += mine == why
+        print("     %-10s log: %s   -> %s" % (v, why, tag))
+        if v not in sk:
+            stops.append("%s: log sample %s is not in the skip list" % (label, v))
+    if len(samples) != 10:
+        stops.append("%s: %d skip samples read from the log, expected 10" % (label, len(samples)))
+    print("   samples in the list: %d of %d - same reason text: %d of %d"
+          % (sum(v in sk for v, _ in samples), len(samples), same_reason, len(samples)))
+    print("   all %d skips (step's reason, read now):" % len(sk))
+    for v in sk:
+        print("     %-10s %s" % (v, sk[v]))
+    print()
+    return set(sk)
+
+
+def main():
+    print("CHECK 1 v2 - fix_split_merges skips by name - read-only")
+    sha = hashlib.sha256(raw).hexdigest()
+    print("split_merge_fixes.json: %d entries - sha256 %s (%s)"
+          % (len(FIXES), sha, "= 61484fbc" if sha == FIXES_SHA else "DIFFERS from 61484fbc"))
+    if sha != FIXES_SHA:
+        stops.append("patch file differs from the code reference")
+    sha_old = hashlib.sha256(raw_old).hexdigest()
+    print("10/25 patch file (63744245^): %d entries - sha256 %s (%s) - entries that differ: %d"
+          % (len(FIXES_OLD), sha_old, "as drafted" if sha_old == OLD_SHA else "DIFFERS",
+             sum(FIXES_OLD.get(k) != v for k, v in FIXES.items())))
+    if sha_old != OLD_SHA:
+        stops.append("the 10/25 patch file is not the drafted one")
+    if os.path.realpath(BUILT) == os.path.realpath(LIVE):
+        print("CHECK1 RESULT: STOP - built and live are the same file")
+        sys.exit(1)
+    print()
+    new = side("BUILT (tail v3, 11/4; file at 61484fbc)", BUILT, LOG_NEW, FIXES)
+    old = side("LIVE (10/25 run; file before 63744245)", LIVE, LOG_OLD, FIXES_OLD)
+    new_only, old_only = sorted(new - old), sorted(old - new)
+    print("== difference")
+    print("   skipped on built, not on live (%d): %s" % (len(new_only), ", ".join(new_only) or "-"))
+    print("   skipped on live, not on built (%d): %s" % (len(old_only), ", ".join(old_only) or "-"))
+    print("   skipped on both (%d)" % len(new & old))
+    print("   expected: +Jdg 11:7, +Rom 9:29, nothing the other way")
+    if set(new_only) != EXPECT_NEW_ONLY or set(old_only) != EXPECT_OLD_ONLY:
+        stops.append("difference is not +Jdg 11:7 +Rom 9:29 / nothing")
+    print()
+    if stops:
+        print("CHECK1 RESULT: STOP - " + " | ".join(stops))
+        sys.exit(1)
+    print("CHECK1 RESULT: AS EXPECTED - %d skips on built = the %d of 10/25 + Jdg 11:7 + Rom 9:29"
+          % (len(new), len(old)))
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = 96a16b5338e47144df34de89f405ce038490246af6b20104f18e00653597d745 ] || { echo "CHECK1 RESULT: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L" "$N" "$O"
+) 2>&1 | tee ~/edition_upgrade_runs/check1v2_split_skips_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: as CHECK 1 — built 206 / 31, live 208 / 29 (each = its log), 10 of 10 samples, difference +Jdg 11:7 +Rom 9:29
+only → `CHECK1 RESULT: AS EXPECTED`; plus the 10/25 file line "as drafted - entries that differ: 18".
+
+### Block CHECK 2b (GATE REF `61484fbc`, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - CHECK 2b unmatched name cells (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK2b RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; L=~/bible-db/bible.db
+for f in "$B" "$L"; do [ -f "$f" ] || { echo "CHECK2b RESULT: STOP - missing: $f"; exit 1; }; done
+P=~/edition_upgrade_runs/check2b_tipnr_cells_20261104.py
+cat > "$P" <<'PY'
+"""CHECK 2b (one-off, read-only): built's unmatched name cells vs live's cell at the same verse +
+position, and the reverse. Both databases opened read-only; nothing is written.
+
+LOST   = built name cell (is_pn = 1) still '*' with English, live's cell there is not '*'
+GAINED = live name cell (is_pn = 1) still '*' with English, built's cell there is not '*'
+Class  = TEXT-CHANGED (the two verses' English sequences differ) or TEXT-SAME.
+Live's numbers are post-8b, so the sums are a review line, never a stop.
+
+Usage: python3 check2b_tipnr_cells_20261104.py <built.db> <live.db>
+"""
+import os
+import sqlite3
+import sys
+
+BUILT, LIVE = sys.argv[1:3]
+EXPECT_CELLS, EXPECT_NAMES, EXPECT_NET = 734, 687, 31649 - 31592   # tail v3 log; the two Matched lines
+Q = ("SELECT v.id, v.book, v.chapter, v.verse, w.position, w.english, w.strongs_base"
+     " FROM words w JOIN verses v ON v.id = w.verse_id")
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def stars(c):
+    """(ref, pos) -> (verse id, english) for name cells still '*' with English"""
+    return {("%s %d:%d" % (b, ch, vs), pos): (vid, eng) for vid, b, ch, vs, pos, eng, sb in
+            c.execute(Q + " WHERE w.is_pn = 1 AND w.strongs_base = '*'"
+                          " AND w.english IS NOT NULL AND w.english <> ''")}
+
+
+def verse(c, ref):
+    """pos -> (english, strongs_base) for one verse"""
+    book, rest = ref.rsplit(" ", 1)
+    ch, vs = rest.split(":")
+    return {pos: (eng or "", sb) for _v, _b, _c, _s, pos, eng, sb in
+            c.execute(Q + " WHERE v.book = ? AND v.chapter = ? AND v.verse = ? ORDER BY w.position",
+                      (book, int(ch), int(vs)))}
+
+
+def compare(here, here_c, other_c):
+    """cells '*' on this side whose cell on the other side is not '*'"""
+    out = []
+    for (ref, pos), (vid, eng) in here.items():
+        mine, theirs = verse(here_c, ref), verse(other_c, ref)
+        o_eng, o_sb = theirs.get(pos, ("(no cell)", None))
+        if o_sb == "*":
+            continue
+        same = [e for e, _ in mine.values()] == [e for e, _ in theirs.values()]
+        out.append((vid, pos, ref, eng, o_eng, o_sb, "TEXT-SAME" if same else "TEXT-CHANGED"))
+    return sorted(out)
+
+
+def show(title, rows, here, other):
+    print("== %s (%d)" % (title, len(rows)))
+    for cls in ("TEXT-CHANGED", "TEXT-SAME"):
+        part = [r for r in rows if r[6] == cls]
+        print("   -- %s (%d)" % (cls, len(part)))
+        for _vid, pos, ref, eng, o_eng, o_sb, _cls in part:
+            print("   %-11s pos %-3d %s %r   %s %r (number %s)" % (ref, pos, here, eng, other, o_eng, o_sb))
+    print()
+    return sum(r[6] == "TEXT-SAME" for r in rows)
+
+
+def main():
+    print("CHECK 2b - import_tipnr unmatched cells, built vs live - read-only")
+    if os.path.realpath(BUILT) == os.path.realpath(LIVE):
+        print("CHECK2b RESULT: STOP - built and live are the same file")
+        sys.exit(1)
+    bc, lc = ro(BUILT), ro(LIVE)
+    b, l = stars(bc), stars(lc)
+    names = len({e.strip() for _v, e in b.values()})
+    print("built unmatched: %d cells / %d distinct English (tail log: %d / %d) %s"
+          % (len(b), names, EXPECT_CELLS, EXPECT_NAMES,
+             "SAME" if (len(b), names) == (EXPECT_CELLS, EXPECT_NAMES) else "DIFFERS - review"))
+    print("live '*' name cells with English: %d (post-8b)" % len(l))
+    print()
+    lost, gained = compare(b, bc, lc), compare(l, lc, bc)
+    same = show("LOST: built '*', live numbered", lost, "built", "live")
+    same += show("GAINED: live '*', built numbered", gained, "live", "built")
+    net = len(lost) - len(gained)
+    print("== sums: lost %d - gained %d = %d ; logs' difference %d ; %s"
+          % (len(lost), len(gained), net, EXPECT_NET,
+             "SAME" if net == EXPECT_NET else "DIFFERS - review (live is post-8b)"))
+    print("   TEXT-SAME cells: %d (review, listed above)" % same)
+    print("CHECK2b RESULT: READ - lost %d, gained %d, net %d vs %d, TEXT-SAME %d"
+          % (len(lost), len(gained), net, EXPECT_NET, same))
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = e044ac410010d1e9a02a33e22118dedf81d3afc121bb6875e0bb42b8609d873f ] || { echo "CHECK2b RESULT: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L"
+) 2>&1 | tee ~/edition_upgrade_runs/check2b_tipnr_cells_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: built unmatched 734 / 687 (SAME); lost − gained vs 57 and the TEXT-SAME list are review lines; ends
+`CHECK2b RESULT: READ`.
