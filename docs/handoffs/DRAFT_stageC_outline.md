@@ -1760,3 +1760,8 @@ exit "$r"
 ```
 Expected: `Ran 11 tests` / `OK`; 23 `ok` lines (18 `corrected_value`, 5 `feed text` — ids 24, 25, 27, 45, 51);
 `RETIRED-ROW CHECK: PASS 23/23 HOLD (corrected_value 18 - feed text 5)`; `check exit 0`; `exit=0`.
+
+**C5 RAN 11/4 05:01 UTC (cleared as printed; REF f8e814c2, PA HEAD 7358c8bf; `retired_check_20261104.log`):**
+11 tests OK; 23 `ok` lines — 18 `corrected_value` + 5 `feed text` (ids 24 Mat 21:19, 25 1Ch 22:15, 27 Job 24:19,
+45 Mar 16:17, 51 2Sa 16:18); `RETIRED-ROW CHECK: PASS 23/23 HOLD (corrected_value 18 - feed text 5)`, exit 0.
+The 23 rows = the C3a retired list, row for row (11 greek_pos + 12 verses.text). No FAIL rows. Next: C6 gate 3.

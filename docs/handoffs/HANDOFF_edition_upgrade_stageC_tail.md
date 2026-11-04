@@ -88,7 +88,9 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   Leave those files alone (ruling).
 - **GATE 1 ACCEPTED (11/4 04:53 UTC, `~/edition_upgrade_runs/gate1_cert_20261104.log`):** REF f8e814c2, PA HEAD
   7358c8bf; controls 6/6 FIRED; built copy 7/7 — `CERTIFIED STATE HOLDS (7/7 green)`.
-- Next: §9.61/§9.63 retired-row gate (`eu_retired_check.py <built>`, REF f8e814c2) → gate 3 v2 member diff.
+- **C5 RETIRED-ROW GATE PASSED (11/4 05:01 UTC, `retired_check_20261104.log`):** 11 tests OK; `PASS 23/23 HOLD
+  (corrected_value 18 - feed text 5)`, the 5 = §9.63's named verses.
+- Next: C6 gate 3 v2 member diff (STOP for the §9.52 punct ruling) → stage D (8b).
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
