@@ -484,11 +484,155 @@ def run_controls_v2():
     return 0 if ok else 1
 
 
+# ── V2 member diff vs a frozen punct-position member file (DESIGN_q2_build §2, §9.52; §9.82) ──
+# The edition-upgrade gate 3 run mode. Member = the verse ref; the ops text is shown, not keyed.
+# Fails (exit 1) on ANY word-order / content-other / dup-gloss member, or a NEW punct member on a
+# verse the eligible file does not mark eligible (non-transplanted). NEW punct members on eligible
+# verses, GONE members and same-verse-changed-ops members are LISTED for ruling, not failed.
+
+MEMBER_LABEL = "V2 MEMBER DIFF:"
+DECLARED_ROW = "Joh 14:26"            # charter §4.10: must be clean on the built copy
+_FROZEN_LINE = re.compile(r"^\s*\[(?P<klass>[a-z-]+)\s*\] (?P<ref>\S+ \d+:\d+)\s+(?P<ops>.*?)\s*$")
+
+
+def load_punct_members(path):
+    """The frozen --list lines (punct-position only) -> {ref: ops}. Any line that does not parse,
+    is another class, or repeats a ref = ValueError (a malformed member file never gates)."""
+    out = {}
+    with open(path, encoding="utf-8") as f:
+        for n, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            m = _FROZEN_LINE.match(line)
+            if not m or m["klass"] != "punct-position":
+                raise ValueError(f"{path}:{n}: not a punct-position member line: {line.rstrip()!r}")
+            if m["ref"] in out:
+                raise ValueError(f"{path}:{n}: {m['ref']} listed twice")
+            out[m["ref"]] = m["ops"]
+    if not out:
+        raise ValueError(f"{path}: no members")
+    return out
+
+
+def load_eligible_refs(path):
+    """A's eligible_<date>.tsv (book, chapter, verse, eligible, reason) -> {ref: True/False}."""
+    import csv
+    out = {}
+    with open(path, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE):
+            out[f"{r['book']} {int(r['chapter'])}:{int(r['verse'])}"] = (r["eligible"] == "1")
+    if not out:
+        raise ValueError(f"{path}: no rows")
+    return out
+
+
+def member_diff_v2(hits, frozen, eligible):
+    """-> dict of member lists (pure; no db)."""
+    ops = {h["ref"]: " ; ".join(h["ops"]) for h in hits}
+    by = defaultdict(list)
+    for h in hits:
+        by[h["klass"]].append(h["ref"])
+    punct = set(by.get("punct-position", ()))
+    new = sorted(punct - set(frozen), key=_ref_sort)
+    return {
+        "word-order": by.get("word-order", []),
+        "content-other": by.get("content-other", []),
+        "dup-gloss": by.get("dup-gloss", []),
+        "gone": sorted(set(frozen) - punct, key=_ref_sort),
+        "new_eligible": [r for r in new if eligible.get(r) is True],
+        "new_not_eligible": [r for r in new if eligible.get(r) is not True],
+        "changed_ops": sorted((r for r in punct & set(frozen) if ops[r] != frozen[r]), key=_ref_sort),
+        "same": sum(1 for r in punct & set(frozen) if ops[r] == frozen[r]),
+        "declared_row": next((h["klass"] for h in hits if h["ref"] == DECLARED_ROW), None),
+        "_ops": ops,
+        "_punct_total": len(punct),
+    }
+
+
+def _ref_sort(ref):
+    book, cv = ref.rsplit(" ", 1)
+    c, v = cv.split(":")
+    return (book, int(c), int(v))
+
+
+def run_member_diff_v2(db, frozen_path, eligible_path):
+    frozen = load_punct_members(frozen_path)
+    eligible = load_eligible_refs(eligible_path)
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    hits = reassembly_hits_v2(conn)
+    total = conn.execute("SELECT count(*) FROM verses").fetchone()[0]
+    conn.close()
+    d = member_diff_v2(hits, frozen, eligible)
+    ops = d["_ops"]
+    print(f"== reassembly-diff V2 member diff on {db} (READ-ONLY) ==")
+    print(f"   verses scanned : {total:,}")
+    print(f"   frozen punct   : {frozen_path} ({len(frozen):,} members)")
+    print(f"   eligible file  : {eligible_path} ({sum(eligible.values()):,} eligible of {len(eligible):,})")
+    for k in ("word-order", "content-other", "dup-gloss"):
+        print(f"\n   {k} members: {len(d[k]):,}")
+        for r in d[k]:
+            print(f"     [{k:<13}] {r:<12} {ops[r]}")
+    print(f"\n   {DECLARED_ROW} (charter 4.10 declared row): "
+          f"{'clean' if d['declared_row'] is None else 'HIT ' + d['declared_row']}")
+    print(f"\n   punct-position on this db {d['_punct_total']:,} - unchanged members {d['same']:,}")
+    print(f"   GONE (in the frozen file, not on this db): {len(d['gone']):,}")
+    for r in d["gone"]:
+        print(f"     [gone         ] {r:<12} was: {frozen[r]}")
+    print(f"   NEW on an eligible verse (listed for ruling): {len(d['new_eligible']):,}")
+    for r in d["new_eligible"]:
+        print(f"     [new-eligible ] {r:<12} {ops[r]}")
+    print(f"   NEW on a NON-eligible verse (FAIL): {len(d['new_not_eligible']):,}")
+    for r in d["new_not_eligible"]:
+        print(f"     [new-NOT-elig ] {r:<12} {ops[r]}")
+    print(f"   SAME verse, different ops (listed for ruling): {len(d['changed_ops']):,}")
+    for r in d["changed_ops"]:
+        print(f"     [changed-ops  ] {r:<12} was: {frozen[r]}")
+        print(f"     {'':<15} {'':<12} now: {ops[r]}")
+    fail = (len(d["word-order"]) + len(d["content-other"]) + len(d["dup-gloss"])
+            + len(d["new_not_eligible"]) + (d["declared_row"] is not None))
+    tail = (f"word-order {len(d['word-order'])} - content-other {len(d['content-other'])} - "
+            f"dup-gloss {len(d['dup-gloss'])} - {DECLARED_ROW} "
+            f"{'clean' if d['declared_row'] is None else 'HIT'} - new on non-eligible "
+            f"{len(d['new_not_eligible'])} | to ruling: gone {len(d['gone'])} - new on eligible "
+            f"{len(d['new_eligible'])} - changed ops {len(d['changed_ops'])} - unchanged {d['same']}")
+    print(f"\n{MEMBER_LABEL} {'FAIL' if fail else 'NO FAIL'} - {tail}")
+    return 1 if fail else 0
+
+
+def _positional(args, valued=("--verse", "--punct-members", "--eligible")):
+    """Non-flag args, skipping the value that follows each flag in `valued`."""
+    out, skip = [], False
+    for a in args:
+        if skip:
+            skip = False
+        elif a in valued:
+            skip = True
+        elif not a.startswith("--"):
+            out.append(a)
+    return out
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     v2 = "--v2" in args
     if "--controls" in args:
         sys.exit(run_controls_v2() if v2 else run_controls())
+    if "--punct-members" in args or "--eligible" in args:
+        try:
+            pm = args[args.index("--punct-members") + 1]
+            el = args[args.index("--eligible") + 1]
+        except (ValueError, IndexError):
+            print("usage: audit_reassembly_diff.py <db> --v2 --punct-members <frozen.txt> --eligible <eligible.tsv>")
+            sys.exit(2)
+        pos = _positional(args)
+        if not v2 or len(pos) != 1:
+            print("the member diff needs --v2 and exactly one db path (no default)")
+            sys.exit(2)
+        try:
+            sys.exit(run_member_diff_v2(pos[0], pm, el))
+        except (ValueError, OSError, sqlite3.Error) as e:
+            print(f"{MEMBER_LABEL} STOP {e}")
+            sys.exit(2)
     db = next((a for a in args if not a.startswith("--")), "bible.db")
     if "--verse" in args:
         ref = args[args.index("--verse") + 1]

@@ -89,6 +89,16 @@ def clean_counted(raw, ref, fires):
     return out
 
 
+def feed_text(app, key, fires=None):
+    """B's text for one eligible verse key (before the em-dash swap): the verse's feed English
+    cells, normalized by AppTransplant, joined in slot order, through clean_counted. The ONE place
+    this is computed - run() uses it, and so does eu_retired_check.py (§9.81)."""
+    ka = app.pairs[key]
+    joined = " ".join(app.norm[(ka[0], ka[1], ka[2], s["slot_index"])] for s in app.feed[ka])
+    return clean_counted(joined, f"{key[0]} {key[1]}:{key[2]}",
+                         fires if fires is not None else collections.Counter())
+
+
 def load_eligible(path):
     p = Path(path)
     if not p.is_file():
@@ -140,9 +150,7 @@ def run(eligible_path, copy=None, apply=False, out_dir=None, stamp="20261031", a
             counts["kept_old:" + reason] += 1
             rows.append((k, "kept_old", reason, "", "", ""))
             continue
-        ka = app.pairs[k]
-        joined = " ".join(app.norm[(ka[0], ka[1], ka[2], s["slot_index"])] for s in app.feed[ka])
-        new = clean_counted(joined, f"{k[0]} {k[1]}:{k[2]}", fires)
+        new = feed_text(app, k, fires)
         if copy is not None:
             if k not in old:
                 raise FeedError(f"{k}: eligible verse has no verses row on the copy")
