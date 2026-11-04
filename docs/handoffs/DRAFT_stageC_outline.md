@@ -125,3 +125,212 @@ Stage D (8b.0–8b.3, `declared_deltas.json` written before gate 2) starts only 
 - `eu_rekey_dump_20261102.log`'s full `fix_split_merges` patched/skipped figure (for the C2 table).
 - Split 80 → 84 one-liner (§9.64 c) — still owed to the ruling chat from stage B.
 - `declared_deltas.json` + the gate B predicted header member list — stage D, before gate 2.
+
+---
+
+## 2026-11-03 — pre-flight done; the two PA blocks (HELD — neither is cleared)
+
+F1 → ruled §9.80 · F2 → §9.81, landed · F3 → §9.82, landed. Pre-flight commit **`87b3d44b`** (scripts/tests:
+`eu_retired_check.py`, `build_prose_from_app.feed_text`, the v2 member-diff mode, two test files, both test
+lists) = the "code unchanged" reference. Labels to grep: **`RETIRED-ROW CHECK:`** · **`V2 MEMBER DIFF:`** ·
+**`S980 RESULT:`**.
+
+### Block P1 — PA pull + HEAD confirm + the two owed figures (read-only apart from the pull)
+```bash
+cd ~/bible-db && git pull && git log -1 --format='PA HEAD %h %s' && git diff --quiet 87b3d44b HEAD -- scripts tests && echo "scripts/tests unchanged since 87b3d44b"
+grep -n "patched\|skipped\|skip samples\|verse not found" ~/edition_upgrade_runs/eu_rekey_dump_20261102.log | head -60
+grep -Hn "merged subject-name" ~/edition_upgrade_runs/stageB_build_20261102.log ~/bible-db/build_pnstar.log ~/bible-db/build_pnstar2.log
+```
+Expected: PA HEAD = the docs commit that adds this section (CC posts the hash); "unchanged since 87b3d44b";
+the split-merge patched/skipped lines; Split lines reading 84 (stage B) and 80 (both lane-② logs).
+
+### Block S980 — §9.80 on both copies (gated; runs only on clearance, after P1 confirms PA HEAD)
+Pre-checks BOTH copies before writing either: status counts 372 / 23 / 6; each copy's EU rows equal
+`eu_batch_rows_20261102.tsv` exactly (fingerprint `16f2c6f5…` — a formatting mismatch here is a safe STOP,
+nothing written); exactly the 21 ruled refs in scope, printed with ids; no OTHER active row (any ledger) with
+`--` in its after-value. Then per copy (src first): rewrite the 21 after-values (`--` → `—`), and BEFORE saving
+check — 21 changed · zero active rows with `--` in the after-value across all ledgers (any printed in full) ·
+the 21 hold `—` in the after-value AND still `--` in the before-value · every other cell of every row unchanged ·
+status counts unchanged · EU rows now equal `eu_batch_rows_20261103.tsv` (fingerprint `b709436a…`). Any miss →
+the change is UNDONE, not saved, STOP. Tested locally on throwaway copies built from the frozen file (not
+bible.db): applies once; a second run stops at the pre-check; an older row with `--` stops it; a failed
+after-check leaves the copy unchanged.
+```bash
+( set -uo pipefail
+REF=87b3d44b
+echo "GATE REF ${REF} - S980 block - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "S980 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 - ~/bible-db/bible_edupg_test_20261101.db ~/bible-db/bible_edupg_test_built_20261102.db <<'PY'
+import hashlib, os, sqlite3, sys
+# §9.80: EU prose after-values to final corpus form ('--' -> em dash), on BOTH copies. Before-values untouched.
+SRC, BUILT = sys.argv[1], sys.argv[2]
+LIVE = os.path.realpath(os.path.expanduser("~/bible-db/bible.db"))
+EM = chr(8212)
+OLD_FP = "16f2c6f515fbcee6de2fac2ec06acefa787cad9c6afc375499e0ec179b1b96ab"   # = eu_batch_rows_20261102.tsv
+NEW_FP = "b709436a40be5ad57574700534495677dc33244fd0bd4f61923c2d4af50e274a"   # = eu_batch_rows_20261103.tsv
+WANT = ("1Ch 21:3,1Ch 2:7,2Ch 34:12,2Ki 14:23,2Ki 14:28,2Ki 18:21,2Ki 24:5,Act 19:38,Dan 12:11,Dan 9:25,"
+        "Deu 32:24,Exo 29:27,Exo 29:38,Exo 6:24,Ezr 7:6,Jdg 20:48,Jer 49:30,Jer 50:29,Jos 13:3,Lev 5:4,Neh 12:35")
+COUNTS = {"active": 372, "retired": 23, "superseded": 6}
+SCOPE = "status='active' AND ledger_ref LIKE 'EU-%' AND field='verses.text' AND instr(corrected_value,'--')>0"
+
+
+class Stop(Exception):
+    pass
+
+
+def fp(con):
+    rows = ["\t".join("" if x is None else str(x) for x in r) for r in con.execute(
+        "SELECT book,chapter,verse,position,field,source_value,corrected_value,ledger_ref "
+        "FROM abp_corrections WHERE ledger_ref LIKE 'EU-%'")]
+    rows.sort(key=lambda s: s.encode("utf-8"))
+    return hashlib.sha256(("\n".join(rows) + "\n").encode("utf-8")).hexdigest()
+
+
+def counts(con):
+    return dict(con.execute("SELECT status, count(*) FROM abp_corrections GROUP BY status").fetchall())
+
+
+def rest(con, ids):
+    """every column of every row, except the 21 rows' corrected_value"""
+    h = hashlib.sha256()
+    q = ",".join("?" * len(ids))
+    for r in con.execute(f"SELECT id,book,chapter,verse,position,field,source_value,reason,ledger_ref,"
+                         f"applied_at,status,created,CASE WHEN id IN ({q}) THEN '<21>' ELSE corrected_value END "
+                         f"FROM abp_corrections ORDER BY id", ids):
+        h.update(repr(tuple(r)).encode("utf-8"))
+    return h.hexdigest()
+
+
+def dash_rows(con):
+    return con.execute("SELECT id, ledger_ref, book||' '||chapter||':'||verse, field, corrected_value "
+                       "FROM abp_corrections WHERE status='active' AND instr(corrected_value,'--')>0 "
+                       "ORDER BY id").fetchall()
+
+
+def target(db):
+    if not os.path.isfile(db):
+        raise Stop(f"not found: {db}")
+    if os.path.realpath(db) == LIVE:
+        raise Stop(f"refusing the LIVE db {db}")
+
+
+def pre(db):
+    target(db)
+    con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        c = counts(con)
+        print(f"  [{db}] status counts {c}")
+        if c != COUNTS:
+            raise Stop(f"{db}: status counts {c} != {COUNTS}")
+        f = fp(con)
+        print(f"  [{db}] EU rows fingerprint {f[:12]}... (20261102 file = {OLD_FP[:12]}...)")
+        if f != OLD_FP:
+            raise Stop(f"{db}: EU rows do not match eu_batch_rows_20261102.tsv")
+        rows = con.execute(f"SELECT id, book||' '||chapter||':'||verse FROM abp_corrections WHERE {SCOPE} "
+                           "ORDER BY id").fetchall()
+        refs = ",".join(sorted((r[1] for r in rows), key=lambda s: s.encode("utf-8")))
+        print(f"  [{db}] in scope: {len(rows)}")
+        for i, ref in rows:
+            print(f"      id {i:>4}  {ref}")
+        if len(rows) != 21 or refs != WANT:
+            raise Stop(f"{db}: in-scope rows are not exactly the 21 ruled refs (got {len(rows)}: {refs})")
+        other = [r for r in dash_rows(con) if r[0] not in {i for i, _ in rows}]
+        for r in other:
+            print(f"  !! [{db}] active row OUTSIDE the 21 with '--' in its after-value: {r!r}")
+        if other:
+            raise Stop(f"{db}: {len(other)} other active row(s) carry '--' in the after-value")
+        return [i for i, _ in rows]
+    finally:
+        con.close()
+
+
+def write(db, ids):
+    con = sqlite3.connect(db)
+    try:
+        con.execute("PRAGMA busy_timeout=5000")
+        con.execute("PRAGMA journal_mode=DELETE")
+        before_rest, before_counts = rest(con, ids), counts(con)
+        q = ",".join("?" * len(ids))
+        n = con.execute(f"UPDATE abp_corrections SET corrected_value=replace(corrected_value,'--',?) "
+                        f"WHERE id IN ({q}) AND {SCOPE}", [EM] + ids).rowcount
+        bad = []
+        if n != 21:
+            bad.append(f"UPDATE changed {n} rows, expected 21")
+        left = dash_rows(con)                                # ALL ledgers, all active rows
+        for r in left:
+            print(f"  !! [{db}] active row with '--' in after-value after the write: {r!r}")
+        if left:
+            bad.append(f"{len(left)} active row(s) still carry '--' in the after-value")
+        ok21 = con.execute(f"SELECT count(*) FROM abp_corrections WHERE id IN ({q}) AND instr(corrected_value,?)>0 "
+                           f"AND instr(source_value,'--')>0", [*ids, EM]).fetchone()[0]
+        if ok21 != 21:
+            bad.append(f"{ok21} of the 21 have an em-dash after-value AND a '--' before-value")
+        if rest(con, ids) != before_rest:
+            bad.append("something other than the 21 after-values changed")
+        if counts(con) != before_counts:
+            bad.append("status counts moved")
+        f = fp(con)
+        if f != NEW_FP:
+            bad.append(f"EU rows fingerprint {f[:12]}... != eu_batch_rows_20261103.tsv {NEW_FP[:12]}...")
+        if bad:
+            con.rollback()
+            raise Stop(f"{db}: NOT saved (undone): " + " | ".join(bad))
+        con.commit()
+    finally:
+        con.close()
+    con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        q = ",".join("?" * len(ids))
+        for i, ref, cv in con.execute(f"SELECT id, book||' '||chapter||':'||verse, corrected_value FROM abp_corrections "
+                                      f"WHERE id IN ({q}) ORDER BY id", ids):
+            print(f"      id {i:>4}  {ref:<11} after-value now: {cv}")
+        print(f"  [{db}] saved: 21 changed - active rows with '--' in after-value (all ledgers) "
+              f"{len(dash_rows(con))} - EU fingerprint {fp(con)[:12]}... = 20261103 file - counts {counts(con)}")
+    finally:
+        con.close()
+
+
+done = []
+try:
+    print("-- pre-checks (read-only, both copies, before any write) --")
+    ids_src, ids_built = pre(SRC), pre(BUILT)
+    print("-- write: src --")
+    write(SRC, ids_src)
+    done.append("src")
+    print("-- write: built --")
+    write(BUILT, ids_built)
+    done.append("built")
+    print("S980 RESULT: APPLIED on both copies - 21 + 21 after-values in em-dash form, 0 active '--' after-values")
+except Stop as e:
+    print(f"S980 RESULT: STOP - {e} - copies saved by this run: {', '.join(done) or 'none'}")
+    sys.exit(1)
+PY
+) 2>&1 | tee ~/edition_upgrade_runs/stageC_s980_20261103.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected last line: `S980 RESULT: APPLIED on both copies - 21 + 21 after-values in em-dash form, 0 active '--' after-values`,
+then `exit=0`. After it passes: CC commits the 20261103 rows freeze + `.sha256` + the spec NOTES file (see flag 3).
+
+### Owed figures
+- **Split 80 → 84** (subject-name split, `build_words_from_abp.py:2737`): old **80** = the 10/25 build and both
+  lane-② ride logs (rebuild-words step 2 pin); new **84** = stage B build, 11/2 (`stageB_build_20261102.log`).
+  +4. Not attributed by member: the build runs the split with its member list muted (`log=lambda *_a: None`,
+  `build_words_from_abp.py:2735`), and both copies are already split, so no dry run can list them now. §4.8
+  wants member attribution before the swap — method owed (CC to draft; not blocking the tail).
+- **Split-merge patched/skipped** from `eu_rekey_dump_20261102.log`: CC cannot read PA files — block P1 prints it.
+  Note: that log is the 11/2 throwaway run of the R2 re-keys (18 patched); it may not carry the full tail figure.
+
+### Flags for the ruling chat
+1. **The banked skip list leaves out two skips the record already expects.** `fix_split_merges` Jdg 11:7 —
+   "no re-key … the entry skips by itself" (§9.72) — and 2Ti 4:10 — "already skips on a plain rebuild" (§9.66).
+   As banked ("expected skips are exactly Isa 28:20, Mar 14:44, Rom 9:29 — any other skip stops the lane") both
+   would stop the tail. Amend the list to include them, or confirm the stop. (Isa 28:20 skips in two steps:
+   `fix_subject_reorder` and `fix_supplied_attach`.)
+2. **Supersession note is a sidecar file**, `eu_corrections_spec_20261102.NOTES.md`, not a line inside the spec
+   TSV: `eu_batch_expand.py` reads that TSV with `csv.DictReader`, so a note line would become a bogus spec row.
+3. **The re-freeze files sit under `tests/`, so committing them moves the "code unchanged" reference.** Proposed:
+   commit them only AFTER block S980 passes (the block proves each table equals the file); that commit becomes
+   the tail block's reference, and `git diff --stat 87b3d44b <it>` = exactly those three fixture files (shown in
+   the tail block). Until then they stay local and uncommitted.
+4. **S980 undoes its own change if any after-check fails** (all checks run before the change is saved) — one
+   step beyond the ruling's "assert after the write".
