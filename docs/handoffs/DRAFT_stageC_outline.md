@@ -1478,3 +1478,31 @@ PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L"
 ```
 Expected: built unmatched 734 / 687 (SAME); lost − gained vs 57 and the TEXT-SAME list are review lines; ends
 `CHECK2b RESULT: READ`.
+
+### CHECK 1 v2 + CHECK 2b — RAN on PA 11/4 (04:06–04:07 UTC), both cleared as printed; held for ruling-chat read
+
+PA HEAD 8db1604a (older master commit; gate is scripts/tests vs 61484fbc — passed). Logs:
+`~/edition_upgrade_runs/check1v2_split_skips_20261104.log`, `~/edition_upgrade_runs/check2b_tipnr_cells_20261104.log`.
+
+**CHECK 1 v2 — `CHECK1 RESULT: AS EXPECTED`, exit 0.** Old patch file sha 7efa15d3… as drafted, entries
+that differ 18. Built 206/31 = log; live 208/29 = log; eligible-now 0 both; 10/10 samples each, same
+reasons. Difference: +Jdg 11:7 +Rom 9:29, nothing the other way; 29 on both. Review notes only:
+built "patched only after normalising" = 2 (Isa 56:10, Luk 12:40) vs live 1 (Luk 12:40) — Isa 56:10 is
+one of the 18 re-keyed entries; 2Ti 4:10 skip reason reads `'For'` on built vs `'for'` on live (edition
+capital), on both lists as ruled.
+
+**CHECK 2b — `CHECK2b RESULT: READ`, exit 0.** Built unmatched 734 / 687 SAME as the tail log. Live '*'
+name cells with English: 16,636. LOST 193 (117 TEXT-CHANGED, 76 TEXT-SAME); GAINED 16,079 (8,106 /
+7,973); net −15,886 vs 57 (review line); TEXT-SAME total 8,049.
+Reading (CC, for the ruling chat — not a ruling): the cell comparison is swamped by 8b, which has run on
+live and not yet on built (handoff line 27: 8b not yet run). rebuild-words.md 8b: import_tipnr writes the
+HEBREW stopgap numbers; live serving is Greek-keyed with Hebrew in `pn_hebrew_xref` (8b.2). That matches
+the shape — GAINED is live '*' vs built H-number (e.g. Gen 2:8 Eden H5731), LOST TEXT-SAME is live
+G-number vs built '*' (e.g. Gen 2:14 Euphrates G2166). Not checked member by member. So this method
+cannot isolate the −57; it does show the edition-text side directly. Cells worth a look (live English
+→ built English at the same slot): 2Ki 9:31 'with Omri,' → 'to Zimri,' H2174; Num 36:5 pos 13 'of
+Israel,' → 'of Joseph,' H3130; Jos 5:15 pos 26 'Josua' → 'did' G4160; 2Ki 23:35 pos 7 'Jehoiakim' →
+'gave' G1325; Est 5:9 pos 12/13 'Haman' ↔ 'seeing' G1492 (a name cell sits one slot over); Psa 89:35
+'I lie to David, no.' → 'I lie to David?'; spelling changes (Gergesite→Gergasite, Zerubbabel→Zorobabel,
+Bethany→Bethania, Seredites→Sardites, Simon→Simeon Deu 33:6, Jonas→Jonah Joh 21:15/16, Klopas→Cleophas,
+Rahab→Rachab Mat 1:5).
