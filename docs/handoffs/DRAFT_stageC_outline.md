@@ -504,3 +504,593 @@ for L in ~/edition_upgrade_runs/stageC_tail3_20261104.log ~/bible-db/finish_pnst
 Expected: split-merge `234 verse(s) patched, 3 skipped` (Jdg 11:7, Rom 9:29, 2Ti 4:10) · subject-reorder skips Isa 28:20 + Mar 14:44 ·
 supplied-attach skips Isa 28:20 · 4b `applied 118 · already-applied 6 · LOUD-SKIPPED 0` · step 7 `applied 248 · already-applied 0 ·
 LOUD-SKIPPED 0` · finish_rebuild exit 0 · words 626,309 · prose at after-text 124 · `--` 0 / 0.
+
+## 2026-11-04 — tail v3 read-back: CHECK 1 + CHECK 2 (read-only; HELD for clearance)
+Ruling chat: tail v3 result HELD pending two read-only checks; §9.83 amended (JP) — expected skip set = the 10/25
+standing set (split-merge 29, subject-reorder 13, supplied-attach 5, by name) + exactly Jdg 11:7 and Rom 9:29 as new
+split-merge skips; 206/31 accepted only if the 31 = the 10/25 29 + those two; the 234/3 forecast withdrawn.
+Both scripts are one-offs written under `~/edition_upgrade_runs/` by the block itself (not `scripts/` — the code
+reference stays `61484fbc`); each block checks the pasted script's sha256 before running it.
+
+**Method notes (why not the plain re-run the ruling describes):**
+- CHECK 1: the step already ran on both copies, so a PATCHED verse no longer holds its before-English and fails the
+  step's own test too. Each verse is read two ways: patch result present at every `new_pos` (punctuation / `--`
+  normalised — fix_bracket_punct and fix_emdash run after) → patched; otherwise the step's own test (same queries,
+  order and reason text as `fix_split_merges.py:46-71`) gives the skip reason; the step's test passing now = would
+  patch today = stop. Live (the 10/25 output) gives the 29. Cross-checks: counts = each log's own line; each log's 10
+  printed samples must be in its list. Blind spot: a skip whose cells already equal the patch result reads as patched
+  — the count check catches it. Checked: no lane-3 verse and no EU word correction touches a split-merge verse.
+- CHECK 2: live's numbers are post-8b (8b re-numbers thousands of name cells), so they don't show what the import
+  decided. Per side: take the cells the import saw (`is_pn = 1` — import_tipnr is the only writer), put back their
+  import-time English (undo lane-3 8b.2a on live only, then step-7 word corrections, then the em dash), set them `*`,
+  run the real `import_tipnr.py` on a throwaway copy. Proof: built has no 8b, so its stored result must equal the re-run
+  cell for cell; each re-run's Matched/Unmatched must equal its own log. Then pair matched cells per verse; lost/gained
+  get a class (EDITION-TEXT / TOKEN-SPLIT / OTHER); any OTHER stops.
+
+Tested locally on synthetic databases (not bible.db): pass case; extra skip, eligible-now, missing sample (check 1);
+OTHER cell, wrong log figure, built proof broken (check 2) — each stops. Reason text matched the real
+`fix_split_merges.py` dry-run on 4 reason kinds. Both whole blocks ran end to end in a fake home (heredoc → sha → run → tee).
+
+### Block CHECK 1 (GATE REF `61484fbc`, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - CHECK 1 split-merge skips (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; L=~/bible-db/bible.db
+N=~/edition_upgrade_runs/stageC_tail3_20261104.log; O=~/bible-db/finish_pnstar2.log
+for f in "$B" "$L" "$N" "$O"; do [ -f "$f" ] || { echo "CHECK1 RESULT: STOP - missing: $f"; exit 1; }; done
+P=~/edition_upgrade_runs/check1_split_skips_20261104.py
+cat > "$P" <<'PY'
+"""CHECK 1 (one-off, read-only): name every fix_split_merges skip on the built copy (tail v3, 11/4)
+and on live (the 10/25 run), and diff the two sets.
+
+Both databases are opened read-only. Nothing is written anywhere.
+
+Why not just re-run the step's test: the step already ran on both copies, so a PATCHED verse no
+longer holds its "before" English and fails the step's own test too. So each verse is read two
+ways and the logs check the result:
+  1. patch result present  - every entry's new_pos cell holds new_eng (punctuation and '--'/em dash
+                             normalised, since fix_bracket_punct and fix_emdash run after the patch)
+                             -> PATCHED
+  2. otherwise             - the step's own test (fix_split_merges.py lines 46-71, same queries, same
+                             order, same reason text) gives the skip reason -> SKIPPED
+  3. the step's test passes now -> ELIGIBLE-NOW (should be 0: the step would patch it today)
+Cross-checks: the counts must equal the step's own log line, and each log's 10 printed skip
+samples must be in the list.
+
+Usage: python3 check1_split_skips_20261104.py <built.db> <live.db> <tail3.log> <finish_pnstar2.log>
+"""
+import hashlib
+import json
+import os
+import re
+import sqlite3
+import sys
+
+BUILT, LIVE, LOG_NEW, LOG_OLD = sys.argv[1:5]
+FIXES_PATH = os.path.join(os.environ.get("CHECK_REPO") or os.path.expanduser("~/bible-db"),
+                          "scripts", "split_merge_fixes.json")
+FIXES_SHA = "eab8e565cd1dd34231254088091ffb13b93e8ec52cdbb53a8b622a1148dcc8c5"   # = 61484fbc
+EXPECT_NEW_ONLY = {"Jdg 11:7", "Rom 9:29"}    # ruling: the 10/25 29 + these two, nothing lost
+EXPECT_OLD_ONLY = set()
+EM = chr(8212)
+PUNCT = ".,;:?" + chr(33) + chr(183) + ")"      # chr(33) = exclamation mark (kept out of the paste)
+EDGE = re.compile("^[(]+|[" + re.escape(PUNCT) + "]+$")
+
+raw = open(FIXES_PATH, "rb").read()
+FIXES = json.loads(raw.decode("utf-8"))
+stops = []
+
+
+def norm(s):
+    s = (s or "").replace("--", EM).strip()
+    prev = None
+    while prev != s:
+        prev = s
+        s = EDGE.sub("", s).strip()
+    return " ".join(s.split())
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def step_test(conn, verse, ops):
+    """fix_split_merges.py's own guard, verbatim in effect. None = would patch now."""
+    book, rest = verse.rsplit(" ", 1)
+    ch, vs = rest.split(":")
+    r = conn.execute("SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                     (book, int(ch), int(vs))).fetchone()
+    if r is None:
+        return None, "verse not found"
+    vid = r[0]
+    for op in ops:
+        row = conn.execute(
+            "SELECT id, english, strongs_base FROM words WHERE verse_id=? AND position=?",
+            (vid, op["old_pos"])).fetchone()
+        if row is None:
+            return vid, "no row at pos %s" % op["old_pos"]
+        if row[2] != "G" + op["sbase"]:
+            return vid, "strongs mismatch pos %s (%s != G%s)" % (op["old_pos"], row[2], op["sbase"])
+        if (row[1] or "") != (op["old_eng"] or ""):
+            return vid, "english mismatch pos %s (%s)" % (op["old_pos"], repr(row[1]))
+    return vid, None
+
+
+def result_present(conn, vid, ops):
+    """(loose, strict, head) - does every new_pos cell hold the patch's result?"""
+    loose = strict = head = True
+    for op in ops:
+        rows = conn.execute(
+            "SELECT english, english_head, strongs_base FROM words WHERE verse_id=? AND position=?",
+            (vid, op["new_pos"])).fetchall()
+        pick = [r for r in rows if r[2] == "G" + op["sbase"]] or rows
+        if not pick:
+            return False, False, False
+        e, h = pick[0][0] or "", pick[0][1] or ""
+        strict &= e == (op["new_eng"] or "")
+        loose &= norm(e) == norm(op["new_eng"])
+        head &= h == (op["new_head"] or "")
+    return loose, strict, head
+
+
+def classify(path):
+    conn = ro(path)
+    out = {"PATCHED": [], "SKIPPED": {}, "ELIGIBLE-NOW": [], "loose_only": [], "head_differs": []}
+    for verse, ops in FIXES.items():
+        vid, reason = step_test(conn, verse, ops)
+        if vid is not None and reason is None:
+            out["ELIGIBLE-NOW"].append(verse)
+            continue
+        if vid is not None:
+            loose, strict, head = result_present(conn, vid, ops)
+            if loose:
+                out["PATCHED"].append(verse)
+                if not strict:
+                    out["loose_only"].append(verse)
+                if not head:
+                    out["head_differs"].append(verse)
+                continue
+        out["SKIPPED"][verse] = reason
+    conn.close()
+    return out
+
+
+SAMPLE = re.compile(r"^\s{3}(\S+ \d+:\d+): (.*)$")
+COUNT = re.compile(r"(\d+) verse\(s\) patched, (\d+) skipped")
+
+
+def read_log(path):
+    """The step's own count line and its printed skip samples, from a finish_rebuild log."""
+    lines = open(path, encoding="utf-8", errors="replace").read().splitlines()
+    starts = [i for i, l in enumerate(lines) if "fix_split_merges.py" in l]
+    if not starts:
+        return None, None, []
+    i = starts[0]
+    patched = skipped = None
+    samples = []
+    j = i + 1
+    while j < len(lines) and "fix_kyrios_mistags" not in lines[j]:
+        m = COUNT.search(lines[j])
+        if m and patched is None:
+            patched, skipped = int(m.group(1)), int(m.group(2))
+        if "skip samples" in lines[j]:
+            k = j + 1
+            while k < len(lines):
+                s = SAMPLE.match(lines[k])
+                if not s:
+                    break
+                samples.append((s.group(1), s.group(2)))
+                k += 1
+        j += 1
+    return patched, skipped, samples
+
+
+def side(label, path, log):
+    res = classify(path)
+    lp, ls, samples = read_log(log)
+    sk = res["SKIPPED"]
+    print("== %s  %s" % (label, path))
+    print("   step's own log line (%s): %s patched / %s skipped" % (log, lp, ls))
+    print("   this check: patched %d - skipped %d - eligible-now %d   (of %d entries)"
+          % (len(res["PATCHED"]), len(sk), len(res["ELIGIBLE-NOW"]), len(FIXES)))
+    print("   patched only after punctuation / dash normalising: %d %s"
+          % (len(res["loose_only"]), ", ".join(res["loose_only"])))
+    print("   patched but english_head differs from the patch's: %d %s"
+          % (len(res["head_differs"]), ", ".join(res["head_differs"])))
+    if res["ELIGIBLE-NOW"]:
+        print("   ELIGIBLE-NOW: " + ", ".join(res["ELIGIBLE-NOW"]))
+        stops.append("%s: %d verse(s) would patch now" % (label, len(res["ELIGIBLE-NOW"])))
+    if lp is None:
+        stops.append("%s: no fix_split_merges count line in %s" % (label, log))
+    elif (lp, ls) != (len(res["PATCHED"]), len(sk)):
+        stops.append("%s: this check %d/%d vs the log %d/%d"
+                     % (label, len(res["PATCHED"]), len(sk), lp, ls))
+    same_reason = 0
+    print("   log's skip samples (%d):" % len(samples))
+    for v, why in samples:
+        mine = sk.get(v)
+        tag = "in list, same reason" if mine == why else ("in list, reason now: " + str(mine)
+                                                         if v in sk else "NOT IN LIST")
+        same_reason += mine == why
+        print("     %-10s log: %s   -> %s" % (v, why, tag))
+        if v not in sk:
+            stops.append("%s: log sample %s is not in the skip list" % (label, v))
+    if len(samples) != 10:
+        stops.append("%s: %d skip samples read from the log, expected 10" % (label, len(samples)))
+    print("   samples in the list: %d of %d - same reason text: %d of %d"
+          % (sum(v in sk for v, _ in samples), len(samples), same_reason, len(samples)))
+    print("   all %d skips (step's reason, read now):" % len(sk))
+    for v in sk:
+        print("     %-10s %s" % (v, sk[v]))
+    print()
+    return set(sk)
+
+
+def main():
+    print("CHECK 1 - fix_split_merges skips by name - read-only")
+    sha = hashlib.sha256(raw).hexdigest()
+    print("split_merge_fixes.json: %d entries - sha256 %s (%s)"
+          % (len(FIXES), sha, "= 61484fbc" if sha == FIXES_SHA else "DIFFERS from 61484fbc"))
+    if sha != FIXES_SHA:
+        stops.append("patch file differs from the code reference")
+    if os.path.realpath(BUILT) == os.path.realpath(LIVE):
+        print("CHECK1 RESULT: STOP - built and live are the same file")
+        sys.exit(1)
+    print()
+    new = side("BUILT (tail v3, 11/4)", BUILT, LOG_NEW)
+    old = side("LIVE (10/25 run)", LIVE, LOG_OLD)
+    new_only, old_only = sorted(new - old), sorted(old - new)
+    print("== difference")
+    print("   skipped on built, not on live (%d): %s" % (len(new_only), ", ".join(new_only) or "-"))
+    print("   skipped on live, not on built (%d): %s" % (len(old_only), ", ".join(old_only) or "-"))
+    print("   skipped on both (%d)" % len(new & old))
+    print("   expected: +Jdg 11:7, +Rom 9:29, nothing the other way")
+    if set(new_only) != EXPECT_NEW_ONLY or set(old_only) != EXPECT_OLD_ONLY:
+        stops.append("difference is not +Jdg 11:7 +Rom 9:29 / nothing")
+    print()
+    if stops:
+        print("CHECK1 RESULT: STOP - " + " | ".join(stops))
+        sys.exit(1)
+    print("CHECK1 RESULT: AS EXPECTED - %d skips on built = the %d of 10/25 + Jdg 11:7 + Rom 9:29"
+          % (len(new), len(old)))
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = 9b4e4bde65842a5f43cd14bace14668b562f5815ef9590e87ee93abd5d5b3ae8 ] || { echo "CHECK1 RESULT: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L" "$N" "$O"
+) 2>&1 | tee ~/edition_upgrade_runs/check1_split_skips_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: built `206 / 31` = log; live `208 / 29` = log; eligible-now 0 / 0; 10 of 10 samples in each list; difference
+`+Jdg 11:7, +Rom 9:29`, nothing the other way (2Ti 4:10 on both) → `CHECK1 RESULT: AS EXPECTED`. Anything else = STOP, review.
+
+### Block CHECK 2 (GATE REF `61484fbc`; sources read-only, writes only `~/edition_upgrade_runs/check2_20261104/`)
+```bash
+set +H
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - CHECK 2 import_tipnr -57 (sources read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK2 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+T=$(git log --since=2026-10-24 --oneline -- scripts/import_tipnr.py scripts/tipnr_alias_variants.py tipnr/TIPNR.txt)
+[ -z "$T" ] || { echo "CHECK2 RESULT: STOP - the name roster or matcher changed since 10/24: $T"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; L=~/bible-db/bible.db
+N=~/edition_upgrade_runs/stageC_tail3_20261104.log; O=~/bible-db/finish_pnstar2.log
+W=~/edition_upgrade_runs/check2_20261104
+for f in "$B" "$L" "$N" "$O"; do [ -f "$f" ] || { echo "CHECK2 RESULT: STOP - missing: $f"; exit 1; }; done
+mkdir -p "$W"
+P=~/edition_upgrade_runs/check2_tipnr_lost_20261104.py
+cat > "$P" <<'PY'
+"""CHECK 2 (one-off): trace the -57 import_tipnr matches (built 31,592 vs the 10/25 run's 31,649).
+
+The built copy and live are opened READ-ONLY. The only files written are two throwaway copies under
+<workdir> (scratch_built.db, scratch_live.db) and their import_tipnr output.
+
+Why a throwaway copy: on live, 8b re-numbers thousands of name cells after the import, so live's
+numbers no longer show what the import decided. So for each side this takes the cells the import
+looked at (is_pn = 1: import_tipnr is the only writer of is_pn = 1, and it marks exactly the cells
+that were '*' when it ran), puts back the English they had when the import ran, sets them to '*',
+and runs the real, unchanged scripts/import_tipnr.py on that copy. Steps after the import that
+change English are undone, newest first:
+  - lane-3 hand repairs (8b.2a; live only): cell back to old_eng where it holds new_eng
+  - word corrections (tail step 7): cell back to source_value where it holds corrected_value
+  - fix_emdash (tail step 5): em dash back to '--'
+Proof the method reproduces the step: the built copy has not had 8b, so its stored result must
+match the re-run cell for cell, and each re-run's Matched figure must equal its own log line.
+
+Usage: python3 check2_tipnr_lost_20261104.py <built.db> <live.db> <tail3.log> <finish_pnstar2.log> <workdir>
+"""
+import json
+import os
+import re
+import sqlite3
+import subprocess
+import sys
+from collections import Counter, defaultdict
+
+BUILT, LIVE, LOG_NEW, LOG_OLD, WORK = (os.path.abspath(a) for a in sys.argv[1:6])
+REPO = os.environ.get("CHECK_REPO") or os.path.expanduser("~/bible-db")
+EM = chr(8212)
+LANE3 = ("lane3_star_fixes2.json", "lane3_star_gapfix.json", "lane3_star_fixes.json")  # undo newest first
+stops = []
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+MATCHED = re.compile(r"Matched\s*:\s*([\d,]+)")
+UNMATCHED = re.compile(r"Unmatched:\s*([\d,]+) words\s*\(([\d,]+) distinct")
+
+
+def import_figures(text):
+    """Matched / Unmatched from the FIRST import_tipnr run in a log or an output."""
+    lines = text.splitlines()
+    start = next((i for i, l in enumerate(lines) if "import_tipnr.py" in l), 0)
+    m = u = None
+    for l in lines[start:]:
+        if m is None and MATCHED.search(l):
+            m = int(MATCHED.search(l).group(1).replace(",", ""))
+        if u is None and UNMATCHED.search(l):
+            g = UNMATCHED.search(l)
+            u = (int(g.group(1).replace(",", "")), int(g.group(2).replace(",", "")))
+        if m is not None and u is not None:
+            break
+    return m, u
+
+
+def make_scratch(label, src):
+    path = os.path.join(WORK, "scratch_%s.db" % label)
+    for p in (path, path + "-journal"):
+        if os.path.exists(p):
+            os.remove(p)
+    c = sqlite3.connect("file:%s" % path, uri=True)
+    c.execute("ATTACH DATABASE ? AS src", ("file:%s?mode=ro" % src,))
+    c.execute("CREATE TABLE verses AS SELECT id, book, chapter, verse FROM src.verses")
+    c.execute("CREATE TABLE words (id INTEGER PRIMARY KEY, verse_id INTEGER, position INTEGER,"
+              " english TEXT, english_now TEXT, strongs_base TEXT, stored_sb TEXT, is_pn INTEGER)")
+    c.execute("INSERT INTO words SELECT rowid, verse_id, position, english, english, '*',"
+              " strongs_base, 0 FROM src.words WHERE is_pn = 1")
+    c.execute("CREATE TABLE bdb AS SELECT strongs_id FROM src.bdb")
+    c.execute("CREATE TABLE lexicon AS SELECT strongs FROM src.lexicon")
+    corr = c.execute("SELECT book, chapter, verse, position, source_value, corrected_value"
+                     " FROM src.abp_corrections WHERE status = 'active' AND field = 'english'").fetchall()
+    c.commit()
+    c.execute("DETACH DATABASE src")
+    vid = {(b, ch, vs): i for i, b, ch, vs in c.execute("SELECT id, book, chapter, verse FROM verses")}
+
+    def ref_id(ref):
+        book, rest = ref.rsplit(" ", 1)
+        ch, vs = rest.split(":")
+        return vid.get((book, int(ch), int(vs)))
+
+    undone = Counter()
+    for fname in (LANE3 if label == "live" else ()):   # 8b.2a has not run on built
+        d = json.load(open(os.path.join(REPO, "scripts", fname), encoding="utf-8"))
+        d.pop("_comment", None)
+        for ref, spec in d.items():
+            for op in spec["ops"]:
+                if op.get("new_eng") == op.get("old_eng"):
+                    continue
+                n = c.execute("UPDATE words SET english = ? WHERE verse_id = ? AND position = ?"
+                              " AND english IS ?", (op.get("old_eng"), ref_id(ref), op["pos"],
+                                                    op.get("new_eng"))).rowcount
+                undone["lane-3 cells"] += n
+    for b, ch, vs, pos, before, after in corr:
+        n = c.execute("UPDATE words SET english = ? WHERE verse_id = ? AND position = ?"
+                      " AND english IS ?", (before, vid.get((b, ch, vs)), pos, after)).rowcount
+        undone["word-correction cells"] += n
+    undone["em-dash cells"] = c.execute("UPDATE words SET english = REPLACE(english, ?, '--')"
+                                        " WHERE instr(english, ?) > 0", (EM, EM)).rowcount
+    c.commit()
+    total = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    c.close()
+    print("   throwaway copy %s: %d name cells (is_pn = 1); undone: lane-3 %d, word corrections %d,"
+          " em dash %d" % (path, total, undone["lane-3 cells"], undone["word-correction cells"],
+                           undone["em-dash cells"]))
+    return path
+
+
+def run_import(label, path):
+    out = subprocess.run([sys.executable, os.path.join(REPO, "scripts", "import_tipnr.py"), path],
+                         cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                         env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+    text = out.stdout + out.stderr
+    with open(os.path.join(WORK, "scratch_%s_import.out" % label), "w", encoding="utf-8") as fh:
+        fh.write(text)
+    if "still strongs_base='*'" not in text:
+        stops.append("%s: import_tipnr did not finish on the throwaway copy (exit %d)"
+                     % (label, out.returncode))
+    return import_figures(text)
+
+
+def load(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True)
+    refs = {i: "%s %d:%d" % (b, ch, vs) for i, b, ch, vs in
+            c.execute("SELECT id, book, chapter, verse FROM verses")}
+    rows = {}
+    for wid, v, pos, eng, now, sb, stored in c.execute(
+            "SELECT id, verse_id, position, english, english_now, strongs_base, stored_sb FROM words"):
+        rows[wid] = dict(ref=refs[v], pos=pos, eng=eng or "", now=now or "", sb=sb, stored=stored)
+    c.close()
+    return rows
+
+
+def core(eng):
+    """letters of the name part: drop leading all-lowercase words (of, the, to, land ...)."""
+    toks = eng.split()
+    while len(toks) > 1 and toks[0].lower() == toks[0]:
+        toks = toks[1:]
+    return re.sub(r"[^a-z]", "", " ".join(toks).lower())
+
+
+def verse_text(conn, ref, idx):
+    """the verse's cells as the import saw them: name cells from the throwaway copy (import-time
+    English), every other cell as stored now. pos -> (english, strongs_base now)"""
+    book, rest = ref.rsplit(" ", 1)
+    ch, vs = rest.split(":")
+    cells = conn.execute("SELECT w.position, w.english, w.strongs_base FROM words w JOIN verses v"
+                         " ON v.id = w.verse_id WHERE v.book = ? AND v.chapter = ? AND v.verse = ?"
+                         " ORDER BY w.position", (book, int(ch), int(vs))).fetchall()
+    out = {}
+    for p, e, s in cells:
+        r = idx.get((ref, p))
+        out[p] = (r["eng"] if r else (e or ""), s)
+    return out
+
+
+def main():
+    print("CHECK 2 - import_tipnr matches, 10/25 run vs tail v3 - sources read-only")
+    if os.path.realpath(BUILT) == os.path.realpath(LIVE):
+        print("CHECK2 RESULT: STOP - built and live are the same file")
+        sys.exit(1)
+    os.makedirs(WORK, exist_ok=True)
+    log_new = import_figures(open(LOG_NEW, encoding="utf-8", errors="replace").read())
+    log_old = import_figures(open(LOG_OLD, encoding="utf-8", errors="replace").read())
+    print("logs: tail v3 Matched %s / Unmatched %s  -  10/25 (%s) Matched %s / Unmatched %s"
+          % (log_new[0], log_new[1], os.path.basename(LOG_OLD), log_old[0], log_old[1]))
+    if None in log_new or None in log_old:
+        stops.append("could not read Matched/Unmatched from a log")
+
+    sides = {}
+    for label, src, logf in (("built", BUILT, log_new), ("live", LIVE, log_old)):
+        print("== %s  %s" % (label, src))
+        p = make_scratch(label, src)
+        fig = run_import(label, p)
+        print("   re-run on the throwaway copy: Matched %s / Unmatched %s   (its own log: %s / %s) %s"
+              % (fig[0], fig[1], logf[0], logf[1], "SAME" if fig == logf else "DIFFERS"))
+        if fig != logf:
+            stops.append("%s: re-run %s/%s vs log %s/%s" % (label, fig[0], fig[1], logf[0], logf[1]))
+        sides[label] = load(p)
+
+    # Proof on built (no 8b yet): the stored result vs the re-run, cell by cell
+    b = sides["built"]
+    st = {i for i, r in b.items() if r["stored"] != "*"}
+    rr = {i for i, r in b.items() if r["sb"] != "*"}
+    numdiff = [i for i in st & rr if b[i]["stored"] != b[i]["sb"]]
+    print("== proof on built: stored matched %d - re-run matched %d - stored only %d - re-run only %d"
+          " - same cell, other number %d" % (len(st), len(rr), len(st - rr), len(rr - st), len(numdiff)))
+    for tag, ids in (("stored only", st - rr), ("re-run only", rr - st), ("other number", numdiff)):
+        for i in sorted(ids, key=lambda k: (b[k]["ref"], b[k]["pos"])):
+            r = b[i]
+            print("   %-12s %-11s pos %-3d import-time %r  now %r  stored %s  re-run %s"
+                  % (tag, r["ref"], r["pos"], r["eng"], r["now"], r["stored"], r["sb"]))
+    if st != rr:
+        stops.append("built: stored result and re-run differ (%d / %d cells)"
+                     % (len(st - rr), len(rr - st)))
+    print()
+
+    # Pair the matched cells verse by verse: same position + number, then same number elsewhere
+    def by_verse(rows):
+        d = defaultdict(list)
+        for r in rows.values():
+            if r["sb"] != "*":
+                d[r["ref"]].append(r)
+        return d
+
+    L, B = by_verse(sides["live"]), by_verse(sides["built"])
+    lost, gained, moved_list = [], [], []
+    for ref in sorted(set(L) | set(B)):
+        lv, bv = list(L.get(ref, [])), list(B.get(ref, []))
+        for r in list(lv):
+            hit = next((x for x in bv if x["pos"] == r["pos"] and x["sb"] == r["sb"]), None)
+            if hit:
+                lv.remove(r); bv.remove(hit)
+        for r in list(lv):
+            hit = next((x for x in bv if x["sb"] == r["sb"]), None)
+            if hit:
+                lv.remove(r); bv.remove(hit); moved_list.append((r, hit))
+        lost += lv
+        gained += bv
+    moved = len(moved_list)
+    print("== MOVED (%d): same number, other cell of the same verse - not a loss" % moved)
+    for r, h in moved_list:
+        print("   %-11s %s  10/25 pos %d %r  ->  built pos %d %r" % (r["ref"], r["sb"], r["pos"], r["eng"],
+                                                                 h["pos"], h["eng"]))
+    print()
+
+    lc, bc = ro(LIVE), ro(BUILT)
+    lidx = {(r["ref"], r["pos"]): r for r in sides["live"].values()}
+    bidx = {(r["ref"], r["pos"]): r for r in sides["built"].values()}
+
+    def reason(r, here_idx, other_idx, other_conn, here_conn):
+        """class for a cell matched on one side and not the other"""
+        o = other_idx.get((r["ref"], r["pos"]))
+        other_cells = verse_text(other_conn, r["ref"], other_idx)
+        here_cells = verse_text(here_conn, r["ref"], here_idx)
+        changed = [c[0] for c in here_cells.values()] != [c[0] for c in other_cells.values()]
+        o_eng = o["eng"] if o else None
+        cell_now = other_cells.get(r["pos"], (None, None))
+        if o is not None and o_eng == r["eng"]:
+            cls = "OTHER (same English, different result)"
+        elif not changed and o is None:
+            cls = "OTHER (verse English unchanged)"
+        else:
+            name = core(r["eng"])
+            joined = re.sub(r"[^a-z]", "", " ".join(c[0] for c in other_cells.values()).lower())
+            if name and name in joined:
+                cls = "TOKEN-SPLIT (name letters still in the verse, carved differently)"
+            elif changed or (o is not None and o_eng != r["eng"]):
+                cls = "EDITION-TEXT (the English wording changed)"
+            else:
+                cls = "OTHER"
+        return cls, o_eng, cell_now
+
+    def show(title, rows, here_idx, other_idx, other_conn, here_conn, here, other):
+        classes = Counter()
+        print("== %s (%d): %s matched, %s not - by verse" % (title, len(rows), here, other))
+        for r in sorted(rows, key=lambda x: (x["ref"], x["pos"])):
+            cls, o_eng, cell_now = reason(r, here_idx, other_idx, other_conn, here_conn)
+            classes[cls.split(" ")[0]] += 1
+            print("   %-11s pos %-3d %s %r -> %s   |   %s: name cell %r, cell as read %r (number now %s)   [%s]"
+                  % (r["ref"], r["pos"], here, r["eng"], r["sb"], other, o_eng, cell_now[0],
+                     cell_now[1], cls))
+        print("   classes: " + ", ".join("%s %d" % kv for kv in sorted(classes.items())))
+        names = Counter(core(r["eng"]) or r["eng"] for r in rows)
+        print("   by name: " + ", ".join("%s %d" % kv for kv in names.most_common()))
+        print()
+        return classes
+
+    lcls = show("LOST", lost, lidx, bidx, bc, lc, "10/25", "built")
+    gcls = show("GAINED", gained, bidx, lidx, lc, bc, "built", "10/25")
+    lc.close(); bc.close()
+    net = len(lost) - len(gained)
+    lm = sum(1 for r in sides["live"].values() if r["sb"] != "*")
+    bm = sum(1 for r in sides["built"].values() if r["sb"] != "*")
+    print("== sums: lost %d - gained %d = net %d ; re-run matched 10/25 %d - built %d = %d ;"
+          " moved within a verse (same number, other cell) %d"
+          % (len(lost), len(gained), net, lm, bm, lm - bm, moved))
+    if log_old[0] is not None and log_new[0] is not None:
+        print("   logs: %d - %d = %d" % (log_old[0], log_new[0], log_old[0] - log_new[0]))
+        if net != log_old[0] - log_new[0]:
+            stops.append("net %d does not equal the logs' difference %d" % (net, log_old[0] - log_new[0]))
+    others = lcls.get("OTHER", 0) + gcls.get("OTHER", 0)
+    if others:
+        stops.append("%d cell(s) in class OTHER" % others)
+    print()
+    if stops:
+        print("CHECK2 RESULT: STOP - " + " | ".join(stops))
+        sys.exit(1)
+    print("CHECK2 RESULT: AS EXPECTED - net -%d = %d lost - %d gained, every one EDITION-TEXT or"
+          " TOKEN-SPLIT, method proven on built" % (net, len(lost), len(gained)))
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = b03d2a0b3ea27ca29c5091c93a224c86fefff5f323b213bf9f9e11a83e8aa724 ] || { echo "CHECK2 RESULT: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$L" "$N" "$O" "$W"
+) 2>&1 | tee ~/edition_upgrade_runs/check2_tipnr_lost_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: both re-runs SAME as their logs (31,592 / 734 (687); 31,649 / 683 (648)); built proof stored-only 0 /
+re-run-only 0; net = 57; every lost/gained cell EDITION-TEXT or TOKEN-SPLIT → `CHECK2 RESULT: AS EXPECTED`. Any OTHER
+or a figure off = STOP, members printed.
