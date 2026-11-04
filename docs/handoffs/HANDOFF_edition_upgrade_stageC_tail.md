@@ -81,9 +81,14 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   + `.sha256`) = the gate-1 code reference.
 - **ACCEPTED SIDE EFFECT (ruling 11/4):** from PA's pull of `f8e814c2` until the swap, `cert_invariants.py` on
   LIVE reads check 4 red (51 active vs pin 372). Expected; nothing runs it automatically. Do not "fix" it.
-- Banked for every gate from here: add `[ -z "$(git status --porcelain -- scripts tests)" ] || STOP` after the
-  `git diff --quiet <REF> HEAD -- scripts tests` line (closes the uncommitted-edit gap).
-- Next: PA pull → C4 gate 1 (REF f8e814c2) → output to the ruling chat before §9.61/§9.63 is drafted.
+- Banked for every gate from here: add `[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || STOP`
+  after the `git diff --quiet <REF> HEAD -- scripts tests` line (closes the uncommitted-edit gap). AMENDED 11/4: the
+  first form (without `--untracked-files=no`) stopped gate 1 on three untracked dumps PA has carried from an earlier
+  lane — `scripts/person_metav_link_residual.txt`, `person_metav_link_tier2.txt`, `tipnr_metav_link_residual.txt`.
+  Leave those files alone (ruling).
+- **GATE 1 ACCEPTED (11/4 04:53 UTC, `~/edition_upgrade_runs/gate1_cert_20261104.log`):** REF f8e814c2, PA HEAD
+  7358c8bf; controls 6/6 FIRED; built copy 7/7 — `CERTIFIED STATE HOLDS (7/7 green)`.
+- Next: §9.61/§9.63 retired-row gate (`eu_retired_check.py <built>`, REF f8e814c2) → gate 3 v2 member diff.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
