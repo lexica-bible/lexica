@@ -1766,3 +1766,55 @@ Expected: `Ran 11 tests` / `OK`; 23 `ok` lines (18 `corrected_value`, 5 `feed te
 45 Mar 16:17, 51 2Sa 16:18); `RETIRED-ROW CHECK: PASS 23/23 HOLD (corrected_value 18 - feed text 5)`, exit 0.
 The 23 rows = the C3a retired list, row for row (11 greek_pos + 12 verses.text). No FAIL rows. Next: C6 gate 3.
 Re-run 11/4 13:32 UTC (same block, same REF/HEAD): identical result, PASS 23/23 (18 + 5), exit 0. The log file now holds this re-run (tee overwrote the 05:01 run).
+
+## C5 ACCEPTED (11/4); C6 gate 3 drafted, held
+
+Ruling chat 11/4: retired-row gate accepted (23/23, 18/5); the 13:32 duplicate run noted, no action. GO for gate 3.
+Standing: "draft X now?" questions go to the ruling chat, not JP.
+
+**C6 — gate 3, v2 member diff (REF f8e814c2, read-only).** Checks first: frozen punct file
+`tests/fixtures/reassembly/punct_members_live_20261030.txt` sha 2b0f4cc4… as committed (241 members; Psa 89:35
+is NOT in it); eligible file `~/edition_upgrade_runs/step5_eligible_20261101.tsv` sha prefix e540d34d (the only
+fingerprint on record, HANDOFF_edition_upgrade_stageC.md "PA figures"). Then the port test
+(`tests/test_reorder_port.py`, 137 verses = JS baseline), the member diff's own 9 tests, the v2 controls, and
+the member diff (`audit_reassembly_diff.py <built> --v2 --punct-members <frozen> --eligible <step5>`).
+Hard fails (exit 1): any word-order / content-other / dup-gloss member, Joh 14:26 not clean, any NEW punct
+member on a non-eligible verse. Otherwise the gate STOPS after printing gone / new-on-eligible / changed-ops
+for the §9.52 ruling. Counts on those lists are not forecast (first v2 member diff on this copy); the ruling
+chat expects Psa 89:35 among the new members — not checked ahead of the run. Tested in a throwaway checkout at
+f8e814c2 on a made-up copy: shifted comma on an eligible verse → listed + `GATE3 RESULT: NO FAIL - STOP HERE`
+(exit 0); same verse not eligible → `GATE3 RESULT: FAIL` (exit 1).
+
+### Block C6 — GATE 3 (GATE REF f8e814c2, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=f8e814c2
+echo "GATE REF ${REF} - GATE 3 reassembly v2 member diff on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "GATE3 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "GATE3 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+F=tests/fixtures/reassembly/punct_members_live_20261030.txt
+E=~/edition_upgrade_runs/step5_eligible_20261101.tsv
+for f in "$B" "$F" "$E"; do [ -f "$f" ] || { echo "GATE3 RESULT: STOP - missing: $f"; exit 1; }; done
+[ "$(sha256sum < "$F" | cut -d' ' -f1)" = 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f ] || { echo "GATE3 RESULT: STOP - frozen punct file is not the committed one"; exit 1; }
+[ "$(sha256sum < "$E" | cut -c1-8)" = e540d34d ] || { echo "GATE3 RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+echo "frozen punct file: $(grep -c . "$F") members (sha 2b0f4cc4 as committed) - eligible file sha e540d34d as recorded"
+python3 tests/test_reorder_port.py || { echo "GATE3 RESULT: STOP - reorder port drifted from the JS baseline"; exit 1; }
+python3 tests/test_reassembly_member_diff.py || { echo "GATE3 RESULT: STOP - the member diff's own tests failed (a check that cannot fire is void)"; exit 1; }
+python3 scripts/audit_reassembly_diff.py --controls --v2 || { echo "GATE3 RESULT: STOP - v2 controls did not fire"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --punct-members "$F" --eligible "$E"; r=$?
+case "$r" in
+  0) echo "GATE3 RESULT: NO FAIL - STOP HERE: the gone / new-on-eligible / changed-ops lists above go to the ruling chat (sec 9.52)";;
+  1) echo "GATE3 RESULT: FAIL - named above (word-order / content-other / dup-gloss / Joh 14:26 / new on non-eligible)";;
+  *) echo "GATE3 RESULT: STOP - member diff exit $r";;
+esac
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/gate3_member_diff_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: the file line (241 members, 2b0f4cc4, e540d34d); `ok  reorder port reproduces the JS baseline on all
+137 fixture verses`; `Ran 9 tests` / `OK`; `V2 CONTROLS PASSED.`; member diff: word-order 0, content-other 0,
+dup-gloss 0, `Joh 14:26 ... clean`, NEW on a NON-eligible verse 0; `V2 MEMBER DIFF: NO FAIL - ...`;
+`GATE3 RESULT: NO FAIL - STOP HERE ...`; exit=0. The full gone / new-on-eligible / changed-ops lists come to the
+ruling chat. Stage D (8b) waits on that ruling.
