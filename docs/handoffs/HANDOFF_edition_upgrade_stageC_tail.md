@@ -73,6 +73,18 @@ figures were CC forecasts that counted every patch entry as applying; on a plain
 build now produces their result) — the 10/25 log shows the same skips. Under the clearance wording ("any other skip stops";
 "234/3 or review") the run is OUT of the cleared figures and needs the ruling chat's review before anything else.
 
+## After close (11/4) — tail accepted, re-pin landed
+- Tail v3 ACCEPTED (CHECK 1 v2 + CHECK 2b, §9.85 defers the −57 to gate 2). Detail: `DRAFT_stageC_outline.md`.
+- C3a RE-PIN DUMP on PA: `REPIN DUMP: OK - 372 = 28 carried + 344 EU - retired 23 - sha256 80db1c35…`
+  (`~/edition_upgrade_runs/repin_dump_20261104.log`); the scp'd file is byte-identical to a local rebuild.
+- **C3b re-pin `f8e814c2`** (3 files: cert_invariants pin 51 → 372 + `abp_corrections_active_built_20261104.txt`
+  + `.sha256`) = the gate-1 code reference.
+- **ACCEPTED SIDE EFFECT (ruling 11/4):** from PA's pull of `f8e814c2` until the swap, `cert_invariants.py` on
+  LIVE reads check 4 red (51 active vs pin 372). Expected; nothing runs it automatically. Do not "fix" it.
+- Banked for every gate from here: add `[ -z "$(git status --porcelain -- scripts tests)" ] || STOP` after the
+  `git diff --quiet <REF> HEAD -- scripts tests` line (closes the uncommitted-edit gap).
+- Next: PA pull → C4 gate 1 (REF f8e814c2) → output to the ruling chat before §9.61/§9.63 is drafted.
+
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
    member check — for each of the 237 `split_merge_fixes.json` entries, does `<built>` hold the patch's `new_eng`/`new_pos`
