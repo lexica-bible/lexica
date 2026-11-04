@@ -1506,3 +1506,220 @@ Israel,' → 'of Joseph,' H3130; Jos 5:15 pos 26 'Josua' → 'did' G4160; 2Ki 23
 'I lie to David, no.' → 'I lie to David?'; spelling changes (Gergesite→Gergasite, Zerubbabel→Zorobabel,
 Bethany→Bethania, Seredites→Sardites, Simon→Simeon Deu 33:6, Jonas→Jonah Joh 21:15/16, Klopas→Cleophas,
 Rahab→Rachab Mat 1:5).
+
+## Tail v3 ACCEPTED (11/4); C3 re-pin + C4 gate 1 drafted, held
+
+Ruling chat 11/4: CHECK 1 v2 + CHECK 2b accepted; §9.85 (JP) defers the −57 import_tipnr matches to gate 2
+(pn_binding declared delta, member by member, after 8b on built — "Hebrew-key vs Greek-key" shown, not
+assumed); named member rulings owed in declared_deltas.json for 2Ki 9:31, Num 36:5 pos 13, Jos 5:15 pos 26,
+2Ki 23:35 pos 7, Est 5:9 pos 12/13; Psa 89:35 → §9.52 v2 STOP; the edition spellings are declared, not
+reviewed. Built copy is post-tail: no further writes until the re-pin commit lands.
+
+**Why C3 starts with a PA dump:** the 23 retired keys exist only in `<built>`'s table (no committed list),
+so the 372 member list cannot be built locally. **C3a** (PA, read-only, below): one-off
+`repin_dump_20261104.py` lists `<built>`'s `status='active' AND applied_at='ingest'` rows (the exact rows
+cert check 4 counts) in the 10/31 format and writes the file + `.sha256` ONLY if: 372 = 28 carried + 344 EU;
+EU keys = `eu_batch_rows_20261103.tsv`'s 344 (sha 38acc6ba…); every carried row is one of the 51
+(`abp_corrections_active_live_20261031.txt`, sha 5b1a7595…); 51 − carried = 23, each `retired` on the copy,
+copy's retired total 23; 0 active rows outside `ingest`. Tested on made-up dbs (good / one EU row missing /
+one old row not retired / one stray row → OK, STOP, STOP, STOP; refuses to overwrite).
+**C3b** (local): scp the two files to `tests/fixtures/corrections/`, check the sha, then ONE commit:
+`scripts/cert_invariants.py` PINS `abp_corrections_active` 51 → 372 (comment names the file + sha) +
+the member file + `.sha256`. Planned diff summary: `scripts/cert_invariants.py | 2 +-` ·
+`tests/fixtures/corrections/abp_corrections_active_built_20261104.txt | 372 +` · `….sha256 | 1 +` →
+`3 files changed, 374 insertions(+), 1 deletion(-)`. ops.md cert line follows in a separate docs commit
+(the ruling says scripts/tests-only). **C3c** (PA): `cd ~/bible-db && git pull --ff-only` — no reload.
+Side effect: cert_invariants on LIVE reads check 4 red (51 vs 372) from the pull until the swap; nothing
+runs it automatically (grep: only comments mention it).
+**C4** gate 1 (below) gets its REF from C3b; printed again with the hash filled before it is run.
+CC note for the ruling chat: the standing code check `git diff --quiet <REF> HEAD -- scripts tests`
+compares PA's last commit to REF, not the files on disk (a test with an uncommitted edit passed it).
+PA is pull-only, so it holds in practice — flagged, not changed.
+
+### Block C3a — RE-PIN DUMP (GATE REF 61484fbc, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - RE-PIN DUMP built active corrections (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "REPIN DUMP: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; O=~/edition_upgrade_runs
+[ -f "$B" ] || { echo "REPIN DUMP: STOP - missing: $B"; exit 1; }
+for f in "$O/abp_corrections_active_built_20261104.txt" "$O/abp_corrections_active_built_20261104.txt.sha256"; do [ -e "$f" ] && { echo "REPIN DUMP: STOP - already exists: $f"; exit 1; }; done
+P=$O/repin_dump_20261104.py
+cat > "$P" <<'PY'
+"""Re-pin dump (one-off, read-only) - DESIGN 9.59. Lists the built copy's active ingest correction
+rows (the rows cert check 4 counts) in the 10/31 member-file format, and checks them against two
+committed files before writing anything:
+  - EU- rows (ledger_ref EU-...) = the 344 keys of tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv
+  - every other active row is one of the 51 in tests/fixtures/corrections/abp_corrections_active_live_20261031.txt
+  - the 51 minus those carried rows = the retire set: each one is status 'retired' on the copy,
+    and the copy's retired total is that same number
+Expected: 372 = 28 carried + 344 EU; retired 23. The member file + .sha256 are written ONLY when every
+check passes. The database is opened read-only; the only writes are the two files in OUT_DIR.
+
+Usage: python3 repin_dump_20261104.py <built.db> <repo> <out_dir>
+"""
+import hashlib
+import os
+import sqlite3
+import sys
+
+BUILT, REPO, OUT_DIR = sys.argv[1:4]
+OLD_REL = "tests/fixtures/corrections/abp_corrections_active_live_20261031.txt"
+OLD_SHA = "5b1a75952c3358ab1ef75431b15f324cc90c3561f33950deb3f37aa824196298"
+EU_REL = "tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv"
+EU_SHA = "38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717"
+NAME = "abp_corrections_active_built_20261104.txt"
+EXPECT_ACTIVE, EXPECT_EU, EXPECT_CARRIED, EXPECT_RETIRED = 372, 344, 28, 23
+stops = []
+
+
+def key(book, ch, vs, pos, field, ref):
+    return (book, int(ch), int(vs), int(pos), field, ref)
+
+
+def line(k):
+    return "%s\t%d\t%d\t%d\t%s\t%s" % k
+
+
+def read_fixture(rel, sha, label):
+    raw = open(os.path.join(REPO, rel), "rb").read()
+    got = hashlib.sha256(raw).hexdigest()
+    print("%s: %s - sha256 %s (%s)" % (label, rel, got[:16], "as committed" if got == sha else "DIFFERS"))
+    if got != sha:
+        stops.append("%s file is not the committed one" % label)
+    return raw.decode("utf-8").splitlines()
+
+
+def show(title, keys):
+    print("== %s (%d)" % (title, len(keys)))
+    for k in keys:
+        print("   " + line(k))
+
+
+def main():
+    print("RE-PIN DUMP - built copy's active correction rows - read-only")
+    if os.path.realpath(BUILT) == os.path.realpath(os.path.expanduser("~/bible-db/bible.db")):
+        print("REPIN DUMP: STOP - this is live, not the built copy")
+        sys.exit(1)
+    old = {key(*l.split("\t")) for l in read_fixture(OLD_REL, OLD_SHA, "51-row member")}
+    eu_lines = read_fixture(EU_REL, EU_SHA, "EU rows")
+    eu = set()
+    for l in eu_lines[1:]:
+        c = l.split("\t")
+        eu.add(key(c[0], c[1], c[2], c[3], c[4], c[7]))
+    print("   51-row file keys %d - EU file keys %d" % (len(old), len(eu)))
+
+    conn = sqlite3.connect("file:%s?mode=ro" % BUILT, uri=True, timeout=30)
+    conn.execute("PRAGMA query_only=1")
+    by_status = conn.execute("SELECT status, applied_at, count(*) FROM abp_corrections "
+                             "GROUP BY status, applied_at ORDER BY status, applied_at").fetchall()
+    print("\nbuilt copy abp_corrections by status / applied_at:")
+    for s, a, n in by_status:
+        print("   %-11s %-8s %d" % (s, a, n))
+    rows = conn.execute("SELECT book, chapter, verse, position, field, ledger_ref FROM abp_corrections "
+                        "WHERE status='active' AND applied_at='ingest'").fetchall()
+    active = [key(*r) for r in rows]
+    if len(set(active)) != len(active):
+        stops.append("%d duplicate active key(s)" % (len(active) - len(set(active))))
+    active = set(active)
+    other_active = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='active' "
+                                "AND applied_at IS NOT 'ingest'").fetchone()[0]
+    act_eu = {k for k in active if k[5].startswith("EU-")}
+    carried = active - act_eu
+    retire_set = old - carried
+
+    print("\nactive ingest rows %d (expect %d) = carried %d (expect %d) + EU %d (expect %d)"
+          % (len(active), EXPECT_ACTIVE, len(carried), EXPECT_CARRIED, len(act_eu), EXPECT_EU))
+    print("active rows NOT applied at ingest: %d (expect 0)" % other_active)
+    for got, want, what in ((len(active), EXPECT_ACTIVE, "active"), (len(carried), EXPECT_CARRIED, "carried"),
+                            (len(act_eu), EXPECT_EU, "EU")):
+        if got != want:
+            stops.append("%s %d, expected %d" % (what, got, want))
+    if other_active:
+        stops.append("%d active row(s) not applied at ingest" % other_active)
+
+    miss_eu, extra_eu = sorted(eu - act_eu), sorted(act_eu - eu)
+    print("EU rows vs the EU file: missing %d - extra %d" % (len(miss_eu), len(extra_eu)))
+    if miss_eu or extra_eu:
+        stops.append("EU rows differ from the EU file")
+        show("EU file rows not active on the copy", miss_eu)
+        show("active EU rows not in the EU file", extra_eu)
+    not_old = sorted(carried - old)
+    print("carried rows not in the 51-row file: %d (expect 0)" % len(not_old))
+    if not_old:
+        stops.append("%d carried row(s) are not in the 51-row file" % len(not_old))
+        show("carried rows not in the 51-row file", not_old)
+
+    not_retired = []
+    for k in sorted(retire_set):
+        st = [r[0] for r in conn.execute(
+            "SELECT status FROM abp_corrections WHERE book=? AND chapter=? AND verse=? AND position=? "
+            "AND field=? AND ledger_ref=?", k)]
+        if st != ["retired"]:
+            not_retired.append((k, st))
+    retired_total = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='retired'").fetchone()[0]
+    conn.close()
+    print("retire set (51 minus carried) %d (expect %d) - status 'retired' on the copy %d - "
+          "copy's retired total %d" % (len(retire_set), EXPECT_RETIRED,
+                                      len(retire_set) - len(not_retired), retired_total))
+    if len(retire_set) != EXPECT_RETIRED or not_retired or retired_total != EXPECT_RETIRED:
+        stops.append("retire set does not check out")
+    for k, st in not_retired:
+        print("   NOT RETIRED: %s  status %s" % (line(k), st))
+
+    print()
+    show("carried rows (the 28 of the 51 still active)", sorted(carried))
+    show("retired rows (51 minus carried)", sorted(retire_set))
+    print()
+    if stops:
+        print("REPIN DUMP: STOP - " + " | ".join(stops) + " - nothing written")
+        sys.exit(1)
+    body = "".join(line(k) + "\n" for k in sorted(active)).encode("utf-8")
+    sha = hashlib.sha256(body).hexdigest()
+    path = os.path.join(OUT_DIR, NAME)
+    with open(path, "wb") as f:
+        f.write(body)
+    with open(path + ".sha256", "wb") as f:
+        f.write(("%s  %s\n" % (sha, NAME)).encode("utf-8"))
+    print("wrote %s (%d lines) + .sha256" % (path, body.count(b"\n")))
+    print("REPIN DUMP: OK - %d = %d carried + %d EU - retired %d - sha256 %s"
+          % (len(active), len(carried), len(act_eu), len(retire_set), sha))
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = 5f25e8f694aa7da242c88ce77fd9134730908becebb72d56ae0ead38b42fccfa ] || { echo "REPIN DUMP: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" ~/bible-db "$O"
+) 2>&1 | tee ~/edition_upgrade_runs/repin_dump_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: both fixture lines `(as committed)`; status/applied_at `active ingest 372 · retired ingest 23 ·
+superseded ingest 6`; `active ingest rows 372 = carried 28 + EU 344`; `NOT applied at ingest: 0`; EU missing 0
+/ extra 0; carried not in the 51: 0; retire set 23 / retired 23 / total 23; the 28 + 23 keys listed; ends
+`REPIN DUMP: OK - 372 = 28 carried + 344 EU - retired 23 - sha256 <hex>`, exit=0. Then (local, read-only
+touchpoint): `scp PA:~/edition_upgrade_runs/abp_corrections_active_built_20261104.txt{,.sha256} ./tests/fixtures/corrections/`
+
+### Block C4 — GATE 1 (REF = the C3b commit; filled in when it exists)
+```bash
+set +H
+( set -uo pipefail
+REF=__REPIN_COMMIT__
+echo "GATE REF ${REF} - GATE 1 cert_invariants on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "GATE1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+grep -q '"abp_corrections_active": 372,' scripts/cert_invariants.py || { echo "GATE1 RESULT: STOP - the corrections pin is not 372 in this checkout"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "GATE1 RESULT: STOP - missing: $B"; exit 1; }
+python3 scripts/cert_invariants.py --controls; c=$?
+[ "$c" -eq 0 ] || { echo "GATE1 RESULT: STOP - controls exit $c (a check that cannot fire is void)"; exit 1; }
+python3 scripts/cert_invariants.py "$B"; r=$?
+[ "$r" -eq 0 ] && echo "GATE1 RESULT: 7/7 on the built copy" || echo "GATE1 RESULT: STOP - suite exit $r (names above)"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/gate1_cert_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: controls `[FIRED]` ×6 + `ALL CONTROLS FIRED`; suite `[OK  ]` ×7 — check 1 words 626,309 / verses
+31,237, check 4 = 372 active all holding, check 3 em-dash 0 — `CERTIFIED STATE HOLDS (7/7 green)`,
+`GATE1 RESULT: 7/7 on the built copy`, exit=0.
