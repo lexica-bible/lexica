@@ -224,7 +224,7 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
-  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE B DONE 11/2 — stage C next (handoff `docs/handoffs/HANDOFF_edition_upgrade_stageC.md`).** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
+  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE C TAIL RAN 11/4 on the built copy (code ref `61484fbc`), NOT yet accepted — next = ruling-chat review of the tail read-back (handoff `docs/handoffs/HANDOFF_edition_upgrade_stageC_tail.md`; stage B record in `HANDOFF_edition_upgrade_stageC.md`).** Follow-ups added 11/4: the nine doubled-word slips (§9.84, list in the stage C handoff). Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
   1,578 · edge splits 90 (both frozen lists MATCH) · B APPLIED 15,571 (EU matched 118). Source copy
   `bible_edupg_test_20261101.db` = 372 active / 23 retired / 6 superseded corrections (344 EU- rows, §9.76). Owed in
   stage C: the lane's `declared_deltas.json` (§9.64/§9.69/§9.70), the §9.59 re-pin to 372, the §9.61/§9.63

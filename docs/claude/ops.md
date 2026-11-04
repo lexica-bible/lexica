@@ -173,7 +173,10 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   `tests/fixtures/corrections/abp_corrections_active_live_20261031.txt` + `.sha256`, a PA dump — re-dump
   and re-pin together whenever the active set changes) + 6 Cushi `superseded`) and its guarded apply
   (fires only when the cell still holds the recorded
-  fresh-parse value, LOUD skip otherwise, log beside the db). New source-defect corrections = new
+  fresh-parse value, LOUD skip otherwise, log beside the db). **A row's `corrected_value` is stored in FINAL
+  corpus form (em-dash `—`, never `--`); `source_value` stays as the build writes it** — finish_rebuild step 5
+  swaps `--` AFTER 4b applies prose rows, and cert check 4 compares byte for byte (edition-upgrade §9.80, 2026-11-04).
+  New source-defect corrections = new
   rows via build_abp_corrections.py (checkpoint first), never a new fix script.
   **2026-07-06 (b196b9a): the overlay now also carries PROSE (verses.text) corrections — no schema
   change, `field='verses.text'` + `position=-1` sentinel (inert to the words path), before/after in
