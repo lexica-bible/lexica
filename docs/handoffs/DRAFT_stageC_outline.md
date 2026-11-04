@@ -452,3 +452,55 @@ exit $rc
 for L in ~/edition_upgrade_runs/stageC_tail2_20261104.log ~/bible-db/finish_pnstar2.log; do echo "######## $L"; grep -n "^GATE REF\|^before tail\|^after tail\|TAIL RESULT\|^== \|^── \|Matched  :\|Unmatched:\|still strongs_base\|FIXTURE\|DRIFT\|pplied\|APPLYING\|SKIP\|skip\|patched\|summary:\|LOUD\|words to edit\|rows to delete\|flips to repair\|Remaining\|with '--'\|Nothing to do\|Saved\|!!\|DO NOT SWAP\|finish_rebuild" "$L" | grep -v "^[0-9]*:── Sample\|^[0-9]*:  -> \|^[0-9]*:  == "; done
 ```
 Expected: as the table above (§9.83), with words 626,309 before AND after.
+
+---
+
+## 2026-11-04 — tail run 2 (v2) STOPPED at its pre-check (nothing ran); TAIL v3 (HELD for re-clearance)
+
+v2 read `prose rows still at their before-text 118 (expect 124)`. The 6 old prose rows are on the 6 carve-out verses, which keep
+live's already-corrected prose, so they read their AFTER-text; only the 118 EU rows are at before-text. **4b's expected line is
+therefore `applied 118 · already-applied 6 · LOUD-SKIPPED 0`** (replaces "applied 124" in the expected table above). The
+read-back's `!!` (inside double quotes) was replaced by bash with the previous command — the pattern is now single-quoted.
+v3 = v2 with the prose check split in two (EU at before-text 118; the old 6 at after-text, named) plus an after-tail count of
+all 124 prose rows at their after-text; new log name `stageC_tail3_…`.
+
+### Block TAIL v3 (GATE REF `61484fbc`)
+```bash
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - TAIL block v3 - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "TAIL RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "TAIL RESULT: STOP - built copy missing: $B"; exit 1; }
+[ "$(realpath "$B")" != "$(realpath ~/bible-db/bible.db)" ] || { echo "TAIL RESULT: STOP - that is the LIVE db"; exit 1; }
+T=$(git log --since=2026-10-24 --oneline -- scripts/import_tipnr.py tipnr/TIPNR.txt)
+[ -z "$T" ] || { echo "TAIL RESULT: STOP - import_tipnr.py / TIPNR.txt changed since 10/24 (roster regression gate owed): $T"; exit 1; }
+J="FROM abp_corrections c JOIN verses v ON v.book=c.book AND v.chapter=c.chapter AND v.verse=c.verse WHERE c.status='active' AND c.field='verses.text'"
+W=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words")
+A=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_corrections WHERE status='active'")
+PE=$(sqlite3 -readonly "$B" "SELECT count(*) $J AND c.ledger_ref LIKE 'EU-%' AND v.text=c.source_value")
+PO=$(sqlite3 -readonly "$B" "SELECT c.book||' '||c.chapter||':'||c.verse $J AND c.ledger_ref NOT LIKE 'EU-%' AND v.text=c.corrected_value ORDER BY 1" | paste -sd,)
+PN=$(sqlite3 -readonly "$B" "SELECT count(*) $J")
+D=$(sqlite3 -readonly "$B" "SELECT count(*) FROM verses WHERE text LIKE '%--%'")
+if [ -e "$B.corrections.log" ]; then L=PRESENT; else L=none; fi
+echo "before tail: words ${W} (expect 626309) - active corrections ${A} (expect 372) - active prose rows ${PN} (expect 124)"
+echo "before tail: EU prose rows at their before-text ${PE} (expect 118) - old prose rows already at their after-text: ${PO} (expect 1Sa 9:3,2Ch 10:13,Jer 3:7,Jer 9:23,Neh 12:43,Rev 11:1 - the 6 carve-out verses keep live's corrected prose)"
+echo "before tail: verses with '--' ${D} (expect more than 0) - corrections log ${L} (expect none)"
+[ "$W" = 626309 ] && [ "$A" = 372 ] && [ "$PN" = 124 ] && [ "$PE" = 118 ] && [ "$PO" = "1Sa 9:3,2Ch 10:13,Jer 3:7,Jer 9:23,Neh 12:43,Rev 11:1" ] && [ "$D" -gt 0 ] && [ "$L" = none ] || { echo "TAIL RESULT: STOP - the copy is not in its post-S980 pre-tail state"; exit 1; }
+ls -l "$B"
+bash scripts/finish_rebuild.sh "$B"; rc=$?
+echo "finish_rebuild exit=${rc}"
+echo "after tail: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words") (expect 626309) - active prose rows at their after-text $(sqlite3 -readonly "$B" "SELECT count(*) $J AND v.text=c.corrected_value") (expect 124) - '--' left: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words WHERE english LIKE '%--%'") / verses $(sqlite3 -readonly "$B" "SELECT count(*) FROM verses WHERE text LIKE '%--%'") (expect 0 / 0)"
+echo "TAIL RESULT: RAN - finish_rebuild exit ${rc} - clearance reads each step's own lines, not the done line"
+exit $rc
+) 2>&1 | tee ~/edition_upgrade_runs/stageC_tail3_20261104.log | tail -80; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Read-back v3 (read-only; single-quoted pattern)
+```bash
+for L in ~/edition_upgrade_runs/stageC_tail3_20261104.log ~/bible-db/finish_pnstar2.log; do echo "######## $L"; grep -n '^GATE REF\|^before tail\|^after tail\|TAIL RESULT\|^== \|^── \|Matched  :\|Unmatched:\|still strongs_base\|FIXTURE\|DRIFT\|pplied\|APPLYING\|SKIP\|skip\|patched\|summary:\|LOUD\|words to edit\|rows to delete\|flips to repair\|Remaining\|with .--.\|Nothing to do\|Saved\|!!\|DO NOT SWAP\|finish_rebuild' "$L" | grep -v '^[0-9]*:── Sample\|^[0-9]*:  -> \|^[0-9]*:  == '; done
+```
+Expected: split-merge `234 verse(s) patched, 3 skipped` (Jdg 11:7, Rom 9:29, 2Ti 4:10) · subject-reorder skips Isa 28:20 + Mar 14:44 ·
+supplied-attach skips Isa 28:20 · 4b `applied 118 · already-applied 6 · LOUD-SKIPPED 0` · step 7 `applied 248 · already-applied 0 ·
+LOUD-SKIPPED 0` · finish_rebuild exit 0 · words 626,309 · prose at after-text 124 · `--` 0 / 0.
