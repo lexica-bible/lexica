@@ -340,3 +340,70 @@ then `exit=0`. After it passes: CC commits the 20261103 rows freeze + `.sha256` 
 - **Split 80 → 84:** stage B build log line 36 reads `Split 84`; `build_pnstar.log` + `build_pnstar2.log` line 34 read `Split 80`. +4, members not yet attributed (method owed before the swap).
 - **Split-merge:** `eu_rekey_dump_20261102.log` has no patched/skipped line — by design: that script only DUMPS rows; the §9.77 "18 patched" came from running the real patch on a throwaway db of those rows. The prediction is in PA's own pre-A check (`preA_check_20261101.log`, local copy `~/edition_upgrade_runs/pa/`): `fix_split_merges: 237 verses, 218 eligible, 22 eligible verses differ at a watched cell` = the 18 re-keyed + Jdg 11:7 + Rom 9:29 + 2Ti 4:10 + Act 2:38 (applies — only its bracket number differs). **Predicted tail: 234 patched · 3 skipped (Jdg 11:7, Rom 9:29, 2Ti 4:10).** Gap checked: the merge-pair / edge-split code landed after the pre-A check; 9 merge-pair verses and 1 edge-split verse are split-merge entries — Neh 5:12 + Eze 20:14 are re-keyed on rows that include that code (§9.77); the other 8 (2Ki 10:19, Eze 34:4, Jdg 14:16, Job 10:18, Job 13:20, Job 19:22, Luk 10:42, Mat 15:32) were not flagged at any watched cell on pre-A and the merge-pair rule only restores OLD English, so they are predicted to apply. A prediction, not a reading — the tail's own line is the figure.
 - This confirms flag 1: the tail is predicted to skip Jdg 11:7 and 2Ti 4:10, which the banked list does not name.
+
+---
+
+## 2026-11-04 — S980 passed; post-S980 commit `61484fbc`; the TAIL block (HELD — not cleared)
+
+S980: both copies `saved: 21 changed`, 0 active `--` after-values, EU fingerprint `b709436a…` = the 20261103 file;
+`S980 RESULT: APPLIED on both copies`, exit 0 (full record DESIGN §9.83 note). Post-S980 commit `61484fbc` (+ `a1d466c9`):
+`git diff --stat 87b3d44b 61484fbc -- scripts tests` = exactly the three fixture files (`eu_batch_rows_20261103.tsv`,
+its `.sha256`, `eu_corrections_spec_20261102.NOTES.md`). Stored-file checksums: 20261103 = `38acc6ba…`, 20261102 = `ac9b9e8c…` (unchanged).
+
+### Block TAIL — finish_rebuild on `<built>` (GATE REF `61484fbc`)
+Stops before running anything if: code differs from the reference · the copy is missing or is live · `import_tipnr.py` /
+`TIPNR.txt` changed since 10/24 (roster gate) · the copy is not pre-tail (words must read 626,305, active corrections 372).
+```bash
+( set -uo pipefail
+REF=61484fbc
+echo "GATE REF ${REF} - TAIL block - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "TAIL RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "TAIL RESULT: STOP - built copy missing: $B"; exit 1; }
+[ "$(realpath "$B")" != "$(realpath ~/bible-db/bible.db)" ] || { echo "TAIL RESULT: STOP - that is the LIVE db"; exit 1; }
+T=$(git log --since=2026-10-24 --oneline -- scripts/import_tipnr.py tipnr/TIPNR.txt)
+[ -z "$T" ] || { echo "TAIL RESULT: STOP - import_tipnr.py / TIPNR.txt changed since 10/24 (roster regression gate owed): $T"; exit 1; }
+W=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words")
+A=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_corrections WHERE status='active'")
+echo "before tail: words ${W} (expect 626305 = raw build, tail not yet run) - active corrections ${A} (expect 372)"
+[ "$W" = 626305 ] && [ "$A" = 372 ] || { echo "TAIL RESULT: STOP - the copy is not in its post-S980 pre-tail state"; exit 1; }
+ls -l "$B"
+bash scripts/finish_rebuild.sh "$B"; rc=$?
+echo "finish_rebuild exit=${rc}"
+echo "after tail: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words") (expect 626309) - '--' left: words $(sqlite3 -readonly "$B" "SELECT count(*) FROM words WHERE english LIKE '%--%'") / verses $(sqlite3 -readonly "$B" "SELECT count(*) FROM verses WHERE text LIKE '%--%'") (expect 0 / 0)"
+echo "TAIL RESULT: RAN - finish_rebuild exit ${rc} - clearance reads each step's own lines, not the done line"
+exit $rc
+) 2>&1 | tee ~/edition_upgrade_runs/stageC_tail_20261104.log | tail -80; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Read-back (read-only) — each step's own lines, new tail vs the 10/25-equivalent tail log
+`finish_pnstar2.log` matches the 10/25 chain line for line (rebuild-words step 3), so it gives the "old" side of every one-liner.
+```bash
+for L in ~/edition_upgrade_runs/stageC_tail_20261104.log ~/bible-db/finish_pnstar2.log; do echo "######## $L"; grep -n "^GATE REF\|^before tail\|^after tail\|TAIL RESULT\|^== \|^── \|Matched  :\|Unmatched:\|still strongs_base\|FIXTURE\|DRIFT\|pplied\|APPLYING\|SKIP\|skip\|patched\|summary:\|LOUD\|words to edit\|rows to delete\|flips to repair\|Remaining\|with '--'\|Nothing to do\|Saved\|!!\|DO NOT SWAP\|finish_rebuild" "$L" | grep -v "^[0-9]*:── Sample\|^[0-9]*:  -> \|^[0-9]*:  == "; done
+```
+
+### Expected (the tail's own lines are the authority; §9.83)
+| step | expected |
+|---|---|
+| import_tipnr | Matched: re-declare vs 31,649; fixture drift check silent, or its findings read |
+| fix_subject_reorder | `applied 18 verse fixes.` · SKIPPED exactly Isa 28:20, Mar 14:44 |
+| fix_mat25_37 | applied |
+| fix_supplied_attach | `applied 4 verse fixes.` · SKIP exactly Isa 28:20 |
+| fix_theos_filler_tags · fix_kyrios_mistags · fix_merge_misses · fix_idios_own · dedup_words · fix_bracket_punct | same as the 10/25 log, or re-declared one-liner |
+| fix_split_merges | **`234 verse(s) patched, 3 skipped`**, skip samples exactly Jdg 11:7, Rom 9:29, 2Ti 4:10 — any other figure = STOP for review |
+| 4b prose corrections | `applied 124 · already-applied 0 · LOUD-SKIPPED 0` |
+| fix_emdash | remaining 0 / 0 |
+| fix_split_flip | re-declare vs 10/25 (1 flip / 1 verse pinned since 8/1) |
+| 7 word corrections | `applied 248 · already-applied 0 · LOUD-SKIPPED 0` |
+| end | `== finish_rebuild done` (not evidence alone) · words 626,309 · `--` 0 / 0 |
+
+### Flag 5 — doubled words new in the app edition's prose (found reading the S980 output; local census, not PA)
+2Ki 14:28 now reads "Hamath belonging to to Judah": the feed has "belonging to" on G3588 and "to Judah," on the name
+(old edition: "Hamath to Judah"). Not caused by S980. Census of B's feed text on the 29,071 PA-eligible verses, doubled
+words absent from the old prose: **25 spots / 25 verses.** Most read as deliberate repeats (Samuel, Samuel · O, O ·
+behold, behold · Absalom, Absalom · Lord, Lord · you; you …); "be be" ×2 is already in the batch. **Nine look like slips
+(no punctuation between):** 2Ki 14:28 "to to" · Deu 24:8 "you you" · Eze 11:12 "you you" · Jdg 20:34 "they they" ·
+Ezr 4:15 "this this" · Est 8:8 "with with" · Joe 2:2 "it it" · Luk 13:28 "there there" · Joh 19:21 "that that"
+(not each read against the Greek yet — some may be grammatical). §9.72 put real-word typos out of this lane; if any are
+to be fixed in this lane, the rows must be inserted BEFORE the tail (they change the 372 and the re-pin).
