@@ -87,11 +87,24 @@ class Repair(unittest.TestCase):
         self.assertEqual(got, {("Lev", "2", "restored", "2", "1"), ("Lev", "0", "shifted", "3", "1"),
                                ("1Co", "1", "restored", "3", "1"), ("1Co", "2", "shifted", "4", "1")})
 
-    def test_strongs_drift_stops(self):
-        _tsv(R.MERGE_PAIRS, MERGE_PAIR_HEADER, [("Lev", 25, 4, 2, 1, "9999", "3756", "sow", "x", "x")])
+    def test_strongs_drift_stops_and_names_every_one(self):
+        _tsv(R.MERGE_PAIRS, MERGE_PAIR_HEADER, [("Lev", 25, 4, 2, 1, "9999", "8888", "sow", "x", "x")])
         code, out = self._run("--dry-run", self.copy, "--out", self.plan)
         self.assertEqual(code, 1)
-        self.assertIn("Strong's base at positions 2/1", out)
+        self.assertIn("NOT THE LISTED WORD: Lev 25:4 p2:", out)
+        self.assertIn("NOT THE LISTED WORD: Lev 25:4 p1:", out)
+        self.assertIn("2 listed position(s) do not hold the listed word", out)
+        self.assertFalse(self.plan.exists())
+
+    def test_proper_noun_bound_after_the_build_is_the_same_word(self):
+        # import_tipnr (import_tipnr.py:719) rewrites a '*' strongs_base to its H-number; strongs stays '*'
+        con = sqlite3.connect(self.copy)
+        con.execute("UPDATE words SET strongs_base = 'H2845' WHERE strongs = '*'")
+        con.commit(); con.close()
+        code, out = self._run("--dry-run", self.copy, "--out", self.plan)
+        self.assertEqual(code, 0, out)
+        self.assertTrue(R.same_word("303", "303.1", "G303"))
+        self.assertFalse(R.same_word("*", "2845", "H2845"))
 
     def test_live_path_refused_everywhere(self):
         shutil.copy(self.copy, R.LIVE_DB)

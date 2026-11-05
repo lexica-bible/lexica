@@ -113,22 +113,43 @@ def _rows(con, key, schema=""):
         "ORDER BY w.position", key).fetchall()
 
 
+def same_word(frozen, strongs, strongs_base):
+    """Is the copy's row at a listed position still the word the frozen list names? The list holds
+    the BUILD-time strongs_base (bare). Later chain steps rewrite Strong's on some rows — import_tipnr
+    binds a proper noun's strongs_base '*' to its H-number and leaves `strongs` as '*'
+    (import_tipnr.py:719) — so the row matches if the frozen value equals its bare strongs_base, its
+    strongs, or its strongs without a dotted suffix."""
+    s = strongs or ""
+    return frozen in (_bare(strongs_base), s, s.split(".")[0])
+
+
 def plan(con, pairs):
-    """-> [plan row tuples in PLAN_HEADER order]. The rule is build_words_from_abp's own."""
-    out = []
+    """-> [plan row tuples in PLAN_HEADER order]. The rule is build_words_from_abp's own. Every listed
+    position is checked first; any row that is not the listed word is named (all of them) and the
+    plan STOPs before anything is computed."""
+    out, bad = [], []
+    for key in _order(pairs):
+        rows = _rows(con, key)
+        idx = {r[1]: i for i, r in enumerate(rows)}
+        for b, n, bs, ns in pairs[key]:
+            for p, f in ((b, bs), (n, ns)):
+                if p not in idx:
+                    bad.append(f"{_ref(key)} p{p}: no row on the copy (list says {f})")
+                elif not same_word(f, rows[idx[p]][5], rows[idx[p]][6]):
+                    r = rows[idx[p]]
+                    bad.append(f"{_ref(key)} p{p}: copy strongs {r[5]!r} / strongs_base {r[6]!r} "
+                               f"english {r[2]!r} - list says {f}")
+    if bad:
+        for line in bad:
+            print(f"   NOT THE LISTED WORD: {line}")
+        raise Stop(f"{len(bad)} listed position(s) do not hold the listed word - named above; no plan written")
     for key in _order(pairs):
         rows = _rows(con, key)
         idx = {r[1]: i for i, r in enumerate(rows)}
         cur = [(r[1], r[2], None, r[5], r[5], r[3], r[4]) for r in rows]   # build tuple layout
         start = list(cur)
         restored = set()
-        for b, n, bs, ns in pairs[key]:
-            if b not in idx or n not in idx:
-                raise Stop(f"{_ref(key)}: listed position {b if b not in idx else n} has no row on the copy")
-            got = (_bare(rows[idx[b]][6]), _bare(rows[idx[n]][6]))
-            if got != (bs, ns):
-                raise Stop(f"{_ref(key)}: Strong's base at positions {b}/{n} is {got[0]}/{got[1]}, "
-                           f"the frozen list says {bs}/{ns}")
+        for b, n, _bs, _ns in pairs[key]:
             cur = B._join_neighbour_group(cur, idx[b], idx[n])
             restored.add(idx[b])
         for i, (s, c) in enumerate(zip(start, cur)):
