@@ -96,7 +96,10 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   on CHECK 3 (record + block: `DRAFT_stageC_outline.md` "C6 gate 3 RAN"). CC local finding: 111 of the 112 are
   merge-pair / edge-split verses (§9.73/§9.75, eligible by rule), Joh 14:26 on neither — so CHECK 3's passdiff
   intersect is forecast to print STOP.
-- Next: CHECK 3 (read-only) → ruling chat → (if cleared) stage D (8b).
+- **CHECK 3 RAN (11/4): STOP** — 0/112 in passdiff (111 merge-pair/edge-split rows, A-side; Joh 14:26 on neither,
+  half-cured: digits now present, a `the` still before `comforter,`); 11/11 punctuation items = FEED. §9.86 does
+  not apply. Record: `DRAFT_stageC_outline.md` "CHECK 3 RAN".
+- Next: ruling chat on the 111 (A's merge-pair/edge-split verb placement) + Joh 14:26 under §4.10. Stage D waits.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only

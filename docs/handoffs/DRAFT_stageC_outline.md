@@ -1941,3 +1941,20 @@ Expected: the inputs line (e540d34d, the 14:30 FAIL log, charter 9cb591c9, scrip
 status of the 112 and the merge-pair/edge-split line (forecast: either 111, neither Joh 14:26); item 2 as stored; item 3
 `Job 3:3 -> FEED`; item 4 `-> FEED` ×10; `CHECK3 RESULT:` STOP if any of the 112 is outside passdiff (forecast), with
 attributions {'FEED': 11}; then the Joh 14:26 --verse view; exit=1 on STOP.
+
+## CHECK 3 RAN (11/4) — STOP, as forecast; held for the ruling chat
+
+`~/edition_upgrade_runs/check3_20261104.log`, REF f8e814c2. `CHECK3 RESULT: STOP - outside passdiff 112 / 112 - ...
+attributions {'FEED': 11}`, exit=1.
+- **Item 1:** in passdiff **0 / 112**; all 112 eligible. On the merge-pair list 104, edge-split 13, either **111**,
+  neither **Joh 14:26** (= CC's local forecast). §9.86's condition (112 ⊂ passdiff) does NOT hold: the 111 are
+  word rows A built under §9.73/§9.75 (old verb put back on its own cell) that v2 places after the noun while
+  the feed prose has it after "not". Not B, not the feed — A's rows. Mechanism (which bracket_id/greek_pos the
+  restored verb cell carries) NOT traced yet.
+- **Item 2, Joh 14:26:** spirit/holy now carry digits (bracket 1, greek_pos 2/1) — the part §4.10 named ("spirit
+  holy," no digits, live) is cured. The hit remains in a new spot: pos 2 `the` (3588, no bracket) sits before pos 3
+  `comforter,`; prose has it after. Reassembled `But the the comforter, holy spirit,` vs text `But the comforter,
+  the holy spirit,`. Same v2 signature as live (`comforter,` displaced). §4.10: "if the built copy still shows the
+  hit, the lane STOPS on it".
+- **Items 3–4:** Job 3:3, Joh 3:15 and all nine " )" verses → **FEED** (11/11; verses.text = B's text on every
+  one). Under §9.87 these go to the follow-up corrections batch with the nine doubled-words.
