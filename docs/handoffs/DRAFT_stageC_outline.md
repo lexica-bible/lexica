@@ -2213,3 +2213,49 @@ Expected on PA: tests OK; `RESTORE-DIGITS PLAN: N cells / V verses - restored R 
 (N not forecast); item-2 150 cells / 123 verses, NOT in the plan expected 0 (any listed = a neighbour cell, or a
 cell whose neighbour is ungrouped in built — reads in place); `R1 RESULT: PLAN WRITTEN`; exit=0. R2 (rollback copy
 → apply with this plan → receipt → verify + residue) is drafted after the ruling chat reads R1.
+
+## R1 ran 11/5 02:23 — STOP on CC's own same-word check (Gen 25:10); fixed 9fbef17f; R1 re-run drafted, held
+
+Ruling chat 11/5: §9.88 amended to the implemented rule (side-aware; displaced members shift; no new group; idempotent;
+receipt = exactly R1's plan, nothing outside it). Code 820a6109 / af14ec30 accepted; CI green on both (af14ec30
+confirmed 11/5). R1 cleared at af14ec30.
+
+**R1 result (`restore_digits_R1_20261105.log`, PA HEAD c294a9e2):** tests 47 OK / 6 OK; then
+`RESTORE-DIGITS STOP: Gen 25:10: Strong's base at positions 11/12 is 3588/H2845, the frozen list says 3588/*`;
+dash verse = **Gen 46:26 position 19**; exit=1. No plan file written (the plan is written only after the check).
+**Cause = CC's check, not the data:** the frozen list holds the BUILD-time strongs_base; import_tipnr later binds a
+proper noun's strongs_base `*` to its H-number and leaves `strongs` as `*` (`import_tipnr.py:719`; other later
+writers of Strong's: fix_subject_reorder.py:112, fill_blank_strongs.py:123, …). The check also stopped at the first
+miss, so one run could not show them all.
+**Fix 9fbef17f (scripts/tests):** `same_word` — a listed position matches if the frozen value equals the copy's bare
+strongs_base, its strongs, or strongs without a dotted suffix; EVERY listed position is checked first, each miss
+named ("NOT THE LISTED WORD: …"), then STOP with no plan. Tests 7 (2 new fail on the old check). Block re-tested at
+9fbef17f: PN rows rebound to H-numbers → plan written, same plan sha d4fcbad8 as before; one listed position holding
+another word → named, no plan, exit 1.
+
+### Block R1 (re-run) — GATE REF 9fbef17f, read-only on built and live
+PA pull first (no reload): `cd ~/bible-db && git pull --ff-only && git log -1 --format=%h`
+```bash
+set +H
+( set -uo pipefail
+REF=9fbef17f
+echo "GATE REF ${REF} - R1 restore-digits DRY RUN on the built copy (read-only; live read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "R1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "R1 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "R1 RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; LIVE=~/bible-db/bible.db
+P=~/edition_upgrade_runs/restore_digits_plan_20261105.tsv; O=~/edition_upgrade_runs/check4_item4_outside_20261104.tsv
+for f in "$B" "$LIVE" "$O"; do [ -f "$f" ] || { echo "R1 RESULT: STOP - missing: $f"; exit 1; }; done
+[ -e "$P" ] && { echo "R1 RESULT: STOP - plan file already exists: $P (move it aside first)"; exit 1; }
+python3 tests/test_app_transplant.py || { echo "R1 RESULT: STOP - build tests failed"; exit 1; }
+python3 tests/test_eu_repair_restore_digits.py || { echo "R1 RESULT: STOP - repair tests failed (a repair that cannot fail is void)"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/eu_repair_restore_digits.py --dry-run "$B" --out "$P" --live "$LIVE"; r=$?
+echo "--- the non-eligible 'dash' verse(s) from CHECK 4 item 4 (named for the R2 residue read) ---"
+awk -F'\t' 'NR>1 && $5=="dash" {print "   " $1 " " $2 ":" $3 " position " $4}' "$O"
+[ "$r" -eq 0 ] && echo "R1 RESULT: PLAN WRITTEN - nothing written to any db; the plan goes to the ruling chat before R2" || echo "R1 RESULT: STOP - dry run exit $r"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/restore_digits_R1_20261105.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: tests 47 OK / 7 OK; no "NOT THE LISTED WORD" lines (any = named for ruling, no plan); the plan lines and
+`RESTORE-DIGITS PLAN: …`; item-2 "NOT in the plan" 0; `Gen 46:26 position 19`; `R1 RESULT: PLAN WRITTEN`; exit=0.

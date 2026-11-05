@@ -109,7 +109,9 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
 - CHECK 4 accepted. §9.88 final + §9.89 (Joh 14:26 = live defect → correction rows). Code landed **820a6109** (+
   af14ec30 display): `_join_neighbour_group` (one rule, build + repair), `eu_repair_restore_digits.py`. Code
   differs from the ruling's wording in 5 named ways (DRAFT "§9.88 final") — owed an OK with R1.
-- Next: PA pull → R1 dry run (held) → ruling chat → R2 apply/verify → Joh 14:26 rows → gate 3 re-run. Stage D waits.
+- §9.88 amended to the implemented rule (11/5). R1 ran 02:23 → STOP on CC's same-word check at Gen 25:10 (PN bound
+  to H2845 after the build); fixed **9fbef17f**. Dash verse = Gen 46:26 p19.
+- Next: PA pull → R1 re-run at 9fbef17f (held) → ruling chat → R2 apply/verify → Joh 14:26 rows → gate 3 re-run.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
