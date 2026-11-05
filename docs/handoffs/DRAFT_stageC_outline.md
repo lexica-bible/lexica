@@ -1958,3 +1958,146 @@ attributions {'FEED': 11}`, exit=1.
   hit, the lane STOPS on it".
 - **Items 3–4:** Job 3:3, Joh 3:15 and all nine " )" verses → **FEED** (11/11; verses.text = B's text on every
   one). Under §9.87 these go to the follow-up corrections batch with the nine doubled-words.
+
+## CHECK 3 accepted; §9.86 withdrawn; CHECK 4 drafted, held (11/4)
+
+Ruling chat 11/4: CHECK 3 accepted; §9.86 withdrawn; gate 3 stays STOPPED per charter 4.10. §9.87 stands (Job 3:3,
+Joh 3:15, the nine " )" verses → follow-up corrections batch, FEED-attributed, declared in gate 3's record).
+Diagnosis to confirm: A's §9.73/§9.75 restores put back old English but not old bracket_id/greek_pos. **Pre-ruling
+§9.88 (JP), if CHECK 4 confirms:** fix at the rule (restore carries bracket_id/greek_pos from the old row; code +
+fingerprint dry run + test → new ref); scoped repair UPDATE on exactly the item-2 cell set from the frozen old rows,
+receipted, pre-repair rollback copy first; gate 3 re-run (word-order 0 except Joh 14:26 if a separate cell defect →
+bracket_id/greek_pos correction rows, Act 7:3 S10 mechanism → pin 372→N + member file, re-pin, gate 1 re-run).
+
+**CC code read (before CHECK 4):** compose takes each cell's greek_pos/bracket_id from the FEED row
+(`build_words_from_abp.py:2397`, fields 5–6 = `f[5], f[6]`); `_restore_merge_pairs` (:2112) and
+`_apply_edge_splits` (:2174) put back only english + english_head. So a restored cell keeps the feed cell's digits —
+none on a feed-blank cell. Consistent with the diagnosis. Also from :2397: every eligible verse takes the feed's
+digits on every cell by design, so item 4 is expected NOT bounded by item 2 (not counted yet).
+
+**CHECK 4** (one-off `check4_20261104.py`, sha db61ef7f…, read-only on BOTH live and built — built opened
+`mode=ro`, live ATTACHed `mode=ro`). A matching cell = same verse + position + Strong's; cells that don't match are
+counted, not compared. (1) the gate-3 word-order verses on the merge-pair/edge-split lists, one line each: restored
+cells live vs built (bracket_id/greek_pos), LOST/kept; (2) every restored cell of all 1,578 pairs / 1,380 verses +
+90 splits: live-has/built-NULL count (bracket, greek_pos), both-set-but-different, no-match, verse list 10 per line;
+(3) Joh 14:26 live beside built, both reassembled through the audit's own `reassemble_ordered`, "the the" YES/NO,
+then the audit's own `--verse` on live; (4) anywhere in built: english set, bracket_id NULL, live's cell has
+bracket_id — inside/outside the item-2 set, outside by step-5 status, every outside cell written to
+`~/edition_upgrade_runs/check4_item4_outside_20261104.tsv`. `CHECK4 RESULT: CONFIRMED` only if 111 hit verses and
+all 111 LOST. Tested on made-up live/built copies in a throwaway checkout at f8e814c2, whole block end to end:
+LOST rows, a kept row → NOT CONFIRMED exit 1, a different-Strong's cell → NO MATCHING CELL, an outside cell → listed
++ written, live --verse view printed.
+
+### Block CHECK 4 (GATE REF f8e814c2, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=f8e814c2
+echo "GATE REF ${REF} - CHECK 4 restore-digits read, live vs built (read-only, both) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK4 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "CHECK4 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; LIVE=~/bible-db/bible.db
+E=~/edition_upgrade_runs/step5_eligible_20261101.tsv; G=~/edition_upgrade_runs/gate3_member_diff_20261104.log
+for f in "$B" "$LIVE" "$E" "$G"; do [ -f "$f" ] || { echo "CHECK4 RESULT: STOP - missing: $f"; exit 1; }; done
+[ "$(sha256sum < "$E" | cut -c1-8)" = e540d34d ] || { echo "CHECK4 RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+grep -qF 'V2 MEMBER DIFF: FAIL - word-order 112 - content-other 1' "$G" || { echo "CHECK4 RESULT: STOP - gate 3 log is not the 14:30 run"; exit 1; }
+S=~/edition_upgrade_runs/check4_20261104.py
+cat > "$S" <<'PYEOF'
+"""CHECK 4 (one-off, read-only, 11/4): do A's merge-pair / edge-split restores drop the old bracket
+digits? argv: built_db live_db eligible_tsv gate3_log outside_tsv. A cell = same verse + position + Strong's."""
+import collections, csv, re, sqlite3, sys
+sys.path.insert(0, "scripts")
+from audit_reassembly_diff import reassemble_ordered
+from audit_abp_app_vs_surface import BOOK_ORDER
+built, live, elig, log, outp = sys.argv[1:6]
+con = sqlite3.connect(f"file:{built}?mode=ro", uri=True)
+con.execute("ATTACH DATABASE ? AS L", (f"file:{live}?mode=ro",))
+def tsv(p): return list(csv.DictReader(open(p, encoding="utf-8"), delimiter="\t", quoting=csv.QUOTE_NONE))
+key = lambda r: (r["book"], int(r["chapter"]), int(r["verse"]))
+st = {key(r): r["reason"] or "eligible" for r in tsv(elig)}
+cells, src = collections.defaultdict(set), {}
+for name in ("merge_pairs", "edge_splits"):
+    R = tsv(f"tests/fixtures/edition_upgrade/{name}_20261102.tsv")
+    src[name] = f"{len(R)} {'pairs' if name == 'merge_pairs' else 'splits'} in {len({key(r) for r in R})} verses"
+    for r in R:
+        cells[key(r)].update((int(r["blank_pos"]), int(r["neighbor_pos"])))
+rank = {b: i for i, b in enumerate(BOOK_ORDER)}
+order = lambda ks: sorted(ks, key=lambda k: (rank.get(k[0], 99), k[1], k[2]))
+nm = lambda k: f"{k[0]} {k[1]}:{k[2]}"
+Q = ("SELECT w.position, w.english, w.bracket_id, w.greek_pos, w.strongs FROM {d}words w JOIN {d}verses v ON w.verse_id = v.id "
+     "WHERE v.book = ? AND v.chapter = ? AND v.verse = ? ORDER BY w.position")
+def rows(k, d=""): return {r[0]: r for r in con.execute(Q.format(d=d), k)}
+dg = lambda r: f"{'-' if r[2] is None else r[2]}/{'-' if r[3] is None else r[3]}"
+lost_cells, lostv, n_b, n_g, differ, smis, line = set(), set(), 0, 0, 0, 0, {}
+for k in order(cells):
+    B, Lv, parts = rows(k), rows(k, "L."), []
+    for p in sorted(cells[k]):
+        b, l = B.get(p), Lv.get(p)
+        if not b or not l or b[4] != l[4]:
+            smis += 1; parts.append(f"p{p} NO MATCHING CELL"); continue
+        lb, lg = l[2] is not None and b[2] is None, l[3] is not None and b[3] is None
+        if lb or lg:
+            lost_cells.add(k + (p,)); lostv.add(k); n_b += lb; n_g += lg
+        elif (l[2], l[3]) != (b[2], b[3]):
+            differ += 1
+        parts.append(f"p{p} {repr(b[1])} L {dg(l)} B {dg(b)}" + (f" (live {repr(l[1])})" if l[1] != b[1] else ""))
+    line[k] = " ; ".join(parts)
+wo = [(b, int(c), int(v)) for b, c, v in re.findall(r"\[word-order\s*\] (\S+) (\d+):(\d+)", open(log, encoding="utf-8").read())]
+hit = [k for k in wo if k in cells]
+print(f"== 1. the {len(hit)} gate-3 word-order verses on the merge-pair/edge-split lists - restored cells, live (L) vs built (B), bracket_id/greek_pos")
+for k in hit:
+    print(f"   {nm(k):11} {'LOST' if k in lostv else 'kept'}  {line[k]}")
+print(f"   live digits -> built NULL on a restored cell: {sum(1 for k in hit if k in lostv)} / {len(hit)}")
+print(f"== 2. full exposure: merge pairs {src['merge_pairs']} + edge splits {src['edge_splits']} = {len(cells)} verses, {sum(len(s) for s in cells.values())} restored cells")
+print(f"   cells live-has / built-NULL: {len(lost_cells)} (bracket_id {n_b} - greek_pos {n_g}) in {len(lostv)} verses"
+      f" | both set but different: {differ} | no matching cell (position/Strong's): {smis}")
+lv = order(lostv)
+for i in range(0, len(lv), 10):
+    print("     " + ", ".join(nm(k) for k in lv[i:i + 10]))
+J = ("Joh", 14, 26)
+Bj, Lj = rows(J), rows(J, "L.")
+print("== 3. Joh 14:26 - pos | LIVE english b/g strongs | BUILT english b/g strongs")
+for p in sorted(set(Bj) | set(Lj)):
+    l, b = Lj.get(p), Bj.get(p)
+    print(f"   {p:3} | " + (f"{repr(l[1]):16} {dg(l):5} {l[4]}" if l else "-") + " | " + (f"{repr(b[1]):16} {dg(b):5} {b[4]}" if b else "-"))
+asm = lambda R: " ".join(reassemble_ordered([dict(position=r[0], english=r[1], bracket_id=r[2], greek_pos=r[3]) for r in R.values()]))
+print(f"   live  reassembled: {asm(Lj)}\n   built reassembled: {asm(Bj)}")
+print(f"   live reassembles 'the the': {'YES' if 'the the' in asm(Lj) else 'NO'} - built: {'YES' if 'the the' in asm(Bj) else 'NO'}")
+print("== 4. anywhere in built: english set, bracket_id NULL, live's matching cell has bracket_id")
+A = con.execute("SELECT v.book, v.chapter, v.verse, w.position FROM words w JOIN verses v ON w.verse_id = v.id "
+                "JOIN L.verses lv ON lv.book = v.book AND lv.chapter = v.chapter AND lv.verse = v.verse "
+                "JOIN L.words lw ON lw.verse_id = lv.id AND lw.position = w.position AND lw.strongs IS w.strongs "
+                "WHERE w.english IS NOT NULL AND w.bracket_id IS NULL AND lw.bracket_id IS NOT NULL").fetchall()
+inside = [a for a in A if tuple(a) in lost_cells]
+out = [a for a in A if tuple(a) not in lost_cells]
+ov = order({tuple(a[:3]) for a in out})
+print(f"   total {len(A)} - inside the item-2 set {len(inside)} - OUTSIDE {len(out)} cells in {len(ov)} verses"
+      f" -> {'BOUNDED by item 2' if not out else 'NOT bounded by item 2'}")
+print(f"   OUTSIDE by step-5 status: {dict(collections.Counter(st.get(k, 'MISSING') for k in ov))}")
+with open(outp, "w", encoding="utf-8", newline="\n") as f:
+    f.write("book\tchapter\tverse\tposition\tstep5\n")
+    for a in sorted(out, key=lambda a: (rank.get(a[0], 99), a[1], a[2], a[3])):
+        f.write(f"{a[0]}\t{a[1]}\t{a[2]}\t{a[3]}\t{st.get(tuple(a[:3]), 'MISSING')}\n")
+print(f"   OUTSIDE list (every cell) -> {outp}; first 50 verses:")
+for i in range(0, min(len(ov), 50), 10):
+    print("     " + ", ".join(nm(k) for k in ov[i:i + 10]))
+con.close()
+ok = len(hit) == 111 and all(k in lostv for k in hit)
+print(f"CHECK4 RESULT: {'CONFIRMED' if ok else 'NOT CONFIRMED'} - gate-3 verses with lost digits {sum(1 for k in hit if k in lostv)}/{len(hit)}"
+      f" - exposure {len(lost_cells)} cells / {len(lostv)} verses - item 4 {'bounded' if not out else f'NOT bounded ({len(out)} cells outside)'}")
+sys.exit(0 if ok else 1)
+PYEOF
+[ "$(sha256sum < "$S" | cut -c1-8)" = db61ef7f ] || { echo "CHECK4 RESULT: STOP - one-off script is not as drafted (db61ef7f...)"; exit 1; }
+echo "inputs: eligible e540d34d - gate 3 log = the 14:30 FAIL run - script db61ef7f - live and built both opened read-only"
+PYTHONIOENCODING=utf-8 python3 "$S" "$B" "$LIVE" "$E" "$G" ~/edition_upgrade_runs/check4_item4_outside_20261104.tsv; r=$?
+echo "--- Joh 14:26 on LIVE through the audit's own --verse (v2, read-only) ---"
+PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$LIVE" --v2 --verse "Joh 14:26"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/check4_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: inputs line; item 1 = 111 lines, `live digits -> built NULL on a restored cell: 111 / 111`; item 2 header
+`merge pairs 1578 pairs in 1380 verses + edge splits 90 splits in 90 verses = 1456 verses, 3336 restored cells`,
+counts not forecast; item 3 live rows without digits on spirit/holy (charter: live rows `the comforter, spirit
+holy,`), live "the the" not forecast; item 4 expected NOT bounded (compose takes feed digits on every eligible
+verse), count not forecast; `CHECK4 RESULT: CONFIRMED - ...` exit=0 if 111/111.
