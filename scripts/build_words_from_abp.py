@@ -2103,14 +2103,50 @@ def _merge_pairs(old_rows, rows):
     return pairs
 
 
+def _join_neighbour_group(rows, b, n):
+    """DESIGN §9.88 — the ONE placement rule for a restored cell (merge pair or edge split), used
+    by the build AND by the built-copy repair (scripts/eu_repair_restore_digits.py).
+    The restored row b takes its neighbour n's bracket group AS IT STANDS (the feed's group id),
+    placed directly on the side it came from — after n when b > n, before n when b < n ("of" +
+    a name) — so the group reads in the merged cell's own order; members of that group at or
+    past the slot move up one. An ungrouped neighbour leaves b ungrouped (two adjacent ungrouped
+    rows already read in position order = the merged cell's order). A grouped neighbour with no
+    greek_pos gives b the group with no greek_pos. A row ALREADY in place (in n's group, numbered
+    next to n on its side, sharing its number with no other member) is left alone, so a second
+    pass changes nothing. Rows are build tuples: greek_pos idx 5, bracket_id idx 6. -> new rows."""
+    out = list(rows)
+    gid, gp = out[n][6], out[n][5]
+    rb = list(out[b])
+    if gid is None:
+        rb[5], rb[6] = None, None
+    elif gp is None:
+        rb[5], rb[6] = None, gid
+    else:
+        want = gp + 1 if b > n else gp - 1
+        if rb[6] == gid and rb[5] == want and not any(
+                j != b and r[6] == gid and r[5] == want for j, r in enumerate(out)):
+            return out
+        slot = gp + 1 if b > n else gp
+        for j, r in enumerate(out):
+            if j != b and r[6] == gid and r[5] is not None and r[5] >= slot:
+                r = list(r)
+                r[5] += 1
+                out[j] = tuple(r)
+        rb[5], rb[6] = slot, gid
+    out[b] = tuple(rb)
+    return out
+
+
 def _restore_merge_pairs(old_rows, rows, pairs):
-    """-> rows with OLD english + english_head on both rows of every pair; all else unchanged."""
+    """-> rows with OLD english + english_head on both rows of every pair, and the blank row
+    placed in its neighbour's bracket group (§9.88, _join_neighbour_group); all else unchanged."""
     out = list(rows)
     for b, n in pairs:
         for j in (b, n):
             r = list(out[j])
             r[1], r[2] = old_rows[j][1], old_rows[j][2]
             out[j] = tuple(r)
+        out = _join_neighbour_group(out, b, n)
     return out
 
 
@@ -2168,7 +2204,8 @@ def _edge_splits(old_rows, rows, skip=()):
 def _apply_edge_splits(old_rows, rows, splits):
     """-> rows with each split made. The blank row takes the piece and its OLD english_head
     (the piece IS its old English); the neighbor keeps the rest, headed by its old head when
-    the rest's words equal its old English, else by _head_word(rest)."""
+    the rest's words equal its old English, else by _head_word(rest). The blank row is then
+    placed in the neighbour's bracket group (§9.88, _join_neighbour_group)."""
     out = list(rows)
     for b, n, rest, piece in splits:
         rb = list(out[b]); rb[1], rb[2] = piece, old_rows[b][2]; out[b] = tuple(rb)
@@ -2176,6 +2213,7 @@ def _apply_edge_splits(old_rows, rows, splits):
         same = _merge_words(rest) == _merge_words(old_rows[n][1])
         rn[1], rn[2] = rest, (old_rows[n][2] if same else _head_word(rest))
         out[n] = tuple(rn)
+        out = _join_neighbour_group(out, b, n)
     return out
 
 

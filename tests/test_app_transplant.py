@@ -17,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import build_words_from_abp as B  # noqa: E402
+import reorder_english as R  # noqa: E402  (the v2 gate's reader-order port)
 
 # Computed twice (same value) on the unmodified build at 4737662e, 2026-10-31.
 BASELINE_DIGEST = "f6f7f58ba3370eecb704c513e883d5125de9416bf4e643a4409286c9479805e3"
@@ -361,7 +362,8 @@ class MergePairs(unittest.TestCase):
         self.assertEqual(pairs, [(1, 0)])
         out = B._restore_merge_pairs(self.OLD, feed, pairs)
         self.assertEqual([(r[1], r[2]) for r in out], [("You shall not", "not"), ("murder.", "murder")])
-        self.assertEqual([(r[5], r[6]) for r in out], [(2, 1), (1, 1)])   # everything else stays feed
+        # §9.88: the neighbour keeps the feed's digits; the blank row joins its group right after it
+        self.assertEqual([(r[5], r[6]) for r in out], [(2, 1), (3, 1)])
 
     def test_backward_and_punctuation_normalized(self):
         old = [_row(0, "of", sb="3588"), _row(1, "Lebanon.", sb="*")]
@@ -401,7 +403,66 @@ class EdgeSplits(unittest.TestCase):
         self.assertEqual(out[1][1:3], ("find.", "find"))           # the piece + its old head
         self.assertEqual(out[0][1], "did not")                       # rest stays on the merged row
         self.assertEqual(out[0][2], B._head_word("did not"))         # rest re-headed (words differ)
-        self.assertEqual((out[0][5], out[0][6]), (1, 2))             # everything else stays feed
+        self.assertEqual((out[0][5], out[0][6]), (1, 2))             # the neighbour stays feed
+        self.assertEqual((out[1][5], out[1][6]), (2, 2))             # §9.88: piece joins its group after it
+
+    def test_left_edge_piece_reads_before_the_name(self):    # 2Ki 15:1 shape, grouped (§9.88)
+        old = [_row(0, "of", None, sb="3588"), _row(1, "Jeroboam", "jeroboam", sb="*")]
+        feed = [_row(0, None, None, sb="3588"), _row(1, "of Jeroboam II", "jeroboam", sb="*", gpos=3, bid=1),
+                _row(2, "son", sb="5207", gpos=1, bid=1)]
+        out = B._apply_edge_splits(old + [feed[2]], feed, B._edge_splits(old + [feed[2]], feed))
+        self.assertEqual([(r[5], r[6]) for r in out], [(3, 1), (4, 1), (1, 1)])
+        self.assertEqual(R.prose_sequence(_words(out)), ["son", "of", "Jeroboam II"])
+
+
+def _words(rows):
+    return [dict(english=r[1], greek_pos=r[5], bracket_id=r[6]) for r in rows]
+
+
+class JoinNeighbourGroup(unittest.TestCase):
+    """DESIGN §9.88 — the one placement rule for a restored row (build + built-copy repair):
+    join the neighbour's group as it stands, on the side the row came from; later members move
+    up one; an ungrouped neighbour leaves the row ungrouped."""
+
+    def test_after_neighbour_later_member_moves_up(self):    # Lev 25:4 / Exo 23:9 shape
+        rows = [_row(0, "your field", sb="68", gpos=2, bid=1), _row(1, "You shall not", gpos=1, bid=1),
+                _row(2, "sow", sb="4687")]
+        out = B._join_neighbour_group(rows, 2, 1)
+        self.assertEqual([(r[5], r[6]) for r in out], [(3, 1), (1, 1), (2, 1)])
+        self.assertEqual(R.prose_sequence(_words(out)), ["You shall not", "sow", "your field"])
+
+    def test_before_neighbour_takes_its_slot(self):           # "of" + a name (1Co 16:19 shape)
+        rows = [_row(0, "assemblies", sb="1577", gpos=1, bid=1), _row(1, "of", sb="3588"),
+                _row(2, "Asia", sb="*", gpos=2, bid=1)]
+        out = B._join_neighbour_group(rows, 1, 2)
+        self.assertEqual([(r[5], r[6]) for r in out], [(1, 1), (2, 1), (3, 1)])
+        self.assertEqual(R.prose_sequence(_words(out)), ["assemblies", "of", "Asia"])
+
+    def test_ungrouped_neighbour_leaves_row_ungrouped(self):
+        rows = [_row(0, "you shall not"), _row(1, "eat", sb="2068", gpos=1, bid=4)]   # a stray feed bracket
+        out = B._join_neighbour_group(rows, 1, 0)
+        self.assertEqual([(r[5], r[6]) for r in out], [(None, None), (None, None)])
+        self.assertEqual(R.prose_sequence(_words(out)), ["you shall not", "eat"])
+
+    def test_grouped_neighbour_without_position(self):
+        rows = [_row(0, "not", bid=2), _row(1, "eat", sb="2068")]
+        out = B._join_neighbour_group(rows, 1, 0)
+        self.assertEqual([(r[5], r[6]) for r in out], [(None, 2), (None, 2)])
+
+    def test_second_pass_changes_nothing(self):
+        after = [_row(0, "your field", sb="68", gpos=2, bid=1), _row(1, "You shall not", gpos=1, bid=1),
+                 _row(2, "sow", sb="4687")]
+        before = [_row(0, "assemblies", sb="1577", gpos=1, bid=1), _row(1, "of", sb="3588"),
+                  _row(2, "Asia", sb="*", gpos=2, bid=1)]
+        for rows, b, n in ((after, 2, 1), (before, 1, 2)):
+            once = B._join_neighbour_group(rows, b, n)
+            self.assertEqual(B._join_neighbour_group(once, b, n), once)
+
+    def test_other_groups_untouched(self):
+        rows = [_row(0, "not", gpos=1, bid=1), _row(1, "eat", sb="2068"), _row(2, "x", sb="1", gpos=2, bid=2)]
+        out = B._join_neighbour_group(rows, 1, 0)
+        self.assertEqual(out[2], rows[2])
+        self.assertEqual(out[0], rows[0])
 
     def test_split_at_left_edge(self):             # 2Ki 15:1
         old = [_row(0, "of", None, sb="3588"), _row(1, "Jeroboam", "jeroboam", sb="*")]
