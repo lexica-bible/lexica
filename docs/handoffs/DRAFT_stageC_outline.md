@@ -2289,3 +2289,67 @@ outside item 2: 284 in 132 verses.
 - All of this is a reading of the plan, not a result: R2's verify (per-verse v2 on the repaired copy) is the proof.
   For R2, the 23 untouched item-2 verses go in verify's `--residue` list (rows vs text printed in full) so the 123
   are each shown, with the named residue + Gen 46:26.
+
+## R1 accepted; R2 (apply + verify) CLEARED CONDITIONALLY, drafted (11/5)
+
+Ruling chat 11/5: R1 accepted (plan 694e1564, 389 / 133; the 45 outside the plan are §9.88 point 3, no action; CHECK 4
+note correction accepted; the 15 punct verses stay for the §9.87 re-freeze). R2 cleared conditionally — JP runs it
+without returning if it matches the spec: ref 9fbef17f; rollback copy `bible_edupg_test_built_pre_digits_20261105.db`
+first, byte-identical; apply only plan 694e1564 (sha-checked); receipt APPLIED 389 - before 389/389 - after 389/389 -
+other rows unchanged (count); v2 word-order over all 1,456 listed verses = 0; full prints of the 123 lost-digit verses,
+the residue (Pro 7:11, Pro 14:13, Pro 29:19, Isa 9:17, Isa 60:18, Jer 5:29, Joh 8:39, 1Co 16:19) and Gen 46:26 pos 19;
+any receipt mismatch = self-rollback, STOP.
+
+Block notes: the receipt check is the exact line `APPLIED 389 cells - before-match 389/389 - after-match 389/389 -
+other rows 625,920 digest … (unchanged)` (625,920 = gate 1's 626,309 words − 389); anything else → restore from the
+rollback copy (cp + cmp) and STOP. A `-journal` file beside the built copy STOPs the block before anything starts, and
+is moved aside (never deleted) before a restore, so SQLite cannot replay it onto the restored file. The print list =
+123 + Pro 7:11, Pro 14:13, Pro 29:19, Isa 9:17, Isa 60:18 + Gen 46:26 (129; Jer 5:29, Joh 8:39, 1Co 16:19 are in the
+123), cross-checked = CHECK 4's 99 LOST + R1's 23 untouched + Pro 6:25. Gen 46:26 pos 17–21 printed from built and
+live (sqlite3 -readonly). Tested at 9fbef17f on made-up copies: good run → APPLIED + verify, exit 0; receipt mismatch
+→ restored byte-identical, exit 1; rollback copy present → STOP, nothing done; wrong plan → STOP, nothing done.
+
+### Block R2 — restore-digits APPLY + VERIFY (GATE REF 9fbef17f; writes the built copy only)
+```bash
+set +H
+( set -uo pipefail
+REF=9fbef17f
+echo "GATE REF ${REF} - R2 restore-digits APPLY + VERIFY on the built copy (writes the built copy only; live read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "R2 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "R2 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "R2 RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; RB=~/bible-db/bible_edupg_test_built_pre_digits_20261105.db; LIVE=~/bible-db/bible.db
+P=~/edition_upgrade_runs/restore_digits_plan_20261105.tsv
+for f in "$B" "$P" "$LIVE"; do [ -f "$f" ] || { echo "R2 RESULT: STOP - missing: $f"; exit 1; }; done
+[ -e "$RB" ] && { echo "R2 RESULT: STOP - rollback copy already exists: $RB (nothing done)"; exit 1; }
+[ -e "$B-journal" ] && { echo "R2 RESULT: STOP - a journal file sits beside the built copy: $B-journal (nothing done)"; exit 1; }
+[ "$(sha256sum < "$P" | cut -c1-8)" = 694e1564 ] || { echo "R2 RESULT: STOP - plan file is not R1's (694e1564...) (nothing done)"; exit 1; }
+cp -p "$B" "$RB" && cmp -s "$B" "$RB" || { echo "R2 RESULT: STOP - rollback copy not byte-identical to the built copy (built copy untouched)"; exit 1; }
+echo "rollback copy: $RB - byte-identical to the built copy ($(stat -c%s "$RB") bytes) - plan 694e1564"
+out=$(PYTHONIOENCODING=utf-8 python3 scripts/eu_repair_restore_digits.py --apply "$B" --rollback "$RB" --plan "$P" 2>&1); a=$?
+echo "$out"
+ok=0; echo "$out" | grep -qF "RESTORE-DIGITS APPLY: APPLIED 389 cells - before-match 389/389 - after-match 389/389 - other rows 625,920 digest" && echo "$out" | grep -qF "(unchanged)" && ok=1
+if [ "$a" -ne 0 ] || [ "$ok" -ne 1 ]; then
+  [ -e "$B-journal" ] && mv "$B-journal" "$B-journal.stale_$(date -u +%H%M%S)" && echo "moved aside a leftover journal file"
+  cp -p "$RB" "$B" && cmp -s "$RB" "$B" && echo "R2 RESULT: STOP - receipt not as cleared (apply exit $a); built copy RESTORED from the rollback copy, byte-identical" || echo "R2 RESULT: STOP - receipt not as cleared AND THE RESTORE DID NOT VERIFY - do nothing else, bring this here"
+  exit 1
+fi
+RES="Gen 9:4,Gen 24:8,Gen 25:10,Gen 37:24,Gen 41:14,Exo 22:18,Exo 22:21,Exo 22:29,Lev 11:11,Lev 12:4,Lev 18:6,Lev 18:18,Lev 19:28,Lev 21:11,Lev 22:4,Lev 22:12,Lev 22:21,Lev 23:7,Lev 23:21,Lev 23:35,Lev 23:36,Lev 25:4,Num 1:49,Num 6:6,Num 8:26,Num 9:12,Deu 1:4,Deu 7:3,Deu 10:16,Deu 15:2,Deu 18:2,Deu 28:12,Deu 28:50,Deu 28:64,Deu 29:6,Jdg 12:1,Jdg 20:17,1Sa 23:19,2Sa 11:13,2Sa 20:3,1Ki 2:28,1Ki 7:2,2Ki 15:1,1Ch 23:9,2Ch 29:7,Ezr 7:15,Ezr 10:6,Neh 5:12,Neh 6:1,Neh 7:43,Job 2:10,Job 10:19,Job 11:11,Job 16:5,Job 19:22,Job 21:14,Job 23:6,Job 34:27,Psa 32:6,Psa 51:17,Psa 56:3,Psa 69:5,Psa 94:14,Psa 107:4,Psa 119:141,Psa 119:153,Psa 119:155,Pro 1:25,Pro 3:32,Pro 5:6,Pro 6:25,Pro 10:30,Son 3:7,Isa 1:11,Isa 1:12,Isa 9:19,Isa 13:10,Isa 15:6,Isa 42:8,Isa 53:9,Isa 57:11,Isa 57:20,Jer 5:22,Jer 5:29,Jer 9:9,Jer 13:1,Jer 44:17,Jer 45:3,Eze 2:3,Eze 4:14,Eze 12:12,Eze 12:13,Eze 13:2,Eze 13:16,Eze 16:4,Eze 16:49,Eze 18:6,Eze 18:8,Eze 18:13,Eze 18:17,Eze 47:22,Dan 2:44,Amo 5:22,Amo 5:23,Mat 1:6,Luk 8:27,Joh 1:45,Joh 2:3,Joh 4:17,Joh 8:39,Joh 8:43,Act 2:10,Act 14:6,Act 27:31,Rom 6:14,1Co 7:10,1Co 7:25,1Co 10:1,1Co 10:20,1Co 16:19,Gal 4:21,1Ti 5:18,2Ti 4:3,Pro 7:11,Pro 14:13,Pro 29:19,Isa 9:17,Isa 60:18,Gen 46:26"
+[ "$(echo "$RES" | tr ',' '\n' | sort -u | grep -c .)" -eq 129 ] || { echo "R2 RESULT: STOP - print list is not the 123 + 5 residue + Gen 46:26 (repair stays applied; rollback copy kept)"; exit 1; }
+echo "--- verify: v2 over all 1,456 listed verses + full prints of the 123 lost-digit verses, the residue, Gen 46:26 ---"
+vout=$(PYTHONIOENCODING=utf-8 python3 scripts/eu_repair_restore_digits.py --verify "$B" --plan "$P" --residue "$RES" 2>&1); v=$?
+echo "$vout"
+echo "--- Gen 46:26 positions 17-21 (pos 19 = the dash residue cell), built then live (read-only) ---"
+for D in "$B" "$LIVE"; do echo "  $(basename "$D"):"; sqlite3 -readonly -separator ' | ' "$D" "SELECT w.position, w.english, w.bracket_id, w.greek_pos, w.strongs FROM words w JOIN verses v ON w.verse_id = v.id WHERE v.book = 'Gen' AND v.chapter = 46 AND v.verse = 26 AND w.position BETWEEN 17 AND 21 ORDER BY w.position" | sed 's/^/    /'; done
+if [ "$v" -eq 0 ] && echo "$vout" | grep -qF "word-order on listed verses 0"; then
+  echo "R2 RESULT: APPLIED 389 + VERIFIED - word-order on the 1,456 listed verses 0 - rollback copy kept - output to the ruling chat"; exit 0
+fi
+echo "R2 RESULT: APPLIED 389 - verify did NOT read word-order 0 (exit $v; named above) - repaired copy and rollback copy both kept - output to the ruling chat"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/restore_digits_R2_20261105.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: rollback copy line (byte-identical, plan 694e1564); `RESTORE-DIGITS APPLY: APPLIED 389 cells - before-match
+389/389 - after-match 389/389 - other rows 625,920 digest X -> X (unchanged)`; per-verse v2 lines for the 133 plan
+verses; `all 1456 listed verses: {...}` with no word-order list; 129 full prints; Gen 46:26 pos 17–21 built + live;
+`RESTORE-DIGITS VERIFY: plan verses 133 - clean … - word-order on listed verses 0`; `R2 RESULT: APPLIED 389 +
+VERIFIED …`; exit=0. Punctuation-only hits on the plan verses are expected (old-English punctuation, §9.87 re-freeze).

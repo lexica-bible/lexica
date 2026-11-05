@@ -115,8 +115,9 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   item-2 NOT in the plan 45 (expected 0) = 23 verses whose pair is fully unbracketed on built (rule point 3; read
   in order already). CHECK 4's "15 punct members = digit loss" note was wrong (old-English punctuation). Read:
   DRAFT "R1 re-run".
-- Next: ruling chat reads R1 → R2 drafted (rollback copy → apply plan 694e1564 → receipt → verify + residue incl. the
-  23 untouched item-2 verses) → Joh 14:26 rows → gate 3 re-run.
+- R1 accepted. **R2 cleared conditionally** (JP runs without returning if it matches the spec) — block in DRAFT "R2".
+- Next: R2 output → ruling chat → Joh 14:26 correction rows (§9.89) → gate 3 re-run → residue rulings → re-pin → gate 1
+  → retired-row re-run → stage D.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
