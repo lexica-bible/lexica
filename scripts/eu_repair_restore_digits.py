@@ -174,6 +174,8 @@ def dry_run(copy, out, live=None):
         verses = {r[:3] for r in rows}
         print(f"== plan: {len(rows)} cells in {len(verses)} verses (restored {roles['restored']} - shifted "
               f"{roles['shifted']}) over {len(pairs)} listed verses -> {out}")
+        print("   per cell: p<position> 'english' r(estored)/s(hifted) bracket_id/greek_pos before -> after"
+              " (live bracket_id/greek_pos) - the order CHECK 4 printed")
         livemap = {}
         if live:
             con.execute("ATTACH DATABASE ? AS L", (f"file:{live}?mode=ro",))
@@ -194,8 +196,8 @@ def dry_run(copy, out, live=None):
                                 item2.add(key + (p,))
         for key in _order(by_verse):
             cells = " ; ".join(
-                f"p{r[3]} {r[6]!r} {r[7][0]} {_n(r[8]) or '-'}/{_n(r[9]) or '-'} -> {_n(r[10]) or '-'}/{_n(r[11]) or '-'}"
-                + (f" (live {_n(livemap[key + (r[3],)][0]) or '-'}/{_n(livemap[key + (r[3],)][1]) or '-'})"
+                f"p{r[3]} {r[6]!r} {r[7][0]} {_n(r[9]) or '-'}/{_n(r[8]) or '-'} -> {_n(r[11]) or '-'}/{_n(r[10]) or '-'}"
+                + (f" (live {_n(livemap[key + (r[3],)][1]) or '-'}/{_n(livemap[key + (r[3],)][0]) or '-'})"
                    if key + (r[3],) in livemap else "")
                 for r in by_verse[key])
             print(f"   {_ref(key):11} {cells}")
