@@ -1818,3 +1818,126 @@ Expected: the file line (241 members, 2b0f4cc4, e540d34d); `ok  reorder port rep
 dup-gloss 0, `Joh 14:26 ... clean`, NEW on a NON-eligible verse 0; `V2 MEMBER DIFF: NO FAIL - ...`;
 `GATE3 RESULT: NO FAIL - STOP HERE ...`; exit=0. The full gone / new-on-eligible / changed-ops lists come to the
 ruling chat. Stage D (8b) waits on that ruling.
+
+## C6 gate 3 RAN (11/4 14:30 UTC) — FAIL, HELD; CHECK 3 drafted, held
+
+**Run** (`~/edition_upgrade_runs/gate3_member_diff_20261104.log`, REF f8e814c2, PA HEAD 7358c8bf): inputs as drafted
+(241 / 2b0f4cc4 / e540d34d); port test OK (137); 9 tests OK; `V2 CONTROLS PASSED.` Member diff:
+`V2 MEMBER DIFF: FAIL - word-order 112 - content-other 1 - dup-gloss 0 - Joh 14:26 HIT - new on non-eligible 0 | to
+ruling: gone 25 - new on eligible 367 - changed ops 12 - unchanged 204` → `GATE3 RESULT: FAIL`, exit=1. Live 10/30
+read word-order 1 (Joh 14:26) / content-other 0 (DESIGN §2 table), so 111 word-order + 1 content-other are new on
+this copy. The full lists are in the PA log (and the 11/4 chat).
+
+**Ruling chat 11/4: HELD (not accepted, not failed).** Reading: the 112 = verb cell at clause end in rows vs earlier in
+the edition prose, read as tag placement (the §9.62 604 passdiff class); Job 3:3 and Joh 14:26 to be shown; Psa 89:35
+on none of the §9.52 lists. Pre-rulings, applying if CHECK 3 shows them: **§9.86 (JP)** word-order criterion for this
+build = all members ⊂ passdiff 604/625 (Joh 14:26 declared with them if same shape and consistent with charter 4.10);
+**§9.87 (JP)** §9.52: the edition's punctuation governs — gone 25 / new-on-eligible 367 / changed-ops 12 accepted,
+frozen punct file re-frozen from this copy (expected 583 = 204 + 367 + 12) in the 9c re-freeze commit; any item CHECK 3
+puts on B = build defect, lane stops; feed items (Job 3:3, Joh 3:15, the " )" set) → follow-up corrections batch with
+the nine doubled-words, declared in gate 3's record.
+
+**CC local finding (before CHECK 3; files in the repo, not a PA read):** 111 of the 112 word-order verses are on the
+frozen merge-pair list (`merge_pairs_20261102.tsv`, 104) or edge-split list (`edge_splits_20261102.tsv`, 13; the two
+overlap); only Joh 14:26 is on neither. Samples: Lev 25:4 "You shall not" / "sow", Joh 2:3 "They do not" / "have." —
+the §9.73 rule puts the OLD verb back on its own cell, and v2 then places that cell after the noun while the feed prose
+has it after "not". Per §9.62 + the B record, passdiff verses are NOT eligible and keep old rows AND old prose (B
+wrote 15,571 + left 13,500 = the 29,071 eligible only), while merge-pair verses stay eligible (§9.73) — so the
+passdiff intersect is forecast at or near 0/112 → CHECK 3 prints STOP. Not checked against PA's eligible file yet.
+Local run of B's own helper on the pinned feed (local feed sha 7bd77385… = manifest): Job 3:3 feed cell
+`May[6be destroyed` (no space) → FEED; Joh 3:15 cell `1eternal.].` → FEED; all nine " )" verses carry `] )` / `], )`
+/ `]; )` in the feed → FEED.
+
+**CHECK 3** (one-off `check3_20261104.py`, sha 9ed2a151…, read-only, 77 lines): (1) the 112 (parsed from the gate 3
+log, must equal its headline) vs step 5's reason column — in-passdiff count, NOT-in-passdiff by name — plus an added
+line vs the merge-pair / edge-split lists; (2) Joh 14:26 rows (pos, english, bracket_id, greek_pos, strongs),
+verses.text, charter §4.10 text, then the audit's own `--verse` v2 view; (3–4) feed cells / B's text
+(`feed_text` + `emdash`) / verses.text for Job 3:3, Joh 3:15 and the nine " )" verses, one FEED-or-B line each.
+`CHECK3 RESULT: AS RULED` only if 0 outside passdiff and every attribution FEED; else STOP (exit 1). Tested on a
+made-up copy in a throwaway checkout at f8e814c2: full block end to end (inputs line, 4 items, --verse, STOP, exit=1);
+all-passdiff log → AS RULED exit 0; text ≠ B's → STOP line; log headline mismatch → STOP before any read.
+
+### Block CHECK 3 (GATE REF f8e814c2, read-only)
+```bash
+set +H
+( set -uo pipefail
+REF=f8e814c2
+echo "GATE REF ${REF} - CHECK 3 gate-3 follow-up on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "CHECK3 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "CHECK3 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; E=~/edition_upgrade_runs/step5_eligible_20261101.tsv
+G=~/edition_upgrade_runs/gate3_member_diff_20261104.log; C=docs/handoffs/CHARTER_edition_upgrade.md
+for f in "$B" "$E" "$G" "$C"; do [ -f "$f" ] || { echo "CHECK3 RESULT: STOP - missing: $f"; exit 1; }; done
+[ "$(sha256sum < "$E" | cut -c1-8)" = e540d34d ] || { echo "CHECK3 RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+grep -qF 'V2 MEMBER DIFF: FAIL - word-order 112 - content-other 1' "$G" || { echo "CHECK3 RESULT: STOP - gate 3 log is not the 14:30 run"; exit 1; }
+S=~/edition_upgrade_runs/check3_20261104.py
+cat > "$S" <<'PYEOF'
+"""CHECK 3 (one-off, read-only, 11/4): gate 3 follow-up. argv: built_db eligible_tsv gate3_log charter_md"""
+import collections, csv, re, sqlite3, sys
+sys.path.insert(0, "scripts")
+import build_prose_from_app as BP
+db, elig, log, charter = sys.argv[1:5]
+L = open(log, encoding="utf-8").read()
+wo = [(b, int(c), int(v)) for b, c, v in re.findall(r"\[word-order\s*\] (\S+) (\d+):(\d+)", L)]
+head = re.search(r"word-order members: (\d+)", L)
+if not head or len(wo) != int(head.group(1)) or len(set(wo)) != len(wo):
+    sys.exit(f"CHECK3 RESULT: STOP - word-order list in the gate 3 log does not match its own headline ({len(wo)})")
+st = {(r["book"], int(r["chapter"]), int(r["verse"])): r["reason"] or "eligible"
+      for r in csv.DictReader(open(elig, encoding="utf-8"), delimiter="\t", quoting=csv.QUOTE_NONE)}
+def refs(p): return {(r["book"], int(r["chapter"]), int(r["verse"])) for r in csv.DictReader(open(p, encoding="utf-8"), delimiter="\t", quoting=csv.QUOTE_NONE)}
+mp, es = refs("tests/fixtures/edition_upgrade/merge_pairs_20261102.tsv"), refs("tests/fixtures/edition_upgrade/edge_splits_20261102.tsv")
+nm = lambda k: f"{k[0]} {k[1]}:{k[2]}"
+print(f"== 1. the {len(wo)} word-order verses vs step 5's reason (passdiff in the file: {sum(1 for r in st.values() if r == 'passdiff')})")
+print(f"   in passdiff: {sum(1 for k in wo if st.get(k) == 'passdiff')} / {len(wo)} - step-5 status of the {len(wo)}: {dict(collections.Counter(st.get(k, 'MISSING') for k in wo))}")
+out = [k for k in wo if st.get(k) != "passdiff"]
+print(f"   NOT in passdiff ({len(out)}):")
+for i in range(0, len(out), 10):
+    print("     " + ", ".join(nm(k) for k in out[i:i + 10]))
+print(f"   (added) on the merge-pair list {sum(1 for k in wo if k in mp)} - edge-split list {sum(1 for k in wo if k in es)} - "
+      f"either {sum(1 for k in wo if k in mp or k in es)} - neither: {', '.join(nm(k) for k in wo if k not in mp and k not in es) or 'none'}")
+con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+def vtext(k): return con.execute("SELECT id, text FROM verses WHERE book=? AND chapter=? AND verse=?", k).fetchone()
+print(f"== 2. Joh 14:26 (step-5 status: {st.get(('Joh', 14, 26), 'MISSING')})")
+vid, t = vtext(("Joh", 14, 26))
+print(f"   verses.text: {t}")
+for p, e, bi, gp, s in con.execute("SELECT position, english, bracket_id, greek_pos, strongs FROM words WHERE verse_id=? ORDER BY position", (vid,)):
+    print(f"   pos {p:3} {repr(e):24} bracket_id {bi} greek_pos {gp} strongs {s}")
+lines = open(charter, encoding="utf-8").read().splitlines()
+i = next(n for n, x in enumerate(lines) if x.startswith("- **John 14:26"))
+print("   charter 4.10 declaration:")
+for x in lines[i:]:
+    if not x.strip() or x.startswith("#"):
+        break
+    print("   | " + x)
+app = BP.AppTransplant(BP.abp_source_texts())
+PAREN = (r"\][,;.]? \)", " )")
+CASES = [(("Job", 3, 3), r"May\[", "Maythe"), (("Joh", 3, 15), r"\.\]\.", "eternal. life.")] + [((b, c, v),) + PAREN for b, c, v in
+         [("2Th", 1, 10), ("Rev", 2, 9), ("Rom", 4, 17), ("Rom", 9, 1), ("Luk", 2, 23), ("Heb", 7, 11), ("Phm", 1, 12), ("Luk", 2, 35), ("Eze", 26, 7)]]
+att = collections.Counter()
+print("== 3-4. feed cells / B's text (feed_text + emdash, B's own helper) / verses.text on the built copy")
+for k, feed_re, mark in CASES:
+    ka = app.pairs[k]
+    cells = " | ".join(s["english"] for s in app.feed[ka])
+    bt, vt = BP.emdash(BP.feed_text(app, k)), vtext(k)[1]
+    v = ("STOP - verses.text is not B's text" if vt != bt else f"STOP - '{mark}' not in the text" if mark not in bt
+         else "FEED" if re.search(feed_re, cells) else "B")
+    att[v.split(" ")[0]] += 1
+    print(f"   {nm(k)} feed: {cells}\n      B   : {bt}\n      text: {vt}\n   {nm(k)} -> {v}  ('{mark}' in text; feed pattern {repr(feed_re)} {'found' if re.search(feed_re, cells) else 'NOT found'})")
+con.close()
+ok = not out and set(att) == {"FEED"}
+print(f"CHECK3 RESULT: {'AS RULED' if ok else 'STOP'} - outside passdiff {len(out)} / {len(wo)} - Joh 14:26 printed for the 4.10 read - attributions {dict(att)}")
+sys.exit(0 if ok else 1)
+PYEOF
+[ "$(sha256sum < "$S" | cut -c1-8)" = 9ed2a151 ] || { echo "CHECK3 RESULT: STOP - one-off script is not as drafted (9ed2a151...)"; exit 1; }
+echo "inputs: eligible e540d34d - gate 3 log = the 14:30 FAIL run - charter sha $(sha256sum < "$C" | cut -c1-8) - script 9ed2a151"
+PYTHONIOENCODING=utf-8 python3 "$S" "$B" "$E" "$G" "$C"; r=$?
+echo "--- Joh 14:26 through the audit's own --verse (v2, read-only) ---"
+PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --verse "Joh 14:26"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/check3_20261104.log; echo "exit=${PIPESTATUS[0]}"
+```
+Expected: the inputs line (e540d34d, the 14:30 FAIL log, charter 9cb591c9, script 9ed2a151); item 1 with the step-5
+status of the 112 and the merge-pair/edge-split line (forecast: either 111, neither Joh 14:26); item 2 as stored; item 3
+`Job 3:3 -> FEED`; item 4 `-> FEED` ×10; `CHECK3 RESULT:` STOP if any of the 112 is outside passdiff (forecast), with
+attributions {'FEED': 11}; then the Joh 14:26 --verse view; exit=1 on STOP.

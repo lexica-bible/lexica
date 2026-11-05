@@ -90,7 +90,13 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   7358c8bf; controls 6/6 FIRED; built copy 7/7 — `CERTIFIED STATE HOLDS (7/7 green)`.
 - **C5 RETIRED-ROW GATE PASSED (11/4 05:01 UTC, `retired_check_20261104.log`):** 11 tests OK; `PASS 23/23 HOLD
   (corrected_value 18 - feed text 5)`, the 5 = §9.63's named verses.
-- Next: C6 gate 3 v2 member diff (STOP for the §9.52 punct ruling) → stage D (8b).
+- **C6 GATE 3 RAN (11/4 14:30 UTC, `gate3_member_diff_20261104.log`): FAIL — HELD by the ruling chat** (not accepted,
+  not failed). word-order 112 · content-other 1 (Job 3:3 "Maythe") · dup-gloss 0 · Joh 14:26 HIT · new on non-eligible
+  0 | gone 25 · new-on-eligible 367 · changed-ops 12 · unchanged 204 (Psa 89:35 on none). Pre-rulings §9.86/§9.87 wait
+  on CHECK 3 (record + block: `DRAFT_stageC_outline.md` "C6 gate 3 RAN"). CC local finding: 111 of the 112 are
+  merge-pair / edge-split verses (§9.73/§9.75, eligible by rule), Joh 14:26 on neither — so CHECK 3's passdiff
+  intersect is forecast to print STOP.
+- Next: CHECK 3 (read-only) → ruling chat → (if cleared) stage D (8b).
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
