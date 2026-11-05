@@ -111,7 +111,12 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   differs from the ruling's wording in 5 named ways (DRAFT "§9.88 final") — owed an OK with R1.
 - §9.88 amended to the implemented rule (11/5). R1 ran 02:23 → STOP on CC's same-word check at Gen 25:10 (PN bound
   to H2845 after the build); fixed **9fbef17f**. Dash verse = Gen 46:26 p19.
-- Next: PA pull → R1 re-run at 9fbef17f (held) → ruling chat → R2 apply/verify → Joh 14:26 rows → gate 3 re-run.
+- **R1 re-run (11/5 02:34): PLAN WRITTEN** 389 cells / 133 verses (restored 117, shifted 272), plan sha 694e1564;
+  item-2 NOT in the plan 45 (expected 0) = 23 verses whose pair is fully unbracketed on built (rule point 3; read
+  in order already). CHECK 4's "15 punct members = digit loss" note was wrong (old-English punctuation). Read:
+  DRAFT "R1 re-run".
+- Next: ruling chat reads R1 → R2 drafted (rollback copy → apply plan 694e1564 → receipt → verify + residue incl. the
+  23 untouched item-2 verses) → Joh 14:26 rows → gate 3 re-run.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only

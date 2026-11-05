@@ -2259,3 +2259,33 @@ exit "$r"
 ```
 Expected: tests 47 OK / 7 OK; no "NOT THE LISTED WORD" lines (any = named for ruling, no plan); the plan lines and
 `RESTORE-DIGITS PLAN: …`; item-2 "NOT in the plan" 0; `Gen 46:26 position 19`; `R1 RESULT: PLAN WRITTEN`; exit=0.
+
+## R1 re-run (11/5 02:34) — PLAN WRITTEN; CC read; R2 not drafted (ruling chat reads R1 first)
+
+`restore_digits_R1_20261105.log`, REF 9fbef17f, PA HEAD c71ce26f; tests 47 OK / 7 OK; no NOT THE LISTED WORD lines.
+`RESTORE-DIGITS PLAN: 389 cells / 133 verses - restored 117 - shifted 272 - plan sha256 694e1564`; dash verse Gen 46:26
+p19; exit=0. **Item-2: 150 cells / 123 verses - in the plan 105 - NOT in the plan 45** (expected 0). Plan cells
+outside item 2: 284 in 132 verses.
+
+**CC read (from the printed lines + the frozen lists; nothing new run on PA):**
+- **The 45 not in the plan = 23 verses where BOTH cells of the pair are unbracketed on built** (live had them
+  bracketed): 18 of the 20 "of" + name pairs, both cells (all but 1Co 16:19 and Joh 8:39, which are in the plan) =
+  36 cells, plus Exo 22:18, Deu 28:64, 1Co 10:1, 1Co 10:20 (both cells) and Gen 41:14 (one cell) = 9. Ruled point (3): an ungrouped neighbour leaves the restored
+  cell ungrouped; two adjacent unbracketed cells read in position order. None of the 23 was a gate-3 word-order hit,
+  so they already read in order. They are 23 of CHECK 4's 24 "non-hit exposure" verses (the 24th, Pro 6:25, is in
+  the plan). **Correction to CHECK 4's note:** the 15 of them on §9.87's punctuation list are NOT digit-loss side
+  effects — the repair does not touch them; their punctuation difference is the restored OLD English (Gen 25:10 old
+  "Heth." vs edition "Heth —"), the same class as the ~27 rehearsal verses. They stay for the §9.87 re-freeze. The
+  ruling's "the 24 item-2 verses outside gate 3 are covered by the repair" holds for Pro 6:25 only.
+- **22 plan verses carry shifted cells only** (the restored cell already held its slot but shared the number with
+  another member). By position: 18 read the same after (restored cell already first among the tied — Gen 17:5,
+  Exo 23:3, Lev 18:26, Lev 19:4, Num 11:17, Num 18:22, 1Sa 25:31, 2Ch 26:18, Psa 78:10, Psa 125:1, Pro 9:13,
+  Pro 10:3, Pro 14:22, Isa 2:4, Isa 10:20, Jer 46:28, Luk 11:46, 1Co 16:7 — renumbering only); **4 change reading =
+  the gate-3 residue Pro 7:11, Pro 14:13, Pro 29:19, Isa 9:17** (restored verb moves ahead of the word it was tied
+  with). Isa 60:18 (5th residue) is cured by its restored cell moving 1/4 → 1/3 next to "shall not".
+- Restored cells that move off live's number without a reading change: Isa 1:24 (1/5 → 1/3, no member between),
+  Num 16:9 (tie 3/3 → 4), Pro 6:25 and Jer 49:36 (gp none → last-in-group number). Jer 5:29, Joh 8:39 and 1Co 16:19
+  get the side-aware placement (the "of" ahead of the name) = their gate-3 hits.
+- All of this is a reading of the plan, not a result: R2's verify (per-verse v2 on the repaired copy) is the proof.
+  For R2, the 23 untouched item-2 verses go in verify's `--residue` list (rows vs text printed in full) so the 123
+  are each shown, with the named residue + Gen 46:26.
