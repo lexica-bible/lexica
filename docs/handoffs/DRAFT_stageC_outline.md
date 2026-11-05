@@ -2141,3 +2141,75 @@ live carries 1/2 and 1/1; CC's CHECK 3 "half-cured" note repeated it (corrected 
 **Item 4:** 1,324 cells; 147 inside the item-2 set; 1,177 OUTSIDE in 558 verses = 557 eligible (feed digits by
 design, :2397) + **1 `dash` verse — not eligible, so its rows should be the old rows; a lost bracket there is
 unexplained.** Every outside cell: `~/edition_upgrade_runs/check4_item4_outside_20261104.tsv`.
+
+## §9.88 final + §9.89 (11/5); code landed 820a6109 + af14ec30; R1 (repair dry run) drafted, held
+
+Ruling chat 11/5: CHECK 4 accepted (99/111; rule + named residue). **§9.88 (JP) final:** one rule for A's restores
+and the built-copy repair — a restored cell joins its neighbour's bracket group as it stands in built (no group →
+new group of the two, neighbour gp 1), greek_pos = neighbour's + 1; repair scoped to the item-2 set (150 cells /
+123 verses), rollback copy `bible_edupg_test_built_pre_digits_<date>.db`, receipt (expect 150 changed, 0 outside),
+then per-verse v2 for the 123; residue named reads (1Co 16:19, Joh 8:39, Jer 5:29 if still hit, Pro 7:11,
+Pro 14:13, Pro 29:19, Isa 9:17, Isa 60:18, the dash verse). **§9.89 (JP):** Joh 14:26 = pre-existing live defect,
+charter 4.10 corrected; fixed by bracket_id/greek_pos correction rows (pin 372 → 376 or actual), inserted with
+the repair. Punct re-freeze waits until after the repair. Sequence: code commit → PA pull → R1/R2 → Joh 14:26 rows →
+gate 3 re-run → residue rulings → re-pin → gate 1 → retired-row re-run → stage D.
+
+**Where the code differs from the ruling's wording (CC; owed a ruling-chat OK with R1):**
+1. **Side-aware.** 20 restored cells sit BEFORE their neighbour — all "of" + a name (17 merge pairs: 1Ki 7:2,
+   1Sa 23:19, Deu 1:4, Eze 2:3, Eze 13:2, Eze 13:16, Eze 47:22, Ezr 7:15, Gen 25:10, Jdg 20:17, Neh 7:43, Son 3:7,
+   1Co 16:19, Act 2:10, Act 14:6, Joh 1:45, Joh 8:39; 3 edge splits: 1Ch 23:9, 2Ki 15:1, Mat 1:6). "neighbour + 1"
+   would read "Name of"; the row takes the neighbour's number and the neighbour moves up one.
+2. **Members at/after the slot move up one** — otherwise two members share a number and the order is a tie.
+3. **Ungrouped neighbour → the restored row stays/becomes ungrouped, no new group.** Two adjacent ungrouped rows
+   already read in position order = the merged cell's order (`reorder_english.py`: a group reads at its first
+   member); a new 2-cell group reads the same but would touch many more cells and add group ids.
+4. **A row already in place is left alone** (a second pass changes nothing — unit-tested).
+5. **"150 changed, 0 outside the set" will not hold as worded:** the plan is every cell the rule changes —
+   item-2 cells, restored rows outside item 2 (e.g. the 7 where live had no digits), and shifted members. R1
+   prints item-2 in/not-in the plan and the plan cells outside item 2; R2's receipt proves nothing outside the
+   PLAN moves (digest of every other words row before/after).
+
+**Code (820a6109, scripts/tests only; af14ec30 display-only):** `_join_neighbour_group` in build_words_from_abp.py,
+called by `_restore_merge_pairs` and `_apply_edge_splits`. New `scripts/eu_repair_restore_digits.py` (dry run →
+plan TSV; apply needs a byte-identical rollback copy and the same plan, receipts before/after + outside digest;
+verify = per-verse v2 + residue print_verse; refuses the live path in every mode). Tests: test_app_transplant 47
+(7 fail on the old restores; two old "digits stay feed" assertions updated — one encoded "murder. You shall not"),
+new test_eu_repair_restore_digits 6 (2 fail on the old rule), both in the hook + CI lists. CI green on 820a6109.
+**Local fingerprint (no dictionary):** eligible / strict_fail / merge-pair / edge-split lists byte-identical; only
+line moved `greek_pos/bracket_id changed 935 -> 737`. **Local rehearsal** (A's rows vs B's text through the audit's
+diff_verse_v2, 1,606 local merge/edge verses): word-order **131 -> 0** (incl. Pro 7:11, Pro 14:13, Pro 29:19,
+Isa 9:17, Isa 60:18, 1Co 16:19, Joh 8:39 locally); punct-position 117 -> 144 — the restored OLD English carries old
+punctuation (Lev 11:11 "meats." vs edition "meats,", Rom 6:14 "you;" vs "you.", Deu 29:6 "bread;" vs "bread,"),
+§9.73's own normalization. Expect those on gate 3's re-run as new punct members for ruling.
+
+### Block R1 — restore-digits DRY RUN (GATE REF af14ec30, read-only on built and live)
+PA pull first (no reload): `cd ~/bible-db && git pull --ff-only && git log -1 --format=%h`
+```bash
+set +H
+( set -uo pipefail
+REF=af14ec30
+echo "GATE REF ${REF} - R1 restore-digits DRY RUN on the built copy (read-only; live read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "R1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "R1 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "R1 RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; LIVE=~/bible-db/bible.db
+P=~/edition_upgrade_runs/restore_digits_plan_20261105.tsv; O=~/edition_upgrade_runs/check4_item4_outside_20261104.tsv
+for f in "$B" "$LIVE" "$O"; do [ -f "$f" ] || { echo "R1 RESULT: STOP - missing: $f"; exit 1; }; done
+[ -e "$P" ] && { echo "R1 RESULT: STOP - plan file already exists: $P (move it aside first)"; exit 1; }
+python3 tests/test_app_transplant.py || { echo "R1 RESULT: STOP - build tests failed"; exit 1; }
+python3 tests/test_eu_repair_restore_digits.py || { echo "R1 RESULT: STOP - repair tests failed (a repair that cannot fail is void)"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/eu_repair_restore_digits.py --dry-run "$B" --out "$P" --live "$LIVE"; r=$?
+echo "--- the non-eligible 'dash' verse(s) from CHECK 4 item 4 (named for the R2 residue read) ---"
+awk -F'\t' 'NR>1 && $5=="dash" {print "   " $1 " " $2 ":" $3 " position " $4}' "$O"
+[ "$r" -eq 0 ] && echo "R1 RESULT: PLAN WRITTEN - nothing written to any db; the plan goes to the ruling chat before R2" || echo "R1 RESULT: STOP - dry run exit $r"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/restore_digits_R1_20261105.log; echo "exit=${PIPESTATUS[0]}"
+```
+Tested end to end in a throwaway checkout at af14ec30 on made-up built/live copies holding all 1,456 listed verses:
+47 + 6 tests OK; plan 1,688 cells / 1,456 verses (restored 1,668, shifted 20 = the 20 "of"+name cells); every
+live-has/copy-lacks cell in the plan; dash line printed; a second run STOPs on the existing plan file.
+Expected on PA: tests OK; `RESTORE-DIGITS PLAN: N cells / V verses - restored R - shifted S - plan sha256 xxxxxxxx`
+(N not forecast); item-2 150 cells / 123 verses, NOT in the plan expected 0 (any listed = a neighbour cell, or a
+cell whose neighbour is ungrouped in built — reads in place); `R1 RESULT: PLAN WRITTEN`; exit=0. R2 (rollback copy
+→ apply with this plan → receipt → verify + residue) is drafted after the ruling chat reads R1.

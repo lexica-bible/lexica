@@ -106,7 +106,10 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   identical (cause elsewhere). Exposure 150 cells / 123 verses; ~15 of the 24 non-hit exposure verses sit on the §9.87
   punct new-on-eligible list (hand count). Joh 14:26 live = built, pre-existing. Item 4: 1,177 cells / 558 verses
   outside (557 eligible + 1 dash). Detail: `DRAFT_stageC_outline.md` "CHECK 4 RAN".
-- Next: ruling chat on §9.88's repair shape → code fix. Stage D waits.
+- CHECK 4 accepted. §9.88 final + §9.89 (Joh 14:26 = live defect → correction rows). Code landed **820a6109** (+
+  af14ec30 display): `_join_neighbour_group` (one rule, build + repair), `eu_repair_restore_digits.py`. Code
+  differs from the ruling's wording in 5 named ways (DRAFT "§9.88 final") — owed an OK with R1.
+- Next: PA pull → R1 dry run (held) → ruling chat → R2 apply/verify → Joh 14:26 rows → gate 3 re-run. Stage D waits.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
