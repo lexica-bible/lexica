@@ -97,11 +97,16 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   merge-pair / edge-split verses (§9.73/§9.75, eligible by rule), Joh 14:26 on neither — so CHECK 3's passdiff
   intersect is forecast to print STOP.
 - **CHECK 3 RAN (11/4): STOP** — 0/112 in passdiff (111 merge-pair/edge-split rows, A-side; Joh 14:26 on neither,
-  half-cured: digits now present, a `the` still before `comforter,`); 11/11 punctuation items = FEED. §9.86 does
-  not apply. Record: `DRAFT_stageC_outline.md` "CHECK 3 RAN".
+  a `the` before `comforter,` — CHECK 3's "half-cured" was WRONG: CHECK 4 shows live = built on every row); 11/11
+  punctuation items = FEED. §9.86 does not apply. Record: `DRAFT_stageC_outline.md` "CHECK 3 RAN".
 - CHECK 3 accepted; §9.86 withdrawn; gate 3 STOPPED (§4.10). Pre-ruling §9.88 (fix at the restore rule + scoped
   digit repair on the built copy) waits on CHECK 4. Code read: restores copy english + head only (:2112, :2174).
-- Next: CHECK 4 (read-only, live vs built) → ruling chat → §9.88 code fix. Stage D waits.
+- **CHECK 4 RAN (11/5 01:51 UTC, `check4_20261104.log`): NOT CONFIRMED (99/111)**, held for the ruling chat. CC sort of
+  item 1 (by the ruling's join test): 95 JOIN cleanly · 4 renumbered/odd · 7 live-no-digits (synthesise) · 5 digits
+  identical (cause elsewhere). Exposure 150 cells / 123 verses; ~15 of the 24 non-hit exposure verses sit on the §9.87
+  punct new-on-eligible list (hand count). Joh 14:26 live = built, pre-existing. Item 4: 1,177 cells / 558 verses
+  outside (557 eligible + 1 dash). Detail: `DRAFT_stageC_outline.md` "CHECK 4 RAN".
+- Next: ruling chat on §9.88's repair shape → code fix. Stage D waits.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only

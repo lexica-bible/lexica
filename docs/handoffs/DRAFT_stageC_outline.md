@@ -1951,8 +1951,9 @@ attributions {'FEED': 11}`, exit=1.
   word rows A built under §9.73/§9.75 (old verb put back on its own cell) that v2 places after the noun while
   the feed prose has it after "not". Not B, not the feed — A's rows. Mechanism (which bracket_id/greek_pos the
   restored verb cell carries) NOT traced yet.
-- **Item 2, Joh 14:26:** spirit/holy now carry digits (bracket 1, greek_pos 2/1) — the part §4.10 named ("spirit
-  holy," no digits, live) is cured. The hit remains in a new spot: pos 2 `the` (3588, no bracket) sits before pos 3
+- **Item 2, Joh 14:26:** ~~spirit/holy now carry digits — the part §4.10 named is cured~~ **WRONG (CC, corrected
+  after CHECK 4): live rows are identical to built on all 26 cells; live ALREADY carries the spirit/holy digits.
+  Nothing was cured — the claim rested on the charter's wording, not a live read.** pos 2 `the` (3588, no bracket) sits before pos 3
   `comforter,`; prose has it after. Reassembled `But the the comforter, holy spirit,` vs text `But the comforter,
   the holy spirit,`. Same v2 signature as live (`comforter,` displaced). §4.10: "if the built copy still shows the
   hit, the lane STOPS on it".
@@ -2101,3 +2102,42 @@ Expected: inputs line; item 1 = 111 lines, `live digits -> built NULL on a resto
 counts not forecast; item 3 live rows without digits on spirit/holy (charter: live rows `the comforter, spirit
 holy,`), live "the the" not forecast; item 4 expected NOT bounded (compose takes feed digits on every eligible
 verse), count not forecast; `CHECK4 RESULT: CONFIRMED - ...` exit=0 if 111/111.
+
+## CHECK 4 RAN (11/5 01:51 UTC) — NOT CONFIRMED (99/111); held for the ruling chat
+
+`~/edition_upgrade_runs/check4_20261104.log` (REF f8e814c2, PA HEAD 7358c8bf, script db61ef7f), exit=1.
+`CHECK4 RESULT: NOT CONFIRMED - gate-3 verses with lost digits 99/111 - exposure 150 cells / 123 verses - item 4 NOT
+bounded (1177 cells outside)`. Ruling chat (11/4, with the clearance) amended §9.88: the repair is NOT "copy live's
+digits"; it depends on whether the lost cell's live bracket matches the group the feed gives its neighbour in built
+(yes for all → join that group with the old greek_pos; else the rule synthesises a group).
+
+**Item 1 sorted by that test (CC, from the printed lines; script `sort_check4.py` in the session scratchpad):**
+- **95 JOIN** — every lost cell's neighbour (the "not" cell) carries in built the SAME bracket + greek_pos as in live,
+  and the lost cell's old greek_pos = neighbour's + 1. Joining the neighbour's group with the old greek_pos gives
+  back live's digits exactly. Gen 9:4 … Rom 6:14 (all LOST verses except the 4 below).
+- **4 RENUMBERED / odd:** Lev 12:4 (p18 live 1/1 → built 2/1: feed renumbered the group; p19 joins group 2 at gp 2 —
+  plus a p12/p13 pair of the 7-shape below); Jer 5:29 (live p3 english is None but the build's old row is "I not";
+  old gp of p4 = 1 collides with neighbour's 1 — live ≠ the build's old rows here); 1Co 16:19 and Joh 8:39 (edge
+  splits "of" + name: built group renumbered AND the name's greek_pos differs, 1/3 vs live 3/2, 3/4 vs 4/2).
+- **7 kept, live has NO digits on the pair; the feed puts a lone bracket on the "not" cell, verb none:** Exo 23:9,
+  Lev 7:26, Lev 18:21, Lev 21:1, Lev 25:37, Joh 12:49, Mat 15:32. Nothing to copy from live → synthesise.
+- **5 kept, digits identical live/built on the restored cells:** Pro 7:11, Pro 14:13, Pro 29:19, Isa 9:17, Isa 60:18 —
+  the hit comes from elsewhere in the verse; neither restore rule touches it. Not read yet.
+
+**Item 2:** 150 cells live-has / built-NULL (bracket 147, greek_pos 150) in 123 verses; both-set-but-different 17;
+no matching cell 1. 24 of the 123 are not gate-3 word-order hits; **15 of those 24 are on gate 3's §9.87
+new-on-eligible punctuation list** (count from the gate 3 output: Gen 25:10, Exo 22:18, Deu 1:4, Jdg 20:17,
+1Sa 23:19, 1Ki 7:2, Ezr 7:15, Neh 7:43, Son 3:7, Eze 2:3, Eze 13:2, Eze 13:16, Eze 47:22, Joh 1:45, Act 14:6) —
+mostly "of"/name edge-split cells. Those "punctuation" members look like digit-loss side effects, not edition
+punctuation; the punct re-freeze (§9.87, expected 583) should come AFTER the repair. Other 9: Gen 41:14, Deu 28:64,
+2Ki 15:1, 1Ch 23:9, Pro 6:25, Mat 1:6, Act 2:10, 1Co 10:1, 1Co 10:20.
+
+**Item 3, Joh 14:26:** live = built on all 26 rows (digits included); live reassembles "But the the comforter, holy
+spirit," too, and the audit's own --verse on live prints the same HIT. Pre-existing live defect (the unbracketed
+`the` at pos 2), untouched by this lane. **Charter §4.10's "rows read `spirit holy,` (no bracket digits)" is wrong —
+live carries 1/2 and 1/1; CC's CHECK 3 "half-cured" note repeated it (corrected above).** Under §9.88 it is the
+"separate cell defect" case.
+
+**Item 4:** 1,324 cells; 147 inside the item-2 set; 1,177 OUTSIDE in 558 verses = 557 eligible (feed digits by
+design, :2397) + **1 `dash` verse — not eligible, so its rows should be the old rows; a lost bracket there is
+unexplained.** Every outside cell: `~/edition_upgrade_runs/check4_item4_outside_20261104.tsv`.
