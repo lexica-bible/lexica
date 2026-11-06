@@ -1,5 +1,8 @@
 # HANDOFF — edition upgrade, stage C: re-pin 374 and close (written 2026-11-06)
 
+> **DONE 2026-11-06 15:43 UTC — stage C CLOSED.** C3a′ OK · C3b `4d66afa3` (pin 374) · C4′ gate 1 7/7 · C5′ 23/23,
+> all as expected; record at the end of `DRAFT_stageC_outline.md`. The "First task" below is spent; start from "Then".
+
 Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and ruling of this stretch is in
 `DRAFT_stageC_outline.md` (sections from "C6 gate 3 RAN" to "J DONE + G3R AS DECLARED"). Rulings: DESIGN §9.86–§9.89.
 

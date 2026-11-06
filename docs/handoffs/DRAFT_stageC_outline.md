@@ -2691,3 +2691,12 @@ FIRED"); built copy 1–7 all `[OK]`, `CERTIFIED STATE HOLDS (7/7 green)`, `GATE
 OK lines carry no figures; per the code, check 1 OK = words 626,309 + verses 31,237 exactly (`check_row_pins`), check 4
 OK = exactly 374 active ingest rows, each holding (`check_corrections`), check 3 OK = em-dash 0 — the expected picture.
 Next: C5′ (REF 4d66afa3).
+
+## C5′ retired-row RAN (11/6 15:43:04 UTC) — PASS as expected → STAGE C CLOSED
+
+`retired_check_20261106.log`, REF 4d66afa3, PA HEAD 4d66afa3: the check's own tests `Ran 11 tests … OK`; all 23 rows
+`ok` (feed text = ids 24, 25, 27, 45, 51; the other 18 corrected_value); `RETIRED-ROW CHECK: PASS 23/23 HOLD
+(corrected_value 18 - feed text 5)`, check exit 0, exit=0 — the expected picture exactly.
+**Stage C closed** on the built copy (re-pin chain C3a′ → C3b → C4′ → C5′ all as expected). Live untouched; live check 4
+stays red (51 vs pin 374) until the swap — accepted. Next per `HANDOFF_edition_upgrade_stageC_repin.md` "Then":
+reviewer-subagent setup (ruling chat), then stage D.
