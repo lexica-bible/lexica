@@ -224,7 +224,7 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
-  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE C CLOSED 11/6 on the built copy (pin 374 `4d66afa3`, gate 1 7/7, retired-row 23/23). NEXT = reviewer-subagent setup (handoff `docs/handoffs/HANDOFF_edition_upgrade_reviewer_setup.md`), then stage D per the "Then" list in `HANDOFF_edition_upgrade_stageC_repin.md` (the out-of-lane follow-up list lives there too).** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
+  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE D OPEN 11/6 — 8b.0 applied on built (339); 8b.1 HELD: the ruled REKEY must also move 6 `pn_hebrew_xref` rows (8b.2's oracle gate reads them by position) — ruling owed. Start from `docs/handoffs/HANDOFF_edition_upgrade_stageD_rekey.md`; out-of-lane follow-ups stay in `HANDOFF_edition_upgrade_stageC_repin.md`.** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
   1,578 · edge splits 90 (both frozen lists MATCH) · B APPLIED 15,571 (EU matched 118). Source copy
   `bible_edupg_test_20261101.db` = 374 active / 23 retired / 6 superseded corrections (344 EU- + 2 S-joh14:26).
   Still owed: the lane's `declared_deltas.json` (§9.64/§9.69/§9.70, before gate 2), B's step in `/rebuild-words`,

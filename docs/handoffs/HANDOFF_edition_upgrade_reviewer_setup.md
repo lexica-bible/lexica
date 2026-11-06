@@ -1,5 +1,8 @@
 # HANDOFF — edition upgrade: reviewer-subagent setup (written 2026-11-06)
 
+> **DONE 2026-11-06** — reviewer.md landed (`8f9e6938`, DESIGN §9.90). Stage D continues in
+> `HANDOFF_edition_upgrade_stageD_rekey.md`.
+
 Successor to `HANDOFF_edition_upgrade_stageC_repin.md` (stage C CLOSED 11/6 at `7d815400`; record at the end of
 `DRAFT_stageC_outline.md`). Stage D waits behind this task.
 

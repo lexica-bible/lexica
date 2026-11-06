@@ -2728,3 +2728,15 @@ Rulings DESIGN §9.90–§9.93. Code REF `0cf4a11c` (gate-2 tooling, §9.92); fi
   sits against the other word of its pair (Gen 34:4 pos 1 'είπε' vs built's Shechem row). For §9.93 (c).
 - **8B0b** (`xref8b0b_20261106.log`): ruling chat 11/6 — **ACCEPTED: `8B0b RESULT: DONE`, applied 339, exit 0.**
   The output went to the ruling chat directly; the figures beyond those are in the PA log, not relayed here.
+
+## 8B1 STOPPED (182) → §9.94 restore-all 178 + re-key; session closed under the stop rule (11/6)
+
+**8B1** (`xref8b1_20261106.log`, 17:30 UTC, REF `0bb60e4a`): pre-checks OK; `checked 28,807 frozen-record slots …;
+182 differ (declared 8)` → `HALT`, dry-run exit 1; `MEMBERS: total 182 - CUSHI 8 - MOVED 6 - OTHER 168 -
+greek-numbered 6` → `8B1 RESULT: STOP`, nothing written. Frozen records at the 20 moved positions: 2Ki 23:35@7
+lemma-only H3079 · Est 5:9@13 surface H2001 · Gen 5:25@2 / 5:26@2 tipnr H4968 · Gen 34:4@2 tipnr H7927 · Jos 5:15@26
+none NULL; none at the other 14. OTHER by origin (CC, repo receipts; DESIGN §9.94): C 24 · E1 23 · E2 12 · E3 7 · E4 16
+traced; J 27 · N 30 · S 9 · X 19 unattributed. Ruled §9.94: restore all 178; re-key 6 identity records + 15
+abp_surface forms; G4 per-table key moves. Docs `b3931161`; code/fixtures `83f8f570` (not yet pulled on PA).
+**Stop:** CC's store inventory said `pn_hebrew_xref` is not read by position before 8b.2 rebuilds it; 8b.2's oracle
+gate reads it (`retire_hebrew_identity.py:162-172`). REKEY / 8B1b not drafted. Next: `HANDOFF_edition_upgrade_stageD_rekey.md`.
