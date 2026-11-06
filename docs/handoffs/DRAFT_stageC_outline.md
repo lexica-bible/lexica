@@ -2703,3 +2703,28 @@ Next: C5′ (REF 4d66afa3).
 **Stage C closed** on the built copy (re-pin chain C3a′ → C3b → C4′ → C5′ all as expected). Live untouched; live check 4
 stays red (51 vs pin 374) until the swap — accepted. Next per `HANDOFF_edition_upgrade_stageC_repin.md` "Then":
 reviewer-subagent setup (ruling chat), then stage D.
+
+## Stage D opened (11/6): file v1, 8B0 STOP → CMP / ROWS / census → 8B0b DONE
+
+Rulings DESIGN §9.90–§9.93. Code REF `0cf4a11c` (gate-2 tooling, §9.92); fixtures REF **`0bb60e4a`**
+(`declared_deltas.json` v1). Trigger check on built (JP, 16:47): no rows.
+- **8B0** (`xref8b0_20261106.log`, 16:55 UTC; first paste STOPPED at the code check — PA had not pulled `0bb60e4a`;
+  pulled, re-pasted): pre-checks OK; pre_8b rollback copy made, sha256 `a4faa4d8…0107` = built; words 626,309;
+  CONTROL OK ×3; dry run **366 = SWAP 317 · REMOVE 22 · LEAVE 26 · HOLD 1, third copy 339** vs the 10/25 369 =
+  319 / 22 / 27 / 1, 341 (`CHARTER_rebuild_trap_fix.md:467`) → `8B0 RESULT: STOP - plan is not 369`, nothing written.
+  HOLD = 1Ch 5:23@13 'Baal' H1168 (R0 ruling, same as 10/25).
+- **8B0-CMP** (`xref8b0_compare_20261106.log`; reference `~/correct_xref_vs_binding_plan.tsv`, 10/25 17:30, 369,
+  rebuild-step): left 4 — 1Ch 1:38@13 Ezer→'Ezar,' `*` · Est 1:17@19 'Artaxerxes),' `*` · Gen 34:4@2 (row moved to
+  @1) · Gen 39:17@14 English blank `*`; joined 1 — Gen 34:4@1 Shechem H7928 SWAP H7927; decision changed 0.
+- **8B0-ROWS** (`xref8b0_rows_20261106.log`): Gen 34:4 pos 1/2 exchanged english + strongs + is_pn (greek_pos and
+  bracket_id blank on both copies — greek_pos is the in-bracket order only); Gen 39:17 Strong's fixed per position,
+  "Hebrew servant," on pos 12, pos 14 blank, bracket widened; 1Ch 1:38 'Ezar,' `*`; Est 1:17 'Artaxerxes),' `*`.
+- **STRONGS-POS census v2** (`strongs_pos_census2_20261106.log`/.tsv; key strongs+morph+lemma): rows 626,309 both;
+  same 31,227 · REORDER-WHOLE 10 · REORDER-SPLIT 0 · DIFFERS 0 · SKIPPED 0; control Gen 34:4 = REORDER-WHOLE.
+  The 10: 2Ki 23:35 6/7, Est 5:9 12/13, Eze 20:14 7/8, Gen 5:25 1/2, Gen 5:26 1/2, Gen 34:4 1/2, Jdg 11:7 6/7,
+  Jos 2:4 19/20, Jos 5:15 26/27, Rom 9:29 17/18. morph+lemma moved with Strong's in 7; Est 5:9, Jos 2:4, Jos 5:15
+  have no morph/lemma (English↔number agreement only).
+- **abp_surface at the 20 positions** (JP read 17:20): src = built, 15 forms, in src's order — on built each now
+  sits against the other word of its pair (Gen 34:4 pos 1 'είπε' vs built's Shechem row). For §9.93 (c).
+- **8B0b** (`xref8b0b_20261106.log`): ruling chat 11/6 — **ACCEPTED: `8B0b RESULT: DONE`, applied 339, exit 0.**
+  The output went to the ruling chat directly; the figures beyond those are in the PA log, not relayed here.
