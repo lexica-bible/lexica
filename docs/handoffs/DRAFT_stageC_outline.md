@@ -2783,3 +2783,19 @@ Routing live: read-only blocks + ruled-gate re-runs → reviewer first; writes �
   1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3; all with a Hebrew number); `live_8b3_id.log` = same split. **Ruled
   §9.95:** EXPECT 3671 / 10236 / 12191 / 4409 / 1971, rewrites 26,323, xref 32,478, GLOB 0; next session = scripts
   commit then 8B2b (`xref8b2b_*`).
+
+## EXPECT re-declared (12b3e689); 8B2b STOP on an abp-tag row (11/6)
+
+Scripts commit `12b3e689` (pushed): `retire_hebrew_identity.py` EXPECT = 3671 / 10236 / 12191 / 4409 / 1971 per §9.95,
+comment cites `~/rekey/live_8b3_id.log`, `drift8b2_20261106.log`, `RUN_rebuild_trap_live.md:157`; the 4 retire tests +
+the pre-commit list green. 8B2b = the 11/6 8B2 block text verbatim (recovered from the 11/6 session transcript, diffed
+identical to what JP ran) with only REF 12b3e689, labels 8B2b, folders/log `xref8b2b_*`, the new split and 26,323.
+- **8B2b STOP (`xref8b2b_20261106.log`): dry run HALTED, nothing written.** HALT on abp-tag row (23928,2): words
+  G4610 vs identity G4609 (the abp-tag check, `retire_hebrew_identity.py:227-230`; ruling chat's read of the log). The
+  script stops at the first bad row, so the count is unknown. STOP ACCEPTED (ruling chat 11/6). `xref8b2b_dry_20261106/`
+  exists on PA (the apply folder is made only after a clean dry run) — the next redraft needs new names.
+- Ruling chat next: read-only, via the reviewer, both copies — (1) every abp-tag identity row whose word differs
+  from the record's greek_strongs (ref, position, english, word strongs/strongs_base, record greek_strongs/lemma,
+  total); (2) per row: any abp_corrections row at that verse/position (any status/field), membership in R2's 389-cell
+  plan (`~/edition_upgrade_runs/restore_digits_plan_20261105.tsv` path:line), src vs built values; (3) verse 23928 →
+  ref. Then CC proposes per row which side is authoritative, with the receipt — proposal only, no write.
