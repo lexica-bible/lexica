@@ -2766,3 +2766,15 @@ Routing live: read-only blocks + ruled-gate re-runs → reviewer first; writes �
   class none, built H3091 restored to '*' under §9.94 (a); candidate correction, with Gen 4:18).
 - Next: 8B2 (`retire_hebrew_identity.py --fresh-rebuild`) drafted for the ruling chat; receipt of the last run =
   `RUN_rebuild_trap_live.md:85` / `CHARTER_rebuild_trap_fix.md:468`.
+- **8B2 STOP (`xref8b2_20261106.log`, REF `83f8f570`, ruling-chat cleared): dry run only, nothing written.** Pre-checks
+  a–f all OK (oracle 0/0, frozen slots off record 0, Greek-numbered non-abp-tag 0, words 626,309, xref 32,478); the dry
+  run HALTED on the class split: built = abp-tag 3,671 · tipnr 10,236 · **lemma-only 12,191 · surface 4,409 · none
+  1,971** vs the code's declared 12,182 / 4,412 / 1,977 (lemma-only +9 = surface −3 + none −6; total 32,478 either
+  way). STOP ACCEPTED (ruling chat 11/6). Run artifacts left in place: `~/edition_upgrade_runs/xref8b2_dry_20261106/`
+  (greek_rows_before.tsv, dry_run_full.log) — a redraft needs new folder names (double-paste guard). Receipt trail:
+  the 10/25 chain ran 8b.2 on the PRE-8b.3 identity (declared split `RUN_rebuild_trap_live.md:85`), then 8b.3 rebuilt
+  `pn_greek_identity` — `identity|21|21` vs live at the swap (`RUN_rebuild_trap_live.md:157`,
+  `CHARTER_rebuild_trap_fix.md:492`), incl. the 2 Sheshach rows surface→lemma-only (`TODO.md:183-184`,
+  `CHARTER_rebuild_trap_fix.md:481`); the post-8b.3 split was never re-declared in the code. Next: read-only drift
+  block (identity source vs xref class, both copies; built vs the 9/6 hdrlane backup if present), then propose the
+  re-declaration + derived rewrite count (tipnr + lemma-only-with-H + surface-with-H) — proposal only, no commit.
