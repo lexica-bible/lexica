@@ -157,6 +157,7 @@ conserving tool calls; the focus notes below are about context quality, not rati
   DIAGNOSIS-grade only: it's the PRE-BUILD source (brackets unreordered, Strong's inline), so it
   is NOT the bytes any gate compares against. **Anything byte-exact — a quote fix, an `--old`
   string — comes from a PA dump of the built `verses.text`, never from `abp_texts/`.**
+- **Edition-upgrade lane:** every read-only block and every re-run of a DESIGN-ruled gate goes to the reviewer subagent first; CC prints a block only under its CLEAR line; ESCALATE text goes to the ruling chat; writes go to the ruling chat directly (DESIGN 9.90).
 - After ANY edit to `static/src/*.jsx`: `npm run build`, commit BOTH source and rebuilt
   `app.js`. Full build-system detail + line-ending traps: `docs/claude/frontend.md`.
 
