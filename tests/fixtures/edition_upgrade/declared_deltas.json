@@ -1,0 +1,20 @@
+{
+  "_what": "gate_greek_header.py --declared, edition upgrade gate 2 (8b.3, before step 9), v1 = the FIRST run's declaration (DESIGN 9.64 + 9.92; G2 renamed_rows, G3 gate_b). pn_binding declared identical: every row the first run shows as differing comes back for a member-by-member ruling (full list from scripts/eu_pn_binding_diff.py), then this file is amended and the gate re-runs. The 3 Michaiah rows stay out (9.58). gate_b at the code pins with no changed rows: the first run is expected to FAIL, and its output (with --dump) is the only source for re-declared figures (9.92). words 626,309 / verses 31,237 confirmed on built at C4' and traced through 8b.0-8b.2a at 0cf4a11c (only in-place edits to words). pn_binding.book is a NUMBER.",
+  "lane": "edition upgrade 2026-11 (bible_edupg_test_20261101.db -> bible_edupg_test_built_20261102.db)",
+  "declared_by": "ruling chat 2026-11-06",
+  "receipt": null,
+  "words":  {"scratch_count": 626309},
+  "verses": {"scratch_count": 31237},
+  "abp_surface":    {"identical": true},
+  "tipnr_entities": {"identical": true},
+  "pn_binding": {"identical": true, "renamed_rows": []},
+  "pn_greek_identity": {
+    "keys_only_in_live": 0, "keys_only_in_scratch": 0, "key_moves_file": null,
+    "note": "Sheshach rows (9.69: Jer 51:41 pos 1, Jer 25:26 pos 25) are declared UNCHANGED; they enter gate_b.changed_rows only if the first run shows them changed, and that is then a new ruling (9.92 as amended)."
+  },
+  "gate_b": {
+    "pins": {"pinned ruled loss": 17, "glued cure (blanked)": 20,
+             "glued cure (replaced)": 94, "glued kept as-is": 30},
+    "changed_rows": []
+  }
+}
