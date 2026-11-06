@@ -55,7 +55,14 @@ records already match (Gen 34:4@1 H7927, 2Ki 23:35@6 H3079, Gen 5:25@1 / 5:26@1 
 
 ## Open for gate 2 (member rulings, §9.85 + §9.93 + §9.94 (e))
 The 85 unattributed restore members (J Joram 27 · N 30 · S 9 · X 19); Gen 39:17, 1Ch 1:38 Ezar, Est 1:17 ")",
-Eze 20:14 English, Gen 5:25/26 Mathusala; the five §9.85 named cells (cite by NAME — three of their positions moved).
+Eze 20:14 English, Gen 5:25/26 Mathusala; the five §9.85 named cells (cite by NAME — three of their positions moved);
+**Jos 5:15@27 Joshua — live record class none, built H3091 restored to '*' under §9.94 (a); candidate correction, with
+Gen 4:18** (ruling chat 11/6, after 8B1b).
+
+**State update 11/6 19:01 UTC:** STAGED-READ, REKEY (three-set: identity 6 + xref 6 + abp_surface 15) and 8B1b
+(restored 178) are DONE and ACCEPTED on built (`DRAFT_stageC_outline.md`, last section). Built = 8b.0 + REKEY + 8b.1.
+PA HEAD `2cdc4cf5`; code REF still `83f8f570`. Next: 8B2. The "FIRST task" list below is DONE except item 2's
+inventory, which STAGED-READ's record carries.
 First gate-2 run includes gate B `--dump`; full pn_binding list from `eu_pn_binding_diff.py`.
 
 ## Standing rules

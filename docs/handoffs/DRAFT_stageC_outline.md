@@ -2740,3 +2740,29 @@ traced; J 27 · N 30 · S 9 · X 19 unattributed. Ruled §9.94: restore all 178;
 abp_surface forms; G4 per-table key moves. Docs `b3931161`; code/fixtures `83f8f570` (not yet pulled on PA).
 **Stop:** CC's store inventory said `pn_hebrew_xref` is not read by position before 8b.2 rebuilds it; 8b.2's oracle
 gate reads it (`retire_hebrew_identity.py:162-172`). REKEY / 8B1b not drafted. Next: `HANDOFF_edition_upgrade_stageD_rekey.md`.
+
+## Reviewer calibrated; STAGED-READ, REKEY (three-set), 8B1b DONE (11/6, 18:48–19:01 UTC) → built = 8b.0 + REKEY + 8b.1
+
+Reviewer calibration (T1 known-good 8B0-CMP / T2 8B0b write / T3 two-edit): T2, T3 as expected; T1 ESCALATED on the
+test's own defects (re-presented an already-run block under its log name; 10/25 tally not in DESIGN) — ruling chat
+ACCEPTED all three. reviewer.md amended `844bb47b` (figure sources incl. cited run receipts/logs; run artifacts under
+`~/edition_upgrade_runs` are not writes, must not overwrite; model fable / effort low); CLAUDE.md routing line `2cdc4cf5`.
+Routing live: read-only blocks + ruled-gate re-runs → reviewer first; writes → ruling chat.
+- **STAGED-READ** (`stageD_read1_20261106.log`, 18:48 UTC, REF `83f8f570`, reviewer CLEAR): position-keyed stores at
+  the 20 moved positions, both copies — verse_ids 10/10 (Eze 20:14 = 21045); identity 6 at the 6 OLD positions on both
+  copies; `pn_hebrew_xref` 6 at the same keys, join mismatches 0, whole-table oracle 0/0 both copies; abp_surface 15/15;
+  active correction rows at the 10 verses 0; pn_slot_binding 0. Inventory behind it: every 8b script's position reads
+  = words, pn_greek_identity, pn_hebrew_xref, abp_surface, abp_corrections, pn_slot_binding; lane-3 JSON files touch
+  none of the 10 verses. Ruling: three-set REKEY sufficient.
+- **REKEY** (`rekey_20261106.log`, 19:00 UTC, REF `83f8f570`, ruling-chat cleared): one transaction — identity 6 +
+  xref 6 (old→new per `pn_greek_identity_key_moves_20261106.tsv`) + abp_surface 15 (6 pair swaps via temp slot + 3
+  singles); 27 guards OK; counts unchanged (identity 32,478 · xref 32,478 · surface 395,003 · words 626,309); oracle
+  0/0 after; the 6 records now at 2Ki 23:35@6, Est 5:9@12, Gen 5:25@1, Gen 5:26@1, Gen 34:4@1, Jos 5:15@27 with xref
+  beside each; `REKEY RESULT: DONE`, exit 0. **ACCEPTED.**
+- **8B1b** (`xref8b1b_20261106.log`, 19:01 UTC, REF `83f8f570`): pre (d) identity at the 6 new positions 6; dry run
+  `178 differ (declared 178)`; `MEMBERS: total 178 - CUSHI 8 - MOVED 0 - OTHER 170 - greek-numbered 0` (OTHER = the
+  168 + Est 5:9@12 `'*'->'H2001'` + Jos 5:15@27 `'H3091'->'*'`); apply `restored 178 slot(s); ... 0 (must be 0)`;
+  words 626,309; `8B1b RESULT: DONE`, exit 0. **ACCEPTED.** Gate-2 member added: Jos 5:15@27 Joshua (live record
+  class none, built H3091 restored to '*' under §9.94 (a); candidate correction, with Gen 4:18).
+- Next: 8B2 (`retire_hebrew_identity.py --fresh-rebuild`) drafted for the ruling chat; receipt of the last run =
+  `RUN_rebuild_trap_live.md:85` / `CHARTER_rebuild_trap_fix.md:468`.
