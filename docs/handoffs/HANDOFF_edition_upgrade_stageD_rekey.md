@@ -58,6 +58,8 @@ The 85 unattributed restore members (J Joram 27 · N 30 · S 9 · X 19); Gen 39:
 Eze 20:14 English, Gen 5:25/26 Mathusala; the five §9.85 named cells (cite by NAME — three of their positions moved);
 **Jos 5:15@27 Joshua — live record class none, built H3091 restored to '*' under §9.94 (a); candidate correction, with
 Gen 4:18** (ruling chat 11/6, after 8B1b).
+**Silas/Silvanus ×3 — live record G4609 with lemma Σιλουανός (=G4610); record itself a candidate correction, with
+Gen 4:18 and Jos 5:15@27** (§9.96; rows 1Th 1:1@2, 2Co 1:19@16, 2Th 1:1@2, restored on built to the record's G4609).
 
 **State update 11/6 19:01 UTC:** STAGED-READ, REKEY (three-set: identity 6 + xref 6 + abp_surface 15) and 8B1b
 (restored 178) are DONE and ACCEPTED on built (`DRAFT_stageC_outline.md`, last section). Built = 8b.0 + REKEY + 8b.1.

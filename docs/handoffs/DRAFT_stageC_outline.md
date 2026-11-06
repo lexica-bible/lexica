@@ -2799,3 +2799,8 @@ identical to what JP ran) with only REF 12b3e689, labels 8B2b, folders/log `xref
   total); (2) per row: any abp_corrections row at that verse/position (any status/field), membership in R2's 389-cell
   plan (`~/edition_upgrade_runs/restore_digits_plan_20261105.tsv` path:line), src vs built values; (3) verse 23928 →
   ref. Then CC proposes per row which side is authoritative, with the receipt — proposal only, no write.
+- **ABPTAG-READ** (REF 12b3e689, read-only, reviewer ESCALATE on a missing porcelain line → added → CLEAR) RAN:
+  `abptag_read_20261106.log` — 16 failing abp-tag rows on built, 0 on src (ruling chat's read; the log is not in the
+  repo). **Ruled §9.96:** frozen record authoritative, restore all 16 (Eze 27:13@1 H3120→G1673; 1Th 1:1@2, 2Co 1:19@16,
+  2Th 1:1@2 G4610→G4609; 12 `'*'` rows → their record's G number); gate-2 member Silas/Silvanus ×3. Next:
+  ABPTAG-RESTORE (write → ruling chat) then 8B2c (`xref8b2c_*`).
