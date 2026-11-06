@@ -42,6 +42,9 @@ Usage: python3 scripts/gate_greek_header.py <live.db> <scratch.db> [--dump <out.
   DESIGN §9.92 (2026-11-06) adds two fields: pn_binding.renamed_rows (a rename =
   one declared event, old key live-only + new key scratch-only, nothing else
   differs) and a gate_b block (pins + changed_rows; absent = the code pins).
+  DESIGN §9.94 (c): key_moves_file is per table — pn_greek_identity.key_moves_file
+  (gate B, as before) and abp_surface.key_moves_file (gate A: src's rows re-keyed by
+  the moves must then equal scratch row for row).
   The full gate-A member list for a ruling comes from
   scripts/eu_pn_binding_diff.py (this gate prints at most 20 problems).
 """
@@ -82,6 +85,47 @@ fails = []
 # the TIGHT key (book, chapter, verse, name), ruled 2026-10-30: (book, name) alone
 # cannot tell two same-name binds in one book apart.
 _KEYCOLS = {"pn_binding": 4, "tipnr_entities": 1, "abp_surface": 2}
+
+
+def _read_moves(path):
+    """A key-moves TSV (header line, then verse_id<TAB>old_pos<TAB>new_pos) ->
+    {(verse_id, old_pos): (verse_id, new_pos)}. Shared by gate A (abp_surface)
+    and gate B (pn_greek_identity) — DESIGN §9.94 (c): each table names its own file."""
+    moves = {}
+    with open(path, encoding="utf-8") as fh:
+        next(fh)                                    # header line
+        for ln in fh:
+            v, p_old, p_new = ln.rstrip("\n").split("\t")[:3]
+            moves[(int(v), int(p_old))] = (int(v), int(p_new))
+    return moves
+
+
+def _declared_moves(l, s, moves):
+    """Gate-A key-moves rule (abp_surface, §9.94 (c)). Every move's source row must
+    exist on live; live's rows are re-keyed by the moves (pair swaps included); no
+    two rows may land on one key; the re-keyed live table must then equal scratch
+    row for row. Returns problem strings (empty = match)."""
+    problems = []
+    lk = {r[:2]: r for r in l}
+    sk = {r[:2]: r for r in s}
+    targets = list(moves.values())
+    if len(set(targets)) != len(targets):
+        problems.append("two declared moves share a target key")
+    for k in sorted(moves):
+        if k not in lk:
+            problems.append(f"declared move {k} -> {moves[k]}: source row missing on live")
+    if problems:
+        return problems
+    moved = {}
+    for k, r in lk.items():
+        nk = moves.get(k, k)
+        if nk in moved:
+            problems.append(f"two live rows land on {nk} after the moves")
+        moved[nk] = nk + tuple(r[2:])
+    for k in sorted(set(moved) | set(sk)):
+        if moved.get(k) != sk.get(k):
+            problems.append(f"row {k}: live after moves {moved.get(k)!r} vs scratch {sk.get(k)!r}")
+    return problems
 
 
 def _declared_members(tbl, cols, l, s, want_rows, renamed_rows=()):
@@ -172,7 +216,22 @@ for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,
     s = list(scr.execute(f"SELECT {cols} FROM {tbl} ORDER BY 1,2,3,4"))
     same = l == s
     decl = (declared or {}).get(tbl)
-    if (declared is None or decl is None
+    if declared is not None and decl is not None and decl.get("key_moves_file"):
+        # §9.94 (c): a per-table moves file — abp_surface only in gate A.
+        if tbl != "abp_surface" or ({"changed_rows", "renamed_rows"} & set(decl)):
+            probs = [f"key_moves_file is defined for abp_surface alone in gate A "
+                     f"(not {tbl}, and not together with changed/renamed rows)"]
+            nmov = 0
+        else:
+            mv = _read_moves(decl["key_moves_file"])
+            nmov = len(mv)
+            probs = _declared_moves(l, s, mv)
+        okA &= not probs
+        print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — {nmov} declared key move(s) "
+              f"→ {'MATCH' if not probs else 'MISMATCH'}")
+        for p in probs[:20]:
+            print(f"    problem: {p}")
+    elif (declared is None or decl is None
             or not ({"changed_rows", "renamed_rows"} & set(decl))):
         # today's byte rule; with --declared, "identical" (or an unmentioned
         # table) is just a declaration of 0.
@@ -277,12 +336,7 @@ else:
                     f"keys only-live {len(only_l)} / only-scratch {len(only_s)} vs declared "
                     f"{kd.get('keys_only_in_live', 0)} / {kd.get('keys_only_in_scratch', 0)}"))
     if kd.get("key_moves_file"):
-        moves = {}
-        with open(kd["key_moves_file"], encoding="utf-8") as fh:
-            next(fh)                                    # header line
-            for ln in fh:
-                v, p_old, p_new = ln.rstrip("\n").split("\t")[:3]
-                moves[(int(v), int(p_old))] = (int(v), int(p_new))
+        moves = _read_moves(kd["key_moves_file"])
         if set(moves) != only_l or set(moves.values()) != only_s:
             bad.append(("KEYSET", len(moves),
                         "declared key moves != actual only-live/only-scratch keys"))

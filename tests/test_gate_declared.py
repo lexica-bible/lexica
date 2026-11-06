@@ -298,5 +298,83 @@ class TestGateDeclaredGateB(unittest.TestCase):
         self.assertIn("gate B: FAIL", out)
 
 
+# ── DESIGN §9.94 (c) G4: per-table key_moves_file (abp_surface in gate A) ────
+LIVE_SURF = [(1, 1, "a", "ta"), (1, 2, "b", "tb"), (2, 5, "c", "tc"), (3, 1, "d", "td")]
+SCR_SURF = [(1, 1, "b", "tb"), (1, 2, "a", "ta"), (2, 6, "c", "tc"), (3, 1, "d", "td")]   # swap + single move
+MOVES = [(1, 1, 2), (1, 2, 1), (2, 5, 6)]
+
+
+def build_surf(path, surf, ident=None):
+    build(path, ident or sib.LIVE_IDENT, LIVE_BIND)
+    conn = sqlite3.connect(path)
+    conn.executemany("INSERT INTO abp_surface VALUES (?,?,?,?)", surf)
+    conn.commit()
+    conn.close()
+
+
+class TestGateDeclaredKeyMoves(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp()
+        cls.live = os.path.join(cls.tmp, "live.db")
+        build_surf(cls.live, LIVE_SURF)
+        cls.scr = os.path.join(cls.tmp, "scr.db")
+        build_surf(cls.scr, SCR_SURF)
+        cls.scr_extra = os.path.join(cls.tmp, "scr_extra.db")       # one more form differs
+        build_surf(cls.scr_extra, SCR_SURF[:3] + [(3, 1, "dX", "td")])
+
+    def moves_file(self, name, rows):
+        p = os.path.join(self.tmp, name)
+        with open(p, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("verse_id\told_pos\tnew_pos\n")
+            for r in rows:
+                fh.write("%d\t%d\t%d\n" % r)
+        return p
+
+    def gate(self, scr, abp_moves, pgi=None):
+        decl = {"lane": "test", "declared_by": "test", "receipt": "test",
+                "words": {"scratch_count": len(sib.WORDS)},
+                "verses": {"scratch_count": len(sib.VERSES)},
+                "abp_surface": {"key_moves_file": abp_moves},
+                "tipnr_entities": {"identical": True}, "pn_binding": {"identical": True},
+                "pn_greek_identity": pgi or {"keys_only_in_live": 0, "keys_only_in_scratch": 0,
+                                             "key_moves_file": None}}
+        p = os.path.join(self.tmp, "d.json")
+        with open(p, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+        return run_gate(self.live, scr, p)
+
+    def test_moves_pass(self):
+        out = self.gate(self.scr, self.moves_file("m.tsv", MOVES))
+        self.assertIn("gate A: abp_surface     4 vs 4 rows — 3 declared key move(s) → MATCH", out)
+        self.assertIn("gate A: PASS — identity layer as declared", out)
+
+    def test_moves_missing_source_row_fails(self):
+        out = self.gate(self.scr, self.moves_file("m2.tsv", MOVES + [(4, 1, 2)]))
+        self.assertIn("problem: declared move (4, 1) -> (4, 2): source row missing on live", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_moves_extra_diff_fails(self):
+        out = self.gate(self.scr_extra, self.moves_file("m3.tsv", MOVES))
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: row (3, 1): live after moves (3, 1, 'd', 'td') vs scratch (3, 1, 'dX', 'td')", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_pn_greek_identity_moves_still_read(self):
+        # gate B's own moves (shared reader): live slot (1,1) re-keyed to (1,3) on scratch
+        moved_ident = [(1, 3) + sib.LIVE_IDENT[0][2:]] + sib.LIVE_IDENT[1:]
+        scr = os.path.join(self.tmp, "scr_pgi.db")
+        build_surf(scr, LIVE_SURF, ident=moved_ident)
+        out = self.gate(scr, self.moves_file("m4.tsv", []),
+                        pgi={"keys_only_in_live": 1, "keys_only_in_scratch": 1,
+                             "key_moves_file": self.moves_file("pgi.tsv", [(1, 1, 3)])})
+        self.assertIn("gate A: abp_surface     4 vs 4 rows — 0 declared key move(s) → MATCH", out)
+        self.assertNotIn("KEYSET", out)
+        bad = self.gate(scr, self.moves_file("m5.tsv", []),
+                        pgi={"keys_only_in_live": 1, "keys_only_in_scratch": 1,
+                             "key_moves_file": self.moves_file("pgi2.tsv", [(1, 1, 4)])})
+        self.assertIn("declared key moves != actual only-live/only-scratch keys", bad)
+
+
 if __name__ == "__main__":
     unittest.main()

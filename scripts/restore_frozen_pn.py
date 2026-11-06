@@ -57,7 +57,14 @@ APPLY = "--apply" in sys.argv
 # name-keyed fix (apply_cushi_namekeyed.py, dry run on the same copy) lists the same 8 slots
 # and refuses only Jer 36 / Zep 1 (H3570 by design). Why it was 6 was not re-traced (the note
 # above ties it to the 8/5 name moves); 8 is the full 2Sa 18 Cushi set, attributed member for member.
-EXPECT = 8
+# RE-DECLARED 2026-11-06 (edition upgrade, DESIGN §9.94 (a), ruling chat): 178 = 8 CUSHI + 168 OTHER
+# + 2 re-keyed (Est 5:9@12 '*'->'H2001', Jos 5:15@27 'H3091'->'*'); MOVED 0 after the §9.94 (b) re-key
+# of 6 identity records (tests/fixtures/edition_upgrade/pn_greek_identity_key_moves_20261106.tsv).
+# Receipt: the 8B1 dry run on bible_edupg_test_built_20261102.db (~/edition_upgrade_runs/xref8b1_20261106.log,
+# 182 = 8 / 6 / 168, every member listed). The 168 are the edition build's English (brackets, joined cells,
+# blank name cells, spellings, step-7 correction order) against live's frozen record; restore-all keeps
+# live's identity on the same Greek word (census: 0 Strong's changes outside the 10 reorder verses).
+EXPECT = 178
 # TEST FIXTURES ONLY (the sanctioned --expect-split pattern): the harness sets
 # the declared figure for synthetic dbs via env, never via a runtime flag.
 if os.environ.get("RESTORE_EXPECT_FIXTURE"):
