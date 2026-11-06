@@ -76,6 +76,7 @@ jobs:
           python tests/test_build_prose.py
           python tests/test_eu_retired_check.py
           python tests/test_eu_repair_restore_digits.py
+          python tests/test_correction_reorder_rows.py
           python tests/test_reassembly_member_diff.py
           python tests/test_abp_tab_bridge.py
           python tests/test_hebrew_xref_positions.py

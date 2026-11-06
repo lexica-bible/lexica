@@ -98,6 +98,17 @@ _MAT2029_REASON = ("S10 word-side. Mat 20:29 bracket '[multitudeG3793 1a great]'
                    "floats to it). Its own bracket; the only mixed numbered/un-numbered case in "
                    "the feed. Mirrors the Mat 20:29 prose Tier B row (S9 f).")
 
+_JOH1426_REASON = ("Edition-upgrade DESIGN §9.89 (word side, S10 option B mechanism). Joh 14:26: ABP "
+                   "reads 'But the comforter, the [2spirit 1holy]' — the second 'the' (G3588) comes "
+                   "AFTER 'comforter,' (G3875). The rows hold pos 2 'the' (G3588, no digits) BEFORE "
+                   "pos 3 'comforter,' (G3875, no digits), so the reader shows 'But the the "
+                   "comforter, holy spirit,' (pre-existing on live, identical on the 11/2 built "
+                   "copy; charter 4.10 corrected). Fix: pos 3 'comforter,' joins pos 0/1's bracket "
+                   "4 ('But'=1, 'the'=2) as its 3rd word — reader order 'But the comforter, the holy "
+                   "spirit,' (the trailing comma stays on 'comforter,', the group's last word). "
+                   "Reorder metadata ONLY; no english/strongs moved. A new 2-word group for pos 2+3 "
+                   "was rejected: its comma floats onto 'the' ('comforter the,').")
+
 _JER923_REASON = ("Jer 9:23 clause 1: ABP's own order digits carry a typo — '[2boast 1the "
                   "2wise man]' (duplicate 2, missing 3) while the two parallel clauses read "
                   "'[3boast 1the 2strong man]' / '[3boast 1the 2rich man]' correctly. CONFIRMED "
@@ -216,6 +227,10 @@ ENTRIES = [
     ("Act",  7,  3, 19, "greek_pos",    None,    "2",    _ACT73_REASON,   "S10-act7:3"),
     ("Act",  7,  3, 20, "bracket_id",   None,    "1",    _ACT73_REASON,   "S10-act7:3"),
     ("Act",  7,  3, 20, "greek_pos",    None,    "1",    _ACT73_REASON,   "S10-act7:3"),
+    # §9.89 — Joh 14:26 pos 3 'comforter,' joins bracket 4 as its 3rd word (pos 2 'the' then
+    # reads after it). Both cells blank now -> source_value None.
+    ("Joh", 14, 26,  3, "bracket_id",   None,    "4",    _JOH1426_REASON, "S-joh14:26"),
+    ("Joh", 14, 26,  3, "greek_pos",    None,    "3",    _JOH1426_REASON, "S-joh14:26"),
     # Jer 9:23 pos 4 'boast' — source order-digit typo (duplicate 2, missing 3), word side
     ("Jer",  9, 23,  4, "greek_pos",    "2",     "3",    _JER923_REASON,  "JER9:23"),
     # ---- Bracket-digit sweep, DUPLICATE pass (2026-07-28; docs/tickets/bracket_digit_sweep.txt).
