@@ -2484,3 +2484,187 @@ fi
 echo "GATE3 RESULT: NOT AS DECLARED (member diff exit $r) - named above"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/gate3_rerun_20261106.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## J DONE + G3R AS DECLARED (11/6 15:09–15:10 UTC); re-pin 372 → 374 chain drafted, held
+
+**J** (`joh1426_rows_20261106.log`, REF e777f965, PA HEAD 6da053c9): BEFORE active 372 / retired 23 / superseded 6 on both
+copies + the Joh 14:26 hit; seed dry runs exactly the 2 rows on both ("would insert 2, skip 57"); inserts "now: 374" ×2;
+apply `would apply 2 · already-applied 248 · LOUD-SKIPPED 0` then `applied 2 · …`; AFTER 374 / 23 / 6, pos 3
+`comforter, | 4 | 3`, `RESULT: clean reassembly (no hit)`; `J RESULT: DONE`, exit=0.
+**G3R** (`gate3_rerun_20261106.log`): tests/controls green; `V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 -
+dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 24 - new on eligible 390 - changed ops 12 -
+unchanged 205`; content-other = Job 3:3; `GATE3 RESULT: AS DECLARED`, exit=0.
+
+**§9.52 re-freeze count = 607** punct-position members on the built copy = unchanged 205 + new-on-eligible 390 +
+changed-ops 12 (gone 24 drop out). §9.87's 583 (first gate 3) → 607 = **+24**, reconciled member by member against the
+two printed lists: **23 new-on-eligible** from R2 (restored old-English punctuation: 1Co 7:25, 1Ti 5:18, Deu 15:2,
+Deu 28:12, Deu 29:6, Eze 18:8, Eze 18:13, Eze 18:17, Gal 4:21, Isa 13:10, Jer 13:1, Job 34:27, Joh 4:17, Lev 7:26,
+Lev 11:11, Lev 12:4, Lev 18:21, Lev 21:11, Lev 23:36, Lev 25:4, Lev 25:37, Neh 5:12, Rom 6:14) + **Num 8:26** (gone →
+unchanged: after R2 its dash op equals the frozen one again; gone 25 → 24, unchanged 204 → 205). The other R2
+punct verses were members already (Jer 49:36, Lev 19:4, Psa 78:10 — in the first 367). Changed-ops: same 12.
+
+**Re-pin chain (ruling 11/6: same C3a/C3b/C4 shape, then gate 1 + retired-row re-runs):**
+- **C3a′** (PA, read-only on built; writes 2 files): one-off `repin_dump_20261106.py` (sha c463ee4a…) — active ingest
+  = the committed 372 file + exactly the two `S-joh14:26` rows; retired 23; non-ingest active 0; dump bytes = the local
+  derivation (372 file + 2 keys, sha256 **446fee35…**), else nothing written. Tested: good → file byte-identical to
+  local; missing row / stray row / 22 retired / file exists → STOP, nothing written; whole block end to end on a
+  made-up copy.
+- **C3b** (local): scp both files to `tests/fixtures/corrections/`, sha = 446fee35…, ONE commit: cert_invariants PINS
+  `abp_corrections_active` 372 → 374 (comment names the new file + sha) + `abp_corrections_active_built_20261106.txt`
+  + `.sha256`. Planned diff: `3 files changed, 376 insertions(+), 1 deletion(-)`. Old 20261104 file kept (history).
+- **C3c** (PA): pull, no reload. **C4′** gate 1 (pin 374; 7/7 expected, words 626,309 unchanged — R2/J wrote digits
+  only) and **C5′** retired-row re-run (PASS 23/23, 18/5 expected — no retired row is on a verse R2/J touched), both
+  REF = the C3b commit, filled in when it exists.
+
+### Block C3a′ — RE-PIN DUMP 374 (GATE REF e777f965; read-only on built, writes 2 files)
+```bash
+set +H
+( set -uo pipefail
+REF=e777f965
+echo "GATE REF ${REF} - C3a RE-PIN DUMP 374 built active corrections (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "REPIN DUMP: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "REPIN DUMP: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; O=~/edition_upgrade_runs
+[ -f "$B" ] || { echo "REPIN DUMP: STOP - missing: $B"; exit 1; }
+grep -qF "J RESULT: DONE" "$O/joh1426_rows_20261106.log" || { echo "REPIN DUMP: STOP - block J has not finished clean"; exit 1; }
+for f in "$O/abp_corrections_active_built_20261106.txt" "$O/abp_corrections_active_built_20261106.txt.sha256"; do [ -e "$f" ] && { echo "REPIN DUMP: STOP - already exists: $f"; exit 1; }; done
+P=$O/repin_dump_20261106.py
+cat > "$P" <<'PY'
+"""Re-pin dump 372 -> 374 (one-off, read-only) - DESIGN 9.89. Lists the built copy's active ingest correction
+rows (the rows cert check 4 counts) in the member-file format and writes the file + .sha256 ONLY if:
+  - active ingest rows = the committed 372-row file (tests/fixtures/corrections/abp_corrections_active_built_20261104.txt)
+    plus exactly the two S-joh14:26 rows, nothing else
+  - retired total 23, no active row outside 'ingest'
+  - the bytes written equal the independent local derivation (372 file + the 2 keys, sha256 446fee35...)
+The database is opened read-only; the only writes are the two files in OUT_DIR.
+
+Usage: python3 repin_dump_20261106.py <built.db> <repo> <out_dir>
+"""
+import hashlib
+import os
+import sqlite3
+import sys
+
+BUILT, REPO, OUT_DIR = sys.argv[1:4]
+OLD_REL = "tests/fixtures/corrections/abp_corrections_active_built_20261104.txt"
+OLD_SHA = "80db1c35"
+NEW = {("Joh", 14, 26, 3, "bracket_id", "S-joh14:26"), ("Joh", 14, 26, 3, "greek_pos", "S-joh14:26")}
+LOCAL_SHA = "446fee35b4080e522e5b2af19aca9dc3acc0b1c582ae56ba4c35ccd0fec539e3"
+NAME = "abp_corrections_active_built_20261106.txt"
+
+
+def key(b, c, v, p, f, r):
+    return (b, int(c), int(v), int(p), f, r)
+
+
+def line(k):
+    return "%s\t%d\t%d\t%d\t%s\t%s" % k
+
+
+def main():
+    print("RE-PIN DUMP 374 - built copy's active correction rows - read-only")
+    stops = []
+    if os.path.realpath(BUILT) == os.path.realpath(os.path.expanduser("~/bible-db/bible.db")):
+        print("REPIN DUMP: STOP - this is live, not the built copy")
+        sys.exit(1)
+    raw = open(os.path.join(REPO, OLD_REL), "rb").read()
+    got = hashlib.sha256(raw).hexdigest()
+    print("372-row member file: %s - sha256 %s (%s)" % (OLD_REL, got[:16], "as committed" if got.startswith(OLD_SHA) else "DIFFERS"))
+    if not got.startswith(OLD_SHA):
+        stops.append("372-row file is not the committed one")
+    old = {key(*l.split("\t")) for l in raw.decode("utf-8").splitlines()}
+    conn = sqlite3.connect("file:%s?mode=ro" % BUILT, uri=True, timeout=30)
+    conn.execute("PRAGMA query_only=1")
+    print("built copy abp_corrections by status / applied_at:")
+    for s, a, n in conn.execute("SELECT status, applied_at, count(*) FROM abp_corrections GROUP BY status, applied_at ORDER BY status, applied_at"):
+        print("   %-11s %-8s %d" % (s, a, n))
+    rows = [key(*r) for r in conn.execute("SELECT book, chapter, verse, position, field, ledger_ref FROM abp_corrections "
+                                          "WHERE status='active' AND applied_at='ingest'")]
+    other = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='active' AND applied_at IS NOT 'ingest'").fetchone()[0]
+    retired = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='retired'").fetchone()[0]
+    conn.close()
+    active = set(rows)
+    if len(active) != len(rows):
+        stops.append("%d duplicate active key(s)" % (len(rows) - len(active)))
+    missing, extra = sorted(old - active), sorted(active - old)
+    print("active ingest rows %d (expect 374) - of the 372 file missing %d (expect 0) - not in it %d (expect 2)"
+          % (len(active), len(missing), len(extra)))
+    for k in missing:
+        print("   MISSING: " + line(k))
+    for k in extra:
+        print("   NEW:     " + line(k))
+    if len(active) != 374 or missing or set(extra) != NEW:
+        stops.append("active rows are not the 372 + the two S-joh14:26 rows")
+    print("active rows NOT applied at ingest %d (expect 0) - retired total %d (expect 23)" % (other, retired))
+    if other or retired != 23:
+        stops.append("non-ingest active %d / retired %d" % (other, retired))
+    body = "".join(line(k) + "\n" for k in sorted(active)).encode("utf-8")
+    sha = hashlib.sha256(body).hexdigest()
+    print("dump sha256 %s - local derivation %s (%s)" % (sha[:16], LOCAL_SHA[:16], "SAME" if sha == LOCAL_SHA else "DIFFERENT"))
+    if sha != LOCAL_SHA:
+        stops.append("dump differs from the local derivation")
+    if stops:
+        print("REPIN DUMP: STOP - " + " | ".join(stops) + " - nothing written")
+        sys.exit(1)
+    path = os.path.join(OUT_DIR, NAME)
+    for p in (path, path + ".sha256"):
+        if os.path.exists(p):
+            print("REPIN DUMP: STOP - already exists: %s - nothing written" % p)
+            sys.exit(1)
+    with open(path, "wb") as f:
+        f.write(body)
+    with open(path + ".sha256", "wb") as f:
+        f.write(("%s  %s\n" % (sha, NAME)).encode("utf-8"))
+    print("wrote %s (%d lines) + .sha256" % (path, body.count(b"\n")))
+    print("REPIN DUMP: OK - 374 = 372 + 2 S-joh14:26 - retired 23 - sha256 %s" % sha)
+
+
+if __name__ == "__main__":
+    main()
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = c463ee4a3864de54d5d63d5fe5f25968e0f66b3702e564558b7d3033cdebbe7d ] || { echo "REPIN DUMP: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" ~/bible-db "$O"
+) 2>&1 | tee ~/edition_upgrade_runs/repin_dump_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Block C4′ — GATE 1 re-run (REF = the C3b commit, filled in when it exists)
+```bash
+set +H
+( set -uo pipefail
+REF=__REPIN_COMMIT__
+echo "GATE REF ${REF} - C4 GATE 1 re-run, cert_invariants on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "GATE1 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "GATE1 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "GATE1 RESULT: STOP - PA has not pulled $REF"; exit 1; }
+grep -q '"abp_corrections_active": 374,' scripts/cert_invariants.py || { echo "GATE1 RESULT: STOP - the corrections pin is not 374 in this checkout"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "GATE1 RESULT: STOP - missing: $B"; exit 1; }
+python3 scripts/cert_invariants.py --controls; c=$?
+[ "$c" -eq 0 ] || { echo "GATE1 RESULT: STOP - controls exit $c (a check that cannot fire is void)"; exit 1; }
+python3 scripts/cert_invariants.py "$B"; r=$?
+[ "$r" -eq 0 ] && echo "GATE1 RESULT: 7/7 on the built copy" || echo "GATE1 RESULT: STOP - suite exit $r (names above)"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/gate1_cert_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Block C5′ — RETIRED-ROW GATE re-run (REF = the C3b commit, filled in when it exists)
+```bash
+set +H
+( set -uo pipefail
+REF=__REPIN_COMMIT__
+echo "GATE REF ${REF} - C5 RETIRED-ROW GATE re-run (sec 9.61/9.63) on the built copy (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "RETIRED-ROW CHECK: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "RETIRED-ROW CHECK: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "RETIRED-ROW CHECK: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+[ -f "$B" ] || { echo "RETIRED-ROW CHECK: STOP - missing: $B"; exit 1; }
+python3 tests/test_eu_retired_check.py; t=$?
+[ "$t" -eq 0 ] || { echo "RETIRED-ROW CHECK: STOP - the check's own tests exit $t (a check that cannot fire is void)"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/eu_retired_check.py "$B"; r=$?
+echo "check exit $r (0 PASS / 1 FAIL / 2 STOP)"
+exit "$r"
+) 2>&1 | tee ~/edition_upgrade_runs/retired_check_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```

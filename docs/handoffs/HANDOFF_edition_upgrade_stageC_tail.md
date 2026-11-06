@@ -121,7 +121,10 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   Rollback copy `bible_edupg_test_built_pre_digits_20261105.db` kept. Gen 46:26 = lane-③ repair pending at 8b.2a.
 - R2 ACCEPTED 11/6. §9.89 rows landed in code **e777f965** (2 rows, pos 3 joins bracket 4; pin 372 → 374). Blocks J +
   G3R drafted, held (DRAFT "§9.89").
-- Next: PA pull → J → G3R → §9.87 re-freeze + residue rulings → re-pin (374) → gate 1 → retired-row re-run → stage D.
+- **J DONE + G3R AS DECLARED (11/6):** 374 active on src + built, Joh 14:26 clean; word-order 0, content-other 1
+  (Job 3:3), new on non-eligible 0. §9.52 re-freeze count **607** (205 + 390 + 12; 583 + 23 R2 punct + Num 8:26).
+- Next: C3a′ dump (held) → C3b commit (pin 374 + member file 446fee35) → PA pull → C4′ gate 1 → C5′ retired-row →
+  §9.87 punct re-freeze (9c) → stage D.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only
