@@ -119,8 +119,9 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
 - **R2 RAN 11/6: APPLIED 389 + VERIFIED** — receipt exact (other rows 625,920 unchanged), word-order 0 on all 1,456
   listed verses, residue 8/8 clean; 144 punct-position (27 plan + the 15 §9.87 verses + rest) → §9.87 re-freeze.
   Rollback copy `bible_edupg_test_built_pre_digits_20261105.db` kept. Gen 46:26 = lane-③ repair pending at 8b.2a.
-- Next: ruling chat reads R2 → Joh 14:26 correction rows (§9.89) → gate 3 re-run → residue rulings → re-pin → gate 1
-  → retired-row re-run → stage D.
+- R2 ACCEPTED 11/6. §9.89 rows landed in code **e777f965** (2 rows, pos 3 joins bracket 4; pin 372 → 374). Blocks J +
+  G3R drafted, held (DRAFT "§9.89").
+- Next: PA pull → J → G3R → §9.87 re-freeze + residue rulings → re-pin (374) → gate 1 → retired-row re-run → stage D.
 
 ## Owed to the ruling chat (next session drafts, read-only)
 1. **The full split-merge skip list (31)** vs the 10/25 list (29): the script prints only 10 samples. Needs a read-only

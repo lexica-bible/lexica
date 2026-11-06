@@ -2380,3 +2380,107 @@ word-order on listed verses 0`; `R2 RESULT: APPLIED 389 + VERIFIED …`. (The pa
   (v2 clean); the word-click on "of Jacob's" is what 8b.2a restores. No lane-3 verse (18) is on the merge-pair /
   edge-split lists, so the repair cannot have disturbed 8b.2a's strict before-check.
 - Joh 14:26 untouched (not listed) — §9.89 correction rows are the next step.
+
+## R2 accepted; §9.89 Joh 14:26 rows (code e777f965) + gate 3 re-run drafted, held (11/6)
+
+Ruling chat 11/6: R2 ACCEPTED (389/389, other rows 625,920 unchanged, word-order 0 on 1,456, residue 8/8). Rollback copy
+`bible_edupg_test_built_pre_digits_20261105.db` kept until the swap. Gen 46:26 pos 19 = lane ③ pending at 8b.2a (not
+residue). Lev 18:21 / Deu 28:12 punct filing per :210 accepted. 27 + 15 punct-only verses → §9.87 re-freeze. GO §9.89.
+
+**Which cells (CC):** ABP (`abp_texts`, diagnosis-grade) reads "But theG3588 G1161 comforter,G3875 theG3588 [2spirit
+G3588 1holy]" — the second "the" comes AFTER "comforter,". The rows (live = built, CHECK 4) hold pos 2 "the" (3588)
+before pos 3 "comforter," (3875), both undigited. Two digit-only fixes tested through the v2 reorder port on the 26
+real rows: **A — pos 3 joins pos 0/1's bracket 4 as its 3rd word → "But the comforter, the holy spirit," = clean**;
+B — a new 2-word group for pos 2+3 (the Act 7:3 shape, 4 rows) → "comforter the," (the group's comma floats onto
+"the") = punct-position. A chosen: **2 rows, pin 372 → 374** (not 376).
+**Code e777f965 (scripts/tests):** two ENTRIES in `build_abp_corrections.py` (Joh 14:26 pos 3 bracket_id None → "4",
+greek_pos None → "3", ledger `S-joh14:26`, reason `_JOH1426_REASON`), next to the S10 Act 7:3 rows. New test
+`test_correction_reorder_rows.py` (3: rows have the ruled shape; the unfixed verse is still a word-order hit; with
+the rows it reads clean — 2 fail without the rows), in hook + CI lists.
+
+**Block J** (chained; each write runs only on the previous step's exact output): row test → BEFORE (counts both
+copies, Joh 14:26 pos 0–7 on built, the audit's --verse) → seed dry run on src and built, each must be exactly the 2
+Joh 14:26 lines with `cell=source` and "would insert 2" → seed --apply src then built, each "active rows … now: 374" →
+`apply_abp_corrections.py <built> --only words` dry run must read "would apply 2 · already-applied 248 ·
+LOUD-SKIPPED 0" (248 = the 372 active minus 124 verses.text, from the 11/4 member file; no active digit row sits on a
+verse R2 changed) → --apply, same receipt → AFTER (counts, rows, --verse must read clean). The seeder's other ~57
+entries print "not duplicated"/flag lines on these copies (cells changed since seeding) — expected noise, filtered;
+its exit code is not used. Rollback if needed: delete the two `S-joh14:26` rows on each copy and set built pos 3 back to
+NULL/NULL. Tested on made-up copies (372 active, 248 already applied): DONE; a second run STOPs at the seed dry run
+("would insert 0"), nothing written.
+**Block G3R** (read-only, after J): needs J's log to say DONE; same inputs/tests/controls as gate 3; AS DECLARED only if
+exit 1 with exactly `word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0` and the
+content-other line is Job 3:3. Tested: AS DECLARED on a made-up copy; STOP without J's log.
+Cert check 4 on built reads 374 vs pin 372 until the re-pin (the sequence's next code step).
+
+### Block J — Joh 14:26 correction rows (GATE REF e777f965)
+PA pull first (no reload): `cd ~/bible-db && git pull --ff-only && git log -1 --format=%h`
+```bash
+set +H
+( set -uo pipefail
+REF=e777f965
+echo "GATE REF ${REF} - J Joh 14:26 correction rows (sec 9.89): insert on src + built, apply on built - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "J RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "J RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "J RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; SRC=~/bible-db/bible_edupg_test_20261101.db
+for f in "$B" "$SRC"; do [ -f "$f" ] || { echo "J RESULT: STOP - missing: $f"; exit 1; }; [ -e "$f-journal" ] && { echo "J RESULT: STOP - journal file beside $f"; exit 1; }; done
+python3 tests/test_correction_reorder_rows.py || { echo "J RESULT: STOP - the row test failed"; exit 1; }
+counts() { sqlite3 -readonly "$1" "SELECT group_concat(status || ' ' || n, ' / ') FROM (SELECT status, count(*) n FROM abp_corrections GROUP BY status ORDER BY status)"; }
+rows() { sqlite3 -readonly -separator ' | ' "$B" "SELECT w.position, w.english, w.bracket_id, w.greek_pos, w.strongs FROM words w JOIN verses v ON w.verse_id = v.id WHERE v.book = 'Joh' AND v.chapter = 14 AND v.verse = 26 AND w.position <= 7 ORDER BY w.position" | sed 's/^/    /'; }
+echo "--- BEFORE: corrections src [$(counts "$SRC")] built [$(counts "$B")]; Joh 14:26 pos 0-7 on built:"; rows
+PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --verse "Joh 14:26"
+L1="  -> Joh 14:26 pos 3 bracket_id: None -> '4'  [S-joh14:26]  cell=source"; L2="  -> Joh 14:26 pos 3 greek_pos: None -> '3'  [S-joh14:26]  cell=source"
+for D in "$SRC" "$B"; do
+  o=$(PYTHONIOENCODING=utf-8 python3 scripts/build_abp_corrections.py "$D" 2>&1)
+  echo "--- seed dry run on $(basename "$D"):"; echo "$o" | grep -E "^  -> |would insert" | sed 's/^/  /'
+  grep -qF "would insert 2, " <<< "$o" && [ "$(echo "$o" | grep -c '^  -> ')" -eq 2 ] && grep -qF "$L1" <<< "$o" && grep -qF "$L2" <<< "$o" || { echo "J RESULT: STOP - seed dry run on $(basename "$D") is not exactly the 2 Joh 14:26 rows (nothing written)"; exit 1; }
+done
+for D in "$SRC" "$B"; do
+  o=$(PYTHONIOENCODING=utf-8 python3 scripts/build_abp_corrections.py "$D" --apply 2>&1)
+  echo "$o" | grep -E "^  -> |written" | sed 's/^/  /'
+  grep -qF "active rows in table now: 374" <<< "$o" && [ "$(echo "$o" | grep -c '^  -> ')" -eq 2 ] || { echo "J RESULT: STOP - insert on $(basename "$D") not as expected (src done first; see above)"; exit 1; }
+done
+o=$(python3 scripts/apply_abp_corrections.py "$B" --only words 2>&1)
+echo "--- apply dry run on built:"; echo "$o" | grep -E "Joh 14:26|summary|SKIP" | sed 's/^/  /'
+grep -qF "would apply 2 " <<< "$o" && grep -qF "already-applied 248 " <<< "$o" && grep -qF "LOUD-SKIPPED 0" <<< "$o" && [ "$(echo "$o" | grep -c 'Joh 14:26 pos 3 .*would apply')" -eq 2 ] || { echo "J RESULT: STOP - apply dry run not exactly 2 / 248 / 0 (rows inserted on both copies, cells NOT written)"; exit 1; }
+o=$(python3 scripts/apply_abp_corrections.py "$B" --only words --apply 2>&1)
+echo "$o" | grep -E "Joh 14:26|summary" | sed 's/^/  /'
+grep -qF "applied 2 " <<< "$o" && grep -qF "already-applied 248 " <<< "$o" && grep -qF "LOUD-SKIPPED 0" <<< "$o" || { echo "J RESULT: STOP - apply receipt not 2 / 248 / 0"; exit 1; }
+echo "--- AFTER: corrections src [$(counts "$SRC")] built [$(counts "$B")]; Joh 14:26 pos 0-7 on built:"; rows
+v=$(PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --verse "Joh 14:26" 2>&1); echo "$v"
+grep -qF "RESULT: clean reassembly (no hit)" <<< "$v" && echo "J RESULT: DONE - 2 rows on src + built (374 active each), applied on built, Joh 14:26 reads clean" || { echo "J RESULT: STOP - Joh 14:26 does not read clean after the apply"; exit 1; }
+) 2>&1 | tee ~/edition_upgrade_runs/joh1426_rows_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Block G3R — gate 3 re-run (GATE REF e777f965, read-only; after J)
+```bash
+set +H
+( set -uo pipefail
+REF=e777f965
+echo "GATE REF ${REF} - GATE 3 RE-RUN v2 member diff on the built copy after R2 + J (read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "GATE3 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "GATE3 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "GATE3 RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+F=tests/fixtures/reassembly/punct_members_live_20261030.txt
+E=~/edition_upgrade_runs/step5_eligible_20261101.tsv
+J=~/edition_upgrade_runs/joh1426_rows_20261106.log
+for f in "$B" "$F" "$E" "$J"; do [ -f "$f" ] || { echo "GATE3 RESULT: STOP - missing: $f"; exit 1; }; done
+[ "$(sha256sum < "$F" | cut -d' ' -f1)" = 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f ] || { echo "GATE3 RESULT: STOP - frozen punct file is not the committed one"; exit 1; }
+[ "$(sha256sum < "$E" | cut -c1-8)" = e540d34d ] || { echo "GATE3 RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+grep -qF "J RESULT: DONE" "$J" || { echo "GATE3 RESULT: STOP - block J has not finished clean ($J)"; exit 1; }
+echo "frozen punct file: $(grep -c . "$F") members (sha 2b0f4cc4) - eligible e540d34d - block J done"
+python3 tests/test_reorder_port.py || { echo "GATE3 RESULT: STOP - reorder port drifted from the JS baseline"; exit 1; }
+python3 tests/test_reassembly_member_diff.py || { echo "GATE3 RESULT: STOP - the member diff's own tests failed"; exit 1; }
+python3 scripts/audit_reassembly_diff.py --controls --v2 || { echo "GATE3 RESULT: STOP - v2 controls did not fire"; exit 1; }
+out=$(PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --punct-members "$F" --eligible "$E" 2>&1); r=$?
+echo "$out"
+if [ "$r" -eq 1 ] && grep -qF "V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 |" <<< "$out" && grep -qF "[content-other] Job 3:3 " <<< "$out"; then
+  echo "GATE3 RESULT: AS DECLARED - word-order 0 - Joh 14:26 clean - new on non-eligible 0 - the one content-other is Job 3:3 (FEED, sec 9.87) - the sec 9.52 lists above go to the re-freeze"; exit 0
+fi
+echo "GATE3 RESULT: NOT AS DECLARED (member diff exit $r) - named above"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/gate3_rerun_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
