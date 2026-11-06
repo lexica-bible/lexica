@@ -149,3 +149,5 @@ diff (STOP for the §9.52 punct ruling) → stage D (8b; `declared_deltas.json` 
 - **Never put `!!` inside double quotes in a block JP pastes** — interactive bash swaps it for the previous command. Single-quote grep patterns.
 - **Forecast a patch's count from the previous run's log, not from its entry count** (this handoff's table).
 - Every cleared PA block is printed in full in chat (`feedback_print_cleared_blocks`).
+
+**SUPERSEDED 11/6 by `HANDOFF_edition_upgrade_stageC_repin.md`** (re-pin 374 → close stage C → stage D).
