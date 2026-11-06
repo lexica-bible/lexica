@@ -2668,3 +2668,14 @@ echo "check exit $r (0 PASS / 1 FAIL / 2 STOP)"
 exit "$r"
 ) 2>&1 | tee ~/edition_upgrade_runs/retired_check_20261106.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## C3a′ RAN (11/6 15:25:58 UTC) — OK as expected; C3b next
+
+Run 1 (PA HEAD 6da053c9, REF e777f965), every line vs the expected picture: 372 file sha 80db1c35 "as committed";
+built `active ingest 374 · retired ingest 23 · superseded ingest 6`; active ingest 374 (expect 374), missing 0
+(expect 0), not in it 2 (expect 2) = `NEW: Joh 14 26 3 bracket_id S-joh14:26` + `… greek_pos S-joh14:26`; non-ingest
+active 0, retired 23; dump sha 446fee35b4080e52 = local (SAME); wrote 374 lines + .sha256;
+`REPIN DUMP: OK - 374 = 372 + 2 S-joh14:26 - retired 23 - sha256 446fee35b4080e522e5b2af19aca9dc3acc0b1c582ae56ba4c35ccd0fec539e3`, exit=0.
+Run 2 (15:26:15, an accidental re-paste) STOPPED at the "already exists" guard, nothing written — but its `tee`
+overwrote `repin_dump_20261106.log`, so **the PA log now holds the run-2 STOP; run 1's OK output is recorded here only**
+(from JP's paste). The two written files are run 1's; the C3b scp check (sha 446fee35…, 374 lines, LF) re-proves them.
