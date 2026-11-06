@@ -116,7 +116,10 @@ build now produces their result) — the 10/25 log shows the same skips. Under t
   in order already). CHECK 4's "15 punct members = digit loss" note was wrong (old-English punctuation). Read:
   DRAFT "R1 re-run".
 - R1 accepted. **R2 cleared conditionally** (JP runs without returning if it matches the spec) — block in DRAFT "R2".
-- Next: R2 output → ruling chat → Joh 14:26 correction rows (§9.89) → gate 3 re-run → residue rulings → re-pin → gate 1
+- **R2 RAN 11/6: APPLIED 389 + VERIFIED** — receipt exact (other rows 625,920 unchanged), word-order 0 on all 1,456
+  listed verses, residue 8/8 clean; 144 punct-position (27 plan + the 15 §9.87 verses + rest) → §9.87 re-freeze.
+  Rollback copy `bible_edupg_test_built_pre_digits_20261105.db` kept. Gen 46:26 = lane-③ repair pending at 8b.2a.
+- Next: ruling chat reads R2 → Joh 14:26 correction rows (§9.89) → gate 3 re-run → residue rulings → re-pin → gate 1
   → retired-row re-run → stage D.
 
 ## Owed to the ruling chat (next session drafts, read-only)

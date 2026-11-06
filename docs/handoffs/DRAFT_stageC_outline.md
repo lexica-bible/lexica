@@ -2353,3 +2353,30 @@ Expected: rollback copy line (byte-identical, plan 694e1564); `RESTORE-DIGITS AP
 verses; `all 1456 listed verses: {...}` with no word-order list; 129 full prints; Gen 46:26 pos 17–21 built + live;
 `RESTORE-DIGITS VERIFY: plan verses 133 - clean … - word-order on listed verses 0`; `R2 RESULT: APPLIED 389 +
 VERIFIED …`; exit=0. Punctuation-only hits on the plan verses are expected (old-English punctuation, §9.87 re-freeze).
+
+## R2 RAN (11/6 14:49 UTC) — APPLIED 389 + VERIFIED; held for the ruling chat
+
+`restore_digits_R2_20261105.log`, REF 9fbef17f, PA HEAD c71ce26f. Rollback copy
+`bible_edupg_test_built_pre_digits_20261105.db` byte-identical (451,964,928 bytes), plan 694e1564.
+`RESTORE-DIGITS APPLY: APPLIED 389 cells - before-match 389/389 - after-match 389/389 - other rows 625,920 digest
+9035d8f6 -> 9035d8f6 (unchanged)`. Verify: plan verses 133 — clean 106, punct-position 27; **all 1,456 listed
+verses {clean 1,312, punct-position 144} — word-order 0**; `RESTORE-DIGITS VERIFY: plan verses 133 - clean 106 -
+word-order on listed verses 0`; `R2 RESULT: APPLIED 389 + VERIFIED …`. (The pasted output ends on that line; the
+`exit=` line after the tee is not in the paste — the RESULT line prints only on the exit-0 path.)
+
+**CC read:**
+- **Residue all clean:** Pro 7:11, Pro 14:13, Pro 29:19, Isa 9:17, Isa 60:18, Jer 5:29, Joh 8:39, 1Co 16:19.
+- **27 plan verses punct-position** = the restored OLD English's punctuation/capitals vs the edition prose (meats. /
+  meats,; You / you; dash placement Num 8:26, Eze 18:17, Lev 19:4, Gal 4:21, Deu 28:12). Lev 18:21 and Deu 28:12 show
+  insert/delete word lines but v2 files them punct-position, which by its rule (`audit_reassembly_diff.py:210`) means
+  the words with punctuation stripped are in the text's order. → §9.87 re-freeze.
+- **The 23 untouched item-2 verses:** 8 clean (Gen 41:14, Deu 28:64, 2Ki 15:1, 1Ch 23:9, Mat 1:6, Act 2:10, 1Co 10:1,
+  1Co 10:20); 15 punct-position = exactly the 15 §9.87 verses (Gen 25:10 Heth., Exo 22:18 You, Deu 1:4, Jdg 20:17,
+  1Sa 23:19, 1Ki 7:2, Ezr 7:15, Neh 7:43, Son 3:7, Eze 2:3, Eze 13:2, Eze 13:16, Eze 47:22, Joh 1:45, Act 14:6).
+- **Gen 46:26 (dash residue) = a lane-③ hand repair not yet applied, not a defect:** built pos 19 "of Jacob's sons —"
+  (no digits) + pos 20 blank `*` is EXACTLY the `old_eng` state of `scripts/lane3_star_fixes2.json` "Gen 46:26"; live
+  holds its `new` state ("sons —" 1/2, "of Jacob's" 1/1). Lane-3 repairs run at /rebuild-words step 8b.2a
+  (rebuild-words.md:242; DESIGN §9.67) = stage D, not yet run on the built copy. The verse already reads right
+  (v2 clean); the word-click on "of Jacob's" is what 8b.2a restores. No lane-3 verse (18) is on the merge-pair /
+  edge-split lists, so the repair cannot have disturbed 8b.2a's strict before-check.
+- Joh 14:26 untouched (not listed) — §9.89 correction rows are the next step.
