@@ -2679,3 +2679,15 @@ active 0, retired 23; dump sha 446fee35b4080e52 = local (SAME); wrote 374 lines 
 Run 2 (15:26:15, an accidental re-paste) STOPPED at the "already exists" guard, nothing written — but its `tee`
 overwrote `repin_dump_20261106.log`, so **the PA log now holds the run-2 STOP; run 1's OK output is recorded here only**
 (from JP's paste). The two written files are run 1's; the C3b scp check (sha 446fee35…, 374 lines, LF) re-proves them.
+
+## C3b landed 4d66afa3; C4′ gate 1 RAN (11/6 15:39:30 UTC) — 7/7 as expected
+
+**Copy check (before C3b):** `sha256sum -c` against the scp'd `.sha256` = OK (446fee35…); 374 lines; byte count CR 0 /
+LF 374 (an early `grep -c $'\r'` inside `"$(…)"` gave a false 1 — bash does not expand `$'…'` there, so it matched
+the letter r; byte count is the record). Committed blob sha = 446fee35… (no ending conversion).
+**C3b** `4d66afa3`: `3 files changed, 376 insertions(+), 1 deletion(-)` = planned. PA pulled 6da053c9 → 4d66afa3.
+**C4′** (`gate1_cert_20261106.log`, REF 4d66afa3, PA HEAD 4d66afa3): controls 1, 2, 3, 4, 7, 7b all FIRED ("ALL CONTROLS
+FIRED"); built copy 1–7 all `[OK]`, `CERTIFIED STATE HOLDS (7/7 green)`, `GATE1 RESULT: 7/7 on the built copy`, exit=0.
+OK lines carry no figures; per the code, check 1 OK = words 626,309 + verses 31,237 exactly (`check_row_pins`), check 4
+OK = exactly 374 active ingest rows, each holding (`check_corrections`), check 3 OK = em-dash 0 — the expected picture.
+Next: C5′ (REF 4d66afa3).
