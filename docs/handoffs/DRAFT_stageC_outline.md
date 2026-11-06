@@ -2804,3 +2804,324 @@ identical to what JP ran) with only REF 12b3e689, labels 8B2b, folders/log `xref
   repo). **Ruled §9.96:** frozen record authoritative, restore all 16 (Eze 27:13@1 H3120→G1673; 1Th 1:1@2, 2Co 1:19@16,
   2Th 1:1@2 G4610→G4609; 12 `'*'` rows → their record's G number); gate-2 member Silas/Silvanus ×3. Next:
   ABPTAG-RESTORE (write → ruling chat) then 8B2c (`xref8b2c_*`).
+
+## ABPTAG-RESTORE + 8B2c drafted, held for the ruling chat (11/6)
+
+`abptag_read_20261106.log` scp'd (read-only touchpoint; not in the repo). Read in full: the 16 built rows match §9.96
+(Eze 27:13@1 H3120->G1673; 1Th 1:1@2, 2Co 1:19@16, 2Th 1:1@2 G4610->G4609; 12 `'*'` rows -> record G); all 16 strongs `'*'`
+(the normal abp-tag name-slot state: 3,655 passing abp-tag rows also carry `'*'`); src carries the record's number at the
+same position on all 16 (word english differs on 14: the edition's English). Corrections at two of the positions
+(Act 16:6@6 ids 72/73, Mat 1:13@0 ids 93/94) are english / english_head only (+ verses.text ids 74/95) — no strongs_base
+row, no clash. R2 plan: none of the 16 verses.
+Tests (made-up dbs): pass; re-paste (folder guard); re-run on fixed rows (row guard); drifted row; missing log line;
+before-count 17; a change outside the 16 inside the transaction (rolled back, db unchanged). Whole block in a fake home
+on a made-up built copy of 626,309 words / 3,671 abp-tag rows: DONE, other 626,293 rows' digest unchanged.
+Helper sha256 2ac942af3fa6eed3f9d292ceb483e6ba5b1db2c4259b76685db8bcd612d9ab4f. Run order: ABPTAG-RESTORE, then 8B2c only
+after it reads DONE.
+
+### Block ABPTAG-RESTORE (GATE REF 12b3e689; WRITES built: 16 words.strongs_base)
+```bash
+set +H
+( set -uo pipefail
+REF=12b3e689
+echo "GATE REF ${REF} - ABPTAG-RESTORE 16 abp-tag strongs_base back to the frozen record on the built copy (sec 9.96; WRITES built) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "ABPTAG-RESTORE RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "ABPTAG-RESTORE RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "ABPTAG-RESTORE RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+R=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+O=~/edition_upgrade_runs
+RL="$O/abptag_read_20261106.log"
+D="$O/abptag_restore_20261106"
+[ -f "$B" ] || { echo "ABPTAG-RESTORE RESULT: STOP - missing: $B"; exit 1; }
+[ -s "$RL" ] || { echo "ABPTAG-RESTORE RESULT: STOP - read log missing or empty: $RL"; exit 1; }
+if [ -e "$D" ]; then echo "ABPTAG-RESTORE RESULT: STOP - output folder already exists (already ran?): $D"; exit 1; fi
+t=$(sqlite3 -readonly "$B" "SELECT count(*) FROM sqlite_master WHERE type='trigger'") || { echo "ABPTAG-RESTORE RESULT: STOP - trigger read failed"; exit 1; }
+echo "pre (a) triggers on built: $t (expect 0)"
+[ "$t" = "0" ] || { echo "ABPTAG-RESTORE RESULT: STOP - built has triggers"; exit 1; }
+if [ -e "$B-journal" ]; then echo "ABPTAG-RESTORE RESULT: STOP - $B-journal present (move it aside, never delete; bring it back)"; exit 1; fi
+echo "pre (b) no -journal beside built: OK"
+[ -s "$R" ] || { echo "ABPTAG-RESTORE RESULT: STOP - pre_8b rollback copy missing or empty: $R"; exit 1; }
+echo "pre (c) pre_8b copy present: $(stat -c '%s bytes, %y' "$R") - built now $(stat -c '%s bytes' "$B") (size only)"
+mkdir -p "$D"
+P="$D/abptag_restore_20261106.py"
+cat > "$P" <<'PY'
+"""ABPTAG-RESTORE (DESIGN sec 9.96): put words.strongs_base back to the frozen record's
+greek_strongs on the 16 abp-tag rows the ABPTAG-READ log listed as failing on built.
+
+WRITES the built copy: 16 single-row changes to words.strongs_base, nothing else.
+All 16 go in one transaction; any failed check before COMMIT rolls ALL of them back.
+
+Before writing, every row must still be EXACTLY what the read log printed:
+  - its verse_id maps to the expected ref, and the read log holds the row's exact line
+  - one words row at (verse_id, position) with the logged english / strongs / strongs_base
+  - the identity record there is abp-tag with greek_strongs = the new value
+  - strongs is '*' (no Greek-numbered word is touched)
+Inside the transaction, before COMMIT:
+  - each UPDATE changed exactly 1 row; total changes 16
+  - the retire_hebrew_identity.py abp-tag check (:223-233) passes on every abp-tag row
+    (no words row / strongs_base differs / not G / record carries hebrew_base) - 0 failing,
+    abp-tag rows 3,671
+  - words 626,309; every word row other than the 16 is unchanged (rowid, strongs, strongs_base
+    digest); the 16 still have strongs '*'; GLOB invariant (bare-number strongs_base) 0
+After COMMIT, the 16 rows are re-read and printed.
+
+Usage: python3 abptag_restore_20261106.py <built.db> <abptag_read_20261106.log>
+"""
+import hashlib
+import sqlite3
+import sys
+
+DB, READLOG = sys.argv[1:3]
+WORDS_EXPECT = 626309
+ABPTAG_EXPECT = 3671
+# verse_id, position, ref, english, strongs, strongs_base now, new strongs_base, the read log's exact line
+ROWS = [
+    (21270, 1, 'Eze 27:13', 'Greece,', '*', 'H3120', 'G1673',
+     "  21270 | Eze 27:13 | 1 | 'Greece,' | '*' | 'H3120' | 'G1673' | 'Ελλάς' | strongs_base differs; strongs_base not G"),
+    (23928, 2, '1Th 1:1', 'Silvanus,', '*', 'G4610', 'G4609',
+     "  23928 | 1Th 1:1 | 2 | 'Silvanus,' | '*' | 'G4610' | 'G4609' | 'Σιλουανός' | strongs_base differs"),
+    (24148, 16, '2Co 1:19', 'Silvanus', '*', 'G4610', 'G4609',
+     "  24148 | 2Co 1:19 | 16 | 'Silvanus' | '*' | 'G4610' | 'G4609' | 'Σιλουανού' | strongs_base differs"),
+    (24461, 2, '2Th 1:1', 'Silvanus,', '*', 'G4610', 'G4609',
+     "  24461 | 2Th 1:1 | 2 | 'Silvanus,' | '*' | 'G4610' | 'G4609' | 'Σιλουανός' | strongs_base differs"),
+    (24627, 9, 'Act 1:23', 'Justus,)', '*', '*', 'G2459',
+     "  24627 | Act 1:23 | 9 | 'Justus,)' | '*' | '*' | 'G2459' | 'Ιούστος' | strongs_base differs; strongs_base not G"),
+    (25170, 6, 'Act 16:6', 'Galatian', '*', '*', 'G1052',
+     "  25170 | Act 16:6 | 6 | 'Galatian' | '*' | '*' | 'G1052' | 'Γαλατικήν' | strongs_base differs; strongs_base not G"),
+    (25225, 0, 'Act 17:21', '( Athenians', '*', '*', 'G117',
+     "  25225 | Act 17:21 | 0 | '( Athenians' | '*' | '*' | 'G117' | 'Αθηναίοι' | strongs_base differs; strongs_base not G"),
+    (25374, 19, 'Act 21:29', 'Paul.)', '*', '*', 'G3972',
+     "  25374 | Act 21:29 | 19 | 'Paul.)' | '*' | '*' | 'G3972' | 'Παύλος' | strongs_base differs; strongs_base not G"),
+    (25553, 12, 'Act 27:17', 'Syrtis Gulf', '*', '*', 'G4950',
+     "  25553 | Act 27:17 | 12 | 'Syrtis Gulf' | '*' | '*' | 'G4950' | 'Σύρτιν' | strongs_base differs; strongs_base not G"),
+    (26424, 2, 'Joh 1:28', 'Bethania', '*', '*', 'G963',
+     "  26424 | Joh 1:28 | 2 | 'Bethania' | '*' | '*' | 'G963' | NULL | strongs_base differs; strongs_base not G"),
+    (27237, 1, 'Joh 20:18', 'Then Mary', '*', '*', 'G3137',
+     "  27237 | Joh 20:18 | 1 | 'Then Mary' | '*' | '*' | 'G3137' | 'Μαρία' | strongs_base differs; strongs_base not G"),
+    (28665, 6, 'Mar 6:22', 'of Herodias,)', '*', '*', 'G2266',
+     "  28665 | Mar 6:22 | 6 | 'of Herodias,)' | '*' | '*' | 'G2266' | 'Ηρωδιάδος' | strongs_base differs; strongs_base not G"),
+    (29083, 13, 'Mar 15:21', 'Rufus,)', '*', '*', 'G4504',
+     "  29083 | Mar 15:21 | 13 | 'Rufus,)' | '*' | '*' | 'G4504' | 'Ρούφου' | strongs_base differs; strongs_base not G"),
+    (29141, 13, 'Mat 1:12', 'Zorobabel;', '*', '*', 'G2216',
+     "  29141 | Mat 1:12 | 13 | 'Zorobabel;' | '*' | '*' | 'G2216' | 'Ζοροβάβελ' | strongs_base differs; strongs_base not G"),
+    (29142, 0, 'Mat 1:13', 'and Zorobabel', '*', '*', 'G2216',
+     "  29142 | Mat 1:13 | 0 | 'and Zorobabel' | '*' | '*' | 'G2216' | 'Ζοροβάβελ' | strongs_base differs; strongs_base not G"),
+    (31003, 4, 'Rom 10:12', 'both of Jew', '*', '*', 'G2455',
+     "  31003 | Rom 10:12 | 4 | 'both of Jew' | '*' | '*' | 'G2455' | 'Ιουδαίου' | strongs_base differs; strongs_base not G"),
+]
+
+
+def stop(msg):
+    print("ABPTAG-RESTORE RESULT: STOP - " + msg)
+    sys.exit(1)
+
+
+def q(v):
+    return "NULL" if v is None else repr(v)
+
+
+def retire_abptag_failing(c):
+    bad = 0
+    n = 0
+    for r in c.execute("""
+        SELECT g.greek_strongs, g.hebrew_base, w.rowid AS wrow, w.strongs_base
+        FROM pn_greek_identity g
+        LEFT JOIN words w ON w.verse_id = g.verse_id AND w.position = g.position
+        WHERE g.source = 'abp-tag'"""):
+        n += 1
+        greek, heb, wrow, cur = r
+        if wrow is None or not cur == greek or not (cur or "").startswith("G") or heb is not None:
+            bad += 1
+    return n, bad
+
+
+def digest_except(c, skip):
+    h = hashlib.sha256()
+    n = 0
+    for rowid, s, sb in c.execute("SELECT rowid, strongs, strongs_base FROM words ORDER BY rowid"):
+        if rowid in skip:
+            continue
+        h.update(("%d\t%s\t%s\n" % (rowid, s, sb)).encode("utf-8"))
+        n += 1
+    return n, h.hexdigest()
+
+
+if not len(ROWS) == 16:
+    stop("the row list does not hold 16 rows")
+log = open(READLOG, encoding="utf-8").read().split("\n")
+c = sqlite3.connect(DB, timeout=30)
+c.execute("PRAGMA journal_mode=DELETE")
+c.execute("PRAGMA busy_timeout=10000")
+
+# ---- guards, nothing written yet
+print("--- guards (before any write)")
+targets = []
+for vid, pos, ref, eng, strongs, sb_now, sb_new, logline in ROWS:
+    tag = "%d@%d %s" % (vid, pos, ref)
+    if logline not in log:
+        stop("%s: the read log does not hold this row's line" % tag)
+    v = c.execute("SELECT book || ' ' || chapter || ':' || verse FROM verses WHERE id=?", (vid,)).fetchone()
+    if not v or not v[0] == ref:
+        stop("%s: verse_id maps to %s" % (tag, v[0] if v else "nothing"))
+    w = c.execute("SELECT rowid, english, strongs, strongs_base FROM words WHERE verse_id=? AND position=?",
+                  (vid, pos)).fetchall()
+    if not len(w) == 1:
+        stop("%s: %d words rows at this slot (expect 1)" % (tag, len(w)))
+    rowid, e, s, sb = w[0]
+    if not (e, s, sb) == (eng, strongs, sb_now):
+        stop("%s: word now english %s strongs %s strongs_base %s - not the logged %s %s %s"
+             % (tag, q(e), q(s), q(sb), q(eng), q(strongs), q(sb_now)))
+    if not s == "*":
+        stop("%s: strongs is %s, not '*' (a Greek-numbered word)" % (tag, q(s)))
+    g = c.execute("SELECT source, greek_strongs FROM pn_greek_identity WHERE verse_id=? AND position=?",
+                  (vid, pos)).fetchone()
+    if not g or not g[0] == "abp-tag" or not g[1] == sb_new:
+        stop("%s: identity record is %s, not abp-tag %s" % (tag, g, sb_new))
+    print("  OK %s pos %d english %s strongs %s strongs_base %s -> %s (record abp-tag %s)"
+          % (ref, pos, q(e), q(s), q(sb), q(sb_new), q(g[1])))
+    targets.append((rowid, sb_now, sb_new, tag))
+if not len({t[0] for t in targets}) == 16:
+    stop("the 16 rows are not 16 different words rows")
+skip = {t[0] for t in targets}
+n_before = c.execute("SELECT count(*) FROM words").fetchone()[0]
+if not n_before == WORDS_EXPECT:
+    stop("words before %d (expect %d)" % (n_before, WORDS_EXPECT))
+n0, dig0 = digest_except(c, skip)
+na0, bad0 = retire_abptag_failing(c)
+print("before: words %d - abp-tag rows %d, failing the retire check %d (expect 16) - other word rows %d digest %s"
+      % (n_before, na0, bad0, n0, dig0[:8]))
+if not bad0 == 16:
+    stop("failing abp-tag rows before is %d, not 16" % bad0)
+
+# ---- the write: one transaction
+c.isolation_level = None
+c.execute("BEGIN IMMEDIATE")
+ch0 = c.total_changes
+for rowid, sb_now, sb_new, tag in targets:
+    cur = c.execute("UPDATE words SET strongs_base=? WHERE rowid=? AND strongs_base=? AND strongs='*'",
+                    (sb_new, rowid, sb_now))
+    if not cur.rowcount == 1:
+        c.execute("ROLLBACK")
+        stop("%s: UPDATE changed %d rows (expect 1) - rolled back, nothing written" % (tag, cur.rowcount))
+changes = c.total_changes - ch0
+na1, bad1 = retire_abptag_failing(c)
+n_after = c.execute("SELECT count(*) FROM words").fetchone()[0]
+n1, dig1 = digest_except(c, skip)
+star = c.execute("SELECT count(*) FROM words WHERE rowid IN (%s) AND strongs='*'" % ",".join("?" * 16),
+                 tuple(sorted(skip))).fetchone()[0]
+glob = c.execute("SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'").fetchone()[0]
+print("in transaction: changes %d (expect 16) - abp-tag rows %d (expect %d), failing the retire check %d (expect 0)"
+      % (changes, na1, ABPTAG_EXPECT, bad1))
+print("in transaction: words %d (expect %d) - other word rows %d digest %s (expect %s, unchanged) - the 16 with strongs '*': %d (expect 16) - GLOB %d (expect 0)"
+      % (n_after, WORDS_EXPECT, n1, dig1[:8], dig0[:8], star, glob))
+ok = (changes == 16 and na1 == ABPTAG_EXPECT and bad1 == 0 and n_after == WORDS_EXPECT
+      and n1 == n0 and dig1 == dig0 and star == 16 and glob == 0)
+if not ok:
+    c.execute("ROLLBACK")
+    stop("a check inside the transaction failed (line above) - rolled back, nothing written")
+c.execute("COMMIT")
+c.close()
+
+# ---- after, read-only
+r = sqlite3.connect("file:%s?mode=ro" % DB, uri=True, timeout=30)
+print("--- the 16 rows after:")
+for vid, pos, ref, eng, strongs, sb_now, sb_new, logline in ROWS:
+    w = r.execute("SELECT english, strongs, strongs_base FROM words WHERE verse_id=? AND position=?", (vid, pos)).fetchone()
+    print("  %d | %s | %d | %s | strongs %s | strongs_base %s (was %s)" % (vid, ref, pos, q(w[0]), q(w[1]), q(w[2]), q(sb_now)))
+na2, bad2 = retire_abptag_failing(r)
+print("after: abp-tag rows %d, failing the retire check %d (expect 0)" % (na2, bad2))
+if not bad2 == 0:
+    stop("after COMMIT the retire check reads %d failing" % bad2)
+print("ABPTAG-RESTORE RESULT: DONE - 16 strongs_base restored to the frozen record - retire abp-tag check 0 failing on %d rows - words %d - other rows unchanged"
+      % (na2, WORDS_EXPECT))
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = 2ac942af3fa6eed3f9d292ceb483e6ba5b1db2c4259b76685db8bcd612d9ab4f ] || { echo "ABPTAG-RESTORE RESULT: STOP - the pasted script does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" "$B" "$RL"; r=$?
+if [ -e "$B-journal" ]; then J=PRESENT; else J=none; fi
+echo "journal after: $J (expect none)"
+[ "$r" -eq 0 ] && [ "$J" = "none" ] || { echo "ABPTAG-RESTORE RESULT: NOT DONE - helper exit $r, journal $J (the helper's own RESULT line above says what stopped it)"; exit 1; }
+exit 0
+) 2>&1 | tee ~/edition_upgrade_runs/abptag_restore_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
+
+### Block 8B2c (GATE REF 12b3e689; = 8B2b with folder/log names `xref8b2c_*` only)
+```bash
+set +H
+( set -uo pipefail
+REF=12b3e689
+echo "GATE REF ${REF} - 8B2b retire_hebrew_identity --fresh-rebuild on the built copy (dry run, apply only on the sec 9.95 picture) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "8B2b RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "8B2b RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "8B2b RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+R=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+O=~/edition_upgrade_runs
+D1="$O/xref8b2c_dry_20261106"; D2="$O/xref8b2c_apply_20261106"
+[ -f "$B" ] || { echo "8B2b RESULT: STOP - missing: $B"; exit 1; }
+if [ -e "$D1" ] || [ -e "$D2" ]; then echo "8B2b RESULT: STOP - output folder already exists (already ran?): $D1 / $D2"; exit 1; fi
+t=$(sqlite3 -readonly "$B" "SELECT count(*) FROM sqlite_master WHERE type='trigger'") || { echo "8B2b RESULT: STOP - trigger read failed"; exit 1; }
+echo "pre (a) triggers on built: $t (expect 0)"
+[ "$t" = "0" ] || { echo "8B2b RESULT: STOP - built has triggers"; exit 1; }
+if [ -e "$B-journal" ]; then echo "8B2b RESULT: STOP - $B-journal present (move it aside, never delete; bring it back)"; exit 1; fi
+echo "pre (b) no -journal beside built: OK"
+[ -s "$R" ] || { echo "8B2b RESULT: STOP - pre_8b rollback copy missing or empty: $R"; exit 1; }
+echo "pre (c) pre_8b copy present: $(stat -c '%s bytes, %y' "$R") - built now $(stat -c '%s bytes' "$B") (size only)"
+OA=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_greek_identity g JOIN pn_hebrew_xref x ON x.verse_id=g.verse_id AND x.position=g.position WHERE g.hebrew_base IS NOT x.hebrew_base")
+OB=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_hebrew_xref x WHERE NOT EXISTS (SELECT 1 FROM pn_greek_identity g WHERE g.verse_id=x.verse_id AND g.position=x.position)")
+echo "pre (d) oracle gate, whole table, before: hebrew_base mismatches $OA, xref rows outside the identity table $OB (expect 0 / 0)"
+[ "$OA" = "0" ] && [ "$OB" = "0" ] || { echo "8B2b RESULT: STOP - oracle gate is not 0 / 0 before the run"; exit 1; }
+RS=$(python3 scripts/restore_frozen_pn.py "$B" 2>&1); rs=$?
+grep -E "^checked" <<< "$RS"
+echo "pre (e) restore_frozen_pn dry run exit $rs (1 expected: 0 differ is a count mismatch against its declared 178, nothing written on a dry run)"
+grep -qF "0 differ from the frozen record (declared 178)" <<< "$RS" || { echo "8B2b RESULT: STOP - frozen slots off record is not 0"; exit 1; }
+G=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_greek_identity g JOIN words w ON w.verse_id=g.verse_id AND w.position=g.position WHERE g.source <> 'abp-tag' AND w.strongs GLOB '[0-9]*'")
+echo "pre (f) non-abp-tag identity records sitting on a Greek-numbered word: $G (expect 0; was 6 before REKEY)"
+[ "$G" = "0" ] || { echo "8B2b RESULT: STOP - an identity record sits on a Greek-numbered word"; exit 1; }
+W0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words")
+X0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_hebrew_xref")
+echo "words before: $W0 (expect 626309) - pn_hebrew_xref before: $X0 (expect 32478)"
+[ "$W0" = "626309" ] || { echo "8B2b RESULT: STOP - words before is not 626309"; exit 1; }
+[ "$X0" = "32478" ] || { echo "8B2b RESULT: STOP - pn_hebrew_xref before is not 32478"; exit 1; }
+mkdir -p "$D1"
+sqlite3 -readonly "$B" "SELECT rowid, strongs, quote(strongs_base) FROM words WHERE strongs GLOB '[0-9]*' ORDER BY rowid" > "$D1/greek_rows_before.tsv"
+echo "snapshot: Greek-numbered word rows (rowid, strongs, strongs_base) before: $(wc -l < "$D1/greek_rows_before.tsv") rows"
+DRY=$(python3 scripts/retire_hebrew_identity.py "$B" --fresh-rebuild 2>&1); d=$?
+printf '%s\n' "$DRY" > "$D1/dry_run_full.log"
+grep -E "oracle gate|identity class split|^verified|^  class|^planned rewrites|^total rows changing|^pn_hebrew_xref rows to write|^is_pn words outside|^HALT|DRY RUN" <<< "$DRY"
+echo "dry run exit $d (expect 0)"
+[ "$d" -eq 0 ] || { echo "8B2b RESULT: STOP - dry run exit $d, nothing written"; exit 1; }
+grep -qF "fresh-rebuild oracle gate: hebrew_base mismatches 0 (must be 0), xref rows outside the identity table 0 (must be 0)" <<< "$DRY" || { echo "8B2b RESULT: STOP - oracle gate line is not 0 / 0"; exit 1; }
+grep -qF "identity class split: {'abp-tag': 3671, 'tipnr': 10236, 'lemma-only': 12191, 'surface': 4409, 'none': 1971}" <<< "$DRY" || { echo "8B2b RESULT: STOP - class split is not 3,671 / 10,236 / 12,191 / 4,409 / 1,971"; exit 1; }
+grep -qF "verified 32,478 rows against their classes" <<< "$DRY" || { echo "8B2b RESULT: STOP - not 32,478 rows verified"; exit 1; }
+grep -qF "total rows changing: 26,323" <<< "$DRY" || { echo "8B2b RESULT: STOP - rows changing is not 26,323 (read the planned-rewrites line)"; exit 1; }
+grep -qF "pn_hebrew_xref rows to write: 32,478 " <<< "$DRY" || { echo "8B2b RESULT: STOP - xref rows to write is not 32,478"; exit 1; }
+grep -qF "is_pn words outside the write set: 0 (expected 0)" <<< "$DRY" || { echo "8B2b RESULT: STOP - is_pn words outside the write set"; exit 1; }
+grep -qF "[DRY RUN] No changes written" <<< "$DRY" || { echo "8B2b RESULT: STOP - no DRY RUN line"; exit 1; }
+echo "dry run = the sec 9.95 picture (split 3,671 / 10,236 / 12,191 / 4,409 / 1,971 - 26,323 rewrites - xref 32,478) - applying"
+mkdir -p "$D2"
+APP=$(python3 scripts/retire_hebrew_identity.py "$B" --fresh-rebuild --apply 2>&1); a=$?
+printf '%s\n' "$APP" > "$D2/apply_full.log"
+grep -E "^stale pn_hebrew_xref dropped|^wrote pn_hebrew_xref|^applied|^GLOB invariant|^HALT|post-write checks" <<< "$APP"
+echo "apply exit $a (expect 0)"
+W1=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words")
+X1=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_hebrew_xref")
+echo "words after: $W1 (expect 626309) - pn_hebrew_xref after: $X1 (expect 32478)"
+OA2=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_greek_identity g JOIN pn_hebrew_xref x ON x.verse_id=g.verse_id AND x.position=g.position WHERE g.hebrew_base IS NOT x.hebrew_base")
+OB2=$(sqlite3 -readonly "$B" "SELECT count(*) FROM pn_hebrew_xref x WHERE NOT EXISTS (SELECT 1 FROM pn_greek_identity g WHERE g.verse_id=x.verse_id AND g.position=x.position)")
+echo "oracle gate, whole table, after (identity vs the rebuilt xref): $OA2 / $OB2 (expect 0 / 0)"
+GL=$(sqlite3 -readonly "$B" "SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'")
+echo "GLOB invariant after (bare-number strongs_base): $GL (expect 0)"
+sqlite3 -readonly "$B" "SELECT rowid, strongs, quote(strongs_base) FROM words WHERE strongs GLOB '[0-9]*' ORDER BY rowid" > "$D2/greek_rows_after.tsv"
+GD=$(diff "$D1/greek_rows_before.tsv" "$D2/greek_rows_after.tsv" | grep -c '^[<>]') || true
+echo "Greek-numbered word rows rewritten (before/after snapshot diff lines): $GD (expect 0)"
+if [ -e "$B-journal" ]; then J=PRESENT; else J=none; fi
+echo "journal after: $J (expect none)"
+if [ "$a" -eq 0 ] && grep -qF "wrote pn_hebrew_xref: 32,478 rows" <<< "$APP" && grep -qF "applied 26,323 strongs_base rewrites" <<< "$APP" && grep -qF "GLOB invariant (bare-number strongs_base): 0 (expected 0)" <<< "$APP" && grep -qF "all post-write checks pass" <<< "$APP" && [ "$W1" = "626309" ] && [ "$X1" = "32478" ] && [ "$OA2" = "0" ] && [ "$OB2" = "0" ] && [ "$GL" = "0" ] && [ "$GD" = "0" ] && [ "$J" = "none" ]; then
+  echo "8B2b RESULT: DONE - 26,323 rewrites - xref rebuilt 32,478 - oracle 0/0 - GLOB 0 - Greek-numbered rows untouched - words 626309 unchanged"; exit 0
+fi
+echo "8B2b RESULT: CHECK - an after-figure differs from the expected picture (lines above)"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/xref8b2c_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
