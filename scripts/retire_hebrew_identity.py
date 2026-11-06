@@ -99,8 +99,17 @@ for _i, _a in enumerate(sys.argv):
 #      none->lemma-only 458 · none->surface 40; nets lemma-only +16, none -477, surface +461.
 #   B  hdrlane vs live (copy of 10/25): source / greek_strongs / greek_lemma changed 0 / 0 / 0;
 #      hebrew_base 341 = the 2026-10-24 xref correction (319 SWAP + 22 REMOVE), not a class.
-EXPECT = {"abp-tag": 3671, "tipnr": 10236, "lemma-only": 12182,
-          "surface": 4412, "none": 1977}
+# RE-DECLARED 2026-11-06 (DESIGN_q2_build.md §9.95, edition-upgrade 8B2 STOP): the 10/25 split
+# above was taken BEFORE 8b.3 rebuilt pn_greek_identity on the rebuild chain (identity 21 rows
+# at the swap, docs/handoffs/RUN_rebuild_trap_live.md:157), so it was never the post-8b.3 table.
+# Receipts: ~/rekey/live_8b3_id.log (the 10/25 post-8b.3 identity split = this one) and
+# drift8b2_20261106.log (record: docs/handoffs/DRAFT_stageC_outline.md, DRIFT-8B2 entry;
+# hdrlane -> built, 9 source changes:
+# surface->lemma-only 3 = Jos 12:23, Jer 25:26, Jer 51:41; none->lemma-only 6 = Num 21:25,
+# 1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3 — all six carry a Hebrew number).
+# Nets lemma-only +9, surface -3, none -6; total 32,478 unchanged. Expected rewrites 26,323.
+EXPECT = {"abp-tag": 3671, "tipnr": 10236, "lemma-only": 12191,
+          "surface": 4409, "none": 1971}
 for i, a in enumerate(sys.argv):
     if a == "--expect-split" and i + 1 < len(sys.argv):
         vals = [int(x) for x in sys.argv[i + 1].split(",")]
