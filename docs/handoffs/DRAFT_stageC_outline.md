@@ -2810,7 +2810,7 @@ identical to what JP ran) with only REF 12b3e689, labels 8B2b, folders/log `xref
 `abptag_read_20261106.log` scp'd (read-only touchpoint; not in the repo). Read in full: the 16 built rows match §9.96
 (Eze 27:13@1 H3120->G1673; 1Th 1:1@2, 2Co 1:19@16, 2Th 1:1@2 G4610->G4609; 12 `'*'` rows -> record G); all 16 strongs `'*'`
 (the normal abp-tag name-slot state: 3,655 passing abp-tag rows also carry `'*'`); src carries the record's number at the
-same position on all 16 (word english differs on 14: the edition's English). Corrections at two of the positions
+same position on all 16 (word english differs on 15 (all but Act 16:6 'Galatian'): the edition's English). Corrections at two of the positions
 (Act 16:6@6 ids 72/73, Mat 1:13@0 ids 93/94) are english / english_head only (+ verses.text ids 74/95) — no strongs_base
 row, no clash. R2 plan: none of the 16 verses.
 Tests (made-up dbs): pass; re-paste (folder guard); re-run on fixed rows (row guard); drifted row; missing log line;
