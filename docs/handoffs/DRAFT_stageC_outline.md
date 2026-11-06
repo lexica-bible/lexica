@@ -3125,3 +3125,20 @@ fi
 echo "8B2b RESULT: CHECK - an after-figure differs from the expected picture (lines above)"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/xref8b2c_20261106.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## ABPTAG-RESTORE + 8B2c RAN — DONE, ACCEPTED (11/6, 23:45–23:46 UTC) → built = 8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2
+
+- **ABPTAG-RESTORE** (`abptag_restore_20261106.log`, REF 12b3e689, PA HEAD 12b3e689): pre a/b/c OK (pre_8b copy
+  451,964,928 bytes); 16 guards OK; before words 626,309 · abp-tag 3,671 failing 16 · other rows 626,293 digest 5efa7864;
+  in transaction changes 16 · failing 0 · words 626,309 · other rows digest 5efa7864 unchanged · 16 with strongs `'*'` ·
+  GLOB 0; the 16 rows printed with the record's numbers; after failing 0; `ABPTAG-RESTORE RESULT: DONE`; journal none;
+  exit=0.
+- **8B2c** (`xref8b2c_20261106.log`, folders `xref8b2c_dry_20261106/` + `xref8b2c_apply_20261106/`): pre a–f OK (oracle
+  0/0, 0 differ (declared 178), Greek-numbered non-abp-tag 0, words 626,309, xref 32,478); Greek-numbered snapshot 593,224
+  rows; dry run oracle 0/0, split 3,671 / 10,236 / 12,191 / 4,409 / 1,971, verified 32,478, five remaining 0; planned
+  tipnr 10,070 H->Greek + 166 '*'->Greek, lemma-only 11,959 H->'*' (232 already '*'), surface 4,128 H->'*' (281 already
+  '*'), kept none 1,800 Hebrew + 171 '*', abp-tag 3,671; total rows changing 26,323; xref to write 32,478 (no-Hebrew
+  4,521); is_pn outside 0. Apply: stale xref dropped, wrote 32,478 (no-Hebrew 4,521 = expected), applied 26,323, GLOB 0,
+  all post-write checks pass; after words 626,309, xref 32,478, oracle 0/0, GLOB 0, Greek-numbered rows rewritten 0,
+  journal none; `8B2b RESULT: DONE`; exit=0.
+- Ruling chat 11/6: both ACCEPTED. Next: 8B2A (`lane3_rebuild_step` = 8b.2a) drafted, held.
