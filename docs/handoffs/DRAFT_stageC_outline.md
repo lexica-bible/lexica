@@ -2778,3 +2778,8 @@ Routing live: read-only blocks + ruled-gate re-runs → reviewer first; writes �
   `CHARTER_rebuild_trap_fix.md:481`); the post-8b.3 split was never re-declared in the code. Next: read-only drift
   block (identity source vs xref class, both copies; built vs the 9/6 hdrlane backup if present), then propose the
   re-declaration + derived rewrite count (tipnr + lemma-only-with-H + surface-with-H) — proposal only, no commit.
+  **DRIFT-8B2 printed 11/6** (reviewer ESCALATE → two mechanical fixes → CLEAR; log `drift8b2_20261106`, folder
+  `drift8b2_20261106/`), RAN on picture: 9 = surface→lemma-only 3 (Jos 12:23, Jer 25:26, Jer 51:41) + none→lemma-only 6 (Num 21:25,
+  1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3; all with a Hebrew number); `live_8b3_id.log` = same split. **Ruled
+  §9.95:** EXPECT 3671 / 10236 / 12191 / 4409 / 1971, rewrites 26,323, xref 32,478, GLOB 0; next session = scripts
+  commit then 8B2b (`xref8b2b_*`).

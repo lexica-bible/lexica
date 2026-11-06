@@ -61,7 +61,19 @@ Gen 4:18** (ruling chat 11/6, after 8B1b).
 
 **State update 11/6 19:01 UTC:** STAGED-READ, REKEY (three-set: identity 6 + xref 6 + abp_surface 15) and 8B1b
 (restored 178) are DONE and ACCEPTED on built (`DRAFT_stageC_outline.md`, last section). Built = 8b.0 + REKEY + 8b.1.
-PA HEAD `2cdc4cf5`; code REF still `83f8f570`. Next: 8B2. The "FIRST task" list below is DONE except item 2's
+PA HEAD `2cdc4cf5`; code REF still `83f8f570`. **8B2 then STOPPED** (`xref8b2_20261106.log`, nothing written): built class
+split lemma-only 12,191 / surface 4,409 / none 1,971 vs the code's declared 12,182 / 4,412 / 1,977 (lemma-only +9 =
+surface −3 + none −6). Cause: the 10/25 chain ran 8b.2 before 8b.3 rebuilt `pn_greek_identity` (identity 21 rows at
+the swap, `RUN_rebuild_trap_live.md:157`); EXPECT never re-declared. DRIFT-8B2 RAN on picture (`drift8b2_20261106.log`): 9 source
+changes hdrlane→built (surface→lemma-only 3 = Jos 12:23, Jer 25:26, Jer 51:41; none→lemma-only 6 = Num 21:25, 1Sa
+20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3, all six with a Hebrew number); `~/rekey/live_8b3_id.log` shows the same
+split = the 10/25 post-8b.3 table. **Ruled §9.95.** **NEXT SESSION, first jobs, in order:** (1) ONE scripts commit —
+`retire_hebrew_identity.py:102-103` EXPECT = 3671 / 10236 / 12191 / 4409 / 1971, comment citing `~/rekey/live_8b3_id.log`
++ `drift8b2_20261106.log` (+ `RUN_rebuild_trap_live.md:157`), tests green, report the new REF in the ruling chat; (2) 8B2b =
+the 11/6 8B2 block (in the 11/6 chat / this session's transcript — not in the repo) with the new REF, folder/log names
+`xref8b2b_*` (the STOP left `xref8b2_dry_20261106/` behind), class-split gate line = the new split, 26,323 in the
+rewrite gates (`total rows changing: 26,323` / `applied 26,323 strongs_base rewrites` / RESULT line), everything else
+unchanged — print for clearance (a write: ruling chat, not the reviewer). The "FIRST task" list below is DONE except item 2's
 inventory, which STAGED-READ's record carries.
 First gate-2 run includes gate B `--dump`; full pn_binding list from `eu_pn_binding_diff.py`.
 
