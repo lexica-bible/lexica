@@ -39,6 +39,11 @@ Usage: python3 scripts/gate_greek_header.py <live.db> <scratch.db> [--dump <out.
   FAIL, same wording as before; a declared row that shows no delta = FAIL naming
   the row (ruled 2026-10-31). Worked example:
   tests/fixtures/rebuild_trap/declared_deltas_20261025.json (the 10/25 rebuild).
+  DESIGN §9.92 (2026-11-06) adds two fields: pn_binding.renamed_rows (a rename =
+  one declared event, old key live-only + new key scratch-only, nothing else
+  differs) and a gate_b block (pins + changed_rows; absent = the code pins).
+  The full gate-A member list for a ruling comes from
+  scripts/eu_pn_binding_diff.py (this gate prints at most 20 problems).
 """
 import os
 import sqlite3
@@ -79,7 +84,7 @@ fails = []
 _KEYCOLS = {"pn_binding": 4, "tipnr_entities": 1, "abp_surface": 2}
 
 
-def _declared_members(tbl, cols, l, s, want_rows):
+def _declared_members(tbl, cols, l, s, want_rows, renamed_rows=()):
     """Gate-A member rule (--declared). The set of row keys that differ between
     live and scratch must EQUAL the declared key set; each declared row's
     `changes` columns must read [from, to] exactly on (live, scratch) and every
@@ -87,7 +92,13 @@ def _declared_members(tbl, cols, l, s, want_rows):
       - a differing row with no declaration  -> "undeclared row … DIFFER"
       - a declared row with no actual delta  -> "declared row … NO DELTA" (ruled 10/31)
       - a declared column off its from/to, or an undeclared column moving on a
-        declared row                          -> named by row and column."""
+        declared row                          -> named by row and column.
+    renamed_rows (pn_binding only, DESIGN §9.92 G2): a rename is ONE declared
+    event {book, chapter, verse, old_name, new_name, changes{}, unchanged[]}.
+    The old key must be live-only and the new key scratch-only; the pair passes
+    only if both halves exist and nothing else differs between the old row and
+    the new row (the `changes` columns read [from, to] old -> new). Both keys
+    then count as declared. An unpaired one-sided row still fails."""
     names = cols.split(",")
     nkey = _KEYCOLS[tbl]
     lmap = {r[:nkey]: r for r in l}
@@ -97,6 +108,37 @@ def _declared_members(tbl, cols, l, s, want_rows):
     for d in want_rows:
         want[tuple(d[c] for c in names[:nkey])] = d
     problems = []
+    if renamed_rows and tbl != "pn_binding":
+        problems.append(f"renamed_rows is defined for pn_binding only, not {tbl}")
+        renamed_rows = ()
+    renamed = set()                      # keys a declared rename accounts for
+    for d in renamed_rows:
+        place = (d["book"], d["chapter"], d["verse"])
+        ok_, nk = (*place, d["old_name"]), (*place, d["new_name"])
+        tag = f"renamed row {place} {d['old_name']!r} -> {d['new_name']!r}"
+        if ok_ in want or nk in want:
+            problems.append(f"{tag}: also declared in changed_rows")
+        renamed |= {ok_, nk}
+        lr, sr = lmap.get(ok_), smap.get(nk)
+        if lr is None or ok_ in smap:
+            problems.append(f"{tag}: old half missing (needs {ok_} on live only)")
+        if sr is None or nk in lmap:
+            problems.append(f"{tag}: new half missing (needs {nk} on scratch only)")
+        if lr is None or sr is None or ok_ in smap or nk in lmap:
+            continue
+        changes = d.get("changes", {})
+        for c, (fv, tv) in changes.items():
+            ci = names.index(c)
+            if lr[ci] != fv or sr[ci] != tv:
+                problems.append(f"{tag} col {c}: old {lr[ci]!r} -> new {sr[ci]!r}, "
+                                f"declared {fv!r} -> {tv!r}")
+        for ci, c in enumerate(names):
+            if ci < nkey or c in changes:
+                continue
+            if lr[ci] != sr[ci]:
+                problems.append(f"{tag} col {c}: {lr[ci]!r} -> {sr[ci]!r} "
+                                "changed but not declared")
+    actual -= renamed
     for k in sorted(actual - set(want), key=repr):
         problems.append(f"undeclared row {k}: DIFFER")
     for k, d in want.items():
@@ -130,7 +172,8 @@ for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,
     s = list(scr.execute(f"SELECT {cols} FROM {tbl} ORDER BY 1,2,3,4"))
     same = l == s
     decl = (declared or {}).get(tbl)
-    if declared is None or decl is None or "changed_rows" not in decl:
+    if (declared is None or decl is None
+            or not ({"changed_rows", "renamed_rows"} & set(decl))):
         # today's byte rule; with --declared, "identical" (or an unmentioned
         # table) is just a declaration of 0.
         okA &= same
@@ -138,11 +181,15 @@ for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,
               + ("byte-identical" if same else
                  ("DIFFER" if declared is None else "DIFFER (declared identical)")))
     else:
-        probs = _declared_members(tbl, cols, l, s, decl["changed_rows"])
+        changed = decl.get("changed_rows", [])
+        renames = decl.get("renamed_rows", [])
+        probs = _declared_members(tbl, cols, l, s, changed, renames)
         okA &= not probs
         ndiff = len({r[:_KEYCOLS[tbl]] for r in set(l) ^ set(s)})
         print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — {ndiff} row(s) differ; "
-              f"declared {len(decl['changed_rows'])} → {'MATCH' if not probs else 'MISMATCH'}")
+              f"declared {len(changed)}"
+              + (f" + {len(renames)} rename(s)" if renames else "")
+              + f" → {'MATCH' if not probs else 'MISMATCH'}")
         for p in probs[:20]:
             print(f"    problem: {p}")
 for tbl in ("words", "verses"):
@@ -298,11 +345,47 @@ for k in set(lrows) & set(srows):
 # control has zero changed rows and must still PASS). Baseline pins for the
 # 2026-08 header landing; re-pin on any future lane.
 n_changed = len(set(lrows) & set(srows)) - counts["unchanged"]
+# --declared gate_b block (DESIGN §9.92 G3): {pins: {the four names}, changed_rows:
+# [{book, chapter, verse, position, name}]}. Absent = the code pins below, unchanged.
+# Present: the pins come from the block, and the header rows that change must EQUAL
+# changed_rows (member rule, like gate A): a changed row not listed fails, a listed
+# row with no change fails, a listed name that is not the slot's label fails.
+PINS = {"pinned ruled loss": 17, "glued cure (blanked)": 20,
+        "glued cure (replaced)": 94, "glued kept as-is": 30}
+gb = (declared or {}).get("gate_b")
+if gb is not None:
+    if set(gb.get("pins", {})) != set(PINS):
+        bad.append(("PIN", "gate_b.pins", f"must name exactly {sorted(PINS)}"))
+    else:
+        PINS = dict(gb["pins"])
+    vkey = {v: k for k, v in vref.items()}
+    want_b = {}
+    for d in gb.get("changed_rows", []):
+        ref = (d["book"], d["chapter"], d["verse"])
+        if ref not in vkey:
+            bad.append(("GATE_B", ref, f"declared header row {ref} pos {d['position']}: no such verse"))
+            continue
+        want_b[(vkey[ref], d["position"])] = d
+    moved = {k for k in set(lrows) & set(srows) if lrows[k] != srows[k]}
+    for k in sorted(moved - set(want_b)):
+        bad.append((k, "undeclared", "header row changed but not in gate_b.changed_rows"))
+    for k, d in sorted(want_b.items()):
+        ref = (*vref[k[0]], k[1])
+        if k not in moved:
+            bad.append(("GATE_B", ref, "declared header row: NO DELTA (live == scratch)"))
+            continue
+        lab = scr.execute("SELECT COALESCE(NULLIF(english_head,''), english) FROM words "
+                          "WHERE verse_id=? AND position=?", k).fetchone()
+        if er.norm_name((lab[0] if lab else "") or "") != d["name"]:
+            bad.append(("GATE_B", ref, f"declared name {d['name']!r} != slot label "
+                                       f"{(lab[0] if lab else None)!r}"))
+    print(f"gate B: declared changed_rows {len(want_b)} · header rows changed {len(moved)}")
 if n_changed:
-    for label, got, exp in (("pinned ruled loss", counts["pinned ruled loss"], 17),
-                            ("glued cure (blanked)", counts["glued cure (blanked)"], 20),
-                            ("glued cure (replaced)", counts["glued cure (replaced)"], 94),
-                            ("glued kept as-is", glued_kept, 30)):
+    for label, got in (("pinned ruled loss", counts["pinned ruled loss"]),
+                       ("glued cure (blanked)", counts["glued cure (blanked)"]),
+                       ("glued cure (replaced)", counts["glued cure (replaced)"]),
+                       ("glued kept as-is", glued_kept)):
+        exp = PINS[label]
         if got != exp:
             bad.append(("PIN", label, f"expected {exp}, got {got}"))
 okB = not bad

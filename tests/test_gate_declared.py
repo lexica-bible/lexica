@@ -162,5 +162,141 @@ class TestGateDeclared(unittest.TestCase):
         self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
 
 
+# ── DESIGN §9.92 G2: pn_binding.renamed_rows (a rename = ONE declared event) ──
+OLD = (40, 1, 12, "zerubbabel", "Zerubbabel@1Ch.3.19", "exact", "", 1, 0, 1)
+NEW = (40, 1, 12, "zorobabel",  "Zerubbabel@1Ch.3.19", "exact", "", 1, 0, 1)
+RENAME = {"book": 40, "chapter": 1, "verse": 12, "old_name": "zerubbabel",
+          "new_name": "zorobabel", "changes": {},
+          "unchanged": ["entity_uniq", "kind", "rule", "render", "hot", "tier"]}
+
+
+class TestGateDeclaredRenames(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp()
+        cls.live = os.path.join(cls.tmp, "live.db")
+        build(cls.live, sib.LIVE_IDENT, LIVE_BIND + [OLD])
+        swapped = after_swap(LIVE_BIND, ALL3)
+        cls.scr_pass = os.path.join(cls.tmp, "scr_pass.db")
+        build(cls.scr_pass, sib.LIVE_IDENT, swapped + [NEW])
+        cls.scr_half = os.path.join(cls.tmp, "scr_half.db")      # old gone, new never added
+        build(cls.scr_half, sib.LIVE_IDENT, swapped)
+        cls.scr_extra = os.path.join(cls.tmp, "scr_extra.db")    # new half moves kind too
+        build(cls.scr_extra, sib.LIVE_IDENT, swapped + [NEW[:5] + ("fuzzy",) + NEW[6:]])
+        with open(FIXTURE, encoding="utf-8") as fh:
+            decl = json.load(fh)
+        decl["words"]["scratch_count"] = len(sib.WORDS)
+        decl["verses"]["scratch_count"] = len(sib.VERSES)
+        decl["pn_binding"]["renamed_rows"] = [RENAME]
+        cls.decl_path = os.path.join(cls.tmp, "declared_rename.json")
+        with open(cls.decl_path, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+
+    def test_rename_pass(self):
+        out = run_gate(self.live, self.scr_pass, self.decl_path)
+        self.assertIn("5 row(s) differ; declared 3 + 1 rename(s) → MATCH", out)
+        self.assertIn("gate A: PASS — identity layer as declared", out)
+        self.assertNotIn("problem:", out.split("gate B:")[0])
+
+    def test_rename_missing_half_fails(self):
+        out = run_gate(self.live, self.scr_half, self.decl_path)
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: renamed row (40, 1, 12) 'zerubbabel' -> 'zorobabel': "
+                      "new half missing (needs (40, 1, 12, 'zorobabel') on scratch only)", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_rename_extra_diff_fails(self):
+        out = run_gate(self.live, self.scr_extra, self.decl_path)
+        self.assertIn("problem: renamed row (40, 1, 12) 'zerubbabel' -> 'zorobabel' col kind: "
+                      "'exact' -> 'fuzzy' changed but not declared", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_unpaired_one_sided_row_still_fails_without_rename(self):
+        with open(self.decl_path, encoding="utf-8") as fh:
+            decl = json.load(fh)
+        del decl["pn_binding"]["renamed_rows"]
+        p = os.path.join(self.tmp, "declared_norename.json")
+        with open(p, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+        out = run_gate(self.live, self.scr_pass, p)
+        self.assertIn("problem: undeclared row (40, 1, 12, 'zerubbabel'): DIFFER", out)
+        self.assertIn("problem: undeclared row (40, 1, 12, 'zorobabel'): DIFFER", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+
+# ── DESIGN §9.92 G3: the gate_b block (pins + changed_rows) ──────────────────
+# One header row changes in an allowed class (Gen 1:1 'David', glued -> blank =
+# glued cure (blanked)); every other identity row is the same on both copies.
+SCR_ONE = [sib.SCR_IDENT[0]] + sib.LIVE_IDENT[1:]
+CODE_PINS = {"pinned ruled loss": 17, "glued cure (blanked)": 20,
+             "glued cure (replaced)": 94, "glued kept as-is": 30}
+TRUE_PINS = {"pinned ruled loss": 0, "glued cure (blanked)": 1,
+             "glued cure (replaced)": 0, "glued kept as-is": 0}
+DAVID = {"book": "Gen", "chapter": 1, "verse": 1, "position": 1, "name": "david"}
+
+
+class TestGateDeclaredGateB(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp()
+        cls.live = os.path.join(cls.tmp, "live.db")
+        cls.scr = os.path.join(cls.tmp, "scr.db")
+        build(cls.live, sib.LIVE_IDENT, LIVE_BIND)
+        build(cls.scr, SCR_ONE, LIVE_BIND)
+
+    def gate(self, gate_b):
+        decl = {"lane": "test", "declared_by": "test", "receipt": "test",
+                "words": {"scratch_count": len(sib.WORDS)},
+                "verses": {"scratch_count": len(sib.VERSES)},
+                "abp_surface": {"identical": True}, "tipnr_entities": {"identical": True},
+                "pn_binding": {"identical": True},
+                "pn_greek_identity": {"keys_only_in_live": 0, "keys_only_in_scratch": 0,
+                                      "key_moves_file": None}}
+        if gate_b is not None:
+            decl["gate_b"] = gate_b
+        p = os.path.join(self.tmp, "d.json")
+        with open(p, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+        out = run_gate(self.live, self.scr, p)
+        self.assertIn("gate A: PASS — identity layer as declared", out)
+        return out
+
+    def test_block_absent_keeps_code_pins(self):
+        out = self.gate(None)
+        self.assertIn("problem: ('PIN', 'glued cure (blanked)', 'expected 20, got 1')", out)
+        self.assertNotIn("declared changed_rows", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_v1_code_pins_and_empty_list_fails_naming_the_row(self):
+        out = self.gate({"pins": CODE_PINS, "changed_rows": []})
+        self.assertIn("gate B: declared changed_rows 0 · header rows changed 1", out)
+        self.assertIn("problem: ((1, 1), 'undeclared', "
+                      "'header row changed but not in gate_b.changed_rows')", out)
+        self.assertIn("problem: ('PIN', 'glued cure (blanked)', 'expected 20, got 1')", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_redeclared_pins_with_named_row_pass(self):
+        out = self.gate({"pins": TRUE_PINS, "changed_rows": [DAVID]})
+        self.assertIn("gate B: declared changed_rows 1 · header rows changed 1", out)
+        self.assertIn("gate B: PASS", out)
+
+    def test_declared_row_without_change_fails(self):
+        tyre = {"book": "Gen", "chapter": 1, "verse": 4, "position": 1, "name": "tyre"}
+        out = self.gate({"pins": TRUE_PINS, "changed_rows": [DAVID, tyre]})
+        self.assertIn("problem: ('GATE_B', ('Gen', 1, 4, 1), "
+                      "'declared header row: NO DELTA (live == scratch)')", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_declared_name_must_be_the_slot_label(self):
+        out = self.gate({"pins": TRUE_PINS, "changed_rows": [dict(DAVID, name="saul")]})
+        self.assertIn("declared name 'saul' != slot label 'David'", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_pins_must_name_all_four(self):
+        out = self.gate({"pins": {"pinned ruled loss": 0}, "changed_rows": [DAVID]})
+        self.assertIn("problem: ('PIN', 'gate_b.pins', \"must name exactly", out)
+        self.assertIn("gate B: FAIL", out)
+
+
 if __name__ == "__main__":
     unittest.main()
