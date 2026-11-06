@@ -54,6 +54,10 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   Rom 4:17, Rom 9:1, Luk 2:23, Heb 7:11, Phm 1:12, Luk 2:35, Eze 26:7) — all FEED-attributed (CHECK 3), declared in gate
   3's record; the nine doubled-words; Split 80 → 84 attribution; the 11/2 held items (DESIGN §9.75/§9.76: the 117 near
   misses + Rom 9:29, verb chip blank this lane); the old-English punctuation members R2 surfaced.
+- **10 reorder verses, eSword order confirmation before swap** (DESIGN §9.93 (b); owed before stage G, not
+  before 8b): 2Ki 23:35 pos 6/7, Est 5:9 pos 12/13, Eze 20:14 pos 7/8, Gen 5:25 pos 1/2, Gen 5:26 pos 1/2,
+  Gen 34:4 pos 1/2, Jdg 11:7 pos 6/7, Jos 2:4 pos 19/20, Jos 5:15 pos 26/27, Rom 9:29 pos 17/18 — whole-row moves
+  into the edition's English order (census `strongs_pos_census2_20261106.log`); confirm each against eSword/ABP.
 
 ## Standing rules (unchanged, all still apply)
 - CC drafts PA blocks; the ruling chat clears; JP runs. Every block printed IN FULL in chat. "Draft X now?" questions
