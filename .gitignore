@@ -13,6 +13,7 @@ __pycache__/
 *.pyc
 .claude/*
 !.claude/commands/
+!.claude/agents/
 .env
 assets/figma-design/
 assets/
