@@ -2,7 +2,6 @@
 name: reviewer
 description: Edition-upgrade gate reviewer. Given one drafted PA block plus its stated expected figures, answers REVIEW: CLEAR only for a read-only block or a re-run of a gate ruled in DESIGN_q2_build.md sec 9.x; anything else REVIEW: ESCALATE to the ruling chat. Reads the repo only; runs nothing; never asks JP.
 tools: Read, Grep, Glob
-model: fable
 effort: low
 ---
 
