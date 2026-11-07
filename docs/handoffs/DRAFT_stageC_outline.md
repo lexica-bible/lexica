@@ -5779,3 +5779,23 @@ read-only line RDIFF8B3C below first.
 ### Line RDIFF8B3C (read-only; what differs between the dry and apply receipts)
 
 Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only line: it only reads two run-artifact text files, uses no db, writes nothing, has no `!`, and its field split matches the writer at build_pn_greek_identity.py:523". Expected if the hypothesis holds: the diff shows reordered forms from line ~290; "differing as written" ≥ 1; fields 1–5 (name / class / occurrences / headword / morph count — the member-list content) 0; after putting each form list in one fixed order 0. Any non-zero in the last two = a finding for the ruling chat (STILL DIFFERS lines list it). Tested locally on made-up receipts: a reorder reads 1 / 0 / 0; a class change reads STILL DIFFERS.
+
+### RDIFF8B3C ran (11/7, 20:06 UTC) — the receipts differ only in the order of tied forms
+
+9 of 2,606 lines differ (290 ashkelon, 429 belial, 456 bethanath, 1136 ibleam, 1500 kirjatharba, 1903 ophrah, 2052
+rehob, 2353 taanach, 2508 zaphon); every one is the same forms with the same counts listed in a different order among
+equal counts. **Fields 1–5 (name / class / occurrences / headword / morph count) differ on 0 lines; with each form list
+put in one fixed order, 0 lines differ.** So the hypothesis holds (`build_pn_greek_identity.py:521` sorts by count
+only; ties follow db row order, which differs between the throwaway dry copy and built). The header member list is
+identical. Receipt of record = the dry copy (`pn8b3c_20261107/greek_header_split_dry.txt`, 2,606 lines, sha
+59dac6f7…); PA's repo receipt now holds the apply version (sha 0051be4c…) — generated, untracked, display order only.
+
+## 8B3c DONE — ACCEPTED (11/7, ruling chat) → built = 8b.0 + REKEY + 8b.1 + §9.96 + 8b.2 + 8b.2a + 8b.3
+
+Under §9.97 / §9.98: identity = the 58 declared rows (split 3,671 / 10,246 / 12,216 / 4,382 / 1,963); slot table =
+the 4 jehoram → joram names; tipnr tables unchanged; pn_binding 15,446 → 15,426 (added 70 / removed 90). **Gate 2's
+pn_binding declared input = `~/edition_upgrade_runs/pn8b3c_20261107/pn_binding_delta_after.tsv` (160 rows)** — it
+replaces `pn_binding {"identical": true}` in `declared_deltas.json` (§9.98 b). Gate B changed_rows come from the 58 in
+`pn8b3_20261107/identity_delta.tsv` (sha 62a99ffe…, §9.97). **Next session:** the gate 2 dump
+(`scripts/eu_pn_binding_diff.py <src> <built>`, read-only) and the first gate 2 run (`gate_greek_header.py --declared`,
+read-only, expected to FAIL per §9.92), each through the reviewer. Handoff: `HANDOFF_edition_upgrade_gate2.md`.

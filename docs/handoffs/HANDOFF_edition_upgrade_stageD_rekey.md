@@ -1,5 +1,7 @@
 # HANDOFF — edition upgrade, stage D: REKEY + 8b.1 (written 2026-11-06)
 
+> **SUPERSEDED 2026-11-07 by `HANDOFF_edition_upgrade_gate2.md`** — stage D is done through 8b.3; this file is history.
+
 Successor to `HANDOFF_edition_upgrade_stageC_repin.md` (its "Standing rules" and "Follow-up list" still apply) and
 `HANDOFF_edition_upgrade_reviewer_setup.md` (done). Every stage-D block, result and ruling so far:
 `DRAFT_stageC_outline.md` (sections from "Stage D opened (11/6)") and DESIGN `DESIGN_q2_build.md` §9.85–§9.94 —
