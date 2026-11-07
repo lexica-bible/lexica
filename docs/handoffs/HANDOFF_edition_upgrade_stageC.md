@@ -26,8 +26,8 @@
 - **Keep:** `~/bible.db.pre-surface-fill-20261025` (the 9a restore's only old-table source until 9c's
   re-freeze passes `--check` against the swapped live), `~/bible-db/bible_pre_trapwire_swap.db` (rollback
   of record; also the §9.78 evidence), `<src>`, `<built>`.
-- **Close-out cleanup (not this lane; JP rules):** the two `bible_pre_pnstar_*` copies (~824 MB),
-  `bible_test.db` — only after a nightly postdates the last swap (ops.md item 6).
+- **Close-out cleanup — DONE 2026-11-07 (JP):** the two `bible_pre_pnstar_*` copies and `bible_test.db`
+  deleted (PA quota), with `~/db_evidence/bible_formlane.db` and the orphaned 9/6 formlane backup.
 
 ## Rulings this session (DESIGN_q2_build.md §9, one line each)
 - §9.58 `pn_binding.rule` blank = `''` (never NULL); the 3 Michaiah rows are NOT declared.

@@ -5727,3 +5727,15 @@ fi
 echo "8B3CX RESULT: CHECK - an after-figure differs (lines above); built was not written by this block"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/pn8b3cx_20261107.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## PA disk cleanup (11/7) — ruling chat; JP ran it
+
+PA home was at quota (8.3G). Read-only repo check per file (record: this session's report) → JP deleted:
+`~/bible-db/bible_pre_pnstar_20260803.db`, `~/bible-db/bible_pre_pnstar_swap_20260805.db` (closed lanes, every banked
+figure recorded; the `~/db_evidence/` twins `TODO.md` claimed were never made), `~/bible-db/bible_test.db`,
+`~/db_backups/bible_formlane.db.20260906-153935.db` + `.info` (orphaned — rotation only runs for databases still in
+`~/bible-db`), `~/db_evidence/bible_formlane.db` (8/23 gated copy). Home now **6.3G**. Kept:
+`~/bible-db/bible_pre_trapwire_swap.db` (rollback of record, §9.78 evidence), `~/bible.db.pre-surface-fill-20261025`
+(step 9a's only old-table source until 9c), the hdrlane 9/6 backup (§9.95), the 4 form-lane TSVs. Doc notes:
+`data-model.md:715`, `HANDOFF_article_slot_rebuild.md:21-22`, `TODO.md` (pnstar + disk-thinning lines),
+`HANDOFF_edition_upgrade_stageC.md:29-30`. Still owed: block 8B3CX (the 8B3c after-check) and the backup-stamp read.

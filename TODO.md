@@ -249,7 +249,7 @@ parser reference notes in its appendix). No open writes.
   dated after the 10/25 18:06 swap (10/26, 10/27, 10/28) all pass the backup sweep (JP ruling 10/25
   required a PASS, not just a later date; the damaged 10/24 copy has since aged out) ·
   `bible_pre_trapwire_swap.db` = the rollback of record · two `bible_pre_pnstar_*` (~824 MB)
-  deletable as their own step.
+  **DELETED by JP 2026-11-07** (PA quota; ruling chat — closed lanes, figures recorded; no copy kept).
 - **Held list** — read-by-hand, no writes queued. Full rows: the handoff (lane (a)'s "Same slot,
   different number" entry + "Also open from 10/24") and `docs/handoffs/CENSUS_abp_surface_fill.md`.
   - **540 + 13 same-slot number disagreements** (app vs ours, after swaps; the 13 are from the fill
@@ -305,9 +305,12 @@ parser reference notes in its appendix). No open writes.
 - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66 variant forms =
   hand-table door candidates.
 - **PA disk housekeeping (small):**
-  - Disk thinning filed 8/23: `bible_test.db` (Aug 4 — JP rules), one of the two in-repo
-    pre_pnstar copies (evidence twins stay in `~/db_evidence/`); `~/bible-db/bible_hdrlane.db`
-    was kept for diagnosis at 8/23.
+  - Disk thinning filed 8/23 — **DONE 2026-11-07 (JP, PA quota 8.3G → 6.3G):** deleted `bible_test.db`,
+    both `bible_pre_pnstar_*` (the `~/db_evidence/` twins were NEVER made — only the form lane's
+    `bible_formlane.db` + 4 TSVs were there), `~/db_evidence/bible_formlane.db` (8/23 gated copy) and
+    `~/db_backups/bible_formlane.db.20260906-153935.db` (+ `.info`; orphaned — its source file is gone, so
+    rotation never touched it). The 4 form-lane TSVs stay. `~/bible-db/bible_hdrlane.db` was kept for
+    diagnosis at 8/23 (its 9/6 backup is the §9.95 reference — keep).
   - WAL crumbs (zero-risk): orphan 0-byte -wal/-shm companion files sit in ~/bible-db
     (bible_test.db-wal, bible_test_scratch.db-*, proseonly.db-* — two with no parent file). Repo
     grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL guards), so the crumbs are

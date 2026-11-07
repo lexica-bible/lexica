@@ -18,8 +18,8 @@ session (below) and the reviewer chat (paste block at the end).
 - **Pinned numbers:** writes 929 · lane B 1,376 HELD · bins P 930 / R 240 /
   D 1,519 (P = pre-pass 1 + 929 ✓; lane A 929 + 383 = 1,312 pin ✓).
 - **Old 1,240 broken writes: SUBSUMED.** A rebuild re-derives everything from
-  source, so the 929/332 record IS their re-audit. Their only surviving copy is
-  `bible_test.db` on PA — quarantined evidence, NEVER swap it.
+  source, so the 929/332 record IS their re-audit. Their only surviving copy was
+  `bible_test.db` on PA (quarantined evidence, never swapped) — **deleted 2026-11-07** (PA quota).
 - **No database was changed in the fix session. Live is untouched.**
 
 ## Sequencing — what runs before what
