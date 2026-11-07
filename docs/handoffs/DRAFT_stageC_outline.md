@@ -3980,3 +3980,393 @@ fi
 echo "8B3 RESULT: CHECK - an after-figure differs from the expected picture (lines above). Before-state of the five tables: $D/before.db"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/pn8b3_20261107.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## 8B3 RAN — STOP at the dry identity build; ACCEPTED as the §9.70 case (11/7, 02:57 UTC) → built untouched, still = 8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a
+
+Log `~/edition_upgrade_runs/pn8b3_20261107.log`, PA HEAD 12b3e689. pre (a) 0 · (b) OK · (c) pre_8b copy 451,964,928 bytes,
+built 451,964,928. 10/25 lines found where expected: `live_8b3_id.log:13-17` (split) + `:66` (32,478);
+`live_8b3_bind.log:8,10,12,14` (hand rulings / witness lanes), `:59` tipnr_entities 4,247, `:60` render 15,378 + HOT 68,
+`:63-69` the 7 Jehoram→Joram OVERRIDE lines, `:70` slot 102 landable / 0 refused, `:71` 102 written;
+`live_8b3_unfind.log:5` in scope 26,830, `:6-7` 0 / 0, `:9` PASS; `live_8b3_twoder.log:2` Hebrew-keyed 2,330 /
+Greek-keyed 502, `:6` agree 2,330 / disagree 0, `:2352` controls 10 failed 0. Header receipt on PA before: 2,614 lines.
+Prep OK: words 626,309, identity 32,478, REKEY 6/6 at the new positions; snapshots identity 32,478 / binding 15,446;
+words fingerprint digest 2b23f546; abp_surface 395,003 digest 623cca1f; dry copy words 33,376 (51 slot-ruling verses).
+SRCMINI OK (6 records moved; identity 32,478 · xref 32,478 · words keys 626,309).
+**Dry identity build (exit 0):** split abp-tag 3,671 · tipnr **10,246** · lemma-only **12,216** · surface **4,382** ·
+none **1,963** = 32,478 (10/25: 3,671 / 10,236 / 12,191 / 4,409 / 1,971; net +10 / +25 / −27 / −8); name-match gate
+refused 526 across 43 pairs; receipt: names classified 2,602, UNRESOLVED 886. → `8B3 RESULT: STOP`, exit=1. Binding,
+audits and the apply never ran.
+**Correction to the 8B3 draft:** it said none of the four scripts' inputs changed since 10/24. True of the files in
+git; NOT of the words table, which the identity builder reads (labels, lemmas) and which this lane rebuilt from the
+edition's text. The 10/25 split was therefore an expectation, not a given — the dry run caught it before built.
+**Side effect:** the dry identity build rewrote PA's receipt `docs/tickets/greek_header_split.txt` (generated,
+untracked; every identity run rewrites it). The earlier copy is in the run folder as `greek_header_split_before.txt`.
+**Ruling (chat, 11/7):** STOP accepted; the §9.70 case — identity rebuilt from the edition's text; re-declare on built
+with the changed rows named; not a defect. Read-only 8B3R ordered (below); then a proposal (not written) for the
+re-declared split for 8B3b and the gate_b changed_rows list (§9.92 G3).
+
+## 8B3R (read-only: what the dry identity build changed) drafted (11/7)
+
+Reads only the files 8B3 left in `~/edition_upgrade_runs/pn8b3_20261107/` (`before.db` = built's five tables before
+8b.3, `dry.db` = the throwaway copy after the dry identity build, `unf_before_rekeyed.db` = src's identity + xref with
+the 6 moves applied, `dry_identity.log`, the two receipt copies), `~/rekey/live_8b3_id.log`, and src through one
+read-only open (english for the printed rows). Every database is opened read-only; no builder runs. Writes two list
+files into the run folder: `identity_delta.tsv` (every differing row) and `receipt_delta.tsv` (every per-name change).
+Prints: (0) the before / dry splits recomputed from the tables, dry = the dry log, and before.db vs src re-keyed (0
+means this delta is also the src → built picture gate 2 will compare); (1) counts by source before → after, by
+greek_strongs changed / unchanged (and how: appears / vanishes / changes), rows gate B counts (greek_strongs /
+greek_lemma / source) vs hebrew_base-only, then the first 60 rows in verse_id order with ref, position, english on built,
+english on src (src position for a moved record), strongs_base on built, before → after record — plus the first 2 rows
+of any source change the 60 don't show; (3) the refusal / pair / names / UNRESOLVED figures, 10/25 vs dry, each with
+its log path:line, every GATED pair whose count differs, and the receipt-level per-name changes (the before copy's
+figures are checked against the 10/25 log's; the copy itself carries no date); (4) whether any of the 6 re-keyed or
+16 abp-tag rows are in the delta.
+Tests (fake home, the real 8B3 test block stopped at the split first): 1 changed row (a REKEY record) listed and
+flagged; re-paste STOP; 3 changed rows incl. an abp-tag row losing its number (greek_strongs vanishes, abp-tag 1 of 16
+flagged, a class beyond the shown rows printed); the log-line patterns checked against PA's own line formats.
+
+### Block 8B3R (GATE REF 12b3e689; READ-ONLY — writes two list files into the run folder)
+
+```bash
+set +H
+( set -uo pipefail
+REF=12b3e689
+echo "GATE REF ${REF} - 8B3R read-only: what the 8B3 dry identity build changed (files in pn8b3_20261107/ + one read-only open of src) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "8B3R RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "8B3R RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "8B3R RESULT: STOP - PA has not pulled $REF"; exit 1; }
+export PYTHONIOENCODING=utf-8
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+D=~/edition_upgrade_runs/pn8b3_20261107
+L1=~/rekey/live_8b3_id.log
+RC=docs/tickets/greek_header_split.txt
+for f in "$D/before.db" "$D/dry.db" "$D/unf_before_rekeyed.db" "$D/dry_identity.log" "$D/greek_header_split_dry.txt" "$S" "$L1"; do [ -s "$f" ] || { echo "8B3R RESULT: STOP - missing or empty: $f"; exit 1; }; done
+[ -e "$D/apply_identity.log" ] && { echo "8B3R RESULT: STOP - $D has an apply log: 8B3 got past the dry run, this read does not fit"; exit 1; }
+P="$D/pn8b3r_helper.py"
+[ -e "$P" ] && { echo "8B3R RESULT: STOP - helper already in the folder (already ran?): $P"; exit 1; }
+for f in "$S" "$B" "$D/before.db" "$D/dry.db" "$D/unf_before_rekeyed.db"; do if [ -e "$f-journal" ]; then echo "8B3R RESULT: STOP - $f-journal present (move it aside, never delete; bring it back)"; exit 1; fi; done
+echo "pre: no -journal beside src, built or the folder's three copies: OK"
+echo "built now (read-out; 8B3 stopped before writing it): $(stat -c '%s bytes, modified %y' "$B")"
+echo "folder: $(ls "$D" | tr '\n' ' ')"
+cat > "$P" <<'PY'
+"""8B3R helper (one-off, read-only): what the 8B3 dry identity build changed.
+
+Reads only the files 8B3 left in its run folder <dir> (before.db = built's tables before 8b.3,
+dry.db = the throwaway copy after the dry identity build, unf_before_rekeyed.db = src's identity
+with the 6 REKEY moves applied, dry_identity.log, the two receipt copies), the 10/25 identity
+log, and src (one read-only open, english for the printed rows). Every database is opened
+read-only. Writes two list files into <dir>: identity_delta.tsv, receipt_delta.tsv.
+
+Usage: python3 pn8b3r_helper.py <dir> <src.db> <live_8b3_id.log>
+"""
+import re
+import sqlite3
+import sys
+from pathlib import Path
+
+REPO = Path.home() / "bible-db"
+sys.path.insert(0, str(REPO))
+import entity_resolution as er  # norm_name: the label form gate B compares (gate_greek_header.py)
+
+MOVES = REPO / "tests" / "fixtures" / "edition_upgrade" / "pn_greek_identity_key_moves_20261106.tsv"
+ABPTAG16 = ((21270, 1), (23928, 2), (24148, 16), (24461, 2), (24627, 9), (25170, 6), (25225, 0),
+            (25374, 19), (25553, 12), (26424, 2), (27237, 1), (28665, 6), (29083, 13), (29141, 13),
+            (29142, 0), (31003, 4))
+CLASSES = ("abp-tag", "tipnr", "lemma-only", "surface", "none")
+SHOW = 60
+COLS = ("greek_strongs", "greek_lemma", "source", "hebrew_base")
+
+
+def stop(msg):
+    print("8B3R RESULT: STOP - " + msg)
+    sys.exit(1)
+
+
+def ro(path):
+    if not Path(path).is_file():
+        stop("missing: %s" % path)
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def ident(c):
+    return {(r[0], r[1]): tuple(r[2:]) for r in c.execute(
+        "SELECT verse_id, position, %s FROM pn_greek_identity" % ", ".join(COLS))}
+
+
+def split_of(rows):
+    s = {k: 0 for k in CLASSES}
+    for v in rows.values():
+        s[v[2]] = s.get(v[2], 0) + 1
+    return s
+
+
+def fmt_split(s):
+    return " / ".join("%s %s" % (k, format(s.get(k, 0), ",")) for k in CLASSES) + \
+        " = %s" % format(sum(s.values()), ",")
+
+
+D, SRC, LIVE_LOG = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+OUT1, OUT2 = D / "identity_delta.tsv", D / "receipt_delta.tsv"
+if OUT1.exists() or OUT2.exists():
+    stop("output list already exists (already ran?): %s" % OUT1)
+moves = []
+for ln in MOVES.read_text(encoding="utf-8").splitlines()[1:]:
+    if ln.strip():
+        v, o, n = ln.split("\t")
+        moves.append((int(v), int(o), int(n)))
+if not len(moves) == 6:
+    stop("moves file has %d rows, not 6" % len(moves))
+new2old = {(v, n): (v, o) for v, o, n in moves}
+
+bef_c, dry_c, unf_c = ro(D / "before.db"), ro(D / "dry.db"), ro(D / "unf_before_rekeyed.db")
+bef, dry, unf = ident(bef_c), ident(dry_c), ident(unf_c)
+vref = {r[0]: (r[1], r[2], r[3]) for r in bef_c.execute("SELECT id, book, chapter, verse FROM verses")}
+
+
+def ref(vid):
+    r = vref.get(vid)
+    return "%s %d:%d" % r if r else "verse %s ?" % vid
+
+
+# ---- (0) the inputs are what 8B3 left
+print("=== (0) the run folder's tables")
+sb, sd = split_of(bef), split_of(dry)
+print("before.db identity (built before 8b.3): %s" % fmt_split(sb))
+print("dry.db identity (after the dry build):  %s" % fmt_split(sd))
+dlog = (D / "dry_identity.log").read_text(encoding="utf-8").splitlines()
+logsplit = {}
+for ln in dlog:
+    m = re.match(r"^  (abp-tag|tipnr|lemma-only|surface|none) +([0-9,]+)$", ln)
+    if m:
+        logsplit[m.group(1)] = int(m.group(2).replace(",", ""))
+print("dry.db split = the split in dry_identity.log: %s" % ("yes" if logsplit == sd else "NO (%s)" % logsplit))
+if not logsplit == sd:
+    stop("dry.db does not hold the dry run's identity table")
+same_src = sum(1 for k in set(bef) | set(unf) if not bef.get(k) == unf.get(k))
+print("before.db identity vs src's identity with the 6 REKEY moves applied (unf_before_rekeyed.db): "
+      "%d rows differ (0 = built's identity before 8b.3 was src's, re-keyed; then this delta is "
+      "also the src -> built picture gate 2 will compare)" % same_src)
+
+# ---- (1) the full delta, before.db -> dry.db
+print()
+print("=== (1) identity delta, before.db -> dry.db (every row in %s)" % OUT1)
+rem = sorted(k for k in bef if k not in dry)
+add = sorted(k for k in dry if k not in bef)
+chg = sorted(k for k in bef if k in dry and not bef[k] == dry[k])
+print("rows: before %s, after %s - changed %d, added %d, removed %d"
+      % (format(len(bef), ","), format(len(dry), ","), len(chg), len(add), len(rem)))
+wrows = {(r[0], r[1]): r[2:] for r in dry_c.execute(
+    "SELECT verse_id, position, english, english_head, strongs_base FROM words WHERE is_pn=1 OR verse_id IN "
+    "(SELECT DISTINCT verse_id FROM pn_greek_identity)")}
+by_src, by_gs, by_gate, missing_w = {}, {"greek_strongs changed": 0, "greek_strongs unchanged": 0}, {}, 0
+gs_kinds = {}
+lines = []
+keys = [("CHANGED", k) for k in chg] + [("ADDED", k) for k in add] + [("REMOVED", k) for k in rem]
+keys.sort(key=lambda t: t[1])
+for kind, k in keys:
+    b, a = bef.get(k), dry.get(k)
+    sb_, sa_ = (b[2] if b else "-"), (a[2] if a else "-")
+    by_src[(sb_, sa_)] = by_src.get((sb_, sa_), 0) + 1
+    gsb, gsa = (b[0] if b else None), (a[0] if a else None)
+    if gsb == gsa:
+        by_gs["greek_strongs unchanged"] += 1
+    else:
+        by_gs["greek_strongs changed"] += 1
+        kind_gs = ("appears (None -> G, after source tipnr)" if gsb is None and gsa and sa_ == "tipnr"
+                   else "appears (None -> G, other source)" if gsb is None
+                   else "vanishes (G -> None)" if gsa is None else "changes (G -> other G)")
+        gs_kinds[kind_gs] = gs_kinds.get(kind_gs, 0) + 1
+    diffcols = [c for i, c in enumerate(COLS) if not (b and a and b[i] == a[i])]
+    gate = "gate-B row" if (b is None or a is None or not b[:3] == a[:3]) else "hebrew_base only"
+    by_gate[gate] = by_gate.get(gate, 0) + 1
+    w = wrows.get(k)
+    if w is None:
+        missing_w += 1
+    eng, head, sbase = (w if w else (None, None, None))
+    label = er.norm_name((head or eng) or "")
+    lines.append((kind, k, eng, sbase, label, ",".join(diffcols), b, a))
+with open(OUT1, "w", encoding="utf-8", newline="\n") as f:
+    f.write("kind\tverse_id\tref\tposition\tenglish_built\tstrongs_base_built\tlabel_norm\tcols_changed\t"
+            "before(greek_strongs,greek_lemma,source,hebrew_base)\tafter\n")
+    for kind, k, eng, sbase, label, dc, b, a in lines:
+        f.write("%s\t%d\t%s\t%d\t%r\t%r\t%r\t%s\t%r\t%r\n" % (kind, k[0], ref(k[0]), k[1], eng, sbase, label, dc, b, a))
+print("by source, before -> after:")
+for (x, y), n in sorted(by_src.items(), key=lambda t: (-t[1], t[0])):
+    print("  %-10s -> %-10s %s" % (x, y, format(n, ",")))
+print("net per class (after - before): " + " / ".join(
+    "%s %+d" % (c, sd.get(c, 0) - sb.get(c, 0)) for c in CLASSES))
+print("by greek_strongs: changed %s, unchanged %s" % (format(by_gs["greek_strongs changed"], ","),
+                                                     format(by_gs["greek_strongs unchanged"], ",")))
+for kk, n in sorted(gs_kinds.items()):
+    print("  greek_strongs %s: %d" % (kk, n))
+print("rows gate B counts as changed (greek_strongs / greek_lemma / source differ): %s - hebrew_base only: %s"
+      % (format(by_gate.get("gate-B row", 0), ","), format(by_gate.get("hebrew_base only", 0), ",")))
+print("delta rows with no words row in the dry copy: %d (expect 0)" % missing_w)
+src_c = ro(SRC)
+
+
+def src_eng(k):
+    sk = new2old.get(k, k)
+    r = src_c.execute("SELECT english FROM words WHERE verse_id=? AND position=?", sk).fetchone()
+    return (r[0] if r else "(no row)"), sk
+
+
+print()
+print("first %d rows (verse_id order): ref @pos | english on built | english on src (src pos if moved) | "
+      "strongs_base built | before -> after (greek_strongs, greek_lemma, source, hebrew_base)" % SHOW)
+shown_cls = set()
+for kind, k, eng, sbase, label, dc, b, a in lines[:SHOW]:
+    se, sk = src_eng(k)
+    shown_cls.add(((b[2] if b else "-"), (a[2] if a else "-")))
+    print("  %s %s @%d | %r | src %r%s | %s | %s -> %s  [%s]"
+          % (kind, ref(k[0]), k[1], eng, se, (" (src pos %d)" % sk[1]) if not sk == k else "",
+             sbase, b, a, dc))
+extra = [(cl, [x for x in lines if ((x[6][2] if x[6] else "-"), (x[7][2] if x[7] else "-")) == cl][:2])
+         for cl in sorted(by_src) if cl not in shown_cls]
+if extra:
+    print("source changes not in the first %d - first 2 rows of each:" % SHOW)
+    for cl, xs in extra:
+        for kind, k, eng, sbase, label, dc, b, a in xs:
+            se, sk = src_eng(k)
+            print("  [%s -> %s] %s %s @%d | %r | src %r | %s | %s -> %s  [%s]"
+                  % (cl[0], cl[1], kind, ref(k[0]), k[1], eng, se, sbase, b, a, dc))
+
+# ---- (3) receipts and the 10/25 log
+print()
+print("=== (3) the dry receipt vs the 10/25 run")
+llog = Path(LIVE_LOG).read_text(encoding="utf-8").splitlines()
+
+
+def figures(lines_, name):
+    out = {}
+    gated = {}
+    for i, ln in enumerate(lines_, 1):
+        if ln.startswith("name-match gate refused") or ln.startswith("receipt written") \
+                or ln.startswith("  (gentilic tokens excluded"):
+            print("  %s:%d: %s" % (name, i, ln))
+        m = re.match(r"^name-match gate refused ([0-9,]+) slot inheritances across ([0-9,]+) ", ln)
+        if m:
+            out["refused"], out["pairs"] = (int(x.replace(",", "")) for x in m.groups())
+        m = re.search(r"names classified: ([0-9,]+), UNRESOLVED: ([0-9,]+)", ln)
+        if m:
+            out["names"], out["unresolved"] = (int(x.replace(",", "")) for x in m.groups())
+        m = re.match(r"^  GATED (.+) ×([0-9]+)$", ln)
+        if m:
+            gated[m.group(1)] = int(m.group(2))
+    return out, gated
+
+
+fl, gl = figures(llog, LIVE_LOG)
+fd, gd = figures(dlog, str(D / "dry_identity.log"))
+for key, lab in (("refused", "name-match gate refusals"), ("pairs", "name->number pairs refused"),
+                 ("names", "names classified"), ("unresolved", "UNRESOLVED")):
+    a_, b_ = fl.get(key), fd.get(key)
+    print("  %-28s 10/25 %s -> dry %s (%s)" % (lab, a_, b_, "same" if a_ == b_ else "%+d" % ((b_ or 0) - (a_ or 0))))
+print("  GATED pair lines: 10/25 %d (sum %d) - dry %d (sum %d)" % (len(gl), sum(gl.values()), len(gd), sum(gd.values())))
+for p in sorted(set(gl) | set(gd)):
+    if not gl.get(p) == gd.get(p):
+        print("    GATED %s: 10/25 %s -> dry %s" % (p, gl.get(p, "-"), gd.get(p, "-")))
+
+
+def receipt(path):
+    names, breath = {}, 0
+    for ln in Path(path).read_text(encoding="utf-8").splitlines():
+        if ln.startswith("# ") and " -> " in ln and not ln.startswith("# breathing repairs"):
+            breath += 1
+        if not ln or ln.startswith("#"):
+            continue
+        p = ln.split("|")
+        names[p[0]] = p[1:]
+    return names, breath
+
+
+rb_path, rd_path = D / "greek_header_split_before.txt", D / "greek_header_split_dry.txt"
+if rb_path.exists():
+    rb, bb = receipt(rb_path)
+    rd, bd = receipt(rd_path)
+    unb = sum(1 for v in rb.values() if v[0].startswith("UNRESOLVED"))
+    und = sum(1 for v in rd.values() if v[0].startswith("UNRESOLVED"))
+    print("  receipt on PA before 8B3 (copy): names %s, UNRESOLVED %s, breathing lines %d - matches the 10/25 "
+          "log's figures: %s (figures only; the copy carries no date)"
+          % (format(len(rb), ","), format(unb, ","), bb,
+             "yes" if (len(rb), unb) == (fl.get("names"), fl.get("unresolved")) else "NO"))
+    print("  dry receipt: names %s, UNRESOLVED %s, breathing lines %d (log says %s / %s)"
+          % (format(len(rd), ","), format(und, ","), bd, fd.get("names"), fd.get("unresolved")))
+    gone = sorted(set(rb) - set(rd))
+    new = sorted(set(rd) - set(rb))
+    moved = sorted(n for n in set(rb) & set(rd) if not rb[n][0] == rd[n][0] or not rb[n][2] == rd[n][2])
+    occ = sorted(n for n in set(rb) & set(rd) if n not in moved and not rb[n][1] == rd[n][1])
+    print("  per name, before copy -> dry: only before %d, only dry %d, class or headword changed %d, "
+          "occurrence count only %d" % (len(gone), len(new), len(moved), len(occ)))
+    trans = {}
+    for n in moved:
+        t = (rb[n][0], rd[n][0])
+        trans[t] = trans.get(t, 0) + 1
+    for (x, y), n in sorted(trans.items(), key=lambda t: -t[1]):
+        print("    class %s -> %s: %d" % (x, y, n))
+    with open(OUT2, "w", encoding="utf-8", newline="\n") as f:
+        f.write("kind\tname\tbefore(class|occ|headword|morph|forms)\tdry\n")
+        for kind, ns in (("ONLY_BEFORE", gone), ("ONLY_DRY", new), ("CHANGED", moved), ("OCC_ONLY", occ)):
+            for n in ns:
+                f.write("%s\t%s\t%s\t%s\n" % (kind, n, "|".join(rb.get(n, [])), "|".join(rd.get(n, []))))
+    print("  first %d (only before / only dry / class or headword changed; all in %s):" % (SHOW, OUT2))
+    for kind, ns in (("ONLY_BEFORE", gone), ("ONLY_DRY", new), ("CHANGED", moved)):
+        for n in ns:
+            if SHOW <= 0:
+                break
+            SHOW -= 1
+            print("    %s %s: %s -> %s" % (kind, n, "|".join(rb.get(n, [])[:4]) or "-", "|".join(rd.get(n, [])[:4]) or "-"))
+else:
+    print("  no receipt copy from before 8B3 in the folder - receipt compare by log figures only")
+
+# ---- (4) the 6 re-keyed + 16 abp-tag rows
+print()
+print("=== (4) the 6 REKEY records and the 16 abp-tag rows in the delta?")
+dk = {k for _kind, k, *_r in lines}
+for v, o, n in moves:
+    print("  REKEY %s @%d: %s" % (ref(v), n, ("IN the delta: %r -> %r" % (bef.get((v, n)), dry.get((v, n))))
+                                  if (v, n) in dk else "not in the delta"))
+hit16 = [k for k in ABPTAG16 if k in dk]
+print("  abp-tag 16: %d of 16 in the delta%s" % (len(hit16), "" if not hit16 else
+                                                 " - " + "; ".join("%s @%d %r -> %r" % (ref(k[0]), k[1], bef.get(k), dry.get(k)) for k in hit16)))
+print("8B3R RESULT: READ DONE - %d identity rows differ (list: %s)" % (len(lines), OUT1))
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = dcd1f07ac0bbfc12c8d012e34972173a32e8574644092ba5b6b94af4dbcba711 ] || { echo "8B3R RESULT: STOP - the pasted helper does not match the drafted one"; exit 1; }
+if [ -f "$RC" ]; then cmp -s "$RC" "$D/greek_header_split_dry.txt" && echo "receipt in PA's repo now ($RC) = the dry run's copy (8B3's dry build rewrote it; the earlier one is $D/greek_header_split_before.txt) - read-out" || echo "receipt in PA's repo now ($RC) differs from the dry run's copy - read-out"; else echo "receipt in PA's repo now: none - read-out"; fi
+python3 "$P" "$D" "$S" "$L1"; h=$?
+for f in "$S" "$B" "$D/before.db" "$D/dry.db" "$D/unf_before_rekeyed.db"; do [ -e "$f-journal" ] && echo "journal after: PRESENT beside $f"; done
+echo "journal after: checked (a PRESENT line above = a problem)"
+echo "list files: $(wc -l < "$D/identity_delta.tsv" 2>/dev/null) lines identity_delta.tsv - $(wc -l < "$D/receipt_delta.tsv" 2>/dev/null) lines receipt_delta.tsv (each with a header line)"
+[ "$h" -eq 0 ] || { echo "8B3R RESULT: STOP - helper exit $h (line above)"; exit 1; }
+exit 0
+) 2>&1 | tee ~/edition_upgrade_runs/pn8b3r_20261107.log; echo "exit=${PIPESTATUS[0]}"
+```
+
+Reviewer subagent on Block 8B3R (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only block (scope a): every database open is mode=ro + query_only, no builder or gate script runs, the only writes are run artifacts in ~/edition_upgrade_runs (helper, two new TSVs, a new dated log), wrapper and tripwires all pass, and the block carries no ruled figure to trace (it reads out; it asserts nothing beyond what it computes)." Non-blocking notes kept as read-guidance (block bytes unchanged): paste once (tee blanks the log on a re-paste); a `None` figure in (3) means "line not found", not zero; read "delta rows with no words row" (expect 0) before using the TSV; the (0) remark is a hint, the "rows gate B counts" line is the gate-relevant figure.
+
+### Proposal for after 8B3R (CC, not written — for the ruling chat)
+
+**Re-declared split for 8B3b:** abp-tag 3,671 · tipnr 10,246 · lemma-only 12,216 · surface 4,382 · none 1,963 =
+32,478, verbatim from `pn8b3_20261107/dry_identity.log` (the only source; not re-derived). 8B3b = Block 8B3 with new
+folder/log names (`pn8b3b_*`), EXP_ID = that split, and the dry-run delta rule changed from "0 rows" to:
+pn_greek_identity differs from before.db by EXACTLY the rows in 8B3R's `identity_delta.tsv` (its sha256 pinned in the
+block, compared row for row), the other four tables still 0. Binding + unfindability expectations unchanged (the binder
+and `build_slot_binding` never read pn_greek_identity — grep; unfindability's before side reads src only).
+Two-derivations reads identity (hebrew_base, greek_strongs; control G1 David @ Mat 1:6), so its 2,330 / 502 count lines
+may move: gate stays `controls: 10  failed: 0`, the count lines printed as read-outs.
+**gate_b.changed_rows shape (§9.92 G3, code `scripts/gate_greek_header.py:402-435`):**
+`[{"book": "Gen", "chapter": 5, "verse": 25, "position": 1, "name": "<label>"}, ...]` — one entry per
+`identity_delta.tsv` row whose greek_strongs / greek_lemma / source differ (the "rows gate B counts" figure); rows that
+differ only in hebrew_base are NOT listed (gate B compares those three columns only, :312-314, and a listed row with no
+change fails, :428-429). book = built's `verses.book` text; position = built's position (the gate re-keys src through
+the moves file first, :345); name = the TSV's `label_norm` (= `er.norm_name` of built's english_head-or-english, the
+value the gate checks, :431-435). Generated from the TSV by a script, never typed by hand; count stated next to it.
+**Not cleared by changed_rows (each needs its own ruling if 8B3R shows it):** (a) any greek_strongs change except
+None → G with after-source tipnr — gate B fails it whatever the list says (:349-356); (b) a changed row whose
+transition falls outside gate B's per-row classes (pinned / glued / breathing / → surface / page-attested / gentilic)
+fails at :397 even when listed; (c) Sheshach (Jer 51:41 pos 1, Jer 25:26 pos 25) in the delta = a new ruling (§9.92 as
+amended); (d) the four pins are NOT taken from 8B3R — per §9.92 they come only from gate 2's first-run output.
