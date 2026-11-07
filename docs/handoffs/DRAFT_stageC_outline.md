@@ -3142,3 +3142,294 @@ echo "8B2b RESULT: CHECK - an after-figure differs from the expected picture (li
   all post-write checks pass; after words 626,309, xref 32,478, oracle 0/0, GLOB 0, Greek-numbered rows rewritten 0,
   journal none; `8B2b RESULT: DONE`; exit=0.
 - Ruling chat 11/6: both ACCEPTED. Next: 8B2A (`lane3_rebuild_step` = 8b.2a) drafted, held.
+
+## 8B2A (step 8b.2a, lane3_rebuild_step) drafted, held for the ruling chat (11/6)
+
+Expected figures = the last 8b.2a run: `~/rekey/live_8b2a.log` (10/25 live rebuild; command `RUN_rebuild_trap_live.md:87`,
+result recorded `CHARTER_rebuild_trap_fix.md:345`): `LANE-3 STEP: PASS` fixes (9, 0, 0) · gapfix (6, 0, 0) · fixes2
+(7, 0, 0); the block reads that line and the 22 per-verse `=== V === (N cell edits)` lines from the log itself
+(`grep -n`, path:line printed) and requires the dry run and the apply to reproduce them exactly (tripwire 5: per-pass
+patch counts from the log). Line format = `lane3_rebuild_step.py:156-158`, unchanged since 10/25 (last change f9747889, comment dates only).
+Lane-3 files pinned at 12b3e689 (committed bytes): fixes e8942de0 (changed 11/2 by 63744245 §9.77 R3: Isa 30:31, Jer
+50:16 re-keyed to built's wording; entry count 9 unchanged) · gapfix 8c8ad0af · fixes2 e6a7efc7.
+**Dry run:** `lane3_rebuild_step` has no dry-run mode and saves file by file, and gapfix joins brackets the fixes file
+creates (Num 25:8 joins 2, 3), so a per-file dry run on built cannot work. The block copies the 18 lane-3 verses'
+verses + words rows from built (read-only, built's own table layout) into a throwaway `lane3_dry.db`, runs the real
+step on it, and applies to built only if the result line and all 22 per-verse lines equal the 10/25 log. After: built
+must equal the dry copy on all 18 verses (all columns).
+**Words checks:** 626,309 before/after; whole-table (rowid, strongs, strongs_base) snapshot diff 0; rows outside the 18
+verses unchanged (all-column digest); inside them only english / english_head / greek_pos / bracket_id change
+(`fix_lane3_star_merges.py:193-196`). Read-out from the files' ops: english 35 · greek_pos 38 · bracket_id 41
+(english/greek_pos = `lane3_rebuild_step.py:8`); english_head depends on the rows.
+**10 moved verses:** none is a lane-3 member — checked from the three files (18 distinct verses) and by the helper at
+run time (STAGED-READ said the same). **Gen 46:26 pos 19:** fixes2 entry; shows as `=== Gen 46:26 === (2 cell edits)`,
+BEFORE pos 19 "of Jacob's sons —" gpos - bid - [G5207] + pos 20 None [*], AFTER pos 19 'sons —' gpos 2 bid 1 + pos 20
+"of Jacob's" gpos 1 bid 1, render PASS, contiguity PASS — printed in full by the block.
+Tests: whole block in a fake home on a made-up built copy (626,309 words; the 18 verses in their pinned before-state):
+DONE; re-paste STOP (folder); already applied STOP at the dry run, built unchanged; a changed pinned verse SKIP → STOP,
+built unchanged; missing 10/25 log STOP. Helper sha256 9262e528f8e97f47b87da8f5f462b9eceec2ee92e5ea5989a2205f70576960e4.
+
+### Block 8B2A (GATE REF 12b3e689; WRITES built: lane-3 english / english_head / greek_pos / bracket_id)
+```bash
+set +H
+( set -uo pipefail
+REF=12b3e689
+echo "GATE REF ${REF} - 8B2A lane3_rebuild_step (step 8b.2a) on the built copy - dry run on a throwaway copy of the 18 lane-3 verses, apply only on the 10/25 picture - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "8B2A RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "8B2A RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "8B2A RESULT: STOP - PA has not pulled $REF"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+R=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+O=~/edition_upgrade_runs
+L=~/rekey/live_8b2a.log
+D="$O/lane3_8b2a_20261106"
+M="$D/lane3_dry.db"
+[ -f "$B" ] || { echo "8B2A RESULT: STOP - missing: $B"; exit 1; }
+[ -s "$L" ] || { echo "8B2A RESULT: STOP - last 8b.2a run log missing or empty: $L"; exit 1; }
+if [ -e "$D" ]; then echo "8B2A RESULT: STOP - output folder already exists (already ran?): $D"; exit 1; fi
+t=$(sqlite3 -readonly "$B" "SELECT count(*) FROM sqlite_master WHERE type='trigger'") || { echo "8B2A RESULT: STOP - trigger read failed"; exit 1; }
+echo "pre (a) triggers on built: $t (expect 0)"
+[ "$t" = "0" ] || { echo "8B2A RESULT: STOP - built has triggers"; exit 1; }
+if [ -e "$B-journal" ]; then echo "8B2A RESULT: STOP - $B-journal present (move it aside, never delete; bring it back)"; exit 1; fi
+echo "pre (b) no -journal beside built: OK"
+[ -s "$R" ] || { echo "8B2A RESULT: STOP - pre_8b rollback copy missing or empty: $R"; exit 1; }
+echo "pre (c) pre_8b copy present: $(stat -c '%s bytes, %y' "$R") - built now $(stat -c '%s bytes' "$B") (size only)"
+for fs in lane3_star_fixes.json:e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 lane3_star_gapfix.json:8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 lane3_star_fixes2.json:e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22; do
+  f=${fs%%:*}; want=${fs#*:}; got=$(sha256sum < "scripts/$f" | cut -d' ' -f1)
+  echo "lane-3 file $f sha256 ${got:0:8} (expect ${want:0:8})"
+  [ "$got" = "$want" ] || { echo "8B2A RESULT: STOP - $f is not the pinned file"; exit 1; }
+done
+EXP="LANE-3 STEP: PASS  (patched, already, skipped per file: fixes (9, 0, 0) · gapfix (6, 0, 0) · fixes2 (7, 0, 0))"
+echo "last 8b.2a run ($L), result line with its line number:"
+grep -n "^LANE-3 STEP:" "$L"
+[ "$(grep -c "^LANE-3 STEP:" "$L")" = "1" ] && [ "$(grep "^LANE-3 STEP:" "$L")" = "$EXP" ] || { echo "8B2A RESULT: STOP - the last run's result line is not: $EXP"; exit 1; }
+LH=$(grep -E '^=== .+ === \(' "$L")
+echo "last run: per-verse patch lines with their line numbers (expect 22):"
+grep -nE '^=== .+ === \(' "$L"
+[ "$(grep -cE '^=== .+ === \(' "$L")" = "22" ] || { echo "8B2A RESULT: STOP - the last run does not show 22 per-verse patch lines"; exit 1; }
+mkdir -p "$D"
+P="$D/lane3_8b2a_helper.py"
+cat > "$P" <<'PY'
+"""8B2A helper (one-off, edition upgrade stage D, step 8b.2a). Never writes the built copy.
+
+  prep  <built.db> <dry.db> <state.json>
+        Reads built read-only. Lists the lane-3 verses from the three pinned files, checks none is
+        one of the 10 moved verses, checks words = 626,309, then writes a THROWAWAY copy of just
+        those verses (their verses + words rows, built's own table layout) to <dry.db> for the dry
+        run, and records built's before-state to <state.json>.
+  check <built.db> <dry.db> <state.json>
+        Reads built and the dry copy read-only after the real step ran on built:
+          - words still 626,309
+          - every words row outside the lane-3 verses unchanged (all columns, digest)
+          - inside the lane-3 verses only english / english_head / greek_pos / bracket_id changed
+            (fix_lane3_star_merges.py:193-196), same rows at the same positions
+          - each lane-3 verse on built now reads exactly as the dry run left it (all columns)
+
+Usage: python3 lane3_8b2a_helper.py prep|check <built.db> <dry.db> <state.json>
+"""
+import hashlib
+import json
+import sqlite3
+import sys
+from pathlib import Path
+
+MODE, BUILT, DRY, STATE = sys.argv[1:5]
+SCRIPTS = Path.home() / "bible-db" / "scripts"
+FILES = ("lane3_star_fixes.json", "lane3_star_gapfix.json", "lane3_star_fixes2.json")
+ALLOWED = ("english", "english_head", "greek_pos", "bracket_id")
+MOVED = ("Gen 5:25", "Gen 5:26", "Gen 34:4", "Jos 2:4", "Jos 5:15", "Jdg 11:7", "2Ki 23:35", "Est 5:9",
+         "Rom 9:29", "Eze 20:14")
+WORDS_EXPECT = 626309
+N_VERSES = 18
+
+
+def stop(msg):
+    print("8B2A RESULT: STOP - " + msg)
+    sys.exit(1)
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def lane3_verses():
+    out = []
+    for f in FILES:
+        d = json.loads((SCRIPTS / f).read_text(encoding="utf-8"))
+        d.pop("_comment", None)
+        for v in d:
+            if v not in out:
+                out.append(v)
+    return out
+
+
+def key(v):
+    book, rest = v.rsplit(" ", 1)
+    ch, vs = rest.split(":")
+    return book, int(ch), int(vs)
+
+
+def verse_ids(c, verses):
+    ids = {}
+    for v in verses:
+        r = c.execute("SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?", key(v)).fetchall()
+        if not len(r) == 1:
+            stop("%s: %d verse rows (expect 1)" % (v, len(r)))
+        ids[v] = r[0][0]
+    return ids
+
+
+def columns(c):
+    return [r[1] for r in c.execute("PRAGMA table_info(words)")]
+
+
+def verse_rows(c, vid):
+    return [list(r) for r in c.execute("SELECT rowid, * FROM words WHERE verse_id=? ORDER BY position, rowid", (vid,))]
+
+
+def outside_digest(c, vids, cols):
+    vi = cols.index("verse_id") + 1
+    h = hashlib.sha256()
+    n = 0
+    for r in c.execute("SELECT rowid, * FROM words ORDER BY rowid"):
+        if r[vi] in vids:
+            continue
+        h.update(repr(tuple(r)).encode("utf-8"))
+        h.update(b"\n")
+        n += 1
+    return n, h.hexdigest()
+
+
+if MODE == "prep":
+    c = ro(BUILT)
+    verses = lane3_verses()
+    print("lane-3 verses in the three files: %d (expect %d): %s" % (len(verses), N_VERSES, ", ".join(verses)))
+    if not len(verses) == N_VERSES:
+        stop("lane-3 verse count is %d, not %d" % (len(verses), N_VERSES))
+    hit = [v for v in MOVED if v in verses]
+    print("of the 10 moved (re-keyed) verses, lane-3 members: %s (expect none)" % (", ".join(hit) or "none"))
+    if hit:
+        stop("a moved verse is a lane-3 member: %s" % hit)
+    ids = verse_ids(c, verses)
+    nw = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    print("words on built before: %d (expect %d)" % (nw, WORDS_EXPECT))
+    if not nw == WORDS_EXPECT:
+        stop("words before is %d" % nw)
+    cols = columns(c)
+    for need in ("id", "verse_id", "position", "english", "english_head", "strongs", "strongs_base",
+                 "greek_pos", "bracket_id"):
+        if need not in cols:
+            stop("words has no column %s" % need)
+    before = {v: verse_rows(c, ids[v]) for v in verses}
+    n_out, dig = outside_digest(c, set(ids.values()), cols)
+    if Path(DRY).exists():
+        stop("dry copy already exists: %s" % DRY)
+    d = sqlite3.connect(DRY)
+    d.execute("PRAGMA journal_mode=DELETE")
+    for t in ("verses", "words"):
+        sql = c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (t,)).fetchone()[0]
+        d.execute(sql)
+    qs = ",".join("?" * len(ids))
+    vrows = c.execute("SELECT * FROM verses WHERE id IN (%s)" % qs, tuple(ids.values())).fetchall()
+    d.executemany("INSERT INTO verses VALUES (%s)" % ",".join("?" * len(vrows[0])), vrows)
+    wrows = c.execute("SELECT * FROM words WHERE verse_id IN (%s)" % qs, tuple(ids.values())).fetchall()
+    d.executemany("INSERT INTO words VALUES (%s)" % ",".join("?" * len(wrows[0])), wrows)
+    d.commit()
+    d.close()
+    Path(STATE).write_text(json.dumps({"verses": verses, "ids": ids, "cols": cols, "before": before,
+                                       "outside_rows": n_out, "outside_digest": dig}), encoding="utf-8")
+    print("dry copy: %d verses, %d words rows -> %s" % (len(vrows), len(wrows), DRY))
+    print("built before: lane-3 verse rows %d - rows outside them %d, digest %s"
+          % (sum(len(x) for x in before.values()), n_out, dig[:8]))
+    print("8B2A PREP: OK")
+
+elif MODE == "check":
+    st = json.loads(Path(STATE).read_text(encoding="utf-8"))
+    c, d = ro(BUILT), ro(DRY)
+    cols = st["cols"]
+    if not columns(c) == cols:
+        stop("words columns changed")
+    nw = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    n_out, dig = outside_digest(c, set(st["ids"].values()), cols)
+    print("words on built after: %d (expect %d)" % (nw, WORDS_EXPECT))
+    print("rows outside the lane-3 verses: %d, digest %s (expect %d, %s - unchanged)"
+          % (n_out, dig[:8], st["outside_rows"], st["outside_digest"][:8]))
+    bad = []
+    if not nw == WORDS_EXPECT:
+        bad.append("words after %d" % nw)
+    if not (n_out == st["outside_rows"] and dig == st["outside_digest"]):
+        bad.append("a row outside the lane-3 verses changed")
+    changed = {k: 0 for k in ALLOWED}
+    other = []
+    same_as_dry = 0
+    for v in st["verses"]:
+        vid = st["ids"][v]
+        b = st["before"][v]
+        a = verse_rows(c, vid)
+        if not ([r[0] for r in a] == [r[0] for r in b]):
+            bad.append("%s: rows differ in number or rowid" % v)
+            continue
+        for rb, ra in zip(b, a):
+            for i, name in enumerate(cols, start=1):
+                if not rb[i] == ra[i]:
+                    if name in ALLOWED:
+                        changed[name] += 1
+                    else:
+                        other.append("%s rowid %s %s" % (v, ra[0], name))
+        dr = [list(r) for r in d.execute("SELECT * FROM words WHERE verse_id=? ORDER BY position, rowid", (vid,))]
+        if [r[1:] for r in a] == dr:
+            same_as_dry += 1
+        else:
+            bad.append("%s: built does not read as the dry run left it" % v)
+    print("cells changed on built (lane-3 verses): %s"
+          % " - ".join("%s %d" % (k, changed[k]) for k in ALLOWED))
+    print("cells changed in any other column: %d (expect 0)%s" % (len(other), (" " + "; ".join(other[:20])) if other else ""))
+    print("lane-3 verses where built = the dry-run result (all columns): %d/%d" % (same_as_dry, len(st["verses"])))
+    if other:
+        bad.append("a column outside english/english_head/greek_pos/bracket_id changed")
+    if bad:
+        for b in bad:
+            print("  problem: " + b)
+        print("8B2A CHECK: FAIL")
+        sys.exit(1)
+    print("8B2A CHECK: OK")
+else:
+    stop("mode must be prep or check")
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = 9262e528f8e97f47b87da8f5f462b9eceec2ee92e5ea5989a2205f70576960e4 ] || { echo "8B2A RESULT: STOP - the pasted helper does not match the drafted one"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$P" prep "$B" "$M" "$D/state.json" || { echo "8B2A RESULT: STOP - prep did not pass (line above); built untouched"; exit 1; }
+sqlite3 -readonly "$B" "SELECT rowid, strongs, quote(strongs_base) FROM words ORDER BY rowid" > "$D/strongs_before.tsv"
+echo "snapshot: every words row (rowid, strongs, strongs_base) before: $(wc -l < "$D/strongs_before.tsv") rows (expect 626309)"
+DRY=$(python3 scripts/lane3_rebuild_step.py "$M" 2>&1); d=$?
+printf '%s\n' "$DRY" > "$D/dry_run_full.log"
+echo "--- dry run on the throwaway copy (full output: $D/dry_run_full.log):"
+grep -E '^=== |^SKIP|^ALREADY|render check|contiguity check|^APPLIED|^  .. lane3_star_|^LANE-3 STEP' <<< "$DRY"
+echo "dry run exit $d (expect 0)"
+[ "$d" -eq 0 ] || { echo "8B2A RESULT: STOP - dry run exit $d; built untouched"; exit 1; }
+[ "$(grep "^LANE-3 STEP:" <<< "$DRY")" = "$EXP" ] || { echo "8B2A RESULT: STOP - dry run result line differs from the last run's; built untouched"; exit 1; }
+[ "$(grep -E '^=== .+ === \(' <<< "$DRY")" = "$LH" ] || { echo "8B2A RESULT: STOP - dry run per-verse patch lines differ from the last run's; built untouched"; exit 1; }
+echo "dry run = the 10/25 picture (PASS - fixes 9 / gapfix 6 / fixes2 7 patched - the same 22 per-verse lines) - applying to built"
+APP=$(python3 scripts/lane3_rebuild_step.py "$B" 2>&1); a=$?
+printf '%s\n' "$APP" > "$D/apply_full.log"
+echo "--- apply on built (full output: $D/apply_full.log):"
+grep -E '^=== |^SKIP|^ALREADY|render check|contiguity check|^APPLIED|^  .. lane3_star_|^LANE-3 STEP' <<< "$APP"
+echo "--- Gen 46:26 (lane 3 at 8b.2a; fixes2) as the apply printed it:"
+awk '/^=== Gen 46:26 ===/{p=1} p{print} p&&/contiguity check/{p=0}' <<< "$APP"
+echo "apply exit $a (expect 0)"
+AS=$(grep "^LANE-3 STEP:" <<< "$APP"); AH=$(grep -E '^=== .+ === \(' <<< "$APP")
+sqlite3 -readonly "$B" "SELECT rowid, strongs, quote(strongs_base) FROM words ORDER BY rowid" > "$D/strongs_after.tsv"
+DF=$(diff "$D/strongs_before.tsv" "$D/strongs_after.tsv"); GD=$(grep -c '^[<>]' <<< "$DF") || true
+echo "words rows whose strongs or strongs_base changed (before/after snapshot diff lines): $GD (expect 0)"
+CHK=$(PYTHONIOENCODING=utf-8 python3 "$P" check "$B" "$M" "$D/state.json" 2>&1); k=$?
+echo "$CHK"
+if [ -e "$B-journal" ]; then J=PRESENT; else J=none; fi
+echo "journal after: $J (expect none)"
+if [ "$a" -eq 0 ] && [ "$AS" = "$EXP" ] && [ "$AH" = "$LH" ] && [ "$GD" = "0" ] && [ "$k" -eq 0 ] && [ "$J" = "none" ]; then
+  echo "8B2A RESULT: DONE - LANE-3 STEP PASS fixes 9 / gapfix 6 / fixes2 7 - built = the dry run on all 18 verses - strongs/strongs_base untouched - words 626309"; exit 0
+fi
+echo "8B2A RESULT: CHECK - an after-figure differs from the expected picture (lines above)"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/lane3_8b2a_20261106.log; echo "exit=${PIPESTATUS[0]}"
+```
