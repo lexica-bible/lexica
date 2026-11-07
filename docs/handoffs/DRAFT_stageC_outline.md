@@ -5739,3 +5739,28 @@ figure recorded; the `~/db_evidence/` twins `TODO.md` claimed were never made), 
 (step 9a's only old-table source until 9c), the hdrlane 9/6 backup (§9.95), the 4 form-lane TSVs. Doc notes:
 `data-model.md:715`, `HANDOFF_article_slot_rebuild.md:21-22`, `TODO.md` (pnstar + disk-thinning lines),
 `HANDOFF_edition_upgrade_stageC.md:29-30`. Still owed: block 8B3CX (the 8B3c after-check) and the backup-stamp read.
+
+## 8B3CX RAN (11/7, 19:53 UTC) — after-check OK; RESULT CHECK on the header receipt line only
+
+Log `~/edition_upgrade_runs/pn8b3cx_20261107.log` (local copy `C:\Users\JP\edition_upgrade_runs\pn8b3cx_20261107.log`):
+the 5 copies were already gone (deleted by hand earlier), no git lock, dumps = HEAD, scripts/tests clean. **8B3c
+CHECK: OK** — words 626,309, 0 rows differing, digest 2b23f546; abp_surface 395,003 / 623cca1f; built = dry copy on
+all five tables; built vs before: identity 58 = the declared list; pn_binding 15,446 → 15,426, added 70 / removed 90
+(read-out, all 160 in `pn8b3c_20261107/pn_binding_delta_after.tsv`); tipnr tables 0; pn_slot_binding = the 4 name
+changes; 6 REKEY records (Jos 5:15 @27 = G2424 tipnr); abp-tag 16/16; saved-log comparisons yes / yes; repo clean;
+journal none. Only miss: `header receipt … 8B3c apply = its dry run: NO - vs the copy on PA before: differs` → RESULT
+CHECK. Ruling chat: 8B3c ACCEPTED as DONE under §9.97/§9.98; the receipt NO is a quota artifact — one read-only
+line first (below), then record.
+
+### Line RCPT8B3C (read-only; the four receipt copies)
+
+```bash
+( cd ~/edition_upgrade_runs/pn8b3c_20261107 || exit 1; echo "RCPT8B3C $(date -u +%FT%TZ)"; for f in greek_header_split_before.txt greek_header_split_dry.txt greek_header_split_apply.txt ~/bible-db/docs/tickets/greek_header_split.txt; do if [ -e "$f" ]; then echo "$f: $(wc -l < "$f") lines - $(stat -c '%s bytes, modified %y' "$f") - sha256 $(sha256sum < "$f" | cut -d' ' -f1)"; else echo "$f: MISSING"; fi; done; for p in "greek_header_split_dry.txt greek_header_split_apply.txt" "greek_header_split_dry.txt greek_header_split_before.txt" "greek_header_split_dry.txt $HOME/bible-db/docs/tickets/greek_header_split.txt"; do set -- $p; echo "cmp $1 vs $(basename "$2"): $(cmp "$1" "$2" 2>&1 || true)"; done; echo "apply copy last line: $(tail -n 1 greek_header_split_apply.txt | cut -c1-120)" ); echo "exit=$?"
+```
+
+Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only line (reads four files, no db opened, no tee, no write, no `!`, no grep); every expected figure is a read-out, not a gate, and the traceable ones trace to code". Expected: before = dry, same sha (2,606 lines — the 8B3b block printed "header receipt on PA before: 2606 lines"); apply likely shorter (cmp "EOF on greek_header_split_apply.txt …"); repo receipt = the apply copy unless the cp itself was cut short.
+
+## Reviewer config (11/7, ruling chat)
+
+`.claude/agents/reviewer.md`: the `model: fable` line removed — the reviewer subagent now runs on the session's
+model; `effort: low` unchanged. Config-only commit `395c52bd`.
