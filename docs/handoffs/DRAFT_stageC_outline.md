@@ -5627,3 +5627,103 @@ fi
 echo "8B3c RESULT: CHECK - an after-figure differs from the expected picture (lines above). Before-state of the five tables: $D/before.db"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/pn8b3c_20261107.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## 8B3c RAN — applied; the after-check did not run (disk quota) (11/7); ruled: cleanup + re-check block 8B3CX
+
+From the ruling chat's read of `~/edition_upgrade_runs/pn8b3c_20261107.log` (CC has not seen the log itself): the
+dry run passed and all four apply steps reproduced it (log lines 194 / 213 / 218 / 222 "yes"); the after-check
+stopped with `OSError 122 Disk quota exceeded` in `words_fingerprints` (helper :427, writing `words_after.tsv`), and a
+git command left `.git/index.lock`. Dry pn_binding delta (read-out): added 70 / removed 90. **Built is at 8b.3 —
+built = 8b.0 + REKEY + 8b.1 + §9.96 + 8b.2 + 8b.2a + 8b.3 — verification owed.**
+**Ruled (one block, writes to PA home only, built untouched):** (1) quota / usage read-out; (2) delete exactly
+`pn8b3_20261107/dry.db`, `pn8b3_20261107/unf_before_rekeyed.db`, `pn8b3b_20261107/dry.db`,
+`pn8b3b_20261107/unf_before_rekeyed.db`, `lane3_8b2a_20261106/lane3_dry.db` (logs, TSVs, before.db stay) — sizes
+before, du after; (3) `.git/index.lock` removed only if no git process holds it, then scripts/tests clean and the two
+binder dumps = HEAD (restored if not); (4) the pinned 8B3c helper's check re-run with the same arguments, plus the
+receipt / journal / repo lines, ending in a RESULT line. Expected: CHECK OK, built = dry copy, identity 58, slot 4,
+pn_binding read-out = the dry delta (added 70 / removed 90), abp-tag 16/16, Jos 5:15@27 G2424. After the run: /wrap.
+
+### Block 8B3CX (GATE REF 1da5abf0; deletes 5 throwaway copies + a stale git lock; built read-only)
+
+Also checks, from the 8B3c run's saved logs, that the unfindability and two-derivations after-runs equal the dry
+run's (the conditions the original DONE line needed). Paste-once marker `pn8b3c_20261107/recheck_started`.
+Tests (fake home, the 8B3c test folder after a simulated stop: lock file, a changed dump, partial `words_after.tsv`,
+the 5 copies present): DONE (5 deleted, lock removed, dump restored, check OK, saved-log comparisons yes); re-paste →
+STOP; a git process listed → STOP, lock left in place.
+
+```bash
+set +H
+( set -uo pipefail
+REF=1da5abf0
+echo "GATE REF ${REF} - 8B3CX after 8B3c's disk-quota stop: quota read-out, delete 5 throwaway copies, clear the git index lock, re-run the 8B3c after-check (built read-only) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "8B3CX RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "8B3CX RESULT: STOP - PA has not pulled $REF"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+O=~/edition_upgrade_runs
+D="$O/pn8b3c_20261107"
+M="$D/dry.db"
+DL="$D/identity_delta_declared.tsv"
+P="$D/pn8b3c_helper.py"
+RC=docs/tickets/greek_header_split.txt
+TX="scripts/pn_binding_hot.txt scripts/pn_binding_numonly.txt"
+for f in "$B" "$M" "$D/before.db" "$D/state.json" "$D/words_before.tsv" "$DL" "$P" "$D/apply_binding.log" "$D/dry_binding.log"; do [ -s "$f" ] || { echo "8B3CX RESULT: STOP - missing or empty: $f"; exit 1; }; done
+[ -e "$D/recheck_started" ] && { echo "8B3CX RESULT: STOP - this block already ran ($D/recheck_started) - paste once"; exit 1; }
+touch "$D/recheck_started" || { echo "8B3CX RESULT: STOP - cannot write in $D (disk still full?)"; exit 1; }
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = faa299aa9da4bd11cf5627066e5f7352390d38c66d5ec5fb78add2173242eb66 ] || { echo "8B3CX RESULT: STOP - $P is not the pinned 8B3c helper"; exit 1; }
+echo "pinned 8B3c helper present: $P (sha256 matches)"
+if [ -e "$B-journal" ]; then echo "8B3CX RESULT: STOP - $B-journal present (move it aside, never delete; bring it back)"; exit 1; fi
+echo "built: no -journal - $(stat -c '%s bytes, modified %y' "$B") (read-out; this block opens built read-only)"
+echo "=== (1) quota / usage ==="
+if command -v quota >/dev/null 2>&1; then quota -s 2>&1 || echo "(quota printed nothing usable)"; else echo "quota command: not available on this host"; fi
+echo "du ~ (whole home): $(du -sh ~ 2>/dev/null | cut -f1)"
+du -sh "$O"/* 2>/dev/null | sort -h | tail -25
+echo "=== (2) delete the 5 ruled throwaway copies (logs, TSVs and before.db stay) ==="
+for f in "$O/pn8b3_20261107/dry.db" "$O/pn8b3_20261107/unf_before_rekeyed.db" "$O/pn8b3b_20261107/dry.db" "$O/pn8b3b_20261107/unf_before_rekeyed.db" "$O/lane3_8b2a_20261106/lane3_dry.db"; do
+  if [ -e "$f-journal" ]; then echo "8B3CX RESULT: STOP - $f-journal present; not deleting"; exit 1; fi
+  if [ -f "$f" ]; then echo "  delete $f - $(stat -c '%s bytes' "$f")"; rm -f "$f" || { echo "8B3CX RESULT: STOP - rm failed: $f"; exit 1; }; [ -e "$f" ] && { echo "8B3CX RESULT: STOP - still present: $f"; exit 1; }; else echo "  already absent: $f"; fi
+done
+echo "du after: home $(du -sh ~ 2>/dev/null | cut -f1) - edition_upgrade_runs $(du -sh "$O" 2>/dev/null | cut -f1)"
+if command -v quota >/dev/null 2>&1; then quota -s 2>&1 | tail -3; fi
+echo "=== (3) git index lock + binder dumps ==="
+LK=.git/index.lock
+if [ -e "$LK" ]; then
+  echo "  $LK present: $(stat -c '%s bytes, modified %y' "$LK")"
+  if command -v fuser >/dev/null 2>&1; then FU=$(fuser "$LK" 2>&1); echo "  fuser: ${FU:-nothing holds it}"; else FU=""; echo "  fuser: not available"; fi
+  GP=$(ps -u "$(id -u)" -o pid=,args= | grep -E '(^|/| )git( |$)' | grep -v grep)
+  echo "  git processes of this user: ${GP:-none}"
+  [ -z "$GP" ] && [ -z "$(fuser "$LK" 2>/dev/null)" ] || { echo "8B3CX RESULT: STOP - a git process may hold $LK; not removing"; exit 1; }
+  rm -f "$LK" || { echo "8B3CX RESULT: STOP - could not remove $LK"; exit 1; }
+  echo "  $LK removed"
+else
+  echo "  $LK: not present"
+fi
+for f in $TX; do
+  if git show "HEAD:$f" | cmp -s - "$f"; then echo "  $f = HEAD"; else echo "  $f differs from HEAD - restoring"; git checkout -- "$f" || { echo "8B3CX RESULT: STOP - git checkout failed: $f"; exit 1; }; git show "HEAD:$f" | cmp -s - "$f" && echo "  $f = HEAD after restore" || { echo "8B3CX RESULT: STOP - $f still differs"; exit 1; }; fi
+done
+GSP=$(git status --porcelain --untracked-files=no -- scripts tests)
+echo "  git status scripts/tests: ${GSP:-clean}"
+[ -z "$GSP" ] || { echo "8B3CX RESULT: STOP - scripts/tests not clean after the restore"; exit 1; }
+[ -e "$LK" ] && { echo "8B3CX RESULT: STOP - $LK came back"; exit 1; }
+echo "=== (4) the 8B3c after-check, re-run (same pinned helper, same arguments; built read-only) ==="
+CHK=$(python3 "$P" check "$B" "$M" "$D" "$DL" "$D/pn_binding_delta_after.tsv" 2>&1); k=$?
+echo "$CHK"
+echo "check exit $k (expect 0)"
+UOK=NO; [ -s "$D/apply_unf.log" ] && cmp -s "$D/apply_unf.log" "$D/unf_rekeyed.log" && UOK=yes
+TOK=NO; [ -s "$D/apply_twoder.log" ] && [ "$(sed 1d "$D/apply_twoder.log")" = "$(sed 1d "$D/dry_twoder.log")" ] && TOK=yes
+echo "from the 8B3c run's saved logs: unfindability after = the dry run's: $UOK - two-derivations after = the dry run's (first line aside): $TOK"
+cmp -s "$D/greek_header_split_dry.txt" "$D/greek_header_split_apply.txt" && RCS=yes || RCS=NO
+if [ -f "$D/greek_header_split_before.txt" ]; then cmp -s "$D/greek_header_split_before.txt" "$D/greek_header_split_apply.txt" && RB=same || RB=differs; else RB="no earlier copy"; fi
+echo "header receipt ($RC): 8B3c apply = its dry run: $RCS - vs the copy on PA before: $RB (read-out)"
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] && GS=clean || GS=DIRTY
+echo "repo scripts/tests after: $GS (expect clean)"
+if [ -e "$B-journal" ]; then J=PRESENT; else J=none; fi
+echo "journal after: $J (expect none)"
+echo "du after the check: edition_upgrade_runs $(du -sh "$O" 2>/dev/null | cut -f1)"
+if [ "$k" -eq 0 ] && [ "$UOK" = "yes" ] && [ "$TOK" = "yes" ] && [ "$RCS" = "yes" ] && [ "$GS" = "clean" ] && [ "$J" = "none" ]; then
+  echo "8B3CX RESULT: DONE - 8B3c verified: built = its dry copy, vs before only the declared rows (identity 58, slot names 4; pn_binding read out), words 626309 + abp_surface unchanged, abp-tag 16/16 - built = 8b.0 + REKEY + 8b.1 + 9.96 + 8b.2 + 8b.2a + 8b.3"; exit 0
+fi
+echo "8B3CX RESULT: CHECK - an after-figure differs (lines above); built was not written by this block"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/pn8b3cx_20261107.log; echo "exit=${PIPESTATUS[0]}"
+```
