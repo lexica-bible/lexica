@@ -5764,3 +5764,18 @@ Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only line
 
 `.claude/agents/reviewer.md`: the `model: fable` line removed — the reviewer subagent now runs on the session's
 model; `effort: low` unchanged. Config-only commit `395c52bd`.
+
+### RCPT8B3C ran (11/7, 20:03 UTC) — NOT truncated: same size, different content
+
+before = dry: 2,606 lines, 182,942 bytes, sha 59dac6f7…, cmp silent. apply = PA repo receipt: 2,606 lines,
+182,942 bytes, sha 0051be4c… (the copy is complete — cp was not cut short). cmp dry vs apply: "differ: char 20408,
+line 290"; the apply copy ends on the normal last line ("# breathing repairs …"). **The ruling chat's quota-truncation
+reading does not fit** — the two receipts have identical length and different bytes. Likely cause (hypothesis, not
+verified): the receipt lists each name's forms sorted by count only (`build_pn_greek_identity.py:521`), so tied forms
+print in the order the rows came out of the db (`:374-383`), which can differ between the throwaway dry copy and
+built. The identity table itself is identical (8B3CX: built = dry copy, 0 differences). Not recorded as DONE yet:
+read-only line RDIFF8B3C below first.
+
+### Line RDIFF8B3C (read-only; what differs between the dry and apply receipts)
+
+Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only line: it only reads two run-artifact text files, uses no db, writes nothing, has no `!`, and its field split matches the writer at build_pn_greek_identity.py:523". Expected if the hypothesis holds: the diff shows reordered forms from line ~290; "differing as written" ≥ 1; fields 1–5 (name / class / occurrences / headword / morph count — the member-list content) 0; after putting each form list in one fixed order 0. Any non-zero in the last two = a finding for the ruling chat (STILL DIFFERS lines list it). Tested locally on made-up receipts: a reorder reads 1 / 0 / 0; a class change reads STILL DIFFERS.
