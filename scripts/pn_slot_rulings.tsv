@@ -110,7 +110,14 @@ malchijah	Ezr	10	25	16	Malchijah@Ezr.10.25b	person	source-order-filing	and Eleaz
 jehoram	2Ch	22	6	2	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram returned to be treated medically in Jezreel	wounded-at-Ramoth role clause; same man patronym'd in-verse at p34 (son of Ahab) — reviewer row 1	paint-override same-referent
 jehoram	2Ch	22	6	34	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab in Jezreel	patronym in-verse — reviewer row 3	paint-override same-referent
 jehoram	2Ki	1	17	11	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram the brother of Ahaziah reigned instead of him	kin phrase resolves in-verse; TIPNR first-names entity at this verse — reviewer row 4	paint-override
-jehoram	2Ki	8	16	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king of Israel	patronym+title in-verse — reviewer row 6	paint-override
-jehoram	2Ki	8	25	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king of Israel	patronym+title in-verse — reviewer row 7	paint-override
-jehoram	2Ki	8	29	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram returned to be treated medically in Jezreel	wounded-at-Ramoth role clause; same man patronym'd in-verse at p38 — reviewer 8:29 block	paint-override same-referent
-jehoram	2Ki	8	29	38	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab in Jezreel	patronym in-verse — reviewer 8:29 block	paint-override same-referent
+# Edition upgrade (DESIGN 9.98 (a), 2026-11-07): the next 4 rows' printed-name key
+# 'jehoram' -> 'joram' - the new edition prints "Joram" at these four slots
+# (8B3b dry run ~/edition_upgrade_runs/pn8b3b_20261107/dry_binding.log: "!! REFUSED
+# 2Ki 8:16 p4 / 8:25 p4 / 8:29 p4 / 8:29 p38 jehoram: G1 STALE-NAME: printed 'joram'";
+# built english 'Joram' at the same cells in the 8B1b run log
+# ~/edition_upgrade_runs/xref8b1b_20261106.log, OTHER lines). Entity, positions,
+# evidence and flags unchanged (evidence quotes keep the reviewer's wording).
+joram	2Ki	8	16	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king of Israel	patronym+title in-verse — reviewer row 6	paint-override
+joram	2Ki	8	25	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king of Israel	patronym+title in-verse — reviewer row 7	paint-override
+joram	2Ki	8	29	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram returned to be treated medically in Jezreel	wounded-at-Ramoth role clause; same man patronym'd in-verse at p38 — reviewer 8:29 block	paint-override same-referent
+joram	2Ki	8	29	38	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab in Jezreel	patronym in-verse — reviewer 8:29 block	paint-override same-referent
