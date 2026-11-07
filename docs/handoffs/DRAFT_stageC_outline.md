@@ -3433,3 +3433,16 @@ fi
 echo "8B2A RESULT: CHECK - an after-figure differs from the expected picture (lines above)"; exit 1
 ) 2>&1 | tee ~/edition_upgrade_runs/lane3_8b2a_20261106.log; echo "exit=${PIPESTATUS[0]}"
 ```
+
+## 8B2A RAN — DONE, ACCEPTED (11/7, 01:28 UTC) → built = 8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a
+Log `~/edition_upgrade_runs/lane3_8b2a_20261106.log` (folder `lane3_8b2a_20261106/`), PA HEAD 12b3e689, exit=0.
+Pre (a) 0 · (b) OK · (c) pre_8b 451,964,928 bytes · the three lane-3 file shas matched (e8942de0 / 8c8ad0af / e6a7efc7).
+10/25 log `~/rekey/live_8b2a.log`: result line at :1142, the 22 per-verse lines at :4–:1107 (Mat 9:11 :4 … Gen 46:26
+:1050, Mat 27:26 :1107). Prep: 18 lane-3 verses, moved-verse members none, words 626,309, dry copy 368 rows, rows
+outside 625,941 digest 3718e4db. Dry run and apply both `LANE-3 STEP: PASS` fixes (9, 0, 0) · gapfix (6, 0, 0) ·
+fixes2 (7, 0, 0), the same 22 per-verse lines; fixes-pass contiguity FAIL only at 2Sa 14:4 (1,4), Num 25:8 (2,4)(3,15),
+Num 25:14 (2,5), Num 25:15 (2,4), filled by gapfix. Gen 46:26 (fixes2): pos 19 "of Jacob's sons —" → 'sons —' gpos 2
+bid 1, pos 20 None → "of Jacob's" gpos 1 bid 1; prose before = after = verses.text; render + contiguity PASS. After:
+strongs/strongs_base snapshot diff 0 · words 626,309 · outside rows 625,941 digest 3718e4db unchanged · cells english 35
+· english_head 17 · greek_pos 38 · bracket_id 41 · other columns 0 · built = dry run 18/18 · journal none ·
+`8B2A RESULT: DONE`. **Ruling chat: ACCEPTED.** Next: 8B3 (the four builders).
