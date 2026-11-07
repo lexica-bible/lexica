@@ -4973,3 +4973,657 @@ echo "8B3b RESULT: CHECK - an after-figure differs from the expected picture (li
 Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only block (scope a): six read-only commands on one run-artifact file, no database opened, no file written (no tee, nothing to overwrite), no `!`, and every line it prints is a read-out whose only ruled anchors (58 rows / 59 lines / all CHANGED) trace to §9.97 and the 8B3R helper code." Expected: 59 lines; kinds 58 CHANGED + 1 header; first/last key read-outs (8B3R printed Gen 4:18 @14 first, Mat 1:5 @7 last); the sha is the pin.
 
 PIN8B3B ran (11/7, 17:43:05Z), exit 0: sha256 `62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca`, 59 lines, 8,536 bytes, modified 17:31:17 UTC; kinds 58 CHANGED + 1 header; first key 98 Gen 4:18 @14, last key 29134 Mat 1:5 @7 (= 8B3R's first and last printed rows). Pin filled into Block 8B3b's two slots; nothing else changed.
+
+## 8B3b RAN — STOP at the dry binding check (11/7, 17:47 UTC); ruled §9.98 → slot TSV edit + 8B3c
+
+Log `~/edition_upgrade_runs/pn8b3b_20261107.log`, PA HEAD 12b3e689. Pin OK (59 lines, 62a99ffe…); pre (a) 0 · (b) OK ·
+(c) 451,964,928; the 10/25 lines as in 8B3; header receipt before 2,606 lines; prep and SRCMINI as in 8B3 (words
+626,309, identity 32,478, REKEY 6/6, snapshots 32,478 / 15,446, digests 2b23f546 / 623cca1f, dry words 33,376).
+Dry identity = the §9.97 split, 526 / 43, 2,602 / 886, exit 0. **Dry binding (exit 0) differed from 10/25:** Hand
+rulings 149 replaced (10/25: 151; jonas Joh 21:15/16 gone), `pn_binding render 15,358 + HOT 68` (−20), OVERRIDE 3
+(2Ch 22:6 ×2, 2Ki 1:17), `!! REFUSED` ×4 jehoram G1 STALE-NAME (printed 'joram') → slot 98 / 4, written 98 →
+`8B3b RESULT: STOP`, exit=1, built untouched. Ruling §9.98 (DESIGN).
+**Landed:** `1da5abf0` — `scripts/pn_slot_rulings.tsv`, the 4 rows' printed-name key 'jehoram' → 'joram' with a
+comment citing the 8B3b REFUSED lines and the 8B1b log's built 'Joram' (`xref8b1b_20261106.log` OTHER lines 2Ki 8:16
+@4, 8:25 @4, 8:29 @4, 8:29 @38); 102 rows still parse; tests green (pre-commit); pushed. **PA must `git pull` (no
+deploy, no reload) before 8B3c.**
+
+## 8B3c drafted (11/7) — held for the ruling chat
+
+8B3c = the pinned 8B3b block with only the §9.98 changes (generator asserts each replacement hits once): REF
+`1da5abf0`; folder/log `pn8b3c_20261107`; helper file `pn8b3c_helper.py` (= the 8B3b helper + the slot-name rule +
+the pn_binding read-out). **Binding expected** = the 10/25 lines minus the OVERRIDE lines, with the Hand line taken
+from `pn8b3b_20261107/dry_binding.log` (must start "204 … 3 … 149 replaced") and `render 15,358 + HOT 68`; Witness
+A / C / verse-offset and tipnr_entities = 10/25; slot 102 / 0; written 102; any REFUSED / FAILED line = STOP;
+OVERRIDE lines printed as a count (10/25: 7). **Dry delta + after-check:** identity = the 58 pinned rows (unchanged
+rule); pn_slot_binding = exactly the 4 name changes (book 12 = 2Ki; 8:16 @4, 8:25 @4, 8:29 @4, 8:29 @38; 'jehoram' →
+'joram', every other column equal), anything else in the table or a missing one = STOP — see the CC note in §9.98
+(the ruling's "0" can't hold: land() stores the name); tipnr_entities + tipnr_entity_refs 0; pn_binding = READ-OUT
+written in full to `pn_binding_delta.tsv` (after-check: `pn_binding_delta_after.tsv`), printed by class + first 40,
+not counted. Built vs the dry copy stays 0 on all five tables.
+Tests: unit (made-up before/after copies): good case passes with the read-out file written; one slot not renamed →
+listed NOT SEEN, STOP; an extra slot change → listed OTHER, STOP. Chain on the fake home (repo at `1da5abf0`; 8B3 stop
+→ 8B3R list → 8B3c, slot rule emptied because the made-up copy has no slot rows): DONE, all four "= the dry run's:
+yes", CHECK OK; and a binding-line mismatch (fake 10/25 log still carrying the old names) → STOP before built.
+
+### Block 8B3c (GATE REF 1da5abf0; WRITES built: pn_greek_identity, pn_binding, tipnr_entities, tipnr_entity_refs, pn_slot_binding)
+
+```bash
+set +H
+( set -uo pipefail
+REF=1da5abf0
+echo "GATE REF ${REF} - 8B3c (DESIGN 9.97 + 9.98) the four 8b.3 scripts (build_pn_greek_identity, build_entity_binding, audit_unfindability, audit_two_derivations) on the built copy - dry run on a throwaway copy, identity = the 58 declared rows, slot names = the 4, pn_binding delta read out, apply only on the expected picture - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "8B3c RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "8B3c RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "8B3c RESULT: STOP - PA has not pulled $REF"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+O=~/edition_upgrade_runs
+D="$O/pn8b3c_20261107"
+DL0="$O/pn8b3_20261107/identity_delta.tsv"
+DL="$D/identity_delta_declared.tsv"
+M="$D/dry.db"
+U="$D/unf_before_rekeyed.db"
+L1=~/rekey/live_8b3_id.log; L2=~/rekey/live_8b3_bind.log; L3=~/rekey/live_8b3_unfind.log; L4=~/rekey/live_8b3_twoder.log
+RC=docs/tickets/greek_header_split.txt
+TX="scripts/pn_binding_hot.txt scripts/pn_binding_numonly.txt"
+[ -f "$B" ] || { echo "8B3c RESULT: STOP - missing: $B"; exit 1; }
+[ -f "$S" ] || { echo "8B3c RESULT: STOP - missing: $S"; exit 1; }
+for f in "$L1" "$L2" "$L3" "$L4"; do [ -s "$f" ] || { echo "8B3c RESULT: STOP - last 8b.3 run log missing or empty: $f"; exit 1; }; done
+[ -s "$DL0" ] || { echo "8B3c RESULT: STOP - declared list (8B3R) missing or empty: $DL0"; exit 1; }
+echo "declared list: $DL0 - $(wc -l < "$DL0") lines (expect 59 = header + 58) - sha256 $(sha256sum < "$DL0" | cut -c1-16)..."
+[ "$(sha256sum < "$DL0" | cut -d' ' -f1)" = 62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca ] && [ "$(wc -l < "$DL0")" = "59" ] || { echo "8B3c RESULT: STOP - the declared list is not the pinned 8B3R file (9.97)"; exit 1; }
+if [ -e "$D" ]; then echo "8B3c RESULT: STOP - output folder already exists (already ran?): $D"; exit 1; fi
+t=$(sqlite3 -readonly "$B" "SELECT count(*) FROM sqlite_master WHERE type='trigger'") || { echo "8B3c RESULT: STOP - trigger read failed"; exit 1; }
+echo "pre (a) triggers on built: $t (expect 0)"
+[ "$t" = "0" ] || { echo "8B3c RESULT: STOP - built has triggers"; exit 1; }
+for f in "$B" "$S"; do if [ -e "$f-journal" ]; then echo "8B3c RESULT: STOP - $f-journal present (move it aside, never delete; bring it back)"; exit 1; fi; done
+echo "pre (b) no -journal beside built or src: OK"
+[ -s "$R" ] || { echo "8B3c RESULT: STOP - pre_8b rollback copy missing or empty: $R"; exit 1; }
+echo "pre (c) pre_8b copy present: $(stat -c '%s bytes, %y' "$R") - built now $(stat -c '%s bytes' "$B") (size only)"
+EXP_OLD=$(printf '%s\n' "  abp-tag    3,671" "  tipnr      10,236" "  lemma-only 12,191" "  surface    4,409" "  none       1,971" "Wrote pn_greek_identity: 32,478 rows.")
+P_ID='^  (abp-tag|tipnr|lemma-only|surface|none) +[0-9,]+$|^Wrote pn_greek_identity: '
+P_BIND='^  pn_binding      : |^  tipnr_entities  : |^slot rulings: |^pn_slot_binding written: |^Hand rulings: |^Witness |REFUSED|FAILED|OVERRIDE'
+P_UNF='^findable-(before|after) +check failures: |^UNFINDABILITY GATE: '
+echo "--- last 8b.3 run (10/25), the lines this run must reproduce, with their line numbers:"
+echo "$L1:"; grep -nE "$P_ID" "$L1"
+EXP_ID=$(printf '%s\n' "  abp-tag    3,671" "  tipnr      10,246" "  lemma-only 12,216" "  surface    4,382" "  none       1,963" "Wrote pn_greek_identity: 32,478 rows.")
+[ "$(grep -E "$P_ID" "$L1")" = "$EXP_OLD" ] || { echo "8B3c RESULT: STOP - the 10/25 identity log does not show the ruled split 3,671 / 10,236 / 12,191 / 4,409 / 1,971 and 32,478 rows"; exit 1; }
+echo "$L2:"; grep -nE "$P_BIND" "$L2"
+LBIND=$(grep -E "$P_BIND" "$L2")
+grep -qxF "  pn_binding      : render 15,378 + HOT 68" <<< "$LBIND" && grep -qE '^slot rulings: 102 landable, 0 refused of ' <<< "$LBIND" && grep -qxF "pn_slot_binding written: 102 rows." <<< "$LBIND" || { echo "8B3c RESULT: STOP - the 10/25 binding log does not show render 15,378 + HOT 68 and 102 slot binds / 0 refused"; exit 1; }
+[ "$(grep -cE 'REFUSED|FAILED' <<< "$LBIND")" = "0" ] || { echo "8B3c RESULT: STOP - the 10/25 binding log shows a refusal or failure"; exit 1; }
+L3B="$O/pn8b3b_20261107/dry_binding.log"
+[ -s "$L3B" ] || { echo "8B3c RESULT: STOP - the 8B3b dry binding log is missing: $L3B"; exit 1; }
+HAND3B=$(grep -E '^Hand rulings: ' "$L3B")
+echo "$L3B (declared Hand line, 9.98 b): $(grep -nE '^Hand rulings: ' "$L3B" | cut -c1-110)..."
+case "$HAND3B" in "Hand rulings: 204 new render binds, 3 already-agreeing, 149 replaced floor/HOT rows "*) ;; *) echo "8B3c RESULT: STOP - the 8B3b dry log has no single Hand rulings line with 149 replaced"; exit 1;; esac
+BASE=$(grep -vE 'OVERRIDE' <<< "$LBIND")
+EXPB=$(while IFS= read -r l; do case "$l" in "Hand rulings: "*) printf '%s\n' "$HAND3B";; "  pn_binding      : "*) printf '%s\n' "  pn_binding      : render 15,358 + HOT 68";; *) printf '%s\n' "$l";; esac; done <<< "$BASE")
+echo "expected binding lines (OVERRIDE lines aside): Hand rulings = the 8B3b line (149) - Witness A / C / verse-offset + tipnr_entities = 10/25 - $(grep -E '^  pn_binding' <<< "$EXPB") - $(grep -E '^slot rulings' <<< "$EXPB") - $(grep -E '^pn_slot_binding written' <<< "$EXPB")"
+echo "$L3:"; grep -nE "$P_UNF|^rows in scope" "$L3"
+LUNF=$(grep -E "$P_UNF" "$L3")
+[ "$LUNF" = "$(printf '%s\n' "findable-before check failures: 0 (expected 0)" "findable-after  check failures: 0 (expected 0)" "UNFINDABILITY GATE: PASS — zero findable-before/unfindable-after.")" ] || { echo "8B3c RESULT: STOP - the 10/25 unfindability log is not PASS 0 / 0"; exit 1; }
+echo "$L4:"; grep -nE '^Hebrew-keyed PN numbers: |^agree: |^controls: ' "$L4"
+LTWO=$(grep -E '^controls: ' "$L4")
+LTWC=$(grep -E '^Hebrew-keyed PN numbers: |^agree: ' "$L4")
+[ "$LTWO" = "controls: 10  failed: 0" ] || { echo "8B3c RESULT: STOP - the 10/25 two-derivations log is not controls 10 failed 0"; exit 1; }
+mkdir -p "$D"
+cp "$DL0" "$DL"; [ "$(sha256sum < "$DL" | cut -d' ' -f1)" = 62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca ] || { echo "8B3c RESULT: STOP - declared list copy differs"; exit 1; }
+P="$D/pn8b3c_helper.py"
+cat > "$P" <<'PY'
+"""8B3c helper (one-off, edition upgrade stage D, step 8b.3; = the 8B3b helper + DESIGN 9.98: the slot
+table may differ only by the 4 jehoram -> joram names, the pn_binding delta is a READ-OUT saved to a
+file). Never writes the built copy or src.
+
+  prep    <built.db> <dry.db> <dir>   read built; save its before-state (the five tables the two
+                                      builders replace -> <dir>/before.db + two snapshot files;
+                                      words per-row fingerprints; abp_surface count + digest);
+                                      write a THROWAWAY copy (<dry.db>) holding just what the four
+                                      8b.3 scripts read, for the dry run
+  srcmini <src.db> <out.db>           a THROWAWAY copy of src's identity + xref (+ words keys) with
+                                      the committed REKEY moves applied, as the unfindability
+                                      audit's before side (its matching is by position)
+  unf1    <audit.log> <src.db>        the as-is audit (src vs built): findable-after failures must
+                                      be exactly the in-scope records at the old REKEY positions
+  delta   <a.db> <b.db> <label> <declared.tsv> <pn_binding_delta.tsv>
+                                      row-level differences in the five tables, a -> b; the
+                                      identity rows must be exactly the declared list (key +
+                                      before/after); pn_slot_binding = the 4 declared name
+                                      changes; tipnr_entities / tipnr_entity_refs 0;
+                                      pn_binding differences written in full + printed
+                                      by class + first 40, NOT counted (9.98 b)
+  check   <built.db> <dry.db> <dir> <declared.tsv> <pn_binding_delta_after.tsv>
+                                      after the apply: words + abp_surface unchanged, built = dry
+                                      copy on the five tables, delta vs before, the 6 re-keyed
+                                      records and the 16 abp-tag rows
+
+Usage: python3 pn8b3c_helper.py <mode> ...
+"""
+import ast
+import hashlib
+import json
+import sqlite3
+import sys
+from pathlib import Path
+
+REPO = Path.home() / "bible-db"
+sys.path.insert(0, str(REPO / "scripts"))
+sys.path.insert(0, str(REPO))
+MOVES = REPO / "tests" / "fixtures" / "edition_upgrade" / "pn_greek_identity_key_moves_20261106.tsv"
+WORDS_EXPECT = 626309
+IDENTITY_EXPECT = 32478
+UNF1_EXPECT = 5
+SCOPE = ("tipnr", "lemma-only", "surface")
+# the five tables build_pn_greek_identity / build_entity_binding (+ build_slot_binding.land) replace
+OUT = (("pn_greek_identity", ("verse_id", "position")),
+       ("pn_binding", ("book", "chapter", "verse", "name")),
+       ("tipnr_entities", ("uniq",)),
+       ("tipnr_entity_refs", None),
+       ("pn_slot_binding", ("book", "chapter", "verse", "position")))
+# everything the four scripts read (main() of each, top to bottom)
+READS = ("verses", "words", "abp_surface", "pn_binding", "pn_hebrew_xref", "pn_greek_identity",
+         "tipnr_entities", "tipnr_entity_refs", "pn_slot_binding", "metav_places",
+         "metav_place_aliases", "metav_people", "metav_people_aliases")
+ABPTAG16 = ((21270, 1), (23928, 2), (24148, 16), (24461, 2), (24627, 9), (25170, 6), (25225, 0),
+            (25374, 19), (25553, 12), (26424, 2), (27237, 1), (28665, 6), (29083, 13), (29141, 13),
+            (29142, 0), (31003, 4))
+
+
+def stop(msg):
+    print("8B3c RESULT: STOP - " + msg)
+    sys.exit(1)
+
+
+def ro(path):
+    c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def tables(c):
+    return {r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+
+
+def cols(c, t):
+    return [r[1] for r in c.execute("PRAGMA table_info(%s)" % t)]
+
+
+def moves():
+    out = []
+    for ln in MOVES.read_text(encoding="utf-8").splitlines()[1:]:
+        if ln.strip():
+            v, o, n = ln.split("\t")
+            out.append((int(v), int(o), int(n)))
+    if not len(out) == 6:
+        stop("moves file has %d rows, not 6" % len(out))
+    return out
+
+
+def ref(c, vid):
+    r = c.execute("SELECT book, chapter, verse FROM verses WHERE id=?", (vid,)).fetchone()
+    return "%s %d:%d" % r if r else "verse %s ?" % vid
+
+
+def words_fingerprints(c, path):
+    h = hashlib.sha256()
+    n = 0
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        for r in c.execute("SELECT rowid, * FROM words ORDER BY rowid"):
+            line = "%s\t%s\n" % (r[0], hashlib.sha1(repr(tuple(r)).encode("utf-8")).hexdigest())
+            f.write(line)
+            h.update(line.encode("utf-8"))
+            n += 1
+    return n, h.hexdigest()
+
+
+def surface_digest(c):
+    rows = sorted(repr(tuple(r)) for r in c.execute("SELECT * FROM abp_surface"))
+    h = hashlib.sha256()
+    for s in rows:
+        h.update(s.encode("utf-8"))
+        h.update(b"\n")
+    return len(rows), h.hexdigest()
+
+
+def keyed(c, t, key):
+    cs = cols(c, t)
+    d = {}
+    for r in c.execute("SELECT * FROM %s" % t):
+        k = tuple(r[cs.index(x)] for x in key) if key else tuple(r)
+        d.setdefault(k, []).append(tuple(r))
+    for k in d:
+        d[k].sort(key=repr)
+    return cs, d
+
+
+IDCOLS = ("greek_strongs", "greek_lemma", "source", "hebrew_base")
+# DESIGN 9.98 (a): the 4 Israel-king slots whose ruled printed name became 'joram' (2Ki = book 12)
+SLOT4 = {(12, 8, 16, 4), (12, 8, 25, 4), (12, 8, 29, 4), (12, 8, 29, 38)}
+SLOT4_FROM, SLOT4_TO = "jehoram", "joram"
+
+
+def declared(path):
+    """The declared identity rows (8B3R's identity_delta.tsv): {(verse_id, position): (before, after)}."""
+    out = {}
+    lines = Path(path).read_text(encoding="utf-8").splitlines()
+    if not lines[0].startswith("kind\tverse_id\tref\tposition\t"):
+        stop("declared list header is not 8B3R's: %s" % path)
+    for ln in lines[1:]:
+        f = ln.split("\t")
+        k = (int(f[1]), int(f[3]))
+        if k in out:
+            stop("declared list has key %s twice" % (k,))
+        out[k] = (ast.literal_eval(f[-2]), ast.literal_eval(f[-1]))
+    return out
+
+
+def delta(a, b, refc, expect=None, readout=None):
+    """Print row-level differences a -> b on the five tables. Returns the total of differences
+    NOT allowed. With expect (the declared identity rows): identity must equal it exactly (key +
+    before/after) and pn_slot_binding may differ only by the SLOT4 name changes. With readout (a
+    file path): pn_binding differences are written there in full and printed by class + first 40,
+    and are NOT counted (9.98 b)."""
+    total = 0
+    for t, key in OUT:
+        ca, da = keyed(a, t, key)
+        cb, db = keyed(b, t, key)
+        if not ca == cb:
+            print("  %s: columns differ %s -> %s" % (t, ca, cb))
+            total += 1
+            continue
+        rem = sorted((k for k in da if k not in db), key=repr)
+        add = sorted((k for k in db if k not in da), key=repr)
+        chg = sorted((k for k in da if k in db and not da[k] == db[k]), key=repr)
+        n = len(rem) + len(add) + len(chg)
+        print("  %s: rows %d -> %d - changed %d, added %d, removed %d"
+              % (t, sum(len(x) for x in da.values()), sum(len(x) for x in db.values()), len(chg), len(add), len(rem)))
+        if t == "pn_greek_identity" and expect is not None:
+            ix = [ca.index(x) for x in IDCOLS]
+            def rec(rows):
+                return tuple(rows[0][i] for i in ix) if rows else None
+            got = {k: (rec(da.get(k)), rec(db.get(k))) for k in set(rem) | set(add) | set(chg)}
+            extra = sorted(k for k in got if k not in expect)
+            absent = sorted(k for k in expect if k not in got)
+            wrong = sorted(k for k in got if k in expect and not got[k] == expect[k])
+            bad = len(extra) + len(absent) + len(wrong)
+            total += bad
+            trans = {}
+            for k in got:
+                tr = "%s -> %s" % ((got[k][0] or ("-",) * 4)[2], (got[k][1] or ("-",) * 4)[2])
+                trans[tr] = trans.get(tr, 0) + 1
+            print("    by source: " + " - ".join("%s %d" % kv for kv in sorted(trans.items(), key=lambda x: (-x[1], x[0]))))
+            print("    = the declared list (%d rows, key + before/after values): %s - not declared %d, declared but "
+                  "absent %d, values differ %d" % (len(expect), "yes" if not bad else "NO", len(extra), len(absent), len(wrong)))
+            shown = 0
+            for kind, ks in (("NOT DECLARED", extra), ("DECLARED, ABSENT", absent), ("VALUES DIFFER", wrong)):
+                for k in ks:
+                    if shown == 40:
+                        break
+                    shown += 1
+                    print("    %s %s  [%s]: got %s - declared %s" % (kind, k, ref(refc, k[0]), got.get(k), expect.get(k)))
+            continue
+        if t == "pn_slot_binding" and expect is not None:
+            ni = ca.index("name")
+            def rest(rows):
+                return [tuple(x for i, x in enumerate(r) if not i == ni) for r in rows]
+            okk = set(k for k in chg if k in SLOT4 and len(da[k]) == 1 and len(db[k]) == 1
+                      and da[k][0][ni] == SLOT4_FROM and db[k][0][ni] == SLOT4_TO and rest(da[k]) == rest(db[k]))
+            other = sorted(set(chg) - okk, key=repr) + add + rem
+            unseen = sorted(SLOT4 - okk)
+            total += len(other) + len(unseen)
+            print("    = the 4 declared name changes (2Ki 8:16@4, 8:25@4, 8:29@4, 8:29@38 %s -> %s, every other column "
+                  "equal; 9.98 a): %s - seen %d, other differences %d, declared but not seen %d"
+                  % (SLOT4_FROM, SLOT4_TO, "yes" if not (other or unseen) else "NO", len(okk), len(other), len(unseen)))
+            for k in other[:40]:
+                print("    OTHER %s: %s -> %s" % (k, da.get(k), db.get(k)))
+            for k in unseen:
+                print("    NOT SEEN %s: %s -> %s" % (k, da.get(k), db.get(k)))
+            continue
+        if t == "pn_binding" and readout is not None:
+            def what(k):
+                if k not in da:
+                    return "added render=%s" % ",".join(str(r[ca.index("render")]) for r in db[k])
+                if k not in db:
+                    return "removed render=%s" % ",".join(str(r[ca.index("render")]) for r in da[k])
+                if not len(da[k]) == len(db[k]):
+                    return "changed: row count %d -> %d" % (len(da[k]), len(db[k]))
+                cc = sorted({ca[i] for x, y in zip(da[k], db[k]) for i in range(len(x)) if not x[i] == y[i]})
+                return "changed: " + ",".join(cc)
+            keys = [("CHANGED", k) for k in chg] + [("ADDED", k) for k in add] + [("REMOVED", k) for k in rem]
+            classes = {}
+            with open(readout, "w", encoding="utf-8", newline="\n") as f:
+                f.write("kind\tbook\tchapter\tverse\tname\tclass\tbefore\tafter\n")
+                for kind, k in keys:
+                    c_ = what(k)
+                    classes[c_] = classes.get(c_, 0) + 1
+                    f.write("%s\t%s\t%s\t%s\t%s\t%s\t%r\t%r\n" % (kind, k[0], k[1], k[2], k[3], c_, da.get(k), db.get(k)))
+            print("    READ-OUT, not a stop (9.98 b) - all %d in %s" % (n, readout))
+            if n:
+                print("    by class: " + " - ".join("%s %d" % kv for kv in sorted(classes.items(), key=lambda x: (-x[1], x[0]))))
+                print("    first 40:")
+            for kind, k in keys[:40]:
+                print("    %s %s [%s]: %s -> %s" % (kind, k, what(k), da.get(k), db.get(k)))
+            continue
+        total += n
+        if not n:
+            continue
+        si = ca.index("source") if t == "pn_greek_identity" else None
+        ri = ca.index("render") if t == "pn_binding" else None
+        def cls(rows):
+            if si is not None:
+                return rows[0][si]
+            if ri is not None:
+                return "render=%s" % rows[0][ri]
+            return t
+        classes = {}
+        for k in chg:
+            c_ = "changed %s -> %s" % (cls(da[k]), cls(db[k]))
+            classes[c_] = classes.get(c_, 0) + 1
+        for k in add:
+            c_ = "added %s" % cls(db[k])
+            classes[c_] = classes.get(c_, 0) + 1
+        for k in rem:
+            c_ = "removed %s" % cls(da[k])
+            classes[c_] = classes.get(c_, 0) + 1
+        if n > 40:
+            print("    by class: " + " - ".join("%s %d" % kv for kv in sorted(classes.items())))
+            print("    first 40:")
+        shown = 0
+        for kind, ks, src in (("CHANGED", chg, None), ("ADDED", add, db), ("REMOVED", rem, da)):
+            for k in ks:
+                if shown == 40:
+                    break
+                shown += 1
+                where = ("  [%s]" % ref(refc, k[0])) if t == "pn_greek_identity" else ""
+                if kind == "CHANGED":
+                    print("    CHANGED %s%s: %s -> %s" % (k, where, da[k], db[k]))
+                else:
+                    print("    %s %s%s: %s" % (kind, k, where, src[k]))
+    return total
+
+
+MODE = sys.argv[1]
+
+if MODE == "prep":
+    B, DRY, DIR = sys.argv[2], sys.argv[3], Path(sys.argv[4])
+    c = ro(B)
+    have = tables(c)
+    miss = [t for t in READS if t not in have]
+    if miss:
+        stop("built has no table(s) %s" % miss)
+    nw = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    ni = c.execute("SELECT count(*) FROM pn_greek_identity").fetchone()[0]
+    print("words on built before: %d (expect %d) - identity rows %d (expect %d)" % (nw, WORDS_EXPECT, ni, IDENTITY_EXPECT))
+    if not (nw == WORDS_EXPECT and ni == IDENTITY_EXPECT):
+        stop("words or identity count before")
+    for v, o, n in moves():
+        at_new = c.execute("SELECT count(*) FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, n)).fetchone()[0]
+        at_old = c.execute("SELECT count(*) FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, o)).fetchone()[0]
+        if not (at_new == 1 and at_old == 0):
+            stop("REKEY record %s %d->%d: %d at new, %d at old on built" % (ref(c, v), o, n, at_new, at_old))
+    print("REKEY records on built: 6/6 at their new positions, none at the old")
+    if Path(DRY).exists() or (DIR / "before.db").exists():
+        stop("dry copy or before.db already exists")
+    # before-state of the five tables the builders replace
+    bconn = sqlite3.connect(str(DIR / "before.db"), uri=True)
+    bconn.execute("PRAGMA journal_mode=DELETE")
+    bconn.execute("ATTACH DATABASE ? AS b", ("file:%s?mode=ro" % B,))
+    for t, _k in OUT:
+        bconn.execute(c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (t,)).fetchone()[0])
+        bconn.execute("INSERT INTO main.%s SELECT * FROM b.%s" % (t, t))
+    bconn.execute("CREATE TABLE verses AS SELECT id, book, chapter, verse FROM b.verses")
+    bconn.commit()
+    bconn.execute("DETACH DATABASE b")
+    bconn.close()
+    for t, order, f in (("pn_greek_identity", "verse_id, position", "identity_before.tsv"),
+                        ("pn_binding", "book, chapter, verse, name, entity_uniq", "binding_before.tsv")):
+        cs = cols(c, t)
+        with open(DIR / f, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("\t".join(cs) + "\n")
+            n = 0
+            for r in c.execute("SELECT * FROM %s ORDER BY %s" % (t, order)):
+                fh.write("\t".join(repr(x) for x in r) + "\n")
+                n += 1
+        print("snapshot %s before: %d rows -> %s" % (t, n, DIR / f))
+    nwf, wdig = words_fingerprints(c, DIR / "words_before.tsv")
+    ns, sdig = surface_digest(c)
+    print("words fingerprints before: %d rows, digest %s - abp_surface before: %d rows, digest %s" % (nwf, wdig[:8], ns, sdig[:8]))
+    # the throwaway copy: what the four scripts read
+    from build_slot_binding import read_tsv
+    slot_v = set()
+    for r in read_tsv():
+        x = c.execute("SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                      (r["book"], int(r["chapter"]), int(r["verse"]))).fetchone()
+        if x:
+            slot_v.add(x[0])
+    d = sqlite3.connect(DRY, uri=True)
+    d.execute("PRAGMA journal_mode=DELETE")
+    d.execute("ATTACH DATABASE ? AS b", ("file:%s?mode=ro" % B,))
+    for t in READS:
+        d.execute(c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (t,)).fetchone()[0])
+    d.execute("CREATE TEMP TABLE sv (id INTEGER PRIMARY KEY)")
+    d.executemany("INSERT INTO sv VALUES (?)", [(v,) for v in sorted(slot_v)])
+    for t in READS:
+        if t == "words":
+            d.execute("INSERT INTO main.words SELECT * FROM b.words WHERE is_pn=1 OR verse_id IN (SELECT id FROM sv)")
+        elif t == "abp_surface":
+            d.execute("INSERT INTO main.abp_surface SELECT * FROM b.abp_surface s WHERE EXISTS "
+                      "(SELECT 1 FROM main.words w WHERE w.verse_id=s.verse_id AND w.position=s.position)")
+        else:
+            d.execute("INSERT INTO main.%s SELECT * FROM b.%s" % (t, t))
+    for (sql,) in c.execute("SELECT sql FROM sqlite_master WHERE type='index' AND sql IS NOT NULL AND tbl_name IN (%s)"
+                            % ",".join("?" * len(READS)), READS):
+        d.execute(sql)
+    d.commit()
+    counts = {t: d.execute("SELECT count(*) FROM main.%s" % t).fetchone()[0] for t in READS}
+    d.execute("DETACH DATABASE b")
+    d.close()
+    print("dry copy: " + " - ".join("%s %d" % (t, counts[t]) for t in READS))
+    print("  (words = the proper-noun rows + every row of the %d verses pn_slot_rulings.tsv names)" % len(slot_v))
+    json.dump({"words_rows": nwf, "words_digest": wdig, "surface_rows": ns, "surface_digest": sdig},
+              open(DIR / "state.json", "w", encoding="utf-8"))
+    print("8B3c PREP: OK")
+
+elif MODE == "srcmini":
+    S, OUTDB = sys.argv[2], sys.argv[3]
+    c = ro(S)
+    if Path(OUTDB).exists():
+        stop("exists: %s" % OUTDB)
+    d = sqlite3.connect(OUTDB, uri=True)
+    d.execute("PRAGMA journal_mode=DELETE")
+    d.execute("ATTACH DATABASE ? AS s", ("file:%s?mode=ro" % S,))
+    for t in ("pn_greek_identity", "pn_hebrew_xref"):
+        d.execute(c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (t,)).fetchone()[0])
+        d.execute("INSERT INTO main.%s SELECT * FROM s.%s" % (t, t))
+    d.execute("CREATE TABLE words (verse_id INTEGER, position INTEGER, strongs_base TEXT)")
+    d.execute("INSERT INTO main.words SELECT verse_id, position, strongs_base FROM s.words")
+    for v, o, n in moves():
+        for t in ("pn_greek_identity", "pn_hebrew_xref"):
+            a = d.execute("SELECT count(*) FROM main.%s WHERE verse_id=? AND position=?" % t, (v, o)).fetchone()[0]
+            b = d.execute("SELECT count(*) FROM main.%s WHERE verse_id=? AND position=?" % t, (v, n)).fetchone()[0]
+            if not (a == 1 and b == 0):
+                stop("src %s %s %d->%d: %d at old, %d at new" % (t, ref(c, v), o, n, a, b))
+            d.execute("UPDATE main.%s SET position=? WHERE verse_id=? AND position=?" % t, (n, v, o))
+        print("  src record %s (verse_id %d) pos %d -> %d: identity + xref moved" % (ref(c, v), v, o, n))
+    d.commit()
+    ni = d.execute("SELECT count(*) FROM main.pn_greek_identity").fetchone()[0]
+    nx = d.execute("SELECT count(*) FROM main.pn_hebrew_xref").fetchone()[0]
+    nw = d.execute("SELECT count(*) FROM main.words").fetchone()[0]
+    d.execute("DETACH DATABASE s")
+    d.close()
+    print("re-keyed src copy: identity %d - xref %d - words keys %d -> %s" % (ni, nx, nw, OUTDB))
+    print("8B3c SRCMINI: OK")
+
+elif MODE == "unf1":
+    LOG, S = sys.argv[2], sys.argv[3]
+    c = ro(S)
+    exp = set()
+    for v, o, n in moves():
+        r = c.execute("SELECT source FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, o)).fetchone()
+        print("  src record %s (verse_id %d) at old pos %d: class %s%s"
+              % (ref(c, v), v, o, r[0] if r else None, " (in the audit's scope)" if r and r[0] in SCOPE else " (out of scope)"))
+        if r and r[0] in SCOPE:
+            exp.add((v, o))
+    text = Path(LOG).read_text(encoding="utf-8").splitlines()
+    got = set()
+    nb = na = None
+    for ln in text:
+        if ln.startswith("findable-before check failures: "):
+            nb = ln.split(": ")[1].split()[0]
+        if ln.startswith("findable-after  check failures: "):
+            na = ln.split(": ")[1].split()[0]
+        if ln.startswith("  AFTER ("):
+            k = ln[len("  AFTER ("):].split(")")[0].split(",")
+            got.add((int(k[0]), int(k[1])))
+    print("as-is audit: before failures %s (expect 0) - after failures %s (expect %d) - failing keys = old REKEY keys in scope: %s"
+          % (nb, na, UNF1_EXPECT, "yes" if got == exp else "NO (got %s, expect %s)" % (sorted(got), sorted(exp))))
+    if not (nb == "0" and na == str(UNF1_EXPECT) and len(exp) == UNF1_EXPECT and got == exp):
+        stop("the as-is unfindability audit is not exactly the moved-position picture")
+    print("8B3c UNF1: OK")
+
+elif MODE == "delta":
+    A, Bp, label, EXP, RD = sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6]
+    if Path(RD).exists():
+        stop("exists: %s" % RD)
+    a, b = ro(A), ro(Bp)
+    print("delta, %s:" % label)
+    n = delta(a, b, a, declared(EXP), RD)
+    print("  differences outside the declared rows (identity 58, slot names 4; pn_binding read out): %d (expect 0)" % n)
+    sys.exit(0 if n == 0 else 1)
+
+elif MODE == "check":
+    B, DRY, DIR, EXP, RD = sys.argv[2], sys.argv[3], Path(sys.argv[4]), sys.argv[5], sys.argv[6]
+    st = json.load(open(DIR / "state.json", encoding="utf-8"))
+    c, d, bef = ro(B), ro(DRY), ro(str(DIR / "before.db"))
+    bad = []
+    nw = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    nwf, wdig = words_fingerprints(c, DIR / "words_after.tsv")
+    a_lines = (DIR / "words_after.tsv").read_text(encoding="utf-8").splitlines()
+    b_lines = (DIR / "words_before.tsv").read_text(encoding="utf-8").splitlines()
+    wdiff = sum(1 for x, y in zip(b_lines, a_lines) if not x == y) + abs(len(a_lines) - len(b_lines))
+    print("words on built after: %d (expect %d) - per-row fingerprint lines differing from before: %d (expect 0) - digest %s (before %s)"
+          % (nw, WORDS_EXPECT, wdiff, wdig[:8], st["words_digest"][:8]))
+    if not (nw == WORDS_EXPECT and wdiff == 0 and wdig == st["words_digest"]):
+        bad.append("words changed")
+    ns, sdig = surface_digest(c)
+    print("abp_surface after: %d rows, digest %s (expect %d, %s - unchanged)" % (ns, sdig[:8], st["surface_rows"], st["surface_digest"][:8]))
+    if not (ns == st["surface_rows"] and sdig == st["surface_digest"]):
+        bad.append("abp_surface changed")
+    print("built after vs the dry copy (must be identical):")
+    if delta(d, c, c):
+        bad.append("built differs from the dry run")
+    print("built after vs built before (identity = the declared 58, slot names = the 4, tipnr tables 0, pn_binding read out):")
+    if delta(bef, c, c, declared(EXP), RD):
+        bad.append("a table differs from its before-snapshot")
+    print("the 6 REKEY records on built after (verse_id, position, greek_strongs, greek_lemma, source, hebrew_base | xref | words english, strongs, strongs_base, is_pn):")
+    for v, o, n in moves():
+        g = c.execute("SELECT * FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, n)).fetchone()
+        x = c.execute("SELECT hebrew_base, class FROM pn_hebrew_xref WHERE verse_id=? AND position=?", (v, n)).fetchone()
+        w = c.execute("SELECT english, strongs, strongs_base, is_pn FROM words WHERE verse_id=? AND position=?", (v, n)).fetchone()
+        old = c.execute("SELECT count(*) FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, o)).fetchone()[0]
+        print("  %s new pos %d: %s | xref %s | words %s | identity rows at old pos %d: %d" % (ref(c, v), n, g, x, w, o, old))
+        if g is None or old:
+            bad.append("REKEY record %s" % ref(c, v))
+    print("the 16 abp-tag rows (9.96) on built after (identity | words strongs, strongs_base) - retire's abp-tag check:")
+    ok16 = 0
+    for v, p in ABPTAG16:
+        g = c.execute("SELECT greek_strongs, greek_lemma, source, hebrew_base FROM pn_greek_identity WHERE verse_id=? AND position=?", (v, p)).fetchone()
+        w = c.execute("SELECT english, strongs, strongs_base FROM words WHERE verse_id=? AND position=?", (v, p)).fetchone()
+        good = bool(g and w and g[2] == "abp-tag" and w[2] == g[0] and (w[2] or "").startswith("G") and g[3] is None)
+        ok16 += good
+        print("  %s (verse_id %d) pos %d: %s | %s | %s" % (ref(c, v), v, p, g, w, "OK" if good else "FAIL"))
+    print("abp-tag check on the 16: %d/16 OK" % ok16)
+    if not ok16 == 16:
+        bad.append("abp-tag rows")
+    if bad:
+        for b_ in bad:
+            print("  problem: " + b_)
+        print("8B3c CHECK: FAIL")
+        sys.exit(1)
+    print("8B3c CHECK: OK")
+else:
+    stop("unknown mode")
+PY
+[ "$(sha256sum < "$P" | cut -d' ' -f1)" = faa299aa9da4bd11cf5627066e5f7352390d38c66d5ec5fb78add2173242eb66 ] || { echo "8B3c RESULT: STOP - the pasted helper does not match the drafted one"; exit 1; }
+if [ -f "$RC" ]; then cp "$RC" "$D/greek_header_split_before.txt"; echo "header receipt on PA before: $(wc -l < "$RC") lines (kept as $D/greek_header_split_before.txt)"; else echo "header receipt on PA before: none"; fi
+python3 "$P" prep "$B" "$M" "$D" || { echo "8B3c RESULT: STOP - prep did not pass (line above); built untouched"; exit 1; }
+python3 "$P" srcmini "$S" "$U" || { echo "8B3c RESULT: STOP - re-keyed src copy did not pass (line above); built untouched"; exit 1; }
+echo "=== DRY RUN on the throwaway copy (built untouched) ==="
+DID=$(python3 scripts/build_pn_greek_identity.py "$M" --apply 2>&1); di=$?
+printf '%s\n' "$DID" > "$D/dry_identity.log"; cp "$RC" "$D/greek_header_split_dry.txt"
+echo "--- 1 build_pn_greek_identity (full output: $D/dry_identity.log):"
+grep -E "$P_ID|^identity split|^name-match gate|^pn_binding render rows|^proper-noun words|^pn_hebrew_xref loaded|^hand-table|^receipt written" <<< "$DID"
+echo "exit $di (expect 0)"
+[ "$di" -eq 0 ] && [ "$(grep -E "$P_ID" <<< "$DID")" = "$EXP_ID" ] || { echo "8B3c RESULT: STOP - dry identity build is not the 9.97 split 3,671 / 10,246 / 12,216 / 4,382 / 1,963 and 32,478; built untouched"; exit 1; }
+DBD=$(python3 scripts/build_entity_binding.py "$M" --apply 2>&1); db=$?
+printf '%s\n' "$DBD" > "$D/dry_binding.log"
+for f in $TX; do cp "$f" "$D/$(basename "$f" .txt)_dry.txt"; done; git checkout -- $TX
+echo "--- 2 build_entity_binding (full output: $D/dry_binding.log; its two scripts/ dumps kept in $D and put back in the repo):"
+grep -E "$P_BIND" <<< "$DBD"
+echo "exit $db (expect 0)"
+DB1=$(grep -E "$P_BIND" <<< "$DBD"); DB2=$(grep -vE 'OVERRIDE' <<< "$DB1")
+echo "OVERRIDE lines: $(grep -cE 'OVERRIDE' <<< "$DB1") (10/25: 7; read-out)"
+[ "$db" -eq 0 ] && [ "$DB2" = "$EXPB" ] && [ "$(grep -cE 'REFUSED|FAILED' <<< "$DB1")" = "0" ] || { echo "8B3c RESULT: STOP - dry binding lines are not the 9.98 picture (Hand 149, render 15,358 + HOT 68, slot 102 / 0, written 102, Witness + tipnr_entities = 10/25, no REFUSED); built untouched"; exit 1; }
+DTW=$(python3 scripts/audit_two_derivations.py "$M" 2>&1); dt=$?
+printf '%s\n' "$DTW" > "$D/dry_twoder.log"
+echo "--- 4 audit_two_derivations on the dry copy (full output: $D/dry_twoder.log):"
+grep -E '^Hebrew-keyed PN numbers: |^agree: |^\[(PASS|FAIL)\] |^controls: ' <<< "$DTW"
+echo "exit $dt (expect 0) - count lines (Hebrew-keyed / agree) vs 10/25: $([ "$(grep -E '^Hebrew-keyed PN numbers: |^agree: ' <<< "$DTW")" = "$LTWC" ] && echo same || echo differ) (read-out, 9.97)"
+[ "$dt" -eq 0 ] && [ "$(grep -E '^controls: ' <<< "$DTW")" = "$LTWO" ] || { echo "8B3c RESULT: STOP - dry two-derivations is not controls 10 failed 0; built untouched"; exit 1; }
+U1=$(python3 scripts/audit_unfindability.py "$S" "$B" --list 2>&1); u1=$?
+printf '%s\n' "$U1" > "$D/unf_asis.log"
+echo "--- 3a audit_unfindability as-is, src vs built (position-keyed; full output: $D/unf_asis.log):"
+grep -E "$P_UNF|^rows in scope|^  (BEFORE|AFTER) " <<< "$U1"
+echo "exit $u1 (expect 1: fails on the moved records only)"
+[ "$u1" -eq 1 ] && python3 "$P" unf1 "$D/unf_asis.log" "$S" || { echo "8B3c RESULT: STOP - as-is unfindability is not the moved-position picture; built untouched"; exit 1; }
+U2=$(python3 scripts/audit_unfindability.py "$U" "$B" --list 2>&1); u2=$?
+printf '%s\n' "$U2" > "$D/unf_rekeyed.log"
+echo "--- 3b audit_unfindability, re-keyed src copy vs built (full output: $D/unf_rekeyed.log):"
+grep -E "$P_UNF|^rows in scope|^  (BEFORE|AFTER) " <<< "$U2"
+echo "exit $u2 (expect 0)"
+[ "$u2" -eq 0 ] && [ "$(grep -E "$P_UNF" <<< "$U2")" = "$LUNF" ] || { echo "8B3c RESULT: STOP - unfindability (re-keyed) is not PASS 0 / 0; built untouched"; exit 1; }
+python3 "$P" delta "$D/before.db" "$M" "built before -> dry copy after the two builders" "$DL" "$D/pn_binding_delta.tsv" || { echo "8B3c RESULT: STOP - the dry run differs beyond the declared rows (identity 58, slot names 4) or touches a tipnr table (listed above); built untouched"; exit 1; }
+echo "dry run = the expected picture (split + 32,478 - binding lines = 10/25 - controls 10/0 - unfindability 0/5 as-is, 0/0 re-keyed - identity = the 58 declared rows, slot names = the 4, tipnr tables 0, pn_binding delta read out) - applying to built"
+echo "=== APPLY on built, in order ==="
+AID=$(python3 scripts/build_pn_greek_identity.py "$B" --apply 2>&1); ai=$?
+printf '%s\n' "$AID" > "$D/apply_identity.log"; cp "$RC" "$D/greek_header_split_apply.txt"
+echo "--- 1 build_pn_greek_identity on built (full output: $D/apply_identity.log):"
+grep -E "$P_ID" <<< "$AID"
+echo "exit $ai (expect 0) - output = the dry run's (first line aside): $([ "$(sed 1d <<< "$AID")" = "$(sed 1d <<< "$DID")" ] && echo yes || echo NO)"
+[ "$ai" -eq 0 ] && [ "$(sed 1d <<< "$AID")" = "$(sed 1d <<< "$DID")" ] || { echo "8B3c RESULT: CHECK - identity on built did not reproduce the dry run; binding NOT run. Built's identity before-state: $D/before.db"; exit 1; }
+ABD=$(python3 scripts/build_entity_binding.py "$B" --apply 2>&1); ab=$?
+printf '%s\n' "$ABD" > "$D/apply_binding.log"
+TXS=yes; for f in $TX; do cp "$f" "$D/$(basename "$f" .txt)_apply.txt"; cmp -s "$f" "$D/$(basename "$f" .txt)_dry.txt" || TXS=NO; git show "HEAD:$f" | cmp -s - "$f" && echo "  $f from this run = the repo copy" || echo "  $f from this run differs from the repo copy (kept in $D)"; done; git checkout -- $TX
+echo "--- 2 build_entity_binding on built (full output: $D/apply_binding.log):"
+grep -E "$P_BIND" <<< "$ABD"
+echo "exit $ab (expect 0) - output = the dry run's (first line aside): $([ "$(sed 1d <<< "$ABD")" = "$(sed 1d <<< "$DBD")" ] && echo yes || echo NO) - scripts/ dumps = the dry run's: $TXS"
+[ "$ab" -eq 0 ] && [ "$(sed 1d <<< "$ABD")" = "$(sed 1d <<< "$DBD")" ] && [ "$TXS" = "yes" ] || { echo "8B3c RESULT: CHECK - binding on built did not reproduce the dry run. Before-state of the five tables: $D/before.db"; exit 1; }
+AU=$(python3 scripts/audit_unfindability.py "$U" "$B" --list 2>&1); au=$?
+printf '%s\n' "$AU" > "$D/apply_unf.log"
+echo "--- 3 audit_unfindability (re-keyed src copy vs built) after the builders:"
+grep -E "$P_UNF" <<< "$AU"
+echo "exit $au (expect 0) - output = the dry run's: $([ "$AU" = "$U2" ] && echo yes || echo NO)"
+ATW=$(python3 scripts/audit_two_derivations.py "$B" 2>&1); at=$?
+printf '%s\n' "$ATW" > "$D/apply_twoder.log"
+echo "--- 4 audit_two_derivations on built:"
+grep -E '^agree: |^controls: ' <<< "$ATW"
+echo "exit $at (expect 0) - output = the dry run's (first line aside): $([ "$(sed 1d <<< "$ATW")" = "$(sed 1d <<< "$DTW")" ] && echo yes || echo NO)"
+CHK=$(python3 "$P" check "$B" "$M" "$D" "$DL" "$D/pn_binding_delta_after.tsv" 2>&1); k=$?
+echo "$CHK"
+cmp -s "$D/greek_header_split_dry.txt" "$D/greek_header_split_apply.txt" && RCS=yes || RCS=NO
+if [ -f "$D/greek_header_split_before.txt" ]; then cmp -s "$D/greek_header_split_before.txt" "$D/greek_header_split_apply.txt" && RB=same || RB=differs; else RB="no earlier copy"; fi
+echo "header receipt ($RC): this run = the dry run's: $RCS - vs the copy on PA before: $RB (read-out)"
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] && GS=clean || GS=DIRTY
+echo "repo scripts/tests after: $GS (expect clean)"
+if [ -e "$B-journal" ]; then J=PRESENT; else J=none; fi
+echo "journal after: $J (expect none)"
+if [ "$au" -eq 0 ] && [ "$AU" = "$U2" ] && [ "$at" -eq 0 ] && [ "$(sed 1d <<< "$ATW")" = "$(sed 1d <<< "$DTW")" ] && [ "$k" -eq 0 ] && [ "$RCS" = "yes" ] && [ "$GS" = "clean" ] && [ "$J" = "none" ]; then
+  echo "8B3c RESULT: DONE - identity 32,478 at the 9.97 split, = before + the 58 declared rows - binding render 15,358 + HOT 68, Hand 149, slot 102 / 0 - unfindability PASS 0/0 (re-keyed), 0/5 as-is = the moved records - two-derivations 10/0 - built = the dry run, vs before only the declared rows (pn_binding delta read out) - words 626309 + abp_surface unchanged"; exit 0
+fi
+echo "8B3c RESULT: CHECK - an after-figure differs from the expected picture (lines above). Before-state of the five tables: $D/before.db"; exit 1
+) 2>&1 | tee ~/edition_upgrade_runs/pn8b3c_20261107.log; echo "exit=${PIPESTATUS[0]}"
+```
