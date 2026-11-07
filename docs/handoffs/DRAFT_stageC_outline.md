@@ -5587,7 +5587,7 @@ grep -E "$P_UNF|^rows in scope|^  (BEFORE|AFTER) " <<< "$U2"
 echo "exit $u2 (expect 0)"
 [ "$u2" -eq 0 ] && [ "$(grep -E "$P_UNF" <<< "$U2")" = "$LUNF" ] || { echo "8B3c RESULT: STOP - unfindability (re-keyed) is not PASS 0 / 0; built untouched"; exit 1; }
 python3 "$P" delta "$D/before.db" "$M" "built before -> dry copy after the two builders" "$DL" "$D/pn_binding_delta.tsv" || { echo "8B3c RESULT: STOP - the dry run differs beyond the declared rows (identity 58, slot names 4) or touches a tipnr table (listed above); built untouched"; exit 1; }
-echo "dry run = the expected picture (split + 32,478 - binding lines = 10/25 - controls 10/0 - unfindability 0/5 as-is, 0/0 re-keyed - identity = the 58 declared rows, slot names = the 4, tipnr tables 0, pn_binding delta read out) - applying to built"
+echo "dry run = the expected picture (split + 32,478 - binding lines = the 9.98 picture - controls 10/0 - unfindability 0/5 as-is, 0/0 re-keyed - identity = the 58 declared rows, slot names = the 4, tipnr tables 0, pn_binding delta read out) - applying to built"
 echo "=== APPLY on built, in order ==="
 AID=$(python3 scripts/build_pn_greek_identity.py "$B" --apply 2>&1); ai=$?
 printf '%s\n' "$AID" > "$D/apply_identity.log"; cp "$RC" "$D/greek_header_split_apply.txt"
