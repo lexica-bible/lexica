@@ -6,6 +6,17 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-07 — PA disk thinning DONE (home 8.3G → 6.3G)
+- The 8B3c after-check died on the PA quota (OSError 122). Deleted by JP after a per-file repo read (ruling chat):
+  both `bible_pre_pnstar_*`, `bible_test.db`, `~/db_evidence/bible_formlane.db` (8/23 gated copy), the 9/6
+  formlane backup in `~/db_backups` (+ `.info`). Kept: `bible_pre_trapwire_swap.db`, `~/bible.db.pre-surface-fill-20261025`,
+  the hdrlane 9/6 backup (§9.95), the 4 form-lane TSVs. Throwaway run copies cleared by 8B3CX.
+- **Lesson:** TODO said the pnstar "evidence twins stay in `~/db_evidence/`" — they were never made (the copy
+  command sat in the charter, nobody confirmed it). An `ls` before the delete caught it; the pair went anyway on
+  closed-lane grounds, with no copy kept. A doc's "the copy is there" is a claim — `ls` it.
+- **Lesson:** backups of a db whose source file is gone are never rotated or compressed (`backup_db.py` only
+  rotates databases it still finds in `~/bible-db`) — they sit full-size until deleted by hand.
+
 ## 2026-10-31 — Edition-upgrade prep: cert pin 30→51, `--declared` gate, Q2 build design (three commits, pushed, not deployed)
 - **Cert pin** `6e9d2df8`: `cert_invariants.py` `abp_corrections_active` 30 → 51 (27 BD-* rows landed after the
   pin, 6 Cushi superseded: 30 − 6 + 27 = 51) + the first frozen corrections member list (PA dump, 51 lines, sha

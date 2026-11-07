@@ -224,12 +224,11 @@ parser reference notes in its appendix). No open writes.
   `0773e2ae`; feed censuses dash/markup/glue `4737662e` + brackets `e4c0afe3`; derivation A `--app-feed`
   `8fdc46f0` + `e4c0afe3` (two-build compose; count-differs frozen at CHUNK level = 704, no PA dump, §9.18);
   derivation B `build_prose_from_app.py` `97d87fb1`. Local no-db dry runs (lexicon/map off, NOT the build's
-  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE D OPEN 11/6 late — built = 8b.0 (339) + REKEY (identity 6 + xref 6 + abp_surface 15) + 8b.1 (restored 178); 8B2 STOPPED on the class split (built 12,191 / 4,409 / 1,971 vs the code's 12,182 / 4,412 / 1,977 — the 10/25 8b.3 rebuild of `pn_greek_identity` was never re-declared); DRIFT-8B2 ran on picture; §9.95 ruled EXPECT 3671/10236/12191/4409/1971, rewrites 26,323. NEXT: scripts commit (EXPECT) → 8B2b. Start from `docs/handoffs/HANDOFF_edition_upgrade_stageD_rekey.md`; out-of-lane follow-ups stay in `HANDOFF_edition_upgrade_stageC_repin.md`.** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
+  figures): A transplants 29,623 / B writes 16,067. **PA SEQUENCE: STAGE D DONE through 8b.3 (11/7) — built = 8b.0 + REKEY + 8b.1 + §9.96 + 8b.2 + 8b.2a + 8b.3 (8B3c, re-checked by 8B3CX: CHECK OK); §9.97 declared 58 identity rows, §9.98 the 4 joram slot keys + pn_binding delta (160 rows) as gate 2's input. NEXT: gate 2 dump (`eu_pn_binding_diff.py`) + first gate 2 run, both read-only via the reviewer. Start from `docs/handoffs/HANDOFF_edition_upgrade_gate2.md`; out-of-lane follow-ups stay in `HANDOFF_edition_upgrade_stageC_repin.md`.** Built copy `~/bible-db/bible_edupg_test_built_20261102.db` (code `3f6b4d3c`): A 29,071 / 1,421 / 625 · merge pairs
   1,578 · edge splits 90 (both frozen lists MATCH) · B APPLIED 15,571 (EU matched 118). Source copy
   `bible_edupg_test_20261101.db` = 374 active / 23 retired / 6 superseded corrections (344 EU- + 2 S-joh14:26).
-  Still owed: the lane's `declared_deltas.json` (§9.64/§9.69/§9.70, before gate 2), B's step in `/rebuild-words`,
-  Split 80 → 84 re-declare. Rulings §9.58–§9.84 = DESIGN §9; §9.85–§9.89 are recorded only in
-  `DRAFT_stageC_outline.md` (not yet copied into DESIGN).
+  Still owed: the lane's `declared_deltas.json` v3 (after gate 2's first run, §9.92/§9.97/§9.98), B's step in `/rebuild-words`,
+  Split 80 → 84 re-declare. Rulings §9.58–§9.98 = DESIGN §9 (sole register).
   **HOLD (JP 10/30, not this lane):** after the upgrade, does the app feed take over the Greek/Strong's
   role from `abp_texts/` + `bh_scrape.db` in a LATER lane? Keep alive; decide after the English-line
   upgrade lands (charter §3 names the Greek residual buckets it would absorb).
@@ -293,6 +292,10 @@ parser reference notes in its appendix). No open writes.
   residue below).
 
 ## Greek header / form lane — leftover follow-ups (arc CLOSED 9/6 → TODO_ARCHIVE)
+- **Header receipt order is not repeatable** (found 11/7, 8B3c): `build_pn_greek_identity.py:521` sorts each
+  name's forms by count only, so tied forms print in database row order — two builds of the SAME table
+  wrote receipts differing on 9 lines (RDIFF8B3C: content identical). Add a second sort key (the form) so
+  receipts compare byte-for-byte; receipt-only change, run a local fingerprint first.
 - **20 glued-blanked rows** (ruling 3, 8/24): they previously showed a (garbage) word-hint and now
   show English — decide downstream whether any deserve a real header (hand-table door). Members =
   the 13 + 7 in the 8/24 session record (`docs/handoffs/HANDOFF_gateB_enumeration.md`).
@@ -305,12 +308,9 @@ parser reference notes in its appendix). No open writes.
 - Mat 9:35 scrape typo `Ισηούς` → corrections-lane citation; Mar 2:8 / Mar 14:66 variant forms =
   hand-table door candidates.
 - **PA disk housekeeping (small):**
-  - Disk thinning filed 8/23 — **DONE 2026-11-07 (JP, PA quota 8.3G → 6.3G):** deleted `bible_test.db`,
-    both `bible_pre_pnstar_*` (the `~/db_evidence/` twins were NEVER made — only the form lane's
-    `bible_formlane.db` + 4 TSVs were there), `~/db_evidence/bible_formlane.db` (8/23 gated copy) and
-    `~/db_backups/bible_formlane.db.20260906-153935.db` (+ `.info`; orphaned — its source file is gone, so
-    rotation never touched it). The 4 form-lane TSVs stay. `~/bible-db/bible_hdrlane.db` was kept for
-    diagnosis at 8/23 (its 9/6 backup is the §9.95 reference — keep).
+  - **Backup stamp read owed after the 11/8 13:30 UTC nightly** (the 11/7 run likely failed on the full disk —
+    unverified; no manual backup run): `cat ~/db_backups/last_success.txt; grep -nE 'XX|!!|Backing up|All backups verified' ~/db_backups/backup.log | tail -12; ls -l ~/db_backups | grep -E 'bible\.db\.'`
+    — expect a 11/8 stamp, no `XX`, the 11/6 + 11/7 bible.db copies compressed.
   - WAL crumbs (zero-risk): orphan 0-byte -wal/-shm companion files sit in ~/bible-db
     (bible_test.db-wal, bible_test_scratch.db-*, proseonly.db-* — two with no parent file). Repo
     grep 2026-07-31: NO script opens WAL (all hits are the anti-WAL guards), so the crumbs are

@@ -135,7 +135,9 @@ hit had left a cut-short .gz under the real name and stamped success —
 instantly. Restore = pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with
 the reversible `mv`. **`study.db` is the one irreplaceable file** (hand-authored argument
 graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Memory
-`project_db_backups`.
+`project_db_backups`. **Rotation only touches dbs still present in `~/bible-db`:** once a working db is
+deleted, its backups are orphaned — never compressed, never removed — until deleted by hand (two 9/6
+copies sat uncompressed for two months; the hdrlane one is kept on purpose as a §9.95 reference).
 
 ## Maintenance / data-quality scripts
 - `scripts/health_check.py <db>` — READ-ONLY scanner; run after ANY import/rebuild. ~14 checks
