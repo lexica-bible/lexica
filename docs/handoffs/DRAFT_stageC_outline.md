@@ -4398,16 +4398,15 @@ dry copy stays 0; (4) two-derivations: controls 10 / 0 required (unchanged), the
 with the 10/25 log as a read-out ("same" / "differ"); (5) everything else byte-for-byte 8B3. The list file is checked
 against a pinned sha256 + 59 lines before anything runs, then copied into the new folder (`identity_delta_declared.tsv`)
 and re-checked. **The pin is not known locally** (the file is only on PA; the pasted 8B3R output lacks two of its
-columns and has one garbled Greek cell), so read-only line PIN8B3B reads it; the block below carries `000…0` in its two
-pin slots — run as-is it STOPs at the pin check before anything else; the pinned version is re-issued with that one
-value changed.
+columns and has one garbled Greek cell), so read-only line PIN8B3B read it (below); the block carries that pin in its two
+pin slots (filled 11/7 after PIN8B3B; before that the slots held `000…0`, which would only STOP at the pin check).
 Tests (fake home, real scripts; the chain 8B3 STOP → 8B3R list → 8B3b): clean 2-row case DONE (dry = declared,
 built = dry, built vs before = declared, abp-tag 16/16, repo clean); a declared row that breaks an abp-tag row →
 applied, then CHECK at abp-tag 15/16 (the after-check catches it); re-paste STOP; list file altered → STOP at the pin;
 rows already applied (declared rows absent) → STOP at the dry delta, built untouched (file time same); a row with other
 values and a row not on the list → each listed, STOP.
 
-### Block 8B3b (GATE REF 12b3e689; WRITES built: pn_greek_identity, pn_binding, tipnr_entities, tipnr_entity_refs, pn_slot_binding) — pin slots 000…0 until PIN8B3B
+### Block 8B3b (GATE REF 12b3e689; WRITES built: pn_greek_identity, pn_binding, tipnr_entities, tipnr_entity_refs, pn_slot_binding) — pinned 11/7 from PIN8B3B
 
 ```bash
 set +H
@@ -4436,7 +4435,7 @@ TX="scripts/pn_binding_hot.txt scripts/pn_binding_numonly.txt"
 for f in "$L1" "$L2" "$L3" "$L4"; do [ -s "$f" ] || { echo "8B3b RESULT: STOP - last 8b.3 run log missing or empty: $f"; exit 1; }; done
 [ -s "$DL0" ] || { echo "8B3b RESULT: STOP - declared list (8B3R) missing or empty: $DL0"; exit 1; }
 echo "declared list: $DL0 - $(wc -l < "$DL0") lines (expect 59 = header + 58) - sha256 $(sha256sum < "$DL0" | cut -c1-16)..."
-[ "$(sha256sum < "$DL0" | cut -d' ' -f1)" = 0000000000000000000000000000000000000000000000000000000000000000 ] && [ "$(wc -l < "$DL0")" = "59" ] || { echo "8B3b RESULT: STOP - the declared list is not the pinned 8B3R file (9.97)"; exit 1; }
+[ "$(sha256sum < "$DL0" | cut -d' ' -f1)" = 62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca ] && [ "$(wc -l < "$DL0")" = "59" ] || { echo "8B3b RESULT: STOP - the declared list is not the pinned 8B3R file (9.97)"; exit 1; }
 if [ -e "$D" ]; then echo "8B3b RESULT: STOP - output folder already exists (already ran?): $D"; exit 1; fi
 t=$(sqlite3 -readonly "$B" "SELECT count(*) FROM sqlite_master WHERE type='trigger'") || { echo "8B3b RESULT: STOP - trigger read failed"; exit 1; }
 echo "pre (a) triggers on built: $t (expect 0)"
@@ -4465,7 +4464,7 @@ LTWO=$(grep -E '^controls: ' "$L4")
 LTWC=$(grep -E '^Hebrew-keyed PN numbers: |^agree: ' "$L4")
 [ "$LTWO" = "controls: 10  failed: 0" ] || { echo "8B3b RESULT: STOP - the 10/25 two-derivations log is not controls 10 failed 0"; exit 1; }
 mkdir -p "$D"
-cp "$DL0" "$DL"; [ "$(sha256sum < "$DL" | cut -d' ' -f1)" = 0000000000000000000000000000000000000000000000000000000000000000 ] || { echo "8B3b RESULT: STOP - declared list copy differs"; exit 1; }
+cp "$DL0" "$DL"; [ "$(sha256sum < "$DL" | cut -d' ' -f1)" = 62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca ] || { echo "8B3b RESULT: STOP - declared list copy differs"; exit 1; }
 P="$D/pn8b3_helper.py"
 cat > "$P" <<'PY'
 """8B3b helper (one-off, edition upgrade stage D, step 8b.3; = the 8B3 helper + the declared identity
@@ -4972,3 +4971,5 @@ echo "8B3b RESULT: CHECK - an after-figure differs from the expected picture (li
 ```
 
 Reviewer subagent (11/7), verdict line verbatim: "REVIEW: CLEAR - read-only block (scope a): six read-only commands on one run-artifact file, no database opened, no file written (no tee, nothing to overwrite), no `!`, and every line it prints is a read-out whose only ruled anchors (58 rows / 59 lines / all CHANGED) trace to §9.97 and the 8B3R helper code." Expected: 59 lines; kinds 58 CHANGED + 1 header; first/last key read-outs (8B3R printed Gen 4:18 @14 first, Mat 1:5 @7 last); the sha is the pin.
+
+PIN8B3B ran (11/7, 17:43:05Z), exit 0: sha256 `62a99ffe59658f46b9e8a5e385d643b7a147870f38f83136b541d52c5950acca`, 59 lines, 8,536 bytes, modified 17:31:17 UTC; kinds 58 CHANGED + 1 header; first key 98 Gen 4:18 @14, last key 29134 Mat 1:5 @7 (= 8B3R's first and last printed rows). Pin filled into Block 8B3b's two slots; nothing else changed.
