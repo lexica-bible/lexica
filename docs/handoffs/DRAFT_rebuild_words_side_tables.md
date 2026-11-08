@@ -72,7 +72,19 @@ The build copies the whole db (`rebuild-words.md` step 9 note), so all three tab
 - **Timing:** none of this goes into the procedure until the gate 2 work is done — "before stage E", not now.
   (CC note: the scripts changes also wait — the lane's gate wrapper requires `scripts tests` unchanged since
   its REF commit, so landing them mid-gate-2 would trip it.)
-- Questions 1–3 below are answered by the blocker rulings above; 4–5 await a ruling.
+- Questions 1–3 below are answered by the blocker rulings above.
+- **Q4 (ruled 11/7): no 12d.** Place-link rows (`kind='place'`) stay as copied. 12c gains a READ-ONLY
+  orphan check: every `kind='place'` entity id in `tipnr_metav_link` resolves to a `tipnr_entities` row on
+  `<built>`; **expect 0 orphans — any other count = STOP.** Drafted check (not run; `<built>` = the built
+  copy's full path):
+  `sqlite3 -readonly <built> "SELECT COUNT(*) FROM tipnr_metav_link l LEFT JOIN tipnr_entities e ON e.uniq = l.uniq WHERE l.kind='place' AND e.uniq IS NULL;"`
+  (columns from `build_person_metav_link.py:100,112,286-293`; the place rows' `metav_id` side is not part
+  of this check.)
+- **Q5 (ruled 11/7): yes.** Each of 12a/12b/12c runs dry/trial on `<built>` first; the expected figures are
+  DECLARED from that log by path:line; the `--apply` is then gated on those declared figures — the same
+  pattern 8b.3 used.
+- **Sequencing (ruled 11/7):** the scripts changes (blockers 1–3) land as ONE commit, after gate 2, before
+  stage E; the step goes into `/rebuild-words` only then.
 
 ## Open questions for the ruling chat
 1. 12a code change (path argument + refuse-without-path + the `add_hebrews13.py` print) — OK to make, as
