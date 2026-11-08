@@ -6159,7 +6159,7 @@ echo "exit $a (expect 0)"
 [ "$a" -eq 0 ] || { echo "STEP12A-DRY RESULT: STOP - --apply failed on the copy (above); built untouched"; exit 1; }
 grep -q "^Filled dotted_lexicon in " <<< "$AP" || { echo "STEP12A-DRY RESULT: STOP - --apply did not report a fill; built untouched"; exit 1; }
 echo "--- dotted_lexicon on the dry copy after: definition + row count"
-sqlite3 -readonly "$D/dry.db" "SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'dotted_lexicon' ORDER BY type, name; SELECT 'rows', count(*) FROM dotted_lexicon"
+sqlite3 -readonly "$D/dry.db" "SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'dotted_lexicon' ORDER BY type, name; SELECT 'rows', count(*) FROM dotted_lexicon" || { echo "STEP12A-DRY RESULT: STOP - dotted_lexicon read failed on the dry copy; built untouched"; exit 1; }
 $E delta --tag STEP12A --a "$B" --b "$D/dry.db" --table dotted_lexicon:strongs --out "$D/step12a_delta_built.tsv" || { echo "STEP12A-DRY RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
 $E delta --tag STEP12A --a "$S" --b "$D/dry.db" --table dotted_lexicon:strongs --out "$D/step12a_delta_src.tsv" || { echo "STEP12A-DRY RESULT: STOP - delta src -> dry (line above); built untouched"; exit 1; }
 $E same --tag STEP12A --built "$B" --dir "$D" || { echo "STEP12A-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
