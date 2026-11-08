@@ -5799,3 +5799,78 @@ replaces `pn_binding {"identical": true}` in `declared_deltas.json` (§9.98 b). 
 `pn8b3_20261107/identity_delta.tsv` (sha 62a99ffe…, §9.97). **Next session:** the gate 2 dump
 (`scripts/eu_pn_binding_diff.py <src> <built>`, read-only) and the first gate 2 run (`gate_greek_header.py --declared`,
 read-only, expected to FAIL per §9.92), each through the reviewer. Handoff: `HANDOFF_edition_upgrade_gate2.md`.
+
+## Stage E opened (11/8): the shared step script `scripts/eu_step.py` — APPROVED (DESIGN §9.106), code REF `006e16ba`
+
+Ruled "after stage D" (ruling chat): the one-off helper pattern (8B2A / 8B3 / 8B3b / 8B3c / SLOT3:
+a ~500-line helper pasted as a heredoc, sha-checked, then prep / dry / delta / apply / check) becomes ONE committed
+script. Approved 11/8 (§9.106) and pushed as `006e16ba`: `scripts/eu_step.py` + `tests/test_eu_step.py` (14 cases;
+ci.yml + pre-commit lists). The block's REF guard now pins the script like any other — no pasted helper, no helper sha (lesson 19:
+long heredocs arrive garbled through the PA console).
+
+Five modes; each ends on one line `<TAG> <MODE>: OK` or `<TAG> <MODE>: STOP - why` (check: FAIL); the block keeps
+the RESULT line. It never writes the db it checks.
+- **pre** — repo guards in the 11/6 order (REF pulled → ancestor of HEAD → scripts/tests = REF → nothing
+  uncommitted); each `--db` present, no `-journal` (checked before opening), triggers 0; each `--keep` rollback copy
+  present; the run folder must not exist, made last.
+- **prep** — read-only on built: `state.json` = every ordinary table's row count + an order-free content digest
+  (sum of sha256 per row) + the whole schema (virtual tables listed, their shadow tables digested); `before.db` =
+  each `--save` table, or row id + named columns (a restore source); `dry.db` = the THROWAWAY copy of each `--copy`
+  table with its indexes and row ids; each copied table proven = built's by digest.
+- **same** — built's schema + every table's digest = `state.json` (built untouched since prep).
+- **delta** — row-level differences a → b on named tables, ALL written to a TSV (no cap) + its sha256, printed per
+  table (counts, by changed column, NULL→value / value→NULL / value→other value) + first N. Key = row id by default
+  or named columns (then rows are counted per distinct value, so a duplicated row is a difference). Every text
+  compare is byte-exact (`COLLATE BINARY`; a NOCASE column can't hide a case-only change). `--zero`, `--expect-sha`.
+- **check** — after the apply: every table NOT in `--written` = its prep digest (schema too); each written table =
+  the dry copy's (digest; on a mismatch the row-level file is written and the first 40 printed); written tables'
+  schema = the dry copy's; no `-journal`; scripts/tests clean.
+
+What stays in the block: the step's own builder command, its log, the step-specific read-outs and the declared
+figures. The apply block (a WRITE: ruling chat) = pre (new folder) → `same` against the dry folder → the builder on
+built → `check --written …` against the dry folder → the dry delta re-read by sha.
+
+### Block STEP11-DRY (GATE REF 006e16ba; READ-ONLY on built — writes only the run folder and its throwaway copy)
+
+Rebuild-words step 11 (`build_rendering_norm.py`, fills `words.english_head_norm` + kjv/bsb `word_norm`) on a
+throwaway copy of the three tables it touches. Goes to the reviewer (§9.106 ask 2); nothing runs on PA until it
+CLEARs. PA pulls first (`cd ~/bible-db && git pull`). Expected: pre/prep/same OK; the builder exits 0 with no "not
+present" line; the delta is a READ-OUT (figures declared from this log for the apply block) — same-code expectation
+kjv_words / bsb_words changed 0; words: only `english_head_norm` changes, no row added or removed.
+**Unknowns until PA runs it (no estimates):** (1) the size of the throwaway copy `dry.db` (three full tables + their
+indexes; prep prints it — the PA home quota was hit once on 11/7); (2) how long the whole-db fingerprint takes (prep
+and `same` each fingerprint every table of built; prep prints its time).
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step11dry_20261108.log
+if [ -e "$L" ]; then echo "STEP11-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP11-DRY rebuild-words step 11 (build_rendering_norm) on a THROWAWAY copy of words/kjv_words/bsb_words - built read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || exit 1
+[ -f scripts/eu_step.py ] || { echo "STEP11-DRY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+D=~/edition_upgrade_runs/step11dry_20261108
+E="python3 scripts/eu_step.py"
+$E pre --tag STEP11 --ref "$REF" --dir "$D" --db "$B" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP11-DRY RESULT: STOP - pre (line above); nothing made"; exit 1; }
+$E prep --tag STEP11 --built "$B" --dir "$D" --copy words,kjv_words,bsb_words --save words:english_head_norm --save kjv_words:word_norm --save bsb_words:word_norm || { echo "STEP11-DRY RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "--- words on built (read-only): rows | english_head non-blank | english_head_norm filled | norm on a blank head"
+sqlite3 -readonly "$B" "SELECT count(*), sum(english_head IS NOT NULL AND english_head <> ''), sum(english_head_norm IS NOT NULL), sum((english_head IS NULL OR english_head = '') AND english_head_norm IS NOT NULL) FROM words"
+echo "--- the norm column + the three norm indexes on built:"
+sqlite3 -readonly "$B" "SELECT 'column', name FROM pragma_table_info('words') WHERE name = 'english_head_norm'; SELECT 'index', name FROM sqlite_master WHERE type = 'index' AND name IN ('idx_words_ehnorm', 'idx_kjvwords_norm', 'idx_bsbwords_norm') ORDER BY name"
+echo "=== DRY RUN: build_rendering_norm on the throwaway copy $D/dry.db (built untouched) ==="
+DRY=$(python3 scripts/build_rendering_norm.py "$D/dry.db" 2>&1); r=$?
+printf '%s\n' "$DRY" > "$D/dry_norm.log"
+echo "$DRY"
+echo "exit $r (expect 0)"
+[ "$r" -eq 0 ] || { echo "STEP11-DRY RESULT: STOP - the builder failed on the copy (above); built untouched"; exit 1; }
+if grep -q "not present" <<< "$DRY"; then echo "STEP11-DRY RESULT: STOP - the builder skipped a table on the copy; built untouched"; exit 1; fi
+echo "--- words on the dry copy after: rows | english_head non-blank | english_head_norm filled | norm on a blank head"
+sqlite3 -readonly "$D/dry.db" "SELECT count(*), sum(english_head IS NOT NULL AND english_head <> ''), sum(english_head_norm IS NOT NULL), sum((english_head IS NULL OR english_head = '') AND english_head_norm IS NOT NULL) FROM words"
+$E delta --tag STEP11 --a "$B" --b "$D/dry.db" --table words --table kjv_words --table bsb_words --out "$D/step11_delta.tsv" || { echo "STEP11-DRY RESULT: STOP - delta (line above); built untouched"; exit 1; }
+$E same --tag STEP11 --built "$B" --dir "$D" || { echo "STEP11-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+echo "STEP11-DRY RESULT: READ DONE - built untouched (same: OK); the delta above + $D/step11_delta.tsv (sha on the DELTA line) are the figures to declare for the apply block"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
