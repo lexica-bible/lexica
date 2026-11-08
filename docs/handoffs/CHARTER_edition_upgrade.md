@@ -313,6 +313,7 @@ bracket parser; `verses.text` through the prose loader on the same feed, indepen
 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 (header gate run with `--declared`, §4.5 — until that lands,
 A/B abort here and need a member-by-member ruling, as 10/25) →
 11 rendering norm (copy) → 10 two-ending read (copy) →
+12 side-table builders 12a → 12b → 12c (copy; dry → declare → apply; order 11 → 10 → 12 → 9 RULED 11/8 by the ruling chat, matching `rebuild-words.md` step 12) →
 9 surface rebuild on `<built>` (builder-chain total re-declared, not 391,130) →
 9a fill restore WITHOUT `--prefill`; dry run → verdict on the reason-6 member list (§4.9) → apply →
 9b health floor (floor re-declared from the new chain total + the restored inserts) →

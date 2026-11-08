@@ -1,5 +1,8 @@
 # HANDOFF — edition upgrade, gate 2 (written 2026-11-07)
 
+> **SUPERSEDED 2026-11-08 by `HANDOFF_edition_upgrade_stageE.md`** — gate 2 green and closed at `c37fd41d`
+> (§9.103); stage D closed (§9.104). This file is history.
+
 Successor to `HANDOFF_edition_upgrade_stageD_rekey.md` (stage D is done through 8b.3). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Every block, result and ruling:
 `DRAFT_stageC_outline.md` (stage D sections onward); rulings only in `DESIGN_q2_build.md` §9 (sole register,

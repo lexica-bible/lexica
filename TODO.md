@@ -10,15 +10,14 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ---
 
 ## Active lane — ABP edition upgrade (English line → the app's edition)
-- **STATE 11/7: stage D DONE through 8b.3 on the built copy** (built = 8b.0 + REKEY + 8b.1 + §9.96 +
-  8b.2 + 8b.2a + 8b.3; 8B3c re-checked by 8B3CX: CHECK OK; §9.97 declared 58 identity rows; §9.98 the 4
-  joram slot keys + pn_binding delta, 160 rows, as gate 2's input). **NEXT: gate 2 dump
-  (`eu_pn_binding_diff.py`) + first gate 2 run, both read-only via the reviewer.** Opener
-  `docs/handoffs/HANDOFF_edition_upgrade_gate2.md` (built/source copy names + figures there); out-of-lane
-  follow-ups in `HANDOFF_edition_upgrade_stageC_repin.md`. Rulings = `docs/handoffs/DESIGN_q2_build.md` §9
-  (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`.
-- Still owed: the lane's `tests/fixtures/edition_upgrade/declared_deltas.json` v3 (after gate 2's first
-  run; §9.92/§9.97/§9.98) · B's step in `/rebuild-words` · Split 80 → 84 re-declare.
+- **STATE 11/8: STAGE D CLOSED; gate 2 GREEN and closed** (GATE2-RUN3 at `c37fd41d`, §9.103; declared file
+  v4 = G5 delta file + G6 shape exceptions). Built = 8b.0 + REKEY + 8b.1 + §9.96 + 8b.2 + 8b.2a + 8b.3 + SLOT3
+  (pn_slot_binding 102 → 105, the 3 Jehoram-of-Judah slots, §9.104). Code REF `f0e60cf7`. **NEXT: stage E —
+  step 12 runs on built (12a → 12b → 12c, dry first), the §9.87 punct ruling (583 vs 607) before 9c, then
+  9 → 9a → 9b → 9c.** Opener `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (copy names, figures, logs,
+  follow-up lane); out-of-lane follow-ups in `HANDOFF_edition_upgrade_stageC_repin.md`. Rulings =
+  `docs/handoffs/DESIGN_q2_build.md` §9 (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`.
+- Still owed: B's step in `/rebuild-words` · Split 80 → 84 re-declare.
 - **`/rebuild-words` step 12, the side-table builders — run on the lane's built copy before step 9** (JP 11/7):
   `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` (+ place-orphan check). Prerequisite
   code LANDED `1ad10cec` (new code REF); procedure text is in `rebuild-words.md` step 12. Each sub-step's figures
