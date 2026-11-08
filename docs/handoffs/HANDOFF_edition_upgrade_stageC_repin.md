@@ -63,10 +63,9 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   or receipt found in the repo for the H3088 value.
 - **Gen 4:18 Methushael H4967 — restore fixes built, note at gate 2** (§9.94 (d)): the edition's "Mathusala" made
   import_tipnr match Methuselah H4968; the 8b.1 restore puts the frozen H4967 back.
-- **`/rebuild-words` step 12 (side-table builders) — before stage E** (JP ruling 11/7): the procedure gains
-  `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` on `<built>`, after 8b.3 + steps
-  11/10, before step 9. Draft + blockers (dotted builder has no path argument — it writes LIVE; gloss sources
-  fetched unpinned) in `docs/handoffs/DRAFT_rebuild_words_side_tables.md` — ruling chat reviews it first.
+- **`/rebuild-words` step 12 (side-table builders) — runs on `<built>` before step 9** (JP rulings 11/7): code
+  prerequisites LANDED `1ad10cec` (new code REF — PA pulls before gate 2); procedure text in `rebuild-words.md`
+  step 12; record `docs/handoffs/DRAFT_rebuild_words_side_tables.md`.
 - **Notes-store position anchors at the 20 moved words — before stage G** (§9.94 (d)): user notes anchor by word
   position (`static/src/12-notes-store.jsx:9-11`); a note on a moved word would point at its partner after the swap.
 

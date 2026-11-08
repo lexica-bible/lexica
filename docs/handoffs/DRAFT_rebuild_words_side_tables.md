@@ -1,6 +1,11 @@
 # DRAFT — `/rebuild-words` step 12: the three side-table builders (for the ruling chat, before stage E)
 
-Status: **DRAFT, not in the procedure.** JP ruled 2026-11-07 that `/rebuild-words` should include the three
+**UPDATE 2026-11-07 (later ruling: "the three script fixes go in NOW, before gate 2"):** code LANDED `1ad10cec`
+(dotted builder takes a required path + decoy-live test; TBESG/TBESH pinned in `tests/fixtures/stepbible/` at the
+June versions, `--fetch` only; metaV builder `--out-dir` + read-only `--check-place-orphans`). The step text is now
+IN `rebuild-words.md` step 12 — that is the authority; this file is the record of how it was ruled.
+
+Original status: **DRAFT, not in the procedure.** JP ruled 2026-11-07 that `/rebuild-words` should include the three
 builders the docs say get re-run after a rebuild. This is the drafted step — which builders, where in the
 order, what each reads and writes — for review before stage E. Nothing here has run. All facts below were
 read from the scripts at `a57c6317`.

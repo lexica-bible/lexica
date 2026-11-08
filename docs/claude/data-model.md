@@ -183,7 +183,7 @@ base G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it o
 joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`, audited by
 `scripts/audit_dotted_lemmas.py`. Phrase idioms are pinned via `PHRASE_OVERRIDES` in
 build_dotted_lexicon.py (ἀνὰ μέσον). Full record: memory `project_build_folded_fixes` §11a.
-**Which dotted numbers get a row (the discriminator, build_dotted_lexicon.py:123-129):** an ABP
+**Which dotted numbers get a row (the discriminator, `collect()` in build_dotted_lexicon.py):** an ABP
 dictionary entry (`abp_ext.def_html`, keyed by the FULL dotted number) is a FORM of the base word —
 skip, base lemma is right — when `base == "G1510"` (every εἰμί conjugation) OR its text cites
 "Strong G####". Everything else is a genuinely different word → own row. Its lemma = the FIRST Greek

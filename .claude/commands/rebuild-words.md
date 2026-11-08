@@ -50,7 +50,7 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
 re-homed onto the copy by JP ruling after the 10/25 run, charter §10 — the step NUMBERS are labels
 other docs cite, not the order):**
 0 → 1 → **1a snapshot check** → 2 build → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
-**11 rendering norm (copy) → 10 two-ending read (copy)** →
+**11 rendering norm (copy) → 10 two-ending read (copy) → 12 side-table builders (copy)** →
 **9 surface rebuild (on the copy) → 9a fill restore (copy) → 9b health floor + oracle (copy)** →
 4 → 5 → 6 → 7 → **8 swap + deploy**.
 Names used below: `<src>` = the fresh copy of live from step 1 (the snapshot check's source AND
@@ -275,7 +275,7 @@ output, if any, rides the step-8 deploy).
    (ship_g707_targeted.py preconditions) before any swap.
    Skipping this chain leaves the serving repoints DORMANT (no pn_hebrew_xref → H-keyed pages fine
    but Greek identity gone) — the run record: docs/PLAN_r2_c3_rebuild.md.
-9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3 and steps 11 + 10, BEFORE the gates (4–7) and
+9. **WHERE: on the rebuilt COPY `<built>`, after 8b.3 and steps 11 + 10 + 12, BEFORE the gates (4–7) and
    the step-8 swap** (re-settled 2026-10-25, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9 — supersedes the
    §1 "live, after the swap" placement, which was practice, not a dependency). Step 9 reads nothing
    that exists only on live: the db's own `verses` / `words` / `lexicon` / `dotted_lexicon` /
@@ -319,7 +319,7 @@ output, if any, rides the step-8 deploy).
    the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
    name-slot `strongs_base` 501 (charter §7).
-10. **WHERE: on `<built>`, right after step 11, before step 9** (JP ruling after the 10/25 run). RE-GENERATE
+10. **WHERE: on `<built>`, right after step 11, before steps 12 and 9** (JP ruling after the 10/25 run). RE-GENERATE
    the two-ending adjective soften-lists: run `scripts/build_two_ending.py <built>` on PA — **always give the
    path; with none it reads LIVE** (`build_two_ending.py:36`). It opens the file read-only and reads only
    `words.strongs_base` + `words.morph`, `lsj`, `lexicon` — nothing live-only; it must follow 8b (8b.2
@@ -343,6 +343,44 @@ output, if any, rides the step-8 deploy).
    values. Memory `project_lexicon_finders`.
    **If it ever has to run on LIVE (the 10/25 exception, charter §10): never within 60 s of a reload**
    (each worker's first-request warm-up writes bible.db, `app.py:441-469`).
+12. **SIDE-TABLE BUILDERS — WHERE: on `<built>`, right after step 10, BEFORE step 9** (JP rulings 2026-11-07;
+   record `docs/handoffs/DRAFT_rebuild_words_side_tables.md`; code `1ad10cec`). The build copies the whole db, so
+   these three tables arrive on `<built>` as LIVE's old copies — never missing, but STALE: each is keyed off what
+   the build changes. After 8b.3 because 8b.2 rewrites `strongs_base` (12b) and 8b.3 rebuilds `pn_binding` (12c);
+   before step 9 because step 9's own builders READ `dotted_lexicon` (`build_abp_surface.py`,
+   `backfill_abp_surface.py`). Order 12a → 12b → 12c (12b reads `dotted_lexicon`). **Each sub-step: dry/trial run on
+   `<built>` → its figures DECLARED from that log by path:line → `--apply` gated on the declared figures** (same
+   pattern as 8b.3). Same-code rebuild expectation: all three equal to `<src>` (the fresh copy of live, step 1) row
+   for row, both ways `0|0`. Edition upgrade: changes are declared members, read before any `--apply`. Tee every run.
+   12a. **`dotted_lexicon`:** `python3 scripts/build_dotted_lexicon.py <built> --diff 2>&1 | tee step12a_diff.log`
+      (read-only: keys added/removed vs `<built>`'s copied table; compares KEYS only) → declare → `python3
+      scripts/build_dotted_lexicon.py <built> --apply 2>&1 | tee step12a_apply.log` (drops + refills that table
+      only). `<db>` is REQUIRED and is the only file opened (no-path / missing-file refuse, exit 2). Reads `words`,
+      `lexicon`, `abp_ext` + the code-pinned overrides. Values check after apply: `<built>` vs `<src>` both ways.
+   12b. **`word_gloss`:** run FROM A SCRATCH FOLDER (it writes `gloss_dotted_blank.tsv` / `gloss_dotted_abp.tsv`
+      into the current folder when they have rows): `python3 ~/bible-db/scripts/build_word_gloss.py <built> 2>&1 |
+      tee step12b_dry.log` (dry run: sources, coverage, residue) → declare → the same + `--apply` (drops + refills
+      that table only). `<built>` FIRST (the path is the first non-flag argument; none = live). TBESG/TBESH come
+      from the pinned copies in `tests/fixtures/stepbible/` (sha256-checked; a changed file refuses) — **never
+      `--fetch` in a rebuild.** Reads `words.strongs_base`, `dotted_lexicon`, `abp_ext`, `lexicon` on `<built>`;
+      `~/bible-db/heb.db` read-only; Dodson from the repo. Values check after apply: `<built>` vs `<src>` both ways.
+   12c. **`tipnr_metav_link` person rows:** its two leftover lists (`scripts/person_metav_link_residual.txt`,
+      `person_metav_link_tier2.txt`) are UNTRACKED PA files that stay untouched — copy them aside first, write this
+      run's lists elsewhere, and prove the originals unchanged after:
+      `mkdir -p ~/step12c_aside ~/step12c_out && cp -p ~/bible-db/scripts/person_metav_link_residual.txt
+      ~/bible-db/scripts/person_metav_link_tier2.txt ~/step12c_aside/ && (cd ~/step12c_aside && sha256sum
+      person_metav_link_*.txt > aside.sha256)` →
+      `python3 scripts/build_person_metav_link.py --bible <built> --out-dir ~/step12c_out 2>&1 | tee
+      step12c_dry.log` (dry run: opens `<built>` read-only; bucket counts + traffic coverage) → declare → the same +
+      `--apply` (deletes + rewrites ONLY `kind='person'` rows; place rows untouched) →
+      `(cd ~/bible-db/scripts && sha256sum -c ~/step12c_aside/aside.sha256)` must print OK for both (if not:
+      `cp -p ~/step12c_aside/person_metav_link_*.txt ~/bible-db/scripts/` and say so) →
+      **place-link orphan check (read-only):** `python3 scripts/build_person_metav_link.py --bible <built>
+      --check-place-orphans` — **must print `PLACE-LINK ORPHANS: 0` / `RESULT: OK`; anything else = STOP.**
+      Place rows (`kind='place'`) are NOT rebuilt (ruling: no 12d) — they stay as copied; the orphan check proves
+      every one still resolves to a `tipnr_entities` row. Needs `~/bible-db/metav_index.db` (built from the MetaV
+      CSVs only — not rebuilt here; `--index` to override). **Always pass `--bible <built>`: without it the script
+      reads LIVE.**
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
 the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.

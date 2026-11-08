@@ -12,8 +12,10 @@ latest §9.98).
   (render 15,358 + HOT 68), pn_slot_binding 102.
 - **src** `~/bible-db/bible_edupg_test_20261101.db`. **Rollbacks (keep until the swap):**
   `bible_edupg_test_built_pre_8b_20261106.db` (built before 8b.0), `bible_edupg_test_built_pre_digits_20261105.db`.
-- **Code REF `1da5abf0`** (scripts/tests; PA pulled). Later commits are docs/config only (no pull needed for a
-  block gated on `1da5abf0`). `scripts/pn_slot_rulings.tsv`: 4 Israel-king slots (2Ki 8:16@4, 8:25@4, 8:29@4,
+- **Code REF `1ad10cec`** (scripts/tests — NEW 11/7, replaces `1da5abf0`; **PA must pull before any gated
+  block**). The 11/7 commit is the step-12 prerequisites only (dotted builder path-only, pinned gloss sources,
+  metaV `--out-dir` + place-orphan check; ruling 11/7) — none of it is in the gate 2 path. Later commits are
+  docs only. `scripts/pn_slot_rulings.tsv`: 4 Israel-king slots (2Ki 8:16@4, 8:25@4, 8:29@4,
   8:29@38) now keyed 'joram' (§9.98 a).
 - **Reviewer subagent** now runs on the session's model (`model:` line removed, `395c52bd`); still clears read-only
   blocks and re-runs of ruled gates only (§9.90); a CLEAR is never a receipt.
