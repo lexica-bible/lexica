@@ -60,6 +60,20 @@ The build copies the whole db (`rebuild-words.md` step 9 note), so all three tab
    — the two untracked PA files the edition-lane standing rules say to leave alone. Point them at a scratch
    path (code change) or accept the overwrite — a ruling.
 
+## Rulings 2026-11-07 (ruling chat, relayed by JP)
+- **Placement accepted in principle:** after 8b.3 and steps 11/10, before step 9.
+- **Blocker 1 → scripts change before stage E:** `build_dotted_lexicon.py` takes a db path and opens only
+  that path, with a test proving it never touches live when given a copy; `add_hebrews13.py`'s printed
+  command is a live-write hazard and gets fixed in the same commit.
+- **Blocker 2:** pin the two STEPBible gloss files in the repo as fixtures with sha256; `build_word_gloss.py`
+  reads the pinned copies (download only as an explicit flag).
+- **Blocker 3:** 12c runs with its two leftover-list files copied aside and restored after, same as the
+  binder dumps in 8B3 — the untracked files stay untouched.
+- **Timing:** none of this goes into the procedure until the gate 2 work is done — "before stage E", not now.
+  (CC note: the scripts changes also wait — the lane's gate wrapper requires `scripts tests` unchanged since
+  its REF commit, so landing them mid-gate-2 would trip it.)
+- Questions 1–3 below are answered by the blocker rulings above; 4–5 await a ruling.
+
 ## Open questions for the ruling chat
 1. 12a code change (path argument + refuse-without-path + the `add_hebrews13.py` print) — OK to make, as
    its own commit with a local test, before stage E?
