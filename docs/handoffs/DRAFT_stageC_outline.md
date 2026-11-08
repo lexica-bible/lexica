@@ -6023,3 +6023,13 @@ failed read, number check, built 353,595 made a gate); re-tested on a fake home.
 "REVIEW: CLEAR - read-only block (scope a): both dbs are opened read-only, it runs no repo code, and its only outputs are two run artifacts that are guarded against overwriting. The fix I asked for is in, and every failure path now ends in one STOP line."
 Non-blocking note: the `NET=$(awk …)` line has no own failure check; a failed awk still STOPs on the next line's sum.
 STEP11-APPLY (a write) stays with the ruling chat.
+
+### STEP11-HEADS ran (11/8, 16:58 UTC) — READ DONE, exit 0 → OPEN edition item "heads gap" (DESIGN §9.107)
+
+Log `~/edition_upgrade_runs/step11heads_20261108.log`; list `step11heads_20261108.tsv` (2,031 rows, sha256
+7a5511e9f61e1bfb…). Duplicate keys 0 / 0. Non-blank english_head: src 354,946 · built 353,595 · difference 1,351.
+Classes: lost 1,691 · gained 340 · src-only 0 · built-only 0 (same row set on both sides); 1,691 − 340 = 1,351.
+Of the 1,691 lost, 1,299 have a blank built english; top src heads lost: "one" 481, "ones" 425, "because" 99,
+"know" 63. **No cause asserted.** OPEN under §9.107 ruling 2: a separate edition item, not a step-11 figure; stays
+open until read and explained from the rows. Next read on it = CC's, drafted from the tsv (the 1,299 blank-english
+lost rows and the 340 gained). STEP11-APPLY does not wait on it (§9.107 ruling 1).
