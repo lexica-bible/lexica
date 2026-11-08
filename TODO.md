@@ -544,6 +544,16 @@ TODO_ARCHIVE is a separate ad-hoc batch — the audit's D and E below are still 
   (`bbbe0963`: every news opener uses DELETE), but turning the step back on was never decided. Until then
   Google-wrapper faces older than the 50h forward-fill window stay wrappers (still clickable). code:
   scripts/news/daily.sh, scripts/news/resolve_backfill_all.py
+- **PARKED — News page load is 70–150 s (measured 11/8, PA access log, Nov 6–8).** `/api/news/all` sends the
+  WHOLE scored archive (30,207 rows, 10.7 MB, every score incl. below the 5 floor, with summaries); a rebuild is
+  ~70–150 s, a same-worker repeat 3.7 s; two loads abandoned by the browser (499). Suspect, not yet timed: the
+  22,834 unlabeled (score <5) rows go through the lexical `_cluster` (each row vs every group), which grows
+  nightly; the `_ALL_CACHE` is per worker and busts on every nightly pull. Not caused by any change since 10/31
+  (only request-path commits: Admin Stats, `d6df215e`/`dc2be0c0`). Fix = a design call (what the page must send:
+  the FeedShape "buried" readout and the Any-score filter read below-floor rows). Time the pieces on PA before
+  choosing. Web-log reads: PA writes the real client IP as a quoted field before `response-time=` — filter with
+  `sed -E 's/^[^ ]+ //; s/"[^"]*" (response-time=)/\1/; s/key=[^ &"]*/key=HIDDEN/g'`.
+  code: views_news.py `_all_cards` / `_cluster` / `all_news`
 - **Corroboration as a rank input** (Aug 14 ruling, layer 3) — stays parked until labeler fusion is measurably down
   (`relabel_check.py --run`); otherwise it rewards falsely "well-corroborated" fused cards.
 - **Admin's LIVE Keep/Dismiss squeeze the headline on a phone** (Kept rows ~148px / 5 lines) — pre-existing; "a
