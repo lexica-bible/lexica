@@ -45,6 +45,11 @@ Usage: python3 scripts/gate_greek_header.py <live.db> <scratch.db> [--dump <out.
   DESIGN §9.94 (c): key_moves_file is per table — pn_greek_identity.key_moves_file
   (gate B, as before) and abp_surface.key_moves_file (gate A: src's rows re-keyed by
   the moves must then equal scratch row for row).
+  G5 (ruled 2026-11-07; DESIGN §9.101): pn_binding.delta_file + sha256 — a committed,
+  sha-pinned copy of a run's row-level pn_binding delta (kind/book/chapter/verse/name/
+  class/before/after). The gate builds its own live -> scratch delta and it must equal
+  the file row for row (kind, key, before, after), both directions; one-sided rows
+  (ADDED / REMOVED) are declared this way, which changed_rows cannot do.
   The full gate-A member list for a ruling comes from
   scripts/eu_pn_binding_diff.py (this gate prints at most 20 problems).
 """
@@ -126,6 +131,73 @@ def _declared_moves(l, s, moves):
         if moved.get(k) != sk.get(k):
             problems.append(f"row {k}: live after moves {moved.get(k)!r} vs scratch {sk.get(k)!r}")
     return problems
+
+
+_DELTA_HEADER = "kind\tbook\tchapter\tverse\tname\tclass\tbefore\tafter"
+
+
+def _declared_delta_file(l, s, path, want_sha):
+    """Gate-A delta-file rule (pn_binding, G5 — DESIGN §9.101). `path` is the committed
+    copy of a run's row-level pn_binding delta (header _DELTA_HEADER; before/after =
+    that key's rows as a repr'd list sorted by repr, or None). Its sha256 must equal
+    want_sha. The gate groups live and scratch rows by the tight key (book, chapter,
+    verse, name), each key's rows sorted by repr, and builds its own delta (kind
+    CHANGED / ADDED / REMOVED, before, after). That delta must equal the file row for
+    row, both directions:
+      - a differing key not in the file     -> "undeclared row … (not in the delta file)"
+      - a file key with no actual delta     -> "declared row … NOT SEEN"
+      - a key in both whose kind/before/after differ -> named with both values
+    Returns (problem strings, number of file rows)."""
+    import ast
+    import hashlib
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != want_sha:
+        return [f"delta_file {path}: sha256 {got} != declared {want_sha}"], 0
+    lines = raw.decode("utf-8").splitlines()
+    if not lines or lines[0] != _DELTA_HEADER:
+        return [f"delta_file {path}: header is not {_DELTA_HEADER!r}"], 0
+    problems, want = [], {}
+    for i, ln in enumerate(lines[1:], 2):
+        p = ln.split("\t")
+        if len(p) != 8:
+            problems.append(f"delta_file line {i}: {len(p)} columns, expected 8")
+            continue
+        k = (int(p[1]), int(p[2]), int(p[3]), p[4])
+        if k in want:
+            problems.append(f"delta_file line {i}: key {k} appears twice")
+            continue
+        b, a = ast.literal_eval(p[6]), ast.literal_eval(p[7])
+        want[k] = (p[0], [tuple(x) for x in b] if b else None,
+                   [tuple(x) for x in a] if a else None)
+    if problems:
+        return problems, len(want)
+
+    def grp(rows):
+        d = {}
+        for r in rows:
+            d.setdefault(tuple(r[:4]), []).append(tuple(r))
+        for k in d:
+            d[k].sort(key=repr)
+        return d
+    lg, sg = grp(l), grp(s)
+    actual = {}
+    for k in set(lg) | set(sg):
+        b, a = lg.get(k), sg.get(k)
+        if b == a:
+            continue
+        actual[k] = ("CHANGED" if b and a else ("ADDED" if a else "REMOVED"), b, a)
+    for k in sorted(set(actual) - set(want), key=repr):
+        problems.append(f"undeclared row {k}: {actual[k][0]} {actual[k][1]!r} -> "
+                        f"{actual[k][2]!r} (not in the delta file)")
+    for k in sorted(set(want) - set(actual), key=repr):
+        problems.append(f"declared row {k}: {want[k][0]} in the delta file, NOT SEEN "
+                        "(live == scratch at this key)")
+    for k in sorted(set(want) & set(actual), key=repr):
+        if want[k] != actual[k]:
+            problems.append(f"row {k}: delta file {want[k]!r} vs actual {actual[k]!r}")
+    return problems, len(want)
 
 
 def _declared_members(tbl, cols, l, s, want_rows, renamed_rows=()):
@@ -216,7 +288,26 @@ for tbl, cols in (("pn_binding", "book,chapter,verse,name,entity_uniq,kind,rule,
     s = list(scr.execute(f"SELECT {cols} FROM {tbl} ORDER BY 1,2,3,4"))
     same = l == s
     decl = (declared or {}).get(tbl)
-    if declared is not None and decl is not None and decl.get("key_moves_file"):
+    if declared is not None and decl is not None and decl.get("delta_file"):
+        # G5 (DESIGN §9.101): a sha-pinned row-level delta file — pn_binding alone.
+        sha = decl.get("sha256") or ""
+        if tbl != "pn_binding" or ({"changed_rows", "renamed_rows", "key_moves_file",
+                                    "identical"} & set(decl)):
+            probs = [f"delta_file is defined for pn_binding alone in gate A (not {tbl}, "
+                     "and not together with changed/renamed rows, key moves or identical)"]
+            nrows = 0
+        else:
+            probs, nrows = _declared_delta_file(l, s, decl["delta_file"], sha)
+        okA &= not probs
+        ndiff = len({r[:_KEYCOLS[tbl]] for r in set(l) ^ set(s)})
+        print(f"gate A: {tbl:15} {len(l):,} vs {len(s):,} rows — {ndiff} row(s) differ; "
+              f"delta file {nrows} row(s) (sha256 {sha[:8]}) "
+              f"→ {'MATCH' if not probs else 'MISMATCH'}")
+        for p in probs[:20]:
+            print(f"    problem: {p}")
+        if len(probs) > 20:
+            print(f"    ... {len(probs) - 20} more problem(s) not shown")
+    elif declared is not None and decl is not None and decl.get("key_moves_file"):
         # §9.94 (c): a per-table moves file — abp_surface only in gate A.
         if tbl != "abp_surface" or ({"changed_rows", "renamed_rows"} & set(decl)):
             probs = [f"key_moves_file is defined for abp_surface alone in gate A "

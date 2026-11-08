@@ -25,6 +25,7 @@ real values are unchanged either side and are not recorded in the repo.
 
 Run:  python tests/test_gate_declared.py
 """
+import hashlib
 import json
 import os
 import sqlite3
@@ -374,6 +375,100 @@ class TestGateDeclaredKeyMoves(unittest.TestCase):
                         pgi={"keys_only_in_live": 1, "keys_only_in_scratch": 1,
                              "key_moves_file": self.moves_file("pgi2.tsv", [(1, 1, 4)])})
         self.assertIn("declared key moves != actual only-live/only-scratch keys", bad)
+
+
+# ── G5 (ruled 2026-11-07, DESIGN §9.101): pn_binding.delta_file + sha256 ─────
+# src -> built: zerubbabel REMOVED, zorobabel ADDED (one-sided rows, which
+# changed_rows cannot declare); everything else the same on both copies.
+DF_HEADER = "kind\tbook\tchapter\tverse\tname\tclass\tbefore\tafter\n"
+DF_ROWS = [("REMOVED", OLD, None, [OLD]), ("ADDED", NEW, [NEW], None)]
+
+
+def delta_line(kind, row, before, after):
+    """One delta-file line in the 8B3c helper's own format (DRAFT_stageC_outline.md:5303)."""
+    if kind == "ADDED":
+        before, after = None, [row]
+    elif kind == "REMOVED":
+        before, after = [row], None
+    return "%s\t%s\t%s\t%s\t%s\t%s\t%r\t%r\n" % (kind, row[0], row[1], row[2], row[3],
+                                                "x", before, after)
+
+
+class TestGateDeclaredDeltaFile(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp()
+        cls.live = os.path.join(cls.tmp, "live.db")
+        build(cls.live, sib.LIVE_IDENT, LIVE_BIND + [OLD])
+        cls.scr = os.path.join(cls.tmp, "scr.db")
+        build(cls.scr, sib.LIVE_IDENT, LIVE_BIND + [NEW])
+        cls.scr_extra = os.path.join(cls.tmp, "scr_extra.db")       # david moves too, undeclared
+        build(cls.scr_extra, sib.LIVE_IDENT,
+              LIVE_BIND[:3] + [LIVE_BIND[3][:5] + ("fuzzy",) + LIVE_BIND[3][6:], NEW])
+
+    def delta_file(self, name, lines):
+        p = os.path.join(self.tmp, name)
+        with open(p, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(DF_HEADER + "".join(lines))
+        with open(p, "rb") as fh:
+            return p, hashlib.sha256(fh.read()).hexdigest()
+
+    def gate(self, scr, path, sha):
+        decl = {"lane": "test", "declared_by": "test", "receipt": "test",
+                "words": {"scratch_count": len(sib.WORDS)},
+                "verses": {"scratch_count": len(sib.VERSES)},
+                "abp_surface": {"identical": True}, "tipnr_entities": {"identical": True},
+                "pn_binding": {"delta_file": path, "sha256": sha},
+                "pn_greek_identity": {"keys_only_in_live": 0, "keys_only_in_scratch": 0,
+                                      "key_moves_file": None}}
+        p = os.path.join(self.tmp, "d.json")
+        with open(p, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+        return run_gate(self.live, scr, p)
+
+    def good(self):
+        return [delta_line("REMOVED", OLD, None, None), delta_line("ADDED", NEW, None, None)]
+
+    def test_g5_pass(self):
+        path, sha = self.delta_file("good.tsv", self.good())
+        out = self.gate(self.scr, path, sha)
+        self.assertIn("gate A: pn_binding      5 vs 5 rows — 2 row(s) differ; delta file 2 row(s) "
+                      "(sha256 %s) → MATCH" % sha[:8], out)
+        self.assertIn("gate A: PASS — identity layer as declared", out)
+        self.assertNotIn("problem:", out.split("gate B:")[0])
+
+    def test_g5_missing_row_fails(self):
+        ghost = (1, 1, 2, "saul", "Saul@1Sa.9.2", "exact", "", 1, 0, 1)
+        path, sha = self.delta_file("missing.tsv", self.good() + [delta_line("REMOVED", ghost, None, None)])
+        out = self.gate(self.scr, path, sha)
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: declared row (1, 1, 2, 'saul'): REMOVED in the delta file, NOT SEEN", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_g5_extra_difference_fails(self):
+        path, sha = self.delta_file("good2.tsv", self.good())
+        out = self.gate(self.scr_extra, path, sha)
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: undeclared row (1, 1, 1, 'david'): CHANGED", out)
+        self.assertIn("(not in the delta file)", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_g5_value_differs_fails(self):
+        wrong = NEW[:4] + ("Zerubbabel@Ezr.2.2",) + NEW[5:]
+        path, sha = self.delta_file("value.tsv", [delta_line("REMOVED", OLD, None, None),
+                                                  delta_line("ADDED", wrong, None, None)])
+        out = self.gate(self.scr, path, sha)
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: row (40, 1, 12, 'zorobabel'): delta file ('ADDED', None, "
+                      "[(40, 1, 12, 'zorobabel', 'Zerubbabel@Ezr.2.2'", out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
+
+    def test_g5_wrong_sha_fails(self):
+        path, sha = self.delta_file("sha.tsv", self.good())
+        out = self.gate(self.scr, path, "0" * 64)
+        self.assertIn("→ MISMATCH", out)
+        self.assertIn("problem: delta_file %s: sha256 %s != declared %s" % (path, sha, "0" * 64), out)
+        self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
 
 
 if __name__ == "__main__":

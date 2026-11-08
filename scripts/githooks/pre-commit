@@ -73,6 +73,7 @@ python tests/test_pn_surface_backfill.py >/dev/null
 python tests/test_pn_lemma_wordstudy.py >/dev/null
 python tests/test_gate_greek_header.py >/dev/null
 python tests/test_gate_declared.py >/dev/null
+python tests/test_eu_declared_v3.py >/dev/null
 python tests/test_eu_pn_binding_diff.py >/dev/null
 python tests/test_abp_app_feed.py >/dev/null
 python tests/test_feed_censuses.py >/dev/null
