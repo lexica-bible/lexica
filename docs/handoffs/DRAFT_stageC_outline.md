@@ -6107,3 +6107,62 @@ abdedc13e9f8b35f…; builder exit 0, 0 stderr lines; header = the 10/25 live fig
 three-ending 283 · no-lsj 41 · noun 68 · unknown 13; soften OT 80 / 441 · NT 208 / 396); generated block 33 lines,
 same sha → IDENTICAL. No paste, no site build. Observed, no ruling: built reads 451,993,600 bytes in PRE (451,964,928
 before the step-11 apply). Next: step 12a (`dotted_lexicon`).
+
+## Step 12a (`dotted_lexicon`) on built — STEP12A-DRY drafted (11/8)
+
+Procedure `rebuild-words.md:355-359` + the step-12 rulings (`DRAFT_rebuild_words_side_tables.md`, Q5: dry on built →
+figures declared from that log by path:line → `--apply` gated on them). `build_dotted_lexicon.py <db>` opens ONLY the
+path given (`:183-192`, refuses with none), reads `words` (dotted `strongs`), `lexicon`, `abp_ext` + the code-pinned
+overrides (`:42-80`), and with `--apply` DROPs + re-CREATEs `dotted_lexicon` only (`:234-242`). Its imports
+(`audit_dotted_lemmas`, `build_abp_translit`) open no db at import (connect only inside their own `main()`).
+**Dry form:** the builder's `--diff` (keys only, the procedure's read-out) AND its `--apply`, both on a THROWAWAY copy
+of the four tables it reads (eu_step prep), then a row-level delta keyed on `strongs` (keys AND lemma/translit
+values; rowids change on a re-create, so the row id is not the key) — built → dry and src → dry (the procedure's
+"values check vs `<src>`"). Same-code expectation: `+0 / -0`, delta 0 both ways. Edition upgrade: every difference is
+a member to read before any apply — the figures are READ-OUTS. Also read out: the table's definition (CREATE line +
+any index) on built, src and the dry copy — a DROP loses any index PA added outside git, and `check` compares the
+written table's definition only with the dry copy, so this read-out is where a lost index would show.
+
+### Block STEP12A-DRY (GATE REF 006e16ba; READ-ONLY on built and src — writes only the run folder and its throwaway copy)
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12a_dry_20261108.log
+if [ -e "$L" ]; then echo "STEP12A-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12A-DRY rebuild-words step 12a (build_dotted_lexicon --diff + --apply) on a THROWAWAY copy of words/lexicon/abp_ext/dotted_lexicon - built and src read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12A-DRY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12A-DRY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+D=~/edition_upgrade_runs/step12a_dry_20261108
+E="python3 scripts/eu_step.py"
+$E pre --tag STEP12A --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12A-DRY RESULT: STOP - pre (line above); nothing made"; exit 1; }
+for f in "$B" "$S"; do
+  echo "--- dotted_lexicon on $f (read-only): definition + row count"
+  sqlite3 -readonly "$f" "SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'dotted_lexicon' ORDER BY type, name; SELECT 'rows', count(*) FROM dotted_lexicon" || { echo "STEP12A-DRY RESULT: STOP - dotted_lexicon read failed on $f"; exit 1; }
+done
+$E prep --tag STEP12A --built "$B" --dir "$D" --copy words,lexicon,abp_ext,dotted_lexicon --save dotted_lexicon || { echo "STEP12A-DRY RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "=== DRY 1: --diff on the throwaway copy (keys only; the procedure's read-out) ==="
+python3 scripts/build_dotted_lexicon.py "$D/dry.db" --diff > "$D/diff.out" 2>&1; r=$?
+echo "exit $r (expect 0) - full output $D/diff.out ($(wc -l < "$D/diff.out") lines); first 3 lines, then the REMOVED section (first 40):"
+head -3 "$D/diff.out"
+sed -n '/^REMOVED/,$p' "$D/diff.out" | head -40
+[ "$r" -eq 0 ] || { echo "STEP12A-DRY RESULT: STOP - --diff failed on the copy (above); built untouched"; exit 1; }
+echo "=== DRY 2: --apply on the throwaway copy $D/dry.db (built untouched) ==="
+AP=$(python3 scripts/build_dotted_lexicon.py "$D/dry.db" --apply 2>&1); a=$?
+printf '%s\n' "$AP" > "$D/apply_dry.log"
+echo "$AP"
+echo "exit $a (expect 0)"
+[ "$a" -eq 0 ] || { echo "STEP12A-DRY RESULT: STOP - --apply failed on the copy (above); built untouched"; exit 1; }
+grep -q "^Filled dotted_lexicon in " <<< "$AP" || { echo "STEP12A-DRY RESULT: STOP - --apply did not report a fill; built untouched"; exit 1; }
+echo "--- dotted_lexicon on the dry copy after: definition + row count"
+sqlite3 -readonly "$D/dry.db" "SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'dotted_lexicon' ORDER BY type, name; SELECT 'rows', count(*) FROM dotted_lexicon"
+$E delta --tag STEP12A --a "$B" --b "$D/dry.db" --table dotted_lexicon:strongs --out "$D/step12a_delta_built.tsv" || { echo "STEP12A-DRY RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
+$E delta --tag STEP12A --a "$S" --b "$D/dry.db" --table dotted_lexicon:strongs --out "$D/step12a_delta_src.tsv" || { echo "STEP12A-DRY RESULT: STOP - delta src -> dry (line above); built untouched"; exit 1; }
+$E same --tag STEP12A --built "$B" --dir "$D" || { echo "STEP12A-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+echo "STEP12A-DRY RESULT: READ DONE - built untouched (same: OK); the two deltas above (files + sha on their DELTA lines) and the --diff are the figures to declare for STEP12A-APPLY"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
