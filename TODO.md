@@ -559,7 +559,27 @@ TODO_ARCHIVE is a separate ad-hoc batch — the audit's D and E below are still 
   share words with it; gate = full card list identical before/after on PA + the frozen fixture) · B) build the
   cards once per nightly into a file all workers read (fallback: live build) · C) send only the chosen date
   range (reverses the one-fetch design; below-5 rows are 83% of the 30d slice — they feed the "buried" readout
-  and the All-score filter). Timing script used: the 11/8 session's `~/news_timing.py` on PA. Web-log reads: PA writes the real client IP as a quoted field before `response-time=` — filter with
+  and the All-score filter). Timing script used: the 11/8 session's `~/news_timing.py` on PA.
+  **Ruling (JP 11/8): parked, not opened. When it opens: A first; C for phones.**
+- **PARKED — one story split across labels; the design has no merge step (11/8 one-week check).** The pope's
+  mail-in midterm vote sits on TWO cards: "Pope Leo XIV US Election Vote 2026" (153 articles, made 10/31, the first
+  night with the reuse check on) and "Pope Leo XIV US Midterm Ballot Request" (21, made 10/30, before it). Both still
+  take new articles; the 11/6 "proud to be an American" remarks landed on both. Leo's AI encyclical is spread over
+  ~7 labels (…AI Encyclical · …AI Encyclical Magnifica Humanitas · …Magnifica Humanitas AI Encyclical — same words,
+  other order · …Magnifica Humanitas Encyclical Release · Pope Leo AI Encyclical 2025 · …Disarming · …Encyclical
+  Quotes Release). The reuse check only blocks a wrong reuse; nothing joins two labels that already exist.
+  Smaller likely twins: the two "Pakistan Blasphemy Laws…", the two "Young People Catholic…", "Pentagon UFO Files
+  Release 2025" vs "…Skinwalker Files Release". Related: a refused article can get a misnamed fresh label — a 2015
+  CNN piece on Francis's encyclical (id 30322) and a 2020 bishops'-conference video (29697) now carry "Pope Leo XIV
+  … Encyclical" labels. The 153-article card itself was read in full: one event (the vote + coverage + reactions),
+  not a catch-all. code: scripts/news/group_news.py
+- **PARKED — a blank or partial AI reply in the nightly labeler is logged as a plain "no".** `_ask` returns an
+  empty list when a reply holds no array, and `confirm_reuse` counts any headline missing from the reply as "not
+  the same"; neither prints an ERR line (only a thrown error does). `fresh_labels` likewise leaves a headline
+  unlabeled without saying why. So the nightly log can't tell a real refusal from an empty answer. Suspected case:
+  11/6 — 13 reuses refused, all 13 left with no label, incl. six South America trip articles that later nights put
+  on the trip card. Nov 1–8 log: zero ERR lines. Fix idea: count and print empty/short replies (no change to
+  behavior). code: group_news.py `_ask`, `_read_array`, `confirm_reuse`, `fresh_labels` Web-log reads: PA writes the real client IP as a quoted field before `response-time=` — filter with
   `sed -E 's/^[^ ]+ //; s/"[^"]*" (response-time=)/\1/; s/key=[^ &"]*/key=HIDDEN/g'`.
   code: views_news.py `_all_cards` / `_cluster` / `all_news`
 - **Corroboration as a rank input** (Aug 14 ruling, layer 3) — stays parked until labeler fusion is measurably down
