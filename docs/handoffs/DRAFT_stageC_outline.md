@@ -6099,3 +6099,11 @@ echo "STEP10-READ RESULT: READ DONE - DIFFERENT from $J (diff above; full output
 
 Reviewer subagent (11/8), verdict line verbatim: "REVIEW: CLEAR - read-only block (the builder opens the db with mode=ro and only prints); writes go only to a new run folder and a guarded dated log; the REF gate is covered by eu_step pre as accepted at §9.106/§9.107"
 Goes straight to PA (read-only). IDENTICAL → step 10 closed "unchanged"; DIFFERENT → the diff goes to the ruling chat.
+
+### STEP10-READ ran (11/8, 18:03 UTC, PA HEAD b3178672, REF 006e16ba) — IDENTICAL → STEP 10 CLOSED "unchanged" (§9.108)
+
+Log `~/edition_upgrade_runs/step10read_20261108.log`. PRE OK; target `00b-two-ending.jsx` = REF, 33 lines, sha256
+abdedc13e9f8b35f…; builder exit 0, 0 stderr lines; header = the 10/25 live figures exactly (two-ending 368 ·
+three-ending 283 · no-lsj 41 · noun 68 · unknown 13; soften OT 80 / 441 · NT 208 / 396); generated block 33 lines,
+same sha → IDENTICAL. No paste, no site build. Observed, no ruling: built reads 451,993,600 bytes in PRE (451,964,928
+before the step-11 apply). Next: step 12a (`dotted_lexicon`).
