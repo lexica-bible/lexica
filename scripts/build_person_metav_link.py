@@ -32,6 +32,15 @@ Run on PythonAnywhere (build the index first):
     python3 scripts/build_metav_person_index.py
     python3 scripts/build_person_metav_link.py                       # dry-run report
     python3 scripts/build_person_metav_link.py --apply               # after review
+
+Options (2026-11-07):
+    --bible <db>          the db to read (and, with --apply, write). Default = live bible.db.
+    --out-dir <dir>       where the two leftover lists go (person_metav_link_tier2.txt +
+                          person_metav_link_residual.txt). Default = scripts/ (unchanged).
+    --check-place-orphans READ-ONLY: count kind='place' link rows whose entity id has no
+                          tipnr_entities row in --bible. Prints "PLACE-LINK ORPHANS: N";
+                          exit 0 when N = 0, exit 1 (STOP) otherwise, exit 2 if the tables are
+                          missing. Writes nothing; needs no metav index.
 """
 import os, re, sqlite3, sys
 from collections import defaultdict
@@ -48,6 +57,27 @@ for i, a in enumerate(sys.argv):
         INDEX = sys.argv[i + 1]
 APPLY = "--apply" in sys.argv
 HERE = os.path.dirname(os.path.abspath(__file__))
+OUT_DIR = HERE                                   # leftover lists; default unchanged (scripts/)
+for i, a in enumerate(sys.argv):
+    if a == "--out-dir" and i + 1 < len(sys.argv):
+        OUT_DIR = sys.argv[i + 1]
+
+
+def check_place_orphans(bible_path):
+    """READ-ONLY. kind='place' rows in tipnr_metav_link whose uniq has no tipnr_entities row.
+    Returns (count, first-20 uniq list), or None when either table is missing."""
+    conn = sqlite3.connect(f"file:{bible_path}?mode=ro", uri=True)
+    try:
+        have = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if not {"tipnr_metav_link", "tipnr_entities"} <= have:
+            return None
+        rows = [r[0] for r in conn.execute(
+            "SELECT l.uniq FROM tipnr_metav_link l "
+            "LEFT JOIN tipnr_entities e ON e.uniq = l.uniq "
+            "WHERE l.kind = 'place' AND e.uniq IS NULL ORDER BY l.uniq")]
+        return len(rows), rows[:20]
+    finally:
+        conn.close()
 
 # TITLES borne by many different men — never one rich bio; the serializer gives them a
 # People/Clan-style title card, so they are unlinkable BY DESIGN (tagged so the top-N
@@ -66,6 +96,20 @@ def key(s):
 
 
 def main():
+    if "--check-place-orphans" in sys.argv:
+        if not os.path.isfile(BIBLE):
+            print(f"STOP: {BIBLE} is not an existing file.")
+            sys.exit(2)
+        res = check_place_orphans(BIBLE)
+        if res is None:
+            print(f"STOP: tipnr_metav_link or tipnr_entities missing in {BIBLE}.")
+            sys.exit(2)
+        n, sample = res
+        print(f"PLACE-LINK ORPHANS: {n}  ({BIBLE})")
+        for u in sample:
+            print(f"  orphan: {u}")
+        print("RESULT: OK (0 orphans)" if n == 0 else "RESULT: STOP (expected 0 orphans)")
+        sys.exit(0 if n == 0 else 1)
     if not os.path.exists(INDEX):
         print(f"MISSING {INDEX} — run build_metav_person_index.py first.")
         sys.exit(2)
@@ -245,13 +289,13 @@ def main():
         for row in sorted(a_by_key.get(nm, [])):
             show(row)
 
-    t2path = os.path.join(HERE, "person_metav_link_tier2.txt")
+    t2path = os.path.join(OUT_DIR, "person_metav_link_tier2.txt")
     with open(t2path, "w", encoding="utf-8") as fh:
         fh.write("# uniq\twin_pid\twin_name\tscore\tmargin\tpool\trunner_pid\trunner_score\n")
         for row in sorted(tier2_audit):
             u, _k, pid, wname, score, margin, npool, r_pid, _rn, r_score = row
             fh.write(f"{u}\t{pid}\t{wname}\t{score:.3f}\t{margin:.3f}\t{npool}\t{r_pid}\t{r_score:.3f}\n")
-    print(f"  full tier-2 dump -> scripts/person_metav_link_tier2.txt")
+    print(f"  full tier-2 dump -> {t2path}")
 
     # ── name-only (demoted) detail — justify or leave demoted ────────────────────
     print(f"\n  name-only demoted picks (7 expected) — refs / metaV-verses / has# / containment:")
@@ -261,13 +305,13 @@ def main():
 
     # ── residual, ranked by traffic, WITH the reason it failed ───────────────────
     res = sorted(buckets["residual"], key=lambda x: -traffic[x[0]])
-    path = os.path.join(HERE, "person_metav_link_residual.txt")
+    path = os.path.join(OUT_DIR, "person_metav_link_residual.txt")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("# uniq\ttraffic\treason\tbest_score\tcandidates\n")
         for uniq, cands, best, reason in res:
             names = [f"{c}:{name_of.get(c,'?')}" for c in cands]
             fh.write(f"{uniq}\t{traffic[uniq]}\t{reason}\t{best:.2f}\t{names}\n")
-    print(f"\n  residual -> scripts/person_metav_link_residual.txt ({len(res)} to hand-resolve)")
+    print(f"\n  residual -> {path} ({len(res)} to hand-resolve)")
     print("  top 15 residual by traffic (reason = why overlap didn't settle it):")
     for uniq, cands, best, reason in res[:15]:
         print(f"    {traffic[uniq]:>4}  {uniq:<24} {len(cands):>2} cands  "

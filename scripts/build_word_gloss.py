@@ -18,9 +18,14 @@ HEBREW (settled 2026-06-22):
 Writes ONE side table, word_gloss(strongs, gloss, source). Touches NOTHING else (not words,
 lexicon, dotted_lexicon, heb.db). Deploy-safe: the /api/* joins read it only if present.
 
-  python3 scripts/build_word_gloss.py            # DRY RUN: coverage + residue, writes nothing
-  python3 scripts/build_word_gloss.py --summary  # dry-run + the loaded-word review (Greek + Hebrew)
-  python3 scripts/build_word_gloss.py --apply    # (re)build word_gloss (that table only)
+  python3 scripts/build_word_gloss.py <db>            # DRY RUN: coverage + residue, writes nothing
+  python3 scripts/build_word_gloss.py <db> --summary  # dry-run + the loaded-word review (Greek + Hebrew)
+  python3 scripts/build_word_gloss.py <db> --apply    # (re)build word_gloss in <db> (that table only)
+
+TBESG/TBESH are read from PINNED repo copies (tests/fixtures/stepbible/, sha256-checked before use —
+ruling 2026-11-07), so a rebuild can't silently pick up an upstream edit. `--fetch` downloads the
+current STEPBible master instead (explicit only; a URL without --fetch is refused). `--tbesg` /
+`--tbesh` still take an explicit file path. Pins + provenance: tests/fixtures/stepbible/PROVENANCE.md.
 
 Re-run after a words rebuild (run build_dotted_lexicon first). Reads heb.db read-only.
 """
@@ -53,10 +58,21 @@ def _opt(name, default=None):
     return default
 
 
-TBESG = _opt("tbesg", DEFAULT_TBESG_URL)
-TBESH = _opt("tbesh", DEFAULT_TBESH_URL)
-DODSON = _opt("dodson", os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "apfathers", "raw", "dodson.csv"))
+HERE = os.path.dirname(os.path.abspath(__file__))
+PIN_DIR = os.path.normpath(os.path.join(HERE, "..", "tests", "fixtures", "stepbible"))
+# Pinned STEPBible copies + their sha256 (also in the *.sha256 files beside them). A changed
+# file refuses to load — re-pin deliberately (PROVENANCE.md), never edit these to match.
+PINNED = {
+    os.path.join(PIN_DIR, "TBESG.txt"):
+        "312f723d7b8ef263bbdfb0451c9b8057125804dfff390b6f8544cff2a84b57f4",
+    os.path.join(PIN_DIR, "TBESH.txt"):
+        "464dccadd95fd8620dd05fa0d7a4caba58ec3c4d5db3ebf38e43d046ca25b591",
+}
+FETCH = "--fetch" in sys.argv
+
+TBESG = _opt("tbesg", DEFAULT_TBESG_URL if FETCH else os.path.join(PIN_DIR, "TBESG.txt"))
+TBESH = _opt("tbesh", DEFAULT_TBESH_URL if FETCH else os.path.join(PIN_DIR, "TBESH.txt"))
+DODSON = _opt("dodson", os.path.join(HERE, "apfathers", "raw", "dodson.csv"))
 HEB = _opt("heb", os.path.expanduser("~/bible-db/heb.db"))
 
 # GREEK plain-meaning hand fixes — ONLY the loaded words where the chosen source still leads
@@ -151,10 +167,23 @@ _ARTICLE = re.compile(r"^(?:a|an|the)\s+", re.I)
 
 def _read_source(src):
     if re.match(r"^https?://", src):
+        if not FETCH:
+            sys.exit(f"REFUSED: {src} is a download; sources are pinned (tests/fixtures/stepbible/). "
+                     "Pass --fetch to download on purpose.")
         import urllib.request
         req = urllib.request.Request(src, headers={"User-Agent": "bible-db/1.0"})
         with urllib.request.urlopen(req) as r:
             return r.read().decode("utf-8")
+    pinned_sha = PINNED.get(os.path.normpath(os.path.abspath(src)))
+    if pinned_sha:
+        import hashlib
+        with open(src, "rb") as f:
+            raw = f.read()
+        got = hashlib.sha256(raw).hexdigest()
+        if got != pinned_sha:
+            sys.exit(f"REFUSED: pinned source {src} sha256 {got} != pinned {pinned_sha}. "
+                     "Re-pin deliberately (PROVENANCE.md); never run on a changed file.")
+        return raw.decode("utf-8")       # same decode the --fetch path uses
     with open(src, encoding="utf-8") as f:
         return f.read()
 

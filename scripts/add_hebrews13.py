@@ -380,7 +380,10 @@ def apply(bible_db, scrape_db):
     print(f"  # 2. Position-keyed side tables (Heb 13 shifted nothing, but they must learn it exists):")
     print(f"  python3 scripts/build_abp_surface.py {bible_db} --bh {scrape_db}")
     print(f"  python3 scripts/build_abp_translit.py {bible_db}")
-    print(f"  python3 scripts/build_dotted_lexicon.py {bible_db}        # Heb 13 has dotted G3766.2 / G1510.6")
+    # build_dotted_lexicon takes <db> as a REQUIRED path (2026-11-07). Before that it ignored the
+    # path printed here and always opened LIVE ~/bible-db/bible.db — a live-write hazard with --apply.
+    print(f"  python3 scripts/build_dotted_lexicon.py {bible_db} --diff   # read-only; Heb 13 has dotted G3766.2 / G1510.6")
+    print(f"  python3 scripts/build_dotted_lexicon.py {bible_db} --apply  # writes dotted_lexicon in {bible_db} only")
     print(f"  python3 scripts/build_entity_binding.py {bible_db} --apply")
     print(f"  python3 scripts/build_two_ending.py {bible_db}            # then rebuild app.js locally if it changed")
     print(f"  # 3. VERIFY (all must pass before reload):")

@@ -10,8 +10,13 @@ headword of the number's OWN abp_ext dictionary entry. This builds a side table,
 right word. It touches NOTHING else: not words, not lexicon, and it skips the
 [ABP] form-notes (1510.x = forms of εἰμί, where the base lemma is already right).
 
-  python3 scripts/build_dotted_lexicon.py            # DRY RUN: print proposed rows, write nothing
-  python3 scripts/build_dotted_lexicon.py --apply    # create + fill dotted_lexicon (that table only)
+  python3 scripts/build_dotted_lexicon.py <db>            # DRY RUN: print proposed rows, write nothing
+  python3 scripts/build_dotted_lexicon.py <db> --diff     # read-only: keys added/removed vs <db>'s own table
+  python3 scripts/build_dotted_lexicon.py <db> --apply    # create + fill dotted_lexicon in <db> (that table only)
+
+<db> is REQUIRED and is the ONLY file opened (2026-11-07 ruling). There is no default: the old
+default was ~/bible-db/bible.db — LIVE — so a "run it on the copy" command silently hit live.
+A missing path or a path that is not an existing file refuses (exit 2) before anything opens.
 
 Reuses the verified Greek extraction from audit_dotted_lemmas.py and the romanizer
 from build_abp_translit.py. Reads abp_ext/lexicon/words; writes ONLY dotted_lexicon.
@@ -25,7 +30,10 @@ import unicodedata
 from audit_dotted_lemmas import clean_text, first_greek
 from build_abp_translit import romanize
 
-DB = os.path.expanduser("~/bible-db/bible.db")
+def db_arg(argv):
+    """The required <db> path: the first non-flag argument, or None. No default (see header)."""
+    pos = [a for a in argv[1:] if not a.startswith("--")]
+    return pos[0] if pos else None
 
 # ABP spells some numbers as Greek numeral LETTERS, parked at a dotted Strong's whose
 # base is an unrelated word (so the auto-derivation below skips/misreads them). Pin the
@@ -172,17 +180,25 @@ def collect(conn):
 
 
 def main():
+    db = db_arg(sys.argv)
+    if not db:
+        print("usage: build_dotted_lexicon.py <db> [--diff | --summary | --apply]\n"
+              "  <db> is required — there is no default (the old one was LIVE bible.db).")
+        sys.exit(2)
+    if not os.path.isfile(db):
+        print(f"REFUSED: {db} is not an existing file (sqlite would create an empty one).")
+        sys.exit(2)
     do_apply = "--apply" in sys.argv
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
     fixes, skipped, abp_fixes = collect(conn)
 
-    if "--diff" in sys.argv:                     # read-only: what would change vs the live table
+    if "--diff" in sys.argv:                     # read-only: what would change vs <db>'s own table
         cur = {r[0] for r in conn.execute("SELECT strongs FROM dotted_lexicon")}
         proposed = {"G" + f[0]: f for f in fixes}
         added = sorted(set(proposed) - cur)
         removed = sorted(cur - set(proposed))
-        print(f"[diff vs live dotted_lexicon]  +{len(added)} added  -{len(removed)} removed")
+        print(f"[diff vs {db} dotted_lexicon]  +{len(added)} added  -{len(removed)} removed")
         print(f"  skipped buckets: {skipped}\n")
         print("ADDED (dotted | corrected word | romanization | uses):")
         for k in added:
@@ -226,7 +242,7 @@ def main():
     conn.commit()
     n = conn.execute("SELECT COUNT(*) FROM dotted_lexicon").fetchone()[0]
     conn.close()
-    print(f"Filled dotted_lexicon with {n} corrected headwords (that table only; "
+    print(f"Filled dotted_lexicon in {db} with {n} corrected headwords (that table only; "
           f"nothing else touched).")
 
 
