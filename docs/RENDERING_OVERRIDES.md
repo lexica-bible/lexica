@@ -59,6 +59,26 @@ for a later ruling, NOT approved for build. Nothing here is built until JP rules
    (low priority); v.35-type semicolon splices (punctuation/assembly territory, riskier —
    PARKED).
 
+## Reader display layers — FUTURE LANE (parked; moved from TODO.md 2026-11-07)
+RECOVERED 2026-07-28 from the 2026-07-12 design chat ("Creating an improved Greek LXX/NT translation") —
+developed then, never ticketed; supersedes the same-day reconstructed two-toggle sketch. Parked BEHIND batch
+one + the FRAME-0 audit; nothing waits on it; details re-ruled before build.
+- **Mechanism:** ONE shared span-override table; stored ABP text NEVER edited; every override hand-ruled and
+  auditable, tagged by class so the toggles operate independently.
+- **Toggle 1 — Lexica corrections (sense overrides).** Spans where ABP is arguably WRONG or inconsistent, not
+  merely literal. Could arguably default ON someday — JP's ruling at build time.
+- **Toggle 2 — smooth reading (readability overrides). ABP ONLY.** Off by default, literal always one tap away.
+  Grammar-class driven, not ad hoc: articular infinitives ("in the to be him" → "while he was"), substantival
+  participles, stacked genitive chains, δέ rendered as endless "And…", Greek-order fronted objects, plus the
+  added-English-filler subclass ("son being twenty and three years old" → "son of twenty and three years" —
+  subtraction beats ABP's paraphrase; "old" has no lemma behind it). Workflow: JP rules a PATTERN once → CC
+  generates the spans mechanically (each stored individually) → JP spot-checks a sample. **Hard bar: zero lemma
+  loss — every English word on screen maps to a Greek word.** Caveat: ABP's woodenness IS its concordance
+  transparency; smoothing is a mode, never a replacement.
+- **Toggle 3 — divine name display (CANDIDATE).** Show "Yahweh" where the text carries the name (tag-driven,
+  H3068 vs H136 Adonai). A separate thread from 1–2 in the record (July 24 discussion). Related regardless: the
+  AI-synthesis prose drifts Yahweh/YHWH/LORD and needs one ruled convention (TODO → Ask the corpus & AI synthesis).
+
 ## Negative exemplar (validator guardrail)
 Jer 22:1/22:4 singular λόγος ("this word") vs 22:5 plural ("these words") — ABP correctly
 tracks the Greek's own number shift. Smoothing to uniformity would compress a real
@@ -79,4 +99,4 @@ silently normalize): bh Greek is accent-only (no breathing marks); a form is sto
 when it differs from the lemma by ending; proper nouns carry no Greek yet (PN backfill owns
 them, incl. the 30,126 Hebrew-numbered OT name slots); 148 verses sit behind a queued,
 eyeball-gated versification map. See `docs/claude/data-model.md` § abp_surface + TODO
-"abp_surface backfill arc".
+"Parked → ABP text & data lanes" (versification map, ἔπω-class table).

@@ -100,7 +100,7 @@ output, if any, rides the step-8 deploy).
    Strong's ("May [2be found 1your hand]") was glued INSIDE the bracket; it now sits OUTSIDE
    ("May [be found your hand]"). ~943 verses, +~1,023 word slots (why the count rose). The source
    bracket parser is now shared — `build.iter_source_tokens`, and the bracket audits delegate to it
-   so they can't drift from the build. See memory project_bracket_helper_peel.
+   so they can't drift from the build. See memory project_build_folded_fixes §1b.
    NEW 2026-06-18 — `_emit_words` VERB SPLIT (`_split_numbered`): ABP wraps some verbs' English
    around the subject, giving ONE Greek word TWO position numbers under a single Strong's with
    nothing between them ("1Was 5justified]" G1344; "1may 5search 7out" G327). The old code read
@@ -108,14 +108,14 @@ output, if any, rides the step-8 deploy).
    number + the verb in the wrong reading order. Now each numbered piece becomes its own word,
    sharing the verb's Strong's. 321 chunks / 308 verses canon-wide (Job 57, Isa 24, 1Co 23,
    Jas 11…), +323 word slots (part of why the count rose). Single-number chunks are byte-identical.
-   See memory project_verb_split_slots.
+   See memory project_build_folded_fixes §2.
    NEW 2026-06-20 — blank-"G." FILL (`apply_blank_strongs_fills`, a FINISHING step at the very end
    of the build, after the insert loop): ABP's source leaves EXACTLY 5 words with a numberless "G."
    (Zec 9:11/1Pe 3:13 "And"→G2532, Heb 7:4 "And view"→G2334, Mat 12:14 "And the"→G3588,
    Act 24:8 "bidding"→G2753). The build merges them onto the next number; this fills the right number
    and splits the slot. Runs automatically on rebuild — do NOT re-run the one-time fill_blank_strongs.py.
    The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
-   project_blank_strongs_fill.
+   project_build_folded_fixes §7.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
    (import_tipnr, **31,649 matched** — re-pinned 2026-10-25: the 10/25 re-key chain's log equals
    the 8/5 lane-② ride's `~/bible-db/finish_pnstar2.log` line for line, timestamps aside; was 31,392
@@ -327,7 +327,7 @@ output, if any, rides the step-8 deploy).
    down against `static/src/00b-two-ending.jsx`. Identical → no paste, no build, record "unchanged".
    Different → paste, rebuild `app.js` LOCALLY, commit + push BEFORE step 8, so the step-8 deploy.sh pulls
    it in with the swap (genders/tallies can shift on a rebuild). Drives the "Masculine/Feminine"
-   word-study display. Memory `project_two_ending_gender`.
+   word-study display. Memory `project_build_folded_fixes` §11b.
 11. **WHERE: on `<built>`, right after 8b.3, before step 10 and step 9** (JP ruling after the 10/25 run —
    same Step-0 answer as step 9: no live-only input). RE-RUN `scripts/build_rendering_norm.py <built>` —
    **always give the path** (with none it opens `bible.db` in the current folder, live from `~/bible-db`;

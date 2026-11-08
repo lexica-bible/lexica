@@ -670,6 +670,59 @@ Fresh-session handoff for continuing the frequency rollout. **The audit doc
 where they seem to differ, the doc wins (lesson banked from a πολύς/G80 conflation this session —
 trust the doc, not chat memory).
 
+## DISPLAY-LAYER WINDOW — 8 banked tickets + the verse-aware gloss-note flag (moved from TODO.md 2026-11-07)
+Banked 2026-07-08 (δύναμις session); window opening UNRULED (batch-2 close vs post-Session-9 — JP's call when
+reached). Members also include the #18A diacritic normalize-both-sides fix + language-scoped query drift. TODO.md
+keeps a one-line pointer here.
+1. **Gloss-note sense references:** every sense mention in a gloss note gets an anchored marker (→1, →2 superscript
+   or equivalent) linking the sense it names, replacing bare prose ("sits within sense 2"). Display-layer only — no
+   entry data or stamp changes. Companion lint candidate: a gloss note naming NO sense gets flagged (cousin of the
+   hedged-citation check, ENGINE_LESSONS #25).
+2. **Gloss-note ordering:** current order is draw-order, guaranteed by nothing. Proposed: by first-cited-verse's
+   sense, fallback alphabetical by glossed word. Renderer change only.
+3. **V6-era card style alignment** (batch-3, JP): batch-2 (V6) cards carry dense per-quote-ref styling; the ruled V7
+   house shape is prose + parenthesized ref clusters (diagnosed NOT drift — V7 edit 5 added the hybrid shape). Decide:
+   cosmetic pass vs leave until redrawn. CONSTRAINT: shipped prose is audited — any reformat first needs a ruling on
+   which edits are legal without re-audit (sibling of the fix_lexica_raw boundary).
+4. **LXX provenance note ⓘ + multi-sense footnote** (7/8–9, JP; one ticket): (a) a hover/tap ⓘ explaining the
+   Septuagint (Greek OT translating Hebrew; senses resting mostly on LXX citations are translation-Greek evidence,
+   weaker for native usage than NT composition-Greek); (b) when the note fires on MULTIPLE senses, a
+   superscript/dagger on each affected headline pointing to ONE footnote below the sense list. Test pages: G1151
+   δάμαλις (all 3 fire), G4582 σελήνη (none), G2779 κῆπος (one; also the sub-use indent test). Display-only.
+5. **Header-gloss provenance (SYSTEMIC — 3 sightings):** the card header gloss comes from `word_gloss` (inherited
+   TBESG/Dodson-family, build_word_gloss.py) and contradicts the verse-verified entry beneath it — G3900 "falling
+   away, sin" over a transgression-only 40/40 card; G956 "missile", unattested in all three translations; G2008
+   "rebuke, chide" while its own notes argue the blame register is wrong for most sense-1 uses. Proposal: derive the
+   header from top corpus renderings (coverage_audit already computes them); design question = top-N verbatim vs
+   renderings + headline fragment. Short-term per-word overrides via OVERRIDES.
+6. **RANGE/Coverage serif gap** (ruled to THIS window): Range + Coverage render sans while senses + gloss notes get
+   the serif `.lex-prose` (styles.css:1439) — missing on `20-shared-components.jsx:322` and `:332`. Template gap on
+   ALL cards, code-confirmed. Two-line fix + rebuild; hold for the display session (also listed in TODO Small fixes).
+7. **Gloss-note marker AT THE CITATION** (7/10, G4061 session 5, JP-ruled split): where a note names a SPECIFIC ref
+   (G4061 "lopped" → Jer 11:16), a small marker on that citation in the senses block. RESTRAINT RULED: markers ONLY
+   where a note names a specific ref. SPLIT: rendering half = this window; structure half = V8-PILE candidate
+   (per-ref anchors touch what the engine emits — frozen until the V8 bump).
+8. **Sub-use paragraph styling** (7/8): "Sub-use:" paragraphs render as plain prose (live G1119). Wanted: a light
+   indicator — indent, smaller type, or left rule — within the quiet-design rules (no boxes). Display-only.
+
+**Verse-aware gloss-note flag** (design-scoping first, NO build; unblocked since the draw cache shipped; not
+batch-blocking). JP's idea: opening a word card FROM a verse in the interlinear whose gloss_note cites that verse
+surfaces the note at the TOP of the card (δίδωμι at 1Sa 22:15 → leads with the impute-freight note). Static Library
+card UNCHANGED — interlinear-entry context only. Scope in order:
+1. **Structured-refs prerequisite.** gloss_notes is one prose blob; `cited_refs`/`_REF_RE` in build_lexica_def.py
+   already pulls (book,ch,vs) from prose. Is per-NOTE catch reliable off the blob, or does the build need a
+   structured `verses:[]` per note? If the latter → new field → JP checkpoint BEFORE anything lands. Also: can the
+   live entries be back-parsed, or do they need a resplit-style pass?
+2. **Precision rule.** Fires ONLY on an exact verse match to a note's citations — a wrong-verse flag is worse than none.
+3. **Design ruling for JP** (one-pill rule / emphasis budget): candidate = a subordinate text line at the card top,
+   no pill, no container, linking down to the note.
+4. **UI-copy principle.** Flag PRESENT = a known note exists; ABSENT = no claim. Gloss notes are EXCEPTION reports over
+   a ~40-verse sample, so absence must NEVER read as "verified clean".
+5. **Adjacency** to the parked word-study-card provenance feature — shared header mechanism vs independent; don't
+   merge without JP's call.
+code: build_lexica_def.py (`split_definition`/`cited_refs`), views_lexica.py (`/api/lexica`),
+20-shared-components.jsx (`LexicaBody`), 30-detail-panel.jsx (fetch path).
+
 ## PRE-REGISTERED EXPECTATIONS CARRIED FORWARD (must NOT soften in transit)
 1. **The four-gate ship bar** is the ship test — not sense-count matching. Do not reintroduce
    "match the reviewer's count" by any back door (demanding a redraw purely to change a count is

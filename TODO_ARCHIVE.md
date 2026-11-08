@@ -6,6 +6,84 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-07 — TODO consolidation (/consolidate, JP-approved plan): closed items moved here
+Why: TODO.md had grown to 1,685 lines / ~195 bullets. Closed write-ups that had sat in TODO marked "(Archive at
+next /wrap)" are recorded below (newest dates first in this block). Removed from TODO as already archived or
+superseded, nothing lost: the cert pin 30→51 + `--declared` gate lines (archived 10/31; the pin is now 374 for the
+edition-upgrade built copy: 372 per §9.59 `f8e814c2` + 2 S-joh14:26 per §9.89; members
+`abp_corrections_active_built_20261106.txt`) · the snapshot-staleness duplicate (charter §6 step 9c) · "reason 5
+unreachable" (a record — CHARTER_rebuild_trap_fix.md §6) · the two `bible_pre_pnstar_*` copies (archived 11/7) ·
+the News cross-night fix block (archived 10/31; rollback + drift watch in ops.md / memory project_news_watch) ·
+the provenance-seal parenthetical (archived 7/16) · the edition item's history (charter + DESIGN §9 + 10/31 entry) ·
+the "Where we're behind other Bible apps" assessment (not work; its actionable bits are TODO Ideas / Future
+projects) · "Share key: retirement not ticketed" (stated that nothing was planned) · "Grayed Keep/Dismiss costs too
+much row on a phone" (shipped `3aac547c` 7/15, archived under "News on mobile, Pass 2") · the "repair-leg gotcha"
+(a lesson, = ENGINE_LESSONS #83). Moved out of TODO: the AI-synthesis exhibits (verbatim) → `docs/claude/ai.md`;
+the reader display-layer design → `docs/RENDERING_OVERRIDES.md`; the Lexica display-layer window + verse-aware
+gloss-note flag → `docs/handoffs/HANDOFF_lexica_rollout.md`; dataset-publication / genealogy-map framing → memory.
+Merged, not dropped: seven scattered owed-check lists → one "Owed checks" section; rebuild prerequisites → one
+"Before / with the next words rebuild" section; the ABP held list → one line pointing at HANDOFF_abp_source_material.md.
+
+- **2026-11-07 — Word-study `alias_note` header badge: ALREADY BUILT before it was filed.** `8d928af6` (2026-07-02)
+  put `alias_note` on the `/api/lexicon/profile` payload and renders it in the Word-study card header
+  (`.detail-strong-alias` inside `.detail-strong-wrap`, 80-lexicon.jsx ~:1204). The 7/3 session (`fb36ac8`, hours
+  later) looked only at the `/api/lexica` fetch and filed it as missing. **Lesson:** check git log + grep the render
+  before filing or building an open item.
+- **2026-11-07 — Ask-corpus "banner comes down after A+B" line retired** — the banner came down 7/2 (`ffdd966f`);
+  the TODO line outlived it by four months.
+- **2026-10-29 — Rollback copies deleted by JP (03:06 UTC):** `~/bible.db.pre-xref-fix-20261024` and
+  `~/rekey/pre_rebuild.db` (423M each). Condition was three nightlies dated after the 10/25 18:06 swap that PASS the
+  backup sweep (10/26, 10/27, 10/28) — JP ruling 10/25 required a PASS, not just a later date.
+- **2026-10-28 — Damaged 10/24 nightly .gz FIXED + the 7/7 backup-script carry-forward closed** (`61cc9bdb`, deployed
+  10/25; `tests/test_backup_rotate.py` 25/25, 12 FAIL on the old code). The 10/25 nightly ran out of quota while
+  gzipping the 10/24 copy (`[Errno 122]`; .gz 107 MB vs 147 MB); `_rotate` left the cut-short stub, kept the raw, and
+  stamped success (same on 7/2 + 7/6). Fix: compress to `.gz.part`, force to disk, read back in full, then rename; a
+  failure removes the partial, keeps the raw and FAILS the run (no stamp → freshness alarm); a raw + .gz pair picks
+  the raw. Proven 10/29 (JP PA read): the 10/26 + 10/27 .gz full size, `-r--r--r--`, no raw beside them, log
+  `All backups verified ok.`, sweep 61 all intact. The good uncompressed 10/24 copy stood as that night's backup until
+  it aged out. **Alert email proven end-to-end:** the 10/25 `--email --only-warn` mail carried the DAMAGED line — a
+  silent nightly now means clean. **Lessons:** a failed write must fail the run, never leave a stub and stamp
+  success; the nightly sweep count (55 vs 62 at a manual run) is just files present — cause not traced, proves nothing.
+- **2026-10-25 — Reader deep-link request loop FIXED** (`0d5ea43a`, deployed 19:48; bundle sha256 on PA disk + as
+  served = the committed blob; JP's `?b=` private-window test landed on 1Ch 13 and stayed). A first-ever visitor
+  (no saved `lexica.books.v1`) arriving on `/?b=…&c=…` — the "Open in the interactive reader" link on `/read/` pages
+  (`views_seo.py:_reader_link`) — looped Gen 1 ↔ the target (56,000+ browser attempts). Mechanism: with no cached
+  list the reader defaults to Genesis 1 in the same render the jump sets the target; the position report replaced
+  the jump marker, the jump effect chased it back, one fetch per swing. Returning visitors were safe (child effects
+  report first, the jump arrives last). Fix: while a jump lands, the position report skips the spot it is leaving
+  (`jumpFromRef`, 60-library.jsx). **Lessons:** dated to `bc47330c` (2026-06-28), NOT the 10/25 swap — by running
+  committed bundles per git rev in a no-database harness (fetch stubbed); PA keeps access logs only back to 10/16,
+  so older impact is unmeasurable (20/Oct: 1 visitor, 423 requests; 25/Oct was CC's own test); never reproduce
+  against live.
+- **2026-10-25 — `/rebuild-words` steps 7 / 10 / 11 after the live rebuild CLOSED** (receipts charter §10a): step 11
+  354,946 normed, finder check PASS · step 10 IDENTICAL (no paste, no deploy) · step 7 items 1–3 on data,
+  JP-accepted; 1Ch 13:10 seen by JP in Chip + Interlinear. **Lessons:** by code trace the ABP English finder matched
+  NOTHING until step 11 ran (the build never writes `english_head_norm`; the finder only checks the column exists) →
+  steps 10 + 11 RE-HOMED onto the copy (after 8b, before 9), this run the recorded exception, ordered 11 → 7 → 10,
+  step 11 never within 60 s of a reload · CC first wrote the 1Ch 13:10 chip reading backwards from a pre-July build
+  comment without reading the renderer — checklist line + comment corrected.
+- **2026-10-25 — News Google-repeat dedupe APPLIED** (258 rows merged, 0 sets left; nightly merge ON;
+  `scripts/news/dedupe.py` + `merge_dups.py`, removed rows kept in `items_merged`; locked by tests/test_news_dedupe.py).
+  Open step (4) `--fill-links` stays in TODO (News, ON HOLD). **Lessons:** same article = same REAL address — Google
+  hands out a NEW redirect link per pull, so `INSERT OR IGNORE` on url never matched; title + outlet is NOT a merge
+  key (recurring headlines, unreliable Google dates); the survivor must take the highest-scored copy's AI reading +
+  label, or 21 articles would have dropped out of the 5+ Inbox (caught in report 1, before any apply); address
+  clean-up rules came from real pairs, and a page's own canonical tag confirms moved articles (`--pages`).
+- **2026-10-25 — News page-date backfill APPLIED** (1,828 Google rows, score ≥ 5, last 60 days: page date 1,392 — 33
+  flagged >30 days off Google, every one verified against the real page; unverified 436 show "~"; RSS untouched; the
+  nightly check runs on new pulls; commits `5109c1f7..0ea8dcd1`) **+ Google redirect hard time stop DONE**
+  (`gnews_resolve.resolve()` under `scripts/news/deadline.with_deadline`, RESOLVE_LIMIT 20 s;
+  `googlenewsdecoder==0.1.7` pinned; tests/test_gnews_resolve_deadline.py). **Lesson:** every reader guard came from a
+  real page that broke it (self-contradicting pages, ambiguous `<time>` lists, dates after the pull, ambiguous
+  day/month). Noted only, not a ticket: `/api/news/resolve` still resolves up to 300 links one after another per
+  request — each capped at 20 s.
+- **2026-07-15 — G1390 probe-2 CLOSED** (do NOT revisit on a re-run): root = `is_pn` is an INCOMPLETE name index
+  (ENGINE_LESSONS #72); its 7 warns stand. Revival trigger is a complete name index, not a bigger byte set.
+- **2026-07-12 — Gloss-note claim-checker noise classes FIXED** (def-engine build session 1, control tests): identical
+  strings via a punctuation-stripped whole-string compare; emphasis italics no longer read as claimed glosses (glosses
+  read only before the ref paren); prose mentions no longer counted as citations (double-shelve counts grounding-list
+  parens only). This closed the 7/11 "sprays junk warnings" item; the remaining checker work is one TODO item.
+
 ## 2026-11-07 — PA disk thinning DONE (home 8.3G → 6.3G)
 - The 8B3c after-check died on the PA quota (OSError 122). Deleted by JP after a per-file repo read (ruling chat):
   both `bible_pre_pnstar_*`, `bible_test.db`, `~/db_evidence/bible_formlane.db` (8/23 gated copy), the 9/6
@@ -840,7 +918,7 @@ incl. the batch-3-may-be-superseded adjudication and the 875-vs-871 read).
   `docs/tickets/RECLASS_catchup_declaration.md`.)*
 
 ### Ask-corpus batches A/B/C + Tier 1 scope fold (7/2–7/3) — the owed acceptance checks, D/E and the normalizer stay in TODO
-- **FULL AUDIT DONE 2026-07-02 — decision doc = `docs/audits/AUDIT_ask_corpus.md` (repo root).** Order = A → deploy +
+- **FULL AUDIT DONE 2026-07-02 — decision doc = `docs/audits/AUDIT_ask_corpus.md`.** Order = A → deploy +
   acceptance → B → D → C → E. **Banner comes down after batches A+B verified live.**
   - **BATCH A SHIPPED 2026-07-02 (commit 559283f, `_CACHE_CODE_VER`→42, 99 tests green).** F1 mixed-signal
     scope (both OT+NT / both greek+hebrew now answer both, not collapse to one), F2 book-aware pick-parse
@@ -2533,7 +2611,7 @@ across all 66 books found it was Hebrews-ONLY — one dropped chapter, not an im
 - One cosmetic leftover, NOT fixed (deliberately — don't edit proven code for a nit): the dry-run's
   own logging splices a stray verse-text line into one word-row block; cause not reproducible
   locally (no scrape/TAGNT on the dev box). Diagnostic-only, no data impact.
-Full record: memory `project_hebrews13_restore`.
+Full record: memory `project_build_folded_fixes` ⟨project_hebrews13_restore⟩.
 
 ---
 
@@ -2801,7 +2879,7 @@ Conservative: unbracketed slot-after shape only. The third εἰμί+empty-`*` c
 correctly skipped (function lead). Applied on PA → import_tipnr → surface → translit; dry-run 0, audit
 0, health_check 0/0. Folds into the build via the same `run()`; 3 new tests (1 positive + 2 negatives).
 Restore note: this came right after closing out the bible.db scare/restore — that replay was re-verified
-clean first (PN-subject + italic-heads both 0, health_check 0/0). Memory `project_pn_subject_verb_fold`.
+clean first (PN-subject + italic-heads both 0, health_check 0/0). Memory `project_build_folded_fixes` ⟨project_pn_subject_verb_fold⟩.
 
 ---
 
@@ -2834,7 +2912,7 @@ two adjacent slots and the verb on the higher, so BOTH reading modes show "David
 would NOT have fixed chip order (the earlier "#2 = bracket-reorder" theory was WRONG; corrected against
 the render code). Applied on PA (~2,278 flat + 19 bracketed), import_tipnr resolved the new name slots,
 surface/translit rebuilt; build-folded so a rebuild reproduces it. `scripts/fix_tamar_subject.py` was
-the wrong (insert) approach and was DELETED. Full record: memory `project_pn_subject_verb_fold`.
+the wrong (insert) approach and was DELETED. Full record: memory `project_build_folded_fixes` ⟨project_pn_subject_verb_fold⟩.
 
 ## ἵνα structural card + the STRUCTURAL-WORD CONTEST RULE — DONE 2026-06-26
 
@@ -2872,7 +2950,7 @@ needed — UNLIKE the other fix_*.py). Live data repaired by `scripts/fix_italic
 **4,409 labels corrected**; the other ~2,300 correctly fell back. Lambano's 22 all land on the verb;
 broad sample overwhelmingly right (dry land→dry, seven times→seven, procreated, behold, unleavened).
 Proved the rule on the 30-row sample locally before touching PA; invariant tests 22/22. Full record:
-memory `project_english_head_label`.
+memory `project_build_folded_fixes` ⟨project_english_head_label⟩.
 
 LEFT ON PURPOSE (not regressions — all follow ABP's own italic marking): verb + a NON-italic tail
 particle ("went forth"→forth, "went down"→down) still labels on the tail (the tail isn't an added word,
@@ -2994,7 +3072,7 @@ A run of small shipped changes (all pushed to master; user deploys):
   welcome-tour final step + About; replaced with `mailto:hello@lexica.bible` and copy reframed "Support
   Lexica"→"Get in touch". (6b969ef) Inbound mail (hello@ + bereans@) now forwards to Proton via **Cloudflare
   Email Routing** (send-only Resend can't receive). Full records: memories `project_email_smtp`,
-  `project_payments_donations`, `project_ai_spend_caps`, `project_ai_search_redesign`, `project_chronological_tab`.
+  `project_payments_donations`, `project_ai_search_architecture` (caps), `project_ai_search_redesign`, `project_chronological_tab`.
 
 ---
 
@@ -3242,7 +3320,7 @@ A batch of bugs the user spotted in one session:
   "Strong G####" in the text`. TWO false starts: skip-by-`[ABP]`-prefix (too greedy, buried σαβέκ) and
   skip-by-"Strong G####"-alone (missed the future-tense εἰμί forms έσται/εισίν which list only verses). dotted_lexicon
   3049→3619 rows. Re-run with the db PATH as a positional (that was missed first run). Full record + recipe:
-  memory `project_dotted_strongs_lemma`.
+  memory `project_build_folded_fixes` ⟨project_dotted_strongs_lemma⟩.
 - **Result-list italic highlight** (commit 664eb1f). The "gold hugs `english_head` only" fix had covered only
   the plain multi-word branch; the two italic branches still painted the whole slot, so a supplied italic "the"
   lit up. Unified into one `tight && hc` block. Memory `project_ai_search_redesign`.
@@ -3271,7 +3349,7 @@ Mat 12:14 "And the"→G3588, Act 24:8 "bidding"→G2753.
 - LESSON: the root was ABP's OWN blank number, NOT our scraper — BibleHub-live renders these clean.
   Confirmed against the eSword ABP source files (`abp_texts/`) before touching anything. An earlier
   "peel the G. text" approach was the WRONG fix and was reverted (these needed their NUMBER filled, not
-  the text stripped). Full record: memory `project_blank_strongs_fill`.
+  the text stripped). Full record: memory `project_build_folded_fixes` ⟨project_blank_strongs_fill⟩.
 
 ---
 
@@ -3370,7 +3448,7 @@ number (ABP parks its own added words at "nearest Strong's + a dot"). ~3049 numb
   extraction on real data before trusting a count — a too-narrow Greek code range read empty and reported
   "0 wrong."
 - **Re-run after any words rebuild:** `build_dotted_lexicon.py --apply` → `build_abp_surface.py --bh` →
-  `build_abp_translit.py`. Full record: memory `project_dotted_strongs_lemma`.
+  `build_abp_translit.py`. Full record: memory `project_build_folded_fixes` ⟨project_dotted_strongs_lemma⟩.
 - **Card formatting (same session):** the hero now reads lemma → romanization · gloss → a labeled,
   evenly-spaced "in this verse" block (form, romanization stacked under it, parsing), split into two grouped
   boxes (`.detail-hero-id` / `.detail-hero-occ`); parsing-only cards (indeclinables) sit tight via
@@ -3514,7 +3592,7 @@ cost two bad runs before the numbers were real.
 DEFERRED — route (b): resolve to a REAL gender from the neighboring noun (match the same-verse noun by
 case+number, which is reliably tagged; only gender is the unknown). Safe only when there's exactly one clear
 match, else fall back to "Masculine/Feminine"; needs the neighboring words at display time (the card sees
-only the clicked word now) or a precompute pass. Parked, not rejected. Memory `project_two_ending_gender`.
+only the clicked word now) or a precompute pass. Parked, not rejected. Memory `project_build_folded_fixes` ⟨project_two_ending_gender⟩.
 
 ## ABP variant-reading (Bos/CP/Ald/Six) footnotes — INVESTIGATED + proof built + SCRAPPED 2026-06-16
 
@@ -3899,7 +3977,7 @@ word onto 'the'" — covers under half the garbles and the build already guards 
 237-verse patch stays: small, stable, proven. **LESSON:** an alignment with no English in it can't
 replace an English-pairing step; it can only filter, and a filter can't reconstruct the missing pairing.
 Throwaway check scripts: `C:\Users\JP\lexica-val\check_splitter_morph.py` + `check_237_targets_morph.py`.
-See memory `project_architecture_rework` (#2) and `project_parser_number_reversal`. DON'T re-investigate.
+See memory `project_architecture_rework` (#2) and `project_build_folded_fixes` ⟨project_parser_number_reversal⟩. DON'T re-investigate.
 
 ---
 

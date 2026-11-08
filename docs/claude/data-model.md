@@ -7,9 +7,9 @@ Core invariants are summarized in CLAUDE.md; this file is the authoritative deta
 ### verses
 ABP verse text. `verses.text` is the clean, correctly-ordered English PROSE (what the reader's
 prose mode + SEO pages use). NEVER rebuild a single verse from `words` joined by `position` —
-that's raw Greek order and SCRAMBLES ABP's bracket-reordered English. (2026-06-21 TSK-panel
-garble: `/api/verse` and `views_crossref._abp_text` were stitching words by position; both now
-read `verses.text`.) NARROW EXCEPTION — don't let this rule excuse a real data bug: a
+that's raw Greek order and SCRAMBLES ABP's bracket-reordered English (`/api/verse` and
+`views_crossref._abp_text` once stitched by position — the 2026-06-21 TSK garble; both now read
+`verses.text`). NARROW EXCEPTION — don't let this rule excuse a real data bug: a
 "LORD the"-style flip (a determiner stranded AFTER its noun) is NOT the expected bracket
 scramble, it's a `_split_compounds` BUILD bug — when it fronts the words it spread onto blank
 Greek slots it lines them up in Greek order instead of the source English order. Fixed in the
@@ -29,6 +29,16 @@ The displayed Greek lemma is joined live from `lexicon` via
 replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay
 G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` added
 rebuild #6 (~78% populated; further fill scrapped — memory `project_abp_morph_gap`).
+**Pronoun retag (build-time, live since 2026-06):** the ABP source (BibleHub) tags σύ/αὐτός and
+the ὑμεῖς/ἡμεῖς families as G1473 (ἐγώ). `apply_pronoun_corrections` in
+`scripts/build_words_from_abp.py` rewrites ONLY those G1473 slots by aligning against Rahlfs-1935
+(OT) / STEPBible TAGNT (NT) via `scripts/lxx_align.py` — data files in `~/` on PA, not git
+(`RAHLFS_FILES_REQUIRED`, `TAGNT_FILES`). The ABP source txt keeps 1473; `'*'` proper-noun slots
+are never touched; uncorrectable slots stay G1473 → `pronoun_review.tsv`. Scope gates
+`ABP_BOOKNUM` (OT, all 39) / `TAGNTSource.SCOPE` (NT, all 27). Memory `project_pronoun_fix_path_c`.
+**`morph` uses TWO schemes:** OT = CATSS dotted (`V.FAI3S`, `RA.DSF`, `RP.GS`, `P`, `C`); NT =
+Robinson hyphen (`V-AAI-3S`, `T-NSM`, `P-GSM`, `PREP`, `CONJ`). Verbs start `V` in both; any
+function-word logic must normalize both (RA/P/C vs T/PREP/CONJ).
 **Bracket contiguity invariant (2026-08-07, lane ③):** every slot inside a bracket's
 position span must carry that bracket_id — interior BLANK slots included (bid set, no
 greek_pos). Chip/interlinear group only CONSECUTIVE same-bid runs (`groupForGreekMode`),
@@ -48,8 +58,11 @@ repair on live goes into a frozen file the chain runs, in the same change.**
 **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE
 gloss is parked whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head`
 (built by `parse_abp._head_word` = last non-function word) is the token's OWN render, the RIGHT
-column for any "renders as" count — raw `english` fed through the normalizer mis-heads a parked
-phrase into a phantom render ("jesus" under a pronoun). All render counters (word-study panel,
+column for any "renders as" count. `_head_word` also skips translator-added (italic) words,
+falling back to the plain pick only when every content word is added (build:
+`_strip_italic_heads` pre-insert + a re-clean after the PN subject split; repair tool
+`scripts/fix_italic_heads.py`). The head is the count column — raw `english` fed through the
+normalizer mis-heads a parked phrase into a phantom render ("jesus" under a pronoun). All render counters (word-study panel,
 def-engine draw, coverage `rendering_sets`) read `english_head`; the chip still DISPLAYS
 `english`. Since 2026-07-12 the def-engine ALSO carries `english` + `italic_words` as CONTEXT
 beside the head (the head stays the count key — a fragment head like "work" for "latticed work"
@@ -65,6 +78,9 @@ Documented limit (pronoun/function slots can carry a trailing parked word): the 
   → WRONG lemma. (2026-06-03, pre-Phase-1: a rebuild left 592k bare → G2206 ζηλόω rendered as
   ἄκρον/G206. Fixed by `UPDATE words SET strongs_base='G'||strongs_base WHERE strongs_base GLOB
   '[0-9]*'`.) tests/test_strongs_join.py + test_build_invariants.py lock this.
+- The same exact join structurally prevents a Hebrew H-number matching a Greek row (the old
+  SUBSTR+LIKE guard let H121 slip → bogus G121 lemma broke Hebrew-PN metaV). Applies to BOTH
+  chapter_text and verse_words.
 - `words.strongs` is intentionally LEFT BARE ('2206', dotted '2321.1'); the frontend renders
   `G{strongs}`. Only strongs_base carries the prefix.
 - DOTTED-NUMBER CAVEAT: strongs_base drops the `.N` (built as `st.split(".")[0]`), so a dotted
@@ -102,40 +118,45 @@ Documented limit (pronoun/function slots can carry a trailing parked word): the 
   2026-07-03; the old bare/SUBSTR examples were the last holdout).
 
 ### abp_surface
-`(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
-feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words).
-Built read-only by `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (PA-only data
-step; DROP+rebuilds only its own table, never words/verses). SOURCE = ABP's OWN printed Greek
-from `bh_scrape.db` `bh_words.greek` (the BibleHub ABP scrape) — same text as `words`, so it
-matches ~91% (Rahlfs/TAGNT capped lower — memory `project_bsb_words`). `/api/chapter` LEFT-JOINs
-it only if present (deploy-safe). bh's Greek
-is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from
-the lemma by ENDING (no echo lines) → ~58% of words show a line (post-backfill). **Backfilled 2026-07-11 by
-`scripts/backfill_abp_surface.py`** (+13,851 rows → 359,288): the builder's strict left-to-right
-aligner fails where ABP's printed ENGLISH order (words.position) diverges from the scrape's Greek
-order (bracket reorders, postpositive particles); the backfill pairs failed slots with leftover
-scrape tokens by Strong's number within the verse, refusing on any count mismatch. Re-run it (then
-translit) after any build_abp_surface re-run. **Stripped-Greek characteristic (2026-07-29):
-despite the builder's strip_marks guard, 4,250 stored forms differ from their lemma ONLY by
-accents/breathings/case (scripts/scan_accent_divergence.py) — any lemma-vs-surface compare
-must fold (frontend: greekFold in 00-core.jsx, compare-only; docs/tickets/accent_divergence.txt).**
-**FILLED 2026-10-25 from the ABP app + Analytical Lexicon** (`apply_abp_surface_fill.py`: 4,411
-writes, 391,130 → 395,003 — 3,823 printed forms on slots that had none, 182 glued NBSP values split
-onto neighbour slots, 357 NBSP → plain space; record `docs/handoffs/CENSUS_abp_surface_fill.md`).
-**No builder re-creates the fill — a `build_abp_surface.py` re-run drops it** (/rebuild-words step 9).
-It is re-landed by `scripts/restore_surface_fill.py` at step 9a from the frozen snapshot
-(checked current at step 1a, `snapshot_surface_fill.py --check`). **Step 9, 9a and the 9b floor all
-run on the rebuilt COPY, before the swap — never on live** (step 9 reads nothing that exists only on
-live; charter `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9, 2026-10-25). Never re-run the one-shot
-`apply_abp_surface_fill.py`.
-Characterizer = `scripts/audit_surface_coverage.py`
-(read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
-Hebrew-numbered OT name slots that can never match Greek, the PN backfill's bucket). Mode-three
-interlinear's Greek line falls back form→lemma→name (`greekLineForWord`, 56-library-order-logic);
-JP RULED 2026-07-11: no fallback marker. Surface translit FILLED by
-`scripts/build_abp_translit.py` (SBL romanization matching the lexicon headword style; the
-rough-breathing 'h' is read from the lemma since bh forms have no breathing; re-run after any
-position-shifting rebuild). Full record: memory `project_bsb_words`.
+**What it is.** `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek
+per ABP word, feeding the word-study side-card "in this verse" line (ABP's source has no Greek
+surface words). SOURCE = ABP's OWN printed Greek from `bh_scrape.db` `bh_words.greek` (the
+BibleHub ABP scrape) — same text as `words`, so it matches ~91% (Rahlfs/TAGNT capped lower —
+memory `project_bsb_words`). `/api/chapter` LEFT-JOINs it only if present (deploy-safe).
+Mode-three interlinear's Greek line falls back form→lemma→name (`greekLineForWord`,
+56-library-order-logic); JP RULED 2026-07-11: no fallback marker. Live floor: 395,003 rows.
+
+**How it is built and kept (order matters):**
+1. `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (PA-only data step; DROP+rebuilds
+   only its own table, never words/verses).
+2. `scripts/backfill_abp_surface.py` (2026-07-11) — the builder's strict left-to-right aligner
+   fails where ABP's printed ENGLISH order (words.position) diverges from the scrape's Greek order
+   (bracket reorders, postpositive particles); the backfill pairs failed slots with leftover scrape
+   tokens by Strong's number within the verse, refusing on any count mismatch. Re-run it (then
+   translit) after any build_abp_surface re-run.
+3. `scripts/build_abp_translit.py` — SBL romanization matching the lexicon headword style; the
+   rough-breathing 'h' is read from the lemma since bh forms have no breathing; re-run after any
+   position-shifting rebuild.
+4. **The 2026-10-25 FILL** (from the ABP app + Analytical Lexicon: printed forms on slots that had
+   none, glued NBSP values split onto neighbour slots, NBSP → plain space; record
+   `docs/handoffs/CENSUS_abp_surface_fill.md`). **No builder re-creates the fill — a
+   `build_abp_surface.py` re-run drops it** (/rebuild-words step 9). It is re-landed by
+   `scripts/restore_surface_fill.py` at step 9a from the frozen snapshot (checked current at step
+   1a, `snapshot_surface_fill.py --check`). **Step 9, 9a and the 9b floor all run on the rebuilt
+   COPY, before the swap — never on live** (step 9 reads nothing that exists only on live; charter
+   `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9, 2026-10-25). Never re-run the one-shot
+   `apply_abp_surface_fill.py`.
+
+**Characteristics.** bh's Greek is accent-only (no breathing marks), so `strip_marks` stores a
+form ONLY when it differs from the lemma by ENDING (no echo lines) → ~58% of words show a line.
+**Stripped-Greek characteristic (2026-07-29): despite the strip_marks guard, 4,250 stored forms
+differ from their lemma ONLY by accents/breathings/case (`scripts/scan_accent_divergence.py`) — any
+lemma-vs-surface compare must fold** (frontend: `greekFold` in 00-core.jsx, compare-only;
+docs/tickets/accent_divergence.txt).
+
+**Tools.** Characterizer = `scripts/audit_surface_coverage.py` (read-only; true divergence residual
+≈0.65% of content slots — 30,126 of the old "gap" were Hebrew-numbered OT name slots that can never
+match Greek, the PN backfill's bucket). Full record: memory `project_bsb_words`.
 
 ### lexicon
 Greek Strong's definitions. Has an indexed `lemma_plain` (accent-stripped/lowercased/
@@ -161,7 +182,14 @@ Strong's + a dot", so the base lemma is the alphabetical neighbour — G180.2 �
 base G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it over the base `lexicon` join;
 joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`, audited by
 `scripts/audit_dotted_lemmas.py`. Phrase idioms are pinned via `PHRASE_OVERRIDES` in
-build_dotted_lexicon.py (ἀνὰ μέσον). Full record: memory `project_dotted_strongs_lemma`.
+build_dotted_lexicon.py (ἀνὰ μέσον). Full record: memory `project_build_folded_fixes` §11a.
+**Which dotted numbers get a row (the discriminator, build_dotted_lexicon.py:123-129):** an ABP
+dictionary entry (`abp_ext.def_html`, keyed by the FULL dotted number) is a FORM of the base word —
+skip, base lemma is right — when `base == "G1510"` (every εἰμί conjugation) OR its text cites
+"Strong G####". Everything else is a genuinely different word → own row. Its lemma = the FIRST Greek
+word of that entry (HTML entities inside `<grk>`, morpheme hyphen joined) — never `words.lemma`
+(blank for ~all of these), never `lexicon` (keyed by base). `build_abp_surface.py` consults
+`dotted_lexicon` first, so a corrected word in dictionary form shows no echo "in this verse" line.
 
 ### pn_binding / tipnr_entities / tipnr_entity_refs
 The Issue-2 entity-binding tables (PA-only, NOT in git; rebuilt by
@@ -183,23 +211,23 @@ until 2026-08-09 and so printed "Tribe: Egypt". Any consumer must branch on the 
 on 959 place rows is an open parser item (TODO.md). Doctrine for rendering it — a chip
 ASSERTS, a labeled row merely STATES — lives in `docs/design.md` §4. Served by `/api/metav/entity` → the `.pnbound` card. Re-run `--apply` after
 a words rebuild (re-tiers from live metaV each run). Memory `project_entity_resolution_rebuild`.
-**FULL ROSTER since 2026-07-30 (scope widening, reviewer close-out approved):** tipnr_entities
-holds ALL 4,247 parsed entities (3,132 person / 1,013 place / 102 other; refs 31,975), not just
-bind-used ones — the slim-card `tipnr_desc` slot reads it by name. pn_binding logic UNCHANGED
-(proven byte-identical in the gate run). Side effect, ruled a CORRECTION: the multi-referent
+**FULL ROSTER since 2026-07-30:** tipnr_entities holds ALL 4,247 parsed entities (3,132 person /
+1,013 place / 102 other; refs 31,975), not just bind-used ones — the slim-card `tipnr_desc` slot
+reads it by name. pn_binding logic unchanged by it. Side effect, ruled a CORRECTION: the multi-referent
 guard's TIPNR signal now sees the full roster, so 25 names with one metaV person but 2+ real
 TIPNR people flipped to the honest decline (list in TODO.md, parked as a future
 disambiguation lane). Gate tool for any re-run: `scripts/gate_tipnr_scope_widen.py` (detector
 control live-vs-live FIRST; post-swap captures only valid AFTER the worker reload).
-**HAND RULINGS (live 2026-07-30, batches 1+2+3 + Lane B = 202 binds (evidence classes incl. spelling-equiv + tipnr-merged-form); + 9 kind='witness' lane-A binds from docs/tickets/witness_census_lanes.txt, same gate):** `scripts/pn_hand_rulings.tsv`
-(repo-versioned; name/ref/entity/evidence-class/rationale per row) is consumed by EVERY
-`build_entity_binding.py` run — ruled binds land as normal pn_binding rows (kind='ruled')
-and re-land automatically on rebuild. Gate: `scripts/gate_pn_rulings.py` (delta pinned to
-the TSV; control first; a batch that replaces a HOT row = stop-and-look).
+**HAND RULINGS:** `scripts/pn_hand_rulings.tsv` (repo-versioned; name/ref/entity/evidence-class/
+rationale per row) is consumed by EVERY `build_entity_binding.py` run — ruled binds land as normal
+pn_binding rows (kind='ruled') and re-land automatically on rebuild. Gate:
+`scripts/gate_pn_rulings.py` (delta pinned to the TSV; control first; a batch that replaces a HOT
+row = stop-and-look). **Witness binds** (kind='witness', a first-class bind type) are read by the
+same builder straight from `docs/tickets/witness_census_lanes.txt`, under the same gate.
 
 ### pn_slot_binding — word-position slot binds (2026-08-08, lane closed)
 Per-SLOT identity for same-name multi verses (two Marys in one verse), PA-only, keyed
-`(book_num, chapter, verse, position)` — deliberately a SEPARATE table beside pn_binding
+`(book, chapter, verse, position)` (`book` = the book NUMBER, as in pn_binding) — deliberately a SEPARATE table beside pn_binding
 (a position column inside it would let LIMIT-1 verse-grain reads paint whole verses).
 Source of truth = repo `scripts/pn_slot_rulings.tsv` (102 rows; a floored slot = NO row;
 `name` = the printed english_head AT the slot — the staleness tripwire). Written by
@@ -300,14 +328,15 @@ no `fork` (built before it entered the register, the θεός/κύριος batch
 instead of serving a one-sided entry (card falls to LSJ).
 
 **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; a word with no entry 404s → the normal
-LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18+26 words: the 6 pilot
-(psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) + 12 from full-build
-BATCH 1 + the frequency-rollout Batch One (26 words, 2026-07-03).
+LSJ card, deploy-safe; flip the flag back to re-gate). The live card count is whatever the
+`lexica_def` table holds — never a docs tally (ENGINE_LESSONS #90). First live set: the 6 pilot
+words (psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia).
 
 **Frame-leakers are HAND-PINNED** (dikaioō/charis/aionios): `pin_core` in `CONTESTED` lifts the
 neutral fork core to `entry.pinned_core`, which LEADS the card while the model's framed senses
 drop below as "Attested uses" (`assemble()` display override, re-applies via `--resplit`, no
-model call). Full record + the V3 prompt-lock: memory `project_lexica_dictionary`.
+model call). Rules + lessons: memory `project_lexica_dictionary`; rollout record:
+`docs/audits/AUDIT_lexica_rollout.md`.
 
 **Batch-build safety gate = the agreement reviewer `scripts/lexica_agreement.py`** (read-only,
 PA-only; draws a word N×, per-verse SUPPORT+COMPANY tells a fold from a hole) — it certifies
@@ -318,7 +347,8 @@ occ ≥ 2 (splitter split3): memory `project_lexica_dictionary` + `docs/audits/A
 **θεός G2316 + κύριος G2962** are membership-only forks (no `pin_core`, the sarx/ekklesia
 pattern) — loaded-referent words that shipped pure-engine in batch 1, then were hand-forked. Fork
 content (θεός's John 1:1c narrow fork, κύριος's OT-YHWH-applied-to-Jesus set) lives in
-`contested_register.py`; full record: memory `project_lexica_dictionary`.
+`contested_register.py`; record: `docs/audits/AUDIT_lexica_rollout.md` (rules + lessons: memory
+`project_lexica_dictionary`).
 
 **LXX-provenance note (Option B) LIVE 2026-06-25:** a subordinate "rests on Septuagint
 (Greek-OT) usage" flag on senses grounded ≥80% OT (≥4 OT refs) — `sense_provenance()` derives it
@@ -418,11 +448,12 @@ list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing g
   auto-loaded by deploy.sh):
   - Septuagint Apocrypha — 16 Brenton books, English-only (`scripts/apocrypha/load_apocrypha.py`)
   - Pseudepigrapha — 1 Enoch, 2 Enoch, Jubilees, 2 Baruch, Apoc. Abraham, Assumption of Moses,
-    English-only (`load_pseudepigrapha.py` + `scripts/enoch/`)
+    English-only (`scripts/apocrypha/load_pseudepigrapha.py` + `scripts/enoch/`)
   - Testaments of the Twelve Patriarchs — 12 separate English-only books
   - Apostolic Fathers — 14 books with FULL GREEK INTERLINEAR: Didache, 1-2 Clement, 7 Ignatian
     letters, Polycarp, Martyrdom of Polycarp, Barnabas, Diognetus, Shepherd of Hermas. Built by
-    `scripts/apfathers/build_af.py` (+ `build_hermas.py`), loaded by `load_apfathers.py`.
+    `scripts/apfathers/build_af.py` (+ `build_hermas.py`), loaded by
+    `scripts/apfathers/load_apfathers.py`.
     Greek+lemma from Brannan/Lake (CC-BY-SA), Strong's via openscriptures + Dodson glosses,
     English from Lightfoot. Memory `project_noncanonical_texts` (pipeline + gitignored raw/).
 
@@ -449,22 +480,20 @@ list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing g
   shows only for owner/admin AND a single `@bp.before_request` (`_study_admin_only`) 403s every
   `/api/study/*` route for non-admins — one gate, all 8 routes. `/api/lexica/seams` is
   hard-gated the same way (403, flipped from empty-200; the public per-word `/api/lexica/<strongs>`
-  is UNTOUCHED). Consequence, intended: gating for-name + for-verse retires the reader's Nave's
-  block AND "In studies:" line for non-admins (client no-ops on the 403). SEAMS is a NON-study.db
+  is UNTOUCHED). Consequence, intended: gating for-verse retires the reader's "In studies:" line
+  for non-admins (client no-ops on the 403); the for-name route fed the Library Nave's block, which
+  was itself REMOVED 2026-07-16. SEAMS is a NON-study.db
   surface — read-only over `lexica_def` fork data; `load()` short-circuits `mod === "seam"`.
-  **Uniform master-detail shell (2026-07-01):** LEFT rail = list (shared `study-row`), CENTER =
-  content (TopicPage / GraphPage / `SeamPriors`), RIGHT = inspect (ZoneEmpty this phase —
-  per-item detail wiring DEFERRED). One top-strip switcher (`study-sub`); `seam-rail` RETIRED.
-  Inspect floats top:0 (`.study-rstack`) with a `view-study`-scoped account-pill offset. The old
-  centered column (`.study-view max-width:820`) survives for MOBILE only. `.study-*` CSS only —
-  never touch shared `.detail-*`. GRAPHS = argument maps (admin-only): shared pool of CLAIMS +
+  The tab's screen layout (master-detail shell, mobile column): frontend.md "Three-zone shell".
+  GRAPHS = argument maps (admin-only): shared pool of CLAIMS +
   per-tradition LINKS, provenance (text/lexicon = grounded; tradition/conjecture/inference =
   not) + strength (solid/contested/weak), stress-tested by `argmap.py`. Drawn as a left→right SVG
   chart per tradition. READ-ONLY in-app — authored via `scripts/add_study_graph.py`. Topics open
   READ-first; a "Preview as reader" admin toggle. Verse text = ABP prose (KJV fallback). Curation:
   readers see PUBLISHED topics only (the ~1817 imported Nave's/MetaV concept topics are deprecated
-  + soft-deleted — Topics is hand-authored only now; KEPT: the 696 `type='name'` name-topics feed
-  the Library Nave's sidebar). Editor verse
+  + soft-deleted — Topics is hand-authored only now). The Library Nave's sidebar block was REMOVED
+  2026-07-16 (render charter); whether the `type='name'` name-topic rows remain in study.db is
+  unconfirmed — PA must check (TODO.md "Nave's retirement"). Editor verse
   lookup = `POST /api/study/verse` (normalizes refs via `_canonical_ref`). Topic INTROS are
   AI-written text-first Berean (`✦ Draft with AI`; `_draft_intro`/`_INTRO_SYSTEM`). PERF: whole
   entry resolves in one batched pass (`_resolve_map`) + `_RESOLVED_CACHE`. Scripts:
@@ -479,9 +508,8 @@ Roles nologin / user / berean / admin — a `role` column in `notes.db users`; g
 `views_notes` (`is_admin()`, `is_berean()` = berean-or-admin, `is_logged_in()`). `OWNER_EMAIL`
 is ALWAYS admin (bootstrap, even before the column migrates). user (any sign-in) = AI search
 (login-gated, costs money); berean = ESV + NIV; admin = visitor Stats + the in-app Admin page
-(sets others' roles). Sign-in is email or Google; Google needs `GOOGLE_CLIENT_ID` + the
-`google-auth` package and the button hides if either is missing (a code-only deploy never
-breaks). Full records: memories `project_user_roles`, `project_esv_audio`,
+(sets others' roles). Sign-in is email or Google (Google setup + its lazy check: frontend.md
+"Notes … accounts"). Full records: memories `project_user_roles`, `project_esv_audio`,
 `project_visitor_stats`.
 
 ## Audio sources
@@ -494,7 +522,7 @@ NIV = no audio source (dead end).
 ## Book abbreviations
 ABP verses table uses: Mar (Mark), Joh (John), Php (Philippians), Jas (James), Heb (Hebrews).
 NT_BOOKS, BOOK_ORDER, BOOK_LABELS in static/src/00-core.jsx use the same set; `_KJV_BOOK_ID` in
-app.py matches.
+core.py matches.
 
 ## MetaV (person/place sidebar)
 - **Provenance contract (2026-07-16): `docs/PROVENANCE_CONTRACT.md`** governs every card
@@ -504,6 +532,10 @@ app.py matches.
 - Tables: `metav_people` (+_aliases, _groups, _relationships), `metav_places` (+_aliases; has
   lat/lon, strongs_g). Looked up by NAME (not strongs). Frontend fetches person + place in
   parallel; toggle shown when both exist.
+- `metav_writers` (book_id → writer) is loaded by `scripts/load_metav.py` but READ BY NOTHING —
+  dormant on purpose: folding its writer names into the book-blurb author list was tried and
+  reverted 2026-06-13 (disputed names made Haiku assert them). `_BOOK_AUTHORS` (views_summary.py)
+  is the only author source. Memory `project_ai_synthesis_quality`.
 - **KJV/BSB reader word → metaV name gate (2026-06-23):** the lookup fires only when the word's
   Strong's is a NAME (proper noun or gentilic) per `core._HEB_NAME_STRONGS` — a startup set
   built from heb.db morphology by DOMINANT use (`app._build_heb_name_cache`, mirrors
@@ -522,18 +554,22 @@ app.py matches.
   place keeps BOTH (was a PK collision: last-imported type won → Adam H121 read 'place').
   `entity_type` = legacy single token. Migration adds the column at PA startup; re-run
   import_tipnr.py after any rebuild. pn_types (the set) is trustworthy.
-- **TIPNR roster (2026-07-16, loader root-cause fix, not yet imported on PA — rides the
-  head-word rebuild):** `import_tipnr.parse_tipnr` now reads the en-dash sub-records the old
-  code discarded as comments (10,127 lines — every alternate spelling and sub-record Strong's
-  had been silently lost; the hand ALIASES map was compensating, e.g. Elias). Roster 2,824 →
-  4,387 keys, numbered entities 2,687 → 2,862. Rules that must survive future edits:
+- **TIPNR roster (loader root-cause fix 2026-07-16, LIVE since the R-1 head-word rebuild):**
+  `import_tipnr.parse_tipnr` reads the en-dash sub-records the old code discarded as comments
+  (every alternate spelling and sub-record Strong's had been silently lost; the hand ALIASES map
+  was compensating). The story + figures: memory `project_entity_resolution_rebuild` (TIPNR
+  loader section). Rules that must survive future edits:
   **Group rows (gentilics) keep their OWN Strong's — Christian=G5546, NOT parent Jesus'
   G2424** (load-bearing control in the rebuild charter); a display-form spelling owned by
-  entities with DIFFERENT numbers is DROPPED, not guessed (93 logged in
-  `docs/tickets/alias_ambiguous_dropped.txt`); harvested keys never override primary names.
-  `scripts/tipnr_alias_variants.py` (399 hand-checked KJV/LXX variants; per-entry audit trail
-  `docs/tickets/alias_decisions.txt`) is consulted at ladder step 7 — inline ALIASES wins on
-  overlap. entity_resolution.py has its OWN separate TIPNR parser — unchanged by this fix.
+  entities with DIFFERENT numbers is DROPPED, not guessed (149 logged in
+  `docs/tickets/alias_ambiguous_dropped.txt`, re-cut after the two-phase harvest fix);
+  harvested keys never override primary names. `scripts/tipnr_alias_variants.py` (hand-checked
+  KJV/LXX variants; per-entry audit trail `docs/tickets/alias_decisions.txt`) is consulted at
+  ladder step 7 — inline ALIASES wins on overlap. **The roster is FROZEN:**
+  `scripts/check_roster_regression.py` exact-matches every name against
+  `scripts/roster_baseline.json` (4,331 keys); `--update-baseline` only under review;
+  `tests/test_tipnr_roster.py` is in both CI lists. entity_resolution.py has its OWN separate
+  TIPNR parser — unchanged by this fix.
 - Gentilics: card labeled "People / Clan", place header "Homeland", AI summary
   fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value).
   **GENTILIC GUARD (2026-07-16, live):** `is_people_group` is now a BINDING input, not
@@ -579,11 +615,9 @@ app.py matches.
   standard word-occurrence control keyed to the entity's OWN number — only the line for the text
   being READ. (EVERY word card shows just the active text's occurrence line — 2026-06-28; the
   full cross-Bible breakdown lives in Word study.) A bind GATES the whole name-based metaV fetch
-  (kills the name-guess person/place card + Groups + Nave's + place-LSJ at once). 404 → the old
-  name-path + Fix A, byte-same (deploy-safe). 14,389 render binds (2026-07-16 gentilic-guard
-  re-apply; was 14,803 — 420 gentilic→place blocked, ~6 converted, delta ACCOUNTED before
-  apply), zero confident-wrong; TIPNR
-  is the identity spine, metaV is enrichment only. Engine = **`entity_resolution.py`** (repo
+  (kills the name-guess person/place card + Groups + place-LSJ at once). 404 → the old
+  name-path + Fix A, byte-same (deploy-safe). Zero confident-wrong (current bind counts: memory
+  `project_pn_card_confidence`); TIPNR is the identity spine, metaV is enrichment only. Engine = **`entity_resolution.py`** (repo
   root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
 - **Bound places SHOW a map again (2026-07-05):** coords come THROUGH the entity endpoint
   (`_place_coord_rows` + `_pin_from_rows`, pinning the coordinate MOST rows agree on). The bound
@@ -633,14 +667,16 @@ app.py matches.
   number). Hard guard: KJV's number = stored → never changed, whatever TIPNR says. Rebuild
   durability = /rebuild-words 8b step 0. Census: `scripts/audit_xref_vs_binding.py`. Record:
   docs/tickets/RECORD_xref_vs_binding_fix_20261024.md.
-- CRITICAL: the lexicon join `l.strongs_g = w.strongs_base` structurally prevents a Hebrew
-  H-number matching a Greek row (the old SUBSTR+LIKE guard let H121 slip → bogus G121 lemma
-  broke Hebrew-PN metaV). Applies to BOTH chapter_text and verse_words.
+- The exact lexicon join is also what keeps a Hebrew H-number from matching a Greek row
+  (H121 → bogus G121 under the old guard) — see "strongs_base format".
 
 ## BibleHub ABP scrape
 - Scraper: `scripts/scrape_biblehub_abp.py` — captures strongs, greek_pos, italic (last-word
   heuristic), strips `[ ]` brackets. The scrape (`bh_scrape.db`) is complete.
-- The words table is rebuilt from `bh_scrape.db` — see `/rebuild-words` + the words section.
+- The words table is built from the ABP `.txt` source (`abp_texts/abp_ot_texts/` +
+  `abp_nt_texts/` = word order, glosses, bracket markers); `bh_scrape.db` is only a metadata
+  overlay (italic, smcap, greek_pos). See `/rebuild-words` + the words section. Do NOT re-scrape —
+  remaining gaps are source-limited.
 - Do NOT add conjugated manuscript forms — the audience are non-Greek readers (standing rule).
 
 ## ABP app witness + purchased helps (read-only diff sources, 2026-10-24)
@@ -712,7 +748,7 @@ text and stay out of git (`abp_app_html/`, `abp_helps/` are gitignored).
   was answered the same day: every moved word must be a rendering ABP prints ONE-TO-ONE
   (single-word tokens, ≥5 distinct verses) on the target's number, per
   `build_attestation_map`; both-neighbours-attested refuses. NO database has been rebuilt
-  with the new rule yet — `bible_test.db` on PA was the OLD halted scratch, evidence only — **deleted 2026-11-07** (PA quota; its broken writes are covered by the rebuild record).
+  with the new rule yet — `bible_test.db` on PA was the OLD halted scratch, evidence only (since deleted).
   Record: `docs/tickets/TICKET_509_article_slot_resweep.md` §6i–§6j;
   sizing receipt `docs/audits/PLAN_ruling10_article_slot.txt`.
 - **A blank article slot is NORMAL, not a defect.** `G3588` legitimately carries no English
@@ -735,4 +771,4 @@ Two-ending Greek adjectives (masc & fem share one form) show "Masculine/Feminine
 word-study card when the morph source never resolves them — `decodeMorph` (00-core.jsx) checks
 `TWO_END_SOFT_OT/_NT` in `static/src/00b-two-ending.jsx`, generated by
 `scripts/build_two_ending.py` (re-run after a words rebuild). Feminine/Neuter tags + words the
-source resolves are left alone. Memory `project_two_ending_gender`.
+source resolves are left alone. Memory `project_build_folded_fixes` §11b.

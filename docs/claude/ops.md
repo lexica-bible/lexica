@@ -1,6 +1,7 @@
 # Lexica reference — Operations
-Routed from CLAUDE.md. Deployment detail, CI/automation, backups, maintenance scripts, SEO,
-security, rebuild procedure.
+Routed from CLAUDE.md. Deployment detail, CI/automation, backups, news nightly, maintenance
+scripts, SEO, security, rebuild procedure. (Architecture-refactor history: memory
+`project_architecture_rework`.)
 
 ## Deployment (full detail)
 - Preferred: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs the invariant tests, loads any
@@ -36,34 +37,37 @@ security, rebuild procedure.
   `noreply@lexica.bible`). The nightly `health_check.py` task can't see the WSGI env, so ITS
   copy of the mail keys + `OWNER_EMAIL` lives in a gitignored `~/bible-db/.env` (the script
   `load_dotenv`s it). Full record + gotchas: memory `project_email_smtp`.
+- **Google sign-in setup.** Diagnose a missing Google button with
+  `curl -s <site>/api/auth/config` → `{"google_client_id": ...}`; `null` = env not
+  loaded (the WSGI line is missing, sits BELOW the app import, or no reload). `google-auth` is in
+  requirements (pip install in `bible-env`). Google Cloud consent screen: **External**, client type
+  **Web application**, JS origin = the https site URL, then **Publish app** (email + profile scopes
+  need no verification review). The client ID is public, not a secret.
 
 ## CI / automation
 - **GitHub Actions** (`.github/workflows/ci.yml`) — every push/PR:
   1. The invariant tests — an **EXPLICIT curated list of filenames in ci.yml AND the pre-commit
      hook, NOT a `tests/*.py` glob** — a new test file gates ONLY if added to BOTH lists by hand
-     (many test files, incl. the alias + rail-payload-contract tests, are deliberately not in
-     the CI list). Tests build their own in-memory data, no bible.db — but the `tests` job
-     `pip install`s flask + anthropic + python-dotenv + flask-limiter, because
-     `test_synthesis_no_leak.py` imports `ai.py`/`core.py`, which need them at load time; keep
-     that list lean, add only when a new test imports something new.
+     (`scripts/githooks/pre-commit` too, or it gates nothing; many test files, incl. the alias +
+     rail-payload-contract tests, are deliberately not in the list). Tests build their own
+     in-memory data, no bible.db — but the `tests` job `pip install`s flask + anthropic +
+     python-dotenv + flask-limiter, because `test_synthesis_no_leak.py` imports `ai.py`/`core.py`,
+     which need them at load time; keep that list lean, add only when a new test imports
+     something new.
   2. Rebuilds `app.js` and FAILS if the committed copy is stale.
-  3. Runs the **node** unit tests `tests/test_ac_word_groups.js` + `tests/test_rstack_logic.js`
-     + `tests/test_note_inspect.js` (in the `frontend` job; the pre-commit hook runs them too)
-     PLUS the Library reading-mode
-     gates `test_library_order.js` + `test_render_markup.js` + the whole-bundle **render smoke
-     gate `smoke_app.js`** (renders `<App/>` with real React via `react-dom/server` to catch
-     blank-site reference/TDZ errors the pure-logic tests can't see — a component-body error
-     passed green before it existed). react/react-dom are TEST-ONLY devDependencies; the app
-     loads React from the CDN UMD.
-  **Both lists are EXPLICIT filenames, never a glob — a new test file must be added to the CI
-  job AND `scripts/githooks/pre-commit` or it gates nothing.**
+  3. Runs the **node** tests listed in the `frontend` job (the pre-commit hook runs them too),
+     incl. the Library reading-mode gates and the whole-bundle **render smoke gate
+     `smoke_app.js`** (renders `<App/>` with real React via `react-dom/server` to catch blank-site
+     reference/TDZ errors the pure-logic tests can't see — a component-body error passed green
+     before it existed). react/react-dom are TEST-ONLY devDependencies; the app loads React from
+     the CDN UMD.
   **A regression test carries a CONTROL section** (`test_note_inspect.js` is the worked example):
   transcribe the shipped-BROKEN logic beside the fixed one and assert the expectations FAIL
   against it. Otherwise a green only proves the test ran, not that it can see the bug it exists
   for — the same rule as `feedback_audit_tools_must_fail`, applied to a fix instead of a detector.
   Repo is public; check the Actions tab or
-  `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is on the dev box
-  (2026-06-22; Claude calls it by full path) — NOT on PA. Memory `project_dependabot_workflow`.
+  `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is on the dev box (Claude
+  calls it by full path) — NOT on PA. Memory `project_dependabot_workflow`.
 - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
   same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` your local
   `git diff` HIDES CR mismatches, so a wrong `app.js` slips past the hook and CI rejects it as
@@ -82,20 +86,20 @@ security, rebuild procedure.
   Bypass once with `git commit --no-verify`.
 - **Dependabot** (`.github/dependabot.yml`) — weekly; PRs for pip/npm/actions, GROUPED (one PR
   per ecosystem: pip minor/patch batched + majors solo, all `@babel/*` together, actions
-  batched). Not auto-merged. **Claude can't merge/close PRs — the safety classifier blocks it
-  even with your OK; it hands you the `gh pr merge/close` commands.** A normal `deploy.sh` does
-  the pip install after a merge. Memory `project_dependabot_workflow`.
+  batched). Not auto-merged. **Merging: the safety classifier blocked `gh pr merge/close` on
+  6/22 but it worked 10/25 on JP's explicit ask — try when he asks; if denied, hand him the
+  `gh pr merge/close` commands.** A normal `deploy.sh` does the pip install after a merge.
+  Memory `project_dependabot_workflow`.
 - Nightly `health_check.py --email --only-warn` — LIVE on PA (daily scheduled task, 23:53 UTC).
   `--only-warn` = mails ONLY on a failed check. Task's mail keys + `OWNER_EMAIL` in
   `~/bible-db/.env`. Memory `project_email_smtp`.
 
-## DISK RETENTION POLICY (reviewer-ruled 2026-07-26 — the permanent fix for the
-## recurring 98%-full incidents; nothing here is optional)
+## DISK RETENTION POLICY (reviewer-ruled 2026-07-26; item 6 JP-approved 2026-07-30 — the
+## permanent fix for the recurring 98%-full incidents; nothing here is optional)
 1. **Rebuild fallbacks (`bible_pre_*`): exactly ONE per receipted rebuild** — the
    swap-adjacent copy. Uncompressed until the rebuild's receipt chain closes + 7
    days; gzip after; DELETE when the next receipted swap's fallback exists with
-   green gates. (Current rollback of record: `bible_pre_r2c3_swap.db`.) This is a
-   hand-run policy applied at rebuild close-outs, not automated.
+   green gates. This is a hand-run policy applied at rebuild close-outs, not automated.
 2. **The nightly backup job backs up LIVE dbs ONLY** — `backup_db.py` skips
    `bible_pre_*`, `*_test*`, `*.new*` (patterns in the script cite this ruling; do
    not re-broaden). Backing up a fallback was the leak: every rebuild's 410M copy
@@ -107,10 +111,9 @@ security, rebuild procedure.
    upgraded PA storage to 10 GB on 2026-08-01 after the 5 GB cap broke a build
    snapshot AND the nightly bible.db backup on the same day; the "free space"
    line a script prints is the shared filer, never the quota).
-5. Applied 2026-07-26: both superseded fallbacks + their backup duplicates +
-   strays deleted (~1.2G); post-swap bible.db backup verified same day.
-6. **ARC ROLLBACK COPIES — single-name rule (JP-approved 2026-07-30, after 5
-   quota hits in one day):** the per-ship rollback copy is only ever
+6. **ARC ROLLBACK COPIES — single-name rule (after 5 quota hits in one day; numbered 6 because
+   other docs cite "ops.md item 6"; old item 5 was a one-day cleanup log):** the
+   per-ship rollback copy is only ever
    `bible.db.rollback` — each ship OVERWRITES it, never mints a new
    `bible.db.pre_<arc>` name (that naming pattern is retired; four of them
    stacked up in one week and blew the quota mid-swap). Deeper history = the
@@ -122,7 +125,7 @@ security, rebuild procedure.
    captures the current state (reviewer-sequenced 2026-07-30: deleting
    pre_greekhdr before that check would have left no path back past two arcs).
 
-## Backups — `scripts/backup_db.py` (2026-06-28)
+## Backups — `scripts/backup_db.py`
 The live dbs are PA-only + not in git, and a careless session has blanked bible.db.
 `backup_db.py` is the floor: a daily, VERIFIED, rotating backup of EVERY live db
 (auto-discovers `*.db` — bible/notes/study/esv/niv/heb/news/bh_scrape), kept in `~/db_backups/`
@@ -134,20 +137,61 @@ hit had left a cut-short .gz under the real name and stamped success —
 `tests/test_backup_rotate.py`), and a `.info` manifest per copy so `--list` shows row counts
 instantly. Restore = pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with
 the reversible `mv`. **`study.db` is the one irreplaceable file** (hand-authored argument
-graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Memory
-`project_db_backups`. **Rotation only touches dbs still present in `~/bible-db`:** once a working db is
-deleted, its backups are orphaned — never compressed, never removed — until deleted by hand (two 9/6
-copies sat uncompressed for two months; the hdrlane one is kept on purpose as a §9.95 reference).
+graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`; bible.db keeps 3 by
+the script's `KEEP_OVERRIDE`). Memory `project_db_backups`. **Rotation only touches dbs still
+present in `~/bible-db`:** once a working db is deleted, its backups are orphaned — never
+compressed, never removed — until deleted by hand (two 9/6 copies sat uncompressed for two months;
+the hdrlane one is kept on purpose as a §9.95 reference).
+
+## News watch nightly (`scripts/news/daily.sh`)
+The News tab's data (news.db) is refreshed by ONE PA scheduled task:
+`bash ~/bible-db/scripts/news/daily.sh`. Story, rulings and labeler lessons: memory
+`project_news_watch`.
+- **Runs the bible-env venv python** (`$HOME/.virtualenvs/bible-env/bin/python`) and hard-stops if
+  it's missing — PA's system python3 lacks `anthropic`, so a plain-`python3` task fails SILENTLY at
+  the scoring step.
+- **Step order:** `gather_news.py` (Google-News thread searches) → `pull_rss.py` (outlet feeds) →
+  `score_news.py` (Haiku, only unscored rows) → `group_news.py` (event labels) →
+  `resolve_new_faces.py` (real article links + page-date check; `|| true`) →
+  `merge_dups.py --apply --nightly` (same-article merge; `|| true`).
+- **NEVER add `--rescore` to the nightly** — it re-tags the whole corpus and costs money every
+  night; it's a by-hand step after a thread-KEY change in `queries.py`.
+- **`resolve_backfill_all.py` step is DISABLED** (commented out) since 2026-07-05: it crashed mid
+  write-back and corrupted news.db (a lost page-1 write during a WAL fold-back on PA's NFS home,
+  with the site reading at the same time; `d6b8c310`). Every news opener now uses
+  `journal_mode=DELETE` + `busy_timeout` (`bbbe0963`). Re-enabling it is a deliberate decision, not
+  a revert.
+- **`ANTHROPIC_API_KEY` must be in `~/bible-db/.env`** — the scorer and labeler read it there; a
+  scheduled task can't see the WSGI env. A missing key only prints "ANTHROPIC_API_KEY not set" and
+  leaves an unscored backlog.
+- **daily.sh does NOT git-pull.** A deploy (`deploy.sh`) is what puts news code live before the
+  nightly runs.
+- **Switch + drift log for the cross-night labeler fix (ON since 2026-10-31):**
+  `touch ~/news_seed_off` → the next nightly labels the old way (same-night labels only, no reuse
+  check); `rm ~/news_seed_off` turns it back on. No code or data change; labels already written
+  stay. Each nightly appends one line to `~/news_reuse.log` ("reuse check: offered N, approved A,
+  rejected R"). Live re-check: `tests/fixtures/news_clustering/relabel_check.py --run --nights-only`.
+- **CI sees FROZEN labels** (`tests/test_news_clustering.py`) — any labeler/prompt change also needs
+  `relabel_check.py --run` on PA (writes nothing; tee it to a log, PA's console cuts long output).
+- **news.db path footgun:** the real file is `~/bible-db/news.db` (`core.NEWS_DB`). A bare
+  `sqlite3 news.db …` run from `~` CREATES an empty `~/news.db` decoy that reads exactly like a
+  blanked database. Always use the full path; `rm ~/news.db` clears a decoy.
 
 ## Maintenance / data-quality scripts
-- `scripts/health_check.py <db>` — READ-ONLY scanner; run after ANY import/rebuild. ~14 checks
+- `scripts/health_check.py <db>` — READ-ONLY scanner; run after ANY import/rebuild. Data checks
   (strongs_base invariant, dups, misalignment, fragmented brackets, missing/orphan greek_pos,
-  strongs range, lexicon/bdb coverage) + person/place overlap report. Should be 0 warnings.
-  `--email [--only-warn] [--email-to=addr]` mails via `mailer.py`.
+  strongs range, lexicon/bdb coverage, abp_surface floor) + backup + disk checks + person/place
+  overlap report. Should be 0 warnings. `--email [--only-warn] [--email-to=addr]` mails via
+  `mailer.py`.
+  **Backup check = freshness AND damage** (cert Session 5; a freshness-only check was blind to the
+  2026-07-02 corrupt-but-recent copy): freshness reuses the one guard in `cert_manifest.py`; every kept
+  backup is swept — raw `.db` gets `PRAGMA quick_check`, `.db.gz` gets a full stream-read (gzip's own
+  checksum catches truncation). `--backup-controls` = the durable proof-of-fire (seeds a truncated raw +
+  truncated gz in a temp dir, requires exactly those two warns).
   **Right after a deploy it can report false `database is locked` errors:** each site worker's
-  first-request warm-up writes the AI cache into bible.db (`app.py:430-458`) and health_check
-  waits only Python's default 5 s (`health_check.py:30`). Wait a few minutes, or re-read the
-  failed checks with `sqlite3 -readonly -cmd ".timeout 60000"` — "locked" is unread, never a pass.
+  first-request warm-up (`app.py` `_warm_caches`) writes the AI cache into bible.db, and
+  health_check's `sqlite3.connect` waits only Python's default 5 s. Wait a few minutes, or re-read
+  the failed checks with `sqlite3 -readonly -cmd ".timeout 60000"` — "locked" is unread, never a pass.
   **PLACEMENT RULE (2026-07-11):** any assertion about live PA DATA (row floors, table counts —
   e.g. the `abp_surface ≥ 395,003` floor) goes HERE, not in pre-commit/CI — those run
   on the dev box and GitHub where bible.db doesn't exist, so the check would always pass and
@@ -160,32 +204,36 @@ copies sat uncompressed for two months; the hdrlane one is kept on purpose as a 
   flip (determiner stranded AFTER its noun, vs clean `verses.text`). Audit shares its detector
   with the fixer (`find_flips`) so they can't drift; the fixer swaps each pair toward
   `verses.text` order and LOOPS to convergence. The build's root fix (`_split_compounds`
-  source-phrase fronting) covers ONLY that pass — a SECOND flip producer (proper-noun slots)
-  regenerates ~175 flip verses on any rebuild (proven by the 2026-07-04 cert harness), so the
-  fixer is FOLDED into finish_rebuild.sh as step 6 (position-only swap, after ALL pinned patches
-  + fix_emdash, before the abp_corrections apply). Re-run surface+translit after any `--apply`.
-  **⚠ 2026-07-06: this pass OVER-FIRES — it swaps "noun, the" even when the "the" belongs to the
-  FOLLOWING noun (Jer 48:1 "…forces, the God" → wrong "…the forces, God"), causing 175 of 180 v2
-  word-order defects. Its own `audit_split_flip` reads 0 because it reuses the fixer's flawed
-  "noun,the = stranded determiner" assumption; only the independent v2 oracle catches it. Blocks
-  the S9 swap; needs scoping to genuine strands. Detail: memory `project_reassembly_diff`.**
-  Memories `project_abp_certification` + `project_split_compounds_flip`.
+  source-phrase fronting) is the real cure; the fixer is FOLDED into finish_rebuild.sh as step 6
+  (position-only swap; ORDER IS LOAD-BEARING: after ALL pinned patches + fix_emdash, before the
+  abp_corrections words apply) as a guarded safety net — pin re-declared 2026-08-01 in
+  finish_rebuild.sh: expect 1 flip / 1 verse per rebuild. Re-run surface+translit after any
+  `--apply`.
+  **LESSON — it once OVER-FIRED while its own audit read 0.** It swapped "noun, the" even when
+  the "the" belonged to the FOLLOWING noun (Jer 48:1 "…forces, the God" → wrong "…the forces,
+  God"), causing 175 of 180 v2 word-order defects; cert S2 had read those ~175 as a second flip
+  producer. `audit_split_flip` read 0 because it shared the fixer's flawed "noun,the = stranded
+  determiner" assumption — only the independent v2 oracle (rows vs `verses.text`) caught it. A
+  shared fixer/audit detector shares its blind spot. Scoped in S10 (`49f09c66`: two clean-text
+  guards in `find_flips` + `audit_split_flip --control`). Memories `project_reassembly_diff`,
+  `project_abp_certification` + `project_build_folded_fixes` §5.
 - `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table
-  (in bible.db; 57 rows = **51 active** (pinned in `cert_invariants.py`; frozen member list
-  `tests/fixtures/corrections/abp_corrections_active_live_20261031.txt` + `.sha256`, a PA dump — re-dump
-  and re-pin together whenever the active set changes) + 6 Cushi `superseded`) and its guarded apply
-  (fires only when the cell still holds the recorded
-  fresh-parse value, LOUD skip otherwise, log beside the db). **A row's `corrected_value` is stored in FINAL
-  corpus form (em-dash `—`, never `--`); `source_value` stays as the build writes it** — finish_rebuild step 5
-  swaps `--` AFTER 4b applies prose rows, and cert check 4 compares byte for byte (edition-upgrade §9.80, 2026-11-04).
-  New source-defect corrections = new
-  rows via build_abp_corrections.py (checkpoint first), never a new fix script.
-  **2026-07-06 (b196b9a): the overlay now also carries PROSE (verses.text) corrections — no schema
-  change, `field='verses.text'` + `position=-1` sentinel (inert to the words path), before/after in
-  the source/corrected cols. `apply_abp_corrections.py --only {words,verses}` gives TWO apply points
-  in finish_rebuild: prose at step 4b (BEFORE split-flip, its oracle), words at step 7 (`--only
-  words`). The 5 (f) prose rows seed from `AUDIT_tierB_f_proposed.json` at the S9 rebuild — live's
-  table is still 18 until that swap.** Full record: `docs/audits/AUDIT_abp_certification.md`.
+  (in bible.db; active rows + `superseded` ones such as the Cushi rows) and its guarded apply
+  (fires only when the cell still holds the recorded fresh-parse value, LOUD skip otherwise, log
+  beside the db). **The active count is pinned in code** — `cert_invariants.PINS
+  ['abp_corrections_active']` + a frozen member list (+ `.sha256`) in
+  `tests/fixtures/corrections/`; re-dump and re-pin together whenever the active set changes.
+  The current pin is read off the edition-upgrade BUILT copy, so live and the built copy differ
+  until that swap. **A row's `corrected_value` is stored in FINAL corpus form (em-dash `—`, never
+  `--`); `source_value` stays as the build writes it** — finish_rebuild step 5 swaps `--` AFTER 4b
+  applies prose rows, and cert check 4 compares byte for byte (edition-upgrade §9.80, 2026-11-04).
+  New source-defect corrections = new rows via build_abp_corrections.py (checkpoint first), never
+  a new fix script.
+  **The overlay also carries PROSE (verses.text) corrections (b196b9a)** — no schema change,
+  `field='verses.text'` + `position=-1` sentinel (inert to the words path), before/after in the
+  source/corrected cols. `apply_abp_corrections.py --only {words,verses}` gives TWO apply points in
+  finish_rebuild: prose at step 4b (BEFORE split-flip, its oracle), words at step 7 (`--only
+  words`). Full record: `docs/audits/AUDIT_abp_certification.md`.
 - `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for `—` in
   `words.english` + `verses.text` (double hyphen only; Beer-sheba safe). FOLDED 2026-07-03: runs
   as a tail step of finish_rebuild.sh (after fix_split_merges — a "--" precondition there must
@@ -198,12 +246,10 @@ copies sat uncompressed for two months; the hdrlane one is kept on purpose as a 
   `docs/audits/AUDIT_abp_invariants.md`.
 - `cert_invariants.py [db]` / `--controls` — the runnable ABP invariant suite (Tier A CERTIFIED
   end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 7 checks: row pins
-  (words 626,309 / verses 31,237 — the suite's own pin; an older "626,305" here was the
-  pre-tail build count, stale; pronoun-review flag count 6,882 at fe06eed-era code,
-  2026-07-16 head-word rebuild — advisory anchor for the next run, not a suite check;
-  the tsv is overwritten per build, so an unpinned count can't be diffed later), split-flip=0
-  (imports the production `find_flips`, never a
-  copy), em-dash '--'=0, correction-overlay reconciliation (failures NAME the row), feed
+  (`PINS` in the script — words/verses, never the pre-tail build count; pronoun-review flag count
+  6,882 at the 2026-07-16 head-word rebuild is an advisory anchor, not a suite check — the tsv is
+  overwritten per build, so an unpinned count can't be diffed later), split-flip=0 (imports the
+  production `find_flips`, never a copy), em-dash '--'=0, correction-overlay reconciliation (failures NAME the row), feed
   manifest, backup freshness, and (Session 4) person/place binding — no proper-noun name renders
   BOTH a fuzzy-place AND an exact-person (the Cushi shape; reads pn_binding+tipnr_entities,
   deploy-safe = passes if the tables are absent). `--controls` seeds bad input into a throwaway
@@ -222,8 +268,7 @@ copies sat uncompressed for two months; the hdrlane one is kept on purpose as a 
   the flag the gate is byte-for-byte the old one. Run at `/rebuild-words` 8b.3, BEFORE step 9 (so
   abp_surface is still identical). Test `tests/test_gate_declared.py` (four cases); worked example
   `tests/fixtures/rebuild_trap/declared_deltas_20261025.json` (the 10/25 Michaiah rows).
-- **Edition-upgrade lane scripts (2026-10-31; code only, nothing run on PA yet; rulings = DESIGN_q2_build.md
-  §9):** `abp_app_feed.py` (the one feed reader: manifest sha+size pin; `--check`; `--attribute <copy>`
+- **Edition-upgrade lane scripts (landed 2026-10-31; rulings = `docs/handoffs/DESIGN_q2_build.md` §9):** `abp_app_feed.py` (the one feed reader: manifest sha+size pin; `--check`; `--attribute <copy>`
   read-only) · `census_feed_{dash,markup,brackets}.py` (read-only feed scanners -> frozen
   `tests/fixtures/edition_upgrade/*_census_20261031.tsv` + `.sha256`; brackets has `--control`) ·
   `build_words_from_abp.py --app-feed` (derivation A, two-build compose; `--dry-run COPY_DB` read-only,
@@ -236,7 +281,7 @@ copies sat uncompressed for two months; the hdrlane one is kept on purpose as a 
   SEARCH LABEL (`words.english_head`) its OWN rendering, never a translator-added italic word
   ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable.
   Build-folded (`_strip_italic_heads` in build_words_from_abp.py), so a rebuild reproduces it.
-  4,409 fixed 2026-06-25. Memory `project_english_head_label`.
+  4,409 fixed 2026-06-25. Memory `project_build_folded_fixes` §6.
 - `fix_pn_subject_merge.py` (`--apply`/`--list-skipped`, dry-run default) — splits a subject
   NAME ABP crammed onto its verb's cell back onto its own clickable `*` slot (name on the LOWER
   slot, verb keeps its number; bracketed cases keep both in-bracket sharing the reorder number).
@@ -245,26 +290,25 @@ copies sat uncompressed for two months; the hdrlane one is kept on purpose as a 
   lead + adjacent empty `*`, minus function-word leads, unbracketed slot-after only).
   Build-folded (`apply_pn_subject_split`, after insert, BEFORE import_tipnr). After `--apply`:
   re-run import_tipnr → build_abp_surface → build_abp_translit. Audit for the εἰμί class:
-  `scripts/audit_eimi_subject_merge.py`. Memory `project_pn_subject_verb_fold`.
+  `scripts/audit_eimi_subject_merge.py`. Memory `project_build_folded_fixes` §8.
 - `build_entity_binding.py` (dry-run default / `--apply`) — the Issue-2 entity-binding build.
   PA-only, reversible; **re-run after any words rebuild** (re-tiers from live metaV). Binder
   logic in `entity_resolution.py`. The old `fix_cushi_strongs.py` is RETIRED — the 6 Cushi slots
   live in `abp_corrections`, applied by the rebuild tail (and `/rebuild-words` 8b.1
   `restore_frozen_pn.py` restores the full 2Sa 18 Cushi set: 8 since 2026-10-25). Memory
   `project_entity_resolution_rebuild`.
-- `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair (DONE+LIVE
-  2026-06-30): restored missing Hebrews 13 (the ABP source file had no ch 13 → no verse rows →
-  its words were skipped, since the build only emits words for verses already in `verses`).
-  Dry-run proves the path by regenerating Heb 12 and diffing byte-for-byte vs live. **General
-  invariant: a missing verse row silently drops its words.** Memory
-  `project_hebrews13_restore`.
+- `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair, done: restored
+  Hebrews 13 (the source had no ch 13 → no verse rows → its words were skipped). Worked example of
+  the additive-insert proof (dry-run regenerates Heb 12, diffs byte-for-byte vs live). **General
+  invariant: a missing verse row silently drops its words.** Memory `project_build_folded_fixes` §10.
 
 ## Words rebuild
 The full step-by-step lives in the **`/rebuild-words`** slash command
 (`.claude/commands/rebuild-words.md`): copy-first → single self-correcting build → tail patches
-→ audit gates → swap/deploy → re-run the dotted-lexicon/surface/translit/two-ending +
-rendering-norm builders + import_tipnr + entity binding + metav person link. Rare, high-stakes —
-never improvise. Hard safety rules stay in CLAUDE.md "Do Not". Background: memory
+→ audit gates → swap/deploy, with import_tipnr, entity binding and the surface/translit/
+two-ending/rendering-norm builders re-run on the built copy. The procedure has NO step for
+`build_dotted_lexicon.py`, `build_word_gloss.py` or `build_person_metav_link.py` — whether it
+needs them is an open TODO item. Rare, high-stakes — never improvise. Hard safety rules stay in CLAUDE.md "Do Not". Background: memory
 `project_architecture_rework`. The build scripts (`build_words_from_abp.py` +
 `build_words_from_bh.py`) write ONLY to `bible.db.new` (a consistent online snapshot); the live
 file is never opened for writing; swap is one reversible `mv`.
@@ -277,8 +321,7 @@ problem, and REFUSES to print `== finish_rebuild done ==` — naming them and ex
 so ANY failing step — `import_tipnr` included — scrolled past and it still printed `done`; a
 failure degrading into a green-looking finish.) A step that "reported a problem" may have FAILED
 **or** may have completed and flagged something for a human — the p2wl:v2 guard fixture drift
-check is the second kind. **Its clean path with real steps is UNVERIFIED (stubs only) — watch the
-first live run.**
+check is the second kind.
 
 **`import_tipnr.py` is the SOLE writer of `is_pn=1`** (the build CLEARS it; everything else only
 reads it) — which is why the p2wl:v2 guard fixture drift check is chained there and fires
@@ -321,12 +364,3 @@ TBESG / TBESH = plain short glosses. MM (Moulton-Milligan) = NOT in the app. LEX
 only for verse-grounded senses. Share-alike bucket (MetaV, AF Greek, OpenScriptures Strong's
 Greek) = keep out of any future dictionary export. /credits page is live; ABP permission email
 sent + Van der Pool public-domain intent received (official dedication not yet executed).
-
-## Refactor backlog (status 2026-06-07 — redesign Phases 0–6 done)
-See memory `project_architecture_rework` and TODO.md. DONE: #1 centralize Strong's handling
-(Phase 1); #2 patch-fold (the six shape-keyed cleanup scripts run INSIDE build_words_from_abp.py
-as one self-correcting pass; proven byte-identical via compare_words.py); #3 backend DRY
-serialization (Phase 2, `_serialize_word_core`); #4 detail-panel state (Phase 4,
-`{hero, sections[]}`); #5 tipnr PK collision (Phase 6, `entity_types`). REMAINING: the
-destructive-DELETE half of #2 (copy-first neutralises it — user's call 2026-06-09) and the
-frontend half of #3 (makeEntry/flattenAiResults dedup).

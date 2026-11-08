@@ -1,11 +1,11 @@
 # Lexica reference — Frontend
-Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accounts, responsive.
+Routed from CLAUDE.md. Build system, responsive shell, measuring the UI, the mobile sheet contract,
+three-zone shell, Library tab, proper-name cards, Notes/accounts.
 
 ## Frontend build step
 - SOURCE is `static/src/*.jsx` — per-view files, concatenated (filename order; numeric prefixes)
   into ONE compilation unit. `static/app.js` is the COMPILED output the browser loads. app.js IS
-  committed; `node_modules/` is git-ignored. (Phase 4, 2026-06-06: the old 3,461-line
-  `static/app.jsx` monolith was split into `static/src/` — see file headers there.)
+  committed; `node_modules/` is git-ignored.
 - After ANY edit to a `static/src/*.jsx` file you MUST rebuild before committing:
   `npm run build` (runs `scripts/build-frontend.js`: concat src → Babel → static/app.js).
   One-time setup: `npm install`. Commit BOTH the .jsx source AND the rebuilt app.js.
@@ -27,40 +27,82 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   `design/*.jsx` as production; use it only as the visual target (see `design/README.md`).
 - **react/react-dom are TEST-ONLY devDependencies** (for the render smoke gates); the app loads
   React 18 from the CDN UMD, NOT from npm.
+- **Testing frontend PURE logic with Node (no JS test runner — on purpose; not worth a standing
+  dependency).** Pattern that tests the REAL function, not a second copy:
+  1. LIFT the pure function into its own JSX-free `.jsx` file numbered BEFORE its consumer in the
+     concat order (`21-shell-logic.jsx` → `22-shell.jsx`, `34-notes-logic.jsx`,
+     `51-corpus-logic.jsx`, `56-library-order-logic.jsx`, `57-chrono-logic.jsx`). It stays a
+     global in the bundle.
+  2. Tail it with `if (typeof module !== "undefined" && module.exports) { module.exports = {...}; }`
+     — a no-op in the browser.
+  3. In the Node test: `require.extensions[".jsx"] = require.extensions[".js"];` then `require()` it.
+  4. The consumer CALLS the lifted helper (one copy, no drift). For a hook, lift only the pure state
+     transforms (`useRightStack` calls `rsPush/rsPop/rsReset`).
+  Add every new test file to BOTH explicit lists — `.github/workflows/ci.yml` (frontend job) and
+  `scripts/githooks/pre-commit` — or it doesn't gate.
 
-## Responsive breakpoints
+## Responsive breakpoints + bars
 - **Desktop ≥1100px**: navy header, left nav panel (224px), lib-bar toolbar, detail panel as
   right sidebar.
 - **Mobile <1100px**: no header, the app's tab nav `.mobile-tabs` fixed at the **TOP** (`top:0` —
   NOT the bottom; the bottom is free for a per-tab bar), panels as bottom sheets. Per-tab bottom
-  bars: Library's reading cockpit `.lib-toolbar`, Word study `.wm-tabs`, News `.zbar`.
+  bars: Library's reading cockpit `.lib-toolbar`, Word study `.wm-tabs`, News `.zbar`. The shell's
+  `.zbar` is `bottom:0` and never collides with `.mobile-tabs`; Library's cockpit is the exception
+  that owns the bottom on its own tab.
 - JS thresholds: `navVisible >= 1100`, `isMobile < 1100` (two states only).
 - CSS: `@media (max-width: 1099px)` / `(min-width: 1100px)` — plus 520px for very small phones
   and a **1500px header nav-overflow** breakpoint (below it the desktop header hides the inline
   nav into a hamburger; subtitle stays). The header actually runs out of room ~1471px: Word
   study / Library / News reserve 472px (`--sidebar-w + 12`) on the right for the floating word
   card. Hamburger = `Header` in `20-shared-components.jsx`; CSS `.hdr-burger`/`.hdr-menu` +
-  `@media (max-width:1499px)`.
+  `@media (max-width: 1499px)`.
 - One shared height `--bar-h` (48px, :root) sizes EVERY mobile chrome bar (top nav, Library
   cockpit `.lib-toolbar`, `.wm-tabs`, `.zbar`) + sheet clearances — bars/sheets use `100dvh` +
-  safe-area, never `100vh`. Don't reclaim it locally: consumers and the sheets' max-height maths
-  key off it.
+  safe-area, never `100vh`. Don't reclaim it locally: consumers and the sheets' height maths key
+  off it.
 
-### Shared controls + touch (cross-tab rules, learned the hard way)
+## Shared controls + touch (cross-tab rules, learned the hard way)
+- **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
+  `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
+  held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
+  chips and card rows all do).
+- **`.seg-b`'s selected state is a WHITE pill (`--ctl-on`) and it is SHARED** — Notes, Study,
+  Library nav, the News view tabs. If a control's selected state looks wrong for its context, the
+  control is probably wearing the wrong class; **restyling `.seg-b` to fix one caller silently
+  restyles four others.** (News's score chips read white beside accent date chips until they were
+  moved onto `.news-presets` — one rule, both.) Same shape as the "reference the system, never a
+  local copy" rule: pick the right shared class, don't fork the colour.
+- **`.seg`/`.seg-b` base styling once lived ONLY in the `@media (min-width:1100px)` block**, so any
+  `.seg` toggle outside Library rendered as run-on text on a phone ("Verse notesJournal"; Library's
+  mobile menu uses `.mseg` and was fine). A mirror rule now sits in the `max-width:1099px` block
+  (styles.css ~:3812 desktop, ~:4149 mobile). A new `.seg` on a non-Library mobile view is covered;
+  a change to one copy must be made to both.
+
+## Measuring the UI — harness + probe method
+Every lesson here was paid for once. Detector discipline in general: memory
+`feedback_audit_tools_must_fail`.
+
+### The harness
 - **Measuring a phone layout: `tests/mobile_harness.js`.** Serves the REAL committed bundle +
   `styles.css` + the local React UMD against stubbed payloads, so a phone-width layout can be
   MEASURED in a real engine (`node tests/mobile_harness.js 8099` →
   `/?view=corpus&admin=1`; `&bundle=head` serves the COMMITTED bundle for A/B). A tool, not a gate
   — deliberately NOT in the CI list: it renders, it doesn't assert. Fixture provenance is per
-  fixture in its header, each traced to the code that produces it. Three traps it already paid for,
-  all in `feedback_audit_tools_must_fail`: assert `window.innerWidth` (Chrome won't window below
-  500px — use device emulation), seed `lexica_tour_seen` (the first-run modal covers everything),
-  and stub `/api/` ONLY (it once answered for `chronological.json` and blanked the whole desktop).
+  fixture in its header, each traced to the code that produces it. Three traps it already paid for:
+  assert `window.innerWidth` (Chrome won't window below 500px — use device emulation), seed
+  `lexica_tour_seen` (the first-run modal covers everything), and stub `/api/` ONLY (it once
+  answered for `chronological.json` and blanked the whole desktop).
   `?admin=1` matters — JP reviews as admin, whose nav carries more tabs than a reader's.
   `&notes=1` seeds the notes store (5 notes + 2 journal pages); `&notes=many` adds 40 generated
   rows (the count axis — empty/few/many is required on every Panel card); omit it for empty.
   An unknown `notes=` value is REJECTED with a 400 — a typo must not quietly serve the empty
   state and be measured as "many".
+- **The lexicon fixture (2026-07-16).** Seeded words G4151 (many: 60 occ, past the 50-row "See
+  more") and H7307 (few: 4 occ, Hebrew path); searches that answer: πνεῦμα / pneuma (lookup),
+  "spirit" (English finder), the two numbers direct. ONE occurrence table per word derives
+  profile/books/verses so replies can't disagree; unknown seeds THROW on both sides, and the server
+  EVALUATES the same resolver text the page embeds (no hand-mirrored copy to drift). Provenance
+  cites live in the file header.
 - **⚠ A 200 FROM THE RIGHT PORT IS NOT A 200 FROM YOUR CODE (2026-07-15).** A harness left
   running by an EARLIER session was squatting on 8099; the new one died with `EADDRINUSE` in the
   background while `curl` cheerfully returned 200 from the old one. Its old code reads an
@@ -70,20 +112,20 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   contradiction is what exposed the squatter. Check the process you started is the process
   answering (a known-negative probe does it in one call), and prefer a fresh port to killing
   something a parallel session may own.
+
+### Fixtures
 - **Provenance when a surface has NO server producer (Notes, 2026-07-15 — the adapted form).** The
   rule is "shape fixtures from the producing code", not "from Python". Notes is browser-local:
   `NotesStore` reads `localStorage` once on first load and caches, so its fixture is a
   **localStorage seed written before `app.js` runs**, not an `/api/` stub. Do NOT shape it from
   `views_notes.py` — `notes_sync` stores the client's blob opaquely (`json.dumps(n)`) and hands the
   same blob back, so the server is a round-tripper and never authors a field. The producers are the
-  CLIENT: `NotesStore.create()`/`createJournal()` for the record, and — **TWO different anchor
-  writers, not one** — `60-library.jsx verseAnchor()` (:1291-1295, the verse-number MENU: stamps
-  `start` and `end` to the same verse, so it can only ever make a single-verse note) or
-  `resolveSelection()` (:1093-1102, the DRAG-SELECT: stores `start.verse`/`end.verse` separately,
-  real `pos` values, and a range `refLabel`). Shape a RANGE fixture from the second; reading only
-  the single-verse writer is how you'd "confirm" that ranges aren't stored at all. Name them per
-  field in the header as usual. Keep such a seed OPT-IN: notes also paint marks in the Library
-  reader, so an always-on seed would quietly move other surfaces' numbers.
+  CLIENT: `NotesStore.create()`/`createJournal()` for the record, and **TWO different anchor
+  writers** (`verseAnchor()` for single verses, `resolveSelection()` for ranges — see "The Notes
+  inspect" below). Shape a RANGE fixture from the second; reading only the single-verse writer is
+  how you'd "confirm" that ranges aren't stored at all. Name them per field in the header as usual.
+  Keep such a seed OPT-IN: notes also paint marks in the Library reader, so an always-on seed
+  would quietly move other surfaces' numbers.
 - **When a fixture DIMENSION becomes load-bearing, it gets real values with named provenance —
   and unknowns THROW.** The chapter fixture's verse count used to be decoration ("a short slice is
   enough to boot"); the moment `NoteVerseInspect` derived the chapter's last verse from it, that
@@ -95,45 +137,51 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
 - **Stub the shape the PRODUCER returns, never the shape the caller expects.** A stub shaped to a
   buggy caller's assumption makes the bug untestable and green. `/api/chapter` stays a bare list in
   the harness precisely because the panel that misread it is what we're catching.
+- **What a view CALLS is a call-site question, not a route-list question** (News fixture,
+  2026-07-15, `b2fa9be`). `00-core.jsx` defines eight news helpers (seven at `b2fa9be`;
+  `newsResolve` added in `4c2305eb`); NewsView calls five, two at mount (`newsMeta`, `newsAll`) — `newsList`/`newsCounts`/`newsShape` have zero call sites (`/all` carries the feed and the
+  browser derives the rest). Stubbing a route nothing asks for answers a question nobody posed.
+- **A fixture value the code COMPUTES on can't be illustrative.** News's window is a rolling 21
+  days read off the clock, so hardcoded dates drift out of it and the fixture quietly renders "No
+  stories match" — a bar measured over an empty feed, passing vacuously. Dates are computed
+  relative to today; thread KEYS must be real (they resolve through `THREAD_LABELS` in
+  views_news.py or render as a bare "?").
 - **Make a fixture row say WHICH row it is.** The harness's verse words carry a `spirit-v{{v}}`
   marker substituted with the requested verse, so a measurement proves which verses actually
   rendered and fetched — not merely how many. "3 rows appeared" is not the same claim as "verses
   21, 22 and 23 appeared", and only the second one catches an off-by-one range.
-- **The `?bundle=head` A/B validates against REMEMBERED numbers too, not just stale reads.** Second
-  instance: Notes's desktop shell measured 1388px where the previous session banked 1400 — not a
-  regression, but the shared chapter fixture having grown to Gen 1's real 31 verses, making the
-  page tall enough for a scrollbar. Identical on BOTH bundles. A number from a previous session is
-  a memory, not a baseline: re-derive it from HEAD at the same viewport and fixtures.
-- **⚠ `?bundle=head` IS JS-ONLY, BY CONSTRUCTION — it CANNOT baseline a CSS change.** It serves
-  `git show HEAD:static/app.js`; `styles.css` always comes live off disk. So on a CSS edit the mix
-  run is HEAD's code against YOUR stylesheet — neither before nor after. Treat it as diagnostic
-  only. **For CSS, the baseline of record is the STASH ROUND-TRIP**, in the same session, same
-  browser, same fixtures: back the files up → `git stash push -u` → `npm run build` (so app.js on
-  disk is HEAD's too) → measure → `git stash pop` → rebuild → **byte-check the restore against the
-  backup**. Anything else is comparing against a memory.
-- **"Stable twice" is NOT "true" — a stability check can pass on a transient.** The Notes frame
-  reads 1388 or 1400 depending on when you look (a scrollbar during load), and BOTH values survived
-  a settle-until-unchanged probe and a double-read six seconds apart, in different runs. Two
-  "stable" readings that disagree mean the probe is measuring the weather. **The only baseline of
-  record is HEAD measured by the IDENTICAL method in the SAME session** — that is what proved 1400
-  is the truth and every 1388 was the artifact. This is the settle lesson's final form; the earlier
-  two (wait before reading; validate the baseline) are subsumed by it.
-- **Settle on the DRIVER of the dimension, not on the surface you're reading.** The probe that
-  produced the phantom waited for the Notes rail — while the LIBRARY, mounted alongside, was still
-  loading and driving the page height that decides the scrollbar that decides the width.
-- **A fix scoped to a desktop container does not reach the phone.** The Notes row clamp went on
-  `.notes-rail-scroll` (desktop-only); the same list renders in the mobile sheet, where rows stayed
-  107px. Measured per surface, not inferred from the desktop pass. Put the rule on the ROW.
-- **A HANDOFF STATES WHAT IT MEASURED AND ORDERS THE NEXT SESSION TO RE-MEASURE IT.** The standing
-  form for a banked session opener (`HANDOFF_*.md`): give the next session the measured state so it
-  starts informed, AND tell it to verify that state against the repo, because a prompt is a memory
-  the moment it's written. Everything ages — endpoint lists, chip counts, file:line cites. A chip
-  in this arc said "5 call sites" when the truth was 6; a later session had added one after the
-  chip was authored. Point at the doc for standing rules rather than re-listing them (a re-listed
-  rule is a copy that drifts); spend the prompt's words on the WHY and on the stop conditions.
-- **`.filters-sep` promotion — CLOSED 2026-07-16.** Measured on desktop Word study with a loaded
-  word (the lexicon fixture): exactly 1×14, background == `var(--rule-2)`, detector control-tested
-  both ways (broken → blind, restored → sees). The promotion out of `.ws` scope changed nothing.
+
+### The baseline of record
+- **The only baseline of record is HEAD measured by the IDENTICAL method in the SAME session.** A
+  number from a previous session is a memory, not a baseline: re-derive it from HEAD at the same
+  viewport and fixtures. When a guardrail looks failed, A/B the committed code BEFORE diagnosing
+  the working copy.
+  - **JS change → `?bundle=head`** (same page, same fixtures, only the bundle swaps).
+  - **⚠ CSS change → the STASH ROUND-TRIP. `?bundle=head` is JS-ONLY by construction** — it serves
+    `git show HEAD:static/app.js` while `styles.css` always comes live off disk, so on a CSS edit
+    the mix run is HEAD's code against YOUR stylesheet — neither before nor after; diagnostic only.
+    Round-trip: back the files up → `git stash push -u` → `npm run build` (so app.js on disk is
+    HEAD's too) → measure → `git stash pop` → rebuild → **byte-check the restore against the
+    backup**. (A `git show <sha>:static/styles.css` swap also works.) Anything else is comparing
+    against a memory.
+- **The incident that set this (Notes, 2026-07-15), told once.** Notes's desktop frame read 1388px
+  or 1400px depending on when you looked — a transient scrollbar while the page was still tall
+  during load. A baseline taken ~1s after navigate read 1388, so the true post-change 1400 looked
+  like a 12px regression that never existed; a later session's 1388-vs-1400 turned out to be the
+  shared chapter fixture having grown to Gen 1's real 31 verses (identical on BOTH bundles).
+  **Both values survived a settle-until-unchanged probe and a double-read six seconds apart, in
+  different runs** — "stable twice" is NOT "true": two "stable" readings that disagree mean the
+  probe is measuring the weather. Only HEAD-by-identical-method proved 1400 is the truth. A wrong
+  BASELINE is worse than a wrong verification: it inverts the sign of every comparison after it.
+- **Settle on a CONDITION, on the DRIVER of the dimension** (the rows are there AND `scrollHeight`
+  stopped moving) — not on a `setTimeout` guess, and not on the surface you're reading. The probe
+  that produced the phantom waited for the Notes rail while the LIBRARY, mounted alongside, was
+  still loading and driving the page height that decides the scrollbar that decides the width.
+- **CSS geometry regressions are INVISIBLE to the gates** — they're logic tests and CI has no
+  browser — so measure a geometry change against a real baseline or it ships (the 339→215px flex
+  regression below did, and JP caught it on his phone).
+
+### Reading the page truthfully
 - **⚠ THE MEASURING PANE IS A HIDDEN TAB — rAF and IntersectionObserver callbacks NEVER fire**
   (`document.hidden === true`; control-proved 2026-07-16: an observer on an on-screen element
   stayed silent 3s, rAF never ran). This is the MECHANISM behind the frozen-animations trap, and
@@ -142,22 +190,41 @@ Routed from CLAUDE.md. Build system, three-zone shell, Library tab, Notes/accoun
   eagerly (VerseRow is the only IO consumer; layout is under test, not laziness) — the shim +
   proof live in `tests/mobile_harness.js`. Rects are the evidence of record in this pane; also
   wait ~100-150ms after any synthetic click before reading (state flushes ride timers here).
-- **The harness HAS a lexicon fixture (2026-07-16).** Seeded words G4151 (many: 60 occ, past the
-  50-row "See more") and H7307 (few: 4 occ, Hebrew path); searches that answer: πνεῦμα / pneuma
-  (lookup), "spirit" (English finder), the two numbers direct. ONE occurrence table per word
-  derives profile/books/verses so replies can't disagree; unknown seeds THROW on both sides, and
-  the server now EVALUATES the same resolver text the page embeds (no hand-mirrored copy to
-  drift). Provenance cites live in the file header.
-- **`:hover` is a POINTER affordance — gate it on `@media (hover: hover)`.** On a touch screen
-  `:hover` latches onto whatever you last touched, so drag-scrolling a list paints every row you
-  held on the way past. Any hover wash on a touch-scrollable list needs the gate (the News lists,
-  chips and card rows all do).
-- **`.seg-b`'s selected state is a WHITE pill (`--ctl-on`) and it is SHARED** — Notes, Study,
-  Library nav, the News view tabs. If a control's selected state looks wrong for its context, the
-  control is probably wearing the wrong class; **restyling `.seg-b` to fix one caller silently
-  restyles four others.** (News's score chips read white beside accent date chips until they were
-  moved onto `.news-presets` — one rule, both.) Same shape as the "reference the system, never a
-  local copy" rule: pick the right shared class, don't fork the colour.
+- **THE VIEWPORT IS ELASTIC — ASSERT `innerWidth` INSIDE THE READ, AT BOTH ENDS (2026-07-15).**
+  The browser pane auto-fits its viewport to content, so a phone-width measurement is not a
+  setting you make once and trust. Two ways it bit in one session: a resize to 375 silently
+  reverted to 1280 during a long-running probe, leaving a MOBILE-rendered DOM (`news-m`, the
+  branch had mounted at 375) laid out at desktop width — every pixel a lie, and nothing about
+  the DOM saying so, because `isMobile` (90-app.jsx, `innerWidth < 1100`) only re-checks on a real
+  resize EVENT that a viewport override doesn't fire. Then, worse: an overflow detector that
+  planted a 500px probe **widened the window to 500**, so it compared 500 against 500 and
+  reported "clean" — *the act of measuring changed the thing measured*, and the failure mode was
+  a reassuring zero. **It was caught only because the detector was control-tested on its own
+  known positive** — the check that is supposed to be a formality is the one that found it. So:
+  read `innerWidth` at the START and END of the same script, assert both are the width you meant,
+  and treat any injected geometry as suspect.
+- **Scope every read to the surface you mean.** The desktop app mounts every view at once, so a
+  bare `document.querySelector('.zempty')` or `.zbar` happily returns ANOTHER tab's
+  mounted-and-hidden copy at 0×0 — it bit twice on 2026-07-15 (a `.zbar` that was Ask-corpus's
+  while measuring Notes, a `.zempty` that was Ask-corpus's while measuring Word study). Query
+  inside the owning surface's root and assert the rect is non-zero.
+- **A fix scoped to a desktop container does not reach the phone.** The Notes row clamp went on
+  `.notes-rail-scroll` (desktop-only); the same list renders in the mobile sheet, where rows stayed
+  107px. Measured per surface, not inferred from the desktop pass. Put the rule on the ROW.
+- **Prove a gray by RECTS, and prove occlusion by HIT TEST.** A disabled tool must still render a
+  real 22×22 glyph box (mounted-and-hidden reads as present — check `svgW`/rects, not presence).
+  And when a sheet overlaps the bar, don't compare z-index declarations: ask
+  `document.elementFromPoint()` what actually paints on top. Declarations get defeated by stacking
+  contexts; the hit test can't be. (The sheet is z151 over the z30 `.zbar` — confirmed by hit test,
+  which is why nothing inside a sheet needs its own bar clearance.) A probe that ignores its own
+  hit-test return will silently measure the wrong sheet (it did, once, 2026-07-15).
+- **Drive a state change THROUGH the control, and hit-test it first.** `el.click()` fires happily
+  on something `display:none`, so a mode flip "verified" that way proves the state changed, not
+  that a reader could change it. Read the button's rect, ask `elementFromPoint()` at its centre
+  whether that button is really what's there, tap THAT, then re-read the result.
+- **Verify a glyph merge by SHAPE, not by the component name you typed** — compare the drawn
+  children (`rect3|pathM15 3v18` etc.) across bars; that's what proves two bars really share a
+  glyph.
 
 ## THE MOBILE SHEET CONTRACT (2026-07-15)
 Every mobile bottom-sheet card is the shared **`Sheet`** (`static/src/20-shared-components.jsx`),
@@ -168,8 +235,8 @@ stop — don't add one.** `ZoneSheet` (22-shell.jsx) is a thin wrapper, not a se
 **Why it exists.** Five hand-rolled frames (`.detail-sheet`, `.wm-sheet`, `.msheet`, `.zsheet`,
 `.mpick`) meant every fix was card-by-card and the drift grew back — five open heights, three
 handle widths, two radii, five z-index layers, and a header divider on three frames but not the
-other two. JP called it: *"the reason past passes didn't stick is five frames."* The parked
-"heights still drift" note in `project_mobile_gestures` was this, unfixed for a month.
+other two. **Migration COMPLETE 2026-07-16:** `.zsheet` (7 cards), `.detail-sheet` (5), `.msheet`
+(2), `.wm-sheet` (4) → `Sheet`; `.mpick` is the sanctioned exception (below).
 
 ### The contract
 | Rule | The value |
@@ -201,22 +268,23 @@ other two. JP called it: *"the reason past passes didn't stick is five frames."*
   IS the check, and "all green" means nothing about it.
 - **48px standard, 96px on Library.** One rule, two results. Library's reading cockpit owns that
   tab's bottom and must not be covered. The zone bars (`.zbar`) are deliberately coverable — a
-  card sits OVER its own bar (hit-test proof below), which is why nothing inside a sheet needs
-  bar clearance. Consequence worth knowing: **you cannot tap another zone's button while a sheet
-  is open** — close it first. A probe that ignores its own hit-test return will silently measure
-  the wrong sheet (it did, once, this session).
+  card sits OVER its own bar (hit-test proof in "Measuring the UI"), which is why nothing inside a
+  sheet needs bar clearance. Consequence worth knowing: **you cannot tap another zone's button
+  while a sheet is open** — close it first.
 - **The nav stays on top.** `.mobile-tabs` is z200, so every card sits UNDER it. Each card stops
   short of the nav anyway, so the nav stays visible and tappable over an open card. Before this,
   `.msheet` (220) and `.mpick` (210) floated over it while `.detail-sheet` (51) and `.wm-sheet`
   (121) sat under — nobody had decided; they'd each just picked a number.
+- **The old per-card keyboard-lift died with the frame** (reviewer-ruled: a fork, not a feature —
+  no shipped Sheet card lifts, the note editor's textarea included). If a lift is ever wanted it
+  is a SHELL-level ruling for all cards (TODO.md "Keyboard-lift"). Not a regression.
 
 ### ⚠ CORRECTION — the radius, and how this pass got it wrong (JP-ruled 2026-07-15)
-**This table said "`var(--radius)` top corners only. The 18px pair is dead — don't reintroduce
-it." That was wrong, and steps 1–2 shipped it.** The correct rule is `--sheet-radius: 18px`, a
-SECOND sanctioned radius owned by the shell. The record is kept rather than rewritten because
-the mistake is the instructive part:
-
-- The doctrine says "one radius (6px)". **In practice it had been split for months**:
+**This table first said "`var(--radius)` top corners only. The 18px pair is dead — don't
+reintroduce it." That was wrong, and steps 1–2 shipped it.** The correct rule is
+`--sheet-radius: 18px`, a SECOND sanctioned radius owned by the shell. Kept because the mistake is
+the instructive part:
+- The doctrine said "one radius (6px)". **In practice it had been split for months**:
   `.detail-sheet` and `.msheet` were 18px, `.zsheet` and `.wm-sheet` 6px. Nobody had noticed.
 - So "converge on the doctrine" was not enforcing an intact rule — **it was picking a side in a
   split**, and it picked against JP's eye on the surfaces he uses most (the Library cards).
@@ -246,13 +314,20 @@ Handle stays on `var(--radius)`: at 4px tall it is fully round at either value.
   a text greys its Greek toggles instead of removing them. Had they unmounted, the card would
   resize under the reader and the whole class would be unsound. Check this BEFORE classifying a
   new card as a Menu — it is a property of the card's code, not a matter of taste.
-- The old `.wm-sheet.tall` flag was NOT drift — it was this distinction, un-named: Word study's
-  Distribution + Word card are data (tall), its Views + Search are controls (short). (Resolved
-  exactly that way in step 4; `.wm-sheet` is gone.)
+- The live Menus: Reading options + You, and Word study's Views + Search (all on the
+  `.msheet-card` band pattern); News Options (`ZoneSheet`/`Shell.mobile` pass the contract's `variant` through as
+  `sheetVariant`; every other zone sheet holds data — Options was the lone miss). Word study's
+  Distribution + Word card are Panels. The old `.wm-sheet.tall` flag was NOT drift — it was this
+  distinction, un-named (and it was a FIXED 90% height, not the max-height ceiling a handoff
+  claimed — measure before moving).
+- **Search's clear × is grayed-not-hidden when the box is empty** (reviewer-ruled 2026-07-16) —
+  the Menu precondition applied to a live case: it used to UNMOUNT. The landing form's × outside
+  the sheet is still conditional on purpose (not a Menu card).
 
 ### `bare` — the child owns its scroll box
-An inline RightStack / the News why-panel manage their own fill + scroll, so `bare` skips the
-padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill).
+An inline RightStack, the News why-panel, or any panel that carries its own header + scroll box
+goes in as a BARE sheet (`bare` / `sheetBare`), skipping the padded `.sh-body` — else it nests a
+second scroll box and collapses the flex-fill.
 - **A bare child brings its OWN header band, and that band IS the card's header** — so a bare
   sheet takes NO `title`, or the name prints twice. The bands already wear the contract's spec
   (serif 16/600 + the divider), which is why "one header spec, two carriers" resolves this
@@ -262,6 +337,12 @@ padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill
   (Ask-corpus's truly-empty `ZoneEmpty` has no band by ruling, but its bar slot is DISABLED
   until there's an answer, so that state is unreachable as a sheet — check the gate, not just
   the render).
+- **Pick which carrier names the panel.** Either hide the panel's DESKTOP header band inside the
+  sheet and let the sheet title name it (Ask-corpus's rail printed "Recent conversations" twice,
+  one line apart, until `.ac-m .sh .ac-rail-top { display: none }` — caught in a screenshot, not
+  in the numbers), or let the band BE the header and pass no title — pick that when the band says
+  something the title can't (Notes's inspect band carries the verse ref "John 4:24", more use
+  than a repeated "Anchored verse").
 - **Every band wears `sh-band`** (`.note-insp-band` / `.news-shape-head` / `.ac-insp-band` /
   `.rstack-bar`). One rule at the contract re-sizes them inside a sheet:
   `.sh--bare .sh-band { height: auto; min-height: 0; padding-top: 2px; padding-bottom: 10px }`.
@@ -280,46 +361,34 @@ padded `.sh-body` (else it nests a second scroll box and collapses the flex-fill
   that's the shape of this whole drift in one line.
 - The child fills via `.sh--bare > *:last-child { flex: 1 1 auto; min-height: 0 }`. The panel
   height is definite, so the child has real room — the old frame had to hard-code `82dvh`.
+- **⚠ A bare sheet's CHILD owns the scroll box, so `ZoneSheet` has no `scrollRef` to hand the
+  dismiss gesture** — that shipped as a real bug (scroll-up dragged the sheet shut).
+  `useSwipeToDismiss` now falls back to the nearest scrollable ancestor of the touch when no ref
+  is given (an explicit `scrollRef` still wins, so every other sheet is unchanged). **The fallback
+  can't rescue a scroll box that isn't a plain `overflow:auto` descendant** — hand it a ref then.
+  **PROVE the fallback on a FORCED overflow, never by code read.** It binds only a box that
+  *actually* overflows (`scrollHeight > clientHeight + 1`), so a sheet whose fixture content is
+  short exercises nothing and passes vacuously. Notes's inspect needed +1400px of injected filler
+  before the gesture could fail at all. Two cases, destructive one LAST with the subject asserted
+  still attached: scrolled DOWN → drag must NOT dismiss (transform stays `none`; this is the bug
+  the fallback exists for), then at top → drag past 90px MUST dismiss.
 
-### Migration state — COMPLETE (2026-07-16). Five frames → one Sheet.
-| Frame | Cards | State |
-|---|---|---|
-| `.zsheet` | 7 (News ×3, Ask-corpus ×2, Notes ×2) | **DONE** — step 1, `05dbd6f` |
-| `.detail-sheet` | 5 (word card, chapter overview, xref, note editor, day intro) | **DONE** — step 2 |
-| `.msheet` | 2 (Reading options, You) | **DONE** — step 3; the first live Menu cards |
-| `.wm-sheet` | 4 (Word study: Distribution, Word card, Views, Search) | **DONE** — step 4, `54eb853` |
-| `.mpick` | 1 | header spec only — the sanctioned exception below |
-
-Step-4 record (the reference surface, measured before AND after on the lexicon fixture):
-- Distribution + Word card = **Panels** (48/764, flush under nav — 764 at 3 rows and at 9);
-  Views + Search = **Menus on the `.msheet-card` band pattern** (372.9 / 274.5, stable across
-  every owned state incl. the HEB-button word swap). The old `.tall` turned out to be a FIXED
-  90% height, not the max-height ceiling the handoff claimed — measure before moving.
-- The word card's sheet title keeps its mono Strong's badge via **`.wm-sh-card`** — a TYPE-ONLY
+### A card's TITLE TYPE is its own; the SHELL is what's shared
+The detail family's headers are not serif 16/600 and must not be forced to it: the word card's is
+the Strong's BADGE (mono 18/500 — and "references are bare mono" is design doctrine), the
+overview's is a book title (serif 20/500). Two reasons this is right, not a concession:
+`.detail-head` is SHARED with the desktop side panels (a mobile-only fork would make one card look
+two ways), and the word card is the LOCKED spacing reference. So conformance for these five is the
+shell + the divider, which they already had. **What the contract guarantees is that every card
+opens the same size, in the same box, with a title over a hairline** — not that a Strong's number
+and a book name wear one font.
+- Word study's word-card sheet keeps its mono Strong's badge via **`.wm-sh-card`** — a TYPE-ONLY
   class on the Sheet (typography belongs to the card family; nothing structural rides it). Its
   header measures 35.3, which is the header rule working (a 15px mono badge needs less than a
   plain title's 36.8) — do not "fix" it.
 - Content insets: the shell's `.sh-body` supplies the 18px side inset, so `.wm-card` dropped its
   own to zero (word-card contents byte-preserved); the rail (12→18) and searchsheet (16→18)
   deliberately converged on contract rhythm.
-- **Search's clear × is grayed-not-hidden when the box is empty** (reviewer-ruled 2026-07-16) —
-  the Menu precondition applied to a live case: it used to UNMOUNT. The landing form's × outside
-  the sheet is still conditional on purpose (not a Menu card).
-- **News Options is a Menu too** (JP's carryover, same day): `ZoneSheet`/`Shell.mobile` now pass
-  the contract's `variant` through (`sheetVariant`); 764 → 358, stable across every knob. Panel
-  audit at the same time: every other zone sheet holds data — Options was the lone miss.
-- **The old per-card keyboard-lift died with the frame** (reviewer-ruled: a fork, not a feature —
-  no shipped Sheet card lifts, the note editor's textarea included). If a lift is ever wanted it
-  is a SHELL-level ruling for all cards. Open ledger item, not a regression.
-
-**A card's TITLE TYPE is its own; the SHELL is what's shared.** The detail family's headers are
-not serif 16/600 and must not be forced to it: the word card's is the Strong's BADGE (mono 18/500
-— and "references are bare mono" is design doctrine), the overview's is a book title (serif
-20/500). Two reasons this is right, not a concession: `.detail-head` is SHARED with the desktop
-side panels (a mobile-only fork would make one card look two ways), and the word card is the
-LOCKED spacing reference. So conformance for these five is the shell + the divider, which they
-already had. **What the contract guarantees is that every card opens the same size, in the same
-box, with a title over a hairline** — not that a Strong's number and a book name wear one font.
 
 ### The single sanctioned exception: `.mpick` (the book picker)
 Full-screen height + its own ✕. It is a **screen-replacing navigator with its own back-stack**
@@ -332,14 +401,15 @@ It DOES adopt the shared header spec and it keeps the swipe hook (both, not eith
 ## Three-zone shell (shared workspace frame)
 Navigate / read / inspect. **Frame components in `static/src/22-shell.jsx`:** `Shell` (four-slot
 frame — desktop `.zshell` grid + a real desktop→mobile collapse to a bottom toolbar `.zbar` +
-`.zsheet` sheets) and `RightStack` (the inspect-panel STACK — depth 1 = one card; a child drills
+`Sheet` cards) and `RightStack` (the inspect-panel STACK — depth 1 = one card; a child drills
 via `useRightStackCtl().push()`, back pops; the PARENT owns the array via `useRightStack()` so a
 center peer-select can `reset()`; lower layers stay mounted, hidden with **`visibility` NOT
-`display:none`** — because these panels are `position:absolute; inset:0`, where `display:none`
-would wipe an overflow box's scrollTop (the Chrome-149 proof + why it's safe elsewhere: memory
-`project_three_zone_shell`). Keys are push-unique minted ids, never by card
-type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS: `.zshell/.zrail/.zcenter/.zinspect`
-+ `.rstack*` + mobile `.zbar/.zsheet`.
+`display:none`** — because these panels are `position:absolute; inset:0`, and Chrome wipes an
+overflow box's scrollTop across `display:none` ONLY for absolutely-positioned boxes (verified
+Chrome 149). A normal-flow box keeps its scroll (the News tab's plain `display:none` wrapper
+proves it), so this is no reason to avoid `display:none` elsewhere. Keys are push-unique minted
+ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS:
+`.zshell/.zrail/.zcenter/.zinspect` + `.rstack*` + mobile `.zbar` + the `.sh-*` sheet block.
 
 **Share the FRAME, not the CONTENTS** — never pull a tab's card/feed styling into `.z*` classes.
 
@@ -352,56 +422,54 @@ the user's per-surface choice, not a hard rule; a top:0 consumer must give each 
 a header BAND (`var(--hdr-h)`) so content clears the navy header (+ a `.app.view-<x>
 .hdr-right` account-pill offset).
 
-**Migrations (all parity-only, proven by parity gates — frame DOM + computed-style diff;
-Library also a Node state-machine gate):** News + Word study render `<Shell>` on desktop
-(`Shell` has `railClass`/`centerClass`); Word study still keeps its own `if (isMobile)` branch,
-News's mobile branch now renders `<Shell isMobile>` too (see the mobile-collapse block below).
-Library's five
-inspect panels carry shared `.zinspect` with `.detail-side` slimmed to its extras — its
-App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile) is
-UNTOUCHED and NOT forced into RightStack. ThreeZone retired.
+**Who's on it (all migrations parity-only, proven by parity gates — frame DOM + computed-style
+diff; Library also a Node state-machine gate; ThreeZone retired):**
+- **News + Word study** render `<Shell>` on desktop (`railClass`/`centerClass`); News's mobile
+  branch renders `<Shell isMobile>` too; Word study keeps its own `if (isMobile)` branch.
+- **Library**'s five inspect panels carry shared `.zinspect` with `.detail-side` slimmed to its
+  extras — its App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover,
+  reconcile) is UNTOUCHED and NOT forced into RightStack.
+- **Ask-corpus** = the first real RightStack consumer: chat layout; rail = threads, center =
+  answer, inspect = the selected answer's provenance (Key passages + a merged "Words in scope"
+  list). A synthesis chip + passage rows PEEK the occurrence → fork → word drill (`.ac-rstack`,
+  top:0). Mobile on the shell's collapse. Spec: `docs/handoffs/HANDOFF_corpus_shell.md`.
+- **Notes**: rail = note index, center = editor edited IN-TAB, right = the note's anchored verse
+  via `VerseRow`; editor guts shared via `useNoteEditor`/`NoteEditFields`; inspect top:0.
+- **News** has a SELECTED-state inspect (click a card → why-it-scored; `‹ Watch` resets — memory
+  `project_news_watch`).
+- **Study** (desktop): uniform master-detail — LEFT rail = list (shared `study-row`), CENTER =
+  content (TopicPage / GraphPage / `SeamPriors`; the Seam index is a Study module, see
+  data-model.md study.db), RIGHT = inspect (ZoneEmpty for now — per-item detail wiring DEFERRED).
+  One top-strip switcher (`study-sub`); `seam-rail` RETIRED. Inspect floats top:0
+  (`.study-rstack`) with a `view-study`-scoped account-pill offset. `.study-*` CSS only — never
+  touch shared `.detail-*`. On a phone Study is still its old centered column
+  (`.study-view.study-mobile`, max-width 820) — the last surface not on the shell's collapse.
+- Full record: memory `project_three_zone_shell`.
 
-**Ask-corpus = FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` — chat
-layout; rail = threads, center = answer, inspect = the selected answer's provenance (Key passages
-+ a merged "Words in scope" list). A synthesis chip + passage rows PEEK the occurrence → fork →
-word drill (`.ac-rstack`, top:0). **Mobile now on the shell's collapse too (2026-07-15)** — see the
-collapse block below. Spec: `docs/handoffs/HANDOFF_corpus_shell.md` + memory `project_three_zone_shell`.
-
-**`.ac` carries a pre-existing `overflow-x: hidden` — SAFE CLEANUP CANDIDATE, not urgent.**
-It predates the mobile pass and masks any sideways overflow inside Ask-corpus. The scroll JP
-reported on his real phone is **GONE** — confirmed by him on device after the mobile pass shipped
-("no scroll", 2026-07-15, post-deploy of `dba2edb` + `5d8e489`); the landing and the search box
-were both rebuilt in those, which is the likeliest reason. Measured independently at 320 + 375,
-reader + admin, landing + thread, with a detector control-tested on a forced 500px probe: nothing
-overflows. So the mask is now known to be hiding nothing, and removing it is a tidy-up someone can
-take whenever they're in here — no repro needed, just re-measure after. Note the trap it sets while
-it stays: `document.scrollWidth` reads clean *through* this clip even with a 500px probe on the
-page — use `getBoundingClientRect()` to hunt overflow here (memory
-`feedback_audit_tools_must_fail`).
-
-**Notes + Seam index + News-rail SHIPPED 2026-07-01** (desktop): Notes on `<Shell>` (rail =
-note index, center = editor edited IN-TAB, right = the note's anchored verse via `VerseRow`;
-editor guts shared via `useNoteEditor`/`NoteEditFields`; inspect top:0). Seam index = a `Seams`
-Study module on `<Shell>` (see data-model.md, study.db). News gained a SELECTED-state inspect
-(click a card → why-it-scored; `‹ Watch` resets — memory `project_news_watch`). Full record:
-memory `project_three_zone_shell`.
+**`.ac`'s mobile `overflow: hidden` masks sideways overflow inside Ask-corpus.** The scroll JP
+reported on his phone is GONE (confirmed on device 2026-07-15, and measured clean at 320 + 375 with
+a control-tested detector), so the mask hides nothing today; removing it is an open tidy-up
+(TODO.md). The trap while it stays: `document.scrollWidth` reads clean *through* this clip even
+with a 500px probe on the page — use `getBoundingClientRect()` to hunt overflow here.
 
 ### The Notes inspect — two defects, one panel (fixed 2026-07-15, `e9089c9`)
 The anchored-verse panel shipped 2026-07-01 with two bugs that only a range note showed both of.
 Both decisions are now pure in **`static/src/34-notes-logic.jsx`**, locked by
 `tests/test_note_inspect.js` (in CI + pre-commit).
-- **`/api/chapter` returns a BARE LIST** (`views_library.py:268`, `jsonify([...])`), and the
-  Library consumes it as one (`60-library.jsx:444`, `setVerses(data)`). The panel read `d.verses`
-  → always empty → the chapter's last verse always fell back to the anchor → the "after"
-  neighbour could never render. **Sibling routes disagree on shape ON PURPOSE**
-  (`/api/verse-words` returns `{words:[...]}`), so read the producer; don't pattern-match off the
-  route next door. Two independent derivations agreeing (the Python's return + the other
-  consumer's use) is what settles it.
-- **A note anchors a RANGE, and the read path never looked.** `resolveSelection()`
-  (`60-library.jsx:1093-1102`) stores `start.verse` and `end.verse` separately from the two edges
-  of a drag-select; the panel used `start.verse` only, so a multi-verse note showed its first
-  verse while the band still said "John 4:21–23". **Trace the WRITE path before believing a data
-  bug** — here the write was innocent and the stored `refLabel` was already a range, so it was
+- **`/api/chapter` returns a BARE LIST** (`chapter_text` in views_library.py,
+  `return jsonify([...])`), and the Library consumes it as one (`setVerses(data)` in
+  60-library.jsx). The panel read `d.verses` → always empty → the chapter's last verse always fell
+  back to the anchor → the "after" neighbour could never render. **Sibling routes disagree on
+  shape ON PURPOSE** (`/api/verse-words` returns `{words:[...]}`), so read the producer; don't
+  pattern-match off the route next door. Two independent derivations agreeing (the Python's return
+  + the other consumer's use) is what settles it.
+- **A note anchors a RANGE, and the read path never looked.** There are two anchor writers in
+  60-library.jsx: `verseAnchor()` (the verse-number MENU — stamps `start` and `end` to the same
+  verse, so it can only make a single-verse note) and `resolveSelection()` (the DRAG-SELECT —
+  stores `start.verse`/`end.verse` separately from the two edges, real `pos` values, and a range
+  `refLabel`). The panel used `start.verse` only, so a multi-verse note showed its first verse
+  while the band still said "John 4:21–23". **Trace the WRITE path before believing a data bug**
+  — here the write was innocent and the stored `refLabel` was already a range, so it was
   display-only: no loss, no history to repair.
 - **THE LESSON — two defects on one surface can hide behind each other.** Fixing the list-read
   alone would have rendered a range note's OWN second verse as a *dimmed neighbour* — presenting
@@ -411,71 +479,10 @@ Both decisions are now pure in **`static/src/34-notes-logic.jsx`**, locked by
   Now the band carries the range and each anchor row carries its own ref. A label that says more
   than the panel renders is a bug even when nothing crashes.
 
-## WORD STUDY IS THE VISUAL REFERENCE SURFACE
-When a visual question is ambiguous, the tiebreaker is **what does Word study do** — the way
-Library is the canonical *reader* (docs/design.md), Word study is the canonical *workspace*. Six
-rulings now converge on it, so this is a standing rule, not a coincidence:
-
-| Ruling | The reference |
-|---|---|
-| Landing rhythm | title → search → helper → samples; an empty state names the ACTION that fills it |
-| Empty-state hero mark | `width="30" height="30"` **at the call site** — never sized by CSS |
-| Verse-list formatting | the **UNOVERRIDDEN base**: normal weight, inherited ink, italics recede |
-| Strip grouping | groups separated by `.filters-sep` (1×14, `--rule-2`) |
-| Empty-state band | a truly-empty inspect drops its band; the shared cross-line is the one divider |
-| Guardrail | **Word study byte-identical** is the hard gate on any cross-surface pass |
-
-- **It is the reference BECAUSE it is unmodified.** The verse-list ruling is the sharpest case:
-  Word study has no `.corpus-text` override at all, so "converge on Word study" resolves to
-  "delete the other surface's overrides" — the smallest possible fix, not a new rule. Check
-  whether the reference is plain before inventing something to copy.
-- **A future divergence from it needs a LOGGED reason** in the CSS at the divergence, naming what
-  meaning the difference carries (Notes's anchor/near emphasis is a legitimate one: the panel has
-  a distinction Word study's flat list doesn't).
-- **Never "also converge" the reference.** If a pass moves Word study's pixels, the pass is wrong
-  — that's how a reference stops being one.
-- **⚠ AMENDMENT (2026-07-15, JP-confirmed) — what the guardrail actually bars.** It bars
-  *incidental* convergence: a pass where Word study is a BYSTANDER must leave it byte-identical.
-  It does NOT bar a unification JP explicitly ordered that names Word study as a target — it bars
-  doing that **silently or unmeasured**. So reference-surface convergence needs BOTH: an explicit
-  JP-sanctioned ruling, AND the measurement built BEFORE the pixels move. **Precedent: the mobile
-  sheet contract** (this session) — Word study was one of the five frames, so `.wm-sheet` had to
-  migrate; the ruling was taken explicitly, and the lexicon fixture is a binding pre-condition of
-  the `.wm-sheet` step (its four sheets are unmeasurable until it exists — six endpoints:
-  `lexiconLookup`/`lexiconProfile`/`lexiconVerses`/`lexiconEnglish`/`lexiconBooks`/`lexica`).
-  Citing this amendment to move Word study without a fresh ruling is the abuse it guards against.
-
-### Italics are translator-supplied words — they never out-shout the scripture (2026-07-15, `63b550e`)
-In ABP an italic word is the TRANSLATOR's, not the text's — the least original thing on the page,
-so it must always be the quietest. `.lib-prose-italic` (`color: var(--ink-2); font-style: italic`)
-is the ONE rule that marks them, everywhere: the KJV/BSB branches in `50-corpus-results.jsx` and
-the ABP prose path in `59c-library-render.jsx` all use it. The Notes inspect broke it **both ways**
-at once, and both are traps for the next surface that styles verse text:
-- **Inheritance:** `.note-insp-anchor .corpus-text { font-weight: 600 }` — the italic span
-  INHERITED the weight and rendered bold-italic. A weight on a verse container hits the italics too.
-- **Direct-beats-inherited:** `.note-insp-near .corpus-text { color: var(--ink-4) }` dims the row,
-  but `.lib-prose-italic` sets `--ink-2` DIRECTLY on the span, so it beat the inherited dim and the
-  supplied word rendered **darker than the real scripture beside it** — the exact inversion of what
-  italics mean. **Any rule that dims verse text must say what happens to the italics inside it**,
-  because `.lib-prose-italic`'s hard-coded colour only "recedes" from the default ink.
-Fix shape: leave `.lib-prose-italic` alone (the reference depends on it) and scope the correction
-to the diverging surface — `.note-insp-anchor .lib-prose-italic { font-weight: 400 }` +
-`.note-insp-near .lib-prose-italic { color: inherit }`.
-
-**An empty state names the ACTION that fills the room — and the answer can differ by surface.**
-Word study's is the reference ("Search a Greek or Hebrew word… to study it here"). Notes's center
-said "Pick a note from the list", which is TRUE on desktop — the empty list is open beside it,
-already saying "In the Library, select some text…". On a phone the collapse puts that list behind
-a button, so for a reader with nothing saved the line pointed at an empty room and buried the only
-first step one tap away. Fixed mobile-only (`isMobile && !anyNotes`), and that is not a fork: the
-two surfaces differ *because their reachability differs*. Ask what's already on screen before
-writing "pick from the list".
-
-### Shell's MOBILE collapse — News, then Ask-corpus, then Notes (all 2026-07-15)
-`MobileBar`/`ZoneSheet`/`.zbar` shipped in Phase 1 with **nothing using them** until News. **Study
-is the last surface still parked** on its own old single-column branch. `Shell` mobile = center
-inline + `mobile={{tools, sheet, sheetTitle, sheetBare, onCloseSheet}}`; a tool opens its zone as a
-swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-derive it:
+### Shell's MOBILE collapse — design rules (News, Ask-corpus, Notes; 2026-07-15)
+`Shell` mobile = center inline + `mobile={{tools, sheet, sheetTitle, sheetBare, onCloseSheet}}`; a
+tool opens its zone as a swipe-dismiss `Sheet`. **Study is the last surface still parked** on its
+own old single-column branch. What the three consumers proved, so the next doesn't re-derive it:
 
 - **A bar slot names a ZONE, not a verb — the DEFAULT, with one bought-out exception.** Count the
   surface's actual zones, don't inherit a button count: News collapsed three, Notes two (its list +
@@ -512,12 +519,6 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   empty BY DESIGN (pages have no verse anchor, ever), not "empty yet" — and it still grays rather
   than dropping the slot, so the bar doesn't reshuffle under the reader when they switch modes. A
   zone that can never apply *in this mode* is still gray, not gone.
-- **Prove a gray by RECTS, and prove occlusion by HIT TEST.** A disabled tool must still render a
-  real 22×22 glyph box (mounted-and-hidden reads as present — check `svgW`/rects, not presence).
-  And when a sheet overlaps the bar, don't compare z-index declarations: ask
-  `document.elementFromPoint()` what actually paints on top. Declarations get defeated by stacking
-  contexts; the hit test can't be. (Notes's sheet is z51 over the z30 bar — confirmed by hit test,
-  which is why nothing inside a sheet needs its own bar clearance.)
 - **Two ways to keep content off the bar; pick by whether the surface has a PINNED control.** News
   pins its shell to `100dvh - --bar-h` and lets the fixed `.zbar` float over the scrolling feed,
   which pads itself clear. Ask-corpus CAN'T — its composer is pinned to the bottom, so a floating
@@ -526,6 +527,11 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   safe area. Same rule, different shape. **Notes took News's shape** — its editor's Save/Delete
   scrolls with the body, nothing is pinned — so the test is literally "is anything pinned to the
   bottom", not "does it feel like a chat".
+- **Pin to the visible viewport** or the whole page rubber-bands: the surface needs
+  `height: calc(100dvh - var(--bar-h) - safe-top)` + `overflow:hidden`, plus
+  `.app.view-<tab> .main { padding-bottom: 0 }`. Same trick as Ask-corpus's `.ac`.
+- **The scroll box needs its own bottom clearance** (`--bar-h` + safe-area) or the last row hides
+  behind the fixed bar.
 - **⚠ MAKING A CONTAINER `display:flex` CAN SHRINK A CHILD THAT USED TO FILL IT — check every child
   for `margin: … auto` first (2026-07-15, `5eaeb23`).** Ask-corpus's mobile composer was made a flex
   COLUMN purely to re-order the quota line above the input. That silently narrowed the follow-up
@@ -535,10 +541,14 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   width and `max-width` did the capping. **The landing didn't break, which is the tell worth
   remembering:** its auto margin sits on the COMPOSER, not on the field, so only the pinned one
   moved. A layout rule added for one child reaches every child. Fix was to scope the flex to the one
-  state that needed it (`.ac-m .ac-composer.hero`). **This class of regression is INVISIBLE to the
-  gates** — they're logic tests and CI has no browser — so measure a geometry change against a real
-  baseline (a `git show <sha>:static/styles.css` swap; `?bundle=head` is JS-only and cannot baseline
-  CSS) or it ships. This one shipped and JP caught it on his phone.
+  state that needed it (`.ac-m .ac-composer.hero`). This one shipped and JP caught it on his phone
+  (see "CSS geometry regressions are invisible to the gates").
+- **An input that won't shrink is almost always a missing `min-width:0` on the INPUT, not on its flex
+  parent (2026-07-01).** Word study's search submit-arrow overlapped "Ask AI": the handoff blamed an
+  absolutely-positioned arrow — wrong, it's a normal flex child and `.search-field` already had
+  `min-width:0`. Real cause: `.ws .search-input` was `flex:1` with no `min-width:0`, so the text input held
+  its ~175px default minimum and shoved the arrow out of the field box. Fix = `min-width:0` on the input
+  (+ let the bar wrap: `.ws .searchbar-in { flex-wrap:wrap }`), no negative margins.
 - **If the surface owns its scrolling, `.zcenter-m` must not be a second scroll box around it**
   (`overflow: hidden`), or the pinned composer floats on a nested scroller. **`.zcenter-m` is a
   scroll box BY DEFAULT** (`flex:1 1 auto; overflow-y:auto`), so any surface whose center already
@@ -546,34 +556,6 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   instead (`overflow:hidden; display:flex; flex-direction:column`), so its fixed mode strip and
   its scrolling editor body keep exactly their desktop jobs. Count the scroll boxes by walking the
   subtree's computed `overflow-y` — don't assume.
-- **A panel's own header band is DESKTOP chrome — hide it inside the sheet.** The sheet's
-  `sheetTitle` already names the panel, so Ask-corpus's rail printed "Recent conversations" twice,
-  one line apart (`.ac-m .zsheet .ac-rail-top { display: none }`). Caught in a screenshot, not in
-  the numbers. **The other resolution: let the band BE the header and pass no `sheetTitle`.** Pick
-  that when the band says something the title can't — Notes's inspect band carries the verse ref
-  ("John 4:24"), which is more use than a repeated "Anchored verse". Then re-size it: a desktop
-  band is `min-height: var(--hdr-h)` to clear the navy nav it floats over, and inside a sheet
-  there's no nav to clear, so it's just a title row.
-- **No bar collision:** `.zbar` is `bottom:0`; the app's own `.mobile-tabs` is `top:0`. The bottom
-  is free. (Library's cockpit is the exception — it owns the bottom on its own tab.)
-- **Pin to the visible viewport** or the whole page rubber-bands: the surface needs
-  `height: calc(100dvh - var(--bar-h) - safe-top)` + `overflow:hidden`, plus
-  `.app.view-<tab> .main { padding-bottom: 0 }`. Same trick as Ask-corpus's `.ac`.
-- **The scroll box needs its own bottom clearance** (`--bar-h` + safe-area) or the last row hides
-  behind the fixed bar.
-- **A panel that carries its own header + scroll box goes in as a BARE sheet** (`sheetBare`), else
-  the padded `.zsheet-body` nests a second scroll box and collapses the flex-fill. **⚠ But a bare
-  sheet's CHILD owns the scroll box, so `ZoneSheet` has no `scrollRef` to hand the dismiss
-  gesture** — that shipped as a real bug (scroll-up dragged the sheet shut). `useSwipeToDismiss`
-  now falls back to the nearest scrollable ancestor of the touch when no ref is given (an explicit
-  `scrollRef` still wins, so every other sheet is unchanged). **The fallback can't rescue a scroll
-  box that isn't a plain `overflow:auto` descendant** — hand it a ref then.
-  **PROVE the fallback on a FORCED overflow, never by code read.** It binds only a box that
-  *actually* overflows (`scrollHeight > clientHeight + 1`), so a sheet whose fixture content is
-  short exercises nothing and passes vacuously. Notes's inspect needed +1400px of injected filler
-  before the gesture could fail at all. Two cases, destructive one LAST with the subject asserted
-  still attached: scrolled DOWN → drag must NOT dismiss (transform stays `none`; this is the bug
-  the fallback exists for), then at top → drag past 90px MUST dismiss.
 - **Bottom-bar icons are 22px** (`.zbar-btn svg`), sized at the bar so every consumer inherits one
   size and the shared `Icon.*` glyphs (14–16px, drawn for dense inline rows) stay untouched. The
   in-app references DISAGREE — Word study `.wm-tab` 22px vs Library cockpit `.mbar-*` 21px — 22
@@ -581,36 +563,66 @@ swipe-dismiss sheet. What the three consumers proved, so the next doesn't re-der
   **Library's cockpit stays a documented 21px EXCEPTION** — it's the mixed bar (it carries the
   book/chapter text button), so its icons are sized to the type beside them. That's the original
   ruling's own logic applied, not amended.
-- Bar height stays `--bar-h`: the app's bar rhythm and the sheets' max-height maths key off it.
-- **A BASELINE read obeys settle-before-read exactly like a verification read** — and a wrong
-  baseline is worse than a wrong verification, because it inverts the sign of every comparison
-  after it. Notes's desktop baseline was taken ~1s after navigate and measured 1388px wide: the
-  page was still tall enough for a transient scrollbar, and the post-change re-read at a true
-  1400px looked like a 12px regression that never existed. Settle on a CONDITION (the rows are
-  there AND `scrollHeight` stopped moving), not on a `setTimeout` guess.
-- **`?bundle=head` is the baseline validator of record.** When a guardrail looks failed, A/B the
-  COMMITTED bundle at the same viewport BEFORE diagnosing the working copy — same page, same
-  fixtures, only the bundle swaps. That is what proved the 1388 was the bad number, not the 1400.
-- **THE VIEWPORT IS ELASTIC — ASSERT `innerWidth` INSIDE THE READ, AT BOTH ENDS (2026-07-15).**
-  The browser pane auto-fits its viewport to content, so a phone-width measurement is not a
-  setting you make once and trust. Two ways it bit in one session: a resize to 375 silently
-  reverted to 1280 during a long-running probe, leaving a MOBILE-rendered DOM (`news-m`, the
-  branch had mounted at 375) laid out at desktop width — every pixel a lie, and nothing about
-  the DOM saying so, because `isMobile` (`90-app.jsx:80`, `innerWidth < 1100`) only re-checks on
-  a real resize EVENT that a viewport override doesn't fire. Then, worse: an overflow detector
-  that planted a 500px probe **widened the window to 500**, so it compared 500 against 500 and
-  reported "clean" — *the act of measuring changed the thing measured*, and the failure mode was
-  a reassuring zero. **It was caught only because the detector was control-tested on its own
-  known positive** (`feedback_audit_tools_must_fail`) — the check that is supposed to be a
-  formality is the one that found it. So: read `innerWidth` at the START and END of the same
-  script, assert both are the width you meant, and treat any injected geometry as suspect.
-- **Scope every read to the surface you mean.** The desktop app mounts every view at once, so a
-  bare `document.querySelector('.zempty')` or `.zbar` happily returns ANOTHER tab's
-  mounted-and-hidden copy at 0×0 — it bit twice in one session (a `.zbar` that was Ask-corpus's
-  while measuring Notes, a `.zempty` that was Ask-corpus's while measuring Word study). Query
-  inside the owning surface's root and assert the rect is non-zero.
 
-### Icons: ONE glyph per function, from `10-icons.jsx` (2026-07-15)
+## WORD STUDY IS THE VISUAL REFERENCE SURFACE
+When a visual question is ambiguous, the tiebreaker is **what does Word study do** — the way
+Library is the canonical *reader* (docs/design.md), Word study is the canonical *workspace*. Six
+rulings converge on it, so this is a standing rule, not a coincidence:
+
+| Ruling | The reference |
+|---|---|
+| Landing rhythm | title → search → helper → samples; an empty state names the ACTION that fills it |
+| Empty-state hero mark | `width="30" height="30"` **at the call site** — never sized by CSS |
+| Verse-list formatting | the **UNOVERRIDDEN base**: normal weight, inherited ink, italics recede |
+| Strip grouping | groups separated by `.filters-sep` (1×14, `--rule-2`) |
+| Empty-state band | a truly-empty inspect drops its band; the shared cross-line is the one divider |
+| Guardrail | **Word study byte-identical** is the hard gate on any cross-surface pass |
+
+- **It is the reference BECAUSE it is unmodified.** The verse-list ruling is the sharpest case:
+  Word study has no `.corpus-text` override at all, so "converge on Word study" resolves to
+  "delete the other surface's overrides" — the smallest possible fix, not a new rule. Check
+  whether the reference is plain before inventing something to copy.
+- **A future divergence from it needs a LOGGED reason** in the CSS at the divergence, naming what
+  meaning the difference carries (Notes's anchor/near emphasis is a legitimate one: the panel has
+  a distinction Word study's flat list doesn't).
+- **Never "also converge" the reference.** If a pass moves Word study's pixels, the pass is wrong
+  — that's how a reference stops being one.
+- **⚠ AMENDMENT (2026-07-15, JP-confirmed) — what the guardrail actually bars.** It bars
+  *incidental* convergence: a pass where Word study is a BYSTANDER must leave it byte-identical.
+  It does NOT bar a unification JP explicitly ordered that names Word study as a target — it bars
+  doing that **silently or unmeasured**. So reference-surface convergence needs BOTH: an explicit
+  JP-sanctioned ruling, AND the measurement built BEFORE the pixels move. **Precedent: the mobile
+  sheet contract** — Word study was one of the five frames, so `.wm-sheet` had to migrate; the
+  ruling was taken explicitly, and the lexicon fixture was built first as a binding pre-condition.
+  Citing this amendment to move Word study without a fresh ruling is the abuse it guards against.
+
+### Italics are translator-supplied words — they never out-shout the scripture (2026-07-15, `63b550e`)
+In ABP an italic word is the TRANSLATOR's, not the text's — the least original thing on the page,
+so it must always be the quietest. `.lib-prose-italic` (`color: var(--ink-2); font-style: italic`)
+is the ONE rule that marks them, everywhere: the KJV/BSB branches in `50-corpus-results.jsx` and
+the ABP prose path in `59c-library-render.jsx` all use it. The Notes inspect broke it **both ways**
+at once, and both are traps for the next surface that styles verse text:
+- **Inheritance:** `.note-insp-anchor .corpus-text { font-weight: 600 }` — the italic span
+  INHERITED the weight and rendered bold-italic. A weight on a verse container hits the italics too.
+- **Direct-beats-inherited:** `.note-insp-near .corpus-text { color: var(--ink-4) }` dims the row,
+  but `.lib-prose-italic` sets `--ink-2` DIRECTLY on the span, so it beat the inherited dim and the
+  supplied word rendered **darker than the real scripture beside it** — the exact inversion of what
+  italics mean. **Any rule that dims verse text must say what happens to the italics inside it**,
+  because `.lib-prose-italic`'s hard-coded colour only "recedes" from the default ink.
+Fix shape: leave `.lib-prose-italic` alone (the reference depends on it) and scope the correction
+to the diverging surface — `.note-insp-anchor .lib-prose-italic { font-weight: 400 }` +
+`.note-insp-near .lib-prose-italic { color: inherit }`.
+
+**An empty state names the ACTION that fills the room — and the answer can differ by surface.**
+Word study's is the reference ("Search a Greek or Hebrew word… to study it here"). Notes's center
+said "Pick a note from the list", which is TRUE on desktop — the empty list is open beside it,
+already saying "In the Library, select some text…". On a phone the collapse puts that list behind
+a button, so for a reader with nothing saved the line pointed at an empty room and buried the only
+first step one tap away. Fixed mobile-only (`isMobile && !anyNotes`), and that is not a fork: the
+two surfaces differ *because their reachability differs*. Ask what's already on screen before
+writing "pick from the list".
+
+## Icons: ONE glyph per function, from `10-icons.jsx` (2026-07-15)
 **RULE THE MATRIX FUNCTION-FIRST — one row per FUNCTION, one column per BAR, each cell the
 current glyph; then one ruling per row.** This is the method, not a formality: the first pass
 tabulated by glyph ("who uses `WsI.Search`?"), unified the source inside one tab, and declared
@@ -629,9 +641,9 @@ it in the first pass. The settled matrix:
 | Start a new one ‡ | — | — | — | `Plus` (New search) | — |
 | The list you navigate by | `[Book Ch]` text | `Book` | `Hash` | `Clock` | `Note` / `Book` † |
 
-‡ The two VERB rows — the exceptions to "a bar slot names a zone" (see the rule above). `Plus` is
-Ask-corpus's, JP-ruled 2026-07-15. Both are bought-out cases, not licence for a third: a verb needs
-its own ruling, and it never paints an active state.
+‡ The two VERB rows — the exceptions to "a bar slot names a zone" (see the mobile-collapse rules).
+`Plus` is Ask-corpus's, JP-ruled 2026-07-15. Both are bought-out cases, not licence for a third: a
+verb needs its own ruling, and it never paints an active state.
 
 † Notes's list slot is **MODE-FOLLOWING** — the first one. One slot, two content names: `Note`
 (pencil) for "Verse notes", `Book` for "Journal pages", flipping with the `Verse notes | Journal`
@@ -655,31 +667,16 @@ names must already be in that tab's own vocabulary.
   means **reading options** and nothing else. Check here before reusing any of them.
 - **A control's LABEL is not its function — open the sheet.** "Views" got the grid glyph off its
   name; it actually holds Edition/Testament/Go-deeper, i.e. a filter. Read the contents, then rule.
-- **Verify a merge by SHAPE, not by the component name you typed** — compare the drawn children
-  (`rect3|pathM15 3v18` etc.) across bars; that's what proves two bars really share a glyph.
-- **THE WHOLE MATRIX IS NOW VERIFIED BY DRAWN SHAPE (2026-07-15, `b2fa9be`).** News was the last
-  holdout — its mobile branch couldn't reach its `<Shell>` without feed data, so two passes
-  reasoned about its three glyphs from the shared components instead of seeing them. The harness
-  News fixture closed it: rendered at an asserted 375px, News reads Threads=`Hash`
-  (`M10 3 8 21…`), Watch=`Panel` (`rect[3 3 18 18 rx2] + M15 3v18`), Options=`Filter`
-  (`M3 6h18M6 12h12M10 18h4`) — the matrix as ruled, nothing re-ruled. Cross-bar by shape: the
-  Panel row is BYTE-IDENTICAL across News's Watch, Ask-corpus's Inspect, Notes's Anchored verse
-  and Word study's Word card (four bars, one glyph), and News's Options equals Word study's
-  Views. **The reasoned-from-components reading turned out RIGHT — which is the point worth
-  keeping: it was right, and it was still unverified.** A correct guess and a measurement are
-  the same value and different facts.
-  Notes's three slots read back `pathM4 20h4L18.5 9.5…` (pencil), `pathM4 4.5A2.5…` (book) and
-  `rect3|pathM15 3v18` (Panel — character-for-character the shape above).
-- **Drive a state change THROUGH the control, and hit-test it first.** `el.click()` fires happily
-  on something `display:none`, so a mode flip "verified" that way proves the state changed, not
-  that a reader could change it. Read the button's rect, ask `elementFromPoint()` at its centre
-  whether that button is really what's there, tap THAT, then re-read the glyph by shape.
-`Icon.*` is the only icon set. Word study used to keep a private `WsI` — deleted, because it was a
-**fork, not drift**: its `Sliders` was character-for-character identical to `Icon.Modes`, and that
-one drawing meant "Views" in Word study and "Reading options" in Library. One glyph, two jobs, in
-two bars. `Card` + `ChevR` had no shared twin, so they were **promoted into `Icon`** rather than
-deleted. Views now takes `Icon.Grid` (arrangement); `Icon.Modes` means reading options and nothing
-else.
+- **The whole matrix is verified by DRAWN SHAPE (2026-07-15, `b2fa9be`)** — News was the last
+  holdout until the harness News fixture let it render; the Panel row is byte-identical across four
+  bars. Two earlier passes had reasoned about News's glyphs from the shared components instead of
+  seeing them. **The reasoned reading turned out RIGHT — which is the point worth keeping: it was
+  right, and it was still unverified.** A correct guess and a measurement are the same value and
+  different facts.
+- `Icon.*` is the only icon set. Word study's private `WsI` was deleted as a **fork, not drift**:
+  its `Sliders` was character-for-character `Icon.Modes`, so one drawing meant "Views" in Word study
+  and "Reading options" in Library. `Card` + `ChevR` had no shared twin, so they were **promoted
+  into `Icon`**. Views now takes `Icon.Filter`; `Icon.Modes` means reading options only.
 - **Never fork a glyph to resize it.** The `Icon.*` components spread props, so pass
   `width`/`height` at the call site (`<Icon.Search width="20" height="20"/>`). This is load-bearing:
   the CSS around those uses sets only the flex SLOT (`.wm-search-i { flex: 0 0 20px }`), never the
@@ -688,32 +685,23 @@ else.
   buttons take the component bare.
 - Before adding a glyph, grep the set for the FUNCTION, not the shape.
 
-## Verse 0 is a REAL verse (standing gotcha, 2026-07-30)
-Psalm superscriptions live at verse 0. Any JS truthiness test on a verse number
-(`book && chapter && verse`) silently drops it — that bug made the AI-blurb fetch go
-verse-less on Psalm-title clicks, the model asked "which one do you mean?", and the
-non-answer got cached and served (pn:abimelech incident). Rule: verse checks compare
-against null/empty, never bare truthiness; any frontend change touching verse
-references gets a verse-0 spot check. First specimen + cert linkage:
-docs/tickets/TICKET_blurb_verse_check.md.
-
 ## Library tab
 Full per-feature history in memory (each block names its file). Standing rules + gotchas here.
 
 ### Layout
-- Desktop toolbar (lib-bar): `[‹ Ch ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]`.
-  Text source lives in the LEFT NAV, not the toolbar. ABP/BSB/HEB one-click (HEB grays on NT;
-  falls back to KJV in the slot if heb.db absent); KJV/ESV/NIV + non-canon fold into a
-  **"More ▾"** popout. (KJV demoted into "More" 2026-06-22 — BSB is the default English; the
-  `kjvInMore = hebShown` flag keeps KJV up top only when heb.db can't fill the slot.) The source
-  row + Eras/Days are **underline tabs**, NOT boxed segments — the source row is a 4-equal-column
-  grid (`.nav-source-seg.seg`) so a long "More" label can't shove the others.
+- Desktop toolbar (lib-bar): `[‹ ›] | [Canonical|Chronological] | [Strong's] [Interlinear]
+  [Compare ▾] | [Chip · Interlinear · Prose] … [Search] [Aa ▾]`. Text source lives in the LEFT
+  NAV, not the toolbar. ABP/BSB/HEB one-click (HEB grays on NT; falls back to KJV in the slot if
+  heb.db absent); KJV/ESV/NIV + non-canon fold into a **"More ▾"** popout (BSB is the default
+  English; the `kjvInMore = hebShown` flag keeps KJV up top only when heb.db can't fill the slot).
+  The source row + Eras/Days are **underline tabs**, NOT boxed segments — the source row is a
+  4-equal-column grid (`.nav-source-seg.seg`) so a long "More" label can't shove the others.
 - Mobile cockpit (lib-toolbar, fixed at the BOTTOM/thumb-zone on Library) is an ICON row of five
-  EQUAL-width slots (2026-06-20): `[🔍 Search] [▷ Play] [Abbr Ch] [ⓘ Info] [⚙ Options]`. Center
-  slot shows the 3-letter book abbreviation ("Amo 1"); right slot is sliders `Icon.Modes` (opens
-  the reading-options sheet). Audio scrubber docks above the cockpit (`.lib-audio-dock`);
-  desktop chrono keeps the inline one. The play button GRAYS (not hides) when a text has no
-  audio, keeping the row balanced.
+  EQUAL-width slots: `[Search] [Play] [Abbr Ch] [Panel] [Options]`. Center slot shows the
+  3-letter book abbreviation ("Amo 1"); the detail-panel slot is `Icon.Panel` (it wore `Icon.Info`
+  until 2026-07-15 — see Icons); right slot is sliders `Icon.Modes` (opens the reading-options
+  sheet). Audio scrubber docks above the cockpit (`.lib-audio-dock`); desktop chrono keeps the
+  inline one. The play button GRAYS (not hides) when a text has no audio, keeping the row balanced.
 - Compare ▾, the "More" popout, and the Aa size/theme menu close on outside-click/Esc AND
   **swallow that dismiss click** (capture-phase one-shot) so it doesn't hit a chip behind them.
 
@@ -721,10 +709,9 @@ Full per-feature history in memory (each block names its file). Standing rules +
 - HEB = public Hebrew OT interlinear (memory `project_hebrew_ot_interlinear`): OT books only
   (book list + mobile picker drop NT in HEB mode), NO chronological order (grayed in Hebrew).
   On a non-Hebrew text sitting on a NT book the HEB selector is grayed, not hidden.
-- **Gray-vs-hide is the user's per-control call** (memory `feedback_gray_dont_hide`): GRAY a
-  real feature that doesn't apply here (HEB on NT, Search on ESV/NIV, mobile play w/o audio);
-  HIDE Compare + the order toggle on non-canon, and ESV/NIV (copyright). Propose gray for
-  inactive-but-applicable, confirm per control.
+- Gray-vs-hide is the user's per-control call (CLAUDE.md "Key design decisions"; memory
+  `feedback_gray_dont_hide`). Library's cases: GRAY HEB on NT, Search on ESV/NIV, mobile play
+  w/o audio; HIDE Compare + the order toggle on non-canon, and ESV/NIV (copyright).
 
 ### Reader appearance (memory `project_reader_appearance`)
 - Reader font = `--f-serif` (Source Serif 4). `Aa ▾` menu / mobile ModesSheet hold A−/A+ size +
@@ -739,7 +726,9 @@ Full per-feature history in memory (each block names its file). Standing rules +
   freelance hues):** `--accent` = STEEL-BLUE (oklch 240, primary links/active), `--ai` = VIOLET
   (280, AI features), `--hl-match` = `#f0d27a` (the ONE shared gold for a matched/target word —
   `.corpus-hit` + `.lib-search-mark`, fixed across themes). **Gold (`--gold`) is RESERVED for
-  target words ONLY** — active tabs, count pills, etc. use `--accent`. Navy = brand header + the
+  target words ONLY** — active tabs, count pills, etc. use `--accent`. Deliberate exceptions that
+  STAY gold (don't sweep): memory `project_side_panel_rail` "Gold that STAYS" — incl. the reading
+  plan's progress bar / % / streak flame (`.plan-bar-fill`). Navy = brand header + the
   chronological "you are here" active-passage rule (shared
   `.nav-passage.on/.plan-passage.on/.mpick-passage.on`, dark falls back to `--spine-nt`).
   **NO brown anywhere** — markers/hovers use `--accent`, not `--gold` (memory
@@ -747,6 +736,8 @@ Full per-feature history in memory (each block names its file). Standing rules +
 - Desktop scrollbars slim app-wide + `html { scrollbar-gutter: stable }` so swapping ABP↔KJV
   never shifts layout. Fonts load **`display=optional`, NOT `swap`** (templates/index.html) —
   kills the mobile toolbar reload flash. Don't switch back.
+- **JetBrains Mono is loaded at weights 400 + 500 ONLY** (templates/index.html). `font-weight:600`
+  on mono faux-bolds and reads "intense" — use 500 (the chrono timeline years do).
 
 ### First-paint rule (JP standing ruling 2026-07-28, FRAME-0 lane)
 **Nothing paints before the final data** — no interim content that later swaps, no
@@ -760,12 +751,40 @@ change and skip the fetch — freeze under a hold. Full record: docs/audits/AUDI
 one root cause). Verifying flashes on the hidden harness tab: rAF doesn't fire and timers
 clamp — use fixed setTimeout snapshots + artificially delayed fetches, not polling.
 
+### Detail-panel React gotchas (entity-binding build, 2026-06-28)
+- **Declare state BEFORE the effect whose deps reference it.** A TDZ ReferenceError white-screened
+  the app on every chip click — Babel and the tests don't catch it; it needs a browser.
+- **Gate the FETCH, not just its render**, to stop downstream work (a verse bind gates the whole
+  name-based metaV fetch, which kills the name-guess card + its Groups + place-LSJ at once).
+- **A cross-effect race** (an effect fires before an async flag flips) needs a SYNCHRONOUS `useRef`
+  set by the earlier effect and read by the later one in the same commit (`bindPendingRef`).
+- **A reused panel paints the previous word's referent.** The rail's DetailPanel had no `key`, and
+  referent state is cleared in an effect that runs AFTER first paint — so a second proper-noun click
+  showed the previous word's identity for the whole bind round-trip (the "referent flip": Adam's
+  card under the Eden header). Fix = `key={activeEntry.id}` on both DetailPanel instances
+  (90-app.jsx) → fresh remount per word; settled cards byte-identical.
+- **Verify a transient UI bug in the LOADING frames, not the settled DOM.** Dumping the card after it
+  settled showed no stray controls and the reported flip was wrongly called nonexistent. Reproduce
+  with a `MutationObserver` on the card recording each distinct frame across a click; the stale frame
+  is the bug (a reused panel's stale paint is also where a "phantom" control like the prior place's
+  Region row comes from).
+
 ### Greek compare rule (2026-07-29, accent-divergence lane)
 `abp_surface` (and the scrape layer generally) is systematically STRIPPED-DOWN Greek —
 no breathing marks, lowercased names, divergent accents — while lexicon lemmas are fully
 pointed. **Any lemma-vs-surface text comparison must use `greekFold()` (00-core.jsx),
 COMPARE-ONLY** (never to transform displayed text); raw equality inherits a ~4,250-row
-false-fire/false-miss class. Record: docs/tickets/accent_divergence.txt.
+false-fire/false-miss class. Record: docs/tickets/accent_divergence.txt; data side:
+data-model.md `abp_surface`.
+
+### Verse 0 is a REAL verse (standing gotcha, 2026-07-30)
+Psalm superscriptions live at verse 0. Any JS truthiness test on a verse number
+(`book && chapter && verse`) silently drops it — that bug made the AI-blurb fetch go
+verse-less on Psalm-title clicks, the model asked "which one do you mean?", and the
+non-answer got cached and served (pn:abimelech incident). Rule: verse checks compare
+against null/empty, never bare truthiness; any frontend change touching verse
+references gets a verse-0 spot check. First specimen + cert linkage:
+docs/tickets/TICKET_blurb_verse_check.md.
 
 ### Render modes (memory `project_reading_modes`)
 THREE ABP reading modes, `viewMode` = chip|prose|interlinear (2026-07-04; a 3-way
@@ -791,31 +810,6 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   prose/toggle reducer (`libViewTransition`) all live in shared
   **`static/src/56-library-order-logic.jsx`** (browser globals + Node `module.exports`),
   Node-tested by `tests/test_library_order.js` + `tests/test_render_markup.js`.
-- **`pnClickPayload` is the ONLY producer of PN click fields (hard rule, 2026-07-30).** Every
-  click site that sends `isPN`/`pnName`/`gloss` spreads `...pnClickPayload(w)` — never hand-roll
-  those fields. Three hand-rolled copies drifted (raw phrase or lowercase head as pnName → the
-  detail panel titled "Blind"/"Then", or silently skipped the entity lookup because
-  `extractProperName` needs a capital). `grep pnName:` over static/src must stay EMPTY. The
-  payload is english_head-first (agreed with verified binds 14–0 in the 2026-07-29 divergence
-  dump; `english` can be a whole rendered phrase).
-- **PN card family rules (JP rulings 2026-07-29/30):** ONE family, two densities. Headers:
-  "Biblical Person"/"Biblical Place" on BOTH the verse-bound TIPNR card and the name-path metaV
-  card (bound card's bare "Person"/"Place" was drift, unified). **NAME ALWAYS SHOWS:** every
-  person/place/group section opens with the entity's name bold (`.pnbound-name`) — this REVERSED
-  the 2026-07-16 differs-only "stutter" rule (on Greek-headed cards suppression left no prominent
-  English name; header = clicked FORM, this line = REFERENT). Don't re-add echo suppression.
-  **SLIM card** (Paul-class, 2,218 slots): name-path person card when the exact/hyphen-blind
-  match is sole-referent (`sole_referent` from the server; fuzzy NEVER slims — the
-  Archite→Archippus rejection is certified) but fails the bio bar AND no place row exists —
-  renders name + gender tag + lone kin link + optional server `tipnr_desc` + the AI note (aidesc
-  gate passes `_slim` through) + the confident label. Label copy (JP option 1): "Matched by
-  name — the only person/place of this name in our records." — sole-referent cards only, all
-  others keep "Matched by name — not checked against this verse."
-- **Census = the card-logic certification tool:** `scripts/audit_pn_card_census.py` MIRRORS the
-  live card decision (payload, lookups, bins incl. a:person-slim). Any ship that changes card
-  logic updates the mirror in the same commit, then re-runs on PA: BOUND must not move,
-  relocations must balance exactly. Banked bracket: 32,479 slots / 14,830 render binds (14,898
-  total rows incl. 68 hot — count render=1, it's what readers see).
 - **Bracket trail punctuation must land on a chip that RENDERS** (Jer 46:15 class, fixed
   2026-07-11): chip mode lifts a group's clause mark and re-emits it after the group's last
   member — but a label-less folded pronoun/article sorts LAST (no order digit) and its chip is
@@ -837,6 +831,7 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   `[`/`]` ride inside the word's english cell (`.lib-iw-brk`), NOT a separate column. Old
   `.lib-bracket*` column CSS is dead.
 - Italic = translator additions, muted/italic: KJV (italic=1), ABP (words.italic=1), ABP `[word]`.
+- Proper-name click payload + card rules: see "Proper-name (PN) cards" below.
 
 ### Compare (memory `project_pericopes_parallel`)
 - Pick 2–4 of ABP/KJV/BSB/ESV/NIV side by side (`translation === "parallel"`, `compareSel`).
@@ -853,6 +848,12 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   (no DB). An `Eras | Days` toggle atop the chrono picker.
 - Days = a 365-day plan with per-text progress (`lexica.plan.v1`), binned into ~12 collapsible
   Month blocks. Component `static/src/58-dayplan.jsx`.
+- Days view: 12 month blocks themed to the Hebrew months / zodiac, deliberately UNEVEN (`ZODIAC`
+  in 58-dayplan.jsx); every day marker toggles independently (`done` list per text); progress
+  syncs to the account via `/api/plan/sync` (notes.db `plan`).
+- Active passage = ONE straight inset rule shared by `.nav-passage.on/.plan-passage.on/
+  .mpick-passage.on`. **`border-radius: 0` is load-bearing** — the 5px base radius rounds the inset
+  bar into a "bracket". No spines / gold sub-rib (killed 2026-06-20).
 - Chrono mode shows an ESV-style daily Reading-intro panel (AI title+summary + era timeline):
   `views_chrono.py` + `static/src/59-dayintro.jsx`.
 
@@ -885,14 +886,16 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   field's nature, so the next author checked whether they were turning a page — not whether they
   were re-emitting.** Enforced now, not just documented: `navAfterVersionSwitch`
   (`56-library-order-logic.jsx`, gated in `tests/test_library_order.js`). **Two producers set it,
-  and a fix must cover BOTH:** Word study's verse list (`90-app.jsx:476`) and the SEO reader
-  deep-link `/?b=&c=&t=` (`:296-302`, generated by `views_seo.py:_reader_link` → the
-  "Open in the interactive reader" link on `/read/<book>/<ch>/<text>` pages). Check for a third
-  before assuming two. The queued cure is to CONSUME the value once applied so no re-emit can
-  re-assert it — own session; it touches the load-bearing nav effect. **`onReaderPos`/`handleReaderPos` carry only (book, chapter) — NO
-  verse.** So in chrono the reconcile MUST keep the passage you're already on when it still
-  covers that chapter; else a chapter split across a day boundary snaps you to the FIRST passage
-  covering it and the clicked plan day never opens — hit 141/365 days (fix cf5c6ec, shared logic
+  and a fix must cover BOTH:** Word study's verse list (the `setLibNav` call in 90-app.jsx's
+  Word-study jump) and the SEO reader deep-link `/?b=&c=&t=` (90-app.jsx's deep-link reader,
+  generated by `views_seo.py:_reader_link` → the "Open in the interactive reader" link on
+  `/read/<book>/<ch>/<text>` pages). Check for a third before assuming two. The queued cure is to
+  CONSUME the value once applied so no re-emit can re-assert it — own session (TODO.md); it touches
+  the load-bearing nav effect.
+- **`onReaderPos`/`handleReaderPos` carry only (book, chapter) — NO verse.** So in chrono the
+  reconcile MUST keep the passage you're already on when it still covers that chapter; else a
+  chapter split across a day boundary snaps you to the FIRST passage covering it and the clicked
+  plan day never opens — hit 141/365 days (fix cf5c6ec, shared logic
   `static/src/57-chrono-logic.jsx` `chronoReconcile`, locked by `tests/test_chrono_reconcile.js`).
 - Clicking a verse number opens the TSK Cross-Reference panel. Desktop link-over from
   Search/Lexicon auto-opens that verse's xref card over the chapter summary.
@@ -912,13 +915,12 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
   beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` →
   compacts `.lib-reading` on desktop.
-- **Mobile = bottom sheets. The five Library rail cards are on the shared `Sheet` (2026-07-15)** —
-  height, header, radius, layer and the dismiss gesture all come from **THE MOBILE SHEET CONTRACT**
+- **Mobile = bottom sheets. The five Library rail cards are on the shared `Sheet`** — height,
+  header, radius, layer and the dismiss gesture all come from **THE MOBILE SHEET CONTRACT**
   (above); nothing here. They close by **swipe-down + tap-scrim — NO close X on mobile** (X stays on
   DESKTOP panels; real centered modals keep theirs). Section spacing aligns to the LOCKED word card,
   and each card's title type stays its own (the word card's Strong's badge is mono by doctrine).
-  The old "heights still drift, not yet unified" note is DEAD — that was the defect the contract
-  fixed; `project_mobile_gestures` still holds the gesture history, not the heights.
+  `project_mobile_gestures` holds the gesture history.
 
 ### Other Library features
 - Focus mode (memory `project_focus_mode`): tap blank to enter, Esc/tap exits. Mobile hides
@@ -935,71 +937,53 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   default flashes before the saved value.** Wheel over fixed chrome doesn't scroll the reading
   pane.
 
-## Notes, highlights, bookmarks + accounts (memory `project_notes_highlights`)
-- **Sign-in lives in the DESKTOP header:** a "Log in" pill (opens `AuthModal`, `authOpen` in
-  90-app.jsx) when signed out, or your display name (else email) when signed in. Clicking opens
-  the **account panel as a dropdown anchored under the button** (`AccountModal anchored`,
-  `accountOpen`) — no longer jumps to Notes (2026-06-20). Signed-in label is PLAIN TEXT.
-  **Mobile has NO header** — account + login live in the **"You" sheet** (rightmost mobile
-  bottom-toolbar slot, replaced About; `YouSheet` in 90-app.jsx, 2026-07-05): person/initial
-  icon → bottom sheet with account row (login form, or account+logout), an appearance section
-  (font size + theme, sharing lifted App state), and an About row. **The Notes tab renders NO
-  login row** (mobile or desktop). `AccountModal` is `anchored={!isMobile}` — desktop dropdown,
-  CENTERED modal on mobile.
-- **Browser-local first; accounts are OPT-IN.** Notes live in `localStorage` `lexica.notes.v1`;
-  fully usable with no account. Signing in syncs across devices. One record = a word-position
-  anchor + optional text/color/bookmark flag — a note, highlight, and bookmark are the SAME
-  record: `{id, device, corpus, translation, book, bookName, chapter, start:{verse,pos},
-  end:{verse,pos}, snippet, body, color, bookmark, deleted, created, updated}`. `id` minted AT
-  CREATION. Delete is SOFT (`deleted:true` tombstone) so deletes propagate through sync/import.
-- **Accounts / sync — `notes.db`, the FIRST + ONLY visitor-write path on the site.** Kept OUT
-  of bible.db (corpus is rebuilt; user data must survive). `core.notes_db()`; tables `users`
-  (optional `name` display column), `tokens`, `notes` (keyed `code = "u<user_id>"`).
-  `views_notes.py`: `/api/auth/signup|login|logout|me|config|google|set-name|delete-account` +
-  `/api/notes/sync` (Bearer token). `delete-account` permanently removes user + all data (the
-  confirm makes you type "delete"). Passwords one-way hashed (werkzeug). Stay-logged-in = random
-  bearer token in `tokens` + `localStorage` `lexica.auth.v1`. Sync = two-way last-write-wins by
-  id. Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create. Password
-  reset + set-password (Google-only accounts can add one) LIVE 2026-06-16 via SMTP/Resend —
-  `request-reset`/`reset`/`set-password` + `password_resets` table; emailed link opens
-  `/?reset=<token>`. `request-reset` always returns ok (never reveals whether an email has an
-  account); `reset` is single-use + 1h + clears every session. NO email verification on signup
-  yet. Mail gotchas: memory `project_email_smtp`.
-- **Google sign-in (optional).** `/api/auth/google` verifies Google's signed token
-  (`google-auth`), finds-or-creates by email. Shows only when `GOOGLE_CLIENT_ID` is set AND
-  `google-auth` importable — both checked LAZILY in `_google_ready()` so a deploy before setup
-  can't break the site.
-- Gestures (do NOT fight word-click=lexicon / verse-number=TSK): drag-select text → bar with 5
-  color swatches + "Note"; right-click (desktop) / long-press (mobile) a verse number → menu
-  (Bookmark · Note · 5 colors). Mobile "Add note" bar pins to screen bottom (clear of the OS
-  copy/share toolbar); `selectionchange` backstop. Inline bookmark marker at verse start
-  (indents first line only).
-- Anchoring is PER READING TEXT, covers non-canon too. ABP AND BSB capture exact word-spots
-  (`data-note-pos` on chip spans, `data-note-verse` on rows); KJV anchors whole-verse.
-  Square corners + flush chips make a multi-word highlight one continuous bar. Same-anchor
-  reuse (no dupes) via `NotesStore.findAnchor`.
-- **Highlights paint across ALL translations (verse-level).** `chapterNotes` (`forChapter`)
-  gathers every translation's records; `hiForWord` paints EXACT words only in the text it was
-  made in and ROUNDS UP to whole verse elsewhere. ABP and BSB paint per-WORD in their own text;
-  KJV still whole-verse only (kjv_words has positions, so the BSB `renderBsbVerse` pattern
-  could close it).
-- **Journal** — free-form second note mode. "Verse notes | Journal" toggle. A journal page =
-  same record shape with `kind:"journal"` + `title` + `body`, NO anchor — autosaving full-page
-  editor, same store/sync. Store: `journals()`, `createJournal()`,
-  `getActiveJournal()`/`setActiveJournal()` (`lexica.journal.active.v1`), `appendToJournal()`.
-  Merge guard lets `kind:"journal"` through without anchor; `all()` keeps journals out of the
-  verse-note list. Server cap `_MAX_JOURNAL_BYTES` 64KB vs notes' 8KB.
-- **Copy + send-verse-to-journal from the reader.** Both the drag-select bar AND the
-  verse-number menu carry Copy + Journal (appends `Genesis 1:8 (ABP) — text` via `journalLine()`
-  in 60-library.jsx, to the OPEN journal page; none open → flash "Open a journal page first").
-  A `lib-flash` toast confirms. Both menus share ONE left-to-right order — colors · Note ·
-  Journal · Copy (· Bookmark on the verse menu only) — keep aligned if you touch either.
-- Files: `static/src/12-notes-store.jsx` (NotesStore + sync/auth + journal helpers +
-  NOTE_COLORS/NOTE_COLOR_CSS + useNotesVersion), `static/src/35-notes.jsx` (NoteAddPopover,
-  VerseNoteMenu, NoteColorRow, NotesPanel editor, JournalView/JournalEditor, NotesView tab,
-  AuthModal). Wiring in 60-library.jsx + 90-app.jsx. Notes tab: text search + filters
-  (All/Bookmarks/Highlights/Notes) + sort (Recent/Reference) + collapsible group-by-book +
-  Journal toggle. Export/Import buttons dropped from UI (store/sync code stays).
+## Proper-name (PN) cards
+Server-side binding facts (pn_binding, slot binds, MetaV endpoints) live in data-model.md.
+- **`pnClickPayload` is the ONLY producer of PN click fields (hard rule, 2026-07-30).** Every
+  click site that sends `isPN`/`pnName`/`gloss` spreads `...pnClickPayload(w)` — never hand-roll
+  those fields. Three hand-rolled copies drifted (raw phrase or lowercase head as pnName → the
+  detail panel titled "Blind"/"Then", or silently skipped the entity lookup because
+  `extractProperName` needs a capital). `grep pnName:` over static/src must stay EMPTY. The
+  payload is english_head-first (agreed with verified binds 14–0 in the 2026-07-29 divergence
+  dump; `english` can be a whole rendered phrase).
+- **PN card family rules (JP rulings 2026-07-29/30):** ONE family, two densities. Headers:
+  "Biblical Person"/"Biblical Place" on BOTH the verse-bound TIPNR card and the name-path metaV
+  card (bound card's bare "Person"/"Place" was drift, unified). **NAME ALWAYS SHOWS:** every
+  person/place/group section opens with the entity's name bold (`.pnbound-name`) — this REVERSED
+  the 2026-07-16 differs-only "stutter" rule (on Greek-headed cards suppression left no prominent
+  English name; header = clicked FORM, this line = REFERENT). Don't re-add echo suppression.
+  **SLIM card** (Paul-class): name-path person card when the exact/hyphen-blind match is
+  sole-referent (`sole_referent` from the server; fuzzy NEVER slims — the Archite→Archippus
+  rejection is certified) but fails the bio bar AND no place row exists — renders name + gender
+  tag + lone kin link + optional server `tipnr_desc` + the AI note (aidesc gate passes `_slim`
+  through) + the confident label. Label copy (JP option 1): "Matched by name — the only
+  person/place of this name in our records." — sole-referent cards only, all others keep "Matched
+  by name — not checked against this verse."
+- **Census = the card-logic certification tool:** `scripts/audit_pn_card_census.py` MIRRORS the
+  live card decision (payload, lookups, bins incl. a:person-slim). Any ship that changes card
+  logic updates the mirror in the same commit, then re-runs on PA: BOUND must not move,
+  relocations must balance exactly. The banked baseline (slot / render-bind counts) lives in memory
+  `project_pn_card_confidence` — compare against it, not a number printed here.
+
+### Chip-merge (adjacent same-entity PN pair = one chip, JP-ruled 2026-07-31)
+Server (views_library, chapter + verse-words feeds) marks the SECOND word
+`pn_merge` when both adjacent slots' pn_binding rows point at ONE entity —
+⚠ pn_binding keys book by NUMBER (er_book_num), the abbrev matched nothing and
+shipped an inert feature once. Reader folds in CHIP MODE ONLY
+(mergePnChipPairs, 56-library-order-logic.jsx); prose + interlinear (faithful
+as-printed) never fold. Rules, each bought by a served defect:
+- **english_head stays the FIRST word's name** — pnClickPayload keys the entity
+  lookup on it (single-producer tripwire); display joins ride `english` +
+  `pnDisplay` only.
+- **Merged card hero renders ONLY from the identity join** (both slots'
+  /api/pn/greek-identity, joined) — per-slot word fields half-join around a
+  star slot's missing lemma ("Γάδ" hero). Translit joins both-or-blank.
+- **Chip Strong's tag = UNION of both halves' recorded tags** — never a
+  compound number the slots don't record (admission discipline). Occurrence
+  line dropped on merged cards (first-form count would mislabel).
+- Chip Greek line joins per-half best form (lemma, else printed form).
+- Negative control proven live: 1Ki 4:13 Ramoth(fort)/Gilead(region) = two
+  entities, correctly unmerged one verse from twenty merged.
 
 ## Tag warrants (site-wide standard, JP-ruled 2026-07-31)
 Principle: hover text where a tag ASSERTS or CITES (there's a warrant to show);
@@ -1020,22 +1004,71 @@ Popover flips left/up at viewport edges (measured before paint).
   unique-name) → pill with warrant; unverified name match → italic prose ON
   PURPOSE (a pill would upgrade the weak claim's register).
 
-## Chip-merge (adjacent same-entity PN pair = one chip, JP-ruled 2026-07-31)
-Server (views_library, chapter + verse-words feeds) marks the SECOND word
-`pn_merge` when both adjacent slots' pn_binding rows point at ONE entity —
-⚠ pn_binding keys book by NUMBER (er_book_num), the abbrev matched nothing and
-shipped an inert feature once. Reader folds in CHIP MODE ONLY
-(mergePnChipPairs, 56-library-order-logic.jsx); prose + interlinear (faithful
-as-printed) never fold. Rules, each bought by a served defect:
-- **english_head stays the FIRST word's name** — pnClickPayload keys the entity
-  lookup on it (single-producer tripwire); display joins ride `english` +
-  `pnDisplay` only.
-- **Merged card hero renders ONLY from the identity join** (both slots'
-  /api/pn/greek-identity, joined) — per-slot word fields half-join around a
-  star slot's missing lemma ("Γάδ" hero). Translit joins both-or-blank.
-- **Chip Strong's tag = UNION of both halves' recorded tags** — never a
-  compound number the slots don't record (admission discipline). Occurrence
-  line dropped on merged cards (first-form count would mislabel).
-- Chip Greek line joins per-half best form (lemma, else printed form).
-- Negative control proven live: 1Ki 4:13 Ramoth(fort)/Gilead(region) = two
-  entities, correctly unmerged one verse from twenty merged.
+## Notes, highlights, bookmarks + accounts (memory `project_notes_highlights`)
+- **Sign-in lives in the DESKTOP header:** a "Log in" pill (opens `AuthModal`, `authOpen` in
+  90-app.jsx) when signed out, or your display name (else email) when signed in. Clicking opens
+  the **account panel as a dropdown anchored under the button** (`AccountModal anchored`,
+  `accountOpen`) — no longer jumps to Notes (2026-06-20). Signed-in label is PLAIN TEXT.
+  **Mobile has NO header** — account + login live in the **"You" sheet** (the rightmost slot of
+  the top tab bar `.mobile-tabs`, replaced About; `YouSheet` in 90-app.jsx, 2026-07-05):
+  person/initial icon → bottom sheet with account row (login form, or account+logout), an
+  appearance section (font size + theme, sharing lifted App state), and an About row. **The Notes
+  tab renders NO login row** (mobile or desktop). `AccountModal` is `anchored={!isMobile}` —
+  desktop dropdown, CENTERED modal on mobile.
+  (Why: `anchored` positions by the DESKTOP header's coords + the `--sidebar-w` shove, which pushed
+  it fully off-screen on a phone — "Account settings does nothing". It looked like isMobile
+  staleness; isMobile is a live width listener.)
+- **Browser-local first; accounts are OPT-IN.** Notes live in `localStorage` `lexica.notes.v1`;
+  fully usable with no account. Signing in syncs across devices. One record = a word-position
+  anchor + optional text/color/bookmark flag — a note, highlight, and bookmark are the SAME
+  record: `{id, device, corpus, translation, book, bookName, chapter, start:{verse,pos},
+  end:{verse,pos}, snippet, body, color, bookmark, deleted, created, updated}`. `id` minted AT
+  CREATION. Delete is SOFT (`deleted:true` tombstone) so deletes propagate through sync/import.
+- **Accounts / sync — `notes.db`, the FIRST + ONLY visitor-write path on the site.** Kept OUT
+  of bible.db (corpus is rebuilt; user data must survive). `core.notes_db()`; tables `users`
+  (optional `name` display column), `tokens`, `notes` (keyed `code = "u<user_id>"`).
+  `views_notes.py`: `/api/auth/signup|login|logout|me|config|google|set-name|delete-account` +
+  `/api/notes/sync` (Bearer token). `delete-account` permanently removes user + all data (the
+  confirm makes you type "delete"). Passwords one-way hashed (werkzeug). Stay-logged-in = random
+  bearer token in `tokens` + `localStorage` `lexica.auth.v1`. Sync = two-way last-write-wins by
+  id. Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create. Password
+  reset + set-password (Google-only accounts can add one) LIVE 2026-06-16 via SMTP/Resend —
+  `request-reset`/`reset`/`set-password` + `password_resets` table; emailed link opens
+  `/?reset=<token>`. `request-reset` always returns ok (never reveals whether an email has an
+  account); `reset` is single-use + 1h + clears every session. NO email verification on signup
+  yet. Mail gotchas: memory `project_email_smtp`. Roles + the rest of notes.db: data-model.md.
+- **Google sign-in (optional).** `/api/auth/google` verifies Google's signed token
+  (`google-auth`), finds-or-creates by email. Shows only when `GOOGLE_CLIENT_ID` is set AND
+  `google-auth` importable — both checked LAZILY in `_google_ready()` so a deploy before setup
+  can't break the site (the button hides if either is missing).
+- Gestures (do NOT fight word-click=lexicon / verse-number=TSK): drag-select text → a bar; right-
+  click (desktop) / long-press (mobile) a verse number → a menu (both menus' contents + their
+  shared order: "Copy + send-verse-to-journal" below). Mobile "Add note" bar pins to screen bottom (clear of the OS copy/share
+  toolbar); `selectionchange` backstop. Inline bookmark marker at verse start (indents first line
+  only).
+- Anchoring is PER READING TEXT, covers non-canon too. ABP AND BSB capture exact word-spots
+  (`data-note-pos` on chip spans, `data-note-verse` on rows); KJV anchors whole-verse.
+  Square corners + flush chips make a multi-word highlight one continuous bar. Same-anchor
+  reuse (no dupes) via `NotesStore.findAnchor`.
+- **Copy + send-verse-to-journal from the reader.** Both the drag-select bar AND the
+  verse-number menu carry Copy + Journal (appends `Genesis 1:8 (ABP) — text` via `journalLine()`
+  in 60-library.jsx, to the OPEN journal page; none open → flash "Open a journal page first").
+  A `lib-flash` toast confirms. Both menus share ONE left-to-right order — 5 colors · Note ·
+  Journal · Copy (· Bookmark on the verse menu only) — keep aligned if you touch either.
+- **Highlights paint across ALL translations (verse-level).** `chapterNotes` (`forChapter`)
+  gathers every translation's records; `hiForWord` paints EXACT words only in the text it was
+  made in and ROUNDS UP to whole verse elsewhere. ABP and BSB paint per-WORD in their own text;
+  KJV still whole-verse only (kjv_words has positions, so the BSB `renderBsbVerse` pattern
+  could close it).
+- **Journal** — free-form second note mode. "Verse notes | Journal" toggle. A journal page =
+  same record shape with `kind:"journal"` + `title` + `body`, NO anchor — autosaving full-page
+  editor, same store/sync. Store: `journals()`, `createJournal()`,
+  `getActiveJournal()`/`setActiveJournal()` (`lexica.journal.active.v1`), `appendToJournal()`.
+  Merge guard lets `kind:"journal"` through without anchor; `all()` keeps journals out of the
+  verse-note list. Server cap `_MAX_JOURNAL_BYTES` 64KB vs notes' 8KB.
+- Files: `static/src/12-notes-store.jsx` (NotesStore + sync/auth + journal helpers +
+  NOTE_COLORS/NOTE_COLOR_CSS + useNotesVersion), `static/src/35-notes.jsx` (NoteAddPopover,
+  VerseNoteMenu, NoteColorRow, NotesPanel editor, JournalView/JournalEditor, NotesView tab,
+  AuthModal). Wiring in 60-library.jsx + 90-app.jsx. Notes tab: text search + filters
+  (All/Bookmarks/Highlights/Notes) + sort (Recent/Reference) + collapsible group-by-book +
+  Journal toggle. Export/Import buttons dropped from UI (store/sync code stays).
