@@ -5874,3 +5874,12 @@ $E same --tag STEP11 --built "$B" --dir "$D" || { echo "STEP11-DRY RESULT: STOP 
 echo "STEP11-DRY RESULT: READ DONE - built untouched (same: OK); the delta above + $D/step11_delta.tsv (sha on the DELTA line) are the figures to declare for the apply block"
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP11-DRY reviewed (11/8) — REVIEW: CLEAR
+
+Reviewer subagent (11/8), verdict line verbatim: "REVIEW: CLEAR - read-only on built (every open of built is mode=ro or sqlite3 -readonly; the builder only touches $D/dry.db); the gate is ruled in §9.106 at REF 006e16ba; the only things it writes are run artifacts in a new folder, with guards against overwriting."
+Its notes for the ruling chat (none blocks the CLEAR): (1) git guards now run inside `eu_step.py pre`, accepted as the
+§9.106 replacement; (2) `cd ~/bible-db || exit 1` is the one failure path with no RESULT line (`exit=1` still shows);
+(3) `build_rendering_norm.py` imports `number_fold.py` from the repo root, outside the guarded `scripts tests` paths —
+**the apply block should guard `number_fold.py` too** (its declared figures depend on it); (4) the two unknowns carried
+as stated. Next: JP runs it on PA after `cd ~/bible-db && git pull`; the log comes back for the declaration.
