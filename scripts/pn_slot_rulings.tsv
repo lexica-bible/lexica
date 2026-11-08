@@ -121,3 +121,12 @@ joram	2Ki	8	16	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king
 joram	2Ki	8	25	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab king of Israel	patronym+title in-verse — reviewer row 7	paint-override
 joram	2Ki	8	29	4	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram returned to be treated medically in Jezreel	wounded-at-Ramoth role clause; same man patronym'd in-verse at p38 — reviewer 8:29 block	paint-override same-referent
 joram	2Ki	8	29	38	Joram@2Ki.1.17-2Ch	person	kin-in-verse	Jehoram son of Ahab in Jezreel	patronym in-verse — reviewer 8:29 block	paint-override same-referent
+# Edition upgrade (DESIGN 9.100 DEFECT x3, ruled 2026-11-07): the new edition prints
+# "Joram" for BOTH kings in these verses, so the one verse-level pn_binding row
+# 'joram' -> Joram@2Ki.1.17-2Ch also paints the king of Judah. These 3 slots are
+# Jehoram son of Jehoshaphat, king of Judah (built verses.text quoted verbatim from
+# ~/edition_upgrade_runs/g2sit_20261107.log); src bound them Jehoram@1Ki.22.50-Mat.
+# paint-override = the 9.100 ruling (ruling chat 11/7) is the banked verdict.
+joram	2Ki	8	16	10	Jehoram@1Ki.22.50-Mat	person	kin-in-verse	Joram son of Jehoshaphat king of Judah reigned.	patronym+title in-verse (king of Judah) — DESIGN 9.100 DEFECT x3	paint-override
+joram	2Ki	8	25	12	Jehoram@1Ki.22.50-Mat	person	kin-in-verse	Ahaziah son of Joram king of Judah reigned.	father of Ahaziah king of Judah in-verse — DESIGN 9.100 DEFECT x3	paint-override
+joram	2Ki	8	29	31	Jehoram@1Ki.22.50-Mat	person	kin-in-verse	Ahaziah, son of Joram king of Judah went down	father of Ahaziah king of Judah in-verse; Joram son of Ahab is p4/p38 — DESIGN 9.100 DEFECT x3	paint-override
