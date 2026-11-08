@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.104**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.105**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## State (11/8, end)
@@ -41,9 +41,9 @@ Local copies of the three fixture inputs: `C:\Users\JP\edition_upgrade_runs\pa\`
    (`DRAFT_rebuild_words_side_tables.md` is the record; `rebuild-words.md` step 12 is the procedure). What is left
    is the run: 12a `dotted_lexicon` → 12b `word_gloss` → 12c person metaV links (+ read-only place-orphan check,
    expect 0), each dry/trial on `<built>` first, figures declared from that log by path:line, `--apply` gated on
-   them (§ Q5). **Order RULED (ruling chat 11/8): 11 → 10 → 12 → 9 → 9a → 9b → 9c**, as `rebuild-words.md` has
-   it; charter §6 amended to match (one line). So steps 11 (rendering norm) and 10 (two-ending read) run on
-   built BEFORE step 12.
+   them (§ Q5). **Order RULED (ruling chat 11/8, DESIGN §9.105): 11 → 10 → 12 → 9 → 9a → 9b → 9c**, as
+   `rebuild-words.md` has it; charter §6 amended to match (one line, `76623539`). So steps 11 (rendering norm) and
+   10 (two-ending read) run on built BEFORE step 12.
 2. **§9.87 punct figure at the 9c fixture:** §9.87 stands at 583; 607 is a CC claim, NOT ruled (§9.91). The
    583 → 607 reconciliation is shown member by member and ruled before the 9c re-freeze commit.
 3. **Stage E steps 9 → 9a → 9b → 9c** on built (charter §6): 9 surface rebuild (builder-chain total re-declared,
