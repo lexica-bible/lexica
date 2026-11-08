@@ -471,5 +471,104 @@ class TestGateDeclaredDeltaFile(unittest.TestCase):
         self.assertIn("gate A: FAIL — identity layer CHANGED — automatic stop", out)
 
 
+# ── G6 (ruled 2026-11-07, DESIGN §9.102): gate_b.shape_exceptions {file, sha256} ──
+# Two header rows change OUTSIDE the ruled shape classes: Gen 1:2 Samuel (clean ->
+# blank, "outside the ruled classes") and Gen 1:4 Tyre (lemma-only -> none, "not a
+# people-word"). Both are declared in changed_rows. The exceptions file is the gate's
+# OWN --dump of that run (the real producer), sha-pinned per test.
+SCR_SHAPE = [sib.LIVE_IDENT[0], sib.SCR_IDENT[1], sib.LIVE_IDENT[2], sib.SCR_IDENT[3]] + sib.LIVE_IDENT[4:]
+SHAPE_ROWS = [{"book": "Gen", "chapter": 1, "verse": 2, "position": 1, "name": "samuel"},
+              {"book": "Gen", "chapter": 1, "verse": 4, "position": 1, "name": "tyre"}]
+SHAPE_PINS = {"pinned ruled loss": 0, "glued cure (blanked)": 0,
+              "glued cure (replaced)": 0, "glued kept as-is": 1}
+
+
+class TestGateDeclaredShapeExceptions(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp()
+        cls.live = os.path.join(cls.tmp, "live.db")
+        cls.scr = os.path.join(cls.tmp, "scr.db")
+        build(cls.live, sib.LIVE_IDENT, LIVE_BIND)
+        build(cls.scr, SCR_SHAPE, LIVE_BIND)
+        cls.dump = os.path.join(cls.tmp, "dump.tsv")
+        out = cls.run_g6(cls, {"pins": SHAPE_PINS, "changed_rows": SHAPE_ROWS}, dump=cls.dump)
+        assert "VIOLATIONS 2" in out, out
+        with open(cls.dump, encoding="utf-8") as fh:
+            cls.dump_lines = fh.read().splitlines(True)
+        assert len(cls.dump_lines) == 4, cls.dump_lines
+
+    def run_g6(self, gate_b, dump=None):
+        decl = {"lane": "test", "declared_by": "test", "receipt": "test",
+                "words": {"scratch_count": len(sib.WORDS)},
+                "verses": {"scratch_count": len(sib.VERSES)},
+                "abp_surface": {"identical": True}, "tipnr_entities": {"identical": True},
+                "pn_binding": {"identical": True},
+                "pn_greek_identity": {"keys_only_in_live": 0, "keys_only_in_scratch": 0,
+                                      "key_moves_file": None},
+                "gate_b": gate_b}
+        p = os.path.join(self.tmp, "d.json")
+        with open(p, "w", encoding="utf-8") as fh:
+            json.dump(decl, fh)
+        env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1")
+        cmd = [sys.executable, GATE, self.live, self.scr, "--declared", p]
+        if dump:
+            cmd += ["--dump", dump]
+        return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                              cwd=ROOT, env=env).stdout
+
+    def exc_file(self, name, lines):
+        p = os.path.join(self.tmp, name)
+        with open(p, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("".join(lines))
+        with open(p, "rb") as fh:
+            return {"file": p, "sha256": hashlib.sha256(fh.read()).hexdigest()}
+
+    def gate(self, exc, rows=SHAPE_ROWS):
+        out = self.run_g6({"pins": SHAPE_PINS, "changed_rows": rows, "shape_exceptions": exc})
+        self.assertIn("gate A: PASS — identity layer as declared", out)
+        return out
+
+    def test_g6_pass(self):
+        out = self.gate(self.exc_file("all.tsv", self.dump_lines))
+        self.assertIn("gate B: shape exceptions declared 2 · fired 2", out)
+        self.assertIn("gate B: PASS", out)
+
+    def test_g6_exception_that_does_not_fire_fails(self):
+        ghost = "Gen 1:3\t1\tthe Ethiopians\tΑιθίοπες\tlemma-only\t\tnone\tCLEAN\tdropped to none\n"
+        out = self.gate(self.exc_file("ghost.tsv", self.dump_lines + [ghost]))
+        self.assertIn("gate B: shape exceptions declared 3 · fired 2", out)
+        self.assertIn("declared shape exception did not fire: 'dropped to none'", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_g6_note_must_match_exactly(self):
+        bent = [ln.replace("outside the ruled classes", "outside the classes") for ln in self.dump_lines]
+        out = self.gate(self.exc_file("bent.tsv", bent))
+        self.assertIn("fired 1", out)
+        self.assertIn("declared shape exception did not fire", out)
+        self.assertIn("outside the ruled classes", out)          # the real problem is back
+        self.assertIn("gate B: FAIL", out)
+
+    def test_g6_row_not_in_changed_rows_fails(self):
+        out = self.gate(self.exc_file("all2.tsv", self.dump_lines), rows=SHAPE_ROWS[:1])
+        self.assertIn("shape exception fired on a row not in gate_b.changed_rows", out)
+        self.assertIn("header row changed but not in gate_b.changed_rows", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_g6_unlisted_shape_problem_still_fails(self):
+        only_samuel = [ln for ln in self.dump_lines if "Tyre" not in ln]
+        out = self.gate(self.exc_file("one.tsv", only_samuel))
+        self.assertIn("gate B: shape exceptions declared 1 · fired 1", out)
+        self.assertIn("is not a people-word", out)
+        self.assertIn("gate B: FAIL", out)
+
+    def test_g6_wrong_sha_fails(self):
+        exc = self.exc_file("sha.tsv", self.dump_lines)
+        out = self.gate({"file": exc["file"], "sha256": "0" * 64})
+        self.assertIn("gate B: shape exceptions declared 0 · fired 0", out)
+        self.assertIn("sha256 %s != declared %s" % (exc["sha256"], "0" * 64), out)
+        self.assertIn("gate B: FAIL", out)
+
+
 if __name__ == "__main__":
     unittest.main()

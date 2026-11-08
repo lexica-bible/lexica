@@ -200,6 +200,43 @@ def _declared_delta_file(l, s, path, want_sha):
     return problems, len(want)
 
 
+_DUMP_HEADER = ("ref\tpos\tenglish\tlive_lemma\tlive_source\tscr_lemma\tscr_source\t"
+                "live_nbsp\tnote")
+
+
+def _read_shape_exceptions(path, want_sha):
+    """G6 (DESIGN §9.102): read a sha-pinned copy of a gate --dump file (line 1 a '#'
+    comment, line 2 _DUMP_HEADER, then one row per problem). Returns (problem strings,
+    {(book, chapter, verse, position): note}). The sha256 must equal want_sha; KEYSET
+    rows and repeated ref+pos are refused."""
+    import hashlib
+    try:
+        with open(path, "rb") as fh:
+            raw = fh.read()
+    except OSError as e:
+        return [f"shape_exceptions file {path!r}: {e}"], {}
+    got = hashlib.sha256(raw).hexdigest()
+    if got != want_sha:
+        return [f"shape_exceptions file {path}: sha256 {got} != declared {want_sha}"], {}
+    lines = raw.decode("utf-8").splitlines()
+    if len(lines) < 2 or not lines[0].startswith("#") or lines[1] != _DUMP_HEADER:
+        return [f"shape_exceptions file {path}: not a gate --dump file (comment + header)"], {}
+    probs, want = [], {}
+    for i, ln in enumerate(lines[2:], 3):
+        p = ln.split("\t")
+        if len(p) != 9 or p[8].startswith("KEYSET"):
+            probs.append(f"shape_exceptions line {i}: not a problem row")
+            continue
+        book, cv = p[0].rsplit(" ", 1)
+        ch, vs = cv.split(":")
+        k = (book, int(ch), int(vs), int(p[1]))
+        if k in want:
+            probs.append(f"shape_exceptions line {i}: {k} appears twice")
+            continue
+        want[k] = p[8]
+    return probs, want
+
+
 def _declared_members(tbl, cols, l, s, want_rows, renamed_rows=()):
     """Gate-A member rule (--declared). The set of row keys that differ between
     live and scratch must EQUAL the declared key set; each declared row's
@@ -525,6 +562,33 @@ if gb is not None:
             bad.append(("GATE_B", ref, f"declared name {d['name']!r} != slot label "
                                        f"{(lab[0] if lab else None)!r}"))
     print(f"gate B: declared changed_rows {len(want_b)} · header rows changed {len(moved)}")
+    # G6 (ruled 2026-11-07, DESIGN §9.102): gate_b.shape_exceptions {file, sha256} —
+    # a sha-pinned copy of a gate run's --dump file naming header rows whose shape
+    # problem was ACCEPTED by ruling. Exact set: each listed row must fire, i.e. the
+    # shape check must raise a problem at that ref+pos with EXACTLY the listed note;
+    # it is then taken off the problem list. A listed row that does not fire, or that
+    # is not in gate_b.changed_rows, fails; an unlisted shape problem still fails.
+    sx = gb.get("shape_exceptions")
+    if sx is not None:
+        sx_probs, sx_want = _read_shape_exceptions(sx.get("file") or "", sx.get("sha256") or "")
+        fired, keep = set(), []
+        for b_ in bad:
+            k_ = b_[0]
+            if isinstance(k_, tuple) and b_[1] != "undeclared":
+                ref_ = (*vref.get(k_[0], ("?", 0, 0)), k_[1])
+                if ref_ in sx_want and sx_want[ref_] == b_[2] and ref_ not in fired:
+                    fired.add(ref_)
+                    if k_ not in want_b:
+                        keep.append(("GATE_B", ref_, "shape exception fired on a row "
+                                                     "not in gate_b.changed_rows"))
+                    continue
+            keep.append(b_)
+        keep.extend(("GATE_B", "gate_b.shape_exceptions", p) for p in sx_probs)
+        for ref_ in sorted(set(sx_want) - fired, key=repr):
+            keep.append(("GATE_B", ref_, f"declared shape exception did not fire: "
+                                         f"{sx_want[ref_]!r}"))
+        bad[:] = keep
+        print(f"gate B: shape exceptions declared {len(sx_want)} · fired {len(fired)}")
 if n_changed:
     for label, got in (("pinned ruled loss", counts["pinned ruled loss"]),
                        ("glued cure (blanked)", counts["glued cure (blanked)"]),

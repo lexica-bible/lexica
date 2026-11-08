@@ -70,7 +70,7 @@ jobs:
           python tests/test_pn_lemma_wordstudy.py
           python tests/test_gate_greek_header.py
           python tests/test_gate_declared.py
-          python tests/test_eu_declared_v3.py
+          python tests/test_eu_declared_gate2.py
           python tests/test_eu_pn_binding_diff.py
           python tests/test_abp_app_feed.py
           python tests/test_feed_censuses.py

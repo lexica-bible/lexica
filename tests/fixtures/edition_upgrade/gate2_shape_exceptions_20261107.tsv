@@ -1,0 +1,36 @@
+# gate-B full problem dump (gate_greek_header.py --dump) — live_nbsp NBSP = glued live value (class-a candidate), CLEAN = class-b candidate, adjudicate before anything moves
+ref	pos	english	live_lemma	live_source	scr_lemma	scr_source	live_nbsp	note
+1Ch 1:48	2	samlah	Σαμλά	surface	Σαμλά	lemma-only	CLEAN	lemma 'Σαμλά' -> 'Σαμλά' outside the ruled classes
+1Ch 10:11	5	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
+2Ki 15:13	3	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
+1Ch 8:37	4	binea	Βαανά	surface	Βαανά	lemma-only	CLEAN	lemma 'Βαανά' -> 'Βαανά' outside the ruled classes
+2Ch 8:17	8	eloth	Αιλάθ	surface	Αιλάθ	lemma-only	CLEAN	lemma 'Αιλάθ' -> 'Αιλάθ' outside the ruled classes
+1Ch 8:38	16	shearaiah	Σαρία	surface	Σαρία	lemma-only	CLEAN	lemma 'Σαρία' -> 'Σαρία' outside the ruled classes
+Num 34:20	5	amminhud	Εμιούδ	surface	Εμιούδ	lemma-only	CLEAN	lemma 'Εμιούδ' -> 'Εμιούδ' outside the ruled classes
+Gen 36:25	6	aholibama	Ελιβεμάς	surface	Ελιβεμάς	lemma-only	CLEAN	lemma 'Ελιβεμάς' -> 'Ελιβεμάς' outside the ruled classes
+Gen 38:1	18	adullam	Οδολαμίτην	lemma-only		none	CLEAN	dropped to none but label 'adullam' is not a people-word
+1Ch 1:47	7	samlah	Σαμλά	surface	Σαμλά	lemma-only	CLEAN	lemma 'Σαμλά' -> 'Σαμλά' outside the ruled classes
+Jos 15:34	4	tapphuah	Ταφφουά	surface	Ταφφουά	lemma-only	CLEAN	lemma 'Ταφφουά' -> 'Ταφφουά' outside the ruled classes
+1Ch 10:12	24	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
+Jos 14:15	8	arbai	Αρβαί	surface	Αρβαί	lemma-only	CLEAN	lemma 'Αρβαί' -> 'Αρβαί' outside the ruled classes
+Jer 6:1	14	bethhaccerem	Βηθαχάρμα	surface	Βηθαχάρμα	lemma-only	CLEAN	lemma 'Βηθαχάρμα' -> 'Βηθαχάρμα' outside the ruled classes
+1Ch 7:27	0	non	Νουμ	surface	Νουμ	lemma-only	CLEAN	lemma 'Νουμ' -> 'Νουμ' outside the ruled classes
+Neh 3:14	11	bethheccerem	βηθαχχαράμ	surface	βηθαχχαράμ	lemma-only	CLEAN	lemma 'βηθαχχαράμ' -> 'βηθαχχαράμ' outside the ruled classes
+Isa 66:19	26	greece	Ελλάδα	surface	Ελλάδα	lemma-only	CLEAN	lemma 'Ελλάδα' -> 'Ελλάδα' outside the ruled classes
+2Sa 5:15	5	napheg	Ναφήγ	surface	Ναφήγ	lemma-only	CLEAN	lemma 'Ναφήγ' -> 'Ναφήγ' outside the ruled classes
+Gen 36:37	2	samiah	Σαμαά	surface	Σαμαά	lemma-only	CLEAN	lemma 'Σαμαά' -> 'Σαμαά' outside the ruled classes
+Jos 20:8	33	golan	Γωλάν	surface	Γωλάν	lemma-only	CLEAN	lemma 'Γωλάν' -> 'Γωλάν' outside the ruled classes
+Num 26:15	12	haggi	Αγγί	surface	Αγγί	lemma-only	CLEAN	lemma 'Αγγί' -> 'Αγγί' outside the ruled classes
+Jos 21:27	20	golan	Γωλάν	surface	Γωλάν	lemma-only	CLEAN	lemma 'Γωλάν' -> 'Γωλάν' outside the ruled classes
+Gen 36:36	7	samiah	Σαμαά	surface	Σαμαά	lemma-only	CLEAN	lemma 'Σαμαά' -> 'Σαμαά' outside the ruled classes
+1Ch 10:12	34	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
+Jos 15:48	6	jatir	Ιθέρ	surface	Ιθέρ	lemma-only	CLEAN	lemma 'Ιθέρ' -> 'Ιθέρ' outside the ruled classes
+Deu 4:43	21	golon	Γαυλών	surface	Γαυλών	lemma-only	CLEAN	lemma 'Γαυλών' -> 'Γαυλών' outside the ruled classes
+2Ki 15:14	16	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
+1Ch 7:29	15	magiddo	Μαγεδδώ	surface	Μαγεδδώ	lemma-only	CLEAN	lemma 'Μαγεδδώ' -> 'Μαγεδδώ' outside the ruled classes
+2Ch 26:2	3	eloth	Αιλάθ	surface	Αιλάθ	lemma-only	CLEAN	lemma 'Αιλάθ' -> 'Αιλάθ' outside the ruled classes
+1Ch 6:71	10	golan	Γωλάν	surface	Γωλάν	lemma-only	CLEAN	lemma 'Γωλάν' -> 'Γωλάν' outside the ruled classes
+1Ch 9:44	16	sheariah	Σααρία	surface	Σααρία	lemma-only	CLEAN	lemma 'Σααρία' -> 'Σααρία' outside the ruled classes
+Act 20:2	13	greece	Ελλάδα	surface	Ελλάδα	lemma-only	CLEAN	lemma 'Ελλάδα' -> 'Ελλάδα' outside the ruled classes
+Ezr 8:7	4	jeshaiaih	Ισαϊας	surface	Ισαϊας	lemma-only	CLEAN	lemma 'Ισαϊας' -> 'Ισαϊας' outside the ruled classes
+2Ki 15:10	6	jabesh	Ιαβής	surface	Ιαβής	lemma-only	CLEAN	lemma 'Ιαβής' -> 'Ιαβής' outside the ruled classes
