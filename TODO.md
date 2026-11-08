@@ -19,6 +19,11 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`.
 - Still owed: the lane's `tests/fixtures/edition_upgrade/declared_deltas.json` v3 (after gate 2's first
   run; §9.92/§9.97/§9.98) · B's step in `/rebuild-words` · Split 80 → 84 re-declare.
+- **Before stage E — `/rebuild-words` step 12, the side-table builders** (JP 11/7: the procedure includes
+  them): `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` on `<built>`, after 8b.3 +
+  steps 11/10, before step 9. Draft + blockers (the dotted builder has NO path argument — it opens LIVE;
+  gloss sources fetched unpinned from GitHub master) in `docs/handoffs/DRAFT_rebuild_words_side_tables.md`,
+  for the ruling chat. Listed on the lane follow-ups (`HANDOFF_edition_upgrade_stageC_repin.md`).
 - Rides this rebuild as DECLARED ROWS, never a live patch (JP 10/30): Joh 14:26 word-order (`comforter,`
   on the wrong slot vs `verses.text`; predates 10/25 — entered between the 7/06 S11 swap and 10/25,
   not traced) and Mark 1:9 "of the of" (DESIGN §5). Punct-position 241 = the first frozen member file
@@ -116,10 +121,6 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 - **split_merges JSON: 29 superseded keys** — the PN-star pass fixes 29 of the 237 patch verses upstream
   (they skip on precondition; all 30 adjudicated DISPLAY-EQUAL, split_skips4.log). Retire at the next
   regen; harmless meanwhile. code: scripts/split_merge_fixes.json
-- **`/rebuild-words` has no step for `scripts/build_dotted_lexicon.py`, `scripts/build_word_gloss.py` or
-  `scripts/build_person_metav_link.py`**,
-  while docs/memory say they're re-run after a rebuild. Decide whether the procedure needs them
-  (`build_dotted_lexicon` reads dotted numbers from `words`).
 - **Header-lane leftovers (read when the header lane is next touched):** the 9/6 landing moved 461 identity
   rows into `surface` (lemma-only→surface 421 + none→surface 40) vs the 451 receipted in
   `docs/handoffs/HANDOFF_gateB_enumeration.md` "Expected picture" — class totals reconcile, 10 rows

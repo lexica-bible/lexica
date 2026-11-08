@@ -306,9 +306,10 @@ The News tab's data (news.db) is refreshed by ONE PA scheduled task:
 The full step-by-step lives in the **`/rebuild-words`** slash command
 (`.claude/commands/rebuild-words.md`): copy-first → single self-correcting build → tail patches
 → audit gates → swap/deploy, with import_tipnr, entity binding and the surface/translit/
-two-ending/rendering-norm builders re-run on the built copy. The procedure has NO step for
-`build_dotted_lexicon.py`, `build_word_gloss.py` or `build_person_metav_link.py` — whether it
-needs them is an open TODO item. Rare, high-stakes — never improvise. Hard safety rules stay in CLAUDE.md "Do Not". Background: memory
+two-ending/rendering-norm builders re-run on the built copy. The procedure has NO step yet for
+`build_dotted_lexicon.py`, `build_word_gloss.py` or `build_person_metav_link.py` — JP ruled 11/7 it
+should; drafted as step 12 in `docs/handoffs/DRAFT_rebuild_words_side_tables.md` (before stage E).
+**Trap until then: `build_dotted_lexicon.py` takes no path — it always opens LIVE bible.db.** Rare, high-stakes — never improvise. Hard safety rules stay in CLAUDE.md "Do Not". Background: memory
 `project_architecture_rework`. The build scripts (`build_words_from_abp.py` +
 `build_words_from_bh.py`) write ONLY to `bible.db.new` (a consistent online snapshot); the live
 file is never opened for writing; swap is one reversible `mv`.
