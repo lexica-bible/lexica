@@ -5,6 +5,17 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 (sole register, latest **§9.105**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
+## Progress 11/8 (later) — read this first
+- **Shared step script landed:** `scripts/eu_step.py` (pre / prep / same / delta / check) + `tests/test_eu_step.py`,
+  **code REF `006e16ba`** (§9.106). New blocks call it instead of pasting a helper; `pre` runs the REF git checks
+  (`mode_pre` :126-136); a block whose builder imports a repo-root file guards that file itself (§9.107).
+- **Step 11 APPLIED on built and CLOSED** (§9.107): english_head_norm filled on 353,595 rows; kjv/bsb unchanged.
+  Built = everything below + **step 11**. Record: `DRAFT_stageC_outline.md` "Stage E opened" onward.
+- **OPEN edition item — the heads gap** (§9.107 ruling 2): built has 1,351 fewer non-blank `english_head` than src
+  (lost 1,691 / gained 340; list `~/edition_upgrade_runs/step11heads_20261108.tsv`). Not a step-11 figure; open until
+  read and explained from the rows; CC drafts the next read.
+- **Next: step 10** (two-ending read on built), then 12a → 12b → 12c, then 9 → 9a → 9b → 9c.
+
 ## State (11/8, end)
 - **Built** `~/bible-db/bible_edupg_test_built_20261102.db` = **8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a +
   8b.3 + SLOT3**. words 626,309 (digest 2b23f546), abp_surface 395,003 (623cca1f), identity 32,478 at

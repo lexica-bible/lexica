@@ -6033,3 +6033,15 @@ Of the 1,691 lost, 1,299 have a blank built english; top src heads lost: "one" 4
 "know" 63. **No cause asserted.** OPEN under §9.107 ruling 2: a separate edition item, not a step-11 figure; stays
 open until read and explained from the rows. Next read on it = CC's, drafted from the tsv (the 1,299 blank-english
 lost rows and the 340 gained). STEP11-APPLY does not wait on it (§9.107 ruling 1).
+
+### STEP11-APPLY ran (11/8, 17:28 UTC, PA HEAD b3178672, REF 006e16ba) — DONE, exit 0 → STEP 11 CLOSED on built
+
+Cleared by the ruling chat under §9.107 on reviewer ESCALATE (write; `pre` covers the standard git checks). Log
+`~/edition_upgrade_runs/step11apply_20261108.log`, folder `step11apply_20261108/`. Every declared figure met:
+number_fold.py = REF, unedited; PRE OK; dry delta 353,596 lines, sha 5bfe6d38… = declared; SAME OK (150 tables +
+schema, 0 differences); words before `626309|353595|0|0`; builder exit 0, recomputed 353,595 / 790,685 / 386,063,
+output after line 1 = the dry run's; words after `626309|353595|353595|0`; CHECK OK — 147 unwritten tables + schema
+0 differences; written tables = the dry copy: words 23ef2493a195 (prep 6e0695228b73), kjv_words 3a944d6da8a0 and
+bsb_words 0f278f0d9da2 (= prep, unchanged); no journal; scripts/tests clean. Restore source if ever needed:
+`step11dry_20261108/before.db`. **Built = … + SLOT3 + step 11.** Still open: the heads gap (§9.107 ruling 2) —
+unchanged by this apply. Housekeeping once stage E no longer needs it: `step11dry_20261108/dry.db` (~192 MB).
