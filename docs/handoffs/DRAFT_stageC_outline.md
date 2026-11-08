@@ -5912,7 +5912,7 @@ figure (re-running step 11 after any later English fix just recomputes the colum
 
 Every `(verse_id, position)` whose english_head is non-blank on one copy and blank on the other, or whose row exists on
 one side only. src = `bible_edupg_test_20261101.db` (fresh copy of live, 11/01). Expected: duplicate keys 0 on both
-(else STOP); src non-blank heads printed (10/25 live: 354,946 — a read-out, src is the 11/01 copy); built 353,595;
+(else STOP); each count read must succeed and be a number (else STOP); src non-blank heads printed (10/25 live: 354,946 — a read-out, src is the 11/01 copy); built must be 353,595 (the STEP11-DRY figure; else STOP);
 **lost − gained + src-only-with-head − built-only-with-head = src non-blank − 353,595** (printed; must hold, else the
 read is wrong). Classes, list file and breakdowns are READ-OUTS for the ruling chat.
 
@@ -5935,9 +5935,12 @@ for f in "$S" "$B"; do
   echo "duplicate (verse_id, position) keys in $f: $d (expect 0)"
   [ "$d" = "0" ] || { echo "STEP11-HEADS RESULT: STOP - duplicate keys; the row match below would double-count"; exit 1; }
 done
-NS=$(sqlite3 -readonly "$S" "SELECT sum($NB) FROM words")
-NT=$(sqlite3 -readonly "$B" "SELECT sum($NB) FROM words")
-echo "words with a non-blank english_head: src $NS (10/25 live: 354946) - built $NT (expect 353595) - difference $((NS - NT))"
+NS=$(sqlite3 -readonly "$S" "SELECT sum($NB) FROM words") || { echo "STEP11-HEADS RESULT: STOP - the src count read failed"; exit 1; }
+NT=$(sqlite3 -readonly "$B" "SELECT sum($NB) FROM words") || { echo "STEP11-HEADS RESULT: STOP - the built count read failed"; exit 1; }
+case "$NS" in ''|*[^0-9]*) echo "STEP11-HEADS RESULT: STOP - the src count is not a number: '$NS'"; exit 1;; esac
+case "$NT" in ''|*[^0-9]*) echo "STEP11-HEADS RESULT: STOP - the built count is not a number: '$NT'"; exit 1;; esac
+echo "words with a non-blank english_head: src $NS (10/25 live: 354946; read-out) - built $NT (expect 353595) - difference $((NS - NT))"
+[ "$NT" = "353595" ] || { echo "STEP11-HEADS RESULT: STOP - built is not the STEP11-DRY figure 353595"; exit 1; }
 Q="SELECT v.book, v.chapter, v.verse, s.position, CASE WHEN t.verse_id IS NULL THEN CASE WHEN $HS THEN 'src-only row, head' ELSE 'src-only row, blank' END WHEN $HS AND NOT $HT THEN 'lost' WHEN NOT $HS AND $HT THEN 'gained' END AS cls, s.english, s.english_head, t.english, t.english_head FROM main.words s JOIN main.verses v ON v.id = s.verse_id LEFT JOIN b.words t ON t.verse_id = s.verse_id AND t.position = s.position WHERE cls IS NOT NULL UNION ALL SELECT v.book, v.chapter, v.verse, t.position, CASE WHEN $HT THEN 'built-only row, head' ELSE 'built-only row, blank' END, NULL, NULL, t.english, t.english_head FROM b.words t JOIN b.verses v ON v.id = t.verse_id WHERE NOT EXISTS (SELECT 1 FROM main.words s WHERE s.verse_id = t.verse_id AND s.position = t.position) ORDER BY 1, 2, 3, 4"
 sqlite3 -readonly -cmd '.mode tabs' "$S" "ATTACH 'file:$B?mode=ro' AS b; $Q" > "$O" || { echo "STEP11-HEADS RESULT: STOP - the row match failed"; exit 1; }
 echo "list: $O - $(wc -l < "$O") rows (book, chapter, verse, position, class, src english, src head, built english, built head) - sha256 $(sha256sum < "$O" | cut -c1-16)..."
