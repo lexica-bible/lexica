@@ -6045,3 +6045,52 @@ output after line 1 = the dry run's; words after `626309|353595|353595|0`; CHECK
 bsb_words 0f278f0d9da2 (= prep, unchanged); no journal; scripts/tests clean. Restore source if ever needed:
 `step11dry_20261108/before.db`. **Built = … + SLOT3 + step 11.** Still open: the heads gap (§9.107 ruling 2) —
 unchanged by this apply. Housekeeping once stage E no longer needs it: `step11dry_20261108/dry.db` (~192 MB).
+
+## Step 10 (two-ending read) on built — STEP10-READ drafted (11/8)
+
+Rebuild-words step 10 (`.claude/commands/rebuild-words.md:322-330`; order §9.105): `scripts/build_two_ending.py
+<built>` opens the db READ-ONLY (`build_two_ending.py:71`, `mode=ro`) and reads only `words.strongs_base` +
+`words.morph`, `lsj`, `lexicon`; it prints a header + the JS soften-lists. Its output from the `// AUTO-GENERATED`
+line down is compared byte for byte with `static/src/00b-two-ending.jsx` (pinned to REF in the block). IDENTICAL →
+step 10 "unchanged" (no paste, no build). DIFFERENT → the diff goes to the ruling chat (a paste + `npm run build` +
+push must land before step 8). 10/25 live (read-out, `CHARTER_rebuild_trap_fix.md:575-579`): IDENTICAL; header
+classes two-ending 368 · three-ending 283 · no-lsj 41 · noun 68 · unknown 13; soften OT 80 words / 441 displays ·
+NT 208 / 396. Edition upgrade changes English (morph is not in scope), but 8b.2 rewrote `strongs_base`, so the
+lists are not asserted: IDENTICAL or DIFFERENT is the read-out.
+
+### Block STEP10-READ (GATE REF 006e16ba; READ-ONLY on built — writes only its run folder + log)
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step10read_20261108.log
+if [ -e "$L" ]; then echo "STEP10-READ RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP10-READ rebuild-words step 10 (build_two_ending, read-only) on built, output vs static/src/00b-two-ending.jsx - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP10-READ RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP10-READ RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+D=~/edition_upgrade_runs/step10read_20261108
+J=static/src/00b-two-ending.jsx
+python3 scripts/eu_step.py pre --tag STEP10 --ref "$REF" --dir "$D" --db "$B" || { echo "STEP10-READ RESULT: STOP - pre (line above); nothing read"; exit 1; }
+git diff --quiet "$REF" HEAD -- "$J" || { echo "STEP10-READ RESULT: STOP - $J differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- "$J")" ] || { echo "STEP10-READ RESULT: STOP - $J has uncommitted edits on PA"; exit 1; }
+echo "$J (the comparison target) = $REF, unedited: OK - $(wc -l < "$J") lines, sha256 $(sha256sum < "$J" | cut -c1-16)..."
+python3 scripts/build_two_ending.py "$B" > "$D/two_ending.out" 2> "$D/two_ending.err"; r=$?
+echo "exit $r (expect 0) - stderr lines: $(wc -l < "$D/two_ending.err") (expect 0)"
+cat "$D/two_ending.err"
+[ "$r" -eq 0 ] || { echo "STEP10-READ RESULT: STOP - the builder failed (above)"; exit 1; }
+echo "--- header (10/25 live: two-ending 368, three-ending 283, no-lsj 41, noun 68, unknown 13; soften OT 80 / 441, NT 208 / 396):"
+sed -n '1,2p' "$D/two_ending.out"
+sed -n '/^\/\/ AUTO-GENERATED/,$p' "$D/two_ending.out" > "$D/two_ending_block.jsx"
+[ -s "$D/two_ending_block.jsx" ] || { echo "STEP10-READ RESULT: STOP - no AUTO-GENERATED line in the output"; exit 1; }
+echo "generated block: $(wc -l < "$D/two_ending_block.jsx") lines, sha256 $(sha256sum < "$D/two_ending_block.jsx" | cut -c1-16)..."
+if cmp -s "$D/two_ending_block.jsx" "$J"; then
+  echo "STEP10-READ RESULT: READ DONE - IDENTICAL to $J: step 10 unchanged, no paste, no build"; exit 0
+fi
+echo "--- DIFFERENT: diff $J (left) vs the generated block (right):"
+diff "$J" "$D/two_ending_block.jsx"
+echo "STEP10-READ RESULT: READ DONE - DIFFERENT from $J (diff above; full output $D/two_ending.out) - for the ruling chat"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
