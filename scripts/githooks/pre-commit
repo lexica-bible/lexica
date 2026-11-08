@@ -76,6 +76,7 @@ python tests/test_gate_declared.py >/dev/null
 python tests/test_eu_declared_gate2.py >/dev/null
 python tests/test_slot_rulings_judah.py >/dev/null
 python tests/test_eu_pn_binding_diff.py >/dev/null
+python tests/test_eu_step.py >/dev/null
 python tests/test_abp_app_feed.py >/dev/null
 python tests/test_feed_censuses.py >/dev/null
 python tests/test_app_transplant.py >/dev/null
