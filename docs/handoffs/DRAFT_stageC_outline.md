@@ -6015,3 +6015,11 @@ fi
 echo "STEP11-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for the three norm columns: $DD/before.db"; exit 1
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP11-HEADS reviewed (11/8) — ESCALATE (mechanical) → fixed (`eb65843f`) → REVIEW: CLEAR
+
+First pass: ESCALATE — the two count reads had no STOP on failure. Fixed per the reviewer's own suggestion (STOP on a
+failed read, number check, built 353,595 made a gate); re-tested on a fake home. Second pass, verdict line verbatim:
+"REVIEW: CLEAR - read-only block (scope a): both dbs are opened read-only, it runs no repo code, and its only outputs are two run artifacts that are guarded against overwriting. The fix I asked for is in, and every failure path now ends in one STOP line."
+Non-blocking note: the `NET=$(awk …)` line has no own failure check; a failed awk still STOPs on the next line's sum.
+STEP11-APPLY (a write) stays with the ruling chat.
