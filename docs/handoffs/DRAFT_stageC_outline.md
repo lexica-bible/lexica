@@ -5883,3 +5883,132 @@ Its notes for the ruling chat (none blocks the CLEAR): (1) git guards now run in
 (3) `build_rendering_norm.py` imports `number_fold.py` from the repo root, outside the guarded `scripts tests` paths —
 **the apply block should guard `number_fold.py` too** (its declared figures depend on it); (4) the two unknowns carried
 as stated. Next: JP runs it on PA after `cd ~/bible-db && git pull`; the log comes back for the declaration.
+
+### STEP11-DRY ran (11/8, 16:21 UTC, PA HEAD b3178672) — READ DONE, exit 0; built untouched
+
+Log `~/edition_upgrade_runs/step11dry_20261108.log`, folder `step11dry_20261108/`. pre OK (REF 006e16ba); prep OK —
+**state.json: 150 tables, 3,809,451 rows, 300 schema entries, 53 s** (no virtual tables); before.db 24,555,520 bytes;
+**dry.db 191,848,448 bytes** (the two §9.106 unknowns, now read); each copied table = built's by digest (words
+6e069522…, kjv_words 3a944d6d…, bsb_words 0f278f0d…). Built before: words 626,309 · english_head non-blank 353,595 ·
+norm filled 0 · norm on a blank head 0; column + all three norm indexes present (no "added column" line). Builder
+on the copy: exit 0, recomputed 353,595 / 790,685 / 386,063; distinct renderings → keys words 12,740 → 10,979, kjv
+13,826 → 11,296, bsb 100,241 → 89,295 (read-out). Dry copy after: 626,309 · 353,595 · 353,595 · 0. **Delta:** words
+changed 353,595 (every one `english_head_norm` NULL → value, no other column), added 0, removed 0; kjv_words 0;
+bsb_words 0 — the stated expectation, met. `step11_delta.tsv` 353,595 lines + header, sha256
+**5bfe6d3819ab6685ba56dde7b6b66b296e1717450f8d6d8f59f3152914b56d44**. same OK (150 tables + schema, 0 differences).
+
+**Declared figures for STEP11-APPLY (each from that log):** builder output after its first line = the dry run's
+(`dry_norm.log`); words read after = `626309|353595|353595|0`; check OK with `--written words,kjv_words,bsb_words`
+against the dry folder (unwritten 147 tables + schema = prep, written tables = the dry copy); the dry delta file
+still hashes 5bfe6d38….
+
+**Read-out against the last run (not a step-11 figure):** the 10/25 live run normed **354,946** words
+(`CHARTER_rebuild_trap_fix.md:528-546`); built has **353,595** non-blank heads — **1,351 fewer**. Step 11 only
+derives from `english_head`, so the gap is the edition's English, not this step; no record in the repo attributes
+it. CC proposes STEP11-HEADS (read-only, below) to list every row behind it. It does not change any STEP11-APPLY
+figure (re-running step 11 after any later English fix just recomputes the column).
+
+### Block STEP11-HEADS (READ-ONLY on src and built — writes one list file + its log; no REF needed: no repo code)
+
+Every `(verse_id, position)` whose english_head is non-blank on one copy and blank on the other, or whose row exists on
+one side only. src = `bible_edupg_test_20261101.db` (fresh copy of live, 11/01). Expected: duplicate keys 0 on both
+(else STOP); src non-blank heads printed (10/25 live: 354,946 — a read-out, src is the 11/01 copy); built 353,595;
+**lost − gained + src-only-with-head − built-only-with-head = src non-blank − 353,595** (printed; must hold, else the
+read is wrong). Classes, list file and breakdowns are READ-OUTS for the ruling chat.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step11heads_20261108.log
+if [ -e "$L" ]; then echo "STEP11-HEADS RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+echo "STEP11-HEADS (read-only) - english_head non-blank on src vs built: every row behind the 1,351 - $(date -u +%FT%TZ)"
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+O=~/edition_upgrade_runs/step11heads_20261108.tsv
+[ -e "$O" ] && { echo "STEP11-HEADS RESULT: STOP - list file already exists: $O"; exit 1; }
+for f in "$S" "$B"; do [ -s "$f" ] || { echo "STEP11-HEADS RESULT: STOP - missing: $f"; exit 1; }; [ -e "$f-journal" ] && { echo "STEP11-HEADS RESULT: STOP - $f-journal present (move it aside, never delete)"; exit 1; }; done
+NB="(english_head IS NOT NULL AND english_head <> '')"
+HS="(s.english_head IS NOT NULL AND s.english_head <> '')"
+HT="(t.english_head IS NOT NULL AND t.english_head <> '')"
+for f in "$S" "$B"; do
+  d=$(sqlite3 -readonly "$f" "SELECT count(*) FROM (SELECT 1 FROM words GROUP BY verse_id, position HAVING count(*) > 1)") || { echo "STEP11-HEADS RESULT: STOP - read failed on $f"; exit 1; }
+  echo "duplicate (verse_id, position) keys in $f: $d (expect 0)"
+  [ "$d" = "0" ] || { echo "STEP11-HEADS RESULT: STOP - duplicate keys; the row match below would double-count"; exit 1; }
+done
+NS=$(sqlite3 -readonly "$S" "SELECT sum($NB) FROM words")
+NT=$(sqlite3 -readonly "$B" "SELECT sum($NB) FROM words")
+echo "words with a non-blank english_head: src $NS (10/25 live: 354946) - built $NT (expect 353595) - difference $((NS - NT))"
+Q="SELECT v.book, v.chapter, v.verse, s.position, CASE WHEN t.verse_id IS NULL THEN CASE WHEN $HS THEN 'src-only row, head' ELSE 'src-only row, blank' END WHEN $HS AND NOT $HT THEN 'lost' WHEN NOT $HS AND $HT THEN 'gained' END AS cls, s.english, s.english_head, t.english, t.english_head FROM main.words s JOIN main.verses v ON v.id = s.verse_id LEFT JOIN b.words t ON t.verse_id = s.verse_id AND t.position = s.position WHERE cls IS NOT NULL UNION ALL SELECT v.book, v.chapter, v.verse, t.position, CASE WHEN $HT THEN 'built-only row, head' ELSE 'built-only row, blank' END, NULL, NULL, t.english, t.english_head FROM b.words t JOIN b.verses v ON v.id = t.verse_id WHERE NOT EXISTS (SELECT 1 FROM main.words s WHERE s.verse_id = t.verse_id AND s.position = t.position) ORDER BY 1, 2, 3, 4"
+sqlite3 -readonly -cmd '.mode tabs' "$S" "ATTACH 'file:$B?mode=ro' AS b; $Q" > "$O" || { echo "STEP11-HEADS RESULT: STOP - the row match failed"; exit 1; }
+echo "list: $O - $(wc -l < "$O") rows (book, chapter, verse, position, class, src english, src head, built english, built head) - sha256 $(sha256sum < "$O" | cut -c1-16)..."
+echo "--- by class:"
+cut -f5 "$O" | sort | uniq -c
+NET=$(awk -F'\t' '$5=="lost"||$5=="src-only row, head"{n++} $5=="gained"||$5=="built-only row, head"{n--} END{print n+0}' "$O")
+echo "lost - gained + src-only with head - built-only with head = $NET (must = $((NS - NT)))"
+[ "$NET" = "$((NS - NT))" ] || { echo "STEP11-HEADS RESULT: STOP - the classes do not add up to the difference; the read is wrong"; exit 1; }
+echo "--- 'lost': top 25 built english (what the row reads now) | count"
+awk -F'\t' '$5=="lost"{print $8}' "$O" | sort | uniq -c | sort -rn | head -25
+echo "--- 'lost': top 25 src heads (what it read before) | count"
+awk -F'\t' '$5=="lost"{print $7}' "$O" | sort | uniq -c | sort -rn | head -25
+echo "--- first 40 rows:"
+head -40 "$O"
+echo "STEP11-HEADS RESULT: READ DONE - every row behind the difference is in $O"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block STEP11-APPLY (GATE REF 006e16ba; WRITES built: words.english_head_norm + kjv/bsb word_norm) — for the ruling chat
+
+The builder on built, gated on the STEP11-DRY figures above. Order: guards (the reviewer's note 3: `number_fold.py`
+= REF and unedited, since the builder imports it; note 2: the `cd` failure now prints a RESULT line) → pre (new
+folder `step11apply_20261108`) → the dry delta file still = the declared sha + line count → `same` against the dry
+folder (built unchanged since the dry run) → built read before = `626309|353595|0|0` → **the one write** (the
+builder on built) → its output after the first line = the dry run's → built read after = `626309|353595|353595|0` →
+`check --written words,kjv_words,bsb_words` against the dry folder (147 unwritten tables + schema = prep; the three
+written tables = the dry copy). Before the write, any miss = STOP, built untouched. After it, a miss = CHECK, with the
+restore source `step11dry_20261108/before.db` (row id + the three norm columns as they were). The builder's own write
+is all-or-nothing (the three updates are saved once, at `build_rendering_norm.py:110`; column + indexes already exist on built, so no other change).
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step11apply_20261108.log
+if [ -e "$L" ]; then echo "STEP11-APPLY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP11-APPLY rebuild-words step 11 (build_rendering_norm) on BUILT, gated on the STEP11-DRY figures - WRITES built: words.english_head_norm (353,595 rows), kjv/bsb word_norm (same values) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP11-APPLY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP11-APPLY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+git diff --quiet "$REF" HEAD -- number_fold.py || { echo "STEP11-APPLY RESULT: STOP - number_fold.py differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- number_fold.py)" ] || { echo "STEP11-APPLY RESULT: STOP - number_fold.py has uncommitted edits on PA"; exit 1; }
+echo "number_fold.py (the builder's import) = $REF, unedited: OK"
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+DD=~/edition_upgrade_runs/step11dry_20261108
+D=~/edition_upgrade_runs/step11apply_20261108
+E="python3 scripts/eu_step.py"
+$E pre --tag STEP11A --ref "$REF" --dir "$D" --db "$B" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP11-APPLY RESULT: STOP - pre (line above); built untouched"; exit 1; }
+for f in state.json before.db dry.db dry_norm.log step11_delta.tsv; do [ -s "$DD/$f" ] || { echo "STEP11-APPLY RESULT: STOP - the dry run's $f is missing or empty in $DD; built untouched"; exit 1; }; done
+DS=$(sha256sum < "$DD/step11_delta.tsv" | cut -d' ' -f1); DN=$(wc -l < "$DD/step11_delta.tsv")
+echo "dry delta file: $DN lines (expect 353596 = header + 353595), sha256 $DS (expect 5bfe6d3819ab6685ba56dde7b6b66b296e1717450f8d6d8f59f3152914b56d44)"
+[ "$DS" = 5bfe6d3819ab6685ba56dde7b6b66b296e1717450f8d6d8f59f3152914b56d44 ] && [ "$DN" = "353596" ] || { echo "STEP11-APPLY RESULT: STOP - the dry delta file is not the declared one; built untouched"; exit 1; }
+$E same --tag STEP11A --built "$B" --dir "$DD" || { echo "STEP11-APPLY RESULT: STOP - built changed since the dry run (lines above); built untouched"; exit 1; }
+RD="SELECT count(*), sum(english_head IS NOT NULL AND english_head <> ''), sum(english_head_norm IS NOT NULL), sum((english_head IS NULL OR english_head = '') AND english_head_norm IS NOT NULL) FROM words"
+W0=$(sqlite3 -readonly "$B" "$RD")
+echo "words on built before: $W0 (expect 626309|353595|0|0)"
+[ "$W0" = "626309|353595|0|0" ] || { echo "STEP11-APPLY RESULT: STOP - built's words read is not the dry run's before picture; built untouched"; exit 1; }
+echo "=== APPLY: build_rendering_norm on built (the one write) ==="
+OUT=$(python3 scripts/build_rendering_norm.py "$B" 2>&1); r=$?
+printf '%s\n' "$OUT" > "$D/apply_norm.log"
+echo "$OUT"
+echo "exit $r (expect 0)"
+SAMEOUT=NO; [ "$(sed 1d <<< "$OUT")" = "$(sed 1d "$DD/dry_norm.log")" ] && SAMEOUT=yes
+echo "builder output after its first line = the dry run's: $SAMEOUT"
+W1=$(sqlite3 -readonly "$B" "$RD")
+echo "words on built after: $W1 (expect 626309|353595|353595|0)"
+CHK=$($E check --tag STEP11A --built "$B" --dir "$DD" --written words,kjv_words,bsb_words 2>&1); k=$?
+echo "$CHK"
+if [ "$r" -eq 0 ] && [ "$SAMEOUT" = "yes" ] && [ "$W1" = "626309|353595|353595|0" ] && [ "$k" -eq 0 ]; then
+  echo "STEP11-APPLY RESULT: DONE - built words.english_head_norm filled on the 353,595 rows with a head (none on a blank head), kjv/bsb word_norm unchanged, built = the dry run on the three tables, the other 147 tables + schema unchanged"; exit 0
+fi
+echo "STEP11-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for the three norm columns: $DD/before.db"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
