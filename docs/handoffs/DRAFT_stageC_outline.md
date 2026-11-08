@@ -6094,3 +6094,8 @@ diff "$J" "$D/two_ending_block.jsx"
 echo "STEP10-READ RESULT: READ DONE - DIFFERENT from $J (diff above; full output $D/two_ending.out) - for the ruling chat"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP10-READ reviewed (11/8) — REVIEW: CLEAR
+
+Reviewer subagent (11/8), verdict line verbatim: "REVIEW: CLEAR - read-only block (the builder opens the db with mode=ro and only prints); writes go only to a new run folder and a guarded dated log; the REF gate is covered by eu_step pre as accepted at §9.106/§9.107"
+Goes straight to PA (read-only). IDENTICAL → step 10 closed "unchanged"; DIFFERENT → the diff goes to the ruling chat.
