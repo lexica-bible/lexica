@@ -545,13 +545,21 @@ TODO_ARCHIVE is a separate ad-hoc batch — the audit's D and E below are still 
   Google-wrapper faces older than the 50h forward-fill window stay wrappers (still clickable). code:
   scripts/news/daily.sh, scripts/news/resolve_backfill_all.py
 - **PARKED — News page load is 70–150 s (measured 11/8, PA access log, Nov 6–8).** `/api/news/all` sends the
-  WHOLE scored archive (30,207 rows, 10.7 MB, every score incl. below the 5 floor, with summaries); a rebuild is
-  ~70–150 s, a same-worker repeat 3.7 s; two loads abandoned by the browser (499). Suspect, not yet timed: the
-  22,834 unlabeled (score <5) rows go through the lexical `_cluster` (each row vs every group), which grows
-  nightly; the `_ALL_CACHE` is per worker and busts on every nightly pull. Not caused by any change since 10/31
-  (only request-path commits: Admin Stats, `d6df215e`/`dc2be0c0`). Fix = a design call (what the page must send:
-  the FeedShape "buried" readout and the Any-score filter read below-floor rows). Time the pieces on PA before
-  choosing. Web-log reads: PA writes the real client IP as a quoted field before `response-time=` — filter with
+  WHOLE scored archive regardless of the page's 30-day default (30,207 rows, every score incl. below the 5 floor,
+  with summaries): 53 MB of JSON, 10.7 MB on the wire (PA's front end already gzips — the access-log byte count
+  is the gzipped size). Same-worker repeat 3.7 s; two loads abandoned by the browser (499). `_ALL_CACHE` is per
+  worker and busts on every nightly pull. Not caused by any change since 10/31 (only request-path commits:
+  Admin Stats, `d6df215e`/`dc2be0c0`).
+  **Timed 11/8 on PA (console, live code, read-only):** card build 55.2 s = lexical `_cluster` on the 22,834
+  unlabeled rows **51.4 s** (each row vs every group so far; 15,219 word-matched cards) + db reads 2.6 + the rest
+  1.2; JSON encode 0.7 s. Grows faster than the archive: grouping only rows from the last 30d / 90d / 365d / all =
+  1.6 / 9.0 / 28.0 / 55 s. Last 30 days = 2,503 cards, 4,105 articles, 3,403 of them below 5; sending that slice
+  = 7.3 MB of JSON (1.2 MB if 5+ only).
+  Options (scoped, not chosen): A) same-result faster `_cluster` (compare a headline only against groups that
+  share words with it; gate = full card list identical before/after on PA + the frozen fixture) · B) build the
+  cards once per nightly into a file all workers read (fallback: live build) · C) send only the chosen date
+  range (reverses the one-fetch design; below-5 rows are 83% of the 30d slice — they feed the "buried" readout
+  and the All-score filter). Timing script used: the 11/8 session's `~/news_timing.py` on PA. Web-log reads: PA writes the real client IP as a quoted field before `response-time=` — filter with
   `sed -E 's/^[^ ]+ //; s/"[^"]*" (response-time=)/\1/; s/key=[^ &"]*/key=HIDDEN/g'`.
   code: views_news.py `_all_cards` / `_cluster` / `all_news`
 - **Corroboration as a rank input** (Aug 14 ruling, layer 3) — stays parked until labeler fusion is measurably down
