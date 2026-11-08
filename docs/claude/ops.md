@@ -43,6 +43,14 @@ scripts, SEO, security, rebuild procedure. (Architecture-refactor history: memor
   requirements (pip install in `bible-env`). Google Cloud consent screen: **External**, client type
   **Web application**, JS origin = the https site URL, then **Publish app** (email + profile scopes
   need no verification review). The client ID is public, not a secret.
+- **Web logs** (`/var/log/www.lexica.bible.access.log`, `.error.log`, `.server.log`; older ones
+  rotate to `.N.gz`). Each access line carries an address in its FIRST field AND ends
+  `"<client IP>" response-time=<seconds>` — dropping only the first field still shows visitors'
+  IPs (11/8 slip); strip both with
+  `sed -E 's/^[^ ]+ //; s/"[^"]*" (response-time=)/\1/'`. A News share-key holder's requests carry
+  `?key=` in the URL — mask it too (`s/key=[^ &"]*/key=HIDDEN/g`). The byte count is AFTER PA's
+  front end gzips the reply (`/api/news/all` logs 10.7 MB for a 53 MB JSON body; the app itself
+  has no compression). Code 499 = the browser gave up before the reply came back.
 
 ## CI / automation
 - **GitHub Actions** (`.github/workflows/ci.yml`) — every push/PR:
@@ -171,6 +179,10 @@ The News tab's data (news.db) is refreshed by ONE PA scheduled task:
   check); `rm ~/news_seed_off` turns it back on. No code or data change; labels already written
   stay. Each nightly appends one line to `~/news_reuse.log` ("reuse check: offered N, approved A,
   rejected R"). Live re-check: `tests/fixtures/news_clustering/relabel_check.py --run --nights-only`.
+- **The nightly's own output** lands in `/var/log/schedule-log-1448472.log` (+ `.1`) — each night
+  starts `==> [YYYY-MM-DD …] gathering`; the `==> grouping` section holds the labeler's ERR and
+  "left unlabeled tonight … id N" lines. Zero ERR lines does NOT prove every AI call answered: a
+  blank or partial reply is counted as "no" without a log line (parked in TODO).
 - **CI sees FROZEN labels** (`tests/test_news_clustering.py`) — any labeler/prompt change also needs
   `relabel_check.py --run` on PA (writes nothing; tee it to a log, PA's console cuts long output).
 - **news.db path footgun:** the real file is `~/bible-db/news.db` (`core.NEWS_DB`). A bare
