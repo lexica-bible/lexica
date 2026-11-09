@@ -6252,3 +6252,21 @@ fi
 echo "STEP12A-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for dotted_lexicon: $DD/before.db"; exit 1
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP12A-APPLY reviewed (11/8) — ESCALATE (write, §9.90), mechanics clean → cleared under §9.109
+
+Reviewer verdict line verbatim: "REVIEW: ESCALATE - STEP12A-APPLY writes built, which is outside what I can clear (§9.90). The mechanical check found no defect, so this goes back to the ruling chat under §9.109."
+The write gate stands as ruled at §9.109. The reviewer's one unread citation, `rebuild-words.md:359`, reads "Values
+check after apply: `<built>` vs `<src>` both ways." (CC read). Block goes to PA as drafted.
+
+### STEP12A-APPLY ran (11/9, 03:05 UTC, PA HEAD b3178672, REF 006e16ba) — DONE, exit 0 → STEP 12a CLOSED (§9.109 closing)
+
+Log `~/edition_upgrade_runs/step12a_apply_20261108.log`; run folder `step12a_apply_20261108/` (apply.log,
+step12a_values_src_built.tsv). PRE OK (built 451,993,600 B, src 451,964,928 B, no journal, triggers 0; both rollbacks
+present). Both dry deltas 1 line (header only), sha c866c003… as declared. SAME OK (150 tables + schema, 0
+differences). Before = the logged definition + autoindex + 3,627 rows. Builder: one line "Filled dotted_lexicon in …
+with 3627 corrected headwords (that table only; nothing else touched).", exit 0 — = the dry run, path aside. After =
+before (definition + 3,627 rows). CHECK OK: 149 untouched tables + schema 0 differences; `dotted_lexicon` 3,627 rows,
+fingerprint 9288508f98d4 = dry copy = prep; no journal; repo scripts/tests clean. Values check src → built
+(key strongs): 3,627 → 3,627, changed 0 / added 0 / removed 0; file header only, sha c866c003…. Restore source not
+needed (`step12a_dry_20261108/before.db` kept until the swap).

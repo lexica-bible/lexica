@@ -14,7 +14,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 - **OPEN edition item — the heads gap** (§9.107 ruling 2): built has 1,351 fewer non-blank `english_head` than src
   (lost 1,691 / gained 340; list `~/edition_upgrade_runs/step11heads_20261108.tsv`). Not a step-11 figure; open until
   read and explained from the rows; CC drafts the next read.
-- **Step 10 CLOSED "unchanged"** (§9.108: IDENTICAL, no paste). **Next: step 12a** (dotted_lexicon), then 12b → 12c, then 9 → 9a → 9b → 9c.
+- **Step 10 CLOSED "unchanged"** (§9.108: IDENTICAL, no paste).
+- **Step 12a APPLIED on built and CLOSED** (§9.109 + closing, 11/9 03:05Z): dotted_lexicon re-created, 3,627 rows = src.
+  **Next: step 12b** (word_gloss), then 12c, then 9 → 9a → 9b → 9c.
 
 ## State (11/8, end)
 - **Built** `~/bible-db/bible_edupg_test_built_20261102.db` = **8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a +
