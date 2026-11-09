@@ -6166,3 +6166,89 @@ $E same --tag STEP12A --built "$B" --dir "$D" || { echo "STEP12A-DRY RESULT: STO
 echo "STEP12A-DRY RESULT: READ DONE - built untouched (same: OK); the two deltas above (files + sha on their DELTA lines) and the --diff are the figures to declare for STEP12A-APPLY"
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP12A-DRY reviewed (11/8) — ESCALATE (mechanical) → fixed (`e8166ac5`) → REVIEW: CLEAR
+
+First pass: ESCALATE — the dry-copy definition read had no STOP clause. Fixed exactly as asked. Second pass, verdict
+line verbatim: "REVIEW: CLEAR - the block only reads built and src; both builder runs hit only the throwaway dry.db; every failure path now ends in one STOP line; the gate guards are in eu_step `pre` as accepted at §9.106/§9.107; no figure is asserted beyond code-traced status lines."
+Goes straight to PA (read-only). Unknown until it runs: the dry copy's size (full words + lexicon + abp_ext +
+dotted_lexicon; step 11's 192 MB `dry.db` is still on PA).
+
+### STEP12A-DRY ran (11/8, 18:34 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0; built untouched; IDENTICAL
+
+Log `~/edition_upgrade_runs/step12a_dry_20261108.log`. PRE OK (built 451,993,600 B; src 451,964,928 B).
+`dotted_lexicon` on built and src: same definition (`CREATE TABLE dotted_lexicon (strongs TEXT PRIMARY KEY, lemma
+TEXT, translit TEXT)` + `sqlite_autoindex_dotted_lexicon_1`), 3,627 rows each. PREP OK: 150 tables / 3,809,451 rows
+in 61 s; before.db 229,376 B; **dry.db 97,918,976 B**; the four copied tables = built (words 23ef2493a195, lexicon
+123b3f07d776, abp_ext 8f9c30bc5f84, dotted_lexicon 9288508f98d4). `--diff`: +0 / −0; skipped buckets form_note 25 ·
+no_entry 86 · unreadable 0 · already_ok 7; REMOVED none. `--apply` on the copy: "Filled … with 3627 corrected
+headwords", exit 0; definition + 3,627 rows unchanged after. **Delta built → dry 0; src → dry 0** (both files header
+only, sha256 c866c00363f6f49c3961768d3103b6833e1a1bcff3f2923a479309197e8619d6). SAME OK. Same-code expectation met.
+
+**Apply or close? (ruling chat asked CC to read §9.105.)** §9.105 rules only the order ("11 → 10 → 12 → 9 → 9a → 9b →
+9c per rebuild-words.md"). The procedure it points to prescribes the apply: `rebuild-words.md:351-354` "dry/trial →
+figures DECLARED → `--apply` gated on the declared figures"; 12a `:355-359` "`--diff` → declare → `--apply` … Values
+check after apply"; Q5 (11/7) the same. Step 12 has NO identical-skip clause (step 10 has one, `:326-327`). So read
+as written, the apply runs; STEP12A-APPLY is drafted below, gated on these figures. An identical-skip for step 12
+would be a new ruling.
+
+### Block STEP12A-APPLY (GATE REF 006e16ba; WRITES built: dotted_lexicon only, DROP + re-CREATE, same 3,627 rows) — for the ruling chat
+
+The builder's imports are both in `scripts/` (covered by `pre`); nothing at the repo root, so no extra file guard.
+Order: guards → pre (new folder `step12a_apply_20261108`) → the dry folder's files present, both delta files =
+header only, sha256 c866c003… → `same` against the dry folder → built read before = the dry log's definition + 3,627
+rows → **the one write** (`--apply` on built) → its output = the dry run's line with built's path → built read after
+= the same definition + 3,627 rows → `check --written dotted_lexicon` against the dry folder (149 unwritten tables +
+schema = prep; dotted_lexicon = the dry copy) → the procedure's values check: delta src → built `--zero`. Before the
+write, any miss = STOP, built untouched; after it, a miss = CHECK with restore source
+`step12a_dry_20261108/before.db` (the whole table as it was).
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12a_apply_20261108.log
+if [ -e "$L" ]; then echo "STEP12A-APPLY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12A-APPLY rebuild-words step 12a (build_dotted_lexicon --apply) on BUILT, gated on the STEP12A-DRY figures - WRITES built: dotted_lexicon only (drop + re-create, 3,627 rows, identical to src) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12A-APPLY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12A-APPLY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DD=~/edition_upgrade_runs/step12a_dry_20261108
+D=~/edition_upgrade_runs/step12a_apply_20261108
+E="python3 scripts/eu_step.py"
+$E pre --tag STEP12AA --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12A-APPLY RESULT: STOP - pre (line above); built untouched"; exit 1; }
+for f in state.json before.db dry.db apply_dry.log step12a_delta_built.tsv step12a_delta_src.tsv; do [ -s "$DD/$f" ] || { echo "STEP12A-APPLY RESULT: STOP - the dry run's $f is missing or empty in $DD; built untouched"; exit 1; }; done
+for f in step12a_delta_built.tsv step12a_delta_src.tsv; do
+  s=$(sha256sum < "$DD/$f" | cut -d' ' -f1); n=$(wc -l < "$DD/$f")
+  echo "dry delta $f: $n line(s) (expect 1 = header only), sha256 $s (expect c866c00363f6f49c3961768d3103b6833e1a1bcff3f2923a479309197e8619d6)"
+  [ "$s" = c866c00363f6f49c3961768d3103b6833e1a1bcff3f2923a479309197e8619d6 ] && [ "$n" = "1" ] || { echo "STEP12A-APPLY RESULT: STOP - $f is not the declared empty delta; built untouched"; exit 1; }
+done
+$E same --tag STEP12AA --built "$B" --dir "$DD" || { echo "STEP12A-APPLY RESULT: STOP - built changed since the dry run (lines above); built untouched"; exit 1; }
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'dotted_lexicon' ORDER BY type, name; SELECT 'rows', count(*) FROM dotted_lexicon"
+EXPD=$(printf '%s\n' "index|sqlite_autoindex_dotted_lexicon_1|" "table|dotted_lexicon|CREATE TABLE dotted_lexicon (strongs TEXT PRIMARY KEY, lemma TEXT, translit TEXT)" "rows|3627")
+R0=$(sqlite3 -readonly "$B" "$RD") || { echo "STEP12A-APPLY RESULT: STOP - read before failed; built untouched"; exit 1; }
+echo "dotted_lexicon on built before:"; echo "$R0"
+[ "$R0" = "$EXPD" ] || { echo "STEP12A-APPLY RESULT: STOP - built's dotted_lexicon is not the dry log's picture (definition + 3627 rows); built untouched"; exit 1; }
+echo "=== APPLY: build_dotted_lexicon --apply on built (the one write) ==="
+OUT=$(python3 scripts/build_dotted_lexicon.py "$B" --apply 2>&1); r=$?
+printf '%s\n' "$OUT" > "$D/apply.log"
+echo "$OUT"
+echo "exit $r (expect 0)"
+SAMEOUT=NO
+case "$OUT" in "Filled dotted_lexicon in "*" with 3627 corrected headwords (that table only; nothing else touched).") [ "$(wc -l <<< "$OUT")" = "1" ] && SAMEOUT=yes;; esac
+echo "output = the dry run's one line (path aside: Filled dotted_lexicon in ... with 3627 corrected headwords ...): $SAMEOUT"
+R1=$(sqlite3 -readonly "$B" "$RD"); echo "dotted_lexicon on built after:"; echo "$R1"
+SAMEDEF=NO; [ "$R1" = "$EXPD" ] && SAMEDEF=yes
+echo "definition + 3627 rows after = before: $SAMEDEF"
+CHK=$($E check --tag STEP12AA --built "$B" --dir "$DD" --written dotted_lexicon 2>&1); k=$?
+echo "$CHK"
+VAL=$($E delta --tag STEP12AA --a "$S" --b "$B" --table dotted_lexicon:strongs --out "$D/step12a_values_src_built.tsv" --zero 2>&1); v=$?
+echo "$VAL"
+if [ "$r" -eq 0 ] && [ "$SAMEOUT" = "yes" ] && [ "$SAMEDEF" = "yes" ] && [ "$k" -eq 0 ] && [ "$v" -eq 0 ]; then
+  echo "STEP12A-APPLY RESULT: DONE - built dotted_lexicon re-created: 3,627 rows, = the dry run, = src row for row (0 both ways); the other 149 tables + schema unchanged"; exit 0
+fi
+echo "STEP12A-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for dotted_lexicon: $DD/before.db"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
