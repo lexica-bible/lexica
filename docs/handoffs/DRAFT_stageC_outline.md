@@ -6270,3 +6270,90 @@ before (definition + 3,627 rows). CHECK OK: 149 untouched tables + schema 0 diff
 fingerprint 9288508f98d4 = dry copy = prep; no journal; repo scripts/tests clean. Values check src → built
 (key strongs): 3,627 → 3,627, changed 0 / added 0 / removed 0; file header only, sha c866c003…. Restore source not
 needed (`step12a_dry_20261108/before.db` kept until the swap).
+
+## Step 12b (`word_gloss`) on built — STEP12B-DRY drafted (11/9)
+
+Procedure `rebuild-words.md:360-367` + Q5 (dry on built → figures declared from that log by path:line → `--apply`
+gated on them). `build_word_gloss.py` takes the db as its first non-flag argument (`:39-40`; none = LIVE, so the
+block always passes one). It reads `words.strongs_base` (G set, `:411`), `dotted_lexicon` (`:417-418`), `abp_ext`
+(`:420-422`), `kjv_strongs` + `bsb_strongs` (Hebrew universe, `:441-444`), `lexicon` (only with `--summary`,
+`:540-541`); `~/bible-db/heb.db` (`:76`, opened `:446`, SELECT only); TBESG/TBESH from the pinned copies
+(`:62-74`, sha256-refused if changed, `:177-185`; no `--fetch`); Dodson `scripts/apfathers/raw/dodson.csv` (`:75`).
+Imports stdlib only. Dry run writes nothing to the db (`:553-556`) but writes `gloss_dotted_blank.tsv` /
+`gloss_dotted_abp.tsv` into the CURRENT folder when they have rows (`:522-536`) — so each run goes in its own
+scratch folder. `--apply` DROPs + re-CREATEs `word_gloss` only (`:558-561`).
+**Dry form (as 12a):** the builder's dry run (+ `--summary`, the loaded-word review) AND its `--apply`, both on a
+THROWAWAY copy of the seven tables it reads (eu_step prep), then a row-level delta keyed on `strongs` — built → dry
+and src → dry. heb.db is read by sha256 before and after (it sits outside built; proves it unchanged). Also read out:
+`word_gloss` definition + rows by source on built, src, and the dry copy after. Same-code expectation: delta 0 both
+ways; the edition upgrade changed `words.strongs_base` (8b.2), so any difference is a member to read before an apply.
+`PYTHONHASHSEED=0` only fixes the PRINT order of the builder's "by source" line (its Hebrew list is a Python set);
+the rows written do not depend on it.
+Tested locally on made-up dbs (fake home, repo clone at HEAD): READ DONE, one planted new number shown in both
+deltas; re-paste, heb.db missing, heb.db journal, and a changed builder each STOP.
+Unknown until it runs: the dry copy's size (words + kjv_strongs + bsb_strongs + 4 small tables) and heb.db's size.
+
+### Block STEP12B-DRY (GATE REF 006e16ba; READ-ONLY on built, src and heb.db — writes only the run folder and its throwaway copy)
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12b_dry_20261109.log
+if [ -e "$L" ]; then echo "STEP12B-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12B-DRY rebuild-words step 12b (build_word_gloss dry run + --apply) on a THROWAWAY copy of words/dotted_lexicon/abp_ext/lexicon/kjv_strongs/bsb_strongs/word_gloss - built, src and heb.db read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12B-DRY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12B-DRY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8 PYTHONHASHSEED=0
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+H=~/bible-db/heb.db
+D=~/edition_upgrade_runs/step12b_dry_20261109
+G=~/bible-db/scripts/build_word_gloss.py
+E="python3 scripts/eu_step.py"
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'word_gloss' ORDER BY type, name; SELECT 'rows', count(*) FROM word_gloss; SELECT 'source', source, count(*) FROM word_gloss GROUP BY source ORDER BY source"
+$E pre --tag STEP12B --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12B-DRY RESULT: STOP - pre (line above); nothing made"; exit 1; }
+[ -s "$H" ] || { echo "STEP12B-DRY RESULT: STOP - $H missing or empty"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP12B-DRY RESULT: STOP - a -journal sits beside $H"; exit 1; }
+H0=$(sha256sum < "$H" | cut -d' ' -f1)
+echo "heb.db (the builder reads it, never writes it): $(stat -c %s "$H") bytes, sha256 $H0"
+for f in "$B" "$S"; do
+  echo "--- word_gloss on $f (read-only): definition + row count + rows by source"
+  sqlite3 -readonly "$f" "$RD" || { echo "STEP12B-DRY RESULT: STOP - word_gloss read failed on $f"; exit 1; }
+done
+$E prep --tag STEP12B --built "$B" --dir "$D" --copy words,dotted_lexicon,abp_ext,lexicon,kjv_strongs,bsb_strongs,word_gloss --save word_gloss || { echo "STEP12B-DRY RESULT: STOP - prep (line above); built untouched"; exit 1; }
+mkdir "$D/dryrun" "$D/applycopy" || { echo "STEP12B-DRY RESULT: STOP - cannot make the two scratch folders; built untouched"; exit 1; }
+echo "=== DRY 1: the builder's dry run (+ --summary: the loaded-word review) on the throwaway copy, run from $D/dryrun ==="
+( cd "$D/dryrun" && python3 "$G" "$D/dry.db" --summary ) > "$D/dryrun.out" 2>&1; r=$?
+cat "$D/dryrun.out"
+echo "exit $r (expect 0)"
+[ "$r" -eq 0 ] || { echo "STEP12B-DRY RESULT: STOP - the dry run failed on the copy (above); built untouched"; exit 1; }
+grep -q '^\[dry-run\] nothing written' "$D/dryrun.out" || { echo "STEP12B-DRY RESULT: STOP - the dry run did not report 'nothing written'; built untouched"; exit 1; }
+echo "=== DRY 2: --apply on the throwaway copy $D/dry.db, run from $D/applycopy (built untouched) ==="
+( cd "$D/applycopy" && python3 "$G" "$D/dry.db" --apply ) > "$D/apply_dry.log" 2>&1; a=$?
+cat "$D/apply_dry.log"
+echo "exit $a (expect 0)"
+[ "$a" -eq 0 ] || { echo "STEP12B-DRY RESULT: STOP - --apply failed on the copy (above); built untouched"; exit 1; }
+grep -q '^Filled word_gloss with ' "$D/apply_dry.log" || { echo "STEP12B-DRY RESULT: STOP - --apply did not report a fill; built untouched"; exit 1; }
+echo "--- files the builder left in its two scratch folders (sha256, lines):"
+find "$D/dryrun" "$D/applycopy" -type f | sort | while read -r f; do echo "$(sha256sum < "$f" | cut -d' ' -f1)  $(wc -l < "$f") lines  ${f#"$D"/}"; done
+echo "--- word_gloss on the dry copy after: definition + row count + rows by source"
+sqlite3 -readonly "$D/dry.db" "$RD" || { echo "STEP12B-DRY RESULT: STOP - word_gloss read failed on the dry copy; built untouched"; exit 1; }
+$E delta --tag STEP12B --a "$B" --b "$D/dry.db" --table word_gloss:strongs --out "$D/step12b_delta_built.tsv" || { echo "STEP12B-DRY RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
+$E delta --tag STEP12B --a "$S" --b "$D/dry.db" --table word_gloss:strongs --out "$D/step12b_delta_src.tsv" || { echo "STEP12B-DRY RESULT: STOP - delta src -> dry (line above); built untouched"; exit 1; }
+H1=$(sha256sum < "$H" | cut -d' ' -f1)
+echo "heb.db after: sha256 $H1 - unchanged: $([ "$H1" = "$H0" ] && echo yes || echo NO)"
+[ "$H1" = "$H0" ] || { echo "STEP12B-DRY RESULT: STOP - heb.db changed during the run (sha above) - report this, do not re-run"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP12B-DRY RESULT: STOP - a -journal now sits beside $H"; exit 1; }
+$E same --tag STEP12B --built "$B" --dir "$D" || { echo "STEP12B-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+echo "STEP12B-DRY RESULT: READ DONE - built untouched (same: OK), heb.db unchanged; the dry run's counts, the two deltas above (files + sha on their DELTA lines) and the scratch-folder files are the figures to declare for STEP12B-APPLY"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12B-DRY reviewed (11/9) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - this is a read-only block (scope a). Built, src and heb.db are only read; every write goes to ~/edition_upgrade_runs/step12b_dry_20261109*. No figures are asserted."
+Cleared unchanged. Reviewer notes: both log checks match the builder's print lines (`:554`, `:564`); the builder's
+`gloss_*.tsv` files land in the scratch folders; heb.db is opened with an ordinary connect but only read — the sha
+before/after + journal checks prove it unchanged. Goes straight to PA (read-only). Unknown until it runs: the dry
+copy's size and heb.db's size.
