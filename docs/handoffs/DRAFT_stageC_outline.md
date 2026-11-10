@@ -6413,3 +6413,71 @@ reviewer's option (b) exactly: `PS=$(ps -eo pid,etime,args); P=$(grep -E 'eu_ste
 nothing else changed; retested (none → READ DONE; fake running process → CHECK). Second pass, verdict line verbatim:
 "REVIEW: CLEAR - read-only block (scope a): it only reads built, src, heb.db and the old log/folder; it writes only its new empty folder (made by pre) and its new log; no figures asserted."
 Goes straight to PA (read-only).
+
+### STEP12B-READ ran (11/10, 02:38 UTC, PA HEAD b3178672) — READ DONE, exit 0 → partial run CLOSED "no effect" (ruling chat 11/10)
+
+Log `~/edition_upgrade_runs/step12b_partial_read_20261109.log`. No process running; PRE OK. The first paste's log:
+1,916 B / 30 lines, written 17:04:44–17:04:49Z 11/9 — PRE OK, heb.db 49,831,936 B sha `885ed4e8…`, word_gloss on
+built AND src: same definition, 17,568 rows, same six source counts (abp-ext 116, dodson 5,220, dotted-lemma 3,449,
+override 59, tbesg 72, tbesh 8,652); ends there. Run folder present and EMPTY; no state.json (prep never wrote it);
+heb.db sha now = logged, no journal. Built, src, heb.db untouched. Ruling (11/10): closed as "no effect"; log + empty
+folder moved aside, never deleted; then STEP12B-DRY runs again, same block, same REF. If the re-paste is cut off
+again, that is the report — no third paste.
+CC observation (no cause asserted): bash reads a whole `if … fi` block before running any of it, and the log holds
+lines from after the point where the console display stopped — so the full block reached bash. The run stopped
+inside `eu_step prep`, which prints nothing until its whole-database fingerprint finishes (53–61 s on PA at steps
+11/12a); its state.json is written only after that.
+
+### Block STEP12B-ASIDE (WRITES only run artifacts: makes one folder, moves the partial log + empty folder into it; no repo code runs)
+
+Name: `~/edition_upgrade_runs/aside_step12b_dry_20261109_partial_noeffect/` holding `step12b_dry_20261109.log` and
+the empty `step12b_dry_20261109/`, moved with `mv -n` (never overwrites). STOPs, moving nothing, if: the aside
+folder exists, the log or folder is missing, the folder is not empty, an `eu_step`/`build_word_gloss` process runs, or
+the log is not 1,916 bytes. DONE only if both originals are gone, both are in the aside folder, and the log's sha256
+after = before. Then the original names are free, so the re-run is the cleared STEP12B-DRY block **byte for byte,
+original log name** (record copy = tested copy, checked). Tested locally: good case → DONE, then STEP12B-DRY → READ
+DONE; re-paste, aside exists, folder not empty, wrong size, running process → each STOP.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12b_moveaside_20261110.log
+if [ -e "$L" ]; then echo "STEP12B-ASIDE RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+echo "STEP12B-ASIDE - moves the partial STEP12B-DRY log + its empty run folder aside (mv, nothing deleted; no repo code runs) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs; N=step12b_dry_20261109; A=$R/aside_${N}_partial_noeffect
+[ -e "$A" ] && { echo "STEP12B-ASIDE RESULT: STOP - $A already exists; nothing moved"; exit 1; }
+[ -f "$R/$N.log" ] || { echo "STEP12B-ASIDE RESULT: STOP - $R/$N.log not there; nothing moved"; exit 1; }
+[ -d "$R/$N" ] || { echo "STEP12B-ASIDE RESULT: STOP - $R/$N not there; nothing moved"; exit 1; }
+[ -z "$(ls -A "$R/$N")" ] || { echo "STEP12B-ASIDE RESULT: STOP - $R/$N is not empty (the read found it empty); nothing moved"; ls -la "$R/$N"; exit 1; }
+PS=$(ps -eo pid,etime,args); P=$(grep -E 'eu_step|build_word_gloss' <<<"$PS")
+[ -z "$P" ] || { echo "STEP12B-ASIDE RESULT: STOP - a process is running (below); nothing moved"; echo "$P"; exit 1; }
+n=$(wc -c < "$R/$N.log"); s0=$(sha256sum < "$R/$N.log" | cut -d' ' -f1)
+echo "partial log: $n bytes (expect 1916, the read), $(wc -l < "$R/$N.log") lines (expect 30), sha256 $s0"
+[ "$n" = 1916 ] || { echo "STEP12B-ASIDE RESULT: STOP - the log is not the 1,916-byte one the read saw; nothing moved"; exit 1; }
+mkdir "$A" || { echo "STEP12B-ASIDE RESULT: STOP - cannot make $A; nothing moved"; exit 1; }
+mv -n "$R/$N.log" "$A/" && mv -n "$R/$N" "$A/" || { echo "STEP12B-ASIDE RESULT: CHECK - a move failed (above); see the listing"; grep step12b <<<"$(ls -la "$R")"; exit 1; }
+echo "--- $A after:"; ls -la "$A" "$A/$N"
+s1=$(sha256sum < "$A/$N.log" | cut -d' ' -f1)
+OK=yes; [ -e "$R/$N.log" ] && OK=no; [ -e "$R/$N" ] && OK=no; [ -d "$A/$N" ] || OK=no; [ "$s1" = "$s0" ] || OK=no
+if [ "$OK" = yes ]; then
+  echo "STEP12B-ASIDE RESULT: DONE - partial log (sha $s0, unchanged) + empty run folder now in $A; the original names are free for the STEP12B-DRY re-run"; exit 0; fi
+echo "STEP12B-ASIDE RESULT: CHECK - something is not where expected (listing above; log sha after $s1)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12B-DRY re-run (after STEP12B-ASIDE DONE)
+
+The block "Block STEP12B-DRY" above, unchanged (REF 006e16ba; reviewer CLEAR 11/9), pasted only after STEP12B-ASIDE
+ends DONE. Keep the console open until its RESULT and `exit=` lines print.
+
+### STEP12B-ASIDE + re-run reviewed (11/10)
+
+**STEP12B-ASIDE:** first pass ESCALATE — tripwire 1 (bare `!` in the DONE test) and tripwire 2 (`ls | grep` in the
+CHECK branch); scope and other mechanics clean. Fixed as the reviewer suggested (`OK=yes … && OK=no` test;
+`grep step12b <<<"$(ls -la "$R")"`); nothing else changed; retested. Second pass, verdict line verbatim:
+"REVIEW: CLEAR - STEP12B-ASIDE as it stands (`docs/handoffs/DRAFT_stageC_outline.md` lines 6441-6466) only moves run artifacts, overwrites nothing, and no longer hits tripwire 1 or 2."
+Reviewer read it as inside the 2026-11-06 run-artifact carve-out (ruling chat 11/10: "scope as the reviewer reads it").
+**STEP12B-DRY re-run:** verdict line verbatim: "REVIEW: CLEAR - re-run of the read-only block I cleared 11/9 (scope a), unchanged in the record; its two name guards pass once STEP12B-ASIDE ends DONE. No figures asserted."
+CC checked: `git diff --quiet 006e16ba HEAD -- scripts tests` clean; the record's STEP12B-DRY block is byte-identical
+to the copy at `5e0213f1`. Order on PA: STEP12B-ASIDE; only if it ends DONE, STEP12B-DRY. If the re-paste is cut off
+again, that is the report (no third paste).
