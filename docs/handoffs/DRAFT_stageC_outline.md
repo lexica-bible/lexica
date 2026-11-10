@@ -6357,3 +6357,59 @@ Cleared unchanged. Reviewer notes: both log checks match the builder's print lin
 `gloss_*.tsv` files land in the scratch folders; heb.db is opened with an ordinary connect but only read — the sha
 before/after + journal checks prove it unchanged. Goes straight to PA (read-only). Unknown until it runs: the dry
 copy's size and heb.db's size.
+
+### STEP12B-DRY did not complete on PA (ruling chat, 11/9)
+
+First paste cut off mid-block after the `H0=` line (no RESULT, no `exit=`); a re-paste stopped on "log already
+exists", as designed. What the first paste left on PA is not known. Ruling (11/9): nothing is deleted or re-run; a
+read-only block prints what exists; the move-aside proposal follows the read and is ruled after it.
+Cause not known. Unverified possibility, not asserted: the console cut the paste itself (the block was ~5.9 KB).
+The log's contents will show whether the run started at all, and the read block is kept to ~2.6 KB.
+
+### Block STEP12B-READ (GATE REF 006e16ba; READ-ONLY — makes only its own empty folder via `pre` and its log)
+
+Prints: any `eu_step` / `build_word_gloss` process still running; `pre` (repo guards; built + src present, no
+journal, no triggers); the first paste's log IN FULL (size, last-written time, lines); the run folder's files (size,
+last written, first 16 hex of sha256) or "not there"; heb.db sha256 + journal check, compared with the sha the first
+paste logged if it got that far; `eu_step same` against the first paste's `state.json` if one exists (built unchanged
+since that prep). RESULT: READ DONE, or CHECK if a process is running, heb.db has a journal or changed, or built
+differs. Tested locally: empty folder, full folder, running process, built changed, heb.db changed, re-paste.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12b_partial_read_20261109.log
+if [ -e "$L" ]; then echo "STEP12B-READ RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12B-READ: what the cut-off STEP12B-DRY paste left - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12B-READ RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; S=~/bible-db/bible_edupg_test_20261101.db; H=~/bible-db/heb.db
+OL=~/edition_upgrade_runs/step12b_dry_20261109.log; D=~/edition_upgrade_runs/step12b_dry_20261109
+echo "--- still running? (any eu_step / build_word_gloss process)"
+PS=$(ps -eo pid,etime,args); P=$(grep -E 'eu_step|build_word_gloss' <<<"$PS"); echo "${P:-none}"
+python3 scripts/eu_step.py pre --tag STEP12BR --ref "$REF" --dir ~/edition_upgrade_runs/step12b_partial_read_20261109 --db "$B" --db "$S" || { echo "STEP12B-READ RESULT: STOP - pre (line above)"; exit 1; }
+echo "--- the first paste's log: $(stat -c '%s bytes, last written %y' "$OL" 2>&1), $(wc -l < "$OL") lines - in full:"
+cat "$OL"; echo "--- end of that log"
+if [ -d "$D" ]; then echo "--- run folder $D (size, last written, sha256):"
+  [ -n "$(find "$D" -type f)" ] || echo "  (no files)"
+  find "$D" -type f | sort | while read -r f; do echo "$(stat -c '%s  %y' "$f")  $(sha256sum < "$f" | cut -c1-16)  ${f#"$D"/}"; done
+else echo "--- run folder $D: not there"; fi
+[ -e "$H-journal" ] && HJ=YES || HJ=no
+H1=$(sha256sum < "$H" | cut -d' ' -f1); H0=$(sed -n 's/^heb\.db (the builder reads it.*sha256 \([0-9a-f]*\)$/\1/p' "$OL")
+echo "heb.db: $(stat -c %s "$H") bytes, sha256 $H1 - journal beside it: $HJ - first paste logged: ${H0:-not logged} - same: $([ -z "$H0" ] && echo n/a || { [ "$H1" = "$H0" ] && echo yes || echo NO; })"
+SM="no state.json - prep never finished; built checked by pre above only"
+if [ -s "$D/state.json" ]; then python3 scripts/eu_step.py same --tag STEP12BR --built "$B" --dir "$D" && SM=OK || SM="NOT OK (lines above)"; fi
+echo "built vs the first paste's prep state: $SM"
+if [ -n "$P" ] || [ "$HJ" = YES ] || [ "${SM#NOT OK}" != "$SM" ] || { [ -n "$H0" ] && [ "$H1" != "$H0" ]; }; then
+  echo "STEP12B-READ RESULT: CHECK - something above is not as expected (running process, heb.db journal/changed, or built differs)"; exit 1; fi
+echo "STEP12B-READ RESULT: READ DONE - nothing running; built/src: no journal (pre); heb.db unchanged where logged; built vs prep: $SM"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12B-READ reviewed (11/9) — ESCALATE (mechanical, tripwire 2) → fixed → REVIEW: CLEAR
+
+First pass: ESCALATE — the "still running?" line piped `ps` into grep under pipefail (tripwire 2). Fixed with the
+reviewer's option (b) exactly: `PS=$(ps -eo pid,etime,args); P=$(grep -E 'eu_step|build_word_gloss' <<<"$PS")`;
+nothing else changed; retested (none → READ DONE; fake running process → CHECK). Second pass, verdict line verbatim:
+"REVIEW: CLEAR - read-only block (scope a): it only reads built, src, heb.db and the old log/folder; it writes only its new empty folder (made by pre) and its new log; no figures asserted."
+Goes straight to PA (read-only).
