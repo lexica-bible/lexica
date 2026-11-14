@@ -8355,3 +8355,6 @@ Tests: 43 pass. Code + tests + charter edit still uncommitted until the ruling.
   9a (`~/edition_upgrade_runs/step9a_apply_<date>/before.db`), with `--from-restore <9a's --report>` in place of the 10/25 CSV.
 - **Note for STEP9-APPLY (gated on 32a39a10):** its REF guard (`eu_step pre`: scripts/tests = 32a39a10) STOPs on a PA that has pulled
   this new REF. PA stays at a9674438 until STEP9-APPLY has run; 9a's blocks then gate on the new REF after a pull.
+
+**New code REF: `cd6566b3`** (11/14) — the §9.121 change; pre-commit all checks passed. scripts/ and tests/ differ from 32a39a10 only
+by restore_surface_fill.py, health_check.py, snapshot_surface_fill.py and tests/test_surface_fill_restore.py.
