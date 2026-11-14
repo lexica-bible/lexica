@@ -8331,3 +8331,15 @@ wrong table; g0_report sound; the four ruled tests real (the 395,003 one on the 
   the wrong-slot test fails; listed-slot-in-snapshot check removed → its test fails; after-count fixed at base + 3 → three tests fail;
   the D1 fix removed → its test fails.
 Tests: 43 pass (22 earlier unchanged + 21 new).
+
+### 9a/9b/9c code re-reviewed after the fixes (11/14) — REVIEW: ESCALATE (code change); D1 closed, no new defect
+Verdict line verbatim: "REVIEW: ESCALATE - still a code change to builders and gates, so it goes to the ruling chat under sec 9.90. D1 is closed and I found no new defect in the changed code. Two small points remain for the ruling chat (R1, R2)."
+- **R2 — FIXED:** an empty `<report>.sha256` now gives a clean STOP ("… != its .sha256 (empty file)"), tested. (The same pattern in
+  the existing `read_snapshot` is left as it was — not part of this change.)
+- **R1 — for the ruling chat:** the report is checked against the `.sha256` beside it; the frozen TSV's sha is pinned in code
+  (`SNAPSHOT_SHA256`), the report's is not, so a changed report with a regenerated `.sha256` would pass `--check`. CC recommends a code
+  pin for the report (`REPORT_SHA256` beside `SNAPSHOT_SHA256` in restore_surface_fill.py, checked by `--check`) **in the 9c commit**,
+  where both shas first exist.
+- Still for the ruling chat: D4 (known difference: `g0_report` checks the changed pre-fill rows are exactly the updates, not each
+  update's old form; restore precondition 3 checks it at apply time).
+Tests: 43 pass. Code + tests + charter edit still uncommitted until the ruling.
