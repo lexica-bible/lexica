@@ -7327,3 +7327,101 @@ echo "STEP9-DRY RESULT: READ DONE - built + src untouched (same: OK); bh_scrape.
 Verdict line verbatim: "REVIEW: CLEAR - read-only block: built, src, bh_scrape.db and the pre-fill copy are only read, all writes go to throwaway copies or new files under ~/edition_upgrade_runs, and the expected figures trace to code and the procedure file"
 Reviewer notes (not blockers): the 391,130 control and the pre-fill 0 are printed, not enforced — read them by eye in
 the log; free disk is not checked and the per-copy size is an estimate.
+
+### Ruling (11/14, §9.112) — step 9 report logged; 9a/9b/9c code item logged (ruled after STEP9-DRY); punct block ordered; STEP9-DRY cleared
+
+## PUNCT-RECON drafted (11/14, §9.112) — 583 vs 607, member by member
+
+Part 1 reads only the two PA logs (`gate3_member_diff_20261104.log`, `gate3_rerun_20261106.log`): it takes every
+`[gone]` / `[new-eligible]` / `[new-NOT-elig]` / `[changed-ops]` line, marks every other frozen ref "unchanged",
+checks the lists add up to each log's own "to ruling:" line (else STOP), and lists every ref whose class differs
+11/4 → 11/6 (expect 24: 23 absent → new-eligible + Num 8:26 gone → unchanged; members 583 → 607), plus refs
+new-eligible on both sides whose printed ops differ. Part 2 re-runs gate 3 exactly as G3R did (port test, the
+member diff's tests, v2 controls, then the member diff on built with the same punct file 2b0f4cc4… and eligible
+e540d34d…) and lists every move 11/6 → today (expected: unknown). Gate-3 code (`audit_reassembly_diff.py`,
+`reorder_english.py`, its tests and fixtures) is unchanged f8e814c2 → 006e16ba, so any move is from built's data.
+Exit 1 from the member diff (a hard-fail class non-empty, as on 11/6: content-other Job 3:3) is read, not a STOP.
+Built is opened read-only by the diff; its size + time are printed before and after.
+Local test (made-up logs + db, punct/eligible fingerprints swapped for the fakes'): every class exercised
+(unchanged, gone, changed-ops, new-eligible, new-NOT-elig, absent), READ DONE, exit 0; re-paste STOP; a log with one
+list line removed → "do not add up to the log's own summary line" STOP.
+
+### Block PUNCT-RECON (GATE REF 006e16ba; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/punct_recon_20261114.log
+if [ -e "$L" ]; then echo "PUNCT-RECON RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - PUNCT-RECON sec 9.87/9.91 punct members: (1) the 11/4 and 11/6 gate-3 logs member by member (no db) (2) the gate-3 v2 member diff re-run on today's built vs 11/6 - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "PUNCT-RECON RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "PUNCT-RECON RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+F=tests/fixtures/reassembly/punct_members_live_20261030.txt
+E=~/edition_upgrade_runs/step5_eligible_20261101.tsv
+L1=~/edition_upgrade_runs/gate3_member_diff_20261104.log
+L2=~/edition_upgrade_runs/gate3_rerun_20261106.log
+D=~/edition_upgrade_runs/punct_recon_20261114
+export LC_ALL=C
+python3 scripts/eu_step.py pre --tag PUNCT --ref "$REF" --dir "$D" --db "$B" || { echo "PUNCT-RECON RESULT: STOP - pre (line above); nothing made"; exit 1; }
+for f in "$F" "$E" "$L1" "$L2"; do [ -s "$f" ] || { echo "PUNCT-RECON RESULT: STOP - missing or empty: $f"; exit 1; }; done
+[ "$(sha256sum < "$F" | cut -d' ' -f1)" = 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f ] || { echo "PUNCT-RECON RESULT: STOP - frozen punct file is not the committed one (2b0f4cc4...)"; exit 1; }
+[ "$(sha256sum < "$E" | cut -c1-8)" = e540d34d ] || { echo "PUNCT-RECON RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+sed -n 's/^ *\[punct-position *\] \([^ ]* [0-9]*:[0-9]*\) .*/\1/p' "$F" | sort -u > "$D/frozen.txt"
+nf=$(wc -l < "$D/frozen.txt"); echo "frozen punct file: $nf members (expect 241; sha 2b0f4cc4 as committed) - eligible file sha e540d34d"
+[ "$nf" = 241 ] || { echo "PUNCT-RECON RESULT: STOP - frozen file did not read as 241 members"; exit 1; }
+# one gate-3 log -> $D/<n>_status.tsv (ref, class) over the frozen refs + every listed ref; prints the counts and the
+# member total (members = unchanged + changed-ops + new-eligible + new-NOT-elig; gone drop out)
+status() {
+  local log=$1 n=$2 k s g ne nn co un mem
+  [ "$(grep -c '^V2 MEMBER DIFF:' "$log")" = 1 ] || { echo "$n: the log does not hold exactly one member-diff summary"; return 1; }
+  sed -n 's/^ *\[\(gone\|new-eligible\|new-NOT-elig\|changed-ops\) *\] \([^ ]* [0-9]*:[0-9]*\) .*/\2\t\1/p' "$log" | sort > "$D/${n}_listed.tsv"
+  k=$(cut -f1 "$D/${n}_listed.tsv" | uniq -d | wc -l); [ "$k" = 0 ] || { echo "$n: $k ref(s) listed twice"; return 1; }
+  awk -F'\t' 'FNR==NR {fz[$1] = 1; next} {c[$1] = $2} END {for (r in fz) if ((r in c) == 0) c[r] = "unchanged"; for (r in c) print r "\t" c[r]}' "$D/frozen.txt" "$D/${n}_listed.tsv" | sort > "$D/${n}_status.tsv"
+  g=$(grep -c $'\tgone$' "$D/${n}_status.tsv"); ne=$(grep -c $'\tnew-eligible$' "$D/${n}_status.tsv"); nn=$(grep -c $'\tnew-NOT-elig$' "$D/${n}_status.tsv")
+  co=$(grep -c $'\tchanged-ops$' "$D/${n}_status.tsv"); un=$(grep -c $'\tunchanged$' "$D/${n}_status.tsv"); mem=$((un + co + ne + nn))
+  s=$(sed -n 's/^V2 MEMBER DIFF:.*| to ruling: //p' "$log")
+  echo "$n summary line: $s"
+  echo "$n from the lists: gone $g - new on eligible $ne - new on NON-eligible $nn - changed ops $co - unchanged $un (241 - gone - changed) => punct members $mem"
+  [ "$s" = "gone $g - new on eligible $ne - changed ops $co - unchanged $un" ] || { echo "$n: the listed members do not add up to the log's own summary line"; return 1; }
+  awk -F'\t' '$2 != "gone" {print $1}' "$D/${n}_status.tsv" > "$D/${n}_members.txt"
+  sed -n 's/^ *\[new-eligible *\] \([^ ]* [0-9]*:[0-9]*\) *\(.*\)$/\1\t\2/p' "$log" | sort > "$D/${n}_newops.tsv"
+}
+# two status files -> every ref whose class differs (absent = not a member and not in the frozen file)
+moved() {
+  join -t $'\t' -a1 -a2 -e absent -o 0,1.2,2.2 "$D/$1_status.tsv" "$D/$2_status.tsv" | awk -F'\t' '$2 != $3' > "$D/moved_$1_$2.tsv"
+  echo "--- refs whose class differs, $1 -> $2: $(wc -l < "$D/moved_$1_$2.tsv") (ref | $1 | $2); by move:"
+  cut -f2,3 "$D/moved_$1_$2.tsv" | sort | uniq -c | sed 's/\t/ -> /'
+  sed 's/\t/ | /g; s/^/    /' "$D/moved_$1_$2.tsv"
+  echo "--- new-eligible on both sides with different printed ops, $1 -> $2: $(join -t $'\t' "$D/$1_newops.tsv" "$D/$2_newops.tsv" | awk -F'\t' '$2 != $3' | tee "$D/opsdiff_$1_$2.tsv" | wc -l)"
+  sed 's/\t/ | /g; s/^/    /' "$D/opsdiff_$1_$2.tsv"
+}
+echo "=== PART 1: the two printed logs, member by member (no db) ==="
+status "$L1" g3_1104 || { echo "PUNCT-RECON RESULT: STOP - 11/4 log (line above)"; exit 1; }
+status "$L2" g3_1106 || { echo "PUNCT-RECON RESULT: STOP - 11/6 log (line above)"; exit 1; }
+echo "expect: 11/4 members 583 (204 + 367 + 12), 11/6 members 607 (205 + 390 + 12); 24 moves: 23 absent -> new-eligible (the R2 verses named in DRAFT 2498-2504) + Num 8:26 gone -> unchanged"
+moved g3_1104 g3_1106
+echo "=== PART 2: the gate-3 v2 member diff re-run on today's built (read-only) ==="
+b0=$(stat -c '%s bytes, modified %y' "$B"); echo "built before: $b0"
+python3 tests/test_reorder_port.py || { echo "PUNCT-RECON RESULT: STOP - reorder port drifted from the JS baseline"; exit 1; }
+python3 tests/test_reassembly_member_diff.py || { echo "PUNCT-RECON RESULT: STOP - the member diff's own tests failed"; exit 1; }
+python3 scripts/audit_reassembly_diff.py --controls --v2 || { echo "PUNCT-RECON RESULT: STOP - v2 controls did not fire"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 scripts/audit_reassembly_diff.py "$B" --v2 --punct-members "$F" --eligible "$E" > "$D/g3_today.out" 2>&1; r=$?
+cat "$D/g3_today.out"; echo "member diff exit $r (1 = a hard-fail class is non-empty, as on 11/6: content-other Job 3:3; 2 = it could not run)"
+[ "$r" -le 1 ] || { echo "PUNCT-RECON RESULT: STOP - the member diff did not run (exit $r)"; exit 1; }
+status "$D/g3_today.out" g3_today || { echo "PUNCT-RECON RESULT: STOP - today's output (line above)"; exit 1; }
+echo "expect: 11/6 -> today = unknown (built changed since 11/6: 8b.0-8b.3, REKEY, SLOT3, the 9.96 restore, steps 11/10/12); every move is listed"
+moved g3_1106 g3_today
+b1=$(stat -c '%s bytes, modified %y' "$B"); echo "built after: $b1 - unchanged: $([ "$b1" = "$b0" ] && echo yes || echo NO)"
+[ "$b1" = "$b0" ] || { echo "PUNCT-RECON RESULT: STOP - built's size or time changed during a read-only run - report this"; exit 1; }
+echo "PUNCT-RECON RESULT: READ DONE - 11/4 members $(wc -l < "$D/g3_1104_members.txt"), 11/6 $(wc -l < "$D/g3_1106_members.txt"), today $(wc -l < "$D/g3_today_members.txt"); moves 11/4->11/6 $(wc -l < "$D/moved_g3_1104_g3_1106.tsv"), 11/6->today $(wc -l < "$D/moved_g3_1106_g3_today.tsv") (lists above; every file in $D)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### PUNCT-RECON reviewed (11/14) — ESCALATE (mechanical, tripwire 1) → fixed → ESCALATE (mechanical, tripwire 2) → fixed → REVIEW: CLEAR
+
+Fix 1: the awk `!(r in c)` → `(r in c) == 0`. Fix 2: the summary read `grep -m1 … | sed …` → `sed -n 's/^V2 MEMBER DIFF:.*| to ruling: //p'`.
+Both exactly as the reviewer named; no other change; local re-test identical (READ DONE; tampered log STOPs). CC ran
+`git diff --stat` f8e814c2 / e777f965 → 006e16ba over audit_reassembly_diff.py, reorder_english.py, the two tests and
+tests/fixtures/reassembly/: empty both ways (affects only how Part 2 moves are explained).
+Verdict line verbatim: "REVIEW: CLEAR - read-only block, both mechanical fixes are in, and one full pass over 7349-7419 hit no tripwire."
