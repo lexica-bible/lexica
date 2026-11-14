@@ -6792,3 +6792,114 @@ Values src → built: 0 changed / 82 added / 0 removed, file sha f70ab8a0… = t
 journal. Restore source not needed (`step12b_dry_20261109/before.db` kept until the swap).
 Transcript note (ruling chat, no action): the console echo of the pasted block was garbled on one line; the block ran
 in full and ended DONE; the log is authoritative.
+
+## Step 12c (`tipnr_metav_link` person rows) on built — STEP12C-DRY drafted (11/14)
+
+Procedure `rebuild-words.md:367-383`, rulings Q4 (no 12d; READ-ONLY place-link orphan check, expect 0, anything else =
+STOP) and blocker 3 (the two untracked leftover lists copied aside and left untouched) in
+`DRAFT_rebuild_words_side_tables.md`, and Q5 (dry → declare → apply).
+
+Builder `scripts/build_person_metav_link.py`:
+- `--bible <db>` is the db it reads (and with `--apply` writes); without it, LIVE (`:51`, `:53-55`).
+- `--index` is metav_index.db (`:52`, `:56-57`).
+- `--out-dir` is where the two leftover lists go (`:60-63`, written `:292-293`, `:308-309`, in the dry run too).
+- Dry run opens `--bible` read-only and ATTACHes the index read-only (`:116-118`). It reads `tipnr_entities`,
+  `tipnr_entity_refs`, `metav_people`, `pn_binding` (`:120-150`).
+- `--apply`: `DELETE … WHERE kind='person'` + INSERT the person links + `CREATE INDEX IF NOT EXISTS`
+  (`:326-341`); place rows untouched. It adds columns only if the table lacks them (`:328-335`).
+- `--check-place-orphans`: read-only (`:66-80`, `:99-112`); prints `PLACE-LINK ORPHANS: N`; exit 0 only at 0.
+- It imports `entity_resolution.py` from the repo root (`:48-49`), so the block guards that file against the REF
+  itself (§9.107 pattern).
+
+**Dry form (as 12a/12b):**
+- the builder's dry run AND its `--apply`, both on a THROWAWAY copy of the five tables (eu_step prep, restore source
+  `tipnr_metav_link`), each with `--out-dir` in its own scratch folder;
+- the two leftover lists in `scripts/` copied to `aside/`, their sha (or "absent") read before and after;
+- metav_index.db sha before and after;
+- the place-link orphan check on built (before anything) and on the copy after `--apply`, each must exit 0;
+- a delta keyed on `uniq+kind` (person rowids change on re-insert), built → dry and src → dry;
+- read-outs: the table definition, rows by kind, and rows by kind/rule on built, src and the copy after.
+
+Same-code expectation: delta 0 both ways. Since 8b.3 rebuilt `pn_binding` and the edition changed entities and
+refs, any difference is a member to read before an apply.
+
+Tested locally (made-up tables, a planted new person entity): READ DONE, the planted link in both deltas, orphans 0
+twice. Each of these STOPs: re-paste, a planted place orphan on built (the check fires), a metav_index journal,
+`entity_resolution.py` edited, metav_index missing. Unknown until it runs: the dry copy's size and metav_index.db's
+size.
+
+### Block STEP12C-DRY (GATE REF 006e16ba; READ-ONLY on built, src and metav_index.db — writes only the run folder, its throwaway copy, and the aside copies)
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12c_dry_20261114.log
+if [ -e "$L" ]; then echo "STEP12C-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12C-DRY rebuild-words step 12c (build_person_metav_link dry run + --apply) on a THROWAWAY copy of tipnr_entities/tipnr_entity_refs/metav_people/pn_binding/tipnr_metav_link + place-link orphan check - built, src, metav_index.db read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12C-DRY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12C-DRY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+X=~/bible-db/metav_index.db
+D=~/edition_upgrade_runs/step12c_dry_20261114
+P="python3 scripts/build_person_metav_link.py"
+E="python3 scripts/eu_step.py"
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'tipnr_metav_link' ORDER BY type, name; SELECT 'kind', kind, count(*) FROM tipnr_metav_link GROUP BY kind ORDER BY kind; SELECT 'rule', kind, rule, count(*) FROM tipnr_metav_link GROUP BY kind, rule ORDER BY kind, rule"
+git diff --quiet "$REF" HEAD -- entity_resolution.py || { echo "STEP12C-DRY RESULT: STOP - entity_resolution.py differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- entity_resolution.py)" ] || { echo "STEP12C-DRY RESULT: STOP - entity_resolution.py has uncommitted edits on PA"; exit 1; }
+echo "entity_resolution.py (the builder's import) = $REF, unedited: OK"
+$E pre --tag STEP12C --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12C-DRY RESULT: STOP - pre (line above); nothing made"; exit 1; }
+mkdir "$D/aside" "$D/dryrun" "$D/applycopy" || { echo "STEP12C-DRY RESULT: STOP - cannot make the run's sub-folders; built untouched"; exit 1; }
+LS0=""; for f in person_metav_link_residual.txt person_metav_link_tier2.txt; do
+  if [ -f "scripts/$f" ]; then cp -p "scripts/$f" "$D/aside/" || { echo "STEP12C-DRY RESULT: STOP - cannot copy scripts/$f aside; built untouched"; exit 1; }; LS0="$LS0 $f=$(sha256sum < "scripts/$f" | cut -d' ' -f1)"; else LS0="$LS0 $f=absent"; fi
+done
+echo "untracked leftover lists in scripts/ (copied aside to $D/aside; the builder is pointed elsewhere):$LS0"
+[ -s "$X" ] || { echo "STEP12C-DRY RESULT: STOP - $X missing or empty"; exit 1; }
+[ -e "$X-journal" ] && { echo "STEP12C-DRY RESULT: STOP - a -journal sits beside $X"; exit 1; }
+X0=$(sha256sum < "$X" | cut -d' ' -f1); echo "metav_index.db (read-only): $(stat -c %s "$X") bytes, sha256 $X0"
+for f in "$B" "$S"; do
+  echo "--- tipnr_metav_link on $f (read-only): definition + rows by kind + by kind/rule"
+  sqlite3 -readonly "$f" "$RD" || { echo "STEP12C-DRY RESULT: STOP - tipnr_metav_link read failed on $f"; exit 1; }
+done
+echo "=== PLACE-LINK ORPHAN CHECK on built (read-only; must print 0) ==="
+$P --bible "$B" --check-place-orphans; o=$?
+[ "$o" -eq 0 ] || { echo "STEP12C-DRY RESULT: STOP - the place-link orphan check on built is not 0 (exit $o, above); built untouched"; exit 1; }
+$E prep --tag STEP12C --built "$B" --dir "$D" --copy tipnr_entities,tipnr_entity_refs,metav_people,pn_binding,tipnr_metav_link --save tipnr_metav_link || { echo "STEP12C-DRY RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "=== DRY 1: the builder's dry run on the throwaway copy (leftover lists -> $D/dryrun) ==="
+$P --bible "$D/dry.db" --index "$X" --out-dir "$D/dryrun" > "$D/dryrun.out" 2>&1; r=$?
+cat "$D/dryrun.out"; echo "exit $r (expect 0)"
+[ "$r" -eq 0 ] || { echo "STEP12C-DRY RESULT: STOP - the dry run failed on the copy (above); built untouched"; exit 1; }
+grep -qF '[DRY-RUN] No table written.' "$D/dryrun.out" || { echo "STEP12C-DRY RESULT: STOP - the dry run did not report 'No table written'; built untouched"; exit 1; }
+echo "=== DRY 2: --apply on the throwaway copy $D/dry.db (leftover lists -> $D/applycopy; built untouched) ==="
+$P --bible "$D/dry.db" --index "$X" --out-dir "$D/applycopy" --apply > "$D/apply_dry.log" 2>&1; a=$?
+cat "$D/apply_dry.log"; echo "exit $a (expect 0)"
+[ "$a" -eq 0 ] || { echo "STEP12C-DRY RESULT: STOP - --apply failed on the copy (above); built untouched"; exit 1; }
+grep -q "^Wrote [0-9]* kind='person' rows into tipnr_metav_link" "$D/apply_dry.log" || { echo "STEP12C-DRY RESULT: STOP - --apply did not report its write; built untouched"; exit 1; }
+echo "--- files the builder wrote in its two scratch folders (sha256, lines):"
+find "$D/dryrun" "$D/applycopy" -type f | sort | while read -r f; do echo "$(sha256sum < "$f" | cut -d' ' -f1)  $(wc -l < "$f") lines  ${f#"$D"/}"; done
+echo "--- tipnr_metav_link on the dry copy after: definition + rows by kind + by kind/rule"
+sqlite3 -readonly "$D/dry.db" "$RD" || { echo "STEP12C-DRY RESULT: STOP - tipnr_metav_link read failed on the dry copy; built untouched"; exit 1; }
+echo "=== PLACE-LINK ORPHAN CHECK on the dry copy after --apply (must print 0) ==="
+$P --bible "$D/dry.db" --check-place-orphans; o2=$?
+[ "$o2" -eq 0 ] || { echo "STEP12C-DRY RESULT: STOP - the place-link orphan check on the dry copy is not 0 (exit $o2, above); built untouched"; exit 1; }
+$E delta --tag STEP12C --a "$B" --b "$D/dry.db" --table tipnr_metav_link:uniq+kind --out "$D/step12c_delta_built.tsv" || { echo "STEP12C-DRY RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
+$E delta --tag STEP12C --a "$S" --b "$D/dry.db" --table tipnr_metav_link:uniq+kind --out "$D/step12c_delta_src.tsv" || { echo "STEP12C-DRY RESULT: STOP - delta src -> dry (line above); built untouched"; exit 1; }
+X1=$(sha256sum < "$X" | cut -d' ' -f1); echo "metav_index.db after: sha256 $X1 - unchanged: $([ "$X1" = "$X0" ] && echo yes || echo NO)"
+[ "$X1" = "$X0" ] || { echo "STEP12C-DRY RESULT: STOP - metav_index.db changed during the run - report this, do not re-run"; exit 1; }
+[ -e "$X-journal" ] && { echo "STEP12C-DRY RESULT: STOP - a -journal now sits beside $X"; exit 1; }
+LS1=""; for f in person_metav_link_residual.txt person_metav_link_tier2.txt; do if [ -f "scripts/$f" ]; then LS1="$LS1 $f=$(sha256sum < "scripts/$f" | cut -d' ' -f1)"; else LS1="$LS1 $f=absent"; fi; done
+echo "leftover lists after - unchanged: $([ "$LS1" = "$LS0" ] && echo yes || echo NO)"
+[ "$LS1" = "$LS0" ] || { echo "STEP12C-DRY RESULT: STOP - a leftover list in scripts/ changed (copies in $D/aside) - report this"; exit 1; }
+$E same --tag STEP12C --built "$B" --dir "$D" || { echo "STEP12C-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+echo "STEP12C-DRY RESULT: READ DONE - built untouched (same: OK); metav_index.db + leftover lists unchanged; place-link orphans 0 on built and on the copy; the dry run's counts, the two deltas above (files + sha on their DELTA lines) and the scratch files are the figures to declare for STEP12C-APPLY"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12C-DRY reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - read-only on built, src and metav_index.db; every write lands in the run folder; the wrapper and tripwires check out; no figure is asserted."
+Reviewer spot-checked every line cite against the builder (all match). Built is touched only by the read-only orphan
+check. The leftover lists are only copied aside and their sha read; `tipnr_metav_link_residual.txt` is not touched.
+Goes straight to PA (read-only).
