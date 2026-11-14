@@ -6481,3 +6481,81 @@ Reviewer read it as inside the 2026-11-06 run-artifact carve-out (ruling chat 11
 CC checked: `git diff --quiet 006e16ba HEAD -- scripts tests` clean; the record's STEP12B-DRY block is byte-identical
 to the copy at `5e0213f1`. Order on PA: STEP12B-ASIDE; only if it ends DONE, STEP12B-DRY. If the re-paste is cut off
 again, that is the report (no third paste).
+
+### STEP12B-ASIDE + STEP12B-DRY re-run ran (11/14, PA HEAD b3178672) — ASIDE DONE; DRY READ DONE, exit 0, NOT +0/−0
+
+ASIDE 01:23Z: partial log 1,916 B / 30 lines, sha bc969e36…, moved with the empty folder into
+`aside_step12b_dry_20261109_partial_noeffect/`; DONE, exit 0. DRY re-run 01:24Z, log
+`step12b_dry_20261109.log`: PRE OK; heb.db 49,831,936 B sha 885ed4e8…, unchanged after; word_gloss on built = src
+(17,568 rows; abp-ext 116 / dodson 5,220 / dotted-lemma 3,449 / override 59 / tbesg 72 / tbesh 8,652). PREP OK:
+150 tables / 3,809,451 rows in 72 s; before.db 831,488 B; dry.db 130,338,816 B; seven copied tables = built. DRY 1
+"nothing written", exit 0. DRY 2 filled 17,650 (5,389 Greek base + 3,580 dotted + 8,681 Hebrew), exit 0; by source
+after: abp-ext 116 / dodson 5,298 / dotted-lemma 3,449 / override 59 / tbesg 76 / tbesh 8,652. Read-outs: dotted
+blank 47 (`gloss_dotted_blank.tsv`, 48 lines, 164536dc…), ABP-glossed dotted 116 (`gloss_dotted_abp.tsv`, 117 lines,
+d6b50a4d…), identical in both scratch folders. **Delta built → dry = src → dry: changed 0, added 82, removed 0;**
+both files 82 lines + header, sha f70ab8a0…. SAME OK.
+Ruling chat (11/14): not the same-code +0/−0 — dodson +78, tbesg +4, the 40 printed all proper nouns. STEP12B-APPLY
+NOT drafted. First: (1) the full 82 with source in the record; (2) a repo read of what accounts for them.
+
+### The 82 — repo read (11/14, CC; from what was read, no cause asserted)
+
+- **Gloss-picking code unchanged since 2026-07-06.** `build_word_gloss.py` commits after `a06a90b8` (7/06, G39
+  override): one, `1ad10cec` (11/07) — db path argument + TBESG/TBESH read from pinned copies (commit text: the
+  pinned files are the versions in place at the 6/22 build and parse identically, 10,846 / 10,790 / 8,723 — the
+  same counts the dry run printed). `git diff a06a90b8 HEAD` on the builder touches none of `pick_base`,
+  `build_greek_rows`, `OVERRIDES`, `normalize`, `load_dodson`, `parse_tbesg`.
+- **Sources unchanged:** `scripts/apfathers/raw/dodson.csv` last changed `982d3c7e` (6/22, first tracked).
+- **Where a Greek base row comes from:** the builder makes one row per `DISTINCT words.strongs_base GLOB 'G*'` in the
+  db it runs on (`:411`), glossed override → Dodson → TBESG (`pick_base`, `:387-396`). A number gets a row only if
+  it is in that db's `words`.
+- **Same values where both have the number:** the delta is changed 0 over all 17,568 existing keys (vs built and
+  vs src) — current code + pinned sources reproduce every row live already has, overrides included (59 = 59).
+- **Not in the repo:** when live's `word_gloss` was last `--apply`'d. Nothing records it; `TODO.md:52-57` still
+  lists the post-6/26 overrides' state on PA as unconfirmed.
+- **So the open question is data, not code:** are the 82 numbers in src's `words.strongs_base` too (then live's
+  word_gloss predates them in live's words), or only in built's (then the edition upgrade brought them in)? The
+  repo cannot answer that; STEP12B-MEMBERS below reads it.
+
+### Block STEP12B-MEMBERS (GATE REF 006e16ba; READ-ONLY — makes only its own empty folder via `pre` and its log)
+
+Prints the dry run's `step12b_delta_built.tsv` IN FULL (sha-checked = f70ab8a0…; the 82 with gloss and source), then
+for each of the 82 numbers its `words` row count on built and on src (`strongs_base` = the number), side by side,
+and how many have none on each. Tested locally (planted number: built 1 / src 0 → READ DONE; wrong file → STOP;
+re-paste → STOP).
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12b_members_20261114.log
+if [ -e "$L" ]; then echo "STEP12B-MEMBERS RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12B-MEMBERS: the 82 word_gloss rows the dry run added + each number's words rows on built and src - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12B-MEMBERS RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db; S=~/bible-db/bible_edupg_test_20261101.db
+T=~/edition_upgrade_runs/step12b_dry_20261109/step12b_delta_built.tsv; X=f70ab8a0a017836044de54e9c0ece024802f58cb6b5f7d447039b76d85693e64
+python3 scripts/eu_step.py pre --tag STEP12BM --ref "$REF" --dir ~/edition_upgrade_runs/step12b_members_20261114 --db "$B" --db "$S" || { echo "STEP12B-MEMBERS RESULT: STOP - pre (line above)"; exit 1; }
+s=$(sha256sum < "$T" | cut -d' ' -f1)
+echo "delta file $T: $(wc -l < "$T") lines (expect 83 = header + 82), sha256 $s (expect $X)"
+[ "$s" = "$X" ] || { echo "STEP12B-MEMBERS RESULT: STOP - not the dry run's delta file"; exit 1; }
+echo "--- the delta file in full:"; cat "$T"; echo "--- end of the delta file"
+K=$(sed -n "s/^word_gloss\tADDED\t('\([GH][0-9.]*\)',).*/('\1')/p" "$T" | paste -sd, -)
+k=$(sed -n "s/^word_gloss\tADDED\t('\([GH][0-9.]*\)',).*/\1/p" "$T" | wc -l)
+echo "numbers read from the file: $k (expect 82)"
+[ "$k" -gt 0 ] || { echo "STEP12B-MEMBERS RESULT: STOP - no numbers read from the file"; exit 1; }
+Q="WITH k(s) AS (VALUES $K) SELECT k.s, count(w.strongs_base) FROM k LEFT JOIN words w ON w.strongs_base = k.s GROUP BY k.s ORDER BY k.s"
+QB=$(sqlite3 -readonly "$B" "$Q") || { echo "STEP12B-MEMBERS RESULT: STOP - words read failed on built"; exit 1; }
+QS=$(sqlite3 -readonly "$S" "$Q") || { echo "STEP12B-MEMBERS RESULT: STOP - words read failed on src"; exit 1; }
+echo "--- words rows per number (number|built|src):"
+[ "$(cut -d'|' -f1 <<<"$QB")" = "$(cut -d'|' -f1 <<<"$QS")" ] || { echo "STEP12B-MEMBERS RESULT: STOP - the two number lists differ"; exit 1; }
+paste -d'|' <(echo "$QB") <(cut -d'|' -f2 <<<"$QS")
+zb=$(awk -F'|' '$2==0{c++} END{print c+0}' <<<"$QB"); zs=$(awk -F'|' '$2==0{c++} END{print c+0}' <<<"$QS")
+echo "STEP12B-MEMBERS RESULT: READ DONE - $k numbers; with NO words rows: built $zb, src $zs (of $k)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12B-MEMBERS reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - read-only block (scope a). The pre gate is in eu_step, the single real gate is the sha, the only writes are an empty run folder and the log, and no figure is asserted without a source."
+Reviewer could not run git; the commit claims in the repo read (`a06a90b8`, `1ad10cec`, `982d3c7e`, the
+`git diff a06a90b8 HEAD` function check) are CC's reads (11/14, `git log` / `git diff` on this checkout). Limit
+noted: a number with a letter suffix would not match the sed and would show as k ≠ 82. Goes straight to PA.
