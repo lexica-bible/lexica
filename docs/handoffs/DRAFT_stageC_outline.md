@@ -8269,3 +8269,38 @@ inserts. 9c before-side: a diff against src WOULD mix edition moves into the fil
 
 **Rulings asked:** (a) one REF (F4) — CC now follows §9.112 as written; (b) charter §6 9c "before side" → the named step-9a copy;
 (c) the changed-English-verse test left to the ruling on the member list, not code; (d) go-ahead to write the code to v2.
+
+### Rulings (11/14, §9.120) — 9a/9b/9c proposal v2 approved
+(a) one code change — approved. (b) charter §6 9c "before side = `<src>`" → the named post-step-9 copy (F3) — approved; the charter
+edit goes in the same commit as the code, the record citing the old wording beside the new. (c) the "inside a changed-English verse"
+test stays a ruling-chat judgement on the dry member list, not code — approved. (d) write the code to v2. Tests: F1 after-count
+with no lists reproduces 395,003 on the 10/25 shapes; a key-2 slot failing the form check STOPs; a leave-list slot that has become
+placeable STOPs; the re-freeze from a 9a report equals a re-freeze from the 10/25 list on made-up data where both exist. Reviewer on
+code + tests; ruling; push → new code REF; 9a drafted only after that REF. STEP9-APPLY: the ruling chat had not received the block —
+to be brought with the reviewer's verdict for the write gate.
+
+## 9a / 9b / 9c code (11/14, CC; to v2 under §9.120) — in the working tree, NOT committed until ruled
+
+- **`restore_surface_fill.py`:** `--base N` (default 391,130); `after_count()` = base + inserts among written slots (placed +
+  key-2-listed); the re-key runs first, then G1a: table = base → restoring, = after-count → the ALREADY check, else STOP;
+  `--key2-alone TSV` (book chapter verse old_position new_position) — a listed slot must be reason 6 with exactly that key-2
+  slot, is then placed there and runs the same preconditions 3/4 + Lexicon check; `--leave-unplaced TSV` (book chapter verse
+  old_position reason) — must end unplaced with exactly that reason; listed slots must be snapshot slots, on one list only;
+  G2 = no undeclared unplaced slot and no listed slot off its listing; `apply()` writes placed + key-2-listed only, checks
+  base under the write lock and the after-count before COMMIT. Report format unchanged (listed slots marked in `detail`).
+  Docstring gates updated. With no options the output is today's line for line (the 22 existing restore tests pass unchanged).
+- **`health_check.py`:** `--surface-floor=N` for that run (constant 395,003 unchanged; re-pinned at the swap).
+- **`snapshot_surface_fill.py`:** `--from-restore REPORT` (exactly one of it and `--csv`): `g0_report` — the diff (src minus
+  pre-fill) = exactly the report's placed slots at their new positions, forms equal, inserts not on the pre-fill side, changed
+  pre-fill rows = exactly the updates; action/cls from the report; row count and receipt counts from the report; `--check`
+  takes it too (step 1a after the re-freeze).
+- **Charter §6 9c amended** in the same change (old wording cited in place): before side = the named post-step-9 copy.
+- **Tests** (`tests/test_surface_fill_restore.py`, 39 pass, was 22): the four ruled — F1 after-count 391,130 + 3,873 = 395,003
+  with no lists on the 10/25 shapes (and 395,014 on 391,141); a key-2 slot failing the form check STOPs (nothing written); a
+  leave-listed slot that has become placeable STOPs; the re-freeze from a 9a report = the 10/25 re-freeze, byte for byte (and
+  its `--check` reads CURRENT) — plus: `--base` moves G1a; a key-2 slot placed and written (after 5); key-2-listed but places
+  normally / at the wrong slot → STOP; leave list leaves the slot, after = base + 2, a second run reads ALREADY; leave reason
+  changed → STOP; an unplaced slot on no list → STOP; a listed slot not in the snapshot → STOP; re-freeze on a moved layout keys
+  the new slots; a leave-listed slot is not frozen; a re-freeze diff holding a row the report does not → STOP; `--csv` and
+  `--from-restore` exclusive; `--surface-floor`. Proven able to fail: with the leave reason check removed, two tests fail; with
+  the re-freeze G0 set check removed, its test fails.
