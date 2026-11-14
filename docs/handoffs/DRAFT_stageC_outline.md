@@ -6903,3 +6903,111 @@ Verdict line verbatim: "REVIEW: CLEAR - read-only on built, src and metav_index.
 Reviewer spot-checked every line cite against the builder (all match). Built is touched only by the read-only orphan
 check. The leftover lists are only copied aside and their sha read; `tipnr_metav_link_residual.txt` is not touched.
 Goes straight to PA (read-only).
+
+### STEP12C-DRY ran (11/14, 02:09 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0, NOT +0/−0
+
+Log `~/edition_upgrade_runs/step12c_dry_20261114.log`.
+- **Guards and unchanged files:** entity_resolution.py = REF; PRE OK; leftover lists unchanged (residual 7c2233d2…,
+  tier2 2b24b761…); metav_index.db 1,966,080 B, a438327f…, unchanged.
+- **Place-link orphans:** 0 on built, 0 on the copy (the procedure's gate, met on both sides).
+- **Prep:** 3,809,533 rows in 38 s; dry.db 4,628,480 B; the five copied tables = built.
+- **Before:** tipnr_metav_link on built = src: 1,644 person rows (overlap 1,419 / strongs 225), no place rows.
+- **Builder report:** tier 1 1,133; tier 2 1,473; demoted 26; residual 129; no metaV 371; of 3,132 person
+  entities; 2,606 linked.
+- **Trial apply:** wrote 2,606 (overlap 1,473 / strongs 1,133).
+- **Delta built → dry = src → dry:** changed 0, added 962, removed 0; files 962 lines + header, sha c44c15d6….
+  Scratch files identical across the two runs (residual 130 lines a247dfb2…, tier2 1,474 lines 1eed6313…).
+- SAME OK.
+
+Ruling chat (11/14): not +0/−0; the 1,644 existing rows are unchanged. STEP12C-APPLY not drafted. First: (1) the 962
+by rule from the file; (2) a repo read of what accounts for 1,644 → 2,606; (3) the "7 expected" wording vs 26 listed.
+
+### 1,644 → 2,606 — repo read (11/14, CC; from what was read, no cause asserted)
+
+- **The builder's link inputs:** `tipnr_entities` (section, head, bases), `tipnr_entity_refs`, `metav_people`, and
+  metav_index.db (`build_person_metav_link.py:129-145`, `:156-212`). `pn_binding` feeds only the traffic numbers
+  (`:146-150`), not which links are made. **It never reads `words`.**
+- **Does the 8b.2 Strong's rewrite feed tier 1? Not through this builder.** Tier 1 compares an entity's `bases`
+  with metaV's Strong's set (`:168-174`). `bases` are written by `build_entity_binding.py:484` from the TIPNR file's
+  own Strong's fields (`entity_resolution.py:592-594`, `:603-605`), not from `words`.
+- **Builder code:** last logic change 7/05 (`a25d286c`); the only later commit, `1ad10cec` (11/07), adds
+  `--bible`/`--out-dir`/`--check-place-orphans`. `build_metav_person_index.py`: unchanged since `00a1238e` (7/05).
+- **Live's table history in the repo:** applied 2026-07-05 with **1,625** links — tier 1 202, tier 2 1,423, demoted 7,
+  residual 56 (`HANDOFF_metav_person_link.md:4`, `:29-41`; `docs/claude/data-model.md:257`). Live now holds
+  **1,644** (strongs 225 / overlap 1,419), so it changed after 7/05; **nothing in the repo records a later run.**
+- **The entity table widened after that:** `7e465865` (2026-07-30) made `build_entity_binding.py --apply` write ALL
+  parsed TIPNR entities, not only those used by a render bind (`:455-460`). Its pre-registered figures were 4,247
+  entities / 3,132 persons / 31,975 refs. Tonight's prep and report show tipnr_entities 4,247, tipnr_entity_refs
+  31,975, 3,132 person entities — the same figures. Also after 7/05: `import_tipnr.py` (7/16, en-dash
+  sub-records), `entity_resolution.py` (7/16, 7/24 R-2).
+- **Open, for data not code:** whether live's own inputs (src) give the same 2,606 links as built's. STEP12C-MEMBERS
+  (2a) answers it exactly, by a trial apply on a copy of src's tables compared link by link with built's trial.
+
+### "7 expected" and the DRY-RUN header — (3), from the code
+
+- **"(7 expected)"** is fixed text in the print at `build_person_metav_link.py:301`, added in `b5b17bb0` (7/05),
+  when the demoted bucket held 7 (`HANDOFF_metav_person_link.md:38`). The lines under it print EVERY member of the
+  bucket (`:302-304`), so 26 listed = the bucket's size now, matching the tier report's "demoted 26" (`:236`). The
+  label does not count anything, and no code checks it against 7.
+- **"DRY-RUN three-tier report"** is printed at `:233`, before the `if not APPLY` branch at `:320`, so `--apply`
+  prints the same header and then writes (`:326-343`). Both are fixed labels, with no effect on what is written.
+
+### Block STEP12C-MEMBERS (GATE REF 006e16ba; READ-ONLY on built, src and metav_index.db — writes only its run folder and a throwaway copy of src's five tables)
+
+(1) prints the 962 from `step12c_delta_built.tsv` (sha-checked c44c15d6…), counted by rule from the file's
+after-column, then listed `uniq | metav_id | rule | score | margin` (also saved to `members_962.txt`).
+(2a) copies src's five tables to a throwaway db (eu_step prep on src) and runs the same `--apply` there. It then
+compares those links row by row with built's trial result (`step12c_dry_20261114/dry.db`), keyed on `uniq+kind`.
+0 = live's own inputs give the same 2,606.
+(2b) prints the builder's link inputs src → built: tipnr_entities by uniq, tipnr_entity_refs by
+uniq+book+chapter+verse, metav_people by person_id.
+Also: metav_index sha unchanged; `same` on src at the end.
+Tested locally (planted entity on built only): (1) lists it as strongs; (2a) shows it as the one link src's inputs
+don't make; (2b) shows it as the one added entity. A wrong delta file → STOP.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12c_members_20261114.log
+if [ -e "$L" ]; then echo "STEP12C-MEMBERS RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12C-MEMBERS: the 962 added person links by rule + the builder's trial apply on a copy of SRC + src->built deltas of its inputs - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12C-MEMBERS RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db; S=~/bible-db/bible_edupg_test_20261101.db; X=~/bible-db/metav_index.db
+DD=~/edition_upgrade_runs/step12c_dry_20261114; D=~/edition_upgrade_runs/step12c_members_20261114
+T=$DD/step12c_delta_built.tsv; XD=c44c15d6fb088ef445854884d3db4d89a6d43f1904f8a3a9cb084289b2f209d2
+P="python3 scripts/build_person_metav_link.py"; E="python3 scripts/eu_step.py"
+git diff --quiet "$REF" HEAD -- entity_resolution.py || { echo "STEP12C-MEMBERS RESULT: STOP - entity_resolution.py differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- entity_resolution.py)" ] || { echo "STEP12C-MEMBERS RESULT: STOP - entity_resolution.py has uncommitted edits on PA"; exit 1; }
+$E pre --tag STEP12CM --ref "$REF" --dir "$D" --db "$B" --db "$S" || { echo "STEP12C-MEMBERS RESULT: STOP - pre (line above)"; exit 1; }
+s=$(sha256sum < "$T" | cut -d' ' -f1); echo "delta file $T: $(wc -l < "$T") lines (expect 963), sha256 $s (expect $XD)"
+[ "$s" = "$XD" ] || { echo "STEP12C-MEMBERS RESULT: STOP - not the dry run's delta file"; exit 1; }
+echo "=== (1) the 962 by rule, counted from the file's after-column ==="
+awk -F'\t' 'NR>1 {k="other"; if ($6 ~ /, '"'"'strongs'"'"', /) k="strongs"; else if ($6 ~ /, '"'"'overlap'"'"', /) k="overlap"; c[$2" "k]++} END {for (x in c) print x, c[x]}' "$T" | sort
+echo "--- the 962 (uniq | metav_id | rule | score | margin):"
+sed -n "s/^tipnr_metav_link\tADDED\t.*\t(('\(.*\)', 'person', \([0-9]*\), '\([a-z]*\)', \([0-9.]*\), \([0-9.]*\), 1),)\$/\1 | \2 | \3 | \4 | \5/p" "$T" > "$D/members_962.txt"
+cat "$D/members_962.txt"; echo "--- lines listed: $(wc -l < "$D/members_962.txt") (expect 962; the file holds every one either way)"
+echo "=== (2a) the same builder --apply on a THROWAWAY copy of SRC's five tables (src = live 11/01; read-only) ==="
+[ -e "$X-journal" ] && { echo "STEP12C-MEMBERS RESULT: STOP - a -journal sits beside $X"; exit 1; }
+X0=$(sha256sum < "$X" | cut -d' ' -f1)
+$E prep --tag STEP12CM --built "$S" --dir "$D" --copy tipnr_entities,tipnr_entity_refs,metav_people,pn_binding,tipnr_metav_link --save tipnr_metav_link || { echo "STEP12C-MEMBERS RESULT: STOP - prep of the src copy (line above); src untouched"; exit 1; }
+mkdir "$D/srcrun" || { echo "STEP12C-MEMBERS RESULT: STOP - cannot make $D/srcrun"; exit 1; }
+$P --bible "$D/dry.db" --index "$X" --out-dir "$D/srcrun" --apply > "$D/srcrun.out" 2>&1; r=$?
+sed -n '1,9p' "$D/srcrun.out"; tail -1 "$D/srcrun.out"; echo "exit $r (expect 0)"
+[ "$r" -eq 0 ] || { echo "STEP12C-MEMBERS RESULT: STOP - the trial apply on the src copy failed (above); src untouched"; exit 1; }
+$E delta --tag STEP12CM --a "$DD/dry.db" --b "$D/dry.db" --table tipnr_metav_link:uniq+kind --out "$D/links_builtcopy_vs_srccopy.tsv" --show 20 || { echo "STEP12C-MEMBERS RESULT: STOP - delta (line above)"; exit 1; }
+X1=$(sha256sum < "$X" | cut -d' ' -f1); echo "metav_index.db unchanged: $([ "$X1" = "$X0" ] && echo yes || echo NO)"
+echo "=== (2b) the builder's link inputs, src -> built (read-only) ==="
+$E delta --tag STEP12CM --a "$S" --b "$B" --table tipnr_entities:uniq --table tipnr_entity_refs:uniq+book+chapter+verse --table metav_people:person_id --out "$D/inputs_src_built.tsv" --show 20 || { echo "STEP12C-MEMBERS RESULT: STOP - input delta (line above)"; exit 1; }
+$E same --tag STEP12CM --built "$S" --dir "$D" || { echo "STEP12C-MEMBERS RESULT: STOP - src differs from its prep state (lines above)"; exit 1; }
+echo "STEP12C-MEMBERS RESULT: READ DONE - src untouched (same: OK); (1) the 962 by rule; (2a) links from src's inputs vs from built's inputs: the DELTA line above (0 = the same 2,606); (2b) input deltas src -> built above"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12C-MEMBERS reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - STEP12C-MEMBERS (ruling chat 11/14 items 1-3, DESIGN sec 9.90): reads built, src and metav_index.db only; the builder's --apply runs only on the throwaway copy $D/dry.db; wrapper and tripwires pass; the repo-read cites match the code."
+Reviewer checked the file:line cites (all match). It could not open the commit cites; CC confirmed each with
+`git log -1` on this checkout (a25d286c 7/05, 1ad10cec 11/07, 00a1238e 7/05, 7e465865 7/30, b5b17bb0 7/05).
+Goes straight to PA (read-only).
