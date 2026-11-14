@@ -7427,3 +7427,124 @@ tests/fixtures/reassembly/: empty both ways (affects only how Part 2 moves are e
 Verdict line verbatim: "REVIEW: CLEAR - read-only block, both mechanical fixes are in, and one full pass over 7349-7419 hit no tripwire."
 
 Ruling chat 11/14: PUNCT-RECON cleared to run on PA (read-only, reviewer CLEAR), either order with STEP9-DRY. Expectations noted, not gates: Part 1 583 → 607 with 24 moves; Part 2 unknown; gate-3 FAIL on Job 3:3 (exit 1) expected, not a stop.
+
+### STEP9-DRY ran (11/14, 18:50 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step9_dry_20261114.log`. built + src untouched (SAME OK both); bh_scrape.db 55,865,344 B,
+5e9d4bb6… before = after; pre-fill copy present (442,687,488 B, 10/25 03:09Z). Copies 110,882,816 / 110,923,776 B.
+abp_surface before on built and src: 395,003, blanks 0, no-word-at-slot 0, the builder's own definition.
+- **Same-code control (src): 346,111 / 13,183 / 31,836 / 391,130** = the 10/25 figures; src → src-dry changed 538 /
+  added 0 / removed 3,873 (sha 9cbf2b18…; = the 4,411 fill coming out); pre-fill → src-dry **0** (G1b oracle holds).
+- **Built: 346,113 / 13,181 / 31,684 / 390,978**; romanized 390,978; blanks 0; no-word-at-slot 0. built → built-dry:
+  changed 538 / added 11 / removed 4,036 (4,585 + header, sha `dbfe1912a5ae039ccf7a5fc3f75c5a5bda2216abad7ea654abd4d19b2f499139`).
+  src-dry → built-dry (the edition's effect on the chain): changed 4 / added 14 / removed 166 (184 + header, sha
+  `0498d40f189516a26290e44f93e57279aa1c67df1dbee794fc270e8497c979a4`).
+- PN backfill refusals built 794 vs src 642 (no-match 390/266, bridge-fail 160/131, bridge-ambiguous 185/189,
+  ambiguous 9/6, blank-label 50/50); PN slots 32,478 both.
+
+### PUNCT-RECON ran (11/14, 19:00 UTC) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/punct_recon_20261114.log`; built unchanged (size + time). Part 1: 11/4 = 583 (204 + 367 +
+12, gone 25), 11/6 = 607 (205 + 390 + 12, gone 24), each = its own summary line; moves 11/4 → 11/6 exactly 24
+(23 absent → new-eligible: 1Co 7:25, 1Ti 5:18, Deu 15:2, Deu 28:12, Deu 29:6, Eze 18:13, Eze 18:17, Eze 18:8,
+Gal 4:21, Isa 13:10, Jer 13:1, Job 34:27, Joh 4:17, Lev 11:11, Lev 12:4, Lev 18:21, Lev 21:11, Lev 23:36,
+Lev 25:37, Lev 25:4, Lev 7:26, Neh 5:12, Rom 6:14; + Num 8:26 gone → unchanged); 0 ops differences. Part 2: today's
+built = 11/6 member for member (607; 0 moves, 0 ops differences); content-other Job 3:3 the one hard-fail (exit 1,
+as on 11/6); word-order 0, dup-gloss 0, Joh 14:26 clean.
+
+### Rulings (11/14, §9.113)
+1. §9.87 punct: **607 is the punct-member figure; 583 superseded** (R2's 23 verses + Num 8:26). 9c freezes 607.
+   Job 3:3 content-other stays the open hard-fail it was on 11/6.
+2. STEP9: control accepted; built's 346,113 / 13,181 / 31,684 / 390,978 (deltas dbfe1912…, 0498d40f…) = the
+   candidate declaration for STEP9-APPLY, not yet declared. First a read: all 184 src-dry → built-dry members by
+   class, each removed slot joined to its built_run/pn_refused.tsv line; the 152/152 confirmed from the files.
+3. The 9a/9b/9c code change is now live (390,978 ≠ 391,130 blocks 9a at :291-294); proposal after the 184 read.
+
+## STEP9-MEMBERS drafted (11/14, §9.113 ruling 2)
+
+Reads only the STEP9-DRY run folder: the src-dry → built-dry delta (guard: 185 lines, sha 0498d40f…), both dry copies
+(guard: abp_surface 390,978 / 391,130 as STEP9-DRY left them; size + time before = after), both pn_refused.tsv files
+and both 3_pn.out files. (1) Each of the 184 members, one line: kind | verse | position | src-dry row → built-dry row |
+the word at that slot on built-dry and on src-dry (Strong's, is_pn, English) | the PN-backfill refusal line at that
+slot on built and on src (cause, label, token) — so a removed name slot shows its built refusal, an added one its src
+refusal, and a slot whose word moved shows the different words. Then counts by kind × name-slot × refusal cause.
+(2) 152/152 from the files: refusal lines (expect 794 / 642), NEW rows from 3_pn.out (31,684 / 31,836), name slots
+(32,478 both), abp_surface rows on a name slot (= NEW) and not on one (359,294 both = builder + backfill).
+Local test on the made-up STEP9-DRY folder (two refusal lines planted): every member joined to the right words and
+refusal lines on both sides; READ DONE; re-paste STOP; the real block on the fake folder STOPs on the delta sha.
+
+### Block STEP9-MEMBERS (GATE REF 006e16ba; READ-ONLY — reads the STEP9-DRY run folder; writes only its own run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9_members_20261114.log
+if [ -e "$L" ]; then echo "STEP9-MEMBERS RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP9-MEMBERS sec 9.113 ruling 2: the 184 src-dry -> built-dry abp_surface members by class, each joined to the word at its slot on both copies and to the PN-backfill refusal line there; the 152/152 from the files - READ-ONLY (reads only the STEP9-DRY run folder) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9-MEMBERS RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP9-MEMBERS RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+DD=~/edition_upgrade_runs/step9_dry_20261114
+T=$DD/step9_delta_srcdry_builtdry.tsv
+BD=$DD/dry.db
+SD=$DD/src/dry.db
+D=~/edition_upgrade_runs/step9_members_20261114
+TAB=$'\t'
+python3 scripts/eu_step.py pre --tag STEP9M --ref "$REF" --dir "$D" --db "$BD" --db "$SD" || { echo "STEP9-MEMBERS RESULT: STOP - pre (line above); nothing made"; exit 1; }
+for f in "$T" "$DD/built_run/pn_refused.tsv" "$DD/src_run/pn_refused.tsv" "$DD/built_run/3_pn.out" "$DD/src_run/3_pn.out"; do [ -s "$f" ] || { echo "STEP9-MEMBERS RESULT: STOP - missing or empty: $f"; exit 1; }; done
+s=$(sha256sum < "$T" | cut -d' ' -f1); n=$(wc -l < "$T"); echo "delta file $T: $n lines (expect 185 = header + 184), sha256 $s (expect 0498d40f189516a26290e44f93e57279aa1c67df1dbee794fc270e8497c979a4)"
+[ "$s" = 0498d40f189516a26290e44f93e57279aa1c67df1dbee794fc270e8497c979a4 ] && [ "$n" = 185 ] || { echo "STEP9-MEMBERS RESULT: STOP - not the STEP9-DRY delta file"; exit 1; }
+bs0=$(stat -c '%s %Y' "$BD" "$SD" | tr '\n' ' ')
+cb=$(sqlite3 -readonly "$BD" "SELECT count(*) FROM abp_surface") || { echo "STEP9-MEMBERS RESULT: STOP - read failed on $BD"; exit 1; }
+cs=$(sqlite3 -readonly "$SD" "SELECT count(*) FROM abp_surface") || { echo "STEP9-MEMBERS RESULT: STOP - read failed on $SD"; exit 1; }
+echo "abp_surface on the copies: built-dry $cb (expect 390978), src-dry $cs (expect 391130)"
+[ "$cb" = 390978 ] && [ "$cs" = 391130 ] || { echo "STEP9-MEMBERS RESULT: STOP - the dry copies are not as STEP9-DRY left them"; exit 1; }
+# --- (1) the 184 members ---
+awk -F'\t' 'NR > 1 {k = $3; gsub(/[() ]/, "", k); split(k, a, ","); print a[1] "\t" a[2] "\t" $2 "\t" $5 "\t" $6}' "$T" > "$D/keys.tsv"
+echo "members by kind (expect CHANGED 4 / ADDED 14 / REMOVED 166):"; cut -f3 "$D/keys.tsv" | sort | uniq -c
+V=$(cut -f1 "$D/keys.tsv" | sort -un | paste -sd, -); echo "verses touched: $(cut -f1 "$D/keys.tsv" | sort -un | wc -l)"
+WQ="SELECT w.verse_id, w.position, v.book, v.chapter, v.verse, COALESCE(w.strongs, ''), COALESCE(w.is_pn, ''), COALESCE(w.english, '') FROM words w JOIN verses v ON v.id = w.verse_id WHERE w.verse_id IN ($V) ORDER BY 1, 2"
+sqlite3 -readonly -separator "$TAB" "$BD" "$WQ" > "$D/words_built.tsv" || { echo "STEP9-MEMBERS RESULT: STOP - words read failed on built-dry"; exit 1; }
+sqlite3 -readonly -separator "$TAB" "$SD" "$WQ" > "$D/words_src.tsv" || { echo "STEP9-MEMBERS RESULT: STOP - words read failed on src-dry"; exit 1; }
+# files in order: words_built, words_src, built refusals, src refusals, keys -> one line per member:
+# kind | ref | pos | src-dry row -> built-dry row | built word at the slot | src word at the slot | built refusal | src refusal
+awk -F'\t' -v OFS='\t' '
+  FNR == 1 {f++}
+  f == 1 {wb[$1 SUBSEP $2] = $6 " pn=" $7 " \"" $8 "\""; ref[$1] = $3 " " $4 ":" $5; bk[$1] = $3 "\t" $4 "\t" $5; next}
+  f == 2 {ws[$1 SUBSEP $2] = $6 " pn=" $7 " \"" $8 "\""; if (($1 in ref) == 0) {ref[$1] = $3 " " $4 ":" $5; bk[$1] = $3 "\t" $4 "\t" $5}; next}
+  f == 3 {rb[$1 "\t" $2 "\t" $3 "\t" $4] = $5 " (label \"" $6 "\", token " $7 ")"; next}
+  f == 4 {rs[$1 "\t" $2 "\t" $3 "\t" $4] = $5 " (label \"" $6 "\", token " $7 ")"; next}
+  f == 5 {k = $1 SUBSEP $2; r = bk[$1] "\t" $2
+          b = (k in wb) ? wb[k] : "(no word)"; s = (k in ws) ? ws[k] : "(no word)"
+          x = (r in rb) ? rb[r] : "-"; y = (r in rs) ? rs[r] : "-"
+          print $3, ref[$1], $2, $4 " -> " $5, b, s, x, y}' \
+  "$D/words_built.tsv" "$D/words_src.tsv" "$DD/built_run/pn_refused.tsv" "$DD/src_run/pn_refused.tsv" "$D/keys.tsv" > "$D/members_184.tsv"
+echo "--- the 184 (kind | ref | position | src-dry row -> built-dry row | built word at the slot | src word at the slot | built PN refusal there | src PN refusal there):"
+sed 's/\t/ | /g; s/^/  /' "$D/members_184.tsv"
+echo "--- lines: $(wc -l < "$D/members_184.tsv") (expect 184)"
+echo "--- by class: kind | built word is a name slot | built refusal cause at the slot (- = none) | src refusal cause at the slot:"
+awk -F'\t' '{p = ($5 ~ / pn=1 /) ? "name slot" : "not a name slot"; x = $7; sub(/ .*/, "", x); y = $8; sub(/ .*/, "", y); print $1 " | built " p " | built refusal " x " | src refusal " y}' "$D/members_184.tsv" | sort | uniq -c
+# --- (2) the 152 / 152 from the files ---
+num() { sed -n "/$2/{s/.*: *//; s/,//g; s/[^0-9].*//; p; q}" "$1"; }
+rb=$(wc -l < "$DD/built_run/pn_refused.tsv"); rs=$(wc -l < "$DD/src_run/pn_refused.tsv")
+nb=$(num "$DD/built_run/3_pn.out" "NEW rows to add"); ns=$(num "$DD/src_run/3_pn.out" "NEW rows to add")
+PQ="SELECT count(*) FROM words WHERE is_pn = 1; SELECT count(*) FROM abp_surface s JOIN words w ON w.verse_id = s.verse_id AND w.position = s.position WHERE w.is_pn = 1; SELECT count(*) FROM abp_surface s JOIN words w ON w.verse_id = s.verse_id AND w.position = s.position WHERE COALESCE(w.is_pn, 0) <> 1"
+qb=$(sqlite3 -readonly "$BD" "$PQ" | paste -sd' ' -); qs=$(sqlite3 -readonly "$SD" "$PQ" | paste -sd' ' -)
+read -r sb pb ob <<<"$qb"; read -r ss ps os <<<"$qs"
+for x in "$rb" "$rs" "$nb" "$ns" "$sb" "$pb" "$ob" "$ss" "$ps" "$os"; do [ -n "$x" ] || { echo "STEP9-MEMBERS RESULT: STOP - a figure for the 152/152 did not read (NEW lines or counts above)"; exit 1; }; done
+echo "refusal lines in pn_refused.tsv: built $rb, src $rs (expect 794 / 642) - difference $((rb - rs))"
+echo "PN backfill NEW rows (3_pn.out): built $nb, src $ns (expect 31684 / 31836) - difference $((ns - nb))"
+echo "name slots (words is_pn = 1): built-dry $sb, src-dry $ss (expect 32478 both); NEW + refused: built $((nb + rb)), src $((ns + rs))"
+echo "abp_surface rows on a name slot: built-dry $pb, src-dry $ps (expect = the NEW rows, as already-present skips were 0)"
+echo "abp_surface rows NOT on a name slot: built-dry $ob, src-dry $os (expect 359294 both = builder + backfill: 346113 + 13181 / 346111 + 13183)"
+echo "152 / 152: rows $((ns - nb)) / refusals $((rb - rs)) / table total $((cs - cb))"
+bs1=$(stat -c '%s %Y' "$BD" "$SD" | tr '\n' ' '); echo "dry copies size + time before = after: $([ "$bs1" = "$bs0" ] && echo yes || echo NO)"
+[ "$bs1" = "$bs0" ] || { echo "STEP9-MEMBERS RESULT: STOP - a dry copy changed during a read-only run - report this"; exit 1; }
+echo "STEP9-MEMBERS RESULT: READ DONE - $(wc -l < "$D/members_184.tsv") members listed and classed (all in $D/members_184.tsv); 152/152 lines above; nothing written outside $D"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9-MEMBERS reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - read-only block. The dry copies are opened only by `sqlite3 -readonly` and by eu_step `pre`'s read-only opener. Built and src are never opened. All output goes to a new run folder, which `pre` refuses to make if it already exists, and to a new log behind the log-exists guard. Every parse matches the code that wrote its input, and one full pass found no tripwire."
+Reviewer notes (not blockers): assumes no `~/.sqliterc` header setting (as earlier blocks); "name slot" = is_pn printed exactly 1.
