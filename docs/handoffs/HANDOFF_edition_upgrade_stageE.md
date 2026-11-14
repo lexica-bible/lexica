@@ -21,6 +21,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 - **Step 12c APPLIED on built and CLOSED** (§9.111 + closing, 11/14 18:08Z): tipnr_metav_link 2,606 = 1,644 + 962
   person links live's own entity tables already produce but live's table never received (note on live, no action).
   **Step 12 (a, b, c) complete.** Next: 9 → 9a → 9b → 9c (§9.87 punct 583 vs 607 ruled before 9c).
+- **Step 9 report + STEP9-DRY drafted** (reviewer CLEAR, 11/14; DRAFT outline "Step 9 → 9a → 9b → 9c"). Found: the
+  9a/9b/9c scripts have the 10/25 figures written in (391,130 / 395,003 / 4,411) — a code change is needed before
+  the 9a dry run (design item for the ruling chat). Punct 583 → 607 needs a read-only reconciliation block (not drafted).
 
 ## State (11/8, end)
 - **Built** `~/bible-db/bible_edupg_test_built_20261102.db` = **8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a +
