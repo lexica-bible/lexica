@@ -7566,3 +7566,151 @@ Aeneas/Eneas …) and the built refusal label is the built spelling; the other 2
 (Jos 2:4 19/20, Jdg 11:7 6/7, Rom 9:29 17/18, Gen 34:4 1/2, 2Ki 23:35 6/7 …). **STEP9-APPLY held pending JP's
 decision on the 160** (apply now as a recorded known regression, or fix the name-slot matching first). Nothing more
 to draft on step 9 until then. The §9.112 9a/9b/9c code-change proposal may proceed meanwhile.
+
+### JP decision + ruling (11/14, §9.115)
+JP: **Option B — fix the name-slot matching first.** STEP9-APPLY stays held; STEP9-DRY's 390,978 withdrawn as a candidate.
+Ruling: a committed repo file pairing each new-edition spelling with the scrape's old-edition label, consulted by the
+name-slot backfill only when a direct match fails; the 160 removed name slots are the list to cover; CC makes the
+design choices (format, per label vs per slot, logging) and says why; tests: direct match wins, mapped miss resolves,
+unmapped miss refuses; reviewer reads proposal + diff; ruling; push → new code REF; then STEP9-DRY re-run under the
+new REF (src control must still be 391,130 / pre-fill → src-dry 0), figures, then the 9a/9b/9c proposal.
+
+## Name-respelling fix — proposal (11/14, CC; code in the working tree, NOT committed until ruled)
+
+**Files.** `scripts/pn_edition_spelling.tsv` (new, 146 rows) · `scripts/backfill_pn_surface.py` (+148 / −2) ·
+`tests/test_pn_edition_spelling.py` (new) · the new test added to `.github/workflows/ci.yml` and
+`scripts/githooks/pre-commit` (both lists). Nothing else changes; no other builder reads the file.
+
+**Design choices, and why.**
+- **Keyed per verse + edition token, not per slot and not globally.** Per slot (position) breaks on the next rebuild:
+  STEP9-MEMBERS showed 24 shifts in 158 verses. A global per-spelling rule would assert a respelling everywhere
+  from evidence in some verses: Joram/Jehoram are different kings in places, and Num 36:5's joseph → israel is a
+  quirk of that one verse's scrape labels. Per verse matches the evidence exactly and survives renumbering.
+- **Format:** TSV, `#` comment lines, header `book chapter verse edition_token scrape_tokens note`; tokens are
+  `_name_token` values (the backfill's own key), the note carries the evidence (src English at the slot). One old token
+  = every refused slot with that edition token in the verse (1Sa 11:1 jabesh ×2); several (comma-separated) = one per
+  refused slot in position order, counts must agree, else the row is not used — needed for Gen 4:18, where the two
+  Mathusala slots were Methusael and Methusaela in the old edition. Built from the 160 removed name slots:
+  157 slots → 146 rows; the other 3 (Num 26:39 Shupham + Shuphamites, Num 36:5 Israel) have the same token on both
+  sides and were refused only as ambiguous — they resolve when their partner slots (hupham, huphamites, joseph)
+  rejoin the group.
+- **Used only on a direct miss, and never changes a direct result.** `pair_verse_listed` runs the existing
+  `pair_verse` unchanged; only for slots it REFUSED does it swap in the listed old token and pair the verse again;
+  the second result is kept only if every slot the first pass paired keeps exactly its form (else the first pass
+  stands and the row reads "conflict"). So the existing rules, refusals and the bridge are untouched, and the list
+  can only add rows.
+- **Loud, never silent:** a malformed list (bad header/verse/token, self-map, duplicate) stops the run before any read
+  or write. The run prints `respelling-list adds`, slots tried / paired / still refused / paired along (a same-token
+  slot that resolves once a listed one joins its group, Num 26:39), and every row not used with its reason (direct
+  match / no slot with this token / count differs / conflict), up to 50 lines; `--dump-list FILE` writes every
+  paired slot (book ch vs pos edition_token old_token form) and every unused row.
+- **Same-code safety:** a row fires only in its verse and only on a refused slot carrying the EDITION spelling; src's
+  slots carry the old spellings, so on src every row should read "no slot with this token" and src's figures must
+  stay 391,130 / pre-fill → src-dry 0 — the STEP9-DRY re-run checks exactly that.
+
+**Tests** (`tests/test_pn_edition_spelling.py`, made-up data in the real table shapes): with an empty list, the
+respelled slots refuse as on 11/14; with the list, a direct match still wins (the old-token row is NOT taken),
+a mapped miss resolves, an unmapped miss still refuses; the ordered Gen 4:18 shape; a count mismatch leaves the row
+unused; the Num 26:39 shape (mapped slot joins the group, both paired in order, one "paired along"); the no-change
+guard (a listed slot that would take a blank slot's glued cell → conflict, first pass kept); malformed lists stop the
+run; a listed slot whose old token has no scrape row stays refused and is reported ("tried, still refused"); the
+committed list loads, 146 rows. `tests/test_pn_surface_backfill.py` (the existing 26-slot suite) passes unchanged.
+Tests proven able to fail: with the no-change guard removed, the G checks fail; with the refused-only rule removed,
+the "not needed" check fails (the guard still keeps A's direct pairing - two layers).
+
+**Completeness gap — found while building the list.** The 160 are names refused AT THE SAME SLOT. A name that moved
+slot is invisible to the 184 delta: e.g. Gen 5:25 / 5:26, where the edition prints the glued cell "Mathusala lived"
+(local feed `abp_app_slots_italic.tsv`) and STEP9-MEMBERS shows src's Methuselah slot holding "lived" on built — the
+built Mathusala slot sits elsewhere in the verse, and nothing in the 184 says whether it got its Greek. So before
+the REF is pushed: **STEP9-NAMESGAP** (read-only, STEP9-DRY folder only) lists every printed name form src-dry has and
+built-dry lacks, verse by verse, with built's refusal lines there; any verse outside the 146 rows gets its row from that
+read, in the same change, so one REF covers every lost name. Locally tested on made-up data (a planted missing
+form is listed with its refusal line; READ DONE).
+
+### Block STEP9-NAMESGAP (v2) (GATE REF 006e16ba; READ-ONLY — reads the STEP9-DRY run folder; writes only its own run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9_namesgap_20261114.log
+if [ -e "$L" ]; then echo "STEP9-NAMESGAP RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP9-NAMESGAP: every printed Greek name form src-dry has and built-dry lacks, verse by verse (catches names that moved slot, which the 184 delta cannot show), with built's refusal lines in each such verse - READ-ONLY (reads only the STEP9-DRY run folder) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9-NAMESGAP RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP9-NAMESGAP RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+DD=~/edition_upgrade_runs/step9_dry_20261114
+BD=$DD/dry.db
+SD=$DD/src/dry.db
+BR=$DD/built_run/pn_refused.tsv
+D=~/edition_upgrade_runs/step9_namesgap_20261114
+TAB=$'\t'
+python3 scripts/eu_step.py pre --tag STEP9N --ref "$REF" --dir "$D" --db "$BD" --db "$SD" || { echo "STEP9-NAMESGAP RESULT: STOP - pre (line above); nothing made"; exit 1; }
+[ -s "$BR" ] || { echo "STEP9-NAMESGAP RESULT: STOP - missing or empty: $BR"; exit 1; }
+bs0=$(stat -c '%s %Y' "$BD" "$SD" | tr '\n' ' ')
+NQ="SELECT s.verse_id, v.book, v.chapter, v.verse, s.form, s.position, COALESCE(NULLIF(w.english_head, ''), w.english) FROM abp_surface s JOIN words w ON w.verse_id = s.verse_id AND w.position = s.position JOIN verses v ON v.id = s.verse_id WHERE w.is_pn = 1 ORDER BY 1"
+sqlite3 -readonly -separator "$TAB" "$SD" "$NQ" > "$D/names_src.tsv" || { echo "STEP9-NAMESGAP RESULT: STOP - read failed on src-dry"; exit 1; }
+sqlite3 -readonly -separator "$TAB" "$BD" "$NQ" > "$D/names_built.tsv" || { echo "STEP9-NAMESGAP RESULT: STOP - read failed on built-dry"; exit 1; }
+ns=$(wc -l < "$D/names_src.tsv"); nb=$(wc -l < "$D/names_built.tsv")
+echo "name-slot rows read: src-dry $ns (expect 31836), built-dry $nb (expect 31684)"
+[ "$ns" = 31836 ] && [ "$nb" = 31684 ] || { echo "STEP9-NAMESGAP RESULT: STOP - the dry copies are not as STEP9-DRY left them"; exit 1; }
+# per verse + form: src count vs built count -> MISSING (src > built) / EXTRA (built > src)
+awk -F'\t' -v OFS='\t' '
+  FNR == 1 {f++}
+  f == 1 {k = $2 "\t" $3 "\t" $4 "\t" $5; s[k]++; next}
+  f == 2 {k = $2 "\t" $3 "\t" $4 "\t" $5; b[k]++; next}
+  END {for (k in s) if (s[k] > b[k]) print "MISSING", k, s[k], b[k] + 0
+       for (k in b) if (b[k] > s[k]) print "EXTRA", k, s[k] + 0, b[k]}' \
+  "$D/names_src.tsv" "$D/names_built.tsv" | sort -t "$TAB" -k1,1 -k2,2 -k3,3n -k4,4n > "$D/forms_diff.tsv"
+mi=$(awk -F'\t' '$1 == "MISSING" {n += $6 - $7} END {print n + 0}' "$D/forms_diff.tsv")
+ex=$(awk -F'\t' '$1 == "EXTRA" {n += $7 - $6} END {print n + 0}' "$D/forms_diff.tsv")
+mv=$(awk -F'\t' '$1 == "MISSING" {print $2 FS $3 FS $4}' "$D/forms_diff.tsv" | sort -u | wc -l)
+echo "forms built lacks: $mi in $mv verses; forms built has extra: $ex; missing - extra = $((mi - ex)) (expect 152 = 31836 - 31684)"
+echo "--- MISSING / EXTRA (kind | book ch:vs | form | src count | built count), each MISSING line followed by the src-dry slot(s) holding that form (position | the label the backfill keys on), and each MISSING verse by built's refusal lines there (pos | cause | label | token):"
+awk -F'\t' '
+  FNR == 1 {f++}
+  f == 1 {r[$1 "\t" $2 "\t" $3] = r[$1 "\t" $2 "\t" $3] "      refused: pos " $4 " | " $5 " | " $6 " | " $7 "\n"; next}
+  f == 2 {k = $2 "\t" $3 "\t" $4 "\t" $5; sl[k] = sl[k] "      src slot: pos " $6 " | " $7 "\n"; next}
+  f == 3 {v = $2 "\t" $3 "\t" $4
+          printf "  %s | %s %s:%s | %s | %s | %s\n", $1, $2, $3, $4, $5, $6, $7
+          if ($1 == "MISSING") printf "%s", sl[$2 "\t" $3 "\t" $4 "\t" $5]
+          if ($1 == "MISSING" && (v in shown) == 0) {shown[v] = 1; printf "%s", (v in r) ? r[v] : "      (no built refusal line in this verse)\n"}}' \
+  "$BR" "$D/names_src.tsv" "$D/forms_diff.tsv"
+bs1=$(stat -c '%s %Y' "$BD" "$SD" | tr '\n' ' '); echo "dry copies size + time before = after: $([ "$bs1" = "$bs0" ] && echo yes || echo NO)"
+[ "$bs1" = "$bs0" ] || { echo "STEP9-NAMESGAP RESULT: STOP - a dry copy changed during a read-only run - report this"; exit 1; }
+echo "STEP9-NAMESGAP RESULT: READ DONE - $mi missing forms in $mv verses, $ex extra (all in $D/forms_diff.tsv)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Respelling proposal + STEP9-NAMESGAP v1 reviewed (11/14) — block CLEAR; code findings to the ruling chat → v2
+
+Verdict line on the v1 block, verbatim: "REVIEW: CLEAR - STEP9-NAMESGAP: read-only block. It opens the dry copies only through `sqlite3 -readonly` and eu_step `pre`. It writes only its own new run folder and a guarded log, the parsing matches the code that wrote its inputs, and no tripwire fires."
+Code findings (no clearance — a builder change goes to the ruling chat, §9.90), with CC's answers:
+- (a) the no-change guard holds; the second pass may also pair a same-token slot that is NOT listed ("paired along",
+  Num 26:39) — intended, counted separately. Agreed; state it in the ruling.
+- (b1) **derivation source** — the old tokens were taken from src's `english`, but the backfill keys on
+  `COALESCE(NULLIF(english_head,''), english)` and matches the SCRAPE's labels; where src's head differs from its English
+  (likely 1Ch 4:14 "of Ge Charashim", Neh 3:14 "the house of Beth-heccerem", Gen 38:1 "of Adullam") a row would fail
+  ("tried, still refused"). **CC: valid — fixed at the source.** NAMESGAP v2 also prints, under each missing form, the
+  src-dry slot(s) holding it with exactly the label the backfill keys on; the list is then REBUILT from those labels
+  (and the moved names added) before the REF — no row taken from `english` alone.
+- (b2) rows that are not respellings (Num 36:5 joseph→israel, 2Ki 9:31 zimri→omri, Act 27:17 gulf→syrtis, Neh 2:19
+  arabian→arab, Eze 27:13 greece→greek, Mar 14:67 nazareth→nazarene, Luk 3:33 phares→perez, 2Ch 14:9 zerah→zarai).
+  **CC checked each against the STEP9-MEMBERS lines:** the form the slot gets is the printed Greek src had at that
+  same slot — Ιωσήφ, Ζαμβρί, Σύρτιν, Αραβί, Ελλάς, Ναζαρηνού, Φαρές, Ζαραϊ — each the Greek of the NEW English
+  (Joseph, Zimri, Syrtis, Arabian, Greece, of Nazareth, Phares, Zerah); the old English was the odd one out. The
+  STEP9-DRY re-run's `--dump-list` gets a per-row read regardless.
+- (c) same-code safety is an argument; the proof is the re-run's src control (391,130; pre-fill → src-dry 0) as a hard
+  condition. Agreed.
+- (d) malformed-list tests now also prove the table is untouched (29 checks pass).
+- (f) both test lists name `test_pn_edition_spelling.py` (ci.yml:70, pre-commit:73).
+- Timing: NAMESGAP is gated on 006e16ba — run it BEFORE the respelling REF is pushed or pulled.
+
+**v2 change** (only the output; same reads, same guards): the names query also takes each row's position and
+`COALESCE(NULLIF(english_head,''), english)`; each MISSING line is followed by "src slot: pos P | label". Local re-test:
+the planted missing form shows its src slot and label, then built's refusal line; READ DONE.
+
+### STEP9-NAMESGAP v2 reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - STEP9-NAMESGAP v2: still read-only and the guards are unchanged; the only change is extra output, and the new label matches the backfill script's own."
+Notes: the section echo (not the GATE REF line) describes the new src-slot lines; run it BEFORE PA pulls the
+respelling REF. The rebuilt list + code go to the ruling chat afterwards, with findings (b2) and (c) open there.
