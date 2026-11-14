@@ -6559,3 +6559,223 @@ Verdict line verbatim: "REVIEW: CLEAR - read-only block (scope a). The pre gate 
 Reviewer could not run git; the commit claims in the repo read (`a06a90b8`, `1ad10cec`, `982d3c7e`, the
 `git diff a06a90b8 HEAD` function check) are CC's reads (11/14, `git log` / `git diff` on this checkout). Limit
 noted: a number with a letter suffix would not match the sed and would show as k ≠ 82. Goes straight to PA.
+
+### STEP12B-MEMBERS ran (11/14, 01:34 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step12b_members_20261114.log`. PRE OK. Delta file 83 lines, sha f70ab8a0… (matched); 82
+numbers read. **All 82 have `words` rows on built AND src, identical counts; 0 with none on either side.** 78 dodson,
+4 tbesg (G6202, G9826, G9827, G9829); all proper nouns. The full list (number | gloss the builder gives | source |
+words rows, built = src):
+
+```
+G1043 | Gabriel | dodson | 4
+G1045 | Gad | dodson | 88
+G1066 | Gideon | dodson | 44
+G1116 | Gomorrah | dodson | 25
+G1136 | Gog | dodson | 14
+G1138 | David | dodson | 1150
+G1158 | Daniel | dodson | 81
+G1443 | Eber | dodson | 12
+G1445 | Hebrew | dodson | 44
+G1478 | Hezekiah | dodson | 132
+G1695 | Emmaus | dodson | 1
+G1697 | Hamor | dodson | 13
+G1802 | Enoch | dodson | 14
+G2166 | Euphrates | dodson | 22
+G2187 | Ephraim | dodson | 188
+G2194 | Zebulon | dodson | 51
+G2196 | Zerah | dodson | 19
+G2243 | Elijah | dodson | 113
+G2268 | Isaiah | dodson | 54
+G2269 | Esau | dodson | 105
+G2283 | Tamar | dodson | 25
+G2291 | Terah | dodson | 12
+G2391 | Jared | dodson | 7
+G2408 | Jeremiah | dodson | 134
+G2410 | Jericho | dodson | 65
+G2421 | Jesse | dodson | 48
+G2422 | Jephthah | dodson | 31
+G2445 | Joppa | dodson | 13
+G2446 | Jordan | dodson | 207
+G2449 | Judea | dodson | 87
+G2464 | Isaac | dodson | 136
+G2466 | Issachar | dodson | 44
+G2488 | Jotham | dodson | 26
+G2493 | Joel | dodson | 21
+G2495 | Jonah | dodson | 31
+G2496 | Joram, Jehoram | dodson | 51
+G2498 | Jehoshaphat | dodson | 77
+G2502 | Josiah | dodson | 55
+G2535 | Cain | dodson | 20
+G28 | Hagar | dodson | 14
+G3098 | Magog | dodson | 5
+G3121 | Mahalaleel, Maleleel | dodson | 6
+G3198 | Melchizedek | dodson | 10
+G3318 | Mesopotamia | dodson | 19
+G3413 | Michael | dodson | 15
+G3416 | Mnason | dodson | 1
+G3475 | Moses | dodson | 862
+G3481 | Nathan | dodson | 44
+G3508 | Naphtali | dodson | 55
+G3604 | Uzziah | dodson | 28
+G3683 | Onesiphorus | dodson | 2
+G4497 | Rehoboam | dodson | 53
+G4502 | Reuben | dodson | 90
+G4527 | Sala | dodson | 3
+G4545 | Samuel | dodson | 148
+G4546 | Samson | dodson | 43
+G4564 | Sarah | dodson | 57
+G4589 | Seth | dodson | 10
+G4611 | Siloam | dodson | 3
+G4614 | Sinai | dodson | 41
+G4670 | Sodom | dodson | 49
+G4672 | Solomon | dodson | 310
+G4966 | Shechem | dodson | 68
+G5328 | Pharaoh | dodson | 285
+G5466 | Chaldean | dodson | 3
+G5488 | Haran | dodson | 22
+G5601 | Obed | dodson | 33
+G5617 | Hosea | dodson | 4
+G6 | Abel | dodson | 17
+G6202 | Akra | tbesg | 5
+G742 | Arphaxad | dodson | 10
+G760 | Asa | dodson | 60
+G768 | Asher | dodson | 46
+G881 | Ahaz | dodson | 43
+G9 | Abilene | dodson | 1
+G903 | Balaam | dodson | 63
+G913 | Barak | dodson | 15
+G958 | Benjamin | dodson | 181
+G965 | Bethlehem | dodson | 53
+G9826 | Bougean | tbesg | 9
+G9827 | Edem | tbesg | 1
+G9829 | Heliopolis | tbesg | 6
+```
+
+**Ruling chat reading (11/14):** the 82 numbers were already in live's `words` (src = the 11/01 copy of live); the
+edition upgrade did not introduce them. Live's `word_gloss` lacks rows for them, while the current builder on the same
+sources produces them. The +82 fills missing glosses; it changes no existing gloss.
+**Note on live's word_gloss (no action here, ruling 11/14):** live's `word_gloss` is 82 rows short of what the current
+builder makes from live's own `words` — these 82 proper-noun numbers have no header gloss on live.
+
+**Ruling (11/14, §9.110):** the +82 is accepted as the declared figure for 12b. STEP12B-APPLY gated on the dry
+figures (below). Restore source `step12b_dry_20261109/before.db`.
+
+### Block STEP12B-APPLY (GATE REF 006e16ba; WRITES built: word_gloss only, DROP + re-CREATE, 17,568 → 17,650) — for the ruling chat
+
+Declared figures sit at the top of the block, each from the STEP12B-DRY log (11/14 01:24Z):
+- both dry delta files 83 lines, sha f70ab8a0… (82 added / 0 changed / 0 removed);
+- the dry scratch files (`gloss_dotted_abp.tsv` d6b50a4d…, `gloss_dotted_blank.tsv` 164536dc…);
+- heb.db sha 885ed4e8…;
+- word_gloss before = definition + 17,568 rows (abp-ext 116 / dodson 5,220 / dotted-lemma 3,449 / override 59 /
+  tbesg 72 / tbesh 8,652);
+- after = 17,650 (dodson 5,298, tbesg 76, the rest unchanged);
+- builder lines "Greek base   : 5389  (blank: 0)", "Greek dotted : 3580  (blank: 47)", "Hebrew       : 8681
+  (blank: 0)", and "Filled word_gloss with 17650 glosses (5389 Greek base + 3580 dotted + 8681 Hebrew; that table
+  only, nothing else touched)."
+
+**Before the write, each miss is a STOP and built is untouched:** pre; the dry files present; both delta files =
+declared; the dry scratch files = declared; `same` (built unchanged since the dry run); heb.db no journal + sha =
+declared; word_gloss before = declared.
+
+**The one write:** `build_word_gloss.py "$B" --apply`, run from `step12b_apply_20261114/apply/`.
+
+**After the write, each miss is a CHECK naming the restore source:**
+- the 4 builder lines present exactly. The whole output is also compared with the dry run's, but shown only, since
+  the by-source line's order may differ.
+- the scratch files = declared, and exactly that many.
+- word_gloss after = declared.
+- `check --written word_gloss` (149 untouched + schema; word_gloss = the dry copy).
+- delta src → built with `--expect-sha f70ab8a0…`, i.e. exactly the 82 declared additions.
+- heb.db sha unchanged, no journal.
+
+Tested locally (made-up dbs, local figures swapped in): DONE. Built changed since the dry run → STOP; heb.db changed →
+STOP; a dry scratch file altered → STOP; an after-figure off → CHECK with the restore source; the real figures on the
+local data → STOP; re-paste → STOP.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12b_apply_20261114.log
+if [ -e "$L" ]; then echo "STEP12B-APPLY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12B-APPLY rebuild-words step 12b (build_word_gloss --apply) on BUILT, gated on the STEP12B-DRY figures (+82 ruled 11/14) - WRITES built: word_gloss only (drop + re-create, 17,568 -> 17,650 rows) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12B-APPLY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12B-APPLY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8 PYTHONHASHSEED=0
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+H=~/bible-db/heb.db
+DD=~/edition_upgrade_runs/step12b_dry_20261109
+D=~/edition_upgrade_runs/step12b_apply_20261114
+G=~/bible-db/scripts/build_word_gloss.py
+E="python3 scripts/eu_step.py"
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'word_gloss' ORDER BY type, name; SELECT 'rows', count(*) FROM word_gloss; SELECT 'source', source, count(*) FROM word_gloss GROUP BY source ORDER BY source"
+# --- declared figures: STEP12B-DRY log (11/14 01:24Z), ruled 11/14 ---
+XD=f70ab8a0a017836044de54e9c0ece024802f58cb6b5f7d447039b76d85693e64; XL=83
+XH=885ed4e8eee19492bf433d551353b52366f6021291b731ef7f3b0d6a19288e65
+XF=$(printf '%s\n' "gloss_dotted_abp.tsv d6b50a4d1b77240f0b91382b42cd96dc830fe783d43eeb2712cd1e532892c3d2" "gloss_dotted_blank.tsv 164536dcee240e23bb0f71589604a4903cb8fde57ff3e24abc32561c29dbd0df")
+XDEF=$(printf '%s\n' "index|sqlite_autoindex_word_gloss_1|" "table|word_gloss|CREATE TABLE word_gloss (strongs TEXT PRIMARY KEY, gloss TEXT, source TEXT)")
+XB=$(printf '%s\n' "$XDEF" "rows|17568" "source|abp-ext|116" "source|dodson|5220" "source|dotted-lemma|3449" "source|override|59" "source|tbesg|72" "source|tbesh|8652")
+XA=$(printf '%s\n' "$XDEF" "rows|17650" "source|abp-ext|116" "source|dodson|5298" "source|dotted-lemma|3449" "source|override|59" "source|tbesg|76" "source|tbesh|8652")
+XO=$(printf '%s\n' "Greek base   : 5389  (blank: 0)" "Greek dotted : 3580  (blank: 47)" "Hebrew       : 8681  (blank: 0)" "Filled word_gloss with 17650 glosses (5389 Greek base + 3580 dotted + 8681 Hebrew; that table only, nothing else touched).")
+# --- before the write: every miss is STOP, built untouched ---
+$E pre --tag STEP12BA --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12B-APPLY RESULT: STOP - pre (line above); built untouched"; exit 1; }
+for f in state.json before.db dry.db apply_dry.log step12b_delta_built.tsv step12b_delta_src.tsv; do [ -s "$DD/$f" ] || { echo "STEP12B-APPLY RESULT: STOP - the dry run's $f is missing or empty in $DD; built untouched"; exit 1; }; done
+for f in step12b_delta_built.tsv step12b_delta_src.tsv; do
+  s=$(sha256sum < "$DD/$f" | cut -d' ' -f1); n=$(wc -l < "$DD/$f")
+  echo "dry delta $f: $n lines (expect $XL = header + 82 added), sha256 $s (expect $XD)"
+  [ "$s" = "$XD" ] && [ "$n" = "$XL" ] || { echo "STEP12B-APPLY RESULT: STOP - $f is not the declared delta; built untouched"; exit 1; }
+done
+while read -r f x; do
+  s=$(sha256sum < "$DD/applycopy/$f" | cut -d' ' -f1); echo "dry scratch file applycopy/$f: sha256 $s (expect $x)"
+  [ "$s" = "$x" ] || { echo "STEP12B-APPLY RESULT: STOP - the dry run's $f is not the declared one; built untouched"; exit 1; }
+done <<<"$XF"
+$E same --tag STEP12BA --built "$B" --dir "$DD" || { echo "STEP12B-APPLY RESULT: STOP - built changed since the dry run (lines above); built untouched"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP12B-APPLY RESULT: STOP - a -journal sits beside $H; built untouched"; exit 1; }
+h0=$(sha256sum < "$H" | cut -d' ' -f1); echo "heb.db before: sha256 $h0 (expect $XH)"
+[ "$h0" = "$XH" ] || { echo "STEP12B-APPLY RESULT: STOP - heb.db is not the one the dry run read; built untouched"; exit 1; }
+R0=$(sqlite3 -readonly "$B" "$RD") || { echo "STEP12B-APPLY RESULT: STOP - read before failed; built untouched"; exit 1; }
+echo "word_gloss on built before:"; echo "$R0"
+[ "$R0" = "$XB" ] || { echo "STEP12B-APPLY RESULT: STOP - built's word_gloss is not the dry log's picture (definition + 17568 rows by source); built untouched"; exit 1; }
+mkdir "$D/apply" || { echo "STEP12B-APPLY RESULT: STOP - cannot make the scratch folder; built untouched"; exit 1; }
+# --- the one write ---
+echo "=== APPLY: build_word_gloss --apply on built, run from $D/apply (the one write) ==="
+( cd "$D/apply" && python3 "$G" "$B" --apply ) > "$D/apply.log" 2>&1; r=$?
+cat "$D/apply.log"; echo "exit $r (expect 0)"
+# --- after the write: every miss is CHECK ---
+SO=yes; while IFS= read -r x; do grep -qFx -- "$x" "$D/apply.log" || SO=NO; done <<<"$XO"
+echo "the three count lines + the Filled line = the dry run's: $SO"
+echo "whole output = the dry run's (shown only; the by-source line's order may differ): $(cmp -s "$D/apply.log" "$DD/apply_dry.log" && echo yes || echo no)"
+SF=yes
+while read -r f x; do s=$(sha256sum < "$D/apply/$f" | cut -d' ' -f1); echo "scratch file apply/$f: sha256 $s (expect $x)"; [ "$s" = "$x" ] || SF=NO; done <<<"$XF"
+nf=$(find "$D/apply" -type f | wc -l); ne=$(wc -l <<<"$XF"); echo "files in $D/apply: $nf (expect $ne)"; [ "$nf" = "$ne" ] || SF=NO
+R1=$(sqlite3 -readonly "$B" "$RD"); echo "word_gloss on built after:"; echo "$R1"
+SA=NO; [ "$R1" = "$XA" ] && SA=yes; echo "definition + 17650 rows by source = the dry copy's: $SA"
+CHK=$($E check --tag STEP12BA --built "$B" --dir "$DD" --written word_gloss 2>&1); k=$?; echo "$CHK"
+VAL=$($E delta --tag STEP12BA --a "$S" --b "$B" --table word_gloss:strongs --out "$D/step12b_values_src_built.tsv" --expect-sha "$XD" 2>&1); v=$?; echo "$VAL"
+h1=$(sha256sum < "$H" | cut -d' ' -f1); HS=yes; [ "$h1" = "$XH" ] || HS=NO; [ -e "$H-journal" ] && HS=NO
+echo "heb.db after: sha256 $h1 - unchanged, no journal: $HS"
+if [ "$r" -eq 0 ] && [ "$SO" = yes ] && [ "$SF" = yes ] && [ "$SA" = yes ] && [ "$k" -eq 0 ] && [ "$v" -eq 0 ] && [ "$HS" = yes ]; then
+  echo "STEP12B-APPLY RESULT: DONE - built word_gloss re-created: 17,650 rows = the dry run; vs src exactly the 82 declared additions (0 changed / 0 removed); the other 149 tables + schema unchanged; heb.db unchanged"; exit 0
+fi
+echo "STEP12B-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for word_gloss: $DD/before.db"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12B-APPLY reviewed (11/14) — ESCALATE (write, §9.90), mechanics clean → to the ruling chat (§9.110 write gate)
+
+Verdict line verbatim: "REVIEW: ESCALATE - STEP12B-APPLY writes built (word_gloss DROP + CREATE + INSERT), so under §9.90 the write gate is the ruling chat's call. The mechanics are clean. Two declared figures are only partly traceable to the record (see 1 and 2 below)."
+The reviewer's two untraceable items, closed here from the STEP12B-DRY re-run log as pasted by JP 11/14
+(`step12b_dry_20261109.log`, the DRY 1 and DRY 2 output), verbatim:
+1. Count lines (identical in DRY 1 and DRY 2):
+   `Greek base   : 5389  (blank: 0)` · `Greek dotted : 3580  (blank: 47)` · `Hebrew       : 8681  (blank: 0)` ·
+   `Filled word_gloss with 17650 glosses (5389 Greek base + 3580 dotted + 8681 Hebrew; that table only, nothing else touched).`
+2. Full sha256 values:
+   - both delta files `f70ab8a0a017836044de54e9c0ece024802f58cb6b5f7d447039b76d85693e64`, "82 lines + header";
+   - heb.db `885ed4e8eee19492bf433d551353b52366f6021291b731ef7f3b0d6a19288e65` (49,831,936 B), before and after;
+   - `gloss_dotted_abp.tsv` `d6b50a4d1b77240f0b91382b42cd96dc830fe783d43eeb2712cd1e532892c3d2` (117 lines);
+   - `gloss_dotted_blank.tsv` `164536dcee240e23bb0f71589604a4903cb8fde57ff3e24abc32561c29dbd0df` (48 lines);
+   - the two scratch files are the same in `dryrun/` and `applycopy/`.
+These match XO / XD / XH / XF in the block exactly. A wrong value before the write would STOP; a wrong count line
+after it would CHECK.
