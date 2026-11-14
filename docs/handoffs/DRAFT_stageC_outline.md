@@ -8288,7 +8288,9 @@ to be brought with the reviewer's verdict for the write gate.
   old_position reason) — must end unplaced with exactly that reason; listed slots must be snapshot slots, on one list only;
   G2 = no undeclared unplaced slot and no listed slot off its listing; `apply()` writes placed + key-2-listed only, checks
   base under the write lock and the after-count before COMMIT. Report format unchanged (listed slots marked in `detail`).
-  Docstring gates updated. With no options the output is today's line for line (the 22 existing restore tests pass unchanged).
+  Docstring gates updated. With no options the BEHAVIOUR is today's (the 22 existing restore tests pass unchanged); the
+  OUTPUT is not line for line — corrected 11/14 after review (D5): a new "G1 after-count" summary line, and the G1a lines now
+  print after the re-key instead of before it.
 - **`health_check.py`:** `--surface-floor=N` for that run (constant 395,003 unchanged; re-pinned at the swap).
 - **`snapshot_surface_fill.py`:** `--from-restore REPORT` (exactly one of it and `--csv`): `g0_report` — the diff (src minus
   pre-fill) = exactly the report's placed slots at their new positions, forms equal, inserts not on the pre-fill side, changed
@@ -8304,3 +8306,28 @@ to be brought with the reviewer's verdict for the write gate.
   the new slots; a leave-listed slot is not frozen; a re-freeze diff holding a row the report does not → STOP; `--csv` and
   `--from-restore` exclusive; `--surface-floor`. Proven able to fail: with the leave reason check removed, two tests fail; with
   the re-freeze G0 set check removed, its test fails.
+
+### 9a/9b/9c code reviewed (11/14) — REVIEW: ESCALATE (code change, §9.90); D1-D6 → fixed / recorded
+Verdict line verbatim: "REVIEW: ESCALATE - this is a code change to builders and gates (restore, health check, re-freeze), so under sec 9.90 it goes to the ruling chat whatever I find. The core logic matches v2 and fails safe, but I found one real defect (D1), three gaps against v2 or the ruling (D2-D4), and CC's \"output unchanged line for line\" claim is not true (D5)."
+Reviewer also: no options → behaviour unchanged; key-2 path places only reason 6 at exactly the listed slot; no new way to accept a
+wrong table; g0_report sound; the four ruled tests real (the 395,003 one on the real constants).
+- **D1 (defect) — FIXED.** A leave-listed slot unplaced for reason 3/4 read "now places" on a later run (the already-restored pass
+  skips preconditions) and was counted as a written insert. Now: on a not-at-base table, a leave-listed reason-3/4 slot must NOT hold
+  the fill form and is taken as unplaced with its listed reason (so not counted); if it holds the fill form → STOP. Test: reason-3 slot
+  left, apply (after 5), second run ALREADY; then the slot given the fill form → "holds the fill form" STOP.
+- **D2 — tests ADDED** for a key-2 slot failing the Lexicon check (reason 5, fill_resolved slot, no Lexicon row → STOP, nothing
+  written) and for its insert target being filled (reason 4 → STOP), beside the existing precondition-3 test. For the ruling chat:
+  "form check" now covered as all three (3, 4, 5).
+- **D3 — DONE in this change.** `--from-restore` pins the report: under `--check` a `<report>.sha256` beside it is required and must
+  match (missing or wrong → STALE SNAPSHOT); under a re-freeze it is verified when present and the report's sha is printed for
+  pinning. Test: check without it → STOP; with it → CURRENT; report changed → STOP.
+- **D4 — recorded as a known difference.** The 10/25 G0 checks each update's pre-fill old form against the approved CSV; `g0_report`
+  checks the changed pre-fill rows are exactly the update slots (the report has no old_form column). Restore precondition 3 checks
+  the old form at apply time. For the ruling chat to accept.
+- **D5 — corrected** in the code summary above.
+- **D6:** `health_check.py --surface-floor N` (two words) now exits with "give the floor as --surface-floor=N" instead of silently
+  checking the default (tested); `g0_report` requires every column it reads (book … form, result) and STOPs cleanly otherwise
+  (tested); `apply()` now filters leave-listed slots explicitly. Further deliberate breaks, each caught: key-2 slot match removed →
+  the wrong-slot test fails; listed-slot-in-snapshot check removed → its test fails; after-count fixed at base + 3 → three tests fail;
+  the D1 fix removed → its test fails.
+Tests: 43 pass (22 earlier unchanged + 21 new).
