@@ -7425,3 +7425,5 @@ Both exactly as the reviewer named; no other change; local re-test identical (RE
 `git diff --stat` f8e814c2 / e777f965 → 006e16ba over audit_reassembly_diff.py, reorder_english.py, the two tests and
 tests/fixtures/reassembly/: empty both ways (affects only how Part 2 moves are explained).
 Verdict line verbatim: "REVIEW: CLEAR - read-only block, both mechanical fixes are in, and one full pass over 7349-7419 hit no tripwire."
+
+Ruling chat 11/14: PUNCT-RECON cleared to run on PA (read-only, reviewer CLEAR), either order with STEP9-DRY. Expectations noted, not gates: Part 1 583 → 607 with 24 moves; Part 2 unknown; gate-3 FAIL on Job 3:3 (exit 1) expected, not a stop.
