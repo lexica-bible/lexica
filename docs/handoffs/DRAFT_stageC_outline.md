@@ -7155,3 +7155,17 @@ eu_step flags, the tripwires and bash validity. Its two open items, closed by CC
   and `table|tipnr_metav_link|CREATE TABLE tipnr_metav_link(uniq TEXT, kind TEXT, metav_id INTEGER, rule TEXT, score REAL, margin REAL)`
   on built, src and the dry copy after `--apply`; XDEF is those two lines exactly.
 Goes to the ruling chat for the write gate (§9.111).
+
+### STEP12C-APPLY ran (11/14, 18:08 UTC, PA HEAD b3178672, REF 006e16ba) — DONE, exit 0 → STEP 12c CLOSED; step 12 complete (§9.111 closing)
+
+Log `~/edition_upgrade_runs/step12c_apply_20261114.log`; run folder `step12c_apply_20261114/` (apply.log, apply/
+scratch files, step12c_links_src_built.tsv). Write gate: the 11/14 +962 ruling stands as the §9.111 call.
+entity_resolution.py = REF, unedited; PRE OK; both dry deltas 963 lines / c44c15d6…; dry scratch shas a247dfb2… /
+1eed6313… matched; SAME OK (150 + schema, 0); metav_index.db a438327f… before, no journal; leftover lists in scripts/
+7c2233d2… / 2b24b761… before; tipnr_metav_link before = declared (logged definition + index; 1,644: overlap 1,419 /
+strongs 225); place-link orphans 0 before. Builder exit 0; the six tier-report lines + "Wrote 2606…" = dry; whole
+output = dry, scratch-folder path aside. Scratch files 2, shas = declared. After = declared (2,606: overlap 1,473 /
+strongs 1,133; definition + index unchanged). Place-link orphans 0 after. CHECK OK: 149 untouched + schema 0;
+tipnr_metav_link 2,606 rows, fingerprint c9676803c1c4 = dry copy (prep 1,644, fd14ff7adc86). Links src → built:
+0 changed / 962 added / 0 removed, file sha c44c15d6… = the dry delta. metav_index.db after unchanged, no journal;
+leftover lists unchanged. Restore source not needed (`step12c_dry_20261114/before.db` kept until the swap).
