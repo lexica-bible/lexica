@@ -34,6 +34,7 @@ Run on PA:
 """
 import argparse
 import os
+import re
 import sqlite3
 import sys
 import unicodedata
@@ -178,6 +179,99 @@ def pair_verse(slots, name_hits, num_hits=(), star_hits=(), bridge=None):
     return out, refused, causes, refused_slots, bridged_positions
 
 
+# ── the edition respelling list (DESIGN 9.115) ───────────────────────────────
+# bh_scrape.db's English labels are the OLD edition's spellings; the edition upgrade respelled some
+# names (Jabish -> Jabesh ...), so their slots no longer find their scrape rows. The list says, per
+# verse, which old token(s) the scrape prints an edition token under. It is consulted ONLY for slots
+# pair_verse refused, and its result is kept only if every slot pair_verse paired keeps its form.
+SPELLING_LIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pn_edition_spelling.tsv")
+SPELLING_HEADER = ["book", "chapter", "verse", "edition_token", "scrape_tokens", "note"]
+_LIST_TOKEN = re.compile(r"^[a-z][a-z' -]*$")
+
+
+def load_spelling_list(path):
+    """pn_edition_spelling.tsv -> {(book, chapter, verse): {compact edition token: [scrape tokens]}}.
+    '#' lines are comments. Any malformed row is a ValueError: a bad list never pairs silently."""
+    out, header, rows = defaultdict(dict), None, 0
+    with open(path, encoding="utf-8") as f:
+        for n, line in enumerate(f, 1):
+            line = line.rstrip("\n")
+            if not line.strip() or line.startswith("#"):
+                continue
+            cells = line.split("\t")
+            if header is None:
+                if cells != SPELLING_HEADER:
+                    raise ValueError(f"{path}:{n}: header must be {SPELLING_HEADER}")
+                header = cells
+                continue
+            if len(cells) != len(SPELLING_HEADER):
+                raise ValueError(f"{path}:{n}: {len(cells)} cells, expect {len(SPELLING_HEADER)}")
+            book, ch, vs, tok, olds, _note = cells
+            olds = olds.split(",")
+            if book not in ABBREV_TO_SLUG or not ch.isdigit() or not vs.isdigit():
+                raise ValueError(f"{path}:{n}: bad verse {book} {ch}:{vs}")
+            if not _LIST_TOKEN.match(tok) or not all(_LIST_TOKEN.match(o) for o in olds):
+                raise ValueError(f"{path}:{n}: tokens must be lowercase name tokens: {tok!r} {olds!r}")
+            if any(compact(o) == compact(tok) for o in olds):
+                raise ValueError(f"{path}:{n}: {tok!r} maps to itself")
+            key = (book, int(ch), int(vs))
+            if compact(tok) in out[key]:
+                raise ValueError(f"{path}:{n}: {book} {ch}:{vs} {tok!r} listed twice")
+            out[key][compact(tok)] = olds
+            rows += 1
+    if header is None:
+        raise ValueError(f"{path}: no header line")
+    return dict(out), rows
+
+
+def pair_verse_listed(slots, name_hits, num_hits=(), star_hits=(), bridge=None, listed=None):
+    """pair_verse, then the respelling list for the slots it REFUSED (listed = this verse's
+    {compact edition token: [scrape tokens]}). One scrape token applies to every refused slot with
+    that edition token; several are taken one per refused slot in position order (counts must agree).
+    The verse is paired again with those slots' old tokens, and that second result is kept only if
+    every slot the first pass paired keeps exactly its form (direct match wins; never a change).
+    Returns pair_verse's 5-tuple (of the kept pass) + info {status, tried, gained}."""
+    first = pair_verse(slots, name_hits, num_hits, star_hits, bridge)
+    info = {"status": {}, "tried": [], "gained": {}}
+    if not listed:
+        return first + (info,)
+    refused_pos = {p for p, _t, _c in first[3]}
+    new_slots, tried = list(slots), []
+    for tok, olds in listed.items():
+        mine = [i for i, (_p, t) in enumerate(slots) if compact(t) == tok]
+        miss = [i for i in mine if slots[i][0] in refused_pos]
+        if not mine:
+            info["status"][tok] = "no slot with this token"
+            continue
+        if not miss:
+            info["status"][tok] = "not needed (direct match)"
+            continue
+        want = olds * len(miss) if len(olds) == 1 else olds
+        if len(want) != len(miss):
+            info["status"][tok] = f"count differs ({len(miss)} refused slot(s), {len(olds)} tokens)"
+            continue
+        for i, old in zip(miss, want):
+            new_slots[i] = (slots[i][0], old)
+            tried.append((slots[i][0], tok, old))
+        info["status"][tok] = "tried"
+    if not tried:
+        return first + (info,)
+    second = pair_verse(new_slots, name_hits, num_hits, star_hits, bridge)
+    if any(second[0].get(p) != f for p, f in first[0].items()):
+        for tok, st in info["status"].items():
+            if st == "tried":
+                info["status"][tok] = "conflict (would change a normally paired slot) - not used"
+        return first + (info,)
+    info["tried"] = tried
+    info["gained"] = {p: f for p, f in second[0].items() if p not in first[0]}
+    for tok, st in info["status"].items():
+        if st == "tried":
+            left = sum(1 for p, t, _o in tried if t == tok and p not in info["gained"])
+            info["status"][tok] = "used" if not left else \
+                f"tried, still refused ({left} slot(s): the old token did not pair either)"
+    return second + (info,)
+
+
 def load_scrape(bh_path):
     """All scrape pools in one place (shared with count_bridge_candidates.py so no
     second copy drifts): name rows, numbered rows, star rows, the per-book bridge,
@@ -231,7 +325,16 @@ def main():
                     help="write every refused slot (tab-separated: book ch vs pos cause "
                          "label token | the verse's scrape name-slots) for the lane-#2 "
                          "by-cause classification")
+    ap.add_argument("--spelling-list", default=SPELLING_LIST, metavar="TSV",
+                    help="the edition respelling list (default: scripts/pn_edition_spelling.tsv)")
+    ap.add_argument("--dump-list", metavar="FILE",
+                    help="write every slot the respelling list paired (paired, book, ch, vs, pos, "
+                         "edition_token, scrape_token, form) and every list row not used")
     args = ap.parse_args()
+    try:
+        listed_all, list_rows = load_spelling_list(args.spelling_list)
+    except (OSError, ValueError) as e:
+        sys.exit(f"respelling list unusable - nothing read or written: {e}")
 
     con = sqlite3.connect(args.db)
     con.row_factory = sqlite3.Row
@@ -272,6 +375,7 @@ def main():
 
     new_rows, already, refused_total, bridged_total = [], 0, 0, 0
     causes_total = defaultdict(int)
+    list_status, list_tried, list_gained, list_along, list_dump = {}, 0, 0, 0, []
     per_book_new = defaultdict(int)
     per_book_refused = defaultdict(int)
     mat1_sample = []
@@ -285,8 +389,22 @@ def main():
         hits = scrape.get((slug, ch, vs), []) if slug else []
         nhits = numbered.get((slug, ch, vs), []) if slug else []
         shits = starred.get((slug, ch, vs), []) if slug else []
-        paired, refused, causes, refused_slots, bpos = pair_verse(
-            slots, hits, nhits, shits, bridge.get(slug, {}) if slug else {})
+        listed = listed_all.get((book, ch, vs))
+        paired, refused, causes, refused_slots, bpos, linfo = pair_verse_listed(
+            slots, hits, nhits, shits, bridge.get(slug, {}) if slug else {}, listed)
+        for tok, st in linfo["status"].items():
+            list_status[(book, ch, vs, tok)] = st
+        list_tried += len(linfo["tried"])
+        tried_pos = {pos for pos, _t, _o in linfo["tried"]}
+        for pos, tok, old in linfo["tried"]:
+            if pos in linfo["gained"]:
+                list_gained += 1
+                list_dump.append(("paired", book, ch, vs, pos, tok, old, linfo["gained"][pos]))
+        own = dict(slots)
+        for pos, form in sorted(linfo["gained"].items()):
+            if pos not in tried_pos:          # a same-token slot the listed one joined (Num 26:39)
+                list_along += 1
+                list_dump.append(("paired along", book, ch, vs, pos, compact(own.get(pos, "")), "", form))
         bridged_total += len(bpos)
         refused_total += refused
         per_book_refused[book] += refused
@@ -314,6 +432,25 @@ def main():
           f"earlier passes, never overwritten — equals the prior passes' total "
           f"minus any slot whose verdict changed under later rules)")
     print(f"  bridge adds (glued cell, same-book attested): {bridged_total:,}")
+    # every list row whose verse has no proper-noun slot never reached pair_verse_listed
+    for (book, ch, vs), toks in listed_all.items():
+        for tok in toks:
+            list_status.setdefault((book, ch, vs, tok), "no slot with this token")
+    by_st = defaultdict(int)
+    for st in list_status.values():
+        by_st[st.split(" (")[0]] += 1
+    print(f"  respelling-list adds      : {list_gained + list_along:,}   (refused slots paired under the verse's "
+          f"old-edition token; {os.path.basename(args.spelling_list)}, {list_rows:,} rows: "
+          + ", ".join(f"{k} {v:,}" for k, v in sorted(by_st.items())) + ")")
+    print(f"  respelling-list slots tried {list_tried:,} - paired {list_gained:,} - "
+          f"still refused {list_tried - list_gained:,}; other slots paired along with them "
+          f"(their group could resolve once the listed slot joined it) {list_along:,}")
+    unused = [(k, st) for k, st in sorted(list_status.items()) if st != "used"]
+    for (book, ch, vs, tok), st in unused[:50]:
+        print(f"      list row not used: {book} {ch}:{vs} {tok} -> "
+              f"{','.join(listed_all[(book, ch, vs)][tok])} : {st}")
+    if len(unused) > 50:
+        print(f"      ... {len(unused) - 50:,} more list rows not used (every one in --dump-list)")
     print(f"  refusals                  : {refused_total:,}")
     for k in sorted(causes_total):
         print(f"      {k:10}: {causes_total[k]:,}")
@@ -330,6 +467,15 @@ def main():
         dump.close()
         print(f"\n  refused-slot dump written: {args.dump_refused} "
               f"({refused_total:,} lines)")
+    if args.dump_list:
+        with open(args.dump_list, "w", encoding="utf-8", newline="\n") as f:
+            for row in list_dump:
+                f.write("\t".join(str(x) for x in row) + "\n")
+            for (book, ch, vs, tok), st in unused:
+                f.write("\t".join(["row not used", book, str(ch), str(vs), "", tok,
+                                   ",".join(listed_all[(book, ch, vs)][tok]), st]) + "\n")
+        print(f"  respelling-list dump written: {args.dump_list} ({len(list_dump):,} paired slots + "
+              f"{len(unused):,} rows not used)")
 
     if not args.apply:
         print("\n  DRY RUN — nothing written. Add --apply to write.\n")

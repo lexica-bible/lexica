@@ -7774,3 +7774,13 @@ Reviewer findings, with CC's answers:
 4. S2, S3, S4 exercise what they claim; each refused in the empty-list baseline.
 5. (b2) and (c): covered by the per-slot check above (it reads every shape-2/3 row too) and the src control as a hard
    condition (391,130; pre-fill → src-dry 0).
+
+### Ruling (11/14, §9.117) — respelling fix APPROVED; pushed as the new code REF
+Deu 2:13: CC's reading stands (a count difference src 2 / built 1, refusal at the same pos 15 — not a shift). **The
+respelling fix is approved**: commit + push as the new code REF; then STEP9-DRY re-run under it with three STOP gates:
+(1) src control = 391,130 (346,111 / 13,183 / 31,836); (2) pre-fill → src-dry 0 differences; (3) every slot the list fills
+on built-dry carries the same Greek form as src-dry at its matching slot, figures read out (filled via the list, checked,
+mismatches 0). Recovered count + new chain total read from that run. Reviewer, then PA.
+Before the commit, CC gave the three slot-shift rows their src positions in the note (gate 3 reads them; data unchanged):
+Gen 5:25 / 5:26 "built pos 1 <- src pos 2", Est 5:9 "built pos 12 <- src pos 2|13" (both src slots hold Αμάν, per the
+NAMESGAP log). Every one of the 160 slot notes now names a src position.
