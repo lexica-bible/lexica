@@ -7169,3 +7169,161 @@ strongs 1,133; definition + index unchanged). Place-link orphans 0 after. CHECK 
 tipnr_metav_link 2,606 rows, fingerprint c9676803c1c4 = dry copy (prep 1,644, fd14ff7adc86). Links src → built:
 0 changed / 962 added / 0 removed, file sha c44c15d6… = the dry delta. metav_index.db after unchanged, no journal;
 leftover lists unchanged. Restore source not needed (`step12c_dry_20261114/before.db` kept until the swap).
+
+## Step 9 → 9a → 9b → 9c — CC report (11/14) + STEP9-DRY drafted
+
+**What each step does (rebuild-words.md 278-315; charter §6, §4.8-4.9), and whether it writes built:**
+- **9 — rebuild abp_surface. WRITES built: abp_surface only.** Four scripts in order on `<built>`, all reading
+  built's own verses / words / lexicon / dotted_lexicon plus `~/bible-db/bh_scrape.db`:
+  `build_abp_surface.py` (drops the table, re-creates it, inserts the form-found rows; :297-304),
+  `backfill_abp_surface.py --apply` (adds rows the strict aligner missed; insert-only, :137),
+  `backfill_pn_surface.py --apply` (adds name-slot rows; insert-only, :339; imports `entity_resolution.py`
+  through `build_pn_greek_identity.py`:33-34), `build_abp_translit.py` (fills the translit column; :98).
+  The drop removes the 10/25 fill (4,411 slots). The procedure's total 391,130 is the same-code figure; on this
+  lane it is re-declared from the dry run (charter §6).
+- **9a — put the fill back. WRITES built: abp_surface only.** `restore_surface_fill.py`: dry run → verdict →
+  `--apply`; re-keys the frozen 10/25 fill (4,411 = 3,873 inserts + 538 updates) onto the new slots by key 2
+  (verse + Strong's + ordinal), key 1 (verse + Strong's + old English) as the check; all or nothing.
+  Charter §4.9: no `--prefill`; reason 6 expected large; the reason-6 member list read against the changed-English
+  verses; JP's choice at that verdict (key 2 alone inside changed verses, declared, or leave to a follow-up).
+- **9b — floor check. Writes nothing.** `health_check.py <built> --no-backup-check --no-disk-check`, the
+  `abp_surface rows BELOW floor` line; floor re-declared (charter §6).
+- **9c — re-freeze. Writes no database; writes repo files.** `snapshot_surface_fill.py --replace` re-freezes the
+  fill from built (new TSV + `.sha256`), the pin in `restore_surface_fill.py` updated in the same commit; §9.87
+  re-freezes the punct member file from built in that same commit.
+
+**Finding — 9a, 9b and 9c run code with the 10/25 figures written in; step 9 does not.** Read in the repo at REF:
+- `restore_surface_fill.py`:63-64 fixes 391,130 / 395,003 / 4,411 / 3,873 / 538. :291-294: a table that is neither
+  391,130 nor 395,003 STOPs before the re-key, so **the 9a dry run cannot run on built unless step 9 lands on
+  391,130 exactly.** :360 + :366-371: any unplaced slot writes nothing (G2), so §4.9's "key 2 alone on reason-6
+  slots" cannot be expressed. :243: after-count fixed at 395,003.
+- `health_check.py`:144 floor fixed at 395,003.
+- `snapshot_surface_fill.py`:56 fixes 4,411; its G0 (`dryrun_rekey_fill.py`:57-58, :266-293) requires the fill =
+  source minus pre-fill = the approved 10/25 CSV, keyed at the OLD slots — a re-freeze from built cannot pass it.
+  Its inputs are "source with the fill" + "pre-fill copy"; for built that pair would be built after 9a + built's
+  step-9 table (before 9a). Charter §6 words the before side as `<src>`; that needs reading against the script.
+So a code change is needed before 9a's dry run (and for 9b/9c). It is a design item for the ruling chat; CC
+drafts it once STEP9-DRY gives the chain total. Step 9 itself has no figure in code, so its dry run can go now.
+
+**§9.87 punct figure (583 vs 607) — where it stands:**
+- 583 = unchanged 204 + new-on-eligible 367 + changed-ops 12 (gone 25): gate 3, 11/4,
+  `~/edition_upgrade_runs/gate3_member_diff_20261104.log`. §9.87 stands at 583.
+- 607 = unchanged 205 + new-on-eligible 390 + changed-ops 12 (gone 24): G3R, 11/6,
+  `~/edition_upgrade_runs/gate3_rerun_20261106.log`. CC's reading (DRAFT 2498-2504): +24 = 23 new-on-eligible from
+  R2 (the 23 verses named there) + Num 8:26 gone → unchanged; changed-ops the same 12. Not ruled (§9.91).
+- That reading was made from the two printed lists, not shown by a block. Built has changed since 11/6 (8b.0-8b.3,
+  REKEY, SLOT3, the §9.96 restore, steps 11/10/12; 8b.2a re-wrote English in 16 verses). The figure that gets
+  frozen is built's at 9c time. So what is needed is a read-only block that (1) takes the member lists out of the
+  two logs and lists every member that moved (expect exactly the 24 named), and (2) re-runs the gate-3 v2 member
+  diff on today's built (same punct file `2b0f4cc4…`, eligible `e540d34d…`) and lists every member that moved since
+  11/6. Gate 3 reads no abp_surface (0 mentions in `audit_reassembly_diff.py`), so this read can run beside step
+  9. Not drafted yet.
+
+**STEP9-DRY** (`step9_dry_20261114`): the step-9 chain on a throwaway copy of built's five tables AND on a
+throwaway copy of src's (the same-code control). Read-only on built, src, bh_scrape.db and the pre-fill copy.
+Prints each pass's counts (and checks NEW = rows written; the PN arithmetic line; table = the sum of the three passes);
+abp_surface definition / rows / blanks / rows with no word at their slot, before and after; four deltas keyed
+verse_id+position: built → its copy (what STEP9-APPLY would write), src → its copy (expect the fill coming out:
+removed 3,873 / changed 538 / added 0, if live's words are as on 10/25), pre-fill copy → src's copy (expect 0, the
+G1b oracle), src's copy → built's copy (the edition's effect). bh_scrape.db sha before/after; `same` on built and
+src. Saves built's abp_surface (395,003 rows) to `before.db` as the restore source.
+Local test (made-up dbs, fake HOME): clean run READ DONE, exit 0; src → its copy = the planted fill exactly
+(1 removed / 1 changed), pre-fill → src's copy 0; re-paste, missing scrape, failed builder each STOP, built untouched.
+Disk (estimate, not measured): two copies of words + verses + abp_surface, roughly 200-250 MB each (step 11's copy with words was 192 MB) + two small before.db files.
+
+### Block STEP9-DRY (GATE REF 006e16ba; READ-ONLY on built, src, bh_scrape.db and the pre-fill copy — writes only its run folder and two throwaway copies)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9_dry_20261114.log
+if [ -e "$L" ]; then echo "STEP9-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP9-DRY rebuild-words step 9 (surface builder + both backfills + translit) on THROWAWAY copies of built's and src's verses/words/lexicon/dotted_lexicon/abp_surface - built, src, bh_scrape.db, the pre-fill copy read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9-DRY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP9-DRY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+H=~/bible-db/bh_scrape.db
+PF=~/bible.db.pre-surface-fill-20261025
+D=~/edition_upgrade_runs/step9_dry_20261114
+E="python3 scripts/eu_step.py"
+T=verses,words,lexicon,dotted_lexicon,abp_surface
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'abp_surface' ORDER BY type, name; SELECT 'rows', count(*), 'blank form', sum(form IS NULL OR form = ''), 'blank translit', sum(translit IS NULL OR translit = '') FROM abp_surface; SELECT 'rows with no word at their slot', count(*) FROM abp_surface s WHERE NOT EXISTS (SELECT 1 FROM words w WHERE w.verse_id = s.verse_id AND w.position = s.position)"
+num() { grep -m1 -F -- "$2" "$1" | sed 's/.*: *//; s/,//g; s/[^0-9].*//'; }
+dlt() { grep -m1 -o 'delta [0-9,]*' "$1" | tr -d 'delta ,'; }
+# the step-9 chain, rebuild-words.md step 9, in order, on ONE throwaway copy ($1); outputs kept in $2
+chain() {
+  local db=$1 o=$2 n1 n2 d2 n3 d3 a3 m3 nt nr
+  echo "--- 1/4 build_abp_surface (drops + re-creates abp_surface on the copy)"
+  python3 scripts/build_abp_surface.py "$db" --bh "$H" > "$o/1_build.out" 2>&1 || { cat "$o/1_build.out"; echo "chain: build_abp_surface failed"; return 1; }
+  grep -E "form found|shows a line|books with no source|Wrote" "$o/1_build.out"
+  n1=$(grep -m1 -o 'Wrote [0-9]* rows' "$o/1_build.out" | tr -dc 0-9); [ -n "$n1" ] || { echo "chain: no Wrote line"; return 1; }
+  echo "--- 2/4 backfill_abp_surface --apply"
+  python3 scripts/backfill_abp_surface.py "$db" --bh "$H" --apply > "$o/2_backfill.out" 2>&1 || { cat "$o/2_backfill.out"; echo "chain: backfill_abp_surface failed"; return 1; }
+  grep -E "existing rows|NEW rows|same-as-dictionary|ambiguity|Wrote" "$o/2_backfill.out"
+  n2=$(num "$o/2_backfill.out" "NEW rows to add"); d2=$(dlt "$o/2_backfill.out")
+  [ -n "$n2" ] && [ "$n2" = "$d2" ] || { echo "chain: backfill NEW ($n2) != rows written ($d2)"; return 1; }
+  echo "--- 3/4 backfill_pn_surface --apply (refused slots -> $o/pn_refused.tsv)"
+  python3 scripts/backfill_pn_surface.py "$db" --bh "$H" --apply --dump-refused "$o/pn_refused.tsv" > "$o/3_pn.out" 2>&1 || { cat "$o/3_pn.out"; echo "chain: backfill_pn_surface failed"; return 1; }
+  sed -n '1,/coverage by book/p' "$o/3_pn.out" | grep -v "coverage by book"; grep -E "refused-slot dump|Wrote" "$o/3_pn.out"
+  n3=$(num "$o/3_pn.out" "NEW rows to add"); d3=$(dlt "$o/3_pn.out")
+  [ -n "$n3" ] && [ "$n3" = "$d3" ] || { echo "chain: PN backfill NEW ($n3) != rows written ($d3)"; return 1; }
+  a3=$(grep -m1 'arithmetic:' "$o/3_pn.out" | sed 's/.*= *//; s/ .*//; s/,//g'); m3=$(grep -m1 'arithmetic:' "$o/3_pn.out" | sed 's/.*must equal *//; s/[^0-9,].*//; s/,//g')
+  [ -n "$a3" ] && [ "$a3" = "$m3" ] || { echo "chain: PN arithmetic $a3 != $m3"; return 1; }
+  echo "--- 4/4 build_abp_translit"
+  python3 scripts/build_abp_translit.py "$db" > "$o/4_translit.out" 2>&1 || { cat "$o/4_translit.out"; echo "chain: build_abp_translit failed"; return 1; }
+  cat "$o/4_translit.out"
+  nt=$(grep -m1 -o 'Filled [0-9]*' "$o/4_translit.out" | tr -dc 0-9)
+  nr=$(sqlite3 -readonly "$db" "SELECT count(*) FROM abp_surface") || { echo "chain: count failed"; return 1; }
+  echo "chain total: builder $n1 + backfill $n2 + PN backfill $n3 = $((n1 + n2 + n3)); table now $nr; romanized $nt"
+  [ "$nr" = "$((n1 + n2 + n3))" ] || { echo "chain: table count is not the sum of the three passes"; return 1; }
+  echo "$n1 $n2 $n3 $nr $nt" > "$o/figures.txt"
+}
+# --- guards (read-only) ---
+git diff --quiet "$REF" HEAD -- entity_resolution.py || { echo "STEP9-DRY RESULT: STOP - entity_resolution.py (imported by the PN backfill) differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- entity_resolution.py)" ] || { echo "STEP9-DRY RESULT: STOP - entity_resolution.py has uncommitted edits on PA"; exit 1; }
+echo "entity_resolution.py (imported by the PN backfill) = $REF, unedited: OK"
+$E pre --tag STEP9 --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9-DRY RESULT: STOP - pre (line above); nothing made"; exit 1; }
+[ -s "$H" ] || { echo "STEP9-DRY RESULT: STOP - $H missing or empty"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP9-DRY RESULT: STOP - a -journal sits beside $H"; exit 1; }
+H0=$(sha256sum < "$H" | cut -d' ' -f1); echo "bh_scrape.db (read-only): $(stat -c %s "$H") bytes, sha256 $H0"
+if [ -s "$PF" ]; then echo "pre-fill copy (read-only): $PF, $(stat -c %s "$PF") bytes, $(date -u -r "$PF" +%FT%TZ)"; else echo "pre-fill copy: MISSING at $PF (charter 7 keeps it until 9c) - the same-code control below is skipped"; fi
+for f in "$B" "$S"; do echo "--- abp_surface on $f (read-only): definition + rows + blanks + rows with no word at their slot"; sqlite3 -readonly "$f" "$RD" || { echo "STEP9-DRY RESULT: STOP - read failed on $f"; exit 1; }; done
+# --- built's copy ---
+$E prep --tag STEP9 --built "$B" --dir "$D" --copy "$T" --save abp_surface || { echo "STEP9-DRY RESULT: STOP - prep of built's copy (line above); built untouched"; exit 1; }
+mkdir "$D/built_run" "$D/src" "$D/src_run" || { echo "STEP9-DRY RESULT: STOP - cannot make the sub-folders; built untouched"; exit 1; }
+echo "=== DRY A: the step-9 chain on the throwaway copy of BUILT ($D/dry.db) ==="
+chain "$D/dry.db" "$D/built_run" || { echo "STEP9-DRY RESULT: STOP - the chain on built's copy stopped (above); built untouched"; exit 1; }
+# --- src's copy: the same-code control (src = live 11/01) ---
+$E prep --tag STEP9 --built "$S" --dir "$D/src" --copy "$T" --save abp_surface || { echo "STEP9-DRY RESULT: STOP - prep of src's copy (line above); src untouched"; exit 1; }
+echo "=== DRY B: the same chain on the throwaway copy of SRC ($D/src/dry.db) - the same-code control ==="
+chain "$D/src/dry.db" "$D/src_run" || { echo "STEP9-DRY RESULT: STOP - the chain on src's copy stopped (above); src untouched"; exit 1; }
+read -r a1 a2 a3 ar at < "$D/built_run/figures.txt"; read -r b1 b2 b3 br bt < "$D/src_run/figures.txt"
+echo "same-code control on src: builder $b1 / backfill $b2 / PN backfill $b3 / total $br (the 10/25 figures: 346111 / 13183 / 31836 / 391130 - same code on live's own words)"
+echo "built: builder $a1 / backfill $a2 / PN backfill $a3 / total $ar (to declare for STEP9-APPLY; not 391,130 by design)"
+for f in "$D/dry.db" "$D/src/dry.db"; do echo "--- abp_surface on $f after the chain"; sqlite3 -readonly "$f" "$RD" || { echo "STEP9-DRY RESULT: STOP - read failed on $f"; exit 1; }; done
+echo "=== DELTAS (abp_surface, key verse_id+position; every row in the file, first 20 printed) ==="
+echo "expect: built -> its dry copy = unknown (read; what STEP9-APPLY writes) | src -> its dry copy = the fill coming out: removed 3,873 (its inserts) / changed 538 (its updates) / added 0, IF live's words are as on 10/25 | pre-fill copy -> src's dry copy = 0 (the G1b oracle) | src's dry copy -> built's dry copy = the edition's effect on the chain (read)"
+$E delta --tag STEP9 --a "$B" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_built.tsv" --show 20 || { echo "STEP9-DRY RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
+$E delta --tag STEP9 --a "$S" --b "$D/src/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_src.tsv" --show 20 || { echo "STEP9-DRY RESULT: STOP - delta src -> src dry (line above)"; exit 1; }
+if [ -s "$PF" ]; then
+  $E delta --tag STEP9 --a "$PF" --b "$D/src/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_prefill_srcdry.tsv" --show 20 || { echo "STEP9-DRY RESULT: STOP - delta pre-fill -> src dry (line above)"; exit 1; }
+fi
+$E delta --tag STEP9 --a "$D/src/dry.db" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_srcdry_builtdry.tsv" --show 20 || { echo "STEP9-DRY RESULT: STOP - delta src dry -> built dry (line above)"; exit 1; }
+# --- after: everything read-only stayed as it was ---
+H1=$(sha256sum < "$H" | cut -d' ' -f1); echo "bh_scrape.db after: sha256 $H1 - unchanged: $([ "$H1" = "$H0" ] && echo yes || echo NO)"
+[ "$H1" = "$H0" ] || { echo "STEP9-DRY RESULT: STOP - bh_scrape.db changed during the run - report this, do not re-run"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP9-DRY RESULT: STOP - a -journal now sits beside $H"; exit 1; }
+$E same --tag STEP9 --built "$B" --dir "$D" || { echo "STEP9-DRY RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+$E same --tag STEP9 --built "$S" --dir "$D/src" || { echo "STEP9-DRY RESULT: STOP - src differs from its prep state (lines above)"; exit 1; }
+echo "copies: $D/dry.db $(stat -c %s "$D/dry.db") bytes, $D/src/dry.db $(stat -c %s "$D/src/dry.db") bytes"
+echo "STEP9-DRY RESULT: READ DONE - built + src untouched (same: OK); bh_scrape.db unchanged; built's chain total $ar, src's $br; the deltas above (files + sha on their lines) and the pass figures are what STEP9-APPLY declares"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9-DRY reviewed (11/14) — REVIEW: CLEAR
+
+Verdict line verbatim: "REVIEW: CLEAR - read-only block: built, src, bh_scrape.db and the pre-fill copy are only read, all writes go to throwaway copies or new files under ~/edition_upgrade_runs, and the expected figures trace to code and the procedure file"
+Reviewer notes (not blockers): the 391,130 control and the pre-fill 0 are printed, not enforced — read them by eye in
+the log; free disk is not checked and the per-copy size is an estimate.
