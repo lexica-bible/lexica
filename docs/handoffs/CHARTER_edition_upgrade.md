@@ -318,7 +318,10 @@ A/B abort here and need a member-by-member ruling, as 10/25) →
 9a fill restore WITHOUT `--prefill`; dry run → verdict on the reason-6 member list (§4.9) → apply →
 9b health floor (floor re-declared from the new chain total + the restored inserts) →
 **9c (NEW, resolves the staleness blocker) RE-FREEZE on `<built>`:** `snapshot_surface_fill.py`
-in replace mode by ruling, source = `<built>` after 9a, "before" side = `<src>` (pre-upgrade live).
+in replace mode by ruling, source = `<built>` after 9a, "before" side = the named copy of `<built>` taken after step 9
+and before 9a (`~/edition_upgrade_runs/step9a_apply_<date>/before.db`, saved by the 9a apply block), with
+`--from-restore <9a's --report>` in place of the 10/25 CSV (AMENDED 11/14, DESIGN §9.120 (b); was: '"before" side =
+`<src>` (pre-upgrade live)' — a diff against src mixes the edition's own slot moves into the fill).
 New frozen file + `.sha256`; pin updated in `restore_surface_fill.py` in the same change; the 10/25
 pre-fill copy is released from its load-bearing role once the new freeze passes its own `--check`
 against a fresh copy of the swapped live (then rotation rules apply to it again) →

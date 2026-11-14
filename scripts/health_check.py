@@ -142,6 +142,12 @@ check("distinct H-bases with NO bdb entry",
 # 3,873; the table with the fill restored reads 0. Shortfall 3,873 exactly = the fill is missing
 # (fix = scripts/restore_surface_fill.py); any other shortfall = a backfill reverted.
 SURFACE_FLOOR = 395003
+# --surface-floor=N (DESIGN 9.120, rebuild-words 9b on the edition upgrade's copy): check THIS run
+# against a declared floor; the constant itself is re-pinned only in the swap commit.
+if "--surface-floor" in sys.argv:                  # the '--surface-floor N' form would be ignored
+    sys.exit("health_check: give the floor as --surface-floor=N (one word)")
+SURFACE_FLOOR = int(next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--surface-floor=")),
+                         SURFACE_FLOOR))
 check(f"abp_surface rows BELOW floor {SURFACE_FLOOR}  [fill or a backfill missing?]",
       f"SELECT CASE WHEN count(*) < {SURFACE_FLOOR} THEN {SURFACE_FLOOR} - count(*) ELSE 0 END "
       "FROM abp_surface",

@@ -370,8 +370,272 @@ class Restore(Base):
         self.assertIn("file changed", out)
 
 
+class AfterCount(unittest.TestCase):
+    """DESIGN 9.120 F1: with no lists and the default base, the computed after-count is today's
+    395,003 on the 10/25 shapes (3,873 inserts + 538 updates laid on 391,130)."""
+    def test_no_lists_reproduces_395003(self):
+        res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
+               + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE)
+        self.assertEqual((rs.ROWS_BASE, rs.N_INSERT, rs.N_UPDATE), (391130, 3873, 538))
+        self.assertEqual(rs.after_count(rs.ROWS_BASE, res), 395003)
+        self.assertEqual(rs.after_count(rs.ROWS_BASE, res), rs.ROWS_AFTER)
+        self.assertEqual(rs.after_count(391141, res), 395014)              # the edition upgrade's base
+        res[0] = dict(reason=6, row=dict(action="insert"))                 # an unwritten slot
+        self.assertEqual(rs.after_count(391141, res), 395013)
+
+
+class ListsBase(Base):
+    """Shared setup for the DESIGN 9.120 tests (no test methods of its own)."""
+    REASON6 = [w if w[:2] != (3, 1) else (3, 1, "1473", "me") for w in OLD_WORDS]
+
+    def setUp(self):
+        super().setUp()
+        rc, out = self.snapshot()
+        assert rc == 0, out
+
+    def build(self, words=OLD_WORDS, surface=PREFILL_SURFACE):
+        make_db(self.built, words, surface)
+
+    def lst(self, name, header, *lines):
+        p = os.path.join(self.tmp, name)
+        with open(p, "w", encoding="utf-8", newline="\n") as f:
+            f.write("\t".join(header) + "\n" + "".join("\t".join(map(str, l)) + "\n" for l in lines))
+        return p
+
+    def run_lists(self, apply=False, key2=None, leave=None, base=None):
+        argv = [self.built, "--snapshot", self.snap, "--lexicon", self.lex, "--report", self.report]
+        if key2 is not None:
+            argv += ["--key2-alone", self.lst("k2.tsv", rs.KEY2_HEADER, *key2)]
+        if leave is not None:
+            argv += ["--leave-unplaced", self.lst("lv.tsv", rs.LEAVE_HEADER, *leave)]
+        if base is not None:
+            argv += ["--base", str(base)]
+        if apply:
+            argv.append("--apply")
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = rs.main(argv, live=self.live)
+        return rc, buf.getvalue()
+
+
+class Lists(ListsBase):
+    """DESIGN 9.120: --base, --key2-alone, --leave-unplaced. Fixture slot (3,1) is the reason-6
+    case (its English changed); (1,3) is the update slot."""
+    def test_base_option_moves_g1a(self):
+        self.build()
+        rc, out = self.run_lists(base=3)
+        self.assertEqual(rc, 1)
+        self.assertIn("abp_surface = 2 rows — expect 3", out)
+
+    def test_key2_list_places_a_reason6_slot(self):
+        self.build(words=self.REASON6)
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 3, 1, 1)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("key-2 listed 1", out)
+        self.assertIn("G1 table after            5 | 5", out)
+        self.assertEqual({(v, p) for v, p, _f, _t in rows_of(self.built)},
+                         {(1, 1), (1, 2), (1, 3), (2, 2), (3, 1)})
+
+    def test_key2_slot_failing_the_form_check_stops(self):
+        words = [w if w[:2] != (1, 3) else (1, 3, "2316", "of god") for w in OLD_WORDS]
+        self.build(words=words, surface=BASE + [(1, 3, "θεός")])     # reason 6, then precondition 3
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 1, 3, 3)])
+        self.assertEqual(rc, 1)
+        self.assertIn("fails at its key-2 slot: reason 3", out)
+        self.assertIn("STOPPED before any write", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_key2_slot_failing_the_lexicon_check_stops(self):
+        # (2,2) 'και' is a fill_resolved (Lexicon-checked) slot: English changed -> reason 6;
+        # with no Lexicon row for 2532 the check at its key-2 slot fails -> reason 5
+        words = [w if w[0] != 2 else (2, w[1], "2532", "also") for w in OLD_WORDS]
+        with open(self.lex, "w", encoding="utf-8", newline="") as f:
+            f.write("ab_number\tlemma\tform\n" + "".join("\t".join(r) + "\n" for r in LEXICON if r[0] != "2532"))
+        self.build(words=words)
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 2, 2, 2)])
+        self.assertEqual(rc, 1)
+        self.assertIn("fails at its key-2 slot: reason 5", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_key2_slot_whose_insert_target_is_filled_stops(self):
+        self.build(words=self.REASON6, surface=PREFILL_SURFACE + [(3, 1, "εγω")])
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 3, 1, 1)], base=3)
+        self.assertEqual(rc, 1)
+        self.assertIn("fails at its key-2 slot: reason 4", out)
+
+    def test_leave_listed_reason3_slot_reads_already_after(self):
+        # D1: a slot left for a precondition cannot re-run it once the fill is in
+        self.build(surface=BASE + [(1, 3, "θεός")])                  # update slot -> reason 3
+        rc, out = self.run_lists(apply=True, leave=[("Gen", 1, 1, 3, 3)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("G1 table after            5 | 5", out)
+        before = digest(self.built)
+        rc, out = self.run_lists(leave=[("Gen", 1, 1, 3, 3)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("ALREADY RESTORED", out)
+        self.assertEqual(digest(self.built), before)
+        c = sqlite3.connect(self.built)                             # now the slot holds the fill form
+        c.execute("UPDATE abp_surface SET form = 'θεοῦ' WHERE verse_id = 1 AND position = 3")
+        c.commit()
+        c.close()
+        rc, out = self.run_lists(leave=[("Gen", 1, 1, 3, 3)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the leave list (reason 3) but its slot holds the fill form", out)
+
+    def test_key2_listed_slot_that_places_normally_stops(self):
+        self.build()
+        rc, out = self.run_lists(key2=[("Gen", 1, 1, 2, 2)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the key-2 list but places normally", out)
+
+    def test_key2_listed_at_the_wrong_slot_stops(self):
+        self.build(words=self.REASON6)
+        rc, out = self.run_lists(key2=[("Gen", 1, 3, 1, 9)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the key-2 list at new position 9, key 2 now finds 1", out)
+
+    def test_leave_list_leaves_the_slot_and_reads_already_after(self):
+        self.build(words=self.REASON6)
+        rc, out = self.run_lists(apply=True, leave=[("Gen", 1, 3, 1, 6)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("G1 after-count            base 2 + inserts written 2 = 4", out)
+        self.assertIn("G1 table after            4 | 4", out)
+        self.assertNotIn((3, 1), {(v, p) for v, p, _f, _t in rows_of(self.built)})
+        before = digest(self.built)
+        rc, out = self.run_lists(leave=[("Gen", 1, 3, 1, 6)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("ALREADY RESTORED", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_leave_listed_slot_that_became_placeable_stops(self):
+        self.build()
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, leave=[("Gen", 1, 1, 2, 6)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the leave list (reason 6) but now places", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_leave_listed_slot_with_another_reason_stops(self):
+        self.build(words=self.REASON6)
+        rc, out = self.run_lists(leave=[("Gen", 1, 3, 1, 1)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the leave list (reason 1) but now reason 6", out)
+
+    def test_unplaced_slot_on_no_list_still_stops(self):
+        self.build(words=self.REASON6)
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, key2=[])
+        self.assertEqual(rc, 1)
+        self.assertIn("G2 1 slot(s) unplaced and not leave-listed", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_listed_slot_not_in_the_snapshot_stops(self):
+        self.build()
+        rc, out = self.run_lists(leave=[("Gen", 1, 9, 9, 6)])
+        self.assertEqual(rc, 1)
+        self.assertIn("every listed slot is a snapshot slot (1 not", out)
+
+
+class Refreeze(ListsBase):
+    """DESIGN 9.120 F3: snapshot_surface_fill.py --from-restore <the restore's --report>."""
+    def refreeze(self, src, prefill, out, check=False):
+        argv = ["--src", src, "--prefill", prefill, "--from-restore", self.report, "--out", out]
+        if check:
+            argv.append("--check")
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = sn.main(argv, live=self.live)
+        return rc, buf.getvalue()
+
+    def restored(self, words=OLD_WORDS, surface=PREFILL_SURFACE, **lists):
+        self.build(words=words, surface=surface)
+        pre2 = os.path.join(self.tmp, "built_after_step9.sqlite")      # the named pre-fill copy
+        shutil.copyfile(self.built, pre2)
+        rc, out = self.run_lists(apply=True, **lists)
+        assert rc == 0, out
+        return pre2
+
+    def test_refreeze_from_a_report_equals_the_1025_freeze(self):
+        pre2 = self.restored()
+        snap2 = os.path.join(self.tmp, "fix", "snap_from_report.tsv")
+        rc, out = self.refreeze(self.built, pre2, snap2)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("PASS — 4 = 3 insert + 1 update = the restore report", out)
+        self.assertEqual(digest(snap2), digest(self.snap))               # byte for byte
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)      # D3: the report is pinned
+        self.assertEqual(rc, 1)
+        self.assertIn("no .sha256 beside it", out)
+        with open(self.report + ".sha256", "w", encoding="utf-8") as f:
+            f.write(f"{digest(self.report)}  report.tsv\n")
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("SNAPSHOT CURRENT", out)
+        with open(self.report, "a", encoding="utf-8") as f:
+            f.write("\n")
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)
+        self.assertEqual(rc, 1)
+        self.assertIn("!= its .sha256", out)
+        open(self.report + ".sha256", "w").close()                       # an empty pin file: clean STOP
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)
+        self.assertEqual(rc, 1)
+        self.assertIn("!= its .sha256 (empty file)", out)
+
+    def test_a_report_missing_a_column_stops_cleanly(self):
+        pre2 = self.restored()
+        with open(self.report, encoding="utf-8") as f:
+            text = f.read()
+        with open(self.report, "w", encoding="utf-8", newline="\n") as f:      # the 'form' column renamed
+            f.write(text.replace("\tform\t", "\tforms\t", 1))
+        rc, out = self.refreeze(self.built, pre2, os.path.join(self.tmp, "fix", "y.tsv"))
+        self.assertEqual(rc, 1)
+        self.assertIn("is not a restore_surface_fill.py --report", out)
+
+    def test_refreeze_on_a_moved_layout_keys_the_new_slots(self):
+        moved = [(1, 1, "2532", "and")] + [(v, p + 1 if v == 1 else p, s, e) for v, p, s, e in OLD_WORDS]
+        pre2 = self.restored(words=moved, surface=[(1, 2, "τοῦ"), (1, 4, "θεου")])
+        snap2 = os.path.join(self.tmp, "fix", "snap_moved.tsv")
+        rc, out = self.refreeze(self.built, pre2, snap2)
+        self.assertEqual(rc, 0, out)
+        rows, _ = sn.read_snapshot(snap2)
+        self.assertEqual(sorted((r["verse_id"], r["position"]) for r in rows), [(1, 3), (1, 4), (2, 2), (3, 1)])
+
+    def test_refreeze_skips_a_leave_listed_slot(self):
+        pre2 = self.restored(words=self.REASON6, leave=[("Gen", 1, 3, 1, 6)])
+        snap2 = os.path.join(self.tmp, "fix", "snap_leave.tsv")
+        rc, out = self.refreeze(self.built, pre2, snap2)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("PASS — 3 = 2 insert + 1 update = the restore report", out)
+
+    def test_g0_stops_on_a_row_the_report_does_not_hold(self):
+        pre2 = self.restored()
+        c = sqlite3.connect(self.built)
+        c.execute("UPDATE abp_surface SET form = 'x' WHERE verse_id = 1 AND position = 1")
+        c.commit()
+        c.close()
+        snap2 = os.path.join(self.tmp, "fix", "snap_extra.tsv")
+        rc, out = self.refreeze(self.built, pre2, snap2)
+        self.assertEqual(rc, 1)
+        self.assertIn("something else changed abp_surface", out)
+        self.assertFalse(os.path.exists(snap2))
+
+    def test_csv_and_from_restore_are_exclusive(self):
+        with open(self.report, "w", encoding="utf-8") as f:
+            f.write("book\n")
+        out2 = os.path.join(self.tmp, "fix", "x.tsv")
+        for extra in (["--csv", self.csv, "--from-restore", self.report], []):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                rc = sn.main(["--src", self.old, "--prefill", self.pre, "--out", out2] + extra,
+                             live=self.live)
+            self.assertEqual(rc, 1)
+            self.assertIn("give exactly one of --csv", buf.getvalue())
+        self.assertFalse(os.path.exists(out2))
+
+
 class Floor(unittest.TestCase):
-    def health(self, n):
+    def health(self, n, *extra):
         tmp = tempfile.mkdtemp()
         try:
             db = os.path.join(tmp, "copy.sqlite")
@@ -381,7 +645,7 @@ class Floor(unittest.TestCase):
             c.commit()
             c.close()
             p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"), db,
-                                "--no-backup-check", "--no-disk-check"], capture_output=True,
+                                "--no-backup-check", "--no-disk-check", *extra], capture_output=True,
                                text=True, encoding="utf-8", env=dict(os.environ, PYTHONIOENCODING="utf-8"))
             return next(l for l in p.stdout.splitlines() if "abp_surface rows BELOW floor" in l)
         finally:
@@ -394,6 +658,23 @@ class Floor(unittest.TestCase):
         self.assertIn("[OK  ] abp_surface rows BELOW floor 395003", line)
         self.assertTrue(line.split("]: ")[1].startswith("0 "))
         self.assertTrue(self.health(391130).split("]: ")[1].startswith("3873 "))
+
+    def test_surface_floor_option_moves_only_that_run(self):
+        # 9b on the edition upgrade's copy: 391,141 + 3,873 = 395,014 (DESIGN 9.120)
+        line = self.health(395013, "--surface-floor=395014")
+        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", line)
+        self.assertTrue(line.split("]: ")[1].startswith("1 "))
+        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", self.health(395014, "--surface-floor=395014"))
+        self.assertIn("BELOW floor 395003", self.health(395014))       # the default is untouched
+        tmp = tempfile.mkdtemp()                                         # the two-word form is refused
+        try:
+            p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"),
+                                os.path.join(tmp, "none.sqlite"), "--surface-floor", "395014"],
+                               capture_output=True, text=True, encoding="utf-8")
+            self.assertNotEqual(p.returncode, 0)
+            self.assertIn("--surface-floor=N", p.stderr)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
 
 
 if __name__ == "__main__":

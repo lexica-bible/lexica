@@ -137,8 +137,60 @@ def word_rows(con, vids):
     return out
 
 
-def build_rows(csrc, cpre, csv_path):
-    new_side, old_side, writes, ins, upd, vold = dr.g0(csrc, cpre, csv_path)
+def g0_report(csrc, cpre, report_path):
+    """G0 for a re-freeze after an edition upgrade (DESIGN 9.120, F3): the fill = --src minus the
+    pre-fill table, and it must be EXACTLY the slots restore_surface_fill.py's --report placed
+    (key-2-listed included, leave-listed never), at their NEW positions, form for form. Action
+    and cls come from the report; the counts are the report's, never the 10/25 constants.
+    -> the same tuple as dryrun_rekey_fill.g0."""
+    say("G0  the fill diff vs the restore report")
+    s_src, s_pre = dr.surface(csrc), dr.surface(cpre)
+    new_side = {k: v for k, v in s_src.items() if s_pre.get(k) != v}
+    old_side = {k: v for k, v in s_pre.items() if s_src.get(k) != v}
+    vold = dr.verses(csrc)
+    vkey = {(b, c, v): i for i, (b, c, v) in vold.items()}
+    with open(real(report_path), encoding="utf-8", newline="") as f:
+        lines = [ln.rstrip("\n").split("\t") for ln in f if ln.strip()]
+    need = {"book", "chapter", "verse", "old_position", "new_position", "action", "cls", "form", "result"}
+    if not lines or not need <= set(lines[0]):
+        raise Stop(f"G0 {report_path} is not a restore_surface_fill.py --report (columns {sorted(need)})")
+    head = lines[0]
+    writes = {}
+    for cells in lines[1:]:
+        r = dict(zip(head, cells))
+        if r["result"] != "placed":
+            continue
+        vid = vkey.get((r["book"], int(r["chapter"]), int(r["verse"])))
+        if vid is None:
+            raise Stop(f"G0 report verse {r['book']} {r['chapter']}:{r['verse']} is not in --src")
+        k = (vid, int(r["new_position"]))
+        if k in writes:
+            raise Stop(f"G0 report places two snapshot rows on slot {k}")
+        writes[k] = dict(action=r["action"], cls=r["cls"], new_form=r["form"])
+    say(f"    report placed {len(writes):,} · src-not-in-prefill {len(new_side):,} · "
+        f"prefill-not-in-src {len(old_side):,}")
+    if set(writes) != set(new_side):
+        raise Stop(f"G0 the report places {len(writes):,} slots, the diff holds {len(new_side):,} "
+                   f"({len(set(writes) ^ set(new_side)):,} differ, e.g. "
+                   f"{sorted(set(writes) ^ set(new_side))[:3]}) — something else changed abp_surface")
+    bad = [k for k, w in writes.items() if w["new_form"] != new_side[k][0]]
+    if bad:
+        raise Stop(f"G0 {len(bad)} report form(s) differ from the stored form, e.g. {bad[:3]}")
+    ins = {k for k, w in writes.items() if w["action"] == "insert"}
+    upd = {k for k, w in writes.items() if w["action"] == "update"}
+    if len(ins) + len(upd) != len(writes) or any(k in s_pre for k in ins) \
+            or set(old_side) != upd:
+        raise Stop("G0 insert/update split does not match the pre-fill table (an insert slot was "
+                   "filled, or the changed pre-fill rows are not exactly the updates)")
+    say(f"    PASS — {len(writes):,} = {len(ins):,} insert + {len(upd):,} update = the restore report")
+    return new_side, old_side, writes, ins, upd, vold
+
+
+def build_rows(csrc, cpre, csv_path, report=None):
+    if report:
+        new_side, old_side, writes, ins, upd, vold = g0_report(csrc, cpre, report)
+    else:
+        new_side, old_side, writes, ins, upd, vold = dr.g0(csrc, cpre, csv_path)
     vids = {v for v, _ in new_side}
     words = word_rows(csrc, vids)
     say("O   every fill slot has exactly one word row in --src")
@@ -194,6 +246,36 @@ def stale_slots(frozen, fresh):
     return out
 
 
+def report_pin(report_path, required):
+    """The restore report is one of the three pinned inputs once a re-freeze is made from it
+    (DESIGN 9.120 F3): <report>.sha256 beside it must match. Required under --check; under a
+    re-freeze it is verified when present and the report's sha is printed for pinning."""
+    with open(real(report_path), "rb") as f:
+        hexd = sha256(f.read())
+    pin = real(report_path) + ".sha256"
+    if os.path.isfile(pin):
+        with open(pin, encoding="utf-8") as f:
+            want = (f.read().split() or [""])[0]
+        if want != hexd:
+            raise Stop(f"--from-restore {report_path}: sha256 {hexd[:16]}… != its .sha256 "
+                       f"{(want or '(empty file)')[:16]}…")
+        say(f"    restore report sha256 {hexd} = its .sha256")
+    elif required:
+        raise Stop(f"--from-restore {report_path}: no .sha256 beside it — the report is a pinned input "
+                   "under --check")
+    else:
+        say(f"    restore report sha256 {hexd} (no .sha256 beside it yet — pin it with the new freeze)")
+    return hexd
+
+
+def expected_counts(a, n_ins, n_upd):
+    """(rows, inserts, updates) the receipt expects: the 10/25 constants with --csv; with
+    --from-restore, the report's own counts (G0 already proved they are the diff's)."""
+    if a.from_restore:
+        return n_ins + n_upd, n_ins, n_upd
+    return N_ROWS, dr.N_INSERT, dr.N_UPDATE
+
+
 def check_current(a, out):
     """--check: the frozen file must equal what --src yields today, byte for byte. Writes nothing."""
     say("=" * 78)
@@ -213,10 +295,15 @@ def check_current(a, out):
                                                else " (no pin set)"))
     with open(out, "rb") as f:
         frozen_bytes = f.read()
+    if a.from_restore:
+        try:
+            report_pin(a.from_restore, required=True)
+        except Stop as e:
+            raise Stop(f"STALE SNAPSHOT — {e} — nothing overwritten") from None
     csrc, cpre = dr.ro(a.src), dr.ro(a.prefill)
     try:
         try:
-            rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv)
+            rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv, a.from_restore)
         except Stop as e:
             raise Stop(f"STALE SNAPSHOT — --src no longer yields the frozen fill ({e}) — "
                        "nothing overwritten") from None
@@ -233,9 +320,10 @@ def check_current(a, out):
                    "file" + ("" if diffs else " (every row matches, the bytes do not)") +
                    " — nothing overwritten. A re-freeze is a ruling, never a way past this")
     say(f"    PASS — {len(rows):,} rows, identical bytes")
+    x_rows, x_ins, x_upd = expected_counts(a, n_ins, n_upd)
     say("\nRECEIPT (expected | actual)")
-    say(f"  rows                    {N_ROWS:,} | {len(rows):,}")
-    say(f"  inserts / updates       {dr.N_INSERT:,} / {dr.N_UPDATE:,} | {n_ins:,} / {n_upd:,}")
+    say(f"  rows                    {x_rows:,} | {len(rows):,}")
+    say(f"  inserts / updates       {x_ins:,} / {x_upd:,} | {n_ins:,} / {n_upd:,}")
     say(f"  sha256                  {pin or '(no pin)'} | {hexd}")
     say("RESULT: SNAPSHOT CURRENT — the frozen file matches --src byte for byte; nothing written")
     return 0
@@ -250,10 +338,14 @@ def run(a, live=dr.LIVE):
             raise Stop(f"{flag} {p}: no such file")
     if real(a.src) == real(a.prefill):
         raise Stop("--src and --prefill must be two different files")
-    if not os.path.isfile(real(a.csv)):
-        raise Stop(f"--csv {a.csv}: no such file")
+    if bool(a.csv) == bool(a.from_restore):
+        raise Stop("give exactly one of --csv (the 10/25 approved list) or --from-restore (a "
+                   "restore_surface_fill.py --report, DESIGN 9.120)")
+    fill_src = a.csv or a.from_restore
+    if not os.path.isfile(real(fill_src)):
+        raise Stop(f"{'--csv' if a.csv else '--from-restore'} {fill_src}: no such file")
     out = real(a.out)
-    if out.endswith(".db") or out in (real(a.src), real(a.prefill), real(a.csv)):
+    if out.endswith(".db") or out in (real(a.src), real(a.prefill), real(fill_src)):
         raise Stop(f"--out {a.out} must be a new .tsv file, not a database or an input")
     if not out.endswith(".tsv"):
         raise Stop(f"--out {a.out} must end in .tsv")
@@ -273,14 +365,17 @@ def run(a, live=dr.LIVE):
     for flag, p in (("--src", a.src), ("--prefill", a.prefill)):
         say(f"  {flag:9} {real(p)}  ({os.path.getsize(real(p)):,} bytes)")
     say("=" * 78)
+    if a.from_restore:
+        report_pin(a.from_restore, required=False)
     csrc, cpre = dr.ro(a.src), dr.ro(a.prefill)
     try:
-        rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv)
+        rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv, a.from_restore)
     finally:
         csrc.close()
         cpre.close()
-    if len(rows) != N_ROWS:
-        raise Stop(f"{len(rows):,} rows, expect {N_ROWS:,}")
+    x_rows, x_ins, x_upd = expected_counts(a, n_ins, n_upd)
+    if len(rows) != x_rows:
+        raise Stop(f"{len(rows):,} rows, expect {x_rows:,}")
 
     data = render(rows)
     say("R   read-back control")
@@ -303,9 +398,9 @@ def run(a, live=dr.LIVE):
     for r in rows:
         cls[r["cls"]] = cls.get(r["cls"], 0) + 1
     say("\nRECEIPT (expected | actual)")
-    say(f"  rows                    {N_ROWS:,} | {len(rows):,}")
-    say(f"  inserts / updates       {dr.N_INSERT:,} / {dr.N_UPDATE:,} | {n_ins:,} / {n_upd:,}")
-    say(f"  distinct slots          {N_ROWS:,} | {len({(r['verse_id'], r['position']) for r in rows}):,}")
+    say(f"  rows                    {x_rows:,} | {len(rows):,}")
+    say(f"  inserts / updates       {x_ins:,} / {x_upd:,} | {n_ins:,} / {n_upd:,}")
+    say(f"  distinct slots          {x_rows:,} | {len({(r['verse_id'], r['position']) for r in rows}):,}")
     say(f"  on name slots (is_pn=1) — | {sum(1 for r in rows if r['is_pn'] == 1):,}")
     say(f"  slots whose number repeats in the verse (k2_count > 1) — | "
         f"{sum(1 for r in rows if r['k2_count'] > 1):,}")
@@ -318,8 +413,12 @@ def run(a, live=dr.LIVE):
 
 def main(argv=None, live=dr.LIVE):
     ap = argparse.ArgumentParser(description="Freeze the abp_surface fill (read-only on databases).")
-    for flag in ("--src", "--prefill", "--csv", "--out"):
+    for flag in ("--src", "--prefill", "--out"):
         ap.add_argument(flag, required=True)
+    ap.add_argument("--csv", help="the 10/25 approved fill list (G0 vs the old slots)")
+    ap.add_argument("--from-restore", metavar="REPORT",
+                    help="a restore_surface_fill.py --report: G0 = the slots it placed, at their NEW "
+                         "positions, counts from the report (DESIGN 9.120; the edition-upgrade re-freeze)")
     ap.add_argument("--replace", action="store_true",
                     help="overwrite an existing snapshot (re-freeze by ruling only)")
     ap.add_argument("--check", action="store_true",

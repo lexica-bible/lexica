@@ -8343,3 +8343,15 @@ Verdict line verbatim: "REVIEW: ESCALATE - still a code change to builders and g
 - Still for the ruling chat: D4 (known difference: `g0_report` checks the changed pre-fill rows are exactly the updates, not each
   update's old form; restore precondition 3 checks it at apply time).
 Tests: 43 pass. Code + tests + charter edit still uncommitted until the ruling.
+
+### Rulings (11/14, §9.121) — 9a/9b/9c code APPROVED; pushed as one code REF
+- D4 accepted as a known difference (the restore checks each old form at write time; the re-freeze checks the changed pre-fill rows
+  are exactly the update set). Not a gap to close now.
+- R1 adopted: the 9a report's fingerprint is fixed in the code in the 9c commit, when both first exist; until then the beside-file
+  check stands.
+- **The code change is approved**: committed and pushed as one code REF — restore_surface_fill.py, health_check.py,
+  snapshot_surface_fill.py, tests/test_surface_fill_restore.py (43), and charter §6 9c amended. Charter old wording, cited here as
+  ruled: '"before" side = `<src>` (pre-upgrade live)'; new: "before" side = the named copy of `<built>` taken after step 9 and before
+  9a (`~/edition_upgrade_runs/step9a_apply_<date>/before.db`), with `--from-restore <9a's --report>` in place of the 10/25 CSV.
+- **Note for STEP9-APPLY (gated on 32a39a10):** its REF guard (`eu_step pre`: scripts/tests = 32a39a10) STOPs on a PA that has pulled
+  this new REF. PA stays at a9674438 until STEP9-APPLY has run; 9a's blocks then gate on the new REF after a pull.

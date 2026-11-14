@@ -33,15 +33,21 @@ conflict. Placed + unplaced = 4,411.
 Gates (STOP before any write):
   S    snapshot = 4,411 rows (3,873 insert + 538 update), distinct slots, checksum matches
   V    every snapshot verse_id names the same book/chapter/verse in <db>
-  G1a  the builder chain's table = 391,130 rows exactly (the base the fill was laid on)
+  G1a  the builder chain's table = --base rows exactly (default 391,130; the base the fill is laid on)
   G1b  (--prefill given) builder table = the pre-fill copy row for row (same-code rebuild only)
-  G2   every slot placed (unplaced = 0)
-  G1   after the writes, before COMMIT: abp_surface = 395,003 rows exactly; the 4,411 written
-       rows = snapshot form + romanize(form, lemma of the NEW slot); every other row unchanged;
-       new rows = exactly the insert slots
+  G2   every slot placed (unplaced = 0) — or, with the declared lists (DESIGN 9.120), every slot
+       placed, key-2-listed (a reason-6 slot placed at exactly its listed key-2 slot, through the
+       same preconditions + Lexicon check) or leave-listed (unplaced with exactly its listed
+       reason); any slot that does not resolve as listed, or a listed slot not in the snapshot,
+       STOPs
+  G1   after the writes, before COMMIT: abp_surface = base + the inserts written (395,003 with
+       the defaults); the written rows (placed + key-2-listed; never leave-listed) = snapshot
+       form + romanize(form, lemma of the NEW slot); every other row unchanged; new rows =
+       exactly the insert slots
   T    after COMMIT: build_abp_translit.py's rule would change 0 rows; quick_check ok
-A table already at 395,003 with every slot holding its form reads ALREADY RESTORED (no write,
-exit 0); any other table count is a G1a STOP; a mix of restored and not-restored slots fails.
+A table already at that after-count with every written slot holding its form reads ALREADY
+RESTORED (no write, exit 0); any other table count is a G1a STOP; a mix of restored and
+not-restored slots fails.
 
   PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py ~/rekey/built3.db \\
       --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv \\
@@ -60,7 +66,7 @@ sys.path.insert(0, HERE)
 import dryrun_rekey_fill as dr                     # noqa: E402  the key rules + the live gate
 import snapshot_surface_fill as snap               # noqa: E402  the file format
 
-ROWS_BASE, ROWS_AFTER = 391130, 395003
+ROWS_BASE, ROWS_AFTER = 391130, 395003       # defaults: --base, and base + every insert written
 N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
 # PINNED 2026-10-25 from the first PA snapshot (JP run, ~/rekey/old3.db = a fresh copy of live):
 # 4,411 rows (3,873 insert + 538 update), 455,812 bytes; receipt in CHARTER_rebuild_trap_fix.md §8.
@@ -78,6 +84,42 @@ def check(ok, msg):
     say(f"   {'PASS' if ok else 'FAIL'}  {msg}")
     if not ok:
         raise Stop(msg)
+
+
+def after_count(base, res):
+    """G1's expected table after the write (DESIGN 9.120, F1): the base + the inserts among the
+    slots that are written (placed, incl. key-2-listed). Never the leave-listed ones."""
+    return base + sum(1 for x in res if not x["reason"] and x["row"]["action"] == "insert")
+
+
+# ── the declared slot lists (DESIGN 9.112 / 9.120, charter 4.9 reason 6) ──────────────────────
+# Both are TSVs made from the 9a DRY RUN's own --report after the ruling chat rules on its member
+# list; slots are named by the snapshot's own (book, chapter, verse, old position).
+KEY2_HEADER = ["book", "chapter", "verse", "old_position", "new_position"]
+LEAVE_HEADER = ["book", "chapter", "verse", "old_position", "reason"]
+
+
+def load_slot_list(path, header):
+    """-> {(book, chapter, verse, old_position): int (new position | reason)}; any malformed or
+    repeated line stops the run before the database is opened."""
+    out = {}
+    with open(real(path), encoding="utf-8") as f:
+        lines = [ln.rstrip("\n") for ln in f if ln.strip() and not ln.startswith("#")]
+    if not lines or lines[0].split("\t") != header:
+        raise Stop(f"{path}: header must be {header}")
+    for n, ln in enumerate(lines[1:], 2):
+        c = ln.split("\t")
+        if len(c) != len(header) or not all(x.isdigit() for x in c[1:]):
+            raise Stop(f"{path}: line {n} is not {header}: {ln!r}")
+        k = (c[0], int(c[1]), int(c[2]), int(c[3]))
+        if k in out:
+            raise Stop(f"{path}: {k} listed twice")
+        out[k] = int(c[4])
+    return out
+
+
+def slot_key(r):
+    return (r["book"], r["chapter"], r["verse"], r["position"])
 
 
 def check_paths(a, live):
@@ -141,12 +183,16 @@ def translit_would_change(con):
 
 
 # ── the re-key (read-only) ───────────────────────────────────────────────────
-def evaluate(con, rows, lex, restoring):
+def evaluate(con, rows, lex, restoring, key2=None, leave=None):
     """One pass over the snapshot -> list of result dicts. `restoring` = the table is at the
     builder base (preconditions 3/4 apply); else the ALREADY check (each placed slot must
-    already hold its form)."""
+    already hold its form). key2 / leave = the declared lists (DESIGN 9.120): a key-2-listed
+    slot must be reason 6 with exactly the listed key-2 slot, and is then placed there and runs
+    the SAME preconditions and Lexicon check as any placed slot; a leave-listed slot must end
+    unplaced with exactly its listed reason. Any other outcome sets list_err (G2 STOPs)."""
     from apply_abp_surface_fill import LEXICON_CLASSES        # the ONE class list
     from census_abp_surface_glued import agree                # the ONE number + form rule
+    key2, leave = key2 or {}, leave or {}
     vids = {r["verse_id"] for r in rows}
     new_w = dr.words_for(con, vids)
     surface = dr.surface(con)
@@ -157,11 +203,27 @@ def evaluate(con, rows, lex, restoring):
         k2 = dr.key2_at(r["strongs"], r["k2_ordinal"], new_rows)
         k1 = dr.key1_at(r["strongs"], r["english"], new_rows)
         reason, detail = dr.decide(k2, k1)
+        sk, listed, list_err = slot_key(r), "", ""
+        if sk in key2:
+            listed = "key2"
+            if reason == 6 and k2[0] == "one" and k2[1] == key2[sk]:
+                reason, detail = 0, "key-2 alone (listed)"
+            elif reason == 6:
+                list_err = f"on the key-2 list at new position {key2[sk]}, key 2 now finds {k2[1]}"
+            else:
+                list_err = f"on the key-2 list but {'places normally' if not reason else f'reason {reason}'}"
         np = k2[1] if reason == 0 else None
         state, lexres = "", "uncovered"
         if reason == 0:
             cur = surface.get((vid, np))
-            if not restoring:
+            if not restoring and leave.get(sk) in (3, 4):
+                # a slot left unwritten at the restore for a precondition (3/4) cannot re-run that
+                # precondition once the rest of the fill is in; it must simply not hold the fill form
+                if cur and cur[0] == r["form"]:
+                    list_err = f"on the leave list (reason {leave[sk]}) but its slot holds the fill form"
+                else:
+                    reason, detail = leave[sk], "left unwritten at the restore (leave list)"
+            elif not restoring:
                 state = "already" if cur and cur[0] == r["form"] else "missing"
             elif r["action"] == "update" and (cur is None or cur[0] != r["old_form"]):
                 reason, detail = 3, f"builder form {cur[0] if cur else None!r} != old {r['old_form']!r}"
@@ -174,8 +236,18 @@ def evaluate(con, rows, lex, restoring):
             lexres = "pass" if ag in want else "fail"
             if lexres == "fail":
                 reason, detail = 5, f"agree() -> {ag}"
+        if listed == "key2" and reason and not list_err:
+            list_err = f"on the key-2 list but fails at its key-2 slot: reason {reason} {detail}"
+        if sk in leave:
+            listed = "leave"
+            if reason != leave[sk] and not list_err:
+                list_err = (f"on the leave list (reason {leave[sk]}) but "
+                            + ("now places" if not reason else f"now reason {reason}"))
+        if listed:
+            detail = f"{detail} [{listed}-listed]"
         out.append(dict(row=r, k2=k2, k1=k1, reason=reason, detail=detail, lex=lexres,
-                        new_pos=np if reason == 0 else None, state=state))
+                        new_pos=np if reason == 0 else None, state=state, listed=listed,
+                        list_err=list_err))
     return out
 
 
@@ -207,10 +279,13 @@ def table_diff(con, other):
 
 
 # ── the write (copies only) ──────────────────────────────────────────────────
-def apply(db, res):
+def apply(db, res, base, expected):
+    """Writes ONLY the placed slots (key-2-listed ones included); leave-listed slots are never
+    written (DESIGN 9.120, F2b). base / expected = G1a's table and G1's after-count."""
     from build_abp_translit import romanize
     from census_abp_surface_glued import NB
     say("W   APPLY — one transaction, abp_surface only")
+    res = [x for x in res if not x["reason"] and x["listed"] != "leave"]     # never a leave-listed slot
     con = sqlite3.connect(f"file:{real(db)}", uri=True, isolation_level=None)
     con.execute("PRAGMA busy_timeout=60000")
     try:
@@ -219,7 +294,7 @@ def apply(db, res):
         con.execute("BEGIN IMMEDIATE")
         try:
             before = dr.surface(con)
-            check(len(before) == ROWS_BASE, f"table still {len(before):,} rows under the write lock")
+            check(len(before) == base, f"table still {len(before):,} rows under the write lock")
             todo = [(x["row"], (x["row"]["verse_id"], x["new_pos"])) for x in res]
             lem = lemmas(con, [k for _, k in todo])
             tl = {}
@@ -240,7 +315,7 @@ def apply(db, res):
                                 "VALUES (?,?,?,?)", (v, p, r["form"], tl[(v, p)]))
             say("   post-write checks (before COMMIT):")
             n = con.execute("SELECT count(*) FROM abp_surface").fetchone()[0]
-            check(n == ROWS_AFTER, f"G1 abp_surface = {n:,} rows (expect {ROWS_AFTER:,} exactly)")
+            check(n == expected, f"G1 abp_surface = {n:,} rows (expect {expected:,} exactly)")
             after = dr.surface(con)
             wk = {k for _, k in todo}
             bad = [k for r, k in todo if after.get(k) != (r["form"], tl[k])]
@@ -279,6 +354,17 @@ def run(a, live=dr.LIVE):
     say(f"  snapshot  {real(a.snapshot)}")
     say("=" * 78)
     rows, hexd = load_snapshot(a.snapshot)
+    base = a.base
+    key2 = load_slot_list(a.key2_alone, KEY2_HEADER) if a.key2_alone else {}
+    leave = load_slot_list(a.leave_unplaced, LEAVE_HEADER) if a.leave_unplaced else {}
+    if key2 or leave or a.key2_alone or a.leave_unplaced:
+        say("L   the declared slot lists")
+        snap_keys = {slot_key(r) for r in rows}
+        stray = sorted(k for k in list(key2) + list(leave) if k not in snap_keys)
+        both = sorted(set(key2) & set(leave))
+        check(not stray, f"every listed slot is a snapshot slot ({len(stray)} not: {stray[:3]})")
+        check(not both, f"no slot on both lists ({len(both)}: {both[:3]})")
+        say(f"    key-2 list {len(key2):,} slot(s) · leave list {len(leave):,} slot(s)")
 
     con = dr.ro(a.db)
     try:
@@ -287,13 +373,7 @@ def run(a, live=dr.LIVE):
         badv = [r for r in rows if vt.get(r["verse_id"]) != (r["book"], r["chapter"], r["verse"])]
         check(not badv, f"every snapshot verse_id names the same verse in <db> ({len(badv)} differ)")
         n0 = con.execute("SELECT count(*) FROM abp_surface").fetchone()[0]
-        say("G1a builder chain's table")
-        restoring = n0 == ROWS_BASE
-        if not restoring and n0 != ROWS_AFTER:
-            check(False, f"abp_surface = {n0:,} rows — expect {ROWS_BASE:,} (step 9 done, fill "
-                         f"not yet restored) or {ROWS_AFTER:,} (already restored)")
-        say(f"   {'PASS' if restoring else 'NOTE'}  abp_surface = {n0:,} rows "
-            f"({'= the builder base' if restoring else '= the restored total: checking ALREADY'})")
+        restoring = n0 == base
         diff = None
         if a.prefill and restoring:
             say("G1b builder table vs the pre-fill copy (same-code rebuild)")
@@ -302,13 +382,22 @@ def run(a, live=dr.LIVE):
         say("    loading the Analytical Lexicon …")
         lex = Lexicon(real(a.lexicon))
         say("RE-KEY + preconditions")
-        res = evaluate(con, rows, lex, restoring)
+        res = evaluate(con, rows, lex, restoring, key2, leave)
     finally:
         con.close()
+    expected = after_count(base, res)
+    say("G1a builder chain's table")
+    if not restoring and n0 != expected:
+        check(False, f"abp_surface = {n0:,} rows — expect {base:,} (step 9 done, fill "
+                     f"not yet restored) or {expected:,} (already restored)")
+    say(f"   {'PASS' if restoring else 'NOTE'}  abp_surface = {n0:,} rows "
+        f"({'= the builder base' if restoring else '= the restored total: checking ALREADY'})")
     write_report(a.report, res)
 
     placed = [x for x in res if x["reason"] == 0]
     unplaced = [x for x in res if x["reason"]]
+    list_bad = [x for x in res if x["list_err"]]
+    undeclared = [x for x in unplaced if x["listed"] != "leave"]
     agreement = Counter(x["detail"] for x in placed)
     weak = [x for x in placed if x["detail"] == "agree-weak"]
     moved = [x for x in placed if x["new_pos"] != x["row"]["position"]]
@@ -334,30 +423,42 @@ def run(a, live=dr.LIVE):
         for x in moved[:200]:
             r = x["row"]
             say(f"    {r['book']} {r['chapter']}:{r['verse']} · {r['position']} → {x['new_pos']}")
+    if list_bad:
+        say(f"\nLISTED slots that do not resolve as listed ({len(list_bad):,}): verse · old pos · why")
+        for x in list_bad:
+            r = x["row"]
+            say(f"    {r['book']} {r['chapter']}:{r['verse']} · pos {r['position']} · {x['list_err']}")
 
+    n_key2 = sum(1 for x in placed if x["listed"] == "key2")
+    n_leave = sum(1 for x in unplaced if x["listed"] == "leave")
     say(f"\n  per-slot report: {real(a.report)} ({len(res):,} rows)")
     say("\nSUMMARY (expected | actual)")
     say(f"  snapshot rows             {N_ROWS:,} | {len(rows):,}   sha256 {hexd[:16]}…")
-    say(f"  table before              {ROWS_BASE:,} | {n0:,}")
+    say(f"  table before              {base:,} | {n0:,}")
     if diff is not None:
         say(f"  vs pre-fill copy          0 / 0 | {diff[0]:,} / {diff[1]:,}")
-    say(f"  placed                    {N_ROWS:,} | {len(placed):,}   (agree-strong "
-        f"{agreement.get('agree-strong', 0):,} · agree-weak {agreement.get('agree-weak', 0):,})")
-    say(f"  unplaced                  0 | {len(unplaced):,}   "
-        + " · ".join(f"r{n} {by_reason[n]:,}" for n in sorted(by_reason)))
+    say(f"  placed                    {N_ROWS - len(leave):,} | {len(placed):,}   (agree-strong "
+        f"{agreement.get('agree-strong', 0):,} · agree-weak {agreement.get('agree-weak', 0):,}"
+        + (f" · key-2 listed {n_key2:,})" if key2 or leave else ")"))
+    say(f"  unplaced                  {len(leave):,} | {len(unplaced):,}   "
+        + " · ".join(f"r{n} {by_reason[n]:,}" for n in sorted(by_reason))
+        + (f"   (leave-listed {n_leave:,})" if leave else ""))
+    if key2 or leave:
+        say(f"  listed slots not as listed 0 | {len(list_bad):,}")
     say(f"  placed inserts / updates  {N_INSERT:,} / {N_UPDATE:,} | {p_ins:,} / {p_upd:,}")
     say(f"  placed rows that moved    — | {len(moved):,}")
     say(f"  Lexicon witness (placed)  — | {dict(sorted(Counter(x['lex'] for x in placed).items()))}")
+    say(f"  G1 after-count            base {base:,} + inserts written {expected - base:,} = {expected:,}")
 
     if not restoring:
         missing = [x for x in placed if x["state"] != "already"]
-        ok = not unplaced and not missing
-        say(f"  already holding its form  {N_ROWS:,} | {len(placed) - len(missing):,}")
+        ok = not undeclared and not list_bad and not missing
+        say(f"  already holding its form  {len(placed):,} | {len(placed) - len(missing):,}")
         say("RESULT: " + ("ALREADY RESTORED — nothing to write" if ok else
                           "FAIL — table is at the restored total but not every slot holds its form"))
         return 0 if ok else 1
 
-    gates_ok = not unplaced and len(placed) == N_ROWS and (diff is None or diff == (0, 0))
+    gates_ok = not undeclared and not list_bad and (diff is None or diff == (0, 0))
     if not a.apply:
         say("RESULT: DRY RUN COMPLETE — nothing written to any database · "
             + ("every gate PASSES (an --apply would write)" if gates_ok else
@@ -366,11 +467,11 @@ def run(a, live=dr.LIVE):
     if not gates_ok:
         say("RESULT: STOPPED before any write — " +
             ("G1b builder table != pre-fill copy" if diff not in (None, (0, 0)) else
-             f"G2 {len(unplaced):,} slot(s) unplaced — G1 cannot reach {ROWS_AFTER:,}") +
-            " · nothing written")
+             f"G2 {len(undeclared):,} slot(s) unplaced and not leave-listed, {len(list_bad):,} "
+             f"listed slot(s) not as listed") + " · nothing written")
         return 1
-    n1 = apply(a.db, res)
-    say(f"  G1 table after            {ROWS_AFTER:,} | {n1:,}")
+    n1 = apply(a.db, res, base, expected)
+    say(f"  G1 table after            {expected:,} | {n1:,}")
     say("RESULT: RESTORED, ALL CHECKS PASS (on a copy)")
     return 0
 
@@ -383,7 +484,15 @@ def main(argv=None, live=dr.LIVE):
     ap.add_argument("--report", required=True)
     ap.add_argument("--prefill")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--base", type=int, default=None,
+                    help=f"the builder chain's table total the fill is laid on (G1a; default {ROWS_BASE:,})")
+    ap.add_argument("--key2-alone", metavar="TSV",
+                    help="declared reason-6 slots to place by key 2 alone (DESIGN 9.120)")
+    ap.add_argument("--leave-unplaced", metavar="TSV",
+                    help="declared slots to leave unplaced, each with its reason (DESIGN 9.120)")
     a = ap.parse_args(argv)
+    if a.base is None:
+        a.base = ROWS_BASE                 # read at call time, so a test's ROWS_BASE takes effect
     try:
         return run(a, live)
     except Stop as e:
