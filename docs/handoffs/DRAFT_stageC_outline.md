@@ -7434,7 +7434,8 @@ Log `~/edition_upgrade_runs/step9_dry_20261114.log`. built + src untouched (SAME
 5e9d4bb6… before = after; pre-fill copy present (442,687,488 B, 10/25 03:09Z). Copies 110,882,816 / 110,923,776 B.
 abp_surface before on built and src: 395,003, blanks 0, no-word-at-slot 0, the builder's own definition.
 - **Same-code control (src): 346,111 / 13,183 / 31,836 / 391,130** = the 10/25 figures; src → src-dry changed 538 /
-  added 0 / removed 3,873 (sha 9cbf2b18…; = the 4,411 fill coming out); pre-fill → src-dry **0** (G1b oracle holds).
+  added 0 / removed 3,873 (= the 4,411 fill coming out; full sha from the log line "differences: 4411 - …/step9_delta_src.tsv:
+  4411 lines + header, sha256 9cbf2b18766192df5fd578291e0ef02b746cab565fc4f9e26aa5bad5b355f7e4", recorded in full 11/14 for STEP9-DRY2); pre-fill → src-dry **0** (G1b oracle holds).
 - **Built: 346,113 / 13,181 / 31,684 / 390,978**; romanized 390,978; blanks 0; no-word-at-slot 0. built → built-dry:
   changed 538 / added 11 / removed 4,036 (4,585 + header, sha `dbfe1912a5ae039ccf7a5fc3f75c5a5bda2216abad7ea654abd4d19b2f499139`).
   src-dry → built-dry (the edition's effect on the chain): changed 4 / added 14 / removed 166 (184 + header, sha
@@ -7784,3 +7785,177 @@ mismatches 0). Recovered count + new chain total read from that run. Reviewer, t
 Before the commit, CC gave the three slot-shift rows their src positions in the note (gate 3 reads them; data unchanged):
 Gen 5:25 / 5:26 "built pos 1 <- src pos 2", Est 5:9 "built pos 12 <- src pos 2|13" (both src slots hold Αμάν, per the
 NAMESGAP log). Every one of the 160 slot notes now names a src position.
+
+## Respelling fix pushed — new code REF `32a39a10` (11/14); STEP9-DRY2 drafted
+
+`32a39a10` = backfill_pn_surface.py (pair_verse_listed + report) + scripts/pn_edition_spelling.tsv (149 rows / 160 slots;
+every slot note names its src position — the 3 shift rows were given theirs before the commit, data unchanged) +
+tests/test_pn_edition_spelling.py (32 checks) + the two test lists. Pre-commit: all checks passed. `scripts/` differ
+from 006e16ba only by these files; entity_resolution.py unchanged.
+
+**STEP9-DRY2** (`step9_dry2_20261114`, GATE REF 32a39a10): the STEP9-DRY chain, src's copy first, PN backfill now also
+writing `--dump-list`. Gates, each a STOP:
+- **1** src control = 346,111 / 13,183 / 31,836 / 391,130; plus src → src-dry = STEP9-DRY's delta exactly (sha 9cbf2b18…);
+- **2** pre-fill copy → src-dry: 0 differences (`--zero`);
+- **3** every slot the list filled on built-dry (from the dump: listed + "paired along") = src-dry's form at the src position
+  the list note names ("paired along" = its own position, unchanged); built-dry's row = the dump's form; figures read out:
+  filled / checked / mismatches / unchecked — must be checked = filled, 0, 0.
+Extra STOP (the list only adds): STEP9-DRY's built copy → this built copy must be ADDED rows only; that count = the
+recovered rows. Read: built's chain total (to declare), built → dry (what STEP9-APPLY writes), src-dry → built-dry.
+Disk: STOP if home is above 9.3 GB by `du` (the run adds about 0.25 GB). Both STEP9-DRY copies are kept (the old built
+copy is read).
+Local test (made-up dbs, a fake list committed in a throwaway clone): a respelled name (Isaac → "Isaak") refused without
+the list, filled by it, gate 3 "OK … checked 1 - mismatches 0", READ DONE; a list note pointing at the wrong src slot →
+"MISMATCH … src pos 0=Αβραάμ" → GATE 3 STOP; the real gate-1 figures on fake data → GATE 1 STOP.
+
+### Block STEP9-DRY2 (GATE REF 32a39a10; READ-ONLY on built, src, bh_scrape.db, the pre-fill copy and STEP9-DRY's built copy — writes only its run folder and two throwaway copies)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9_dry2_20261114.log
+if [ -e "$L" ]; then echo "STEP9-DRY2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=32a39a10
+echo "GATE REF ${REF} - STEP9-DRY2 rebuild-words step 9 re-run under the respelling fix (sec 9.117): the chain on THROWAWAY copies of src's and built's verses/words/lexicon/dotted_lexicon/abp_surface; gates (1) src control 391,130 (2) pre-fill -> src-dry 0 (3) every list-filled slot = src-dry's Greek at its matching slot - built, src, bh_scrape.db, the pre-fill copy read-only - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9-DRY2 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] && [ -f scripts/pn_edition_spelling.tsv ] || { echo "STEP9-DRY2 RESULT: STOP - PA has not pulled $REF (eu_step.py / pn_edition_spelling.tsv missing)"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+H=~/bible-db/bh_scrape.db
+PF=~/bible.db.pre-surface-fill-20261025
+LIST=scripts/pn_edition_spelling.tsv
+OLD=~/edition_upgrade_runs/step9_dry_20261114/dry.db
+D=~/edition_upgrade_runs/step9_dry2_20261114
+E="python3 scripts/eu_step.py"
+T=verses,words,lexicon,dotted_lexicon,abp_surface
+TAB=$'\t'
+RD="SELECT 'rows', count(*), 'blank form', sum(form IS NULL OR form = ''), 'blank translit', sum(translit IS NULL OR translit = '') FROM abp_surface; SELECT 'rows with no word at their slot', count(*) FROM abp_surface s WHERE NOT EXISTS (SELECT 1 FROM words w WHERE w.verse_id = s.verse_id AND w.position = s.position)"
+num() { sed -n "/$2/{s/.*: *//; s/,//g; s/[^0-9].*//; p; q}" "$1"; }
+dlt() { sed -n "/delta [0-9,]*/{s/.*delta \([0-9,]*\).*/\1/; s/,//g; p; q}" "$1"; }
+# the step-9 chain, rebuild-words.md step 9, in order, on ONE throwaway copy ($1); outputs kept in $2
+chain() {
+  local db=$1 o=$2 n1 n2 d2 n3 d3 a3 m3 nt nr
+  echo "--- 1/4 build_abp_surface (drops + re-creates abp_surface on the copy)"
+  python3 scripts/build_abp_surface.py "$db" --bh "$H" > "$o/1_build.out" 2>&1 || { cat "$o/1_build.out"; echo "chain: build_abp_surface failed"; return 1; }
+  sed -n '/form found\|shows a line\|books with no source\|Wrote/p' "$o/1_build.out"
+  n1=$(sed -n 's/.*Wrote \([0-9]*\) rows.*/\1/p' "$o/1_build.out"); [ -n "$n1" ] || { echo "chain: no Wrote line"; return 1; }
+  echo "--- 2/4 backfill_abp_surface --apply"
+  python3 scripts/backfill_abp_surface.py "$db" --bh "$H" --apply > "$o/2_backfill.out" 2>&1 || { cat "$o/2_backfill.out"; echo "chain: backfill_abp_surface failed"; return 1; }
+  sed -n '/existing rows\|NEW rows\|same-as-dictionary\|ambiguity\|Wrote/p' "$o/2_backfill.out"
+  n2=$(num "$o/2_backfill.out" "NEW rows to add"); d2=$(dlt "$o/2_backfill.out")
+  [ -n "$n2" ] && [ "$n2" = "$d2" ] || { echo "chain: backfill NEW ($n2) != rows written ($d2)"; return 1; }
+  echo "--- 3/4 backfill_pn_surface --apply (respelling list $LIST; refused slots -> $o/pn_refused.tsv; list use -> $o/pn_list.tsv)"
+  python3 scripts/backfill_pn_surface.py "$db" --bh "$H" --apply --dump-refused "$o/pn_refused.tsv" --dump-list "$o/pn_list.tsv" > "$o/3_pn.out" 2>&1 || { cat "$o/3_pn.out"; echo "chain: backfill_pn_surface failed"; return 1; }
+  sed -n '1,/coverage by book/p' "$o/3_pn.out" | sed '/coverage by book/d'; sed -n '/refused-slot dump\|respelling-list dump\|Wrote/p' "$o/3_pn.out"
+  n3=$(num "$o/3_pn.out" "NEW rows to add"); d3=$(dlt "$o/3_pn.out")
+  [ -n "$n3" ] && [ "$n3" = "$d3" ] || { echo "chain: PN backfill NEW ($n3) != rows written ($d3)"; return 1; }
+  a3=$(sed -n '/arithmetic:/{s/.*= *//; s/ .*//; s/,//g; p; q}' "$o/3_pn.out"); m3=$(sed -n '/arithmetic:/{s/.*must equal *//; s/[^0-9,].*//; s/,//g; p; q}' "$o/3_pn.out")
+  [ -n "$a3" ] && [ "$a3" = "$m3" ] || { echo "chain: PN arithmetic $a3 != $m3"; return 1; }
+  echo "--- 4/4 build_abp_translit"
+  python3 scripts/build_abp_translit.py "$db" > "$o/4_translit.out" 2>&1 || { cat "$o/4_translit.out"; echo "chain: build_abp_translit failed"; return 1; }
+  cat "$o/4_translit.out"
+  nt=$(sed -n 's/^Filled \([0-9]*\).*/\1/p' "$o/4_translit.out")
+  nr=$(sqlite3 -readonly "$db" "SELECT count(*) FROM abp_surface") || { echo "chain: count failed"; return 1; }
+  echo "chain total: builder $n1 + backfill $n2 + PN backfill $n3 = $((n1 + n2 + n3)); table now $nr; romanized $nt"
+  [ "$nr" = "$((n1 + n2 + n3))" ] || { echo "chain: table count is not the sum of the three passes"; return 1; }
+  echo "$n1 $n2 $n3 $nr $nt" > "$o/figures.txt"
+}
+# --- guards (read-only) ---
+git diff --quiet "$REF" HEAD -- entity_resolution.py || { echo "STEP9-DRY2 RESULT: STOP - entity_resolution.py (imported by the PN backfill) differs from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- entity_resolution.py)" ] || { echo "STEP9-DRY2 RESULT: STOP - entity_resolution.py has uncommitted edits on PA"; exit 1; }
+echo "entity_resolution.py (imported by the PN backfill) = $REF, unedited: OK"
+dk=$(du -sk ~ 2>/dev/null | cut -f1); echo "home in use: $dk KB (the dashboard quota is 10 GB; this run adds about 0.25 GB - two copies like STEP9-DRY's 110 MB + two before.db of 18 MB)"
+[ -n "$dk" ] && [ "$dk" -le 9300000 ] || { echo "STEP9-DRY2 RESULT: STOP - home is above 9.3 GB (or du failed) - free space first; nothing made"; exit 1; }
+$E pre --tag STEP9B --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9-DRY2 RESULT: STOP - pre (line above); nothing made"; exit 1; }
+[ -s "$H" ] || { echo "STEP9-DRY2 RESULT: STOP - $H missing or empty"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP9-DRY2 RESULT: STOP - a -journal sits beside $H"; exit 1; }
+[ -s "$PF" ] || { echo "STEP9-DRY2 RESULT: STOP - the pre-fill copy $PF is missing (gate 2 needs it)"; exit 1; }
+[ -s "$OLD" ] || { echo "STEP9-DRY2 RESULT: STOP - STEP9-DRY's built copy $OLD is missing (the recovered-rows delta needs it)"; exit 1; }
+H0=$(sha256sum < "$H" | cut -d' ' -f1); echo "bh_scrape.db (read-only): $(stat -c %s "$H") bytes, sha256 $H0 (STEP9-DRY read 5e9d4bb6...)"
+echo "respelling list $LIST: $(sed -n '/^[A-Z0-9]/p' "$LIST" | wc -l) rows (the header starts lowercase and is not counted), sha256 $(sha256sum < "$LIST" | cut -d' ' -f1)"
+mkdir "$D/built_run" "$D/src" "$D/src_run" || { echo "STEP9-DRY2 RESULT: STOP - cannot make the sub-folders"; exit 1; }
+# --- src's copy first: gates 1 and 2 ---
+$E prep --tag STEP9B --built "$S" --dir "$D/src" --copy "$T" --save abp_surface || { echo "STEP9-DRY2 RESULT: STOP - prep of src's copy (line above); src untouched"; exit 1; }
+echo "=== DRY B: the chain on the throwaway copy of SRC ($D/src/dry.db) - the same-code control ==="
+chain "$D/src/dry.db" "$D/src_run" || { echo "STEP9-DRY2 RESULT: STOP - the chain on src's copy stopped (above); src untouched"; exit 1; }
+read -r b1 b2 b3 br bt < "$D/src_run/figures.txt"
+echo "GATE 1 - src control: builder $b1 / backfill $b2 / PN backfill $b3 / total $br (must be 346111 / 13183 / 31836 / 391130)"
+[ "$b1 $b2 $b3 $br" = "346111 13183 31836 391130" ] || { echo "STEP9-DRY2 RESULT: STOP - GATE 1 - the src control moved: the respelling list changed the same-code result"; exit 1; }
+echo "GATE 2 - pre-fill copy -> src-dry (must be 0 differences):"
+$E delta --tag STEP9B --a "$PF" --b "$D/src/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_prefill_srcdry.tsv" --show 20 --zero || { echo "STEP9-DRY2 RESULT: STOP - GATE 2 - src-dry is not the pre-fill table (line above)"; exit 1; }
+echo "src -> src-dry (must be STEP9-DRY's delta exactly: 4,411 lines, sha 9cbf2b18...):"
+$E delta --tag STEP9B --a "$S" --b "$D/src/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_src.tsv" --show 5 --expect-sha 9cbf2b18766192df5fd578291e0ef02b746cab565fc4f9e26aa5bad5b355f7e4 || { echo "STEP9-DRY2 RESULT: STOP - src -> src-dry is not STEP9-DRY's delta (line above)"; exit 1; }
+# --- built's copy ---
+$E prep --tag STEP9B --built "$B" --dir "$D" --copy "$T" --save abp_surface || { echo "STEP9-DRY2 RESULT: STOP - prep of built's copy (line above); built untouched"; exit 1; }
+echo "=== DRY A: the chain on the throwaway copy of BUILT ($D/dry.db) ==="
+chain "$D/dry.db" "$D/built_run" || { echo "STEP9-DRY2 RESULT: STOP - the chain on built's copy stopped (above); built untouched"; exit 1; }
+read -r a1 a2 a3 ar at < "$D/built_run/figures.txt"
+echo "built: builder $a1 / backfill $a2 / PN backfill $a3 / total $ar (STEP9-DRY without the list: 346113 / 13181 / 31684 / 390978)"
+for f in "$D/dry.db" "$D/src/dry.db"; do echo "--- abp_surface on $f after the chain"; sqlite3 -readonly "$f" "$RD" || { echo "STEP9-DRY2 RESULT: STOP - read failed on $f"; exit 1; }; done
+# --- GATE 3: every slot the list filled on built-dry = src-dry's form at its matching slot ---
+echo "=== GATE 3 - list-filled slots vs src-dry ==="
+LP=$D/built_run/pn_list.tsv
+[ -f "$LP" ] || { echo "STEP9-DRY2 RESULT: STOP - GATE 3 - no list dump at $LP"; exit 1; }
+# the list notes -> (book ch vs built_pos) -> src position(s) "M" or "M|K"
+sed -n '/^[A-Z0-9][A-Za-z0-9]*\t[0-9]/p' "$LIST" | awk -F'\t' -v OFS='\t' '{n = split($6, part, "; "); for (i = 1; i <= n; i++) if (part[i] ~ /^built pos [0-9]+ <- src pos [0-9|]+ /) {split(part[i], w, " "); print $1, $2, $3, w[3], w[7]}}' > "$D/list_slots.tsv"
+echo "list slot notes: $(wc -l < "$D/list_slots.tsv") (expect 160)"
+awk -F'\t' '$1 == "paired" || $1 == "paired along"' "$LP" > "$D/filled.tsv"
+nf=$(wc -l < "$D/filled.tsv"); echo "slots filled via the list on built-dry: $nf ($(awk -F'\t' '$1 == "paired"' "$D/filled.tsv" | wc -l) listed + $(awk -F'\t' '$1 == "paired along"' "$D/filled.tsv" | wc -l) paired along)"
+V=$(cut -f2-4 "$D/filled.tsv" | sort -u | awk -F'\t' '{printf "%s(v.book = '"'"'%s'"'"' AND v.chapter = %s AND v.verse = %s)", (NR > 1 ? " OR " : ""), $1, $2, $3}')
+[ -n "$V" ] || { echo "STEP9-DRY2 RESULT: STOP - GATE 3 - the list filled no slot at all"; exit 1; }
+FQ="SELECT v.book, v.chapter, v.verse, s.position, s.form FROM abp_surface s JOIN verses v ON v.id = s.verse_id WHERE $V"
+sqlite3 -readonly -separator "$TAB" "$D/src/dry.db" "$FQ" > "$D/src_forms.tsv" || { echo "STEP9-DRY2 RESULT: STOP - GATE 3 - read failed on src-dry"; exit 1; }
+sqlite3 -readonly -separator "$TAB" "$D/dry.db" "$FQ" > "$D/built_forms.tsv" || { echo "STEP9-DRY2 RESULT: STOP - GATE 3 - read failed on built-dry"; exit 1; }
+# files: list_slots, src_forms, built_forms, filled -> one line per filled slot; a listed slot uses its note's src position(s),
+# a 'paired along' slot (same token, not listed) its own position
+awk -F'\t' -v FIG="$D/gate3_figures.txt" '
+  FNR == 1 {f++}
+  f == 1 {sp[$1 FS $2 FS $3 FS $4] = $5; next}
+  f == 2 {sf[$1 FS $2 FS $3 FS $4] = $5; next}
+  f == 3 {bf[$1 FS $2 FS $3 FS $4] = $5; next}
+  f == 4 {k = $2 FS $3 FS $4 FS $5
+          if ($1 == "paired") {p = (k in sp) ? sp[k] : ""} else {p = $5}
+          if (p == "") {print "UNCHECKED | " $1 " | " $2 " " $3 ":" $4 " pos " $5 " | " $8 " | the list note names no src position"; nu++; next}
+          n = split(p, ps, "|"); srcf = ""; ok = 0
+          for (i = 1; i <= n; i++) {x = $2 FS $3 FS $4 FS ps[i]; srcf = srcf (i > 1 ? " / " : "") ps[i] "=" ((x in sf) ? sf[x] : "(none)"); if ((x in sf) && sf[x] == $8) ok = 1}
+          b = (k in bf) ? bf[k] : "(none)"
+          if (b != $8) ok = 0
+          print (ok ? "OK" : "MISMATCH") " | " $1 " | " $2 " " $3 ":" $4 " pos " $5 " | built " b " | src pos " srcf " | " $6 " <- " $7
+          nc++; if (ok == 0) nm++}
+  END {printf "GATE 3 figures: checked %d - mismatches %d - unchecked %d\n", nc + 0, nm + 0, nu + 0 > FIG}' \
+  "$D/list_slots.tsv" "$D/src_forms.tsv" "$D/built_forms.tsv" "$D/filled.tsv" > "$D/gate3.tsv"
+sed 's/^/  /' "$D/gate3.tsv"
+cat "$D/gate3_figures.txt"
+read -r _g _3 _f _c nc _m _x nm _u _y nu < "$D/gate3_figures.txt"
+echo "GATE 3 - filled via the list $nf, checked $nc, mismatches $nm, unchecked $nu (must be: checked = filled, mismatches 0, unchecked 0)"
+[ "$nc" = "$nf" ] && [ "$nm" = 0 ] && [ "$nu" = 0 ] || { echo "STEP9-DRY2 RESULT: STOP - GATE 3 - a list-filled slot does not carry src-dry's Greek (lines above); built untouched"; exit 1; }
+# --- deltas (read) ---
+echo "=== DELTAS (abp_surface, key verse_id+position; every row in the file, first 20 printed) ==="
+echo "STEP9-DRY's built copy (no list) -> this built copy: the list's only effect - must be ADDED rows only (changed 0, removed 0)"
+$E delta --tag STEP9B --a "$OLD" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_old_new_built.tsv" --show 20 || { echo "STEP9-DRY2 RESULT: STOP - delta old -> new built copy (line above)"; exit 1; }
+ch=$(awk -F'\t' 'NR > 1 && $2 != "ADDED"' "$D/step9_delta_old_new_built.tsv" | wc -l); ad=$(awk -F'\t' 'NR > 1 && $2 == "ADDED"' "$D/step9_delta_old_new_built.tsv" | wc -l)
+echo "recovered rows (added over STEP9-DRY's built copy): $ad - changed or removed: $ch (must be 0)"
+[ "$ch" = 0 ] || { echo "STEP9-DRY2 RESULT: STOP - the list changed or removed a row it should only add"; exit 1; }
+echo "built -> its dry copy: what STEP9-APPLY would write (read)"
+$E delta --tag STEP9B --a "$B" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_built.tsv" --show 20 || { echo "STEP9-DRY2 RESULT: STOP - delta built -> dry (line above); built untouched"; exit 1; }
+echo "src-dry -> built-dry: the edition's effect on the chain, after the fix (read; STEP9-DRY: 184 = 4 / 14 / 166)"
+$E delta --tag STEP9B --a "$D/src/dry.db" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/step9_delta_srcdry_builtdry.tsv" --show 20 || { echo "STEP9-DRY2 RESULT: STOP - delta src dry -> built dry (line above)"; exit 1; }
+# --- after: everything read-only stayed as it was ---
+H1=$(sha256sum < "$H" | cut -d' ' -f1); echo "bh_scrape.db after: sha256 $H1 - unchanged: $([ "$H1" = "$H0" ] && echo yes || echo NO)"
+[ "$H1" = "$H0" ] || { echo "STEP9-DRY2 RESULT: STOP - bh_scrape.db changed during the run - report this, do not re-run"; exit 1; }
+[ -e "$H-journal" ] && { echo "STEP9-DRY2 RESULT: STOP - a -journal now sits beside $H"; exit 1; }
+$E same --tag STEP9B --built "$B" --dir "$D" || { echo "STEP9-DRY2 RESULT: STOP - built differs from its prep state (lines above)"; exit 1; }
+$E same --tag STEP9B --built "$S" --dir "$D/src" || { echo "STEP9-DRY2 RESULT: STOP - src differs from its prep state (lines above)"; exit 1; }
+echo "copies: $D/dry.db $(stat -c %s "$D/dry.db") bytes, $D/src/dry.db $(stat -c %s "$D/src/dry.db") bytes"
+echo "STEP9-DRY2 RESULT: READ DONE - gates 1, 2, 3 passed; built + src untouched; built's chain total $ar (builder $a1 / backfill $a2 / PN $a3), recovered $ad rows over STEP9-DRY; the deltas above are what STEP9-APPLY declares"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9-DRY2 reviewed (11/14) — REVIEW: ESCALATE (untraced sha + two STOPs beyond §9.117); mechanics clean
+Verdict line verbatim: "REVIEW: ESCALATE - the full 64-character sha in gate 1 cannot be traced (the repo records only the prefix 9cbf2b18…), and two of the STOPs go beyond what §9.117 ruled. The mechanics check out."
+- The sha: CC traced it to the STEP9-DRY log as pasted 11/14 ("differences: 4411 - …/step9_delta_src.tsv: 4411 lines + header,
+  sha256 9cbf2b18766192df5fd578291e0ef02b746cab565fc4f9e26aa5bad5b355f7e4") and recorded it in full in the STEP9-DRY receipt.
+- Two STOPs beyond the ruling, for the ruling chat to adopt or drop: (a) src → src-dry delta = STEP9-DRY's exactly (sha above);
+  (b) STEP9-DRY's built copy → this built copy = ADDED rows only (the list may only add). Both run after their gates and can
+  only stop a run, never pass a bad one.
+- Cosmetic: the list row-count label no longer says "incl. header" (the header is not counted). No other change.
