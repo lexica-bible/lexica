@@ -7548,3 +7548,21 @@ echo "STEP9-MEMBERS RESULT: READ DONE - $(wc -l < "$D/members_184.tsv") members 
 
 Verdict line verbatim: "REVIEW: CLEAR - read-only block. The dry copies are opened only by `sqlite3 -readonly` and by eu_step `pre`'s read-only opener. Built and src are never opened. All output goes to a new run folder, which `pre` refuses to make if it already exists, and to a new log behind the log-exists guard. Every parse matches the code that wrote its input, and one full pass found no tripwire."
 Reviewer notes (not blockers): assumes no `~/.sqliterc` header setting (as earlier blocks); "name slot" = is_pn printed exactly 1.
+
+### STEP9-MEMBERS ran (11/14, 19:18 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step9_members_20261114.log`; list `step9_members_20261114/members_184.tsv`. Delta file
+185 lines / 0498d40f…; copies 390,978 / 391,130, unchanged. 184 = ADDED 14 / CHANGED 4 / REMOVED 166 over 158 verses.
+By class: REMOVED name slot with a built refusal there 160 (no-match 127 / bridge-fail 30 / ambiguous 3; src refusal
+none); REMOVED not a name slot 6; ADDED name slot 12 (src refusal there: bridge-ambiguous 3, bridge-fail 3, no-match 3,
+blank-label 1, none 2); ADDED not a name slot 2; CHANGED 4 (1 name slot, 3 not). 152/152 from the files: refusals
+794 − 642, NEW 31,836 − 31,684, table 391,130 − 390,978; name slots 32,478 both; NEW + refused 32,478 both; non-name
+rows 359,294 both.
+
+### Ruling (11/14, §9.114)
+Read from the list (ruling chat, no cause asserted): at the 160 removed name slots the built English differs from
+src's at the same slot (Jabesh/Jabish, Joram/Jehoram, Mathusala/Methuselah, Gergasite/Gergesite, Silvanus/Silas,
+Aeneas/Eneas …) and the built refusal label is the built spelling; the other 24 are slot shifts within their verse
+(Jos 2:4 19/20, Jdg 11:7 6/7, Rom 9:29 17/18, Gen 34:4 1/2, 2Ki 23:35 6/7 …). **STEP9-APPLY held pending JP's
+decision on the 160** (apply now as a recorded known regression, or fix the name-slot matching first). Nothing more
+to draft on step 9 until then. The §9.112 9a/9b/9c code-change proposal may proceed meanwhile.
