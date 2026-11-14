@@ -7714,3 +7714,63 @@ the planted missing form shows its src slot and label, then built's refusal line
 Verdict line verbatim: "REVIEW: CLEAR - STEP9-NAMESGAP v2: still read-only and the guards are unchanged; the only change is extra output, and the new label matches the backfill script's own."
 Notes: the section echo (not the GATE REF line) describes the new src-slot lines; run it BEFORE PA pulls the
 respelling REF. The rebuilt list + code go to the ruling chat afterwards, with findings (b2) and (c) open there.
+
+### STEP9-NAMESGAP ran (11/14, 21:49 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step9_namesgap_20261114.log`; `forms_diff.tsv` in its run folder. Dry copies unchanged.
+Name-slot rows 31,836 / 31,684; forms built lacks **163 in 144 verses**, extra 11 (Καϊν ×2, Αχιτόφελ ×2, Ρουβήν,
+Συμεών, Ιεζάβελ, Εβραίος, Ιωακείμ, Βηθανία, Ιησούν — names built now matches that src refused); 163 − 11 = 152.
+Each missing form shown with src's keyed slot label(s) and built's refusal lines.
+
+### Ruling (11/14, §9.116)
+Three shapes read from the list (no cause asserted): (1) spelling variants (the bulk); (2) tokenization/possessive —
+Act 27:17 syrtis/gulf, Est 5:9 haman/hamans, Gen 38:1 adullam/adullamite, Neh 2:19 arab/arabian, Jos 9:7
+hivites/hivite; (3) a different English word — Num 36:5 israel/joseph, 2Ki 9:31 omri/zimri, Eze 27:13 greek/greece,
+Luk 3:33 perez/phares, Mar 14:67 nazarene/nazareth (CC's 8-row Greek check noted). Slot shifts: Gen 5:25/5:26,
+Deu 2:13, Est 5:9. **Ruling:** rebuild the list from this log (per verse, new label → src label, used only on a
+refusal); mark shape 2 / shape 3 rows; say from the code whether a verse-scoped pair covers the slot shifts; tests as
+ruled + one shape-2 + one shape-3; reviewer; ruling; push → new REF; STEP9-DRY re-run — the recovered count is READ,
+not forecast.
+
+## Name-respelling fix — proposal v2 (11/14, list rebuilt from STEP9-NAMESGAP; code still uncommitted)
+
+**List rebuilt** (`scripts/pn_edition_spelling.tsv`, **149 rows covering 160 slots**), from the NAMESGAP MISSING section:
+per verse, each built refusal paired with the src slot holding the missing form — same position first, else (slot
+shift) the verse's remaining missing slot, whose src tokens must agree. Old token = `_name_token` of src's keyed label
+(`COALESCE(english_head, english)`), never the displayed English. 163 missing = 160 listed slots + 3 same-token slots
+(Num 26:39 Shupham, Shuphamites; Num 36:5 Israel) that resolve when their partners rejoin; 1 built refusal paired with
+nothing (2Ki 22:1 pos 3 josiah — refused on src too; not a missing form). Against v1 (146 rows, from `english`): every
+v1 pair confirmed by src's keyed label; **+3 rows** — the slot shifts Gen 5:25, Gen 5:26 (mathusala → methuselah,
+built pos 1 ← src pos 2) and Est 5:9 (hamans → haman, built pos 12 ← src pos 2/13); Neh 3:14's old token is now src's
+label `bethheccerem` (v1 had `beth-heccerem`; same key once hyphens drop). Notes mark the 5 shape-2 and 5 shape-3 rows
+and every slot shift, and give each slot's built pos ← src pos.
+**Slot shifts — covered by the verse-scoped pair, from what the code does:** `pair_verse` groups a verse's slots by
+token and pairs a token's slots with that token's scrape rows in printed order — position is never compared with the
+src side. The list only changes the refused slot's token, so a name that moved within its verse pairs exactly as it
+would at its old position. Deu 2:13: built already has one Ζαρέδ (count 1 of 2); its refused slot gets `zered → zared`; the scrape's
+zared rows both carry Ζαρέδ, so whichever way the group forms, the form is the same (the no-change guard keeps the
+slot already paired). Tested: S2 (refused slot at another position than
+its direct twin), S4 (Gen 5:25 shape, name only in a glued cell → the bridge path with the old token).
+**Tests** (32 checks, all pass): the three ruled cases; shape 2 (possessive "Haman's" in a shifted slot → Αμάν, the
+direct Haman slot unchanged); shape 3 (Joseph takes the row the old edition labelled Israel, Israel its own, in order);
+the bridge path (S4); plus the v1 cases. The existing `test_pn_surface_backfill.py` passes unchanged.
+Recovered count on the real data: read from the STEP9-DRY re-run, not forecast.
+
+### Respelling proposal v2 reviewed (11/14) — no defect found; findings to the ruling chat (no CLEAR: builder change, §9.90)
+Reviewer findings, with CC's answers:
+1. Rows checkable from the repo only in part (the per-row MISSING lines are in the ruling chat's paste): the +3 rows, Neh 3:14,
+   and the per-slot notes confirmed. **Deu 2:13:** the ruling lists it as a slot shift; the list note reads "built pos 15 ← src
+   pos 15" (no shift) — CC: from the log it is not a shift. src had Ζαρέδ at pos 10 and 15, built has one Ζαρέδ already and refuses
+   pos 15 only; the shift was a count (2 vs 1), not a moved slot. For the ruling chat to state which stands.
+2. **"pairs exactly as at its old position" is too strong** — CC: agreed, withdrawn. `_resolve` pairs a group's slots with its
+   forms in position order; if two refused slots enter a group with DIFFERENT forms and one has moved, the order could swap them,
+   and the no-change guard (first-pass pairings only) would not see it. Checked against the list: every multi-slot group is
+   either one Greek form throughout (the jabish/jehoram/anakim groups: Ιαβής/Ιαβίς, Ιωράμ, Ενακίμ) or keeps its positions
+   (Num 26:39 1/6 Σωφάν/Οφάμ, Num 36:5 5/13 Ισραήλ/Ιωσήφ, built pos = src pos); Gen 4:18's two slots take two different old
+   tokens (two one-slot groups); the shifted slots (Gen 5:25/26 bridge, single slot; Est 5:9 one form) cannot swap. **To
+   prove it on the data instead of arguing it:** the STEP9-DRY re-run will compare EVERY slot the list paired (its
+   `--dump-list` line) with src-dry's form at the src slot the list note names — any difference = STOP, not a read.
+3. Shape marking matches the ruling's lists (2Ch 14:9 zerah/zarai correctly left with the spelling variants).
+4. S2, S3, S4 exercise what they claim; each refused in the empty-list baseline.
+5. (b2) and (c): covered by the per-slot check above (it reads every shape-2/3 row too) and the src control as a hard
+   condition (391,130; pre-fill → src-dry 0).
