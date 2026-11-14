@@ -8218,3 +8218,54 @@ CC closed it: the STEP9-DRY2 log prints "bh_scrape.db (read-only): 55865344 byte
 the STEP9-DRY2 receipt above now carries it in full. Every other declared figure and sha traced by the reviewer to the receipt.
 Noted by the reviewer: on a mismatch `check` writes `step9_dry2_20261114/check_delta_abp_surface.tsv` (a new file, never an overwrite).
 Goes to the ruling chat for the write gate (§9.119 ruling 1).
+
+### 9a/9b/9c proposal reviewed (11/14) — REVIEW: ESCALATE (design change, §9.90/§9.112); four gaps → proposal v2
+Verdict line verbatim: "REVIEW: ESCALATE - this is a design change to builders and gates (out of reviewer scope under sec 9.90 / sec 9.112), so it goes to the ruling chat. Most claims about current behaviour check out against the code, but there are four gaps the proposal needs to close before code is written (F1-F4 below)."
+Current-behaviour claims confirmed (constants, :222, decide :202-221 → reason 6 always has one key-2 slot, G0 reads only
+abp_surface from the pre-fill side — it reads verses and the CSV from the src side). Arithmetic 395,014 correct with no leave-list
+inserts. 9c before-side: a diff against src WOULD mix edition moves into the fill (G0 diffs whole slot rows).
+
+## 9a / 9b / 9c proposal v2 (11/14, CC) — closes F1-F4; still design only
+
+- **F4 — one code REF, as §9.112 says.** The split is withdrawn. The re-freeze code can be written and tested now: the restore's
+  `--report` already carries every column it needs (`write_report` :182-193: book, chapter, verse, old/new position, action, cls,
+  form, result, reason, lexicon). All of 9a, 9b and 9c's code lands in one REF before 9a is drafted.
+- **F1 — the "already restored" path.** The restore no longer decides restoring vs already-restored from a fixed total. It runs the
+  re-key first, then: written set W = placed slots + key-2-listed slots (leave-listed slots are never written); expected after =
+  `--base` + the inserts in W. Table = base → restoring; table = expected after AND every slot in W already holds its form →
+  ALREADY RESTORED (no write); anything else → STOP. With no lists and the default base this gives 391,130 + 3,873 = 395,003 —
+  today's behaviour exactly. The write-time recheck (:222) and G1 (:243) use base and expected-after.
+- **F2a — key-2-alone slots get the same checks as normal ones.** A listed reason-6 slot is treated as placed at its key-2 slot and
+  then runs the SAME update/insert preconditions (reasons 3/4) and the SAME Analytical-Lexicon check (:162-176). A slot whose class is
+  not a Lexicon class has no second witness today either; the 9a dry run's member list will show every reason-6 slot's class and
+  lexicon result, so the ruling sees which key-2-alone slots rest on key 2 alone with no witness.
+- **F2b — the write covers only W.** apply() writes placed + key-2-listed slots and skips leave-listed ones explicitly (today it
+  would STOP on their empty new position, :228 — safe, but now stated and tested).
+- **F2c — the leave list re-checks its reason.** Each leave line carries the reason the dry run reported; at apply time the slot
+  must still be unplaced with that same reason, else STOP — as strict as the key-2 list.
+- **Changed-English verses** (charter §4.9: a reason-6 slot outside a changed verse is a real miss): not enforced in code; the
+  ruling on the dry run's member list is where it is checked. Stated so the ruling can accept or reject that.
+- **F3 — the 9c inputs, named:**
+  - **Pre-fill side:** the 9a APPLY block makes it, with `eu_step prep --save abp_surface` before its write →
+    `~/edition_upgrade_runs/step9a_apply_<date>/before.db` = built's abp_surface after step 9 and before 9a. (Not
+    `step9_dry2_20261114/before.db`, which is built BEFORE step 9.) → **For a ruling:** charter §6 9c's "before side = `<src>`"
+    amended to this named copy.
+  - **`snapshot_surface_fill.py --from-restore REPORT`** (the 9a APPLY report): replaces `--csv` (then not required) and G0's CSV
+    match. G0 = the diff (built after 9a minus the pre-fill side) is exactly the report's written set W at its NEW positions, form
+    for form; insert/update counts from the report; action and cls for each snapshot row from the report (today from the CSV via
+    g0's `writes`); verse names (`vold`) from the src side's verses, as today; old form/translit of updates from the pre-fill side,
+    as today. The row-count check (:282-283, N_ROWS 4,411) becomes "= the report's |W|" under `--from-restore`.
+  - **Step 1a `--check` after the re-freeze:** the same three inputs, pinned — the new frozen TSV (sha in the restore), the 9a report
+    committed beside it with its own `.sha256`, and the pre-fill table kept on PA like today's `~/bible.db.pre-surface-fill-20261025`.
+    `--check --from-restore <pinned report>` re-derives the rows from a fresh copy of live and must match byte for byte, so future
+    same-code /rebuild-words step 1a still passes. rebuild-words.md 1a and 9a commands updated in the same 9c commit.
+  - **Counts re-pinned in the 9c commit:** restore N_ROWS / N_INSERT / N_UPDATE (the new file's), its SNAPSHOT_SHA256, its default
+    base (391,141); `dryrun_rekey_fill` keeps 3,873 / 538 / EXPECT_DIFF 4,411 / 538 for the 10/25 files (they describe those files);
+    the `--from-restore` path takes its counts from the report, never from those constants. §9.87 punct file re-frozen at 607 in the
+    same commit. Health floor at the swap commit.
+- **Tests added for v2:** already-restored with lists (after = base + W's inserts); key-2-alone slot failing the lexicon / precondition
+  → STOP; leave slot whose reason changed → STOP; leave slot never written; `--from-restore` G0 matches only W at new positions
+  (a moved, unlisted, or extra row → STOP); `--check --from-restore` byte-for-byte; every default path = today's.
+
+**Rulings asked:** (a) one REF (F4) — CC now follows §9.112 as written; (b) charter §6 9c "before side" → the named step-9a copy;
+(c) the changed-English-verse test left to the ruling on the member list, not code; (d) go-ahead to write the code to v2.
