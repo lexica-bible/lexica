@@ -7811,7 +7811,7 @@ the list, filled by it, gate 3 "OK … checked 1 - mismatches 0", READ DONE; a l
 ### Block STEP9-DRY2 (GATE REF 32a39a10; READ-ONLY on built, src, bh_scrape.db, the pre-fill copy and STEP9-DRY's built copy — writes only its run folder and two throwaway copies)
 ```bash
 set +H
-L=~/edition_upgrade_runs/step9_dry2_20261114.log
+L=~/edition_upgrade_runs/step9_dry2_run2_20261114.log
 if [ -e "$L" ]; then echo "STEP9-DRY2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
 ( set -uo pipefail
 REF=32a39a10
@@ -7959,3 +7959,17 @@ Verdict line verbatim: "REVIEW: ESCALATE - the full 64-character sha in gate 1 c
   (b) STEP9-DRY's built copy → this built copy = ADDED rows only (the list may only add). Both run after their gates and can
   only stop a run, never pass a bad one.
 - Cosmetic: the list row-count label no longer says "incl. header" (the header is not counted). No other change.
+
+### Ruling (11/14, §9.118) — the two extra STOPs adopted; STEP9-DRY2 cleared; the stray first paste
+Both extra STOPs adopted: (a) src → src-dry = STEP9-DRY's src delta exactly (sha 9cbf2b18…); (b) STEP9-DRY's built copy →
+this built copy = ADDED rows only, its count = the recovered figure. **STEP9-DRY2 cleared as drafted.** Event: JP pasted it
+at 22:35Z before the clearance and before `git pull`; it stopped at its own first guard ("PA has not pulled 32a39a10"),
+exit 1, before `pre` — nothing made except `~/edition_upgrade_runs/step9_dry2_20261114.log` holding that STOP.
+CC's choice for the stray log: **leave it where it is (kept as the record of that stop) and point the re-run at a new log
+name** — the only change to the block is `L=~/edition_upgrade_runs/step9_dry2_run2_20261114.log`; the run folder
+`step9_dry2_20261114` was never made, so it stays. Then JP: `git pull` in ~/bible-db, confirm HEAD = 32a39a10 or later,
+paste the re-run.
+
+### STEP9-DRY2 (log renamed) reviewed (11/14) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - the block is read-only and re-runs the gates ruled in §9.117, with the two extra STOPs adopted in §9.118. It changed in only the two lines you named, and the new log name collides with nothing the block or eu_step pre checks."
+PA pulled to a9674438 (contains 32a39a10; later commits docs only) — JP's paste 11/14.
