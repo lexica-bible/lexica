@@ -17,7 +17,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 - **Step 10 CLOSED "unchanged"** (§9.108: IDENTICAL, no paste).
 - **Step 12a APPLIED on built and CLOSED** (§9.109 + closing, 11/9 03:05Z): dotted_lexicon re-created, 3,627 rows = src.
 - **Step 12b APPLIED on built and CLOSED** (§9.110, 11/14 01:45Z): word_gloss 17,650 = 17,568 + 82 proper-noun
-  glosses live already lacked (in live's words, never glossed; note on live, no action). **Next: step 12c**, then 9 → 9a → 9b → 9c.
+  glosses live already lacked (in live's words, never glossed; note on live, no action).
+- **Step 12c: +962 accepted** (§9.111, 11/14): person links live's own entity tables already produce but live's table
+  never received (note on live, no action). **STEP12C-APPLY drafted**, awaiting the ruling chat's write gate; then 9 → 9a → 9b → 9c.
 
 ## State (11/8, end)
 - **Built** `~/bible-db/bible_edupg_test_built_20261102.db` = **8b.0 + REKEY + 8b.1 + §9.96 restore + 8b.2 + 8b.2a +

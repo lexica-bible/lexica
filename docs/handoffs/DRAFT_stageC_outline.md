@@ -7011,3 +7011,147 @@ Verdict line verbatim: "REVIEW: CLEAR - STEP12C-MEMBERS (ruling chat 11/14 items
 Reviewer checked the file:line cites (all match). It could not open the commit cites; CC confirmed each with
 `git log -1` on this checkout (a25d286c 7/05, 1ad10cec 11/07, 00a1238e 7/05, 7e465865 7/30, b5b17bb0 7/05).
 Goes straight to PA (read-only).
+
+### STEP12C-MEMBERS ran (11/14, 02:33 UTC, PA HEAD b3178672, REF 006e16ba) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step12c_members_20261114.log`. PRE OK; delta file 963 lines, sha c44c15d6… = the dry run's.
+- **(1) The 962 by rule, counted from the file:** `ADDED strongs 908`, `ADDED overlap 54` (the 908/54 split confirmed
+  from the file). All 962 listed (`members_962.txt` in the run folder, 962 lines); every one score 1.0 / margin 1.0.
+- **(2a) The same builder `--apply` on a throwaway copy of SRC's five tables:** prep 3,809,468 rows in 71 s;
+  before.db 1,644 rows; the five copied tables = src's (pn_binding 15,446, digest 50e0d6ef1bac). Report: tier 1
+  1,133 / tier 2 1,473 / demoted 26 / residual 129 / no metaV 371, of 3,132; wrote 2,606. Links built-copy →
+  src-copy: 2,606 → 2,606, **changed 0, added 0, removed 0** (header-only file, sha c866c003…). metav_index.db unchanged.
+- **(2b) Link inputs src → built:** tipnr_entities 4,247 → 4,247, tipnr_entity_refs 31,975 → 31,975, metav_people
+  3,086 → 3,086 — 0 differences each. SAME OK (src untouched).
+
+**Ruling chat reading (11/14):** live's own inputs already produce 2,606; the 962 are links live's table never
+received after the 7/30 entity-table change (`7e465865`). Not an edition-upgrade effect.
+**Observed, no ruling:** pn_binding on src 15,446 rows (50e0d6ef1bac) vs built 15,426 (b9c115b8b82c) — an input to the
+traffic numbers only; not a 12c gate.
+**Note on live's tipnr_metav_link (no action here, ruling 11/14):** live's table is 962 person links short of what
+the current builder makes from live's own entity tables (alongside the 12b note on live's word_gloss).
+
+**Ruling (11/14, §9.111):** the +962 is accepted as the declared figure for 12c. STEP12C-APPLY gated on the
+STEP12C-DRY figures (below). Restore source `step12c_dry_20261114/before.db`.
+
+## STEP12C-APPLY drafted (11/14)
+
+Declared figures, all from the STEP12C-DRY log (02:09Z) as ruled:
+- both dry delta files 963 lines (962 added, 0 changed, 0 removed), sha `c44c15d6…`;
+- built unchanged since the dry run (`same` against `step12c_dry_20261114`);
+- tipnr_metav_link on built before = the logged definition + index, 1,644 person rows (overlap 1,419 / strongs 225);
+- the builder's six tier-report lines and `Wrote 2606 kind='person' rows into tipnr_metav_link (rule/score/margin recorded).`;
+- after: same definition + index, 2,606 (overlap 1,473 / strongs 1,133);
+- scratch files = the dry's (residual `a247dfb2…`, tier2 `1eed6313…`), exactly two files;
+- place-link orphans 0 on built before the write (STOP) and after (CHECK);
+- `check --written tipnr_metav_link`: 149 tables + schema = prep, tipnr_metav_link = the dry copy;
+- src → built delta on `uniq+kind` with `--expect-sha c44c15d6…` (the same 962 adds);
+- metav_index.db sha `a438327f…`, no journal, before (STOP) and after (CHECK);
+- leftover lists in `scripts/` = the dry log's (residual `7c2233d2…`, tier2 `2b24b761…`) before (STOP) and after (CHECK);
+- entity_resolution.py = REF, unedited (STOP).
+
+The builder writes with `--out-dir $D/apply`, so it never writes the lists in `scripts/`. Its write
+(`build_person_metav_link.py:320-343`) deletes and re-inserts only `kind='person'` rows; place rows are untouched. It
+opens built with plain `sqlite3.connect` (no journal-mode change). One line is shown only, not gated: whether the
+whole output equals the dry apply output with the scratch-folder path set aside.
+
+Tested locally (made-up tables, one planted new person link): DONE, exit 0; output = the dry's apart from the path. Each
+of these STOPs before the write: re-paste; built already written (`same` fails); a leftover list edited; a journal
+beside metav_index.db. A wrong after-figure gives CHECK with the restore source named.
+
+### Block STEP12C-APPLY (GATE REF 006e16ba; WRITES built: tipnr_metav_link person rows only, 1,644 → 2,606) — for the ruling chat
+
+```bash
+set +H
+L=~/edition_upgrade_runs/step12c_apply_20261114.log
+if [ -e "$L" ]; then echo "STEP12C-APPLY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=006e16ba
+echo "GATE REF ${REF} - STEP12C-APPLY rebuild-words step 12c (build_person_metav_link --apply) on BUILT, gated on the STEP12C-DRY figures (+962 ruled 11/14) - WRITES built: tipnr_metav_link person rows only (1,644 -> 2,606) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP12C-APPLY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -f scripts/eu_step.py ] || { echo "STEP12C-APPLY RESULT: STOP - scripts/eu_step.py missing (PA has not pulled $REF)"; exit 1; }
+export PYTHONIOENCODING=utf-8
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+X=~/bible-db/metav_index.db
+DD=~/edition_upgrade_runs/step12c_dry_20261114
+D=~/edition_upgrade_runs/step12c_apply_20261114
+P="python3 scripts/build_person_metav_link.py"
+E="python3 scripts/eu_step.py"
+RD="SELECT type, name, sql FROM sqlite_master WHERE tbl_name = 'tipnr_metav_link' ORDER BY type, name; SELECT 'kind', kind, count(*) FROM tipnr_metav_link GROUP BY kind ORDER BY kind; SELECT 'rule', kind, rule, count(*) FROM tipnr_metav_link GROUP BY kind, rule ORDER BY kind, rule"
+# --- declared figures: STEP12C-DRY log (11/14 02:09Z), ruled 11/14 ---
+XD=c44c15d6fb088ef445854884d3db4d89a6d43f1904f8a3a9cb084289b2f209d2; XL=963
+XX=a438327f01e023588ef8ada0fe2ff4bc9412dccba073c5491172907387478fd8
+XLS=" person_metav_link_residual.txt=7c2233d22d3a900a5c5b99e55eec7aa84dc68c431c0f25625a9adb5c97817872 person_metav_link_tier2.txt=2b24b761d25940336aeb158cc0b900d1751c8b3b8348fac52b6fd9a274887960"
+XF=$(printf '%s\n' "person_metav_link_residual.txt a247dfb2b9baeed7166122ea82c119ade68f6d72f8193e6d32a78e84d1e69ac1" "person_metav_link_tier2.txt 1eed6313ee343499f8094d3fef69a3d44d66595928809326a27bbe5e37fde66a")
+XDEF=$(printf '%s\n' "index|ix_tipnr_metav_link|CREATE INDEX ix_tipnr_metav_link ON tipnr_metav_link(uniq)" "table|tipnr_metav_link|CREATE TABLE tipnr_metav_link(uniq TEXT, kind TEXT, metav_id INTEGER, rule TEXT, score REAL, margin REAL)")
+XB=$(printf '%s\n' "$XDEF" "kind|person|1644" "rule|person|overlap|1419" "rule|person|strongs|225")
+XA=$(printf '%s\n' "$XDEF" "kind|person|2606" "rule|person|overlap|1473" "rule|person|strongs|1133")
+XO=$(printf '%s\n' "  Tier 1 Strong's-direct :  1133  (linked)" "  Tier 2 verse-overlap   :  1473  (linked)" "  name-only DEMOTED->resid:    26  (not linked)" "  RESIDUAL (hand-list)   :   129" "  no metaV record        :   371" "  ------ 3132 TIPNR person entities;  2606 LINKED" "Wrote 2606 kind='person' rows into tipnr_metav_link (rule/score/margin recorded).")
+lists() { local o="" f; for f in person_metav_link_residual.txt person_metav_link_tier2.txt; do if [ -f "scripts/$f" ]; then o="$o $f=$(sha256sum < "scripts/$f" | cut -d' ' -f1)"; else o="$o $f=absent"; fi; done; echo "$o"; }
+# --- before the write: every miss is STOP, built untouched ---
+git diff --quiet "$REF" HEAD -- entity_resolution.py || { echo "STEP12C-APPLY RESULT: STOP - entity_resolution.py differs from $REF; built untouched"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- entity_resolution.py)" ] || { echo "STEP12C-APPLY RESULT: STOP - entity_resolution.py has uncommitted edits on PA; built untouched"; exit 1; }
+echo "entity_resolution.py (the builder's import) = $REF, unedited: OK"
+$E pre --tag STEP12CA --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP12C-APPLY RESULT: STOP - pre (line above); built untouched"; exit 1; }
+for f in state.json before.db dry.db apply_dry.log step12c_delta_built.tsv step12c_delta_src.tsv; do [ -s "$DD/$f" ] || { echo "STEP12C-APPLY RESULT: STOP - the dry run's $f is missing or empty in $DD; built untouched"; exit 1; }; done
+for f in step12c_delta_built.tsv step12c_delta_src.tsv; do
+  s=$(sha256sum < "$DD/$f" | cut -d' ' -f1); n=$(wc -l < "$DD/$f")
+  echo "dry delta $f: $n lines (expect $XL = header + 962 added), sha256 $s (expect $XD)"
+  [ "$s" = "$XD" ] && [ "$n" = "$XL" ] || { echo "STEP12C-APPLY RESULT: STOP - $f is not the declared delta; built untouched"; exit 1; }
+done
+while read -r f x; do
+  s=$(sha256sum < "$DD/applycopy/$f" | cut -d' ' -f1); echo "dry scratch file applycopy/$f: sha256 $s (expect $x)"
+  [ "$s" = "$x" ] || { echo "STEP12C-APPLY RESULT: STOP - the dry run's $f is not the declared one; built untouched"; exit 1; }
+done <<<"$XF"
+$E same --tag STEP12CA --built "$B" --dir "$DD" || { echo "STEP12C-APPLY RESULT: STOP - built changed since the dry run (lines above); built untouched"; exit 1; }
+[ -e "$X-journal" ] && { echo "STEP12C-APPLY RESULT: STOP - a -journal sits beside $X; built untouched"; exit 1; }
+x0=$(sha256sum < "$X" | cut -d' ' -f1); echo "metav_index.db before: sha256 $x0 (expect $XX)"
+[ "$x0" = "$XX" ] || { echo "STEP12C-APPLY RESULT: STOP - metav_index.db is not the one the dry run read; built untouched"; exit 1; }
+LS0=$(lists); echo "leftover lists in scripts/ before:$LS0"
+[ "$LS0" = "$XLS" ] || { echo "STEP12C-APPLY RESULT: STOP - the leftover lists in scripts/ are not the dry log's; built untouched"; exit 1; }
+R0=$(sqlite3 -readonly "$B" "$RD") || { echo "STEP12C-APPLY RESULT: STOP - read before failed; built untouched"; exit 1; }
+echo "tipnr_metav_link on built before:"; echo "$R0"
+[ "$R0" = "$XB" ] || { echo "STEP12C-APPLY RESULT: STOP - built's tipnr_metav_link is not the dry log's picture (definition + index + 1644 rows by rule); built untouched"; exit 1; }
+echo "=== PLACE-LINK ORPHAN CHECK on built before the write (read-only; must print 0) ==="
+$P --bible "$B" --check-place-orphans; o0=$?
+[ "$o0" -eq 0 ] || { echo "STEP12C-APPLY RESULT: STOP - the place-link orphan check on built is not 0 (exit $o0, above); built untouched"; exit 1; }
+mkdir "$D/apply" || { echo "STEP12C-APPLY RESULT: STOP - cannot make the scratch folder; built untouched"; exit 1; }
+# --- the one write ---
+echo "=== APPLY: build_person_metav_link --apply on built (leftover lists -> $D/apply; the one write) ==="
+$P --bible "$B" --index "$X" --out-dir "$D/apply" --apply > "$D/apply.log" 2>&1; r=$?
+cat "$D/apply.log"; echo "exit $r (expect 0)"
+# --- after the write: every miss is CHECK ---
+SO=yes; while IFS= read -r x; do grep -qFx -- "$x" "$D/apply.log" || SO=NO; done <<<"$XO"
+echo "the six tier-report lines + the Wrote 2606 line = the dry run's: $SO"
+echo "whole output = the dry run's apply output, scratch-folder path aside (shown only): $(diff -q <(sed "s#$D/apply/#OUT/#" "$D/apply.log") <(sed "s#$DD/applycopy/#OUT/#" "$DD/apply_dry.log") > /dev/null && echo yes || echo no)"
+SF=yes
+while read -r f x; do s=$(sha256sum < "$D/apply/$f" | cut -d' ' -f1); echo "scratch file apply/$f: sha256 $s (expect $x)"; [ "$s" = "$x" ] || SF=NO; done <<<"$XF"
+nf=$(find "$D/apply" -type f | wc -l); ne=$(wc -l <<<"$XF"); echo "files in $D/apply: $nf (expect $ne)"; [ "$nf" = "$ne" ] || SF=NO
+R1=$(sqlite3 -readonly "$B" "$RD"); echo "tipnr_metav_link on built after:"; echo "$R1"
+SA=NO; [ "$R1" = "$XA" ] && SA=yes; echo "definition + index + 2606 rows by rule = the dry copy's: $SA"
+echo "=== PLACE-LINK ORPHAN CHECK on built after the write (read-only; must print 0) ==="
+$P --bible "$B" --check-place-orphans; o1=$?
+CHK=$($E check --tag STEP12CA --built "$B" --dir "$DD" --written tipnr_metav_link 2>&1); k=$?; echo "$CHK"
+VAL=$($E delta --tag STEP12CA --a "$S" --b "$B" --table tipnr_metav_link:uniq+kind --out "$D/step12c_links_src_built.tsv" --expect-sha "$XD" 2>&1); v=$?; echo "$VAL"
+x1=$(sha256sum < "$X" | cut -d' ' -f1); XS=yes; [ "$x1" = "$XX" ] || XS=NO; [ -e "$X-journal" ] && XS=NO
+echo "metav_index.db after: sha256 $x1 - unchanged, no journal: $XS"
+LS1=$(lists); LU=NO; [ "$LS1" = "$XLS" ] && LU=yes; echo "leftover lists in scripts/ after - unchanged: $LU"
+if [ "$r" -eq 0 ] && [ "$SO" = yes ] && [ "$SF" = yes ] && [ "$SA" = yes ] && [ "$o1" -eq 0 ] && [ "$k" -eq 0 ] && [ "$v" -eq 0 ] && [ "$XS" = yes ] && [ "$LU" = yes ]; then
+  echo "STEP12C-APPLY RESULT: DONE - built tipnr_metav_link person rows re-written: 2,606 (overlap 1,473 / strongs 1,133) = the dry run; vs src exactly the 962 declared additions (0 changed / 0 removed); place-link orphans 0; the other 149 tables + schema unchanged; metav_index.db + leftover lists unchanged"; exit 0
+fi
+echo "STEP12C-APPLY RESULT: CHECK - an after-figure differs (lines above). Restore source for tipnr_metav_link: $DD/before.db"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP12C-APPLY reviewed (11/14) — REVIEW: ESCALATE (write), mechanics clean
+
+Verdict line verbatim: "REVIEW: ESCALATE - STEP12C-APPLY writes built (person rows in tipnr_metav_link, via `build_person_metav_link.py --apply`), so under DESIGN sec 9.90 the ruling chat must clear it. I found no mechanical defects."
+Reviewer checked the figures against the record and §9.111, STOP-before / CHECK-after, the builder's write paths, the
+eu_step flags, the tripwires and bash validity. Its two open items, closed by CC from the pasted STEP12C-DRY log:
+- **full shas:** every 64-character sha in the block is copied from that log (delta, metav_index.db, leftover lists,
+  scratch files);
+- **definition text:** the dry log printed `index|ix_tipnr_metav_link|CREATE INDEX ix_tipnr_metav_link ON tipnr_metav_link(uniq)`
+  and `table|tipnr_metav_link|CREATE TABLE tipnr_metav_link(uniq TEXT, kind TEXT, metav_id INTEGER, rule TEXT, score REAL, margin REAL)`
+  on built, src and the dry copy after `--apply`; XDEF is those two lines exactly.
+Goes to the ruling chat for the write gate (§9.111).
