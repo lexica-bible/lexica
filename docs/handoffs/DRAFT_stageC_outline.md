@@ -6779,3 +6779,16 @@ The reviewer's two untraceable items, closed here from the STEP12B-DRY re-run lo
    - the two scratch files are the same in `dryrun/` and `applycopy/`.
 These match XO / XD / XH / XF in the block exactly. A wrong value before the write would STOP; a wrong count line
 after it would CHECK.
+
+### STEP12B-APPLY ran (11/14, 01:45 UTC, PA HEAD b3178672, REF 006e16ba) — DONE, exit 0 → STEP 12b CLOSED (§9.110 closing)
+
+Log `~/edition_upgrade_runs/step12b_apply_20261114.log`; run folder `step12b_apply_20261114/` (apply.log, apply/
+scratch files, step12b_values_src_built.tsv). Write gate: the 11/14 +82 ruling stands as the §9.110 call. PRE OK;
+both dry deltas 83 lines / f70ab8a0…; dry scratch shas matched; SAME OK (150 + schema, 0); heb.db before 885ed4e8…;
+word_gloss before = declared (17,568 by source). Builder exit 0; the 3 count lines + Filled line = dry; whole output =
+dry. Scratch files 2, shas = declared. After = declared (17,650; dodson 5,298, tbesg 76, rest unchanged). CHECK OK:
+149 untouched + schema 0; word_gloss 17,650 rows, fingerprint 22ca5f3ab0c5 = dry copy (prep 17,568, daea2c5f30ba).
+Values src → built: 0 changed / 82 added / 0 removed, file sha f70ab8a0… = the dry delta. heb.db after unchanged, no
+journal. Restore source not needed (`step12b_dry_20261109/before.db` kept until the swap).
+Transcript note (ruling chat, no action): the console echo of the pasted block was garbled on one line; the block ran
+in full and ended DONE; the log is authoritative.
