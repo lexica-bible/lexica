@@ -9347,6 +9347,6 @@ expected (unchanged 607; content-other Job 3:3 "replace: rows[May the] -> text[M
 **Ruling (11/15, §9.131):** both files accepted as CANDIDATES for the 9c pins, not declared; local copies must hash to these values
 (+ report e154d8d4…) after scp; members read of strongs_base 1 / english 83 / english_head 23 before the declaration.
 **Eligible-file sha (§9.131 (3)) — CC settles: no full sha needed in the record.** In this block the eligible file is only an
-argument to the self-diff, where it is consulted only for NEW members (audit_reassembly_diff.py :539-540); the self-diff found 0 new,
+argument to the self-diff, where it is consulted only for NEW members (audit_reassembly_diff.py :542-543); the self-diff found 0 new,
 so no eligibility value was read into any figure. The 8-character guard is the same as PUNCT-RECON's (:7369), where the file did
 decide members.
