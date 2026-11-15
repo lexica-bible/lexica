@@ -10233,3 +10233,76 @@ the text src has. The other **69 EU verses.text rows are in the delta and built'
 So the verses.text delta = B's written set − the 49 EU rows whose correction equals src's text; every delta member is accounted for
 by B's list or an EU row. (Not checked locally: that each of the 49 corrected_values equals src's text — src's text is not local;
 their absence from the delta says built = src there.)
+
+## Step 4 — §9.143 answers + the heads-gap read (11/15; local, from the STEP4-DELTA files + committed / local files; no PA run)
+
+**What B's list holds per verse** (`prose_20261031.tsv` header): book, chapter, verse, outcome, reason, old_len, new_len, changed —
+**lengths only, no text or hash.** So for the non-EU members the gate can check membership and built's text LENGTH = new_len; it
+cannot check the text value from B's list alone (said in the record).
+**The "6" of 4b's "6 + 118":** the 6 verses of the committed carve-out `tests/fixtures/edition_upgrade/correction_carveout_20261031.tsv`
+(1Sa 9:3, 2Ch 10:13, Jer 3:7, Jer 9:23, Neh 12:43, Rev 11:1; §9.51 "carve-out on BOTH sides — A keeps old rows, B keeps old prose,
+reason correction"). In B's list each is `kept_old / correction`; none is in the delta, none among the 49 / 69 — same on both copies.
+(Live's active list holds 18 verses.text rows; the other 12 are not 4b's: 7 are B `unchanged`, 5 are B `written` and in the delta —
+1Ch 22:15, 2Sa 16:18, Job 24:19, Mar 16:17, Mat 21:19.)
+**Mark 1:9:** B `written` (123 → 113 chars), in the 15,522, not among the 49.
+**Heads gap (§9.107 ruling 2), read from the 5,427 english_head members:** the delta reproduces the 11/8 record exactly — **lost
+1,691 (text → None) · gained 340 (None → text) · changed 3,396 · net −1,351.** Every one of them except 2 sits on a cell whose
+english also differs:
+- lost 1,691 = 1,299 where the english went blank (src english most often "the one" 322, "the ones" 225, "of the ones" 122, "of the
+  one" 89, "know" 35, "to the ones" 30, "to the one" 29 …; in 101 of the 1,299 the lost words appear in a neighbour's NEW english at
+  −1 / −2) + 392 where the english changed to function words only ("for" 55, "For" 45, "of" 39, "not" 29, "the" 14 …) and the head is None;
+- gained 340 = 235 english changed + 105 english filled (built "the ones" 41, "unto" 26, "the one" 26, "according to" 10 …);
+- changed 3,396 = 3,394 with the english changed + **2 with the english the SAME:** Isa 48:5 @4 head 'would' → 'what' and Joh 19:18 @10
+  'here' → 'ere'. Both are EU typo rows that correct `english` only, with NO english_head row (`eu_batch_rows_20261103.tsv` :158 "what
+  whould happen" → "what would happen"; :101 "one h ere on that side," → "one here on that side,"): built's english = src's, its head
+  reads like the head of the typo text. **Finding for the ruling chat, no cause asserted.** (12 EU english rows have no head row; for
+  the other 10 the head is either equal to src or the english also changed.)
+No cause is asserted for the 1,351; the read shows it is carried by English changes, cell by cell. The heads are declared through A's
+english_head output (§9.139 (1)) + the later writes.
+    LOST with english gone blank (1,299): top src english
+         322 'the one'
+         225 'the ones'
+         122 'of the ones'
+          89 'of the one'
+          35 'know'
+          30 'to the ones'
+          29 'to the one'
+          19 'want'
+          13 'hearken to'
+          11 'listen to'
+           8 'know.'
+           8 'know,'
+           8 'hearken'
+           8 'abstain'
+           7 'turn'
+       ...of the 1,299, the lost English words appear in a neighbour's NEW english (±1/±2) and not its old: 101 {-1: 97, -2: 4}
+    LOST with english changed but head None (392): top built english
+          55 'for'
+          45 'For'
+          39 'of'
+          29 'not'
+          14 'the'
+          13 'into'
+          11 'as'
+          11 'to the'
+          11 'in'
+          10 'of,'
+          10 'to'
+           7 'upon'
+           7 'he'
+           6 'these'
+           5 'of the'
+    GAINED (340): top built english
+          41 'the ones'
+          26 'unto'
+          26 'the one'
+          10 'according to'
+           7 'of the one'
+           5 'of the ones'
+           5 'him'
+           4 'of which'
+           4 'this one'
+           4 'the things'
+    head changed, english SAME (2):
+       ('Isa', 48, 5, 4) ('would', 'what')
+       ('Joh', 19, 18, 10) ('here', 'ere')
