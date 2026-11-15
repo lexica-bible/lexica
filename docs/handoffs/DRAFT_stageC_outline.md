@@ -8755,3 +8755,8 @@ bs1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' '); echo "built + src size and time 
 echo "STEP9A-CTX RESULT: READ DONE - 16 slots read in context (9 held + 7 behind ruling 1's basis)"
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP9A-CTX reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only context read for the §9.123 ruling-2 slots. It uses the restore's own key, class and agree rules, its wrapper is complete, and it STOPs on any missing slot or key mismatch."
+Reviewer observation (no STOP): the "both r6 / places, lexicon pass" check on the 2 unprinted rows prints yes/NO without
+stopping — the ruling chat reads that line in the log.
