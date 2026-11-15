@@ -9889,3 +9889,33 @@ of the six slots 9a placed at a moved position (§9.128 "moved 6"); src holds th
 the post-step-9 table differs at moved slots. Not read further; recorded as printed (§9.137).
 **Ruling (11/15, §9.137): step 9c CLOSED; steps 9 → 9a → 9b → 9c complete on built.** Next: charter §6 step 4 report.
 `step9a_apply_20261115/dry.db` (the 9a throwaway, ~110 MB): left in place for now (CC's call, §9.137) — not needed by any pin.
+
+## Step 4 (compare_words vs live) — CC report: what it needs (11/15, §9.137; nothing drafted, nothing run)
+
+- **The gate, as written** (charter §6 :328-330): "4 compare_words vs live — per-COLUMN attribution: `english` / `english_head` /
+  `verses.text` rows = the declared 29% set + Mark 1:9; ANY `strongs` / `strongs_base` / `position` / `morph` delta outside the
+  declared (ii) set = stop". Mark 1:9 must appear by name in the `english` diff, value = the app's cell (DESIGN :236-251; Q 7.5 ruled at DESIGN :341:
+  informational, no english_rows section).
+- **The tool as it stands cannot give that gate** (`scripts/compare_words.py`, 135 lines, unchanged since 7bca8fac): it keys words by
+  verse + position over english, english_head, strongs, strongs_base, greek_pos, italic, italic_words, smcap_words, morph, lemma,
+  is_pn + a bracket rank (:36-37, :40-68); prints a fingerprint, three counts and the FIRST `--limit` rows of each list (:113-126);
+  exit 1 on any difference. It does NOT: count differences per column; read `verses.text`; follow a word that moved position (a move
+  shows as one "only in OLD" + one "only in NEW"); write the full member list to a file; or compare any column against a declared set.
+- **The declared sets are not member files yet.** CC found no file for "the declared 29% set" (the charter and DESIGN :243 quote the
+  phrase only; `step5_eligible_20261101.tsv`, e540d34d, is the 29,071 ELIGIBLE verses — not the same thing, not checked as a
+  stand-in). "The declared (ii) set" comes from charter §3's choice (ii) "taken with a declared slot change", but **Q7 was ruled (i)**
+  (count-differs keep the old text, §3 :133-135) — so what step 4 must treat as declared position / strongs / strongs_base / morph
+  changes is the set of ruled stage C/D changes on built (e.g. REKEY's key moves, the 20 moved words and 10 reorder verses in the
+  stageC_repin follow-up list, the digits restore, 8b.2's six none → lemma-only strongs_base rows incl. Jer 49:3 @3, the 8b.2a
+  lane-3 repairs) — today spread across records, not one list.
+- **"vs live":** `<src>` is the step-1 copy of live (11/01). Whether step 4 compares built against `<src>` (and separately proves live
+  = src now), or against a fresh copy of live, is unruled.
+- **Open item that lands in this gate:** the heads gap (§9.107 ruling 2: built 1,351 fewer non-blank `english_head`; lost 1,691 /
+  gained 340) is an `english_head` column difference — it has to be explained before step 4 can pass that column.
+- **CC's proposal (for a ruling, no code yet):** (1) a ruling on what the declared sets are: the changed-English verse set (derived
+  src → built from `verses.text`, then ruled as a member list) + Mark 1:9; and the (ii) set = a member list assembled from the ruled
+  stage C/D changes, each row citing its § ruling. (2) A read-only first block: the full raw delta built vs src, written in full to
+  files — per row (verse, position, column, before, after) for `words`, per verse for `verses.text` — with counts per column and the
+  moved-word pairs matched, no gate yet; its figures drive (1). Done with one committed script (the §9.106 rule: no pasted helper),
+  so a code change → reviewer → ruling chat; or `compare_words.py` extended. (3) Then the gate block: each column's member set =
+  its declared file, exactly.
