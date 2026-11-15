@@ -9350,3 +9350,144 @@ expected (unchanged 607; content-other Job 3:3 "replace: rows[May the] -> text[M
 argument to the self-diff, where it is consulted only for NEW members (audit_reassembly_diff.py :542-543); the self-diff found 0 new,
 so no eligibility value was read into any figure. The 8-character guard is the same as PUNCT-RECON's (:7369), where the file did
 decide members.
+
+## 9c inputs: local copies + members read (11/15, §9.131 ruling 2) — local, no PA run
+
+**scp by JP (11/15)** of `step9c_freeze_20261115/` + `step9a_apply_20261115/key2_list.tsv` to the local staging folder
+`C:\Users\JP\edition_upgrade_runs\pa\step9c_freeze_20261115\` (outside the repo). Local sha256, in full:
+- `abp_surface_fill_20261115.tsv` d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff (4,412 lines) = PA's
+- `punct_members_built_20261115.txt` 0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056 (607 lines) = PA's
+- `report_apply.tsv` e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a (4,412 lines) = PA's
+- `key2_list.tsv` d0967a0d7a725270bedd914e2760d79b6416d6b40ce38cf84165d3ca36f0dc5e (83 slots + header) = the §9.126 list
+The 10/25 local copy `tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv` = d9435bde… (the pin).
+
+**Members read** (a Python read of the four files: each new row joined to its 10/25 row through the report, new slot → old
+slot, as the block's awk join; then each differing column listed; the key-2 list compared as a SET of old slots). Output verbatim:
+```text
+pairs joined: 4411; key-2 list rows: 83
+
+=== strongs_base: 1 row(s) differ 10/25 -> new ===
+  of these on the key-2 list (by old slot): 0; report detail 'key-2 alone (listed)': 0
+  Jer 49:3 pos 3->3 [not-listed; agree-strong] insert/split_receive_name strongs * | strongs_base: [H5857] -> [*] | english [Ai] -> [Ai]
+
+=== english: 83 row(s) differ 10/25 -> new ===
+  of these on the key-2 list (by old slot): 83; report detail 'key-2 alone (listed)': 83
+  Gen 4:8 pos 21->21 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 450 | english: [rose up] -> [that Cain rose up] | english_head [rose] -> [rose]
+  Gen 5:16 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2198 | english: [lived] -> [lived,] | english_head [lived] -> [lived]
+  Gen 5:26 pos 1->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2198 | english: [lived] -> [lived,] | english_head [lived] -> [lived]
+  Gen 31:55 pos 15->15 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 654 | english: [turned] -> [returned] | english_head [turned] -> [returned]
+  Gen 41:8 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4680 | english: [wise men.] -> [wise ones.] | english_head [wise] -> [ones]
+  Gen 41:34 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4160 | english: [let Pharaoh make] -> [let Pharaoh do this,] | english_head [make] -> [do]
+  Gen 44:33 pos 18->18 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 80 | english: [his brothers.] -> [his brothers!] | english_head [brothers] -> [brothers]
+  Gen 49:30 pos 12->12 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2932 | english: [acquired] -> [acquired —] | english_head [acquired] -> [acquired]
+  Exo 16:16 pos 23->23 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4633 | english: [your tents] -> [of your tents] | english_head [tents] -> [tents]
+  Exo 23:18 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 2378.2 | english: [my sacrifice,] -> [my sacrifice offering,] | english_head [sacrifice] -> [offering]
+  Exo 30:8 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1821.1 | english: [should ignite] -> [should light up] | english_head [ignite] -> [light]
+  Exo 32:26 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2476 | english: [stood] -> [that Moses stood] | english_head [stood] -> [stood]
+  Lev 3:17 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3544.1 | english: [an] -> [as an] | english_head [\N] -> [\N]
+  Lev 20:15 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 2844.2 | english: [his laying with] -> [his laying] | english_head [laying] -> [laying]
+  Num 12:1 pos 13->13 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2983 | english: [took] -> [took —] | english_head [took] -> [took]
+  Num 16:25 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 450 | english: [rose up] -> [rose] | english_head [rose] -> [rose]
+  Num 22:36 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2240 | english: [had came] -> [had come] | english_head [came] -> [come]
+  Deu 12:12 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 3816 | english: [manservants,] -> [menservants,] | english_head [manservants] -> [menservants]
+  Deu 13:6 pos 53->53 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 3962 | english: [your fathers,] -> [your fathers;] | english_head [fathers] -> [fathers]
+  Deu 28:62 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 446.2 | english: [for] -> [because] | english_head [\N] -> [because]
+  Deu 31:28 pos 13->13 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 1122.3 | english: [judicial recorders!] -> [judicial recorders,] | english_head [recorders] -> [recorders]
+  Deu 33:6 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2198 | english: [Let Reuben live] -> [Let Reuben live,] | english_head [live] -> [live]
+  Deu 33:7 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3778 | english: [this for] -> [to this] | english_head [\N] -> [\N]
+  Jos 5:5 pos 30->30 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_unlisted strongs 390 | english: [paced] -> [turned] | english_head [paced] -> [turned]
+  Jos 7:16 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4317 | english: [he led] -> [led] | english_head [led] -> [led]
+  Jos 12:23 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/split_receive strongs 3588 | english: [of] -> [the one] | english_head [\N] -> [one]
+  Jos 13:21 pos 20->20 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3960 | english: [struck] -> [struck —] | english_head [struck] -> [struck]
+  Jos 17:1 pos 17->17 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/split_receive strongs 1063 | english: [For] -> [for] | english_head [\N] -> [\N]
+  Jdg 6:6 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4433 | english: [became poor] -> [became poor —] | english_head [poor] -> [poor]
+  1Sa 7:10 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1510.7.3 | english: [was] -> [as Samuel was] | english_head [\N] -> [samuel]
+  1Sa 13:6 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/split_receive strongs 846 | english: [they] -> [it] | english_head [\N] -> [\N]
+  1Sa 13:6 pos 6->6 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4730.2 | english: [were in a strait] -> [was straitly to him,] | english_head [strait] -> [him]
+  1Sa 14:35 pos 7->7 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 756 | english: [began] -> [first began] | english_head [began] -> [began]
+  1Sa 20:27 pos 26->26 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3756 | english: [he has not] -> [has not come] | english_head [has] -> [come]
+  1Sa 22:16 pos 6->6 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 599 | english: [should die] -> [should die —] | english_head [die] -> [die]
+  2Sa 5:2 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1510.6 | english: [was] -> [when Saul was] | english_head [\N] -> [saul]
+  2Sa 5:10 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4198 | english: [went along] -> [went] | english_head [went] -> [went]
+  2Sa 17:17 pos 22->22 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 935 | english: [to king] -> [king] | english_head [king] -> [king]
+  2Sa 18:21 pos 12->12 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4352 | english: [did obeisance to] -> [did obeisance] | english_head [obeisance] -> [obeisance]
+  1Ki 8:44 pos 25->25 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 3739 | english: [which] -> [of which] | english_head [which] -> [which]
+  1Ki 14:20 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 936 | english: [reigned] -> [reigned —] | english_head [reigned] -> [reigned]
+  1Ki 17:17 pos 22->22 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3739 | english: [\N] -> [of which] | english_head [\N] -> [which]
+  1Ki 21:15 pos 11->11 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2036 | english: [said] -> [that Jezebel said] | english_head [said] -> [said]
+  1Ki 22:48 pos 11->11 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 5553 | english: [gold.] -> [gold;] | english_head [gold] -> [gold]
+  1Ki 22:48 pos 14->14 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4198 | english: [go;] -> [\N] | english_head [go] -> [\N]
+  1Ki 22:49 pos 17->17 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3756 | english: [did not] -> [wanted it not] | english_head [did] -> [wanted]
+  1Ki 22:49 pos 18->18 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2309 | english: [want it] -> [\N] | english_head [want] -> [\N]
+  1Ki 22:50 pos 17->17 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3962 | english: [his fore father.] -> [his forefather.] | english_head [father] -> [forefather]
+  Ezr 9:5 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 5014 | english: [humiliation,] -> [humiliation;] | english_head [humiliation] -> [humiliation]
+  Job 15:30 pos 7->7 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3133 | english: [may] -> [May] | english_head [may] -> [may]
+  Job 18:11 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3643.4 | english: [May] -> [may] | english_head [may] -> [may]
+  Job 18:17 pos 3->3 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 622 | english: [May] -> [may] | english_head [may] -> [may]
+  Job 20:10 pos 3->3 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3643.4 | english: [May] -> [may] | english_head [may] -> [may]
+  Job 27:1 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4369 | english: [proceeded] -> [proceeding] | english_head [proceeded] -> [proceeding]
+  Job 32:21 pos 8->8 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 3766.2 | english: [shall I in any way feel shame.] -> [in no way] | english_head [shame] -> [way]
+  Job 32:21 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 1788 | english: [\N] -> [shall I shame.] | english_head [\N] -> [shame]
+  Psa 42:3 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_pronoun strongs 3450 | english: [for me] -> [to me] | english_head [me] -> [me]
+  Psa 48:0 pos 6->6 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4521 | english: [Sabbath.] -> [of Sabbath.] | english_head [sabbath] -> [sabbath]
+  Psa 53:0 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4907 | english: [contemplation;,] -> [contemplation;] | english_head [contemplation] -> [contemplation]
+  Psa 71:0 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3588 | english: [\N] -> [A psalm to] | english_head [\N] -> [psalm]
+  Psa 92:0 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3588 | english: [\N] -> [of the] | english_head [\N] -> [\N]
+  Psa 108:7 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 1266 | english: [I shall divide Shechem into parts;] -> [I shall divide Shechem into parts,] | english_head [parts] -> [parts]
+  Psa 147:1 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2237.1 | english: [may] -> [May] | english_head [may] -> [may]
+  Isa 15:2 pos 3->3 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 622 | english: [for] -> [For] | english_head [\N] -> [\N]
+  Isa 19:13 pos 10->10 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4105 | english: [they shall cause Egypt to wander] -> [they shall cause Egypt to wander,] | english_head [wander] -> [wander]
+  Isa 30:31 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2274 | english: [shall be vanquished,] -> [shall be vanquished] | english_head [vanquished] -> [vanquished]
+  Isa 47:13 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 312 | english: [let] -> [Let] | english_head [let] -> [let]
+  Jer 20:1 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 191 | english: [heard] -> [heard,] | english_head [heard] -> [heard]
+  Jer 26:21 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 191 | english: [heard] -> [heard,] | english_head [heard] -> [heard]
+  Jer 37:12 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 1831 | english: [came forth] -> [that Jeremiah came forth] | english_head [forth] -> [forth]
+  Jer 46:14 pos 23->23 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4665.3 | english: [your yew tree.] -> [your yew tree!] | english_head [tree] -> [tree]
+  Jer 48:18 pos 11->11 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 3643.4 | english: [is destroyed] -> [is destroyed —] | english_head [destroyed] -> [destroyed]
+  Jer 48:20 pos 12->12 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/split_receive_name strongs * | english: [Moab] -> [Moab,] | english_head [moab] -> [moab]
+  Jer 49:3 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 3643.4 | english: [was destroyed.] -> [was destroyed!] | english_head [destroyed] -> [destroyed]
+  Jer 50:16 pos 11->11 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3162 | english: [sword.] -> [sword!] | english_head [sword] -> [sword]
+  Lam 5:15 pos 8->8 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 5525 | english: [our dance.] -> [our dance;] | english_head [dance] -> [dance]
+  Eze 16:10 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2224 | english: [I tied] -> [tied] | english_head [tied] -> [tied]
+  Mic 2:12 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4863 | english: [In being gathered] -> [In being gathered,] | english_head [gathered] -> [gathered]
+  1Co 4:8 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4147 | english: [Are you] -> [are you] | english_head [\N] -> [\N]
+  1Co 14:26 pos 21->21 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 1096 | english: [let] -> [Let] | english_head [let] -> [let]
+  Act 14:2 pos 3->3 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 544 | english: [having resisted persuasion,] -> [resisting persuasion,] | english_head [persuasion] -> [persuasion]
+  Heb 12:9 pos 14->14 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 5293 | english: [shall we] -> [Shall we] | english_head [shall] -> [shall]
+  Luk 9:15 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 347 | english: [they laid them] -> [laid them] | english_head [them] -> [them]
+  SET COMPARE english-diff old slots vs key-2 list old slots: same set True; diff-only 0; key2-only 0
+
+=== english_head: 23 row(s) differ 10/25 -> new ===
+  of these on the key-2 list (by old slot): 23; report detail 'key-2 alone (listed)': 23
+  Gen 31:55 pos 15->15 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 654 | english_head: [turned] -> [returned] | english [turned] -> [returned]
+  Gen 41:8 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4680 | english_head: [wise] -> [ones] | english [wise men.] -> [wise ones.]
+  Gen 41:34 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4160 | english_head: [make] -> [do] | english [let Pharaoh make] -> [let Pharaoh do this,]
+  Exo 23:18 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 2378.2 | english_head: [sacrifice] -> [offering] | english [my sacrifice,] -> [my sacrifice offering,]
+  Exo 30:8 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1821.1 | english_head: [ignite] -> [light] | english [should ignite] -> [should light up]
+  Num 22:36 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2240 | english_head: [came] -> [come] | english [had came] -> [had come]
+  Deu 12:12 pos 19->19 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 3816 | english_head: [manservants] -> [menservants] | english [manservants,] -> [menservants,]
+  Deu 28:62 pos 5->5 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 446.2 | english_head: [\N] -> [because] | english [for] -> [because]
+  Jos 5:5 pos 30->30 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_unlisted strongs 390 | english_head: [paced] -> [turned] | english [paced] -> [turned]
+  Jos 12:23 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/split_receive strongs 3588 | english_head: [\N] -> [one] | english [of] -> [the one]
+  1Sa 7:10 pos 1->1 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1510.7.3 | english_head: [\N] -> [samuel] | english [was] -> [as Samuel was]
+  1Sa 13:6 pos 6->6 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_keep strongs 4730.2 | english_head: [strait] -> [him] | english [were in a strait] -> [was straitly to him,]
+  1Sa 20:27 pos 26->26 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3756 | english_head: [has] -> [come] | english [he has not] -> [has not come]
+  2Sa 5:2 pos 4->4 [K2-LIST; key-2 alone (listed) [key2-listed]] update/split_trim strongs 1510.6 | english_head: [\N] -> [saul] | english [was] -> [when Saul was]
+  1Ki 17:17 pos 22->22 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3739 | english_head: [\N] -> [which] | english [\N] -> [of which]
+  1Ki 22:48 pos 14->14 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4198 | english_head: [go] -> [\N] | english [go;] -> [\N]
+  1Ki 22:49 pos 17->17 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3756 | english_head: [did] -> [wanted] | english [did not] -> [wanted it not]
+  1Ki 22:49 pos 18->18 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 2309 | english_head: [want] -> [\N] | english [want it] -> [\N]
+  1Ki 22:50 pos 17->17 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3962 | english_head: [father] -> [forefather] | english [his fore father.] -> [his forefather.]
+  Job 27:1 pos 2->2 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 4369 | english_head: [proceeded] -> [proceeding] | english [proceeded] -> [proceeding]
+  Job 32:21 pos 8->8 [K2-LIST; key-2 alone (listed) [key2-listed]] update/normalize strongs 3766.2 | english_head: [shame] -> [way] | english [shall I in any way feel shame.] -> [in no way]
+  Job 32:21 pos 9->9 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 1788 | english_head: [\N] -> [shame] | english [\N] -> [shall I shame.]
+  Psa 71:0 pos 0->0 [K2-LIST; key-2 alone (listed) [key2-listed]] insert/fill_resolved strongs 3588 | english_head: [\N] -> [psalm] | english [\N] -> [A psalm to]
+
+=== strongs_base member, both rows in full ===
+  10/25: verse_id=20266 | book=Jer | chapter=49 | verse=3 | position=3 | action=insert | cls=split_receive_name | form=Γαϊ | translit=Gai | old_form=\N | old_translit=\N | strongs=* | strongs_base=H5857 | english=Ai | english_head=ai | is_pn=1 | k2_ordinal=1 | k2_count=4
+  new  : verse_id=20266 | book=Jer | chapter=49 | verse=3 | position=3 | action=insert | cls=split_receive_name | form=Γαϊ | translit=Gai | old_form=\N | old_translit=\N | strongs=* | strongs_base=* | english=Ai | english_head=ai | is_pn=1 | k2_ordinal=1 | k2_count=4
+```
+Read, no cause asserted (§9.131): **english 83 = exactly the key-2 list's 83 slots** (set compare by old slot: same set, 0 / 0;
+all 83 carry report detail "key-2 alone (listed)"). **english_head 23: all inside those 83.** **strongs_base 1: Jer 49:3 @3 "Ai"**
+(name slot, strongs `*`, insert / split_receive_name, agree-strong, NOT on the key-2 list): 10/25 strongs_base H5857, new `*`;
+every other column equal. Pointer only, not read: Jer 49:3 is one of the six none → lemma-only verses in §9.95's 8b.2 drift list.
