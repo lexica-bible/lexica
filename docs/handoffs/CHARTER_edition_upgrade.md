@@ -326,8 +326,11 @@ New frozen file + `.sha256`; pin updated in `restore_surface_fill.py` in the sam
 pre-fill copy is released from its load-bearing role once the new freeze passes its own `--check`
 against a fresh copy of the swapped live (then rotation rules apply to it again) →
 4 compare_words vs live — per-COLUMN attribution: `english` / `english_head` / `verses.text` rows =
-the declared 29% set + Mark 1:9; ANY `strongs` / `strongs_base` / `position` / `morph` delta outside
-the declared (ii) set = stop →
+the declared changed-English set + Mark 1:9; ANY `strongs` / `strongs_base` / `position` / `morph` delta outside
+the declared (ii) set = stop (AMENDED 11/15, DESIGN §9.139 (0); was: "the declared 29% set + Mark 1:9" — the
+build's kept-old set is A's eligible file's 2,166 ineligible, the declared sets are derived from the build's
+inputs and the ruled steps' own files, §9.138 (3) / §9.139; the comparison is built vs `<src>`, plus a separate
+live = src proof, §9.138 (4)) →
 5 strongs_base invariant 0 →
 6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) →
