@@ -9934,7 +9934,7 @@ the post-step-9 table differs at moved slots. Not read further; recorded as prin
   (`~/count_differs_members.tsv`, PA only) is the gate-5 member list, not the build's input — not checked here against the 2,166.
 - **verses.text:** B's per-verse list `step5_prose_20261101.tsv` (f2a22ecd…; local copy `prose_20261031.tsv`, same sha) — written
   15,571 · unchanged 13,500 · kept_old 2,166; derived from the feed + src + A's eligible file; B2's apply list was "SAME bytes"
-  (stage C handoff :82, :92-94). Mark 1:9 is in it: eligible, `written`, 123 → 113 chars. **Available as a member list.**
+  (HANDOFF_edition_upgrade_stageC.md :82, :88-90). Mark 1:9 is in it: eligible, `written`, 123 → 113 chars. **Available as a member list.**
 - **words.english / english_head:** A prints only a COUNT ("english changed 15,588", build_words_from_abp.py :2473-2475); its
   dry run writes strict_fail, eligible, merge_pairs, edge_splits (:2481-2507) — **no per-cell english list exists.** It can be
   produced from inputs only by a new A dry-run output (a code change to the build; a new file = checkpoint) run on a copy of src
