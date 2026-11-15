@@ -9047,3 +9047,10 @@ fi
 echo "STEP9A-APPLY RESULT: CHECK -$FL differ (lines above). Restore source for abp_surface: $D/before.db"; exit 1
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP9A-APPLY reviewed (11/15) — REVIEW: ESCALATE (a write, §9.90 — the gate is the ruling chat's); no mechanical defect
+Verdict line verbatim: "REVIEW: ESCALATE - STEP9A-APPLY writes to built (abp_surface 391,141 -> 395,014), so only the ruling chat can rule the write gate (sec 9.90). I found no mechanical defect. One note: the full lexicon sha in the block cannot be traced past its 8-character prefix."
+**Lexicon sha, traced:** the full value `91d9d036c0922ef965f03a006de24492f7ba3159b2714a4a47c61cc680e5eac8` is printed on the "lexicon
+abp_helps/analytical_lexicon.tsv: 39540 lines, sha256 …" line of both `~/edition_upgrade_runs/step9a_dry_20261115.log` and
+`~/edition_upgrade_runs/step9a_dry2_20261115.log` (as pasted 11/15); the block's XLEX is that value. A wrong value would STOP before
+the write.
