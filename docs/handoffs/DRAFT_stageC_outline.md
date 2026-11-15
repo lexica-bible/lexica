@@ -10451,3 +10451,13 @@ heads differ on both: 0); src only 0; **built only 3 = CANDIDATES 2 + inputs dif
 Reading (CC's, for the ruling): the 2 candidates are exactly the two known rows; over every row of both copies there is no other
 stale head of this shape. The 1 "inputs differ" row and the 4 both-copies rows are in mismatch_a / mismatch_b on PA (not printed in
 the log) — they are outside this check by design; the 1 is answered by the A english_head output.
+
+### HEADCHECK files read (11/15; JP's scp of `step4_headcheck_20261115/`; local shas = PA's: mismatch_a 011b6a7a…, mismatch_b 7e32d798…, candidates 890d8cd6…, both_differ 6d8e0e3c…)
+- **The 4 mismatching on BOTH copies, identical on both (so live's state, not an edition delta):** Jer 34:18 @18 'in front of me,'
+  head 'front' (rule 'me'); Mal 3:6 @7 english '' head '' (rule None — an empty string where the rule gives none; strongs 241.2, the
+  step-7 carried correction L10, §9.59); Mat 25:37 @8 'did we see' head None (rule 'see') and @9 'you' head 'see' (rule None) — the
+  head sits on the neighbour, a relocation pass's shape. Outside this check by design.
+- **The 1 "inputs differ":** Jos 2:4 @19 — built english 'I do not', head None, rule 'do' (src at @19: 'I know', a moved position — one
+  of the 10 reorder verses, §9.93 (a); its english differs, so the check cannot judge it). Answered by the A english_head output; it is
+  also one of the 32 non-swap cells at the moved positions (§9.143 (1)), so it is read when the A output's moved-position matching is laid.
+- **The 2 candidates** = Isa 48:5 @4 and Joh 19:18 @10, as printed.
