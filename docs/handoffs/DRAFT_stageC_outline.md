@@ -9332,3 +9332,21 @@ echo "STEP9C-FREEZE RESULT: CHECK -$FL (lines above; files in $D)"; exit 1
 ### STEP9C-FREEZE reviewed (11/15) — REVIEW: CLEAR
 Verdict line verbatim: "REVIEW: CLEAR - STEP9C-FREEZE is read-only on every database. It writes only to a new run folder plus its log, every gate wrapper item is present, no tripwire fires, and each figure traces to a ruling, to code or to a cited run receipt."
 Every printed text the block matches traced by the reviewer to snapshot_surface_fill.py :170-171, :185, :222, :262, :401-402, :410 and audit_reassembly_diff.py :596-602.
+
+### STEP9C-FREEZE ran (11/15, 15:15:02Z, PA HEAD 476de530, REF 88f7a5f6) — READ DONE, exit 0 (§9.131)
+Log `~/edition_upgrade_runs/step9c_freeze_20261115.log`; folder `step9c_freeze_20261115/`. PRE OK; before.db ea6c54c3…, report
+e154d8d4…, 10/25 fill d9435bde… = declared; CHECK OK (149 + schema 0; 395,014 / 219a3ebe7075). Re-freeze: G0 / O / R PASS, all six
+chk lines yes; RECEIPT rows 4,411, 3,873 / 538, distinct 4,411, name slots 22, k2_count > 1 1,486, by class fill_pronoun 42 ·
+fill_resolved 3,710 · fill_unlisted 32 · normalize 357 · split_keep 89 · split_receive 68 · split_receive_name 21 · split_trim 92.
+**New frozen fill `abp_surface_fill_20261115.tsv`: 4,411 rows, 455,953 B, sha256
+d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff.** Join: 4,411 / 4,411 / 4,411 / missing 0; must-equal columns 0;
+moved 6; read-outs translit 0, old_form 0, old_translit 0, strongs_base 1, english 83, english_head 23, is_pn 0, k2_count 0.
+Punct: tests + controls pass; by class 607 / 1 / 0 / 0; **`punct_members_built_20261115.txt` 607 lines / 607 refs, sha256
+0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056**, = PUNCT-RECON's 11/14 set (0 / 0); self-diff exit 1, line =
+expected (unchanged 607; content-other Job 3:3 "replace: rows[May the] -> text[Maythe]"). Built + pre-9a copy untouched.
+**Ruling (11/15, §9.131):** both files accepted as CANDIDATES for the 9c pins, not declared; local copies must hash to these values
+(+ report e154d8d4…) after scp; members read of strongs_base 1 / english 83 / english_head 23 before the declaration.
+**Eligible-file sha (§9.131 (3)) — CC settles: no full sha needed in the record.** In this block the eligible file is only an
+argument to the self-diff, where it is consulted only for NEW members (audit_reassembly_diff.py :539-540); the self-diff found 0 new,
+so no eligibility value was read into any figure. The 8-character guard is the same as PUNCT-RECON's (:7369), where the file did
+decide members.
