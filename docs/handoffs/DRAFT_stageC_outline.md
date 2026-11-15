@@ -9919,3 +9919,52 @@ the post-step-9 table differs at moved slots. Not read further; recorded as prin
   moved-word pairs matched, no gate yet; its figures drive (1). Done with one committed script (the §9.106 rule: no pasted helper),
   so a code change → reviewer → ruling chat; or `compare_words.py` extended. (3) Then the gate block: each column's member set =
   its declared file, exactly.
+
+## Step 4 — item 3 sources report (11/15, §9.138 (3)); repo + local copies only, no PA run
+
+**A. The changed-English verse set — what can produce it from the build's INPUTS (not from built):**
+- **Which verses the build takes:** A's eligible file (derivation A's own output, §9.48 "A owns eligibility"; B re-checks it
+  against its own decide() on the same frozen inputs, build_prose_from_app.py :28-30, :130-133). PA `~/edition_upgrade_runs/
+  step5_eligible_20261101.tsv` (e540d34d…; local copy `C:\Users\JP\edition_upgrade_runs\pa\eligible_20261031.tsv`, same sha):
+  31,237 verses, **eligible 29,071 / ineligible 2,166** = count_differs 704 · passdiff 625 · other 464 · rows 111 · dotted 61 ·
+  markup 60 · bracket 50 · dash 37 · versification 32 · ours_only 9 · swap 7 · correction 6 (counted from the local copy).
+- **Count-differs:** the build's kept-old set is the CHUNK-LEVEL 704 (`tests/fixtures/edition_upgrade/count_differs_chunk_20261031.tsv`,
+  0453e3b4…, committed; §9.18: "Frozen count-differs for the build = chunk-level set … 1,849 remains the Q7 'before' for the
+  post-build census"); all 704 = A's count_differs verses (checked locally, 704 / 704). The 1,849 census list
+  (`~/count_differs_members.tsv`, PA only) is the gate-5 member list, not the build's input — not checked here against the 2,166.
+- **verses.text:** B's per-verse list `step5_prose_20261101.tsv` (f2a22ecd…; local copy `prose_20261031.tsv`, same sha) — written
+  15,571 · unchanged 13,500 · kept_old 2,166; derived from the feed + src + A's eligible file; B2's apply list was "SAME bytes"
+  (stage C handoff :82, :92-94). Mark 1:9 is in it: eligible, `written`, 123 → 113 chars. **Available as a member list.**
+- **words.english / english_head:** A prints only a COUNT ("english changed 15,588", build_words_from_abp.py :2473-2475); its
+  dry run writes strict_fail, eligible, merge_pairs, edge_splits (:2481-2507) — **no per-cell english list exists.** It can be
+  produced from inputs only by a new A dry-run output (a code change to the build; a new file = checkpoint) run on a copy of src
+  with the step-5 inputs, its count checked = 15,588.
+- **Later English writes on built, each with its own file:** finish_rebuild 4b prose corrections (6 active + 118 EU rows) and
+  step 7 word corrections (`tests/fixtures/edition_upgrade/eu_batch_rows_20261102/20261103.tsv`, committed; correction carve-out
+  `correction_carveout_20261031.tsv`); 8b.2a lane-3 (18 verses: english 35 · english_head 17 cells, `~/rekey/live_8b2a.log`
+  + DR "8B2A" entry); merge pairs 1,578 / edge splits 90 (old English kept, `merge_pairs_` / `edge_splits_20261102.tsv`, committed).
+- **"29%":** neither lane figure is 29% (B wrote 15,571 = 49.8% of 31,237; A english changed 15,588). The 29% comes from the
+  rebuild-trap charter's estimate; not traced further.
+
+**B. The (ii) set — ruled stage C/D changes to strongs / strongs_base / position / morph (inventory checked against DR lines):**
+| change | columns | ruling | members in a file? |
+|---|---|---|---|
+| 10 reorder verses = the 20 moved words | position (whole rows; morph+lemma with them in 7) | §9.93 (a) | listed in DR :2724-2726; file `strongs_pos_census2_20261106.tsv` — PA only |
+| 8b.2: the six none → lemma-only rows | strongs_base (H → `*`) | §9.95 | `drift8b2_20261106.log` (PA); Jer 49:3 @3 read (§9.133); the other five's positions from §9.78 only |
+| 8b.2: 26,323 rewrites | strongs_base | §9.95 | **counts only** (`xref8b2c_*` logs PA); restores live's 10/25 state, so expected net vs src = the six only — not measured |
+| 8b.0: 339 applied | strongs_base | §9.93 (d) | **counts only** in the repo (`xref8b0b_20261106.log` PA; 5 named vs the 10/25 plan, DR :2716-2718) |
+| 8b.1: 178 restored to the frozen record | strongs_base | §9.94 (a) | dry-run members local `C:\Users\JP\xref8b1_20261106.log` (182 lines); apply log PA |
+| ABPTAG-RESTORE: 16 | strongs_base | §9.96 | named in DR :2880-2912; "src carries the record's number … on all 16" (DR :2812) → net vs src 0 expected |
+| Split 80 → 84 (subject-name split, build) | strongs, strongs_base, morph | **NOT ruled** — +4 unattributed, member log muted (DR :314-318) | none |
+| PN-star A 1,505 + B 2,552; Filled 5 | strongs; position+strongs | counts = 10/25 (stage B record, D :470; not a § ruling) | **counts only** |
+- **Not in the four columns, by their own records:** 8b.2a (DR :3446-3447: "strongs/strongs_base snapshot diff 0 … english 35 ·
+  english_head 17 · greek_pos 38 · bracket_id 41 · other columns 0") — so the 8b.2a repairs belong to the English side, not (ii);
+  the digits restore (writes `greek_pos, bracket_id` only, eu_repair_restore_digits.py :268); REKEY (no words column); SLOT3, 8b.3.
+- **Gaps:** no step measured NET strongs_base built vs src after all of 8b (the census key is strongs+morph+lemma); 8b.0's 339 and
+  8b.2's 26,323 are counts only; 6 of the 10 reorder verses have no recorded cause (4 trace to fix_split_merges entries skipped or
+  re-keyed on built, §9.72 / §9.77 — CC's reading); Split +4 unruled; the §9.92 "words trace" not found.
+
+**What would produce the (ii) list from the steps' own files (not the delta):** a read-only PA block that extracts members from the
+PA-only logs/files above (census2 .tsv; drift8b2 log; xref8b0b / xref8b1b / abptag apply logs if they print members; stage B log
+for Split / PN-star) — what each log actually prints is not known until read. Where a step's log holds counts only (8b.2's 26,323
+at least), its members cannot come from its own files; the ruling chat to say how those are declared.
