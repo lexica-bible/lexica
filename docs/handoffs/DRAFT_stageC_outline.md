@@ -9060,9 +9060,10 @@ nothing else runs on PA in this session (JP: new CC + reviewer sessions after 9a
 
 ### STEP9A-APPLY ran (11/15, PA HEAD 476de530, REF 88f7a5f6) — DONE, exit 0 → STEP 9a CLOSED at 395,014 (§9.128)
 
-Log `~/edition_upgrade_runs/step9a_apply_20261115.log`; run folder `step9a_apply_20261115/`. (The paste JP brought starts at the
-"=== built = what STEP9-APPLY left" line; the GATE REF / pre / sha lines above it are in the PA log; the ruling chat read the
-whole run.) Pre-write: CHECK OK vs STEP9-DRY2 (391,141, 70af7a4a08e7); prep: 150 tables / 3,806,633 rows / 300 schema entries;
+Log `~/edition_upgrade_runs/step9a_apply_20261115.log`; run folder `step9a_apply_20261115/`. Started 13:57:29Z (GATE REF line;
+the full log was pasted on a second paste — the first began at the check section). PRE OK (88f7a5f6 an ancestor of HEAD,
+scripts/tests = REF, no journals, both rollback copies present); home in use 7,378,000 KB before the run; snapshot d9435bde…,
+lexicon 91d9d036c0922ef9…, key-2 list 83 / d0967a0d…, STEP9A-DRY2 report e154d8d4… — each = declared. Pre-write: CHECK OK vs STEP9-DRY2 (391,141, 70af7a4a08e7); prep: 150 tables / 3,806,633 rows / 300 schema entries;
 **before.db 18,194,432 B, sha ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273, 391,141 rows** (the pre-9a copy,
 the 9c before side, F3); dry.db 109,780,992 B. Throwaway restore: all gates PASS, placed line = declared, report e154d8d4… (= the
 dry report), 395,014; before → throwaway 3,873 added / 538 changed / 0 removed at exactly the report's slots, delta sha
