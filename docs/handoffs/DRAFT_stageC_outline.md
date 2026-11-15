@@ -9057,3 +9057,20 @@ the write.
 
 **Ruling (11/15, §9.127): STEP9A-APPLY cleared to run** on the §9.126 figures. After its log: push, write the successor handoff;
 nothing else runs on PA in this session (JP: new CC + reviewer sessions after 9a closes).
+
+### STEP9A-APPLY ran (11/15, PA HEAD 476de530, REF 88f7a5f6) — DONE, exit 0 → STEP 9a CLOSED at 395,014 (§9.128)
+
+Log `~/edition_upgrade_runs/step9a_apply_20261115.log`; run folder `step9a_apply_20261115/`. (The paste JP brought starts at the
+"=== built = what STEP9-APPLY left" line; the GATE REF / pre / sha lines above it are in the PA log; the ruling chat read the
+whole run.) Pre-write: CHECK OK vs STEP9-DRY2 (391,141, 70af7a4a08e7); prep: 150 tables / 3,806,633 rows / 300 schema entries;
+**before.db 18,194,432 B, sha ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273, 391,141 rows** (the pre-9a copy,
+the 9c before side, F3); dry.db 109,780,992 B. Throwaway restore: all gates PASS, placed line = declared, report e154d8d4… (= the
+dry report), 395,014; before → throwaway 3,873 added / 538 changed / 0 removed at exactly the report's slots, delta sha
+77d619039ef0474c742650e910d18ee150d202612bfd5717031123a850ba1f1a; SAME OK. **Write on built:** S / L / V / G1a PASS; moved 6
+(Gen 5:25, 5:26, 34:4, Jos 5:15, 2Ki 23:35, Est 5:9); placed 4,411 (3,977 · 351 · key-2 listed 83); 3,873 / 538; Lexicon 4,022 /
+389; W: journal delete, 391,141 under the lock, post-write 395,014, 4,411 written rows = snapshot form + translit, every other row
+unchanged, new rows = the insert slots, no NBSP / ἡ, COMMITTED; T: translit rule 0, quick_check ok. **After:** apply report sha
+e154d8d4… (`step9a_apply_20261115/report_apply.tsv`); abp_surface 395,014; CHECK OK (149 untouched + schema; abp_surface
+219a3ebe7075 = throwaway); before → after delta = the throwaway's (77d61903…).
+**Ruling (11/15, §9.128): step 9a applied on built and CLOSED at 395,014.** Observed, no ruling: "APPLY (copy only)" / "(on a
+copy)" are the restore's fixed labels. Push; successor handoff (`HANDOFF_edition_upgrade_stageE.md`); nothing further on PA.
