@@ -10334,3 +10334,28 @@ read-only script (or an eu_words_delta option) → reviewer → ruling chat, the
   only written tables; every other table + schema unchanged).
 - Knock-on, for the record: built's active-corrections count rises by the number of rows (cert_invariants pin / the active-list
   fixture re-pinned at the swap, as the rest of §4.7); the corrections ride to live with the swap, so a future rebuild re-applies them.
+
+## Head-consistency check code (11/15, CC; §9.145 (2), order step (a)) — in the working tree, NOT committed until ruled
+
+- **NEW `scripts/eu_head_check.py`** (read-only: `mode=ro` + `query_only`; writes only into an existing EMPTY `--out`):
+  `--a <src> --b <built> --out <dir> [--show "Book C:V@P"]...`. Recomputes the BASE rule with the build's own function
+  (`parse_abp._head_word`, the import build_words_from_abp.py :27 uses), in the build's order: plain pick → italic re-pick as
+  `_strip_italic_heads` (:1815-1834: only when english has a space and italic_words names words) → name re-pick as `_star_name_heads`
+  (:1837-1849: strongs `*`, english has a space, non-empty). Lists each copy's stored ≠ recomputed rows (mismatch_a / mismatch_b, in
+  full); a CANDIDATE = mismatch on built only with english, italic_words, strongs equal on both copies (candidates.tsv: verse,
+  position, english, stored head src, stored head built, recomputed, italic_words, strongs); built-only rows whose inputs differ are
+  counted as "inputs differ" (the recorded LIMIT, §9.145 (2)). Counts both / src only / built only printed, none a gate; `--show`
+  prints a named row's full detail on both copies (the block's control). STOP on a duplicate word key or a word with no verse row.
+- **NEW `tests/test_eu_head_check.py`** (7): the recompute mirrors the base rule (plain / italic / name); identical copies → no
+  candidate (a special-pass row mismatches on both); the Joh 19:18 shape on built only → a candidate; a built-only mismatch with other
+  english → "inputs differ"; src-only counted; `--show` yes / NO; neither db written; `--out` empty; same file refused. Proven able to
+  fail: italic re-pick off → 3 tests fail; the equal-inputs condition dropped → the inputs-differ test fails. In ci.yml + pre-commit
+  (80 test files pass). Speed: 626,309 recomputes ≈ 1 s locally.
+- **A note on the control, found while testing the function locally (for the ruling chat before the run):** the base rule gives
+  "side" for "one here on that side," and "happen" for "what would happen"; the stored heads come from the italic re-pick. With
+  italic_words {on, that, side}, "one here on that side," → 'here' and the typo "one h ere on that side," → 'ere' (= src / built at
+  Joh 19:18 @10). For Isa 48:5 @4, "what would happen" gives 'would' with italic {happen} but 'what' with italic {would, happen};
+  the typo gives 'whould' either way. italic_words is equal on both copies (the delta's italic_words count is 0) but its value is
+  not local — so on the real rows built's 'what' may be what the rule gives and src's 'would' the mismatch. If so, Isa 48:5 @4 will
+  NOT be a candidate and the block reads CHECK on that control, with `--show` printing both rows in full; that result comes to the
+  ruling chat as found (it would bear on §9.144 (5)'s "built's head must read src's").
