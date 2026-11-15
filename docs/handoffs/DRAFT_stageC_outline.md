@@ -8789,3 +8789,32 @@ English for that slot; the helper printed the empty value as None.)
   Two ways out, for the ruling chat: (A) a small code change letting a reason-7 slot go on the key-2 list on the same terms as
   reason 6 (exactly its listed key-2 slot; same preconditions + Lexicon check), with tests; or (B) leave the 4 and accept the loss,
   incl. Jos 12:23's dropped article. CC recommends A.
+
+**Ruling (11/15, §9.124):** basis of ruling 1 amended ("the English at the slot is reworded, recased, or moved to a neighbouring
+word"); the 5 r6 uncovered and the 4 r7 go on the key-2 list; **option A** (reason 7 allowed on the key-2 list on reason 6's terms,
+3 tests named); leave list empty, key-2 list = all 83; then STEP9A-DRY re-run with the list (read-outs placed 4,411 / unplaced 0 /
+after-count = 391,141 + inserts; gates = the restore's own) → figures declared for STEP9A-APPLY (F3 before.db).
+
+## Reason-7 key-2 code change (11/15, CC; to §9.124 ruling 3) — in the working tree, NOT committed until ruled
+
+`scripts/restore_surface_fill.py` evaluate (:208-213): a key-2-listed slot may now be reason 6 **or 7**; it places only when key 2
+finds one slot = exactly the listed new position (for reason 7 that is never key 1's slot), then runs the same preconditions
+(3 / 4) and Lexicon check (5) as before; a listed reason-6/7 slot whose key 2 finds another position still STOPs ("on the key-2
+list at new position N, key 2 now finds M"); any other reason still STOPs. Docstring (G2, evaluate), the list-section comment and
+`--key2-alone` help updated. Nothing else changes (decide(), the leave list, after-count, apply, the 9c re-freeze — which takes
+every placed slot whatever its reason).
+`tests/test_surface_fill_restore.py` (+4, now 47; fixture: (1,2) 'word' → 'speech' and a second 3056 'word' at (1,5), so key 2 → 2,
+key 1 → 5 = reason 7): **r7 listed places** (key 1's slot filled by its own row, left unchanged; table 6); **r7 listed with key 1's
+slot empty goes only to its listed slot** (nothing written at (1,5); table 5); **r7 listed at key 1's slot STOPs**, nothing
+written; **r7 on no list still STOPs** (G2), nothing written. With the code change reverted, the first three FAIL and the
+fourth passes (it guards behaviour that must not change).
+
+### Reason-7 code change reviewed (11/15) — REVIEW: CLEAR (code change → ruling chat, §9.90)
+Verdict line verbatim: "REVIEW: CLEAR - the reason-7 key-2 change matches DESIGN 9.124 ruling 3. Reason 7 now goes through the same check, preconditions and Lexicon check as reason 6, and nothing else changed. The 4 tests exercise what their names say. Per 9.90 this verdict goes to the ruling chat, and it is a block clearance, not a receipt of results."
+Reviewer note (not a defect): the restore has no check that two snapshot slots land on one new position. CC check
+(`dryrun_rekey_fill.py:170-179`): every placement — normal or listed — is key 2's slot, the k-th position carrying the slot's
+Greek number; two slots with the same number in a verse have different k, and a position held twice returns "ambiguous" (reason
+2, never placed). So two placed slots cannot share a position; reason 7 adds nothing here.
+
+**Ruling (11/15, §9.125):** the reason-7 change is approved; commit + push as the new code REF. PA pulls; then the STEP9A-DRY
+re-run with the key-2 list of all 83 (leave list empty), reviewer, PA.

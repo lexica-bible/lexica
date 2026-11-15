@@ -36,10 +36,10 @@ Gates (STOP before any write):
   G1a  the builder chain's table = --base rows exactly (default 391,130; the base the fill is laid on)
   G1b  (--prefill given) builder table = the pre-fill copy row for row (same-code rebuild only)
   G2   every slot placed (unplaced = 0) — or, with the declared lists (DESIGN 9.120), every slot
-       placed, key-2-listed (a reason-6 slot placed at exactly its listed key-2 slot, through the
-       same preconditions + Lexicon check) or leave-listed (unplaced with exactly its listed
-       reason); any slot that does not resolve as listed, or a listed slot not in the snapshot,
-       STOPs
+       placed, key-2-listed (a reason-6 or reason-7 slot placed at exactly its listed key-2 slot,
+       through the same preconditions + Lexicon check; reason 7 since DESIGN 9.124) or
+       leave-listed (unplaced with exactly its listed reason); any slot that does not resolve
+       as listed, or a listed slot not in the snapshot, STOPs
   G1   after the writes, before COMMIT: abp_surface = base + the inserts written (395,003 with
        the defaults); the written rows (placed + key-2-listed; never leave-listed) = snapshot
        form + romanize(form, lemma of the NEW slot); every other row unchanged; new rows =
@@ -92,7 +92,7 @@ def after_count(base, res):
     return base + sum(1 for x in res if not x["reason"] and x["row"]["action"] == "insert")
 
 
-# ── the declared slot lists (DESIGN 9.112 / 9.120, charter 4.9 reason 6) ──────────────────────
+# ── the declared slot lists (DESIGN 9.112 / 9.120 / 9.124, charter 4.9 reason 6) ───────────────
 # Both are TSVs made from the 9a DRY RUN's own --report after the ruling chat rules on its member
 # list; slots are named by the snapshot's own (book, chapter, verse, old position).
 KEY2_HEADER = ["book", "chapter", "verse", "old_position", "new_position"]
@@ -187,7 +187,8 @@ def evaluate(con, rows, lex, restoring, key2=None, leave=None):
     """One pass over the snapshot -> list of result dicts. `restoring` = the table is at the
     builder base (preconditions 3/4 apply); else the ALREADY check (each placed slot must
     already hold its form). key2 / leave = the declared lists (DESIGN 9.120): a key-2-listed
-    slot must be reason 6 with exactly the listed key-2 slot, and is then placed there and runs
+    slot must be reason 6 or 7 (7 since DESIGN 9.124) with exactly the listed key-2 slot (never
+    key 1's), and is then placed there and runs
     the SAME preconditions and Lexicon check as any placed slot; a leave-listed slot must end
     unplaced with exactly its listed reason. Any other outcome sets list_err (G2 STOPs)."""
     from apply_abp_surface_fill import LEXICON_CLASSES        # the ONE class list
@@ -206,9 +207,9 @@ def evaluate(con, rows, lex, restoring, key2=None, leave=None):
         sk, listed, list_err = slot_key(r), "", ""
         if sk in key2:
             listed = "key2"
-            if reason == 6 and k2[0] == "one" and k2[1] == key2[sk]:
+            if reason in (6, 7) and k2[0] == "one" and k2[1] == key2[sk]:
                 reason, detail = 0, "key-2 alone (listed)"
-            elif reason == 6:
+            elif reason in (6, 7):
                 list_err = f"on the key-2 list at new position {key2[sk]}, key 2 now finds {k2[1]}"
             else:
                 list_err = f"on the key-2 list but {'places normally' if not reason else f'reason {reason}'}"
@@ -487,7 +488,7 @@ def main(argv=None, live=dr.LIVE):
     ap.add_argument("--base", type=int, default=None,
                     help=f"the builder chain's table total the fill is laid on (G1a; default {ROWS_BASE:,})")
     ap.add_argument("--key2-alone", metavar="TSV",
-                    help="declared reason-6 slots to place by key 2 alone (DESIGN 9.120)")
+                    help="declared reason-6 / reason-7 slots to place by key 2 alone (DESIGN 9.120, 9.124)")
     ap.add_argument("--leave-unplaced", metavar="TSV",
                     help="declared slots to leave unplaced, each with its reason (DESIGN 9.120)")
     a = ap.parse_args(argv)

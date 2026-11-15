@@ -496,6 +496,45 @@ class Lists(ListsBase):
         self.assertEqual(rc, 1)
         self.assertIn("on the key-2 list at new position 9, key 2 now finds 1", out)
 
+    # DESIGN 9.124: a reason-7 slot may be key-2-listed on reason 6's terms. Fixture: (1,2) 'word'
+    # is now 'speech' and a second 3056 'word' sits at (1,5) -> key 2 finds 2, key 1 finds 5.
+    REASON7 = [w if w[:2] != (1, 2) else (1, 2, "3056", "speech") for w in OLD_WORDS] + [(1, 5, "3056", "word")]
+
+    def test_key2_list_places_a_reason7_slot(self):
+        self.build(words=self.REASON7, surface=PREFILL_SURFACE + [(1, 5, "λόγου")])  # key 1's slot filled
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 1, 2, 2)], base=3)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("key-2 listed 1", out)
+        self.assertIn("G1 table after            6 | 6", out)
+        rows = {(v, p): f for v, p, f, _t in rows_of(self.built)}
+        self.assertEqual(rows[(1, 2)], "λόγου")
+        self.assertEqual(rows[(1, 5)], "λόγου")                     # key 1's own row, unchanged
+
+    def test_key2_listed_reason7_with_key1_slot_empty_goes_only_to_its_listed_slot(self):
+        self.build(words=self.REASON7)                              # (1,5) has no form
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 1, 2, 2)])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("G1 table after            5 | 5", out)
+        self.assertEqual({(v, p) for v, p, _f, _t in rows_of(self.built)},
+                         {(1, 1), (1, 2), (1, 3), (2, 2), (3, 1)})   # nothing at (1,5)
+
+    def test_key2_listed_reason7_at_key1s_slot_stops(self):
+        self.build(words=self.REASON7)
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, key2=[("Gen", 1, 1, 2, 5)])
+        self.assertEqual(rc, 1)
+        self.assertIn("on the key-2 list at new position 5, key 2 now finds 2", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_reason7_slot_on_no_list_still_stops(self):
+        self.build(words=self.REASON7)
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, key2=[])
+        self.assertEqual(rc, 1)
+        self.assertIn("G2 1 slot(s) unplaced and not leave-listed", out)
+        self.assertIn("both one slot, different", out)
+        self.assertEqual(digest(self.built), before)
+
     def test_leave_list_leaves_the_slot_and_reads_already_after(self):
         self.build(words=self.REASON6)
         rc, out = self.run_lists(apply=True, leave=[("Gen", 1, 3, 1, 6)])
