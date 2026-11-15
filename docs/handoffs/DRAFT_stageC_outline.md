@@ -8818,3 +8818,99 @@ Greek number; two slots with the same number in a verse have different k, and a 
 
 **Ruling (11/15, §9.125):** the reason-7 change is approved; commit + push as the new code REF. PA pulls; then the STEP9A-DRY
 re-run with the key-2 list of all 83 (leave list empty), reviewer, PA.
+
+**New code REF `88f7a5f6`** (11/15, pushed; pre-commit all passed): the reason-7 key-2 change + 4 tests + the docs above.
+
+## STEP9A-DRY2 drafted (11/15, GATE REF 88f7a5f6; PA must pull first) — the §9.124/§9.125 re-run with the key-2 list
+
+Read-only. **Guards:** pre (REF 88f7a5f6); snapshot (+ .sha256), Lexicon, and STEP9A-DRY's report present; **that report's sha =
+fb5daacf…** (the one STEP9A-CTX printed and the rulings read); built = STEP9-APPLY's result (`eu_step check`) and abp_surface
+391,141; built + src size/time before = after.
+**The key-2 list (§9.124 ruling 4)** is derived on PA from that report: every unplaced row, at its key-2 slot (`key2` = "one:N");
+STOP unless 83 = r6 79 + r7 4 with every key 2 one slot. Saved as `step9a_dry2_20261115/key2_list.tsv` (STEP9A-APPLY reuses it by
+sha), printed in full with its sha. Leave list: none.
+**The restore DRY RUN** `--base 391141 --key2-alone <list>`, no `--prefill`: its S / L / V / G1a lines, any UNPLACED / LISTED-not-
+as-listed / MOVED lists, SUMMARY and RESULT printed; output + report kept (report sha printed). Then: each listed slot found in the
+report and placed at exactly its listed position "key-2 alone (listed)" (count, any other printed); the 9 CTX slots as the report
+has them.
+**Read-outs vs the traced expectation — printed yes/NO, NOT gates (§9.124 ruling 5):** placed 4,411 = agree-strong 3,977 +
+agree-weak 351 + key-2 listed 83; unplaced 0; listed-not-as-listed 0; inserts / updates 3,873 / 538 (the S gate's split, all
+placed); moved 6 (the trial's 6 — the 4 r7 place at their old positions, CTX log); Lexicon pass 4,022 / uncovered 389 (the trial's
+4,018 / 389 + the 4 r7, each Lexicon-checked and agree() full at key 2, CTX log); after-count 391,141 + 3,873 = 395,014; every gate
+passes. The gates are the restore's own.
+Local test (fake copies; fake clone at 88f7a5f6 + one fake commit setting the snapshot counts / unpinning it): READ DONE, exit 0,
+3-slot list (r6 2 + r7 1) all placed "key-2 alone (listed)", restore "every gate PASSES"; the figure lines read NO on fake figures
+and yes where they match; a listed slot made to fail its Lexicon check → the restore's LISTED list + "NOT AS LISTED" line, restore
+exit 1, block still READ DONE (read-out, not a STOP); report sha not the ruled one → STOP; re-paste → STOP.
+
+### Block STEP9A-DRY2 (GATE REF 88f7a5f6; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9a_dry2_20261115.log
+if [ -e "$L" ]; then echo "STEP9A-DRY2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=88f7a5f6
+echo "GATE REF ${REF} - STEP9A-DRY2 rebuild-words step 9a DRY RUN re-run: restore_surface_fill on built at --base 391141 with the key-2 list of all 83 unplaced slots (r6 79 + r7 4), leave list empty (sec 9.124 / 9.125) - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9A-DRY2 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+SNAP=tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
+LEX=abp_helps/analytical_lexicon.tsv
+DD=~/edition_upgrade_runs/step9_dry2_20261114
+DA=~/edition_upgrade_runs/step9a_dry_20261115
+D=~/edition_upgrade_runs/step9a_dry2_20261115
+E="python3 scripts/eu_step.py"
+$E pre --tag STEP9AD2 --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9A-DRY2 RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$SNAP" "$SNAP.sha256" "$LEX" "$DA/restore_dry.tsv"; do [ -s "$f" ] || { echo "STEP9A-DRY2 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "snapshot $SNAP: $(wc -l < "$SNAP") lines, sha256 $(sha256sum < "$SNAP" | cut -d' ' -f1) (the restore checks it against its pin d9435bde...)"
+echo "lexicon $LEX: $(wc -l < "$LEX") lines, sha256 $(sha256sum < "$LEX" | cut -d' ' -f1) (STEP9A-DRY: 91d9d036...)"
+RS=$(sha256sum < "$DA/restore_dry.tsv" | cut -d' ' -f1); echo "STEP9A-DRY report $DA/restore_dry.tsv: sha256 $RS (expect fb5daacf..., the report the rulings read)"
+[ "$RS" = fb5daacff90133a4242aa3006163c1a4d9a8cff11d0c287d0ecb6668dedc4cf6 ] || { echo "STEP9A-DRY2 RESULT: STOP - the STEP9A-DRY report is not the one the rulings read"; exit 1; }
+echo "=== built = what STEP9-APPLY left (eu_step check against STEP9-DRY2's prep + dry copy; read-only) ==="
+$E check --tag STEP9AD2 --built "$B" --dir "$DD" --written abp_surface || { echo "STEP9A-DRY2 RESULT: STOP - built is not STEP9-APPLY's result (lines above)"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect 391141)"
+[ "$n0" = 391141 ] || { echo "STEP9A-DRY2 RESULT: STOP - built's abp_surface is not 391,141"; exit 1; }
+bs0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+# --- the key-2 list (sec 9.124 ruling 4): every unplaced slot of the STEP9A-DRY report, at its key-2 slot ---
+K="$D/key2_list.tsv"
+awk -F'\t' -v OFS='\t' 'BEGIN {print "book", "chapter", "verse", "old_position", "new_position"} NR > 1 && $12 == "unplaced" {split($10, k, ":"); print $1, $2, $3, $4, ((k[1] == "one") ? k[2] : "NOT-ONE")}' "$DA/restore_dry.tsv" > "$K"
+nk=$(($(wc -l < "$K") - 1)); n6=$(awk -F'\t' 'NR > 1 && $12 == "unplaced" && $13 == 6' "$DA/restore_dry.tsv" | wc -l); n7=$(awk -F'\t' 'NR > 1 && $12 == "unplaced" && $13 == 7' "$DA/restore_dry.tsv" | wc -l); nx=$(awk -F'\t' '$5 == "NOT-ONE"' "$K" | wc -l)
+echo "key-2 list $K: $nk slots (expect 83) = reason 6 $n6 (expect 79) + reason 7 $n7 (expect 4); key 2 not one slot: $nx (expect 0); sha256 $(sha256sum < "$K" | cut -d' ' -f1)"
+[ "$nk" = 83 ] && [ "$n6" = 79 ] && [ "$n7" = 4 ] && [ "$nx" = 0 ] || { echo "STEP9A-DRY2 RESULT: STOP - the key-2 list is not the ruled 83"; exit 1; }
+echo "--- the key-2 list in full (book chapter verse old_position new_position):"
+sed -n '2,$p' "$K" | sed 's/\t/ /g; s/^/  /'
+# --- the restore dry run with the list (writes only its --report) ---
+echo "=== restore_surface_fill DRY RUN on built: --base 391141 --key2-alone (83), no leave list, no --prefill ==="
+python3 scripts/restore_surface_fill.py "$B" --snapshot "$SNAP" --lexicon "$LEX" --report "$D/restore_dry2.tsv" --base 391141 --key2-alone "$K" > "$D/restore_dry2.out" 2>&1; r=$?
+sed -n '1,/^RE-KEY/p' "$D/restore_dry2.out"
+sed -n '/^G1a/{p;n;p}' "$D/restore_dry2.out"
+sed -n '/^UNPLACED rows/,/^$/p' "$D/restore_dry2.out"
+sed -n '/^LISTED slots that do not resolve/,/^$/p' "$D/restore_dry2.out"
+sed -n '/^PLACED rows that MOVED/,/^$/p' "$D/restore_dry2.out"
+sed -n '/^SUMMARY/,$p' "$D/restore_dry2.out"
+echo "restore exit $r (0 = every gate passes)"
+sed -n '/^RESULT: DRY RUN COMPLETE/p' "$D/restore_dry2.out" | sed -n '1p' > "$D/result.txt"
+[ -s "$D/result.txt" ] || { echo "STEP9A-DRY2 RESULT: STOP - the restore did not finish its dry run (full output: $D/restore_dry2.out)"; exit 1; }
+echo "full restore output: $D/restore_dry2.out ($(wc -l < "$D/restore_dry2.out") lines); report $D/restore_dry2.tsv: $(wc -l < "$D/restore_dry2.tsv") lines, sha256 $(sha256sum < "$D/restore_dry2.tsv" | cut -d' ' -f1)"
+# --- each listed slot in the report: placed at exactly its listed position, by the listed rule ---
+awk -F'\t' 'FNR == 1 {f++; next} f == 1 {want[$1 FS $2 FS $3 FS $4] = $5; next} ($1 FS $2 FS $3 FS $4) in want {n++; if ($12 == "placed" && $5 == want[$1 FS $2 FS $3 FS $4] && index($14, "key-2 alone (listed)") == 1) ok++; else print "  NOT AS LISTED: " $1 " " $2 ":" $3 " pos " $4 " -> " $5 " " $12 " r" $13 " " $14} END {print "listed slots found in the report: " n + 0 " (expect 83); placed at exactly the listed position by key 2 alone: " ok + 0 " (expect 83)"}' "$K" "$D/restore_dry2.tsv"
+echo "--- the 9 slots ruled on the context read (sec 9.124 rulings 2-3), as the report has them - verse | old pos -> new pos | action | cls | result | detail | lexicon:"
+awk -F'\t' -v OFS=' | ' '($1 " " $2 ":" $3 " " $4) ~ /^(Lev 20:15 4|Deu 28:62 5|Jos 5:5 30|1Ki 8:44 25|Job 32:21 8|Jos 12:23 2|1Ki 14:20 4|Jer 26:21 19|Psa 71:0 0)$/ {print "  " $1 " " $2 ":" $3, $4 " -> " $5, $6, $7, $12, $14, $15}' "$D/restore_dry2.tsv"
+# --- expected read-outs (traced; NOT gates - sec 9.124 ruling 5) ---
+SUM=$(sed -n '/^SUMMARY/,$p' "$D/restore_dry2.out")
+chk() { case "$SUM" in *"$2"*) echo "  $1: yes";; *) echo "  $1: NO (expected text: $2)";; esac; }
+echo "--- read-outs vs the traced expectation (not gates):"
+chk "placed 4,411 = agree-strong 3,977 + agree-weak 351 + key-2 listed 83" "4,411 | 4,411   (agree-strong 3,977 · agree-weak 351 · key-2 listed 83)"
+chk "unplaced 0" "unplaced                  0 | 0"
+chk "listed slots not as listed 0" "listed slots not as listed 0 | 0"
+chk "placed inserts / updates 3,873 / 538" "3,873 / 538 | 3,873 / 538"
+chk "moved 6 (the trial's 6; the 4 r7 place at their old positions)" "placed rows that moved    — | 6"
+chk "Lexicon pass 4,022 / uncovered 389 (the trial's + the 4 r7)" "{'pass': 4022, 'uncovered': 389}"
+chk "after-count 391,141 + 3,873 = 395,014" "base 391,141 + inserts written 3,873 = 395,014"
+chk "every gate passes" "every gate PASSES"
+bs1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' '); echo "built + src size and time before = after: $([ "$bs1" = "$bs0" ] && echo yes || echo NO)"
+[ "$bs1" = "$bs0" ] || { echo "STEP9A-DRY2 RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+echo "STEP9A-DRY2 RESULT: READ DONE - restore exit $r: $(cat "$D/result.txt")"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
