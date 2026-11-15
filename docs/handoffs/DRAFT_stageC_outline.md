@@ -8500,3 +8500,6 @@ Verdict line verbatim: "REVIEW: ESCALATE - the block is read-only and its wrappe
   the slots.
 - **Minor — FIXED:** tabs / newlines inside `verses.text` or `words.english` are replaced by spaces in the reads.
 The block above now holds the fixed text.
+
+### STEP9A-DRY re-reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - this re-run is read-only; the three fixes are in exactly as named, nothing else moved, and every wrapper item and tripwire passes"
