@@ -138,6 +138,8 @@ Local copies of the three fixture inputs: `C:\Users\JP\edition_upgrade_runs\pa\`
   Num 36:5 @13 xref H3478 vs identity G2501 (frozen record restored over built-before H3130).
 - 1Sa 11:3 @6: Ιαβής on ', saying,' with is_pn 1, on both copies.
 - Est 1:17 ')' stays on the §9.87 list.
+- Isa 48:5 @4 (§9.148): italic_words 'happen,whould' (the typo still in the added-words value, both copies) → the corrected
+  value; and src / live's english_head 'would' (built keeps 'what', a declared single row of the step-4 gate).
 - `check_wordpos_prereg.py` R4 refuses the 4 Israel-king joram rows (evidence quotes keep "Jehoram …") — §9.98.
 - Still open from earlier (stageC_repin follow-up list): the 10 reorder verses — eSword/ABP order confirmation
   before the swap (§9.93 b); notes-store position anchors at the 20 moved words — before stage G.

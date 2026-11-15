@@ -10489,3 +10489,27 @@ added words at Isa 48:5 slot 4; with 'would' as an added word the build's rule g
 exists so a head is never an added word. Writing 'would' would set the head to a word the print marks as added; the follow-up
 italic_words correction would then make it stale again. Raised to the ruling chat before the Isa row is put in a fix file; the Joh
 19:18 @10 row is drafted meanwhile. The 1 inputs-differ row and the 4 both-copies rows were already read (adee2a15, "HEADCHECK files read").
+
+## Joh 19:18 @10 head fix — code part (11/15, CC; §9.148 (3)-(5)) — in the working tree, NOT committed until ruled
+
+**Route:** the lane's existing correction route (§9.145 item 3), with the one code change §9.148 (4) asks for.
+- `scripts/eu_batch_insert.py`: the end check now counts only the EU rows THIS run adds (`n_after − n_before == len(rows)`, printed as
+  "EU- rows on the copy: N (before M; this batch adds K, expected K)"); before, it compared ALL EU rows on the copy to the batch size, so
+  a later batch on built (344 EU rows already) would read MISMATCH after writing. New `--created` (default the first batch's
+  2026-11-02, so the first-batch behaviour is unchanged); the Joh row uses 2026-11-15. Nothing else changes (the clash check — any row
+  of any status on the same key STOPs — the sha / count pins, the dry run).
+- NEW fixture `tests/fixtures/edition_upgrade/eu_batch_rows_heads_20261115.tsv` (+ `.sha256`, `4ba1d7bc1292b8bee8529bdf3f661e417153de243d88a108a33136be1975bb60`):
+  one row — Joh 19 18 10 `english_head` source 'ere' → corrected 'here', ledger EU-Joh19:18, group `typo` (§9.74). **Why 'here':**
+  english, italic_words ('on,side,that') and strongs ('1782') are equal on both copies; src's stored head 'here' = the build's rule; the
+  pinned feed's added words at this slot are 'on that side,' (so the rule's head is the Greek word's own 'here'); built's 'ere' is the
+  rule's head of the typo text "one h ere" the EU english row corrected (HEADCHECK SHOW lines; §9.147 / §9.148 (3)).
+- NEW `tests/test_eu_batch_insert.py` (6): first batch on a copy with no EU rows → INSERTED (old behaviour); second batch on a copy
+  already holding EU rows → INSERTED (fails under the old end check — proven); dry run writes nothing; `--created` sets the date,
+  default 2026-11-02; an existing key of any status STOPs; wrong sha / count STOP; the committed heads file = its pin and holds exactly
+  the one row. In ci.yml + pre-commit; 81 test files pass.
+**Then (after the ruling + commit = new code REF), the PA write block, drafted on that REF:** dry on a throwaway copy (eu_step prep:
+words, abp_corrections, kjv_words, bsb_words), then on built: `eu_batch_insert.py --rows <heads file> --sha256 4ba1d7bc… --expect 1
+--created 2026-11-15 --apply` → `apply_abp_corrections.py --apply` (guarded; only the cell holding 'ere' is written, every other active
+row reads already-applied) → `build_rendering_norm.py` (step 11's recompute: only Joh 19:18 @10's english_head_norm may move) → eu_step
+check (written: words, abp_corrections, and the rendering-norm tables = the throwaway; every other table + schema unchanged) and a
+row read at Joh 19:18 @10 (head 'here', norm 'here'). Before-copy saved by prep. Then the raw delta re-run (read-only).
