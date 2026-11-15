@@ -9787,3 +9787,89 @@ restore_surface_fill.py carries both pins; 10/25 file d9435bde…; all four fixt
 e154d8d4…, `~/abp_surface_prefill_20261115.db` 18,194,432 B ea6c54c3… (abp_surface 391,141 rows); `sha256sum -c` OK on
 abp_surface_fill_20261115 / restore_report_20261115 / abp_surface_fill_20261025; sources + 10/25 file unchanged; checkout clean.
 Every line = the §9.135 declaration.
+
+## STEP9C-CHECK drafted (11/15, GATE REF 19e2fb25) — §9.134 (c): rebuild-words 1a's `--check` on built under the 9c pins
+
+Read-only; writes only `step9c_check_20261115/` + its log. Guards (STOP): pre (`--db` built + src, `--keep` the pre-fill copy,
+snapshot, report); the two `.sha256` files present; snapshot d025cc08… / report e154d8d4… / pre-fill copy ea6c54c3…; built =
+STEP9A-APPLY's result (eu_step check). **1.** The 1a command (rebuild-words.md :74) with `--src` = built → exit 0 and nine printed
+lines (snapshot_surface_fill.py at 19e2fb25: :314, :275, :286, :190, :342, :345-347, :348) incl. `RESULT: SNAPSHOT CURRENT`;
+misses → CHECK. **2. Control:** the same with `--src` = src (10/25 layout) → must STOP "STALE SNAPSHOT" (§9.134 (ii)). **3. Control:**
+`--csv` → must STOP "check needs --from-restore" (the §9.134 guard, :375-379). Built / src / pre-fill size+time and the fixture
+folder listing unchanged, else STOP.
+Local test (WSL, fake HOME, clone at 1848c08c + a fake commit setting the pins to the fakes; a made-up built with a 4,411-slot fill
+re-frozen by the real STEP9C-FREEZE block, files placed as STEP9C-PLACE does; src = built minus one fill row): clean PASS exit 0
+(nine yes; src control STALE; --csv control refused); re-paste STOP; a tampered frozen file → CHECK.
+
+### Block STEP9C-CHECK (GATE REF 19e2fb25; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9c_check_20261115.log
+if [ -e "$L" ]; then echo "STEP9C-CHECK RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=19e2fb25
+echo "GATE REF ${REF} - STEP9C-CHECK rebuild-words step 1a's --check under the 9c pins, on built (DESIGN 9.134 (c)): snapshot_surface_fill --check --src <built> --prefill ~/abp_surface_prefill_20261115.db --from-restore the pinned report - expect SNAPSHOT CURRENT; two controls that must STOP (src = the 10/25 layout -> STALE; --csv -> the 9.134 guard) - READ-ONLY, writes only its run folder and log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9C-CHECK RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+PF=~/abp_surface_prefill_20261115.db
+FX=tests/fixtures/rebuild_trap
+SNAP=$FX/abp_surface_fill_20261115.tsv
+REP=$FX/restore_report_20261115.tsv
+D=~/edition_upgrade_runs/step9c_check_20261115
+XS=d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff
+XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a
+XB4=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273
+ck() { python3 scripts/snapshot_surface_fill.py --check --src "$1" --prefill "$PF" "$2" "$3" --out "$SNAP" > "$4" 2>&1; }
+# --- before the check: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag CHECK9C --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep "$PF" --keep "$SNAP" --keep "$REP" || { echo "STEP9C-CHECK RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$SNAP.sha256" "$REP.sha256" "$DA/state.json" "$DA/dry.db"; do [ -s "$f" ] || { echo "STEP9C-CHECK RESULT: STOP - missing or empty: $f"; exit 1; }; done
+s=$(sha256sum < "$SNAP" | cut -d' ' -f1); echo "snapshot $SNAP: sha256 $s (expect $XS)"; [ "$s" = "$XS" ] || { echo "STEP9C-CHECK RESULT: STOP - not the pinned snapshot"; exit 1; }
+s=$(sha256sum < "$REP" | cut -d' ' -f1); echo "report $REP: sha256 $s (expect $XR)"; [ "$s" = "$XR" ] || { echo "STEP9C-CHECK RESULT: STOP - not the pinned report"; exit 1; }
+s=$(sha256sum < "$PF" | cut -d' ' -f1); echo "pre-fill copy $PF: sha256 $s (expect $XB4)"; [ "$s" = "$XB4" ] || { echo "STEP9C-CHECK RESULT: STOP - not the recorded pre-fill copy"; exit 1; }
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+python3 scripts/eu_step.py check --tag CHECK9C --built "$B" --dir "$DA" --written abp_surface || { echo "STEP9C-CHECK RESULT: STOP - built is not STEP9A-APPLY's result (lines above)"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" "$PF" | tr '\n' ' '); fx0=$(ls -l --time-style=+%s "$FX" | sha256sum | cut -d' ' -f1)
+FL=""
+# --- the check (the 1a command, --src = built): must read SNAPSHOT CURRENT ---
+echo "=== 1. --check on BUILT under the 9c pins (the rebuild-words 1a command, --src = built) ==="
+ck "$B" --from-restore "$REP" "$D/check_built.out"; r=$?
+cat "$D/check_built.out"; echo "check exit $r (expect 0)"
+chk() { case "$(cat "$D/check_built.out")" in *"$2"*) echo "  $1: yes";; *) echo "  $1: NO (expected text: $2)"; FL="$FL $3";; esac; }
+echo "--- vs the declared figures:"
+chk "frozen file = its .sha256 and the pin" "PASS — checksum file matches, = the pin in restore_surface_fill.py" pin
+chk "report = its .sha256" "restore report sha256 $XR = its .sha256" report-file
+chk "report = the pin (R1)" "restore report = the pin in restore_surface_fill.py" report-pin
+chk "G0 = the report, 4,411 = 3,873 + 538" "PASS — 4,411 = 3,873 insert + 538 update = the restore report" g0
+chk "re-derived = the frozen file byte for byte" "PASS — 4,411 rows, identical bytes" bytes
+chk "rows 4,411" "rows                    4,411 | 4,411" rows
+chk "inserts / updates 3,873 / 538" "inserts / updates       3,873 / 538 | 3,873 / 538" split
+chk "sha256 pin | file" "sha256                  $XS | $XS" sha
+chk "SNAPSHOT CURRENT" "RESULT: SNAPSHOT CURRENT" current
+[ "$r" = 0 ] || FL="$FL exit"
+# --- controls (the check must be able to fail): each must STOP ---
+echo "=== 2. control: --check with --src = src (the 10/25 layout, pre-upgrade live) - must read STALE (DESIGN 9.134 (ii)) ==="
+ck "$S" --from-restore "$REP" "$D/check_src.out"; rc1=$?
+cut -c1-300 <<< "$(grep -E '^STOPPED|^RESULT' "$D/check_src.out")"; echo "control exit $rc1 (expect 1)"
+[ "$rc1" = 1 ] && grep -q "STALE SNAPSHOT" "$D/check_src.out" && [ "$(grep -c "SNAPSHOT CURRENT" "$D/check_src.out")" = 0 ] || FL="$FL control-src"
+echo "=== 3. control: --check with --csv (any existing file; the 9.134 guard stops before reading it) - must STOP ==="
+ck "$B" --csv "$REP" "$D/check_csv.out"; rc2=$?
+cut -c1-300 <<< "$(grep -E '^STOPPED|^RESULT' "$D/check_csv.out")"; echo "control exit $rc2 (expect 1)"
+[ "$rc2" = 1 ] && grep -q "check needs --from-restore" "$D/check_csv.out" || FL="$FL control-csv"
+# --- nothing written ---
+st1=$(stat -c '%s %Y' "$B" "$S" "$PF" | tr '\n' ' '); fx1=$(ls -l --time-style=+%s "$FX" | sha256sum | cut -d' ' -f1)
+echo "built, src and the pre-fill copy: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO); fixture folder listing before = after: $([ "$fx1" = "$fx0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] && [ "$fx1" = "$fx0" ] || { echo "STEP9C-CHECK RESULT: STOP - a database or the fixture folder changed during a read-only run - report this"; exit 1; }
+if [ -z "$FL" ]; then
+  echo "STEP9C-CHECK RESULT: PASS - --check on built under 19e2fb25: SNAPSHOT CURRENT (4,411 rows, byte for byte; snapshot + report = their pins); both controls STOP (src STALE, --csv refused); nothing written"; exit 0
+fi
+echo "STEP9C-CHECK RESULT: CHECK -$FL (lines above; outputs in $D)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9C-CHECK reviewed (11/15) — ESCALATE (tripwire 2: grep piped to cut, lines 50 / 54) → fixed as named → REVIEW: CLEAR
+Fix: both display lines → `cut -c1-300 <<< "$(grep -E '^STOPPED|^RESULT' "<file>")"`; nothing else changed; re-test identical.
+Verdict line verbatim: "REVIEW: CLEAR - read-only block. The tripwire 2 hit is fixed: lines 50 and 54 now use <<<. All expected texts trace to code at 19e2fb25, and the wrapper is complete."
+Runs only after the ruling chat has read the STEP9C-PLACE log (§9.135). No push while it waits (§9.76).
