@@ -8914,3 +8914,8 @@ bs1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' '); echo "built + src size and time 
 echo "STEP9A-DRY2 RESULT: READ DONE - restore exit $r: $(cat "$D/result.txt")"
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### STEP9A-DRY2 reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - STEP9A-DRY2 only reads. It re-runs the 9a restore dry run (no --apply) under REF 88f7a5f6 with the 83-slot key-2 list from §9.124 ruling 4 and an empty leave list. Its `chk` texts match the restore's SUMMARY format, and the restore's own gates stay the gates (§9.124 ruling 5)."
+Reviewer note (not a stop): "moved 6" assumes the 4 r7 place at their old positions (shown by the CTX log); a NO there is
+information, not a failure.
