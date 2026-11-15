@@ -10359,3 +10359,19 @@ read-only script (or an eu_words_delta option) → reviewer → ruling chat, the
   not local — so on the real rows built's 'what' may be what the rule gives and src's 'would' the mismatch. If so, Isa 48:5 @4 will
   NOT be a candidate and the block reads CHECK on that control, with `--show` printing both rows in full; that result comes to the
   ruling chat as found (it would bear on §9.144 (5)'s "built's head must read src's").
+
+### Head-check code reviewed (11/15) — REVIEW: ESCALATE (code change); one DEFECT + one GAP → fixed → closed
+First review: "REVIEW: ESCALATE - this is a code change, so under §9.90 it goes to the ruling chat. One DEFECT: `recompute()` runs the two head passes in a different order from the full build."
+- **DEFECT — fixed:** the full build re-runs the italic re-pick AFTER writing the rows (build_words_from_abp.py :2784-2790 →
+  fix_italic_heads.py :44-73: every row with a space and italic_words, no strongs condition, applied when the pick is not empty), so on
+  a star row with italics the italic pick wins over the name pick. recompute() now = plain → italic (verse pass) → name (star rows) →
+  italic re-clean LAST. Without the fix such rows would mismatch on both copies and could never become candidates.
+- **GAP — fixed:** test `test_star_row_with_italics_ends_on_the_italic_pick` ("Hezekiah went up", italic {up}, `*` → 'went'; no italics
+  → 'hezekiah'); switching the re-clean off fails exactly that test.
+- **(7c) — added:** rows mismatching on both copies with different stored heads are counted and written to both_differ.tsv (outside the
+  check, like inputs-differ). Test added. Tests 9; all 80 pre-commit test files pass.
+Second review: "REVIEW: ESCALATE - this is a code change, so it still goes to the ruling chat under §9.90. The DEFECT and the GAP from my first report are both fixed in the working tree, and I found nothing new in the code."
+Still open for the ruling chat before the run block: (6) the Isa 48:5 @4 control — CC's reading of `_head_word` confirmed by the reviewer
+(parse_abp.py :117-139): if the row's italic_words are {would, happen}, built's 'what' is the rule's head, src's 'would' the mismatch,
+and the row is src-only, not a candidate → the control reads CHECK; to be decided BEFORE the run. (7b) the run block declares the
+expected control lines up front and gates on them. (7d) every count is a forecast with no source until the run.
