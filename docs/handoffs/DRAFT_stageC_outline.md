@@ -8760,3 +8760,32 @@ echo "STEP9A-CTX RESULT: READ DONE - 16 slots read in context (9 held + 7 behind
 Verdict line verbatim: "REVIEW: CLEAR - read-only context read for the §9.123 ruling-2 slots. It uses the restore's own key, class and agree rules, its wrapper is complete, and it STOPs on any missing slot or key mismatch."
 Reviewer observation (no STOP): the "both r6 / places, lexicon pass" check on the 2 unprinted rows prints yes/NO without
 stopping — the ruling chat reads that line in the log.
+
+### STEP9A-CTX ran (11/15, 13:11 UTC, PA HEAD ca74e54d, REF cd6566b3) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step9a_ctx_20261115.log`; folder `step9a_ctx_20261115/` (helper sha d3ee7c67… = the local test's).
+PRE OK; restore_dry.tsv 4,412 lines (fb5daacf…), members.tsv 83 (1f032d1d…); CHECK OK (391,141, 70af7a4a08e7); unprinted rows 2,
+both r6 / places, lexicon pass = **yes** (Heb 12:9 @14 "shall we" → "Shall we"; Luk 9:15 @4 "they laid them" → "laid them");
+16 slots, every one's keys recomputed = the dry report; built + src untouched. ("key-1 English "None"" = the snapshot holds no
+English for that slot; the helper printed the empty value as None.)
+
+**CC reading, slot by slot (each from the log lines above):**
+- **5 r6 "uncovered" — key 2 is right on all 5.** Lev 20:15 @4, Deu 28:62 @5, 1Ki 8:44 @25, Job 32:21 @8 are normalize updates:
+  built's key-2 slot already holds exactly the old form (the builder put the same Greek there), so the precondition holds; the
+  English there is reworded (his laying with → his laying; for → because; which → of which; … → in no way). 1Ki 8:44's key-1
+  slots @14 / @32 hold η / ον — other words. Jos 5:5 @30: the only 390 (ἀναστρέφω) in the verse, slot empty, English paced →
+  turned.
+- **4 r7 — key 2 is right on all 4; key 1 points at the other copy of the same Greek number:** 1Ki 14:20 key 1 @17 already holds
+  εβασίλευσεν (Nadab reigned); Jer 26:21 key 1 @1 already holds ήκουσεν (the rulers heard); Jos 12:23 key 1 @7 already holds της
+  (of Gilgal); Psa 71:0 key 1 @3 is των's slot (its own snapshot row, ordinal 1, places there). Key 2's slots are empty.
+- **Psa 71:0 is not a real miss:** the verse text is the same, but the word English moved (src: pos 0 blank, pos 1 "A psalm to
+  David"; built: pos 0 "A psalm to", pos 1 "David"). Both have no-English article slots, which is why key 1 drifted.
+- **The 7 X slots confirm ruling 1:** each is the same Greek number at the same position, slot empty, Lexicon full; the English
+  is reworded, recased, or moved to a neighbour (blank on one side).
+- **Blocker — the code does not allow a reason-7 slot on the key-2 list.** `restore_surface_fill.py:207-214`: a key-2-listed slot
+  that is not reason 6 gets "on the key-2 list but reason 7" → G2 STOP. So today the 4 r7 can only go on the leave list, which
+  drops 4 Greek forms live has. **Jos 12:23 is worse:** pos 3's own row (split_keep update `του Ναφαθδώρ` → `Ναφαθδώρ`, snapshot
+  line checked in the repo) still places, so leaving pos 2 would strip του from pos 3 and land it nowhere — half of a split.
+  Two ways out, for the ruling chat: (A) a small code change letting a reason-7 slot go on the key-2 list on the same terms as
+  reason 6 (exactly its listed key-2 slot; same preconditions + Lexicon check), with tests; or (B) leave the 4 and accept the loss,
+  incl. Jos 12:23's dropped article. CC recommends A.
