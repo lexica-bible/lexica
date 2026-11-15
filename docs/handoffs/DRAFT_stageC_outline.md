@@ -10461,3 +10461,24 @@ the log) — they are outside this check by design; the 1 is answered by the A e
   of the 10 reorder verses, §9.93 (a); its english differs, so the check cannot judge it). Answered by the A english_head output; it is
   also one of the 32 non-swap cells at the moved positions (§9.143 (1)), so it is read when the A output's moved-position matching is laid.
 - **The 2 candidates** = Isa 48:5 @4 and Joh 19:18 @10, as printed.
+
+## Isa 48:5 @4 added words (§9.147 point 4, asked by the ruling chat) + a Joh 19:18 fix-draft finding (11/15, CC; local reads)
+
+**Was the added-words value in scope of the typo correction? No.** The EU rows for Isa 48:5 are `english` @4 ("what whould happen" →
+"what would happen") and `verses.text` only (`eu_batch_rows_20261103.tsv` :158-159); there is no `italic_words` row. On this lane
+nothing italic-related comes from the feed: §9.44 "italic flag from the OLD set … nothing italic-related transplants this lane"; the
+build takes italic_words from the old-edition metadata (build_words_from_abp.py :6, :339). So 'happen,whould' is the same on src and
+built (live's value).
+**What the source marks as added:** the pinned app feed (`abp_app_html/abp_app_slots_italic.tsv`, sha 7bd77385… = the charter §2 pin;
+local copy checked) has Isa 48:5 slot 4 (G3739 α): english 'what  whould happen', italic 1, **italic_words 'whould happen'** — i.e. the
+print marks "would happen" as added and "what" as the Greek word's own rendering. (Joh 19:18 slot 9, G1782 εντεύθεν: english 'one h ere
+on that side,', italic_words 'on that side,' — consistent with the check's rule head 'here'.)
+**The rule's head with 'would' as an added word:** `_head_word("what would happen", {"would","happen"})` = **'what'** (= built's stored
+head); with the stored 'happen,whould' it is 'would' (= src's head) — tested locally with the build's function.
+No cause asserted. CC's reading, for the ruling: src's 'would' rests on the typo inside the added-words value ('whould' ≠ 'would', so
+'would' counts as a real word); with the added words as the feed marks them, built's 'what' is the rule's head. Nothing written for
+this row until ruled.
+**Finding for the Joh 19:18 @10 fix draft:** `eu_batch_insert.py` takes `--rows` (a new file) and the group `typo` exists, but its
+end check counts ALL `EU-%` rows on the copy against the batch size (:146-151: "EU- rows on the copy: N (expected len(rows))"). Built
+already holds the 344 EU rows, so a 1-row batch would end "MISMATCH" after writing. Using it needs a small code change (count only
+the rows this run inserts), or another route — to be stated in the draft. Its `created` date is fixed at 2026-11-02 (:33).
