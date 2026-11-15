@@ -115,8 +115,9 @@ class Base(unittest.TestCase):
                 f.write("\t".join(row) + "\n")
         self._saved = (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE,
                        sn.N_ROWS, rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
-                       rs.SNAPSHOT_SHA256)
+                       rs.SNAPSHOT_SHA256, rs.REPORT_SHA256)
         rs.SNAPSHOT_SHA256 = None                  # the planted snapshot is not the pinned one
+        rs.REPORT_SHA256 = None                    # nor is a planted restore report
         dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = 4, 1, 3, 1
         sn.N_ROWS = 4
         rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE = 2, 5, 4, 3, 1
@@ -124,7 +125,7 @@ class Base(unittest.TestCase):
     def tearDown(self):
         (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE, sn.N_ROWS,
          rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
-         rs.SNAPSHOT_SHA256) = self._saved
+         rs.SNAPSHOT_SHA256, rs.REPORT_SHA256) = self._saved
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def snapshot(self, **over):
@@ -242,6 +243,15 @@ class SnapshotCheck(Base):
         self.edit_src("INSERT INTO abp_surface VALUES (3, 9, 'x', '')")
         rc, out = self.snapshot(check=True)
         self.assert_stale(rc, out, "G0 diff counts are not the fill's")
+
+    def test_check_with_csv_refused_once_a_report_is_pinned(self):
+        """DESIGN 9.134 (finding 3): with REPORT_SHA256 set, --check must use --from-restore."""
+        rs.REPORT_SHA256 = "0" * 64
+        rc, out = self.snapshot(check=True)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("--check needs --from-restore", out)
+        self.assertNotIn("SNAPSHOT CURRENT", out)
+        self.assertEqual(digest(self.snap), self.frozen)            # never overwritten
 
     def test_refuses_a_file_that_is_not_the_pinned_one(self):
         rs.SNAPSHOT_SHA256 = "0" * 64
@@ -371,17 +381,46 @@ class Restore(Base):
 
 
 class AfterCount(unittest.TestCase):
-    """DESIGN 9.120 F1: with no lists and the default base, the computed after-count is today's
-    395,003 on the 10/25 shapes (3,873 inserts + 538 updates laid on 391,130)."""
+    """DESIGN 9.120 F1: with no lists the computed after-count is the 10/25 figure 395,003 on the
+    10/25 shapes (3,873 inserts + 538 updates laid on 391,130). Since the 9c re-pin (DESIGN 9.133)
+    the DEFAULT base is the upgraded chain's 391,141, so the default after-count is 395,014."""
     def test_no_lists_reproduces_395003(self):
         res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
                + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE)
-        self.assertEqual((rs.ROWS_BASE, rs.N_INSERT, rs.N_UPDATE), (391130, 3873, 538))
-        self.assertEqual(rs.after_count(rs.ROWS_BASE, res), 395003)
-        self.assertEqual(rs.after_count(rs.ROWS_BASE, res), rs.ROWS_AFTER)
-        self.assertEqual(rs.after_count(391141, res), 395014)              # the edition upgrade's base
+        self.assertEqual((rs.N_INSERT, rs.N_UPDATE), (3873, 538))
+        self.assertEqual(rs.after_count(391130, res), 395003)              # the 10/25 shapes
         res[0] = dict(reason=6, row=dict(action="insert"))                 # an unwritten slot
         self.assertEqual(rs.after_count(391141, res), 395013)
+
+    def test_defaults_are_the_9c_pins(self):
+        res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
+               + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE)
+        self.assertEqual((rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS), (391141, 395014, 4411))
+        self.assertEqual(rs.after_count(rs.ROWS_BASE, res), rs.ROWS_AFTER)
+        self.assertEqual(rs.SNAPSHOT_SHA256,
+                         "d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff")
+        self.assertEqual(rs.REPORT_SHA256,
+                         "e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a")
+
+
+class PinnedFiles(unittest.TestCase):
+    """The frozen files are git-ignored ABP text (on PA and in the local checkout only), so this
+    runs only where they are present: each must hash to its pin in restore_surface_fill.py."""
+    FIX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "rebuild_trap")
+
+    def check(self, name, pin):
+        p = os.path.join(self.FIX, name)
+        if not os.path.isfile(p):
+            self.skipTest(f"{name} not in this checkout (git-ignored)")
+        self.assertEqual(digest(p), pin)
+        with open(p + ".sha256", encoding="utf-8") as f:
+            self.assertEqual(f.read().split()[0], pin)
+
+    def test_snapshot_file_is_the_pin(self):
+        self.check("abp_surface_fill_20261115.tsv", rs.SNAPSHOT_SHA256)
+
+    def test_report_file_is_the_pin(self):
+        self.check("restore_report_20261115.tsv", rs.REPORT_SHA256)
 
 
 class ListsBase(Base):
@@ -620,6 +659,25 @@ class Refreeze(ListsBase):
         rc, out = self.refreeze(self.built, pre2, snap2, check=True)
         self.assertEqual(rc, 1)
         self.assertIn("!= its .sha256 (empty file)", out)
+
+    def test_check_requires_the_report_pinned_in_code(self):
+        """R1 (DESIGN 9.121 / 9.133): under --check the report must also be REPORT_SHA256."""
+        pre2 = self.restored()
+        snap2 = os.path.join(self.tmp, "fix", "snap_r1.tsv")
+        rc, out = self.refreeze(self.built, pre2, snap2)
+        self.assertEqual(rc, 0, out)
+        with open(self.report + ".sha256", "w", encoding="utf-8") as f:
+            f.write(f"{digest(self.report)}  report.tsv\n")
+        rs.REPORT_SHA256 = digest(self.report)
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("restore report = the pin in restore_surface_fill.py", out)
+        rs.REPORT_SHA256 = "0" * 64                       # .sha256 beside it matches, the code pin does not
+        rc, out = self.refreeze(self.built, pre2, snap2, check=True)
+        self.assertEqual(rc, 1)
+        self.assertIn("STALE SNAPSHOT", out)
+        self.assertIn("is not the pinned report", out)
+        self.assertNotIn("SNAPSHOT CURRENT", out)
 
     def test_a_report_missing_a_column_stops_cleanly(self):
         pre2 = self.restored()

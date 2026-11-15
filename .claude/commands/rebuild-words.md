@@ -66,11 +66,20 @@ output, if any, rides the step-8 deploy).
    and before DELETING any old copy, check the newest nightly in ~/db_backups is stamped
    AFTER the last swap — the nightly runs ~13:30 UTC and does not cover an evening ship.)
 1a. **SNAPSHOT CHECK — before the build, on `<src>`** (added 2026-10-25, charter §9). The
-   2026-10-25 abp_surface fill is frozen ONCE in `tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
-   (+ `.sha256`; git-ignored ABP text — on PA and in the local checkout only; sha256 pinned in
-   `restore_surface_fill.py`). Before every rebuild, prove the frozen file still describes live:
-   `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
-   It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
+   abp_surface fill is frozen in `tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv` — re-frozen
+   2026-11-15 by the edition upgrade from its copy after 9a (DESIGN 9.133; was `abp_surface_fill_20261025.tsv`)
+   — beside the 9a report it was made from, `restore_report_20261115.tsv` (each + `.sha256`; git-ignored
+   ABP text — on PA and in the local checkout only; both sha256s pinned in `restore_surface_fill.py`:
+   SNAPSHOT_SHA256, REPORT_SHA256). Before every rebuild, prove the frozen file still describes live:
+   `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <src> --prefill ~/abp_surface_prefill_20261115.db --from-restore tests/fixtures/rebuild_trap/restore_report_20261115.tsv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv`
+   (`--prefill` = the upgraded chain's step-9 table, saved by the 9a apply as
+   `~/edition_upgrade_runs/step9a_apply_20261115/before.db`, sha256 `ea6c54c3…`, 391,141 rows, DESIGN 9.128; its
+   standing home, ruled DESIGN 9.134, is the sha-checked copy `~/abp_surface_prefill_20261115.db` — the original
+   stays. Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Until the edition-upgrade swap, live still holds
+   the 10/25 layout and this check reads STALE on it** (e.g. Jer 49:3 @3: the frozen `strongs_base` is
+   `*`, live's words still H5857) — no rebuild of live runs between the 9c re-pin and the swap. The
+   10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
+   (passes only with the 10/25 pin). It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
    table or a fill slot's word row changed since the freeze (or the file is not the pinned one) —
    surface it, never overwrite (a re-freeze is a ruling: `--replace`, without `--check`). `<src>`
    must be a copy of live taken NOW; live itself is refused. A missing frozen file also stops: copy
@@ -299,8 +308,13 @@ output, if any, rides the step-8 deploy).
    `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above** — step 9 drops
    it; 9a puts it back. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows); never re-run it.
 9a. **RESTORE THE FILL — on `<built>`, dry run → verdict → `--apply`** (charter G1–G3 §8, wired §9).
-   `PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py <built> --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/bible.db.pre-surface-fill-20261025 --report <report.tsv>`
-   (read-only; then the same + `--apply`). Same-code expected: table before 391,130 · vs pre-fill
+   `PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py <built> --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/abp_surface_prefill_20261115.db --report <report.tsv>`
+   (read-only; then the same + `--apply`). **Re-pinned 2026-11-15 (DESIGN 9.133): snapshot
+   `abp_surface_fill_20261115.tsv`, default `--base` 391,141, so G1 = 391,141 + 3,873 = 395,014** — these
+   describe live only AFTER the edition-upgrade swap; the same-code split figures below are the 10/25
+   ones and are re-declared at the first same-code run after the swap (the 10/25 command used
+   `--snapshot …/abp_surface_fill_20261025.tsv --prefill ~/bible.db.pre-surface-fill-20261025`).
+   10/25 same-code expected: table before 391,130 · vs pre-fill
    copy 0 / 0 (G1b) · placed 4,411 (agree-strong 4,057 · agree-weak 354) · unplaced 0 · inserts /
    updates 3,873 / 538 · moved 0; after `--apply`: **G1 = 395,003 exactly** · translit rule changes 0
    · `RESULT: RESTORED, ALL CHECKS PASS`. All or nothing: any unplaced slot or a G1a/G1b miss writes

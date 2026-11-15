@@ -33,15 +33,16 @@ conflict. Placed + unplaced = 4,411.
 Gates (STOP before any write):
   S    snapshot = 4,411 rows (3,873 insert + 538 update), distinct slots, checksum matches
   V    every snapshot verse_id names the same book/chapter/verse in <db>
-  G1a  the builder chain's table = --base rows exactly (default 391,130; the base the fill is laid on)
+  G1a  the builder chain's table = --base rows exactly (default 391,141 since 2026-11-15, was 391,130;
+       the base the fill is laid on)
   G1b  (--prefill given) builder table = the pre-fill copy row for row (same-code rebuild only)
   G2   every slot placed (unplaced = 0) — or, with the declared lists (DESIGN 9.120), every slot
        placed, key-2-listed (a reason-6 or reason-7 slot placed at exactly its listed key-2 slot,
        through the same preconditions + Lexicon check; reason 7 since DESIGN 9.124) or
        leave-listed (unplaced with exactly its listed reason); any slot that does not resolve
        as listed, or a listed slot not in the snapshot, STOPs
-  G1   after the writes, before COMMIT: abp_surface = base + the inserts written (395,003 with
-       the defaults); the written rows (placed + key-2-listed; never leave-listed) = snapshot
+  G1   after the writes, before COMMIT: abp_surface = base + the inserts written (395,014 with
+       the defaults; was 395,003); the written rows (placed + key-2-listed; never leave-listed) = snapshot
        form + romanize(form, lemma of the NEW slot); every other row unchanged; new rows =
        exactly the insert slots
   T    after COMMIT: build_abp_translit.py's rule would change 0 rows; quick_check ok
@@ -50,8 +51,8 @@ RESTORED (no write, exit 0); any other table count is a G1a STOP; a mix of resto
 not-restored slots fails.
 
   PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py ~/rekey/built3.db \\
-      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv \\
-      --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/bible.db.pre-surface-fill-20261025 \\
+      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv \\
+      --lexicon abp_helps/analytical_lexicon.tsv --prefill <the pre-fill copy, rebuild-words 9a> \\
       --report ~/rekey/restore_dry.tsv            # add --apply to write (copies only)
 """
 import argparse
@@ -66,11 +67,22 @@ sys.path.insert(0, HERE)
 import dryrun_rekey_fill as dr                     # noqa: E402  the key rules + the live gate
 import snapshot_surface_fill as snap               # noqa: E402  the file format
 
-ROWS_BASE, ROWS_AFTER = 391130, 395003       # defaults: --base, and base + every insert written
+ROWS_BASE, ROWS_AFTER = 391141, 395014       # defaults: --base, and base + every insert written
 N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
-# PINNED 2026-10-25 from the first PA snapshot (JP run, ~/rekey/old3.db = a fresh copy of live):
-# 4,411 rows (3,873 insert + 538 update), 455,812 bytes; receipt in CHARTER_rebuild_trap_fix.md §8.
-SNAPSHOT_SHA256 = "d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b"
+# RE-PINNED 2026-11-15 (edition upgrade step 9c, DESIGN 9.133 declaration) to the re-freeze from the
+# upgraded copy after 9a: tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv — 4,411 rows
+# (3,873 insert + 538 update), 455,953 bytes; made by STEP9C-FREEZE (~/edition_upgrade_runs/
+# step9c_freeze_20261115.log, 11/15 15:15Z) with --from-restore the 9a apply report. Default base
+# 391,141 = the upgraded builder chain (DESIGN 9.122); 391,141 + 3,873 = 395,014 (DESIGN 9.128).
+# Was (2026-10-25, the first PA snapshot of live, receipt CHARTER_rebuild_trap_fix.md §8):
+# abp_surface_fill_20261025.tsv d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b,
+# base 391,130, after 395,003 — kept on PA + locally until the new freeze passes --check against
+# the swapped live (charter §7).
+SNAPSHOT_SHA256 = "d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff"
+# R1 (DESIGN 9.121 / 9.133): the 9a apply report the new freeze was made from — the third pinned
+# input of `snapshot_surface_fill.py --check --from-restore` (beside the snapshot pin above and the
+# pre-fill table). Kept beside the snapshot as restore_report_20261115.tsv (+ .sha256), 4,412 lines.
+REPORT_SHA256 = "e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a"
 
 REASONS = {1: "no slot (key 2 found none)", 2: "ambiguous",
            3: "update precondition (builder form != recorded old form)",

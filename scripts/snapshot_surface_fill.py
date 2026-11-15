@@ -34,13 +34,18 @@ old word positions.
       --csv ~/abp_surface_fill_dryrun.csv \\
       --out ~/bible-db/tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
 
+The edition-upgrade re-freeze (2026-11-15, DESIGN 9.120 F3 / 9.133; STEP9C-FREEZE) made the file now
+pinned, from the upgraded copy after 9a: --src <built> --prefill <the pre-9a copy of its abp_surface>
+--from-restore <the 9a apply report> --out .../abp_surface_fill_20261115.tsv.
+
 The snapshot holds ABP text (printed Greek forms + ABP English): it stays OUT of the public repo
 (.gitignore) — PA keeps it in the fixture folder; a second copy goes to the local fixture folder.
 
 --check  (the /rebuild-words step 1a mode, added 2026-10-25, charter §9): the frozen file already
 exists — verify it, write NOTHING. Its .sha256 must match, it must be the snapshot pinned in
 restore_surface_fill.py (SNAPSHOT_SHA256), and re-deriving the rows from --src (a fresh copy of live)
-must give the frozen file BYTE FOR BYTE. Pass -> "SNAPSHOT CURRENT". Anything else -> STOPPED: STALE
+must give the frozen file BYTE FOR BYTE. With --from-restore, the report must also match its
+.sha256 and be the report pinned in restore_surface_fill.py (REPORT_SHA256, R1). Pass -> "SNAPSHOT CURRENT". Anything else -> STOPPED: STALE
 SNAPSHOT, naming the slots that differ; the file is never overwritten (a re-freeze is a ruling,
 --replace without --check). A missing file under --check also stops (copy the second copy back).
 """
@@ -246,10 +251,18 @@ def stale_slots(frozen, fresh):
     return out
 
 
+def pinned_report():
+    """R1 (DESIGN 9.121 / 9.133): the restore report's pin lives in restore_surface_fill.py
+    (REPORT_SHA256), beside the snapshot pin — read it from there."""
+    import restore_surface_fill as rs
+    return rs.REPORT_SHA256
+
+
 def report_pin(report_path, required):
     """The restore report is one of the three pinned inputs once a re-freeze is made from it
-    (DESIGN 9.120 F3): <report>.sha256 beside it must match. Required under --check; under a
-    re-freeze it is verified when present and the report's sha is printed for pinning."""
+    (DESIGN 9.120 F3): <report>.sha256 beside it must match. Required under --check, where the
+    report must also be the one pinned in code (REPORT_SHA256, R1); under a re-freeze it is
+    verified when present and the report's sha is printed for pinning."""
     with open(real(report_path), "rb") as f:
         hexd = sha256(f.read())
     pin = real(report_path) + ".sha256"
@@ -265,6 +278,13 @@ def report_pin(report_path, required):
                    "under --check")
     else:
         say(f"    restore report sha256 {hexd} (no .sha256 beside it yet — pin it with the new freeze)")
+    if required:
+        code = pinned_report()
+        if code is not None and hexd != code:
+            raise Stop(f"--from-restore {report_path}: sha256 {hexd[:16]}… is not the pinned report "
+                       f"{code[:16]}… (REPORT_SHA256 in restore_surface_fill.py)")
+        say("    restore report = the pin in restore_surface_fill.py" if code
+            else "    (no report pin set in restore_surface_fill.py)")
     return hexd
 
 
@@ -352,6 +372,11 @@ def run(a, live=dr.LIVE):
     if a.check and a.replace:
         raise Stop("--check and --replace cannot be used together")
     if a.check:
+        if not a.from_restore and pinned_report() is not None:
+            # DESIGN 9.134 (reviewer finding 3): the pinned snapshot was made from a restore report
+            # (R1), so its --check must name that report — a --csv check would skip the report pin
+            raise Stop("--check needs --from-restore: the pinned snapshot was frozen from a restore "
+                       "report (REPORT_SHA256 in restore_surface_fill.py)")
         if not os.path.isfile(out):
             raise Stop(f"--check: no frozen snapshot at --out {a.out} — nothing to verify. Copy the "
                        "second copy back; never re-freeze to get past this")
