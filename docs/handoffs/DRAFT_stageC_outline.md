@@ -9075,3 +9075,104 @@ e154d8d4… (`step9a_apply_20261115/report_apply.tsv`); abp_surface 395,014; CHE
 219a3ebe7075 = throwaway); before → after delta = the throwaway's (77d61903…).
 **Ruling (11/15, §9.128): step 9a applied on built and CLOSED at 395,014.** Observed, no ruling: "APPLY (copy only)" / "(on a
 copy)" are the restore's fixed labels. Push; successor handoff (`HANDOFF_edition_upgrade_stageE.md`); nothing further on PA.
+
+## New CC + reviewer sessions (11/15, §9.127) — read-in confirmed; STEP9B drafted (GATE REF 88f7a5f6)
+
+Read-in (repo at f4521e5d, scripts/tests = 88f7a5f6, 476de530 an ancestor of HEAD): handoff SUCCESSOR START; DESIGN §9.105-§9.128;
+this record from "Step 9 → 9a → 9b → 9c" to the end. Figures as recorded: built abp_surface 395,014 (`219a3ebe7075`); pre-9a copy
+`step9a_apply_20261115/before.db` 18,194,432 B, sha `ea6c54c3…e7273`, 391,141 rows; 9a apply report `report_apply.tsv` 4,412 lines,
+sha `e154d8d4…`; key-2 list 83 (`d0967a0d…`), leave list empty; code REF 88f7a5f6, PA HEAD 476de530.
+
+**STEP9B** (`step9b_floor_20261115`), read-only. **Guards (STOP):** pre (REF 88f7a5f6; `--keep` the two rollbacks + the pre-9a copy);
+the three 9a files on PA = the recorded shas (before.db also 391,141 rows); built = STEP9A-APPLY's result (`eu_step check` vs the
+9a folder's prep + throwaway; on a mismatch check adds a NEW `step9a_apply_20261115/check_delta_abp_surface.tsv`) and abp_surface
+395,014; the control copy = the pre-9a sha; built / src / before.db size+time before = after. **Gate (CHECK on a miss):**
+`health_check.py <built> --surface-floor=395014 --no-backup-check --no-disk-check` — exactly one floor line, reading
+`[OK  ] abp_surface rows BELOW floor 395014 …: 0`; full report printed. **Control (CHECK on a miss):** the same on a COPY of the
+pre-9a table → `[WARN] … floor 395014 …: 3873` (the default 395,003 would read 3,862, so it also proves the `=` argument is used
+on PA); health_check never opens the kept before.db itself. **Read-out, not a gate:** src at the default floor 395,003, every
+report line that differs src → built. The 9b "oracle" half (rebuild-words.md :313-315) is same-code only; the 9a block proved
+before → after = exactly the 4,411 slots (§9.128).
+Local test (WSL, fake HOME, clone at f4521e5d; made-up built 395,014 / src 395,003 with a real eu_step prep + 3,873 inserts; fake
+shas): clean PASS exit 0; re-paste → STOP; control at the default floor → NO (3862) → CHECK; floor pattern broken → CHECK floor;
+wrong pre-9a sha → STOP; one built row changed → check FAIL → STOP; -journal beside built → pre STOP; clean re-run PASS.
+
+### Block STEP9B (GATE REF 88f7a5f6; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9b_floor_20261115.log
+if [ -e "$L" ]; then echo "STEP9B RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=88f7a5f6
+echo "GATE REF ${REF} - STEP9B rebuild-words step 9b on BUILT: health_check abp_surface floor at --surface-floor=395014 (= step 9's 391,141 + the 3,873 restored inserts; charter sec 6, DESIGN 9.120) + a control on a copy of the pre-9a table + src's report beside built's - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9B RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+D=~/edition_upgrade_runs/step9b_floor_20261115
+E="python3 scripts/eu_step.py"
+# --- declared figures: STEP9A-APPLY log (11/15), DESIGN 9.126 / 9.128 ---
+XFLOOR=395014; XPRE=391141; XSHORT=3873
+XB4=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273
+XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a
+XK=d0967a0d7a725270bedd914e2760d79b6416d6b40ce38cf84165d3ca36f0dc5e
+# the floor line as health_check prints it (health_check.py:151 label, :299-300 format); $1 = status, $2 = floor, $3 = shortfall
+fline() { printf '  [%s] abp_surface rows BELOW floor %s  [fill or a backfill missing?]: %s   (' "$1" "$2" "$3"; }
+hc() { python3 scripts/health_check.py "$@" --no-backup-check --no-disk-check; }
+# --- before the health check: every miss is STOP ---
+$E pre --tag STEP9B --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db --keep "$DA/before.db" || { echo "STEP9B RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DA/before.db" "$DA/report_apply.tsv" "$DA/key2_list.tsv" "$DA/state.json" "$DA/dry.db"; do [ -s "$f" ] || { echo "STEP9B RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== the 9a files on PA (the 9c inputs) = the STEP9A-APPLY record ==="
+s=$(sha256sum < "$DA/before.db" | cut -d' ' -f1); n=$(sqlite3 -readonly "$DA/before.db" "SELECT count(*) FROM abp_surface"); echo "pre-9a copy $DA/before.db: $(stat -c %s "$DA/before.db") bytes, sha256 $s, abp_surface $n rows (expect 18194432, $XB4, $XPRE)"
+[ "$s" = "$XB4" ] && [ "$n" = "$XPRE" ] || { echo "STEP9B RESULT: STOP - the pre-9a copy is not the recorded one - report this"; exit 1; }
+s=$(sha256sum < "$DA/report_apply.tsv" | cut -d' ' -f1); echo "9a apply report $DA/report_apply.tsv: $(wc -l < "$DA/report_apply.tsv") lines, sha256 $s (expect 4412, $XR)"
+[ "$s" = "$XR" ] || { echo "STEP9B RESULT: STOP - the 9a apply report is not the recorded one - report this"; exit 1; }
+s=$(sha256sum < "$DA/key2_list.tsv" | cut -d' ' -f1); echo "key-2 list $DA/key2_list.tsv: $(($(wc -l < "$DA/key2_list.tsv") - 1)) slots, sha256 $s (expect 83, $XK)"
+[ "$s" = "$XK" ] || { echo "STEP9B RESULT: STOP - the key-2 list is not the recorded one - report this"; exit 1; }
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+$E check --tag STEP9B --built "$B" --dir "$DA" --written abp_surface || { echo "STEP9B RESULT: STOP - built is not STEP9A-APPLY's result (lines above)"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect $XFLOOR)"
+[ "$n0" = "$XFLOOR" ] || { echo "STEP9B RESULT: STOP - built's abp_surface is not $XFLOOR"; exit 1; }
+cp "$DA/before.db" "$D/control_pre9a.db" || { echo "STEP9B RESULT: STOP - cannot copy the pre-9a table for the control"; exit 1; }
+s=$(sha256sum < "$D/control_pre9a.db" | cut -d' ' -f1); echo "control copy $D/control_pre9a.db: sha256 $s (expect $XB4)"
+[ "$s" = "$XB4" ] || { echo "STEP9B RESULT: STOP - the control copy is not the pre-9a copy"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" "$DA/before.db" | tr '\n' ' ')
+FL=""
+# --- 9b: the floor on built (the gate: shortfall 0 at the declared floor) ---
+echo "=== 9b: health_check on BUILT, --surface-floor=$XFLOOR (full report) ==="
+hc "$B" --surface-floor="$XFLOOR" > "$D/health_built.out" 2>&1; r=$?
+cat "$D/health_built.out"
+echo "health_check exit $r (expect 0)"; [ "$r" = 0 ] || FL="$FL built-exit"
+nf=$(grep -cF -- "$(fline 'OK  ' "$XFLOOR" 0)" "$D/health_built.out"); na=$(grep -c 'abp_surface rows BELOW floor' "$D/health_built.out")
+echo "9b floor line on built reads [OK  ] ... floor $XFLOOR ...: 0 - $([ "$nf" = 1 ] && [ "$na" = 1 ] && echo yes || echo NO) (matching $nf, floor lines $na; expect 1, 1)"
+[ "$nf" = 1 ] && [ "$na" = 1 ] || FL="$FL floor"
+# --- control (the detector must fire on a known positive): the pre-9a table at the same floor ---
+echo "=== control: health_check on a COPY of the pre-9a table ($XPRE rows, abp_surface only), --surface-floor=$XFLOOR ==="
+hc "$D/control_pre9a.db" --surface-floor="$XFLOOR" > "$D/health_control.out" 2>&1; rc=$?
+grep 'abp_surface rows BELOW floor' "$D/health_control.out"
+echo "control exit $rc (expect 0); its other checks read ERR because the copy holds abp_surface only: $(grep -c '^  \[ERR \]' "$D/health_control.out") ERR lines (full output $D/health_control.out)"
+nc=$(grep -cF -- "$(fline WARN "$XFLOOR" "$XSHORT")" "$D/health_control.out")
+echo "control floor line reads [WARN] ... floor $XFLOOR ...: $XSHORT (= the 3,873 inserts 9a put back; the default 395003 would read 3862): $([ "$nc" = 1 ] && echo yes || echo NO)"
+[ "$rc" = 0 ] && [ "$nc" = 1 ] || FL="$FL control"
+# --- read-out, not a gate: src (pre-upgrade live) at its own floor, every line beside built's ---
+echo "=== read-out (not a gate): health_check on SRC at the default floor 395003 - lines that differ src -> built ==="
+hc "$S" > "$D/health_src.out" 2>&1; rs=$?
+echo "src: exit $rs; floor line: $(grep 'abp_surface rows BELOW floor' "$D/health_src.out" | sed 's/^ *//')"
+diff <(sed '1,2d' "$D/health_src.out") <(sed '1,2d' "$D/health_built.out") | sed -n '/^[<>]/p' | sed 's/^</  src  :/; s/^>/  built:/'
+echo "(full src report: $D/health_src.out)"
+st1=$(stat -c '%s %Y' "$B" "$S" "$DA/before.db" | tr '\n' ' ')
+echo "built, src and the pre-9a copy: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "STEP9B RESULT: STOP - built, src or the pre-9a copy changed during a read-only run - report this"; exit 1; }
+if [ -z "$FL" ]; then
+  echo "STEP9B RESULT: PASS - built abp_surface $XFLOOR, shortfall 0 at floor $XFLOOR; control: the pre-9a table reads shortfall $XSHORT at the same floor; built = STEP9A-APPLY's result; the 9a files = the record"; exit 0
+fi
+echo "STEP9B RESULT: CHECK -$FL (lines above)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9B reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only re-run of the ruled 9b gate (§9.120) at the §9.128 after-count, with a control that fires; repo guards are inside `eu_step pre`. The only files it writes are new run artifacts."
+Reviewer note (not a stop): the full XR and XK shas rest on this record's STEP9A-DRY2 lines (:8927, :8930) quoting the PA log, not
+on DESIGN text; the prefixes match §9.126 / §9.128 and a mismatch can only STOP. Every other figure traced to §9.120 / §9.126 /
+§9.128 or health_check.py :144-152, :296-300.
