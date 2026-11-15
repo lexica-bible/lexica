@@ -10012,3 +10012,69 @@ Known limits, recorded: bracket_id is compared as a rank, so a type-only change 
 on either side", a reading aid. For the run block (reviewer's list): print `python3 --version`; `-journal` check on both copies;
 a new dated empty `--out` + dated log; a peak-memory reading (`/usr/bin/time -v` as a second one); the three untracked PA files
 left alone.
+
+## STEP4-DELTA drafted (11/15, GATE REF a147c61a; PA pulls first) — the step-4 raw delta, no gate (§9.138 (2) / §9.140)
+
+Read-only on both databases; writes only `step4_delta_20261115/` (+ `delta/` for the script) and its log. Prints python3's version;
+pre (REF a147c61a; `--db` built + src: journals, triggers); built = STEP9A-APPLY's result (eu_step check); src size = 451,964,928
+(every stage-E log); `/usr/bin/time -v eu_words_delta.py --a src --b built --out step4_delta_20261115/delta`; prints the script's
+whole output (counts per column, one-side-column lines, moved / unpaired, six file shas, its peak-memory line), then time's peak /
+wall / exit; a STOP from the script keeps the partial folder and STOPs the block (§9.140 (a)); built + src size/time unchanged.
+Known limits carried (§9.140): a type-only bracket_id change is hidden by the rank; "moved" is a reading aid.
+Local test (WSL, made-up built + 9a folder with morph/lemma; src = a copy with a verse text changed and a word moved): READ DONE
+exit 0 (1 moved pair, 1 verses.text, peak 35 MB); re-paste STOP; wrong src size STOP; no morph/lemma → script STOP → block STOP;
+duplicate word key → script STOP → block STOP.
+
+### Block STEP4-DELTA (GATE REF a147c61a; READ-ONLY — writes only its run folder and log; no gate)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_delta_20261115.log
+if [ -e "$L" ]; then echo "STEP4-DELTA RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=a147c61a
+echo "GATE REF ${REF} - STEP4-DELTA charter sec 6 step 4, the RAW DELTA (DESIGN 9.138 (2) / 9.140): eu_words_delta.py --a src --b built, every member to files, counts per column - NO GATE - READ-ONLY on both databases; writes only its run folder and log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP4-DELTA RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+D=~/edition_upgrade_runs/step4_delta_20261115
+XS_SIZE=451964928
+echo "python3: $(python3 --version 2>&1)"
+# --- before the run: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag DELTA4 --ref "$REF" --dir "$D" --db "$B" --db "$S" || { echo "STEP4-DELTA RESULT: STOP - pre (line above; it also refuses a -journal beside either copy); nothing read"; exit 1; }
+for f in "$DA/state.json" "$DA/dry.db"; do [ -s "$f" ] || { echo "STEP4-DELTA RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+python3 scripts/eu_step.py check --tag DELTA4 --built "$B" --dir "$DA" --written abp_surface || { echo "STEP4-DELTA RESULT: STOP - built is not STEP9A-APPLY's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE, as in every stage-E log)"
+[ "$n" = "$XS_SIZE" ] || { echo "STEP4-DELTA RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+mkdir "$D/delta" || { echo "STEP4-DELTA RESULT: STOP - cannot make $D/delta"; exit 1; }
+# --- the raw delta (src = a, built = b); peak memory read twice: the script's own line and /usr/bin/time -v ---
+echo "=== eu_words_delta.py --a src --b built --out $D/delta ==="
+if [ -x /usr/bin/time ]; then
+  /usr/bin/time -v python3 scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" > "$D/delta.out" 2> "$D/time.txt"; r=$?
+else
+  python3 scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" > "$D/delta.out" 2> "$D/time.txt"; r=$?
+  echo "(no /usr/bin/time on this system - the script's own peak line only)"
+fi
+cat "$D/delta.out"
+echo "delta exit $r (expect 0)"
+echo "--- /usr/bin/time -v (peak memory, wall time, exit):"
+grep -E "Maximum resident set size|Elapsed \(wall clock\)|Exit status|Command terminated" "$D/time.txt"
+grep -qv -E "^\s|Command being timed" "$D/time.txt" && { echo "--- anything else the run wrote to stderr:"; grep -v -E "^\s|Command being timed" "$D/time.txt"; }
+[ "$r" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "STEP4-DELTA RESULT: STOP - the delta did not finish (exit $r; lines above; partial files kept in $D/delta) - the log goes to the ruling chat, a re-run uses a new dated folder"; exit 1; }
+echo "--- files in $D/delta:"
+ls -l "$D/delta" | sed 's/^/  /'
+st1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+echo "built and src: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "STEP4-DELTA RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+echo "STEP4-DELTA RESULT: READ DONE - every member in $D/delta (no gate; nothing ruled from counts; known limits: a type-only bracket_id change is hidden by the rank; 'moved' is a reading aid)"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP4-DELTA reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only raw delta under DESIGN 9.138 (2) / 9.140 (no gate); the wrapper checks are all present (git diff, porcelain and merge-base sit inside eu_step pre); the only writes are new run artifacts."
+Reviewer notes: src size traced to DR :6179, :6265, :9192 (also built's size before step 11, DESIGN :515 — harmless, src is the
+path tested); `morph` / `lemma` on built traceable from the build (build_words_from_abp.py :2639-2642), on src not receipted in
+the repo — if absent the script STOPs cleanly and both copies stay untouched.
