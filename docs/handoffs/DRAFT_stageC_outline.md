@@ -8380,3 +8380,123 @@ Rom 9:29, and the Gen 34:4 / Jos 2:4 swaps.)
 **Ruling (11/15, §9.122): step 9 applied on built and CLOSED at 391,141.** PA may pull to cd6566b3 (done: PA at ca74e54d). Built's
 abp_surface now is the "before side" for 9c (charter §6 amended); 9a's apply block saves it as `step9a_apply_<date>/before.db` (F3).
 Next: STEP9A-DRY under cd6566b3.
+
+## STEP9A-DRY drafted (11/15, GATE REF cd6566b3; PA at ca74e54d)
+
+Read-only. **Guards:** pre (REF cd6566b3); the snapshot (+ .sha256) and the Analytical Lexicon present (shas printed; the restore
+checks the snapshot against its pin d9435bde…); **built = exactly what STEP9-APPLY left** (`eu_step check` against STEP9-DRY2's prep
++ dry copy: 149 untouched + schema, abp_surface = the dry copy) and abp_surface 391,141; built + src size/time before = after.
+**(1) The restore DRY RUN** on built, `--base 391141`, no lists, no `--prefill` (charter §4.9): its S / V / G1a lines and SUMMARY
+printed; full output and per-slot report kept. Exit 1 = a gate fails (slots unplaced) — read, not a STOP; a run that does not reach
+"RESULT: DRY RUN COMPLETE" is a STOP.
+**(2) TRIAL dry run (still writes nothing):** every reason-6 slot from (1) on a key-2 list (book chapter verse old_position
+new_position = its key-2 slot), so each runs the same preconditions + Lexicon check there (§9.120 F2a: the member list shows each
+reason-6 slot's result). Its SUMMARY printed.
+**(3) The member list:** every unplaced slot from (1), one line: reason · verse · old position · the verse's English changed or
+not (src → built `verses.text`) · action · cls · **by key 2 alone** (trial: "places, lexicon pass/uncovered" or "FAILS rN") · form ·
+src English at the old slot · key 2 → built English there · key 1 · detail. Counts by reason × changed × trial result; **every**
+unplaced slot in a verse whose English did NOT change (charter §4.9: a reason-6 slot there is a real miss); the first 80 in changed
+verses (all in `members.tsv` on PA). Expected figures: none forecast — the 10/25 restore placed 4,411 on an unchanged text; this is
+the first run on the new English (charter §4.9 expects reason 6 to be large).
+Local test (made-up dbs from the restore tests' own shapes; a throwaway clone at cd6566b3 + one fake commit setting the snapshot
+counts to the fake file's and unpinning it): READ DONE; two reason-6 slots listed, one in a changed verse and one in an unchanged
+verse ("real miss" list), each with old/new English; the trial placed both; with the Lexicon row removed the unchanged-verse slot
+reads "FAILS r5"; built altered since STEP9-APPLY → STOP; re-paste → STOP.
+
+### Block STEP9A-DRY (GATE REF cd6566b3; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9a_dry_20261115.log
+if [ -e "$L" ]; then echo "STEP9A-DRY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=cd6566b3
+echo "GATE REF ${REF} - STEP9A-DRY rebuild-words step 9a DRY RUN: restore_surface_fill on built at --base 391141, no lists (sec 9.120/9.122) + the unplaced member list read against the changed-English verses (charter 4.9) - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9A-DRY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+SNAP=tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
+LEX=abp_helps/analytical_lexicon.tsv
+DD=~/edition_upgrade_runs/step9_dry2_20261114
+D=~/edition_upgrade_runs/step9a_dry_20261115
+E="python3 scripts/eu_step.py"
+TAB=$'\t'
+$E pre --tag STEP9AD --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9A-DRY RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$SNAP" "$SNAP.sha256" "$LEX"; do [ -s "$f" ] || { echo "STEP9A-DRY RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "snapshot $SNAP: $(wc -l < "$SNAP") lines, sha256 $(sha256sum < "$SNAP" | cut -d' ' -f1) (the restore checks it against its pin d9435bde...)"
+echo "lexicon $LEX: $(wc -l < "$LEX") lines, sha256 $(sha256sum < "$LEX" | cut -d' ' -f1)"
+echo "=== built = what STEP9-APPLY left (eu_step check against STEP9-DRY2's prep + dry copy; read-only) ==="
+$E check --tag STEP9AD --built "$B" --dir "$DD" --written abp_surface || { echo "STEP9A-DRY RESULT: STOP - built is not STEP9-APPLY's result (lines above)"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect 391141)"
+[ "$n0" = 391141 ] || { echo "STEP9A-DRY RESULT: STOP - built's abp_surface is not 391,141"; exit 1; }
+bs0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+# --- the restore dry run (writes only its --report) ---
+echo "=== restore_surface_fill DRY RUN on built: --base 391141, no lists, no --prefill (charter 4.9) ==="
+python3 scripts/restore_surface_fill.py "$B" --snapshot "$SNAP" --lexicon "$LEX" --report "$D/restore_dry.tsv" --base 391141 > "$D/restore_dry.out" 2>&1; r=$?
+sed -n '1,/^RE-KEY/p' "$D/restore_dry.out"
+sed -n '/^G1a/{p;n;p}' "$D/restore_dry.out"
+sed -n '/^SUMMARY/,$p' "$D/restore_dry.out"
+echo "restore exit $r (0 = every slot placed; 1 = a gate fails, i.e. slots unplaced - read below)"
+sed -n '/^RESULT: DRY RUN COMPLETE/p' "$D/restore_dry.out" | sed -n '1p' > "$D/result.txt"
+[ -s "$D/result.txt" ] || { echo "STEP9A-DRY RESULT: STOP - the restore did not finish its dry run (full output: $D/restore_dry.out)"; exit 1; }
+echo "full restore output: $D/restore_dry.out ($(wc -l < "$D/restore_dry.out") lines: the agree-weak, unplaced and moved lists are in it)"
+# --- TRIAL (still a dry run, writes nothing): every reason-6 slot on a key-2 list, so each one runs the same
+# preconditions + Lexicon check at its key-2 slot (DESIGN 9.120 F2a: the member list shows each one's result) ---
+awk -F'\t' -v OFS='\t' 'BEGIN {print "book", "chapter", "verse", "old_position", "new_position"} NR > 1 && $12 == "unplaced" && $13 == 6 {split($10, k, ":"); print $1, $2, $3, $4, k[2]}' "$D/restore_dry.tsv" > "$D/trial_key2.tsv"
+n6=$(($(wc -l < "$D/trial_key2.tsv") - 1)); echo "=== TRIAL dry run: all $n6 reason-6 slots by key 2 alone (nothing written) ==="
+if [ "$n6" -gt 0 ]; then
+  python3 scripts/restore_surface_fill.py "$B" --snapshot "$SNAP" --lexicon "$LEX" --report "$D/restore_trial.tsv" --base 391141 --key2-alone "$D/trial_key2.tsv" > "$D/restore_trial.out" 2>&1; rt=$?
+  sed -n '/^SUMMARY/,$p' "$D/restore_trial.out"
+  echo "trial exit $rt; the reason-6 slots that would FAIL by key 2 alone are in the member list below (column 'by key 2 alone')"
+else
+  printf 'book\n' > "$D/restore_trial.tsv"
+fi
+# --- the member list: every unplaced slot, read against the changed-English verses ---
+echo "=== UNPLACED slots, each with its verse's English changed or not (src -> built verses.text) and the English at the slot ==="
+awk -F'\t' 'NR > 1 && $12 == "unplaced"' "$D/restore_dry.tsv" > "$D/unplaced.tsv"
+nu=$(wc -l < "$D/unplaced.tsv"); echo "unplaced slots: $nu"
+VQ="SELECT book, chapter, verse, replace(replace(replace(COALESCE(text, ''), char(9), ' '), char(10), ' '), char(13), ' ') FROM verses"
+sqlite3 -readonly -separator "$TAB" "$S" "$VQ" > "$D/verses_src.tsv" || { echo "STEP9A-DRY RESULT: STOP - verses read failed on src"; exit 1; }
+sqlite3 -readonly -separator "$TAB" "$B" "$VQ" > "$D/verses_built.tsv" || { echo "STEP9A-DRY RESULT: STOP - verses read failed on built"; exit 1; }
+awk -F'\t' 'FNR == 1 {f++} f == 1 {t[$1 FS $2 FS $3] = $4; next} {k = $1 FS $2 FS $3; print k FS (((k in t) && t[k] == $4) ? "same" : "CHANGED")}' "$D/verses_src.tsv" "$D/verses_built.tsv" > "$D/verse_changed.tsv"
+echo "verses whose English changed src -> built: $(awk -F'\t' '$4 == "CHANGED"' "$D/verse_changed.tsv" | wc -l) of $(wc -l < "$D/verse_changed.tsv")"
+if [ "$nu" -gt 0 ]; then
+  # every word row from each copy (no long WHERE list); the awk join below picks the slots it needs
+  WQ="SELECT v.book, v.chapter, v.verse, w.position, replace(replace(COALESCE(w.english, ''), char(9), ' '), char(10), ' ') FROM words w JOIN verses v ON v.id = w.verse_id"
+  sqlite3 -readonly -separator "$TAB" "$S" "$WQ" > "$D/words_src.tsv" || { echo "STEP9A-DRY RESULT: STOP - words read failed on src"; exit 1; }
+  sqlite3 -readonly -separator "$TAB" "$B" "$WQ" > "$D/words_built.tsv" || { echo "STEP9A-DRY RESULT: STOP - words read failed on built"; exit 1; }
+  # one line per unplaced slot: reason | verse | old pos | verse English changed | action | cls | by key 2 alone (trial) | form | src English at the old slot | key 2 -> built English there | key 1 | detail
+  awk -F'\t' -v OFS='\t' '
+    FNR == 1 {f++}
+    f == 1 {vc[$1 FS $2 FS $3] = $4; next}
+    f == 2 {es[$1 FS $2 FS $3 FS $4] = $5; next}
+    f == 3 {eb[$1 FS $2 FS $3 FS $4] = $5; next}
+    f == 4 {if (FNR > 1) tr[$1 FS $2 FS $3 FS $4] = (($12 == "placed") ? "places, lexicon " $15 : "FAILS r" $13); next}
+    f == 5 {v = $1 FS $2 FS $3; split($10, k2, ":"); nb = (k2[1] == "one") ? eb[v FS k2[2]] : "-"
+            t = ($13 == 6 && (v FS $4 in tr)) ? tr[v FS $4] : "-"
+            print "r" $13, $1 " " $2 ":" $3, $4, ((v in vc) ? vc[v] : "?"), $6, $7, t, $9, "\"" es[v FS $4] "\"", $10 " \"" nb "\"", $11, $14}' \
+    "$D/verse_changed.tsv" "$D/words_src.tsv" "$D/words_built.tsv" "$D/restore_trial.tsv" "$D/unplaced.tsv" > "$D/members.tsv"
+  echo "--- by reason x verse English (changed / same) x by key 2 alone:"
+  cut -f1,4,7 "$D/members.tsv" | sort | uniq -c
+  echo "--- every unplaced slot in a verse whose English did NOT change (charter 4.9: a reason-6 slot here is a real miss) - reason | verse | old pos | verse | action | cls | by key 2 alone | form | src English | key 2 -> built English | key 1 | detail:"
+  awk -F'\t' '$4 != "CHANGED"' "$D/members.tsv" | sed 's/\t/ | /g; s/^/  /'
+  ni=$(awk -F'\t' '$4 == "CHANGED"' "$D/members.tsv" | wc -l)
+  echo "--- unplaced slots in a verse whose English changed: $ni; by reason above; the first 80 (all $ni in $D/members.tsv):"
+  awk -F'\t' '$4 == "CHANGED"' "$D/members.tsv" | sed -n '1,80p' | sed 's/\t/ | /g; s/^/  /'
+fi
+bs1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' '); echo "built + src size and time before = after: $([ "$bs1" = "$bs0" ] && echo yes || echo NO)"
+[ "$bs1" = "$bs0" ] || { echo "STEP9A-DRY RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+echo "STEP9A-DRY RESULT: READ DONE - restore dry run at base 391,141: $(cat "$D/result.txt"); unplaced $nu (member list above; report $D/restore_dry.tsv)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9A-DRY reviewed (11/15) — REVIEW: ESCALATE (two member-list defects) → fixed → re-review
+Verdict line verbatim: "REVIEW: ESCALATE - the block is read-only and its wrapper and tripwires pass, but two defects in the member list (the part the ruling reads) need a redraft before it runs"
+- **Defect 1 — FIXED:** the "by key 2 alone" column took the trial report's result for EVERY slot, so non-reason-6 slots (e.g.
+  reason 7) showed "FAILS rN" as if tried by key 2. Now only reason-6 slots carry a trial result; every other slot shows "-".
+  Re-tested with a planted reason-7 slot: "r7 | Gen 1:1 | … | - | …".
+- **Defect 2 — FIXED:** the words read built one long OR list of verses (could exceed SQLite's expression depth or the Linux
+  argument limit on a large unplaced set). Now each copy's whole words table is read once (no WHERE) and the awk join picks
+  the slots.
+- **Minor — FIXED:** tabs / newlines inside `verses.text` or `words.english` are replaced by spaces in the reads.
+The block above now holds the fixed text.
