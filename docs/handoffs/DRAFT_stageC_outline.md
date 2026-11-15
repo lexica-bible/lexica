@@ -8919,3 +8919,131 @@ echo "STEP9A-DRY2 RESULT: READ DONE - restore exit $r: $(cat "$D/result.txt")"
 Verdict line verbatim: "REVIEW: CLEAR - STEP9A-DRY2 only reads. It re-runs the 9a restore dry run (no --apply) under REF 88f7a5f6 with the 83-slot key-2 list from §9.124 ruling 4 and an empty leave list. Its `chk` texts match the restore's SUMMARY format, and the restore's own gates stay the gates (§9.124 ruling 5)."
 Reviewer note (not a stop): "moved 6" assumes the 4 r7 place at their old positions (shown by the CTX log); a NO there is
 information, not a failure.
+
+### STEP9A-DRY2 ran (11/15, 13:36 UTC, PA HEAD 476de530, REF 88f7a5f6) — READ DONE, restore exit 0, every gate PASSES
+
+Log `~/edition_upgrade_runs/step9a_dry2_20261115.log`; folder `step9a_dry2_20261115/`. PRE OK; snapshot d9435bde… (pin), lexicon
+91d9d036…, STEP9A-DRY report fb5daacf… (= ruled); CHECK OK (391,141, 70af7a4a08e7). Key-2 list 83 = r6 79 + r7 4, NOT-ONE 0,
+**sha d0967a0d7a725270bedd914e2760d79b6416d6b40ce38cf84165d3ca36f0dc5e** (printed in full in the log). Restore: S / L / V / G1a PASS;
+placed 4,411 (3,977 · 351 · key-2 listed 83); unplaced 0; listed-not-as-listed 0; inserts / updates 3,873 / 538; moved 6 (Gen 5:25
+1→2, Gen 5:26 1→2, Gen 34:4 1→2, Jos 5:15 27→26, 2Ki 23:35 6→7, Est 5:9 12→13); Lexicon pass 4,022 / uncovered 389; after-count
+395,014; "every gate PASSES". Report `restore_dry2.tsv` 4,412 lines, **sha e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a**.
+83 / 83 listed slots placed at exactly their listed position by key 2 alone; the 9 CTX slots placed as ruled. All eight read-outs
+yes. Built + src untouched.
+
+**Ruling (11/15, §9.126): STEP9A declaration** (figures above, for STEP9A-APPLY); draft STEP9A-APPLY (F3 before.db, prove built =
+STEP9-APPLY's result, restore `--apply` same arguments, after-checks: 395,014 / 149 untouched + schema / before → after = exactly
+the 4,411 snapshot rows / the restore's own post-write gates).
+
+## STEP9A-APPLY drafted (11/15, GATE REF 88f7a5f6) — for the ruling chat (a write; reviewer on mechanics)
+
+**Before the write (every miss = STOP, built untouched):** pre (REF 88f7a5f6; run folder `step9a_apply_20261115/`); home disk in use
+printed (adds ~0.13 GB); snapshot / lexicon / key-2 list (copied into the run folder) / STEP9A-DRY2 report = the declared shas;
+built = STEP9-APPLY's result (`eu_step check` vs STEP9-DRY2) and abp_surface 391,141. **prep** (`--copy
+verses,words,lexicon,dotted_lexicon,abp_surface --save abp_surface`, as STEP9-DRY2): state.json, **before.db = built's
+abp_surface before 9a (F3, the 9c before side)**, and a THROWAWAY copy dry.db. **The same restore `--apply` on the throwaway copy
+first:** exit 0 + "RESTORED, ALL CHECKS PASS"; its placed line = the declared one; its report sha = e154d8d4… (= the dry report,
+row for row); its table 395,014; before → throwaway delta (`eu_step delta`, key verse_id+position) = added 3,873 / changed 538 /
+removed 0, and its slot + kind set = the report's placed inserts / updates at their new slots (verse ids read from built). `same`:
+built untouched since prep.
+**The write:** the restore `--apply` on built, the STEP9A-DRY2 arguments (`--base 391141 --key2-alone <the list>`, no leave list,
+no `--prefill`); its S / L / V / G1a / MOVED / SUMMARY / W / post-write / T / RESULT lines printed.
+**After (every miss = CHECK, naming the restore source `step9a_apply_20261115/before.db`):** restore exit 0 + "RESTORED, ALL
+CHECKS PASS" (its own G1 / written-rows / every-other-row / new-rows / NBSP / translit / quick_check gates); placed line = declared;
+apply report sha = e154d8d4…; abp_surface 395,014; `eu_step check` vs this block's prep + the throwaway (149 untouched + schema;
+abp_surface = the throwaway's); before → after delta sha = the before → throwaway delta's (so exactly the 4,411 snapshot slots).
+Local test (fake copies; fake clone at 88f7a5f6 + fake counts/pin; the fake STEP9A-DRY2 folder re-made): DONE, every line as
+above (3 inserts + 1 update; check OK; delta = throwaway's); a wrong declared figure → STOP before the write, built byte-identical;
+a forced post-write miss → "CHECK - report differ … Restore source …/before.db"; built altered since STEP9-APPLY → STOP; re-paste
+→ STOP.
+
+### Block STEP9A-APPLY (GATE REF 88f7a5f6; WRITES built: abp_surface only, 391,141 → 395,014) — for the ruling chat
+```bash
+set +H
+L=~/edition_upgrade_runs/step9a_apply_20261115.log
+if [ -e "$L" ]; then echo "STEP9A-APPLY RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=88f7a5f6
+echo "GATE REF ${REF} - STEP9A-APPLY rebuild-words step 9a on BUILT: restore_surface_fill --apply at --base 391141 with the 83-slot key-2 list, leave list empty, gated on the STEP9A-DRY2 figures (sec 9.124 / 9.125 + the STEP9A declaration) - WRITES built: abp_surface only (391,141 -> 395,014) - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9A-APPLY RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+SNAP=tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
+LEX=abp_helps/analytical_lexicon.tsv
+DD=~/edition_upgrade_runs/step9_dry2_20261114
+DA2=~/edition_upgrade_runs/step9a_dry2_20261115
+D=~/edition_upgrade_runs/step9a_apply_20261115
+E="python3 scripts/eu_step.py"
+TAB=$'\t'
+# --- declared figures: STEP9A-DRY2 log (11/15 13:36Z), ruled 11/15 (the STEP9A declaration) ---
+XSNAP=d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b
+XLEX=91d9d036c0922ef965f03a006de24492f7ba3159b2714a4a47c61cc680e5eac8
+XK=d0967a0d7a725270bedd914e2760d79b6416d6b40ce38cf84165d3ca36f0dc5e
+XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a
+XBASE=391141; XAFTER=395014; XINS=3873; XUPD=538
+XSUM="placed                    4,411 | 4,411   (agree-strong 3,977 · agree-weak 351 · key-2 listed 83)"
+# the restore on db $1, report $2, output $3 - the STEP9A-DRY2 arguments + --apply
+restore() { python3 scripts/restore_surface_fill.py "$1" --snapshot "$SNAP" --lexicon "$LEX" --report "$2" --base "$XBASE" --key2-alone "$D/key2_list.tsv" --apply > "$3" 2>&1; }
+# --- before the write: every miss is STOP, built untouched ---
+$E pre --tag STEP9AA --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9A-APPLY RESULT: STOP - pre (line above); built untouched"; exit 1; }
+dk=$(du -sk ~ 2>/dev/null | cut -f1); echo "home in use: $dk KB (the dashboard quota is 10 GB; this run adds about 0.13 GB - one copy like STEP9-DRY2's ~110 MB + before.db ~18 MB)"
+for f in "$SNAP" "$SNAP.sha256" "$LEX" "$DA2/key2_list.tsv" "$DA2/restore_dry2.tsv"; do [ -s "$f" ] || { echo "STEP9A-APPLY RESULT: STOP - missing or empty: $f; built untouched"; exit 1; }; done
+s=$(sha256sum < "$SNAP" | cut -d' ' -f1); echo "snapshot: sha256 $s (expect $XSNAP)"; [ "$s" = "$XSNAP" ] || { echo "STEP9A-APPLY RESULT: STOP - not the declared snapshot; built untouched"; exit 1; }
+s=$(sha256sum < "$LEX" | cut -d' ' -f1); echo "lexicon: sha256 $s (expect $XLEX)"; [ "$s" = "$XLEX" ] || { echo "STEP9A-APPLY RESULT: STOP - not the declared lexicon; built untouched"; exit 1; }
+cp "$DA2/key2_list.tsv" "$D/key2_list.tsv" || { echo "STEP9A-APPLY RESULT: STOP - cannot copy the key-2 list; built untouched"; exit 1; }
+s=$(sha256sum < "$D/key2_list.tsv" | cut -d' ' -f1); echo "key-2 list (copied from STEP9A-DRY2): $(($(wc -l < "$D/key2_list.tsv") - 1)) slots, sha256 $s (expect 83, $XK)"
+[ "$s" = "$XK" ] || { echo "STEP9A-APPLY RESULT: STOP - not the declared key-2 list; built untouched"; exit 1; }
+s=$(sha256sum < "$DA2/restore_dry2.tsv" | cut -d' ' -f1); echo "STEP9A-DRY2 report: sha256 $s (expect $XR)"; [ "$s" = "$XR" ] || { echo "STEP9A-APPLY RESULT: STOP - not the declared dry report; built untouched"; exit 1; }
+echo "=== built = what STEP9-APPLY left (eu_step check against STEP9-DRY2's prep + dry copy; read-only) ==="
+$E check --tag STEP9AA --built "$B" --dir "$DD" --written abp_surface || { echo "STEP9A-APPLY RESULT: STOP - built is not STEP9-APPLY's result (lines above); built untouched"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect $XBASE)"
+[ "$n0" = "$XBASE" ] || { echo "STEP9A-APPLY RESULT: STOP - built's abp_surface is not $XBASE; built untouched"; exit 1; }
+echo "=== prep: state of built, before.db (built's abp_surface before 9a = the 9c before side, F3) and a THROWAWAY copy ==="
+$E prep --tag STEP9AA --built "$B" --dir "$D" --copy verses,words,lexicon,dotted_lexicon,abp_surface --save abp_surface || { echo "STEP9A-APPLY RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "before.db: sha256 $(sha256sum < "$D/before.db" | cut -d' ' -f1), abp_surface $(sqlite3 -readonly "$D/before.db" "SELECT count(*) FROM abp_surface") rows (expect $XBASE)"
+# --- the same restore on the THROWAWAY copy first: it must end exactly as STEP9A-DRY2 said ---
+echo "=== restore --apply on the THROWAWAY copy $D/dry.db (same arguments) ==="
+restore "$D/dry.db" "$D/report_drycopy.tsv" "$D/drycopy.out"; rc=$?
+sed -n '/^SUMMARY/,$p' "$D/drycopy.out"
+echo "throwaway restore exit $rc (expect 0)"
+[ "$rc" = 0 ] && [ -n "$(sed -n '/^RESULT: RESTORED, ALL CHECKS PASS/p' "$D/drycopy.out")" ] || { echo "STEP9A-APPLY RESULT: STOP - the restore did not pass on the throwaway copy (full output $D/drycopy.out); built untouched"; exit 1; }
+case "$(cat "$D/drycopy.out")" in *"$XSUM"*) ;; *) echo "STEP9A-APPLY RESULT: STOP - the throwaway copy's placed line is not the declared one; built untouched"; exit 1;; esac
+s=$(sha256sum < "$D/report_drycopy.tsv" | cut -d' ' -f1); echo "throwaway report: sha256 $s (expect $XR = STEP9A-DRY2's, row for row)"
+[ "$s" = "$XR" ] || { echo "STEP9A-APPLY RESULT: STOP - the throwaway report differs from the dry report; built untouched"; exit 1; }
+n=$(sqlite3 -readonly "$D/dry.db" "SELECT count(*) FROM abp_surface"); echo "throwaway abp_surface: $n (expect $XAFTER)"
+[ "$n" = "$XAFTER" ] || { echo "STEP9A-APPLY RESULT: STOP - the throwaway table is not $XAFTER; built untouched"; exit 1; }
+# before -> throwaway after = exactly the 4,411 snapshot slots: 3,873 added at the inserts' new slots + 538 changed at the updates'
+$E delta --tag STEP9AA --a "$D/before.db" --b "$D/dry.db" --table abp_surface:verse_id+position --out "$D/delta_drycopy.tsv" --show 5 > "$D/delta_drycopy.out" 2>&1 || { cat "$D/delta_drycopy.out"; echo "STEP9A-APPLY RESULT: STOP - delta before -> throwaway (lines above); built untouched"; exit 1; }
+cat "$D/delta_drycopy.out"
+XD=$(sha256sum < "$D/delta_drycopy.tsv" | cut -d' ' -f1)
+sqlite3 -readonly -separator "$TAB" "$B" "SELECT id, book, chapter, verse FROM verses" > "$D/verse_ids.tsv" || { echo "STEP9A-APPLY RESULT: STOP - verses read failed; built untouched"; exit 1; }
+awk -F'\t' -v OFS='\t' 'FNR == 1 {f++} f == 1 {id[$2 FS $3 FS $4] = $1; next} FNR > 1 && $12 == "placed" {print "abp_surface", (($6 == "insert") ? "ADDED" : "CHANGED"), "(" id[$1 FS $2 FS $3] ", " $5 ")"}' "$D/verse_ids.tsv" "$D/report_drycopy.tsv" | sort > "$D/expect_keys.tsv"
+sed '1d' "$D/delta_drycopy.tsv" | cut -f1-3 | sort > "$D/delta_keys.tsv"
+na=$(awk -F'\t' '$2 == "ADDED"' "$D/delta_keys.tsv" | wc -l); nc=$(awk -F'\t' '$2 == "CHANGED"' "$D/delta_keys.tsv" | wc -l); nr=$(awk -F'\t' '$2 == "REMOVED"' "$D/delta_keys.tsv" | wc -l)
+echo "before -> throwaway: added $na (expect $XINS), changed $nc (expect $XUPD), removed $nr (expect 0); slots + kind = the report's placed inserts / updates at their new slots: $(cmp -s "$D/expect_keys.tsv" "$D/delta_keys.tsv" && echo yes || echo NO); delta sha256 $XD"
+[ "$na" = "$XINS" ] && [ "$nc" = "$XUPD" ] && [ "$nr" = 0 ] && cmp -s "$D/expect_keys.tsv" "$D/delta_keys.tsv" || { echo "STEP9A-APPLY RESULT: STOP - the throwaway's change is not exactly the 4,411 snapshot slots; built untouched"; exit 1; }
+$E same --tag STEP9AA --built "$B" --dir "$D" || { echo "STEP9A-APPLY RESULT: STOP - built changed since prep (lines above); built untouched"; exit 1; }
+# --- the write ---
+echo "=== APPLY: restore_surface_fill --apply on BUILT ($B) - writes abp_surface only ==="
+restore "$B" "$D/report_apply.tsv" "$D/apply.out"; r=$?
+sed -n '1,/^RE-KEY/p' "$D/apply.out"
+sed -n '/^G1a/{p;n;p}' "$D/apply.out"
+sed -n '/^PLACED rows that MOVED/,/^$/p' "$D/apply.out"
+sed -n '/^SUMMARY/,$p' "$D/apply.out"
+echo "restore exit $r (expect 0)"
+# --- after the write: every miss is CHECK ---
+FL=""
+[ "$r" = 0 ] && [ -n "$(sed -n '/^RESULT: RESTORED, ALL CHECKS PASS/p' "$D/apply.out")" ] || FL="$FL restore"
+case "$(cat "$D/apply.out")" in *"$XSUM"*) ;; *) FL="$FL placed-line";; esac
+s=$(sha256sum < "$D/report_apply.tsv" 2>/dev/null | cut -d' ' -f1); echo "apply report: sha256 $s (expect $XR = the dry report, row for row)"; [ "$s" = "$XR" ] || FL="$FL report"
+n1=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n1 (expect $XAFTER)"; [ "$n1" = "$XAFTER" ] || FL="$FL count"
+CHK=$($E check --tag STEP9AA --built "$B" --dir "$D" --written abp_surface 2>&1); k=$?; echo "$CHK"; [ "$k" = 0 ] || FL="$FL check"
+VAL=$($E delta --tag STEP9AA --a "$D/before.db" --b "$B" --table abp_surface:verse_id+position --out "$D/delta_built.tsv" --show 5 --expect-sha "$XD" 2>&1); v=$?; echo "$VAL"
+echo "built before -> built after = before -> throwaway (exactly the 4,411 snapshot slots; sha $XD): $([ "$v" = 0 ] && echo yes || echo NO)"; [ "$v" = 0 ] || FL="$FL delta"
+if [ -z "$FL" ]; then
+  echo "STEP9A-APPLY RESULT: DONE - built abp_surface 391,141 -> 395,014 (3,873 inserts + 538 updates = the 4,411 snapshot slots, 83 by key 2 alone); report = the dry report (e154d8d4...); = the throwaway copy (check OK, 149 untouched + schema); the restore's own post-write gates PASS. Pre-9a copy (the 9c before side): $D/before.db"; exit 0
+fi
+echo "STEP9A-APPLY RESULT: CHECK -$FL differ (lines above). Restore source for abp_surface: $D/before.db"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
