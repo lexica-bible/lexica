@@ -9491,3 +9491,80 @@ Read, no cause asserted (§9.131): **english 83 = exactly the key-2 list's 83 sl
 all 83 carry report detail "key-2 alone (listed)"). **english_head 23: all inside those 83.** **strongs_base 1: Jer 49:3 @3 "Ai"**
 (name slot, strongs `*`, insert / split_receive_name, agree-strong, NOT on the key-2 list): 10/25 strongs_base H5857, new `*`;
 every other column equal. Pointer only, not read: Jer 49:3 is one of the six none → lemma-only verses in §9.95's 8b.2 drift list.
+
+## Jer 49:3 @3 strongs_base (§9.132 ruling 6) — read (b) from the code; read (a) needs PA (JER493-READ drafted)
+
+**(b) Where the fill file's strongs_base column comes from, and what reads it (code at 88f7a5f6 = HEAD for scripts/tests):**
+- **Source at freeze time:** the `--src` database's `words.strongs_base` at the slot. `word_rows()` reads `SELECT verse_id,
+  position, strongs, strongs_base, english, english_head, is_pn FROM words` (snapshot_surface_fill.py:127-137); `build_rows()`
+  takes the slot's one row (:207) and writes `strongs_base=sb` into the frozen row (:214-218). So the 10/25 file holds live's
+  words value on 10/25 (its `--src` was a fresh copy of live), and the new file holds built's words value after 9a.
+- **What reads it afterwards:**
+  - `restore_surface_fill.py`: NO. `load_snapshot()` checks sha / counts / form / old_form only (:145-160); the re-key uses the
+    row's `strongs`, `k2_ordinal`, `english` (:204-205), the preconditions use `form` / `old_form` / `action` (:223-231), the
+    Lexicon check uses `cls`, `form` and the NEW words row's `strongs` from the database (:233-236; `dr.words_for` reads
+    `strongs`, not `strongs_base`, dryrun_rekey_fill.py:132-141). The restore's two `strongs_base` reads (:168, :181) are the
+    DATABASE's words column joined to `lexicon` for the translit lemma — not the snapshot column.
+  - `dryrun_rekey_fill.py`: NO (no `strongs_base` in the file).
+  - `snapshot_surface_fill.py --check` (rebuild-words step 1a): YES, as part of the whole-row, byte-for-byte compare —
+    `check_current()` re-derives every row from `--src` (so from that database's `words.strongs_base` at the slot) and
+    requires the render to equal the frozen file's bytes (:313-321); a difference is reported per slot by `stale_slots()`,
+    which compares every column (:232-246). So after the swap, step 1a's `--check` on a fresh copy of live passes only if
+    live's `words.strongs_base` at Jer 49:3 @3 is `*`, as frozen.
+  - Tests: `tests/test_surface_fill_restore.py` builds made-up `words` tables with the column (:62, :67); no test reads the
+    snapshot's `strongs_base` value on its own — only inside the whole-file re-freeze / `--check` byte compares.
+- So the column is a record of the slot's word as it stood ("the OLD words row", docstring :14-15), read back only by the
+  byte-for-byte `--check`; nothing places or writes by it.
+
+**(a) What §9.95's drift list records for Jer 49:3 — cannot be answered from the repo.** The repo holds the list at verse level
+only: DESIGN :500 (§9.95) and DRAFT :2781-2786 — "none→lemma-only 6 = Num 21:25, 1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20,
+Jer 49:3; all with a Hebrew number". No slot, column or values. The DRIFT-8B2 block text was not appended to this record
+(handoff stageD_rekey :74-79: the 8B2 block lived in the 11/6 chat), and the drift log was not pasted into the repo. The read
+that answers it is JER493-READ below: every line naming Jer 49:3 / verse id 20266 in `drift8b2_20261106.log` (+ its folder),
+the 8b.2 apply run's log and folders (`xref8b2c_*`) and `~/rekey/live_8b3_id.log`; and the Jer 49:3 rows of words,
+pn_greek_identity and pn_hebrew_xref on src, the pre-8b rollback copy and built. No cause asserted.
+
+### Block JER493-READ (GATE REF 88f7a5f6; READ-ONLY — writes only its run folder and log; no figure gated)
+Local test (WSL, fake HOME, clone at 08d15be7, three made-up dbs + a fake drift log): READ DONE exit 0; missing logs print "not present (or not a file)"; re-paste STOP.
+```bash
+set +H
+L=~/edition_upgrade_runs/jer493_read_20261115.log
+if [ -e "$L" ]; then echo "JER493-READ RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=88f7a5f6
+echo "GATE REF ${REF} - JER493-READ sec 9.131 follow-up (a): Jer 49:3 in the sec 9.95 drift / 8b.2 logs, and its name-slot rows (words, pn_greek_identity, pn_hebrew_xref) on src, the pre-8b rollback copy and built - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "JER493-READ RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+P8=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+O=~/edition_upgrade_runs
+D=$O/jer493_read_20261115
+python3 scripts/eu_step.py pre --tag JER493 --ref "$REF" --dir "$D" --db "$S" --db "$P8" --db "$B" || { echo "JER493-READ RESULT: STOP - pre (line above); nothing read"; exit 1; }
+st0=$(stat -c '%s %Y' "$S" "$P8" "$B" | tr '\n' ' ')
+echo "=== 1. the logs: every line naming Jer 49:3 or verse id 20266 (file: line number: text) ==="
+for f in "$O/drift8b2_20261106.log" "$O"/drift8b2_20261106/* "$O/xref8b2c_20261106.log" "$O"/xref8b2c_dry_20261106/* "$O"/xref8b2c_apply_20261106/* ~/rekey/live_8b3_id.log; do
+  if [ -f "$f" ]; then n=$(grep -cE 'Jer 49:3([^0-9]|$)|(^|[^0-9])20266([^0-9]|$)' "$f"); echo "--- $f: $n line(s)"; grep -nE 'Jer 49:3([^0-9]|$)|(^|[^0-9])20266([^0-9]|$)' "$f" | cut -c1-400 | sed 's/^/    /'; else echo "--- $f: not present (or not a file)"; fi
+done
+echo "=== 2. Jer 49:3 on each copy (verse id, then every word row; identity + xref rows of that verse) ==="
+for db in "$S" "$P8" "$B"; do
+  echo "--- $db"
+  v=$(sqlite3 -readonly "$db" "SELECT id FROM verses WHERE book='Jer' AND chapter=49 AND verse=3"); echo "  verse id: $v (the two frozen fill files: 20266)"
+  [ -n "$v" ] || { echo "JER493-READ RESULT: STOP - no Jer 49:3 row on $db"; exit 1; }
+  echo "  words (position | strongs | strongs_base | english | is_pn):"
+  sqlite3 -readonly -separator ' | ' "$db" "SELECT position, quote(strongs), quote(strongs_base), quote(english), quote(is_pn) FROM words WHERE verse_id=$v ORDER BY position" | sed 's/^/    /'
+  echo "  pn_greek_identity (position | greek_strongs | greek_lemma | source | hebrew_base):"
+  sqlite3 -readonly -separator ' | ' "$db" "SELECT position, quote(greek_strongs), quote(greek_lemma), quote(source), quote(hebrew_base) FROM pn_greek_identity WHERE verse_id=$v ORDER BY position" | sed 's/^/    /'
+  echo "  pn_hebrew_xref (position | hebrew_base | class):"
+  sqlite3 -readonly -separator ' | ' "$db" "SELECT position, quote(hebrew_base), quote(class) FROM pn_hebrew_xref WHERE verse_id=$v ORDER BY position" | sed 's/^/    /'
+done
+st1=$(stat -c '%s %Y' "$S" "$P8" "$B" | tr '\n' ' ')
+echo "src, pre-8b copy and built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "JER493-READ RESULT: STOP - a database changed during a read-only run - report this"; exit 1; }
+echo "JER493-READ RESULT: READ DONE - lines and rows above (no figure gated; a read for the ruling chat)"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### JER493-READ reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only block. The gate checks run inside `eu_step.py pre`, the only things written are a new run folder and a new log (neither may already exist), and no figure is gated."
+Reviewer notes (not stops): a copy lacking one of the two name tables prints an sqlite error line and the block carries on (reads as "table absent"); the grep pipelines return non-zero on no match, but nothing tests that.
