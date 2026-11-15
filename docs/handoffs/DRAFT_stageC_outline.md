@@ -9968,3 +9968,47 @@ the post-step-9 table differs at moved slots. Not read further; recorded as prin
 PA-only logs/files above (census2 .tsv; drift8b2 log; xref8b0b / xref8b1b / abptag apply logs if they print members; stage B log
 for Split / PN-star) — what each log actually prints is not known until read. Where a step's log holds counts only (8b.2's 26,323
 at least), its members cannot come from its own files; the ruling chat to say how those are declared.
+
+## Step 4 raw-delta code (11/15, CC; §9.138 (2) / §9.139) — in the working tree, NOT committed until ruled
+
+Order chosen (§9.139 (5)): this code first (the first NET measure), then the live = src proof and the PA log read, then the A
+dry-run English output.
+- **NEW `scripts/eu_words_delta.py`** (read-only; both databases opened `mode=ro` + `query_only`; writes only into an existing
+  EMPTY `--out`): `--a <src> --b <built> --out <dir>`. Keys: verse = (book, chapter, verse); word = (book, chapter, verse,
+  position); row ids and verse_id not compared. Every `words` column both copies have is compared (columns on one side only are
+  printed); `bracket_id` as a per-verse first-appearance RANK (as compare_words.py); every `verses` column but id. STOP on a
+  duplicate verse or word key, or a word whose verse_id has no verse row.
+  **Moved-word pairing rule (stated in the code docstring, §9.138 condition):** identity = (strongs, morph, lemma) — the 11/6
+  census v2 key. Per verse, a-side candidates = positions only on a or whose identity differs from b's at the same position; b
+  likewise. a:p and b:q (q ≠ p) pair ONLY when their identity matches and no other candidate on either side carries that identity
+  in that verse (unique both ways); every other candidate is written as UNPAIRED. A pair is a reading aid — its cells still appear
+  as they are.
+  Files: words_cells.tsv (book chapter verse position column a b moved), words_only.tsv, words_moved.tsv (with the other columns
+  that differ between the paired rows), words_unpaired.tsv, verses_cells.tsv, verses_only.tsv, summary.txt; values via repr();
+  each file's line count + sha256 printed; counts per column printed.
+- **NEW `tests/test_eu_words_delta.py`** (10): identical → all 0; changed cell listed; bracket renumbered = no difference,
+  regrouped = difference; a swap pairs both ways; a repeated identity left UNPAIRED (never forced); a one-side word listed and
+  paired when unique; verses.text + a one-side verse listed; neither db written (sha + mtime, no journal); `--out` must exist and
+  be empty; same file both sides refused. Proven able to fail: uniqueness check loosened → the repeated-identity test fails;
+  bracket rank off → the bracket test fails. Added to ci.yml + pre-commit (79 test files, all pass on the working tree).
+- **Charter §6 step 4 amended** (§9.139 (0), old wording cited in place): "the declared 29% set" → "the declared changed-English
+  set".
+- Not in this change: any gate (§9.139 (6)); the A dry-run output (§9.139 (1)); the PA blocks. After the ruling: commit = new code
+  REF; then the raw-delta block (read-only: built vs src into a run folder; reviewer) and the live = src proof block (a fresh copy
+  of live, JP's disk check first, the copy and its removal in the block).
+
+### Step 4 raw-delta code reviewed (11/15) — REVIEW: ESCALATE (code change); 3 GAPs → 2 closed, memory open for a ruling
+First verdict verbatim: "REVIEW: ESCALATE - this is a code change (new script, new test, CI/hook lines, charter amendment). Under §9.90 that goes to the ruling chat. The mechanics are mostly sound; findings are below."
+Confirmed: read-only (`mode=ro` + `query_only`), `--out` must exist and be empty, same file refused; the pairing rule = the
+docstring, nothing forced; every member reaches a file; all common columns compared, type-strict, repr keeps None vs ''.
+**Fixed after review:** summary.txt written with plain `open(..., newline="\n", errors="surrogateescape")` (any python3);
+ONE structure per side (the second copy gone) + a peak-memory line; read-only open via `as_uri()` (escapes ? # %); tests
+10 → 16 (str vs int; 1 vs 1.0 — proven: dropping the type check fails exactly that test; one-side column; summary.txt = the
+printed output; word with no verse row STOP; duplicate word STOP). 79 pre-commit test files pass.
+**Memory, measured locally (WSL, made-up full-size copies: 31,237 verses, 624,740 words rows per side, 13 compared columns, short
+values):** peak 757 MB (`time -v` 775,904 KB), 5.5 s. Real rows hold longer English → PA higher; not measured on PA.
+Re-review verbatim: "REVIEW: ESCALATE - this is still a code change, so it goes to the ruling chat under §9.90. The Python-version and test GAPs are closed. The memory GAP is reduced, but PA's figure has not been measured, so it stays open as a ruling point."
+Known limits, recorded: bracket_id is compared as a rank, so a type-only change in that column alone is hidden; `moved` = "in a pair
+on either side", a reading aid. For the run block (reviewer's list): print `python3 --version`; `-journal` check on both copies;
+a new dated empty `--out` + dated log; a peak-memory reading (`/usr/bin/time -v` as a second one); the three untracked PA files
+left alone.
