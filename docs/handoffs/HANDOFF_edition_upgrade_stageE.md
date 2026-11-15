@@ -23,7 +23,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   **Step 12 (a, b, c) complete.** Next: 9 → 9a → 9b → 9c (§9.87 punct 583 vs 607 ruled before 9c).
 - **Step 9 report + STEP9-DRY drafted** (reviewer CLEAR, 11/14; DRAFT outline "Step 9 → 9a → 9b → 9c"). Found: the
   9a/9b/9c scripts have the 10/25 figures written in (391,130 / 395,003 / 4,411) — a code change is needed before
-  the 9a dry run (design item for the ruling chat). Punct: **607 ruled** (§9.113). STEP9-DRY + STEP9-MEMBERS ran: built
+  the 9a dry run (design item for the ruling chat). Punct: **607 ruled** (§9.113).
+- **Step 9 APPLIED on built and CLOSED at 391,141** (§9.122, 11/15 02:55Z) after the respelling fix (code REF 32a39a10, §9.117;
+  163 name forms recovered). **9a/9b/9c code REF cd6566b3** (§9.121). PA at ca74e54d. Next: STEP9A-DRY (`--base 391141`). STEP9-DRY + STEP9-MEMBERS ran: built
   chain 390,978; 160 name slots lose their printed Greek (new English spelling no longer matches the scrape). **STEP9-APPLY
   held for JP: apply as a known regression, or fix the name matching first** (§9.114).
 

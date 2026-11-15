@@ -8358,3 +8358,25 @@ Tests: 43 pass. Code + tests + charter edit still uncommitted until the ruling.
 
 **New code REF: `cd6566b3`** (11/14) — the §9.121 change; pre-commit all checks passed. scripts/ and tests/ differ from 32a39a10 only
 by restore_surface_fill.py, health_check.py, snapshot_surface_fill.py and tests/test_surface_fill_restore.py.
+
+### STEP9-APPLY ran (11/15, 02:55 UTC, PA HEAD a9674438, REF 32a39a10) — DONE, exit 0 → STEP 9 CLOSED at 391,141 (§9.122)
+
+Log `~/edition_upgrade_runs/step9_apply_20261114.log`; run folder `step9_apply_20261114/`. Write gate cleared by the ruling chat on
+the STEP9-DRY2 figures (§9.119). Pre-write: PRE OK; dry figures = declared; dry deltas 4,423 / 467fd9ba… and 28 / b0fd29d1…; list
+7033acea…; bh_scrape.db 5e9d4bb6…; SAME OK (150 + schema, 0). Write: chain 346,113 / 13,181 / 31,847 = 391,141; romanized 391,141;
+list adds 163 (160 + 3 along); refusals 631. Post-write: figures = declared; pn_list.tsv c505b167… and pn_refused.tsv 235efe2d… =
+the dry run's; CHECK OK (149 untouched + schema 0; abp_surface 391,141, fingerprint 70af7a4a08e7 = dry copy; prep 395,003,
+18d0bba9d262); before → after = the declared delta (4,422 + header, sha 467fd9ba…: changed 538 / added 11 / removed 3,873); gate 3 on
+built 163 / 163 / 0 / 0; bh_scrape.db unchanged, no journal. Restore source not needed (`step9_dry2_20261114/before.db` kept).
+**The 27 members of src-dry → built-dry** (the edition's effect on the chain), from the log (verse_id, position):
+ADDED (88,2) Καϊν · ADDED (88,22) Καϊν · ADDED (131,1) Μαθουσαλά / REMOVED (131,2) · ADDED (132,1) Μαθουσαλά / REMOVED (132,2) ·
+CHANGED (985,1) είπε δε → Συχέμ / (985,2) Συχέμ → είπε δε · ADDED (1167,14) Εβραίος · ADDED (5817,1) Ρουβήν · ADDED (5817,6) Συμεών ·
+CHANGED (5874,19) οίδα → ουκ / (5874,20) ουκ → οίδα · ADDED (5950,27) Ιησούν · ADDED (6837,6) ουχ / REMOVED (6837,7) · ADDED (9467,4)
+Ιεζάβελ · ADDED (10201,6) Ιωακίμ / REMOVED (10201,7) · ADDED (11143,1) Αχιτόφελ · ADDED (11144,2) Αχιτόφελ · ADDED (12788,12) Αμάν /
+REMOVED (12788,13) · ADDED (20007,2) Ιωακείμ · ADDED (26424,2) Βηθανία · REMOVED (30987,17) ωμοιώθημεν / ADDED (30987,18).
+(= changed 4 / added 17 / removed 6: the 11 names built now matches, the slot shifts Gen 5:25/26, Est 5:9, Jdg 11:7, 2Ki 23:35,
+Rom 9:29, and the Gen 34:4 / Jos 2:4 swaps.)
+
+**Ruling (11/15, §9.122): step 9 applied on built and CLOSED at 391,141.** PA may pull to cd6566b3 (done: PA at ca74e54d). Built's
+abp_surface now is the "before side" for 9c (charter §6 amended); 9a's apply block saves it as `step9a_apply_<date>/before.db` (F3).
+Next: STEP9A-DRY under cd6566b3.
