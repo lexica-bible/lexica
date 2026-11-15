@@ -10513,3 +10513,26 @@ words, abp_corrections, kjv_words, bsb_words), then on built: `eu_batch_insert.p
 row reads already-applied) → `build_rendering_norm.py` (step 11's recompute: only Joh 19:18 @10's english_head_norm may move) → eu_step
 check (written: words, abp_corrections, and the rendering-norm tables = the throwaway; every other table + schema unchanged) and a
 row read at Joh 19:18 @10 (head 'here', norm 'here'). Before-copy saved by prep. Then the raw delta re-run (read-only).
+
+### Joh 19:18 fix code reviewed (11/15) — REVIEW: ESCALATE (code change); code sound; two gaps in the planned PA block
+Verdict line verbatim: "REVIEW: ESCALATE - this is a code change (eu_batch_insert.py, a new fixture and a new test), so under §9.90 it goes to the ruling chat. The code looks sound. Two gaps in the planned PA block need settling before it is drafted."
+Confirmed: the end check counts only this run's rows (the script's only write is the one INSERT); `--created` default keeps the first
+batch; the fixture row exact, its header = `load()`, group `typo` in REASON; no existing english_head row at Joh 19:18 @10 in the EU
+files or the active lists (only english @10 and verses.text); apply_abp_corrections applies an english_head row at 'ingest' only where
+the cell holds 'ere'. Notes: a non-"EU-" ledger_ref would read MISMATCH after writing (not this file); the "EU- rows on the copy" line's
+wording changed.
+**Gap 1 — build_rendering_norm.py rewrites three whole columns** (words.english_head_norm, kjv_words / bsb_words word_norm;
+recompute_norms :57-80, no scope option on the command line). **CC's answer, for the ruling:**
+- `number_fold.py` and `build_rendering_norm.py` are UNCHANGED since step 11 ran on built (`git diff --stat 006e16ba HEAD` on both: empty;
+  STEP11-APPLY ran at REF 006e16ba, §9.107 closing), and no step since has written built's words / kjv_words / bsb_words (every stage-E
+  write was checked by eu_step against its prep). So a full re-run re-writes identical values everywhere except the one fixed head.
+- The block proves it, not assumes it: on the throwaway first and then on built, before → after content delta (eu_step delta) on
+  words (key verse_id+position), kjv_words and bsb_words — expected exactly 2 cells, both at Joh 19:18 @10 (english_head 'ere' → 'here',
+  english_head_norm 'ere' → 'here'), 0 elsewhere; and eu_step check with written = words, abp_corrections (kjv_words / bsb_words must
+  then match their prep digests, i.e. unchanged).
+- Rejected alternative: an english_head_norm row in the correction file. In a rebuild, corrections apply at step 7 (finish_rebuild)
+  before step 11 fills the norm column, so that row would find the cell empty and LOUD-SKIP (apply_abp_corrections exits 1) — a trap
+  for every future rebuild.
+**Gap 2 — apply_abp_corrections.py's expected counts** (applied 1 · already-applied N · skipped 0) must be traced to built's last apply
+log before the block is drafted; and it appends to `<db>.corrections.log` beside built (a new or appended file — the block will say so).
+CC traces both when drafting the block.
