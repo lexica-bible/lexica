@@ -9775,3 +9775,15 @@ First verdict verbatim: "REVIEW: ESCALATE - STEP9C-PLACE writes outside a run fo
 - Notes: gate checks delegated to `eu_step pre` (:132-140, :154), as earlier eu_step blocks; pins match :81 / :85; never
   overwrites; JP pulls 19e2fb25 first; no pushes to scripts/ or tests/ while the block waits (§9.76).
 Re-review verbatim: "REVIEW: ESCALATE - STEP9C-PLACE still writes outside a run folder (DESIGN 9.90 / 9.134(b)), so it goes to the ruling chat. Finding 1 is closed and nothing new turned up."
+
+### Ruling (11/15, §9.135) — STEP9C-PLACE cleared to run at 19e2fb25
+
+### STEP9C-PLACE ran (11/15, 17:39:09Z, PA HEAD 1425b124, REF 19e2fb25) — DONE, exit 0
+Log `~/edition_upgrade_runs/step9c_place_20261115.log` (PA pulled 476de530 → 1425b124 first). PRE OK (19e2fb25 pulled, an
+ancestor, scripts/tests = REF, nothing uncommitted; the three sources present). Targets none existing. Sources = expect:
+snapshot d025cc08… (455,953 B), report e154d8d4… (403,318 B), pre-9a copy ea6c54c3… (18,194,432 B); the checkout's
+restore_surface_fill.py carries both pins; 10/25 file d9435bde…; all four fixture targets git-ignored. Placed:
+`tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv` 455,953 B d025cc08…, `restore_report_20261115.tsv` 403,318 B
+e154d8d4…, `~/abp_surface_prefill_20261115.db` 18,194,432 B ea6c54c3… (abp_surface 391,141 rows); `sha256sum -c` OK on
+abp_surface_fill_20261115 / restore_report_20261115 / abp_surface_fill_20261025; sources + 10/25 file unchanged; checkout clean.
+Every line = the §9.135 declaration.
