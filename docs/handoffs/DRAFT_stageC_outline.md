@@ -10375,3 +10375,62 @@ Still open for the ruling chat before the run block: (6) the Isa 48:5 @4 control
 (parse_abp.py :117-139): if the row's italic_words are {would, happen}, built's 'what' is the rule's head, src's 'would' the mismatch,
 and the row is src-only, not a candidate → the control reads CHECK; to be decided BEFORE the run. (7b) the run block declares the
 expected control lines up front and gates on them. (7d) every count is a forecast with no source until the run.
+
+## HEADCHECK drafted (11/15, GATE REF 50957fc0; PA pulls first) — the step-4 head-consistency check run (§9.145 (2) / §9.146)
+
+Read-only; writes only `step4_headcheck_20261115/` (+ `check/`) and its log. Same wrapper as STEP4-DELTA (python3 version; pre on built
++ src; built = STEP9A-APPLY's result; src size 451,964,928; size/time unchanged). Runs `eu_head_check.py --a src --b built --show
+"Joh 19:18@10" --show "Isa 48:5@4"`, prints its whole output (counts both / src only / built only, candidates, the two SHOW blocks,
+four file shas). **Hard control (§9.146):** "SHOW Joh 19:18@10 - candidate: yes", else CHECK. Isa 48:5 @4 printed, not gated.
+Local test (WSL; made-up rows: Joh 19:18 @10 built 'ere' / src 'here', italic {on, that, side}; Isa 48:5 @4 built 'what' / src 'would',
+italic {would, happen}): READ DONE exit 0 (candidates 1, Joh yes, Isa NO with both lines); re-paste STOP; Joh made non-candidate → CHECK.
+
+### Block HEADCHECK (GATE REF 50957fc0; READ-ONLY — writes only its run folder and log; no gate but the control)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_headcheck_20261115.log
+if [ -e "$L" ]; then echo "HEADCHECK RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=50957fc0
+echo "GATE REF ${REF} - HEADCHECK step 4 head-consistency check (DESIGN 9.145 (2) / 9.146): eu_head_check.py --a src --b built, both copies' english_head against the build's base rule, stale-head candidates - NO GATE; hard control Joh 19:18 @10 must be a candidate; Isa 48:5 @4 printed for reading - READ-ONLY on both databases; writes only its run folder and log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "HEADCHECK RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+D=~/edition_upgrade_runs/step4_headcheck_20261115
+XS_SIZE=451964928
+echo "python3: $(python3 --version 2>&1)"
+# --- before the run: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag HEADCHK --ref "$REF" --dir "$D" --db "$B" --db "$S" || { echo "HEADCHECK RESULT: STOP - pre (line above; it also refuses a -journal beside either copy); nothing read"; exit 1; }
+for f in "$DA/state.json" "$DA/dry.db"; do [ -s "$f" ] || { echo "HEADCHECK RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+python3 scripts/eu_step.py check --tag HEADCHK --built "$B" --dir "$DA" --written abp_surface || { echo "HEADCHECK RESULT: STOP - built is not STEP9A-APPLY's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"
+[ "$n" = "$XS_SIZE" ] || { echo "HEADCHECK RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+mkdir "$D/check" || { echo "HEADCHECK RESULT: STOP - cannot make $D/check"; exit 1; }
+# --- the check (src = a, built = b); the two named rows printed in full on both copies ---
+echo "=== eu_head_check.py --a src --b built --out $D/check --show 'Joh 19:18@10' --show 'Isa 48:5@4' ==="
+python3 scripts/eu_head_check.py --a "$S" --b "$B" --out "$D/check" --show "Joh 19:18@10" --show "Isa 48:5@4" > "$D/check.out" 2>&1; r=$?
+cat "$D/check.out"
+echo "head check exit $r (expect 0)"
+[ "$r" = 0 ] && [ -n "$(sed -n '/^RESULT: HEAD CHECK WRITTEN/p' "$D/check.out")" ] || { echo "HEADCHECK RESULT: STOP - the check did not finish (exit $r; lines above; partial files kept in $D/check) - the log goes to the ruling chat"; exit 1; }
+# --- control (DESIGN 9.146 (b)): Joh 19:18 @10 must be a candidate; Isa 48:5 @4 is read, not gated ---
+FL=""
+if [ -n "$(sed -n '/^SHOW Joh 19:18@10 - candidate: yes$/p' "$D/check.out")" ]; then echo "hard control Joh 19:18 @10 is a candidate: yes"; else echo "hard control Joh 19:18 @10 is a candidate: NO"; FL="$FL control-Joh19:18"; fi
+echo "Isa 48:5 @4: $(sed -n 's/^SHOW Isa 48:5@4 - //p' "$D/check.out") (a result either way - DESIGN 9.146 (b); the src / built lines above are read in the ruling chat)"
+echo "--- files in $D/check:"
+ls -l "$D/check" | sed 's/^/  /'
+st1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+echo "built and src: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "HEADCHECK RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+if [ -z "$FL" ]; then
+  echo "HEADCHECK RESULT: READ DONE - every list in $D/check; candidates are read by member before any fix list (no figure is a gate)"; exit 0
+fi
+echo "HEADCHECK RESULT: CHECK -$FL (lines above; files in $D/check)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### HEADCHECK reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only run of the ruled step-4 head check (DESIGN 9.146 / 9.145 (2)); the repo guards run inside eu_step pre, same pattern as the cleared STEP4-DELTA; the one hard control is the one 9.146 names; no other figure is a gate."
