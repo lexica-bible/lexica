@@ -9568,3 +9568,28 @@ echo "JER493-READ RESULT: READ DONE - lines and rows above (no figure gated; a r
 ### JER493-READ reviewed (11/15) — REVIEW: CLEAR
 Verdict line verbatim: "REVIEW: CLEAR - read-only block. The gate checks run inside `eu_step.py pre`, the only things written are a new run folder and a new log (neither may already exist), and no figure is gated."
 Reviewer notes (not stops): a copy lacking one of the two name tables prints an sqlite error line and the block carries on (reads as "table absent"); the grep pipelines return non-zero on no match, but nothing tests that.
+
+### JER493-READ ran (11/15, 16:17:21Z, PA HEAD 476de530, REF 88f7a5f6) — READ DONE, exit 0
+Log `~/edition_upgrade_runs/jer493_read_20261115.log`. PRE OK; src / pre-8b copy / built untouched (size + time).
+**Logs, verbatim (column names not printed in the matched lines):**
+- `drift8b2_20261106.log` :25 and :50 — `Jer 49:3|20266|3|lemma-only|none|'H5857'|'H5857'|'Ai'|'H5857'|'*'`; :71 —
+  `Jer 49:3|20266|3|none|lemma-only|'H5857'|'H5857'`.
+- `drift8b2_20261106/folded_differ_bible_edupg_test_20261101.tsv` :6 and `…_built_20261102.tsv` :6 — the same line as :25.
+- `xref8b2c_20261106.log`, `xref8b2c_dry_20261106/dry_run_full.log`, `xref8b2c_apply_20261106/apply_full.log`,
+  `~/rekey/live_8b3_id.log`: 0 lines. `greek_rows_before.tsv` / `greek_rows_after.tsv` :16902 `20266|2036|'G2036'` — that file
+  is keyed by words rowid, so 20266 there is a rowid, not this verse (a false match of the pattern).
+**Jer 49:3 (verse id 20266 on all three copies), slot @3 "Ai" (strongs `*`, is_pn 1):**
+| copy | words.strongs_base @3 | pn_greek_identity @3 (source, hebrew_base) | pn_hebrew_xref @3 (hebrew_base, class) |
+|---|---|---|---|
+| src | H5857 | lemma-only, H5857 | H5857, **none** |
+| pre-8b copy | H5857 | lemma-only, H5857 | H5857, **none** |
+| built | **`*`** | lemma-only, H5857 | H5857, **lemma-only** |
+The verse's other name slots: @1 Heshbon (identity surface), @7 Rabbah, @14 Milcom (lemma-only) — xref lemma-only on all three
+copies; words strongs_base `*` on src and built, the Hebrew number on the pre-8b copy.
+**Answer to §9.132 (a):** yes, @3 is in §9.95's drift list — :71 records slot 3 with `none` → `lemma-only` (the class) and
+H5857 / H5857. **CC's reading, from the rows and the code, offered for the ruling — not a finding:** retire_hebrew_identity.py's
+rule is `lemma-only` → words.strongs_base `*`, `none` → Hebrew kept (docstring :12-16). On src (live as of 11/01) the slot's
+xref class is `none` and words keeps H5857, while its identity row says lemma-only; on built the xref class is `lemma-only` and
+words is `*`. That is the §9.95 picture (10/25: 8b.2 ran before 8b.3 rebuilt the identity table; the lane's 8B2c ran after, with
+the six none → lemma-only rows in its 26,323), and the frozen files record each copy's words value as it stood: 10/25 H5857,
+new `*`.
