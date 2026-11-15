@@ -10482,3 +10482,10 @@ this row until ruled.
 end check counts ALL `EU-%` rows on the copy against the batch size (:146-151: "EU- rows on the copy: N (expected len(rows))"). Built
 already holds the 344 EU rows, so a 1-row batch would end "MISMATCH" after writing. Using it needs a small code change (count only
 the rows this run inserts), or another route — to be stated in the draft. Its `created` date is fixed at 2026-11-02 (:33).
+
+### Ruling (11/15, §9.147) — HEADCHECK READ DONE; candidates exactly the 2; §9.144 (5) stands for both; the fix block may be drafted
+CC's note to the ruling, before drafting (recorded at f75e2fac, "Isa 48:5 @4 added words"): the pinned feed marks "whould happen" as the
+added words at Isa 48:5 slot 4; with 'would' as an added word the build's rule gives 'what' (= built's head), and `_strip_italic_heads`
+exists so a head is never an added word. Writing 'would' would set the head to a word the print marks as added; the follow-up
+italic_words correction would then make it stale again. Raised to the ruling chat before the Isa row is put in a fix file; the Joh
+19:18 @10 row is drafted meanwhile. The 1 inputs-differ row and the 4 both-copies rows were already read (adee2a15, "HEADCHECK files read").
