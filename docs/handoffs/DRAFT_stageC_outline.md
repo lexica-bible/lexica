@@ -10434,3 +10434,20 @@ echo "HEADCHECK RESULT: CHECK -$FL (lines above; files in $D/check)"; exit 1
 
 ### HEADCHECK reviewed (11/15) — REVIEW: CLEAR
 Verdict line verbatim: "REVIEW: CLEAR - read-only run of the ruled step-4 head check (DESIGN 9.146 / 9.145 (2)); the repo guards run inside eu_step pre, same pattern as the cleared STEP4-DELTA; the one hard control is the one 9.146 names; no other figure is a gate."
+
+### HEADCHECK ran (11/15, 21:02:58Z, PA HEAD 3a5f6d9c after a pull from e5f77e11, REF 50957fc0) — READ DONE, exit 0
+Log `~/edition_upgrade_runs/step4_headcheck_20261115.log`; files `step4_headcheck_20261115/check/`. Python 3.13.1; PRE OK; CHECK OK
+(395,014 / 219a3ebe7075); src 451,964,928 B. **Counts (none a gate):** stored ≠ base rule: src 4 / built 7; on both copies 4 (stored
+heads differ on both: 0); src only 0; **built only 3 = CANDIDATES 2 + inputs differ 1.**
+- **SHOW Joh 19:18 @10 — candidate: yes** (hard control met): src english 'one here on that side,', head 'here', italic_words
+  'on,side,that', strongs '1782', recomputed 'here' — matches; built the same english / italic / strongs, head 'ere', recomputed 'here' — MISMATCH.
+- **SHOW Isa 48:5 @4 — candidate: yes:** src english 'what would happen', head 'would', italic_words 'happen,whould', strongs '3739',
+  recomputed 'would' — matches; built the same english / italic / strongs, head 'what', recomputed 'would' — MISMATCH.
+  (The added-words value is 'happen,whould' on BOTH copies — the old edition's typo form, so 'would' is not an added word and the rule
+  gives 'would'. CC's earlier {would, happen} worry does not arise.)
+- Files: mismatch_a 4 lines `011b6a7a48e7ff6f4efa2354ffcd983a93d94e6f5bb778bd6247b031ce3f3b33`; mismatch_b 7 `7e32d7983533acd000e59ca292ca39e58b4c2553885c7a219bddd69656ac8e6e`;
+  candidates 2 `890d8cd6bc4abbe9176149cf0bd68f4337d5ce24e4fe35641bc8403186044013`; both_differ 0 `6d8e0e3cb2a35dc3cb94c7499229a03c162ed52bf2b5b4523c417dbe97c5b896`.
+- Built + src unchanged. HEADCHECK RESULT: READ DONE.
+Reading (CC's, for the ruling): the 2 candidates are exactly the two known rows; over every row of both copies there is no other
+stale head of this shape. The 1 "inputs differ" row and the 4 both-copies rows are in mismatch_a / mismatch_b on PA (not printed in
+the log) — they are outside this check by design; the 1 is answered by the A english_head output.
