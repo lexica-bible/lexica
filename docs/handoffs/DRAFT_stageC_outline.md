@@ -9198,3 +9198,137 @@ overlap 127 (15 with a place strongs_g). Control (pre-9a copy): `[WARN] … floo
 abp_surface only). Read-out: src exit 0, `[OK  ] … floor 395003 …: 0`; the floor line is the only line differing src → built.
 Built, src, pre-9a copy untouched. No check_delta file written.
 **Ruling (11/15, §9.130): step 9b CLOSED.** Next: 9c (code change → reviewer → ruling chat).
+
+## STEP9C-FREEZE drafted (11/15, GATE REF 88f7a5f6) — the PA half of 9c: make the two 9c input files from built
+
+Read-only on every database; writes only `step9c_freeze_20261115/` + its log; nothing into the PA checkout. The 9c CODE commit
+(pins, rebuild-words 1a/9a, punct fixture swap, tests) comes after JP's scp and goes reviewer → ESCALATE → ruling chat (§9.129 (7)).
+**Guards (STOP):** pre; before.db `ea6c54c3…`, report `e154d8d4…`, 10/25 fill `d9435bde…` (= restore_surface_fill.py:73 pin),
+eligible `e540d34d`, PUNCT-RECON's `g3_today_members.txt` present; built = STEP9A-APPLY's result; abp_surface 395,014; built +
+before.db untouched. **1. Re-freeze:** `snapshot_surface_fill.py --src <built> --prefill <before.db> --from-restore <report copy
++ .sha256> --out step9c_freeze_20261115/abp_surface_fill_20261115.tsv` (new path; no --replace); its own G0 / O / R; printed
+lines checked: placed 4,411 · src-not-in-prefill 4,411 · prefill-not-in-src 538; 4,411 = 3,873 + 538; rows 4,411. **2. Second
+derivation:** each new row joined to its 10/25 row through the report (old slot → new slot): action / cls / form / strongs /
+k2_ordinal equal on all 4,411 (gates, traced: placement is key 2's slot, key2_at :170-179; 9a wrote the snapshot form); moved
+(expect 6) and the other columns' differences are read-outs. **3. Punct:** port test, member-diff tests, v2 controls; `--v2 --list`
+→ `punct_members_built_20261115.txt` (charter :555 recipe); 607 lines / 607 refs (§9.113) = PUNCT-RECON's 11/14 set; built's member
+diff against the new file = "FAIL … content-other 1 … gone 0 - new on eligible 0 - changed ops 0 - unchanged 607" (exit 1, Job 3:3).
+Not here: the `--check` round trip (needs the new pin = the 9c commit); placing files in PA's fixture folder (a checkout write).
+Local test (WSL, fake HOME, made-up built with 4,411 fill slots + 3 punct verses + Job 3:3): clean READ DONE exit 0; re-paste STOP;
+wrong report sha STOP; wrong pre-fill side → script G0 STOPPED → STOP; a 10/25 form changed → CHECK join; extra 11/14 ref → CHECK
+punct; built row changed → STOP; clean re-run READ DONE.
+
+### Block STEP9C-FREEZE (GATE REF 88f7a5f6; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9c_freeze_20261115.log
+if [ -e "$L" ]; then echo "STEP9C-FREEZE RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=88f7a5f6
+echo "GATE REF ${REF} - STEP9C-FREEZE rebuild-words step 9c inputs: re-freeze the abp_surface fill from built after 9a (snapshot_surface_fill --from-restore the 9a apply report, pre-fill = the pre-9a copy; DESIGN 9.120 F3, charter sec 6) + the punct member list from built (607, DESIGN 9.113) - READ-ONLY on every database; writes only its run folder and log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9C-FREEZE RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+PR=~/edition_upgrade_runs/punct_recon_20261114
+OLD=tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
+EL=~/edition_upgrade_runs/step5_eligible_20261101.tsv
+D=~/edition_upgrade_runs/step9c_freeze_20261115
+NEW="$D/abp_surface_fill_20261115.tsv"
+PM="$D/punct_members_built_20261115.txt"
+E="python3 scripts/eu_step.py"
+# --- declared figures: STEP9A-APPLY / STEP9B logs (DESIGN 9.126, 9.128, 9.130); PUNCT-RECON log (9.113) ---
+XB4=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273
+XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a
+XOLD=d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b
+XROWS=4411; XINS=3873; XUPD=538; XAFTER=395014; XPUNCT=607
+XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 - changed ops 0 - unchanged 607"
+# --- before the freeze: every miss is STOP ---
+$E pre --tag STEP9C --ref "$REF" --dir "$D" --db "$B" --keep "$DA/before.db" || { echo "STEP9C-FREEZE RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DA/before.db" "$DA/report_apply.tsv" "$DA/state.json" "$DA/dry.db" "$OLD" "$OLD.sha256" "$EL" "$PR/g3_today_members.txt"; do [ -s "$f" ] || { echo "STEP9C-FREEZE RESULT: STOP - missing or empty: $f"; exit 1; }; done
+s=$(sha256sum < "$DA/before.db" | cut -d' ' -f1); echo "pre-9a copy (the --prefill side): sha256 $s (expect $XB4)"; [ "$s" = "$XB4" ] || { echo "STEP9C-FREEZE RESULT: STOP - the pre-9a copy is not the recorded one - report this"; exit 1; }
+s=$(sha256sum < "$DA/report_apply.tsv" | cut -d' ' -f1); echo "9a apply report: sha256 $s (expect $XR)"; [ "$s" = "$XR" ] || { echo "STEP9C-FREEZE RESULT: STOP - the 9a apply report is not the recorded one - report this"; exit 1; }
+s=$(sha256sum < "$OLD" | cut -d' ' -f1); echo "10/25 frozen fill $OLD: sha256 $s (expect $XOLD, the pin in restore_surface_fill.py:73)"; [ "$s" = "$XOLD" ] || { echo "STEP9C-FREEZE RESULT: STOP - the 10/25 frozen fill is not the pinned one"; exit 1; }
+[ "$(sha256sum < "$EL" | cut -c1-8)" = e540d34d ] || { echo "STEP9C-FREEZE RESULT: STOP - eligible file is not step 5's (e540d34d...)"; exit 1; }
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+$E check --tag STEP9C --built "$B" --dir "$DA" --written abp_surface || { echo "STEP9C-FREEZE RESULT: STOP - built is not STEP9A-APPLY's result (lines above)"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect $XAFTER)"
+[ "$n0" = "$XAFTER" ] || { echo "STEP9C-FREEZE RESULT: STOP - built's abp_surface is not $XAFTER"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$DA/before.db" | tr '\n' ' ')
+# --- 1. the fill re-freeze (the script's own G0 / O / R gates; G0 = built minus the pre-9a copy is exactly the report's placed slots at their new positions) ---
+cp "$DA/report_apply.tsv" "$D/report_apply.tsv" || { echo "STEP9C-FREEZE RESULT: STOP - cannot copy the 9a report"; exit 1; }
+printf '%s  report_apply.tsv\n' "$XR" > "$D/report_apply.tsv.sha256"
+echo "=== 1. snapshot_surface_fill on built: --prefill the pre-9a copy, --from-restore the 9a report (copy + .sha256 in the run folder), --out a NEW file in the run folder ==="
+python3 scripts/snapshot_surface_fill.py --src "$B" --prefill "$DA/before.db" --from-restore "$D/report_apply.tsv" --out "$NEW" > "$D/snapshot.out" 2>&1; r=$?
+cat "$D/snapshot.out"; echo "snapshot exit $r (expect 0)"
+[ "$r" = 0 ] && [ -n "$(sed -n '/^RESULT: SNAPSHOT WRITTEN/p' "$D/snapshot.out")" ] || { echo "STEP9C-FREEZE RESULT: STOP - the re-freeze did not pass its own gates (lines above); nothing else made"; exit 1; }
+FL=""
+chk() { case "$(cat "$D/snapshot.out")" in *"$2"*) echo "  $1: yes";; *) echo "  $1: NO (expected text: $2)"; FL="$FL $3";; esac; }
+echo "--- the re-freeze vs the declared figures:"
+chk "G0 = the restore report, 4,411 = 3,873 insert + 538 update" "PASS — 4,411 = 3,873 insert + 538 update = the restore report" g0
+chk "report placed 4,411 · built-not-in-pre-9a 4,411 · pre-9a-not-in-built 538" "report placed 4,411 · src-not-in-prefill 4,411 · prefill-not-in-src 538" g0-counts
+chk "O: every slot on one word row" "PASS — 4,411 slots, each on one word row" o
+chk "rows 4,411" "rows                    4,411 | 4,411" rows
+chk "inserts / updates 3,873 / 538" "inserts / updates       3,873 / 538 | 3,873 / 538" split
+chk "report sha = its .sha256" "restore report sha256 $XR = its .sha256" report
+NS=$(sha256sum < "$NEW" | cut -d' ' -f1); echo "new frozen file $NEW: $(($(wc -l < "$NEW") - 1)) rows, $(stat -c %s "$NEW") bytes, sha256 $NS; its .sha256 file: $(cat "$NEW.sha256")"
+[ "$(cut -d' ' -f1 "$NEW.sha256")" = "$NS" ] || FL="$FL new-sha"
+# --- 2. second derivation (read-out + gates): every new row against its 10/25 row, joined through the report (old slot -> new slot) ---
+echo "=== 2. new frozen file vs the 10/25 frozen file, row by row through the 9a report (old slot -> new slot) ==="
+awk -F'\t' '
+  FNR == 1 {f++; if (f == 2 || f == 3) for (i = 1; i <= NF; i++) col[f, $i] = i; next}
+  f == 1 && $12 == "placed" {nw[$1 FS $2 FS $3 FS $5] = $1 FS $2 FS $3 FS $4; np++; next}
+  f == 2 {old[$2 FS $3 FS $4 FS $5] = $0; next}
+  f == 3 {
+    k = $2 FS $3 FS $4 FS $5; n++
+    if ((k in nw) == 0) {print "  NOT IN THE REPORT: " k; miss++; next}
+    ok = nw[k]; if ((ok in old) == 0) {print "  NO 10/25 ROW: " k " <- " ok; miss++; next}
+    split(old[ok], o, "\t"); matched++
+    nc = split("action cls form strongs k2_ordinal", must, " ")
+    for (j = 1; j <= nc; j++) if (o[col[2, must[j]]] != $(col[3, must[j]])) {bad[must[j]]++; if (shown[must[j]]++ < 5) print "  " must[j] " differs at " k ": 10/25 [" o[col[2, must[j]]] "] -> new [" $(col[3, must[j]]) "]"}
+    if (o[col[2, "position"]] != $(col[3, "position"])) moved++
+    nr = split("translit old_form old_translit strongs_base english english_head is_pn k2_count", ro, " ")
+    for (j = 1; j <= nr; j++) if (o[col[2, ro[j]]] != $(col[3, ro[j]])) diff[ro[j]]++
+  }
+  END {
+    print "rows in the new file " n + 0 " (expect 4411); report placed " np + 0 " (expect 4411); joined to a 10/25 row " matched + 0 " (expect 4411); missing " miss + 0 " (expect 0)"
+    printf "must be equal on every row (traced: placed at key 2'"'"'s slot = same full strongs + ordinal; written = the snapshot form, action, cls):"
+    for (j = 1; j <= nc; j++) printf " %s %d", must[j], bad[must[j]] + 0; print " (expect 0 each)"
+    print "slot moved (old position != new) " moved + 0 " (read-out; STEP9A-APPLY: moved 6)"
+    printf "read-out, rows differing 10/25 -> new (not gates):"; for (j = 1; j <= nr; j++) printf " %s %d", ro[j], diff[ro[j]] + 0; print ""
+    print "JOIN-OK " ((n == 4411 && np == 4411 && matched == 4411 && miss == 0) ? "yes" : "NO") " " ((bad["action"] + bad["cls"] + bad["form"] + bad["strongs"] + bad["k2_ordinal"]) == 0 ? "yes" : "NO")
+  }' "$D/report_apply.tsv" "$OLD" "$NEW" > "$D/join.out" 2>&1
+cat "$D/join.out"
+[ "$(sed -n 's/^JOIN-OK //p' "$D/join.out")" = "yes yes" ] || FL="$FL join"
+# --- 3. the punct member list from built (the 10/30 recipe, charter :555), then built's member diff against it ---
+echo "=== 3. punct-position members on built (audit_reassembly_diff --v2 --list; read-only) ==="
+python3 tests/test_reorder_port.py > "$D/t_port.out" 2>&1 || { tail -5 "$D/t_port.out"; echo "STEP9C-FREEZE RESULT: STOP - reorder port drifted from the JS baseline (the fill file is made; $D)"; exit 1; }
+python3 tests/test_reassembly_member_diff.py > "$D/t_md.out" 2>&1 || { tail -5 "$D/t_md.out"; echo "STEP9C-FREEZE RESULT: STOP - the member diff's own tests failed (the fill file is made; $D)"; exit 1; }
+python3 scripts/audit_reassembly_diff.py --controls --v2 > "$D/controls.out" 2>&1 || { tail -5 "$D/controls.out"; echo "STEP9C-FREEZE RESULT: STOP - v2 controls did not fire (the fill file is made; $D)"; exit 1; }
+echo "port test, member-diff tests, v2 controls: pass"
+python3 scripts/audit_reassembly_diff.py "$B" --v2 --list > "$D/list.out" 2>&1; rl=$?
+sed -n '/^   by class:/,/^$/p' "$D/list.out"; echo "list exit $rl (expect 0)"; [ "$rl" = 0 ] || FL="$FL list-exit"
+grep -E "^\s*\[punct-position" "$D/list.out" > "$PM"
+np=$(wc -l < "$PM"); sed -n 's/^ *\[punct-position *\] \([^ ]* [0-9]*:[0-9]*\) .*/\1/p' "$PM" | sort > "$D/pm_refs.txt"; nu=$(sort -u "$D/pm_refs.txt" | wc -l)
+sort "$PR/g3_today_members.txt" > "$D/recon_refs.txt"
+echo "punct member file $PM: $np lines, $nu distinct refs, sha256 $(sha256sum < "$PM" | cut -d' ' -f1) (expect $XPUNCT, $XPUNCT)"
+echo "ref set = PUNCT-RECON's today members (11/14, $(wc -l < "$D/recon_refs.txt") refs): $(cmp -s "$D/pm_refs.txt" "$D/recon_refs.txt" && echo yes || echo NO); only here $(comm -23 "$D/pm_refs.txt" "$D/recon_refs.txt" | wc -l), only in 11/14 $(comm -13 "$D/pm_refs.txt" "$D/recon_refs.txt" | wc -l) (expect 0, 0)"
+[ "$np" = "$XPUNCT" ] && [ "$nu" = "$XPUNCT" ] && cmp -s "$D/pm_refs.txt" "$D/recon_refs.txt" || FL="$FL punct"
+python3 scripts/audit_reassembly_diff.py "$B" --v2 --punct-members "$PM" --eligible "$EL" > "$D/self_diff.out" 2>&1; rs=$?
+SL=$(sed -n '/^V2 MEMBER DIFF:/p' "$D/self_diff.out"); sed -n '/content-other members/,/^$/p' "$D/self_diff.out"
+echo "built vs its own new member file: exit $rs (expect 1, content-other Job 3:3 as on 11/6 and 11/14)"; echo "  $SL"
+echo "  = expected (every member unchanged, nothing gone or new): $([ "$SL" = "$XSELF" ] && echo yes || echo NO)"
+[ "$rs" = 1 ] && [ "$SL" = "$XSELF" ] || FL="$FL self-diff"
+st1=$(stat -c '%s %Y' "$B" "$DA/before.db" | tr '\n' ' ')
+echo "built and the pre-9a copy: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "STEP9C-FREEZE RESULT: STOP - built or the pre-9a copy changed during a read-only run - report this"; exit 1; }
+if [ -z "$FL" ]; then
+  echo "STEP9C-FREEZE RESULT: READ DONE - new frozen fill $NEW 4,411 rows (3,873 + 538), sha256 $NS = the 10/25 rows joined through the 9a report; punct members $XPUNCT ($PM, = PUNCT-RECON's); every file in $D for scp"; exit 0
+fi
+echo "STEP9C-FREEZE RESULT: CHECK -$FL (lines above; files in $D)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9C-FREEZE reviewed (11/15) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - STEP9C-FREEZE is read-only on every database. It writes only to a new run folder plus its log, every gate wrapper item is present, no tripwire fires, and each figure traces to a ruling, to code or to a cited run receipt."
+Every printed text the block matches traced by the reviewer to snapshot_surface_fill.py :170-171, :185, :222, :262, :401-402, :410 and audit_reassembly_diff.py :596-602.
