@@ -10211,3 +10211,25 @@ the approved A dry-run output (§9.139 (1)) also writes greek_pos and bracket_id
 checked against the stage-B log line (read on PA); plus the later writes from their own files: the digits restore (389 cells,
 `restore_digits_plan_20261105.tsv`, PA), the J rows at Joh 14:26, 8b.2a (greek_pos 38 / bracket_id 41, its run files). bracket_id is
 compared as a rank in the delta, so the A output must be compared as a rank too.
+
+## Step 4 — two more local reads (11/15, §9.142 (1) and (5)); from the STEP4-DELTA files + committed / local files; no PA run
+
+**(a) The other five columns at the 20 moved positions (§9.142 (1)):** 10 verses × 5 columns (english, english_head,
+english_head_norm, greek_pos, bracket_id) = 50 column pairs: **exact swap 9 · equal at both positions on both copies 9 · NOT a swap
+32.** The 32, as read (src → built at each position): 2Ki 23:35 greek_pos @6 2 → 1; Est 5:9 english / english_head
+("seeing" | "Haman" → "Haman's" | "seeing") and greek_pos / bracket_id (2/1, 2/2 → None); Eze 20:14 english / english_head / norm
+("should not" | "be thoroughly" → "thorough one," | "should not"); Gen 5:25 and 5:26 english / english_head / norm (Methuselah →
+Mathusala; 5:26 "lived" → "lived,") and greek_pos / bracket_id (bracket removed); Jdg 11:7 english ("Did you" | "not" → "Is it not"
+| "that you") + english_head / norm @6 "did" → None; Jos 2:4 english ("I know" | "not" → "I do not" | "know"); Jos 5:15 english /
+english_head / norm (Josua → Joshua) + greek_pos / bracket_id (None → 2/1, 2/2); Rom 9:29 english / english_head / norm ("we would
+be" | "like." → "we would have been like." | None) + greek_pos / bracket_id @17 (None → 1 / 3). So at the moved positions these five
+columns are NOT covered by the (ii) list: they belong with the English / greek_pos / bracket_id declarations (the A dry-run output +
+the later writes), as ruled.
+**(b) B's verses.text list laid against the delta's 15,522 (§9.142 (5); local `prose_20261031.tsv` = step5_prose f2a22ecd…):**
+B written 15,571 · delta 15,522 · **in both 15,522 · in the delta but not B-written 0** · B-written but NOT in the delta **49**. The 49
+are exactly 49 of the 118 EU `verses.text` correction rows applied after B in 4b (`tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv`,
+committed; also in `abp_corrections_active_built_20261106.txt`, 0 in live's active list) — the correction brings those verses back to
+the text src has. The other **69 EU verses.text rows are in the delta and built's text = their `corrected_value` exactly (69 / 69).**
+So the verses.text delta = B's written set − the 49 EU rows whose correction equals src's text; every delta member is accounted for
+by B's list or an EU row. (Not checked locally: that each of the 49 corrected_values equals src's text — src's text is not local;
+their absence from the delta says built = src there.)
