@@ -9186,3 +9186,15 @@ on DESIGN text; the prefixes match §9.126 / §9.128 and a mismatch can only STO
 - The fingerprint-source point (full XR / XK shas) was raised and withdrawn: the STEP9A-DRY2 "ran" entry (:8927, :8930) carries
   both in full. No change to the block.
 - Not a receipt (§9.90 / R2-b): the STEP9B log goes to the ruling chat before 9b is closed. 9c not cleared by any of this.
+
+### STEP9B ran (11/15, 14:34:23Z, PA HEAD 476de530, REF 88f7a5f6) — PASS, exit 0 → STEP 9b CLOSED at 395,014 (§9.130)
+Log `~/edition_upgrade_runs/step9b_floor_20261115.log`; folder `step9b_floor_20261115/`. PRE OK (built 452,063,232 B, src
+451,964,928 B, no journals, triggers 0; both rollbacks + before.db present). The 9a files = declared, each sha printed in full:
+before.db 18,194,432 B / ea6c54c3… / 391,141 rows; report_apply.tsv 4,412 lines / e154d8d4…; key2_list.tsv 83 / d0967a0d….
+CHECK OK vs the 9a folder (149 unwritten + schema 0; abp_surface 395,014, 219a3ebe7075 = the throwaway; prep 391,141,
+70af7a4a08e7). Built health report: 0 warnings, 0 errors; floor line `[OK  ] abp_surface rows BELOW floor 395014 …: 0` (matching
+1, floor lines 1); informational lines: proper-noun extended numbers 24, G-bases with no lexicon gloss 7, metaV person/place
+overlap 127 (15 with a place strongs_g). Control (pre-9a copy): `[WARN] … floor 395014 …: 3873`, exit 0, 15 ERR lines (copy holds
+abp_surface only). Read-out: src exit 0, `[OK  ] … floor 395003 …: 0`; the floor line is the only line differing src → built.
+Built, src, pre-9a copy untouched. No check_delta file written.
+**Ruling (11/15, §9.130): step 9b CLOSED.** Next: 9c (code change → reviewer → ruling chat).

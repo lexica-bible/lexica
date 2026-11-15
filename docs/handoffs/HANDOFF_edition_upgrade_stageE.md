@@ -2,13 +2,13 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.128**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.130**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/15, after step 9a closed) — new CC + reviewer sessions open here
 
 JP's decision (§9.127): new CC and reviewer sessions from this point. Rulings: `DESIGN_q2_build.md` §9 (sole register, latest
-**§9.128**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a → 9b → 9c" to the end (every block text, log, verdict).
+**§9.130**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a → 9b → 9c" to the end (every block text, log, verdict).
 Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies; the `reviewer` subagent CLEARs read-only blocks and
 re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling chat; JP runs every block on PA and pastes the log.
 
@@ -32,8 +32,11 @@ untouched throughout. Rollbacks kept: `bible_edupg_test_built_pre_8b_20261106.db
 **Code:** REF **`88f7a5f6`** (§9.125). PA HEAD **`476de530`** (docs only on top of 88f7a5f6; later docs commits need no pull for
 code, but `eu_step pre` needs the block's REF to be an ancestor of PA's HEAD).
 
+**11/15 later: step 9b CLOSED (§9.130)** — STEP9B PASS, floor 395,014 held, control 3,873 fired; §9.129 / §9.130 registered.
+Next is **9c** (item 2 below).
+
 **Next — 9b then 9c (§9.120 / §9.121; charter §6; `.claude/commands/rebuild-words.md` 9b, 9c), then charter §6 steps 4 → 8:**
-1. **9b — health floor, read-only:** `python3 scripts/health_check.py <built> --no-backup-check --no-disk-check
+1. **9b — DONE (§9.130).** Was: health floor, read-only: `python3 scripts/health_check.py <built> --no-backup-check --no-disk-check
    --surface-floor=395014` (only the `=` form is accepted, `health_check.py:149`). The floor = the 9a after-count; the
    `SURFACE_FLOOR = 395003` constant (`health_check.py:144`) is re-pinned at the swap commit, not now.
 2. **9c — re-freeze, one commit** (a code change → reviewer → ruling chat): `scripts/snapshot_surface_fill.py --replace --src <built
