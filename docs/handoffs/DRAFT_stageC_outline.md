@@ -10089,3 +10089,125 @@ words_moved 20 `d32361b3f814e5e5079ff408272d563605036afbf032dfc0ce8943c970d60f08
 `870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9`; words_only / words_unpaired / verses_only 0 lines. Peak 638 MB
 (no /usr/bin/time on PA). Built + src unchanged. Known limits carried: bracket_id type-only change hidden by the rank; "moved" a
 reading aid. **Ruling (§9.141): READ DONE; next the members read of strongs / strongs_base / morph / lemma / is_pn and the 20 pairs.**
+
+## Step 4 members read (11/15, §9.141 (4)-(5)) — local, from the STEP4-DELTA files; no PA run
+
+JP's scp of `step4_delta_20261115/` → `C:\Users\JP\edition_upgrade_runs\pa\step4_delta_20261115\delta\`; local shas = PA's
+(words_cells 62d9c85d…, words_moved d32361b3…, verses_cells 870e4782…).
+**The 20 moved pairs = §9.93's 10 reorder verses, position for position** (2Ki 23:35 6/7, Est 5:9 12/13, Eze 20:14 7/8, Gen 5:25
+1/2, Gen 5:26 1/2, Gen 34:4 1/2, Jdg 11:7 6/7, Jos 2:4 19/20, Jos 5:15 26/27, Rom 9:29 17/18 — DR :2724-2725); unpaired 0.
+**The 86 strongs / strongs_base / morph / lemma / is_pn cells — every one attributed, 0 unattributed:**
+- **80 at the 20 moved positions** (strongs 20 · strongs_base 20 · morph 14 · lemma 14 · is_pn 12) → §9.93 (a) "whole-row moves into
+  the edition's English order". Checked locally: each of the 40 column pairs is an exact swap (built at p = src at q and built at q
+  = src at p; 40 / 40, 0 exceptions). morph + lemma in 7 verses, is_pn in the 6 name+verb verses — as the census v2 record says.
+- **6 elsewhere, strongs_base H → `*`** → §9.95's six none → lemma-only rows: Num 21:25 @2 (H3478), 1Sa 20:37 @11 (H3129), 2Sa 15:6
+  @18 (H53), Jer 48:15 @1 (H4124), Jer 48:20 @12 (H4124), Jer 49:3 @3 (H5857) — positions = §9.78 for five, §9.133 for Jer 49:3.
+- Output of the read, verbatim:
+```text
+in the 10 reorder verses at their moved positions: 80 Counter({'strongs': 20, 'strongs_base': 20, 'morph': 14, 'lemma': 14, 'is_pn': 12})
+elsewhere: 6 Counter({'strongs_base': 6})
+  1Sa | 20 | 37 | 11 | strongs_base | 'H3129' | '*' | no
+  2Sa | 15 | 6 | 18 | strongs_base | 'H53' | '*' | no
+  Jer | 48 | 15 | 1 | strongs_base | 'H4124' | '*' | no
+  Jer | 48 | 20 | 12 | strongs_base | 'H4124' | '*' | no
+  Jer | 49 | 3 | 3 | strongs_base | 'H5857' | '*' | no
+  Num | 21 | 25 | 2 | strongs_base | 'H3478' | '*' | no
+
+  M 2Ki | 23 | 35 | 6 | strongs | '1325' | '*' | yes
+  M 2Ki | 23 | 35 | 6 | strongs_base | 'G1325' | '*' | yes
+  M 2Ki | 23 | 35 | 6 | is_pn | 0 | 1 | yes
+  M 2Ki | 23 | 35 | 6 | morph | 'V.AAI3S' | None | yes
+  M 2Ki | 23 | 35 | 6 | lemma | 'δίδωμι' | None | yes
+  M 2Ki | 23 | 35 | 7 | strongs | '*' | '1325' | yes
+  M 2Ki | 23 | 35 | 7 | strongs_base | '*' | 'G1325' | yes
+  M 2Ki | 23 | 35 | 7 | is_pn | 1 | 0 | yes
+  M 2Ki | 23 | 35 | 7 | morph | None | 'V.AAI3S' | yes
+  M 2Ki | 23 | 35 | 7 | lemma | None | 'δίδωμι' | yes
+  M Est | 5 | 9 | 12 | strongs | '1492' | '*' | yes
+  M Est | 5 | 9 | 12 | strongs_base | 'G1492' | '*' | yes
+  M Est | 5 | 9 | 12 | is_pn | 0 | 1 | yes
+  M Est | 5 | 9 | 13 | strongs | '*' | '1492' | yes
+  M Est | 5 | 9 | 13 | strongs_base | '*' | 'G1492' | yes
+  M Est | 5 | 9 | 13 | is_pn | 1 | 0 | yes
+  M Eze | 20 | 14 | 7 | strongs | '3361' | '3892.4' | yes
+  M Eze | 20 | 14 | 7 | strongs_base | 'G3361' | 'G3892' | yes
+  M Eze | 20 | 14 | 7 | morph | 'D' | None | yes
+  M Eze | 20 | 14 | 7 | lemma | 'μή' | None | yes
+  M Eze | 20 | 14 | 8 | strongs | '3892.4' | '3361' | yes
+  M Eze | 20 | 14 | 8 | strongs_base | 'G3892' | 'G3361' | yes
+  M Eze | 20 | 14 | 8 | morph | None | 'D' | yes
+  M Eze | 20 | 14 | 8 | lemma | None | 'μή' | yes
+  M Gen | 5 | 25 | 1 | strongs | '2198' | '*' | yes
+  M Gen | 5 | 25 | 1 | strongs_base | 'G2198' | 'G3103' | yes
+  M Gen | 5 | 25 | 1 | is_pn | 0 | 1 | yes
+  M Gen | 5 | 25 | 1 | morph | 'V.AAI3S' | None | yes
+  M Gen | 5 | 25 | 1 | lemma | 'ζάω' | None | yes
+  M Gen | 5 | 25 | 2 | strongs | '*' | '2198' | yes
+  M Gen | 5 | 25 | 2 | strongs_base | 'G3103' | 'G2198' | yes
+  M Gen | 5 | 25 | 2 | is_pn | 1 | 0 | yes
+  M Gen | 5 | 25 | 2 | morph | None | 'V.AAI3S' | yes
+  M Gen | 5 | 25 | 2 | lemma | None | 'ζάω' | yes
+  M Gen | 5 | 26 | 1 | strongs | '2198' | '*' | yes
+  M Gen | 5 | 26 | 1 | strongs_base | 'G2198' | 'G3103' | yes
+  M Gen | 5 | 26 | 1 | is_pn | 0 | 1 | yes
+  M Gen | 5 | 26 | 1 | morph | 'V.AAI3S' | None | yes
+  M Gen | 5 | 26 | 1 | lemma | 'ζάω' | None | yes
+  M Gen | 5 | 26 | 2 | strongs | '*' | '2198' | yes
+  M Gen | 5 | 26 | 2 | strongs_base | 'G3103' | 'G2198' | yes
+  M Gen | 5 | 26 | 2 | is_pn | 1 | 0 | yes
+  M Gen | 5 | 26 | 2 | morph | None | 'V.AAI3S' | yes
+  M Gen | 5 | 26 | 2 | lemma | None | 'ζάω' | yes
+  M Gen | 34 | 4 | 1 | strongs | '2036' | '*' | yes
+  M Gen | 34 | 4 | 1 | strongs_base | 'G2036' | 'G4966' | yes
+  M Gen | 34 | 4 | 1 | is_pn | 0 | 1 | yes
+  M Gen | 34 | 4 | 1 | morph | 'V.AAI3S' | None | yes
+  M Gen | 34 | 4 | 1 | lemma | 'ἔπω' | None | yes
+  M Gen | 34 | 4 | 2 | strongs | '*' | '2036' | yes
+  M Gen | 34 | 4 | 2 | strongs_base | 'G4966' | 'G2036' | yes
+  M Gen | 34 | 4 | 2 | is_pn | 1 | 0 | yes
+  M Gen | 34 | 4 | 2 | morph | None | 'V.AAI3S' | yes
+  M Gen | 34 | 4 | 2 | lemma | None | 'ἔπω' | yes
+  M Jdg | 11 | 7 | 6 | strongs | '5210' | '3780' | yes
+  M Jdg | 11 | 7 | 6 | strongs_base | 'G5210' | 'G3780' | yes
+  M Jdg | 11 | 7 | 6 | morph | 'RP.NP' | 'D' | yes
+  M Jdg | 11 | 7 | 6 | lemma | 'ὑμεῖς' | 'οὐχί' | yes
+  M Jdg | 11 | 7 | 7 | strongs | '3780' | '5210' | yes
+  M Jdg | 11 | 7 | 7 | strongs_base | 'G3780' | 'G5210' | yes
+  M Jdg | 11 | 7 | 7 | morph | 'D' | 'RP.NP' | yes
+  M Jdg | 11 | 7 | 7 | lemma | 'οὐχί' | 'ὑμεῖς' | yes
+  M Jos | 2 | 4 | 19 | strongs | '1492' | '3756' | yes
+  M Jos | 2 | 4 | 19 | strongs_base | 'G1492' | 'G3756' | yes
+  M Jos | 2 | 4 | 20 | strongs | '3756' | '1492' | yes
+  M Jos | 2 | 4 | 20 | strongs_base | 'G3756' | 'G1492' | yes
+  M Jos | 5 | 15 | 26 | strongs | '*' | '4160' | yes
+  M Jos | 5 | 15 | 26 | strongs_base | '*' | 'G4160' | yes
+  M Jos | 5 | 15 | 26 | is_pn | 1 | 0 | yes
+  M Jos | 5 | 15 | 27 | strongs | '4160' | '*' | yes
+  M Jos | 5 | 15 | 27 | strongs_base | 'G4160' | '*' | yes
+  M Jos | 5 | 15 | 27 | is_pn | 0 | 1 | yes
+  M Rom | 9 | 29 | 17 | strongs | '3666' | '302' | yes
+  M Rom | 9 | 29 | 17 | strongs_base | 'G3666' | 'G302' | yes
+  M Rom | 9 | 29 | 17 | morph | 'V-API-1P' | 'PRT' | yes
+  M Rom | 9 | 29 | 17 | lemma | 'ὁμοιόω' | 'ἄν' | yes
+  M Rom | 9 | 29 | 18 | strongs | '302' | '3666' | yes
+  M Rom | 9 | 29 | 18 | strongs_base | 'G302' | 'G3666' | yes
+  M Rom | 9 | 29 | 18 | morph | 'PRT' | 'V-API-1P' | yes
+  M Rom | 9 | 29 | 18 | lemma | 'ἄν' | 'ὁμοιόω' | yes
+```
+**The asked items:** Jer 49:3 @3 — found (one of the six). The 6 reorder verses with no recorded cause — found: all 10 reorder
+verses are here and only as exact whole-row swaps; the delta shows WHAT moved, not WHY — their cause stays unrecorded (open, §9.139
+(4)). Split 80 → 84 (+4) — NOT found: no number cell is left outside the 80 + 6, so the +4 left no net difference from src in these
+five columns or in position (CC's reading: src was already split, DR :318). Likewise PN-star A / B, Filled 5, 8b.0's 339, 8b.1's
+178, ABPTAG's 16 and 8b.2's 26,323 leave no net member here beyond the six.
+**english_head_norm — a rule, checked on every member (local):** step 11 fills `english_head_norm = number_fold.normalize(english_head)`
+(build_rendering_norm.py :11, :33; `from number_fold import normalize`). All 4,891 head_norm cells sit at a position whose
+english_head differs (4,891 / 4,891); on both sides the stored norm = normalize(that side's head) (0 exceptions); the other 536
+english_head differences normalize equal on both sides (0 stale). Proposal: declare english_head_norm "attributed by rule (step 11's
+function), not by member file", following the english_head set.
+**greek_pos 3,318 · bracket_id 4,208 — proposal:** both are derived by the bracket parser from the English line, so A's transplant
+changes them; A counts only VERSES with any change (`greek_pos_or_bracket_changed`, build_words_from_abp.py :2459-2460); the PA
+stage-B figure for it is not in the repo (`935 -> 737` at DR :2179 is a LOCAL no-dictionary fingerprint, not the build's). Proposal:
+the approved A dry-run output (§9.139 (1)) also writes greek_pos and bracket_id cell changes in the same format, its verse count
+checked against the stage-B log line (read on PA); plus the later writes from their own files: the digits restore (389 cells,
+`restore_digits_plan_20261105.tsv`, PA), the J rows at Joh 14:26, 8b.2a (greek_pos 38 / bracket_id 41, its run files). bracket_id is
+compared as a rank in the delta, so the A output must be compared as a rank too.
