@@ -9873,3 +9873,19 @@ echo "STEP9C-CHECK RESULT: CHECK -$FL (lines above; outputs in $D)"; exit 1
 Fix: both display lines → `cut -c1-300 <<< "$(grep -E '^STOPPED|^RESULT' "<file>")"`; nothing else changed; re-test identical.
 Verdict line verbatim: "REVIEW: CLEAR - read-only block. The tripwire 2 hit is fixed: lines 50 and 54 now use <<<. All expected texts trace to code at 19e2fb25, and the wrapper is complete."
 Runs only after the ruling chat has read the STEP9C-PLACE log (§9.135). No push while it waits (§9.76).
+
+### Ruling (11/15, §9.136) — STEP9C-PLACE DONE and closed (log read in full from JP's cat of the log; exit=0 as reported)
+
+### STEP9C-CHECK ran (11/15, 17:52:28Z, PA HEAD 1425b124, REF 19e2fb25) — PASS, exit 0 → STEP 9c CLOSED (§9.137)
+Log `~/edition_upgrade_runs/step9c_check_20261115.log`. PRE OK; snapshot d025cc08… / report e154d8d4… / pre-fill copy ea6c54c3…
+= expect; CHECK OK (149 + schema 0; 395,014 / 219a3ebe7075). **1.** `--check` on built: F PASS (= the pin); report = its .sha256
+and = the pin; G0 PASS (placed 4,411 · src-not-in-prefill 4,411 · prefill-not-in-src 538; 4,411 = 3,873 + 538); O PASS; C PASS
+4,411 rows identical bytes; RECEIPT 4,411 | 4,411, 3,873 / 538 | 3,873 / 538, sha d025cc08… | d025cc08…; **RESULT: SNAPSHOT
+CURRENT**; exit 0; nine lines yes. **2.** src control: "STOPPED: STALE SNAPSHOT — --src no longer yields the frozen fill (G0 the
+report places 4,411 slots, the diff holds 4,420 (11 differ, e.g. [(131, 1), (132, 1), (985, 1)]) …"; exit 1. **3.** `--csv`
+control: "STOPPED: --check needs --from-restore …"; exit 1. Built / src / pre-fill copy + fixture folder unchanged. RESULT PASS.
+CC's reading of the src control's 11, offered only, not a finding: verse ids 131 / 132 / 985 are Gen 5:25 / 5:26 / 34:4 — three
+of the six slots 9a placed at a moved position (§9.128 "moved 6"); src holds the fill at the old layout, so a diff of src against
+the post-step-9 table differs at moved slots. Not read further; recorded as printed (§9.137).
+**Ruling (11/15, §9.137): step 9c CLOSED; steps 9 → 9a → 9b → 9c complete on built.** Next: charter §6 step 4 report.
+`step9a_apply_20261115/dry.db` (the 9a throwaway, ~110 MB): left in place for now (CC's call, §9.137) — not needed by any pin.

@@ -2,56 +2,48 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.130**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.137**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/15, after step 9a closed) — new CC + reviewer sessions open here
+## SUCCESSOR START (11/15, after step 9c closed) — open here
 
-JP's decision (§9.127): new CC and reviewer sessions from this point. Rulings: `DESIGN_q2_build.md` §9 (sole register, latest
-**§9.130**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a → 9b → 9c" to the end (every block text, log, verdict).
-Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies; the `reviewer` subagent CLEARs read-only blocks and
-re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling chat; JP runs every block on PA and pastes the log.
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.137**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
+the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
+chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one
+paste block.
 
 **State of built** (`~/bible-db/bible_edupg_test_built_20261102.db`): everything in "State (11/8, end)" below + steps 11, 10
-(unchanged), 12a/b/c, **9 (391,141)** and **9a**: **abp_surface 395,014** (fingerprint `219a3ebe7075`; = 391,141 + the 3,873
-inserts; 538 updates; all 4,411 snapshot slots placed, 83 of them by key 2 alone). src `~/bible-db/bible_edupg_test_20261101.db`
-untouched throughout. Rollbacks kept: `bible_edupg_test_built_pre_8b_20261106.db`, `bible_edupg_test_built_pre_digits_20261105.db`.
-- **Pre-9a copy (the 9c before side, F3; also 9a's restore source — KEEP, and keep it past 9c: step 1a `--check` re-reads it):**
-  `~/edition_upgrade_runs/step9a_apply_20261115/before.db` — 18,194,432 B, sha256
-  `ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273`, abp_surface 391,141 rows.
-- **The 9a apply report** (9c's `--from-restore` input; R1 pins its sha in code): `~/edition_upgrade_runs/step9a_apply_20261115/report_apply.tsv`,
-  4,412 lines, sha256 `e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a` (= the dry report `step9a_dry2_20261115/restore_dry2.tsv`).
-  It is on PA only — reaching git needs JP's scp (PA is pull-only).
-- **The §9.124 lists:** key-2 list 83 (r6 79 + r7 4) `~/edition_upgrade_runs/step9a_dry2_20261115/key2_list.tsv`, sha256
-  `d0967a0d7a725270bedd914e2760d79b6416d6b40ce38cf84165d3ca36f0dc5e` (copy in `step9a_apply_20261115/`); **leave list: empty.**
-- Other 9a pins: snapshot `tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv` `d9435bde…` (4,411 rows); lexicon
-  `abp_helps/analytical_lexicon.tsv` `91d9d036c0922ef965f03a006de24492f7ba3159b2714a4a47c61cc680e5eac8`; base 391,141.
-- 9a logs: `step9a_dry_20261115`, `step9a_ctx_20261115`, `step9a_dry2_20261115`, `step9a_apply_20261115` (+ folders). The
-  throwaway `step9a_apply_20261115/dry.db` (~110 MB) can go once 9c is done; `before.db` stays.
+(unchanged), 12a/b/c, **9 (391,141), 9a (abp_surface 395,014, fingerprint `219a3ebe7075`), 9b (floor 395,014 held, §9.130) and 9c
+(re-frozen + pinned, `--check` SNAPSHOT CURRENT on built, §9.137)**. Steps 9 → 9a → 9b → 9c complete. src
+`~/bible-db/bible_edupg_test_20261101.db` untouched throughout. Rollbacks kept: `bible_edupg_test_built_pre_8b_20261106.db`,
+`bible_edupg_test_built_pre_digits_20261105.db`.
 
-**Code:** REF **`88f7a5f6`** (§9.125). PA HEAD **`476de530`** (docs only on top of 88f7a5f6; later docs commits need no pull for
-code, but `eu_step pre` needs the block's REF to be an ancestor of PA's HEAD).
+**Code:** REF **`19e2fb25`** (§9.134: the 9c re-pin). PA HEAD **`1425b124`** (docs after it need no pull for code; `eu_step pre`
+needs the block's REF to be an ancestor of PA's HEAD). **The 9c pins** (`scripts/restore_surface_fill.py`):
+- `SNAPSHOT_SHA256` = `d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff` — `tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv`
+  (4,411 rows = 3,873 + 538, 455,953 B).
+- `REPORT_SHA256` = `e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a` — `tests/fixtures/rebuild_trap/restore_report_20261115.tsv`
+  (the 9a apply report, 4,412 lines; R1).
+- Default base / after 391,141 / 395,014; N_ROWS / N_INSERT / N_UPDATE 4,411 / 3,873 / 538.
+- Both files + `.sha256` are git-ignored ABP text, on PA (placed by STEP9C-PLACE, §9.136) and locally; the 10/25 pair stays beside
+  them (charter §7). `snapshot_surface_fill.py --check` needs `--from-restore` while a report is pinned (§9.134 guard).
+- **Pre-fill copy (1a / 9a `--prefill`):** `~/abp_surface_prefill_20261115.db` — 18,194,432 B, sha256
+  `ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273`, abp_surface 391,141 rows (§9.134 (iii)); the original
+  `~/edition_upgrade_runs/step9a_apply_20261115/before.db` stays.
+- **Punct member file:** `tests/fixtures/reassembly/punct_members_built_20261115.txt` (607, `0cc4d428…7056`, committed); the 10/30
+  file (241) kept.
+- **Until the swap, live does not match these pins** (§9.134 (ii)): 1a `--check` on live reads STALE (e.g. Jer 49:3 @3 frozen `*`,
+  live H5857); 9a's default base does not fit live. No rebuild of live runs before the swap. NOT yet re-pinned (swap commit): the
+  health floor 395,003 (`health_check.py:144`) and rebuild-words step 9 / 9b text.
+- 9a/9c run folders on PA: `step9a_*`, `step9b_floor_20261115`, `step9c_freeze_20261115`, `step9c_place_20261115`,
+  `step9c_check_20261115`, `jer493_read_20261115`. The 9a throwaway `step9a_apply_20261115/dry.db` (~110 MB) left in place (§9.137:
+  CC's call; needed only if a later block re-checks built against the 9a prep).
 
-**11/15 later: step 9b CLOSED (§9.130)** — STEP9B PASS, floor 395,014 held, control 3,873 fired; §9.129 / §9.130 registered.
-Next is **9c** (item 2 below).
+**Next:** charter §6 **step 4** (compare_words vs live, per-column attribution) → 5 → 6 → 7 → 8, then the swap (stage G). CC's
+report on what step 4 needs goes to the ruling chat first (§9.137).
 
-**Next — 9b then 9c (§9.120 / §9.121; charter §6; `.claude/commands/rebuild-words.md` 9b, 9c), then charter §6 steps 4 → 8:**
-1. **9b — DONE (§9.130).** Was: health floor, read-only: `python3 scripts/health_check.py <built> --no-backup-check --no-disk-check
-   --surface-floor=395014` (only the `=` form is accepted, `health_check.py:149`). The floor = the 9a after-count; the
-   `SURFACE_FLOOR = 395003` constant (`health_check.py:144`) is re-pinned at the swap commit, not now.
-2. **9c — re-freeze, one commit** (a code change → reviewer → ruling chat): `scripts/snapshot_surface_fill.py --replace --src <built
-   after 9a> --prefill ~/edition_upgrade_runs/step9a_apply_20261115/before.db --from-restore <the 9a apply report> --out
-   tests/fixtures/rebuild_trap/<new frozen TSV>` — G0 = built minus the pre-9a copy is exactly the report's placed slots at their
-   new positions. In the same commit: **R1** — the 9a report's sha (`e154d8d4…`) pinned in code, the report committed beside the
-   new frozen file with its `.sha256`; the restore's `SNAPSHOT_SHA256`, `N_ROWS / N_INSERT / N_UPDATE` (the new file's) and default
-   base **391,141** re-pinned (`restore_surface_fill.py:69-73`; `dryrun_rekey_fill` keeps the 10/25 constants — they describe the
-   10/25 files); **the §9.87 punct member file re-frozen at 607** (§9.113 ruling 1; current file
-   `tests/fixtures/reassembly/punct_members_live_20261030.txt`, 241 lines); rebuild-words.md **1a and 9a commands** updated
-   (`--check --from-restore <pinned report>`; 9a `--base 391141`). Proposal v2 + code record: `DRAFT_stageC_outline.md`
-   "9a / 9b / 9c proposal v2" and "9a / 9b / 9c code".
-3. Then charter §6 **4 → 8**, then the swap (stage G).
-
-**Open items (none blocks 9b/9c):**
+**Open items (none blocked 9; carry into steps 4 → 8):**
 - **Heads gap** (§9.107 ruling 2): built has 1,351 fewer non-blank `english_head` than src (lost 1,691 / gained 340; list
   `~/edition_upgrade_runs/step11heads_20261108.tsv`). Open until read and explained from the rows; CC drafts the read.
 - **Notes on live, no action:** live's word_gloss lacks 82 proper-noun glosses built has (12b, §9.110); live's tipnr_metav_link is
