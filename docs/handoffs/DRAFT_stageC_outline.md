@@ -9176,3 +9176,13 @@ Verdict line verbatim: "REVIEW: CLEAR - read-only re-run of the ruled 9b gate (�
 Reviewer note (not a stop): the full XR and XK shas rest on this record's STEP9A-DRY2 lines (:8927, :8930) quoting the PA log, not
 on DESIGN text; the prefixes match §9.126 / §9.128 and a mismatch can only STOP. Every other figure traced to §9.120 / §9.126 /
 §9.128 or health_check.py :144-152, :296-300.
+
+### Ruling (11/15, §9.129) — STEP9B stands on the reviewer's CLEAR; JP runs it as printed
+- **The one write outside the run folder:** `~/edition_upgrade_runs/step9a_apply_20261115/check_delta_abp_surface.tsv`, made by
+  `eu_step check` (eu_step.py :489-492) only if built differs from what 9a left — a STOP path — and never over an existing file.
+- **9b comparison against live — ruled N/A on this lane, not skipped:** `rebuild-words.md` :313-315 limits it to a same-code
+  rebuild; this lane's 9a already showed before → after = exactly the 4,411 snapshot slots (3,873 added / 538 changed / 0
+  removed, delta `77d61903…`, STEP9A-APPLY ran entry above, §9.128).
+- The fingerprint-source point (full XR / XK shas) was raised and withdrawn: the STEP9A-DRY2 "ran" entry (:8927, :8930) carries
+  both in full. No change to the block.
+- Not a receipt (§9.90 / R2-b): the STEP9B log goes to the ruling chat before 9b is closed. 9c not cleared by any of this.
