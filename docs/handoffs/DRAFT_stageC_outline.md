@@ -10078,3 +10078,14 @@ Verdict line verbatim: "REVIEW: CLEAR - read-only raw delta under DESIGN 9.138 (
 Reviewer notes: src size traced to DR :6179, :6265, :9192 (also built's size before step 11, DESIGN :515 — harmless, src is the
 path tested); `morph` / `lemma` on built traceable from the build (build_words_from_abp.py :2639-2642), on src not receipted in
 the repo — if absent the script STOPs cleanly and both copies stay untouched.
+
+### STEP4-DELTA ran (11/15, 19:21:30Z, PA HEAD e5f77e11, REF a147c61a) — READ DONE, exit 0 (§9.141)
+Log `~/edition_upgrade_runs/step4_delta_20261115.log`; files `step4_delta_20261115/delta/`. Python 3.13.1; PRE OK; built
+452,063,232 B, src 451,964,928 B; CHECK OK. 13 words columns compared, none one-sided; rows 31,237 / 626,309 both. Counts:
+english 32,962 · english_head 5,427 · strongs 20 · strongs_base 26 · greek_pos 3,318 · bracket_id 4,208 · italic 0 ·
+italic_words 0 · smcap_words 0 · is_pn 12 · morph 14 · lemma 14 · english_head_norm 4,891 · only 0 / 0 · moved 20 in 10 verses,
+unpaired 0 / 0 · verses.text 15,522 · verses only 0 / 0. words_cells 50,892 lines `62d9c85dd7d7b19a8c398f6894fd3e4ec2f7ce70fb400d61b88504814df27ac4`;
+words_moved 20 `d32361b3f814e5e5079ff408272d563605036afbf032dfc0ce8943c970d60f08`; verses_cells 15,522
+`870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9`; words_only / words_unpaired / verses_only 0 lines. Peak 638 MB
+(no /usr/bin/time on PA). Built + src unchanged. Known limits carried: bracket_id type-only change hidden by the rank; "moved" a
+reading aid. **Ruling (§9.141): READ DONE; next the members read of strongs / strongs_base / morph / lemma / is_pn and the 20 pairs.**
