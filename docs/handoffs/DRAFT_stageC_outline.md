@@ -9593,3 +9593,82 @@ xref class is `none` and words keeps H5857, while its identity row says lemma-on
 words is `*`. That is the §9.95 picture (10/25: 8b.2 ran before 8b.3 rebuilt the identity table; the lane's 8B2c ran after, with
 the six none → lemma-only rows in its 26,323), and the frozen files record each copy's words value as it stood: 10/25 H5857,
 new `*`.
+
+## 9c code change (11/15, CC; on the §9.133 pins) — in the working tree, NOT committed until ruled
+
+**What changes (6 files + 2 new):**
+- `scripts/restore_surface_fill.py` — `SNAPSHOT_SHA256` d9435bde… → **d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff**
+  (STEP9C-FREEZE log, RECEIPT "sha256" line; §9.133); new **`REPORT_SHA256` = e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a**
+  (R1; STEP9A-APPLY log, apply report sha, §9.128; = the STEP9A-DRY2 report, :8930; §9.133); defaults `ROWS_BASE, ROWS_AFTER`
+  391,130 / 395,003 → **391,141 / 395,014** (§9.122 base; §9.128 after-count; §9.133 "default base 391,141");
+  `N_ROWS / N_INSERT / N_UPDATE` stay 4,411 / 3,873 / 538 — the new file's own counts (STEP9C-FREEZE RECEIPT). Comment block
+  cites the old pin and the 10/25 base/after; docstring G1a / G1 / usage lines updated.
+- `scripts/snapshot_surface_fill.py` — `pinned_report()` reads `REPORT_SHA256`; `report_pin(required=True)` (the `--check` path)
+  now also STOPs unless the report = that pin ("is not the pinned report"), after the existing beside-file `.sha256` check; a
+  re-freeze (`required=False`) is unchanged. Docstring: the 9c usage + the R1 sentence under `--check`.
+- `tests/test_surface_fill_restore.py` (47 → 51): setUp/tearDown also save and blank `REPORT_SHA256`; `AfterCount`: the F1 ruled
+  test keeps 391,130 → 395,003 explicitly (the 10/25 shapes, §9.120 (d)); new `test_defaults_are_the_9c_pins` (391,141 / 395,014 /
+  4,411 and both shas); new `PinnedFiles` (2 tests: the local git-ignored snapshot and report each hash to their pin + their
+  `.sha256`; SKIP where the files are absent, i.e. CI); new `Refreeze.test_check_requires_the_report_pinned_in_code` (report =
+  pin → CURRENT; beside-file `.sha256` right but code pin wrong → STALE "is not the pinned report").
+- `tests/test_reassembly_member_diff.py` (9 → 10): the real-file test reads both member files (241 and 607; Gen 2:19 ops the same);
+  new `test_frozen_files_match_their_sha256`.
+- NEW `tests/fixtures/reassembly/punct_members_built_20261115.txt` (607 lines, sha 0cc4d428…, = the STEP9C-FREEZE file, local copy
+  checked) + `.sha256`. The 10/30 file (241) stays.
+- `.claude/commands/rebuild-words.md` — 1a command: `--check --src <src> --prefill ~/abp_surface_prefill_20261115.db --from-restore
+  tests/fixtures/rebuild_trap/restore_report_20261115.tsv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv` + the
+  pre-swap STALE note (Jer 49:3 @3) + the 10/25 command kept for the record; 9a command: new snapshot + the same `--prefill`, the
+  re-pin (base 391,141, G1 395,014) said to describe live only after the swap, the 10/25 split figures labelled as 10/25 ones.
+- `tests/fixtures/rebuild_trap/README.md` — the three files and two pins.
+- Local only (git-ignored, not in the diff): `tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv` (+ `.sha256`, as made on PA)
+  and `restore_report_20261115.tsv` (+ `.sha256`, written by CC: "e154d8d4…  restore_report_20261115.tsv"); `sha256sum -c` OK on
+  both; the 10/25 pair untouched.
+**Tests:** the two files above 51 + 10 OK; all 78 pre-commit test files pass on the working tree (both files already on the
+ci.yml + pre-commit lists). **Proven able to fail:** code-pin compare removed → the R1 test fails; SNAPSHOT_SHA256 changed by one
+character → `test_defaults_are_the_9c_pins` + `test_snapshot_file_is_the_pin` fail; one line appended to the new punct file →
+the round-trip and sha tests fail. All restored; working tree as described.
+
+**Items for the ruling (not decided in the change):**
+- **(i) "committed beside the frozen file" (handoff item 2, R1 §9.121) cannot be done as worded.** `.gitignore:44-47`: "# Rebuild-trap
+  frozen fill snapshot (snapshot_surface_fill.py): ABP printed Greek + ABP English, / # ABP text, never in the public repo. PA keeps
+  it here; a second copy sits in the local checkout. / tests/fixtures/rebuild_trap/*.tsv / tests/fixtures/rebuild_trap/*.sha256".
+  The 10/25 file's handling (README, before this change): "Both files are git-ignored on purpose … PA keeps the working copy in this
+  folder of `~/bible-db`; a second copy sits in the same folder of the local checkout (scp)." The report holds the same ABP text
+  (forms) as the snapshot. **Proposed:** R1 is met by the code pin (`REPORT_SHA256`, checked by `--check`); the report and the new
+  snapshot sit beside each other in the fixture folder on PA and locally, git-ignored, exactly as the 10/25 file. PA's copies are
+  placed by a later block (a write to PA's checkout folder → ruling chat).
+- **(ii) Between this commit and the swap, live does not match the pins.** Step 1a's new `--check` on a copy of live reads STALE
+  (live is the 10/25 layout); 9a's new defaults (base 391,141) do not fit a rebuild of live. Read (b), §9.132: after the swap,
+  step 1a's `--check` expects `*` at Jer 49:3 @3 on live (built's value; live today H5857). **Proposed:** accept; no rebuild of
+  live runs before the swap; rebuild-words 1a/9a say so (done in this change).
+- **(iii) The standing home of the pre-9a copy** (1a's and 9a's `--prefill`). Today `~/edition_upgrade_runs/step9a_apply_20261115/
+  before.db` (sha ea6c54c3…, 18,194,432 B, abp_surface only — enough: `--check` reads only abp_surface from the pre-fill side,
+  snapshot_surface_fill.py g0_report :152; the restore's G1b compares abp_surface only, restore_surface_fill.py table_diff :281-291). **Proposed:** a copy at
+  `~/abp_surface_prefill_20261115.db` (the name rebuild-words now uses), sha-checked = ea6c54c3…, kept like
+  `~/bible.db.pre-surface-fill-20261025`; the run-folder original also stays. Made by the same later PA block as (i).
+- **(iv) The punct member files.** The new 607 file is added beside the 10/30 file (kept; both tested). DESIGN §6 gate table row 3
+  still names the 10/30 file — a design record, not edited; the next gate-3 run names its file in its own block.
+- **Not in this change (by ruling):** the health floor 395,003 (swap commit, §9.120 / charter §7); rebuild-words step 9's
+  "391,130" and 9b's floor text (swap commit, with the floor); `dryrun_rekey_fill` constants (keep the 10/25 figures, §9.120 F3);
+  `apply_abp_surface_fill.py` (one-shot, untouched).
+**After the ruling:** one scripts/tests/docs commit = new code REF; then (1) a PA write block for (i)+(iii) (placing the snapshot,
+report and pre-fill copy, each sha-checked) → ruling chat; (2) the `--check` run on built under the new REF as its own read-only
+block: `--check --src <built> --prefill <the pre-9a copy> --from-restore <report> --out <new snapshot>` → expect SNAPSHOT CURRENT.
+
+### 9c code change reviewed (11/15) — REVIEW: ESCALATE (code change, §9.90); no defect; three gaps → for the ruling
+Verdict line verbatim: "REVIEW: ESCALATE - this is a code change (scripts, tests, fixtures, rebuild-words.md), which is a write under the scope rules and DESIGN §9.90, so it goes to the ruling chat. I found no defect in how it works."
+Confirmed by the reviewer: constants = the §9.133 declaration; the R1 check runs only under `--check` (`check_current` is the only
+`required=True` caller) and AFTER the beside-file `.sha256` check, so a matching `.sha256` cannot get past it (test :654-671);
+the F1 ruled test keeps 391,130 → 395,003 by hand; floor tests still 395,003 (swap commit); `PinnedFiles` skips only when the
+.tsv is absent; items (i) / (iii) accurate against `.gitignore:44-47`, g0_report :152, table_diff :281-291.
+- **Finding 3 (GAP, for a ruling):** `--check --csv …` never reaches the R1 report check (it runs only with `--from-restore`).
+  Under the new pin a `--csv` check should still stop at the byte compare (reviewer's reading, untested). **CC recommends:** make
+  `--check` require `--from-restore` whenever `REPORT_SHA256` is set (one guard + one test) — not done until ruled.
+- **Finding 8 (GAP, for a ruling):** rebuild-words 1a / 9a name `~/abp_surface_prefill_20261115.db`, which exists only once
+  item (iii)'s PA block runs; the commands fail until then (no rebuild of live runs before the swap, item (ii)). The pre-9a copy's
+  figures there now cite DESIGN 9.128 (added after review). **CC recommends:** the doc lands with this commit; the (i)+(iii) PA
+  block follows it, before any `--check` run.
+- **Finding 9 (GAP, minor):** the restore docstring's usage line now has a placeholder `--prefill <the pre-fill copy,
+  rebuild-words 9a>`, not a pasteable path. **CC:** left as is; it points to the one place the path is kept.
+- Notes: `.sha256` file name inside not checked by `PinnedFiles` (first field only); `REPORT_SHA256 = None` means "no pin" as for
+  the snapshot (set in shipped code; only tests blank it).
