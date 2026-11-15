@@ -9687,3 +9687,91 @@ the F1 ruled test keeps 391,130 → 395,003 by hand; floor tests still 395,003 (
 - **Committed `19e2fb25`** (pre-commit all checks passed). scripts/ + tests/ differ from 88f7a5f6 by restore_surface_fill.py,
   snapshot_surface_fill.py, test_surface_fill_restore.py, test_reassembly_member_diff.py and the new punct fixture pair (+
   rebuild-words.md and the fixture README outside scripts/tests).
+
+## STEP9C-PLACE drafted (11/15, GATE REF 19e2fb25; PA must pull first) — §9.134 (b): items (i) + (iii) on PA
+
+WRITES 5 new files outside a run folder, overwrites nothing, writes no database: the pinned snapshot (from the STEP9C-FREEZE
+run folder) and the ORIGINAL 9a report into the checkout's git-ignored `tests/fixtures/rebuild_trap/` as
+`abp_surface_fill_20261115.tsv` / `restore_report_20261115.tsv`, each + a `.sha256` written as "<sha>  <name>"; and
+`step9a_apply_20261115/before.db` copied to `~/abp_surface_prefill_20261115.db` (original stays). **Before any write (STOP):**
+pre (REF 19e2fb25; `--keep` the three sources); no target and no journal beside the prefill target exists; each source = its
+pin (d025cc08…, e154d8d4…, ea6c54c3…); the checkout's restore_surface_fill.py carries both pins; the 10/25 file = d9435bde…; all
+four fixture targets git-ignored (`git check-ignore`). **Writes:** `cp -n` / `mv -n`. **After (CHECK):** each placed file's sha =
+its pin; `sha256sum -c` on both new pairs + the 10/25 pair; prefill 391,141 rows (read-only); no .tmp left; sources + 10/25 file
+size/time unchanged; checkout `git status --porcelain --untracked-files=no -- tests scripts` clean.
+Figure sources: XS / XR §9.133 and restore_surface_fill.py :81 / :85 at 19e2fb25; XB4 + 391,141 §9.128 (full sha in the entry);
+XOLD the old pin, CHARTER_rebuild_trap_fix.md §8 receipt and the comment in restore_surface_fill.py.
+Local test (WSL, fake HOME, clone at 4a99657e; the REAL local snapshot + report as sources, a made-up 391,141-row before.db with
+its sha swapped in): clean DONE exit 0; re-paste STOP; targets present → "never overwritten" STOP; a source report changed →
+STOP before any write; after the fix, a clean run with PA's three untracked scripts/ files present → DONE exit 0.
+
+### Block STEP9C-PLACE (GATE REF 19e2fb25; WRITES 5 new files — for the ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9c_place_20261115.log
+if [ -e "$L" ]; then echo "STEP9C-PLACE RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=19e2fb25
+echo "GATE REF ${REF} - STEP9C-PLACE DESIGN 9.134 items (i) + (iii): copy the pinned 9c snapshot + the 9a report into the checkout's git-ignored fixture folder, and the pre-9a copy to ~/abp_surface_prefill_20261115.db - WRITES 5 new files, overwrites nothing, no database written - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9C-PLACE RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export LC_ALL=C
+O=~/edition_upgrade_runs
+DA=$O/step9a_apply_20261115
+DF=$O/step9c_freeze_20261115
+D=$O/step9c_place_20261115
+FX=tests/fixtures/rebuild_trap
+XS=d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff
+XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a
+XB4=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273
+XOLD=d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b
+# sources and targets (source -> target); the two .sha256 files are made, not copied (see below)
+SNAP_S="$DF/abp_surface_fill_20261115.tsv"; SNAP_T="$FX/abp_surface_fill_20261115.tsv"
+REP_S="$DA/report_apply.tsv";               REP_T="$FX/restore_report_20261115.tsv"
+PRE_S="$DA/before.db";                       PRE_T=~/abp_surface_prefill_20261115.db
+sh1() { sha256sum < "$1" | cut -d' ' -f1; }
+# --- before any write: every miss is STOP, nothing written ---
+python3 scripts/eu_step.py pre --tag PLACE --ref "$REF" --dir "$D" --keep "$PRE_S" --keep "$SNAP_S" --keep "$REP_S" || { echo "STEP9C-PLACE RESULT: STOP - pre (line above); nothing written"; exit 1; }
+for t in "$SNAP_T" "$SNAP_T.sha256" "$REP_T" "$REP_T.sha256" "$PRE_T" "$PRE_T-journal"; do [ -e "$t" ] && { echo "STEP9C-PLACE RESULT: STOP - target already exists, never overwritten: $t"; exit 1; }; done
+echo "targets: none exists yet (5 files + no journal beside the pre-fill target)"
+s=$(sh1 "$SNAP_S"); echo "source snapshot $SNAP_S: sha256 $s (expect $XS = SNAPSHOT_SHA256)"; [ "$s" = "$XS" ] || { echo "STEP9C-PLACE RESULT: STOP - source snapshot is not the pinned one; nothing written"; exit 1; }
+s=$(sh1 "$REP_S"); echo "source report $REP_S: sha256 $s (expect $XR = REPORT_SHA256)"; [ "$s" = "$XR" ] || { echo "STEP9C-PLACE RESULT: STOP - source report is not the pinned one; nothing written"; exit 1; }
+s=$(sh1 "$PRE_S"); echo "source pre-9a copy $PRE_S: sha256 $s (expect $XB4)"; [ "$s" = "$XB4" ] || { echo "STEP9C-PLACE RESULT: STOP - source pre-9a copy is not the recorded one; nothing written"; exit 1; }
+grep -q "SNAPSHOT_SHA256 = \"$XS\"" scripts/restore_surface_fill.py && grep -q "REPORT_SHA256 = \"$XR\"" scripts/restore_surface_fill.py || { echo "STEP9C-PLACE RESULT: STOP - the checkout's restore_surface_fill.py does not carry the two pins; nothing written"; exit 1; }
+echo "restore_surface_fill.py at $REF carries SNAPSHOT_SHA256 = $XS and REPORT_SHA256 = $XR"
+s=$(sh1 "$FX/abp_surface_fill_20261025.tsv"); echo "10/25 frozen fill (kept, charter sec 7): sha256 $s (expect $XOLD)"; [ "$s" = "$XOLD" ] || { echo "STEP9C-PLACE RESULT: STOP - the 10/25 file is not the one recorded; nothing written"; exit 1; }
+for t in "$SNAP_T" "$SNAP_T.sha256" "$REP_T" "$REP_T.sha256"; do git check-ignore -q "$t" || { echo "STEP9C-PLACE RESULT: STOP - $t would NOT be git-ignored; nothing written"; exit 1; }; done
+echo "all four fixture targets are git-ignored (.gitignore:46-47)"
+st0=$(stat -c '%s %Y' "$SNAP_S" "$REP_S" "$PRE_S" "$FX/abp_surface_fill_20261025.tsv" | tr '\n' ' ')
+# --- the writes: copy, never overwrite (cp -n); each placed file sha-checked; every miss after this point is CHECK ---
+FL=""
+cp -n "$SNAP_S" "$SNAP_T" || FL="$FL cp-snapshot"
+printf '%s  abp_surface_fill_20261115.tsv\n' "$XS" > "$SNAP_T.sha256.tmp" && mv -n "$SNAP_T.sha256.tmp" "$SNAP_T.sha256" || FL="$FL snapshot-sha-file"
+cp -n "$REP_S" "$REP_T" || FL="$FL cp-report"
+printf '%s  restore_report_20261115.tsv\n' "$XR" > "$REP_T.sha256.tmp" && mv -n "$REP_T.sha256.tmp" "$REP_T.sha256" || FL="$FL report-sha-file"
+cp -n "$PRE_S" "$PRE_T" || FL="$FL cp-prefill"
+echo "=== after: each placed file ==="
+for f in "$SNAP_T" "$REP_T" "$PRE_T"; do echo "  $f: $(stat -c %s "$f" 2>/dev/null) bytes, sha256 $(sh1 "$f" 2>/dev/null)"; done
+[ "$(sh1 "$SNAP_T")" = "$XS" ] || FL="$FL snapshot-sha"
+[ "$(sh1 "$REP_T")" = "$XR" ] || FL="$FL report-sha"
+[ "$(sh1 "$PRE_T")" = "$XB4" ] || FL="$FL prefill-sha"
+( cd "$FX" && sha256sum -c abp_surface_fill_20261115.tsv.sha256 restore_report_20261115.tsv.sha256 abp_surface_fill_20261025.tsv.sha256 ) || FL="$FL sha256-c"
+n=$(sqlite3 -readonly "$PRE_T" "SELECT count(*) FROM abp_surface"); echo "  $PRE_T: abp_surface $n rows (expect 391141)"; [ "$n" = 391141 ] || FL="$FL prefill-rows"
+ls "$FX"/*.tmp >/dev/null 2>&1 && FL="$FL tmp-left"
+st1=$(stat -c '%s %Y' "$SNAP_S" "$REP_S" "$PRE_S" "$FX/abp_surface_fill_20261025.tsv" | tr '\n' ' ')
+echo "sources and the 10/25 file: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"; [ "$st1" = "$st0" ] || FL="$FL sources-changed"
+g=$(git status --porcelain --untracked-files=no -- tests scripts); echo "checkout tests/ + scripts/ vs git: $([ -z "$g" ] && echo clean || echo "NOT clean: $g")"; [ -z "$g" ] || FL="$FL checkout"
+if [ -z "$FL" ]; then
+  echo "STEP9C-PLACE RESULT: DONE - placed $SNAP_T (+ .sha256), $REP_T (+ .sha256), $PRE_T; each = its pin; sources, the 10/25 file and the checkout unchanged"; exit 0
+fi
+echo "STEP9C-PLACE RESULT: CHECK -$FL (lines above). Nothing was overwritten (cp -n / mv -n); a wrong placed file can be moved aside to $D"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP9C-PLACE reviewed (11/15) — REVIEW: ESCALATE (a write, §9.90 / §9.134 (b)); one DEFECT → fixed → closed
+First verdict verbatim: "REVIEW: ESCALATE - STEP9C-PLACE writes outside a run folder (5 new files: 4 in the checkout's tests/fixtures/rebuild_trap/ plus ~/abp_surface_prefill_20261115.db). Under DESIGN 9.90 / 9.134(b) that means ESCALATE. I found one DEFECT in the mechanics that should be fixed before the ruling chat rules on it."
+- DEFECT 1: the end check used `--untracked-files=all`; PA's three untracked scripts/ files (person_metav_link_residual.txt,
+  person_metav_link_tier2.txt, tipnr_metav_link_residual.txt) would turn every clean run into CHECK. **Fixed exactly as named:**
+  `--untracked-files=no` (as eu_step.py :136, :499); re-tested with those three files present → DONE.
+- Notes: gate checks delegated to `eu_step pre` (:132-140, :154), as earlier eu_step blocks; pins match :81 / :85; never
+  overwrites; JP pulls 19e2fb25 first; no pushes to scripts/ or tests/ while the block waits (§9.76).
+Re-review verbatim: "REVIEW: ESCALATE - STEP9C-PLACE still writes outside a run folder (DESIGN 9.90 / 9.134(b)), so it goes to the ruling chat. Finding 1 is closed and nothing new turned up."
