@@ -9054,3 +9054,6 @@ Verdict line verbatim: "REVIEW: ESCALATE - STEP9A-APPLY writes to built (abp_sur
 abp_helps/analytical_lexicon.tsv: 39540 lines, sha256 …" line of both `~/edition_upgrade_runs/step9a_dry_20261115.log` and
 `~/edition_upgrade_runs/step9a_dry2_20261115.log` (as pasted 11/15); the block's XLEX is that value. A wrong value would STOP before
 the write.
+
+**Ruling (11/15, §9.127): STEP9A-APPLY cleared to run** on the §9.126 figures. After its log: push, write the successor handoff;
+nothing else runs on PA in this session (JP: new CC + reviewer sessions after 9a closes).
