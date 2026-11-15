@@ -10306,3 +10306,31 @@ english_head output (§9.139 (1)) + the later writes.
     head changed, english SAME (2):
        ('Isa', 48, 5, 4) ('would', 'what')
        ('Joh', 19, 18, 10) ('here', 'ere')
+
+## §9.144 (5) — is english_head a function of english? + proposed fix mechanics for the 2 (11/15, CC; nothing drafted to run)
+
+**No — english_head is NOT a pure function of english** (build_words_from_abp.py; parse_abp._head_word :80): the base pick is
+`_head_word(english)` (last non-function word), but the stored head also depends on —
+- `italic_words`: `_strip_italic_heads` re-picks skipping translator-added words (:1815-1834), and again after the subject-name split (:2779-2791);
+- `strongs == '*'`: `_star_name_heads` prefers the capitalised NAME (`prefer_name=True`, :1837-1849);
+- neighbouring rows: the function-word relocation and oath passes set heads by their own rules (`_fw_derive_head` :1646 used at
+  :1694; `_oath_head` :1730 / :1758);
+- the OLD edition: merge pairs and edge splits keep the OLD english_head (§9.73 / §9.75; :2072, :2141, :2205);
+- hand corrections: the EU batch sets 107 english_head cells directly.
+So "stored = derived" over every row cannot be one formula. **A read-only check that would still catch a stale head anywhere:**
+recompute the base rule `_head_word(english, italic_words, prefer_name = strongs=='*')` on EVERY row of BOTH built and src (same
+code, two copies) and list each copy's rows where stored ≠ recomputed; then compare the two lists. A row that mismatches on built
+but NOT on src while its english (and italic_words, strongs) are equal on both is a stale-head candidate — the two known cases are
+exactly that shape. Rows that mismatch on both copies are the special passes working (not candidates). Needs a small committed
+read-only script (or an eu_words_delta option) → reviewer → ruling chat, then a read-only block.
+**Proposed fix mechanics (for after that read, covering everything it finds; not drafted):** the lane's existing correction route —
+- a new committed batch file `tests/fixtures/edition_upgrade/eu_batch_rows_heads_20261115.tsv` (+ `.sha256`): one row per stale head
+  (book, chapter, verse, position, field `english_head`, source_value = built's head, corrected_value = src's head, ledger_ref
+  EU-<verse>, group `typo`, §9.74 / §9.144);
+- `eu_batch_insert.py` on built (`--sha256` / `--expect` pinned; it STOPs on any existing abp_corrections row on the same key, of any
+  status) → `apply_abp_corrections.py --apply` (guarded: writes a cell only where it still holds source_value; every other active row
+  reads "already applied") → `build_rendering_norm.py` on built (step 11's recompute; only the fixed rows' english_head_norm may move);
+- in one write block: dry on a throwaway copy first (eu_step prep), before-copy saved, eu_step check after (words + abp_corrections the
+  only written tables; every other table + schema unchanged).
+- Knock-on, for the record: built's active-corrections count rises by the number of rows (cert_invariants pin / the active-list
+  fixture re-pinned at the swap, as the rest of §4.7); the corrections ride to live with the swap, so a future rebuild re-applies them.
