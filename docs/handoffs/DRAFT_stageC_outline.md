@@ -9672,3 +9672,18 @@ the F1 ruled test keeps 391,130 → 395,003 by hand; floor tests still 395,003 (
   rebuild-words 9a>`, not a pasteable path. **CC:** left as is; it points to the one place the path is kept.
 - Notes: `.sha256` file name inside not checked by `PinnedFiles` (first field only); `REPORT_SHA256 = None` means "no pin" as for
   the snapshot (set in shipped code; only tests blank it).
+
+### Rulings (11/15, §9.134) — 9c code APPROVED; finding-3 guard added; committed `19e2fb25` = new code REF
+- **Finding-3 guard (adopted):** `snapshot_surface_fill.py` run(): under `--check`, no `--from-restore` while `REPORT_SHA256` is set →
+  STOP "--check needs --from-restore …"; test `SnapshotCheck.test_check_with_csv_refused_once_a_report_is_pinned` (restore tests
+  51 → 52). Proven able to fail: guard replaced by `if False:` → that test fails; restored → OK. All 78 pre-commit test files pass.
+- rebuild-words 1a now names the ruled home `~/abp_surface_prefill_20261115.db` (§9.134 (iii)) and the `--csv` refusal.
+- **Reviewer on the delta only:** "REVIEW: ESCALATE - no defect: the 9.134 delta (one guard, one test, the rebuild-words 1a sentence) does what was ruled. ESCALATE only because CLEAR is not available for a code change."
+  (Guard cannot block `--from-restore --check` or a re-freeze; other `--csv --check` tests unaffected — setUp blanks the pin.)
+- **Punct file content (§9.134 "raised"):** the same kind as the committed 10/30 file — every line parses as a `punct-position`
+  member line (`[punct-position] <ref> <ops>`; 607 / 607 parsed, 10/30: 241 / 241), one class only, op kinds delete / insert /
+  replace in both, each op naming short English word fragments of the verse (`rows[…] -> text[…]`); longest line 207 chars
+  (10/30: 164); 55,412 B (10/30: 22,580 B). Same recipe (`--v2 --list`, charter :555).
+- **Committed `19e2fb25`** (pre-commit all checks passed). scripts/ + tests/ differ from 88f7a5f6 by restore_surface_fill.py,
+  snapshot_surface_fill.py, test_surface_fill_restore.py, test_reassembly_member_diff.py and the new punct fixture pair (+
+  rebuild-words.md and the fixture README outside scripts/tests).
