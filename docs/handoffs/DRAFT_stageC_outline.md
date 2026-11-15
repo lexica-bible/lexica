@@ -8503,3 +8503,255 @@ The block above now holds the fixed text.
 
 ### STEP9A-DRY re-reviewed (11/15) — REVIEW: CLEAR
 Verdict line verbatim: "REVIEW: CLEAR - this re-run is read-only; the three fixes are in exactly as named, nothing else moved, and every wrapper item and tripwire passes"
+
+### STEP9A-DRY ran (11/15, 06:44 UTC, PA HEAD ca74e54d, REF cd6566b3) — READ DONE, exit 0
+
+Log `~/edition_upgrade_runs/step9a_dry_20261115.log`; run folder `step9a_dry_20261115/` (`restore_dry.tsv/.out`,
+`restore_trial.tsv/.out`, `trial_key2.tsv`, `members.tsv`). PRE OK; snapshot 4,412 lines, sha d9435bde… (= pin); lexicon 39,540
+lines, sha 91d9d036…; CHECK OK (built = STEP9-APPLY's result: 149 untouched + schema 0, abp_surface 391,141 / 70af7a4a08e7);
+built + src untouched.
+**Dry run (`--base 391141`, no lists):** S / V PASS; G1a 391,141 = base; placed 4,328 (agree-strong 3,977 · agree-weak 351);
+unplaced 83 (r6 79 · r7 4); inserts / updates 3,809 / 519; moved 5; Lexicon pass 3,944 / uncovered 384; after-count 394,950;
+"a gate FAILS" (expected).
+**Trial (all 79 r6 on a key-2 list):** placed 4,407 (… · key-2 listed 79); unplaced 4 (r7); listed-not-as-listed 0; inserts /
+updates 3,869 / 538; moved 6; Lexicon pass 4,018 / uncovered 389; after-count 395,010.
+**Member list:** verses with changed English 15,522 of 31,237. r6 CHANGED places / pass 74 · r6 CHANGED places / uncovered 5
+(Lev 20:15 @4, Deu 28:62 @5, Jos 5:5 @30, 1Ki 8:44 @25 [key 1 several 14, 32], Job 32:21 @8) · r7 CHANGED 3 (Jos 12:23 @2 key 1
+→ 7, 1Ki 14:20 @4 → 17, Jer 26:21 @19 → 1) · r7 same 1 (Psa 71:0 @0 → 3). 80 of the 82 changed-verse rows printed.
+
+**Ruling (11/15, §9.123):** (1) the 74 r6 / changed / key-2 places / Lexicon pass go on the key-2 list. (2) Held for a read: the
+5 r6 uncovered + the 4 r7 — src words ±3 around the old slot, built words ±3 around key 2's slot (and key 1's for r7; all three
+candidates for 1Ki 8:44), the Greek form the snapshot would write; Psa 71:0 (the one §4.9 real-miss candidate) printed whole on
+both sides. Noted, no ruling: moved 5 / 6; trial after-count 395,010 vs 10/25 395,003. Next: the 9-slot context read, with reviewer
+verdict; then the key-2 and leave lists are fixed and STEP9A-APPLY drafted.
+
+**CC notes on the log (checked against the code):**
+- "Lexicon uncovered" on the 5 is not a failed check: their classes (normalize ×4, fill_unlisted ×1) are not in
+  `LEXICON_CLASSES` (`scripts/apply_abp_surface_fill.py:53-55`), so the restore never Lexicon-checks them
+  (`restore_surface_fill.py` evaluate: `want = LEXICON_CLASSES.get(cls)`; no `want` → stays "uncovered").
+- Ruling 1 covers 74 rows, but the log printed 72 of them: changed-verse rows 81-82 (both r6 / pass — all 3 r7 and all 5
+  uncovered are among the 80 printed) were not shown. The context read prints those two as well.
+- 5 of the 74 have blank English on one side at the slot: src blank at 1Ki 17:17 @22, Job 32:21 @9, Psa 92:0 @5; built blank
+  at 1Ki 22:48 @14, 1Ki 22:49 @18. Ruling 1's stated basis ("a punctuation / case / wording variant of the src English") does
+  not describe these. Key 2 is the Greek number + its count in the verse, and the Lexicon passes, so the Greek word is the same;
+  the English moved to a neighbour. The context read shows these 5 too, so the ruling can confirm them.
+
+## STEP9A-CTX drafted (11/15, GATE REF cd6566b3; PA at ca74e54d) — the §9.123 ruling-2 context read
+
+Read-only. **Guards:** pre (REF cd6566b3); the snapshot (+ .sha256), the Lexicon, and STEP9A-DRY's `restore_dry.tsv` (4,412
+lines) + `members.tsv` (83 lines) present, their shas printed; built = STEP9-APPLY's result (`eu_step check` against STEP9-DRY2,
+as STEP9A-DRY) and abp_surface 391,141; built + src size/time before = after.
+**Slots (16):** group **H** = the 9 held by ruling 2 — Lev 20:15 @4, Deu 28:62 @5, Jos 5:5 @30, 1Ki 8:44 @25, Job 32:21 @8,
+Jos 12:23 @2, 1Ki 14:20 @4, Jer 26:21 @19, Psa 71:0 @0 (whole verse, both sides). Group **X** = behind ruling 1's basis (CC notes
+above): the 2 changed-verse member rows STEP9A-DRY did not print (rows 81-82; printed in full first, with a check that both are
+r6 / places, Lexicon pass) + the 5 with blank English on one side (1Ki 17:17 @22, 1Ki 22:48 @14, 1Ki 22:49 @18, Job 32:21 @9,
+Psa 92:0 @5).
+**Per slot** (a helper written into the run folder; opens src + built read-only; uses the restore's own key rules
+`dryrun_rekey_fill.key2_at / key1_at / decide`, the one class list `LEXICON_CLASSES` and the one `agree()` rule): the snapshot
+row (action, class, form, old form, strongs + its key-2 count, the key-1 English); whether the restore Lexicon-checks the class;
+the dry report's result + keys; the keys recomputed on built (= the report, else the helper exits 1 → STOP); both verse texts;
+src words ±3 around the old slot and built words ±3 around every candidate (key 2's; key 1's; all of 1Ki 8:44's), each with
+strongs, lemma, is_pn, English and the form on that copy's abp_surface; at each built candidate the restore's precondition
+(update: built form = old form; insert: slot empty) and `agree()` (marked "information only" on a class the restore does not
+check). No figures forecast.
+Local test (the STEP9A-DRY fake copies; a reason-7 slot with key 1 elsewhere, a reason-6 whole-verse slot, a reason-6
+"uncovered" slot, a placed update): READ DONE, each slot's keys = the report; a slot not in the snapshot → NOT FOUND, exit 1; a
+report key altered → "= the dry report: NO", exit 1; the helper failing inside the block → STOP; built altered → CHECK FAIL →
+STOP; re-paste → STOP.
+
+### Block STEP9A-CTX (GATE REF cd6566b3; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/step9a_ctx_20261115.log
+if [ -e "$L" ]; then echo "STEP9A-CTX RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=cd6566b3
+echo "GATE REF ${REF} - STEP9A-CTX the 9 held slots of sec 9.123 ruling 2 (+ 7 slots behind ruling 1's basis) read in context on src and built - READ-ONLY - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP9A-CTX RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+SNAP=tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv
+LEX=abp_helps/analytical_lexicon.tsv
+DD=~/edition_upgrade_runs/step9_dry2_20261114
+DA=~/edition_upgrade_runs/step9a_dry_20261115
+D=~/edition_upgrade_runs/step9a_ctx_20261115
+E="python3 scripts/eu_step.py"
+TAB=$'\t'
+$E pre --tag STEP9AC --ref "$REF" --dir "$D" --db "$B" --db "$S" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "STEP9A-CTX RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$SNAP" "$SNAP.sha256" "$LEX" "$DA/restore_dry.tsv" "$DA/members.tsv"; do [ -s "$f" ] || { echo "STEP9A-CTX RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "STEP9A-DRY report $DA/restore_dry.tsv: $(wc -l < "$DA/restore_dry.tsv") lines (expect 4412), sha256 $(sha256sum < "$DA/restore_dry.tsv" | cut -d' ' -f1)"
+echo "STEP9A-DRY member list $DA/members.tsv: $(wc -l < "$DA/members.tsv") lines (expect 83), sha256 $(sha256sum < "$DA/members.tsv" | cut -d' ' -f1)"
+[ "$(wc -l < "$DA/restore_dry.tsv")" = 4412 ] && [ "$(wc -l < "$DA/members.tsv")" = 83 ] || { echo "STEP9A-CTX RESULT: STOP - the STEP9A-DRY files are not what its log showed"; exit 1; }
+echo "=== built = what STEP9-APPLY left (eu_step check against STEP9-DRY2's prep + dry copy; read-only) ==="
+$E check --tag STEP9AC --built "$B" --dir "$DD" --written abp_surface || { echo "STEP9A-CTX RESULT: STOP - built is not STEP9-APPLY's result (lines above)"; exit 1; }
+n0=$(sqlite3 -readonly "$B" "SELECT count(*) FROM abp_surface"); echo "abp_surface on built: $n0 (expect 391141)"
+[ "$n0" = 391141 ] || { echo "STEP9A-CTX RESULT: STOP - built's abp_surface is not 391,141"; exit 1; }
+bs0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+# --- the 2 changed-verse member rows STEP9A-DRY did not print (rows 81-82; ruling 1 counted them) ---
+awk -F'\t' '$4 == "CHANGED"' "$DA/members.tsv" | sed -n '81,$p' > "$D/unprinted.tsv"
+echo "changed-verse member rows not printed by STEP9A-DRY: $(wc -l < "$D/unprinted.tsv") (expect 2); both r6 / places, lexicon pass: $([ "$(awk -F'\t' '$1 == "r6" && $7 == "places, lexicon pass"' "$D/unprinted.tsv" | wc -l)" = 2 ] && echo yes || echo NO)"
+[ "$(wc -l < "$D/unprinted.tsv")" = 2 ] || { echo "STEP9A-CTX RESULT: STOP - not 2 unprinted changed-verse rows"; exit 1; }
+sed 's/\t/ | /g; s/^/  /' "$D/unprinted.tsv"
+# --- the slots: group H = held by ruling 2 (whole verse for Psa 71:0); X = behind ruling 1's basis
+# (the 2 unprinted rows + the 5 with blank English on one side) - group book chapter verse old_position whole ---
+{ printf 'H\tLev\t20\t15\t4\t0\nH\tDeu\t28\t62\t5\t0\nH\tJos\t5\t5\t30\t0\nH\t1Ki\t8\t44\t25\t0\nH\tJob\t32\t21\t8\t0\n'
+  printf 'H\tJos\t12\t23\t2\t0\nH\t1Ki\t14\t20\t4\t0\nH\tJer\t26\t21\t19\t0\nH\tPsa\t71\t0\t0\t1\n'
+  awk -F'\t' -v OFS='\t' '{split($2, a, " "); split(a[2], b, ":"); print "X", a[1], b[1], b[2], $3, 0}' "$D/unprinted.tsv"
+  printf 'X\t1Ki\t17\t17\t22\t0\nX\t1Ki\t22\t48\t14\t0\nX\t1Ki\t22\t49\t18\t0\nX\tJob\t32\t21\t9\t0\nX\tPsa\t92\t0\t5\t0\n'; } > "$D/slots.tsv"
+echo "slots to read: $(wc -l < "$D/slots.tsv") (expect 16)"
+P="$D/ctx9_helper.py"
+cat > "$P" <<'PY'
+"""STEP9A-CTX helper (one-off, edition upgrade step 9a; ruling chat 11/15, sec 9.123 ruling 2). Read-only:
+src + built opened mode=ro; the snapshot read with its .sha256 check; the STEP9A-DRY report read.
+Per slot: the snapshot row; the dry report's result + keys; the keys recomputed on built with the
+restore's own rules (dryrun_rekey_fill.key2_at / key1_at / decide); src words around the old slot and
+built words around every candidate slot (key 2's, key 1's), each with its lemma and the form on that
+copy's abp_surface; at each built candidate the restore's precondition and the Lexicon agree() result.
+argv: <src.db> <built.db> <snapshot.tsv> <lexicon.tsv> <restore_dry.tsv> <slots.tsv>
+slots.tsv (no header): group book chapter verse old_position whole(0/1)"""
+import os
+import sqlite3
+import sys
+
+sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
+import dryrun_rekey_fill as dr                          # noqa: E402  the key rules
+import snapshot_surface_fill as snap                    # noqa: E402  the file format
+from apply_abp_surface_fill import LEXICON_CLASSES      # noqa: E402  the one class list
+from census_abp_surface_glued import Lexicon, agree     # noqa: E402  the one number + form rule
+
+src_p, built_p, snap_p, lex_p, rep_p, slots_p = sys.argv[1:7]
+
+
+def ro(p):
+    return sqlite3.connect("file:%s?mode=ro" % p, uri=True, timeout=60)
+
+
+def kf(k):                                     # = the restore report's key text
+    return "%s:%s" % (k[0], k[1])
+
+
+def load(con, keys):
+    vid = {}
+    for i, b, c, v, t in con.execute("SELECT id, book, chapter, verse, COALESCE(text, '') FROM verses"):
+        if (b, c, v) in keys:
+            vid[(b, c, v)] = (i, t)
+    ids = {x[0] for x in vid.values()}
+    lem = {}
+    for s, l in con.execute("SELECT strongs_g, COALESCE(lemma, '') FROM lexicon"):
+        lem[s] = l if s not in lem else lem[s] + " / " + l
+    words = {}
+    for v, p, s, sb, e, pn in con.execute(
+            "SELECT verse_id, position, strongs, strongs_base, english, is_pn FROM words"):
+        if v in ids:
+            words.setdefault(v, []).append((p, s, e, pn, lem.get(sb, "")))
+    for v in words:
+        words[v].sort(key=lambda r: r[0])
+    surf = {}
+    for v, p, f in con.execute("SELECT verse_id, position, form FROM abp_surface"):
+        if v in ids:
+            surf[(v, p)] = f
+    return vid, words, surf
+
+
+def show(label, words, surf, vid, marks, whole):
+    keep = sorted({w[0] for w in words if whole or any(abs(w[0] - m) <= 3 for m in marks)})
+    print("  %s:" % label)
+    last = None
+    for p, s, e, pn, lem in words:
+        if p not in keep:
+            continue
+        if last is not None and p > last + 1:
+            print("         ...")
+        last = p
+        f = surf.get((vid, p))
+        print("    %-9s %3d | %s | %s | is_pn %s | %s | form %s"
+              % ("/".join(marks.get(p, [])), p, s, lem or "-", pn,
+                 '"%s"' % e if e is not None else "(no English)", f if f is not None else "(none)"))
+
+
+rows, hexd = snap.read_snapshot(snap_p)
+print("snapshot sha256 %s (= its .sha256 file), %d rows" % (hexd, len(rows)))
+by = {(r["book"], r["chapter"], r["verse"], r["position"]): r for r in rows}
+rep = {}
+with open(rep_p, encoding="utf-8", newline="") as f:
+    head = f.readline().rstrip("\n").split("\t")
+    for line in f:
+        d = dict(zip(head, line.rstrip("\n").split("\t")))
+        rep[(d["book"], int(d["chapter"]), int(d["verse"]), int(d["old_position"]))] = d
+slots = []
+with open(slots_p, encoding="utf-8") as f:
+    for line in f:
+        g, b, c, v, p, whole = line.rstrip("\n").split("\t")
+        slots.append((g, b, int(c), int(v), int(p), whole == "1"))
+lex = Lexicon(lex_p)
+keys = {(b, c, v) for g, b, c, v, p, w in slots}
+cs, cb = ro(src_p), ro(built_p)
+try:
+    sv, sw, ss = load(cs, keys)
+    bv, bw, bs = load(cb, keys)
+finally:
+    cs.close()
+    cb.close()
+
+bad = 0
+for g, b, c, v, p, whole in slots:
+    k = (b, c, v, p)
+    r, d = by.get(k), rep.get(k)
+    print("\n=== [%s] %s %d:%d old position %d" % (g, b, c, v, p))
+    if r is None or d is None or (b, c, v) not in sv or (b, c, v) not in bv:
+        print("  NOT FOUND in the snapshot / the dry report / a copy's verses")
+        bad += 1
+        continue
+    print("  snapshot row: %s | class %s | form %s | old form %s | strongs %s (key 2: its number %d of %d with that"
+          " strongs in the verse, counting from 0) | key-1 English \"%s\" | is_pn %s"
+          % (r["action"], r["cls"], r["form"], r["old_form"], r["strongs"], r["k2_ordinal"], r["k2_count"],
+             r["english"], r["is_pn"]))
+    want = LEXICON_CLASSES.get(r["cls"])
+    print("  the restore Lexicon-checks this class: %s"
+          % ("yes, wants agree() in " + "/".join(want) if want else "no - never checked, so 'uncovered'"))
+    print("  dry report: %s | reason %s | key 2 %s | key 1 %s | %s"
+          % (d["result"], d["reason"] or "-", d["key2"], d["key1"], d["detail"]))
+    svid, stext = sv[(b, c, v)]
+    bvid, btext = bv[(b, c, v)]
+    new_rows = [(q, s, e, pn) for q, s, e, pn, lem in bw.get(bvid, [])]
+    k2 = dr.key2_at(r["strongs"], r["k2_ordinal"], new_rows)
+    k1 = dr.key1_at(r["strongs"], r["english"], new_rows)
+    reason, _ = dr.decide(k2, k1)
+    same = kf(k2) == d["key2"] and kf(k1) == d["key1"] and (str(reason) if reason else "") == d["reason"]
+    print("  recomputed on built: key 2 %s | key 1 %s | reason %s (= the dry report: %s)"
+          % (kf(k2), kf(k1), reason or "-", "yes" if same else "NO"))
+    bad += 0 if same else 1
+    print("  verse_id src %d / built %d; verse English src -> built: %s" % (svid, bvid, "same" if stext == btext else "CHANGED"))
+    print("  src   verse: \"%s\"" % stext)
+    print("  built verse: \"%s\"" % btext)
+    marks = {}
+    if k2[0] == "one":
+        marks.setdefault(k2[1], []).append("key2")
+    for q in ([k1[1]] if k1[0] == "one" else list(k1[1]) if k1[0] == "amb" else []):
+        marks.setdefault(q, []).append("key1")
+    show("src words around the old slot (mark | pos | strongs | lemma | is_pn | English | form on src's abp_surface)",
+         sw.get(svid, []), ss, svid, {p: ["old"]}, whole)
+    show("built words around each candidate (form = built's abp_surface now, before the fill)",
+         bw.get(bvid, []), bs, bvid, marks, whole)
+    for q in sorted(marks):
+        cur = bs.get((bvid, q))
+        if r["action"] == "update":
+            pre = "update: built's form = the old form: %s (built holds %s)" % ("yes" if cur == r["old_form"] else "NO", cur)
+        else:
+            pre = "insert: slot empty on built: %s" % ("yes" if cur is None else "NO (holds %s)" % cur)
+        s = next(x[1] for x in new_rows if x[0] == q)
+        print("  at %s position %d: %s | Lexicon agree(%s, form) = %s%s"
+              % ("+".join(marks[q]), q, pre, s, agree(lex, s, r["form"]), "" if want else " (information only)"))
+print("\ncontext read: %d slots; every slot found and its keys recomputed = the dry report: %s"
+      % (len(slots), "yes" if bad == 0 else "NO (%d)" % bad))
+sys.exit(1 if bad else 0)
+PY
+echo "helper $P: sha256 $(sha256sum < "$P" | cut -d' ' -f1)"
+python3 "$P" "$S" "$B" "$SNAP" "$LEX" "$DA/restore_dry.tsv" "$D/slots.tsv"; h=$?
+bs1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' '); echo "built + src size and time before = after: $([ "$bs1" = "$bs0" ] && echo yes || echo NO)"
+[ "$bs1" = "$bs0" ] || { echo "STEP9A-CTX RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+[ "$h" = 0 ] || { echo "STEP9A-CTX RESULT: STOP - helper exit $h (a slot not found, or its keys differ from the dry report - lines above)"; exit 1; }
+echo "STEP9A-CTX RESULT: READ DONE - 16 slots read in context (9 held + 7 behind ruling 1's basis)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
