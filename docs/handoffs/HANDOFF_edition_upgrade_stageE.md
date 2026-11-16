@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.152**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.153**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/15 late, step 4 in progress; HEADFIX cleared, NOT run) — open here
@@ -28,7 +28,7 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
 
 ## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.152**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.153**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one
@@ -37,7 +37,10 @@ paste block.
 **State of built** (`~/bible-db/bible_edupg_test_built_20261102.db`): everything in "State (11/8, end)" below + steps 11, 10
 (unchanged), 12a/b/c, **9 (391,141), 9a (abp_surface 395,014, fingerprint `219a3ebe7075`), 9b (floor 395,014 held, §9.130) and 9c
 (re-frozen + pinned, `--check` SNAPSHOT CURRENT on built, §9.137)**. Steps 9 → 9a → 9b → 9c complete. src
-`~/bible-db/bible_edupg_test_20261101.db` untouched throughout. Rollbacks kept: `bible_edupg_test_built_pre_8b_20261106.db`,
+`~/bible-db/bible_edupg_test_20261101.db` untouched by steps 9 → 9c. Earlier, src received four writes to its
+abp_corrections as the build's source copy for corrections (§9.153 (1)): 11/1 the 23 retired (that block's log not yet read,
+so its full write set is open), 11/2 the 344 EU- rows, 11/3-4 S980's 21 values, 11/6 the 2 S-joh14:26 rows. The live = src
+proof covers words + verses only (§9.139 (4)). Rollbacks kept: `bible_edupg_test_built_pre_8b_20261106.db`,
 `bible_edupg_test_built_pre_digits_20261105.db`.
 
 **Code:** REF **`19e2fb25`** (§9.134: the 9c re-pin). PA HEAD **`1425b124`** (docs after it need no pull for code; `eu_step pre`
