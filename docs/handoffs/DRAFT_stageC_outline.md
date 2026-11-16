@@ -10574,7 +10574,7 @@ L=~/edition_upgrade_runs/step4_headfix_20261115.log
 if [ -e "$L" ]; then echo "HEADFIX RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
 ( set -uo pipefail
 REF=0cad6894
-echo "GATE REF ${REF} - HEADFIX Joh 19:18 @10 english_head 'ere' -> 'here' on BUILT (DESIGN 9.144 (5) / 9.147 / 9.148 (3) / 9.149): eu_batch_insert (the 1-row heads file) -> apply_abp_corrections --only words -> build_rendering_norm, dry on a THROWAWAY copy first - WRITES built: words (2 cells) + abp_corrections (1 row); appends to built's .corrections.log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+echo "GATE REF ${REF} - HEADFIX Joh 19:18 @10 english_head 'ere' -> 'here' on BUILT (DESIGN 9.144 (5) / 9.147 / 9.148 (3) / 9.149): eu_batch_insert (the 1-row heads file) -> apply_abp_corrections --only words -> build_rendering_norm, dry on a THROWAWAY copy first - WRITES built: words (2 cells) + abp_corrections (1 row); appends TWO reports (the apply's dry run and its write) to built's .corrections.log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
 cd ~/bible-db || { echo "HEADFIX RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
 export PYTHONIOENCODING=utf-8 LC_ALL=C
 B=~/bible-db/bible_edupg_test_built_20261102.db
@@ -10648,10 +10648,29 @@ grep -qF "$XAPPLY" "$D/built.apply.out" 2>/dev/null || FL="$FL apply"
 c=$(cell "$B"); echo "built Joh 19:18 @10 after: $c (expect $XCELL_AFTER)"; [ "$c" = "$XCELL_AFTER" ] || FL="$FL cell"
 c=$(corr "$B"); echo "built abp_corrections after: $c (expect $XCORR_AFTER)"; [ "$c" = "$XCORR_AFTER" ] || FL="$FL corrections"
 CHK=$($E check --tag HEADFIX --built "$B" --dir "$D" --written words,abp_corrections 2>&1); k=$?; echo "$CHK"; [ "$k" = 0 ] || FL="$FL check"
-echo "built's corrections log after: $(stat -c %s "$B.corrections.log" 2>/dev/null) bytes (a write outside the run folder, declared - DESIGN 9.149)"
+echo "built's corrections log after: $(stat -c %s "$B.corrections.log" 2>/dev/null) bytes (two reports appended - the apply's dry run and its write; a write outside the run folder, declared - DESIGN 9.149; not restorable from before.db)"
 if [ -z "$FL" ]; then
   echo "HEADFIX RESULT: DONE - built Joh 19:18 @10 english_head + english_head_norm 'ere' -> 'here'; abp_corrections 374 -> 375 active (EU-Joh19:18 english_head); built = the throwaway (check OK: words + abp_corrections = the dry copy, every other table incl. kjv_words / bsb_words + schema unchanged). Restore source: $D/before.db. Later blocks' 'built =' guard: eu_step check --dir $D --written words,abp_corrections"; exit 0
 fi
 echo "HEADFIX RESULT: CHECK -$FL differ (lines above). Restore source: $D/before.db (words english_head + english_head_norm by row id; abp_corrections whole)"; exit 1
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### HEADFIX reviewed (11/15) — REVIEW: ESCALATE (a write, §9.90); 0 DEFECT, 2 GAP, 6 NOTE
+Verdict line verbatim: "REVIEW: ESCALATE - HEADFIX writes built (words 2 cells, abp_corrections 1 row, and appends to built's .corrections.log), so it is outside reviewer scope under §9.90. I found no defects in how it works: 0 DEFECT, 2 GAP, 6 NOTE."
+Confirmed: nothing writes built before the "=== the chain on BUILT" line; the delta awk matches eu_step's TSV writer (key repr,
+column order, before/after repr); the definitions check is needed (the norm script creates indexes / columns if missing); every
+post-write miss ends in one CHECK naming before.db; the replacement guard is stated.
+- **GAP 1 (tracing):** 374|23|6 and "already-applied 250" rest on the J run's record prose (DR :2490-2492, summarising
+  `~/edition_upgrade_runs/joh1426_rows_20261106.log`, PA) and the committed active list (374 lines = 124 verses.text + 250 word cells);
+  retired 23 / superseded 6 only in the prose; the list does not carry applied_at. Each figure is read live and STOPs before the write
+  on a miss. No step after the J run wrote abp_corrections (every later write's eu_step check left it out of its written list and found
+  it unchanged). For the ruling: accept the fixture + prose, or a PA read of the J log first.
+- **GAP 2 — fixed in the block text:** the apply's DRY run also appends a report to `<db>.corrections.log` (apply_abp_corrections.py
+  :144-146), so built's log gets TWO reports; the GATE REF line and the final line now say so ("not restorable from before.db").
+- Notes: (1) before the write the delta covers words / kjv_words / bsb_words / abp_corrections; verses is copied but not compared
+  (`--only words` never writes verses, :89) — other tables only by the post-write check (a CHECK, not a STOP); (2) the norm script
+  rewrites whole columns, so built's -journal is about their size while the throwaway + before.db sit in home — the dry run on the
+  throwaway has the same footprint first; only "home in use" is printed; (3) before.db covers the 2 cells + the row; (4) the
+  cert_invariants pin 374 → 375 + the active-list fixture at the swap; (5) the cell's before value traced to HEADCHECK and read live;
+  (6) PA pulls to ≥ 0cad6894 first; no scripts/tests push while the block waits.
