@@ -11072,3 +11072,14 @@ cases were first planted after the STEP9A prep and stopped at that earlier guard
   re-pin at the swap (TODO.md :17); §9.154 (4) deploy.sh loader cite corrected to :40-43 (fixed above); the "live has no
   EU-Heb11:24 row" line is from the record, live not read; PA must pull to d34d6723 first, and no scripts/tests push while the block
   waits.
+
+### HEADFIX2 CLEARED TO RUN (11/16, §9.155) — at GATE REF d34d6723, as recorded above, after PA pulls
+Sources of the declared figures (§9.155 (3)), read in the PA logs as pasted:
+- 374|23|6, the cell `one here on that side,|ere|ere`, built's corrections log 47,168 B, and the throwaway's 375|23|6 →
+  `~/edition_upgrade_runs/step4_headfix_20261115.log` (HEADFIX, 03:25:51Z).
+- "would apply 1 · already-applied 249 · LOUD-SKIPPED 1" with `!! SKIP Heb 11:24 pos 7 english` →
+  `~/edition_upgrade_runs/headfix_stop_read_20261116.log` (HFREAD, 03:43:51Z).
+Conditions: JP checks PA disk headroom first (the 11/15 HEADFIX folder, with its 201 MB throwaway, is still in home); a CHECK or
+STOP goes to the ruling chat as printed, and nothing is restored before it is read there. Next after the log is read: the raw-delta
+re-run (read-only), then the A dry-run output code.
+
