@@ -10674,3 +10674,10 @@ post-write miss ends in one CHECK naming before.db; the replacement guard is sta
   throwaway has the same footprint first; only "home in use" is printed; (3) before.db covers the 2 cells + the row; (4) the
   cert_invariants pin 374 → 375 + the active-list fixture at the swap; (5) the cell's before value traced to HEADCHECK and read live;
   (6) PA pulls to ≥ 0cad6894 first; no scripts/tests push while the block waits.
+
+## HEADFIX cleared (11/15, ruling chat §9.150) — NOT yet run
+HEADFIX cleared to run at GATE REF 0cad6894, block as printed in "Block HEADFIX" above, after PA pulls. GAP 1 ruled (fixture +
+record prose accepted for 374|23|6 and 250). Ruling chat's own check recorded: Joh 19:18 has no row in
+abp_surface_fill_20261115.tsv (4,411 rows; 43 Joh, none at 19:18) — the 9c pin is not made stale. Conditions: JP checks PA disk
+headroom first; any CHECK/STOP goes to the ruling chat as printed. Session wrapped here (context); the successor runs nothing new
+until HEADFIX's log is read. Next guard after it runs: `eu_step check --dir ~/edition_upgrade_runs/step4_headfix_20261115 --written words,abp_corrections`.

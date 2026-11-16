@@ -2,12 +2,32 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.137**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.150**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/15, after step 9c closed) — open here
+## SUCCESSOR START (11/15 late, step 4 in progress; HEADFIX cleared, NOT run) — open here
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.137**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Read the 9c section below for pins, roles and open items — it still holds, except where this block overrides it.
+- **Code REF `0cad6894`** (§9.149: eu_batch_insert `--created` + this-run EU count; heads fixture
+  `tests/fixtures/edition_upgrade/eu_batch_rows_heads_20261115.tsv`, sha `4ba1d7bc…bb60`). Step-4 tools landed this session:
+  `scripts/eu_words_delta.py` (raw delta, a147c61a), `scripts/eu_head_check.py` (head-consistency check, 50957fc0).
+- **built is still STEP9A-APPLY's result** until HEADFIX runs (guard: `eu_step check --dir
+  ~/edition_upgrade_runs/step9a_apply_20261115 --written abp_surface`).
+- **HEADFIX (Joh 19:18 @10 english_head + norm 'ere' → 'here'; abp_corrections 374 → 375 active) is CLEARED (§9.150), NOT YET RUN.**
+  Block text: `DRAFT_stageC_outline.md` → "Block HEADFIX". Conditions: PA pulls to ≥ 0cad6894; JP checks PA disk headroom first;
+  a CHECK/STOP goes to the ruling chat as printed, nothing restored before it is read. **After it runs, every later block's
+  "built =" guard is `eu_step check --dir ~/edition_upgrade_runs/step4_headfix_20261115 --written words,abp_corrections`.**
+  Swap-commit knock-ons it adds: cert pin abp_corrections_active 374 → 375; active-list fixture re-pin.
+- **Step-4 state:** (ii) member list ruled (§9.142); verses.text declared list ruled (§9.143–§9.144); english_head_norm by rule
+  (§9.142); Isa 48:5 @4 a declared single row, no fix (§9.148); charter §6 step 4 wording amended (§9.139 (0)).
+- **Order left:** HEADFIX run + its log read → raw-delta re-run (read-only) → A dry-run output code (english, english_head,
+  greek_pos, bracket_id cell changes; conditions §9.139 (1) / §9.142 (4)) → live = src proof (after JP's disk check) + PA log read
+  (census2, drift8b2, 8b.0/8b.1/ABPTAG, stage B incl. greek_pos/bracket line) → all lists laid against the delta → the step-4 gate
+  block, still unapproved. Then charter steps 5 → 8, then the swap.
+
+## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
+
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.150**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one
