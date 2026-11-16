@@ -2,10 +2,20 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.156**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.157**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/16 late, step 4 in progress; HEADFIX2 DONE + closed §9.156; next the raw-delta re-run) — open here
+## SUCCESSOR START (11/16 late, step 4 in progress; HEADFIX2 closed §9.156; STEP4-DELTA2 READ DONE §9.157) — open here
+
+- **11/16 23:05Z: STEP4-DELTA2 (raw delta re-run on the fixed built) READ DONE — the REFERENCE delta for the step-4 gate (§9.157)**:
+  `~/edition_upgrade_runs/step4_delta2_20261116/delta/`, words_cells 50,890 `86e44c58…dafc` (= the 11/15 delta less the two
+  Joh 19:18 @10 cells). Counts: english 32,962 · english_head 5,426 · greek_pos 3,318 · bracket_id 4,208 · english_head_norm 4,890 ·
+  verses.text 15,522. **NEXT: the A dry-run output code** (build_words_from_abp.py AppTransplant: one row per changed cell — verse,
+  position, column, before, after — for english, english_head, greek_pos, bracket_id as the delta's per-verse rank; §9.139 (1) +
+  §9.142 (4) conditions: changes nothing A writes, tested on/off; inputs sha-checked vs step 5 (eligible e540d34d… etc.); counts =
+  english changed 15,588 + a named stage-B figure, greek_pos/bracket verse count vs the stage-B log line) → reviewer → ruling chat.
+  Then the live = src proof (JP disk check) + the PA log read (stage-B greek_pos/bracket line, 11/1 retire log, strongs_base rows vs
+  pn_greek_identity). Gate block unapproved.
 
 - **11/16 21:13Z: HEADFIX2 RAN — DONE, exit 0, at code REF `d34d6723` (§9.153–§9.155; spent-by-lane-3 rule).** Built Joh 19:18
   @10 english_head + norm 'ere' → 'here'; abp_corrections 374|23|6 → 375|23|6; apply "applied 1 · already-applied 249 · spent by
@@ -42,7 +52,7 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
 
 ## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.156**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.157**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one
