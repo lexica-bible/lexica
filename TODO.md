@@ -10,13 +10,11 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ---
 
 ## Active lane — ABP edition upgrade (English line → the app's edition)
-- **STATE 11/8: STAGE D CLOSED; gate 2 GREEN and closed** (GATE2-RUN3 at `c37fd41d`, §9.103; declared file
-  v4 = G5 delta file + G6 shape exceptions). Built = 8b.0 + REKEY + 8b.1 + §9.96 + 8b.2 + 8b.2a + 8b.3 + SLOT3
-  (pn_slot_binding 102 → 105, the 3 Jehoram-of-Judah slots, §9.104). Code REF `f0e60cf7`. **NEXT: stage E —
-  step 12 runs on built (12a → 12b → 12c, dry first), the §9.87 punct ruling (583 vs 607) before 9c, then
-  9 → 9a → 9b → 9c.** Opener `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (copy names, figures, logs,
-  follow-up lane); out-of-lane follow-ups in `HANDOFF_edition_upgrade_stageC_repin.md`. Rulings =
-  `docs/handoffs/DESIGN_q2_build.md` §9 (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`.
+- **STATE 11/15 late: stage E — steps 11, 10, 12a/b/c, 9, 9a, 9b, 9c CLOSED on built; charter §6 step 4 in progress.** HEADFIX (Joh 19:18 @10 head fix) cleared, NOT run (§9.150). Code REF `0cad6894`. Opener: SUCCESSOR START in
+  `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (order left: HEADFIX → raw-delta re-run → A dry-run output code →
+  live = src proof + PA log read → step-4 gate → steps 5–8 → swap). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9
+  (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`. Swap-commit knock-ons: health floor 395,003 →
+  395,014, cert pin abp_corrections_active 374 → 375 (after HEADFIX), active-list fixture re-pin.
 - Still owed: B's step in `/rebuild-words` · Split 80 → 84 re-declare.
 - **`/rebuild-words` step 12, the side-table builders — run on the lane's built copy before step 9** (JP 11/7):
   `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` (+ place-orphan check). Prerequisite
