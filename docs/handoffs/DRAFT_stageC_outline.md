@@ -10681,3 +10681,59 @@ record prose accepted for 374|23|6 and 250). Ruling chat's own check recorded: J
 abp_surface_fill_20261115.tsv (4,411 rows; 43 Joh, none at 19:18) — the 9c pin is not made stale. Conditions: JP checks PA disk
 headroom first; any CHECK/STOP goes to the ruling chat as printed. Session wrapped here (context); the successor runs nothing new
 until HEADFIX's log is read. Next guard after it runs: `eu_step check --dir ~/edition_upgrade_runs/step4_headfix_20261115 --written words,abp_corrections`.
+
+### HEADFIX ran (11/16, 03:25:51Z, PA HEAD 842c79ee, REF 0cad6894) — STOP before the write, exit 1; built untouched (to the ruling chat)
+From JP's terminal paste (the echo of the pasted block text is overwritten again, as on STEP9B; the run's output is complete through
+"exit=1"; the PA log file is the record). PRE OK (repo guards, both rollback copies, run folder made); home in use 7,560,320 KB; heads
+file `4ba1d7bc…bb60` = expect; CHECK OK against STEP9A-APPLY (149 + schema 0; abp_surface 395,014 / `219a3ebe7075`; no journal; repo
+clean); cell `one here on that side,|ere|ere` = expect; abp_corrections 374|23|6 = expect; built's .corrections.log 47,168 B before;
+PREP OK (state.json 150 tables / 3,810,506 rows / 300 schema entries in 35 s; before.db words 626,309 + abp_corrections 403 rows,
+10,231,808 B, sha256 `da47ce8c49968f2df564cecada7367336193eaa94a55483b182297caedd957f3`; dry.db verses / words / abp_corrections /
+kjv_words / bsb_words digests = built's, 201,183,232 B); Joh 19:18 verse id 27195.
+On the THROWAWAY: insert = declared (374 → 375 active, EU- rows 345 = before 344 + 1, "RESULT: INSERTED - counts as expected");
+**apply dry: "would apply 1 · already-applied 249 · LOUD-SKIPPED 1"** (declared: would apply 1 · already-applied 250 · LOUD-SKIPPED 0;
+Joh 19:18 @10 english "already applied (ok)", english_head "would apply") → the apply exits 1 on any skip (apply_abp_corrections.py
+:148) → chain step 13 → **"HEADFIX RESULT: STOP - the chain failed on the throwaway copy at step 13 … built untouched"**, exit=1. The
+apply / norm steps never ran (no dry.apply.out / dry.norm.out). The block's grep filter does not show the `!! SKIP` line (:103 / :113 /
+:129), so the skipped row is not in the log; it is in `step4_headfix_20261115/dry.apply_dry.out` on PA.
+CC local read (no PA run; no cause asserted): of the 250 active word rows (english 121, english_head 109, greek_pos 9, strongs 4,
+strongs_base 4, bracket_id 3), 25 have a src → built cell in STEP4-DELTA's words_cells.tsv — the 23 EU rows among them hold their
+corrected_value on built; the other 2 are Joh 14:26 @3 bracket_id / greek_pos (S-joh14:26, src None → built 1 / 3, no value on file to
+compare); none sits in one of the 10 moved verses. The other 225 are equal on src and built and cannot be read locally.
+Nothing to restore (no write reached built). Next: a read-only read of the dry apply output + built's own .corrections.log history
+(was the skip there before HEADFIX?) + `eu_step same` (built = prep) — reviewer first, log to the ruling chat. HEADFIX is not re-run
+as printed: its log-exists guard STOPs, and the declared "already-applied 250 · LOUD-SKIPPED 0" no longer fits; any re-run is a
+changed block → reviewer → ruling chat.
+
+### Block HFREAD (READ-ONLY — writes only its own log; no gate) — why HEADFIX stopped
+```bash
+set +H
+L=~/edition_upgrade_runs/headfix_stop_read_20261116.log
+if [ -e "$L" ]; then echo "HFREAD RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+echo "HFREAD - READ-ONLY: why HEADFIX stopped (dry apply LOUD-SKIPPED 1) - writes only this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "HFREAD RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+D=~/edition_upgrade_runs/step4_headfix_20261115
+echo "=== 1. the dry apply's output on the throwaway, every line except 'already applied (ok)' ==="
+grep -v 'already applied (ok)' "$D/dry.apply_dry.out"
+echo "=== 2. built's corrections log: size (expect 47168, as before HEADFIX) and every summary / !! line with its line number ==="
+stat -c %s "$B.corrections.log"
+grep -nE 'summary:|!! ' "$B.corrections.log"
+echo "=== 3. built = HEADFIX's prep (read-only, expect differences 0) ==="
+python3 scripts/eu_step.py same --tag HFREAD --built "$B" --dir "$D"; echo "same exit: $? (expect 0)"
+echo "=== 4. files in the HEADFIX run folder ==="
+ls -l "$D"
+echo "=== 5. the HEADFIX log file: line count and its last 3 lines ==="
+wc -l < ~/edition_upgrade_runs/step4_headfix_20261115.log; tail -3 ~/edition_upgrade_runs/step4_headfix_20261115.log
+echo "HFREAD RESULT: READ DONE"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### HFREAD reviewed (11/16) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only diagnostic. It writes only its own new log (the block stops if that log already exists), it is not a gate, and it has no `!` except inside the `[ -e ]` test."
+Confirmed: `eu_step same` = mode_same (:283-294), reads state.json and opens built via ro() (mode=ro + query_only); `--tag` only
+prefixes printed lines; the grep patterns match apply_abp_corrections.py's SKIP (:103 / :113 / :129), summary (:137-138) and warning
+(:140) lines; the apply appends to `<db>.corrections.log` (:144-146), so section 2 reads built's own history. Note: if
+`dry.apply_dry.out` were absent, section 1 prints "No such file" — read as file-not-found, not as no SKIP line. No figure is a gate.
