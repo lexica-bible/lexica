@@ -11103,3 +11103,70 @@ Log `~/edition_upgrade_runs/step4_headfix2_20261116.log`; JP pasted it in full. 
 - RESULT: DONE. Restore source `step4_headfix2_20261116/before.db`. Later blocks' "built =" guard: `eu_step check --dir
   ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections`.
 
+## STEP4-DELTA2 drafted (11/16, GATE REF d34d6723) — the raw delta re-run on the fixed built (§9.156 (5)), no gate
+Block STEP4-DELTA (11/15, reviewed CLEAR, ran READ DONE §9.141) with ONLY these changes: log `step4_delta2_20261116.log` + folder
+`step4_delta2_20261116`, tag DELTA4B, result lines "STEP4-DELTA2"; REF d34d6723 (`git diff a147c61a d34d6723 --
+scripts/eu_words_delta.py scripts/eu_step.py` is empty: the same tool); the "built =" guard is now HEADFIX2's (§9.156 (3)) —
+`eu_step check --dir ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections`, and the file check reads that
+folder's state.json + dry.db. src size 451,964,928 unchanged (HEADFIX2 wrote built only). No counts forecast (§9.156 (5): english_head
+and english_head_norm are read, not forecast); nothing ruled from counts. Read-only on both databases; writes only its run folder
+and log.
+Local test (WSL, clone at 5ad60723 with scripts/tests = d34d6723; made-up built with morph/lemma, a HEADFIX2-style prep folder and
+the same 1-cell + 1-row write on built and its throwaway; src = built before that write + one english cell + one verse text):
+READ DONE exit 0 (english 1, english_head 1, english_head_norm 1, verses.text 1; built + src unchanged); re-paste STOP; src wrong size
+STOP; another built words cell changed after the HEADFIX2 prep → `CHECK: FAIL - words on built differs from the dry run` → STOP.
+### Block STEP4-DELTA2 (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; no gate)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_delta2_20261116.log
+if [ -e "$L" ]; then echo "STEP4-DELTA2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+echo "GATE REF ${REF} - STEP4-DELTA2 charter sec 6 step 4, the RAW DELTA re-run on the fixed built (DESIGN 9.138 (2) / 9.140 / 9.156 (5)): eu_words_delta.py --a src --b built, every member to files, counts per column - NO GATE - READ-ONLY on both databases; writes only its run folder and log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP4-DELTA2 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+DH=~/edition_upgrade_runs/step4_headfix2_20261116
+D=~/edition_upgrade_runs/step4_delta2_20261116
+XS_SIZE=451964928
+echo "python3: $(python3 --version 2>&1)"
+# --- before the run: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag DELTA4B --ref "$REF" --dir "$D" --db "$B" --db "$S" || { echo "STEP4-DELTA2 RESULT: STOP - pre (line above; it also refuses a -journal beside either copy); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db"; do [ -s "$f" ] || { echo "STEP4-DELTA2 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check against HEADFIX2's prep + throwaway copy; read-only; DESIGN 9.156 (3)) ==="
+python3 scripts/eu_step.py check --tag DELTA4B --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP4-DELTA2 RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE, as in every stage-E log)"
+[ "$n" = "$XS_SIZE" ] || { echo "STEP4-DELTA2 RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+mkdir "$D/delta" || { echo "STEP4-DELTA2 RESULT: STOP - cannot make $D/delta"; exit 1; }
+# --- the raw delta (src = a, built = b); peak memory read twice: the script's own line and /usr/bin/time -v ---
+echo "=== eu_words_delta.py --a src --b built --out $D/delta ==="
+if [ -x /usr/bin/time ]; then
+  /usr/bin/time -v python3 scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" > "$D/delta.out" 2> "$D/time.txt"; r=$?
+else
+  python3 scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" > "$D/delta.out" 2> "$D/time.txt"; r=$?
+  echo "(no /usr/bin/time on this system - the script's own peak line only)"
+fi
+cat "$D/delta.out"
+echo "delta exit $r (expect 0)"
+echo "--- /usr/bin/time -v (peak memory, wall time, exit):"
+grep -E "Maximum resident set size|Elapsed \(wall clock\)|Exit status|Command terminated" "$D/time.txt"
+grep -qv -E "^\s|Command being timed" "$D/time.txt" && { echo "--- anything else the run wrote to stderr:"; grep -v -E "^\s|Command being timed" "$D/time.txt"; }
+[ "$r" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "STEP4-DELTA2 RESULT: STOP - the delta did not finish (exit $r; lines above; partial files kept in $D/delta) - the log goes to the ruling chat, a re-run uses a new dated folder"; exit 1; }
+echo "--- files in $D/delta:"
+ls -l "$D/delta" | sed 's/^/  /'
+st1=$(stat -c '%s %Y' "$B" "$S" | tr '\n' ' ')
+echo "built and src: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "STEP4-DELTA2 RESULT: STOP - built or src changed during a read-only run - report this"; exit 1; }
+echo "STEP4-DELTA2 RESULT: READ DONE - every member in $D/delta (no gate; nothing ruled from counts; known limits: a type-only bracket_id change is hidden by the rank; 'moved' is a reading aid)"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+
+### STEP4-DELTA2 reviewed (11/16) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - read-only re-run of the raw delta ordered by DESIGN 9.156 (5); identical to the cleared STEP4-DELTA block apart from the stated changes; the built guard is the one set in 9.156 (3); no counts forecast."
+Reviewer notes: line-by-line compare against STEP4-DELTA shows only the listed changes; src size 451,964,928 traced as before
+(HEADFIX2 wrote built only, §9.156 (1)); the reviewer could not run git — CC's check: `git diff --stat a147c61a d34d6723 --
+scripts/eu_words_delta.py scripts/eu_step.py` is empty, and `eu_step pre` enforces scripts/tests = d34d6723 on PA. PA is at
+1d5e34ee (scripts/tests = d34d6723), so no pull is needed for this block.
