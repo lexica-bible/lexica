@@ -10771,3 +10771,37 @@ dry.apply_dry.out (no dry.apply.out / dry.norm.out). (5) HEADFIX log 50 lines, e
   the swap (live's 20261031 active list has no Heb 11:24 row — it is an EU row). Not run; read from the code.
 - Follow-up read drafted (HEBREAD: the row as built holds it, words at Heb 11:24 on built and src, the 8b.2a log lines, built's
   corrections-log lines for Heb 11:24) — reviewer first.
+
+### Block HEBREAD (READ-ONLY — writes only its own log; no gate) — Heb 11:24 @7 on built and src (§9.151 (3) asks)
+```bash
+set +H
+L=~/edition_upgrade_runs/heb1124_read_20261116.log
+if [ -e "$L" ]; then echo "HEBREAD RESULT: STOP - log already exists (kept as is): $L"; else
+( set -uo pipefail
+echo "HEBREAD - READ-ONLY: Heb 11:24 @7 (the HEADFIX skip) on built and src - writes only this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "HEBREAD RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+Q1="SELECT rowid, book, chapter, verse, position, field, source_value, corrected_value, ledger_ref, reason, applied_at, status, created FROM abp_corrections WHERE book='Heb' AND chapter=11 AND verse=24 ORDER BY position, field"
+Q2="SELECT w.position, w.english, w.english_head, w.strongs_base, w.greek_pos, w.bracket_id, w.is_pn FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book='Heb' AND v.chapter=11 AND v.verse=24 ORDER BY w.position"
+Q3="SELECT text FROM verses WHERE book='Heb' AND chapter=11 AND verse=24"
+for x in "built:$B" "src:$S"; do n=${x%%:*}; db=${x#*:}
+  echo "=== $n: abp_corrections rows at Heb 11:24 ==="; sqlite3 -readonly -header "$db" "$Q1"
+  echo "=== $n: words at Heb 11:24 (position|english|english_head|strongs_base|greek_pos|bracket_id|is_pn) ==="; sqlite3 -readonly "$db" "$Q2"
+  echo "=== $n: verses.text ==="; sqlite3 -readonly "$db" "$Q3"
+done
+echo "=== the 8b.2a run log (11/7) at Heb 11:24 ==="
+grep -n -A14 '=== Heb 11:24 ===' ~/edition_upgrade_runs/lane3_8b2a_20261106.log
+echo "=== the 8b.2a apply's full output (lane3_8b2a_20261106/apply_full.log) at Heb 11:24 ==="
+awk '/^=== Heb 11:24 ===/{p=1} p{print} p&&/contiguity check/{p=0}' ~/edition_upgrade_runs/lane3_8b2a_20261106/apply_full.log
+echo "=== built's corrections log: every line naming Heb 11:24 ==="
+grep -n 'Heb 11:24' "$B.corrections.log"
+echo "HEBREAD RESULT: READ DONE"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### HEBREAD reviewed (11/16) — REVIEW: CLEAR (three rounds)
+Round 1 verdict verbatim: "REVIEW: CLEAR - HEBREAD only reads (sqlite3 -readonly, grep, tee to a new dated log it refuses to overwrite); no gate, no write, no figure used as a gate. One finding below: the 8b.2a grep will not show the cell detail you expect." — the 8B2A block tee'd only filtered lines into the main log (:3409 / :3418); the full apply output is `lane3_8b2a_20261106/apply_full.log` (:3186, :3416). Src's abp_corrections content is NOT an expectation (no source in the record).
+Round 2 (added `grep -A14` on apply_full.log): CLEAR, but -A14 cuts the block short (fix_lane3_star_merges.py :175-189 prints the whole verse BEFORE and AFTER, then prose and two checks).
+Round 3 verdict verbatim: "REVIEW: CLEAR - the awk line only reads an existing run file into the same new log (single quotes, no `!`, no pipe), and it prints the whole Heb 11:24 block, which -A14 would have cut short." (the awk range form of :3420). The main-log grep stays as header evidence only. No figure is a gate.
