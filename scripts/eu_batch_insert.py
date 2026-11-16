@@ -82,6 +82,8 @@ def main(argv=None):
     ap.add_argument("--sha256", required=True, help="pinned sha256 of the reviewed rows file")
     ap.add_argument("--expect", type=int, required=True, help="pinned row count")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--created", default=CREATED,
+                    help="the rows' created date (default %s, the first batch's; DESIGN 9.148)" % CREATED)
     a = ap.parse_args(argv)
     if is_live(a.db):
         print(f"STOP: {a.db} is the live database (or a file named bible.db) - copies only.")
@@ -136,19 +138,22 @@ def main(argv=None):
               f"{before.get('active', 0) + len(rows)}.")
         con.close()
         return 0
+    def n_eu():
+        return con.execute("SELECT count(*) FROM abp_corrections WHERE ledger_ref LIKE 'EU-%'").fetchone()[0]
+    n_before = n_eu()          # DESIGN 9.148: a later batch lands on a copy that already holds EU rows
     con.executemany(
         """INSERT INTO abp_corrections (book, chapter, verse, position, field, source_value,
                corrected_value, reason, ledger_ref, applied_at, status, created)
            VALUES (?,?,?,?,?,?,?,?,?,'ingest','active',?)""",
         [(r["book"], r["chapter"], r["verse"], r["position"], r["field"], r["source_value"],
-          r["corrected_value"], r["reason"], r["ledger_ref"], CREATED) for r in rows])
+          r["corrected_value"], r["reason"], r["ledger_ref"], a.created) for r in rows])
     con.commit()
     after = counts()
-    n_new = con.execute("SELECT count(*) FROM abp_corrections WHERE ledger_ref LIKE 'EU-%'").fetchone()[0]
+    n_new = n_eu()
     con.close()
     print(f"  abp_corrections after: {after}")
-    print(f"  EU- rows on the copy: {n_new} (expected {len(rows)})")
-    ok = n_new == len(rows) and after.get("active", 0) == before.get("active", 0) + len(rows)
+    print(f"  EU- rows on the copy: {n_new} (before {n_before}; this batch adds {n_new - n_before}, expected {len(rows)})")
+    ok = n_new - n_before == len(rows) and after.get("active", 0) == before.get("active", 0) + len(rows)
     print("RESULT: " + ("INSERTED - counts as expected" if ok else "MISMATCH - read the counts above"))
     return 0 if ok else 1
 
