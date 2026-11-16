@@ -10536,3 +10536,122 @@ recompute_norms :57-80, no scope option on the command line). **CC's answer, for
 **Gap 2 — apply_abp_corrections.py's expected counts** (applied 1 · already-applied N · skipped 0) must be traced to built's last apply
 log before the block is drafted; and it appends to `<db>.corrections.log` beside built (a new or appended file — the block will say so).
 CC traces both when drafting the block.
+
+## HEADFIX drafted (11/15, GATE REF 0cad6894; PA pulls first) — Joh 19:18 @10 head fix on built (§9.148 (3) / §9.149), for the ruling chat (a write)
+
+WRITES built: words (2 cells: Joh 19:18 @10 english_head + english_head_norm 'ere' → 'here') and abp_corrections (1 row); appends to
+built's `.corrections.log` (a write outside the run folder, declared, §9.149). **Chain:** `eu_batch_insert.py --rows <heads file>
+--sha256 4ba1d7bc… --expect 1 --created 2026-11-15` (dry, then --apply) → `apply_abp_corrections.py --only words` (dry, then --apply) →
+`build_rendering_norm.py` (in full, §9.149 (b)). **Declared figures:** heads file sha 4ba1d7bc…; built abp_corrections
+active|retired|superseded **374|23|6** before (J run 11/6, DR :2490-2492 "AFTER 374 / 23 / 6"; the committed active list
+`abp_corrections_active_built_20261106.txt` = 374 lines: 250 word cells + 124 verses.text) → **375|23|6** after; apply
+"would apply 1 · already-applied 250 · LOUD-SKIPPED 0" then "applied 1 · already-applied 250 · LOUD-SKIPPED 0" (250 = the active word
+rows in that list; the J run's `--only words` read "already-applied 248" with its 2 rows pending, DR :2492); the cell before
+'one here on that side,|ere|ere' (HEADCHECK SHOW + eu_step state), after '…|here|here'.
+**Before any write (STOP, built untouched):** pre (REF 0cad6894); heads-file sha; built = STEP9A-APPLY's result; the cell and the counts as
+declared; prep (`--copy verses,words,abp_corrections,kjv_words,bsb_words --save words:english_head+english_head_norm --save
+abp_corrections`) → before.db = the restore source, sha printed; the WHOLE chain on the throwaway: insert INSERTED, apply lines as
+declared, the cell and 375|23|6; built → throwaway delta: words exactly 1 row (Joh 19:18 @10, exactly english_head + english_head_norm
+('ere','ere') → ('here','here')), kjv_words + bsb_words 0 (`--zero`), abp_corrections 1 ADDED; the table + index definitions of the four
+tables built = throwaway (the norm script creates indexes if missing); `same`. **Write** = the chain on built. **After (CHECK naming
+before.db):** chain exit 0, INSERTED, the apply line, the cell, 375|23|6, eu_step check with written = words, abp_corrections (= the
+throwaway; kjv_words / bsb_words and every other table + schema = prep), the log's size.
+**New "built =" reference for later blocks (§9.149):** `eu_step check --dir ~/edition_upgrade_runs/step4_headfix_20261115 --written
+words,abp_corrections` (this block's prep + throwaway) replaces the STEP9A-APPLY guard.
+**Knock-on (for the swap commit):** the cert_invariants `abp_corrections_active` pin 374 → 375 and the active-list fixture re-pinned with
+§4.7's re-adjudication at the swap (not now).
+Local test (WSL, fake HOME, clone at 44f58bf1; made-up built with 374 active corrections (250 word cells already applied + 124
+verses.text), 23 retired, 6 superseded, kjv / bsb word tables with their norm indexes, and a 9a prep): DONE exit 0 (dry + built chain
+lines exactly as declared, delta 1 / 0 / 1, definitions equal, check OK); re-paste STOP; a second run on the fixed copy STOPs at the
+"built = STEP9A-APPLY" guard, built byte-identical; a copy WITHOUT the kjv norm index → "definitions … NO" → STOP before the write.
+(First test run, before the copies had the indexes: the post-write check caught the two new indexes as CHECK — the pre-write
+definitions check was added from that.)
+
+### Block HEADFIX (GATE REF 0cad6894; WRITES built: words 2 cells + abp_corrections 1 row) — for the ruling chat
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_headfix_20261115.log
+if [ -e "$L" ]; then echo "HEADFIX RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=0cad6894
+echo "GATE REF ${REF} - HEADFIX Joh 19:18 @10 english_head 'ere' -> 'here' on BUILT (DESIGN 9.144 (5) / 9.147 / 9.148 (3) / 9.149): eu_batch_insert (the 1-row heads file) -> apply_abp_corrections --only words -> build_rendering_norm, dry on a THROWAWAY copy first - WRITES built: words (2 cells) + abp_corrections (1 row); appends to built's .corrections.log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "HEADFIX RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+D=~/edition_upgrade_runs/step4_headfix_20261115
+F=tests/fixtures/edition_upgrade/eu_batch_rows_heads_20261115.tsv
+E="python3 scripts/eu_step.py"
+# --- declared figures ---
+XF=4ba1d7bc1292b8bee8529bdf3f661e417153de243d88a108a33136be1975bb60     # the heads file (DESIGN 9.149)
+XCORR="374|23|6"                 # abp_corrections active|retired|superseded on built (J run 11/6, DR :2490-2492; active list 20261106 = 374 lines)
+XCORR_AFTER="375|23|6"           # + the 1 row (DESIGN 9.149)
+XAPPLY="applied 1 · already-applied 250 · LOUD-SKIPPED 0"     # 250 = the active word-cell rows (the 20261106 active list: 250 words + 124 verses.text)
+XDRYAPPLY="would apply 1 · already-applied 250 · LOUD-SKIPPED 0"
+XCELL_BEFORE="one here on that side,|ere|ere"
+XCELL_AFTER="one here on that side,|here|here"
+cell() { sqlite3 -readonly "$1" "SELECT w.english || '|' || w.english_head || '|' || w.english_head_norm FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book='Joh' AND v.chapter=19 AND v.verse=18 AND w.position=10"; }
+corr() { sqlite3 -readonly "$1" "SELECT (SELECT count(*) FROM abp_corrections WHERE status='active') || '|' || (SELECT count(*) FROM abp_corrections WHERE status='retired') || '|' || (SELECT count(*) FROM abp_corrections WHERE status='superseded')"; }
+chain() {   # $1 = db, $2 = output prefix: insert -> apply (words) -> norm; each step's output kept
+  python3 scripts/eu_batch_insert.py "$1" --rows "$F" --sha256 "$XF" --expect 1 --created 2026-11-15 > "$2.insert_dry.out" 2>&1 || return 11
+  python3 scripts/eu_batch_insert.py "$1" --rows "$F" --sha256 "$XF" --expect 1 --created 2026-11-15 --apply > "$2.insert.out" 2>&1 || return 12
+  python3 scripts/apply_abp_corrections.py "$1" --only words > "$2.apply_dry.out" 2>&1 || return 13
+  python3 scripts/apply_abp_corrections.py "$1" --only words --apply > "$2.apply.out" 2>&1 || return 14
+  python3 scripts/build_rendering_norm.py "$1" > "$2.norm.out" 2>&1 || return 15
+  return 0
+}
+# --- before any write: every miss is STOP, built untouched ---
+$E pre --tag HEADFIX --ref "$REF" --dir "$D" --db "$B" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "HEADFIX RESULT: STOP - pre (line above); built untouched"; exit 1; }
+dk=$(du -sk ~ 2>/dev/null | cut -f1); echo "home in use: $dk KB (this run adds one throwaway copy of verses + words + abp_corrections + kjv_words + bsb_words and a small before.db)"
+s=$(sha256sum < "$F" | cut -d' ' -f1); echo "heads file $F: sha256 $s (expect $XF)"; [ "$s" = "$XF" ] || { echo "HEADFIX RESULT: STOP - not the committed heads file; built untouched"; exit 1; }
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only) ==="
+$E check --tag HEADFIX --built "$B" --dir "$DA" --written abp_surface || { echo "HEADFIX RESULT: STOP - built is not STEP9A-APPLY's result (lines above); built untouched"; exit 1; }
+c=$(cell "$B"); echo "built Joh 19:18 @10 (english|head|norm): $c (expect $XCELL_BEFORE)"; [ "$c" = "$XCELL_BEFORE" ] || { echo "HEADFIX RESULT: STOP - the cell is not as declared; built untouched"; exit 1; }
+c=$(corr "$B"); echo "built abp_corrections active|retired|superseded: $c (expect $XCORR)"; [ "$c" = "$XCORR" ] || { echo "HEADFIX RESULT: STOP - abp_corrections is not as recorded; built untouched"; exit 1; }
+[ -e "$B.corrections.log" ] && echo "built's corrections log before: $(stat -c %s "$B.corrections.log") bytes" || echo "built's corrections log before: none (the apply will create it)"
+echo "=== prep: state of built, before.db (restore source: words' english_head + english_head_norm by row id, and abp_corrections whole) and a THROWAWAY copy ==="
+$E prep --tag HEADFIX --built "$B" --dir "$D" --copy verses,words,abp_corrections,kjv_words,bsb_words --save words:english_head+english_head_norm --save abp_corrections || { echo "HEADFIX RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "before.db (restore source): sha256 $(sha256sum < "$D/before.db" | cut -d' ' -f1)"
+VID=$(sqlite3 -readonly "$B" "SELECT id FROM verses WHERE book='Joh' AND chapter=19 AND verse=18"); echo "Joh 19:18 verse id on built: $VID"
+# --- the same chain on the THROWAWAY copy first: it must end exactly as declared ---
+echo "=== the chain on the THROWAWAY copy $D/dry.db ==="
+chain "$D/dry.db" "$D/dry"; rc=$?
+for x in insert apply_dry apply norm; do echo "--- dry $x:"; grep -E "RESULT|abp_corrections (before|after)|EU- rows|summary:|STOP|recomputed|Joh 19:18" "$D/dry.$x.out" | sed 's/^/  /'; done
+[ "$rc" = 0 ] || { echo "HEADFIX RESULT: STOP - the chain failed on the throwaway copy at step $rc (outputs $D/dry.*.out); built untouched"; exit 1; }
+grep -qF "RESULT: INSERTED - counts as expected" "$D/dry.insert.out" && grep -qF "$XDRYAPPLY" "$D/dry.apply_dry.out" && grep -qF "$XAPPLY" "$D/dry.apply.out" || { echo "HEADFIX RESULT: STOP - the throwaway chain's lines are not the declared ones; built untouched"; exit 1; }
+c=$(cell "$D/dry.db"); echo "throwaway Joh 19:18 @10: $c (expect $XCELL_AFTER)"; [ "$c" = "$XCELL_AFTER" ] || { echo "HEADFIX RESULT: STOP - the throwaway cell is not as declared; built untouched"; exit 1; }
+c=$(corr "$D/dry.db"); echo "throwaway abp_corrections: $c (expect $XCORR_AFTER)"; [ "$c" = "$XCORR_AFTER" ] || { echo "HEADFIX RESULT: STOP - the throwaway's corrections counts are not as declared; built untouched"; exit 1; }
+echo "=== built -> throwaway, every cell (words keyed verse_id+position; kjv_words / bsb_words must not differ; abp_corrections by id) ==="
+$E delta --tag HEADFIX --a "$B" --b "$D/dry.db" --table words:verse_id+position --out "$D/delta_words.tsv" --show 5 > "$D/delta_words.out" 2>&1; cat "$D/delta_words.out"
+$E delta --tag HEADFIX --a "$B" --b "$D/dry.db" --table kjv_words --table bsb_words --out "$D/delta_kjvbsb.tsv" --zero > "$D/delta_kjvbsb.out" 2>&1; rk=$?; cat "$D/delta_kjvbsb.out"
+$E delta --tag HEADFIX --a "$B" --b "$D/dry.db" --table abp_corrections --out "$D/delta_corr.tsv" --show 5 > "$D/delta_corr.out" 2>&1; cat "$D/delta_corr.out"
+nw=$(($(wc -l < "$D/delta_words.tsv") - 1)); nc=$(($(wc -l < "$D/delta_corr.tsv") - 1))
+w1=$(awk -F'\t' -v k="($VID, 10)" -v was="('ere', 'ere')" -v now="('here', 'here')" 'NR > 1 && $2 == "CHANGED" && $3 == k && $4 == "english_head,english_head_norm" && $5 == was && $6 == now' "$D/delta_words.tsv" | wc -l)
+c1=$(awk -F'\t' 'NR > 1 && $2 == "ADDED"' "$D/delta_corr.tsv" | wc -l)
+echo "words: $nw row(s) differ (expect 1) - the Joh 19:18 @10 row with exactly english_head + english_head_norm 'ere' -> 'here': $w1 (expect 1); kjv_words + bsb_words differ: exit $rk (expect 0); abp_corrections: $nc row(s) differ, added $c1 (expect 1, 1)"
+[ "$nw" = 1 ] && [ "$w1" = 1 ] && [ "$rk" = 0 ] && [ "$nc" = 1 ] && [ "$c1" = 1 ] || { echo "HEADFIX RESULT: STOP - the throwaway differs from built by more or other than the 2 cells + 1 row; built untouched"; exit 1; }
+SQ="SELECT type || '|' || name || '|' || tbl_name || '|' || coalesce(sql, '') FROM sqlite_master WHERE tbl_name IN ('words','abp_corrections','kjv_words','bsb_words') ORDER BY type, name"
+sqlite3 -readonly "$B" "$SQ" > "$D/schema_built.txt"; sqlite3 -readonly "$D/dry.db" "$SQ" > "$D/schema_dry.txt"
+echo "table + index definitions of words / abp_corrections / kjv_words / bsb_words, built = throwaway after the chain: $(cmp -s "$D/schema_built.txt" "$D/schema_dry.txt" && echo yes || echo NO) ($(wc -l < "$D/schema_built.txt") entries)"
+cmp -s "$D/schema_built.txt" "$D/schema_dry.txt" || { diff "$D/schema_built.txt" "$D/schema_dry.txt"; echo "HEADFIX RESULT: STOP - the chain changed a table or index definition on the throwaway; built untouched"; exit 1; }
+$E same --tag HEADFIX --built "$B" --dir "$D" || { echo "HEADFIX RESULT: STOP - built changed since prep (lines above); built untouched"; exit 1; }
+# --- the write ---
+echo "=== the chain on BUILT ($B) - writes words (2 cells) + abp_corrections (1 row); appends to $B.corrections.log ==="
+chain "$B" "$D/built"; r=$?
+for x in insert apply_dry apply norm; do echo "--- built $x:"; grep -E "RESULT|abp_corrections (before|after)|EU- rows|summary:|STOP|recomputed|Joh 19:18" "$D/built.$x.out" 2>/dev/null | sed 's/^/  /'; done
+echo "chain on built: exit $r (expect 0)"
+# --- after the write: every miss is CHECK ---
+FL=""
+[ "$r" = 0 ] || FL="$FL chain-step-$r"
+grep -qF "RESULT: INSERTED - counts as expected" "$D/built.insert.out" 2>/dev/null || FL="$FL insert"
+grep -qF "$XAPPLY" "$D/built.apply.out" 2>/dev/null || FL="$FL apply"
+c=$(cell "$B"); echo "built Joh 19:18 @10 after: $c (expect $XCELL_AFTER)"; [ "$c" = "$XCELL_AFTER" ] || FL="$FL cell"
+c=$(corr "$B"); echo "built abp_corrections after: $c (expect $XCORR_AFTER)"; [ "$c" = "$XCORR_AFTER" ] || FL="$FL corrections"
+CHK=$($E check --tag HEADFIX --built "$B" --dir "$D" --written words,abp_corrections 2>&1); k=$?; echo "$CHK"; [ "$k" = 0 ] || FL="$FL check"
+echo "built's corrections log after: $(stat -c %s "$B.corrections.log" 2>/dev/null) bytes (a write outside the run folder, declared - DESIGN 9.149)"
+if [ -z "$FL" ]; then
+  echo "HEADFIX RESULT: DONE - built Joh 19:18 @10 english_head + english_head_norm 'ere' -> 'here'; abp_corrections 374 -> 375 active (EU-Joh19:18 english_head); built = the throwaway (check OK: words + abp_corrections = the dry copy, every other table incl. kjv_words / bsb_words + schema unchanged). Restore source: $D/before.db. Later blocks' 'built =' guard: eu_step check --dir $D --written words,abp_corrections"; exit 0
+fi
+echo "HEADFIX RESULT: CHECK -$FL differ (lines above). Restore source: $D/before.db (words english_head + english_head_norm by row id; abp_corrections whole)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
