@@ -10867,3 +10867,34 @@ rows' slots in pn_greek_identity on built?) would make it a file fact.
   reverses §9.67's 11/2 amendment (JP: Heb 11:24 OUT of R3), so it needs JP's re-ruling.
 HEADFIX re-draft (after the ruling): under B, counts read from built first in the block's dry run (§9.151 (2)); the SKIP / spent
 lines printed, not filtered.
+
+#### §9.153 (3) option B — code drafted, reviewer findings (11/16, NOT committed; awaits the ruling chat)
+Uncommitted in CC's working tree; identified by file sha256 (LF bytes):
+- NEW `scripts/lane3_spent.py` `83b9e349…97d2` — the one rule. Lane3Ops loads the three lane-3 files only if each sha = its pin
+  (fixes `e8942de0…8948`, gapfix `8c8ad0af…36b2`, fixes2 `e6a7efc7…2b22`); missing/changed file -> rule OFF, every row judged as
+  before. match(): (a) exactly one op across the three files on the row's book/ch/vs/pos, field english / greek_pos / bracket_id
+  (english_head never: the files record no old head); (b) corrected_value = the op's old value (the apply's text compare);
+  (c) the slot holds the op's new english, head, gpos, bid on sbase (fix_lane3_star_merges.py's ALREADY test). DECLARED =
+  {Heb 11:24 pos 7 english: §9.153}.
+- `scripts/apply_abp_corrections.py` `8d1f7b51…4c3f` — sha + ON/OFF lines at the top of every report; the rule asked only after
+  source and corrected both fail; declared match -> `~~ <key>: spent by lane-3 8b.2a [ledger] cell … — matched <op> — declared
+  <ruling>`, not a skip; undeclared match -> `!! SKIP` + "NOT declared spent" line; summary now `<verb> a · already-applied b ·
+  spent by lane-3: k · LOUD-SKIPPED s`. Exit 1 on any skip, as before.
+- `scripts/cert_invariants.py` `a0a46e3b…be20` — check 4 uses the same rule beside moved-to-xref; new pin
+  `abp_corrections_spent_lane3: 1`; red if the spent count != the pin or a match is undeclared; shas + spent rows printed under
+  check 4. Active pin unchanged (374).
+- `tests/test_lane3_spent.py` `b480def6…9cb8` (14 tests, real apply script + real cert function + real lane-3 files), added to
+  `scripts/githooks/pre-commit` `4f5d854d…d412` and `.github/workflows/ci.yml` `388bb527…4241`; `tests/test_c3_instruments.py`
+  `7b168161…6b2d` passes expected_spent=0 to its 4 calls (its small dbs have no spent row).
+Proof each test can fail: 11 planted sabotages, one at a time, each turned at least one test red (undeclared counted spent;
+(b) dropped; (c) dropped; spent folded into already-applied; sha mismatch ignored — apply AND cert; cert count unchecked; cert
+undeclared exempted; sha lines not printed; source value no longer applied; exactly-one-op dropped; english_head given english's
+keys); files restored byte-identical (sha checked). Full pre-commit list passes; `cert_invariants --controls` all fire.
+Reviewer (REVIEW: ESCALATE — code change): no defect against §9.153 (3)'s conditions. One gap — the apply-side "file changed ->
+rule OFF" path was proven only through the cert — CLOSED by `test_red_lane3_file_changed_apply_prints_off_and_skips` (real apply +
+helper copied beside a one-byte-changed fixes2: sha `!= pin`, rule OFF, `!! SKIP Heb 11:24 pos 7 english`, exit 1). Notes for the
+ruling chat: (i) the summary line format changes — the HEADFIX re-draft's expected line is written in the new format; nothing in
+scripts/ or tests/ reads the old line; finish_rebuild.sh uses the exit code only, and at rebuild step 7 the cell holds the source
+value so the rule is never reached (rebuild unchanged); (ii) the cert on any copy where Heb 11:24 @7 still holds its corrected
+value (before 8b.2a, or today's live) reads "0 row(s) spent by lane-3, declared 1" = red — CC holds that correct for a finished
+copy; to be confirmed. Active count unchanged (374; 375 with the heads row).
