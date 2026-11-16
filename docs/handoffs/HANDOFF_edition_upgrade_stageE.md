@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.150**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.151**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/15 late, step 4 in progress; HEADFIX cleared, NOT run) — open here
@@ -13,7 +13,8 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
   `scripts/eu_words_delta.py` (raw delta, a147c61a), `scripts/eu_head_check.py` (head-consistency check, 50957fc0).
 - **built is still STEP9A-APPLY's result** until HEADFIX runs (guard: `eu_step check --dir
   ~/edition_upgrade_runs/step9a_apply_20261115 --written abp_surface`).
-- **HEADFIX (Joh 19:18 @10 english_head + norm 'ere' → 'here'; abp_corrections 374 → 375 active) is CLEARED (§9.150), NOT YET RUN.**
+- **11/16: HEADFIX RAN and STOPPED before any write (§9.151)** — the dry apply on the throwaway LOUD-SKIPPED Heb 11:24 @7 english (cell 'daughter,'; lane-3 8b.2a rewrote it after the J run — CC's reading, not ruled). Built unchanged = STEP9A-APPLY's result; the STEP9A guard below still holds. A re-run is a CHANGED block (new dated folder/log, counts read from built). Record: DRAFT "HFREAD ran".
+- (was) **HEADFIX (Joh 19:18 @10 english_head + norm 'ere' → 'here'; abp_corrections 374 → 375 active) is CLEARED (§9.150), NOT YET RUN.**
   Block text: `DRAFT_stageC_outline.md` → "Block HEADFIX". Conditions: PA pulls to ≥ 0cad6894; JP checks PA disk headroom first;
   a CHECK/STOP goes to the ruling chat as printed, nothing restored before it is read. **After it runs, every later block's
   "built =" guard is `eu_step check --dir ~/edition_upgrade_runs/step4_headfix_20261115 --written words,abp_corrections`.**
@@ -27,7 +28,7 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
 
 ## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.150**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.151**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one

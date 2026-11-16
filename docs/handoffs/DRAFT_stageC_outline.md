@@ -10737,3 +10737,37 @@ Confirmed: `eu_step same` = mode_same (:283-294), reads state.json and opens bui
 prefixes printed lines; the grep patterns match apply_abp_corrections.py's SKIP (:103 / :113 / :129), summary (:137-138) and warning
 (:140) lines; the apply appends to `<db>.corrections.log` (:144-146), so section 2 reads built's own history. Note: if
 `dry.apply_dry.out` were absent, section 1 prints "No such file" — read as file-not-found, not as no SKIP line. No figure is a gate.
+
+### Ruling (11/16, §9.151) — HEADFIX STOPPED before any write; built unchanged = STEP9A-APPLY's result; nothing restored
+The GAP-1 acceptance (§9.150 (2)) is withdrawn for any re-run: the apply's expected counts are read from built first. HEADFIX is not
+re-run as printed; a re-run = a changed block (new dated log + folder, counts from HFREAD, skip lines printed) → reviewer → ruling chat.
+
+### HFREAD ran (11/16, 03:43:51Z, PA HEAD 842c79ee) — READ DONE, exit 0
+Log `~/edition_upgrade_runs/headfix_stop_read_20261116.log`. (1) dry.apply_dry.out (DRY-RUN on dry.db, 03:28:17; 375 active ingest
+rows): **`!! SKIP Heb 11:24 pos 7 english: cell 'daughter,'… matches NEITHER source NOR corrected — position drift / upstream change:
+regraft, do not force.`**; `-> Joh 19:18 pos 10 english_head: would apply [EU-Joh19:18]`; summary "would apply 1 · already-applied
+249 · LOUD-SKIPPED 1"; report appended to dry.db.corrections.log. (2) built's .corrections.log 47,168 B (unchanged); its summaries:
+:127 "applied 118 · already-applied 6 · LOUD-SKIPPED 0", :379 "applied 248 · already-applied 0 · LOUD-SKIPPED 0", :633 "would apply 2
+· already-applied 248 · LOUD-SKIPPED 0", :887 "applied 2 · already-applied 248 · LOUD-SKIPPED 0" (the last two = the J run, 11/6) — no
+earlier run on built shows a skip; no `!!` line in it. (3) `eu_step same`: built vs prep 150 tables + schema, differences 0, HFREAD SAME
+OK, exit 0. (4) run folder: before.db, state.json, dry.db, dry.db.corrections.log, dry.insert_dry.out, dry.insert.out,
+dry.apply_dry.out (no dry.apply.out / dry.norm.out). (5) HEADFIX log 50 lines, ends with its STOP line.
+
+### Heb 11:24 @7 — CC's local read (11/16; repo + record only, no PA run; for the ruling chat, no cause asserted)
+- The row: EU-Heb11:24, english @7, source 'of Pharoah's daughter,' → corrected 'of Pharaoh's daughter,', group P5, flag lane3
+  (`eu_batch_rows_20261103.tsv` :11; verses.text row :12). On the 20261106 active list (:182). Built's own row not yet read on PA.
+- A ruled step writes this cell after the corrections: `scripts/lane3_star_fixes2.json` "Heb 11:24" — op pos 7 old_eng
+  "of Pharaoh's daughter," → new_eng "daughter," (head 'daughter', gpos 2, bid 2), op pos 8 None → "of Pharaoh's" (head 'pharaohs',
+  gpos 1, bid 2). §9.67 (amended 11/2) ruled that order on purpose: the corrections step restores "of Pharaoh's daughter," BEFORE
+  lane-3 runs at 8b.2a, so the lane-3 entry keyed on that wording stands.
+- On built: the J run (11/6 15:09) read the cell as corrected (already-applied 248 of 250, 0 skipped); 8B2A ran on built 11/7 01:28
+  (fixes2 (7, 0, 0); cells english 35 …) — after it, @7 = 'daughter,' (HFREAD's SKIP line). STEP4-DELTA has no Heb 11:24 cell in words
+  or verses.text, so built = src at every column of the verse.
+- CC's reading, for the ruling: the EU row is spent once 8b.2a has run — on a full rebuild it applies at finish_rebuild step 7
+  (`finish_rebuild.sh:95`) and lane-3 then rewrites the cell; any later re-apply on a finished copy (as HEADFIX does) can only
+  LOUD-SKIP it. Not a second defect on built (the cell = lane-3's ruled new_eng = src).
+- Knock-on found from code: `cert_invariants.py` check_corrections (:89-124) requires every active ingest row to HOLD its corrected
+  value; Heb 11:24 @7 reads 'daughter,' vs 'of Pharaoh's daughter,', so that check would name this row on built now and on live after
+  the swap (live's 20261031 active list has no Heb 11:24 row — it is an EU row). Not run; read from the code.
+- Follow-up read drafted (HEBREAD: the row as built holds it, words at Heb 11:24 on built and src, the 8b.2a log lines, built's
+  corrections-log lines for Heb 11:24) — reviewer first.
