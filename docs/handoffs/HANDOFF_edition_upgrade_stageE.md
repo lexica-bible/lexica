@@ -5,7 +5,21 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 (sole register, latest **§9.155**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/15 late, step 4 in progress; HEADFIX cleared, NOT run) — open here
+## SUCCESSOR START (11/16 late, step 4 in progress; HEADFIX2 DONE, log owed to the ruling chat) — open here
+
+- **11/16 21:13Z: HEADFIX2 RAN — DONE, exit 0, at code REF `d34d6723` (§9.153–§9.155; spent-by-lane-3 rule).** Built Joh 19:18
+  @10 english_head + norm 'ere' → 'here'; abp_corrections 374|23|6 → 375|23|6; apply "applied 1 · already-applied 249 · spent by
+  lane-3: 1 · LOUD-SKIPPED 0" (spent = Heb 11:24 @7 english); built → throwaway 1 words row / kjv+bsb 0 / corrections +1; check OK;
+  built's corrections log 47,168 → 75,652 B. Restore source `~/edition_upgrade_runs/step4_headfix2_20261116/before.db`
+  (sha `da47ce8c…57f3`). **Every later block's "built =" guard: `eu_step check --dir
+  ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections`** (supersedes the STEP9A and the
+  step4_headfix_20261115 guards below). Record: DRAFT "HEADFIX2 ran". Next once the ruling chat has read the log: the raw-delta
+  re-run (read-only), then the A dry-run output code (§9.155 (8)). Swap knock-ons: cert pin abp_corrections_active 374 → 375 +
+  active-list fixture re-pin; the cert's spent pin (1) is already in d34d6723.
+- Still open from §9.153: the PA log read gains (a) the 11/1 retire block's log (write 1 to src's abp_corrections) and (b) a
+  read-only check that the 4 active strongs_base rows are not in pn_greek_identity — both before the gate.
+
+(Below: the 11/15 start block, kept for history.)
 
 Read the 9c section below for pins, roles and open items — it still holds, except where this block overrides it.
 - **Code REF `0cad6894`** (§9.149: eu_batch_insert `--created` + this-run EU count; heads fixture

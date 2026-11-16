@@ -11083,3 +11083,23 @@ Conditions: JP checks PA disk headroom first (the 11/15 HEADFIX folder, with its
 STOP goes to the ruling chat as printed, and nothing is restored before it is read there. Next after the log is read: the raw-delta
 re-run (read-only), then the A dry-run output code.
 
+### HEADFIX2 ran (11/16, 21:13:26Z, PA HEAD 1d5e34ee, REF d34d6723) — DONE, exit 0 (to the ruling chat)
+Log `~/edition_upgrade_runs/step4_headfix2_20261116.log`; JP pasted it in full. Every declared line matched:
+- PRE OK (repo guards at d34d6723); home in use 7,771,060 KB; heads file `4ba1d7bc…bb60` = expect; STEP9A check OK (149 tables
+  unwritten, abp_surface 395,014 `219a3ebe7075`); cell `…|ere|ere`; 374|23|6; corrections log 47,168 B.
+- PREP OK: 150 tables / 3,810,506 rows digested; before.db 10,231,808 B, sha `da47ce8c…57f3` (= HEADFIX's 11/15 before.db: built
+  unchanged in between); dry.db five tables "= built's"; Joh 19:18 verse id 27195.
+- READ: 374 active; three lane-3 files "= pin"; rule ON (47 op cells; declared 1); `~~ Heb 11:24 pos 7 english: spent by lane-3
+  8b.2a … matched lane3_star_fixes2.json op pos 7`; "would apply 0 · already-applied 249 · spent by lane-3: 1 · LOUD-SKIPPED 0";
+  249 quiet lines; exit 0.
+- Throwaway chain: insert 374 → 375 (EU- 344 → 345), INSERTED; dry apply 1·249·1·0; apply 1·249·1·0 (Joh 19:18 @10 english_head
+  applied); norm recomputed words 353,595 / kjv 790,685 / bsb 386,063; cell `…|here|here`; 375|23|6.
+- Delta built → throwaway: words 1 row (27195, 10) english_head + norm ('ere','ere') → ('here','here'); kjv + bsb 0; abp_corrections
+  +1 (id 404, Joh 19:18 @10 english_head ere → here, EU-Joh19:18, ingest, active, 2026-11-15); definitions equal (58 entries);
+  SAME OK (150 tables + schema).
+- Chain on built: the same lines (apply_dry 1·249·1·0, apply 1·249·1·0, the spent line, the pins, rule ON); exit 0; cell
+  `…|here|here`; 375|23|6; CHECK OK (148 unwritten; words `d95acb5d4be4` and abp_corrections `d97d928ca7f5` = the dry copy); corrections
+  log 47,168 → 75,652 B (two reports, declared).
+- RESULT: DONE. Restore source `step4_headfix2_20261116/before.db`. Later blocks' "built =" guard: `eu_step check --dir
+  ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections`.
+
