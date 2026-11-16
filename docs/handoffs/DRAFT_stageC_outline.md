@@ -10898,3 +10898,177 @@ scripts/ or tests/ reads the old line; finish_rebuild.sh uses the exit code only
 value so the rule is never reached (rebuild unchanged); (ii) the cert on any copy where Heb 11:24 @7 still holds its corrected
 value (e.g. a copy before 8b.2a; live not checked) reads "0 row(s) spent by lane-3, declared 1" = red — CC holds that correct for a finished
 copy; to be confirmed. Active count unchanged (374; 375 with the heads row).
+
+
+### §9.154 (4) — does anything run cert_invariants against LIVE on a schedule? (CC, from the repo, 11/16)
+No, not from anything in the repo. `grep -rn cert_invariants` over the scripts / workflow / hook files outside cert_invariants.py itself
+finds only comments (audit_reassembly_diff.py :20/:131, cert_manifest.py :163, eu_retired_check.py :6, health_check.py :248).
+- `scripts/deploy.sh` runs `tests/test_strongs_join.py` + `tests/test_build_invariants.py` (:18-19) and the non-canonical loaders
+  only if their folders changed (:40-43), then the reload — no cert_invariants, no apply_abp_corrections.
+- The nightly `health_check.py --email --only-warn` (ops.md :101, 23:53 UTC) imports only cert_manifest's backup guard (:178), not
+  cert_invariants, apply_abp_corrections or lane3_spent.
+- The pre-commit hook and CI run the test files on made-up databases only.
+- ops.md :259 lists cert_invariants as "the runnable ABP invariant suite", READ-ONLY; its own docstring (:4) "Re-proves … on demand". The PA scheduled-task list itself lives on PA, not in the repo; the repo's
+  record of it is ops.md (health_check nightly, the news nightly `scripts/news/daily.sh`), and neither calls the cert.
+What check 4 reads on live: already RED before this commit and outside the pins until the swap. TODO.md :27-28: the 374 pin is
+"for the BUILT copy … What check 4 reads on live before the swap = the lane's question, not resolved here." The last recorded live
+read (CHARTER_edition_upgrade.md :515, 10/30): "6/7 green, check 4 RED — 51 active correction row(s), pinned 30", every row holding.
+Since then the pin moved to 374 (§9.89), so the count line is red on live either way. Under d34d6723, check 4 on live would add one
+more line inside the same red check — "0 row(s) spent by lane-3, declared 1" — because, on the record, live has no EU-Heb11:24 row
+(the EU rows were inserted on src, the build's source copy, and reached built through the build — §9.153 (1)). No green check turns red. (Live itself not read for this answer.)
+
+### Block HEADFIX2 (GATE REF d34d6723; WRITES built: words 2 cells + abp_corrections 1 row) — re-draft per §9.151 (5) / §9.153 (4) / §9.154; for the ruling chat
+Changes from HEADFIX (11/15 text above, unchanged apart from these): new log `step4_headfix2_20261116.log` + folder
+`step4_headfix2_20261116`, tag HEADFIX2; REF `d34d6723` (the spent rule; PA must pull to it — `eu_step pre` needs it as an ancestor of
+PA's HEAD with scripts/ + tests/ = REF). Declared figures, each from a read on record: corrections 374|23|6 and the throwaway's
+375|23|6 (HEADFIX log, §9.151); built's `.corrections.log` 47,168 B (HEADFIX + HFREAD, §9.151/§9.152) — NEW guard, STOP if not;
+apply figures from HFREAD's dry apply ("would apply 1 · already-applied 249 · LOUD-SKIPPED 1", the skip = Heb 11:24 @7 english,
+§9.152) restated in d34d6723's format with that row as the declared spent row. NEW: the block's own READ before any chain — the
+apply's dry run on the throwaway BEFORE the heads row (built's own state; writes only the run folder's dry.db.corrections.log) must
+read "would apply 0 · already-applied 249 · spent by lane-3: 1 · LOUD-SKIPPED 0", else STOP. Every apply output (read, dry chain,
+built chain) is printed IN FULL except the quiet "already applied (ok)" lines, whose count is printed; each must carry its declared
+summary, the `~~ Heb 11:24 pos 7 english: spent by lane-3 8b.2a` line, "rule: ON", and the three lane-3 pins "= pin" (the declared "LOUD-SKIPPED 0" rules out every
+`!!` line; before the write: STOP; after: CHECK). Chain step output shown in run order (insert dry, insert, apply dry, apply, norm).
+Unchanged: STEP9A-APPLY "built =" guard (HEADFIX stopped before any write, §9.151 (1)); cell + counts guards; prep (before.db
+restore source); delta words 1 row / kjv+bsb 0 / corrections +1; schema compare; `eu_step same`; the chain; after-write checks;
+`eu_step check --dir step4_headfix2_20261116 --written words,abp_corrections` as the later "built =" guard.
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_headfix2_20261116.log
+if [ -e "$L" ]; then echo "HEADFIX2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+echo "GATE REF ${REF} - HEADFIX2 Joh 19:18 @10 english_head 'ere' -> 'here' on BUILT (DESIGN 9.144 (5) / 9.147 / 9.148 (3) / 9.149; re-draft per 9.151 (5) / 9.153 (4) / 9.154): eu_batch_insert (the 1-row heads file) -> apply_abp_corrections --only words -> build_rendering_norm, dry on a THROWAWAY copy first - WRITES built: words (2 cells) + abp_corrections (1 row); appends TWO reports (the apply's dry run and its write) to built's .corrections.log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "HEADFIX2 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+export PYTHONIOENCODING=utf-8 LC_ALL=C
+B=~/bible-db/bible_edupg_test_built_20261102.db
+DA=~/edition_upgrade_runs/step9a_apply_20261115
+D=~/edition_upgrade_runs/step4_headfix2_20261116
+F=tests/fixtures/edition_upgrade/eu_batch_rows_heads_20261115.tsv
+E="python3 scripts/eu_step.py"
+# --- declared figures (each from a read on record, not from prose) ---
+XF=4ba1d7bc1292b8bee8529bdf3f661e417153de243d88a108a33136be1975bb60     # the heads file (DESIGN 9.149; HEADFIX log 9.151)
+XCORR="374|23|6"                 # built abp_corrections active|retired|superseded as HEADFIX read it 11/16 (9.151)
+XCORR_AFTER="375|23|6"           # + the 1 row (9.149; the 11/16 throwaway insert read 375|23|6, 9.151)
+XLOG=47168                       # built's .corrections.log bytes, read by HEADFIX + HFREAD 11/16 (9.151, 9.152)
+# apply figures: HFREAD's dry apply on built's copy + the heads row read "would apply 1 · already-applied 249 · LOUD-SKIPPED 1",
+# the one skip = Heb 11:24 pos 7 english (9.152); under REF d34d6723 that row is the declared spent row (9.153 / 9.154)
+XREAD="would apply 0 · already-applied 249 · spent by lane-3: 1 · LOUD-SKIPPED 0"     # the throwaway BEFORE the insert (this block's own read)
+XDRYAPPLY="would apply 1 · already-applied 249 · spent by lane-3: 1 · LOUD-SKIPPED 0"
+XAPPLY="applied 1 · already-applied 249 · spent by lane-3: 1 · LOUD-SKIPPED 0"
+XSPENT="~~ Heb 11:24 pos 7 english: spent by lane-3 8b.2a"
+XCELL_BEFORE="one here on that side,|ere|ere"
+XCELL_AFTER="one here on that side,|here|here"
+PINS="lane3_star_fixes.json:e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 lane3_star_gapfix.json:8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 lane3_star_fixes2.json:e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22"
+cell() { sqlite3 -readonly "$1" "SELECT w.english || '|' || w.english_head || '|' || w.english_head_norm FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book='Joh' AND v.chapter=19 AND v.verse=18 AND w.position=10"; }
+corr() { sqlite3 -readonly "$1" "SELECT (SELECT count(*) FROM abp_corrections WHERE status='active') || '|' || (SELECT count(*) FROM abp_corrections WHERE status='retired') || '|' || (SELECT count(*) FROM abp_corrections WHERE status='superseded')"; }
+show() {    # $1 = an apply output: every line except the quiet "already applied (ok)" ones, then how many of those
+  grep -v "already applied (ok)$" "$1" | sed 's/^/  /'; echo "  (+ $(grep -c "already applied (ok)$" "$1") quiet 'already applied (ok)' line(s) not shown)"
+}
+applyok() { # $1 = an apply output, $2 = the declared summary (its LOUD-SKIPPED 0 rules out every !! line): summary, the spent line, rule ON, the three pins
+  grep -qF "summary: $2" "$1" && grep -qF "$XSPENT" "$1" && grep -qF "spent-by-lane-3 rule: ON" "$1" || return 1
+  for p in $PINS; do grep -qF "lane-3 file ${p%%:*}: sha256 ${p#*:} = pin" "$1" || return 1; done
+}
+chain() {   # $1 = db, $2 = output prefix: insert -> apply (words) -> norm; each step's output kept
+  python3 scripts/eu_batch_insert.py "$1" --rows "$F" --sha256 "$XF" --expect 1 --created 2026-11-15 > "$2.insert_dry.out" 2>&1 || return 11
+  python3 scripts/eu_batch_insert.py "$1" --rows "$F" --sha256 "$XF" --expect 1 --created 2026-11-15 --apply > "$2.insert.out" 2>&1 || return 12
+  python3 scripts/apply_abp_corrections.py "$1" --only words > "$2.apply_dry.out" 2>&1 || return 13
+  python3 scripts/apply_abp_corrections.py "$1" --only words --apply > "$2.apply.out" 2>&1 || return 14
+  python3 scripts/build_rendering_norm.py "$1" > "$2.norm.out" 2>&1 || return 15
+  return 0
+}
+showchain() { # $1 = output prefix, $2 = label
+  for x in insert_dry insert apply_dry apply norm; do
+    case $x in
+      apply*) echo "--- $2 $x (in full but the quiet lines):"; [ -e "$1.$x.out" ] && show "$1.$x.out" || echo "  (not run)" ;;
+      *) echo "--- $2 $x:"; grep -E "RESULT|abp_corrections (before|after)|EU- rows|summary:|STOP|recomputed|Joh 19:18" "$1.$x.out" 2>/dev/null | sed 's/^/  /' ;;
+    esac
+  done
+}
+# --- before any write: every miss is STOP, built untouched ---
+$E pre --tag HEADFIX2 --ref "$REF" --dir "$D" --db "$B" --keep ~/bible-db/bible_edupg_test_built_pre_8b_20261106.db --keep ~/bible-db/bible_edupg_test_built_pre_digits_20261105.db || { echo "HEADFIX2 RESULT: STOP - pre (line above); built untouched"; exit 1; }
+dk=$(du -sk ~ 2>/dev/null | cut -f1); echo "home in use: $dk KB (this run adds one throwaway copy of verses + words + abp_corrections + kjv_words + bsb_words and a small before.db)"
+s=$(sha256sum < "$F" | cut -d' ' -f1); echo "heads file $F: sha256 $s (expect $XF)"; [ "$s" = "$XF" ] || { echo "HEADFIX2 RESULT: STOP - not the committed heads file; built untouched"; exit 1; }
+echo "=== built = what STEP9A-APPLY left (eu_step check against STEP9A-APPLY's prep + throwaway copy; read-only; HEADFIX 11/16 stopped before any write, 9.151) ==="
+$E check --tag HEADFIX2 --built "$B" --dir "$DA" --written abp_surface || { echo "HEADFIX2 RESULT: STOP - built is not STEP9A-APPLY's result (lines above); built untouched"; exit 1; }
+c=$(cell "$B"); echo "built Joh 19:18 @10 (english|head|norm): $c (expect $XCELL_BEFORE)"; [ "$c" = "$XCELL_BEFORE" ] || { echo "HEADFIX2 RESULT: STOP - the cell is not as declared; built untouched"; exit 1; }
+c=$(corr "$B"); echo "built abp_corrections active|retired|superseded: $c (expect $XCORR)"; [ "$c" = "$XCORR" ] || { echo "HEADFIX2 RESULT: STOP - abp_corrections is not as recorded; built untouched"; exit 1; }
+c=$(stat -c %s "$B.corrections.log" 2>/dev/null); echo "built's corrections log before: ${c:-none} bytes (expect $XLOG)"; [ "$c" = "$XLOG" ] || { echo "HEADFIX2 RESULT: STOP - built's corrections log changed since 11/16 (an apply ran on built?); built untouched"; exit 1; }
+echo "=== prep: state of built, before.db (restore source: words' english_head + english_head_norm by row id, and abp_corrections whole) and a THROWAWAY copy ==="
+$E prep --tag HEADFIX2 --built "$B" --dir "$D" --copy verses,words,abp_corrections,kjv_words,bsb_words --save words:english_head+english_head_norm --save abp_corrections || { echo "HEADFIX2 RESULT: STOP - prep (line above); built untouched"; exit 1; }
+echo "before.db (restore source): sha256 $(sha256sum < "$D/before.db" | cut -d' ' -f1)"
+VID=$(sqlite3 -readonly "$B" "SELECT id FROM verses WHERE book='Joh' AND chapter=19 AND verse=18"); echo "Joh 19:18 verse id on built: $VID"
+# --- the block's own read of built's state: the apply's dry run on the THROWAWAY, before the heads row ---
+echo "=== READ: apply_abp_corrections --only words, dry, on the THROWAWAY before the insert (built's own state; writes only $D/dry.db.corrections.log) ==="
+python3 scripts/apply_abp_corrections.py "$D/dry.db" --only words > "$D/dry.read.out" 2>&1; rr=$?; show "$D/dry.read.out"; echo "read: exit $rr (expect 0)"
+[ "$rr" = 0 ] && applyok "$D/dry.read.out" "$XREAD" || { echo "HEADFIX2 RESULT: STOP - the read is not as declared ($XREAD, the spent line, rule ON, the three pins); built untouched"; exit 1; }
+# --- the same chain on the THROWAWAY copy first: it must end exactly as declared ---
+echo "=== the chain on the THROWAWAY copy $D/dry.db ==="
+chain "$D/dry.db" "$D/dry"; rc=$?
+showchain "$D/dry" dry
+[ "$rc" = 0 ] || { echo "HEADFIX2 RESULT: STOP - the chain failed on the throwaway copy at step $rc (outputs $D/dry.*.out); built untouched"; exit 1; }
+grep -qF "RESULT: INSERTED - counts as expected" "$D/dry.insert.out" && applyok "$D/dry.apply_dry.out" "$XDRYAPPLY" && applyok "$D/dry.apply.out" "$XAPPLY" || { echo "HEADFIX2 RESULT: STOP - the throwaway chain's lines are not the declared ones; built untouched"; exit 1; }
+c=$(cell "$D/dry.db"); echo "throwaway Joh 19:18 @10: $c (expect $XCELL_AFTER)"; [ "$c" = "$XCELL_AFTER" ] || { echo "HEADFIX2 RESULT: STOP - the throwaway cell is not as declared; built untouched"; exit 1; }
+c=$(corr "$D/dry.db"); echo "throwaway abp_corrections: $c (expect $XCORR_AFTER)"; [ "$c" = "$XCORR_AFTER" ] || { echo "HEADFIX2 RESULT: STOP - the throwaway's corrections counts are not as declared; built untouched"; exit 1; }
+echo "=== built -> throwaway, every cell (words keyed verse_id+position; kjv_words / bsb_words must not differ; abp_corrections by id) ==="
+$E delta --tag HEADFIX2 --a "$B" --b "$D/dry.db" --table words:verse_id+position --out "$D/delta_words.tsv" --show 5 > "$D/delta_words.out" 2>&1; cat "$D/delta_words.out"
+$E delta --tag HEADFIX2 --a "$B" --b "$D/dry.db" --table kjv_words --table bsb_words --out "$D/delta_kjvbsb.tsv" --zero > "$D/delta_kjvbsb.out" 2>&1; rk=$?; cat "$D/delta_kjvbsb.out"
+$E delta --tag HEADFIX2 --a "$B" --b "$D/dry.db" --table abp_corrections --out "$D/delta_corr.tsv" --show 5 > "$D/delta_corr.out" 2>&1; cat "$D/delta_corr.out"
+nw=$(($(wc -l < "$D/delta_words.tsv") - 1)); nc=$(($(wc -l < "$D/delta_corr.tsv") - 1))
+w1=$(awk -F'\t' -v k="($VID, 10)" -v was="('ere', 'ere')" -v now="('here', 'here')" 'NR > 1 && $2 == "CHANGED" && $3 == k && $4 == "english_head,english_head_norm" && $5 == was && $6 == now' "$D/delta_words.tsv" | wc -l)
+c1=$(awk -F'\t' 'NR > 1 && $2 == "ADDED"' "$D/delta_corr.tsv" | wc -l)
+echo "words: $nw row(s) differ (expect 1) - the Joh 19:18 @10 row with exactly english_head + english_head_norm 'ere' -> 'here': $w1 (expect 1); kjv_words + bsb_words differ: exit $rk (expect 0); abp_corrections: $nc row(s) differ, added $c1 (expect 1, 1)"
+[ "$nw" = 1 ] && [ "$w1" = 1 ] && [ "$rk" = 0 ] && [ "$nc" = 1 ] && [ "$c1" = 1 ] || { echo "HEADFIX2 RESULT: STOP - the throwaway differs from built by more or other than the 2 cells + 1 row; built untouched"; exit 1; }
+SQ="SELECT type || '|' || name || '|' || tbl_name || '|' || coalesce(sql, '') FROM sqlite_master WHERE tbl_name IN ('words','abp_corrections','kjv_words','bsb_words') ORDER BY type, name"
+sqlite3 -readonly "$B" "$SQ" > "$D/schema_built.txt"; sqlite3 -readonly "$D/dry.db" "$SQ" > "$D/schema_dry.txt"
+echo "table + index definitions of words / abp_corrections / kjv_words / bsb_words, built = throwaway after the chain: $(cmp -s "$D/schema_built.txt" "$D/schema_dry.txt" && echo yes || echo NO) ($(wc -l < "$D/schema_built.txt") entries)"
+cmp -s "$D/schema_built.txt" "$D/schema_dry.txt" || { diff "$D/schema_built.txt" "$D/schema_dry.txt"; echo "HEADFIX2 RESULT: STOP - the chain changed a table or index definition on the throwaway; built untouched"; exit 1; }
+$E same --tag HEADFIX2 --built "$B" --dir "$D" || { echo "HEADFIX2 RESULT: STOP - built changed since prep (lines above); built untouched"; exit 1; }
+# --- the write ---
+echo "=== the chain on BUILT ($B) - writes words (2 cells) + abp_corrections (1 row); appends to $B.corrections.log ==="
+chain "$B" "$D/built"; r=$?
+showchain "$D/built" built
+echo "chain on built: exit $r (expect 0)"
+# --- after the write: every miss is CHECK ---
+FL=""
+[ "$r" = 0 ] || FL="$FL chain-step-$r"
+grep -qF "RESULT: INSERTED - counts as expected" "$D/built.insert.out" 2>/dev/null || FL="$FL insert"
+applyok "$D/built.apply_dry.out" "$XDRYAPPLY" 2>/dev/null || FL="$FL apply-dry"
+applyok "$D/built.apply.out" "$XAPPLY" 2>/dev/null || FL="$FL apply"
+c=$(cell "$B"); echo "built Joh 19:18 @10 after: $c (expect $XCELL_AFTER)"; [ "$c" = "$XCELL_AFTER" ] || FL="$FL cell"
+c=$(corr "$B"); echo "built abp_corrections after: $c (expect $XCORR_AFTER)"; [ "$c" = "$XCORR_AFTER" ] || FL="$FL corrections"
+CHK=$($E check --tag HEADFIX2 --built "$B" --dir "$D" --written words,abp_corrections 2>&1); k=$?; echo "$CHK"; [ "$k" = 0 ] || FL="$FL check"
+echo "built's corrections log after: $(stat -c %s "$B.corrections.log" 2>/dev/null) bytes (was $XLOG; two reports appended - the apply's dry run and its write; a write outside the run folder, declared - DESIGN 9.149; not restorable from before.db)"
+if [ -z "$FL" ]; then
+  echo "HEADFIX2 RESULT: DONE - built Joh 19:18 @10 english_head + english_head_norm 'ere' -> 'here'; abp_corrections 374 -> 375 active (EU-Joh19:18 english_head); apply: applied 1 · already-applied 249 · spent by lane-3: 1 (Heb 11:24 @7 english) · LOUD-SKIPPED 0; built = the throwaway (check OK: words + abp_corrections = the dry copy, every other table incl. kjv_words / bsb_words + schema unchanged). Restore source: $D/before.db. Later blocks' 'built =' guard: eu_step check --dir $D --written words,abp_corrections"; exit 0
+fi
+echo "HEADFIX2 RESULT: CHECK -$FL differ (lines above). Restore source: $D/before.db (words english_head + english_head_norm by row id; abp_corrections whole)"; exit 1
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+Local test (WSL, fake HOME, clone at d34d6723; made-up built: Joh 19:18 @10 'ere', Heb 11:24 @7/@8 in lane-3's after state + its
+EU @7 english row, 249 other word corrections already applied, 124 verses.text, 23 retired, 6 superseded, kjv / bsb tables with norm
+indexes, corrections log 47,168 B, a STEP9A prep): DONE exit 0 — READ 0·249·1·0, dry chain 1·249·1·0 / 1·249·1·0, built chain the
+same, delta words 1 / kjv+bsb 0 / corrections +1, check OK, log 47,168 → 74,388 B; re-paste STOP (log exists). Each STOP before
+any write with built byte-identical: log one byte longer; declared count 373|23|6; Heb 11:24 @7 bracket blank (READ shows
+`!! SKIP Heb 11:24 pos 7 english`, spent 0, skipped 1); another word row changed (READ shows that SKIP, already-applied 248).
+(First test run: the made-up Heb @8 norm was typed by hand ('pharaohs', the norm script gives 'pharaoh'), so the throwaway delta showed
+2 words rows and the block STOPped before the write — the guard working on a test-data fault; the data was fixed. The two bad-state
+cases were first planted after the STEP9A prep and stopped at that earlier guard; re-planted before it.)
+
+### HEADFIX2 reviewed (11/16) — REVIEW: ESCALATE (a write, §9.90); 1 DEFECT (fixed), 2 GAP, 5 NOTE
+- DEFECT 1 (tripwire 1, a bare `!`): applyok carried `&& ! grep -qF "!! " "$1"`. It would likely run (set +H is the first line), but it
+  breaks the standing PA rule and adds nothing: every `!!` line the apply prints comes with a skip, which the declared "LOUD-SKIPPED 0"
+  already rules out; a pin mismatch prints `!= pin`, caught by the three "= pin" checks and "rule: ON". FIXED: the clause is dropped
+  (block text above is the fixed one; the only remaining `!` sits in a comment and in `!=`). Local test re-run on the fixed block: same
+  results (DONE; re-paste STOP; all four bad states STOP before any write, built byte-identical).
+- GAP 1: the declared figures trace to the run-record prose (HEADFIX ran, HFREAD ran) and DESIGN §9.151/§9.152, not to PA log
+  path:line; every one is re-read live and STOPs before the write. For the ruling chat: accept that source, as §9.150 did for
+  HEADFIX's GAP 1, or ask for the PA log lines.
+- GAP 2: the throwaway as a stand-in for built rests on eu_step prep copying verses / words / abp_corrections in full (as in
+  HEADFIX/HFREAD). The READ and the dry chain write only `$D/dry.db` and `$D/dry.db.corrections.log`.
+- Passed: applyok's fixed-string summary match; XSPENT / "rule: ON" / the three pins byte-identical to LANE3_PINS; no wrong-pass
+  path found; the bash pipes and counts are safe with set -e off; the change list matches the block.
+- NOTES: old review GAP 2 (two reports appended to built's log) carried; old notes 1-6 carried, incl. the 374→375 pin + fixture
+  re-pin at the swap (TODO.md :17); §9.154 (4) deploy.sh loader cite corrected to :40-43 (fixed above); the "live has no
+  EU-Heb11:24 row" line is from the record, live not read; PA must pull to d34d6723 first, and no scripts/tests push while the block
+  waits.
