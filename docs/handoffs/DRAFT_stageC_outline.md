@@ -10896,5 +10896,5 @@ helper copied beside a one-byte-changed fixes2: sha `!= pin`, rule OFF, `!! SKIP
 ruling chat: (i) the summary line format changes — the HEADFIX re-draft's expected line is written in the new format; nothing in
 scripts/ or tests/ reads the old line; finish_rebuild.sh uses the exit code only, and at rebuild step 7 the cell holds the source
 value so the rule is never reached (rebuild unchanged); (ii) the cert on any copy where Heb 11:24 @7 still holds its corrected
-value (before 8b.2a, or today's live) reads "0 row(s) spent by lane-3, declared 1" = red — CC holds that correct for a finished
+value (e.g. a copy before 8b.2a; live not checked) reads "0 row(s) spent by lane-3, declared 1" = red — CC holds that correct for a finished
 copy; to be confirmed. Active count unchanged (374; 375 with the heads row).
