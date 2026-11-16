@@ -10805,3 +10805,65 @@ echo "HEBREAD RESULT: READ DONE"
 Round 1 verdict verbatim: "REVIEW: CLEAR - HEBREAD only reads (sqlite3 -readonly, grep, tee to a new dated log it refuses to overwrite); no gate, no write, no figure used as a gate. One finding below: the 8b.2a grep will not show the cell detail you expect." — the 8B2A block tee'd only filtered lines into the main log (:3409 / :3418); the full apply output is `lane3_8b2a_20261106/apply_full.log` (:3186, :3416). Src's abp_corrections content is NOT an expectation (no source in the record).
 Round 2 (added `grep -A14` on apply_full.log): CLEAR, but -A14 cuts the block short (fix_lane3_star_merges.py :175-189 prints the whole verse BEFORE and AFTER, then prose and two checks).
 Round 3 verdict verbatim: "REVIEW: CLEAR - the awk line only reads an existing run file into the same new log (single quotes, no `!`, no pipe), and it prints the whole Heb 11:24 block, which -A14 would have cut short." (the awk range form of :3420). The main-log grep stays as header evidence only. No figure is a gate.
+
+### HEBREAD ran (11/16, 15:23:26Z, PA HEAD 842c79ee) — READ DONE, exit 0 (§9.152)
+Log `~/edition_upgrade_runs/heb1124_read_20261116.log`. abp_corrections at Heb 11:24, the same on built and src: id 68 verses.text
+('…son of Pharoah's daughter,' → '…son of Pharaoh's daughter,') and id 67 @7 english ('of Pharoah's daughter,' → 'of Pharaoh's
+daughter,'), both EU-Heb11:24, reason "edition upgrade: app-edition misspelling of a name (DESIGN_q2_build §9.72)", ingest, active,
+created 2026-11-02. Words, built = src row for row: 0 'By belief' · 1 'Moses,' (is_pn 1) · 2 'great' 2/1 · 3 'having become,' 1/1 ·
+4 'denied' · 5 'to be called' · 6 'son' · 7 'daughter,' daughter G2364 2/2 · 8 "of Pharaoh's" pharaohs `*` 1/2 is_pn 1; verses.text
+the same on both, "…son of Pharaoh's daughter,". 8b.2a main log: Heb 11:24 headers only (:906 prep echo, :91 dry, :164 apply; render
++ contiguity PASS). apply_full.log: BEFORE @7 "of Pharaoh's daughter," gpos - bid - [G2364], @8 None [*]; AFTER @7 'daughter,' 2/2,
+@8 "of Pharaoh's" 1/2; prose before = after = verses.text; render PASS, contiguity PASS. Built's corrections log: :62 verses.text
+applied, :252 @7 english applied, :504 and :758 "already applied (ok)". HFREAD's log read by the ruling chat in full the same day.
+Ruled §9.152 (2): explained, not a defect on built.
+
+## §9.152 (3) + (4) — CC's answers (11/16; repo + record only, no PA run)
+
+**(4) src's abp_corrections.** By design src was the build's SOURCE copy for corrections (the build reads abp_corrections from it).
+"src untouched throughout" in the handoff's 9c section covers steps 9 → 9c only (HANDOFF_stageE :38-39); wording to be fixed. Writes
+to src on record, all to abp_corrections:
+1. 11/1: the 23 cured rows retired (§9.59 / §9.60, step 6 "SELECT + retire", after the A dry run). Recorded only as a result
+   (HANDOFF_edition_upgrade_stageC.md :20-22). The retire block and its log are NOT in the repo, so what else it wrote can't be read
+   from the repo; a PA read of its log would answer.
+2. 11/2: the 344 EU- rows (§9.68 / §9.72 / §9.76) by `eu_batch_insert.py` ("on the build SOURCE copy, before stage B", :2-3);
+   created = its constant 2026-11-02 (:33); its one write is the INSERT into abp_corrections (:145) → 372 / 23 / 6.
+3. 11/3-4: S980 (§9.80) "on both copies": 21 corrected_value rows `--` → em dash, an UPDATE of abp_corrections (block S980 :147-311,
+   result :348-349).
+4. 11/6: J (§9.89): `build_abp_corrections.py <src> --apply` inserted the 2 S-joh14:26 rows (:2440-2444; that script writes only
+   CREATE TABLE IF NOT EXISTS + INSERT into abp_corrections, :49 / :430). The apply ran on built only (:2445-2450), so src's words
+   were not written (STEP4-DELTA: Joh 14:26 @3 src None → built 1 / 3) → 374 / 23 / 6.
+For "live = src" (§9.138 (4)): words and verses only, as ruled. src's abp_corrections differs from live by these four writes by design,
+so the proof does not cover that table.
+
+**(3a) Which active rows can reach Heb 11:24's state, from the files.** After finish_rebuild step 7 (`finish_rebuild.sh` :89-95)
+the steps that rewrite words cells are: 8b.0 / 8b.1 / 8b.2, strongs_base only, on name-identity slots (correct_xref_vs_binding
+:258-260 from its name plan; restore_frozen_pn :15-18 / :128 per identity row; retire_hebrew_identity :245-261 / :315); 8b.2a lane-3,
+english / english_head / greek_pos / bracket_id at its op positions only (fix_lane3_star_merges.py :191-196; join_bids are guards
+only, :142-144); step 11, english_head_norm only (no correction row targets it). Laid against the files (one-off script, CC
+scratchpad): the three lane-3 files = 22 verse entries, 47 op positions; the 374 active rows (20261106 list) + the Joh 19:18 heads
+row give **exactly 1 active row on a lane-3 op cell: Heb 11:24 @7 english** (its corrected value = the op's old_eng exactly). Lane-3
+never writes verses.text, so the Heb 11:24 prose row is unaffected. The 4 active strongs_base rows are Greek numbers on ordinary
+words (Jer 49:13 @28 G165, 1Sa 6:11 @21 G1475, Mal 3:6 @7 G241, Dan 4:33 @1 G846; build_abp_corrections.py :207-221), not name
+slots. That rests on the three scripts selecting from identity rows, not on a member file; a read-only PA check (are any of the 375
+rows' slots in pn_greek_identity on built?) would make it a file fact.
+
+**(3b) How to represent and handle a row in this state: three options.**
+- **A: leave the row; each block accepts the skip by name.** Rebuild: unchanged. Apply exit: 1 on every finished copy, forever;
+  every block must declare and tolerate it. Cert check_corrections: names it on built and on live after the swap (red). Count:
+  374 / 375 unchanged. Leaves a standing red; not proposed.
+- **B (CC's recommendation): one rule in code, "spent by lane-3".** A word row counts as satisfied when a lane-3 op sits on its
+  cell, the row's corrected_value = that op's old value for the row's column, and the cell now holds the op's new value (all four
+  lane-3 columns as the op sets them, and the op's strongs_base). apply_abp_corrections: prints `== … already applied (spent by
+  lane-3 8b.2a, <file>)`, counted as already-applied, exit 0; a cell holding anything else still LOUD-SKIPs. cert check_corrections:
+  the same rule, beside the existing `_correction_moved_to_xref` exemption (:120). Rebuild: unchanged (at step 7 the cell holds the
+  source → applies; lane-3 after). Count: unchanged, 374 → 375 with the heads row. Today it fits exactly the 1 row above. Code: one
+  shared helper reading the three lane-3 files + apply_abp_corrections.py + cert_invariants.py + tests (known positive: the Heb
+  shape on a made-up post-8b.2a copy reads spent; a cell holding anything else still skips / reads red; a pre-8b.2a copy still
+  applies). Reviewer → ruling chat.
+- **C: retire the EU english @7 row and re-key lane3_star_fixes2.json's Heb 11:24 op old_eng to the feed's "of Pharoah's
+  daughter,".** Rebuild: step 7 leaves @7 alone, lane-3 matches the feed wording, same end cells. Apply exit: 0. Cert: green.
+  Count: 374 → 373 (375 → 374 with the heads row), with a cert pin + active-list fixture re-pin and a lane-3 file sha re-pin. It
+  reverses §9.67's 11/2 amendment (JP: Heb 11:24 OUT of R3), so it needs JP's re-ruling.
+HEADFIX re-draft (after the ruling): under B, counts read from built first in the block's dry run (§9.151 (2)); the SKIP / spent
+lines printed, not filtered.
