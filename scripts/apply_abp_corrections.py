@@ -14,6 +14,11 @@ LOUDLY and skipped — never a silent write, never a silent no-op:
   * cell == corrected_value  -> already applied (re-run / live copy) — counted, quiet
   * anything else            -> LOUD SKIP (position drift or an upstream change; the
                                 correction needs regrafting, not forcing)
+    EXCEPT a row SPENT BY LANE-3 (scripts/lane3_spent.py, DESIGN §9.153): a ruled lane-3
+    edit (rebuild step 8b.2a) rewrote the cell after this step. Only when the rule's three
+    conditions hold AND the row is declared there: printed "~~ ... spent by lane-3" with
+    the op it matched, counted on its own ("spent by lane-3: k"), never as already-applied,
+    and not a skip. The lane-3 files' shas are printed at the top of every report.
 
 Reads the table FROM THE TARGET DB ITSELF — the rebuild scratch is a snapshot of live,
 so once the table exists in live, every copy carries its own corrections. A db without
@@ -26,13 +31,17 @@ Usage:
   python3 scripts/apply_abp_corrections.py <db>            # dry run (default)
   python3 scripts/apply_abp_corrections.py <db> --apply    # write
 
-Exit: 0 = clean (applied / already-applied / no table); 1 = at least one LOUD skip.
+Exit: 0 = clean (applied / already-applied / declared spent / no table); 1 = at least one
+LOUD skip.
 """
 import argparse
 import sqlite3
 import sys
 from datetime import datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lane3_spent import Lane3Ops, declared, describe  # the ONE spent-by-lane-3 rule (§9.153)
 
 
 def cellmatch(cell, target):
@@ -77,9 +86,11 @@ def main():
     ).fetchall()
 
     mode = "APPLY" if args.apply else "DRY-RUN"
+    lane3 = Lane3Ops()
     lines = [f"[{mode}] abp_corrections -> {args.db}  ({datetime.now():%Y-%m-%d %H:%M:%S})",
              f"  active ingest-time corrections: {len(rows)}"]
-    applied = already = skipped = 0
+    lines += [f"  {s}" for s in lane3.lines]
+    applied = already = spent = skipped = 0
     cur = conn.cursor()
 
     for c in rows:
@@ -125,9 +136,21 @@ def main():
             lines.append(f"  -> {key}: {'applied' if args.apply else 'would apply'}"
                          f"  [{c['ledger_ref'] or c['reason'][:40]}]")
         else:
+            # §9.153 (option B): a lane-3 op may have rewritten this cell after step 7. Asked ONLY
+            # here, after source and corrected both failed — so a pre-8b.2a copy still applies.
+            m = None if is_prose else lane3.match(conn, c)
+            if m and declared(c):
+                spent += 1
+                lines.append(f"  ~~ {key}: spent by lane-3 8b.2a  [{c['ledger_ref'] or ''}] "
+                             f"cell {(val or '')[:70]!r} — matched {describe(*m)} "
+                             f"— declared {declared(c)}")
+                continue
             skipped += 1
             lines.append(f"  !! SKIP {key}: cell {(val or '')[:70]!r}… matches NEITHER source "
                          "NOR corrected — position drift / upstream change: regraft, do not force.")
+            if m:
+                lines.append(f"     (the spent-by-lane-3 rule matches {describe(*m)}, but this "
+                             "row is NOT declared spent — red until ruled)")
 
     if args.apply:
         conn.commit()
@@ -135,7 +158,7 @@ def main():
 
     verb = "applied" if args.apply else "would apply"
     lines.append(f"  summary: {verb} {applied} · already-applied {already} · "
-                 f"LOUD-SKIPPED {skipped}")
+                 f"spent by lane-3: {spent} · LOUD-SKIPPED {skipped}")
     if skipped:
         lines.append("  !! one or more corrections did NOT land — see the SKIP lines above.")
     report = "\n".join(lines)

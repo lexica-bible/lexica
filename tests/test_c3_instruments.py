@@ -154,19 +154,19 @@ def main() -> int:
 
     cc = _cert_db(os.path.join(tmp, "c1.db"), "H3569", None)
     check("cert pre: holding correction -> no problems",
-          check_corrections(cc, expected_active=1), [])
+          check_corrections(cc, expected_active=1, expected_spent=0), [])
     cc.close()
     cc = _cert_db(os.path.join(tmp, "c2.db"), "*", ("H3569", "lemma-only"))
     check("cert post: moved-to-xref correction -> no problems",
-          check_corrections(cc, expected_active=1), [])
+          check_corrections(cc, expected_active=1, expected_spent=0), [])
     cc.close()
     cc = _cert_db(os.path.join(tmp, "c3.db"), "*", None)
     check("cert CONTROL: '*' with NO xref table still FAILS",
-          len(check_corrections(cc, expected_active=1)), 1)
+          len(check_corrections(cc, expected_active=1, expected_spent=0)), 1)
     cc.close()
     cc = _cert_db(os.path.join(tmp, "c4.db"), "*", ("H3569", "none"))
     check("cert CONTROL: kept-Hebrew class gets NO exemption",
-          len(check_corrections(cc, expected_active=1)), 1)
+          len(check_corrections(cc, expected_active=1, expected_spent=0)), 1)
     cc.close()
 
     if fails:

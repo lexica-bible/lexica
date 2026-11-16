@@ -37,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from audit_split_flip import find_flips           # the ONE flip detector
 from cert_manifest import backup_guard_message    # the ONE backup guard
 from apply_abp_corrections import cellmatch as _cellmatch  # number-safe compare (Fix A) — numeric greek_pos/bracket_id cells vs text corrected_value
+from lane3_spent import Lane3Ops as _Lane3Ops, declared as _spent_declared, describe as _spent_describe  # the ONE spent-by-lane-3 rule (DESIGN 9.153)
 
 # Certified 2026-07-04 (Session 3 swap; compare_words gate: 110 cells / 11
 # pre-registered live-stale verses, 626,305 = 626,305 rows).
@@ -44,6 +45,7 @@ PINS = {
     "words": 626309,  # S11: +4 vs Session-3 pin = the (P2) _split_numbered splits (Dan 4:1, Isa 10:23, Luk 8:28, Pro 3:15), verified by per-verse word-count diff vs live
     "verses": 31237,  # read from live at suite landing 2026-07-04
     "abp_corrections_active": 374,  # edition upgrade DESIGN 9.89: 372 + 2 S-joh14:26, read off the built copy 2026-11-06; members tests/fixtures/corrections/abp_corrections_active_built_20261106.txt (sha256 446fee35...)
+    "abp_corrections_spent_lane3": 1,  # DESIGN 9.153: Heb 11:24 pos 7 english (members = lane3_spent.DECLARED); a second spent row is red until ruled
 }
 
 
@@ -86,13 +88,22 @@ def check_emdash(conn) -> list:
     return problems
 
 
-def check_corrections(conn, expected_active=None) -> list:
+def check_corrections(conn, expected_active=None, expected_spent=None, notes=None,
+                      lane3=None) -> list:
     """Every active ingest-time correction must HOLD its corrected value on live.
     Failures NAME the row (book ch:vs pos field) — a reconciliation red is only
-    actionable if it says which correction broke."""
+    actionable if it says which correction broke.
+    Two exemptions, each a named rule: moved-to-xref (below) and SPENT BY LANE-3
+    (scripts/lane3_spent.py, DESIGN §9.153 — the same rule object the apply uses; only a
+    row declared there; the spent count must equal the pin, so a second spent row is red
+    until ruled). `notes`, if a list, receives the lane-3 file shas + the spent rows."""
     if expected_active is None:
         expected_active = PINS["abp_corrections_active"]
-    problems = []
+    if expected_spent is None:
+        expected_spent = PINS["abp_corrections_spent_lane3"]
+    if lane3 is None:
+        lane3 = _Lane3Ops()
+    problems, spent = [], []
     has = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
                        "AND name='abp_corrections'").fetchone()
     if not has:
@@ -119,8 +130,19 @@ def check_corrections(conn, expected_active=None) -> list:
         elif not _cellmatch(hits[0]["val"], c["corrected_value"]):
             if _correction_moved_to_xref(conn, c, hits[0]["val"]):
                 continue     # certified value intact in its post-retirement home
+            m = None if c["field"] == "verses.text" else lane3.match(conn, c)
+            if m and _spent_declared(c):
+                spent.append(f"{key}: spent by lane-3 — matched {_spent_describe(*m)}")
+                continue     # §9.153: a declared row a ruled lane-3 edit rewrote after step 7
             problems.append(f"{key}: reads {hits[0]['val']!r}, certified value is "
-                            f"{c['corrected_value']!r} (source was {c['source_value']!r})")
+                            f"{c['corrected_value']!r} (source was {c['source_value']!r})"
+                            + (f" — the spent-by-lane-3 rule matches {_spent_describe(*m)}, "
+                               "but the row is NOT declared spent (red until ruled)" if m else ""))
+    if len(spent) != expected_spent:
+        problems.append(f"{len(spent)} row(s) spent by lane-3, declared {expected_spent}")
+    if notes is not None:
+        notes += lane3.lines + [f"spent by lane-3: {len(spent)} (declared {expected_spent})"] \
+            + spent
     return problems
 
 
@@ -229,11 +251,17 @@ CHECKS = [
     ("1 row pins (words/verses)", lambda conn: check_row_pins(conn)),
     ("2 split-flip = 0",          check_split_flip),
     ("3 em-dash '--' = 0",        check_emdash),
-    ("4 corrections intact",      lambda conn: check_corrections(conn)),
+    ("4 corrections intact",      lambda conn: _with_notes(check_corrections, conn)),
     ("5 feed manifest",           lambda conn: check_manifest()),
     ("6 backup freshness",        lambda conn: check_backup()),
     ("7 person/place binding",    check_person_place_binding),
 ]
+
+
+def _with_notes(check, conn):
+    """Run a check that fills a `notes` list -> (problems, notes)."""
+    notes = []
+    return check(conn, notes=notes), notes
 
 
 def run_suite(db: str) -> int:
@@ -241,7 +269,8 @@ def run_suite(db: str) -> int:
     failed = 0
     print(f"== cert_invariants on {db} (read-only) ==")
     for name, fn in CHECKS:
-        problems = fn(conn)
+        res = fn(conn)
+        problems, notes = res if isinstance(res, tuple) else (res, [])
         if problems:
             failed += 1
             print(f"  [FAIL] {name}")
@@ -249,6 +278,8 @@ def run_suite(db: str) -> int:
                 print(f"         - {p}")
         else:
             print(f"  [OK  ] {name}")
+        for n in notes:
+            print(f"           . {n}")
     conn.close()
     print(f"\n{'CERTIFIED STATE HOLDS' if not failed else f'{failed} CHECK(S) FAILED'} "
           f"({len(CHECKS) - failed}/{len(CHECKS)} green)")
@@ -314,7 +345,7 @@ def run_controls() -> int:
                      "('2Sa',18,21,4,'strongs_base','H3570','H3569',"
                      "'active','ingest','Class2-cushi','control seed')")
         conn.commit()
-        bad = check_corrections(conn, expected_active=1)
+        bad = check_corrections(conn, expected_active=1, expected_spent=0)
         named = any("2Sa 18:21 pos 4 strongs_base" in p for p in bad)
         results.append(("4 corrections (must NAME the row)", bool(bad) and named, bad))
 
