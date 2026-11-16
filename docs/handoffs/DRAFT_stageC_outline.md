@@ -11170,3 +11170,18 @@ Reviewer notes: line-by-line compare against STEP4-DELTA shows only the listed c
 (HEADFIX2 wrote built only, §9.156 (1)); the reviewer could not run git — CC's check: `git diff --stat a147c61a d34d6723 --
 scripts/eu_words_delta.py scripts/eu_step.py` is empty, and `eu_step pre` enforces scripts/tests = d34d6723 on PA. PA is at
 1d5e34ee (scripts/tests = d34d6723), so no pull is needed for this block.
+
+### STEP4-DELTA2 ran (11/16, 23:05:10Z, PA HEAD 1d5e34ee, REF d34d6723) — READ DONE, exit 0 (to the ruling chat)
+Log `~/edition_upgrade_runs/step4_delta2_20261116.log`; files `step4_delta2_20261116/delta/`. Python 3.13.1; PRE OK; built
+452,063,232 B, src 451,964,928 B; CHECK OK vs HEADFIX2 (words `d95acb5d4be4`, abp_corrections `d97d928ca7f5` = the dry copy; 148
+unwritten, differences 0). 13 columns, none one-sided; rows 31,237 / 626,309 both. Counts: english 32,962 · english_head 5,426 ·
+strongs 20 · strongs_base 26 · greek_pos 3,318 · bracket_id 4,208 · italic 0 · italic_words 0 · smcap_words 0 · is_pn 12 · morph 14 ·
+lemma 14 · english_head_norm 4,890 · only 0 / 0 · moved 20 in 10 verses, unpaired 0 / 0 · verses.text 15,522 · verses only 0 / 0.
+words_cells 50,890 `86e44c58…fdafc`; words_moved 20 `d32361b3…0f08`; verses_cells 15,522 `870e4782…57f9`; the three empty files'
+shas as 11/15. Peak 639 MB (no /usr/bin/time on PA). Built + src unchanged.
+**Against STEP4-DELTA (11/15), CC's local check:** only english_head (5,427 → 5,426) and english_head_norm (4,891 → 4,890) moved;
+words_moved and verses_cells shas identical. The 11/15 words_cells.tsv (JP's scp, sha `62d9c85d…`) held `Joh 19 18 10 english_head
+'here' 'ere'` and `… english_head_norm 'here' 'ere'` (src 'here', built 'ere'). That file with exactly those two lines removed has
+sha256 `86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc` = the 11/16 words_cells sha on PA. So the new delta is
+the 11/15 delta minus those two cells, member for member: HEADFIX2 brought built's Joh 19:18 @10 head + norm to src's value, and
+nothing else in words or verses moved.
