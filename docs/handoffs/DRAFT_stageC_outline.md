@@ -11749,3 +11749,182 @@ a lane-3 bracket comes first in the verse (Mat 9:11 @15–18, Num 25:8 @25–27,
 **english_head_norm:** by rule, where english_head differs. **(c)'s whole expected list:** the 11 retired greek_pos cells (§9.161 (4) (a));
 Joh 14:26 @3 greek_pos (blank → 3) + bracket_id (blank → bracket 4's rank); the lane-3 cells above; english_head_norm by rule; verses.text 0;
 moved 0; strongs-side counts only. Any other member — an EU row that APPLIES on T_c included — is a finding (§9.164 (2)).
+
+## (c) the CONTROL — Block CCTL drafted (11/17, GATE REF d34d6723; §9.159 (3), §9.160 (1)-(3), §9.164 (4)) — for the ruling chat
+**What it does.** T_c = src → the OLD build (no --app-feed) → finish_rebuild.sh in full → step 11 (build_rendering_norm.py), all on a
+throwaway copy that lives in the run folder `~/edition_upgrade_runs/step4_c_control_20261117/T_c.db`; then (4) a read-only read of T_c's
+correction rows and (5) `eu_words_delta --a src --b T_c`. Expected members: the §9.164 (3) record above (by name). GATE REF d34d6723 = PA's
+scripts today: **no PA pull before it.**
+**Writes (declared):** `<src>.new` (the build's own output, moved at once into the run folder as T_c.db), T_c.db and the files in the run
+folder (build.out, finish.out, norm.out, delta/, T_c.db.corrections.log from the two applies, the checkout copies), the log. In
+~/bible-db: `pronoun_review.tsv` (build :2796 at d34d6723; untracked, not ignored) and `unmatched_pn.txt` (import_tipnr.py :694; ignored)
+— each copied into `checkout_before/` first; after the run the run's own files go to `checkout_run/` and the originals go back (a trap
+does this on every exit once the copies exist); `git status --porcelain` (untracked included) before = after is checked.
+**Conditions, §9.160 (2) and §9.164 (4), each in the block:**
+- STOP if `<src>.new` (or its -journal / -wal / -shm) or T_c.db exists — the build deletes an existing .new (:2626-2629), never allowed.
+- src: size = 451,964,928 (STOP) and sha256 before = after (printed in full; CHECK). The build reads src only through its read-only
+  snapshot (:2631-2634, mode=ro + backup into .new).
+- pre_8b: not opened by this block at all.
+- built: only read by the "built =" guard (HEADFIX2's, §9.156 (3)).
+- LIVE: finish_rebuild.sh takes the db path as its only argument (:24) and passes `"${DB}"` to every step (each line checked; none
+  without it); each script's own fallback (`bible.db`, fix_emdash.py :24) applies only when no path is given; the build writes only
+  `<input>.new`; nothing in the chain swaps or deploys. **One point for the ruling chat (it amends §9.160 (2)'s wording):** the ruling
+  asks for "live's size and time before = after" as a STOP, but the standing note of 2026-11-01 (memory project_db_backups; `core.py:341`
+  ai_search_cache, `views_lsj.py:467` summaries) records that the live site writes into bible.db in normal use, so its size and time can
+  move during a long run with nothing of ours touching it. The block therefore PRINTS live's size and time before and after (no gate) and
+  uses as its proof a read-only digest (eu_step's own `digest`, mode=ro) of every table the chain writes — words, verses, tipnr,
+  kjv_words, bsb_words — plus abp_corrections, before (STOP if unreadable) and after (CHECK on any change). The digest reads all of live's
+  words rows (~626k) twice, a few seconds each, read-only.
+- the two checkout files: above.
+- the "Type 'rebuild'" prompt: answered with `<<< rebuild` — the same bytes as the 10/25 record's `echo rebuild |`
+  (RUN_rebuild_trap_live.md :57); stage B's own block text is not in the repo, its log shows the prompt answered at :11 (§9.161 (1)).
+- every later-apply skip named: all `!! SKIP` / `NOT declared spent` lines printed with line numbers; every EU- row that APPLIED on T_c
+  printed (a finding, §9.164 (2)); finish's problem list must hold only the two apply steps (else STOP); then a read of T_c lists every
+  active row whose cell does not hold its corrected value — a non-EU row there = STOP; expected EU word rows = SRCREAD's 23 by id (a
+  difference printed, a finding); prose EU 69 by count (§9.143 (2)).
+- reports: the OLD build writes no report files — `app.report()` runs only `if app is not None` (:2813-2814) and main calls
+  `run(bible_db, scrape_db)` without one (:2992); the 10/31 files in ~/edition_upgrade_runs are fingerprinted before and after anyway.
+- inputs: bh_scrape.db sha = `5e9d4bb6…30bb` (STOP); `cert_manifest.py verify` exit 0 with last line "Baseline intact: 76 files match the
+  2026-10-31 pin." (STOP; a warn-only backup-guard line may precede it); scripts/tests = REF (eu_step pre); number_fold.py = REF (step
+  11 imports it; as STEP11-APPLY :5983-5984).
+- disk: STOP if `du -sk ~` > 7,900,000 KB (7,681,224 after RMTHROW, §9.163 (3), + 200 MB). **JP reads the PA dashboard first** — at
+  10/25 the first build died on "disk I/O error" with the dashboard at 9.9 / 10 GB while du read 8.4 GB (CHARTER_rebuild_trap_fix.md
+  :338-340), so du can understate the quota. The copy adds about 452 MB (src's size); peak one throwaway (§9.160 (4)).
+- wall time: start / end printed for the build, finish, norm and delta (measured, not forecast).
+- figures: the build's lines printed beside the 10/25 record (CHARTER_rebuild_trap_fix.md :341, :465: words 626,305 · skipped 0 ·
+  flagged 6,882 · split 80 · PN-star A 1,505 + B 2,552 / 3,161 · article-slot 923 / 411) — a miss is a finding for the delta, NOT a STOP
+  (CC's choice: (c) exists to measure drift; say if a STOP is wanted).
+- the delta: members in the four columns + english_head_norm OUTSIDE the 28 expected verses (18 lane-3 + the 9 retired-row verses +
+  Joh 14:26) printed (first 80; all in outside_expected.tsv) — each is drift. Inside them, CC lays the delta against §9.164 (3) cell for
+  cell from the delta files (JP's scp), as for STEP4-DELTA.
+**Local test** (WSL clone at d34d6723 + a test commit of stand-ins for the build, finish_rebuild.sh, the norm and cert_manifest — each
+mimicking only what the block reads; eu_step, eu_words_delta and the SQL real; made-up src / built / live): DONE exit 0, the planted
+outside-expected cell listed, checkout put back (status = before, pronoun_review.tsv = the old one), src / bh_scrape / live digests /
+10/31 files unchanged; drift run lists the extra cell; an extra finish problem → STOP (checkout put back by the trap); a non-EU row
+skipped → STOP; an existing src.new → STOP before any write; re-paste STOP. Found and fixed while testing: a failed read of T_c's
+correction rows gave a misleading "non-EU" STOP — it now STOPs as "the read failed".
+### Block CCTL (GATE REF d34d6723; WRITES a throwaway copy + two checkout files put back — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_c_control_20261117.log
+if [ -e "$L" ]; then echo "CCTL RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - CCTL - (c) the CONTROL (DESIGN 9.159 (3), 9.160 (1)-(3), 9.162, 9.164 (4)): T_c = src -> OLD build (no --app-feed) -> finish_rebuild.sh in full -> step 11 norm, all on a throwaway copy in the run folder; then eu_words_delta src vs T_c (read-only) - WRITES: src.new (moved at once into the run folder as T_c.db), T_c.db, the run folder, this log; pronoun_review.tsv + unmatched_pn.txt in ~/bible-db are put back as they were - src, built, pre_8b and LIVE only read - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "CCTL RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+LIVE=~/bible-db/bible.db
+BH=~/bible-db/bh_scrape.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step4_c_control_20261117
+T=$D/T_c.db
+XS_SIZE=451964928                 # src: step4_delta2_20261116.log (DESIGN 9.157 (1))
+XBH=5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb   # bh_scrape.db: palog_read_20261116.log (DESIGN 9.161 (2))
+XMAN="Baseline intact: 76 files match the 2026-10-31 pin."              # cert_manifest.json (committed, 76 entries, created 2026-10-31); CHARTER_edition_upgrade.md :637
+XHOME_MAX=7900000                 # KB: home in use 7,681,224 after RMTHROW (rm_throwaways_20261117.log, DESIGN 9.163 (3)) + 200 MB slack
+X_WORDSKIP="69 93 94 105 117 132 134 135 137 138 146 151 152 162 168 173 179 182 183 185 190 191 199"   # SRCREAD's 24 skip rows less id 67 (DESIGN 9.164 (1))
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+LDIG() { EU -c 'import sys; sys.path.insert(0, "scripts"); import eu_step as e; c = e.ro(sys.argv[1]); print(" ".join("%s=%d/%s" % (t, *e.digest(c, t)) for t in sys.argv[2:])); c.close()' "$@"; }
+# --- before any write: every miss is STOP, nothing written but the empty run folder ---
+EU scripts/eu_step.py pre --tag CCTL --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "CCTL RESULT: STOP - pre (line above); nothing written"; exit 1; }
+git diff --quiet "$REF" HEAD -- number_fold.py || { echo "CCTL RESULT: STOP - number_fold.py differs from $REF (step 11 imports it)"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- number_fold.py)" ] || { echo "CCTL RESULT: STOP - number_fold.py has uncommitted edits on PA"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$LIVE" "$BH"; do [ -s "$f" ] || { echo "CCTL RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag CCTL --built "$B" --dir "$DH" --written words,abp_corrections || { echo "CCTL RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+for f in "$S.new" "$S.new-journal" "$S.new-wal" "$S.new-shm" "$T"; do [ -e "$f" ] && { echo "CCTL RESULT: STOP - already exists (the build would delete a .new; never let it): $f"; exit 1; }; done
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"
+[ "$n" = "$XS_SIZE" ] || { echo "CCTL RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+s0=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 before: $s0"
+h0=$(cut -d' ' -f1 <<< "$(sha256sum < "$BH")"); echo "bh_scrape.db sha256: $h0 (expect $XBH)"
+[ "$h0" = "$XBH" ] || { echo "CCTL RESULT: STOP - bh_scrape.db is not the file stage B read"; exit 1; }
+m=$(EU scripts/cert_manifest.py verify 2>&1); rm_=$?; echo "cert_manifest verify (exit $rm_; a BACKUP GUARD warning line before it is warn-only, cert_manifest.py _backup_staleness_check):"; echo "$m"
+[ "$rm_" = 0 ] && [ "$(tail -n 1 <<< "$m")" = "$XMAN" ] || { echo "CCTL RESULT: STOP - the build's pinned inputs are not the 2026-10-31 pin"; exit 1; }
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use before: $dk0 KB (STOP above $XHOME_MAX; the copy adds about 452 MB; the PA dashboard, read by JP first, is the quota's own figure)"
+[ "$dk0" -le "$XHOME_MAX" ] || { echo "CCTL RESULT: STOP - home has grown since RMTHROW; read the dashboard and the ruling chat first"; exit 1; }
+echo "=== LIVE before (read-only): size + time printed, NOT a gate (the site writes its cache into bible.db, standing note 2026-11-01); the tables the chain writes, digested ==="
+stat -c 'live: %s bytes, last write %y' "$LIVE"
+lv0=$(LDIG "$LIVE" words verses tipnr kjv_words bsb_words abp_corrections) || { echo "CCTL RESULT: STOP - live could not be read"; exit 1; }
+echo "live digests before: $lv0"
+sha256sum "$R"/*_20261031.tsv > "$D/files_1031_before.txt"; echo "10/31 report files (sha256, before): $(wc -l < "$D/files_1031_before.txt") files"; cat "$D/files_1031_before.txt"
+git status --porcelain > "$D/git_status_before.txt"; echo "checkout status before (untracked included):"; cat "$D/git_status_before.txt"
+mkdir "$D/checkout_before" "$D/checkout_run" || { echo "CCTL RESULT: STOP - cannot make the checkout folders"; exit 1; }
+for f in pronoun_review.tsv unmatched_pn.txt; do if [ -e "$f" ]; then cp -p -- "$f" "$D/checkout_before/$f" && echo "kept a copy: ~/bible-db/$f ($(stat -c %s "$f") bytes)"; else echo "not present before: ~/bible-db/$f"; fi; done
+put_back() {
+  for f in pronoun_review.tsv unmatched_pn.txt; do
+    [ -e "$f" ] && mv -- "$f" "$D/checkout_run/$f"
+    [ -e "$D/checkout_before/$f" ] && cp -p -- "$D/checkout_before/$f" "$f"
+  done
+  git status --porcelain > "$D/git_status_after.txt"
+  echo "checkout put back: status after = before: $(cmp -s "$D/git_status_before.txt" "$D/git_status_after.txt" && echo yes || echo NO); the run's own copies are in $D/checkout_run"
+}
+trap put_back EXIT
+# --- the writes: the build on src (read through its own read-only snapshot) into src.new, moved at once into the run folder ---
+echo "=== (1) OLD build: build_words_from_abp.py src bh_scrape.db, no --app-feed - start $(date -u +%FT%TZ) ==="
+EU scripts/build_words_from_abp.py "$S" "$BH" <<< rebuild > "$D/build.out" 2>&1; rb=$?
+echo "build exit $rb (expect 0) - end $(date -u +%FT%TZ)"
+grep -n -E "Type 'rebuild'|Snapshot|Filled |Split |Re-cleaned|Flagged|Words inserted|Verses skipped|Article-slot|PN-star|Traceback|Error|ERROR" "$D/build.out"
+echo "10/25 record (CHARTER_rebuild_trap_fix.md :341, :465): words 626,305 - skipped 0 - flagged 6,882 - split 80 - PN-star A 1,505 + B 2,552 / 3,161 refusals - article-slot 923 / 411 (a miss is a finding for the delta, not a STOP)"
+[ "$rb" = 0 ] && [ -s "$S.new" ] || { echo "CCTL RESULT: STOP - the build did not finish (exit $rb; $D/build.out); any src.new is left where it is for the ruling chat"; exit 1; }
+for f in "$S.new-journal" "$S.new-wal" "$S.new-shm"; do [ -e "$f" ] && { echo "CCTL RESULT: STOP - a side file beside src.new: $f (left as is)"; exit 1; }; done
+mv -- "$S.new" "$T" || { echo "CCTL RESULT: STOP - cannot move src.new into the run folder"; exit 1; }
+echo "T_c: $T, $(stat -c %s "$T") bytes"
+echo "=== (2) finish_rebuild.sh in full on T_c (it takes the db path as its only argument; every step gets \${DB}; no step swaps or deploys) - start $(date -u +%FT%TZ) ==="
+bash scripts/finish_rebuild.sh "$T" < /dev/null > "$D/finish.out" 2>&1; rf=$?
+echo "finish exit $rf (expect 1: 4b and step 7 LOUD-SKIP EU- rows) - end $(date -u +%FT%TZ)"
+grep -n -E "^── |Matched|already-applied|LOUD-SKIPPED|spent by lane-3|Traceback|DRIFT|drift" "$D/finish.out"
+echo "--- every SKIP line the two applies printed (each by name; DESIGN 9.160 (2)):"
+grep -n -E '!! SKIP|NOT declared spent' "$D/finish.out"
+echo "--- every EU- row that APPLIED on T_c (a finding, DESIGN 9.164 (2); expect none below this line):"
+grep -n -E -e '-> .*applied .*\[EU-' "$D/finish.out"
+pl=$(sed -n '/did NOT finish clean/,/DO NOT SWAP/p' "$D/finish.out"); pl=$(grep -E '^     - ' <<< "$pl")
+echo "--- finish's problem list:"; echo "${pl:-(none)}"
+other=$(grep -v -x -F -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only verses" -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only words" <<< "$pl")
+[ -z "$other" ] || { echo "CCTL RESULT: STOP - finish reported a problem other than the two applies (T_c kept as is):"; echo "$other"; exit 1; }
+echo "=== (3) step 11: build_rendering_norm.py on T_c - start $(date -u +%FT%TZ) ==="
+EU scripts/build_rendering_norm.py "$T" < /dev/null > "$D/norm.out" 2>&1; rn=$?
+tail -n 8 "$D/norm.out"; echo "norm exit $rn (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rn" = 0 ] || { echo "CCTL RESULT: STOP - step 11 failed (T_c kept as is)"; exit 1; }
+echo "=== (4) T_c: every active correction row whose cell does NOT hold its corrected value (= the rows the applies skipped), read-only ==="
+WC="CASE c.field WHEN 'english' THEN w.english WHEN 'english_head' THEN w.english_head WHEN 'greek_pos' THEN w.greek_pos WHEN 'bracket_id' THEN w.bracket_id WHEN 'strongs' THEN w.strongs WHEN 'strongs_base' THEN w.strongs_base END"
+NH="WITH e AS (SELECT c.id, c.book, c.chapter, c.verse, c.position, c.field, c.ledger_ref AS lr, c.corrected_value AS cv, CASE WHEN c.field = 'verses.text' THEN (SELECT count(*) FROM verses v WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse) ELSE (SELECT count(*) FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) END AS nslot, CASE WHEN c.field = 'verses.text' THEN (SELECT v.text FROM verses v WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse) ELSE (SELECT $WC FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) END AS cell FROM abp_corrections c WHERE c.status = 'active' AND c.applied_at = 'ingest'), nh AS (SELECT * FROM e WHERE nslot <> 1 OR NOT ((cell IS NULL AND cv IS NULL) OR (cell IS NOT NULL AND CAST(cell AS TEXT) = cv)))"
+echo "-- active rows on a field this read does not cover (expect none below this line):"
+sqlite3 -readonly "$T" "SELECT id, field FROM abp_corrections WHERE status = 'active' AND applied_at = 'ingest' AND field NOT IN ('verses.text', 'english', 'english_head', 'greek_pos', 'bracket_id', 'strongs', 'strongs_base')"
+echo "-- counts (kind|EU|n) - expect verses.text EU 69 (118 EU prose rows less the 49 that return src's text, DESIGN 9.143 (2)); words EU 23; non-EU 0:"
+sqlite3 -readonly "$T" "$NH SELECT CASE WHEN field = 'verses.text' THEN 'verses.text' ELSE 'words' END, lr LIKE 'EU-%', count(*) FROM nh GROUP BY 1, 2 ORDER BY 1, 2"
+echo "-- every word row in it (id|ref|position|field|ledger_ref|T_c cell|corrected_value):"
+sqlite3 -readonly "$T" "$NH SELECT id, book||' '||chapter||':'||verse, position, field, lr, cell, cv FROM nh WHERE field <> 'verses.text' ORDER BY book, chapter, verse, position, field"
+nn=$(sqlite3 -readonly "$T" "$NH SELECT count(*) FROM nh WHERE lr NOT LIKE 'EU-%'")
+[[ "$nn" =~ ^[0-9]+$ ]] || { echo "CCTL RESULT: STOP - the read of T_c's correction rows failed (lines above); T_c kept as is"; exit 1; }
+[ "$nn" = 0 ] || { echo "CCTL RESULT: STOP - $nn non-EU correction row(s) skipped on T_c (DESIGN 9.160 (2)); rows above; T_c kept as is"; exit 1; }
+ws=$(sqlite3 -readonly "$T" "$NH SELECT id FROM nh WHERE field <> 'verses.text' ORDER BY id"); ws=$(tr '\n' ' ' <<< "$ws"); ws=${ws% }
+echo "EU word rows not holding corrected on T_c: $ws"
+echo "  = SRCREAD's 24 skip rows less id 67 (expect yes; a difference is a finding, not a STOP): $([ "$ws" = "$X_WORDSKIP" ] && echo yes || echo NO)"
+echo "=== (5) the delta: eu_words_delta.py --a src --b T_c (read-only on both) - start $(date -u +%FT%TZ) ==="
+mkdir "$D/delta" || { echo "CCTL RESULT: STOP - cannot make $D/delta"; exit 1; }
+EU scripts/eu_words_delta.py --a "$S" --b "$T" --out "$D/delta" < /dev/null > "$D/delta.out" 2>&1; rd=$?
+cat "$D/delta.out"; echo "delta exit $rd (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rd" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "CCTL RESULT: STOP - the delta did not finish (partial files kept in $D/delta)"; exit 1; }
+echo "--- members in english / english_head / greek_pos / bracket_id / english_head_norm OUTSIDE the 28 verses where (c) expects members (DESIGN 9.164 (3)) - each is drift, read and ruled before (b):"
+XV="1Ch|21|9 1Sa|14|50 1Sa|24|5 2Ch|14|12 2Sa|14|4 2Sa|18|31 2Sa|18|32 Eze|23|5 Gen|46|26 Heb|11|24 Isa|30|31 Jer|50|16 Lev|24|10 Mat|9|11 Mat|27|26 Num|25|8 Num|25|14 Num|25|15 Mat|20|29 1Sa|17|8 Exo|32|3 Job|39|13 Mar|16|17 1Sa|21|11 2Sa|16|18 Mic|1|13 Psa|116|1 Joh|14|26"
+awk -F'\t' -v XV="$XV" 'BEGIN { n = split(XV, a, " "); for (i = 1; i <= n; i++) k[a[i]] = 1 } NR > 1 && ($5 == "english" || $5 == "english_head" || $5 == "greek_pos" || $5 == "bracket_id" || $5 == "english_head_norm") { if ((($1 "|" $2 "|" $3) in k) == 0) print }' "$D/delta/words_cells.tsv" > "$D/outside_expected.tsv"
+echo "outside the expected verses: $(wc -l < "$D/outside_expected.tsv") cells (all in $D/outside_expected.tsv; first 80 below)"
+head -n 80 "$D/outside_expected.tsv"
+# --- after: the checkout put back, src, live, bh_scrape, the 10/31 files; every miss is CHECK (T_c is a throwaway; nothing to restore) ---
+bad=0
+trap - EXIT; put_back; cmp -s "$D/git_status_before.txt" "$D/git_status_after.txt" || bad=1
+s1=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 after: $s1 (= before: $([ "$s1" = "$s0" ] && echo yes || echo NO))"; [ "$s1" = "$s0" ] || bad=1
+h1=$(cut -d' ' -f1 <<< "$(sha256sum < "$BH")"); echo "bh_scrape.db sha256 after = before: $([ "$h1" = "$h0" ] && echo yes || echo NO)"; [ "$h1" = "$h0" ] || bad=1
+stat -c 'live: %s bytes, last write %y (printed only)' "$LIVE"
+lv1=$(LDIG "$LIVE" words verses tipnr kjv_words bsb_words abp_corrections); echo "live digests after: $lv1"
+echo "live: the tables the chain writes, before = after: $([ "$lv1" = "$lv0" ] && echo yes || echo NO)"; [ "$lv1" = "$lv0" ] || bad=1
+sha256sum "$R"/*_20261031.tsv > "$D/files_1031_after.txt"; echo "10/31 report files before = after: $(cmp -s "$D/files_1031_before.txt" "$D/files_1031_after.txt" && echo yes || echo NO)"; cmp -s "$D/files_1031_before.txt" "$D/files_1031_after.txt" || bad=1
+[ -e "$S.new" ] && { echo "CHECK: a src.new exists again: $S.new"; bad=1; }
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use after: $dk1 KB (before $dk0 KB; T_c + run files $((dk1 - dk0)) KB)"
+[ "$bad" = 0 ] || { echo "CCTL RESULT: CHECK - lines above (T_c kept in $D) - to the ruling chat as printed"; exit 1; }
+echo "CCTL RESULT: DONE - T_c built, finished and normed in $D; delta in $D/delta; expected members laid by CC from the delta files, nothing ruled from counts"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
