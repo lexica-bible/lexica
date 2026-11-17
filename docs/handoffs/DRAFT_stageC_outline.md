@@ -11333,3 +11333,132 @@ log; strongs_base vs pn_greek_identity) → (c) block → its log to the ruling 
 the pre_8b → built read → the gate block (still unapproved).
 
 ### §9.160 (11/16) — the PLAN APPROVED as the route for the four columns; (c) and (b) are write blocks (reviewer on mechanics → ESCALATE → ruling chat); disk removals ruled; session wrapped (JP). Successor start: HANDOFF_edition_upgrade_stageE.md.
+
+## Step 4, §9.160 route — read-in (11/16, new CC session) and item 1: the PA log read (PALOG)
+**Read-in, checked against the files:** code REF `adfb8ac5` (exists; scripts/ + tests/ unchanged from it to HEAD d36d77f6); PA HEAD
+`1d5e34ee` with scripts/tests = d34d6723 (handoff :15). Built = HEADFIX2's result, 375|23|6, guard `eu_step check --dir
+~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections` (§9.156 (3)). STEP4-DELTA2: words_cells 50,890
+`86e44c58…fdafc`, verses_cells 15,522 `870e4782…57f9`, words_moved 20 `d32361b3…0f08` (§9.157). 9c pins = the code and the fixture
+files: restore_surface_fill.py :81 `d025cc08…72ff`, :85 `e154d8d4…c4748a`; punct_members_built_20261115.txt 607 lines, sha
+`0cc4d428…7056` (local sha256). Every figure in the session brief matches the record.
+**Where the handoff differs from the brief or needs a word:** (a) handoff item 1 also carries §9.158 (4)'s greek_pos stored-type
+read (assigned to the A run block, which §9.159 (2) made a read-out only) — kept in PALOG, with bracket_id and pre_8b added (pre_8b
+is (b)'s comparison copy; eu_words_delta compares type-strict, :199 / :236); (b) the plan (:11311) took the bh_scrape sha "from the
+stage-B log … or printed by the block": the stage-B build at 3f6b4d3c prints only the scrape path (:2950), no sha, so PALOG prints
+today's sha + last-write time — that sha is stage B's only if the file was not written after 11/2; (c) the 11/1 retire block's log
+name is in no repo file — PALOG looks for it by date and by name, and says so if it finds none; (d) PALOG also prints every stage-B
+build and B2 figure line WITH its line number, so the (b) block can cite each by path:line (§9.158 (6), §9.160 (3)).
+**PALOG** — read-only (sqlite3 -readonly, grep, find, stat, sha256sum); writes only its log and the empty run folder `eu_step pre`
+makes. GATE REF d34d6723 = what PA has now: **no pull before it** (after a pull to adfb8ac5, `pre` STOPs on "scripts/tests differ",
+nothing read). Expectations are read-outs, none a gate: status counts src 374|23|6 / built 375|23|6 (§9.153 (1), §9.156 (1)); the
+active strongs + strongs_base rows = 8 on 4 slots, as `tests/fixtures/corrections/abp_corrections_active_built_20261106.txt`, with no
+pn_greek_identity row at any of them (§9.153 (2)); greek_pos / bracket_id types not forecast.
+Local test (WSL, clone at d34d6723; `sqlite3` replaced by a Python stand-in with the CLI's list output, as WSL has no sqlite3; made-up
+src / built / pre_8b, a HEADFIX2-style prep folder, fake stage-B logs, an 11/1 "retire" file): READ DONE exit 0, every section
+printed; a planted pn_greek_identity row at Mal 3:6 @7 on src showed (identity_rows 1 + the row) and built showed none; re-paste STOP;
+built changed after the prep → `PALOG CHECK: FAIL - words on built differs from the dry run` → STOP; src wrong size → STOP.
+### Block PALOG (GATE REF d34d6723; READ-ONLY — writes only its log and an empty run folder; no gate)
+```bash
+set +H
+L=~/edition_upgrade_runs/palog_read_20261116.log
+if [ -e "$L" ]; then echo "PALOG RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export PYTHONIOENCODING=utf-8 LC_ALL=C TZ=UTC
+echo "GATE REF ${REF} - PALOG - the PA log read (DESIGN 9.160 (5) first item; 9.139 (3), 9.153 (1)-(2), 9.158 (4)) - READ-ONLY: logs, files and three db copies read with sqlite3 -readonly; writes only this log and an empty run folder (on a failed built guard only, eu_step check also leaves check_delta_<table>.tsv in HEADFIX2's folder, never overwriting) - NO GATE - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "PALOG RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+BH=~/bible-db/bh_scrape.db
+R=~/edition_upgrade_runs
+LB=$R/stageB_build_20261102.log
+LA=$R/stageB_Bapply_20261102.log
+DH=$R/step4_headfix2_20261116
+D=$R/palog_read_20261116
+XS_SIZE=451964928
+# --- before the reads: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag PALOG --ref "$REF" --dir "$D" --db "$B" --db "$S" --db "$P" || { echo "PALOG RESULT: STOP - pre (line above; it also refuses a -journal beside any copy); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db"; do [ -s "$f" ] || { echo "PALOG RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check against HEADFIX2's prep + throwaway copy; read-only; DESIGN 9.156 (3)) ==="
+python3 scripts/eu_step.py check --tag PALOG --built "$B" --dir "$DH" --written words,abp_corrections || { echo "PALOG RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE, as printed in ~/edition_upgrade_runs/step4_delta2_20261116.log, DESIGN 9.157 (1))"
+[ "$n" = "$XS_SIZE" ] || { echo "PALOG RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+st0=$(stat -c '%s %Y' "$B" "$S" "$P" | tr '\n' ' ')
+# --- (1) the stage-B logs ---
+echo "=== (1) stage-B logs: size, last write (UTC), line count ==="
+for f in "$LB" "$LA"; do if [ -f "$f" ]; then echo "$(stat -c '%s bytes - last write %y' "$f") - $(wc -l < "$f") lines - $f"; else echo "NOT FOUND: $f"; fi; done
+echo "--- (1a) first 6 and last 6 lines of each ---"
+for f in "$LB" "$LA"; do [ -f "$f" ] || continue; echo "## $f - head"; head -n 6 "$f"; echo "## $f - tail"; tail -n 6 "$f"; done
+echo "--- (1b) every line carrying a date (first 20 per file) ---"
+for f in "$LB" "$LA"; do [ -f "$f" ] || continue; h=$(grep -Hn -E '20[0-9][0-9]-[01][0-9]-[0-3][0-9]' "$f"); [ -n "$h" ] && head -n 20 <<< "$h" || echo "no dated line in $f"; done
+echo "--- (1c) stage-B build: the greek_pos / bracket_id line (DESIGN 9.142 (4), 9.160 (3)) ---"
+[ -f "$LB" ] && { grep -Hn 'of transplanted:' "$LB" || echo "no 'of transplanted:' line in $LB"; }
+echo "--- (1d) stage-B build: the figure lines, with line numbers (first 80) ---"
+[ -f "$LB" ] && { h=$(grep -Hn -E "Words inserted|Verses skipped|Flagged|Article-slot|PN-star|feed normalizations|paired |transplanted|strict_fail|passdiff|merge_pairs|edge_splits|merge-pair list|edge-split list|eligible list|Filled |Split |Re-cleaned|scrape db|Type .rebuild|renamed|SAME" "$LB"); [ -n "$h" ] && head -n 80 <<< "$h" || echo "no figure line in $LB"; }
+echo "--- (1e) stage-B B2 apply: the figure lines, with line numbers (first 40) ---"
+[ -f "$LA" ] && { h=$(grep -Hn -E "written|unchanged|kept old|EU rows|APPLIED|active prose|SAME" "$LA"); [ -n "$h" ] && head -n 40 <<< "$h" || echo "no figure line in $LA"; }
+# --- (2) bh_scrape.db ---
+echo "=== (2) bh_scrape.db: size, last write (UTC), sha256 - the stage-B build prints only its path, no sha (build_words_from_abp.py at 3f6b4d3c :2950) ==="
+ls -l --time-style=full-iso "$BH" 2>&1
+[ -e "$BH-journal" ] && echo "a -journal is beside it: $BH-journal" || echo "no -journal beside it"
+[ -f "$BH" ] && sha256sum "$BH"
+# --- (3) the 11/1 retire block ---
+echo "=== (3) the 11/1 retire block (write 1 to src's abp_corrections, DESIGN 9.153 (1)); its block and log are not in the repo - looking for them ==="
+echo "--- (3a) files under $R (depth 2) last written 2026-11-01 UTC ---"
+sort <<< "$(find "$R" -maxdepth 2 -type f -newermt '2026-11-01 00:00' -not -newermt '2026-11-02 00:00' -printf '%TY-%Tm-%Td %TH:%TM  %s  %p\n')"
+echo "--- (3b) files named *retire* under $R (depth 2) and in ~/bible-db itself, any date ---"
+sort <<< "$(find "$R" -maxdepth 2 -type f -iname '*retire*' -printf '%TY-%Tm-%Td %TH:%TM  %s  %p\n'; find ~/bible-db -maxdepth 1 -type f -iname '*retire*' -printf '%TY-%Tm-%Td %TH:%TM  %s  %p\n')"
+echo "--- (3c) each of those last written 11/1 or 11/2 and under 300 KB, in full ---"
+for f in $(find "$R" -maxdepth 2 -type f -iname '*retire*' -newermt '2026-11-01 00:00' -not -newermt '2026-11-03 00:00' -size -300k) $(find ~/bible-db -maxdepth 1 -type f -iname '*retire*' -newermt '2026-11-01 00:00' -not -newermt '2026-11-03 00:00' -size -300k); do echo "## $f ($(wc -l < "$f") lines)"; cat "$f"; done
+echo "--- (3d) shell-history lines naming 'retired' with UPDATE or SET (evidence only; the history may be cut short) ---"
+if [ -f ~/.bash_history ]; then h=$(grep -n -i 'retired' ~/.bash_history); m=$(grep -i -E 'update|set ' <<< "$h"); [ -n "$m" ] && head -n 20 <<< "$m" || echo "none"; else echo "no ~/.bash_history"; fi
+echo "=== (4) abp_corrections status counts - expect src active 374 / retired 23 / superseded 6, built 375 / 23 / 6 (DESIGN 9.153 (1), 9.156 (1)) ==="
+QS="SELECT status, count(*) FROM abp_corrections GROUP BY status ORDER BY status"
+for x in "src:$S" "built:$B"; do n=${x%%:*}; db=${x#*:}; echo "-- $n"; sqlite3 -readonly "$db" "$QS"; done
+echo "--- (4a) src: the retired rows (the table keeps no time of a status change) ---"
+sqlite3 -readonly -header "$S" "SELECT id, book, chapter, verse, position, field, ledger_ref, applied_at, status, created FROM abp_corrections WHERE status='retired' ORDER BY id"
+# --- (5) the active Strong's correction rows vs pn_greek_identity ---
+echo "=== (5) active strongs / strongs_base correction rows vs pn_greek_identity (DESIGN 9.153 (2)) ==="
+echo "expect on each copy: 8 rows on 4 slots - 1Sa 6:11 @21 (L2), Dan 4:33 @1 (L5), Jer 49:13 @28 (L11), Mal 3:6 @7 (L10), strongs + strongs_base each (as tests/fixtures/corrections/abp_corrections_active_built_20261106.txt); identity_rows 0 on every row; no pn_greek_identity row at those slots"
+Q5="SELECT c.id, c.book||' '||c.chapter||':'||c.verse AS ref, c.position, c.field, c.source_value, c.corrected_value, c.ledger_ref, v.id AS verse_id, w.strongs, w.strongs_base, w.is_pn, w.english, (SELECT count(*) FROM pn_greek_identity g WHERE g.verse_id = v.id AND g.position = c.position) AS identity_rows FROM abp_corrections c LEFT JOIN verses v ON v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse LEFT JOIN words w ON w.verse_id = v.id AND w.position = c.position WHERE c.status = 'active' AND c.field IN ('strongs', 'strongs_base') ORDER BY c.book, c.chapter, c.verse, c.position, c.field"
+Q5B="SELECT DISTINCT g.* FROM abp_corrections c JOIN verses v ON v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse JOIN pn_greek_identity g ON g.verse_id = v.id AND g.position = c.position WHERE c.status = 'active' AND c.field IN ('strongs', 'strongs_base')"
+for x in "src:$S" "built:$B"; do n=${x%%:*}; db=${x#*:}
+  echo "-- $n: the rows"; sqlite3 -readonly -header "$db" "$Q5"
+  echo "-- $n: pn_greek_identity rows at those slots (expect none below this line)"; sqlite3 -readonly -header "$db" "$Q5B"
+done
+# --- (6) the stored type of greek_pos / bracket_id ---
+echo "=== (6) words.greek_pos and bracket_id: declared type and stored types (DESIGN 9.158 (4); read-out, no gate; no forecast from the repo) ==="
+QT1="SELECT name, type FROM pragma_table_info('words') WHERE name IN ('greek_pos', 'bracket_id') ORDER BY name"
+QT2="SELECT 'greek_pos', typeof(greek_pos), count(*) FROM words GROUP BY 2 UNION ALL SELECT 'bracket_id', typeof(bracket_id), count(*) FROM words GROUP BY 2 ORDER BY 1, 2"
+for x in "src:$S" "built:$B" "pre_8b:$P"; do n=${x%%:*}; db=${x#*:}
+  echo "-- $n: declared"; sqlite3 -readonly "$db" "$QT1"
+  echo "-- $n: stored (column|type|rows)"; sqlite3 -readonly "$db" "$QT2"
+done
+# --- after ---
+st1=$(stat -c '%s %Y' "$B" "$S" "$P" | tr '\n' ' ')
+echo "built, src, pre_8b: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "PALOG RESULT: STOP - a copy changed during a read-only run - report this"; exit 1; }
+echo "PALOG RESULT: READ DONE - no gate; every 'expect' above is a read-out for the ruling chat; run folder $D left empty"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### PALOG reviewed, round 1 (11/16) — REVIEW: ESCALATE (tripwire 2: greps piped under pipefail) → fixed, resubmitted
+Verdict line verbatim: "REVIEW: ESCALATE - tripwire 2 is hit: greps are piped under pipefail (one of them feeds an `|| echo none`
+fallback), instead of using `<<<`." Fixed (mechanical, lesson 10): every `grep … | head` and `find … | sort` in the block now goes
+through a variable and `<<<` (the history line, the date / figure / B2 greps, the two find listings), each with its own "none" line;
+the src size cites `step4_delta2_20261116.log` / §9.157 (1); the header says eu_step check leaves `check_delta_<table>.tsv` in
+HEADFIX2's folder on a failed guard only (eu_step.py :489-492, never overwriting). The delegated git checks (eu_step pre :132-136)
+are the form STEP4-DELTA2 was cleared with. Re-tested locally: the same four runs as before + a run with no history file and no
+retire file (each section prints its "none" / empty line, READ DONE).
+
+### PALOG reviewed, round 2 (11/16) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - PALOG is read-only, approved by DESIGN §9.160 (5), and the round-1 tripwire-2 fix holds.
+Every expected figure is a read-out (nothing gates on it) and traces to a source." Round 1's unchecked items read: the grep labels
+match the build at 3f6b4d3c (:2435, :2727, :2737, :2750, :2759, :2762, :2770, :2950); the column names match build_abp_corrections.py
+:49-63 and build_pn_greek_identity.py :538-546; the paths match the record; src size = §9.157 (1); the 8 rows on 4 slots = the
+20261106 active fixture (its only strongs / strongs_base rows). No DEFECT, no GAP. **NOTE 1 (CC checked, true):** the echo cites
+§9.153 (1) / §9.156 (1) for src 374|23|6, but neither gives src's count; the source is block J's log
+`~/edition_upgrade_runs/joh1426_rows_20261106.log`, recorded at :2490-2492 ("AFTER 374 / 23 / 6", on both copies). The echo text is
+left as cleared (a label, gates nothing); this line is the correct cite. NOTE 2: a stage-B log not in ~/edition_upgrade_runs prints
+"NOT FOUND" — a result for the ruling chat, not an empty read. NOTE 3: no push while the block waits; PA must not pull before it.
