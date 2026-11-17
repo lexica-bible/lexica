@@ -12467,3 +12467,8 @@ log's delta file list as JP pasted it; the "BSTD ran" entry now carries it in fu
 check: PA's GNU tool behaviour (as RMTC), CC's test results, the BSTD log on PA itself.
 
 ### RMTB CLEARED (11/17, §9.174) — to run as printed; its log + the dashboard's File storage line go to the ruling chat
+
+### RMTB ran (11/17, 19:55:10Z–19:55:19Z) — RMTB RESULT: DONE, exit=0
+Every §9.174 (4) line met: BSTD result line, words_cells.tsv 4963903336…9329 and T_b.db 451,964,928 B = expect; rm exit 0; every other
+file in the run folder (25) size and time before = after: yes; src, built, pre_8b: yes. Home in use 8,127,096 → 7,685,688 KB (freed
+441,408 KB); /tmp 9,322,145 B before and after; home + /tmp after 7,694,791 KB. Dashboard line: to the ruling chat with the log.
