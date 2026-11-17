@@ -12136,3 +12136,5 @@ echo "RMTC RESULT: DONE - $(date -u +%FT%TZ) - T_c.db removed; the run folder's 
 
 ### RMTC reviewed (11/17) — REVIEW: ESCALATE (a delete; §9.90 / §9.169 (5)(a)); 0 DEFECT, 0 GAP
 Verdict line verbatim: "REVIEW: ESCALATE - Block RMTC deletes a file (T_c.db), which is a write; under §9.90 only the ruling chat can clear it". Checked: no `!`; no guard on a pipe; -journal/-wal/-shm STOP; every STOP before the one `rm -- "$T"`; CHECKs after; $D in the result line expands as in CCTL; no REF wrapper needed (runs no repo code). NOTE 1 (rm without -f could ask on the terminal if T_c is write-protected) — **taken: a STOP added before the rm if T_c.db or its folder is not writable**; re-tested (the 7 cases + T_c not writable → STOP, nothing removed). NOTE 2: the home + /tmp line is an estimate; the dashboard is the quota's figure (§9.167).
+
+### RMTC CLEARED TO RUN (11/17, §9.170) — as printed above; declared log figures §9.170 (3); the log + the dashboard line after it to the ruling chat
