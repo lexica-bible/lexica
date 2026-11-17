@@ -11252,7 +11252,7 @@ lemma / morph / is_pn — not the four.) Then 8b.2a, the digits restore, J, HEAD
 **What follows:** src (the 11/01 copy of live) is itself the 10/25 rebuild through the same chain, so these steps act on BOTH sides.
 A step acting identically on both sides makes no delta member. But the list's before / after are RAW build values: wherever a later
 step rewrote the cell, the stored value differs from the list's value. fix_emdash alone guarantees that for every feed cell whose
-English carries '--' (the transplant itself writes ' --' at the end of 1,480 feed cells, the dash pin). Five steps and the fill move
+English carries '--' (the transplant itself writes ' --' at the end of 4,248 feed cells, APP_DASH_END_PIN :2029, sec 9.38). Five steps and the fill move
 positions, so in those verses the list's keys are not the stored keys.
 **So the list cannot be laid against the delta cell for cell BY VALUE as it stands; by KEY it can, except in the verses where a step
 moved positions.** Comes to the ruling chat before the run (§9.158 (5)). Options, none drafted:
