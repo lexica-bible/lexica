@@ -11266,3 +11266,68 @@ moved positions.** Comes to the ruling chat before the run (§9.158 (5)). Option
   the control for (b).
 CC's recommendation: (b) with (c) as its control: it is the only one that is cell for cell by value and derived from inputs only.
 (a) leans on rule-attribution for a bulk step (emdash) across thousands of cells.
+
+## §9.159 (3) — PLAN for (c) then (b) (CC, 11/16; repo + record only; no block drafted)
+**What the build does (read, build_words_from_abp.py run()):** it reads its input db ONLY through a read-only snapshot (:2700-2706,
+`mode=ro` + backup) and writes `<input>.new` beside it (:2681), DELETING any existing `<input>.new` first (:2696-2698). It asks
+"Type 'rebuild'" (:2688; stage B piped it). So both runs build from src read-only into `bible_edupg_test_20261101.db.new` and move
+that file into a new run folder in the same command (stage B's pattern, HANDOFF_edition_upgrade_stageC.md :77-80). Writes outside
+the run folder, declared: `~/bible-db/pronoun_review.tsv` (the build, :2867-2868; untracked, overwritten by each build) and
+`~/bible-db/unmatched_pn.txt` (import_tipnr.py :694; gitignored). The block lists ~/bible-db and `git status` before and after;
+any other new or changed file = STOP / CHECK.
+**Which copies (all on PA, kept):** src (the 11/01 live copy = the 10/25 rebuild through the same chain); `built_pre_digits_20261105`
+= built right after the stage-C tail (HANDOFF_..._stageC_repin.md :21); `built_pre_8b_20261106` = post-tail + R2 (§9.88, 389
+cells) + J (§9.89, 2 rows), before 8b.0 (stageE handoff :135); built.
+**(c) FIRST — the control, no app feed.** T_c = src → the OLD build (no --app-feed), code at the run's REF → finish_rebuild.sh in
+full (corrections ON, as on src's own 10/25 chain) → build_rendering_norm.py (step 11, so english_head_norm is comparable).
+Compared: eu_words_delta --a src --b T_c, all 13 columns + verses.text. Expected members, each from its own file; anything else =
+build or chain drift since 10/25, read and ruled before (b) means anything:
+- english / english_head / greek_pos / bracket_id: the 8b.2a lane-3 cells src holds and T_c does not (the three lane-3 files,
+  22 entries / 47 op cells: new values on src, old values on T_c); the cells of the 23 RETIRED rows (applied on src at 10/25, not
+  applied on T_c — read from abp_corrections, status retired, in the block); Joh 14:26 @3 (the 2 S-joh14:26 J rows apply on T_c at
+  step 7; src's words were never written, §9.153 (1) write 4). english_head_norm: only where english_head differs.
+- strongs / strongs_base / is_pn / morph / lemma: src's own 8b chain (8b.0–8b.2, not re-run on T_c) — counts printed, NOT read as
+  members, nothing ruled from them (these columns' gate is the (ii) list, §9.142).
+- positions: moved pairs 0; verses.text 0 (no B2; fix_emdash finds no '--' in src's text).
+- step 4b / step 7 on T_c LOUD-SKIP every EU- row whose source value (the feed's text) is not in the old build's cell, so
+  finish_rebuild reports problems and exits 1. The block reads the skip lines and requires every skipped row to be an EU- row
+  (ledger_ref "EU-…"); any non-EU skip = STOP. The skip count is printed, not pre-declared (it depends on how many feed source
+  values equal the old English).
+**(b) — the standard.** T_b = src → the --app-feed build with the step-5 inputs → B2 `build_prose_from_app.py --apply` on T_b (as
+stage B) → finish_rebuild.sh in full (corrections ON: src's table = 374 active = built's at stage C + the 2 J rows; no heads row).
+Compared: **eu_words_delta --a built_pre_8b_20261106 --b T_b, all 13 columns + verses.text. Expected: EMPTY.** Why that copy:
+pre_8b is exactly "build + B2 + tail + R2 + J". R2 is now inside the build (§9.88: one rule, build + repair, code 820a6109) and J is
+applied by T_b's step 7 from src's table, so the comparison needs NO enumerated later writes; any member is a finding. (pre_digits
+would need R2's 389 cells and J enumerated; pre_8b needs none.)
+**The rest of the chain, separately, read-only, no new copy:** eu_words_delta --a built_pre_8b_20261106 --b built (all columns +
+verses.text). Its members = the writes after pre_8b, each attributed to its own file: 8b.0 / 8b.1 / 8b.2 / ABPTAG (strongs_base,
+§9.93–§9.96), REKEY / the 10 reorder verses if they fall after pre_8b (§9.93 (a)), 8b.2a lane-3 (the three files), step 11 norm
+(by rule), steps 10 / 12a-c, HEADFIX2 (1 row); the 9 / 9a / 9b / 9c surface steps write no words. Then built = pre_8b + those
+writes, and pre_8b = T_b from inputs: the src → built delta is explained cell for cell by value, through the build, without the A
+cells list.
+**Inputs, sha-checked in each block against the record:** the frozen feed + manifest, count-differs (0453e3b4…), the censuses, the
+merge-pair (3fb43b41…) and edge-split (03edab28…) frozen lists — committed, and checked by the build itself (STOP on a miss);
+abp_texts / tipnr / Rahlfs / TAGNT = the cert_manifest pins (`cert_manifest.py verify` in the block); bh_scrape.db (PA only; its
+sha from the stage-B log in the PA log read, or printed by the block and recorded); the step-5 lists
+`~/edition_upgrade_runs/step5_{eligible,strict_fail,prose}_20261101.tsv` (e540d34d…, 1513e235…, f2a22ecd… — full shas read in
+the block): T_b's eligible + strict_fail must be SAME bytes, as stage B's were (HANDOFF_..._stageC.md :78, :85).
+**Figures each run must reproduce:** (b) the stage-B record (HANDOFF_..._stageC.md :83-89; DESIGN :470): Words inserted 626,305 ·
+skipped 0 · flagged 6,882 · article-slot 923 / 411 · PN-star A 1,505 + B 2,552 / 3,161 · transplanted 29,071 · strict_fail 1,421
+(passdiff 625) · english changed 15,588 · merge pairs 1,578 / 1,380 MATCHES · edge splits 90 / 90 MATCHES · Filled 5 · Split 84;
+B2 written 15,571 · unchanged 13,500 · kept old 2,166 · EU matched 118. **One caution, not a forecast:** the §9.88 rule moved into
+the build after stage B (820a6109), so A's printed greek_pos/bracket_id verse count may differ from the stage-B log's. That line is
+read from the stage-B log first (PA log read) and the block prints both. english changed and transplanted are not touched by that
+rule as read (it changes only restored rows' bracket membership); a miss on them is STOP-and-read. (c): the 10/25 rebuild's own
+figures (Words inserted, Filled, Split, PN-star) from the 10/25 record, cited in the block.
+**Cost:** each throwaway ≈ 452 MB (= src; the build's .new is moved, not copied); delta outputs ≈ 7 MB each; the norm step adds
+nothing. Runs are sequential: after (c)'s log is read and ruled, T_c is removed by a block before (b) starts, so the peak is ONE
+throwaway (~0.46 GB). Headroom: home in use 7,771,060 KB on 11/16 (HEADFIX2 log) vs the 10 GB dashboard quota (record :7867) ≈
+2.2 GB free. Existing throwaways: step4_headfix_20261115/dry.db (201 MB — kept by §9.153 (4), removable only by ruling) and
+step4_headfix2_20261116/dry.db (201 MB — NEEDED: the "built =" guard reads it). JP's disk check first, as for every copy. Wall
+time: not in the repo — the stage-B build log's timestamps are read in the PA log read; otherwise the first run is the measurement
+(§9.140 (a) precedent). Each run is one long console command (stage B ran its build in one sitting on 11/2).
+**Nothing writes built, src or live:** src is read only through the build's read-only snapshot; built and pre_8b are only read
+by eu_words_delta (mode=ro). Each run gets a new dated folder + log, tee'd, with a re-paste STOP.
+**Order:** PA log read (now also: the stage-B log's timestamps + its greek_pos/bracket line + the bh_scrape sha; the 11/1 retire
+log; strongs_base vs pn_greek_identity) → (c) block → its log to the ruling chat → ruling → T_c removal → (b) block → its log →
+the pre_8b → built read → the gate block (still unapproved).
