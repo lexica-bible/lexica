@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.158**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.159**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/16 late, step 4 in progress; HEADFIX2 closed §9.156; STEP4-DELTA2 READ DONE §9.157) — open here
@@ -52,7 +52,7 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
 
 ## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.158**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.159**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one
