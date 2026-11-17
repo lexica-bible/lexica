@@ -11623,3 +11623,7 @@ fully by name; the (c) block then lays its delta against that list.
 **Not yet checked, said plainly:** whether the OLD build's output has moved since 10/25 anywhere — that is (c)'s question. The §9.88 rule
 entered the build at 820a6109 inside A's two restores (`_join_neighbour_group`, merge pairs + edge splits), which exist only in the
 --app-feed path; from the commit message, not traced line by line for the old path.
+
+### RMTHROW CLEARED TO RUN (11/17, §9.162) — at GATE REF d34d6723, as recorded above (with the GAP 1 fix), no PA pull before it, after JP's disk check
+Declared: both before.db shas = expect before and after; 201,183,232 B; abp_surface 395,014; rm exit codes 0 0; both files gone; kept files
+unchanged: yes; RESULT: DONE; exit=0. From here no block cites step9a_apply_20261115 or step4_headfix_20261115 as a "built =" reference.
