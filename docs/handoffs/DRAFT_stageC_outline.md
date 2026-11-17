@@ -12603,3 +12603,331 @@ head, each blank → rnorm(built's head) (Joh 19:18 @10 → 'here' among them); 
 **Nothing else:** verses.text 0; italic, italic_words, smcap_words 0; words only 0 / 0; moved pairs 0 (unpaired 0 / 0); verses only 0
 / 0. Strong's side (strongs, strongs_base, morph, lemma, is_pn): counts printed only (§9.173 (4)(ii)); P8READ shows strongs_base
 rewrites inside these verses (e.g. 1Ch 21:9 @4 H1410 → G1045), the 8b chain's, as expected.
+
+## P8DELTA drafted (11/17, GATE REF d34d6723) — pre_8b → built against the named list, the norm rule, and the composition against STEP4-DELTA2 (§9.176 (5), §9.177 (7))
+READ-ONLY (three copies through eu_words_delta mode=ro; built through the check mode=ro); writes only its run folder and log. **No PA
+pull.** Two deltas: pre_8b → built (p8b/), src → pre_8b (sp8/). Declared: pre_8b → built moved / verses / unpaired 0 0 0 0; src → pre_8b
+20 10 0 0 (the unpaired zeros inferred from STEP4-DELTA2's, reviewer GAP 2 — a miss is a CHECK); the named list (english 35 · english_head
+18 · greek_pos 38 · bracket_id 51, every cell with values; blank = None or ''); english_head_norm members = built's head rows, each blank
+→ rnorm(built head), count 353,595 (XNORM, P8READ (5)); every p8b one-side / moved / unpaired / verses file empty; Strong's side counted
+only. The composition: per words cell, src → pre_8b then pre_8b → built (a chain break = finding), dropped where the ends are equal, moved
+flag from src → pre_8b's pairs, compared exactly with STEP4-DELTA2's words_cells (86e44c58…dafc, sha-checked before any delta); moved
+pairs equal; verses composed likewise. The check program is written into the run folder from the block and its sha checked (XCHK).
+**Tests** (WSL clone at d34d6723; three copies built from the REAL P8READ rows + Joh 19:18 @10; STEP4-DELTA2 made by the real tool):
+the real tool gave exactly the named list (142 of 142 cells, values equal); clean → READ DONE; re-paste STOP; an unlisted english change on
+built → CHECK naming the cell; reference words_cells changed → STOP before any delta; check.py fingerprint differs → STOP; norm count
+declared 214 vs 213 → CHECK.
+### Block P8DELTA (GATE REF d34d6723; READ-ONLY — writes only its run folder and log)
+```bash
+set +H
+L=~/edition_upgrade_runs/p8_delta_20261117.log
+if [ -e "$L" ]; then echo "P8DELTA RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - P8DELTA - pre_8b -> built laid against the named list, the norm rule, and the composition src -> pre_8b -> built against STEP4-DELTA2 (DESIGN 9.173 (4)-(5)(b), 9.176 (5), 9.177 (7)) - READ-ONLY: three copies read by eu_words_delta (mode=ro) and built by the check (mode=ro); writes only its run folder and this log - every expect is declared before the run - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P8DELTA RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/p8_delta_20261117
+C=$R/step4_delta2_20261116/delta
+XS_SIZE=451964928                 # src: step4_delta2_20261116.log (DESIGN 9.157 (1))
+XP_SIZE=451964928                 # pre_8b: step4_b_standard_20261117.log, the delta's "a:" line (DESIGN 9.173 (1))
+XC_WC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc   # STEP4-DELTA2 words_cells.tsv (DESIGN 9.157, 9.173 (4)(iii))
+XNORM=353595                      # english_head_norm members = built rows with a head: P8READ (5), built 626309|353595|353595|0 (DESIGN 9.177 (6))
+XCHK=87d67627d9d13c2789fa48d0b7bb3601f68a96ca452d67068444157d797c81cc   # sha256 of check.py as written below (CC's file, tested); a paste that changed it STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+# --- before the reads: every miss is STOP ---
+EU scripts/eu_step.py pre --tag P8DELTA --ref "$REF" --dir "$D" --db "$S" --db "$B" --db "$P" || { echo "P8DELTA RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$C/words_cells.tsv" "$C/words_moved.tsv" "$C/words_only.tsv" "$C/words_unpaired.tsv" "$C/verses_cells.tsv" "$C/verses_only.tsv"; do [ -s "$f" ] || { echo "P8DELTA RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag P8DELTA --built "$B" --dir "$DH" --written words,abp_corrections || { echo "P8DELTA RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"; [ "$n" = "$XS_SIZE" ] || { echo "P8DELTA RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+n=$(stat -c %s "$P"); echo "pre_8b size: $n bytes (expect $XP_SIZE)"; [ "$n" = "$XP_SIZE" ] || { echo "P8DELTA RESULT: STOP - pre_8b is not the size BSTD read"; exit 1; }
+c0=$(cut -d' ' -f1 <<< "$(sha256sum < "$C/words_cells.tsv")"); echo "STEP4-DELTA2 words_cells.tsv sha256: $c0 (expect $XC_WC)"
+[ "$c0" = "$XC_WC" ] || { echo "P8DELTA RESULT: STOP - not the STEP4-DELTA2 reference delta"; exit 1; }
+for f in words_moved words_only words_unpaired verses_cells verses_only; do echo "STEP4-DELTA2 $f.tsv: $(cut -d' ' -f1 <<< "$(sha256sum < "$C/$f.tsv")") (printed)"; done
+st0=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+mkdir "$D/p8b" "$D/sp8" || { echo "P8DELTA RESULT: STOP - cannot make the delta folders"; exit 1; }
+cat > "$D/check.py" <<'PYEOF'
+# P8DELTA check (READ-ONLY). argv: run folder, built db, the STEP4-DELTA2 delta folder.
+# (1) lays pre_8b -> built (D/p8b) against the expected list named in the record (DESIGN 9.176 (5), 9.177);
+# (2) checks english_head_norm by step 11's rule against built (build_rendering_norm._norm_or_none);
+# (3) composes src -> pre_8b (D/sp8) with pre_8b -> built and compares the result with STEP4-DELTA2, cell for cell.
+# Opens built read-only (mode=ro); reads TSV files; writes nothing. argv[4]: the declared english_head_norm member count.
+import ast, os, sqlite3, sys
+from collections import Counter
+from pathlib import Path
+sys.path.insert(0, "scripts")
+from build_rendering_norm import _norm_or_none
+
+D, BUILT, C = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
+XNORM = int(sys.argv[4])
+BL = "BLANK"   # None or '' (P8READ's sqlite3 output does not tell them apart)
+EM = "—"
+BANG = chr(33)
+ENGLISH = [
+    ("1Ch", 21, 9, 6, "David's seer,", "seer,"), ("1Ch", 21, 9, 8, BL, "David's"),
+    ("1Sa", 14, 50, 3, "of Saul's wife", "wife"), ("1Sa", 14, 50, 4, BL, "of Saul's"),
+    ("1Sa", 24, 5, 6, "David's heart", "heart"), ("1Sa", 24, 5, 7, BL, "David's"),
+    ("2Ch", 14, 12, 11, "the Ethiopians fled.", "fled."), ("2Ch", 14, 12, 12, BL, "the Ethiopians"),
+    ("2Sa", 14, 4, 3, "Tekoahite woman", "woman"), ("2Sa", 14, 4, 5, BL, "Tekoahite"),
+    ("Eze", 23, 5, 1, "Aholah fornicated", "fornicated"), ("Eze", 23, 5, 3, BL, "Aholah"),
+    ("Gen", 46, 26, 19, "of Jacob's sons " + EM, "sons " + EM), ("Gen", 46, 26, 20, BL, "of Jacob's"),
+    ("Heb", 11, 24, 7, "of Pharaoh's daughter,", "daughter,"), ("Heb", 11, 24, 8, BL, "of Pharaoh's"),
+    ("Isa", 30, 31, 5, "the Assyrians shall be vanquished", "shall be vanquished"), ("Isa", 30, 31, 6, BL, "the Assyrians"),
+    ("Jer", 50, 16, 11, "of the Grecian sword" + BANG, "sword" + BANG), ("Jer", 50, 16, 12, BL, "of the Grecian"),
+    ("Lev", 24, 10, 3, "of an Israelitish woman,", "woman,"), ("Lev", 24, 10, 4, BL, "of an Israelitish"),
+    ("Mat", 27, 26, 7, "scourging Jesus,", "Jesus,"), ("Mat", 27, 26, 8, BL, "scourging"),
+    ("Mat", 9, 11, 1, "the Pharisees seeing,", "seeing,"), ("Mat", 9, 11, 2, BL, "the"), ("Mat", 9, 11, 3, BL, "Pharisees"),
+    ("Num", 25, 8, 3, "Israelitish man", "man"), ("Num", 25, 8, 5, BL, "Israelitish"),
+    ("Num", 25, 8, 14, "Israelitish man,", "man,"), ("Num", 25, 8, 16, BL, "Israelitish"),
+    ("Num", 25, 14, 4, "Israelitish man", "man"), ("Num", 25, 14, 6, BL, "Israelitish"),
+    ("Num", 25, 15, 3, "of the Midianitish woman", "woman"), ("Num", 25, 15, 5, BL, "of the Midianitish")]
+HEAD = [("1Ch", 21, 9, 8, BL, "davids"), ("1Sa", 14, 50, 4, BL, "sauls"), ("1Sa", 24, 5, 7, BL, "davids"),
+        ("2Ch", 14, 12, 12, BL, "ethiopians"), ("2Sa", 14, 4, 5, BL, "tekoahite"), ("Eze", 23, 5, 3, BL, "aholah"),
+        ("Gen", 46, 26, 20, BL, "jacobs"), ("Heb", 11, 24, 8, BL, "pharaohs"), ("Isa", 30, 31, 6, BL, "assyrians"),
+        ("Jer", 50, 16, 12, BL, "grecian"), ("Lev", 24, 10, 4, BL, "israelitish"), ("Mat", 27, 26, 8, BL, "scourging"),
+        ("Mat", 9, 11, 3, BL, "pharisees"), ("Num", 25, 8, 5, BL, "israelitish"), ("Num", 25, 8, 16, BL, "israelitish"),
+        ("Num", 25, 14, 6, BL, "israelitish"), ("Num", 25, 15, 5, BL, "midianitish"), ("Joh", 19, 18, 10, "ere", "here")]
+GPOS = [("1Ch", 21, 9, 6, BL, 2), ("1Ch", 21, 9, 8, BL, 1), ("1Sa", 14, 50, 3, BL, 2), ("1Sa", 14, 50, 4, BL, 1),
+        ("1Sa", 24, 5, 5, 2, 3), ("1Sa", 24, 5, 6, 1, 2), ("1Sa", 24, 5, 7, BL, 1),
+        ("2Ch", 14, 12, 11, BL, 2), ("2Ch", 14, 12, 12, BL, 1),
+        ("2Sa", 14, 4, 1, 3, 4), ("2Sa", 14, 4, 3, 2, 3), ("2Sa", 14, 4, 5, BL, 2),
+        ("Eze", 23, 5, 1, BL, 2), ("Eze", 23, 5, 3, BL, 1), ("Gen", 46, 26, 19, BL, 2), ("Gen", 46, 26, 20, BL, 1),
+        ("Heb", 11, 24, 7, BL, 2), ("Heb", 11, 24, 8, BL, 1), ("Isa", 30, 31, 5, BL, 2), ("Isa", 30, 31, 6, BL, 1),
+        ("Jer", 50, 16, 11, BL, 2), ("Jer", 50, 16, 12, BL, 1),
+        ("Lev", 24, 10, 1, 3, 4), ("Lev", 24, 10, 3, 2, 3), ("Lev", 24, 10, 4, BL, 2),
+        ("Mat", 27, 26, 7, BL, 2), ("Mat", 27, 26, 8, BL, 1),
+        ("Mat", 9, 11, 1, BL, 3), ("Mat", 9, 11, 2, BL, 1), ("Mat", 9, 11, 3, BL, 2),
+        ("Num", 25, 8, 3, BL, 2), ("Num", 25, 8, 5, BL, 1), ("Num", 25, 8, 14, BL, 2), ("Num", 25, 8, 16, BL, 1),
+        ("Num", 25, 14, 4, BL, 2), ("Num", 25, 14, 6, BL, 1), ("Num", 25, 15, 3, BL, 2), ("Num", 25, 15, 5, BL, 1)]
+BRK = []
+for vk, ps, a, b in [(("1Ch", 21, 9), (6, 7, 8), BL, 2), (("1Sa", 14, 50), (3, 4), BL, 1), (("1Sa", 24, 5), (7,), BL, 1),
+                     (("2Ch", 14, 12), (11, 12), BL, 2), (("2Sa", 14, 4), (4, 5), BL, 1), (("2Sa", 18, 31), (7,), BL, 1),
+                     (("2Sa", 18, 32), (15,), BL, 2), (("Eze", 23, 5), (1, 2, 3), BL, 1), (("Gen", 46, 26), (19, 20), BL, 1),
+                     (("Heb", 11, 24), (7, 8), BL, 2), (("Isa", 30, 31), (5, 6), BL, 1), (("Jer", 50, 16), (11, 12), BL, 1),
+                     (("Lev", 24, 10), (4,), BL, 1), (("Mat", 27, 26), (7, 8), BL, 1),
+                     (("Mat", 9, 11), (1, 2, 3), BL, 1), (("Mat", 9, 11), (15, 16, 17, 18), 1, 2),
+                     (("Num", 25, 8), (3, 4, 5), BL, 1), (("Num", 25, 8), (14, 15, 16), BL, 2), (("Num", 25, 8), (25, 26, 27), 1, 3),
+                     (("Num", 25, 14), (4, 5, 6), BL, 2),
+                     (("Num", 25, 15), (3, 4, 5), BL, 1), (("Num", 25, 15), (14, 15, 16), 1, 2)]:
+    for p in ps:
+        BRK.append(vk + (p, a, b))
+EXP = {}
+for col, lst in (("english", ENGLISH), ("english_head", HEAD), ("greek_pos", GPOS), ("bracket_id", BRK)):
+    for r in lst:
+        EXP[(r[0], r[1], r[2], r[3], col)] = (r[4], r[5])
+STRONG_SIDE = ("strongs", "strongs_base", "morph", "lemma", "is_pn")
+print("expected list (named in the record, DESIGN 9.176 (5) / 9.177): english %d · english_head %d · greek_pos %d · bracket_id %d"
+      % (len(ENGLISH), len(HEAD), len(GPOS), len(BRK)))
+
+
+def lit(s):
+    return ast.literal_eval(s)
+
+
+def same(exp, got):
+    if exp == BL:
+        return got is None or got == ""
+    return (got == exp) or (isinstance(exp, int) and isinstance(got, str) and got == str(exp))
+
+
+def rows(path):
+    f = open(path, encoding="utf-8", errors="surrogateescape", newline="\n")
+    head = f.readline().rstrip("\n").split("\t")
+    out = []
+    for line in f:
+        out.append(line.rstrip("\n").split("\t"))
+    f.close()
+    return head, out
+
+
+def cells(folder):
+    h, rs = rows(folder / "words_cells.tsv")
+    assert h == ["book", "chapter", "verse", "position", "column", "a", "b", "moved"], h
+    d = {}
+    for r in rs:
+        d[(r[0], int(r[1]), int(r[2]), int(r[3]), r[4])] = (r[5], r[6], r[7])
+    return d
+
+
+def nlines(path):
+    return len(rows(path)[1])
+
+
+bad = []
+# ---------- (1) pre_8b -> built laid against the list ----------
+P = cells(D / "p8b")
+seen, by_col, kinds = set(), Counter(), Counter()
+norm_members = {}
+for k, (a, b, mv) in P.items():
+    col = k[4]
+    by_col[col] += 1
+    if col == "english_head_norm":
+        norm_members[k[:4]] = (a, b)
+        continue
+    if col in STRONG_SIDE:
+        continue
+    if mv == "yes":
+        bad.append(("a member at a moved position (none declared)", k, a, b))
+    if k not in EXP:
+        bad.append(("NOT IN THE LIST", k, a, b))
+        continue
+    seen.add(k)
+    ea, eb = EXP[k]
+    ga, gb = lit(a), lit(b)
+    kinds[(col, type(ga).__name__, type(gb).__name__)] += 1
+    if not (same(ea, ga) and same(eb, gb)):
+        bad.append(("VALUE differs from the list", k, a, b, "expected", ea, eb))
+for k in sorted(set(EXP) - seen, key=str):
+    bad.append(("in the list, NOT in the delta", k, EXP[k]))
+print("(1) pre_8b -> built members by column (Strong's side read out only, DESIGN 9.173 (4)(ii)):")
+for col in sorted(by_col):
+    print("    %-20s %d" % (col, by_col[col]))
+print("    list cells found in the delta: %d of %d" % (len(seen), len(EXP)))
+print("    value types seen (column, a, b): " + "; ".join("%s %s->%s %d" % (c, x, y, n) for (c, x, y), n in sorted(kinds.items())))
+for n in ("words_only.tsv", "words_moved.tsv", "words_unpaired.tsv", "verses_cells.tsv", "verses_only.tsv"):
+    m = nlines(D / "p8b" / n)
+    print("    %-20s %d lines (expect 0)" % (n, m))
+    if m:
+        bad.append(("pre_8b -> built: %s not empty" % n, m))
+# ---------- (2) english_head_norm by step 11's rule ----------
+c = sqlite3.connect("%s?mode=ro" % Path(BUILT).resolve().as_uri(), uri=True)
+c.text_factory = lambda b: b.decode("utf-8", "surrogateescape")
+exp_norm, blank_heads = {}, 0
+for bk, ch, vs, pos, head in c.execute("SELECT v.book, v.chapter, v.verse, w.position, w.english_head FROM words w "
+                                        "JOIN verses v ON v.id = w.verse_id"):
+    if head is None or head == "":
+        blank_heads += 1
+        continue
+    exp_norm[(bk, ch, vs, pos)] = _norm_or_none(head)
+c.close()
+want = {k: v for k, v in exp_norm.items() if v is not None}
+nb = 0
+for k, (a, b) in norm_members.items():
+    ga, gb = lit(a), lit(b)
+    if not (ga is None or ga == "") or k not in want or not (gb == want[k]):
+        nb += 1
+        if nb <= 20:
+            bad.append(("english_head_norm member not by the rule", k, a, b, "built head's norm", want.get(k)))
+missing = [k for k in want if k not in norm_members]
+print("(2) english_head_norm: members %d; built rows with a head %d (whitespace-only heads %d); rule rnorm(built head), a blank:"
+      " broken %d, rule rows with no member %d" % (len(norm_members), len(exp_norm), len(exp_norm) - len(want), nb, len(missing)))
+print("    english_head_norm members = the declared %d: %s" % (XNORM, "yes" if len(norm_members) == XNORM else "NO"))
+if not (len(norm_members) == XNORM):
+    bad.append(("english_head_norm: member count is not the declared count", len(norm_members), XNORM))
+if nb > 20:
+    bad.append(("english_head_norm: more broken members not listed", nb - 20))
+for k in missing[:20]:
+    bad.append(("english_head_norm: rule row with no member", k, want[k]))
+# ---------- (3) composition: src -> pre_8b, then pre_8b -> built, against STEP4-DELTA2 (src -> built) ----------
+A, Cc = cells(D / "sp8"), cells(C)
+pairs_a = rows(D / "sp8" / "words_moved.tsv")[1]
+pairs_c = rows(C / "words_moved.tsv")[1]
+in_pair = set()
+for r in pairs_a:
+    vk = (r[0], int(r[1]), int(r[2]))
+    in_pair.add(vk + (int(r[3]),))
+    in_pair.add(vk + (int(r[4]),))
+comp, broke = {}, []
+for k in set(A) | set(P):
+    if k in A and k in P:
+        if not (A[k][1] == P[k][0]):
+            broke.append(k)
+            continue
+        av, bv = A[k][0], P[k][1]
+    elif k in A:
+        av, bv = A[k][0], A[k][1]
+    else:
+        av, bv = P[k][0], P[k][1]
+    if av == bv:
+        continue
+    comp[k] = (av, bv, "yes" if k[:4] in in_pair else "no")
+only_comp = sorted((k for k in comp if k not in Cc), key=str)
+only_c = sorted((k for k in Cc if k not in comp), key=str)
+diff_val = sorted((k for k in comp if k in Cc and not (comp[k] == Cc[k])), key=str)
+print("(3) composition, words: src -> pre_8b %d cells + pre_8b -> built %d cells -> composed %d; STEP4-DELTA2 %d; chain breaks %d;"
+      " composed only %d; STEP4-DELTA2 only %d; value / moved differs %d"
+      % (len(A), len(P), len(comp), len(Cc), len(broke), len(only_comp), len(only_c), len(diff_val)))
+for k in broke[:20]:
+    bad.append(("composition: src->pre_8b b is not pre_8b->built a", k, A[k], P[k]))
+for k in only_comp[:20]:
+    bad.append(("composition: composed, not in STEP4-DELTA2", k, comp[k]))
+for k in only_c[:20]:
+    bad.append(("composition: in STEP4-DELTA2, not composed", k, Cc[k]))
+for k in diff_val[:20]:
+    bad.append(("composition: values differ", k, comp[k], Cc[k]))
+if len(broke) + len(only_comp) + len(only_c) + len(diff_val) > 80:
+    bad.append(("composition: more members than listed", len(broke) + len(only_comp) + len(only_c) + len(diff_val)))
+ka = sorted(tuple(r[:6]) for r in pairs_a)
+kc = sorted(tuple(r[:6]) for r in pairs_c)
+print("    moved pairs: src -> pre_8b %d, STEP4-DELTA2 %d, the same pairs (verse, positions, identity): %s"
+      % (len(ka), len(kc), "yes" if ka == kc else "NO"))
+if not (ka == kc):
+    bad.append(("composition: moved pairs differ", [x for x in ka if x not in kc][:10], [x for x in kc if x not in ka][:10]))
+# verses.text and the one-side files
+def vcells(folder):
+    return {(r[0], int(r[1]), int(r[2]), r[3]): (r[4], r[5]) for r in rows(folder / "verses_cells.tsv")[1]}
+VA, VP, VC = vcells(D / "sp8"), vcells(D / "p8b"), vcells(C)
+vcomp = {}
+for k in set(VA) | set(VP):
+    if k in VA and k in VP:
+        av, bv = VA[k][0], VP[k][1]
+    elif k in VA:
+        av, bv = VA[k]
+    else:
+        av, bv = VP[k]
+    if not (av == bv):
+        vcomp[k] = (av, bv)
+print("    verses: src -> pre_8b %d + pre_8b -> built %d -> composed %d; STEP4-DELTA2 %d; equal: %s"
+      % (len(VA), len(VP), len(vcomp), len(VC), "yes" if vcomp == VC else "NO"))
+if not (vcomp == VC):
+    bad.append(("composition: verses differ", sorted(set(vcomp) ^ set(VC), key=str)[:10]))
+for n in ("words_only.tsv", "words_unpaired.tsv", "verses_only.tsv"):
+    m1, m2 = nlines(D / "sp8" / n), nlines(C / n)
+    print("    %-20s src -> pre_8b %d, STEP4-DELTA2 %d (expect 0 and 0)" % (n, m1, m2))
+    if m1 or m2:
+        bad.append(("one-side rows", n, m1, m2))
+print("FINDINGS: %d" % len(bad))
+for x in bad:
+    print("  " + repr(x))
+print("P8CHECK: %s" % ("MATCH - the list, the norm rule and the composition hold" if not bad else "NOT A MATCH - findings above"))
+sys.exit(0 if not bad else 3)
+PYEOF
+k=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/check.py")"); echo "check.py sha256: $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "P8DELTA RESULT: STOP - check.py is not the file CC wrote and tested (paste changed?)"; exit 1; }
+# --- (1) pre_8b -> built ---
+echo "=== (1) eu_words_delta --a pre_8b --b built - start $(date -u +%FT%TZ) ==="
+EU scripts/eu_words_delta.py --a "$P" --b "$B" --out "$D/p8b" < /dev/null > "$D/p8b.out" 2>&1; r1=$?
+cat "$D/p8b.out"; echo "delta exit $r1 (expect 0) - end $(date -u +%FT%TZ)"
+[ "$r1" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/p8b.out")" ] || { echo "P8DELTA RESULT: STOP - the pre_8b -> built delta did not finish (partial files kept in $D/p8b)"; exit 1; }
+# --- (2) src -> pre_8b ---
+echo "=== (2) eu_words_delta --a src --b pre_8b - start $(date -u +%FT%TZ) ==="
+EU scripts/eu_words_delta.py --a "$S" --b "$P" --out "$D/sp8" < /dev/null > "$D/sp8.out" 2>&1; r2=$?
+cat "$D/sp8.out"; echo "delta exit $r2 (expect 0) - end $(date -u +%FT%TZ)"
+[ "$r2" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/sp8.out")" ] || { echo "P8DELTA RESULT: STOP - the src -> pre_8b delta did not finish (partial files kept in $D/sp8)"; exit 1; }
+# --- after the deltas: every miss is CHECK (read-only; nothing to restore) ---
+bad=0
+m1=$(awk '$1 == "moved" && $2 == "pairs" {print $3 " " $5 " " $10 " " $13}' "$D/p8b.out"); echo "pre_8b -> built moved pairs / verses / unpaired a / unpaired b: $m1 (expect 0 0 0 0, DESIGN 9.176 (2))"; [ "$m1" = "0 0 0 0" ] || bad=1
+m2=$(awk '$1 == "moved" && $2 == "pairs" {print $3 " " $5 " " $10 " " $13}' "$D/sp8.out"); echo "src -> pre_8b moved pairs / verses / unpaired a / unpaired b: $m2 (expect 20 10 0 0: the 10 reorder verses, DESIGN 9.93, 9.176 (2))"; [ "$m2" = "20 10 0 0" ] || bad=1
+echo "=== (3) the check: the named list, the norm rule, the composition - start $(date -u +%FT%TZ) ==="
+EU "$D/check.py" "$D" "$B" "$C" "$XNORM" < /dev/null > "$D/check.out" 2>&1; r3=$?
+cat "$D/check.out"; echo "check exit $r3 (expect 0; 3 = findings) - end $(date -u +%FT%TZ)"
+case "$r3" in 0) ;; 3) bad=1 ;; *) echo "P8DELTA RESULT: STOP - the check did not finish (exit $r3; $D/check.out)"; exit 1 ;; esac
+st1=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+echo "src, built, pre_8b: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "P8DELTA RESULT: STOP - a copy changed during a read-only run - report this"; exit 1; }
+[ "$bad" = 0 ] || { echo "P8DELTA RESULT: CHECK - lines above; read-only, nothing to restore - to the ruling chat as printed"; exit 1; }
+echo "P8DELTA RESULT: READ DONE - pre_8b -> built = the named list + the norm rule, nothing else; src -> pre_8b -> built composes to STEP4-DELTA2 cell for cell"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+### P8DELTA reviewed (11/17) — REVIEW: CLEAR (round 2)
+Round 1: "REVIEW: CLEAR - read-only block ... every gate item is present, and the four tables equal the named list cell for cell." 0
+DEFECT; GAP 1 (the norm count 353,595 not declared) → fixed (XNORM, a finding on a miss, tested both ways); GAP 2 (src → pre_8b unpaired 0
+/ 0 inferred) → a miss is a CHECK, noted to the ruling chat. Round 2: "REVIEW: CLEAR - the GAP 1 change is in place and correct. The
+block is still read-only and still in reviewer scope." Not checked by the reviewer: the embedded check.py sha (the block's own guard),
+CC's tests, PA memory / runtime.
