@@ -12062,3 +12062,73 @@ english_head 17 at named positions with the named src value; english_head_norm 1
 Job 39:13 @5 4→2, Mar 16:17 @13 1→3, 1Sa 21:11 @9 1→2, 2Sa 16:18 @21 1→2, Mic 1:13 @8 1→3, Psa 116:1 @3 1→2 — + Joh 14:26 @3 None→3.
 **The 1 bracket_id beyond 51:** Joh 14:26 @3 None→rank 1. Both were in §9.164 (3)'s whole expected list. **0 unattributed.**
 **PA checkout strays (§9.168 (7)):** noted in TODO.md → Small fixes.
+
+**§9.169 (1) record line:** every one of the 75 outside cells sits at a position of one of the 39 ops — 75 of 75 (english 39, english_head 18, english_head_norm 18; checked against outside_expected.tsv and the 63744245^ entries).
+
+### (c) RULED (11/17, §9.169) — the control STANDS, PASSED with the declared exception (18 split-merge + 2 lane-3 entries re-keyed for the new feed). Next: (a) T_c removal, then (b).
+
+## (a) T_c removal — Block RMTC drafted (11/17) — a delete: reviewer → ESCALATE → ruling chat
+**RMTC** removes `step4_c_control_20261117/T_c.db` only; runs no repo code, opens no database. Before the removal every miss is a STOP: T_c, the delta's words_cells.tsv, the CCTL log, src, built, pre_8b and live each present, not empty, not a link; T_c not the same file as any of them; no -journal / -wal / -shm beside T_c; the CCTL log's result line = the one ruled on (§9.168); words_cells.tsv sha = 7d789d5c…c522 and T_c = 452,038,656 B (both from step4_c_control_20261117.log, the delta's lines). After the rm every miss is a CHECK (nothing to restore): T_c gone; every other file in the run folder size + time before = after; src, built, pre_8b size + time before = after; home in use and the user's /tmp files before and after (the quota counts both, §9.167).
+Local test (WSL, made-up home): DONE exit 0, only T_c.db gone, the other files unchanged; re-paste STOP; a -journal beside T_c STOP; wrong delta sha STOP; wrong T_c size STOP; T_c a link to live STOP; a different result line STOP — each with nothing removed.
+### Block RMTC (DELETES T_c.db only — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/rm_tc_20261117.log
+if [ -e "$L" ]; then echo "RMTC RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export LC_ALL=C TZ=UTC
+echo "RMTC - removes T_c.db only (DESIGN 9.169 (5a)); everything else in the CCTL run folder stays (logs, delta files, outputs, T_c.db.corrections.log); runs no repo code, opens no database - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs
+D=$R/step4_c_control_20261117
+T=$D/T_c.db
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+LIVE=~/bible-db/bible.db
+# declared figures, each from a PA log line:
+XT_SIZE=452038656   # T_c.db after finish + norm: step4_c_control_20261117.log, the delta's "b:" line (DESIGN 9.168 (1))
+XWC=7d789d5c2c22598f238a2ddcb8e100c435402588437db956fef13df125cac522   # delta/words_cells.tsv: same log, the delta's file list
+XRES="CCTL RESULT: CHECK - lines above (T_c kept in $D) - to the ruling chat as printed"   # the CCTL log's result line
+# --- before the removal: every miss is STOP, nothing removed ---
+for f in "$T" "$D/delta/words_cells.tsv" "$R/step4_c_control_20261117.log" "$S" "$B" "$P" "$LIVE"; do
+  [ -s "$f" ] || { echo "RMTC RESULT: STOP - missing or empty: $f; nothing removed"; exit 1; }
+  [ -L "$f" ] && { echo "RMTC RESULT: STOP - a link, not a file: $f; nothing removed"; exit 1; }
+done
+for f in "$S" "$B" "$P" "$LIVE"; do [ "$T" -ef "$f" ] && { echo "RMTC RESULT: STOP - T_c.db is the same file as $f; nothing removed"; exit 1; }; done
+for x in -journal -wal -shm; do [ -e "$T$x" ] && { echo "RMTC RESULT: STOP - a $x file beside T_c.db (left as is for the ruling chat); nothing removed"; exit 1; }; done
+r=$(sed -n '/^CCTL RESULT: /p' "$R/step4_c_control_20261117.log"); echo "CCTL log result line: $r"
+[ "$r" = "$XRES" ] || { echo "RMTC RESULT: STOP - the CCTL log's result line is not the one ruled on (9.168); nothing removed"; exit 1; }
+w=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/delta/words_cells.tsv")"); echo "delta/words_cells.tsv sha256 $w (expect $XWC)"
+[ "$w" = "$XWC" ] || { echo "RMTC RESULT: STOP - not the CCTL run folder's delta - wrong folder?; nothing removed"; exit 1; }
+n=$(stat -c %s "$T"); echo "T_c.db: $n bytes (expect $XT_SIZE)"
+[ "$n" = "$XT_SIZE" ] || { echo "RMTC RESULT: STOP - T_c.db is not the size the delta read; nothing removed"; exit 1; }
+echo "=== the run folder before ==="
+ls -l --time-style=full-iso "$D"
+k0=$(find "$D" -type f -not -path "$T" -printf '%s %T@ %p\n' | sort)
+c0=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (the quota counts both, DESIGN 9.167)"
+# --- the removal ---
+echo "=== removing T_c.db ==="
+rm -- "$T"; rr=$?
+echo "rm exit code: $rr (expect 0)"
+# --- after the removal: every miss is CHECK (nothing to restore - T_c is a throwaway) ---
+bad=0
+[ "$rr" = 0 ] || { echo "CHECK: the rm failed"; bad=1; }
+[ -e "$T" ] && { echo "CHECK: still present: $T"; bad=1; }
+k1=$(find "$D" -type f -printf '%s %T@ %p\n' | sort)
+echo "every other file in the run folder: size and time before = after: $([ "$k1" = "$k0" ] && echo yes || echo NO) ($(wc -l <<< "$k1") files)"
+[ "$k1" = "$k0" ] || { echo "CHECK: the run folder's other files changed:"; diff <(echo "$k0") <(echo "$k1"); bad=1; }
+c1=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+echo "src, built, pre_8b: size and time before = after: $([ "$c1" = "$c0" ] && echo yes || echo NO)"
+[ "$c1" = "$c0" ] || { echo "CHECK: a kept copy changed:"; echo "$c0"; echo "$c1"; bad=1; }
+echo "=== the run folder after ==="
+ls -l --time-style=full-iso "$D"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm1=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use after: $dk1 KB (before $dk0 KB; freed $((dk0 - dk1)) KB); my files in /tmp after: $tm1 bytes"
+echo "home + /tmp after: $(( dk1 + tm1 / 1024 )) KB (what the quota counts; the PA dashboard is the quota's own figure)"
+[ "$bad" = 0 ] || { echo "RMTC RESULT: CHECK - lines above; nothing to restore (throwaway copy) - to the ruling chat as printed"; exit 1; }
+echo "RMTC RESULT: DONE - $(date -u +%FT%TZ) - T_c.db removed; the run folder's other files kept"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
