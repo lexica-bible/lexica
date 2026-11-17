@@ -12359,3 +12359,9 @@ CCTL's real build.out); dash / folded :2506-2507; merge_pairs / edge_splits :251
 :248-253 (CCTL's real delta.out read with the same awk fields). For the ruling chat: GAP 1 (wrapper via eu_step pre, as cleared for
 CCTL); NOTE 2 (the two apply summaries are CC's derivation; a miss is a CHECK); NOTE 3 (XHOME_MAX 7,900,000 = RMTC's 7,683,676 + about
 200 MB slack, unruled; BSTD not to run before the RMTC log is read, §9.170 (4)).
+
+### BSTD CLEARED (11/17, §9.171) — to run at GATE REF d34d6723 as printed, no PA pull, after (1) the RMTC log is pasted and read in the ruling chat and (2) the PA dashboard shows 1 GB free or more
+Points 1–3 accepted (wrapper via eu_step pre; the two apply summaries as declared, a miss = CHECK; XHOME_MAX 7,900,000 on RMTC's log
+figure). **Owed after the run (§9.171 (5)):** the full pre_8b sha256 BSTD prints ("pre_8b sha256 before:") goes into this record as the
+recorded value, with the xref8b0_20261106.log line it should equal named as still to be read on PA. Declared for the log: §9.171 (7).
+A non-empty delta's members are read from the files before anything else is drafted (§9.171 (8)).
