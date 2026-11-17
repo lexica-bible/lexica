@@ -2272,7 +2272,7 @@ class AppTransplant:
                  dash_path=APP_DASH_CENSUS, markup_path=APP_MARKUP_CENSUS,
                  glue_path=APP_GLUE_CENSUS, bracket_path=APP_BRACKET_CENSUS,
                  correction_path=APP_CORRECTION_CARVEOUT, dash_pin=APP_DASH_END_PIN,
-                 fold_pin=APP_SPACE_FOLD_PIN):
+                 fold_pin=APP_SPACE_FOLD_PIN, record_cells=False):
         import abp_app_feed as F
         from census_feed_dash import shapes as dash_shapes
         from audit_abp_app_vs_surface import clean_num
@@ -2323,6 +2323,11 @@ class AppTransplant:
         self.merge_members = []     # §9.73: one row per merge pair, MERGE_PAIR_HEADER order
         self.edge_members = []      # §9.75: one row per edge split, EDGE_SPLIT_HEADER order
         self.verdict = {}           # our key -> '' (eligible) or the outcome / reason
+        # step-4 A dry-run output (edition upgrade DESIGN §9.139 (1) / §9.142 (4)): OFF unless asked
+        # for; when on it only READS old_rows / composed and appends here, so A's rows are unchanged.
+        self.record_cells = record_cells
+        self.cell_members = []      # (book, ch, v, position, column, before, after)
+        self.gb_raw_verses = set()  # verses the greek_pos/bracket_id tally counts (raw ids)
 
     def feed_chunks(self, ka):
         """Feed sub-slots for one feed verse: [(strongs_part, english, slot_index)], a
@@ -2458,7 +2463,42 @@ class AppTransplant:
             self.tally["english_changed"] += 1
         if any(o[5] != c[5] or o[6] != c[6] for o, c in zip(old_rows, composed)):
             self.tally["greek_pos_or_bracket_changed"] += 1
+            if self.record_cells:
+                self.gb_raw_verses.add(key)
+        if self.record_cells:
+            self._record_cells(key, old_rows, composed)
         return composed
+
+    # (column, index in a build row) — the cells the step-4 A dry-run output lists by value
+    _CELL_COLS = (("english", 1), ("english_head", 2), ("greek_pos", 5))
+
+    @staticmethod
+    def _bracket_rank(rows):
+        """{position: bracket_id as a per-verse RANK} — exactly eu_words_delta.load_words: walk the
+        verse in position order, a bracket's rank = the order it first appears, None stays None."""
+        rank, out = {}, {}
+        for r in sorted(rows, key=lambda r: r[0]):
+            out[r[0]] = None if r[6] is None else rank.setdefault(r[6], len(rank) + 1)
+        return out
+
+    def _record_cells(self, key, old_rows, composed):
+        """Append one member per changed cell: english / english_head / greek_pos by value,
+        bracket_id by per-verse rank (the delta's normalisation). Reads only. Both sides are
+        compared AS STORED: each row through _prefix_base, the insert's own conversion (it blanks
+        greek_pos on a word with no bracket) — the delta reads stored cells."""
+        if [o[0] for o in old_rows] != [c[0] for c in composed]:
+            raise self.F.FeedError(f"{key}: composed positions differ from the OLD set's - "
+                                   "the cell list would be keyed wrongly")
+        old_rows = [_prefix_base(o) for o in old_rows]
+        composed = [_prefix_base(c) for c in composed]
+        ro, rc = self._bracket_rank(old_rows), self._bracket_rank(composed)
+        for o, c in zip(old_rows, composed):
+            for col, i in self._CELL_COLS:
+                if o[i] != c[i]:
+                    self.cell_members.append((key[0], key[1], key[2], o[0], col, o[i], c[i]))
+            if ro[o[0]] != rc[c[0]]:
+                self.cell_members.append((key[0], key[1], key[2], o[0], "bracket_id",
+                                          ro[o[0]], rc[c[0]]))
 
     def report(self, out_dir=None, stamp="20261031"):
         t = self.tally
@@ -2508,6 +2548,37 @@ class AppTransplant:
                 for r in self.edge_members:
                     f.write("\t".join(str(x) for x in r) + "\n")
             print(f"  edge-split list (sec 9.75): {len(self.edge_members):,} rows -> {e}")
+            if self.record_cells:
+                self.write_cells(out_dir / f"cells_{stamp}.tsv", rank)
+
+    CELL_HEADER = ("book", "chapter", "verse", "position", "column", "before", "after")
+
+    def write_cells(self, path, rank):
+        """The step-4 A dry-run output (DESIGN §9.139 (1) / §9.142 (4)): one row per changed cell,
+        before = the OLD set (the ABP build of src's text), after = what A writes; values with
+        repr() as eu_words_delta writes them. Prints the counts the block checks."""
+        rows = sorted(self.cell_members, key=lambda r: (rank.get(r[0], 99), r[1], r[2], r[3], r[4]))
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write("\t".join(self.CELL_HEADER) + "\n")
+            for r in rows:
+                f.write("\t".join([str(x) for x in r[:5]] + [repr(r[5]), repr(r[6])]) + "\n")
+        by_col = collections.Counter(r[4] for r in rows)
+        eng_v = {r[:3] for r in rows if r[4] == "english"}
+        gb_v = {r[:3] for r in rows if r[4] in ("greek_pos", "bracket_id")}
+        t = self.tally
+        print(f"  cells list (step 4, sec 9.139 / 9.142): {len(rows):,} rows -> {path}")
+        print("  cells by column: " + " - ".join(f"{c} {by_col[c]:,}" for c in
+                                                  ("english", "english_head", "greek_pos", "bracket_id")))
+        print(f"  cells check: verses with an english cell {len(eng_v):,} = english changed "
+              f"{t['english_changed']:,}: {'yes' if len(eng_v) == t['english_changed'] else 'NO'}")
+        key3 = lambda k: (rank.get(k[0], 99), k[1], k[2])      # noqa: E731
+        raw_only = sorted(self.gb_raw_verses - gb_v, key=key3)
+        list_only = sorted(gb_v - self.gb_raw_verses, key=key3)
+        name = lambda ks: (": " + ", ".join(f"{b} {c}:{v}" for b, c, v in ks)) if ks else ""   # noqa: E731
+        print(f"  cells check: verses with a greek_pos or bracket cell {len(gb_v):,} - greek_pos/bracket_id "
+              f"changed (raw build values) {t['greek_pos_or_bracket_changed']:,} - listed and not counted "
+              f"{len(list_only)}{name(list_only)} - counted and not listed (only a bracket number, or a "
+              f"greek_pos the insert blanks, changed) {len(raw_only)}{name(raw_only)}")
 
     def check_merge_pairs(self, mode, frozen=APP_MERGE_PAIRS, edge_frozen=APP_EDGE_SPLITS):
         """Print both frozen-list check lines (sec 9.73 merge pairs, sec 9.75 edge splits);
@@ -2925,7 +2996,12 @@ def main():
                         help="directory for strict_fail_<date>.tsv")
     parser.add_argument("--gen-count-differs", metavar="FILE",
                         help="write the chunk-level count-differs keys from the frozen feed + abp_texts")
+    parser.add_argument("--cells", action="store_true",
+                        help="with --dry-run / --dry-run-nodb only: also write cells_<date>.tsv, one row per "
+                             "changed english / english_head / greek_pos / bracket_id (rank) cell (step 4)")
     args = parser.parse_args()
+    if args.cells and args.dry_run is None and not args.dry_run_nodb:
+        sys.exit("ERROR: --cells works only with --dry-run or --dry-run-nodb")
 
     if args.gen_count_differs or args.dry_run is not None or args.dry_run_nodb or args.app_feed:
         from abp_app_feed import FeedError
@@ -2937,7 +3013,7 @@ def main():
                 print(f"chunk-level count-differs: {len(app.count_differs):,} verses "
                       f"-> {args.gen_count_differs}")
                 return
-            app = AppTransplant(src_texts, count_differs=args.count_differs)
+            app = AppTransplant(src_texts, count_differs=args.count_differs, record_cells=args.cells)
             if args.dry_run is not None:
                 # <COPY_DB> is mandatory, no default — it must never fall through to live.
                 if not args.dry_run or not Path(args.dry_run).is_file():
