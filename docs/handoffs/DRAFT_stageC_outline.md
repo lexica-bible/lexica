@@ -11973,3 +11973,38 @@ dashboard rounds to 0.1 GB, so the free space is somewhere from 0.95 to 1.05 GB 
 written. Figure to the ruling chat (§9.165). Beside it: home in use by `du` after RMTHROW was 7,681,224 KB (about 7.87 GB,
 rm_throwaways_20261117.log); the dashboard's 9.0 GB is about 1.1 GB above that — the same kind of gap as 10/25 (dashboard 9.9 GB vs du
 8.4 GB). CCTL adds about 452 MB for T_c, plus the finish chain's working files on it.
+
+### SPACE read ran (11/17, reviewer CLEAR) — log ~/edition_upgrade_runs/space_read_20261117.log (JP pasted)
+home (du) 7,681,940 KB = 7.33 GiB. My files in /tmp and /var/tmp: the same 10 names and sizes listed under both (printed total 3,526,650,644 = each counted twice); one copy = 1,754,003,177 B = 1.63 GiB. 7.33 + 1.63 = 8.96 GiB = the dashboard's 9.0 GB: the quota counts /tmp, /tmp and /var/tmp are one folder (not proven; the figures agree). The 10 are old scratch: scratch_strip_refs.py test copies (scratch5207 / scratch2316 / scratch2316b), cert_s11_cw_itemize.sh dumps (sb_* / eh_*), the 8/5 ride copy bible_ride_0805.db (a different lineage, CHARTER_form_table_rebuild.md :76-79), spike.log, ss_bible_test.db.new.txt; no record keeps any of them. Home copies NOT proposed: pre_digits / pre_8b (kept rollback copies), pre_trapwire_swap (§9.78 evidence), pre-surface-fill (rebuild-words.md :81, :316), hdrlane (§9.95 reference, ops.md :152), db_backups (nightly rotation).
+
+### Block RMTMP drafted (11/17) — a write: to the ruling chat directly (§9.90); tested on made-up folders (separate folders: 18 removed, an unlisted file kept; re-paste STOP; a file changed today STOP, nothing removed; one folder: one copy each)
+```bash
+set +H
+L=~/edition_upgrade_runs/rm_tmp_20261117.log
+if [ -e "$L" ]; then echo "RMTMP RESULT: STOP - log already exists (already ran? kept as is): $L"; else
+( set -u
+echo "RMTMP - removes 10 named scratch files in /tmp (and the same names in /var/tmp if that is a separate folder); nothing in home is touched - $(date -u +%FT%TZ)"
+F="bible_ride_0805.db scratch5207.db scratch2316.db scratch2316b.db spike.log sb_new.txt sb_live.txt eh_live.txt eh_new.txt ss_bible_test.db.new.txt"
+if [ /tmp -ef /var/tmp ]; then DIRS="/tmp"; echo "/var/tmp is the same folder as /tmp (one copy of each file)"; else DIRS="/tmp /var/tmp"; echo "/var/tmp is a separate folder (both copies go)"; fi
+me=$(id -un)
+echo "== before (every miss is STOP; nothing removed yet): bytes, last changed, owner, path =="
+P=""
+for d in $DIRS; do for f in $F; do p="$d/$f"
+  [ -e "$p" ] || { echo "not there (skipped): $p"; continue; }
+  [ -f "$p" ] && [ ! -L "$p" ] || { echo "RMTMP RESULT: STOP - not a plain file: $p"; exit 1; }
+  [ "$(stat -c %U "$p")" = "$me" ] || { echo "RMTMP RESULT: STOP - not owned by $me: $p"; exit 1; }
+  [ -z "$(find "$p" -mmin -1440)" ] || { echo "RMTMP RESULT: STOP - changed in the last 24 hours (in use?): $p"; exit 1; }
+  stat -c '%s  %y  %U  %n' "$p"; P="$P $p"
+done; done
+[ -n "$P" ] || { echo "RMTMP RESULT: STOP - none of the named files is there"; exit 1; }
+t0=$(find /tmp /var/tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}'); echo "my files in /tmp + /var/tmp before: $t0 bytes (each file counted once per path)"
+echo "== removing =="
+for p in $P; do rm -f -- "$p" && echo "removed: $p"; done
+echo "== after =="
+left=0; for p in $P; do [ -e "$p" ] && { echo "STILL THERE: $p"; left=1; }; done
+t1=$(find /tmp /var/tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}'); echo "my files in /tmp + /var/tmp after: $t1 bytes"
+du -sk ~ 2>/dev/null
+[ "$left" = 0 ] || { echo "RMTMP RESULT: CHECK - a file is still there (lines above)"; exit 1; }
+echo "RMTMP RESULT: DONE - $(date -u +%FT%TZ) - read the PA dashboard's File storage line next (it may lag)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
