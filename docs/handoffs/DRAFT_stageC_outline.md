@@ -12557,3 +12557,49 @@ Note 4: the git checks are eu_step pre's (its "repo guards" line, as in CCTL / B
 byte match (copied by grep from the SRCREAD block above), the BSTD lines behind XP_SIZE (the BSTD delta's "a:" line, 451964928 bytes).
 
 ### P8READ APPROVED (11/17, §9.176) — run as printed; its sha line closes §9.171 (5) on "yes" + equal sha; then the named list + the delta block
+
+### P8READ ran (11/17, 20:24:14Z, PA HEAD 1d5e34ee, REF d34d6723) — READ DONE, exit 0 (log ~/edition_upgrade_runs/p8_read_20261117.log; JP pasted it)
+PRE OK; CHECK OK vs HEADFIX2; pre_8b 451,964,928 B. (1) xref8b0_20261106.log :5 "rollback sha256 built a4faa4d8503296b18ba8368db1cd7d643783e9c5f15ea6b035cb9d4864ef0107"
+and :6 "rollback sha256 copy  a4faa4d8…0107" (same full value); "appears in that log: yes"; pre_8b sha now = it → §9.171 (5) closed
+under §9.176 (3). (2)/(3) the 18 lane-3 verses on pre_8b and built in full; found 18 / 47 on both. (4) Joh 19:18 @10: pre_8b english
+"one here on that side," head 'ere' norm blank; built same english, head 'here', norm 'here'. (5) norm read: pre_8b 626309|353578|0|0;
+built 626309|353595|353595|0. Copies unchanged. (A second paste after it was cancelled with Ctrl-C before it ran; the log guard would
+have stopped it anyway.)
+
+## pre_8b → built — the expected list, named (CC, 11/17; from P8READ (2)-(5) + the lane-3 files; §9.176 (5))
+Two independent derivations agree: these cell counts, read off P8READ's rows, equal the 8B2A log's after-check (english 35 · english_head
+17 · greek_pos 38 · bracket_id 41 raw op cells) and, by rank, (c)'s 51 (§9.164 (3)) in reverse. "blank" = None or '' (sqlite3's
+output does not tell them apart; the delta file's repr will). bracket_id is by per-verse RANK (eu_words_delta.py :11-13, load_words).
+**english — 35 (pre_8b → built), all lane-3 op cells:** 1Ch 21:9 @6 "David's seer," → 'seer,' · @8 blank → "David's" · 1Sa 14:50 @3
+"of Saul's wife" → 'wife' · @4 blank → "of Saul's" · 1Sa 24:5 @6 "David's heart" → 'heart' · @7 blank → "David's" · 2Ch 14:12 @11
+'the Ethiopians fled.' → 'fled.' · @12 blank → 'the Ethiopians' · 2Sa 14:4 @3 'Tekoahite woman' → 'woman' · @5 blank → 'Tekoahite' ·
+Eze 23:5 @1 'Aholah fornicated' → 'fornicated' · @3 blank → 'Aholah' · Gen 46:26 @19 "of Jacob's sons —" → 'sons —' · @20 blank →
+"of Jacob's" · Heb 11:24 @7 "of Pharaoh's daughter," → 'daughter,' · @8 blank → "of Pharaoh's" · Isa 30:31 @5 'the Assyrians shall be
+vanquished' → 'shall be vanquished' · @6 blank → 'the Assyrians' · Jer 50:16 @11 'of the Grecian sword!' → 'sword!' · @12 blank → 'of the
+Grecian' · Lev 24:10 @3 'of an Israelitish woman,' → 'woman,' · @4 blank → 'of an Israelitish' · Mat 27:26 @7 'scourging Jesus,' →
+'Jesus,' · @8 blank → 'scourging' · Mat 9:11 @1 'the Pharisees seeing,' → 'seeing,' · @2 blank → 'the' · @3 blank → 'Pharisees' ·
+Num 25:8 @3 'Israelitish man' → 'man' · @5 blank → 'Israelitish' · @14 'Israelitish man,' → 'man,' · @16 blank → 'Israelitish' ·
+Num 25:14 @4 'Israelitish man' → 'man' · @6 blank → 'Israelitish' · Num 25:15 @3 'of the Midianitish woman' → 'woman' · @5 blank → 'of
+the Midianitish'. (Isa 30:31 / Jer 50:16 carry today's re-keyed wording, §9.77 — the app feed's, as pre_8b holds it.)
+**english_head — 18:** the 17 lane-3 op cells whose head goes blank → filled: 1Ch 21:9 @8 'davids' · 1Sa 14:50 @4 'sauls' · 1Sa 24:5
+@7 'davids' · 2Ch 14:12 @12 'ethiopians' · 2Sa 14:4 @5 'tekoahite' · Eze 23:5 @3 'aholah' · Gen 46:26 @20 'jacobs' · Heb 11:24 @8
+'pharaohs' · Isa 30:31 @6 'assyrians' · Jer 50:16 @12 'grecian' · Lev 24:10 @4 'israelitish' · Mat 27:26 @8 'scourging' · Mat 9:11 @3
+'pharisees' · Num 25:8 @5 'israelitish' · Num 25:8 @16 'israelitish' · Num 25:14 @6 'israelitish' · Num 25:15 @5 'midianitish'
+(353,578 + 17 = 353,595 heads, P8READ (5)); + HEADFIX2's Joh 19:18 @10 'ere' → 'here'. Every other op cell's head is the same on both.
+**greek_pos — 38, all op cells:** 1Ch 21:9 @6 blank→2 · @8 blank→1 · 1Sa 14:50 @3 blank→2 · @4 blank→1 · 1Sa 24:5 @5 2→3 · @6 1→2 ·
+@7 blank→1 · 2Ch 14:12 @11 blank→2 · @12 blank→1 · 2Sa 14:4 @1 3→4 · @3 2→3 · @5 blank→2 · Eze 23:5 @1 blank→2 · @3 blank→1 · Gen
+46:26 @19 blank→2 · @20 blank→1 · Heb 11:24 @7 blank→2 · @8 blank→1 · Isa 30:31 @5 blank→2 · @6 blank→1 · Jer 50:16 @11 blank→2 · @12
+blank→1 · Lev 24:10 @1 3→4 · @3 2→3 · @4 blank→2 · Mat 27:26 @7 blank→2 · @8 blank→1 · Mat 9:11 @1 blank→3 · @2 blank→1 · @3 blank→2 ·
+Num 25:8 @3 blank→2 · @5 blank→1 · @14 blank→2 · @16 blank→1 · Num 25:14 @4 blank→2 · @6 blank→1 · Num 25:15 @3 blank→2 · @5 blank→1.
+**bracket_id — 51 by rank: 41 op cells + 10 non-op cells renumbered because a new lane-3 bracket now comes first:** 1Ch 21:9 @6 @7 @8
+None→2 · 1Sa 14:50 @3 @4 None→1 · 1Sa 24:5 @7 None→1 · 2Ch 14:12 @11 @12 None→2 · 2Sa 14:4 @4 @5 None→1 · 2Sa 18:31 @7 None→1 (the
+bracket first seen at @6 ranks 1, ahead of @18's) · 2Sa 18:32 @15 None→2 · Eze 23:5 @1 @2 @3 None→1 · Gen 46:26 @19 @20 None→1 · Heb
+11:24 @7 @8 None→2 · Isa 30:31 @5 @6 None→1 · Jer 50:16 @11 @12 None→1 · Lev 24:10 @4 None→1 · Mat 27:26 @7 @8 None→1 · Mat 9:11 @1 @2
+@3 None→1, **@15 @16 @17 @18 1→2 (non-op)** · Num 25:8 @3 @4 @5 None→1, @14 @15 @16 None→2, **@25 @26 @27 1→3 (non-op)** · Num 25:14
+@4 @5 @6 None→2 · Num 25:15 @3 @4 @5 None→1, **@14 @15 @16 1→2 (non-op)**.
+**english_head_norm — by rule (step 11, build_rendering_norm.py :49-55, :57-82):** pre_8b holds no norm (P8READ (5): 0 filled); built
+holds rnorm(english_head) on every row with a non-blank head and none elsewhere. So the members are exactly built's 353,595 rows with a
+head, each blank → rnorm(built's head) (Joh 19:18 @10 → 'here' among them); no member on a blank-head row.
+**Nothing else:** verses.text 0; italic, italic_words, smcap_words 0; words only 0 / 0; moved pairs 0 (unpaired 0 / 0); verses only 0
+/ 0. Strong's side (strongs, strongs_base, morph, lemma, is_pn): counts printed only (§9.173 (4)(ii)); P8READ shows strongs_base
+rewrites inside these verses (e.g. 1Ch 21:9 @4 H1410 → G1045), the 8b chain's, as expected.
