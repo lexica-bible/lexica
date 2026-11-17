@@ -12142,3 +12142,207 @@ Verdict line verbatim: "REVIEW: ESCALATE - Block RMTC deletes a file (T_c.db), w
 ### RMTC ran (11/17) — RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/rm_tc_20261117.log; JP pasted it)
 Against §9.170 (3): result line = expect; words_cells.tsv sha 7d789d5c…c522 = expect; T_c 452,038,656 B = expect; rm exit 0; every other file in the run folder same size and time: yes (21 files); src, built, pre_8b: yes. Home in use 8,125,172 → 7,683,676 KB (freed 441,496 KB); my /tmp files 9,322,145 B before and after (= RMTMP's after-figure 18,644,290 counted once, /tmp = /var/tmp); home + /tmp after 7,692,779 KB. Dashboard line after: JP reads it; it goes to the ruling chat with this log (§9.170 (4)).
 **Dashboard after RMTC (JP, 11/17):** "File storage: 73% full – 7.3 GB of your 10.0 GB quota" — fits home + /tmp 7,692,779 KB (= 7.34 GiB). Free about 2.7 GB for (b) (T_b about 452 MB plus its run files).
+
+## (b) the STANDARD — Block BSTD drafted (11/17, GATE REF d34d6723) — a write: reviewer → ESCALATE → ruling chat (§9.169 (5)(b)); not to run before the RMTC log is read there
+**What it does.** T_b = src → `build_words_from_abp.py src bh_scrape.db --app-feed --out <run folder>` (prompt answered `<<< rebuild`,
+as CCTL) → src.new moved at once into the run folder as T_b.db → B2 `build_prose_from_app.py --eligible <T_b's eligible list> --apply T_b
+--out <run folder>` → `finish_rebuild.sh T_b` in full (no step 11 norm: pre_8b was taken before step 11, so both sides carry the build's
+english_head_norm) → `eu_words_delta --a built_pre_8b_20261106 --b T_b`, **expected EMPTY**. Run folder `step4_b_standard_20261117`, log
+`step4_b_standard_20261117.log`.
+**Inputs.** The build's app-feed inputs are the committed fixtures (count-differs, censuses, carve-out, frozen merge-pair / edge-split
+lists, versification class — tests/fixtures/edition_upgrade, covered by eu_step pre's scripts/tests = REF guard) and the PA-only feed
+(abp_app_html/abp_app_slots_italic.tsv, sha-pinned in cert_manifest.json and checked by the build itself, FeedError = STOP); the cert
+pins (`cert_manifest.py verify`); bh_scrape.db (sha = §9.161 (2)). The build's report files go to the run folder (`--out`, report()
+:2546-2580 writes strict_fail / eligible / merge_pairs / edge_splits `_20261031.tsv`); B2's prose list too (`--out`, :196).
+**Before any write, every miss is a STOP:** eu_step pre (REF, the three copies, no -journal); HEADFIX2's built guard; src.new / -journal /
+-wal / -shm / T_b absent; none of the five report names already in the run folder; src 451,964,928 B; **pre_8b's sha256 starts a4faa4d8
+and ends 0107** (the copy made at 8B0 = built then, xref8b0_20261106.log, record :2711-2712 — the full sha is not in the repo); bh_scrape
+sha; cert_manifest "Baseline intact: 76 files"; home ≤ 7,900,000 KB (after RMTC 7,683,676 + slack); live's six-table digest taken.
+**After the build, STOP:** build exit ≠ 0 or no src.new (the build itself STOPs on a merge-pair / edge-split list miss or a feed pin
+miss); a side file beside src.new; **transplanted ≠ 29,071 or english changed ≠ 15,588 (§9.169 (5)(b): STOP and read)**; T_b's eligible ≠
+e540d34d… or strict_fail ≠ 1513e235… (full shas from step4_c_control_20261117.log's 10/31 files list = step 5's lists; B2 not run).
+B2 exit ≠ 0 = STOP. finish exit not 0 / 1, exit 1 with no problem list, or a problem other than the two applies = STOP.
+**Printed with "= stage B (yes)" or NO, a NO is a CHECK (the delta still runs):** stageB_build_20261102.log :33 merge-pair MATCHES 1,578
+· :34 edge-split MATCHES 90 · :35 Filled 5 · :36 Split 84 · :37 Re-cleaned 3 · :39 Flagged 6,882 · :42 Words inserted 626,305 · :43
+skipped 0 · :44 article-slot 923 / 411 · :45 PN-star A 1,505 + B 2,552 / 3,161 · :48 dash 4,248 / folded 12,480 · :54 strict_fail 1,421 ·
+passdiff 625 · :57 merge 1,578 / 1,380 · :58 edge 90 / 90 (line numbers as palog_read_20261116.log printed them, §9.161); **:56
+greek_pos/bracket_id — this run's line printed beside stage B's 1,258, not gated**; stageB_Bapply_20261102.log :2 15,571 / 13,500 · :3
+kept old 2,166 · :6 EU 118 / other 0 · :7 APPLIED 15,571; B2's prose list = f2a22ecd… (stage B: SAME bytes). **The two apply summaries —
+CC's derivation, not a PA log of a like run:** src's table holds 374 active (124 verses.text + 250 words; CCTL's applies summed 124 and
+250); stage C's tail on built read 4b `applied 118 · already-applied 6 · LOUD-SKIPPED 0` and step 7 `applied 248 · already-applied 0 ·
+LOUD-SKIPPED 0` (record :505-506), then the J run applied the 2 Joh 14:26 rows (:2492) — so on T_b: 4b `applied 118 · already-applied
+6 · spent by lane-3: 0 · LOUD-SKIPPED 0`, step 7 `applied 250 · already-applied 0 · spent by lane-3: 0 · LOUD-SKIPPED 0`, finish exit 0.
+**After the delta, every miss is a CHECK:** any words column with members; verses.text 0; moved 0 0 0; words only 0 0; verses only 0 0
+(the first 40 member cells printed); any stage-B / apply figure NO; checkout put back; src sha before = after; pre_8b size + time
+before = after; bh sha; live's six-table digest before = after; the 10/31 files before = after; no src.new again; home and /tmp after.
+T_b stays until a removal is ruled.
+**Local test** (WSL, clone at d34d6723 with test stand-ins for the build / B2 / finish / cert_manifest; made-up src, built, pre_8b, live,
+HEADFIX2-style folder; the real eu_step and eu_words_delta): DONE exit 0 with every figure line "(yes)" and an empty delta, checkout put
+back, pronoun_review.tsv restored; re-paste STOP; a drifted cell → CHECK with the member listed; english changed 15,587 → STOP after the
+build, B2 not run; a different eligible list → STOP, B2 not run; the build's merge-pair STOP → STOP, src.new left in place; step 7
+LOUD-SKIP 1 → CHECK ("7: … NO"), the delta still run; pre_8b not the 8B0 copy → STOP before any write.
+### Block BSTD (GATE REF d34d6723; WRITES src.new → T_b.db + the run folder — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_b_standard_20261117.log
+if [ -e "$L" ]; then echo "BSTD RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - BSTD - (b) the STANDARD (DESIGN 9.160 (1)-(3), 9.169 (5)(b)): T_b = src -> --app-feed build (--out = the run folder) -> B2 build_prose_from_app.py --apply -> finish_rebuild.sh in full, all on a throwaway copy in the run folder; then eu_words_delta built_pre_8b_20261106 vs T_b (read-only), expected EMPTY - WRITES: src.new (moved at once into the run folder as T_b.db), T_b.db, the run folder, this log; pronoun_review.tsv + unmatched_pn.txt in ~/bible-db are put back as they were - src, built, pre_8b and LIVE only read - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "BSTD RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+LIVE=~/bible-db/bible.db
+BH=~/bible-db/bh_scrape.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step4_b_standard_20261117
+T=$D/T_b.db
+XS_SIZE=451964928                 # src: step4_delta2_20261116.log (DESIGN 9.157 (1))
+XBH=5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb   # bh_scrape.db: palog_read_20261116.log (DESIGN 9.161 (2))
+XMAN="Baseline intact: 76 files match the 2026-10-31 pin."              # cert_manifest.json; as in CCTL (step4_c_control_20261117.log, DESIGN 9.168 (1))
+XHOME_MAX=7900000                 # KB: home in use 7,683,676 after RMTC (rm_tc_20261117.log) + about 200 MB slack
+XP_SHA_HEAD=a4faa4d8; XP_SHA_TAIL=0107   # pre_8b sha256 as made at 8B0 = built then: xref8b0_20261106.log (record DRAFT_stageC_outline.md :2711-2712)
+XELIG=e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f   # eligible_20261031.tsv = step 5's: step4_c_control_20261117.log, the 10/31 files list (DESIGN 9.160 (3), 9.169 (5)(b))
+XSF=1513e23518f53dab92abefe14fc489957b8fd1a59d6eca9898c5a7a3f2d51494     # strict_fail_20261031.tsv = step 5's: same log line set
+XPROSE=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864  # prose_20261031.tsv = step 5's / step 7's (stage B: prose list SAME bytes): same log line set
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+LDIG() { EU -c 'import sys; sys.path.insert(0, "scripts"); import eu_step as e; c = e.ro(sys.argv[1]); print(" ".join("%s=%d/%s" % (t, *e.digest(c, t)) for t in sys.argv[2:])); c.close()' "$@"; }
+# --- before any write: every miss is STOP; nothing written but the run folder and its own listings ---
+EU scripts/eu_step.py pre --tag BSTD --ref "$REF" --dir "$D" --db "$S" --db "$B" --db "$P" || { echo "BSTD RESULT: STOP - pre (line above); nothing written"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$LIVE" "$BH" "$P"; do [ -s "$f" ] || { echo "BSTD RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag BSTD --built "$B" --dir "$DH" --written words,abp_corrections || { echo "BSTD RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+for f in "$S.new" "$S.new-journal" "$S.new-wal" "$S.new-shm" "$T"; do [ -e "$f" ] && { echo "BSTD RESULT: STOP - already exists (the build would delete a .new; never let it): $f"; exit 1; }; done
+for f in strict_fail eligible merge_pairs edge_splits prose; do [ -e "$D/${f}_20261031.tsv" ] && { echo "BSTD RESULT: STOP - $D/${f}_20261031.tsv already exists"; exit 1; }; done
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"
+[ "$n" = "$XS_SIZE" ] || { echo "BSTD RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+s0=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 before: $s0"
+p0=$(cut -d' ' -f1 <<< "$(sha256sum < "$P")"); echo "pre_8b sha256 before: $p0 (expect $XP_SHA_HEAD...$XP_SHA_TAIL)"
+[ "${p0:0:8}" = "$XP_SHA_HEAD" ] && [ "${p0: -4}" = "$XP_SHA_TAIL" ] || { echo "BSTD RESULT: STOP - pre_8b is not the copy made at 8B0"; exit 1; }
+pt0=$(stat -c '%s %Y' "$P")
+h0=$(cut -d' ' -f1 <<< "$(sha256sum < "$BH")"); echo "bh_scrape.db sha256: $h0 (expect $XBH)"
+[ "$h0" = "$XBH" ] || { echo "BSTD RESULT: STOP - bh_scrape.db is not the file stage B read"; exit 1; }
+m=$(EU scripts/cert_manifest.py verify 2>&1); rm_=$?; echo "cert_manifest verify (exit $rm_; a BACKUP GUARD warning line before it is warn-only, cert_manifest.py _backup_staleness_check):"; echo "$m"
+[ "$rm_" = 0 ] && [ "$(tail -n 1 <<< "$m")" = "$XMAN" ] || { echo "BSTD RESULT: STOP - the build's pinned inputs are not the 2026-10-31 pin"; exit 1; }
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (the quota counts both, DESIGN 9.167; STOP if home is above $XHOME_MAX; the copy adds about 452 MB; the PA dashboard, read by JP first, is the quota's own figure)"
+[ "$dk0" -le "$XHOME_MAX" ] || { echo "BSTD RESULT: STOP - home has grown since RMTC; read the dashboard and the ruling chat first"; exit 1; }
+echo "=== LIVE before (read-only): size + time printed, NOT a gate (the site writes its cache into bible.db); the tables the chain writes, digested ==="
+stat -c 'live: %s bytes, last write %y' "$LIVE"
+lv0=$(LDIG "$LIVE" words verses tipnr kjv_words bsb_words abp_corrections) || { echo "BSTD RESULT: STOP - live could not be read"; exit 1; }
+echo "live digests before: $lv0"
+sha256sum "$R"/*_20261031.tsv > "$D/files_1031_before.txt"; echo "10/31 report files (sha256, before): $(wc -l < "$D/files_1031_before.txt") files"; cat "$D/files_1031_before.txt"
+git status --porcelain > "$D/git_status_before.txt"; echo "checkout status before: $(wc -l < "$D/git_status_before.txt") lines (list in $D/git_status_before.txt)"
+mkdir "$D/checkout_before" "$D/checkout_run" || { echo "BSTD RESULT: STOP - cannot make the checkout folders"; exit 1; }
+for f in pronoun_review.tsv unmatched_pn.txt; do if [ -e "$f" ]; then cp -p -- "$f" "$D/checkout_before/$f" && echo "kept a copy: ~/bible-db/$f ($(stat -c %s "$f") bytes)"; else echo "not present before: ~/bible-db/$f"; fi; done
+put_back() {
+  for f in pronoun_review.tsv unmatched_pn.txt; do
+    [ -e "$f" ] && mv -- "$f" "$D/checkout_run/$f"
+    [ -e "$D/checkout_before/$f" ] && cp -p -- "$D/checkout_before/$f" "$f"
+  done
+  git status --porcelain > "$D/git_status_after.txt"
+  echo "checkout put back: status after = before: $(cmp -s "$D/git_status_before.txt" "$D/git_status_after.txt" && echo yes || echo NO); the run's own copies are in $D/checkout_run"
+}
+trap put_back EXIT
+# --- the writes (1): the --app-feed build on src (read through its own read-only snapshot) into src.new, reports into the run folder ---
+echo "=== (1) --app-feed build: build_words_from_abp.py src bh_scrape.db --app-feed --out <run folder> - start $(date -u +%FT%TZ) ==="
+EU scripts/build_words_from_abp.py "$S" "$BH" --app-feed --out "$D" <<< rebuild > "$D/build.out" 2>&1; rb=$?
+echo "build exit $rb (expect 0) - end $(date -u +%FT%TZ)"
+grep -n -E "Type 'rebuild'|Snapshot|STOP|Filled |Split |Re-cleaned|Flagged|Words inserted|Verses skipped|Article-slot|PN-star|feed normalizations|paired |transplanted|count_differs|versification|ours_only|strict_fail|merge_pairs|edge_splits|merge-pair list|edge-split list|eligible list|Traceback|Error|ERROR" "$D/build.out"
+[ "$rb" = 0 ] && [ -s "$S.new" ] || { echo "BSTD RESULT: STOP - the build did not finish (exit $rb; $D/build.out); any src.new is left where it is for the ruling chat"; exit 1; }
+for f in "$S.new-journal" "$S.new-wal" "$S.new-shm"; do [ -e "$f" ] && { echo "BSTD RESULT: STOP - a side file beside src.new: $f (left as is)"; exit 1; }; done
+mv -- "$S.new" "$T" || { echo "BSTD RESULT: STOP - cannot move src.new into the run folder"; exit 1; }
+echo "T_b: $T, $(stat -c %s "$T") bytes"
+echo "--- the stage-B build figures (stageB_build_20261102.log, line numbers as printed in palog_read_20261116.log; DESIGN 9.161, 9.169 (5)(b)):"
+bfig=0
+fig() { if grep -q -E -e "$2" "$D/build.out"; then echo "  $1: = stage B (yes)"; else echo "  $1: NOT = stage B - the line(s) above are this run's"; bfig=1; fi; }
+fig ":33 merge-pair list MATCHES (1,578 rows)" "merge-pair list: MATCHES the frozen merge_pairs_20261102.tsv \(1,578 rows\)"
+fig ":34 edge-split list MATCHES (90 rows)" "edge-split list: MATCHES the frozen edge_splits_20261102.tsv \(90 rows\)"
+fig ":35 Filled 5" "Filled 5 blank-Strong's"
+fig ":36 Split 84" "Split 84 merged subject-name"
+fig ":37 Re-cleaned 3" "Re-cleaned 3 italic head"
+fig ":39 Flagged 6,882" "Flagged 6,882 pronoun slots"
+fig ":42 Words inserted 626,305" "Words inserted: 626,305$"
+fig ":43 Verses skipped 0" "Verses skipped: 0$"
+fig ":44 article-slot 923 / 411" "Article-slot pass \(ruling 10\): 923 written, 411 refusals"
+fig ":45 PN-star A 1,505 + B 2,552 / 3,161" "PN-star pass \(lane 2\): A 1,505 \+ B 2,552 written .*, 3,161 refusals"
+fig ":48 dash 4,248 / folded 12,480" "end ' -' -> ' --' 4,248 \(pin 4,248\) - space-folded cells 12,480 \(pin 12,480\)"
+fig ":54 strict_fail 1,421" "^  strict_fail +1,421$"
+fig "passdiff 625" "strict_fail by reason: .*passdiff 625 "
+fig ":57 merge 1,578 / 1,380" "merge_pairs \(sec 9.73\): 1,578 pairs in 1,380 verses"
+fig ":58 edge 90 / 90" "edge_splits \(sec 9.75\): 90 cells in 90 verses"
+tr_=$(grep -c -E "^  transplanted +29,071$" "$D/build.out"); ec=$(grep -c -E "of transplanted: english changed 15,588 - " "$D/build.out")
+echo "  :50 transplanted 29,071: $([ "$tr_" = 1 ] && echo '= stage B (yes)' || echo NO)"
+echo "  :56 english changed 15,588: $([ "$ec" = 1 ] && echo '= stage B (yes)' || echo NO)"
+echo "  :56 greek_pos/bracket_id changed - stage B 1,258 (printed only; the 9.88 rule entered the build at 820a6109, after stage B): this run's line:"; grep -E "of transplanted:" "$D/build.out"
+[ "$tr_" = 1 ] && [ "$ec" = 1 ] || { echo "BSTD RESULT: STOP - transplanted or english changed is not stage B's (DESIGN 9.169 (5)(b): STOP and read; T_b kept as is)"; exit 1; }
+el=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/eligible_20261031.tsv")"); sf=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/strict_fail_20261031.tsv")")
+echo "eligible list: $el (expect $XELIG) - strict_fail list: $sf (expect $XSF)"
+[ "$el" = "$XELIG" ] && [ "$sf" = "$XSF" ] || { echo "BSTD RESULT: STOP - T_b's eligible or strict_fail list is not step 5's bytes (T_b kept as is; B2 not run)"; exit 1; }
+# --- the writes (2): B2 on T_b ---
+echo "=== (2) B2: build_prose_from_app.py --eligible <T_b's eligible list> --apply T_b --out <run folder> - start $(date -u +%FT%TZ) ==="
+EU scripts/build_prose_from_app.py --eligible "$D/eligible_20261031.tsv" --apply "$T" --out "$D" < /dev/null > "$D/b2.out" 2>&1; r2=$?
+cat "$D/b2.out"; echo "B2 exit $r2 (expect 0) - end $(date -u +%FT%TZ)"
+[ "$r2" = 0 ] || { echo "BSTD RESULT: STOP - B2 did not finish (T_b kept as is)"; exit 1; }
+echo "--- the stage-B B2 figures (stageB_Bapply_20261102.log, line numbers as printed in palog_read_20261116.log):"
+fb=$D/b2.out
+fig2() { if grep -q -F -e "$2" "$fb"; then echo "  $1: = stage B (yes)"; else echo "  $1: NOT = stage B"; bfig=1; fi; }
+fig2 ":2 written 15,571 / unchanged 13,500" "written 15,571 - unchanged (identical after em-dash swap) 13,500"
+fig2 ":3 kept old 2,166" "kept old 2,166:"
+fig2 ":6 EU 118 / other 0" "EU rows matched on written verses: 118 - other active prose rows matched: 0"
+fig2 ":7 APPLIED 15,571" "APPLIED: 15,571 verses.text rows written"
+pr=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/prose_20261031.tsv")"); echo "prose list: $pr (expect $XPROSE, stage B: SAME bytes) - $([ "$pr" = "$XPROSE" ] && echo yes || echo NO)"
+[ "$pr" = "$XPROSE" ] || bfig=1
+# --- the writes (3): finish_rebuild.sh on T_b ---
+echo "=== (3) finish_rebuild.sh in full on T_b (it takes the db path as its only argument; every step gets \${DB}; no step swaps or deploys) - start $(date -u +%FT%TZ) ==="
+bash scripts/finish_rebuild.sh "$T" < /dev/null > "$D/finish.out" 2>&1; rf=$?
+echo "finish exit $rf (expect 0, as stage C's tail on built) - end $(date -u +%FT%TZ)"
+grep -n -E "^── |Matched|summary:|spent by lane-3|Traceback|DRIFT|drift" "$D/finish.out"
+echo "--- every SKIP line the two applies printed (expect none):"
+grep -n -E ' SKIP |NOT declared spent' "$D/finish.out"
+pl=$(sed -n '/did NOT finish clean/,/DO NOT SWAP/p' "$D/finish.out"); pl=$(grep -E '^     - ' <<< "$pl")
+echo "--- finish's problem list:"; echo "${pl:-(none)}"
+case "$rf" in 0|1) ;; *) echo "BSTD RESULT: STOP - finish exited $rf (only 0 or 1 is a finished run; T_b kept as is)"; exit 1 ;; esac
+[ "$rf" = 1 ] && [ -z "$pl" ] && { echo "BSTD RESULT: STOP - finish exited 1 with no problem list (T_b kept as is)"; exit 1; }
+other=$(grep -v -x -F -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only verses" -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only words" <<< "$pl")
+[ -z "$other" ] || { echo "BSTD RESULT: STOP - finish reported a problem other than the two applies (T_b kept as is):"; echo "$other"; exit 1; }
+echo "--- the two apply summaries (src's table: 374 active = 124 verses.text + 250 words; stage C's tail on built: 4b 118 / 6 / 0, step 7 248 / 0 / 0, then J 2 - DRAFT :505-506, :2492):"
+fig3() { if grep -q -F -e "$2" "$D/finish.out"; then echo "  $1: yes"; else echo "  $1: NO"; bfig=1; fi; }
+fig3 "4b: applied 118 · already-applied 6 · spent 0 · LOUD-SKIPPED 0" "summary: applied 118 · already-applied 6 · spent by lane-3: 0 · LOUD-SKIPPED 0"
+fig3 "7: applied 250 · already-applied 0 · spent 0 · LOUD-SKIPPED 0" "summary: applied 250 · already-applied 0 · spent by lane-3: 0 · LOUD-SKIPPED 0"
+# --- the delta ---
+echo "=== (4) the delta: eu_words_delta.py --a pre_8b --b T_b (read-only on both) - start $(date -u +%FT%TZ) ==="
+mkdir "$D/delta" || { echo "BSTD RESULT: STOP - cannot make $D/delta"; exit 1; }
+EU scripts/eu_words_delta.py --a "$P" --b "$T" --out "$D/delta" < /dev/null > "$D/delta.out" 2>&1; rd=$?
+cat "$D/delta.out"; echo "delta exit $rd (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rd" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "BSTD RESULT: STOP - the delta did not finish (partial files kept in $D/delta)"; exit 1; }
+# --- after the delta: every miss is CHECK (T_b is a throwaway; nothing to restore) ---
+bad=0
+echo "--- expected EMPTY (DESIGN 9.160 (1)); every member is a finding, read from the delta files:"
+wc_=$(awk '$1 ~ /^words\./ && $2 != 0' "$D/delta.out"); echo "words columns with members: ${wc_:-(none)}"; [ -z "$wc_" ] || bad=1
+vt=$(awk '$1 == "verses.text" {print $2}' "$D/delta.out"); echo "verses.text: $vt (expect 0)"; [ "$vt" = 0 ] || bad=1
+mp=$(awk '$1 == "moved" && $2 == "pairs" {print $3 " " $10 " " $13}' "$D/delta.out"); echo "moved pairs / unpaired a / unpaired b: $mp (expect 0 0 0)"; [ "$mp" = "0 0 0" ] || bad=1
+wo=$(awk '$1 == "words" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "words only a / only b: $wo (expect 0 0)"; [ "$wo" = "0 0" ] || bad=1
+vo=$(awk '$1 == "verses" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "verses only a / only b: $vo (expect 0 0)"; [ "$vo" = "0 0" ] || bad=1
+echo "first 40 member cells, if any (all in $D/delta/words_cells.tsv):"; head -n 41 "$D/delta/words_cells.tsv"
+echo "--- the stage-B / stage-C figures above: $([ "$bfig" = 0 ] && echo 'all = (yes)' || echo 'a miss (NO lines above)')"; [ "$bfig" = 0 ] || bad=1
+# --- the checkout put back, src, pre_8b, live, bh_scrape, the 10/31 files; every miss is CHECK ---
+trap - EXIT; put_back; cmp -s "$D/git_status_before.txt" "$D/git_status_after.txt" || bad=1
+s1=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 after = before: $([ "$s1" = "$s0" ] && echo yes || echo NO)"; [ "$s1" = "$s0" ] || bad=1
+pt1=$(stat -c '%s %Y' "$P"); echo "pre_8b size and time after = before: $([ "$pt1" = "$pt0" ] && echo yes || echo NO)"; [ "$pt1" = "$pt0" ] || bad=1
+h1=$(cut -d' ' -f1 <<< "$(sha256sum < "$BH")"); echo "bh_scrape.db sha256 after = before: $([ "$h1" = "$h0" ] && echo yes || echo NO)"; [ "$h1" = "$h0" ] || bad=1
+stat -c 'live: %s bytes, last write %y (printed only)' "$LIVE"
+lv1=$(LDIG "$LIVE" words verses tipnr kjv_words bsb_words abp_corrections); echo "live digests after: $lv1"
+echo "live: the tables the chain writes, before = after: $([ "$lv1" = "$lv0" ] && echo yes || echo NO)"; [ "$lv1" = "$lv0" ] || bad=1
+sha256sum "$R"/*_20261031.tsv > "$D/files_1031_after.txt"; echo "10/31 report files before = after: $(cmp -s "$D/files_1031_before.txt" "$D/files_1031_after.txt" && echo yes || echo NO)"; cmp -s "$D/files_1031_before.txt" "$D/files_1031_after.txt" || bad=1
+[ -e "$S.new" ] && { echo "CHECK: a src.new exists again: $S.new"; bad=1; }
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm1=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use after: $dk1 KB (before $dk0 KB; T_b + run files $((dk1 - dk0)) KB); my files in /tmp after: $tm1 bytes"
+[ "$bad" = 0 ] || { echo "BSTD RESULT: CHECK - lines above (T_b kept in $D) - to the ruling chat as printed"; exit 1; }
+echo "BSTD RESULT: DONE - the delta pre_8b vs T_b is EMPTY; every stage-B / stage-C figure reproduced; T_b kept in $D until a removal is ruled"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
