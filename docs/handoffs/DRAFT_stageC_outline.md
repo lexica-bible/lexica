@@ -12384,3 +12384,7 @@ after stage B). T_b.db 451,964,928 B kept in step4_b_standard_20261117 until a r
 **pre_8b full sha256 as printed (§9.171 (5), now the recorded value):**
 `a4faa4d8503296b18ba8368db1cd7d643783e9c5f15ea6b035cb9d4864ef0107` — to equal the pre_8b sha line of `xref8b0_20261106.log`
 (record :2711-2712 holds only `a4faa4d8…0107`); that log line is still to be read on PA.
+
+### (b) RULED (11/17, §9.173) — (b) PASSED; next: (a) RMTB (T_b removal) → (b) read-only pre_8b → built + src → pre_8b + xref8b0 sha line → (c) live = src proof → (d) step-4 gate proposal
+The BSTD "ran" entry above is the run record; the ruling chat read the log in full and confirmed every §9.171 (7) line. Scope for
+pre_8b → built and the composition check: §9.173 (4).
