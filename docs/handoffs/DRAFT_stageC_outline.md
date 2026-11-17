@@ -11462,3 +11462,164 @@ match the build at 3f6b4d3c (:2435, :2727, :2737, :2750, :2759, :2762, :2770, :2
 `~/edition_upgrade_runs/joh1426_rows_20261106.log`, recorded at :2490-2492 ("AFTER 374 / 23 / 6", on both copies). The echo text is
 left as cleared (a label, gates nothing); this line is the correct cite. NOTE 2: a stage-B log not in ~/edition_upgrade_runs prints
 "NOT FOUND" — a result for the ruling chat, not an empty read. NOTE 3: no push while the block waits; PA must not pull before it.
+
+### PALOG ran (11/17, 03:07:01Z, PA HEAD 1d5e34ee, REF d34d6723) — READ DONE, exit 0; ruled §9.161
+Log `~/edition_upgrade_runs/palog_read_20261116.log` (run folder `palog_read_20261116` left empty). PRE OK; CHECK OK vs HEADFIX2
+(words `d95acb5d4be4`, abp_corrections 404 `d97d928ca7f5`); src 451,964,928 B; built, src, pre_8b unchanged. Stage-B build log 80 lines,
+last write 2026-11-03 01:40:49Z, no start time in it; figure lines by number: :33 merge-pair MATCHES 1,578 · :34 edge-split MATCHES
+90 · :35 Filled 5 · :36 Split 84 · :37 Re-cleaned 3 · :39 Flagged 6,882 · :42 Words inserted 626,305 · :43 Verses skipped 0 · :44
+article-slot 923 / 411 · :45 PN-star A 1,505 + B 2,552 / 3,161 · :48 dash 4,248 / folded 12,480 · :50 transplanted 29,071 · :54
+strict_fail 1,421 · :56 english changed 15,588, greek_pos/bracket_id changed 1,258 · :57 merge 1,578 / 1,380 · :58 edge 90 / 90; the
+build's report files went to `~/edition_upgrade_runs/stageB_20261102/` (:59-62, the `_20261031` stamp). B2 log: :2 15,571 / 13,500 ·
+:3 kept old 2,166 · :6 EU 118 / other 0 · :7 APPLIED 15,571. Stage B's "Type 'rebuild'" prompt answered at :11. bh_scrape.db
+55,865,344 B, last write 2026-06-30, sha256 `5e9d4bb6…fb30bb`. The 11/1 retire: `step6b_retire_20261101.log` (active 51 → 28, 23 ids;
+journal_mode delete) + `step6a_after_retire_set_20261101.log` (AFTER-THE-FACT PASS; 10 cured rows stay active). abp_corrections src
+374|23|6, built 375|23|6. Strong's rows 8 on 4 slots, is_pn 0, no pn_greek_identity row, both copies. greek_pos / bracket_id declared
+INTEGER, stored integer or null only, on src, built, pre_8b.
+
+## Item 2 — the removal block (RMTHROW, §9.160 (4), §9.161 (5)) drafted (11/17, GATE REF d34d6723) — for the ruling chat
+**Which guards still read `step9a_apply_20261115/dry.db`** (from the record and the repo): none still in use. It was read by (i)
+the STEP9A "built =" guard (`eu_step check --dir step9a_apply_20261115 --written abp_surface`, which opens the folder's dry.db, eu_step.py
+:461-462) — last used by HEADFIX2 (:10993), superseded by HEADFIX2's guard from §9.156 (3) on (STEP4-DELTA2 and PALOG use only
+`step4_headfix2_20261116`); (ii) STEP9C-FREEZE's presence check (:9248), done 11/15. No script or test names the folder; rebuild-words.md
+:76 names only its before.db (stays). abp_surface on built stays covered: HEADFIX2's prep digested all 150 tables, and its check compares
+the 148 unwritten ones (abp_surface among them) with that digest. `step4_headfix_20261115/dry.db`: last read by HFREAD (:10718, 11/16);
+nothing after. After the removal the STEP9A guard can no longer run — as §9.156 (3) already rules it out.
+**RMTHROW** deletes exactly two files; opens no database for writing (one `sqlite3 -readonly` count). Before any removal every miss is a
+STOP: pre; HEADFIX2's guard; each named file present, not empty, not a link; no -journal beside either throwaway; each folder proven by
+its before.db sha (HEADFIX `da47ce8c…57f3`, step4_headfix_20261115.log / §9.151; 9a `ea6c54c3…e7273`, step9a_apply_20261115.log /
+§9.128); HEADFIX's dry.db = 201,183,232 B (HFREAD log, §9.152); the 9a dry.db's abp_surface = 395,014 rows (step9a_apply_20261115.log,
+§9.128) — its size is printed, not declared (the record has only its prep size 109,780,992 B, before the throwaway restore wrote it).
+After the first rm every miss is a CHECK (nothing to restore — throwaway copies): both gone; both before.db shas unchanged; HEADFIX2's
+state.json / dry.db / before.db, the 9a state.json and built: size + time before = after; home in use before / after (`du -sk ~`, as
+HEADFIX2 :10990). JP's disk check first (§9.160 (4)).
+Local test (WSL, clone at d34d6723, sqlite3 stand-in, made-up folders with the shas / size / count set to the made-up files): DONE exit 0,
+exactly the two dry.db gone, both before.db + HEADFIX2's folder unchanged; re-paste STOP; wrong 9a before.db → STOP, nothing removed;
+9a throwaway row count wrong → STOP, nothing removed; a -journal beside the HEADFIX throwaway → STOP; built changed after HEADFIX2's prep
+→ STOP before any removal.
+### Block RMTHROW (GATE REF d34d6723; DELETES two throwaway files — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/rm_throwaways_20261117.log
+if [ -e "$L" ]; then echo "RMTHROW RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export LC_ALL=C TZ=UTC
+echo "GATE REF ${REF} - RMTHROW - removes two throwaway copies (DESIGN 9.160 (4)): step4_headfix_20261115/dry.db and step9a_apply_20261115/dry.db - before.db in both folders and HEADFIX2's folder stay - no database opened for writing - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "RMTHROW RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D1=$R/step4_headfix_20261115
+D2=$R/step9a_apply_20261115
+D=$R/rm_throwaways_20261117
+# declared figures, each from a PA log line:
+X1_SIZE=201183232   # D1/dry.db: ~/edition_upgrade_runs/headfix_stop_read_20261116.log (HFREAD, DESIGN 9.152)
+X1_BEFORE=da47ce8c49968f2df564cecada7367336193eaa94a55483b182297caedd957f3   # D1/before.db: ~/edition_upgrade_runs/step4_headfix_20261115.log (9.151)
+X2_BEFORE=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273   # D2/before.db: ~/edition_upgrade_runs/step9a_apply_20261115.log (9.128)
+X2_SURF=395014      # D2/dry.db abp_surface rows after the 9a throwaway restore: step9a_apply_20261115.log (9.128)
+# --- before any removal: every miss is STOP, nothing removed ---
+python3 scripts/eu_step.py pre --tag RMTHROW --ref "$REF" --dir "$D" --db "$B" || { echo "RMTHROW RESULT: STOP - pre (line above); nothing removed"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$DH/before.db" "$D1/before.db" "$D1/dry.db" "$D2/before.db" "$D2/state.json" "$D2/dry.db"; do
+  [ -s "$f" ] || { echo "RMTHROW RESULT: STOP - missing or empty: $f; nothing removed"; exit 1; }
+  [ -L "$f" ] && { echo "RMTHROW RESULT: STOP - a link, not a file: $f; nothing removed"; exit 1; }
+done
+for f in "$D1/dry.db" "$D2/dry.db"; do [ -e "$f-journal" ] && { echo "RMTHROW RESULT: STOP - a -journal beside $f (left as is for the ruling chat); nothing removed"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; reads HEADFIX2's state.json + dry.db, which stay) ==="
+python3 scripts/eu_step.py check --tag RMTHROW --built "$B" --dir "$DH" --written words,abp_corrections || { echo "RMTHROW RESULT: STOP - built is not HEADFIX2's result (lines above); nothing removed"; exit 1; }
+echo "=== the two folders before ==="
+ls -l --time-style=full-iso "$D1" "$D2"
+s1=$(cut -d' ' -f1 <<< "$(sha256sum < "$D1/before.db")"); echo "$D1/before.db sha256 $s1 (expect $X1_BEFORE)"
+[ "$s1" = "$X1_BEFORE" ] || { echo "RMTHROW RESULT: STOP - not HEADFIX's before.db - wrong folder?; nothing removed"; exit 1; }
+s2=$(cut -d' ' -f1 <<< "$(sha256sum < "$D2/before.db")"); echo "$D2/before.db sha256 $s2 (expect $X2_BEFORE)"
+[ "$s2" = "$X2_BEFORE" ] || { echo "RMTHROW RESULT: STOP - not the 9a before.db - wrong folder?; nothing removed"; exit 1; }
+n1=$(stat -c %s "$D1/dry.db"); echo "$D1/dry.db: $n1 bytes (expect $X1_SIZE)"
+[ "$n1" = "$X1_SIZE" ] || { echo "RMTHROW RESULT: STOP - HEADFIX's throwaway is not the size HFREAD printed; nothing removed"; exit 1; }
+n2=$(sqlite3 -readonly "$D2/dry.db" "SELECT count(*) FROM abp_surface"); echo "$D2/dry.db: $(stat -c %s "$D2/dry.db") bytes (printed, not declared: the record has only its prep size 109,780,992, before the throwaway restore wrote it) - abp_surface $n2 rows (expect $X2_SURF)"
+[ "$n2" = "$X2_SURF" ] || { echo "RMTHROW RESULT: STOP - the 9a throwaway does not hold the 9a result; nothing removed"; exit 1; }
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use before: $dk0 KB"
+k0=$(stat -c '%s %Y %n' "$DH/state.json" "$DH/dry.db" "$DH/before.db" "$D2/state.json" "$B")
+# --- the removal ---
+echo "=== removing the two throwaway copies ==="
+rm -- "$D1/dry.db"; r1=$?
+rm -- "$D2/dry.db"; r2=$?
+echo "rm exit codes: $r1 $r2 (expect 0 0)"
+# --- after the first removal: every miss is CHECK (nothing to restore; the log goes to the ruling chat as printed) ---
+bad=0
+[ "$r1" = 0 ] && [ "$r2" = 0 ] || { echo "CHECK: an rm failed"; bad=1; }
+for f in "$D1/dry.db" "$D2/dry.db"; do [ -e "$f" ] && { echo "CHECK: still present: $f"; bad=1; }; done
+a1=$(cut -d' ' -f1 <<< "$(sha256sum < "$D1/before.db")"); a2=$(cut -d' ' -f1 <<< "$(sha256sum < "$D2/before.db")")
+echo "before.db after: $D1 $a1 - $D2 $a2 (each = its expect above: $([ "$a1" = "$X1_BEFORE" ] && [ "$a2" = "$X2_BEFORE" ] && echo yes || echo NO))"
+[ "$a1" = "$X1_BEFORE" ] && [ "$a2" = "$X2_BEFORE" ] || { echo "CHECK: a before.db changed"; bad=1; }
+k1=$(stat -c '%s %Y %n' "$DH/state.json" "$DH/dry.db" "$DH/before.db" "$D2/state.json" "$B")
+echo "HEADFIX2's state.json / dry.db / before.db, 9a state.json, built: size and time before = after: $([ "$k1" = "$k0" ] && echo yes || echo NO)"
+[ "$k1" = "$k0" ] || { echo "CHECK: a kept file changed:"; echo "$k0"; echo "$k1"; bad=1; }
+echo "=== the two folders after ==="
+ls -l --time-style=full-iso "$D1" "$D2"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use after: $dk1 KB (before $dk0 KB; freed $((dk0 - dk1)) KB)"
+[ "$bad" = 0 ] || { echo "RMTHROW RESULT: CHECK - lines above; nothing to restore (throwaway copies) - to the ruling chat as printed"; exit 1; }
+echo "RMTHROW RESULT: DONE - two throwaway copies removed; both before.db and HEADFIX2's folder unchanged"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### RMTHROW reviewed (11/17) — REVIEW: ESCALATE (it deletes files, §9.161 (5)); 0 DEFECT, 1 GAP (fixed), 2 NOTE
+Verdict line verbatim: "REVIEW: ESCALATE - RMTHROW deletes two files, so it falls outside what a reviewer can clear (a write, sec 9.161
+(5)). On mechanics I found no defect, one minor gap and two notes." The reviewer confirmed CC's reading: after :10945 nothing reads
+`step9a_apply_20261115/dry.db`; no planned block does; every declared figure matches its log source. GAP 1 FIXED: `$D2/state.json`
+added to the presence loop (it was in the before/after compare only — a missing file would have compared "yes" on two equal errors).
+NOTE 1: JP's disk check is in the prose, not the block (as earlier blocks); du printed before / after. NOTE 2: HEADFIX's dry.db is
+identified by size, its folder by the before.db sha. **PA: no pull before it** — GATE REF d34d6723 is what PA has; a pull to adfb8ac5
+would STOP it at pre, nothing removed.
+
+## §9.161 (4) — (c)'s expected members at the 23 retired rows, and (c)'s expected member list by name (CC, 11/17; repo + record only)
+**What T_c is:** a copy of src through the OLD build (no --app-feed) at today's code → finish_rebuild.sh in full → step 11 norm.
+**(a) The 11 retired greek_pos cells.** The apply reads only `status='active' AND applied_at='ingest'` (apply_abp_corrections.py :27, :84),
+so on T_c the 11 retired rows are never read and step 7 leaves those cells as the old build + chain make them. On src (the 10/25 chain)
+the same rows were active and applied at step 7 — an apply writes only where the cell equals source_value (:116-136) — so before step 7
+the 10/25 chain held source_value there, and src holds corrected_value. Lane-3 (the only later step on src that writes greek_pos) has no
+op in any of the 11 verses (the 18 lane-3 verses are listed below). So, if the old build's output at those cells has not moved since
+10/25, **T_c = source_value, src = corrected_value: 11 greek_pos members**, values from the seed `build_abp_corrections.py` (the block
+reads them from src's table and prints both): Mat 20:29 @7 2→1 (:223) · 1Sa 17:8 @18 3→2 (:247) · Exo 32:3 @5 5→4, @6 7→6, @8 6→5
+(:264-266) · Job 39:13 @5 4→2 (:274) · Mar 16:17 @13 1→3 (:281) · 1Sa 21:11 @9 1→2 (:290) · 2Sa 16:18 @21 1→2 (:299) · Mic 1:13 @8
+1→3 (:308) · Psa 116:1 @3 1→2 (:324) (written src → T_c). Any other value at those cells is old-build drift, read like any other.
+**(b) verses.text.** The OLD build writes no verses row (build_words_from_abp.py: no UPDATE / INSERT on verses); the copy's verses table is
+src's, taken by the build's snapshot. In the chain only two steps write verses.text: 4b `apply_abp_corrections --only verses`
+(finish_rebuild.sh :66) and fix_emdash (:73; fix_emdash.py :46 replaces '--' with '—'). 4b on T_c: the 12 retired prose rows are not read
+(status); the 6 non-EU active prose rows hold on src (corrected = src's text; cert check 4 green on live 11/1, HANDOFF_edition_upgrade_stageC.md :18) → already applied; of the 118 EU prose rows, the 49 whose
+corrected_value is src's text (§9.143 (2)) → already applied, and the 69 have source_value = B's feed text (§9.79), which differs from
+src's text on every one of those verses (B wrote them because it differs, §9.55) → LOUD-SKIP (EU, allowed). fix_emdash: src went
+through fix_emdash at 10/25 and no later step wrote verses.text, so no '--' is expected in src's text — a fact for a read, not shown yet.
+**So T_c carries src's verses.text unchanged; the 12 retired prose rows cannot produce members; verses.text expected 0** (given the '--'
+read).
+**(c) Expected members by name, the four columns + english_head_norm (anything else = drift, read and ruled before (b)):**
+1. **The 11 retired greek_pos cells** — above.
+2. **Joh 14:26 @3 greek_pos (src blank → T_c 3) and bracket_id (blank → bracket 4's rank)** — the two S-joh14:26 rows
+   (build_abp_corrections.py :232-233) are active in src's table, apply on T_c at step 7 (source None = the blank cell), never applied
+   to src's words (§9.153 (1) write 4).
+3. **Lane-3 8b.2a: 47 op cells in 18 verses**, src = the op's new value, T_c = the old value (the three lane-3 files; english 35 ·
+   greek_pos 38 · bracket_id 41 = 8b.2a's recorded figures, §9.139 (1) / §9.141). english_head: at most the 35 cells that set english;
+   8b.2a recorded 17 (§9.139 (1)); the files hold no old head, so T_c's head there is read from (c) itself, laid as "a subset of those 35,
+   17 of them". Cells (eng = english, head? = english_head where it differs, gpos, bid = raw bracket change): Mat 9:11 @1 eng/head?/gpos/bid; Mat 9:11 @2 eng/head?/gpos/bid; Mat 9:11 @3 eng/head?/gpos/bid; 2Ch 14:12 @11 eng/head?/gpos/bid; 2Ch 14:12 @12 eng/head?/gpos/bid; 2Sa 14:4 @1 gpos; 2Sa 14:4 @3 eng/head?/gpos; 2Sa 14:4 @5 eng/head?/gpos/bid; Isa 30:31 @5 eng/head?/gpos/bid; Isa 30:31 @6 eng/head?/gpos/bid; Jer 50:16 @11 eng/head?/gpos/bid; Jer 50:16 @12 eng/head?/gpos/bid; Lev 24:10 @1 gpos; Lev 24:10 @3 eng/head?/gpos; Lev 24:10 @4 eng/head?/gpos/bid; Num 25:8 @3 eng/head?/gpos/bid; Num 25:8 @5 eng/head?/gpos/bid; Num 25:8 @14 eng/head?/gpos/bid; Num 25:8 @16 eng/head?/gpos/bid; Num 25:14 @4 eng/head?/gpos/bid; Num 25:14 @6 eng/head?/gpos/bid; Num 25:15 @3 eng/head?/gpos/bid; Num 25:15 @5 eng/head?/gpos/bid; Eze 23:5 @1 eng/head?/gpos/bid; Eze 23:5 @2 bid; Eze 23:5 @3 eng/head?/gpos/bid; Heb 11:24 @7 eng/head?/gpos/bid; Heb 11:24 @8 eng/head?/gpos/bid; 1Ch 21:9 @6 eng/head?/gpos/bid; 1Ch 21:9 @7 bid; 1Ch 21:9 @8 eng/head?/gpos/bid; 1Sa 14:50 @3 eng/head?/gpos/bid; 1Sa 14:50 @4 eng/head?/gpos/bid; 1Sa 24:5 @5 gpos; 1Sa 24:5 @6 eng/head?/gpos; 1Sa 24:5 @7 eng/head?/gpos/bid; Gen 46:26 @19 eng/head?/gpos/bid; Gen 46:26 @20 eng/head?/gpos/bid; Mat 27:26 @7 eng/head?/gpos/bid; Mat 27:26 @8 eng/head?/gpos/bid; 2Sa 14:4 @4 bid; Num 25:8 @4 bid; Num 25:8 @15 bid; Num 25:14 @5 bid; Num 25:15 @4 bid; 2Sa 18:31 @7 bid; 2Sa 18:32 @15 bid.
+   **Plus bracket_id rank renumbering:** the delta compares bracket_id as a per-verse rank by first position (eu_words_delta.py :12,
+   :83-92), so a new lane-3 bracket ahead of an existing one renumbers that bracket's other cells in the same verse. Those cells are not
+   in the files; they can only be named from src's rows of the 18 verses (a read below).
+4. **EU word rows that APPLY on T_c — not in the plan, and a class it missed.** 226 active EU word rows (english 119, english_head 107;
+   eu_batch_rows_20261102.tsv) have source_value = the FEED's cell. On T_c the step-7 cell is the OLD English. Where the old English
+   equals the feed's (a typo or appended gloss that the old ABP text also carried), the row applies on T_c: T_c = corrected, src = the old
+   text → a member. Where the old English already equals corrected_value → already applied, no member. Otherwise → LOUD-SKIP (EU). On
+   src, english / english_head after step 7 were changed only by lane-3 (8b.0–8b.2 write strongs_base; 8b.3 the identity table; 9–9c
+   abp_surface; 10 / 12 side tables; 11 the norm), so src's cell = T_c's step-7 cell except at lane-3 op cells (one EU row sits on one:
+   Heb 11:24 @7 english, whose corrected = the op's old_eng → already applied on T_c). **These members can only be named by a read of
+   src's cells against each EU row's source / corrected values** (the apply's own rule, cellmatch :47-57: blank matches only blank, else
+   compared as text).
+5. **english_head_norm** where english_head differs (by rule, §9.142 (3)).
+6. strongs / strongs_base / is_pn / morph / lemma: src's own 8b chain — counts only (plan, §9.160 (1)). Moved pairs 0.
+**What this needs before (c) is drafted — one read-only block (proposed, not drafted):** on src, read-only: (i) every active EU word row
+with src's cell and its outcome by the apply's rule (apply / already / skip), lane-3 op cells flagged; (ii) src's rows (position, english,
+english_head, greek_pos, bracket_id) in the 18 lane-3 verses, from which CC names the rank-renumbered cells (T_c side = the op's old
+values); (iii) count of '--' in src's verses.text and words.english (expect 0); (iv) the 11 retired greek_pos rows' source / corrected
+and src's cell (expect cell = corrected); (v) Joh 14:26 @3 on src (expect greek_pos and bracket_id blank). Its output gives (c)'s list
+fully by name; the (c) block then lays its delta against that list.
+**Not yet checked, said plainly:** whether the OLD build's output has moved since 10/25 anywhere — that is (c)'s question. The §9.88 rule
+entered the build at 820a6109 inside A's two restores (`_join_neighbour_group`, merge pairs + edge splits), which exist only in the
+--app-feed path; from the commit message, not traced line by line for the old path.
