@@ -11185,3 +11185,42 @@ words_moved and verses_cells shas identical. The 11/15 words_cells.tsv (JP's scp
 sha256 `86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc` = the 11/16 words_cells sha on PA. So the new delta is
 the 11/15 delta minus those two cells, member for member: HEADFIX2 brought built's Joh 19:18 @10 head + norm to src's value, and
 nothing else in words or verses moved.
+
+### STEP4-DELTA2 ran — recorded above; ruled §9.157 (reference delta for the step-4 gate)
+
+## A dry-run output — code drafted (11/16, NOT committed; §9.139 (1) / §9.142 (4) / §9.157 (5)) — for the ruling chat
+Uncommitted in CC's working tree; file sha256 (LF bytes):
+- `scripts/build_words_from_abp.py` `b2cd46a3…cdb7` (+80 / −2) — AppTransplant gains `record_cells=False`; when on, apply() calls
+  `_record_cells(key, old_rows, composed)` AFTER composed is final and both tallies have counted; it only reads and appends one
+  member per changed cell: english, english_head, greek_pos by value; bracket_id as eu_words_delta's per-verse rank
+  (`_bracket_rank` = load_words :83-92: position order, first appearance = 1, None stays None). Both sides are compared AS STORED
+  (each row through `_prefix_base`, the insert's own conversion, which blanks greek_pos on a word with no bracket). A guard stops if
+  composed positions ever differ from OLD's. report() writes `cells_<stamp>.tsv` (book, chapter, verse, position, column, before,
+  after; before = OLD = the ABP build of src's text, after = what A writes; values repr() as the delta writes them) and prints: rows
+  by column; "verses with an english cell N = english changed N: yes/NO"; greek_pos/bracket verses listed vs A's existing raw
+  tally, naming listed-not-counted and counted-not-listed verses. CLI `--cells`, refused unless `--dry-run` / `--dry-run-nodb`, so a
+  real build never records.
+- `tests/test_app_cells.py` `ff3e8267…735d` (12 tests) — on/off: rows, tallies, verdicts identical, nothing recorded when off;
+  members = exactly the changed cells (stored form); rank = eu_words_delta.load_words on the same rows; renumbered bracket not a
+  member, regroup is; a no-bracket greek_pos difference is NOT a cell, an in-bracket one IS; position guard; file format + check
+  lines; english check prints NO on a mismatch; both directions of the greek_pos/bracket check name their verses; `--cells` without
+  a dry run refused; with the real feed present (local only; CI skips it): the whole `--dry-run-nodb` run's four files + printout
+  identical on / off, only the cells file and its lines added. Added to `scripts/githooks/pre-commit` `251e0089…c355` and
+  `.github/workflows/ci.yml` `7fd49477…7c83`.
+Proof each test can fail: 13 planted breaks, one at a time, each turned at least one test red (recording alters A's rows; records
+when off; english_head dropped; bracket by raw id; rank rule dropped; position guard dropped; before/after swapped; plain not repr;
+english check always yes; verse naming dropped; compared raw not as stored; `--cells` allowed without a dry run; file written when
+off); builder restored byte-identical (sha checked). Full pre-commit list passes (incl. test_app_transplant's 47 and its default-path
+byte digest).
+Local no-db dry run (lexicon / BibleHub OFF — NOT PA's figures): the HEAD code, the new code without `--cells`, and with `--cells`
+give byte-identical strict_fail / eligible / merge_pairs / edge_splits files and the same printout (only the cells lines added).
+With `--cells`: 46,469 rows (english 35,386 · english_head 5,912 · greek_pos 2,565 · bracket_id 2,606); english verses 16,272 =
+english changed 16,272: yes; greek_pos/bracket verses listed 736 vs raw 737, counted-not-listed 1: Num 36:6 (a no-bracket greek_pos
+the insert blanks).
+Reviewer (ESCALATE, code change): DEFECT 1 — cells first compared on raw build values, not as stored (`_prefix_base` blanks
+greek_pos without a bracket) → FIXED as recommended (both sides through `_prefix_base`; planted test + sabotage M13 added);
+re-review: "DEFECT 1 is closed … Nothing new found"; "changes nothing A writes" holds as read. GAP — greek_pos's stored type (repr
+'3' vs 3) cannot be seen from the repo → assigned to the run block: a read-only declared-type / typeof() read of words.greek_pos on
+src and built, before the comparison, its expected answer stated. For the run block (later, reviewer → ruling chat): refuse if
+cells_<stamp>.tsv exists; english changed 15,588, transplanted 29,071, the eligible sha (e540d34d…, in full) and the greek_pos /
+bracket verse count each cited by PA log path:line or DESIGN §; local figures are no-db, not PA's.
