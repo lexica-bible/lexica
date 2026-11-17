@@ -12365,3 +12365,7 @@ Points 1–3 accepted (wrapper via eu_step pre; the two apply summaries as decla
 figure). **Owed after the run (§9.171 (5)):** the full pre_8b sha256 BSTD prints ("pre_8b sha256 before:") goes into this record as the
 recorded value, with the xref8b0_20261106.log line it should equal named as still to be read on PA. Declared for the log: §9.171 (7).
 A non-empty delta's members are read from the files before anything else is drafted (§9.171 (8)).
+
+### RMTC log read (11/17, §9.172) — RMTC DONE and closed; BSTD's first condition met
+Home in use 7,683,676 KB and home + /tmp 7,692,779 KB released as declared figures; dashboard 7.3 of 10.0 GB. BSTD runs once JP reads
+the dashboard at 1 GB free or more. The ruling's text cited "§9.171 (2)" / "§9.172 (7)"; in the register those are §9.170 (4) / §9.171 (7).
