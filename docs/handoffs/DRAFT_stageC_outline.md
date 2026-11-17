@@ -11717,7 +11717,8 @@ echo "SRCREAD RESULT: READ DONE - no gate; every expect above is a read-out for 
 Verdict line verbatim: "REVIEW: CLEAR - Block SRCREAD is read-only and in scope under §9.162 (6) (approved there; §9.163 (4) makes it
 next). Its SQL matches the apply's rule, the lane-3 lists match the three files, and there are no shell traps." Checked: read-only; the
 outcome SQL against apply_abp_corrections.py :84 / :85 / :123 / :128 / :131 and cellmatch :54-56 (blank handling included); the 47 op
-cells (23 + 17 + 6 + the one shared verse key counted once per op … = the files) and 18 verses; shell. No DEFECT, no GAP. NOTE 1: lane3 is
+cells and 18 verses; shell. (The reviewer's per-file note read the gapfix file as 6 ops; CC's count from the file is 7 — 2Sa 14:4 1, Num
+25:8 2, Num 25:14 1, Num 25:15 1, 2Sa 18:31 1, 2Sa 18:32 1 — so 23 + 17 + 7 = 47, as gen.py asserts.) No DEFECT, no GAP. NOTE 1: lane3 is
 matched by cell, not field — CC checked the active list: Heb 11:24 has only @7 english and the verses.text row (no english_head row), so
 lane3 = 1 holds as written. NOTE 2: the apply counts a lane-3 "spent" row apart from skip; SRCREAD folds it into skip, the lane-3 row
 being flagged and handled by hand. NOTE 3: on a failed built guard eu_step check leaves check_delta_<t>.tsv in HEADFIX2's folder. NOTE 4:
