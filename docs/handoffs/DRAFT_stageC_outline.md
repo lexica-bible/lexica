@@ -11224,3 +11224,45 @@ re-review: "DEFECT 1 is closed … Nothing new found"; "changes nothing A writes
 src and built, before the comparison, its expected answer stated. For the run block (later, reviewer → ruling chat): refuse if
 cells_<stamp>.tsv exists; english changed 15,588, transplanted 29,071, the eligible sha (e540d34d…, in full) and the greek_pos /
 bracket verse count each cited by PA log path:line or DESIGN §; local figures are no-db, not PA's.
+
+### A dry-run output committed — REF `adfb8ac5` (§9.158 (2))
+`adfb8ac54fb4535c13d26f2088a46b91d695dc80`; scripts/ + tests/ vs d34d6723: build_words_from_abp.py +80/−2, githooks/pre-commit +1,
+tests/test_app_cells.py +208 (3 files, 287 / 2); ci.yml +1 outside scripts/tests. Pre-commit list passed on the commit.
+
+### §9.158 (5) — do later steps change the four columns? (CC, from the repo, 11/16)
+**YES — both inside the build and in the chain to today's built, and several of them are NOT on the later-writes list.**
+The list is taken in A's verse pass (build_words_from_abp.py :2792 `app.apply`). After it:
+**Inside the build (run(), after the insert at :2805-2811):**
+- the insert itself — `_prefix_base` (blanks greek_pos on a word with no bracket): already modelled in the list (§9.158 (1)).
+- :2833-2836 `apply_blank_strongs_fills` → fill_blank_strongs.py :103-108 (kind "split": shifts EVERY position in the verse +1, sets
+  english / english_head at the new pos 1, inserts a new slot 0) and :120-126 (kind "number": english / english_head at pos 0).
+  5 verses (stage B "Filled 5"). Moves positions.
+- :2843-2846 `apply_pn_subject_split` → fix_pn_subject_merge.py :322-336: writes english, english_head, greek_pos, bracket_id on the
+  '*' slot and the verb slot (no position move). Stage B "Split 80 → 84".
+- :2855-2860 `apply_italic_heads` → fix_italic_heads.py :72: english_head only. Its count prints in the build log ("Re-cleaned N
+  italic head label(s)"); not in the repo's record.
+- The A dry run (`--dry-run`, app_dry_run) runs NONE of these three: they act on the database after the insert.
+**finish_rebuild.sh on built (stage C tail, HANDOFF_edition_upgrade_stageC.md :95), each writing one of the four columns or moving
+positions:** :37 fix_subject_reorder (english; bracket_id + greek_pos to NULL) · :38 fix_mat25_37 (position, english) ·
+:39 fix_supplied_attach (position, english) · :40 fix_theos_filler_tags (:79/:84 english + english_head) · :41 fix_split_merges
+(english, english_head, position) · :43 fix_merge_misses (english, english_head, position) · :46 fix_idios_own (english, english_head,
+greek_pos) · :50 dedup_words (deletes rows) · :56 fix_bracket_punct (english) · :73 fix_emdash (english: every '--' → '—', bulk) ·
+:86 fix_split_flip (positions) · :95 step 7 corrections (on the list). (:42 fix_kyrios_mistags writes only strongs / strongs_base /
+lemma / morph / is_pn — not the four.) Then 8b.2a, the digits restore, J, HEADFIX2 (on the list); step 11 head_norm only (by rule).
+**What follows:** src (the 11/01 copy of live) is itself the 10/25 rebuild through the same chain, so these steps act on BOTH sides.
+A step acting identically on both sides makes no delta member. But the list's before / after are RAW build values: wherever a later
+step rewrote the cell, the stored value differs from the list's value. fix_emdash alone guarantees that for every feed cell whose
+English carries '--' (the transplant itself writes ' --' at the end of 1,480 feed cells, the dash pin). Five steps and the fill move
+positions, so in those verses the list's keys are not the stored keys.
+**So the list cannot be laid against the delta cell for cell BY VALUE as it stands; by KEY it can, except in the verses where a step
+moved positions.** Comes to the ruling chat before the run (§9.158 (5)). Options, none drafted:
+- (a) lay by key, with each value difference attributed to a named later step by that step's own rule (emdash replace,
+  bracket-punct move, …), each class counted; a member fitting no named rule = stop; the position-moving verses read from those
+  steps' own logs — the "attributed by rule" principle of §9.139 (4).
+- (b) make the after-side the stored result: on a throwaway copy of src, run the real `--app-feed` build and the same finish chain
+  up to before step 7, and compare it with src (the delta of A + chain, from inputs, not from built). Heavy: one full build + chain
+  on PA (disk ~0.45 GB a copy, hours), but cell for cell by value.
+- (c) the same as (b) without the app feed (the OLD build + chain), compared with src, to show the chain alone reproduces src —
+  the control for (b).
+CC's recommendation: (b) with (c) as its control: it is the only one that is cell for cell by value and derived from inputs only.
+(a) leans on rule-attribution for a bulk step (emdash) across thousands of cells.
