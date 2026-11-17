@@ -12474,3 +12474,84 @@ file in the run folder (25) size and time before = after: yes; src, built, pre_8
 441,408 KB); /tmp 9,322,145 B before and after; home + /tmp after 7,694,791 KB. Dashboard line: to the ruling chat with the log.
 
 ### RMTB RULED (11/17, §9.175) — DONE and closed; dashboard after RMTB 7.3 of 10.0 GB (JP); next = the read-only block (pre_8b → built, src → pre_8b, xref8b0 sha line)
+
+## P8READ drafted (11/17, GATE REF d34d6723) — a read of pre_8b's rows before the pre_8b → built delta block; proposed to the ruling chat
+**Why.** §9.173 (5)(b) asks for the delta block's English-side members named by file BEFORE it runs, as §9.164 (3) did for (c). From the
+repo, CC can name: 8b.0 / 8b.1 / ABPTAG / 8b.2 write strongs_base only (correct_xref_vs_binding.py :259, restore_frozen_pn.py :128,
+retire_hebrew_identity.py :315); REKEY wrote identity / xref / abp_surface only; 8b.3 the pn tables; step 9 / 9a-c abp_surface; step 10
+nothing (IDENTICAL); 12a-c dotted_lexicon / word_gloss / tipnr_metav_link. Words' English side after pre_8b is written only by 8b.2a
+(fix_lane3_star_merges.py :194: english, english_head, greek_pos, bracket_id; 8B2A log: english 35 · english_head 17 · greek_pos 38 ·
+bracket_id 41 raw, in the 18 lane-3 verses), step 11 (english_head_norm, every row with a head: build_rendering_norm.py :57-82; built
+before step 11 had 0 norms, step11apply_20261108.log) and HEADFIX2 (Joh 19:18 @10 english_head + norm). The 10 reorder verses are
+src → pre_8b (8B0's census compared src with built at 8B0 = pre_8b), not pre_8b → built. What CC cannot name from the repo: the lane-3
+fixer pins only the op cells (fix_lane3_star_merges.py :150-160), so pre_8b's other cells in the 18 verses — which decide the
+bracket_id RANK renumbering eu_words_delta compares (in (c): 10 non-op cells) and the english_head values — are not known until read.
+So, as SRCREAD for (c) (§9.162 (6)): read pre_8b's (and built's) rows in the 18 verses first, name the list, then the delta block.
+**What it reads:** (1) the xref8b0_20261106.log lines holding 'sha256' / 'a4faa4d8', and whether BSTD's full pre_8b sha is there
+(printed, no gate) + pre_8b's sha now; (2)/(3) SRCREAD's read (2) — same generated L3 / L3V lists — on pre_8b and on built, found
+counts expect 18 / 47 each; (4) Joh 19:18 @10 on both; (5) STEP11-APPLY's own norm read on both. pre_8b's expectations other than its
+row count are NOT forecast (reviewer gaps 1-2: STEP11-APPLY and HEADFIX2 read built, not pre_8b).
+**Tests** (WSL clone at d34d6723, sqlite3 stand-in, made-up copies): READ DONE with the sha line found; re-paste STOP; 8B0 log
+missing → printed + NO, READ DONE; pre_8b another size → STOP before any read.
+### Block P8READ (GATE REF d34d6723; READ-ONLY — writes only its log and an empty run folder; no gate)
+```bash
+set +H
+L=~/edition_upgrade_runs/p8_read_20261117.log
+if [ -e "$L" ]; then echo "P8READ RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export PYTHONIOENCODING=utf-8 LC_ALL=C TZ=UTC
+echo "GATE REF ${REF} - P8READ - pre_8b -> built: the rows needed to name the expected members before the delta block (DESIGN 9.173 (4)-(5)(b), 9.175 (4)) - READ-ONLY: pre_8b and built read with sqlite3 -readonly; the 8B0 log read with grep; writes only this log and an empty run folder - NO GATE; every expect is a read-out - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P8READ RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/p8_read_20261117
+X8=$R/xref8b0_20261106.log
+XP_SHA=a4faa4d8503296b18ba8368db1cd7d643783e9c5f15ea6b035cb9d4864ef0107   # pre_8b sha256 as BSTD printed it: step4_b_standard_20261117.log (DESIGN 9.173 (1), (3))
+XP_SIZE=451964928                 # pre_8b: the BSTD delta's "a:" line, same log
+# --- before the reads: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag P8READ --ref "$REF" --dir "$D" --db "$P" --db "$B" || { echo "P8READ RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db"; do [ -s "$f" ] || { echo "P8READ RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+python3 scripts/eu_step.py check --tag P8READ --built "$B" --dir "$DH" --written words,abp_corrections || { echo "P8READ RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$P"); echo "pre_8b size: $n bytes (expect $XP_SIZE)"
+[ "$n" = "$XP_SIZE" ] || { echo "P8READ RESULT: STOP - pre_8b is not the size BSTD read"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$P" "$B")
+echo "=== (1) the 8B0 log's sha lines for the pre_8b copy (DESIGN 9.171 (5), 9.173 (3)): every line of $X8 holding 'sha256' or 'a4faa4d8' ==="
+[ -s "$X8" ] && grep -n -i -E 'sha256|a4faa4d8' "$X8"
+[ -s "$X8" ] || echo "the 8B0 log is missing or empty: $X8 (printed only)"
+echo "-- the full pre_8b sha BSTD printed ($XP_SHA) appears in that log: $([ -s "$X8" ] && grep -q -F -e "$XP_SHA" "$X8" && echo yes || echo NO)"
+echo "-- pre_8b sha256 now: $(cut -d' ' -f1 <<< "$(sha256sum < "$P")") (expect $XP_SHA)"
+# the 47 lane-3 op cells and their 18 verses, as in SRCREAD (generated from scripts/lane3_star_fixes.json, lane3_star_fixes2.json, lane3_star_gapfix.json)
+L3="l3(book, chapter, verse, position) AS (VALUES ('Mat',9,11,1), ('Mat',9,11,2), ('Mat',9,11,3), ('2Ch',14,12,11), ('2Ch',14,12,12), ('2Sa',14,4,1), ('2Sa',14,4,3), ('2Sa',14,4,5), ('Isa',30,31,5), ('Isa',30,31,6), ('Jer',50,16,11), ('Jer',50,16,12), ('Lev',24,10,1), ('Lev',24,10,3), ('Lev',24,10,4), ('Num',25,8,3), ('Num',25,8,5), ('Num',25,8,14), ('Num',25,8,16), ('Num',25,14,4), ('Num',25,14,6), ('Num',25,15,3), ('Num',25,15,5), ('Eze',23,5,1), ('Eze',23,5,2), ('Eze',23,5,3), ('Heb',11,24,7), ('Heb',11,24,8), ('1Ch',21,9,6), ('1Ch',21,9,7), ('1Ch',21,9,8), ('1Sa',14,50,3), ('1Sa',14,50,4), ('1Sa',24,5,5), ('1Sa',24,5,6), ('1Sa',24,5,7), ('Gen',46,26,19), ('Gen',46,26,20), ('Mat',27,26,7), ('Mat',27,26,8), ('2Sa',14,4,4), ('Num',25,8,4), ('Num',25,8,15), ('Num',25,14,5), ('Num',25,15,4), ('2Sa',18,31,7), ('2Sa',18,32,15))"
+L3V="l3v(book, chapter, verse) AS (VALUES ('Mat',9,11), ('2Ch',14,12), ('2Sa',14,4), ('Isa',30,31), ('Jer',50,16), ('Lev',24,10), ('Num',25,8), ('Num',25,14), ('Num',25,15), ('Eze',23,5), ('Heb',11,24), ('1Ch',21,9), ('1Sa',14,50), ('1Sa',24,5), ('Gen',46,26), ('Mat',27,26), ('2Sa',18,31), ('2Sa',18,32))"
+RQ="WITH $L3, $L3V SELECT v.book||' '||v.chapter||':'||v.verse AS ref, w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.strongs_base, CASE WHEN EXISTS (SELECT 1 FROM l3 WHERE l3.book = v.book AND l3.chapter = v.chapter AND l3.verse = v.verse AND l3.position = w.position) THEN 'op' ELSE '' END AS op FROM words w JOIN verses v ON v.id = w.verse_id JOIN l3v ON l3v.book = v.book AND l3v.chapter = v.chapter AND l3v.verse = v.verse ORDER BY v.book, v.chapter, v.verse, w.position"
+FQ="WITH $L3, $L3V SELECT (SELECT count(*) FROM l3v JOIN verses v ON v.book = l3v.book AND v.chapter = l3v.chapter AND v.verse = l3v.verse), (SELECT count(*) FROM l3 JOIN verses v ON v.book = l3.book AND v.chapter = l3.chapter AND v.verse = l3.verse JOIN words w ON w.verse_id = v.id AND w.position = l3.position)"
+echo "=== (2) pre_8b's rows in the 18 lane-3 verses (ref|position|english|english_head|greek_pos|bracket_id|strongs_base|op = a lane-3 op cell) ==="
+sqlite3 -readonly -header "$P" "$RQ"
+echo "-- verses found / op cells found on pre_8b (expect 18 / 47):"; sqlite3 -readonly "$P" "$FQ"
+echo "=== (3) built's rows in the same 18 verses (same columns) ==="
+sqlite3 -readonly -header "$B" "$RQ"
+echo "-- verses found / op cells found on built (expect 18 / 47):"; sqlite3 -readonly "$B" "$FQ"
+echo "=== (4) Joh 19:18 @10 on pre_8b and built (built 'here' / 'here': HEADFIX2's apply, DESIGN 9.155; pre_8b NOT forecast - HEADFIX2's record shows built's cell before the fix, 'ere', not pre_8b's) ==="
+JQ="SELECT w.position, w.english, w.english_head, w.english_head_norm FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = 'Joh' AND v.chapter = 19 AND v.verse = 18 AND w.position = 10"
+echo "pre_8b:"; sqlite3 -readonly -header "$P" "$JQ"
+echo "built:"; sqlite3 -readonly -header "$B" "$JQ"
+echo "=== (5) english_head_norm (rows | with a head | norm filled | norm on a blank head) - the STEP11-APPLY read (step11apply_20261108.log: built before 626309|353595|0|0, after 626309|353595|353595|0) ==="
+NQ="SELECT count(*), sum(english_head IS NOT NULL AND english_head <> ''), sum(english_head_norm IS NOT NULL), sum((english_head IS NULL OR english_head = '') AND english_head_norm IS NOT NULL) FROM words"
+echo "pre_8b (rows 626309 = the BSTD delta's rows line; the rest NOT forecast - STEP11-APPLY read built after the 8b chain, not pre_8b):"; sqlite3 -readonly "$P" "$NQ"
+echo "built (expect 626309|353595|353595|0):"; sqlite3 -readonly "$B" "$NQ"
+# --- after ---
+st1=$(stat -c '%s %Y %n' "$P" "$B")
+echo "pre_8b and built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "P8READ RESULT: STOP - a copy changed during a read-only run - report this"; exit 1; }
+echo "P8READ RESULT: READ DONE - no gate; every expect above is a read-out for the ruling chat; run folder $D left empty"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+### P8READ reviewed (11/17) — REVIEW: ESCALATE (scope: a read not ordered by §9.173 (5)(b) / §9.175 (4), put ahead of the ordered block — the ruling chat's call, as SRCREAD §9.162 (6)); 0 DEFECT
+GAPS 1-2 (pre_8b's norm / head figures and Joh 19:18 @10 'ere' on pre_8b had no source) → fixed: relabelled NOT forecast; tests re-run,
+same results. GAP 3 (the xref8b0 sha line printed, not gated) → for the ruling chat: whether this read covers §9.173 (5)(b)'s sha line.
+Note 4: the git checks are eu_step pre's (its "repo guards" line, as in CCTL / BSTD). Reviewer did not check: eu_step code, the L3 / L3V
+byte match (copied by grep from the SRCREAD block above), the BSTD lines behind XP_SIZE (the BSTD delta's "a:" line, 451964928 bytes).
