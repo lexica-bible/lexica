@@ -12346,3 +12346,16 @@ echo "home in use after: $dk1 KB (before $dk0 KB; T_b + run files $((dk1 - dk0))
 echo "BSTD RESULT: DONE - the delta pre_8b vs T_b is EMPTY; every stage-B / stage-C figure reproduced; T_b kept in $D until a removal is ruled"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### BSTD reviewed (11/17) — REVIEW: ESCALATE (a write; §9.90); 0 DEFECT; GAP 1 = the wrapper delegated to eu_step pre (as CCTL, §9.165)
+Verdict line verbatim: "REVIEW: ESCALATE - Block BSTD writes (src.new built and moved to T_b.db, B2 and finish_rebuild run on T_b,
+~/bible-db/pronoun_review.tsv and unmatched_pn.txt changed and put back)". Reviewer checked: no `!` but awk `!=`; guards read through
+`<<<` or a file; every STOP before writes; the 10/31 files hashed before / after; the put-back trap; patterns vs code — "english changed"
+:2513, "Words inserted" :2871, "passdiff 625 " :2512 / APP_REASONS :2031-2032, "list: MATCHES the frozen …" :2242, the apply summaries
+apply_abp_corrections.py :160-161. **Left unchecked by the reviewer, checked by CC against the code (tripwire 6):** Filled :2836, Split
+:2846, Re-cleaned :2859, Flagged :2868, Verses skipped :2872, Article-slot :2874, PN-star :2879 (and all seven printed in this form in
+CCTL's real build.out); dash / folded :2506-2507; merge_pairs / edge_splits :2514-2517; B2's four lines build_prose_from_app.py
+:207-220; finish's problem line finish_rebuild.sh :105 with the run lines :66 / :95 (and CCTL's real finish.out); eu_words_delta COUNTS
+:248-253 (CCTL's real delta.out read with the same awk fields). For the ruling chat: GAP 1 (wrapper via eu_step pre, as cleared for
+CCTL); NOTE 2 (the two apply summaries are CC's derivation; a miss is a CHECK); NOTE 3 (XHOME_MAX 7,900,000 = RMTC's 7,683,676 + about
+200 MB slack, unruled; BSTD not to run before the RMTC log is read, §9.170 (4)).
