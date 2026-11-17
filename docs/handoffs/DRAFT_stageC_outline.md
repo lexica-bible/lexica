@@ -12472,3 +12472,5 @@ check: PA's GNU tool behaviour (as RMTC), CC's test results, the BSTD log on PA 
 Every §9.174 (4) line met: BSTD result line, words_cells.tsv 4963903336…9329 and T_b.db 451,964,928 B = expect; rm exit 0; every other
 file in the run folder (25) size and time before = after: yes; src, built, pre_8b: yes. Home in use 8,127,096 → 7,685,688 KB (freed
 441,408 KB); /tmp 9,322,145 B before and after; home + /tmp after 7,694,791 KB. Dashboard line: to the ruling chat with the log.
+
+### RMTB RULED (11/17, §9.175) — DONE and closed; dashboard after RMTB 7.3 of 10.0 GB (JP); next = the read-only block (pre_8b → built, src → pre_8b, xref8b0 sha line)
