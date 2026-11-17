@@ -144,6 +144,10 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   needs the backfill sum (its MISMATCH warning is a permanent false alarm on any backfilled table).
 
 ## Small fixes, ready when wanted
+- **PA checkout: several hundred untracked files in ~/bible-db** (seen in CCTL's `git status`, 11/17): old agreement_*/VOID_*
+  draft files, logs, and stray files named like single words or book codes ("0", "1Sa", "Checking", "Done.", "Pulling",
+  "Running", "Warming" — likely a mis-pasted command's output written as files). Read-only list first, then a named removal
+  block; not urgent. Keep pronoun_review.tsv / unmatched_pn.txt (builds write them).
 - **Ask-corpus mobile `.ac { overflow: hidden }` mask (styles.css ~:5116) — optional tidy-up.** Predates
   the mobile pass and hides any sideways overflow inside Ask-corpus; JP confirmed the phone scroll gone
   (2026-07-15) and it measured clean at 320 + 375, so it masks nothing today. Remove it when someone is in

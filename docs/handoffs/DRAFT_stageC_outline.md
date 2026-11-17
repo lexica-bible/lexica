@@ -12042,3 +12042,23 @@ caught).** Result: **0 members unexplained.**
   (40 in the R2 verses, 26,340 elsewhere = src's own 8b chain).
 **Correction to CC's note sent with the log:** it said greek_pos 50 vs 38 and bracket_id 52 vs 51 left 12 and 1 cells unaccounted. Wrong:
 38 is the lane-3 part only; the whole named greek_pos list is 38 + 11 retired + Joh 14:26 = 50, bracket_id 51 + Joh 14:26 = 52.
+
+### §9.168 (4)/(5) answer — the R2 lead shown from the files; the expected verses laid (CC, 11/17; local copies of the delta + finish.out)
+Scripts (scratchpad cctlread/): lay.py, r2check.py, pairs.py, skips.py; lay.py and r2check.py fired on a tampered copy first (3 of 3, 1 of 1).
+**(4) The 18 verses and 39 pairs.** split_merge_fixes.json at 63744245^ vs 63744245: exactly 18 entries differ — the 18 drift verses, none
+extra either way. **Pairs:** all 39 moved pairs tie one-to-one to the 39 ops of those 18 old entries (src position = op new_pos, T_c position
+= op old_pos, same Strong's base); 0 ops unmatched. **finish.out:** fix_split_merges prints only its first 10 skips (fix_split_merges.py :51,
+:71), so finish.out :157-170 names 6 of the 18 (Exo 4:23, Gen 28:22, Gen 31:49, Job 8:10, Jos 2:4, Neh 5:12; the other 4 samples are
+non-R2 "And" verses). For all 18, CC replayed the script's english guard (:66) on T_c's values: the NEW keys fail every one (the 6
+reproduce the printed sample exactly — same position, same value); the OLD keys pass every one. **src's value:** for all 39 ops src holds
+the 63744245^ key's new_eng at new_pos (and its new_head where given), T_c holds that key's old_eng at old_pos: 39 of 39. **Strong's side:**
+strongs 39, morph 37, lemma 37 all at pair positions, each a clean move (src's value at one end = T_c's at the other); morph / lemma 37 not 39
+because the Jos 2:4 pair's rows carry no morph or lemma on either side. strongs_base 26,380 = 39 at pair positions + **1 listed apart:
+Mat 28:10 @16 strongs_base '*' (src) → 'H1551' (T_c)** — not a pair cell; same class as the 26,340 outside the 18 (src's own 8b chain, not
+re-run on T_c; counts only). **0 verses or pairs that do not tie.**
+**(5) Inside the 28 expected verses.** english 35 of 35, greek_pos 38 of 38, bracket_id 51 of 51 at the §9.164 (3) values exactly;
+english_head 17 at named positions with the named src value; english_head_norm 17 at exactly those 17 positions. **The 12 greek_pos beyond
+38:** the 11 retired cells (§9.161 (4) (a)), values exact — Mat 20:29 @7 2→1, 1Sa 17:8 @18 3→2, Exo 32:3 @5 5→4, @6 7→6, @8 6→5,
+Job 39:13 @5 4→2, Mar 16:17 @13 1→3, 1Sa 21:11 @9 1→2, 2Sa 16:18 @21 1→2, Mic 1:13 @8 1→3, Psa 116:1 @3 1→2 — + Joh 14:26 @3 None→3.
+**The 1 bracket_id beyond 51:** Joh 14:26 @3 None→rank 1. Both were in §9.164 (3)'s whole expected list. **0 unattributed.**
+**PA checkout strays (§9.168 (7)):** noted in TODO.md → Small fixes.
