@@ -12555,3 +12555,5 @@ GAPS 1-2 (pre_8b's norm / head figures and Joh 19:18 @10 'ere' on pre_8b had no 
 same results. GAP 3 (the xref8b0 sha line printed, not gated) → for the ruling chat: whether this read covers §9.173 (5)(b)'s sha line.
 Note 4: the git checks are eu_step pre's (its "repo guards" line, as in CCTL / BSTD). Reviewer did not check: eu_step code, the L3 / L3V
 byte match (copied by grep from the SRCREAD block above), the BSTD lines behind XP_SIZE (the BSTD delta's "a:" line, 451964928 bytes).
+
+### P8READ APPROVED (11/17, §9.176) — run as printed; its sha line closes §9.171 (5) on "yes" + equal sha; then the named list + the delta block
