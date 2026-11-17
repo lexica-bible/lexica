@@ -12153,7 +12153,7 @@ english_head_norm) → `eu_words_delta --a built_pre_8b_20261106 --b T_b`, **exp
 lists, versification class — tests/fixtures/edition_upgrade, covered by eu_step pre's scripts/tests = REF guard) and the PA-only feed
 (abp_app_html/abp_app_slots_italic.tsv, sha-pinned in cert_manifest.json and checked by the build itself, FeedError = STOP); the cert
 pins (`cert_manifest.py verify`); bh_scrape.db (sha = §9.161 (2)). The build's report files go to the run folder (`--out`, report()
-:2546-2580 writes strict_fail / eligible / merge_pairs / edge_splits `_20261031.tsv`); B2's prose list too (`--out`, :196).
+:2503 / :2523-2550 writes strict_fail / eligible / merge_pairs / edge_splits `_20261031.tsv`); B2's prose list too (`--out`, :196).
 **Before any write, every miss is a STOP:** eu_step pre (REF, the three copies, no -journal); HEADFIX2's built guard; src.new / -journal /
 -wal / -shm / T_b absent; none of the five report names already in the run folder; src 451,964,928 B; **pre_8b's sha256 starts a4faa4d8
 and ends 0107** (the copy made at 8B0 = built then, xref8b0_20261106.log, record :2711-2712 — the full sha is not in the repo); bh_scrape
