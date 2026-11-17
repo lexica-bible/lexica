@@ -12141,3 +12141,4 @@ Verdict line verbatim: "REVIEW: ESCALATE - Block RMTC deletes a file (T_c.db), w
 
 ### RMTC ran (11/17) — RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/rm_tc_20261117.log; JP pasted it)
 Against §9.170 (3): result line = expect; words_cells.tsv sha 7d789d5c…c522 = expect; T_c 452,038,656 B = expect; rm exit 0; every other file in the run folder same size and time: yes (21 files); src, built, pre_8b: yes. Home in use 8,125,172 → 7,683,676 KB (freed 441,496 KB); my /tmp files 9,322,145 B before and after (= RMTMP's after-figure 18,644,290 counted once, /tmp = /var/tmp); home + /tmp after 7,692,779 KB. Dashboard line after: JP reads it; it goes to the ruling chat with this log (§9.170 (4)).
+**Dashboard after RMTC (JP, 11/17):** "File storage: 73% full – 7.3 GB of your 10.0 GB quota" — fits home + /tmp 7,692,779 KB (= 7.34 GiB). Free about 2.7 GB for (b) (T_b about 452 MB plus its run files).
