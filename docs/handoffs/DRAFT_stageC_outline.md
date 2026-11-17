@@ -12015,3 +12015,30 @@ echo "RMTMP RESULT: DONE - $(date -u +%FT%TZ) - read the PA dashboard's File sto
 
 ### RMTMP ran (11/17) — log ~/edition_upgrade_runs/rm_tmp_20261117.log (1,717 bytes, 14:25:16Z; JP pasted it from a new console)
 How it ran: JP's first paste carried the markdown fence lines; bash read them as a backtick capture whose first word was `bash`, so the console sat in a second shell whose normal output was hidden (errors still showed). At 14:23 the log did not exist. JP then pasted the block (no fences) into that same console at 14:25: it ran in full, its screen output hidden; the log holds all of it. The `exit=` line goes to the screen only (it is printed after tee), so it was not seen. Read from a new console at 14:36 (check reviewer-CLEAR, read-only): log as below; each of the 10 files "No such file"; /tmp and /var/tmp the same folder; ps on the new console's server lists only that console (does not show the old one, which may sit on another server). Log against §9.166 (5): same-folder line yes; the 10 printed with size, date, owner (oldest 07-02, newest spike.log 10-29); "removed:" for all 10; no STILL THERE; before 3,526,650,644 B (find over /tmp and /var/tmp counts each file twice when they are one folder) → after 18,644,290 B; du 7,681,956 KB; RESULT: DONE 14:25:16Z; exit= not seen. Dashboard after: 7.3 of 10.0 GB. The old console is to be killed from PA's Consoles page; anything still queued in it reaches the log-exists STOP.
+
+### CCTL ran (11/17) — RESULT: CHECK, exit=1 (log ~/edition_upgrade_runs/step4_c_control_20261117.log; JP pasted it; delta files + *.out copied down by scp)
+Dashboard before: 7.3 of 10.0 GB. Every STOP gate passed (pre, check = HEADFIX2's result, src size 451,964,928, bh sha = pin, cert_manifest
+"Baseline intact: 76 files", home 7,681,964 KB). Build 14:44:44–14:46:40, exit 0; figures = the 10/25 record (626,305 · 0 · 6,882 · 80 ·
+PN-star A 1,505 + B 2,552 / 3,161 · article-slot 923 / 411). finish exit 1, problem list = the two applies only; verses apply 0 applied / 55
+already / 69 LOUD-SKIPPED; words apply 24 applied / 203 already / 23 LOUD-SKIPPED; no EU row applied. Norm exit 0. T_c's not-corrected rows:
+verses.text EU 69, words EU 23, non-EU 0; the 23 ids = SRCREAD's list (yes). Delta: verses.text 0, words/verses only 0/0, italic 0 0 0;
+**moved pairs 39 (in 18 verses), declared 0 → the one CHECK.** After: src sha, bh sha, live six-table digests, 10/31 files, checkout all
+before = after; home after 8,125,164 KB (T_c + run files 443,200 KB).
+
+**CC's lay of every member (local copies; scratchpad cctlread/lay.py + r2check.py; both fired on a tampered copy first: 3 of 3 and 1 of 1
+caught).** Result: **0 members unexplained.**
+- lane-3 (§9.164 (3)): english 35 of 35, greek_pos 38 of 38, bracket_id 51 of 51 (incl. the 10 non-op rank cells), each with the named
+  src and T_c values exactly; english_head 17, all at named positions (= the 17 recorded at 8b.2a, §9.139 (1)).
+- the 11 retired greek_pos cells, values exact; Joh 14:26 @3 greek_pos None → 3, bracket_id None → rank 1.
+- english_head_norm 35 = exactly the english_head positions (by rule).
+- **R2 re-key (not in the named list — CC's miss when naming):** commit 63744245 (11/2, §9.77 R2) re-keyed 18 entries of
+  scripts/split_merge_fixes.json to the app-feed wording (unchanged since; = d34d6723). The 18 drift verses are exactly those 18 (0 either
+  way). Their 39 ops are the 39 moved pairs; for every op (39 of 39) T_c holds the OLD key's pre-patch value at old_pos and src holds the
+  post-patch value at new_pos — src was patched at 10/25 with the old keys, T_c (old build) does not match the new keys. finish.out
+  :157-170: fix_split_merges "APPLIED — 190 patched, 47 skipped", its skip samples include 6 of the 18 ("english mismatch"). Cells: english
+  39, english_head 18, english_head_norm 18 — the 75 in outside_expected.tsv; no greek_pos or bracket_id. Same cause as Isa 30:31 /
+  Jer 50:16 in lane-3 (§9.164 (3)). (b) builds with the app feed, whose wording the new keys were written for.
+- strongs-side (counts only, nothing ruled): strongs 39, morph 37, lemma 37 all in the 18 R2 verses (the moved rows); strongs_base 26,380
+  (40 in the R2 verses, 26,340 elsewhere = src's own 8b chain).
+**Correction to CC's note sent with the log:** it said greek_pos 50 vs 38 and bracket_id 52 vs 51 left 12 and 1 cells unaccounted. Wrong:
+38 is the lane-3 part only; the whole named greek_pos list is 38 + 11 retired + Joh 14:26 = 50, bracket_id 51 + Joh 14:26 = 52.
