@@ -10,11 +10,13 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ---
 
 ## Active lane — ABP edition upgrade (English line → the app's edition)
-- **STATE 11/15 late: stage E — steps 11, 10, 12a/b/c, 9, 9a, 9b, 9c CLOSED on built; charter §6 step 4 in progress.** HEADFIX (Joh 19:18 @10 head fix) cleared, NOT run (§9.150). Code REF `0cad6894`. Opener: SUCCESSOR START in
-  `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (order left: HEADFIX → raw-delta re-run → A dry-run output code →
-  live = src proof + PA log read → step-4 gate → steps 5–8 → swap). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9
-  (sole register); charter `docs/handoffs/CHARTER_edition_upgrade.md`. Swap-commit knock-ons: health floor 395,003 →
-  395,014, cert pin abp_corrections_active 374 → 375 (after HEADFIX), active-list fixture re-pin.
+- **STATE 11/16 end: stage E closed through 9c; charter §6 step 4 in progress.** HEADFIX2 DONE on built (375 active);
+  STEP4-DELTA2 = the reference delta; the four English-side columns are to be proven by two throwaway rebuilds — (c) the
+  control, then (b) vs pre_8b, expected empty (§9.159–§9.160). Code REF `adfb8ac5`. Opener: SUCCESSOR START in
+  `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (order: PA log read → removal → (c) → (b) → pre_8b→built read →
+  live = src proof → step-4 gate → steps 5–8 → swap). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9 (sole register,
+  latest §9.160); charter `docs/handoffs/CHARTER_edition_upgrade.md`. Swap-commit knock-ons: health floor 395,003 →
+  395,014, cert pin abp_corrections_active 374 → 375, active-list fixture re-pin (the spent pin 1 is already in code).
 - Still owed: B's step in `/rebuild-words` · Split 80 → 84 re-declare.
 - **`/rebuild-words` step 12, the side-table builders — run on the lane's built copy before step 9** (JP 11/7):
   `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` (+ place-orphan check). Prerequisite
@@ -24,9 +26,10 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   on the wrong slot vs `verses.text`; predates 10/25 — entered between the 7/06 S11 swap and 10/25,
   not traced) and Mark 1:9 "of the of" (DESIGN §5). Punct-position 241 = the first frozen member file
   (charter §4.3; the S9 "260" pin is retired — never a member list).
-- Cert pin note: `cert_invariants` now pins `abp_corrections_active` = 374 for the BUILT copy (372 per
-  §9.59 `f8e814c2` + 2 S-joh14:26 per §9.89; members `abp_corrections_active_built_20261106.txt`); the old "30→51 rides the next deploy" line is superseded. What check 4 reads on
-  live before the swap = the lane's question, not resolved here.
+- Cert pin note: `cert_invariants` pins `abp_corrections_active` = 374 for the BUILT copy (372 per
+  §9.59 `f8e814c2` + 2 S-joh14:26 per §9.89; members `abp_corrections_active_built_20261106.txt`) and
+  `abp_corrections_spent_lane3` = 1 (§9.154). Check 4 on live stays red until the swap (§9.155 (2): nothing runs it on a
+  schedule).
 - Rollback + snapshot: `bible_pre_trapwire_swap.db` = rollback of record. `~/bible.db.pre-surface-fill-20261025`
   STAYS until the re-freeze (charter §6 step 9c: after the build, on the copy, before = pre-upgrade live)
   passes its own `--check` against the swapped live — it is the frozen snapshot's only "before" side, so
@@ -37,7 +40,7 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   lexicon-gated passes place Strong's under different words on old vs feed English (keep old rows this
   lane). Members = the `passdiff` rows of PA `~/edition_upgrade_runs/strict_fail_20261031.tsv` (local
   copy `C:\Users\JP\edition_upgrade_runs\pa\passdiff_pa_only_604.tsv`). **The PA file name is a FIXED
-  stamp in code (`build_words_from_abp.py:2463`) — a re-run of A's dry run overwrites it; keep the local copy.**
+  stamp in code (`build_words_from_abp.py:2503`, `report()`) — a re-run of A (dry run OR a full `--app-feed` build, `--out` default `~/edition_upgrade_runs`) overwrites it; keep the local copy.**
 
 ## Owed checks (read-only — JP on PA, or an eyeball)
 - **Backup stamp read after the 11/8 13:30 UTC nightly** (the 11/7 run likely failed on the full disk —

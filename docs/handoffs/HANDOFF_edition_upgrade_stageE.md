@@ -57,6 +57,9 @@ in the reply; ruling-chat messages in one paste block.
   no step swaps or deploys) and STOP on live's size/time changing; `pronoun_review.tsv` (build :2867) is UNTRACKED and not ignored,
   `unmatched_pn.txt` (import_tipnr :694) is gitignored — declare them left or moved; the "Type 'rebuild'" prompt piped as stage B
   did (quote the stage-B record); every later-apply skip named in the log; new dated folder + log each run, re-paste STOP.
+  **Trap for the (b) block:** an `--app-feed` build writes its report files (strict_fail / eligible / merge_pairs /
+  edge_splits `_20261031.tsv` — a FIXED stamp, `report()` default) into `--out`, whose default is `~/edition_upgrade_runs`
+  — it would overwrite the 10/31 files there. Pass `--out <the run folder>`; check those paths do not exist first.
 - **Ruled — do not re-open:** the (ii) member list (§9.142); the verses.text declared list (§9.143–§9.144); english_head_norm by
   rule (§9.142, now 4,890 members); Isa 48:5 @4 a declared single row (§9.148); Heb 11:24 @7 english = the one declared
   spent-by-lane-3 row (§9.152–§9.154); the A cells list (`--cells`) is a READ-OUT only, gates nothing (§9.159 (2)); (a)

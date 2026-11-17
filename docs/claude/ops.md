@@ -241,6 +241,13 @@ The News tab's data (news.db) is refreshed by ONE PA scheduled task:
   applies prose rows, and cert check 4 compares byte for byte (edition-upgrade §9.80, 2026-11-04).
   New source-defect corrections = new rows via build_abp_corrections.py (checkpoint first), never
   a new fix script.
+  **SPENT BY LANE-3 (edition upgrade §9.153–§9.154, `d34d6723`):** a word row whose cell a ruled
+  later step rewrites (lane-3 8b.2a, after step 7) holds neither source nor corrected on a finished
+  copy. `scripts/lane3_spent.py` is the one rule (exactly one lane-3 op on the cell + corrected =
+  that op's old value + the slot holds the op's new values; the three lane-3 files sha-PINNED, a
+  changed file turns the rule OFF; only rows in its `DECLARED` list). The apply prints `~~ … spent`
+  and counts it apart (exit 0); cert check 4 pins the spent count (`abp_corrections_spent_lane3`).
+  A new spent row = a ruling + a DECLARED entry; editing a lane-3 file = re-pin its sha by ruling.
   **The overlay also carries PROSE (verses.text) corrections (b196b9a)** — no schema change,
   `field='verses.text'` + `position=-1` sentinel (inert to the words path), before/after in the
   source/corrected cols. `apply_abp_corrections.py --only {words,verses}` gives TWO apply points in
