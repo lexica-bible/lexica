@@ -11828,7 +11828,7 @@ XHOME_MAX=7900000                 # KB: home in use 7,681,224 after RMTHROW (rm_
 X_WORDSKIP="69 93 94 105 117 132 134 135 137 138 146 151 152 162 168 173 179 182 183 185 190 191 199"   # SRCREAD's 24 skip rows less id 67 (DESIGN 9.164 (1))
 EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
 LDIG() { EU -c 'import sys; sys.path.insert(0, "scripts"); import eu_step as e; c = e.ro(sys.argv[1]); print(" ".join("%s=%d/%s" % (t, *e.digest(c, t)) for t in sys.argv[2:])); c.close()' "$@"; }
-# --- before any write: every miss is STOP, nothing written but the empty run folder ---
+# --- before any write: every miss is STOP; nothing written but the run folder and its own listings ---
 EU scripts/eu_step.py pre --tag CCTL --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "CCTL RESULT: STOP - pre (line above); nothing written"; exit 1; }
 git diff --quiet "$REF" HEAD -- number_fold.py || { echo "CCTL RESULT: STOP - number_fold.py differs from $REF (step 11 imports it)"; exit 1; }
 [ -z "$(git status --porcelain --untracked-files=no -- number_fold.py)" ] || { echo "CCTL RESULT: STOP - number_fold.py has uncommitted edits on PA"; exit 1; }
@@ -11877,11 +11877,13 @@ bash scripts/finish_rebuild.sh "$T" < /dev/null > "$D/finish.out" 2>&1; rf=$?
 echo "finish exit $rf (expect 1: 4b and step 7 LOUD-SKIP EU- rows) - end $(date -u +%FT%TZ)"
 grep -n -E "^── |Matched|already-applied|LOUD-SKIPPED|spent by lane-3|Traceback|DRIFT|drift" "$D/finish.out"
 echo "--- every SKIP line the two applies printed (each by name; DESIGN 9.160 (2)):"
-grep -n -E '!! SKIP|NOT declared spent' "$D/finish.out"
+grep -n -E ' SKIP |NOT declared spent' "$D/finish.out"
 echo "--- every EU- row that APPLIED on T_c (a finding, DESIGN 9.164 (2); expect none below this line):"
 grep -n -E -e '-> .*applied .*\[EU-' "$D/finish.out"
 pl=$(sed -n '/did NOT finish clean/,/DO NOT SWAP/p' "$D/finish.out"); pl=$(grep -E '^     - ' <<< "$pl")
 echo "--- finish's problem list:"; echo "${pl:-(none)}"
+case "$rf" in 0|1) ;; *) echo "CCTL RESULT: STOP - finish exited $rf (only 0 or 1 is a finished run; T_c kept as is)"; exit 1 ;; esac
+[ "$rf" = 1 ] && [ -z "$pl" ] && { echo "CCTL RESULT: STOP - finish exited 1 with no problem list (T_c kept as is)"; exit 1; }
 other=$(grep -v -x -F -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only verses" -e "     - python3 scripts/apply_abp_corrections.py $T --apply --only words" <<< "$pl")
 [ -z "$other" ] || { echo "CCTL RESULT: STOP - finish reported a problem other than the two applies (T_c kept as is):"; echo "$other"; exit 1; }
 echo "=== (3) step 11: build_rendering_norm.py on T_c - start $(date -u +%FT%TZ) ==="
@@ -11891,8 +11893,9 @@ tail -n 8 "$D/norm.out"; echo "norm exit $rn (expect 0) - end $(date -u +%FT%TZ)
 echo "=== (4) T_c: every active correction row whose cell does NOT hold its corrected value (= the rows the applies skipped), read-only ==="
 WC="CASE c.field WHEN 'english' THEN w.english WHEN 'english_head' THEN w.english_head WHEN 'greek_pos' THEN w.greek_pos WHEN 'bracket_id' THEN w.bracket_id WHEN 'strongs' THEN w.strongs WHEN 'strongs_base' THEN w.strongs_base END"
 NH="WITH e AS (SELECT c.id, c.book, c.chapter, c.verse, c.position, c.field, c.ledger_ref AS lr, c.corrected_value AS cv, CASE WHEN c.field = 'verses.text' THEN (SELECT count(*) FROM verses v WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse) ELSE (SELECT count(*) FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) END AS nslot, CASE WHEN c.field = 'verses.text' THEN (SELECT v.text FROM verses v WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse) ELSE (SELECT $WC FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) END AS cell FROM abp_corrections c WHERE c.status = 'active' AND c.applied_at = 'ingest'), nh AS (SELECT * FROM e WHERE nslot <> 1 OR NOT ((cell IS NULL AND cv IS NULL) OR (cell IS NOT NULL AND CAST(cell AS TEXT) = cv)))"
-echo "-- active rows on a field this read does not cover (expect none below this line):"
-sqlite3 -readonly "$T" "SELECT id, field FROM abp_corrections WHERE status = 'active' AND applied_at = 'ingest' AND field NOT IN ('verses.text', 'english', 'english_head', 'greek_pos', 'bracket_id', 'strongs', 'strongs_base')"
+UF="FROM abp_corrections WHERE status = 'active' AND applied_at = 'ingest' AND field NOT IN ('verses.text', 'english', 'english_head', 'greek_pos', 'bracket_id', 'strongs', 'strongs_base')"
+uf=$(sqlite3 -readonly "$T" "SELECT count(*) $UF"); echo "-- active rows on a field this read does not cover: $uf (expect 0)"
+[ "$uf" = 0 ] || { sqlite3 -readonly "$T" "SELECT id, field $UF"; echo "CCTL RESULT: STOP - this read does not cover every active row's field (T_c kept as is)"; exit 1; }
 echo "-- counts (kind|EU|n) - expect verses.text EU 69 (118 EU prose rows less the 49 that return src's text, DESIGN 9.143 (2)); words EU 23; non-EU 0:"
 sqlite3 -readonly "$T" "$NH SELECT CASE WHEN field = 'verses.text' THEN 'verses.text' ELSE 'words' END, lr LIKE 'EU-%', count(*) FROM nh GROUP BY 1, 2 ORDER BY 1, 2"
 echo "-- every word row in it (id|ref|position|field|ledger_ref|T_c cell|corrected_value):"
@@ -11913,8 +11916,17 @@ XV="1Ch|21|9 1Sa|14|50 1Sa|24|5 2Ch|14|12 2Sa|14|4 2Sa|18|31 2Sa|18|32 Eze|23|5 
 awk -F'\t' -v XV="$XV" 'BEGIN { n = split(XV, a, " "); for (i = 1; i <= n; i++) k[a[i]] = 1 } NR > 1 && ($5 == "english" || $5 == "english_head" || $5 == "greek_pos" || $5 == "bracket_id" || $5 == "english_head_norm") { if ((($1 "|" $2 "|" $3) in k) == 0) print }' "$D/delta/words_cells.tsv" > "$D/outside_expected.tsv"
 echo "outside the expected verses: $(wc -l < "$D/outside_expected.tsv") cells (all in $D/outside_expected.tsv; first 80 below)"
 head -n 80 "$D/outside_expected.tsv"
-# --- after: the checkout put back, src, live, bh_scrape, the 10/31 files; every miss is CHECK (T_c is a throwaway; nothing to restore) ---
+# --- after the delta: every miss is CHECK (T_c is a throwaway; nothing to restore) ---
 bad=0
+echo "--- the delta's other figures, each declared (DESIGN 9.160 (1), 9.162 (4), 9.164 (2)); a miss is a CHECK:"
+vt=$(awk '$1 == "verses.text" {print $2}' "$D/delta.out"); echo "verses.text: $vt (expect 0)"; [ "$vt" = 0 ] || bad=1
+mp=$(awk '$1 == "moved" && $2 == "pairs" {print $3 " " $10 " " $13}' "$D/delta.out"); echo "moved pairs / unpaired a / unpaired b: $mp (expect 0 0 0)"; [ "$mp" = "0 0 0" ] || bad=1
+wo=$(awk '$1 == "words" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "words only a / only b: $wo (expect 0 0)"; [ "$wo" = "0 0" ] || bad=1
+vo=$(awk '$1 == "verses" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "verses only a / only b: $vo (expect 0 0)"; [ "$vo" = "0 0" ] || bad=1
+it=$(awk '$1 == "words.italic" || $1 == "words.italic_words" || $1 == "words.smcap_words" {s = s $2 " "} END {print s}' "$D/delta.out"); echo "italic / italic_words / smcap_words: $it(expect 0 0 0, the same build code reading the same text)"; [ "$it" = "0 0 0 " ] || bad=1
+echo "strongs-side columns (src's own 8b chain, not re-run on T_c - counts only, nothing ruled from them; DESIGN 9.160 (1)):"
+awk '$1 == "words.strongs" || $1 == "words.strongs_base" || $1 == "words.is_pn" || $1 == "words.morph" || $1 == "words.lemma" {print "  " $0}' "$D/delta.out"
+# --- the checkout put back, src, live, bh_scrape, the 10/31 files; every miss is CHECK ---
 trap - EXIT; put_back; cmp -s "$D/git_status_before.txt" "$D/git_status_after.txt" || bad=1
 s1=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 after: $s1 (= before: $([ "$s1" = "$s0" ] && echo yes || echo NO))"; [ "$s1" = "$s0" ] || bad=1
 h1=$(cut -d' ' -f1 <<< "$(sha256sum < "$BH")"); echo "bh_scrape.db sha256 after = before: $([ "$h1" = "$h0" ] && echo yes || echo NO)"; [ "$h1" = "$h0" ] || bad=1
@@ -11928,3 +11940,26 @@ dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use after: $dk1 KB (
 echo "CCTL RESULT: DONE - T_c built, finished and normed in $D; delta in $D/delta; expected members laid by CC from the delta files, nothing ruled from counts"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### CCTL reviewed (11/17) — REVIEW: ESCALATE (it writes, §9.160 (2); and it amends §9.160 (2)'s live STOP); 0 DEFECT, tripwire 1 + 3 GAP fixed
+Verdict line verbatim: "REVIEW: ESCALATE - Block CCTL writes (src.new → T_c.db, plus two files in the checkout that are put back), so it
+is outside CLEAR scope (§9.160 (2), §9.164 (4)). It also changes the wording of the §9.160 (2) live STOP, and one tripwire hit." The
+reviewer checked item 1 (nothing writes src, built, pre_8b or live) and found it holds: build :2618 / :2627-2629 / :2631-2634 / :2796 /
+:2813 / :2992 at d34d6723; finish_rebuild.sh :24-25, every run line "${DB}", no swap or deploy; the only file writes in the chain are
+import_tipnr.py :694 (declared) and apply's `<db>.corrections.log` beside T_c (in the run folder). Live table list complete for what the
+chain writes (words; verses: fix_emdash :46 + apply :133; tipnr: import_tipnr :357-373; words / kjv_words / bsb_words: norm :70-75);
+the digest reads every column; index-only changes are not digested. **Fixed:** tripwire 1 — the SKIP grep no longer holds a `!`
+(pattern ' SKIP |NOT declared spent'; no `!` anywhere in the block now); GAP — finish's exit code gated (STOP unless 0 or 1; STOP on 1
+with no problem list); GAP — the "field not covered" read is now a STOP; GAP — the delta's other figures declared and checked (CHECK on
+a miss): verses.text 0, moved / unpaired 0 0 0, words only 0 0, verses only 0 0, italic / italic_words / smcap_words 0 0 0; the
+strongs-side columns printed as counts only; NOTE — "nothing written but the empty run folder" reworded (the run folder's own listings
+are written before the build). Re-tested: the six cases as before, plus finish exiting 2 → STOP (checkout put back) and a changed
+verse text on T_c → CHECK at verses.text. Reviewer NOTE (not changed): bh_scrape.db is opened by the build without read-only mode
+(:2600, :2833); it only reads it, and the sha before = after covers it.
+
+### CCTL reviewed, round 2 (11/17) — REVIEW: ESCALATE (writes; amends §9.160 (2)'s live STOP); 0 DEFECT, 0 GAP
+Verdict line verbatim: "REVIEW: ESCALATE - Block CCTL still writes (src.new moved to T_c.db, plus two checkout files that are put back),
+so it cannot be cleared under DESIGN 9.90 and goes to the ruling chat. All the round-1 fixes are in and correct. I found no remaining
+defects or gaps in how the block runs." Checked: no `!` in the block; the exit-code gate after the diagnostic greps, with the put-back trap
+still set; the "field not covered" STOP; the awk field positions against eu_words_delta.py :247-253; `bad` set once before the first CHECK
+and only raised after; STOPs only before the delta, CHECKs only after. For the ruling chat: clearance, and the live-check wording.
