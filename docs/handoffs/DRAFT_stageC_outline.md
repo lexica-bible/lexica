@@ -12369,3 +12369,18 @@ A non-empty delta's members are read from the files before anything else is draf
 ### RMTC log read (11/17, §9.172) — RMTC DONE and closed; BSTD's first condition met
 Home in use 7,683,676 KB and home + /tmp 7,692,779 KB released as declared figures; dashboard 7.3 of 10.0 GB. BSTD runs once JP reads
 the dashboard at 1 GB free or more. The ruling's text cited "§9.171 (2)" / "§9.172 (7)"; in the register those are §9.170 (4) / §9.171 (7).
+
+### BSTD ran (11/17, 19:15:31Z–19:21:00Z) — BSTD RESULT: DONE, exit=0; the delta pre_8b vs T_b is EMPTY
+PA HEAD 1d5e34ee (repo guards: d34d6723 an ancestor, scripts/tests = d34d6723); PRE OK; HEADFIX2 check OK (words d95acb5d4be4,
+abp_corrections d97d928ca7f5 = the dry copy). Every §9.171 (7) declared line met: build exit 0, all 15 build figures + transplanted
+29,071 + english changed 15,588 "= stage B (yes)"; eligible e540d34d…580f, strict_fail 1513e235…1494, prose f2a22ecd…a864 = expect;
+B2 exit 0 and its four figures yes; finish exit 0, problem list (none), no SKIP line; 4b "applied 118 · already-applied 6 · spent by
+lane-3: 0 · LOUD-SKIPPED 0" and step 7 "applied 250 · already-applied 0 · spent by lane-3: 0 · LOUD-SKIPPED 0" yes; delta all 13
+words columns 0, verses.text 0, moved 0 (unpaired 0 / 0), words only 0 / 0, verses only 0 / 0 (rows 31,237 / 626,309 both sides;
+words_cells.tsv sha 4963903336ba…9329, header only); checkout put back yes; src, pre_8b size + time, bh_scrape, live's six digests,
+10/31 files before = after. Printed only: greek_pos/bracket_id changed **1,145** (stage B 1,258; the §9.88 rule entered at 820a6109,
+after stage B). T_b.db 451,964,928 B kept in step4_b_standard_20261117 until a removal is ruled. Home 7,683,692 → 8,127,092 KB
+(+443,400); /tmp 9,322,145 B unchanged.
+**pre_8b full sha256 as printed (§9.171 (5), now the recorded value):**
+`a4faa4d8503296b18ba8368db1cd7d643783e9c5f15ea6b035cb9d4864ef0107` — to equal the pre_8b sha line of `xref8b0_20261106.log`
+(record :2711-2712 holds only `a4faa4d8…0107`); that log line is still to be read on PA.
