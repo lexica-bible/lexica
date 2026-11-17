@@ -11966,3 +11966,10 @@ and only raised after; STOPs only before the delta, CHECKs only after. For the r
 
 ### CCTL CLEARED TO RUN (11/17, §9.165) — at GATE REF d34d6723, as recorded above (round-2 text), no PA pull; ONLY if the PA dashboard shows at least 1 GB free (else not run; the figure to the ruling chat)
 Live check ruled: size/time printed only; the six-table digest is the proof. Declared for the log: §9.165 (6). T_c and any src.new stay until ruled.
+
+### CCTL NOT RUN (11/17) — the §9.165 dashboard condition is not shown met
+JP's PA dashboard read (pasted 11/17): "File storage: 90% full – 9.0 GB of your 10.0 GB quota"; CPU 6% (329.61 s of 5,000 s). The
+dashboard rounds to 0.1 GB, so the free space is somewhere from 0.95 to 1.05 GB — at least 1 GB is not shown. CCTL not run; nothing
+written. Figure to the ruling chat (§9.165). Beside it: home in use by `du` after RMTHROW was 7,681,224 KB (about 7.87 GB,
+rm_throwaways_20261117.log); the dashboard's 9.0 GB is about 1.1 GB above that — the same kind of gap as 10/25 (dashboard 9.9 GB vs du
+8.4 GB). CCTL adds about 452 MB for T_c, plus the finish chain's working files on it.
