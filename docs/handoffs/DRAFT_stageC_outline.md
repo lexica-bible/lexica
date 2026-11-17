@@ -12008,3 +12008,5 @@ du -sk ~ 2>/dev/null
 echo "RMTMP RESULT: DONE - $(date -u +%FT%TZ) - read the PA dashboard's File storage line next (it may lag)"
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### RMTMP CLEARED TO RUN (11/17, §9.166) — as printed above; declared log figures §9.166 (5); then the dashboard again, CCTL only if at least 1 GB free (§9.165)
