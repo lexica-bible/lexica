@@ -12010,3 +12010,5 @@ echo "RMTMP RESULT: DONE - $(date -u +%FT%TZ) - read the PA dashboard's File sto
 ```
 
 ### RMTMP CLEARED TO RUN (11/17, §9.166) — as printed above; declared log figures §9.166 (5); then the dashboard again, CCTL only if at least 1 GB free (§9.165)
+
+### Dashboard after RMTMP (11/17, JP pasted): "File storage: 73% full – 7.3 GB of your 10.0 GB quota" (was 9.0) — 2.7 GB free, the §9.165 / §9.166 (6) condition met; CCTL to run as cleared. The 1.7 GB drop fits the 10 files (1.63 GiB) — the quota counted /tmp. RMTMP log to the ruling chat with the CCTL log.
