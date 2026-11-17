@@ -11963,3 +11963,6 @@ so it cannot be cleared under DESIGN 9.90 and goes to the ruling chat. All the r
 defects or gaps in how the block runs." Checked: no `!` in the block; the exit-code gate after the diagnostic greps, with the put-back trap
 still set; the "field not covered" STOP; the awk field positions against eu_words_delta.py :247-253; `bad` set once before the first CHECK
 and only raised after; STOPs only before the delta, CHECKs only after. For the ruling chat: clearance, and the live-check wording.
+
+### CCTL CLEARED TO RUN (11/17, §9.165) — at GATE REF d34d6723, as recorded above (round-2 text), no PA pull; ONLY if the PA dashboard shows at least 1 GB free (else not run; the figure to the ruling chat)
+Live check ruled: size/time printed only; the six-table digest is the proof. Declared for the log: §9.165 (6). T_c and any src.new stay until ruled.
