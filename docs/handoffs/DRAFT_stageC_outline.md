@@ -12095,6 +12095,7 @@ for f in "$T" "$D/delta/words_cells.tsv" "$R/step4_c_control_20261117.log" "$S" 
   [ -L "$f" ] && { echo "RMTC RESULT: STOP - a link, not a file: $f; nothing removed"; exit 1; }
 done
 for f in "$S" "$B" "$P" "$LIVE"; do [ "$T" -ef "$f" ] && { echo "RMTC RESULT: STOP - T_c.db is the same file as $f; nothing removed"; exit 1; }; done
+[ -w "$T" ] && [ -w "$D" ] || { echo "RMTC RESULT: STOP - T_c.db or its folder is not writable (rm would ask on the terminal); nothing removed"; exit 1; }
 for x in -journal -wal -shm; do [ -e "$T$x" ] && { echo "RMTC RESULT: STOP - a $x file beside T_c.db (left as is for the ruling chat); nothing removed"; exit 1; }; done
 r=$(sed -n '/^CCTL RESULT: /p' "$R/step4_c_control_20261117.log"); echo "CCTL log result line: $r"
 [ "$r" = "$XRES" ] || { echo "RMTC RESULT: STOP - the CCTL log's result line is not the one ruled on (9.168); nothing removed"; exit 1; }
@@ -12132,3 +12133,6 @@ echo "home + /tmp after: $(( dk1 + tm1 / 1024 )) KB (what the quota counts; the 
 echo "RMTC RESULT: DONE - $(date -u +%FT%TZ) - T_c.db removed; the run folder's other files kept"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### RMTC reviewed (11/17) — REVIEW: ESCALATE (a delete; §9.90 / §9.169 (5)(a)); 0 DEFECT, 0 GAP
+Verdict line verbatim: "REVIEW: ESCALATE - Block RMTC deletes a file (T_c.db), which is a write; under §9.90 only the ruling chat can clear it". Checked: no `!`; no guard on a pipe; -journal/-wal/-shm STOP; every STOP before the one `rm -- "$T"`; CHECKs after; $D in the result line expands as in CCTL; no REF wrapper needed (runs no repo code). NOTE 1 (rm without -f could ask on the terminal if T_c is write-protected) — **taken: a STOP added before the rm if T_c.db or its folder is not writable**; re-tested (the 7 cases + T_c not writable → STOP, nothing removed). NOTE 2: the home + /tmp line is an estimate; the dashboard is the quota's figure (§9.167).
