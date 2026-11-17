@@ -11268,11 +11268,11 @@ CC's recommendation: (b) with (c) as its control: it is the only one that is cel
 (a) leans on rule-attribution for a bulk step (emdash) across thousands of cells.
 
 ## §9.159 (3) — PLAN for (c) then (b) (CC, 11/16; repo + record only; no block drafted)
-**What the build does (read, build_words_from_abp.py run()):** it reads its input db ONLY through a read-only snapshot (:2700-2706,
-`mode=ro` + backup) and writes `<input>.new` beside it (:2681), DELETING any existing `<input>.new` first (:2696-2698). It asks
-"Type 'rebuild'" (:2688; stage B piped it). So both runs build from src read-only into `bible_edupg_test_20261101.db.new` and move
+**What the build does (read, build_words_from_abp.py run()):** it reads its input db ONLY through a read-only snapshot (:2702-2705,
+`mode=ro` + backup) and writes `<input>.new` beside it (:2682), DELETING any existing `<input>.new` first (:2698-2700). It asks
+"Type 'rebuild'" (:2689; stage B piped it). So both runs build from src read-only into `bible_edupg_test_20261101.db.new` and move
 that file into a new run folder in the same command (stage B's pattern, HANDOFF_edition_upgrade_stageC.md :77-80). Writes outside
-the run folder, declared: `~/bible-db/pronoun_review.tsv` (the build, :2867-2868; untracked, overwritten by each build) and
+the run folder, declared: `~/bible-db/pronoun_review.tsv` (the build, :2867; untracked, overwritten by each build) and
 `~/bible-db/unmatched_pn.txt` (import_tipnr.py :694; gitignored). The block lists ~/bible-db and `git status` before and after;
 any other new or changed file = STOP / CHECK.
 **Which copies (all on PA, kept):** src (the 11/01 live copy = the 10/25 rebuild through the same chain); `built_pre_digits_20261105`
