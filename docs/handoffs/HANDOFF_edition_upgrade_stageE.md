@@ -2,10 +2,73 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.159**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.160**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/16 late, step 4 in progress; HEADFIX2 closed §9.156; STEP4-DELTA2 READ DONE §9.157) — open here
+## SUCCESSOR START (11/16 end; step 4 in progress; the (c) → (b) route ruled §9.160) — open here
+
+Rulings: DESIGN §9 (latest **§9.160**). Run record: `DRAFT_stageC_outline.md` (the end is current). Roles unchanged (§9.90):
+the ruling chat rules; CC drafts + tests on made-up copies; the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled
+gates only — writes and code go to the ruling chat; JP runs every block on PA and pastes the log; every cleared block goes IN FULL
+in the reply; ruling-chat messages in one paste block.
+- **Code REF `adfb8ac5`** (§9.158: the A dry-run `--cells` read-out). Before it: `d34d6723` (§9.154: spent-by-lane-3 rule,
+  `scripts/lane3_spent.py`; cert pin `abp_corrections_spent_lane3` 1). **PA HEAD `1d5e34ee`** (last pull, 11/16) — scripts/tests
+  there = d34d6723, so a block at REF adfb8ac5 or later needs a PA pull first (`cd ~/bible-db && git pull --ff-only && git log -1
+  --format=%h`, no reload).
+- **built** `~/bible-db/bible_edupg_test_built_20261102.db` = **HEADFIX2's result** (§9.156): Joh 19:18 @10 english_head + norm
+  'here'; abp_corrections **375|23|6**. **"built =" guard for every block: `eu_step check --dir
+  ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections`** (a block citing STEP9A-APPLY for words or
+  abp_corrections is wrong). Restore source `step4_headfix2_20261116/before.db` (sha `da47ce8c…57f3`).
+- **src** `~/bible-db/bible_edupg_test_20261101.db` (451,964,928 B): the build's source copy for corrections (four writes to its
+  abp_corrections on record, §9.153 (1)); untouched by steps 9 → 9c and by HEADFIX2. Rollbacks kept:
+  `bible_edupg_test_built_pre_8b_20261106.db` (= build + B2 + tail + R2 + J, before 8b.0) and
+  `bible_edupg_test_built_pre_digits_20261105.db` (= right after the stage-C tail).
+- **Reference delta = STEP4-DELTA2** (§9.157): `~/edition_upgrade_runs/step4_delta2_20261116/delta/` — words_cells 50,890
+  `86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc`, verses_cells 15,522 `870e4782…57f9`, words_moved 20
+  `d32361b3…0f08`. Counts: english 32,962 · english_head 5,426 · strongs 20 · strongs_base 26 · greek_pos 3,318 · bracket_id 4,208 ·
+  is_pn 12 · morph 14 · lemma 14 · english_head_norm 4,890 · verses.text 15,522.
+- **NEXT — the approved route for the four columns (english / english_head / greek_pos / bracket_id), §9.159–§9.160, in this order
+  (plan text: DRAFT "§9.159 (3) — PLAN"):**
+  1. **PA log read** (read-only, reviewer scope): the stage-B log's timestamps (wall time) + its greek_pos/bracket_id line + the
+     bh_scrape sha; the 11/1 retire block's log (write 1 to src's abp_corrections, quoted); the 4 active strongs_base rows
+     (Jer 49:13 @28 G165, 1Sa 6:11 @21 G1475, Mal 3:6 @7 G241, Dan 4:33 @1 G846) against pn_greek_identity. Also (§9.158 (4)) the
+     stored type of words.greek_pos (typeof / declared type) on src and built.
+  2. **Removal block** (§9.160 (4)): `step4_headfix_20261115/dry.db` and `step9a_apply_20261115/dry.db` may go (before.db in both
+     stays); the block names which guards still read step9a's dry.db first (CC's reading: none since §9.156 (3) — confirm from the
+     DRAFT blocks). HEADFIX2's dry.db STAYS. JP's disk check first (home 7,771,060 KB of 10 GB on 11/16).
+  3. **(c) control block** — T_c = src → OLD build (no --app-feed) → finish_rebuild.sh in full (corrections on) → step 11 norm;
+     `eu_words_delta --a src --b T_c`, 13 columns + verses.text. Expected only: the lane-3 8b.2a cells, the 23 retired rows' cells,
+     Joh 14:26 @3, english_head_norm only where english_head differs; moved 0; verses.text 0; strongs-side columns = src's own 8b
+     chain, counts only. 4b/7 LOUD-skip EU- rows (finish exits 1); a non-EU skip = STOP. Anything else in the four columns = build
+     drift since 10/25, read and ruled before (b). **A write block** (the build writes `<src>.new`) → reviewer on mechanics →
+     ESCALATE → ruling chat.
+  4. its log → ruling → **T_c removal** block.
+  5. **(b) standard block** — T_b = src → `--app-feed` build (step-5 inputs) → B2 apply → finish_rebuild.sh in full;
+     `eu_words_delta --a built_pre_8b_20261106 --b T_b`: **expected EMPTY**; any member is a finding. Must reproduce the stage-B
+     figures (HANDOFF_..._stageC.md :83-89; DESIGN :470): 626,305 · 0 · 6,882 · 923/411 · PN-star 1,505 + 2,552 / 3,161 ·
+     transplanted 29,071 · strict_fail 1,421 (625) · english changed 15,588 · merge 1,578/1,380 + edge 90/90 MATCHES · Filled 5 ·
+     Split 84; B2 15,571 / 13,500 / 2,166, EU 118. A miss on 15,588 or 29,071 = STOP-and-read; the greek_pos/bracket verse count is
+     printed beside the stage-B line (it may move: §9.88's rule entered the build at 820a6109). Same write-block route.
+  6. **pre_8b → built read** (read-only): every member attributed to its own file (8b.0 / 8b.1 / 8b.2 / ABPTAG, REKEY / the 10
+     reorder verses, 8b.2a, step 11 norm by rule, 10 / 12, HEADFIX2).
+  7. the live = src proof (keeps its place before the gate) → the step-4 gate block (still UNAPPROVED).
+  **Conditions for (c) and (b), §9.160 (2):** STOP if `<src>.new` exists (never let the build delete one); src sha256 before =
+  after; pre_8b read-only; LIVE untouched — say how finish_rebuild.sh is pointed at the throwaway (it takes the db path as $1;
+  no step swaps or deploys) and STOP on live's size/time changing; `pronoun_review.tsv` (build :2867) is UNTRACKED and not ignored,
+  `unmatched_pn.txt` (import_tipnr :694) is gitignored — declare them left or moved; the "Type 'rebuild'" prompt piped as stage B
+  did (quote the stage-B record); every later-apply skip named in the log; new dated folder + log each run, re-paste STOP.
+- **Ruled — do not re-open:** the (ii) member list (§9.142); the verses.text declared list (§9.143–§9.144); english_head_norm by
+  rule (§9.142, now 4,890 members); Isa 48:5 @4 a declared single row (§9.148); Heb 11:24 @7 english = the one declared
+  spent-by-lane-3 row (§9.152–§9.154); the A cells list (`--cells`) is a READ-OUT only, gates nothing (§9.159 (2)); (a)
+  rule-attribution for the four columns NOT adopted (§9.159 (2)).
+- **Still open:** the 10 reorder verses' cause / eSword order confirmation (§9.93 (b), before the swap); notes-store position
+  anchors at the 20 moved words (before stage G); the follow-up lane list below. Swap knock-ons: cert pin abp_corrections_active
+  374 → 375 + the active-list fixture re-pin (the spent pin 1 is already in d34d6723); built's .corrections.log carries HEADFIX2's
+  two appended reports (declared).
+
+(Below: the 11/16 mid-day notes and the 11/15 start block, kept for history.)
+
+### 11/16 mid-day notes (history)
 
 - **11/16 23:05Z: STEP4-DELTA2 (raw delta re-run on the fixed built) READ DONE — the REFERENCE delta for the step-4 gate (§9.157)**:
   `~/edition_upgrade_runs/step4_delta2_20261116/delta/`, words_cells 50,890 `86e44c58…dafc` (= the 11/15 delta less the two
@@ -52,7 +115,7 @@ Read the 9c section below for pins, roles and open items — it still holds, exc
 
 ## Step 9c closed (11/15) — earlier start block, still valid for pins/roles/open items
 
-Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.159**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
+Rulings: `DESIGN_q2_build.md` §9 (sole register, latest **§9.160**). Run record: `DRAFT_stageC_outline.md`, from "Step 9 → 9a →
 9b → 9c" to the end (every block text, log, verdict). Roles unchanged: ruling chat rules; CC drafts + tests on made-up copies;
 the `reviewer` subagent CLEARs read-only blocks and re-runs of ruled gates only (§9.90) — writes and code changes go to the ruling
 chat; JP runs every block on PA and pastes the log (the log itself, not a summary — §9.136). Messages to the ruling chat go in one

@@ -11331,3 +11331,5 @@ by eu_words_delta (mode=ro). Each run gets a new dated folder + log, tee'd, with
 **Order:** PA log read (now also: the stage-B log's timestamps + its greek_pos/bracket line + the bh_scrape sha; the 11/1 retire
 log; strongs_base vs pn_greek_identity) → (c) block → its log to the ruling chat → ruling → T_c removal → (b) block → its log →
 the pre_8b → built read → the gate block (still unapproved).
+
+### §9.160 (11/16) — the PLAN APPROVED as the route for the four columns; (c) and (b) are write blocks (reviewer on mechanics → ESCALATE → ruling chat); disk removals ruled; session wrapped (JP). Successor start: HANDOFF_edition_upgrade_stageE.md.
