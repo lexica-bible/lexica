@@ -12465,3 +12465,5 @@ echo "RMTB RESULT: DONE - $(date -u +%FT%TZ) - T_b.db removed; the run folder's 
 Checks line for line the same as RMTC (only the label, names and figures differ). GAP 1 answered: the full sha is printed in the BSTD
 log's delta file list as JP pasted it; the "BSTD ran" entry now carries it in full. GAPs 2–3 traced, no action. Reviewer did not
 check: PA's GNU tool behaviour (as RMTC), CC's test results, the BSTD log on PA itself.
+
+### RMTB CLEARED (11/17, §9.174) — to run as printed; its log + the dashboard's File storage line go to the ruling chat
