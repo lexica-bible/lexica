@@ -11627,3 +11627,98 @@ entered the build at 820a6109 inside A's two restores (`_join_neighbour_group`, 
 ### RMTHROW CLEARED TO RUN (11/17, §9.162) — at GATE REF d34d6723, as recorded above (with the GAP 1 fix), no PA pull before it, after JP's disk check
 Declared: both before.db shas = expect before and after; 201,183,232 B; abp_surface 395,014; rm exit codes 0 0; both files gone; kept files
 unchanged: yes; RESULT: DONE; exit=0. From here no block cites step9a_apply_20261115 or step4_headfix_20261115 as a "built =" reference.
+
+### RMTHROW ran (11/17, 04:00:05Z, PA HEAD 1d5e34ee, REF d34d6723) — DONE; ruled §9.163
+Log `~/edition_upgrade_runs/rm_throwaways_20261117.log`. Disk before (JP, 03:08): `du -sk ~` 7,985,080 KB. PRE OK; CHECK OK vs HEADFIX2;
+both before.db shas = expect before and after (da47ce8c…57f3, ea6c54c3…e7273); HEADFIX dry.db 201,183,232 B; 9a dry.db 109,944,832 B,
+abp_surface 395,014; rm 0 0; kept files unchanged: yes; home 7,985,092 → 7,681,224 KB (freed 303,868 KB); RESULT: DONE. Removed:
+`step4_headfix_20261115/dry.db`, `step9a_apply_20261115/dry.db`. Neither folder is a "built =" reference from here (§9.162 (3)).
+
+## SRCREAD drafted (11/17, GATE REF d34d6723) — the read-only read of src approved in §9.162 (6); completes (c)'s expected list by name
+READ-ONLY (sqlite3 -readonly on src; built read only by the "built =" guard); writes only its log and the empty run folder `eu_step pre`
+makes. **No PA pull before it.** Five reads, every "expect" a read-out (§9.162 (6)):
+(1) every active EU word row (status active, applied_at ingest, ledger_ref EU-…, field english / english_head) with src's cell and its
+outcome under the apply's own rule, written as SQL from apply_abp_corrections.py — :84 (active + ingest), :123 (exactly one slot, else
+SKIP-slots), :128 (cell = corrected → already), :131 (cell = source → APPLY), else skip; cellmatch :47-56 (a blank cell matches only a
+blank value; otherwise compared as text: SQLite's CAST(… AS TEXT) gives '3' for 3, as str() does). Rows printed in the apply's order;
+counts by field × outcome × lane3; expect 226 rows (english 119, english_head 107; the 20261106 active fixture) and lane3 = 1 on exactly
+Heb 11:24 @7 english (§9.153 (2)). Also listed: any active EU row on another column (expect none). On T_c an APPLY row is a (c) member
+(T_c = corrected, src = src's cell); already / skip are not — except at a lane-3 cell, where T_c's step-7 cell is the op's OLD value, not
+src's (read by hand from the files for that one row).
+(2) src's rows (position, english, english_head, greek_pos, bracket_id, strongs_base, op flag) in the 18 lane-3 verses; found counts
+expect 18 / 47. From these CC names the bracket-rank-renumbered cells (T_c side = the op's old values).
+(3) '--' in src's verses.text and words.english: expect 0 / 0; first 20 hits of each printed.
+(4) the 11 retired greek_pos rows with src's cell: expect 11, each src_holds 'corrected'.
+(5) Joh 14:26 on src: expect @3 greek_pos and bracket_id blank.
+The 47 op cells and 18 verses in the block are GENERATED from the three lane-3 files (scratchpad gen.py; asserts 47 / 18), not typed.
+Local test (WSL, clone at d34d6723, sqlite3 stand-in; made-up src with one row per outcome — APPLY, already, skip, SKIP-slots, the
+lane-3 skip — plus a stray greek_pos EU row, a non-EU row, a superseded row, an EU prose row, a retired greek_pos row, Joh 14:26):
+READ DONE exit 0, each row in its expected outcome, the stray row listed, the non-EU / superseded / prose rows not in (1); found 2 / 5 on
+the made-up copy; re-paste STOP; a planted '--' in a verse and a word → 1 / 1 with both hits printed.
+### Block SRCREAD (GATE REF d34d6723; READ-ONLY — writes only its log and an empty run folder; no gate)
+```bash
+set +H
+L=~/edition_upgrade_runs/src_cread_20261117.log
+if [ -e "$L" ]; then echo "SRCREAD RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export PYTHONIOENCODING=utf-8 LC_ALL=C TZ=UTC
+echo "GATE REF ${REF} - SRCREAD - (c)'s expected members by name, read on src (DESIGN 9.162 (6)) - READ-ONLY: src and built read with sqlite3 -readonly; writes only this log and an empty run folder - NO GATE; every expect is a read-out - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "SRCREAD RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/src_cread_20261117
+XS_SIZE=451964928
+# --- before the reads: every miss is STOP ---
+python3 scripts/eu_step.py pre --tag SRCREAD --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "SRCREAD RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db"; do [ -s "$f" ] || { echo "SRCREAD RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+python3 scripts/eu_step.py check --tag SRCREAD --built "$B" --dir "$DH" --written words,abp_corrections || { echo "SRCREAD RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE, as printed in ~/edition_upgrade_runs/step4_delta2_20261116.log, DESIGN 9.157 (1))"
+[ "$n" = "$XS_SIZE" ] || { echo "SRCREAD RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+# the 47 lane-3 op cells and their 18 verses, generated from scripts/lane3_star_fixes.json, lane3_star_fixes2.json, lane3_star_gapfix.json
+L3="l3(book, chapter, verse, position) AS (VALUES ('Mat',9,11,1), ('Mat',9,11,2), ('Mat',9,11,3), ('2Ch',14,12,11), ('2Ch',14,12,12), ('2Sa',14,4,1), ('2Sa',14,4,3), ('2Sa',14,4,5), ('Isa',30,31,5), ('Isa',30,31,6), ('Jer',50,16,11), ('Jer',50,16,12), ('Lev',24,10,1), ('Lev',24,10,3), ('Lev',24,10,4), ('Num',25,8,3), ('Num',25,8,5), ('Num',25,8,14), ('Num',25,8,16), ('Num',25,14,4), ('Num',25,14,6), ('Num',25,15,3), ('Num',25,15,5), ('Eze',23,5,1), ('Eze',23,5,2), ('Eze',23,5,3), ('Heb',11,24,7), ('Heb',11,24,8), ('1Ch',21,9,6), ('1Ch',21,9,7), ('1Ch',21,9,8), ('1Sa',14,50,3), ('1Sa',14,50,4), ('1Sa',24,5,5), ('1Sa',24,5,6), ('1Sa',24,5,7), ('Gen',46,26,19), ('Gen',46,26,20), ('Mat',27,26,7), ('Mat',27,26,8), ('2Sa',14,4,4), ('Num',25,8,4), ('Num',25,8,15), ('Num',25,14,5), ('Num',25,15,4), ('2Sa',18,31,7), ('2Sa',18,32,15))"
+L3V="l3v(book, chapter, verse) AS (VALUES ('Mat',9,11), ('2Ch',14,12), ('2Sa',14,4), ('Isa',30,31), ('Jer',50,16), ('Lev',24,10), ('Num',25,8), ('Num',25,14), ('Num',25,15), ('Eze',23,5), ('Heb',11,24), ('1Ch',21,9), ('1Sa',14,50), ('1Sa',24,5), ('Gen',46,26), ('Mat',27,26), ('2Sa',18,31), ('2Sa',18,32))"
+# every active EU word row with src's cell; outcome by apply_abp_corrections.py's own rule (:84 active + ingest, in its row order;
+# :123 exactly one slot; :128 cell = corrected -> already; :131 cell = source -> apply; else skip; cellmatch :47-56: blank matches
+# only blank, otherwise compared as text). lane3 = 1 where the cell is a lane-3 op cell (on T_c that cell holds the op's old value).
+E="WITH $L3, e AS (SELECT c.id, c.book, c.chapter, c.verse, c.position, c.field, c.source_value AS sv, c.corrected_value AS cv, (SELECT count(*) FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) AS nslot, (SELECT CASE c.field WHEN 'english' THEN w.english WHEN 'english_head' THEN w.english_head END FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse AND w.position = c.position) AS cell, EXISTS (SELECT 1 FROM l3 WHERE l3.book = c.book AND l3.chapter = c.chapter AND l3.verse = c.verse AND l3.position = c.position) AS lane3 FROM abp_corrections c WHERE c.status = 'active' AND c.applied_at = 'ingest' AND c.ledger_ref LIKE 'EU-%' AND c.field IN ('english', 'english_head')), o AS (SELECT *, CASE WHEN nslot <> 1 THEN 'SKIP-slots' WHEN (cell IS NULL AND cv IS NULL) OR (cell IS NOT NULL AND CAST(cell AS TEXT) = cv) THEN 'already' WHEN (cell IS NULL AND sv IS NULL) OR (cell IS NOT NULL AND CAST(cell AS TEXT) = sv) THEN 'APPLY' ELSE 'skip' END AS outcome FROM e)"
+echo "=== (1) active EU word rows on src by outcome (expect 226 rows: english 119, english_head 107, as tests/fixtures/corrections/abp_corrections_active_built_20261106.txt; lane3 = 1 on exactly one row, Heb 11:24 @7 english, DESIGN 9.153 (2); outcome counts not forecast) ==="
+sqlite3 -readonly -header "$S" "$E SELECT field, outcome, lane3, count(*) AS n FROM o GROUP BY field, outcome, lane3 ORDER BY field, outcome, lane3"
+echo "-- active EU rows whose field is not english / english_head / verses.text (expect none below this line):"
+sqlite3 -readonly -header "$S" "SELECT id, book, chapter, verse, position, field FROM abp_corrections WHERE status = 'active' AND ledger_ref LIKE 'EU-%' AND field NOT IN ('english', 'english_head', 'verses.text')"
+echo "--- (1a) every row (id|ref|position|field|outcome|lane3|source_value|corrected_value|src cell) ---"
+sqlite3 -readonly -header "$S" "$E SELECT id, book||' '||chapter||':'||verse AS ref, position, field, outcome, lane3, sv AS source_value, cv AS corrected_value, cell AS src_cell FROM o ORDER BY book, chapter, verse, position, field"
+echo "=== (2) src's rows in the 18 lane-3 verses (ref|position|english|english_head|greek_pos|bracket_id|strongs_base|op = a lane-3 op cell) ==="
+sqlite3 -readonly -header "$S" "WITH $L3, $L3V SELECT v.book||' '||v.chapter||':'||v.verse AS ref, w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.strongs_base, CASE WHEN EXISTS (SELECT 1 FROM l3 WHERE l3.book = v.book AND l3.chapter = v.chapter AND l3.verse = v.verse AND l3.position = w.position) THEN 'op' ELSE '' END AS op FROM words w JOIN verses v ON v.id = w.verse_id JOIN l3v ON l3v.book = v.book AND l3v.chapter = v.chapter AND l3v.verse = v.verse ORDER BY v.book, v.chapter, v.verse, w.position"
+echo "-- verses found / op cells found (expect 18 / 47):"
+sqlite3 -readonly "$S" "WITH $L3, $L3V SELECT (SELECT count(*) FROM l3v JOIN verses v ON v.book = l3v.book AND v.chapter = l3v.chapter AND v.verse = l3v.verse), (SELECT count(*) FROM l3 JOIN verses v ON v.book = l3.book AND v.chapter = l3.chapter AND v.verse = l3.verse JOIN words w ON w.verse_id = v.id AND w.position = l3.position)"
+echo "=== (3) '--' left on src (expect 0 and 0: fix_emdash ran on src's 10/25 chain and nothing later wrote verses.text) ==="
+sqlite3 -readonly "$S" "SELECT 'verses.text', count(*) FROM verses WHERE text LIKE '%--%' UNION ALL SELECT 'words.english', count(*) FROM words WHERE english LIKE '%--%'"
+echo "-- first 20 hits of each (expect none below this line):"
+sqlite3 -readonly "$S" "SELECT 'verses', book||' '||chapter||':'||verse, text FROM verses WHERE text LIKE '%--%' LIMIT 20"
+sqlite3 -readonly "$S" "SELECT 'words', v.book||' '||v.chapter||':'||v.verse, w.position, w.english FROM words w JOIN verses v ON v.id = w.verse_id WHERE w.english LIKE '%--%' LIMIT 20"
+echo "=== (4) the 11 retired greek_pos rows with src's cell (expect 11 rows; src_cell = corrected_value on each, DESIGN 9.161 (4) (a)) ==="
+sqlite3 -readonly -header "$S" "SELECT c.id, c.book||' '||c.chapter||':'||c.verse AS ref, c.position, c.source_value, c.corrected_value, w.greek_pos AS src_cell, CASE WHEN w.greek_pos IS NOT NULL AND CAST(w.greek_pos AS TEXT) = c.corrected_value THEN 'corrected' WHEN w.greek_pos IS NOT NULL AND CAST(w.greek_pos AS TEXT) = c.source_value THEN 'SOURCE' ELSE 'NEITHER' END AS src_holds FROM abp_corrections c LEFT JOIN verses v ON v.book = c.book AND v.chapter = c.chapter AND v.verse = c.verse LEFT JOIN words w ON w.verse_id = v.id AND w.position = c.position WHERE c.status = 'retired' AND c.field = 'greek_pos' ORDER BY c.id"
+echo "=== (5) Joh 14:26 on src (expect @3 greek_pos and bracket_id blank, DESIGN 9.153 (1) write 4) ==="
+sqlite3 -readonly -header "$S" "SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id FROM words w JOIN verses v ON v.id = w.verse_id WHERE v.book = 'Joh' AND v.chapter = 14 AND v.verse = 26 ORDER BY w.position"
+# --- after ---
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src and built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+[ "$st1" = "$st0" ] || { echo "SRCREAD RESULT: STOP - a copy changed during a read-only run - report this"; exit 1; }
+echo "SRCREAD RESULT: READ DONE - no gate; every expect above is a read-out for the ruling chat; run folder $D left empty"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### SRCREAD reviewed (11/17) — REVIEW: CLEAR
+Verdict line verbatim: "REVIEW: CLEAR - Block SRCREAD is read-only and in scope under §9.162 (6) (approved there; §9.163 (4) makes it
+next). Its SQL matches the apply's rule, the lane-3 lists match the three files, and there are no shell traps." Checked: read-only; the
+outcome SQL against apply_abp_corrections.py :84 / :85 / :123 / :128 / :131 and cellmatch :54-56 (blank handling included); the 47 op
+cells (23 + 17 + 6 + the one shared verse key counted once per op … = the files) and 18 verses; shell. No DEFECT, no GAP. NOTE 1: lane3 is
+matched by cell, not field — CC checked the active list: Heb 11:24 has only @7 english and the verses.text row (no english_head row), so
+lane3 = 1 holds as written. NOTE 2: the apply counts a lane-3 "spent" row apart from skip; SRCREAD folds it into skip, the lane-3 row
+being flagged and handled by hand. NOTE 3: on a failed built guard eu_step check leaves check_delta_<t>.tsv in HEADFIX2's folder. NOTE 4:
+all five asked-for reads present. **PA: no pull before it.**
