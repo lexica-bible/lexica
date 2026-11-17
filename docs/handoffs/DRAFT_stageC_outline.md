@@ -12377,7 +12377,7 @@ abp_corrections d97d928ca7f5 = the dry copy). Every §9.171 (7) declared line me
 B2 exit 0 and its four figures yes; finish exit 0, problem list (none), no SKIP line; 4b "applied 118 · already-applied 6 · spent by
 lane-3: 0 · LOUD-SKIPPED 0" and step 7 "applied 250 · already-applied 0 · spent by lane-3: 0 · LOUD-SKIPPED 0" yes; delta all 13
 words columns 0, verses.text 0, moved 0 (unpaired 0 / 0), words only 0 / 0, verses only 0 / 0 (rows 31,237 / 626,309 both sides;
-words_cells.tsv sha 4963903336ba…9329, header only); checkout put back yes; src, pre_8b size + time, bh_scrape, live's six digests,
+words_cells.tsv sha 4963903336ba59b59f8678141478becbcf0de667f2d4fd80124884ae45ef9329, header only, as the log's delta file list printed it); checkout put back yes; src, pre_8b size + time, bh_scrape, live's six digests,
 10/31 files before = after. Printed only: greek_pos/bracket_id changed **1,145** (stage B 1,258; the §9.88 rule entered at 820a6109,
 after stage B). T_b.db 451,964,928 B kept in step4_b_standard_20261117 until a removal is ruled. Home 7,683,692 → 8,127,092 KB
 (+443,400); /tmp 9,322,145 B unchanged.
@@ -12388,3 +12388,80 @@ after stage B). T_b.db 451,964,928 B kept in step4_b_standard_20261117 until a r
 ### (b) RULED (11/17, §9.173) — (b) PASSED; next: (a) RMTB (T_b removal) → (b) read-only pre_8b → built + src → pre_8b + xref8b0 sha line → (c) live = src proof → (d) step-4 gate proposal
 The BSTD "ran" entry above is the run record; the ruling chat read the log in full and confirmed every §9.171 (7) line. Scope for
 pre_8b → built and the composition check: §9.173 (4).
+
+## Block RMTB drafted (11/17, §9.173 (5)(a)) — removes T_b.db only; RMTC (§9.170) with names and figures changed
+Removes ~/edition_upgrade_runs/step4_b_standard_20261117/T_b.db; the run folder's other files stay. Runs no repo code, opens no
+database. Declared figures, each from the BSTD log (step4_b_standard_20261117.log, "BSTD ran" entry above): XT_SIZE 451,964,928 (the
+delta's "b:" line; the same size as src and pre_8b, so the same-file check is what tells them apart); XWC 4963903336ba…9329 in full
+(the delta's file list; header only, so any empty delta has it — the fixed folder and the BSTD result line pin the run); XRES = the
+BSTD log's DONE line. Tested on made-up copies (9 cases): DONE with only T_b gone; re-paste STOP; -journal beside T_b STOP; wrong delta
+sha STOP; wrong size STOP; T_b a symlink to live STOP; a different BSTD result line STOP; T_b not writable STOP; T_b a hard link to src
+STOP. The test's header-only words_cells.tsv gave the same sha as PA's.
+
+```bash
+set +H
+L=~/edition_upgrade_runs/rm_tb_20261117.log
+if [ -e "$L" ]; then echo "RMTB RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export LC_ALL=C TZ=UTC
+echo "RMTB - removes T_b.db only (DESIGN 9.173 (5)(a)); everything else in the BSTD run folder stays (logs, delta files, report lists, outputs, checkout copies); runs no repo code, opens no database - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs
+D=$R/step4_b_standard_20261117
+T=$D/T_b.db
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+LIVE=~/bible-db/bible.db
+# declared figures, each from a PA log line:
+XT_SIZE=451964928   # T_b.db after B2 + finish: step4_b_standard_20261117.log, the delta's "b:" line (DESIGN 9.173 (1)); the same size as src and pre_8b, so the -ef line below is what tells them apart
+XWC=4963903336ba59b59f8678141478becbcf0de667f2d4fd80124884ae45ef9329   # delta/words_cells.tsv (header only, so any empty delta has this sha; the folder is fixed and the BSTD result line pins the run): same log, the delta's file list
+XRES="BSTD RESULT: DONE - the delta pre_8b vs T_b is EMPTY; every stage-B / stage-C figure reproduced; T_b kept in $D until a removal is ruled"   # the BSTD log's result line
+# --- before the removal: every miss is STOP, nothing removed ---
+for f in "$T" "$D/delta/words_cells.tsv" "$R/step4_b_standard_20261117.log" "$S" "$B" "$P" "$LIVE"; do
+  [ -s "$f" ] || { echo "RMTB RESULT: STOP - missing or empty: $f; nothing removed"; exit 1; }
+  [ -L "$f" ] && { echo "RMTB RESULT: STOP - a link, not a file: $f; nothing removed"; exit 1; }
+done
+for f in "$S" "$B" "$P" "$LIVE"; do [ "$T" -ef "$f" ] && { echo "RMTB RESULT: STOP - T_b.db is the same file as $f; nothing removed"; exit 1; }; done
+[ -w "$T" ] && [ -w "$D" ] || { echo "RMTB RESULT: STOP - T_b.db or its folder is not writable (rm would ask on the terminal); nothing removed"; exit 1; }
+for x in -journal -wal -shm; do [ -e "$T$x" ] && { echo "RMTB RESULT: STOP - a $x file beside T_b.db (left as is for the ruling chat); nothing removed"; exit 1; }; done
+r=$(sed -n '/^BSTD RESULT: /p' "$R/step4_b_standard_20261117.log"); echo "BSTD log result line: $r"
+[ "$r" = "$XRES" ] || { echo "RMTB RESULT: STOP - the BSTD log's result line is not the one ruled on (9.173); nothing removed"; exit 1; }
+w=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/delta/words_cells.tsv")"); echo "delta/words_cells.tsv sha256 $w (expect $XWC)"
+[ "$w" = "$XWC" ] || { echo "RMTB RESULT: STOP - not the BSTD run folder's delta - wrong folder?; nothing removed"; exit 1; }
+n=$(stat -c %s "$T"); echo "T_b.db: $n bytes (expect $XT_SIZE)"
+[ "$n" = "$XT_SIZE" ] || { echo "RMTB RESULT: STOP - T_b.db is not the size the delta read; nothing removed"; exit 1; }
+echo "=== the run folder before ==="
+ls -l --time-style=full-iso "$D"
+k0=$(find "$D" -type f -not -path "$T" -printf '%s %T@ %p\n' | sort)
+c0=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (the quota counts both, DESIGN 9.167)"
+# --- the removal ---
+echo "=== removing T_b.db ==="
+rm -- "$T"; rr=$?
+echo "rm exit code: $rr (expect 0)"
+# --- after the removal: every miss is CHECK (nothing to restore - T_b is a throwaway) ---
+bad=0
+[ "$rr" = 0 ] || { echo "CHECK: the rm failed"; bad=1; }
+[ -e "$T" ] && { echo "CHECK: still present: $T"; bad=1; }
+k1=$(find "$D" -type f -printf '%s %T@ %p\n' | sort)
+echo "every other file in the run folder: size and time before = after: $([ "$k1" = "$k0" ] && echo yes || echo NO) ($(wc -l <<< "$k1") files)"
+[ "$k1" = "$k0" ] || { echo "CHECK: the run folder's other files changed:"; diff <(echo "$k0") <(echo "$k1"); bad=1; }
+c1=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+echo "src, built, pre_8b: size and time before = after: $([ "$c1" = "$c0" ] && echo yes || echo NO)"
+[ "$c1" = "$c0" ] || { echo "CHECK: a kept copy changed:"; echo "$c0"; echo "$c1"; bad=1; }
+echo "=== the run folder after ==="
+ls -l --time-style=full-iso "$D"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm1=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use after: $dk1 KB (before $dk0 KB; freed $((dk0 - dk1)) KB); my files in /tmp after: $tm1 bytes"
+echo "home + /tmp after: $(( dk1 + tm1 / 1024 )) KB (what the quota counts; the PA dashboard is the quota's own figure)"
+[ "$bad" = 0 ] || { echo "RMTB RESULT: CHECK - lines above; nothing to restore (throwaway copy) - to the ruling chat as printed"; exit 1; }
+echo "RMTB RESULT: DONE - $(date -u +%FT%TZ) - T_b.db removed; the run folder's other files kept"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### RMTB reviewed (11/17) — REVIEW: ESCALATE (a delete; §9.90); 0 DEFECT; GAP 1 = XWC's full value was cited only shortened in this record
+Checks line for line the same as RMTC (only the label, names and figures differ). GAP 1 answered: the full sha is printed in the BSTD
+log's delta file list as JP pasted it; the "BSTD ran" entry now carries it in full. GAPs 2–3 traced, no action. Reviewer did not
+check: PA's GNU tool behaviour (as RMTC), CC's test results, the BSTD log on PA itself.
