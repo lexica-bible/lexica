@@ -12931,3 +12931,14 @@ DEFECT; GAP 1 (the norm count 353,595 not declared) → fixed (XNORM, a finding 
 / 0 inferred) → a miss is a CHECK, noted to the ruling chat. Round 2: "REVIEW: CLEAR - the GAP 1 change is in place and correct. The
 block is still read-only and still in reviewer scope." Not checked by the reviewer: the embedded check.py sha (the block's own guard),
 CC's tests, PA memory / runtime.
+
+### P8DELTA ran (11/18, 01:33:20Z–01:35:35Z, PA HEAD 1d5e34ee, REF d34d6723) — READ DONE, exit 0 (log ~/edition_upgrade_runs/p8_delta_20261117.log; JP pasted it)
+PRE OK; CHECK OK vs HEADFIX2; src / pre_8b 451,964,928 B; STEP4-DELTA2 words_cells 86e44c58…dafc = expect (words_moved d32361b3…0f08,
+verses_cells 870e4782…57f9 printed); check.py sha = XCHK. **pre_8b → built:** english 35 · english_head 18 · greek_pos 38 · bracket_id 51
+· english_head_norm 353,595 · strongs_base 26,349 (Strong's side, read out only) · every other column 0; moved 0 (unpaired 0 / 0); words
+only 0 / 0; verses.text 0; verses only 0 / 0; words_cells 380,086 `7e467aa4…771a`. **src → pre_8b:** english 32,995 · english_head 5,444 ·
+strongs 20 · strongs_base 26,358 · greek_pos 3,356 · bracket_id 4,259 · is_pn 12 · morph 14 · lemma 14 · english_head_norm 354,946;
+moved 20 in 10 verses (unpaired 0 / 0); verses.text 15,522 (verses_cells 870e4782…57f9 = STEP4-DELTA2's); words_cells 427,418
+`c671ecbb…dc5e`. **The check:** list cells found 142 of 142, 0 value differences; norm 353,595 = built's head rows = declared, broken 0;
+composition 427,418 + 380,086 → 50,890 = STEP4-DELTA2's 50,890, chain breaks 0, differences 0; moved pairs the same 20; verses equal;
+FINDINGS 0; P8CHECK MATCH. Copies unchanged. Peak 630 MB.
