@@ -13077,3 +13077,14 @@ the home bound measures home only, /tmp printed (as BSTD).
 GAP 1 and GAP 2 accepted. "copy quick_check" is a read-out: anything but ok and the result is not DONE for the ruling chat. **Side files
 beside live are read before the copy only; they are not read after it** (no after-read added — the block runs as cleared). Declared for
 the log: §9.180 (6). The copy's removal = a separate block after the log is read (§9.180 (8)).
+
+### LIVESRC ran (11/18, 15:43:35Z–15:44:55Z, PA HEAD 1d5e34ee, REF d34d6723) — LIVESRC RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/live_src_20261118.log; JP pasted it; exit= outside the log by construction, from JP's console paste)
+PRE OK; src 451,964,928 B; home before 7,727,788 KB (≤ 7,900,000); /tmp 9,322,145 B. Live before: 460,251,136 B, last write
+2026-11-17 14:54:22Z; -journal / -wal / -shm absent. Copy: live journal mode delete; **copy quick_check: ok**; triggers 0; 460,251,136 B;
+exit 0 (15:43:43Z–15:44:31Z). Live after the copy: same size and time. Delta: 13 words columns, none one-sided; verses text only, none
+one-sided; rows 31,237 / 31,237 and 626,309 / 626,309; every words column 0; verses.text 0; moved / verses / unpaired 0 0 0 0; only 0 0
+both; six files header only; peak 637 MB. Digests src = copy: yes — words 626309/`1ce75b22fd302e368f1bfca1bcb9e0fdccdce9e3658af4534f258f5fd3b25b26`,
+verses 31237/`5717b0451ba5e1b044a1c3f1a3cf718c15d23e3a669a605b9c3d5502d1f721ae`. src sha after = before. Copy kept:
+`~/edition_upgrade_runs/live_src_20261118/live_copy_20261118.db` 460,251,136 B. Home after 8,177,344 KB (+449,556).
+**src full sha256 as printed (now the recorded value):** `5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01`.
+Every §9.180 (6) declared line met, as CC reads it; the log goes to the ruling chat.
