@@ -13866,3 +13866,5 @@ the block, only the XCHK line and the check.py lines named in "STEP4GATE revised
 no other line of the block's bash or of check.py; outside the block, only the draft paragraph's G7 / tests wording and the new entries.
 
 ### GSRC log READ in the ruling chat (11/18, §9.187) — HOLD 1 CLOSED; §9.185 (4) and (7) MET; the GSRC-sourced constants stand. HOLD 2 (the revision above) with the ruling chat
+
+### STEP4GATE CLEARED (11/18, §9.188) — to run as printed at XCHK 2a5a8a3c…19fe, no PA pull (PA HEAD 1d5e34ee: scripts/tests = d34d6723, the EU rows file present at 38acc6ba…6717 — CC checked with git); its log, in full through exit=, goes to the ruling chat; step 4 is ruled on the log
