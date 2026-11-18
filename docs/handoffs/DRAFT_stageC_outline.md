@@ -13072,3 +13072,8 @@ the repo guards are delegated to eu_step pre (as BSTD / CCTL). **NOTES:** the di
 being the row id (repo fixtures say so; live's own layout not seen by the reviewer); the backup copies in one step, so the site's cache
 writes wait for it (~452 MB); the copy's trigger count is printed, not a guard; "live expected the same" rows = §9.138 (4)'s premise;
 the home bound measures home only, /tmp printed (as BSTD).
+
+### LIVESRC CLEARED (11/18, §9.180) — to run as printed at GATE REF d34d6723, no PA pull
+GAP 1 and GAP 2 accepted. "copy quick_check" is a read-out: anything but ok and the result is not DONE for the ruling chat. **Side files
+beside live are read before the copy only; they are not read after it** (no after-read added — the block runs as cleared). Declared for
+the log: §9.180 (6). The copy's removal = a separate block after the log is read (§9.180 (8)).
