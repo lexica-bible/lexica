@@ -13342,3 +13342,492 @@ Round 1: ESCALATE, 1 DEFECT — tripwire 2 (grep in a pipe under pipefail, three
 every expectation is a read-out with a traced source." Notes: per-column counts unsorted, capped at 20 (display only); GAP 6 stands (the
 composition / P8CHECK grep words untraced into check.py — read-out, "(no …)" fallback); no GATE REF wrapper (runs no repo script). Not
 checked by the reviewer: the PA files themselves; CC's mock run. JP runs it; its log goes to CC (and on to the ruling chat with the draft).
+
+### GSRC ran (11/18, 17:07:03Z, PA HEAD 1d5e34ee) — READ DONE, exit 0 (log ~/edition_upgrade_runs/gate_sources_20261118.log; JP pasted it)
+Every read-out as expected. Line numbers below are the GSRC log's own (its output only, header = :1).
+- **§9.185 (4):** `p8_delta_20261117.log:19` "STEP4-DELTA2 words_cells.tsv sha256: 86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc
+  (expect 86e44c58…dafc)" (GSRC :4); `:122` "(3) composition, words: src -> pre_8b 427418 cells + pre_8b -> built 380086 cells -> composed
+  50890; STEP4-DELTA2 50890; chain breaks 0; composed only 0; STEP4-DELTA2 only 0; value / moved differs 0" (GSRC :7); `:129` P8CHECK MATCH,
+  `:132` READ DONE. So the line §9.185 (4) asks for exists: the composition was laid against the file of sha 86e44c58…dafc.
+- **§9.185 (7):** the census run's own script is on PA too (`strongs_pos_census2_20261106.py`, 3,497 B — not in the repo). The tsv:
+  1,462 B, sha `8a5ab914356460627a1fcd4c5c729f0d59344a069257f82676e1bc08b54cea2e` (GSRC :14), 21 lines; header class · book · chapter ·
+  verse · position · src_strongs · built_strongs · src_morph · built_morph · src_lemma · built_lemma · src_english · built_english
+  (GSRC :17); 20 rows, every one REORDER-WHOLE, two positions per verse. **A census log exists and records the rows:**
+  `strongs_pos_census2_20261106.log` (27 lines; GATE REF 0bb60e4a, src vs built, 2026-11-06T17:19:13Z) — `:4` "verses: same 31227 -
+  REORDER-WHOLE 10 - REORDER-SPLIT 0 - DIFFERS 0 (0 cells) - SKIPPED 0" (GSRC :47), `:14-:23` the 10 verses with their positions (= DR
+  :2724-2725), `:25` names the tsv as its full list.
+- Prose list `step5_prose_20261101.tsv` 943,076 B, sha f2a22ecd…a864 = expect (GSRC :73).
+
+## The step-4 gate block — DRAFT (11/18, CC; §9.185) — UNAPPROVED until read in the ruling chat
+**What it does (READ-ONLY):** eu_step pre (REF d34d6723) on src + built; built = HEADFIX2's result; src size + full sha; the
+STEP4-DELTA2 folder by its words_cells sha; the P8DELTA lines :19 / :122 (§9.185 (4)); the census tsv by its sha and its log's :4;
+the prose list and the EU file by sha — every miss before the delta a STOP. Then one fresh eu_words_delta src → built into the run
+folder, then the embedded check (G1–G8, §9.185), then src sha / built check / sizes and times again. Writes only its run folder and
+log. Reads neither live nor pre_8b (§9.185 (4): pre_8b rests on P8DELTA's sha guard, `a4faa4d8…0107`, §9.173 (1) / §9.177 (2)).
+**Every expected figure and its source:** src 451,964,928 B and sha 5da9bb95…7e01 — §9.181 (1); STEP4-DELTA2 words_cells 86e44c58…dafc
+— §9.157 (1); P8DELTA :19 and :122 — that log, as GSRC printed them (:4, :7); census tsv sha 8a5ab914…ea2e — GSRC :14; census log :4 —
+GSRC :47; prose sha f2a22ecd…a864 — DR :12210 + GSRC :73; EU file sha 38acc6ba…6717 — its committed .sha256; in the check: 80 + 6 = 86
+— §9.142 (1); 49 / 69 / 15,522 — §9.143 (2); B written 15,571 — stageB_Bapply :2 (§9.161 (1)); Isa 48:5 @4 'would' → 'what' —
+§9.148 (2); Joh 19:18 / Heb 11:24 no member — §9.156 (2) / §9.152 (2); the summary lines (13 columns; rows 31,237 / 626,309; none
+one-sided) — §9.141, §9.157 (1); the census cross-check list — DR :2724-2725. Read-outs only (nothing gated on them): every count G4
+prints, the non-EU member count (computed, §9.185 (3)), Mark 1:9 and Joh 14:26 @3 (§9.185), the six fresh files' full shas (printed
+beside the reference's), peak memory, wall time.
+**Limits written into this record (§9.185 (3), (4)):** G6's length rule cannot tell a "—" already in B's own text from a swapped one;
+finish_rebuild :37-:72 were not traced for verses.text; the length check is the second, weaker look — the by-value proof of
+verses.text is (b) (§9.173 (2), §9.178 (2)). G4 stands on P8DELTA's ruled composition (§9.178 (4)) through G1's byte-identity; pre_8b is
+not read and not re-proven here. Also (§9.140): a type-only change in bracket_id alone is hidden by the rank.
+**Tests (WSL, clone at d34d6723, Python 3.14; check.py sha c9ec9108…a61b = XCHK, the same file the block writes):** full-size made-up
+copies (31,237 verses — B's prose list's keys; 626,309 words; verse texts = the real 11/15 delta's src / built sides, the EU rows'
+corrected values for the 49) built by `gen.py`; the reference delta and every fresh delta made by the real eu_words_delta at d34d6723;
+the test copies' verses_cells came out `870e4782…57f9` = STEP4-DELTA2's own. 15 cases, ALL AS EXPECTED:
+clean → exit 0, G1–G8 PASS ("non-EU members 15453 (computed) - … fails: 0", on the real texts) · an unlisted english cell → G1 (+G4) ·
+an extra strongs cell → G2 "in the delta, NOT declared" (+G1, G3 unpaired, G4) · a broken swap (Jdg 11:7 @6 morph) → G2 "value
+differs" (+G3) · an undeclared moved pair → G2 ×6 + G3 ×2 · a stale norm on src → G5 "src … stored 'stale' rule 'word2'" · one of the
+49 with built ≠ src → G6 · one of the 69 off by a space → G6 · a length off by one → G6 "length rule (9.185 (3))" · an extra delta verse
+→ G6 "in the delta, NOT declared" · Isa 48:5 @4 absent → G7 ×2 · a member in Joh 19:18 → G7 · an italic member → G8 — each exit 3 ·
+census position changed (Rom 9:29 @18 → @19) → STOP exit 2 · census class changed → STOP exit 2. **Measured peak memory: the check
+98 MB; the delta 667 MB** on the made-up copies (PA's delta: 639 MB, §9.157 (1)). The block itself: run end to end on a test home
+with ONLY its X* constant lines set to the test copies' values (the check heredoc unchanged, its sha = XCHK) — results below the block.
+### Block STEP4GATE (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; no PA pull)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_gate_20261118.log
+if [ -e "$L" ]; then echo "STEP4GATE RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - STEP4GATE - the step-4 gate: the raw delta src -> built laid against the declared lists, G1-G8 (DESIGN 9.138 (3)+(6), 9.185) - READ-ONLY: src and built read by eu_words_delta and the check (mode=ro); writes only its run folder and this log - every expect is declared before the run - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP4GATE RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step4_gate_20261118
+C=$R/step4_delta2_20261116/delta
+P8=$R/p8_delta_20261117.log
+CEN=$R/strongs_pos_census2_20261106.tsv
+CLOG=$R/strongs_pos_census2_20261106.log
+PRO=$R/step5_prose_20261101.tsv
+EUF=tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv
+XS_SIZE=451964928                                                          # src size: DESIGN 9.181 (1)
+XS_SHA=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01    # src sha256: DESIGN 9.181 (1)
+XC_WC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc     # STEP4-DELTA2 words_cells.tsv: DESIGN 9.157 (1)
+XP8_19="STEP4-DELTA2 words_cells.tsv sha256: $XC_WC (expect $XC_WC)"       # p8_delta_20261117.log:19 (GSRC log :4; DESIGN 9.185 (4))
+XP8_122="(3) composition, words: src -> pre_8b 427418 cells + pre_8b -> built 380086 cells -> composed 50890; STEP4-DELTA2 50890; chain breaks 0; composed only 0; STEP4-DELTA2 only 0; value / moved differs 0"   # p8_delta_20261117.log:122 (GSRC :7; DESIGN 9.178 (4))
+XCEN=8a5ab914356460627a1fcd4c5c729f0d59344a069257f82676e1bc08b54cea2e      # census tsv sha256: gate_sources_20261118.log :14
+XCLOG4="verses: same 31227 - REORDER-WHOLE 10 - REORDER-SPLIT 0 - DIFFERS 0 (0 cells) - SKIPPED 0"   # census log :4 (GSRC :47)
+XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # step5 prose list: DR :12210, GSRC :73
+XEU=38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717       # tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv.sha256
+XCHK=c9ec910889ca23a241ef31b840d9ee3dbbaf2478b6f96fbf954d5b37b368a61b      # sha256 of check.py as written below (CC's file, tested); a paste that changed it STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the delta: every miss is STOP ---
+EU scripts/eu_step.py pre --tag STEP4GATE --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "STEP4GATE RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$C/words_cells.tsv" "$C/words_moved.tsv" "$C/words_only.tsv" "$C/words_unpaired.tsv" "$C/verses_cells.tsv" "$C/verses_only.tsv" "$C/summary.txt" "$P8" "$CEN" "$CLOG" "$PRO" "$EUF"; do [ -s "$f" ] || { echo "STEP4GATE RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag STEP4GATE --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP4GATE RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"; [ "$n" = "$XS_SIZE" ] || { echo "STEP4GATE RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+s0=$(h "$S"); echo "src sha256: $s0 (expect $XS_SHA)"; [ "$s0" = "$XS_SHA" ] || { echo "STEP4GATE RESULT: STOP - src is not the copy live = src was proven against"; exit 1; }
+c0=$(h "$C/words_cells.tsv"); echo "STEP4-DELTA2 words_cells.tsv sha256: $c0 (expect $XC_WC)"; [ "$c0" = "$XC_WC" ] || { echo "STEP4GATE RESULT: STOP - not the STEP4-DELTA2 reference delta"; exit 1; }
+l19=$(sed -n '19p' "$P8"); echo "p8_delta_20261117.log:19: $l19"; [ "$l19" = "$XP8_19" ] || { echo "STEP4GATE RESULT: STOP - P8DELTA :19 is not the reference-delta line (DESIGN 9.185 (4))"; exit 1; }
+l122=$(sed -n '122p' "$P8"); echo "p8_delta_20261117.log:122: $l122"; [ "$l122" = "$XP8_122" ] || { echo "STEP4GATE RESULT: STOP - P8DELTA :122 is not the composition line (DESIGN 9.178 (4))"; exit 1; }
+k=$(h "$CEN"); echo "census tsv sha256: $k (expect $XCEN)"; [ "$k" = "$XCEN" ] || { echo "STEP4GATE RESULT: STOP - census tsv is not the file GSRC read"; exit 1; }
+k=$(sed -n '4p' "$CLOG"); echo "census log :4: $k"; [ "$k" = "$XCLOG4" ] || { echo "STEP4GATE RESULT: STOP - census log :4 is not 10 REORDER-WHOLE / 0 SPLIT / 0 DIFFERS"; exit 1; }
+k=$(h "$PRO"); echo "prose list sha256: $k (expect $XPRO)"; [ "$k" = "$XPRO" ] || { echo "STEP4GATE RESULT: STOP - not B2's prose list"; exit 1; }
+k=$(h "$EUF"); echo "EU rows file sha256: $k (expect $XEU)"; [ "$k" = "$XEU" ] || { echo "STEP4GATE RESULT: STOP - not the committed EU rows file"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+cat > "$D/check.py" <<'PYEOF'
+# STEP-4 GATE check (READ-ONLY; DESIGN 9.138 (3)+(6), 9.185). Run from ~/bible-db (imports scripts/build_rendering_norm).
+# argv: 1 run folder (the fresh src -> built delta is in <run>/delta)  2 STEP4-DELTA2's delta folder  3 src db  4 built db
+#       5 census v2 tsv  6 B2's prose list  7 the EU rows file (tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv)
+# Opens src and built mode=ro + query_only; reads TSV files; writes nothing.
+# Exit 0 = PASS (G1-G8 all hold) - 3 = FINDING (listed) - 2 = STOP (an input is not what the gate was declared against).
+import ast, hashlib, os, sqlite3, sys
+from collections import Counter, defaultdict
+from pathlib import Path
+sys.path.insert(0, "scripts")
+from build_rendering_norm import _norm_or_none
+
+RUN, C = Path(sys.argv[1]), Path(sys.argv[2])
+SRC, BUILT, CENSUS, PROSE, EUF = sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7]
+F = RUN / "delta"
+EM = "—"
+STRONG = ("strongs", "strongs_base", "morph", "lemma", "is_pn")
+FILES = ("words_cells.tsv", "words_only.tsv", "words_moved.tsv", "words_unpaired.tsv", "verses_cells.tsv", "verses_only.tsv")
+# DR :2724-2725 (census v2 record) - a CROSS-CHECK of the census file, not its source (DESIGN 9.185 (7))
+XREF10 = {("2Ki", 23, 35): (6, 7), ("Est", 5, 9): (12, 13), ("Eze", 20, 14): (7, 8), ("Gen", 5, 25): (1, 2),
+          ("Gen", 5, 26): (1, 2), ("Gen", 34, 4): (1, 2), ("Jdg", 11, 7): (6, 7), ("Jos", 2, 4): (19, 20),
+          ("Jos", 5, 15): (26, 27), ("Rom", 9, 29): (17, 18)}
+CENSUS_HEAD = ["class", "book", "chapter", "verse", "position", "src_strongs", "built_strongs", "src_morph", "built_morph",
+               "src_lemma", "built_lemma", "src_english", "built_english"]   # gate_sources_20261118.log (GSRC) tsv header
+# the six none -> lemma-only rows, strongs_base -> '*' (DESIGN 9.95; positions 9.78 / 9.133; listed in 9.142 (1))
+SIX = [("Num", 21, 25, 2), ("1Sa", 20, 37, 11), ("2Sa", 15, 6, 18), ("Jer", 48, 15, 1), ("Jer", 48, 20, 12), ("Jer", 49, 3, 3)]
+# summary.txt lines the delta must print (DESIGN 9.141 (13 columns), 9.157 (1) (rows, none one-sided))
+SUMMARY = ["words columns compared (13): english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, "
+           "italic_words, smcap_words, is_pn, morph, lemma, english_head_norm",
+           "words columns on one side only: a none - b none",
+           "verses columns compared (1): text",
+           "verses columns on one side only: a none - b none",
+           "rows: verses a 31237 / b 31237 - words a 626309 / b 626309"]
+X49, X69, XDECL, XWRIT = 49, 69, 15522, 15571        # DESIGN 9.143 (2) (49 / 69 / 15,522); stageB_Bapply :2 written 15,571 (9.161 (1))
+ISA = (("Isa", 48, 5, 4), "would", "what")            # DESIGN 9.148 (2): english_head 'would' -> 'what' + its norm cell
+NONE_IN = [("Joh", 19, 18), ("Heb", 11, 24)]          # DESIGN 9.156 (2), 9.152 (2): no member in these verses
+SHOW = [("Mar", 1, 9), ("Joh", 14, 26)]               # charter 4.10: printed by name, read-outs only (9.185)
+
+finds = Counter()
+lines_out = []
+
+
+class Stop(Exception):
+    pass
+
+
+def find(gate, *what):
+    finds[gate] += 1
+    if finds[gate] <= 40:
+        print("  FINDING %s: %s" % (gate, " | ".join(repr(x) for x in what)))
+
+
+def same(x, y):          # sqlite values, type-strict (1 and '1' differ)
+    return type(x) is type(y) and x == y
+
+
+def lit(s):
+    return ast.literal_eval(s)
+
+
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def rows(path):
+    with open(path, encoding="utf-8", errors="surrogateescape", newline="\n") as f:
+        head = f.readline().rstrip("\n").split("\t")
+        return head, [ln.rstrip("\n").split("\t") for ln in f]
+
+
+def ro(path):
+    c = sqlite3.connect("%s?mode=ro" % Path(path).resolve().as_uri(), uri=True)
+    c.text_factory = lambda b: b.decode("utf-8", "surrogateescape")
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def verdict(gate):
+    print("%s: %s" % (gate, "PASS" if finds[gate] == 0 else "FINDING (%d)" % finds[gate]))
+
+
+try:
+    # ---------- G1: the fresh delta is byte-equal to STEP4-DELTA2 ----------
+    print("=== G1 the fresh delta = STEP4-DELTA2, byte for byte (DESIGN 9.157 (1), 9.185 (4)) ===")
+    for n in FILES:
+        a, b = sha(F / n), sha(C / n)
+        eq = (F / n).read_bytes() == (C / n).read_bytes()
+        print("  %-20s fresh %s  ref %s  equal: %s" % (n, a, b, "yes" if eq else "NO"))
+        if not eq:
+            find("G1", n, "differs from STEP4-DELTA2")
+    verdict("G1")
+
+    # ---------- read the fresh delta ----------
+    h, wc = rows(F / "words_cells.tsv")
+    if not h == ["book", "chapter", "verse", "position", "column", "a", "b", "moved"]:
+        raise Stop("words_cells.tsv header: %r" % h)
+    W = {}
+    for r in wc:
+        W[(r[0], int(r[1]), int(r[2]), int(r[3]), r[4])] = (lit(r[5]), lit(r[6]), r[7])
+    h, mv = rows(F / "words_moved.tsv")
+    h2, vc = rows(F / "verses_cells.tsv")
+    if not h2 == ["book", "chapter", "verse", "column", "a", "b"]:
+        raise Stop("verses_cells.tsv header: %r" % h2)
+    V = {}
+    for r in vc:
+        if not r[3] == "text":
+            find("G8", "verses column other than text", r[:4])
+        V[(r[0], int(r[1]), int(r[2]))] = (lit(r[4]), lit(r[5]))
+    print("fresh delta: words cells %d - moved %d - verses %d" % (len(W), len(mv), len(V)))
+    S, B = ro(SRC), ro(BUILT)
+
+    # ---------- G2: Strong's side = the (ii) list (DESIGN 9.142 (1)), declared from census v2 + 9.95 + src ----------
+    print("=== G2 strongs / strongs_base / morph / lemma / is_pn = the (ii) list ===")
+    print("  census tsv sha256: %s (printed before use, DESIGN 9.185 (7))" % sha(CENSUS))
+    ch, cr = rows(CENSUS)
+    if not ch == CENSUS_HEAD:
+        raise Stop("census header is not the one GSRC printed: %r" % ch)
+    cls = Counter(r[0] for r in cr)
+    print("  census rows %d, classes %s" % (len(cr), dict(cls)))
+    if not (set(cls) == {"REORDER-WHOLE"}):
+        raise Stop("census lists a class other than REORDER-WHOLE: %r" % dict(cls))
+    cv = defaultdict(list)
+    for r in cr:
+        cv[(r[1], int(r[2]), int(r[3]))].append((int(r[4]), r[5]))
+    if not (len(cv) == 10 and all(len(v) == 2 for v in cv.values())):
+        raise Stop("census does not list exactly 10 REORDER-WHOLE verses of 2 positions each")
+    swaps = {vk: tuple(sorted(p for p, _ in v)) for vk, v in cv.items()}
+    if not swaps == XREF10:
+        raise Stop("census verses / positions do not match DR :2724-2725: %r" % sorted(set(swaps.items()) ^ set(XREF10.items())))
+    print("  census: 10 REORDER-WHOLE verses, 0 other; = DR :2724-2725 cross-check: yes")
+    q = ("SELECT w.position, w.strongs, w.strongs_base, w.morph, w.lemma, w.is_pn FROM words w JOIN verses v ON v.id = w.verse_id "
+         "WHERE v.book = ? AND v.chapter = ? AND v.verse = ?")
+
+    def src_rows(vk):
+        return {r[0]: dict(zip(STRONG, r[1:])) for r in S.execute(q, vk)}
+    decl = {}
+    for vk, (p, pq) in sorted(swaps.items()):
+        sr = src_rows(vk)
+        for pos, cs in cv[vk]:
+            if not (pos in sr and str(sr[pos]["strongs"]) == cs):
+                raise Stop("census src_strongs %r at %s @%d is not src's %r" % (cs, vk, pos, sr.get(pos, {}).get("strongs")))
+        for col in STRONG:
+            x, y = sr[p][col], sr[pq][col]
+            if not same(x, y):
+                decl[vk + (p, col)] = (x, y)
+                decl[vk + (pq, col)] = (y, x)
+    n_swap = len(decl)
+    for k in SIX:
+        sr = src_rows(k[:3])
+        if k[3] not in sr:
+            raise Stop("no src row at %r" % (k,))
+        kk = k + ("strongs_base",)
+        if kk in decl:
+            find("G2", "a six-row cell is also a swap cell", kk)
+        decl[kk] = (sr[k[3]]["strongs_base"], "*")
+    got = {k: v[:2] for k, v in W.items() if k[4] in STRONG}
+    print("  declared: swap cells %d + six rows %d = %d; delta members in these five columns %d (DESIGN 9.142 (1): 80 + 6 = 86)"
+          % (n_swap, len(SIX), len(decl), len(got)))
+    if not (n_swap == 80 and len(decl) == 86):
+        find("G2", "declared count is not 80 + 6 = 86", n_swap, len(decl))
+    for k in sorted(set(decl) | set(got), key=str):
+        if k not in got:
+            find("G2", "declared, NOT in the delta", k, decl[k])
+        elif k not in decl:
+            find("G2", "in the delta, NOT declared", k, got[k])
+        elif not (same(decl[k][0], got[k][0]) and same(decl[k][1], got[k][1])):
+            find("G2", "value differs", k, "declared", decl[k], "delta", got[k])
+    verdict("G2")
+
+    # ---------- G3: moved pairs = the census swaps; position has no other member ----------
+    print("=== G3 moved pairs = the 10 census swaps both ways; unpaired 0 / 0 ===")
+    want = set()
+    for vk, (p, pq) in swaps.items():
+        want.add(vk + (p, pq))
+        want.add(vk + (pq, p))
+    have = set((r[0], int(r[1]), int(r[2]), int(r[3]), int(r[4])) for r in mv)
+    print("  moved rows %d (declared %d)" % (len(have), len(want)))
+    for k in sorted(want ^ have, key=str):
+        find("G3", "moved pair %s" % ("declared, not in the delta" if k in want else "in the delta, not declared"), k)
+    for n in ("words_unpaired.tsv", "words_only.tsv"):
+        m = len(rows(F / n)[1])
+        print("  %-20s %d lines (expect 0)" % (n, m))
+        if m:
+            find("G3", n, "not empty", m)
+    verdict("G3")
+
+    # ---------- G4: the four columns = the composition, carried by G1 (DESIGN 9.185 (4), option a) ----------
+    print("=== G4 english / english_head / greek_pos / bracket_id = the composition (9.178 (4)); carried by G1 ===")
+    by = Counter(k[4] for k in W)
+    print("  members: " + " - ".join("%s %d" % (c, by[c]) for c in ("english", "english_head", "greek_pos", "bracket_id")))
+    if finds["G1"]:
+        find("G4", "G1 did not hold - the composition ruling does not carry to this delta")
+    verdict("G4")
+
+    # ---------- G5: english_head_norm by step 11's rule on EVERY row of src and built (DESIGN 9.142 (3)) ----------
+    print("=== G5 english_head_norm = _norm_or_none(english_head) on every row, src and built ===")
+    for name, c in (("src", S), ("built", B)):
+        n = heads = broke = 0
+        for bk, chp, vs, pos, head, norm in c.execute(
+                "SELECT v.book, v.chapter, v.verse, w.position, w.english_head, w.english_head_norm "
+                "FROM words w JOIN verses v ON v.id = w.verse_id"):
+            n += 1
+            e = _norm_or_none(head)
+            if e is not None:
+                heads += 1
+            if not same(norm, e):
+                broke += 1
+                find("G5", name, (bk, chp, vs, pos), "head", head, "stored", norm, "rule", e)
+        print("  %-5s rows %d - rows the rule gives a value %d - broken %d (expect 0)" % (name, n, heads, broke))
+    nm = [k for k in W if k[4] == "english_head_norm"]
+    off = [k for k in nm if k[:4] + ("english_head",) not in W]
+    print("  english_head_norm members %d; at a position where english_head does not differ: %d (expect 0)" % (len(nm), len(off)))
+    for k in off:
+        find("G5", "norm member without an english_head member", k, W[k][:2])
+    verdict("G5")
+
+    # ---------- G6: verses.text (DESIGN 9.143 (2), 9.144 (1) as replaced by 9.185 (3)) ----------
+    print("=== G6 verses.text = B written - the EU rows equal to src; the 49 / 69 by value; the rest by the 9.185 (3) length rule ===")
+    print("  prose list sha256: %s - EU rows file sha256: %s" % (sha(PROSE), sha(EUF)))
+    ph, pr = rows(PROSE)
+    if not ph == ["book", "chapter", "verse", "outcome", "reason", "old_len", "new_len", "changed"]:
+        raise Stop("prose list header: %r" % ph)
+    P = {(r[0], int(r[1]), int(r[2])): r for r in pr}
+    written = {k for k, r in P.items() if r[3] == "written"}
+    eh, er = rows(EUF)
+    ix = {n: i for i, n in enumerate(eh)}
+    eu = {}
+    for r in er:
+        if r[ix["field"]] == "verses.text":
+            k = (r[ix["book"]], int(r[ix["chapter"]]), int(r[ix["verse"]]))
+            if k in eu:
+                find("G6", "two EU verses.text rows on one verse", k)
+            eu[k] = r[ix["corrected_value"]]
+
+    def texts(c):
+        return {(b, ch_, v): t for b, ch_, v, t in c.execute("SELECT book, chapter, verse, text FROM verses")}
+    ST, BT = texts(S), texts(B)
+    print("  B written %d (stageB_Bapply :2: 15,571) - EU verses.text rows %d (118)" % (len(written), len(eu)))
+    if not len(written) == XWRIT:
+        find("G6", "B written is not 15,571", len(written))
+    for k in eu:
+        if k not in written:
+            find("G6", "EU verses.text row on a verse B did not write", k)
+    g49 = sorted(k for k in eu if same(eu[k], ST.get(k)))
+    g69 = sorted(k for k in eu if k not in set(g49))
+    print("  EU rows whose corrected_value = src's text: %d (expect %d) - the others: %d (expect %d)" % (len(g49), X49, len(g69), X69))
+    if not (len(g49) == X49 and len(g69) == X69):
+        find("G6", "49 / 69 split differs", len(g49), len(g69))
+    for k in g49:
+        if not same(BT.get(k), eu[k]):
+            find("G6", "one of the 49: built is not corrected (= src)", k, BT.get(k), eu[k])
+    for k in g69:
+        if not same(BT.get(k), eu[k]):
+            find("G6", "one of the 69: built is not corrected", k, BT.get(k), eu[k])
+    declared = written - set(g49)
+    print("  declared %d (expect %d) - delta verses %d - declared, not in the delta %d - in the delta, not declared %d"
+          % (len(declared), XDECL, len(V), len(declared - set(V)), len(set(V) - declared)))
+    if not len(declared) == XDECL:
+        find("G6", "declared count is not 15,522", len(declared))
+    for k in sorted(declared - set(V)):
+        find("G6", "declared, NOT in the delta", k)
+    for k in sorted(set(V) - declared):
+        find("G6", "in the delta, NOT declared", k)
+    rest = sorted(k for k in declared if k not in eu)
+    fail = 0
+    for k in rest:
+        t = BT.get(k)
+        nl = int(P[k][6])
+        if t is None or not (len(t) + t.count(EM) == nl):
+            fail += 1
+            find("G6", "length rule (9.185 (3))", k, "new_len", nl, "built len", None if t is None else len(t),
+                 "dashes", None if t is None else t.count(EM), "built text", t)
+    print("  non-EU members %d (computed) - len(built) + count(em-dash) = new_len fails: %d (expect 0)" % (len(rest), fail))
+    verdict("G6")
+
+    # ---------- G7: named rows ----------
+    print("=== G7 named rows ===")
+    (ik, ia, ib) = ISA
+    hk, nk = ik + ("english_head",), ik + ("english_head_norm",)
+    print("  Isa 48:5 @4 english_head: %r (declared %r -> %r, DESIGN 9.148 (2))" % (W.get(hk, ("absent",))[:2], ia, ib))
+    if not (hk in W and same(W[hk][0], ia) and same(W[hk][1], ib)):
+        find("G7", "Isa 48:5 @4 english_head is not 'would' -> 'what' in the delta", W.get(hk))
+    print("  Isa 48:5 @4 english_head_norm: %r (present; values by the G5 rule)" % (W.get(nk, ("absent",))[:2],))
+    if nk not in W:
+        find("G7", "Isa 48:5 @4 english_head_norm cell absent")
+    mvk = set((r[0], int(r[1]), int(r[2])) for r in mv)
+    for vk in NONE_IN:
+        m = [k for k in W if k[:3] == vk] + ([vk] if vk in V else []) + ([vk] if vk in mvk else [])
+        print("  %s %d:%d members: %d (expect 0)" % (vk[0], vk[1], vk[2], len(m)))
+        for k in m:
+            find("G7", "member in a verse declared to have none", k)
+    for vk in SHOW:
+        print("  %s %d:%d (read-out, not declared):" % vk)
+        for k in sorted((k for k in W if k[:3] == vk), key=str):
+            print("    @%d %-18s %r -> %r" % (k[3], k[4], W[k][0], W[k][1]))
+        if vk in V:
+            print("    verses.text %r -> %r" % V[vk])
+    verdict("G7")
+
+    # ---------- G8: zeros and the delta's own summary ----------
+    print("=== G8 italic columns 0; one-side files empty; rows; 13 columns + text, none one-sided ===")
+    for col in ("italic", "italic_words", "smcap_words"):
+        m = sum(1 for k in W if k[4] == col)
+        print("  %-14s %d (expect 0)" % (col, m))
+        if m:
+            find("G8", col, "has members", m)
+    vo = len(rows(F / "verses_only.tsv")[1])
+    print("  verses_only.tsv %d lines (expect 0)" % vo)
+    if vo:
+        find("G8", "verses_only not empty", vo)
+    summ = (F / "summary.txt").read_text(encoding="utf-8").split("\n")
+    for s in SUMMARY:
+        ok = s in summ
+        print("  summary line present: %s - %s" % ("yes" if ok else "NO", s))
+        if not ok:
+            find("G8", "summary line missing", s)
+    verdict("G8")
+    S.close()
+    B.close()
+except Stop as e:
+    print("GATE CHECK: STOP - %s" % e)
+    sys.exit(2)
+
+try:
+    import resource
+    print("check peak memory (max resident): %d MB" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
+except ImportError:
+    pass
+tot = sum(finds.values())
+print("FINDINGS: %d (%s)" % (tot, ", ".join("%s %d" % (g, finds[g]) for g in sorted(finds)) or "none"))
+if tot > sum(min(n, 40) for n in finds.values()):
+    print("  (more findings than printed: each gate prints its first 40)")
+print("STEP-4 GATE CHECK: %s" % ("PASS - G1 to G8 hold" if tot == 0 else "FINDING - lines above"))
+sys.exit(0 if tot == 0 else 3)
+PYEOF
+k=$(h "$D/check.py"); echo "check.py sha256: $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "STEP4GATE RESULT: STOP - check.py is not the file CC wrote and tested (paste changed?)"; exit 1; }
+# --- the fresh delta src -> built ---
+echo "=== (1) eu_words_delta --a src --b built - start $(date -u +%FT%TZ) ==="
+mkdir "$D/delta" || { echo "STEP4GATE RESULT: STOP - cannot make $D/delta"; exit 1; }
+EU scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" < /dev/null > "$D/delta.out" 2>&1; r1=$?
+cat "$D/delta.out"; echo "delta exit $r1 (expect 0) - end $(date -u +%FT%TZ)"
+[ "$r1" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "STEP4GATE RESULT: STOP - the delta did not finish (partial files kept in $D/delta)"; exit 1; }
+# --- the gate ---
+echo "=== (2) the gate check G1-G8 - start $(date -u +%FT%TZ) ==="
+EU "$D/check.py" "$D" "$C" "$S" "$B" "$CEN" "$PRO" "$EUF" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = an input not as declared) - end $(date -u +%FT%TZ)"
+# --- after: copies unchanged (read-only run) ---
+s1=$(h "$S"); echo "src sha256 after: $s1 (= before: $([ "$s1" = "$s0" ] && echo yes || echo NO))"
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src, built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+EU scripts/eu_step.py check --tag STEP4GATE --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$s1" = "$s0" ] && [ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "STEP4GATE RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+case "$r2" in
+  0) echo "STEP4GATE RESULT: PASS - $(date -u +%FT%TZ) - src -> built = the declared lists in every column, G1-G8 hold; to the ruling chat"; exit 0 ;;
+  3) echo "STEP4GATE RESULT: FINDING - $(date -u +%FT%TZ) - the members above (and $D/check.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "STEP4GATE RESULT: STOP - the check stopped or did not finish (exit $r2; $D/check.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+**End-to-end run of the block (WSL test home; clone at d34d6723; test pre + prep made the HEADFIX2-style guard folder from the test
+built; the X* lines XS_SIZE, XS_SHA, XC_WC, XCEN set to the test copies' values — `diff` shows only those four lines changed; check.py
+sha = XCHK):** RUN 1 clean → every guard line as declared, delta exit 0, check G1–G8 PASS, src sha after = before, sizes / times yes,
+built check after OK, "STEP4GATE RESULT: PASS", exit=0 (delta 4 s, check 3 s on the test copies; PA's wall time measured by the run) ·
+RUN 2 re-paste → "STOP - log already exists" · RUN 3 census tsv changed by one byte → "STOP - census tsv is not the file GSRC read",
+before the delta · RUN 4 built changed after prep → "STEP4GATE CHECK: FAIL - words on built differs from the dry run" → "STOP - built
+is not HEADFIX2's result", before any read. Expected on PA: every guard line "= expect"; the delta's counts = §9.157 (1)'s; G1–G8 PASS;
+"STEP4GATE RESULT: PASS"; exit=0. Read-outs, not forecast: wall times, peak memory, G4's counts, G6's non-EU count.
+
+### Charter §6 step 4 — the amended text, PROPOSED (§9.185 (6)); not committed until the ruling chat reads it with the block
+Current (CHARTER :328-333) is replaced by:
+> 4 compare_words vs live — the step-4 gate (DESIGN §9.138 (3)+(6), §9.185): the raw delta built vs `<src>`, every column, laid
+> against the declared lists; a member either way not declared = a FINDING. `strongs` / `strongs_base` / `morph` / `lemma` / `is_pn` =
+> the (ii) list (§9.142 (1): the 10 census v2 swaps + §9.95's six rows); `position` = those 10 swaps as moved pairs, no word on one side
+> only (G3 + G8); `english` / `english_head` / `greek_pos` / `bracket_id` = the composition src → pre_8b (the build's own output from the
+> inputs, (b) §9.173 (2)) → built (the named list, §9.178 (2)), proven against the reference delta STEP4-DELTA2 (§9.157, §9.178 (4));
+> `english_head_norm` by step 11's rule on both copies (§9.142 (3)); `verses.text` = B2's written list less the 49 EU rows equal to src
+> (§9.143 (2)), the 49 and 69 by value, the rest by length (§9.185 (3)); Isa 48:5 @4 a declared single row (§9.148); Mark 1:9 and Joh
+> 14:26 printed by name; plus a separate live = src proof on a fresh copy of live (§9.138 (4), §9.181) (AMENDED <date>, DESIGN §9.<n>;
+> was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = the declared changed-English set + Mark 1:9; ANY
+> `strongs` / `strongs_base` / `position` / `morph` delta outside the declared (ii) set = stop" (AMENDED 11/15, §9.139 (0))) →
+
+### STEP4GATE reviewed (11/18) — REVIEW: ESCALATE (a new gate; §9.185 keeps it unapproved until read in the ruling chat); 0 DEFECT, 1 GAP, 6 NOTEs
+Reviewer's text goes to the ruling chat verbatim. Every §9.185 condition read as met ((3), (4), (6), (7); (5) "as far as the text
+shows"). Acted on: **NOTE 1** — p8_delta :122 is now compared as the WHOLE line (XP8_122 = the full GSRC :7 text, §9.178 (4)'s 427,418 /
+380,086 included), not prefix + tail. **NOTE 5** — the full outputs are now in the repo: `docs/handoffs/drafts/STEP4GATE_tests_20261118.txt`
+(461 lines; re-run after the NOTE 1 change: 15 cases "as expected", ALL CASES AS EXPECTED at :302; the end-to-end run's four results;
+check.py sha c9ec9108…a61b = XCHK at :2 and :339). Put to the ruling chat: **GAP 1** — "Joh 19:18 has no member" (G7) rests on §9.156 (2)
++ §9.157 (3) (STEP4-DELTA2 = the 11/15 delta less the two Joh 19:18 @10 lines) and on CC's read of the 11/15 delta's files (Joh 19:18:
+those two lines only; no verses_cells line) — a local read, not a register line; confirm as ruled, or make it a read-out. A wrong
+"none" can only raise a false FINDING (G1 still binds). Left as they are: NOTE 2 (the other five STEP4-DELTA2 files are compared byte for
+byte with the fresh delta, not pinned by a ruled sha — §9.157 gives them abbreviated; G2 / G3 / G6 check their contents on their own);
+NOTE 3 (a census column written differently on PA = STOP, not a silent pass); NOTE 4 (wording); NOTE 6 (six full shas printed — answers
+§9.185's open point). Not checked by the reviewer: XCHK by computation, CC's tests, the PA files.
