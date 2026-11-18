@@ -1,0 +1,234 @@
+STEP4GATE run 2 (DESIGN 9.190) + CAUSE1 - end-to-end tests on the WSL test copies, 11/18 (CC). Script: e2e_r2.sh (scratchpad). Upload file sha256: 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe
+test clone HEAD d34d6723
+--- lines that differ from the record's block (constants only) ---
+< XS_SIZE=451964928                                         
+< XS_SHA=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33
+< XC_WC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26d
+> XS_SIZE=40263680                                          
+> XS_SHA=c349a0230d5a52e904a17bff3a793e493d69d4246e1201d8cee
+> XC_WC=d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead49
+< XCEN=8a5ab914356460627a1fcd4c5c729f0d59344a069257f82676e1b
+> XCEN=23a4fa463490562efacd29ec65b5f623cc8961289a06a2dd53141
+=============== RUN 1 (clean) ===============
+GATE REF d34d6723 - STEP4GATE - the step-4 gate: the raw delta src -> built laid against the declared lists, G1-G8 (DESIGN 9.138 (3)+(6), 9.185) - run 2 (DESIGN 9.190: new names; check.py uploaded through PA's Files page, sha-pinned) - READ-ONLY: src and built read by eu_words_delta and the check (mode=ro); writes only its run folder and this log - every expect is declared before the run - PA HEAD d34d6723 - 2026-11-18T22:09:05Z
+repo /home/jp/gate4/repo - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gate4/home2/bible-db/bible_edupg_test_20261101.db: 40263680 bytes - no -journal - triggers 0
+db /home/jp/gate4/home2/bible-db/bible_edupg_test_built_20261102.db: 40259584 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate4/home2/edition_upgrade_runs/step4_gate_r2_20261118
+STEP4GATE PRE: OK
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (1) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 626309 rows, fc2c4381eb7d - dry copy 626309 rows, fc2c4381eb7d - = the dry run: yes - vs prep 626309 rows, fc2c4381eb7d
+written table abp_corrections: built 1 rows, 35b912ad6b5b - dry copy 1 rows, 35b912ad6b5b - = the dry run: yes - vs prep 1 rows, 35b912ad6b5b
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP4GATE CHECK: OK
+src size: 40263680 bytes (expect 40263680)
+src sha256: c349a0230d5a52e904a17bff3a793e493d69d4246e1201d8cee01abe36856efc (expect c349a0230d5a52e904a17bff3a793e493d69d4246e1201d8cee01abe36856efc)
+STEP4-DELTA2 words_cells.tsv sha256: d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b (expect d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b)
+p8_delta_20261117.log:19: STEP4-DELTA2 words_cells.tsv sha256: d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b (expect d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b)
+p8_delta_20261117.log:122: (3) composition, words: src -> pre_8b 427418 cells + pre_8b -> built 380086 cells -> composed 50890; STEP4-DELTA2 50890; chain breaks 0; composed only 0; STEP4-DELTA2 only 0; value / moved differs 0
+census tsv sha256: 23a4fa463490562efacd29ec65b5f623cc8961289a06a2dd531413e356567917 (expect 23a4fa463490562efacd29ec65b5f623cc8961289a06a2dd531413e356567917)
+census log :4: verses: same 31227 - REORDER-WHOLE 10 - REORDER-SPLIT 0 - DIFFERS 0 (0 cells) - SKIPPED 0
+prose list sha256: f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864 (expect f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864)
+EU rows file sha256: 38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717 (expect 38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717)
+check.py sha256 (the uploaded file, as copied into the run folder): 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+=== (1) eu_words_delta --a src --b built - start 2026-11-18T22:09:08Z ===
+eu_words_delta - READ-ONLY on both databases; writes only /home/jp/gate4/home2/edition_upgrade_runs/step4_gate_r2_20261118/delta
+  a: /home/jp/gate4/home2/bible-db/bible_edupg_test_20261101.db (40263680 bytes)
+  b: /home/jp/gate4/home2/bible-db/bible_edupg_test_built_20261102.db (40259584 bytes)
+words columns compared (13): english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma, english_head_norm
+words columns on one side only: a none - b none
+verses columns compared (1): text
+verses columns on one side only: a none - b none
+rows: verses a 31237 / b 31237 - words a 626309 / b 626309
+
+COUNTS (every member is in the files below)
+  words.english                3003
+  words.english_head           3001
+  words.strongs                20
+  words.strongs_base           26
+  words.greek_pos              3
+  words.bracket_id             0
+  words.italic                 0
+  words.italic_words           0
+  words.smcap_words            0
+  words.is_pn                  12
+  words.morph                  14
+  words.lemma                  14
+  words.english_head_norm      3001
+  words only a / only b       0 / 0
+  moved pairs                 20 (in 10 verses) - unpaired a 0 / b 0
+  verses.text                  15522
+  verses only a / only b      0 / 0
+
+  words_cells.tsv          9094 lines + header  sha256 d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b
+  words_only.tsv              0 lines + header  sha256 43180f048ca45f3bab822eebb2dd7fee8241c86342fd3438d930aca9bbec646f
+  words_moved.tsv            20 lines + header  sha256 38bfa45d9120bb80dfe530e309fd162bccfb77c957c620ccb7321df588b4647e
+  words_unpaired.tsv          0 lines + header  sha256 db1bc9802b85e7481af194c6771d3b72da63b2b6d48885e8aa9c8067b2f9b4c5
+  verses_cells.tsv        15522 lines + header  sha256 870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9
+  verses_only.tsv             0 lines + header  sha256 8e5665e7be89d4dd0ecf8a32618b299703050b61b14d4e0be1dbaaa2adbd8af8
+  peak memory (max resident) 667 MB
+RESULT: DELTA WRITTEN - no database was written
+delta exit 0 (expect 0) - end 2026-11-18T22:09:13Z
+=== (2) the gate check G1-G8 - start 2026-11-18T22:09:13Z ===
+check.py sha256 as run: 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+=== G1 the fresh delta = STEP4-DELTA2, byte for byte (DESIGN 9.157 (1), 9.185 (4)) ===
+  words_cells.tsv      fresh d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b  ref d98bfc4166837d4521e7a06c5c0b5ec839150bb4cad0352ead4920996f60dc7b  equal: yes
+  words_only.tsv       fresh 43180f048ca45f3bab822eebb2dd7fee8241c86342fd3438d930aca9bbec646f  ref 43180f048ca45f3bab822eebb2dd7fee8241c86342fd3438d930aca9bbec646f  equal: yes
+  words_moved.tsv      fresh 38bfa45d9120bb80dfe530e309fd162bccfb77c957c620ccb7321df588b4647e  ref 38bfa45d9120bb80dfe530e309fd162bccfb77c957c620ccb7321df588b4647e  equal: yes
+  words_unpaired.tsv   fresh db1bc9802b85e7481af194c6771d3b72da63b2b6d48885e8aa9c8067b2f9b4c5  ref db1bc9802b85e7481af194c6771d3b72da63b2b6d48885e8aa9c8067b2f9b4c5  equal: yes
+  verses_cells.tsv     fresh 870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9  ref 870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9  equal: yes
+  verses_only.tsv      fresh 8e5665e7be89d4dd0ecf8a32618b299703050b61b14d4e0be1dbaaa2adbd8af8  ref 8e5665e7be89d4dd0ecf8a32618b299703050b61b14d4e0be1dbaaa2adbd8af8  equal: yes
+G1: PASS
+fresh delta: words cells 9094 - moved 20 - verses 15522
+=== G2 strongs / strongs_base / morph / lemma / is_pn = the (ii) list ===
+  census tsv sha256: 23a4fa463490562efacd29ec65b5f623cc8961289a06a2dd531413e356567917 (printed before use, DESIGN 9.185 (7))
+  census rows 20, classes {'REORDER-WHOLE': 20}
+  census: 10 REORDER-WHOLE verses, 0 other; = DR :2724-2725 cross-check: yes
+  declared: swap cells 80 + six rows 6 = 86; delta members in these five columns 86 (DESIGN 9.142 (1): 80 + 6 = 86)
+G2: PASS
+=== G3 moved pairs = the 10 census swaps both ways; unpaired 0 / 0 ===
+  moved rows 20 (declared 20)
+  words_unpaired.tsv   0 lines (expect 0)
+  words_only.tsv       0 lines (expect 0)
+G3: PASS
+=== G4 english / english_head / greek_pos / bracket_id = the composition (9.178 (4)); carried by G1 ===
+  members: english 3003 - english_head 3001 - greek_pos 3 - bracket_id 0
+G4: PASS
+=== G5 english_head_norm = _norm_or_none(english_head) on every row, src and built ===
+  src   rows 626309 - rows the rule gives a value 437322 - broken 0 (expect 0)
+  built rows 626309 - rows the rule gives a value 437322 - broken 0 (expect 0)
+  english_head_norm members 3001; at a position where english_head does not differ: 0 (expect 0)
+G5: PASS
+=== G6 verses.text = B written - the EU rows equal to src; the 49 / 69 by value; the rest by the 9.185 (3) length rule ===
+  prose list sha256: f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864 - EU rows file sha256: 38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717
+  B written 15571 (stageB_Bapply :2: 15,571) - EU verses.text rows 118 (118)
+  EU rows whose corrected_value = src's text: 49 (expect 49) - the others: 69 (expect 69)
+  declared 15522 (expect 15522) - delta verses 15522 - declared, not in the delta 0 - in the delta, not declared 0
+  non-EU members 15453 (computed) - len(built) + count(em-dash) = new_len fails: 0 (expect 0)
+G6: PASS
+=== G7 named rows ===
+  Isa 48:5 @4 english_head: ('would', 'what') (declared 'would' -> 'what', DESIGN 9.148 (2))
+  Isa 48:5 @4 english_head_norm: ('would', 'what') (present; values by the G5 rule)
+  Heb 11:24 members: 0 (expect 0)
+  Joh 19:18 @10 english_head: absent (expect absent, DESIGN 9.156 (2) / 9.157 (3))
+  Joh 19:18 @10 english_head_norm: absent (expect absent, DESIGN 9.156 (2) / 9.157 (3))
+  Joh 19:18 other members (read-out, not declared, DESIGN 9.186): words 0 - verses.text no - moved no
+  Mar 1:9 (read-out, not declared):
+    @10 english            'of the' -> 'of'
+    @10 greek_pos          None -> 1
+    @11 english            'of Galilee,' -> 'Galilee,'
+    @11 greek_pos          None -> 2
+    @13 english            'he was immersed' -> 'was immersed'
+    verses.text 'And it came to pass in those days, Jesus came from Nazareth of the of Galilee, and he was immersed by John into the Jordan.' -> 'And it came to pass in those days, Jesus came from Nazareth of Galilee, and was immersed by John into the Jordan.'
+  Joh 14:26 (read-out, not declared):
+    @3 greek_pos          None -> 3
+G7: PASS
+=== G8 italic columns 0; one-side files empty; rows; 13 columns + text, none one-sided ===
+  italic         0 (expect 0)
+  italic_words   0 (expect 0)
+  smcap_words    0 (expect 0)
+  verses_only.tsv 0 lines (expect 0)
+  summary line present: yes - words columns compared (13): english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma, english_head_norm
+  summary line present: yes - words columns on one side only: a none - b none
+  summary line present: yes - verses columns compared (1): text
+  summary line present: yes - verses columns on one side only: a none - b none
+  summary line present: yes - rows: verses a 31237 / b 31237 - words a 626309 / b 626309
+G8: PASS
+check peak memory (max resident): 97 MB
+FINDINGS: 0 (none)
+STEP-4 GATE CHECK: PASS - G1 to G8 hold
+check exit 0 (expect 0; 3 = findings; 2 = an input not as declared; 4 = check.py not the pinned bytes) - end 2026-11-18T22:09:15Z
+src sha256 after: c349a0230d5a52e904a17bff3a793e493d69d4246e1201d8cee01abe36856efc (= before: yes)
+src, built: size and time before = after: yes
+STEP4GATE CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP4GATE RESULT: PASS - 2026-11-18T22:09:19Z - src -> built = the declared lists in every column, G1-G8 hold; to the ruling chat
+exit=0
+=============== RUN 2 (re-paste) ===============
+STEP4GATE RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gate4/home2/edition_upgrade_runs/step4_gate_r2_20261118.log
+=============== RUN 3 (upload missing -> STOP before anything is read) ===============
+STEP4GATE PRE: OK
+STEP4GATE RESULT: STOP - missing or empty: /home/jp/gate4/home2/edition_upgrade_runs/step4gate_check_20261118.py
+exit=1
+=============== RUN 4 (upload one byte changed -> STOP before the delta, sha printed) ===============
+EU rows file sha256: 38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717 (expect 38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717)
+check.py sha256 (the uploaded file, as copied into the run folder): a38493f4301389ea888c825c7ea2ce5b3d2f1c7d3dc57e52e6822798b6168505 (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+STEP4GATE RESULT: STOP - the uploaded check.py is not the file CC wrote and tested
+exit=1
+check.py
+=============== RUN 5 (upload with CRLF line ends, as a Windows editor might save it -> STOP) ===============
+check.py sha256 (the uploaded file, as copied into the run folder): f3541cfbe6c4bf7d9df9c63f4ade4eaa048586f0d917206a7e7da05d7498b077 (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+STEP4GATE RESULT: STOP - the uploaded check.py is not the file CC wrote and tested
+exit=1
+=============== the launcher on its own (the block's exact lines, from block_r2.sh) ===============
+--- L1: launcher = the direct run (same inputs as RUN 1): diff of the outputs ---
+launcher exit 0
+direct exit 0
+0a1
+> check.py sha256 as run: 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+64c65
+---
+--- L2: the run-folder file changed after the pre-delta check -> exit 4, nothing of check.py runs ---
+launcher exit 4 (want 4)
+check.py sha256 as run: a823176a806d702985ad88196e844c32c386ec917a85fdd4008a280b3b345f95 (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+--- L3: a FINDING through the launcher -> exit 3 (reference delta copy with one extra line, G1) ---
+launcher exit 3 (want 3)
+G1: FINDING (1)
+G2: PASS
+G3: PASS
+G4: FINDING (1)
+G5: PASS
+G6: PASS
+G7: PASS
+G8: PASS
+FINDINGS: 2 (G1 1, G4 1)
+STEP-4 GATE CHECK: FINDING - lines above
+--- L4: an input not as declared through the launcher -> exit 2 (census class changed) ---
+launcher exit 2 (want 2)
+GATE CHECK: STOP - census lists a class other than REORDER-WHOLE: {'REORDER-SPLIT': 1, 'REORDER-WHOLE': 19}
+--- L5: the launcher does not put the folder it runs from on the search path (a planted resource.py beside check.py is not imported) ---
+launcher exit 0 (want 0)
+check peak memory (max resident): 97 MB
+STEP-4 GATE CHECK: PASS - G1 to G8 hold
+=============== CAUSE1: kept file = the tested file cut after 13 lines + the block's last line (as on PA) ===============
+--- lines that differ from the record's CAUSE1 (constant only) ---
+< XK=5754d31edc082482786523fc68eece31c8cb4fbc5f54aaec160dd22
+> XK=2729b40c3b82eefd4af37254850c539912a883e22f9accc5c57e761
+CAUSE1 - READ-ONLY - the kept check.py of the 11/18 STEP4GATE STOP laid against the tested file (DESIGN 9.190 (3)) - reads two files, writes only this log - 2026-11-18T22:09:37Z
+tested file sha256: 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+kept file sha256: 2729b40c3b82eefd4af37254850c539912a883e22f9accc5c57e761b19c2d896 (expect 2729b40c3b82eefd4af37254850c539912a883e22f9accc5c57e761b19c2d896)
+kept file: 14 lines, 947 bytes - tested file: 346 lines, 18060 bytes
+first byte that differs: /home/jp/gate4/home2/edition_upgrade_runs/step4_gate_20261118/check.py /home/jp/gate4/home2/edition_upgrade_runs/step4gate_check_20261118.py differ: byte 896, line 14
+kept file's leading lines equal, line for line, to the tested file's: 13 (the first line that differs or is missing: 14)
+=== the kept file in full, numbered (cat -A: $ = end of line, ^M = carriage return, M- = non-ASCII byte) ===
+     1	# STEP-4 GATE check (READ-ONLY; DESIGN 9.138 (3)+(6), 9.185). Run from ~/bible-db (imports scripts/build_rendering_norm).$
+     2	# argv: 1 run folder (the fresh src -> built delta is in <run>/delta)  2 STEP4-DELTA2's delta folder  3 src db  4 built db$
+     3	#       5 census v2 tsv  6 B2's prose list  7 the EU rows file (tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv)$
+     4	# Opens src and built mode=ro + query_only; reads TSV files; writes nothing.$
+     5	# Exit 0 = PASS (G1-G8 all hold) - 3 = FINDING (listed) - 2 = STOP (an input is not what the gate was declared against).$
+     6	import ast, hashlib, os, sqlite3, sys$
+     7	from collections import Counter, defaultdict$
+     8	from pathlib import Path$
+     9	sys.path.insert(0, "scripts")$
+    10	from build_rendering_norm import _norm_or_none$
+    11	$
+    12	RUN, C = Path(sys.argv[1]), Path(sys.argv[2])$
+    13	SRC, BUILT, CENSUS, PROSE, EUF = sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7]$
+    14	) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi$
+=== end of the kept file ===
+CAUSE1 RESULT: READ DONE - 2026-11-18T22:09:37Z
+exit=0
+=============== CAUSE1 re-paste ===============
+CAUSE1 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gate4/home2/edition_upgrade_runs/step4_gate_cause_20261118.log
+=============== CAUSE1 with the upload changed -> STOP ===============
+tested file sha256: 439b42d3071714d921620d855887c29d13668bb9c15422aa4206b9d0872bd53b (expect 2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe)
+CAUSE1 RESULT: STOP - the uploaded file is not the tested one
+exit=1
+=============== CAUSE1 with the real XK (kept file on the test home is not PA's) -> STOP ===============
+kept file sha256: 2729b40c3b82eefd4af37254850c539912a883e22f9accc5c57e761b19c2d896 (expect 5754d31edc082482786523fc68eece31c8cb4fbc5f54aaec160dd224e7530808)
+CAUSE1 RESULT: STOP - the kept file is not the one the 11/18 run hashed
+exit=1

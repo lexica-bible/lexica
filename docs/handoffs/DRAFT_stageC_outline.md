@@ -13881,3 +13881,190 @@ check.py heredoc cut after its first ~13 lines and jumping to the block's last l
 (eu_step pre STOPs on an existing run folder, :154-155; the block STOPs on an existing log) and a way to bring check.py to PA other than
 the paste — both change the cleared block, so they go to the ruling chat with the STOP (CC's recommendation: JP uploads check.py through
 PA's Files page; the block checks it against the same XCHK; no pull; the check.py text and the sha unchanged).
+
+## The step-4 gate block, run 2 — DRAFT (11/18, CC; §9.190) — UNAPPROVED until read in the ruling chat
+
+**What changed from the cleared block (DR :13392-13812), and nothing else** (CC's `diff`; the full block below):
+- **New names (§9.190 (4)):** log `~/edition_upgrade_runs/step4_gate_r2_20261118.log`; run folder `step4_gate_r2_20261118/`. The 11/18 log and
+  run folder `step4_gate_20261118/` are not touched; the block never names them.
+- **check.py by upload (§9.190 (5)):** the heredoc (DR :13439-13786) is gone. New line `U=$R/step4gate_check_20261118.py` (the uploaded file);
+  `$U` added to the "missing or empty" STOP list; after the last source check, `cp "$U" "$D/check.py"`, then its sha printed against XCHK —
+  a miss is a STOP before the delta (§9.190 (5) a). XCHK unchanged: 2a5a8a3c…19fe, the sha of DR :13440-13785.
+- **No gap between the check and the use (§9.190 (5) b):** check.py is no longer run by its file name. A short Python launcher (10 lines, in
+  the block) reads `$D/check.py` ONCE into memory, hashes those bytes, prints "check.py sha256 as run: … (expect XCHK)", exits 4 on a miss
+  without running anything, and otherwise runs those same bytes. No file is read between the hash and the run. Exit 4 falls in the
+  block's existing STOP case; the "check exit" line names it. The launcher also keeps the folder check.py sits in off the import path
+  (only `scripts`, which check.py adds itself, as before).
+- The header line names run 2 and DESIGN 9.190. The XCHK comment cites DR :13440-13785 and §9.188 / §9.190 (5). Every other line,
+  constant, expected figure and STOP is the cleared block's, unchanged.
+
+**Where the upload lands (§9.190 (5) c):** `/home/appssanding720/edition_upgrade_runs/step4gate_check_20261118.py` — JP opens that folder on
+PA's Files page and uploads the file there. **It cannot trip the repo guards:** it is outside `~/bible-db`. eu_step's guards look only at
+the repo — `git diff --quiet REF HEAD -- scripts tests` and `git status --porcelain --untracked-files=no -- scripts tests` (eu_step.py
+pre :134, :136; the "built =" check :499) — and the copy goes into the run folder, also outside the repo. Nothing on PA is pulled.
+
+**The file JP uploads (§9.190 (5) d):** CC wrote it from the record itself — `sed -n 13440,13785p` of this file (DR) — to
+`C:\Users\JP\edition_upgrade_runs\step4gate_check_20261118.py` on JP's PC: 346 lines, 18,060 bytes, LF line ends (0 carriage returns),
+sha256 2a5a8a3c…19fe = XCHK. It is byte-equal (`cmp`) to the check.py the 16 planted cases and both end-to-end runs used. **How JP sees it is
+the right one before uploading:** in PowerShell, `(Get-FileHash C:\Users\JP\edition_upgrade_runs\step4gate_check_20261118.py).Hash` prints
+`2A5A8A3C68A50CFA3900BC5461FA8F7296CABA50314E0D11E5F2E4C1CBC519FE` (CC ran it; the same sha in capitals). JP must not open and save it in an
+editor: a Windows save can turn the line ends into CRLF, and that STOPs the block (RUN 5 below). After the upload, the block prints the sha
+before it uses the file.
+
+**The cause read (§9.190 (3)) — Block CAUSE1, read-only, for the reviewer.** It does not hold the second run. It needs the uploaded file,
+so it runs after the upload, in either order with the gate. It reads the kept `step4_gate_20261118/check.py` and the uploaded file and
+writes only its own log. It STOPs unless the uploaded file's sha = XCHK and the kept file's sha = 5754d31e…0808 (as
+step4_gate_20261118.log printed it, §9.190 (1)). It prints both files' line and byte counts; the first byte that differs (`cmp`); how many
+of the kept file's first lines equal the tested file's, line for line; and the kept file in full, numbered, with `cat -A`, so line ends
+and stray bytes show. It infers nothing: the ruling chat reads the cause from the printout. **CAUSE1 is no part of the gate.**
+
+**Tests (WSL test home; the test clone at d34d6723; the four X* constants swapped for the test copies' values, `diff` shows only those):**
+`docs/handoffs/drafts/STEP4GATE_r2_tests_20261118.txt` (234 lines).
+- RUN 1 clean: every pre line = expect; "check.py sha256 (the uploaded file…)" and "check.py sha256 as run" both = XCHK; G1–G8 PASS,
+  FINDINGS: 0; STEP4GATE RESULT: PASS; exit=0 (:12-150).
+- RUN 2 re-paste: STOP, log exists (:151).
+- RUN 3 upload missing: STOP "missing or empty" after pre, nothing read (:153).
+- RUN 4 one byte changed: sha printed, STOP before the delta; the run folder holds only check.py (:157).
+- RUN 5 CRLF line ends: STOP (:163).
+- The launcher on its own (its exact lines cut from the block):
+  - L1, same inputs as RUN 1: output = the old direct run's except the added "as run" line and the peak-memory line (the diff's 64c65,
+    filtered) (:168).
+  - L2, the run-folder file changed after the pre-delta check: exit 4, only the sha line printed, the planted line never ran (:175).
+  - L3, a FINDING: exit 3 (:178). L4, an input not as declared: exit 2 (:190).
+  - L5, a planted `resource.py` beside check.py: not imported, PASS (:193).
+- CAUSE1 on a kept file made the way CC reads PA's (the tested file's first 13 lines + the block's last line; XK swapped for its sha):
+  - READ DONE: 14 lines / 947 B against 346 / 18,060; differs at byte 896, line 14; 13 leading lines equal; the file printed in
+    full (:197).
+  - Re-paste: STOP (:225). Upload changed: STOP (:227). The real XK: STOP, the test kept file is not PA's (:231).
+- Peaks: check 97 MB, delta 667 MB, on the test copies.
+
+Block sha256 (the fenced text below, as tested): STEP4GATE run 2 161b85da…0f1f, 82 lines; CAUSE1 7e0588da…dcd1, 24 lines.
+
+### Block STEP4GATE run 2 (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; check.py uploaded; no PA pull)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_gate_r2_20261118.log
+if [ -e "$L" ]; then echo "STEP4GATE RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - STEP4GATE - the step-4 gate: the raw delta src -> built laid against the declared lists, G1-G8 (DESIGN 9.138 (3)+(6), 9.185) - run 2 (DESIGN 9.190: new names; check.py uploaded through PA's Files page, sha-pinned) - READ-ONLY: src and built read by eu_words_delta and the check (mode=ro); writes only its run folder and this log - every expect is declared before the run - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP4GATE RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step4_gate_r2_20261118
+C=$R/step4_delta2_20261116/delta
+P8=$R/p8_delta_20261117.log
+CEN=$R/strongs_pos_census2_20261106.tsv
+CLOG=$R/strongs_pos_census2_20261106.log
+PRO=$R/step5_prose_20261101.tsv
+EUF=tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv
+U=$R/step4gate_check_20261118.py                                            # check.py as JP uploaded it through PA's Files page (DESIGN 9.190 (5) c); outside the repo
+XS_SIZE=451964928                                                          # src size: DESIGN 9.181 (1)
+XS_SHA=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01    # src sha256: DESIGN 9.181 (1)
+XC_WC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc     # STEP4-DELTA2 words_cells.tsv: DESIGN 9.157 (1)
+XP8_19="STEP4-DELTA2 words_cells.tsv sha256: $XC_WC (expect $XC_WC)"       # p8_delta_20261117.log:19 (GSRC log :4; DESIGN 9.185 (4))
+XP8_122="(3) composition, words: src -> pre_8b 427418 cells + pre_8b -> built 380086 cells -> composed 50890; STEP4-DELTA2 50890; chain breaks 0; composed only 0; STEP4-DELTA2 only 0; value / moved differs 0"   # p8_delta_20261117.log:122 (GSRC :7; DESIGN 9.178 (4))
+XCEN=8a5ab914356460627a1fcd4c5c729f0d59344a069257f82676e1bc08b54cea2e      # census tsv sha256: gate_sources_20261118.log :14
+XCLOG4="verses: same 31227 - REORDER-WHOLE 10 - REORDER-SPLIT 0 - DIFFERS 0 (0 cells) - SKIPPED 0"   # census log :4 (GSRC :47)
+XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # step5 prose list: DR :12210, GSRC :73
+XEU=38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717       # tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv.sha256
+XCHK=2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe      # sha256 of check.py (DR :13440-13785, CC's tested file; DESIGN 9.188, 9.190 (5)); any other file STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the delta: every miss is STOP ---
+EU scripts/eu_step.py pre --tag STEP4GATE --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "STEP4GATE RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$DH/state.json" "$DH/dry.db" "$C/words_cells.tsv" "$C/words_moved.tsv" "$C/words_only.tsv" "$C/words_unpaired.tsv" "$C/verses_cells.tsv" "$C/verses_only.tsv" "$C/summary.txt" "$P8" "$CEN" "$CLOG" "$PRO" "$EUF" "$U"; do [ -s "$f" ] || { echo "STEP4GATE RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag STEP4GATE --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP4GATE RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"; [ "$n" = "$XS_SIZE" ] || { echo "STEP4GATE RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+s0=$(h "$S"); echo "src sha256: $s0 (expect $XS_SHA)"; [ "$s0" = "$XS_SHA" ] || { echo "STEP4GATE RESULT: STOP - src is not the copy live = src was proven against"; exit 1; }
+c0=$(h "$C/words_cells.tsv"); echo "STEP4-DELTA2 words_cells.tsv sha256: $c0 (expect $XC_WC)"; [ "$c0" = "$XC_WC" ] || { echo "STEP4GATE RESULT: STOP - not the STEP4-DELTA2 reference delta"; exit 1; }
+l19=$(sed -n '19p' "$P8"); echo "p8_delta_20261117.log:19: $l19"; [ "$l19" = "$XP8_19" ] || { echo "STEP4GATE RESULT: STOP - P8DELTA :19 is not the reference-delta line (DESIGN 9.185 (4))"; exit 1; }
+l122=$(sed -n '122p' "$P8"); echo "p8_delta_20261117.log:122: $l122"; [ "$l122" = "$XP8_122" ] || { echo "STEP4GATE RESULT: STOP - P8DELTA :122 is not the composition line (DESIGN 9.178 (4))"; exit 1; }
+k=$(h "$CEN"); echo "census tsv sha256: $k (expect $XCEN)"; [ "$k" = "$XCEN" ] || { echo "STEP4GATE RESULT: STOP - census tsv is not the file GSRC read"; exit 1; }
+k=$(sed -n '4p' "$CLOG"); echo "census log :4: $k"; [ "$k" = "$XCLOG4" ] || { echo "STEP4GATE RESULT: STOP - census log :4 is not 10 REORDER-WHOLE / 0 SPLIT / 0 DIFFERS"; exit 1; }
+k=$(h "$PRO"); echo "prose list sha256: $k (expect $XPRO)"; [ "$k" = "$XPRO" ] || { echo "STEP4GATE RESULT: STOP - not B2's prose list"; exit 1; }
+k=$(h "$EUF"); echo "EU rows file sha256: $k (expect $XEU)"; [ "$k" = "$XEU" ] || { echo "STEP4GATE RESULT: STOP - not the committed EU rows file"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+cp "$U" "$D/check.py" || { echo "STEP4GATE RESULT: STOP - cannot copy the uploaded check.py into the run folder"; exit 1; }
+k=$(h "$D/check.py"); echo "check.py sha256 (the uploaded file, as copied into the run folder): $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "STEP4GATE RESULT: STOP - the uploaded check.py is not the file CC wrote and tested"; exit 1; }
+# --- the fresh delta src -> built ---
+echo "=== (1) eu_words_delta --a src --b built - start $(date -u +%FT%TZ) ==="
+mkdir "$D/delta" || { echo "STEP4GATE RESULT: STOP - cannot make $D/delta"; exit 1; }
+EU scripts/eu_words_delta.py --a "$S" --b "$B" --out "$D/delta" < /dev/null > "$D/delta.out" 2>&1; r1=$?
+cat "$D/delta.out"; echo "delta exit $r1 (expect 0) - end $(date -u +%FT%TZ)"
+[ "$r1" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "STEP4GATE RESULT: STOP - the delta did not finish (partial files kept in $D/delta)"; exit 1; }
+# --- the gate ---
+echo "=== (2) the gate check G1-G8 - start $(date -u +%FT%TZ) ==="
+# check.py is read ONCE; those bytes are hashed and those same bytes are run - no other file can be read between the check and the use (DESIGN 9.190 (5) b)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XCHK" "$D" "$C" "$S" "$B" "$CEN" "$PRO" "$EUF" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = an input not as declared; 4 = check.py not the pinned bytes) - end $(date -u +%FT%TZ)"
+# --- after: copies unchanged (read-only run) ---
+s1=$(h "$S"); echo "src sha256 after: $s1 (= before: $([ "$s1" = "$s0" ] && echo yes || echo NO))"
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src, built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+EU scripts/eu_step.py check --tag STEP4GATE --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$s1" = "$s0" ] && [ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "STEP4GATE RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+case "$r2" in
+  0) echo "STEP4GATE RESULT: PASS - $(date -u +%FT%TZ) - src -> built = the declared lists in every column, G1-G8 hold; to the ruling chat"; exit 0 ;;
+  3) echo "STEP4GATE RESULT: FINDING - $(date -u +%FT%TZ) - the members above (and $D/check.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "STEP4GATE RESULT: STOP - the check stopped or did not finish (exit $r2; $D/check.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block CAUSE1 (READ-ONLY — reads the kept check.py and the uploaded file; writes only its log; runs after the upload)
+```bash
+set +H
+L=~/edition_upgrade_runs/step4_gate_cause_20261118.log
+if [ -e "$L" ]; then echo "CAUSE1 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+R=~/edition_upgrade_runs
+K=$R/step4_gate_20261118/check.py                                          # the check.py the 11/18 run wrote (kept, DESIGN 9.188 / 9.190 (4))
+U=$R/step4gate_check_20261118.py                                           # the tested file as JP uploaded it (DESIGN 9.190 (5))
+XCHK=2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe      # sha256 of DR :13440-13785 (DESIGN 9.188)
+XK=5754d31edc082482786523fc68eece31c8cb4fbc5f54aaec160dd224e7530808        # the kept file's sha as step4_gate_20261118.log printed it (DESIGN 9.190 (1))
+echo "CAUSE1 - READ-ONLY - the kept check.py of the 11/18 STEP4GATE STOP laid against the tested file (DESIGN 9.190 (3)) - reads two files, writes only this log - $(date -u +%FT%TZ)"
+for f in "$K" "$U"; do [ -s "$f" ] || { echo "CAUSE1 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+u=$(h "$U"); echo "tested file sha256: $u (expect $XCHK)"; [ "$u" = "$XCHK" ] || { echo "CAUSE1 RESULT: STOP - the uploaded file is not the tested one"; exit 1; }
+k=$(h "$K"); echo "kept file sha256: $k (expect $XK)"; [ "$k" = "$XK" ] || { echo "CAUSE1 RESULT: STOP - the kept file is not the one the 11/18 run hashed"; exit 1; }
+echo "kept file: $(wc -l < "$K") lines, $(wc -c < "$K") bytes - tested file: $(wc -l < "$U") lines, $(wc -c < "$U") bytes"
+c=$(cmp "$K" "$U" 2>&1); echo "first byte that differs: ${c:-none}"
+m=$(awk 'NR == FNR {t[FNR] = $0; next} {if ($0 == t[FNR]) m = FNR; else exit} END {print m + 0}' "$U" "$K")
+echo "kept file's leading lines equal, line for line, to the tested file's: $m (the first line that differs or is missing: $((m + 1)))"
+echo "=== the kept file in full, numbered (cat -A: \$ = end of line, ^M = carriage return, M- = non-ASCII byte) ==="
+cat -n -A "$K"
+echo "=== end of the kept file ==="
+echo "CAUSE1 RESULT: READ DONE - $(date -u +%FT%TZ)"
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP4GATE run 2 + CAUSE1 reviewed (11/18) — both REVIEW: ESCALATE; 0 DEFECT
+**Run 2:** ESCALATE because §9.190 (6) keeps its clearance with the ruling chat; it is not a re-run of a ruled block as written. The reviewer
+read it line by line against the cleared block. Only the lines the draft names differ. §9.190 (5) a, b, c and d are met as written (d:
+the text only; the local file was not checked by the reviewer). Conventions hold; the tests file's cited lines match. NOTE 1: tests :173
+shows `64c65` with its content filtered. CC's unfiltered diff of the two outputs (WSL `~/gate4/direct1.out` vs `la1.out`): the added
+"check.py sha256 as run" line, and at 64c65 only `check peak memory (max resident): 98 MB` → `96 MB`. Nothing else differs. NOTE 2:
+the repo guards are carried by eu_step pre, unchanged.
+**CAUSE1:** ESCALATE. Its gating value XK = 5754d31edc082482786523fc68eece31c8cb4fbc5f54aaec160dd224e7530808 is written in full in the
+register nowhere; §9.190 (1) records only 5754d31e…0808. CC took the full value from step4_gate_20261118.log's "check.py sha256" line, as
+JP pasted it in the session. The ruling chat has since read that log in full by cat (§9.190). It is settled by either (a) the ruling
+chat confirming the full value from that log, or (b) XK made a read-out only. GAP: CAUSE1 has no GATE REF or repo guard. It runs no repo
+script and reads only run-folder files, so it does not need one, but that rule is unstated.
+Not checked by the reviewer: any hash (XCHK, the block shas, the upload file), eu_words_delta.py, build_rendering_norm.py, check.py's body,
+the PA logs, git.
