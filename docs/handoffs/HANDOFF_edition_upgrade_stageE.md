@@ -22,6 +22,10 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   the ruling chat. Six questions put there (32 moved-position cells; heads gap; G6's corrected length check — as ruled, §9.144 (1) fails
   2,629 verses on the em-dash swap; G4 option a/b; embedded vs committed check; charter step-4 wording) + G2's census source. Nothing
   drafted as a block until ruled.
+- **11/18 evening: §9.185 ruled the proposal (option a; corrected G6 length rule; embedded check). GSRC ran (READ DONE). Block
+  STEP4GATE DRAFTED + TESTED** (DRAFT "## The step-4 gate block — DRAFT"; check.py sha c9ec9108…a61b; outputs
+  `docs/handoffs/drafts/STEP4GATE_tests_20261118.txt`); reviewer ESCALATE, 0 defect, GAP 1 (Joh 19:18 "no member" basis) → ruling
+  chat with the charter step-4 text. UNAPPROVED until read there; JP runs it only on that clearance.
 
 ## SUCCESSOR START (11/16 end; step 4 in progress; the (c) → (b) route ruled §9.160) — open here
 
