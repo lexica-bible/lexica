@@ -12942,3 +12942,5 @@ moved 20 in 10 verses (unpaired 0 / 0); verses.text 15,522 (verses_cells 870e478
 `c671ecbb…dc5e`. **The check:** list cells found 142 of 142, 0 value differences; norm 353,595 = built's head rows = declared, broken 0;
 composition 427,418 + 380,086 → 50,890 = STEP4-DELTA2's 50,890, chain breaks 0, differences 0; moved pairs the same 20; verses equal;
 FINDINGS 0; P8CHECK MATCH. Copies unchanged. Peak 630 MB.
+
+### P8DELTA RULED (11/18, §9.178) — pre_8b → built PASSED; composition PASSED; both items closed. Next: the live = src proof, drafted only after the ruling chat confirms the dashboard (≥ 1 GB free, /tmp counted)
