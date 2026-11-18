@@ -13868,3 +13868,16 @@ no other line of the block's bash or of check.py; outside the block, only the dr
 ### GSRC log READ in the ruling chat (11/18, §9.187) — HOLD 1 CLOSED; §9.185 (4) and (7) MET; the GSRC-sourced constants stand. HOLD 2 (the revision above) with the ruling chat
 
 ### STEP4GATE CLEARED (11/18, §9.188) — to run as printed at XCHK 2a5a8a3c…19fe, no PA pull (PA HEAD 1d5e34ee: scripts/tests = d34d6723, the EU rows file present at 38acc6ba…6717 — CC checked with git); its log, in full through exit=, goes to the ruling chat; step 4 is ruled on the log
+
+### STEP4GATE ran (11/18 18:56 UTC, PA HEAD 1d5e34ee) — RESULT: STOP at the check.py fingerprint, exit=1; the paste reached PA damaged
+**What ran, all read-only:** pre OK (repo guards, both copies no journal, triggers 0, run folder made); built = HEADFIX2's result (words
+626,309 rows d95acb5d4be4, abp_corrections 404 rows d97d928ca7f5, CHECK OK); src size and sha, the STEP4-DELTA2 sha, P8DELTA :19 and :122,
+the census tsv sha and log :4, the prose list sha, the EU rows file sha — every line = its declared value. **Then:** `check.py sha256:
+5754d31e…0808 (expect 2a5a8a3c…19fe)` → STOP. The delta, the gate check and the after-checks did not run; nothing was read past the
+fingerprints, nothing written but the run folder (`step4_gate_20261118/`, with the damaged check.py) and the log.
+**Why:** the echoed input shows the PA web console broke the ~420-line paste ("Loading console..." mid-paste, lines repeated, the
+check.py heredoc cut after its first ~13 lines and jumping to the block's last line). The pin did its job: the damaged program never ran.
+**Kept as they are (§9.188):** the log `~/edition_upgrade_runs/step4_gate_20261118.log` and the run folder. A second run needs new names
+(eu_step pre STOPs on an existing run folder, :154-155; the block STOPs on an existing log) and a way to bring check.py to PA other than
+the paste — both change the cleared block, so they go to the ruling chat with the STOP (CC's recommendation: JP uploads check.py through
+PA's Files page; the block checks it against the same XCHK; no pull; the check.py text and the sha unchanged).
