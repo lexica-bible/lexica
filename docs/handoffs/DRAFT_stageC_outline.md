@@ -13180,3 +13180,103 @@ gone; every other file in the run folder (8) size and time before = after: yes; 
 with the log.
 
 ### RMLC RULED (11/18, §9.183) — CLOSED; dashboard after it 7.4 / 10.0 GB (§9.184). Step 4: every held item closed; next = the step-4 gate block proposal
+
+## Step-4 gate — PROPOSAL (11/18, CC; §9.138 (6), §9.183 (5)) — NOT a block; reviewer → ESCALATE → ruling chat before any code or block
+**What the gate is** (charter §6 step 4; §9.138 (3) + (6)): the raw delta built vs src, every column, laid against the declared
+lists; a member in the delta and not declared, or declared and not in the delta = FINDING. Every declared set below comes from a step's
+own file, a ruled rule, or src itself — none from the src → built delta it gates (§9.138 (3)).
+**Form proposed:** ONE read-only block at GATE REF d34d6723, no PA pull (the tools it runs — eu_step.py, eu_words_delta.py,
+build_rendering_norm.py — are unchanged since d34d6723; the only scripts change since is adfb8ac5's build_words_from_abp.py, not run).
+(1) eu_step pre on src + built; built = HEADFIX2's result (eu_step check, §9.156 (3)); src 451,964,928 B and full sha256
+`5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01` (§9.181 (1)) — every miss a STOP. (2) A fresh eu_words_delta
+src → built into a new run folder. (3) A check program written from the block and sha-pinned (P8DELTA's pattern, §9.178), reading the
+fresh delta files, src and built mode=ro, and two input files. (4) After: src sha, built check, sizes and times before = after.
+Writes only its run folder and log. Reads neither live nor pre_8b (unless G4 option b).
+
+**G1 — the delta is the reference.** The six fresh member files byte-equal (cmp) the six files in STEP4-DELTA2's folder on PA
+(`~/edition_upgrade_runs/step4_delta2_20261116/delta/`), that folder first proven by its words_cells sha
+`86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc` (§9.157 (1); STOP if not) — no other sha typed in; the other five
+files' shas printed as read-outs beside §9.157 (1)'s (words_moved `d32361b3…0f08`, verses_cells `870e4782…57f9`). So every ruling laid on
+STEP4-DELTA2 applies to the gate run's own delta, and its counts are STEP4-DELTA2's (english 32,962 · english_head 5,426 · strongs 20 ·
+strongs_base 26 · greek_pos 3,318 · bracket_id 4,208 · is_pn 12 · morph 14 · lemma 14 · english_head_norm 4,890 · verses.text 15,522 ·
+moved 20 in 10 verses).
+**G2 — Strong's side** (strongs, strongs_base, morph, lemma, is_pn) **= the (ii) list exactly** (§9.142 (1)). The declared set is
+computed by the check from src and the step records, not typed-in values: (a) the 10 REORDER-WHOLE swaps (20 positions, one swap per
+verse) are READ by the check from the census v2 file on PA, `~/edition_upgrade_runs/strongs_pos_census2_20261106.tsv` (§9.93 (a);
+DR :2722-2726, :9952) — its sha printed; it must list exactly 10 REORDER-WHOLE verses and 0 REORDER-SPLIT / DIFFERS (the log's line,
+DR :2723), else STOP; then at each swap, every one of the five columns where src(p) ≠ src(q), declared as src(p) → src(q) (whole-row
+swap); (b) strongs_base at §9.95's six rows — Num 21:25 @2, 1Sa 20:37 @11, 2Sa 15:6 @18, Jer 48:15 @1, Jer 48:20 @12, Jer 49:3 @3
+(positions §9.78 / §9.133) — declared src's value → `*`. (a) and (b) must not share a cell (asserted). Expected 80 + 6 = 86 (§9.142
+(1)); the delta's members in these five columns = the declared set both ways, values equal. **Open for the ruling chat:** the census file
+was not opened in any ruled block, so CC cannot cite its sha; either the block's first read of it is accepted (sha printed, the 10 verses
+matched against DR :2724-2725), or the ruling chat registers the 10 swaps from that record first.
+**G3 — moved pairs and position** (charter §6 step 4 names `position`): the delta's 20 moved pairs = those same 10 swaps both ways,
+unpaired 0 / 0; position has no other member (words only 0 / 0, G8).
+**G4 — english, english_head, greek_pos, bracket_id = the composition** (§9.159 (2), §9.169 (4), §9.173 (2), §9.178 (2) + (4)): src →
+pre_8b reproduced from the inputs by (b); pre_8b → built = the named 142 cells; composed = STEP4-DELTA2 cell for cell. **Option a (CC
+recommends):** carried by G1 — the gate's delta is byte-equal to the file the composition was proven against, and src (sha) and built
+(eu_step check) are shown to be the same copies; a re-run reads the same bytes. **Option b:** the gate re-runs both legs (pre_8b → built,
+src → pre_8b) and P8DELTA's check inside the block, so it stands alone; adds pre_8b to the reads (sha `a4faa4d8…0107` guard) and two
+delta runs (each ~640 MB peak, §9.157 (1); wall time measured, not forecast).
+**G5 — english_head_norm by rule** (§9.142 (3)): on EVERY row of src and of built, stored = `build_rendering_norm._norm_or_none(
+english_head)` (:49; the function step 11 registers, :61); broken 0 on each copy. With english_head under G4 the norm members follow.
+Basis for 0 on src: P8DELTA's rule broken 0 on built (§9.178 (2)); src = built off the members; on the members both sides held on the
+11/15 local read (DR "Step 4 members read", 0 exceptions). Read-outs: rows with a head on each copy (built 353,595, §9.177 (4)(d) / (6);
+src read, not forecast). (bracket_id compared as a per-verse rank throughout: eu_words_delta.py :12-14, :83-92.)
+**G6 — verses.text** (§9.143 (2), §9.144 (1)). Inputs: B2's list at the path DR :11312 names, `~/edition_upgrade_runs/step5_prose_20261101.tsv`
+(stage B's `prose_20261031.tsv` is the SAME bytes, DR :12210; the block reads only the step5 path; a sha miss = STOP), sha
+`f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864` (stageB_Bapply :2 written 15,571; §9.173 (1)); the committed
+`tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv`, sha `38acc6ba…6717` (118 verses.text rows). Declared = B written − the EU
+verses.text rows whose corrected_value = src's text. Checks: all 118 EU rows sit on B-written verses; the "= src" group is 49 and each
+reads built = corrected = src; the other 69 each read built = corrected; declared 15,522 = the delta's verses, both ways; the 15,453
+non-EU members get the length check, in the CORRECTED form below.
+**Correction to §9.144 (1)'s length check — for ruling.** As ruled ("built's text length = new_len") it FAILS on 2,629 of the 15,453.
+Cause, in the code: B's list records new_len = len(new) (build_prose_from_app.py :178), the text BEFORE the em-dash swap; B2 writes
+that text (:179) and the finish chain's fix_emdash.py (finish_rebuild.sh :73) then turns each "--" into "—", one character shorter.
+Laid locally (11/18) on the 11/15 delta's verses_cells (`870e4782…57f9` = STEP4-DELTA2's) and the local prose_20261031.tsv
+(`f2a22ecd…` = step5_prose): **len(built) + count of "—" in built = new_len on 15,453 / 15,453**; on the 2,629, built − new_len =
+−1 ×2,444 · −2 ×157 · −3 ×19 · −4 ×8 · −5 ×1, every one holding "—". Also seen: len(src) = old_len 15,453 / 15,453; the 69 built =
+corrected 69 / 69; B written − delta = exactly the 49, delta − B written 0 (= §9.143 (2)). Proposed form: len(built) + count("—") =
+new_len. Its limit: a "—" already in B's own text would pass as a swapped one — the check cannot tell them apart. The other finish steps
+between B2 and fix_emdash (finish_rebuild.sh :37-:72) were NOT traced for verses.text; the local read shows none changed a non-EU length
+beyond the dash swap (15,453 / 15,453) — a read, not a trace. Every local figure in this paragraph is a READ-OUT for the block, not a
+declared expectation: the block re-reads each on PA. (§9.164 (1): src's verses.text holds no "--".) CC's reading, not asked
+to be ruled: (b) already reproduced built's verses.text BY VALUE from the inputs through B2 + the chain (§9.173 (2); pre_8b → built
+verses.text 0, §9.178 (2)); the length check is a second, weaker look, kept because §9.144 (1) ruled it.
+**G7 — named rows, printed in full.** Isa 48:5 @4 english_head + english_head_norm 'would' → 'what' MUST be in the delta (§9.148 (2)).
+Mark 1:9 printed by name (charter §4.10) — READ-OUTS, not declared (the values sit only in the gated delta, §9.138 (3)); as the 11/15
+delta shows them: @10 english 'of the' → 'of', greek_pos None → 1, bracket_id None → 2;
+@11 'of Galilee,' → 'Galilee,', None → 2, None → 2; @13 'he was immersed' → 'was immersed'; verses.text a member (B written, new_len
+113; not among the 49, §9.144 (3)). Joh 14:26 @3 greek_pos None → 3, bracket_id None → 1, printed (§4.10's own test is v2 word-order,
+step 6). Joh 19:18 and Heb 11:24 must have NO member (§9.156 (2); §9.152 (2)). Mark 1:9 and Joh 14:26 are gated by G1 / G4, printed here.
+**G8 — zeros:** italic, italic_words, smcap_words 0; words only 0 / 0; verses only 0 / 0; unpaired 0 / 0; rows 31,237 / 31,237 and
+626,309 / 626,309; 13 words columns + verses.text, none one-sided.
+**RESULT:** PASS only if G1–G8 all hold. FINDING = a gate missed; every member printed (verse, position, column, src, built, the list it
+fails) and written to findings.tsv; goes to the ruling chat as printed. STOP = a pre-condition missed, before any read.
+**Tests before the block is shown** (made-up copies from real rows + the real tools; each gate fired on a planted positive first): G1 a
+changed byte; G2 an extra strongs cell and a broken swap; G5 a stale norm on src; G6 one of the 49 with built ≠ src, one of the 69 off,
+a length off by one, an extra delta verse; G7 Isa 48:5 @4 absent; G8 an italic member — each → FINDING; clean → PASS; re-paste → STOP.
+**Cost:** no copy; output ~7 MB (the 11/15 delta folder); one delta run ~640 MB peak (§9.157 (1)); the check program's own peak NOT
+forecast — measured and printed by the block (as §9.140 (a)); read-only, so a kill loses only that run; dashboard 7.4 / 10.0 GB (§9.184).
+**REF check (CC, 11/18):** `git diff --stat d34d6723 HEAD -- scripts tests` = build_words_from_abp.py, githooks/pre-commit,
+tests/test_app_cells.py only (adfb8ac5) — none run by the gate.
+**Not covered (the record will say so):** bracket_id type-only changes hidden by the rank (§9.140); non-EU verses.text by value (rests on
+(b)); live (§9.181, as of 2026-11-18T15:43Z); abp_corrections (outside by design, §9.153 (1)); the strongs_base invariant (step 5); the
+audits (step 6); the pre-swap open items (§9.93 (b) eSword order of the 10 reorder verses; notes anchors at the 20 moved words).
+**CC asks the ruling chat to rule:** (1) §9.143 (1)'s 32 non-swap cells at the moved positions — CC's reading: accounted for by the
+composition (§9.178 (4): value and moved flag compared on every cell, differs 0) — close? (2) §9.144 (4) the heads gap, whose closing
+named A's english_head output — that route was replaced by (b) (§9.159 (2)); CC's reading: the 5,426 english_head members are
+accounted for by the composition — close? (3) G6's length check in the corrected form. (4) G4 option a or b. (5) The check program
+embedded and sha-pinned in the block (P8DELTA's precedent; no PA pull) — CC recommends — or a committed script (new code REF, PA
+pull). (6) Charter §6 step 4 still reads "english / english_head / verses.text rows = the declared changed-English set + Mark 1:9":
+amended in the gate's record commit to name the composition and the verses.text list, old wording cited beside it (as §9.139 (0)).
+
+### Step-4 gate PROPOSAL reviewed (11/18) — REVIEW: ESCALATE (a proposal, out of reviewer scope by design); 0 DEFECT; GAPs answered in the text above
+Reviewer's text goes to the ruling chat verbatim. Answered in the proposal above: GAP 1 (G2 positions from DRAFT prose) → the check reads
+census v2's tsv on PA, guarded against the log's line; registering the 10 swaps put to the ruling chat; "10 swaps / 20 positions"
+wording; (a)/(b) no-overlap asserted. GAP 2 (three empty-file shas unsourced; one looked mistyped — it is `8e5665e7be89…bd8af8`, the
+11/15 PA summary.txt) → G1 now byte-compares against STEP4-DELTA2's own folder on PA, guarded by the ruled words_cells sha; no other
+sha typed. GAP (check's peak memory) → measured, not forecast. Notes taken: G6 local figures and G7 Mark 1:9 / Joh 14:26 values are
+read-outs, not declared; finish steps :37-:72 not traced for verses.text (said); §9.164 (1) cited for no "--" on src; `position`
+covered by G3 + G8; cites fixed (353,595 → §9.177; rank rule eu_words_delta.py :12-14, :83-92; prose path = DR :11312's). Reviewer's
+item 5 (REF stat) unchecked there for want of a shell — CC ran it (above). G4 option a vs b left to the ruling chat, as the reviewer says.

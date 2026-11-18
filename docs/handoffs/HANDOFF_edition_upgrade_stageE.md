@@ -18,6 +18,10 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   (the (ii) member list, the 50 other-column cells, B's length-only limit, the head-consistency check), §9.157 (STEP4-DELTA2 = the
   reference delta), §9.177–§9.178 (the named pre_8b → built list and the composition). GATE REF d34d6723 = PA's scripts (no pull).
   The proposal goes to the reviewer → ESCALATE → ruling chat before any code or block.
+- **11/18 later: PROPOSAL DRAFTED + REVIEWED** (DRAFT "## Step-4 gate — PROPOSAL", reviewer ESCALATE, 0 defect, gaps answered) — with
+  the ruling chat. Six questions put there (32 moved-position cells; heads gap; G6's corrected length check — as ruled, §9.144 (1) fails
+  2,629 verses on the em-dash swap; G4 option a/b; embedded vs committed check; charter step-4 wording) + G2's census source. Nothing
+  drafted as a block until ruled.
 
 ## SUCCESSOR START (11/16 end; step 4 in progress; the (c) → (b) route ruled §9.160) — open here
 
