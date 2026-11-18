@@ -14068,3 +14068,8 @@ chat confirming the full value from that log, or (b) XK made a read-out only. GA
 script and reads only run-folder files, so it does not need one, but that rule is unstated.
 Not checked by the reviewer: any hash (XCHK, the block shas, the upload file), eu_words_delta.py, build_rendering_norm.py, check.py's body,
 the PA logs, git.
+
+### STEP4GATE run 2 and CAUSE1 CLEARED (11/18, §9.191) — run as printed (DR :13945-14026, sha 161b85da…0f1f; DR :14031-14054, sha 7e0588da…dcd1); XK confirmed in full; no PA pull
+JP: checks the upload file's sha on his PC (Get-FileHash → 2A5A8A3C…19FE), uploads it through PA's Files page to
+`/home/appssanding720/edition_upgrade_runs/`, then runs run 2 and CAUSE1, each pasted on its own. Each log goes to the ruling chat in full
+through exit=. Step 4 is ruled on run 2's log. The charter text is committed after that log is read there.
