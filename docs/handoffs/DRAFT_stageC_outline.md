@@ -13170,3 +13170,5 @@ expands to the exact DONE line); no `!`; guards via `<<<` or a file; every STOP 
 answered:** the LIVESRC log's delta file list line, as JP pasted it, now quoted in the "LIVESRC ran" entry above (words_cells.tsv 0 lines
 + header, sha 4963903336…9329). GAP 2 (the "8 other files" is CC's test figure, not declared) — no action; the block compares the
 folder's own list before and after. Reviewer did not check: PA's GNU tools, CC's test results, the LIVESRC log on PA.
+
+### RMLC CLEARED (11/18, §9.182) — to run as printed; its log + the dashboard File storage line after it go to the ruling chat
