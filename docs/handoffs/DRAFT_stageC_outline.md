@@ -13178,3 +13178,5 @@ Every §9.182 (4) line met: LIVESRC result line, words_cells.tsv 4963903336…93
 gone; every other file in the run folder (8) size and time before = after: yes; src, built, pre_8b: yes. Home in use 8,177,348 →
 7,727,832 KB (freed 449,516 KB); /tmp 9,322,145 B before and after; home + /tmp after 7,736,935 KB. Dashboard line: to the ruling chat
 with the log.
+
+### RMLC RULED (11/18, §9.183) — CLOSED; dashboard after it 7.4 / 10.0 GB (§9.184). Step 4: every held item closed; next = the step-4 gate block proposal

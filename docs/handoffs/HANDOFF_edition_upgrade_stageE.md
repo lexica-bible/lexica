@@ -2,8 +2,22 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.160**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.184**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
+
+## SUCCESSOR START (11/18 end; step 4 — every held item CLOSED; next = the step-4 gate block PROPOSAL) — open here
+- **Closed on PA logs read by the ruling chat:** (c) control §9.169 · (b) standard (pre_8b = T_b) §9.173 · the xref8b0 sha line
+  §9.177 · pre_8b → built = the named list + the norm rule, and the composition src → pre_8b → built = STEP4-DELTA2 cell for cell
+  §9.178 · **live = src** (fresh copy of live, words + verses EMPTY delta, digests with row ids equal) §9.181 · every throwaway removed
+  (T_c §9.172, T_b §9.175, the live copy §9.183). Run records: `DRAFT_stageC_outline.md` from "## (b) the STANDARD" to the end.
+- **Copies on PA now:** src `bible_edupg_test_20261101.db` (451,964,928 B, full sha `5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01`);
+  built `bible_edupg_test_built_20261102.db` (HEADFIX2 state, guard = `eu_step check --dir step4_headfix2_20261116`); pre_8b
+  `bible_edupg_test_built_pre_8b_20261106.db` (sha `a4faa4d8…0107`, full in DRAFT "BSTD ran"). Dashboard 7.4 / 10.0 GB (§9.184).
+- **NEXT = CC's step-4 gate block PROPOSAL (unapproved — §9.138 (6), §9.183 (5)).** Inputs to read first: §9.138 (3) + (6) (the gate
+  lays the raw delta built vs src against the declared lists; members either way unlisted = finding), §9.139 (1)–(4), §9.142–§9.145
+  (the (ii) member list, the 50 other-column cells, B's length-only limit, the head-consistency check), §9.157 (STEP4-DELTA2 = the
+  reference delta), §9.177–§9.178 (the named pre_8b → built list and the composition). GATE REF d34d6723 = PA's scripts (no pull).
+  The proposal goes to the reviewer → ESCALATE → ruling chat before any code or block.
 
 ## SUCCESSOR START (11/16 end; step 4 in progress; the (c) → (b) route ruled §9.160) — open here
 
