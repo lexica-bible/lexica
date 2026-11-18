@@ -13864,3 +13864,5 @@ built changed → STOP. Peaks unchanged (check 98 MB; delta 667 MB on the test c
 else changed" checked only in part — no `git diff` there): CC's `git diff` of the working copy against e2dff845 / 8d49fd07 shows, in
 the block, only the XCHK line and the check.py lines named in "STEP4GATE revised" (NONE_IN; JOH_ABSENT; JOH_SHOW; the new G7 loop) —
 no other line of the block's bash or of check.py; outside the block, only the draft paragraph's G7 / tests wording and the new entries.
+
+### GSRC log READ in the ruling chat (11/18, §9.187) — HOLD 1 CLOSED; §9.185 (4) and (7) MET; the GSRC-sourced constants stand. HOLD 2 (the revision above) with the ruling chat
