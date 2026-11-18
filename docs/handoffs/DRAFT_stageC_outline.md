@@ -12944,3 +12944,131 @@ composition 427,418 + 380,086 → 50,890 = STEP4-DELTA2's 50,890, chain breaks 0
 FINDINGS 0; P8CHECK MATCH. Copies unchanged. Peak 630 MB.
 
 ### P8DELTA RULED (11/18, §9.178) — pre_8b → built PASSED; composition PASSED; both items closed. Next: the live = src proof, drafted only after the ruling chat confirms the dashboard (≥ 1 GB free, /tmp counted)
+
+## The live = src proof — Block LIVESRC drafted (11/18, GATE REF d34d6723; §9.138 (4), §9.179) — adds a copy: reviewer → ESCALATE → ruling chat
+**What it does.** A fresh copy of live by sqlite's backup (as src was made on 11/1), live opened read-only — the only step that opens
+live (before and after the copy, live's size and time are read by `stat`, which does not open it; printed only). The copy is
+checked (quick_check ok, no side file) and kept in the run folder `~/edition_upgrade_runs/live_src_20261118/live_copy_20261118.db`
+until a removal is ruled. Then `eu_words_delta --a src --b the copy` (read-only on both): words + verses, **expected EMPTY**;
+abp_corrections outside it by design (§9.153 (1)). Then a second read: eu_step's words + verses digests (row ids included) on src
+and the copy, expected equal. Log `live_src_20261118.log`.
+**Before the copy, every miss is a STOP:** eu_step pre on src (REF, no -journal, triggers 0, a fresh run folder); live present; src
+451,964,928 B (step4_delta2_20261116.log, §9.157 (1)); src sha256 starts 5da9bb95 and ends 7e01 (CCTL's before = after, §9.168 (1); the
+full value is not in the repo); home ≤ 7,900,000 KB (the BSTD bound, §9.171 (3); after RMTB 7,685,688, §9.175 (1)) — the dashboard read
+of §9.179 was 7.4 of 10.0 GB. **No block has run on PA since that read** (the last, P8DELTA, ran before it); anything added on PA outside the
+blocks is not known here — the home bound above is the in-block guard.
+**The copy:** exit ≠ 0, no copy, or a side file beside it = STOP (anything made is left in the run folder).
+**After the delta, every miss is a CHECK** (a finding before the step-4 gate, §9.138 (4)): 13 words columns compared and none one-sided;
+verses: text only, none one-sided; rows `verses a 31237 / b 31237 - words a 626309 / b 626309` (src's, step4_delta_20261115.log,
+§9.141; live expected the same); every words column 0; verses.text 0; moved / verses / unpaired 0 0 0 0; words only 0 0; verses only 0 0;
+all six member files header only (any member printed, first 40); digests src = copy; src sha after = before.
+**Local test** (WSL clone at d34d6723; made-up src and live, live with an extra abp_corrections row and a cache table; the real eu_step
+and eu_words_delta): clean → DONE exit 0 (the extra abp_corrections row and cache table not seen, by design); re-paste STOP; one english
+cell changed on live → CHECK with the cell listed; an extra verse on live → CHECK (rows NO, words only 0 5, verses only 0 1, members
+listed); same content with other row ids → delta empty, digests NO → CHECK; src sha head wrong → STOP before the copy, run folder empty;
+home over the bound → STOP before the copy; live not a database → STOP at the copy.
+### Block LIVESRC (GATE REF d34d6723; WRITES the copy + its run folder; live opened read-only by the copy step only — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/live_src_20261118.log
+if [ -e "$L" ]; then echo "LIVESRC RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - LIVESRC - the live = src proof (DESIGN 9.138 (4), 9.139 (4), 9.153 (1), 9.178 (7), 9.179): a FRESH copy of live (sqlite backup, live opened read-only - the only step that opens live), then eu_words_delta src vs the copy (read-only on both), words + verses expected EMPTY; abp_corrections outside it by design - WRITES: the copy + the run folder + this log; src only read - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "LIVESRC RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+S=~/bible-db/bible_edupg_test_20261101.db
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+D=$R/live_src_20261118
+LC=$D/live_copy_20261118.db
+XS_SIZE=451964928                 # src: step4_delta2_20261116.log (DESIGN 9.157 (1))
+XS_SHA_HEAD=5da9bb95; XS_SHA_TAIL=7e01   # src sha256 before = after in CCTL: step4_c_control_20261117.log (DESIGN 9.168 (1)); the full value is not in the repo
+XROWS="rows: verses a 31237 / b 31237 - words a 626309 / b 626309"   # src's rows: step4_delta_20261115.log, "rows 31,237 / 626,309 both sides" (DESIGN 9.141); live expected the same
+XHOME_MAX=7900000                 # KB: the bound ruled for BSTD (DESIGN 9.171 (3)); home after RMTB 7,685,688 (rm_tb_20261117.log, DESIGN 9.175 (1)); the copy adds about 452 MB after this check
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+DIG() { EU -c 'import sys; sys.path.insert(0, "scripts"); import eu_step as e; c = e.ro(sys.argv[1]); print(" ".join("%s=%d/%s" % (t, *e.digest(c, t)) for t in sys.argv[2:])); c.close()' "$@"; }
+# --- before the copy: every miss is STOP; nothing written but the run folder ---
+EU scripts/eu_step.py pre --tag LIVESRC --ref "$REF" --dir "$D" --db "$S" || { echo "LIVESRC RESULT: STOP - pre (line above); nothing written"; exit 1; }
+[ -s "$LIVE" ] || { echo "LIVESRC RESULT: STOP - live missing or empty: $LIVE"; exit 1; }
+n=$(stat -c %s "$S"); echo "src size: $n bytes (expect $XS_SIZE)"
+[ "$n" = "$XS_SIZE" ] || { echo "LIVESRC RESULT: STOP - src is not the size every declared figure was read against"; exit 1; }
+s0=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 before: $s0 (expect $XS_SHA_HEAD...$XS_SHA_TAIL)"
+[ "${s0:0:8}" = "$XS_SHA_HEAD" ] && [ "${s0: -4}" = "$XS_SHA_TAIL" ] || { echo "LIVESRC RESULT: STOP - src is not the copy CCTL read"; exit 1; }
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (the quota counts both, DESIGN 9.167; STOP if home is above $XHOME_MAX; the dashboard read 7.4 of 10.0 GB, DESIGN 9.179)"
+[ "$dk0" -le "$XHOME_MAX" ] || { echo "LIVESRC RESULT: STOP - home has grown since the dashboard read; read the dashboard and the ruling chat first"; exit 1; }
+echo "=== LIVE before: size + time (stat, the file is not opened) and its side files - printed only (the site writes its cache into bible.db) ==="
+stat -c 'live: %s bytes, last write %y' "$LIVE"
+for f in "$LIVE-journal" "$LIVE-wal" "$LIVE-shm"; do echo "beside live: $f $([ -e "$f" ] && echo present || echo absent)"; done
+# --- the write: the fresh copy (live opened read-only by sqlite's backup; the copy set to journal_mode=DELETE) ---
+echo "=== (1) the copy: sqlite backup of live into the run folder - start $(date -u +%FT%TZ) ==="
+EU - "$LIVE" "$LC" <<'PY'; rc=$?
+import os, sqlite3, sys
+live, dst = sys.argv[1], sys.argv[2]
+s = sqlite3.connect("file:%s?mode=ro" % live, uri=True, timeout=60)
+print("live journal mode (read): %s" % s.execute("PRAGMA journal_mode").fetchone()[0])
+d = sqlite3.connect(dst)
+s.backup(d)
+d.execute("PRAGMA journal_mode=DELETE")
+d.close()
+s.close()
+c = sqlite3.connect("file:%s?mode=ro" % dst, uri=True)
+print("copy quick_check: %s" % c.execute("PRAGMA quick_check").fetchone()[0])
+print("copy triggers: %d" % c.execute("SELECT count(*) FROM sqlite_master WHERE type='trigger'").fetchone()[0])
+c.close()
+print("copy: %d bytes" % os.path.getsize(dst))
+PY
+echo "copy exit $rc (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rc" = 0 ] && [ -s "$LC" ] || { echo "LIVESRC RESULT: STOP - the copy did not finish (anything made is left in $D for the ruling chat)"; exit 1; }
+for f in "$LC-journal" "$LC-wal" "$LC-shm"; do [ -e "$f" ] && { echo "LIVESRC RESULT: STOP - a side file beside the copy: $f (left as is)"; exit 1; }; done
+stat -c 'live after the copy: %s bytes, last write %y (printed only)' "$LIVE"
+# --- the delta (read-only on src and the copy) ---
+echo "=== (2) the delta: eu_words_delta.py --a src --b the copy - start $(date -u +%FT%TZ) ==="
+mkdir "$D/delta" || { echo "LIVESRC RESULT: STOP - cannot make $D/delta"; exit 1; }
+EU scripts/eu_words_delta.py --a "$S" --b "$LC" --out "$D/delta" < /dev/null > "$D/delta.out" 2>&1; rd=$?
+cat "$D/delta.out"; echo "delta exit $rd (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rd" = 0 ] && [ -n "$(sed -n '/^RESULT: DELTA WRITTEN/p' "$D/delta.out")" ] || { echo "LIVESRC RESULT: STOP - the delta did not finish (partial files kept in $D/delta; the copy kept)"; exit 1; }
+# --- after the delta: every miss is CHECK (a finding before the step-4 gate, DESIGN 9.138 (4)) ---
+bad=0
+echo "--- expected EMPTY (DESIGN 9.138 (4)); every member is a finding, read from the delta files:"
+wn=$(sed -n 's/^words columns compared (\([0-9]*\)).*/\1/p' "$D/delta.out"); echo "words columns compared: $wn (expect 13, as STEP4-DELTA, DESIGN 9.141)"; [ "$wn" = 13 ] || bad=1
+w1=$(grep -c -x -F "words columns on one side only: a none - b none" "$D/delta.out"); echo "words columns on one side only: none both sides: $([ "$w1" = 1 ] && echo yes || echo NO)"; [ "$w1" = 1 ] || bad=1
+v0=$(grep -c -x -F "verses columns compared (1): text" "$D/delta.out"); echo "verses columns compared = text only: $([ "$v0" = 1 ] && echo yes || echo NO)"; [ "$v0" = 1 ] || bad=1
+v1=$(grep -c -x -F "verses columns on one side only: a none - b none" "$D/delta.out"); echo "verses columns on one side only: none both sides: $([ "$v1" = 1 ] && echo yes || echo NO)"; [ "$v1" = 1 ] || bad=1
+r1=$(grep -c -x -F "$XROWS" "$D/delta.out"); echo "rows: verses 31237 / 31237, words 626309 / 626309: $([ "$r1" = 1 ] && echo yes || echo NO)"; [ "$r1" = 1 ] || bad=1
+wc_=$(awk '$1 ~ /^words\./ && $2 > 0' "$D/delta.out"); echo "words columns with members: ${wc_:-(none)}"; [ -z "$wc_" ] || bad=1
+vt=$(awk '$1 == "verses.text" {print $2}' "$D/delta.out"); echo "verses.text: $vt (expect 0)"; [ "$vt" = 0 ] || bad=1
+mp=$(awk '$1 == "moved" && $2 == "pairs" {print $3 " " $5 " " $10 " " $13}' "$D/delta.out"); echo "moved pairs / verses / unpaired a / unpaired b: $mp (expect 0 0 0 0)"; [ "$mp" = "0 0 0 0" ] || bad=1
+wo=$(awk '$1 == "words" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "words only a / only b: $wo (expect 0 0)"; [ "$wo" = "0 0" ] || bad=1
+vo=$(awk '$1 == "verses" && $2 == "only" {print $7 " " $9}' "$D/delta.out"); echo "verses only a / only b: $vo (expect 0 0)"; [ "$vo" = "0 0" ] || bad=1
+for f in words_cells words_only words_moved words_unpaired verses_cells verses_only; do
+  k=$(wc -l < "$D/delta/$f.tsv"); echo "$f.tsv: $((k - 1)) member lines (expect 0)"
+  [ "$k" = 1 ] || { bad=1; echo "  first 40 members:"; head -n 41 "$D/delta/$f.tsv"; }
+done
+echo "--- words + verses digests, row ids included (eu_step digest; read-only on src and the copy; expect equal):"
+ds=$(DIG "$S" words verses) || { echo "CHECK: src could not be digested"; ds=x; bad=1; }
+dc=$(DIG "$LC" words verses) || { echo "CHECK: the copy could not be digested"; dc=y; bad=1; }
+echo "src:  $ds"; echo "copy: $dc"
+echo "digests src = copy: $([ "$ds" = "$dc" ] && echo yes || echo NO)"; [ "$ds" = "$dc" ] || bad=1
+# --- src unchanged; the copy kept; space after ---
+s1=$(cut -d' ' -f1 <<< "$(sha256sum < "$S")"); echo "src sha256 after = before: $([ "$s1" = "$s0" ] && echo yes || echo NO)"; [ "$s1" = "$s0" ] || bad=1
+echo "the copy (kept until a removal is ruled): $LC, $(stat -c %s "$LC") bytes"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm1=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use after: $dk1 KB (before $dk0 KB; the copy + run files $((dk1 - dk0)) KB); my files in /tmp after: $tm1 bytes"
+[ "$bad" = 0 ] || { echo "LIVESRC RESULT: CHECK - lines above (the copy kept in $D) - to the ruling chat as printed"; exit 1; }
+echo "LIVESRC RESULT: DONE - live's words + verses = src's: the delta is EMPTY and the digests are equal; the copy is kept in $D until a removal is ruled"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### LIVESRC reviewed (11/18) — REVIEW: ESCALATE (it adds a copy of live; §9.179 (2)); 0 DEFECT, 2 GAP, 5 NOTE
+Verdict line verbatim: "REVIEW: ESCALATE - DESIGN §9.179 (2) says this block goes to the ruling chat for clearance (it adds a copy of
+live)". Code check, all matched: the awk fields for moved / words only / verses only against eu_words_delta.py :247-253; the exact-line
+greps and the rows line against :166-171 / :184-185; DIG against eu_step.ro / digest :61-108; the copy step (heredoc + rc, read-only URI,
+backup, then journal_mode=DELETE); no `!`; guards via `<<<` or files; every figure found in its cited § line. **GAP 1:** three STOPs
+come after the write (copy failed, side file beside the copy, the delta did not finish) — each keeps the copy and says so. **GAP 2:**
+the repo guards are delegated to eu_step pre (as BSTD / CCTL). **NOTES:** the digest's "row ids included" rests on words.id / verses.id
+being the row id (repo fixtures say so; live's own layout not seen by the reviewer); the backup copies in one step, so the site's cache
+writes wait for it (~452 MB); the copy's trigger count is printed, not a guard; "live expected the same" rows = §9.138 (4)'s premise;
+the home bound measures home only, /tmp printed (as BSTD).
