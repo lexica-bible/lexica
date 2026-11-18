@@ -13172,3 +13172,9 @@ answered:** the LIVESRC log's delta file list line, as JP pasted it, now quoted 
 folder's own list before and after. Reviewer did not check: PA's GNU tools, CC's test results, the LIVESRC log on PA.
 
 ### RMLC CLEARED (11/18, §9.182) — to run as printed; its log + the dashboard File storage line after it go to the ruling chat
+
+### RMLC ran (11/18, 16:19:20Z–16:19:29Z) — RMLC RESULT: DONE (log ~/edition_upgrade_runs/rm_lc_20261118.log; JP pasted it by cat, so no exit= line)
+Every §9.182 (4) line met: LIVESRC result line, words_cells.tsv 4963903336…9329 and the copy 460,251,136 B = expect; rm exit 0; the copy
+gone; every other file in the run folder (8) size and time before = after: yes; src, built, pre_8b: yes. Home in use 8,177,348 →
+7,727,832 KB (freed 449,516 KB); /tmp 9,322,145 B before and after; home + /tmp after 7,736,935 KB. Dashboard line: to the ruling chat
+with the log.
