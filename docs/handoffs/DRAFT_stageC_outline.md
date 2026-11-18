@@ -13280,3 +13280,65 @@ sha typed. GAP (check's peak memory) → measured, not forecast. Notes taken: G6
 read-outs, not declared; finish steps :37-:72 not traced for verses.text (said); §9.164 (1) cited for no "--" on src; `position`
 covered by G3 + G8; cites fixed (353,595 → §9.177; rank rule eu_words_delta.py :12-14, :83-92; prose path = DR :11312's). Reviewer's
 item 5 (REF stat) unchecked there for want of a shell — CC ran it (above). G4 option a vs b left to the ruling chat, as the reviewer says.
+
+### Step-4 gate PROPOSAL RULED (11/18, §9.185) — approved as the basis for drafting; G4 option a; G6 corrected form; embedded check; census first read accepted on conditions
+
+## Before the gate draft — two sources not in the repo (11/18, CC; §9.185 (4), (7))
+- **§9.185 (4):** the P8DELTA line exists by the block's construction — :12650 prints "STEP4-DELTA2 words_cells.tsv sha256: $c0 (expect
+  $XC_WC)", where $C = `~/edition_upgrade_runs/step4_delta2_20261116/delta` (:12636), and its check.py composes against
+  `$C/words_cells.tsv` (check.py argv[3] at :12667; `cells(C)` at :12828 reads `C / "words_cells.tsv"` via :12749-12750) — and the "P8DELTA ran" entry (:12936) records it printed = expect.
+  But the pasted log is not in the repo, so its LINE NUMBER is unknown. Not cited from memory: read on PA below.
+- **§9.185 (7):** the census v2 run (11/6) has no block, script or file layout in the repo — only the summary at DR :2722-2726
+  (`strongs_pos_census2_20261106.log` / `.tsv`, both PA-only; git 65c04bf5 added only that summary). Its column layout, which copies
+  it compared, and whether its log lists the 10 rows are unknown here. The gate's census reader cannot be written without them.
+  So: Block GSRC (read-only), then the check program and the gate draft.
+
+### Block GSRC (READ-ONLY — opens no database; writes only its log; no PA pull)
+```bash
+set +H
+L=~/edition_upgrade_runs/gate_sources_20261118.log
+if [ -e "$L" ]; then echo "GSRC RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+R=~/edition_upgrade_runs
+echo "GSRC - step-4 gate sources (DESIGN 9.185 (4), (7)) - READ-ONLY: opens no database, writes only this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+echo "=== (4) P8DELTA log: the reference-delta sha line and the check's composition lines ==="
+P8=$R/p8_delta_20261117.log
+ls -l --time-style=full-iso "$P8" || { echo "GSRC RESULT: STOP - P8DELTA log missing: $P8"; exit 1; }
+grep -n "STEP4-DELTA2 words_cells.tsv sha256" "$P8" || echo "(no such line in $P8)"
+grep -n -i "composition\|P8CHECK\|P8DELTA RESULT" "$P8" || echo "(no composition / result line in $P8)"
+echo "=== (7) census v2 files under $R ==="
+find "$R" -maxdepth 2 -name 'strongs_pos_census2*' -printf '%TY-%Tm-%Td %TH:%TM %s %p\n'
+T=$R/strongs_pos_census2_20261106.tsv
+G=$R/strongs_pos_census2_20261106.log
+if [ -f "$T" ]; then
+  echo "tsv sha256: $(cut -d' ' -f1 <<< "$(sha256sum < "$T")")"
+  echo "tsv lines (incl header): $(wc -l < "$T")"
+  echo "--- tsv header ---"; head -1 "$T"
+  echo "--- tsv lines naming REORDER / SPLIT / DIFFERS / SKIPPED (first 40, numbered) ---"
+  awk '/REORDER|SPLIT|DIFFERS|SKIPPED/ && n < 40 { print NR ":" $0; n++ }' "$T"
+  echo "--- tsv: count of each value in every column (of the first 5) holding REORDER / DIFFERS / SKIPPED / same; at most 20 values each ---"
+  awk -F'\t' '{ for (i = 1; i <= 5 && i <= NF; i++) { c[i, $i]++; if ($i ~ /REORDER|DIFFERS|SKIPPED|^same$/) hit[i] = 1 } }
+    END { for (i = 1; i <= 5; i++) if (hit[i]) { print "column " i ":"; m = 0; for (k in c) { split(k, p, SUBSEP); if (p[1] == i && m < 20) { print "  " c[k] "  " p[2]; m++ } } } }' "$T"
+else echo "(no tsv at $T)"; fi
+if [ -f "$G" ]; then
+  n=$(wc -l < "$G"); echo "--- census log: $n lines ---"
+  if [ "$n" -le 150 ]; then cat -n "$G"; else awk 'NR <= 60 { printf "%6d\t%s\n", NR, $0 }' "$G"; echo "..."; awk '/REORDER|SPLIT|DIFFERS|SKIPPED|RESULT|rows/ && n < 60 { print NR ":" $0; n++ }' "$G"; fi
+else echo "(no census log at $G)"; fi
+echo "=== the gate's other input: B2's prose list (DR :11312) ==="
+F=$R/step5_prose_20261101.tsv
+ls -l --time-style=full-iso "$F" && echo "sha256: $(cut -d' ' -f1 <<< "$(sha256sum < "$F")") (expect f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864)"
+echo "GSRC RESULT: READ DONE - $(date -u +%FT%TZ)"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+Expected (read-outs; nothing gated): the P8DELTA sha line found with 86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc
+and "(expect …)" the same; the census tsv and log present (DR :2722); the tsv lists the 10 verses of DR :2724-2725 as REORDER-WHOLE;
+the prose list's sha = f2a22ecd…a864. Any "(no …)" line goes to the ruling chat as printed.
+
+### GSRC reviewed (11/18) — REVIEW: CLEAR (round 2)
+Round 1: ESCALATE, 1 DEFECT — tripwire 2 (grep in a pipe under pipefail, three lines) → rewritten as awk reading the file directly; the
+`find | sort` pipe removed too; local mock run: syntax OK, short and 200-line logs print as intended, re-paste stops on the guard. Round 2:
+"REVIEW: CLEAR - Read-only block (it opens no database and writes only its own log, which it will not overwrite); tripwire 2 is fixed;
+every expectation is a read-out with a traced source." Notes: per-column counts unsorted, capped at 20 (display only); GAP 6 stands (the
+composition / P8CHECK grep words untraced into check.py — read-out, "(no …)" fallback); no GATE REF wrapper (runs no repo script). Not
+checked by the reviewer: the PA files themselves; CC's mock run. JP runs it; its log goes to CC (and on to the ruling chat with the draft).
