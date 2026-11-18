@@ -13368,7 +13368,7 @@ log. Reads neither live nor pre_8b (§9.185 (4): pre_8b rests on P8DELTA's sha g
 — §9.157 (1); P8DELTA :19 and :122 — that log, as GSRC printed them (:4, :7); census tsv sha 8a5ab914…ea2e — GSRC :14; census log :4 —
 GSRC :47; prose sha f2a22ecd…a864 — DR :12210 + GSRC :73; EU file sha 38acc6ba…6717 — its committed .sha256; in the check: 80 + 6 = 86
 — §9.142 (1); 49 / 69 / 15,522 — §9.143 (2); B written 15,571 — stageB_Bapply :2 (§9.161 (1)); Isa 48:5 @4 'would' → 'what' —
-§9.148 (2); Joh 19:18 / Heb 11:24 no member — §9.156 (2) / §9.152 (2); the summary lines (13 columns; rows 31,237 / 626,309; none
+§9.148 (2); Joh 19:18 @10 english_head + english_head_norm absent — §9.156 (2) / §9.157 (3) / §9.186 (the verse's other members a read-out); Heb 11:24 no member — §9.152 (2); the summary lines (13 columns; rows 31,237 / 626,309; none
 one-sided) — §9.141, §9.157 (1); the census cross-check list — DR :2724-2725. Read-outs only (nothing gated on them): every count G4
 prints, the non-EU member count (computed, §9.185 (3)), Mark 1:9 and Joh 14:26 @3 (§9.185), the six fresh files' full shas (printed
 beside the reference's), peak memory, wall time.
@@ -13376,15 +13376,15 @@ beside the reference's), peak memory, wall time.
 finish_rebuild :37-:72 were not traced for verses.text; the length check is the second, weaker look — the by-value proof of
 verses.text is (b) (§9.173 (2), §9.178 (2)). G4 stands on P8DELTA's ruled composition (§9.178 (4)) through G1's byte-identity; pre_8b is
 not read and not re-proven here. Also (§9.140): a type-only change in bracket_id alone is hidden by the rank.
-**Tests (WSL, clone at d34d6723, Python 3.14; check.py sha c9ec9108…a61b = XCHK, the same file the block writes):** full-size made-up
+**Tests (WSL, clone at d34d6723, Python 3.14; check.py sha 2a5a8a3c…19fe = XCHK, the same file the block writes):** full-size made-up
 copies (31,237 verses — B's prose list's keys; 626,309 words; verse texts = the real 11/15 delta's src / built sides, the EU rows'
 corrected values for the 49) built by `gen.py`; the reference delta and every fresh delta made by the real eu_words_delta at d34d6723;
-the test copies' verses_cells came out `870e4782…57f9` = STEP4-DELTA2's own. 15 cases, ALL AS EXPECTED:
+the test copies' verses_cells came out `870e4782…57f9` = STEP4-DELTA2's own. 16 cases (re-made on the §9.186 check), ALL AS EXPECTED:
 clean → exit 0, G1–G8 PASS ("non-EU members 15453 (computed) - … fails: 0", on the real texts) · an unlisted english cell → G1 (+G4) ·
 an extra strongs cell → G2 "in the delta, NOT declared" (+G1, G3 unpaired, G4) · a broken swap (Jdg 11:7 @6 morph) → G2 "value
 differs" (+G3) · an undeclared moved pair → G2 ×6 + G3 ×2 · a stale norm on src → G5 "src … stored 'stale' rule 'word2'" · one of the
 49 with built ≠ src → G6 · one of the 69 off by a space → G6 · a length off by one → G6 "length rule (9.185 (3))" · an extra delta verse
-→ G6 "in the delta, NOT declared" · Isa 48:5 @4 absent → G7 ×2 · a member in Joh 19:18 → G7 · an italic member → G8 — each exit 3 ·
+→ G6 "in the delta, NOT declared" · Isa 48:5 @4 absent → G7 ×2 · Joh 19:18 @10 head + norm in the delta → G7 ×2 · another Joh 19:18 member → G7 PASS, printed as a read-out (G1 catches the changed delta) · an italic member → G8 — each exit 3 ·
 census position changed (Rom 9:29 @18 → @19) → STOP exit 2 · census class changed → STOP exit 2. **Measured peak memory: the check
 98 MB; the delta 667 MB** on the made-up copies (PA's delta: 639 MB, §9.157 (1)). The block itself: run end to end on a test home
 with ONLY its X* constant lines set to the test copies' values (the check heredoc unchanged, its sha = XCHK) — results below the block.
@@ -13418,7 +13418,7 @@ XCEN=8a5ab914356460627a1fcd4c5c729f0d59344a069257f82676e1bc08b54cea2e      # cen
 XCLOG4="verses: same 31227 - REORDER-WHOLE 10 - REORDER-SPLIT 0 - DIFFERS 0 (0 cells) - SKIPPED 0"   # census log :4 (GSRC :47)
 XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # step5 prose list: DR :12210, GSRC :73
 XEU=38acc6ba99d8ef8ac7b2eccb92494115bde94e9f957751677ebf86cf420f6717       # tests/fixtures/edition_upgrade/eu_batch_rows_20261103.tsv.sha256
-XCHK=c9ec910889ca23a241ef31b840d9ee3dbbaf2478b6f96fbf954d5b37b368a61b      # sha256 of check.py as written below (CC's file, tested); a paste that changed it STOPs
+XCHK=2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe      # sha256 of check.py as written below (CC's file, tested); a paste that changed it STOPs
 EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
 h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
 # --- before the delta: every miss is STOP ---
@@ -13471,7 +13471,9 @@ SUMMARY = ["words columns compared (13): english, english_head, strongs, strongs
            "rows: verses a 31237 / b 31237 - words a 626309 / b 626309"]
 X49, X69, XDECL, XWRIT = 49, 69, 15522, 15571        # DESIGN 9.143 (2) (49 / 69 / 15,522); stageB_Bapply :2 written 15,571 (9.161 (1))
 ISA = (("Isa", 48, 5, 4), "would", "what")            # DESIGN 9.148 (2): english_head 'would' -> 'what' + its norm cell
-NONE_IN = [("Joh", 19, 18), ("Heb", 11, 24)]          # DESIGN 9.156 (2), 9.152 (2): no member in these verses
+NONE_IN = [("Heb", 11, 24)]                           # DESIGN 9.152 (2): no member in this verse
+JOH_ABSENT = [("Joh", 19, 18, 10, "english_head"), ("Joh", 19, 18, 10, "english_head_norm")]   # DESIGN 9.156 (2), 9.157 (3), 9.186
+JOH_SHOW = ("Joh", 19, 18)                            # DESIGN 9.186: any other member of the verse is a read-out
 SHOW = [("Mar", 1, 9), ("Joh", 14, 26)]               # charter 4.10: printed by name, read-outs only (9.185)
 
 finds = Counter()
@@ -13727,6 +13729,17 @@ try:
         print("  %s %d:%d members: %d (expect 0)" % (vk[0], vk[1], vk[2], len(m)))
         for k in m:
             find("G7", "member in a verse declared to have none", k)
+    for k in JOH_ABSENT:
+        print("  Joh 19:18 @10 %s: %s (expect absent, DESIGN 9.156 (2) / 9.157 (3))" % (k[4], "absent" if k not in W else "PRESENT %r" % (W[k][:2],)))
+        if k in W:
+            find("G7", "Joh 19:18 @10 cell declared absent is in the delta", k, W[k][:2])
+    jo = [k for k in W if k[:3] == JOH_SHOW and k not in JOH_ABSENT]
+    print("  Joh 19:18 other members (read-out, not declared, DESIGN 9.186): words %d - verses.text %s - moved %s"
+          % (len(jo), "yes" if JOH_SHOW in V else "no", "yes" if JOH_SHOW in mvk else "no"))
+    for k in sorted(jo, key=str):
+        print("    @%d %-18s %r -> %r" % (k[3], k[4], W[k][0], W[k][1]))
+    if JOH_SHOW in V:
+        print("    verses.text %r -> %r" % V[JOH_SHOW])
     for vk in SHOW:
         print("  %s %d:%d (read-out, not declared):" % vk)
         for k in sorted((k for k in W if k[:3] == vk), key=str):
@@ -13831,3 +13844,23 @@ those two lines only; no verses_cells line) — a local read, not a register lin
 byte with the fresh delta, not pinned by a ruled sha — §9.157 gives them abbreviated; G2 / G3 / G6 check their contents on their own);
 NOTE 3 (a census column written differently on PA = STOP, not a silent pass); NOTE 4 (wording); NOTE 6 (six full shas printed — answers
 §9.185's open point). Not checked by the reviewer: XCHK by computation, CC's tests, the PA files.
+
+### STEP4GATE READ, NOT CLEARED (11/18, §9.186) — HOLD 1: the GSRC log to be pasted in the ruling chat (JP); HOLD 2: Joh 19:18 re-ruled → G7 changed
+
+### STEP4GATE revised (11/18, CC; §9.186 HOLD 2) — G7's Joh 19:18 check; new XCHK; tests re-made
+**The change (check.py only; the block's bash is unchanged apart from the XCHK line):** NONE_IN now holds Heb 11:24 alone (§9.152 (2)).
+New JOH_ABSENT = Joh 19:18 @10 english_head and english_head_norm (§9.156 (2), §9.157 (3), §9.186): each printed "absent" or
+"PRESENT (a, b)"; present = a G7 FINDING. New JOH_SHOW: every other member of Joh 19:18 (words cells, verses.text, moved) printed as a
+read-out, not declared, never a finding (§9.186). **XCHK c9ec9108…a61b → `2a5a8a3c68a50cfa3900bc5461fa8f7296caba50314e0d11e5f2e4c1cbc519fe`**
+(the block's heredoc body hashes to it; the draft text above updated to the new sha and to the new G7 wording).
+**Tests re-made on the new sha, tests file REPLACED** (`docs/handoffs/drafts/STEP4GATE_tests_20261118.txt`, 521 lines; check.py sha at :2
+and :397): 16 cases, ALL AS EXPECTED (:360) — the old "a member in Joh 19:18" case split in two: "Joh 19:18 @10 head + norm in the delta"
+→ G7 FINDING ×2 (:292); "another Joh 19:18 member" → G7 PASS with "@1 english 'word1' -> 'planted'" printed as a read-out, the run still
+exit 3 through G1 (:312). Every other case as before. End to end on the new block: clean → PASS; re-paste → STOP; census changed → STOP;
+built changed → STOP. Peaks unchanged (check 98 MB; delta 667 MB on the test copies).
+
+### STEP4GATE revision reviewed (11/18) — REVIEW: ESCALATE (a new gate; HOLD 1 open; clearance is the ruling chat's); 0 DEFECT, 0 GAP
+"the G7 change matches §9.186 HOLD 2, with 0 DEFECT and 0 GAP." Reviewer's text goes to the ruling chat verbatim. Its NOTE 5 ("nothing
+else changed" checked only in part — no `git diff` there): CC's `git diff` of the working copy against e2dff845 / 8d49fd07 shows, in
+the block, only the XCHK line and the check.py lines named in "STEP4GATE revised" (NONE_IN; JOH_ABSENT; JOH_SHOW; the new G7 loop) —
+no other line of the block's bash or of check.py; outside the block, only the draft paragraph's G7 / tests wording and the new entries.
