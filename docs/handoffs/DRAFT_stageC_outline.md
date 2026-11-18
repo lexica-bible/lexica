@@ -13083,8 +13083,90 @@ PRE OK; src 451,964,928 B; home before 7,727,788 KB (≤ 7,900,000); /tmp 9,322,
 2026-11-17 14:54:22Z; -journal / -wal / -shm absent. Copy: live journal mode delete; **copy quick_check: ok**; triggers 0; 460,251,136 B;
 exit 0 (15:43:43Z–15:44:31Z). Live after the copy: same size and time. Delta: 13 words columns, none one-sided; verses text only, none
 one-sided; rows 31,237 / 31,237 and 626,309 / 626,309; every words column 0; verses.text 0; moved / verses / unpaired 0 0 0 0; only 0 0
-both; six files header only; peak 637 MB. Digests src = copy: yes — words 626309/`1ce75b22fd302e368f1bfca1bcb9e0fdccdce9e3658af4534f258f5fd3b25b26`,
+both; six files header only (the log's delta file list: `words_cells.tsv 0 lines + header sha256 4963903336ba59b59f8678141478becbcf0de667f2d4fd80124884ae45ef9329`); peak 637 MB. Digests src = copy: yes — words 626309/`1ce75b22fd302e368f1bfca1bcb9e0fdccdce9e3658af4534f258f5fd3b25b26`,
 verses 31237/`5717b0451ba5e1b044a1c3f1a3cf718c15d23e3a669a605b9c3d5502d1f721ae`. src sha after = before. Copy kept:
 `~/edition_upgrade_runs/live_src_20261118/live_copy_20261118.db` 460,251,136 B. Home after 8,177,344 KB (+449,556).
 **src full sha256 as printed (now the recorded value):** `5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01`.
 Every §9.180 (6) declared line met, as CC reads it; the log goes to the ruling chat.
+
+### LIVESRC RULED (11/18, §9.181) — live = src PASSED; every step-4 item held open is closed. Next: RMLC (the copy's removal), then CC's step-4 gate proposal (unapproved)
+
+## Block RMLC drafted (11/18, §9.181 (5)) — removes the LIVESRC copy only; RMTB (§9.174) with names and figures changed
+Removes ~/edition_upgrade_runs/live_src_20261118/live_copy_20261118.db; the run folder's other files (delta/, delta.out) stay. Runs no
+repo code, opens no database; live is named only for the "same file" and "not a link" checks. Declared figures, each from the LIVESRC
+log (live_src_20261118.log, "LIVESRC ran" entry above): XT_SIZE 460,251,136 (the "copy:" and "kept" lines; the same size as live, so the
+same-file check is what tells them apart); XWC 4963903336ba59b59f8678141478becbcf0de667f2d4fd80124884ae45ef9329 (the delta file list;
+header only, so any empty delta has it — the fixed folder and the LIVESRC result line pin the run); XRES = the LIVESRC log's DONE line.
+Tested on made-up files (8 cases): DONE with only the copy gone (the 8 other files size and time unchanged); re-paste STOP; the copy a
+hard link to live STOP; a symlink to live STOP; wrong size STOP; a different LIVESRC result line STOP; -journal beside the copy STOP;
+wrong delta sha STOP. The test's header-only words_cells.tsv gave the same sha as PA's.
+### Block RMLC (DELETES live_copy_20261118.db only — reviewer → ESCALATE → ruling chat)
+```bash
+set +H
+L=~/edition_upgrade_runs/rm_lc_20261118.log
+if [ -e "$L" ]; then echo "RMLC RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export LC_ALL=C TZ=UTC
+echo "RMLC - removes live_copy_20261118.db only (DESIGN 9.181 (5)); everything else in the LIVESRC run folder stays (delta files, delta.out); runs no repo code, opens no database - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs
+D=$R/live_src_20261118
+T=$D/live_copy_20261118.db
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+LIVE=~/bible-db/bible.db
+# declared figures, each from a PA log line:
+XT_SIZE=460251136   # the copy: live_src_20261118.log, the "copy:" line and the "kept" line (DESIGN 9.181 (3), (5)); the same size as live, so the -ef line below is what tells them apart
+XWC=4963903336ba59b59f8678141478becbcf0de667f2d4fd80124884ae45ef9329   # delta/words_cells.tsv (header only, so any empty delta has this sha; the folder is fixed and the LIVESRC result line pins the run): live_src_20261118.log, the delta file list
+XRES="LIVESRC RESULT: DONE - live's words + verses = src's: the delta is EMPTY and the digests are equal; the copy is kept in $D until a removal is ruled"   # the LIVESRC log's result line (DESIGN 9.181 (1))
+# --- before the removal: every miss is STOP, nothing removed ---
+for f in "$T" "$D/delta/words_cells.tsv" "$R/live_src_20261118.log" "$S" "$B" "$P" "$LIVE"; do
+  [ -s "$f" ] || { echo "RMLC RESULT: STOP - missing or empty: $f; nothing removed"; exit 1; }
+  [ -L "$f" ] && { echo "RMLC RESULT: STOP - a link, not a file: $f; nothing removed"; exit 1; }
+done
+for f in "$S" "$B" "$P" "$LIVE"; do [ "$T" -ef "$f" ] && { echo "RMLC RESULT: STOP - the copy is the same file as $f; nothing removed"; exit 1; }; done
+[ -w "$T" ] && [ -w "$D" ] || { echo "RMLC RESULT: STOP - the copy or its folder is not writable (rm would ask on the terminal); nothing removed"; exit 1; }
+for x in -journal -wal -shm; do [ -e "$T$x" ] && { echo "RMLC RESULT: STOP - a $x file beside the copy (left as is for the ruling chat); nothing removed"; exit 1; }; done
+r=$(sed -n '/^LIVESRC RESULT: /p' "$R/live_src_20261118.log"); echo "LIVESRC log result line: $r"
+[ "$r" = "$XRES" ] || { echo "RMLC RESULT: STOP - the LIVESRC log's result line is not the one ruled on (9.181); nothing removed"; exit 1; }
+w=$(cut -d' ' -f1 <<< "$(sha256sum < "$D/delta/words_cells.tsv")"); echo "delta/words_cells.tsv sha256 $w (expect $XWC)"
+[ "$w" = "$XWC" ] || { echo "RMLC RESULT: STOP - not the LIVESRC run folder's delta - wrong folder?; nothing removed"; exit 1; }
+n=$(stat -c %s "$T"); echo "the copy: $n bytes (expect $XT_SIZE)"
+[ "$n" = "$XT_SIZE" ] || { echo "RMLC RESULT: STOP - the copy is not the size LIVESRC printed; nothing removed"; exit 1; }
+echo "=== the run folder before ==="
+ls -l --time-style=full-iso "$D"
+k0=$(find "$D" -type f -not -path "$T" -printf '%s %T@ %p\n' | sort)
+c0=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (the quota counts both, DESIGN 9.167)"
+# --- the removal ---
+echo "=== removing live_copy_20261118.db ==="
+rm -- "$T"; rr=$?
+echo "rm exit code: $rr (expect 0)"
+# --- after the removal: every miss is CHECK (nothing to restore - the copy is a throwaway; live is not touched) ---
+bad=0
+[ "$rr" = 0 ] || { echo "CHECK: the rm failed"; bad=1; }
+[ -e "$T" ] && { echo "CHECK: still present: $T"; bad=1; }
+k1=$(find "$D" -type f -printf '%s %T@ %p\n' | sort)
+echo "every other file in the run folder: size and time before = after: $([ "$k1" = "$k0" ] && echo yes || echo NO) ($(wc -l <<< "$k1") files)"
+[ "$k1" = "$k0" ] || { echo "CHECK: the run folder's other files changed:"; diff <(echo "$k0") <(echo "$k1"); bad=1; }
+c1=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+echo "src, built, pre_8b: size and time before = after: $([ "$c1" = "$c0" ] && echo yes || echo NO)"
+[ "$c1" = "$c0" ] || { echo "CHECK: a kept copy changed:"; echo "$c0"; echo "$c1"; bad=1; }
+echo "=== the run folder after ==="
+ls -l --time-style=full-iso "$D"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm1=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use after: $dk1 KB (before $dk0 KB; freed $((dk0 - dk1)) KB); my files in /tmp after: $tm1 bytes"
+echo "home + /tmp after: $(( dk1 + tm1 / 1024 )) KB (what the quota counts; the PA dashboard is the quota's own figure)"
+[ "$bad" = 0 ] || { echo "RMLC RESULT: CHECK - lines above; nothing to restore (throwaway copy) - to the ruling chat as printed"; exit 1; }
+echo "RMLC RESULT: DONE - $(date -u +%FT%TZ) - the copy removed; the run folder's other files kept"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### RMLC reviewed (11/18) — REVIEW: ESCALATE (a delete; §9.90); 0 DEFECT; GAP 1 = XWC not cited from this run's log in the record
+Line for line RMTB with only label, names, figures, the sed pattern, wording and the cited rule changed; XT_SIZE and XRES traced (XRES
+expands to the exact DONE line); no `!`; guards via `<<<` or a file; every STOP before the rm; live only named in -s / -L / -ef. **GAP 1
+answered:** the LIVESRC log's delta file list line, as JP pasted it, now quoted in the "LIVESRC ran" entry above (words_cells.tsv 0 lines
++ header, sha 4963903336…9329). GAP 2 (the "8 other files" is CC's test figure, not declared) — no action; the block compares the
+folder's own list before and after. Reviewer did not check: PA's GNU tools, CC's test results, the LIVESRC log on PA.
