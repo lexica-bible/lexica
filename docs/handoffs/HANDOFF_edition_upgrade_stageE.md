@@ -2,15 +2,17 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.199**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.200**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 night; STEP6AUD RAN — step 6 NOT PASSED, C4 FINDING, §9.199) — open here
 - **STEP6AUD log ruled (§9.199; DR "## The step-6 audit log — RULED"):** every gate PASSED except **C4: built BEYOND allowlist 747 > 671**
   (src 662). Serving deltas + PN-star CLOSED. Count-differs pin = 27c2f790…0a82.
-- **NEXT (CC):** JP copies the run folder + log down read-only (scp → `C:\Users\JP\edition_upgrade_runs\pa\`); CC reads the two
-  phrase-gloss dumps and brings the account of the 173 newly flagged (155 G3756) / 88 cleared + a proposal; plus the read-outs: A9's one
-  anchorable word, src cert check 4's 94 lines, v1 punct-shift 31. The wording call on those rows is JP's.
+- **C4 account + read-outs BROUGHT (§9.200 asks; DR "### C4 account + the three read-outs"; rows in
+  `drafts/STEP6AUD_C4_account_20261119.txt`):** all 173 new rows rest on a STEP4-DELTA2 english cell and are the app edition's own
+  JOINED slots (e.g. `3756-1097` 'I know not'); no built count was ever pre-registered. Proposal: (a) accept + re-pin at swap (CC's pick)
+  or (b) hold for a build change. **NEXT = the ruling chat's ruling on C4, then JP's call on the 671.** The run copy sits at
+  `C:\Users\JP\edition_upgrade_runs\pa\step6_audit_20261119\` — outside the repo, NOT committed (verse text).
 - Still OWED: C4; import_tipnr −57; Split 84 (open by name).
 
 ## SUCCESSOR START (11/19 late; STEP6AUD CLEARED TO RUN, §9.198) — superseded by 11/19 night above

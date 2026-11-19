@@ -15389,3 +15389,64 @@ this log (§9.199 (4)); the count-differs list's pin from now on = first-read sh
 - *A2:* not gated, as ruled; the cover is v2 word-order 0, gated in C3 and PASSED.
 **C4 account of the 173 + proposal:** OWED from a read of the two dumps (`c4_phrase_built.out`, `c4_phrase_src.out`, PA only) — JP copies
 the run folder down read-only (scp, as on 10/25) to `C:\Users\JP\edition_upgrade_runs\pa\`; nothing on PA is written or re-run.
+
+### C4 account + the three read-outs (11/19, CC; for §9.199 / §9.200) — no ruling on C4 yet; the FINDING stands
+**The copy (read for this account only).** JP copied PA's run folder and log down read-only by scp to `C:\Users\JP\edition_upgrade_runs\pa\`
+(`step6_audit_20261119\` + `step6_audit_20261119.log`, sha256 cdac2610…454c; 591 lines by `wc -l`, the RESULT line last — the ruling chat
+counted 592 on the paste). OUTSIDE the repo and NOT committed: the outputs carry verse text. check.py in the copy = 109d95de…3627. Each file
+read here has the line count the log printed for it: c4_phrase_built.out 2,933 (log :49) · c4_phrase_src.out 2,522 (:65) · c1_cert_src.out
+111 (:60) · c3_v1_built.out 36 (:47) · a9_tier2_built.out 212 (:43) · a9_tier2_src.out 212 (:59).
+**Other inputs, each proved by its sha:** STEP4-DELTA2 words_cells = the local copy of the 11/15 delta
+(`C:\Users\JP\edition_upgrade_runs\pa\step4_delta_20261115\delta\words_cells.tsv`) less its two Joh 19:18 @10 lines → 86e44c58…dafc =
+§9.157 (1), re-computed by the script; the frozen app-edition feed, local copy `abp_app_html/abp_app_slots_italic.tsv` (gitignored) →
+7bd77385…cf63 = cert_manifest.json :273-276. Script `docs/handoffs/drafts/STEP6AUD_harness/c4rows.py`; its output, row by row,
+`docs/handoffs/drafts/STEP6AUD_C4_account_20261119.txt` (890 lines, sha256 ec1e2234…90c2; dump lines + the cell values, no verse text).
+**Method.** The FLAGGED sections (built.out :12-791, src.out :12-706) compared as whole printed lines, as the check did → newly flagged 173,
+newly cleared 88 (= check.out). For each row: the STEP4-DELTA2 english cell(s) at its own slots — the HOST cell whose value (built for a new
+row, src for a cleared one) is the flagged gloss, and the ORPHAN cell at host ± 1 — then the feed slot holding both Strong's numbers.
+**(b) The 173 newly flagged — every row rests on at least one english cell of STEP4-DELTA2; none rests on no cell:**
+- 100: host cell AND orphan cell — src split the phrase over the two rows; built has it whole on the function-word row and the content
+  word's row blank (e.g. Gen 27:2, built.out :20: pos 5 'I do not' → 'I know not', pos 6 'know' → blank).
+- 72: host cell only, orphan blank on src and built. 64 of them were flagged on src in the same verse / host / head under the old wording
+  (e.g. Gen 21:26 pos 4 'I do not know' → 'I know not'); 8 were not — the old wording failed the head / dictionary test (e.g. Gen 40:23
+  'remembered not' → 'did not remember').
+- 1: orphan cell only — Joh 10:37 (built.out :632): pos 2 'do' → blank; the host 'I do not' is the same on both.
+- **The feed, all 173:** the app edition prints the host and the orphan as ONE joined slot carrying the whole phrase (e.g. Gen 27:2 slot 5
+  `3756-1097` 'I know not'). 169 at the same reference; 3 at the app's next verse number (Psa 24:4 → app 24:5, 78:38 → 78:39, 118:18 →
+  118:19); Mar 9:18's host is the build's G846 where the app has 1473. The build put the slot's English on the function-word row (155 of the
+  173 hosts are G3756) and left the content word's row blank.
+**The 88 newly cleared — every row rests on a cell** (given, though the stop rule names only new rows; the charter asks the member list of both):
+- 86: host cell only (src's flagged gloss → a new wording on built), orphan blank on both; the feed holds them as one joined slot. On built
+  (read from built.out): 64 are re-flagged under the new wording (the 64 above); 21 still carry the phrase on the function-word row but sit
+  under NO-EVIDENCE — the new verb form fails the dictionary test (e.g. Deu 1:43 'you listened not to'); 1 (Joh 3:18) is flagged under a
+  new head ('believes' for 'trusts').
+- 2: host + orphan cells, orphan blank → filled — Job 32:21, Jer 40:14: the feed has SEPARATE slots there, and built gives the content
+  word its own English.
+**Net.** +85 = 109 new rows with no old counterpart − 24 cleared with none. NOT read: NO-EVIDENCE 1,814 → 2,140 (not gated; not read row
+by row).
+**Pre-registered count on built: NONE in the record.** The charter states the requirement (:169-170, "Pre-register: the count on the built
+copy …"); the only pre-registered phrase-gloss figures are live's (charter §5 :286 "702 raw / 671 beyond allowlist expected"; DESIGN :265,
+live 10/30 693 / 662 / 1,814); the step-6 proposal and block said C4 on built is "measured fresh … not presumed" (DR :14538-14539);
+STEP6AUD gated ≤ 671 and printed built's figure. Also on record: the swap commit re-pins the phrase-gloss allowlist (charter :351-352).
+**(c) CC's proposal — the call is JP's; moving or restating 671 is JP's.**
+- (a) Accept the edition's joined-slot layout for these rows: JP rules the wording acceptable; built's measured 747 with this member account
+  is recorded as the floor's new figure, re-pinned in the swap commit (charter :351-352); the deferred (g) fix (charter :171) names these
+  173 + the 21 NO-EVIDENCE rows in its scope. Cost, stated plainly: on 100 rows the content word's own row had English on src and has none
+  on built (the verse prose is not affected).
+- (b) Hold the swap for a build change that gives the content word's row its own English in these joined slots, then rebuild built and
+  re-run steps 4-6. Splitting "I know not" across two rows is a wording choice, not mechanical — why the charter deferred (g).
+- **CC recommends (a):** every new row is the edition's own joined slot, witnessed in the sha-pinned feed; none comes from anything else.
+**Read-outs, from the copy:**
+- **Src cert check 4** — 94 lines over 70 verses (c1_cert_src.out :7-100). Each matched by verse + position + field to the committed
+  active list `tests/fixtures/corrections/abp_corrections_active_built_20261106.txt` (374 rows; .sha256 OK): 92 EU rows + the 2
+  `S-joh14:26` rows; none outside the list. The record: the EU rows were inserted on src and reached built through the build (DR
+  :10917-10918, §9.153 (1)); the two S-joh14:26 rows were seeded on src and built and applied to built only (Block J, DR :2397-2410). So
+  src's red lines are rows that describe built's values.
+- **v1 punct-shift 31 on built** — no § carries it. c3_v1_built.out :4 total hits 32, :9 punct-shift 31 (+ :36 the content-other Job 3:3);
+  src 0. The v1 tool prints 3 samples per class and has no list-all option (audit_reassembly_diff.py run_report, d34d6723 :333-372). The 3
+  named (:33-35 Exo 22:15, Exo 22:18, Lev 21:5) are members of the 9c 607 file (punct_members_built_20261115.txt :28, :29, :84), and each
+  book's v1 count is ≤ that book's count in the 607 file. The full 31 are not listed; the gated cover is C3's v2 line (unchanged 607, new 0).
+- **A9 anchorable 515,454 → 515,453** — not one word. a9_tier2_built.out against src: Gen 27,486 → 27,484 (:57), Est 3,235 → 3,234 (:59),
+  Jdg 12,967 → 12,968 (:25), Rom 6,310 → 6,311 (:60), net −1. All four books hold swap verses of STEP4-DELTA2's words_moved (local copy sha
+  d32361b3…0f08 = §9.157 (1)): Gen 5:25, 5:26, 34:4 · Est 5:9 · Jdg 11:7 · Rom 9:29 (the other four, 2Ki 23:35, Eze 20:14, Jos 2:4, Jos
+  5:15, show no net book change). Tier 2 prints counts by book only, so no single word can be named from its output.
