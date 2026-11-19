@@ -14092,3 +14092,16 @@ only the missing part prints (the "as run" sha line, the check, the after-checks
 bash ran. The 11/18 cause stays with CAUSE1 (not yet run).
 Kept as they are: the log `~/edition_upgrade_runs/step4_gate_r2_20261118.log` and the run folder. **Step 4 is ruled on the log in the ruling
 chat (§9.191 (3)); the charter text waits for that read.**
+
+### CAUSE1 ran (11/19 00:36:41 UTC) — READ DONE, exit=0 (as JP's screen printed it); to the ruling chat, NOT yet read there
+As printed: tested (uploaded) file sha = XCHK; kept file sha = XK 5754d31e…0808. Kept 347 lines / 18,061 bytes against 346 / 18,060.
+First byte that differs: 14,365, line 273. The kept file's first 272 lines equal the tested file's. In the printout, kept :273-274 read
+`… "dashes", None if t is None else t.count(EM), "built $` / `text", t)$` where the tested file's line 273 is one line, `"built text"`.
+Every other printed line matches the tested file's line one later; no `^M`; the only `M-` bytes are the em dash on :15, as in the tested file.
+**CC's check (local, read-only):** the tested file with ONE line break put after `"built ` on line 273 (column 71 of a 79-byte line)
+gives 347 lines, 18,061 bytes, sha256 5754d31edc082482786523fc68eece31c8cb4fbc5f54aaec160dd224e7530808 = XK, byte for byte. So that one
+added line break is the WHOLE difference between the 11/18 check.py and the tested one.
+**CORRECTION to "### STEP4GATE ran" above:** its "Why" said the heredoc was "cut after its first ~13 lines and jumping to the block's
+last line." That is wrong — it was read from the screen echo, and the kept file is whole except for that one line break. The CAUSE1 test
+(tests file :197) modelled that wrong shape; the block's reads (shas, counts, cmp, leading-line count, full print) do not depend on it.
+How the line break got there is for the ruling chat to read from the printout; CC infers no cause.
