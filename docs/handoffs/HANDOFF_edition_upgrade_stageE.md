@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.194**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.195**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 later; charter §6 STEPS 4 + 5 PASSED, §9.193 + §9.194; next = step 6) — open here
@@ -15,7 +15,12 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   reviewer (CLEAR only if read-only), log to the ruling chat by JP's cat.
 - **11/19 late: step-6 PROPOSAL DRAFTED + REVIEWED** (DR "## Charter §6 step 6 — PROPOSAL"; reviewer ESCALATE, 1 DEFECT + 5 GAP
   answered) — with the ruling chat, Q1–Q7 open (cert pin 374 vs built 375; Job 3:3; count-differs expected set; the §4.8 ASK rows;
-  F-A audit_bracket_order and F-B the L9 lint both read the OLD abp_texts, not built; "= src" gating). Nothing drafted as a block until ruled.
+  F-A audit_bracket_order and F-B the L9 lint both read the OLD abp_texts, not built; "= src" gating).
+- **11/19 later: PROPOSAL RULED (§9.195)** — FORM accepted for drafting + tests (no run cleared); Q1 (a) · Q2 on conditions · Q3 · Q5 (a)
+  · Q6 (a) · Q7. Read-backs in DR "### §9.195 read-backs". **Back to the ruling chat first:** abp_texts is files, not a table, so the
+  "148 unwritten tables" proof cannot exist (proposed guard: cert check 5 + git diff on abp_texts); the serving-delta "G2 covers it" claim
+  withdrawn. **OWED:** import_tipnr −57 read; Split 84 open by name. **NEXT after that answer:** draft STEP6AUD + the check program, test on
+  WSL with a planted positive per detector, reviewer, then the ruling chat for clearance.
 - **WSL test homes:** `~/gate5/home3-5` (built from `~/gate4/repo` at d34d6723 + its test copies; the head of `docs/handoffs/drafts/STEP5INV_tests_20261119.txt`
   shows how — copy scripts/tests/.git + both test dbs into a home, test pre + prep make the guard folder). No sqlite3 tool in WSL —
   write reads in Python.

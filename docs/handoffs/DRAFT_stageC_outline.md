@@ -14414,3 +14414,38 @@ two harnesses equal on the same run. GAP 4 → `--list` dropped from A7. GAP 5 �
 NOTE 1 → Q7. NOTE 2 → health_check cite :144 / :145-150. **NOTE 3 — not verified by the reviewer:** the §4.8 table figures and cites
 (CC traced each to the cited lines, 11/19), the identity splits, CHARTER_rebuild_trap_fix :488-491, rebuild-words :311-315, health_check
 :23 / :296-306. These are checked again before any block is drafted.
+
+### Step-6 PROPOSAL RULED (11/19, §9.195) — FORM accepted for drafting + tests; Q1 (a), Q2 on conditions, Q3, Q5 (a), Q6 (a), Q7 accepted; Q4 nothing closed (five OWED / read in STEP6AUD); no run cleared
+
+### §9.195 read-backs (CC, 11/19, from the repo; nothing run)
+- **Q2 — §9.113's lines, verbatim** (DESIGN :523): "**Ruling 1 (§9.87 punct): 607 is the punct-member figure; 583 superseded** (R2's 23
+  verses + Num 8:26 gone→unchanged, shown member by member; today's built = the 11/6 set exactly). 9c freezes 607 members. Job 3:3
+  content-other stays the open hard-fail." The ruling it carries forward, §9.87 (DESIGN :488), JP 11/4, verbatim: "feed items (Job 3:3, Joh
+  3:15, the " )" set) → follow-up corrections batch with the nine doubled-words, declared in gate 3's record" and "§9.87 stands (Job 3:3, Joh
+  3:15, the nine " )" verses → follow-up corrections batch, FEED-attributed, declared in gate 3's record)". CC's reading: neither wording makes
+  the fix a precondition of step 6 — it sends Job 3:3 to the follow-up batch; "open hard-fail" names its state.
+- **Q6 — abp_texts is NOT a table.** It is 66 text files in the PA checkout (`git ls-files abp_texts` = 66; last commit touching it 63d88808),
+  read by the lint through build_words_from_abp.py :87-91, :302-306. The eu_step "built =" guard covers database tables only, so abp_texts
+  cannot be among its 148 unwritten tables — **this comes back, per §9.195.** What does guard those files: (i) cert check 5 —
+  `cert_manifest.py verify` re-hashes all 66 (feed_files :58-68, "expected 66 ABP files") against cert_manifest.json, red on any change;
+  C1 runs it in the same block; (ii) CC can add `git diff --quiet d34d6723 HEAD -- abp_texts` + the porcelain check on abp_texts to the
+  block's pre-checks. Proposed: both.
+- **Sources for the two figures.** "≤ 671": charter §4.4 :167-168 (the gate text) and :172 "Live before (2026-10-30): … FLAGGED BEYOND
+  allowlist 662 (gate ≤ 671)", from the 10/30 PA read §9.1 (d), log `~/edition_d_phrase_gloss.log` (charter :397) — the charter is a record,
+  not the register; no § line found. 1,849: charter :124-127 "MEASURED 2026-10-30 (PA, census_count_differs.py, first run)", log
+  `~/edition_a_count_differs.log` and members `~/count_differs_members.tsv` (charter :387); JP's Q7 ruling quoted at DESIGN :14-16 ("the 1,849
+  keep the OLD text … censused as a member list"). Neither log's line number is in the repo — STEP6AUD can print each log's own line by grep
+  (read-only) so the gated figure comes from a log line in the same run; otherwise both are read-outs, as §9.195 says.
+- **Q4 serving deltas — the §4.8 row verbatim** (charter :231): "serving deltas +9 / 2,190 / 1,523". Its definition (rebuild-words :235-241):
+  "PRE-REGISTERED serving deltas vs pre-rebuild live … +9 slots gain Greek (saul ×8 → G4549, zacharias ×1 → G2197 …) · 2,190 slots
+  Hebrew→'*' (1,524 lemma-only + 666 surface churn) · 1,523 slots '*'→Hebrew (none-class churn …). Anything outside these three groups at
+  the serving column = HALT." **The G2 line:** §9.193 (3) "G2 PASS (80 + 6 = 86 declared, 86 in the delta)"; DR :14083 (CC's record of the
+  log) "G2 80 + 6 = 86 = 86"; the log line itself is in `~/edition_upgrade_runs/step4_gate_r2_20261118.log` on PA, not in the repo.
+  **Correction to the proposal:** G2 covers built vs src (the serving column moved only at the (ii) list); it does NOT re-derive the three
+  10/25 groups, which measure a rebuild against PRE-rebuild live. Whether built vs src is the right comparison for this lane is the question;
+  CC no longer says G2 "covers" the row.
+- **Q4 lane-3 — DR :3437-3448 verbatim:** "## 8B2A RAN — DONE, ACCEPTED (11/7, 01:28 UTC) … Dry run and apply both `LANE-3 STEP: PASS` fixes
+  (9, 0, 0) · gapfix (6, 0, 0) · fixes2 (7, 0, 0), the same 22 per-verse lines … After: strongs/strongs_base snapshot diff 0 · words 626,309 ·
+  outside rows 625,941 digest 3718e4db unchanged · cells english 35 · english_head 17 · greek_pos 38 · bracket_id 41 · other columns 0 ·
+  built = dry run 18/18 · journal none · `8B2A RESULT: DONE`. **Ruling chat: ACCEPTED.**" Log `~/edition_upgrade_runs/lane3_8b2a_20261106.log`.
+- **Still owed, not done here:** import_tipnr −57 (a read listing or attributing the 57); Split 84 (open by name).
