@@ -1,0 +1,791 @@
+# STEP6AUD tests (11/19, CC, WSL test homes ~/gate6/h3-h5; the block run AS WRITTEN with only the constants below swapped).
+# Harness: docs/handoffs/drafts/STEP6AUD_harness/ (setup_base.sh -> mkfeeds.py + mkdbs.py; mkhome.sh; mkplants.py; mktest.py; run.sh; tstops.sh; t8.sh; final.sh).
+# Base clone = ~/gate4/repo at d34d6723 + ONE test-only commit 4d1f52d6 that re-pins cert_manifest.json over the made-up feeds
+#   ( 1 file changed, 15 insertions(+), 19 deletions(-)); so REF is swapped to it in every test. scripts/ and tests/ = d34d6723.
+# Test copies: the 11/18 made-up pair (~/gate5/home3; 626,309 words / 31,237 verses, rows 'wordN') + lexicon / word_gloss (from
+#   scripts/apfathers/raw/dodson.csv), bdb, lsj, abp_surface (395,003 src / 395,014 built), abp_corrections (built 375 active incl.
+#   the Heb 11:24 @7 spent row; src 374), the Psa 39:1 control rows, a Job 3:3 content-other on both, Hab 3:1 sized to the slots sample.
+# Made-up feeds: Rahlfs (Gen 1:1-3), TAGNT (Mat / Act 1:1-2), a 1-row bh_scrape.db; the local abp_app_slots.tsv is a 3,480-line
+#   SAMPLE (8 chapters), not PA's 10/24 file. So tier 2, the lint + sizing and the census ran for real on made-up inputs: their
+#   output format is real, their figures mean nothing for PA. Their PA-only failure lines (load failed / NOT found / NOT AUDITED
+#   for a missing source) were tested only on HAND-WRITTEN outputs (T8).
+# check program sha256 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627
+
+=============== T1: the block's swapped constants (diff block.sh -> the test block) ===============
+5c5
+< REF=d34d6723
+---
+> REF=4d1f52d6
+34,38c34,38
+< XEL=e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f       # DR :12208; DESIGN 9.171 (6) / 9.173 (1) e540d34d...580f
+< XWC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc       # DESIGN 9.157 (1)
+< XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # DR :12210; DESIGN 9.173 (1)
+< XBH=5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb       # DESIGN 9.161 (1)
+< XCDM_N=1850                                                                # header + 1,849 verses (charter :125; census_count_differs.py :84 writes the header)
+---
+> XEL=1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b       # DR :12208; DESIGN 9.171 (6) / 9.173 (1) e540d34d...580f
+> XWC=5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db       # DESIGN 9.157 (1)
+> XPRO=48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b      # DR :12210; DESIGN 9.173 (1)
+> XBH=fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a       # DESIGN 9.161 (1)
+> XCDM_N=180                                                                # header + 1,849 verses (charter :125; census_count_differs.py :84 writes the header)
+43,44c43,44
+< XA1=177                                                                    # A8 src A1: rebuild-words :189; CHARTER_rebuild_trap_fix :490 (10/25 live copy + rebuild)
+< XT2=92.26%                                                                 # A9 src tier 2: CHARTER_rebuild_trap_fix :489 (10/25)
+---
+> XA1=0                                                                    # A8 src A1: rebuild-words :189; CHARTER_rebuild_trap_fix :490 (10/25 live copy + rebuild)
+> XT2=100.00%                                                                 # A9 src tier 2: CHARTER_rebuild_trap_fix :489 (10/25)
+47,48c47,48
+< XCD=1849; XCDOT=1451; XCDNT=398                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
+< XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 - changed ops 0 - unchanged 607"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
+---
+> XCD=179; XCDOT=156; XCDNT=23                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
+> XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
+
+=============== T1: screen output ===============
+GATE REF 4d1f52d6 - STEP6AUD - charter 6 step 6: the rebuild-words step-6 audits + the S9 block (4.1-4.4) + DESIGN 6 gates 4-6, every audit on built AND src (DESIGN 9.195-9.197) - READ-ONLY: the audits and the check open both copies read-only; writes only its run folder and this log; no database copy - every expect is declared before the run - PA HEAD 4d1f52d6 - 2026-11-19T18:12:38Z
+repo /home/jp/gate6/h4/bible-db - HEAD 4d1f52d6 - REF 4d1f52d6
+repo guards: 4d1f52d6 pulled, an ancestor of HEAD, scripts/tests = 4d1f52d6, nothing uncommitted there
+db /home/jp/gate6/h4/bible-db/bible_edupg_test_20261101.db: 48787456 bytes - no -journal - triggers 0
+db /home/jp/gate6/h4/bible-db/bible_edupg_test_built_20261102.db: 48787456 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate6/h4/edition_upgrade_runs/step6_audit_20261119
+STEP6AUD PRE: OK
+abp_texts (66 tracked files, expect 66), cert_manifest.json, AUDIT_phrase_gloss_allowlist.txt: = 4d1f52d6, nothing changed or added in the checkout (DESIGN 9.196, 9.197)
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (6) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 626309 rows, e6abe45775f6 - dry copy 626309 rows, e6abe45775f6 - = the dry run: yes - vs prep 626309 rows, e6abe45775f6
+written table abp_corrections: built 404 rows, e637fdd7b420 - dry copy 404 rows, e637fdd7b420 - = the dry run: yes - vs prep 404 rows, e637fdd7b420
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP6AUD CHECK: OK
+punct file (9c): sha256 0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056, 607 lines (expect 0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056, 607)
+punct file (live 10/30): sha256 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f, 241 lines (expect 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f, 241)
+eligible file sha256: 1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b (expect 1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b)
+STEP4-DELTA2 words_cells.tsv sha256: 5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db (expect 5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db)
+prose list sha256: 48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b (expect 48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b)
+bh_scrape.db sha256: fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a (expect fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a)
+count-differs member list: sha256 2d1f1b00472c90d3ecbcec7d7aa292d8e6ea7c4f78166a9b8effdeeedb5938d4 (FIRST READ - the pin from now on, DESIGN 9.195 Q3), 180 lines (expect 180)
+slots file abp_app_html/abp_app_slots.tsv: sha256 cf48f25b2040f6616964adcb6558f7270f35732fd58947494cfe9f48703a822c (first read), 3480 lines - TAGNT files: 2
+check.py sha256 (the uploaded file, as copied into the run folder): 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 (expect 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627)
+=== (1) controls - start 2026-11-19T18:12:43Z ===
+  c1_cert_controls: exit 0 - 21 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  a7_flip_control: exit 0 - 5 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_test_reorder_port: exit 0 - 2 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_test_member_diff: exit 0 - 6 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_controls_v1: exit 0 - 8 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_controls_v2: exit 0 - 8 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c2_lint_control: exit 0 - 12 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:50Z
+=== (2) audits on built and src - start 2026-11-19T18:12:50Z ===
+  a1_health_built: exit 0 - 25 lines - 2026-11-19T18:12:50Z -> 2026-11-19T18:21:13Z
+  a2_bracket_built: exit 0 - 21 lines - 2026-11-19T18:21:13Z -> 2026-11-19T18:21:16Z
+  a3_cross_built: exit 0 - 5 lines - 2026-11-19T18:21:16Z -> 2026-11-19T18:21:19Z
+  a4_lord_built: exit 0 - 16 lines - 2026-11-19T18:21:19Z -> 2026-11-19T18:21:19Z
+  a5_funcword_built: exit 0 - 17 lines - 2026-11-19T18:21:19Z -> 2026-11-19T18:21:19Z
+  a6_filler_built: exit 0 - 3 lines - 2026-11-19T18:21:19Z -> 2026-11-19T18:21:19Z
+  a7_flip_built: exit 0 - 8 lines - 2026-11-19T18:21:19Z -> 2026-11-19T18:21:20Z
+  a8_tier1_built: exit 0 - 60 lines - 2026-11-19T18:21:20Z -> 2026-11-19T18:21:21Z
+  a9_tier2_built: exit 0 - 117 lines - 2026-11-19T18:21:21Z -> 2026-11-19T18:21:23Z
+  c1_cert_built: exit 1 - 18 lines - 2026-11-19T18:21:23Z -> 2026-11-19T18:21:34Z
+  c2_lint_built: exit 0 - 28 lines - 2026-11-19T18:21:34Z -> 2026-11-19T18:21:41Z
+  c2_size_built: exit 0 - 164 lines - 2026-11-19T18:21:41Z -> 2026-11-19T18:21:46Z
+  c3_v1_built: exit 0 - 17 lines - 2026-11-19T18:21:46Z -> 2026-11-19T18:21:48Z
+  c3_v2diff_built: exit 1 - 629 lines - 2026-11-19T18:21:48Z -> 2026-11-19T18:21:50Z
+  c4_phrase_built: exit 0 - 15 lines - 2026-11-19T18:21:50Z -> 2026-11-19T18:21:50Z
+  c5_census_built: exit 0 - 18 lines - 2026-11-19T18:21:50Z -> 2026-11-19T18:21:51Z
+  a1_health_src: exit 0 - 25 lines - 2026-11-19T18:21:51Z -> 2026-11-19T18:28:17Z
+  a2_bracket_src: exit 0 - 21 lines - 2026-11-19T18:28:17Z -> 2026-11-19T18:28:19Z
+  a3_cross_src: exit 0 - 5 lines - 2026-11-19T18:28:19Z -> 2026-11-19T18:28:22Z
+  a4_lord_src: exit 0 - 16 lines - 2026-11-19T18:28:22Z -> 2026-11-19T18:28:22Z
+  a5_funcword_src: exit 0 - 17 lines - 2026-11-19T18:28:22Z -> 2026-11-19T18:28:22Z
+  a6_filler_src: exit 0 - 3 lines - 2026-11-19T18:28:22Z -> 2026-11-19T18:28:22Z
+  a7_flip_src: exit 0 - 8 lines - 2026-11-19T18:28:22Z -> 2026-11-19T18:28:23Z
+  a8_tier1_src: exit 0 - 60 lines - 2026-11-19T18:28:23Z -> 2026-11-19T18:28:25Z
+  a9_tier2_src: exit 0 - 117 lines - 2026-11-19T18:28:25Z -> 2026-11-19T18:28:26Z
+  c1_cert_src: exit 1 - 17 lines - 2026-11-19T18:28:26Z -> 2026-11-19T18:28:37Z
+  c2_lint_src: exit 0 - 28 lines - 2026-11-19T18:28:37Z -> 2026-11-19T18:28:43Z
+  c2_size_src: exit 0 - 164 lines - 2026-11-19T18:28:43Z -> 2026-11-19T18:28:48Z
+  c3_v1_src: exit 0 - 17 lines - 2026-11-19T18:28:48Z -> 2026-11-19T18:28:49Z
+  c3_v2diff_src: exit 1 - 629 lines - 2026-11-19T18:28:49Z -> 2026-11-19T18:28:51Z
+  c4_phrase_src: exit 0 - 15 lines - 2026-11-19T18:28:51Z -> 2026-11-19T18:28:51Z
+  c5_census_src: exit 0 - 18 lines - 2026-11-19T18:28:51Z -> 2026-11-19T18:28:53Z
+  c3_v2diff_built_live241: exit 1 - 263 lines - 2026-11-19T18:28:53Z -> 2026-11-19T18:28:55Z
+=== (3) the check - start 2026-11-19T18:28:55Z ===
+check.py sha256 as run: 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 (expect 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627)
+=== inputs ===
+  D = /home/jp/gate6/h4/edition_upgrade_runs/step6_audit_20261119
+  B = /home/jp/gate6/h4/bible-db/bible_edupg_test_built_20261102.db
+  S = /home/jp/gate6/h4/bible-db/bible_edupg_test_20261101.db
+  WC = /home/jp/gate6/h4/edition_upgrade_runs/step4_delta2_20261116/delta/words_cells.tsv
+  PRO = /home/jp/gate6/h4/edition_upgrade_runs/step5_prose_20261101.tsv
+  CDM = /home/jp/gate6/h4/count_differs_members.tsv
+  PGA = /home/jp/gate6/h4/edition_d_phrase_gloss_all.txt
+  PGL = /home/jp/gate6/h4/edition_d_phrase_gloss.log
+  CDL = /home/jp/gate6/h4/edition_a_count_differs.log
+  G4L = /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log
+  BSB = /home/jp/gate6/h4/edition_upgrade_runs/stageB_build_20261102.log
+  BSO = /home/jp/gate6/h4/edition_upgrade_runs/step4_b_standard_20261117/build.out
+  XFLOOR = 395014
+  XACT = 375
+  XPIN = 374
+  XA1 = 0
+  XT2 = 100.00%
+  XMAX = 671
+  X662 = 662
+  XCD = 179
+  XCDOT = 156
+  XCDNT = 23
+  XSELF = V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0
+  XJOB = Job 3:3
+  XJOBSRC = Job 3:3
+  XTAGNT = 2
+=== A1 health_check - built: 0 warning(s), 0 error(s) at --surface-floor=395014; src a read-out (code floor) ===
+  built: 0 warning(s), 0 error(s) - floor checked 395014
+  src: 0 warning(s), 0 error(s) - floor checked 395003
+A1: PASS - gate: built health 0 / 0
+=== A2 audit_bracket_order - READ-OUT, not gated (9.195 Q5 (a)): it compares against the OLD abp_texts ===
+  built: CHIP genuine 0 - CHIP mismatches 0 - PROSE-only 0
+  src: CHIP genuine 0 - CHIP mismatches 0 - PROSE-only 0 (10/25 live: genuine 3, rebuild-words :183)
+  NOT MEASURED on built by this tool: bracket order (the tool reads abp_texts/, the pre-edition text). Cover: v2 word-order 0 on built, gated in C3 below.
+=== A7 control: audit_split_flip --control PASS, exit 0 ===
+=== A3 scan_strongs_cross.py - built: function-anchor 0 (rebuild-words :185); src a read-out ===
+  built: Number-reversal crosses: 0  (function-anchor 0, other 0)  [DB: /home/jp/gate6/h4/bible-db/bible_edupg_test_built_20261102.db]
+  src: Number-reversal crosses: 0  (function-anchor 0, other 0)  [DB: /home/jp/gate6/h4/bible-db/bible_edupg_test_20261101.db]
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+=== A4 audit_lord_strongs.py - built: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185); src a read-out ===
+  built: REPAIRABLE:      0   (capital LORD: 0)
+  src: REPAIRABLE:      0   (capital LORD: 0)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+=== A5 audit_funcword_wrongslot.py - built: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490); src a read-out ===
+  built: REPAIRABLE-NOUN   :      0
+  src: REPAIRABLE-NOUN   :      0
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+=== A6 scan_content_filler_tags.py - built: G2316 0 (rebuild-words :187); src a read-out ===
+  built: G2316: 0 row(s) rendered as filler-only  [DB: /home/jp/gate6/h4/bible-db/bible_edupg_test_built_20261102.db]
+  src: G2316: 0 row(s) rendered as filler-only  [DB: /home/jp/gate6/h4/bible-db/bible_edupg_test_20261101.db]
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+=== A7 audit_split_flip.py - built: flipped pairs 0 (rebuild-words :187-188, MUST be 0); src a read-out ===
+  built: flipped 'the/a + noun' pairs baked in the words table: 0
+  src: flipped 'the/a + noun' pairs baked in the words table: 0
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+=== A8 audit_corpus_tier1 - built A1 = src A1 (same run; 9.195 Q7); src A1 = 0 (rebuild-words :189; CHARTER_rebuild_trap_fix :490) ===
+  built: A1 0
+  src: A1 0
+A8: PASS - gate: A1 built = src; src = 0
+=== A9 audit_corpus_tier2 - built CONFIRMED % = src's (same run; 9.195 Q7); src = 100.00% (CHARTER_rebuild_trap_fix :489); a source-missing line = FINDING ===
+  built: rahlfs=yes tagnt=2 file(s) book=ALL
+  built: CONFIRMED 122 of 122 anchorable = 100.00%
+  src: rahlfs=yes tagnt=2 file(s) book=ALL
+  src: CONFIRMED 122 of 122 anchorable = 100.00%
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+=== C1 cert_invariants - controls all FIRED; built: checks 1-3, 5-7 OK, check 4 red ONLY on its count line (9.195 Q1 (a)) ===
+  controls: ['[FIRED] 1 row pins', '[FIRED] 2 split-flip', '[FIRED] 3 em-dash', '[FIRED] 4 corrections (must NAME the row)', '[FIRED] 7 person/place binding (both directions)', '[FIRED] 7b allowlist: moved counts FIRE, audited counts stay quiet']
+  built abp_corrections active + ingest, read now: 375 (expect 375, DESIGN 9.156 (4))
+  built: 1 CHECK(S) FAILED (6/7 green) - exit 1
+    built [OK] 1 row pins (words/verses)
+    built [OK] 2 split-flip = 0
+    built [OK] 3 em-dash '--' = 0
+    built [FAIL] 4 corrections intact
+        - 375 active correction row(s), pinned 374 (an emptied/edited table would otherwise pass this check silently)
+    built [OK] 5 feed manifest
+    built [OK] 6 backup freshness
+    built [OK] 7 person/place binding
+      built . lane-3 file lane3_star_fixes.json: sha256 e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 = pin
+      built . lane-3 file lane3_star_gapfix.json: sha256 8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 = pin
+      built . lane-3 file lane3_star_fixes2.json: sha256 e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22 = pin
+      built . spent-by-lane-3 rule: ON (47 op cells; declared spent rows: 1)
+      built . spent by lane-3: 1 (declared 1)
+      built . Heb 11:24 pos 7 english: spent by lane-3 — matched lane3_star_fixes2.json op pos 7: old english "of Pharaoh's daughter," -> new english 'daughter,' / head 'daughter' / gpos 2 / bid 2 on G2364
+  src: 1 CHECK(S) FAILED (6/7 green) - exit 1
+    src [OK] 1 row pins (words/verses)
+    src [OK] 2 split-flip = 0
+    src [OK] 3 em-dash '--' = 0
+    src [FAIL] 4 corrections intact
+        - 0 row(s) spent by lane-3, declared 1
+    src [OK] 5 feed manifest
+    src [OK] 6 backup freshness
+    src [OK] 7 person/place binding
+      src . lane-3 file lane3_star_fixes.json: sha256 e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 = pin
+      src . lane-3 file lane3_star_gapfix.json: sha256 8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 = pin
+      src . lane-3 file lane3_star_fixes2.json: sha256 e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22 = pin
+      src . spent-by-lane-3 rule: ON (47 op cells; declared spent rows: 1)
+      src . spent by lane-3: 0 (declared 1)
+  src: a read-out (cert on src not decided, 9.195 Q1)
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+=== C2 lint_split_wrong_slot + size_split_compounds - control PASSED; the two scope counts equal on the same copy (9.195 Q6 (a)); a 'NOT found' reference line = STOP (reviewer GAP 2) ===
+  control: CONTROL PASSED - exit 0 - Rahlfs + TAGNT loaded
+  built: lint RECONCILE 9,092 / 7,731 - sizing 9,092 / 7,731 - equal: yes
+  built: read-outs - content recipients 786 in 745 verses - RAW FLAGS 6 - RESIDUE 0
+  src: lint RECONCILE 9,092 / 7,731 - sizing 9,092 / 7,731 - equal: yes
+  src: read-outs - content recipients 786 in 745 verses - RAW FLAGS 6 - RESIDUE 0
+  NOT MEASURED on built's words (9.195 Q6): the lint and the sizing replay the split over abp_texts/ (the OLD edition); they read only the lexicon + word_gloss from the copy.
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+=== C3 reassembly - tests + controls green; built v2 member diff = the 9c self-diff line exactly (DR :9245, 9.131); content-other exactly [Job 3:3] on built and [Job 3:3] on src (9.195 Q2) ===
+  c3_test_reorder_port: exit 0 - ok  reorder port reproduces the JS baseline on all 137 fixture verses
+  c3_test_member_diff: exit 0 - OK
+  c3_controls_v1: exit 0 - ALL CONTROLS PASSED — fires on defect, quiet on fix + reorder.
+  c3_controls_v2: exit 0 - V2 CONTROLS PASSED.
+  v1 (read-outs):                       src    built    b - s
+  v1 (read-outs): dup-gloss               0        0       +0
+  v1 (read-outs): content-other           1        1       +0
+  v1 (read-outs): punct-shift             0        0       +0
+  v1 (read-outs): total hits              1        1       +0
+  v1 (read-outs): bracket-excluded        0        0       +0
+    built [content-other] Job 3:3      insert: rows[] -> text[zzextra]
+  built: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+  built expect: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+    src [content-other] Job 3:3      insert: rows[] -> text[zzextra]
+  src: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+  read-out, built vs the live 241 file: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 241 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+=== C4 phrase-gloss - CONTROL Psa 39:1 FIRED on both; built BEYOND <= 671 (charter :167-168); a newly flagged row outside the changed-English verses = FINDING (charter :170-171) ===
+  built: CONTROL Psa 39:1 FIRED - FLAGGED 1 - NO-EVIDENCE 0 - allowlisted 0 / 31 - BEYOND allowlist 1
+    built read-out: ⚠ allowlist entr(ies) that no longer fire (drift — investigate): 1Ki 17:20 G4771, 2Sa 1:3 G4771, Act 23:15 G846, Deu 4:7 G846, Eph 5:26 G846, Eze 40:3 G846, Gal 4:17 G846, Jdg 10:4 G846, Jdg 11:24 G846, Job 15:24 G846, Job 33:16 G846, Joh 13:2 G846, Luk 22:4 G846, Mar 11:18 G846, Mar 12:13 G846, Mar 14:25 G846, Mar 14:40 G846, Mar 16:18 G846, Mar 16:7 G846, Mar 1:45 G846, Mar 3:6 G846, Mar 8:22 G846, Mar 9:18 G846, Mar 9:50 G846, Mat 12:14 G846, Mat 22:15 G846, Mat 26:16 G846, Mat 26:29 G846, Mat 26:42 G846, Mat 28:7 G846, Rom 1:19 G846
+  src: CONTROL Psa 39:1 FIRED - FLAGGED 1 - NO-EVIDENCE 0 - allowlisted 0 / 31 - BEYOND allowlist 1
+    src read-out: ⚠ allowlist entr(ies) that no longer fire (drift — investigate): 1Ki 17:20 G4771, 2Sa 1:3 G4771, Act 23:15 G846, Deu 4:7 G846, Eph 5:26 G846, Eze 40:3 G846, Gal 4:17 G846, Jdg 10:4 G846, Jdg 11:24 G846, Job 15:24 G846, Job 33:16 G846, Joh 13:2 G846, Luk 22:4 G846, Mar 11:18 G846, Mar 12:13 G846, Mar 14:25 G846, Mar 14:40 G846, Mar 16:18 G846, Mar 16:7 G846, Mar 1:45 G846, Mar 3:6 G846, Mar 8:22 G846, Mar 9:18 G846, Mar 9:50 G846, Mat 12:14 G846, Mat 22:15 G846, Mat 26:16 G846, Mat 26:29 G846, Mat 26:42 G846, Mat 28:7 G846, Rom 1:19 G846
+  changed-English verses: 3 (english members of STEP4-DELTA2 words_cells: 2 verses; B written: 1)
+  newly flagged on built (not on src): 0
+  newly cleared on built (flagged on src only): 0
+  read-out, src vs the 10/30 live dump (/home/jp/gate6/h4/edition_d_phrase_gloss_all.txt): live 1 - src 1 - on src only 0 - on live only 0
+  the 10/30 log's own line (charter :172: 662) - /home/jp/gate6/h4/edition_d_phrase_gloss.log: 1 line(s)
+    :2   FLAGGED BEYOND allowlist (gate <= 671):    662
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+=== C5 census_count_differs - the verse set EQUALS /home/jp/gate6/h4/count_differs_members.tsv on built AND on src (9.195 Q3) ===
+  the file: 179 verses
+  built: COUNT-DIFFERS verses: 179  (OT 156 · NT 23) - members 179 - = the file: yes
+  src: COUNT-DIFFERS verses: 179  (OT 156 · NT 23) - members 179 - = the file: yes
+  the 10/30 log's own line (charter :125) - /home/jp/gate6/h4/edition_a_count_differs.log: 1 line(s)
+    :2 COUNT-DIFFERS verses: 179  (OT 156 · NT 23)
+C5: PASS - gate: the count-differs set on built and src = the file
+=== R serving deltas: the G2 lines of the step-4 run-2 log (9.197 (2); a missing line = FINDING) ===
+  G2 heading - /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :3 === G2 strongs / strongs_base / morph / lemma / is_pn = the (ii) list ===
+  G2 declared line - /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :4   declared: swap cells 80 + six rows 6 = 86; delta members in these five columns 86 (DESIGN 9.142 (1): 80 + 6 = 86)
+  G2 verdict - /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :5 G2: PASS
+  the delta's strongs_base count (the 26 = 20 + 6) - /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :2   words.strongs_base           26
+=== R PN-star A + B (9.195 Q4): build-pass counters, printed by the build; no database holds them - the build logs' own lines (a missing line = FINDING) ===
+  stage-B build log (the build that made built; 9.161 :45) - /home/jp/gate6/h4/edition_upgrade_runs/stageB_build_20261102.log: 1 line(s)
+    :45   PN-star pass (lane 2): A 1,505 + B 2,552 written (per DECISION — the sizing plan also prints per SLOT), 3,161 refusals (x 1)
+  BSTD build.out (the (b) reproduction from src; 9.173 (1)) - /home/jp/gate6/h4/edition_upgrade_runs/step4_b_standard_20261117/build.out: 1 line(s)
+    :1   PN-star pass (lane 2): A 1,505 + B 2,552 written (per DECISION — the sizing plan also prints per SLOT), 3,161 refusals (x 1)
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 0
+OPEN, named, not passed: Job 3:3 content-other (9.113 ruling 1; 9.195 Q2)
+NOT MEASURED on built by this run: bracket order (A2; cover = v2 word-order 0, C3); 4.2 L9 split (C2, tool health)
+check exit 0 (expect 0; 3 = findings; 2 = an output not as declared or a control that did not fire; 4 = check.py not the pinned bytes) - end 2026-11-19T18:28:55Z
+src, built: size and time before = after: yes
+STEP6AUD CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP6AUD RESULT: PASS - 2026-11-19T18:28:58Z - every gate holds; Job 3:3 content-other named OPEN, not passed; to the ruling chat
+exit=0
+
+=============== T3: the block's swapped constants (diff block.sh -> the test block) ===============
+5c5
+< REF=d34d6723
+---
+> REF=4d1f52d6
+34,38c34,38
+< XEL=e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f       # DR :12208; DESIGN 9.171 (6) / 9.173 (1) e540d34d...580f
+< XWC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc       # DESIGN 9.157 (1)
+< XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # DR :12210; DESIGN 9.173 (1)
+< XBH=5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb       # DESIGN 9.161 (1)
+< XCDM_N=1850                                                                # header + 1,849 verses (charter :125; census_count_differs.py :84 writes the header)
+---
+> XEL=1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b       # DR :12208; DESIGN 9.171 (6) / 9.173 (1) e540d34d...580f
+> XWC=5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db       # DESIGN 9.157 (1)
+> XPRO=48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b      # DR :12210; DESIGN 9.173 (1)
+> XBH=fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a       # DESIGN 9.161 (1)
+> XCDM_N=180                                                                # header + 1,849 verses (charter :125; census_count_differs.py :84 writes the header)
+43,44c43,44
+< XA1=177                                                                    # A8 src A1: rebuild-words :189; CHARTER_rebuild_trap_fix :490 (10/25 live copy + rebuild)
+< XT2=92.26%                                                                 # A9 src tier 2: CHARTER_rebuild_trap_fix :489 (10/25)
+---
+> XA1=0                                                                    # A8 src A1: rebuild-words :189; CHARTER_rebuild_trap_fix :490 (10/25 live copy + rebuild)
+> XT2=100.00%                                                                 # A9 src tier 2: CHARTER_rebuild_trap_fix :489 (10/25)
+47,48c47,48
+< XCD=1849; XCDOT=1451; XCDNT=398                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
+< XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 - changed ops 0 - unchanged 607"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
+---
+> XCD=179; XCDOT=156; XCDNT=23                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
+> XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
+
+--- plants (mkplants.py on h5; the guard re-made on the planted built) ---
+words 626309
+planted: P1 A1 2Ki 1:1 @1 strongs_base '4151'
+planted: P2 A3 2Ki 2:1 @1 G3588 'glory' <-> @2 G1391 'of'
+planted: P3 A4 2Ki 3:1 @1 'the LORD said' on G2036, @2 G2962 empty
+planted: P4 A5 Rom 1:1 @1 G3588 'the son', @2 G5207 empty (N)
+planted: P5 A6 2Ki 4:1 @1 G2316 'of'
+planted: P6 A7/C1 check 2/C3 word-order 2Ki 5:1 rows 'LORD the', text 'the LORD'
+planted: P7 A8 2Ki 6:1-3 @5 G1005 lemma 'zzqqxx'
+planted: P8 A9 Gen 1:2 @3 G1003 -> G2000
+planted: P9 C1 check 4 Exo 1:1 @1 reads 'zzbroken'
+planted: P10 C3 2Ki 7:1 text + 'zzz2'
+planted: P11 C4 2Ki 8:1 G3361 'to not believe' + G4100 empty (outside); P12 Rom 1:2 the same (inside)
+planted: P13 C5 Hab 3:1 one row moved to Jon 1:1
+planted: F1 C4 the 10/30 BEYOND line reads 663; F2 C5 the 10/30 COUNT-DIFFERS line reads 178; F3 R no 'G2:' line; F4 R no PN-star line in build.out
+TESTPREP PRE: OK
+TESTPREP PREP: OK
+=============== T3: screen output ===============
+GATE REF 4d1f52d6 - STEP6AUD - charter 6 step 6: the rebuild-words step-6 audits + the S9 block (4.1-4.4) + DESIGN 6 gates 4-6, every audit on built AND src (DESIGN 9.195-9.197) - READ-ONLY: the audits and the check open both copies read-only; writes only its run folder and this log; no database copy - every expect is declared before the run - PA HEAD 4d1f52d6 - 2026-11-19T18:12:38Z
+repo /home/jp/gate6/h5/bible-db - HEAD 4d1f52d6 - REF 4d1f52d6
+repo guards: 4d1f52d6 pulled, an ancestor of HEAD, scripts/tests = 4d1f52d6, nothing uncommitted there
+db /home/jp/gate6/h5/bible-db/bible_edupg_test_20261101.db: 48787456 bytes - no -journal - triggers 0
+db /home/jp/gate6/h5/bible-db/bible_edupg_test_built_20261102.db: 48787456 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate6/h5/edition_upgrade_runs/step6_audit_20261119
+STEP6AUD PRE: OK
+abp_texts (66 tracked files, expect 66), cert_manifest.json, AUDIT_phrase_gloss_allowlist.txt: = 4d1f52d6, nothing changed or added in the checkout (DESIGN 9.196, 9.197)
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (6) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 626309 rows, 345814721e90 - dry copy 626309 rows, 345814721e90 - = the dry run: yes - vs prep 626309 rows, 345814721e90
+written table abp_corrections: built 404 rows, e637fdd7b420 - dry copy 404 rows, e637fdd7b420 - = the dry run: yes - vs prep 404 rows, e637fdd7b420
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP6AUD CHECK: OK
+punct file (9c): sha256 0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056, 607 lines (expect 0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056, 607)
+punct file (live 10/30): sha256 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f, 241 lines (expect 2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f, 241)
+eligible file sha256: 1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b (expect 1df036500553069b415dd02aa250220b421e05b1c77be671be796dcfdae6f60b)
+STEP4-DELTA2 words_cells.tsv sha256: 5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db (expect 5dfb03abbc5afd0a5894cce25c32e0b0e4c70fccae3475ecb31712ea9aca40db)
+prose list sha256: 48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b (expect 48a4996ecf88d9c5f458acbded22787433e9c37e66db5bf2202119ebe7dc797b)
+bh_scrape.db sha256: fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a (expect fbc24703e58bc70eba47e4276b48045853a09180c03831c8adeda8a7ef18dc1a)
+count-differs member list: sha256 2d1f1b00472c90d3ecbcec7d7aa292d8e6ea7c4f78166a9b8effdeeedb5938d4 (FIRST READ - the pin from now on, DESIGN 9.195 Q3), 180 lines (expect 180)
+slots file abp_app_html/abp_app_slots.tsv: sha256 cf48f25b2040f6616964adcb6558f7270f35732fd58947494cfe9f48703a822c (first read), 3480 lines - TAGNT files: 2
+check.py sha256 (the uploaded file, as copied into the run folder): 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 (expect 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627)
+=== (1) controls - start 2026-11-19T18:12:43Z ===
+  c1_cert_controls: exit 0 - 21 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  a7_flip_control: exit 0 - 5 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_test_reorder_port: exit 0 - 2 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_test_member_diff: exit 0 - 6 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_controls_v1: exit 0 - 8 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c3_controls_v2: exit 0 - 8 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:43Z
+  c2_lint_control: exit 0 - 12 lines - 2026-11-19T18:12:43Z -> 2026-11-19T18:12:50Z
+=== (2) audits on built and src - start 2026-11-19T18:12:50Z ===
+  a1_health_built: exit 0 - 25 lines - 2026-11-19T18:12:50Z -> 2026-11-19T18:19:40Z
+  a2_bracket_built: exit 0 - 21 lines - 2026-11-19T18:19:40Z -> 2026-11-19T18:19:42Z
+  a3_cross_built: exit 0 - 8 lines - 2026-11-19T18:19:43Z -> 2026-11-19T18:19:45Z
+  a4_lord_built: exit 0 - 19 lines - 2026-11-19T18:19:45Z -> 2026-11-19T18:19:45Z
+  a5_funcword_built: exit 0 - 23 lines - 2026-11-19T18:19:45Z -> 2026-11-19T18:19:45Z
+  a6_filler_built: exit 0 - 5 lines - 2026-11-19T18:19:45Z -> 2026-11-19T18:19:45Z
+  a7_flip_built: exit 0 - 9 lines - 2026-11-19T18:19:45Z -> 2026-11-19T18:19:47Z
+  a8_tier1_built: exit 0 - 65 lines - 2026-11-19T18:19:47Z -> 2026-11-19T18:19:48Z
+  a9_tier2_built: exit 0 - 118 lines - 2026-11-19T18:19:48Z -> 2026-11-19T18:19:50Z
+  c1_cert_built: exit 1 - 20 lines - 2026-11-19T18:19:50Z -> 2026-11-19T18:20:01Z
+  c2_lint_built: exit 0 - 28 lines - 2026-11-19T18:20:01Z -> 2026-11-19T18:20:08Z
+  c2_size_built: exit 0 - 164 lines - 2026-11-19T18:20:08Z -> 2026-11-19T18:20:13Z
+  c3_v1_built: exit 0 - 19 lines - 2026-11-19T18:20:13Z -> 2026-11-19T18:20:15Z
+  c3_v2diff_built: exit 1 - 631 lines - 2026-11-19T18:20:15Z -> 2026-11-19T18:20:17Z
+  c4_phrase_built: exit 0 - 18 lines - 2026-11-19T18:20:17Z -> 2026-11-19T18:20:17Z
+  c5_census_built: exit 0 - 18 lines - 2026-11-19T18:20:17Z -> 2026-11-19T18:20:19Z
+  a1_health_src: exit 0 - 25 lines - 2026-11-19T18:20:19Z -> 2026-11-19T18:27:01Z
+  a2_bracket_src: exit 0 - 21 lines - 2026-11-19T18:27:01Z -> 2026-11-19T18:27:04Z
+  a3_cross_src: exit 0 - 5 lines - 2026-11-19T18:27:04Z -> 2026-11-19T18:27:07Z
+  a4_lord_src: exit 0 - 16 lines - 2026-11-19T18:27:07Z -> 2026-11-19T18:27:07Z
+  a5_funcword_src: exit 0 - 17 lines - 2026-11-19T18:27:07Z -> 2026-11-19T18:27:07Z
+  a6_filler_src: exit 0 - 3 lines - 2026-11-19T18:27:07Z -> 2026-11-19T18:27:07Z
+  a7_flip_src: exit 0 - 8 lines - 2026-11-19T18:27:07Z -> 2026-11-19T18:27:08Z
+  a8_tier1_src: exit 0 - 60 lines - 2026-11-19T18:27:08Z -> 2026-11-19T18:27:10Z
+  a9_tier2_src: exit 0 - 117 lines - 2026-11-19T18:27:10Z -> 2026-11-19T18:27:11Z
+  c1_cert_src: exit 1 - 17 lines - 2026-11-19T18:27:11Z -> 2026-11-19T18:27:22Z
+  c2_lint_src: exit 0 - 28 lines - 2026-11-19T18:27:22Z -> 2026-11-19T18:27:29Z
+  c2_size_src: exit 0 - 164 lines - 2026-11-19T18:27:29Z -> 2026-11-19T18:27:34Z
+  c3_v1_src: exit 0 - 17 lines - 2026-11-19T18:27:34Z -> 2026-11-19T18:27:36Z
+  c3_v2diff_src: exit 1 - 629 lines - 2026-11-19T18:27:36Z -> 2026-11-19T18:27:38Z
+  c4_phrase_src: exit 0 - 15 lines - 2026-11-19T18:27:38Z -> 2026-11-19T18:27:38Z
+  c5_census_src: exit 0 - 18 lines - 2026-11-19T18:27:38Z -> 2026-11-19T18:27:40Z
+  c3_v2diff_built_live241: exit 1 - 265 lines - 2026-11-19T18:27:40Z -> 2026-11-19T18:27:42Z
+=== (3) the check - start 2026-11-19T18:27:42Z ===
+check.py sha256 as run: 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 (expect 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627)
+=== inputs ===
+  D = /home/jp/gate6/h5/edition_upgrade_runs/step6_audit_20261119
+  B = /home/jp/gate6/h5/bible-db/bible_edupg_test_built_20261102.db
+  S = /home/jp/gate6/h5/bible-db/bible_edupg_test_20261101.db
+  WC = /home/jp/gate6/h5/edition_upgrade_runs/step4_delta2_20261116/delta/words_cells.tsv
+  PRO = /home/jp/gate6/h5/edition_upgrade_runs/step5_prose_20261101.tsv
+  CDM = /home/jp/gate6/h5/count_differs_members.tsv
+  PGA = /home/jp/gate6/h5/edition_d_phrase_gloss_all.txt
+  PGL = /home/jp/gate6/h5/edition_d_phrase_gloss.log
+  CDL = /home/jp/gate6/h5/edition_a_count_differs.log
+  G4L = /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log
+  BSB = /home/jp/gate6/h5/edition_upgrade_runs/stageB_build_20261102.log
+  BSO = /home/jp/gate6/h5/edition_upgrade_runs/step4_b_standard_20261117/build.out
+  XFLOOR = 395014
+  XACT = 375
+  XPIN = 374
+  XA1 = 0
+  XT2 = 100.00%
+  XMAX = 671
+  X662 = 662
+  XCD = 179
+  XCDOT = 156
+  XCDNT = 23
+  XSELF = V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0
+  XJOB = Job 3:3
+  XJOBSRC = Job 3:3
+  XTAGNT = 2
+=== A1 health_check - built: 0 warning(s), 0 error(s) at --surface-floor=395014; src a read-out (code floor) ===
+  built: 1 warning(s), 0 error(s) - floor checked 395014
+    built: [WARN] bare (unprefixed) strongs_base  [INVARIANT]: 1
+  FINDING A1: built health: 1 warning(s), 0 error(s) (expect 0 / 0; lines above)
+  src: 0 warning(s), 0 error(s) - floor checked 395003
+A1: FINDING (1) - gate: built health 0 / 0
+=== A2 audit_bracket_order - READ-OUT, not gated (9.195 Q5 (a)): it compares against the OLD abp_texts ===
+  built: CHIP genuine 0 - CHIP mismatches 0 - PROSE-only 0
+  src: CHIP genuine 0 - CHIP mismatches 0 - PROSE-only 0 (10/25 live: genuine 3, rebuild-words :183)
+  NOT MEASURED on built by this tool: bracket order (the tool reads abp_texts/, the pre-edition text). Cover: v2 word-order 0 on built, gated in C3 below.
+=== A7 control: audit_split_flip --control PASS, exit 0 ===
+=== A3 scan_strongs_cross.py - built: function-anchor 0 (rebuild-words :185); src a read-out ===
+  built: Number-reversal crosses: 1  (function-anchor 1, other 0)  [DB: /home/jp/gate6/h5/bible-db/bible_edupg_test_built_20261102.db]
+  FINDING A3: built: 1 (expect 0)
+      2Ki 2:1      pos  1 G3588  eng='glory'        <-> pos  2 G1391  eng='of'
+  src: Number-reversal crosses: 0  (function-anchor 0, other 0)  [DB: /home/jp/gate6/h5/bible-db/bible_edupg_test_20261101.db]
+A3: FINDING (1) - gate: function-anchor 0 (rebuild-words :185)
+=== A4 audit_lord_strongs.py - built: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185); src a read-out ===
+  built: REPAIRABLE:      1   (capital LORD: 1)
+  FINDING A4: built: 1 (expect 0)
+          2Ki 3:1      | G2036   | V.X1     | 'the LORD said'                          | move='the LORD' keep='said'
+  src: REPAIRABLE:      0   (capital LORD: 0)
+A4: FINDING (1) - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+=== A5 audit_funcword_wrongslot.py - built: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490); src a read-out ===
+  built: REPAIRABLE-NOUN   :      1
+  FINDING A5: built: 1 (expect 0)
+          Rom 1:1      | G3588   | 'son'        | 'the son'                | orphan[+1]=G5207 pos=N def='a son, descendent'
+  src: REPAIRABLE-NOUN   :      0
+A5: FINDING (1) - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+=== A6 scan_content_filler_tags.py - built: G2316 0 (rebuild-words :187); src a read-out ===
+  built: G2316: 1 row(s) rendered as filler-only  [DB: /home/jp/gate6/h5/bible-db/bible_edupg_test_built_20261102.db]
+  FINDING A6: built: 1 (expect 0)
+    
+      2Ki 4:1        eng='of'           brk=None
+           >>G2316='of'  |    G1002='word2'
+  src: G2316: 0 row(s) rendered as filler-only  [DB: /home/jp/gate6/h5/bible-db/bible_edupg_test_20261101.db]
+A6: FINDING (1) - gate: G2316 0 (rebuild-words :187)
+=== A7 audit_split_flip.py - built: flipped pairs 0 (rebuild-words :187-188, MUST be 0); src a read-out ===
+  built: flipped 'the/a + noun' pairs baked in the words table: 1
+  FINDING A7: built: 1 (expect 0)
+    (audit_split_flip prints no member list without --list; cert check 2 names the first)
+  src: flipped 'the/a + noun' pairs baked in the words table: 0
+A7: FINDING (1) - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+=== A8 audit_corpus_tier1 - built A1 = src A1 (same run; 9.195 Q7); src A1 = 0 (rebuild-words :189; CHARTER_rebuild_trap_fix :490) ===
+  built: A1 3
+  src: A1 0
+  FINDING A8: built A1 3 != src A1 0
+    built: │          · Gen 1:1  G1005 (VERB, edit=6): words.lemma='zzqqxx' vs lexicon='lem1005'  (×3)
+A8: FINDING (1) - gate: A1 built = src; src = 0
+=== A9 audit_corpus_tier2 - built CONFIRMED % = src's (same run; 9.195 Q7); src = 100.00% (CHARTER_rebuild_trap_fix :489); a source-missing line = FINDING ===
+  built: rahlfs=yes tagnt=2 file(s) book=ALL
+  built: CONFIRMED 121 of 122 anchorable = 99.18%
+  src: rahlfs=yes tagnt=2 file(s) book=ALL
+  src: CONFIRMED 122 of 122 anchorable = 100.00%
+  FINDING A9: built CONFIRMED 99.18% != src 100.00%
+A9: FINDING (1) - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+=== C1 cert_invariants - controls all FIRED; built: checks 1-3, 5-7 OK, check 4 red ONLY on its count line (9.195 Q1 (a)) ===
+  controls: ['[FIRED] 1 row pins', '[FIRED] 2 split-flip', '[FIRED] 3 em-dash', '[FIRED] 4 corrections (must NAME the row)', '[FIRED] 7 person/place binding (both directions)', '[FIRED] 7b allowlist: moved counts FIRE, audited counts stay quiet']
+  built abp_corrections active + ingest, read now: 375 (expect 375, DESIGN 9.156 (4))
+  built: 2 CHECK(S) FAILED (5/7 green) - exit 1
+    built [OK] 1 row pins (words/verses)
+    built [FAIL] 2 split-flip = 0
+        - 1 flipped pair(s), e.g. 2Ki 5:1 stored 'LORD the'
+    built [OK] 3 em-dash '--' = 0
+    built [FAIL] 4 corrections intact
+        - 375 active correction row(s), pinned 374 (an emptied/edited table would otherwise pass this check silently)
+        - Exo 1:1 pos 1 english: reads 'zzbroken', certified value is 'word1' (source was 'old')
+    built [OK] 5 feed manifest
+    built [OK] 6 backup freshness
+    built [OK] 7 person/place binding
+      built . lane-3 file lane3_star_fixes.json: sha256 e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 = pin
+      built . lane-3 file lane3_star_gapfix.json: sha256 8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 = pin
+      built . lane-3 file lane3_star_fixes2.json: sha256 e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22 = pin
+      built . spent-by-lane-3 rule: ON (47 op cells; declared spent rows: 1)
+      built . spent by lane-3: 1 (declared 1)
+      built . Heb 11:24 pos 7 english: spent by lane-3 — matched lane3_star_fixes2.json op pos 7: old english "of Pharaoh's daughter," -> new english 'daughter,' / head 'daughter' / gpos 2 / bid 2 on G2364
+  FINDING C1: check 2 split-flip = 0 red: ["1 flipped pair(s), e.g. 2Ki 5:1 stored 'LORD the'"]
+  FINDING C1: check 4 is not exactly the one declared red line '375 active correction row(s), pinned 374 (an emptied/edited table would otherwise pass this check silently)': FAIL ['375 active correction row(s), pinned 374 (an emptied/edited table would otherwise pass this check silently)', "Exo 1:1 pos 1 english: reads 'zzbroken', certified value is 'word1' (source was 'old')"]
+  FINDING C1: built summary '2 CHECK(S) FAILED (5/7 green)' exit 1 (expect '1 CHECK(S) FAILED (6/7 green)', exit 1)
+  src: 1 CHECK(S) FAILED (6/7 green) - exit 1
+    src [OK] 1 row pins (words/verses)
+    src [OK] 2 split-flip = 0
+    src [OK] 3 em-dash '--' = 0
+    src [FAIL] 4 corrections intact
+        - 0 row(s) spent by lane-3, declared 1
+    src [OK] 5 feed manifest
+    src [OK] 6 backup freshness
+    src [OK] 7 person/place binding
+      src . lane-3 file lane3_star_fixes.json: sha256 e8942de0cf5df9b998568f70ef66042b1c968564e8fb5781526887532dd98948 = pin
+      src . lane-3 file lane3_star_gapfix.json: sha256 8c8ad0afc76468eb3f32c1c3419a0ea30d10650d5c448365dcc86d746b6d36b2 = pin
+      src . lane-3 file lane3_star_fixes2.json: sha256 e6a7efc762ff5185f4cab2983dada481955f7aab92ca417d516703182c042b22 = pin
+      src . spent-by-lane-3 rule: ON (47 op cells; declared spent rows: 1)
+      src . spent by lane-3: 0 (declared 1)
+  src: a read-out (cert on src not decided, 9.195 Q1)
+C1: FINDING (3) - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+=== C2 lint_split_wrong_slot + size_split_compounds - control PASSED; the two scope counts equal on the same copy (9.195 Q6 (a)); a 'NOT found' reference line = STOP (reviewer GAP 2) ===
+  control: CONTROL PASSED - exit 0 - Rahlfs + TAGNT loaded
+  built: lint RECONCILE 9,092 / 7,731 - sizing 9,092 / 7,731 - equal: yes
+  built: read-outs - content recipients 786 in 745 verses - RAW FLAGS 6 - RESIDUE 0
+  src: lint RECONCILE 9,092 / 7,731 - sizing 9,092 / 7,731 - equal: yes
+  src: read-outs - content recipients 786 in 745 verses - RAW FLAGS 6 - RESIDUE 0
+  NOT MEASURED on built's words (9.195 Q6): the lint and the sizing replay the split over abp_texts/ (the OLD edition); they read only the lexicon + word_gloss from the copy.
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+=== C3 reassembly - tests + controls green; built v2 member diff = the 9c self-diff line exactly (DR :9245, 9.131); content-other exactly [Job 3:3] on built and [Job 3:3] on src (9.195 Q2) ===
+  c3_test_reorder_port: exit 0 - ok  reorder port reproduces the JS baseline on all 137 fixture verses
+  c3_test_member_diff: exit 0 - OK
+  c3_controls_v1: exit 0 - ALL CONTROLS PASSED — fires on defect, quiet on fix + reorder.
+  c3_controls_v2: exit 0 - V2 CONTROLS PASSED.
+  v1 (read-outs):                       src    built    b - s
+  v1 (read-outs): dup-gloss               0        0       +0
+  v1 (read-outs): content-other           1        2       +1
+  v1 (read-outs): punct-shift             0        0       +0
+  v1 (read-outs): total hits              1        2       +1
+  v1 (read-outs): bracket-excluded        0        0       +0
+    built [word-order   ] 2Ki 5:1      insert: rows[] -> text[the] ; delete: rows[the] -> text[]
+    built [content-other] 2Ki 7:1      insert: rows[] -> text[zzz2]
+    built [content-other] Job 3:3      insert: rows[] -> text[zzextra]
+  built: V2 MEMBER DIFF: FAIL - word-order 1 - content-other 2 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+  built expect: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+  FINDING C3: built V2 MEMBER DIFF line / exit is not the 9c self-diff's (lines above)
+  FINDING C3: built word-order is not 0 (the cover named for bracket order, 9.195 Q5)
+  FINDING C3: built content-other members ['2Ki 7:1', 'Job 3:3'] (expect exactly ['Job 3:3'], 9.195 Q2)
+    src [content-other] Job 3:3      insert: rows[] -> text[zzextra]
+  src: V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 607 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+  read-out, built vs the live 241 file: V2 MEMBER DIFF: FAIL - word-order 1 - content-other 2 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 241 - new on eligible 0 - changed ops 0 - unchanged 0 - exit 1
+C3: FINDING (3) - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+=== C4 phrase-gloss - CONTROL Psa 39:1 FIRED on both; built BEYOND <= 671 (charter :167-168); a newly flagged row outside the changed-English verses = FINDING (charter :170-171) ===
+  built: CONTROL Psa 39:1 FIRED - FLAGGED 4 - NO-EVIDENCE 0 - allowlisted 0 / 31 - BEYOND allowlist 4
+    built read-out: ⚠ allowlist entr(ies) that no longer fire (drift — investigate): 1Ki 17:20 G4771, 2Sa 1:3 G4771, Act 23:15 G846, Deu 4:7 G846, Eph 5:26 G846, Eze 40:3 G846, Gal 4:17 G846, Jdg 10:4 G846, Jdg 11:24 G846, Job 15:24 G846, Job 33:16 G846, Joh 13:2 G846, Luk 22:4 G846, Mar 11:18 G846, Mar 12:13 G846, Mar 14:25 G846, Mar 14:40 G846, Mar 16:18 G846, Mar 16:7 G846, Mar 1:45 G846, Mar 3:6 G846, Mar 8:22 G846, Mar 9:18 G846, Mar 9:50 G846, Mat 12:14 G846, Mat 22:15 G846, Mat 26:16 G846, Mat 26:29 G846, Mat 26:42 G846, Mat 28:7 G846, Rom 1:19 G846
+  src: CONTROL Psa 39:1 FIRED - FLAGGED 1 - NO-EVIDENCE 0 - allowlisted 0 / 31 - BEYOND allowlist 1
+    src read-out: ⚠ allowlist entr(ies) that no longer fire (drift — investigate): 1Ki 17:20 G4771, 2Sa 1:3 G4771, Act 23:15 G846, Deu 4:7 G846, Eph 5:26 G846, Eze 40:3 G846, Gal 4:17 G846, Jdg 10:4 G846, Jdg 11:24 G846, Job 15:24 G846, Job 33:16 G846, Joh 13:2 G846, Luk 22:4 G846, Mar 11:18 G846, Mar 12:13 G846, Mar 14:25 G846, Mar 14:40 G846, Mar 16:18 G846, Mar 16:7 G846, Mar 1:45 G846, Mar 3:6 G846, Mar 8:22 G846, Mar 9:18 G846, Mar 9:50 G846, Mat 12:14 G846, Mat 22:15 G846, Mat 26:16 G846, Mat 26:29 G846, Mat 26:42 G846, Mat 28:7 G846, Rom 1:19 G846
+  changed-English verses: 3 (english members of STEP4-DELTA2 words_cells: 2 verses; B written: 1)
+  newly flagged on built (not on src): 3
+    [new NOT a changed-English verse] 2Ki 8:1      | G3361   | 'believe'    | 'to not believe'           | orphan[+1]=G4100
+  FINDING C4: newly flagged outside the changed-English verses: 2Ki 8:1      | G3361   | 'believe'    | 'to not believe'           | orphan[+1]=G4100
+    [new changed-English] Rom 1:1      | G3588   | 'son'        | 'the son'                  | orphan[+1]=G5207
+    [new changed-English] Rom 1:2      | G3361   | 'believe'    | 'to not believe'           | orphan[+1]=G4100
+  newly cleared on built (flagged on src only): 0
+  read-out, src vs the 10/30 live dump (/home/jp/gate6/h5/edition_d_phrase_gloss_all.txt): live 1 - src 1 - on src only 0 - on live only 0
+  the 10/30 log's own line (charter :172: 662) - /home/jp/gate6/h5/edition_d_phrase_gloss.log: 1 line(s)
+    :1   FLAGGED BEYOND allowlist (gate <= 671):    663
+  FINDING C4: the 10/30 log :1 does not read 662: '  FLAGGED BEYOND allowlist (gate <= 671):    663' (a read-out for this run)
+C4: FINDING (2) - gate: control FIRED on both; built BEYOND 4 <= 671; no newly flagged row outside the changed-English verses
+=== C5 census_count_differs - the verse set EQUALS /home/jp/gate6/h5/count_differs_members.tsv on built AND on src (9.195 Q3) ===
+  the file: 179 verses
+  built: COUNT-DIFFERS verses: 180  (OT 157 · NT 23) - members 180 - = the file: NO
+  FINDING C5: built: count-differs verse NOT in the file: Hab 3 1
+  src: COUNT-DIFFERS verses: 179  (OT 156 · NT 23) - members 179 - = the file: yes
+  the 10/30 log's own line (charter :125) - /home/jp/gate6/h5/edition_a_count_differs.log: 1 line(s)
+    :2 COUNT-DIFFERS verses: 178  (OT 156 · NT 23)
+  FINDING C5: the 10/30 log :2 does not read 179 (OT 156, NT 23): 'COUNT-DIFFERS verses: 178  (OT 156 · NT 23)' (a read-out for this run)
+C5: FINDING (2) - gate: the count-differs set on built and src = the file
+=== R serving deltas: the G2 lines of the step-4 run-2 log (9.197 (2); a missing line = FINDING) ===
+  G2 heading - /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :3 === G2 strongs / strongs_base / morph / lemma / is_pn = the (ii) list ===
+  G2 declared line - /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :4   declared: swap cells 80 + six rows 6 = 86; delta members in these five columns 86 (DESIGN 9.142 (1): 80 + 6 = 86)
+  G2 verdict - /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log: 0 line(s)
+  FINDING R: G2 verdict: no line in /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log
+  the delta's strongs_base count (the 26 = 20 + 6) - /home/jp/gate6/h5/edition_upgrade_runs/step4_gate_r2_20261118.log: 1 line(s)
+    :2   words.strongs_base           26
+=== R PN-star A + B (9.195 Q4): build-pass counters, printed by the build; no database holds them - the build logs' own lines (a missing line = FINDING) ===
+  stage-B build log (the build that made built; 9.161 :45) - /home/jp/gate6/h5/edition_upgrade_runs/stageB_build_20261102.log: 1 line(s)
+    :45   PN-star pass (lane 2): A 1,505 + B 2,552 written (per DECISION — the sizing plan also prints per SLOT), 3,161 refusals (x 1)
+  BSTD build.out (the (b) reproduction from src; 9.173 (1)) - /home/jp/gate6/h5/edition_upgrade_runs/step4_b_standard_20261117/build.out: 0 line(s)
+  FINDING R: no PN-star line in /home/jp/gate6/h5/edition_upgrade_runs/step4_b_standard_20261117/build.out
+R: FINDING (2) - gate: the asked-for log lines printed
+FINDINGS: 20 (A1 1, A3 1, A4 1, A5 1, A6 1, A7 1, A8 1, A9 1, C1 3, C3 3, C4 2, C5 2, R 2)
+OPEN, named, not passed: Job 3:3 content-other (9.113 ruling 1; 9.195 Q2)
+NOT MEASURED on built by this run: bracket order (A2; cover = v2 word-order 0, C3); 4.2 L9 split (C2, tool health)
+check exit 3 (expect 0; 3 = findings; 2 = an output not as declared or a control that did not fire; 4 = check.py not the pinned bytes) - end 2026-11-19T18:27:42Z
+src, built: size and time before = after: yes
+STEP6AUD CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP6AUD RESULT: FINDING - 2026-11-19T18:27:46Z - the findings above (and /home/jp/gate6/h5/edition_upgrade_runs/step6_audit_20261119/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== T2 re-paste (h4) ===============
+STEP6AUD RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gate6/h4/edition_upgrade_runs/step6_audit_20261119.log
+(exit 0)
+
+=============== STOP tests (h3) ===============
+=============== T4 the uploaded check program missing -> STOP after pre, nothing read ===============
+abp_texts (66 tracked files, expect 66), cert_manifest.json, AUDIT_phrase_gloss_allowlist.txt: = 4d1f52d6, nothing changed or added in the checkout (DESIGN 9.196, 9.197)
+STEP6AUD RESULT: STOP - missing or empty: /home/jp/gate6/h3/edition_upgrade_runs/step6aud_check_20261119.py
+exit=1
+
+=============== T5 the uploaded check program with one line break added inside a string -> STOP at its sha, no audit run ===============
+check.py sha256 (the uploaded file, as copied into the run folder): f3235355d008643eb5573a8b5fc4f7cb0d5770f44a2e32abee09fa0c3096e415 (expect 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627)
+STEP6AUD RESULT: STOP - the uploaded check program is not the file CC wrote and tested
+exit=1
+check.py 
+=============== T6 built changed after the guard was made -> CHECK FAIL, STOP ===============
+repo scripts/tests: clean (expect clean)
+STEP6AUD CHECK: FAIL - words on built differs from the dry run
+STEP6AUD RESULT: STOP - built is not HEADFIX2's result (lines above)
+exit=1
+
+=============== T7 abp_texts changed in the checkout -> STOP (git diff / porcelain) ===============
+STEP6AUD RESULT: STOP - abp_texts / cert_manifest.json / the allowlist changed or added in the checkout:  M abp_texts/abp_ot_texts/abp_genesis.txt
+exit=1
+
+=============== T7b an untracked file in abp_texts -> STOP (porcelain) ===============
+STEP6AUD RESULT: STOP - abp_texts / cert_manifest.json / the allowlist changed or added in the checkout: ?? abp_texts/abp_ot_texts/abp_extra.txt
+exit=1
+
+=============== T7c cert_manifest.json edited -> STOP ===============
+STEP6AUD RESULT: STOP - abp_texts / cert_manifest.json / the allowlist changed or added in the checkout:  M cert_manifest.json
+exit=1
+
+=============== T7d the count-differs member list one verse short -> STOP ===============
+count-differs member list: sha256 e5e0384bc5236cf5b223e87606803f092236916df7828452660d6229fd0444e9 (FIRST READ - the pin from now on, DESIGN 9.195 Q3), 179 lines (expect 180)
+STEP6AUD RESULT: STOP - the member list is not 1,849 verses + header
+exit=1
+
+
+=============== T8: the check program alone through the block's launcher, one hand-edited output per case (h4) ===============
+=============== T8 tier2_source_missing: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+  FINDING A9: built: a reference source missing in the header (expect rahlfs=yes, tagnt=2, book=ALL)
+  FINDING A9: built: !! TAGNT load failed: [Errno 2] (hand-written)
+  FINDING A9: built: a book not audited for a missing source: │   Rev     12000 words   (no --tagnt)
+  FINDING A9: NOT AUDITED books differ: built [('Rev', 'no --tagnt')] - src []
+A9: FINDING (4) - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+C5: PASS - gate: the count-differs set on built and src = the file
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 4 (A9 4)
+=============== T8 lint_rahlfs_not_found: check exit 2 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+STOP: c2_lint_src: Rahlfs: NOT found — OT input will differ from production
+<string>:1: DeprecationWarning: 'count' is passed as positional argument
+=============== T8 sizing_scope_differs: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+  FINDING C2: built: lint RECONCILE (9092, 7731) != sizing (9093, 7731)
+C2: FINDING (1) - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+C5: PASS - gate: the count-differs set on built and src = the file
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 1 (C2 1)
+=============== T8 phrase_control_missed: check exit 2 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+STOP: c4_phrase_src: CONTROL Psa 39:1 did not FIRE - do not trust the count
+=============== T8 cmdline_other_copy: check exit 2 ===============
+A1: PASS - gate: built health 0 / 0
+STOP: a3_cross_built.out: the command line does not name /home/jp/gate6/h4/bible-db/bible_edupg_test_built_20261102.db
+=============== T8 cert_second_red: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+  FINDING C1: check 6 backup freshness red: ['last clean backup was 30h ago (>25h) (hand-written)']
+  FINDING C1: built summary '2 CHECK(S) FAILED (5/7 green)' exit 1 (expect '1 CHECK(S) FAILED (6/7 green)', exit 1)
+C1: FINDING (2) - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+C5: PASS - gate: the count-differs set on built and src = the file
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 2 (C1 2)
+=============== T8 cert_check5_red: check exit 2 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+STOP: cert check 5 (feed manifest - the abp_texts guard, DESIGN 9.196) red on built: ['cert_manifest verify FAILED: ERROR: expected 66 ABP files, found 67 (hand-written)']
+=============== T8 census_member_extra: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+  FINDING C5: src: count-differs verse NOT in the file: Rev 22 21
+C5: FINDING (1) - gate: the count-differs set on built and src = the file
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 1 (C5 1)
+=============== T8 g2_log_missing: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [Job 3:3] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+C5: PASS - gate: the count-differs set on built and src = the file
+  FINDING R: G2 heading: no line in /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log
+  FINDING R: G2 declared line: no line in /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log
+  FINDING R: G2 verdict: no line in /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log
+  FINDING R: the delta's strongs_base count (the 26 = 20 + 6): no line in /home/jp/gate6/h4/edition_upgrade_runs/step4_gate_r2_20261118.log
+R: FINDING (4) - gate: the asked-for log lines printed
+FINDINGS: 4 (R 4)
+=============== T8 xjobsrc_empty: check exit 3 ===============
+A1: PASS - gate: built health 0 / 0
+A3: PASS - gate: function-anchor 0 (rebuild-words :185)
+A4: PASS - gate: WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)
+A5: PASS - gate: REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, CHARTER_rebuild_trap_fix :490)
+A6: PASS - gate: G2316 0 (rebuild-words :187)
+A7: PASS - gate: flipped pairs 0 (rebuild-words :187-188, MUST be 0)
+A8: PASS - gate: A1 built = src; src = 0
+A9: PASS - gate: CONFIRMED built = src; src = 100.00%; every reference source loaded
+C1: PASS - gate: built: the one declared red (check 4's count line, 375 vs pin 374); every other check OK; check 5 re-hashed the 66 abp_texts files against cert_manifest.json
+C2: PASS - gate: control PASSED; the two scope counts equal on built
+  FINDING C3: src content-other members ['Job 3:3'] (expect exactly [], 9.195 Q2)
+C3: FINDING (1) - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [] on src
+C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged row outside the changed-English verses
+C5: PASS - gate: the count-differs set on built and src = the file
+R: PASS - gate: the asked-for log lines printed
+FINDINGS: 1 (C3 1)

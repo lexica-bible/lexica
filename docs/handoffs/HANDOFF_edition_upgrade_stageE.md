@@ -31,6 +31,12 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   positive per detector; name the hand-written-output ones: tier-2, L9 lint + sizing, census) → reviewer (close N3: re-check the §4.8 table,
   identity splits, CHARTER_rebuild_trap_fix :488-491, rebuild-words :311-315, health_check :23 / :296-306) → ruling chat for clearance.
   Check-program text goes up by PA's Files upload, sha-pinned, through the read-once launcher.
+- **11/19 night: STEP6AUD DRAFTED + TESTED + REVIEWED** (DR "## The step-6 audit block — DRAFT"; block DR :14595-14736 sha 4ce43493…9b52;
+  check program DR :14741-15301 sha 109d95de…3627 = XCHK; upload file `C:\Users\JP\edition_upgrade_runs\step6aud_check_20261119.py`; tests
+  `docs/handoffs/drafts/STEP6AUD_tests_20261119.txt` + harness `drafts/STEP6AUD_harness/`, WSL homes `~/gate6/h3-h5`). Reviewer ESCALATE, 0 DEFECT.
+  **With the ruling chat for clearance:** GAP 1 (the ruled src condition for Job 3:3 should FAIL on the record, DR :1828 — keep, or `XJOBSRC=""`);
+  the allowlist added to the git guard; the 66-count + red check 5 made STOPs (CC's reading of §9.196 "each"); Q6 scope gate on built only;
+  GAP 2 (PN-star has no database-side read — the build-log lines are printed). Nothing runs on PA before that clearance.
 - **WSL test homes:** `~/gate5/home3-5` (built from `~/gate4/repo` at d34d6723 + its test copies; the head of `docs/handoffs/drafts/STEP5INV_tests_20261119.txt`
   shows how — copy scripts/tests/.git + both test dbs into a home, test pre + prep make the guard folder). No sqlite3 tool in WSL —
   write reads in Python.

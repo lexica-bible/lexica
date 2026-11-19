@@ -14472,3 +14472,871 @@ NOTE 1 → Q7. NOTE 2 → health_check cite :144 / :145-150. **NOTE 3 — not ve
 For the drafting: if the G2 line as printed does not itself show the strongs_base share (20 + 6 = 26), STEP6AUD also greps and prints the
 same log's delta-count line (the one carrying "strongs_base 26", as §9.193 (2) reads it) and the record names that line as the one that
 shows it.
+
+## The step-6 audit block — DRAFT (11/19, CC; §9.195–§9.197) — UNAPPROVED until cleared in the ruling chat
+**What it does.** Block STEP6AUD runs charter §6 step 6 on **built AND src** in one read-only run: the rebuild-words step-6 audits (A1–A9),
+the S9 block (C1 cert suite, C2 L9 lint + sizing, C3 reassembly, C4 phrase-gloss) and DESIGN §6 gate 5 (C5 count-differs census), plus the
+read-outs the ruling chat asked for (R: the step-4 run-2 log's G2 lines, §9.197; the PN-star lines, §9.195 Q4). Each audit's whole output goes
+to its own file in the run folder `step6_audit_20261119/`, the command line (with the copy's full path) as its first line; exit codes and
+times go to `exits.tsv`. None of the scripts gates its own figure, so the **check program** (uploaded, sha-pinned, run through the read-once
+launcher) reads those files and judges every gated figure. Log `~/edition_upgrade_runs/step6_audit_20261119.log`. No database copy; nothing
+writes a database (the check opens built `mode=ro` + query_only for one count; five opens are a plain connect that only reads —
+health_check.py :30, scan_strongs_cross.py :45, scan_content_filler_tags.py :45, and the scrape db in lint_split_wrong_slot.py :307 and
+size_split_compounds.py :48 — each path is checked to exist first, and built's and src's
+size + time are compared after, with the "built =" guard).
+**Form = STEP5INV / STEP4GATE run 2:** GATE REF d34d6723 (PA's scripts, no pull); eu_step pre (new run folder, repo guards on scripts/tests,
+no journal, triggers 0); the "built =" HEADFIX2 guard before and after; src + built size and time before = after; the check program by PA's
+Files upload (`~/edition_upgrade_runs/step6aud_check_20261119.py`), copied into the run folder, sha = XCHK or STOP, then run by the same
+10-line launcher as run 2 (read once, hashed, those bytes run; exit 4 on a miss). **New pre-checks, each a STOP:** `git diff --quiet d34d6723
+HEAD -- abp_texts cert_manifest.json AUDIT_phrase_gloss_allowlist.txt` + `git status --porcelain` on the same three (untracked files
+included, so an added .txt in abp_texts also STOPs) — §9.196 / §9.197 name abp_texts + cert_manifest.json; **CC added the allowlist** (the
+"≤ 671" counts beyond it) — a tightening, flagged for the ruling chat; abp_texts holds 66 tracked files (the count cert check 5 pins,
+§9.196); every input file present; the sha of each pinned input (9c punct file
+0cc4d428… 607 lines §9.133; live 241 file 2b0f4cc4… 241 lines; eligible e540d34d…580f DR :12208; STEP4-DELTA2 words_cells 86e44c58…
+§9.157; prose f2a22ecd… DR :12210; bh_scrape 5e9d4bb6… §9.161 (1)); the count-differs member list's sha printed as the FIRST READ (its pin
+from then on, §9.195 Q3) and its line count = 1,850 (header + 1,849) or STOP. **Controls first, each a STOP on failure:** cert `--controls`,
+split-flip `--control`, tests/test_reorder_port.py, tests/test_reassembly_member_diff.py, reassembly `--controls` and `--controls --v2`, the
+L9 lint `--control` (on built).
+
+**The gates the check program judges** (every expected figure is a block constant with its source on the same line; FINDING = listed,
+nothing stopped; STOP = an output missing / not from the copy it names / a control that did not fire / a reference "NOT found" in the lint /
+cert check 5 red on built):
+| | gate (built unless said) | source |
+|---|---|---|
+| A1 | health 0 warning(s), 0 error(s) at `--surface-floor=395014` (floor line must show 395014) | rebuild-words :182; §9.130; health_check.py :23, :145-150, :296-306 |
+| A3 / A4 / A5 / A6 / A7 | function-anchor 0 · LORD REPAIRABLE 0 · REPAIRABLE-NOUN 0 · G2316 0 · split-flip 0 (+ its `--control` PASS) | rebuild-words :185-188; REPAIRABLE-NOUN 0 = the 10/25 observed figure, CHARTER_rebuild_trap_fix :490 (form accepted §9.195) |
+| A8 | tier-1 A1 built = src (same run); src = 177, else FINDING | §9.195 Q7; rebuild-words :189; CHARTER_rebuild_trap_fix :490 |
+| A9 | tier-2 CONFIRMED % built = src; src = 92.26%, else FINDING; header rahlfs=yes · tagnt=2 · book=ALL; no "load failed" / "No reference source loaded" line; a NOT AUDITED book for a missing source = FINDING; NOT AUDITED books built = src | §9.195 Q7; CHARTER_rebuild_trap_fix :489; tier2 :111-129, :366-371; build_words_from_abp.py :93-94 |
+| C1 | cert `--controls` all FIRED (STOP); built: checks 1-3, 5-7 OK; check 4 red on exactly ONE line, "375 active correction row(s), pinned 374 (…)", 375 = the check's own read of built (active + ingest) and = §9.156 (4); summary "1 CHECK(S) FAILED (6/7 green)", exit 1. Check 5 green = the 66 abp_texts files re-hashed against cert_manifest.json; **a red check 5 is a STOP** (§9.196: the abp_texts guards, "each a STOP on failure") | §9.195 Q1 (a); cert_invariants.py :47, :111-115 |
+| C2 | lint `--control` PASSED (STOP); lint RECONCILE total / verses = sizing "recipient slots filled by split" / "verses affected" on built; any "NOT found" line = STOP | §9.195 Q6 (a); reviewer GAP 2, GAP 3 |
+| C3 | tests + controls green (STOP); built v2 member diff vs the 9c 607 file = XSELF exactly (word-order 0 · content-other 1 · … · unchanged 607), exit 1; built content-other = exactly [Job 3:3]; src content-other = exactly XJOBSRC; **word-order 0 is the gated cover for bracket order** | DR :9245 (§9.131); §9.113 ruling 1; §9.195 Q2, Q5 |
+| C4 | CONTROL Psa 39:1 FIRED on both (else STOP); no "(note:" line (allowlist / LSJ missing = STOP); built BEYOND allowlist ≤ 671; a row flagged on built and not on src in a verse that is not changed-English = FINDING (changed-English = verses with an `english` member in STEP4-DELTA2 words_cells + B's `written` verses); the 10/30 log's own BEYOND line printed — missing or ≠ 662 = FINDING | charter :167-168, :170-172; §9.196 |
+| C5 | the count-differs verse set on built AND on src = `~/count_differs_members.tsv` (member diff, both directions listed); the 10/30 log's own COUNT-DIFFERS line printed — missing or ≠ 1,849 (OT 1,451 · NT 398) = FINDING | DESIGN §6 gate 5 (:266); §9.195 Q3; charter :125; §9.196 |
+| R | the step-4 run-2 log's G2 heading, declared line, verdict line and the delta's `words.strongs_base` count line, each printed with its line number (missing = FINDING); the PN-star line of the stage-B build log (:45) and of BSTD's build.out (missing = FINDING) | §9.197 (2); §9.195 Q4 |
+**Read-outs (nothing gated):** A2 audit_bracket_order CHIP genuine / total / PROSE-only on both (src beside the 10/25 "3"); A1 src at the code
+floor 395,003 (src = live; as §9.130 read it); A3–A7 on src; cert on src (§9.195 Q1: not decided); lint + sizing on src, RAW FLAGS / RESIDUE
+on both; v1 class counts on both with built − src; built vs the live 241 file; phrase-gloss counts, newly flagged / cleared lists in full, src
+vs the 10/30 live dump; the "⚠ allowlist entr(ies) that no longer fire" line if printed. **The result line names:** Job 3:3 content-other
+OPEN, not passed; bracket order and §4.2 NOT MEASURED on built by these tools (cover for bracket order = v2 word-order 0, gated).
+
+**GAP 1 — Q2's src condition, as ruled, should FAIL on the record (for the ruling chat before clearance).** §9.195 Q2: "src's same-run report
+shows the same member". The record says src shows none: live read content-other 0 on 10/30 (DR :1828 "Live 10/30 read word-order 1 (Joh 14:26) /
+content-other 0 … 1 content-other are new on this copy"; DESIGN §6 :264 "before" column), and Job 3:3's content-other comes from the app feed
+(§9.87, "FEED-attributed"; DR :1960 "Job 3:3 … → FEED") — src carries the old text. CC expects **C3 FINDING on src: content-other [] , expect
+[Job 3:3]**. The src set is a block constant (`XJOBSRC`, not in the uploaded program), so the ruling can be: (a) keep as ruled — the run shows
+that FINDING; or (b) restate the condition as "src shows NO content-other" (`XJOBSRC=""`, one block line; tested, T8 last case). CC recommends
+(b): it is what the record predicts, and it shows Job 3:3 is the edition's, not src's.
+**GAP 2 — PN-star "read on built and src" (§9.195 Q4).** PN-star A / B are counters the BUILD prints (build_words_from_abp.py :2808-2812);
+no table stores them, so no database read of built or src can give them. STEP6AUD prints the line from the two PA logs that hold it for
+built's line of descent: `stageB_build_20261102.log` :45 (§9.161 (1), the build that made built) and `step4_b_standard_20261117/build.out`
+((b), the reproduction from src, §9.173 (1)). For src's own 10/25 build there is no log path on the record — the figure is in
+CHARTER_rebuild_trap_fix :341 and :465 only. CC cannot do more without code; how PN-star is closed is the ruling chat's.
+**NOTEs.** (1) Cert check 6 reads ~/db_backups/last_success.txt — JP runs the block when the nightly backup is fresh (≤ 25 h), else C1 shows a
+FINDING about PA, not built. (2) Expected picture on PA, CC's reading, not traced through every script: A1 0/0 (§9.130 read 0/0 on built at
+this floor; since then HEADFIX2's one cell + one row); A8 built = src (the 80 swap cells move lemma with strongs; the six '*' rows are not
+G-rows); **A9 built may differ from src** — the 10 swap verses reorder slots and tier-2 aligns in order — a difference is a FINDING listed by
+book, not forced; A3–A7, C4 and C5 on built are measured fresh (built's English differs from src's in 32,962 cells) and are not presumed;
+src A8 177 / A9 92.26% / C5 = the file / C4 BEYOND 662 expected unless live moved since 10/25 / 10/30. (3) Cost: no copy; tier 2, the lint
+(control + 2 runs) and the sizing (2 runs) each replay the corpus — run time not forecast, each audit's start / end time is printed.
+(4) Not covered (as the proposal): live after the 11/18 copy; abp_corrections beyond check 4; the swap-time records; step 7; the pre-swap open
+items. Still OWED and not closed here: import_tipnr −57; Split 84 (open by name); serving deltas (ruled on this log, §9.197).
+
+**Tests** (`docs/handoffs/drafts/STEP6AUD_tests_20261119.txt`, 791 lines; harness `docs/handoffs/drafts/STEP6AUD_harness/`; WSL test homes
+`~/gate6/h3-h5`; the block run AS WRITTEN). The test homes are new (not `~/gate5`): the 11/18 made-up pair only held words + verses, so CC
+added what each step-6 audit reads (tests :2-11). Swapped constants, shown by `diff` (tests :14-43): REF → the test commit (d34d6723 + one
+test-only commit re-pinning cert_manifest.json over the made-up feeds; scripts/tests = d34d6723), the five input shas + the member-list line
+count of the made-up files, XA1 / XT2 / XCD… to the test copies' figures, XSELF's "gone 607 … unchanged 0" (the test copies carry none of the 607
+punct members). XCHK, XPIN, XACT, XFLOOR, XMAX, X662, XJOB, XJOBSRC and every other line are the block's own.
+- **T1 clean → PASS** (tests :44-282): every control exit 0; A1 0/0 at 395014 (src 0/0 at 395003); A3–A7 0; A8 0 = 0; A9 100.00% = 100.00%;
+  C1 exactly the declared red ("375 … pinned 374"), check 4's notes show spent 1 (declared 1); C2 9,092 / 7,731 = 9,092 / 7,731; C3 = XSELF,
+  content-other [Job 3:3] on both; C4 control FIRED, 0 newly flagged; C5 179 = the file on both; R lines printed with line numbers; FINDINGS 0;
+  size + time unchanged; guard after exit 0; RESULT: PASS, exit=0.
+- **T3 KNOWN POSITIVES → FINDING** (tests :284-603; plants :314-330): 13 data plants on built, each in its own verse, + 4 file plants, guard
+  re-made on the planted built. FINDINGS 20 (:595), each naming its plant: A1 bare '4151' WARN · A3 2Ki 2:1 G3588 'glory' ↔ G1391 'of' · A4
+  2Ki 3:1 'the LORD said' + empty G2962 · A5 Rom 1:1 'the son' + empty G5207 · A6 2Ki 4:1 G2316 'of' · A7 2Ki 5:1 'LORD the' (also cert check 2
+  red and the C3 word-order hit) · A8 built 3 ≠ src 0 · A9 99.18% ≠ 100.00% · C1 a second check-4 line (Exo 1:1 'zzbroken') + check 2 · C3
+  XSELF differs, word-order not 0, content-other [2Ki 7:1, Job 3:3] · C4 2Ki 8:1 newly flagged outside the changed verses (Rom 1:1 / Rom 1:2
+  inside them: listed, no finding) + the 10/30 line reading 663 · C5 Hab 3:1 count-differs not in the file + the 10/30 line reading 178 · R the
+  missing "G2:" line and the missing PN-star line. RESULT: FINDING, exit=1; copies unchanged, guard after exit 0.
+- **T2 re-paste → STOP**, log exists (:605-607). **STOP cases** (:609-642), each before any audit runs: T4 upload missing · T5 upload with one
+  line break added inside a string (the 11/18 shape) → its sha printed, STOP · T6 built changed after the guard → CHECK FAIL · T7 an abp_texts
+  file changed · T7b an untracked .txt added to abp_texts · T7c cert_manifest.json edited · T7d the member list one verse short.
+- **T8 — the check program alone, through the block's own launcher lines, on a copy of T1's run folder with ONE output hand-edited per case**
+  (:644-791): tier-2 "load failed" + tagnt=1 + a NOT AUDITED "(no --tagnt)" book → FINDING A9 ×4 · lint "Rahlfs: NOT found" → STOP · sizing
+  count +1 → FINDING C2 · phrase-gloss CONTROL MISSED → STOP · a command line naming the other copy → STOP · a second red cert check (6) →
+  FINDING C1 ×2 · a red cert check 5 → STOP (§9.196) · an extra census member on src → FINDING C5 · the step-4 log missing → FINDING R ×4 · `XJOBSRC=""` (GAP 1 option b) on the
+  clean outputs → FINDING C3 (the made-up src does carry Job 3:3).
+- **Tested only on hand-written outputs (§9.195 TESTS):** the PA-only failure branches of tier 2 (load failed / source missing / NOT AUDITED),
+  of the L9 lint + sizing (NOT found; scope counts unequal) and of the census (an extra member on src). Tier 2, the lint + sizing and the census
+  themselves ran for real in T1 / T3, but on made-up feeds (Rahlfs Gen 1:1-3, TAGNT Mat / Act 1:1-2, a 1-row bh_scrape.db, and the local
+  3,480-line SAMPLE of abp_app_slots.tsv, not PA's 10/24 file): the output format is real, the figures mean nothing for PA.
+- Times on the test copies (no index on words.verse_id there): health_check ~6.7 min per copy; every other audit ≤ 10 s; whole run ~15 min.
+
+**NOTE 3 (the proposal reviewer's) re-checked against the files, 11/19:** §4.8 table — import_tipnr 31,649 → 31,592 (−57)
+HANDOFF_..._stageC_tail.md :57 (the 10/25 log column vs v3 11/4) and DR :1094; Words inserted DESIGN :470 (626,305), §9.64 (:455) and §9.103
+(:508) 626,309; Split 80 → 84 DESIGN :470, :478 (§9.83), DR :318 (members not listable), stageC_repin :56; PN-star DESIGN :470, §9.173 (1),
+DR :9959; restore_frozen_pn EXPECT = 178 at restore_frozen_pn.py :67 (d34d6723), §9.94 (DESIGN :499); abp_surface chain 391,141 §9.119
+(:529) / §9.122 (:532); restore placed 4,411 = 3,977 / 351 / 83 §9.128 (:538); G1 395,014 §9.126 (:536) / §9.128; health floor §9.130 (:540,
+"0 warnings / 0 errors, floor line … 395014 …: 0"; src read-out "floor 395003 …: 0"). Identity splits: retire_hebrew_identity.py :111-112
+at d34d6723 = 3,671 / 10,236 / 12,191 / 4,409 / 1,971 (§9.95, DESIGN :500); after 8b.3 3,671 / 10,246 / 12,216 / 4,382 / 1,963 (§9.97, :502).
+CHARTER_rebuild_trap_fix :488-491 = the H line (tier 2 92.26% · bracket genuine 3 · function-anchor 0 · LORD REPAIRABLE 0 · REPAIRABLE-NOUN 0 ·
+split-flip 0 · A1 177). rebuild-words :311-315 = the 9a command; :313 "G1 = 391,141 + 3,873 = 395,014". health_check.py :23 = the db is the
+first non-flag argument; :296-306 = the report and its "N warning(s), M error(s)." tally line. All match the proposal's cites.
+
+**The file JP uploads:** CC writes it from this record — the fenced check program below, `sed -n 14741,15301p` of this file — to
+`C:\Users\JP\edition_upgrade_runs\step6aud_check_20261119.py`: 561 lines, 33,288 bytes, LF, sha256
+109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 = XCHK = the file every test above ran. JP checks it on his PC with
+`(Get-FileHash C:\Users\JP\edition_upgrade_runs\step6aud_check_20261119.py).Hash` → `109D95DEC86D6E45C4A003ADBEC5482D6AF471BB27E4B7373B1FD16AFB823627`,
+does not open it in an editor, and uploads it through PA's Files page to `/home/appssanding720/edition_upgrade_runs/`.
+Block sha256 (the fenced text below, DR :14595-14736, as tested): 4ce4349313944aa8c9a7757c1bd6fa0c2f00a4847aca9a65effe87de51e79b52, 142 lines; check program DR :14741-15301.
+
+### Block STEP6AUD (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; check program uploaded; no PA pull; no database copy)
+```bash
+set +H
+L=~/edition_upgrade_runs/step6_audit_20261119.log
+if [ -e "$L" ]; then echo "STEP6AUD RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - STEP6AUD - charter 6 step 6: the rebuild-words step-6 audits + the S9 block (4.1-4.4) + DESIGN 6 gates 4-6, every audit on built AND src (DESIGN 9.195-9.197) - READ-ONLY: the audits and the check open both copies read-only; writes only its run folder and this log; no database copy - every expect is declared before the run - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP6AUD RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step6_audit_20261119
+P=~/bible-db/scripts
+U=$R/step6aud_check_20261119.py                                            # the check program as JP uploaded it through PA's Files page; outside the repo
+BH=~/bible-db/bh_scrape.db                                                 # the L9 lint's and the sizing's scrape db
+RAH=~/LXX-Rahlfs-1935                                                      # tier 2 / lint / sizing reference (build_words_from_abp.py :92)
+PM=tests/fixtures/reassembly/punct_members_built_20261115.txt              # the 607 punct file frozen at 9c (DESIGN 9.131, 9.133)
+PL=tests/fixtures/reassembly/punct_members_live_20261030.txt               # the live 241 file (charter 4.3) - a read-out diff only
+EL=$R/step5_eligible_20261101.tsv                                          # step 5's eligible file (the v2 member diff's --eligible)
+WC=$R/step4_delta2_20261116/delta/words_cells.tsv                          # STEP4-DELTA2 (DESIGN 9.157) - its english members = changed-English verses
+PRO=$R/step5_prose_20261101.tsv                                            # B2's prose list - its written verses = changed-English verses
+SLOTS=abp_app_html/abp_app_slots.tsv                                       # the 10/24 slots file the count-differs list was made from (charter :387)
+CDM=~/count_differs_members.tsv                                            # the count-differs member list (charter :128, :387)
+AL=AUDIT_phrase_gloss_allowlist.txt                                        # the phrase-gloss allowlist the "<= 671" counts beyond (charter 4.4)
+G4L=$R/step4_gate_r2_20261118.log                                          # STEP4GATE run 2 log - its G2 lines are printed (DESIGN 9.197 (2))
+PGL=~/edition_d_phrase_gloss.log                                           # the 10/30 phrase-gloss log (charter :397) - its BEYOND line is printed (9.196)
+PGA=~/edition_d_phrase_gloss_all.txt                                       # the 10/30 phrase-gloss dump (charter :479-480) - a read-out diff
+CDL=~/edition_a_count_differs.log                                          # the 10/30 census log (charter :386) - its COUNT-DIFFERS line is printed (9.196)
+BSB=$R/stageB_build_20261102.log                                           # the stage-B build log (DESIGN 9.161 (1)) - its PN-star line is printed (9.195 Q4)
+BSO=$R/step4_b_standard_20261117/build.out                                 # the BSTD build output (DESIGN 9.173 (1)) - its PN-star line is printed (9.195 Q4)
+XPM=0cc4d4288f7a35576b40063b5f1e1b4ff9d21642cef80f4d7bcec02f6dfa7056; XPM_N=607   # DESIGN 9.133 (the 9c pin declaration)
+XPL=2b0f4cc43efc6dd423d934d4633727f69fcb6f45f894727b3a634265b68a941f; XPL_N=241   # its committed .sha256; charter 4.3 (241 live members)
+XEL=e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f       # DR :12208; DESIGN 9.171 (6) / 9.173 (1) e540d34d...580f
+XWC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc       # DESIGN 9.157 (1)
+XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # DR :12210; DESIGN 9.173 (1)
+XBH=5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb       # DESIGN 9.161 (1)
+XCDM_N=1850                                                                # header + 1,849 verses (charter :125; census_count_differs.py :84 writes the header)
+XCHK=109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627     # sha256 of the check program (DR: the step-6 check program, CC's tested file); any other file STOPs
+# --- the gated figures the check judges (each with its register / log line) ---
+XFLOOR=395014                                                              # A1 health floor on built: DESIGN 9.130 (health_check.py :145-150 --surface-floor=N)
+XACT=375; XPIN=374                                                         # C1: built's active corrections DESIGN 9.156 (4), 9.161 (1) (375|23|6); pin cert_invariants.py :47 at d34d6723
+XA1=177                                                                    # A8 src A1: rebuild-words :189; CHARTER_rebuild_trap_fix :490 (10/25 live copy + rebuild)
+XT2=92.26%                                                                 # A9 src tier 2: CHARTER_rebuild_trap_fix :489 (10/25)
+XMAX=671                                                                   # C4 built BEYOND allowlist ceiling: charter :167-168 (DESIGN 9.196: the charter's own gate text)
+X662=662                                                                   # C4 the 10/30 log's BEYOND line: charter :172 (DESIGN 9.196: missing / different = FINDING, a read-out for the run)
+XCD=1849; XCDOT=1451; XCDNT=398                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
+XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 - changed ops 0 - unchanged 607"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
+XJOB="Job 3:3"                                                             # C3 content-other on built, exactly this: DESIGN 9.113 ruling 1, 9.195 Q2
+XJOBSRC="Job 3:3"                                                          # C3 content-other on src, exactly this: 9.195 Q2 as ruled (CC: the record says src reads none - DR :1828 - so expect a C3 FINDING on src; see GAP 1)
+XTAGNT=2                                                                   # A9 TAGNT files: build_words_from_abp.py :93-94 (TAGNT_FILES)
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# every audit: its full output into $D/<name>.out, the command line (with the copy's full path) as the first line; exit + times into $D/exits.tsv
+A() { local n=$1 w=$2 o t0 t1 r; shift 2; o="$D/$n.out"; t0=$(date -u +%FT%TZ)
+  printf '# cmd (cwd %s): python3 %s\n' "$w" "$*" > "$o"
+  ( cd "$w" && PYTHONIOENCODING=utf-8 python3 "$@" ) < /dev/null >> "$o" 2>&1; r=$?
+  t1=$(date -u +%FT%TZ); printf '%s\t%s\t%s\t%s\n' "$n" "$r" "$t0" "$t1" >> "$D/exits.tsv"
+  echo "  $n: exit $r - $(wc -l < "$o") lines - $t0 -> $t1"; return "$r"; }
+# --- before any audit: every miss is STOP ---
+EU scripts/eu_step.py pre --tag STEP6AUD --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "STEP6AUD RESULT: STOP - pre (line above); nothing read"; exit 1; }
+git diff --quiet "$REF" HEAD -- abp_texts cert_manifest.json "$AL" || { echo "STEP6AUD RESULT: STOP - abp_texts / cert_manifest.json / the allowlist differ from $REF"; exit 1; }
+k=$(git status --porcelain -- abp_texts cert_manifest.json "$AL"); [ -z "$k" ] || { echo "STEP6AUD RESULT: STOP - abp_texts / cert_manifest.json / the allowlist changed or added in the checkout: $k"; exit 1; }
+n=$(git ls-files abp_texts | wc -l); echo "abp_texts ($n tracked files, expect 66), cert_manifest.json, $AL: = $REF, nothing changed or added in the checkout (DESIGN 9.196, 9.197)"
+[ "$n" = 66 ] || { echo "STEP6AUD RESULT: STOP - abp_texts does not hold the 66 files cert check 5 pins (DESIGN 9.196)"; exit 1; }
+for f in "$U" "$BH" "$PM" "$PL" "$EL" "$WC" "$PRO" "$SLOTS" "$CDM" "$AL" ~/TAGNT_Mat-Jhn.txt ~/TAGNT_Act-Rev.txt; do [ -s "$f" ] || { echo "STEP6AUD RESULT: STOP - missing or empty: $f"; exit 1; }; done
+[ -d "$RAH" ] || { echo "STEP6AUD RESULT: STOP - missing: $RAH"; exit 1; }
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag STEP6AUD --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP6AUD RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+k=$(h "$PM"); n=$(wc -l < "$PM"); echo "punct file (9c): sha256 $k, $n lines (expect $XPM, $XPM_N)"; [ "$k" = "$XPM" ] && [ "$n" = "$XPM_N" ] || { echo "STEP6AUD RESULT: STOP - not the 9c punct file"; exit 1; }
+k=$(h "$PL"); n=$(wc -l < "$PL"); echo "punct file (live 10/30): sha256 $k, $n lines (expect $XPL, $XPL_N)"; [ "$k" = "$XPL" ] && [ "$n" = "$XPL_N" ] || { echo "STEP6AUD RESULT: STOP - not the live 241 file"; exit 1; }
+k=$(h "$EL"); echo "eligible file sha256: $k (expect $XEL)"; [ "$k" = "$XEL" ] || { echo "STEP6AUD RESULT: STOP - not step 5's eligible file"; exit 1; }
+k=$(h "$WC"); echo "STEP4-DELTA2 words_cells.tsv sha256: $k (expect $XWC)"; [ "$k" = "$XWC" ] || { echo "STEP6AUD RESULT: STOP - not the STEP4-DELTA2 reference delta"; exit 1; }
+k=$(h "$PRO"); echo "prose list sha256: $k (expect $XPRO)"; [ "$k" = "$XPRO" ] || { echo "STEP6AUD RESULT: STOP - not B2's prose list"; exit 1; }
+k=$(h "$BH"); echo "bh_scrape.db sha256: $k (expect $XBH)"; [ "$k" = "$XBH" ] || { echo "STEP6AUD RESULT: STOP - not the scrape db stage B read"; exit 1; }
+k=$(h "$CDM"); n=$(wc -l < "$CDM"); echo "count-differs member list: sha256 $k (FIRST READ - the pin from now on, DESIGN 9.195 Q3), $n lines (expect $XCDM_N)"; [ "$n" = "$XCDM_N" ] || { echo "STEP6AUD RESULT: STOP - the member list is not 1,849 verses + header"; exit 1; }
+echo "slots file $SLOTS: sha256 $(h "$SLOTS") (first read), $(wc -l < "$SLOTS") lines - TAGNT files: $(ls ~/TAGNT_*.txt | wc -l)"
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+cp "$U" "$D/check.py" || { echo "STEP6AUD RESULT: STOP - cannot copy the uploaded check program into the run folder"; exit 1; }
+k=$(h "$D/check.py"); echo "check.py sha256 (the uploaded file, as copied into the run folder): $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "STEP6AUD RESULT: STOP - the uploaded check program is not the file CC wrote and tested"; exit 1; }
+mkdir "$D/l9_built" "$D/l9_src" || { echo "STEP6AUD RESULT: STOP - cannot make the lint folders"; exit 1; }
+# --- (1) controls first: each must fire, else STOP (charter 4 rule; DESIGN 9.195 Q1 (a)) ---
+echo "=== (1) controls - start $(date -u +%FT%TZ) ==="
+A c1_cert_controls ~/bible-db "$P/cert_invariants.py" --controls || { echo "STEP6AUD RESULT: STOP - cert_invariants --controls did not all fire ($D/c1_cert_controls.out)"; exit 1; }
+A a7_flip_control ~/bible-db "$P/audit_split_flip.py" --control || { echo "STEP6AUD RESULT: STOP - the split-flip control failed"; exit 1; }
+A c3_test_reorder_port ~/bible-db ~/bible-db/tests/test_reorder_port.py || { echo "STEP6AUD RESULT: STOP - the reorder port drifted from the JS baseline"; exit 1; }
+A c3_test_member_diff ~/bible-db ~/bible-db/tests/test_reassembly_member_diff.py || { echo "STEP6AUD RESULT: STOP - the member diff's own tests failed"; exit 1; }
+A c3_controls_v1 ~/bible-db "$P/audit_reassembly_diff.py" --controls || { echo "STEP6AUD RESULT: STOP - reassembly v1 controls failed"; exit 1; }
+A c3_controls_v2 ~/bible-db "$P/audit_reassembly_diff.py" --controls --v2 || { echo "STEP6AUD RESULT: STOP - reassembly v2 controls failed"; exit 1; }
+A c2_lint_control "$D/l9_built" "$P/lint_split_wrong_slot.py" "$B" "$BH" --control || { echo "STEP6AUD RESULT: STOP - the L9 lint control failed"; exit 1; }
+# --- (2) the audits, each on built AND src (a non-zero exit is the check's to judge) ---
+echo "=== (2) audits on built and src - start $(date -u +%FT%TZ) ==="
+for c in built src; do
+  [ "$c" = built ] && X=$B || X=$S
+  if [ "$c" = built ]; then A a1_health_built ~/bible-db "$P/health_check.py" "$X" --surface-floor=$XFLOOR --no-backup-check --no-disk-check
+  else A a1_health_src ~/bible-db "$P/health_check.py" "$X" --no-backup-check --no-disk-check; fi
+  A a2_bracket_$c ~/bible-db "$P/audit_bracket_order.py" "$X"
+  A a3_cross_$c ~/bible-db "$P/scan_strongs_cross.py" "$X"
+  A a4_lord_$c ~/bible-db "$P/audit_lord_strongs.py" "$X"
+  A a5_funcword_$c ~/bible-db "$P/audit_funcword_wrongslot.py" "$X" --preps
+  A a6_filler_$c ~/bible-db "$P/scan_content_filler_tags.py" "$X"
+  A a7_flip_$c ~/bible-db "$P/audit_split_flip.py" "$X"
+  A a8_tier1_$c ~/bible-db "$P/audit_corpus_tier1.py" "$X"
+  A a9_tier2_$c ~/bible-db "$P/audit_corpus_tier2.py" "$X" --rahlfs "$RAH" --tagnt ~/TAGNT_*.txt
+  A c1_cert_$c ~/bible-db "$P/cert_invariants.py" "$X"
+  A c2_lint_$c "$D/l9_$c" "$P/lint_split_wrong_slot.py" "$X" "$BH"
+  A c2_size_$c "$D/l9_$c" "$P/size_split_compounds.py" "$X" "$BH"
+  A c3_v1_$c ~/bible-db "$P/audit_reassembly_diff.py" "$X"
+  A c3_v2diff_$c ~/bible-db "$P/audit_reassembly_diff.py" "$X" --v2 --punct-members "$PM" --eligible "$EL"
+  A c4_phrase_$c ~/bible-db "$P/audit_phrase_gloss_underdist.py" "$X" --dump-all
+  A c5_census_$c ~/bible-db "$P/census_count_differs.py" "$X" "$SLOTS" --out "$D/cd_$c.tsv"
+done
+A c3_v2diff_built_live241 ~/bible-db "$P/audit_reassembly_diff.py" "$B" --v2 --punct-members "$PL" --eligible "$EL"
+# --- (3) the check: every gated figure, each from its file (none of the scripts gates its own) ---
+echo "=== (3) the check - start $(date -u +%FT%TZ) ==="
+# check.py is read ONCE; those bytes are hashed and those same bytes are run - no other file can be read between the check and the use (DESIGN 9.190 (5) b)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XCHK" \
+  "D=$D" "B=$B" "S=$S" "WC=$WC" "PRO=$PRO" "CDM=$CDM" "PGA=$PGA" "PGL=$PGL" "CDL=$CDL" "G4L=$G4L" "BSB=$BSB" "BSO=$BSO" \
+  "XFLOOR=$XFLOOR" "XACT=$XACT" "XPIN=$XPIN" "XA1=$XA1" "XT2=$XT2" "XMAX=$XMAX" "X662=$X662" "XCD=$XCD" "XCDOT=$XCDOT" "XCDNT=$XCDNT" \
+  "XSELF=$XSELF" "XJOB=$XJOB" "XJOBSRC=$XJOBSRC" "XTAGNT=$XTAGNT" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = an output not as declared or a control that did not fire; 4 = check.py not the pinned bytes) - end $(date -u +%FT%TZ)"
+# --- after: copies unchanged (read-only run) ---
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src, built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+EU scripts/eu_step.py check --tag STEP6AUD --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "STEP6AUD RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+case "$r2" in
+  0) echo "STEP6AUD RESULT: PASS - $(date -u +%FT%TZ) - every gate holds; Job 3:3 content-other named OPEN, not passed; to the ruling chat"; exit 0 ;;
+  3) echo "STEP6AUD RESULT: FINDING - $(date -u +%FT%TZ) - the findings above (and $D/check.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "STEP6AUD RESULT: STOP - the check stopped or did not finish (exit $r2; $D/check.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The step-6 check program — the file JP uploads (`step6aud_check_20261119.py`, sha256 109d95de…3627 = XCHK)
+```python
+# STEP-6 audit check (READ-ONLY; charter 6 step 6; DESIGN 9.195-9.197). Judges every gated figure from the audit outputs
+# STEP6AUD wrote into its run folder - none of the step-6 scripts gates its own figure (DR "## Charter 6 step 6 - PROPOSAL").
+# argv: KEY=VALUE pairs, every one required (the block declares each value and its source):
+#   D run folder - B built db - S src db - WC STEP4-DELTA2 words_cells.tsv - PRO B2's prose list - CDM count-differs members
+#   PGA 10/30 phrase-gloss dump - PGL 10/30 phrase-gloss log - CDL 10/30 count-differs log - G4L step-4 run-2 log
+#   BSB stage-B build log - BSO BSTD build.out - XFLOOR XACT XPIN XA1 XT2 XMAX X662 XCD XCDOT XCDNT XSELF XJOB XJOBSRC XTAGNT
+#   (XJOBSRC = the content-other members src must show, comma-separated; it may be empty)
+# Opens built mode=ro + query_only (one count); reads text files; writes nothing.
+# Exit 0 = PASS (every gate holds) - 3 = FINDING (listed) - 2 = STOP (an output missing, unreadable, not from the copy it
+# names, or a control that did not fire).
+import re, sqlite3, sys
+from collections import Counter
+from pathlib import Path
+
+NEED = ("D B S WC PRO CDM PGA PGL CDL G4L BSB BSO XFLOOR XACT XPIN XA1 XT2 XMAX X662 XCD XCDOT XCDNT XSELF XJOB XJOBSRC "
+        "XTAGNT").split()
+A = {}
+for a in sys.argv[1:]:
+    k, _, v = a.partition("=")
+    A[k] = v
+miss = [k for k in NEED if k not in A or (A[k] == "" and k != "XJOBSRC")]   # XJOBSRC may be empty (src expected to show none)
+if miss:
+    print("STOP: argument(s) missing: %s" % " ".join(miss))
+    sys.exit(2)
+D, B, S = Path(A["D"]), A["B"], A["S"]
+COPIES = (("built", B), ("src", S))
+finds = Counter()
+order = []
+
+
+class Stop(Exception):
+    pass
+
+
+def find(gate, *what):
+    if gate not in order:
+        order.append(gate)
+    finds[gate] += 1
+    print("  FINDING %s: %s" % (gate, " | ".join(str(x) for x in what)))
+
+
+def verdict(gate, text):
+    if gate not in order:
+        order.append(gate)
+    print("%s: %s - gate: %s" % (gate, "PASS" if finds[gate] == 0 else "FINDING (%d)" % finds[gate], text))
+
+
+def num(s):
+    return int(s.replace(",", ""))
+
+
+EXITS = {}
+ex = D / "exits.tsv"
+if not ex.is_file():
+    print("STOP: %s missing" % ex)
+    sys.exit(2)
+for ln in ex.read_text(encoding="utf-8").splitlines():
+    p = ln.split("\t")
+    EXITS[p[0]] = int(p[1])
+
+
+def out(name, db=None, script=None):
+    """The audit output <name>.out: its first line is the command line the block ran; the copy's path must be one of
+    its words (and the script's name), so every figure below is read from the copy it is said to be from."""
+    f = D / (name + ".out")
+    if not f.is_file():
+        raise Stop("%s missing" % f)
+    if name not in EXITS:
+        raise Stop("%s has no exit line in exits.tsv" % name)
+    lines = f.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines or not lines[0].startswith("# cmd (cwd "):
+        raise Stop("%s: first line is not the command line" % f.name)
+    words = lines[0].split()
+    if db is not None and db not in words:
+        raise Stop("%s: the command line does not name %s" % (f.name, db))
+    if script is not None and not any(w.endswith("/" + script) for w in words):
+        raise Stop("%s: the command line does not run %s" % (f.name, script))
+    return lines
+
+
+def one(lines, rx, name, what):
+    """Exactly one line matching rx; else STOP (the script did not print the line its figure is read from)."""
+    hits = [m for m in (re.search(rx, ln) for ln in lines) if m]
+    if len(hits) != 1:
+        raise Stop("%s: %d line(s) for %s (expect 1)" % (name, len(hits), what))
+    return hits[0]
+
+
+def pathline(lines, name, rx, db):
+    m = one(lines, rx, name, "the script's own path line")
+    if m.group(1) != db:
+        raise Stop("%s: the script says it read %r, not %r" % (name, m.group(1), db))
+
+
+def section(lines, head_rx, stop_blank=True):
+    """Lines after the first line matching head_rx, up to the next blank line."""
+    got, on = [], False
+    for ln in lines:
+        if on:
+            if stop_blank and not ln.strip():
+                break
+            got.append(ln)
+        elif re.search(head_rx, ln):
+            on = True
+    return got
+
+
+def grep_log(path, rx, what):
+    """Each line of a PA log matching rx, with its line number - the log's own line, printed as it is."""
+    p = Path(path)
+    if not p.is_file():
+        print("  %s - %s: FILE NOT THERE" % (what, path))
+        return None
+    hits = []
+    for i, ln in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        if re.search(rx, ln):
+            hits.append((i, ln))
+    print("  %s - %s: %d line(s)" % (what, path, len(hits)))
+    for i, ln in hits:
+        print("    :%d %s" % (i, ln))
+    return hits
+
+
+try:
+    print("=== inputs ===")
+    for k in NEED:
+        print("  %s = %s" % (k, A[k]))
+
+    # ---------- A1 health_check (rebuild-words :182; floor 395,014 DESIGN 9.130; tally health_check.py :296-306) ----------
+    print("=== A1 health_check - built: 0 warning(s), 0 error(s) at --surface-floor=%s; src a read-out (code floor) ===" % A["XFLOOR"])
+    for c, db in COPIES:
+        L = out("a1_health_" + c, db, "health_check.py")
+        pathline(L, "a1_health_" + c, r"^=== bible\.db health check: (.*) ===$", db)
+        m = one(L, r"^  (\d+) warning\(s\), (\d+) error\(s\)\.$", "a1_health_" + c, "the tally")
+        fl = one(L, r"abp_surface rows BELOW floor (\d+) ", "a1_health_" + c, "the floor line")
+        print("  %s: %s warning(s), %s error(s) - floor checked %s" % (c, m.group(1), m.group(2), fl.group(1)))
+        for ln in L:
+            if ln.startswith("  [WARN]") or ln.startswith("  [ERR ]"):
+                print("    %s: %s" % (c, ln.strip()))
+        if c == "built":
+            if fl.group(1) != A["XFLOOR"]:
+                raise Stop("a1_health_built: floor %s, not %s" % (fl.group(1), A["XFLOOR"]))
+            if (m.group(1), m.group(2)) != ("0", "0"):
+                find("A1", "built health: %s warning(s), %s error(s) (expect 0 / 0; lines above)" % (m.group(1), m.group(2)))
+    verdict("A1", "built health 0 / 0")
+
+    # ---------- A2 audit_bracket_order: READ-OUT only (DESIGN 9.195 Q5 (a)) ----------
+    print("=== A2 audit_bracket_order - READ-OUT, not gated (9.195 Q5 (a)): it compares against the OLD abp_texts ===")
+    for c, db in COPIES:
+        L = out("a2_bracket_" + c, db, "audit_bracket_order.py")
+        pathline(L, "a2_bracket_" + c, r"^READ-ONLY bracket-ORDER audit -> (.*)$", db)
+        g = one(L, r"^      genuine \(no benign tag\)\s+: (\d+)", "a2_bracket_" + c, "CHIP genuine")
+        t = one(L, r"^  CHIP mismatches \(position != source PRINTED order\): (\d+)$", "a2_bracket_" + c, "CHIP total")
+        pr = one(L, r"^  PROSE-only mismatches \(greek_pos vs reading order\): (\d+)", "a2_bracket_" + c, "PROSE-only")
+        print("  %s: CHIP genuine %s - CHIP mismatches %s - PROSE-only %s%s" % (
+            c, g.group(1), t.group(1), pr.group(1), " (10/25 live: genuine 3, rebuild-words :183)" if c == "src" else ""))
+    print("  NOT MEASURED on built by this tool: bracket order (the tool reads abp_texts/, the pre-edition text). "
+          "Cover: v2 word-order 0 on built, gated in C3 below.")
+
+    # ---------- A3-A7: zero floors on built (rebuild-words :185-188); src a read-out ----------
+    zero = [("A3", "a3_cross", "scan_strongs_cross.py", "function-anchor 0 (rebuild-words :185)",
+             r"^Number-reversal crosses: (\d+)  \(function-anchor (\d+), other (\d+)\)  \[DB: (.*)\]$", 2, 4,
+             r"^-- FUNCTION-anchor "),
+            ("A4", "a4_lord", "audit_lord_strongs.py", "WRONG-SLOT REPAIRABLE 0 (rebuild-words :185)",
+             r"^    REPAIRABLE\s*:\s+([\d,]+)\s+\(capital LORD: [\d,]+\)$", 1, None, r"^  --- WRONG-SLOT/REPAIRABLE samples"),
+            ("A5", "a5_funcword", "audit_funcword_wrongslot.py", "REPAIRABLE-NOUN 0 (rebuild-words :186; 10/25 observed 0, "
+             "CHARTER_rebuild_trap_fix :490)", r"^  REPAIRABLE-NOUN\s*:\s+([\d,]+)", 1, None, r"^  --- REPAIRABLE-NOUN \("),
+            ("A6", "a6_filler", "scan_content_filler_tags.py", "G2316 0 (rebuild-words :187)",
+             r"^G2316: (\d+) row\(s\) rendered as filler-only  \[DB: (.*)\]$", 1, 2, r"^G2316: "),
+            ("A7", "a7_flip", "audit_split_flip.py", "flipped pairs 0 (rebuild-words :187-188, MUST be 0)",
+             r"^  flipped 'the/a \+ noun' pairs baked in the words table: (\d+)$", 1, None, None)]
+    paths = {"a4_lord": r"^READ-ONLY 'LORD'/\S+ Strong's-display audit -> (.*)$",
+             "a5_funcword": r"^READ-ONLY function-word WRONG-SLOT audit -> (.*)$",
+             "a7_flip": r"^READ-ONLY split-flip audit -> (.*)$"}
+    L = out("a7_flip_control", None, "audit_split_flip.py")
+    if EXITS["a7_flip_control"] != 0 or "  => PASS — a 0 on the corpus is trustable." not in L:
+        raise Stop("audit_split_flip --control did not PASS (exit %d)" % EXITS["a7_flip_control"])
+    print("=== A7 control: audit_split_flip --control PASS, exit 0 ===")
+    for gate, stem, script, text, rx, grp, pgrp, members in zero:
+        print("=== %s %s - built: %s; src a read-out ===" % (gate, script, text))
+        for c, db in COPIES:
+            L = out("%s_%s" % (stem, c), db, script)
+            m = one(L, rx, "%s_%s" % (stem, c), text)
+            if pgrp:
+                if m.group(pgrp) != db:
+                    raise Stop("%s_%s: the script says it read %r" % (stem, c, m.group(pgrp)))
+            else:
+                pathline(L, "%s_%s" % (stem, c), paths[stem], db)
+            n = num(m.group(grp))
+            print("  %s: %s" % (c, m.group(0).strip()))
+            if c == "built" and n != 0:
+                find(gate, "built: %d (expect 0)" % n)
+                if members:
+                    for ln in section(L, members, stop_blank=(gate != "A6")):
+                        print("    %s" % ln)
+                else:
+                    print("    (audit_split_flip prints no member list without --list; cert check 2 names the first)")
+        verdict(gate, text)
+
+    # ---------- A8 tier1 A1, A9 tier2 (DESIGN 9.195 Q7: built = src same run; src vs the 10/25 figure) ----------
+    print("=== A8 audit_corpus_tier1 - built A1 = src A1 (same run; 9.195 Q7); src A1 = %s (rebuild-words :189; "
+          "CHARTER_rebuild_trap_fix :490) ===" % A["XA1"])
+    a1 = {}
+    for c, db in COPIES:
+        L = out("a8_tier1_" + c, db, "audit_corpus_tier1.py")
+        pathline(L, "a8_tier1_" + c, r"^    db=(.*)  lemma_col=", db)
+        a1[c] = one(L, r"\] A1 · GENUINE Strong's↔lemma mismatch \(different root\): (\d+)$", "a8_tier1_" + c, "A1").group(1)
+        print("  %s: A1 %s" % (c, a1[c]))
+    if a1["built"] != a1["src"]:
+        find("A8", "built A1 %s != src A1 %s" % (a1["built"], a1["src"]))
+        for c, _ in COPIES:
+            for ln in section(out("a8_tier1_" + c), r"\] A1 · GENUINE"):
+                if "·" in ln and "words.lemma=" in ln:
+                    print("    %s: %s" % (c, ln.strip()))
+    if a1["src"] != A["XA1"]:
+        find("A8", "src A1 %s != the recorded %s (listed; nothing stopped)" % (a1["src"], A["XA1"]))
+    verdict("A8", "A1 built = src; src = %s" % A["XA1"])
+
+    print("=== A9 audit_corpus_tier2 - built CONFIRMED %% = src's (same run; 9.195 Q7); src = %s (CHARTER_rebuild_trap_fix "
+          ":489); a source-missing line = FINDING ===" % A["XT2"])
+    t2, na = {}, {}
+    for c, db in COPIES:
+        L = out("a9_tier2_" + c, db, "audit_corpus_tier2.py")
+        h = one(L, r"^    db=(.*)  rahlfs=(yes|NO)  tagnt=(\d+) file\(s\)  book=(\S+)$", "a9_tier2_" + c, "the header")
+        if h.group(1) != db:
+            raise Stop("a9_tier2_%s: the script says it read %r" % (c, h.group(1)))
+        print("  %s: rahlfs=%s tagnt=%s file(s) book=%s" % (c, h.group(2), h.group(3), h.group(4)))
+        if h.group(2) != "yes" or h.group(3) != A["XTAGNT"] or h.group(4) != "ALL":
+            find("A9", "%s: a reference source missing in the header (expect rahlfs=yes, tagnt=%s, book=ALL)" % (c, A["XTAGNT"]))
+        for ln in L:
+            if "load failed" in ln or "No reference source loaded" in ln:
+                find("A9", "%s: %s" % (c, ln.strip()))
+        if EXITS["a9_tier2_" + c] != 0:
+            find("A9", "%s: exit %d" % (c, EXITS["a9_tier2_" + c]))
+            continue
+        m = one(L, r"^│  CONFIRMED \(abp number == reference\): (\d+)   = ([\d.]+%)$", "a9_tier2_" + c, "CONFIRMED")
+        an = one(L, r"^│  anchorable CONTENT words \(aligned, non-PN\): (\d+)$", "a9_tier2_" + c, "anchorable")
+        t2[c] = m.group(2)
+        print("  %s: CONFIRMED %s of %s anchorable = %s" % (c, m.group(1), an.group(1), m.group(2)))
+        na[c] = []
+        for ln in section(L, r"^┌─ NOT AUDITED"):
+            mm = re.match(r"^│   (\S+)\s+(\d+) words   \((.*)\)$", ln)
+            if mm:
+                na[c].append((mm.group(1), mm.group(3)))
+                print("    %s NOT AUDITED: %s" % (c, ln[4:].strip()))
+                if "no --tagnt" in mm.group(3) or ("no --rahlfs" in mm.group(3) and h.group(2) != "yes"):
+                    find("A9", "%s: a book not audited for a missing source: %s" % (c, ln.strip()))
+    if len(t2) == 2:
+        if t2["built"] != t2["src"]:
+            find("A9", "built CONFIRMED %s != src %s" % (t2["built"], t2["src"]))
+        if t2["src"] != A["XT2"]:
+            find("A9", "src CONFIRMED %s != the recorded %s (listed; nothing stopped)" % (t2["src"], A["XT2"]))
+        if sorted(na["built"]) != sorted(na["src"]):
+            find("A9", "NOT AUDITED books differ: built %s - src %s" % (sorted(na["built"]), sorted(na["src"])))
+    verdict("A9", "CONFIRMED built = src; src = %s; every reference source loaded" % A["XT2"])
+
+    # ---------- C1 cert_invariants (charter 4.1; DESIGN 9.195 Q1 (a)) ----------
+    print("=== C1 cert_invariants - controls all FIRED; built: checks 1-3, 5-7 OK, check 4 red ONLY on its count line "
+          "(9.195 Q1 (a)) ===")
+    L = out("c1_cert_controls", None, "cert_invariants.py")
+    if EXITS["c1_cert_controls"] != 0 or not any(ln.startswith("ALL CONTROLS FIRED") for ln in L) or \
+            any("DID NOT FIRE" in ln for ln in L):
+        raise Stop("cert_invariants --controls did not all fire (exit %d)" % EXITS["c1_cert_controls"])
+    print("  controls: %s" % [ln.strip() for ln in L if ln.startswith("  [")])
+    c = sqlite3.connect("%s?mode=ro" % Path(B).resolve().as_uri(), uri=True)
+    c.execute("PRAGMA query_only=1")
+    act = c.execute("SELECT count(*) FROM abp_corrections WHERE status='active' AND applied_at='ingest'").fetchone()[0]
+    c.close()
+    print("  built abp_corrections active + ingest, read now: %d (expect %s, DESIGN 9.156 (4))" % (act, A["XACT"]))
+    if str(act) != A["XACT"]:
+        find("C1", "built holds %d active ingest corrections, not %s" % (act, A["XACT"]))
+    red = "%d active correction row(s), pinned %s (an emptied/edited table would otherwise pass this check silently)" % (
+        act, A["XPIN"])
+    names = ["1 row pins (words/verses)", "2 split-flip = 0", "3 em-dash '--' = 0", "4 corrections intact",
+             "5 feed manifest", "6 backup freshness", "7 person/place binding"]
+    for cc, db in COPIES:
+        L = out("c1_cert_" + cc, db, "cert_invariants.py")
+        pathline(L, "c1_cert_" + cc, r"^== cert_invariants on (.*) \(read-only\) ==$", db)
+        state, probs, cur = {}, {}, None
+        for ln in L:
+            m = re.match(r"^  \[(OK  |FAIL)\] (.*)$", ln)
+            if m:
+                cur = m.group(2)
+                state[cur] = m.group(1).strip()
+                probs[cur] = []
+                continue
+            if cur and ln.startswith("         - "):
+                probs[cur].append(ln[11:])
+        tail = one(L, r"^(CERTIFIED STATE HOLDS|\d+ CHECK\(S\) FAILED) \((\d)/7 green\)$", "c1_cert_" + cc, "the summary")
+        print("  %s: %s - exit %d" % (cc, tail.group(0), EXITS["c1_cert_" + cc]))
+        for n in names:
+            print("    %s [%s] %s" % (cc, state.get(n, "MISSING"), n))
+            for p in probs.get(n, []):
+                print("        - %s" % p)
+        for ln in L:
+            if ln.startswith("           . "):
+                print("      %s . %s" % (cc, ln[13:]))
+        if cc != "built":
+            continue
+        if sorted(state) != sorted(names):
+            raise Stop("c1_cert_built: checks printed %s" % sorted(state))
+        if state["5 feed manifest"] != "OK":      # the abp_texts guard (66 files vs cert_manifest.json): DESIGN 9.196, a STOP
+            raise Stop("cert check 5 (feed manifest - the abp_texts guard, DESIGN 9.196) red on built: %s" % probs["5 feed manifest"])
+        for n in names:
+            if n == "4 corrections intact":
+                if state[n] != "FAIL" or probs[n] != [red]:
+                    find("C1", "check 4 is not exactly the one declared red line %r: %s %s" % (red, state[n], probs[n]))
+            elif state[n] != "OK":
+                find("C1", "check %s red: %s" % (n, probs[n]))
+        if tail.group(0) != "1 CHECK(S) FAILED (6/7 green)" or EXITS["c1_cert_built"] != 1:
+            find("C1", "built summary %r exit %d (expect '1 CHECK(S) FAILED (6/7 green)', exit 1)" % (
+                tail.group(0), EXITS["c1_cert_built"]))
+    print("  src: a read-out (cert on src not decided, 9.195 Q1)")
+    verdict("C1", "built: the one declared red (check 4's count line, %d vs pin %s); every other check OK; check 5 "
+            "re-hashed the 66 abp_texts files against cert_manifest.json" % (act, A["XPIN"]))
+
+    # ---------- C2 L9 split lint + sizing (charter 4.2; DESIGN 9.195 Q6 (a): tool health; NOT measured on built) ----------
+    print("=== C2 lint_split_wrong_slot + size_split_compounds - control PASSED; the two scope counts equal on the same copy "
+          "(9.195 Q6 (a)); a 'NOT found' reference line = STOP (reviewer GAP 2) ===")
+    L = out("c2_lint_control", B, "lint_split_wrong_slot.py")
+    if EXITS["c2_lint_control"] != 0 or not any(ln.strip() == "CONTROL PASSED" for ln in L) or             any("NOT found" in ln for ln in L) or not ("Rahlfs: loaded" in L and "TAGNT: loaded" in L):
+        raise Stop("the L9 lint --control did not pass on the production input (exit %d)" % EXITS["c2_lint_control"])
+    print("  control: CONTROL PASSED - exit 0 - Rahlfs + TAGNT loaded")
+    sc = {}
+    for c, db in COPIES:
+        for stem, script in (("c2_lint_", "lint_split_wrong_slot.py"), ("c2_size_", "size_split_compounds.py")):
+            L = out(stem + c, db, script)
+            for ln in L:
+                if "NOT found" in ln:
+                    raise Stop("%s%s: %s" % (stem, c, ln.strip()))
+            if EXITS[stem + c] != 0:
+                raise Stop("%s%s: exit %d (did not finish)" % (stem, c, EXITS[stem + c]))
+            if not ("Rahlfs: loaded" in L and "TAGNT: loaded" in L):
+                raise Stop("%s%s: Rahlfs / TAGNT 'loaded' lines missing" % (stem, c))
+        L = out("c2_lint_" + c)
+        r = one(L, r"^  RECONCILE vs sizing script: ([\d,]+) total recipient slots across ([\d,]+) verses ", "c2_lint_" + c,
+                "RECONCILE")
+        raw = one(L, r"^  RAW FLAGS:\s+([\d,]+)", "c2_lint_" + c, "RAW FLAGS")
+        res = one(L, r"^  RESIDUE \(real candidates\):\s+([\d,]+)$", "c2_lint_" + c, "RESIDUE")
+        cr = one(L, r"^  content-word recipients: ([\d,]+) across ([\d,]+) verses", "c2_lint_" + c, "content recipients")
+        Z = out("c2_size_" + c)
+        zs = one(Z, r"^  recipient slots filled by split: ([\d,]+)$", "c2_size_" + c, "recipient slots")
+        zv = one(Z, r"^  verses affected:\s+([\d,]+)$", "c2_size_" + c, "verses affected")
+        sc[c] = ((num(r.group(1)), num(r.group(2))), (num(zs.group(1)), num(zv.group(1))))
+        print("  %s: lint RECONCILE %s / %s - sizing %s / %s - equal: %s" % (
+            c, r.group(1), r.group(2), zs.group(1), zv.group(1), "yes" if sc[c][0] == sc[c][1] else "NO"))
+        print("  %s: read-outs - content recipients %s in %s verses - RAW FLAGS %s - RESIDUE %s" % (
+            c, cr.group(1), cr.group(2), raw.group(1), res.group(1)))
+    if sc["built"][0] != sc["built"][1]:
+        find("C2", "built: lint RECONCILE %s != sizing %s" % (sc["built"][0], sc["built"][1]))
+    print("  NOT MEASURED on built's words (9.195 Q6): the lint and the sizing replay the split over abp_texts/ "
+          "(the OLD edition); they read only the lexicon + word_gloss from the copy.")
+    verdict("C2", "control PASSED; the two scope counts equal on built")
+
+    # ---------- C3 reassembly (charter 4.3; DESIGN 6 gate 3 as replaced by 9.113 / 9.131; 9.195 Q2) ----------
+    print("=== C3 reassembly - tests + controls green; built v2 member diff = the 9c self-diff line exactly (DR :9245, "
+          "9.131); content-other exactly [%s] on built and [%s] on src (9.195 Q2) ===" % (A["XJOB"], A["XJOBSRC"]))
+    for n, sc_, want in (("c3_test_reorder_port", "test_reorder_port.py", None),
+                         ("c3_test_member_diff", "test_reassembly_member_diff.py", None),
+                         ("c3_controls_v1", "audit_reassembly_diff.py", "ALL CONTROLS PASSED"),
+                         ("c3_controls_v2", "audit_reassembly_diff.py", "V2 CONTROLS PASSED.")):
+        L = out(n, None, sc_)
+        if EXITS[n] != 0 or (want and not any(ln.startswith(want) for ln in L)):
+            raise Stop("%s: exit %d / its pass line missing" % (n, EXITS[n]))
+        print("  %s: exit 0 - %s" % (n, next((ln.strip() for ln in L if want and ln.startswith(want)),
+                                             next((ln.strip() for ln in reversed(L) if ln.strip()), ""))))
+    v1 = {}
+    for c, db in COPIES:
+        L = out("c3_v1_" + c, db, "audit_reassembly_diff.py")
+        pathline(L, "c3_v1_" + c, r"^== reassembly-diff on (.*) \(READ-ONLY\) ==$", db)
+        v1[c] = [num(one(L, r"^     %s\s+([\d,]+)$" % k, "c3_v1_" + c, k).group(1)) for k in
+                 ("dup-gloss", "content-other", "punct-shift")]
+        v1[c].append(num(one(L, r"^   total hits     : ([\d,]+)$", "c3_v1_" + c, "total hits").group(1)))
+        v1[c].append(num(one(L, r"not judgeable from the bag\): ([\d,]+)$", "c3_v1_" + c, "bracket excluded").group(1)))
+    print("  v1 (read-outs): %-16s %8s %8s %8s" % ("", "src", "built", "b - s"))
+    for i, k in enumerate(("dup-gloss", "content-other", "punct-shift", "total hits", "bracket-excluded")):
+        print("  v1 (read-outs): %-16s %8d %8d %+8d" % (k, v1["src"][i], v1["built"][i], v1["built"][i] - v1["src"][i]))
+    co = {}
+    for c, db in COPIES:
+        n = "c3_v2diff_" + c
+        L = out(n, db, "audit_reassembly_diff.py")
+        pathline(L, n, r"^== reassembly-diff V2 member diff on (.*) \(READ-ONLY\) ==$", db)
+        tail = one(L, r"^V2 MEMBER DIFF: .*$", n, "the V2 MEMBER DIFF line").group(0)
+        co[c] = []
+        for ln in L:
+            m = re.match(r"^     \[(word-order|content-other|dup-gloss)\s*\] (\S+ \d+:\d+)\s", ln)
+            if m:
+                print("    %s %s" % (c, ln.strip()))
+                if m.group(1) == "content-other":
+                    co[c].append(m.group(2))
+        print("  %s: %s - exit %d" % (c, tail, EXITS[n]))
+        if c == "built":
+            print("  built expect: %s - exit 1" % A["XSELF"])
+            if tail != A["XSELF"] or EXITS[n] != 1:
+                find("C3", "built V2 MEMBER DIFF line / exit is not the 9c self-diff's (lines above)")
+            if re.search(r" word-order 0 ", tail) is None:
+                find("C3", "built word-order is not 0 (the cover named for bracket order, 9.195 Q5)")
+        want = [A["XJOB"]] if c == "built" else [x for x in A["XJOBSRC"].split(",") if x]
+        if co[c] != want:
+            find("C3", "%s content-other members %s (expect exactly %s, 9.195 Q2)" % (c, co[c], want))
+    L = out("c3_v2diff_built_live241", B, "audit_reassembly_diff.py")
+    print("  read-out, built vs the live 241 file: %s - exit %d" % (
+        one(L, r"^V2 MEMBER DIFF: .*$", "c3_v2diff_built_live241", "the line").group(0), EXITS["c3_v2diff_built_live241"]))
+    verdict("C3", "word-order 0 on built (gated - the cover for bracket order); content-other exactly [%s] on built "
+            "(named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [%s] on src" % (A["XJOB"], A["XJOBSRC"]))
+
+    # ---------- C4 phrase-gloss (charter 4.4; DESIGN 6 gate 4) ----------
+    print("=== C4 phrase-gloss - CONTROL Psa 39:1 FIRED on both; built BEYOND <= %s (charter :167-168); a newly flagged "
+          "row outside the changed-English verses = FINDING (charter :170-171) ===" % A["XMAX"])
+
+    def flagged(L, name, strict=True):
+        hd = [ln for ln in L if re.match(r"^  --- FLAGGED \((\d+)\) ", ln)]
+        rows = Counter()
+        for ln in section(L, r"^  --- FLAGGED \("):
+            rows[ln.strip()] += 1
+        if strict and hd and num(re.match(r"^  --- FLAGGED \((\d+)\) ", hd[0]).group(1)) != sum(rows.values()):
+            raise Stop("%s: FLAGGED header count != rows listed" % name)
+        return rows
+
+    fl, beyond = {}, {}
+    for c, db in COPIES:
+        n = "c4_phrase_" + c
+        L = out(n, db, "audit_phrase_gloss_underdist.py")
+        pathline(L, n, r"^READ-ONLY phrase-gloss UNDER-distribution audit -> (.*)$", db)
+        for ln in L:
+            if ln.strip().startswith("(note:"):
+                raise Stop("%s: %s (not the production input)" % (n, ln.strip()))
+        if not any(ln.startswith("  CONTROL Psa 39:1: FIRED") for ln in L):
+            raise Stop("%s: CONTROL Psa 39:1 did not FIRE - do not trust the count" % n)
+        f = one(L, r"^  FLAGGED \(under-distribution class\):\s+([\d,]+)$", n, "FLAGGED")
+        ne = one(L, r"^  NO-EVIDENCE \(blank neighbour, def-miss\):\s+([\d,]+)$", n, "NO-EVIDENCE")
+        al = one(L, r"^  allowlisted \(S11 explained\):\s+([\d,]+) / (\d+)$", n, "allowlisted")
+        bz = one(L, r"^  FLAGGED BEYOND allowlist \(gate <= 671\):\s+([\d,]+)$", n, "BEYOND")
+        beyond[c] = num(bz.group(1))
+        fl[c] = flagged(L, n)
+        print("  %s: CONTROL Psa 39:1 FIRED - FLAGGED %s - NO-EVIDENCE %s - allowlisted %s / %s - BEYOND allowlist %s" % (
+            c, f.group(1), ne.group(1), al.group(1), al.group(2), bz.group(1)))
+        if num(f.group(1)) != sum(fl[c].values()):
+            raise Stop("%s: FLAGGED %s but %d rows dumped" % (n, f.group(1), sum(fl[c].values())))
+        for ln in L:
+            if "no longer fire" in ln:
+                print("    %s read-out: %s" % (c, ln.strip()))
+    if beyond["built"] > int(A["XMAX"]):
+        find("C4", "built FLAGGED BEYOND allowlist %d > %s" % (beyond["built"], A["XMAX"]))
+    changed = set()
+    wc = Path(A["WC"]).read_text(encoding="utf-8").splitlines()
+    if wc[0].split("\t") != ["book", "chapter", "verse", "position", "column", "a", "b", "moved"]:
+        raise Stop("words_cells.tsv header: %r" % wc[0])
+    for ln in wc[1:]:
+        p = ln.split("\t")
+        if p[4] == "english":
+            changed.add("%s %s:%s" % (p[0], p[1], p[2]))
+    ne_ = len(changed)
+    pr = Path(A["PRO"]).read_text(encoding="utf-8").splitlines()
+    if pr[0].split("\t") != ["book", "chapter", "verse", "outcome", "reason", "old_len", "new_len", "changed"]:
+        raise Stop("prose list header: %r" % pr[0])
+    nw = 0
+    for ln in pr[1:]:
+        p = ln.split("\t")
+        if p[3] == "written":
+            changed.add("%s %s:%s" % (p[0], p[1], p[2]))
+            nw += 1
+    print("  changed-English verses: %d (english members of STEP4-DELTA2 words_cells: %d verses; B written: %d)" % (
+        len(changed), ne_, nw))
+    new, gone = fl["built"] - fl["src"], fl["src"] - fl["built"]
+    print("  newly flagged on built (not on src): %d" % sum(new.values()))
+    for r in sorted(new):
+        ref = r.split(" | ")[0].strip()
+        ok = ref in changed
+        print("    [new %s] %s" % ("changed-English" if ok else "NOT a changed-English verse", r))
+        if not ok:
+            find("C4", "newly flagged outside the changed-English verses: %s" % r)
+    print("  newly cleared on built (flagged on src only): %d" % sum(gone.values()))
+    for r in sorted(gone):
+        print("    [cleared] %s" % r)
+    pga = Path(A["PGA"])
+    if pga.is_file():
+        lv = flagged(pga.read_text(encoding="utf-8", errors="replace").splitlines(), "10/30 dump", strict=False)
+        print("  read-out, src vs the 10/30 live dump (%s): live %d - src %d - on src only %d - on live only %d" % (
+            pga, sum(lv.values()), sum(fl["src"].values()), sum((fl["src"] - lv).values()), sum((lv - fl["src"]).values())))
+        for r in sorted(fl["src"] - lv):
+            print("    [src only ] %s" % r)
+        for r in sorted(lv - fl["src"]):
+            print("    [live only] %s" % r)
+    else:
+        print("  read-out: the 10/30 dump %s is not there" % pga)
+    h = grep_log(A["PGL"], r"FLAGGED BEYOND allowlist", "the 10/30 log's own line (charter :172: 662)")
+    if not h:
+        find("C4", "no FLAGGED BEYOND line in %s" % A["PGL"])
+    else:
+        for i, ln in h:
+            m = re.search(r"FLAGGED BEYOND allowlist \(gate <= 671\):\s+([\d,]+)$", ln)
+            if not m or m.group(1) != A["X662"]:
+                find("C4", "the 10/30 log :%d does not read %s: %r (a read-out for this run)" % (i, A["X662"], ln))
+    verdict("C4", "control FIRED on both; built BEYOND %d <= %s; no newly flagged row outside the changed-English verses" % (
+        beyond["built"], A["XMAX"]))
+
+    # ---------- C5 count-differs census (DESIGN 6 gate 5; DESIGN 9.195 Q3: equal set vs the file, built AND src) ----------
+    print("=== C5 census_count_differs - the verse set EQUALS %s on built AND on src (9.195 Q3) ===" % A["CDM"])
+
+    def cdset(path, name):
+        t = Path(path).read_text(encoding="utf-8").splitlines()
+        if not t or t[0].split("\t")[:3] != ["book", "chapter", "verse"]:
+            raise Stop("%s: header %r" % (name, t[:1]))
+        s = [tuple(ln.split("\t")[:3]) for ln in t[1:]]
+        if len(set(s)) != len(s):
+            raise Stop("%s: a verse appears twice" % name)
+        return set(s)
+
+    pin = cdset(A["CDM"], "count_differs_members.tsv")
+    print("  the file: %d verses" % len(pin))
+    for c, db in COPIES:
+        n = "c5_census_" + c
+        L = out(n, db, "census_count_differs.py")
+        if EXITS[n] != 0:
+            raise Stop("%s: exit %d" % (n, EXITS[n]))
+        m = one(L, r"^COUNT-DIFFERS verses: ([\d,]+)  \(OT ([\d,]+) · NT ([\d,]+)\)$", n, "COUNT-DIFFERS")
+        one(L, r"^wrote ([\d,]+) member rows -> ", n, "the wrote line")
+        got = cdset(D / ("cd_%s.tsv" % c), "cd_%s.tsv" % c)
+        print("  %s: %s - members %d - = the file: %s" % (c, m.group(0), len(got), "yes" if got == pin else "NO"))
+        for k in sorted(got - pin):
+            find("C5", "%s: count-differs verse NOT in the file: %s" % (c, " ".join(k)))
+        for k in sorted(pin - got):
+            find("C5", "%s: the file's verse NOT count-differs on %s: %s" % (c, c, " ".join(k)))
+    h = grep_log(A["CDL"], r"COUNT-DIFFERS verses:", "the 10/30 log's own line (charter :125)")
+    if not h:
+        find("C5", "no COUNT-DIFFERS line in %s" % A["CDL"])
+    else:
+        for i, ln in h:
+            m = re.search(r"COUNT-DIFFERS verses: ([\d,]+)  \(OT ([\d,]+) · NT ([\d,]+)\)", ln)
+            if not m or (num(m.group(1)), num(m.group(2)), num(m.group(3))) != (int(A["XCD"]), int(A["XCDOT"]), int(A["XCDNT"])):
+                find("C5", "the 10/30 log :%d does not read %s (OT %s, NT %s): %r (a read-out for this run)" % (
+                    i, A["XCD"], A["XCDOT"], A["XCDNT"], ln))
+    if len(pin) != int(A["XCD"]):
+        find("C5", "the file holds %d verses, not %s" % (len(pin), A["XCD"]))
+    verdict("C5", "the count-differs set on built and src = the file")
+
+    # ---------- read-outs the ruling chat asked for (DESIGN 9.195 Q4, 9.196, 9.197) ----------
+    print("=== R serving deltas: the G2 lines of the step-4 run-2 log (9.197 (2); a missing line = FINDING) ===")
+    for rx, what in ((r"^=== G2 ", "G2 heading"), (r"^  declared: swap cells ", "G2 declared line"), (r"^G2: ", "G2 verdict"),
+                     (r"^  words\.strongs_base\s+\d+$", "the delta's strongs_base count (the 26 = 20 + 6)")):
+        h = grep_log(A["G4L"], rx, what)
+        if not h:
+            find("R", "%s: no line in %s" % (what, A["G4L"]))
+    print("=== R PN-star A + B (9.195 Q4): build-pass counters, printed by the build; no database holds them - the build "
+          "logs' own lines (a missing line = FINDING) ===")
+    for path, what in ((A["BSB"], "stage-B build log (the build that made built; 9.161 :45)"),
+                       (A["BSO"], "BSTD build.out (the (b) reproduction from src; 9.173 (1))")):
+        h = grep_log(path, r"PN-star pass \(lane 2\):", what)
+        if not h:
+            find("R", "no PN-star line in %s" % path)
+    verdict("R", "the asked-for log lines printed")
+
+    nf = sum(finds.values())
+    print("FINDINGS: %d%s" % (nf, "" if not nf else " (" + ", ".join("%s %d" % (g, finds[g]) for g in order if finds[g]) + ")"))
+    print("OPEN, named, not passed: %s content-other (9.113 ruling 1; 9.195 Q2)" % A["XJOB"])
+    print("NOT MEASURED on built by this run: bracket order (A2; cover = v2 word-order 0, C3); 4.2 L9 split (C2, tool health)")
+    sys.exit(3 if nf else 0)
+except Stop as e:
+    print("STOP: %s" % e)
+    sys.exit(2)
+```
+
+### STEP6AUD reviewed (11/19) — REVIEW: ESCALATE (GAP 1 and the allowlist in the guard need a ruling; §9.195 sends the block to the ruling chat anyway); 0 DEFECT
+Confirmed by the reviewer in code: read-only as claimed (writes only the run folder, the log, the lint / sizing TSVs in `l9_*`; every audit
+opens `mode=ro` but the five plain connects named above, each path checked first; the lint `--control` exits before it writes); every regex in
+the check program against its script's print line (health_check :151, :296, :304; bracket :242-249; cross :172-173; lord :162, :169; funcword
+:225, :230; filler :64; split_flip :176, :197-198; tier1 :195, :531; tier2 :112-129, :303-304, :367-370; cert :114-115, :270-285, :387, :393;
+lint :313-328; size :120-121; reassembly :343-351, :426, :481, :567-598; phrase :256-273; census :69-70, :87; eu_words_delta :247); every
+gate against §9.195 Q1-Q3, Q5-Q7, §9.196, §9.197; the expected figures each from a register / log line; the tests file's cites; a planted
+known positive for every gated detector; the conventions (re-paste guard, every STOP before a read, controls first, after-checks, the run-2
+launcher). Items and what CC did:
+1. **GAP 1** — facts as stated (DR :1828); XJOBSRC="Job 3:3" is expected to give a C3 FINDING on src. **To the ruling chat:** (a) keep, or (b)
+   `XJOBSRC=""`. Reviewer's side point: src's v2 word-order may read 1 (Joh 14:26, DR :1828) — a read-out only (Q5 gates built).
+2. **The allowlist in the git guard** — not in §9.197's text; a tightening. **To the ruling chat:** accept or remove (one block line).
+3. **The 66-file count not gated; a red check 5 was a FINDING** — §9.196: "cert check 5 green in the same block (66 files), plus git diff …
+   each a STOP on failure". **CC changed both** (CC's reading of "each"): the block STOPs unless `git ls-files abp_texts` = 66; the check
+   program STOPs on a red check 5 on built. Re-tested (all of the tests above are the re-run on these final files; T8 case `cert_check5_red`
+   → STOP). The 66 line cannot fire on its own in a test: the git diff guard before it catches any change to the tracked set first.
+4. **Wrapper** — the scripts/tests repo guards (diff, porcelain, ancestor) and the journal check sit in eu_step pre (eu_step.py :132-141), as
+   in STEP5INV and run 2 — recorded so the ruling chat accepts it knowingly.
+- **Q6 reading** — the scope counts are gated on built, printed on src (§9.195 Q6: tool health; "the same run" read as the same copy's lint +
+  sizing). **To the ruling chat:** confirm built-only.
+- **GAP 2** — facts as stated (PN-star is a build print, no table; DR :9959 "counts only").
+- **NOTE 3 closed** for every cite the reviewer opened (DESIGN :455, :470, :478, :499, :500, :502, :529, :532, :536, :538, :540; restore_frozen_pn
+  :67; retire_hebrew_identity :111-112; stageC_tail :57; DR :318, :1094; stageC_repin :56; CHARTER_rebuild_trap_fix :488-491; rebuild-words
+  :311-315; health_check :23, :296-306). Not opened by the reviewer: §9.103 (:508) and §9.83 in full — CC read :508: "words 626,309 / verses
+  31,237"; :478 "Split 80 → 84".
+- N1 health's `--no-backup-check --no-disk-check` — the same command as STEP9B, DR :9090 (CC checked): closed. N2 a cosmetic run of spaces in
+  one wrapped print line (tested as is). N3 = NOTE 1 (cert check 6 is PA's backup state).
+- Never fired in a test on the real scripts: a missing health floor line; cert `--controls` not firing; the phrase-gloss "(note:" STOP and a
+  MISSED control (both only through hand-edited T8 outputs).
+- Not checked by the reviewer: the PA logs (step-4 run 2, stage B, BSTD) — so whether the R lines are there is for the run to show;
+  build_words_from_abp.py at d34d6723 (CC: :92-94 and :2808-2812 read with git show); eu_step `check`; the harness; any sha; the pin sources
+  beyond their cited §; the PA files' presence; tier-2's percent format.
+**Follow-up review of the item-3 change (11/19) — REVIEW: ESCALATE (same reasons), 0 DEFECT.** Confirmed: the block STOPs unless
+`git ls-files abp_texts` = 66, after the git guards and before any input is read (DR :14658-14659); a red check 5 on built STOPs the check
+program, built only (DR :15042-15043); both fit §9.196 on CC's reading of "each" (to be confirmed there). Line counts moved only by the two
+edits (block 141 → 142, program 559 → 561); the reviewer cannot hash, so "nothing else changed" rests on CC's shas and the re-run.
+The record's account of the first review is faithful; N1 closed (the same flags at DR :7189, :9090, :9122); DESIGN :508 is CC's reading.
+**Open for the ruling chat before clearance:** GAP 1 (XJOBSRC keep / empty) · the allowlist in the git guard · Q6 built-only · the item-3
+reading of "each".
