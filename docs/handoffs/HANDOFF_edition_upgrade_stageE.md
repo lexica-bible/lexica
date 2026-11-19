@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.200**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.202**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 night; STEP6AUD RAN — step 6 NOT PASSED, C4 FINDING, §9.199) — open here
@@ -11,8 +11,13 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 - **C4 account + read-outs BROUGHT (§9.200 asks; DR "### C4 account + the three read-outs"; rows in
   `drafts/STEP6AUD_C4_account_20261119.txt`):** all 173 new rows rest on a STEP4-DELTA2 english cell and are the app edition's own
   JOINED slots (e.g. `3756-1097` 'I know not'); no built count was ever pre-registered. Proposal: (a) accept + re-pin at swap (CC's pick)
-  or (b) hold for a build change. **NEXT = the ruling chat's ruling on C4, then JP's call on the 671.** The run copy sits at
-  `C:\Users\JP\edition_upgrade_runs\pa\step6_audit_20261119\` — outside the repo, NOT committed (verse text).
+  or (b) hold for a build change. The run copy sits at `C:\Users\JP\edition_upgrade_runs\pa\step6_audit_20261119\` — outside the
+  repo, NOT committed (verse text).
+- **§9.201–§9.202:** stop rule NOT triggered; no built pre-registration = a recorded GAP. Account rewritten to **v2** (reviewer ESCALATE on v1
+  → CLEAR on v2, both verbatim in DR "### C4 account v2 …"). JP's call: (a) **on condition "not losing any context or greek"**. CC's reads of
+  the three conditions show MORE than the blank cell: 7 rows also lose greek_pos + bracket_id; in chip view the verb's chip is not drawn;
+  the verb can't be clicked; γινώσκω's "renders as" counts + the English finder lose the row. **NEXT = JP's call again, on those facts**
+  (then registered by the ruling chat). Nothing re-pinned, re-run or rebuilt.
 - Still OWED: C4; import_tipnr −57; Split 84 (open by name).
 
 ## SUCCESSOR START (11/19 late; STEP6AUD CLEARED TO RUN, §9.198) — superseded by 11/19 night above

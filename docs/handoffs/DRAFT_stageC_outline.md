@@ -15450,3 +15450,135 @@ STEP6AUD gated ≤ 671 and printed built's figure. Also on record: the swap comm
   Jdg 12,967 → 12,968 (:25), Rom 6,310 → 6,311 (:60), net −1. All four books hold swap verses of STEP4-DELTA2's words_moved (local copy sha
   d32361b3…0f08 = §9.157 (1)): Gen 5:25, 5:26, 34:4 · Est 5:9 · Jdg 11:7 · Rom 9:29 (the other four, 2Ki 23:35, Eze 20:14, Jos 2:4, Jos
   5:15, show no net book change). Tier 2 prints counts by book only, so no single word can be named from its output.
+
+### C4 account v2, the reviewer's verdicts, and JP's three conditions (11/19, CC; §9.201 / §9.202)
+**Account v2 SUPERSEDES the v1 file and the v1 figures above.** The reviewer's first check (verbatim below) found that figures in the
+section above were not produced by the committed script (the 64 / 8 split, where the 88 sit on built, 169 / 3, 155, +85), that "orphan blank
+on both" and the Joh 10:37 host were inferred, not shown, and that two hand-entered maps (verse offsets, 846 → 1473) had no source. v2
+(`drafts/STEP6AUD_harness/c4rows.py`, rewritten) prints every figure itself in the account's SUMMARY (account :1315-1345); states the
+rule-4 reason a host-only row's orphan is blank on both sides; for Joh 10:37 shows pos 2 is the verse's only changed english cell and no
+longer claims what the host holds; finds the feed slot at the same verse, then ± 1 verse, and folds pronoun numbers with the build's own
+`build_abp_surface._norm` (:90-95); matches each cleared row on built by SLOT. Account v2 = `drafts/STEP6AUD_C4_account_20261119.txt`,
+1,345 lines, sha256 60fb07b9d16871aed96e257dd5742928d9c2759a85b693b446e4faf6f0504b96 (v1 ec1e2234… is gone from the folder; it is in git at
+9ac4eb12). **v2 SUMMARY:** new 173 = 100 host + orphan · 72 host only (64 with a cleared counterpart, 8 without) · 1 orphan only
+(Joh 10:37); feed 170 same reference (Mar 9:18 through the pronoun fold) + 3 at the app's next verse, all joined slots; hosts G3756 155.
+Cleared 88 = 86 host only (joined slot) + 2 host + orphan (separate slots: Job 32:21, Jer 40:14); on built 64 re-flagged same head · 21 under
+NO-EVIDENCE · 1 under a new head (Joh 3:18) · 2 in neither list (Job 32:21, Jer 40:14). Net 109 − 24 = +85 = 778 − 693. The figures in the
+section above match v2's except the feed line, which v2 states as 170 + 3.
+
+**Reviewer, first check (v1) — verbatim:**
+> REVIEW: ESCALATE - the counts reproduce and every row I spot-checked matches the raw inputs, but the record states figures and facts that neither the account nor c4rows.py produce, and the script's attribution has two untested links.
+>
+> To the ruling chat (re §9.201, C4 account check, read-only):
+>
+> **What I checked (Read/Grep only; I ran nothing and computed no sha)**
+> - **Selection matches check.py's.** c4rows.py:45-54 takes the FLAGGED sections of both dumps (from the `--- FLAGGED` line up to `--- NO-EVIDENCE`) and compares whole stripped lines as multisets (Counter difference). check.out on the copy prints the same totals: newly flagged 173 (check.out:227), newly cleared 88 (:401), and 261 `[new…]`/`[cleared]` lines.
+> - **The delta columns are read correctly.** f[5]=a=src and f[6]=b=built (c4rows.py:42), english rows only, and the two Joh 19:18 @10 lines are dropped (:32-33). The side index is right: k=1 for new rows, k=0 for cleared (:63).
+> - **My counts, from the account file:**
+>   - Dump-line entries: 261. Feed lines: 261. Host lines: 260 (172 new + 88 cleared). Orphan lines: 102 (100 new, 2 cleared). Orphan-only (`orphan*`) rows: 1 (Joh 10:37).
+>   - All 100 new-row orphan lines end `-> None`.
+>   - "RESTS ON NO CELL": 0. "gloss matches N positions": 0.
+>   - "NO slot holding both": 2 (Job 32:21 at :718, Jer 40:14 at :743).
+>   - So: new 173 = 100 + 72 + 1, cleared 88 = 86 + 2. Reproduced.
+> - **Rows checked against the raw dumps, delta and feed:**
+>   - New: Gen 27:2 (built.out:20; delta 22583/22586; feed slot 5 3756-1097), Gen 21:26 (delta 22215), Joh 10:37 (built.out:632; delta 32892; feed slot 1 3756-4160), Psa 24:4 (built.out:352; delta 46266/46269; feed Psalms 24:5 slot 13 3756-3660), Mar 9:18 (built.out:703; delta pos 22; feed slot 20 1473-1544), Deu 25:18 orphan[-1] (built.out:142; delta 14550 pos 23; feed slot 19 3756-5399).
+>   - Cleared: Job 32:21 (src.out:313; delta 31657/31660; feed slots 8 (3766.2) and 9 (1788) are separate), Jer 40:14 (src.out:408; delta 30254/30258; feed slots 21 (3756) and 22 (4100) are separate), Mar 9:18 (src.out:631).
+>   - All agree with what the account cites.
+>   - That is 6 new and 3 cleared against all three sources. The request asked for at least 10 new and 5 cleared. I also read Gen 27:36 through Exo 34:24 in the account, but not against the inputs.
+>
+> **Defects / gaps**
+> 1. **Record claims with no support in the account or the script** (DRAFT_stageC_outline.md :15410-15425). c4rows.py computes none of these, and nothing in the account file shows them:
+>    - "64 … flagged on src … under the old wording / 8 were not"
+>    - "21 … under NO-EVIDENCE / 1 (Joh 3:18) new head"
+>    - "169 at the same reference; 3 at the app's next verse"
+>    - "155 of the 173 hosts are G3756"
+>    - "+85 = 109 − 24"
+>    They need their own counting, or must be marked as untraced.
+> 2. **"Orphan blank on src and built"** (:15410 for the 72, :15419 for the 86) is not tested. On host-only rows the script only finds that the orphan position has no english line in the delta, i.e. it is unchanged (c4rows.py:72). It never reads whether that cell is blank.
+> 3. **Joh 10:37 (`orphan*`):** the fallback at c4rows.py:76 takes any cell in the verse that is blank on built and filled on src. It does not test that the cell sits at host+d, and the host's position is never established. Pos 2 next to feed slot 1 makes the record's attribution plausible, but it is not shown.
+> 4. **Host attribution is by gloss text only** (c4rows.py:64). The cell's Strong's number is never checked against the dump's host number. There was no multi-match in this run, so this is a gap, not a defect I found.
+> 5. **Hand-entered values without a ruling or code source:** the OFFSET map (Psa 24/78/118, c4rows.py:87) and the 846→1473 map (:95).
+> 6. **Not checked:**
+>    - Any sha: words_cells 86e44c58…, feed 7bd77385…, account ec1e2234….
+>    - That the repo account file is byte-for-byte the script's output. The script writes to the scratchpad (:120), not to the account path.
+>    - The audit script audit_phrase_gloss_underdist.py: not read. I have no `git log`, so its tie to d34d6723 is unverified.
+>    - DESIGN §9.199-§9.201: not read.
+>    - NO-EVIDENCE rows: not read.
+>
+> **Rulings that would settle it:** either have CC re-derive gaps 1-3 in the script and print them in the account, or rule that the record drops or qualifies those figures. Also rule whether gloss-only host matching (gap 4) is acceptable when it produces zero multi-matches.
+
+**Reviewer, second check (v2) — verbatim:**
+> REVIEW: CLEAR - the v2 account is the c4rows.py v2 output format, every SUMMARY figure adds up from the per-row lines, and all 14 rows I checked match the raw dump, delta and feed.
+>
+> To the ruling chat (re §9.201, C4 account v2, read-only). This is a check that the account is what it says. It is not a receipt of results (R2-b).
+>
+> **Your six fixes, item by item**
+> 1. **SUMMARY figures** (account :1315-1345, written by c4rows.py:144-174). Every figure adds up:
+>    - New: host-only 72 (64 with a counterpart, 8 without) + host+orphan 100 + orphan-only 1 = 173.
+>    - New feed: 170 at the same reference + 3 at the app's next verse = 173.
+>    - New host Strong's tally sums to 173, with G3756 = 155.
+>    - Cleared: host-only 86 + host+orphan 2 = 88. Feed: 86 joined + 2 with no shared slot.
+>    - Cleared, where each sits on built: 64 re-flagged + 21 under NO-EVIDENCE + 1 under a new head + 2 in neither list = 88.
+>    - Net: 109 (8 + 100 + 1) − 24 (88 − 64) = +85, the same as 778 − 693.
+>    - I read the SUMMARY plus about 40 per-row entries. I did not hand-count all 261 entries for the 64/8 or 64/21/1/2 splits. Those counts come from the script's own tally, whose logic I read (:136-169).
+> 2. **Rule-4 inference holds.** audit_phrase_gloss_underdist.py:197-211 flags a row only when the word at host position ± d has blank english on the dumped side. If that cell has no english line in the delta, it is unchanged, so it is blank on both sides. This rests on the host position being the cell matched by gloss (see 4).
+> 3. **Joh 10:37.** The fallback (c4rows.py:111) now requires the orphan's host position to be unchanged. I confirmed in the delta that pos 2 is the verse's only changed english cell (words_cells.tsv:32892-32894). The account no longer claims what the host holds.
+> 4. **Gloss-only host match** is stated honestly at :95-98, and there are 0 multi-matches. The limit stands: the cell's Strong's number cannot be tested from the delta.
+> 5. **Hand-entered maps are gone.** The feed match tries the same verse, then ±1 (:126). The pronoun fold is build_abp_surface._norm (:90-95, folds the pronoun set to 1473).
+> 6. **Cleared rows "on built"** are now matched by slot (:156-166).
+>
+> **Rows checked against the raw dump, delta and feed**
+> - New (10): Gen 27:2, Joh 10:37, Psa 24:4 (feed Psa 24:5 slot 13), Psa 118:18 (delta 47909/47912; feed 118:19 slot 8), Mar 9:18 (slot 20 1473-1544), Deu 25:18 orphan[-1] (slot 19), Rom 9:29 (built.out:780; delta 49561/49570; feed slot 15 302-3666), 1Sa 20:27 (built.out:193; delta 4905/4910; feed slot 24), Joh 3:18 (built.out:612), Gen 21:26.
+> - Cleared (4 named + Mar 9:18 = 5): Job 32:21 and Jer 40:14 (the feed has separate slots for both, as the account says), Joh 3:18 (src.out:543; built.out:612 under the new head 'believes'), Deu 1:43 (src.out:102; built.out:1015 is in NO-EVIDENCE, which starts at :792; feed slot 4), Mar 9:18 (src.out:631 and built.out:703).
+> - Every dump line, delta cell and feed slot the account cites matched.
+>
+> **Notes, not defects**
+> - The SUMMARY label at :1319 is cut at the colon ("in neither built list (built english at the host slot"). Cosmetic.
+> - Rom 9:29's delta cells carry moved=yes (words_cells.tsv:49561/49570). The script ignores that column, which is harmless here.
+>
+> **Not checked**
+> - Any sha (60fb07b9…, 86e44c58…, 7bd77385…). I can't hash, and I can't confirm the file on disk is from the last run.
+> - All 261 rows by hand.
+> - The NO-EVIDENCE totals.
+> - DESIGN §9.199-§9.201.
+> - The record text at DR :15393-15438, which you say will be rewritten from the SUMMARY.
+
+**JP's three conditions (§9.202), from reads** — script `drafts/STEP6AUD_harness/c4cond.py` (reads account v2 + the local 11/15 delta, the
+same words_cells check as c4rows.py; verses_cells sha 870e4782… = §9.157 (2); words_moved d32361b3… = §9.157 (1)). The rows: the 101 whose
+english goes to blank on built (account v2's 100 "orphan … -> None" + Joh 10:37 pos 2).
+- **(1) Greek — other columns of the 101 rows in STEP4-DELTA2:**
+  - On all 101, `english_head` and `english_head_norm` go from a value to blank with the english (the head is taken from the english).
+  - 92: nothing else changes.
+  - 7: `greek_pos` and `bracket_id` also go from a value to blank — Exo 34:24 @14, Job 4:18 @5, Pro 30:11 @8, Isa 1:13 @18, Eze 20:39 @28,
+    1Ti 5:8 @10, 2Ti 1:16 @17 (on src these rows sat inside an ABP bracket; on built they carry no English to place in one).
+  - 1: `bracket_id` goes from blank to 4 — 1Sa 20:27 @27.
+  - 1: Rom 9:29 @18 — strongs 302 → 3666, strongs_base, lemma ἄν → ὁμοιόω, morph PRT → V-API-1P, every cell marked moved = yes: this is one
+    of STEP4-DELTA2's 20 declared moved pairs (words_moved, §9.157 (1)) — the two Greek words swapped positions; ὁμοιόω is not lost, it sits
+    at @18 on built.
+  - `strongs`, `strongs_base`, `lemma`, `morph`, `is_pn`: unchanged on the other 100 rows.
+- **(3) Verse text:** 99 of the 101 verses have a new `verses.text` in STEP4-DELTA2 (verses_cells), and on each the built text holds the
+  whole phrase (compared with punctuation and dashes stripped). 2 verses' text is unchanged (not in verses_cells): Psa 118:18 ("he shall not
+  deliver") and Jer 12:13 ("shall not benefit"). Neither has a correction row (both active lists, tests/fixtures/corrections), so the
+  ABP source prose stands in for live there (docs/claude/data-model.md :706-708); abp_psalms.txt :2063 "[3 to 4death 1he shall not 2deliver
+  me]" → "he shall not deliver me to death"; abp_jeremiah.txt :315 "Their lots shall not benefit them." Diagnosis-grade (pre-build source),
+  not a byte read of built.
+- **(2) Context — what the site does with a word row whose english is blank** (code read at the working copy; views_lexicon.py last
+  changed a0bbdf62, static/src/59c-library-render.jsx e9417bc0):
+  - **Reader, chip mode:** the verse's chips are the rows with english, kjv_def or '*' (59c :354); a chip's label is the english, else
+    english_head (59c :209-211, :251); **with both blank the chip is not drawn (59c :252 `if (!rawLabel) return null`)** — so at Gen 27:2 the
+    γινώσκω chip (its Greek word and number) does not show; the οὐ chip shows "I know not".
+  - **Reader, interlinear / prose word line:** the word is kept if it has a Greek line (59c :800), so γινώσκω's Greek shows, with no English
+    under it; **it is not clickable** — a click needs english or english_head (59c :801-803; the same test in chip mode :233).
+  - **Word study for γινώσκω (G1097):** the occurrence count by book and the verse list read the Strong's number only (views_lexicon.py
+    :1606-1617, :1822-1828) — Gen 27:2 stays counted and listed. **The "ABP renders it as" list skips rows with blank english (:1472-1478),**
+    so Gen 27:2 drops out of γινώσκω's rendering counts; picking a rendering lists only rows whose english matches (:1778-1795), so Gen 27:2
+    is under none of them; the English finder matches english_head_norm (:947-971), so a search for "know" no longer counts this row for
+    γινώσκω. The οὐ row's head is now 'know' (STEP4-DELTA2: Gen 27:2 @5 english_head 'do' → 'know'); function-word numbers are dropped from
+    the finder's results (:980-986) and function-word renderings are folded to their connector (:1531-1533, :1538-1541) — whether "I know
+    not" folds to "not" was NOT read through `_normalize_gloss`.
+  - NOT read: the SEO word pages (views_seo.py :162-186), Ask-the-corpus (ai.py :574-582, :1131-1134 also require english non-blank),
+    search tab, detail panel.
+  - The same holds today on live for every row the audit already flags: by its rule 4 the content-word row next to each flagged row is
+    blank (693 on src).
+- **So (1)–(3) do NOT show "nothing lost beyond the blank cell itself":** the 7 bracket/position blanks; the chip view hides the verb; the
+  verb cannot be clicked; γινώσκω's rendering counts and the "know" finder lose the row. Per §9.202 this goes back to JP as printed.

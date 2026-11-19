@@ -1,890 +1,1345 @@
-# NEWLY FLAGGED on built (not on src) — 173 rows; each: the dump line (file:line), then the STEP4-DELTA2 english cell(s) it rests on (src -> built),
-#   then the app-edition feed slot that holds both numbers. orphan* = the host cell is unchanged in the delta; the row rests on the orphan cell only.
+# C4 account v2 (CC, 11/19). Inputs: STEP4-DELTA2 words_cells sha256 86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc; feed sha256 7bd77385a80de3c3a762b9427658dfec4163d4882f5a3ea56be10ff61436cf63.
+# built FLAGGED 778, src FLAGGED 693; newly flagged 173, newly cleared 88 (whole printed lines, as the check program).
+# Each row: the dump line (file:line); the STEP4-DELTA2 english cell(s) it rests on (src -> built); the feed slot holding both
+# Strong's numbers (pronoun numbers folded by build_abp_surface._norm); for a cleared row, where it sits on built.
+
+# NEWLY FLAGGED on built (not on src)
 c4_phrase_built.out:16  Gen 21:26    | G3756   | 'know'       | 'I know not'               | orphan[+1]=G1097
       host    pos 4   english 'I do not know' -> 'I know not'
-      feed: Gen 21:26 slot 4 3756-1097 'I know not'
+      orphan  pos 5   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Gen 21:26 slot 4 3756-1097 'I know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:20  Gen 27:2     | G3756   | 'know'       | 'I know not'               | orphan[+1]=G1097
       host    pos 5   english 'I do not' -> 'I know not'
       orphan  pos 6   english 'know' -> None
-      feed: Gen 27:2 slot 5 3756-1097 'I know not'
+      no counterpart
+      feed: Gen 27:2 slot 5 3756-1097 'I know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:21  Gen 27:36    | G3756   | 'behind'     | 'Have you not left behind' | orphan[+1]=G5275
       host    pos 32  english 'Do you not' -> 'Have you not left behind'
       orphan  pos 33  english 'leave behind' -> None
-      feed: Gen 27:36 slot 23 3756-5275 'Have you not left behind'
+      no counterpart
+      feed: Gen 27:36 slot 23 3756-5275 'Have you not left behind' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:22  Gen 28:1     | G3756   | 'take'       | 'You shall not take'       | orphan[+1]=G2983
       host    pos 11  english 'Not' -> 'You shall not take'
       orphan  pos 12  english 'shall you take' -> None
-      feed: Gen 28:1 slot 11 3756-2983 'You shall not take'
+      no counterpart
+      feed: Gen 28:1 slot 11 3756-2983 'You shall not take' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:23  Gen 29:15    | G3756   | 'slave'      | 'you shall not slave'      | orphan[+1]=G1398
       host    pos 10  english 'you shall not' -> 'you shall not slave'
       orphan  pos 11  english 'be a slave' -> None
-      feed: Gen 29:15 slot 9 3756-1398 'you shall not slave'
+      no counterpart
+      feed: Gen 29:15 slot 9 3756-1398 'you shall not slave' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:25  Gen 31:28    | G3756   | 'worthy'     | 'am I not worthy'          | orphan[+1]=G515
       host    pos 1   english 'not' -> 'am I not worthy'
       orphan  pos 2   english 'am I worthy' -> None
-      feed: Gen 31:28 slot 1 3756-515 'am I not worthy'
+      no counterpart
+      feed: Gen 31:28 slot 1 3756-515 'am I not worthy' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:28  Gen 32:16    | G2596   | 'alone'      | 'by itself alone.'         | orphan[+1]=G3441
       host    pos 9   english 'alone.' -> 'by itself alone.'
-      feed: Gen 32:16 slot 8 2596-3441 'by itself alone.'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Gen 32:16 slot 8 2596-3441 'by itself alone.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:37  Gen 39:8     | G3756   | 'knows'      | 'knows not,'               | orphan[+1]=G1097
       host    pos 15  english 'does not' -> 'knows not,'
       orphan  pos 16  english 'know' -> None
-      feed: Gen 39:8 slot 11 3756-1097 'knows not,'
+      no counterpart
+      feed: Gen 39:8 slot 11 3756-1097 'knows not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:39  Gen 40:23    | G3756   | 'remember'   | 'did not remember'         | orphan[+1]=G3403
       host    pos 1   english 'remembered not' -> 'did not remember'
-      feed: Gen 40:23 slot 1 3756-3403 '[3did not remember'
+      orphan  pos 2   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Gen 40:23 slot 1 3756-3403 '[3did not remember' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:40  Gen 41:19    | G3756   | 'see'        | 'I did not see'            | orphan[+1]=G1492
       host    pos 21  english 'I saw not' -> 'I did not see'
-      feed: Gen 41:19 slot 21 3756-1492 'I did not see'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Gen 41:19 slot 21 3756-1492 'I did not see' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:46  Gen 47:19    | G3756   | 'desolate'   | 'shall not be made desolate!' | orphan[+1]=G2049
       host    pos 40  english 'will not' -> 'shall not be made desolate!'
       orphan  pos 41  english 'be made desolate.' -> None
-      feed: Gen 47:19 slot 38 3756-2049 'shall not be made desolate!'
+      no counterpart
+      feed: Gen 47:19 slot 38 3756-2049 'shall not be made desolate!' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:51  Exo 4:1      | G3756   | 'appears'    | 'appears not'              | orphan[+1]=G3708
       host    pos 18  english 'did not' -> 'appears not'
       orphan  pos 19  english 'appear' -> None
-      feed: Exo 4:1 slot 16 3756-3708 '[2appears not'
+      no counterpart
+      feed: Exo 4:1 slot 16 3756-3708 '[2appears not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:72  Exo 20:16    | G3756   | 'witness'    | 'You shall not falsely witness' | orphan[+1]=G5576
       host    pos 0   english 'You shall not' -> 'You shall not falsely witness'
       orphan  pos 1   english 'witness falsely' -> None
-      feed: Exo 20:16 slot 0 3756-5576 'You shall not falsely witness'
+      no counterpart
+      feed: Exo 20:16 slot 0 3756-5576 'You shall not falsely witness' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:88  Exo 32:1     | G3756   | 'know'       | 'we know not'              | orphan[+1]=G1492
       host    pos 39  english 'we do not know' -> 'we know not'
-      feed: Exo 32:1 slot 37 3756-1492 'we know not'
+      orphan  pos 40  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Exo 32:1 slot 37 3756-1492 'we know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:89  Exo 32:23    | G3756   | 'know'       | 'we know not'              | orphan[+1]=G1492
       host    pos 20  english 'we do not know' -> 'we know not'
-      feed: Exo 32:23 slot 18 3756-1492 'we know not'
+      orphan  pos 21  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Exo 32:23 slot 18 3756-1492 'we know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:93  Exo 34:24    | G3756   | 'desire'     | 'he shall not desire'      | orphan[+1]=G1937
       host    pos 13  english None -> 'he shall not desire'
       orphan  pos 14  english 'shall desire' -> None
-      feed: Exo 34:24 slot 10 3756-1937 'he shall not desire'
+      no counterpart
+      feed: Exo 34:24 slot 10 3756-1937 'he shall not desire' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:97  Lev 4:22     | G3756   | 'do'         | 'he should not do —'       | orphan[+1]=G4160
       host    pos 17  english 'he shall not do' -> 'he should not do —'
-      feed: Lev 4:22 slot 15 3756-4160 'he should not do -'
+      orphan  pos 18  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Lev 4:22 slot 15 3756-4160 'he should not do -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:101  Lev 7:23     | G3756   | 'eat'        | 'you shall not eat.'       | orphan[+1]=G2068
       host    pos 12  english 'you shall not eat!' -> 'you shall not eat.'
-      feed: Lev 7:23 slot 12 3756-2068 'you shall not eat.'
+      orphan  pos 13  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Lev 7:23 slot 12 3756-2068 'you shall not eat.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:105  Lev 11:41    | G3756   | 'eat'        | 'you shall not eat it.'    | orphan[+1]=G977
       host    pos 12  english 'you shall not' -> 'you shall not eat it.'
       orphan  pos 13  english 'eat.' -> None
-      feed: Lev 11:41 slot 11 3756-977 'you shall not eat  it.'
+      no counterpart
+      feed: Lev 11:41 slot 11 3756-977 'you shall not eat  it.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:110  Num 9:10     | G2532   | 'observe'    | 'shall observe'            | orphan[+1]=G4160
       host    pos 24  english 'he shall observe' -> 'shall observe'
-      feed: Num 9:10 slot 23 2532-4160 'shall observe'
+      orphan  pos 25  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Num 9:10 slot 23 2532-4160 'shall observe' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:111  Num 13:31    | G3756   | 'ascend'     | 'We ascend not;'           | orphan[+1]=G305
       host    pos 8   english 'We are not' -> 'We ascend not;'
       orphan  pos 9   english 'ascending;' -> None
-      feed: Num 13:31 slot 8 3756-305 'We ascend not;'
+      no counterpart
+      feed: Num 13:31 slot 8 3756-305 'We ascend not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:112  Num 16:12    | G3756   | 'ascend'     | 'We do not ascend.'        | orphan[+1]=G305
       host    pos 11  english 'We do not' -> 'We do not ascend.'
       orphan  pos 12  english 'ascend to you.' -> None
-      feed: Num 16:12 slot 10 3756-305 'We do not ascend.'
+      no counterpart
+      feed: Num 16:12 slot 10 3756-305 'We do not ascend.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:117  Num 24:17    | G3756   | 'approaches' | 'he approaches not.'       | orphan[+1]=G1448
       host    pos 7   english 'he does not' -> 'he approaches not.'
       orphan  pos 8   english 'approach.' -> None
-      feed: Num 24:17 slot 7 3756-1448 'he approaches not.'
+      no counterpart
+      feed: Num 24:17 slot 7 3756-1448 'he approaches not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:119  Num 30:5     | G3756   | 'stand'      | 'shall not stand —'        | orphan[+1]=G2476
       host    pos 24  english 'then they shall not' -> 'shall not stand —'
       orphan  pos 25  english 'stand;' -> None
-      feed: Num 30:5 slot 19 3756-2476 'shall not stand -'
+      no counterpart
+      feed: Num 30:5 slot 19 3756-2476 'shall not stand -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:125  Deu 5:20     | G3756   | 'witness'    | 'You shall not falsely witness' | orphan[+1]=G5576
       host    pos 0   english 'You shall not' -> 'You shall not falsely witness'
       orphan  pos 1   english 'witness falsely' -> None
-      feed: Deu 5:20 slot 0 3756-5576 'You shall not falsely witness'
+      no counterpart
+      feed: Deu 5:20 slot 0 3756-5576 'You shall not falsely witness' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:126  Deu 5:22     | G3756   | 'more'       | 'he added not any more.'   | orphan[+1]=G4369
       host    pos 22  english 'he did not' -> 'he added not any more.'
       orphan  pos 23  english 'add any more.' -> None
-      feed: Deu 5:22 slot 20 3756-4369 'he added not  any more.'
+      no counterpart
+      feed: Deu 5:22 slot 20 3756-4369 'he added not  any more.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:131  Deu 13:2     | G3756   | 'know'       | 'we know not.'             | orphan[+1]=G1492
       host    pos 18  english 'we do not' -> 'we know not.'
       orphan  pos 19  english 'know.' -> None
-      feed: Deu 13:2 slot 17 3756-1492 'we know not.'
+      no counterpart
+      feed: Deu 13:2 slot 17 3756-1492 'we know not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:141  Deu 25:3     | G3756   | 'more'       | 'they shall not add more.' | orphan[+1]=G4369
       host    pos 4   english 'they shall not add more;' -> 'they shall not add more.'
-      feed: Deu 25:3 slot 4 3756-4369 'they shall not add more.'
+      orphan  pos 5   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Deu 25:3 slot 4 3756-4369 'they shall not add more.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:142  Deu 25:18    | G3756   | 'fear'       | 'did not fear'             | orphan[-1]=G5399
       host    pos 23  english 'feared not' -> 'did not fear'
-      feed: Deu 25:18 slot 19 3756-5399 'he did not fear'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Deu 25:18 slot 19 3756-5399 'he did not fear' (same reference; gloss differs)
 c4_phrase_built.out:143  Deu 28:44    | G3756   | 'lend'       | 'shall not lend.'          | orphan[+1]=G1155
       host    pos 6   english 'shall not lend;' -> 'shall not lend.'
-      feed: Deu 28:44 slot 5 3756-1155 '1shall not lend].'
+      orphan  pos 7   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Deu 28:44 slot 5 3756-1155 '1shall not lend].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:145  Deu 32:52    | G3756   | 'enter'      | 'you shall not enter'      | orphan[+1]=G1525
       host    pos 7   english 'you shall not enter,' -> 'you shall not enter'
-      feed: Deu 32:52 slot 7 3756-1525 '1you shall not enter]'
+      orphan  pos 8   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Deu 32:52 slot 7 3756-1525 '1you shall not enter]' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:176  Jdg 15:13    | G3756   | 'kill'       | 'we will not kill'         | orphan[+1]=G2289
       host    pos 17  english 'we will not' -> 'we will not kill'
       orphan  pos 18  english 'kill you.' -> None
-      feed: Jdg 15:13 slot 15 3756-2289 'we will not kill'
+      no counterpart
+      feed: Jdg 15:13 slot 15 3756-2289 'we will not kill' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:193  1Sa 20:27    | G3756   | 'come'       | 'has not come'             | orphan[+1]=G3854
       host    pos 26  english 'he has not' -> 'has not come'
       orphan  pos 27  english 'come,' -> None
-      feed: 1Sa 20:27 slot 24 3756-3854 '[4has not come,'
+      no counterpart
+      feed: 1Sa 20:27 slot 24 3756-3854 '[4has not come,' (same reference; gloss differs)
 c4_phrase_built.out:199  2Sa 1:14     | G3756   | 'fear'       | 'you fear not'             | orphan[+1]=G5399
       host    pos 5   english 'you do not' -> 'you fear not'
       orphan  pos 6   english 'fear' -> None
-      feed: 2Sa 1:14 slot 5 3756-5399 'you fear not'
+      no counterpart
+      feed: 2Sa 1:14 slot 5 3756-5399 'you fear not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:204  2Sa 15:11    | G3756   | 'know'       | 'they did not know,'       | orphan[+1]=G1492
       host    pos 13  english 'they did not know' -> 'they did not know,'
-      feed: 2Sa 15:11 slot 13 3756-1492 'they did not know,'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 2Sa 15:11 slot 13 3756-1492 'they did not know,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:217  1Ki 1:11     | G3756   | 'knows'      | 'knows not.'               | orphan[+1]=G1097
       host    pos 20  english 'does not' -> 'knows not.'
       orphan  pos 21  english 'know.' -> None
-      feed: 1Ki 1:11 slot 17 3756-1097 'knows not.'
+      no counterpart
+      feed: 1Ki 1:11 slot 17 3756-1097 'knows not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:218  1Ki 2:4      | G3756   | 'away'       | 'there shall not be lifted away' | orphan[+1]=G1808
       host    pos 35  english 'There shall not be lifted away' -> 'there shall not be lifted away'
-      feed: 1Ki 2:4 slot 31 3756-1808 'there shall not be lifted away'
+      orphan  pos 36  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Ki 2:4 slot 31 3756-1808 'there shall not be lifted away' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:223  1Ki 3:7      | G3756   | 'know'       | 'I know not'               | orphan[+1]=G1492
       host    pos 22  english 'I do not' -> 'I know not'
       orphan  pos 23  english 'know' -> None
-      feed: 1Ki 3:7 slot 19 3756-1492 'I know not'
+      no counterpart
+      feed: 1Ki 3:7 slot 19 3756-1492 'I know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:228  1Ki 9:6      | G3361   | 'keep'       | 'so as to not keep them,'  | orphan[+1]=G5442
       host    pos 19  english 'so as to not keep,' -> 'so as to not keep them,'
-      feed: 1Ki 9:6 slot 16 3361-5442 'so as to not keep  them,'
+      orphan  pos 20  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Ki 9:6 slot 16 3361-5442 'so as to not keep  them,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:234  1Ki 13:28    | G3756   | 'break'      | 'it did not break'         | orphan[+1]=G4937
       host    pos 29  english 'it did not tear apart' -> 'it did not break'
-      feed: 1Ki 13:28 slot 28 3756-4937 'it did not break'
+      orphan  pos 30  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: 1Ki 13:28 slot 28 3756-4937 'it did not break' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:239  1Ki 18:12    | G3756   | 'know'       | 'I know not;'              | orphan[+1]=G1492
       host    pos 16  english 'I do not' -> 'I know not;'
       orphan  pos 17  english 'know,' -> None
-      feed: 1Ki 18:12 slot 16 3756-1492 'I know not;'
+      no counterpart
+      feed: 1Ki 18:12 slot 16 3756-1492 'I know not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:244  1Ki 22:18    | G3756   | 'prophesies' | 'prophesies not'           | orphan[+1]=G4395
       host    pos 14  english 'would not' -> 'prophesies not'
       orphan  pos 15  english 'prophesy' -> None
-      feed: 1Ki 22:18 slot 13 3756-4395 '[2prophesies not'
+      no counterpart
+      feed: 1Ki 22:18 slot 13 3756-4395 '[2prophesies not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:266  2Ki 18:32    | G3756   | 'die'        | 'not die!'                 | orphan[+1]=G599
       host    pos 27  english 'you shall not die.' -> 'not die!'
-      feed: 2Ki 18:32 slot 26 3756-599 'not die!'
+      orphan  pos 28  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 2Ki 18:32 slot 26 3756-599 'not die!' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:271  2Ki 24:14    | G3756   | 'behind'     | 'They did not leave any behind' | orphan[+1]=G5275
       host    pos 22  english 'They did not' -> 'They did not leave any behind'
       orphan  pos 23  english 'leave behind' -> None
-      feed: 2Ki 24:14 slot 22 3756-5275 'They did not leave  any behind'
+      no counterpart
+      feed: 2Ki 24:14 slot 22 3756-5275 'They did not leave  any behind' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:272  1Ch 16:22    | G3361   | 'touch'      | 'saying, Touch not'        | orphan[+1]=G680
       host    pos 0   english 'Saying, Touch not' -> 'saying, Touch not'
-      feed: 1Ch 16:22 slot 0 3361-680 'saying, Touch not'
+      orphan  pos 1   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Ch 16:22 slot 0 3361-680 'saying, Touch not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:285  2Ch 18:16    | G3756   | 'have'       | 'have not'                 | orphan[+1]=G2192
       host    pos 20  english 'have no' -> 'have not'
-      feed: 2Ch 18:16 slot 17 3756-2192 '[2have not'
+      orphan  pos 21  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 2Ch 18:16 slot 17 3756-2192 '[2have not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:288  2Ch 20:33    | G3756   | 'remove'     | 'he did not remove;'       | orphan[+1]=G1808
       host    pos 3   english 'he did not remove,' -> 'he did not remove;'
-      feed: 2Ch 20:33 slot 3 3756-1808 'he did not remove;'
+      orphan  pos 4   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 2Ch 20:33 slot 3 3756-1808 'he did not remove;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:305  Neh 4:11     | G3756   | 'see'        | 'shall not see,'           | orphan[+1]=G3708
       host    pos 8   english 'they shall not see' -> 'shall not see,'
-      feed: Neh 4:11 slot 7 3756-3708 'shall not see,'
+      orphan  pos 9   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Neh 4:11 slot 7 3756-3708 'shall not see,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:316  Job 4:18     | G3756   | 'trusts'     | 'he trusts not,'           | orphan[+1]=G4100
       host    pos 4   english 'he does not' -> 'he trusts not,'
       orphan  pos 5   english 'trust,' -> None
-      feed: Job 4:18 slot 3 3756-4100 'he trusts not,'
+      no counterpart
+      feed: Job 4:18 slot 3 3756-4100 'he trusts not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:321  Job 14:3     | G3778   | 'account'    | 'an account of this'       | orphan[+1]=G3056
       host    pos 2   english 'an account of this one' -> 'an account of this'
-      feed: Job 14:3 slot 2 3778-3056 '[2an account of this'
+      orphan  pos 3   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Job 14:3 slot 2 3778-3056 '[2an account of this' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:328  Job 20:9     | G3756   | 'proceeds'   | 'proceeds not,'            | orphan[+1]=G4369
       host    pos 3   english 'does not' -> 'proceeds not,'
       orphan  pos 4   english 'proceed,' -> None
-      feed: Job 20:9 slot 3 3756-4369 'proceeds not,'
+      no counterpart
+      feed: Job 20:9 slot 3 3756-4369 'proceeds not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:329  Job 20:23    | G1487   | 'means'      | 'if by any means'          | orphan[+1]=G1513
       host    pos 0   english 'If by any means' -> 'if by any means'
-      feed: Job 20:23 slot 0 1487-1513 'if by any means'
+      orphan  pos 1   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Job 20:23 slot 0 1487-1513 'if by any means' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:330  Job 23:9     | G3756   | 'see'        | 'I shall not see.'         | orphan[+1]=G3708
       host    pos 8   english 'I shall not see it.' -> 'I shall not see.'
-      feed: Job 23:9 slot 6 3756-3708 'I shall not see.'
+      orphan  pos 9   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Job 23:9 slot 6 3756-3708 'I shall not see.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:331  Job 24:16    | G3756   | 'know'       | 'they know not'            | orphan[+1]=G1921
       host    pos 7   english 'they do not' -> 'they know not'
       orphan  pos 8   english 'know' -> None
-      feed: Job 24:16 slot 7 3756-1921 'they know not'
+      no counterpart
+      feed: Job 24:16 slot 7 3756-1921 'they know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:334  Job 27:11    | G3756   | 'lie'        | 'I shall not lie.'         | orphan[+1]=G5574
       host    pos 13  english 'I shall not lie about.' -> 'I shall not lie.'
-      feed: Job 27:11 slot 13 3756-5574 'I shall not lie.'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Job 27:11 slot 13 3756-5574 'I shall not lie.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:352  Psa 24:4     | G3756   | 'oath'       | 'swore not by an oath'     | orphan[+1]=G3660
       host    pos 15  english 'did not' -> 'swore not by an oath'
       orphan  pos 16  english 'swear by an oath' -> None
-      feed: Psa 24:5 slot 13 3756-3660 'swore not by an oath'
+      no counterpart
+      feed: Psa 24:5 slot 13 3756-3660 'swore not by an oath' (app's next verse; gloss = the flagged gloss)
 c4_phrase_built.out:360  Psa 78:38    | G3756   | 'destroy'    | 'will not utterly destroy,' | orphan[+1]=G1311
       host    pos 10  english 'he will not' -> 'will not utterly destroy,'
       orphan  pos 11  english 'utterly destroy.' -> None
-      feed: Psa 78:39 slot 8 3756-1311 'will not utterly destroy,'
+      no counterpart
+      feed: Psa 78:39 slot 8 3756-1311 'will not utterly destroy,' (app's next verse; gloss = the flagged gloss)
 c4_phrase_built.out:364  Psa 115:5    | G3756   | 'see'        | 'shall not see.'           | orphan[+1]=G3708
       host    pos 8   english 'they shall not' -> 'shall not see.'
       orphan  pos 9   english 'see;' -> None
-      feed: Psa 115:5 slot 7 3756-3708 'shall not see.'
+      no counterpart
+      feed: Psa 115:5 slot 7 3756-3708 'shall not see.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:365  Psa 115:6    | G3756   | 'smell'      | 'they smell not.'          | orphan[+1]=G3750
       host    pos 8   english 'they shall not' -> 'they smell not.'
       orphan  pos 9   english 'smell;' -> None
-      feed: Psa 115:6 slot 7 3756-3750.1 'they smell not.'
+      no counterpart
+      feed: Psa 115:6 slot 7 3756-3750.1 'they smell not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:366  Psa 118:18   | G3756   | 'deliver'    | 'he shall not deliver'     | orphan[+1]=G3860
       host    pos 8   english 'he shall not' -> 'he shall not deliver'
       orphan  pos 9   english 'deliver me.' -> None
-      feed: Psa 118:19 slot 8 3756-3860 '1he shall not deliver'
+      no counterpart
+      feed: Psa 118:19 slot 8 3756-3860 '1he shall not deliver' (app's next verse; gloss = the flagged gloss)
 c4_phrase_built.out:379  Pro 14:5     | G3756   | 'lies'       | 'lies not;'                | orphan[+1]=G5574
       host    pos 2   english 'does not' -> 'lies not;'
       orphan  pos 3   english 'lie;' -> None
-      feed: Pro 14:5 slot 2 3756-5574 'lies not;'
+      no counterpart
+      feed: Pro 14:5 slot 2 3756-5574 'lies not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:380  Pro 17:10    | G3756   | 'perceives'  | 'perceives not.'           | orphan[+1]=G143
       host    pos 7   english 'does not' -> 'perceives not.'
       orphan  pos 8   english 'perceive.' -> None
-      feed: Pro 17:10 slot 6 3756-143 'perceives not.'
+      no counterpart
+      feed: Pro 17:10 slot 6 3756-143 'perceives not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:388  Pro 27:1     | G3756   | 'know'       | 'you know not'             | orphan[+1]=G1097
       host    pos 6   english 'you do not' -> 'you know not'
       orphan  pos 7   english 'know' -> None
-      feed: Pro 27:1 slot 5 3756-1063-1097 'for you know not'
+      no counterpart
+      feed: Pro 27:1 slot 5 3756-1063-1097 'for you know not' (same reference; gloss differs)
 c4_phrase_built.out:389  Pro 27:26    | G1473   | 'lambs'      | 'lambs to you!'            | orphan[+1]=G704
       host    pos 9   english 'lambs for you.' -> 'lambs to you!'
-      feed: Pro 27:26 slot 9 1473-704 'lambs to you!'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Pro 27:26 slot 9 1473-704 'lambs to you!' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:390  Pro 30:11    | G3756   | 'blesses'    | 'blesses not.'             | orphan[+1]=G2127
       host    pos 7   english 'he does not' -> 'blesses not.'
       orphan  pos 8   english 'bless.' -> None
-      feed: Pro 30:11 slot 7 3756-2127 '2blesses not].'
+      no counterpart
+      feed: Pro 30:11 slot 7 3756-2127 '2blesses not].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:391  Pro 31:27    | G3756   | 'eats'       | 'she eats not.'            | orphan[+1]=G2068
       host    pos 7   english 'she does not' -> 'she eats not.'
       orphan  pos 8   english 'eat.' -> None
-      feed: Pro 31:27 slot 5 3756-2068 'she eats not.'
+      no counterpart
+      feed: Pro 31:27 slot 5 3756-2068 'she eats not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:392  Ecc 4:12     | G3756   | 'quickly'    | 'shall not quickly'        | orphan[+1]=G5030
       host    pos 15  english 'shall not' -> 'shall not quickly'
       orphan  pos 16  english 'be quickly' -> None
-      feed: Ecc 4:12 slot 15 3756-5030 'shall not quickly'
+      no counterpart
+      feed: Ecc 4:12 slot 15 3756-5030 'shall not quickly' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:396  Ecc 7:28     | G3756   | 'find'       | 'did not find;'            | orphan[+1]=G2147
       host    pos 6   english 'I did not' -> 'did not find;'
       orphan  pos 7   english 'find.' -> None
-      feed: Ecc 7:28 slot 5 3756-2147 'did not find;'
+      no counterpart
+      feed: Ecc 7:28 slot 5 3756-2147 'did not find;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:399  Ecc 10:14    | G3756   | 'knows'      | 'knows not'                | orphan[+1]=G1097
       host    pos 5   english 'does not' -> 'knows not'
       orphan  pos 6   english 'know' -> None
-      feed: Ecc 10:14 slot 5 3756-1097 '[2knows not'
+      no counterpart
+      feed: Ecc 10:14 slot 5 3756-1097 '[2knows not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:400  Ecc 10:15    | G3756   | 'knows'      | 'knows not'                | orphan[+1]=G1097
       host    pos 6   english 'does not' -> 'knows not'
       orphan  pos 7   english 'know how' -> None
-      feed: Ecc 10:15 slot 6 3756-1097 'knows not'
+      no counterpart
+      feed: Ecc 10:15 slot 6 3756-1097 'knows not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:403  Ecc 11:2     | G3756   | 'know'       | 'you know not'             | orphan[+1]=G1097
       host    pos 9   english 'you do not' -> 'you know not'
       orphan  pos 10  english 'know' -> None
-      feed: Ecc 11:2 slot 9 3756-1097 'you know not'
+      no counterpart
+      feed: Ecc 11:2 slot 9 3756-1097 'you know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:404  Ecc 11:4     | G3756   | 'sows'       | 'he sows not;'             | orphan[+1]=G4687
       host    pos 2   english 'one does not' -> 'he sows not;'
       orphan  pos 3   english 'sow,' -> None
-      feed: Ecc 11:4 slot 2 3756-4687 'he sows not;'
+      no counterpart
+      feed: Ecc 11:4 slot 2 3756-4687 'he sows not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:405  Ecc 11:4     | G3756   | 'harvests'   | 'he harvests not,'         | orphan[+1]=G2325
       host    pos 9   english 'will not' -> 'he harvests not,'
       orphan  pos 10  english 'harvest.' -> None
-      feed: Ecc 11:4 slot 8 3756-2325 'he harvests not,'
+      no counterpart
+      feed: Ecc 11:4 slot 8 3756-2325 'he harvests not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:406  Ecc 11:6     | G3756   | 'know'       | 'you know not'             | orphan[+1]=G1097
       host    pos 15  english 'you do not' -> 'you know not'
       orphan  pos 16  english 'know' -> None
-      feed: Ecc 11:6 slot 13 3756-1097 'you know not'
+      no counterpart
+      feed: Ecc 11:6 slot 13 3756-1097 'you know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:408  Son 5:6      | G3756   | 'hear'       | 'he did not hear'          | orphan[+1]=G5219
       host    pos 23  english 'he did not' -> 'he did not hear'
       orphan  pos 24  english 'hearken' -> None
-      feed: Son 5:6 slot 17 3756-5219 'he did not hear'
+      no counterpart
+      feed: Son 5:6 slot 17 3756-5219 'he did not hear' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:411  Isa 1:13     | G3756   | 'endure'     | 'I endure not.'            | orphan[+1]=G430
       host    pos 17  english 'I cannot' -> 'I endure not.'
       orphan  pos 18  english 'endure.' -> None
-      feed: Isa 1:13 slot 16 3756-430 '1I endure not].'
+      no counterpart
+      feed: Isa 1:13 slot 16 3756-430 '1I endure not].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:415  Isa 14:17    | G3756   | 'loose'      | 'he did not loose?'        | orphan[+1]=G3089
       host    pos 13  english 'he did not loose.' -> 'he did not loose?'
-      feed: Isa 14:17 slot 12 3756-3089 'he did not loose?'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Isa 14:17 slot 12 3756-3089 'he did not loose?' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:416  Isa 28:20    | G3756   | 'able'       | 'we are not able'          | orphan[+1]=G1410
       host    pos 1   english 'in no way' -> 'we are not able'
       orphan  pos 2   english 'are we able' -> None
-      feed: Isa 28:20 slot 1 3756-1410 'we are not able'
+      no counterpart
+      feed: Isa 28:20 slot 1 3756-1410 'we are not able' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:420  Isa 45:9     | G3756   | 'work'       | 'you work not,'            | orphan[+1]=G2038
       host    pos 23  english 'you do not' -> 'you work not,'
       orphan  pos 24  english 'work,' -> None
-      feed: Isa 45:9 slot 23 3756-2038 'you work not,'
+      no counterpart
+      feed: Isa 45:9 slot 23 3756-2038 'you work not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:426  Isa 59:8     | G3756   | 'know'       | 'they know not,'           | orphan[+1]=G1492
       host    pos 3   english 'they do not' -> 'they know not,'
       orphan  pos 4   english 'know,' -> None
-      feed: Isa 59:8 slot 3 3756-1492 'they know not,'
+      no counterpart
+      feed: Isa 59:8 slot 3 3756-1492 'they know not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:427  Isa 59:8     | G3756   | 'know'       | 'they know not'            | orphan[+1]=G1492
       host    pos 21  english 'they do not' -> 'they know not'
       orphan  pos 22  english 'know' -> None
-      feed: Isa 59:8 slot 3 3756-1492 'they know not,'
+      no counterpart
+      feed: Isa 59:8 slot 3 3756-1492 'they know not,' (same reference; gloss differs)
 c4_phrase_built.out:430  Jer 4:29     | G3756   | 'dwells'     | 'dwells not'               | orphan[+1]=G2730
       host    pos 27  english 'does not' -> 'dwells not'
       orphan  pos 28  english 'dwell' -> None
-      feed: Jer 4:29 slot 27 3756-2730 '[2dwells not'
+      no counterpart
+      feed: Jer 4:29 slot 27 3756-2730 '[2dwells not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:433  Jer 5:21     | G3756   | 'see'        | 'they see not;'            | orphan[+1]=G991
       host    pos 10  english 'they do not' -> 'they see not;'
       orphan  pos 11  english 'see;' -> None
-      feed: Jer 5:21 slot 9 3756-991 'they see not;'
+      no counterpart
+      feed: Jer 5:21 slot 9 3756-991 'they see not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:434  Jer 5:21     | G3756   | 'hear'       | 'they hear not.'           | orphan[+1]=G191
       host    pos 15  english 'they do not' -> 'they hear not.'
       orphan  pos 16  english 'hear.' -> None
-      feed: Jer 5:21 slot 12 3756-191 'they hear not.'
+      no counterpart
+      feed: Jer 5:21 slot 12 3756-191 'they hear not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:437  Jer 7:9      | G3756   | 'know'       | 'you know not;'            | orphan[+1]=G1492
       host    pos 20  english 'you do not' -> 'you know not;'
       orphan  pos 21  english 'know,' -> None
-      feed: Jer 7:9 slot 18 3756-1492 'you know not;'
+      no counterpart
+      feed: Jer 7:9 slot 18 3756-1492 'you know not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:438  Jer 7:16     | G3756   | 'listen'     | 'I will not listen.'       | orphan[+1]=G1522
       host    pos 24  english 'I will not' -> 'I will not listen.'
       orphan  pos 25  english 'listen to you.' -> None
-      feed: Jer 7:16 slot 18 3756-1522 'I will not listen.'
+      no counterpart
+      feed: Jer 7:16 slot 18 3756-1522 'I will not listen.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:439  Jer 7:26     | G3756   | 'heed'       | 'took not heed'            | orphan[+1]=G4337
       host    pos 5   english 'did not' -> 'took not heed'
       orphan  pos 6   english 'take heed' -> None
-      feed: Jer 7:26 slot 4 3756-4337 '[2took not heed'
+      no counterpart
+      feed: Jer 7:26 slot 4 3756-4337 '[2took not heed' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:444  Jer 12:13    | G3756   | 'benefit'    | 'shall not benefit'        | orphan[+1]=G5623
       host    pos 8   english 'shall not' -> 'shall not benefit'
       orphan  pos 9   english 'benefit them.' -> None
-      feed: Jer 12:13 slot 7 3756-5623 'shall not benefit'
+      no counterpart
+      feed: Jer 12:13 slot 7 3756-5623 'shall not benefit' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:445  Jer 13:12    | G3756   | 'know'       | 'we know not'              | orphan[+1]=G1097
       host    pos 26  english 'that we shall not' -> 'we know not'
       orphan  pos 27  english 'know' -> None
-      feed: Jer 13:12 slot 25 3756-1097 'we know not'
+      no counterpart
+      feed: Jer 13:12 slot 25 3756-1097 'we know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:449  Jer 17:22    | G3756   | 'do'         | 'you shall not do —'       | orphan[+1]=G4160
       host    pos 15  english 'you shall not do.' -> 'you shall not do —'
-      feed: Jer 17:22 slot 14 3756-4160 '1you shall not do] -'
+      orphan  pos 16  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Jer 17:22 slot 14 3756-4160 '1you shall not do] -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:453  Jer 23:32    | G3756   | 'charge'     | 'I gave charge not'        | orphan[+1]=G1781
       host    pos 33  english 'I did not' -> 'I gave charge not'
       orphan  pos 34  english 'give charge' -> None
-      feed: Jer 23:32 slot 30 3756-1781 'I gave charge not'
+      no counterpart
+      feed: Jer 23:32 slot 30 3756-1781 'I gave charge not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:454  Jer 25:4     | G3756   | 'heed'       | 'took heed not'            | orphan[+1]=G4337
       host    pos 15  english 'you did not' -> 'took heed not'
       orphan  pos 16  english 'take heed' -> None
-      feed: Jer 25:4 slot 13 3756-4337 'took heed not'
+      no counterpart
+      feed: Jer 25:4 slot 13 3756-4337 'took heed not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:458  Jer 34:4     | G3756   | 'die'        | 'You shall not die'        | orphan[+1]=G599
       host    pos 13  english 'you shall not die' -> 'You shall not die'
-      feed: Jer 34:4 slot 13 3756-599 'You shall not die'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Jer 34:4 slot 13 3756-599 'You shall not die' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:475  Eze 8:12     | G3756   | 'sees'       | 'sees not'                 | orphan[+1]=G3708
       host    pos 26  english 'does not' -> 'sees not'
       orphan  pos 27  english 'see' -> None
-      feed: Eze 8:12 slot 26 3756-3708 '[3sees not'
+      no counterpart
+      feed: Eze 8:12 slot 26 3756-3708 '[3sees not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:481  Eze 18:16    | G3756   | 'force'      | 'seized not by force,'     | orphan[+1]=G726
       host    pos 10  english 'seized not by force;' -> 'seized not by force,'
-      feed: Eze 18:16 slot 8 3756-726 'seized not by force,'
+      orphan  pos 11  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Eze 18:16 slot 8 3756-726 'seized not by force,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:487  Eze 20:39    | G3756   | 'profane'    | 'profane not'              | orphan[+1]=G953
       host    pos 27  english 'shall not' -> 'profane not'
       orphan  pos 28  english 'profane' -> None
-      feed: Eze 20:39 slot 25 3756-953 '1profane not]'
+      no counterpart
+      feed: Eze 20:39 slot 25 3756-953 '1profane not]' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:489  Eze 24:6     | G3756   | 'forth'      | 'came not forth'           | orphan[+1]=G1831
       host    pos 19  english 'did not' -> 'came not forth'
       orphan  pos 20  english 'come forth' -> None
-      feed: Eze 24:6 slot 19 3756-1831 'came not forth'
+      no counterpart
+      feed: Eze 24:6 slot 19 3756-1831 'came not forth' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:495  Eze 34:3     | G3756   | 'graze'      | 'you graze not.'           | orphan[+1]=G1006
       host    pos 16  english 'you do not' -> 'you graze not.'
       orphan  pos 17  english 'graze.' -> None
-      feed: Eze 34:3 slot 15 3756-1006 'you graze not.'
+      no counterpart
+      feed: Eze 34:3 slot 15 3756-1006 'you graze not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:508  Dan 11:12    | G3756   | 'prevail'    | 'shall not prevail.'       | orphan[+1]=G2729
       host    pos 13  english 'he shall not prevail.' -> 'shall not prevail.'
-      feed: Dan 11:12 slot 12 3756-2729 'shall not prevail.'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Dan 11:12 slot 12 3756-2729 'shall not prevail.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:513  Joe 3:17     | G3756   | 'go'         | 'shall not go'             | orphan[+1]=G1330
       host    pos 20  english None -> 'shall not go'
       orphan  pos 21  english 'shall go' -> None
-      feed: Joe 3:17 slot 18 3756-1330 'shall not go'
+      no counterpart
+      feed: Joe 3:17 slot 18 3756-1330 'shall not go' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:518  Jon 4:10     | G3756   | 'hardship'   | 'you suffered not hardship' | orphan[+1]=G2553
       host    pos 11  english 'you suffered no hardship' -> 'you suffered not hardship'
-      feed: Jon 4:10 slot 10 3756-2553 'you suffered not hardship'
+      orphan  pos 12  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Jon 4:10 slot 10 3756-2553 'you suffered not hardship' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:521  Hab 2:4      | G3756   | 'well'       | 'does not think well'      | orphan[+1]=G2106
       host    pos 2   english 'favors not' -> 'does not think well'
-      feed: Hab 2:4 slot 2 3756-2106 '[2does not think well'
+      orphan  pos 3   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Hab 2:4 slot 2 3756-2106 '[2does not think well' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:522  Hag 2:20     | G1537   | 'time'       | 'of a second time'         | orphan[+1]=G1208
       host    pos 4   english 'the second time' -> 'of a second time'
-      feed: Hag 2:20 slot 4 1537-1208 'of a second  time'
+      orphan  pos 5   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Hag 2:20 slot 4 1537-1208 'of a second  time' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:529  1Co 1:16     | G3756   | 'know'       | 'I know not'               | orphan[+1]=G1492
       host    pos 7   english 'I do not know' -> 'I know not'
-      feed: 1Co 1:16 slot 5 3756-1492 'I know not'
+      orphan  pos 8   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Co 1:16 slot 5 3756-1492 'I know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:531  1Co 7:36     | G3756   | 'sins'       | 'he sins not —'            | orphan[+1]=G264
       host    pos 19  english 'he does not' -> 'he sins not —'
       orphan  pos 20  english 'sin;' -> None
-      feed: 1Co 7:36 slot 17 3756-264 'he sins not -'
+      no counterpart
+      feed: 1Co 7:36 slot 17 3756-264 'he sins not -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:534  1Co 10:21    | G3756   | 'able'       | 'You are not able'         | orphan[+1]=G1410
       host    pos 8   english 'you are not able' -> 'You are not able'
-      feed: 1Co 10:21 slot 0 3756-1410 'You are not able to'
+      orphan  pos 9   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Co 10:21 slot 0 3756-1410 'You are not able to' (same reference; gloss differs)
 c4_phrase_built.out:539  1Co 12:21    | G3756   | 'have'       | 'I have not;'              | orphan[+1]=G2192
       host    pos 9   english 'I have no;' -> 'I have not;'
-      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:540  1Co 12:21    | G3756   | 'have'       | 'I have not.'              | orphan[+1]=G2192
       host    pos 19  english 'I have no.' -> 'I have not.'
-      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];'
+      orphan  pos 20  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];' (same reference; gloss differs)
 c4_phrase_built.out:543  1Co 14:16    | G3756   | 'knows'      | 'he knows not?'            | orphan[+1]=G1492
       host    pos 22  english 'he does not' -> 'he knows not?'
       orphan  pos 23  english 'know?' -> None
-      feed: 1Co 14:16 slot 22 3756-1492 'he knows not?'
+      no counterpart
+      feed: 1Co 14:16 slot 22 3756-1492 'he knows not?' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:547  1Jn 2:21     | G3756   | 'know'       | 'you know not'             | orphan[+1]=G1492
       host    pos 4   english 'you do not' -> 'you know not'
       orphan  pos 5   english 'know' -> None
-      feed: 1Jn 2:21 slot 3 3756-1492 'you know not'
+      no counterpart
+      feed: 1Jn 2:21 slot 3 3756-1492 'you know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:548  1Jn 3:6      | G3756   | 'sins'       | 'sins not;'                | orphan[+1]=G264
       host    pos 5   english 'does not' -> 'sins not;'
       orphan  pos 6   english 'sin;' -> None
-      feed: 1Jn 3:6 slot 5 3756-264 'sins not;'
+      no counterpart
+      feed: 1Jn 3:6 slot 5 3756-264 'sins not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:551  1Ti 5:8      | G3756   | 'beforehand' | 'thinks not beforehand,'   | orphan[+1]=G4306
       host    pos 9   english 'does not' -> 'thinks not beforehand,'
       orphan  pos 10  english 'think beforehand,' -> None
-      feed: 1Ti 5:8 slot 8 3756-4306 '1thinks not beforehand],'
+      no counterpart
+      feed: 1Ti 5:8 slot 8 3756-4306 '1thinks not beforehand],' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:558  2Co 12:2     | G3756   | 'know'       | 'I know not;'              | orphan[+1]=G1492
       host    pos 10  english 'I do not' -> 'I know not;'
       orphan  pos 11  english 'know;' -> None
-      feed: 2Co 12:2 slot 10 3756-1492 'I know not;'
+      no counterpart
+      feed: 2Co 12:2 slot 10 3756-1492 'I know not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:559  2Co 12:2     | G3756   | 'know'       | 'I know not —'             | orphan[+1]=G1492
       host    pos 16  english 'I do not' -> 'I know not —'
       orphan  pos 17  english 'know,' -> None
-      feed: 2Co 12:2 slot 10 3756-1492 'I know not;'
+      no counterpart
+      feed: 2Co 12:2 slot 10 3756-1492 'I know not;' (same reference; gloss differs)
 c4_phrase_built.out:560  2Co 12:3     | G3756   | 'know'       | 'I know not —'             | orphan[+1]=G1492
       host    pos 12  english 'I do not' -> 'I know not —'
       orphan  pos 13  english 'know,' -> None
-      feed: 2Co 12:3 slot 12 3756-1492 'I know not -'
+      no counterpart
+      feed: 2Co 12:3 slot 12 3756-1492 'I know not -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:565  2Pe 2:10     | G3756   | 'tremble'    | 'they tremble not'         | orphan[+1]=G5141
       host    pos 15  english 'they do not' -> 'they tremble not'
       orphan  pos 16  english 'tremble' -> None
-      feed: 2Pe 2:10 slot 14 3756-5141 '1they tremble not'
+      no counterpart
+      feed: 2Pe 2:10 slot 14 3756-5141 '1they tremble not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:566  2Ti 1:16     | G3756   | 'ashamed'    | 'was not ashamed.'         | orphan[+1]=G1870
       host    pos 16  english 'he was not' -> 'was not ashamed.'
       orphan  pos 17  english 'ashamed;' -> None
-      feed: 2Ti 1:16 slot 12 3756-1870 '1was not ashamed].'
+      no counterpart
+      feed: 2Ti 1:16 slot 12 3756-1870 '1was not ashamed].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:581  Act 23:19    | G2596   | 'private'    | 'in private,'              | orphan[+1]=G2398
       host    pos 9   english 'in private' -> 'in private,'
-      feed: Act 23:19 slot 8 2596-2398 'in private,'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Act 23:19 slot 8 2596-2398 'in private,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:588  Gal 2:14     | G3756   | 'uprightly'  | 'he walked not uprightly'  | orphan[+1]=G3716
       host    pos 4   english 'he did not' -> 'he walked not uprightly'
       orphan  pos 5   english 'walk uprightly' -> None
-      feed: Gal 2:14 slot 4 3756-3716 'he walked not uprightly'
+      no counterpart
+      feed: Gal 2:14 slot 4 3756-3716 'he walked not uprightly' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:594  Heb 2:10     | G3588   | 'whole'      | 'is the whole,)'           | orphan[+1]=G3956
       host    pos 10  english 'is the whole),' -> 'is the whole,)'
-      feed: Heb 2:10 slot 4 3588-3956 'is the whole,'
+      orphan  pos 11  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Heb 2:10 slot 4 3588-3956 'is the whole,' (same reference; gloss differs)
 c4_phrase_built.out:599  Heb 9:22     | G3756   | 'becomes'    | 'there becomes not'        | orphan[+1]=G1096
       host    pos 12  english 'there becomes no' -> 'there becomes not'
-      feed: Heb 9:22 slot 12 3756-1096 'there becomes not'
+      orphan  pos 13  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Heb 9:22 slot 12 3756-1096 'there becomes not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:601  Heb 10:6     | G3756   | 'well'       | 'you thought not well of.' | orphan[+1]=G2106
       host    pos 4   english 'you did not' -> 'you thought not well of.'
       orphan  pos 5   english 'think well of.' -> None
-      feed: Heb 10:6 slot 4 3756-2106 'you thought not well of.'
+      no counterpart
+      feed: Heb 10:6 slot 4 3756-2106 'you thought not well of.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:602  Heb 10:38    | G3756   | 'pleasure'   | 'takes not pleasure'       | orphan[+1]=G2106
       host    pos 9   english 'takes no pleasure' -> 'takes not pleasure'
-      feed: Heb 10:38 slot 8 3756-2106 '[2takes not pleasure'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Heb 10:38 slot 8 3756-2106 '[2takes not pleasure' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:603  Jas 4:2      | G3756   | 'have'       | 'you do not have.'         | orphan[+1]=G2192
       host    pos 2   english 'do not' -> 'you do not have.'
       orphan  pos 3   english 'have;' -> None
-      feed: Jas 4:2 slot 2 3756-2192 'you do not have.'
+      no counterpart
+      feed: Jas 4:2 slot 2 3756-2192 'you do not have.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:605  Joh 2:24     | G3756   | 'entrust'    | 'did not entrust'          | orphan[+1]=G4100
       host    pos 4   english 'did not' -> 'did not entrust'
       orphan  pos 5   english 'trust' -> None
-      feed: Joh 2:24 slot 4 3756-4100 'did not entrust'
+      no counterpart
+      feed: Joh 2:24 slot 4 3756-4100 'did not entrust' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:611  Joh 3:12     | G3756   | 'believe'    | 'you believe not,'         | orphan[+1]=G4100
       host    pos 6   english 'you do not' -> 'you believe not,'
       orphan  pos 7   english 'believe,' -> None
-      feed: Joh 3:12 slot 6 3756-4100 'you believe not,'
+      no counterpart
+      feed: Joh 3:12 slot 6 3756-4100 'you believe not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:612  Joh 3:18     | G3361   | 'believes'   | 'he believes not'          | orphan[+1]=G4100
       host    pos 13  english 'he trusts not' -> 'he believes not'
-      feed: Joh 3:18 slot 12 3361-4100 'he believes not'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Joh 3:18 slot 12 3361-4100 'he believes not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:617  Joh 5:24     | G3756   | 'comes'      | 'comes not;'               | orphan[+1]=G2064
       host    pos 21  english 'comes not,' -> 'comes not;'
-      feed: Joh 5:24 slot 20 3756-2064 '1comes not];'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 5:24 slot 20 3756-2064 '1comes not];' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:618  Joh 5:30     | G3756   | 'seek'       | 'I seek not'               | orphan[+1]=G2212
       host    pos 18  english 'I do not' -> 'I seek not'
       orphan  pos 19  english 'seek' -> None
-      feed: Joh 5:30 slot 16 3756-2212 'I seek not'
+      no counterpart
+      feed: Joh 5:30 slot 16 3756-2212 'I seek not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:622  Joh 7:34     | G3756   | 'find'       | 'shall not find.'          | orphan[+1]=G2147
       host    pos 3   english 'shall not find;' -> 'shall not find.'
-      feed: Joh 7:34 slot 3 3756-2147 'shall not find.'
+      orphan  pos 4   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 7:34 slot 3 3756-2147 'shall not find.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:627  Joh 9:29     | G3756   | 'know'       | 'we know not'              | orphan[+1]=G1492
       host    pos 9   english 'we do not' -> 'we know not'
       orphan  pos 10  english 'know' -> None
-      feed: Joh 9:29 slot 8 3756-1492 'we know not'
+      no counterpart
+      feed: Joh 9:29 slot 8 3756-1492 'we know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:629  Joh 10:5     | G3756   | 'know'       | 'they know not'            | orphan[+1]=G1492
       host    pos 9   english 'they do not know' -> 'they know not'
-      feed: Joh 10:5 slot 8 3756-1492 'they know not'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 10:5 slot 8 3756-1492 'they know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:632  Joh 10:37    | G3756   | 'do'         | 'I do not'                 | orphan[+1]=G4160
-      orphan* pos 2   english 'do' -> None
-      feed: Joh 10:37 slot 1 3756-4160 'I do not'
+      english cells changed in the verse: [2]
+      orphan  pos 2   english 'do' -> None  (host pos 1 has no english change in the delta; its value is not in the delta - the only english cell changed in the verse is this one)
+      no counterpart
+      feed: Joh 10:37 slot 1 3756-4160 'I do not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:634  Joh 12:19    | G3756   | 'benefit'    | 'you benefit not'          | orphan[+1]=G5623
       host    pos 8   english 'you benefit' -> 'you benefit not'
-      feed: Joh 12:19 slot 7 3756-5623 'you benefit not'
+      orphan  pos 9   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 12:19 slot 7 3756-5623 'you benefit not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:640  Joh 14:10    | G3756   | 'speak'      | 'I speak not.'             | orphan[+1]=G2980
       host    pos 21  english 'I speak not;' -> 'I speak not.'
-      feed: Joh 14:10 slot 20 3756-2980 '1I speak not].'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 14:10 slot 20 3756-2980 '1I speak not].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:648  Joh 19:11    | G3756   | 'have'       | 'You have not'             | orphan[+1]=G2192
       host    pos 3   english 'You do not' -> 'You have not'
       orphan  pos 4   english 'have' -> None
-      feed: Joh 19:11 slot 1 3756-2192 'You have not'
+      no counterpart
+      feed: Joh 19:11 slot 1 3756-2192 'You have not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:650  Joh 20:14    | G3756   | 'knows'      | 'knows not'                | orphan[+1]=G1492
       host    pos 13  english 'she knows not' -> 'knows not'
-      feed: Joh 20:14 slot 13 3756-1492 'knows not'
+      orphan  pos 14  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Joh 20:14 slot 13 3756-1492 'knows not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:661  Luk 8:13     | G3756   | 'have'       | 'have not,'                | orphan[+1]=G2192
       host    pos 16  english 'have no,' -> 'have not,'
-      feed: Luk 8:13 slot 15 3756-2192 '1have not],'
+      orphan  pos 17  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Luk 8:13 slot 15 3756-2192 '1have not],' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:663  Luk 9:55     | G3756   | 'know'       | 'You know not'             | orphan[+1]=G1492
       host    pos 6   english 'You do not know' -> 'You know not'
-      feed: Luk 9:55 slot 5 3756-1492 'You know not'
+      orphan  pos 7   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Luk 9:55 slot 5 3756-1492 'You know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:668  Luk 12:46    | G3756   | 'knows'      | 'he knows not,'            | orphan[+1]=G1097
       host    pos 15  english 'he knows not;' -> 'he knows not,'
-      feed: Luk 12:46 slot 13 3756-1097 'he knows not,'
+      orphan  pos 16  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Luk 12:46 slot 13 3756-1097 'he knows not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:673  Luk 17:22    | G3756   | 'see'        | 'you will not see.'        | orphan[+1]=G3708
       host    pos 18  english 'you will not' -> 'you will not see.'
       orphan  pos 19  english 'see it.' -> None
-      feed: Luk 17:22 slot 17 3756-3708 'you will not see.'
+      no counterpart
+      feed: Luk 17:22 slot 17 3756-3708 'you will not see.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:676  Luk 19:44    | G3756   | 'leave'      | 'shall not leave'          | orphan[+1]=G863
       host    pos 10  english 'they shall not leave' -> 'shall not leave'
-      feed: Luk 19:44 slot 9 3756-863 'shall not leave'
+      orphan  pos 11  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Luk 19:44 slot 9 3756-863 'shall not leave' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:690  Mar 3:25     | G3756   | 'able'       | 'is not able'              | orphan[+1]=G1410
       host    pos 6   english 'shall not be able' -> 'is not able'
-      feed: Mar 3:25 slot 6 3756-1410 '[2is not able'
+      orphan  pos 7   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 3:25 slot 6 3756-1410 '[2is not able' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:693  Mar 4:13     | G3756   | 'perceive'   | 'Do you not perceive'      | orphan[+1]=G1492
       host    pos 3   english 'Do you not' -> 'Do you not perceive'
       orphan  pos 4   english 'know' -> None
-      feed: Mar 4:13 slot 3 3756-1492 'Do you not perceive'
+      no counterpart
+      feed: Mar 4:13 slot 3 3756-1492 'Do you not perceive' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:700  Mar 8:16     | G3756   | 'have'       | 'We do not have.'          | orphan[+1]=G2192
       host    pos 7   english 'We have no.' -> 'We do not have.'
-      feed: Mar 8:16 slot 7 3756-2192 '1We do not have].'
+      orphan  pos 8   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 8:16 slot 7 3756-2192 '1We do not have].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:701  Mar 8:17     | G3756   | 'have'       | 'you do not have?'         | orphan[+1]=G2192
       host    pos 10  english 'you have no?' -> 'you do not have?'
-      feed: Mar 8:17 slot 10 3756-2192 '1you do not have]?'
+      orphan  pos 11  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 8:17 slot 10 3756-2192 '1you do not have]?' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:703  Mar 9:18     | G846    | 'cast'       | 'they should cast it out;' | orphan[+1]=G1544
       host    pos 22  english 'they should cast it out,' -> 'they should cast it out;'
-      feed: Mar 9:18 slot 20 1473-1544 'they should cast it out;'
+      orphan  pos 23  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 9:18 slot 20 1473-1544 'they should cast it out;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:704  Mar 9:25     | G1473   | 'orders'     | 'give orders to you —'     | orphan[+1]=G2004
       host    pos 21  english 'give orders to you,' -> 'give orders to you —'
-      feed: Mar 9:25 slot 21 1473-2004 'give orders to you -'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 9:25 slot 21 1473-2004 'give orders to you -' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:706  Mar 10:38    | G3756   | 'know'       | 'You know not'             | orphan[+1]=G1492
       host    pos 5   english 'You do not know' -> 'You know not'
-      feed: Mar 10:38 slot 4 3756-1492 'You know not'
+      orphan  pos 6   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 10:38 slot 4 3756-1492 'You know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:708  Mar 11:29    | G3778   | 'do'         | 'I do these things.'       | orphan[+1]=G4160
       host    pos 21  english 'I do these things!' -> 'I do these things.'
-      feed: Mar 11:29 slot 20 3778-4160 'I do these  things.'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mar 11:29 slot 20 3778-4160 'I do these  things.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:713  Mar 12:20    | G3756   | 'leave'      | 'did not leave'            | orphan[+1]=G863
       host    pos 10  english 'he left no' -> 'did not leave'
-      feed: Mar 12:20 slot 10 3756-863 'did not leave'
+      orphan  pos 11  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      no counterpart
+      feed: Mar 12:20 slot 10 3756-863 'did not leave' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:731  Mat 6:24     | G3756   | 'able'       | 'You are not able'         | orphan[+1]=G1410
       host    pos 21  english 'you are not able' -> 'You are not able'
-      feed: Mat 6:24 slot 20 3756-1410 'You are not able'
+      orphan  pos 22  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 6:24 slot 20 3756-1410 'You are not able' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:732  Mat 6:26     | G3756   | 'sow'        | 'they sow not,'            | orphan[+1]=G4687
       host    pos 7   english 'they do not' -> 'they sow not,'
       orphan  pos 8   english 'sow,' -> None
-      feed: Mat 6:26 slot 7 3756-4687 'they sow not,'
+      no counterpart
+      feed: Mat 6:26 slot 7 3756-4687 'they sow not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:737  Mat 13:13    | G3756   | 'see'        | 'they see not;'            | orphan[+1]=G991
       host    pos 8   english 'they do not' -> 'they see not;'
       orphan  pos 9   english 'see,' -> None
-      feed: Mat 13:13 slot 7 3756-991 'they see not;'
+      no counterpart
+      feed: Mat 13:13 slot 7 3756-991 'they see not;' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:738  Mat 13:13    | G3756   | 'hear'       | 'they hear not,'           | orphan[+1]=G191
       host    pos 12  english 'they do not' -> 'they hear not,'
       orphan  pos 13  english 'hear,' -> None
-      feed: Mat 13:13 slot 10 3756-191 'they hear not,'
+      no counterpart
+      feed: Mat 13:13 slot 10 3756-191 'they hear not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:740  Mat 14:17    | G3756   | 'have'       | 'We do not have'           | orphan[+1]=G2192
       host    pos 4   english 'We do not' -> 'We do not have'
       orphan  pos 5   english 'have anything' -> None
-      feed: Mat 14:17 slot 3 3756-2192 'We do not have'
+      no counterpart
+      feed: Mat 14:17 slot 3 3756-2192 'We do not have' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:741  Mat 15:20    | G3756   | 'defiles'    | 'defiles not'              | orphan[+1]=G2840
       host    pos 11  english 'does not' -> 'defiles not'
       orphan  pos 12  english 'defile' -> None
-      feed: Mat 15:20 slot 11 3756-2840 'defiles not'
+      no counterpart
+      feed: Mat 15:20 slot 11 3756-2840 'defiles not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:745  Mat 16:23    | G3756   | 'think'      | 'you think not'            | orphan[+1]=G5426
       host    pos 14  english 'you do not' -> 'you think not'
       orphan  pos 15  english 'think' -> None
-      feed: Mat 16:23 slot 12 3756-5426 'you think not'
+      no counterpart
+      feed: Mat 16:23 slot 12 3756-5426 'you think not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:749  Mat 20:22    | G3756   | 'know'       | 'You know not'             | orphan[+1]=G1492
       host    pos 5   english 'You do not know' -> 'You know not'
-      feed: Mat 20:22 slot 3 3756-1492 'You know not'
+      orphan  pos 6   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 20:22 slot 3 3756-1492 'You know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:753  Mat 22:16    | G3756   | 'care'       | 'there is not a care'      | orphan[+1]=G3199
       host    pos 24  english 'there is no care' -> 'there is not a care'
-      feed: Mat 22:16 slot 22 3756-3199 'there is not a care'
+      orphan  pos 25  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 22:16 slot 22 3756-3199 'there is not a care' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:755  Mat 24:50    | G3756   | 'knows'      | 'he knows not,'            | orphan[+1]=G1097
       host    pos 15  english 'he knows not.' -> 'he knows not,'
-      feed: Mat 24:50 slot 13 3756-1097 'he knows not,'
+      orphan  pos 16  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 24:50 slot 13 3756-1097 'he knows not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:756  Mat 25:40    | G1909   | 'much'       | 'In as much as'            | orphan[+1]=G3745
       host    pos 9   english 'in as much as' -> 'In as much as'
-      feed: Mat 25:40 slot 9 1909-3745 'In as much as'
+      orphan  pos 10  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 25:40 slot 9 1909-3745 'In as much as' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:757  Mat 25:45    | G1909   | 'much'       | 'If as much as'            | orphan[+1]=G3745
       host    pos 7   english 'if as much as' -> 'If as much as'
-      feed: Mat 25:45 slot 7 1909-3745 'If as much as'
+      orphan  pos 8   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Mat 25:45 slot 7 1909-3745 'If as much as' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:767  Rev 3:17     | G3756   | 'know'       | 'you know not'             | orphan[+1]=G1492
       host    pos 12  english 'you do not' -> 'you know not'
       orphan  pos 13  english 'know' -> None
-      feed: Rev 3:17 slot 11 3756-1492 'you know not'
+      no counterpart
+      feed: Rev 3:17 slot 11 3756-1492 'you know not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:774  Rom 7:15     | G3756   | 'know'       | 'I do not know.'           | orphan[+1]=G1097
       host    pos 3   english 'I do not know;' -> 'I do not know.'
-      feed: Rom 7:15 slot 2 3756-1097 'I do not know.'
+      orphan  pos 4   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Rom 7:15 slot 2 3756-1097 'I do not know.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:775  Rom 8:7      | G3756   | 'submits'    | 'it submits not,'          | orphan[+1]=G5293
       host    pos 13  english 'it does not' -> 'it submits not,'
       orphan  pos 14  english 'submit,' -> None
-      feed: Rom 8:7 slot 12 3756-5293 'it submits not,'
+      no counterpart
+      feed: Rom 8:7 slot 12 3756-5293 'it submits not,' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:776  Rom 8:25     | G3756   | 'see'        | 'we see not'               | orphan[+1]=G991
       host    pos 3   english 'we do not' -> 'we see not'
       orphan  pos 4   english 'see' -> None
-      feed: Rom 8:25 slot 2 3756-991 '3we see not'
+      no counterpart
+      feed: Rom 8:25 slot 2 3756-991 '3we see not' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:777  Rom 8:26     | G3756   | 'know'       | 'we know not.'             | orphan[+1]=G1492
       host    pos 15  english 'we do not' -> 'we know not.'
       orphan  pos 16  english 'know;' -> None
-      feed: Rom 8:26 slot 12 3756-1492 'we know not.'
+      no counterpart
+      feed: Rom 8:26 slot 12 3756-1492 'we know not.' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:780  Rom 9:29     | G302    | 'like'       | 'we would have been like.' | orphan[+1]=G3666
       host    pos 17  english 'we would be' -> 'we would have been like.'
       orphan  pos 18  english 'like.' -> None
-      feed: Rom 9:29 slot 15 302-3666 '1we would have been like].'
+      no counterpart
+      feed: Rom 9:29 slot 15 302-3666 '1we would have been like].' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:781  Rom 10:14    | G3756   | 'believe'    | 'they do not believe?'     | orphan[+1]=G4100
       host    pos 5   english 'they do not' -> 'they do not believe?'
       orphan  pos 6   english 'trust?' -> None
-      feed: Rom 10:14 slot 5 3756-4100 'they do not believe?'
+      no counterpart
+      feed: Rom 10:14 slot 5 3756-4100 'they do not believe?' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:782  Rom 11:11    | G3361   | 'stumble'    | 'Did they stumble'         | orphan[+1]=G4417
       host    pos 2   english 'did they stumble' -> 'Did they stumble'
-      feed: Rom 11:11 slot 2 3361-4417 'Did they stumble'
+      orphan  pos 3   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Rom 11:11 slot 2 3361-4417 'Did they stumble' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:783  Rom 13:10    | G3756   | 'works'      | 'works not,'               | orphan[+1]=G2038
       host    pos 5   english 'works no,' -> 'works not,'
-      feed: Rom 13:10 slot 5 3756-2038 '1works not],'
+      orphan  pos 6   english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Rom 13:10 slot 5 3756-2038 '1works not],' (same reference; gloss = the flagged gloss)
 c4_phrase_built.out:788  Heb 13:9     | G3756   | 'benefit'    | 'derive not a benefit'     | orphan[+1]=G5623
       host    pos 16  english 'derive no benefit' -> 'derive not a benefit'
-      feed: Heb 13:9 slot 15 3756-5623 '[3derive not a benefit'
+      orphan  pos 17  english unchanged in the delta; blank on built by the audit's rule 4, so blank on both
+      counterpart (a cleared row: same verse / host / head)
+      feed: Heb 13:9 slot 15 3756-5623 '[3derive not a benefit' (same reference; gloss = the flagged gloss)
 
-# NEWLY CLEARED on built (flagged on src only) — 88 rows; each: the dump line (file:line), then the STEP4-DELTA2 english cell(s) it rests on (src -> built),
-#   then the app-edition feed slot that holds both numbers. orphan* = the host cell is unchanged in the delta; the row rests on the orphan cell only.
+# NEWLY CLEARED on built (flagged on src only)
 c4_phrase_src.out:16  Gen 21:26    | G3756   | 'know'       | 'I do not know'            | orphan[+1]=G1097
       host    pos 4   english 'I do not know' -> 'I know not'
-      feed: Gen 21:26 slot 4 3756-1097 'I know not'
+      orphan  pos 5   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:16 'I know not'
+      feed: Gen 21:26 slot 4 3756-1097 'I know not' (same reference; gloss differs)
 c4_phrase_src.out:76  Exo 32:1     | G3756   | 'know'       | 'we do not know'           | orphan[+1]=G1492
       host    pos 39  english 'we do not know' -> 'we know not'
-      feed: Exo 32:1 slot 37 3756-1492 'we know not'
+      orphan  pos 40  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:88 'we know not'
+      feed: Exo 32:1 slot 37 3756-1492 'we know not' (same reference; gloss differs)
 c4_phrase_src.out:77  Exo 32:23    | G3756   | 'know'       | 'we do not know'           | orphan[+1]=G1492
       host    pos 20  english 'we do not know' -> 'we know not'
-      feed: Exo 32:23 slot 18 3756-1492 'we know not'
+      orphan  pos 21  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:89 'we know not'
+      feed: Exo 32:23 slot 18 3756-1492 'we know not' (same reference; gloss differs)
 c4_phrase_src.out:84  Lev 4:22     | G3756   | 'do'         | 'he shall not do'          | orphan[+1]=G4160
       host    pos 17  english 'he shall not do' -> 'he should not do —'
-      feed: Lev 4:22 slot 15 3756-4160 'he should not do -'
+      orphan  pos 18  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:97 'he should not do —'
+      feed: Lev 4:22 slot 15 3756-4160 'he should not do -' (same reference; gloss differs)
 c4_phrase_src.out:88  Lev 7:23     | G3756   | 'eat'        | 'you shall not eat!'       | orphan[+1]=G2068
       host    pos 12  english 'you shall not eat!' -> 'you shall not eat.'
-      feed: Lev 7:23 slot 12 3756-2068 'you shall not eat.'
+      orphan  pos 13  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:101 'you shall not eat.'
+      feed: Lev 7:23 slot 12 3756-2068 'you shall not eat.' (same reference; gloss differs)
 c4_phrase_src.out:96  Num 9:10     | G2532   | 'observe'    | 'he shall observe'         | orphan[+1]=G4160
       host    pos 24  english 'he shall observe' -> 'shall observe'
-      feed: Num 9:10 slot 23 2532-4160 'shall observe'
+      orphan  pos 25  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:110 'shall observe'
+      feed: Num 9:10 slot 23 2532-4160 'shall observe' (same reference; gloss differs)
 c4_phrase_src.out:102  Deu 1:43     | G3756   | 'listen'     | 'you did not listen to'    | orphan[+1]=G1522
       host    pos 4   english 'you did not listen to' -> 'you listened not to'
-      feed: Deu 1:43 slot 4 3756-1522 'you listened not to'
+      orphan  pos 5   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1015 'you listened not to'
+      feed: Deu 1:43 slot 4 3756-1522 'you listened not to' (same reference; gloss differs)
 c4_phrase_src.out:103  Deu 3:26     | G3756   | 'listen'     | 'he did not listen to'     | orphan[+1]=G1522
       host    pos 7   english 'he did not listen to' -> 'listened not to'
-      feed: Deu 3:26 slot 6 3756-1522 'listened not to'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1021 'listened not to'
+      feed: Deu 3:26 slot 6 3756-1522 'listened not to' (same reference; gloss differs)
 c4_phrase_src.out:122  Deu 25:3     | G3756   | 'more'       | 'they shall not add more;' | orphan[+1]=G4369
       host    pos 4   english 'they shall not add more;' -> 'they shall not add more.'
-      feed: Deu 25:3 slot 4 3756-4369 'they shall not add more.'
+      orphan  pos 5   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:141 'they shall not add more.'
+      feed: Deu 25:3 slot 4 3756-4369 'they shall not add more.' (same reference; gloss differs)
 c4_phrase_src.out:123  Deu 28:44    | G3756   | 'lend'       | 'shall not lend;'          | orphan[+1]=G1155
       host    pos 6   english 'shall not lend;' -> 'shall not lend.'
-      feed: Deu 28:44 slot 5 3756-1155 '1shall not lend].'
+      orphan  pos 7   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:143 'shall not lend.'
+      feed: Deu 28:44 slot 5 3756-1155 '1shall not lend].' (same reference; gloss differs)
 c4_phrase_src.out:125  Deu 29:4     | G3756   | 'give'       | 'did not give'             | orphan[+1]=G1325
       host    pos 1   english 'did not give' -> 'gave not'
-      feed: Deu 29:4 slot 1 3756-1325 '[3gave not'
+      orphan  pos 2   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1092 'gave not'
+      feed: Deu 29:4 slot 1 3756-1325 '[3gave not' (same reference; gloss differs)
 c4_phrase_src.out:126  Deu 32:52    | G3756   | 'enter'      | 'you shall not enter,'     | orphan[+1]=G1525
       host    pos 7   english 'you shall not enter,' -> 'you shall not enter'
-      feed: Deu 32:52 slot 7 3756-1525 '1you shall not enter]'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:145 'you shall not enter'
+      feed: Deu 32:52 slot 7 3756-1525 '1you shall not enter]' (same reference; gloss differs)
 c4_phrase_src.out:158  Jdg 16:14    | G3756   | 'know'       | 'did not know'             | orphan[-1]=G1097
       host    pos 57  english 'did not know' -> 'knew not'
-      feed: Jdg 16:14 slot 51 3756-1097 'he knew not'
+      orphan  pos 56  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1164 'knew not'
+      feed: Jdg 16:14 slot 51 3756-1097 'he knew not' (same reference; gloss differs)
 c4_phrase_src.out:168  1Sa 3:19     | G3756   | 'fall'       | 'there did not fall'       | orphan[+1]=G4098
       host    pos 9   english 'there did not fall' -> 'there fell not one'
-      feed: 1Sa 3:19 slot 7 3756-4098 'there fell not  one'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1205 'there fell not one'
+      feed: 1Sa 3:19 slot 7 3756-4098 'there fell not  one' (same reference; gloss differs)
 c4_phrase_src.out:171  1Sa 13:11    | G3756   | 'come'       | 'did not come'             | orphan[+1]=G3854
       host    pos 18  english 'did not come' -> 'came not'
-      feed: 1Sa 13:11 slot 16 3756-3854 'came not'
+      orphan  pos 19  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1223 'came not'
+      feed: 1Sa 13:11 slot 16 3756-3854 'came not' (same reference; gloss differs)
 c4_phrase_src.out:185  2Sa 15:11    | G3756   | 'know'       | 'they did not know'        | orphan[+1]=G1492
       host    pos 13  english 'they did not know' -> 'they did not know,'
-      feed: 2Sa 15:11 slot 13 3756-1492 'they did not know,'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:204 'they did not know,'
+      feed: 2Sa 15:11 slot 13 3756-1492 'they did not know,' (same reference; gloss differs)
 c4_phrase_src.out:198  1Ki 2:4      | G3756   | 'away'       | 'There shall not be lifted away' | orphan[+1]=G1808
       host    pos 35  english 'There shall not be lifted away' -> 'there shall not be lifted away'
-      feed: 1Ki 2:4 slot 31 3756-1808 'there shall not be lifted away'
+      orphan  pos 36  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:218 'there shall not be lifted away'
+      feed: 1Ki 2:4 slot 31 3756-1808 'there shall not be lifted away' (same reference; gloss differs)
 c4_phrase_src.out:207  1Ki 9:6      | G3361   | 'keep'       | 'so as to not keep,'       | orphan[+1]=G5442
       host    pos 19  english 'so as to not keep,' -> 'so as to not keep them,'
-      feed: 1Ki 9:6 slot 16 3361-5442 'so as to not keep  them,'
+      orphan  pos 20  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:228 'so as to not keep them,'
+      feed: 1Ki 9:6 slot 16 3361-5442 'so as to not keep  them,' (same reference; gloss differs)
 c4_phrase_src.out:208  1Ki 9:22     | G3756   | 'give'       | 'did not give'             | orphan[+1]=G1325
       host    pos 5   english 'did not give' -> 'did not appoint'
-      feed: 1Ki 9:22 slot 5 3756-1325 '[2did not appoint'
+      orphan  pos 6   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1330 'did not appoint'
+      feed: 1Ki 9:22 slot 5 3756-1325 '[2did not appoint' (same reference; gloss differs)
 c4_phrase_src.out:222  1Ki 22:18    | G3756   | 'say'        | 'Did I not say'            | orphan[+1]=G2036
       host    pos 9   english 'Did I not say' -> 'Said I not'
-      feed: 1Ki 22:18 slot 9 3756-2036 'Said I not'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1371 'Said I not'
+      feed: 1Ki 22:18 slot 9 3756-2036 'Said I not' (same reference; gloss differs)
 c4_phrase_src.out:244  2Ki 18:32    | G3756   | 'die'        | 'you shall not die.'       | orphan[+1]=G599
       host    pos 27  english 'you shall not die.' -> 'not die!'
-      feed: 2Ki 18:32 slot 26 3756-599 'not die!'
+      orphan  pos 28  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:266 'not die!'
+      feed: 2Ki 18:32 slot 26 3756-599 'not die!' (same reference; gloss differs)
 c4_phrase_src.out:249  1Ch 16:22    | G3361   | 'touch'      | 'Saying, Touch not'        | orphan[+1]=G680
       host    pos 0   english 'Saying, Touch not' -> 'saying, Touch not'
-      feed: 1Ch 16:22 slot 0 3361-680 'saying, Touch not'
+      orphan  pos 1   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:272 'saying, Touch not'
+      feed: 1Ch 16:22 slot 0 3361-680 'saying, Touch not' (same reference; gloss differs)
 c4_phrase_src.out:262  2Ch 18:16    | G3756   | 'have'       | 'have no'                  | orphan[+1]=G2192
       host    pos 20  english 'have no' -> 'have not'
-      feed: 2Ch 18:16 slot 17 3756-2192 '[2have not'
+      orphan  pos 21  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:285 'have not'
+      feed: 2Ch 18:16 slot 17 3756-2192 '[2have not' (same reference; gloss differs)
 c4_phrase_src.out:265  2Ch 20:33    | G3756   | 'remove'     | 'he did not remove,'       | orphan[+1]=G1808
       host    pos 3   english 'he did not remove,' -> 'he did not remove;'
-      feed: 2Ch 20:33 slot 3 3756-1808 'he did not remove;'
+      orphan  pos 4   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:288 'he did not remove;'
+      feed: 2Ch 20:33 slot 3 3756-1808 'he did not remove;' (same reference; gloss differs)
 c4_phrase_src.out:282  Neh 4:11     | G3756   | 'see'        | 'they shall not see'       | orphan[+1]=G3708
       host    pos 8   english 'they shall not see' -> 'shall not see,'
-      feed: Neh 4:11 slot 7 3756-3708 'shall not see,'
+      orphan  pos 9   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:305 'shall not see,'
+      feed: Neh 4:11 slot 7 3756-3708 'shall not see,' (same reference; gloss differs)
 c4_phrase_src.out:297  Job 14:3     | G3778   | 'account'    | 'an account of this one'   | orphan[+1]=G3056
       host    pos 2   english 'an account of this one' -> 'an account of this'
-      feed: Job 14:3 slot 2 3778-3056 '[2an account of this'
+      orphan  pos 3   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:321 'an account of this'
+      feed: Job 14:3 slot 2 3778-3056 '[2an account of this' (same reference; gloss differs)
 c4_phrase_src.out:299  Job 14:21    | G3756   | 'knows'      | 'he knows not.'            | orphan[+1]=G1987
       host    pos 12  english 'he knows not.' -> 'he has not knowledge.'
-      feed: Job 14:21 slot 9 3756-1987 'he has not knowledge.'
+      orphan  pos 13  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1598 'he has not knowledge.'
+      feed: Job 14:21 slot 9 3756-1987 'he has not knowledge.' (same reference; gloss differs)
 c4_phrase_src.out:305  Job 20:23    | G1487   | 'means'      | 'If by any means'          | orphan[+1]=G1513
       host    pos 0   english 'If by any means' -> 'if by any means'
-      feed: Job 20:23 slot 0 1487-1513 'if by any means'
+      orphan  pos 1   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:329 'if by any means'
+      feed: Job 20:23 slot 0 1487-1513 'if by any means' (same reference; gloss differs)
 c4_phrase_src.out:306  Job 23:9     | G3756   | 'see'        | 'I shall not see it.'      | orphan[+1]=G3708
       host    pos 8   english 'I shall not see it.' -> 'I shall not see.'
-      feed: Job 23:9 slot 6 3756-3708 'I shall not see.'
+      orphan  pos 9   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:330 'I shall not see.'
+      feed: Job 23:9 slot 6 3756-3708 'I shall not see.' (same reference; gloss differs)
 c4_phrase_src.out:309  Job 27:11    | G3756   | 'lie'        | 'I shall not lie about.'   | orphan[+1]=G5574
       host    pos 13  english 'I shall not lie about.' -> 'I shall not lie.'
-      feed: Job 27:11 slot 13 3756-5574 'I shall not lie.'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:334 'I shall not lie.'
+      feed: Job 27:11 slot 13 3756-5574 'I shall not lie.' (same reference; gloss differs)
 c4_phrase_src.out:313  Job 32:21    | G3766   | 'shame'      | 'shall I in any way feel shame.' | orphan[+1]=G1788
       host    pos 8   english 'shall I in any way feel shame.' -> 'in no way'
       orphan  pos 9   english None -> 'shall I shame.'
-      feed: Job 32:21: NO slot holding both 3766 and 1788
+      on built: in neither built list (built english at the host slot: 'in no way')
+      feed: Job 32:21: NO slot holding both 3766 and 1788 (+/- 1 verse)
 c4_phrase_src.out:357  Pro 27:26    | G1473   | 'lambs'      | 'lambs for you.'           | orphan[+1]=G704
       host    pos 9   english 'lambs for you.' -> 'lambs to you!'
-      feed: Pro 27:26 slot 9 1473-704 'lambs to you!'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:389 'lambs to you!'
+      feed: Pro 27:26 slot 9 1473-704 'lambs to you!' (same reference; gloss differs)
 c4_phrase_src.out:359  Ecc 6:6      | G3756   | 'knows'      | 'he knows not,'            | orphan[+1]=G1492
       host    pos 8   english 'he knows not,' -> 'he knew not,'
-      feed: Ecc 6:6 slot 8 3756-1492 '1he knew not],'
+      orphan  pos 9   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:1857 'he knew not,'
+      feed: Ecc 6:6 slot 8 3756-1492 '1he knew not],' (same reference; gloss differs)
 c4_phrase_src.out:372  Isa 14:17    | G3756   | 'loose'      | 'he did not loose.'        | orphan[+1]=G3089
       host    pos 13  english 'he did not loose.' -> 'he did not loose?'
-      feed: Isa 14:17 slot 12 3756-3089 'he did not loose?'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:415 'he did not loose?'
+      feed: Isa 14:17 slot 12 3756-3089 'he did not loose?' (same reference; gloss differs)
 c4_phrase_src.out:391  Jer 11:7     | G3756   | 'hear'       | 'they did not hear,'       | orphan[+1]=G191
       host    pos 26  english 'they did not hear,' -> 'they heard not,'
-      feed: Jer 11:7 slot 22 3756-191 'they heard not,'
+      orphan  pos 27  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2117 'they heard not,'
+      feed: Jer 11:7 slot 22 3756-191 'they heard not,' (same reference; gloss differs)
 c4_phrase_src.out:395  Jer 17:22    | G3756   | 'do'         | 'you shall not do.'        | orphan[+1]=G4160
       host    pos 15  english 'you shall not do.' -> 'you shall not do —'
-      feed: Jer 17:22 slot 14 3756-4160 '1you shall not do] -'
+      orphan  pos 16  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:449 'you shall not do —'
+      feed: Jer 17:22 slot 14 3756-4160 '1you shall not do] -' (same reference; gloss differs)
 c4_phrase_src.out:402  Jer 34:4     | G3756   | 'die'        | 'you shall not die'        | orphan[+1]=G599
       host    pos 13  english 'you shall not die' -> 'You shall not die'
-      feed: Jer 34:4 slot 13 3756-599 'You shall not die'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:458 'You shall not die'
+      feed: Jer 34:4 slot 13 3756-599 'You shall not die' (same reference; gloss differs)
 c4_phrase_src.out:403  Jer 35:17    | G3756   | 'answer'     | 'they did not answer.'     | orphan[+1]=G611
       host    pos 37  english 'they did not answer.' -> 'they answered not.'
-      feed: Jer 35:17 slot 36 3756-611 'they answered not.'
+      orphan  pos 38  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2218 'they answered not.'
+      feed: Jer 35:17 slot 36 3756-611 'they answered not.' (same reference; gloss differs)
 c4_phrase_src.out:408  Jer 40:14    | G3756   | 'trust'      | 'did not trust'            | orphan[+1]=G4100
       host    pos 22  english 'did not trust' -> 'not'
       orphan  pos 23  english None -> 'trusted'
-      feed: Jer 40:14: NO slot holding both 3756 and 4100
+      on built: in neither built list (built english at the host slot: 'not')
+      feed: Jer 40:14: NO slot holding both 3756 and 4100 (+/- 1 verse)
 c4_phrase_src.out:413  Jer 50:24    | G3756   | 'know'       | 'you did not know.'        | orphan[+1]=G1097
       host    pos 6   english 'you did not know.' -> 'you knew not.'
-      feed: Jer 50:24 slot 6 3756-1097 'you knew not.'
+      orphan  pos 7   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2259 'you knew not.'
+      feed: Jer 50:24 slot 6 3756-1097 'you knew not.' (same reference; gloss differs)
 c4_phrase_src.out:425  Eze 11:12    | G3756   | 'go'         | 'you did not go,'          | orphan[+1]=G4198
       host    pos 17  english 'you did not go,' -> 'you went not,'
-      feed: Eze 11:12 slot 16 3756-4198 'you went not,'
+      orphan  pos 18  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2318 'you went not,'; built.out:2319 'you went not,'
+      feed: Eze 11:12 slot 16 3756-4198 'you went not,' (same reference; gloss differs)
 c4_phrase_src.out:428  Eze 18:16    | G3756   | 'force'      | 'seized not by force;'     | orphan[+1]=G726
       host    pos 10  english 'seized not by force;' -> 'seized not by force,'
-      feed: Eze 18:16 slot 8 3756-726 'seized not by force,'
+      orphan  pos 11  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:481 'seized not by force,'
+      feed: Eze 18:16 slot 8 3756-726 'seized not by force,' (same reference; gloss differs)
 c4_phrase_src.out:429  Eze 18:19    | G3756   | 'take'       | 'does not take'            | orphan[+1]=G2983
       host    pos 4   english 'does not take' -> 'took not'
-      feed: Eze 18:19 slot 4 3756-2983 '[3took not'
+      orphan  pos 5   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2349 'took not'
+      feed: Eze 18:19 slot 4 3756-2983 '[3took not' (same reference; gloss differs)
 c4_phrase_src.out:433  Eze 20:13    | G3756   | 'go'         | 'they did not go,'         | orphan[+1]=G4198
       host    pos 14  english 'they did not go,' -> 'they went not,'
-      feed: Eze 20:13 slot 13 3756-4198 'they went not,'
+      orphan  pos 15  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2356 'they went not,'
+      feed: Eze 20:13 slot 13 3756-4198 'they went not,' (same reference; gloss differs)
 c4_phrase_src.out:454  Dan 11:12    | G3756   | 'prevail'    | 'he shall not prevail.'    | orphan[+1]=G2729
       host    pos 13  english 'he shall not prevail.' -> 'shall not prevail.'
-      feed: Dan 11:12 slot 12 3756-2729 'shall not prevail.'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:508 'shall not prevail.'
+      feed: Dan 11:12 slot 12 3756-2729 'shall not prevail.' (same reference; gloss differs)
 c4_phrase_src.out:455  Dan 11:24    | G3756   | 'do'         | 'did not do'               | orphan[+1]=G4160
       host    pos 11  english 'did not do' -> 'did not'
-      feed: Dan 11:24 slot 11 3756-4160 '[2did not'
+      orphan  pos 12  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2455 'did not'
+      feed: Dan 11:24 slot 11 3756-4160 '[2did not' (same reference; gloss differs)
 c4_phrase_src.out:464  Jon 4:10     | G3756   | 'hardship'   | 'you suffered no hardship' | orphan[+1]=G2553
       host    pos 11  english 'you suffered no hardship' -> 'you suffered not hardship'
-      feed: Jon 4:10 slot 10 3756-2553 'you suffered not hardship'
+      orphan  pos 12  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:518 'you suffered not hardship'
+      feed: Jon 4:10 slot 10 3756-2553 'you suffered not hardship' (same reference; gloss differs)
 c4_phrase_src.out:467  Zep 3:2      | G3756   | 'listen'     | 'She did not listen to'    | orphan[+1]=G1522
       host    pos 0   english 'She did not listen to' -> 'She listened not to'
-      feed: Zep 3:2 slot 0 3756-1522 'She listened not to'
+      orphan  pos 1   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2531 'She listened not to'
+      feed: Zep 3:2 slot 0 3756-1522 'She listened not to' (same reference; gloss differs)
 c4_phrase_src.out:468  Hag 2:20     | G1537   | 'time'       | 'the second time'          | orphan[+1]=G1208
       host    pos 4   english 'the second time' -> 'of a second time'
-      feed: Hag 2:20 slot 4 1537-1208 'of a second  time'
+      orphan  pos 5   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:522 'of a second time'
+      feed: Hag 2:20 slot 4 1537-1208 'of a second  time' (same reference; gloss differs)
 c4_phrase_src.out:475  1Co 1:16     | G3756   | 'know'       | 'I do not know'            | orphan[+1]=G1492
       host    pos 7   english 'I do not know' -> 'I know not'
-      feed: 1Co 1:16 slot 5 3756-1492 'I know not'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:529 'I know not'
+      feed: 1Co 1:16 slot 5 3756-1492 'I know not' (same reference; gloss differs)
 c4_phrase_src.out:479  1Co 10:21    | G3756   | 'able'       | 'you are not able'         | orphan[+1]=G1410
       host    pos 8   english 'you are not able' -> 'You are not able'
-      feed: 1Co 10:21 slot 0 3756-1410 'You are not able to'
+      orphan  pos 9   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:534 'You are not able'
+      feed: 1Co 10:21 slot 0 3756-1410 'You are not able to' (same reference; gloss differs)
 c4_phrase_src.out:484  1Co 12:21    | G3756   | 'have'       | 'I have no;'               | orphan[+1]=G2192
       host    pos 9   english 'I have no;' -> 'I have not;'
-      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:539 'I have not;'
+      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];' (same reference; gloss differs)
 c4_phrase_src.out:485  1Co 12:21    | G3756   | 'have'       | 'I have no.'               | orphan[+1]=G2192
       host    pos 19  english 'I have no.' -> 'I have not.'
-      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];'
+      orphan  pos 20  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:540 'I have not.'
+      feed: 1Co 12:21 slot 9 3756-2192 '1I have not];' (same reference; gloss differs)
 c4_phrase_src.out:517  Act 23:19    | G2596   | 'private'    | 'in private'               | orphan[+1]=G2398
       host    pos 9   english 'in private' -> 'in private,'
-      feed: Act 23:19 slot 8 2596-2398 'in private,'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:581 'in private,'
+      feed: Act 23:19 slot 8 2596-2398 'in private,' (same reference; gloss differs)
 c4_phrase_src.out:529  Heb 2:10     | G3588   | 'whole'      | 'is the whole),'           | orphan[+1]=G3956
       host    pos 10  english 'is the whole),' -> 'is the whole,)'
-      feed: Heb 2:10 slot 4 3588-3956 'is the whole,'
+      orphan  pos 11  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:594 'is the whole,)'
+      feed: Heb 2:10 slot 4 3588-3956 'is the whole,' (same reference; gloss differs)
 c4_phrase_src.out:534  Heb 9:22     | G3756   | 'becomes'    | 'there becomes no'         | orphan[+1]=G1096
       host    pos 12  english 'there becomes no' -> 'there becomes not'
-      feed: Heb 9:22 slot 12 3756-1096 'there becomes not'
+      orphan  pos 13  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:599 'there becomes not'
+      feed: Heb 9:22 slot 12 3756-1096 'there becomes not' (same reference; gloss differs)
 c4_phrase_src.out:536  Heb 10:38    | G3756   | 'pleasure'   | 'takes no pleasure'        | orphan[+1]=G2106
       host    pos 9   english 'takes no pleasure' -> 'takes not pleasure'
-      feed: Heb 10:38 slot 8 3756-2106 '[2takes not pleasure'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:602 'takes not pleasure'
+      feed: Heb 10:38 slot 8 3756-2106 '[2takes not pleasure' (same reference; gloss differs)
 c4_phrase_src.out:543  Joh 3:18     | G3361   | 'trusts'     | 'he trusts not'            | orphan[+1]=G4100
       host    pos 13  english 'he trusts not' -> 'he believes not'
-      feed: Joh 3:18 slot 12 3361-4100 'he believes not'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: flagged on built under a new head: built.out:612 'he believes not' head 'believes'
+      feed: Joh 3:18 slot 12 3361-4100 'he believes not' (same reference; gloss differs)
 c4_phrase_src.out:548  Joh 5:24     | G3756   | 'comes'      | 'comes not,'               | orphan[+1]=G2064
       host    pos 21  english 'comes not,' -> 'comes not;'
-      feed: Joh 5:24 slot 20 3756-2064 '1comes not];'
+      orphan  pos 22  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:617 'comes not;'
+      feed: Joh 5:24 slot 20 3756-2064 '1comes not];' (same reference; gloss differs)
 c4_phrase_src.out:552  Joh 7:34     | G3756   | 'find'       | 'shall not find;'          | orphan[+1]=G2147
       host    pos 3   english 'shall not find;' -> 'shall not find.'
-      feed: Joh 7:34 slot 3 3756-2147 'shall not find.'
+      orphan  pos 4   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:622 'shall not find.'
+      feed: Joh 7:34 slot 3 3756-2147 'shall not find.' (same reference; gloss differs)
 c4_phrase_src.out:558  Joh 10:5     | G3756   | 'know'       | 'they do not know'         | orphan[+1]=G1492
       host    pos 9   english 'they do not know' -> 'they know not'
-      feed: Joh 10:5 slot 8 3756-1492 'they know not'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:629 'they know not'
+      feed: Joh 10:5 slot 8 3756-1492 'they know not' (same reference; gloss differs)
 c4_phrase_src.out:562  Joh 12:19    | G3756   | 'benefit'    | 'you benefit'              | orphan[+1]=G5623
       host    pos 8   english 'you benefit' -> 'you benefit not'
-      feed: Joh 12:19 slot 7 3756-5623 'you benefit not'
+      orphan  pos 9   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:634 'you benefit not'
+      feed: Joh 12:19 slot 7 3756-5623 'you benefit not' (same reference; gloss differs)
 c4_phrase_src.out:564  Joh 12:37    | G3756   | 'believe'    | 'they did not believe'     | orphan[+1]=G4100
       host    pos 7   english 'they did not believe' -> 'they believed not'
-      feed: Joh 12:37 slot 7 3756-4100 'they believed not'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2738 'they believed not'
+      feed: Joh 12:37 slot 7 3756-4100 'they believed not' (same reference; gloss differs)
 c4_phrase_src.out:569  Joh 14:10    | G3756   | 'speak'      | 'I speak not;'             | orphan[+1]=G2980
       host    pos 21  english 'I speak not;' -> 'I speak not.'
-      feed: Joh 14:10 slot 20 3756-2980 '1I speak not].'
+      orphan  pos 22  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:640 'I speak not.'
+      feed: Joh 14:10 slot 20 3756-2980 '1I speak not].' (same reference; gloss differs)
 c4_phrase_src.out:571  Joh 14:30    | G3756   | 'have'       | 'he does not have'         | orphan[+1]=G2192
       host    pos 14  english 'he does not have' -> 'he has not'
-      feed: Joh 14:30 slot 14 3756-2192 'he has not'
+      orphan  pos 15  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2743 'he has not'
+      feed: Joh 14:30 slot 14 3756-2192 'he has not' (same reference; gloss differs)
 c4_phrase_src.out:579  Joh 20:2     | G3756   | 'know'       | 'we do not know'           | orphan[+1]=G1492
       host    pos 26  english 'we do not know' -> 'we knew not'
-      feed: Joh 20:2 slot 24 3756-1492 'we knew not'
+      orphan  pos 27  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: under NO-EVIDENCE on built: built.out:2760 'we knew not'
+      feed: Joh 20:2 slot 24 3756-1492 'we knew not' (same reference; gloss differs)
 c4_phrase_src.out:580  Joh 20:14    | G3756   | 'knows'      | 'she knows not'            | orphan[+1]=G1492
       host    pos 13  english 'she knows not' -> 'knows not'
-      feed: Joh 20:14 slot 13 3756-1492 'knows not'
+      orphan  pos 14  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:650 'knows not'
+      feed: Joh 20:14 slot 13 3756-1492 'knows not' (same reference; gloss differs)
 c4_phrase_src.out:591  Luk 8:13     | G3756   | 'have'       | 'have no,'                 | orphan[+1]=G2192
       host    pos 16  english 'have no,' -> 'have not,'
-      feed: Luk 8:13 slot 15 3756-2192 '1have not],'
+      orphan  pos 17  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:661 'have not,'
+      feed: Luk 8:13 slot 15 3756-2192 '1have not],' (same reference; gloss differs)
 c4_phrase_src.out:593  Luk 9:55     | G3756   | 'know'       | 'You do not know'          | orphan[+1]=G1492
       host    pos 6   english 'You do not know' -> 'You know not'
-      feed: Luk 9:55 slot 5 3756-1492 'You know not'
+      orphan  pos 7   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:663 'You know not'
+      feed: Luk 9:55 slot 5 3756-1492 'You know not' (same reference; gloss differs)
 c4_phrase_src.out:598  Luk 12:46    | G3756   | 'knows'      | 'he knows not;'            | orphan[+1]=G1097
       host    pos 15  english 'he knows not;' -> 'he knows not,'
-      feed: Luk 12:46 slot 13 3756-1097 'he knows not,'
+      orphan  pos 16  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:668 'he knows not,'
+      feed: Luk 12:46 slot 13 3756-1097 'he knows not,' (same reference; gloss differs)
 c4_phrase_src.out:605  Luk 19:44    | G3756   | 'leave'      | 'they shall not leave'     | orphan[+1]=G863
       host    pos 10  english 'they shall not leave' -> 'shall not leave'
-      feed: Luk 19:44 slot 9 3756-863 'shall not leave'
+      orphan  pos 11  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:676 'shall not leave'
+      feed: Luk 19:44 slot 9 3756-863 'shall not leave' (same reference; gloss differs)
 c4_phrase_src.out:619  Mar 3:25     | G3756   | 'able'       | 'shall not be able'        | orphan[+1]=G1410
       host    pos 6   english 'shall not be able' -> 'is not able'
-      feed: Mar 3:25 slot 6 3756-1410 '[2is not able'
+      orphan  pos 7   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:690 'is not able'
+      feed: Mar 3:25 slot 6 3756-1410 '[2is not able' (same reference; gloss differs)
 c4_phrase_src.out:628  Mar 8:16     | G3756   | 'have'       | 'We have no.'              | orphan[+1]=G2192
       host    pos 7   english 'We have no.' -> 'We do not have.'
-      feed: Mar 8:16 slot 7 3756-2192 '1We do not have].'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:700 'We do not have.'
+      feed: Mar 8:16 slot 7 3756-2192 '1We do not have].' (same reference; gloss differs)
 c4_phrase_src.out:629  Mar 8:17     | G3756   | 'have'       | 'you have no?'             | orphan[+1]=G2192
       host    pos 10  english 'you have no?' -> 'you do not have?'
-      feed: Mar 8:17 slot 10 3756-2192 '1you do not have]?'
+      orphan  pos 11  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:701 'you do not have?'
+      feed: Mar 8:17 slot 10 3756-2192 '1you do not have]?' (same reference; gloss differs)
 c4_phrase_src.out:631  Mar 9:18     | G846    | 'cast'       | 'they should cast it out,' | orphan[+1]=G1544
       host    pos 22  english 'they should cast it out,' -> 'they should cast it out;'
-      feed: Mar 9:18 slot 20 1473-1544 'they should cast it out;'
+      orphan  pos 23  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:703 'they should cast it out;'
+      feed: Mar 9:18 slot 20 1473-1544 'they should cast it out;' (same reference; gloss differs)
 c4_phrase_src.out:632  Mar 9:25     | G1473   | 'orders'     | 'give orders to you,'      | orphan[+1]=G2004
       host    pos 21  english 'give orders to you,' -> 'give orders to you —'
-      feed: Mar 9:25 slot 21 1473-2004 'give orders to you -'
+      orphan  pos 22  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:704 'give orders to you —'
+      feed: Mar 9:25 slot 21 1473-2004 'give orders to you -' (same reference; gloss differs)
 c4_phrase_src.out:634  Mar 10:38    | G3756   | 'know'       | 'You do not know'          | orphan[+1]=G1492
       host    pos 5   english 'You do not know' -> 'You know not'
-      feed: Mar 10:38 slot 4 3756-1492 'You know not'
+      orphan  pos 6   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:706 'You know not'
+      feed: Mar 10:38 slot 4 3756-1492 'You know not' (same reference; gloss differs)
 c4_phrase_src.out:636  Mar 11:29    | G3778   | 'do'         | 'I do these things!'       | orphan[+1]=G4160
       host    pos 21  english 'I do these things!' -> 'I do these things.'
-      feed: Mar 11:29 slot 20 3778-4160 'I do these  things.'
+      orphan  pos 22  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:708 'I do these things.'
+      feed: Mar 11:29 slot 20 3778-4160 'I do these  things.' (same reference; gloss differs)
 c4_phrase_src.out:658  Mat 6:24     | G3756   | 'able'       | 'you are not able'         | orphan[+1]=G1410
       host    pos 21  english 'you are not able' -> 'You are not able'
-      feed: Mat 6:24 slot 20 3756-1410 'You are not able'
+      orphan  pos 22  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:731 'You are not able'
+      feed: Mat 6:24 slot 20 3756-1410 'You are not able' (same reference; gloss differs)
 c4_phrase_src.out:670  Mat 20:22    | G3756   | 'know'       | 'You do not know'          | orphan[+1]=G1492
       host    pos 5   english 'You do not know' -> 'You know not'
-      feed: Mat 20:22 slot 3 3756-1492 'You know not'
+      orphan  pos 6   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:749 'You know not'
+      feed: Mat 20:22 slot 3 3756-1492 'You know not' (same reference; gloss differs)
 c4_phrase_src.out:674  Mat 22:16    | G3756   | 'care'       | 'there is no care'         | orphan[+1]=G3199
       host    pos 24  english 'there is no care' -> 'there is not a care'
-      feed: Mat 22:16 slot 22 3756-3199 'there is not a care'
+      orphan  pos 25  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:753 'there is not a care'
+      feed: Mat 22:16 slot 22 3756-3199 'there is not a care' (same reference; gloss differs)
 c4_phrase_src.out:676  Mat 24:50    | G3756   | 'knows'      | 'he knows not.'            | orphan[+1]=G1097
       host    pos 15  english 'he knows not.' -> 'he knows not,'
-      feed: Mat 24:50 slot 13 3756-1097 'he knows not,'
+      orphan  pos 16  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:755 'he knows not,'
+      feed: Mat 24:50 slot 13 3756-1097 'he knows not,' (same reference; gloss differs)
 c4_phrase_src.out:677  Mat 25:40    | G1909   | 'much'       | 'in as much as'            | orphan[+1]=G3745
       host    pos 9   english 'in as much as' -> 'In as much as'
-      feed: Mat 25:40 slot 9 1909-3745 'In as much as'
+      orphan  pos 10  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:756 'In as much as'
+      feed: Mat 25:40 slot 9 1909-3745 'In as much as' (same reference; gloss differs)
 c4_phrase_src.out:678  Mat 25:45    | G1909   | 'much'       | 'if as much as'            | orphan[+1]=G3745
       host    pos 7   english 'if as much as' -> 'If as much as'
-      feed: Mat 25:45 slot 7 1909-3745 'If as much as'
+      orphan  pos 8   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:757 'If as much as'
+      feed: Mat 25:45 slot 7 1909-3745 'If as much as' (same reference; gloss differs)
 c4_phrase_src.out:694  Rom 7:15     | G3756   | 'know'       | 'I do not know;'           | orphan[+1]=G1097
       host    pos 3   english 'I do not know;' -> 'I do not know.'
-      feed: Rom 7:15 slot 2 3756-1097 'I do not know.'
+      orphan  pos 4   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:774 'I do not know.'
+      feed: Rom 7:15 slot 2 3756-1097 'I do not know.' (same reference; gloss differs)
 c4_phrase_src.out:697  Rom 11:11    | G3361   | 'stumble'    | 'did they stumble'         | orphan[+1]=G4417
       host    pos 2   english 'did they stumble' -> 'Did they stumble'
-      feed: Rom 11:11 slot 2 3361-4417 'Did they stumble'
+      orphan  pos 3   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:782 'Did they stumble'
+      feed: Rom 11:11 slot 2 3361-4417 'Did they stumble' (same reference; gloss differs)
 c4_phrase_src.out:698  Rom 13:10    | G3756   | 'works'      | 'works no,'                | orphan[+1]=G2038
       host    pos 5   english 'works no,' -> 'works not,'
-      feed: Rom 13:10 slot 5 3756-2038 '1works not],'
+      orphan  pos 6   english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:783 'works not,'
+      feed: Rom 13:10 slot 5 3756-2038 '1works not],' (same reference; gloss differs)
 c4_phrase_src.out:703  Heb 13:9     | G3756   | 'benefit'    | 'derive no benefit'        | orphan[+1]=G5623
       host    pos 16  english 'derive no benefit' -> 'derive not a benefit'
-      feed: Heb 13:9 slot 15 3756-5623 '[3derive not a benefit'
+      orphan  pos 17  english unchanged in the delta; blank on src by the audit's rule 4, so blank on both
+      on built: re-flagged on built, same head, new wording: built.out:788 'derive not a benefit'
+      feed: Heb 13:9 slot 15 3756-5623 '[3derive not a benefit' (same reference; gloss differs)
+
+# SUMMARY (every figure the record states, counted here)
+#      2  cleared feed | none | separate
+#     86  cleared feed | same reference | joined
+#      1  cleared on built | flagged on built under a new head
+#      2  cleared on built | in neither built list (built english at the host slot
+#     64  cleared on built | re-flagged on built, same head, new wording
+#     21  cleared on built | under NO-EVIDENCE on built
+#     86  cleared | host
+#      2  cleared | host+orphan
+#      3  new feed | app's next verse | joined
+#    170  new feed | same reference | joined
+#      2  new host | G1473
+#      1  new host | G1487
+#      1  new host | G1537
+#      2  new host | G1909
+#      1  new host | G2532
+#      2  new host | G2596
+#      1  new host | G302
+#      4  new host | G3361
+#      1  new host | G3588
+#    155  new host | G3756
+#      2  new host | G3778
+#      1  new host | G846
+#     72  new | host
+#     64  new | host | counterpart
+#      8  new | host | no counterpart
+#    100  new | host+orphan
+#    100  new | host+orphan | no counterpart
+#      1  new | orphan
+#      1  new | orphan | no counterpart
+#   net: new with no counterpart 109 - cleared with no counterpart 24 = +85 (built FLAGGED 778 - src 693 = +85)
