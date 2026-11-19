@@ -14073,3 +14073,22 @@ the PA logs, git.
 JP: checks the upload file's sha on his PC (Get-FileHash → 2A5A8A3C…19FE), uploads it through PA's Files page to
 `/home/appssanding720/edition_upgrade_runs/`, then runs run 2 and CAUSE1, each pasted on its own. Each log goes to the ruling chat in full
 through exit=. Step 4 is ruled on run 2's log. The charter text is committed after that log is read there.
+
+### STEP4GATE run 2 ran (11/18 23:49:58 UTC, PA HEAD 1d5e34ee) — RESULT: PASS, exit=0 (as JP's screen printed it); to the ruling chat, NOT yet read there
+CC laid the screen output against §9.188's expected list (§9.191 (3)), line by line: every gated line = its expect. pre OK (repo guards
+at d34d6723; both copies no journal, triggers 0; run folder `step4_gate_r2_20261118/` made); CHECK OK — words 626,309 d95acb5d4be4,
+abp_corrections 404 d97d928ca7f5; src 451,964,928 B, 5da9bb95…7e01; STEP4-DELTA2 86e44c58…dafc; P8DELTA :19 and :122; census tsv
+8a5ab914…ea2e and log :4; prose f2a22ecd…a864; EU rows 38acc6ba…6717; both check.py sha lines (as copied, as run) = XCHK 2a5a8a3c…19fe.
+Delta counts = §9.157 (1) in all 13 columns + verses.text 15,522; only 0 / 0 both tables; moved 20 in 10 verses, unpaired 0 / 0;
+words_cells 50,890 lines; rows 31,237 / 31,237 and 626,309 / 626,309; delta exit 0. G1 six files equal; G2 80 + 6 = 86 = 86; G3 20 / 0 / 0;
+G5 broken 0 / 0; G6 15,571 · 118 · 49 · 69 · 15,522 · 0 · 0 · fails 0; G7 Isa 48:5 @4 'would' → 'what' + norm present, Joh 19:18 @10
+both absent, Heb 11:24 0; G8 0 / 0 / 0, verses_only 0, five summary lines yes; G1–G8 PASS; FINDINGS: 0; check exit 0; src after = before;
+size and time unchanged; built after exit 0; STEP4GATE RESULT: PASS (23:52:28Z); exit=0. Read-outs: G4 32,962 / 5,426 / 3,318 / 4,208;
+non-EU 15,453; rule-gives-a-value 354,946 / 353,595; Mark 1:9, Joh 14:26 as printed; Joh 19:18 other members 0 / no / no; peaks delta
+638 MB, check 122 MB; delta 23 s, check 14 s.
+**Seen on the screen, not inferred from:** the console's echo of the paste is again incomplete — after the line `# check.py is read
+ONCE…` it shows only the block's last line, with fragments of the `3)` and `*)` case lines over it. Yet the output carries lines that
+only the missing part prints (the "as run" sha line, the check, the after-checks, the PASS line). So the echo did not show everything
+bash ran. The 11/18 cause stays with CAUSE1 (not yet run).
+Kept as they are: the log `~/edition_upgrade_runs/step4_gate_r2_20261118.log` and the run folder. **Step 4 is ruled on the log in the ruling
+chat (§9.191 (3)); the charter text waits for that read.**
