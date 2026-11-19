@@ -55,6 +55,18 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   Rom 4:17, Rom 9:1, Luk 2:23, Heb 7:11, Phm 1:12, Luk 2:35, Eze 26:7) — all FEED-attributed (CHECK 3), declared in gate
   3's record; the nine doubled-words; Split 80 → 84 attribution; the 11/2 held items (DESIGN §9.75/§9.76: the 117 near
   misses + Rom 9:29, verb chip blank this lane); the old-English punctuation members R2 surfaced.
+  - **C4 joined-slot rows (§9.203, 11/19 — JP: "we can fix/split them later if it makes sense to"; NOT a work order, JP raises
+    it):** (a) the **101 rows whose english is blank on built** — account v2 `docs/handoffs/drafts/STEP6AUD_C4_account_20261119.txt`
+    (sha 60fb07b9…4b96): the 100 "orphan … -> None" lines + Joh 10:37 @2; the edition prints each "not + verb" as ONE joined slot and the
+    build puts its English on the function word. On those rows the verb's chip is not drawn, it is not clickable, and it is out of its
+    word's "renders as" list, the rendering filter and the English finder (DR "### C4 account v2 …" (2)). (b) **The 8 rows with
+    greek_pos / bracket_id movement**: Exo 34:24 @14, Job 4:18 @5, Pro 30:11 @8, Isa 1:13 @18, Eze 20:39 @28, 1Ti 5:8 @10, 2Ti 1:16 @17
+    (both columns → blank) and 1Sa 20:27 @27 (bracket_id blank → 4) — every cell IS in the step-4 declared list, STEP4-DELTA2
+    words_cells (86e44c58…dafc; lines 18015-6, 30900-1, 45820-1, 25516-7, 19233-4, 5733-4, 10658-9, 4912, header = line 1), none in
+    the named pre_8b → built list (DR :12569 on), so all from the build leg. (c) **Surfaces not read** for a blank-english row: the SEO
+    word pages (views_seo.py :162-186), Ask-the-corpus (ai.py :574-582, :1131-1134), the search tab, the detail panel, and how
+    `_normalize_gloss` folds a function word's phrase ("I know not"). Also: NO-EVIDENCE 1,814 → 2,140 on built — a read-out with no
+    account (§9.201); no count on built was pre-registered for §4.4 — a lane GAP (§9.201).
 - **10 reorder verses, eSword order confirmation before swap** (DESIGN §9.93 (b); owed before stage G, not
   before 8b): 2Ki 23:35 pos 6/7, Est 5:9 pos 12/13, Eze 20:14 pos 7/8, Gen 5:25 pos 1/2, Gen 5:26 pos 1/2,
   Gen 34:4 pos 1/2, Jdg 11:7 pos 6/7, Jos 2:4 pos 19/20, Jos 5:15 pos 26/27, Rom 9:29 pos 17/18 — whole-row moves

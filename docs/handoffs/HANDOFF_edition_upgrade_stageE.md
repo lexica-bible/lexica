@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.202**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.203**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 night; STEP6AUD RAN — step 6 NOT PASSED, C4 FINDING, §9.199) — open here
@@ -16,9 +16,12 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 - **§9.201–§9.202:** stop rule NOT triggered; no built pre-registration = a recorded GAP. Account rewritten to **v2** (reviewer ESCALATE on v1
   → CLEAR on v2, both verbatim in DR "### C4 account v2 …"). JP's call: (a) **on condition "not losing any context or greek"**. CC's reads of
   the three conditions show MORE than the blank cell: 7 rows also lose greek_pos + bracket_id; in chip view the verb's chip is not drawn;
-  the verb can't be clicked; γινώσκω's "renders as" counts + the English finder lose the row. **NEXT = JP's call again, on those facts**
-  (then registered by the ruling chat). Nothing re-pinned, re-run or rebuilt.
-- Still OWED: C4; import_tipnr −57; Split 84 (open by name).
+  the verb can't be clicked; γινώσκω's "renders as" counts + the English finder lose the row.
+- **§9.203: JP ruled C4 (a)** ("i just want it to line up w/ the official version"): 747 is built's figure, the 671 restated to 747 for
+  this lane, re-pin in the swap commit; C4 FINDING disposed. Follow-ups carried by name (stageC_repin "C4 joined-slot rows"). Step 6 NOT
+  yet passed. **NEXT = the ruling chat on CC's two proposals (DR "### C4 ruled (a) …"):** import_tipnr −57 CLOSE on its outputs (words
+  side inside the passed step-4 delta; pn_binding passed gate 2) · Split 84 CARRY open by name. Then step 6 can be ruled.
+- Still OWED: import_tipnr −57; Split 84 (open by name) — both proposed (above).
 
 ## SUCCESSOR START (11/19 late; STEP6AUD CLEARED TO RUN, §9.198) — superseded by 11/19 night above
 - **Block STEP6AUD CLEARED** (§9.198; DR "### STEP6AUD CLEARED"): block DR :14595-14736, sha **e4449a39…3f10** (142 lines; GAP 1 (b)

@@ -15582,3 +15582,36 @@ english goes to blank on built (account v2's 100 "orphan … -> None" + Joh 10:3
     blank (693 on src).
 - **So (1)–(3) do NOT show "nothing lost beyond the blank cell itself":** the 7 bracket/position blanks; the chip view hides the verb; the
   verb cannot be clicked; γινώσκω's rendering counts and the "know" finder lose the row. Per §9.202 this goes back to JP as printed.
+
+### C4 ruled (a) by JP (§9.203) — the follow-ups carried; what step 6 still needs (CC, 11/19)
+**C4 disposed (§9.203):** JP: "probably a, i just want it to line up w/ the official version. we can fix/split them later if it makes sense
+to". Built's FLAGGED BEYOND allowlist = 747 with account v2 (60fb07b9…4b96) as its member account; the charter's ≤ 671 restated by JP to
+747 for this lane, re-pinned in the swap commit (charter :351-352), not before; the (g) fix stays deferred (charter :171); splitting the
+rows later is JP's to raise. The STEP6AUD log is not re-run.
+**Carried to the follow-up list by name** (HANDOFF_edition_upgrade_stageC_repin.md, "Follow-up list", the new "C4 joined-slot rows"
+item): the 101 blank rows; the 8 rows with greek_pos / bracket_id movement; the surfaces not read; NO-EVIDENCE 1,814 → 2,140; the
+pre-registration GAP. **The 8 rows and the step-4 declared lists:** every one of their 15 position cells is a member of STEP4-DELTA2
+words_cells (sha 86e44c58…dafc, the list step 4's G1 matched byte for byte, §9.193 (3)/(5)) — line numbers in that file, header = line 1:
+1Sa 20:27 @27 bracket_id :4912 · 1Ti 5:8 @10 :5733-5734 · 2Ti 1:16 @17 :10658-10659 · Exo 34:24 @14 :18015-18016 · Eze 20:39 @28
+:19233-19234 · Isa 1:13 @18 :25516-25517 · Job 4:18 @5 :30900-30901 · Pro 30:11 @8 :45820-45821 (read from the local copy that hashes to
+86e44c58). None is in the named pre_8b → built list (DR :12569 on), so all come from the build leg src → pre_8b, which §9.178 (4)
+composes into STEP4-DELTA2 cell for cell.
+**What step 6 still needs (CC's reading).** Every gated audit of STEP6AUD passed except C4, now disposed; Job 3:3 content-other stays
+named OPEN (§9.195 Q2: not a precondition of step 6; whether the swap can go with it open is not ruled). Of the §4.8 figures re-declared on
+built (DR "Part B", :14318-14334), all are ruled or closed except two:
+- **import_tipnr −57 (31,649 → 31,592).** Record: §9.85 deferred it to gate 2 (pn_binding member by member); gate 2 closed GREEN on a
+  declared 160-row pn_binding delta (§9.101, §9.103); no § names the −57 closed; the CHECK 2b method could not isolate the 57 (DR
+  :1497-1502). What import_tipnr writes, at d34d6723: words — `UPDATE words SET strongs_base=?, is_pn=1` for each match and `is_pn=1` on
+  every remaining '*' row (import_tipnr.py :717-723); and the tipnr table, deleted and re-filled from the TIPNR list (:371-374). Built's
+  words against src are STEP4-DELTA2, and step 4 PASSED with every compared column equal to the declared lists, nothing outside them
+  (§9.193 (5)) — strongs_base 26, is_pn 12 among them. **CC proposes: CLOSE the −57 for step 6 on its outputs** — the count is a tally
+  inside an intermediate step; what it writes to words is wholly inside the step-4 delta (passed), and the serving table it feeds passed
+  gate 2 on a declared delta. The 57 themselves stay unlisted. NOT on record: a built-vs-src compare of the tipnr table itself.
+  If the ruling chat wants the 57 listed, that needs a new read-only block (both import_tipnr runs' match lists) — CC would draft it.
+- **Split 80 → 84 (+4).** The build splits merged subject names with its member log switched off (build_words_from_abp.py :2773
+  `log=lambda *_a: None`, the count printed at :2775, at d34d6723); src was already split, so no dry run can list the four now (DR
+  :314-318). STEP4-DELTA2 shows no number or position cell outside the declared 80 + 6 (DR :10199-10200): the +4 left no net difference
+  from src. **CC proposes: CARRY, open by name** — it is already on the follow-up list ("Split 80 → 84 attribution"); listing the four needs
+  a build-code change (unmute the log) and a rebuild, not a step-6 read.
+**So, on CC's reading, step 6 can be ruled PASSED** once the ruling chat rules on these two, with: C4 by §9.203; Job 3:3 named OPEN; the
+read-outs as §9.201 recorded them; the pre-registration GAP recorded. Nothing re-run, re-pinned or rebuilt.
