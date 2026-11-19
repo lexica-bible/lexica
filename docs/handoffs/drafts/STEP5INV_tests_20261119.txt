@@ -1,0 +1,101 @@
+# STEP5INV tests (11/19, CC, WSL test home; clone at d34d6723; the block run AS WRITTEN, no constant swapped). Script: e2e5.sh (scratchpad gate5). inv.py sha256 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f; block sha256 8a36b029a8db608903fdc0345c3fde38c1b6baf8456023c7a3edee54c7ebfa31
+test repo HEAD d34d6723
+=============== T1 clean (the block as written) ===============
+GATE REF d34d6723 - STEP5INV - charter 6 step 5: the strongs_base invariant on built (rebuild-words step 5: words whose strongs_base is a bare number, GLOB '[0-9]*', MUST be 0; dotted bare numbers included) - READ-ONLY: built and src opened mode=ro; writes only its run folder and this log - PA HEAD d34d6723 - 2026-11-19T00:55:19Z
+repo /home/jp/gate5/home3/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gate5/home3/bible-db/bible_edupg_test_20261101.db: 40263680 bytes - no -journal - triggers 0
+db /home/jp/gate5/home3/bible-db/bible_edupg_test_built_20261102.db: 40259584 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate5/home3/edition_upgrade_runs/step5_invariant_20261119
+STEP5INV PRE: OK
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (1) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 626309 rows, fc2c4381eb7d - dry copy 626309 rows, fc2c4381eb7d - = the dry run: yes - vs prep 626309 rows, fc2c4381eb7d
+written table abp_corrections: built 1 rows, 35b912ad6b5b - dry copy 1 rows, 35b912ad6b5b - = the dry run: yes - vs prep 1 rows, 35b912ad6b5b
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP5INV CHECK: OK
+=== (1) the invariant on built; (2) read-outs on src and built - start 2026-11-19T00:55:22Z ===
+inv.py sha256: 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f (expect 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f)
+(1) built: words whose strongs_base is a bare number (GLOB '[0-9]*', dotted included): 0 (MUST be 0)
+(2) read-outs, nothing gated on them - words.strongs_base by shape:
+                            src      built    b - s
+  rows                   626309     626309       +0
+  G-number               626300     626300       +0
+  H-number                    6          0       -6
+    of these dotted           0          0       +0
+  '*'                         3          9       +6
+  empty ''                    0          0       +0
+  NULL                        0          0       +0
+  bare number                 0          0       +0
+  other                       0          0       +0
+STEP-5 INVARIANT: HOLDS - 0 bare-number strongs_base on built
+read exit 0 (expect 0; 3 = the invariant does not hold) - end 2026-11-19T00:55:23Z
+src, built: size and time before = after: yes
+STEP5INV CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP5INV RESULT: PASS - 2026-11-19T00:55:26Z - built: 0 bare-number strongs_base; to the ruling chat
+exit=0
+=============== T2 re-paste ===============
+STEP5INV RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gate5/home3/edition_upgrade_runs/step5_invariant_20261119.log
+=============== T3 damaged paste: one line break added inside a string of the script (as on 11/18) -> STOP at the inv.py sha, nothing read ===============
+61c61,62
+< print("(2) read-outs, nothing gated on them - words.strongs_base by shape:")
+---
+> print("(2) read-outs, nothing gated on them - words.strongs_base 
+> by shape:")
+inv.py sha256: 0d572a7130d8f6bb34d77a69d7173794c5efc396bef60a3dadc1709b13d6998a (expect 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f)
+STEP5INV RESULT: STOP - inv.py is not the file CC wrote and tested (paste changed?)
+exit=1
+inv.py
+=============== T4 known positive: built with a bare '4151', a dotted bare '1246.2', and read-out shapes 'g12' / NULL / '' planted; guard re-made on it -> FINDING ===============
+planted on rowids [1, 2, 3, 4, 5]
+test repo HEAD d34d6723
+GATE REF d34d6723 - STEP5INV - charter 6 step 5: the strongs_base invariant on built (rebuild-words step 5: words whose strongs_base is a bare number, GLOB '[0-9]*', MUST be 0; dotted bare numbers included) - READ-ONLY: built and src opened mode=ro; writes only its run folder and this log - PA HEAD d34d6723 - 2026-11-19T00:55:33Z
+repo /home/jp/gate5/home4/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gate5/home4/bible-db/bible_edupg_test_20261101.db: 40263680 bytes - no -journal - triggers 0
+db /home/jp/gate5/home4/bible-db/bible_edupg_test_built_20261102.db: 40259584 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate5/home4/edition_upgrade_runs/step5_invariant_20261119
+STEP5INV PRE: OK
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (1) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 626309 rows, bf37998eea04 - dry copy 626309 rows, bf37998eea04 - = the dry run: yes - vs prep 626309 rows, bf37998eea04
+written table abp_corrections: built 1 rows, 35b912ad6b5b - dry copy 1 rows, 35b912ad6b5b - = the dry run: yes - vs prep 1 rows, 35b912ad6b5b
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP5INV CHECK: OK
+=== (1) the invariant on built; (2) read-outs on src and built - start 2026-11-19T00:55:37Z ===
+inv.py sha256: 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f (expect 67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f)
+(1) built: words whose strongs_base is a bare number (GLOB '[0-9]*', dotted included): 2 (MUST be 0)
+  BARE: rowid 1 Gen 1:1 @1 strongs '1001' strongs_base '4151'
+  BARE: rowid 2 Gen 1:1 @2 strongs '1002' strongs_base '1246.2'
+(2) read-outs, nothing gated on them - words.strongs_base by shape:
+                            src      built    b - s
+  rows                   626309     626309       +0
+  G-number               626300     626295       -5
+  H-number                    6          0       -6
+    of these dotted           0          0       +0
+  '*'                         3          9       +6
+  empty ''                    0          1       +1
+  NULL                        0          1       +1
+  bare number                 0          2       +2
+  other                       0          1       +1
+  other on built: rowid 3 Gen 1:1 @3 strongs '1003' strongs_base 'g12'
+STEP-5 INVARIANT: DOES NOT HOLD - 2 rows above
+read exit 3 (expect 0; 3 = the invariant does not hold) - end 2026-11-19T00:55:38Z
+src, built: size and time before = after: yes
+STEP5INV CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP5INV RESULT: FINDING - 2026-11-19T00:55:41Z - the rows above (and /home/jp/gate5/home4/edition_upgrade_runs/step5_invariant_20261119/inv.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+=============== T5 built changed after the guard was made -> STOP at the built check, nothing read ===============
+test repo HEAD d34d6723
+repo scripts/tests: clean (expect clean)
+STEP5INV CHECK: FAIL - words on built differs from the dry run
+STEP5INV RESULT: STOP - built is not HEADFIX2's result (lines above)
+exit=1
+=============== T6 the read on its own (the heredoc body as written) = the production SQL: same count as tests/test_build_invariants.py's line on T4's built ===============
+test_build_invariants SQL on T4 built: 2 (want 2)

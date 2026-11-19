@@ -14111,3 +14111,131 @@ Step 4 rests on STEP4GATE run 2 + LIVESRC (§9.181). CAUSE1: what differed estab
 how NOT established. Charter §6 step 4 replaced by the text approved in §9.186 (3) (DR "### Charter §6 step 4 — the amended text",
 unchanged since approval), placeholders filled (AMENDED 11/19, DESIGN §9.186 (3), §9.193) and a PASSED line added. Next: charter step 5,
 CC's to bring. Kept: the upload file and both gate run folders.
+
+## Charter §6 step 5 — the strongs_base invariant block STEP5INV — DRAFT (11/19, CC; §9.193 (11)) — UNAPPROVED until reviewed
+**What it checks:** rebuild-words step 5 (`.claude/commands/rebuild-words.md` :180), on built: words whose `strongs_base` is a bare
+number, `GLOB '[0-9]*'` (the same SQL as tests/test_build_invariants.py :55; a dotted bare number like `1246.2` matches too, per the
+dotted-number audit rule) — MUST be 0. 0 = PASS; any = FINDING, each row printed (rowid, verse, position, strongs, strongs_base; first 40).
+**Read-outs, nothing gated on them:** words.strongs_base on src and built by shape — G-number · H-number · of these dotted · '*' · '' ·
+NULL · bare number · other — with built − src, and up to 20 "other" rows per copy. Expected picture (from §9.193 G2, the 26 strongs_base
+members = 20 swap cells, which move values between rows and so change no count, + §9.95's six rows → '*'): b − s = '*' +6, the six
+rows' src shapes −6 between them, every other line +0. A different picture is a read-out for the ruling chat, not a STOP.
+**Form:** STEP4GATE run 1's (§9.188): GATE REF d34d6723 (PA's scripts; no pull); eu_step pre (new run folder `step5_invariant_20261119/`,
+repo guards, no journal, triggers 0); "built =" HEADFIX2's result (eu_step check, the standing guard) before and after; src and built size
+and time before = after. The read is a short Python file written by the block's heredoc into the run folder and sha-pinned (XINV) before it
+runs — a damaged paste STOPs (T3: one line break added inside a string, as on 11/18). It opens both copies mode=ro + query_only and writes
+nothing. Not hashed: src (no figure here rests on src's bytes; its size and time are compared before and after). 93 lines.
+**Tests** (`docs/handoffs/drafts/STEP5INV_tests_20261119.txt`, 101 lines; WSL test homes, clone at d34d6723, the block run AS WRITTEN):
+T1 clean → bare 0, read-outs ('*' 3 → 9, H-number 6 → 0 on the test copies), PASS, exit=0 (:3-39) · T2 re-paste → STOP, log exists (:41)
+· T3 damaged paste → inv.py sha printed, STOP before any read, the run folder holds only inv.py (:42-51) · T4 KNOWN POSITIVE: built with '4151' and '1246.2' planted (plus
+'g12', NULL, '' as read-out shapes), guard re-made on it → both BARE rows printed by name, 'g12' listed as other, read exit 3, FINDING,
+exit=1 (:52-93) · T5 built changed after the guard → CHECK FAIL, STOP, nothing read (:94-99) · T6 the test file's own SQL on T4's built = 2
+(:100-101). **CC's first run of these tests crashed** at the "other" member list (an SQL slip — the block STOPped as built to); fixed
+(the member list now selects through a sub-select), re-pinned, all six re-run; the file holds the re-run.
+Block sha256 (the fenced text below, as tested): 8a36b029a8db608903fdc0345c3fde38c1b6baf8456023c7a3edee54c7ebfa31.
+
+### Block STEP5INV (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; no PA pull)
+```bash
+set +H
+L=~/edition_upgrade_runs/step5_invariant_20261119.log
+if [ -e "$L" ]; then echo "STEP5INV RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+echo "GATE REF ${REF} - STEP5INV - charter 6 step 5: the strongs_base invariant on built (rebuild-words step 5: words whose strongs_base is a bare number, GLOB '[0-9]*', MUST be 0; dotted bare numbers included) - READ-ONLY: built and src opened mode=ro; writes only its run folder and this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP5INV RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step5_invariant_20261119
+XINV=67ae59988be37beb0fe8f725ae04658abb5578b10203869a1f5fa2290398ea3f      # sha256 of inv.py (DR: the block's heredoc body, CC's tested file); any other text STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the read: every miss is STOP ---
+EU scripts/eu_step.py pre --tag STEP5INV --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "STEP5INV RESULT: STOP - pre (line above); nothing read"; exit 1; }
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag STEP5INV --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP5INV RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+echo "=== (1) the invariant on built; (2) read-outs on src and built - start $(date -u +%FT%TZ) ==="
+cat > "$D/inv.py" <<'PYEOF'
+# STEP-5 strongs_base invariant (READ-ONLY; charter 6 step 5; rebuild-words step 5). argv: 1 built db  2 src db
+# Opens both mode=ro + query_only; writes nothing. Exit 0 = built has 0 bare-number strongs_base - 3 = it has some (listed).
+import sqlite3, sys
+from pathlib import Path
+
+BUILT, SRC = sys.argv[1], sys.argv[2]
+BARE = "strongs_base GLOB '[0-9]*'"          # the invariant, as rebuild-words step 5 and tests/test_build_invariants.py write it
+SHAPES = [("G-number", "strongs_base GLOB 'G[0-9]*'"),
+          ("H-number", "strongs_base GLOB 'H[0-9]*'"),
+          ("  of these dotted", "strongs_base GLOB '[GH][0-9]*.*'"),
+          ("'*'", "strongs_base = '*'"),
+          ("empty ''", "strongs_base = ''"),
+          ("NULL", "strongs_base IS NULL"),
+          ("bare number", BARE)]
+OTHER = ("NOT (strongs_base IS NULL OR strongs_base = '' OR strongs_base = '*' OR strongs_base GLOB '[GH][0-9]*' OR %s)" % BARE)
+
+
+def ro(p):
+    c = sqlite3.connect("%s?mode=ro" % Path(p).resolve().as_uri(), uri=True)
+    c.text_factory = lambda b: b.decode("utf-8", "surrogateescape")
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def members(c, where, n):
+    return c.execute("SELECT w.rowid, v.book, v.chapter, v.verse, w.position, w.strongs, w.strongs_base FROM words w "
+                     "JOIN verses v ON v.id = w.verse_id WHERE w.rowid IN (SELECT rowid FROM words WHERE %s) "
+                     "ORDER BY w.rowid LIMIT %d" % (where, n)).fetchall()
+
+
+B, S = ro(BUILT), ro(SRC)
+bare = B.execute("SELECT count(*) FROM words WHERE " + BARE).fetchone()[0]
+print("(1) built: words whose strongs_base is a bare number (GLOB '[0-9]*', dotted included): %d (MUST be 0)" % bare)
+for r in members(B, BARE, 40):
+    print("  BARE: rowid %s %s %s:%s @%s strongs %s strongs_base %s" % (r[0], r[1], r[2], r[3], r[4], ascii(r[5]), ascii(r[6])))
+if bare > 40:
+    print("  (more than printed: the first 40 by rowid)")
+print("(2) read-outs, nothing gated on them - words.strongs_base by shape:")
+got = {}
+for name, c in (("src", S), ("built", B)):
+    got[name] = [c.execute("SELECT count(*) FROM words").fetchone()[0]]
+    got[name] += [c.execute("SELECT count(*) FROM words WHERE " + w).fetchone()[0] for _, w in SHAPES]
+    got[name].append(c.execute("SELECT count(*) FROM words WHERE " + OTHER).fetchone()[0])
+names = ["rows"] + [n for n, _ in SHAPES] + ["other"]
+print("  %-18s %10s %10s %8s" % ("", "src", "built", "b - s"))
+for i, n in enumerate(names):
+    print("  %-18s %10d %10d %+8d" % (n, got["src"][i], got["built"][i], got["built"][i] - got["src"][i]))
+for name, c in (("src", S), ("built", B)):
+    for r in members(c, OTHER, 20):
+        print("  other on %s: rowid %s %s %s:%s @%s strongs %s strongs_base %s" % (name, r[0], r[1], r[2], r[3], r[4], ascii(r[5]), ascii(r[6])))
+S.close()
+B.close()
+print("STEP-5 INVARIANT: %s" % ("HOLDS - 0 bare-number strongs_base on built" if bare == 0 else "DOES NOT HOLD - %d rows above" % bare))
+sys.exit(0 if bare == 0 else 3)
+PYEOF
+k=$(h "$D/inv.py"); echo "inv.py sha256: $k (expect $XINV)"; [ "$k" = "$XINV" ] || { echo "STEP5INV RESULT: STOP - inv.py is not the file CC wrote and tested (paste changed?)"; exit 1; }
+EU "$D/inv.py" "$B" "$S" < /dev/null > "$D/inv.out" 2>&1; r1=$?
+cat "$D/inv.out"; echo "read exit $r1 (expect 0; 3 = the invariant does not hold) - end $(date -u +%FT%TZ)"
+# --- after: copies unchanged (read-only run) ---
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src, built: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+EU scripts/eu_step.py check --tag STEP5INV --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "STEP5INV RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+case "$r1" in
+  0) echo "STEP5INV RESULT: PASS - $(date -u +%FT%TZ) - built: 0 bare-number strongs_base; to the ruling chat"; exit 0 ;;
+  3) echo "STEP5INV RESULT: FINDING - $(date -u +%FT%TZ) - the rows above (and $D/inv.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "STEP5INV RESULT: STOP - the read stopped or did not finish (exit $r1; $D/inv.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### STEP5INV reviewed (11/19) — REVIEW: CLEAR (read-only, §9.90 scope (a)); 0 DEFECT, 0 GAP, 2 NOTEs
+Read-only as claimed (inv.py and eu_step pre/check open mode=ro; writes only the log, the run folder and inv.py / inv.out /
+check_after.out in it); pre, the "built =" check and the inv.py pin each STOP before the read (T3, T5); the SQL = tests/test_build_invariants.py
+:55 (T6); conventions hold; test cites match the file. NOTE 1: the test copies' words / abp_corrections hashes differ from PA's — expected.
+NOTE 2: a STOP after pre leaves the run folder, so a re-run needs new names — as STEP4GATE. Not checked by the reviewer: the block and XINV
+shas (CC: DR :14139-14231 hashes to 8a36b029…fa31; the heredoc body to XINV 67ae5998…a3f), whether the eu_step write opener is on this
+path — **CC checked: the only read-write open in eu_step.py is :203, inside `prep`; this block calls only `pre` and `check`; eu_step.py =
+d34d6723.** JP runs it as printed; the log goes to the ruling chat in full through exit=; step 5 is ruled there on the log.
