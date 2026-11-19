@@ -14449,3 +14449,21 @@ NOTE 1 → Q7. NOTE 2 → health_check cite :144 / :145-150. **NOTE 3 — not ve
   outside rows 625,941 digest 3718e4db unchanged · cells english 35 · english_head 17 · greek_pos 38 · bracket_id 41 · other columns 0 ·
   built = dry run 18/18 · journal none · `8B2A RESULT: DONE`. **Ruling chat: ACCEPTED.**" Log `~/edition_upgrade_runs/lane3_8b2a_20261106.log`.
 - **Still owed, not done here:** import_tipnr −57 (a read listing or attributing the 57); Split 84 (open by name).
+
+### Come-back RULED (11/19, §9.196) — abp_texts guards accepted (cert check 5 + git diff/porcelain on abp_texts, each a STOP); Q2 stands; lane-3 CLOSED by reference; serving deltas OWED with three asks; both log greps accepted
+
+### §9.196 answers (CC, 11/19, from the repo; nothing run)
+- **cert_manifest.json unchanged from d34d6723:** it is a tracked file at the repo root (`git ls-files cert_manifest.json`); last commit
+  touching it ade78308 (2026-10-30); `git diff --stat d34d6723 HEAD -- cert_manifest.json` is empty here. STEP6AUD adds it to the same
+  pre-check as abp_texts: `git diff --quiet d34d6723 HEAD -- abp_texts cert_manifest.json` + porcelain on both, STOP on failure.
+- **Serving deltas (1) — the column.** rebuild-words does NOT name it. The line is :241 "Anything outside these three groups at the serving
+  column = HALT", under step 8b.2 (:224) `retire_hebrew_identity.py`, after :200 "live serving is GREEK-keyed with Hebrew in
+  `pn_hebrew_xref`". The groups are slot moves Hebrew→'*' / '*'→Hebrew / gain Greek (:237-240). The only words column that script writes is
+  `strongs_base` (retire_hebrew_identity.py :315 `UPDATE words SET strongs_base=? WHERE rowid=?`). CC's reading, from the code, not a quote:
+  the serving column = `words.strongs_base`. No verbatim naming exists to bring.
+- **(2) the G2 line as printed:** not in the repo. DR :14083 is CC's record of the log, not the log. STEP6AUD greps
+  `~/edition_upgrade_runs/step4_gate_r2_20261118.log` for its G2 line and prints it, unless JP pastes it first.
+- **(3) 26 vs 80 + 6 = 86.** §9.193 (2) delta counts on the Strong's-side columns: strongs 20 · strongs_base 26 · morph 14 · lemma 14 · is_pn 12.
+  G2's 86 is the declared cell set over all five columns: the 10 whole-row swaps (20 positions) give 20 + 20 + 14 + 14 + 12 = 80 cells
+  (only where src(p) ≠ src(q), §9.142 (1), DR :13207-13209), plus §9.95's six strongs_base rows → '*' = 86. The strongs_base column alone:
+  20 swap cells + 6 = 26 — the "26 strongs_base cells" in the proposal = the strongs_base share of G2's 86.
