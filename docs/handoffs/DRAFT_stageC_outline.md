@@ -15365,3 +15365,27 @@ the named OPEN. CC's NOTE 2 stands beside it: A9 built may differ from src (the 
 JP's cat of the log, not a summary. **Still OWED:** import_tipnr −57; Split 84 (open by name); serving deltas and PN-star (both ruled on
 this log; PN-star's comparison to src's 10/25 figure rests on charter prose only — CHARTER_rebuild_trap_fix :341 / :465 — recorded as not
 measured).
+
+## The step-6 audit log — RULED (§9.199): NOT PASSED, C4 FINDING standing
+Log `~/edition_upgrade_runs/step6_audit_20261119.log` (592 lines, RESULT at 22:04:48Z: FINDING, FINDINGS 1 (C4)), run folder
+`step6_audit_20261119/` — both kept as they are. Every other gate PASSED as declared (§9.199 (1)); serving deltas and PN-star CLOSED on
+this log (§9.199 (4)); the count-differs list's pin from now on = first-read sha 27c2f790…0a82.
+**C4:** built FLAGGED BEYOND allowlist 747 > 671 (src 662 = the 10/30 line :6). The charter text the gate rests on, CHARTER_edition_upgrade.md
+:167-172 at 91f6715f, verbatim:
+> `audit_phrase_gloss_underdist.py`: control Psa 39:1 FIRED first; FLAGGED beyond
+> `AUDIT_phrase_gloss_allowlist.txt` ≤ 671. The class is English-shaped, so the app edition can move it
+> both ways (the app edition may distribute phrases ABP's older text parked). Pre-register: the count
+> on the built copy, member list of newly flagged and newly cleared vs live; a NEW flagged row that is
+> not an app-edition wording change = stop. The deferred (g) FIX stays deferred (own pass, post-upgrade).
+> **Live before (2026-10-30):** CONTROL Psa 39:1 FIRED · FLAGGED 693 · FLAGGED BEYOND allowlist 662 (gate ≤ 671)
+**Read-outs, what the record holds (CC, 11/19):**
+- *Cert on src:* §9.195 Q1 left it "not decided"; the block printed it as a read-out (DR :15053). The record says the EU correction rows
+  were inserted on src, the build's source copy, and reached built through the build (DR :10917-10918, citing §9.153 (1)); src's
+  abp_corrections reads 374|23|6 (§9.161 (1)). No record line predicts src's check-4 red count (94 lines / 70 verses); attributing them
+  row by row needs `c1_cert_src.out` (PA only).
+- *v1 punct-shift 31 on built:* NO § carries it. The record's punct figures on built are the v2 punct-position members (the 9c 607 file,
+  §9.131 / §9.133); the v1 tool's only recorded figures are live's (charter :160, punct-shift 0). Bringing it needs `c3_v1_built.out`.
+- *A9 anchorable 515,453 / 515,454:* the one word is not in the log; naming it needs `a9_tier2_built.out` + `a9_tier2_src.out`.
+- *A2:* not gated, as ruled; the cover is v2 word-order 0, gated in C3 and PASSED.
+**C4 account of the 173 + proposal:** OWED from a read of the two dumps (`c4_phrase_built.out`, `c4_phrase_src.out`, PA only) — JP copies
+the run folder down read-only (scp, as on 10/25) to `C:\Users\JP\edition_upgrade_runs\pa\`; nothing on PA is written or re-run.
