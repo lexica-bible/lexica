@@ -14245,3 +14245,172 @@ As printed: PRE OK; "built =" CHECK OK before and after; inv.py sha = XINV; buil
 unchanged; RESULT: PASS at 2026-11-19T01:03:09Z. Read-outs (src / built): rows 626,309 / 626,309; G 607,131 / 607,131; H 1,806 / 1,800;
 '*' 16,765 / 16,771; '' 607 / 607; NULL, bare, other, dotted 0. The −6 / +6 fits the six H → '*' rows; not shown to be those rows, nothing
 rests on it. Charter §6 step 5 marked PASSED. Next: step 6 (audits, floors re-declared per §4.8, + the S9 block), CC's to bring.
+
+## Charter §6 step 6 — PROPOSAL (11/19, CC; §9.194 (5)) — NOT a block; reviewer → ESCALATE → ruling chat before any code or block
+**What step 6 is** (charter :343): "audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4)". Three parts: **A** the
+`/rebuild-words` step-6 audits (rebuild-words.md :181-191); **B** the §4.8 chain figures, each re-declared on built with its source
+(charter :228-237); **C** §4.1 cert suite, §4.2 L9 split lint, §4.3 reassembly v1 + v2, §4.4 phrase-gloss — plus DESIGN §6 gates 4-6, whose
+"when" column says step 6 (DESIGN :265-267: phrase-gloss, the count-differs census, corrections check 4).
+**Copies.** Every audit runs on **built** (guard: "built =" HEADFIX2's result, `eu_step check --dir ~/edition_upgrade_runs/step4_headfix2_20261116
+--written words,abp_corrections`, before and after) AND on **src** in the same block, same code. src stands for live: live = src for
+words + verses as of 2026-11-18T15:43Z (§9.181); so src's figure IS the "live before" for each floor, read today, not copied from 10/25.
+Neither live nor pre_8b is opened. GATE REF d34d6723 (PA's scripts; no pull; `git diff --stat d34d6723 HEAD -- scripts tests` =
+build_words_from_abp.py, githooks/pre-commit, tests/test_app_cells.py only — none run here).
+**Form.** One read-only block, STEP6AUD, STEP5INV's shape: eu_step pre (new run folder), the "built =" guard before and after, src and built
+size and time before = after. Each audit's output goes IN FULL to its own file in the run folder. **None of the step-6 scripts judges its own
+floor** (each exits 0 whatever it counts, below), so a check program reads those files and judges every floor; it is uploaded by PA's Files
+page, sha-pinned and run through the read-once launcher (lesson of 11/18, §9.193 (9); DR "## The step-4 gate block, run 2"). RESULT PASS
+only if every gate below holds; FINDING = a gate missed, members printed; STOP = a pre-condition missed.
+
+### Code facts the block is built on (read 11/19; file:line)
+- **Six step-6 scripts read live `bible.db` when no path is given** (rebuild-words :182-190 writes them without one): audit_bracket_order.py
+  :63, scan_strongs_cross.py :38, audit_lord_strongs.py :32, audit_funcword_wrongslot.py :63, scan_content_filler_tags.py :16,
+  audit_corpus_tier1.py :34; audit_corpus_tier2.py :71 also falls back to bible.db when the path does not end in ".db". Also
+  cert_invariants.py :400, health_check.py :23, audit_phrase_gloss_underdist.py :50, lint_split_wrong_slot.py :295. Every call in the
+  block names the copy's full path, and the block writes each command line, path included, as the first line of that audit's output file;
+  the check program reads the path from that line. Where a script also prints its own path line (e.g. audit_split_flip :197 "-> <db>",
+  scan_content_filler_tags :64 "[DB: <db>]", cert_invariants "on <db>"), the check program requires it to match; the L9 lint (main
+  :293-387) and size_split_compounds.py print no path line — for those the command line is the only record (reviewer GAP 1).
+- **No floor is enforced by an exit code:** audit_split_flip.py :180-211 (main returns None), the four scans, tier1, tier2 (exit 1 only when
+  NO reference loaded, :128-129), health_check.py (no sys.exit on WARN/ERR), audit_phrase_gloss_underdist.py (the "≤ 671" is a label only),
+  lint_split_wrong_slot.py (no exit in the full pass), audit_reassembly_diff.py v1/v2 reports. Exit-gated: cert_invariants (suite and
+  `--controls`), audit_split_flip `--control`, lint `--control`, reassembly `--controls` / `--controls --v2` / the member diff.
+- **Open read-write (plain connect), SELECT only:** scan_strongs_cross.py :45, scan_content_filler_tags.py :45, health_check.py :30,
+  lint_split_wrong_slot.py :307 (bh_scrape.db). Nothing writes; a wrong path would CREATE an empty file — the block checks each path exists
+  first; built's and src's size and time are compared after.
+- **Files written:** the L9 lint writes three TSVs into the CURRENT folder (lint :338, :369, :382; size_split_compounds.py :124 one more) —
+  run from the run folder so nothing lands in the PA checkout. audit_bracket_order.py :94 reads `abp_texts/` relative to the current folder —
+  run from ~/bible-db. Nothing else writes a file.
+- **Built-in controls (known positives in code):** cert_invariants `--controls` (checks 1-4, 7, 7b; 5-6 none, :289-394); audit_split_flip
+  `--control` (:143-177); lint `--control` (:255-290); reassembly `--controls` (v1) and `--controls --v2`; phrase-gloss Psa 39:1 (:253-273).
+  **No control:** audit_bracket_order, scan_strongs_cross, audit_lord_strongs, audit_funcword_wrongslot, scan_content_filler_tags,
+  audit_corpus_tier1, audit_corpus_tier2, health_check's data lines. For those, src's own non-zero lines are the in-block known positive where
+  one exists (A1, tier-2, CHIP); the zero-floor ones get a planted positive in the local tests only (below).
+
+### Part A — the rebuild-words step-6 audits (each on built, src's figure beside it)
+| # | audit (as run) | gate on built | floor's source | english-keyed? |
+|---|---|---|---|---|
+| A1 | `health_check.py <built> --surface-floor=395014 --no-backup-check --no-disk-check` | 0 warnings, 0 errors (tally line health_check.py :296-306) | rebuild-words :182; floor 395,014 §9.130 (9b, the same command read 0/0 on built; built since = HEADFIX2's one words cell + one corrections row) | yes (some lines) |
+| A2 | `audit_bracket_order.py <built>` | **see F-A — not gateable as written** | CHIP genuine 3, rebuild-words :183, re-declared 10/25 (CHARTER_rebuild_trap_fix.md :489-491) | compares built's english to the OLD source |
+| A3 | `scan_strongs_cross.py <built>` | function-anchor 0 (:172-173 line) | rebuild-words :185 | yes, vs lexicon |
+| A4 | `audit_lord_strongs.py <built>` | REPAIRABLE 0 (:168-169 line) | rebuild-words :185 | yes |
+| A5 | `audit_funcword_wrongslot.py <built> --preps` | REPAIRABLE-NOUN 0 (:229-230) — checklist "≈ 0"; 10/25 observed 0 (CHARTER_rebuild_trap_fix.md :490); CC proposes 0, any member listed | rebuild-words :186 | yes |
+| A6 | `scan_content_filler_tags.py <built>` | G2316 0 (:64 line) | rebuild-words :187 | yes |
+| A7 | `audit_split_flip.py --control` (must PASS, exit 0) then `audit_split_flip.py <built>` (as rebuild-words :187; no `--list`) | 0 flipped pairs (the :198 count line) | rebuild-words :187-188 "MUST be 0"; also cert check 2 | yes (english + verses.text) |
+| A8 | `audit_corpus_tier1.py <built>` | A1 = src's same-run A1 (10/25: 177) | rebuild-words :189-190 | no (lemma vs lexicon, :230-235) |
+| A9 | `audit_corpus_tier2.py <built> --rahlfs ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` | "No reference source loaded"/"load failed"/NOT AUDITED lines absent (a missing source silently drops books, :120-125, :366-371); CONFIRMED % = src's same-run % (10/25: 92.26%, CHARTER_rebuild_trap_fix.md :488) | rebuild-words :190-191 | no (Strong's bases, :217, :260) |
+A8/A9: built differs from src in strongs / strongs_base / morph / lemma / is_pn by exactly the (ii) list (§9.193 G2: 80 swap cells + 6
+strongs_base rows → '*'). CC's reading: whole-row swaps move every one of these columns together, so A1 should not move, and tier-2 can move
+only at the 10 swap verses and the 6 rows — not traced through either script; so the gate is "= src", and any difference is printed with the
+verse refs the script names and goes for ruling, not forced. "= src's same-run figure" in place of the 10/25 number is CC's design, not
+ruled — asked as Q7 (reviewer NOTE 1). A3-A7: these read built's own english; built's english differs from src's in 32,962
+cells (step 4, §9.193 (2)), so a non-zero is possible and would be a FINDING — not presumed 0 by carry-over.
+
+**F-A (finding, needs a ruling): audit_bracket_order measures the OLD edition.** It compares built's `words.english` word sequence, bracket by
+bracket, to the ABP source txt in `abp_texts/` (:5-7, :94, :187-196) — the pre-edition text (charter §2; abp_texts/ is not the feed). On
+built, every bracket whose English the edition changed can mismatch for that reason alone, so "CHIP genuine 3" cannot be expected and a large
+number would mean nothing. Options: (a) run it on src only as a tool-health read-out (expect 3 = 10/25) and on built as a read-out, gate
+nothing on built — the class it guards (position order vs printed order) is covered on built by the step-4 composition (bracket_id /
+greek_pos / english proven cell for cell from the build inputs, §9.178, §9.193 G4) and by v2 word-order 0 (C3); (b) a new feed-reading mode
+(compare against the pinned app feed `abp_app_slots_italic.tsv`) — code, new REF; CC has NOT read whether the feed carries the printed
+bracket order the comparison needs. **CC recommends (a)**, with the cover named in the record; (b) if the ruling chat wants CHIP itself on
+built.
+
+### Part B — the §4.8 figures, re-declared on built (each with its source; the record holds no step after its own that moves it)
+| figure (charter :229-233) | 10/25 | built | source | state |
+|---|---|---|---|---|
+| import_tipnr matched | 31,649 | 31,592 (−57) | HANDOFF_..._stageC_tail.md :57; DR :1094 | **deferred to gate 2 by §9.85 (DESIGN :486); gate 2 closed on the declared pn_binding delta 160 (§9.101, §9.103) but no § names the −57 closed. ASK (Q4).** |
+| Words inserted | 626,305 + 4 | 626,305 → 626,309 | DESIGN :470; §9.103; step 5 log (§9.194 (4)) | declared (§9.64); held through §9.194 |
+| Split merged subject-name(s) | 80 | 84 | DESIGN :470; §9.83 (stage B log :36) | **not ruled — +4 unattributed; members cannot be listed now (DR :318); on the follow-up list (stageC_repin :56). ASK (Q4).** |
+| PN-star A + B | 1,505 + 2,552 | 1,505 + 2,552 (/3,161) | DESIGN :470; reproduced by (b) §9.173 | same counts; "not a § ruling" (DR :9959). ASK to register (Q4). |
+| restore_frozen_pn | 8 | 178 | §9.94 (a); restore_frozen_pn.py :67 EXPECT | ruled |
+| identity split | 3,671 / 10,236 / 12,182 / 4,412 / 1,977 | retire EXPECT 3,671 / 10,236 / 12,191 / 4,409 / 1,971; identity after 8b.3 3,671 / 10,246 / 12,216 / 4,382 / 1,963 | §9.95; §9.97 | ruled (the charter's line is the pre-§9.95 code figure) |
+| serving deltas | +9 / 2,190 / 1,523 | **no record** | — | **The three groups are vs PRE-10/25 live on a same-code rebuild (rebuild-words :235-241). For this lane the serving column (words.strongs_base) built vs src = the (ii) list, 26 cells, gated by step 4 G2 (§9.193). CC proposes: re-declared as step 4's G2, no new read. ASK (Q4).** |
+| lane-3 step | PASS | PASS fixes 9 / gapfix 6 / fixes2 7 | DR :3437-3448 ("Ruling chat: ACCEPTED") | accepted in the record, no § number. ASK to register (Q4). |
+| G5 (xref / name slots) | 519 / 501 | — | charter :345 "G5 recorded" | swap-time record (step 8), not step 6 |
+| CHIP / A1 / tier-2 | 3 / 177 / ~92% | this block (Part A) | — | A2 (F-A) / A8 / A9 |
+| abp_surface builder chain | 391,130 | 391,141 | §9.119, §9.122 | ruled |
+| restore placed (strong / weak) | 4,411 (4,057 / 354), unplaced 0 | 4,411 = 3,977 strong + 351 weak + 83 key-2 listed; unplaced 0 | §9.126, §9.128 | ruled |
+| G1 | 395,003 | 395,014 | §9.128; rebuild-words :313 | ruled |
+| health floor | 395,003 | 395,014 (`--surface-floor=395014`; code constant stays 395,003 until the swap commit: health_check.py :144 constant, :145-150 the `--surface-floor=N` override; §9.134) | §9.130 | ruled; re-read in A1 |
+
+### Part C — the S9 block (charter §4.1–4.4) + DESIGN §6 gates 4-6
+**Stale cells in DESIGN §6's table (:260-267), and what replaces each (reviewer GAP 5)** — the step-6 gate is judged against these, not
+the table text: gate 3 "punct-position = MEMBER DIFF vs punct_members_live_20261030.txt (241)" → the 607 built file, re-frozen at 9c
+(§9.113 ruling 1, §9.131, §9.134 (iv)); gate 3 "content-other 0" → Job 3:3 "stays the open hard-fail" (§9.113 ruling 1) → Q2; gate 6
+"abp_corrections_active 51 / the §4.7 re-adjudication" → pin 374 in code (cert_invariants.py :47 comment: DESIGN 9.89, 372 + 2) and built
+375 by §9.156 (4) → Q1; gate 1 "after step 3" ran as C4 / C4′ (DR :1706, :2630) on built as it then was — C1 below is its step-6 re-run.
+**C1 — §4.1 cert suite.** `cert_invariants.py --controls` → "ALL CONTROLS FIRED" exit 0 (else STOP), then `cert_invariants.py <built>`.
+Pins in code at d34d6723 (cert_invariants.py :44-49): words 626,309 · verses 31,237 · abp_corrections_active **374** · spent_lane3 1.
+**Built holds 375 active** (HEADFIX2 added one, §9.156; "Carried to the swap, not acted on now: cert pin 374 → 375 and the active-list
+fixture", §9.156 (4), DESIGN :566). So as the code stands, check 4 is red on the count line "375 active correction row(s), pinned 374" (:111-115) even if
+every row holds. **ASK (Q1):** (a) run at d34d6723 and declare exactly that one red line — every other check-4 line, and checks 1-3 and 7,
+must be green; any other red = FINDING (CC recommends: the pin's own record says swap commit); or (b) re-pin 374 → 375 + the fixture now
+(code, new REF, PA pull) and gate 7/7. Checks 5 (feed manifest, 76 files, DESIGN :20) and 6 (backup ≤ 25 h, `~/db_backups/last_success.txt`)
+read machine state, not the copy — a red there is a finding about PA, not built. Check 4 is DESIGN §6 gate 6 (step 6 row).
+**C2 — §4.2 L9 split lint. F-B (finding, needs a ruling): the lint never reads built's words.** It opens the db only for the lexicon +
+word_gloss (:16, :302-305) and replays the split over the ABP source files (`B._abp_sources()` → abp_texts/, build_words_from_abp.py
+:87-91, :302-306; lint :216, :231) — the OLD edition, without the app-feed transplant; its sizing partner size_split_compounds.py the same
+(:43, :48). On built or src it measures the same old-text split (only word_gloss differs: +82 proper-noun glosses at 12b, §9.110). So "the
+two harnesses agreeing on the SAME copy" (charter :146) cannot be shown for built's English by these tools. Both scripts load Rahlfs / TAGNT
+themselves and only PRINT "Rahlfs: NOT found" / "TAGNT: NOT found — … input will differ from production" (lint :312-319; size_split :57-63)
+— in any run of them either line = STOP (reviewer GAP 2). Scope figures: the 18,384 / 12,718 post-S11 pair has no run log in the repo (TODO.md
+:142-143 and HANDOFF_lexica_rollout.md :3164 are prose), and the lint's RECONCILE line prints a fixed label "sizing: 18,339 / 12,692"
+(:324-325) — so neither is a gate; the real check is the lint's RECONCILE total = size_split_compounds' "recipient slots filled by split" /
+"verses affected" (:120-121) in the same run (reviewer GAP 3). Options: (a) run both on built as written, with `--control` first, as a
+tool-health check (control PASSED, residue 0, the two scope counts equal), and declare §4.2 not measurable on built — the split's effect on built's rows is inside the step-4 composition (A's output
+reproduced from the inputs by (b), §9.173; pre_8b → built named, §9.178); (b) a lint mode that replays the split over the app feed
+(code, new REF). **CC recommends (b) if §4.2 is to be a gate on built; (a) otherwise** — the ruling chat's call, not CC's. Not testable
+locally either way: bh_scrape.db, ~/LXX-Rahlfs-1935 and ~/TAGNT_* are on PA only.
+**C3 — §4.3 reassembly v1 AND v2.** `tests/test_reorder_port.py`, `tests/test_reassembly_member_diff.py`, `audit_reassembly_diff.py --controls`
+(v1: "ALL CONTROLS PASSED") and `--controls --v2` ("V2 CONTROLS PASSED.") — each exit 0, else STOP. Then v1 report on built and src
+(no v1 run on built anywhere in this lane's record; live 10/30 read 0 hits, charter :159-160 — printed, class counts compared, built − src
+listed); then the gate: `audit_reassembly_diff.py <built> --v2 --punct-members tests/fixtures/reassembly/punct_members_built_20261115.txt
+--eligible ~/edition_upgrade_runs/step5_eligible_20261101.tsv` — expected EXACTLY the 9c self-diff line (DR :9245 XSELF, §9.131): "V2 MEMBER DIFF:
+FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 -
+changed ops 0 - unchanged 607", exit 1, the one content-other = Job 3:3 (built since 9c = HEADFIX2's english_head cell only, which the
+reassembly does not read — CC's reading). Read-out: the same diff against the live 241 file (punct_members_live_20261030.txt).
+**ASK (Q2): Job 3:3 content-other is "the open hard-fail" (§9.113 ruling 1; follow-up corrections batch).** §4.3 says zero content-other.
+Does step 6 pass with Job 3:3 declared by name (CC's reading of §9.113), or must its fix land on built before step 6 can pass?
+**C4 — §4.4 phrase-gloss.** `audit_phrase_gloss_underdist.py <copy> --dump-all` on built and src. Gates: "CONTROL Psa 39:1: FIRED" on both;
+built "FLAGGED BEYOND allowlist" ≤ 671 (charter :167-168); member diff built vs src: newly flagged / newly cleared listed in full; **a newly
+flagged verse that is not a changed-English verse = FINDING** (charter :170-171) — changed-English = the verses with an english member in
+STEP4-DELTA2 (`step4_delta2_20261116/delta/words_cells.tsv`, sha 86e44c58…dafc, §9.157) or in B's written list (step5_prose sha f2a22ecd…,
+§9.173 (1)). Read-out: src vs the 10/30 live dump `~/edition_d_phrase_gloss_all.txt` (charter :479-480, :522) — the 702 → 693 member diff
+owed by charter :173-174 / §9.4 (h) stays owed; this shows only whether live moved since 10/30. The allowlist re-pin is the swap commit's
+(charter :351-352).
+**C5 — DESIGN §6 gate 5, count-differs census.** `census_count_differs.py <built> abp_app_html/abp_app_slots.tsv --out <run folder>/cd_built.tsv`
+(the 10/24 slots file the pinned list was made from, charter :387) — gate: the verse set EQUALS `~/count_differs_members.tsv` (1,849, OT
+1,451 · NT 398, charter :125-127), member diff, not a count (DESIGN :266). Neither PA file's sha is in any record: first read (sha printed,
+the count line checked), as the census-v2 file at step 4 (§9.185). Read-out: the same census on src. **ASK (Q3):** CC has not traced whether
+built's alignment against the 10/24 slots file should still give the 1,849 after the transplant (taken verses now carry app English,
+`align_verse` compares Strong's, slot count AND English bags) — CC's expectation is unproven; a difference is listed for ruling, not forced.
+
+### Tests before the block is shown (WSL homes ~/gate5/home3-5, clone at d34d6723; the block run AS WRITTEN)
+Clean copies → PASS; re-paste → STOP; damaged upload → STOP before any read; built changed after the guard → STOP. **A planted known
+positive per detector**, each → FINDING naming it: a function-anchor cross (A3), a "LORD" wrong-slot (A4), a preposition wrong-slot noun
+(A5), a G2316 filler row (A6), a "LORD the" flip (A7 and cert check 2), an A1 lemma mismatch (A8), a health WARN line (bare strongs_base),
+a word-order hit (C3), a newly flagged phrase-gloss row outside the changed verses (C4), an extra count-differs verse (C5), a second red
+cert line (C1). **Cannot be tested locally:** A9 tier-2, the L9 lint and the census need ~/LXX-Rahlfs-1935, ~/TAGNT_*, bh_scrape.db and the
+two app TSVs, none of which are on this machine — the check program's parsing of their output is tested on outputs CC writes by hand from
+the print statements (cited), and the block prints each file's sha. Said in the record.
+**Cost:** no copy; tier-2 and the lint each rebuild the corpus in memory (run time not forecast — measured and printed); read-only, so a kill
+loses only that run.
+**Not covered (the record will say so):** live (§9.181, as of 2026-11-18T15:43Z); abp_corrections beyond check 4; the swap-time records (G5,
+the cert / health / allowlist / snapshot re-pins, charter :345-346); step 7 spot-checks; the pre-swap open items (§9.93 (b) eSword order of
+the 10 reorder verses; notes anchors at the 20 moved words).
+**CC asks the ruling chat to rule:** **Q1** cert check 4 at 374 vs 375 — (a) one declared red line / (b) re-pin first. **Q2** Job 3:3 content-other.
+**Q3** the count-differs gate's expected set on built. **Q4** the §4.8 rows marked ASK (−57 import_tipnr; Split 84; PN-star; serving deltas
+= step 4 G2; lane-3 PASS registered). **Q5** F-A (CHIP): (a) read-out + named cover / (b) feed mode. **Q6** F-B (L9 lint): (a) tool-health
+run + declared not measurable on built / (b) feed mode. **Q7** A8 / A9 (and A2's src read-out): gate built "= src's same-run figure" in
+place of the 10/25 number (177 / 92.26%). Nothing drafted as a block until ruled.
+
+### Step-6 PROPOSAL reviewed (11/19) — REVIEW: ESCALATE (a proposal, out of reviewer scope by design); 1 DEFECT, 5 GAP, 3 NOTE — all answered above
+Confirmed in code by the reviewer: F-A (audit_bracket_order :5-7, :94, :113), F-B (lint :302-305, :216; size_split :43, :99), the bible.db
+defaults, the plain opens, the exit-code list, cert pins :44-49 and the count line :113-115, C3's expected line = DR :9245 XSELF.
+D1 (the swap-commit cite was §9.149 / §9.155) → §9.156 (4). GAP 1 (path line) → command line written into each output; scripts with no path
+line named. GAP 2 → Rahlfs/TAGNT "NOT found" = STOP. GAP 3 → 18,384 / 12,718 and the printed 18,339 / 12,692 are read-outs; the gate is the
+two harnesses equal on the same run. GAP 4 → `--list` dropped from A7. GAP 5 → the stale DESIGN §6 cells and their replacing § named.
+NOTE 1 → Q7. NOTE 2 → health_check cite :144 / :145-150. **NOTE 3 — not verified by the reviewer:** the §4.8 table figures and cites
+(CC traced each to the cited lines, 11/19), the identity splits, CHARTER_rebuild_trap_fix :488-491, rebuild-words :311-315, health_check
+:23 / :296-306. These are checked again before any block is drafted.

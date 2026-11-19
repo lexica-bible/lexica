@@ -13,6 +13,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   first. Same form as STEP4GATE / STEP5INV: GATE REF d34d6723 (PA's scripts), eu_step pre, the "built =" HEADFIX2 guard before and
   after, any embedded program text sha-pinned (long text by upload), tested on WSL copies with a planted known positive per detector,
   reviewer (CLEAR only if read-only), log to the ruling chat by JP's cat.
+- **11/19 late: step-6 PROPOSAL DRAFTED + REVIEWED** (DR "## Charter §6 step 6 — PROPOSAL"; reviewer ESCALATE, 1 DEFECT + 5 GAP
+  answered) — with the ruling chat, Q1–Q7 open (cert pin 374 vs built 375; Job 3:3; count-differs expected set; the §4.8 ASK rows;
+  F-A audit_bracket_order and F-B the L9 lint both read the OLD abp_texts, not built; "= src" gating). Nothing drafted as a block until ruled.
 - **WSL test homes:** `~/gate5/home3-5` (built from `~/gate4/repo` at d34d6723 + its test copies; the head of `docs/handoffs/drafts/STEP5INV_tests_20261119.txt`
   shows how — copy scripts/tests/.git + both test dbs into a home, test pre + prep make the guard folder). No sqlite3 tool in WSL —
   write reads in Python.
