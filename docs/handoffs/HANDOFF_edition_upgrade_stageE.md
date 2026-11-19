@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.196**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.197**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 later; charter §6 STEPS 4 + 5 PASSED, §9.193 + §9.194; next = step 6) — open here
@@ -25,7 +25,9 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   cert_manifest.json` + porcelain (STOP each); Q2 stands (Job 3:3 named OPEN; built + src both show exactly it); lane-3 CLOSED by reference;
   both 10/30 log lines grepped in-block (≤ 671 = charter gate text; 1,849 member diff vs the file). Answers in DR "### §9.196 answers".
   **STILL OWED (not step-6 blockers):** import_tipnr −57 read; Split 84 open by name; serving deltas (the G2 log line, grep it in STEP6AUD).
-  **NEXT = draft STEP6AUD + check program** per DR "## Charter §6 step 6 — PROPOSAL" as amended by §9.195–§9.196 → WSL tests (a planted
+  **§9.197 (11/19):** manifest pre-check accepted; STEP6AUD greps + prints the G2 line from `step4_gate_r2_20261118.log` (missing =
+  FINDING) and, if that line lacks the strongs_base share, the same log's delta-count line; serving deltas ruled on the STEP6AUD log.
+  **NEXT = draft STEP6AUD + check program** per DR "## Charter §6 step 6 — PROPOSAL" as amended by §9.195–§9.197 → WSL tests (a planted
   positive per detector; name the hand-written-output ones: tier-2, L9 lint + sizing, census) → reviewer (close N3: re-check the §4.8 table,
   identity splits, CHARTER_rebuild_trap_fix :488-491, rebuild-words :311-315, health_check :23 / :296-306) → ruling chat for clearance.
   Check-program text goes up by PA's Files upload, sha-pinned, through the read-once launcher.

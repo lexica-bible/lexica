@@ -14467,3 +14467,8 @@ NOTE 1 → Q7. NOTE 2 → health_check cite :144 / :145-150. **NOTE 3 — not ve
   G2's 86 is the declared cell set over all five columns: the 10 whole-row swaps (20 positions) give 20 + 20 + 14 + 14 + 12 = 80 cells
   (only where src(p) ≠ src(q), §9.142 (1), DR :13207-13209), plus §9.95's six strongs_base rows → '*' = 86. The strongs_base column alone:
   20 swap cells + 6 = 26 — the "26 strongs_base cells" in the proposal = the strongs_base share of G2's 86.
+
+### §9.196 answers RULED (11/19, §9.197) — manifest pre-check accepted; serving column = words.strongs_base recorded as CC's reading (no verbatim naming exists); STEP6AUD prints the G2 line from the step-4 run-2 log (missing = FINDING); serving deltas OWED until the STEP6AUD log is read
+For the drafting: if the G2 line as printed does not itself show the strongs_base share (20 + 6 = 26), STEP6AUD also greps and prints the
+same log's delta-count line (the one carrying "strongs_base 26", as §9.193 (2) reads it) and the record names that line as the one that
+shows it.
