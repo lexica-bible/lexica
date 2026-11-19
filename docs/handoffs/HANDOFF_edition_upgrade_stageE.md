@@ -2,10 +2,23 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.184**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.193**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/18 end; step 4 — every held item CLOSED; next = the step-4 gate block PROPOSAL) — open here
+## SUCCESSOR START (11/19; charter §6 STEP 4 PASSED, §9.193; next = step 5) — open here
+- **Step 4 PASSED** (§9.193) on two logs read in the ruling chat: STEP4GATE run 2 (`~/edition_upgrade_runs/step4_gate_r2_20261118.log`,
+  G1–G8 PASS, FINDINGS 0) + LIVESRC (§9.181). Charter §6 step 4 now carries the amended text (§9.186 (3)) and the PASSED line.
+  Scope: 13 words columns + verses.text; abp_corrections outside by design; live changing before the swap = the swap step's to carry.
+- **NEXT = charter §6 step 5 ("strongs_base invariant 0"), CC's to bring** (§9.193 (11)): draft → test on copies → reviewer →
+  ruling chat as the lane's rules require. Copies on PA unchanged from the 11/18 list below (src, built = HEADFIX2's result, pre_8b).
+- **Kept on PA, no removal unless brought to the ruling chat:** the upload `~/edition_upgrade_runs/step4gate_check_20261118.py`, run
+  folders `step4_gate_20261118/` (run-1 STOP) and `step4_gate_r2_20261118/`.
+- **Lesson (PA web console):** a ~420-line paste reached bash with ONE extra line break (CAUSE1, §9.193 (9): what differed established,
+  how NOT). The screen echo of a long paste is not a faithful copy — never read a cause off it. Bring long program text by PA's Files
+  upload, sha-pinned, run through the read-once launcher (DR "## The step-4 gate block, run 2"); logs go to the ruling chat by JP's
+  `cat`, never on CC's summary.
+
+## SUCCESSOR START (11/18 end; step 4 — every held item CLOSED; next = the step-4 gate block PROPOSAL) — superseded by 11/19 above
 - **Closed on PA logs read by the ruling chat:** (c) control §9.169 · (b) standard (pre_8b = T_b) §9.173 · the xref8b0 sha line
   §9.177 · pre_8b → built = the named list + the norm rule, and the composition src → pre_8b → built = STEP4-DELTA2 cell for cell
   §9.178 · **live = src** (fresh copy of live, words + verses EMPTY delta, digests with row ids equal) §9.181 · every throwaway removed

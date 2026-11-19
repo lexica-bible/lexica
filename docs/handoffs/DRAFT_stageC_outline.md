@@ -14105,3 +14105,9 @@ added line break is the WHOLE difference between the 11/18 check.py and the test
 last line." That is wrong — it was read from the screen echo, and the kept file is whole except for that one line break. The CAUSE1 test
 (tests file :197) modelled that wrong shape; the block's reads (shas, counts, cmp, leading-line count, full print) do not depend on it.
 How the line break got there is for the ruling chat to read from the printout; CC infers no cause.
+
+### STEP 4 PASSED (11/19, §9.193) — both logs read in the ruling chat in full (JP's cat)
+Step 4 rests on STEP4GATE run 2 + LIVESRC (§9.181). CAUSE1: what differed established (one line break inside the string on line 273),
+how NOT established. Charter §6 step 4 replaced by the text approved in §9.186 (3) (DR "### Charter §6 step 4 — the amended text",
+unchanged since approval), placeholders filled (AMENDED 11/19, DESIGN §9.186 (3), §9.193) and a PASSED line added. Next: charter step 5,
+CC's to bring. Kept: the upload file and both gate run folders.

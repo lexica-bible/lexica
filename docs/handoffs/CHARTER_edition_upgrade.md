@@ -325,12 +325,19 @@ and before 9a (`~/edition_upgrade_runs/step9a_apply_<date>/before.db`, saved by 
 New frozen file + `.sha256`; pin updated in `restore_surface_fill.py` in the same change; the 10/25
 pre-fill copy is released from its load-bearing role once the new freeze passes its own `--check`
 against a fresh copy of the swapped live (then rotation rules apply to it again) →
-4 compare_words vs live — per-COLUMN attribution: `english` / `english_head` / `verses.text` rows =
-the declared changed-English set + Mark 1:9; ANY `strongs` / `strongs_base` / `position` / `morph` delta outside
-the declared (ii) set = stop (AMENDED 11/15, DESIGN §9.139 (0); was: "the declared 29% set + Mark 1:9" — the
-build's kept-old set is A's eligible file's 2,166 ineligible, the declared sets are derived from the build's
-inputs and the ruled steps' own files, §9.138 (3) / §9.139; the comparison is built vs `<src>`, plus a separate
-live = src proof, §9.138 (4)) →
+4 compare_words vs live — the step-4 gate (DESIGN §9.138 (3)+(6), §9.185): the raw delta built vs `<src>`, every column, laid
+against the declared lists; a member either way not declared = a FINDING. `strongs` / `strongs_base` / `morph` / `lemma` / `is_pn` =
+the (ii) list (§9.142 (1): the 10 census v2 swaps + §9.95's six rows); `position` = those 10 swaps as moved pairs, no word on one side
+only (G3 + G8); `english` / `english_head` / `greek_pos` / `bracket_id` = the composition src → pre_8b (the build's own output from the
+inputs, (b) §9.173 (2)) → built (the named list, §9.178 (2)), proven against the reference delta STEP4-DELTA2 (§9.157, §9.178 (4));
+`english_head_norm` by step 11's rule on both copies (§9.142 (3)); `verses.text` = B2's written list less the 49 EU rows equal to src
+(§9.143 (2)), the 49 and 69 by value, the rest by length (§9.185 (3)); Isa 48:5 @4 a declared single row (§9.148); Mark 1:9 and Joh
+14:26 printed by name; plus a separate live = src proof on a fresh copy of live (§9.138 (4), §9.181) (AMENDED 11/19, DESIGN §9.186 (3), §9.193;
+was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = the declared changed-English set + Mark 1:9; ANY
+`strongs` / `strongs_base` / `position` / `morph` delta outside the declared (ii) set = stop" (AMENDED 11/15, §9.139 (0)))
+— **PASSED 11/19 (DESIGN §9.193):** STEP4GATE run 2 (`step4_gate_r2_20261118.log`, RESULT: PASS, G1–G8, FINDINGS 0; record DRAFT
+"### STEP4GATE run 2 ran") + LIVESRC (§9.181; live = src as of the copy at 2026-11-18T15:43-15:44Z). Scope: the 13 words columns and
+`verses.text`; abp_corrections outside both by design; live changing before the swap is the swap step's to carry →
 5 strongs_base invariant 0 →
 6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) →
