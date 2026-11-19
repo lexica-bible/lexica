@@ -2,10 +2,22 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.193**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.194**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/19; charter §6 STEP 4 PASSED, §9.193; next = step 5) — open here
+## SUCCESSOR START (11/19 later; charter §6 STEPS 4 + 5 PASSED, §9.193 + §9.194; next = step 6) — open here
+- **Step 5 PASSED** (§9.194): Block STEP5INV (DR "## Charter §6 step 5"; read-only, reviewer CLEAR) — built's bare-number
+  strongs_base = 0. Log `~/edition_upgrade_runs/step5_invariant_20261119.log`, run folder `step5_invariant_20261119/` (kept).
+- **NEXT = charter §6 step 6, CC's to bring** (§9.194 (5)): "audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4)"; the
+  audit list and floors = `.claude/commands/rebuild-words.md` step 6 (:185 on). Read CHARTER §4.1–4.4 + §4.8 and DESIGN §9 on step 6
+  first. Same form as STEP4GATE / STEP5INV: GATE REF d34d6723 (PA's scripts), eu_step pre, the "built =" HEADFIX2 guard before and
+  after, any embedded program text sha-pinned (long text by upload), tested on WSL copies with a planted known positive per detector,
+  reviewer (CLEAR only if read-only), log to the ruling chat by JP's cat.
+- **WSL test homes:** `~/gate5/home3-5` (built from `~/gate4/repo` at d34d6723 + its test copies; `e2e5.sh` in the session scratchpad
+  shows how — copy scripts/tests/.git + both test dbs into a home, test pre + prep make the guard folder). No sqlite3 tool in WSL —
+  write reads in Python.
+
+## SUCCESSOR START (11/19; charter §6 STEP 4 PASSED, §9.193; next = step 5) — superseded by 11/19 later above
 - **Step 4 PASSED** (§9.193) on two logs read in the ruling chat: STEP4GATE run 2 (`~/edition_upgrade_runs/step4_gate_r2_20261118.log`,
   G1–G8 PASS, FINDINGS 0) + LIVESRC (§9.181). Charter §6 step 4 now carries the amended text (§9.186 (3)) and the PASSED line.
   Scope: 13 words columns + verses.text; abp_corrections outside by design; live changing before the swap = the swap step's to carry.

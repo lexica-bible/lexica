@@ -338,7 +338,8 @@ was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = 
 — **PASSED 11/19 (DESIGN §9.193):** STEP4GATE run 2 (`step4_gate_r2_20261118.log`, RESULT: PASS, G1–G8, FINDINGS 0; record DRAFT
 "### STEP4GATE run 2 ran") + LIVESRC (§9.181; live = src as of the copy at 2026-11-18T15:43-15:44Z). Scope: the 13 words columns and
 `verses.text`; abp_corrections outside both by design; live changing before the swap is the swap step's to carry →
-5 strongs_base invariant 0 →
+5 strongs_base invariant 0 — **PASSED 11/19 (DESIGN §9.194):** STEP5INV (`step5_invariant_20261119.log`): built, bare-number
+`strongs_base` (GLOB '[0-9]*', dotted included) = 0 →
 6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) →
 8 swap + deploy.sh — the only live action; G5 recorded; then cert_invariants on live, pins +

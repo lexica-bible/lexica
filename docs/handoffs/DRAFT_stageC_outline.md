@@ -14239,3 +14239,9 @@ NOTE 2: a STOP after pre leaves the run folder, so a re-run needs new names — 
 shas (CC: DR :14139-14231 hashes to 8a36b029…fa31; the heredoc body to XINV 67ae5998…a3f), whether the eu_step write opener is on this
 path — **CC checked: the only read-write open in eu_step.py is :203, inside `prep`; this block calls only `pre` and `check`; eu_step.py =
 d34d6723.** JP runs it as printed; the log goes to the ruling chat in full through exit=; step 5 is ruled there on the log.
+
+### STEP 5 PASSED (11/19, §9.194) — STEP5INV log read in the ruling chat in full (JP's cat)
+As printed: PRE OK; "built =" CHECK OK before and after; inv.py sha = XINV; built bare-number strongs_base 0 — HOLDS; size and time
+unchanged; RESULT: PASS at 2026-11-19T01:03:09Z. Read-outs (src / built): rows 626,309 / 626,309; G 607,131 / 607,131; H 1,806 / 1,800;
+'*' 16,765 / 16,771; '' 607 / 607; NULL, bare, other, dotted 0. The −6 / +6 fits the six H → '*' rows; not shown to be those rows, nothing
+rests on it. Charter §6 step 5 marked PASSED. Next: step 6 (audits, floors re-declared per §4.8, + the S9 block), CC's to bring.
