@@ -14588,7 +14588,7 @@ first non-flag argument; :296-306 = the report and its "N warning(s), M error(s)
 109d95dec86d6e45c4a003adbec5482d6af471bb27e4b7373b1fd16afb823627 = XCHK = the file every test above ran. JP checks it on his PC with
 `(Get-FileHash C:\Users\JP\edition_upgrade_runs\step6aud_check_20261119.py).Hash` → `109D95DEC86D6E45C4A003ADBEC5482D6AF471BB27E4B7373B1FD16AFB823627`,
 does not open it in an editor, and uploads it through PA's Files page to `/home/appssanding720/edition_upgrade_runs/`.
-Block sha256 (the fenced text below, DR :14595-14736, as tested): 4ce4349313944aa8c9a7757c1bd6fa0c2f00a4847aca9a65effe87de51e79b52, 142 lines; check program DR :14741-15301.
+Block sha256 (the fenced text below, DR :14595-14736) — **CLEARED, §9.198: e4449a398dbfd9c79ed52e8e27fb73ce711ef6822097fc445d7fabefd2653f10**, 142 lines (as tested: 4ce43493…9b52; the one line changed is :14644, `XJOBSRC=""`); check program DR :14741-15301, unchanged.
 
 ### Block STEP6AUD (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; check program uploaded; no PA pull; no database copy)
 ```bash
@@ -14641,7 +14641,7 @@ X662=662                                                                   # C4 
 XCD=1849; XCDOT=1451; XCDNT=398                                            # C5 the 10/30 log's COUNT-DIFFERS line: charter :125 (DESIGN 9.196, the same rule)
 XSELF="V2 MEMBER DIFF: FAIL - word-order 0 - content-other 1 - dup-gloss 0 - Joh 14:26 clean - new on non-eligible 0 | to ruling: gone 0 - new on eligible 0 - changed ops 0 - unchanged 607"   # C3: DR :9245 (the 9c self-diff, DESIGN 9.131)
 XJOB="Job 3:3"                                                             # C3 content-other on built, exactly this: DESIGN 9.113 ruling 1, 9.195 Q2
-XJOBSRC="Job 3:3"                                                          # C3 content-other on src, exactly this: 9.195 Q2 as ruled (CC: the record says src reads none - DR :1828 - so expect a C3 FINDING on src; see GAP 1)
+XJOBSRC=""                                                                 # C3 content-other on src: NONE (a member on src = FINDING) - DESIGN 9.198, GAP 1 (b), replacing 9.195 Q2's src condition (DR :1828)
 XTAGNT=2                                                                   # A9 TAGNT files: build_words_from_abp.py :93-94 (TAGNT_FILES)
 EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
 h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
@@ -15340,3 +15340,28 @@ edits (block 141 → 142, program 559 → 561); the reviewer cannot hash, so "no
 The record's account of the first review is faithful; N1 closed (the same flags at DR :7189, :9090, :9122); DESIGN :508 is CC's reading.
 **Open for the ruling chat before clearance:** GAP 1 (XJOBSRC keep / empty) · the allowlist in the git guard · Q6 built-only · the item-3
 reading of "each".
+
+### STEP6AUD CLEARED (11/19, ruling chat; DESIGN §9.198)
+**Cleared to run:** the block at DR :14595-14736 with GAP 1 (b) applied — sha256 **e4449a398dbfd9c79ed52e8e27fb73ce711ef6822097fc445d7fabefd2653f10**,
+142 lines; the one line that differs from the tested 4ce43493…9b52 is DR :14644, now `XJOBSRC=""` (C3: src shows NO content-other; a member on
+src = FINDING). Check program unchanged, sha 109d95de…3627 = XCHK (DR :14741-15301 re-hashed after the edit). GATE REF d34d6723, no pull, no
+database copy. (b)'s two directions, both through the block's launcher on the WSL test copies: FINDING when src carries a member (T8
+`xjobsrc_empty`) and PASS when src carries none (T8b, run after the ruling, tests file end; harness `drafts/STEP6AUD_harness/t8b.sh`).
+**The 1,850th line of the count-differs list** is its header: census_count_differs.py at d34d6723 writes the header line
+`book · chapter · verse · app_verse · our_slots · app_subslots · delta · our_unpaired · app_unpaired · english` (:83-84 — the block's comment
+on :14632 cites :84, the second line of that one write) and then one line per member verse (:85-86), each ending in a newline, so `wc -l` =
+1 + 1,849. The check program reads line 1 as that header (STOP if its first three fields are not book / chapter / verse) and the rest as
+the member set (STOP on a verse listed twice) — DR :15241-15248.
+**Check 6 (backup freshness):** red on a stale stamp is a FINDING (C1 "check 6 red", DR :15048-15049, plus the summary-line FINDING at :15050-15052) —
+as §9.198 states; JP times the run against the nightly backup (≤ 25 h).
+**Expected in the log (§9.198, from CC's note and the record):** guard before and after words 626,309 `d95acb5d4be4`, abp_corrections 404
+`d97d928ca7f5`, 148 unwritten tables differences 0 (§9.156 (1), §9.157 (1), §9.177 (1)); src + built size and time unchanged; A1 0 / 0 at
+395014; A3–A7 0; A8 built = src, src 177; A9 built = src, src 92.26%, no source-missing line; C1 one red (check 4, 375 vs pin 374), check 5
+green on 66; C2 control PASSED, scope counts equal on built; C3 the DR :9245 line, built [Job 3:3] OPEN, src none, word-order 0; C4 Psa 39:1
+FIRED, BEYOND ≤ 671, no newly flagged row outside the changed-English verses, the 10/30 line 662; C5 the set = the file on both, first-read
+sha printed, the 10/30 line 1,849; R the G2 lines + the strongs_base 26 line, the two PN-star lines; FINDINGS 0 beyond the declared red and
+the named OPEN. CC's NOTE 2 stands beside it: A9 built may differ from src (the 10 swap verses); if it does, that is a FINDING, as printed.
+**On the log:** a FINDING or STOP goes to the ruling chat as printed; nothing restored, removed or re-run before it is read there. Ruled on
+JP's cat of the log, not a summary. **Still OWED:** import_tipnr −57; Split 84 (open by name); serving deltas and PN-star (both ruled on
+this log; PN-star's comparison to src's 10/25 figure rests on charter prose only — CHARTER_rebuild_trap_fix :341 / :465 — recorded as not
+measured).

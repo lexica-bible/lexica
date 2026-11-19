@@ -789,3 +789,11 @@ C4: PASS - gate: control FIRED on both; built BEYOND 1 <= 671; no newly flagged 
 C5: PASS - gate: the count-differs set on built and src = the file
 R: PASS - gate: the asked-for log lines printed
 FINDINGS: 1 (C3 1)
+
+=============== T8b (11/19, after §9.198): GAP 1 (b)'s PASS direction — harness t8b.sh (t8.sh's set-up + this one case) on h4, block_T1.sh's launcher ===============
+# XJOBSRC="" and src's reassembly output with its one "[content-other] Job 3:3" member line removed (the made-up src carries it, so T8
+# xjobsrc_empty above shows the FINDING direction). Expect C3 PASS with [] on src, FINDINGS 0, exit 0.
+=============== T8 xjobsrc_empty_src_none: check exit 0 ===============
+C3: PASS - gate: word-order 0 on built (gated - the cover for bracket order); content-other exactly [Job 3:3] on built (named OPEN, NOT passed - 9.113 ruling 1; 9.195 Q2) and [] on src
+FINDINGS: 0
+# (every other gate line PASS, as in T1; output trimmed to the C3 and FINDINGS lines)

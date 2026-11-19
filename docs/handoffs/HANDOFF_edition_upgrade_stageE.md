@@ -2,10 +2,18 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.197**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.198**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/19 later; charter §6 STEPS 4 + 5 PASSED, §9.193 + §9.194; next = step 6) — open here
+## SUCCESSOR START (11/19 late; STEP6AUD CLEARED TO RUN, §9.198) — open here
+- **Block STEP6AUD CLEARED** (§9.198; DR "### STEP6AUD CLEARED"): block DR :14595-14736, sha **e4449a39…3f10** (142 lines; GAP 1 (b)
+  applied — `XJOBSRC=""`, the only change from the tested 4ce43493…9b52); check program DR :14741-15301 sha 109d95de…3627 unchanged,
+  upload file `C:\Users\JP\edition_upgrade_runs\step6aud_check_20261119.py` → PA `/home/appssanding720/edition_upgrade_runs/`.
+- **NEXT = JP runs it** (after the nightly backup, so cert check 6 is fresh), then pastes the log's cat to the ruling chat; CC reads the
+  same log against §9.198's expected list and cites each log line. A FINDING or STOP goes as printed; nothing re-run before it is read.
+- Still OWED: import_tipnr −57; Split 84 (open by name); serving deltas + PN-star (ruled on the STEP6AUD log).
+
+## SUCCESSOR START (11/19 later; charter §6 STEPS 4 + 5 PASSED, §9.193 + §9.194; next = step 6) — superseded by 11/19 late above
 - **Step 5 PASSED** (§9.194): Block STEP5INV (DR "## Charter §6 step 5"; read-only, reviewer CLEAR) — built's bare-number
   strongs_base = 0. Log `~/edition_upgrade_runs/step5_invariant_20261119.log`, run folder `step5_invariant_20261119/` (kept).
 - **NEXT = charter §6 step 6, CC's to bring** (§9.194 (5)): "audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4)"; the
