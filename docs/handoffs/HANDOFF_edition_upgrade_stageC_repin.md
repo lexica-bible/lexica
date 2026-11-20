@@ -76,6 +76,12 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   before 8b): 2Ki 23:35 pos 6/7, Est 5:9 pos 12/13, Eze 20:14 pos 7/8, Gen 5:25 pos 1/2, Gen 5:26 pos 1/2,
   Gen 34:4 pos 1/2, Jdg 11:7 pos 6/7, Jos 2:4 pos 19/20, Jos 5:15 pos 26/27, Rom 9:29 pos 17/18 — whole-row moves
   into the edition's English order (census `strongs_pos_census2_20261106.log`); confirm each against eSword/ABP.
+  **JP 11/20 (§9.214): the APP EDITION rules (charter §0.1); eSword is a witness only — only a verse where built
+  matches NEITHER eSword NOR the app feed is brought (ruling chat + JP).**
+- **L9 split lint on built (charter §4.2) — OPEN by name, FIRST on the list after the swap** (JP, §9.214, 11/20;
+  §4.2 set aside for the swap). Needs new code: a lint mode that replays the split through the app-feed transplant
+  (`lint_split_wrong_slot.py` + its sizing partner `size_split_compounds.py`); new REF, PA pull, tests, a
+  read-only block. NOT a work order until JP raises it. Detail: DR "### L9 on built — the code answer (§9.214)".
 - **Joram H3088 ×27 — receipt owed** (DESIGN §9.94 (d)): frozen H3088 vs import_tipnr H3141 at 2Ki 3–12; no ruling
   or receipt found in the repo for the H3088 value.
 - **Gen 4:18 Methushael H4967 — restore fixes built, note at gate 2** (§9.94 (d)): the edition's "Mathusala" made

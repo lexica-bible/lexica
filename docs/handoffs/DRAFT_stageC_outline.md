@@ -17284,3 +17284,36 @@ ordinary ARC ships) — this is a receipted full rebuild, and backup_db skips `b
 - Carried open by name as listed; PRE-SWAP LIST mapping noted.
 - **NEXT:** JP — Q7, Q11, the P1 copy-down, the Tasks tab. CC — P1/P2 sheets once the copy-down lands; P3 and P4 blocks; the Q2 code read;
   PA's help on Q3.
+
+### L9 on built — the code answer (§9.214, 11/20)
+**Question (ruling chat):** can the L9 lint run on built's words with the tools at d34d6723 and no code change? **NO.**
+Read at HEAD b5a391fa; `lint_split_wrong_slot.py` and `size_split_compounds.py` are identical at d34d6723 and HEAD
+(`git diff --quiet d34d6723 HEAD -- <both>` exit 0); the one later change to `build_words_from_abp.py` (adfb8ac5, `--cells`) touches
+the AppTransplant record/report code and `main()` only, nothing below :2272 and none of `_abp_sources` / `iter_verses` /
+`build_verse_words` / `_split_compounds`.
+- The lint opens the db only for the lexicon and word_gloss (lint :302-305, `_load_dodson` :101-105 → `SELECT strongs, gloss FROM
+  word_gloss`; its own docstring :16 "opens bible.db read-only (unused beyond a handle check)"). Neither script reads `words`.
+- Its verses come from `B.iter_verses(*B._abp_sources())` (lint :216; sizer :99) → abp_texts/ (build_words_from_abp.py :87-91,
+  :302-306) — the OLD edition text. It re-runs the split on that text (lint :231 `B.build_verse_words(abp_words, bh_rows, lex)`, with
+  `B._split_compounds` wrapped at :214; sizer :96, :115).
+- Built's English is the app-feed transplant: the build composes OLD + FEED rows per verse in `AppTransplant.apply`
+  (build_words_from_abp.py :2400; the feed rows go through their own `build_verse_words` at :2424), called at :2791 only when
+  `--app-feed` is set (:3065; AppTransplant made at :3011/:3016). Neither lint script makes an AppTransplant, so on any copy they
+  measure the old-text split; so the F-B finding (DR :14351, confirmed by the reviewer, §9.195 Q6) holds. My line to JP ("I can run it
+  read-only before the swap") was WRONG.
+- Also seen (on the record, not a finding): the lint's replay leaves out the build's `ren=` and `names=` (lint :231 vs build :2788-2790).
+**The new code it would take** (option (b) of F-B): a lint mode in `lint_split_wrong_slot.py`, and the same in its sizing partner
+`size_split_compounds.py` (the §4.2 "two harnesses agreeing"), that builds the AppTransplant the way the build does and runs
+`app.apply` after the OLD split. The split recipients are taken from the composed rows only, because the wrapper sees two split runs
+per verse, OLD and FEED. It lands as a new REF; PA pulls, with no reload since these are scripts only. Its tests would be hand-built
+OLD-vs-FEED verses proving the recipients come from the composed rows, plus `--control` PASS unchanged; the new test file goes into
+BOTH CI lists. Clearance: the code commit to the ruling chat as a diff with local test output; the run is then a read-only block
+through the reviewer, with Rahlfs / TAGNT "NOT found" = STOP. Not testable end to end locally: bh_scrape.db, Rahlfs and TAGNT are
+on PA only.
+**Branch selected by JP's conditional ruling: CODE CHANGE NEEDED →** charter §4.2 set aside for the swap, by JP; L9 on built carried
+OPEN by name, FIRST on the list after the swap; not a work order until he raises it. (Follow-up list:
+HANDOFF_edition_upgrade_stageC_repin.md.)
+**Q11 (JP, 11/20):** the app edition rules the 10 reorder verses (charter §0.1). eSword's read happens as a witness only. Only a
+verse where built matches NEITHER eSword NOR the app feed is brought, to the ruling chat and to JP. Recorded beside §9.93 (b).
+- **Still owed before P6:** P1 (copy-down, 1Ch 25:3, Eze 31:9 @22); P2 sheets + JP's eSword read; P3; P4 (File storage line first,
+  built's full sha); the Q2 code read; PA's Disable / Enable behaviour; the swap commit diff; the rollback block.
