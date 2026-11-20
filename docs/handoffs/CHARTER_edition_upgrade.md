@@ -358,7 +358,7 @@ was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = 
 for this lane, re-pinned in the swap commit); Job 3:3 content-other OPEN; import_tipnr −57 and Split +4 owed before step 8 (both since set aside by JP for their rows, §9.210 / §9.205; OPEN past the swap) →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) — **split in two, 11/20 (DESIGN
 §9.206):** Part A = one read-only block on built + src BEFORE step 8, and step 7 is ruled on its log; Part B = the same verses on the
-served site after step 8's reload, recorded under step 8. The order 7 before 8 stands →
+served site after step 8's reload, recorded under step 8. The order 7 before 8 stands — **PASSED 11/20 (DESIGN §9.212)** on Part A's log (STEP7A, READ) →
 8 swap + deploy.sh — the only live action; G5 recorded; then cert_invariants on live, pins +
 manifest + allowlists + the new snapshot all re-pinned in the ONE swap commit.
 

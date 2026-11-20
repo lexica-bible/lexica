@@ -17054,3 +17054,9 @@ in the run record (DR :12208, :14628), not a register line — accepted as the r
 fd36bed1…c97d and XCHK 7e40ccf3…2859 are CC's figures — the ruling chat hashes DR :16551-16628 itself.
 **For JP, once cleared:** upload `C:\Users\JP\edition_upgrade_runs\step7a_check_20261120.py` to `~/edition_upgrade_runs/` through PA's
 Files page (sha 7e40ccf3…2859), then paste the block; the log goes to the ruling chat by cat. Commits stay local until it has run (§9.76).
+
+### STEP7A RAN → READ; CHARTER §6 STEP 7 PASSED (§9.212, 11/20)
+As registered at DESIGN §9.212: every declared expectation met; H121 and ζηλόω now read from database cells on both copies. Owed by CC:
+what built Eze 31:9 @22's lemma line holds in check.out (the paste showed two unreadable characters where src reads τρυφή; the
+verse's fresh delta is 0 and the check passed) — when the run folder is next copied down. NEXT: the step-8 PLAN (the swap, the only live
+action), CC's to bring before any block; its contents are listed in §9.212.
