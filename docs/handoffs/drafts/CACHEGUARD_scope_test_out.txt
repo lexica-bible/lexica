@@ -1,0 +1,32 @@
+# output of CACHEGUARD_scope_test.sh (sha256 bee4cb798d26da404c42c698313f0ab4b01e30c296a329233c22c86aacbeed0f), Git Bash, 2026-11-20T14:55:27Z
+what NEW lists here:
+  -rw-r--r-- JP 197121 2 1700000000.0000000000 bd/__pycache__/a.pyc
+  -rw-r--r-- JP 197121 2 1700000000.0000000000 bd/scripts/__pycache__/b.pyc
+  drwxr-xr-x JP 197121 0 1700000000.0000000000 bd/__pycache__
+  drwxr-xr-x JP 197121 0 1700000000.0000000000 bd/scripts/__pycache__
+N1 the folders the cache folders sit in change (a file made and removed in bd and in bd/scripts): NEW holds: yes - OLD holds: NO
+P0 a temp file made and removed INSIDE a cache folder (same listing after): NEW moves: yes
+P1 new cache file: NEW moves: yes
+P2 cache file removed: NEW moves: yes
+P3 cache file rewritten, same size, no wait: NEW moves: yes
+P3b cache file permissions changed: NEW moves: NO
+P4 new empty cache folder: NEW moves: yes
+P5 one of two cache folders removed: NEW moves: yes
+P6 last cache folder removed: NEW moves: yes
+P7 none, then one cache folder made: NEW moves: yes
+# same script (sha256 bee4cb798d26da404c42c698313f0ab4b01e30c296a329233c22c86aacbeed0f) under WSL Linux (its temp folder), 2026-11-20T14:55:39Z:
+what NEW lists here:
+  -rw-r--r-- jp jp 2 1700000000.0000000000 bd/__pycache__/a.pyc
+  -rw-r--r-- jp jp 2 1700000000.0000000000 bd/scripts/__pycache__/b.pyc
+  drwxr-xr-x jp jp 60 1700000000.0000000000 bd/__pycache__
+  drwxr-xr-x jp jp 60 1700000000.0000000000 bd/scripts/__pycache__
+N1 the folders the cache folders sit in change (a file made and removed in bd and in bd/scripts): NEW holds: yes - OLD holds: NO
+P0 a temp file made and removed INSIDE a cache folder (same listing after): NEW moves: yes
+P1 new cache file: NEW moves: yes
+P2 cache file removed: NEW moves: yes
+P3 cache file rewritten, same size, no wait: NEW moves: yes
+P3b cache file permissions changed: NEW moves: yes
+P4 new empty cache folder: NEW moves: yes
+P5 one of two cache folders removed: NEW moves: yes
+P6 last cache folder removed: NEW moves: yes
+P7 none, then one cache folder made: NEW moves: yes
