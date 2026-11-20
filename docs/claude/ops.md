@@ -98,7 +98,7 @@ scripts, SEO, security, rebuild procedure. (Architecture-refactor history: memor
   6/22 but it worked 10/25 on JP's explicit ask — try when he asks; if denied, hand him the
   `gh pr merge/close` commands.** A normal `deploy.sh` does the pip install after a merge.
   Memory `project_dependabot_workflow`.
-- Nightly `health_check.py --email --only-warn` — LIVE on PA (daily scheduled task, 23:53 UTC).
+- Nightly `health_check.py --email --only-warn` — LIVE on PA (daily scheduled task, **13:30 UTC**, beside the backup — PA Tasks tab read 2026-11-20; the old 23:53 time is gone).
   `--only-warn` = mails ONLY on a failed check. Task's mail keys + `OWNER_EMAIL` in
   `~/bible-db/.env`. Memory `project_email_smtp`.
 

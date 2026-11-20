@@ -17317,3 +17317,63 @@ HANDOFF_edition_upgrade_stageC_repin.md.)
 verse where built matches NEITHER eSword NOR the app feed is brought, to the ruling chat and to JP. Recorded beside §9.93 (b).
 - **Still owed before P6:** P1 (copy-down, 1Ch 25:3, Eze 31:9 @22); P2 sheets + JP's eSword read; P3; P4 (File storage line first,
   built's full sha); the Q2 code read; PA's Disable / Enable behaviour; the swap commit diff; the rollback block.
+
+### P1 + Tasks tab — read locally (11/20, CC; §9.213 (iii), §9.214)
+**Copy-down** (JP's scp, PA → `C:\Users\JP\edition_upgrade_runs\pa\`, outside the repo), sha256 of each:
+- `words_cells.tsv` 50,891 lines (header + 50,890) `86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc` = §9.157's sha;
+- `words_moved.tsv` 21 lines (header + 20) `d32361b3f814e5e5079ff408272d563605036afbf032dfc0ce8943c970d60f08` = HANDOFF stageE :164-166;
+- `check.out` (STEP7A) 312 lines `fddc6e094eaf654c0d873cfc2cb8def429a447f9a4c4c5d08b69f1abe1c36263` (no recorded sha to match);
+- `tipnr57_read_20261119.log` 1,523 lines `2176cadcd6123b41e6ae918ef875296b2edcad9f0e52a60b9e223b5a07ec3477` (no recorded sha to match).
+
+**PA Tasks tab** (JP's screenshot, server time 17:44 UTC, 11/20), in words:
+- Scheduled, Daily **13:30** UTC: `cd ~/bible-db && python3 scripts/health_check.py bible.db --email --only-warn` — expiry never.
+- Scheduled, Daily **13:30** UTC: `cd ~/bible-db && python3 scripts/backup_db.py --keep 7 >> ~/db_backups/backup....` (cut off on the
+  screen) — expiry never.
+- Scheduled, Daily **06:00** UTC: `bash ~/bible-db/scripts/news/daily.sh` — expiry never.
+- Always-on tasks: none ("You have no tasks yet").
+- **No task at 23:53 UTC.** ops.md :101 said the health check ran at 23:53; it runs at 13:30, beside the backup (ops.md :101 corrected in
+  this commit). The plan's 23:53 lines (DR :17095, :17163) rest on that old line.
+- **The 06:00 news job does not open bible.db:** no file under `scripts/news/` names `bible.db` except two comments saying they never
+  open it (gather_news.py :10, pull_rss.py :13); every `sqlite3.connect` there is on news.db's path or an argument (grep, 11/20).
+- **Swap window (CC's proposal, for P6):** both 13:30 tasks read bible.db (the backup copies it), so P6 starts no earlier than 14:30 UTC
+  and ends before 13:00 UTC; the 06:00 news job sets no limit. P6's first check line changes from "not within 30 min of 13:30 or
+  23:53" to "UTC time outside 13:00-14:30". The first 13:30 backup after the swap is P9's.
+
+**P1(c) Eze 31:9 @22 — the lemma line (§9.212).** check.out :121 (src) and :149 (built), position 22: `english='delicacy' |
+english_head='delicacy' | strongs='5172' | strongs_base='G5172' | greek_pos=6 | bracket_id=2 | is_pn=0 | italic=0 | lemma='τρυφή'` on
+both. The two lines are byte-identical once the "src"/"built" label is removed (cmp); the lemma bytes are `cf 84 cf 81 cf 85 cf 86 ce
+ae` (τρυφή) on both. check.out holds no U+FFFD anywhere. The two unreadable characters were in the screen paste, not in the file.
+**Closed as read:** built's lemma at Eze 31:9 @22 = src's = τρυφή.
+
+**P1(b) 1Ch 25:3 — traced cell by cell: ON the step-4 declared list, not unlisted.**
+- STEP4-DELTA2 `words_cells.tsv` holds five cells for the verse, all in the `english` column, all `moved = no`:
+  :1059 @0 None → 'To' · :1060 @1 'To Jeduthun —' → 'Jeduthun,' · :1061 @3 'of Jeduthun' → 'of Jeduthun —' · :1062 @4 'were Gedaliah,' →
+  'Gedaliah,' · :1063 @12 'Mattithiah —' → 'Mattithiah,'. No strongs / strongs_base / is_pn / greek_pos / bracket_id cell for the
+  verse, and no line in `words_moved.tsv`. So no row moved and no stored number changed. The edition's English moved the em dash
+  from after the first Jeduthun to after the second and split 'To' off.
+- TIPNR57 :959 `MOVED 1Ch 25:3 H3038 src @3 'of Jeduthun' -> built @1 'Jeduthun,'` is the **matcher's** answer moving with the dash:
+  it takes the cell without an em dash and gives `*` to the one with it (log :265, pre_8b @3 'of Jeduthun —' stored H3038 matcher now
+  `*`). It is not a row move. :1366 / :1367 (GAINED @4 Gedaliah H1436, @12 Mattithiah H4993, [TEXT-CHANGED]) are words_cells :1062 /
+  :1063.
+- All five cells are english-side members of STEP4-DELTA2 words_cells (the step-4 composition, §9.178; G2 PASS 80 + 6, §9.193). None is
+  a number or position cell, so it is not among the 80 + 6. Not in XREF10, because it is not a reorder verse.
+
+**P1(a) cause read — read-out (§9.213 Q12).** The TIPNR57 pairing (program, DR :16060-16080) takes only cells with is_pn = 1 and a
+matcher answer other than `*`. A cell pairs as MOVED when the other copy has the same answer at another cell of the verse; what is
+left is LOST / GAINED, and its class is read at the SAME position on the other copy.
+- **The four MOVED:** the name reads as a name the matcher takes on both copies: 2Ki 23:35 'Jehoiakim' @7 → @6 (words_cells
+  :8978-8994); Gen 5:25 / 5:26 'Methuselah' @2 → 'Mathusala' @1, both H4968 (:21345-21384); Gen 34:4 'Shechem' @2 → @1
+  (:23249-23264). Same answer, other cell, so MOVED.
+- **Est 5:9:** src @13 'Haman' → H2001 (log :1101). Built's name cell is @12 with english **"Haman's"** (words_cells :16184, head
+  'hamans', norm 'haman'). It is not in built's paired set, so by the program's rule the matcher's answer there is `*`. The log does not
+  print built @12's answer: this part is read from the rule, not printed. So @13 is LOST, and its class comes from built @13 'seeing'
+  is_pn 0 → NOT-A-NAME-CELL.
+- **Jos 5:15:** built @27 **'Joshua'** → H3091 (log :1463). src's name cell is @26 with the old spelling **'Josua'** (words_cells
+  :33862). There is no LOST line for it, so by the same rule src's answer there is `*`; this agrees with the 8B1 frozen record "Jos
+  5:15@26 none" (DR :2737). So @27 is GAINED, and its class comes from src @27 'did' is_pn 0 → NOT-A-NAME-CELL.
+- In both, the English of the name changed ("Haman" → "Haman's"; "Josua" → "Joshua"). The four MOVED keep a form the matcher takes on
+  both sides.
+
+**P1 status:** (a) record item ACCEPTED (§9.213 Q12) + this cause read-out; (b) 1Ch 25:3 TRACED, on the declared list; (c) Eze 31:9
+@22 CLOSED as read. The Tasks tab is in words above. NEXT for CC: P2's sheets (words_moved.tsv is now local), P3, P4, the Q2 code read,
+and PA's Disable / Enable help.
