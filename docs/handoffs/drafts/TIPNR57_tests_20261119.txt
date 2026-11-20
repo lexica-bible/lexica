@@ -1,0 +1,179 @@
+# TIPNR57 tests (11/20, CC, WSL test homes ~/gate57/*, clone at d34d6723; the block run as written with ONLY XCHK, XS, XP swapped - the made-up copies' shas). Harness: docs/handoffs/drafts/TIPNR57_harness/. check program sha256 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc; block sha256 (XCHK filled) 0144cf9988ed82c17f731c57af49b5d7af041edbb78e99a251fce5eabb052daf
+# TIPNR57 tests (2026-11-20T01:58:25Z); check program sha256 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc; block sha256 (with __XCHK__ filled) below
+
+=============== T1 clean (the block as written) ===============
+GATE REF d34d6723 - TIPNR57 - the import_tipnr -57 read (DESIGN 9.204: list / attribute the 57 lost import_tipnr matches, 10/25 31,649 -> built 31,592, and compare the tipnr table built vs src) - READ-ONLY: src, built and pre_8b opened mode=ro; the unchanged import_tipnr runs on an in-memory database only; writes only its run folder and this log; no database copy - PA HEAD d34d6723 - 2026-11-20T01:58:26Z
+repo /home/jp/gate57/h1/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gate57/h1/bible-db/bible_edupg_test_20261101.db: 180224 bytes - no -journal - triggers 0
+db /home/jp/gate57/h1/bible-db/bible_edupg_test_built_20261102.db: 180224 bytes - no -journal - triggers 0
+db /home/jp/gate57/h1/bible-db/bible_edupg_test_built_pre_8b_20261106.db: 180224 bytes - no -journal - triggers 0
+run folder made: /home/jp/gate57/h1/edition_upgrade_runs/tipnr57_read_20261119
+TIPNR57 PRE: OK
+tipnr/, cert_manifest.json: = d34d6723, nothing changed or added in the checkout
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (4) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 16 rows, 98ae56f218c0 - dry copy 16 rows, 98ae56f218c0 - = the dry run: yes - vs prep 16 rows, 98ae56f218c0
+written table abp_corrections: built 1 rows, 47f1ce197752 - dry copy 1 rows, 47f1ce197752 - = the dry run: yes - vs prep 1 rows, 47f1ce197752
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+TIPNR57 CHECK: OK
+src sha256: bf37341de2be156075db99472d53ea6403aee80e5959b30de115365e9df8ffe3 (expect bf37341de2be156075db99472d53ea6403aee80e5959b30de115365e9df8ffe3)
+pre_8b sha256: 3fbd1b36c1d19fc3f467a255dad2ea0835493b7405f21c152dd1fb846ab7a96c (expect 3fbd1b36c1d19fc3f467a255dad2ea0835493b7405f21c152dd1fb846ab7a96c)
+check.py sha256 (the uploaded file, as copied into the run folder): 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc (expect 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc)
+=== the read - start 2026-11-20T01:58:26Z ===
+check.py sha256 as run: 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc (expect 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc)
+tipnr/TIPNR.txt sha256 1a3b7d7df5cfa1e96eefa07dec92900bea278370c6788fadb5d036f3223b637c (cert pin 1a3b7d7df5cfa1e96eefa07dec92900bea278370c6788fadb5d036f3223b637c): same
+scripts/import_tipnr.py sha256 c854c31ce9def1dd7cb2e2c0fb9a830c21384e71a4b9cd891684683f389bb2e7
+scripts/tipnr_alias_variants.py sha256 c8c38ffde4ffc2a00c90c55accf76f09411b35bfc0ca012c28849a423a92d614
+=== (1) control: the matcher on 6 made-up cells with known answers ===
+  'Jesus'    -> G2424  (expect G2424)
+  'Abraham'  -> H85    (expect H85)
+  'of Egypt,' -> H4714  (expect H4714)
+  'Qzxqzx'   -> *      (expect *)
+  ''         -> *      (expect *)
+  'Jesus--'  -> G2424  (expect G2424)
+  Matched 4 / Unmatched (1, 1) (expect 4 / (1, 1)) - CONTROL FIRED
+=== (2) the tipnr table: src vs built (and pre_8b), each vs the pinned file as import_tipnr parses it ===
+  src     columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2862 - sha256 of the sorted rows 610c5ff1055ac48a - = the file's parse (2862 rows): yes
+  built   columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2862 - sha256 of the sorted rows 610c5ff1055ac48a - = the file's parse (2862 rows): yes
+  pre_8b  columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2862 - sha256 of the sorted rows 610c5ff1055ac48a - = the file's parse (2862 rows): yes
+  src vs built: only on src 0 - only on built 0 - same strongs, other fields 0 - duplicate keys 0 / 0
+  TIPNR TABLE built vs src: SAME, row for row
+=== (3) the matcher on each copy's name cells (is_pn = 1), English as each copy holds it now ===
+  src: the 10/25-equivalent tail log /home/jp/gate57/h1/bible-db/finish_pnstar2.log: Matched 6 / Unmatched (2, 2)
+  built: tail v3 log /home/jp/gate57/h1/edition_upgrade_runs/stageC_tail3_20261104.log: Matched 4 / Unmatched (3, 3)
+  pre_8b: BSTD finish.out (read-out) /home/jp/gate57/h1/edition_upgrade_runs/step4_b_standard_20261117/finish.out: Matched 4 / Unmatched (3, 3)
+  src     words 17 - name cells 10 (English blank 1, with an em dash 1) - the matcher now: Matched 7 / Unmatched (2, 2)
+  built   words 16 - name cells 8 (English blank 1, with an em dash 1) - the matcher now: Matched 4 / Unmatched (3, 3)
+  pre_8b  words 16 - name cells 8 (English blank 1, with an em dash 1) - the matcher now: Matched 5 / Unmatched (2, 2)
+=== (4) pre_8b (build + tail output, before 8b): the matcher now vs the number stored, cell by cell ===
+  stored numbers on name cells 4 - cells where the matcher now gives another answer 1
+    Exo 1:1      @1   english 'Aaron'  stored *  matcher now H175
+=== (5) cell by cell ===
+  src vs built - MOVED (same number, other cell of the verse; not a loss) 1
+    MOVED Gen 1:1      H1732  src @3 'David' -> built @4 'David'
+  LOST (4): matched on src, not on built
+    LOST   Gen 2:1      @1   src 'Moses' -> H4872  |  built same cell: 'Qzxmoses' is_pn 1 now * matcher *  [TEXT-CHANGED]
+    LOST   Gen 2:1      @3   src 'Pharaoh' -> H6547  |  built same cell: 'Qzxph' is_pn 1 now * matcher *  [TEXT-CHANGED]
+    LOST   Mat 1:1      @2   src 'Jesus' -> G2424  |  built same cell: 'Jesus' is_pn 0 now G2424  [NOT-A-NAME-CELL]
+    LOST   Mat 1:2      @5   src 'of Judah,' -> G2455  |  built same cell: no cell  [NO-CELL]
+    by English: 'Jesus' 1, 'Moses' 1, 'Pharaoh' 1, 'of Judah,' 1
+  GAINED (1): matched on built, not on src
+    GAINED Exo 1:1      @1   built 'Aaron' -> H175  |  src same cell: 'Qzxaaron' is_pn 1 now * matcher *  [TEXT-CHANGED]
+    by English: 'Aaron' 1
+  classes: GAINED TEXT-CHANGED 1, LOST NO-CELL 1, LOST NOT-A-NAME-CELL 1, LOST TEXT-CHANGED 2
+  pre_8b vs built - MOVED (same number, other cell of the verse; not a loss) 0
+  LOST (1): matched on pre_8b, not on built
+    LOST   Gen 2:1      @3   pre_8b 'Pharaoh' -> H6547  |  built same cell: 'Qzxph' is_pn 1 now * matcher *  [TEXT-CHANGED]
+    by English: 'Pharaoh' 1
+  GAINED (0): matched on built, not on pre_8b
+    by English: 
+  classes: LOST TEXT-CHANGED 1
+=== (6) the 57 as a sum: 10/25 log 6 - tail v3 log 4 = 2 (the terms add up by construction; what each term rests on is the point) ===
+      -1  10/25 log - src now: src's English moved after its import (tail patches, 8b.2a, any later write); no pre-8b copy of that run exists, so a COUNT only, not listed
+      +3  src now - built now: section 5 src vs built, lost 4 - gained 1
+      -1  built now - pre_8b now: section 5 pre_8b vs built, gained 0 - lost 1 (8b.2a + the pre_8b -> built named list)
+      +1  pre_8b now - pre_8b stored: section 4, matcher number where '*' is stored 1 - '*' where a number is stored 0
+      +0  pre_8b stored - BSTD finish.out (T_b = pre_8b, 9.173): numbers set after the import by a tail step (fix_kyrios_mistags' Cyrus rows) or other-number cells
+      +0  BSTD finish.out - tail v3 log: the build's code between 11/4 and d34d6723
+  sum +2 = 6 - 4
+TIPNR57 CHECK: READ - the figures and lists above go to the ruling chat
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 2026-11-20T01:58:27Z
+src, built, pre_8b: size and time before = after: yes
+Python cache folders in the checkout before = after: yes (e3b0c44298fc1c14 / e3b0c44298fc1c14)
+TIPNR57 CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+TIPNR57 RESULT: READ - 2026-11-20T01:58:27Z - the figures and lists above go to the ruling chat as printed
+exit=0
+
+=============== T2 re-paste on T1's home -> STOP, log exists ===============
+TIPNR57 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gate57/h1/edition_upgrade_runs/tipnr57_read_20261119.log
+
+=============== T3 damaged upload (one line break added inside a string) -> STOP before any read ===============
+check.py sha256 (the uploaded file, as copied into the run folder): 0529e58a4e06bf545b9965aa340a111a5749b298675d0f74f8b13cd66afe4583 (expect 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc)
+TIPNR57 RESULT: STOP - the uploaded check program is not the file CC wrote and tested
+exit=1
+run folder holds: check.py
+
+=============== T4 KNOWN POSITIVE (tipnr): built's tipnr table one row short + one row changed (planted before the guard) -> FINDING ===============
+planted on built's tipnr: removed 'G0', changed 'G1'
+=== (2) the tipnr table: src vs built (and pre_8b), each vs the pinned file as import_tipnr parses it ===
+  src     columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2862 - sha256 of the sorted rows 610c5ff1055ac48a - = the file's parse (2862 rows): yes
+  built   columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2861 - sha256 of the sorted rows 9b7bc35a9b2a656a - = the file's parse (2862 rows): NO
+  pre_8b  columns ['strongs', 'name', 'entity_type', 'entity_types'] - rows 2862 - sha256 of the sorted rows 610c5ff1055ac48a - = the file's parse (2862 rows): yes
+  src vs built: only on src 1 - only on built 0 - same strongs, other fields 1 - duplicate keys 0 / 0
+    only on src: ('G0', 'Unnamed#1', 'person', 'person')
+    src ('G1', 'Alpha', 'other', 'other')  |  built ('G1', 'Alpha (changed)', 'other', 'other')
+  TIPNR TABLE built vs src: DIFFERS
+=== (3) the matcher on each copy's name cells (is_pn = 1), English as each copy holds it now ===
+TIPNR57 RESULT: FINDING - 2026-11-20T01:58:29Z - the findings above (and /home/jp/gate57/h4/edition_upgrade_runs/tipnr57_read_20261119/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== T5 built changed after the guard (one name cell's English) -> CHECK FAIL, STOP, nothing read ===============
+written table words: built 16 rows, 63d3f079effa - dry copy 16 rows, 98ae56f218c0 - = the dry run: NO - vs prep 16 rows, 98ae56f218c0
+TIPNR57 CHECK: FAIL - words on built differs from the dry run
+TIPNR57 RESULT: STOP - built is not HEADFIX2's result (lines above)
+exit=1
+
+=============== T6 pre_8b not the recorded copy (one cell changed) -> STOP at its sha ===============
+src sha256: bf37341de2be156075db99472d53ea6403aee80e5959b30de115365e9df8ffe3 (expect bf37341de2be156075db99472d53ea6403aee80e5959b30de115365e9df8ffe3)
+pre_8b sha256: 32497616b435b5d4b239e47bf67a0f203b56e7fe30912bb97f7fffaa496661e3 (expect 3fbd1b36c1d19fc3f467a255dad2ea0835493b7405f21c152dd1fb846ab7a96c)
+TIPNR57 RESULT: STOP - pre_8b is not the 11/6 copy as recorded
+exit=1
+
+=============== T7 tipnr/TIPNR.txt edited in the checkout -> STOP (git guard) ===============
+TIPNR57 RESULT: STOP - tipnr/ or cert_manifest.json changed or added in the checkout:  M tipnr/TIPNR.txt
+exit=1
+
+=============== T8 the tail v3 log missing -> STOP ===============
+TIPNR57 RESULT: STOP - missing or empty: /home/jp/gate57/h8/edition_upgrade_runs/stageC_tail3_20261104.log
+exit=1
+
+=============== T9 BSTD finish.out missing -> READ, the two last terms printed as one ===============
+=== (6) the 57 as a sum: 10/25 log 6 - tail v3 log 4 = 2 (the terms add up by construction; what each term rests on is the point) ===
+      -1  10/25 log - src now: src's English moved after its import (tail patches, 8b.2a, any later write); no pre-8b copy of that run exists, so a COUNT only, not listed
+      +3  src now - built now: section 5 src vs built, lost 4 - gained 1
+      -1  built now - pre_8b now: section 5 pre_8b vs built, gained 0 - lost 1 (8b.2a + the pre_8b -> built named list)
+      +1  pre_8b now - pre_8b stored: section 4, matcher number where '*' is stored 1 - '*' where a number is stored 0
+      +0  pre_8b stored - tail v3 log (BSTD finish.out missing: the two terms in one)
+  sum +2 = 6 - 4
+TIPNR57 CHECK: READ - the figures and lists above go to the ruling chat
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 2026-11-20T01:58:36Z
+src, built, pre_8b: size and time before = after: yes
+Python cache folders in the checkout before = after: yes (e3b0c44298fc1c14 / e3b0c44298fc1c14)
+TIPNR57 CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+TIPNR57 RESULT: READ - 2026-11-20T01:58:36Z - the figures and lists above go to the ruling chat as printed
+exit=0
+
+=============== T10 the CONTROL fires on a broken matcher: the check program alone (block's launcher not used) on a scratch repo whose import_tipnr drops the 'of ' prefix strip -> CONTROL MISSED, STOP exit 2 ===============
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+tipnr/TIPNR.txt sha256 1a3b7d7df5cfa1e96eefa07dec92900bea278370c6788fadb5d036f3223b637c (cert pin 1a3b7d7df5cfa1e96eefa07dec92900bea278370c6788fadb5d036f3223b637c): same
+scripts/import_tipnr.py sha256 882aa7f89647934f6f78c91a45aaf4504b2a2a910842e21048fbf924f87db737
+scripts/tipnr_alias_variants.py sha256 c8c38ffde4ffc2a00c90c55accf76f09411b35bfc0ca012c28849a423a92d614
+=== (1) control: the matcher on 6 made-up cells with known answers ===
+  'Jesus'    -> G2424  (expect G2424)
+  'Abraham'  -> H85    (expect H85)
+  'of Egypt,' -> *      (expect H4714)
+  'Qzxqzx'   -> *      (expect *)
+  ''         -> *      (expect *)
+  'Jesus--'  -> G2424  (expect G2424)
+  Matched 3 / Unmatched (2, 2) (expect 4 / (1, 1)) - CONTROL MISSED
+TIPNR57 CHECK: STOP - the control did not come out as declared
+exit 2
+
+=============== T11 size: the check program alone on the 626,309-row STEP6AUD test copies (~/gate6/dbs; no tipnr table there, 13 name cells) - time and memory ===============
+  src     words 626309 - name cells 7 (English blank 1, with an em dash 0) - the matcher now: Matched 0 / Unmatched (6, 4)
+  built   words 626309 - name cells 13 (English blank 0, with an em dash 0) - the matcher now: Matched 0 / Unmatched (13, 9)
+  pre_8b  words 626309 - name cells 7 (English blank 1, with an em dash 0) - the matcher now: Matched 0 / Unmatched (6, 4)
+TIPNR57 CHECK: FINDING - tipnr table missing on src or built
+elapsed 1.03 s, max RSS 118416 KB
+
+=============== T1b T1's checkout after the run: no Python cache folder anywhere (expect none) ===============
+0
+
+=============== T12 KNOWN POSITIVE for the cache guard: the block's before/after lines around a plain import of scripts/tipnr_alias_variants WITHOUT the no-cache setting -> NO ===============
+Python cache folders in the checkout before = after: NO (e3b0c44298fc1c14 / af7d026aad8835fb)
+tipnr_alias_variants.cpython-314.pyc

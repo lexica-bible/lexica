@@ -13,6 +13,14 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   monsters', Mark 1:9)"; rebuild-words step 7). Read the charter step-7 line + rebuild-words step 7 first; the form is a proposal to the
   ruling chat (what is checked, on which copy, how, expected), then a read-only block. **Step 7's plan goes to the ruling chat before
   anything in it runs on PA (§9.205).**
+- **11/20: BOTH DRAFTS BROUGHT, with the ruling chat** (one paste): (1) **step-7 spot-check PLAN** (DR "## Charter §6 step 7 — the
+  spot-check PLAN") — Part A on the copies before step 8 (read-only block, drafted only after the plan is ruled) + Part B on the served
+  site after the reload; expected per verse with sources; **Q1 Mark 1:9's τῆς cell reads 'of' (in a bracket with 'Galilee,') — neither
+  blank nor the app's value as §4.10 / DESIGN :251 declared;** Q2 the A + B split. (2) **Block TIPNR57** (DR "## The import_tipnr −57
+  read"; block :15734-15801 sha 0144cf99…2daf; program :15806-16162 XCHK 331dc30f…bffc; upload file
+  `C:\Users\JP\edition_upgrade_runs\tipnr57_check_20261119.py`; tests `drafts/TIPNR57_tests_20261119.txt`, harness `drafts/TIPNR57_harness/`,
+  WSL homes `~/gate57/*`). Reviewer ESCALATE (cache files + a comment) → fixed → **CLEAR**, both verbatim in DR. Runs only on the ruling
+  chat's clearance; then the log goes there by JP's cat. Its src term "10/25 log − src now" is a COUNT only (no pre-8b copy of that run).
 - **Split +4 DONE (§9.205):** JP set charter :235-237 aside for this row only; carried OPEN by name past the swap (charter §4.8 note);
   no rebuild. Un-muting the split's member log = a later code change, JP's to raise.
 - **PRE-SWAP LIST — every item owed BEFORE STEP 8** (§9.204, plus the items already on record):

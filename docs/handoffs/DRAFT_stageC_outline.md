@@ -15627,3 +15627,608 @@ NEXT: step 7.
 JP: OK — charter :235-237 set aside for the Split +4 only (noted beside §4.8 in the charter); carried OPEN by name past the swap; no
 rebuild, no re-run of steps 4-6. Still owed before step 8: the import_tipnr −57 read (read-only block, reviewer). Step 7's plan goes to
 the ruling chat before anything runs on PA.
+
+## Charter §6 step 7 — the spot-check PLAN (11/19, CC; §9.204 NEXT, §9.205) — a PROPOSAL; nothing in it runs on PA before the ruling chat rules it
+**What step 7 is.** Charter :350 "7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9)";
+rebuild-words :192-196 (Eze 31:9 "were jealous of" → ζηλόω · 1Chr 1:1 "Adam" → H121, opens metaV · 1Ch 13:10 chip view reads "the LORD
+was enraged", English order, no bracket marks or digits; only the Interlinear view keeps "[²was enraged ¹the LORD]"); DESIGN :270 / :333
+(the list = rebuild-words' three + the charter's two, nothing else). **The record runs these on the SERVED site, after the swap's reload**
+(RUN_rebuild_trap_live.md :188-189 "Step 7 spot-checks on the served site (after the reload)"; the 10/25 run did not do them,
+CHARTER_rebuild_trap_fix :504), while this charter puts step 7 BEFORE step 8. A copy cannot be served (the site reads bible.db only), so CC
+proposes TWO parts:
+- **Part A — before step 8, on the copies, one read-only block (drafted only after this plan is ruled).** On `built`
+  (`~/bible-db/bible_edupg_test_built_20261102.db`, the "built =" HEADFIX2 guard before + after) and `src`
+  (`~/bible-db/bible_edupg_test_20261101.db`, sha 5da9bb95…7e01 before; size + time after), both mode=ro: for each of the five verses
+  print every word row (position, english, english_head, strongs, strongs_base, lexicon lemma by `l.strongs_g = w.strongs_base`,
+  greek_pos, bracket_id, is_pn, italic), `verses.text`, the reading order through `scripts/reorder_english.py` (the port of the
+  reader's getEnglishOrderWords; `tests/test_reorder_port.py` green first, as STEP6AUD ran it), and each bracket's chip order (its rows by
+  greek_pos ascending — chip mode orders a bracket group with orderBracketGroupWords, 59c-library-render.jsx :350-395); the verse's lines from
+  STEP4-DELTA2 words_cells (sha 86e44c58…dafc, `step4_delta2_20261116/delta/words_cells.tsv` on PA) and from B2's prose list (f2a22ecd…a864).
+  Same form as STEP5INV (GATE REF d34d6723, eu_step pre, check program by upload, sha-pinned, read-once launcher), tested on WSL first.
+- **Part B — after step 8's reload, on the served site:** the five as rebuild-words :192-196 words them, read in the browser (a click and
+  what the card shows); CC can read the public pages with the in-app browser, JP's eye for the chip view. Recorded under step 8.
+
+**Expected, per check (Part A; "= src" means built's cells equal src's at those rows and no DELTA2 line names them):**
+| check | eligible / B2 (the local files hash to e540d34d…580f and f2a22ecd…a864 = PA's) | expected on built, with its source |
+|---|---|---|
+| **1Ch 13:10 chip order** | eligible · written 161 → 158 | The εθυμώθη (G2373) and κύριος (G2962) rows = src (the 11/15 STEP4-DELTA, 62d9c85d, names only @7 'he struck' → 'struck', @18 'ark.' → 'ark;', @19 'And' → 'and' in this verse — the block confirms against DELTA2); the two rows share a bracket_id with κύριος' greek_pos lower → chip and prose read "the LORD was enraged"; no digit in either cell's english (rebuild-words :193-196). `verses.text` = 158 characters (B2) and reads "the LORD was enraged". The app feed joins the pair into ONE slot (`2373-2962` "the LORD was enraged", italic "the" — abp_app_slots_italic.tsv, 1 Chronicles 13:10 slot 1); built keeps our two slots (the DELTA line set above). CC's hand-made English order of the feed gives 157 characters, not 158 — not used as an expectation; the block prints built's text. |
+| **Eze 31:9** "were jealous of" → ζηλόω | NOT eligible (count_differs) · kept_old | Every row and `verses.text` = src (Q7 (i), charter :130-132; no DELTA line). The εζήλωσαν row: english 'were jealous of' (feed slot 14 reads "[8were jealous of"), strongs_base G2206, lemma ζηλόω — on src and built alike. |
+| **1Ch 1:1** "Adam" → H121, opens metaV | eligible · unchanged 18 → 18 | Adam's row = src on every column; its `pn_hebrew_xref` row (hebrew_base H121 expected) and its `pn_binding` row (book NUMBER 13, ch 1, vs 1, name 'adam': entity_uniq / kind / render) = src. Neither 1Ch 1:1 nor 1Ch 13:10 nor Mark 1:9 is in the gate-2 pn_binding delta (160 rows, local `pn_binding_delta_after.tsv`) or the 8B3R identity delta (58 rows, local `identity_delta.tsv`) — read 11/19. |
+| **Gen 1:21** "sea monsters" | eligible · written 222 → 228 | The κῆτος (G2785) row: 'whales' (src) → 'sea monsters' (built), english_head 'whales' → 'monsters', english_head_norm 'whale' → 'monster' (11/15 DELTA @5; the block re-reads DELTA2); @10 'life' → 'soul', @19 'types;' → 'types,'. `verses.text` 228 characters, holds "sea monsters", not "whales" (CC's hand English order of the feed = 228). |
+| **Mark 1:9** "Nazareth of the of Galilee" (§0.2, §4.10) | eligible · written 123 → 113 | As step 4's G7 printed it (DR :13247-13250, from the 11/15 delta): @10 τῆς 'of the' → **'of'**, greek_pos None → 1, bracket_id None → 2; @11 'of Galilee,' → 'Galilee,', None → 2, None → 2; @13 'he was immersed' → 'was immersed'. `verses.text` 113 characters (CC's hand English order of the feed = 113), holds "Nazareth of Galilee," and not "of the of". |
+
+**Two points for the ruling chat before Part A is drafted:**
+- **Q1 — Mark 1:9's τῆς cell.** Charter §4.10 (:253-254) declared the new value "per the app edition (blank or the app's value)", and
+  DESIGN :251 "value = the app's cell". The app's τῆς cell is BLANK and its Galilee cell reads "of Galilee," (feed slots 9-10); built's τῆς
+  cell reads **'of'** in a bracket with 'Galilee,' — it reads right ("Nazareth of Galilee"), but it is neither blank nor the app's value
+  cell for cell. Step 4 printed it as a read-out (§9.185, §9.193), not gated against §4.10's wording. CC's reading: the defect §0.2 names
+  is cured; the cell shape differs from the declared outcome. Accept as built, or not — the ruling chat's (JP's if it is a content call).
+- **Q2 — the Part A / Part B split.** Accept A before step 8 (copies, read-only) + B after the reload (served site), or run step 7 only as
+  rebuild-words words it (served, after the swap) with the charter's order amended. CC's pick: A + B — A gives a pre-swap read where a
+  wrong cell can still stop the swap; B is the only place the chip view itself can be seen.
+**Not checked by Part A:** the chip view's own rendering (JSX, not ported — only the bracket order by greek_pos it uses); the word card,
+the metaV card and the click path (Part B); any verse beyond these five.
+
+## The import_tipnr −57 read — block TIPNR57 — DRAFT (11/19, CC; §9.204) — READ-ONLY; owed before step 8
+**What it reads (§9.204: "lists or attributes the 57 and compares the tipnr table, built vs src").** 31,649 = the 10/25-equivalent tail
+log (`~/bible-db/finish_pnstar2.log`; HANDOFF_edition_upgrade_stageC_tail.md :55-57; rebuild-words :129-131); 31,592 = tail v3 on built
+(`stageC_tail3_20261104.log`, same table). CHECK 2 (DR :774-1096) was rejected as too much machinery (DR :1109); CHECK 2b could not isolate
+the 57 because 8b had run on live and not on built (DR :1497-1502). **Now both copies have had the same chain after the import** (built:
+8b + 11 + 10 + 12 + 9 + 9a + HEADFIX2), and **pre_8b** (`bible_edupg_test_built_pre_8b_20261106.db`, = built after the build + tail,
+before 8b; T_b rebuilt it byte-for-byte from the inputs, §9.173) still holds the import's own stored numbers.
+**How (no database written, no copy made).** import_tipnr's decision for a cell rests on the cell's English and the book's testament only
+(import_tipnr.py :380-389 the select, :660-680 the loop, at d34d6723); it sets is_pn = 1 on every `'*'` cell it saw, matched or not
+(:717-724). Two other writers of is_pn = 1: fix_pn_subject_merge, inside the build (build_words_from_abp.py :2842-2846), writes its rows
+with strongs_base '*' (fix_pn_subject_merge.py :323-326), so the import selects them anyway; fix_kyrios_mistags, in the tail AFTER the
+import (the 2 Cyrus rows, its :10-12, :59), is not in the import's input. So each copy's is_pn = 1 cells = what its import looked at, plus
+those Cyrus rows (corrected after the reviewer's first pass, below). The check program runs the **real, unchanged `import_tipnr.main()`** over those cells' English as each copy holds it
+now, pointed at an in-memory database (`sqlite3 ":memory:"`; the script's connect is redirected there; its fixture-drift check, which needs
+the whole corpus, is stubbed out). Every database file is opened mode=ro + query_only. Sections:
+1. **Control** (charter §4: a control fires before any figure counts): 6 made-up cells with known answers — 'Jesus' (Mat) G2424, 'Abraham'
+   H85, 'of Egypt,' H4714, 'Qzxqzx' unmatched, '' not selected, 'Jesus--' G2424; Matched 4 / Unmatched 1 (1). Any other answer = STOP.
+2. **tipnr table:** src vs built row for row (only-on-one-side, same key other fields, duplicates) — **any difference = FINDING**; each copy
+   (and pre_8b) also against the pinned file's own parse (import_tipnr :371-374 deletes and refills the table from it), printed.
+3. **Matcher on each copy** (src, built, pre_8b): its own printed Matched / Unmatched lines, beside the two tail logs' and BSTD's
+   `finish.out` (read-out).
+4. **pre_8b, cell by cell:** the matcher's answer now vs the number the import stored — every disagreement listed (how far "English now"
+   is from "English at the import" on the built side).
+5. **Cell by cell, src vs built and pre_8b vs built:** matched cells paired per verse (same position + number, then same number elsewhere =
+   MOVED); every LOST / GAINED cell listed with the other copy's cell at that verse + position, classed TEXT-CHANGED / NOT-A-NAME-CELL (the
+   other copy gave that row a real number at build) / NO-CELL / SAME-TEXT (**SAME-TEXT = FINDING**: one English, two answers would break
+   the method).
+6. **The 57 as a sum of terms**, each with what it rests on: 10/25 log − src now (**a COUNT only — no pre-8b copy of the 10/25 run exists,
+   so src's post-import English moves cannot be listed**) · src now − built now (section 5's list) · built now − pre_8b now (section 5's
+   list) · pre_8b now − pre_8b stored (section 4) · pre_8b stored − BSTD finish.out (the Cyrus rows, if any) · BSTD − tail v3. The three
+   list-backed terms are checked against their lists (a mismatch = STOP).
+**What closes the −57, CC's reading for the ruling chat (not a gate in the block):** every listed cell TEXT-CHANGED, NOT-A-NAME-CELL or
+NO-CELL (an edition wording or slot change); tipnr SAME; the src count-only term small enough to be named as the one unlisted part.
+**Exit:** READ (0) · FINDING (3: tipnr differs, or SAME-TEXT) · STOP (2: control missed, input missing, matcher did not finish, a term ≠
+its list). **Form:** STEP5INV / STEP6AUD's — GATE REF d34d6723 (PA's scripts, no pull); `eu_step pre` (new run folder
+`tipnr57_read_20261119/`, repo guards, no journal, triggers 0 on all three copies); `git diff` d34d6723 + porcelain on `tipnr/` and
+cert_manifest.json (STOP each); the "built =" HEADFIX2 guard before and after; src and pre_8b full sha before (their recorded values:
+HANDOFF_edition_upgrade_stageE.md :111; DR :12384-12385); size + time of all three before = after; the check program by PA Files upload,
+sha-pinned, through the read-once launcher. **No Python cache files** (reviewer's first pass): `PYTHONDONTWRITEBYTECODE=1` in the block,
+`sys.dont_write_bytecode = True` in the program before it loads any repo script, and the checkout's `__pycache__` folders listed before
+and after — any change = STOP. **No database copy.** 68 lines; the program 357 lines.
+**Tests** (`docs/handoffs/drafts/TIPNR57_tests_20261119.txt`, 179 lines; harness `docs/handoffs/drafts/TIPNR57_harness/`; WSL test homes
+`~/gate57/*`, clone at d34d6723; the block run as written with ONLY XCHK, XS, XP swapped — the made-up copies' shas): **T1** clean, made-up
+copies planted with every class — LOST TEXT-CHANGED ×2, NOT-A-NAME-CELL, NO-CELL, GAINED TEXT-CHANGED, MOVED, an em-dash and a blank name
+cell, a pre_8b disagreement — all listed by name, cache folders before = after yes, READ, exit=0 (:4-90) · **T2** re-paste → STOP, log
+exists (:91-93) · **T3** damaged upload (one line break inside a string) → sha printed, STOP, the run folder holds only check.py (:94-99) ·
+**T4 KNOWN POSITIVE:** built's tipnr one row short + one changed → both printed, FINDING (:100-113) · **T5** built changed after the guard →
+CHECK FAIL, STOP (:114-119) · **T6** pre_8b one cell changed → STOP at its sha (:120-125) · **T7** TIPNR.txt edited → STOP (:126-129) ·
+**T8** tail v3 log missing → STOP (:130-133) · **T9** BSTD finish.out missing → READ, the last two terms as one (:134-150) · **T10** the
+control on a broken matcher (a scratch repo whose import_tipnr drops the "of " strip) → CONTROL MISSED, STOP exit 2 (:151-166) · **T11** the
+program alone on the 626,309-row STEP6AUD test copies: 1.0 s, 118 MB peak (:167-173) · **T1b** T1's checkout after the whole run: 0 cache
+folders (:174-176) · **T12 KNOWN POSITIVE for the cache guard:** the block's before/after lines around a plain import of
+scripts/tipnr_alias_variants with the no-cache setting off → NO, the .pyc named (:177-179). **CC's first T1 crashed** (import_tipnr leaves sqlite3.Row on the connection; the
+sort of its rows failed) — the block STOPped as built to; fixed (`row_factory = None` after the run), all re-run; the file holds the re-run.
+**The file JP uploads:** `C:\Users\JP\edition_upgrade_runs\tipnr57_check_20261119.py` — the fenced program below, 357 lines, 18,861 bytes,
+LF, sha256 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc = XCHK = the file every test ran. JP checks it with
+`(Get-FileHash C:\Users\JP\edition_upgrade_runs\tipnr57_check_20261119.py).Hash` → `331DC30FAB1F26E78E69F813D6C0CA26ABA05599CAEB63AA125E6138515EBFFC`,
+does not open it in an editor, uploads it through PA's Files page to `/home/appssanding720/edition_upgrade_runs/`.
+Block sha256 (the fenced bash below, DR :15734-15801, as tested): 0144cf9988ed82c17f731c57af49b5d7af041edbb78e99a251fce5eabb052daf; the program = DR :15806-16162 (`sed -n 15806,16162p` hashes to XCHK).
+
+### Block TIPNR57 (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; check program uploaded; no PA pull; no database copy)
+```bash
+set +H
+L=~/edition_upgrade_runs/tipnr57_read_20261119.log
+if [ -e "$L" ]; then echo "TIPNR57 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1                                           # no Python cache files written anywhere, the checkout included (reviewer, 11/20)
+pc0=$(find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s 2>/dev/null | sha256sum | cut -c1-16)
+echo "GATE REF ${REF} - TIPNR57 - the import_tipnr -57 read (DESIGN 9.204: list / attribute the 57 lost import_tipnr matches, 10/25 31,649 -> built 31,592, and compare the tipnr table built vs src) - READ-ONLY: src, built and pre_8b opened mode=ro; the unchanged import_tipnr runs on an in-memory database only; writes only its run folder and this log; no database copy - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "TIPNR57 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+P=~/bible-db/bible_edupg_test_built_pre_8b_20261106.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/tipnr57_read_20261119
+U=$R/tipnr57_check_20261119.py                                             # the check program as JP uploaded it through PA's Files page; outside the repo
+TL=$R/stageC_tail3_20261104.log                                            # built's import: tail v3 (HANDOFF_edition_upgrade_stageC_tail.md :57, 31,592 / 734 (687))
+OL=~/bible-db/finish_pnstar2.log                                           # the 10/25-equivalent tail log (stageC_tail :55-57, 31,649 / 683 (648); rebuild-words :129-131)
+BL=$R/step4_b_standard_20261117/finish.out                                 # BSTD's tail output (T_b = pre_8b, DESIGN 9.173) - a read-out; missing is printed, not a STOP
+XS=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01       # src full sha256: HANDOFF_edition_upgrade_stageE.md :111
+XP=a4faa4d8503296b18ba8368db1cd7d643783e9c5f15ea6b035cb9d4864ef0107       # pre_8b full sha256: DR "BSTD ran" :12384-12385 (DESIGN 9.173)
+XTIP=1a3b7d7df5cfa1e96eefa07dec92900bea278370c6788fadb5d036f3223b637c     # tipnr/TIPNR.txt: cert_manifest.json :305-306 at d34d6723
+XCHK=331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc     # sha256 of the check program (DR: the TIPNR57 check program, CC's tested file); any other file STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the read: every miss is STOP ---
+EU scripts/eu_step.py pre --tag TIPNR57 --ref "$REF" --dir "$D" --db "$S" --db "$B" --db "$P" || { echo "TIPNR57 RESULT: STOP - pre (line above); nothing read"; exit 1; }
+git diff --quiet "$REF" HEAD -- tipnr cert_manifest.json || { echo "TIPNR57 RESULT: STOP - tipnr/ or cert_manifest.json differ from $REF"; exit 1; }
+k=$(git status --porcelain -- tipnr cert_manifest.json); [ -z "$k" ] || { echo "TIPNR57 RESULT: STOP - tipnr/ or cert_manifest.json changed or added in the checkout: $k"; exit 1; }
+echo "tipnr/, cert_manifest.json: = $REF, nothing changed or added in the checkout"
+for f in "$U" "$TL" "$OL"; do [ -s "$f" ] || { echo "TIPNR57 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag TIPNR57 --built "$B" --dir "$DH" --written words,abp_corrections || { echo "TIPNR57 RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+k=$(h "$S"); echo "src sha256: $k (expect $XS)"; [ "$k" = "$XS" ] || { echo "TIPNR57 RESULT: STOP - src is not the 11/1 copy as recorded"; exit 1; }
+k=$(h "$P"); echo "pre_8b sha256: $k (expect $XP)"; [ "$k" = "$XP" ] || { echo "TIPNR57 RESULT: STOP - pre_8b is not the 11/6 copy as recorded"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+cp "$U" "$D/check.py" || { echo "TIPNR57 RESULT: STOP - cannot copy the uploaded check program into the run folder"; exit 1; }
+k=$(h "$D/check.py"); echo "check.py sha256 (the uploaded file, as copied into the run folder): $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "TIPNR57 RESULT: STOP - the uploaded check program is not the file CC wrote and tested"; exit 1; }
+echo "=== the read - start $(date -u +%FT%TZ) ==="
+# check.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5) b)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XCHK" \
+  "S=$S" "B=$B" "P=$P" "D=$D" "REPO=$HOME/bible-db" "TL=$TL" "OL=$OL" "BL=$BL" "XTIP=$XTIP" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end $(date -u +%FT%TZ)"
+# --- after: copies unchanged (read-only run) ---
+st1=$(stat -c '%s %Y %n' "$S" "$B" "$P")
+echo "src, built, pre_8b: size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+pc1=$(find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s 2>/dev/null | sha256sum | cut -c1-16)
+echo "Python cache folders in the checkout before = after: $([ "$pc1" = "$pc0" ] && echo yes || echo NO) ($pc0 / $pc1)"
+[ "$pc1" = "$pc0" ] || { echo "TIPNR57 RESULT: STOP - a Python cache file appeared or changed in the checkout - report this as printed"; exit 1; }
+EU scripts/eu_step.py check --tag TIPNR57 --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "TIPNR57 RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+case "$r2" in
+  0) echo "TIPNR57 RESULT: READ - $(date -u +%FT%TZ) - the figures and lists above go to the ruling chat as printed"; exit 0 ;;
+  3) echo "TIPNR57 RESULT: FINDING - $(date -u +%FT%TZ) - the findings above (and $D/check.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "TIPNR57 RESULT: STOP - the read stopped or did not finish (exit $r2; $D/check.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The TIPNR57 check program — the file JP uploads (`tipnr57_check_20261119.py`, sha256 331dc30f…bffc = XCHK)
+```python
+# TIPNR57 - the import_tipnr -57 read (READ-ONLY; DESIGN 9.204: list / attribute the 57 lost import_tipnr matches,
+# 10/25 run 31,649 -> built 31,592, and compare the tipnr table built vs src).
+# argv KEY=VALUE: S src db · B built db · P pre_8b db · D run folder · REPO the checkout · TL built's tail log (tail v3) ·
+# OL the 10/25-equivalent tail log (finish_pnstar2.log) · BL BSTD's finish.out (read-out only) · XTIP the cert pin of tipnr/TIPNR.txt
+#
+# HOW. import_tipnr decides each name cell from two things only: the cell's English and the book's testament
+# (import_tipnr.py :380-389 the select, :660-680 the loop, at d34d6723). It writes is_pn = 1 on every '*' cell, matched
+# or not (:717-724). Two other writers of is_pn = 1: fix_pn_subject_merge (in-build, build_words_from_abp.py :2842-2846;
+# its rows are written with strongs_base '*', fix_pn_subject_merge.py :323-326, so the import selects them anyway) and
+# fix_kyrios_mistags (tail, AFTER the import: the 2 Cyrus rows, :10-12 + :59 there - not in the import's input). So on
+# each copy the cells with is_pn = 1 are the cells its import looked at, plus those Cyrus rows. This program runs the REAL,
+# unchanged import_tipnr.main() over those cells' English as each copy holds it NOW - in an in-memory database only
+# (sqlite ":memory:"; the script's connect is pointed at it; its fixture check, which needs the whole corpus, is
+# stubbed out). Every database file is opened mode=ro + query_only; nothing is written except this program's outputs in D.
+# Then: (1) a control with known answers; (2) the tipnr table, src vs built vs the pinned file's own parse; (3) on
+# each copy the matcher's Matched line beside the tail log's; (4) pre_8b (built before 8b, = the build + tail
+# output, BSTD 9.173): the matcher's decision vs the number the import stored, cell by cell - how far "English now"
+# is from "English at the import"; (5) src vs built and pre_8b vs built, cell by cell; (6) the 57 as a sum of terms.
+# Exit 0 = READ · 3 = FINDING (tipnr differs src vs built, or a cell with the same English on both copies and a
+# different decision) · 2 = STOP (an input missing, the control did not fire, the matcher did not finish).
+import hashlib
+import importlib.util
+import io
+import os
+import re
+import sqlite3
+import sys
+import types
+from collections import Counter, defaultdict
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+
+sys.dont_write_bytecode = True   # importing the repo's scripts must leave no cache files in ~/bible-db/scripts (reviewer, 11/20)
+A = dict(a.split("=", 1) for a in sys.argv[1:])
+S, B, P, D, REPO = A["S"], A["B"], A["P"], A["D"], A["REPO"]
+findings = []
+MATCHED = re.compile(r"Matched\s*:\s*([\d,]+)")
+UNMATCHED = re.compile(r"Unmatched:\s*([\d,]+) words\s*\(([\d,]+) distinct")
+
+
+def stop(why):
+    print("TIPNR57 CHECK: STOP - " + why)
+    sys.exit(2)
+
+
+def ro(p):
+    c = sqlite3.connect("%s?mode=ro" % Path(p).resolve().as_uri(), uri=True)
+    c.text_factory = lambda b: b.decode("utf-8", "surrogateescape")
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def figures(text):
+    """Matched / Unmatched / distinct from the FIRST import_tipnr run in a log or an output."""
+    lines = text.splitlines()
+    start = next((i for i, l in enumerate(lines) if "import_tipnr.py" in l), 0)
+    m = u = None
+    for l in lines[start:]:
+        if m is None and MATCHED.search(l):
+            m = int(MATCHED.search(l).group(1).replace(",", ""))
+        if u is None and UNMATCHED.search(l):
+            g = UNMATCHED.search(l)
+            u = (int(g.group(1).replace(",", "")), int(g.group(2).replace(",", "")))
+        if m is not None and u is not None:
+            break
+    return m, u
+
+
+# ---- the real matcher, pointed at an in-memory database ----
+tip = Path(REPO) / "tipnr" / "TIPNR.txt"
+if not tip.is_file():
+    stop("the pinned TIPNR file is missing: %s (import_tipnr would DOWNLOAD instead - not run)" % tip)
+k = hashlib.sha256(tip.read_bytes()).hexdigest()
+print("tipnr/TIPNR.txt sha256 %s (cert pin %s): %s" % (k, A["XTIP"], "same" if k == A["XTIP"] else "DIFFERENT"))
+if k != A["XTIP"]:
+    stop("tipnr/TIPNR.txt is not the pinned file")
+for f in ("import_tipnr.py", "tipnr_alias_variants.py"):
+    print("scripts/%s sha256 %s" % (f, hashlib.sha256((Path(REPO) / "scripts" / f).read_bytes()).hexdigest()))
+HOLD = {}
+
+
+class _Conn:
+    """the import's connection: every call goes to the in-memory database; close() is left to this program."""
+    def __init__(self, c):
+        object.__setattr__(self, "_c", c)
+
+    def __getattr__(self, n):
+        return getattr(self._c, n)
+
+    def __setattr__(self, n, v):
+        setattr(self._c, n, v)
+
+    def close(self):
+        pass
+
+
+def _connect(*_a, **_k):
+    return _Conn(HOLD["mem"])
+
+
+sys.modules["check_p2_guard_fixture"] = types.SimpleNamespace(check_guard_fixture=lambda conn: (True, []))
+sys.path.insert(0, str(Path(REPO) / "scripts"))
+sys.argv = ["import_tipnr.py", ":memory: (TIPNR57)"]
+spec = importlib.util.spec_from_file_location("import_tipnr_t57", str(Path(REPO) / "scripts" / "import_tipnr.py"))
+MOD = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(MOD)
+if MOD.DRY_RUN or MOD.DOWNLOAD_TIPNR or MOD.TIPNR_PINNED != str(tip):
+    stop("import_tipnr did not load as expected (dry run / download / pinned path)")
+MOD.sqlite3 = types.SimpleNamespace(connect=_connect, Row=sqlite3.Row)
+
+
+def run_matcher(label, verses, rows, bdb, lex):
+    """verses: [(id, book)] · rows: [(word id, verse_id, english)] -> ({word id: number or '*'}, figures, tipnr rows)"""
+    mem = sqlite3.connect(":memory:")
+    mem.execute("CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT)")
+    mem.executemany("INSERT INTO verses VALUES (?, ?)", verses)
+    mem.execute("CREATE TABLE words (id INTEGER PRIMARY KEY, verse_id INTEGER, english TEXT, strongs_base TEXT,"
+                " is_pn INTEGER)")
+    mem.executemany("INSERT INTO words VALUES (?, ?, ?, '*', 0)", rows)
+    mem.execute("CREATE TABLE bdb (strongs_id TEXT)")
+    mem.executemany("INSERT INTO bdb VALUES (?)", bdb)
+    mem.execute("CREATE TABLE lexicon (strongs TEXT)")
+    mem.executemany("INSERT INTO lexicon VALUES (?)", lex)
+    mem.commit()
+    HOLD["mem"] = mem
+    buf = io.StringIO()
+    try:
+        with redirect_stdout(buf), redirect_stderr(buf):
+            MOD.main()
+    except SystemExit as e:
+        buf.write("\n(SystemExit %s)\n" % e.code)
+    except Exception as e:  # noqa: BLE001 - reported, then STOP
+        buf.write("\n(EXCEPTION %r)\n" % e)
+    out = buf.getvalue()
+    (Path(D) / ("matcher_%s.out" % label)).write_text(out, encoding="utf-8")
+    if "words still strongs_base='*'" not in out:
+        stop("the matcher did not finish on %s (D/matcher_%s.out)" % (label, label))
+    mem.row_factory = None   # import_tipnr set sqlite3.Row on the connection (:346)
+    dec = dict(mem.execute("SELECT id, strongs_base FROM words"))
+    tips = sorted(mem.execute("SELECT strongs, name, entity_type, entity_types FROM tipnr"))
+    mem.close()
+    m, u = figures(out)
+    wrote = sum(1 for v in dec.values() if v != "*")
+    if m != wrote:
+        stop("%s: the matcher printed Matched %s but wrote %d numbers" % (label, m, wrote))
+    return dec, (m, u), tips
+
+
+# ---- (1) control: known answers, each must come out as declared (charter 4: a control fires before any figure counts) ----
+print("=== (1) control: the matcher on 6 made-up cells with known answers ===")
+CV = [(1, "Mat"), (2, "Gen")]
+CR = [(1, 1, "Jesus"), (2, 2, "Abraham"), (3, 2, "of Egypt,"), (4, 2, "Qzxqzx"), (5, 2, ""), (6, 1, "Jesus--")]
+CX = {1: "G2424", 2: "H85", 3: "H4714", 4: "*", 5: "*", 6: "G2424"}
+dec, fig, tip_parse = run_matcher("control", CV, CR, [("H85",), ("H4714",)], [("2424",)])
+ok = all(dec[i] == CX[i] for i in CX) and fig == (4, (1, 1))
+for i, _v, e in CR:
+    print("  %-10r -> %-6s (expect %s)" % (e, dec[i], CX[i]))
+print("  Matched %s / Unmatched %s (expect 4 / (1, 1)) - CONTROL %s" % (fig[0], fig[1], "FIRED" if ok else "MISSED"))
+if not ok:
+    stop("the control did not come out as declared")
+
+# ---- (2) the tipnr table: src vs built, each vs the pinned file's own parse ----
+print("=== (2) the tipnr table: src vs built (and pre_8b), each vs the pinned file as import_tipnr parses it ===")
+conns = {"src": ro(S), "built": ro(B), "pre_8b": ro(P)}
+tabs = {}
+for name, c in conns.items():
+    cols = [r[1] for r in c.execute("PRAGMA table_info(tipnr)")]
+    tabs[name] = sorted(c.execute("SELECT strongs, name, entity_type, entity_types FROM tipnr")) if cols else None
+    t = tabs[name]
+    print("  %-7s columns %s - rows %s - sha256 of the sorted rows %s - = the file's parse (%d rows): %s"
+          % (name, cols, "none" if t is None else len(t),
+             "-" if t is None else hashlib.sha256(repr(t).encode("utf-8")).hexdigest()[:16],
+             len(tip_parse), "-" if t is None else ("yes" if t == tip_parse else "NO")))
+
+
+def tdiff(a, b, an, bn):
+    ka, kb = {r[0]: r for r in a}, {r[0]: r for r in b}
+    only_a, only_b = sorted(set(ka) - set(kb)), sorted(set(kb) - set(ka))
+    other = sorted(s for s in set(ka) & set(kb) if ka[s] != kb[s])
+    print("  %s vs %s: only on %s %d - only on %s %d - same strongs, other fields %d - duplicate keys %d / %d"
+          % (an, bn, an, len(only_a), bn, len(only_b), len(other), len(a) - len(ka), len(b) - len(kb)))
+    for s in only_a:
+        print("    only on %s: %r" % (an, ka[s]))
+    for s in only_b:
+        print("    only on %s: %r" % (bn, kb[s]))
+    for s in other:
+        print("    %s %r  |  %s %r" % (an, ka[s], bn, kb[s]))
+    return not (only_a or only_b or other) and len(a) == len(b)
+
+
+if tabs["src"] is None or tabs["built"] is None:
+    findings.append("tipnr table missing on src or built")
+else:
+    if not tdiff(tabs["src"], tabs["built"], "src", "built"):
+        findings.append("tipnr table: built differs from src (rows above)")
+    print("  TIPNR TABLE built vs src: %s" % ("SAME, row for row" if tabs["src"] == tabs["built"] else "DIFFERS"))
+
+# ---- (3) the matcher on each copy's name cells (is_pn = 1), English as held now ----
+print("=== (3) the matcher on each copy's name cells (is_pn = 1), English as each copy holds it now ===")
+logs = {}
+for key, what in (("OL", "src: the 10/25-equivalent tail log"), ("TL", "built: tail v3 log"), ("BL", "pre_8b: BSTD finish.out (read-out)")):
+    p = A[key]
+    if os.path.isfile(p):
+        logs[key] = figures(open(p, encoding="utf-8", errors="replace").read())
+        print("  %s %s: Matched %s / Unmatched %s" % (what, p, logs[key][0], logs[key][1]))
+    else:
+        logs[key] = (None, None)
+        print("  %s %s: MISSING" % (what, p))
+if None in logs["OL"] or None in logs["TL"]:
+    stop("could not read Matched / Unmatched from the tail v3 log or the 10/25-equivalent log")
+side = {}
+for name, c in conns.items():
+    refs = {i: (b, ch, v) for i, b, ch, v in c.execute("SELECT id, book, chapter, verse FROM verses")}
+    n = c.execute("SELECT count(*) FROM words").fetchone()[0]
+    k = c.execute("SELECT count(*) FROM (SELECT DISTINCT verse_id, position FROM words)").fetchone()[0]
+    if n != k:
+        stop("%s: %d word rows but %d distinct verse + position keys" % (name, n, k))
+    cells = {}
+    for wid, vid, pos, eng, sb in c.execute("SELECT id, verse_id, position, english, strongs_base FROM words"
+                                            " WHERE is_pn = 1"):
+        cells[(refs[vid], pos)] = dict(id=wid, vid=vid, eng=eng, sb=sb, pn=1, ref=refs[vid], pos=pos)
+    side[name] = dict(refs=refs, vid={r: i for i, r in refs.items()}, cells=cells, rows=n, conn=c)
+    rows = [(x["id"], x["vid"], x["eng"]) for x in cells.values()]
+    dec, fig, _t = run_matcher(name, [(i, r[0]) for i, r in refs.items()], rows,
+                               c.execute("SELECT strongs_id FROM bdb").fetchall(),
+                               c.execute("SELECT strongs FROM lexicon").fetchall())
+    for x in cells.values():
+        x["dec"] = dec[x["id"]]
+    blank = sum(1 for x in cells.values() if not (x["eng"] or "").strip())
+    emd = sum(1 for x in cells.values() if "—" in (x["eng"] or ""))
+    side[name]["fig"] = fig
+    print("  %-7s words %d - name cells %d (English blank %d, with an em dash %d) - the matcher now: Matched %s /"
+          " Unmatched %s" % (name, side[name]["rows"], len(rows), blank, emd, fig[0], fig[1]))
+
+
+def ref_s(r):
+    return "%s %d:%d" % r
+
+
+# ---- (4) pre_8b: the matcher's decision vs the number the import stored ----
+print("=== (4) pre_8b (build + tail output, before 8b): the matcher now vs the number stored, cell by cell ===")
+pc = side["pre_8b"]["cells"]
+stored = sum(1 for x in pc.values() if x["pn"] == 1 and x["sb"] != "*")
+dis = sorted((x for x in pc.values() if x["pn"] == 1 and x["dec"] != x["sb"]), key=lambda x: (x["ref"], x["pos"]))
+print("  stored numbers on name cells %d - cells where the matcher now gives another answer %d" % (stored, len(dis)))
+for x in dis:
+    print("    %-12s @%-3d english %r  stored %s  matcher now %s" % (ref_s(x["ref"]), x["pos"], x["eng"], x["sb"], x["dec"]))
+
+
+# ---- (5) cell by cell: a vs b, matched cells paired per verse (same position + number, then same number) ----
+def compare(an, bn):
+    a, b = side[an]["cells"], side[bn]["cells"]
+
+    def by_verse(cells):
+        d = defaultdict(list)
+        for x in cells.values():
+            if x["pn"] == 1 and x["dec"] != "*":
+                d[x["ref"]].append(x)
+        return d
+    va, vb = by_verse(a), by_verse(b)
+    lost, gained, moved = [], [], []
+    for ref in sorted(set(va) | set(vb)):
+        la, lb = list(va.get(ref, [])), list(vb.get(ref, []))
+        for x in list(la):
+            h = next((y for y in lb if y["pos"] == x["pos"] and y["dec"] == x["dec"]), None)
+            if h:
+                la.remove(x)
+                lb.remove(h)
+        for x in list(la):
+            h = next((y for y in lb if y["dec"] == x["dec"]), None)
+            if h:
+                la.remove(x)
+                lb.remove(h)
+                moved.append((x, h))
+        lost += la
+        gained += lb
+
+    def cell(sd, ref, pos):
+        """the other copy's cell at the same verse + position: its name cell, else read from the copy (read-only)"""
+        o = sd["cells"].get((ref, pos))
+        if o is None and ref in sd["vid"]:
+            r = sd["conn"].execute("SELECT english, strongs_base, is_pn FROM words WHERE verse_id = ? AND position = ?",
+                                   (sd["vid"][ref], pos)).fetchone()
+            if r:
+                o = dict(eng=r[0], sb=r[1], pn=r[2], dec=None)
+        return o
+
+    def cls(x, other):
+        o = cell(other, x["ref"], x["pos"])
+        if o is None:
+            return "NO-CELL", o
+        if o["pn"] != 1:
+            return "NOT-A-NAME-CELL", o
+        if (o["eng"] or "") == (x["eng"] or ""):
+            return "SAME-TEXT", o
+        return "TEXT-CHANGED", o
+
+    tally = Counter()
+    print("  %s vs %s - MOVED (same number, other cell of the verse; not a loss) %d" % (an, bn, len(moved)))
+    for x, h in moved:
+        print("    MOVED %-12s %s  %s @%d %r -> %s @%d %r" % (ref_s(x["ref"]), x["dec"], an, x["pos"], x["eng"], bn,
+                                                         h["pos"], h["eng"]))
+    for title, rows, there, hn, tn in (("LOST", lost, side[bn], an, bn), ("GAINED", gained, side[an], bn, an)):
+        print("  %s (%d): matched on %s, not on %s" % (title, len(rows), hn, tn))
+        names = Counter()
+        for x in sorted(rows, key=lambda r: (r["ref"], r["pos"])):
+            c, o = cls(x, there)
+            tally[(title, c)] += 1
+            names[x["eng"]] += 1
+            oo = "no cell" if o is None else "%r is_pn %s now %s%s" % (o["eng"], o["pn"], o["sb"],
+                                                                        "" if o["pn"] != 1 else " matcher %s" % o["dec"])
+            print("    %-6s %-12s @%-3d %s %r -> %s  |  %s same cell: %s  [%s]"
+                  % (title, ref_s(x["ref"]), x["pos"], hn, x["eng"], x["dec"], tn, oo, c))
+        print("    by English: " + ", ".join("%r %d" % kv for kv in sorted(names.items(), key=lambda kv: (-kv[1], kv[0]))))
+    print("  classes: " + ", ".join("%s %s %d" % (t, c, n) for (t, c), n in sorted(tally.items())))
+    same = tally[("LOST", "SAME-TEXT")] + tally[("GAINED", "SAME-TEXT")]
+    return len(lost), len(gained), same
+
+
+print("=== (5) cell by cell ===")
+r_sb = compare("src", "built")
+r_pb = compare("pre_8b", "built")
+for (an, bn), r in ((("src", "built"), r_sb), (("pre_8b", "built"), r_pb)):
+    if r[2]:
+        findings.append("%s vs %s: %d cell(s) with the same English and a different decision" % (an, bn, r[2]))
+
+# ---- (6) the 57 as a sum of terms ----
+X, Y, Q = side["src"]["fig"][0], side["built"]["fig"][0], side["pre_8b"]["fig"][0]
+OLm, TLm, BLm = logs["OL"][0], logs["TL"][0], logs["BL"][0]
+up = sum(1 for x in dis if x["dec"] != "*" and x["sb"] == "*")
+down = sum(1 for x in dis if x["dec"] == "*" and x["sb"] != "*")
+print("=== (6) the 57 as a sum: 10/25 log %d - tail v3 log %d = %d (the terms add up by construction; what each term"
+      " rests on is the point) ===" % (OLm, TLm, OLm - TLm))
+terms = [("10/25 log - src now: src's English moved after its import (tail patches, 8b.2a, any later write); no"
+          " pre-8b copy of that run exists, so a COUNT only, not listed", OLm - X),
+         ("src now - built now: section 5 src vs built, lost %d - gained %d" % r_sb[:2], X - Y),
+         ("built now - pre_8b now: section 5 pre_8b vs built, gained %d - lost %d (8b.2a + the pre_8b -> built named"
+          " list)" % (r_pb[1], r_pb[0]), Y - Q),
+         ("pre_8b now - pre_8b stored: section 4, matcher number where '*' is stored %d - '*' where a number is stored"
+          " %d" % (up, down), Q - stored)]
+if BLm is not None:
+    terms += [("pre_8b stored - BSTD finish.out (T_b = pre_8b, 9.173): numbers set after the import by a tail step"
+               " (fix_kyrios_mistags' Cyrus rows) or other-number cells", stored - BLm),
+              ("BSTD finish.out - tail v3 log: the build's code between 11/4 and d34d6723", BLm - TLm)]
+else:
+    terms += [("pre_8b stored - tail v3 log (BSTD finish.out missing: the two terms in one)", stored - TLm)]
+for t, n in terms:
+    print("  %+6d  %s" % (n, t))
+print("  sum %+d = %d - %d" % (sum(n for _, n in terms), OLm, TLm))
+if X - Y != r_sb[0] - r_sb[1] or Y - Q != r_pb[1] - r_pb[0] or Q - stored != up - down:
+    stop("a section-5 count does not equal its matcher figures (src - built %d vs %d; built - pre_8b %d vs %d)"
+         % (X - Y, r_sb[0] - r_sb[1], Y - Q, r_pb[1] - r_pb[0]))
+for c in conns.values():
+    c.close()
+print("TIPNR57 CHECK: %s" % ("READ - the figures and lists above go to the ruling chat" if not findings else
+                             "FINDING - " + " | ".join(findings)))
+sys.exit(0 if not findings else 3)
+```
+
+### TIPNR57 reviewed, first pass (11/20) — REVIEW: ESCALATE (verbatim below); both points fixed, re-tested, back to the reviewer
+The reviewer read the first draft (block sha 24a6a47c…a3ba, XCHK dca33f2a…2def). Its text, verbatim:
+> REVIEW: ESCALATE - the block is not read-only as claimed: running import_tipnr in-process can write compiled-code cache files into the PA checkout (scripts/__pycache__), and the program's "only other writer of is_pn = 1" claim leaves out fix_pn_subject_merge.
+>
+> For the ruling chat (block TIPNR57, DRAFT_stageC_outline.md, block :15728-15790, program :15795-16148, XCHK dca33f2a…2def):
+>
+> What the block does: it runs under GATE REF d34d6723, does eu_step pre, the git and porcelain checks on tipnr/ and cert_manifest.json, the HEADFIX2 "built =" check before and after, and the src and pre_8b sha checks. It then runs the uploaded, sha-pinned check program through the read-once launcher. The program opens src, built and pre_8b with mode=ro and query_only (:15837-15841). It also runs the unchanged import_tipnr.main() in-process against sqlite ":memory:" databases.
+>
+> What stopped it:
+>
+> 1. Wrapper / scope (write in the PA checkout). The program loads the repo's own code as modules: `spec.loader.exec_module` on scripts/import_tipnr.py (:15895-15897), and through it `from tipnr_alias_variants import VARIANT_ALIASES` (import_tipnr.py:37). Python's normal loader writes a compiled-code cache to ~/bible-db/scripts/__pycache__/ whenever one is missing or stale. Nothing in the launcher (:15768-15777) or in EU() (:15750) turns that off: no PYTHONDONTWRITEBYTECODE and no sys.dont_write_bytecode. import_tipnr is normally run as a script (finish_rebuild.sh:33), and Python does not cache a script that is run directly. eu_step.py imports nothing from the repo (eu_step.py:39-47). So this is the first block in the lane to import repo scripts in-process, and the cache file may well not exist yet. The files are gitignored (.gitignore:12-13), so the porcelain check would not see them. Under the 2026-11-06 definition, though, the PA checkout counts as a write, and the header line (:15734) says "writes only its run folder and this log". I cannot tell from the repo whether those cache files already exist on PA, so the claim cannot be cleared (stop rule). Suggested fix: add `export PYTHONDONTWRITEBYTECODE=1` (or `sys.dont_write_bytecode = True` in the program before the import), then re-test. Changing the program changes XCHK and the block sha, so the tests must be re-run.
+>
+> 2. Method claim (3) is false as written. The program comment (:15801-15803) says import_tipnr "is the only writer of is_pn = 1 apart from fix_kyrios_mistags". fix_pn_subject_merge.py:229 + :323-326 also writes `is_pn=1`, and the build calls it in-build (build_words_from_abp.py:2842-2846) on a copy-first rebuild, where the is_pn column already exists. Those rows are written with strongs_base='*' (:324), so import_tipnr selects them anyway (import_tipnr.py:381-387). The conclusion still stands: the is_pn = 1 cells are the import's input set, apart from fix_kyrios_mistags. The stated reason is incomplete, though, and it sits inside the sha-pinned text the ruling chat will read. Correct it when the program is re-pinned.
+>
+> Checked and in order:
+> - The connect redirect: sqlite3 is swapped on the module after the load (:15900), and main() calls `sqlite3.connect(DB)` (import_tipnr.py:345).
+> - The DRY_RUN guard: if it were on, import_tipnr.py:694 would write unmatched_pn.txt into ~/bible-db. The program STOPs on DRY_RUN or DOWNLOAD (:15898-15899).
+> - The download branch: blocked by the is_file and pin checks (:15862-15867, import_tipnr.py:317-323).
+> - check_p2_guard_fixture: stubbed (:15892, import_tipnr.py:741).
+> - tipnr_alias_variants: opens nothing.
+> - Decisions depend only on english.strip() and testament: import_tipnr.py:660-679, with DIRECT checked against bdb/lexicon only for a warning (:643-658).
+> - The tipnr refill: :371-374.
+> - The guards STOP before any read: block :15753-15765.
+> - The test ranges in the section (:4-89, 90-92, 93-98, 99-112, 113-118, 119-124, 125-128, 129-132, 133-148, 149-164, 165-170) match the headers in TIPNR57_tests_20261119.txt.
+>
+> I did not trace the sha figures (XS, XP, XTIP) or the log figures (31,649 / 31,592) to their cited lines, because the block was already stopped on items 1 and 2.
+>
+> Ruling that would settle it: either (a) send the block back to CC with the cache write switched off and the is_pn writer comment corrected, then re-test and re-pin, and bring it back for review; or (b) rule that compiled-code cache files under the gitignored scripts/__pycache__ are not a "write" for this lane.
+
+(The line numbers in that text are the first draft's, in this file's earlier layout; the section was rewritten in place.)
+**CC took (a) — the reviewer's own fix, nothing more:** (1) `export PYTHONDONTWRITEBYTECODE=1` in the block; `sys.dont_write_bytecode =
+True` in the program before any repo script loads; the checkout's `__pycache__` folders listed before and after, a change = STOP (T1 / T9
+yes, T1b 0 folders, T12 the guard fires on a planted .pyc). (2) The comment and this section now name fix_pn_subject_merge (rows written as
+`'*'`, so selected by the import) and fix_kyrios_mistags (after the import, not in its input). Re-pinned: XCHK 331dc30f…bffc, block
+0144cf99…2daf; every test re-run (the tests file holds the re-run). Nothing else in the block or program changed.
+
+### TIPNR57 reviewed, second pass (11/20) — REVIEW: CLEAR (read-only, §9.90); verbatim below. NOT cleared to run: that is the ruling chat's
+> REVIEW: CLEAR - Block TIPNR57 is now a read-only block in scope (DESIGN sec 9.204 asks for it as one). The cache-file write is switched off and has a before/after STOP, the is_pn writer comment is corrected, and every expected figure traces to a source.
+>
+> The block is DR C:\Users\JP\projects\bible-db\docs\handoffs\DRAFT_stageC_outline.md :15734-15801 (sha 0144cf99…2daf as stated). It is cleared unchanged and in full, as it stands in that file. CC prints those lines verbatim under this CLEAR line. The check program it runs is DR :15806-16162, XCHK 331dc30fab1f26e78e69f813d6c0ca26aba05599caeb63aa125e6138515ebffc.
+>
+> First-pass items, now fixed:
+> - `export PYTHONDONTWRITEBYTECODE=1` is at :15740.
+> - `sys.dont_write_bytecode = True` is at :15838, before the repo scripts load (spec / exec_module at :15909-15911).
+> - The __pycache__ fingerprint is taken before (:15741) and after (:15790-15792), with a STOP if it changed.
+> - Known positive: T12 (tests :177-179) shows the guard printing NO when a cache file appears. T1b (:174-176) shows no cache folder after a clean run.
+> - The is_pn comment (:15811-15816) now names fix_pn_subject_merge (build_words_from_abp.py:2842-2846, fix_pn_subject_merge.py:323-326, rows written as '*') and fix_kyrios_mistags. This matches the code.
+> - Still holding from the first pass: the connect redirect, the DRY_RUN and download stops, the fixture stub, mode=ro + query_only, and the guards that STOP before any read.
+>
+> Expected figures and their sources:
+> - XS 5da9bb95…7e01: HANDOFF_edition_upgrade_stageE.md:111 (src, 451,964,928 B). Matches.
+> - XP a4faa4d8…0107: DR :12384-12385, "pre_8b full sha256 as printed (§9.171 (5), now the recorded value)". Matches. One note: DR :12385-12386 also says this value is still to be matched against the xref8b0_20261106.log line on PA. The block's STOP on any other sha protects the run either way.
+> - XTIP 1a3b7d7d…637c: cert_manifest.json:305-306. Matches. The block's `git diff --quiet d34d6723 HEAD -- tipnr cert_manifest.json` holds the pin to d34d6723 on PA.
+> - 31,649 / 683 (648), the 10/25-equivalent finish_pnstar2.log, and 31,592 / 734 (687), tail v3: HANDOFF_edition_upgrade_stageC_tail.md:57, row "import_tipnr Matched / Unmatched / still `*`". Matches.
+> - Control answers (G2424, H85, H4714, *, not selected, G2424; Matched 4 / Unmatched (1, 1)): these follow from the program's own set-up and import_tipnr.py:583-683 (find_entry: the "of " strip, the trailing dash strip, the testament pick; blank English is left out of the select at :386).
+> - tipnr built = src: import_tipnr.py:371-374 refills the table from the pinned file.
+> - Exit codes: READ 0, FINDING 3 (the block exits 1), STOP 2 or 4 (the block exits 1). Program :16158-16162 and block :15796-15800.
+>
+> Wrapper and tripwires:
+> - Wrapper: GATE REF line, scripts/tests code check via eu_step pre (STEP5INV / STEP6AUD form), extra git diff and porcelain checks on tipnr/ and cert_manifest.json, a dated log that is never overwritten (tripwire 9 guard at :15736), expected figures stated in the request, exit code printed, no pull, no database copy, the three untracked files not touched. All present.
+> - Tripwires: no `!` in the block; the only grep-style read uses `<<<`; nothing else hit.
+> - Minor, not blocking: the pc0 `find` (:15741) runs before the GATE REF line. It prints nothing unless find hits an error, and those errors would go into the log.
+>
+> Test cites match C:\Users\JP\projects\bible-db\docs\handoffs\drafts\TIPNR57_tests_20261119.txt, including T1b :174-176 and T12 :177-179.
+>
+> This CLEAR is a block clearance under sec 9.90, not a receipt of results. It confirms no output. No push while the block waits (sec 9.76).
+
+**CC's note on the last line:** the push that records this (docs + the test harness under docs/handoffs/drafts only) changes nothing under
+scripts/, tests/, tipnr/ or cert_manifest.json, which is all the block's code guards read on PA, and PA does not pull for this block. Both
+drafts (the step-7 PLAN and TIPNR57) go to the ruling chat in one paste; JP runs TIPNR57 only on the ruling chat's clearance.
