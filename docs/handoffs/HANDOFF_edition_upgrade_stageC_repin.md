@@ -77,7 +77,8 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   Gen 34:4 pos 1/2, Jdg 11:7 pos 6/7, Jos 2:4 pos 19/20, Jos 5:15 pos 26/27, Rom 9:29 pos 17/18 — whole-row moves
   into the edition's English order (census `strongs_pos_census2_20261106.log`); confirm each against eSword/ABP.
   **JP 11/20 (§9.214): the APP EDITION rules (charter §0.1); eSword is a witness only — only a verse where built
-  matches NEITHER eSword NOR the app feed is brought (ruling chat + JP).**
+  matches NEITHER eSword NOR the app feed is brought (ruling chat + JP).** **CLOSED 11/20 (§9.216): eSword read set aside
+  by JP; built = feed at all 10 pairs and a fresh read of the app pages = feed for all 10 (DR "### P2 — the 10 reorder verses").**
 - **L9 split lint on built (charter §4.2) — OPEN by name, FIRST on the list after the swap** (JP, §9.214, 11/20;
   §4.2 set aside for the swap). Needs new code: a lint mode that replays the split through the app-feed transplant
   (`lint_split_wrong_slot.py` + its sizing partner `size_split_compounds.py`); new REF, PA pull, tests, a

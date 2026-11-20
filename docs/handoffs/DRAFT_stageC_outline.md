@@ -17403,3 +17403,62 @@ and PA's Disable / Enable help.
   whole.** No change asked now; that removal is its own ruled block (§9.213 Q5 terms; charter §7).
 - **STILL OWED BEFORE P6:** P2's sheets + JP's eSword read; P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2
   code read; PA's Disable / Enable behaviour; the swap commit's diff; the rollback block. (--keep: answered above.)
+
+### P2 — the 10 reorder verses, closed without an eSword read (§9.216, 11/20)
+**JP's ruling (ruling chat, 11/20):** no eSword read ("esword is the old version, we have the abp app"); §9.93 (b)'s eSword witness is set
+aside for this lane, following Q11 (§9.214). Noted beside §9.93 (b). In its place, CC's two local checks; no JP hand-work, no PA.
+Scripts: `docs/handoffs/drafts/P2_harness/sheets.py` (sha `574b90ee…0c`) and `fresh_compare.py` (`5c3ffb38…7b65`). Outputs are kept
+OUTSIDE the repo (verse text) at `C:\Users\JP\edition_upgrade_runs\p2_20261120\`: sheets.out `dc556855…541e`, sheets_control.out
+`1878457a…9944`, fresh.out `ee13c65b…02eb`, fresh_control.out `cd3c56c1…9140`, and fresh_pages/ (the 9 pages, shas in fresh.out).
+Inputs: words_moved.tsv `d32361b3…0f08`, words_cells.tsv `86e44c58…fdafc` (both hash-checked, §9.215), and the feed
+`abp_app_html/abp_app_slots_italic.tsv`, whose sha fresh_compare checks first: 7bd77385…cf63 = the pin (charter :69-72).
+
+**(1) Built's order = the feed's, all 10 pairs (20 rows): YES.** Per verse, the sheet prints the feed's slots, each moved row (src @a →
+built @b, number, built English, greek_pos, bracket), src's English at the same two positions, and both copies' reading order. "Order"
+is the English **reading** order: the reader's own rule (scripts/reorder_english.py :24-27, :30-72) reads rows in one bracket group by
+greek_pos, ties in position order, and rows outside brackets in position order. A cell not in words_cells is equal on both copies; the
+sheet follows the moved rows to a listed value, or prints it as "same on both, unlisted".
+
+| Verse | built reads | feed | src reads (old) | built = feed |
+|---|---|---|---|---|
+| 2Ki 23:35 | @6 Jehoiakim, @7 gave (both gp 1, one bracket) | slot 6 "1Jehoiakim gave]" [1325-*] | Jehoiakim, gave (bracket, gp 1/2) | YES |
+| Est 5:9 | @12 Haman's, @13 seeing (no bracket) | slot 11 "Haman's seeing" [1492-*] | Haman, seeing (bracket 2, gp 1/2) | YES |
+| Eze 20:14 | @7 thorough one, @8 should not | slots 6, 7 "thorough one," / "should not be profaned" | should not, be thoroughly | YES |
+| Gen 5:25 | @1 Mathusala, @2 lived | slot 1 "Mathusala lived" [2198-*] | Methuselah, lived (bracket 1) | YES |
+| Gen 5:26 | @1 Mathusala, @2 lived, | slot 1 "Mathusala lived," [2198-*] | Methuselah, lived (bracket 1) | YES |
+| Gen 34:4 | @1 Shechem, @2 said | slot 0 "And Shechem said" [2036-1161-*] | said, Shechem | YES |
+| Jdg 11:7 | @6 Is it not, @7 that you | slots 5, 6 "Is it not" / "that you" | Did you, not | YES |
+| Jos 2:4 | @19 I do not, @20 know | slot 19 "I do not know" [3756-1492] | I know, not | YES |
+| Jos 5:15 | @27 Joshua, @26 did (bracket 2, gp 1/2) | slot 22 "Joshua did" [4160-*] | Josua, did | YES |
+| Rom 9:29 | @17 (302) "we would have been like.", @18 (3666) blank | slot 15 "1we would have been like]." [302-3666] | we would be, like. | YES (*) |
+
+(*) Rom 9:29: the feed prints ONE joined English for both numbers. Built carries it on 302 @17 and leaves 3666 @18 blank, so the row
+order = the slot's number order (302-3666). @17 is in bracket 3 and @18 outside brackets, so the sheet shows position order there and
+does not decide the reading order; one English piece leaves nothing to order.
+- **Read-outs, not findings:** (a) Inside a joined feed slot, built's POSITION order follows the slot's English, not its number order,
+  at 2Ki 23:35, Est 5:9, Gen 5:25, 5:26 and 34:4; at Jos 2:4 the two agree; at Jos 5:15 the position order follows the number order
+  (4160 @26, * @27) and greek_pos gives the reading order. Both kinds read the same as the feed. (b) Jdg 11:7: the feed tags "that you"
+  1473; built's row keeps 5210. That is not an order item and is not traced here. (c) src's reading order already had the name first
+  at 2Ki 23:35, Est 5:9 and Gen 5:25/26 (through brackets), so for those four the move changed the position order, not what the reader
+  reads.
+- **Control:** `sheets.py --control` swaps built's English at Gen 34:4 → that verse prints NO and "ALL 10: NO"; every other verse
+  prints YES (sheets_control.out).
+
+**(2) Where the feed came from, and a fresh read.** The record (charter :60-67): `https://www.apostolicbibleapp.com/Chapters/<Book>
+<n>.html`, one page per chapter, fetched 2026-10-24 by JP on PA with `scripts/fetch_abp_app.py` (no redirects followed; each page's own
+`<title>` checked). The italic column was re-parsed from the cached pages by `scripts/reparse_abp_app_italic.py` (charter :27, §0.6
+Q3), and the frozen file was pinned 10/31 (charter :69-72). **Re-read fresh: done, 11/20 18:05-18:06 UTC**, from this PC: the 9 public
+chapter pages holding the 10 verses (2 Kings 23, Esther 5, Ezekiel 20, Genesis 5, 34, Judges 11, Joshua 2, 5, Romans 9), with curl,
+no redirects (`--max-redirs 0`; all 9 returned 200), about 1 request a second, and a generic user agent. Each page was parsed with the
+repo's OWN parser (`reparse_abp_app_italic.parse_cached_page` → `fetch_abp_app.ChapterParser`, which stops if the `<title>` is wrong;
+all 9 titles matched, no parser anomalies). Each verse was compared with the frozen feed slot by slot, all 9 columns.
+**Result: all 10 verses IDENTICAL** (slot counts 40, 20, 16, 11, 18, 12, 31, 22, 24, 16; fresh.out "ALL 10 fresh = feed: YES").
+Control: `fresh_compare.py --control` changes the fresh Genesis 5:25 slot 1 to "lived Mathusala" → exactly that verse prints NO
+(fresh_control.out). **What this shows, and what it does not:** the app's own pages today carry, for these 10 verses, exactly what the
+frozen feed holds. The same parser read both times, so it is not an independent check of the parser itself; the parser's own controls
+(Gen 25:15, 1Ki 11:14) were not re-run, because those chapters were not fetched.
+
+**(3) Nothing to bring:** no verse where built matches neither the feed nor src, and no verse where the fresh read differs from the feed.
+**P2 CLOSED on (1)-(3)**, not on a JP read (as ruled).
+**Still owed before P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
+behaviour; the swap commit's diff; the rollback block.
