@@ -16482,3 +16482,575 @@ Tested on a scratch folder, Git Bash and WSL Linux (docs/handoffs/drafts/CACHEGU
 
 ### JP's two rulings (§9.210, 11/20)
 The −57: OK, rule set aside for this row (charter §4.8 note), OPEN by name past the swap, no rebuild or read. Mark 1:9: accepted as built (τῆς 'of'), fix after the swap (charter §4.10 note); **Part A's Mark 1:9 expectation = built as it stands, from step 4's G7, declared as JP's departure from §4.10.** Both on the follow-up list (HANDOFF_edition_upgrade_stageC_repin.md :54-62). Still owed by CC: the declared-list lines for Est 5:9 @13, Jos 5:15 @27 and the five MOVED verses (record item); Part A's block.
+
+## Block STEP7A — charter §6 step 7 Part A: the five spot-check verses on built and src — DRAFT (11/20, CC; §9.206 (1), §9.210 (2)) — READ-ONLY
+**What it does.** One read-only block on `built` and `src` (both opened mode=ro + query_only), STEP6AUD / TIPNR57's form: GATE REF
+d34d6723; `eu_step pre` (new run folder); the "built =" HEADFIX2 guard before and after; src's sha before and after; DELTA2's two files,
+B2's prose list and step 5's eligible file sha-checked; `tests/test_reorder_port.py` first (the port = the JS baseline); the check
+program by upload, sha-pinned at copy and as run; size + time of both copies around it. New since TIPNR57: `GIT_OPTIONAL_LOCKS=0`, and
+the cache line lists only the cache folders and what is in them (§9.209 (b)). Writes only its run folder and its log.
+**The check program** (`step7a_check_20261120.py`, below; JP uploads it to `~/edition_upgrade_runs/` through PA's Files page; CC's
+tested file, sha `7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859`; local copy
+`C:\Users\JP\edition_upgrade_runs\step7a_check_20261120.py`):
+- **(0) control:** a third small file (built's five verses with Gen 1:21 @5 english put back to 'whales' and Mark 1:9's text put back to
+  src's) must be reported by the same comparison as two misses → "CONTROL FIRED", else STOP.
+- **(1) three derivations of "what changed src → built", verse by verse:** the five verses' verses rows and all their words rows (every
+  column, values as stored) are copied into two small files in the run folder, and the REAL `scripts/eu_words_delta.py` `run()` — the
+  program that made DELTA2 — compares them. That fresh delta is laid against (a) DELTA2's own lines for these verses on PA and (b) the
+  lines declared in the program. The declared lines are CC's copy of the 11/15 STEP4-DELTA for these verses (local scp of
+  `words_cells.tsv`, sha 62d9c85d…; DR :11183-11186: DELTA2 = that file minus the two Joh 19:18 cells, by sha) and its `verses_cells.tsv`
+  (local sha 870e4782…57f9 = DELTA2's, §9.157). Each verse: fresh = DELTA2 = declared, line for line; only / moved / unpaired 0.
+- **(2) each verse printed in full on both copies:** `verses.text` and its length; the reader's prose order through the port (a read-out
+  beside the text, not judged — v2 judged the corpus at step 6); every word row (position, english, english_head, strongs, strongs_base,
+  greek_pos, bracket_id, is_pn, italic, lexicon lemma by `l.strongs_g = w.strongs_base`); step 5's eligible line and B2's outcome /
+  old_len / new_len (read-outs). Built's text = DELTA2's new text (the three written verses) or = src's (Eze 31:9, 1Ch 1:1).
+- **(3) the named checks** (rebuild-words :192-196; charter :350 / §4.10; §9.206; §9.210): below.
+
+**EXPECTED IN THE LOG, each with its source:**
+| line | expected | source |
+|---|---|---|
+| STEP7A PRE | OK (repo guards; src + built: no -journal, triggers 0; run folder made) | eu_step.py :126-159 |
+| built guard (before and after) | tables NOT written differences 0; words 626309 d95acb5d4be4; abp_corrections 404 d97d928ca7f5; STEP7A CHECK: OK; after exit 0 | §9.209 (1) (CACHE57), §9.156 (3) |
+| src sha256 (before and after) | 5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01 | §9.168 (1); HANDOFF_edition_upgrade_stageE.md "Copies on PA now" |
+| DELTA2 words_cells / verses_cells | 86e44c58…fdafc / 870e4782…57f9 | §9.157 (1) |
+| prose list / eligible file | f2a22ecd…a864 / e540d34d…580f | §9.173 (1); DR :12208-12210 |
+| test_reorder_port | "ok  reorder port reproduces the JS baseline on all 137 fixture verses", exit 0 | DR :1825 (137); STEP6AUD c3_test_reorder_port |
+| check.py sha (copy and as run) | 7e40ccf3…2859 | CC's tested file |
+| (0) | both planted misses CAUGHT; CONTROL FIRED | this program |
+| (1) fresh delta | words_cells 17, verses_cells 3; only / moved / unpaired / verses_only 0 / 0 / 0 / 0; DELTA2's lines in these verses 17 / 3 | the declared lines below |
+| (1) per verse, fresh = DELTA2 | 1Ch 13:10 4 lines (@7 'he struck' → 'struck', @18 'ark.' → 'ark;', @19 'And' → 'and', text) · Eze 31:9 0 · 1Ch 1:1 0 · Gen 1:21 8 (@5 english 'whales' → 'sea monsters', head 'whales' → 'monsters', norm 'whale' → 'monster'; @10 english / head / norm 'life' → 'soul'; @19 'types;' → 'types,'; text) · Mark 1:9 8 (@10 'of the' → 'of', greek_pos None → 1, bracket_id None → 2; @11 'of Galilee,' → 'Galilee,', None → 2, None → 2; @13 'he was immersed' → 'was immersed'; text); all "same: yes" | 11/15 delta lines (= DELTA2 here, DR :11183-11186); §9.157 |
+| (2) built verses.text | 1Ch 13:10 "And the LORD was enraged in anger against Uzza, and struck him there, on account of the stretching out of his hand upon the ark; and he died there before God." · Gen 1:21 "…the great sea monsters, and every soul of living creatures…their types, and…" · Mark 1:9 "…from Nazareth of Galilee, and was immersed by John into the Jordan." (each = DELTA2's verses_cells b); Eze 31:9 and 1Ch 1:1 = src's | DELTA2 verses_cells (870e4782…57f9) |
+| (2) lengths (read-outs) | built 158 / 228 / 113 for 1Ch 13:10 / Gen 1:21 / Mark 1:9; B2 new_len 158 / 228 / 113 | B2 prose list; §9.206 (1): no length expectation from CC's hand count |
+| (3) 1Ch 13:10, both copies | one G2373 row and one G2962 row; one bracket; the LORD's greek_pos lower; no digit in either cell; every slot inside the bracket in it; chip order of the bracket reads "the LORD was enraged"; verses.text holds it | rebuild-words :193-196; charter :350; data-model "Bracket contiguity invariant" |
+| (3) Eze 31:9, both copies | the G2206 row: english 'were jealous of', lexicon lemma ζηλόω (compared in NFC) | rebuild-words :192 |
+| (3) 1Ch 1:1, both copies | one row whose english holds 'Adam'; its pn_hebrew_xref row one row, hebrew_base 'H121'; a pn_binding row (book 13, ch 1, vs 1) named 'adam'; Adam's xref row and the verse's pn_binding rows built = src | rebuild-words :192; DR :15656 (not in the gate-2 pn_binding delta nor the 8B3R identity delta); pn_binding.book = entity_resolution.book_num, canon 1..66 |
+| (3) Gen 1:21 | src: the G2785 row 'whales', text holds 'whales'; built: 'sea monsters', text holds 'sea monsters' and not 'whales' | charter :350; DELTA2 |
+| (3) Mark 1:9, built | text holds 'Nazareth of Galilee,' and not 'of the of'; @10 / @11 / @13 printed on both copies | **§9.210 (2): built as it stands, JP's departure from charter §4.10, declared** |
+| after | src, built size and time before = after: yes; cache folders and contents before = after: yes; built guard after exit 0 | — |
+| RESULT | **READ, exit 0** (FINDING exit 1 if any expectation above is missed, every member printed; STOP exit 1 on a log that exists, pre, a missing input, a sha, the port test, the control, a copy or cache change) | — |
+
+**What it cannot show, stated:** the chip view's own rendering, the word card, the metaV card and the click path (Part B, after step 8's
+reload); any verse beyond these five. The expectations H121 (Adam) and ζηλόω (Eze 31:9) are rebuild-words' own spot-check values; CC has
+no database and has not seen either cell — if either misses, the line says so on both copies (src is the 10/25 rebuild's copy).
+The reader's prose order (the port) is printed beside the text, not gated: the port re-orders bracket groups only, and the real
+`verses.text` is the build's prose — v2 judged the two against each other for the whole corpus at step 6 (§9.204).
+
+**Tests** (`docs/handoffs/drafts/STEP7A_tests_20261120.txt`; harness `docs/handoffs/drafts/STEP7A_harness/`; WSL test homes
+`~/gates7a/*`, each a d34d6723 clone + made-up src / built holding the five verses, rows shaped to give exactly the declared delta lines;
+DELTA2 stand-ins; the REAL prose list and eligible file (shas e540d34d / f2a22ecd); the block as written with only XCHK, XS, XWC, XVC
+swapped): A1 the clean pair → READ, every line as declared, no cache folder left · A2 one built cell more than declared → FINDING
+(fresh vs declared and fresh vs DELTA2) · A3 the LORD's greek_pos above the verb's on built → FINDING (chip order + an undeclared line) ·
+A4 built's Adam xref H122 → FINDING · A5 both copies' G2206 lemma ζηλῶ → FINDING on both · A6 DELTA2 lacking Mark 1:9 @13 → FINDING
+at Mark 1:9 only · A7 re-paste → STOP · A8 the uploaded program one byte changed → STOP before it runs · A9 built changed after the
+guard folder → STOP at the built guard · A10 KNOWN POSITIVE for the cache line: a cache file made in scripts/__pycache__ during the run
+→ STOP · A11 a file made and removed in the checkout folder itself during the run → the cache line holds, READ (the job waits for
+check.py to appear before writing; that it ran before the after-line is not itself timed).
+
+### Block STEP7A (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; check program uploaded; no PA pull; no database copy)
+```bash
+set +H
+L=~/edition_upgrade_runs/step7a_spotcheck_20261120.log
+if [ -e "$L" ]; then echo "STEP7A RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1                                           # no Python cache file written in the checkout
+export GIT_OPTIONAL_LOCKS=0                                                # git status (here and inside eu_step) does not rewrite the checkout's index file
+pcf() { find ~/bible-db \( -name __pycache__ -type d -o -path '*/__pycache__/*' \) -printf '%M %u %g %s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -c1-16; }   # the cache folders and what is in them only (DESIGN 9.209)
+pc0=$(pcf)
+echo "GATE REF ${REF} - STEP7A - charter 6 step 7 Part A: the five spot-check verses on built and src (DESIGN 9.206 (1), 9.210 (2)) - READ-ONLY: both copies opened read-only; writes only its run folder (two small extract files among them) and this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "STEP7A RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+S=~/bible-db/bible_edupg_test_20261101.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116
+D=$R/step7a_spotcheck_20261120
+U=$R/step7a_check_20261120.py                                              # the check program as JP uploaded it through PA's Files page; outside the repo
+WC=$R/step4_delta2_20261116/delta/words_cells.tsv                          # STEP4-DELTA2 (DESIGN 9.157)
+VC=$R/step4_delta2_20261116/delta/verses_cells.tsv                         # STEP4-DELTA2 (DESIGN 9.157)
+PRO=$R/step5_prose_20261101.tsv                                            # B2's prose list (read-out: outcome, old_len, new_len)
+EL=$R/step5_eligible_20261101.tsv                                          # step 5's eligible file (read-out: eligible, reason)
+XS=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01       # src full sha256: DESIGN 9.168 (1); HANDOFF_edition_upgrade_stageE.md "Copies on PA now"
+XWC=86e44c58502748d24be623f4f11c859db540d4c08e4f058dd26dd4345c9fdafc       # DESIGN 9.157 (1)
+XVC=870e4782018564c874ec16aa9ac6aa1c9516c4007df917f394db330bfe9857f9       # DESIGN 9.157 (1) (870e4782...57f9)
+XPRO=f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864      # DR :12210; DESIGN 9.173 (1)
+XEL=e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f       # DR :12208; DESIGN 9.171 (6) / 9.173 (1)
+XCHK=7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859                                                              # sha256 of the check program (DR: the STEP7A check program, CC's tested file); any other file STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the read: every miss is STOP ---
+EU scripts/eu_step.py pre --tag STEP7A --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "STEP7A RESULT: STOP - pre (line above); nothing read"; exit 1; }
+for f in "$U" "$WC" "$VC" "$PRO" "$EL"; do [ -s "$f" ] || { echo "STEP7A RESULT: STOP - missing or empty: $f"; exit 1; }; done
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag STEP7A --built "$B" --dir "$DH" --written words,abp_corrections || { echo "STEP7A RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+k=$(h "$S"); echo "src sha256: $k (expect $XS)"; [ "$k" = "$XS" ] || { echo "STEP7A RESULT: STOP - src is not the 11/1 copy as recorded"; exit 1; }
+k=$(h "$WC"); echo "STEP4-DELTA2 words_cells.tsv sha256: $k (expect $XWC)"; [ "$k" = "$XWC" ] || { echo "STEP7A RESULT: STOP - not the STEP4-DELTA2 words_cells"; exit 1; }
+k=$(h "$VC"); echo "STEP4-DELTA2 verses_cells.tsv sha256: $k (expect $XVC)"; [ "$k" = "$XVC" ] || { echo "STEP7A RESULT: STOP - not the STEP4-DELTA2 verses_cells"; exit 1; }
+k=$(h "$PRO"); echo "prose list sha256: $k (expect $XPRO)"; [ "$k" = "$XPRO" ] || { echo "STEP7A RESULT: STOP - not B2's prose list"; exit 1; }
+k=$(h "$EL"); echo "eligible file sha256: $k (expect $XEL)"; [ "$k" = "$XEL" ] || { echo "STEP7A RESULT: STOP - not step 5's eligible file"; exit 1; }
+st0=$(stat -c '%s %Y %n' "$S" "$B")
+echo "=== the reading-order port = the JS baseline (tests/test_reorder_port.py) ==="
+EU tests/test_reorder_port.py > "$D/test_reorder_port.out" 2>&1; r0=$?
+tail -n 3 "$D/test_reorder_port.out"; echo "test_reorder_port: exit $r0 (expect 0)"
+[ "$r0" = 0 ] || { echo "STEP7A RESULT: STOP - the reorder port drifted from the JS baseline ($D/test_reorder_port.out)"; exit 1; }
+cp "$U" "$D/check.py" || { echo "STEP7A RESULT: STOP - cannot copy the uploaded check program into the run folder"; exit 1; }
+k=$(h "$D/check.py"); echo "check.py sha256 (the uploaded file, as copied into the run folder): $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "STEP7A RESULT: STOP - the uploaded check program is not the file CC wrote and tested"; exit 1; }
+echo "=== the check - start $(date -u +%FT%TZ) ==="
+# check.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5) b; TIPNR57's launcher)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XCHK" \
+  "S=$S" "B=$B" "D=$D" "REPO=$HOME/bible-db" "WC=$WC" "VC=$VC" "PRO=$PRO" "EL=$EL" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = a STOP inside the check; 4 = check.py not the pinned bytes) - end $(date -u +%FT%TZ)"
+# --- after the read: every guard ---
+st1=$(stat -c '%s %Y %n' "$S" "$B")
+echo "src, built size and time before = after: $([ "$st1" = "$st0" ] && echo yes || echo NO)"
+k=$(h "$S"); echo "src sha256 after: $k (expect $XS)"
+[ "$k" = "$XS" ] || { echo "STEP7A RESULT: STOP - src changed during a read-only run - report this as printed"; exit 1; }
+pc1=$(pcf)
+echo "Python cache folders and their contents before = after: $([ "$pc1" = "$pc0" ] && echo yes || echo NO) ($pc0 / $pc1)"
+EU scripts/eu_step.py check --tag STEP7A --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; r3=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result after: exit $r3 (expect 0)"
+[ "$st1" = "$st0" ] && [ "$r3" = 0 ] || { echo "STEP7A RESULT: STOP - a copy changed during a read-only run - report this as printed"; exit 1; }
+[ "$pc1" = "$pc0" ] || { echo "STEP7A RESULT: STOP - a Python cache file or folder appeared, changed or went in the checkout - report this as printed"; exit 1; }
+case "$r2" in
+  0) echo "STEP7A RESULT: READ - $(date -u +%FT%TZ) - every declared expectation met; the lines above go to the ruling chat as printed"; exit 0 ;;
+  3) echo "STEP7A RESULT: FINDING - $(date -u +%FT%TZ) - the findings above (and $D/check.out) go to the ruling chat as printed; read-only, nothing to restore"; exit 1 ;;
+  *) echo "STEP7A RESULT: STOP - the check stopped or did not finish (exit $r2; $D/check.out)"; exit 1 ;;
+esac
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The STEP7A check program — `~/edition_upgrade_runs/step7a_check_20261120.py` (JP uploads it; sha 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859)
+```python
+# STEP7A - charter 6 step 7, Part A: the five spot-check verses on built and src (READ-ONLY; DESIGN 9.206 (1), 9.210 (2)).
+# argv KEY=VALUE: S src db · B built db · D run folder · REPO the checkout · WC STEP4-DELTA2 words_cells.tsv ·
+# VC STEP4-DELTA2 verses_cells.tsv · PRO B2's prose list · EL step 5's eligible file
+#
+# HOW. Both copies are opened mode=ro + query_only. For the five verses, every verses row and every words row is copied
+# (all columns, values as stored) into two small files in D (src5.db, built5.db), and the REAL, unchanged
+# scripts/eu_words_delta.py run() compares them - the program that made STEP4-DELTA2 - into D/delta5/. So, per verse, three
+# derivations of "what changed src -> built" are laid side by side: (1) this fresh delta; (2) DELTA2's own lines on PA
+# (sha-checked by the block); (3) the lines declared below, which are CC's copy of the 11/15 STEP4-DELTA lines for these
+# verses (local scp, sha 62d9c85d...; DR :11183-11186: DELTA2 = that file minus two Joh 19:18 cells, by sha) and of its
+# verses_cells (870e4782...57f9 = DELTA2's, DESIGN 9.157). All three must be the same line set, verse by verse.
+# Then the named checks (rebuild-words :192-196, charter :350 / 4.10, DESIGN 9.206, 9.210). The reading order is the
+# reader's, through scripts/reorder_english.py (the port; the block runs tests/test_reorder_port.py first).
+# Exit 0 = READ (every declared expectation met) · 3 = FINDING (one missed; every member printed) · 2 = STOP.
+import hashlib
+import importlib.util
+import io
+import re
+import sqlite3
+import sys
+import unicodedata
+from contextlib import redirect_stdout
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+A = dict(a.split("=", 1) for a in sys.argv[1:])
+S, B, D, REPO = A["S"], A["B"], Path(A["D"]), Path(A["REPO"])
+findings = []
+VERSES = [("1Ch", 13, 10), ("Eze", 31, 9), ("1Ch", 1, 1), ("Gen", 1, 21), ("Mar", 1, 9)]
+NAME = {("1Ch", 13, 10): "1Ch 13:10", ("Eze", 31, 9): "Eze 31:9", ("1Ch", 1, 1): "1Ch 1:1", ("Gen", 1, 21): "Gen 1:21",
+        ("Mar", 1, 9): "Mark 1:9"}
+BOOKNUM = {"1Ch": 13}   # pn_binding.book is a NUMBER: entity_resolution.book_num, canonical 1..66 (build_entity_binding.py :169)
+# --- the declared lines: CC's copy of the 11/15 delta for these verses (= DELTA2 here, DR :11183-11186) ---
+DECL_WC = """\
+1Ch	13	10	7	english	'he struck'	'struck'	no
+1Ch	13	10	18	english	'ark.'	'ark;'	no
+1Ch	13	10	19	english	'And'	'and'	no
+Gen	1	21	5	english	'whales'	'sea monsters'	no
+Gen	1	21	5	english_head	'whales'	'monsters'	no
+Gen	1	21	5	english_head_norm	'whale'	'monster'	no
+Gen	1	21	10	english	'life'	'soul'	no
+Gen	1	21	10	english_head	'life'	'soul'	no
+Gen	1	21	10	english_head_norm	'life'	'soul'	no
+Gen	1	21	19	english	'types;'	'types,'	no
+Mar	1	9	10	english	'of the'	'of'	no
+Mar	1	9	10	greek_pos	None	1	no
+Mar	1	9	10	bracket_id	None	2	no
+Mar	1	9	11	english	'of Galilee,'	'Galilee,'	no
+Mar	1	9	11	greek_pos	None	2	no
+Mar	1	9	11	bracket_id	None	2	no
+Mar	1	9	13	english	'he was immersed'	'was immersed'	no
+"""
+DECL_VC = {  # built's verses.text where it changed (the b value of DELTA2's verses_cells); src's for the other two
+    ("1Ch", 13, 10): "And the LORD was enraged in anger against Uzza, and struck him there, on account of the stretching out of his"
+                     " hand upon the ark; and he died there before God.",
+    ("Gen", 1, 21): "And God made the great sea monsters, and every soul of living creatures of reptiles which the waters brought"
+                    " forth according to their types, and every feathered winged creature according to type. And God beheld that"
+                    " it was good.",
+    ("Mar", 1, 9): "And it came to pass in those days, Jesus came from Nazareth of Galilee, and was immersed by John into the"
+                   " Jordan.",
+}
+DECL_SRC_TEXT = {  # src's verses.text where it changed (the a value): the fresh delta must show exactly a -> b
+    ("1Ch", 13, 10): "And the LORD was enraged in anger against Uzza, and he struck him there, on account of the stretching out of"
+                     " his hand upon the ark. And he died there before God.",
+    ("Gen", 1, 21): "And God made the great whales, and every life of living creatures of reptiles which the waters brought forth"
+                    " according to their types; and every feathered winged creature according to type. And God beheld that it"
+                    " was good.",
+    ("Mar", 1, 9): "And it came to pass in those days, Jesus came from Nazareth of the of Galilee, and he was immersed by John into"
+                   " the Jordan.",
+}
+
+
+def stop(why):
+    print("STEP7A CHECK: STOP - " + why)
+    sys.exit(2)
+
+
+def finding(msg):
+    findings.append(msg)
+    print("  FINDING: " + msg)
+
+
+def ro(p):
+    c = sqlite3.connect("%s?mode=ro" % Path(p).resolve().as_uri(), uri=True)
+    c.text_factory = lambda b: b.decode("utf-8", "surrogateescape")
+    c.execute("PRAGMA query_only=1")
+    return c
+
+
+def load(path, name):
+    spec = importlib.util.spec_from_file_location(name, str(path))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+EWD = load(REPO / "scripts" / "eu_words_delta.py", "eu_words_delta_s7a")
+ORD = load(REPO / "scripts" / "reorder_english.py", "reorder_english_s7a")
+for f in ("eu_words_delta.py", "reorder_english.py"):
+    print("scripts/%s sha256 %s" % (f, hashlib.sha256((REPO / "scripts" / f).read_bytes()).hexdigest()))
+
+
+def extract(src_conn, out_path, keys, plant=None):
+    """the verses rows + all their words rows, every column, values as stored, into a new small file."""
+    vcols = [r[1] for r in src_conn.execute("PRAGMA table_info(verses)")]
+    wcols = [r[1] for r in src_conn.execute("PRAGMA table_info(words)")]
+    o = sqlite3.connect(str(out_path))
+    o.execute("PRAGMA journal_mode=DELETE")
+    o.execute("CREATE TABLE verses (%s)" % ", ".join('"%s"' % x for x in vcols))   # no declared types: values keep their type
+    o.execute("CREATE TABLE words (%s)" % ", ".join('"%s"' % x for x in wcols))
+    n = 0
+    for k in keys:
+        vr = src_conn.execute("SELECT * FROM verses WHERE book=? AND chapter=? AND verse=?", k).fetchall()
+        if len(vr) != 1:
+            stop("%s: %d verses rows in %s (expect 1)" % (NAME[k], len(vr), out_path.name))
+        o.execute("INSERT INTO verses VALUES (%s)" % ",".join("?" * len(vcols)), vr[0])
+        vid = vr[0][vcols.index("id")]
+        rows = src_conn.execute("SELECT * FROM words WHERE verse_id=? ORDER BY position", (vid,)).fetchall()
+        o.executemany("INSERT INTO words VALUES (%s)" % ",".join("?" * len(wcols)), rows)
+        n += len(rows)
+    if plant:
+        plant(o)
+    o.commit()
+    o.close()
+    return n
+
+
+def fresh_delta(a_db, b_db, out):
+    out.mkdir()
+    buf = io.StringIO()
+    try:
+        with redirect_stdout(buf):
+            EWD.run(str(a_db), str(b_db), str(out))
+    except EWD.Stop as e:
+        stop("eu_words_delta stopped on the small files: %s" % e)
+    (out / "run.out").write_text(buf.getvalue(), encoding="utf-8")
+    wc = [l for l in (out / "words_cells.tsv").read_text(encoding="utf-8").splitlines()[1:] if l]
+    vc = [l for l in (out / "verses_cells.tsv").read_text(encoding="utf-8").splitlines()[1:] if l]
+    other = {n: len((out / n).read_text(encoding="utf-8").splitlines()) - 1
+             for n in ("words_only.tsv", "words_moved.tsv", "words_unpaired.tsv", "verses_only.tsv")}
+    return wc, vc, other
+
+
+def key3(line):
+    p = line.split("\t")
+    return (p[0], int(p[1]), int(p[2]))
+
+
+def decl_vc_lines():
+    out = []
+    for k, b in DECL_VC.items():
+        out.append("\t".join([k[0], str(k[1]), str(k[2]), "text", repr(DECL_SRC_TEXT[k]), repr(b)]))
+    return out
+
+
+def compare(label, wc, vc, other, quiet=False):
+    """fresh lines vs the declared lines, verse by verse -> list of misses (each printed unless quiet)."""
+    miss = []
+    dw = [l for l in DECL_WC.splitlines() if l]
+    dv = decl_vc_lines()
+    for k in VERSES:
+        for kind, fresh, decl in (("words", wc, dw), ("verses", vc, dv)):
+            f = sorted(l for l in fresh if key3(l) == k)
+            d = sorted(l for l in decl if key3(l) == k)
+            for l in sorted(set(f) - set(d)):
+                miss.append("%s %s: %s line NOT declared: %s" % (label, NAME[k], kind, l))
+            for l in sorted(set(d) - set(f)):
+                miss.append("%s %s: declared %s line MISSING: %s" % (label, NAME[k], kind, l))
+    for n, c in other.items():
+        if c:
+            miss.append("%s: %s has %d line(s) (expect 0)" % (label, n, c))
+    if not quiet:
+        for m in miss:
+            finding(m)
+    return miss
+
+
+cs, cb = ro(S), ro(B)
+# ---- (0) the control: a known positive the comparison must catch ----
+print("=== (0) control: built's Gen 1:21 @5 english set back to 'whales' and Mark 1:9's text to src's, in a THIRD small file;"
+      " the same comparison must report both ===")
+(D / "ctl").mkdir()
+na = extract(cs, D / "ctl" / "src5.db", VERSES)
+
+
+def plant(o):
+    vid = o.execute("SELECT id FROM verses WHERE book='Gen' AND chapter=1 AND verse=21").fetchone()[0]
+    o.execute("UPDATE words SET english='whales' WHERE verse_id=? AND position=5", (vid,))
+    o.execute("UPDATE verses SET text=? WHERE book='Mar' AND chapter=1 AND verse=9", (DECL_SRC_TEXT[("Mar", 1, 9)],))
+
+
+nb = extract(cb, D / "ctl" / "built5_planted.db", VERSES, plant)
+wc, vc, other = fresh_delta(D / "ctl" / "src5.db", D / "ctl" / "built5_planted.db", D / "ctl" / "delta5")
+m = compare("control", wc, vc, other, quiet=True)
+want = ["control Gen 1:21: declared words line MISSING: Gen\t1\t21\t5\tenglish\t'whales'\t'sea monsters'\tno",
+        "control Mark 1:9: declared verses line MISSING: " + [l for l in decl_vc_lines() if l.startswith("Mar\t")][0]]
+for w in want:
+    print("  control expects: %s - %s" % (w.split(":")[0] + ":" + w.split(":")[1], "CAUGHT" if w in m else "NOT CAUGHT"))
+if not all(w in m for w in want):
+    stop("the control did not fire (the comparison would miss a changed cell)")
+print("CONTROL FIRED (%d control misses in all, the two planted among them)" % len(m))
+
+# ---- (1) the three derivations, verse by verse ----
+print("=== (1) what changed src -> built in the five verses: the fresh delta (eu_words_delta.run on the two small files) vs"
+      " the declared lines vs DELTA2's own lines ===")
+na = extract(cs, D / "src5.db", VERSES)
+nb = extract(cb, D / "built5.db", VERSES)
+print("small files: src5.db %d word rows, built5.db %d word rows (5 verses each)" % (na, nb))
+wc, vc, other = fresh_delta(D / "src5.db", D / "built5.db", D / "delta5")
+print("fresh delta: words_cells %d lines, verses_cells %d lines; words_only / moved / unpaired / verses_only: %s"
+      % (len(wc), len(vc), " / ".join(str(other[n]) for n in ("words_only.tsv", "words_moved.tsv", "words_unpaired.tsv",
+                                                             "verses_only.tsv"))))
+compare("fresh vs declared", wc, vc, other)
+d2w = [l for l in Path(A["WC"]).read_text(encoding="utf-8", errors="surrogateescape").splitlines()[1:]
+       if l and l.split("\t")[0] in {k[0] for k in VERSES} and key3(l) in VERSES]
+d2v = [l for l in Path(A["VC"]).read_text(encoding="utf-8", errors="surrogateescape").splitlines()[1:]
+       if l and l.split("\t")[0] in {k[0] for k in VERSES} and key3(l) in VERSES]
+print("DELTA2's lines in these verses: words_cells %d, verses_cells %d" % (len(d2w), len(d2v)))
+for k in VERSES:
+    f = sorted(l for l in wc if key3(l) == k) + sorted(l for l in vc if key3(l) == k)
+    d = sorted(l for l in d2w if key3(l) == k) + sorted(l for l in d2v if key3(l) == k)
+    print("  %-9s fresh %d lines - DELTA2 %d lines - same: %s" % (NAME[k], len(f), len(d), "yes" if f == d else "NO"))
+    if f != d:
+        for l in sorted(set(f) - set(d)):
+            finding("%s: fresh line not in DELTA2: %s" % (NAME[k], l))
+        for l in sorted(set(d) - set(f)):
+            finding("%s: DELTA2 line not in the fresh delta: %s" % (NAME[k], l))
+for l in wc:
+    print("    words  " + l)
+for l in vc:
+    print("    verses " + l.split("\t")[0] + " " + l.split("\t")[1] + ":" + l.split("\t")[2] + " text (a -> b, printed in (2))")
+
+# ---- (2) each verse in full, both copies ----
+COLS = ("position", "english", "english_head", "strongs", "strongs_base", "greek_pos", "bracket_id", "is_pn", "italic")
+
+
+def rows(c, k):
+    vid, text = c.execute("SELECT id, text FROM verses WHERE book=? AND chapter=? AND verse=?", k).fetchone()
+    rs = c.execute("SELECT %s, l.lemma FROM words w LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base WHERE w.verse_id=?"
+                   " ORDER BY w.position" % ", ".join("w." + x for x in COLS), (vid,)).fetchall()
+    return vid, text, [dict(zip(COLS + ("lemma",), r)) for r in rs]
+
+
+pro = {}
+for l in Path(A["PRO"]).read_text(encoding="utf-8").splitlines()[1:]:
+    p = l.split("\t")
+    if len(p) >= 7 and (p[0], p[1].isdigit() and int(p[1]), p[2].isdigit() and int(p[2])) in VERSES:
+        pro[(p[0], int(p[1]), int(p[2]))] = p
+eli = {}
+for l in Path(A["EL"]).read_text(encoding="utf-8").splitlines()[1:]:
+    p = l.split("\t")
+    if len(p) >= 4 and p[1].isdigit() and p[2].isdigit() and (p[0], int(p[1]), int(p[2])) in VERSES:
+        eli[(p[0], int(p[1]), int(p[2]))] = p
+DATA = {}
+for k in VERSES:
+    DATA[k] = {"src": rows(cs, k), "built": rows(cb, k)}
+    print("=== (2) %s - step 5: eligible %s %s - B2 prose list: %s %s, old_len %s, new_len %s ===" % (
+        NAME[k], eli.get(k, ["", "", "", "?"])[3], (eli.get(k, ["", "", "", "", ""]) + [""])[4],
+        pro.get(k, ["", "", "", "?"])[3], pro.get(k, ["", "", "", "", ""])[4], pro.get(k, [""] * 7)[5],
+        pro.get(k, [""] * 7)[6]))
+    for side in ("src", "built"):
+        vid, text, ws = DATA[k][side]
+        print("  %s verses.text (%d characters): %s" % (side, len(text or ""), text))
+        prose = " ".join(ORD.prose_sequence(ws))
+        print("  %s reading order (the reader's prose, through the port): %s" % (side, prose))
+        print("  %s port = verses.text (spaces folded): %s" % (side, "yes" if " ".join(prose.split()) == " ".join(
+            (text or "").split()) else "no (a read-out; v2 judged the corpus at step 6)"))
+        for w in ws:
+            print("    %s %s" % (side, " | ".join("%s=%r" % (c, w[c]) for c in COLS + ("lemma",))))
+    exp = DECL_VC.get(k, DATA[k]["src"][1])
+    got = DATA[k]["built"][1]
+    print("  built verses.text = %s: %s" % ("DELTA2's new text" if k in DECL_VC else "src's", "yes" if got == exp else "NO"))
+    if got != exp:
+        finding("%s: built verses.text is not %s" % (NAME[k], "DELTA2's new text" if k in DECL_VC else "src's"))
+    if k in DECL_SRC_TEXT and DATA[k]["src"][1] != DECL_SRC_TEXT[k]:
+        finding("%s: src verses.text is not DELTA2's old text" % NAME[k])
+
+
+def one(ws, pred, what, k, side):
+    hit = [w for w in ws if pred(w)]
+    if len(hit) != 1:
+        finding("%s %s: %d rows %s (expect 1)" % (NAME[k], side, len(hit), what))
+        return None
+    return hit[0]
+
+
+def nfc(s):
+    return unicodedata.normalize("NFC", s or "")
+
+
+# ---- (3) the named checks ----
+print("=== (3) the named checks (rebuild-words :192-196; charter :350, 4.10; DESIGN 9.206, 9.210) ===")
+k = ("1Ch", 13, 10)
+for side in ("src", "built"):
+    ws = DATA[k][side][2]
+    v = one(ws, lambda w: w["strongs_base"] == "G2373", "with strongs_base G2373 (was enraged)", k, side)
+    l_ = one(ws, lambda w: w["strongs_base"] == "G2962", "with strongs_base G2962 (the LORD)", k, side)
+    if v and l_:
+        same = v["bracket_id"] is not None and v["bracket_id"] == l_["bracket_id"]
+        lower = isinstance(l_["greek_pos"], int) and isinstance(v["greek_pos"], int) and l_["greek_pos"] < v["greek_pos"]
+        digit = bool(re.search(r"\d", (v["english"] or "") + (l_["english"] or "")))
+        grp = [w for w in ws if same and w["bracket_id"] == v["bracket_id"]]
+        pos = [w["position"] for w in grp]
+        inside = [w["position"] for w in ws if pos and min(pos) <= w["position"] <= max(pos)]
+        contig = bool(pos) and sorted(pos) == sorted(inside)
+        chip = " ".join((w["english"] or "").strip() for w in ORD.order_bracket_group_words(grp) if (w["english"] or "").strip())
+        print("  1Ch 13:10 %s: G2373 @%s %r greek_pos %r - G2962 @%s %r greek_pos %r - one bracket: %s - the LORD's greek_pos"
+              " lower: %s - a digit in either cell: %s - the bracket's positions %s, every slot inside it in it: %s"
+              % (side, v["position"], v["english"], v["greek_pos"], l_["position"], l_["english"], l_["greek_pos"],
+                 "yes" if same else "NO", "yes" if lower else "NO", "YES" if digit else "no", pos, "yes" if contig else "NO"))
+        print("  1Ch 13:10 %s chip order of that bracket (its rows by greek_pos, orderBracketGroupWords): %s - reads 'the LORD"
+              " was enraged': %s" % (side, chip, "yes" if "the LORD was enraged" in chip else "NO"))
+        if not (same and lower and not digit and contig and "the LORD was enraged" in chip):
+            finding("1Ch 13:10 %s: the LORD / was enraged pair is not one contiguous bracket reading 'the LORD was enraged' with"
+                    " no digit" % side)
+for side in ("src", "built"):
+    print("  1Ch 13:10 %s verses.text holds 'the LORD was enraged': %s" % (
+        side, "yes" if "the LORD was enraged" in (DATA[k][side][1] or "") else "NO"))
+    if "the LORD was enraged" not in (DATA[k][side][1] or ""):
+        finding("1Ch 13:10 %s: verses.text does not read 'the LORD was enraged'" % side)
+print("  1Ch 13:10 built verses.text length %d (B2's new_len %s - a read-out; DESIGN 9.206 (1): no length expectation from"
+      " CC's hand count)" % (len(DATA[k]["built"][1] or ""), pro.get(k, [""] * 7)[6]))
+
+k = ("Eze", 31, 9)
+for side in ("src", "built"):
+    w = one(DATA[k][side][2], lambda w: w["strongs_base"] == "G2206", "with strongs_base G2206", k, side)
+    if w:
+        ok = w["english"] == "were jealous of" and nfc(w["lemma"]) == nfc("ζηλόω")
+        print("  Eze 31:9 %s: G2206 @%s english %r, lexicon lemma %r - 'were jealous of' and ζηλόω: %s"
+              % (side, w["position"], w["english"], w["lemma"], "yes" if ok else "NO"))
+        if not ok:
+            finding("Eze 31:9 %s: the G2206 row is not 'were jealous of' / ζηλόω" % side)
+
+k = ("1Ch", 1, 1)
+xr, pb = {}, {}
+for side, c in (("src", cs), ("built", cb)):
+    vid, _, ws = DATA[k][side]
+    w = one(ws, lambda w: "Adam" in (w["english"] or ""), "whose english holds 'Adam'", k, side)
+    has_x = c.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='pn_hebrew_xref'").fetchone()[0]
+    has_b = c.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='pn_binding'").fetchone()[0]
+    if not (has_x and has_b):
+        finding("1Ch 1:1 %s: pn_hebrew_xref / pn_binding table missing (%s / %s)" % (side, has_x, has_b))
+        continue
+    if w:
+        xr[side] = c.execute("SELECT verse_id, position, hebrew_base, class FROM pn_hebrew_xref WHERE verse_id=? AND position=?",
+                             (vid, w["position"])).fetchall()
+        print("  1Ch 1:1 %s: Adam @%s english %r strongs %r strongs_base %r is_pn %r - pn_hebrew_xref %s"
+              % (side, w["position"], w["english"], w["strongs"], w["strongs_base"], w["is_pn"],
+                 [tuple(r[1:]) for r in xr[side]] or "NO ROW"))
+        if len(xr[side]) != 1 or xr[side][0][2] != "H121":
+            finding("1Ch 1:1 %s: Adam's pn_hebrew_xref row is not one row with hebrew_base 'H121'" % side)
+    pb[side] = sorted(c.execute("SELECT * FROM pn_binding WHERE book=? AND chapter=? AND verse=?", (BOOKNUM["1Ch"], 1, 1)))
+    print("  1Ch 1:1 %s: pn_binding rows (book 13, ch 1, vs 1): %d" % (side, len(pb[side])))
+    for r in pb[side]:
+        print("    %s %r" % (side, r))
+    if not any(isinstance(r[3], str) and r[3].lower() == "adam" for r in pb[side]):
+        finding("1Ch 1:1 %s: no pn_binding row named 'adam'" % side)
+if "src" in xr and "built" in xr:
+    print("  1Ch 1:1 Adam's pn_hebrew_xref row built = src (position, hebrew_base, class): %s"
+          % ("yes" if [r[1:] for r in xr["src"]] == [r[1:] for r in xr["built"]] else "NO"))
+    if [r[1:] for r in xr["src"]] != [r[1:] for r in xr["built"]]:
+        finding("1Ch 1:1: Adam's pn_hebrew_xref row differs built vs src")
+if "src" in pb and "built" in pb:
+    print("  1Ch 1:1 pn_binding rows built = src: %s" % ("yes" if pb["src"] == pb["built"] else "NO"))
+    if pb["src"] != pb["built"]:
+        finding("1Ch 1:1: pn_binding rows differ built vs src")
+
+k = ("Gen", 1, 21)
+for side, want in (("src", "whales"), ("built", "sea monsters")):
+    w = one(DATA[k][side][2], lambda w: w["strongs_base"] == "G2785", "with strongs_base G2785", k, side)
+    t = DATA[k][side][1] or ""
+    good = w is not None and w["english"] == want and want in t and (side == "src" or "whales" not in t)
+    print("  Gen 1:21 %s: G2785 @%s english %r - verses.text holds %r%s: %s" % (
+        side, w and w["position"], w and w["english"], want, "" if side == "src" else " and not 'whales'",
+        "yes" if good else "NO"))
+    if not good:
+        finding("Gen 1:21 %s: the G2785 row / text is not %r" % (side, want))
+
+k = ("Mar", 1, 9)
+t = DATA[k]["built"][1] or ""
+good = "Nazareth of Galilee," in t and "of the of" not in t
+print("  Mark 1:9 built: verses.text holds 'Nazareth of Galilee,' and not 'of the of': %s (the cells as built, DESIGN 9.210 (2):"
+      " JP accepted the τῆς cell 'of' as built - a departure from charter 4.10, declared)" % ("yes" if good else "NO"))
+if not good:
+    finding("Mark 1:9 built: verses.text is not 'Nazareth of Galilee,' without 'of the of'")
+for side in ("src", "built"):
+    for w in DATA[k][side][2]:
+        if w["position"] in (10, 11, 13):
+            print("  Mark 1:9 %s @%s english %r greek_pos %r bracket_id %r strongs_base %r" % (
+                side, w["position"], w["english"], w["greek_pos"], w["bracket_id"], w["strongs_base"]))
+cs.close()
+cb.close()
+print("STEP7A CHECK: %s" % ("READ - every declared expectation met; the lines above go to the ruling chat" if not findings
+                            else "FINDING - %d: " % len(findings) + " | ".join(findings)))
+sys.exit(0 if not findings else 3)
+```
+
+### STEP7A reviewed, first pass (11/20) — REVIEW: ESCALATE (fixed by CC; second pass below)
+In short: read-only confirmed (both copies mode=ro + query_only; writes only $D and the log; eu_words_delta.run() writes only into its
+out folder; the control plants a third small file only); the declared lines match the local 11/15 files line for line (17 words lines;
+the three texts a / b); guard figures, src sha, DELTA2 and prose shas match §9.206 (3) / §9.209 (1) / §9.190 (1). **ESCALATE on one
+departure: §9.190 (5)(b)** — the draft hashed `$D/check.py` and then ran it by path (a gap between the check and the use); STEP4GATE,
+STEP6AUD and TIPNR57 read the file ONCE and run the bytes they hashed. Also: `python3 -I` drops PYTHONIOENCODING (Greek output on a
+non-UTF-8 locale would STOP); the check's input was not taken from /dev/null. Left for CC to trace: e540d34d (DR :12208), "137" (DR :1825),
+rebuild-words :192-196's H121 / ζηλόω.
+**CC's fix:** TIPNR57's read-once launcher (DR :15775-15785) taken over as is — the file is read once, those bytes hashed and run, exit 4
+if not the pinned bytes; no `-I` (the encoding setting holds); input from /dev/null. The after-hash line is gone (the as-run hash is now
+the launcher's own line). All eleven tests re-run on the fixed block, same outcomes (tests file header: block sha cece35cd… = the fixed
+block with XCHK still a placeholder; DR's block = that with XCHK filled). **Block now DR :16551-16628, sha
+fd36bed1615974ddbd4d97125ddb249fdf2ed1631b40817fafa6e868a234c97d; program DR :16633-17027, sha 7e40ccf3…2859 (unchanged).**
+Traced: e540d34d — DR :12208 (`XELIG=e540d34d…580f`, = step 5's per the CCTL log's 10/31 files list) and the real file the tests copy hashes to it;
+"137" — DR :1825 (the gate-3 run of 11/4, "port test OK (137)") and the d34d6723 test file prints 137 in A1; H121 / ζηλόω — the source is
+rebuild-words :192 itself (its spot-check values); no database cell has been seen by CC, as the section says.
+
+### STEP7A reviewed, second pass (11/20) — REVIEW: CLEAR (read-only, §9.90). NOT cleared to run: that is the ruling chat's
+In short (the reviewer echoed the block in full as it read it at DR :16551-16628; not repeated here): the launcher matches TIPNR57's
+word for word (read once, hash printed and checked, exit 4 on a miss, sys.path[0] pop, exec of the same bytes); no `-I`; input from
+/dev/null; exit 0 READ, 3 FINDING, 2 / 4 / a crash → STOP via `*`, all after-guards run before the `case`; the EXPECTED row "check.py sha
+(copy and as run)" holds (copy :16597-16598, as run = the launcher's line :16605). Read-only, wrapper and tripwires as in the first pass;
+A10 the cache line's known positive, A11 its control. Expected figures traced as in the EXPECTED table; the eligible sha's full value is
+in the run record (DR :12208, :14628), not a register line — accepted as the run record. The reviewer has no shell: block sha
+fd36bed1…c97d and XCHK 7e40ccf3…2859 are CC's figures — the ruling chat hashes DR :16551-16628 itself.
+**For JP, once cleared:** upload `C:\Users\JP\edition_upgrade_runs\step7a_check_20261120.py` to `~/edition_upgrade_runs/` through PA's
+Files page (sha 7e40ccf3…2859), then paste the block; the log goes to the ruling chat by cat. Commits stay local until it has run (§9.76).

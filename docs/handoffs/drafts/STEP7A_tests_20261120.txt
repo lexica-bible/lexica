@@ -1,0 +1,363 @@
+# STEP7A tests (2026-11-20T15:31:12Z); block sha256 cece35cdee180891beb0513b74f2b1f74f3fcc2b4a2a44f85f9678dc7ededab4; check sha256 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859
+
+=============== A1 clean pair (the declared picture) -> READ, every line printed ===============
+< XCHK=__XCHK__                                                              # sha256 of t
+> XCHK=7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859                   
+home ready: /home/jp/gates7a/a1
+GATE REF d34d6723 - STEP7A - charter 6 step 7 Part A: the five spot-check verses on built and src (DESIGN 9.206 (1), 9.210 (2)) - READ-ONLY: both copies opened read-only; writes only its run folder (two small extract files among them) and this log - PA HEAD d34d6723 - 2026-11-20T15:31:13Z
+repo /home/jp/gates7a/a1/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gates7a/a1/bible-db/bible_edupg_test_20261101.db: 32768 bytes - no -journal - triggers 0
+db /home/jp/gates7a/a1/bible-db/bible_edupg_test_built_20261102.db: 32768 bytes - no -journal - triggers 0
+run folder made: /home/jp/gates7a/a1/edition_upgrade_runs/step7a_spotcheck_20261120
+STEP7A PRE: OK
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (4) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 69 rows, f8f2f8fcde32 - dry copy 69 rows, f8f2f8fcde32 - = the dry run: yes - vs prep 69 rows, f8f2f8fcde32
+written table abp_corrections: built 1 rows, 47f1ce197752 - dry copy 1 rows, 47f1ce197752 - = the dry run: yes - vs prep 1 rows, 47f1ce197752
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+STEP7A CHECK: OK
+src sha256: fd469f85fbcac6f12991fc1776bae49851c7ca8a242d575886b27ab036595f4c (expect fd469f85fbcac6f12991fc1776bae49851c7ca8a242d575886b27ab036595f4c)
+STEP4-DELTA2 words_cells.tsv sha256: 3f50ec5528caa87b3383639bd8ee770a99232d1c4917fa53ba81616924a74df3 (expect 3f50ec5528caa87b3383639bd8ee770a99232d1c4917fa53ba81616924a74df3)
+STEP4-DELTA2 verses_cells.tsv sha256: aad450db225c0ea617d75580efe729e5b4e73b220f3e55f03682fb7c9f2356f9 (expect aad450db225c0ea617d75580efe729e5b4e73b220f3e55f03682fb7c9f2356f9)
+prose list sha256: f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864 (expect f2a22ecd9142aac0341d06a112861b2e5d85fb313621607adf003384c356a864)
+eligible file sha256: e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f (expect e540d34d422b86dab2fa7d28f9f86c322bad3d5ea6808f42c6a3bab64d42580f)
+=== the reading-order port = the JS baseline (tests/test_reorder_port.py) ===
+ok  reorder port reproduces the JS baseline on all 137 fixture verses
+test_reorder_port: exit 0 (expect 0)
+check.py sha256 (the uploaded file, as copied into the run folder): 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859 (expect 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859)
+=== the check - start 2026-11-20T15:31:14Z ===
+check.py sha256 as run: 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859 (expect 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859)
+scripts/eu_words_delta.py sha256 59681f5ff92d704c7fcfa3429bf48f4a71cb9b98701cd27f982062192b1ccf7e
+scripts/reorder_english.py sha256 78d170f9e5df1185685fd79686749f40e466bf06440bad5fee32b6bb6cdd09ce
+=== (0) control: built's Gen 1:21 @5 english set back to 'whales' and Mark 1:9's text to src's, in a THIRD small file; the same comparison must report both ===
+  control expects: control Gen 1:21 - CAUGHT
+  control expects: control Mark 1:9 - CAUGHT
+CONTROL FIRED (2 control misses in all, the two planted among them)
+=== (1) what changed src -> built in the five verses: the fresh delta (eu_words_delta.run on the two small files) vs the declared lines vs DELTA2's own lines ===
+small files: src5.db 68 word rows, built5.db 68 word rows (5 verses each)
+fresh delta: words_cells 17 lines, verses_cells 3 lines; words_only / moved / unpaired / verses_only: 0 / 0 / 0 / 0
+DELTA2's lines in these verses: words_cells 17, verses_cells 3
+  1Ch 13:10 fresh 4 lines - DELTA2 4 lines - same: yes
+  Eze 31:9  fresh 0 lines - DELTA2 0 lines - same: yes
+  1Ch 1:1   fresh 0 lines - DELTA2 0 lines - same: yes
+  Gen 1:21  fresh 8 lines - DELTA2 8 lines - same: yes
+  Mark 1:9  fresh 8 lines - DELTA2 8 lines - same: yes
+    words  1Ch	13	10	7	english	'he struck'	'struck'	no
+    words  1Ch	13	10	18	english	'ark.'	'ark;'	no
+    words  1Ch	13	10	19	english	'And'	'and'	no
+    words  Gen	1	21	5	english	'whales'	'sea monsters'	no
+    words  Gen	1	21	5	english_head	'whales'	'monsters'	no
+    words  Gen	1	21	5	english_head_norm	'whale'	'monster'	no
+    words  Gen	1	21	10	english	'life'	'soul'	no
+    words  Gen	1	21	10	english_head	'life'	'soul'	no
+    words  Gen	1	21	10	english_head_norm	'life'	'soul'	no
+    words  Gen	1	21	19	english	'types;'	'types,'	no
+    words  Mar	1	9	10	english	'of the'	'of'	no
+    words  Mar	1	9	10	greek_pos	None	1	no
+    words  Mar	1	9	10	bracket_id	None	2	no
+    words  Mar	1	9	11	english	'of Galilee,'	'Galilee,'	no
+    words  Mar	1	9	11	greek_pos	None	2	no
+    words  Mar	1	9	11	bracket_id	None	2	no
+    words  Mar	1	9	13	english	'he was immersed'	'was immersed'	no
+    verses 1Ch 13:10 text (a -> b, printed in (2))
+    verses Gen 1:21 text (a -> b, printed in (2))
+    verses Mar 1:9 text (a -> b, printed in (2))
+=== (2) 1Ch 13:10 - step 5: eligible 1  - B2 prose list: written , old_len 161, new_len 158 ===
+  src verses.text (161 characters): And the LORD was enraged in anger against Uzza, and he struck him there, on account of the stretching out of his hand upon the ark. And he died there before God.
+  src reading order (the reader's prose, through the port): And the LORD was enraged in anger against Uzza, he struck him there, on account of the stretching out of his hand upon the ark. And he died there before God.
+  src port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    src position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=2 | english='was enraged' | english_head='enraged' | strongs='2373' | strongs_base='G2373' | greek_pos=2 | bracket_id=7 | is_pn=0 | italic=0 | lemma='θυμόω'
+    src position=3 | english='the LORD' | english_head='LORD' | strongs='2962' | strongs_base='G2962' | greek_pos=1 | bracket_id=7 | is_pn=0 | italic=0 | lemma='κύριος'
+    src position=4 | english='in anger' | english_head='anger' | strongs='2372' | strongs_base='G2372' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=5 | english='against' | english_head='against' | strongs='1909' | strongs_base='G1909' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=6 | english='Uzza,' | english_head='Uzza' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=7 | english='he struck' | english_head='struck' | strongs='3960' | strongs_base='G3960' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=8 | english='him' | english_head='him' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=9 | english='there,' | english_head='there' | strongs='1563' | strongs_base='G1563' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=10 | english='on account of' | english_head='account' | strongs='1223' | strongs_base='G1223' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=11 | english='the stretching out' | english_head='stretching' | strongs='1614' | strongs_base='G1614' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=12 | english='of his' | english_head='his' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=13 | english='hand' | english_head='hand' | strongs='5495' | strongs_base='G5495' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=14 | english='upon' | english_head='upon' | strongs='1909' | strongs_base='G1909' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=15 | english='the' | english_head='the' | strongs='3588' | strongs_base='G3588' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=18 | english='ark.' | english_head='ark' | strongs='2787' | strongs_base='G2787' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=19 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=20 | english='he died' | english_head='died' | strongs='599' | strongs_base='G599' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=21 | english='there' | english_head='there' | strongs='1563' | strongs_base='G1563' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=22 | english='before' | english_head='before' | strongs='1725' | strongs_base='G1725' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=23 | english='God.' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text (158 characters): And the LORD was enraged in anger against Uzza, and struck him there, on account of the stretching out of his hand upon the ark; and he died there before God.
+  built reading order (the reader's prose, through the port): And the LORD was enraged in anger against Uzza, struck him there, on account of the stretching out of his hand upon the ark; and he died there before God.
+  built port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    built position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=2 | english='was enraged' | english_head='enraged' | strongs='2373' | strongs_base='G2373' | greek_pos=2 | bracket_id=7 | is_pn=0 | italic=0 | lemma='θυμόω'
+    built position=3 | english='the LORD' | english_head='LORD' | strongs='2962' | strongs_base='G2962' | greek_pos=1 | bracket_id=7 | is_pn=0 | italic=0 | lemma='κύριος'
+    built position=4 | english='in anger' | english_head='anger' | strongs='2372' | strongs_base='G2372' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=5 | english='against' | english_head='against' | strongs='1909' | strongs_base='G1909' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=6 | english='Uzza,' | english_head='Uzza' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=7 | english='struck' | english_head='struck' | strongs='3960' | strongs_base='G3960' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=8 | english='him' | english_head='him' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=9 | english='there,' | english_head='there' | strongs='1563' | strongs_base='G1563' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=10 | english='on account of' | english_head='account' | strongs='1223' | strongs_base='G1223' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=11 | english='the stretching out' | english_head='stretching' | strongs='1614' | strongs_base='G1614' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=12 | english='of his' | english_head='his' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=13 | english='hand' | english_head='hand' | strongs='5495' | strongs_base='G5495' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=14 | english='upon' | english_head='upon' | strongs='1909' | strongs_base='G1909' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=15 | english='the' | english_head='the' | strongs='3588' | strongs_base='G3588' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=18 | english='ark;' | english_head='ark' | strongs='2787' | strongs_base='G2787' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=19 | english='and' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=20 | english='he died' | english_head='died' | strongs='599' | strongs_base='G599' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=21 | english='there' | english_head='there' | strongs='1563' | strongs_base='G1563' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=22 | english='before' | english_head='before' | strongs='1725' | strongs_base='G1725' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=23 | english='God.' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text = DELTA2's new text: yes
+=== (2) Eze 31:9 - step 5: eligible 0 count_differs - B2 prose list: kept_old count_differs, old_len , new_len  ===
+  src verses.text (98 characters): Because of the multitude of his branches; and the trees of the paradise of God were jealous of it.
+  src reading order (the reader's prose, through the port): Because of the multitude of his branches; and the trees of the paradise of God were jealous of it.
+  src port = verses.text (spaces folded): yes
+    src position=1 | english='Because of' | english_head='Because' | strongs='1223' | strongs_base='G1223' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=2 | english='the multitude' | english_head='multitude' | strongs='4128' | strongs_base='G4128' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=3 | english='of his branches;' | english_head='branches' | strongs='2814' | strongs_base='G2814' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=4 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=5 | english='the trees' | english_head='trees' | strongs='3586' | strongs_base='G3586' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=6 | english='of the paradise' | english_head='paradise' | strongs='3857' | strongs_base='G3857' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=7 | english='of God' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=8 | english='were jealous of' | english_head='jealous' | strongs='2206' | strongs_base='G2206' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma='ζηλόω'
+    src position=9 | english='it.' | english_head='it' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text (98 characters): Because of the multitude of his branches; and the trees of the paradise of God were jealous of it.
+  built reading order (the reader's prose, through the port): Because of the multitude of his branches; and the trees of the paradise of God were jealous of it.
+  built port = verses.text (spaces folded): yes
+    built position=1 | english='Because of' | english_head='Because' | strongs='1223' | strongs_base='G1223' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=2 | english='the multitude' | english_head='multitude' | strongs='4128' | strongs_base='G4128' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=3 | english='of his branches;' | english_head='branches' | strongs='2814' | strongs_base='G2814' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=4 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=5 | english='the trees' | english_head='trees' | strongs='3586' | strongs_base='G3586' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=6 | english='of the paradise' | english_head='paradise' | strongs='3857' | strongs_base='G3857' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=7 | english='of God' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=8 | english='were jealous of' | english_head='jealous' | strongs='2206' | strongs_base='G2206' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma='ζηλόω'
+    built position=9 | english='it.' | english_head='it' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text = src's: yes
+=== (2) 1Ch 1:1 - step 5: eligible 1  - B2 prose list: unchanged , old_len 18, new_len 18 ===
+  src verses.text (18 characters): Adam, Seth, Enosh,
+  src reading order (the reader's prose, through the port): Adam, Seth, Enosh,
+  src port = verses.text (spaces folded): yes
+    src position=1 | english='Adam,' | english_head='Adam' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=2 | english='Seth,' | english_head='Seth' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=3 | english='Enosh,' | english_head='Enosh' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+  built verses.text (18 characters): Adam, Seth, Enosh,
+  built reading order (the reader's prose, through the port): Adam, Seth, Enosh,
+  built port = verses.text (spaces folded): yes
+    built position=1 | english='Adam,' | english_head='Adam' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=2 | english='Seth,' | english_head='Seth' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=3 | english='Enosh,' | english_head='Enosh' | strongs='*' | strongs_base='*' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+  built verses.text = src's: yes
+=== (2) Gen 1:21 - step 5: eligible 1  - B2 prose list: written , old_len 222, new_len 228 ===
+  src verses.text (222 characters): And God made the great whales, and every life of living creatures of reptiles which the waters brought forth according to their types; and every feathered winged creature according to type. And God beheld that it was good.
+  src reading order (the reader's prose, through the port): And God made the great whales and every life of living creatures of reptiles which the waters brought forth according to types; their types; and every feathered winged creature according to type. And God beheld that it was good.
+  src port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    src position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=2 | english='God' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=3 | english='made' | english_head='made' | strongs='4160' | strongs_base='G4160' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=4 | english='the great' | english_head='great' | strongs='3173' | strongs_base='G3173' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=5 | english='whales' | english_head='whales' | strongs='2785' | strongs_base='G2785' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma='κῆτος'
+    src position=6 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=7 | english='every' | english_head='every' | strongs='3956' | strongs_base='G3956' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=10 | english='life' | english_head='life' | strongs='5590' | strongs_base='G5590' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=11 | english='of living creatures' | english_head='creatures' | strongs='2198' | strongs_base='G2198' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=12 | english='of reptiles' | english_head='reptiles' | strongs='2062' | strongs_base='G2062' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=13 | english='which' | english_head='which' | strongs='3739' | strongs_base='G3739' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=14 | english='the waters brought forth' | english_head='brought' | strongs='1806' | strongs_base='G1806' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=15 | english='according to' | english_head='according' | strongs='2596' | strongs_base='G2596' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=16 | english='types;' | english_head='types' | strongs='1085' | strongs_base='G1085' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=17 | english='' | english_head='' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=18 | english='their' | english_head='their' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=19 | english='types;' | english_head='types' | strongs='1085' | strongs_base='G1085' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=20 | english='and every feathered winged creature according to type. And God beheld that it was good.' | english_head='good' | strongs='2570' | strongs_base='G2570' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text (228 characters): And God made the great sea monsters, and every soul of living creatures of reptiles which the waters brought forth according to their types, and every feathered winged creature according to type. And God beheld that it was good.
+  built reading order (the reader's prose, through the port): And God made the great sea monsters and every soul of living creatures of reptiles which the waters brought forth according to types; their types, and every feathered winged creature according to type. And God beheld that it was good.
+  built port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    built position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=2 | english='God' | english_head='God' | strongs='2316' | strongs_base='G2316' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=3 | english='made' | english_head='made' | strongs='4160' | strongs_base='G4160' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=4 | english='the great' | english_head='great' | strongs='3173' | strongs_base='G3173' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=5 | english='sea monsters' | english_head='monsters' | strongs='2785' | strongs_base='G2785' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma='κῆτος'
+    built position=6 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=7 | english='every' | english_head='every' | strongs='3956' | strongs_base='G3956' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=10 | english='soul' | english_head='soul' | strongs='5590' | strongs_base='G5590' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=11 | english='of living creatures' | english_head='creatures' | strongs='2198' | strongs_base='G2198' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=12 | english='of reptiles' | english_head='reptiles' | strongs='2062' | strongs_base='G2062' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=13 | english='which' | english_head='which' | strongs='3739' | strongs_base='G3739' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=14 | english='the waters brought forth' | english_head='brought' | strongs='1806' | strongs_base='G1806' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=15 | english='according to' | english_head='according' | strongs='2596' | strongs_base='G2596' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=16 | english='types;' | english_head='types' | strongs='1085' | strongs_base='G1085' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=17 | english='' | english_head='' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=18 | english='their' | english_head='their' | strongs='846' | strongs_base='G846' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=19 | english='types,' | english_head='types' | strongs='1085' | strongs_base='G1085' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=20 | english='and every feathered winged creature according to type. And God beheld that it was good.' | english_head='good' | strongs='2570' | strongs_base='G2570' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+  built verses.text = DELTA2's new text: yes
+=== (2) Mark 1:9 - step 5: eligible 1  - B2 prose list: written , old_len 123, new_len 113 ===
+  src verses.text (123 characters): And it came to pass in those days, Jesus came from Nazareth of the of Galilee, and he was immersed by John into the Jordan.
+  src reading order (the reader's prose, through the port): And in it came to pass those days, Jesus came from Nazareth of the of Galilee, and he was immersed by John into the Jordan.
+  src port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    src position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=2 | english='it came to pass' | english_head='pass' | strongs='1096' | strongs_base='G1096' | greek_pos=2 | bracket_id=3 | is_pn=0 | italic=0 | lemma=None
+    src position=3 | english='in' | english_head='in' | strongs='1722' | strongs_base='G1722' | greek_pos=1 | bracket_id=3 | is_pn=0 | italic=0 | lemma=None
+    src position=4 | english='those' | english_head='those' | strongs='1565' | strongs_base='G1565' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=5 | english='days,' | english_head='days' | strongs='2250' | strongs_base='G2250' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=6 | english='Jesus' | english_head='Jesus' | strongs='2424' | strongs_base='G2424' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=7 | english='came' | english_head='came' | strongs='2064' | strongs_base='G2064' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=8 | english='from' | english_head='from' | strongs='575' | strongs_base='G575' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=9 | english='Nazareth' | english_head='Nazareth' | strongs='3478' | strongs_base='G3478' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=10 | english='of the' | english_head='the' | strongs='3588' | strongs_base='G3588' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=11 | english='of Galilee,' | english_head='Galilee' | strongs='1056' | strongs_base='G1056' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=12 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=13 | english='he was immersed' | english_head='immersed' | strongs='907' | strongs_base='G907' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=14 | english='by' | english_head='by' | strongs='5259' | strongs_base='G5259' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=15 | english='John' | english_head='John' | strongs='2491' | strongs_base='G2491' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    src position=16 | english='into' | english_head='into' | strongs='1519' | strongs_base='G1519' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    src position=17 | english='the Jordan.' | english_head='Jordan' | strongs='2446' | strongs_base='G2446' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+  built verses.text (113 characters): And it came to pass in those days, Jesus came from Nazareth of Galilee, and was immersed by John into the Jordan.
+  built reading order (the reader's prose, through the port): And in it came to pass those days, Jesus came from Nazareth of Galilee, and was immersed by John into the Jordan.
+  built port = verses.text (spaces folded): no (a read-out; v2 judged the corpus at step 6)
+    built position=1 | english='And' | english_head='And' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=2 | english='it came to pass' | english_head='pass' | strongs='1096' | strongs_base='G1096' | greek_pos=2 | bracket_id=3 | is_pn=0 | italic=0 | lemma=None
+    built position=3 | english='in' | english_head='in' | strongs='1722' | strongs_base='G1722' | greek_pos=1 | bracket_id=3 | is_pn=0 | italic=0 | lemma=None
+    built position=4 | english='those' | english_head='those' | strongs='1565' | strongs_base='G1565' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=5 | english='days,' | english_head='days' | strongs='2250' | strongs_base='G2250' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=6 | english='Jesus' | english_head='Jesus' | strongs='2424' | strongs_base='G2424' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=7 | english='came' | english_head='came' | strongs='2064' | strongs_base='G2064' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=8 | english='from' | english_head='from' | strongs='575' | strongs_base='G575' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=9 | english='Nazareth' | english_head='Nazareth' | strongs='3478' | strongs_base='G3478' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=10 | english='of' | english_head='the' | strongs='3588' | strongs_base='G3588' | greek_pos=1 | bracket_id=9 | is_pn=0 | italic=0 | lemma=None
+    built position=11 | english='Galilee,' | english_head='Galilee' | strongs='1056' | strongs_base='G1056' | greek_pos=2 | bracket_id=9 | is_pn=1 | italic=0 | lemma=None
+    built position=12 | english='and' | english_head='and' | strongs='2532' | strongs_base='G2532' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=13 | english='was immersed' | english_head='immersed' | strongs='907' | strongs_base='G907' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=14 | english='by' | english_head='by' | strongs='5259' | strongs_base='G5259' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=15 | english='John' | english_head='John' | strongs='2491' | strongs_base='G2491' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+    built position=16 | english='into' | english_head='into' | strongs='1519' | strongs_base='G1519' | greek_pos=None | bracket_id=None | is_pn=0 | italic=0 | lemma=None
+    built position=17 | english='the Jordan.' | english_head='Jordan' | strongs='2446' | strongs_base='G2446' | greek_pos=None | bracket_id=None | is_pn=1 | italic=0 | lemma=None
+  built verses.text = DELTA2's new text: yes
+=== (3) the named checks (rebuild-words :192-196; charter :350, 4.10; DESIGN 9.206, 9.210) ===
+  1Ch 13:10 src: G2373 @2 'was enraged' greek_pos 2 - G2962 @3 'the LORD' greek_pos 1 - one bracket: yes - the LORD's greek_pos lower: yes - a digit in either cell: no - the bracket's positions [2, 3], every slot inside it in it: yes
+  1Ch 13:10 src chip order of that bracket (its rows by greek_pos, orderBracketGroupWords): the LORD was enraged - reads 'the LORD was enraged': yes
+  1Ch 13:10 built: G2373 @2 'was enraged' greek_pos 2 - G2962 @3 'the LORD' greek_pos 1 - one bracket: yes - the LORD's greek_pos lower: yes - a digit in either cell: no - the bracket's positions [2, 3], every slot inside it in it: yes
+  1Ch 13:10 built chip order of that bracket (its rows by greek_pos, orderBracketGroupWords): the LORD was enraged - reads 'the LORD was enraged': yes
+  1Ch 13:10 src verses.text holds 'the LORD was enraged': yes
+  1Ch 13:10 built verses.text holds 'the LORD was enraged': yes
+  1Ch 13:10 built verses.text length 158 (B2's new_len 158 - a read-out; DESIGN 9.206 (1): no length expectation from CC's hand count)
+  Eze 31:9 src: G2206 @8 english 'were jealous of', lexicon lemma 'ζηλόω' - 'were jealous of' and ζηλόω: yes
+  Eze 31:9 built: G2206 @8 english 'were jealous of', lexicon lemma 'ζηλόω' - 'were jealous of' and ζηλόω: yes
+  1Ch 1:1 src: Adam @1 english 'Adam,' strongs '*' strongs_base '*' is_pn 1 - pn_hebrew_xref [(1, 'H121', 'tipnr')]
+  1Ch 1:1 src: pn_binding rows (book 13, ch 1, vs 1): 2
+    src (13, 1, 1, 'adam', 'Adam@Gen.2.19', 'person', 'r1', 1, 0, 1)
+    src (13, 1, 1, 'seth', 'Seth@Gen.4.25', 'person', 'r1', 1, 0, 1)
+  1Ch 1:1 built: Adam @1 english 'Adam,' strongs '*' strongs_base '*' is_pn 1 - pn_hebrew_xref [(1, 'H121', 'tipnr')]
+  1Ch 1:1 built: pn_binding rows (book 13, ch 1, vs 1): 2
+    built (13, 1, 1, 'adam', 'Adam@Gen.2.19', 'person', 'r1', 1, 0, 1)
+    built (13, 1, 1, 'seth', 'Seth@Gen.4.25', 'person', 'r1', 1, 0, 1)
+  1Ch 1:1 Adam's pn_hebrew_xref row built = src (position, hebrew_base, class): yes
+  1Ch 1:1 pn_binding rows built = src: yes
+  Gen 1:21 src: G2785 @5 english 'whales' - verses.text holds 'whales': yes
+  Gen 1:21 built: G2785 @5 english 'sea monsters' - verses.text holds 'sea monsters' and not 'whales': yes
+  Mark 1:9 built: verses.text holds 'Nazareth of Galilee,' and not 'of the of': yes (the cells as built, DESIGN 9.210 (2): JP accepted the τῆς cell 'of' as built - a departure from charter 4.10, declared)
+  Mark 1:9 src @10 english 'of the' greek_pos None bracket_id None strongs_base 'G3588'
+  Mark 1:9 src @11 english 'of Galilee,' greek_pos None bracket_id None strongs_base 'G1056'
+  Mark 1:9 src @13 english 'he was immersed' greek_pos None bracket_id None strongs_base 'G907'
+  Mark 1:9 built @10 english 'of' greek_pos 1 bracket_id 9 strongs_base 'G3588'
+  Mark 1:9 built @11 english 'Galilee,' greek_pos 2 bracket_id 9 strongs_base 'G1056'
+  Mark 1:9 built @13 english 'was immersed' greek_pos None bracket_id None strongs_base 'G907'
+STEP7A CHECK: READ - every declared expectation met; the lines above go to the ruling chat
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the check; 4 = check.py not the pinned bytes) - end 2026-11-20T15:31:14Z
+src, built size and time before = after: yes
+src sha256 after: fd469f85fbcac6f12991fc1776bae49851c7ca8a242d575886b27ab036595f4c (expect fd469f85fbcac6f12991fc1776bae49851c7ca8a242d575886b27ab036595f4c)
+Python cache folders and their contents before = after: yes (e3b0c44298fc1c14 / e3b0c44298fc1c14)
+STEP7A CHECK: OK
+built = HEADFIX2's result after: exit 0 (expect 0)
+STEP7A RESULT: READ - 2026-11-20T15:31:14Z - every declared expectation met; the lines above go to the ruling chat as printed
+exit=0
+cache folders in the checkout after: 0
+
+=============== A2 built Gen 1:21 @19 'types:' (one cell more than declared) -> FINDING (fresh vs declared, fresh vs DELTA2) ===============
+  FINDING: fresh vs declared Gen 1:21: words line NOT declared: Gen	1	21	19	english	'types;'	'types:'	no
+  FINDING: fresh vs declared Gen 1:21: declared words line MISSING: Gen	1	21	19	english	'types;'	'types,'	no
+  Gen 1:21  fresh 8 lines - DELTA2 8 lines - same: NO
+  FINDING: Gen 1:21: fresh line not in DELTA2: Gen	1	21	19	english	'types;'	'types:'	no
+  FINDING: Gen 1:21: DELTA2 line not in the fresh delta: Gen	1	21	19	english	'types;'	'types,'	no
+  Gen 1:21 src: G2785 @5 english 'whales' - verses.text holds 'whales': yes
+  Gen 1:21 built: G2785 @5 english 'sea monsters' - verses.text holds 'sea monsters' and not 'whales': yes
+STEP7A CHECK: FINDING - 4: fresh vs declared Gen 1:21: words line NOT declared: Gen	1	21	19	english	'types;'	'types:'	no | fresh vs declared Gen 1:21: declared words line MISSING: Gen	1	21	19	english	'types;'	'types,'	no | Gen 1:21: fresh line not in DELTA2: Gen	1	21	19	english	'types;'	'types:'	no | Gen 1:21: DELTA2 line not in the fresh delta: Gen	1	21	19	english	'types;'	'types,'	no
+STEP7A RESULT: FINDING - 2026-11-20T15:31:15Z - the findings above (and /home/jp/gates7a/a2/edition_upgrade_runs/step7a_spotcheck_20261120/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== A3 built 1Ch 13:10: the LORD's greek_pos above the verb's -> FINDING (chip order), src clean ===============
+  FINDING: fresh vs declared 1Ch 13:10: words line NOT declared: 1Ch	13	10	3	greek_pos	1	3	no
+  FINDING: 1Ch 13:10: fresh line not in DELTA2: 1Ch	13	10	3	greek_pos	1	3	no
+  1Ch 13:10 src: G2373 @2 'was enraged' greek_pos 2 - G2962 @3 'the LORD' greek_pos 1 - one bracket: yes - the LORD's greek_pos lower: yes - a digit in either cell: no - the bracket's positions [2, 3], every slot inside it in it: yes
+  1Ch 13:10 src chip order of that bracket (its rows by greek_pos, orderBracketGroupWords): the LORD was enraged - reads 'the LORD was enraged': yes
+  1Ch 13:10 built: G2373 @2 'was enraged' greek_pos 2 - G2962 @3 'the LORD' greek_pos 3 - one bracket: yes - the LORD's greek_pos lower: NO - a digit in either cell: no - the bracket's positions [2, 3], every slot inside it in it: yes
+  1Ch 13:10 built chip order of that bracket (its rows by greek_pos, orderBracketGroupWords): was enraged the LORD - reads 'the LORD was enraged': NO
+  FINDING: 1Ch 13:10 built: the LORD / was enraged pair is not one contiguous bracket reading 'the LORD was enraged' with no digit
+  1Ch 13:10 src verses.text holds 'the LORD was enraged': yes
+  1Ch 13:10 built verses.text holds 'the LORD was enraged': yes
+  1Ch 13:10 built verses.text length 158 (B2's new_len 158 - a read-out; DESIGN 9.206 (1): no length expectation from CC's hand count)
+STEP7A CHECK: FINDING - 3: fresh vs declared 1Ch 13:10: words line NOT declared: 1Ch	13	10	3	greek_pos	1	3	no | 1Ch 13:10: fresh line not in DELTA2: 1Ch	13	10	3	greek_pos	1	3	no | 1Ch 13:10 built: the LORD / was enraged pair is not one contiguous bracket reading 'the LORD was enraged' with no digit
+STEP7A RESULT: FINDING - 2026-11-20T15:31:16Z - the findings above (and /home/jp/gates7a/a3/edition_upgrade_runs/step7a_spotcheck_20261120/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== A4 built Adam's xref H122 -> FINDING (built not H121; built != src) ===============
+  1Ch 1:1 src: Adam @1 english 'Adam,' strongs '*' strongs_base '*' is_pn 1 - pn_hebrew_xref [(1, 'H121', 'tipnr')]
+  1Ch 1:1 built: Adam @1 english 'Adam,' strongs '*' strongs_base '*' is_pn 1 - pn_hebrew_xref [(1, 'H122', 'tipnr')]
+  FINDING: 1Ch 1:1 built: Adam's pn_hebrew_xref row is not one row with hebrew_base 'H121'
+  1Ch 1:1 Adam's pn_hebrew_xref row built = src (position, hebrew_base, class): NO
+  FINDING: 1Ch 1:1: Adam's pn_hebrew_xref row differs built vs src
+STEP7A CHECK: FINDING - 2: 1Ch 1:1 built: Adam's pn_hebrew_xref row is not one row with hebrew_base 'H121' | 1Ch 1:1: Adam's pn_hebrew_xref row differs built vs src
+STEP7A RESULT: FINDING - 2026-11-20T15:31:17Z - the findings above (and /home/jp/gates7a/a4/edition_upgrade_runs/step7a_spotcheck_20261120/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== A5 both copies' G2206 lemma 'ζηλῶ' -> FINDING on both ===============
+  Eze 31:9 src: G2206 @8 english 'were jealous of', lexicon lemma 'ζηλῶ' - 'were jealous of' and ζηλόω: NO
+  FINDING: Eze 31:9 src: the G2206 row is not 'were jealous of' / ζηλόω
+  Eze 31:9 built: G2206 @8 english 'were jealous of', lexicon lemma 'ζηλῶ' - 'were jealous of' and ζηλόω: NO
+  FINDING: Eze 31:9 built: the G2206 row is not 'were jealous of' / ζηλόω
+STEP7A CHECK: FINDING - 2: Eze 31:9 src: the G2206 row is not 'were jealous of' / ζηλόω | Eze 31:9 built: the G2206 row is not 'were jealous of' / ζηλόω
+STEP7A RESULT: FINDING - 2026-11-20T15:31:18Z - the findings above (and /home/jp/gates7a/a5/edition_upgrade_runs/step7a_spotcheck_20261120/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== A6 the DELTA2 stand-in lacks Mark 1:9 @13 -> FINDING (fresh vs DELTA2 differs at Mark 1:9 only) ===============
+  1Ch 13:10 fresh 4 lines - DELTA2 4 lines - same: yes
+  Eze 31:9  fresh 0 lines - DELTA2 0 lines - same: yes
+  1Ch 1:1   fresh 0 lines - DELTA2 0 lines - same: yes
+  Gen 1:21  fresh 8 lines - DELTA2 8 lines - same: yes
+  Mark 1:9  fresh 8 lines - DELTA2 7 lines - same: NO
+  FINDING: Mark 1:9: fresh line not in DELTA2: Mar	1	9	13	english	'he was immersed'	'was immersed'	no
+STEP7A CHECK: FINDING - 1: Mark 1:9: fresh line not in DELTA2: Mar	1	9	13	english	'he was immersed'	'was immersed'	no
+STEP7A RESULT: FINDING - 2026-11-20T15:31:19Z - the findings above (and /home/jp/gates7a/a6/edition_upgrade_runs/step7a_spotcheck_20261120/check.out) go to the ruling chat as printed; read-only, nothing to restore
+exit=1
+
+=============== A7 re-paste on A1's home -> STOP, log exists ===============
+STEP7A RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gates7a/a1/edition_upgrade_runs/step7a_spotcheck_20261120.log
+
+=============== A8 the uploaded check program changed by one byte -> STOP before the check runs ===============
+check.py sha256 (the uploaded file, as copied into the run folder): d40b9b3d9587d59a66f55701b1648d33436acee24ff0d7045dc91575733dada6 (expect 7e40ccf37f0f95305e5f03d7c80b83776ee716ade27e3bdfa414978cb7232859)
+STEP7A RESULT: STOP - the uploaded check program is not the file CC wrote and tested
+exit=1
+
+=============== A9 built changed after the guard folder was made (one words cell) -> STOP at the built guard, nothing read ===============
+written table words: built 69 rows, 0ca6b0cd83c2 - dry copy 69 rows, f8f2f8fcde32 - = the dry run: NO - vs prep 69 rows, f8f2f8fcde32
+STEP7A CHECK: FAIL - words on built differs from the dry run
+STEP7A RESULT: STOP - built is not HEADFIX2's result (lines above)
+exit=1
+
+=============== A10 KNOWN POSITIVE for the cache line: a cache file appears in scripts/__pycache__ while the block runs -> STOP at the cache line ===============
+Python cache folders and their contents before = after: NO (e3b0c44298fc1c14 / 8248bab3a49911b1)
+STEP7A RESULT: STOP - a Python cache file or folder appeared, changed or went in the checkout - report this as printed
+exit=1
+
+=============== A11 the checkout folder itself changes while the block runs (a file made and removed in ~/bible-db) -> the cache line holds, READ ===============
+Python cache folders and their contents before = after: yes (e3b0c44298fc1c14 / e3b0c44298fc1c14)
+STEP7A RESULT: READ - 2026-11-20T15:31:23Z - every declared expectation met; the lines above go to the ruling chat as printed
+exit=0
