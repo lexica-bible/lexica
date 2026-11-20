@@ -79,6 +79,9 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   **JP 11/20 (§9.214): the APP EDITION rules (charter §0.1); eSword is a witness only — only a verse where built
   matches NEITHER eSword NOR the app feed is brought (ruling chat + JP).** **CLOSED 11/20 (§9.216): eSword read set aside
   by JP; built = feed at all 10 pairs and a fresh read of the app pages = feed for all 10 (DR "### P2 — the 10 reorder verses").**
+  Reviewer read done 11/20 (§9.217): ESCALATE on one 2Ki 23:35 read-out cell, corrected; verdicts unchanged.
+- **Jdg 11:7 "that you" — feed number 1473, built keeps 5210** (P2 read-out (b), §9.217, 11/20): a number, not an order
+  item; not traced. Carried by name; nothing asked before the swap.
 - **L9 split lint on built (charter §4.2) — OPEN by name, FIRST on the list after the swap** (JP, §9.214, 11/20;
   §4.2 set aside for the swap). Needs new code: a lint mode that replays the split through the app-feed transplant
   (`lint_split_wrong_slot.py` + its sizing partner `size_split_compounds.py`); new REF, PA pull, tests, a

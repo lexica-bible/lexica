@@ -17421,7 +17421,7 @@ sheet follows the moved rows to a listed value, or prints it as "same on both, u
 
 | Verse | built reads | feed | src reads (old) | built = feed |
 |---|---|---|---|---|
-| 2Ki 23:35 | @6 Jehoiakim, @7 gave (both gp 1, one bracket) | slot 6 "1Jehoiakim gave]" [1325-*] | Jehoiakim, gave (bracket, gp 1/2) | YES |
+| 2Ki 23:35 | @6 Jehoiakim, @7 gave (both gp 1; bracket UNLISTED, same on both → position order either way) | slot 6 "1Jehoiakim gave]" [1325-*] | @6 gave gp 2, @7 Jehoiakim gp 1; bracket UNLISTED → src reading order NOT decided (corrected 11/20, reviewer) | YES |
 | Est 5:9 | @12 Haman's, @13 seeing (no bracket) | slot 11 "Haman's seeing" [1492-*] | Haman, seeing (bracket 2, gp 1/2) | YES |
 | Eze 20:14 | @7 thorough one, @8 should not | slots 6, 7 "thorough one," / "should not be profaned" | should not, be thoroughly | YES |
 | Gen 5:25 | @1 Mathusala, @2 lived | slot 1 "Mathusala lived" [2198-*] | Methuselah, lived (bracket 1) | YES |
@@ -17439,8 +17439,9 @@ does not decide the reading order; one English piece leaves nothing to order.
   at 2Ki 23:35, Est 5:9, Gen 5:25, 5:26 and 34:4; at Jos 2:4 the two agree; at Jos 5:15 the position order follows the number order
   (4160 @26, * @27) and greek_pos gives the reading order. Both kinds read the same as the feed. (b) Jdg 11:7: the feed tags "that you"
   1473; built's row keeps 5210. That is not an order item and is not traced here. (c) src's reading order already had the name first
-  at 2Ki 23:35, Est 5:9 and Gen 5:25/26 (through brackets), so for those four the move changed the position order, not what the reader
-  reads.
+  at Est 5:9 and Gen 5:25/26 (brackets listed in words_cells), so for those three the move changed the position order, not what the reader
+  reads. **2Ki 23:35 struck from (c) (reviewer, §9.217):** its bracket is unlisted, so src's reading order there is not traced; the
+  sheet's src-order line printed it "by greek_pos" because the code (sheets.py :136) treats the unlisted marker as a bracket.
 - **Control:** `sheets.py --control` swaps built's English at Gen 34:4 → that verse prints NO and "ALL 10: NO"; every other verse
   prints YES (sheets_control.out).
 
@@ -17462,3 +17463,85 @@ frozen feed holds. The same parser read both times, so it is not an independent 
 **P2 CLOSED on (1)-(3)**, not on a JP read (as ruled).
 **Still owed before P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
 behaviour; the swap commit's diff; the rollback block.
+
+### P2 ruled CLOSED (§9.217, 11/20) — the reviewer's read of the P2 scripts and outputs, verbatim, and what was changed
+**Ruling chat (11/20), read: CC's note only:** P2 CLOSED on (1)-(3) without a JP read; CC's LIMIT recorded (same parser both times). Because the
+closure rests on scripts the ruling chat has not read, sheets.py + fresh_compare.py and their outputs go through the reviewer (read-only), with
+the verdict verbatim here. This is not a hold on P3 or P4; a different result comes back. Read-out (b) Jdg 11:7 (feed 1473, built 5210)
+is carried by name on the follow-up list (stageC_repin), with nothing asked before the swap; (a) and (c) are noted as read.
+
+**Reviewer verdict, verbatim (reviewer subagent, 11/20):**
+```
+REVIEW: ESCALATE - P2 (1) and (2) are backed by the scripts and outputs, but one DR table cell and read-out (c) for 2Ki 23:35 are not supported by sheets.out
+
+Escalation text for the ruling chat:
+
+This was a read-only review of the evidence behind the P2 closure (DESIGN §9.216). Nothing was run, and no database or file was touched. I am not confirming any output (R2-b). I checked the scripts' logic and the printed lines.
+
+**What I opened and read**
+- C:\Users\JP\projects\bible-db\docs\handoffs\drafts\P2_harness\sheets.py, read in full.
+- C:\Users\JP\projects\bible-db\docs\handoffs\drafts\P2_harness\fresh_compare.py, read in full.
+- C:\Users\JP\edition_upgrade_runs\p2_20261120\sheets.out, fresh.out and fresh_control.out, all read in full.
+- sheets_control.out, lines 50-64 only (the Gen 34:4 block). I did not read its other verses or its summary lines.
+- scripts/reorder_english.py :1-75.
+- The DR P2 section at DRAFT_stageC_outline.md :17407-17452.
+
+**What I did not read or check**
+- reparse_abp_app_italic.py, fetch_abp_app.py, charter :60-72, the fresh_pages HTML, and the two TSV inputs.
+- I could not compute any sha256, so none of the stated hashes is confirmed by me. That covers the two scripts, the four outputs, the inputs and the pages.
+
+**Findings**
+
+1. sheets.py logic is sound for the verdict on each verse.
+   - **built_val (:48-72):** it walks the cells that are equal on both copies, starting from built@p. If no listed value is reached, it returns a marker naming the group of positions that are equal to each other. Two rows get the identical marker only when they are in the same equal group, so their values really are equal. Comparing markers for equality (:115) is therefore valid.
+   - **Reading order (:115-127):**
+     - Same bracket and same greek_pos gives position order. That is correct under reorder_english.py :27 (stable sort) and :68-69, whether the shared bracket is empty or a real group.
+     - The one-group branch sorts by greek_pos and then position, matching :27.
+     - Rom 9:29 goes to the MIXED branch. Its YES (:144-155) rests on the joined slot's number order (302-3666) against the row positions, not on the reader rule. The DR states this openly at (*).
+   - **occ() (:75-80):** it matches whole words and picks the closest pair of matches. Checking the 10 feed lines, each built English either occurs once or its nearest match falls in the right slot (for example "gave" at 2Ki: slot 6 is chosen over slot 24 because Jehoiakim is only in slot 6).
+   - I found no verse whose YES could come from a tie or a wrong match.
+   - **Control:** it swaps built English in the same rows the real check uses (:107-108), so it exercises the real comparison. sheets_control.out:58-61 shows "said then Shechem", feed "Shechem first", NO.
+
+2. The DR table cell and read-out that sheets.out does not support:
+   - DR :17424 says 2Ki 23:35 built is "(both gp 1, one bracket)" and src is "(bracket, gp 1/2)". But sheets.out:4-6 prints the bracket at both positions as "same-on-both-unlisted". The bracket value is never seen; it could be empty.
+   - The src-order code (:136) treats that marker as a real bracket because it is not None. That is the only reason src is shown "by greek_pos" with Jehoiakim first. If the bracket is really empty, src reads in position order: @6 "gave" and then @7 "Jehoiakim".
+   - So read-out (c) at DR :17442, "src's reading order already had the name first at 2Ki 23:35", is not traced.
+   - Built's verdict at 2Ki is unaffected: greek_pos ties at 1 on both rows, so it is position order either way.
+   - All other rows of the table match sheets.out.
+
+3. fresh_compare.py does what claim (2) says.
+   - It checks the feed sha first and exits on a mismatch (:20-24). It restricts to exactly the 10 verses (TEN, :16-17).
+   - It compares whole rows, all 9 columns (:18, :30), and walks every slot up to the longer of the two lists, so a missing or extra slot also counts as a difference (:57-61).
+   - fresh.out:11-21 shows ten YES lines with matching slot counts, then "ALL 10 fresh = feed: YES".
+   - The control (:46-52) changes the parsed fresh row before the same comparison. fresh_control.out:15-17 and :24 show only Gen 5:25 slot 1 differing, then ALL NO. The control goes through the real comparison, not a separate path.
+
+4. Limits the record does not state:
+   - (a) fresh_compare reads `fresh_pages` beside the script (:14), and the run used a scratch copy. fresh.out prints each page's sha, but nothing ties those shas to the pages now in p2_20261120\fresh_pages. A hash comparison would settle this; I could not run one.
+   - (b) sheets checks only the relative order of the two moved rows. It does not check their place relative to neighbouring words, or a bracket group's position in the verse (a group reads at its first member, reorder_english :70-72).
+   - (c) Only English order is compared. Strong's numbers, Greek and punctuation placement in built are not compared to the feed. Jdg 11:7 (5210 against 1473) is already noted as a read-out.
+   - (d) The YES verdicts rest on the input TSVs being complete. I did not check their hashes.
+
+**What would settle it**
+- Either correct DR :17424 to read "bracket unlisted, same on both" and drop or qualify 2Ki 23:35 in read-out (c),
+- or have the ruling chat rule that the read-outs are outside the closure.
+- Also add limits 4(a)-(c) to the stated limits, or rule them accepted.
+- The verdicts in (1) and (2) need no change.
+```
+
+**CC's answer (11/20), with the record corrected in the same commit:**
+- **Finding 2: accepted, corrected.** At DR :17424 the 2Ki 23:35 row now reads: built "both gp 1; bracket UNLISTED, same on both → position
+  order either way", src "@6 gave gp 2, @7 Jehoiakim gp 1; bracket UNLISTED → src reading order NOT decided". In read-out (c), 2Ki
+  23:35 is struck, with the reason written beside it (sheets.py :136 treats the unlisted marker as a bracket). (c) now names Est 5:9 and
+  Gen 5:25/26 only, whose brackets are listed in words_cells (:16188-16189, :16196-16197; :21349-21350, :21359-21360). The script is
+  NOT changed, so its sha and outputs stay as reviewed; the flaw sits in a read-out line, not in a verdict line.
+- **Limit 4(a): settled by hashing.** Each of the 9 pages now in `p2_20261120\fresh_pages\` hashes to the sha fresh.out printed for it,
+  9 of 9 matching (CC, 11/20, sha256sum against the "page …" lines).
+- **Limits 4(b), 4(c): added to P2's stated limits.** P2 compares only the relative English order of the two moved rows in each pair:
+  not their place among the neighbouring words, not a bracket group's place in the verse, and not built's Strong's numbers, Greek or
+  punctuation against the feed. (Jdg 11:7 is already carried by name.)
+- **Limit 4(d):** both inputs were hash-checked by CC against their register values before use: words_cells `86e44c58…fdafc` (§9.157),
+  words_moved `d32361b3…0f08` (stageE :164-166); recorded in §9.215. The reviewer could not compute hashes, so this rests on CC's run.
+- The verdicts (1) and (2) are unchanged, as the reviewer says.
+- **STILL OWED BEFORE P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
+  behaviour; the swap commit's diff; the rollback block. (The reviewer's verdict on P2: in, above; it differs on a read-out, so it goes
+  back to the ruling chat.)
