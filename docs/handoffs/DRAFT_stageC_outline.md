@@ -17545,3 +17545,27 @@ This was a read-only review of the evidence behind the P2 closure (DESIGN §9.21
 - **STILL OWED BEFORE P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
   behaviour; the swap commit's diff; the rollback block. (The reviewer's verdict on P2: in, above; it differs on a read-out, so it goes
   back to the ruling chat.)
+
+### P2 stays CLOSED after the reviewer (§9.218, 11/20) — limits in full, and the reads that cover the verse text
+- **Ruling (read: CC's note only):** P2 STAYS CLOSED; the reviewer's ESCALATE is taken as scope plus the one finding. The correction is
+  accepted. At 2Ki 23:35 built's verdict stands (greek_pos ties, position order either way); **src's reading order at 2Ki 23:35 is NOT
+  decided by this read**. Read-out (c) names only Est 5:9 and Gen 5:25 / 5:26. 4(a) is settled on CC's hashes, 9 of 9. 4(d) rests on
+  CC's run and is recorded as that. Jdg 11:7 (1473 against 5210) stays carried by name.
+- **P2's stated limits, in full (what P2 did NOT show):** (i) the same parser read the app pages both times, so the parser itself is not
+  independently checked; (ii) only the relative order of the two moved rows in each pair is checked, not their neighbours or a bracket
+  group's placement in the verse; (iii) English order only, not Strong's numbers, Greek or punctuation.
+- **The reads that cover the verse text beyond P2 (register lines):**
+  - **Step-4 gate, §9.193 (STEP4GATE run 2, `step4_gate_r2_20261118.log`, RESULT: PASS 2026-11-18T23:52:28Z):** src → built = the declared
+    lists in every compared column (the 13 words columns and verses.text), nothing outside them. It covers *which* cells changed, the 20
+    moved rows' Strong's, lemma, morph, greek_pos and bracket cells among them: G2 80 + 6 = 86 declared = 86 in the delta; G3 moved 20 in 10
+    verses, unpaired 0 / 0; G6 verses.text 15,522 declared = delta. It shows that nothing changed outside the declared lists; it does not
+    show that the declared values are right.
+  - **STEP6AUD C3, §9.204 (step 6 PASSED; `step6_audit_20261119.log` :284, :289, :586):** v2 member diff on built "word-order 0 -
+    content-other 1 (Job 3:3, OPEN) - … unchanged 607, gone 0, new on eligible 0", gated as the cover for bracket order. That is the
+    whole verse's English in the reader's order against built's own verses.text, which derivation B writes from the app feed. So it covers
+    neighbours, bracket-group placement and the punctuation-position members (607 unchanged, the frozen set) for every verse, the 10
+    included.
+  - **Still covered by neither:** built's Strong's numbers against the feed's numbers (e.g. Jdg 11:7). The step-4 gate shows the number
+    cells changed only where declared, not that they agree with the app. That remains as carried (Jdg 11:7 by name).
+- **STILL OWED BEFORE P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
+  behaviour; the swap commit's diff; the rollback block.
