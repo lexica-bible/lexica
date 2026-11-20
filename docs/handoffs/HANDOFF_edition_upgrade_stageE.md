@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.205**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.206**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/19 end; charter §6 STEPS 4 + 5 + 6 PASSED — §9.193, §9.194, §9.204; next = step 7) — open here
@@ -13,7 +13,8 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   monsters', Mark 1:9)"; rebuild-words step 7). Read the charter step-7 line + rebuild-words step 7 first; the form is a proposal to the
   ruling chat (what is checked, on which copy, how, expected), then a read-only block. **Step 7's plan goes to the ruling chat before
   anything in it runs on PA (§9.205).**
-- **11/20: BOTH DRAFTS BROUGHT, with the ruling chat** (one paste): (1) **step-7 spot-check PLAN** (DR "## Charter §6 step 7 — the
+- **11/20 RULED (§9.206): step-7 plan Q2 A + B ACCEPTED (7 before 8 stands; step 7 ruled on Part A's log; Part B under step 8); TIPNR57 CLEARED TO RUN as printed; Q1 Mark 1:9 put to JP (Part A's Mark 1:9 expectation waits on him; no write to built cleared).** NEXT: (a) JP runs TIPNR57 → log to the ruling chat by cat; (b) CC drafts Part A (read-only block, built + src, expectations with register/log lines; 1Ch 13:10 prints text + length, no 157/158 expectation) → reviewer → ruling chat; (c) JP's Mark 1:9 answer. Closing the −57 is ruled on the log; the count-only src term, if unlisted, is JP's to set aside (§9.206 (4)).
+- *(History)* **11/20: BOTH DRAFTS BROUGHT, with the ruling chat** (one paste): (1) **step-7 spot-check PLAN** (DR "## Charter §6 step 7 — the
   spot-check PLAN") — Part A on the copies before step 8 (read-only block, drafted only after the plan is ruled) + Part B on the served
   site after the reload; expected per verse with sources; **Q1 Mark 1:9's τῆς cell reads 'of' (in a bracket with 'Galilee,') — neither
   blank nor the app's value as §4.10 / DESIGN :251 declared;** Q2 the A + B split. (2) **Block TIPNR57** (DR "## The import_tipnr −57

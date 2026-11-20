@@ -16232,3 +16232,17 @@ yes, T1b 0 folders, T12 the guard fires on a planted .pyc). (2) The comment and 
 **CC's note on the last line:** the push that records this (docs + the test harness under docs/handoffs/drafts only) changes nothing under
 scripts/, tests/, tipnr/ or cert_manifest.json, which is all the block's code guards read on PA, and PA does not pull for this block. Both
 drafts (the step-7 PLAN and TIPNR57) go to the ruling chat in one paste; JP runs TIPNR57 only on the ruling chat's clearance.
+
+### Step-7 plan RULED + TIPNR57 CLEARED (§9.206, 11/20)
+- **Q2: A + B accepted;** 7 before 8 stands (charter step-7 line noted). Part A is drafted now (below, when brought): read-only, built +
+  src, expectations declared before the run with their register / log lines; reviewer; log to the ruling chat by cat. Step 7 is ruled on
+  Part A's log; Part B goes under step 8.
+- **1Ch 13:10:** no length expectation from CC's hand count (157); the block prints verses.text and its length; a difference from B2's
+  158 is named in the result.
+- **Q1 Mark 1:9 → JP** (put to him 11/20): built's τῆς @10 reads 'of' (greek_pos 1, bracket 2, with @11 'Galilee,'); the app's τῆς is
+  blank and its Galilee cell reads 'of Galilee,'. §4.10 declared "blank or the app's value". Part A's Mark 1:9 expectation waits on him.
+  No write to built is cleared.
+- **TIPNR57 CLEARED TO RUN** as printed (DR :15734-15801, 0144cf99…2daf; program 331dc30f…bffc; GATE REF d34d6723; no pull, no copy).
+  Expected log lines as §9.206 (3). JP uploads `C:\Users\JP\edition_upgrade_runs\tipnr57_check_20261119.py` → `~/edition_upgrade_runs/`,
+  runs the block, brings `~/edition_upgrade_runs/tipnr57_read_20261119.log` by cat. FINDING / STOP → ruling chat as printed, nothing
+  re-run first. Closing the −57 is ruled on the log; the count-only src term, if it is the unlisted part, is JP's to set aside (§9.206 (4)).
