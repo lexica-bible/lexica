@@ -340,7 +340,9 @@ was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = 
 `verses.text`; abp_corrections outside both by design; live changing before the swap is the swap step's to carry →
 5 strongs_base invariant 0 — **PASSED 11/19 (DESIGN §9.194):** STEP5INV (`step5_invariant_20261119.log`): built, bare-number
 `strongs_base` (GLOB '[0-9]*', dotted included) = 0 →
-6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) →
+6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) — **PASSED 11/19 (DESIGN §9.204):** STEP6AUD
+(`step6_audit_20261119.log`, RESULT: FINDING, FINDINGS 1 = C4, disposed by JP's ruling (a), §9.203: §4.4's ≤ 671 restated to built's 747
+for this lane, re-pinned in the swap commit); Job 3:3 content-other OPEN; import_tipnr −57 and Split +4 owed before step 8 →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) →
 8 swap + deploy.sh — the only live action; G5 recorded; then cert_invariants on live, pins +
 manifest + allowlists + the new snapshot all re-pinned in the ONE swap commit.

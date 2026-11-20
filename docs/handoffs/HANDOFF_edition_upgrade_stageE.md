@@ -2,10 +2,32 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.203**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.204**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
-## SUCCESSOR START (11/19 night; STEP6AUD RAN — step 6 NOT PASSED, C4 FINDING, §9.199) — open here
+## SUCCESSOR START (11/19 end; charter §6 STEPS 4 + 5 + 6 PASSED — §9.193, §9.194, §9.204; next = step 7) — open here
+- **Step 6 PASSED (§9.204)** on `step6_audit_20261119.log` as disposed: C4 by JP's ruling (a) (§9.203; built 747, account v2); Job 3:3
+  content-other OPEN; bracket order + the §4.2 L9 split on built's words NOT measured by this run; read-outs as §9.201; the §4.4
+  pre-registration GAP recorded. Nothing re-run, re-pinned or rebuilt; live not touched.
+- **NEXT = charter §6 step 7, CC's to bring** (charter §6: "7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 'sea
+  monsters', Mark 1:9)"; rebuild-words step 7). Read the charter step-7 line + rebuild-words step 7 first; the form is a proposal to the
+  ruling chat (what is checked, on which copy, how, expected), then a read-only block.
+- **PRE-SWAP LIST — every item owed BEFORE STEP 8** (§9.204, plus the items already on record):
+  - **The tipnr read (§9.204):** a read-only block that LISTS or ATTRIBUTES the 57 lost import_tipnr matches (31,649 → 31,592) and compares
+    the tipnr table built vs src. CC drafts it → reviewer (read-only) → ruling chat. Record: DR :779-800 (CHECK 2), :1490-1505 (CHECK 2b
+    could not isolate the 57 — 8b had run on live, not on built); import_tipnr.py :371-374 (tipnr table), :717-723 (words writes) at d34d6723.
+  - **JP's call on Split 80 → 84 (+4) (§9.204):** set the charter's member-attribution rule (:235-237) aside for these four, or rebuild
+    with the split's member log on (build_words_from_abp.py :2773-2775). What the record shows: the count line (stage B log :36); no
+    number or position cell outside the declared 80 + 6 (DR :10199-10200).
+  - **Job 3:3 content-other OPEN** (§9.113, §9.195 Q2) — whether the swap can go with it open is not ruled.
+  - **The swap commit re-pins:** phrase-gloss 747 (§9.203); cert pin abp_corrections_active 374 → 375 + the active-list fixture
+    (§9.156 (4)); health floor 395,003 → 395,014 (§9.130, health_check.py :144); the punct 607 file, snapshot, manifest, L9 scope
+    (charter :351-352).
+  - **The C4 follow-up item** (stageC_repin follow-up list, "C4 joined-slot rows").
+  - Already on record: the 10 reorder verses' eSword order (§9.93 (b)); notes-store anchors at the 20 moved words (before stage G);
+    live moving after the 11/18 copy (the swap step's, §9.181).
+
+## SUCCESSOR START (11/19 night; STEP6AUD RAN — step 6 NOT PASSED, C4 FINDING, §9.199) — superseded by 11/19 end above
 - **STEP6AUD log ruled (§9.199; DR "## The step-6 audit log — RULED"):** every gate PASSED except **C4: built BEYOND allowlist 747 > 671**
   (src 662). Serving deltas + PN-star CLOSED. Count-differs pin = 27c2f790…0a82.
 - **C4 account + read-outs BROUGHT (§9.200 asks; DR "### C4 account + the three read-outs"; rows in

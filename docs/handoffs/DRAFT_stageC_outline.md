@@ -15615,3 +15615,10 @@ built (DR "Part B", :14318-14334), all are ruled or closed except two:
   a build-code change (unmute the log) and a rebuild, not a step-6 read.
 **So, on CC's reading, step 6 can be ruled PASSED** once the ruling chat rules on these two, with: C4 by §9.203; Job 3:3 named OPEN; the
 read-outs as §9.201 recorded them; the pre-registration GAP recorded. Nothing re-run, re-pinned or rebuilt.
+
+### STEP 6 PASSED (§9.204, 11/19)
+Ruled on the STEP6AUD log as disposed (C4 by §9.203; Job 3:3 OPEN; read-outs §9.201; the §4.4 pre-registration GAP). import_tipnr −57
+NOT closed on its outputs — a read-only block listing / attributing the 57 + a tipnr-table compare built vs src is OWED BEFORE STEP 8
+(CC drafts → reviewer → ruling chat). Split +4 carried open by name; JP's call (set the charter :235-237 rule aside for the four, or
+rebuild with the member log on) OWED BEFORE STEP 8. The pre-swap list lives in HANDOFF_edition_upgrade_stageE.md SUCCESSOR START (11/19 end).
+NEXT: step 7.
