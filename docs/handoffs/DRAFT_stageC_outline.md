@@ -15622,3 +15622,8 @@ NOT closed on its outputs — a read-only block listing / attributing the 57 + a
 (CC drafts → reviewer → ruling chat). Split +4 carried open by name; JP's call (set the charter :235-237 rule aside for the four, or
 rebuild with the member log on) OWED BEFORE STEP 8. The pre-swap list lives in HANDOFF_edition_upgrade_stageE.md SUCCESSOR START (11/19 end).
 NEXT: step 7.
+
+### Split +4 RULED (§9.205, 11/19)
+JP: OK — charter :235-237 set aside for the Split +4 only (noted beside §4.8 in the charter); carried OPEN by name past the swap; no
+rebuild, no re-run of steps 4-6. Still owed before step 8: the import_tipnr −57 read (read-only block, reviewer). Step 7's plan goes to
+the ruling chat before anything runs on PA.

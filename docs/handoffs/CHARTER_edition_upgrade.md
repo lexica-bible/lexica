@@ -235,6 +235,10 @@ of these was pinned on a same-text rebuild. An English-line change can move the 
 (anything that reads `english`: the subject-name split, PN-star B, the fill's key 1, the floor). The
 rule: each is re-derived on the built copy and the difference attributed member by member before
 the swap; none is forced.
+**Rule SET ASIDE for one row, by JP, 2026-11-19 (DESIGN §9.205):** `Split 80 → 84` (+4) — the four are not attributed member by member
+before the swap (the build prints the count, not the members; naming them needs a code change + rebuild + steps 4–6 again; STEP4-DELTA2
+shows no number or position cell outside the declared 80 + 6). Carried OPEN by name on the follow-up list, past the swap. The rule stands
+for every other row above.
 ### 4.9 The fill restore under new English (step 9a)
 Re-key ruling 10/25: key 2 (verse_id + ordinal of Strong's in verse) primary, key 1 (verse_id +
 Strong's + english) cross-check; "a slot whose English changes cannot pass key 1 … on the
