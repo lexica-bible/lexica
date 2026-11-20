@@ -239,6 +239,10 @@ the swap; none is forced.
 before the swap (the build prints the count, not the members; naming them needs a code change + rebuild + steps 4–6 again; STEP4-DELTA2
 shows no number or position cell outside the declared 80 + 6). Carried OPEN by name on the follow-up list, past the swap. The rule stands
 for every other row above.
+**Rule SET ASIDE for a second row, by JP, 2026-11-20 (DESIGN §9.210):** `import_tipnr matched 31,649 → 31,592` (−57) — the 57 are not
+attributed member by member before the swap (TIPNR57: the sum's +660 term is a count with no members; no pre-8b copy of the 10/25 run
+exists; the tipnr table is the same row for row on src, built and pre_8b). Carried OPEN by name on the follow-up list, past the swap; no
+rebuild and no further read asked. The rule stands for every other row above.
 ### 4.9 The fill restore under new English (step 9a)
 Re-key ruling 10/25: key 2 (verse_id + ordinal of Strong's in verse) primary, key 1 (verse_id +
 Strong's + english) cross-check; "a slot whose English changes cannot pass key 1 … on the
@@ -252,6 +256,11 @@ follow-up. Then the re-freeze (§6 9c).
 ### 4.10 Declared single rows — Mark 1:9 and John 14:26
 - Mark 1:9 slot "of the" (τῆς, G3588) — old `english` "of the", new per the app edition (blank or the app's
   value). Appears in the compare_words diff by name.
+  **SET ASIDE for this row, by JP, 2026-11-20 (DESIGN §9.210): accept as built; fix after the swap.** Built's τῆς reads 'of' with
+  'Galilee,' on the next word (the app's τῆς is blank, its Galilee cell "of Galilee,"; the verse text reads "Nazareth of Galilee") —
+  neither blank nor the app's value. No write to built before the swap; step 7 Part A expects built as it stands (step 4's G7 figures),
+  declared as this departure. On the follow-up corrections list by name, to be brought to the app's cells after the swap; not a work
+  order until JP raises it.
 - **John 14:26 (added 2026-10-30, §0.9):** the live word-order hit — rows read `spirit holy,` (Greek order,
   no bracket digits) where the prose reads `the holy spirit,`. Declared outcome on the built copy: v2
   word-order 0 with Joh 14:26 clean (either the app edition's slots carry the digits, or the build's pair
@@ -346,7 +355,7 @@ was: "per-COLUMN attribution: `english` / `english_head` / `verses.text` rows = 
 `strongs_base` (GLOB '[0-9]*', dotted included) = 0 →
 6 audits (all floors re-declared per §4.8) + the S9 block (§4.1–4.4) — **PASSED 11/19 (DESIGN §9.204):** STEP6AUD
 (`step6_audit_20261119.log`, RESULT: FINDING, FINDINGS 1 = C4, disposed by JP's ruling (a), §9.203: §4.4's ≤ 671 restated to built's 747
-for this lane, re-pinned in the swap commit); Job 3:3 content-other OPEN; import_tipnr −57 and Split +4 owed before step 8 →
+for this lane, re-pinned in the swap commit); Job 3:3 content-other OPEN; import_tipnr −57 and Split +4 owed before step 8 (both since set aside by JP for their rows, §9.210 / §9.205; OPEN past the swap) →
 7 spot-check (1Ch 13:10 chip order, Eze 31:9, 1Chr 1:1; add Gen 1:21 "sea monsters", Mark 1:9) — **split in two, 11/20 (DESIGN
 §9.206):** Part A = one read-only block on built + src BEFORE step 8, and step 7 is ruled on its log; Part B = the same verses on the
 served site after step 8's reload, recorded under step 8. The order 7 before 8 stands →

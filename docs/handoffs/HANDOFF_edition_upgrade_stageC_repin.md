@@ -54,7 +54,11 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
 - **Follow-up list (out of this lane):** Job 3:3 "Maythe", Joh 3:15 "eternal. life.", the " )" set (2Th 1:10, Rev 2:9,
   Rom 4:17, Rom 9:1, Luk 2:23, Heb 7:11, Phm 1:12, Luk 2:35, Eze 26:7) — all FEED-attributed (CHECK 3), declared in gate
   3's record; the nine doubled-words; Split 80 → 84 attribution (OPEN by name past the swap — charter :235-237 set aside for it by JP,
-  §9.205; un-muting the member log, build_words_from_abp.py :2773, is a later code change JP raises); the 11/2 held items (DESIGN §9.75/§9.76: the 117 near
+  §9.205; un-muting the member log, build_words_from_abp.py :2773, is a later code change JP raises); **import_tipnr −57** (31,649 → 31,592; OPEN by name past the swap — charter
+  :235-237 set aside for it by JP, §9.210, 11/20; the sum's +660 term has no members: no pre-8b copy of the 10/25 run exists; no rebuild
+  or further read asked); **Mark 1:9 τῆς** (built 'of', 'Galilee,' on the next word; the app's τῆς blank and its Galilee cell "of
+  Galilee," — accepted as built by JP, §9.210, 11/20, charter §4.10 set aside for this row; to be brought to the app's cells AFTER the
+  swap; NOT a work order until JP raises it); the 11/2 held items (DESIGN §9.75/§9.76: the 117 near
   misses + Rom 9:29, verb chip blank this lane); the old-English punctuation members R2 surfaced.
   - **C4 joined-slot rows (§9.203, 11/19 — JP: "we can fix/split them later if it makes sense to"; NOT a work order, JP raises
     it):** (a) the **101 rows whose english is blank on built** — account v2 `docs/handoffs/drafts/STEP6AUD_C4_account_20261119.txt`
