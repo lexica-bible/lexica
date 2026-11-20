@@ -17377,3 +17377,29 @@ left is LOST / GAINED, and its class is read at the SAME position on the other c
 **P1 status:** (a) record item ACCEPTED (§9.213 Q12) + this cause read-out; (b) 1Ch 25:3 TRACED, on the declared list; (c) Eze 31:9
 @22 CLOSED as read. The Tasks tab is in words above. NEXT for CC: P2's sheets (words_moved.tsv is now local), P3, P4, the Q2 code read,
 and PA's Disable / Enable help.
+
+### P1 + Tasks tab RULED (§9.215, 11/20) — and the --keep reconciliation
+- **P1(c) Eze 31:9 @22 CLOSED** on CC's read. **P1(b) 1Ch 25:3 CLOSED as traced**, ON the step-4 declared list; TIPNR57's MOVED line there is
+  the matcher's answer changing cell with the English, not a row move. **P1(a) cause read = read-out:** at Est 5:9 built @12 and Jos 5:15
+  src @26 the matcher's answer (`*`) is **CC's reading of the pairing rule, NOT printed by the log**. The record item itself was accepted in
+  §9.213 Q12.
+- **First-read pins from now on:** check.out `fddc6e094eaf654c0d873cfc2cb8def429a447f9a4c4c5d08b69f1abe1c36263`;
+  tipnr57_read_20261119.log `2176cadcd6123b41e6ae918ef875296b2edcad9f0e52a60b9e223b5a07ec3477`.
+- **Tasks tab** recorded as read from JP's screenshot (17:44 UTC, 11/20): it reads one moment. **SWAP WINDOW ACCEPTED:** P6's first check
+  is "UTC time outside 13:00-14:30", a STOP on a miss; it rests on the clock, not on the task list being unchanged. The plan's 23:53 lines
+  fall with the corrected ops.md. "The news job never opens bible.db" is CC's reading of scripts/news.
+- **--keep reconciliation (from the code):** the task line passes `--keep 7`, but each db's limit is `min(keep, KEEP_OVERRIDE.get(stem,
+  keep))` (backup_db.py :219) with `KEEP_OVERRIDE = {"bible.db": 3}` (:71; JP 2026-07-16, comment :66-70). So **bible.db keeps 3**; every
+  other db (notes, study, heb, news, esv, niv, bh_scrape) keeps 7. `_rotate` (:264-292) keeps the newest `keep` stamps. It gzips all but
+  the newest `raw` (default 1, :31); whether the task line passes `--raw` is not visible, because the line is cut off on the screen. It
+  deletes the rest; "the newest good copy is never deleted" (:266). A copy that fails its check is deleted and rotates nothing out
+  (:198-211). Names skipped: `bible_pre_*` (:63) and anything containing `_test` (:64); the glob is `*.db` (:76), so `bible.db.new`
+  is never picked up. ops.md :148-149 says the same. **The plan's "keeps 3" (DR :17094, :17199) holds.**
+- **What that means for the fallbacks (read-out, for the removal block later):** each 13:30 run after the swap adds one copy of the NEW
+  live and pushes out the oldest. After the third post-swap nightly, all three kept bible.db copies are post-swap, so no nightly copy of
+  the pre-swap live is left. That is the same day the plan lets the rollback copy be considered for removal ("three nightlies postdate
+  the swap AND pass", DR :17191). The rollback copy is `bible_pre_*`, which the nightly never backs up, and src holds only words + verses
+  equal to pre-swap live (LIVESRC 11/18), not the other tables. So **once the rollback copy is removed, nothing holds the pre-swap live
+  whole.** No change asked now; that removal is its own ruled block (§9.213 Q5 terms; charter §7).
+- **STILL OWED BEFORE P6:** P2's sheets + JP's eSword read; P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2
+  code read; PA's Disable / Enable behaviour; the swap commit's diff; the rollback block. (--keep: answered above.)
