@@ -1,0 +1,189 @@
+# CACHE57 tests (2026-11-20T04:00:19Z); block sha256 dc87384739488545ce9d8a375048605c00c1cbaeb36ba4e13e5137d6935b6ccf
+
+=============== C1 planted: two cache folders; one file + the checkout folder timed INSIDE the run window, the rest before -> READ, WINDOW lines named ===============
+pipeline fingerprint before the block (C6: must equal the block's 'fingerprint now'): f8a18ba881ed7904
+GATE REF d34d6723 - CACHE57 - the TIPNR57 cache STOP read + the built guard (DESIGN 9.207) - READ-ONLY: lists the checkout's Python cache folders with their times, git status, and checks built = HEADFIX2's result; removes nothing; writes only its run folder and this log - PA HEAD d34d6723 - 2026-11-20T04:00:21Z
+repo /home/jp/gatec57/c1/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gatec57/c1/bible-db/bible_edupg_test_built_20261102.db: 180224 bytes - no -journal - triggers 0
+run folder made: /home/jp/gatec57/c1/edition_upgrade_runs/tipnr57_cacheread_20261120
+CACHE57 PRE: OK
+=== (1) the cache fingerprint: what it covers ===
+TIPNR57 hashed the output of: find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s - one line per entry of each cache folder, its '.' (the folder) and '..' (the folder it sits in), each with size and time
+fingerprint now: f8a18ba881ed7904 - TIPNR57 before: 8e00610037786fbc - after: 8fc320b2a0924d9d - now = after: NO
+cache folders: 2 (full listing in /home/jp/gatec57/c1/edition_upgrade_runs/tipnr57_cacheread_20261120/listing_start.txt)
+TIPNR57: header 2026-11-20T04:00:20Z, read end 2026-11-20T04:00:21Z. WINDOW here = 2026-11-20T03:59:20Z to 2026-11-20T04:01:21Z (60 s either side: the fingerprint was taken just before the header line and just after the read)
+  cache folder: /home/jp/gatec57/c1/bible-db/__pycache__
+  cache folder: /home/jp/gatec57/c1/bible-db/scripts/__pycache__
+listing lines by time: before the window 4 - in the WINDOW 2 - AFTER it 0
+(a line timed before the window: its time and size did not move after that time; a WINDOW line moved in the run window or the minute either side; an AFTER line moved since and may also have moved in the window)
+  WINDOW 2026-11-20T04:00:25Z  /home/jp/gatec57/c1/bible-db/scripts/__pycache__/eu_step.cpython-310.pyc    [-rw-r--r--  1 jp jp     2 1795147225 eu_step.cpython-310.pyc]
+  WINDOW 2026-11-20T04:00:30Z  /home/jp/gatec57/c1/bible-db    [drwxr-xr-x 15 jp jp 4096 1795147230 ..]
+=== (2) the folders the cache folders sit in: entries changed or created since the window opened (a removed file leaves no entry) ===
+  /home/jp/gatec57/c1/bible-db - its own time 2026-11-20T04:00:30Z
+    changed in the WINDOW: 68 entries, 40 shown
+      __pycache__  changed 2026-11-20T02:00:20Z  status-changed 2026-11-20T04:00:21Z  4096 bytes
+      scripts  changed 2026-11-20T02:00:20Z  status-changed 2026-11-20T04:00:21Z  20480 bytes
+      .claude  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  4096 bytes
+      .github  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  4096 bytes
+      .gitignore  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  1711 bytes
+      AUDIT_phrase_gloss_allowlist.txt  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  2756 bytes
+      AUDIT_reassembly_survivors.txt  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  1939 bytes
+      AUDIT_tierB_f_proposed.json  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  1671 bytes
+      CLAUDE.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  15829 bytes
+      CREDITS.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  3182 bytes
+      ENGINE_LESSONS.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  136466 bytes
+      Ideas  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  4096 bytes
+      README.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  6584 bytes
+      TODO.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  60908 bytes
+      TODO_ARCHIVE.md  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  362498 bytes
+      abp_texts  changed 2026-11-20T04:00:19Z  status-changed 2026-11-20T04:00:19Z  4096 bytes
+      ai.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  140856 bytes
+      app.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  22096 bytes
+      argmap.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8149 bytes
+      babel.config.json  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  41 bytes
+      cert_manifest.json  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  12334 bytes
+      cert_prose_leak_diff.json  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4966 bytes
+      clear_parse_jargon_cache.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4045 bytes
+      contested_register.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  20452 bytes
+      core.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  27718 bytes
+      corpus_panel.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  17428 bytes
+      design  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4096 bytes
+      docs  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4096 bytes
+      double_star_names.txt  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  25347 bytes
+      entity_resolution.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  35872 bytes
+      lexica_coverage.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  27136 bytes
+      mailer.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  3428 bytes
+      number_fold.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  5066 bytes
+      package-lock.json  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  41237 bytes
+      package.json  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  415 bytes
+      redistribution_firings.tsv  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  124045 bytes
+      requirements.txt  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  138 bytes
+      static  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4096 bytes
+      stats_rollup.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  17469 bytes
+      structural.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  76287 bytes
+    changed AFTER it (newest shown): 0 entries, 0 shown
+  /home/jp/gatec57/c1/bible-db/scripts - its own time 2026-11-20T02:00:20Z
+    changed in the WINDOW: 283 entries, 40 shown
+      __pycache__  changed 2026-11-20T02:00:20Z  status-changed 2026-11-20T04:00:21Z  4096 bytes
+      _gen_split_candidates.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  7381 bytes
+      _split_harness.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  3510 bytes
+      abp_app_feed.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  13970 bytes
+      add_hebrews13.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  21507 bytes
+      add_lemma_plain.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  3444 bytes
+      add_study_graph.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  32983 bytes
+      add_study_graph_hina_hardening.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  26307 bytes
+      add_study_graph_salvation.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  34209 bytes
+      add_study_topic.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  5758 bytes
+      adjudicate_concordance_diff.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  17640 bytes
+      align_probe.pl  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8610 bytes
+      align_survey.pl  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4870 bytes
+      apfathers  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4096 bytes
+      apocrypha  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  12288 bytes
+      apply_abp_corrections.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8432 bytes
+      apply_abp_surface_fill.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  22246 bytes
+      apply_cushi_namekeyed.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  4195 bytes
+      attribute_unfindability.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  5853 bytes
+      audit_abp_app_vs_surface.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  41504 bytes
+      audit_abp_tab_bridge.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  9470 bytes
+      audit_alias_gap.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  12902 bytes
+      audit_article_slot_carrier.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  65315 bytes
+      audit_bracket_collapse.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  12521 bytes
+      audit_bracket_order.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  13660 bytes
+      audit_bracket_punct.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  9028 bytes
+      audit_chip_trail_drop.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8180 bytes
+      audit_corpus_tier1.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  27745 bytes
+      audit_corpus_tier2.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  17974 bytes
+      audit_dangling_context.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  2539 bytes
+      audit_dotted_lemmas.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  5010 bytes
+      audit_eimi_subject_merge.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  6425 bytes
+      audit_entity_resolution.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  10044 bytes
+      audit_funcword_wrongslot.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  10867 bytes
+      audit_helper_double_tag.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  11649 bytes
+      audit_lexica_coverage.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8426 bytes
+      audit_lexica_flags.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  5710 bytes
+      audit_lexicon_vs_missing_forms.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  7984 bytes
+      audit_lord_strongs.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8448 bytes
+      audit_lsj_homograph.py  changed 2026-11-20T04:00:20Z  status-changed 2026-11-20T04:00:20Z  8105 bytes
+    changed AFTER it (newest shown): 0 entries, 0 shown
+=== (3) git status on the checkout (read only; the index file is not rewritten) ===
+--- changed or untracked:
+?? finish_pnstar2.log
+?? zz_window.txt
+--- (end)
+--- ignored, cache folders only:
+!! __pycache__/
+!! scripts/__pycache__/
+--- (end)
+=== (4) built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) - not run by TIPNR57 after its STOP ===
+tables NOT written (4) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 16 rows, 98ae56f218c0 - dry copy 16 rows, 98ae56f218c0 - = the dry run: yes - vs prep 16 rows, 98ae56f218c0
+written table abp_corrections: built 1 rows, 47f1ce197752 - dry copy 1 rows, 47f1ce197752 - = the dry run: yes - vs prep 1 rows, 47f1ce197752
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+CACHE57 CHECK: OK
+built = HEADFIX2's result: exit 0 (expect 0) - built size and time before = after this check: yes (180224 1795147220 /home/jp/gatec57/c1/bible-db/bible_edupg_test_built_20261102.db)
+=== (5) the cache listing at this block's end vs its start (lines that moved while this read ran) ===
+(none moved)
+fingerprint at the end: f8a18ba881ed7904
+CACHE57 RESULT: READ - 2026-11-20T04:00:21Z - the lines above go to the ruling chat as printed; nothing removed, restored or re-run
+exit=0
+
+=============== C2 KNOWN POSITIVE for section (5): once the start listing is written, an outside job moves the checkout folder's time (the '..' line) and adds a cache file -> both lines in the diff ===============
+=== (5) the cache listing at this block's end vs its start (lines that moved while this read ran) ===
+1c1
+< total 12
+---
+> total 16
+3c3
+< drwxr-xr-x 15 jp jp 4096 1795147223 ..
+---
+> drwxr-xr-x 15 jp jp 4096 1795147723 ..
+4a5
+> -rw-r--r--  1 jp jp    2 1795147223 late.cpython-310.pyc
+fingerprint at the end: 1942addab2ae6ac8
+CACHE57 RESULT: READ - 2026-11-20T04:00:23Z - the lines above go to the ruling chat as printed; nothing removed, restored or re-run
+exit=0
+
+=============== C3 built changed (one cell) -> guard FAIL -> FINDING ===============
+GATE REF d34d6723 - CACHE57 - the TIPNR57 cache STOP read + the built guard (DESIGN 9.207) - READ-ONLY: lists the checkout's Python cache folders with their times, git status, and checks built = HEADFIX2's result; removes nothing; writes only its run folder and this log - PA HEAD d34d6723 - 2026-11-20T04:00:24Z
+written table words: built 16 rows, 63d3f079effa - dry copy 16 rows, 98ae56f218c0 - = the dry run: NO - vs prep 16 rows, 98ae56f218c0
+CACHE57 CHECK: FAIL - words on built differs from the dry run
+built = HEADFIX2's result: exit 1 (expect 0) - built size and time before = after this check: yes (180224 1795147224 /home/jp/gatec57/c3/bible-db/bible_edupg_test_built_20261102.db)
+CACHE57 RESULT: FINDING - 2026-11-20T04:00:24Z - built is not shown = HEADFIX2's result (lines above); to the ruling chat as printed; nothing restored or re-run
+exit=1
+
+=============== C4 re-paste on C1's home -> STOP, log exists ===============
+CACHE57 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gatec57/c1/edition_upgrade_runs/tipnr57_cacheread_20261120.log
+
+=============== C5 TIPNR57 log missing -> STOP ===============
+CACHE57 RESULT: STOP - the TIPNR57 log is missing or empty: /home/jp/gatec57/c5/edition_upgrade_runs/tipnr57_read_20261119.log
+exit=1
+
+=============== C7 one cache folder only (ls prints no folder header) -> the folder still named on its lines ===============
+=== (1) the cache fingerprint: what it covers ===
+TIPNR57 hashed the output of: find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s - one line per entry of each cache folder, its '.' (the folder) and '..' (the folder it sits in), each with size and time
+fingerprint now: cb2f5d0bdc170f59 - TIPNR57 before: 8e00610037786fbc - after: 8fc320b2a0924d9d - now = after: NO
+cache folders: 1 (full listing in /home/jp/gatec57/c7/edition_upgrade_runs/tipnr57_cacheread_20261120/listing_start.txt)
+TIPNR57: header 2026-11-20T04:00:27Z, read end 2026-11-20T04:00:28Z. WINDOW here = 2026-11-20T03:59:27Z to 2026-11-20T04:01:28Z (60 s either side: the fingerprint was taken just before the header line and just after the read)
+  cache folder: /home/jp/gatec57/c7/bible-db/tests/__pycache__
+listing lines by time: before the window 0 - in the WINDOW 3 - AFTER it 0
+(a line timed before the window: its time and size did not move after that time; a WINDOW line moved in the run window or the minute either side; an AFTER line moved since and may also have moved in the window)
+  WINDOW 2026-11-20T04:00:28Z  /home/jp/gatec57/c7/bible-db/tests    [drwxr-xr-x 5 jp jp 4096 1795147228 ..]
+  WINDOW 2026-11-20T04:00:28Z  /home/jp/gatec57/c7/bible-db/tests/__pycache__    [drwxr-xr-x 2 jp jp 4096 1795147228 .]
+  WINDOW 2026-11-20T04:00:30Z  /home/jp/gatec57/c7/bible-db/tests/__pycache__/t.pyc    [-rw-r--r-- 1 jp jp    2 1795147230 t.pyc]
+=== (2) the folders the cache folders sit in: entries changed or created since the window opened (a removed file leaves no entry) ===
+
+=============== C8 no cache folder -> 0 folders, READ; no cache folder made by the block ===============
+cache folders: 0 (full listing in /home/jp/gatec57/c8/edition_upgrade_runs/tipnr57_cacheread_20261120/listing_start.txt)
+listing lines by time: before the window 0 - in the WINDOW 0 - AFTER it 0
+CACHE57 RESULT: READ - 2026-11-20T04:00:29Z - the lines above go to the ruling chat as printed; nothing removed, restored or re-run
+exit=0
+cache folders after: 0
+
+=============== C9 the checkout's index file is not rewritten by the block (a tracked file touched so plain git status WOULD rewrite it) ===============
+CACHE57 RESULT: READ - 2026-11-20T04:00:32Z - the lines above go to the ruling chat as printed; nothing removed, restored or re-run
+exit=0
+index before = after the block: yes (1795147231.114915 / 1795147231.114915)
+known positive - plain git status afterwards rewrites it: yes (1795147232.114915)

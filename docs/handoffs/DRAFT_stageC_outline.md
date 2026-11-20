@@ -16246,3 +16246,215 @@ drafts (the step-7 PLAN and TIPNR57) go to the ruling chat in one paste; JP runs
   Expected log lines as §9.206 (3). JP uploads `C:\Users\JP\edition_upgrade_runs\tipnr57_check_20261119.py` → `~/edition_upgrade_runs/`,
   runs the block, brings `~/edition_upgrade_runs/tipnr57_read_20261119.log` by cat. FINDING / STOP → ruling chat as printed, nothing
   re-run first. Closing the −57 is ruled on the log; the count-only src term, if it is the unlisted part, is JP's to set aside (§9.206 (4)).
+
+### TIPNR57 log RULED STOP (§9.207, 11/20)
+- **STOP stands** (cache fingerprint before ≠ after: 8e00610037786fbc / 8fc320b2a0924d9d). Nothing removed, restored or re-run; no
+  cause assumed. The after-guard on built did not run (the block exits at the cache STOP before it).
+- **CC's test gap, a fact about the tests, not a cause:** the fingerprint is `ls -la` of every `__pycache__` folder in the checkout, so
+  it also holds each folder's `.` and `..` lines (the folder itself and the folder it sits in, with size and time). Every TIPNR57 test
+  home had NO cache folder (T1b: 0), so the fingerprint was never tested against folders that already exist on PA. T12 proved it fires
+  on a new file; it never proved it holds still when nothing of ours writes. CACHE57 below reads which line moved.
+- **Owed first: block CACHE57** (read-only, reviewer): the folders and every listing line with its time against the TIPNR57 run window;
+  the entries changed in the folders they sit in; git status on the checkout; the "built =" guard; the listing at its own start vs end.
+- **Owed after (for when the −57 is ruled):** the declared-list line for Est 5:9 @13 and Jos 5:15 @27 (is_pn differs between the copies)
+  and the five MOVED verses (1Ch 25:3, 2Ki 23:35, Gen 5:25, Gen 5:26, Gen 34:4). Not yet traced — CC brings them with lines, not now.
+- The −57: the +660 term is a count with no members; CC's closing condition is not met as printed; JP's to set aside or not (charter
+  :235-237), after the STOP is read.
+
+## Block CACHE57 — the TIPNR57 cache STOP read + the built guard — DRAFT (11/20, CC; §9.207) — READ-ONLY
+**What §9.207 asked:** what the fingerprint covers and which line of it moved (the folders with their times; git status on the
+checkout), and the "built =" guard; no cache file removed. **What the block prints:** (1) the fingerprint's own command, the cache
+folders, the fingerprint now against TIPNR57's before / after, and every listing line timed inside TIPNR57's run window (its header time
+to its read-end time, 60 s either side) or after it, each named (the file, the folder itself for `.`, the folder it sits in for `..`);
+(2) for each folder that holds a cache folder, the entries changed inside the window and the newest changed after it (a removed file
+leaves no entry — said in the line); (3) `git status --porcelain` on the checkout, and the ignored cache folders; (4) the "built ="
+guard, exactly TIPNR57's line, with built's size + time around it; (5) the cache listing at this block's start vs its end (anything that
+moves while this read runs). **LIMIT, stated:** TIPNR57 kept only the two hashes, not the listings, so no read can show the "before"
+line; a line timed before the window did not move in it (time and size; a permission or owner change would not show in the time); a
+WINDOW line is the candidate; an AFTER line moved since and may also have moved in the window. **Writes nothing in the checkout:**
+`PYTHONDONTWRITEBYTECODE=1`; `GIT_OPTIONAL_LOCKS=0` (git status — this block's and eu_step's — does not rewrite the checkout's index
+file, C9); the listing program runs `python3 -I` with stdlib only; the run folder is under `~/edition_upgrade_runs/`. **Exit:** READ (0)
+· FINDING (1: the guard FAILs or built's size/time moves) · STOP (1: log exists, TIPNR57 log missing, pre, the listing read).
+**Form:** GATE REF d34d6723; `eu_step pre` on built (new run folder `tipnr57_cacheread_20261120/`); the guard as TIPNR57 printed it. No
+upload: the block is pasted whole. 98 lines.
+**Tests** (`docs/handoffs/drafts/CACHE57_tests_20261120.txt`, 189 lines; harness `drafts/TIPNR57_harness/runc57.sh` on mkhome57 homes,
+each after one TIPNR57 run for its window; WSL `~/gatec57/*`; the block run as written, nothing swapped): **C1** two planted cache
+folders, one file and the checkout folder timed inside the window, the rest before → both WINDOW lines named, 4 before; guard OK; READ
+(:3-132) · **C6 (in C1)** the pipeline's own hash taken before the block = the block's "fingerprint now" (f8a18ba8…, :4 and :13) ·
+**C2 KNOWN POSITIVE for (5):** once the start listing is written an outside job moves the checkout folder's time and adds a cache file →
+the `..` line, the new file and the `total` line all in the diff (:133-148) · **C3** built one cell changed → CHECK FAIL, FINDING (:149-156)
+· **C4** re-paste → STOP (:157-159) · **C5** TIPNR57 log missing → STOP (:160-163) · **C7** one cache folder (ls prints no folder header)
+→ still named (:164-177) · **C8** no cache folder → 0, READ, none made (:178-184) · **C9** the index file before = after the block, and
+the KNOWN POSITIVE: plain git status afterwards does rewrite it (:185-189). **CC's first C2 did not fire** (a file made and removed every
+0.2 s; the block ran inside one second and the listing shows whole seconds) — the case was rebuilt as above; the file holds the re-run.
+Block sha256 (the fenced bash below, as tested): dc87384739488545ce9d8a375048605c00c1cbaeb36ba4e13e5137d6935b6ccf.
+
+### Block CACHE57 (GATE REF d34d6723; READ-ONLY — writes only its run folder and log; no PA pull; no upload; nothing removed)
+```bash
+set +H
+L=~/edition_upgrade_runs/tipnr57_cacheread_20261120.log
+if [ -e "$L" ]; then echo "CACHE57 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1                                           # this block writes no Python cache file
+export GIT_OPTIONAL_LOCKS=0                                                # git status here (and inside eu_step) does not rewrite the checkout's index file
+R=~/edition_upgrade_runs
+D=$R/tipnr57_cacheread_20261120
+TLOG=$R/tipnr57_read_20261119.log                                          # the TIPNR57 log (DESIGN 9.207) - only its start and end times are read
+B=~/bible-db/bible_edupg_test_built_20261102.db
+DH=$R/step4_headfix2_20261116
+P0=8e00610037786fbc; P1=8fc320b2a0924d9d                                   # TIPNR57's cache fingerprint before / after, as printed (DESIGN 9.207)
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+lst() { find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s 2>/dev/null; }   # TIPNR57's fingerprint command, unchanged, without the hash
+echo "GATE REF ${REF} - CACHE57 - the TIPNR57 cache STOP read + the built guard (DESIGN 9.207) - READ-ONLY: lists the checkout's Python cache folders with their times, git status, and checks built = HEADFIX2's result; removes nothing; writes only its run folder and this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "CACHE57 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+[ -s "$TLOG" ] || { echo "CACHE57 RESULT: STOP - the TIPNR57 log is missing or empty: $TLOG"; exit 1; }
+EU scripts/eu_step.py pre --tag CACHE57 --ref "$REF" --dir "$D" --db "$B" || { echo "CACHE57 RESULT: STOP - pre (line above); nothing read"; exit 1; }
+lst > "$D/listing_start.txt"; find ~/bible-db -name __pycache__ -type d | sort > "$D/cache_folders.txt"
+k=$(sha256sum < "$D/listing_start.txt" | cut -c1-16)
+echo "=== (1) the cache fingerprint: what it covers ==="
+echo "TIPNR57 hashed the output of: find ~/bible-db -name __pycache__ -type d | sort | xargs -r ls -la --time-style=+%s - one line per entry of each cache folder, its '.' (the folder) and '..' (the folder it sits in), each with size and time"
+echo "fingerprint now: $k - TIPNR57 before: $P0 - after: $P1 - now = after: $([ "$k" = "$P1" ] && echo yes || echo NO)"
+echo "cache folders: $(wc -l < "$D/cache_folders.txt") (full listing in $D/listing_start.txt)"
+EU -I -c 'import sys, os, re, time, calendar
+sys.dont_write_bytecode = True
+sys.stdout.reconfigure(errors="backslashreplace")
+lst, dirs, tlog = sys.argv[1:4]
+TS = r"(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ)"
+def ut(t): return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t))
+start = end = None
+for ln in open(tlog, encoding="utf-8", errors="replace"):
+    if start is None and ln.startswith("GATE REF "):
+        m = re.search(TS + r"\s*$", ln)
+        start = m and calendar.timegm(time.strptime(m.group(1), "%Y-%m-%dT%H:%M:%SZ"))
+    m = re.match(r"check exit .* - end " + TS, ln)
+    if m: end = calendar.timegm(time.strptime(m.group(1), "%Y-%m-%dT%H:%M:%SZ"))
+if not start or not end:
+    print("CACHE57 READ: STOP - the TIPNR57 header time or read-end time is not in the log"); sys.exit(2)
+lo, hi = start - 60, end + 60
+print("TIPNR57: header %s, read end %s. WINDOW here = %s to %s (60 s either side: the fingerprint was taken just before the header line and just after the read)" % (ut(start), ut(end), ut(lo), ut(hi)))
+folders = [l.rstrip("\n") for l in open(dirs, encoding="utf-8", errors="surrogateescape") if l.strip()]
+for f in folders[:60]: print("  cache folder: %s" % f)
+if len(folders) > 60: print("  ... %d more (cache_folders.txt)" % (len(folders) - 60))
+cur = folders[0] if len(folders) == 1 else "?"
+n = {"before": 0, "WINDOW": 0, "AFTER": 0}; shown = []
+for ln in open(lst, encoding="utf-8", errors="surrogateescape"):
+    ln = ln.rstrip("\n")
+    if ln.startswith("/") and ln.endswith(":"):
+        cur = ln[:-1]; continue
+    p = ln.split(None, 6)
+    if len(p) == 7 and p[5].isdigit():
+        t = int(p[5]); c = "before" if t < lo else ("WINDOW" if t <= hi else "AFTER")
+        n[c] += 1
+        what = cur if p[6] == "." else (os.path.dirname(cur) if p[6] == ".." else os.path.join(cur, p[6]))
+        if c != "before": shown.append((t, c, what, ln))
+print("listing lines by time: before the window %d - in the WINDOW %d - AFTER it %d" % (n["before"], n["WINDOW"], n["AFTER"]))
+print("(a line timed before the window: its time and size did not move after that time; a WINDOW line moved in the run window or the minute either side; an AFTER line moved since and may also have moved in the window)")
+for t, c, what, ln in sorted(shown):
+    print("  %-6s %s  %s    [%s]" % (c, ut(t), what, ln))
+print("=== (2) the folders the cache folders sit in: entries changed or created since the window opened (a removed file leaves no entry) ===")
+for par in sorted(set(os.path.dirname(f) for f in folders)):
+    try: st = os.stat(par)
+    except OSError as e: print("  %s: cannot read (%s)" % (par, e)); continue
+    print("  %s - its own time %s" % (par, ut(int(st.st_mtime))))
+    inw, aft = [], []
+    for e in os.scandir(par):
+        try: s = e.stat(follow_symlinks=False)
+        except OSError: continue
+        if lo <= s.st_mtime <= hi + 1 or lo <= s.st_ctime <= hi + 1: inw.append((min(s.st_mtime, s.st_ctime), e.name, s))
+        elif max(s.st_mtime, s.st_ctime) > hi + 1: aft.append((max(s.st_mtime, s.st_ctime), e.name, s))
+    inw.sort(); aft.sort()
+    for lab, allrows, rows in (("changed in the WINDOW", inw, inw[:40]), ("changed AFTER it (newest shown)", aft, aft[-10:])):
+        print("    %s: %d entries, %d shown" % (lab, len(allrows), len(rows)))
+        for t, name, s in rows:
+            print("      %s  changed %s  status-changed %s  %d bytes" % (name, ut(int(s.st_mtime)), ut(int(s.st_ctime)), s.st_size))
+' "$D/listing_start.txt" "$D/cache_folders.txt" "$TLOG"; r1=$?
+[ "$r1" = 0 ] || { echo "CACHE57 RESULT: STOP - the listing read did not finish (exit $r1)"; exit 1; }
+echo "=== (3) git status on the checkout (read only; the index file is not rewritten) ==="
+echo "--- changed or untracked:"; git status --porcelain; echo "--- (end)"
+echo "--- ignored, cache folders only:"; x=$(git status --porcelain --ignored); grep -F __pycache__ <<< "$x"; echo "--- (end)"
+echo "=== (4) built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) - not run by TIPNR57 after its STOP ==="
+st0=$(stat -c '%s %Y %n' "$B")
+EU scripts/eu_step.py check --tag CACHE57 --built "$B" --dir "$DH" --written words,abp_corrections; r3=$?
+st1=$(stat -c '%s %Y %n' "$B")
+echo "built = HEADFIX2's result: exit $r3 (expect 0) - built size and time before = after this check: $([ "$st1" = "$st0" ] && echo yes || echo NO) ($st1)"
+lst > "$D/listing_end.txt"
+echo "=== (5) the cache listing at this block's end vs its start (lines that moved while this read ran) ==="
+diff "$D/listing_start.txt" "$D/listing_end.txt" && echo "(none moved)"
+echo "fingerprint at the end: $(sha256sum < "$D/listing_end.txt" | cut -c1-16)"
+if [ "$r3" = 0 ] && [ "$st1" = "$st0" ]; then
+  echo "CACHE57 RESULT: READ - $(date -u +%FT%TZ) - the lines above go to the ruling chat as printed; nothing removed, restored or re-run"; exit 0
+else
+  echo "CACHE57 RESULT: FINDING - $(date -u +%FT%TZ) - built is not shown = HEADFIX2's result (lines above); to the ruling chat as printed; nothing restored or re-run"; exit 1
+fi
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### CACHE57 reviewed, first pass (11/20) — REVIEW: ESCALATE (verbatim below); the one hit fixed, re-tested, back to the reviewer
+The reviewer read the first draft (block sha 9989fcf2…17ea). Its text, verbatim:
+> REVIEW: ESCALATE - tripwire 2: grep fed by a pipe under pipefail at DR :16376; I also could not check the block's sha256 because I have no shell.
+>
+> **To the ruling chat:**
+>
+> Block CACHE57 (C:\Users\JP\projects\bible-db\docs\handoffs\DRAFT_stageC_outline.md :16294-16391, GATE REF d34d6723, DESIGN §9.207) is meant to be a read-only read of the TIPNR57 cache-fingerprint STOP plus the "built =" guard. It lists the checkout's `__pycache__` folders and their times, runs git status, and runs `eu_step check` on built. It writes only its run folder `tipnr57_cacheread_20261120/` and its log, both under `~/edition_upgrade_runs`. Its first line checks that the log does not already exist, which covers tripwire 9.
+>
+> What I checked and found in order:
+> - **Wrapper:** the GATE REF line is the first line tee'd (:16310). The output goes to a dated log and the exit code is printed (:16391). The diff, porcelain and merge-base checks are not written out inline. They run inside `eu_step pre` (scripts/eu_step.py:132 merge-base, :134 `diff --quiet REF HEAD -- scripts tests`, :136 porcelain `--untracked-files=no -- scripts tests`). That is the same form as the TIPNR57 block, which was already cleared. Nothing in the block touches the three untracked PA files. I found no `!` other than `set +H`.
+> - **What stopped it, tripwire 2:** :16376 reads `git status --porcelain --ignored | grep -F __pycache__` inside `set -uo pipefail`. Its exit code is not used, so it does not change the result. But the banked rule is "grep via `<<<`, not pipes", and any hit means ESCALATE. A fix that would let it clear: `x=$(git status --porcelain --ignored); grep -F __pycache__ <<< "$x"`.
+> - **Stop rule (CLAUDE.md):** the request gives sha256 9989fcf2…617ea for :16294-16391. I can read files but cannot run commands, so I could not compute it. I have not verified it.
+> - **Expected figures:**
+>   - words 626309 d95acb5d4be4, abp_corrections 404 d97d928ca7f5, and "tables NOT written differences 0": the request credits these to §9.206 (3) and §9.207 (2). The only DESIGN line my search for "9.207" found is :618, and it is too long for the search to display. I did not read §9.206 or §9.207 in full, so these figures are not traced by me.
+>   - The two prior hashes 8e00610037786fbc and 8fc320b2a0924d9d match the §9.207 note in the DRAFT (:16251), but DRAFT prose alone is not a source.
+>   - I did not read the test file or the harness, so the C1-C9 claims and their line ranges are not checked.
+> - **Read-only claim:** I found no write in the checkout in the parts I read. `PYTHONDONTWRITEBYTECODE=1` and `GIT_OPTIONAL_LOCKS=0` are exported and inherited by `eu_step`. Built is touched only by `stat`, `eu_step pre` and `eu_step check`. I did not read `mode_check` itself.
+>
+> **What would settle it:** the drafter swaps the :16376 pipe for a `<<<` form and gives the new sha. Then a re-review that reads §9.206 (3) and §9.207 (2) in full, reads `eu_step mode_check`, and checks the tests file C1-C9 against the stated ranges. Separately, the ruling chat needs to name who confirms the sha, since this reviewer cannot compute it.
+
+**CC took the reviewer's fix, nothing more:** :16376 now reads `x=$(git status --porcelain --ignored); grep -F __pycache__ <<< "$x"`
+(the reviewer's own words). No other grep in the block is fed by a pipe. Re-pinned: block sha dc873847…6ccf (CC computed it on the
+lines in place, `sed -n 16294,16391p | sha256sum`; the ruling chat hashed TIPNR57 itself on 11/20, §9.206, and can do the same here).
+Every test re-run; the tests file holds the re-run (same ranges; C6 now f8a18ba8…, :4 and :13).
+
+### CACHE57 reviewed, second pass (11/20) — REVIEW: CLEAR (read-only, §9.90); verbatim below. NOT cleared to run: that is the ruling chat's
+> REVIEW: CLEAR - read-only block for the read §9.207 asked for; the gate checks run inside eu_step pre; the tripwire-2 grep is fixed at :16376; every expected figure traces to §9.206/§9.207 or to eu_step.py
+>
+> This clearance is under §9.90 and covers the block only. It is not a receipt of results and confirms no output. No push while the block waits (§9.76).
+>
+> **Hash not checked by me.** I have no shell, so I could not compute the sha256 dc873847…6ccf for DR :16294-16391. I cleared the text as I read it at C:\Users\JP\projects\bible-db\docs\handoffs\DRAFT_stageC_outline.md :16294-16391. The same sha heads the tests file (:1), but CC computed it, not me. Whoever pastes the block should hash it as the ruling chat did for TIPNR57.
+>
+> [Here the reviewer's reply echoes the block in full as it read it at DR :16294-16391; not repeated here — the block above is the record.]
+>
+> **Expected figures and their sources:**
+> - **CACHE57 PRE: OK**, with the repo line, HEAD and REF d34d6723: scripts/eu_step.py:126-159 (mode_pre). It runs the merge-base check (:132), `diff --quiet REF HEAD -- scripts tests` (:134), the porcelain check `--untracked-files=no -- scripts tests` (:136), the `-journal` and trigger checks (:140-146), and refuses a run folder that already exists (:154-155). These are the gate wrapper's three checks, run the same way as in the TIPNR57 block that §9.206 (3) cleared.
+> - **Section (1):** the fingerprint now, against 8e00610037786fbc / 8fc320b2a0924d9d. The two hashes are from §9.207 (1) (DESIGN_q2_build.md:618). Either yes or NO is a printed read-out, not a gate (block :16318).
+> - **Guard values** (words 626309 d95acb5d4be4, abp_corrections 404 d97d928ca7f5, the tables not written at differences 0): from §9.207 (2) at :618 and §9.206 (3) at :617 ("148 tables differences 0"). They are printed by eu_step.py:465-466 (the "tables NOT written … differences %d (expect 0)" line) and :484-486 (rows plus the first 12 characters of the sha for each table that was written).
+> - **CACHE57 CHECK: OK**: eu_step.py:453-506, mode_check. It fails on any difference, a `-journal` beside built, or changes in scripts/tests (:503-504). The tests show the OK and FAIL lines at :125 and :152.
+> - **Built size and time before = after yes**: block :16378-16381.
+> - **RESULT: READ, exit 0**: block :16386-16387. **FINDING, exit 1** if the guard fails or built's size or time moves: :16388-16389. **STOP** on a log that already exists (:16296), a missing TIPNR57 log (:16312), a failed pre (:16313), or a listing read that fails (:16373).
+>
+> **Read-only check:**
+> - I found no write in the checkout. `PYTHONDONTWRITEBYTECODE=1` and `GIT_OPTIONAL_LOCKS=0` are exported, so eu_step inherits them. The listing program runs `python3 -I` with stdlib only.
+> - Built is touched only by `stat` and by eu_step pre and check.
+> - New paths are the run folder (mode_pre refuses one that exists) and the log (:16296 refuses one that exists).
+> - mode_check writes `check_delta_<table>.tsv` into `$DH` only when a table differs, and only if that file does not exist (:489-492). That is a run artifact under `~/edition_upgrade_runs` and cannot overwrite anything, so tripwire 9 holds.
+> - Nothing in the block touches the three untracked PA files.
+>
+> **Wrapper and tripwires:**
+> - The GATE REF line is the first line tee'd (:16310). Output is tee'd to a dated log and the exit code is printed (:16391).
+> - Tripwire 1: the only `!` is in `set +H`.
+> - Tripwire 2: `<<<` now at :16376.
+> - Tripwire 7: no CR pattern.
+> - Tripwire 8: the tests prove the checks can fire. C3 FINDING (:149-155), C2 section (5) firing on a planted change (:133-147), C9 index-file control (:185-189), C4/C5 STOPs (:157-162).
+> - Tripwire 10: the `-journal` check is in mode_pre (:140-141).
+>
+> **Tests:** C:\Users\JP\projects\bible-db\docs\handoffs\drafts\CACHE57_tests_20261120.txt. The cited ranges match the case headers. C6 is at :4 and :13 (f8a18ba881ed7904 matches).
+>
+> **Small mismatch:** the section says the tests file is 189 lines, but my read shows it running to line 190. It does not affect the clearance.
+>
+> I did not read the harness runc57.sh.
+
+**CC's notes:** (1) the tests file is 189 lines ending in a line break (`wc -l` 189, last byte `\n`); a file reader shows the empty
+line after it as 190. (2) The hash is unverified by the reviewer by its own words — the ruling chat hashes DR :16294-16391 itself before
+clearing (expect dc873847…6ccf). (3) "No push while the block waits": the commit recording this stays LOCAL until the block has run; the
+ruling chat reads from the repo folder.
