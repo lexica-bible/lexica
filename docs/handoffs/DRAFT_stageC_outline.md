@@ -16458,3 +16458,6 @@ Every test re-run; the tests file holds the re-run (same ranges; C6 now f8a18ba8
 line after it as 190. (2) The hash is unverified by the reviewer by its own words — the ruling chat hashes DR :16294-16391 itself before
 clearing (expect dc873847…6ccf). (3) "No push while the block waits": the commit recording this stays LOCAL until the block has run; the
 ruling chat reads from the repo folder.
+
+### CACHE57 CLEARED (§9.208, 11/20)
+The ruling chat hashed DR :16294-16391 to dc87384739488545ce9d8a375048605c00c1cbaeb36ba4e13e5137d6935b6ccf (the same as CC's) and cleared the block to run as printed, GATE REF d34d6723. It read CC's note and the block; not the tests, harness, reviewer verdicts or eu_step.py. Expected in the log as listed in §9.208. A FINDING or STOP goes to the ruling chat as printed; nothing restored, removed or re-run first. The LIMIT and the test gap are noted (the gap as a fact about the tests, not the cause). JP runs the block as printed and brings the log by cat. Commits stay local until the block has run (§9.76).
