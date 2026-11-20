@@ -17199,7 +17199,8 @@ until three nightlies postdate the swap AND pass (charter §7 :366-367); every r
 - Deeper fallback: src (= live's words + verses on 11/18) and the nightly bible.db copies until they rotate out (keeps 3).
 
 ### Carried OPEN by name past the swap (§9.212)
-Job 3:3 content-other (§9.113, §9.195 Q2; built + src both show exactly it, §9.196) · Split 80 → 84 (+4) (§9.205; charter §4.8 :238-241)
+Job 3:3 content-other (§9.113, §9.195 Q2; **NEW on built — the swap brings it to live**: STEP6AUD log :272 / :289 "content-other exactly
+[Job 3:3] on built and [] on src"; corrected 11/20, §9.213 Q8) · Split 80 → 84 (+4) (§9.205; charter §4.8 :238-241)
 · import_tipnr −57 (§9.210 (1); charter §4.8 :242-245) · Mark 1:9 τῆς, accepted as built, fix after the swap (§9.210 (2); charter §4.10
 :259-263) · the C4 joined-slot rows (§9.203; stageC_repin :63-74) · the stray files in PA's checkout (§9.168 (7), §9.209; TODO.md
 :147-148). Also after the swap, by earlier ruling: the redraw of frozen quotes for the 29% set, own pass (charter §0.6 Q6). **The rest of
@@ -17238,7 +17239,9 @@ ordinary ARC ships) — this is a receipted full rebuild, and backup_db skips `b
   flagged-beyond member list as a file (as §4.3 did for punct).
 - **Q7 — L9 (charter §4.2) not measured on built** (§9.204): carry it open by name, no L9 figure in the swap commit **(CC's pick)** — or a
   read-only L9 run on built's words before the swap.
-- **Q8 — Job 3:3:** the swap goes with it open (both copies show exactly it, §9.196; the swap neither adds nor removes it) **(CC's pick)**.
+- **Q8 — Job 3:3:** the swap goes with it open **(CC's pick)**. *(Wording as first sent — "both copies show exactly it, §9.196; the swap
+  neither adds nor removes it" — was WRONG: the STEP6AUD log reads [Job 3:3] on built and [] on src, so it is new on built and the swap
+  brings it to live. Corrected by the ruling chat, §9.213 Q8; CC re-read the local log copy, :272, :283, :289.)*
 - **Q9 — G5's pn_hebrew_xref count:** a read-out at the swap, recorded (CHARTER_rebuild_trap_fix :276-282: a record, not a block)
   **(CC's pick)** — or a pre-read on built vs src in P4's block so the swap has an expected figure.
 - **Q10 — order:** P1 → P2 → P3 → P4 (with Q1, Q4) → P5 → P6 → P7 → P8 → P9; P1–P3 can run in any order.
@@ -17261,3 +17264,23 @@ ordinary ARC ships) — this is a receipted full rebuild, and backup_db skips `b
 - GAP 8 (P1(a) untraced cause) → Q12.
 - NOTE 9 (`_migrate_db` blanking) → answered under Q1 (guarded; P4 shows the columns). NOTE 10 (Q3 unverified) → stands as written.
 - NOTE 11: about two thirds of the cites opened and read as cited; the rest listed by the reviewer as not opened.
+
+### Swap PLAN RULED (§9.213, 11/20) — accepted as the order of work (P1 → P9); clears nothing
+- **Conditions:** (i) built's full sha256 read + printed in P4's block, so P6 declares it as expected; (ii) the rollback is a BLOCK —
+  drafted, WSL-tested, reviewer, cleared with P6, run only if ruled; (iii) JP pastes PA's Tasks tab before P6 is drafted — the swap window
+  is set against it and 13:30 / 23:53 UTC; (iv) P3: notes.db mode=ro, counts + positions only, nothing else reaches a log; (v) the swap
+  commit comes to the ruling chat as a diff + local test output BEFORE it is pushed.
+- **Q1** ruled on P4's counts; the charter names only the AI cache — anything else dropped (lsj / abp_ext summaries, any table) goes to JP
+  with its count. **Q2** code read first; the bump + its categories come back with it, inside the swap commit's diff. **Q3** site STOPPED;
+  before P6 is drafted CC brings PA's own help on Disable → Enable → reload and what a disabled app does to scheduled tasks; clicks are
+  JP's. **Q4** CC's pick. **Q5** CC's pick on terms: check on built in a block before the swap, built's sha = (i), P6 shows bible.db's sha
+  = it after the move; recorded beside charter §6 :340; the 10/25 pre-fill copy + snapshot stay (removal its own block). **Q6** ≤ 747,
+  with the member account named beside the pin (account v2, 60fb07b9…4b96, §9.203); no new member file. **Q7** JP's — put to him.
+  **Q8** swap with Job 3:3 OPEN (§9.87, §9.113) — and CC's wording corrected: NEW on built, the swap brings it to live. **Q9** a PRE-READ in
+  P4's block: built vs src, every table, rows + digest, differing tables listed, pn_hebrew_xref / pn_greek_identity / name-slot
+  strongs_base printed — the expected G5; P7 reads live against it; "6 + 6 + 58" stays CC's sum until then. **Q11** JP's — put to him.
+  **Q12** P1(a) ACCEPTED as the record item (Est 5:9 @13, Jos 5:15 @27, 2Ki 23:35, Gen 5:25, 5:26, 34:4); the cause read rides with the
+  copy-down as a read-out; **1Ch 25:3 OWED BEFORE P6**, traced cell by cell or named unlisted.
+- Carried open by name as listed; PRE-SWAP LIST mapping noted.
+- **NEXT:** JP — Q7, Q11, the P1 copy-down, the Tasks tab. CC — P1/P2 sheets once the copy-down lands; P3 and P4 blocks; the Q2 code read;
+  PA's help on Q3.
