@@ -17060,3 +17060,204 @@ As registered at DESIGN §9.212: every declared expectation met; H121 and ζηλ
 what built Eze 31:9 @22's lemma line holds in check.out (the paste showed two unreadable characters where src reads τρυφή; the
 verse's fresh delta is 0 and the check passed) — when the run folder is next copied down. NEXT: the step-8 PLAN (the swap, the only live
 action), CC's to bring before any block; its contents are listed in §9.212.
+
+## Charter §6 step 8 — the SWAP PLAN (11/20, CC; §9.212 NEXT) — a PROPOSAL; no block is drafted and nothing runs on PA before the ruling chat rules it
+**What step 8 is.** Charter §6 :362-363 "8 swap + deploy.sh — the only live action; G5 recorded; then cert_invariants on live, pins +
+manifest + allowlists + the new snapshot all re-pinned in the ONE swap commit"; rebuild-words :330-335 ("`mv bible.db
+bible_pre_<reason>_<date>.db; mv <built> bible.db`; then `bash ~/bible-db/scripts/deploy.sh` … record G5"); charter §7 :365-376
+(rollback). §9.212 lists what this plan carries; each item below names its register or log line. Items marked **CC's reading** are
+reads of code or the record, not yet checked on PA.
+
+### Facts the plan is built on (read 11/20; file:line)
+- **built** `~/bible-db/bible_edupg_test_built_20261102.db` = HEADFIX2's result; guard `eu_step check --dir
+  ~/edition_upgrade_runs/step4_headfix2_20261116 --written words,abp_corrections` → words 626309 d95acb5d4be4, abp_corrections 404
+  d97d928ca7f5, tables NOT written differences 0 (last read by STEP7A, §9.212). Its full sha256 is NOT on record.
+- **src** `~/bible-db/bible_edupg_test_20261101.db`, 451,964,928 B, sha256 `5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01`
+  (DR :13089, §9.181; before = after in STEP7A, §9.212).
+- **live** `~/bible-db/bible.db`: 460,251,136 B, last write 2026-11-17 14:54:22Z at LIVESRC (DR :13082-13083); **460,271,616 B, changed
+  2026-11-20T08:22:43Z** (CACHE57's listing, §9.209). LIVESRC proved live's words + verses = src's on 11/18 (delta EMPTY; digests words
+  626309/`1ce75b22…5b26`, verses 31237/`5717b045…21ae`, DR :13086-13087; §9.181). **Live is +8,306,688 B over src's copy with words +
+  verses equal — the difference sits in other tables, not read by any block.** The swap replaces the whole file, so whatever live wrote
+  there since 11/1 is dropped (charter §7 :373 names only the AI cache).
+- **What the site writes into bible.db — CC's reading of the code:** `ai_search_cache` (core.py :341 insert, :359 and :381 deletes; table
+  made at app.py :359-366); `lsj.summary_json` and `abp_ext.summary_json` (views_lsj.py :467, :470); the one-time column adds in
+  `_migrate_db` (app.py :321 on); each worker's first-request warm-up prunes the cache (app.py :441-469 — rebuild-words :358-359 "never
+  within 60 s of a reload"). Visits, accounts and notes go to notes.db (views_stats.py :88, views_notes.py). Not read: whether any
+  scheduled task or hand-run script writes bible.db (PA's task list is JP's).
+- **Space:** the swap is two renames in one folder — it adds no copy. Last dashboard read 7.4 / 10.0 GB (§9.184, 11/18); STEP6AUD,
+  TIPNR57, CACHE57, STEP7A added no database copy (§9.211 "no File storage line is needed"). Every block below that adds a ~450 MB copy
+  is preceded by JP's File storage line, ≥ 1 GB free, /tmp counted (§9.165 (3), §9.179 (1), §9.183 (4)).
+- **What deploy.sh brings with the swap commit — CC's reading:** last known PA HEAD `1d5e34ee` (HANDOFF stageE :153). From it to HEAD,
+  outside docs: `scripts/build_words_from_abp.py` (adfb8ac5, the `--cells` read-out, §9.158), `tests/test_app_cells.py`, ci.yml,
+  the pre-commit hook, TODO.md — no serving file (app/core/ai/views/static/templates/requirements) and no loader folder deploy.sh
+  watches (deploy.sh :40-43). deploy.sh runs only test_strongs_join + test_build_invariants (:18-19).
+- **Nightly jobs:** backup 13:30 UTC (bible.db keeps 3; skips `bible_pre_*` and `*_test*`, backup_db.py :58-64; ops.md :111-114,
+  :148); health_check 23:53 UTC (ops.md :101).
+
+### The plan, in order (each block drafted only after this plan is ruled; read-only ones → reviewer, writes → the ruling chat)
+**P1 — record items still owed (§9.209, §9.210, §9.212), one copy-down by JP.**
+- (a) **Declared-list lines, traced from the repo:** Est 5:9 @13, Jos 5:15 @27 and four of the five MOVED verses (2Ki 23:35, Gen 5:25,
+  Gen 5:26, Gen 34:4) are pairs of the 10 reorder verses: census v2 DR :2722-2726 (Est 5:9 12/13, Jos 5:15 26/27, 2Ki 23:35 6/7,
+  Gen 5:25 1/2, Gen 5:26 1/2, Gen 34:4 1/2; "Est 5:9, Jos 2:4, Jos 5:15 have no morph/lemma"); the declared (ii) set §9.142 (1) (the 20
+  moved pairs, whole-row moves, is_pn 12 among the 80 cells); the step-4 gate's own list `XREF10`, step4gate_check :19-21 (XCHK
+  2a5a8a3c…19fe, DR :13870 / run 2 DR :13892; the local copy `C:\Users\JP\edition_upgrade_runs\step4gate_check_20261118.py` hashes to
+  it); G2 PASS 80 + 6 = 86 (§9.193). A whole-row move puts the name on the pair's other position, so is_pn differs at @13 / @27 between
+  the copies. **Not traced:** why TIPNR57 paired the four as MOVED but Est 5:9 / Jos 5:15 as NOT-A-NAME-CELL (its MOVED pairing needs the
+  same matcher number elsewhere in the verse, DR program cls() and the pairing loop; the matcher's answers are in the PA log only).
+- (b) **1Ch 25:3 is NOT on any declared list CC can find** (not in XREF10, not in §9.142 (1), not in the local run copies). The verse has
+  three Jeduthun cells (abp_texts/abp_ot_texts/abp_1chronicles.txt :797, diagnosis-grade). Its two cells are in the TIPNR57 log's
+  "MOVED 1Ch 25:3" line, on PA only. Owed: that line + the STEP4-DELTA2 `words_cells.tsv` lines for 1Ch 25:3 → CC traces each cell to the
+  step-4 declared lists (english / english_head side: the composition, §9.178), or names it unlisted.
+- (c) **Eze 31:9 @22** (§9.212): built's lemma line in `~/edition_upgrade_runs/step7a_spotcheck_20261120/check.out`.
+- **Form:** JP copies down (scp, PA → local, read-only toward PA; verse text, kept OUTSIDE the repo at
+  `C:\Users\JP\edition_upgrade_runs\pa\`): `step7a_spotcheck_20261120/check.out`, `tipnr57_read_20261119.log`, and from
+  `step4_delta2_20261116/delta/` the files `words_cells.tsv` and `words_moved.tsv` (P2 uses the second). CC reads them locally (sha of
+  each printed beside the cite; words_cells must hash `86e44c58…dafc`, §9.157; words_moved `d32361b3…0f08`, HANDOFF stageE :164-166).
+  No block.
+
+**P2 — the 10 reorder verses' order confirmation (§9.93 (b); stageC_repin :75-78).** **Witness: eSword/ABP, all 10, as §9.93 (b) and
+CLAUDE.md's word-order rule say — JP reads eSword.** CC prepares one sheet per verse: built's rows at the pair (words_moved.tsv, from P1),
+src's, the old stream `abp_texts/` (diagnosis-grade), and the app feed `abp_app_html/abp_app_slots_italic.tsv` (hash 7bd77385…, charter
+§0.10 :43) as **read-outs beside it, not the witness**: the feed is the build's own input (charter §6 :323-324), so built = feed cannot
+confirm itself (reviewer DEFECT 1). JP says per verse which order eSword shows. Any verse where eSword ≠ built goes to the ruling chat
+(Q11 on what rules if eSword shows the old edition's order). Local sheet + JP's eSword read, no block.
+
+**P3 — notes-store anchors at the 20 moved words (§9.94 (d); stageC_repin :86-87).** Notes anchor by word position
+(12-notes-store.jsx :9-11). A read-only block on `~/bible-db/notes.db` (opened mode=ro): which stored rows carry an anchor in the 10
+verses, at which positions — **counts and positions only; no note text, no user id, no email in the log.** CC reads views_notes.py :84-125
+for the tables that hold anchors before drafting. **LIMIT:** notes of visitors who never signed in live only in their browser and cannot
+be read. Expected: unknown, a read-out; any anchor at a moved position goes to the ruling chat (fix or accept, after the swap).
+
+**P4 — what the swap drops: live vs src, every table (charter §7 :373; §9.209 live moved).** Read-only toward live (sqlite backup into a
+fresh copy, LIVESRC's form, DR :12970-13063) → **JP's File storage line first, ≥ 1 GB free**; for every table on live and src: rows +
+eu_step digest (eu_step.py :102); the differing tables listed; for each, the rows only on live / changed (eu_step delta, counts + keys,
+no AI text in the log). Expected: words + verses = LIVESRC's digests; differing tables ⊆ {ai_search_cache, lsj, abp_ext} (CC's reading
+above); **any other table differing = STOP** (the swap would drop rows CC has not accounted for). The copy removed after (RMLC's form,
+DR :13103-13165). Read-only block + a copy → ruling chat (§9.179 (2)).
+
+**P5 — the swap commit (ONE commit; charter §6 :363, §7 :368-370; drafted, tested locally, shown before it lands; pushed only right
+before the swap block runs, and no other deploy between that push and the swap).** Re-pins, each with its line:
+- cert pin `abp_corrections_active` 374 → **375** (cert_invariants.py :47) + the active-list fixture of built's 375 rows with its sha
+  (§9.156 (4); the members file comes from a read of built — part of P4's block or its own); spent pin `abp_corrections_spent_lane3` **1**
+  stays (cert_invariants.py :48, §9.153–§9.154) — STEP6AUD's one declared red was 375 vs 374 (§9.204).
+- phrase-gloss **747** (§9.203): the gate text "≤ 671" at audit_phrase_gloss_underdist.py :55 and :261 → 747 (Q6 below on the form).
+- health floor 395,003 → **395,014** (health_check.py :138-144; §9.130; rebuild-words :313) + the tests that pin 395,003
+  (test_surface_fill_restore.py :752-765) + rebuild-words step 9 / 9b text (HANDOFF stageE :289-290).
+- the cert_invariants.py :47 comment names the 374 fixture `abp_corrections_active_built_20261106.txt` (sha 446fee35…) — replaced by the
+  new fixture's name + sha in the same edit.
+- the other 395,003 sites, each said: test_surface_fill_restore.py :14 (docstring) moves with the floor; :387-391
+  (`after_count(391130, res) == 395003`, "the 10/25 shapes") is the 10/25 computed figure and stays; apply_abp_surface_fill.py :50 is the
+  one-shot 10/25 script and stays (rebuild-words :309).
+- **allowlists, each said:** (a) punct — `punct_members_built_20261115.txt` (607, `0cc4d428…7056`) is already committed (HANDOFF stageE
+  :286); no code default reads a punct file (audit_reassembly_diff.py takes it by `--punct-members` path, :602-625; cert_invariants.py and
+  health_check.py hold no punct read — grep 11/20); the swap commit changes docs only, naming 607 where the 241 file is still named.
+  (b) phrase-gloss — the allowlist FILE `AUDIT_phrase_gloss_allowlist.txt` (read by default, audit_phrase_gloss_underdist.py :56-58)
+  stays as it is under Q6's pick; only the "≤ 671" text moves. (c) L9 — none (below).
+- snapshot: already re-pinned at 9c (restore_surface_fill.py :81, §9.134) — nothing to change; its `--check` vs swapped live is P8.
+- manifest: **CC's reading** — nothing changes (cert check 5 green on built in STEP6AUD, §9.204; abp_texts + cert_manifest.json =
+  d34d6723, §9.196). To be confirmed when the commit is drafted.
+- L9 scope (charter §4.2): **not measured on built** (§9.204) — no figure to pin; Q7 below.
+- Before the push: a read-only check that none of the commit's NEW file paths exists untracked on PA's checkout (several hundred
+  untracked files there, TODO.md :147-148, §9.168 (7)) — a pull refuses to overwrite one.
+**P6 — the swap block (a WRITE to live → the ruling chat; JP runs it; one run folder + log).** CC's proposed shape:
+1. **Before anything moves (every miss = STOP, nothing moved):** time not within 30 min of 13:30 or 23:53 UTC; the "built =" HEADFIX2
+   guard (values above); built's full sha256 printed (now recorded); no -journal / -wal / -shm beside live or built; live and built on the
+   same device (`stat -c %d`, so mv is a rename); the rollback name `~/bible-db/bible_pre_edition_upgrade_<date>.db` does not exist;
+   src's sha = the recorded value.
+2. **The site stopped** (Q3): JP disables the web app on the PA Web tab; the block then reads live in place, read-only: no -journal,
+   words + verses digests = LIVESRC's (**live = src re-shown at the swap**, §9.212), and the table list = P4's (only the tables ruled
+   there differ; the row counts of what is dropped printed — charter §7 :373).
+3. **The move:** `mv bible.db bible_pre_edition_upgrade_<date>.db` (charter §6 :319, §7 :366; ops.md item 1 :107-110), then `mv
+   <built> bible.db`. After: bible.db's sha = built's from step 1; the rollback's size/time = live's from step 2; no side file.
+   A miss after the first mv and before the second = put the first back (`mv` the rollback name to bible.db) and STOP.
+4. **The site back:** JP enables the web app, then `bash ~/bible-db/scripts/deploy.sh` (pulls the swap commit, two tests, API reload,
+   5× sweep all 200; deploy.sh :67-106). G2 rule: no bare touch.
+**P7 — after the reload (read-only, ≥ 60 s after it):** cert_invariants on live: 7/7 green with 375 / 1 (check 6 = backup alive, as
+printed); `health_check.py` on live by hand (deploy.sh :107-108): floor line `[OK]` at 395,014, warnings 0 (a `database is locked` on
+the words checks = the warm-up, re-read as on 10/25, CHARTER_rebuild_trap_fix :498-501); **G5 recorded** — live vs the rollback:
+`pn_hebrew_xref` rows changed, `pn_greek_identity` rows changed, name-slot `strongs_base` changed (rebuild-words :333-335;
+CHARTER_rebuild_trap_fix :276-282: a record, not a block; a different count is read member by member). **The 519 | 519 · 21 | 21 · 501
+in rebuild-words :333-335 are the 10/25 same-code figures** (live then held 8/5-basis classes that a rebuild rewrote from the 9/6 classes,
+CHARTER_rebuild_trap_fix :276-282) — they do NOT apply here: live is that 10/25 rebuild, and this lane's src → built changes are its own.
+This lane has **no pre-registered G5 figure in the register.** What the record holds, as CC reads it (CC's sum, not a register line):
+strongs_base ⊆ the 26 step-4 cells (20 moved + 6, §9.142 (1)); identity = gate 2's declared 6 + 6 key moves (§9.94) + 58 changed rows
+(§9.97, §9.100; declared_deltas.json v4); pn_hebrew_xref: nothing (Q9). **Part B** (§9.206 (1), §9.212): the five step-7 verses on the served
+site — 1Ch 13:10 chip view reads "the LORD was enraged" (Interlinear keeps "[²was enraged ¹the LORD]"); Eze 31:9 "were jealous of" →
+word card ζηλόω; 1Ch 1:1 Adam → H121, opens metaV; Gen 1:21 "sea monsters"; Mark 1:9 "Nazareth of Galilee," (rebuild-words :192-196;
+§9.210 (2) for Mark 1:9) — CC in the in-app browser (public pages), JP's eye on the chip view; recorded under step 8.
+**P8 — the 9c snapshot `--check` against the swapped live** (charter §6 :333-340; §7 :371-372: the 10/25 pre-fill copy and frozen
+snapshot stay until it passes). Q5 below on where it runs.
+**P9 — the next nightly:** the backup stamp read (no `XX`, the new bible.db copy present; ops.md :128-134). The rollback copy is kept
+until three nightlies postdate the swap AND pass (charter §7 :366-367); every removal after (rollback, src, pre_8b, pre_digits, the
+10/25 pre-fill copy, run folders) is its own ruled block later.
+
+### The rollback path (charter §7 :365-376)
+- **File:** site stopped; `mv bible.db bible_edition_upgrade_backedout_<date>.db` (kept, not deleted); `mv
+  bible_pre_edition_upgrade_<date>.db bible.db`; site enabled; deploy.sh. **Code:** `git revert` of the swap commit, pushed, pulled by
+  that same deploy.sh — "roll both or neither" (§7 :368-370). Anything the site writes into bible.db between the swap and a rollback is
+  lost by the rollback (the same class as P4). The rollback file is never opened for writing (backup_db skips `bible_pre_*`).
+- Deeper fallback: src (= live's words + verses on 11/18) and the nightly bible.db copies until they rotate out (keeps 3).
+
+### Carried OPEN by name past the swap (§9.212)
+Job 3:3 content-other (§9.113, §9.195 Q2; built + src both show exactly it, §9.196) · Split 80 → 84 (+4) (§9.205; charter §4.8 :238-241)
+· import_tipnr −57 (§9.210 (1); charter §4.8 :242-245) · Mark 1:9 τῆς, accepted as built, fix after the swap (§9.210 (2); charter §4.10
+:259-263) · the C4 joined-slot rows (§9.203; stageC_repin :63-74) · the stray files in PA's checkout (§9.168 (7), §9.209; TODO.md
+:147-148). Also after the swap, by earlier ruling: the redraw of frozen quotes for the 29% set, own pass (charter §0.6 Q6). **The rest of
+the follow-up lane rides as listed** (HANDOFF stageE :380-397, from §9.100; stageC_repin :54-62), including: Gen 4:18 @16 binding lost
+(§9.100 ACCEPT + follow-up; stageE :381); the 117 near misses + Rom 9:29, chip blank (§9.76; stageC_repin :61-62). **Closed, not
+carried:** Joram H3088 ×27 receipt — "satisfied (all 27 J cells H3088 on src and built)" (§9.100).
+**The PRE-SWAP LIST (HANDOFF stageE :33-47) mapped:** tipnr read — DONE (§9.207, §9.209, §9.210) · Split +4 — RULED (§9.205) · Mark 1:9 —
+RULED (§9.210) · declared-list lines — P1 · step 7 Part A — PASSED (§9.212) · Job 3:3 — Q8 · swap commit re-pins — P5 · C4 follow-up —
+carried above · 10 reorder verses — P2 · notes anchors — P3 · live moving after the copy — P4 + P6 step 2.
+**Rollback copy naming:** no `bible_pre_edition_upgrade_<date>.db` was made at step 1 (grep of DR, DESIGN, handoffs, 11/20: the name
+appears only in the charter, :319 and :366); src is step 1's "`<src>` copy of live". So the swap's first rename makes the one fallback.
+ops.md item 1 (:107-110, "exactly ONE per receipted rebuild", `bible_pre_*`) governs, not item 6 (:122-127, `bible.db.rollback` for
+ordinary ARC ships) — this is a receipted full rebuild, and backup_db skips `bible_pre_*` (:63) where it would back up `bible.db.rollback`.
+
+### Open questions for the ruling chat (CC's pick first)
+- **Q1 — what the swap drops (P4).** Drop the live-only rows (charter §7 as written; counts recorded) **(CC's pick:** a carry would be a
+  new write to built after every gate, with its own guard; the lost cache and summaries are redrawn on demand) — or carry
+  `lsj.summary_json` / `abp_ext.summary_json` into built before the swap (dictionary summaries, CC's reading: not verse text). Ruled on
+  P4's counts. (Reviewer NOTE 9: `_migrate_db` also blanks lsj/abp_ext summary_json, app.py :331-336 / :345-350 — but only inside the
+  try that first adds the `summary_v` / `abp_summary_v` column; on a file where the column exists the add fails and the blanking is
+  skipped. built is a copy of live, which has run it — CC's reading; P4 prints both columns' presence on built and live to show it.)
+- **Q2 — the AI answer cache on the old text.** built keeps src's pre-11/1 `ai_search_cache` rows, drawn on the old English. ai.md
+  :202-207: a data-feed change needs a `_CACHE_CODE_VER` bump (ai.py :1612, now 48). Whether the swap commit bumps it, and for which
+  categories, is not ruled; which categories embed ABP verse text is a code read not yet done (charter §5 (f) :290-292). CC's pick: that
+  code read before the swap commit is drafted, then the bump in the swap commit for the categories that quote verse text.
+- **Q3 — stop the site for the swap (CC's pick)** or two renames with it running. Reason: with the site up, a request between the two mv's
+  opens a missing bible.db (core.py :182 `sqlite3.connect(DB)` makes an empty file), and a cache write in flight leaves a `bible.db-journal`
+  that belongs to the old file but sits beside the new one. **Not verified by CC:** how PA's Disable → Enable → reload sequence behaves;
+  read from PA's own help before the block is drafted.
+- **Q4 — live = src at the swap:** P4 ahead (copy, full table read) + the in-place words + verses digests with the site stopped (CC's
+  pick: no gap between the proof and the move) — or a LIVESRC re-run alone.
+- **Q5 — P8 on built just before the swap** (snapshot `--check` refuses live only; built becomes live byte for byte, proven by the sha
+  in P6 step 3; no extra copy) **(CC's pick)** — or on a fresh copy of the swapped live, charter §6 :340's wording (a ~450 MB copy,
+  File storage line first).
+- **Q6 — the phrase-gloss re-pin form:** the number only, ≤ 671 → ≤ 747 (§9.203's wording) **(CC's pick)** — or also freeze built's
+  flagged-beyond member list as a file (as §4.3 did for punct).
+- **Q7 — L9 (charter §4.2) not measured on built** (§9.204): carry it open by name, no L9 figure in the swap commit **(CC's pick)** — or a
+  read-only L9 run on built's words before the swap.
+- **Q8 — Job 3:3:** the swap goes with it open (both copies show exactly it, §9.196; the swap neither adds nor removes it) **(CC's pick)**.
+- **Q9 — G5's pn_hebrew_xref count:** a read-out at the swap, recorded (CHARTER_rebuild_trap_fix :276-282: a record, not a block)
+  **(CC's pick)** — or a pre-read on built vs src in P4's block so the swap has an expected figure.
+- **Q10 — order:** P1 → P2 → P3 → P4 (with Q1, Q4) → P5 → P6 → P7 → P8 → P9; P1–P3 can run in any order.
+- **Q11 — P2's witness if eSword disagrees.** eSword holds the older ABP stream (our src's text); the lane's target is the app edition.
+  If eSword shows src's order where built took the app's, which rules: eSword (§9.93 (b) as written) or the app edition (charter §0.1, the
+  lane's target)? CC has no pick — a content call (JP's).
+- **Q12 — P1(a)'s untraced part:** why TIPNR57 paired four verses as MOVED but Est 5:9 / Jos 5:15 as NOT-A-NAME-CELL is not traced (the
+  matcher's answers are in the PA log only). §9.209 asks for the declared-list lines, which P1(a) gives. CC's pick: accept the record item
+  on the lines; the cause read rides with P1's copy-down if the ruling chat wants it.
+
+### Reviewer pass (11/20) — REVIEW: ESCALATE (a live-action plan, outside reviewer scope; 1 DEFECT, 7 GAP, 3 NOTE) — answered above
+- DEFECT 1 (P2 made the app feed, the build's own input, the witness against §9.93 (b)'s eSword/ABP) → P2 rewritten: eSword/ABP for all
+  10, feed as a read-out; Q11 added.
+- GAP 2 (G5 10/25 figures not named; "6 + 6 + 58" CC's sum) → P7 names them and why they do not apply; the sum labelled CC's.
+- GAP 3 (allowlists not each said) → P5 "allowlists, each said".
+- GAP 4 (step-1 rollback copy; ops item 1 vs 6) → "Rollback copy naming" paragraph.
+- GAP 5 (re-pin sites: cert :47 comment, test :14, :387-391) → P5 bullets added.
+- GAP 6 (Joram, Gen 4:18, 117 near misses) → carried list: two carried, Joram closed (§9.100).
+- GAP 7 (PRE-SWAP LIST not mapped) → mapped line by line.
+- GAP 8 (P1(a) untraced cause) → Q12.
+- NOTE 9 (`_migrate_db` blanking) → answered under Q1 (guarded; P4 shows the columns). NOTE 10 (Q3 unverified) → stands as written.
+- NOTE 11: about two thirds of the cites opened and read as cited; the rest listed by the reviewer as not opened.
