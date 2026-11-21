@@ -1,0 +1,211 @@
+# P4 tests (2026-11-21T05:38:23Z); block sha256 6e34b442a4dbf366096beeb0efb710c4e89e1110e97493f63b125e1deea95f31; check sha256 3a82decaa9550853ca5d71427e18357be30c29545d10e4ed0a76b1d8d37a6606
+
+=============== D1 clean (the expected picture: live differs only in ai_search_cache + lsj) -> DONE, every line printed ===============
+TESTPREP PREP: OK
+test-copy lines changed: 3
+block lines changed: 3
+home ready: /home/jp/gatep4/d1
+GATE REF d34d6723 - P4 - what the swap drops, built's full sha and the Q9 pre-read (DESIGN 9.213 (i), Q1, Q4, Q9) - WRITES: a fresh copy of live in the run folder (sqlite backup; live opened read-only by that step only), the run folder and this log; src and built only read - PA HEAD d34d6723 - 2026-11-21T05:38:24Z
+repo /home/jp/gatep4/d1/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gatep4/d1/bible-db/bible_edupg_test_20261101.db: 77824 bytes - no -journal - triggers 0
+db /home/jp/gatep4/d1/bible-db/bible_edupg_test_built_20261102.db: 77824 bytes - no -journal - triggers 0
+run folder made: /home/jp/gatep4/d1/edition_upgrade_runs/p4_live_tables_20261121
+P4 PRE: OK
+uploaded check program sha256 (before anything is copied): d21d1963a35adc2c04a9893b8e92c0b5c219a88a8d4955079067cd0ffcf0f0d4 (expect d21d1963a35adc2c04a9893b8e92c0b5c219a88a8d4955079067cd0ffcf0f0d4)
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (9) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 30 rows, 7560d2186922 - dry copy 30 rows, 7560d2186922 - = the dry run: yes - vs prep 30 rows, 7560d2186922
+written table abp_corrections: built 1 rows, 48c416105fd6 - dry copy 1 rows, 48c416105fd6 - = the dry run: yes - vs prep 1 rows, 48c416105fd6
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+P4 CHECK: OK
+src sha256 before: bc0070fa27fbbe3a6e3bb38a7ead2cd8c35d6e369570be28963049d74804ec25 (expect bc0070fa27fbbe3a6e3bb38a7ead2cd8c35d6e369570be28963049d74804ec25)
+BUILT FULL SHA256 (before): 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428 - the swap block declares this value (DESIGN 9.213 (i))
+built: 77824 bytes, last write 2026-11-21 05:38:24.454496468 +0000
+home in use before: 186204 KB; my files in /tmp: 0 bytes (STOP above 999999999 KB; the copy adds about 460 MB after this check)
+=== LIVE before: size + time (stat, the file is not opened) and its side files - printed only ===
+live: 77824 bytes, last write 2026-11-21 05:38:24.566497118 +0000
+beside live: /home/jp/gatep4/d1/bible-db/bible.db-journal absent
+beside live: /home/jp/gatep4/d1/bible-db/bible.db-wal absent
+beside live: /home/jp/gatep4/d1/bible-db/bible.db-shm absent
+=== (copy) sqlite backup of live into the run folder - start 2026-11-21T05:38:25Z ===
+live journal mode (read): delete
+copy quick_check: ok
+copy triggers: 0
+copy: 77824 bytes
+copy exit 0 (expect 0) - end 2026-11-21T05:38:25Z
+live after the copy: 77824 bytes, last write 2026-11-21 05:38:24.566497118 +0000 (printed only)
+=== the check - start 2026-11-21T05:38:25Z ===
+check.py sha256 as run: d21d1963a35adc2c04a9893b8e92c0b5c219a88a8d4955079067cd0ffcf0f0d4 (expect d21d1963a35adc2c04a9893b8e92c0b5c219a88a8d4955079067cd0ffcf0f0d4)
+=== (1) every table: rows / digest (first 12) on live copy | src | built - live=src? built=src? ===
+  abp_corrections                    1/13d4ad905c45         1/13d4ad905c45         1/48c416105fd6         live=src yes built=src NO
+  abp_ext                            1/bc72801895a2         1/bc72801895a2         1/bc72801895a2         live=src yes built=src yes
+  ai_search_cache                    6/5104e259fb8a         4/9684b1a6fce2         3/62522cfa0d45         live=src NO  built=src NO
+  books                              1/e3c7483df558         1/e3c7483df558         1/e3c7483df558         live=src yes built=src yes
+  lexicon                            1/12ac0bfb2565         1/12ac0bfb2565         1/12ac0bfb2565         live=src yes built=src yes
+  lsj                                1/40b065bed602         1/52e21e5e634e         1/52e21e5e634e         live=src NO  built=src yes
+  pn_greek_identity                  5/7a51779546cb         5/7a51779546cb         5/b48696bad837         live=src yes built=src NO
+  pn_hebrew_xref                     5/4d22e698364d         5/4d22e698364d         5/58468633b423         live=src yes built=src NO
+  tipnr                              1/c0fc6f49d7eb         1/c0fc6f49d7eb         1/c0fc6f49d7eb         live=src yes built=src yes
+  verses                             5/c1ba9e6bf9df         5/c1ba9e6bf9df         5/c1ba9e6bf9df         live=src yes built=src yes
+  words                              30/9fb6c527bf29        30/9fb6c527bf29        30/7560d2186922        live=src yes built=src NO
+  live: 11 tables, virtual none
+  src: 11 tables, virtual none
+  built: 11 tables, virtual none
+=== (2) live copy vs src ===
+  words on the live copy: 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8 (expect 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8, LIVESRC): yes
+  verses on the live copy: 5/c1ba9e6bf9dfdd8f7245feed7ef8fd4f1e2bc3aa138a20b3b7a76fc4cefe807c (expect 5/c1ba9e6bf9dfdd8f7245feed7ef8fd4f1e2bc3aa138a20b3b7a76fc4cefe807c, LIVESRC): yes
+  tables that differ, live vs src (2): ai_search_cache, lsj
+  differing tables outside ai_search_cache/lsj/abp_ext: none
+  schema entries on one side only (type, name, table): 0
+  row delta src -> live, per differing table (eu_step.run_delta; values in the run folder only):
+  ai_search_cache (key query): rows 4 -> 6 - changed 1, added 2, removed 0
+    by class: added 2
+    by class: changed result_json 1
+    by class: result_json: value -> other value 1
+  lsj (key key): rows 1 -> 1 - changed 1, added 0, removed 0
+    by class: changed summary_json 1
+    by class: summary_json: NULL -> value 1
+  delta_live_vs_src.tsv: 4 difference lines, sha256 6d31a713f40941e4a3f0a2895bb7a2b2146b50cb21ed1ce0b7166465ac6ff550
+=== (3) the site's start-up changes (app.py _migrate_db): present on live copy | src | built ===
+  lsj.summary_json: yes | yes | yes
+  lsj.summary_v: yes | yes | yes
+  abp_ext.summary_json: yes | yes | yes
+  abp_ext.abp_summary_v: yes | yes | yes
+  books.sort_order: yes | yes | yes
+  lexicon.strongs_g: yes | yes | yes
+  tipnr.entity_types: yes | yes | yes
+  index idx_ai_cache_ver: yes | yes | yes
+  index idx_lexicon_strongs_g: yes | yes | yes
+  index idx_kjv_strongs_word: NO | NO | NO
+  index idx_kjv_words_word: NO | NO | NO
+  index idx_bsb_strongs_id: NO | NO | NO
+  table ai_search_cache: yes | yes | yes
+  live: lsj rows with a summary_json: 1
+  live: abp_ext rows with a summary_json: 0
+  src: lsj rows with a summary_json: 0
+  src: abp_ext rows with a summary_json: 0
+  built: lsj rows with a summary_json: 0
+  built: abp_ext rows with a summary_json: 0
+=== (4) ai_search_cache rows by category (the ver_key part before ':'; anything else 'other') ===
+  live: other 1, search 2, summary 2, xref 1
+  src: search 2, summary 2
+  built: search 2, summary 1
+=== (5) built vs src ===
+  tables that differ, built vs src (5): abp_corrections, ai_search_cache, pn_greek_identity, pn_hebrew_xref, words
+  words keyed by (verse_id, position): src 30 rows, built 30 rows, matched 30
+  every verse id names the same (book, chapter, verse) on src and built (eu_words_delta.py :67 reads the same four columns): src 5, built 5, matched 5: yes
+  every words row matched on (verse_id, position) - the same rows STEP4-DELTA2 keyed by (book, chapter, verse, position): yes
+  (only strongs, strongs_base, is_pn are gated; the other columns are raw-cell read-outs - bracket_id here is the stored value, not STEP4-DELTA2's per-verse rank, so it is NOT comparable with 4,208)
+  cells that differ, by column: strongs 2, strongs_base 3, is_pn 1
+  strongs cells src -> built: 2 (expect 2, STEP4GATE run 2, DESIGN 9.193 (2)): yes
+  strongs_base cells src -> built: 3 (expect 3, STEP4GATE run 2, DESIGN 9.193 (2)): yes
+  is_pn cells src -> built: 1 (expect 1, STEP4GATE run 2, DESIGN 9.193 (2)): yes
+=== (6) G5 - the expected figures for P7 (a read-out; DESIGN 9.213 Q9) ===
+  --- G5 src -> built ---
+  pn_hebrew_xref: rows changed 1 (by column: class 1); class -> class: none -> lemma-only 1; keys only before 0, only after 0
+  pn_greek_identity: rows changed 1 (by column: source 1); source -> source: lemma-only -> none 1; keys only before 0, only after 0
+  name-slot strongs_base (is_pn = 1 on either side) changed: 1 (H -> * 1)
+  --- G5 live copy -> built (what P7 reads: live after the swap vs the rollback) ---
+  pn_hebrew_xref: rows changed 1 (by column: class 1); class -> class: none -> lemma-only 1; keys only before 0, only after 0
+  pn_greek_identity: rows changed 1 (by column: source 1); source -> source: lemma-only -> none 1; keys only before 0, only after 0
+  name-slot strongs_base (is_pn = 1 on either side) changed: 1 (H -> * 1)
+=== findings ===
+P4 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 2026-11-21T05:38:25Z
+src sha256 after = before: yes
+built sha256 after = before: yes
+P4 CHECK: OK
+built = HEADFIX2's result, after: exit 0 (expect 0)
+the copy (kept until a removal is ruled): /home/jp/gatep4/d1/edition_upgrade_runs/p4_live_tables_20261121/live_copy_20261121.db, 77824 bytes
+home in use after: 186324 KB (before 186204 KB; the copy + run files 120 KB)
+the checkout's cache folders and their contents unchanged: yes
+P4 RESULT: DONE - read as printed; built's full sha 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428; the copy kept in /home/jp/gatep4/d1/edition_upgrade_runs/p4_live_tables_20261121 until a removal is ruled
+exit=0
+leak grep (planted AI text / definitions / summary in the log): 0
+...the same in the run folder's delta file (allowed there): 4
+cache folders in the checkout after: 0
+
+=============== D2 live words differ from src -> FINDING (live words not LIVESRC's; words outside the three) ===============
+  words on the live copy: 30/692ba05f598358828d40571264d847899468ba82bdf01bcaabb1b638637f95bf (expect 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8, LIVESRC): NO
+  differing tables outside ai_search_cache/lsj/abp_ext: words
+  FINDING: live words is not LIVESRC's
+  FINDING: live differs from src in words (30 -> 30 rows) - outside the expected three; to JP with its count (9.213 Q1)
+P4 CHECK: FINDINGS - findings 2
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d2/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D3 live differs from src in books -> FINDING (outside the three, to JP with its count) ===============
+  differing tables outside ai_search_cache/lsj/abp_ext: books
+  FINDING: live differs from src in books (1 -> 1 rows) - outside the expected three; to JP with its count (9.213 Q1)
+P4 CHECK: FINDINGS - findings 1
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d3/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D4 a table on live only -> FINDING ===============
+  table on one side only: stray (live only, 1 rows)
+  schema entries on one side only (type, name, table): 1
+  FINDING: table stray on live only (1 rows)
+P4 CHECK: FINDINGS - findings 1
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d4/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D5 built has one strongs_base cell more than declared -> FINDING ===============
+  strongs_base cells src -> built: 4 (expect 3, STEP4GATE run 2, DESIGN 9.193 (2)): NO
+  name-slot strongs_base (is_pn = 1 on either side) changed: 2 (H -> * 1, H -> H 1)
+  name-slot strongs_base (is_pn = 1 on either side) changed: 2 (H -> * 1, H -> H 1)
+  FINDING: built vs src strongs_base cells 4, expected 3
+P4 CHECK: FINDINGS - findings 1
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d5/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D6 built lacks lsj.summary_v -> printed NO in (3) (a read-out, not a finding) ===============
+  lsj.summary_v: yes | yes | NO
+P4 RESULT: DONE - read as printed; built's full sha 16c98049bf3e7e9bde4874a71cd06ac5dd9125f81167be06de2bbdd436e975a1; the copy kept in /home/jp/gatep4/d6/edition_upgrade_runs/p4_live_tables_20261121 until a removal is ruled
+exit=0
+
+=============== D7 re-paste on D1's home -> STOP, log exists ===============
+P4 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gatep4/d1/edition_upgrade_runs/p4_live_tables_20261121.log
+
+=============== D8 the uploaded check program changed by one byte -> STOP before the copy (nothing copied) ===============
+uploaded check program sha256 (before anything is copied): 3bb0ea38cc3e049b37d0e0b848bdb4f320b08c0b277813f7bbe2f1d192eaa06b (expect d21d1963a35adc2c04a9893b8e92c0b5c219a88a8d4955079067cd0ffcf0f0d4)
+P4 RESULT: STOP - the uploaded check program is not the file CC wrote and tested; nothing copied
+exit=1
+
+=============== D9 built changed after the guard folder was made -> STOP at the built guard, before the copy ===============
+written table words: built 30 rows, f0f1d7533012 - dry copy 30 rows, 7560d2186922 - = the dry run: NO - vs prep 30 rows, 7560d2186922
+P4 RESULT: STOP - built is not HEADFIX2's result (lines above)
+exit=1
+
+=============== D10 home above the bound -> STOP before the copy ===============
+home in use before: 186204 KB; my files in /tmp: 0 bytes (STOP above 1 KB; the copy adds about 460 MB after this check)
+P4 RESULT: STOP - home has grown since the 11/20 dashboard read; read the dashboard and the ruling chat first
+exit=1
+
+=============== D11 src not the recorded copy -> STOP ===============
+src sha256 before: bc0070fa27fbbe3a6e3bb38a7ead2cd8c35d6e369570be28963049d74804ec25 (expect 0000)
+P4 RESULT: STOP - src is not the 11/1 copy as recorded
+exit=1
+
+=============== D12 a cache file appears in scripts/__pycache__ while the block runs -> CHECK at the cache line ===============
+the checkout's cache folders and their contents unchanged: NO
+P4 RESULT: CHECK - lines above (the copy kept in /home/jp/gatep4/d12/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D13 built's verse ids differ from src's (one verse row renumbered on built) -> FINDING (rows not all matched) ===============
+  words keyed by (verse_id, position): src 30 rows, built 30 rows, matched 24
+  every verse id names the same (book, chapter, verse) on src and built (eu_words_delta.py :67 reads the same four columns): src 5, built 5, matched 5: yes
+  every words row matched on (verse_id, position) - the same rows STEP4-DELTA2 keyed by (book, chapter, verse, position): NO
+  FINDING: built vs src words rows do not all match on (verse_id, position): 30 / 30 / 24
+P4 CHECK: FINDINGS - findings 1
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d13/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1
+
+=============== D14 built's verse id 5 names another verse (Gen 1:9 instead of 1:5) -> FINDING (verse ids) ===============
+  every verse id names the same (book, chapter, verse) on src and built (eu_words_delta.py :67 reads the same four columns): src 5, built 5, matched 4: NO
+  FINDING: built vs src verse ids do not all name the same (book, chapter, verse): 5 / 5 / 4
+P4 CHECK: FINDINGS - findings 1
+P4 RESULT: FINDINGS - listed above (the copy kept in /home/jp/gatep4/d14/edition_upgrade_runs/p4_live_tables_20261121) - to the ruling chat as printed
+exit=1

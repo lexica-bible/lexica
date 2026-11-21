@@ -17824,3 +17824,429 @@ swap is not covered, and **the swap block's record says so in one line** (carrie
 record; the §9.190 (5)(b) miss stays noted; the hold is released.
 **Still owed before P6:** P4 (File storage line, or CC's word that nothing added a copy since 11/20; built's full sha; the Q9 pre-read);
 the Q2 code read; PA's Disable / Enable behaviour; the swap commit's diff; the rollback block.
+
+## Block P4 — what the swap drops, built's full sha, the Q9 pre-read (11/21, CC) — WRITES a copy of live → the ruling chat
+**What it is.** Plan P4 (DR swap PLAN) under §9.213 (i), Q1, Q4, Q9, with §9.190 (5)(b) and §9.209. GATE REF d34d6723 (eu_step pre). The
+block makes ONE fresh copy of live in its run folder (LIVESRC's sqlite-backup step: live opened mode=ro by that step only; the copy set
+to journal_mode=DELETE; quick_check; triggers). The uploaded check program reads the three copies read-only (live copy, src, built). It
+writes only into the run folder: digests.tsv; delta_live_vs_src.tsv, which is eu_step.run_delta's own file and holds row values, so it
+stays in the run folder; check.out; check_after.out. Then the log. **The copy is kept until a removal is ruled** (RMLC's form).
+**File storage (§9.219):** the 11/20 paste read 7.4 of 10.0 GB. Since then the blocks run on PA are P3 and P3b, each adding a run
+folder with one ~6 KB program copy and a log. **No copy has been added since 11/20, as CC reads the record.** The block's own
+home check (≤ 7,900,000 KB, the BSTD bound §9.171 (3) that LIVESRC used) STOPs before the copy if home has grown.
+**Files:** block below (sha256 **b38f48d9cb206e5d059cb53c19b34b42bd1ff38edc3c4bf2b23291d2c5752566**); the check program
+`~/edition_upgrade_runs/p4_check_20261121.py` (JP uploads it; sha256 **3a82decaa9550853ca5d71427e18357be30c29545d10e4ed0a76b1d8d37a6606**;
+local `C:\Users\JP\edition_upgrade_runs\p4_check_20261121.py`); tests `docs/handoffs/drafts/P4_harness/` (mkdbs_p4.py, mkhome_p4.sh,
+run_p4.sh, tests_p4.out sha 7319f822…6d31).
+**Expected (CC's declaration):**
+- pre OK; the built guard OK (tables NOT written: differences 0; words 626309 d95acb5d4be4; abp_corrections 404 d97d928ca7f5; §9.193 (1)).
+- The uploaded program's sha = 3a82deca…6606, checked BEFORE anything is copied and again as run.
+- src sha = 5da9bb95…7e01. **Built's full sha printed: no prior figure; it becomes the pin P6 declares (condition (i)).**
+- home ≤ 7,900,000 KB. Copy: quick_check ok, triggers 0, about 460 MB (live 460,271,616 B on 11/20, §9.212; a read-out).
+- (2) words / verses on the live copy = LIVESRC's full digests, yes / yes. Tables differing live vs src ⊆ {ai_search_cache, lsj,
+  abp_ext}: CC's reading of what the site writes, ai_search_cache via core.py :336-347 and lsj / abp_ext summary_json via views_lsj.py
+  :467, :470. Any other table = FINDING, to JP with its count (§9.213 Q1).
+- (5) built vs src: every verse id names the same (book, chapter, verse), yes; every words row matched on (verse_id, position), yes;
+  strongs 20 / strongs_base 26 / is_pn 12 (§9.193 (2); CC re-counted these from the local STEP4-DELTA2 words_cells.tsv, 86e44c58…fdafc:
+  20 / 26 / 12).
+- (1), (3), (4), (6) G5, the schema lines and the other words-column counts: read-outs. The words-column counts are raw cells;
+  bracket_id there is the stored value, not STEP4-DELTA2's per-verse rank, and is not comparable with 4,208.
+- Any FINDING comes to the ruling chat as printed; results DONE / FINDINGS / CHECK / STOP.
+**Tests (WSL; a clone at d34d6723 per test home; made-up copies).** In the TEST copy of the program only LIVESRC's two digests and
+STEP4's three counts are swapped. In the test block only XCHK, XS and XHOME_MAX are swapped. Fourteen cases:
+- D1 clean → DONE, every line; leak grep of the log for the planted AI texts / definitions / summaries = 0 (they appear only in the
+  run folder's delta file); cache folders 0.
+- D2 live words differ → 2 FINDINGs. D3 live differs in books → FINDING (to JP with count). D4 a table on live only → FINDING.
+- D5 built one strongs_base cell more → FINDING. D6 built lacks lsj.summary_v → printed NO, a read-out, DONE.
+- D7 re-paste → STOP, log exists. D8 the program changed by one byte → STOP before the copy, nothing copied.
+- D9 built changed after the guard → STOP at the guard, before the copy. D10 home above the bound → STOP before the copy.
+- D11 src sha wrong → STOP. D12 a cache file appears during the run → CHECK.
+- D13 words of one verse renumbered on built → FINDING (rows not all matched). D14 a verse id naming another verse → FINDING.
+**Reviewer, pass 1 (verbatim verdict line):** "REVIEW: ESCALATE - P4 writes a fresh copy of live (about 460 MB) into the run folder.
+That is a write under DESIGN 9.90 / 9.179 (2), so only the ruling chat can clear it. I found no DEFECT. There are two NOTES the ruling
+chat should rule on or record."
+- Checked by it: the wrapper, tripwires 1/2, write reach, no leaks to the log (run_delta show=0; eu_step :407-412 prints counts and
+  column names only), the run_delta keys against the schema files, the G5 keys and labels, and the launcher = DR :15775-15785 byte for
+  byte. Every figure was traced to its DESIGN line.
+- Not re-read by it: DR :12970-13063, so "LIVESRC's step verbatim" is CC's claim.
+- NOTE 1: the program's sha was checked only after the copy.
+- NOTE 2: (5)'s (verse_id, position) key is not eu_words_delta's (book, chapter, verse, position), and its bracket_id is not the rank;
+  only the three gated columns are comparable.
+**CC's changes after pass 1:** NOTE 1 → the program's sha is checked BEFORE anything is copied (D8 now STOPs with "nothing copied").
+NOTE 2 → a gate that every words row matched on (verse_id, position), plus the printed line saying which counts are gated and that
+bracket_id is not the rank (D13 added).
+**Reviewer, pass 2 (verbatim verdict line):** "REVIEW: ESCALATE - P4 still writes a fresh copy of live into the run folder, so it still
+needs the ruling chat's clearance (DESIGN 9.90 / 9.179 (2)). NOTE 1 is met. NOTE 2 is met, with one small gap: the gate does not tie
+verse ids to book/chapter/verse."
+- Its optional (b): add the verses check. **CC took it:** a gate that every verse id names the same (book, chapter, verse) on src and
+  built (the four columns eu_words_delta.py :67 reads; D14 added).
+- **That last gate was added AFTER the reviewer's second pass and has not been re-read by it.** It is ten lines at the head of (5),
+  tested by D1 (yes) and D14 (NO → FINDING).
+**Rulings needed:** (a) clearance of the copy write, the copy to be kept until a removal is ruled; (b) the record of NOTE 2 as above.
+**For JP, once cleared:** upload `C:\Users\JP\edition_upgrade_runs\p4_check_20261121.py` to `~/edition_upgrade_runs/` through PA's Files
+page, then paste the block and send the console back. Expected run time is several minutes: three full reads of ~450 MB copies,
+plus the built guard twice.
+
+### Block P4 (GATE REF d34d6723; WRITES one copy of live + its run folder + log; sha256 b38f48d9cb206e5d059cb53c19b34b42bd1ff38edc3c4bf2b23291d2c5752566)
+```bash
+set +H
+L=~/edition_upgrade_runs/p4_live_tables_20261121.log
+if [ -e "$L" ]; then echo "P4 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1                                           # no Python cache file written in the checkout
+export GIT_OPTIONAL_LOCKS=0                                                # git status (inside eu_step) does not rewrite the checkout's index file
+pcf() { find ~/bible-db \( -name __pycache__ -type d -o -path '*/__pycache__/*' \) -printf '%M %u %g %s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -c1-16; }   # the cache folders and what is in them only (DESIGN 9.209)
+pc0=$(pcf)
+echo "GATE REF ${REF} - P4 - what the swap drops, built's full sha and the Q9 pre-read (DESIGN 9.213 (i), Q1, Q4, Q9) - WRITES: a fresh copy of live in the run folder (sqlite backup; live opened read-only by that step only), the run folder and this log; src and built only read - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P4 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116                                              # the HEADFIX2 guard folder (DESIGN 9.156 (3))
+D=$R/p4_live_tables_20261121
+LC=$D/live_copy_20261121.db
+U=$R/p4_check_20261121.py                                                  # the check program as JP uploaded it through PA's Files page; outside the repo
+XS=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01       # src full sha256: DESIGN 9.168 (1); LIVESRC (DR, 11/18)
+XHOME_MAX=7900000                                                          # KB: the bound ruled for BSTD (DESIGN 9.171 (3)), used by LIVESRC; dashboard 7.4 of 10.0 GB (JP 11/20, DESIGN 9.219)
+XCHK=3a82decaa9550853ca5d71427e18357be30c29545d10e4ed0a76b1d8d37a6606                                                              # sha256 of the check program CC wrote and tested (DR "### The P4 check program"); any other file STOPs
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+# --- before the copy: every miss is STOP; nothing written but the run folder ---
+EU scripts/eu_step.py pre --tag P4 --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "P4 RESULT: STOP - pre (line above); nothing written but the run folder"; exit 1; }
+[ -s "$U" ] || { echo "P4 RESULT: STOP - the uploaded check program is missing or empty: $U"; exit 1; }
+k=$(h "$U"); echo "uploaded check program sha256 (before anything is copied): $k (expect $XCHK)"
+[ "$k" = "$XCHK" ] || { echo "P4 RESULT: STOP - the uploaded check program is not the file CC wrote and tested; nothing copied"; exit 1; }
+[ -s "$LIVE" ] || { echo "P4 RESULT: STOP - live missing or empty: $LIVE"; exit 1; }
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag P4 --built "$B" --dir "$DH" --written words,abp_corrections || { echo "P4 RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+s0=$(h "$S"); echo "src sha256 before: $s0 (expect $XS)"
+[ "$s0" = "$XS" ] || { echo "P4 RESULT: STOP - src is not the 11/1 copy as recorded"; exit 1; }
+b0=$(h "$B"); echo "BUILT FULL SHA256 (before): $b0 - the swap block declares this value (DESIGN 9.213 (i))"
+stat -c 'built: %s bytes, last write %y' "$B"
+me=$(id -un)
+dk0=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); tm0=$(find /tmp -user "$me" -type f -printf '%s\n' 2>/dev/null | awk '{s += $1} END {print s + 0}')
+echo "home in use before: $dk0 KB; my files in /tmp: $tm0 bytes (STOP above $XHOME_MAX KB; the copy adds about 460 MB after this check)"
+[ "$dk0" -le "$XHOME_MAX" ] || { echo "P4 RESULT: STOP - home has grown since the 11/20 dashboard read; read the dashboard and the ruling chat first"; exit 1; }
+echo "=== LIVE before: size + time (stat, the file is not opened) and its side files - printed only ==="
+stat -c 'live: %s bytes, last write %y' "$LIVE"
+for f in "$LIVE-journal" "$LIVE-wal" "$LIVE-shm"; do echo "beside live: $f $([ -e "$f" ] && echo present || echo absent)"; done
+# --- the write: the fresh copy (live opened read-only by sqlite's backup; the copy set to journal_mode=DELETE) - LIVESRC's step ---
+echo "=== (copy) sqlite backup of live into the run folder - start $(date -u +%FT%TZ) ==="
+EU - "$LIVE" "$LC" <<'PY'; rc=$?
+import os, sqlite3, sys
+live, dst = sys.argv[1], sys.argv[2]
+s = sqlite3.connect("file:%s?mode=ro" % live, uri=True, timeout=60)
+print("live journal mode (read): %s" % s.execute("PRAGMA journal_mode").fetchone()[0])
+d = sqlite3.connect(dst)
+s.backup(d)
+d.execute("PRAGMA journal_mode=DELETE")
+d.close()
+s.close()
+c = sqlite3.connect("file:%s?mode=ro" % dst, uri=True)
+print("copy quick_check: %s" % c.execute("PRAGMA quick_check").fetchone()[0])
+print("copy triggers: %d" % c.execute("SELECT count(*) FROM sqlite_master WHERE type='trigger'").fetchone()[0])
+c.close()
+print("copy: %d bytes" % os.path.getsize(dst))
+PY
+echo "copy exit $rc (expect 0) - end $(date -u +%FT%TZ)"
+[ "$rc" = 0 ] && [ -s "$LC" ] || { echo "P4 RESULT: STOP - the copy did not finish (anything made is left in $D for the ruling chat)"; exit 1; }
+for f in "$LC-journal" "$LC-wal" "$LC-shm"; do [ -e "$f" ] && { echo "P4 RESULT: STOP - a side file beside the copy: $f (left as is)"; exit 1; }; done
+stat -c 'live after the copy: %s bytes, last write %y (printed only)' "$LIVE"
+# --- the check (read-only on all three copies) ---
+cp "$U" "$D/check.py" || { echo "P4 RESULT: STOP - cannot copy the uploaded check program into the run folder"; exit 1; }
+echo "=== the check - start $(date -u +%FT%TZ) ==="
+# check.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5)(b); TIPNR57's launcher, DR :15775-15785)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XCHK" \
+  "LC=$LC" "S=$S" "B=$B" "D=$D" "REPO=$HOME/bible-db" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end $(date -u +%FT%TZ)"
+# --- after: every miss is CHECK ---
+bad=0
+s1=$(h "$S"); echo "src sha256 after = before: $([ "$s1" = "$s0" ] && echo yes || echo NO)"; [ "$s1" = "$s0" ] || bad=1
+b1=$(h "$B"); echo "built sha256 after = before: $([ "$b1" = "$b0" ] && echo yes || echo NO)"; [ "$b1" = "$b0" ] || bad=1
+EU scripts/eu_step.py check --tag P4 --built "$B" --dir "$DH" --written words,abp_corrections > "$D/check_after.out" 2>&1; ra=$?
+tail -n 1 "$D/check_after.out"; echo "built = HEADFIX2's result, after: exit $ra (expect 0)"; [ "$ra" = 0 ] || bad=1
+for f in "$S-journal" "$B-journal"; do [ -e "$f" ] && { echo "CHECK: side file $f"; bad=1; }; done
+echo "the copy (kept until a removal is ruled): $LC, $(stat -c %s "$LC") bytes"
+dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use after: $dk1 KB (before $dk0 KB; the copy + run files $((dk1 - dk0)) KB)"
+pc1=$(pcf); echo "the checkout's cache folders and their contents unchanged: $([ "$pc1" = "$pc0" ] && echo yes || echo NO)"; [ "$pc1" = "$pc0" ] || bad=1
+[ "$r2" = 0 ] || [ "$r2" = 3 ] || { echo "P4 RESULT: STOP - the check did not finish (exit $r2; the copy kept in $D)"; exit 1; }
+[ "$bad" = 0 ] || { echo "P4 RESULT: CHECK - lines above (the copy kept in $D) - to the ruling chat as printed"; exit 1; }
+[ "$r2" = 3 ] && { echo "P4 RESULT: FINDINGS - listed above (the copy kept in $D) - to the ruling chat as printed"; exit 1; }
+echo "P4 RESULT: DONE - read as printed; built's full sha $b0; the copy kept in $D until a removal is ruled"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The P4 check program — `~/edition_upgrade_runs/p4_check_20261121.py` (JP uploads it; sha256 3a82decaa9550853ca5d71427e18357be30c29545d10e4ed0a76b1d8d37a6606)
+```python
+"""P4 check program (edition-upgrade step 8, plan P4; DESIGN 9.213 (i), Q1, Q4, Q9). READ-ONLY on every copy.
+
+Run by block P4 through the read-once launcher (DESIGN 9.190 (5)(b)), arguments KEY=value:
+  LC=<fresh copy of live, made by the block>  S=<src>  B=<built>  D=<run folder>  REPO=<checkout>
+It reads the three copies (mode=ro + query_only, through eu_step.ro), and writes only into D:
+  digests.tsv (every table, rows + full digest, on each copy) and delta_live_vs_src.tsv (eu_step's row
+  delta for the tables where live differs from src; it holds row values, so it stays in the run folder).
+The log gets table names, row counts, digests, column names and counts only: never a cached AI text,
+a summary, a definition or a query string.
+
+  (1) every table on live-copy / src / built: rows + digest (eu_step.digest, the form LIVESRC used)
+  (2) live vs src: words + verses = LIVESRC's digests (DESIGN 9.181) - a miss is a FINDING;
+      the tables that differ must be among ai_search_cache, lsj, abp_ext (plan P4; charter 7) - any other
+      differing table, or a table on one side only, is a FINDING (DESIGN 9.213 Q1: put to JP with its count);
+      eu_step's row delta for each differing table: counts and changed-column names only
+  (3) the site's start-up changes (app.py _migrate_db :321-420): which of its columns / tables / indexes
+      each copy already has (a missing summary_v / abp_summary_v means start-up blanks those summaries)
+  (4) AI cache rows by category (the ver_key part before ':'), on each copy
+  (5) built vs src: the differing tables listed; the words cells that changed, counted by column,
+      keyed by (verse_id, position) - strongs 20, strongs_base 26, is_pn 12 as STEP4GATE run 2 read them
+      (DESIGN 9.193 (2)); a miss is a FINDING
+  (6) G5, the expected figures for P7 (DESIGN 9.213 Q9): pn_hebrew_xref, pn_greek_identity and name-slot
+      strongs_base, built vs src AND built vs the live copy (P7 reads live after the swap against the
+      rollback = today's live)
+Exit 0 = READ (every check held), 3 = FINDINGS (listed), 2 = STOP (could not read).
+"""
+import os
+import re
+import sqlite3
+import sys
+from collections import Counter
+
+args = dict(a.split("=", 1) for a in sys.argv[1:])
+LC, S, B, D, REPO = args["LC"], args["S"], args["B"], args["D"], args["REPO"]
+sys.path.insert(0, os.path.join(REPO, "scripts"))
+import eu_step as E  # noqa: E402  (the lane's own reader + digest + row delta; never a copy)
+
+LIVESRC = {"words": [626309, "1ce75b22fd302e368f1bfca1bcb9e0fdccdce9e3658af4534f258f5fd3b25b26"],
+           "verses": [31237, "5717b0451ba5e1b044a1c3f1a3cf718c15d23e3a669a605b9c3d5502d1f721ae"]}   # DR LIVESRC ran; DESIGN 9.181
+ALLOWED = ("ai_search_cache", "lsj", "abp_ext")       # plan P4 (DR swap PLAN); charter 7 names the AI cache
+KEYS = {"ai_search_cache": "query", "lsj": "key", "abp_ext": "strongs"}   # app.py :359-364; parse_lsj.py :56-61; load_abp_ext.py :6-11
+STEP4 = {"strongs": 20, "strongs_base": 26, "is_pn": 12}   # STEP4GATE run 2, src -> built (DESIGN 9.193 (2))
+MIGRATE = [("lsj", "summary_json"), ("lsj", "summary_v"), ("abp_ext", "summary_json"), ("abp_ext", "abp_summary_v"),
+           ("books", "sort_order"), ("lexicon", "strongs_g"), ("tipnr", "entity_types")]       # app.py :326-391
+MIG_IDX = ["idx_ai_cache_ver", "idx_lexicon_strongs_g", "idx_kjv_strongs_word", "idx_kjv_words_word", "idx_bsb_strongs_id"]
+CLASS = ("abp-tag", "tipnr", "lemma-only", "none")    # retire_hebrew_identity.py :126; build_pn_greek_identity.py :543
+findings = []
+
+
+def lab(v):
+    return v if v in CLASS else ("NULL" if v is None else "other")
+
+
+def shape(v):
+    if v is None:
+        return "NULL"
+    if v == "*":
+        return "*"
+    if re.fullmatch(r"H\d+(\.\d+)?", v):
+        return "H"
+    if re.fullmatch(r"G\d+(\.\d+)?", v):
+        return "G"
+    return "other"
+
+
+def cat(v):
+    p = (v or "").split(":", 1)[0]
+    return p if (":" in (v or "") and re.fullmatch(r"[a-z_]{1,20}", p)) else "other"
+
+
+try:
+    con = {n: E.ro(p) for n, p in (("live", LC), ("src", S), ("built", B))}
+except E.Stop as e:
+    print("P4 STOP: %s" % e)
+    sys.exit(2)
+
+# ---- (1) every table, every copy
+tabs, virt, dig = {}, {}, {}
+for n, c in con.items():
+    tabs[n], virt[n] = E.plain_tables(c)
+    dig[n] = {t: E.digest(c, t) for t in tabs[n]}
+alln = sorted(set(tabs["live"]) | set(tabs["src"]) | set(tabs["built"]))
+print("=== (1) every table: rows / digest (first 12) on live copy | src | built - live=src? built=src? ===")
+with open(os.path.join(D, "digests.tsv"), "w", encoding="utf-8", newline="\n") as f:
+    f.write("table\tlive_rows\tlive_digest\tsrc_rows\tsrc_digest\tbuilt_rows\tbuilt_digest\n")
+    for t in alln:
+        cells, fcells = [], []
+        for n in ("live", "src", "built"):
+            d = dig[n].get(t)
+            cells.append("-" if d is None else "%d/%s" % (d[0], d[1][:12]))
+            fcells += ["-", "-"] if d is None else [str(d[0]), d[1]]
+        ls = "yes" if dig["live"].get(t) == dig["src"].get(t) else "NO"
+        bs = "yes" if dig["built"].get(t) == dig["src"].get(t) else "NO"
+        print("  %-34s %-22s %-22s %-22s live=src %-3s built=src %s" % (t, cells[0], cells[1], cells[2], ls, bs))
+        f.write("\t".join([t] + fcells) + "\n")
+for n in ("live", "src", "built"):
+    print("  %s: %d tables, virtual %s" % (n, len(tabs[n]), ",".join(virt[n]) or "none"))
+
+# ---- (2) live vs src
+print("=== (2) live copy vs src ===")
+for t, (rows, dg) in LIVESRC.items():
+    got = dig["live"].get(t)
+    ok = got == [rows, dg]
+    print("  %s on the live copy: %s (expect %d/%s, LIVESRC): %s" % (t, "-" if got is None else "%d/%s" % tuple(got), rows, dg,
+                                                                      "yes" if ok else "NO"))
+    if not ok:
+        findings.append("live %s is not LIVESRC's" % t)
+one_side = sorted(set(tabs["live"]) ^ set(tabs["src"]))
+for t in one_side:
+    where = "live only" if t in tabs["live"] else "src only"
+    n = (dig["live"].get(t) or dig["src"].get(t))[0]
+    print("  table on one side only: %s (%s, %d rows)" % (t, where, n))
+    findings.append("table %s on %s (%d rows)" % (t, where, n))
+diff_ls = [t for t in alln if t in tabs["live"] and t in tabs["src"] and dig["live"][t] != dig["src"][t]]
+print("  tables that differ, live vs src (%d): %s" % (len(diff_ls), ", ".join(diff_ls) or "none"))
+other = [t for t in diff_ls if t not in ALLOWED]
+print("  differing tables outside %s: %s" % ("/".join(ALLOWED), ", ".join(other) or "none"))
+for t in other:
+    findings.append("live differs from src in %s (%d -> %d rows) - outside the expected three; to JP with its count (9.213 Q1)"
+                    % (t, dig["src"][t][0], dig["live"][t][0]))
+sl, ll = E.schema(con["src"]), E.schema(con["live"])
+sd = [("src only", e) for e in sl if e not in ll] + [("live only", e) for e in ll if e not in sl]
+print("  schema entries on one side only (type, name, table): %d" % len(sd))
+for w, e in sd:
+    print("    %s: %s %s on %s" % (w, e[0], e[1], e[2]))
+print("  row delta src -> live, per differing table (eu_step.run_delta; values in the run folder only):")
+specs = ["%s:%s" % (t, KEYS[t]) if t in KEYS else t for t in diff_ls]
+try:
+    total, sha = E.run_delta(S, LC, specs, os.path.join(D, "delta_live_vs_src.tsv"), 0) if specs else (0, "-")
+    print("  delta_live_vs_src.tsv: %d difference lines, sha256 %s" % (total, sha))
+except E.Stop as e:
+    print("  row delta: STOP inside it: %s" % e)
+    findings.append("the live-vs-src row delta could not run: %s" % e)
+
+# ---- (3) the site's start-up changes
+print("=== (3) the site's start-up changes (app.py _migrate_db): present on live copy | src | built ===")
+for t, col in MIGRATE:
+    row = []
+    for n in ("live", "src", "built"):
+        row.append("yes" if t in tabs[n] and col in E.cols(con[n], t) else ("no table" if t not in tabs[n] else "NO"))
+    print("  %s.%s: %s" % (t, col, " | ".join(row)))
+for i in MIG_IDX:
+    row = ["yes" if con[n].execute("SELECT 1 FROM sqlite_master WHERE type='index' AND name=?", (i,)).fetchone() else "NO"
+           for n in ("live", "src", "built")]
+    print("  index %s: %s" % (i, " | ".join(row)))
+print("  table ai_search_cache: %s" % " | ".join("yes" if "ai_search_cache" in tabs[n] else "NO" for n in ("live", "src", "built")))
+for n in ("live", "src", "built"):
+    for t, col in (("lsj", "summary_json"), ("abp_ext", "summary_json")):
+        if t in tabs[n] and col in E.cols(con[n], t):
+            k = con[n].execute("SELECT count(*) FROM %s WHERE %s IS NOT NULL" % (E.q(t), E.q(col))).fetchone()[0]
+            print("  %s: %s rows with a %s: %d" % (n, t, col, k))
+
+# ---- (4) AI cache by category
+print("=== (4) ai_search_cache rows by category (the ver_key part before ':'; anything else 'other') ===")
+for n in ("live", "src", "built"):
+    if "ai_search_cache" not in tabs[n]:
+        print("  %s: no table" % n)
+        continue
+    cc = Counter(cat(r[0]) for r in con[n].execute("SELECT ver_key FROM ai_search_cache"))
+    print("  %s: %s" % (n, ", ".join("%s %d" % kv for kv in sorted(cc.items())) or "none"))
+
+# ---- (5) + (6) built vs src, built vs live: words cells, G5
+mem = sqlite3.connect("file::memory:", uri=True)
+mem.text_factory = E.text
+mem.execute("ATTACH DATABASE ? AS s", ("file:%s?mode=ro" % S,))
+mem.execute("ATTACH DATABASE ? AS b", ("file:%s?mode=ro" % B,))
+mem.execute("ATTACH DATABASE ? AS l", ("file:%s?mode=ro" % LC,))
+mem.execute("PRAGMA query_only=1")
+
+print("=== (5) built vs src ===")
+diff_bs = [t for t in alln if t in tabs["built"] and t in tabs["src"] and dig["built"][t] != dig["src"][t]]
+print("  tables that differ, built vs src (%d): %s" % (len(diff_bs), ", ".join(diff_bs) or "none"))
+for t in sorted(set(tabs["built"]) ^ set(tabs["src"])):
+    print("  table on one side only: %s (%s)" % (t, "built only" if t in tabs["built"] else "src only"))
+
+
+def words_cells(x, y):
+    """Words cells that differ x -> y, keyed by (verse_id, position): count per column."""
+    cols_ = [c for c in E.cols(con["src"], "words") if c not in ("id", "verse_id", "position")]
+    sel = ", ".join("sum(p.%s IS NOT q.%s)" % (E.q(c), E.q(c)) for c in cols_)
+    r = mem.execute("SELECT count(*), %s FROM %s.words p JOIN %s.words q ON p.verse_id = q.verse_id AND p.position = q.position"
+                    % (sel, x, y)).fetchone()
+    na = mem.execute("SELECT count(*) FROM %s.words" % x).fetchone()[0]
+    nb = mem.execute("SELECT count(*) FROM %s.words" % y).fetchone()[0]
+    return r[0], na, nb, dict(zip(cols_, r[1:]))
+
+
+j, na, nb, wc = words_cells("s", "b")
+print("  words keyed by (verse_id, position): src %d rows, built %d rows, matched %d" % (na, nb, j))
+vs_ = mem.execute("SELECT count(*) FROM s.verses").fetchone()[0]
+vb_ = mem.execute("SELECT count(*) FROM b.verses").fetchone()[0]
+vm_ = mem.execute("SELECT count(*) FROM s.verses x JOIN b.verses y ON x.id = y.id AND x.book IS y.book AND x.chapter IS y.chapter "
+                  "AND x.verse IS y.verse").fetchone()[0]
+vok = vs_ == vb_ == vm_
+print("  every verse id names the same (book, chapter, verse) on src and built (eu_words_delta.py :67 reads the same four columns):"
+      " src %d, built %d, matched %d: %s" % (vs_, vb_, vm_, "yes" if vok else "NO"))
+if not vok:
+    findings.append("built vs src verse ids do not all name the same (book, chapter, verse): %d / %d / %d" % (vs_, vb_, vm_))
+ok = j == na == nb
+print("  every words row matched on (verse_id, position) - the same rows STEP4-DELTA2 keyed by (book, chapter, verse, position): %s"
+      % ("yes" if ok else "NO"))
+if not ok:
+    findings.append("built vs src words rows do not all match on (verse_id, position): %d / %d / %d" % (na, nb, j))
+print("  (only strongs, strongs_base, is_pn are gated; the other columns are raw-cell read-outs - bracket_id here is the stored"
+      " value, not STEP4-DELTA2's per-verse rank, so it is NOT comparable with 4,208)")
+print("  cells that differ, by column: %s" % ", ".join("%s %d" % (c, n) for c, n in wc.items() if n) )
+for c, want in STEP4.items():
+    ok = wc.get(c) == want
+    print("  %s cells src -> built: %s (expect %d, STEP4GATE run 2, DESIGN 9.193 (2)): %s" % (c, wc.get(c), want, "yes" if ok else "NO"))
+    if not ok:
+        findings.append("built vs src %s cells %s, expected %d" % (c, wc.get(c), want))
+
+
+def g5(x, y, label):
+    print("  --- G5 %s ---" % label)
+    for t, f in (("pn_hebrew_xref", "class"), ("pn_greek_identity", "source")):
+        if not all(mem.execute("SELECT 1 FROM %s.sqlite_master WHERE type='table' AND name=?" % z, (t,)).fetchone() for z in (x, y)):
+            print("  %s: missing on a side" % t)
+            findings.append("%s missing (%s)" % (t, label))
+            continue
+        oa = mem.execute("SELECT count(*) FROM %s.%s p LEFT JOIN %s.%s q ON p.verse_id = q.verse_id AND p.position = q.position "
+                         "WHERE q.verse_id IS NULL" % (x, t, y, t)).fetchone()[0]
+        ob = mem.execute("SELECT count(*) FROM %s.%s q LEFT JOIN %s.%s p ON p.verse_id = q.verse_id AND p.position = q.position "
+                         "WHERE p.verse_id IS NULL" % (y, t, x, t)).fetchone()[0]
+        cols_ = [c for c in E.cols(con["src"], t) if c not in ("verse_id", "position")]
+        ch = mem.execute("SELECT %s FROM %s.%s p JOIN %s.%s q ON p.verse_id = q.verse_id AND p.position = q.position "
+                         "WHERE %s" % (", ".join("p.%s, q.%s" % (c, c) for c in cols_), x, t, y, t,
+                                       " OR ".join("p.%s IS NOT q.%s" % (c, c) for c in cols_))).fetchall()
+        bycol = Counter()
+        tr = Counter()
+        fi = cols_.index(f)
+        for r in ch:
+            for i, c in enumerate(cols_):
+                if r[2 * i] != r[2 * i + 1]:
+                    bycol[c] += 1
+            if r[2 * fi] != r[2 * fi + 1]:
+                tr["%s -> %s" % (lab(r[2 * fi]), lab(r[2 * fi + 1]))] += 1
+        print("  %s: rows changed %d (by column: %s); %s -> %s: %s; keys only before %d, only after %d"
+              % (t, len(ch), ", ".join("%s %d" % kv for kv in sorted(bycol.items())) or "none", f, f,
+                 ", ".join("%s %d" % kv for kv in sorted(tr.items())) or "none", oa, ob))
+    rows = mem.execute("SELECT p.strongs_base, q.strongs_base FROM %s.words p JOIN %s.words q ON p.verse_id = q.verse_id "
+                       "AND p.position = q.position WHERE p.strongs_base IS NOT q.strongs_base AND (p.is_pn = 1 OR q.is_pn = 1)"
+                       % (x, y)).fetchall()
+    sh = Counter("%s -> %s" % (shape(a), shape(b)) for a, b in rows)
+    print("  name-slot strongs_base (is_pn = 1 on either side) changed: %d (%s)"
+          % (len(rows), ", ".join("%s %d" % kv for kv in sorted(sh.items())) or "none"))
+
+
+print("=== (6) G5 - the expected figures for P7 (a read-out; DESIGN 9.213 Q9) ===")
+g5("s", "b", "src -> built")
+g5("l", "b", "live copy -> built (what P7 reads: live after the swap vs the rollback)")
+mem.close()
+for c in con.values():
+    c.close()
+
+print("=== findings ===")
+for x in findings:
+    print("  FINDING: %s" % x)
+print("P4 CHECK: %s - findings %d" % ("READ" if not findings else "FINDINGS", len(findings)))
+sys.exit(3 if findings else 0)
+```
