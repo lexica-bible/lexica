@@ -19971,3 +19971,8 @@ echo "P7 RESULT: DONE - $(date -u +%FT%TZ) - cert 7/7, the health floor OK with 
 - **CC's two checks between the commit and the push (a miss on either = no push, to the ruling chat):** (1) `git add -N` the two fixture paths, the 8-path `git diff` hashes 003bb52f…83ee (§9.227, §9.231); (2) after the commit, `git rev-parse HEAD:<path>` for the block's eleven pinned files = its PINS (§9.233).
 - **The day, in order:** JP uploads p6_check_20261121.py and p7_check_20261121.py (hash-checked before P6A) -> P6A -> PB0 -> CC: the commit, the two checks, the push -> P6R -> JP Disables -> P6B -> JP Enables, then Reloads -> P6C -> P7 -> Part B in words. Not started between 11:00 and 14:30 UTC. CC pushes nothing else from the swap commit until P7's result.
 - Each block is re-hashed against its cleared sha before CC prints it for JP.
+
+## STEP 8, THE DAY (11/21) - run record
+- 19:52Z CC re-hashed every cleared block (XP filled): P6A 2ed1ccc6…8284, P6R f822d624…e630, P6B 959dacee…d54f, P6C 596eca57…1e70, RB0 73939c63…0ada, RB1 8c60304b…6af6, RB2 a67c31b9…cc40, PB0 5bdca89b…922a, PB 0593313e…534d - all as cleared. origin/master = local 183028ee.
+- JP uploaded p6_check_20261121.py and p7_check_20261121.py to ~/edition_upgrade_runs/ (his word, ~20:00Z).
+- The upload check line: reviewer ESCALATE (the p6 value's 64 characters not in the register) -> cleared by the ruling chat, §9.234, both values in full.
