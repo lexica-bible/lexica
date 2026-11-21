@@ -1,0 +1,147 @@
+diff --git a/.claude/commands/rebuild-words.md b/.claude/commands/rebuild-words.md
+index 0f5d4cdc..7f112bdd 100644
+--- a/.claude/commands/rebuild-words.md
++++ b/.claude/commands/rebuild-words.md
+@@ -322,15 +322,15 @@ output, if any, rides the step-8 deploy).
+    edition upgrade) drops it, re-declares these figures, and needs a re-freeze afterwards (handoff
+    held item "snapshot staleness"). The restore refuses live by design: it only ever runs here.
+ 9b. **HEALTH FLOOR + ORACLE — on `<built>`.** `health_check.py <built> --no-backup-check
+-   --no-disk-check`: the `abp_surface rows BELOW floor 395003` line must read `[OK  ] … : 0`
+-   (floor raised 2026-10-25 from 389,244 — charter G3: builder chain 391,130 + the fill's 3,873
+-   inserts; shortfall 3,873 exactly = the fill is missing; the 2026-07-16 miss is why the guard
+-   exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
++   --no-disk-check`: the `abp_surface rows BELOW floor 395014` line must read `[OK  ] … : 0`
++   (floor 395,014 since the edition-upgrade swap, DESIGN 9.130: builder chain 391,141 + the fill's
++   3,873 inserts; before it 395,003, raised 2026-10-25 from 389,244 — charter G3; shortfall 3,873
++   exactly = the fill is missing; the 2026-07-16 miss is why the guard exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
+    `0|0` (the end-to-end oracle; also proves live's table did not change since `<src>` was taken).
+ 8. **Swap + deploy (the only live action):** `mv bible.db bible_pre_<reason>_<date>.db; mv <built> bible.db`; then
+    `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
+    built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch). Live goes from
+-   the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
++   the old table to the rebuilt one (395,014 rows since the edition upgrade) in one move; no fill-less moment. At the
+    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
+    name-slot `strongs_base` 501 (charter §7).
+ 10. **WHERE: on `<built>`, right after step 11, before steps 12 and 9** (JP ruling after the 10/25 run). RE-GENERATE
+diff --git a/ai.py b/ai.py
+index cdd65440..3ffffc60 100644
+--- a/ai.py
++++ b/ai.py
+@@ -1609,7 +1609,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
+ 
+ # Bump this integer whenever server-side search logic changes in a way that
+ # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
+-_CACHE_CODE_VER = 48   # 48: provenance rail carries the numbering crosswalk (alias_note per key word)
++_CACHE_CODE_VER = 49   # 49: edition-upgrade swap - the corpus English changed (app edition); search answers redraw (DESIGN 9.226 Q2 (a))
++                       # 48: provenance rail carries the numbering crosswalk (alias_note per key word)
+                        # 47: scope folded into the cache key (_scope_tag) — "fire O.T." vs "fire o t" no longer collide
+                        # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
+                        # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)
+diff --git a/scripts/audit_phrase_gloss_underdist.py b/scripts/audit_phrase_gloss_underdist.py
+index cb43e3fa..c682f995 100644
+--- a/scripts/audit_phrase_gloss_underdist.py
++++ b/scripts/audit_phrase_gloss_underdist.py
+@@ -52,7 +52,10 @@ DUMP_ALL = "--dump-all" in ARGS
+ BOOK_FILTER = ARGS[ARGS.index("--book") + 1] if "--book" in ARGS else None
+ 
+ # ── (g) allowlist — the S11 rebuild's 31 explained new rows (P1 pronoun consolidations
+-#    + Mat 12:14 charter L466). Frozen baseline = flagged rows BEYOND this list (<= 671).
++#    + Mat 12:14 charter L466). Frozen baseline = flagged rows BEYOND this list (<= 747).
++#    747 since the edition-upgrade swap (DESIGN 9.203: "the charter's <= 671 is restated by JP to
++#    built's 747"; 9.213 Q6; was 671). Member account: v2, docs/handoffs/drafts/STEP6AUD_C4_account_20261119.txt
++#    (sha256 60fb07b9...4b96); no new member file.
+ #    Cert artifact: AUDIT_phrase_gloss_allowlist.txt (repo root). Missing -> raw count. ──
+ _ALLOWLIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
+                                "AUDIT_phrase_gloss_allowlist.txt")
+@@ -258,7 +261,7 @@ print(f"  function-word set: {len(FUNC):,} (LSJ ∪ override)")
+ print(f"  FLAGGED (under-distribution class): {buckets['FLAGGED']:6,}")
+ print(f"  NO-EVIDENCE (blank neighbour, def-miss): {buckets['NO-EVIDENCE']:6,}")
+ print(f"  allowlisted (S11 explained):        {len(allow_hit):6,} / {len(ALLOWLIST)}")
+-print(f"  FLAGGED BEYOND allowlist (gate <= 671): {len(beyond):6,}")
++print(f"  FLAGGED BEYOND allowlist (gate <= 747): {len(beyond):6,}")
+ if allow_stale:
+     print("  ⚠ allowlist entr(ies) that no longer fire (drift — investigate): "
+           + ", ".join(f"{r} {h}" for r, h in sorted(allow_stale)))
+diff --git a/scripts/cert_invariants.py b/scripts/cert_invariants.py
+index 1c4adcd7..241b8911 100644
+--- a/scripts/cert_invariants.py
++++ b/scripts/cert_invariants.py
+@@ -44,7 +44,7 @@ from lane3_spent import Lane3Ops as _Lane3Ops, declared as _spent_declared, desc
+ PINS = {
+     "words": 626309,  # S11: +4 vs Session-3 pin = the (P2) _split_numbered splits (Dan 4:1, Isa 10:23, Luk 8:28, Pro 3:15), verified by per-verse word-count diff vs live
+     "verses": 31237,  # read from live at suite landing 2026-07-04
+-    "abp_corrections_active": 374,  # edition upgrade DESIGN 9.89: 372 + 2 S-joh14:26, read off the built copy 2026-11-06; members tests/fixtures/corrections/abp_corrections_active_built_20261106.txt (sha256 446fee35...)
++    "abp_corrections_active": 375,  # edition upgrade swap, DESIGN 9.156 (4): 374 (9.89) + 1 EU-Joh19:18 english_head (HEADFIX2), read off the built copy by block R375 2026-11-21; members tests/fixtures/corrections/abp_corrections_active_built_20261121.txt (sha256 005da9f3...)
+     "abp_corrections_spent_lane3": 1,  # DESIGN 9.153: Heb 11:24 pos 7 english (members = lane3_spent.DECLARED); a second spent row is red until ruled
+ }
+ 
+diff --git a/scripts/health_check.py b/scripts/health_check.py
+index 1fab3043..ea7b4bd0 100644
+--- a/scripts/health_check.py
++++ b/scripts/health_check.py
+@@ -141,7 +141,10 @@ check("distinct H-bases with NO bdb entry",
+ # Control (red first): the pre-fill copy and a rebuilt table without the fill both read shortfall
+ # 3,873; the table with the fill restored reads 0. Shortfall 3,873 exactly = the fill is missing
+ # (fix = scripts/restore_surface_fill.py); any other shortfall = a backfill reverted.
+-SURFACE_FLOOR = 395003
++# FLOOR RAISED at the edition-upgrade swap (2026-11) to 395,014 (DESIGN 9.120, 9.130 "step 9b CLOSED -
++# built's abp_surface holds the floor at 395,014"): the builder chain's 391,141 on the app-edition
++# English + the same 3,873 fill inserts. Shortfall 3,873 exactly still = the fill is missing.
++SURFACE_FLOOR = 395014
+ # --surface-floor=N (DESIGN 9.120, rebuild-words 9b on the edition upgrade's copy): check THIS run
+ # against a declared floor; the constant itself is re-pinned only in the swap commit.
+ if "--surface-floor" in sys.argv:                  # the '--surface-floor N' form would be ignored
+diff --git a/tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256 b/tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256
+new file mode 100644
+index 00000000..6f4ee7b2
+--- /dev/null
++++ b/tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256
+@@ -0,0 +1 @@
++005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048  abp_corrections_active_built_20261121.txt
+diff --git a/tests/test_surface_fill_restore.py b/tests/test_surface_fill_restore.py
+index e8f68f5e..52dce7c6 100644
+--- a/tests/test_surface_fill_restore.py
++++ b/tests/test_surface_fill_restore.py
+@@ -11,7 +11,7 @@ What must hold (feedback_audit_tools_must_fail — every outcome fires on a plan
+   * reasons 3 / 4 / 6 fire and block the write (database bytes unchanged);
+   * G1a stops on a wrong builder total; G1b stops when the builder table != the pre-fill copy;
+   * a tampered snapshot is refused (checksum);
+-  * the health floor: 395,002 rows WARN shortfall 1, 395,003 rows OK.
++  * the health floor: 395,013 rows WARN shortfall 1, 395,014 rows OK (re-pinned at the edition-upgrade swap; was 395,003).
+ 
+ Run:  python tests/test_surface_fill_restore.py
+ """
+@@ -748,21 +748,22 @@ class Floor(unittest.TestCase):
+         finally:
+             shutil.rmtree(tmp, ignore_errors=True)
+ 
+-    def test_floor_is_395003(self):
+-        self.assertIn("[WARN] abp_surface rows BELOW floor 395003", self.health(395002))
+-        self.assertTrue(self.health(395002).split("]: ")[1].startswith("1 "))
+-        line = self.health(395003)
+-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395003", line)
++    def test_floor_is_395014(self):
++        # re-pinned at the edition-upgrade swap: builder chain 391,141 + the fill's 3,873 (DESIGN 9.120, 9.130)
++        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", self.health(395013))
++        self.assertTrue(self.health(395013).split("]: ")[1].startswith("1 "))
++        line = self.health(395014)
++        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", line)
+         self.assertTrue(line.split("]: ")[1].startswith("0 "))
+-        self.assertTrue(self.health(391130).split("]: ")[1].startswith("3873 "))
++        self.assertTrue(self.health(391141).split("]: ")[1].startswith("3873 "))   # the fill missing = shortfall 3,873 exactly
+ 
+     def test_surface_floor_option_moves_only_that_run(self):
+-        # 9b on the edition upgrade's copy: 391,141 + 3,873 = 395,014 (DESIGN 9.120)
+-        line = self.health(395013, "--surface-floor=395014")
+-        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", line)
++        # --surface-floor=N checks one run against a declared floor (DESIGN 9.120); a different N than the default
++        line = self.health(395019, "--surface-floor=395020")
++        self.assertIn("[WARN] abp_surface rows BELOW floor 395020", line)
+         self.assertTrue(line.split("]: ")[1].startswith("1 "))
+-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", self.health(395014, "--surface-floor=395014"))
+-        self.assertIn("BELOW floor 395003", self.health(395014))       # the default is untouched
++        self.assertIn("[OK  ] abp_surface rows BELOW floor 395020", self.health(395020, "--surface-floor=395020"))
++        self.assertIn("BELOW floor 395014", self.health(395020))       # the default is untouched
+         tmp = tempfile.mkdtemp()                                         # the two-word form is refused
+         try:
+             p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"),

@@ -1,0 +1,89 @@
+# swap commit draft - local test run 2026-11-21: every CI-list file (.github/workflows/ci.yml), exit code first, then cert_invariants --controls; the last lines are tests/test_surface_fill_restore.py run once more on its own (it is also in the CI list above)
+0 tests/test_strongs_join.py | 
+0 tests/test_build_invariants.py | 
+0 tests/test_folded_fixes.py | 
+0 tests/test_argmap.py | 
+0 tests/test_versification.py | 
+0 tests/test_corpus_panel.py | 
+0 tests/test_synthesis_no_leak.py | 
+0 tests/test_typed_strongs.py | 
+0 tests/test_render_head_no_phantom.py | 
+0 tests/test_lexica_agreement_parse.py | 
+0 tests/test_lexica_glossset_fold.py | 
+0 tests/test_lexica_detectors.py | 
+0 tests/test_draw_hints.py | 
+0 tests/test_lexica_section_split.py | 
+0 tests/test_section_matcher_sweep.py | 
+0 tests/test_ref_tail_expansion.py | 
+0 tests/test_coverage_gate.py | 
+0 tests/test_repair_pass.py | 
+0 tests/test_v11_probes.py | 
+0 tests/test_fix_lexica_raw.py | 
+0 tests/test_offline_gate_lints.py | 
+0 tests/test_quote_repair.py | 
+0 tests/test_draw_history.py | 
+0 tests/test_helper_double_tag.py | 
+0 tests/test_stats_rollup.py | 
+0 tests/test_article_slot_attestation.py | 
+0 tests/test_pn_star_verb_merge.py | 
+0 tests/test_pn_star_merge_fix.py | 
+0 tests/test_cushi_namekeyed.py | Ran 5 tests in 0.096s OK 
+0 tests/test_context_feed.py | 
+0 tests/test_prompt_contract.py | 
+0 tests/test_written_ranges.py | 
+0 tests/test_news_gate.py | 
+0 tests/test_news_bulk.py | 
+0 tests/test_news_dedupe.py | OK test_news_dedupe 
+0 tests/test_news_clustering.py | OK test_news_clustering 
+0 tests/test_key_strongs_filter.py | 
+0 tests/test_tipnr_roster.py | 
+0 tests/test_pn_greek_identity.py | 
+0 tests/test_pn_name_match.py | 
+0 tests/test_reader_greek_flips.py | 
+0 tests/test_ws_greek_flips.py | 
+0 tests/test_c3_dormant.py | 
+0 tests/test_retire_builder.py | 
+0 tests/test_retire_reclass.py | 
+0 tests/test_c3_instruments.py | 
+0 tests/test_pn_surface_backfill.py | 
+0 tests/test_pn_edition_spelling.py | 
+0 tests/test_pn_lemma_wordstudy.py | 
+0 tests/test_gate_greek_header.py | Ran 8 tests in 0.379s OK 
+0 tests/test_gate_declared.py | Ran 30 tests in 6.255s OK 
+0 tests/test_eu_declared_gate2.py | Ran 4 tests in 0.150s OK 
+0 tests/test_slot_rulings_judah.py | Ran 4 tests in 0.172s OK 
+0 tests/test_eu_pn_binding_diff.py | Ran 5 tests in 0.161s OK 
+0 tests/test_eu_step.py | Ran 14 tests in 4.764s OK 
+0 tests/test_eu_words_delta.py | Ran 16 tests in 0.759s OK 
+0 tests/test_eu_head_check.py | Ran 9 tests in 0.365s OK 
+0 tests/test_eu_batch_insert.py | Ran 6 tests in 0.144s OK 
+0 tests/test_abp_app_feed.py | Ran 17 tests in 2.628s OK 
+0 tests/test_feed_censuses.py | Ran 17 tests in 5.052s OK 
+0 tests/test_app_transplant.py | Ran 47 tests in 28.843s OK 
+0 tests/test_app_cells.py | Ran 12 tests in 28.995s OK 
+0 tests/test_build_prose.py | Ran 12 tests in 0.399s OK 
+0 tests/test_eu_retired_check.py | Ran 11 tests in 0.270s OK 
+0 tests/test_eu_repair_restore_digits.py | Ran 7 tests in 0.210s OK 
+0 tests/test_correction_reorder_rows.py | Ran 3 tests in 0.000s OK 
+0 tests/test_reassembly_member_diff.py | Ran 10 tests in 0.717s OK 
+0 tests/test_abp_tab_bridge.py | 
+0 tests/test_hebrew_xref_positions.py | 
+0 tests/test_audit_xref_vs_binding.py | 
+0 tests/test_correct_xref_vs_binding.py | 
+0 tests/test_page_date.py | 
+0 tests/test_rank_score.py | 
+0 tests/test_gnews_resolve_deadline.py | 
+0 tests/test_rekey_dryrun.py | Ran 7 tests in 0.724s OK 
+0 tests/test_lane3_already_applied.py | Ran 3 tests in 0.462s OK 
+0 tests/test_lane3_rebuild_step.py | Ran 12 tests in 0.016s OK 
+0 tests/test_lane3_spent.py | Ran 14 tests in 1.615s OK 
+0 tests/test_surface_fill_restore.py | Ran 52 tests in 8.768s OK 
+0 tests/test_backup_rotate.py | 
+0 tests/test_dotted_lexicon_path.py | Ran 5 tests in 0.798s OK 
+0 tests/test_word_gloss_pinned.py | Ran 5 tests in 0.153s OK 
+0 tests/test_person_metav_link_orphans.py | Ran 6 tests in 0.307s OK 
+cert_invariants --controls exit 0 | ALL CONTROLS FIRED - the suite can fail, its greens mean something.
+FAILED FILES: 0
+Ran 52 tests in 7.171s
+
+OK

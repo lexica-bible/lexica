@@ -18681,3 +18681,30 @@ Every expected line as declared:
 - Dump sha 005da9f3…3048 = the local derivation (SAME); wrote 375 lines + .sha256; REPIN375: OK; DONE.
 **Copy-down (JP's scp) to tests/fixtures/corrections/:** abp_corrections_active_built_20261121.txt hashes 005da9f3…3048 = its .sha256 line =
 CC's local derivation (cmp identical); 375 lines, LF, no CR. It goes into the swap commit.
+
+## The SWAP COMMIT — drafted (11/21, CC), held for the ruling chat (§9.213 (v)); not committed, not pushed
+**Files** (working tree; the diff is `docs/handoffs/drafts/SWAP_COMMIT/swap_commit.diff`, sha256 002f2791…41f6, 8 files):
+- `scripts/cert_invariants.py` :47 — `abp_corrections_active` **374 → 375**, comment naming §9.156 (4), R375 and the new member file
+  `tests/fixtures/corrections/abp_corrections_active_built_20261121.txt` (sha 005da9f3…). The spent pin 1 (:48) is unchanged.
+- `tests/fixtures/corrections/abp_corrections_active_built_20261121.txt` (375 lines, = R375's dump = CC's local derivation) + `.sha256`.
+  The 374 file (20261106) stays. These are the only NEW paths.
+- `scripts/audit_phrase_gloss_underdist.py` :55 comment and :261 gate text **≤ 671 → ≤ 747**, with §9.203's words and account v2
+  (60fb07b9…4b96) named (§9.213 Q6); the allowlist file is unchanged; no new member file.
+- `scripts/health_check.py` :144 `SURFACE_FLOOR` **395003 → 395014**, with a comment citing §9.120 / §9.130; the 10/25 history is kept.
+- `tests/test_surface_fill_restore.py`: :14 docstring; `test_floor_is_395003` → `test_floor_is_395014` (395,013 WARN 1 / 395,014 OK /
+  391,141 shortfall 3,873); the `--surface-floor` option test moved to 395,020, so it still shows the option moves only that run, with
+  the default 395,014 untouched. :387-391 (the 10/25 after-count 395,003) stays, as planned.
+- `ai.py` :1612 `_CACHE_CODE_VER` **48 → 49** (§9.226 Q2 (a), search only).
+- `.claude/commands/rebuild-words.md` 9b and 8: floor 395,014 (history kept).
+**Not changed, each said:**
+- cert_manifest.json: its files are abp_texts, bh_scrape.db, the app feed, rahlfs, tagnt and tipnr — no script.
+- The punct 607 file: no code default reads a punct file, and no procedure doc names the 241 file (grep of docs/claude, .claude/commands,
+  CLAUDE.md: none).
+- The snapshot: already re-pinned at 9c. L9: none (§9.214).
+- apply_abp_surface_fill.py :50, restore_surface_fill.py :45 / :79 and dryrun_rekey_fill.py :396: the 10/25 history, they stay.
+**Local test output** (`docs/handoffs/drafts/SWAP_COMMIT/swap_tests.out`, sha 465c18e9…dc4e): every file in the CI list (83) exit 0,
+FAILED FILES 0; `cert_invariants.py --controls` "ALL CONTROLS FIRED"; test_surface_fill_restore 52 OK. After that run, CC changed one
+COMMENT in audit_phrase_gloss_underdist.py: CC's earlier wording "the +76 are the C4 joined-slot rows" was unverified and is replaced by
+§9.203's own words. The file still parses; no code line moved.
+**Push plan (as planned, P5):** committed locally with `-F`, pushed only right before P6, with no other deploy between. Before the push, a
+read-only check that neither NEW path exists untracked in PA's checkout (a pull refuses to overwrite one).
