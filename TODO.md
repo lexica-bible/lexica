@@ -10,13 +10,7 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ---
 
 ## Active lane — ABP edition upgrade (English line → the app's edition)
-- **STATE 11/16 end: stage E closed through 9c; charter §6 step 4 in progress.** HEADFIX2 DONE on built (375 active);
-  STEP4-DELTA2 = the reference delta; the four English-side columns are to be proven by two throwaway rebuilds — (c) the
-  control, then (b) vs pre_8b, expected empty (§9.159–§9.160). Code REF `adfb8ac5`. Opener: SUCCESSOR START in
-  `docs/handoffs/HANDOFF_edition_upgrade_stageE.md` (order: PA log read → removal → (c) → (b) → pre_8b→built read →
-  live = src proof → step-4 gate → steps 5–8 → swap). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9 (sole register,
-  latest §9.160); charter `docs/handoffs/CHARTER_edition_upgrade.md`. Swap-commit knock-ons: health floor 395,003 →
-  395,014, cert pin abp_corrections_active 374 → 375, active-list fixture re-pin (the spent pin 1 is already in code).
+- **STATE 11/21 end: THE SWAP IS DONE (20:21 UTC) and stands (DESIGN §9.235); live = the app edition on the swap commit `7bb92e10`.** Charter §6 steps 4-7 passed; step 8's blocks all ran DONE; cert 7/7 at 375, health floor OK at 395,014, G5 as declared; P8 (the 9c snapshot check on a copy of the new live) PASSED (§9.238). **Open on step 8: P9** - the first 13:30 UTC run after the swap (11/22): backup + health check read. Opener: SUCCESSOR START (11/21 end) in `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`. Rulings = `docs/handoffs/DESIGN_q2_build.md` §9 (latest §9.238). The swap-commit knock-ons LANDED in `7bb92e10` (health floor 395,014, cert pin 375 + member file, phrase-gloss gate ≤ 747, `_CACHE_CODE_VER` 49). Kept on PA until ruled removals: the rollback file `bible_pre_edition_upgrade_20261121.db` (three good nightlies first), the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot. Carried open: L9 on the new words (first), Job 3:3, Split +4, import_tipnr −57, Mark 1:9, the C4 joined-slot rows, the Q6 redraw pass, Jdg 11:7, the stray files in PA's checkout.
 - Still owed: B's step in `/rebuild-words` · Split 80 → 84 re-declare.
 - **`/rebuild-words` step 12, the side-table builders — run on the lane's built copy before step 9** (JP 11/7):
   `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` (+ place-orphan check). Prerequisite
