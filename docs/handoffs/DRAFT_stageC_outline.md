@@ -18708,3 +18708,27 @@ COMMENT in audit_phrase_gloss_underdist.py: CC's earlier wording "the +76 are th
 §9.203's own words. The file still parses; no code line moved.
 **Push plan (as planned, P5):** committed locally with `-F`, pushed only right before P6, with no other deploy between. Before the push, a
 read-only check that neither NEW path exists untracked in PA's checkout (a pull refuses to overwrite one).
+
+### The swap commit CLEARED (§9.227, 11/21) — CC's answers and how it is held
+- **(1) Why swap_commit.diff left out the .txt:** CC's diff command named the fixture's `.sha256` path but not the `.txt` path, to keep the
+  read short. The `.txt` is 375 data lines, R375's dump: it hashes 005da9f3…3048, equals CC's local derivation (cmp), and its own .sha256
+  line agrees. The FULL change set, the .txt included, is now `docs/handoffs/drafts/SWAP_COMMIT/swap_commit_full.patch`, sha256
+  **003bb52f106d50fbeb8321938e12f62e65e929b4f6e206e476258294f1fa83ee**.
+- **(4) Final-tree check of the changed comment:** `python -B -c "compile(...)"` on scripts/audit_phrase_gloss_underdist.py → "compile OK"
+  (no cache file written). No test file covers that script (grep of tests/: none). Its code lines are unchanged since the CI run.
+- **HOW IT IS HELD — CC's decision within the clearance:** the commit is NOT made now. A local commit on master would ride out with the
+  next routine docs push, and the push is not cleared. The working tree holds exactly the cleared change set. **Right before P6:** check
+  that `git diff` of the 8 paths still hashes 003bb52f…83ee; then `git commit -F docs/handoffs/drafts/SWAP_COMMIT/commit_message.txt`
+  (sha 23e454c7…d82b) of those 8 paths only, the pre-commit tests run; then the push, on P6's clearance. Until then CC pushes docs only,
+  by named paths.
+- **(2), (3):** carried into P6: the read-only check of PA's checkout for the two new fixture paths before the push; no other deploy
+  between; if P6 STOPs before the move, no deploy.sh and the commit stays unpulled on PA; if the swap is called off, the revert is pushed
+  before any other deploy.
+- **Point: rebuild-words step 8's 10/25 G5 figures** stay as they are in this commit; changing them now would change the cleared diff.
+  On the post-swap list: mark them as the 10/25 same-code figures and point an edition-upgrade-style lane to its own P4-style pre-read
+  (§9.222 (5)).
+- **Point: what reads the member fixture.** Nothing in code. cert_invariants.py reads only the pin. Check 4 (:96-154) counts
+  `status='active' AND applied_at='ingest'` rows against `PINS["abp_corrections_active"]`, then checks each row's cell on the database
+  (words, or verses.text for prose rows). The fixture is the member record for audits, not a code input. **So P7's check 4 is expected
+  green for two stated reasons:** live after the swap = built, which R375 read with 375 active ingest rows, the pin; and every row held on
+  built in STEP6AUD C1, whose one declared red was the count (375 vs the old pin 374, §9.204).

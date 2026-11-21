@@ -1,0 +1,3 @@
+edition upgrade: THE SWAP COMMIT - cert pin abp_corrections_active 374 -> 375 (+ member file 20261121, sha 005da9f3), phrase-gloss gate <= 747 (account v2), health floor 395014 (+ tests), _CACHE_CODE_VER 49 (search), rebuild-words floor text (DESIGN 9.156 (4), 9.203, 9.130, 9.226 Q2 (a); cleared by the ruling chat 11/21, pushed only right before P6)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
