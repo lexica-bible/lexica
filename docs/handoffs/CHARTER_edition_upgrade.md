@@ -371,6 +371,7 @@ manifest + allowlists + the new snapshot all re-pinned in the ONE swap commit.
 - The 10/25 pre-fill copy and the 10/25 frozen snapshot are NOT deleted before 9c's new freeze has
   passed `--check` against the swapped live — until then they are the only working restore path.
 - AI cache rows written between the copy and the swap are dropped by the swap (record the count).
+  *[Note — JP, 2026-11-21 (§9.224, his delegation "make the calls bro idk", ruled through the ruling chat): the swap also DROPS the `lsj` and `abp_ext` summary_json rows written on live since the 11/1 copy (P4 as of its copy: lsj 50, abp_ext 4; ai_search_cache 99). No carry into built, no write to built before the swap; the rollback copy keeps every dropped row. P6 prints the final counts, site stopped.]*
 - **Frozen verse text in `lexica_def` / summaries:** the Lexica card renders verse text frozen from
   `def_json`, copied from `verses.text` at build (S9 render trace). After the swap every card quotes
   the OLD edition until redrawn. This is a blast-radius item, not a rollback item — §8 Q6.

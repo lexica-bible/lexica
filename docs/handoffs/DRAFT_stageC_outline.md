@@ -18446,3 +18446,7 @@ moves, named above.
 - **P7's G5 read must PRINT the six pn_hebrew_xref keys** whose class moves none → lemma-only, and set them against §9.95's six verses (Num
   21:25, 1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3); a different member comes to the ruling chat. P7's expected figures read
   "surface" where P4 printed "other". (P4's program prints neither the keys nor "surface", so P7 needs a program change, ruled with P7's block.)
+
+### Q1 RULED (§9.224, 11/21) — the 54 summaries DROP (JP's delegation); carried to P6
+P6 must print, site stopped, the final dropped counts live vs built for ai_search_cache, lsj, abp_ext; any differing table beyond those three
+and abp_corrections = STOP. Charter §7 :374 carries JP's note.
