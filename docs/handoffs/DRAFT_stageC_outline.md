@@ -18321,3 +18321,90 @@ P4 list (DR :17131-17137) named only the three site-written tables and left it o
 **Console echo:** the screen echo of the pasted block shows garbled tail lines ("fill sha $b0; …"), the PA console's known echo fault.
 Every step after the copy printed its line (the after-checks through "P4 RESULT"), so bash ran the whole block. The log file is the
 record; a `cat` of it is available if the ruling chat wants it.
+
+### P4 log HELD by the ruling chat (11/21) — what it asked, and CC's answers so far
+The ruling chat gives no ruling on a summary: the run ended FINDINGS (1) and the console echo was garbled. JP brings the cat of the log, and
+§9.221's five points are ruled on it. Nothing restored, removed or re-run; the copy stays. Asked to come with it:
+**(A) "other" in the G5 source labels — the real labels, from the copies.** The 8B3R log (DR :4376-4380) read these same tables: before.db
+= src's identity re-keyed (0 rows differ from src), and dry.db = the identity 8B3b wrote to built. The 148-table guard shows that table
+unchanged since. That log lists the 58 changed rows with real labels: surface → lemma-only 33 · lemma-only → surface 6 · none → surface 6
+· surface → tipnr 6 · lemma-only → tipnr 3 · none → lemma-only 2 · lemma-only → none 1 (Gen 38:1 @18) · none → tipnr 1 (Jos 5:15 @27).
+P4's moves are other → lemma-only 33, lemma-only → other 6, none → other 6, other → tipnr 6, lemma-only → tipnr 3, none → lemma-only 2,
+lemma-only → none 1. **They are the same counts, move by move, with "surface" in every "other" slot, less the one at Jos 5:15 @27.**
+The builder writes exactly five labels: abp-tag / tipnr / lemma-only / surface / none (build_pn_greek_identity.py :410, :496). CC's P4
+program listed four and left out "surface" (its CLASS line copied the comment at :543). **So "other" = surface**, read from the 8B3R log
+of the copies, not printed by P4. P7's expected figures are named with "surface". P7 uses the same program, so it will print "other" in
+the same slots; CC will say so in P7's expected lines, or fix the label list in a ruled program change.
+**(B) "6 + 6 + 58" against the read's 57 + 6 / 6 — the sum was wrong.** §9.97 (and the 8B3R log): the 58 changed identity rows were counted
+AFTER the 6 re-keyed records had moved ("before.db = src's identity re-keyed"), and "of the 6 REKEY rows only Jos 5:15@27 is in it".
+P4 joins src and built on (verse_id, position) WITHOUT re-keying, so it shows:
+- the 6 re-keyed records as 6 keys only before + 6 only after (the same 6 rows, seen from each side, not 6 + 6 different rows);
+- Jos 5:15 @27 at a moved key, so it is not in P4's "changed";
+- the other 57 of the 58 as "changed".
+Check: the record's 10 greek_strongs arrivals = P4's greek_strongs 9 + Jos 5:15 @27; its 48 class moves among surface / lemma-only / none
+= P4's 33 + 6 + 6 + 2 + 1. **CC's "6 + 6 + 58" counted the 6 re-keyed rows twice and Jos 5:15 @27 twice. The distinct identity rows
+touched src → built are 6 re-keyed + 57 changed in place = 63** (CC's arithmetic from the two reads; Jos 5:15 @27 is one of the 6).
+**(C) abp_corrections — the 23 changed ids and the 346 removed.** CC's local count from the frozen member files:
+abp_corrections_active_live_20261031.txt (51 lines, live's active set) vs abp_corrections_active_built_20261106.txt (374 lines, the active
+set on built and on src, stageC_repin :14) by (book, chapter, verse, position, field, ledger_ref): **in both 28; live-active only 23;
+built-active only 346** — the P4 delta's 23 and 346. The delta's CHANGED lines carry only id + status, so the 23 ids cannot be tied to
+those keys without a read. **Block P4B is that read** (below; reviewer CLEAR). The 346 are traced from P4's delta_live_vs_src.tsv (its
+REMOVED lines hold src's full rows), once JP copies it down outside the repo. The register line quoted, as asked: §9.193 (5) "Scope as
+stated: the 13 words columns and verses.text; abp_corrections is outside both by design."
+
+### Block P4B (READ-ONLY on the P4 live copy, src, built; inline program; writes only its log) — reviewer CLEAR (11/21)
+```bash
+set +H
+L=~/edition_upgrade_runs/p4b_corrections_ids_20261121.log
+if [ -e "$L" ]; then echo "P4B RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+echo "P4B - the 57 abp_corrections rows on P4's live copy: id, place, field, ledger_ref, status - and the same ids' status on src and built (DESIGN 9.221 hold: trace the 23 changed ids) - READ-ONLY: the three copies opened read-only; no text, value or reason printed; writes only this log - $(date -u +%FT%TZ)"
+LC=~/edition_upgrade_runs/p4_live_tables_20261121/live_copy_20261121.db
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+for f in "$LC" "$S" "$B"; do [ -s "$f" ] || { echo "P4B RESULT: STOP - missing or empty: $f"; exit 1; }; [ -e "$f-journal" ] && { echo "P4B RESULT: STOP - $f-journal present"; exit 1; }; done
+PYTHONIOENCODING=utf-8 python3 - "$LC" "$S" "$B" <<'PY'; rc=$?
+import sqlite3, sys
+lc, s, b = sys.argv[1:4]
+def ro(p):
+    c = sqlite3.connect("file:%s?mode=ro" % p, uri=True, timeout=60)
+    c.execute("PRAGMA query_only=1")
+    return c
+C = {"live": ro(lc), "src": ro(s), "built": ro(b)}
+want = ["id", "book", "chapter", "verse", "position", "field", "ledger_ref", "status"]
+for n, c in C.items():
+    cols = [r[1] for r in c.execute("PRAGMA table_info(abp_corrections)")]
+    miss = [x for x in want if x not in cols]
+    if miss:
+        print("P4B RESULT: STOP - %s abp_corrections lacks %s" % (n, miss)); sys.exit(2)
+    print("%s: abp_corrections %d rows; by status: %s" % (n, c.execute("SELECT count(*) FROM abp_corrections").fetchone()[0],
+          ", ".join("%s %d" % r for r in c.execute("SELECT status, count(*) FROM abp_corrections GROUP BY status ORDER BY status"))))
+st = {n: dict(c.execute("SELECT id, status FROM abp_corrections")) for n, c in C.items()}
+print("=== the live copy's rows: id | book chapter:verse @position | field | ledger_ref | status live / src / built ===")
+k = 0
+for r in C["live"].execute("SELECT id, book, chapter, verse, position, field, ledger_ref, status FROM abp_corrections ORDER BY id"):
+    i = r[0]
+    mark = "" if st["src"].get(i) == r[7] else "   <- status differs on src"
+    print("%5d | %s %s:%s @%s | %s | %s | %s / %s / %s%s" % (i, r[1], r[2], r[3], r[4], r[5], r[6], r[7], st["src"].get(i, "-"), st["built"].get(i, "-"), mark))
+    k += mark != ""
+print("ids on the live copy whose status differs on src: %d" % k)
+print("ids on the live copy missing on src: %d - on built: %d" % (sum(1 for i in st["live"] if i not in st["src"]), sum(1 for i in st["live"] if i not in st["built"])))
+for c in C.values():
+    c.close()
+PY
+echo "program exit $rc (expect 0)"
+[ "$rc" = 0 ] || { echo "P4B RESULT: STOP - the read stopped (line above)"; exit 1; }
+echo "P4B RESULT: DONE - read as printed; to the ruling chat"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+- **Expected:** live 57 rows; src 403 (374 active / 23 retired / 6 superseded); built 404 (375 active, §9.156); "ids on the live copy whose
+  status differs on src: 23"; "missing on src: 0 - on built: 0"; program exit 0; P4B RESULT: DONE. The reviewer notes: a live id missing on
+  src would also be marked "differs", so read the two counts together.
+- **Tests** (WSL, made-up copies with the real column set, planted text in source_value / corrected_value / reason;
+  docs/handoffs/drafts/P4_harness/tests_p4b.out): E1 clean → the 2 planted status changes marked, DONE, leak grep 0 · E2 re-paste → STOP ·
+  E3 columns missing → STOP · E4 live copy missing → STOP · E5 a -journal beside src → STOP · copies unchanged.
+- **Reviewer verdict line, verbatim:** "REVIEW: CLEAR - a read-only block (three copies opened read-only, writes only a new dated log, stops
+  if that log already exists); every expected figure traces to §9.156 or to the P4 run." It did not open the tests or harness. "This is a
+  block clearance under §9.90, not a receipt of results. The later local comparison against the fixtures is CC's work."

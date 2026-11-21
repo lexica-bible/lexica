@@ -1,0 +1,32 @@
+# P4B tests; block sha256 8361bf2cb6b6891cd91edf792489ba122d8f7e22415d3b1a4e5a88a17b57a879
+== E1 clean (2 of 5 live ids retired on src; 3 new on src)
+P4B - the 57 abp_corrections rows on P4's live copy: id, place, field, ledger_ref, status - and the same ids' status on src and built (DESIGN 9.221 hold: trace the 23 changed ids) - READ-ONLY: the three copies opened read-only; no text, value or reason printed; writes only this log - 2026-11-21T06:11:01Z
+live: abp_corrections 5 rows; by status: active 5
+src: abp_corrections 8 rows; by status: active 6, retired 2
+built: abp_corrections 9 rows; by status: active 7, retired 2
+=== the live copy's rows: id | book chapter:verse @position | field | ledger_ref | status live / src / built ===
+    1 | Gen 1:1 @2 | english | L1 | active / active / active
+    2 | Gen 1:2 @2 | english | L2 | active / retired / retired   <- status differs on src
+    3 | Gen 1:3 @2 | english | L3 | active / retired / retired   <- status differs on src
+    4 | Gen 1:4 @2 | english | L4 | active / active / active
+    5 | Gen 1:5 @2 | english | L5 | active / active / active
+ids on the live copy whose status differs on src: 2
+ids on the live copy missing on src: 0 - on built: 0
+program exit 0 (expect 0)
+P4B RESULT: DONE - read as printed; to the ruling chat
+exit=0
+leak grep: 0
+== E2 re-paste -> STOP
+P4B RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gatep4b/e1/edition_upgrade_runs/p4b_corrections_ids_20261121.log
+== E3 built lacks the columns -> STOP
+P4B RESULT: STOP - built abp_corrections lacks ['chapter', 'verse', 'position', 'field', 'ledger_ref', 'status']
+program exit 2 (expect 0)
+P4B RESULT: STOP - the read stopped (line above)
+exit=1
+== E4 the live copy missing -> STOP
+P4B RESULT: STOP - missing or empty: /home/jp/gatep4b/e4/edition_upgrade_runs/p4_live_tables_20261121/live_copy_20261121.db
+exit=1
+== E5 a -journal beside src -> STOP
+P4B RESULT: STOP - /home/jp/gatep4b/e5/bible-db/bible_edupg_test_20261101.db-journal present
+exit=1
+== E6 copies unchanged by E1: accc254cf04d f1279f22f0ae 
