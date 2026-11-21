@@ -18258,3 +18258,10 @@ word + the block's own home STOP). NOTE 2 recorded as stated. The verse-id gate 
 "LIVESRC's step verbatim" stays CC's claim. Expected lines as §9.221 lists them; any FINDING / CHECK / STOP comes as printed, nothing
 restored, removed or re-run before it is read; the copy stays in every outcome. On the log: Q1, live = src as of the copy, built's sha
 as P6's pin, G5 expected for P7.
+- **Record item (§9.221): the reviewer's read of the verse-id gate (11/21), verbatim first line:** "Verdict: the verse-id gate
+  (p4_check_20261121.py :190-198) does what it claims. If src and built have the same verse count and every id joins with the same book,
+  chapter and verse, each verse id points to the same verse on both copies." It rests on verses.id being unique, taken from it being the
+  table's key, not checked against a schema file. For the record: **P4's strongs / strongs_base / is_pn equal STEP4-DELTA2's 20 / 26 / 12
+  only when both the verse-id line and the words-match line print yes; either NO is a FINDING.** The other column counts (bracket_id above
+  all) stay raw-cell read-outs. It did not hash the files or read D14's output; "a reading of the gate, not a confirmation of any output
+  (R2-b)".
