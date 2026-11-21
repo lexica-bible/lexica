@@ -18250,3 +18250,11 @@ for x in findings:
 print("P4 CHECK: %s - findings %d" % ("READ" if not findings else "FINDINGS", len(findings)))
 sys.exit(3 if findings else 0)
 ```
+
+### Block P4 CLEARED (§9.221, 11/21) — run as printed; the log comes to the ruling chat
+Cleared: block b38f48d9…2566, program 3a82deca…6606, GATE REF d34d6723, no pull. The one write = the live copy in
+~/edition_upgrade_runs/p4_live_tables_20261121/, kept until a removal is ruled (its own block). File storage accepted (11/20 line + CC's
+word + the block's own home STOP). NOTE 2 recorded as stated. The verse-id gate goes to the reviewer as a record item, not a hold.
+"LIVESRC's step verbatim" stays CC's claim. Expected lines as §9.221 lists them; any FINDING / CHECK / STOP comes as printed, nothing
+restored, removed or re-run before it is read; the copy stays in every outcome. On the log: Q1, live = src as of the copy, built's sha
+as P6's pin, G5 expected for P7.

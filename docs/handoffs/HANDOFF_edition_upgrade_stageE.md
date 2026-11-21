@@ -14,6 +14,7 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   ruling chat (what is checked, on which copy, how, expected), then a read-only block. **Step 7's plan goes to the ruling chat before
   anything in it runs on PA (§9.205).**
 - **11/20 CHARTER §6 STEP 7 PASSED (§9.212) on STEP7A's log (READ; H121 + ζηλόω read from cells on both copies). NEXT = the STEP-8 PLAN (the swap; the only live action) — CC brings a plan before any block; what it must carry is listed in §9.212.** Owed: Eze 31:9 @22 lemma line from check.out (paste showed 2 unreadable chars) when the run folder is next copied down; the declared-list lines for Est 5:9 @13, Jos 5:15 @27 + 5 MOVED verses.
+- **11/21 P4 CLEARED (§9.221)** — JP uploads p4_check_20261121.py, runs the block, pastes the console. On its log the ruling chat rules Q1, live = src, built sha = P6 pin, G5 for P7.
 - **11/21 BLOCK P4 DRAFTED + TESTED (14 cases) — reviewer ESCALATE x2 (it adds a live copy; NOTES 1/2 taken; verse-id gate added after pass 2, not re-read) → WITH THE RULING CHAT for clearance.** DR "## Block P4"; program p4_check_20261121.py sha 3a82deca…6606; block b38f48d9…2566.
 - **11/21 P3 CLOSED (§9.220)** on P3b. P6 record must carry one line: notes made after 11/21 05:21Z are not covered. NEXT: P4.
 - **11/21 P3b RAN: DONE, the run of record** — no stored note anchors in the 10 verses (live 0, deleted 0), same as the first run. To the ruling chat. NEXT: P4.
