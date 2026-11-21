@@ -17816,3 +17816,11 @@ echo "P3 RESULT: DONE - read as printed; to the ruling chat"; exit 0
 none. **P3 READ-OUT: live 0, deleted 0** — the same as the first run (05:16Z). program exit 0; exit=0. Every expected line as declared.
 The cat of the log = the console lines (the exit= line is outside the log by construction). LIMIT as stated (signed-out visitors' notes
 are in their browsers, not read). **P3 done: no stored note sits on a moved word; nothing to fix after the swap.**
+
+### P3 CLOSED (§9.220, 11/21) — on P3b's log, the run of record
+No stored note, live or deleted, is anchored in any of the 10 reorder verses, so nothing is to be fixed or accepted after the swap on this
+count. LIMIT: signed-out visitors' notes are in their browsers, not read. **A read of 11/21 05:21Z:** a note made between then and the
+swap is not covered, and **the swap block's record says so in one line** (carried to P6). The first run (05:16Z) is kept, not the run of
+record; the §9.190 (5)(b) miss stays noted; the hold is released.
+**Still owed before P6:** P4 (File storage line, or CC's word that nothing added a copy since 11/20; built's full sha; the Q9 pre-read);
+the Q2 code read; PA's Disable / Enable behaviour; the swap commit's diff; the rollback block.
