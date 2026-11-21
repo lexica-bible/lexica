@@ -20246,3 +20246,14 @@ echo "P8 RESULT: PASS - $(date -u +%FT%TZ) - SNAPSHOT CURRENT on a fresh copy of
 - The block to run = docs/handoffs/drafts/P6_harness/block_p8.sh as now committed, sha256 aec8e27eb8901ab2f43f593e2e83b9689a2398bc2705c3e5318f5c03c1ac74ae (the ruling chat's figure; CC's file hashes the same). The text printed under "### Block P8" above (59a1cc22…508a) differs from it in that one token only.
 - Re-test at the new figure (run_p8.sh, the bound case's sed moved to 8400000): 13 cases as before - 1 PASS, 2 CHECK, 11 STOP lines; B3 (home above the bound) STOP, nothing copied. tests_p8.out regenerated.
 - JP's dashboard line 11/21: "79% full - 7.9 GB of your 10.0 GB quota". Term: not started between 12:30 and 14:30 UTC.
+
+### P8 RAN (11/21, 21:29:37Z, PA HEAD 7bb92e10) - P8 RESULT: PASS at 21:30:57Z, exit=0 (JP's console paste; log ~/edition_upgrade_runs/p8_snapshot_check_20261121.log)
+Against §9.237's expected lines, each met (the console's echo of the pasted block was garbled at its tail, the known fault; every output line is there):
+- repo guards yes; UTC 2129, twice; snapshot d025cc08…72ff, report e154d8d4…748a, pre-fill copy ea6c54c3…7273, src 5da9bb95…7e01 - each as pinned; **home before 8,228,316 KB** (bound 8,400,000).
+- live before and after the copy: 452,063,232 bytes, last write 20:35:00Z, no side files. Copy 21:29:46-21:30:26Z: live journal mode delete; quick_check ok; triggers 0; 452,063,232 bytes.
+- the copy's words 626309 d95acb5d4be4 and abp_surface 395014 219a3ebe7075: yes, yes.
+- **1. --check on the copy:** F PASS (= the pin); report = its .sha256 and = the pin; G0 placed 4,411 · src-not-in-prefill 4,411 · prefill-not-in-src 538, PASS 4,411 = 3,873 + 538; O PASS 4,411 slots; C PASS 4,411 rows, identical bytes; RECEIPT 4,411 | 4,411, 3,873 / 538 | 3,873 / 538, sha d025cc08… | d025cc08…; **RESULT: SNAPSHOT CURRENT**; exit 0; the nine lines yes.
+- **2. control (src):** "STOPPED: STALE SNAPSHOT — … the diff holds 4,420 (11 differ, e.g. [(131, 1), (132, 1), (985, 1)])"; exit 1 - the same text as on 11/15 (§9.137).
+- src and the pre-fill copy, the fixture folder listing, the cache folders: unchanged, yes / yes / yes.
+- the copy's sha256 before removal 1771afbce177e05c8904253d823d2cca7ef6479341b1bf29244ac0b7900642d5 (452,063,232 bytes); **the copy removed: yes; home after 8,228,336 KB** (before 8,228,316).
+- **Owed:** the log to the ruling chat by cat (JP), and its ruling on P8. The 10/25 pre-fill copy and snapshot stay until a removal is ruled. P9 on the first 13:30 UTC run after the swap (11/22).
