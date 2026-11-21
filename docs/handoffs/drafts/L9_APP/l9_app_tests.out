@@ -1,0 +1,30 @@
+test_feed_word_reported_not_old (__main__.A_ComposedRows.test_feed_word_reported_not_old) ... ok
+test_no_split_no_recipient (__main__.A_ComposedRows.test_no_split_no_recipient) ... ok
+test_passdiff_keeps_old_recipient (__main__.B_KeptOld.test_passdiff_keeps_old_recipient) ... ok
+test_verse_not_in_db_is_skipped (__main__.B_KeptOld.test_verse_not_in_db_is_skipped) ... ok
+test_no_split_nothing_filled (__main__.C2_FilledSlots.test_no_split_nothing_filled) ... ok
+test_planted_ambiguous_group_counted_not_guessed (__main__.C2_FilledSlots.test_planted_ambiguous_group_counted_not_guessed) ... ok
+test_real_split_sorts_and_god_slot_is_filled (__main__.C2_FilledSlots.test_real_split_sorts_and_god_slot_is_filled) ... ok
+test_feed_owner (__main__.C_Ownership.test_feed_owner) ... ok
+test_lint_and_sizer_agree_on_the_real_transplant (__main__.C_Ownership.test_lint_and_sizer_agree_on_the_real_transplant) ... ok
+test_neither_owner (__main__.C_Ownership.test_neither_owner) ... ok
+test_old_owner_merge_restore_or_edge_blank (__main__.C_Ownership.test_old_owner_merge_restore_or_edge_blank) ... ok
+test_owners_unit (__main__.C_Ownership.test_owners_unit) ... ok
+test_planted_ambiguous_split_counted_by_both (__main__.C_Ownership.test_planted_ambiguous_split_counted_by_both) ... ok
+test_repeated_word_credits_the_filled_slot (__main__.C_Ownership.test_repeated_word_credits_the_filled_slot) ... ok
+test_load_words (__main__.D_WordsTable.test_load_words) ... ok
+test_match (__main__.D_WordsTable.test_match) ... ok
+test_planted_bare_base_differs (__main__.D_WordsTable.test_planted_bare_base_differs) ... ok
+test_planted_head_differs (__main__.D_WordsTable.test_planted_head_differs) ... ok
+test_planted_missing_row_and_rowcount (__main__.D_WordsTable.test_planted_missing_row_and_rowcount) ... ok
+test_clean (__main__.E_MainAppFeed.test_clean) ... ok
+test_frozen_lists_not_matching_stops (__main__.E_MainAppFeed.test_frozen_lists_not_matching_stops) ... ok
+test_planted_live_differs (__main__.E_MainAppFeed.test_planted_live_differs) ... ok
+test_sizer_frozen_lists_not_matching_stops (__main__.E_MainAppFeed.test_sizer_frozen_lists_not_matching_stops) ... ok
+test_sizer_main_same_figures (__main__.E_MainAppFeed.test_sizer_main_same_figures) ... ok
+test_default_replays_old_text_only (__main__.F_DefaultUnchanged.test_default_replays_old_text_only) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.416s
+
+OK
