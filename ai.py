@@ -1609,7 +1609,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 48   # 48: provenance rail carries the numbering crosswalk (alias_note per key word)
+_CACHE_CODE_VER = 49   # 49: edition-upgrade swap - the corpus English changed (app edition); search answers redraw (DESIGN 9.226 Q2 (a))
+                       # 48: provenance rail carries the numbering crosswalk (alias_note per key word)
                        # 47: scope folded into the cache key (_scope_tag) — "fire O.T." vs "fire o t" no longer collide
                        # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
                        # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)

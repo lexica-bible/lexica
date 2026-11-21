@@ -322,15 +322,15 @@ output, if any, rides the step-8 deploy).
    edition upgrade) drops it, re-declares these figures, and needs a re-freeze afterwards (handoff
    held item "snapshot staleness"). The restore refuses live by design: it only ever runs here.
 9b. **HEALTH FLOOR + ORACLE — on `<built>`.** `health_check.py <built> --no-backup-check
-   --no-disk-check`: the `abp_surface rows BELOW floor 395003` line must read `[OK  ] … : 0`
-   (floor raised 2026-10-25 from 389,244 — charter G3: builder chain 391,130 + the fill's 3,873
-   inserts; shortfall 3,873 exactly = the fill is missing; the 2026-07-16 miss is why the guard
-   exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
+   --no-disk-check`: the `abp_surface rows BELOW floor 395014` line must read `[OK  ] … : 0`
+   (floor 395,014 since the edition-upgrade swap, DESIGN 9.130: builder chain 391,141 + the fill's
+   3,873 inserts; before it 395,003, raised 2026-10-25 from 389,244 — charter G3; shortfall 3,873
+   exactly = the fill is missing; the 2026-07-16 miss is why the guard exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
    `0|0` (the end-to-end oracle; also proves live's table did not change since `<src>` was taken).
 8. **Swap + deploy (the only live action):** `mv bible.db bible_pre_<reason>_<date>.db; mv <built> bible.db`; then
    `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
    built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch). Live goes from
-   the old 395,003-row table to the rebuilt 395,003-row table in one move; no fill-less moment. At the
+   the old table to the rebuilt one (395,014 rows since the edition upgrade) in one move; no fill-less moment. At the
    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
    name-slot `strongs_base` 501 (charter §7).
 10. **WHERE: on `<built>`, right after step 11, before steps 12 and 9** (JP ruling after the 10/25 run). RE-GENERATE

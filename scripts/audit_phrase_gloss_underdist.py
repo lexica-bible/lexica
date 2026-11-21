@@ -52,7 +52,10 @@ DUMP_ALL = "--dump-all" in ARGS
 BOOK_FILTER = ARGS[ARGS.index("--book") + 1] if "--book" in ARGS else None
 
 # ── (g) allowlist — the S11 rebuild's 31 explained new rows (P1 pronoun consolidations
-#    + Mat 12:14 charter L466). Frozen baseline = flagged rows BEYOND this list (<= 671).
+#    + Mat 12:14 charter L466). Frozen baseline = flagged rows BEYOND this list (<= 747).
+#    747 since the edition-upgrade swap (DESIGN 9.203: "the charter's <= 671 is restated by JP to
+#    built's 747"; 9.213 Q6; was 671). Member account: v2, docs/handoffs/drafts/STEP6AUD_C4_account_20261119.txt
+#    (sha256 60fb07b9...4b96); no new member file.
 #    Cert artifact: AUDIT_phrase_gloss_allowlist.txt (repo root). Missing -> raw count. ──
 _ALLOWLIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
                                "AUDIT_phrase_gloss_allowlist.txt")
@@ -258,7 +261,7 @@ print(f"  function-word set: {len(FUNC):,} (LSJ ∪ override)")
 print(f"  FLAGGED (under-distribution class): {buckets['FLAGGED']:6,}")
 print(f"  NO-EVIDENCE (blank neighbour, def-miss): {buckets['NO-EVIDENCE']:6,}")
 print(f"  allowlisted (S11 explained):        {len(allow_hit):6,} / {len(ALLOWLIST)}")
-print(f"  FLAGGED BEYOND allowlist (gate <= 671): {len(beyond):6,}")
+print(f"  FLAGGED BEYOND allowlist (gate <= 747): {len(beyond):6,}")
 if allow_stale:
     print("  ⚠ allowlist entr(ies) that no longer fire (drift — investigate): "
           + ", ".join(f"{r} {h}" for r, h in sorted(allow_stale)))

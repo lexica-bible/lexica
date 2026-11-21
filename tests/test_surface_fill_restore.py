@@ -11,7 +11,7 @@ What must hold (feedback_audit_tools_must_fail — every outcome fires on a plan
   * reasons 3 / 4 / 6 fire and block the write (database bytes unchanged);
   * G1a stops on a wrong builder total; G1b stops when the builder table != the pre-fill copy;
   * a tampered snapshot is refused (checksum);
-  * the health floor: 395,002 rows WARN shortfall 1, 395,003 rows OK.
+  * the health floor: 395,013 rows WARN shortfall 1, 395,014 rows OK (re-pinned at the edition-upgrade swap; was 395,003).
 
 Run:  python tests/test_surface_fill_restore.py
 """
@@ -748,21 +748,22 @@ class Floor(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
-    def test_floor_is_395003(self):
-        self.assertIn("[WARN] abp_surface rows BELOW floor 395003", self.health(395002))
-        self.assertTrue(self.health(395002).split("]: ")[1].startswith("1 "))
-        line = self.health(395003)
-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395003", line)
+    def test_floor_is_395014(self):
+        # re-pinned at the edition-upgrade swap: builder chain 391,141 + the fill's 3,873 (DESIGN 9.120, 9.130)
+        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", self.health(395013))
+        self.assertTrue(self.health(395013).split("]: ")[1].startswith("1 "))
+        line = self.health(395014)
+        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", line)
         self.assertTrue(line.split("]: ")[1].startswith("0 "))
-        self.assertTrue(self.health(391130).split("]: ")[1].startswith("3873 "))
+        self.assertTrue(self.health(391141).split("]: ")[1].startswith("3873 "))   # the fill missing = shortfall 3,873 exactly
 
     def test_surface_floor_option_moves_only_that_run(self):
-        # 9b on the edition upgrade's copy: 391,141 + 3,873 = 395,014 (DESIGN 9.120)
-        line = self.health(395013, "--surface-floor=395014")
-        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", line)
+        # --surface-floor=N checks one run against a declared floor (DESIGN 9.120); a different N than the default
+        line = self.health(395019, "--surface-floor=395020")
+        self.assertIn("[WARN] abp_surface rows BELOW floor 395020", line)
         self.assertTrue(line.split("]: ")[1].startswith("1 "))
-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", self.health(395014, "--surface-floor=395014"))
-        self.assertIn("BELOW floor 395003", self.health(395014))       # the default is untouched
+        self.assertIn("[OK  ] abp_surface rows BELOW floor 395020", self.health(395020, "--surface-floor=395020"))
+        self.assertIn("BELOW floor 395014", self.health(395020))       # the default is untouched
         tmp = tempfile.mkdtemp()                                         # the two-word form is refused
         try:
             p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"),

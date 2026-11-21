@@ -141,7 +141,10 @@ check("distinct H-bases with NO bdb entry",
 # Control (red first): the pre-fill copy and a rebuilt table without the fill both read shortfall
 # 3,873; the table with the fill restored reads 0. Shortfall 3,873 exactly = the fill is missing
 # (fix = scripts/restore_surface_fill.py); any other shortfall = a backfill reverted.
-SURFACE_FLOOR = 395003
+# FLOOR RAISED at the edition-upgrade swap (2026-11) to 395,014 (DESIGN 9.120, 9.130 "step 9b CLOSED -
+# built's abp_surface holds the floor at 395,014"): the builder chain's 391,141 on the app-edition
+# English + the same 3,873 fill inserts. Shortfall 3,873 exactly still = the fill is missing.
+SURFACE_FLOOR = 395014
 # --surface-floor=N (DESIGN 9.120, rebuild-words 9b on the edition upgrade's copy): check THIS run
 # against a declared floor; the constant itself is re-pinned only in the swap commit.
 if "--surface-floor" in sys.argv:                  # the '--surface-floor N' form would be ignored
