@@ -14,6 +14,7 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
   ruling chat (what is checked, on which copy, how, expected), then a read-only block. **Step 7's plan goes to the ruling chat before
   anything in it runs on PA (§9.205).**
 - **11/20 CHARTER §6 STEP 7 PASSED (§9.212) on STEP7A's log (READ; H121 + ζηλόω read from cells on both copies). NEXT = the STEP-8 PLAN (the swap; the only live action) — CC brings a plan before any block; what it must carry is listed in §9.212.** Owed: Eze 31:9 @22 lemma line from check.out (paste showed 2 unreadable chars) when the run folder is next copied down; the declared-list lines for Est 5:9 @13, Jos 5:15 @27 + 5 MOVED verses.
+- **11/21 P3b RAN: DONE, the run of record** — no stored note anchors in the 10 verses (live 0, deleted 0), same as the first run. To the ruling chat. NEXT: P4.
 - **11/21 P3 HELD (§9.219) on §9.190 (5)(b) (hash-then-run gap; CC + reviewer missed it); first run (05:16Z, live 0/deleted 0) kept, not the run of record. P3b (read-once launcher, block c581e9fc…e9f, program unchanged) reviewer CLEAR → JP runs it, log by cat to the ruling chat.** NEXT: P4.
 - **11/21 P3 RAN: DONE** — no stored note anchors in any of the 10 verses (live 0, deleted 0). To the ruling chat. NEXT: P4.
 - **11/20 P3 BLOCK CLEARED by the reviewer (second pass; pass 1 ESCALATE on extra log lines, fixed)** — DR "### Block P3"; program p3_notes_20261120.py sha b5940f2b…738b, JP uploads it, then runs the block. File storage 7.4 / 10.0 GB recorded. NEXT: P4 (the copy + every-table read).

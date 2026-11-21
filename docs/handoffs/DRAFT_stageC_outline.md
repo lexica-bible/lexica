@@ -17809,3 +17809,10 @@ echo "program exit $rc (expect 0; 4 = p3.py not the pinned bytes, nothing read)"
 echo "P3 RESULT: DONE - read as printed; to the ruling chat"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### P3b RAN (11/21, 05:21:55Z) — P3 RESULT: DONE, exit=0 — the run of record (log ~/edition_upgrade_runs/p3_notes_20261121.log; JP pasted the console and the log by cat)
+"p3.py sha256 as run: b5940f2b…738b (expect = it)"; CONTROL (9 made-up rows) FIRED; notes table present yes; shape yes. notes: rows live
+51, deleted 67; journal pages 11; corpus not bible 6; no "rows anchored in one of the 10 verses" line (0). Endpoints ON a moved position:
+none. **P3 READ-OUT: live 0, deleted 0** — the same as the first run (05:16Z). program exit 0; exit=0. Every expected line as declared.
+The cat of the log = the console lines (the exit= line is outside the log by construction). LIMIT as stated (signed-out visitors' notes
+are in their browsers, not read). **P3 done: no stored note sits on a moved word; nothing to fix after the swap.**
