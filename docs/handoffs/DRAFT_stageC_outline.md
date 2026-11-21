@@ -18450,3 +18450,17 @@ moves, named above.
 ### Q1 RULED (§9.224, 11/21) — the 54 summaries DROP (JP's delegation); carried to P6
 P6 must print, site stopped, the final dropped counts live vs built for ai_search_cache, lsj, abp_ext; any differing table beyond those three
 and abp_corrections = STOP. Charter §7 :374 carries JP's note.
+
+### P4B RAN (11/21, 06:44:05Z) — P4B RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/p4b_corrections_ids_20261121.log; JP pasted the console) — the 23 TRACED
+As printed: live 57 rows (active 51, superseded 6); src 403 (active 374, retired 23, superseded 6); built 404 (active 375, retired 23,
+superseded 6). "ids on the live copy whose status differs on src: 23"; "missing on src: 0 - on built: 0"; program exit 0; DONE. Every
+expected line as declared. The 23 marked rows are active on live and retired on both src and built: ids 19, 24-28, 33, 34, 37-39, 42-45,
+48-53, 56, 57. The other 34 carry the same status on all three (28 active, 6 superseded Class2-cushi).
+**Trace (CC, local):**
+- The 23 marked rows' (book, chapter, verse, position, field, ledger_ref) **EQUAL the 23 lines** of abp_corrections_active_live_20261031.txt
+  that are not in abp_corrections_active_built_20261106.txt (23 = 23, all in both). That is the re-adjudication's retired set (stageC_repin
+  :14 "23 retired").
+- Their ids **EQUAL the delta's 23 CHANGED ids**.
+- With the 346 (traced 00709ccb), the abp_corrections difference live vs src is fully accounted for: **346 rows new on src, all active,
+  = the built-active-only members; 23 rows retired on src = the live-active-only members; 34 rows the same; 0 rows on live only.**
+- §9.193 (5): "Scope as stated: the 13 words columns and verses.text; abp_corrections is outside both by design."
