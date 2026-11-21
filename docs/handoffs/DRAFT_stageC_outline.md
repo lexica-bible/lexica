@@ -19965,3 +19965,9 @@ us1=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); [ "$u
 echo "P7 RESULT: DONE - $(date -u +%FT%TZ) - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### P7 CLEARED (§9.233, 11/21) - everything for step 8 is cleared; JP sets the hour
+- Cleared as printed: block 527722ce…63a1 ("### Block P7, corrected" above), program 911f5ec9…4a36. The ruling chat checked all eleven PINS itself. Expected log lines: §9.233.
+- **CC's two checks between the commit and the push (a miss on either = no push, to the ruling chat):** (1) `git add -N` the two fixture paths, the 8-path `git diff` hashes 003bb52f…83ee (§9.227, §9.231); (2) after the commit, `git rev-parse HEAD:<path>` for the block's eleven pinned files = its PINS (§9.233).
+- **The day, in order:** JP uploads p6_check_20261121.py and p7_check_20261121.py (hash-checked before P6A) -> P6A -> PB0 -> CC: the commit, the two checks, the push -> P6R -> JP Disables -> P6B -> JP Enables, then Reloads -> P6C -> P7 -> Part B in words. Not started between 11:00 and 14:30 UTC. CC pushes nothing else from the swap commit until P7's result.
+- Each block is re-hashed against its cleared sha before CC prints it for JP.
