@@ -82,6 +82,9 @@ Successor to `HANDOFF_edition_upgrade_stageC_tail.md`. Every block, result and r
   Reviewer read done 11/20 (§9.217): ESCALATE on one 2Ki 23:35 read-out cell, corrected; verdicts unchanged.
 - **Jdg 11:7 "that you" — feed number 1473, built keeps 5210** (P2 read-out (b), §9.217, 11/20): a number, not an order
   item; not traced. Carried by name; nothing asked before the swap.
+- **Built's Strong's numbers against the app feed's numbers — checked by NO read** (§9.218 note, 11/20): the step-4 gate
+  shows only that number cells changed where declared; v2 compares English. OPEN by name beside Jdg 11:7; nothing asked
+  before the swap.
 - **L9 split lint on built (charter §4.2) — OPEN by name, FIRST on the list after the swap** (JP, §9.214, 11/20;
   §4.2 set aside for the swap). Needs new code: a lint mode that replays the split through the app-feed transplant
   (`lint_split_wrong_slot.py` + its sizing partner `size_split_compounds.py`); new REF, PA pull, tests, a
