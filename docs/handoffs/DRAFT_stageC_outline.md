@@ -18414,3 +18414,30 @@ echo "P4B RESULT: DONE - read as printed; to the ruling chat"; exit 0
   set **equals** the 346 built-active-only lines of the member files, 346 = 346, all in both. **The 23 CHANGED rows: status retired (src)
   → active (live), 23 of 23**; ids 19, 24-28, 33, 34, 37-39, 42-45, 48-53, 56, 57. Tying those ids to the 23 live-active-only member lines
   (and so to the retired list) waits on P4B's read.
+
+### P4 RULED (§9.222, 11/21) — built's sha pinned; live = src; Q1 counts; G5 expected; item (7) answered below
+- Pinned: **built's full sha d2c8603b…1523 = P6's pin**. Live = src as of the copy (re-shown at P6, site stopped). The FINDING is disposed
+  as CC's miss (added 0). Q1: 99 AI-cache rows dropped and recorded; **54 summaries (lsj 50, abp_ext 4) = JP's call**. G5 expected for P7
+  as printed. The copy is kept; any later copy-adding block brings the File storage line again (home now 8,213,868 KB).
+- Owed items already answered (bf6bbe9c, 00709ccb; DR "### P4 log HELD by the ruling chat"): the G5 labels ("other" = surface, from the
+  8B3R log of the copies); the "6 + 6 + 58" sum (wrong; 63 distinct rows); the 346 traced exactly. The 23 wait on P4B's log.
+**Item (7) — the register line for each of the seven tables (CC, 11/21).** Each step below ran before HEADFIX2's prep (11/16). The
+148-table guard shows built's copies of these tables unchanged since that prep, before and after P4.
+- **abp_surface 395,003 → 395,014:** §9.130, "step 9b CLOSED — built's abp_surface holds the floor at 395,014", read there as "abp_surface
+  395,014 / `219a3ebe7075` = the 9a throwaway". P4 printed built's abp_surface 395014/219a3ebe7075, the same digest head.
+- **pn_binding 15,446 → 15,426:** §9.102 and §9.103, "gate A PASS — pn_binding 15,446 vs 15,426, 160 row(s) differ, delta file 160 row(s)
+  (sha256 f26fb503) → MATCH". P4: src 15446, built 15426.
+- **pn_greek_identity (57 changed + 6 / 6 keys):** §9.94 (3), block REKEY, "pn_greek_identity 6 + abp_surface 15 moves", the record
+  "REKEY … ACCEPTED" (DR :2757-2760), which gives the 6 / 6 keys. §9.97, "the 58 rows in `pn8b3_20261107/identity_delta.tsv` (sha-pinned)
+  are declared edition effects", gives 58 = P4's 57 plus Jos 5:15 @27 at a re-keyed key (DR "### P4 log HELD", (B)).
+- **pn_hebrew_xref (6 changed + 6 / 6 keys):** §9.94 (3) REKEY ("xref 6 … old→new", DR :2759) gives the 6 / 6 keys. The 6 class moves
+  none → lemma-only: §9.95, retire_hebrew_identity EXPECT re-declared with the receipt "none→lemma-only 6 = Num 21:25, 1Sa 20:37, 2Sa 15:6,
+  Jer 48:15, Jer 48:20, Jer 49:3" and "Expected rewrites 26,323 (= 26,317 + 6, all six carry a Hebrew number)". **CC's reading by count:**
+  P4 printed no keys, so tying P4's 6 to those six verses needs a read of the keys (offered, not run).
+- **pn_slot_binding 102 → 105:** §9.104, "slot rulings: 105 landable, 0 refused of 105" and "pn_slot_binding written: 105 rows … built
+  pn_slot_binding = the throwaway row for row (105)".
+- **tipnr_metav_link 1,644 → 2,606:** §9.111, STEP12C-DRY "tipnr_metav_link delta built→dry = src→dry: 0 changed / 962 added / 0 removed",
+  "after 2,606", with the note that "live's own inputs already produce 2,606".
+- **word_gloss 17,568 → 17,650:** §9.110, "Ruling: the +82 is accepted as the declared figure for 12b", "after 17,650".
+**Each of the seven has a register line**; none comes to the ruling chat as unruled. The one tie-by-count is pn_hebrew_xref's six
+moves, named above.
