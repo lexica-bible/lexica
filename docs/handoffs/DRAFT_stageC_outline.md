@@ -18265,3 +18265,59 @@ as P6's pin, G5 expected for P7.
   only when both the verse-id line and the words-match line print yes; either NO is a FINDING.** The other column counts (bracket_id above
   all) stay raw-cell read-outs. It did not hash the files or read D14's output; "a reading of the gate, not a confirmation of any output
   (R2-b)".
+
+### P4 RAN (11/21, 05:50:23Z–05:56:37Z, PA HEAD 1d5e34ee, REF d34d6723) — P4 RESULT: FINDINGS (1), exit=1 (log ~/edition_upgrade_runs/p4_live_tables_20261121.log; JP pasted the console)
+**Every gated line as declared, except one FINDING, which is CC's miss in the expected list:**
+- PRE OK (src 451,964,928 B; built 452,063,232 B; no -journal; triggers 0).
+- Uploaded program sha 3a82deca…6606 before the copy and as run.
+- Guard: tables NOT written (148) differences 0; words 626309 d95acb5d4be4; abp_corrections 404 d97d928ca7f5; CHECK OK before and after (exit 0).
+- src sha 5da9bb95…7e01, after = before yes.
+- **BUILT FULL SHA256 = `d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523`** (452,063,232 B, last write 2026-11-16
+  21:17:48Z), after = before yes. Per §9.221 this becomes P6's pin, once ruled.
+- Home before 7,755,860 KB (≤ 7,900,000); after 8,213,868 KB (+458,008).
+- Live: 460,275,712 B, last write 2026-11-21 02:43:17Z, side files absent; the same size and time after the copy.
+- Copy: journal mode delete, quick_check ok, triggers 0, 460,275,712 B, 05:51:44Z–05:52:28Z. Cache folders unchanged yes.
+- (2) live words 626309 / 1ce75b22…5b26 and verses 31237 / 5717b045…21ae = LIVESRC's, yes / yes. No table on one side only. Schema
+  entries on one side only: 0. 150 tables on each copy, none virtual.
+- (5) verse ids 31237 / 31237 / 31237 yes; words rows 626309 matched yes; **strongs 20, strongs_base 26, is_pn 12, yes / yes / yes.**
+  Raw-cell read-outs: english 32,962 · english_head 5,426 · greek_pos 3,318 · bracket_id 3,655 (stored value, not the rank; not
+  comparable with 4,208) · morph 14 · lemma 14 · english_head_norm 4,890.
+**THE FINDING:** "live differs from src in abp_corrections (403 -> 57 rows) - outside the expected three". **This is CC's miss, not
+a change on live.** abp_corrections is the table this lane rewrote on src on purpose (stage C re-adjudication; src = 374 active / 23
+retired / 6 superseded = 403, HANDOFF stageC_repin :14-15). LIVESRC's ruling already put it "outside both by design" (§9.193 (5)). The plan's
+P4 list (DR :17131-17137) named only the three site-written tables and left it out.
+- What the delta shows, src → live (key id): **removed 346** (rows on src, not on live), **added 0** (no live row missing from src),
+  **changed 23** (column `status` only).
+- So the swap drops NO abp_corrections row that exists only on live: live's 57 rows all exist on src (and built) by id. 23 of them
+  carry a different status there. CC's reading, not traced row by row: the 23 match the "23 retired" of the lane's re-adjudication.
+- Built carries 404 (src + HEADFIX2's 1, §9.156).
+**What the swap drops (Q1), live → built, as printed:**
+- **ai_search_cache: 99 rows** live has and src / built do not (added 99, changed 0, removed 0). By category, live − built: chrono 1,
+  pn 7, search 5, summary 21, xref 65 (live 137 / 353 / 25 / 1,271 / 678; built 136 / 346 / 20 / 1,250 / 613).
+- **lsj summaries: 50 rows** (42 new on live, 8 changed). lsj rows with a summary: live 1,542, built 1,500.
+- **abp_ext summaries: 4 rows** (3 new, 1 changed). Rows with a summary: live 99, built 96.
+- **abp_corrections:** nothing live-only (above).
+- Nothing else differs live vs src.
+- (3) Every _migrate_db column / index / table is present on all three copies, summary_v and abp_summary_v included. So start-up after
+  the swap blanks no summary (app.py :331-350 run only when adding those columns).
+**Built vs src, the other differing tables (read-outs, all lane changes):**
+- abp_surface 395,003 → 395,014.
+- pn_binding 15,446 → 15,426.
+- pn_slot_binding 102 → 105.
+- tipnr_metav_link 1,644 → 2,606.
+- word_gloss 17,568 → 17,650 (+82, §9.110).
+- verses (31,237 rows, digest differs: the step-4 prose).
+- words, abp_corrections, pn_greek_identity, pn_hebrew_xref.
+**G5 (Q9), identical for src → built and live copy → built:**
+- **pn_hebrew_xref:** 6 rows changed (class only: none → lemma-only 6); keys only before 6, only after 6.
+- **pn_greek_identity:** 57 rows changed, by column source 57, greek_strongs 9, greek_lemma 9. Source moves: other → lemma-only 33,
+  lemma-only → other 6, none → other 6, other → tipnr 6, lemma-only → tipnr 3, none → lemma-only 2, lemma-only → none 1. Keys only
+  before 6, only after 6.
+- **name-slot strongs_base:** 18 changed (H → * 6, G → G 6, * → G 3, G → * 3).
+- "other" = a source value outside the four labels the program knows (abp-tag / tipnr / lemma-only / none). The program does not print
+  the value; P7, run with the same program, will be comparable.
+- **CC's earlier sum "6 + 6 + 58" does not match the read** (57 changed + 6 / 6 key moves for identity). It was never a register
+  figure (§9.213 Q9); not reconciled here.
+**Console echo:** the screen echo of the pasted block shows garbled tail lines ("fill sha $b0; …"), the PA console's known echo fault.
+Every step after the copy printed its line (the after-checks through "P4 RESULT"), so bash ran the whole block. The log file is the
+record; a `cat` of it is available if the ruling chat wants it.
