@@ -18408,3 +18408,9 @@ echo "P4B RESULT: DONE - read as printed; to the ruling chat"; exit 0
 - **Reviewer verdict line, verbatim:** "REVIEW: CLEAR - a read-only block (three copies opened read-only, writes only a new dated log, stops
   if that log already exists); every expected figure traces to §9.156 or to the P4 run." It did not open the tests or harness. "This is a
   block clearance under §9.90, not a receipt of results. The later local comparison against the fixtures is CC's work."
+- **(C) the 346: TRACED (11/21, local).** JP copied down `delta_live_vs_src.tsv`; its sha256 is 332ca8c6…ab76, the value P4 printed. It
+  sits outside the repo at `C:\Users\JP\edition_upgrade_runs\pa\`. Script `docs/handoffs/drafts/P4_harness/trace_p4_corrections.py`.
+  Every one of the 346 REMOVED rows (src rows not on live) is **active** on src. Their (book, chapter, verse, position, field, ledger_ref)
+  set **equals** the 346 built-active-only lines of the member files, 346 = 346, all in both. **The 23 CHANGED rows: status retired (src)
+  → active (live), 23 of 23**; ids 19, 24-28, 33, 34, 37-39, 42-45, 48-53, 56, 57. Tying those ids to the 23 live-active-only member lines
+  (and so to the retired list) waits on P4B's read.
