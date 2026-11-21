@@ -1,0 +1,111 @@
+# P9 tests (2026-11-21T21:55:29Z); block 3c6984f1f37af5fb; the only line changed in each test copy:
+5c5
+< XNOT_BEFORE=202611221500                       # 15:00 UTC 11/22 - well after the 13:30 tasks finish
+---
+> XNOT_BEFORE=202601010000                       # 15:00 UTC 11/22 - well after the 13:30 tasks finish
+
+=============== A1 clean -> PASS (whole output); nothing in the home changed ===============
+P9 - the first 13:30 UTC nightly after the swap (DESIGN 9.235, 9.238) - READ-ONLY: reads files in ~/db_backups and git's HEAD; opens no database; runs no backup and no health check; writes no file
+now UTC: 202611212155
+PA HEAD: 71075caa
+--- 1. the success stamp (written only on a fully clean backup run)
+last_success.txt: 2026-11-22T13:41:17
+stamp from the 11/22 13:30 run: yes
+--- 2. backup.log, its last run (from the last 'Backing up' line to the end)
+  | Backing up 3 db(s) -> /home/x/db_backups
+  |   free space 50.1 GB; live dbs total 0.50 GB
+  | 
+  |   OK  bible.db: ok (delete), 150 tables, ~790,000 rows in largest, 452.1 MB
+  |   OK  notes.db: ok (delete), 4 tables, ~12 rows in largest, 0.1 MB
+  |   OK  study.db: ok (delete), 9 tables, ~300 rows in largest, 0.2 MB
+  | 
+  | All backups verified ok.
+XX lines in the last run: 0 - yes
+the last run's final line: All backups verified ok. - yes
+bible.db line 'OK  bible.db: ok (delete), ...' in the last run: 1 - yes
+--- 3. the bible.db copies kept
+  | -rw-r--r-- 1 jp jp   0 2026-11-21T21:55Z bible.db.20261120-133004.db.gz
+  | -rw-r--r-- 1 jp jp 183 2026-11-21T21:55Z bible.db.20261120-133004.info
+  | -rw-r--r-- 1 jp jp   0 2026-11-21T21:55Z bible.db.20261121-133002.db.gz
+  | -rw-r--r-- 1 jp jp 183 2026-11-21T21:55Z bible.db.20261121-133002.info
+  | -rw-r--r-- 1 jp jp   0 2026-11-21T21:55Z bible.db.20261122-133003.db
+  | -rw-r--r-- 1 jp jp 183 2026-11-21T21:55Z bible.db.20261122-133003.info
+bible.db copies kept (bible.db keeps 3): 3 - yes
+newest copy 20261122-133003 from the 11/22 13:30 run: yes
+newest copy kept uncompressed: yes
+--- 4. the newest copy's check file, bible.db.20261122-133003.info (its head lines; it lists every table)
+  | db: bible.db
+  | when: 2026-11-22 13:30:03
+  | journal_mode: delete
+  | quick_check: ok
+  | size_bytes: 452063232
+  quick_check: ok - yes
+  journal_mode of live: delete - yes
+  words: 626309 - yes
+  verses: 31237 - yes
+  abp_surface (the new edition): 395014 - yes
+  tables listed: 4
+--- 5. control: the copy before it, bible.db.20261121-133002 (pre-swap live) must read the OLD figure
+  | when: 2026-11-21 13:30:02
+  copy made before the swap (11/21 20:21Z): yes
+  abp_surface on the pre-swap copy: 395003 - yes
+P9 BACKUP RESULT: PASS - the 11/22 nightly copied the new live and its check read ok
+home unchanged by the block: yes
+
+=============== A2 an XX line in an OLDER run only (the last run clean) -> PASS (only the last run is read) ===============
+XX lines in the last run: 0 - yes
+the last run's final line: All backups verified ok. - yes
+P9 BACKUP RESULT: PASS - the 11/22 nightly copied the new live and its check read ok
+
+=============== B1 an XX line in the last run (another db) -> CHECK ===============
+XX lines in the last run: 1 - NO (expected 0)
+the last run's final line: !!  1 db(s) failed to back up cleanly - see above. Exit 1. - NO (expected All backups verified ok.)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B2 the 11/22 run did not finish clean: stamp still 11/21, the log's last run ends without 'All backups verified ok.' -> CHECK ===============
+stamp from the 11/22 13:30 run: NO
+the last run's final line:   OK  study.db: ok (delete), 9 tables, ~300 rows in largest, 0.2 MB - NO (expected All backups verified ok.)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B3 the newest copy reads the OLD abp_surface (the nightly copied the old file) -> CHECK ===============
+  abp_surface (the new edition): 395003 - NO (expected 395014)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B4 no 11/22 copy (the nightly did not run): newest = 11/21, gz -> CHECK ===============
+stamp from the 11/22 13:30 run: NO
+bible.db copies kept (bible.db keeps 3): 2 - NO (expected 3)
+newest copy 20261121-133002 from the 11/22 13:30 run: NO
+newest copy kept uncompressed: NO
+  abp_surface (the new edition): 395003 - NO (expected 395014)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B5 before 15:00 UTC 11/22 (the printed block, unchanged) -> STOP, nothing read ===============
+P9 - the first 13:30 UTC nightly after the swap (DESIGN 9.235, 9.238) - READ-ONLY: reads files in ~/db_backups and git's HEAD; opens no database; runs no backup and no health check; writes no file
+now UTC: 202611212155
+P9 RESULT: STOP - too early; paste after 15:00 UTC on 11/22 (nothing read)
+
+=============== B6 the copy's check file: quick_check not ok and live in wal mode -> CHECK ===============
+  quick_check: *** in database main *** - NO (expected ok)
+  journal_mode of live: wal - NO (expected delete)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B7 the control cannot tell the two apart (the copy before also reads 395014) -> CHECK ===============
+  abp_surface on the pre-swap copy: 395014 - NO (expected 395003)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B8 four bible.db copies kept (rotation did not trim) -> CHECK ===============
+bible.db copies kept (bible.db keeps 3): 4 - NO (expected 3)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B9 words / verses counts off -> CHECK ===============
+  words: 626308 - NO (expected 626309)
+  verses: 31236 - NO (expected 31237)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B10 the bible.db line missing from the last run -> CHECK ===============
+bible.db line 'OK  bible.db: ok (delete), ...' in the last run: 0 - NO (expected 1)
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
+
+=============== B11 newest copy only gzipped (no raw) -> CHECK ===============
+newest copy kept uncompressed: NO
+P9 BACKUP RESULT: CHECK - a line above reads NO; nothing was changed; to the ruling chat as printed
