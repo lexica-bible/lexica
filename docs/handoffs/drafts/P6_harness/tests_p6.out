@@ -1,0 +1,235 @@
+# P6 tests (2026-11-21T15:43:39Z); p6a 4c53e4bdf553d00f p6r f822d62437750c13 p6b 2e116b4d03d508d1 p6c 596eca57000c45b8 rb0 73939c63dbe5efce rb1 8c60304bbb12a55b rb2 a67c31b9e21378f7 program 3dfe1600963b792b
+
+=============== S1 the whole swap: P6A -> P6R -> P6B -> (stand-in deploy) P6C -> DONE; then the rollback RB0 -> RB1 -> RB2 -> DONE ===============
+TESTPREP PRE: OK
+TESTPREP PREP: OK
+home ready: /home/jp/gatep6/s1
+GATE REF d34d6723 - P6A - the swap, part A: every check that can run with the site UP (DESIGN 9.213 P6, 9.228) - READ-ONLY: src + built opened read-only; live only stat'd; writes only the run folder (src's table digests) and this log - PA HEAD d34d6723 - 2026-11-21T15:43:41Z
+repo /home/jp/gatep6/s1/bible-db - HEAD d34d6723 - REF d34d6723
+repo guards: d34d6723 pulled, an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+db /home/jp/gatep6/s1/bible-db/bible_edupg_test_20261101.db: 77824 bytes - no -journal - triggers 0
+db /home/jp/gatep6/s1/bible-db/bible_edupg_test_built_20261102.db: 77824 bytes - no -journal - triggers 0
+run folder made: /home/jp/gatep6/s1/edition_upgrade_runs/p6_swap
+P6A PRE: OK
+uploaded check program sha256: cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f (expect cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f)
+=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ===
+tables NOT written (9) + their schema vs prep: differences 0 (expect 0)
+written tables' schema (table + indexes) = the dry copy's: yes
+written table words: built 30 rows, 7560d2186922 - dry copy 30 rows, 7560d2186922 - = the dry run: yes - vs prep 30 rows, 7560d2186922
+written table abp_corrections: built 1 rows, 48c416105fd6 - dry copy 1 rows, 48c416105fd6 - = the dry run: yes - vs prep 1 rows, 48c416105fd6
+journal beside built: none (expect none)
+repo scripts/tests: clean (expect clean)
+P6A CHECK: OK
+src sha256: bc0070fa27fbbe3a6e3bb38a7ead2cd8c35d6e369570be28963049d74804ec25 (expect bc0070fa27fbbe3a6e3bb38a7ead2cd8c35d6e369570be28963049d74804ec25)
+built sha256: 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428 (expect 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428)
+no -journal / -wal / -shm beside live, built or src: yes
+live and built on the same device (so mv is a rename): yes (2096 / 2096)
+existing bible_pre_edition_upgrade_* files: 0 (expect 0)
+the swap commit's two new paths absent in PA's checkout: yes
+live now: 77824 bytes, last write 2026-11-21 15:43:41.356952705 +0000 (printed only)
+check.py sha256 as run: cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f (expect cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f)
+src words: 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8 (= LIVESRC's: yes)
+src verses: 5/c1ba9e6bf9dfdd8f7245feed7ef8fd4f1e2bc3aa138a20b3b7a76fc4cefe807c (= LIVESRC's: yes)
+src: 11 tables digested, saved to /home/jp/gatep6/s1/edition_upgrade_runs/p6_swap/src_digests.json
+P6 CHECK: PRE OK
+check exit 0 (expect 0; 2 = a STOP inside; 4 = not the pinned bytes)
+the checkout's cache folders and their contents unchanged: yes
+UTC now 1543 - P6B must start outside 13:00-14:30 UTC (DESIGN 9.215, 9.228)
+P6A RESULT: DONE - CC pushes the swap commit next (PA does NOT pull it); then JP pastes P6R
+exit=0
+GATE REF d34d6723 - P6R - the swap, READY: the checks that must come after CC's push and before JP's Disable (DESIGN 9.228: everything readable before Disable is read before it) - READ-ONLY; site UP; writes only this log - PA HEAD d34d6723 - 2026-11-21T15:43:41Z
+repo guards: scripts/tests = d34d6723 (the swap commit NOT pulled yet): yes
+existing bible_pre_edition_upgrade_* files: 0 (expect 0)
+built sha256: 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428 (expect 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428)
+UTC time 1543 - P6B must run outside 1300-1430 (it checks again, twice)
+P6R RESULT: DONE - JP: DISABLE the web app now, then paste P6B
+exit=0
+P6B - the swap, part B, INSIDE THE WINDOW (JP has just DISABLED the web app): still-file hold, live read in place, the two renames (DESIGN 9.213 P6, 9.224, 9.228) - WRITES: two renames in ~/bible-db (live -> the rollback name, built -> bible.db) + the run folder + this log - WINDOW START (this paste) 2026-11-21T15:43:41Z
+UTC time 1543 (STOP inside 1300-1430)
+=== still-file hold on live: 7 reads, 5 s apart - size + last write unchanged, no -journal / -wal / -shm ===
+  read 1 15:43:41: size+time 77824 1795275821
+  read 2 15:43:46: size+time 77824 1795275821
+  read 3 15:43:51: size+time 77824 1795275821
+  read 4 15:43:56: size+time 77824 1795275821
+  read 5 15:44:01: size+time 77824 1795275821
+  read 6 15:44:06: size+time 77824 1795275821
+  read 7 15:44:11: size+time 77824 1795275821
+live held still for the whole hold: yes
+=== live read in place, read-only: LIVESRC digests, every table vs src, what the swap drops (the program, read once) ===
+check.py sha256 as run: cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f (expect cab38c74e138e54109f591efc6ef43c86b1b37f501088eac62fc2eb5ef3b966f)
+live words: 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8 (expect 30/9fb6c527bf29ed3e211e77d923dc57db4f8cfde4c5ccfecb74c7f07e528a27c8, LIVESRC): yes
+live verses: 5/c1ba9e6bf9dfdd8f7245feed7ef8fd4f1e2bc3aa138a20b3b7a76fc4cefe807c (expect 5/c1ba9e6bf9dfdd8f7245feed7ef8fd4f1e2bc3aa138a20b3b7a76fc4cefe807c, LIVESRC): yes
+tables on one side only (live vs src): none
+tables that differ, live vs src (2): ai_search_cache, lsj
+differing tables outside ai_search_cache/lsj/abp_ext/abp_corrections: none
+=== what the swap drops: built -> live, row delta (eu_step.run_delta; values in the run folder only) ===
+  ai_search_cache (key query): rows 3 -> 6 - changed 1, added 3, removed 0
+    by class: added 3
+    by class: changed result_json 1
+    by class: result_json: value -> other value 1
+  lsj (key key): rows 1 -> 1 - changed 1, added 0, removed 0
+    by class: changed summary_json 1
+    by class: summary_json: NULL -> value 1
+  abp_ext (key strongs): rows 1 -> 1 - changed 0, added 0, removed 0
+delta_built_vs_live.tsv: 5 difference lines, sha256 f4eb40748f74cc5a85205b08c04856395644e7e13896a94feb1f00108c7ed944
+(read: 'added' = rows live has and built does not - dropped by the swap; 'changed' = live's row differs from built's)
+P6 CHECK: LIVE OK
+check exit 0 (expect 0; 2 = a STOP inside; 4 = not the pinned bytes)
+LIVE FULL SHA256 just before the move: dadd5672981940eba9fb4bcc2bfe7342326307358cbed1e9bad2dfa11488c2cf (77824 bytes, last write 2026-11-21 15:43:41.356952705 +0000)
+UTC time 1544 (STOP inside 1300-1430)
+=== the move - 15:44:12 ===
+1. live renamed to /home/jp/gatep6/s1/bible-db/bible_pre_edition_upgrade_20261121.db
+2. built renamed to /home/jp/gatep6/s1/bible-db/bible.db - 15:44:12
+bible.db sha256 = built's pin: yes (4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428)
+the rollback file's sha256 = live's just before: yes
+the rollback file: 77824 bytes, last write 2026-11-21 15:43:41.356952705 +0000 (= live's before: yes)
+Notes made after the P3b read (11/21 05:21Z) are not covered by it (DESIGN 9.220).
+P6B RESULT: DONE - swapped at 2026-11-21T15:44:12Z; JP: ENABLE the web app, then RELOAD it, then paste P6C
+exit=0
+P6C - the swap, part C: the site back (JP has ENABLED, then RELOADED the web app) and deploy.sh pulls the swap commit (DESIGN 9.213 P6, 9.227, 9.228) - WINDOW END (this paste) 2026-11-21T15:44:12Z - PA HEAD before d34d6723
+    reloaded (API — all workers restarted together).
+==> Worker sweep (5x, all must be 200):
+200 200 200 200 200 
+deploy.sh exit 0 (expect 0) - 2026-11-21T15:44:12Z
+PA HEAD after: 8b5d2c5b - edition upgrade: THE SWAP COMMIT - test copy
+API reload: yes
+worker sweep 5x 200: yes
+HEAD is the swap commit: yes
+cert pin 375 in the checkout: yes
+health floor 395014 in the checkout: yes
+_CACHE_CODE_VER 49 in the checkout: yes
+the 375 member file in the checkout: yes
+P6C RESULT: DONE - live is the new edition on the swap commit; P7 (read-only, at least 60 s after the reload) next
+exit=0
+after the swap: bible.db = built's bytes: yes; rollback file = old live's bytes: yes
+leak grep (planted AI text / definitions / summaries in the three logs): 0
+RB0 - ROLLBACK, READY (only if the ruling chat rules a rollback; CC has pushed the revert of the swap commit; PA must NOT pull it yet): the checks before JP's Disable (DESIGN 9.228) - READ-ONLY; site UP; writes only this log - PA HEAD 8b5d2c5b - 2026-11-21T15:44:12Z
+PA HEAD subject: edition upgrade: THE SWAP COMMIT - test copy
+PA is on the swap commit (the revert NOT pulled yet): yes
+the rollback file's sha256 = live's just before the swap: yes (dadd5672981940eba9fb4bcc2bfe7342326307358cbed1e9bad2dfa11488c2cf)
+existing bible_pre_edition_upgrade_backedout_* files: 0 (expect 0)
+UTC time 1544 - RB1 must run outside 1300-1430 (it checks again, twice)
+RB0 RESULT: DONE - JP: DISABLE the web app now, then paste RB1
+exit=0
+RB1 - ROLLBACK, part 1, INSIDE ITS OWN WINDOW (JP has just DISABLED the web app after RB0 DONE): still-file hold, then two renames back (charter 7; DESIGN 9.213 (ii), 9.228) - WRITES: two renames in ~/bible-db + this log - WINDOW START (this paste) 2026-11-21T15:44:12Z
+UTC time 1544 (STOP inside 1300-1430)
+=== still-file hold on live: 7 reads, 5 s apart ===
+  read 1 15:44:12: size+time 77824 1795275821
+  read 2 15:44:17: size+time 77824 1795275821
+  read 3 15:44:22: size+time 77824 1795275821
+  read 4 15:44:27: size+time 77824 1795275821
+  read 5 15:44:32: size+time 77824 1795275821
+  read 6 15:44:37: size+time 77824 1795275821
+  read 7 15:44:42: size+time 77824 1795275821
+the swapped-in live sha256 before the move back: 4657b321254c855b733c4620a6407d0eaeae33c47ca583f070dc1631dc2e5428 (77824 bytes, last write 2026-11-21 15:43:41.232952757 +0000)
+UTC time 1544 (STOP inside 1300-1430)
+=== the move back - 15:44:42 ===
+1. the swapped-in live renamed to /home/jp/gatep6/s1/bible-db/bible_pre_edition_upgrade_backedout_20261121.db (kept)
+2. the pre-swap file renamed back to /home/jp/gatep6/s1/bible-db/bible.db - 15:44:42
+bible.db sha256 = live's just before the swap: yes
+the kept swapped-in file's sha256 = before the move back: yes
+Rows the site wrote into the swapped-in bible.db since P6B stay in /home/jp/gatep6/s1/bible-db/bible_pre_edition_upgrade_backedout_20261121.db (charter 7: lost to live by a rollback; kept on disk).
+RB1 RESULT: DONE - rolled back at 2026-11-21T15:44:42Z; JP: ENABLE the web app, then RELOAD it, then paste RB2
+exit=0
+RB2 - ROLLBACK, part 2: the site back (JP has ENABLED, then RELOADED the web app) and deploy.sh pulls the revert of the swap commit (charter 7 'roll both or neither'; DESIGN 9.227 (3)) - WINDOW END (this paste) 2026-11-21T15:44:42Z - PA HEAD before 8b5d2c5b
+    reloaded (API — all workers restarted together).
+==> Worker sweep (5x, all must be 200):
+200 200 200 200 200 
+deploy.sh exit 0 (expect 0) - 2026-11-21T15:44:42Z
+PA HEAD after: 58a9487f - Revert "edition upgrade: THE SWAP COMMIT - test copy"
+API reload: yes
+worker sweep 5x 200: yes
+HEAD is the revert of the swap commit: yes
+cert pin back to 374: yes
+health floor back to 395003: yes
+RB2 RESULT: DONE - live is the pre-swap file on the pre-swap code; to the ruling chat
+exit=0
+after the rollback: bible.db = old live's bytes: yes; kept swapped-in file = built's bytes: yes
+
+=============== S2 live written during the hold (a writer touches bible.db) -> P6B STOP, nothing moved ===============
+exit=0
+exit=0
+  read 1 15:44:45: size+time 77824 1795275884
+  read 2 15:44:50: size+time 77824 1795275888
+  read 3 15:44:55: size+time 77824 1795275894
+  read 4 15:45:00: size+time 77824 1795275900
+  read 5 15:45:05: size+time 77824 1795275903
+  read 6 15:45:10: size+time 77824 1795275909
+  read 7 15:45:15: size+time 77824 1795275915
+P6B RESULT: STOP - live is still being written (size/time moved or a side file); nothing moved - is the web app disabled?
+exit=1
+rollback files: 0
+
+=============== S3 the swap commit pulled early (PA's scripts differ from d34d6723) -> P6R STOP, nothing moved ===============
+exit=0
+P6R RESULT: STOP - PA's scripts/tests are not d34d6723 (was the swap commit pulled early?)
+exit=1
+
+=============== S4 live differs from src in books at the swap -> P6B STOP (outside the ruled four), nothing moved ===============
+exit=0
+exit=0
+UTC time 1545 (STOP inside 1300-1430)
+differing tables outside ai_search_cache/lsj/abp_ext/abp_corrections: books
+P6 CHECK: STOP - live differs from src in ['books'] - outside the ruled four (9.224)
+check exit 2 (expect 0; 2 = a STOP inside; 4 = not the pinned bytes)
+P6B RESULT: STOP - the live read stopped (lines above); nothing moved
+exit=1
+rollback files: 0
+
+=============== S5 inside the 13:00-14:30 window (TEST copy: the window moved to bracket now) -> P6B STOP ===============
+exit=0
+exit=0
+UTC time 1545 (STOP inside 1300-1430)
+P6B RESULT: STOP - inside the 13:00-14:30 UTC backup / health window; nothing moved
+exit=1
+
+=============== S6 the renames cannot be made (~/bible-db made read-only) -> P6B STOP at the first rename, live in place ===============
+exit=0
+exit=0
+mv: cannot move '/home/jp/gatep6/s6/bible-db/bible.db' to '/home/jp/gatep6/s6/bible-db/bible_pre_edition_upgrade_20261121.db': Permission denied
+P6B RESULT: STOP - the first rename did not land cleanly (mv exit 1); live is in place
+exit=1
+-rw-r--r-- 1 jp jp 77824 Nov 21 10:45 /h
+
+=============== S7 a new fixture path already in PA's checkout -> P6A STOP ===============
+P6A RESULT: STOP - the swap commit's new path already exists in PA's checkout: tests/fixtures/corrections/abp_corrections_active_built_20261121.txt (a pull would refuse it)
+exit=1
+
+=============== S8 built not the pinned copy -> P6A STOP ===============
+P6A RESULT: STOP - built is not the copy P4 read
+exit=1
+
+=============== S9 P6C without P6B DONE -> STOP, deploy.sh NOT run ===============
+P6C RESULT: STOP - P6B did not finish DONE; deploy.sh NOT run (DESIGN 9.227 (3))
+exit=1
+
+=============== S10 P6B without P6R -> STOP ===============
+exit=0
+P6B RESULT: STOP - P6R has not finished DONE; nothing moved
+exit=1
+
+=============== S11 RB0 with no finished swap -> STOP; RB1 without RB0 -> STOP ===============
+RB0 RESULT: STOP - there is no finished swap to roll back (P6B not DONE)
+exit=1
+RB1 RESULT: STOP - RB0 has not finished DONE; nothing moved
+exit=1
+
+=============== S12 a rollback-named file already there -> P6R STOP ===============
+exit=0
+P6R RESULT: STOP - a rollback-named file already exists
+exit=1
+
+=============== S13 the revert pulled early before the rollback -> RB0 STOP (roll both or neither) ===============
+exit=0
+exit=0
+exit=0
+exit=0
+RB0 RESULT: STOP - PA's HEAD is not the swap commit (the revert pulled early, or the swap never deployed) - roll both or neither (charter 7)
+exit=1
+
+=============== S14 the swap commit pulled between P6R and P6B -> P6B STOP, nothing moved ===============
+exit=0
+exit=0
+P6B RESULT: STOP - PA has already pulled the swap commit (no deploy may run between P6R and the swap); nothing moved
+exit=1
+rollback files: 0; rollback.txt: absent

@@ -18745,3 +18745,472 @@ read-only check that neither NEW path exists untracked in PA's checkout (a pull 
 - Tasks: unchanged.
 - To the ruling chat as asked ("anything other than a clean stop and a clean return comes here"): the stop is clean, but what a visitor
   sees during it is a browser security warning.
+
+## P6 — THE SWAP and its ROLLBACK, for clearance together (11/21, CC; §9.213 (ii), §9.227, §9.228)
+**Sequence** (one run folder `~/edition_upgrade_runs/p6_swap`; each block's log refuses to overwrite):
+1. **P6A** (site UP, read-only, GATE REF d34d6723): program sha; the HEADFIX2 built guard; src sha; built sha = d2c8603b…1523 (§9.222 (1));
+   no side files; same device; no bible_pre_edition_upgrade_* file; the swap commit's two new paths absent in PA's checkout (§9.227 (2));
+   src's every-table digests saved (the program, MODE=pre).
+2. **CC commits the cleared swap commit** (the re-check: the 8-path diff hashes 003bb52f…83ee) **and pushes it**; PA does NOT pull.
+3. **P6R** (site UP, read-only): P6A DONE; the run folder; the repo guard (the swap commit NOT pulled); no rollback-named file; the built sha;
+   built's side files; the time printed.
+4. **JP clicks Disable**, then pastes **P6B — the window** (WINDOW START = its first line): P6R's DONE line (a log read); the time
+   (STOP inside 13:00-14:30 UTC); HEAD not yet the swap commit (a log read); the **still-file hold** (7 reads, 5 s apart: size + last write
+   unchanged, no -journal / -wal / -shm); **live read in place** (the program, MODE=live: words / verses = LIVESRC's; every table vs src's
+   saved digests — one-side = STOP, differing outside ai_search_cache / lsj / abp_ext / abp_corrections = STOP (§9.224); what the swap drops,
+   built → live, for the three tables, counts only); live unchanged through the read; **live's full sha recorded**; the time again; the
+   rollback note (name + sha); **the two renames** (`mv -n` live → `bible_pre_edition_upgrade_<UTC date>.db`, `mv -n` built → bible.db; a
+   miss after the first puts it back); after: bible.db sha = d2c8603b…, the rollback file's sha = live's just before; the §9.220 notes line.
+5. **JP clicks Enable, then Reload**, then pastes **P6C** (WINDOW END = its first line): P6B DONE required, else deploy.sh is NOT run
+   (§9.227 (3)); `deploy.sh` (pulls the swap commit; its output kept in the run folder); its "reloaded (API" line and the sweep line
+   "200 200 200 200 200 " checked (deploy.sh exits 0 even when the reload fails); HEAD = the swap commit; the pin 375, floor 395014,
+   _CACHE_CODE_VER 49 and the 375 member file in the checkout.
+6. P7 (read-only, ≥ 60 s after the reload) — its own block, next.
+**ROLLBACK (only if ruled; charter §7 "roll both or neither"):** CC pushes `git revert` of the swap commit (PA does not pull) → **RB0**
+(site UP, read-only: P6B DONE; rollback.txt; the name pattern; HEAD subject = the swap commit, so the revert is not yet pulled; the rollback
+file present, no side files, its sha = live's sha from just before the swap; no backed-out file) → JP Disable → **RB1** (window: RB0 DONE; the
+time; the still-file hold; the swapped-in live's sha; the time again; `mv -n` bible.db → `bible_pre_edition_upgrade_backedout_<date>.db`
+(KEPT, and skipped by the nightly backup, backup_db.py :63), `mv -n` the rollback file → bible.db, put-back on a miss; after: bible.db sha =
+the pre-swap sha) → JP Enable + Reload → **RB2** (deploy.sh pulls the revert; reload + sweep lines; HEAD = 'Revert "edition upgrade: THE SWAP
+COMMIT…'; pin 374 and floor 395003 back).
+**Program** `~/edition_upgrade_runs/p6_check_20261121.py` (JP uploads it; sha256 **3dfe1600963b792bdaff114f132eb0675b5794eb626ae8ab88dc1fec1d8208e6**),
+read once and run by P6A (MODE=pre) and P6B (MODE=live).
+**Block shas:** P6A 2ed1ccc6…8284 · P6R f822d624…e630 · P6B 959dacee…d54f · P6C 596eca57…1e70 · RB0 73939c63…0ada · RB1 8c60304b…6af6 ·
+RB2 a67c31b9…cc40.
+**Tests** (WSL; clones at d34d6723 with a local origin carrying the cleared patch as a test swap commit and its revert; P4's made-up copies;
+a no-network stand-in for deploy.sh, tests only; docs/handoffs/drafts/P6_harness/, tests_p6.out sha b6a95186…c2e3) — 14 cases:
+- S1: the whole swap then the whole rollback; bytes checked at each step; the kept file under the bible_pre_ name; leak grep 0.
+- S2: a writer touches live during the hold → STOP, nothing moved.
+- S3: the swap commit pulled before P6R → P6R STOP. S14: pulled between P6R and P6B → P6B STOP, nothing moved.
+- S4: live differs from src in books → STOP. S5: inside the time window → STOP.
+- S6: renames impossible (folder read-only) → STOP at the first rename, live in place.
+- S7: a new fixture path present → P6A STOP. S8: built sha wrong → P6A STOP.
+- S9: P6C without P6B → STOP, no deploy. S10: P6B without P6R → STOP.
+- S11: RB0 with no swap → STOP; RB1 without RB0 → STOP. S12: a rollback-named file present → P6R STOP.
+- S13: the revert pulled early → RB0 STOP.
+**Reviewer pass 1 — ESCALATE** (writes to live): 2 DEFECTS and 3 findings.
+- D1: the kept backed-out file's first name (`bible_edition_upgrade_backedout_*`) would be picked up by the nightly backup. Fixed: a
+  `bible_pre_` name.
+- D2: reads that could run before Disable sat inside the window. Fixed: the new P6R / RB0.
+- F1: the clock was checked once. Fixed: checked twice.
+- F2: RB1 had no repo guard. Fixed: RB0's HEAD check.
+- F3: a question for the ruling chat (below).
+**Pass 2 — ESCALATE; verbatim verdict line:** "REVIEW: ESCALATE - P6B, P6C, RB1 and RB2 still write to live, so I cannot clear them. On the
+re-read, D1, D2, F1 and F2 are met, and I found no new defects. Four smaller points need a ruling, F3 is still open, and the guard line in P6B
+is CC's request for a ruling." Its N2 (P6B: re-check that the swap commit is not pulled) and N3 (write rollback.txt after the last time check)
+CC took, re-tested (S14 added; all 14 as above). N1, N4, F3 and the guard line go to the ruling chat. Not checked by it: the program, the
+tests, the shas; P6A beyond its DONE line.
+
+### The P6 program — `~/edition_upgrade_runs/p6_check_20261121.py` (sha256 3dfe1600963b792bdaff114f132eb0675b5794eb626ae8ab88dc1fec1d8208e6)
+```python
+"""P6 check program (edition-upgrade step 8, the swap; DESIGN 9.213, 9.221-9.228). READ-ONLY on every database it opens.
+
+Two modes, run by blocks P6a and P6b through the read-once launcher (DESIGN 9.190 (5)(b)); arguments KEY=value:
+  MODE=pre    S=<src> B=<built> D=<run folder> REPO=<checkout>
+      site UP. Every table of src: rows + eu_step.digest, saved to D/src_digests.json (src is sha-pinned by the block),
+      so the window only has to read live. Prints the table count.
+  MODE=live   LIVE=<live bible.db> B=<built> D=<run folder> REPO=<checkout>
+      site DISABLED (inside the window). Reads live in place, read-only:
+        - words + verses digests = LIVESRC's (DESIGN 9.181; re-shown at the swap, 9.222 (2)) - else STOP
+        - every table of live vs the saved src digests: tables on one side only = STOP; tables that differ must be among
+          ai_search_cache, lsj, abp_ext, abp_corrections (9.224: "any table beyond ... differing at that read = STOP")
+        - what the swap drops, live -> built, for ai_search_cache, lsj, abp_ext: eu_step.run_delta(built -> live), counts and
+          changed-column names only (values only in D/delta_built_vs_live.tsv)
+The log gets table names, counts, digests, column names - never a cached AI text, summary, definition or query string.
+Exit 0 = all held; 2 = STOP (the block stops before any rename).
+"""
+import json
+import os
+import sys
+
+args = dict(a.split("=", 1) for a in sys.argv[1:])
+MODE, D, REPO = args["MODE"], args["D"], args["REPO"]
+sys.path.insert(0, os.path.join(REPO, "scripts"))
+import eu_step as E  # noqa: E402  (the lane's own reader + digest + row delta)
+
+LIVESRC = {"words": [626309, "1ce75b22fd302e368f1bfca1bcb9e0fdccdce9e3658af4534f258f5fd3b25b26"],
+           "verses": [31237, "5717b0451ba5e1b044a1c3f1a3cf718c15d23e3a669a605b9c3d5502d1f721ae"]}   # DESIGN 9.181, 9.222 (2)
+ALLOWED = ("ai_search_cache", "lsj", "abp_ext", "abp_corrections")      # DESIGN 9.224 (P6 terms)
+DROPPED = ("ai_search_cache", "lsj", "abp_ext")
+KEYS = {"ai_search_cache": "query", "lsj": "key", "abp_ext": "strongs"}  # app.py :359-364; parse_lsj.py :56-61; load_abp_ext.py :6-11
+SAVED = os.path.join(D, "src_digests.json")
+
+
+def stop(msg):
+    print("P6 CHECK: STOP - %s" % msg)
+    sys.exit(2)
+
+
+try:
+    if MODE == "pre":
+        c = E.ro(args["S"])
+        tabs, virt = E.plain_tables(c)
+        dig = {t: E.digest(c, t) for t in tabs}
+        c.close()
+        if virt:
+            stop("src has virtual tables %s" % virt)
+        if os.path.exists(SAVED):
+            stop("already exists: %s" % SAVED)
+        with open(SAVED, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(dig, f, sort_keys=True)
+        for t, (rows, dg) in LIVESRC.items():
+            ok = dig.get(t) == [rows, dg]
+            print("src %s: %s (= LIVESRC's: %s)" % (t, "%d/%s" % tuple(dig[t]) if t in dig else "-", "yes" if ok else "NO"))
+            if not ok:
+                stop("src %s is not LIVESRC's" % t)
+        print("src: %d tables digested, saved to %s" % (len(dig), SAVED))
+        print("P6 CHECK: PRE OK")
+    elif MODE == "live":
+        if not os.path.exists(SAVED):
+            stop("no saved src digests (run P6a first): %s" % SAVED)
+        src = json.load(open(SAVED, encoding="utf-8"))
+        c = E.ro(args["LIVE"])
+        tabs, virt = E.plain_tables(c)
+        if virt:
+            stop("live has virtual tables %s" % virt)
+        dig = {t: E.digest(c, t) for t in tabs}
+        c.close()
+        for t, (rows, dg) in LIVESRC.items():
+            ok = dig.get(t) == [rows, dg]
+            print("live %s: %s (expect %d/%s, LIVESRC): %s" % (t, "%d/%s" % tuple(dig[t]) if t in dig else "-", rows, dg,
+                                                             "yes" if ok else "NO"))
+            if not ok:
+                stop("live %s is not LIVESRC's - live = src does not hold at the swap" % t)
+        one = sorted(set(dig) ^ set(src))
+        print("tables on one side only (live vs src): %s" % (", ".join(one) or "none"))
+        if one:
+            stop("table(s) on one side only: %s" % one)
+        diff = sorted(t for t in dig if dig[t] != src[t])
+        print("tables that differ, live vs src (%d): %s" % (len(diff), ", ".join(diff) or "none"))
+        other = [t for t in diff if t not in ALLOWED]
+        print("differing tables outside %s: %s" % ("/".join(ALLOWED), ", ".join(other) or "none"))
+        if other:
+            stop("live differs from src in %s - outside the ruled four (9.224)" % other)
+        print("=== what the swap drops: built -> live, row delta (eu_step.run_delta; values in the run folder only) ===")
+        specs = ["%s:%s" % (t, KEYS[t]) for t in DROPPED]
+        total, sha = E.run_delta(args["B"], args["LIVE"], specs, os.path.join(D, "delta_built_vs_live.tsv"), 0)
+        print("delta_built_vs_live.tsv: %d difference lines, sha256 %s" % (total, sha))
+        print("(read: 'added' = rows live has and built does not - dropped by the swap; 'changed' = live's row differs from built's)")
+        print("P6 CHECK: LIVE OK")
+    else:
+        stop("unknown MODE %r" % MODE)
+except E.Stop as e:
+    stop(str(e))
+```
+
+### Block P6A (sha256 2ed1ccc6560dad1c167323c1d59e608be54ba00cbcfb6abeac75aeac053a8284)
+```bash
+set +H
+L=~/edition_upgrade_runs/p6a_swap_pre.log
+if [ -e "$L" ]; then echo "P6A RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+export GIT_OPTIONAL_LOCKS=0
+pcf() { find ~/bible-db \( -name __pycache__ -type d -o -path '*/__pycache__/*' \) -printf '%M %u %g %s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -c1-16; }   # DESIGN 9.209
+pc0=$(pcf)
+echo "GATE REF ${REF} - P6A - the swap, part A: every check that can run with the site UP (DESIGN 9.213 P6, 9.228) - READ-ONLY: src + built opened read-only; live only stat'd; writes only the run folder (src's table digests) and this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P6A RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+S=~/bible-db/bible_edupg_test_20261101.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+DH=$R/step4_headfix2_20261116                                              # the HEADFIX2 guard folder (DESIGN 9.156 (3))
+D=$R/p6_swap                                                               # one run folder for P6A / P6B / P6C (one swap)
+U=$R/p6_check_20261121.py                                                  # the check program as JP uploaded it through PA's Files page
+XS=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01       # src full sha256 (DESIGN 9.168 (1), 9.181)
+XB=d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523       # built full sha256 = P6's pin (DESIGN 9.222 (1))
+XP=3dfe1600963b792bdaff114f132eb0675b5794eb626ae8ab88dc1fec1d8208e6                                                                  # sha256 of the check program CC wrote and tested; any other file STOPs
+NEWF="tests/fixtures/corrections/abp_corrections_active_built_20261121.txt tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256"   # the swap commit's two NEW paths (DESIGN 9.227 (2))
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+EU scripts/eu_step.py pre --tag P6A --ref "$REF" --dir "$D" --db "$S" --db "$B" || { echo "P6A RESULT: STOP - pre (line above); nothing written but the run folder"; exit 1; }
+for f in "$U" "$LIVE"; do [ -s "$f" ] || { echo "P6A RESULT: STOP - missing or empty: $f"; exit 1; }; done
+k=$(h "$U"); echo "uploaded check program sha256: $k (expect $XP)"
+[ "$k" = "$XP" ] || { echo "P6A RESULT: STOP - the uploaded check program is not the file CC wrote and tested"; exit 1; }
+echo "=== built = what HEADFIX2 left (eu_step check; read-only; DESIGN 9.156 (3)) ==="
+EU scripts/eu_step.py check --tag P6A --built "$B" --dir "$DH" --written words,abp_corrections || { echo "P6A RESULT: STOP - built is not HEADFIX2's result (lines above)"; exit 1; }
+s0=$(h "$S"); echo "src sha256: $s0 (expect $XS)"; [ "$s0" = "$XS" ] || { echo "P6A RESULT: STOP - src is not the 11/1 copy as recorded"; exit 1; }
+b0=$(h "$B"); echo "built sha256: $b0 (expect $XB)"; [ "$b0" = "$XB" ] || { echo "P6A RESULT: STOP - built is not the copy P4 read"; exit 1; }
+for f in "$LIVE" "$B" "$S"; do for x in -journal -wal -shm; do [ -e "$f$x" ] && { echo "P6A RESULT: STOP - side file present: $f$x (left as is)"; exit 1; }; done; done
+echo "no -journal / -wal / -shm beside live, built or src: yes"
+dl=$(stat -c %d "$LIVE"); db=$(stat -c %d "$B"); echo "live and built on the same device (so mv is a rename): $([ "$dl" = "$db" ] && echo yes || echo NO) ($dl / $db)"
+[ "$dl" = "$db" ] || { echo "P6A RESULT: STOP - live and built are on different devices"; exit 1; }
+rb=$(find ~/bible-db -maxdepth 1 -name 'bible_pre_edition_upgrade_*' | wc -l); echo "existing bible_pre_edition_upgrade_* files: $rb (expect 0)"
+[ "$rb" = 0 ] || { echo "P6A RESULT: STOP - a rollback-named file already exists"; exit 1; }
+for p in $NEWF; do [ -e "$p" ] && { echo "P6A RESULT: STOP - the swap commit's new path already exists in PA's checkout: $p (a pull would refuse it)"; exit 1; }; done
+echo "the swap commit's two new paths absent in PA's checkout: yes"
+stat -c 'live now: %s bytes, last write %y (printed only)' "$LIVE"
+cp "$U" "$D/check.py" || { echo "P6A RESULT: STOP - cannot copy the program into the run folder"; exit 1; }
+# check.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5)(b); TIPNR57's launcher, DR :15775-15785)
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XP" "MODE=pre" "S=$S" "B=$B" "D=$D" "REPO=$HOME/bible-db" < /dev/null; r=$?
+echo "check exit $r (expect 0; 2 = a STOP inside; 4 = not the pinned bytes)"
+[ "$r" = 0 ] || { echo "P6A RESULT: STOP - the pre-read stopped (lines above)"; exit 1; }
+s1=$(h "$S"); [ "$s1" = "$s0" ] || { echo "P6A RESULT: CHECK - src changed during the read"; exit 1; }
+pc1=$(pcf); echo "the checkout's cache folders and their contents unchanged: $([ "$pc1" = "$pc0" ] && echo yes || echo NO)"; [ "$pc1" = "$pc0" ] || { echo "P6A RESULT: CHECK - cache folders changed"; exit 1; }
+h0=$(date -u +%H%M); echo "UTC now $h0 - P6B must start outside 13:00-14:30 UTC (DESIGN 9.215, 9.228)"
+echo "P6A RESULT: DONE - CC pushes the swap commit next (PA does NOT pull it); then JP pastes P6R"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block P6R (sha256 f822d62437750c13c7ef13a528d7f0cbb34c6e7cce3bb1629ebc24530028e630)
+```bash
+set +H
+L=~/edition_upgrade_runs/p6r_swap_ready.log
+if [ -e "$L" ]; then echo "P6R RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export GIT_OPTIONAL_LOCKS=0
+echo "GATE REF ${REF} - P6R - the swap, READY: the checks that must come after CC's push and before JP's Disable (DESIGN 9.228: everything readable before Disable is read before it) - READ-ONLY; site UP; writes only this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P6R RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+D=$R/p6_swap
+XB=d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523       # built full sha256 = P6's pin (DESIGN 9.222 (1))
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+grep -qx "P6A RESULT: DONE - CC pushes the swap commit next (PA does NOT pull it); then JP pastes P6R" "$R/p6a_swap_pre.log" || { echo "P6R RESULT: STOP - P6A has not finished DONE"; exit 1; }
+[ -s "$D/src_digests.json" ] && [ -s "$D/check.py" ] || { echo "P6R RESULT: STOP - P6A's run folder is incomplete"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD && git diff --quiet "$REF" HEAD -- scripts tests && [ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "P6R RESULT: STOP - PA's scripts/tests are not $REF (was the swap commit pulled early?)"; exit 1; }
+echo "repo guards: scripts/tests = $REF (the swap commit NOT pulled yet): yes"
+for f in "$LIVE" "$B"; do [ -s "$f" ] || { echo "P6R RESULT: STOP - missing or empty: $f"; exit 1; }; done
+rb=$(find ~/bible-db -maxdepth 1 -name 'bible_pre_edition_upgrade_*' | wc -l); echo "existing bible_pre_edition_upgrade_* files: $rb (expect 0)"
+[ "$rb" = 0 ] || { echo "P6R RESULT: STOP - a rollback-named file already exists"; exit 1; }
+b0=$(h "$B"); echo "built sha256: $b0 (expect $XB)"; [ "$b0" = "$XB" ] || { echo "P6R RESULT: STOP - built is not the pinned copy"; exit 1; }
+for x in -journal -wal -shm; do [ -e "$B$x" ] && { echo "P6R RESULT: STOP - side file $B$x"; exit 1; }; done
+hm=$(date -u +%H%M); echo "UTC time $hm - P6B must run outside 1300-1430 (it checks again, twice)"
+echo "P6R RESULT: DONE - JP: DISABLE the web app now, then paste P6B"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block P6B (sha256 959daceebfad8e82496126d15d91cb88effaa557f303d201c2106135787fd54f)
+```bash
+set +H
+L=~/edition_upgrade_runs/p6b_swap_window.log
+if [ -e "$L" ]; then echo "P6B RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+echo "P6B - the swap, part B, INSIDE THE WINDOW (JP has just DISABLED the web app): still-file hold, live read in place, the two renames (DESIGN 9.213 P6, 9.224, 9.228) - WRITES: two renames in ~/bible-db (live -> the rollback name, built -> bible.db) + the run folder + this log - WINDOW START (this paste) $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P6B RESULT: STOP - cannot cd to ~/bible-db; nothing moved"; exit 1; }
+B=~/bible-db/bible_edupg_test_built_20261102.db
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+D=$R/p6_swap
+XB=d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523       # built full sha256 = P6's pin (DESIGN 9.222 (1)); read in P6R before Disable
+XP=3dfe1600963b792bdaff114f132eb0675b5794eb626ae8ab88dc1fec1d8208e6                                                                  # sha256 of the check program (the same file P6A ran)
+HOLD_N=7; HOLD_S=5                                                         # still-file hold: 7 reads 5 s apart = 30 s (DESIGN 9.228; CC's figure)
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+nofile() { [ -s "$1" ] && return 1; return 0; }                            # true when the file is missing or empty (no bang in a pasted block)
+inwin() { hm=$(date -u +%H%M); echo "UTC time $hm (STOP inside 1300-1430)"; [ "$hm" -ge 1300 ] && [ "$hm" -le 1430 ]; }
+# --- guard: P6R finished (every other pre-Disable read is P6R's) ---
+grep -q "^P6R RESULT: DONE" "$R/p6r_swap_ready.log" || { echo "P6B RESULT: STOP - P6R has not finished DONE; nothing moved"; exit 1; }
+inwin && { echo "P6B RESULT: STOP - inside the 13:00-14:30 UTC backup / health window; nothing moved"; exit 1; }
+case "$(git log -1 --format=%s)" in "edition upgrade: THE SWAP COMMIT"*) echo "P6B RESULT: STOP - PA has already pulled the swap commit (no deploy may run between P6R and the swap); nothing moved"; exit 1;; esac
+echo "=== still-file hold on live: $HOLD_N reads, $HOLD_S s apart - size + last write unchanged, no -journal / -wal / -shm ==="
+st0=$(stat -c '%s %Y' "$LIVE"); ok=1
+for i in $(seq 1 "$HOLD_N"); do
+  st=$(stat -c '%s %Y' "$LIVE"); sf=""; for x in -journal -wal -shm; do [ -e "$LIVE$x" ] && sf="$sf $x"; done
+  echo "  read $i $(date -u +%T): size+time $st${sf:+ - SIDE FILE$sf}"
+  [ "$st" = "$st0" ] && [ -z "$sf" ] || ok=0
+  [ "$i" -lt "$HOLD_N" ] && sleep "$HOLD_S"
+done
+[ "$ok" = 1 ] || { echo "P6B RESULT: STOP - live is still being written (size/time moved or a side file); nothing moved - is the web app disabled?"; exit 1; }
+echo "live held still for the whole hold: yes"
+echo "=== live read in place, read-only: LIVESRC digests, every table vs src, what the swap drops (the program, read once) ==="
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XP" "MODE=live" "LIVE=$LIVE" "B=$B" "D=$D" "REPO=$HOME/bible-db" < /dev/null; r=$?
+echo "check exit $r (expect 0; 2 = a STOP inside; 4 = not the pinned bytes)"
+[ "$r" = 0 ] || { echo "P6B RESULT: STOP - the live read stopped (lines above); nothing moved"; exit 1; }
+st1=$(stat -c '%s %Y' "$LIVE"); [ "$st1" = "$st0" ] || { echo "P6B RESULT: STOP - live changed during the read; nothing moved"; exit 1; }
+for x in -journal -wal -shm; do [ -e "$LIVE$x" ] && { echo "P6B RESULT: STOP - side file $LIVE$x; nothing moved"; exit 1; }; done
+l0=$(h "$LIVE"); echo "LIVE FULL SHA256 just before the move: $l0 ($(stat -c '%s bytes, last write %y' "$LIVE"))"
+RB=~/bible-db/bible_pre_edition_upgrade_$(date -u +%Y%m%d).db
+[ -e "$RB" ] && { echo "P6B RESULT: STOP - $RB exists; nothing moved"; exit 1; }
+inwin && { echo "P6B RESULT: STOP - the reads ran into the 13:00-14:30 UTC window; nothing moved"; exit 1; }
+printf '%s\n%s\n' "$RB" "$l0" > "$D/rollback.txt" || { echo "P6B RESULT: STOP - cannot write $D/rollback.txt; nothing moved"; exit 1; }
+# --- the move: two renames on one device; a miss between them puts the first one back ---
+echo "=== the move - $(date -u +%T) ==="
+mv -n "$LIVE" "$RB"; m1=$?
+if [ "$m1" != 0 ] || [ -e "$LIVE" ] || nofile "$RB"; then
+  [ -e "$LIVE" ] || { [ -s "$RB" ] && mv -n "$RB" "$LIVE"; }
+  echo "P6B RESULT: STOP - the first rename did not land cleanly (mv exit $m1); live is $([ -s "$LIVE" ] && echo 'in place' || echo 'NOT IN PLACE - TO THE RULING CHAT NOW')"; exit 1
+fi
+echo "1. live renamed to $RB"
+mv -n "$B" "$LIVE"; m2=$?
+if [ "$m2" != 0 ] || nofile "$LIVE" || [ -e "$B" ]; then
+  [ -e "$LIVE" ] || mv -n "$RB" "$LIVE"
+  echo "P6B RESULT: STOP - the second rename did not land cleanly (mv exit $m2); the first was put back: live is $([ "$(h "$LIVE")" = "$l0" ] && echo 'the pre-swap file again' || echo 'NOT the pre-swap file - TO THE RULING CHAT NOW')"; exit 1
+fi
+echo "2. built renamed to $LIVE - $(date -u +%T)"
+# --- after: every miss = CHECK (the files stay as they are; to the ruling chat before anything else) ---
+bad=0
+n1=$(h "$LIVE"); echo "bible.db sha256 = built's pin: $([ "$n1" = "$XB" ] && echo yes || echo NO) ($n1)"; [ "$n1" = "$XB" ] || bad=1
+r1=$(h "$RB"); echo "the rollback file's sha256 = live's just before: $([ "$r1" = "$l0" ] && echo yes || echo NO)"; [ "$r1" = "$l0" ] || bad=1
+echo "the rollback file: $(stat -c '%s bytes, last write %y' "$RB") (= live's before: $([ "$(stat -c '%s %Y' "$RB")" = "$st0" ] && echo yes || echo NO))"
+[ -e "$B" ] && { echo "CHECK: the built path still exists"; bad=1; }
+for x in -journal -wal -shm; do for f in "$LIVE" "$RB"; do [ -e "$f$x" ] && { echo "CHECK: side file $f$x"; bad=1; }; done; done
+[ "$bad" = 0 ] || { echo "P6B RESULT: CHECK - lines above; the site stays disabled; to the ruling chat before anything else"; exit 1; }
+echo "Notes made after the P3b read (11/21 05:21Z) are not covered by it (DESIGN 9.220)."
+echo "P6B RESULT: DONE - swapped at $(date -u +%FT%TZ); JP: ENABLE the web app, then RELOAD it, then paste P6C"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block P6C (sha256 596eca57000c45b8d62433fc4581aa4948efb136afd82e4d1eef0ad7dbad1e70)
+```bash
+set +H
+L=~/edition_upgrade_runs/p6c_swap_deploy.log
+if [ -e "$L" ]; then echo "P6C RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+echo "P6C - the swap, part C: the site back (JP has ENABLED, then RELOADED the web app) and deploy.sh pulls the swap commit (DESIGN 9.213 P6, 9.227, 9.228) - WINDOW END (this paste) $(date -u +%FT%TZ) - PA HEAD before $(git -C ~/bible-db log -1 --format=%h)"
+R=~/edition_upgrade_runs
+grep -q "^P6B RESULT: DONE" "$R/p6b_swap_window.log" || { echo "P6C RESULT: STOP - P6B did not finish DONE; deploy.sh NOT run (DESIGN 9.227 (3))"; exit 1; }
+cd ~/bible-db || { echo "P6C RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+D=$R/p6_swap
+bash ~/bible-db/scripts/deploy.sh > "$D/deploy.out" 2>&1; rd=$?
+cat "$D/deploy.out"
+echo "deploy.sh exit $rd (expect 0) - $(date -u +%FT%TZ)"
+s=$(git log -1 --format=%s); echo "PA HEAD after: $(git log -1 --format=%h) - $s"
+bad=0
+grep -q "    reloaded (API " "$D/deploy.out" && echo "API reload: yes" || { echo "API reload: NO - press the dashboard Reload by hand and tell the ruling chat"; bad=1; }
+grep -qx "200 200 200 200 200 " "$D/deploy.out" && echo "worker sweep 5x 200: yes" || { echo "worker sweep 5x 200: NO"; bad=1; }
+case "$s" in "edition upgrade: THE SWAP COMMIT"*) echo "HEAD is the swap commit: yes";; *) echo "HEAD is the swap commit: NO"; bad=1;; esac
+grep -q '"abp_corrections_active": 375,' scripts/cert_invariants.py && echo "cert pin 375 in the checkout: yes" || { echo "cert pin 375 in the checkout: NO"; bad=1; }
+grep -q '^SURFACE_FLOOR = 395014$' scripts/health_check.py && echo "health floor 395014 in the checkout: yes" || { echo "health floor 395014: NO"; bad=1; }
+grep -q '^_CACHE_CODE_VER = 49 ' ai.py && echo "_CACHE_CODE_VER 49 in the checkout: yes" || { echo "_CACHE_CODE_VER 49: NO"; bad=1; }
+[ -s tests/fixtures/corrections/abp_corrections_active_built_20261121.txt ] && echo "the 375 member file in the checkout: yes" || { echo "the 375 member file: NO"; bad=1; }
+[ "$rd" = 0 ] && [ "$bad" = 0 ] || { echo "P6C RESULT: CHECK - lines above; to the ruling chat"; exit 1; }
+echo "P6C RESULT: DONE - live is the new edition on the swap commit; P7 (read-only, at least 60 s after the reload) next"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block RB0 (sha256 73939c63dbe5efce7d5e93ad8b4a628b4544c924e0bf04c42c56f0861de70ada)
+```bash
+set +H
+L=~/edition_upgrade_runs/rb0_rollback_ready.log
+if [ -e "$L" ]; then echo "RB0 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+export GIT_OPTIONAL_LOCKS=0
+echo "RB0 - ROLLBACK, READY (only if the ruling chat rules a rollback; CC has pushed the revert of the swap commit; PA must NOT pull it yet): the checks before JP's Disable (DESIGN 9.228) - READ-ONLY; site UP; writes only this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "RB0 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+LIVE=~/bible-db/bible.db
+D=~/edition_upgrade_runs/p6_swap
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+grep -q "^P6B RESULT: DONE" ~/edition_upgrade_runs/p6b_swap_window.log || { echo "RB0 RESULT: STOP - there is no finished swap to roll back (P6B not DONE)"; exit 1; }
+[ -s "$D/rollback.txt" ] || { echo "RB0 RESULT: STOP - $D/rollback.txt missing"; exit 1; }
+RB=$(sed -n 1p "$D/rollback.txt"); X0=$(sed -n 2p "$D/rollback.txt")   # the rollback file P6B made, and live's sha just before the swap
+case "$RB" in "$HOME"/bible-db/bible_pre_edition_upgrade_*.db) ;; *) echo "RB0 RESULT: STOP - unexpected rollback name: $RB"; exit 1;; esac
+s=$(git log -1 --format=%s); echo "PA HEAD subject: $s"
+case "$s" in "edition upgrade: THE SWAP COMMIT"*) echo "PA is on the swap commit (the revert NOT pulled yet): yes";; *) echo "RB0 RESULT: STOP - PA's HEAD is not the swap commit (the revert pulled early, or the swap never deployed) - roll both or neither (charter 7)"; exit 1;; esac
+for f in "$LIVE" "$RB"; do [ -s "$f" ] || { echo "RB0 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+for x in -journal -wal -shm; do [ -e "$RB$x" ] && { echo "RB0 RESULT: STOP - side file $RB$x"; exit 1; }; done
+r0=$(h "$RB"); echo "the rollback file's sha256 = live's just before the swap: $([ "$r0" = "$X0" ] && echo yes || echo NO) ($r0)"
+[ "$r0" = "$X0" ] || { echo "RB0 RESULT: STOP - the rollback file is not the pre-swap live"; exit 1; }
+n=$(find ~/bible-db -maxdepth 1 -name 'bible_pre_edition_upgrade_backedout_*' | wc -l); echo "existing bible_pre_edition_upgrade_backedout_* files: $n (expect 0)"
+[ "$n" = 0 ] || { echo "RB0 RESULT: STOP - a backed-out file already exists"; exit 1; }
+hm=$(date -u +%H%M); echo "UTC time $hm - RB1 must run outside 1300-1430 (it checks again, twice)"
+echo "RB0 RESULT: DONE - JP: DISABLE the web app now, then paste RB1"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block RB1 (sha256 8c60304bbb12a55b179a0dd05681cec65af28b3cd194057161d6da5cb9526af6)
+```bash
+set +H
+L=~/edition_upgrade_runs/rb1_rollback_window.log
+if [ -e "$L" ]; then echo "RB1 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+echo "RB1 - ROLLBACK, part 1, INSIDE ITS OWN WINDOW (JP has just DISABLED the web app after RB0 DONE): still-file hold, then two renames back (charter 7; DESIGN 9.213 (ii), 9.228) - WRITES: two renames in ~/bible-db + this log - WINDOW START (this paste) $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "RB1 RESULT: STOP - cannot cd to ~/bible-db; nothing moved"; exit 1; }
+LIVE=~/bible-db/bible.db
+D=~/edition_upgrade_runs/p6_swap
+HOLD_N=7; HOLD_S=5                                                         # the same still-file hold as P6B (DESIGN 9.228)
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+nofile() { [ -s "$1" ] && return 1; return 0; }                            # true when the file is missing or empty (no bang in a pasted block)
+inwin() { hm=$(date -u +%H%M); echo "UTC time $hm (STOP inside 1300-1430)"; [ "$hm" -ge 1300 ] && [ "$hm" -le 1430 ]; }
+# --- guard: RB0 finished (every other pre-Disable read is RB0's) ---
+grep -q "^RB0 RESULT: DONE" ~/edition_upgrade_runs/rb0_rollback_ready.log || { echo "RB1 RESULT: STOP - RB0 has not finished DONE; nothing moved"; exit 1; }
+RB=$(sed -n 1p "$D/rollback.txt"); X0=$(sed -n 2p "$D/rollback.txt")   # read and checked by RB0
+OUT=~/bible-db/bible_pre_edition_upgrade_backedout_$(date -u +%Y%m%d).db  # the swapped-in file is KEPT; a bible_pre_* name, so the nightly backup skips it (backup_db.py :63; reviewer D1)
+inwin && { echo "RB1 RESULT: STOP - inside the 13:00-14:30 UTC window; nothing moved"; exit 1; }
+echo "=== still-file hold on live: $HOLD_N reads, $HOLD_S s apart ==="
+st0=$(stat -c '%s %Y' "$LIVE"); ok=1
+for i in $(seq 1 "$HOLD_N"); do
+  st=$(stat -c '%s %Y' "$LIVE"); sf=""; for x in -journal -wal -shm; do [ -e "$LIVE$x" ] && sf="$sf $x"; done
+  echo "  read $i $(date -u +%T): size+time $st${sf:+ - SIDE FILE$sf}"
+  [ "$st" = "$st0" ] && [ -z "$sf" ] || ok=0
+  [ "$i" -lt "$HOLD_N" ] && sleep "$HOLD_S"
+done
+[ "$ok" = 1 ] || { echo "RB1 RESULT: STOP - live is still being written; nothing moved - is the web app disabled?"; exit 1; }
+n0=$(h "$LIVE"); echo "the swapped-in live sha256 before the move back: $n0 ($(stat -c '%s bytes, last write %y' "$LIVE"))"
+[ -e "$OUT" ] && { echo "RB1 RESULT: STOP - $OUT exists; nothing moved"; exit 1; }
+inwin && { echo "RB1 RESULT: STOP - the reads ran into the 13:00-14:30 UTC window; nothing moved"; exit 1; }
+echo "=== the move back - $(date -u +%T) ==="
+mv -n "$LIVE" "$OUT"; m1=$?
+if [ "$m1" != 0 ] || [ -e "$LIVE" ] || nofile "$OUT"; then
+  [ -e "$LIVE" ] || { [ -s "$OUT" ] && mv -n "$OUT" "$LIVE"; }
+  echo "RB1 RESULT: STOP - the first rename did not land cleanly (mv exit $m1); live is $([ -s "$LIVE" ] && echo 'in place' || echo 'NOT IN PLACE - TO THE RULING CHAT NOW')"; exit 1
+fi
+echo "1. the swapped-in live renamed to $OUT (kept)"
+mv -n "$RB" "$LIVE"; m2=$?
+if [ "$m2" != 0 ] || nofile "$LIVE" || [ -e "$RB" ]; then
+  [ -e "$LIVE" ] || mv -n "$OUT" "$LIVE"
+  echo "RB1 RESULT: STOP - the second rename did not land cleanly (mv exit $m2); the first was put back: live is $([ "$(h "$LIVE")" = "$n0" ] && echo 'the swapped-in file again' || echo 'NOT the swapped-in file - TO THE RULING CHAT NOW')"; exit 1
+fi
+echo "2. the pre-swap file renamed back to $LIVE - $(date -u +%T)"
+bad=0
+x1=$(h "$LIVE"); echo "bible.db sha256 = live's just before the swap: $([ "$x1" = "$X0" ] && echo yes || echo NO)"; [ "$x1" = "$X0" ] || bad=1
+o1=$(h "$OUT"); echo "the kept swapped-in file's sha256 = before the move back: $([ "$o1" = "$n0" ] && echo yes || echo NO)"; [ "$o1" = "$n0" ] || bad=1
+for x in -journal -wal -shm; do for f in "$LIVE" "$OUT"; do [ -e "$f$x" ] && { echo "CHECK: side file $f$x"; bad=1; }; done; done
+[ "$bad" = 0 ] || { echo "RB1 RESULT: CHECK - lines above; the site stays disabled; to the ruling chat before anything else"; exit 1; }
+echo "Rows the site wrote into the swapped-in bible.db since P6B stay in $OUT (charter 7: lost to live by a rollback; kept on disk)."
+echo "RB1 RESULT: DONE - rolled back at $(date -u +%FT%TZ); JP: ENABLE the web app, then RELOAD it, then paste RB2"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block RB2 (sha256 a67c31b9e21378f76cd5d6eb2ac12a4289fe74f97d7c1b7d7a847ee29190cc40)
+```bash
+set +H
+L=~/edition_upgrade_runs/rb2_rollback_deploy.log
+if [ -e "$L" ]; then echo "RB2 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+echo "RB2 - ROLLBACK, part 2: the site back (JP has ENABLED, then RELOADED the web app) and deploy.sh pulls the revert of the swap commit (charter 7 'roll both or neither'; DESIGN 9.227 (3)) - WINDOW END (this paste) $(date -u +%FT%TZ) - PA HEAD before $(git -C ~/bible-db log -1 --format=%h)"
+R=~/edition_upgrade_runs
+D=$R/p6_swap
+grep -q "^RB1 RESULT: DONE" "$R/rb1_rollback_window.log" || { echo "RB2 RESULT: STOP - RB1 did not finish DONE; deploy.sh NOT run"; exit 1; }
+cd ~/bible-db || { echo "RB2 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+bash ~/bible-db/scripts/deploy.sh > "$D/deploy_rollback.out" 2>&1; rd=$?
+cat "$D/deploy_rollback.out"
+echo "deploy.sh exit $rd (expect 0) - $(date -u +%FT%TZ)"
+s=$(git log -1 --format=%s); echo "PA HEAD after: $(git log -1 --format=%h) - $s"
+bad=0
+grep -q "    reloaded (API " "$D/deploy_rollback.out" && echo "API reload: yes" || { echo "API reload: NO - press the dashboard Reload by hand and tell the ruling chat"; bad=1; }
+grep -qx "200 200 200 200 200 " "$D/deploy_rollback.out" && echo "worker sweep 5x 200: yes" || { echo "worker sweep 5x 200: NO"; bad=1; }
+case "$s" in 'Revert "edition upgrade: THE SWAP COMMIT'*) echo "HEAD is the revert of the swap commit: yes";; *) echo "HEAD is the revert of the swap commit: NO"; bad=1;; esac
+grep -q '"abp_corrections_active": 374,' scripts/cert_invariants.py && echo "cert pin back to 374: yes" || { echo "cert pin back to 374: NO"; bad=1; }
+grep -q '^SURFACE_FLOOR = 395003$' scripts/health_check.py && echo "health floor back to 395003: yes" || { echo "health floor back to 395003: NO"; bad=1; }
+[ "$rd" = 0 ] && [ "$bad" = 0 ] || { echo "RB2 RESULT: CHECK - lines above; to the ruling chat"; exit 1; }
+echo "RB2 RESULT: DONE - live is the pre-swap file on the pre-swap code; to the ruling chat"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
