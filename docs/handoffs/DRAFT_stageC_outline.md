@@ -18517,3 +18517,157 @@ re-enables with Enable + Reload (JP's clicks), then deploy.sh's reload as planne
   **CC's reading:** while disabled, PA's front end answers with its own wildcard certificate instead of the site's, so every visitor gets a
   browser security warning, not a maintenance page, for as long as the site is down. Not yet reported: whether Enable alone brought the site
   back or the Reload was needed, and whether the Tasks tab still shows the three tasks. Asked of JP.
+- **JP's second report (11/21):** after Enable the site was **back before he clicked Reload** ("Back before Reload"); he clicked Reload anyway
+  and the site came back fine. Still to report: the Tasks tab showing the three tasks.
+
+### Block R375 (GATE REF d34d6723; READ-ONLY on built; writes only its run folder: the 375-row member file + .sha256, and its log) — reviewer CLEAR (11/21, second pass)
+For the swap commit's cert pin 374 → 375 (§9.156 (4), plan P5). Modeled on C3a′ (DR :2519-2626), with the upload + read-once launcher. The dump must equal CC's local derivation: the committed 374 file (446fee35…) + HEADFIX2's row (Joh 19:18 @10 english_head, EU-Joh19:18; §9.156, DR :11098), sorted, LF: sha256 **005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048**, else STOP with nothing written. Built's full sha must be d2c8603b…1523 (§9.222 (1)) before and after. Program `~/edition_upgrade_runs/dump375_20261121.py` (JP uploads it; sha 0362d2cc…4a84).
+- **Tests** (WSL, clones at d34d6723; docs/handoffs/drafts/R375_harness/tests_r375.out sha 1104b6e9…632c): F1 clean → OK, the file identical to the local derivation; F2 re-paste STOP; F3 an extra active row → STOP, nothing written; F4 retired 22 STOP; F5 the 374 file altered → STOP; F6 program one byte → STOP; F7 built sha wrong → STOP; F8 -journal → STOP; F9 an uncommitted tests/ edit → STOP; F10 checkout not at d34d6723 → STOP.
+- **Reviewer pass 1: ESCALATE** — no GATE REF / repo guard, and §9.190 (5)'s exemption does not cover a block that opens a database and reads a repo file. CC took its option (b) and added the standard wrapper (REF d34d6723, which holds the 374 file since 4d66afa3). **Pass 2, verbatim verdict line:** "REVIEW: CLEAR - R375 is a read-only block (built opened mode=ro + query_only) and now carries the full gate wrapper. Its only writes are a new run folder and a dated log under ~/edition_upgrade_runs, and both refuse an existing path." It did not verify the block sha or reopen the tests: "This CLEAR clears the block to run under §9.90; it is not a receipt of any result."
+- **Expected:** GATE REF d34d6723 first; repo guards line; program sha 0362d2cc…4a84 before and as run; built d2c8603b…1523 before, after = yes; active ingest 375 / retired ingest 23 / superseded ingest 6; "active ingest rows 375 … missing 0 … not in it 1", NEW = Joh 19:18 @10 english_head EU-Joh19:18; non-ingest active 0; retired 23; dump sha SAME 005da9f3…3048; REPIN375: OK; R375 RESULT: DONE; exit=0. **No push of scripts/tests while it waits (it is gated on d34d6723).**
+```bash
+set +H
+L=~/edition_upgrade_runs/repin375_20261121.log
+if [ -e "$L" ]; then echo "R375 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+export GIT_OPTIONAL_LOCKS=0
+echo "GATE REF ${REF} - R375 - re-pin dump 374 -> 375: built's active correction rows as the member file for the swap commit (DESIGN 9.156 (4), 9.213 P5) - READ-ONLY on built; writes only its run folder (the member file + .sha256) and this log - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "R375 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+git merge-base --is-ancestor "$REF" HEAD || { echo "R375 RESULT: STOP - PA has not pulled $REF (or it is not an ancestor of HEAD)"; exit 1; }
+git diff --quiet "$REF" HEAD -- scripts tests || { echo "R375 RESULT: STOP - scripts/tests differ from $REF"; exit 1; }
+[ -z "$(git status --porcelain --untracked-files=no -- scripts tests)" ] || { echo "R375 RESULT: STOP - uncommitted changes in scripts/tests on PA"; exit 1; }
+echo "repo guards: $REF an ancestor of HEAD, scripts/tests = $REF, nothing uncommitted there"
+R=~/edition_upgrade_runs
+D=$R/repin375_20261121
+B=~/bible-db/bible_edupg_test_built_20261102.db
+F=~/bible-db/tests/fixtures/corrections/abp_corrections_active_built_20261106.txt   # the committed 374-row file (sha 446fee35..., checked inside)
+U=$R/dump375_20261121.py                                                   # the program as JP uploaded it through PA's Files page; outside the repo
+XB=d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523       # built's full sha256: P4, DESIGN 9.222 (1) (P6's pin)
+XP=0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84                                                                  # sha256 of the program CC wrote and tested (DR "### Block R375"); any other file STOPs
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+for f in "$U" "$B" "$F"; do [ -s "$f" ] || { echo "R375 RESULT: STOP - missing or empty: $f"; exit 1; }; done
+[ -e "$B-journal" ] && { echo "R375 RESULT: STOP - $B-journal present"; exit 1; }
+[ -e "$D" ] && { echo "R375 RESULT: STOP - the run folder already exists: $D (kept as is)"; exit 1; }
+k=$(h "$U"); echo "uploaded program sha256: $k (expect $XP)"
+[ "$k" = "$XP" ] || { echo "R375 RESULT: STOP - the uploaded program is not the file CC wrote and tested; nothing read"; exit 1; }
+b0=$(h "$B"); echo "built sha256 before: $b0 (expect $XB)"
+[ "$b0" = "$XB" ] || { echo "R375 RESULT: STOP - built is not the copy P4 read (DESIGN 9.222 (1))"; exit 1; }
+mkdir "$D" || { echo "R375 RESULT: STOP - cannot make $D"; exit 1; }
+cp "$U" "$D/dump.py" || { echo "R375 RESULT: STOP - cannot copy the program into the run folder"; exit 1; }
+# dump.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5)(b); TIPNR57's launcher, DR :15775-15785)
+PYTHONIOENCODING=utf-8 python3 -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("dump.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/dump.py" "$XP" "$B" "$F" "$D" < /dev/null; rc=$?
+echo "program exit $rc (expect 0; 1 = a STOP inside, nothing written; 2 = a STOP before the read; 4 = dump.py not the pinned bytes)"
+b1=$(h "$B"); echo "built sha256 after = before: $([ "$b1" = "$b0" ] && echo yes || echo NO)"
+[ "$rc" = 0 ] || { echo "R375 RESULT: STOP - the dump stopped (lines above)"; exit 1; }
+[ "$b1" = "$b0" ] || { echo "R375 RESULT: CHECK - built's sha changed during the read"; exit 1; }
+ls -l "$D"
+echo "R375 RESULT: DONE - the member file is in $D for JP's copy-down"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The R375 program — `~/edition_upgrade_runs/dump375_20261121.py` (sha256 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84)
+```python
+"""Re-pin dump 374 -> 375 (one-off, read-only on built) - DESIGN 9.156 (4), 9.213 P5. Lists the built copy's active ingest
+correction rows (the rows cert check 4 counts) in the member-file format and writes the file + .sha256 ONLY if:
+  - active ingest rows = the committed 374-row file (tests/fixtures/corrections/abp_corrections_active_built_20261106.txt,
+    sha256 446fee35...) plus exactly HEADFIX2's one row (Joh 19:18 @10 english_head, EU-Joh19:18; DESIGN 9.156), nothing else
+  - no active row outside 'ingest'; retired total 23 (P4B, DESIGN 9.225)
+  - the bytes written equal CC's independent local derivation (the 374 file + that key, sorted; sha256 005da9f3...)
+The database is opened read-only; the only writes are the two files in OUT_DIR, which must not exist.
+
+Usage (through the block's read-once launcher): dump375.py <built.db> <374-row file> <out_dir>
+"""
+import hashlib
+import os
+import sqlite3
+import sys
+
+BUILT, OLD, OUT_DIR = sys.argv[1:4]
+OLD_SHA = "446fee35b4080e522e5b2af19aca9dc3acc0b1c582ae56ba4c35ccd0fec539e3"
+NEW = ("Joh", 19, 18, 10, "english_head", "EU-Joh19:18")
+LOCAL_SHA = "005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048"
+NAME = "abp_corrections_active_built_20261121.txt"
+
+
+def key(b, c, v, p, f, r):
+    return (b, int(c), int(v), int(p), f, r)
+
+
+def line(k):
+    return "%s\t%d\t%d\t%d\t%s\t%s" % k
+
+
+def main():
+    print("RE-PIN DUMP 375 - built copy's active correction rows - read-only")
+    stops = []
+    if os.path.realpath(BUILT) == os.path.realpath(os.path.expanduser("~/bible-db/bible.db")):
+        print("REPIN375: STOP - this is live, not the built copy")
+        sys.exit(2)
+    raw = open(OLD, "rb").read()
+    got = hashlib.sha256(raw).hexdigest()
+    print("374-row member file: %s - sha256 %s (expect %s)" % (OLD, got, OLD_SHA))
+    if got != OLD_SHA:
+        print("REPIN375: STOP - the 374-row file is not the committed one")
+        sys.exit(2)
+    old = {key(*l.split("\t")) for l in raw.decode("utf-8").splitlines()}
+    conn = sqlite3.connect("file:%s?mode=ro" % BUILT, uri=True, timeout=30)
+    conn.execute("PRAGMA query_only=1")
+    print("built copy abp_corrections by status / applied_at:")
+    for s, a, n in conn.execute("SELECT status, applied_at, count(*) FROM abp_corrections GROUP BY status, applied_at "
+                                "ORDER BY status, applied_at"):
+        print("   %-11s %-8s %d" % (s, a, n))
+    rows = [key(*r) for r in conn.execute("SELECT book, chapter, verse, position, field, ledger_ref FROM abp_corrections "
+                                          "WHERE status='active' AND applied_at='ingest'")]
+    other = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='active' AND applied_at IS NOT 'ingest'").fetchone()[0]
+    retired = conn.execute("SELECT count(*) FROM abp_corrections WHERE status='retired'").fetchone()[0]
+    conn.close()
+    active = set(rows)
+    if len(active) != len(rows):
+        stops.append("%d duplicate active key(s)" % (len(rows) - len(active)))
+    missing, extra = sorted(old - active), sorted(active - old)
+    print("active ingest rows %d (expect 375) - of the 374 file missing %d (expect 0) - not in it %d (expect 1)"
+          % (len(active), len(missing), len(extra)))
+    for k in missing:
+        print("   MISSING: " + line(k))
+    for k in extra:
+        print("   NEW:     " + line(k))
+    if len(active) != 375 or missing or extra != [NEW]:
+        stops.append("active rows are not the 374 + HEADFIX2's Joh 19:18 @10 english_head row")
+    print("active rows NOT applied at ingest %d (expect 0) - retired total %d (expect 23)" % (other, retired))
+    if other or retired != 23:
+        stops.append("non-ingest active %d / retired %d" % (other, retired))
+    body = "".join(line(k) + "\n" for k in sorted(active)).encode("utf-8")
+    sha = hashlib.sha256(body).hexdigest()
+    print("dump sha256 %s - local derivation %s (%s)" % (sha, LOCAL_SHA, "SAME" if sha == LOCAL_SHA else "DIFFERENT"))
+    if sha != LOCAL_SHA:
+        stops.append("dump differs from the local derivation")
+    if stops:
+        print("REPIN375: STOP - " + " | ".join(stops) + " - nothing written")
+        sys.exit(1)
+    path = os.path.join(OUT_DIR, NAME)
+    for p in (path, path + ".sha256"):
+        if os.path.exists(p):
+            print("REPIN375: STOP - already exists: %s - nothing written" % p)
+            sys.exit(1)
+    with open(path, "wb") as f:
+        f.write(body)
+    with open(path + ".sha256", "wb") as f:
+        f.write(("%s  %s\n" % (sha, NAME)).encode("utf-8"))
+    print("wrote %s (%d lines) + .sha256" % (path, body.count(b"\n")))
+    print("REPIN375: OK - 375 = 374 + EU-Joh19:18 english_head - retired 23 - sha256 %s" % sha)
+
+
+if __name__ == "__main__":
+    main()
+```

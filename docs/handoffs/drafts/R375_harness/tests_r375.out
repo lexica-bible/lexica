@@ -1,0 +1,217 @@
+# R375 tests; block sha256 30be6e2a8366fc26255edf4f2bc22c7be87ce6da5d9555c96ac969816b1cb37d; program sha256 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84
+== F1 clean -> OK, the file = the local derivation
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+GATE REF d34d6723 - R375 - re-pin dump 374 -> 375: built's active correction rows as the member file for the swap commit (DESIGN 9.156 (4), 9.213 P5) - READ-ONLY on built; writes only its run folder (the member file + .sha256) and this log - PA HEAD d34d6723 - 2026-11-21T07:18:36Z
+repo guards: d34d6723 an ancestor of HEAD, scripts/tests = d34d6723, nothing uncommitted there
+uploaded program sha256: 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84 (expect 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84)
+built sha256 before: a125c7223cbd16df49e20fe1a8a50866847ab20763d8df0d257a5f6a05ef5107 (expect a125c7223cbd16df49e20fe1a8a50866847ab20763d8df0d257a5f6a05ef5107)
+dump.py sha256 as run: 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84 (expect 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84)
+RE-PIN DUMP 375 - built copy's active correction rows - read-only
+374-row member file: /home/jp/gater375/f1/bible-db/tests/fixtures/corrections/abp_corrections_active_built_20261106.txt - sha256 446fee35b4080e522e5b2af19aca9dc3acc0b1c582ae56ba4c35ccd0fec539e3 (expect 446fee35b4080e522e5b2af19aca9dc3acc0b1c582ae56ba4c35ccd0fec539e3)
+built copy abp_corrections by status / applied_at:
+   active      ingest   375
+   retired     ingest   23
+   superseded  ingest   6
+active ingest rows 375 (expect 375) - of the 374 file missing 0 (expect 0) - not in it 1 (expect 1)
+   NEW:     Joh	19	18	10	english_head	EU-Joh19:18
+active rows NOT applied at ingest 0 (expect 0) - retired total 23 (expect 23)
+dump sha256 005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048 - local derivation 005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048 (SAME)
+wrote /home/jp/gater375/f1/edition_upgrade_runs/repin375_20261121/abp_corrections_active_built_20261121.txt (375 lines) + .sha256
+REPIN375: OK - 375 = 374 + EU-Joh19:18 english_head - retired 23 - sha256 005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048
+program exit 0 (expect 0; 1 = a STOP inside, nothing written; 2 = a STOP before the read; 4 = dump.py not the pinned bytes)
+built sha256 after = before: yes
+total 28
+-rw-r--r-- 1 jp jp 12668 Nov 21 07:18 abp_corrections_active_built_20261121.txt
+-rw-r--r-- 1 jp jp   108 Nov 21 07:18 abp_corrections_active_built_20261121.txt.sha256
+-rwxr-xr-x 1 jp jp  4746 Nov 21 07:18 dump.py
+R375 RESULT: DONE - the member file is in /home/jp/gater375/f1/edition_upgrade_runs/repin375_20261121 for JP's copy-down
+exit=0
+file vs local derivation: identical
+== F2 re-paste -> STOP
+R375 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gater375/f1/edition_upgrade_runs/repin375_20261121.log
+== F3 one extra active row on built -> STOP, nothing written
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+GATE REF d34d6723 - R375 - re-pin dump 374 -> 375: built's active correction rows as the member file for the swap commit (DESIGN 9.156 (4), 9.213 P5) - READ-ONLY on built; writes only its run folder (the member file + .sha256) and this log - PA HEAD d34d6723 - 2026-11-21T07:18:36Z
+active ingest rows 376 (expect 375) - of the 374 file missing 0 (expect 0) - not in it 2 (expect 1)
+   NEW:     Gen	1	1	2	english	ZZ
+   NEW:     Joh	19	18	10	english_head	EU-Joh19:18
+REPIN375: STOP - active rows are not the 374 + HEADFIX2's Joh 19:18 @10 english_head row | dump differs from the local derivation - nothing written
+R375 RESULT: STOP - the dump stopped (lines above)
+exit=1
+dump.py
+== F4 retired 22 -> STOP
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+active rows NOT applied at ingest 0 (expect 0) - retired total 22 (expect 23)
+REPIN375: STOP - non-ingest active 0 / retired 22 - nothing written
+R375 RESULT: STOP - the dump stopped (lines above)
+exit=1
+== F5 the 374 file altered -> STOP before the read
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+R375 RESULT: STOP - uncommitted changes in scripts/tests on PA
+exit=1
+== F6 program changed one byte -> STOP, nothing read
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+uploaded program sha256: 2c0eda15e7435fdaaaf48146eaaec138ffc8a4bf14cf34905417d1da3a9bc037 (expect 0362d2cc2ce1af24ad45408104f981d3222799025186fa1996f281c0d9d94a84)
+R375 RESULT: STOP - the uploaded program is not the file CC wrote and tested; nothing read
+exit=1
+== F7 built not the P4 copy (sha) -> STOP
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+built sha256 before: a125c7223cbd16df49e20fe1a8a50866847ab20763d8df0d257a5f6a05ef5107 (expect 0000)
+R375 RESULT: STOP - built is not the copy P4 read (DESIGN 9.222 (1))
+exit=1
+== F8 a -journal beside built -> STOP
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+R375 RESULT: STOP - /home/jp/gater375/f8/bible-db/bible_edupg_test_built_20261102.db-journal present
+exit=1
+== F9 scripts differ from REF (a test file edited, uncommitted) -> STOP before anything
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+R375 RESULT: STOP - uncommitted changes in scripts/tests on PA
+exit=1
+== F10 the checkout is not at a descendant of REF -> STOP
+Note: switching to 'd34d672350e897087e1e3d3b4c0c7657cbb74946'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+R375 RESULT: STOP - PA has not pulled d34d6723 (or it is not an ancestor of HEAD)
+exit=1
