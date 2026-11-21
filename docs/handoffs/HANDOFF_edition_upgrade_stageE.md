@@ -5,6 +5,17 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 (sole register, latest **§9.207**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
+## STANDING (JP, 11/21) — ruling-chat traffic
+The ruling chat asked that this sit beside "the 11/21 instruction on questions to JP"; CC found no such instruction written in this handoff
+or the register, so it stands here on its own (CC to place it beside that one once its text is in the record). JP's standing instruction (via the ruling chat, 11/21):
+1. Do NOT send a note to the ruling chat only to say a ruling was registered. Register it and carry on; the register is the record (JP carries
+   each note across by hand).
+2. Send to the ruling chat ONLY when something needs it: a block or commit for clearance, a log to rule on, a question, a finding, or an
+   answer the ruling asked for.
+3. When sending, LEAD with what needs ruling. Leave out the "registered as ruled" recap and the repeated STILL OWED list unless it changed.
+4. If a ruling's wording was wrong or cannot be registered as given, say so — that is a question, and it goes.
+5. The ruling chat does not reply to a pure acknowledgement; its silence on one is not a hold.
+
 ## SUCCESSOR START (11/19 end; charter §6 STEPS 4 + 5 + 6 PASSED — §9.193, §9.194, §9.204; next = step 7) — open here
 - **Step 6 PASSED (§9.204)** on `step6_audit_20261119.log` as disposed: C4 by JP's ruling (a) (§9.203; built 747, account v2); Job 3:3
   content-other OPEN; bracket order + the §4.2 L9 split on built's words NOT measured by this run; read-outs as §9.201; the §4.4
