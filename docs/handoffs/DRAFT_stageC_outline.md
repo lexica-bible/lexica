@@ -19988,3 +19988,50 @@ echo "P7 RESULT: DONE - $(date -u +%FT%TZ) - cert 7/7, the health floor OK with 
 - **Part B, in words (§9.232 (10)).** JP, on the served site after the reload, the five step-7 verses (1Ch 13:10 chip view "the LORD was enraged" with the Interlinear keeping the bracketed form; Eze 31:9 "were jealous of" -> word card ζηλόω; 1Ch 1:1 Adam -> H121, opens the person info; Gen 1:21 "sea monsters"; Mark 1:9 "Nazareth of Galilee,"): **"yes they are all good, not slow"** (his words, ~20:40Z). CC, the public pages in the in-app browser (~20:45Z), each HTTP 200: /read/1-chronicles/13 v10 "And [2was enraged G2373 1the LORD] G2962 in anger against Uzza, and struck him there, … upon the ark; and he died there before God."; /read/ezekiel/31 "ζηλόω were jealous of G2206"; /read/1-chronicles/1 v1 "Ἀδάμ Adam, G76"; /read/genesis/1 v21 "κῆτος [2sea monsters G2785 μέγας 1great]", "ψυχή soul", the word "whales" not on the page; /read/mark/1 v9 "from Nazareth [1of 2Galilee], and was immersed by John into the Jordan." Not seen by CC: the chip view's own rendering, the word card and the H121 person card (the click path) - those are JP's eye.
 - **Where it stands:** step 8's blocks have all run DONE. P6B's, P6C's and P7's logs go to the ruling chat by cat (JP). The rollback file is kept until three nightlies postdate the swap and pass (charter 7); P8 (the 9c snapshot check) and P9 (the next nightly) follow.
 - **STEP 8 RULED (§9.235, 11/21): the swap has landed and stands; no rollback.** One term NOT met: §9.213 Q5's snapshot --check on built before the swap never ran (CC did not bring the block; the ruling chat did not carry it). CC's miss to own: the handoff's sequence line put P8 after P7 and CC followed it without re-reading Q5's accepted form. It touched nothing on live. **NEXT: P8 as a PLAN** (charter :340 form on a fresh copy of the swapped live, File storage line first; or another form CC can defend); **P9** on the first 13:30 UTC run after the swap (11/22). Step 8 stays open until both are ruled. The 10/25 pre-fill copy and snapshot stay.
+
+## P8 - THE SNAPSHOT CHECK after the swap: a PLAN (11/21, CC; §9.235) - no block is drafted; nothing runs before the ruling chat rules it
+**What P8 is for.** Charter §6 :339-340 and §7: the 9c freeze (`tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv`, pin
+d025cc08…72ff in restore_surface_fill.py :81) must pass its own `--check` against the swapped live before the 10/25 pre-fill copy and
+the 10/25 frozen snapshot are released. §9.213 Q5 moved that check to built, before the swap; it did not run then (§9.235).
+**What the check reads (code, read 11/21):** `snapshot_surface_fill.py --check` (:299-350) opens --src and --prefill read-only
+(dryrun_rekey_fill.ro :117-119) and writes nothing. From --src it reads `abp_surface` (verse_id, position, form, translit; dr.surface
+:123-125), `verses` (dr.verses, for book / chapter / verse) and `words` (verse_id, position, strongs, strongs_base, english,
+english_head, is_pn; word_rows :132-143) - nothing else. It refuses live and any file named bible.db (dr.is_live :82-94; run :352-354).
+**What the record already holds:**
+- The same `--check` RAN ON BUILT on 11/15, 17:52:28Z - **RESULT: SNAPSHOT CURRENT** (STEP9C-CHECK, §9.137; DR "### STEP9C-CHECK
+  ran"): F PASS (= the pin), G0 PASS (4,411 = 3,873 + 538), O PASS, C PASS 4,411 rows identical bytes; built's abp_surface 395,014 /
+  219a3ebe7075.
+- P7 on live after the swap (§9.235): abp_surface 395014 / 219a3ebe7075 - the same rows and digest; words 626309 / d95acb5d4be4 =
+  built's final value.
+- So the one stretch not covered by a run is built's `words` between 11/15 17:52Z and the swap. **CC's reading of the record, not
+  proven by a run:** the writes to built's words after that time are HEADFIX / HEADFIX2 (11/15-11/16), the Joh 19:18 @10 head cell
+  (§9.156; cert pin 374 -> 375 "EU-Joh19:18 english_head"); the 148-table guard holds from HEADFIX2's prep on. CC read the local copy
+  of the frozen file (sha d025cc08…72ff, 4,411 rows): it has two rows in John 19 (19:13 @9, 19:26 @18) and **none at Joh 19:18**, so no fill slot sits on
+  the changed cell; k2_ordinal / k2_count are built from `strongs`, which that fix did not write.
+**FORM A - the charter's own wording (CC's pick): the check run on a fresh copy of the swapped live.**
+1. One block, site UP, outside 13:00-14:30 UTC. Guards as P4's: repo at the swap commit (or later docs-only), the fixture files and
+   the pre-fill copy `~/abp_surface_prefill_20261115.db` present with their recorded shas (snapshot d025cc08…, report e154d8d4…,
+   pre-fill ea6c54c3…; §9.134, §9.137), home under a ruled bound.
+2. The copy: sqlite's backup of bible.db (opened read-only) into `~/edition_upgrade_runs/p8_snapshot_check_<date>/live_copy.db`,
+   journal_mode=DELETE on the copy, quick_check ok, no side file - P4's step (DR "### Block P4", the copy lines). About 452 MB.
+3. Tie the copy to what P7 read: its words 626309 / d95acb5d4be4 and abp_surface 395014 / 219a3ebe7075 (eu_step.digest) - a miss = STOP.
+4. `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <copy> --prefill ~/abp_surface_prefill_20261115.db
+   --from-restore tests/fixtures/rebuild_trap/restore_report_20261115.tsv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv`
+   (rebuild-words 1a, :74). **Expected, = STEP9C-CHECK's lines:** F PASS = the pin; G0 placed 4,411, 4,411 = 3,873 + 538; O PASS;
+   C PASS 4,411 rows, identical bytes; RECEIPT 4,411 | 4,411, 3,873 / 538 | 3,873 / 538; **RESULT: SNAPSHOT CURRENT**; exit 0.
+5. After: the fixture folder, the pre-fill copy and bible.db's size unchanged by the block (live's own writes aside); the cache folders
+   unchanged. The copy's fate is the ruling chat's: kept until a removal block (as P4's), or removed by this block on SNAPSHOT CURRENT
+   only (CC's pick: storage; on any other result it is kept for the read).
+6. A STALE result changes nothing on live. It means the frozen file does not describe live, so no rebuild may lean on it until a ruled
+   re-freeze; the 10/25 pre-fill copy and snapshot stay. It comes to the ruling chat as printed.
+- **File storage (needs JP's dashboard read first):** home was 8,213,868 KB after P4's copy (§9.222). The swap added nothing (two
+  renames). A 452 MB copy brings it to about 8.66 million KB of the 10 GB quota (10,485,760 KB), about 83%; health_check warns at 85%.
+  The nightly at 13:30 rotates its bible.db copies (keeps 3). A bound for the block is the ruling chat's to set. Room could be made
+  first by a ruled removal of the P4 live copy (`~/edition_upgrade_runs/p4_live_tables_20261121/live_copy_20261121.db`, ~460 MB, the
+  pre-swap live as of P4's run on 11/21; the rollback file is the whole pre-swap live) - offered, not proposed.
+**FORM B - no copy, no run: P8 taken on the record.** The three facts above (the 11/15 PASS on built; abp_surface identical by digest;
+the only later words write off every fill slot). It costs no storage and no block. Its weakness: the middle fact about `words` is CC's
+reading of the record plus one local read of the frozen file, not a byte-for-byte run - the thing `--check` exists to give. CC does
+not pick it.
+**Not in this plan:** the release / removal of the 10/25 pre-fill copy and snapshot (after P8 passes, its own ruled block); P9.
+**Reviewer:** not run on this plan (no block yet); the block goes to it first when drafted.
