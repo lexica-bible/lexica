@@ -18441,3 +18441,8 @@ echo "P4B RESULT: DONE - read as printed; to the ruling chat"; exit 0
 - **word_gloss 17,568 → 17,650:** §9.110, "Ruling: the +82 is accepted as the declared figure for 12b", "after 17,650".
 **Each of the seven has a register line**; none comes to the ruling chat as unruled. The one tie-by-count is pn_hebrew_xref's six
 moves, named above.
+
+### Item (7) ANSWERED (§9.223, 11/21) — carried to P7
+- **P7's G5 read must PRINT the six pn_hebrew_xref keys** whose class moves none → lemma-only, and set them against §9.95's six verses (Num
+  21:25, 1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3); a different member comes to the ruling chat. P7's expected figures read
+  "surface" where P4 printed "other". (P4's program prints neither the keys nor "surface", so P7 needs a program change, ruled with P7's block.)
