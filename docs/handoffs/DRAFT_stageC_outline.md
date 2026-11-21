@@ -17767,3 +17767,45 @@ rows deleted 67 (118); journal pages 11; corpus not bible (non-canon) 6. **No li
 program prints a tally key only when its count is above 0, so 0 rows of any translation anchor in the 10 verses** (CC's reading of
 p3_notes :72-74 + read()). Endpoints ON a moved position: none. **P3 READ-OUT: live 0, deleted 0.** program exit 0; exit=0.
 Every fixed line as declared. LIMIT as stated: signed-out visitors' notes are in their browsers only.
+
+### P3 HELD by the ruling chat on §9.190 (5)(b) (§9.219, 11/21) — P3b with the read-once launcher; reviewer CLEAR
+- **Ruling chat (11/21; read there: the block DR :17577-17601 and program :17606-17736 in full, hashing 6cb110a9…e8b8 and b5940f2b…738b):** §9.213 (iv) is met by the program as written. **HELD on one point:** the block hashes `$D/p3.py`, then runs it by path, the gap §9.190 (5)(b) forbids ("the block uses the file it hashed — no gap between the check and the use in which a different file could be read"); STEP7A was escalated on exactly that and took TIPNR57's read-once launcher. Settle it either way; then P3 is cleared as a read-only block and its log comes to the ruling chat by cat.
+- **CC's answer: §9.190 (5)(b) APPLIES to P3 (an uploaded, sha-pinned program, as in its own wording); CC missed it, and so did the reviewer's two passes.** **The first P3 run had already happened** (11/21 05:16:05Z, DONE, live 0 / deleted 0, DR "### P3 RAN"): it ran on the reviewer's CLEAR under §9.90, before the hold. It stays as a run under the gap, not the run of record. **P3b** = the same block with TIPNR57's launcher (DR :15775-15785) word for word: read once, those bytes hashed ("p3.py sha256 as run"), exit 4 on a miss, those bytes run. It uses new names (log `p3_notes_20261121.log`, folder `p3_notes_20261121`), so the first run's folder and log are kept. The program is UNCHANGED (the uploaded `p3_notes_20261120.py`, b5940f2b…738b), so nothing new is uploaded.
+- **Tests (same harness):** t3 → the same six lines, DONE · t5 → "other", DONE · program changed by one byte → "as run" prints the other hash, exit 4, STOP, nothing read · wrong shape / log exists / folder exists / notes.db missing → STOP · leak grep for the planted data = 0.
+- **Reviewer verdict line, verbatim:** "REVIEW: CLEAR - P3b now hashes and runs the same bytes, read once, using TIPNR57's launcher word for word, so §9.190 (5)(b) is met. It is still read-only and writes only a new run folder and a new log, each refused if it already exists." It found the launcher lines equal to DR :15776-15784 line for line (label and arguments aside). It did not read §9.190's DESIGN text itself or hash the files. Its record note: "the first P3 run … used the hash-then-run-by-path launcher. I cleared that block and missed the §9.190 (5)(b) gap. P3b is the run that meets (5)(b)."
+- **Expected:** "p3.py sha256 as run: b5940f2b…738b (expect = it)"; CONTROL (9) FIRED; notes table present yes; shape yes; "program exit 0"; P3 RESULT: DONE; exit=0. READ-OUT: no expected figure. CC expects the same counts as the first run unless notes changed in between (a read-out).
+
+### Block P3b (sha256 c581e9fc6a9282de169aa7255a12b45af245f83b62d20241c421ef4197f33e9f; program as uploaded, b5940f2b…738b)
+```bash
+set +H
+L=~/edition_upgrade_runs/p3_notes_20261121.log
+if [ -e "$L" ]; then echo "P3 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+echo "P3b (re-run with the read-once launcher, DESIGN 9.190 (5)(b)) - notes anchored at the 20 moved words (DESIGN 9.94 (d); 9.213 (iv)) - READ-ONLY: notes.db opened read-only; counts and positions only (no note text, id, account code, user id or email); no bible.db copy opened; writes only its run folder and this log - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs
+D=$R/p3_notes_20261121                                                   # a new run folder: the 11/21 05:16Z run (p3_notes_20261120) is kept as is
+U=$R/p3_notes_20261120.py                                                 # the program as JP uploaded it through PA's Files page; outside the repo
+N=~/bible-db/notes.db
+XP=b5940f2b4f66b5b4c9ef1d466b9648e8a468127db4b98108ffddf259fe2b738b        # sha256 of the program CC wrote and tested (DR "### Block P3"); any other file STOPs
+[ -s "$U" ] || { echo "P3 RESULT: STOP - the uploaded program is missing or empty: $U"; exit 1; }
+[ -s "$N" ] || { echo "P3 RESULT: STOP - notes.db missing or empty: $N"; exit 1; }
+[ -e "$D" ] && { echo "P3 RESULT: STOP - the run folder already exists: $D (kept as is)"; exit 1; }
+mkdir "$D" || { echo "P3 RESULT: STOP - cannot make $D"; exit 1; }
+cp "$U" "$D/p3.py" || { echo "P3 RESULT: STOP - cannot copy the program into the run folder"; exit 1; }
+# p3.py is read ONCE; those bytes are hashed and those same bytes are run (DESIGN 9.190 (5)(b); TIPNR57's launcher, DR :15775-15785)
+PYTHONIOENCODING=utf-8 python3 -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("p3.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/p3.py" "$XP" "$N" < /dev/null; rc=$?
+echo "program exit $rc (expect 0; 4 = p3.py not the pinned bytes, nothing read)"
+[ "$rc" = 0 ] || { echo "P3 RESULT: STOP - the program stopped (line above)"; exit 1; }
+echo "P3 RESULT: DONE - read as printed; to the ruling chat"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
