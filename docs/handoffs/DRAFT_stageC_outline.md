@@ -18505,3 +18505,15 @@ day. A one-minute test at a quiet hour (outside 13:00-14:30 UTC):
 The site is down for about a minute. The swap block itself would not rely on Disable alone: with the site disabled it waits, then checks
 that bible.db's size and time hold still for a set time and that no -journal is beside it before the first rename. After the renames it
 re-enables with Enable + Reload (JP's clicks), then deploy.sh's reload as planned.
+
+### Q2 / Q3 RULED (§9.226, 11/21); the Disable test, JP's first report
+- Q2 (a) + (b): `_CACHE_CODE_VER` 48 → 49 in the swap commit (search only). summary / xref / pn / chrono wait for the Q6 post-swap pass and
+  serve old-English answers until it runs. **Post-swap list, by name: the Q6 redraw pass for summary / xref / pn / chrono (pn's treatment
+  stated when the pass is brought).**
+- **Q3 test, JP's report (in words; the times are his browser's):** while the site was disabled, Firefox at https://www.lexica.bible showed
+  "Be careful. Something doesn't look right." with **Error Code: SSL_ERROR_BAD_CERT_DOMAIN**. The certificate "is only valid for:
+  *.pythonanywhere.com"; "The site is set up to allow only secure connections", so there is no way past the page. Time stamp "21 Nov 2026
+  02:09:38 GMT-5" = **07:09:38 UTC**, outside 13:00–14:30. JP: "then site came back fine".
+  **CC's reading:** while disabled, PA's front end answers with its own wildcard certificate instead of the site's, so every visitor gets a
+  browser security warning, not a maintenance page, for as long as the site is down. Not yet reported: whether Enable alone brought the site
+  back or the Reload was needed, and whether the Tasks tab still shows the three tasks. Asked of JP.
