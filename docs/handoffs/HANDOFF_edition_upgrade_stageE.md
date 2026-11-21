@@ -5,6 +5,72 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 (sole register, latest **§9.207**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
+## SUCCESSOR START (11/21 — the swap is cleared pending the put-back block) — OPEN HERE
+**Where it stands.** Charter §6 step 8 (the swap, the only live action). Every pre-swap read is done and ruled (§9.213-§9.229). The swap
+and rollback blocks are **CLEARED AS PRINTED (§9.229), held on ONE gap**: the put-back block below. Nothing has run on PA for the swap;
+live is untouched; the site is up.
+**Your FIRST task — the put-back block (§9.229 (1); owed BEFORE P6R runs).** A file-only put-back for the two states RB0 refuses:
+(a) P6B ending CHECK after the renames, or "NOT IN PLACE" / "NOT the pre-swap file"; (b) P6B DONE but P6C failing before PA is on the swap
+commit. It must:
+- read `~/edition_upgrade_runs/p6_swap/rollback.txt` (P6B writes it before the first rename: line 1 the rollback file's name, line 2 live's
+  full sha just before the move);
+- keep whatever sits at bible.db under a `bible_pre_` name (backup_db.py :63 skips `bible_pre_*`; a name without it would be backed up nightly
+  — reviewer D1 on RB1);
+- put the rollback file back as bible.db and show its sha = line 2;
+- leave NO deploy to run. CC's `git revert` of the pushed swap commit follows before any other deploy.
+- Same form as RB1 (DR "## P6 — THE SWAP and its ROLLBACK", :18749 on, every block in full): still-file hold, `mv -n`, put-back on a miss,
+  CHECK = the site stays disabled.
+- Test it on the WSL homes for EACH state above (the harness: docs/handoffs/drafts/P6_harness/ — mkhome_p6.sh, run_p6.sh; WSL clone at
+  ~/gate4/repo = d34d6723; Git Bash needs `MSYS_NO_PATHCONV=1 wsl -e bash /mnt/c/...`).
+- Then the reviewer (it will ESCALATE: a write to live), then the ruling chat clears it. Then the swap can be scheduled.
+**The eight cleared shas (§9.229):** program `p6_check_20261121.py` 3dfe1600963b792bdaff114f132eb0675b5794eb626ae8ab88dc1fec1d8208e6 · P6A
+2ed1ccc6560dad1c167323c1d59e608be54ba00cbcfb6abeac75aeac053a8284 · P6R f822d62437750c13c7ef13a528d7f0cbb34c6e7cce3bb1629ebc24530028e630 ·
+P6B 959daceebfad8e82496126d15d91cb88effaa557f303d201c2106135787fd54f · P6C 596eca57000c45b8d62433fc4581aa4948efb136afd82e4d1eef0ad7dbad1e70 ·
+RB0 73939c63dbe5efce7d5e93ad8b4a628b4544c924e0bf04c42c56f0861de70ada · RB1 8c60304bbb12a55b179a0dd05681cec65af28b3cd194057161d6da5cb9526af6 ·
+RB2 a67c31b9e21378f76cd5d6eb2ac12a4289fe74f97d7c1b7d7a847ee29190cc40. The program's local copy is `C:\Users\JP\edition_upgrade_runs\p6_check_20261121.py`
+(JP uploads it to `~/edition_upgrade_runs/` before P6A). Each block is printed in full in DR under "### Block P6A (sha256 …)" etc.; the
+source files (with __XP__ unfilled) and the program are in `docs/handoffs/drafts/P6_harness/` with the tests; filling __XP__ with the
+program's sha reproduces each cleared sha (CC checked all seven, 11/21). Re-hash before printing any block.
+**THE SWAP COMMIT — NOT committed, NOT pushed.** The working tree holds exactly the cleared change set (8 paths: rebuild-words.md, ai.py,
+audit_phrase_gloss_underdist.py, cert_invariants.py, health_check.py, test_surface_fill_restore.py, and the two UNTRACKED fixture files
+`tests/fixtures/corrections/abp_corrections_active_built_20261121.txt` + `.sha256`). **Do not touch them; commit nothing else that sweeps
+them up — commit docs by named paths only.**
+- Cleared: swap_commit.diff 002f2791…41f6 (seven paths) (§9.227).
+- The full 8-path change set: `docs/handoffs/drafts/SWAP_COMMIT/swap_commit_full.patch` 003bb52f…83ee.
+- **The term (§9.229), already stated in DR:** the full set = those seven hunks unchanged plus the fixture .txt hashing 005da9f3…3048, and
+  nothing else. CC proved it 11/21: the full patch minus the .txt section equals swap_commit.diff byte for byte; the .txt section's 375 added
+  lines hash 005da9f3…3048.
+- **At P6 time, between P6A DONE and P6R:** `git add -N` the two fixture paths; the 8-path `git diff` must hash 003bb52f…83ee. Then commit
+  those 8 paths ONLY with `git commit -F docs/handoffs/drafts/SWAP_COMMIT/commit_message.txt` (the subject must start "edition upgrade: THE
+  SWAP COMMIT": P6B, P6C and RB0 check it). Then push (on P6's clearance); no other deploy between the push and the swap.
+**Pins:** built `~/bible-db/bible_edupg_test_built_20261102.db` full sha **d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523**
+(§9.222 (1)); src 5da9bb95…7e01; LIVESRC words 626309/1ce75b22…5b26, verses 31237/5717b045…21ae; PA HEAD 1d5e34ee, scripts/tests = REF
+d34d6723 (P6A / P6R / P6B check it).
+**The sequence:** P6A (site up) → CC commits + pushes the swap commit (PA does NOT pull) → P6R (site up) → JP DISABLES → P6B (the window) →
+JP ENABLES, then RELOADS → P6C (deploy.sh) → P7 (read-only, ≥ 60 s after the reload; its own block, not yet drafted: cert_invariants 7/7 at
+375 / 1; health_check floor 395,014; the G5 read with "surface" labels and the six pn_hebrew_xref keys vs §9.95's six verses (§9.223); Part
+B on the served site) → P8 (the 9c snapshot --check on swapped live) → P9 (the next nightly). Rollback (only if ruled): CC pushes the revert
+→ RB0 → Disable → RB1 → Enable + Reload → RB2.
+**The window rules (§9.215, §9.228, §9.229):** the hour is JP's, low traffic, never inside 13:00-14:30 UTC (the 13:30 health + backup
+tasks); while the app is disabled visitors see the browser's certificate warning (PA's wildcard certificate), accepted. A P6B / RB1 STOP
+saying "nothing moved" → JP ENABLES at once, then the log goes to the ruling chat. A CHECK, "NOT IN PLACE" or "NOT the pre-swap file" →
+the site STAYS disabled and the log goes to the ruling chat at once. P6A's and P6R's logs CC reads against their DONE lines; P6B's and
+P6C's go to the ruling chat by cat. Any re-run = the same block with _r2 on its log (and P6A's folder), brought as a pair with the block
+that reads that log (§9.229 Q-c). If RB0 / RB1 STOP before the move, every deploy is held until ruled (Q-d).
+**Carried OPEN by name past the swap** (DR "### Carried OPEN by name past the swap"; stageC_repin follow-up list):
+- Job 3:3 content-other (new on built; it goes live with the swap).
+- Split +4; import_tipnr −57; Mark 1:9 τῆς (fix after the swap).
+- The C4 joined-slot rows; the stray files in PA's checkout.
+- **L9 on built (first after the swap, §9.214).**
+- The Q6 redraw pass for summary / xref / pn / chrono (§9.226): those serve old-English answers until it runs.
+- Built Strong's vs the feed's (§9.218); Jdg 11:7 1473 vs 5210 (§9.217).
+- rebuild-words step 8's 10/25 G5 figures to mark as 10/25-only (§9.227 point).
+- The P4 live copy (`~/edition_upgrade_runs/p4_live_tables_20261121/live_copy_20261121.db`, ~460 MB) kept until a removal block is ruled.
+**JP's standing instructions (11/21):** questions go to the ruling chat, not to JP (CC + reviewer recommend; the ruling chat rules; JP is asked
+only what cannot be done without him); and NO confirmation-only notes to the ruling chat — register a ruling and carry on; send only a block
+or commit for clearance, a log to rule on, a question, a finding, or an answer a ruling asked for, leading with what needs ruling (the
+"## STANDING (JP, 11/21)" section below).
+
 ## STANDING (JP, 11/21) — ruling-chat traffic
 The ruling chat asked that this sit beside "the 11/21 instruction on questions to JP"; CC found no such instruction written in this handoff
 or the register, so it stands here on its own (CC to place it beside that one once its text is in the record). JP's standing instruction (via the ruling chat, 11/21):

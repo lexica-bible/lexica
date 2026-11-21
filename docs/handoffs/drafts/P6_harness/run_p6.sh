@@ -1,5 +1,5 @@
 set -uo pipefail
-T=/mnt/c/Users/JP/AppData/Local/Temp/claude/375bfdbef9aafd6e/cfce0c4f-7b18-4f6d-afde-d8ca6329f7ec/scratchpad/p6
+T=/mnt/c/Users/JP/projects/bible-db/docs/handoffs/drafts/P6_harness
 G=~/gatep6; mkdir -p $G
 hd() { echo; echo "=============== $* ==============="; }
 mk() { bash "$T/mkhome_p6.sh" "$1" "${2:-none}" > "$1.mk" 2>&1 || { cat "$1.mk"; exit 1; }; }

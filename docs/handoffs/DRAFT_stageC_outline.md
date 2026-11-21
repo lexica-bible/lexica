@@ -19214,3 +19214,13 @@ grep -q '^SURFACE_FLOOR = 395003$' scripts/health_check.py && echo "health floor
 echo "RB2 RESULT: DONE - live is the pre-swap file on the pre-swap code; to the ruling chat"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### P6 CLEARED AS PRINTED, held on the put-back block (§9.229, 11/21) — the diff term stated; HANDED OFF
+- **The swap-commit term (§9.229), stated:** the 8-path change set `swap_commit_full.patch` (003bb52f…83ee) **is the seven cleared hunks of
+  swap_commit.diff (002f2791…41f6) unchanged plus the new fixture .txt, and nothing else.** CC's check (11/21): split into per-file sections,
+  the full patch minus the .txt section equals swap_commit.diff byte for byte; the .txt section is "new file mode 100644" with 375 added
+  lines hashing 005da9f3…3048 (= R375's dump, = its .sha256). The working tree's 8-path diff still hashes 003bb52f…83ee. NOT committed,
+  NOT pushed.
+- **The put-back block (§9.229 (1)) is the next task, owed before P6R runs.** Handed off to a fresh session at JP's word: HANDOFF stageE
+  "## SUCCESSOR START (11/21 — the swap is cleared pending the put-back block)". The P6 harness is now durable in
+  docs/handoffs/drafts/P6_harness/ (the block sources, the program and the test files; T points there).

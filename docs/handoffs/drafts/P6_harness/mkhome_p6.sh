@@ -3,7 +3,7 @@
 # (LIVESRC's two digests swapped for the made-up copies'); the blocks with XP filled (XS / XB swapped for the made-up copies').
 # usage: mkhome_p6.sh <home> [plant]   (WSL only)
 set -euo pipefail
-T=/mnt/c/Users/JP/AppData/Local/Temp/claude/375bfdbef9aafd6e/cfce0c4f-7b18-4f6d-afde-d8ca6329f7ec/scratchpad/p6
+T=/mnt/c/Users/JP/projects/bible-db/docs/handoffs/drafts/P6_harness
 PATCH=/mnt/c/Users/JP/projects/bible-db/docs/handoffs/drafts/SWAP_COMMIT/swap_commit_full.patch
 H=$1; PL=${2:-none}
 rm -rf "$H"; mkdir -p "$H/edition_upgrade_runs"
