@@ -17,6 +17,7 @@ or the register, so it stands here on its own (CC to place it beside that one on
 5. The ruling chat does not reply to a pure acknowledgement; its silence on one is not a hold.
 
 ## SUCCESSOR START (11/19 end; charter §6 STEPS 4 + 5 + 6 PASSED — §9.193, §9.194, §9.204; next = step 7) — open here
+- **11/21 Q2 code read + Q3 PA-help read RECORDED (DR "### Q2 — the AI cache code read", "### Q3 — PA's Disable / Enable"); both to the ruling chat as questions.** Q2 pick: bump 48→49 (search only), rest by Q6 post-swap pass. Q3: PA help silent → a 1-minute Disable/Enable test by JP before P6.
 - **Step 6 PASSED (§9.204)** on `step6_audit_20261119.log` as disposed: C4 by JP's ruling (a) (§9.203; built 747, account v2); Job 3:3
   content-other OPEN; bracket order + the §4.2 L9 split on built's words NOT measured by this run; read-outs as §9.201; the §4.4
   pre-registration GAP recorded. Nothing re-run, re-pinned or rebuilt; live not touched.

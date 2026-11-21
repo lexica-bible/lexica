@@ -18464,3 +18464,44 @@ expected line as declared. The 23 marked rows are active on live and retired on 
 - With the 346 (traced 00709ccb), the abp_corrections difference live vs src is fully accounted for: **346 rows new on src, all active,
   = the built-active-only members; 23 rows retired on src = the live-active-only members; 34 rows the same; 0 rows on live only.**
 - §9.193 (5): "Scope as stated: the 13 words columns and verses.text; abp_corrections is outside both by design."
+
+### Q2 — the AI cache code read (CC, 11/21) — all five categories draw on ABP text; a question for the ruling chat
+**What each category feeds the model, and what it stores** (code at HEAD; the serving files are unchanged since PA HEAD 1d5e34ee):
+| category | rows on built (P4 (4)) | ABP text into the prompt | what the cached row stores | key (can it be tied to verses?) |
+|---|---|---|---|---|
+| summary | 1,250 | verses.text (views_summary.py :7 docstring) | {"text": model output} (:298, :313) | summary_book:<book>, summary_ch:<book>:<chapter> (:10-11): yes |
+| xref | 613 | `_abp_text` = verses.text, source + candidates (views_crossref.py :85-100, :215, :270) | {"refs": BSB/KJV text (:160, :267), "synthesis": model} (:298) | xref_cur:<book>:<chapter>:<verse> (:176): yes |
+| pn | 346 | verses.text for an ABP anchor (views_metav.py :94-99) | {"name", "description", "ref", ...} (:383) | pn:<name>:<book><ch>:<vs>:<translation> or pn:<name> (:357, :360): partly |
+| chrono | 136 | `_passage_text` = verses.text (views_chrono.py :78-89) | {"title", "summary"} (:145) | chrono_intro:<day> (:100): via the reading plan |
+| search | 20 | words / verses through the model's SQL (ai.py :305, :354, :578, :1132) | the answer payload | the query string: no |
+- **No stored payload displays ABP verse text itself.** The xref "refs" text is BSB / KJV. Every category's MODEL output was written from the
+  old ABP English, so a stored answer can paraphrase or quote the old wording.
+- **Only `search` has a code salt** (`_CACHE_CODE_VER` = 48, ai.py :1612, in its fingerprint :1644). The other four fingerprint their
+  prompts only (views_summary.py :128, views_crossref.py :80, views_metav.py :69, views_chrono.py :70). A bump of 48 refreshes search
+  alone; refreshing any other category needs a salt added to its fingerprint (a code change per file) or its rows removed.
+**What already governs it:** charter §5 (f) :290-292 put the AI cache in the "frozen-quote scope (Q6 redraw pass)", and JP's §8 Q6
+(10/30, verbatim) reads "Q6 redraw only the 29% set, own post-swap pass." ai.md :202-207's standing rule (a data-feed change needs the bump)
+was written for search.
+**CC's pick (Q2, for the ruling chat):**
+- (a) **swap commit: `_CACHE_CODE_VER` 48 → 49 (search only)**, comment "edition upgrade swap: the corpus English changed". Search answers
+  can't be tied to verses, and there are 20 rows.
+- (b) **summary / xref / pn / chrono: NO change in the swap commit.** They follow Q6: the post-swap redraw pass, its own block, removes the
+  rows whose key touches a changed verse (STEP4-DELTA2's verse set), and they redraw on demand.
+- Until that pass runs, those rows serve answers drawn on the old English. The pass is planned as the first step after P9.
+- Alternative (b′): salt all four in the swap commit, so all 2,345 rows redraw on demand at once; that contradicts Q6's "only the 29%".
+### Q3 — PA's Disable / Enable (CC, 11/21): PA's help is SILENT
+Read by a fetch of PA's help: /pages/ReloadWebApp/, /pages/API/, /pages/WebAppBasics/, /pages/ScheduledTasks/, /pages/AlwaysOnTasks/,
+/pages/FreeAccountsFeatures/, /pages/ErrorReloadingWebApp/; the forum index (no thread). /pages/DisablingWebApp/ = 404.
+- The only behaviour PA documents is Reload: "we finish serving the requests that your workers are currently processing, and then we stop
+  the workers, drop any requests that are in the queue, and spin up workers with the new code" (/pages/ReloadWebApp/).
+- Disable / Enable appear only as API rows: "Disable the webapp." / "Enable the webapp." (/pages/API/,
+  /api/v0/user/{username}/webapps/{domain_name}/disable/ and /enable/).
+- Silent: whether Disable stops workers at once or lets requests finish; what visitors see; whether Enable starts fresh or needs Reload;
+  any effect on scheduled tasks; any auto-re-enable.
+**CC's pick (Q3):** since the swap rests on "site STOPPED" (§9.213 Q3), find out on the real account before P6 is drafted, not on the
+day. A one-minute test at a quiet hour (outside 13:00-14:30 UTC):
+- JP clicks Disable, opens the site and notes what a visitor sees.
+- He clicks Enable and notes whether the site comes back without a Reload, then clicks Reload anyway.
+The site is down for about a minute. The swap block itself would not rely on Disable alone: with the site disabled it waits, then checks
+that bible.db's size and time hold still for a set time and that no -journal is beside it before the first rename. After the renames it
+re-enables with Enable + Reload (JP's clicks), then deploy.sh's reload as planned.
