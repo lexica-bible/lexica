@@ -17569,3 +17569,194 @@ This was a read-only review of the evidence behind the P2 closure (DESIGN §9.21
     cells changed only where declared, not that they agree with the app. That remains as carried (Jdg 11:7 by name).
 - **STILL OWED BEFORE P6:** P3; P4 (File storage line first, built's full sha, the Q9 pre-read); the Q2 code read; PA's Disable / Enable
   behaviour; the swap commit's diff; the rollback block.
+
+### File storage line (11/20, JP paste of the PA Files page): "74% full – 7.4 GB of your 10.0 GB quota" → 2.6 GB free, ≥ 1 GB (§9.165 (3)); P4 adds one ~460 MB copy.
+
+### Block P3 (READ-ONLY on notes.db; no bible.db; writes only its run folder + log; program uploaded; no REF gate, no repo script runs) — reviewer CLEAR (11/20, second pass)
+```bash
+set +H
+L=~/edition_upgrade_runs/p3_notes_20261120.log
+if [ -e "$L" ]; then echo "P3 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+export TZ=UTC
+export PYTHONDONTWRITEBYTECODE=1
+echo "P3 - notes anchored at the 20 moved words (DESIGN 9.94 (d); 9.213 (iv)) - READ-ONLY: notes.db opened read-only; counts and positions only (no note text, id, account code, user id or email); no bible.db copy opened; writes only its run folder and this log - $(date -u +%FT%TZ)"
+R=~/edition_upgrade_runs
+D=$R/p3_notes_20261120
+U=$R/p3_notes_20261120.py                                                 # the program as JP uploaded it through PA's Files page; outside the repo
+N=~/bible-db/notes.db
+XP=b5940f2b4f66b5b4c9ef1d466b9648e8a468127db4b98108ffddf259fe2b738b        # sha256 of the program CC wrote and tested (DR "### Block P3"); any other file STOPs
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+[ -s "$U" ] || { echo "P3 RESULT: STOP - the uploaded program is missing or empty: $U"; exit 1; }
+[ -s "$N" ] || { echo "P3 RESULT: STOP - notes.db missing or empty: $N"; exit 1; }
+[ -e "$D" ] && { echo "P3 RESULT: STOP - the run folder already exists: $D (kept as is)"; exit 1; }
+mkdir "$D" || { echo "P3 RESULT: STOP - cannot make $D"; exit 1; }
+cp "$U" "$D/p3.py" || { echo "P3 RESULT: STOP - cannot copy the program into the run folder"; exit 1; }
+k=$(h "$D/p3.py"); echo "p3.py sha256 (the uploaded file, as copied into the run folder): $k (expect $XP)"
+[ "$k" = "$XP" ] || { echo "P3 RESULT: STOP - the uploaded program is not the file CC wrote and tested"; exit 1; }
+PYTHONIOENCODING=utf-8 python3 "$D/p3.py" "$N" < /dev/null; rc=$?
+echo "program exit $rc (expect 0)"
+[ "$rc" = 0 ] || { echo "P3 RESULT: STOP - the program stopped (line above)"; exit 1; }
+echo "P3 RESULT: DONE - read as printed; to the ruling chat"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The P3 program — `~/edition_upgrade_runs/p3_notes_20261120.py` (JP uploads it; sha256 b5940f2b4f66b5b4c9ef1d466b9648e8a468127db4b98108ffddf259fe2b738b; local copy `C:\Users\JP\edition_upgrade_runs\p3_notes_20261120.py`)
+```python
+import json, os, sqlite3, sys
+from collections import Counter
+# P3 - notes anchored at the 20 moved words (DESIGN 9.94 (d); 9.213 (iv)). notes.db opened
+# read-only. Prints COUNTS and POSITIONS only: never a note's text, snippet, id, account
+# code, user id or email. Anchor shape: static/src/60-library.jsx :1114-1120 (corpus,
+# translation, book, chapter, start {verse, pos}, end {verse, pos}); pos = words.position
+# (59c-library-render.jsx data-note-pos). Rows: views_notes.py :752 (code, id, json, updated, deleted).
+KNOWN_TR = ("abp", "kjv", "bsb", "heb", "esv", "niv", "parallel")   # 60-library.jsx translation values
+MOVED = {("2Ki", 23, 35): (6, 7), ("Est", 5, 9): (12, 13), ("Eze", 20, 14): (7, 8), ("Gen", 5, 25): (1, 2),
+         ("Gen", 5, 26): (1, 2), ("Gen", 34, 4): (1, 2), ("Jdg", 11, 7): (6, 7), ("Jos", 2, 4): (19, 20),
+         ("Jos", 5, 15): (26, 27), ("Rom", 9, 29): (17, 18)}   # words_moved.tsv d32361b3...0f08 (DESIGN 9.157)
+
+
+def _int(x):
+    try:
+        return int(x)
+    except (TypeError, ValueError):
+        return None
+
+
+def read(rows):
+    """rows = iterable of (json_text, deleted). -> (tally, per)."""
+    tally = Counter()
+    per = Counter()          # (verse key, position, translation, live|deleted) -> n
+    for js, deleted in rows:
+        state = "deleted" if deleted else "live"
+        tally["rows " + state] += 1
+        try:
+            n = json.loads(js)
+        except (TypeError, ValueError):
+            tally["json not readable"] += 1
+            continue
+        if not isinstance(n, dict):
+            tally["json not an object"] += 1
+            continue
+        if n.get("kind") == "journal":
+            tally["journal pages (no verse anchor)"] += 1
+            continue
+        st, en = n.get("start"), n.get("end")
+        if not isinstance(st, dict):
+            tally["no start anchor"] += 1
+            continue
+        if not isinstance(en, dict):
+            en = st
+        if n.get("corpus") != "bible":
+            tally["corpus not bible (non-canon)"] += 1
+            continue
+        book, ch = n.get("book"), _int(n.get("chapter"))
+        sv, ev = _int(st.get("verse")), _int(en.get("verse"))
+        sp, ep = _int(st.get("pos")), _int(en.get("pos"))
+        tr = n.get("translation")
+        tr = tr if tr in KNOWN_TR else "other"   # only a known label reaches the log (reviewer, 11/20)
+        for (b, c, v), pair in MOVED.items():
+            if book != b or ch != c or sv is None or ev is None or not (sv <= v <= ev):
+                continue
+            tally["rows anchored in one of the 10 verses"] += 1
+            on = set()
+            if sv == v and sp in pair:
+                on.add(sp)
+            if ev == v and ep in pair:
+                on.add(ep)
+            if not on:
+                if sp is None and ep is None:
+                    tally["  of them: whole-verse anchors (no word position)"] += 1
+                else:
+                    tally["  of them: word anchors not ending on a moved position"] += 1
+            for p in sorted(on):
+                per[((b, c, v), p, tr, state)] += 1
+    return tally, per
+
+
+def show(tally, per):
+    for k in sorted(tally):
+        print("  %s: %d" % (k, tally[k]))
+    print("  endpoints ON a moved position (verse, position, translation, live/deleted: count):")
+    if not per:
+        print("    none")
+    for ((b, c, v), p, tr, state), k in sorted(per.items()):
+        print("    %s %d:%d @%d  translation %s  %s: %d" % (b, c, v, p, tr, state, k))
+    live = sum(k for (_v, _p, _t, s), k in per.items() if s == "live")
+    dele = sum(k for (_v, _p, _t, s), k in per.items() if s == "deleted")
+    return live, dele
+
+
+# --- control: made-up rows with known answers, through the same read() ---
+def mk(tr, b, c, sv, sp, ev=None, ep=None, **kw):
+    d = dict(corpus="bible", translation=tr, book=b, chapter=c, start=dict(verse=sv, pos=sp),
+             end=dict(verse=sv if ev is None else ev, pos=sp if ep is None else ep), body="SECRET", snippet="SECRET")
+    d.update(kw)
+    return json.dumps(d)
+
+
+CTL = [(mk("abp", "Gen", 34, 4, 1), 0),            # ON @1 live
+       (mk("abp", "Gen", 34, 4, 0, 4, 2), 1),      # end ON @2, deleted
+       (mk("abp", "Gen", 34, 4, 3), 0),            # word anchor, not on a moved position
+       (mk("abp", "Gen", 34, 4, None), 0),         # whole-verse anchor
+       (mk("kjv", "Rom", 9, 28, 5, 29, 17), 0),    # end ON @17, kjv label
+       (mk("abp", "Gen", 34, 5, 1), 0),            # other verse
+       (mk("LABEL-LEAK", "Jos", 2, 4, 20), 0),     # end ON @20, unknown label -> "other"
+       (json.dumps({"kind": "journal", "body": "SECRET"}), 0),
+       ("{not json", 0)]
+ct, cp = read(CTL)
+want = {(("Gen", 34, 4), 1, "abp", "live"): 1, (("Gen", 34, 4), 2, "abp", "deleted"): 1,
+        (("Rom", 9, 29), 17, "kjv", "live"): 1, (("Jos", 2, 4), 20, "other", "live"): 1}
+ok = (dict(cp) == want and ct["rows anchored in one of the 10 verses"] == 6
+      and ct["  of them: word anchors not ending on a moved position"] == 1
+      and ct["  of them: whole-verse anchors (no word position)"] == 1
+      and ct["json not readable"] == 1 and ct["journal pages (no verse anchor)"] == 1)
+print("CONTROL (9 made-up rows, known answers): %s" % ("FIRED" if ok else "FAILED"))
+if not ok:
+    print("P3 RESULT: STOP - the control did not give its known answers; nothing read from notes.db")
+    sys.exit(1)
+
+path = sys.argv[1]
+con = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=30)
+con.execute("PRAGMA query_only=1")
+tabs = [r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
+print("notes table present: %s" % ("yes" if "notes" in tabs else "NO"))
+if "notes" not in tabs:
+    print("P3 RESULT: STOP - no notes table")
+    sys.exit(1)
+cols = [r[1] for r in con.execute("PRAGMA table_info(notes)")]
+print("notes table shape = code, id, json, updated, deleted (views_notes.py :93-98): %s" % ("yes" if cols == ["code", "id", "json", "updated", "deleted"] else "NO"))
+if cols != ["code", "id", "json", "updated", "deleted"]:
+    print("P3 RESULT: STOP - the notes table is not the shape views_notes.py :93-98 makes")
+    sys.exit(1)
+tally, per = read(con.execute("SELECT json, deleted FROM notes"))
+con.close()
+print("=== notes.db, the notes table (read-only; counts and positions only) ===")
+live, dele = show(tally, per)
+print("P3 READ-OUT: endpoints on a moved position: live %d, deleted %d (a read-out; any live one goes to the ruling chat)" % (live, dele))
+```
+
+### P3 — tests and the two reviewer passes (11/20)
+- **Local tests** (Git Bash, a made-up HOME, fixture notes.db files with the real table shape; planted note text, account code, ids, an
+  email in a users table, and a made-up translation label): t3 (5 live + 1 deleted endpoints planted, incl. a 'parallel' label and a range
+  26→27) → exactly those 6 lines, DONE exit 0 · t1 empty → 0 / 0, DONE · t2 nothing on a moved position → 0 / 0, DONE · t5 an unknown label
+  at Jos 2:4 @19 → printed "other", DONE · t4 wrong table shape → STOP exit 1 · log exists → STOP · run folder exists → STOP · uploaded
+  program changed by one byte → STOP before it runs · notes.db missing → STOP. Leak grep over every log (planted text, code, ids, email,
+  labels, "users", "bytes") = 0 lines. notes.db byte-identical after a run (cmp).
+- **Reviewer pass 1: ESCALATE** — the program printed more than counts and positions from notes.db (table names, column names, the raw
+  translation string, file size, side-file presence), against §9.213 (iv). It offered (a) a ruling allowing them, or (b) known labels only and
+  the table-name line dropped. **CC took (b)** and went further: translation limited to abp / kjv / bsb / heb / esv / niv / parallel, else
+  "other"; table and column names replaced by yes/NO shape lines; size and side-file lines removed; the block's two `stat` lines removed;
+  a 9th control row (an unknown label must count as "other"). Re-tested as above.
+- **Reviewer pass 2, verbatim verdict line:** "REVIEW: CLEAR - this is a read-only block, and from notes.db the program now prints only
+  counts, positions, yes/NO shape checks and one of seven fixed translation labels (anything else prints "other"), as §9.213 (iv) requires.
+  It writes only its new run folder and the log, and refuses to overwrite either." It checked the 10 pairs against words_moved.tsv rows 2-21
+  (every row). Not checked by it: 59c-library-render.jsx (pos = words.position rests on CC's line list :75, :93, :109, :121, :130, :132,
+  :239, :256, :294); heb / esv / niv as live values (they only change which label prints); the hashes. "This CLEAR is a clearance of the
+  block under §9.90. It does not confirm any result."
+- **Expected:** "CONTROL (9 made-up rows, known answers): FIRED" · "notes table present: yes" · "notes table shape = … : yes" · "program
+  exit 0 (expect 0)" · "P3 RESULT: DONE" · exit=0. The READ-OUT counts have no expected figure (a read-out; any live endpoint → the ruling
+  chat). LIMIT: notes of visitors who never signed in live only in their browser; only endpoints are counted (a range whose ends sit
+  elsewhere still covers both words after the swap).
+- **For JP:** upload `C:\Users\JP\edition_upgrade_runs\p3_notes_20261120.py` to `~/edition_upgrade_runs/` through PA's Files page, then paste
+  the block in a bash console and paste the log back.
