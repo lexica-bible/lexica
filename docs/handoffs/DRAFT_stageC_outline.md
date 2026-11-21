@@ -19421,3 +19421,390 @@ echo "PB RESULT: DONE - the pre-swap file is back as bible.db at $(date -u +%FT%
 - **The sequence, as cleared:** the program uploaded -> P6A -> PB0 -> the push -> P6R -> Disable -> P6B -> Enable + Reload -> P6C -> P7 (its own block, to come). P6B's and P6C's logs to the ruling chat by cat; P6A's, PB0's, P6R's read by CC against their DONE lines.
 - **The 8-path diff line (§9.229's term; the ruling chat named it as still owed) - it stands above, in "### P6 CLEARED AS PRINTED", and CC re-checked it 11/21 at HEAD c7185029:** swap_commit_full.patch hashes 003bb52f106d50fbeb8321938e12f62e65e929b4f6e206e476258294f1fa83ee; it has 8 per-file sections; the 7 that are not the fixture .txt, joined, equal swap_commit.diff (002f2791…41f6) byte for byte; the .txt section is "new file mode 100644" with 375 added lines and no other line, the added lines hashing 005da9f3be151340ed81624303cb8388fcfa727983feb990a0e0e6abbd633048 = the fixture file on disk (375 lines). So: the seven cleared hunks unchanged plus the fixture .txt, and nothing else. The working tree still holds exactly that patch (`git apply --check -R` of it passes; `git diff --stat` lists the 6 changed files only). **Not re-run today:** the `git add -N` + 8-path `git diff` hash itself (it touches the staging list; it is the step between P6A DONE and P6R). NOT committed, NOT pushed.
 - **Owed next:** P7's block (to come, its own clearance). JP sets the hour.
+
+## P7 - AFTER THE SWAP: the read-only check on live (plan P7; §9.213 Q9, §9.222 (5), §9.223), for clearance (11/21, CC)
+**What it is.** The block after P6C DONE, site UP. READ-ONLY: it reads bible.db (the swapped-in file) and the rollback file named in
+`p6_swap/rollback.txt`; it writes its run folder `~/edition_upgrade_runs/p7_after_swap` and its dated log, nothing else. JP uploads the
+program first (with P6's program, before P6A, so nothing is uploaded inside the day's sequence).
+**It does:**
+- Guards (a miss = STOP, nothing read): P6C's log has its DONE line; PA's HEAD subject is the swap commit, d34d6723 is in its history, the
+  files changed since d34d6723 under scripts / tests / ai.py are exactly the cleared seven names, **each of the eight cleared files is
+  byte-for-byte the cleared one (git blob ids, CC's from the cleared working tree; reviewer D2)**, no uncommitted change; rollback.txt's
+  name and sha well-formed; the rollback file present, no side file, its sha = line 2; the program's sha = the pin; the run folder not
+  already there (reviewer D1).
+- Waits until 60 s after P6C's log was last written (the reload is inside P6C's deploy.sh).
+- 1. `cert_invariants.py` on live: 7/7 green, exit 0, the spent line 1 / 1, the pin 375 in the checkout.
+- 2. `health_check.py` on live with `--no-backup-check --no-disk-check`: the floor line OK at 395014; 0 warning(s), 0 error(s).
+- 1 and 2 are each read again, up to twice more, 30 s apart, ONLY while the output says "database is locked" (the 10/25 case,
+  CHARTER_rebuild_trap_fix :496-501); every output is printed.
+- 3. The program (read once, hashed as run): (1) live's words 626309 / d95acb5d4be4, abp_corrections 404 / d97d928ca7f5 (§9.212),
+  abp_surface 395014 / 219a3ebe7075 (§9.130) gated; seven other tables read out. (2) G5, rollback file -> live, gated on §9.222 (5)'s
+  figures with "surface" for P4's "other" (§9.223). (3) the six class-moved pn_hebrew_xref rows printed by verse @position and gated
+  against §9.95's six verses; the keys on one side only printed beside REKEY's record (DR :2757-2761), not gated.
+- After (a miss = CHECK): the rollback file's sha unchanged, no side file beside it, the checkout's cache folders unchanged, no
+  uncommitted change.
+- Result: DONE / FINDINGS / CHECK / STOP. Every one goes to the ruling chat; the site stays as it is; the log by cat.
+**The program against P4's:** its G5 part is p4_check_20261121.py :214-246 with: "surface" added to the label list
+(build_pn_greek_identity.py :410, :496); the key columns added to the selects so rows can be printed; the figures gated; a 60 s wait on
+the in-memory connection.
+**Shas:** block (filled) 1448a2ef9c42a28ae24809d7222bed08770190c567033092904dc1474a92752a · block source, __XP7__ unfilled f172659ea915eed478dcf589201c6062ebdaabd45194f99e8aeeee3558e989f2 · program 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36 · tests_p7.out dff361f45bd8cf56799ad442a14a3f4d88199cf4c3f8a75efd4d42ef16e9f859 · run_p7.sh faa52c927efa7349dec3fb638b2a53aa42869c6d0cdb0cb96a15e504ad707152.
+**The seven identity source moves - traced (reviewer D3).** §9.222 (5) says "the seven moves as printed"; the values stood only in DR
+prose. CC's recount (11/21): the local copy of `identity_delta.tsv` (C:\Users\JP\edition_upgrade_runs\pa\) hashes 62a99ffe…acca, the
+pinned value (§9.101; DR :4438, :4975), 58 CHANGED rows. Less Jos 5:15 @27 (none -> tipnr; at a re-keyed key, so not in P4's "changed",
+DR "### P4 log HELD" (B)): surface -> lemma-only 33, lemma-only -> surface 6, none -> surface 6, surface -> tipnr 6, lemma-only -> tipnr 3,
+none -> lemma-only 2, lemma-only -> none 1 = 57; greek_strongs 9, greek_lemma 9, source 57. These are the program's gated values.
+**Tests** (WSL; run_p7.sh -> tests_p7.out) - 33 cases, all as expected:
+- DONE: A1 (clean; whole log shown; second paste STOPs; leak grep 0; both files' bytes unchanged; checkout clean), A2 (the 60 s wait as
+  printed: took 60 s), H3 (health locked once, read again, DONE), C3 (cert locked once, read again, DONE).
+- A3: a home made by the REAL P6A -> P6R -> P6B -> P6C, then P7 with the real program, no line changed: every guard passes on P6's own
+  log and rollback.txt, and the eight blob ids match the cleared patch applied on d34d6723; the made-up files are not the real figures,
+  so FINDINGS (18), as intended.
+- FINDINGS, each plant firing its own gate and no other: xrefkey (a seventh verse in place of Jer 49:3: only the key gate), count, slot,
+  wordsdig, notable, verseid; C1 (cert check 4 red), C2 (a second spent row), H1 (floor short 3,873), H2 (another warning), H4 (locked on
+  all three reads).
+- CHECK: K1 (a cache folder appears in the checkout during the run).
+- STOP, nothing read: S1, S2 (P6C not DONE / no log), S3 (HEAD = d34d6723), S4 (a docs commit on top), S5 (uncommitted ai.py edit), S6-S8
+  (rollback file missing / other bytes / -journal beside it), S9, S10 (program not the pin / missing), S11 (bad rollback.txt, two forms),
+  S12 (bible.db missing), S13 (an eighth file changed), S14 (run folder already there: kept, not overwritten), S15 (the seven names right,
+  one file's content not the cleared bytes).
+- H5: the REAL health_check.py (the swap commit's) on a made-up file with 395,014 abp_surface rows: the block's floor text matches the
+  real line (1); the tally line's form matches.
+- **How the tests stand in:** the made-up pair (mkdbs_p7.py) is built to give exactly the real G5 figures, so the program's real
+  expectations are what run; only its three digests of (1) are swapped for the made-up file's (one line, mkhome_p7.sh). cert_invariants
+  and health_check are a stand-in (p7_standin.py) printing the real scripts' lines: the made-up files lack the tables the real two read.
+- **Fired by no test:** the real cert_invariants.py (its output form is read from :268-286, :143-145 only); the program's exit 2 and
+  exit 4; the rollback file or a side file changing during the run; the uncommitted-change re-check after; the real figures on the real
+  files; PA's network disk.
+**Reviewer - one pass, verbatim verdict line:** "REVIEW: ESCALATE - P7 is a new gated block (not a re-run of a ruled gate); it can
+overwrite its own run-folder files on a later-day run, it replaces a required wrapper line, seven of its gated figures trace only to
+DRAFT prose, and it rests on unruled choices (a)-(g); the block text is also not final (__XP7__ unfilled)." D1 (run-folder overwrite) ->
+the folder guard, S14. D2 (names are not content) -> the eight blob ids, S15. D3 -> the recount above. D4 -> the filled block and its
+sha below. G1 (no lock retry for cert or the program) -> cert read again as health is, C3; the program waits 60 s. **The fixes were NOT
+re-read by the reviewer.** It did not open run_p7.sh, mkhome_p7.sh, mkdbs_p7.py, p7_standin.py or swap_commit_full.patch, verified
+neither sha, ran nothing, and read lane3_spent.py / cert_manifest.py / audit_split_flip.py for write calls only (CC: cert_manifest's one
+write, :148, is inside cmd_build; `verify` is dispatched separately, :217-221).
+**For the ruling chat (CC's choices and the reviewer's notes):**
+1. health_check runs with --no-backup-check --no-disk-check (the backup sweep reads every kept backup end to end; that and the disk line
+   are the 13:30 task's, and P9 reads the nightly). The plan says only "health_check.py on live by hand".
+2. health_check.py opens the file the ordinary way (health_check.py :30), not read-only; it runs reads only. If a site worker had died
+   mid-write and left a -journal beside bible.db, this open would roll it back, as any site request would. The block prints side files
+   beside live and does not stop on them (the site is up).
+3. The lock re-read: up to three reads 30 s apart for cert and for health, only on "database is locked". On 10/25 two health runs locked
+   and the four words checks were then re-read by hand with a 60 s wait.
+4. While the program digests words and runs the joins it holds live open for reading; a site cache write in that time waits or fails
+   (reviewer G2; the cache is empty with _CACHE_CODE_VER just bumped, so workers will be writing). P4 made the same reads on a copy.
+   The alternative is a fresh ~460 MB copy of live first (a File storage line; home 8,213,868 KB at P4).
+5. The code guard STOPs on a docs commit pulled on top of the swap commit, so CC pushes nothing between the swap commit and P7's DONE.
+   The GATE REF line reads "d34d6723 + the swap commit", and the wrapper's `git diff --quiet REF HEAD -- scripts tests` is replaced by
+   the name list + the eight blob ids (the swap commit's hash does not exist until it is committed). CC re-reads the eight ids from the
+   commit itself before the push, beside the 003bb52f…83ee check; a miss = no push.
+6. "The cleared seven names" in the block = the seven paths under scripts / tests / ai.py (the fixture .txt among them); §9.227's "seven
+   files" is the cleared diff's seven (rebuild-words.md among them, the .txt not). The eight blob ids cover both sets.
+7. cert check 5 (manifest) and 6 (backup stamp under 25 h) are read at run time and do not read the database; no receipt shows cert
+   green at 375 / 1 on built's bytes (STEP6AUD's declared red was the count). Health 0 / 0 on built was STEP6AUD's declared A1 line (DR :14506); CC did not re-open that log's A1 result today.
+8. A cert FAIL prints the failing cell's value and verse text into the log (cert_invariants.py :137-138): ABP text, in a log bound for
+   the ruling chat.
+9. No 13:00-14:30 UTC stop in P7 (it only reads; §9.230 (4) keeps the swap clear of the window). The log is dated by the run's UTC date;
+   the run-folder guard is what refuses a second run. A P6C re-run (_r2) needs a paired P7 (it greps P6C's log by name).
+10. A site worker writing a cache folder in the checkout during the run would read as CHECK (reviewer G7); P4 ran with the site up and
+    read "unchanged".
+11. Part B (the five step-7 verses on the served site, DR :17184-17187) is not in the block: CC in the browser on the public pages, JP's
+    eye on the chip view, recorded in words under step 8.
+**NOT cleared. Nothing run on PA.**
+
+### Block P7 (sha256 1448a2ef9c42a28ae24809d7222bed08770190c567033092904dc1474a92752a, __XP7__ filled)
+```bash
+set +H
+L=~/edition_upgrade_runs/p7_after_swap_$(date -u +%Y%m%d).log
+if [ -e "$L" ]; then echo "P7 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export LC_ALL=C
+export PYTHONDONTWRITEBYTECODE=1
+export GIT_OPTIONAL_LOCKS=0
+echo "GATE REF ${REF} + the swap commit - P7 - after the swap: cert_invariants and health_check on live, G5 against the rollback file (DESIGN 9.213 P7 / Q9, 9.222 (5), 9.223) - READ-ONLY: live and the rollback file only read; writes only its run folder and this log; site UP - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "P7 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+LIVE=~/bible-db/bible.db
+R=~/edition_upgrade_runs
+D=$R/p7_after_swap
+U=$R/p7_check_20261121.py                                                  # the check program as JP uploaded it through PA's Files page; outside the repo
+XP7=911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36                                                                # sha256 of the check program CC wrote and tested; any other file STOPs
+CERT=scripts/cert_invariants.py
+HC=scripts/health_check.py
+WAIT=60                                                                    # seconds after P6C's log was last written (the reload is inside P6C's deploy.sh) - plan P7
+WANT="ai.py scripts/audit_phrase_gloss_underdist.py scripts/cert_invariants.py scripts/health_check.py tests/fixtures/corrections/abp_corrections_active_built_20261121.txt tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256 tests/test_surface_fill_restore.py "
+# the eight files of the cleared swap commit, each by git blob id (CC, from the cleared working tree = swap_commit_full.patch 003bb52f...83ee, DESIGN 9.231)
+PINS="7f112bdddab79d4f2ba861c76504bd4c5d024ff7 .claude/commands/rebuild-words.md
+3ffffc60e2034dcf206caca69e91e7c98631ee34 ai.py
+c682f995ba13682b981535591cbd99ff0a3c3c95 scripts/audit_phrase_gloss_underdist.py
+241b8911b1b2acc9438e5a54c1906760463a4cd0 scripts/cert_invariants.py
+ea7b4bd027e7a7559057094fc8b073b977202064 scripts/health_check.py
+210267f6515e902ffb6cf58dec73b3b6549a181d tests/fixtures/corrections/abp_corrections_active_built_20261121.txt
+6f4ee7b20df2de01dbc82428a5f172b509f61a72 tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256
+52dce7c6bd88d7a9cdd31ac8ca18e4d30d4c6566 tests/test_surface_fill_restore.py"
+EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
+# run a read up to 3 times, 30 s apart, ONLY while its output says "database is locked" (a site worker writing its cache, as on 10/25); every output printed
+try3() { o=$1; shift; for i in 1 2 3; do "$@" > "${o}_$i.out" 2>&1; rx=$?; echo "--- run $i (exit $rx) ---"; cat "${o}_$i.out"; grep -q "database is locked" "${o}_$i.out" || break; [ "$i" -lt 3 ] && { echo "run $i hit 'database is locked'; the same read again in 30 s"; sleep 30; }; done; }
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+pcf() { find ~/bible-db \( -name __pycache__ -type d -o -path '*/__pycache__/*' \) -printf '%M %u %g %s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -c1-16; }   # DESIGN 9.209
+# --- guards: every miss is STOP, nothing read ---
+grep -q "^P6C RESULT: DONE" "$R/p6c_swap_deploy.log" 2>/dev/null || { echo "P7 RESULT: STOP - P6C has not finished DONE ($R/p6c_swap_deploy.log); nothing read"; exit 1; }
+s=$(git log -1 --format=%s); echo "PA HEAD subject: $s"
+a=no; git merge-base --is-ancestor "$REF" HEAD && a=yes
+nm=$(git diff --name-only "$REF" HEAD -- scripts tests ai.py | sort | tr '\n' ' ')
+us=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); rs=$?; u=$(grep -c . <<< "$us")
+c=no; case "$s" in "edition upgrade: THE SWAP COMMIT"*) c=yes;; esac
+n=no; [ "$nm" = "$WANT" ] && n=yes
+b=yes; while read -r want path; do got=$(git rev-parse "HEAD:$path" 2>/dev/null); [ "$got" = "$want" ] || { b=no; echo "  content differs from the cleared swap commit: $path (HEAD has ${got:-nothing})"; }; done <<< "$PINS"
+echo "PA's code: HEAD is the swap commit: $c; $REF is in its history: $a; files changed since $REF in scripts / tests / ai.py = the cleared seven names: $n; all eight cleared files byte-for-byte as cleared (git blob ids): $b; git status exit $rs, uncommitted changes in them: $u (expect yes, yes, yes, yes, 0, 0)"
+[ "$n" = yes ] || echo "  changed: $nm"
+[ -n "$us" ] && echo "$us"
+[ "$c" = yes ] && [ "$a" = yes ] && [ "$n" = yes ] && [ "$b" = yes ] && [ "$rs" = 0 ] && [ "$u" = 0 ] || { echo "P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read"; exit 1; }
+[ -s "$R/p6_swap/rollback.txt" ] || { echo "P7 RESULT: STOP - $R/p6_swap/rollback.txt is missing; nothing read"; exit 1; }
+RB=$(sed -n 1p "$R/p6_swap/rollback.txt"); X0=$(sed -n 2p "$R/p6_swap/rollback.txt")
+case "$RB" in "$HOME"/bible-db/bible_pre_edition_upgrade_*.db) ;; *) echo "P7 RESULT: STOP - unexpected rollback name: $RB; nothing read"; exit 1;; esac
+grep -Eqx '[0-9a-f]{64}' <<< "$X0" || { echo "P7 RESULT: STOP - rollback.txt line 2 is not a sha256; nothing read"; exit 1; }
+[ -s "$RB" ] || { echo "P7 RESULT: STOP - the rollback file is missing or empty: $RB; nothing read"; exit 1; }
+[ -s "$LIVE" ] || { echo "P7 RESULT: STOP - bible.db is missing or empty; nothing read - TO THE RULING CHAT NOW"; exit 1; }
+for x in -journal -wal -shm; do [ -e "$RB$x" ] && { echo "P7 RESULT: STOP - side file beside the rollback file: $RB$x; nothing read"; exit 1; }; done
+[ -s "$U" ] || { echo "P7 RESULT: STOP - the uploaded check program is missing or empty: $U; nothing read"; exit 1; }
+k=$(h "$U"); echo "uploaded check program sha256: $k (expect $XP7)"
+[ "$k" = "$XP7" ] || { echo "P7 RESULT: STOP - the uploaded check program is not the file CC wrote and tested; nothing read"; exit 1; }
+[ -e "$D" ] && { echo "P7 RESULT: STOP - the run folder already exists (an earlier run? it is kept as is): $D; nothing read"; exit 1; }
+mkdir -p "$D" && cp "$U" "$D/check.py" || { echo "P7 RESULT: STOP - cannot make the run folder or copy the program into it"; exit 1; }
+t6=$(stat -c %Y "$R/p6c_swap_deploy.log"); w=$(( WAIT - ($(date +%s) - t6) ))
+echo "P6C's log was last written $(date -u -d "@$t6" +%FT%TZ); waiting ${w} s if above 0 (at least $WAIT s after it)"
+[ "$w" -gt 0 ] && sleep "$w"
+pc0=$(pcf)
+r0=$(h "$RB"); echo "the rollback file $RB sha256 = rollback.txt line 2 (live just before the swap): $([ "$r0" = "$X0" ] && echo yes || echo NO)"
+[ "$r0" = "$X0" ] || { echo "P7 RESULT: STOP - the rollback file is not the pre-swap bytes; nothing compared - TO THE RULING CHAT NOW"; exit 1; }
+stat -c 'live now: %s bytes, last write %y (printed only; the site is up and writes its cache)' "$LIVE"
+for x in -journal -wal -shm; do echo "beside live: bible.db$x $([ -e "$LIVE$x" ] && echo present || echo absent) (printed only)"; done
+bad=0; fin=0
+# --- 1. cert_invariants on live (read-only; it opens the file mode=ro) ---
+echo "=== 1. cert_invariants on live - start $(date -u +%T) (expect 7/7 green; check 4 at the pin 375, spent 1) ==="
+try3 "$D/cert" EU "$CERT" "$LIVE"; rc=$rx; ci=$i
+grep -qx "CERTIFIED STATE HOLDS (7/7 green)" "$D/cert_$ci.out" && [ "$rc" = 0 ] && echo "cert 7/7 green, exit 0 (run $ci): yes" || { echo "cert 7/7 green, exit 0 (run $ci): NO"; fin=1; }
+grep -q "spent by lane-3: 1 (declared 1)" "$D/cert_$ci.out" && echo "cert spent line 1 / 1: yes" || { echo "cert spent line 1 / 1: NO"; fin=1; }
+grep -q '"abp_corrections_active": 375,' scripts/cert_invariants.py && echo "the pin read by check 4 is 375: yes" || { echo "the pin read by check 4 is 375: NO"; fin=1; }
+# --- 2. health_check on live (reads only; its backup sweep and disk line are the nightly task's, left out) ---
+echo "=== 2. health_check on live, --no-backup-check --no-disk-check - start $(date -u +%T) (expect the floor line OK at 395014 and 0 warning(s), 0 error(s)) ==="
+try3 "$D/health" EU "$HC" "$LIVE" --no-backup-check --no-disk-check; rh=$rx
+grep -qF "[OK  ] abp_surface rows BELOW floor 395014  [fill or a backfill missing?]: 0 " "$D/health_$i.out" && echo "health floor line OK at 395014 (run $i): yes" || { echo "health floor line OK at 395014 (run $i): NO"; fin=1; }
+grep -qx "  0 warning(s), 0 error(s)\." "$D/health_$i.out" && [ "$rh" = 0 ] && echo "health 0 warnings, 0 errors (run $i): yes" || { echo "health 0 warnings, 0 errors (run $i): NO"; fin=1; }
+# --- 3. G5 and the keys: the rollback file -> live (the program, read once; both files opened read-only) ---
+echo "=== 3. G5 and the keys - start $(date -u +%T) ==="
+EU -c 'import hashlib, sys
+p, x = sys.argv[1], sys.argv[2]
+b = open(p, "rb").read()
+h = hashlib.sha256(b).hexdigest()
+print("check.py sha256 as run: %s (expect %s)" % (h, x), flush=True)
+h == x or sys.exit(4)
+sys.path[0] == "" and sys.path.pop(0)
+sys.argv = [p] + sys.argv[3:]
+exec(compile(b, p, "exec"), {"__name__": "__main__"})' "$D/check.py" "$XP7" "LIVE=$LIVE" "RB=$RB" "REPO=$HOME/bible-db" < /dev/null > "$D/check.out" 2>&1; r2=$?
+cat "$D/check.out"; echo "check exit $r2 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end $(date -u +%T)"
+# --- after: every miss is CHECK ---
+r1=$(h "$RB"); echo "the rollback file's sha256 after = before: $([ "$r1" = "$r0" ] && echo yes || echo NO)"; [ "$r1" = "$r0" ] || bad=1
+for x in -journal -wal -shm; do [ -e "$RB$x" ] && { echo "CHECK: side file $RB$x"; bad=1; }; done
+pc1=$(pcf); echo "the checkout's cache folders and their contents unchanged: $([ "$pc1" = "$pc0" ] && echo yes || echo NO)"; [ "$pc1" = "$pc0" ] || bad=1
+us1=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); [ "$us1" = "$us" ] && echo "scripts / tests / ai.py still as committed: yes" || { echo "scripts / tests / ai.py still as committed: NO"; bad=1; }
+[ "$r2" = 0 ] || [ "$r2" = 3 ] || { echo "P7 RESULT: STOP - the G5 read did not finish (exit $r2; $D/check.out); the site stays as it is; to the ruling chat as printed"; exit 1; }
+[ "$bad" = 0 ] || { echo "P7 RESULT: CHECK - lines above; the site stays as it is; to the ruling chat as printed"; exit 1; }
+[ "$fin" = 0 ] && [ "$r2" = 0 ] || { echo "P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log"; exit 1; }
+echo "P7 RESULT: DONE - $(date -u +%FT%TZ) - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### The P7 check program - `~/edition_upgrade_runs/p7_check_20261121.py` (JP uploads it; sha256 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36)
+```python
+"""P7 check program (edition-upgrade step 8, plan P7; DESIGN 9.213 Q9, 9.222 (5), 9.223). READ-ONLY on both files.
+
+Run by block P7 through the read-once launcher (DESIGN 9.190 (5)(b)), arguments KEY=value:
+  LIVE=<bible.db, the swapped-in file>  RB=<the rollback file = live as it was just before the swap>  REPO=<checkout>
+Both are opened mode=ro + query_only (eu_step.ro, and mode=ro ATTACH). It writes nothing.
+The log gets table names, row counts, digests, verse references, positions and the class / source labels only.
+
+  (1) the lane's tables on live now: rows + digest (eu_step.digest). Gated where the record holds built's value:
+      words 626309 / d95acb5d4be4 and abp_corrections 404 / d97d928ca7f5 (DESIGN 9.212), abp_surface 395014 /
+      219a3ebe7075 (DESIGN 9.130; P4's line, DR "### P4 RULED" item (7)). The rest are read-outs.
+  (2) G5, the rollback file -> live (DESIGN 9.222 (5): P4's figures "live copy -> built", accepted as P7's expected
+      figures, with "surface" where P4 printed "other", DESIGN 9.223): pn_hebrew_xref, pn_greek_identity, name-slot
+      strongs_base. A figure that differs is a FINDING.
+  (3) the pn_hebrew_xref rows whose class moved, by key, set against DESIGN 9.95's six verses (DESIGN 9.223):
+      a different member is a FINDING. The keys on one side only are printed as read-outs beside REKEY's record
+      (DR "REKEY ... ACCEPTED").
+Exit 0 = READ (every gated figure held), 3 = FINDINGS (listed), 2 = STOP (could not read).
+"""
+import os
+import re
+import sqlite3
+import sys
+from collections import Counter
+
+args = dict(a.split("=", 1) for a in sys.argv[1:])
+LIVE, RB, REPO = args["LIVE"], args["RB"], args["REPO"]
+sys.path.insert(0, os.path.join(REPO, "scripts"))
+import eu_step as E  # noqa: E402  (the lane's own reader + digest; never a copy)
+
+BUILT = {"words": (626309, "d95acb5d4be4"), "abp_corrections": (404, "d97d928ca7f5"), "abp_surface": (395014, "219a3ebe7075")}
+READOUT = ("verses", "pn_hebrew_xref", "pn_greek_identity", "pn_binding", "pn_slot_binding", "tipnr_metav_link", "word_gloss")
+CLASS = ("abp-tag", "tipnr", "lemma-only", "surface", "none")   # build_pn_greek_identity.py :410, :496 (the five labels)
+G5 = {   # DESIGN 9.222 (5); the seven source moves from P4's log with "surface" for "other" (DESIGN 9.223)
+    "pn_hebrew_xref": {"changed": 6, "bycol": {"class": 6}, "moves": {"none -> lemma-only": 6}, "before": 6, "after": 6},
+    "pn_greek_identity": {"changed": 57, "bycol": {"greek_lemma": 9, "greek_strongs": 9, "source": 57},
+                          "moves": {"surface -> lemma-only": 33, "lemma-only -> surface": 6, "none -> surface": 6,
+                                    "surface -> tipnr": 6, "lemma-only -> tipnr": 3, "none -> lemma-only": 2,
+                                    "lemma-only -> none": 1}, "before": 6, "after": 6},
+}
+SLOT = {"n": 18, "shapes": {"* -> G": 3, "G -> *": 3, "G -> G": 6, "H -> *": 6}}                # DESIGN 9.222 (5)
+SIX = {("Num", 21, 25), ("1Sa", 20, 37), ("2Sa", 15, 6), ("Jer", 48, 15), ("Jer", 48, 20), ("Jer", 49, 3)}   # DESIGN 9.95, 9.223
+REKEY = {("2Ki", 23, 35, 6), ("Est", 5, 9, 12), ("Gen", 5, 25, 1), ("Gen", 5, 26, 1), ("Gen", 34, 4, 1), ("Jos", 5, 15, 27)}  # DR REKEY
+findings = []
+
+
+def lab(v):
+    return v if v in CLASS else ("NULL" if v is None else "other")
+
+
+def shape(v):
+    if v is None:
+        return "NULL"
+    if v == "*":
+        return "*"
+    if re.fullmatch(r"H\d+(\.\d+)?", v):
+        return "H"
+    if re.fullmatch(r"G\d+(\.\d+)?", v):
+        return "G"
+    return "other"
+
+
+def cnt(d):
+    return ", ".join("%s %d" % kv for kv in sorted(d.items())) or "none"
+
+
+def gate(what, got, want):
+    ok = got == want
+    print("    %s: %s" % (what, "as expected" if ok else "NOT AS EXPECTED - expected %s" % (want,)))
+    if not ok:
+        findings.append("%s: got %s, expected %s" % (what, got, want))
+
+
+try:
+    live, rb = E.ro(LIVE), E.ro(RB)
+except E.Stop as e:
+    print("P7 STOP: %s" % e)
+    sys.exit(2)
+
+print("=== (1) the lane's tables on live now: rows / digest (first 12) ===")
+tabs = E.plain_tables(live)[0]
+for t in list(BUILT) + list(READOUT):
+    if t not in tabs:
+        print("  %-20s MISSING on live" % t)
+        findings.append("table %s missing on live" % t)
+        continue
+    n, d = E.digest(live, t)
+    if t in BUILT:
+        ok = (n, d[:12]) == BUILT[t]
+        print("  %-20s %d / %s (expect %d / %s, built's value on record): %s" % (t, n, d[:12], BUILT[t][0], BUILT[t][1], "yes" if ok else "NO"))
+        if not ok:
+            findings.append("live %s is %d / %s, built's on record is %d / %s" % (t, n, d[:12], BUILT[t][0], BUILT[t][1]))
+    else:
+        print("  %-20s %d / %s (a read-out)" % (t, n, d[:12]))
+rb.close()
+
+mem = sqlite3.connect("file::memory:", uri=True, timeout=60)   # wait up to 60 s on a site worker's write (eu_step.ro waits the same)
+mem.text_factory = E.text
+mem.execute("ATTACH DATABASE ? AS o", ("file:%s?mode=ro" % RB,))     # o = the rollback file (old live)
+mem.execute("ATTACH DATABASE ? AS n", ("file:%s?mode=ro" % LIVE,))   # n = live now
+mem.execute("PRAGMA query_only=1")
+
+
+def ref(vid, db):
+    r = mem.execute("SELECT book, chapter, verse FROM %s.verses WHERE id = ?" % db, (vid,)).fetchone()
+    return tuple(r) if r else ("?", vid, 0)
+
+
+def fmt(k):
+    return "%s %s:%s @%s" % k
+
+
+print("=== (2) G5 - the rollback file -> live (expected: DESIGN 9.222 (5), labels per 9.223) ===")
+vo = mem.execute("SELECT count(*) FROM o.verses").fetchone()[0]
+vn = mem.execute("SELECT count(*) FROM n.verses").fetchone()[0]
+vm = mem.execute("SELECT count(*) FROM o.verses x JOIN n.verses y ON x.id = y.id AND x.book IS y.book AND x.chapter IS y.chapter "
+                 "AND x.verse IS y.verse").fetchone()[0]
+print("  every verse id names the same (book, chapter, verse) on both files: old %d, live %d, matched %d: %s"
+      % (vo, vn, vm, "yes" if vo == vn == vm else "NO"))
+if not vo == vn == vm:
+    findings.append("verse ids do not all name the same verse on the rollback file and live: %d / %d / %d" % (vo, vn, vm))
+keys = {}
+for t, f in (("pn_hebrew_xref", "class"), ("pn_greek_identity", "source")):
+    if not all(mem.execute("SELECT 1 FROM %s.sqlite_master WHERE type='table' AND name=?" % z, (t,)).fetchone() for z in ("o", "n")):
+        print("  %s: missing on a side" % t)
+        findings.append("%s missing on a side" % t)
+        continue
+    before = mem.execute("SELECT p.verse_id, p.position FROM o.%s p LEFT JOIN n.%s q ON p.verse_id = q.verse_id AND p.position = q.position "
+                         "WHERE q.verse_id IS NULL ORDER BY 1, 2" % (t, t)).fetchall()
+    after = mem.execute("SELECT q.verse_id, q.position FROM n.%s q LEFT JOIN o.%s p ON p.verse_id = q.verse_id AND p.position = q.position "
+                        "WHERE p.verse_id IS NULL ORDER BY 1, 2" % (t, t)).fetchall()
+    cols_ = [c for c in E.cols(live, t) if c not in ("verse_id", "position")]
+    ch = mem.execute("SELECT p.verse_id, p.position, %s FROM o.%s p JOIN n.%s q ON p.verse_id = q.verse_id AND p.position = q.position "
+                     "WHERE %s ORDER BY 1, 2" % (", ".join("p.%s, q.%s" % (E.q(c), E.q(c)) for c in cols_), t, t,
+                                                 " OR ".join("p.%s IS NOT q.%s" % (E.q(c), E.q(c)) for c in cols_))).fetchall()
+    bycol, tr, moved = Counter(), Counter(), []
+    fi = cols_.index(f)
+    for r in ch:
+        v = r[2:]
+        for i, c in enumerate(cols_):
+            if v[2 * i] != v[2 * i + 1]:
+                bycol[c] += 1
+        if v[2 * fi] != v[2 * fi + 1]:
+            tr["%s -> %s" % (lab(v[2 * fi]), lab(v[2 * fi + 1]))] += 1
+            moved.append((r[0], r[1], lab(v[2 * fi]), lab(v[2 * fi + 1])))
+    print("  %s: rows changed %d (by column: %s); %s -> %s: %s; keys only before %d, only after %d"
+          % (t, len(ch), cnt(bycol), f, f, cnt(tr), len(before), len(after)))
+    x = G5[t]
+    gate("%s rows changed" % t, len(ch), x["changed"])
+    gate("%s by column" % t, dict(bycol), x["bycol"])
+    gate("%s %s moves" % (t, f), dict(tr), x["moves"])
+    gate("%s keys only before / only after" % t, (len(before), len(after)), (x["before"], x["after"]))
+    keys[t] = (before, after, moved)
+rows = mem.execute("SELECT p.strongs_base, q.strongs_base FROM o.words p JOIN n.words q ON p.verse_id = q.verse_id "
+                   "AND p.position = q.position WHERE p.strongs_base IS NOT q.strongs_base AND (p.is_pn = 1 OR q.is_pn = 1)").fetchall()
+sh = Counter("%s -> %s" % (shape(a), shape(b)) for a, b in rows)
+print("  name-slot strongs_base (is_pn = 1 on either side) changed: %d (%s)" % (len(rows), cnt(sh)))
+gate("name-slot strongs_base changed", len(rows), SLOT["n"])
+gate("name-slot strongs_base by shape", dict(sh), SLOT["shapes"])
+
+print("=== (3) the keys (DESIGN 9.223) ===")
+if "pn_hebrew_xref" in keys:
+    before, after, moved = keys["pn_hebrew_xref"]
+    print("  pn_hebrew_xref rows whose class moved (%d), verse @position, old -> new:" % len(moved))
+    got = set()
+    for vid, pos, a, b in moved:
+        r = ref(vid, "n")
+        got.add(r)
+        print("    %s: %s -> %s" % (fmt(r + (pos,)), a, b))
+    print("  DESIGN 9.95's six verses: %s" % ", ".join("%s %s:%s" % k for k in sorted(SIX)))
+    gate("the class-moved rows' verses = 9.95's six", sorted(got), sorted(SIX))
+for t in ("pn_hebrew_xref", "pn_greek_identity"):
+    if t not in keys:
+        continue
+    before, after, _ = keys[t]
+    b_ = [ref(v, "o") + (p,) for v, p in before]
+    a_ = [ref(v, "n") + (p,) for v, p in after]
+    print("  %s keys only on the rollback file (a read-out): %s" % (t, "; ".join(fmt(k) for k in b_) or "none"))
+    print("  %s keys only on live (a read-out): %s" % (t, "; ".join(fmt(k) for k in a_) or "none"))
+    print("    = the six places REKEY's record names (2Ki 23:35 @6, Est 5:9 @12, Gen 5:25 @1, Gen 5:26 @1, Gen 34:4 @1, Jos 5:15 @27):"
+          " %s (a read-out, not gated)" % ("yes" if set(a_) == REKEY else "no"))
+mem.close()
+live.close()
+
+print("=== findings ===")
+for x in findings:
+    print("  FINDING: %s" % x)
+print("P7 CHECK: %s - findings %d" % ("READ" if not findings else "FINDINGS", len(findings)))
+sys.exit(3 if findings else 0)
+```

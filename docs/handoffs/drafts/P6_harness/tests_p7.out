@@ -1,0 +1,371 @@
+# P7 tests (2026-11-21T18:57:10Z); block f172659ea915eed4 program 911f5ec9d62c6bf3
+
+=============== A1 clean -> DONE (the whole log shown); a second paste -> STOP; nothing leaked; both files' bytes unchanged ===============
+home ready: /home/jp/gatep7/a1 (plant none)
+GATE REF d34d6723 + the swap commit - P7 - after the swap: cert_invariants and health_check on live, G5 against the rollback file (DESIGN 9.213 P7 / Q9, 9.222 (5), 9.223) - READ-ONLY: live and the rollback file only read; writes only its run folder and this log; site UP - PA HEAD 5fcac4f2 - 2026-11-21T18:57:12Z
+PA HEAD subject: edition upgrade: THE SWAP COMMIT - test copy
+PA's code: HEAD is the swap commit: yes; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: yes; all eight cleared files byte-for-byte as cleared (git blob ids): yes; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+uploaded check program sha256: c764a8333d03e3852a0bb8b1a438cf1ea0a49ff867e59715f4e627db0f1171c4 (expect c764a8333d03e3852a0bb8b1a438cf1ea0a49ff867e59715f4e627db0f1171c4)
+P6C's log was last written 2026-11-21T18:57:12Z; waiting 1 s if above 0 (at least 2 s after it)
+the rollback file /home/jp/gatep7/a1/bible-db/bible_pre_edition_upgrade_20261122.db sha256 = rollback.txt line 2 (live just before the swap): yes
+live now: 53248 bytes, last write 2026-11-21 18:57:12.855425402 +0000 (printed only; the site is up and writes its cache)
+beside live: bible.db-journal absent (printed only)
+beside live: bible.db-wal absent (printed only)
+beside live: bible.db-shm absent (printed only)
+=== 1. cert_invariants on live - start 18:57:14 (expect 7/7 green; check 4 at the pin 375, spent 1) ===
+--- run 1 (exit 0) ---
+== cert_invariants on /home/jp/gatep7/a1/bible-db/bible.db (read-only) ==
+  [OK  ] 1 row pins
+  [OK  ] 2 split flip
+  [OK  ] 3 em-dash
+  [OK  ] 4 corrections
+           . spent by lane-3: 1 (declared 1)
+  [OK  ] 5 feed manifest
+  [OK  ] 6 backup freshness
+  [OK  ] 7 person/place binding
+CERTIFIED STATE HOLDS (7/7 green)
+cert 7/7 green, exit 0 (run 1): yes
+cert spent line 1 / 1: yes
+the pin read by check 4 is 375: yes
+=== 2. health_check on live, --no-backup-check --no-disk-check - start 18:57:14 (expect the floor line OK at 395014 and 0 warning(s), 0 error(s)) ===
+--- run 1 (exit 0) ---
+=== bible.db health check: /home/jp/gatep7/a1/bible-db/bible.db ===
+  (flags: --no-backup-check --no-disk-check)
+  [OK  ] bare (unprefixed) strongs_base  [INVARIANT]: 0
+  [OK  ] abp_surface rows BELOW floor 395014  [fill or a backfill missing?]: 0   (shortfall vs floor; 3873 = the 10/25 fill is missing (restore_surface_fill.py); other = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py)
+  0 warning(s), 0 error(s).
+health floor line OK at 395014 (run 1): yes
+health 0 warnings, 0 errors (run 1): yes
+=== 3. G5 and the keys - start 18:57:14 ===
+check.py sha256 as run: c764a8333d03e3852a0bb8b1a438cf1ea0a49ff867e59715f4e627db0f1171c4 (expect c764a8333d03e3852a0bb8b1a438cf1ea0a49ff867e59715f4e627db0f1171c4)
+=== (1) the lane's tables on live now: rows / digest (first 12) ===
+  words                111 / 29ecedf91464 (expect 111 / 29ecedf91464, built's value on record): yes
+  abp_corrections      1 / bc066c5a2349 (expect 1 / bc066c5a2349, built's value on record): yes
+  abp_surface          5 / 16f85c73f7ac (expect 5 / 16f85c73f7ac, built's value on record): yes
+  verses               92 / 6cb0f3f02396 (a read-out)
+  pn_hebrew_xref       13 / 0ab5d014db54 (a read-out)
+  pn_greek_identity    64 / 1e48ec296a56 (a read-out)
+  pn_binding           1 / 28cb03b06c28 (a read-out)
+  pn_slot_binding      1 / 28cb03b06c28 (a read-out)
+  tipnr_metav_link     1 / 28cb03b06c28 (a read-out)
+  word_gloss           1 / 28cb03b06c28 (a read-out)
+=== (2) G5 - the rollback file -> live (expected: DESIGN 9.222 (5), labels per 9.223) ===
+  every verse id names the same (book, chapter, verse) on both files: old 92, live 92, matched 92: yes
+  pn_hebrew_xref: rows changed 6 (by column: class 6); class -> class: none -> lemma-only 6; keys only before 6, only after 6
+    pn_hebrew_xref rows changed: as expected
+    pn_hebrew_xref by column: as expected
+    pn_hebrew_xref class moves: as expected
+    pn_hebrew_xref keys only before / only after: as expected
+  pn_greek_identity: rows changed 57 (by column: greek_lemma 9, greek_strongs 9, source 57); source -> source: lemma-only -> none 1, lemma-only -> surface 6, lemma-only -> tipnr 3, none -> lemma-only 2, none -> surface 6, surface -> lemma-only 33, surface -> tipnr 6; keys only before 6, only after 6
+    pn_greek_identity rows changed: as expected
+    pn_greek_identity by column: as expected
+    pn_greek_identity source moves: as expected
+    pn_greek_identity keys only before / only after: as expected
+  name-slot strongs_base (is_pn = 1 on either side) changed: 18 (* -> G 3, G -> * 3, G -> G 6, H -> * 6)
+    name-slot strongs_base changed: as expected
+    name-slot strongs_base by shape: as expected
+=== (3) the keys (DESIGN 9.223) ===
+  pn_hebrew_xref rows whose class moved (6), verse @position, old -> new:
+    Num 21:25 @3: none -> lemma-only
+    1Sa 20:37 @3: none -> lemma-only
+    2Sa 15:6 @3: none -> lemma-only
+    Jer 48:15 @3: none -> lemma-only
+    Jer 48:20 @3: none -> lemma-only
+    Jer 49:3 @3: none -> lemma-only
+  DESIGN 9.95's six verses: 1Sa 20:37, 2Sa 15:6, Jer 48:15, Jer 48:20, Jer 49:3, Num 21:25
+    the class-moved rows' verses = 9.95's six: as expected
+  pn_hebrew_xref keys only on the rollback file (a read-out): 2Ki 23:35 @7; Est 5:9 @13; Gen 5:25 @2; Gen 5:26 @2; Gen 34:4 @2; Jos 5:15 @28
+  pn_hebrew_xref keys only on live (a read-out): 2Ki 23:35 @6; Est 5:9 @12; Gen 5:25 @1; Gen 5:26 @1; Gen 34:4 @1; Jos 5:15 @27
+    = the six places REKEY's record names (2Ki 23:35 @6, Est 5:9 @12, Gen 5:25 @1, Gen 5:26 @1, Gen 34:4 @1, Jos 5:15 @27): yes (a read-out, not gated)
+  pn_greek_identity keys only on the rollback file (a read-out): 2Ki 23:35 @7; Est 5:9 @13; Gen 5:25 @2; Gen 5:26 @2; Gen 34:4 @2; Jos 5:15 @28
+  pn_greek_identity keys only on live (a read-out): 2Ki 23:35 @6; Est 5:9 @12; Gen 5:25 @1; Gen 5:26 @1; Gen 34:4 @1; Jos 5:15 @27
+    = the six places REKEY's record names (2Ki 23:35 @6, Est 5:9 @12, Gen 5:25 @1, Gen 5:26 @1, Gen 34:4 @1, Jos 5:15 @27): yes (a read-out, not gated)
+=== findings ===
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:57:14
+the rollback file's sha256 after = before: yes
+the checkout's cache folders and their contents unchanged: yes
+scripts / tests / ai.py still as committed: yes
+P7 RESULT: DONE - 2026-11-21T18:57:14Z - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words
+exit=0
+P7 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gatep7/a1/edition_upgrade_runs/p7_after_swap_20261121.log
+leak grep (planted verse / word text in the log and the run folder): 0
+bible.db bytes unchanged: yes; rollback file bytes unchanged: yes; files in ~/bible-db beside the two: 0
+git status of the checkout (tracked files): 0 changed
+
+=============== A2 the 60 s wait as printed in the block (WAIT=60) -> waits, then DONE ===============
+P6C's log was last written 2026-11-21T18:57:16Z; waiting 60 s if above 0 (at least 60 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:58:16
+P7 RESULT: DONE - 2026-11-21T18:58:16Z - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words
+exit=0
+took 60 s
+
+=============== A3 a home made by the REAL P6A -> P6R -> P6B -> P6C; then P7 with the REAL program (no line changed): the guards pass on P6's own log and rollback.txt; the made-up files are not the real figures -> FINDINGS ===============
+exit=0
+exit=0
+exit=0
+exit=0
+GATE REF d34d6723 + the swap commit - P7 - after the swap: cert_invariants and health_check on live, G5 against the rollback file (DESIGN 9.213 P7 / Q9, 9.222 (5), 9.223) - READ-ONLY: live and the rollback file only read; writes only its run folder and this log; site UP - PA HEAD 3cf6df38 - 2026-11-21T18:58:50Z
+PA's code: HEAD is the swap commit: yes; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: yes; all eight cleared files byte-for-byte as cleared (git blob ids): yes; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+uploaded check program sha256: 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36 (expect 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36)
+the rollback file /home/jp/gatep7/a3/bible-db/bible_pre_edition_upgrade_20261121.db sha256 = rollback.txt line 2 (live just before the swap): yes
+check.py sha256 as run: 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36 (expect 911f5ec9d62c6bf3e58bc2eafd11513f1fda653333da88b66b49f751f8624a36)
+=== (2) G5 - the rollback file -> live (expected: DESIGN 9.222 (5), labels per 9.223) ===
+  pn_hebrew_xref: rows changed 1 (by column: class 1); class -> class: none -> lemma-only 1; keys only before 0, only after 0
+    pn_hebrew_xref rows changed: NOT AS EXPECTED - expected 6
+  pn_greek_identity: rows changed 1 (by column: source 1); source -> source: lemma-only -> none 1; keys only before 0, only after 0
+    pn_greek_identity rows changed: NOT AS EXPECTED - expected 57
+  pn_hebrew_xref keys only on the rollback file (a read-out): none
+  pn_greek_identity keys only on the rollback file (a read-out): none
+  FINDING: pn_hebrew_xref rows changed: got 1, expected 6
+  FINDING: pn_greek_identity rows changed: got 1, expected 57
+P7 CHECK: FINDINGS - findings 18
+the rollback file's sha256 after = before: yes
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-xrefkey planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:58:52Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+    the class-moved rows' verses = 9.95's six: NOT AS EXPECTED - expected [('1Sa', 20, 37), ('2Sa', 15, 6), ('Jer', 48, 15), ('Jer', 48, 20), ('Jer', 49, 3), ('Num', 21, 25)]
+  FINDING: the class-moved rows' verses = 9.95's six: got [('1Sa', 20, 37), ('2Sa', 15, 6), ('Jer', 48, 15), ('Jer', 48, 20), ('Num', 21, 25), ('Psa', 1, 9)], expected [('1Sa', 20, 37), ('2Sa', 15, 6), ('Jer', 48, 15), ('Jer', 48, 20), ('Jer', 49, 3), ('Num', 21, 25)]
+P7 CHECK: FINDINGS - findings 1
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:58:54
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-count planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:58:56Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+    pn_greek_identity rows changed: NOT AS EXPECTED - expected 57
+    pn_greek_identity by column: NOT AS EXPECTED - expected {'greek_lemma': 9, 'greek_strongs': 9, 'source': 57}
+    pn_greek_identity source moves: NOT AS EXPECTED - expected {'surface -> lemma-only': 33, 'lemma-only -> surface': 6, 'none -> surface': 6, 'surface -> tipnr': 6, 'lemma-only -> tipnr': 3, 'none -> lemma-only': 2, 'lemma-only -> none': 1}
+  FINDING: pn_greek_identity rows changed: got 58, expected 57
+  FINDING: pn_greek_identity by column: got {'greek_strongs': 9, 'greek_lemma': 9, 'source': 58}, expected {'greek_lemma': 9, 'greek_strongs': 9, 'source': 57}
+  FINDING: pn_greek_identity source moves: got {'surface -> lemma-only': 33, 'lemma-only -> surface': 6, 'none -> surface': 6, 'surface -> tipnr': 6, 'lemma-only -> tipnr': 3, 'none -> lemma-only': 2, 'lemma-only -> none': 1, 'tipnr -> none': 1}, expected {'surface -> lemma-only': 33, 'lemma-only -> surface': 6, 'none -> surface': 6, 'surface -> tipnr': 6, 'lemma-only -> tipnr': 3, 'none -> lemma-only': 2, 'lemma-only -> none': 1}
+P7 CHECK: FINDINGS - findings 3
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:58:58
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-slot planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:00Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+    name-slot strongs_base changed: NOT AS EXPECTED - expected 18
+    name-slot strongs_base by shape: NOT AS EXPECTED - expected {'* -> G': 3, 'G -> *': 3, 'G -> G': 6, 'H -> *': 6}
+  FINDING: name-slot strongs_base changed: got 19, expected 18
+  FINDING: name-slot strongs_base by shape: got {'* -> G': 3, 'G -> *': 3, 'G -> G': 6, 'H -> *': 6, 'H -> H': 1}, expected {'* -> G': 3, 'G -> *': 3, 'G -> G': 6, 'H -> *': 6}
+P7 CHECK: FINDINGS - findings 2
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:02
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-wordsdig planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:04Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+  words                111 / 9eda150400eb (expect 111 / 29ecedf91464, built's value on record): NO
+  FINDING: live words is 111 / 9eda150400eb, built's on record is 111 / 29ecedf91464
+P7 CHECK: FINDINGS - findings 1
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:06
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-notable planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:08Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+  FINDING: table word_gloss missing on live
+P7 CHECK: FINDINGS - findings 1
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:10
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== F-verseid planted in the made-up pair -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:12Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+  every verse id names the same (book, chapter, verse) on both files: old 92, live 92, matched 91: NO
+  FINDING: verse ids do not all name the same verse on the rollback file and live: 92 / 92 / 91
+P7 CHECK: FINDINGS - findings 1
+check exit 3 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:15
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== C1 cert check 4 red -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:17Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 1) ---
+cert 7/7 green, exit 0 (run 1): NO
+--- run 1 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:19
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== C2 cert green but a second spent row noted -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:21Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+cert spent line 1 / 1: NO
+--- run 1 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:24
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== H1 health: the floor short by 3,873 -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:25Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+health floor line OK at 395014 (run 1): NO
+health 0 warnings, 0 errors (run 1): NO
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:27
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== H2 health: one other warning -> FINDINGS ===============
+P6C's log was last written 2026-11-21T18:59:29Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+health 0 warnings, 0 errors (run 1): NO
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 18:59:31
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== H3 health: 'database is locked' on the first read only -> read again after 30 s -> DONE ===============
+P6C's log was last written 2026-11-21T18:59:33Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+  [ERR ] bare (unprefixed) strongs_base  [INVARIANT]: -   (database is locked)
+run 1 hit 'database is locked'; the same read again in 30 s
+--- run 2 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 19:00:05
+P7 RESULT: DONE - 2026-11-21T19:00:05Z - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words
+exit=0
+
+=============== H4 health: 'database is locked' on all three reads -> FINDINGS ===============
+P6C's log was last written 2026-11-21T19:00:06Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+  [ERR ] bare (unprefixed) strongs_base  [INVARIANT]: -   (database is locked)
+run 1 hit 'database is locked'; the same read again in 30 s
+--- run 2 (exit 0) ---
+  [ERR ] bare (unprefixed) strongs_base  [INVARIANT]: -   (database is locked)
+run 2 hit 'database is locked'; the same read again in 30 s
+--- run 3 (exit 0) ---
+  [ERR ] bare (unprefixed) strongs_base  [INVARIANT]: -   (database is locked)
+health 0 warnings, 0 errors (run 3): NO
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 19:01:08
+P7 RESULT: FINDINGS - the NO lines and FINDING lines above; the site stays as it is; nothing is restored, removed or re-run before the ruling chat has read this log
+exit=1
+
+=============== H5 the REAL health_check.py (the swap commit's) on a made-up file with 395,014 abp_surface rows: the block's two grep texts against the real output ===============
+real floor line:   [OK  ] abp_surface rows BELOW floor 395014  [fill or a backfill missing?]: 0   (shortfall vs floor; 3873 = the 10/25 f
+block's floor text matches it: 1 (expect 1)
+real tally line: '  0 warning(s), 15 error(s).' - the block's form '  N warning(s), M error(s).': 1 (expect 1)
+
+=============== C3 cert: 'database is locked' on the first read only -> read again after 30 s -> DONE ===============
+P6C's log was last written 2026-11-21T19:01:11Z; waiting 1 s if above 0 (at least 2 s after it)
+--- run 1 (exit 1) ---
+sqlite3.OperationalError: database is locked
+run 1 hit 'database is locked'; the same read again in 30 s
+--- run 2 (exit 0) ---
+--- run 1 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 19:01:43
+P7 RESULT: DONE - 2026-11-21T19:01:43Z - cert 7/7, the health floor OK with 0 warnings, G5 and the six keys as declared; this log to the ruling chat by cat. Part B (the five verses on the served site) is CC's and JP's, recorded in words
+exit=0
+
+=============== K1 a Python cache folder appears in the checkout during the run -> CHECK ===============
+P6C's log was last written 2026-11-21T19:01:45Z; waiting 2 s if above 0 (at least 2 s after it)
+--- run 1 (exit 0) ---
+--- run 1 (exit 0) ---
+P7 CHECK: READ - findings 0
+check exit 0 (expect 0; 3 = findings; 2 = a STOP inside the read; 4 = check.py not the pinned bytes) - end 19:01:47
+the checkout's cache folders and their contents unchanged: NO
+P7 RESULT: CHECK - lines above; the site stays as it is; to the ruling chat as printed
+exit=1
+
+=============== S1 P6C's log without a DONE line -> STOP ===============
+P7 RESULT: STOP - P6C has not finished DONE (/home/jp/gatep7/s1/edition_upgrade_runs/p6c_swap_deploy.log); nothing read
+exit=1
+
+=============== S2 no P6C log -> STOP ===============
+P7 RESULT: STOP - P6C has not finished DONE (/home/jp/gatep7/s2/edition_upgrade_runs/p6c_swap_deploy.log); nothing read
+exit=1
+
+=============== S3 PA not on the swap commit (HEAD = d34d6723) -> STOP ===============
+PA's code: HEAD is the swap commit: no; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: no; all eight cleared files byte-for-byte as cleared (git blob ids): no; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+  changed: 
+P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read
+exit=1
+
+=============== S4 a commit on top of the swap commit pulled -> STOP ===============
+PA's code: HEAD is the swap commit: no; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: yes; all eight cleared files byte-for-byte as cleared (git blob ids): yes; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read
+exit=1
+
+=============== S5 an uncommitted edit in ai.py -> STOP ===============
+PA's code: HEAD is the swap commit: yes; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: yes; all eight cleared files byte-for-byte as cleared (git blob ids): yes; git status exit 0, uncommitted changes in them: 1 (expect yes, yes, yes, yes, 0, 0)
+ M ai.py
+P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read
+exit=1
+
+=============== S6 the rollback file missing -> STOP ===============
+P7 RESULT: STOP - the rollback file is missing or empty: /home/jp/gatep7/s6/bible-db/bible_pre_edition_upgrade_20261122.db; nothing read
+exit=1
+
+=============== S7 the rollback file not the pre-swap bytes -> STOP ===============
+the rollback file /home/jp/gatep7/s7/bible-db/bible_pre_edition_upgrade_20261122.db sha256 = rollback.txt line 2 (live just before the swap): NO
+P7 RESULT: STOP - the rollback file is not the pre-swap bytes; nothing compared - TO THE RULING CHAT NOW
+exit=1
+
+=============== S8 a -journal beside the rollback file -> STOP ===============
+P7 RESULT: STOP - side file beside the rollback file: /home/jp/gatep7/s8/bible-db/bible_pre_edition_upgrade_20261122.db-journal; nothing read
+exit=1
+
+=============== S9 the uploaded program not the pinned file -> STOP ===============
+uploaded check program sha256: 6d0b8dc8666ba73e57104bdc0f7554c4a9e2a69722a4f42f62b4b9300e28955d (expect c764a8333d03e3852a0bb8b1a438cf1ea0a49ff867e59715f4e627db0f1171c4)
+P7 RESULT: STOP - the uploaded check program is not the file CC wrote and tested; nothing read
+exit=1
+
+=============== S10 the uploaded program missing -> STOP ===============
+P7 RESULT: STOP - the uploaded check program is missing or empty: /home/jp/gatep7/s10/edition_upgrade_runs/p7_check_20261121.py; nothing read
+exit=1
+
+=============== S11 rollback.txt names a file elsewhere / line 2 not a sha -> STOP ===============
+P7 RESULT: STOP - unexpected rollback name: /tmp/elsewhere.db; nothing read
+exit=1
+P7 RESULT: STOP - rollback.txt line 2 is not a sha256; nothing read
+exit=1
+
+=============== S12 bible.db missing -> STOP ===============
+P7 RESULT: STOP - bible.db is missing or empty; nothing read - TO THE RULING CHAT NOW
+exit=1
+
+=============== S14 the run folder already there (a later-day second paste) -> STOP, nothing overwritten ===============
+P7 RESULT: STOP - the run folder already exists (an earlier run? it is kept as is): /home/jp/gatep7/s14/edition_upgrade_runs/p7_after_swap; nothing read
+exit=1
+keepme
+
+=============== S15 the seven names right but one file's content not the cleared bytes (a commit titled as the swap commit) -> STOP ===============
+PA HEAD subject: edition upgrade: THE SWAP COMMIT - other content
+  content differs from the cleared swap commit: scripts/health_check.py (HEAD has 277ddc11de7d9e1ace334a5d2796fec6f3bc1304)
+PA's code: HEAD is the swap commit: yes; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: yes; all eight cleared files byte-for-byte as cleared (git blob ids): no; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read
+exit=1
+
+=============== S13 the swap commit's file list is not the seven (a test file changed in a commit titled as the swap commit) -> STOP ===============
+PA's code: HEAD is the swap commit: yes; d34d6723 is in its history: yes; files changed since d34d6723 in scripts / tests / ai.py = the cleared seven names: no; all eight cleared files byte-for-byte as cleared (git blob ids): yes; git status exit 0, uncommitted changes in them: 0 (expect yes, yes, yes, yes, 0, 0)
+  changed: ai.py scripts/audit_phrase_gloss_underdist.py scripts/cert_invariants.py scripts/health_check.py tests/fixtures/corrections/abp_corrections_active_built_20261121.txt tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256 tests/test_strongs_join.py tests/test_surface_fill_restore.py 
+P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read
+exit=1
