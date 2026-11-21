@@ -1,5 +1,5 @@
 # P7 tests: a test home in the state P6C DONE leaves, made by hand: a clone whose HEAD is a test swap commit (the cleared patch
-# applied on d34d6723), P6C's log with its DONE line, p6_swap/rollback.txt, and the made-up pair of files (mkdbs_p7.py).
+# applied on the REAL master - origin carries the real history, adfb8ac5 included; ruling chat 11/21, DESIGN 9.232), P6C's log with its DONE line, p6_swap/rollback.txt, and the made-up pair of files (mkdbs_p7.py).
 # The TEST copy of the program differs from p7_check.py in ONE line: the three digests of (1) are the made-up file's own.
 # The TEST copy of the block: __XP7__ filled, CERT / HC pointed at the stand-in (p7_standin.py), WAIT shortened.
 # usage: mkhome_p7.sh <home> [plant] [wait seconds]   (WSL only)
@@ -9,8 +9,9 @@ PATCH=/mnt/c/Users/JP/projects/bible-db/docs/handoffs/drafts/SWAP_COMMIT/swap_co
 H=$1; PL=${2:-none}; W=${3:-2}
 rm -rf "$H"; mkdir -p "$H/edition_upgrade_runs/p6_swap" "$H/standin"
 git clone -q --bare ~/gate4/repo "$H/origin.git"
+git -C "$H/origin.git" fetch -q /mnt/c/Users/JP/projects/bible-db master:refs/heads/realmaster
 git clone -q "$H/origin.git" "$H/work"
-( cd "$H/work" && git checkout -q d34d6723 && git switch -q -c master-test && git apply "$PATCH" && git add -A \
+( cd "$H/work" && git checkout -q realmaster && git switch -q -c master-test && git apply "$PATCH" && git add -A \
   && git -c user.email=t@t -c user.name=t commit -q -m "edition upgrade: THE SWAP COMMIT - test copy" \
   && git push -q origin master-test:refs/heads/swaptest \
   && git -c user.email=t@t -c user.name=t commit -q --allow-empty -m "docs only on top" && git push -q origin master-test:refs/heads/ontop )

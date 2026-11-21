@@ -17,8 +17,9 @@ XP7=__XP7__                                                                # sha
 CERT=scripts/cert_invariants.py
 HC=scripts/health_check.py
 WAIT=60                                                                    # seconds after P6C's log was last written (the reload is inside P6C's deploy.sh) - plan P7
-WANT="ai.py scripts/audit_phrase_gloss_underdist.py scripts/cert_invariants.py scripts/health_check.py tests/fixtures/corrections/abp_corrections_active_built_20261121.txt tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256 tests/test_surface_fill_restore.py "
-# the eight files of the cleared swap commit, each by git blob id (CC, from the cleared working tree = swap_commit_full.patch 003bb52f...83ee, DESIGN 9.231)
+# the names changed since REF under scripts / tests / ai.py once PA has pulled: the swap commit's seven + the three of adfb8ac5 (the --cells dry-run output, approved DESIGN 9.158; on origin since 11/16, not on PA before P6C) - DESIGN 9.232
+WANT="ai.py scripts/audit_phrase_gloss_underdist.py scripts/build_words_from_abp.py scripts/cert_invariants.py scripts/githooks/pre-commit scripts/health_check.py tests/fixtures/corrections/abp_corrections_active_built_20261121.txt tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256 tests/test_app_cells.py tests/test_surface_fill_restore.py "
+# the eight files of the cleared swap commit, each by git blob id (CC, from the cleared working tree = swap_commit_full.patch 003bb52f...83ee, DESIGN 9.231), then the three of adfb8ac5 by their blob ids at the swap commit's parent (= at adfb8ac5 itself)
 PINS="7f112bdddab79d4f2ba861c76504bd4c5d024ff7 .claude/commands/rebuild-words.md
 3ffffc60e2034dcf206caca69e91e7c98631ee34 ai.py
 c682f995ba13682b981535591cbd99ff0a3c3c95 scripts/audit_phrase_gloss_underdist.py
@@ -26,7 +27,10 @@ c682f995ba13682b981535591cbd99ff0a3c3c95 scripts/audit_phrase_gloss_underdist.py
 ea7b4bd027e7a7559057094fc8b073b977202064 scripts/health_check.py
 210267f6515e902ffb6cf58dec73b3b6549a181d tests/fixtures/corrections/abp_corrections_active_built_20261121.txt
 6f4ee7b20df2de01dbc82428a5f172b509f61a72 tests/fixtures/corrections/abp_corrections_active_built_20261121.txt.sha256
-52dce7c6bd88d7a9cdd31ac8ca18e4d30d4c6566 tests/test_surface_fill_restore.py"
+52dce7c6bd88d7a9cdd31ac8ca18e4d30d4c6566 tests/test_surface_fill_restore.py
+e238dc9dd4d8275af5dedba8c0f6c8d6805aaaa5 scripts/build_words_from_abp.py
+3fe7d6cdbfe193f33b74dc4b72fd6bb6234cb399 scripts/githooks/pre-commit
+240a63f12d9721dcfc5e6412b16afeb74a59ff65 tests/test_app_cells.py"
 EU() { PYTHONIOENCODING=utf-8 python3 "$@"; }
 # run a read up to 3 times, 30 s apart, ONLY while its output says "database is locked" (a site worker writing its cache, as on 10/25); every output printed
 try3() { o=$1; shift; for i in 1 2 3; do "$@" > "${o}_$i.out" 2>&1; rx=$?; echo "--- run $i (exit $rx) ---"; cat "${o}_$i.out"; grep -q "database is locked" "${o}_$i.out" || break; [ "$i" -lt 3 ] && { echo "run $i hit 'database is locked'; the same read again in 30 s"; sleep 30; }; done; }
@@ -40,8 +44,8 @@ nm=$(git diff --name-only "$REF" HEAD -- scripts tests ai.py | sort | tr '\n' ' 
 us=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); rs=$?; u=$(grep -c . <<< "$us")
 c=no; case "$s" in "edition upgrade: THE SWAP COMMIT"*) c=yes;; esac
 n=no; [ "$nm" = "$WANT" ] && n=yes
-b=yes; while read -r want path; do got=$(git rev-parse "HEAD:$path" 2>/dev/null); [ "$got" = "$want" ] || { b=no; echo "  content differs from the cleared swap commit: $path (HEAD has ${got:-nothing})"; }; done <<< "$PINS"
-echo "PA's code: HEAD is the swap commit: $c; $REF is in its history: $a; files changed since $REF in scripts / tests / ai.py = the cleared seven names: $n; all eight cleared files byte-for-byte as cleared (git blob ids): $b; git status exit $rs, uncommitted changes in them: $u (expect yes, yes, yes, yes, 0, 0)"
+b=yes; while read -r want path; do got=$(git rev-parse -q --verify "HEAD:$path" 2>/dev/null); [ "$got" = "$want" ] || { b=no; echo "  content differs from the cleared bytes: $path (HEAD has ${got:-nothing})"; }; done <<< "$PINS"
+echo "PA's code: HEAD is the swap commit: $c; $REF is in its history: $a; files changed since $REF in scripts / tests / ai.py = the ten expected names (the swap commit's seven + adfb8ac5's three): $n; all eleven pinned files byte-for-byte as pinned (git blob ids): $b; git status exit $rs, uncommitted changes in them: $u (expect yes, yes, yes, yes, 0, 0)"
 [ "$n" = yes ] || echo "  changed: $nm"
 [ -n "$us" ] && echo "$us"
 [ "$c" = yes ] && [ "$a" = yes ] && [ "$n" = yes ] && [ "$b" = yes ] && [ "$rs" = 0 ] && [ "$u" = 0 ] || { echo "P7 RESULT: STOP - PA's code is not the swap commit as cleared; nothing read"; exit 1; }

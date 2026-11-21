@@ -1,5 +1,6 @@
-# P7 tests (the read-only check after the swap). Test homes: mkhome_p7.sh (the state P6C DONE leaves, made by hand; the made-up
-# pair gives exactly the real expected G5 figures) - and one home made by the real P6 blocks (mkhome_p6.sh), case A3.
+# P7 tests (the read-only check after the swap). EVERY home's origin carries the REAL master (adfb8ac5 included) with a test swap commit
+# on top (DESIGN 9.232). Test homes: mkhome_p7.sh (the state P6C DONE leaves, made by hand; the made-up
+# pair gives exactly the real expected G5 figures) - and one home made by the real P6 blocks (mkhome_p6real.sh: PA at 1d5e34ee), case A3.
 # cert_invariants / health_check are the stand-in p7_standin.py (the made-up files lack the tables the real two read); H5 runs the
 # REAL health_check.py to show the block's floor-line text is the real one.   usage (WSL): bash run_p7.sh > tests_p7.out
 set -uo pipefail
@@ -24,9 +25,9 @@ echo "git status of the checkout (tracked files): $(cd $H/bible-db && git status
 hd "A2 the 60 s wait as printed in the block (WAIT=60) -> waits, then DONE"
 H=$G/a2; mk $H none 60; t0=$(date +%s); run $H | keep; echo "took $(( $(date +%s) - t0 )) s"
 
-hd "A3 a home made by the REAL P6A -> P6R -> P6B -> P6C; then P7 with the REAL program (no line changed): the guards pass on P6's own log and rollback.txt; the made-up files are not the real figures -> FINDINGS"
-H=$G/a3; bash "$T/mkhome_p6.sh" $H > $H.mk 2>&1 || { cat $H.mk; exit 1; }
-for b in p6a p6r p6b; do run $H $b | tail -1; done
+hd "A3 REAL history: PA at 1d5e34ee, the REAL P6A -> P6R -> P6B -> P6C (the pull brings the swap commit AND adfb8ac5); then P7 with the REAL program (no line changed): the guards pass on P6's own log and rollback.txt; the made-up files are not the real figures -> FINDINGS"
+H=$G/a3; bash "$T/mkhome_p6real.sh" $H > $H.mk 2>&1 || { cat $H.mk; exit 1; }
+for b in p6a p6r p6b; do run $H $b | tail -1; done; echo "PA HEAD before the pull: $(cd $H/bible-db && git log -1 --format=%h)"
 cp $H/deploy_standin.sh $H/bible-db/scripts/deploy.sh; run $H p6c | tail -1; ( cd $H/bible-db && git checkout -q scripts/deploy.sh )
 mkdir -p $H/standin; cp $T/p7_standin.py $H/standin/cert.py; cp $T/p7_standin.py $H/standin/health.py; cp $T/p7_check.py $H/edition_upgrade_runs/p7_check_20261121.py
 sed -e "s/__XP7__/$(sha256sum < $T/p7_check.py | cut -d' ' -f1)/" -e "s|^CERT=.*|CERT=$H/standin/cert.py|" -e "s|^HC=.*|HC=$H/standin/health.py|" -e "s/^WAIT=60 /WAIT=2 /" $T/block_p7.sh > $H/p7.sh
@@ -60,7 +61,7 @@ H=$G/k1; mk $H; echo pyc > $H/standin/cert.mode; run $H | keep
 
 hd "S1 P6C's log without a DONE line -> STOP";    H=$G/s1; mk $H; echo "P6C RESULT: CHECK - lines above" > $H/edition_upgrade_runs/p6c_swap_deploy.log; run $H | tail -2
 hd "S2 no P6C log -> STOP";                       H=$G/s2; mk $H; rm $H/edition_upgrade_runs/p6c_swap_deploy.log; run $H | tail -2
-hd "S3 PA not on the swap commit (HEAD = d34d6723) -> STOP"; H=$G/s3; mk $H; ( cd $H/bible-db && git checkout -q -B main d34d6723 ); run $H | tail -4
+hd "S3 PA not on the swap commit (HEAD = 1d5e34ee, no pull) -> STOP"; H=$G/s3; mk $H; ( cd $H/bible-db && git checkout -q -B main 1d5e34ee ); run $H | tail -4
 hd "S4 a commit on top of the swap commit pulled -> STOP"; H=$G/s4; mk $H; ( cd $H/bible-db && git checkout -q -B main origin/ontop ); run $H | tail -3
 hd "S5 an uncommitted edit in ai.py -> STOP";     H=$G/s5; mk $H; echo "# x" >> $H/bible-db/ai.py; run $H | tail -4
 hd "S6 the rollback file missing -> STOP";        H=$G/s6; mk $H; rm $H/bible-db/bible_pre_edition_upgrade_20261122.db; run $H | tail -2
@@ -75,5 +76,7 @@ hd "S12 bible.db missing -> STOP";                H=$G/s12; mk $H; rm $H/bible-d
 hd "S14 the run folder already there (a later-day second paste) -> STOP, nothing overwritten"; H=$G/s14; mk $H; mkdir -p $H/edition_upgrade_runs/p7_after_swap; echo keepme > $H/edition_upgrade_runs/p7_after_swap/cert_1.out; run $H | tail -2; cat $H/edition_upgrade_runs/p7_after_swap/cert_1.out
 hd "S15 the seven names right but one file's content not the cleared bytes (a commit titled as the swap commit) -> STOP"
 H=$G/s15; mk $H; ( cd $H/bible-db && git reset -q --soft HEAD~1 && echo "# x" >> scripts/health_check.py && git -c user.email=t@t -c user.name=t commit -q -am "edition upgrade: THE SWAP COMMIT - other content" ); run $H | tail -5
+hd "S16 the pull did not bring adfb8ac5's three (PA on the swap commit laid straight on d34d6723, the old test origin) -> STOP"
+H=$G/s16; mk $H; ( cd $H/bible-db && git checkout -q -B main d34d6723 && git apply /mnt/c/Users/JP/projects/bible-db/docs/handoffs/drafts/SWAP_COMMIT/swap_commit_full.patch && git add -A && git -c user.email=t@t -c user.name=t commit -q -m "edition upgrade: THE SWAP COMMIT - on d34d6723" ); run $H | tail -6
 hd "S13 the swap commit's file list is not the seven (a test file changed in a commit titled as the swap commit) -> STOP"
 H=$G/s13; mk $H; ( cd $H/bible-db && echo "# x" >> tests/test_strongs_join.py && git -c user.email=t@t -c user.name=t commit -q -am "edition upgrade: THE SWAP COMMIT - with one more file" ); run $H | tail -4
