@@ -23,7 +23,7 @@ H=$G/b1; mk $H stale; L0=$(sha $H/bible-db/bible.db); run $H | grep -E "slot \(|
 hd "B2 the copy's words digest is not P7's -> STOP before the check, the copy KEPT"
 H=$G/b2; mk $H; L0=$(sha $H/bible-db/bible.db); sed -i 's/^XW="[^"]*"/XW="626309 d95acb5d4be4"/' $H/p8.sh; run $H | tail -3; state $H $L0; echo "check output made: $(ls $H/edition_upgrade_runs/p8_snapshot_check | grep -c check_)"
 hd "B3 home above the bound -> STOP, nothing copied"
-H=$G/b3; mk $H; L0=$(sha $H/bible-db/bible.db); sed -i 's/^XHOME_MAX=8300000/XHOME_MAX=1      /' $H/p8.sh; run $H | tail -3; state $H $L0; echo "run folder made: $([ -e $H/edition_upgrade_runs/p8_snapshot_check ] && echo yes || echo no)"
+H=$G/b3; mk $H; L0=$(sha $H/bible-db/bible.db); sed -i 's/^XHOME_MAX=8400000/XHOME_MAX=1      /' $H/p8.sh; run $H | tail -3; state $H $L0; echo "run folder made: $([ -e $H/edition_upgrade_runs/p8_snapshot_check ] && echo yes || echo no)"
 hd "B4 inside the 13:00-14:30 window (TEST copy: the window moved to bracket now) -> STOP, nothing copied"
 H=$G/b4; mk $H; NOW=$(date -u +%H%M); LO=$(printf %04d $((10#$NOW - 1))); HI=$(printf %04d $((10#$NOW + 1)))
 sed -i "s/-ge 1300 \] \&\& \[ \"\$hm\" -le 1430/-ge $LO ] \&\& [ \"\$hm\" -le $HI/" $H/p8.sh; run $H | tail -3

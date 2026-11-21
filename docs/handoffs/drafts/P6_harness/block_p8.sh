@@ -24,7 +24,7 @@ XB4=ea6c54c34a86539929bee354f4b3390d7aadbdba081f5010233381e0fd4e7273      # the 
 XSRC=5da9bb95c4b1337054dd8dd82ec3cbbb5ac97790c151ee56b33fdac0caf57e01     # src full sha256 (DESIGN 9.168 (1), 9.181; P6A read it 11/21)
 XW="626309 d95acb5d4be4"                                                   # the copy's words: rows + digest head = P7's read of live (DESIGN 9.235)
 XA="395014 219a3ebe7075"                                                   # the copy's abp_surface = P7's read of live (DESIGN 9.235)
-XHOME_MAX=8300000                                                          # KB: STOP before the copy above this (DESIGN 9.236 (2))
+XHOME_MAX=8400000                                                          # KB: STOP before the copy above this (DESIGN 9.236 (2))
 h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
 inwin() { hm=$(date -u +%H%M); echo "UTC time $hm (STOP inside 1300-1430)"; [ "$hm" -ge 1300 ] && [ "$hm" -le 1430 ]; }
 pcf() { find ~/bible-db \( -name __pycache__ -type d -o -path '*/__pycache__/*' \) -printf '%M %u %g %s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -c1-16; }   # DESIGN 9.209

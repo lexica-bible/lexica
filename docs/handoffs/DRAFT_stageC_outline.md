@@ -20241,3 +20241,8 @@ dk1=$(cut -f1 <<< "$(du -sk ~ 2>/dev/null)"); echo "home in use after: $dk1 KB (
 echo "P8 RESULT: PASS - $(date -u +%FT%TZ) - SNAPSHOT CURRENT on a fresh copy of the swapped live (4,411 rows, byte for byte; snapshot + report = their pins); the src control read STALE; the copy removed; this log to the ruling chat by cat. The 10/25 pre-fill copy and snapshot stay until a removal is ruled"; exit 0
 ) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
 ```
+
+### Block P8 CLEARED (§9.237, 11/21) - with XHOME_MAX 8300000 -> 8400000 on line 27, nothing else
+- The block to run = docs/handoffs/drafts/P6_harness/block_p8.sh as now committed, sha256 aec8e27eb8901ab2f43f593e2e83b9689a2398bc2705c3e5318f5c03c1ac74ae (the ruling chat's figure; CC's file hashes the same). The text printed under "### Block P8" above (59a1cc22…508a) differs from it in that one token only.
+- Re-test at the new figure (run_p8.sh, the bound case's sed moved to 8400000): 13 cases as before - 1 PASS, 2 CHECK, 11 STOP lines; B3 (home above the bound) STOP, nothing copied. tests_p8.out regenerated.
+- JP's dashboard line 11/21: "79% full - 7.9 GB of your 10.0 GB quota". Term: not started between 12:30 and 14:30 UTC.

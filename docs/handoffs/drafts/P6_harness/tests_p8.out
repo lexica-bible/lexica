@@ -1,27 +1,27 @@
-# P8 tests (2026-11-21T21:09:10Z); block 59a1cc22685b15b6
+# P8 tests (2026-11-21T21:15:41Z); block aec8e27eb8901ab2
 
 =============== A1 clean -> PASS, the copy removed (whole log shown); a second paste -> STOP; no planted text in the log or outputs ===============
-home ready: /home/jp/gatep8/a1 (plant none; REF d85840de; words 5000 06d6f259aa2a; abp_surface 5000 de98ac741aec)
-GATE REF d85840de - P8 - the 9c snapshot's --check against a fresh copy of the swapped live (charter 6 :340; DESIGN 9.235, 9.236) - WRITES: a fresh copy of live in the run folder (sqlite backup; live opened read-only by that step only), REMOVED by this block on PASS only; the run folder; this log. src and the pre-fill copy only read - site UP - PA HEAD d85840de - 2026-11-21T21:09:15Z
-repo guards: d85840de in HEAD's history, scripts / tests / ai.py = d85840de, nothing uncommitted there: yes
-UTC time 2109 (STOP inside 1300-1430)
+home ready: /home/jp/gatep8/a1 (plant none; REF 297e3959; words 5000 06d6f259aa2a; abp_surface 5000 de98ac741aec)
+GATE REF 297e3959 - P8 - the 9c snapshot's --check against a fresh copy of the swapped live (charter 6 :340; DESIGN 9.235, 9.236) - WRITES: a fresh copy of live in the run folder (sqlite backup; live opened read-only by that step only), REMOVED by this block on PASS only; the run folder; this log. src and the pre-fill copy only read - site UP - PA HEAD 297e3959 - 2026-11-21T21:15:47Z
+repo guards: 297e3959 in HEAD's history, scripts / tests / ai.py = 297e3959, nothing uncommitted there: yes
+UTC time 2115 (STOP inside 1300-1430)
 snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv: sha256 dbf282ca2e7b0a41d4010000b31e67466a9f5cf1972b7c12fbc26e8bcb206ee7 (expect dbf282ca2e7b0a41d4010000b31e67466a9f5cf1972b7c12fbc26e8bcb206ee7)
 report tests/fixtures/rebuild_trap/restore_report_20261115.tsv: sha256 9d44569a1cc243b01df5f48fbce11e9573cd2495ba385a334e5c1509e1d21017 (expect 9d44569a1cc243b01df5f48fbce11e9573cd2495ba385a334e5c1509e1d21017)
 pre-fill copy /home/jp/gatep8/a1/abp_surface_prefill_20261115.db: sha256 f9efb0fb66c040195b8c5195a355d3e1065857cc86d907f6e356aaa190299803 (expect f9efb0fb66c040195b8c5195a355d3e1065857cc86d907f6e356aaa190299803)
 src /home/jp/gatep8/a1/bible-db/bible_edupg_test_20261101.db: sha256 f0add47cb1b8c3005eb0850654f53e9c83e753dbb332076534ca4f67e8a073f7 (expect f0add47cb1b8c3005eb0850654f53e9c83e753dbb332076534ca4f67e8a073f7)
-home in use before: 192592 KB (STOP above 8300000 KB; the copy adds about 442,000 KB after this check)
-live before: 352256 bytes, last write 2026-11-21 21:09:15.384184054 +0000 (printed only; the site is up)
+home in use before: 193220 KB (STOP above 8400000 KB; the copy adds about 442,000 KB after this check)
+live before: 352256 bytes, last write 2026-11-21 21:15:47.132410792 +0000 (printed only; the site is up)
 beside live: bible.db-journal absent (printed only)
 beside live: bible.db-wal absent (printed only)
 beside live: bible.db-shm absent (printed only)
-UTC time 2109 (STOP inside 1300-1430)
-=== (copy) sqlite backup of live into the run folder - start 2026-11-21T21:09:15Z ===
+UTC time 2115 (STOP inside 1300-1430)
+=== (copy) sqlite backup of live into the run folder - start 2026-11-21T21:15:47Z ===
 live journal mode (read): delete
 copy quick_check: ok
 copy triggers: 0
 copy: 352256 bytes
-copy exit 0 (expect 0) - end 2026-11-21T21:09:15Z
-live after the copy: 352256 bytes, last write 2026-11-21 21:09:15.384184054 +0000 (printed only)
+copy exit 0 (expect 0) - end 2026-11-21T21:15:47Z
+live after the copy: 352256 bytes, last write 2026-11-21 21:15:47.132410792 +0000 (printed only)
 beside live after the copy: bible.db-journal absent (printed only; -wal / -shm are never expected)
 beside live after the copy: bible.db-wal absent (printed only; -wal / -shm are never expected)
 beside live after the copy: bible.db-shm absent (printed only; -wal / -shm are never expected)
@@ -69,8 +69,8 @@ control exit 1 (expect 1)
 src and the pre-fill copy: size and time before = after: yes; fixture folder listing before = after: yes; the checkout's cache folders unchanged: yes
 the copy's sha256 before it is removed: feb9318bfad8ded310171dd19f96fcc44ca73b78e031ae2148632fb9758d3049 (352256 bytes)
 the copy removed: yes
-home in use after: 192612 KB (before 192592 KB)
-P8 RESULT: PASS - 2026-11-21T21:09:16Z - SNAPSHOT CURRENT on a fresh copy of the swapped live (4,411 rows, byte for byte; snapshot + report = their pins); the src control read STALE; the copy removed; this log to the ruling chat by cat. The 10/25 pre-fill copy and snapshot stay until a removal is ruled
+home in use after: 193240 KB (before 193220 KB)
+P8 RESULT: PASS - 2026-11-21T21:15:47Z - SNAPSHOT CURRENT on a fresh copy of the swapped live (4,411 rows, byte for byte; snapshot + report = their pins); the src control read STALE; the copy removed; this log to the ruling chat by cat. The 10/25 pre-fill copy and snapshot stay until a removal is ruled
 exit=0
 P8 RESULT: STOP - log already exists (already ran? it is kept as is): /home/jp/gatep8/a1/edition_upgrade_runs/p8_snapshot_check_20261121.log
 leak grep (planted verse / word text): 0
@@ -87,7 +87,7 @@ STOPPED: STALE SNAPSHOT — 1 slot(s) differ between --src and the frozen file �
   sha256 pin | file: NO (expected text: sha256                  dbf282ca2e7b0a41d4010000b31e67466a9f5cf1972b7c12fbc26e8bcb206ee7 | dbf282ca2e7b0a41d4010000b31e67466a9f5cf1972b7c12fbc26e8bcb206ee7)
   SNAPSHOT CURRENT: NO (expected text: RESULT: SNAPSHOT CURRENT)
 STOPPED: STALE SNAPSHOT — --src no longer yields the frozen fill (G0 the report places 4,411 slots, the diff holds 4,410 (1 differ, e.g. [(1, 7)]) — something else changed abp_surface) — nothing overwritten
-the copy is KEPT: /home/jp/gatep8/b1/edition_upgrade_runs/p8_snapshot_check/live_copy.db (356352 bytes); home in use: 193496 KB
+the copy is KEPT: /home/jp/gatep8/b1/edition_upgrade_runs/p8_snapshot_check/live_copy.db (356352 bytes); home in use: 193080 KB
 P8 RESULT: CHECK - bytes rows split sha current exit (lines above; outputs and the copy in /home/jp/gatep8/b1/edition_upgrade_runs/p8_snapshot_check) - nothing on live is changed by this; to the ruling chat as printed; the 10/25 pre-fill copy and snapshot stay
 exit=1
 copy in the run folder: KEPT; bible.db bytes unchanged: yes; side files in ~/bible-db: 0
@@ -100,14 +100,14 @@ copy in the run folder: KEPT; bible.db bytes unchanged: yes; side files in ~/bib
 check output made: 0
 
 =============== B3 home above the bound -> STOP, nothing copied ===============
-home in use before: 192624 KB (STOP above 1 KB; the copy adds about 442,000 KB after this check)
+home in use before: 192724 KB (STOP above 1 KB; the copy adds about 442,000 KB after this check)
 P8 RESULT: STOP - home is above the ruled bound (or du gave nothing); nothing copied; read the dashboard and the ruling chat first
 exit=1
 copy in the run folder: absent; bible.db bytes unchanged: yes; side files in ~/bible-db: 0
 run folder made: no
 
 =============== B4 inside the 13:00-14:30 window (TEST copy: the window moved to bracket now) -> STOP, nothing copied ===============
-UTC time 2109 (STOP inside 1300-1430)
+UTC time 2116 (STOP inside 1300-1430)
 P8 RESULT: STOP - inside the 13:00-14:30 UTC backup / health window; nothing copied
 exit=1
 
@@ -126,7 +126,7 @@ P8 RESULT: STOP - not the recorded pre-fill copy; nothing copied
 exit=1
 
 =============== B8 an uncommitted edit under scripts -> STOP, nothing copied ===============
-P8 RESULT: STOP - PA's scripts / tests / ai.py are not 29604289 (the swap commit); nothing copied
+P8 RESULT: STOP - PA's scripts / tests / ai.py are not 41e13be0 (the swap commit); nothing copied
 exit=1
 
 =============== B9 the control cannot fail (src made the same as live) -> CHECK control-src, the copy KEPT ===============
@@ -134,7 +134,7 @@ RESULT: SNAPSHOT CURRENT — the frozen file matches --src byte for byte; nothin
 === 2. control: --check with --src = src (the 11/1 copy, the old layout) - must read STALE (as STEP9C-CHECK's control, DESIGN 9.137) ===
 RESULT: SNAPSHOT CURRENT — the frozen file matches --src byte for byte; nothing written
 control exit 0 (expect 1)
-the copy is KEPT: /home/jp/gatep8/b9/edition_upgrade_runs/p8_snapshot_check/live_copy.db (352256 bytes); home in use: 192972 KB
+the copy is KEPT: /home/jp/gatep8/b9/edition_upgrade_runs/p8_snapshot_check/live_copy.db (352256 bytes); home in use: 193072 KB
 P8 RESULT: CHECK - control-src (lines above; outputs and the copy in /home/jp/gatep8/b9/edition_upgrade_runs/p8_snapshot_check) - nothing on live is changed by this; to the ruling chat as printed; the 10/25 pre-fill copy and snapshot stay
 exit=1
 copy in the run folder: KEPT; bible.db bytes unchanged: yes; side files in ~/bible-db: 0
@@ -149,7 +149,7 @@ P8 RESULT: STOP - src is not the 11/1 copy as recorded; nothing copied
 exit=1
 
 =============== B12 the window reached between the first time check and the copy (TEST copy: only the SECOND check's window moved to bracket now) -> STOP, nothing copied ===============
-UTC time 2110 (second check)
+UTC time 2116 (second check)
 P8 RESULT: STOP - the reads ran into the 13:00-14:30 UTC window; nothing copied
 exit=1
 run folder made: no
