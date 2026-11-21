@@ -18,13 +18,19 @@ test_planted_bare_base_differs (__main__.D_WordsTable.test_planted_bare_base_dif
 test_planted_head_differs (__main__.D_WordsTable.test_planted_head_differs) ... ok
 test_planted_missing_row_and_rowcount (__main__.D_WordsTable.test_planted_missing_row_and_rowcount) ... ok
 test_clean (__main__.E_MainAppFeed.test_clean) ... ok
+test_earlier_output_in_folder_stops_before_anything (__main__.E_MainAppFeed.test_earlier_output_in_folder_stops_before_anything) ... ok
 test_frozen_lists_not_matching_stops (__main__.E_MainAppFeed.test_frozen_lists_not_matching_stops) ... ok
 test_planted_live_differs (__main__.E_MainAppFeed.test_planted_live_differs) ... ok
+test_sizer_earlier_output_stops (__main__.E_MainAppFeed.test_sizer_earlier_output_stops) ... ok
 test_sizer_frozen_lists_not_matching_stops (__main__.E_MainAppFeed.test_sizer_frozen_lists_not_matching_stops) ... ok
 test_sizer_main_same_figures (__main__.E_MainAppFeed.test_sizer_main_same_figures) ... ok
 test_default_replays_old_text_only (__main__.F_DefaultUnchanged.test_default_replays_old_text_only) ... ok
+test_planted_base_change_judged_on_composed (__main__.G_JudgedOnComposed.test_planted_base_change_judged_on_composed) ... ok
+test_planted_emptied_slot (__main__.G_JudgedOnComposed.test_planted_emptied_slot) ... ok
+test_real_pass_g1473_retag_on_a_filled_slot (__main__.G_JudgedOnComposed.test_real_pass_g1473_retag_on_a_filled_slot) ... ok
+test_unchanged_recipient_not_listed (__main__.G_JudgedOnComposed.test_unchanged_recipient_not_listed) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 0.416s
+Ran 31 tests in 0.517s
 
 OK
