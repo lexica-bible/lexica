@@ -18734,3 +18734,14 @@ read-only check that neither NEW path exists untracked in PA's checkout (a pull 
   built in STEP6AUD C1, whose one declared red was the count (375 vs the old pin 374, §9.204).
 - **The re-check right before P6, exactly:** `git add -N` the two fixture paths (they are untracked until then), then the `git diff` of the
   8 paths must hash 003bb52f…83ee (checked 11/21 by CC: it does). Then commit those 8 paths with the message file.
+- **JP's third report (11/21): the Tasks tab after the test**, his screenshot (PA server time 15:11 UTC), in words: Daily 13:30
+  `cd ~/bible-db && python3 scripts/health_check.py bible.db --email --only-warn`, expiry never; Daily 13:30
+  `cd ~/bible-db && python3 scripts/backup_db.py --keep 7 >> ~/db_backups/backup....`, expiry never; Daily 06:00
+  `bash ~/bible-db/scripts/news/daily.sh`, expiry never. **The same three tasks as the 11/20 read.** Disable / Enable left them in place.
+**Q3 test, complete (CC's summary):**
+- Stop: while disabled, the site answered every visitor with PA's own certificate (*.pythonanywhere.com), and Firefox showed
+  SSL_ERROR_BAD_CERT_DOMAIN with no way past (HSTS). That is a security warning, not a maintenance page.
+- Return: after Enable the site was back BEFORE a Reload; Reload was clicked anyway and the site came back fine.
+- Tasks: unchanged.
+- To the ruling chat as asked ("anything other than a clean stop and a clean return comes here"): the stop is clean, but what a visitor
+  sees during it is a browser security warning.
