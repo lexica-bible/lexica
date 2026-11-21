@@ -6,6 +6,7 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 `.claude/commands/rebuild-words.md`.
 
 ## SUCCESSOR START (11/21 — the swap is cleared pending the put-back block) — OPEN HERE
+**UPDATE 11/21 later - the put-back is DRAFTED and with the ruling chat; NOT cleared.** Blocks PB (the put-back) and PB0 (its read-only pre-swap check, to run before P6R): docs/handoffs/drafts/P6_harness/block_pb.sh 0593313eac3994eabf885658cc8d202efd1c282c4e0ebfb5410ba5e77d9b534d and block_pb0.sh 5bdca89b198fd8081699de13e8dcb6a8e1d5dbaa05d2f6ce6a0a623609f0922a; 23 tests (run_pb.sh -> tests_pb.out), reviewer ESCALATE x3 with D1 / D2 / N1 taken. Full record + both blocks in full: DR "## PB - THE FILE-ONLY PUT-BACK". NEXT: the ruling chat's answer (nine points there); register it in DESIGN 9; then the swap can be scheduled (PB0 before P6R). The 'FIRST task' paragraph below is done to that point.
 **Where it stands.** Charter §6 step 8 (the swap, the only live action). Every pre-swap read is done and ruled (§9.213-§9.229). The swap
 and rollback blocks are **CLEARED AS PRINTED (§9.229), held on ONE gap**: the put-back block below. Nothing has run on PA for the swap;
 live is untouched; the site is up.

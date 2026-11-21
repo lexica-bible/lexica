@@ -19224,3 +19224,193 @@ echo "RB2 RESULT: DONE - live is the pre-swap file on the pre-swap code; to the 
 - **The put-back block (§9.229 (1)) is the next task, owed before P6R runs.** Handed off to a fresh session at JP's word: HANDOFF stageE
   "## SUCCESSOR START (11/21 — the swap is cleared pending the put-back block)". The P6 harness is now durable in
   docs/handoffs/drafts/P6_harness/ (the block sources, the program and the test files; T points there).
+
+## PB - THE FILE-ONLY PUT-BACK (§9.229 (1)) and its pre-swap check PB0, for clearance (11/21, CC)
+**What it is.** The put-back owed before P6R may run: the way out of the two states RB0 refuses. (a) P6B ending CHECK after the renames, or
+its "NOT IN PLACE" / "NOT the pre-swap file" STOPs (also P6B cut off with no result line); (b) P6B DONE, P6C failing before PA is on the
+swap commit. Run only if the ruling chat rules it, with the web app DISABLED (still disabled in (a); JP disables first in (b)).
+**PB does:** reads `p6_swap/rollback.txt` (line 1 must be `~/bible-db/bible_pre_edition_upgrade_*.db`, line 2 a sha256); refuses if PA is
+on the swap commit, or if PA's scripts / tests / ai.py are not the pre-swap code d34d6723 (ancestor + diff + no uncommitted change -
+reviewer D2); the 13:00-14:30 UTC stop, twice; the rollback file hashed BEFORE anything moves (must = line 2); the still-file hold on
+bible.db (7 reads, 5 s apart, no side files) when a file is there; `mv -n` bible.db -> `bible_pre_edition_upgrade_putback_<UTC date>.db`
+(KEPT; a bible_pre_ name, backup_db.py :63), `mv -n` the rollback file -> bible.db, the first put back on a miss; after: bible.db sha =
+line 2, the kept file's sha = what sat there, the rollback name gone, no side files, else CHECK (site stays disabled). With no bible.db it
+is one rename. An empty file at bible.db is kept like any other (reviewer D1). DONE: JP Enables, then Reloads; NO deploy; CC pushes the
+revert of the swap commit before any other deploy.
+**PB0 (read-only, site UP, before P6R):** PB's exact code test run on PA before the swap, because PB tests ai.py and no block before
+Disable reads ai.py on PA (reviewer N1). DONE only on yes / yes / exit 0 / 0.
+**Shas:** PB 0593313eac3994eabf885658cc8d202efd1c282c4e0ebfb5410ba5e77d9b534d · PB0 5bdca89b198fd8081699de13e8dcb6a8e1d5dbaa05d2f6ce6a0a623609f0922a · tests_pb.out 87d696840001d76187a029aa803d4917b4b8d06f362a0a696c1459c71e359155 · run_pb.sh 105a0411817769b88cdfea8aa006beaed8c94532473b44e7e3bbabe2ce87c921.
+Sources: docs/handoffs/drafts/P6_harness/block_pb.sh, block_pb0.sh (no __XP__: the file IS the block).
+**Tests** (WSL, the P6 homes; run_pb.sh -> tests_pb.out) - 23 cases, all as expected; bytes checked by sha before and after:
+- DONE, old live back: T1 (P6B CHECK after the renames; a second paste STOPs), T2 ("NOT IN PLACE", hand-made: one rename), T3 ("NOT the
+  pre-swap file", hand-made: the partial file kept), T4 (P6B cut off, no result line), T5 (state (b): P6C's pull fails, the site has
+  written to the new file; then the revert deploys clean, scripts/tests = d34d6723, pin 374), T15 (the revert pulled early after a finished
+  swap - the state RB0 refuses in S13), T19 (an EMPTY bible.db in the NOT IN PLACE state: kept, old live back).
+- STOP, nothing moved: T6 (PA on the swap commit), T7 (P6B never ran; no rollback.txt), T8 (a writer during the hold), T9 (-journal beside
+  bible.db), T10 (the rollback file not the pre-swap bytes), T11 (folder read-only: first rename refused, file in place), T12 (keep name
+  exists), T13 (inside the time window), T14 (first rename missed, live in place: "already the pre-swap file"), T16 (PB's own second rename
+  made to miss: the first put back), T17 (neither file; an empty rollback file), T18 (bad rollback.txt), T20 (a commit on top of the swap
+  commit pulled), T21 (-journal beside the rollback file), T22 (no rollback file, bible.db not pre-swap), T23 (PB0 DONE clean; PB0 STOP and
+  PB STOP on an uncommitted ai.py edit).
+- **Fired by no test:** the same-name guard; the side-file-with-no-bible.db guard; "already pre-swap while the rollback file is there";
+  the two re-checks after the hold; the second time check; the empty-HEAD-subject STOP; the ancestor arm alone; a real put-back of PB's
+  first rename; the second-rename miss with no bible.db; the "IS the pre-swap file" message; the CHECK ending. T2, T3, T14 are hand-made
+  states, not produced by P6B. PA's network-disk rename behaviour is not something WSL can show.
+**Reviewer - three passes, ESCALATE each time (a write to live).** Pass 1: D1 (an empty bible.db stranded the block half-way) and D2 (the
+"not on the swap commit" guard read only HEAD's subject) - both fixed and tested (T19, T20). Pass 2: D1, D2 met; N1 (PB's code test stricter
+than anything read before Disable) - answered by PB0. Pass 3, verbatim verdict lines: "REVIEW: ESCALATE - PB0 (`block_pb0.sh`): read-only
+and sound on the read, but its log name is not dated, which my wrapper list makes an automatic escalate." / "REVIEW: ESCALATE - PB
+(`block_pb.sh`): still a write to live; N1 is met by PB0 plus a term, and I found no new defect." Not checked by it: either sha; PB
+:46-99 on pass 3; tests_pb.out outside T23; mkhome_p6.sh; PA itself.
+**For the ruling chat (CC's choices and the reviewer's findings):**
+1. ONE block, no RB0-style ready block: in (a) the site is already down. Cost in (b): two full-file hashes + the 30 s hold inside the outage.
+2. Every PB STOP says "leave the web app as it is (no Enable, no Disable); to the ruling chat now" - NOT the §9.229 term "nothing moved ->
+   Enable at once", because before PB the files are not in a known-good state. Only CHECK says the site stays disabled.
+3. PB accepts any state where PA's code is the pre-swap code, so also the revert-pulled-early state RB0 refuses (T15). It does not gate on
+   P6C's log (it prints P6B's and P6C's result lines for the record).
+4. The 13:00-14:30 stop is kept. In (a) it could hold a disabled site, with bible.db absent, up to 90 minutes; the reviewer asks whether
+   the one-rename case should be allowed inside it.
+5. Nothing checks that the site answers after Enable + Reload (RB2 has a sweep; PB leaves no deploy). A read-only sweep block could follow.
+6. Terms asked: (i) P6R is not pasted until PB0 is DONE; (ii) no pull, deploy or edit on PA between PB0 DONE and P6B (nothing re-reads
+   ai.py in between); (iii) PB0 is not the block waiting when the swap commit is pushed.
+7. PB0's form: undated log that refuses overwrite (as P6R), ai.py added to the wrapper's diff line, the three guards stopped on together.
+8. A _r2 re-run of P6B needs a paired PB (PB reads p6b_swap_window.log and p6_swap by name).
+9. Still no cleared path: a side file beside bible.db or the rollback file (PB STOPs, correctly); a deploy run after a P6B CHECK (PA on
+   the swap commit without P6B DONE: RB0 and PB both refuse) - a breach of process, named.
+**NOT cleared. Nothing run on PA. P6R stays held until the ruling chat clears PB (and PB0).**
+
+### Block PB0 (sha256 5bdca89b198fd8081699de13e8dcb6a8e1d5dbaa05d2f6ce6a0a623609f0922a)
+```bash
+set +H
+L=~/edition_upgrade_runs/pb0_putback_ready.log
+if [ -e "$L" ]; then echo "PB0 RESULT: STOP - log already exists (already ran? it is kept as is): $L"; else
+( set -uo pipefail
+REF=d34d6723
+export TZ=UTC
+export GIT_OPTIONAL_LOCKS=0
+echo "GATE REF ${REF} - PB0 - the put-back's code test, made BEFORE the swap (reviewer N1: PB tests ai.py as well as scripts + tests, and no block before Disable reads ai.py on PA) - READ-ONLY; site UP; writes only this log; to run before P6R is pasted - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+cd ~/bible-db || { echo "PB0 RESULT: STOP - cannot cd to ~/bible-db"; exit 1; }
+s=$(git log -1 --format=%s); echo "PA HEAD subject: $s"
+[ -n "$s" ] || { echo "PB0 RESULT: STOP - git gave no HEAD subject"; exit 1; }
+a=no; git merge-base --is-ancestor "$REF" HEAD && a=yes
+d=no; git diff --quiet "$REF" HEAD -- scripts tests ai.py && d=yes
+us=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); rs=$?; u=$(grep -c . <<< "$us")
+echo "PA's code against the pre-swap code $REF: $REF is in HEAD's history: $a; scripts / tests / ai.py same as $REF: $d; git status exit $rs, uncommitted changes in them: $u (expect yes, yes, 0, 0)"
+[ -n "$us" ] && echo "$us"
+[ "$a" = yes ] && [ "$d" = yes ] && [ "$rs" = 0 ] && [ "$u" = 0 ] || { echo "PB0 RESULT: STOP - PA's scripts / tests / ai.py are not $REF: PB would refuse after a swap; P6R is NOT to be pasted; to the ruling chat"; exit 1; }
+echo "PB0 RESULT: DONE - PB's code test passes on PA as it stands; P6R may follow (after P6A DONE and CC's push)"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
+
+### Block PB (sha256 0593313eac3994eabf885658cc8d202efd1c282c4e0ebfb5410ba5e77d9b534d)
+```bash
+set +H
+L=~/edition_upgrade_runs/pb_putback_window.log
+if [ -e "$L" ]; then echo "PB RESULT: STOP - log already exists (already ran? it is kept as is): $L - leave the web app as it is; to the ruling chat now"; else
+( set -uo pipefail
+export TZ=UTC
+export GIT_OPTIONAL_LOCKS=0
+REF=d34d6723                                                               # the pre-swap code: P6A / P6R / P6B hold PA's scripts + tests to it; ai.py is the same there
+echo "PB - PUT-BACK, FILE ONLY (DESIGN 9.229 (1); only if the ruling chat rules it; for when PA is NOT on the swap commit). The web app is DISABLED: still disabled after P6B, or JP has just DISABLED it after a P6C failure. Still-file hold, then the pre-swap file back as bible.db - WRITES: at most two renames in ~/bible-db + this log; NO deploy - WINDOW START (this paste) $(date -u +%FT%TZ) - PA HEAD $(git -C ~/bible-db log -1 --format=%h)"
+stop() { echo "PB RESULT: STOP - $1; nothing moved - leave the web app as it is (no Enable, no Disable); to the ruling chat now"; exit 1; }
+cd ~/bible-db || stop "cannot cd to ~/bible-db"
+LIVE=~/bible-db/bible.db
+B=~/bible-db/bible_edupg_test_built_20261102.db
+R=~/edition_upgrade_runs
+D=$R/p6_swap
+XB=d2c8603b4700d6dce089b688c5e00e8a3fdec879eea96bef5a6ce7cd09ca1523       # built full sha256 = P6's pin (DESIGN 9.222 (1)); printed for the record only
+HOLD_N=7; HOLD_S=5                                                         # the same still-file hold as P6B and RB1 (DESIGN 9.228)
+h() { cut -d' ' -f1 <<< "$(sha256sum < "$1")"; }
+gone() { [ -e "$1" ] && return 1; return 0; }                              # true when nothing at all sits at the path
+nofile() { [ -s "$1" ] && return 1; return 0; }                            # true when the file is missing or empty (no bang in a pasted block)
+inwin() { hm=$(date -u +%H%M); echo "UTC time $hm (STOP inside 1300-1430)"; [ "$hm" -ge 1300 ] && [ "$hm" -le 1430 ]; }
+sidef() { sf=""; for x in -journal -wal -shm; do [ -e "$1$x" ] && sf="$sf $x"; done; echo "$sf"; }
+# --- guards: P6B ran and wrote its rollback note; PA is NOT on the swap commit ---
+[ -s "$R/p6b_swap_window.log" ] || stop "P6B has not run: there is nothing to put back"
+p=$(grep '^P6B RESULT:' "$R/p6b_swap_window.log" | tail -1); echo "P6B's result line: ${p:-none (P6B did not finish)}"
+[ -e "$R/p6c_swap_deploy.log" ] && { p=$(grep '^P6C RESULT:' "$R/p6c_swap_deploy.log" | tail -1); echo "P6C's result line: ${p:-none (P6C did not finish)}"; }
+[ -s "$D/rollback.txt" ] || stop "$D/rollback.txt is missing: P6B stopped before its first rename"
+RB=$(sed -n 1p "$D/rollback.txt"); X0=$(sed -n 2p "$D/rollback.txt")   # the rollback file P6B named, and live's sha just before the swap
+case "$RB" in "$HOME"/bible-db/bible_pre_edition_upgrade_*.db) ;; *) stop "unexpected rollback name: $RB";; esac
+case "$X0" in *[^0-9a-f]*) stop "rollback.txt line 2 is not a sha256";; esac
+[ "${#X0}" = 64 ] || stop "rollback.txt line 2 is not a sha256"
+echo "rollback.txt: $RB / $X0"
+s=$(git log -1 --format=%s); echo "PA HEAD subject: $s"
+[ -n "$s" ] || stop "git gave no HEAD subject: the code PA is on cannot be read"
+case "$s" in "edition upgrade: THE SWAP COMMIT"*) stop "PA is ON the swap commit: this block is file-only; that case is RB0 / RB1 / RB2 (roll both or neither, charter 7)";; esac
+a=no; git merge-base --is-ancestor "$REF" HEAD && a=yes
+d=no; git diff --quiet "$REF" HEAD -- scripts tests ai.py && d=yes
+us=$(git status --porcelain --untracked-files=no -- scripts tests ai.py); rs=$?; u=$(grep -c . <<< "$us")
+echo "PA's code against the pre-swap code $REF (the same three tests PB0 made before the swap): $REF is in HEAD's history: $a; scripts / tests / ai.py same as $REF: $d; git status exit $rs, uncommitted changes in them: $u (expect yes, yes, 0, 0)"
+[ "$a" = yes ] && [ "$d" = yes ] && [ "$rs" = 0 ] && [ "$u" = 0 ] || stop "PA's scripts / tests / ai.py are NOT the pre-swap code $REF (the line above says which test missed): a file-only put-back would roll one and not both (charter 7)"
+echo "PA is NOT on the swap commit, and its scripts / tests / ai.py = the pre-swap code $REF: yes"
+OUT=~/bible-db/bible_pre_edition_upgrade_putback_$(date -u +%Y%m%d).db   # what sits at bible.db is KEPT; a bible_pre_* name, so the nightly backup skips it (backup_db.py :63; reviewer D1 on RB1)
+[ "$RB" = "$OUT" ] && stop "the rollback name and the keep name are the same"
+[ -e "$OUT" ] && stop "$OUT exists"
+inwin && stop "inside the 13:00-14:30 UTC backup / health window"
+# --- what is on disk ---
+haveL=0; [ -e "$LIVE" ] && haveL=1
+haveR=0; [ -s "$RB" ] && haveR=1
+echo "on disk: bible.db $([ "$haveL" = 1 ] && echo present || echo ABSENT); the rollback file $([ "$haveR" = 1 ] && echo present || echo ABSENT); the built path $([ -e "$B" ] && echo present || echo absent)"
+[ -e "$RB" ] && [ "$haveR" = 0 ] && stop "an EMPTY file sits at the rollback name"
+[ -n "$(sidef "$RB")" ] && stop "side file beside the rollback file:$(sidef "$RB")"
+[ "$haveL" = 0 ] && [ -n "$(sidef "$LIVE")" ] && stop "no bible.db, but a side file sits beside its name:$(sidef "$LIVE")"
+if [ "$haveR" = 0 ]; then
+  [ "$haveL" = 0 ] && stop "NEITHER bible.db NOR the rollback file is there - NOT IN PLACE"
+  [ "$(h "$LIVE")" = "$X0" ] && stop "there is no rollback file and bible.db is ALREADY the pre-swap file (sha = rollback.txt line 2): nothing to put back"
+  stop "there is no rollback file and bible.db is NOT the pre-swap file"
+fi
+r0=$(h "$RB"); echo "the rollback file's sha256 = live's just before the swap: $([ "$r0" = "$X0" ] && echo yes || echo NO) ($r0)"
+[ "$r0" = "$X0" ] || stop "the rollback file is not the pre-swap live"
+n0=""
+if [ "$haveL" = 1 ]; then
+  echo "=== still-file hold on bible.db: $HOLD_N reads, $HOLD_S s apart - size + last write unchanged, no -journal / -wal / -shm ==="
+  st0=$(stat -c '%s %Y' "$LIVE"); ok=1
+  for i in $(seq 1 "$HOLD_N"); do
+    st=$(stat -c '%s %Y' "$LIVE"); sf=$(sidef "$LIVE")
+    echo "  read $i $(date -u +%T): size+time $st${sf:+ - SIDE FILE$sf}"
+    [ "$st" = "$st0" ] && [ -z "$sf" ] || ok=0
+    [ "$i" -lt "$HOLD_N" ] && sleep "$HOLD_S"
+  done
+  [ "$ok" = 1 ] || stop "bible.db is still being written (size/time moved or a side file) - is the web app disabled?"
+  echo "bible.db held still for the whole hold: yes"
+  n0=$(h "$LIVE"); echo "what sits at bible.db now: sha256 $n0 ($(stat -c '%s bytes, last write %y' "$LIVE")) - built's pinned bytes: $([ "$n0" = "$XB" ] && echo yes || echo 'no (expected once the site has written to it)')$([ -s "$LIVE" ] || echo ' - an EMPTY file: kept all the same')"
+  [ "$n0" = "$X0" ] && stop "bible.db is ALREADY the pre-swap file while the rollback file is also there"
+  [ "$(stat -c '%s %Y' "$LIVE")" = "$st0" ] || stop "bible.db changed during the read"
+  [ -n "$(sidef "$LIVE")" ] && stop "side file beside bible.db:$(sidef "$LIVE")"
+else
+  echo "no file at bible.db: no hold to make, nothing to keep"
+fi
+inwin && stop "the reads ran into the 13:00-14:30 UTC window"
+# --- the put-back: at most two renames on one device; a miss on the second puts the first one back ---
+echo "=== the put-back - $(date -u +%T) ==="
+if [ "$haveL" = 1 ]; then
+  mv -n "$LIVE" "$OUT"; m1=$?
+  if [ "$m1" != 0 ] || [ -e "$LIVE" ] || gone "$OUT"; then
+    [ -e "$LIVE" ] || { [ -e "$OUT" ] && mv -n "$OUT" "$LIVE"; }
+    echo "PB RESULT: STOP - the first rename did not land cleanly (mv exit $m1); bible.db is $([ -e "$LIVE" ] && [ "$(h "$LIVE")" = "$n0" ] && echo 'what sat there before, in place' || echo 'NOT what sat there before') - leave the web app as it is (no Enable, no Disable); to the ruling chat now"; exit 1
+  fi
+  echo "1. what sat at bible.db renamed to $OUT (kept)"
+else
+  echo "1. (nothing sat at bible.db)"
+fi
+mv -n "$RB" "$LIVE"; m2=$?
+if [ "$m2" != 0 ] || nofile "$LIVE" || [ -e "$RB" ]; then
+  [ -e "$LIVE" ] || { [ "$haveL" = 1 ] && mv -n "$OUT" "$LIVE"; }
+  if [ "$haveL" = 1 ]; then w=$([ -e "$LIVE" ] && [ "$(h "$LIVE")" = "$n0" ] && echo 'the first was put back: bible.db is what sat there before' || echo 'bible.db is NOT what sat there before'); else w=$([ -e "$LIVE" ] && echo 'bible.db is NOT as it was (a file is there now)' || echo 'bible.db is absent, as before'); fi
+  [ -s "$LIVE" ] && [ "$(h "$LIVE")" = "$X0" ] && w="bible.db IS the pre-swap file (sha = rollback.txt line 2): the rename landed although it did not report clean; the rollback name $([ -e "$RB" ] && echo 'still exists' || echo 'is gone')"
+  echo "PB RESULT: STOP - the second rename did not land cleanly (mv exit $m2); $w - leave the web app as it is (no Enable, no Disable); to the ruling chat now"; exit 1
+fi
+echo "2. the pre-swap file renamed back to $LIVE - $(date -u +%T)"
+# --- after: every miss = CHECK (the files stay as they are) ---
+bad=0
+x1=$(h "$LIVE"); echo "bible.db sha256 = live's just before the swap (rollback.txt line 2): $([ "$x1" = "$X0" ] && echo yes || echo NO) ($x1)"; [ "$x1" = "$X0" ] || bad=1
+if [ "$haveL" = 1 ]; then o1=$(h "$OUT"); echo "the kept file's sha256 = what sat at bible.db before the put-back: $([ "$o1" = "$n0" ] && echo yes || echo NO)"; [ "$o1" = "$n0" ] || bad=1; fi
+[ -e "$RB" ] && { echo "CHECK: the rollback name still exists"; bad=1; }
+for f in "$LIVE" "$OUT"; do [ -n "$(sidef "$f")" ] && { echo "CHECK: side file beside $f:$(sidef "$f")"; bad=1; }; done
+echo "the built path after: $([ -e "$B" ] && echo present || echo 'absent (a new swap needs a ruled block first)')"
+[ "$bad" = 0 ] || { echo "PB RESULT: CHECK - lines above; the site stays disabled; to the ruling chat before anything else"; exit 1; }
+[ "$haveL" = 1 ] && echo "What sat at bible.db, with anything the site wrote into it, stays in $OUT (kept on disk; not in live)."
+echo "PB RESULT: DONE - the pre-swap file is back as bible.db at $(date -u +%FT%TZ); JP: ENABLE the web app, then RELOAD it. Do NOT run deploy.sh: no deploy until CC has pushed the revert of the swap commit and the ruling chat has ruled. This log to the ruling chat now"; exit 0
+) 2>&1 | tee "$L"; echo "exit=${PIPESTATUS[0]}"; fi
+```
