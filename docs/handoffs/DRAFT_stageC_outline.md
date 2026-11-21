@@ -18732,3 +18732,5 @@ read-only check that neither NEW path exists untracked in PA's checkout (a pull 
   (words, or verses.text for prose rows). The fixture is the member record for audits, not a code input. **So P7's check 4 is expected
   green for two stated reasons:** live after the swap = built, which R375 read with 375 active ingest rows, the pin; and every row held on
   built in STEP6AUD C1, whose one declared red was the count (375 vs the old pin 374, §9.204).
+- **The re-check right before P6, exactly:** `git add -N` the two fixture paths (they are untracked until then), then the `git diff` of the
+  8 paths must hash 003bb52f…83ee (checked 11/21 by CC: it does). Then commit those 8 paths with the message file.
