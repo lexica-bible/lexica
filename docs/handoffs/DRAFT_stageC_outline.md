@@ -18671,3 +18671,13 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+### R375 RAN (11/21, 07:24:53Z, PA HEAD 1d5e34ee, REF d34d6723) — R375 RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/repin375_20261121.log; JP pasted the console)
+Every expected line as declared:
+- GATE REF first; repo guards OK.
+- Program 0362d2cc…4a84 before and as run. Built d2c8603b…1523 before, after = yes.
+- 374 file 446fee35…; by status / applied_at: active ingest 375, retired ingest 23, superseded ingest 6.
+- "active ingest rows 375 … missing 0 … not in it 1", NEW = Joh 19:18 @10 english_head EU-Joh19:18; non-ingest active 0; retired 23.
+- Dump sha 005da9f3…3048 = the local derivation (SAME); wrote 375 lines + .sha256; REPIN375: OK; DONE.
+**Copy-down (JP's scp) to tests/fixtures/corrections/:** abp_corrections_active_built_20261121.txt hashes 005da9f3…3048 = its .sha256 line =
+CC's local derivation (cmp identical); 375 lines, LF, no CR. It goes into the swap commit.
