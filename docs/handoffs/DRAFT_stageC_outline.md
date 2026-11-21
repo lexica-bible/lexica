@@ -17760,3 +17760,10 @@ print("P3 READ-OUT: endpoints on a moved position: live %d, deleted %d (a read-o
   elsewhere still covers both words after the swap).
 - **For JP:** upload `C:\Users\JP\edition_upgrade_runs\p3_notes_20261120.py` to `~/edition_upgrade_runs/` through PA's Files page, then paste
   the block in a bash console and paste the log back.
+
+### P3 RAN (11/21, 05:16:05Z) — P3 RESULT: DONE, exit=0 (log ~/edition_upgrade_runs/p3_notes_20261120.log; JP pasted the console)
+p3.py sha256 = b5940f2b…738b (expect = it); CONTROL (9 made-up rows) FIRED; notes table present yes; shape yes. notes table: rows live 51,
+rows deleted 67 (118); journal pages 11; corpus not bible (non-canon) 6. **No line "rows anchored in one of the 10 verses" printed — the
+program prints a tally key only when its count is above 0, so 0 rows of any translation anchor in the 10 verses** (CC's reading of
+p3_notes :72-74 + read()). Endpoints ON a moved position: none. **P3 READ-OUT: live 0, deleted 0.** program exit 0; exit=0.
+Every fixed line as declared. LIMIT as stated: signed-out visitors' notes are in their browsers only.
