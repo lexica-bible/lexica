@@ -2,13 +2,22 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.243**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.244**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## STANDING RULE (JP-approved 11/21, DESIGN 9.243) - READ FIRST: size the care to what a redo costs
 (1) Cheap to redo or self-regenerating (saved AI answers, caches, logs, old run folders, docs): just do it; one line to the ruling chat after. (2) Code changes and read-only checks: ONE reader, ONE round (reviewer OR ruling chat, not both); a second round only for a real bug. (3) Bible data on live (words, verses, corrections, name tables) and removal of the last whole pre-swap copy: full care, cleared block, log read by the ruling chat. Measure nothing unless the answer changes what gets done. A group 1/2 item needing more than one round trip STOPS; the ruling chat puts drop/continue to JP. Overrides any heavier charter/register rule for groups 1-2.
 
-## SUCCESSOR START (11/21 end - THE SWAP IS DONE AND RULED; next = P9, the 11/22 nightly) - OPEN HERE
+## SUCCESSOR START (11/22 - P9 PASSED, STEP 8 CLOSED, DESIGN 9.244; next = the L9 PA leg) - OPEN HERE
+
+1. **L9 PA leg.** L9 is on master as 2bdf3a62 (from b79ecc1f, code byte-identical) and pushed. Block
+   docs/handoffs/drafts/L9_APP/block_l9pa.sh (read-only; CLEARED by the reviewer 11/22, one round - its one named fix, --untracked-files=no, applied; sha 8826ff749b36abf4361e58ebdd57acaecb9c213a17888db34017ccfcb72f3383; JP runs it after deploy.sh; not 13:00-14:30
+   UTC). Its last line goes to the ruling chat: one line if PASS (RESIDUE 0, ambiguous 0); anything else as printed.
+2. **Rollback copy:** 11/22 was nightly 1 of 3. ~/bible-db/bible_pre_edition_upgrade_20261121.db stays until three good
+   nightlies and a ruled removal. The 10/25 pre-fill copy removal can be brought as its own ruled block.
+3. The carried-open list in the 11/21 section below (item 4) stands, minus L9's local leg (done).
+
+## SUCCESSOR START (11/21 end - THE SWAP IS DONE AND RULED; next = P9, the 11/22 nightly) - superseded by 11/22 above
 **Where it stands.** Charter 6 step 8: the swap ran 11/21 20:21Z and STANDS (DESIGN 9.235). Live = the built copy's bytes on the swap commit 7bb92e10. P6A, PB0, P6R, P6B, P6C, P7 each DONE; P8 PASSED 21:30Z (9.238). No rollback; RB0-RB2 and PB were not run. Rulings to 9.238. Run record: DR "## STEP 8, THE DAY (11/21)", "### P8 RAN".
 **NEXT, in order:**
 1. **P9 - the last open item of step 8.** **11/21: BLOCK P9 CLEARED by the reviewer (read-only; sha 3c6984f1...a932, printed in full in DR "## P9 - THE FIRST NIGHTLY AFTER THE SWAP"). JP pastes it after 15:00 UTC 11/22, plus the health task's 11/22 log text from the PA Tasks tab (that task writes no file); both go to the ruling chat, which rules P9.** Background: After the first 13:30 UTC run following the swap (11/22): the backup file's check line and the health_check result, read without a new write. CC cannot read PA: draft a small READ-ONLY block for JP (reviewer first; it may CLEAR a read-only block), say exactly what JP pastes. Then the ruling chat rules P9 and step 8 closes.
