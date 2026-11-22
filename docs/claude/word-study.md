@@ -187,18 +187,20 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
   stored value, and the key has ONE lexicon owner (γαζα, ηλι collide → refused). `_bridge_if_grey`
   consults it only when the production predicate finds nothing, so MIXED numbers (47 at landing
   with a same-header numberless residue — own follow-up) and ordinary words never change.
-  Bridged: the ABP branch (book counts, All-books + per-book lists with `position`, total) =
+  Bridged: the ABP branch (book counts, All-books + per-book lists with `positions`, total) =
   `_pn_lemma_rows(header)` — the PN: page's derivation, PARITY locked in
   `tests/test_abp_tab_bridge.py`; renderings stay empty; profile carries `abp_header` (JP-approved
   field, present only when bridged) which drives the ruled state line under the count. Israel /
   Jerusalem (lemma-only only, one value) HELD by ruling: they route only once the header lane vets
   them as `surface`, never via a lemma-only door. Census tool: `scripts/audit_abp_tab_bridge.py`
-  (read-only, live + a pre-fold copy). NOT bridged: `/api/lexicon/books` (only the rendering-chip
-  book narrowing calls it — empty for bridged names, so the chip doesn't narrow; open in TODO.md).
+  (read-only, live + a pre-fold copy). `/api/lexicon/books` (the rendering-chip book narrowing)
+  bridges too, counting the same rows (`_pn_lemma_rows`, or `_bridged_head_rows` under a chip);
+  locked `tests/test_pn_slot_verses.py` (11/21).
 - **In-verse highlight:** the verse-row highlighter matches by Strong's number everywhere
-  EXCEPT this lane — a PN: page has no number, so the profile/verses rows carry each
-  occurrence's `position` (the name's own word slot from pn_greek_identity) and VerseRow lights
-  it via `hiPositions`. **Hebrew numbers too:** when `_abp_strongs_filter`'s cross-ref arm
+  EXCEPT this lane — a PN: page has no number, so the profile/verses rows carry
+  `positions` (the name's own word slots from pn_greek_identity, ONE entry per verse via
+  `_slot_verses` — a verse naming the person twice is one row with both slots, 11/21) and
+  VerseRow lights them via `hiPositions`. The profile's `total` and book counts still count hits. **Hebrew numbers too:** when `_abp_strongs_filter`'s cross-ref arm
   is in use (`_h_xref_union_on`), both ABP verse lists send `positions` — every slot that
   SAME filter matched in the verse, one row per verse — because the xref-only words store
   '*' and can't match by number. VerseRow prefers `positions`, else `position`. Greek-number

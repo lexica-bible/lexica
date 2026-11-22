@@ -65,7 +65,7 @@ def main():
     except Exception:
         pass
     from views_lexicon import (_header_bridge, _bridge_if_grey, _pn_lemma_rows, _all_books_verses,
-                               _bridge_line)
+                               _bridge_line, _slot_verses)
 
     c = _fixture()
     fails = []
@@ -84,10 +84,10 @@ def main():
     rows, trunc = _all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "", "all",
                                     6000, abp_header="Γαλιλαία")
     pn = _pn_lemma_rows(c, "Γαλιλαία")
-    check("PARITY: bridged All-books list == PN: page rows (count)", len(rows), len(pn))
-    check("PARITY: same keys, canonical order, slot carried",
-          [(r["book"], r["chapter"], r["verse"], r["position"]) for r in rows],
-          [(r["book"], r["chapter"], r["verse"], r["position"]) for r in pn])
+    check("PARITY: bridged All-books list == PN: page rows (count)", len(rows), len(_slot_verses(pn)))
+    check("PARITY: same keys, canonical order, slots carried",
+          [(r["book"], r["chapter"], r["verse"], r["positions"]) for r in rows],
+          [(r["book"], r["chapter"], r["verse"], [r["position"]]) for r in pn])
     check("canonical order: Jos before Mat", [r["book"] for r in rows], ["Jos", "Mat", "Mat"])
     check("testament narrows the bridged list",
           len(_all_books_verses(c, "abp", "1056", "1056", "G1056", False, False, "", "nt",

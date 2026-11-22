@@ -1180,6 +1180,43 @@ def _pn_lemma_rows(conn, lemma, testament="all"):
     return rows
 
 
+def _bridged_head_rows(conn, header, testament="all"):
+    """_pn_lemma_rows plus each slot's OWN printed head — what a rendering chip
+    filters a bridged name on (same compare as the numbered branch)."""
+    rows = conn.execute(f"""
+        SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse,
+               p.position AS position,
+               COALESCE(NULLIF(w.english_head,''), w.english) AS head
+        FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id
+        JOIN words w ON w.verse_id = p.verse_id AND w.position = p.position
+        WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
+        ORDER BY {_BOOK_RANK_SQL}, v.chapter, v.verse
+    """, (header,)).fetchall()
+    if testament in ("ot", "nt"):
+        keep = (lambda bid: bid <= 39) if testament == "ot" else (lambda bid: bid >= 40)
+        rows = [r for r in rows if keep(_KJV_BOOK_ID.get(r["book"], 999))]
+    return rows
+
+
+def _slot_verses(rows):
+    """One list entry per VERSE, carrying every slot the name fills there
+    (`positions`, the same field lane (f) gives Hebrew xref rows). The rows
+    above are one per HIT, so a verse naming the person twice came back as two
+    entries with the same key. First-seen order is kept (rows are canonical)."""
+    out, at = [], {}
+    for r in rows:
+        key = (r["book"], r["chapter"], r["verse"])
+        e = at.get(key)
+        if e is None:
+            e = at[key] = {"book": r["book"], "chapter": r["chapter"],
+                           "verse": r["verse"], "positions": []}
+            out.append(e)
+        e["positions"].append(r["position"])
+    for e in out:
+        e["positions"].sort()
+    return out
+
+
 def _header_bridge(conn, snum):
     """ABP-tab routing (CHARTER_abp_tab_routing.md, reviewer-ruled 2026-09-06): the
     folded Greek header a Strong's number may route its ABP tab through when the
@@ -1295,12 +1332,11 @@ def _pn_lemma_profile(lemma):
         books = [{"book": b, "name": book_meta.get(b, {}).get("name", b),
                   "testament": book_meta.get(b, {}).get("testament", ""), "count": c}
                  for b, c in sorted(book_counts.items(), key=lambda x: -x[1])]
-        # position = the name's own word slot in that verse (pn_greek_identity's
+        # positions = the name's own word slots in that verse (pn_greek_identity's
         # key); a numberless form has no Strong's for the highlighter to match,
-        # so the verse row lights this slot instead.
-        dv = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
-               "position": r["position"]}
-              for r in occ[:_ALL_VERSES_CAP]]
+        # so the verse row lights these slots instead. One entry per verse.
+        sv = _slot_verses(occ)
+        dv = sv[:_ALL_VERSES_CAP]
         # Same payload keys as a numbered profile so the frontend machinery is
         # unchanged; name_form drives the honest state line + gated extras.
         return jsonify({"strongs": f"{_PN_KEY}{lemma}", "name_form": True,
@@ -1311,7 +1347,7 @@ def _pn_lemma_profile(lemma):
                         "bsb_glosses": [], "has_abp": True, "has_kjv": False,
                         "has_heb": False, "has_bsb": False, "alias_note": None,
                         "default_verses": dv,
-                        "default_truncated": len(occ) > _ALL_VERSES_CAP})
+                        "default_truncated": len(sv) > _ALL_VERSES_CAP})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:
@@ -1603,7 +1639,17 @@ def lexicon_books(strongs):
         sid = f"H{snum}" if is_heb else f"G{snum}"
         is_func = (not is_heb) and snum in _FUNCTION_STRONGS
         book_counts = {}  # corpus=all merges ABP + KJV per book (gloss-filtered)
-        if corpus in ("abp", "all"):
+        # Bridged name (ABP-tab routing): no words row carries the number, so count
+        # the name's own slots — the same rows the verses endpoint serves, so the
+        # narrowed book rail and the list under it agree by construction.
+        _hdr = _bridge_if_grey(conn, num, snum, sid, is_heb) if corpus == "abp" else None
+        if _hdr:
+            occ = (_bridged_head_rows(conn, _hdr) if gloss else _pn_lemma_rows(conn, _hdr))
+            for r in occ:
+                if gloss and _normalize_gloss(r["head"] or "", is_func=is_func) != gloss:
+                    continue
+                book_counts[r["book"]] = book_counts.get(r["book"], 0) + 1
+        elif corpus in ("abp", "all"):
             _bp, _bpar = _abp_strongs_filter(conn, num, sid)
             for r in conn.execute(f"""
                 SELECT v.book, COALESCE(NULLIF(w.english_head,''), w.english) AS eng, COUNT(*) AS cnt
@@ -1748,23 +1794,11 @@ def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, test
         if gloss:
             # Rendering chip: filter on the slot's OWN printed head, same compare
             # as the numbered branch (_normalize_gloss), same rows as the list.
-            rows = conn.execute(f"""
-                SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse,
-                       p.position AS position,
-                       COALESCE(NULLIF(w.english_head,''), w.english) AS head
-                FROM pn_greek_identity p JOIN verses v ON v.id = p.verse_id
-                JOIN words w ON w.verse_id = p.verse_id AND w.position = p.position
-                WHERE p.greek_lemma = ? AND p.greek_strongs IS NULL
-                ORDER BY {_BOOK_RANK_SQL}, v.chapter, v.verse
-            """, (abp_header,)).fetchall()
-            if testament in ("ot", "nt"):
-                keep = (lambda bid: bid <= 39) if testament == "ot" else (lambda bid: bid >= 40)
-                rows = [r for r in rows if keep(_KJV_BOOK_ID.get(r["book"], 999))]
-            rows = [r for r in rows if _normalize_gloss(r["head"] or "", is_func=is_func) == gloss]
+            rows = [r for r in _bridged_head_rows(conn, abp_header, testament)
+                    if _normalize_gloss(r["head"] or "", is_func=is_func) == gloss]
         else:
             rows = _pn_lemma_rows(conn, abp_header, testament)
-        out = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
-                "position": r["position"]} for r in rows]
+        out = _slot_verses(rows)
         return out[:cap], len(out) > cap
 
     # ABP (default): the words table joined to verses.
@@ -1844,11 +1878,9 @@ def lexicon_verses(strongs, book):
             occ = _pn_lemma_rows(conn, lemma, testament)
             if book != "all":
                 occ = [r for r in occ if r["book"] == book]
-            vout = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
-                     "position": r["position"]}
-                    for r in occ[:_ALL_VERSES_CAP]]
-            return jsonify({"verses": vout, "glosses": [],
-                            "truncated": len(occ) > _ALL_VERSES_CAP})
+            sv = _slot_verses(occ)
+            return jsonify({"verses": sv[:_ALL_VERSES_CAP], "glosses": [],
+                            "truncated": len(sv) > _ALL_VERSES_CAP})
         finally:
             conn.close()
     m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', strongs.strip())
@@ -1890,8 +1922,9 @@ def lexicon_verses(strongs, book):
                 # highlighter. VerseRow re-fetches the verse text by key.
                 occ = [r for r in _pn_lemma_rows(conn, _hdr) if r["book"] == book]
                 conn.close()
-                return jsonify({"verses": [{"chapter": r["chapter"], "verse": r["verse"],
-                                            "position": r["position"]} for r in occ],
+                return jsonify({"verses": [{"chapter": e["chapter"], "verse": e["verse"],
+                                            "positions": e["positions"]}
+                                           for e in _slot_verses(occ)],
                                 "glosses": []})
         if corpus == "heb":
             # Real Hebrew OT: which verses in this book carry the word (the frontend's

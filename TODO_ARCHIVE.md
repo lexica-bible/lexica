@@ -6,6 +6,15 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-21 — small fixes, batch 2 (one commit)
+- **Dead CSS removed:** `.corpus-group*`, `.corpus-chevron*`, `.corpus-text-toggle` (no callers since the flat passage list)
+  and `.ac-construction*` (banner dropped in `ffdd966f`). `.corpus-groups` + `.additional-refs-*` are live and stay.
+- **`/api/lexicon/books` now bridges** for the 6 bridged names (Galilee-shaped): the ABP / no-corpus book list was empty, so
+  a rendering chip didn't narrow the book rail. It counts the same rows the verses endpoint serves.
+- **Name-form lists: one entry per verse** (`_slot_verses`, `positions`): PN: page, its profile default list, and the
+  bridged All-books / per-book lists. A verse naming the person twice was two rows with one key. Totals still count hits.
+  Locked by `tests/test_pn_slot_verses.py` (10 fails on the old code); `test_abp_tab_bridge` parity check updated.
+
 ## 2026-11-22 — small fixes closed (one commit)
 - **Delete-account now removes ALL the account's data:** `/api/auth/delete-account` also deletes `corpus` (saved Ask-the-corpus
   chats) and `ai_usage` (its daily counters); the site total (user_id 0) stays. Locked by `tests/test_delete_account.py`

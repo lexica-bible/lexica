@@ -156,16 +156,6 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   pytest line, or give each a runner. (The runnable ones were added to both lists 11/22.)
 - **Phone Strong's tags: `.lib-iw-strongs` is set to 9px in the phone CSS** (`static/styles.css:2555`) —
   drift from the "Strong's tags scale, never a fixed px" rule (frontend.md); fix the CSS. (JP ruling 11/7)
-- **Dead CSS:** `.corpus-group*` rules (styles.css ~1534-1571; the `.corpus-groups` container is live) and
-  `.ac-construction*` (~4936-4945, ~5197; the banner went in `ffdd966f`) have no callers.
-- **`/api/lexicon/books` has no bridge branch** (`views_lexicon.py:1580ff`): for the 6 bridged names its ABP
-  answer is empty, so clicking a rendering chip quietly shows the unnarrowed book list (the page's own list
-  comes from the bridged profile). Fix = the same `_bridge_if_grey` → `_pn_lemma_rows` door the verses
-  endpoint uses. Low stakes. JP-checked 10/24: `books/G1056?corpus=kjv` IS populated; only ABP + the
-  no-corpus default come back empty.
-- **The `PN:<form>` name-form lane sends one list entry per hit**, so a verse naming the person twice shows
-  two rows with the same key (`_pn_lemma_rows` → `lexicon_verses` PN branch; the bridged branches share it).
-  Fix: one row per verse carrying all its slots, as lane (f) did.
 - **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62; the card's "galilee, for"
   line and the KJV tab say 63) — display finding.
 - **Word-study card header — HEBREW HALF** (Greek half done `7bee235`): the Hebrew card's hero gloss is
