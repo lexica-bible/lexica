@@ -2,11 +2,17 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.244**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.245**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## STANDING RULE (JP-approved 11/21, DESIGN 9.243) - READ FIRST: size the care to what a redo costs
 (1) Cheap to redo or self-regenerating (saved AI answers, caches, logs, old run folders, docs): just do it; one line to the ruling chat after. (2) Code changes and read-only checks: ONE reader, ONE round (reviewer OR ruling chat, not both); a second round only for a real bug. (3) Bible data on live (words, verses, corrections, name tables) and removal of the last whole pre-swap copy: full care, cleared block, log read by the ruling chat. Measure nothing unless the answer changes what gets done. A group 1/2 item needing more than one round trip STOPS; the ruling chat puts drop/continue to JP. Overrides any heavier charter/register rule for groups 1-2.
+
+## UPDATE 11/22 later - L9 ON THE NEW WORDS CLOSED AS RUN (DESIGN 9.245)
+JP ruled: closed on RESIDUE 0, DIFFER 0, 893/893 content recipients matching live; figures now 17,452 / 12,128 / 893. Carried by
+name, not examined, not work orders unless JP raises them: the 14 ambiguous filled-slot pairings (Job 13:27, Jdg 11:37, Psa
+105:39, ...), the 10-slot lint/sizer gap, the 4 row-count-differs verses, the 34 changed-after-split recipients. Run folder
+~/l9_app_20261122_174308 kept. Next on this lane: nightlies 2 and 3 for the rollback copy; the 10/25 pre-fill copy removal when brought.
 
 ## SUCCESSOR START (11/22 - P9 PASSED, STEP 8 CLOSED, DESIGN 9.244; next = the L9 PA leg) - OPEN HERE
 
