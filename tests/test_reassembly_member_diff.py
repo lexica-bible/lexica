@@ -68,7 +68,8 @@ class MemberDiff(unittest.TestCase):
 
     def test_frozen_file_line_format_round_trips(self):
         # the 10/30 live file (241) and the 9c re-freeze from the upgraded copy (607, DESIGN 9.113 / 9.133)
-        for name, n in (("punct_members_live_20261030.txt", 241), ("punct_members_built_20261115.txt", 607)):
+        for name, n in (("punct_members_live_20261030.txt", 241), ("punct_members_built_20261115.txt", 607),
+                        ("punct_members_live_20261122.txt", 601)):   # Bible-text batch, DESIGN 9.247
             real = ROOT / "tests" / "fixtures" / "reassembly" / name
             m = A.load_punct_members(real)
             self.assertEqual(len(m), n, name)
@@ -76,7 +77,8 @@ class MemberDiff(unittest.TestCase):
 
     def test_frozen_files_match_their_sha256(self):
         import hashlib
-        for name in ("punct_members_live_20261030.txt", "punct_members_built_20261115.txt"):
+        for name in ("punct_members_live_20261030.txt", "punct_members_built_20261115.txt",
+                     "punct_members_live_20261122.txt"):
             real = ROOT / "tests" / "fixtures" / "reassembly" / name
             want = (real.parent / (name + ".sha256")).read_text(encoding="utf-8").split()[0]
             self.assertEqual(hashlib.sha256(real.read_bytes()).hexdigest(), want, name)

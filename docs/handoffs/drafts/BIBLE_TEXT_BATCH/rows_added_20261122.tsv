@@ -1,0 +1,2 @@
+verse	cell	position_or_word_id	before	after	read
+Joh 7:1 (KJV)	kjv_strongs.strongs_id	680991	him: G615	him: G846	Replaces the cleared after-value (none). The verse's Greek has αὐτόν; the KJV data tags 'to kill him' with G846 at Joh 5:18
