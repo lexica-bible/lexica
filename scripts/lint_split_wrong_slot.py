@@ -232,14 +232,192 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
         yield f"{abbrev} {ch}:{vs}", rows, holder["recips"], holder["nrecip"], holder["fnwords"]
 
 
-def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
+# ── --app-feed: L9 on the app-edition words (edition upgrade, DESIGN §9.214, §9.239) ──────────
+# Built's English is the app-feed transplant: per verse the build makes the OLD rows (the old
+# text, every pass) and then AppTransplant.apply builds the FEED rows (the feed's English, the
+# same pipeline, so _split_compounds runs a SECOND time) and composes the two
+# (build_words_from_abp.run :2788-2793; apply :2400-2470). The default mode above replays the OLD
+# text only, so on built it measures a split the live rows no longer carry (DR "### L9 on built -
+# the code answer"). This mode replays the build's own path - OLD rows with ren= and names= as
+# run() passes them, then app.apply - and takes the recipients from the COMPOSED rows only: a
+# split recipient counts where its own run supplied the composed cell (english + english_head
+# equal to that run's final row at that position). A merge-pair restore (§9.73) and an edge
+# split's blank row (§9.75: the piece IS the old English, with the old head) equal the OLD cell
+# and are OLD's; an edge split's neighbour whose rest is not its old English is neither run's
+# and carries no split recipient. Positions are the build's position values (r[0]), which
+# the split itself permutes (build_words_from_abp.py :623-625), never list indexes.
+
+def _owners(calls, rows, old_rows):
+    """{position: the build_verse_words call that supplied the composed cell, or None}. rows IS
+    old_rows when apply kept the OLD set (any outcome but a pass): then only call 0 (the OLD run)
+    owns cells, even when apply built a FEED set and refused it (passdiff)."""
+    if rows is old_rows:
+        return {r[0]: calls[0] for r in rows}
+    if len(calls) != 2:
+        raise RuntimeError(f"composed verse with {len(calls)} build_verse_words calls (expected 2)")
+    old_c, feed_c = calls
+    oc = {r[0]: (r[1], r[2]) for r in old_c["rows"]}
+    fc = {r[0]: (r[1], r[2]) for r in feed_c["rows"]}
+    out = {}
+    for r in rows:
+        cell = (r[1], r[2])
+        out[r[0]] = feed_c if fc.get(r[0]) == cell else old_c if oc.get(r[0]) == cell else None
+    return out
+
+
+def _filled(before, after):
+    """-> (positions the split FILLED, ambiguous groups). The split rewrites the rows it uses,
+    permutes their positions (:623-625) and SORTS the list (:627), so a row is followed by what
+    the split never changes - its Greek side (strongs, strongs_base, italic, italic_words,
+    smcap_words, morph, lemma; idx 3, 4, 7, 8, 9, 11, 12). A row left untouched (same tuple at
+    the same position) is not filled. The changed rows pair up by that Greek side; a slot is
+    filled when it had no English before and has English after. A Greek side shared by changed
+    rows that were not all empty, or all filled, before cannot be paired for certain: counted
+    as ambiguous (expected 0; a non-zero is printed, not guessed past)."""
+    gk = lambda r: (r[3], r[4], r[7], r[8], r[9], r[11], r[12])   # noqa: E731
+    bpos = {r[0]: r for r in before}
+    same = {r[0] for r in after if bpos.get(r[0]) == r}
+    bgroups, agroups = defaultdict(list), defaultdict(list)
+    for r in before:
+        if r[0] not in same:
+            bgroups[gk(r)].append(r)
+    for r in after:
+        if r[0] not in same:
+            agroups[gk(r)].append(r)
+    filled, ambiguous = [], 0
+    for k, arows in agroups.items():
+        empty_before = {not (r[1] or "").strip() for r in bgroups.get(k, [])}
+        if len(empty_before) > 1 or len(bgroups.get(k, [])) != len(arows):
+            ambiguous += 1
+            continue
+        if empty_before == {True}:
+            filled += [r[0] for r in arows if (r[1] or "").strip()]
+    return filled, ambiguous
+
+
+def _iter_built_app(bh_index, lex, rahlfs, tagnt, app, ren, names, verse_keys, stash, amb=None,
+                    changes=None):
+    """Yields (ref, rows, recips, nrecip, fnwords) like _iter_built, from the COMPOSED rows.
+    verse_keys = the db's verses (run() skips a verse with no row, :2764-2767). stash[key] =
+    {position: (english_head, strongs_base)} of the composed rows, for the words-table check.
+    nrecip = the slots the split FILLED (empty before, text after) in the run that owns them.
+
+    JUDGED ON THE COMPOSED CELL (§9.240 (1)). Passes after the split inside build_verse_words
+    (:1982-1999) never move a position but can change a filled slot's Strong's number
+    (_fix_backwards_pairing :714-717, _split_pn_article_lump :763-767, _g1473_gloss_retag :1551,
+    _strip_helper_double_tag :467), its english / head (_split_pn_article_lump, _lord_subject_split
+    :1612-1616, _lord_oath_fix :1757-1758, _strip_italic_heads :1834, _star_name_heads :1851;
+    punctuation only :1468), or empty it (_funcword_noun_relocate :1723). So each owned filled
+    slot is classed by its COMPOSED row - a content head -> a content recipient judged as
+    (position, composed head, composed base); text with no head -> a function word; no text ->
+    emptied - and every one whose split-time (head, base) is not the composed (head, base), or
+    that is emptied, is appended to `changes` (ref, position, class, split english / head / base,
+    composed english / head / base), class 'changed' or 'emptied'. A punctuation-only english
+    move (:1468) is not listed. Nothing is judged on a pair live does not carry."""
+    real_split, real_bvw = B._split_compounds, B.build_verse_words
+    calls, cur = [], {}
+
+    def wrapped(rows, lexicon, carry=False):
+        snap = list(rows)
+        real_split(rows, lexicon, carry)
+        filled, n_amb = _filled(snap, rows)
+        if amb is not None and n_amb:
+            amb.append((cur["ref"], n_amb))
+        # the FILLED slots themselves, with their split-time cell. (_iter_built's count-beyond-
+        # before per base+head credits the LAST row of a repeated word - "God madeG4160 G2316
+        # andG2532 GodG2316" credits the source's own 'God' at 3, not the filled slot 0 -
+        # harmless there, wrong once ownership is by position.)
+        at = {r[0]: r for r in rows}
+        cur["filled"] = {p: (at[p][1], at[p][2], at[p][4]) for p in filled}
+
+    def wrapped_bvw(*a, **k):
+        ref = cur.get("ref")
+        cur.clear()
+        cur.update(filled={}, ref=ref)
+        out = real_bvw(*a, **k)
+        calls.append(dict(cur, rows=out))
+        return out
+
+    B._split_compounds, B.build_verse_words = wrapped, wrapped_bvw
+    try:
+        for abbrev, ch, vs, raw_words in B.iter_verses(*B._abp_sources()):
+            key = (abbrev, ch, vs)
+            if key not in verse_keys:
+                continue
+            slug = B.ABBREV_TO_SLUG.get(abbrev)
+            bh_rows = bh_index.get((slug, ch, vs), []) if slug else []
+            words, corrs = B._pronoun_corrections(abbrev, ch, vs, raw_words, rahlfs, tagnt, [])
+            calls.clear()
+            cur["ref"] = f"{abbrev} {ch}:{vs}"
+            old_rows = B.build_verse_words(words, bh_rows, lex, ren=ren, article_refusals=[],
+                                           names=names, pn_star_refusals=[])
+            rows = app.apply(key, raw_words, corrs, old_rows, bh_rows, lex, ren=ren, names=names)
+            own = _owners(calls, rows, old_rows)
+            comp = {r[0]: r for r in rows}
+            recips, fnwords, nrecip = [], [], 0
+            for c in calls:
+                for p, (e_s, h_s, b_s) in sorted(c["filled"].items()):
+                    if own.get(p) is not c:
+                        continue
+                    nrecip += 1
+                    r = comp[p]
+                    text = (r[1] or "").strip()
+                    if r[2]:
+                        recips.append((p, r[2], r[4]))
+                    elif text:
+                        fnwords.append(text.lower())
+                    if changes is not None and ((h_s, b_s) != (r[2], r[4]) or not text):
+                        changes.append((cur["ref"], p, "changed" if text else "emptied",
+                                        e_s, h_s, b_s, r[1], r[2], r[4]))
+            stash[key] = {r[0]: (r[2], r[4]) for r in rows}
+            yield f"{abbrev} {ch}:{vs}", rows, recips, nrecip, fnwords
+    finally:
+        B._split_compounds, B.build_verse_words = real_split, real_bvw
+
+
+def _load_words(conn):
+    """{(book, chapter, verse): {position: (english_head, strongs_base)}} from the words table."""
+    out = defaultdict(dict)
+    for b, c, v, pos, head, sb in conn.execute(
+            "SELECT v.book, v.chapter, v.verse, w.position, w.english_head, w.strongs_base "
+            "FROM words w JOIN verses v ON v.id = w.verse_id"):
+        out[(b, c, v)][pos] = (head, sb)
+    return out
+
+
+def _vs_words(affected, stash, live):
+    """Each content recipient's composed cell against the words table at the same verse and
+    position: the replay speaks for live only where they agree. -> (match, differ_rows,
+    verses_rowcount_differs). strongs_base compared G-prefixed (_prefix_base)."""
+    match, differ = 0, []
+    for ref, recips in affected:
+        ab, cv = ref.split(" ")
+        ch, vs = (int(x) for x in cv.split(":"))
+        key = (ab, ch, vs)
+        for pos, head, base in recips:
+            ch_head, ch_base = stash[key][pos]
+            want = (ch_head, "G" + ch_base if ch_base and ch_base[0].isdigit() else ch_base)
+            got = live.get(key, {}).get(pos)
+            if got == want:
+                match += 1
+            else:
+                differ.append((ref, pos, head, base, want[0], want[1],
+                               "" if got is None else got[0], "(no row)" if got is None else got[1]))
+    rc = sum(1 for k, cells in stash.items() if len(live.get(k, {})) != len(cells))
+    return match, differ, rc
+
+
+def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt, it=None):
     """One pass: tally every number's renderings across the WHOLE corpus (the reference —
-    all slots), and stash the split RECIPIENTS of affected verses (what we certify)."""
+    all slots), and stash the split RECIPIENTS of affected verses (what we certify).
+    it = another verse iterator (the --app-feed one); None = the default replay."""
     counts = defaultdict(Counter)
     totals = Counter()
     affected = []
     recon = {"total_recip": 0, "verses_any": 0, "fnvocab": Counter()}   # reconciliation vs sizing
-    for ref, rows, recips, nrecip, fnwords in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
+    if it is None:
+        it = _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True)
+    for ref, rows, recips, nrecip, fnwords in it:
         for _pos, hf, base in _content_slots(rows):
             counts[base][hf] += 1
             totals[base] += 1
@@ -296,12 +474,33 @@ def main():
     ap.add_argument("scrape_db", nargs="?", default="bh_scrape.db")
     ap.add_argument("--control", action="store_true", help="run the control test and exit")
     ap.add_argument("--out", default="split_wrong_slot_flags.tsv")
+    ap.add_argument("--app-feed", action="store_true",
+                    help="L9 on the app-edition words: replay the build's transplant, recipients from the "
+                         "COMPOSED rows, and check each one against the words table (DESIGN 9.214, 9.239)")
+    ap.add_argument("--count-differs", default=str(B.APP_COUNT_DIFFERS),
+                    help="with --app-feed: the frozen chunk-level count-differs file (as the build)")
     args = ap.parse_args()
+
+    if args.app_feed:
+        # every file this mode writes goes to the CURRENT folder under a fixed name: say which
+        # folder, and never write over an earlier run's file (§9.240 (5))
+        outs = [args.out, "split_function_recipient_vocab.tsv", "split_wrong_slot_residue.tsv",
+                "split_wrong_slot_vs_words.tsv", "split_recipients_changed.tsv"]
+        print(f"output folder: {Path.cwd()}")
+        there = [o for o in outs if Path(o).exists()]
+        if there:
+            print(f"STOP: output file(s) already in this folder, not overwritten: {there}")
+            sys.exit(1)
 
     import sqlite3
     ro = sqlite3.connect(f"file:{args.bible_db}?mode=ro", uri=True)
     lex = B.load_lexicon(ro)                        # used by the split's own passes + the triage noise filter
     dodson = _load_dodson(ro)                       # word_gloss (Dodson/Strong's-Hebrew) for the noise filter
+    if args.app_feed:
+        verse_keys = {(b, c, v) for b, c, v in ro.execute("SELECT book, chapter, verse FROM verses")}
+        live = _load_words(ro)
+        print(f"words table: {sum(len(c) for c in live.values()):,} rows in {len(live):,} verses; "
+              f"verses table: {len(verse_keys):,}")
     ro.close()
 
     scrape = sqlite3.connect(args.scrape_db)
@@ -318,11 +517,42 @@ def main():
     else:
         print("TAGNT: NOT found — NT input will differ from production")
 
+    it = stash = app = None
+    if args.app_feed:
+        from abp_app_feed import FeedError
+        try:
+            app = B.AppTransplant(B.abp_source_texts(), count_differs=args.count_differs)
+        except FeedError as e:
+            print(f"STOP: {e}")
+            sys.exit(1)
+        stash, amb, changes = {}, [], []
+        it = _iter_built_app(bh_index, lex, rahlfs, tagnt, app, B.build_attestation_map(),
+                             B.load_name_roster(), verse_keys, stash, amb, changes)
+        print("mode: --app-feed (the build's transplant; recipients from the composed rows)")
+
     print("building corpus rendering reference + stashing affected verses …")
-    counts, totals, affected, recon = _build_counts_and_stash(bh_index, lex, rahlfs, tagnt)
+    counts, totals, affected, recon = _build_counts_and_stash(bh_index, lex, rahlfs, tagnt, it)
     print(f"  numbers with renderings: {len(totals):,}")
-    print(f"  RECONCILE vs sizing script: {recon['total_recip']:,} total recipient slots across "
-          f"{recon['verses_any']:,} verses (sizing: 18,339 / 12,692)")
+    if args.app_feed:
+        print(f"  RECONCILE vs sizing script: {recon['total_recip']:,} total recipient slots across "
+              f"{recon['verses_any']:,} verses (size_split_compounds.py --app-feed must print the same)")
+        print(f"  replayed verses: {len(stash):,}; transplant tally: "
+              + ", ".join(f"{k} {v:,}" for k, v in sorted(app.tally.items())))
+        print(f"  AMBIGUOUS filled-slot pairings: {sum(n for _r, n in amb):,} in {len(amb):,} split runs "
+              f"(expected 0; first: {amb[:5]})")
+        n_chg = sum(1 for c in changes if c[2] == "changed")
+        n_emp = len(changes) - n_chg
+        print(f"  recipients CHANGED after the split by a later pass (head or Strong's): {n_chg:,}; "
+              f"EMPTIED: {n_emp:,} - judged on the composed cell; listed in full in split_recipients_changed.tsv")
+        # the replay IS the build's transplant only if it reproduces the frozen lists (§9.73, §9.75)
+        try:
+            app.check_merge_pairs("build")
+        except FeedError as e:
+            print(f"STOP: the replay is not the build's transplant - {e}")
+            sys.exit(1)
+    else:
+        print(f"  RECONCILE vs sizing script: {recon['total_recip']:,} total recipient slots across "
+              f"{recon['verses_any']:,} verses (sizing: 18,339 / 12,692)")
     content_recips = sum(len(r) for _ref, r in affected)
     print(f"  content-word recipients: {content_recips:,} across {len(affected):,} verses "
           f"(the audited subset; the rest moved function words = accepted caveat)")
@@ -347,6 +577,25 @@ def main():
         line += chunk
     if line.strip():
         print(line)
+
+    if args.app_feed:
+        # ── the words table: does each audited recipient read on live as the replay composed it? ──
+        match, differ, rc = _vs_words(affected, stash, live)
+        print("\n── content recipients vs the words table (same verse, same position) ──")
+        print(f"  match:   {match:,}   (english_head and G-prefixed strongs_base equal)")
+        print(f"  DIFFER:  {len(differ):,}   (full list -> split_wrong_slot_vs_words.tsv)")
+        print(f"  replayed verses whose row count differs from the words table: {rc:,}")
+        Path("split_wrong_slot_vs_words.tsv").write_text(
+            "ref\tposition\tjudged_head\tjudged_base\tcomposed_head\tcomposed_base\tlive_head\tlive_base\n" +
+            "\n".join("\t".join(str(x) for x in d) for d in differ), encoding="utf-8")
+        for d in differ[:20]:
+            print(f"    {d[0]}  pos {d[1]}  composed {d[4]!r}<{d[5]}>  live {d[6]!r}<{d[7]}>")
+        Path("split_recipients_changed.tsv").write_text(
+            "ref\tposition\tclass\tsplit_english\tsplit_head\tsplit_base\tcomposed_english\tcomposed_head\t"
+            "composed_base\n" + "\n".join("\t".join("" if x is None else str(x) for x in c) for c in changes),
+            encoding="utf-8")
+        for c in changes[:20]:
+            print(f"    {c[0]}  pos {c[1]}  {c[2]}: split {c[4]!r}<{c[5]}>  composed {c[7]!r}<{c[8]}>")
 
     flags = []
     recip_total = 0
@@ -400,6 +649,11 @@ def main():
             print(f"    {r}  pos {p}  {h!r} on {bs}   [{bs} normally: {top}]")
         print("\n  NEXT: verify these against BibleHub, count true wrong-slots, "
               "that rate x residue = the real estimate that goes against the bar.")
+    if args.app_feed:
+        print(f"\n  L9 --app-feed RESULT: recipients {recon['total_recip']:,} in {recon['verses_any']:,} verses; "
+              f"content {recip_total:,}; RAW FLAGS {len(flags):,}; RESIDUE {len(residue):,}; "
+              f"vs words: match {match:,}, DIFFER {len(differ):,}; ambiguous {sum(n for _r, n in amb):,}; "
+              f"changed after split {n_chg:,}, emptied {n_emp:,}")
 
 
 if __name__ == "__main__":

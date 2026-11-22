@@ -31,17 +31,126 @@ sys.path.insert(0, str(Path(__file__).parent))
 import build_words_from_abp as B
 
 
+def size_app(app, bh_index, lex, rahlfs, tagnt, ren, names, verse_keys):
+    """--app-feed: replay the build's per-verse path (build_words_from_abp.run :2772-2793: OLD rows
+    with ren= and names=, then app.apply, which builds the FEED rows - a second split - and
+    composes). Each build_verse_words call records the slots ITS split filled (empty before the
+    split, text after; keyed by the position value the split leaves, it permutes them) and its
+    final cells (followed through the split by the row's Greek side, never its list index). A
+    composed cell belongs to the FEED call when it equals that call's final cell,
+    else to the OLD call when it equals that one's (a merge-pair restore, §9.73, or an edge
+    split's blank row, §9.75, whose piece IS the old English), else to neither (an edge split's
+    neighbour left with a new rest); when apply kept the OLD set (rows IS old_rows) only the OLD call
+    counts. A filled slot is counted when its own call owns the composed cell. Coded apart from
+    lint_split_wrong_slot.py's capture on purpose: the two counts must agree (charter §4.2).
+    -> (moved, verses, samples, ambiguous Greek-side groups)."""
+    real_split, real_bvw = B._split_compounds, B.build_verse_words
+    runs, amb = [], [0]
+
+    def wrapped(rows, lexicon, carry=False):
+        # the split permutes positions and sorts the list (build :623-627): follow each row by
+        # its Greek side (idx 3, 4, 7, 8, 9, 11, 12), which the split never changes, pairing
+        # before and after rows of one Greek side in position order
+        greek = lambda r: (r[3], r[4], r[7], r[8], r[9], r[11], r[12])   # noqa: E731
+        was = {}
+        for r in sorted(rows, key=lambda r: r[0]):
+            was.setdefault(greek(r), []).append(not (r[1] or "").strip())
+        before = list(rows)
+        real_split(rows, lexicon, carry)
+        # a Greek side shared by rows the split CHANGED, some empty before and some not: the pairing
+        # below is by position order, not certain - counted (the lint counts the same and skips them)
+        changed = [r for r in before if r not in rows]
+        mixed = {}
+        for r in changed:
+            mixed.setdefault(greek(r), set()).add(not (r[1] or "").strip())
+        amb[0] += sum(1 for s in mixed.values() if len(s) > 1)
+        filled, k = [], {}
+        for r in sorted(rows, key=lambda r: r[0]):
+            g = greek(r)
+            i = k.get(g, 0)
+            k[g] = i + 1
+            if was[g][i] and (r[1] or "").strip():
+                filled.append(r[0])
+        runs[-1]["filled"] = filled
+
+    def wrapped_bvw(*a, **k):
+        runs.append({"filled": []})
+        me = runs[-1]
+        out = real_bvw(*a, **k)
+        me["final"] = {r[0]: (r[1], r[2]) for r in out}
+        return out
+
+    moved = verses = 0
+    samples = []
+    B._split_compounds, B.build_verse_words = wrapped, wrapped_bvw
+    try:
+        for abbrev, ch, vs, raw_words in B.iter_verses(*B._abp_sources()):
+            if (abbrev, ch, vs) not in verse_keys:
+                continue
+            slug = B.ABBREV_TO_SLUG.get(abbrev)
+            bh_rows = bh_index.get((slug, ch, vs), []) if slug else []
+            words, corrs = B._pronoun_corrections(abbrev, ch, vs, raw_words, rahlfs, tagnt, [])
+            runs.clear()
+            old_rows = B.build_verse_words(words, bh_rows, lex, ren=ren, article_refusals=[],
+                                           names=names, pn_star_refusals=[])
+            rows = app.apply((abbrev, ch, vs), raw_words, corrs, old_rows, bh_rows, lex,
+                             ren=ren, names=names)
+            if rows is old_rows:
+                old, feed = runs[0], None
+            elif len(runs) == 2:
+                old, feed = runs
+            else:
+                raise RuntimeError(f"{abbrev} {ch}:{vs}: composed with {len(runs)} build calls (expected 2)")
+            counted = set()
+            for r in rows:
+                cell = (r[1], r[2])
+                if feed is not None and feed["final"].get(r[0]) == cell:
+                    owner = feed
+                elif old["final"].get(r[0]) == cell:
+                    owner = old
+                else:
+                    continue
+                if r[0] in owner["filled"]:
+                    counted.add(r[0])
+            if counted:
+                moved += len(counted)
+                verses += 1
+                # composed rows are 12 wide (build :2440-2441): idx 4 strongs_base, idx 11 lemma
+                # (the default mode reads lemma at idx 12 of the 13-wide split-time rows)
+                samples.append((f"{abbrev} {ch}:{vs}", " | ".join(
+                    f"{'*' if r[0] in counted else ''}{(r[1] or '').strip()}<{r[4] or '-'}"
+                    f"{'/' + r[11] if r[11] else ''}>"
+                    for r in sorted(rows, key=lambda r: r[0]) if (r[1] or "").strip())))
+    finally:
+        B._split_compounds, B.build_verse_words = real_split, real_bvw
+    return moved, verses, samples, amb[0]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("bible_db", nargs="?", default="bible.db")
     ap.add_argument("scrape_db", nargs="?", default="bh_scrape.db")
     ap.add_argument("--samples", type=int, default=50, help="affected verses to print")
     ap.add_argument("--out", default="split_compounds_samples.tsv")
+    ap.add_argument("--app-feed", action="store_true",
+                    help="size the split in the app-edition build: the build's transplant replayed, "
+                         "slots counted from the COMPOSED rows (DESIGN 9.214, 9.239)")
+    ap.add_argument("--count-differs", default=str(B.APP_COUNT_DIFFERS),
+                    help="with --app-feed: the frozen chunk-level count-differs file (as the build)")
     args = ap.parse_args()
+
+    if args.app_feed:
+        # the samples file goes to the CURRENT folder: say which, never write over an earlier run's
+        print(f"output folder: {Path.cwd()}")
+        if Path(args.out).exists():
+            print(f"STOP: {args.out} already in this folder, not overwritten")
+            sys.exit(1)
 
     # lexicon from a READ-ONLY handle on the live db
     ro = sqlite3.connect(f"file:{args.bible_db}?mode=ro", uri=True)
     lex = B.load_lexicon(ro)
+    verse_keys = ({(b, c, v) for b, c, v in ro.execute("SELECT book, chapter, verse FROM verses")}
+                  if args.app_feed else None)
     ro.close()
     print(f"lexicon entries: {len(lex):,}")
 
@@ -61,6 +170,31 @@ def main():
         tagnt = B.TAGNTSource([str(p) for p in B.TAGNT_FILES]); print("TAGNT: loaded")
     else:
         print("TAGNT: NOT found — NT input will differ from production")
+
+    if args.app_feed:
+        from abp_app_feed import FeedError
+        try:
+            app = B.AppTransplant(B.abp_source_texts(), count_differs=args.count_differs)
+        except FeedError as e:
+            print(f"STOP: {e}")
+            sys.exit(1)
+        moved, verses, samples, n_amb = size_app(app, bh_index, lex, rahlfs, tagnt, B.build_attestation_map(),
+                                          B.load_name_roster(), verse_keys)
+        print("\n── _split_compounds sizing, --app-feed (slots counted from the COMPOSED rows) ──")
+        print(f"  recipient slots filled by split: {moved:,}")
+        print(f"  verses affected:                 {verses:,}")
+        print(f"  AMBIGUOUS Greek-side groups:     {n_amb:,}   (expected 0; the lint prints its own count)")
+        print("  transplant tally: " + ", ".join(f"{k} {v:,}" for k, v in sorted(app.tally.items())))
+        try:
+            app.check_merge_pairs("build")
+        except FeedError as e:
+            print(f"STOP: the replay is not the build's transplant - {e}")
+            sys.exit(1)
+        Path(args.out).write_text(
+            "ref\tafter (composed rows; * = a slot the split filled)\n" +
+            "\n".join("\t".join(s) for s in samples), encoding="utf-8")
+        print(f"  {len(samples):,} samples -> {args.out}")
+        return
 
     # ── wrap the REAL split so we count only what IT does ──
     real_split = B._split_compounds
