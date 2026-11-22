@@ -6,6 +6,13 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-21 — small fixes, batch 3 (one commit)
+- **7 plain-style test files now gate:** `tests/run_plain_tests.py` runs every `test_*` in test_cache_key_scope,
+  test_curation_parse, test_scope_detect, test_verse_ref_parse, test_lexica_book_norm, test_lexica_coverage,
+  test_number_fold (65 tests) with a must-fail control first; in ci.yml + pre-commit. Only test_lexica_draw_cache stays open.
+- **PA tidy step 1 drafted:** `docs/handoffs/drafts/PA_tidy/block_list.sh` (read-only list of untracked files + -wal/-shm
+  crumbs). Reviewer CLEAR; JP pastes when wanted.
+
 ## 2026-11-21 — small fixes, batch 2 (one commit)
 - **Dead CSS removed:** `.corpus-group*`, `.corpus-chevron*`, `.corpus-text-toggle` (no callers since the flat passage list)
   and `.ac-construction*` (banner dropped in `ffdd966f`). `.corpus-groups` + `.additional-refs-*` are live and stay.

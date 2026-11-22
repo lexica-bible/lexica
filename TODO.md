@@ -141,7 +141,9 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 - **PA checkout: several hundred untracked files in ~/bible-db** (seen in CCTL's `git status`, 11/17): old agreement_*/VOID_*
   draft files, logs, and stray files named like single words or book codes ("0", "1Sa", "Checking", "Done.", "Pulling",
   "Running", "Warming" — likely a mis-pasted command's output written as files). Read-only list first, then a named removal
-  block; not urgent. Keep pronoun_review.tsv / unmatched_pn.txt (builds write them).
+  block; not urgent. Keep pronoun_review.tsv / unmatched_pn.txt (builds write them). **Step 1 drafted 11/21:**
+  `docs/handoffs/drafts/PA_tidy/block_list.sh` (read-only; also covers the WAL crumbs below) — JP pastes when wanted;
+  step 2 is drafted from its output.
 - **Ask-corpus mobile `.ac { overflow: hidden }` mask (styles.css ~:5116) — optional tidy-up.** Predates
   the mobile pass and hides any sideways overflow inside Ask-corpus; JP confirmed the phone scroll gone
   (2026-07-15) and it measured clean at 320 + 375, so it masks nothing today. Remove it when someone is in
@@ -149,11 +151,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 - **WAL crumbs (zero-risk):** orphan 0-byte -wal/-shm files in ~/bible-db (bible_test.db-wal,
   bible_test_scratch.db-*, proseonly.db-* — two with no parent). Repo grep 7/31: NO script opens WAL;
   check their file dates, then delete.
-- **Tests that still gate nothing (pytest-style files, no runner):** `test_cache_key_scope`, `test_curation_parse`,
-  `test_scope_detect`, `test_verse_ref_parse` (also `import ai` fails from repo root), `test_lexica_book_norm`,
-  `test_lexica_coverage`, `test_number_fold`, and `test_lexica_draw_cache` (needs pytest + the live DB). Starting
-  them with `python tests/x.py` runs nothing, so they can't go in the two lists as they are: add pytest to CI and a
-  pytest line, or give each a runner. (The runnable ones were added to both lists 11/22.)
+- **One test still gates nothing:** `test_lexica_draw_cache` (real pytest fixtures + the live DB). The other 7
+  plain-style files now run via `tests/run_plain_tests.py` in both lists (11/21).
 - **Phone Strong's tags: `.lib-iw-strongs` is set to 9px in the phone CSS** (`static/styles.css:2555`) —
   drift from the "Strong's tags scale, never a fixed px" rule (frontend.md); fix the CSS. (JP ruling 11/7)
 - **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62; the card's "galilee, for"

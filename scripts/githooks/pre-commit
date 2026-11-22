@@ -101,6 +101,7 @@ python tests/test_correction_reorder_rows.py >/dev/null
 python tests/test_reassembly_member_diff.py >/dev/null
 python tests/test_abp_tab_bridge.py >/dev/null
 python tests/test_pn_slot_verses.py >/dev/null
+python tests/run_plain_tests.py >/dev/null
 python tests/test_hebrew_xref_positions.py >/dev/null
 python tests/test_audit_xref_vs_binding.py >/dev/null
 python tests/test_correct_xref_vs_binding.py >/dev/null
