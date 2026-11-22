@@ -27,7 +27,7 @@ bp = Blueprint("lsj", __name__)
 # Writes a plain DEFINITION of the word — its central everyday meaning + the one or two other
 # senses the entry clearly draws — opening with the meaning itself (no "this word means …"),
 # NOT a usage survey (2026-06-23, settled after a prompt review). Runs on HAIKU. Reframe, not a
-# blacklist (project_synthesis_no_parse + project_ai_synthesis_quality). The standing levers:
+# blacklist (memory project_ai_synthesis_quality). The standing levers:
 #   - open with the meaning, no preface; don't name the books or organize senses by where the
 #     word appears — give what it means, not where it's used.
 #   - Koine anchor without naming a text: "common Koine sense, not specialized classical-era

@@ -87,6 +87,14 @@ python tests/test_app_transplant.py >/dev/null
 python tests/test_app_cells.py >/dev/null
 python tests/test_build_prose.py >/dev/null
 python tests/test_ai_edition_wipe.py >/dev/null
+python tests/test_delete_account.py >/dev/null
+python tests/test_key_strongs_alias.py >/dev/null
+python tests/test_pin_retrieval_alias.py >/dev/null
+python tests/test_lexicon_lookup_bands.py >/dev/null
+python tests/test_rail_payload_contract.py >/dev/null
+python tests/test_reorder_port.py >/dev/null
+python tests/test_thread_skeleton.py >/dev/null
+python scripts/cert_invariants.py --controls >/dev/null
 python tests/test_eu_retired_check.py >/dev/null
 python tests/test_eu_repair_restore_digits.py >/dev/null
 python tests/test_correction_reorder_rows.py >/dev/null

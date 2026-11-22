@@ -247,6 +247,13 @@ def check_backup() -> list:
     return [msg] if msg else []
 
 
+def check_journal_mode(conn) -> list:
+    """The db must be in rollback-journal mode DELETE, never WAL: PA's home is NFS and WAL
+    corrupts on a crash there (news.db, 2026-07-05; CLAUDE.md hard rule). Read only."""
+    mode = (conn.execute("PRAGMA journal_mode").fetchone()[0] or "").lower()
+    return [] if mode == "delete" else [f"journal_mode is {mode!r}, must be 'delete' (never WAL on PA)"]
+
+
 CHECKS = [
     ("1 row pins (words/verses)", lambda conn: check_row_pins(conn)),
     ("2 split-flip = 0",          check_split_flip),
@@ -255,6 +262,7 @@ CHECKS = [
     ("5 feed manifest",           lambda conn: check_manifest()),
     ("6 backup freshness",        lambda conn: check_backup()),
     ("7 person/place binding",    check_person_place_binding),
+    ("8 journal_mode = delete",   check_journal_mode),
 ]
 
 
@@ -379,7 +387,17 @@ def run_controls() -> int:
         results.append(("7 person/place binding (both directions)", both, bad))
         results.append(("7b allowlist: moved counts FIRE, audited counts stay quiet",
                         moved_fires and pinned_quiet, [b for b in bad if b.startswith("ebal:")]))
+        quiet = check_journal_mode(conn)                       # the scratch db is in DELETE mode
         conn.close()
+
+        # control 8: a db flipped to WAL must fail; the DELETE-mode scratch above stayed quiet
+        wal = sqlite3.connect(str(Path(td) / "wal.db"))
+        wal.execute("PRAGMA journal_mode=WAL")
+        wal.execute("CREATE TABLE t(x)")
+        wal.commit()
+        bad = check_journal_mode(wal)
+        wal.close()
+        results.append(("8 journal_mode (WAL fires, DELETE quiet)", bool(bad) and not quiet, bad))
 
     print("== cert_invariants CONTROLS (each check must FIRE on seeded bad input) ==")
     ok = True

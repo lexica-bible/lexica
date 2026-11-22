@@ -15,7 +15,9 @@ signup yet.
 
 Storage: notes.db (core.notes_db), kept OUT of bible.db (corpus gets rebuilt;
 user data must survive that). Tables: users, tokens, notes (one row per note,
-keyed by owner = "u<user_id>"), plan, password_resets.
+keyed by owner = "u<user_id>"), plan, corpus (saved Ask-the-corpus conversations,
+same owner key), password_resets, ai_usage (daily AI-search counters per user_id;
+user_id 0 = the whole site).
 
 Endpoints:
   POST /api/auth/signup        {email, password}  -> {token, email}
@@ -630,8 +632,10 @@ def set_name():
 @limiter.limit("10 per hour")
 def delete_account():
     """Permanently delete the signed-in account and ALL its data — the user row,
-    every note/highlight/bookmark, the reading-plan progress, every login token,
-    and any pending reset links. No undo. Requires the account's bearer token."""
+    every note/highlight/bookmark, the reading-plan progress, the saved Ask-the-corpus
+    conversations, its daily AI-usage counters, every login token, and any pending
+    reset links. No undo. Requires the account's bearer token. (The whole-site usage
+    total, user_id 0, is not the account's and stays.)"""
     _ensure_tables()
     conn = notes_db()
     try:
@@ -641,6 +645,8 @@ def delete_account():
         owner = "u" + str(uid)
         conn.execute("DELETE FROM notes WHERE code = ?", (owner,))
         conn.execute("DELETE FROM plan WHERE code = ?", (owner,))
+        conn.execute("DELETE FROM corpus WHERE code = ?", (owner,))
+        conn.execute("DELETE FROM ai_usage WHERE user_id = ?", (uid,))
         conn.execute("DELETE FROM password_resets WHERE user_id = ?", (uid,))
         conn.execute("DELETE FROM tokens WHERE user_id = ?", (uid,))
         conn.execute("DELETE FROM users WHERE id = ?", (uid,))

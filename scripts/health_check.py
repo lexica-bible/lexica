@@ -27,7 +27,9 @@ EMAIL_TO = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--email-t
 # --backup-controls: prove the backup damage detections fire, then exit — never
 # opens the real db (":memory:" placeholder so no stray bible.db gets created).
 CONTROLS = "--backup-controls" in sys.argv
-conn = sqlite3.connect(":memory:" if CONTROLS else DB)
+# timeout=60: right after a deploy each site worker's warm-up writes the AI cache, which held
+# the 5 s default wait past its limit and read as false "database is locked" (ops.md).
+conn = sqlite3.connect(":memory:" if CONTROLS else DB, timeout=60)
 conn.row_factory = sqlite3.Row
 
 results = []

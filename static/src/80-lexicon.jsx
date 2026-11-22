@@ -126,8 +126,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // when this landed. RE-RULED 2026-07-28 (JP, FRAME-0 audit site 2): nothing paints before
   // the final data — the Definition block now HOLDS until this resolves, matching the
   // Library card (30-detail-panel lexicaLoading). undefined = still loading, null = no entry.
-  // The numbering crosswalk (alias_note) rides this same response but its header badge is a
-  // separate queue item, not wired here.
+  // The numbering crosswalk (alias_note) rides this same response; the header badge reads it
+  // from profile.alias_note instead (the `· ABP …` / `· standard …` badge further down).
   const [lexica, setLexica] = useState(undefined);
   useEffect(() => {
     const sn = profile && profile.strongs;

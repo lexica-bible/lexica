@@ -2679,8 +2679,8 @@ if(!profile||!/^G/i.test(profile.strongs))return;let cancelled=false;setLsjLoadi
 // when this landed. RE-RULED 2026-07-28 (JP, FRAME-0 audit site 2): nothing paints before
 // the final data — the Definition block now HOLDS until this resolves, matching the
 // Library card (30-detail-panel lexicaLoading). undefined = still loading, null = no entry.
-// The numbering crosswalk (alias_note) rides this same response but its header badge is a
-// separate queue item, not wired here.
+// The numbering crosswalk (alias_note) rides this same response; the header badge reads it
+// from profile.alias_note instead (the `· ABP …` / `· standard …` badge further down).
 const[lexica,setLexica]=useState(undefined);useEffect(()=>{const sn=profile&&profile.strongs;if(!sn||sn==="*"||profile.name_form){setLexica(null);return;}// numberless name-form: no entry to fetch (resolve, don't hold)
 setLexica(undefined);let cancelled=false;api.lexica(sn).then(d=>{if(!cancelled)setLexica(d&&!d.error?d:null);}).catch(()=>{if(!cancelled)setLexica(null);});return()=>{cancelled=true;};},[profile?.strongs]);useEffect(()=>{if(!pendingStrongs)return;onPendingStrongsConsumed?.();setGroupings(null);setMatches(null);// pendingStrongs may be a bare Strong's or { strongs, corpus } (from an
 // ABP/KJV "occurrences" link) — drill in to the corpus the link named.

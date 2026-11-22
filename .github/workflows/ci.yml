@@ -84,6 +84,14 @@ jobs:
           python tests/test_app_cells.py
           python tests/test_build_prose.py
           python tests/test_ai_edition_wipe.py
+          python tests/test_delete_account.py
+          python tests/test_key_strongs_alias.py
+          python tests/test_pin_retrieval_alias.py
+          python tests/test_lexicon_lookup_bands.py
+          python tests/test_rail_payload_contract.py
+          python tests/test_reorder_port.py
+          python tests/test_thread_skeleton.py
+          python scripts/cert_invariants.py --controls
           python tests/test_eu_retired_check.py
           python tests/test_eu_repair_restore_digits.py
           python tests/test_correction_reorder_rows.py

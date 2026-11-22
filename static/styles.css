@@ -81,8 +81,6 @@
   --sheet-radius: 18px;
 
   --sidebar-w: 460px;
-  /* News's right feed-shape panel matches Library/Word study width (pinned to the
-     shared --sidebar-w so they stay locked together). */
   /* News's inspect panel is DELIBERATELY narrower than the shared 460 (restored 2026-07-24,
      reverting 352e191's unification): the panel is always open and News's top bar carries
      more controls than any other tab (views+date+score+sort+refresh+info+copy/export+bulk),

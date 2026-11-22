@@ -146,32 +146,16 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   the mobile pass and hides any sideways overflow inside Ask-corpus; JP confirmed the phone scroll gone
   (2026-07-15) and it measured clean at 320 + 375, so it masks nothing today. Remove it when someone is in
   there, then re-measure with getBoundingClientRect (scrollWidth reads clean through the clip).
-- **health_check false "database is locked"** in the minutes after a deploy (sqlite opens with the 5 s default
-  wait; workers' warm-up writes the AI cache — ops.md). code: scripts/health_check.py
 - **WAL crumbs (zero-risk):** orphan 0-byte -wal/-shm files in ~/bible-db (bible_test.db-wal,
   bible_test_scratch.db-*, proseonly.db-* — two with no parent). Repo grep 7/31: NO script opens WAL;
   check their file dates, then delete.
-- **Invariant #8:** add a `journal_mode=delete` assertion to `cert_invariants.py` (7/7 → 8/8) so a WAL flip
-  is caught by the suite, not just the session tripwire.
-- **Tests that gate nothing:** `tests/test_lexica_draw_cache.py` fails 5 tests on any machine without the
-  live DB (no such table — needs a skip-without-DB guard or a fixture; unticketed known-red is rot) · the
-  CI list is an EXPLICIT set of filenames (`.github/workflows/ci.yml` + `scripts/githooks/pre-commit`), so
-  real tests don't gate: the alias tests, `test_scope_detect`, `test_thread_skeleton`,
-  `test_lexicon_lookup_bands`, **`test_rail_payload_contract`** (pins the rail field names
-  `grounded`/`contested`/`alias_note` from the producing side; never added — git log -S). Add to BOTH lists
-  after confirming each runs clean in CI's environment, or switch CI to a glob once every file is
-  import-clean from repo root.
+- **Tests that still gate nothing (pytest-style files, no runner):** `test_cache_key_scope`, `test_curation_parse`,
+  `test_scope_detect`, `test_verse_ref_parse` (also `import ai` fails from repo root), `test_lexica_book_norm`,
+  `test_lexica_coverage`, `test_number_fold`, and `test_lexica_draw_cache` (needs pytest + the live DB). Starting
+  them with `python tests/x.py` runs nothing, so they can't go in the two lists as they are: add pytest to CI and a
+  pytest line, or give each a runner. (The runnable ones were added to both lists 11/22.)
 - **Phone Strong's tags: `.lib-iw-strongs` is set to 9px in the phone CSS** (`static/styles.css:2555`) —
   drift from the "Strong's tags scale, never a fixed px" rule (frontend.md); fix the CSS. (JP ruling 11/7)
-- **Delete-account leaves Ask-corpus history behind** (code read, not checked on PA; a separate task card
-  was raised). `/api/auth/delete-account` (`views_notes.py` ~:629-652) deletes notes, plan,
-  password_resets, tokens, users — NOT `corpus` (saved Ask-the-corpus chats, keyed by the same
-  `code = "u<id>"`) and not `ai_usage` (per-user daily counters); its docstring promises "ALL its data".
-- **Stale code comments:** `styles.css` ~:83-85 (News panel "matches Library/Word study width" — the token
-  below is the deliberately narrower `--news-sidebar-w: 380px`) · `views_notes.py` header (:17-18) lists 5
-  tables, there are 7 (+ corpus, ai_usage) · `views_lsj.py:30` cites the deleted memory
-  `project_synthesis_no_parse` · `80-lexicon.jsx:129-130` says the alias_note header badge is "not wired
-  here" (it is — :1204).
 - **Dead CSS:** `.corpus-group*` rules (styles.css ~1534-1571; the `.corpus-groups` container is live) and
   `.ac-construction*` (~4936-4945, ~5197; the banner went in `ffdd966f`) have no callers.
 - **`/api/lexicon/books` has no bridge branch** (`views_lexicon.py:1580ff`): for the 6 bridged names its ABP

@@ -6,6 +6,19 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-22 — small fixes closed (one commit)
+- **Delete-account now removes ALL the account's data:** `/api/auth/delete-account` also deletes `corpus` (saved Ask-the-corpus
+  chats) and `ai_usage` (its daily counters); the site total (user_id 0) stays. Locked by `tests/test_delete_account.py`
+  (fails on the old code: corpus rows left).
+- **health_check false "database is locked" after a deploy:** it now waits 60 s instead of sqlite's 5 s default (ops.md).
+- **cert_invariants check 8 — journal_mode must be DELETE, never WAL** (7/7 → 8/8), with a control that seeds a WAL db and
+  must fire; `cert_invariants.py --controls` now runs in both test lists.
+- **Tests now gating:** test_delete_account, test_key_strongs_alias, test_pin_retrieval_alias, test_lexicon_lookup_bands,
+  test_rail_payload_contract, test_reorder_port, test_thread_skeleton added to ci.yml + pre-commit. The pytest-style rest
+  stays an open TODO item.
+- **Stale comments fixed:** styles.css News-panel width note; views_notes.py header table list; views_lsj.py's deleted-memory
+  citation; 80-lexicon.jsx alias_note badge note.
+
 ## 2026-11-07 — TODO consolidation (/consolidate, JP-approved plan): closed items moved here
 Why: TODO.md had grown to 1,685 lines / ~195 bullets. Closed write-ups that had sat in TODO marked "(Archive at
 next /wrap)" are recorded below (newest dates first in this block). Removed from TODO as already archived or

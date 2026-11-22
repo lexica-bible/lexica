@@ -200,10 +200,10 @@ The News tab's data (news.db) is refreshed by ONE PA scheduled task:
   backup is swept — raw `.db` gets `PRAGMA quick_check`, `.db.gz` gets a full stream-read (gzip's own
   checksum catches truncation). `--backup-controls` = the durable proof-of-fire (seeds a truncated raw +
   truncated gz in a temp dir, requires exactly those two warns).
-  **Right after a deploy it can report false `database is locked` errors:** each site worker's
+  **Right after a deploy it used to report false `database is locked` errors:** each site worker's
   first-request warm-up (`app.py` `_warm_caches`) writes the AI cache into bible.db, and
-  health_check's `sqlite3.connect` waits only Python's default 5 s. Wait a few minutes, or re-read
-  the failed checks with `sqlite3 -readonly -cmd ".timeout 60000"` — "locked" is unread, never a pass.
+  health_check's `sqlite3.connect` waited only Python's default 5 s. It now waits 60 s (11/22). If
+  "locked" still shows, it is unread, never a pass: re-run after a few minutes.
   **PLACEMENT RULE (2026-07-11):** any assertion about live PA DATA (row floors, table counts —
   e.g. the `abp_surface ≥ 395,003` floor) goes HERE, not in pre-commit/CI — those run
   on the dev box and GitHub where bible.db doesn't exist, so the check would always pass and
