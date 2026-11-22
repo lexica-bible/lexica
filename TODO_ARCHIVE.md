@@ -12,6 +12,9 @@ few "leave it alone" verdicts worth keeping.
 - **`test_lexica_draw_cache` now gates** through `tests/run_plain_tests.py`. The old note was wrong: it never needed the live db, it builds its own small data. It needed pytest, and its data had gone stale against the builder; both fixed, with must-fail controls on the status and citation checks.
 - **The KJV 62-vs-63 item moved** to the Bible-text batch in TODO: 63 is right, and the fix is re-tagging Joh 7:1.
 
+## 2026-11-22 — dictionary cards quote the current text
+- `/api/lexica/<number>` now replaces each stored verse quote with today's `verses.text`, by ref (`views_lexica.py`, `tests/test_lexica_current_verses.py`). The stored rows are not written. Spot-check before the fix: of 42 quotes on 7 cards, 20 differed from the live verse in wording and 8 in punctuation only.
+
 ## 2026-11-21 — small fixes, batch 3 (one commit)
 - **7 plain-style test files now gate:** `tests/run_plain_tests.py` runs every `test_*` in test_cache_key_scope,
   test_curation_parse, test_scope_detect, test_verse_ref_parse, test_lexica_book_norm, test_lexica_coverage,

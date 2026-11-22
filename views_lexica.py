@@ -7,6 +7,7 @@ or the word has no entry, it 404s and the card falls back to the existing LSJ pa
 deploy before the data step can't break anything. Read-only; the build script is the only writer.
 """
 import json
+import re
 
 from flask import Blueprint, jsonify
 
@@ -35,6 +36,25 @@ def _has_lexica(conn):
     return conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name='lexica_def'"
     ).fetchone() is not None
+
+
+_VERSE_REF = re.compile(r"^(\S+) (\d+):(\d+)$")
+
+
+def _current_verses(conn, sid, stored):
+    """The card's cited verses with TODAY's verses.text, looked up by ref (ruling chat 11/22).
+    def_json holds a copy from build time, so an edition change would otherwise leave cards
+    quoting the old English. A ref with no verse is left out, as build_verses does, and logged."""
+    out = []
+    for v in stored or []:
+        m = _VERSE_REF.match(v.get("ref") or "")
+        row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                           (m.group(1), int(m.group(2)), int(m.group(3)))).fetchone() if m else None
+        if row and row["text"]:
+            out.append({**v, "text": row["text"]})
+        else:
+            log.warning("lexica %s cites a verse not in the text: %r", sid, v.get("ref"))
+    return out
 
 
 @bp.route("/api/lexica/seams")
@@ -155,6 +175,14 @@ def lexica_def(strongs):
                   "scripts/build_lexica_def.py --resplit --word %s --apply on PA", sid, sid)
         return jsonify(_notfound), 404
     entry.pop("raw", None)        # the browser uses the split fields, not the full prose blob
+    conn = db_ro()
+    try:
+        entry["verses"] = _current_verses(conn, sid, entry.get("verses"))
+    except Exception as e:
+        log.warning("lexica verse lookup failed for %s: %s", sid, e)
+        return jsonify({"error": "lookup failed"}), 500
+    finally:
+        conn.close()
     if alias_note:
         entry["alias_note"] = alias_note
     return jsonify(entry)

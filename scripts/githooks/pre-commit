@@ -88,6 +88,7 @@ python tests/test_app_cells.py >/dev/null
 python tests/test_split_lint_app.py >/dev/null
 python tests/test_build_prose.py >/dev/null
 python tests/test_ai_edition_wipe.py >/dev/null
+python tests/test_lexica_current_verses.py >/dev/null
 python tests/test_delete_account.py >/dev/null
 python tests/test_key_strongs_alias.py >/dev/null
 python tests/test_pin_retrieval_alias.py >/dev/null

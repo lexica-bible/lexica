@@ -85,6 +85,7 @@ jobs:
           python tests/test_split_lint_app.py
           python tests/test_build_prose.py
           python tests/test_ai_edition_wipe.py
+          python tests/test_lexica_current_verses.py
           python tests/test_delete_account.py
           python tests/test_key_strongs_alias.py
           python tests/test_pin_retrieval_alias.py

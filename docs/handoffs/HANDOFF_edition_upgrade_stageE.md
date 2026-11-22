@@ -2,11 +2,15 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.245**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.246**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## STANDING RULE (JP-approved 11/21, DESIGN 9.243) - READ FIRST: size the care to what a redo costs
 (1) Cheap to redo or self-regenerating (saved AI answers, caches, logs, old run folders, docs): just do it; one line to the ruling chat after. (2) Code changes and read-only checks: ONE reader, ONE round (reviewer OR ruling chat, not both); a second round only for a real bug. (3) Bible data on live (words, verses, corrections, name tables) and removal of the last whole pre-swap copy: full care, cleared block, log read by the ruling chat. Measure nothing unless the answer changes what gets done. A group 1/2 item needing more than one round trip STOPS; the ruling chat puts drop/continue to JP. Overrides any heavier charter/register rule for groups 1-2.
+
+## UPDATE 11/22 end - LEFTOVERS (DESIGN 9.246)
+/rebuild-words now builds the app edition; dictionary cards quote the current text. HELD for the ruling chat's clearance, nothing on live: the Bible-text
+batch, docs/handoffs/drafts/BIBLE_TEXT_BATCH/rows_20261122.tsv. Its write block is drafted only after the rows are cleared. Owed items: TODO.md, active lane.
 
 ## UPDATE 11/22 later - L9 ON THE NEW WORDS CLOSED AS RUN (DESIGN 9.245)
 JP ruled: closed on RESIDUE 0, DIFFER 0, 893/893 content recipients matching live; figures now 17,452 / 12,128 / 893. Carried by
