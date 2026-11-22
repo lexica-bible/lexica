@@ -68,8 +68,11 @@ class Batch(unittest.TestCase):
         ins = """INSERT INTO abp_corrections (book, chapter, verse, position, field, source_value, corrected_value, reason,
                  ledger_ref, applied_at, status, created) VALUES (?,?,?,?,?,?,?,?,?,'ingest','active','2026-11-02')"""
         c.execute(ins, (*B.EXISTING_PROSE, -1, "verses.text", src, ex["before"], "jeroboam", "EU-2Ki14:28"))
-        for i in range(B.ACTIVE_BEFORE - 1):
-            c.execute(ins, ("Zzz", 1, i + 1, 1, "english", "a", "b", "filler", "filler"))
+        # the other 374 rows = the REAL pinned member list, so the list-sha reads below are real
+        for line in Path(B.ACTIVE_OLD).read_text(encoding="utf-8").splitlines():
+            bk, ch, vs, pos, fld, led = line.split("\t")
+            if (bk, int(ch), int(vs), int(pos), fld) != (*B.EXISTING_PROSE, -1, "verses.text"):
+                c.execute(ins, (bk, int(ch), int(vs), int(pos), fld, "a", "b", "filler", led))
         c.commit()
         c.close()
         for name, value in (("WORDS", 2 * len(self.plan["words"])), ("VERSES", len(self.plan["prose"]))):
@@ -120,7 +123,7 @@ class Batch(unittest.TestCase):
 
     def test_existing_prose_row_changed_not_doubled(self):
         self.run_mode("apply")
-        rows = self.q("SELECT source_value, corrected_value FROM abp_corrections WHERE book='2Ki' AND position=-1")
+        rows = self.q("SELECT source_value, corrected_value FROM abp_corrections WHERE book='2Ki' AND chapter=14 AND verse=28 AND position=-1")
         self.assertEqual(len(rows), 1)
         self.assertIn("Jeroboam II", rows[0][0])
         self.assertIn("belonging to Judah", rows[0][1])
@@ -172,6 +175,87 @@ class Batch(unittest.TestCase):
         d0 = digest(self.db)
         self.assertEqual(self.run_mode("undo")[0], 1)
         self.assertEqual(digest(self.db), d0)
+
+    def _members(self, db, frozen):
+        after = Path(frozen) == B.PUNCT_NEW
+        return {"word-order": [], "content-other": [] if after else ["Job 3:3"], "dup-gloss": [], "gone": [],
+                "new": [], "changed": [], "same": B.PUNCT_AFTER if after else B.PUNCT_BEFORE, "declared_row": None}
+
+    def test_whole_path_check_apply_after(self):
+        """The three steps the block runs, in order, with the real member-list shas."""
+        with mock.patch.object(B, "check_fill", lambda p: None), \
+             mock.patch.object(B, "member_read", self._members), \
+             mock.patch.object(B, "phrase_gloss", lambda db: 700), \
+             mock.patch.object(B, "run_cert", lambda db: None):
+            rc, out = self.run_mode("check")
+            self.assertEqual(rc, 0, out)
+            self.assertIn("= 76 changes", out)
+            self.assertEqual(self.run_mode("apply")[0], 0)
+            rc, out = self.run_mode("after")
+            self.assertEqual(rc, 0, out)
+            self.assertIn(f"NEW PIN abp_corrections_active: 403, member list sha {B.ACTIVE_NEW_SHA}", out)
+            self.assertIn("NEW FROZEN punct list: 601", out)
+            self.assertEqual(self.run_mode("check")[0], 1, "check must refuse once the write is in")
+
+    def test_after_refuses_before_the_write(self):
+        with mock.patch.object(B, "check_fill", lambda p: None), \
+             mock.patch.object(B, "member_read", self._members), \
+             mock.patch.object(B, "phrase_gloss", lambda db: 700), \
+             mock.patch.object(B, "run_cert", lambda db: None):
+            self.assertEqual(self.run_mode("after")[0], 1)
+
+    def test_cert_reads_at_403_and_puts_the_pin_back(self):
+        import cert_invariants as C
+        seen = []
+        with mock.patch.object(C, "run_suite", lambda db: seen.append(C.PINS["abp_corrections_active"]) or 0):
+            B.run_cert(self.db)
+        self.assertEqual(seen, [B.ACTIVE_AFTER])
+        self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
+        with mock.patch.object(C, "run_suite", lambda db: 1):
+            with self.assertRaises(B.Stop):
+                B.run_cert(self.db)
+        self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
+
+    def _audit_db(self, name, control=True, lsj=True):
+        p = os.path.join(self.tmp.name, name)
+        c = sqlite3.connect(p)
+        c.executescript("""
+            CREATE TABLE lexicon (strongs TEXT, lemma TEXT, kjv_def TEXT, strongs_def TEXT);
+            CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT);
+            CREATE TABLE words (verse_id INT, position INT, english TEXT, strongs_base TEXT);
+            INSERT INTO lexicon VALUES ('264', 'x', 'sin', ''), ('3361', 'y', 'not', '');
+        """)
+        if lsj:
+            c.execute("CREATE TABLE lsj (plain TEXT, def_html TEXT)")
+        c.execute("INSERT INTO verses VALUES (1, ?, ?, 1)", ("Psa", 39) if control else ("Gen", 1))
+        c.execute("INSERT INTO words VALUES (1, 0, 'to not sin', 'G3361')")
+        c.execute("INSERT INTO words VALUES (1, 1, '', 'G264')")
+        c.commit()
+        c.close()
+        return p
+
+    def test_phrase_gloss_reads_the_real_audit(self):
+        """Runs the PRODUCTION audit: this is the read that stopped the 11/22 re-run."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            n = B.phrase_gloss(self._audit_db("a.db"))
+        self.assertEqual(n, 1)
+        self.assertIn("control fired", out.getvalue())
+
+    def test_phrase_gloss_stops_when_its_control_misses(self):
+        with self.assertRaises(B.Stop) as e:
+            B.phrase_gloss(self._audit_db("b.db", control=False))
+        self.assertIn("CONTROL Psa 39:1: MISSED", str(e.exception))
+
+    def test_phrase_gloss_stops_when_an_input_is_missing(self):
+        with self.assertRaises(B.Stop) as e:
+            B.phrase_gloss(self._audit_db("c.db", lsj=False))
+        self.assertIn("without a required input", str(e.exception))
+
+    def test_phrase_gloss_stops_above_the_gate(self):
+        with mock.patch.object(B, "PHRASE_GATE", 0), self.assertRaises(B.Stop) as e:
+            B.phrase_gloss(self._audit_db("d.db"))
+        self.assertIn("above the gate", str(e.exception))
 
     def test_window_refused(self):
         mock.patch.stopall()

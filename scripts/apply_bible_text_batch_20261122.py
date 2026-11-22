@@ -295,8 +295,15 @@ def phrase_gloss(db):
     r = subprocess.run([sys.executable, str(HERE / "audit_phrase_gloss_underdist.py"), str(db)],
                        capture_output=True, text=True, encoding="utf-8", errors="replace",
                        env={**os.environ, "PYTHONIOENCODING": "utf-8"})
-    if "CONTROL: FIRED" not in r.stdout:
-        raise Stop("phrase-gloss audit: its control did not fire")
+    err = " / ".join((r.stderr or "").strip().splitlines()[-3:])
+    if r.returncode != 0:
+        raise Stop(f"phrase-gloss audit: exit {r.returncode}; stderr: {err or '(none)'}")
+    if "(note:" in (r.stderr or ""):     # allowlist or LSJ missing: the count is not the gated one
+        raise Stop(f"phrase-gloss audit: ran without a required input: {err}")
+    lines = r.stdout.splitlines()
+    if not any(ln.startswith("  CONTROL Psa 39:1: FIRED") for ln in lines):
+        ctl = next((ln.strip() for ln in lines if "CONTROL" in ln), "(no CONTROL line)")
+        raise Stop(f"phrase-gloss audit: its control did not fire: {ctl}; stderr: {err or '(none)'}")
     m = re.search(r"FLAGGED BEYOND allowlist \(gate <= 747\):\s*([\d,]+)", r.stdout)
     if not m:
         raise Stop("phrase-gloss audit: no result line")
