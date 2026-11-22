@@ -1368,17 +1368,20 @@ def lexicon_profile(strongs):
     _deriv_raw = ""
     is_diff = False   # set True below for an ABP dotted number that's its own word
     is_step = False   # set True below for a STEP-extended number served via step_lexicon (G2)
+    heb_word_gloss = ""   # Hebrew header gloss: word_gloss = TBESH + hand overrides
     conn = db_ro()
     try:
         if is_heb:
             strongs_id = f"H{snum}"
+            # The table is named `bdb` but holds Strong's Hebrew, NOT Brown-Driver-Briggs.
             row = conn.execute(
                 "SELECT lemma, xlit, description FROM bdb WHERE strongs_id = ?", (strongs_id,)
             ).fetchone()
             if not row:
                 return jsonify({"error": "not found"}), 404
             lemma, translit, definition = row["lemma"] or "", row["xlit"] or "", row["description"] or ""
-            derivation = ""   # BDB has no separate etymology column
+            derivation = ""   # the `bdb` table (Strong's Hebrew) has no separate etymology column
+            heb_word_gloss = _word_gloss(conn, strongs_id)
         else:
             dl = _dotted_diff_row(conn, num)
             if dl:
@@ -1606,7 +1609,7 @@ def lexicon_profile(strongs):
         # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
         # "step" rides only when TRUE so every pre-existing profile payload stays
         # byte-identical across the G2 deploy (the invariance proof).
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated, **({"abp_header": abp_header} if abp_header else {})})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated, **({"abp_header": abp_header} if abp_header else {}), **({"word_gloss": heb_word_gloss} if heb_word_gloss else {})})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

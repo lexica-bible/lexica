@@ -120,6 +120,16 @@ function groupForGreekMode(words) {
   return groups;
 }
 
+// A possessive name's english_head is a folded lookup key ("davids"); the word the page
+// prints is "David's". Display only — every lookup still keys off the head.
+function pnPrintedPossessive(w) {
+  const head = (w.english_head || "").toLowerCase();
+  if (!head) return "";
+  const tok = (w.english || "").split(/\s+/).find(t =>
+    /['’]/.test(t) && t.replace(/[^A-Za-z]/g, "").toLowerCase() === head);
+  return tok ? tok.replace(/^[^A-Za-z]+/, "").replace(/[^A-Za-z'’]+$/, "") : "";
+}
+
 // THE GREEK-LINE FALLBACK CHAIN (mode three / faithful ABP interlinear): what to
 // print as a word's main Greek line. Order is FIXED and load-bearing —
 //   1. inflected  — the printed ABP surface form (abp_surface), when stored
@@ -136,7 +146,7 @@ function greekLineForWord(w) {
   if (inf) return { text: inf, kind: "inflected" };
   const lem = (w.lemma || "").trim();
   if (lem) return { text: lem, kind: "lemma" };
-  const name = (w.english_head || w.english || "").trim();
+  const name = (pnPrintedPossessive(w) || w.english_head || w.english || "").trim();
   if (name) return { text: name.charAt(0).toUpperCase() + name.slice(1), kind: "name" };
   return { text: "", kind: "none" };
 }
@@ -160,9 +170,10 @@ function pnClickPayload(w, greekText) {
   // pnDisplay = the pair's joined DISPLAY name ("Ezion Geber") for the card's
   // English line; every lookup still keys off pnName (single-producer rule).
   const pnDisplay = (w.pn_merge_pos != null && w.english)
-    ? w.english.replace(/[\s,.:;!?'"–\-]+$/, "") : undefined;
+    ? w.english.replace(/[\s,.:;!?'"–\-]+$/, "") : (pnPrintedPossessive(w) || undefined);
   return { isPN: true, pnName, gloss: pnName,
-           ...(w.pn_merge_pos != null ? { pnMergePos: w.pn_merge_pos, pnDisplay } : {}) };
+           ...(w.pn_merge_pos != null ? { pnMergePos: w.pn_merge_pos, pnDisplay }
+             : pnDisplay ? { pnDisplay } : {}) };
 }
 
 // CHIP-MERGE FOLD (JP-approved verdict 2026-07-31): the server marks the SECOND

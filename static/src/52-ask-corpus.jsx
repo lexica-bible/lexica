@@ -1091,8 +1091,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           <div className="ac-strip">
             <button className="ac-strip-new" onClick={newThread} disabled={!started}
               title="Start a new conversation">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              <Icon.Plus width="13" height="13" />
               New thread
             </button>
           </div>

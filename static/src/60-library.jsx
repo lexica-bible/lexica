@@ -1732,7 +1732,11 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
               ) : searchResults == null ? (
                 null
               ) : searchResults.length === 0 ? (
-                <div className="lib-search-status">No matches.</div>
+                <div className="lib-search-status">
+                  {(searchHi?.terms || []).some(t => /\p{Script=Greek}|\p{Script=Hebrew}/u.test(t))
+                    ? "Search covers the English text only. To look up a Greek or Hebrew word, use Word study."
+                    : "No matches."}
+                </div>
               ) : (
                 <>
                   <div className="lib-search-status">

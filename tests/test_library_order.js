@@ -224,6 +224,19 @@ test("2Ki 23:29 PN click payload carries isPN + capitalized pnName", () => {
   assert.strictEqual(pnClickPayload(ki.words.find(w => w.english === "river")), null);
 });
 
+// 10b. A possessive name DISPLAYS as printed ("David's"), while the lookup key stays
+//      the head form. Row shape read from the live /api/verse-words (1Sa 24:5, Mat 22:42).
+test("possessive PN shows the printed name; lookup key unchanged", () => {
+  const david = { english: "David's.", english_head: "davids", is_pn: true, strongs_base: "*" };
+  const p = pnClickPayload(david, "");
+  assert.strictEqual(p.pnName, "Davids", "the lookup key must not move");
+  assert.strictEqual(p.pnDisplay, "David's");
+  assert.strictEqual(greekLineForWord(david).text, "David's");
+  const plain = { english: "David,", english_head: "david", is_pn: true, strongs_base: "*" };
+  assert.ok(!("pnDisplay" in pnClickPayload(plain, "")), "a plain name carries no display override");
+  assert.strictEqual(greekLineForWord(plain).text, "David");
+});
+
 // 11. ANCHOR — mode three restores ABP's superscript digits (greek_pos) on
 //     bracketed words, in SOURCE order (no reorder). The renderer shows each word's
 //     greek_pos as printed; this pins the digit sequence the reader sees.

@@ -2498,7 +2498,8 @@ input { font-family: inherit; }
   .pericope-heading { margin-top: 0.85rem; }
   .lib-verse-row { margin-bottom: 3px; }
   /* Chip: smaller word size to fit more per line */
-  .lib-iw-strongs { font-size: 9px; }
+  /* Scales with the reading size; the phone's 15px default would otherwise land at ~8px. */
+  .lib-iw-strongs { font-size: max(9px, calc(var(--lib-font-size, 15px) * 0.53)); }
   /* Compare: stack the chosen texts vertically, one labeled line each. */
   .lib-parallel-verse,
   .lib-cmp-2 .lib-parallel-verse, .lib-cmp-3 .lib-parallel-verse, .lib-cmp-4 .lib-parallel-verse {

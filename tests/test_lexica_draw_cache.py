@@ -9,12 +9,15 @@ The model is never called: model_prose is stubbed to return canned prose and mak
 away, so the suite adds NO anthropic / API-key dependency (that's exactly the property the lazy
 client gives us — applying a cached draw touches no model).
 """
+import contextlib
+import functools
+import io
 import json
 import os
 import sqlite3
 import sys
-
-import pytest
+import tempfile
+from unittest import mock
 
 _SCRIPTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts")
 sys.path.insert(0, _SCRIPTS)
@@ -43,7 +46,8 @@ def _fixture_db(path):
     conn = sqlite3.connect(path)
     conn.executescript("""
         CREATE TABLE verses  (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT, text TEXT);
-        CREATE TABLE words   (verse_id INT, position INT, strongs TEXT, strongs_base TEXT, english_head TEXT);
+        CREATE TABLE words   (verse_id INT, position INT, strongs TEXT, strongs_base TEXT, english_head TEXT,
+                              english TEXT, italic_words TEXT, is_pn INT DEFAULT 0);
         CREATE TABLE lexicon (strongs_g TEXT, lemma TEXT, translit TEXT);
     """)
     conn.execute("INSERT INTO lexicon VALUES (?,?,?)", (G25, "ἀγαπάω", "agapao"))
@@ -56,7 +60,7 @@ def _fixture_db(path):
     for vid, bk, ch, vs, text, toks in rows:
         conn.execute("INSERT INTO verses VALUES (?,?,?,?,?)", (vid, bk, ch, vs, text))
         for pos, (base, head) in enumerate(toks):
-            conn.execute("INSERT INTO words VALUES (?,?,?,?,?)", (vid, pos, base[1:], base, head))
+            conn.execute("INSERT INTO words VALUES (?,?,?,?,?,?,?,0)", (vid, pos, base[1:], base, head, head, ""))
     conn.commit()
     conn.close()
 
@@ -71,27 +75,39 @@ def _read_row(db, sid):
 
 
 def _run(argv):
-    """Drive main() with a patched argv; return the SystemExit code (None = clean exit)."""
+    """Drive main() with a patched argv; return the SystemExit code (None = clean exit).
+    Its output is captured (Greek must not hit a cp1252 console); stderr lands in _run.err."""
     old = sys.argv
     sys.argv = argv
+    out, err = io.StringIO(), io.StringIO()
     try:
-        B.main()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            B.main()
         return None
     except SystemExit as e:
         return e.code
     finally:
         sys.argv = old
+        _run.err = err.getvalue()
+        _run.out = out.getvalue()
 
 
-@pytest.fixture
-def env(tmp_path, monkeypatch):
-    B._VALID_BOOKS = None                       # reset the module-cached book set between tests
-    draws = tmp_path / "draws"
-    monkeypatch.setattr(B, "DRAWS_DIR", str(draws))
-    monkeypatch.setattr(B, "make_client", lambda: None)   # never build a real client in tests
-    db = str(tmp_path / "bible.db").replace("\\", "/")     # forward slashes → valid RO file: URI on Windows
-    _fixture_db(db)
-    return {"db": db, "draws": str(draws)}
+def with_env(fn):
+    """Run a test on its own throwaway fixture db + draws folder (stdlib only, so
+    tests/run_plain_tests.py can call it with no arguments). model_prose is restored after."""
+    @functools.wraps(fn)
+    def wrapped():
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            draws = os.path.join(tmp, "draws")
+            with mock.patch.object(B, "DRAWS_DIR", draws), \
+                 mock.patch.object(B, "make_client", lambda: None), \
+                 mock.patch.object(B, "model_prose", B.model_prose):
+                B._VALID_BOOKS = None                  # reset the module-cached book set between tests
+                B._P2_PN_CACHE.clear()                 # keyed by id(conn); a reused id must not carry over
+                db = os.path.join(tmp, "bible.db").replace(os.sep, "/")  # valid RO file: URI on Windows
+                _fixture_db(db)
+                return fn({"db": db, "draws": draws})
+    return wrapped
 
 
 def _draw_file(env):
@@ -103,8 +119,8 @@ def _no_model(*a, **k):
 
 
 # ── helper-level unit tests ─────────────────────────────────────────────────────────────────────
-def test_signature_status_and_roundtrip(tmp_path, monkeypatch):
-    monkeypatch.setattr(B, "DRAWS_DIR", str(tmp_path / "draws"))
+@with_env
+def test_signature_status_and_roundtrip(env):
     gset = [("loved", 3)]
     ctx = [("Joh", 3, 16, "loved", "", "For God so loved", "", "", [])]
     sig = B.draw_signature("G25", "agapao", gset, ctx)
@@ -122,21 +138,23 @@ def test_signature_status_and_roundtrip(tmp_path, monkeypatch):
 
 
 # ── the five required end-to-end proofs ───────────────────────────────────────────────────────
-def test_apply_ships_cached_draw_verbatim(env, monkeypatch):
+@with_env
+def test_apply_ships_cached_draw_verbatim(env):
     """dry-run saves the draw; apply writes it byte-for-byte, with NO model call."""
-    monkeypatch.setattr(B, "model_prose", lambda *a, **k: CANNED_GOOD)
+    B.model_prose = lambda *a, **k: CANNED_GOOD
     assert _run(["b", "--dry-run", "--word", "G25", "--db", env["db"]]) is None
     assert os.path.exists(_draw_file(env)), "dry-run must save the reviewed draw"
 
-    monkeypatch.setattr(B, "model_prose", _no_model)          # prove apply never calls the model
+    B.model_prose = _no_model                                 # prove apply never calls the model
     assert _run(["b", "--apply", "--word", "G25", "--db", env["db"]]) is None
     entry = json.loads(_read_row(env["db"], "G25"))
     assert entry["raw"] == CANNED_GOOD                        # shipped bytes == reviewed bytes
 
 
-def test_stale_input_invalidates(env, monkeypatch):
+@with_env
+def test_stale_input_invalidates(env):
     """A words/verse change moves the signature; --require-cache refuses rather than ship a stale draw."""
-    monkeypatch.setattr(B, "model_prose", lambda *a, **k: CANNED_GOOD)
+    B.model_prose = lambda *a, **k: CANNED_GOOD
     _run(["b", "--dry-run", "--word", "G25", "--db", env["db"]])
 
     conn = sqlite3.connect(env["db"])                         # move a fed verse's prose → new signature
@@ -145,38 +163,42 @@ def test_stale_input_invalidates(env, monkeypatch):
     conn.close()
     B._VALID_BOOKS = None
 
-    monkeypatch.setattr(B, "model_prose", _no_model)          # require-cache refuses before any model call
+    B.model_prose = _no_model                                 # require-cache refuses before any model call
     code = _run(["b", "--apply", "--require-cache", "--word", "G25", "--db", env["db"]])
     assert code is not None, "a stale draw under --require-cache must refuse"
     assert _read_row(env["db"], "G25") is None, "nothing may be written"
 
 
-def test_apply_on_miss_flags_unreviewed(env, monkeypatch, capsys):
+@with_env
+def test_apply_on_miss_flags_unreviewed(env):
     """Permissive single-word apply with no draw: writes, but loudly, and leaves NO draw file."""
-    monkeypatch.setattr(B, "model_prose", lambda *a, **k: CANNED_GOOD)
+    B.model_prose = lambda *a, **k: CANNED_GOOD
     assert _run(["b", "--apply", "--word", "G25", "--db", env["db"]]) is None
     entry = json.loads(_read_row(env["db"], "G25"))
     assert entry["raw"] == CANNED_GOOD
-    assert "UNREVIEWED" in capsys.readouterr().err
+    assert "UNREVIEWED" in _run.err
     assert not os.path.exists(_draw_file(env)), \
         "an unreviewed fresh apply must not leave a draw file that later looks reviewed"
 
 
-def test_gate_fires_on_cached_content(env, monkeypatch):
+@with_env
+def test_gate_fires_on_cached_content(env):
     """A cached draw with a bad citation still hits the citation gate at apply — no write."""
-    monkeypatch.setattr(B, "model_prose", lambda *a, **k: CANNED_BAD)
+    B.model_prose = lambda *a, **k: CANNED_BAD
     _run(["b", "--dry-run", "--word", "G25", "--db", env["db"]])   # saves the (bad) draw file
     assert os.path.exists(_draw_file(env))
 
-    monkeypatch.setattr(B, "model_prose", _no_model)
+    B.model_prose = _no_model
     code = _run(["b", "--apply", "--word", "G25", "--db", env["db"]])
     assert code is not None, "the citation gate must reject the cached bad draw"
+    assert "citation gate FAILED" in (_run.out + _run.err), "refused, but not by the citation gate"
     assert _read_row(env["db"], "G25") is None
 
 
-def test_edited_draw_hard_refused(env, monkeypatch):
+@with_env
+def test_edited_draw_hard_refused(env):
     """Same input, but the draw file's prose was changed between review and apply → hard refuse."""
-    monkeypatch.setattr(B, "model_prose", lambda *a, **k: CANNED_GOOD)
+    B.model_prose = lambda *a, **k: CANNED_GOOD
     _run(["b", "--dry-run", "--word", "G25", "--db", env["db"]])
 
     p = _draw_file(env)
@@ -186,7 +208,7 @@ def test_edited_draw_hard_refused(env, monkeypatch):
     with open(p, "w", encoding="utf-8") as f:
         json.dump(rec, f, ensure_ascii=False)
 
-    monkeypatch.setattr(B, "model_prose", _no_model)           # must NOT fall through to a fresh draw
+    B.model_prose = _no_model                                  # must NOT fall through to a fresh draw
     code = _run(["b", "--apply", "--word", "G25", "--db", env["db"]])
     assert code is not None, "an edited draw must be refused, not silently redrawn"
     assert _read_row(env["db"], "G25") is None

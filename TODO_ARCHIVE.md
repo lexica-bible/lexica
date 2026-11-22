@@ -6,6 +6,12 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-11-22 — small fixes, batch 4 (one commit)
+- **Six display fixes (each waits for JP's look after deploy):** a possessive name card reads "David's", not "Davids" (the lookup key is unchanged) · Greek or Hebrew typed into Library search says the search is English-only · phone Strong's tags scale with the reading size, never below 9px (plain scaling would shrink them to ~8px at the phone's 15px default) · Range + Coverage use the serif `.lex-prose` · the desktop Ask-corpus plus = `Icon.Plus` · the Hebrew Word-study header reads `word_gloss` (TBESH + overrides) from its own profile field; the `bdb` table is Strong's Hebrew.
+- **Closed, not built: the Ask-corpus mobile `.ac { overflow: hidden }` removal.** Ruling chat 11/22: its own comment says it keeps only the inner chat scrolling (the phone "gap" fix), so it stays.
+- **`test_lexica_draw_cache` now gates** through `tests/run_plain_tests.py`. The old note was wrong: it never needed the live db, it builds its own small data. It needed pytest, and its data had gone stale against the builder; both fixed, with must-fail controls on the status and citation checks.
+- **The KJV 62-vs-63 item moved** to the Bible-text batch in TODO: 63 is right, and the fix is re-tagging Joh 7:1.
+
 ## 2026-11-21 — small fixes, batch 3 (one commit)
 - **7 plain-style test files now gate:** `tests/run_plain_tests.py` runs every `test_*` in test_cache_key_scope,
   test_curation_parse, test_scope_detect, test_verse_ref_parse, test_lexica_book_norm, test_lexica_coverage,

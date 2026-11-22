@@ -8,7 +8,6 @@ same call path; if the runner doesn't catch it, it stops before trusting any pas
 
 Pure stdlib, no bible.db. Exit 1 on any failure. Run:  python tests/run_plain_tests.py
 A new plain-style file goes in FILES below (the two test lists only name this runner).
-Not here: test_lexica_draw_cache (real pytest fixtures + the live DB).
 """
 import importlib.util
 import os
@@ -28,6 +27,7 @@ FILES = [
     "test_lexica_book_norm",
     "test_lexica_coverage",
     "test_number_fold",
+    "test_lexica_draw_cache",
 ]
 
 

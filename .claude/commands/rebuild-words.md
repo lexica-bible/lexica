@@ -49,7 +49,7 @@ dashboard has the real number). A `disk I/O error` on the very first snapshot wr
 **RUN ORDER (re-settled 2026-10-25, `docs/handoffs/CHARTER_rebuild_trap_fix.md` §9; steps 10 + 11
 re-homed onto the copy by JP ruling after the 10/25 run, charter §10 — the step NUMBERS are labels
 other docs cite, not the order):**
-0 → 1 → **1a snapshot check** → 2 build → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
+0 → 1 → **1a snapshot check** → 2 build (`--app-feed`) → **2b prose** → 3 finish → 8b.0 → 8b.1 → 8b.2 → 8b.2a → 8b.3 →
 **11 rendering norm (copy) → 10 two-ending read (copy) → 12 side-table builders (copy)** →
 **9 surface rebuild (on the copy) → 9a fill restore (copy) → 9b health floor + oracle (copy)** →
 4 → 5 → 6 → 7 → **8 swap + deploy**.
@@ -75,21 +75,29 @@ output, if any, rides the step-8 deploy).
    (`--prefill` = the upgraded chain's step-9 table, saved by the 9a apply as
    `~/edition_upgrade_runs/step9a_apply_20261115/before.db`, sha256 `ea6c54c3…`, 391,141 rows, DESIGN 9.128; its
    standing home, ruled DESIGN 9.134, is the sha-checked copy `~/abp_surface_prefill_20261115.db` — the original
-   stays. Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Until the edition-upgrade swap, live still holds
-   the 10/25 layout and this check reads STALE on it** (e.g. Jer 49:3 @3: the frozen `strongs_base` is
-   `*`, live's words still H5857) — no rebuild of live runs between the 9c re-pin and the swap. The
-   10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
+   stays. Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Since the 11/21 swap this check reads CURRENT on a
+   fresh copy of live (P8, DESIGN 9.238).** The 10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
    (passes only with the 10/25 pin). It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
    table or a fill slot's word row changed since the freeze (or the file is not the pinned one) —
    surface it, never overwrite (a re-freeze is a ruling: `--replace`, without `--check`). `<src>`
    must be a copy of live taken NOW; live itself is refused. A missing frozen file also stops: copy
    the second copy back, never re-freeze to get past it.
-2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
+2. Rebuild (self-correcting) **on the app edition, the live English since the 11/21 swap (DESIGN 9.235):**
+   `R=~/rebuild_runs/<date>; mkdir -p "$R"` (a NEW, empty folder), then
+   `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db --app-feed --out "$R"`
+   **NEVER run it without `--app-feed`:** the plain build takes the OLD English from `abp_texts/` and
+   would put it back into the word rows. **Always give `--out`:** the report files carry a fixed
+   `_20261031` stamp, and the default folder `~/edition_upgrade_runs` holds the real ones from the upgrade.
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
    correction + morph. Confirm `Words inserted: 626,305` (the build's OWN last step, the blank-"G." fill, then
    splits 4 slots and adds 4 rows, so the finished build's table already reads 626,309 = the live pin;
    no tail step adds words — corrected 2026-11-04, the old note said "the tail patches add 4"), `Verses skipped: 0`, flagged 6,882 (pinned, ops.md), and
-   `Split 80 merged subject-name(s)` — **re-pinned 2026-10-25** from the two lane-② ride logs
+   `Split 84 merged subject-name(s)` — **re-pinned 2026-11-22 for `--app-feed`** (stage B + BSTD; the +4
+   accepted by JP, members not named, DESIGN 9.205). **App-feed figures, read 11/17 on the pre-swap copy
+   (BSTD, DESIGN 9.173):** transplanted 29,071 · english changed 15,588 · strict_fail 1,421 (passdiff 625) ·
+   merge-pair list MATCHES 1,578 · edge-split list MATCHES 90 · Filled 5 · Re-cleaned 3. **No rebuild has
+   yet run from the swapped live, so a figure that moves = STOP and read; it is not automatically wrong.**
+   The plain build's Split was 80 — **re-pinned 2026-10-25** from the two lane-② ride logs
    on PA (`~/bible-db/build_pnstar.log`, `build_pnstar2.log`) and the 10/25 re-key build, all
    three 80. Was 2,436 before the 8/5 lane-② PN-star pass, whose class B now splits most of
    these names off their verbs earlier in the same build (2,436 = 2,299 roster/εἰμί + 137
@@ -125,8 +133,17 @@ output, if any, rides the step-8 deploy).
    and splits the slot. Runs automatically on rebuild — do NOT re-run the one-time fill_blank_strongs.py.
    The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
    project_build_folded_fixes §7.
-3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
-   (import_tipnr, **31,649 matched** — re-pinned 2026-10-25: the 10/25 re-key chain's log equals
+2b. **PROSE FROM THE APP EDITION — on `<built>`, after the build, before step 3** (derivation B, DESIGN
+   9.48-9.57). Move `bible_test.db.new` to `<built>`, then dry run → read → apply, each with its own folder:
+   `mkdir -p "$R/prose_dry" "$R/prose_apply"`
+   `PYTHONIOENCODING=utf-8 python3 scripts/build_prose_from_app.py --eligible "$R/eligible_20261031.tsv" --dry-run <built> --out "$R/prose_dry"`
+   then the same with `--apply <built> --out "$R/prose_apply"`. It writes `verses.text` only, only on
+   eligible verses whose text differs, and refuses the live path. **The written count is NOT pinned for a
+   rebuild from the swapped live:** the upgrade's 15,571 written / 13,500 unchanged were against the OLD
+   English. Declare the figure from this dry run before `--apply`. Any STOP = no apply.
+3. Tail — one command: `bash scripts/finish_rebuild.sh <built>`. Restores proper nouns
+   (import_tipnr, **31,592 matched on the app edition** (DESIGN 9.210; the −57 accepted by JP, carried
+   open) — before it **31,649**, re-pinned 2026-10-25: the 10/25 re-key chain's log equals
    the 8/5 lane-② ride's `~/bible-db/finish_pnstar2.log` line for line, timestamps aside; was 31,392
    at the 2026-07-16 roster, before lane ② — the build CLEARS is_pn + PN
    Strong's) then the PINNED
@@ -171,23 +188,23 @@ output, if any, rides the step-8 deploy).
      floats a trailing comma left on the verb onto the last chip of the LORD-subject brackets made
      in the pass (e.g. "said · the LORD,"). Runs LAST so it tidies brackets created above; re-run
      settles to 0.
-4. PROVE IT (the gate): `python3 scripts/compare_words.py bible.db --compare bible_test.db`.
+4. PROVE IT (the gate): `python3 scripts/compare_words.py bible.db --compare <built>`.
    Keyed by verse+position over all display columns, bracket-numbering normalised. Expect a small,
    EXPLAINABLE diff vs live (live is older code/data: ~17k english_head head-word drift +
    ~32 newer-TIPNR proper-noun numbers + the 3 Cyrus fixes live lacks — none are errors). For a
    clean [IDENTICAL] readout, compare against an OLD-WAY rebuild instead (stash the build edits,
    rebuild + run the full chain) — that isolates any genuine change introduced by a code edit.
 5. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
-6. Audits (the gates), all on bible_test.db, AFTER 9b (before step 9 the copy still carries live's
+6. Audits (the gates), all on `<built>`, AFTER 9b (before step 9 the copy still carries live's
    old surface table, so its floor line passes for free): `health_check.py` (0 warnings) → `audit_bracket_order.py`
    (CHIP genuine **3** — re-declared 2026-10-25 from the live rebuild, where live's own copy and the
    rebuild both read 3; was "≈ 2", the known Jon 4:9 twin-bracket FPs) → `scan_strongs_cross.py`
    (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
    `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
-   (G2316 0) → `audit_split_flip.py bible_test.db` (**MUST be 0** — the "LORD the" determiner-flip
+   (G2316 0) → `audit_split_flip.py <built>` (**MUST be 0** — the "LORD the" determiner-flip
    guard; if non-zero the `_split_compounds` source-phrase-order fix regressed, don't swap) →
    `audit_corpus_tier1.py` (A1 **177** — re-declared 2026-10-25, live copy and rebuild both 177; was
-   "≈ 176") → `audit_corpus_tier2.py bible_test.db --rahlfs
+   "≈ 176") → `audit_corpus_tier2.py <built> --rahlfs
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 — **Chip view reads "the LORD was enraged"**: English order,

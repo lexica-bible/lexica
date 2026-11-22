@@ -10,37 +10,21 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ---
 
 ## Active lane — ABP edition upgrade (English line → the app's edition)
-- **STATE 11/21 end: THE SWAP IS DONE (20:21 UTC) and stands (DESIGN §9.235); live = the app edition on the swap commit `7bb92e10`.** Charter §6 steps 4-7 passed; step 8's blocks all ran DONE; cert 7/7 at 375, health floor OK at 395,014, G5 as declared; P8 (the 9c snapshot check on a copy of the new live) PASSED (§9.238). **Open on step 8: P9** - the first 13:30 UTC run after the swap (11/22): backup + health check read. Opener: SUCCESSOR START (11/21 end) in `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`. Rulings = `docs/handoffs/DESIGN_q2_build.md` §9 (latest §9.238). The swap-commit knock-ons LANDED in `7bb92e10` (health floor 395,014, cert pin 375 + member file, phrase-gloss gate ≤ 747, `_CACHE_CODE_VER` 49). Kept on PA until ruled removals: the rollback file `bible_pre_edition_upgrade_20261121.db` (three good nightlies first), the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot. Carried open: L9 on the new words (first), Job 3:3, Split +4, import_tipnr −57, Mark 1:9, the C4 joined-slot rows, the Q6 redraw pass, Jdg 11:7, the stray files in PA's checkout.
-- Still owed: B's step in `/rebuild-words` · Split 80 → 84 re-declare.
-- **`/rebuild-words` step 12, the side-table builders — run on the lane's built copy before step 9** (JP 11/7):
-  `build_dotted_lexicon` → `build_word_gloss` → `build_person_metav_link` (+ place-orphan check). Prerequisite
-  code LANDED `1ad10cec` (new code REF); procedure text is in `rebuild-words.md` step 12. Each sub-step's figures
-  are declared from its dry-run log before `--apply`. Record: `docs/handoffs/DRAFT_rebuild_words_side_tables.md`.
-- Rides this rebuild as DECLARED ROWS, never a live patch (JP 10/30): Joh 14:26 word-order (`comforter,`
-  on the wrong slot vs `verses.text`; predates 10/25 — entered between the 7/06 S11 swap and 10/25,
-  not traced) and Mark 1:9 "of the of" (DESIGN §5). Punct-position 241 = the first frozen member file
-  (charter §4.3; the S9 "260" pin is retired — never a member list).
-- Cert pin note: `cert_invariants` pins `abp_corrections_active` = 374 for the BUILT copy (372 per
-  §9.59 `f8e814c2` + 2 S-joh14:26 per §9.89; members `abp_corrections_active_built_20261106.txt`) and
-  `abp_corrections_spent_lane3` = 1 (§9.154). Check 4 on live stays red until the swap (§9.155 (2): nothing runs it on a
-  schedule).
-- Rollback + snapshot: `bible_pre_trapwire_swap.db` = rollback of record. `~/bible.db.pre-surface-fill-20261025`
-  STAYS until the re-freeze (charter §6 step 9c: after the build, on the copy, before = pre-upgrade live)
-  passes its own `--check` against the swapped live — it is the frozen snapshot's only "before" side, so
-  the rotation/single-rollback rule does not apply to it.
+- **STATE 11/22: THE UPGRADE IS LIVE AND STEP 8 IS CLOSED.** Live = the app edition since the 11/21 20:21 UTC swap (`7bb92e10`, DESIGN §9.235). P9, the first nightly after it, passed (§9.244). L9 on the new words closed as run (§9.245). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9. Opener = the top of `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`.
+- **Still ticking:** the rollback file `bible_pre_edition_upgrade_20261121.db` stays until three good nightlies (11/22 = #1) and a ruled removal. Also kept on PA until a ruled removal: the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot.
+- **OWNED LEFTOVER 1 — the Bible-text batch (ruling chat 11/22; group 3, full care; nothing on live until cleared).** Feed typos now live: Job 3:3 "Maythe", Joh 3:15 "eternal. life", the nine stray " )" verses (Eze 26:7, Luk 2:23, 2:35, Rom 4:17, 9:1, 2Th 1:10, Phm 1:12, Heb 7:11, Rev 2:9). KJV Joh 7:1: the G1056 tag sits on "for" and "Galilee" is untagged, so the card reads 63 but the sidebar's rendering list 62; 63 is right, and the fix is the re-tag. Doubled-word candidates, each read against the Greek first: 2Ki 14:28, Deu 24:8, Eze 11:12, Jdg 20:34, Ezr 4:15, Est 8:8, Joe 2:2, Luk 13:28, Joh 19:21. CC brings it for clearance per row (verse, cell, before, after, the read it rests on); a candidate CC cannot settle is listed apart and stays out of the block.
+- **OWNED LEFTOVER 2 — dictionary quotes (group 2).** `lexica_def` cards serve verse text frozen before the upgrade (spot-check 11/22: 18 of 42 quotes differ in wording from the live verse). Fix = cards serve the current verse text by ref at display time. The check of the card PROSE for old-English wording is a separate item, sized in one line, not built with this.
+- **OWNED LEFTOVER 3 — `/rebuild-words` on the app edition: DONE 11/22** (`--app-feed`, the prose step 2b, Split 84, import_tipnr 31,592). Its figures were read on the pre-swap copy; no rebuild has run from the swapped live yet, so the first one reads every figure before it trusts it.
+- **Carried by name, not work orders unless JP raises them:** Split +4 (§9.205) · import_tipnr −57 (§9.210) · Mark 1:9 τῆς slot, verse text reads right (§9.210) · the C4 joined-slot rows and NO-EVIDENCE 2,140 · Jdg 11:7 1473 vs 5210 and built's Strong's numbers against the feed (§9.217-9.218) · the L9 carried set: 14 ambiguous filled-slot pairings, the 10-slot lint/sizer gap, 4 row-count-differs verses, 34 changed-after-split recipients (§9.245) · the declared-list lines for Est 5:9 @13, Jos 5:15 @27 and the five MOVED verses (§9.210) · `/rebuild-words` step 8's 10/25 G5 figures to mark as 10/25-only (§9.227).
 - HOLD (JP 10/30, not this lane): after the upgrade, does the app feed take over the Greek/Strong's role
   from `abp_texts/` + `bh_scrape.db`? Decide after the English-line upgrade lands (charter §3).
 - FOLLOW-UP LANE (JP 11/1, §9.62, not this lane): **tag-placement reconciliation** — 604 verses where the
   lexicon-gated passes place Strong's under different words on old vs feed English (keep old rows this
   lane). Members = the `passdiff` rows of PA `~/edition_upgrade_runs/strict_fail_20261031.tsv` (local
   copy `C:\Users\JP\edition_upgrade_runs\pa\passdiff_pa_only_604.tsv`). **The PA file name is a FIXED
-  stamp in code (`build_words_from_abp.py:2503`, `report()`) — a re-run of A (dry run OR a full `--app-feed` build, `--out` default `~/edition_upgrade_runs`) overwrites it; keep the local copy.**
+  stamp in code (`build_words_from_abp.py`, `report()`) — a re-run of A (dry run OR a full `--app-feed` build) with the default `--out` overwrites it; keep the local copy.**
 
 ## Owed checks (read-only — JP on PA, or an eyeball)
-- **Backup stamp read after the 11/8 13:30 UTC nightly** (the 11/7 run likely failed on the full disk —
-  unverified; no manual backup run):
-  `cat ~/db_backups/last_success.txt; grep -nE 'XX|!!|Backing up|All backups verified' ~/db_backups/backup.log | tail -12; ls -l ~/db_backups | grep -E 'bible\.db\.'`
-  — expect a 11/8 stamp, no `XX`, the 11/6 + 11/7 bible.db copies compressed.
 - **Helper audit controls** (refreshed 10/25, not yet re-run on PA): the next `scripts/audit_helper_double_tag.py`
   run should show 4 PASS — 2Ki 11:16 G2007 · Psa 69:21 G4222 · Act 13:19 G2624 (A-review) · Rth 2:16 (B).
   Any FAIL = read it before trusting the counts.
@@ -133,8 +117,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   Record: `docs/audits/AUDIT_abp_certification.md` §L12 + Door 1 disposition.
 - **Cert-lane tool labels:** `verify_prose_leak.py` needs a "Tier B applied" mode (its parser-only check
   FAILs-that-aren't on the 5 Tier-B prose verses against a finished scratch — next rebuild shouldn't
-  re-derive this) · `lint_split_wrong_slot.py:325` still prints "sizing: 18,339 / 12,692" → 18,384 / 12,718
-  (the real post-S11 scope; both harnesses agree) · `audit_surface_coverage.py`'s stored-vs-live control
+  re-derive this) · `lint_split_wrong_slot.py:555` (the plain, non-feed mode only) still prints "sizing: 18,339 / 12,692" → 18,384 / 12,718
+  (the post-S11 scope; both harnesses agree; the app-feed figures of record are 17,452 / 12,128 / 893, §9.245) · `audit_surface_coverage.py`'s stored-vs-live control
   needs the backfill sum (its MISMATCH warning is a permanent false alarm on any backfilled table).
 
 ## Small fixes, ready when wanted
@@ -144,37 +128,11 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   block; not urgent. Keep pronoun_review.tsv / unmatched_pn.txt (builds write them). **Step 1 drafted 11/21:**
   `docs/handoffs/drafts/PA_tidy/block_list.sh` (read-only; also covers the WAL crumbs below) — JP pastes when wanted;
   step 2 is drafted from its output.
-- **Ask-corpus mobile `.ac { overflow: hidden }` mask (styles.css ~:5116) — optional tidy-up.** Predates
-  the mobile pass and hides any sideways overflow inside Ask-corpus; JP confirmed the phone scroll gone
-  (2026-07-15) and it measured clean at 320 + 375, so it masks nothing today. Remove it when someone is in
-  there, then re-measure with getBoundingClientRect (scrollWidth reads clean through the clip).
 - **WAL crumbs (zero-risk):** orphan 0-byte -wal/-shm files in ~/bible-db (bible_test.db-wal,
   bible_test_scratch.db-*, proseonly.db-* — two with no parent). Repo grep 7/31: NO script opens WAL;
   check their file dates, then delete.
-- **One test still gates nothing:** `test_lexica_draw_cache` (real pytest fixtures + the live DB). The other 7
-  plain-style files now run via `tests/run_plain_tests.py` in both lists (11/21).
-- **Phone Strong's tags: `.lib-iw-strongs` is set to 9px in the phone CSS** (`static/styles.css:2555`) —
-  drift from the "Strong's tags scale, never a fixed px" rule (frontend.md); fix the CSS. (JP ruling 11/7)
-- **Word-study results sidebar lists only ONE KJV rendering** (galilee shows 62; the card's "galilee, for"
-  line and the KJV tab say 63) — display finding.
-- **Word-study card header — HEBREW HALF** (Greek half done `7bee235`): the Hebrew card's hero gloss is
-  `profile.definition` = `bdb.description` (`views_lexicon.py:1337-1345`), the long paragraph, not
-  `word_gloss`. Fix = return the Hebrew `word_gloss` in its own profile field + one frontend line. **Own
-  checkpoint (API change).** ⚠ The sourcing comment MUST say **Strong's Hebrew** — the table is named `bdb`
-  but is not Brown-Driver-Briggs.
-- **Possessive PN card header shows the head-form ("Davids")** — the form-name line title-cases
-  `english_head` (a lookup key: lowercased, punctuation stripped). Display-layer only: render the PN entry's
-  canonical name or re-title-case the raw english, never the head. Words data is correct.
-- **RANGE/Coverage serif gap** — Range + Coverage lines (`20-shared-components.jsx:322`, `:332`) lack the
-  `.lex-prose` serif class (styles.css:1439) the senses block + gloss notes use. Two-line fix + rebuild;
-  ruled to the Lexica display session; a visual change → JP's yes.
 - **Trailing-clause float set copy-pasted in 6 live places** (build + 4 render + port) — unify to one shared
   definition so they can't drift.
-- **Library search handed GREEK characters** returns a bare "No matches" (reads as "not in the Bible") — it
-  should say the search is English-only (reviewer-ruled 7/29).
-- **PARKED (JP 7/15): desktop Ask-corpus strip's hand-inlined plus → `Icon.Plus`** (`52-ask-corpus.jsx`
-  `.ac-strip-new` still draws its own at a different stroke width). "Reference the system" — but it MOVES
-  DESKTOP PIXELS, so it needs a desktop-scoped pass + JP's eye.
 
 ---
 

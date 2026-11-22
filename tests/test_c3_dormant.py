@@ -232,6 +232,20 @@ def main() -> int:
         check("P2: SEO /word profile serves G9xxx (C3-Q3)",
               (prof or {}).get("lemma"), "Ἀγάγ")
         check("P2: SEO ABP count for G9xxx", (prof or {}).get("total"), 1)
+
+        # Hebrew header gloss: its own field, from word_gloss; Greek payload unchanged.
+        p = json.loads(client.get("/api/lexicon/profile/H90?corpus=abp").get_data(as_text=True))
+        check("P3: no word_gloss table -> no field", "word_gloss" in p, False)
+        c = sqlite3.connect(dbp)
+        c.execute("CREATE TABLE word_gloss (strongs TEXT, gloss TEXT, source TEXT)")
+        c.execute("INSERT INTO word_gloss VALUES ('H90', 'Agag', 'tbesh')")
+        c.execute("INSERT INTO word_gloss VALUES ('G9826', 'Agag', 'tbesg')")   # so the Greek check can fire
+        c.commit()
+        c.close()
+        p = json.loads(client.get("/api/lexicon/profile/H90?corpus=abp").get_data(as_text=True))
+        check("P3: Hebrew profile carries word_gloss", p.get("word_gloss"), "Agag")
+        p = json.loads(client.get("/api/lexicon/profile/G9826").get_data(as_text=True))
+        check("P3: Greek profile has no word_gloss field", "word_gloss" in p, False)
     finally:
         core.DB, core.READER_GREEK_FLIPS = old_db, old_flag
 
