@@ -85,7 +85,10 @@ _LSJ_OVERRIDES = {
 # stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
 # changes, the stamp no longer matches and the old summary is dropped + regenerated on
 # next view. No manual cache-clear script needed.
-_LSJ_SYNTH_VER = ai_fingerprint("lsj", _LSJ_SYNTHESIS_SYSTEM, _LSJ_ASK_CTX, _LSJ_ASK_GEN)
+# "edition:app-20261121": the corpus English changed at the edition-upgrade swap (11/21); every
+# saved summary is dropped and redrawn on its next view, general ones included (DESIGN 9.242).
+_LSJ_SYNTH_VER = ai_fingerprint("lsj", _LSJ_SYNTHESIS_SYSTEM, _LSJ_ASK_CTX, _LSJ_ASK_GEN,
+                                "edition:app-20261121")
 
 # keyed on LSJ key; persists for server lifetime. Capped so a long-running worker
 # can't grow it without bound — context-keyed entries are many distinct keys.

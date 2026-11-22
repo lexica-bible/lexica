@@ -77,8 +77,10 @@ e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 # displayed/fallback text to BSB and renaming the verse field to `text`; and
 # (bsb-fallback-4) feeding the Step-1 candidate picker BSB too (changes which refs are
 # chosen) — so the whole cached payload refreshes instead of serving a stale row.
+# "edition:app-20261121": the corpus English changed at the edition-upgrade swap (11/21); every
+# saved answer was written from the old English, so all are dropped (DESIGN 9.242).
 _XREF_VER = ai_fingerprint(
-    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:bsb-fallback-4"
+    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:bsb-fallback-4", "edition:app-20261121"
 )
 
 

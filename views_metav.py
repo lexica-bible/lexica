@@ -66,7 +66,9 @@ _PN_USER_TMPL = (
 )
 # Fallback when the verse text can't be fetched (keeps a single system prompt):
 _PN_USER_TMPL_NOVERSE = 'Who or what is "{name}" at {ref}? Describe only the one meant there.'
-_PN_VER = ai_fingerprint("pn", _PN_SYSTEM, _PN_USER_TMPL, _PN_USER_TMPL_NOVERSE)
+# "edition:app-20261121": the corpus English changed at the edition-upgrade swap (11/21); every
+# saved answer is dropped, KJV / BSB rows included (DESIGN 9.242).
+_PN_VER = ai_fingerprint("pn", _PN_SYSTEM, _PN_USER_TMPL, _PN_USER_TMPL_NOVERSE, "edition:app-20261121")
 
 # translation code -> (full name for the prompt, verse-table + columns keyed by book-NUMBER;
 # ABP is keyed by book ABBREV in `verses`). heb/unknown fall back to ABP (the anchor text).

@@ -227,7 +227,9 @@ Full record: memory `project_ai_cache_unify`.
   → repeats re-ran all 3 models on cold workers). The other categories read the table directly.
 - **Lifetime:** no age expiry, no count eviction (`created_at` is never used to delete). Rows
   clear only when that category's prompt changes (startup prune) or by hand; a reload empties the
-  in-memory dict. The lone size cap is the LSJ in-memory cache (`_LSJ_SUMMARY_CACHE_MAX`,
+  in-memory dict. A CORPUS change (new English) is a salt in every fingerprint that reads it:
+  the edition-upgrade wipe added `"edition:app-20261121"` to summary / xref / pn / chrono / lsj
+  (DESIGN 9.242; search's `_CACHE_CODE_VER` 49 at the swap). The lone size cap is the LSJ in-memory cache (`_LSJ_SUMMARY_CACHE_MAX`,
   views_lsj.py — a RAM guard; persistent copies live in `summary_json`).
 - **xref/summary `msg:` salts:** a fingerprint covers the PROMPTS only — a user-MESSAGE or
   payload change (e.g. feeding ABP instead of KJV) needs a manual salt in the `ai_fingerprint`

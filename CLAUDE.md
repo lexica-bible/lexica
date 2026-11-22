@@ -151,6 +151,7 @@ are about context quality, not rationing.)
   compares. **Anything byte-exact — a quote fix, an `--old` string — comes from a PA dump of the
   built `verses.text`, never from `abp_texts/`.**
 - **Edition-upgrade lane:** every read-only block and every re-run of a DESIGN-ruled gate goes to the reviewer subagent first; CC prints a block only under its CLEAR line; ESCALATE text goes to the ruling chat; writes go to the ruling chat directly (DESIGN 9.90).
+- **CARE SIZED TO THE REDO COST (JP-approved 11/21, DESIGN 9.243) — overrides heavier rules for groups 1–2:** (1) cheap to redo / self-regenerating (AI answers, caches, logs, old run folders, docs) → just do it, one line to the ruling chat after; (2) code changes + read-only checks → ONE reader, ONE round (reviewer OR ruling chat), second round only for a real bug; (3) Bible data on live + the last pre-swap copy → full care as before. Measure nothing unless it changes what gets done; a group 1–2 item past one round trip STOPS.
 - After ANY edit to `static/src/*.jsx`: `npm run build`, commit BOTH source and rebuilt
   `app.js`. Full build-system detail + line-ending traps: `docs/claude/frontend.md`.
 

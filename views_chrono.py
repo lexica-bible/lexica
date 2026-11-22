@@ -67,7 +67,9 @@ _PROMPT_TMPL = (
     "Do not add any labels, headings, or quotation marks."
 )
 
-_VER = ai_fingerprint("chrono", _SYSTEM, _PROMPT_TMPL, _MODEL)
+# "edition:app-20261121": the corpus English changed at the edition-upgrade swap (11/21); every
+# saved answer was written from the old English, so all are dropped (DESIGN 9.242).
+_VER = ai_fingerprint("chrono", _SYSTEM, _PROMPT_TMPL, _MODEL, "edition:app-20261121")
 
 
 def prune_cache() -> int:

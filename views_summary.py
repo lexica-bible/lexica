@@ -125,8 +125,11 @@ _CHAP_PROMPT_TMPL = (
 # Shared template fingerprint: editing any prompt above changes this, so every
 # summary lazily refreshes. Rows carry a per-book author suffix (see _summary_ver),
 # so editing one book's author in _BOOK_AUTHORS refreshes only that book.
+# "edition:app-20261121": the corpus English changed at the edition-upgrade swap (11/21); every
+# saved answer was written from the old English, so all are dropped (DESIGN 9.242).
 _SUMMARY_TPL_BASE = ai_fingerprint(
-    "summary", _SUMMARY_SYSTEM, _AUTHOR_LINE_TMPL, _BOOK_PROMPT_TMPL, _CHAP_PROMPT_TMPL, _CHAP_MODEL
+    "summary", _SUMMARY_SYSTEM, _AUTHOR_LINE_TMPL, _BOOK_PROMPT_TMPL, _CHAP_PROMPT_TMPL, _CHAP_MODEL,
+    "edition:app-20261121"
 )
 
 
