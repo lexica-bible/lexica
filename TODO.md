@@ -113,13 +113,9 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ## Small fixes, ready when wanted
 - **PA checkout: several hundred untracked files in ~/bible-db** (seen in CCTL's `git status`, 11/17): old agreement_*/VOID_*
   draft files, logs, and stray files named like single words or book codes ("0", "1Sa", "Checking", "Done.", "Pulling",
-  "Running", "Warming" — likely a mis-pasted command's output written as files). Read-only list first, then a named removal
-  block; not urgent. Keep pronoun_review.tsv / unmatched_pn.txt (builds write them). **Step 1 drafted 11/21:**
-  `docs/handoffs/drafts/PA_tidy/block_list.sh` (read-only; also covers the WAL crumbs below) — JP pastes when wanted;
-  step 2 is drafted from its output.
-- **WAL crumbs (zero-risk):** orphan 0-byte -wal/-shm files in ~/bible-db (bible_test.db-wal,
-  bible_test_scratch.db-*, proseonly.db-* — two with no parent). Repo grep 7/31: NO script opens WAL;
-  check their file dates, then delete.
+  "Running", "Warming" — likely a mis-pasted command's output written as files). Not urgent. Keep pronoun_review.tsv /
+  unmatched_pn.txt (builds write them). **Step 1 ran 11/23 (§9.255): 284 untracked files, 278 at the top level**, listed in PA
+  `~/edition_upgrade_runs/leftover_reads_20261122/tidy.txt`; step 2 (a named removal block) is drafted from it.
 - **Trailing-clause float set copy-pasted in 6 live places** (build + 4 render + port) — unify to one shared
   definition so they can't drift.
 
@@ -461,7 +457,7 @@ TODO_ARCHIVE is a separate ad-hoc batch — the audit's D and E below are still 
   (`bbbe0963`: every news opener uses DELETE), but turning the step back on was never decided. Until then
   Google-wrapper faces older than the 50h forward-fill window stay wrappers (still clickable). code:
   scripts/news/daily.sh, scripts/news/resolve_backfill_all.py
-- **PARKED — News page load is 70–150 s (measured 11/8, PA access log, Nov 6–8).** `/api/news/all` sends the
+- **OPEN, look at when there is a gap (JP raised it again 11/23; not a work order, News stays on hold) — News page load is 70–150 s (measured 11/8, PA access log, Nov 6–8).** `/api/news/all` sends the
   WHOLE scored archive regardless of the page's 30-day default (30,207 rows, every score incl. below the 5 floor,
   with summaries): 53 MB of JSON, 10.7 MB on the wire (PA's front end already gzips — the access-log byte count
   is the gzipped size). Same-worker repeat 3.7 s; two loads abandoned by the browser (499). `_ALL_CACHE` is per
