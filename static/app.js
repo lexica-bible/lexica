@@ -565,8 +565,9 @@ function bodyFieldCount(b){return b.chips.length+(b.born?1:0)+b.rows.length;}// 
 // as identifying the PERSON. It doesn't: G2496 is the number for the written name
 // Ἰωράμ, which BOTH kings Jehoram carry because both are spelled that way, and the
 // occurrence line under it ("51× G2496") counts that FORM across everyone bearing it.
-// WORDING APPROVED VERBATIM (JP, 2026-08-09): it states the positive rather than a
-// denial — "not the person" read as though the two were unrelated. Don't reword it.
+// WORDING APPROVED VERBATIM (JP, 2026-11-23, DESIGN 9.258; replaces the 2026-08-09 line,
+// which readers found hard to follow). It states the positive rather than a denial:
+// "not the person" read as though the two were unrelated. Don't reword it.
 // Returns "" when the card can't carry the claim honestly:
 //   * no identity block under it (nothing for "below" to point at),
 //   * no real number — a header reading "PN" has nothing to clarify. RULED a
