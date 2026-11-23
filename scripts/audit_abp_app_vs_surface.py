@@ -145,9 +145,64 @@ def is_greek_letter(c):
     return "Ͱ" <= c <= "Ͽ" or "ἀ" <= c <= "῿"
 
 
+# The app's Greek font is a keyboard font: English typed in it comes out as Greek letters.
+_SYMBOL_FONT = str.maketrans("αβχδεφγηιϕκλμνοπθρστυςωξψζ", "abcdefghijklmnopqrstuvwxyz")
+# Common English words, read off the app's own English column, minus every spelling that is also a real
+# Greek word in the app (το, εν, συν, μεν...). "dan", "in", "man" are out: Δαν, ιν (hin), μαν (manna).
+_ENGLISH_IN_FONT = frozenset("""
+    abides abomination about abundance accord according account act action after against almighty also am
+    amen among and angel anger announcing anointed any apart appear are aromatics around arranged arrows as
+    ashamed aside assigned at attention authority away back bad be bear beasts beating beautiful became bed
+    before behind behold being belongings beneath besides between beyond bid bitterness bless blood body
+    bondman bondmen book bound break bring bringing broadsword brother brothers brought built burden burned
+    burnt but buy by called came camp carried case cause ceased certain changed chief child childless
+    children chose clean come coming commander commanders completely congregation consider consume contempt
+    counsel courtyard cubits curse cut dagger darkness daughter days decree deep demolished desire destroyed
+    destruction did die died dimness disabled disgraced distress disturbed do does dominate done donkey
+    doors down drank dust dwell dwelling dwelt each early east eight eighty end enemies enemy enraged enter
+    entered eons equity established extinction face fall false far father fathers feared fearful fell fellow
+    female field fifty fill filled fire first flee flock flocks flood flowing followed foods foot for force
+    forces forth fortified found foundations four friends from fruit full gate gates gather gathered gentle
+    giants glad glory go going golden good granted great grew griefs guarded had hand hands has hastened he
+    head heal healing hear heard heart heed heeded heifers her here hid hidden high hill him his hold
+    holding holies holy home honor hope horn horsemen hosts hour house humble hundred husband if immediately
+    impiety impious incense incinerate incinerated infection inherited iniquities iniquity inquire inside
+    intelligence intelligent interpretation into is it its keeping kill killed kin kind king kingdoms kings
+    knew know known lack land last lawlessness lawlessnesses laws leader learn led left length lest let life
+    lift lifted light like lips listen little locked lord lot made make making manly many matter may mercy
+    middle might mighty military mind misery misled money morning mount mounted mouth my name names nations
+    near neck next ninth not of off offer offering once one ones opened opposite oracles ordained orders
+    other our out outside own parents parted parts pass paths pay peace people peoples pity place places
+    plain please pleasing pleasure possessions power praise prepared priest priests prison proceed produce
+    progeny properties prophets purified put rage rain raise raised ran rather reign remnant report rescue
+    rescued rescuing resettlement resisting responded restored return returned right righteousness roads
+    robe rod root round rule rulers run running sacrifice sacrificed sacrificing said sanctified satraps saw
+    say saying says sea search season see seized sent separate separation set setting settled shall shame
+    she sheep should shoulders show showed sides sight sign silent sinner sins sitting six sixty small so
+    sons south speak spirit split spoken stars stationed stopped strength stretched strike striking strong
+    struck submitted sword swore take takes teaching tear tell temple tent terrified testimony thanks that
+    the their them there therefore these they thing things thirst this thousand three throne through throw
+    thrust time together toil took top touching trade treasuries treated trees tribes tribute trumpet trust
+    truth turned two unto upon us utterly wall war was wash washed waste way we weight well went were what
+    which white who whole widows wild will wisdom wise with witness womb women wood word words worked
+    working works worthy would wrath write year yet you young younger your yours
+""".split())
+
+
 def english_font(g):
-    """Lower-case Latin anywhere = English typed in the Greek font."""
-    return bool(re.search(r"[a-z]", g or ""))
+    """English typed in the Greek font: lower-case Latin; a footnote glued to the Greek with a dot
+    ("ητοι.είτε"); or an unaccented word that spells English in that font ("δαγγερ", "τηε").
+    Run it on the cell AFTER the " - " note is cut, or nearly every footnoted cell fires."""
+    s = g or ""
+    if re.search(r"[a-z]", s) or re.search(r"[^\W\d_]\.[^\W\d_]", s):
+        return True
+    for t in re.findall(r"[^\W\d_]+", s):
+        m = t.lower().translate(_SYMBOL_FONT)
+        if "dagger" in m:                       # the footnote mark, sometimes doubled
+            return True
+        if m in _ENGLISH_IN_FONT and not any(unicodedata.combining(c) for c in unicodedata.normalize("NFD", t)):
+            return True
+    return False
 
 
 def foreign_unmapped(g):

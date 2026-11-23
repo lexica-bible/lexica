@@ -88,6 +88,7 @@ jobs:
           python tests/test_lexica_current_verses.py
           python tests/test_bible_text_batch.py
           python tests/test_short_meaning.py
+          python tests/test_split_and_font_checks.py
           python tests/test_delete_account.py
           python tests/test_key_strongs_alias.py
           python tests/test_pin_retrieval_alias.py

@@ -176,6 +176,9 @@ class Routes(unittest.TestCase):
     def test_dotted_override_keeps_its_gloss(self):
         self.assertEqual(self.get("G4004.4"), {"reviewed_gloss": "fifty years old"})
 
+    def test_charis_kjv_number_reads_the_gloss_on_its_abp_number(self):
+        self.assertEqual(self.get("G5485"), {"reviewed_gloss": "favor, kindness, goodwill"})
+
     def test_kept_number_with_no_stored_meaning_shows_no_header(self):
         with mock.patch.dict(M.COUNTS_MISLEAD, {"G4151.7": "the counts are the base number's mixed list"}):
             self.assertEqual(self.get("G4151.7"), {})

@@ -16,7 +16,7 @@ from flask import Blueprint, jsonify, request
 import core as _core
 from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 from number_fold import normalize as _fold_norm
-from contested_register import alias_note_for
+from contested_register import alias_note_for, LEXICA_ALIASES
 import short_meaning as _short_meaning
 
 bp = Blueprint("lexicon", __name__)
@@ -1380,7 +1380,8 @@ def _header_meaning(conn, num, is_heb, lists=None):
     full = f"G{num}"
     for k in ((full, key) if (not is_heb and "." in num) else (key,)):
         if k in _short_meaning.COUNTS_MISLEAD:
-            g = _word_gloss(conn, k)
+            # G5485 (the KJV/BSB number for charis) has no row of its own; its gloss is on G5484.
+            g = _word_gloss(conn, k) or _word_gloss(conn, LEXICA_ALIASES.get(k, k))
             return {"reviewed_gloss": g} if g else {}
     if _is_name_number(conn, key):
         return {}
