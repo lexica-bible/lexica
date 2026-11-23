@@ -12,8 +12,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ## Active lane — ABP edition upgrade (English line → the app's edition)
 - **STATE 11/22: THE UPGRADE IS LIVE AND STEP 8 IS CLOSED.** Live = the app edition since the 11/21 20:21 UTC swap (`7bb92e10`, DESIGN §9.235). P9, the first nightly after it, passed (§9.244). L9 on the new words closed as run (§9.245). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9. Opener = the top of `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`.
 - **Still ticking:** the rollback file `bible_pre_edition_upgrade_20261121.db` stays until three good nightlies (11/22 = #1) and a ruled removal. Also kept on PA until a ruled removal: the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot.
-- **KJV one-word tag shift: SIZED 11/23 (§9.255), no repair built.** 21 verses have long shifts and 31 short ones, by reading all 70 the detector listed (18 were chance). It is a floor: a single misplaced tag cannot fire it. Rows: PA `~/edition_upgrade_runs/leftover_reads_20261122/kjv_shift.tsv`. Any repair is group 3 with its own block.
-- **Dictionary quotes: DONE and live 11/22 (§9.246).** Cards serve today's verse text by ref. **Card prose, read 11/23 (§9.255):** 41 of the 85 cards carry possible old-edition wording, 232 places listed (`prose_hits.tsv`, same folder), not yet sorted real from coincidence; no fix built.
+- **KJV one-word tag shift: SIZED 11/23 (§9.255), no repair built.** 21 verses have long shifts and 31 short ones, by reading all 70 the detector listed (18 were chance). It is a floor: a single misplaced tag cannot fire it. Rows: PA `~/edition_upgrade_runs/leftover_reads_20261122/kjv_shift.tsv`. **Repair ordered 11/23 (§9.257), group 3:** the 21 long verses = 405 rows in `docs/handoffs/drafts/KJV_SHIFT/rows_long_20261123.tsv`, with the ruling chat for clearance; then the write block; the 31 short ones follow as their own rows file. Nothing on live until cleared.
+- **Dictionary quotes: DONE and live 11/22 (§9.246).** Cards serve today's verse text by ref. **Card prose, sorted 11/23 (§9.257):** of 104 card-and-verse places, **88 really carry old-edition wording, in 36 cards**, and 16 were coincidence (`docs/handoffs/drafts/DICTIONARY_PROSE/places_20261123.tsv`). The rewrite of those cards is not ordered.
 - **`/rebuild-words` on the app edition: DONE 11/22** (`--app-feed`, the prose step 2b, Split 84, import_tipnr 31,592). Its figures were read on the pre-swap copy; no rebuild has run from the swapped live yet, so the first one reads every figure before it trusts it.
 - **Carried by name, not work orders unless JP raises them:** Split +4 (§9.205) · import_tipnr −57 (§9.210) · Mark 1:9 τῆς slot, verse text reads right (§9.210) · the C4 joined-slot rows and NO-EVIDENCE 2,140 · Jdg 11:7 1473 vs 5210 and built's Strong's numbers against the feed (§9.217-9.218) · the L9 carried set: 14 ambiguous filled-slot pairings, the 10-slot lint/sizer gap, 4 row-count-differs verses, 34 changed-after-split recipients (§9.245) · the declared-list lines for Est 5:9 @13, Jos 5:15 @27 and the five MOVED verses (§9.210) · `/rebuild-words` step 8's 10/25 G5 figures to mark as 10/25-only (§9.227).
 - HOLD (JP 10/30, not this lane): after the upgrade, does the app feed take over the Greek/Strong's role
@@ -25,10 +25,10 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   stamp in code (`build_words_from_abp.py`, `report()`) — a re-run of A (dry run OR a full `--app-feed` build) with the default `--out` overwrites it; keep the local copy.**
 
 ## Owed checks (read-only — JP on PA, or an eyeball)
-- **Nave's retirement — the data was NOT removed (read 11/23, §9.255).** The name-path sidebar section is GONE
-  (2026-07-16; `30-detail-panel.jsx:589`) and Nave's is not on `/credits`, but study.db still holds **696
-  `type='name'` rows, none marked deleted**. study.db is the one irreplaceable file, so any removal is its own
-  ruled step. The admin-gated `/api/study/for-name` route is a SEPARATE decision (rides Study's return).
+- **Nave's retirement — the data was NOT removed (read 11/23, §9.255); ruled: left until Study returns (§9.257).**
+  The name-path sidebar section is GONE (2026-07-16; `30-detail-panel.jsx:589`) and Nave's is not on `/credits`,
+  but study.db still holds **696 `type='name'` rows, none marked deleted**. study.db is the one irreplaceable file,
+  so any removal is its own ruled step. The admin-gated `/api/study/for-name` route rides Study's return too.
 - **JP read-only sweeps (from 7/31):** bible-wide count of name chips still with NO Greek after the 11/22 fallback
   (no card Greek either) · bible-wide `,,` count on `verses.text` (class or
   one-off — feeds the Van der Pool errata list).
@@ -115,7 +115,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   draft files, logs, and stray files named like single words or book codes ("0", "1Sa", "Checking", "Done.", "Pulling",
   "Running", "Warming" — likely a mis-pasted command's output written as files). Not urgent. Keep pronoun_review.tsv /
   unmatched_pn.txt (builds write them). **Step 1 ran 11/23 (§9.255): 284 untracked files, 278 at the top level**, listed in PA
-  `~/edition_upgrade_runs/leftover_reads_20261122/tidy.txt`; step 2 (a named removal block) is drafted from it.
+  `~/edition_upgrade_runs/leftover_reads_20261122/tidy.txt`. **Step 2 drafted 11/23 (§9.257):** `docs/handoffs/drafts/PA_tidy/block_move.sh`
+  moves 51 (21 empty strays + 30 old run logs) into a holding folder and deletes nothing. 227 stay: the 194 dictionary `agreement_*` files (floor evidence, `floor_subsample.py` reads them), anything named in code or docs, correction logs, the study.db backup. A write: not run until cleared.
 - **Trailing-clause float set copy-pasted in 6 live places** (build + 4 render + port) — unify to one shared
   definition so they can't drift.
 
@@ -140,17 +141,13 @@ Write-class items are each a checkpoint lane that starts with a PA row read. Ope
   left them as legitimate): one Greek word carries two word rows with the same number (2Ki 11:16 `they put
   | upon` G2007; Gen 24:41 `they should | give her` G1325). 174 outside-bracket (on the helper audit's
   A-review list) · **454 both-inside-bracket — NO detector** (the helper audit skips this shape by design).
-  Why it matters: the double rows inflate occurrence counts and the ≥2 check. List `abp_helps/split_rendering_628.tsv` (git-ignored); evidence CENSUS §5. Precondition: PA row read of
-  all 628 (the 20-verse read was a sample) + a detector for the 454 before any write.
-- **Held list (read-by-hand, no writes queued)** — full rows in the handoff + `CENSUS_abp_surface_fill.md`:
-  191 name slots with no printed form · 30 vs 27 glued names (re-read the full `~/abp_app_audit_rerun.txt`
-  C3 block) · Baal 1Ch 5:23 · 33 unlisted forms · 3 app letters with no ruling · 4 split conflicts + Isa
-  41:14 · Deu 4:45 · 60 plain-η spots · 23 + 3 unflagged glued splits · 1,823 empty-lemma slots · MIXED 42
-  names (no Concordance verse lists for names) · Concordance leftovers (44 print inconsistencies, 16 label
-  holds, 3 unplaced refs, CENSUS §6 classes). **ACTION inside it: 28 English-in-Greek cells** ("δαγγερ")
-  pass the app audit's English-font check (it looks for a Latin letter) — the 10/25 fill held all 28, but
-  **fix the audit check before the list feeds another write.**
-- (d) **English-Greek Index** — last of the purchased helps; not started.
+  Why it matters: the double rows inflate occurrence counts and the ≥2 check. List `tests/fixtures/split_rendering/list_628_20261025.tsv`; evidence CENSUS §5. **Detector built 11/23 (§9.257):** `scripts/audit_split_rendering.py` finds the both-inside shape and re-reads the 628 on today's table; its PA run is the next read. The fix is group 3: a rows file for clearance, after the KJV batch.
+- **Purchased-helps list, ruled 11/23 (§9.257); full rows in the handoff + `CENSUS_abp_surface_fill.md`. Every figure dates from 10/25, before the swap.**
+  **DO, group 3, each a rows file for clearance after the KJV batch:** the 628 fix (above) · 16 label holds · 23 + 3 unflagged
+  glued splits · the single-verse holds (Baal 1Ch 5:23, Deu 4:45, Isa 41:14, 4 split conflicts, 3 app letters).
+  **HOLD:** 1,823 empty-lemma slots (reader effect not on file) · 30 vs 27 glued names (re-read the full `~/abp_app_audit_rerun.txt` C3 block).
+  **DONE 11/23:** the English-in-Greek audit check now catches all-Greek-letter English ("δαγγερ"). Of the 28 held cells, 25 are English in the font; 3 are real Greek with a double space (Lev 23:8, 23:25, 1Sa 15:35).
+  **CLOSED, not worth doing (§9.257):** 44 print inconsistencies (the Concordance's error; ours is right) · 3 unplaced refs (Concordance refs with no matching verse) · 33 unlisted forms (the form already shows) · 60 plain-η spots (no reader effect worth a Bible-data write) · MIXED 42 names (the Concordance has no name lists to check against) · 191 name slots (the 11/22 fallback shows the card's Greek where the card has one) · (d) English-Greek Index (no reader problem on file; the PDF stays available as a witness).
 - **Phrase-gloss under-distribution (671, fix (g) deferred):** adjudicate a sample of the "not+verb" class
   vs the ABP app (defect vs ABP negation convention), then distribute true defects dual-ordering-style.
   Detector `scripts/audit_phrase_gloss_underdist.py`.
