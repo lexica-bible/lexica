@@ -521,6 +521,9 @@ TODO_ARCHIVE is a separate ad-hoc batch — the audit's D and E below are still 
   are MANUAL, so routes/clicks aren't checked per push. The main test gap if you ever want to close it.
 
 ### Future projects (banked — JP raises; framing in memory)
+- **Remove most em dashes from the site, except the Bible text (JP 11/23; not a work order).** In scope: page wording,
+  labels, dictionary cards, AI answers and any other site-written text. Out of scope: the verse text and its `--` to `—`
+  build form, which stay as they are.
 - **Dataset publication with receipts** — after the Greek PN work completes (or ABP permission resolves): standoff
   annotation + receipts + errata upstream. Framing: memory `project_licensing_attributions`.
 - **Genealogy-of-Jesus map** — the person-card tag navigates to a walkable lineage (both Mat 1 / Luk 3 lines, edge
