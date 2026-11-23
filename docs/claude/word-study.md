@@ -31,6 +31,11 @@ Routed from CLAUDE.md. The Lexicon/Word-study surface + its endpoints.
   renders `LexicaBody` for a Hebrew word (it shows the BDB section), so neither does the card. The block
   HOLDS until the fetch resolves (FRAME-0 first-paint rule, frontend.md). The Summary/Full toggles live
   inside the shared components — carrying them IS the parity; never fork the component.
+- **The header's short meaning comes from the card's own renders-as counts (JP ruling, DESIGN 9.253),** on
+  Word study AND the Library card: `short_meaning.py`, served by `views_lexicon._header_meaning`. ABP list
+  for Greek, Hebrew list for Hebrew, most used first; forms of one word fold together; up to 3. Words whose
+  counts would mislead keep their reviewed `word_gloss`: each is named with its reason in `COUNTS_MISLEAD`.
+  Function words and names keep what they showed before. Display only, no table is written.
 - **Numbering crosswalk in the card header:** `/api/lexicon/profile` returns `alias_note`
   (`contested_register.alias_note_for`, the same helper the Library card uses) → rendered beside the
   Strong's badge as `.detail-strong-alias` inside the one `.detail-strong-wrap` unit.

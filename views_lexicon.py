@@ -17,6 +17,7 @@ import core as _core
 from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 from number_fold import normalize as _fold_norm
 from contested_register import alias_note_for
+import short_meaning as _short_meaning
 
 bp = Blueprint("lexicon", __name__)
 
@@ -1354,6 +1355,99 @@ def _pn_lemma_profile(lemma):
         conn.close()
 
 
+_MEANING_CACHE = {}     # per worker; a deploy reload clears it
+
+
+def _is_name_number(conn, key):
+    try:
+        return conn.execute("SELECT 1 FROM tipnr WHERE strongs = ? LIMIT 1", (key,)).fetchone() is not None
+    except sqlite3.OperationalError:
+        return False
+
+
+def _header_meaning(conn, num, is_heb, lists=None):
+    """The word card's short meaning (JP's ruling, DESIGN 9.253), the ONE path for Word study and
+    the reader card. -> {"short_meaning": text from the renders-as counts} for an ordinary word;
+    {"reviewed_gloss": word_gloss} for a word in COUNTS_MISLEAD; {} for a function word or a name
+    (each card keeps what it showed). `lists` = (own list, KJV, BSB) when the caller has them.
+    Reads only; writes nothing."""
+    snum = num.split(".")[0]
+    is_diff = (not is_heb) and bool(_dotted_diff_row(conn, num))
+    key = f"H{snum}" if is_heb else (f"G{num}" if is_diff else f"G{snum}")
+    # Function words first: they keep exactly what each card showed (same test as the profile).
+    if (snum in _HEB_FUNCTION_STRONGS) if is_heb else (not is_diff and snum in _FUNCTION_STRONGS):
+        return {}
+    full = f"G{num}"
+    for k in ((full, key) if (not is_heb and "." in num) else (key,)):
+        if k in _short_meaning.COUNTS_MISLEAD:
+            g = _word_gloss(conn, k)
+            return {"reviewed_gloss": g} if g else {}
+    if _is_name_number(conn, key):
+        return {}
+    if not is_heb and not is_diff:      # a STEP-only or bridged number is a name, whichever card asks
+        if conn.execute("SELECT 1 FROM lexicon WHERE strongs = ?", (snum,)).fetchone() is None \
+                and _step_lexicon_row(conn, snum) is not None:
+            return {}
+        if _bridge_if_grey(conn, num, snum, f"G{snum}", False):
+            return {}
+    if lists is None:
+        sid = f"H{snum}" if is_heb else f"G{snum}"
+        own = []
+        if is_heb:
+            if _heb_ready():
+                h = heb_db()
+                try:
+                    own = _fold_glosses(((r["gloss"], r["cnt"]) for r in _heb_gloss_rows(h, sid)), drop_singletons=True)
+                finally:
+                    h.close()
+        else:
+            pred, params = _abp_strongs_filter(conn, num, sid)
+            own = _fold_glosses(((r[0], r[1]) for r in conn.execute(f"""
+                SELECT COALESCE(NULLIF(w.english_head,''), w.english), COUNT(*) FROM words w
+                WHERE {pred} AND w.english IS NOT NULL AND w.english != '' AND w.english != '*'
+                GROUP BY COALESCE(NULLIF(w.english_head,''), w.english)""", params)), drop_singletons=True)
+        def other():
+            for tw, ts in (("kjv_words", "kjv_strongs"), ("bsb_words", "bsb_strongs")):
+                if ts == "bsb_strongs" and not _bsb_ready(conn):
+                    continue
+                r = conn.execute(f"""SELECT w.word, COUNT(*) FROM {ts} s JOIN {tw} w ON w.word_id = s.word_id
+                                     WHERE s.strongs_id = ? GROUP BY w.word""", (sid,)).fetchall()
+                folded = _fold_glosses(((x[0], x[1]) for x in r), drop_singletons=True)
+                if folded:
+                    return folded
+            return []
+        # A dotted different-word has no KJV/BSB side: the base number is another word.
+        rows = own if is_diff else (own or other())
+    else:
+        rows = next((x for x in lists if x), [])
+    text = _short_meaning.from_counts([(x["gloss"], x["count"]) for x in rows])
+    return {"short_meaning": text} if text else {}
+
+
+@bp.route("/api/lexicon/short-meaning/<strongs>")
+def lexicon_short_meaning(strongs):
+    """The reader card's short meaning, without loading the whole word profile."""
+    # A Hebrew byform (H1254a) reads its base number, as the word page does.
+    m = re.match(r'^([GgHh])(\d+(?:\.\d+)?)([A-Za-z]?)$', strongs.strip())
+    if not m or (m.group(3) and m.group(1).upper() != "H"):
+        return jsonify({})
+    k = m.group(1).upper() + m.group(2)
+    if k in _MEANING_CACHE:
+        return jsonify(_MEANING_CACHE[k])
+    conn = db_ro()
+    try:
+        out = _header_meaning(conn, m.group(2), m.group(1).upper() == "H")
+    except Exception:
+        return jsonify({})          # the card falls back to its stored gloss
+    finally:
+        conn.close()
+    if out:                         # an empty answer could be a passing read error: never kept
+        if len(_MEANING_CACHE) > 20000:
+            _MEANING_CACHE.clear()
+        _MEANING_CACHE[k] = out
+    return jsonify(out)
+
+
 @bp.route("/api/lexicon/profile/<strongs>")
 def lexicon_profile(strongs):
     if strongs.strip().startswith(_PN_KEY):
@@ -1603,11 +1697,13 @@ def lexicon_profile(strongs):
         default_verses, default_truncated = _all_books_verses(
             conn, _vcorpus, num, snum, sid, is_heb, is_func, "", _tt, _ALL_VERSES_CAP,
             abp_header=abp_header)
+        # The header's short meaning: the renders-as lists above, most used first (DESIGN 9.253).
+        meaning = _header_meaning(conn, num, is_heb, ((heb_glosses if is_heb else abp_glosses), kjv_glosses, bsb_glosses))
         # Numbering crosswalk (word-study card header) — same shared helper the word card uses,
         # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
         # "step" rides only when TRUE so every pre-existing profile payload stays
         # byte-identical across the G2 deploy (the invariance proof).
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated, **({"abp_header": abp_header} if abp_header else {})})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, **({"step": True} if is_step else {}), "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated, **({"abp_header": abp_header} if abp_header else {}), **meaning})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

@@ -18,6 +18,12 @@ function shortLemmaGloss(s) {
   return out;
 }
 
+// The word card's short meaning (DESIGN 9.253): built on the server from the card's own
+// renders-as counts, or a reviewed gloss for a word whose counts would mislead. "" = none.
+function headerMeaning(m) {
+  return m ? (m.short_meaning || shortLemmaGloss(m.reviewed_gloss)) : "";
+}
+
 // The Haiku-written blurbs (cross-ref synthesis, book/chapter summaries, person/
 // place descriptions, LSJ word study) routinely mark transliterated Greek/Hebrew in
 // markdown — *italic* and occasionally **bold**. Rendered as plain text the markers
@@ -455,6 +461,8 @@ const api = {
     const qs = p.toString();
     return fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}${qs ? "?" + qs : ""}`).then(r => r.json());
   },
+  shortMeaning: (strongs) =>
+    fetch(`/api/lexicon/short-meaning/${encodeURIComponent(strongs)}`).then(r => (r.ok ? r.json() : {})),
   lexiconVerses: (strongs, book, corpus, gloss, testament) =>
     fetch(`/api/lexicon/verses/${encodeURIComponent(strongs)}/${encodeURIComponent(book)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}${testament && testament !== "all" ? `&testament=${encodeURIComponent(testament)}` : ""}`).then(r => r.json()),
   lexiconBooks: (strongs, corpus, gloss) =>

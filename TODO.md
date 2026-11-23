@@ -312,7 +312,7 @@ Write-class items are each a checkpoint lane that starts with a PA row read. Ope
   FRAME-0. Design: `docs/RENDERING_OVERRIDES.md` ("Reader display layers" section).
 
 ### Word study & lexicon
-- **Hebrew word meanings: content pass (ruling chat 11/22, §9.248; not built).** `word_gloss`'s Hebrew side (TBESH + overrides) has one-word meanings that miss the word's range: ruach H7307 "spirit" (renders spirit 218, wind 104, breath 38), nephesh H5315 "soul" (life 228, self 225, person 81), and the rest of the loaded list in `build_word_gloss.py --summary`. Library's Hebrew cards read these today. Fix = a reviewed override pass; only then can the Word-study Hebrew header read `word_gloss` (tried 11/22, reverted).
+- **Word-card short meaning from the rendering counts: read the rest (JP's rule, §9.253, live after deploy).** Read by eye on 112 words (every hand override + a stress list), not on all ~14,000. A word whose header misleads gets added to `COUNTS_MISLEAD` in `short_meaning.py`, by name with its reason. A read-only PA list of every built header would size this.
 - **Greek text search / inflected-form lookup** (JP hit it 7/29 searching κύριε): Library in-text search is
   English-only by design (views_search.py). If built, it MUST compare accent-insensitively both sides (reuse
   the existing normalizer — `docs/tickets/accent_divergence.txt`; never write a second one) or it inherits the

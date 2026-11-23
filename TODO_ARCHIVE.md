@@ -12,6 +12,9 @@ few "leave it alone" verdicts worth keeping.
 - **`test_lexica_draw_cache` now gates** through `tests/run_plain_tests.py`. The old note was wrong: it never needed the live db, it builds its own small data. It needed pytest, and its data had gone stale against the builder; both fixed, with must-fail controls on the status and citation checks.
 - **The KJV 62-vs-63 item moved** to the Bible-text batch in TODO: 63 is right, and the fix is re-tagging Joh 7:1.
 
+## 2026-11-23 — word-card short meaning comes from the rendering counts (DESIGN 9.253)
+- JP's ruling, on Word study and the Library card: most-used renderings, forms of one word folded, up to 3 (`short_meaning.py`). Words whose counts mislead keep their reviewed gloss, each named in `COUNTS_MISLEAD`. This replaces the "Hebrew gloss content work" entry.
+
 ## 2026-11-23 — possessive name cards read the name (DESIGN 9.252)
 - The card's name line for "David's" now reads "David", from the entry when it is that same name, else the word without its possessive. Lookups, chips and verse text are unchanged.
 

@@ -703,6 +703,19 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     return () => { cancelled = true; };
   }, [entry && entry.id, boundLoading, boundEntity]);
 
+  // The header's short meaning, from this word's own renders-as counts (DESIGN 9.253). A name
+  // or non-canonical word has none. The line holds blank until it answers (first-paint rule).
+  const meaningKey = (entry && !isPN && !entry.isExtra && /^[GH]\d/.test(entry.strongs || "")) ? entry.strongs : "";
+  const [meaning, setMeaning] = useState(null);
+  useEffect(() => {
+    if (!meaningKey) { setMeaning(null); return; }
+    let cancelled = false;
+    api.shortMeaning(meaningKey)
+      .then(d => { if (!cancelled) setMeaning({ ...d, key: meaningKey }); })
+      .catch(() => { if (!cancelled) setMeaning({ key: meaningKey }); });
+    return () => { cancelled = true; };
+  }, [meaningKey]);
+
   // AI description fallback for PN entries with no metaV data
   const [aiDescription, setAiDescription] = useState(null);
   const [aiDescLoading, setAiDescLoading] = useState(false);
@@ -930,16 +943,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
   // stays as the headword).
   const relocateGloss = !!(heroForm && hero.standaloneGloss && !hero.noGloss && !isPN && !metavData);
-  // The plain-meaning `word_gloss` dictionary sense ("spirit, breath"), threaded for ABP,
-  // KJV, BSB, and Hebrew alike (each text's chapter endpoint joins word_gloss).
-  const heroLemmaGloss = entry.lemmaGloss ? shortLemmaGloss(entry.lemmaGloss) : "";
+  // The short meaning from the word's renders-as counts; the stored `word_gloss` (threaded by
+  // each text's chapter endpoint) only when the server has no counted meaning for it.
+  const meaningPending = !!meaningKey && (!meaning || meaning.key !== meaningKey);
+  const heroLemmaGloss = meaningPending ? ""
+    : (headerMeaning(meaning) || (entry.lemmaGloss ? shortLemmaGloss(entry.lemmaGloss) : ""));
   // Show that dictionary gloss up top for EVERY word that has one and isn't a name/place.
   // When there's an "in this verse" form line, the contextual english drops onto it
   // (relocateGloss); when there isn't (KJV, an ABP word with no printed form), the meaning
   // simply replaces the in-verse word up top. A form word with NO gloss keeps the old
   // behavior: empty up top, contextual english on the form line (don't duplicate it).
   const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData);
-  const heroTopGloss = showLemmaGloss ? heroLemmaGloss : (relocateGloss ? "" : hero.standaloneGloss);
+  const heroTopGloss = meaningPending ? "" : (showLemmaGloss ? heroLemmaGloss : (relocateGloss ? "" : hero.standaloneGloss));
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match. Falls back to a standalone gloss line only when
   // there's no transliteration.

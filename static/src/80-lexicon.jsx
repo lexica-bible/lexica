@@ -465,13 +465,12 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const _topRender = !profile ? "" : (
     (((profileCorpus === "heb" ? profile.heb_glosses : profileCorpus === "bsb" ? profile.bsb_glosses : profileCorpus === "kjv" ? profile.kjv_glosses : profile.abp_glosses) || [])[0] || {}).gloss
     || ((profile.heb_glosses || profile.abp_glosses || profile.kjv_glosses || profile.bsb_glosses || [])[0] || {}).gloss || "");
-  // Header gloss = the plain dictionary meaning (word_gloss), trimmed exactly like the Library
-  // word card (shortLemmaGloss), so the two surfaces match. GREEK: profile.definition leads with
-  // word_gloss. HEBREW: that field is the long Strong's Hebrew paragraph (the table named `bdb`), so
-  // keep the top in-verse rendering. word_gloss's Hebrew side (TBESH + overrides) is not used here
-  // until its one-word glosses get their content pass (TODO: nephesh read "soul", ruach "spirit").
-  const firstGloss = !profile ? "" : (
-    (/^G/i.test(profile.strongs) ? shortLemmaGloss(profile.definition) : "") || _topRender);
+  // Header = the short meaning from this word's renders-as counts (DESIGN 9.253), the same value
+  // the Library word card shows. A function word or name has none, so it keeps what it had:
+  // GREEK reads profile.definition (word_gloss first). HEBREW: that field is the long Strong's
+  // Hebrew paragraph (the table named `bdb`), so it keeps the top in-verse rendering.
+  const firstGloss = !profile ? "" : (headerMeaning(profile)
+    || (/^G/i.test(profile.strongs) ? shortLemmaGloss(profile.definition) : "") || _topRender);
   const selBookName = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.name || selectedBook) : "";
   const selBookCount = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.count ?? null) : null;
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };

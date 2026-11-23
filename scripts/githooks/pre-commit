@@ -90,6 +90,7 @@ python tests/test_build_prose.py >/dev/null
 python tests/test_ai_edition_wipe.py >/dev/null
 python tests/test_lexica_current_verses.py >/dev/null
 python tests/test_bible_text_batch.py >/dev/null
+python tests/test_short_meaning.py >/dev/null
 python tests/test_delete_account.py >/dev/null
 python tests/test_key_strongs_alias.py >/dev/null
 python tests/test_pin_retrieval_alias.py >/dev/null
