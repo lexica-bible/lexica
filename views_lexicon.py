@@ -14,7 +14,7 @@ import sqlite3
 from flask import Blueprint, jsonify, request
 
 import core as _core
-from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
+from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents, clean_heb_definition
 from number_fold import normalize as _fold_norm
 from contested_register import alias_note_for, LEXICA_ALIASES
 import short_meaning as _short_meaning
@@ -602,7 +602,7 @@ def lexicon_lookup():
                     (f"H{snum}",)
                 ).fetchone()
                 if row:
-                    return jsonify([{"strongs": row["strongs_id"], "lemma": row["lemma"] or "", "translit": row["xlit"] or "", "gloss": row["description"] or ""}])
+                    return jsonify([{"strongs": row["strongs_id"], "lemma": row["lemma"] or "", "translit": row["xlit"] or "", "gloss": clean_heb_definition(row["description"])}])
             else:
                 dl = _dotted_diff_row(conn, num)
                 if dl:
@@ -636,7 +636,7 @@ def lexicon_lookup():
 
         def _heb_row(r, match):
             return {"strongs": r["strongs_id"], "lemma": r["lemma"] or "",
-                    "translit": r["xlit"] or "", "gloss": r["description"] or "", "match": match}
+                    "translit": r["xlit"] or "", "gloss": clean_heb_definition(r["description"]), "match": match}
 
         def _sort_key(row):
             # Deterministic order within a band: by Strong's number (letter then value).
@@ -1365,6 +1365,44 @@ def _is_name_number(conn, key):
         return False
 
 
+def _keep_name_capitals(conn, text, num, snum, is_heb, is_diff):
+    """The counts are folded to lower case, so a name read "nod". On a name's card, a shown rendering
+    takes its capital back when the text itself writes it with one most of the time. A name = a
+    Hebrew proper noun or gentilic (core._HEB_NAME_STRONGS), or a Greek word with a capital headword."""
+    try:
+        if is_heb:
+            if snum not in _core._HEB_NAME_STRONGS:
+                return text
+        else:
+            row = _dotted_diff_row(conn, num) if is_diff else conn.execute(
+                "SELECT lemma FROM lexicon WHERE strongs = ?", (snum,)).fetchone()
+            if not row or not (row["lemma"] or "")[:1].isupper():
+                return text
+        sid = f"H{snum}" if is_heb else f"G{snum}"
+        raw = [] if is_diff else list(conn.execute(
+            """SELECT w.word, COUNT(*) FROM kjv_strongs s JOIN kjv_words w ON w.word_id = s.word_id
+               WHERE s.strongs_id = ? GROUP BY w.word""", (sid,)))
+        if not is_heb:
+            pred, params = _abp_strongs_filter(conn, num, sid)
+            raw += list(conn.execute(f"""
+                SELECT COALESCE(NULLIF(w.english_head,''), w.english), COUNT(*) FROM words w
+                WHERE {pred} AND w.english IS NOT NULL AND w.english != '' AND w.english != '*'
+                GROUP BY COALESCE(NULLIF(w.english_head,''), w.english)""", params))
+    except sqlite3.OperationalError:
+        return text
+    caps, total = {}, {}
+    for g, c in raw:
+        words = re.findall(r"[^\W\d_][\w'’-]*", g or "")
+        key = _normalize_gloss(g or "")
+        if not words or not key:
+            continue
+        for k in {key, _fold_norm(key)}:
+            total[k] = total.get(k, 0) + c
+            caps[k] = caps.get(k, 0) + (c if words[-1][0].isupper() else 0)
+    return ", ".join(p[:1].upper() + p[1:] if caps.get(p, 0) * 2 > total.get(p, 0) > 0 else p
+                     for p in text.split(", "))
+
+
 def _header_meaning(conn, num, is_heb, lists=None):
     """The word card's short meaning (JP's ruling, DESIGN 9.253), the ONE path for Word study and
     the reader card. -> {"short_meaning": text from the renders-as counts} for an ordinary word;
@@ -1422,6 +1460,8 @@ def _header_meaning(conn, num, is_heb, lists=None):
     else:
         rows = next((x for x in lists if x), [])
     text = _short_meaning.from_counts([(x["gloss"], x["count"]) for x in rows])
+    if text:
+        text = _keep_name_capitals(conn, text, num, snum, is_heb, is_diff)
     return {"short_meaning": text} if text else {}
 
 
@@ -1473,7 +1513,7 @@ def lexicon_profile(strongs):
             ).fetchone()
             if not row:
                 return jsonify({"error": "not found"}), 404
-            lemma, translit, definition = row["lemma"] or "", row["xlit"] or "", row["description"] or ""
+            lemma, translit, definition = row["lemma"] or "", row["xlit"] or "", clean_heb_definition(row["description"])
             derivation = ""   # the `bdb` table (Strong's Hebrew) has no separate etymology column
         else:
             dl = _dotted_diff_row(conn, num)

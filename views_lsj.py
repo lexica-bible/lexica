@@ -16,6 +16,7 @@ import re
 from flask import Blueprint, jsonify, request
 
 from core import (
+    clean_heb_definition,
     db, db_ro, _anthropic, limiter, log,
     _strip_accents, _strip_length_marks, ai_fingerprint,
 )
@@ -498,6 +499,6 @@ def bdb_lookup(strongs_id):
         "lemma":          row["lemma"] or "",
         "xlit":           row["xlit"] or "",
         "pronounce":      row["pronounce"] or "",
-        "description":    row["description"] or "",
+        "description":    clean_heb_definition(row["description"]),
         "part_of_speech": row["part_of_speech"] or "",
     })

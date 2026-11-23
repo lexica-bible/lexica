@@ -71,6 +71,16 @@ _FUNCTION_STRONGS: set[str] = set()
 # bogus place/person card, while real names + gentilics still do.
 _HEB_NAME_STRONGS: set[str] = set()
 
+# Some Strong's Hebrew definitions (the `bdb` table) carry a source editor's note, glued on
+# with no space: "the same as נוֹדlemma נוֹדּ extra dagesh, corrected to נוֹד; vagrancy".
+_HEB_EDITOR_NOTE = re.compile(
+    r"\s*(?<![A-Za-z])lemma\s+[֐-׿\-]+[^;:]{0,80}?\bcorrected to\s+[֐-׿\-]+")
+
+
+def clean_heb_definition(text):
+    """A Strong's Hebrew definition without the source editor's note. Display only."""
+    return _HEB_EDITOR_NOTE.sub("", text or "").strip()
+
 # In-memory L1 cache for AI-derived payloads (ai-search queries + xref synthesis/
 # curation). Shared by the AI and cross-reference blueprints; mutated IN PLACE
 # (cache[key] = payload), never reassigned, so `from core import _ai_cache`

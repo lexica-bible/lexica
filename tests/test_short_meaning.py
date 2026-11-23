@@ -117,17 +117,19 @@ class Routes(unittest.TestCase):
                                           ('G4004.4', 'fifty years old', 'override'),
                                           ('H853', 'marks the direct object', 'override');
             INSERT INTO tipnr VALUES ('G1138', 'person');
-            INSERT INTO lexicon VALUES ('4151', 'a'), ('5484', 'b'), ('1138', 'c'), ('3756', 'd'), ('7777', 'e'), ('4004', 'f');
+            INSERT INTO lexicon VALUES ('4151', 'a'), ('5484', 'b'), ('1138', 'c'), ('3756', 'd'), ('7777', 'e'), ('4004', 'f'),
+                                       ('2419', 'Ἱερουσαλήμ'), ('2486', 'Ἰχνεύω');
             INSERT INTO dotted_lexicon VALUES ('G7777.1', 'other', ''), ('G4004.4', 'fifty', '');
         """)
         i = 0
         for sb, st, rows in (("G4151", "4151", G4151), ("G5484", "5484", [("favor", 230)]), ("G1138", "1138", [("david", 50)]),
-                             ("G3756", "3756", [("not", 9)]), ("G7777", "7777.1", [("the", 1)]), ("G4004", "4004.4", [("old", 3)])):
+                             ("G3756", "3756", [("not", 9)]), ("G7777", "7777.1", [("the", 1)]), ("G4004", "4004.4", [("old", 3)]),
+                             ("G2419", "2419", [("Jerusalem", 5)]), ("G2486", "2486", [("prowling", 3)])):
             for g, n in rows:
                 for _ in range(n):
                     i += 1
                     c.execute("INSERT INTO words VALUES (1, ?, ?, ?, ?, ?)", (i, g, g, st, sb))
-        for sid, rows in (("H7307", H7307), ("G7777", [("wrongword", 40)])):
+        for sid, rows in (("H7307", H7307), ("G7777", [("wrongword", 40)]), ("H5113", [("Nod", 3)])):
             for g, n in rows:
                 for _ in range(n):
                     i += 1
@@ -175,6 +177,22 @@ class Routes(unittest.TestCase):
 
     def test_dotted_override_keeps_its_gloss(self):
         self.assertEqual(self.get("G4004.4"), {"reviewed_gloss": "fifty years old"})
+
+    def test_a_name_keeps_its_capital(self):
+        with mock.patch.object(core, "_HEB_NAME_STRONGS", {"5113"}):
+            self.assertEqual(self.get("H5113"), {"short_meaning": "Nod"})
+        self.assertEqual(self.get("G2419"), {"short_meaning": "Jerusalem"})
+
+    def test_a_capital_only_comes_back_on_a_name_and_from_the_text(self):
+        VL._MEANING_CACHE.clear()
+        self.assertEqual(self.get("H5113"), {"short_meaning": "nod"})       # not on the name list
+        self.assertEqual(self.get("G2486"), {"short_meaning": "prowling"})  # capital headword, lower-case text
+
+    def test_the_source_editors_note_is_stripped(self):
+        s = "the same as נוֹדlemma נוֹדּ extra dagesh, corrected to נוֹד; vagrancy; Nod, the land of Cain; Nod."
+        self.assertEqual(core.clean_heb_definition(s), "the same as נוֹד; vagrancy; Nod, the land of Cain; Nod.")
+        for keep in ("a lemma of the root; to go", "corrected, to go straight", "", None):
+            self.assertEqual(core.clean_heb_definition(keep), (keep or ""))
 
     def test_charis_kjv_number_reads_the_gloss_on_its_abp_number(self):
         self.assertEqual(self.get("G5485"), {"reviewed_gloss": "favor, kindness, goodwill"})

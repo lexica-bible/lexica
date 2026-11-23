@@ -213,11 +213,11 @@ ok(bodyFieldCount(bare) === 0 && IdentityBody(bare) === null,
 
 // ── 4. the scope note ──────────────────────────────────────────────────────────
 ok(scopeNoteText("G2496", "Ἰωράμ", "person")
-     === "G2496 numbers the name form Ἰωράμ — the person this verse names is below.",
+     === "G2496 is the number for the name Ἰωράμ. The person this verse means is shown below.",
    "the approved sentence, verbatim");
-ok(scopeNoteText("G2496", "Ἰωράμ", "place").endsWith("the place this verse names is below."),
+ok(scopeNoteText("G2496", "Ἰωράμ", "place").endsWith("The place this verse means is shown below."),
    "the place variant substitutes cleanly");
-ok(scopeNoteText("H3141", "יְהוֹרָם", "person").startsWith("H3141 numbers the name form"),
+ok(scopeNoteText("H3141", "יְהוֹרָם", "person").startsWith("H3141 is the number for the name"),
    "a Hebrew-headed card carries it too");
 ok(scopeNoteText("PN", "Ἰωράμ", "person") === "",
    "a header with no number ('PN') carries NO note — ruled omission, nothing to clarify");

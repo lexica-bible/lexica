@@ -26,7 +26,7 @@ from xml.sax.saxutils import escape
 
 from flask import Blueprint, render_template, abort, redirect, Response
 
-from core import (db_ro, heb_db, _KJV_BOOK_ID, dotted_lexicon_cols,
+from core import (clean_heb_definition, db_ro, heb_db, _KJV_BOOK_ID, dotted_lexicon_cols,
                   step_lemma_cols, pn_xref_ready)
 
 bp = Blueprint("seo", __name__)
@@ -480,7 +480,7 @@ def _word_profile(strongs: str):
             if not row:
                 return None
             lemma, translit = row["lemma"] or "", row["xlit"] or ""
-            definition = _TAG_RE.sub("", row["description"] or "").strip()
+            definition = _TAG_RE.sub("", clean_heb_definition(row["description"])).strip()
             lang = "Hebrew"
         else:
             row = conn.execute("SELECT lemma, translit, strongs_def, kjv_def FROM lexicon WHERE strongs = ?", (num,)).fetchone()

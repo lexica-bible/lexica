@@ -194,7 +194,7 @@ function bodyFieldCount(b) { return b.chips.length + (b.born ? 1 : 0) + b.rows.l
 //     not what a Strong's number numbers).
 function scopeNoteText(strongs, form, kind) {
   if (!kind || !form || !/^[GH]\d/.test(strongs || "")) return "";
-  return `${strongs} numbers the name form ${form} — the ${kind} this verse names is below.`;
+  return `${strongs} is the number for the name ${form}. The ${kind} this verse means is shown below.`;
 }
 
 function MetavPersonBody({ data, withEponym }) {

@@ -573,7 +573,7 @@ function bodyFieldCount(b){return b.chips.length+(b.born?1:0)+b.rows.length;}// 
 //     deliberate omission, not a coverage hole (reviewer, 2026-08-09),
 //   * no script form in the hero (it falls back to the English name, and that is
 //     not what a Strong's number numbers).
-function scopeNoteText(strongs,form,kind){if(!kind||!form||!/^[GH]\d/.test(strongs||""))return"";return`${strongs} numbers the name form ${form} — the ${kind} this verse names is below.`;}function MetavPersonBody({data,withEponym}){if(!data)return null;// Eponym opener on the name-path card. Parentage guard keeps namesakes plain:
+function scopeNoteText(strongs,form,kind){if(!kind||!form||!/^[GH]\d/.test(strongs||""))return"";return`${strongs} is the number for the name ${form}. The ${kind} this verse means is shown below.`;}function MetavPersonBody({data,withEponym}){if(!data)return null;// Eponym opener on the name-path card. Parentage guard keeps namesakes plain:
 // only the record whose parents are Israel/Jacob (the 12 sons) or Joseph
 // (Ephraim/Manasseh) is the founder; Israel himself passes by name.
 const parents=(data.relationships||[]).filter(r=>r.type==="child").map(r=>r.name);const eponym=withEponym&&EPONYM_LINES[data.name]&&(data.name==="Israel"||parents.some(p=>/^(Israel|Jacob|Joseph)$/.test(p)))?EPONYM_LINES[data.name]:null;return/*#__PURE__*/React.createElement(React.Fragment,null,eponym&&/*#__PURE__*/React.createElement("p",{className:"pnbound-desc"},eponym),eponym&&/*#__PURE__*/React.createElement("div",{className:"detail-h"},"The man"),/*#__PURE__*/React.createElement(IdentityBody,metavBody(data)));}function SummaryPanel({book,chapter,bookLabel,isMobile,onClose,onBack}){// Remembers fetched summaries across remounts (the panel unmounts whenever a

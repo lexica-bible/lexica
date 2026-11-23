@@ -10,7 +10,7 @@ _kjv_strongs_search HELPER used by the search blueprint.
 """
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV, word_gloss_join, _HEB_NAME_STRONGS
+from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV, word_gloss_join, _HEB_NAME_STRONGS, clean_heb_definition
 
 bp = Blueprint("kjv", __name__)
 
@@ -301,7 +301,7 @@ def kjv_strongs_search(strongs_id):
             "book":         book_abbrev,
             "chapter":      r["chapter"],
             "verse":        r["verse_num"],
-            "definition":   r["definition"] or "",
+            "definition":   clean_heb_definition(r["definition"]),
             "derivation":   "",
             "is_function":  False,
             "isKjv":        True,
