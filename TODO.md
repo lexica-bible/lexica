@@ -12,8 +12,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ## Active lane — ABP edition upgrade (English line → the app's edition)
 - **STATE 11/22: THE UPGRADE IS LIVE AND STEP 8 IS CLOSED.** Live = the app edition since the 11/21 20:21 UTC swap (`7bb92e10`, DESIGN §9.235). P9, the first nightly after it, passed (§9.244). L9 on the new words closed as run (§9.245). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9. Opener = the top of `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`.
 - **Still ticking:** the rollback file `bible_pre_edition_upgrade_20261121.db` stays until three good nightlies (11/22 = #1) and a ruled removal. Also kept on PA until a ruled removal: the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot.
-- **KJV one-word tag shift: size the class (ruling chat 11/22, §9.247; read-only check, reviewer one round; not built).** KJV Joh 7:1 had every Strong's tag one word late after an untranslated καί; that verse is fixed. Whether other KJV verses have the same shift is not measured.
-- **Dictionary quotes: DONE and live 11/22 (§9.246).** Cards serve today's verse text by ref. **Still open, separate, not built:** check the prose of the 85 cards for wording that quotes the old English.
+- **KJV one-word tag shift: SIZED 11/23 (§9.255), no repair built.** 21 verses have long shifts and 31 short ones, by reading all 70 the detector listed (18 were chance). It is a floor: a single misplaced tag cannot fire it. Rows: PA `~/edition_upgrade_runs/leftover_reads_20261122/kjv_shift.tsv`. Any repair is group 3 with its own block.
+- **Dictionary quotes: DONE and live 11/22 (§9.246).** Cards serve today's verse text by ref. **Card prose, read 11/23 (§9.255):** 41 of the 85 cards carry possible old-edition wording, 232 places listed (`prose_hits.tsv`, same folder), not yet sorted real from coincidence; no fix built.
 - **`/rebuild-words` on the app edition: DONE 11/22** (`--app-feed`, the prose step 2b, Split 84, import_tipnr 31,592). Its figures were read on the pre-swap copy; no rebuild has run from the swapped live yet, so the first one reads every figure before it trusts it.
 - **Carried by name, not work orders unless JP raises them:** Split +4 (§9.205) · import_tipnr −57 (§9.210) · Mark 1:9 τῆς slot, verse text reads right (§9.210) · the C4 joined-slot rows and NO-EVIDENCE 2,140 · Jdg 11:7 1473 vs 5210 and built's Strong's numbers against the feed (§9.217-9.218) · the L9 carried set: 14 ambiguous filled-slot pairings, the 10-slot lint/sizer gap, 4 row-count-differs verses, 34 changed-after-split recipients (§9.245) · the declared-list lines for Est 5:9 @13, Jos 5:15 @27 and the five MOVED verses (§9.210) · `/rebuild-words` step 8's 10/25 G5 figures to mark as 10/25-only (§9.227).
 - HOLD (JP 10/30, not this lane): after the upgrade, does the app feed take over the Greek/Strong's role
@@ -25,21 +25,10 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   stamp in code (`build_words_from_abp.py`, `report()`) — a re-run of A (dry run OR a full `--app-feed` build) with the default `--out` overwrites it; keep the local copy.**
 
 ## Owed checks (read-only — JP on PA, or an eyeball)
-- **Helper audit controls** (refreshed 10/25, not yet re-run on PA): the next `scripts/audit_helper_double_tag.py`
-  run should show 4 PASS — 2Ki 11:16 G2007 · Psa 69:21 G4222 · Act 13:19 G2624 (A-review) · Rth 2:16 (B).
-  Any FAIL = read it before trusting the counts.
-- **word_gloss overrides — PA state unconfirmed.** Overrides added after 2026-06-26 (the +7 from `95c4c97`:
-  G3340/G5486/G32/G652/G4352/G86/G1067; εἰμί G1510; G39 `a06a90b`) only reach the card after
-  `build_word_gloss.py --apply` on PA. Read-only check:
-  `sqlite3 ~/bible-db/bible.db "SELECT strongs, gloss, source FROM word_gloss WHERE strongs IN ('G1510','G32','G652','G4352','G86','G1067','G3340','G5486','G39') ORDER BY strongs"`
-  — expect source = override and the glosses in `build_word_gloss.py` OVERRIDES. If not: pull, then
-  `--apply` (dry-run first).
-- **Nave's retirement — confirm the data side on PA, then close.** The name-path sidebar section is GONE
-  (2026-07-16, "Nave's dead code removed (data nuked on PA)"; `30-detail-panel.jsx:589`), and Nave's is not on
-  `/credits`, but nothing in the repo shows whether the study.db `type='name'` name-topic rows were deleted:
-  `sqlite3 ~/bible-db/study.db "SELECT type, deleted, count(*) FROM entries GROUP BY type, deleted"`.
-  The admin-gated `/api/study/for-name` route is a SEPARATE decision (rides Study's return — don't delete
-  it reflexively).
+- **Nave's retirement — the data was NOT removed (read 11/23, §9.255).** The name-path sidebar section is GONE
+  (2026-07-16; `30-detail-panel.jsx:589`) and Nave's is not on `/credits`, but study.db still holds **696
+  `type='name'` rows, none marked deleted**. study.db is the one irreplaceable file, so any removal is its own
+  ruled step. The admin-gated `/api/study/for-name` route is a SEPARATE decision (rides Study's return).
 - **JP read-only sweeps (from 7/31):** bible-wide count of name chips still with NO Greek after the 11/22 fallback
   (no card Greek either) · bible-wide `,,` count on `verses.text` (class or
   one-off — feeds the Van der Pool errata list).
@@ -312,7 +301,7 @@ Write-class items are each a checkpoint lane that starts with a PA row read. Ope
   FRAME-0. Design: `docs/RENDERING_OVERRIDES.md` ("Reader display layers" section).
 
 ### Word study & lexicon
-- **Word-card short meaning from the rendering counts: read the rest (JP's rule, §9.253, live after deploy).** Read by eye on 112 words (every hand override + a stress list), not on all ~14,000. A word whose header misleads gets added to `COUNTS_MISLEAD` in `short_meaning.py`, by name with its reason. A read-only PA list of every built header would size this.
+- **Word-card short meaning: all 14,770 count-built headers read 11/23 (§9.255); 1,113 more kept by name.** Left open: **17 word pages pool different Greek words** (G131 G151 G1303 G1314 G1315 G1316 G1326 G1333 G1335 G1337 G1356 G1357 G1368 G1371 G1377 G1393 G1759, with 45 dotted numbers that have no entry of their own; G1393 Dorcas lists spear 38), so neither the counts nor the stored meaning is right for all their verses; the same shape exists on 47 base numbers in all, the other 30 not flagged as misleading · **15 words have a misleading header and no stored meaning** (G40 G640.2 G1350.1 G1610.2 G2468 G2674.2 G2711.1 G2926 G2982 G3386 G3785 G4339.5 G4896 G4921.2 G5315) · 133 flagged headers were left on the counts because the stored meaning was no better; a few of those (G3439, G4282, H8438) need a better stored meaning.
 - **Greek text search / inflected-form lookup** (JP hit it 7/29 searching κύριε): Library in-text search is
   English-only by design (views_search.py). If built, it MUST compare accent-insensitively both sides (reuse
   the existing normalizer — `docs/tickets/accent_divergence.txt`; never write a second one) or it inherits the

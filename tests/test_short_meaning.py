@@ -73,6 +73,16 @@ class Rule(unittest.TestCase):
         self.assertTrue(all(isinstance(v, str) and v for v in M.COUNTS_MISLEAD.values()))
         self.assertNotIn("G4151", M.COUNTS_MISLEAD, "JP's own example reads from the counts")
 
+    def test_the_headers_read_one_by_one_are_kept_by_name(self):
+        """DESIGN 9.255: a phrase's leftover word never heads a card."""
+        for n in ("G1831", "G4863", "G2521", "H408", "H6440", "H2009"):
+            self.assertIn(n, M.COUNTS_MISLEAD)
+        for n in ("H7307", "H5315", "G4160", "G165", "G4716", "G3086"):     # read, and left on the counts
+            self.assertNotIn(n, M.COUNTS_MISLEAD)
+        # These pages pool different Greek words: a stored meaning would put "Dorcas" on a spear.
+        for n in ("G1393", "G1393.1", "G1303", "G1303.1", "G1315"):
+            self.assertNotIn(n, M.COUNTS_MISLEAD)
+
     def test_every_hand_override_is_decided(self):
         """A new override in build_word_gloss.py must be placed here too, never dropped silently."""
         src = (ROOT / "scripts" / "build_word_gloss.py").read_text(encoding="utf-8")
@@ -165,6 +175,10 @@ class Routes(unittest.TestCase):
 
     def test_dotted_override_keeps_its_gloss(self):
         self.assertEqual(self.get("G4004.4"), {"reviewed_gloss": "fifty years old"})
+
+    def test_kept_number_with_no_stored_meaning_shows_no_header(self):
+        with mock.patch.dict(M.COUNTS_MISLEAD, {"G4151.7": "the counts are the base number's mixed list"}):
+            self.assertEqual(self.get("G4151.7"), {})
 
     def test_function_word_beats_the_kept_list(self):
         with mock.patch.object(VL, "_HEB_FUNCTION_STRONGS", frozenset({"853"})):

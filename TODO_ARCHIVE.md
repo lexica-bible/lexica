@@ -12,6 +12,11 @@ few "leave it alone" verdicts worth keeping.
 - **`test_lexica_draw_cache` now gates** through `tests/run_plain_tests.py`. The old note was wrong: it never needed the live db, it builds its own small data. It needed pytest, and its data had gone stale against the builder; both fixed, with must-fail controls on the status and citation checks.
 - **The KJV 62-vs-63 item moved** to the Bible-text batch in TODO: 63 is right, and the fix is re-tagging Joh 7:1.
 
+## 2026-11-23 — leftover reads closed these checks (DESIGN 9.255)
+- Helper audit controls: 4 PASS on live (2Ki 11:16, Psa 69:21, Act 13:19, Rth 2:16).
+- word_gloss overrides on PA: 59 of 60 match the file; G5485 has no row because ABP does not use that number.
+- WAL crumbs: no -wal or -shm files are left under ~/bible-db.
+
 ## 2026-11-23 — word-card short meaning comes from the rendering counts (DESIGN 9.253)
 - JP's ruling, on Word study and the Library card: most-used renderings, forms of one word folded, up to 3 (`short_meaning.py`). Words whose counts mislead keep their reviewed gloss, each named in `COUNTS_MISLEAD`. This replaces the "Hebrew gloss content work" entry.
 
