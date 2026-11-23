@@ -3,6 +3,7 @@ two rows with both pieces inside a bracket. Own throwaway db; never touches bibl
 
 Run:  python tests/test_split_and_font_checks.py
 """
+import csv
 import os
 import sqlite3
 import subprocess
@@ -24,7 +25,7 @@ class Font(unittest.TestCase):
             self.assertTrue(A.english_font(g), g)
 
     def test_quiet_on_real_greek(self):
-        for g in ("και", "το", "εν", "συν", "μεν", "Δαν", "ιν", "μαν", "πνεύμα", "ου  ποιἡσετε", "", None):
+        for g in ("και", "το", "εν", "συν", "μεν", "Δαν", "Ουρ", "ιν", "μαν", "πνεύμα", "ου  ποιἡσετε", "", None):
             self.assertFalse(A.english_font(g), g)
 
 
@@ -36,6 +37,9 @@ class Pairs(unittest.TestCase):
     def test_one_word_on_two_rows(self):
         self.assertEqual(S.pairs_in_verse([row(4, "they should"), row(5, "give her")]), [(0, 1, "same-form")])
 
+    def test_second_piece_just_after_the_bracket(self):             # Deu 4:10 on live, 11/23
+        self.assertEqual(S.pairs_in_verse([row(25, "let"), row(26, "hear", gpos=None, bid=None)]), [(0, 1, "same-form")])
+
     def test_a_missing_form_is_named(self):
         self.assertEqual(S.pairs_in_verse([row(4, "let"), row(5, "hear", form="")]), [(0, 1, "form-missing")])
 
@@ -44,7 +48,7 @@ class Pairs(unittest.TestCase):
                      [row(4, "a", form="άγιος"), row(5, "b", form="αγία")],   # two different forms
                      [row(4, "a"), row(6, "b")],                        # not neighbours
                      [row(4, "a"), row(5, "b", st="1326")],             # two numbers
-                     [row(4, "a", gpos=None, bid=None), row(5, "b")],   # the helper audit's shape
+                     [row(4, "a", gpos=None, bid=None), row(5, "b")],   # the helper audit's shape (second opens a bracket)
                      [row(4, "a", st="*"), row(5, "b", st="*")]):       # name slots
             self.assertEqual(S.pairs_in_verse(rows), [], rows)
 
@@ -57,11 +61,15 @@ class WholeRun(unittest.TestCase):
         c.executescript("""CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT, text TEXT);
             CREATE TABLE words (verse_id INT, position INT, english TEXT, strongs TEXT, greek_pos INT, bracket_id INT);
             CREATE TABLE abp_surface (verse_id INT, position INT, form TEXT, translit TEXT);""")
-        refs = [r.replace(":", " ").split() for r in S.CONTROLS] if with_controls else [["Gen", "1", "1"]]
-        for vid, (b, ch, v) in enumerate(refs, 1):
+        with open(S.FROZEN, encoding="utf-8", newline="") as f:
+            frozen = {f"{x['book']} {x['chapter']}:{x['verse']}": x["strongs"] for x in csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
+                      if x["shape"] == "both-inside-bracket"}
+        refs = [(r, frozen[r]) for r in S.CONTROLS] if with_controls else [("Gen 1:1", "1325")]
+        for vid, (r, num) in enumerate(refs, 1):
+            b, ch, v = r.replace(":", " ").split()
             c.execute("INSERT INTO verses VALUES (?,?,?,?,'x')", (vid, b, int(ch), int(v)))
             for pos, eng in ((1, "they should"), (2, "give her")):
-                c.execute("INSERT INTO words VALUES (?,?,?,'1325',1,1)", (vid, pos, eng))
+                c.execute("INSERT INTO words VALUES (?,?,?,?,1,1)", (vid, pos, eng, num))
                 c.execute("INSERT INTO abp_surface VALUES (?,?,'δώσι','')", (vid, pos))
         c.commit()
         c.close()

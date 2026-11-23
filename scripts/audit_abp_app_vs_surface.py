@@ -148,7 +148,7 @@ def is_greek_letter(c):
 # The app's Greek font is a keyboard font: English typed in it comes out as Greek letters.
 _SYMBOL_FONT = str.maketrans("αβχδεφγηιϕκλμνοπθρστυςωξψζ", "abcdefghijklmnopqrstuvwxyz")
 # Common English words, read off the app's own English column, minus every spelling that is also a real
-# Greek word in the app (το, εν, συν, μεν...). "dan", "in", "man" are out: Δαν, ιν (hin), μαν (manna).
+# Greek word in the app (το, εν, συν, μεν...). "dan", "in", "man", "our" are out: Δαν, ιν (hin), μαν (manna), Ουρ (Ur).
 _ENGLISH_IN_FONT = frozenset("""
     abides abomination about abundance accord according account act action after against almighty also am
     amen among and angel anger announcing anointed any apart appear are aromatics around arranged arrows as
@@ -172,7 +172,7 @@ _ENGLISH_IN_FONT = frozenset("""
     lift lifted light like lips listen little locked lord lot made make making manly many matter may mercy
     middle might mighty military mind misery misled money morning mount mounted mouth my name names nations
     near neck next ninth not of off offer offering once one ones opened opposite oracles ordained orders
-    other our out outside own parents parted parts pass paths pay peace people peoples pity place places
+    other out outside own parents parted parts pass paths pay peace people peoples pity place places
     plain please pleasing pleasure possessions power praise prepared priest priests prison proceed produce
     progeny properties prophets purified put rage rain raise raised ran rather reign remnant report rescue
     rescued rescuing resettlement resisting responded restored return returned right righteousness roads

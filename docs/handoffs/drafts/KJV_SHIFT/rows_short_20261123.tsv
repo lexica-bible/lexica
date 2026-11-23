@@ -1,0 +1,108 @@
+verse	cell	position_or_word_id	before	after	read
+Gen 47:28 (KJV)	kjv_strongs.strongs_id	36059	age: H3117	age: H3117+H2416	'age' renders the Hebrew days + life; H705 is 'forty'. The Hebrew says 'years' twice, English once, so the extra H8141 drops
+Gen 47:28 (KJV)	kjv_strongs.strongs_id	36060	of: H2416	of: (none)	'age' renders the Hebrew days + life; H705 is 'forty'. The Hebrew says 'years' twice, English once, so the extra H8141 drops
+Gen 47:28 (KJV)	kjv_strongs.strongs_id	36065	forty: H8141	forty: H705	'age' renders the Hebrew days + life; H705 is 'forty'. The Hebrew says 'years' twice, English once, so the extra H8141 drops
+Gen 47:28 (KJV)	kjv_strongs.strongs_id	36066	and: H705	and: (none)	'age' renders the Hebrew days + life; H705 is 'forty'. The Hebrew says 'years' twice, English once, so the extra H8141 drops
+1Sa 25:29 (KJV)	kjv_strongs.strongs_id	217891	middle: H3709	middle: H8432	H8432 is 'middle'; H3709 (the hollow) goes with 'sling', which BSB also tags H7050
+1Sa 25:29 (KJV)	kjv_strongs.strongs_id	217892	of: H8432	of: (none)	H8432 is 'middle'; H3709 (the hollow) goes with 'sling', which BSB also tags H7050
+1Sa 25:29 (KJV)	kjv_strongs.strongs_id	217894	sling: H7050	sling: H3709+H7050	H8432 is 'middle'; H3709 (the hollow) goes with 'sling', which BSB also tags H7050
+1Ch 24:4 (KJV)	kjv_strongs.strongs_id	306818	sixteen: H6240	sixteen: H6240+H8337	sixteen = H6240 + H8337; 'chief' is H7218, as earlier in this verse
+1Ch 24:4 (KJV)	kjv_strongs.strongs_id	306819	chief: H8337	chief: H7218	sixteen = H6240 + H8337; 'chief' is H7218, as earlier in this verse
+1Ch 24:4 (KJV)	kjv_strongs.strongs_id	306820	men: H7218	men: (none)	sixteen = H6240 + H8337; 'chief' is H7218, as earlier in this verse
+Ezr 8:35 (KJV)	kjv_strongs.strongs_id	343620	twelve: H6240	twelve: H6240+H8147	twelve = H6240 + H8147, as on 'twelve bullocks' earlier in this verse
+Ezr 8:35 (KJV)	kjv_strongs.strongs_id	343621	he: H8147	he: (none)	twelve = H6240 + H8147, as on 'twelve bullocks' earlier in this verse
+Mat 7:2 (KJV)	kjv_strongs.strongs_id	614222	For: G1722	For: G1063	BSB: For G1063, with G1722, what G3739, as on 'with what measure' later in this verse
+Mat 7:2 (KJV)	kjv_strongs.strongs_id	614223	with: G3739	with: G1722	BSB: For G1063, with G1722, what G3739, as on 'with what measure' later in this verse
+Mat 7:2 (KJV)	kjv_strongs.strongs_id	614224	what: G1063	what: G3739	BSB: For G1063, with G1722, what G3739, as on 'with what measure' later in this verse
+Mat 13:13 (KJV)	kjv_strongs.strongs_id	619432	Therefore: G5124	Therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 13:13 (KJV)	kjv_strongs.strongs_id	619433	speak: G1223	speak: G2980	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 13:13 (KJV)	kjv_strongs.strongs_id	619434	I: G2980	I: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 21:43 (KJV)	kjv_strongs.strongs_id	626796	Therefore: G5124	Therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 21:43 (KJV)	kjv_strongs.strongs_id	626797	say: G1223	say: G3004	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 21:43 (KJV)	kjv_strongs.strongs_id	626798	I: G3004	I: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Mat 25:1 (KJV)	kjv_strongs.strongs_id	629606	to: (none)	to: G1519	BSB: to G1519; G529 is 'meet'
+Mat 25:1 (KJV)	kjv_strongs.strongs_id	629607	meet: G1519	meet: G529	BSB: to G1519; G529 is 'meet'
+Mat 25:1 (KJV)	kjv_strongs.strongs_id	629608	the: G529	the: (none)	BSB: to G1519; G529 is 'meet'
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655655	Judge: G2532	Judge: G2919	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655656	not: G2919	not: G3361	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655657	and: G3361	and: G2532	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655658	ye: G2532	ye: (none)	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655659	shall: (none)	shall: G2919	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655660	not: G2919	not: G3364	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655661	be: G3364	be: (none)	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655662	judged: (none)	judged: G2919	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655663	condemn: G2919	condemn: G2613	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655664	not: G2613	not: G3361	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655665	and: G3361	and: G2532	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655666	ye: G2532	ye: (none)	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655667	shall: (none)	shall: G2613	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655668	not: G2613	not: G3364	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655669	be: G3364	be: (none)	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655670	condemned: (none)	condemned: G2613	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655671	forgive: G2613	forgive: G630	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655672	and: G630	and: G2532	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655673	ye: G2532	ye: (none)	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 6:37 (KJV)	kjv_strongs.strongs_id	655676	forgiven: (none)	forgiven: G630	Every tag sits one word late after an untranslated G2532 καί; moves one word left, G2532 drops; the last tag fell off, BSB tags 'forgiven' G630
+Luk 11:21 (KJV)	kjv_strongs.strongs_id	661624	his: G833	his: G1438	BSB: his G1438, house G833
+Luk 11:21 (KJV)	kjv_strongs.strongs_id	661625	palace: G1438	palace: G833	BSB: his G1438, house G833
+Luk 18:1 (KJV)	kjv_strongs.strongs_id	667842	them: G4314	them: G846	BSB: them G846; G4314 is 'to this end'
+Luk 18:1 (KJV)	kjv_strongs.strongs_id	667843	to: G846	to: G4314	BSB: them G846; G4314 is 'to this end'
+Joh 6:29 (KJV)	kjv_strongs.strongs_id	680103	him: G3739	him: (none)	BSB: the One G3739, He G1565
+Joh 6:29 (KJV)	kjv_strongs.strongs_id	680104	whom: G1565	whom: G3739	BSB: the One G3739, He G1565
+Joh 6:29 (KJV)	kjv_strongs.strongs_id	680105	he: (none)	he: G1565	BSB: the One G3739, He G1565
+Joh 6:65 (KJV)	kjv_strongs.strongs_id	680851	Therefore: G5124	Therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 6:65 (KJV)	kjv_strongs.strongs_id	680852	said: G1223	said: G2046	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 6:65 (KJV)	kjv_strongs.strongs_id	680853	I: G2046	I: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 8:42 (KJV)	kjv_strongs.strongs_id	682891	neither: G1063	neither: G3761	neither = G3761, came = G2064 (BSB); the untranslated G1063 γάρ drops
+Joh 8:42 (KJV)	kjv_strongs.strongs_id	682892	came: G3761	came: G2064	neither = G3761, came = G2064 (BSB); the untranslated G1063 γάρ drops
+Joh 8:42 (KJV)	kjv_strongs.strongs_id	682893	I: G2064	I: (none)	neither = G3761, came = G2064 (BSB); the untranslated G1063 γάρ drops
+Joh 9:24 (KJV)	kjv_strongs.strongs_id	683789	again: G1537	again: G1537+G1208	'again' is the pair G1537 + G1208 (ἐκ δευτέρου); called = G5455 (BSB)
+Joh 9:24 (KJV)	kjv_strongs.strongs_id	683790	called: G1208	called: G5455	'again' is the pair G1537 + G1208 (ἐκ δευτέρου); called = G5455 (BSB)
+Joh 9:24 (KJV)	kjv_strongs.strongs_id	683791	they: G5455	they: (none)	'again' is the pair G1537 + G1208 (ἐκ δευτέρου); called = G5455 (BSB)
+Joh 13:11 (KJV)	kjv_strongs.strongs_id	687429	therefore: G1223	therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 13:11 (KJV)	kjv_strongs.strongs_id	687430	said: G5124	said: G2036	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 13:11 (KJV)	kjv_strongs.strongs_id	687431	he: G2036	he: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 13:28 (KJV)	kjv_strongs.strongs_id	687773	for: (none)	for: G4314	'for what intent' is G4314 + G5101, each on its own word
+Joh 13:28 (KJV)	kjv_strongs.strongs_id	687774	what: G4314	what: G5101	'for what intent' is G4314 + G5101, each on its own word
+Joh 13:28 (KJV)	kjv_strongs.strongs_id	687775	intent: G5101	intent: (none)	'for what intent' is G4314 + G5101, each on its own word
+Joh 16:15 (KJV)	kjv_strongs.strongs_id	689655	therefore: G1223	therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 16:15 (KJV)	kjv_strongs.strongs_id	689656	said: G5124	said: G2036	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Joh 16:15 (KJV)	kjv_strongs.strongs_id	689657	I: G2036	I: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+Act 7:3 (KJV)	kjv_strongs.strongs_id	698804	which: G302	which: G3739+G302	'which' is G3739 with the particle G302; none stays on 'I'
+Act 7:3 (KJV)	kjv_strongs.strongs_id	698805	I: G3739	I: (none)	'which' is G3739 with the particle G302; none stays on 'I'
+Act 10:29 (KJV)	kjv_strongs.strongs_id	702745	Therefore: G2532	Therefore: G1352	BSB: So G1352, came G2064; the untranslated G2532 καί drops
+Act 10:29 (KJV)	kjv_strongs.strongs_id	702746	came: G1352	came: G2064	BSB: So G1352, came G2064; the untranslated G2532 καί drops
+Act 10:29 (KJV)	kjv_strongs.strongs_id	702747	I: G2064	I: (none)	BSB: So G1352, came G2064; the untranslated G2532 καί drops
+Act 13:42 (KJV)	kjv_strongs.strongs_id	705570	them: G1519	them: G846	'them' is G846; G1519 goes with 'the next sabbath' (BSB: on G1519 the next Sabbath)
+Act 13:42 (KJV)	kjv_strongs.strongs_id	705571	the: G846	the: G1519	'them' is G846; G1519 goes with 'the next sabbath' (BSB: on G1519 the next Sabbath)
+Act 14:3 (KJV)	kjv_strongs.strongs_id	705871	therefore: G3767	therefore: G3303+G3767	'therefore' is the pair G3303 + G3767 (μὲν οὖν); abode = G1304 (BSB)
+Act 14:3 (KJV)	kjv_strongs.strongs_id	705872	abode: G3303	abode: G1304	'therefore' is the pair G3303 + G3767 (μὲν οὖν); abode = G1304 (BSB)
+Act 14:3 (KJV)	kjv_strongs.strongs_id	705873	they: G1304	they: (none)	'therefore' is the pair G3303 + G3767 (μὲν οὖν); abode = G1304 (BSB)
+Act 17:17 (KJV)	kjv_strongs.strongs_id	708708	Therefore: G3303	Therefore: G3303+G3767	'Therefore' is the pair G3303 + G3767 (μὲν οὖν); disputed = G1256 (BSB)
+Act 17:17 (KJV)	kjv_strongs.strongs_id	708709	disputed: G3767	disputed: G1256	'Therefore' is the pair G3303 + G3767 (μὲν οὖν); disputed = G1256 (BSB)
+Act 17:17 (KJV)	kjv_strongs.strongs_id	708710	he: G1256	he: (none)	'Therefore' is the pair G3303 + G3767 (μὲν οὖν); disputed = G1256 (BSB)
+Rom 8:10 (KJV)	kjv_strongs.strongs_id	722646	body: G3303	body: G4983	BSB: body G4983; the untranslated G3303 μέν drops
+Rom 8:10 (KJV)	kjv_strongs.strongs_id	722647	is: G4983	is: (none)	BSB: body G4983; the untranslated G3303 μέν drops
+Rom 9:15 (KJV)	kjv_strongs.strongs_id	723612	whom: G302	whom: G3739+G302	'whom' is G3739 with the particle G302, both times; none stays on 'I'
+Rom 9:15 (KJV)	kjv_strongs.strongs_id	723613	I: G3739	I: (none)	'whom' is G3739 with the particle G302, both times; none stays on 'I'
+Rom 9:15 (KJV)	kjv_strongs.strongs_id	723623	whom: G302	whom: G3739+G302	'whom' is G3739 with the particle G302, both times; none stays on 'I'
+Rom 9:15 (KJV)	kjv_strongs.strongs_id	723624	I: G3739	I: (none)	'whom' is G3739 with the particle G302, both times; none stays on 'I'
+1Co 7:39 (KJV)	kjv_strongs.strongs_id	731539	law: G1909	law: G3551	'law' is G3551; 'as long as' takes G1909 + G3745 + G5550, as in the cleared Rom 7:1
+1Co 7:39 (KJV)	kjv_strongs.strongs_id	731540	as: G3551	as: (none)	'law' is G3551; 'as long as' takes G1909 + G3745 + G5550, as in the cleared Rom 7:1
+1Co 7:39 (KJV)	kjv_strongs.strongs_id	731541	long: G5550	long: (none)	'law' is G3551; 'as long as' takes G1909 + G3745 + G5550, as in the cleared Rom 7:1
+1Co 7:39 (KJV)	kjv_strongs.strongs_id	731542	as: G3745	as: G1909+G3745+G5550	'law' is G3551; 'as long as' takes G1909 + G3745 + G5550, as in the cleared Rom 7:1
+Eph 4:4 (KJV)	kjv_strongs.strongs_id	747888	even: (none)	even: G2532	'even as' is G2532 + G2531, each on its own word
+Eph 4:4 (KJV)	kjv_strongs.strongs_id	747889	as: G2532	as: G2531	'even as' is G2532 + G2531, each on its own word
+Eph 4:4 (KJV)	kjv_strongs.strongs_id	747890	ye: G2531	ye: (none)	'even as' is G2532 + G2531, each on its own word
+Eph 5:29 (KJV)	kjv_strongs.strongs_id	748935	even: (none)	even: G2532	'even as' is G2532 + G2531, each on its own word
+Eph 5:29 (KJV)	kjv_strongs.strongs_id	748936	as: G2532	as: G2531	'even as' is G2532 + G2531, each on its own word
+Eph 5:29 (KJV)	kjv_strongs.strongs_id	748937	the: G2531	the: (none)	'even as' is G2532 + G2531, each on its own word
+Eph 5:33 (KJV)	kjv_strongs.strongs_id	748995	every: (none)	every: G1538	'every one' is G1538 + G1520, each on its own word (BSB: each one G1538)
+Eph 5:33 (KJV)	kjv_strongs.strongs_id	748996	one: G1538	one: G1520	'every one' is G1538 + G1520, each on its own word (BSB: each one G1538)
+Eph 5:33 (KJV)	kjv_strongs.strongs_id	748997	of: G1520	of: (none)	'every one' is G1538 + G1520, each on its own word (BSB: each one G1538)
+Jas 4:14 (KJV)	kjv_strongs.strongs_id	770403	that: G4314	that: (none)	BSB: appears G5316; G4314 is 'for'
+Jas 4:14 (KJV)	kjv_strongs.strongs_id	770404	appeareth: (none)	appeareth: G5316	BSB: appears G5316; G4314 is 'for'
+Jas 4:14 (KJV)	kjv_strongs.strongs_id	770405	for: G5316	for: G4314	BSB: appears G5316; G4314 is 'for'
+1Jn 4:5 (KJV)	kjv_strongs.strongs_id	776609	therefore: G5124	therefore: G1223+G5124	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+1Jn 4:5 (KJV)	kjv_strongs.strongs_id	776610	speak: G1223	speak: G2980	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word
+1Jn 4:5 (KJV)	kjv_strongs.strongs_id	776611	they: G2980	they: (none)	Therefore: the pair G1223 + G5124 (διά τοῦτο) belongs on the one English word; the next tag moves onto its own word

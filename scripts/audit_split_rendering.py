@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Read-only: one Greek word carrying two word rows ("split renderings", TODO; JP ruled a counting
-defect 10/25). The helper audit sees the shape with the first piece outside the bracket. This sees
-the other shape, both pieces inside it, which had no detector (454 of the 628 listed on 10/25).
+defect 10/25). The helper audit sees the shape with the first piece outside and the second opening
+a bracket. This sees the rest, which had no detector (454 of the 628 listed on 10/25, filed there as
+"both inside"; read on live 11/23, the second piece usually sits just AFTER the bracket: Deu 4:10
+`let` in the bracket, `hear` after it).
 
-A pair = two neighbouring rows, the same full Strong's number, each with a bracket and a Greek
-position, the same printed Greek form on both, and different English.
+A pair = two neighbouring rows, the same full Strong's number, the same printed Greek form on both,
+different English, and not the helper audit's shape.
 
 It also re-reads the 10/25 figures on today's table: how many of the 628 still have 2+ rows, and
 whether any printed form in abp_surface is English typed in the Greek font.
@@ -33,7 +35,7 @@ FROZEN = os.path.join(os.path.dirname(HERE), "tests", "fixtures", "split_renderi
 CONTROLS = ("Gen 24:41", "Deu 4:10", "Ezr 6:3", "Est 2:17", "Psa 115:17", "Jer 49:14", "2Co 2:11",
             "Joh 11:50", "Mar 14:4", "Rom 15:2")
 FONT_CONTROLS = ("δαγγερ και", "- Φορ τηε ενδ.λἡμμα")
-FONT_QUIET = ("και", "το", "Δαν", "πνεύμα")
+FONT_QUIET = ("και", "το", "Δαν", "Ουρ", "πνεύμα")
 
 _PUNCT = re.compile(r"[^\w\s]")
 
@@ -54,7 +56,7 @@ def pairs_in_verse(rows):
         a, b = rows[i], rows[i + 1]
         if b[0] != a[0] + 1 or not real(a[2]) or a[2] != b[2]:
             continue
-        if a[3] is None or b[3] is None or a[4] is None or b[4] is None:
+        if a[4] is None and b[4] is not None:       # the helper audit's shape
             continue
         if not norm(a[1]) or not norm(b[1]) or norm(a[1]) == norm(b[1]):
             continue
@@ -95,13 +97,7 @@ def main():
         f.write("verse\tstrongs\tposition\tenglish_1\tenglish_2\tform_1\tform_2\tkind\n")
         for x in lines:
             f.write("\t".join(str(c).replace("\t", " ") for c in x) + "\n")
-    print(f"both-inside pairs today: {len(lines):,} ({dict(kinds)}) in {len({x[0] for x in lines}):,} verses", flush=True)
-
-    bad = 0
-    found_refs = {r for r, _s in found}
-    miss = [c for c in CONTROLS if c not in found_refs]
-    print(f"  control, the ten verses read on 10/25: {len(CONTROLS) - len(miss)} of {len(CONTROLS)} fire; missing {miss}")
-    bad += bool(miss)
+    print(f"pairs today: {len(lines):,} ({dict(kinds)}) in {len({x[0] for x in lines}):,} verses", flush=True)
 
     live = defaultdict(Counter)
     for vid, rows in verses.items():
@@ -110,6 +106,14 @@ def main():
                 live[ref[vid]][r[2]] += 1
     with open(args.frozen, encoding="utf-8", newline="") as f:
         frozen = list(csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE))
+
+    # The control is the verse AND its number, so another pair in the same verse cannot satisfy it.
+    bad = 0
+    want = {(f"{x['book']} {x['chapter']}:{x['verse']}", x["strongs"]) for x in frozen
+            if f"{x['book']} {x['chapter']}:{x['verse']}" in CONTROLS and x["shape"] == "both-inside-bracket"}
+    miss = sorted(want - found)
+    print(f"  control, the ten verses read on 10/25: {len(want) - len(miss)} of {len(want)} fire; missing {miss}")
+    bad += bool(miss) or len(want) != len(CONTROLS)
     tally = Counter()
     with open(os.path.join(args.out, "list_628_today.tsv"), "w", encoding="utf-8", newline="\n") as f:
         f.write("verse\tstrongs\tshape_1025\trows_today\tdetector_fires\n")
