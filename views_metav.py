@@ -10,7 +10,7 @@ from flask import Blueprint, jsonify, request
 from core import (
     db, db_ro, _anthropic, log,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
-    h_abp_predicate,
+    h_abp_predicate, resolve_identity_lemma,
 )
 from entity_resolution import book_num, norm_name, is_people_group
 
@@ -709,30 +709,8 @@ def _greek_identity_payload(conn, verse_id, position):
     if not r or r["source"] == "none":
         return None
     gs = r["greek_strongs"]
-    lemma = r["greek_lemma"] or ""
-    translit = ""
-    step = False
+    lemma, translit, step = resolve_identity_lemma(conn, have, gs, r["greek_lemma"])
     if gs:
-        # Lemma/translit resolve: main lexicon first, else step_lexicon — the
-        # STEP flag marks an extended number our lexicon doesn't carry (S2-Q2:
-        # the card shows a quiet "STEP" source tag beside it).
-        lex = conn.execute(
-            "SELECT lemma, translit FROM lexicon WHERE strongs_g = ?",
-            (gs,)).fetchone() if "lexicon" in have else None
-        if lex and lex["lemma"]:
-            lemma, translit = lex["lemma"], lex["translit"] or ""
-        elif "step_lexicon" in have:
-            # step_lexicon keys: estrong = padded TBESG text ('G0007G'), base =
-            # plain NUMBER (7) — the indexed join key. The identity number is
-            # unpadded text ('G9827'), so join on the number, never the text
-            # (receipt-2 catch: a text join here never matched anything).
-            digits = "".join(ch for ch in gs[1:] if ch.isdigit())
-            sl = conn.execute(
-                "SELECT lemma, translit FROM step_lexicon WHERE base = ? "
-                "ORDER BY estrong LIMIT 1",
-                (int(digits),)).fetchone() if digits else None
-            if sl and sl["lemma"]:
-                lemma, translit, step = sl["lemma"], sl["translit"] or "", True
         # S2-Q4: a numbered identity counts by its Greek number — over the
         # identity table, the same derivation the stage-1 audit certified.
         count = conn.execute(

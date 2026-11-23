@@ -239,7 +239,7 @@ const LibRender = (function () {
           <span key={key} data-note-pos={w.position}
             className={"lib-word" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
             onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), ...pnClickPayload(w) } : makeEntry(w)) : undefined}>
-            {showInterlinear && ((w.lemma || w.inflected) ? <span className="lib-iw-greek">{w.lemma || w.inflected}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
+            {showInterlinear && (chipGreek(w) ? <span className="lib-iw-greek">{chipGreek(w)}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
             <span className="lib-iw-english">{englishParts(w)}</span>
             {showStrongs && (abpChipStrongsTag(w)
               ? <span className="lib-iw-strongs">{abpChipStrongsTag(w)}</span>
@@ -256,7 +256,7 @@ const LibRender = (function () {
         <span key={key} data-note-pos={w.position}
           className={"lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), ...pnClickPayload(w) } : makeEntry(w)) : undefined}>
-          {showInterlinear && ((w.lemma || w.inflected) ? <span className="lib-iw-greek">{w.lemma || w.inflected}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
+          {showInterlinear && (chipGreek(w) ? <span className="lib-iw-greek">{chipGreek(w)}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-english">{label}</span>
           {showStrongs && (
             abpChipStrongsTag(w)
@@ -294,7 +294,7 @@ const LibRender = (function () {
           <span key={key} data-note-pos={w.position}
             className={"lib-word lib-word-bracketed" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
             onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), ...pnClickPayload(w) } : makeEntry(w)) : undefined}>
-            {showInterlinear && ((w.lemma || w.inflected) ? <span className="lib-iw-greek">{w.lemma || w.inflected}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
+            {showInterlinear && (chipGreek(w) ? <span className="lib-iw-greek">{chipGreek(w)}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
             <span className="lib-iw-pos-english">
               {brkOpen(0)}
               <span className="lib-iw-english">{englishParts(w)}</span>
@@ -315,8 +315,8 @@ const LibRender = (function () {
         <span key={key} data-note-pos={w.position}
           className={"lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), ...pnClickPayload(w) } : makeEntry(w)) : undefined}>
-          {showInterlinear && ((w.lemma || w.inflected)
-            ? <span className="lib-iw-greek">{w.lemma || w.inflected}</span>
+          {showInterlinear && (chipGreek(w)
+            ? <span className="lib-iw-greek">{chipGreek(w)}</span>
             : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-pos-english">
             {brkOpen(0)}

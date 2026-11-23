@@ -12,6 +12,14 @@ few "leave it alone" verdicts worth keeping.
 - **`test_lexica_draw_cache` now gates** through `tests/run_plain_tests.py`. The old note was wrong: it never needed the live db, it builds its own small data. It needed pytest, and its data had gone stale against the builder; both fixed, with must-fail controls on the status and citation checks.
 - **The KJV 62-vs-63 item moved** to the Bible-text batch in TODO: 63 is right, and the fix is re-tagging Joh 7:1.
 
+## 2026-11-23 — the Bible-text batch landed (DESIGN 9.247-9.251)
+- **On live 00:08 UTC 11/23, block r3, 76 changes, cert 8/8 at 403.** Job 3:3 "Maythe", Joh 3:15 "eternal. life", the nine stray " )" verses, four doubled words (2Ki 14:28, Jdg 20:34, Est 8:8, Luk 13:28), and KJV Joh 7:1, where every tag sat one word late ("him" also gained G846), so Galilee's KJV count reads 63 under the one rendering. Read as correct and left alone: Deu 24:8, Eze 11:12, Ezr 4:15, Joe 2:2, Joh 19:21. The ABP rows are in `abp_corrections`, so a rebuild re-applies them.
+- **Moved:** cert pin 375 -> 403 (`abp_corrections_active_live_20261122.txt`); frozen punct list 607 -> 601 (`punct_members_live_20261122.txt`, now in `/rebuild-words` step 6). Phrase-gloss first read on swapped live: 747, at the gate.
+
+## 2026-11-22 — name chips show their card's Greek; Hebrew header put back
+- **Name chips (the David's / Hiram class):** a name word with English but no Greek of its own now shows the Greek name its card shows, at read time, with no Bible data written (`views_library._chip_name_greek`, `chipGreek`). The Hiram item closes with this.
+- **Hebrew Word-study header reverted** to the top in-verse rendering: reading `word_gloss` turned nephesh from "life" into "soul". The real fix is in TODO.
+
 ## 2026-11-22 — dictionary cards quote the current text
 - `/api/lexica/<number>` now replaces each stored verse quote with today's `verses.text`, by ref (`views_lexica.py`, `tests/test_lexica_current_verses.py`). The stored rows are not written. Spot-check before the fix: of 42 quotes on 7 cards, 20 differed from the live verse in wording and 8 in punctuation only.
 

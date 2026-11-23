@@ -316,8 +316,6 @@ const LEX_WORDS = {
     definition: "Stand-in BDB-style paragraph — wind; by resemblance breath, a sensible (violent) " +
                 "exhalation; by resemblance spirit, the animating principle; the harness measures " +
                 "layout, not the lexicon.",
-    // Stand-in header gloss; the profile sends word_gloss for a Hebrew number (views_lexicon.py).
-    word_gloss: "wind, breath",
     derivation: "",
     related: [],
     has: { abp: false, heb: true, kjv: true, bsb: true },
@@ -840,7 +838,6 @@ const RESOLVER_SRC = `
     return {
       strongs: w.strongs, lemma: w.lemma, translit: w.translit,
       definition: w.definition, derivation: w.derivation, related: w.related,
-      word_gloss: w.word_gloss,
       total: total, books: books, corpus: c,
       glosses: g.slice(),
       abp_glosses: w.has.abp ? g : [], heb_glosses: w.has.heb ? g : [],

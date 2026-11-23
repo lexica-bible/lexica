@@ -394,6 +394,37 @@ def _strongs_num(q: str):
     return m.group(1) if m else None
 
 
+def resolve_identity_lemma(conn, have, gs, stored):
+    """A proper noun's served Greek from its pn_greek_identity row -> (lemma, translit, step).
+    The ONE rule, shared by the name card and the reader's chip fallback so they can't disagree:
+    a numbered identity reads the main lexicon first, else step_lexicon (step=True); a lemma-only
+    identity keeps its stored form. `have` = the table names present."""
+    lemma, translit, step = stored or "", "", False
+    if not gs:
+        return lemma, translit, step
+    # Lemma/translit resolve: main lexicon first, else step_lexicon — the
+    # STEP flag marks an extended number our lexicon doesn't carry (S2-Q2:
+    # the card shows a quiet "STEP" source tag beside it).
+    lex = conn.execute(
+        "SELECT lemma, translit FROM lexicon WHERE strongs_g = ?",
+        (gs,)).fetchone() if "lexicon" in have else None
+    if lex and lex["lemma"]:
+        lemma, translit = lex["lemma"], lex["translit"] or ""
+    elif "step_lexicon" in have:
+        # step_lexicon keys: estrong = padded TBESG text ('G0007G'), base =
+        # plain NUMBER (7) — the indexed join key. The identity number is
+        # unpadded text ('G9827'), so join on the number, never the text
+        # (receipt-2 catch: a text join here never matched anything).
+        digits = "".join(ch for ch in gs[1:] if ch.isdigit())
+        sl = conn.execute(
+            "SELECT lemma, translit FROM step_lexicon WHERE base = ? "
+            "ORDER BY estrong LIMIT 1",
+            (int(digits),)).fetchone() if digits else None
+        if sl and sl["lemma"]:
+            lemma, translit, step = sl["lemma"], sl["translit"] or "", True
+    return lemma, translit, step
+
+
 def _serialize_word_core(row) -> dict:
     """Canonical core fields for an ABP words+lexicon row, built ONE way so the
     three word serializers (chapter_text / verse_words / _fetch_verse_words) can't

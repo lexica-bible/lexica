@@ -467,10 +467,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     || ((profile.heb_glosses || profile.abp_glosses || profile.kjv_glosses || profile.bsb_glosses || [])[0] || {}).gloss || "");
   // Header gloss = the plain dictionary meaning (word_gloss), trimmed exactly like the Library
   // word card (shortLemmaGloss), so the two surfaces match. GREEK: profile.definition leads with
-  // word_gloss. HEBREW: profile.definition is the long Strong's Hebrew paragraph (the table named
-  // `bdb`), so the header reads profile.word_gloss (TBESH + hand overrides) instead.
+  // word_gloss. HEBREW: that field is the long Strong's Hebrew paragraph (the table named `bdb`), so
+  // keep the top in-verse rendering. word_gloss's Hebrew side (TBESH + overrides) is not used here
+  // until its one-word glosses get their content pass (TODO: nephesh read "soul", ruach "spirit").
   const firstGloss = !profile ? "" : (
-    shortLemmaGloss(/^G/i.test(profile.strongs) ? profile.definition : profile.word_gloss) || _topRender);
+    (/^G/i.test(profile.strongs) ? shortLemmaGloss(profile.definition) : "") || _topRender);
   const selBookName = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.name || selectedBook) : "";
   const selBookCount = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.count ?? null) : null;
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };

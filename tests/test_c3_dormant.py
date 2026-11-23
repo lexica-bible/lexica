@@ -233,19 +233,34 @@ def main() -> int:
               (prof or {}).get("lemma"), "Ἀγάγ")
         check("P2: SEO ABP count for G9xxx", (prof or {}).get("total"), 1)
 
-        # Hebrew header gloss: its own field, from word_gloss; Greek payload unchanged.
-        p = json.loads(client.get("/api/lexicon/profile/H90?corpus=abp").get_data(as_text=True))
-        check("P3: no word_gloss table -> no field", "word_gloss" in p, False)
+        # Name chip with no Greek of its own: the card's Greek rides as pn_greek (DESIGN 9.248).
+        def word(path, eng):
+            d = json.loads(client.get(path).get_data(as_text=True))
+            ws = d["words"] if isinstance(d, dict) else next(x for x in d if x["verse"] == 7)["words"]
+            return next(x for x in ws if x["english"] == eng)
         c = sqlite3.connect(dbp)
-        c.execute("CREATE TABLE word_gloss (strongs TEXT, gloss TEXT, source TEXT)")
-        c.execute("INSERT INTO word_gloss VALUES ('H90', 'Agag', 'tbesh')")
-        c.execute("INSERT INTO word_gloss VALUES ('G9826', 'Agag', 'tbesg')")   # so the Greek check can fire
+        c.execute("CREATE TABLE pericopes (book TEXT, chapter INT, verse INT, heading TEXT)")
+        c.execute("INSERT INTO words (id, verse_id, position, english, english_head, strongs_base, strongs, is_pn) "
+                  "VALUES (6, 2, 6, '', '', '*', '*', 1)")      # a name slot with no English
+        c.execute("INSERT INTO pn_greek_identity VALUES (2, 6, NULL, 'Κενός', 'lemma-only', NULL)")
         c.commit()
         c.close()
-        p = json.loads(client.get("/api/lexicon/profile/H90?corpus=abp").get_data(as_text=True))
-        check("P3: Hebrew profile carries word_gloss", p.get("word_gloss"), "Agag")
-        p = json.loads(client.get("/api/lexicon/profile/G9826").get_data(as_text=True))
-        check("P3: Greek profile has no word_gloss field", "word_gloss" in p, False)
+        check("P3: flips OFF -> no pn_greek", "pn_greek" in word("/api/verse-words/1Sa/15/7", "Havilah"), False)
+        core.READER_GREEK_FLIPS = True
+        check("P3: verse feed carries the card's Greek",
+              word("/api/verse-words/1Sa/15/7", "Havilah").get("pn_greek"), "Εὐιλάτ")
+        check("P3: chapter feed carries the card's Greek",
+              word("/api/chapter/1Sa/15", "Havilah").get("pn_greek"), "Εὐιλάτ")
+        w = json.loads(client.get("/api/verse-words/1Sa/15/8").get_data(as_text=True))["words"]
+        check("P3: a word with its own lemma gets no pn_greek",
+              "pn_greek" in next(x for x in w if x["english"] == "Agag"), False)
+        w = json.loads(client.get("/api/verse-words/1Sa/15/6").get_data(as_text=True))["words"]
+        check("P3: 'none' class gets no pn_greek",
+              "pn_greek" in next(x for x in w if x["english"] == "Kenite"), False)
+        w = json.loads(client.get("/api/verse-words/1Sa/15/7").get_data(as_text=True))["words"]
+        check("P3: a slot with no English stays without Greek",
+              "pn_greek" in next(x for x in w if x["position"] == 6), False)
+        core.READER_GREEK_FLIPS = False
     finally:
         core.DB, core.READER_GREEK_FLIPS = old_db, old_flag
 

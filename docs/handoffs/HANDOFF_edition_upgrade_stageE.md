@@ -2,7 +2,7 @@
 
 Successor to `HANDOFF_edition_upgrade_gate2.md` (gate 2 green and closed; stage D CLOSED). Standing rules and the
 follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings only in `DESIGN_q2_build.md` §9
-(sole register, latest **§9.249**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
+(sole register, latest **§9.251**). Order of the remaining steps: charter `CHARTER_edition_upgrade.md` §6 +
 `.claude/commands/rebuild-words.md`.
 
 ## STANDING RULE (JP-approved 11/21, DESIGN 9.243) - READ FIRST: size the care to what a redo costs
@@ -10,7 +10,7 @@ follow-up list in `HANDOFF_edition_upgrade_stageC_repin.md` still apply. Rulings
 
 ## UPDATE 11/22 end - LEFTOVERS (DESIGN 9.246)
 /rebuild-words now builds the app edition; dictionary cards quote the current text. HELD for the ruling chat's clearance, nothing on live: the Bible-text
-batch: 50 rows CLEARED (9.247); write program scripts/apply_bible_text_batch_20261122.py, current block drafts/BIBLE_TEXT_BATCH/block_btb_r3.sh, NOT run, waits for the ruling chat (9.249); run 1 was interrupted, r2 stopped at check, nothing written. Owed items: TODO.md, active lane.
+batch: LANDED on live 11/23 00:08 UTC by block r3, ruled done (9.251); cert 8/8 at 403, punct 601. Next on this lane: nightlies 2 and 3 for the rollback copy. Open by name: TODO.md, active lane.
 
 ## UPDATE 11/22 later - L9 ON THE NEW WORDS CLOSED AS RUN (DESIGN 9.245)
 JP ruled: closed on RESIDUE 0, DIFFER 0, 893/893 content recipients matching live; figures now 17,452 / 12,128 / 893. Carried by

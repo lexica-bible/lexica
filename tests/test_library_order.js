@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, navAfterVersionSwitch } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, mergePnChipPairs, pnClickPayload, libViewTransition, navAfterVersionSwitch } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -235,6 +235,28 @@ test("possessive PN shows the printed name; lookup key unchanged", () => {
   const plain = { english: "David,", english_head: "david", is_pn: true, strongs_base: "*" };
   assert.ok(!("pnDisplay" in pnClickPayload(plain, "")), "a plain name carries no display override");
   assert.strictEqual(greekLineForWord(plain).text, "David");
+});
+
+// 10c. A name word with no Greek of its own shows the card's Greek; its own always wins.
+test("name chip falls back to the card's Greek, never over its own", () => {
+  const david = { english: "David's", english_head: "davids", is_pn: true, strongs_base: "*", pn_greek: "Δαβίδ" };
+  assert.strictEqual(chipGreek(david), "Δαβίδ");
+  assert.deepStrictEqual(greekLineForWord(david), { text: "Δαβίδ", kind: "identity" });
+  assert.strictEqual(chipGreek({ ...david, inflected: "Δαυίδ" }), "Δαυίδ");
+  assert.strictEqual(chipGreek({ ...david, lemma: "Δαυίδ", inflected: "x" }), "Δαυίδ");
+  assert.strictEqual(chipGreek({ english: "David" }), "");
+  assert.strictEqual(pnClickPayload(david, "Δαβίδ").pnName, "Davids", "the lookup key must not move");
+});
+
+// 10d. A merged pair's chip shows both halves' Greek, but pn_greek never enters `lemma`,
+//      which is what the card's entry reads.
+test("merged name chip: pn_greek shows on the chip, never in lemma", () => {
+  const a = { position: 1, english: "Ezion", english_head: "ezion", is_pn: true, strongs_base: "*", pn_greek: "Γεσιών" };
+  const b = { position: 2, english: "Geber", english_head: "geber", is_pn: true, strongs_base: "*", pn_merge: true, inflected: "Γάβερ" };
+  const [m] = mergePnChipPairs([a, b]);
+  assert.strictEqual(chipGreek(m), "Γεσιών Γάβερ");
+  assert.strictEqual(m.lemma, "Γάβερ", "lemma holds only the words' own Greek");
+  assert.ok(!m.lemma.includes("Γεσιών"));
 });
 
 // 11. ANCHOR — mode three restores ABP's superscript digits (greek_pos) on

@@ -205,7 +205,11 @@ output, if any, rides the step-8 deploy).
    guard; if non-zero the `_split_compounds` source-phrase-order fix regressed, don't swap) →
    `audit_corpus_tier1.py` (A1 **177** — re-declared 2026-10-25, live copy and rebuild both 177; was
    "≈ 176") → `audit_corpus_tier2.py <built> --rahlfs
-   ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
+   ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%) → the word-order member check against the frozen
+   punctuation list in force (601 since the 11/23 Bible-text batch, DESIGN 9.247-9.251; the 607 and 241
+   files are records):
+   `python3 scripts/audit_reassembly_diff.py <built> --v2 --punct-members tests/fixtures/reassembly/punct_members_live_20261122.txt --eligible "$R/eligible_20261031.tsv"`
+   — expect `NO FAIL`, word-order 0, content-other 0, dup-gloss 0, gone 0, new 0, changed 0, unchanged 601.
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 — **Chip view reads "the LORD was enraged"**: English order,
    no bracket marks or digits since 2026-07-04 `9ff47f00` + `7b7fc505`; only the Interlinear view keeps

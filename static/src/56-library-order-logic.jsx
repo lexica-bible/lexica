@@ -130,15 +130,23 @@ function pnPrintedPossessive(w) {
   return tok ? tok.replace(/^[^A-Za-z]+/, "").replace(/[^A-Za-z'’]+$/, "") : "";
 }
 
+// A chip's Greek line: its dictionary form, else its printed form, else (a name word with
+// neither) the Greek name its card shows. pn_greek is served only for that last case.
+// chip_greek = a merged pair's joined line (mergePnChipPairs).
+function chipGreek(w) {
+  return w.chip_greek || w.lemma || w.inflected || w.pn_greek || "";
+}
+
 // THE GREEK-LINE FALLBACK CHAIN (mode three / faithful ABP interlinear): what to
 // print as a word's main Greek line. Order is FIXED and load-bearing —
 //   1. inflected  — the printed ABP surface form (abp_surface), when stored
 //   2. lemma      — the dictionary form (lexicon join)
-//   3. name       — the English proper-noun name, capitalized. Since the Phase-6
+//   3. pn_greek   — a name word with neither: the Greek name its card shows
+//   4. name       — the English proper-noun name, capitalized. Since the Phase-6
 //                   PN backfill (2026-07-27/28) most name slots carry `inflected`
-//                   and resolve at step 1; this step now serves only the 2,358
+//                   and resolve at step 1; this step serves what is left of the
 //                   stamped residue (TICKET_pn_lemma_residue.md)
-//   4. none       — nothing to show (the ~477 empty '*' tokens stay invisible)
+//   5. none       — nothing to show (the ~477 empty '*' tokens stay invisible)
 // Returns { text, kind }. The chain-order test pins this precedence so the future
 // PN backfill can't drift it.
 function greekLineForWord(w) {
@@ -146,6 +154,8 @@ function greekLineForWord(w) {
   if (inf) return { text: inf, kind: "inflected" };
   const lem = (w.lemma || "").trim();
   if (lem) return { text: lem, kind: "lemma" };
+  const pg = (w.pn_greek || "").trim();
+  if (pg) return { text: pg, kind: "identity" };
   const name = (pnPrintedPossessive(w) || w.english_head || w.english || "").trim();
   if (name) return { text: name.charAt(0).toUpperCase() + name.slice(1), kind: "name" };
   return { text: "", kind: "none" };
@@ -198,6 +208,8 @@ function mergePnChipPairs(words) {
         // Greek line read "Γάδ" alone — half a name (JP catch 2026-07-31). The
         // rule: each half shows exactly what its single chip showed.
         lemma: [prev.lemma || prev.inflected, w.lemma || w.inflected].filter(Boolean).join(" "),
+        // Chip display only: the card's entry reads `lemma`, so pn_greek must never ride in it.
+        chip_greek: [chipGreek(prev), chipGreek(w)].filter(Boolean).join(" "),
         inflected: [prev.inflected, w.inflected].filter(Boolean).join(" "),
         pn_merge_pos: w.position,   // partner slot — the card joins both headwords for display
         // Union tag rule (JP verdict 2026-07-31): the chip's Strong's tag unions
@@ -292,5 +304,5 @@ function navAfterVersionSwitch(n) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition, mergePnChipPairs, navAfterVersionSwitch };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, pnClickPayload, libViewTransition, mergePnChipPairs, navAfterVersionSwitch };
 }

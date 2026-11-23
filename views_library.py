@@ -12,7 +12,7 @@ from flask import Blueprint, jsonify
 
 import core as _core
 from core import (db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols,
-                  step_lemma_cols, pn_xref_parts)
+                  step_lemma_cols, pn_xref_parts, resolve_identity_lemma)
 from entity_resolution import norm_name as er_norm_name, book_num as er_book_num
 
 bp = Blueprint("library", __name__)
@@ -31,20 +31,44 @@ def _greek_flip_parts(conn):
     ).fetchone() is not None
     if not has_gid:
         return "", ""
-    return (", g.greek_strongs AS g_strongs, g.source AS g_src",
+    return (", g.greek_strongs AS g_strongs, g.source AS g_src, g.greek_lemma AS g_lemma",
             "LEFT JOIN pn_greek_identity g ON g.verse_id = w.verse_id AND g.position = w.position")
 
 
-def _gid_field(r, enabled):
+def _chip_name_greek(conn, rows, key):
+    """Display fallback (ruling chat 11/22, DESIGN 9.248): a name word with English but no Greek
+    of its own (no lemma; on the chapter feed, no printed form either, since the verse feed does
+    not carry that column) shows the Greek name its card shows, by the card's own rule. Read at
+    serve time; no Bible data is written. A slot with no English stays invisible."""
+    have = {r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('lexicon','step_lexicon')")}
+    memo, out = {}, {}
+    for r in rows:
+        src = r["g_src"]
+        if not src or src == "none" or r["lemma"] or not (r["english"] or "").strip():
+            continue
+        if "surface_form" in r.keys() and r["surface_form"]:
+            continue
+        k = (r["g_strongs"], r["g_lemma"])
+        if k not in memo:
+            memo[k] = resolve_identity_lemma(conn, have, *k)[0]
+        if memo[k]:
+            out[key(r)] = memo[k]
+    return out
+
+
+def _gid_field(r, enabled, name_greek=""):
     """The per-word identity field, present ONLY when a real identity was served
     (source != 'none'); 'strongs' is the Greek number or empty for a lemma-only
-    word (the tag hides rather than fabricate a number — Q3)."""
+    word (the tag hides rather than fabricate a number — Q3). `pn_greek` rides only
+    on a name word that has no Greek of its own (_chip_name_greek)."""
     if not enabled:
         return {}
     src = r["g_src"]
     if not src or src == "none":
         return {}
-    return {"g_id": {"strongs": r["g_strongs"] or "", "src": src}}
+    return {"g_id": {"strongs": r["g_strongs"] or "", "src": src},
+            **({"pn_greek": name_greek} if name_greek else {})}
 
 
 @bp.route("/api/verse/<book>/<int:chapter>/<int:verse>")
@@ -113,6 +137,7 @@ def verse_words(book, chapter, verse):
                ORDER BY w.position""",
             (row["id"],),
         ).fetchall()
+        name_greek = _chip_name_greek(conn, wrows, lambda r: r["position"]) if gid_sel else {}
         # Chip-merge signal (JP-approved 2026-07-31): two ADJACENT proper-noun words
         # whose recorded binds resolve to the SAME entity (Ezion+Geber, Ramoth+Gilead)
         # render as ONE chip. Display-only marker derived from pn_binding — the source
@@ -153,7 +178,7 @@ def verse_words(book, chapter, verse):
                 "pn_types":    w["pn_types"],
                 "is_content":  w["strongs_base"] not in _FUNCTION_STRONGS,
                 **({"pn_merge": True} if w["position"] in merge_pos else {}),
-                **_gid_field(w, bool(gid_sel)),
+                **_gid_field(w, bool(gid_sel), name_greek.get(w["position"], "")),
             }
             for w in wrows
         ]
@@ -318,6 +343,7 @@ def chapter_text(book, chapter):
                ORDER BY v.verse, w.position""",
             (book, chapter),
         ).fetchall()
+        name_greek = _chip_name_greek(conn, rows, lambda r: (r["verse"], r["position"])) if gid_sel else {}
         # Chip-merge signal (JP-approved 2026-07-31) — same marker as verse_words:
         # adjacent same-entity PN pair -> the SECOND word carries pn_merge and the
         # reader folds it into the first chip. Derived from pn_binding at read time;
@@ -349,7 +375,7 @@ def chapter_text(book, chapter):
             # table is built + this word anchored. Blank otherwise → no extra line.
             "inflected":          (r["surface_form"]     if has_surface else "") or "",
             "inflected_translit": (r["surface_translit"] if has_surface else "") or "",
-            **_gid_field(r, bool(gid_sel)),
+            **_gid_field(r, bool(gid_sel), name_greek.get((r["verse"], r["position"]), "")),
         })
     if brows:
         bmap: dict[int, dict] = {}

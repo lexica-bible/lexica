@@ -403,7 +403,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     } else {
       api.verseWords(entry.book, entry.chapter, entry.verse)
         .then(d => done((d.words || []).map(w => ({
-          top: w.lemma || "", translit: w.translit || "", english: w.english || "",
+          top: w.lemma || w.pn_greek || "", translit: w.translit || "", english: w.english || "",
           strongs: (w.strongs_base === "*") ? "" : tag((w.strongs && w.strongs !== "*") ? w.strongs : w.strongs_base),
           he: false,
           bracket_id: w.bracket_id,   // ABP translator-supplied words -> [ ] in the render (KJV/Hebrew leave this undefined)

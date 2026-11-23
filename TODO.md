@@ -12,8 +12,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
 ## Active lane — ABP edition upgrade (English line → the app's edition)
 - **STATE 11/22: THE UPGRADE IS LIVE AND STEP 8 IS CLOSED.** Live = the app edition since the 11/21 20:21 UTC swap (`7bb92e10`, DESIGN §9.235). P9, the first nightly after it, passed (§9.244). L9 on the new words closed as run (§9.245). Rulings = `docs/handoffs/DESIGN_q2_build.md` §9. Opener = the top of `docs/handoffs/HANDOFF_edition_upgrade_stageE.md`.
 - **Still ticking:** the rollback file `bible_pre_edition_upgrade_20261121.db` stays until three good nightlies (11/22 = #1) and a ruled removal. Also kept on PA until a ruled removal: the P4 live copy, src, pre_8b, the 10/25 pre-fill copy + snapshot.
-- **OWNED LEFTOVER 1 — the Bible-text batch (ruling chat 11/22; group 3, full care; nothing on live until cleared). ROWS CLEARED (DESIGN §9.247): `docs/handoffs/drafts/BIBLE_TEXT_BATCH/rows_20261122.tsv` + the one added row. The write block `block_btb.sh` waits for the ruling chat's clearance; after it runs, the cert pin moves to 403 in its own commit. Then size the KJV one-word-shift class by a read-only check, reviewer one round.** In it: Job 3:3, Joh 3:15, the nine stray " )" verses, the four doubled words read as errors against the Greek (2Ki 14:28, Jdg 20:34, Est 8:8, Luk 13:28), and KJV Joh 7:1, where every Strong's tag sits one word late (21 word rows, not one). Read as correct and left alone: Deu 24:8, Eze 11:12, Ezr 4:15, Joe 2:2, Joh 19:21. Owed with the write: cert pin 375 → 403 + member file; the existing active 2Ki 14:28 prose row is changed, not duplicated; the `--` source form on Luk 2:35, 2Ki 14:28, Jdg 20:34 (§9.80); ten verses in the frozen 607 punct list re-frozen.
-- **Dictionary quotes: DONE in code 11/22, live after deploy (§9.246).** Cards serve today's verse text by ref. **Still open, separate, not built:** check the prose of the 85 cards for wording that quotes the old English.
+- **KJV one-word tag shift: size the class (ruling chat 11/22, §9.247; read-only check, reviewer one round; not built).** KJV Joh 7:1 had every Strong's tag one word late after an untranslated καί; that verse is fixed. Whether other KJV verses have the same shift is not measured.
+- **Dictionary quotes: DONE and live 11/22 (§9.246).** Cards serve today's verse text by ref. **Still open, separate, not built:** check the prose of the 85 cards for wording that quotes the old English.
 - **`/rebuild-words` on the app edition: DONE 11/22** (`--app-feed`, the prose step 2b, Split 84, import_tipnr 31,592). Its figures were read on the pre-swap copy; no rebuild has run from the swapped live yet, so the first one reads every figure before it trusts it.
 - **Carried by name, not work orders unless JP raises them:** Split +4 (§9.205) · import_tipnr −57 (§9.210) · Mark 1:9 τῆς slot, verse text reads right (§9.210) · the C4 joined-slot rows and NO-EVIDENCE 2,140 · Jdg 11:7 1473 vs 5210 and built's Strong's numbers against the feed (§9.217-9.218) · the L9 carried set: 14 ambiguous filled-slot pairings, the 10-slot lint/sizer gap, 4 row-count-differs verses, 34 changed-after-split recipients (§9.245) · the declared-list lines for Est 5:9 @13, Jos 5:15 @27 and the five MOVED verses (§9.210) · `/rebuild-words` step 8's 10/25 G5 figures to mark as 10/25-only (§9.227).
 - HOLD (JP 10/30, not this lane): after the upgrade, does the app feed take over the Greek/Strong's role
@@ -40,8 +40,8 @@ banked, not scheduled, never pre-pitched. **Ideas** = nothing committed.
   `sqlite3 ~/bible-db/study.db "SELECT type, deleted, count(*) FROM entries GROUP BY type, deleted"`.
   The admin-gated `/api/study/for-name` route is a SEPARATE decision (rides Study's return — don't delete
   it reflexively).
-- **JP read-only sweeps (from 7/31):** bible-wide count of PN chips with NO Greek line in ABP chip view
-  (scopes the Hiram item to the class, not the sighting) · bible-wide `,,` count on `verses.text` (class or
+- **JP read-only sweeps (from 7/31):** bible-wide count of name chips still with NO Greek after the 11/22 fallback
+  (no card Greek either) · bible-wide `,,` count on `verses.text` (class or
   one-off — feeds the Van der Pool errata list).
 - **Eyeballs (verification debt, nothing blocks on them):** Ask-corpus mobile, both states (numbers verified
   at 375px; the VISUAL was never certified — the screenshot tool timed out) · Ask-corpus #20B acceptance
@@ -264,10 +264,7 @@ Write-class items are each a checkpoint lane that starts with a PA row read. Ope
 - **Star-slot G-number (vocative-O residue, own ruling):** Jer 15:5 Ιερουσαλήμ serves lemma-only/no-number
   while G2419 exists — an R-2 identity-rules question (FINDING in `docs/tickets/vocative_head_words.txt`).
 - **"Field" oddity** — capitalized 'field' (Isa 29:17 al.) serves a metaV PLACE card via name match (flag only).
-- **Hiram 1Ki 9:27: no Greek above the chip in ABP chip view** — the card header has Χειράμ, so likely not a
-  scrape gap: chip Greek reads `w.lemma||w.inflected` and abp_surface skips name slots (the 30,126-slot gap).
-  DIAGNOSE BEFORE TOUCHING (bh_scrape row + words/abp_surface; do other Greek-headed name chips show Greek?).
-  Page-attested-empty = a finding, not a fix. Count the class first (Owed checks).
+- **David spelling on name chips (listed, ruling chat 11/22, §9.248):** our Greek reads Δαβίδ at 1Sa 24:5 and 1Ch 21:9; the ABP app prints Δαυίδ there (Mat 22:42: both Δαβίδ). We keep ours; the Greek side of the feed is the HELD question in the active lane.
 - **Place-card raw fields:** `area: ">"` on 959 place records — TIPNR place rows use a different column layout
   (the read lands on a '>' marker); person-side `area` is mixed by design too (~1,150 "Tribe of X" vs ~400
   regions/periods). Parser pass (section='place' in `entity_resolution.parse_tipnr`) and/or display
@@ -315,6 +312,7 @@ Write-class items are each a checkpoint lane that starts with a PA row read. Ope
   FRAME-0. Design: `docs/RENDERING_OVERRIDES.md` ("Reader display layers" section).
 
 ### Word study & lexicon
+- **Hebrew word meanings: content pass (ruling chat 11/22, §9.248; not built).** `word_gloss`'s Hebrew side (TBESH + overrides) has one-word meanings that miss the word's range: ruach H7307 "spirit" (renders spirit 218, wind 104, breath 38), nephesh H5315 "soul" (life 228, self 225, person 81), and the rest of the loaded list in `build_word_gloss.py --summary`. Library's Hebrew cards read these today. Fix = a reviewed override pass; only then can the Word-study Hebrew header read `word_gloss` (tried 11/22, reverted).
 - **Greek text search / inflected-form lookup** (JP hit it 7/29 searching κύριε): Library in-text search is
   English-only by design (views_search.py). If built, it MUST compare accent-insensitively both sides (reuse
   the existing normalizer — `docs/tickets/accent_divergence.txt`; never write a second one) or it inherits the

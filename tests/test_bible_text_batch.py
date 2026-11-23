@@ -206,15 +206,18 @@ class Batch(unittest.TestCase):
 
     def test_cert_reads_at_403_and_puts_the_pin_back(self):
         import cert_invariants as C
-        seen = []
-        with mock.patch.object(C, "run_suite", lambda db: seen.append(C.PINS["abp_corrections_active"]) or 0):
-            B.run_cert(self.db)
-        self.assertEqual(seen, [B.ACTIVE_AFTER])
-        self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
-        with mock.patch.object(C, "run_suite", lambda db: 1):
-            with self.assertRaises(B.Stop):
+        pin = C.PINS["abp_corrections_active"]     # 403 since the batch landed (DESIGN 9.251)
+        with mock.patch.dict(C.PINS, {"abp_corrections_active": B.ACTIVE_BEFORE}):
+            seen = []
+            with mock.patch.object(C, "run_suite", lambda db: seen.append(C.PINS["abp_corrections_active"]) or 0):
                 B.run_cert(self.db)
-        self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
+            self.assertEqual(seen, [B.ACTIVE_AFTER])
+            self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
+            with mock.patch.object(C, "run_suite", lambda db: 1):
+                with self.assertRaises(B.Stop):
+                    B.run_cert(self.db)
+            self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
+        self.assertEqual(pin, B.ACTIVE_AFTER)
 
     def _audit_db(self, name, control=True, lsj=True):
         p = os.path.join(self.tmp.name, name)
