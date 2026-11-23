@@ -130,6 +130,17 @@ function pnPrintedPossessive(w) {
   return tok ? tok.replace(/^[^A-Za-z]+/, "").replace(/[^A-Za-z'’]+$/, "") : "";
 }
 
+// The card's name line for a possessive ("David's" -> "David"), ruling chat 11/23, DESIGN 9.252.
+// The bound or name-path entry's own name when it IS this name; a differently spelled or fuzzy
+// match never replaces it, so a card can't title itself with someone else. No match = the
+// printed word without its possessive. The verse's own wording is untouched everywhere else.
+function pnPossessiveName(printed, boundName, nameMatch) {
+  const stem = (printed || "").replace(/['’]s?$/i, "");
+  const fold = (s) => (s || "").toLowerCase().replace(/[^a-z]/g, "");
+  const entry = [boundName, nameMatch].find(n => n && fold(n) === fold(stem));
+  return entry || (stem ? stem.charAt(0).toUpperCase() + stem.slice(1) : "");
+}
+
 // A chip's Greek line: its dictionary form, else its printed form, else (a name word with
 // neither) the Greek name its card shows. pn_greek is served only for that last case.
 // chip_greek = a merged pair's joined line (mergePnChipPairs).
@@ -304,5 +315,5 @@ function navAfterVersionSwitch(n) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, pnClickPayload, libViewTransition, mergePnChipPairs, navAfterVersionSwitch };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, pnPossessiveName, pnClickPayload, libViewTransition, mergePnChipPairs, navAfterVersionSwitch };
 }

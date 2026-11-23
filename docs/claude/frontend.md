@@ -946,6 +946,10 @@ Server-side binding facts (pn_binding, slot binds, MetaV endpoints) live in data
   `extractProperName` needs a capital). `grep pnName:` over static/src must stay EMPTY. The
   payload is english_head-first (agreed with verified binds 14–0 in the 2026-07-29 divergence
   dump; `english` can be a whole rendered phrase).
+- **Possessive names (JP 2026-11-23, DESIGN 9.252):** the card's name line reads the name ("David"), from
+  the bound or name-path entry when it IS that name (`pnPossessiveName`), else the word without its
+  possessive. A fuzzy or differently spelled match never renames it. Lookups still key on pnName; chips and
+  verses keep the printed "David's".
 - **PN card family rules (JP rulings 2026-07-29/30):** ONE family, two densities. Headers:
   "Biblical Person"/"Biblical Place" on BOTH the verse-bound TIPNR card and the name-path metaV
   card (bound card's bare "Person"/"Place" was drift, unified). **NAME ALWAYS SHOWS:** every

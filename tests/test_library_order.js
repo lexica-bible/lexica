@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, mergePnChipPairs, pnClickPayload, libViewTransition, navAfterVersionSwitch } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, chipGreek, pnPossessiveName, mergePnChipPairs, pnClickPayload, libViewTransition, navAfterVersionSwitch } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -235,6 +235,18 @@ test("possessive PN shows the printed name; lookup key unchanged", () => {
   const plain = { english: "David,", english_head: "david", is_pn: true, strongs_base: "*" };
   assert.ok(!("pnDisplay" in pnClickPayload(plain, "")), "a plain name carries no display override");
   assert.strictEqual(greekLineForWord(plain).text, "David");
+});
+
+// 10b2. The card's name line for a possessive is the name itself, never a different person.
+test("possessive card name: the entry's own name, never a fuzzy other", () => {
+  assert.strictEqual(pnPossessiveName("David's", "", "David"), "David");
+  assert.strictEqual(pnPossessiveName("David's", "David", ""), "David");
+  assert.strictEqual(pnPossessiveName("David's", "", ""), "David", "no entry: the word without its possessive");
+  assert.strictEqual(pnPossessiveName("Moses'", "", "Moses"), "Moses");
+  assert.strictEqual(pnPossessiveName("Jesse's", "", "Jesus"), "Jesse", "a fuzzy match never renames it");
+  assert.strictEqual(pnPossessiveName("Jews'", "Judah", ""), "Jews", "a clan keeps its own name");
+  assert.strictEqual(pnPossessiveName("Beth-el's", "Bethel", ""), "Bethel", "same name, the entry's spelling");
+  assert.strictEqual(pnPossessiveName("", "David", "David"), "");
 });
 
 // 10c. A name word with no Greek of its own shows the card's Greek; its own always wins.

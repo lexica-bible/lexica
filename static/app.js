@@ -748,7 +748,9 @@ const sn=entry&&(entry.strongs_raw||entry.strongs_base);if(!sn||sn==="*"){setLex
 // on the resolved name in lane 1 but the TITLE still read the raw gloss, whose first
 // capital can be a stray sentence word ("Blind Pharisee," -> "Blind"). One precedence
 // everywhere: the word the bind resolved on is the word the header shows.
-const properName=extractProperName(entry.pnName||entry.gloss);const nameOrGloss=isPN||metavData?properName:entry.gloss;// trimPunct: tail punctuation only. trimTail (punct + leading-article strip) is for
+const properName=extractProperName(entry.pnName||entry.gloss);// A possessive click ("David's"): the name line reads the name itself. Display only;
+// every lookup above still keys off pnName. A merged pair's pnDisplay is its joined name.
+const possessiveName=entry.pnDisplay&&entry.pnMergePos==null?pnPossessiveName(entry.pnDisplay,boundEntity&&boundEntity.name,metavData&&metavData.name):"";const nameOrGloss=isPN||metavData?possessiveName||properName:entry.gloss;// trimPunct: tail punctuation only. trimTail (punct + leading-article strip) is for
 // NAME displays; the in-verse gloss must stay VERBATIM — stripArticles was eating
 // real wording ("His disciples" → "disciples", Mat 28:13, JP sighting 2026-07-31).
 const trimPunct=s=>s?.replace(/[.,;:!?—-]+$/,"").trim();const trimTail=s=>stripArticles(trimPunct(s));// The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
@@ -773,7 +775,7 @@ const giLemma=greekId&&greekId.lemma||"";// Hebrew-flash fix, hero leg: while th
 const hero=greekIdPending||isHebrewWord&&bdbLoading?{he:false,noGloss:true,script:" ",translit:"",standaloneGloss:"",morph:""}:{he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew&&!giLemma,// MERGED compound card (JP sweep verdict 2026-07-31): the IDENTITY JOIN is
 // the ONLY hero source — per-slot word fields (entry.greek/translit, joined
 // naively at the chip) produced half-names ("Γάδ" hero, "Gád · Dibon" row).
-script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.pnMergePos!=null?giLemma||nameOrGloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.pnMergePos!=null?giLemma?greekId.translit:"":entry.translit||(giLemma?greekId.translit:""),standaloneGloss:isPN||metavData?trimTail(entry.pnDisplay||properName):trimPunct(entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
+script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.pnMergePos!=null?giLemma||nameOrGloss:entry.greek||giLemma||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.pnMergePos!=null?giLemma?greekId.translit:"":entry.translit||(giLemma?greekId.translit:""),standaloneGloss:isPN||metavData?trimTail(possessiveName||entry.pnDisplay||properName):trimPunct(entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
 // it differs from the headword lemma (indeclinable words can coincide → skip it). For an
 // idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
 // redundant + mangled-looking next to the authored lemma, so drop it.
@@ -857,7 +859,7 @@ const peopleClan=isPeopleClan(be);// A bound person cross-linked to its rich Met
 const richPerson=!!be.metav&&!peopleClan;// When the group treatment fires, title the card with the PEOPLE term (the clicked
 // gloss, e.g. "Jews") and leave the ancestor to the Lineage line — the card is about
 // the people, not the individual.
-const clickName=extractProperName(entry.pnName||entry.gloss||"");const heroName=peopleClan&&clickName?clickName:be.name;// TIPNR 'other'-section records (34: deities, groups, months, constellations, the
+const clickName=possessiveName||extractProperName(entry.pnName||entry.gloss||"");const heroName=peopleClan&&clickName?clickName:be.name;// TIPNR 'other'-section records (34: deities, groups, months, constellations, the
 // temple pillars, Satan, Leviathan) used to all read "Identity". JP+reviewer ruling
 // 2026-07-16 (render charter R1–R4): type the heading from TIPNR's OWN description
 // words — no imported category (no "pagan"), the descr line carries the detail.
@@ -1683,7 +1685,11 @@ let li=cleaned.length-1;while(li>0&&!(cleaned[li].english||"").trim())li--;clean
 function lastRenderedIndex(words){let li=words.length-1;while(li>0&&!(words[li].english||words[li].english_head||"").trim())li--;return li;}// Group a position-sorted word list into runs by bracket_id for bracket notation rendering.
 function groupForGreekMode(words){const groups=[];let cur=null;for(const w of words){const bid=w.bracket_id!==null&&w.bracket_id!==undefined?w.bracket_id:null;if(bid===null){groups.push({isBracket:false,word:w});cur=null;}else{if(!cur||cur.bid!==bid){cur={isBracket:true,bid,words:[]};groups.push(cur);}cur.words.push(w);}}return groups;}// A possessive name's english_head is a folded lookup key ("davids"); the word the page
 // prints is "David's". Display only — every lookup still keys off the head.
-function pnPrintedPossessive(w){const head=(w.english_head||"").toLowerCase();if(!head)return"";const tok=(w.english||"").split(/\s+/).find(t=>/['’]/.test(t)&&t.replace(/[^A-Za-z]/g,"").toLowerCase()===head);return tok?tok.replace(/^[^A-Za-z]+/,"").replace(/[^A-Za-z'’]+$/,""):"";}// A chip's Greek line: its dictionary form, else its printed form, else (a name word with
+function pnPrintedPossessive(w){const head=(w.english_head||"").toLowerCase();if(!head)return"";const tok=(w.english||"").split(/\s+/).find(t=>/['’]/.test(t)&&t.replace(/[^A-Za-z]/g,"").toLowerCase()===head);return tok?tok.replace(/^[^A-Za-z]+/,"").replace(/[^A-Za-z'’]+$/,""):"";}// The card's name line for a possessive ("David's" -> "David"), ruling chat 11/23, DESIGN 9.252.
+// The bound or name-path entry's own name when it IS this name; a differently spelled or fuzzy
+// match never replaces it, so a card can't title itself with someone else. No match = the
+// printed word without its possessive. The verse's own wording is untouched everywhere else.
+function pnPossessiveName(printed,boundName,nameMatch){const stem=(printed||"").replace(/['’]s?$/i,"");const fold=s=>(s||"").toLowerCase().replace(/[^a-z]/g,"");const entry=[boundName,nameMatch].find(n=>n&&fold(n)===fold(stem));return entry||(stem?stem.charAt(0).toUpperCase()+stem.slice(1):"");}// A chip's Greek line: its dictionary form, else its printed form, else (a name word with
 // neither) the Greek name its card shows. pn_greek is served only for that last case.
 // chip_greek = a merged pair's joined line (mergePnChipPairs).
 function chipGreek(w){return w.chip_greek||w.lemma||w.inflected||w.pn_greek||"";}// THE GREEK-LINE FALLBACK CHAIN (mode three / faithful ABP interlinear): what to
@@ -1768,7 +1774,7 @@ s.showStrongs=true;s.showInterlinear=true;s.proseSnap=null;}else if(mode!=="pros
 // along"; this is the same lesson at the version-switch site, now in one shared,
 // tested function instead of a third hand-rolled copy.
 // Returns the SAME object when there is nothing to re-arm, so React skips the update.
-function navAfterVersionSwitch(n){if(!n||n.highlight==null)return n;const{translation,extern,...rest}=n;return{...rest,scroll:true,instant:true};}if(typeof module!=="undefined"&&module.exports){module.exports={getEnglishOrderWords,groupForGreekMode,orderBracketGroupWords,lastRenderedIndex,greekLineForWord,chipGreek,pnClickPayload,libViewTransition,mergePnChipPairs,navAfterVersionSwitch};}// ============================================================
+function navAfterVersionSwitch(n){if(!n||n.highlight==null)return n;const{translation,extern,...rest}=n;return{...rest,scroll:true,instant:true};}if(typeof module!=="undefined"&&module.exports){module.exports={getEnglishOrderWords,groupForGreekMode,orderBracketGroupWords,lastRenderedIndex,greekLineForWord,chipGreek,pnPossessiveName,pnClickPayload,libViewTransition,mergePnChipPairs,navAfterVersionSwitch};}// ============================================================
 // CHRONOLOGICAL RECONCILE — pure passage-lookup logic, factored OUT of LibraryView so ONE
 // copy is used by both the app (60-library.jsx: passageForRef + the reader-position
 // reconcile) and the Node unit test (tests/test_chrono_reconcile.js). No React here —

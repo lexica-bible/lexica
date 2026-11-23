@@ -859,7 +859,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // capital can be a stray sentence word ("Blind Pharisee," -> "Blind"). One precedence
   // everywhere: the word the bind resolved on is the word the header shows.
   const properName = extractProperName(entry.pnName || entry.gloss);
-  const nameOrGloss = (isPN || metavData) ? properName : entry.gloss;
+  // A possessive click ("David's"): the name line reads the name itself. Display only;
+  // every lookup above still keys off pnName. A merged pair's pnDisplay is its joined name.
+  const possessiveName = (entry.pnDisplay && entry.pnMergePos == null)
+    ? pnPossessiveName(entry.pnDisplay, boundEntity && boundEntity.name, metavData && metavData.name) : "";
+  const nameOrGloss = (isPN || metavData) ? (possessiveName || properName) : entry.gloss;
   // trimPunct: tail punctuation only. trimTail (punct + leading-article strip) is for
   // NAME displays; the in-verse gloss must stay VERBATIM — stripArticles was eating
   // real wording ("His disciples" → "disciples", Mat 28:13, JP sighting 2026-07-31).
@@ -901,7 +905,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit
       : (entry.pnMergePos != null ? (giLemma ? greekId.translit : "")
         : (entry.translit || (giLemma ? greekId.translit : "")))),
-    standaloneGloss: (isPN || metavData) ? trimTail(entry.pnDisplay || properName)
+    standaloneGloss: (isPN || metavData) ? trimTail(possessiveName || entry.pnDisplay || properName)
       : trimPunct(entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss),
     morph: morphLine,
   };
@@ -1044,7 +1048,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // When the group treatment fires, title the card with the PEOPLE term (the clicked
       // gloss, e.g. "Jews") and leave the ancestor to the Lineage line — the card is about
       // the people, not the individual.
-      const clickName = extractProperName(entry.pnName || entry.gloss || "");
+      const clickName = possessiveName || extractProperName(entry.pnName || entry.gloss || "");
       const heroName = (peopleClan && clickName) ? clickName : be.name;
       // TIPNR 'other'-section records (34: deities, groups, months, constellations, the
       // temple pillars, Satan, Leviathan) used to all read "Identity". JP+reviewer ruling
