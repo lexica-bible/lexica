@@ -1,0 +1,5 @@
+verse	cell	position_or_word_id	before	after	read
+1Co 5:13 (KJV)	kjv_strongs.strongs_id	730161	yourselves: G5216	yourselves: G5216+G846	The app's Greek here is εξ υμών αυτών, so 'yourselves' renders both G5216 and G846; no Greek word stands behind 'that'
+1Co 5:13 (KJV)	kjv_strongs.strongs_id	730162	that: G846	that: (none)	The app's Greek here is εξ υμών αυτών, so 'yourselves' renders both G5216 and G846; no Greek word stands behind 'that'
+Mar 7:11 (KJV)	kjv_strongs.strongs_id	639760	whatsoever: G1437	whatsoever: G1437+G3739	The app's Greek here is ο εάν, so 'whatsoever' renders both G3739 and G1437, as Mat 10:11 pairs G302 + G3739 on 'whatsoever'; no Greek word stands behind 'thou'
+Mar 7:11 (KJV)	kjv_strongs.strongs_id	639761	thou: G3739	thou: (none)	The app's Greek here is ο εάν, so 'whatsoever' renders both G3739 and G1437, as Mat 10:11 pairs G302 + G3739 on 'whatsoever'; no Greek word stands behind 'thou'
