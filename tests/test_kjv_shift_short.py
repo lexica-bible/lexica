@@ -57,9 +57,14 @@ class Write(unittest.TestCase):
         psa = S.load_plan("psa")
         self.assertEqual(len(psa), 6)
         self.assertEqual({p["key"] for p in psa}, {(19, 7, 1)})
+        two = S.load_plan("two")
+        self.assertEqual(len(two), 4)
+        self.assertEqual({p["key"] for p in two}, {(46, 5, 13), (41, 7, 11)})
+        for other in ("short", "psa"):
+            self.assertFalse({p["id"] for p in two} & {p["id"] for p in S.load_plan(other)})
 
     def test_round_trip_both_batches(self):
-        for batch in ("short", "psa"):
+        for batch in ("short", "psa", "two"):
             with self.subTest(batch):
                 self.build(batch)
                 start = self.tags()

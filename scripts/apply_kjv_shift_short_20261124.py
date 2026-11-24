@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """apply_kjv_shift_short_20261124.py - the KJV tag-shift rows after the long batch (DESIGN 9.259, 9.260).
 
-Two batches, each its own sha-pinned rows file, each cleared and run on its own:
+Three batches, each its own sha-pinned rows file, each cleared and run on its own:
   short  the 31 short verses, 107 rows (cleared, 9.259)
-  psa    Psa 7:1, 6 rows (brought for clearance, 9.260)
+  psa    Psa 7:1, 6 rows (cleared and run, 9.261)
+  two    1Co 5:13 and Mar 7:11, 4 rows (brought for clearance, 9.261)
 
   python3 scripts/apply_kjv_shift_short_20261124.py check short   READ-ONLY: every before-value
   python3 scripts/apply_kjv_shift_short_20261124.py apply short   the write: one all-or-nothing step
@@ -29,6 +30,7 @@ from read_leftovers_20261122 import Fit, kjv_key, shift_runs            # noqa: 
 BATCHES = {
     "short": ("rows_short_20261123.tsv", "58454d7405e05867616e8b2a7a7fe3c3215ed0414deb355454fbfdd1daee44ca", 107, 31),
     "psa": ("rows_psa7_1_20261124.tsv", "c6b043a6341348c154dbcea0a8ae514ff4aa3e8f4237eebefb058ea79c98c9f2", 6, 1),
+    "two": ("rows_two_verses_20261124.tsv", "d1ca037e3ed82aeaa62b692720eff00af7630f24141f1c45e3aa1505dc477b38", 4, 2),
 }
 BOOK_ID = {v: k for k, v in BOOKS.items()}
 
