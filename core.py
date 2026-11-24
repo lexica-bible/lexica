@@ -76,7 +76,7 @@ _HEB_NAME_STRONGS: set[str] = set()
 # and "xlit Birʻîy corrected to Birʼîy; from בַּיִת".
 _HEB_EDITOR_NOTE = re.compile(
     r"\s*(?<![A-Za-z])(?:lemma\s+[֐-׿\-]+[^;:]{0,80}?\bcorrected to\s+[֐-׿\-]+(?:\s+[֐-׿\-]+)*"
-    r"|xlit\s+[^;:]{1,40}?\s+corrected to\s+[^\s;:,.)]+)")
+    r"|xlit\s+[^;:]{1,40}?\s+corrected to\s+[^\s;:,.)]+(?:\s+[ʼʻ]?[A-ZÀ-ÖØ-Þ][^\s;:,.)]*)*)")
 
 
 def clean_heb_definition(text):

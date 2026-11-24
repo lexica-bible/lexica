@@ -100,6 +100,16 @@ class Write(unittest.TestCase):
         self.assertIn("for information only", out)
         self.assertIn("AFTER DONE", out)
 
+    def test_a_failed_detector_scan_does_not_stop_a_clean_run(self):
+        self.build("psa")
+        self.quiet(S.do_write, self.db, "psa", True)
+        def boom(conn, plan):
+            raise sqlite3.OperationalError("database is locked")
+        with mock.patch.object(S, "flagged", boom):
+            out = self.quiet(S.do_read, self.db, "psa", "after")
+        self.assertIn("did not run", out)
+        self.assertIn("AFTER DONE", out)
+
     def test_refuses_the_nightly_window(self):
         self.build("short")
         with mock.patch.object(K, "in_window", lambda: True):

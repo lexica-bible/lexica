@@ -84,8 +84,11 @@ def do_read(db, batch, side, scan=True):
             raise K.Stop(f"{len(bad)} {side}-value(s) differ from live:\n  " + "\n  ".join(bad[:40]))
         print(f"{side}-values: all {len(plan)} rows match live, {len({p['key'] for p in plan})} verses")
         if scan:
-            names = flagged(conn, plan)
-            print(f"detector, for information only: flags {len(names)} of these verses {names}")
+            try:
+                names = flagged(conn, plan)
+                print(f"detector, for information only (any run of 2+ tags): flags {len(names)} of these verses {names}")
+            except sqlite3.Error as e:      # the read-back above decides; a failed scan never stops a run
+                print(f"detector, for information only: did not run ({e})")
     finally:
         conn.close()
     print("CHECK DONE" if side == "before" else "AFTER DONE")

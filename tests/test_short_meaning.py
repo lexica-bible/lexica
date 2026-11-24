@@ -196,6 +196,8 @@ class Routes(unittest.TestCase):
                          "from the article (see הָלְאָה) and זֶה")
         self.assertEqual(core.clean_heb_definition("lemma פִּי הַחִרֹת yod, corrected to פִּי הַחִירֹת; xlit Pi corrected to Pîy; from פֶּה; mouth"),
                          "from פֶּה; mouth")
+        self.assertEqual(core.clean_heb_definition("xlit ʼĂram Tsôbâh corrected to ʼĂram Tsôwbâh; from אֲרָם and צוֹבָה"), "from אֲרָם and צוֹבָה")
+        self.assertEqual(core.clean_heb_definition("from בַּקְבֻּקxlit baqbûk corrected to baqbuq and יָהּ; emptying"), "from בַּקְבֻּק and יָהּ; emptying")
         for keep in ("a lemma of the root; to go", "corrected, to go straight", "", None):
             self.assertEqual(core.clean_heb_definition(keep), (keep or ""))
 
