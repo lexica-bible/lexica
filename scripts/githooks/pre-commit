@@ -93,6 +93,7 @@ python tests/test_bible_text_batch.py >/dev/null
 python tests/test_short_meaning.py >/dev/null
 python tests/test_split_and_font_checks.py >/dev/null
 python tests/test_kjv_shift_apply.py >/dev/null
+python tests/test_kjv_shift_short.py >/dev/null
 python tests/test_delete_account.py >/dev/null
 python tests/test_key_strongs_alias.py >/dev/null
 python tests/test_pin_retrieval_alias.py >/dev/null

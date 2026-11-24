@@ -72,14 +72,20 @@ _FUNCTION_STRONGS: set[str] = set()
 _HEB_NAME_STRONGS: set[str] = set()
 
 # Some Strong's Hebrew definitions (the `bdb` table) carry a source editor's note, glued on
-# with no space: "the same as נוֹדlemma נוֹדּ extra dagesh, corrected to נוֹד; vagrancy".
+# with no space, of two kinds: "the same as נוֹדlemma נוֹדּ extra dagesh, corrected to נוֹד; vagrancy"
+# and "xlit Birʻîy corrected to Birʼîy; from בַּיִת".
 _HEB_EDITOR_NOTE = re.compile(
-    r"\s*(?<![A-Za-z])lemma\s+[֐-׿\-]+[^;:]{0,80}?\bcorrected to\s+[֐-׿\-]+")
+    r"\s*(?<![A-Za-z])(?:lemma\s+[֐-׿\-]+[^;:]{0,80}?\bcorrected to\s+[֐-׿\-]+(?:\s+[֐-׿\-]+)*"
+    r"|xlit\s+[^;:]{1,40}?\s+corrected to\s+[^\s;:,.)]+)")
 
 
 def clean_heb_definition(text):
-    """A Strong's Hebrew definition without the source editor's note. Display only."""
-    return _HEB_EDITOR_NOTE.sub("", text or "").strip()
+    """A Strong's Hebrew definition without the source editor's notes. Display only."""
+    s = text or ""
+    c = _HEB_EDITOR_NOTE.sub("", s)
+    if c == s:
+        return s.strip()
+    return re.sub(r";(?:\s*;)+", ";", c).strip().lstrip(";, ")
 
 # In-memory L1 cache for AI-derived payloads (ai-search queries + xref synthesis/
 # curation). Shared by the AI and cross-reference blueprints; mutated IN PLACE
