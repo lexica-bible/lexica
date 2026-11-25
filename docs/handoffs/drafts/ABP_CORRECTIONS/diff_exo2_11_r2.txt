@@ -1,0 +1,186 @@
+diff --git a/scripts/apply_abp_corrections_exo2_11_20261124.py b/scripts/apply_abp_corrections_exo2_11_20261124.py
+index 06fc8c3d..85476c87 100644
+--- a/scripts/apply_abp_corrections_exo2_11_20261124.py
++++ b/scripts/apply_abp_corrections_exo2_11_20261124.py
+@@ -1,10 +1,13 @@
+ #!/usr/bin/env python3
+-"""apply_abp_corrections_exo2_11_20261124.py - Exo 2:11 "old er" -> "older" (DESIGN 9.266, rows 1-3).
++"""apply_abp_corrections_exo2_11_20261124.py - Exo 2:11 "old er" -> "older" (DESIGN 9.266 rows 1-3; 9.267 the finder key).
+ 
+ Writes the three cleared cells (the verse text, word 8's English, word 8's head word) and registers each in
+ abp_corrections, so the next words rebuild re-applies them (prose at finish step 4b, word cells at step 7).
+-The rows are rows 1-3 of the sha-pinned rows_20261124.tsv the ruling chat cleared; rows 4-8 (printed forms)
+-are not part of this write (DESIGN 9.266 (4)).
++In the same step it moves word 8's finder key (english_head_norm = number_fold.normalize of the head word,
++the column the Word-study English finder matches on), from rows_added_20261124.tsv; that cell gets no
++correction row because a rebuild recomputes it from the corrected head (/rebuild-words step 11).
++The rows are rows 1-3 of the sha-pinned rows_20261124.tsv the ruling chat cleared, plus the one sha-pinned
++added row; rows 4-8 (printed forms) are not part of this write (DESIGN 9.266 (4)).
+ 
+   python3 scripts/apply_abp_corrections_exo2_11_20261124.py check   READ-ONLY: every before-value + every gate
+   python3 scripts/apply_abp_corrections_exo2_11_20261124.py apply   the write: one all-or-nothing step
+@@ -12,14 +15,15 @@ are not part of this write (DESIGN 9.266 (4)).
+   python3 scripts/apply_abp_corrections_exo2_11_20261124.py undo    the way back, from the before-values
+ 
+ apply and undo each: refuse 13:00-14:30 UTC; take the write hold; re-read every starting value; write; read
+-every result back; count the changes (6); save only if all of that held.
++every result back; count the changes (7); save only if all of that held.
+ 
+ What this write moves, each read by `after`:
+   cert pin abp_corrections_active 403 -> 406
+     (members abp_corrections_active_live_20261122.txt -> abp_corrections_active_live_20261124.txt)
+ What it does not move, each read by `check` and `after`: words 626,309 and verses 31,237; the frozen punct
+ list (punct_members_live_20261122.txt, 601 members, word-order check clean); the phrase-gloss gate (<= 747);
+-the frozen abp_surface fill (Exo 2:11 @8 is not a fill slot).
++the frozen abp_surface fill (Exo 2:11 @8 is not a fill slot). Read for information, never written: the
++stored dictionary entry for G3173 (lexica_def), whose own build marks a draw stale when its evidence moves.
+ The pin in cert_invariants.py moves in its own commit AFTER `after` passes, so the code never claims 406
+ while live holds 403. Reuses the 11/22 batch's checks (apply_bible_text_batch_20261122.py) unchanged.
+ """
+@@ -35,11 +39,17 @@ from pathlib import Path
+ HERE = Path(__file__).resolve().parent
+ ROOT = HERE.parent
+ sys.path.insert(0, str(HERE))
++sys.path.insert(0, str(ROOT))                    # number_fold.py lives at the repo root
+ import apply_bible_text_batch_20261122 as B      # noqa: E402
+ 
+ Stop = B.Stop
+ ROWS = ROOT / "docs" / "handoffs" / "drafts" / "ABP_CORRECTIONS" / "rows_20261124.tsv"
+ ROWS_SHA = "47a8bd83b789514f0ab310443db35a12d2fbf81791ef2daa768609d124eec64f"   # cleared, DESIGN 9.266
++# DESIGN 9.267: the head word's finder key (words.english_head_norm, number_fold.normalize of the head;
++# scripts/build_rendering_norm.py) moves with it in the same step. A rebuild recomputes it at /rebuild-words
++# step 11, after the word corrections (finish_rebuild.sh step 7), so it gets no correction row.
++ADDED = ROWS.parent / "rows_added_20261124.tsv"
++ADDED_SHA = "f5833e3deebe4d52839bce22ea64411b8d5c74b953f8985801b6777f593fe71f"
+ ACTIVE_OLD, ACTIVE_OLD_SHA = B.ACTIVE_NEW, B.ACTIVE_NEW_SHA                       # the 403 on live since 11/22
+ ACTIVE_NEW = ROOT / "tests" / "fixtures" / "corrections" / "abp_corrections_active_live_20261124.txt"
+ ACTIVE_NEW_SHA = "1f5cec8fbae5b8326c289b8d272a912fcff77f29375c9368d76ac825b42b54f0"     # 403 + the 3 Exo 2:11 rows
+@@ -48,8 +58,10 @@ PUNCT, PUNCT_SHA, PUNCT_N = B.PUNCT_NEW, B.PUNCT_NEW_SHA, B.PUNCT_AFTER
+ KEY = ("Exo", 2, 11)
+ LEDGER = "EU-Exo2:11"
+ CREATED = "2026-11-24"
+-CHANGES = 6      # 1 verse + 2 word cells + 3 new correction rows
+-WORD_FIELDS = {"words.english": "english", "words.english_head": "english_head"}
++CHANGES = 7      # 1 verse + 3 word cells + 3 new correction rows
++WORD_FIELDS = {"words.english": "english", "words.english_head": "english_head",
++               "words.english_head_norm": "english_head_norm"}
++REGISTERED = ("english", "english_head")     # the word cells that get a correction row
+ 
+ 
+ def load_plan():
+@@ -64,12 +76,24 @@ def load_plan():
+             or any(B._ref(r["verse"]) != KEY for r in mine) or any(r["cell"].startswith("words") for r in rows[3:]) \
+             or any(r["cell"] == "verses.text" for r in rows[3:]):
+         raise Stop("rows 1-3 are not Exo 2:11's verse text, English and head word")
++    got = B.sha(ADDED)
++    if got != ADDED_SHA:
++        raise Stop(f"{ADDED.name}: sha {got}, pinned {ADDED_SHA}")
++    added = B._rows(ADDED)
++    if [(r["verse"], r["cell"]) for r in added] != [("Exo 2:11", "words.english_head_norm")]:
++        raise Stop(f"{ADDED.name} is not the one Exo 2:11 english_head_norm row")
+     prose = {"before": mine[0]["before"], "after": mine[0]["after"], "read": mine[0]["read"]}
+     words = [{"pos": int(r["position_or_word_id"]), "field": WORD_FIELDS[r["cell"]],
+-              "before": r["before"], "after": r["after"], "read": r["read"]} for r in mine[1:]]
++              "before": r["before"], "after": r["after"], "read": r["read"]} for r in mine[1:] + added]
+     if prose["before"].count("old er") != 1 or prose["before"].replace("old er", "older") != prose["after"] \
+-            or [(w["pos"], w["before"], w["after"]) for w in words] != [(8, "old er", "older"), (8, "er", "older")]:
+-        raise Stop("rows 1-3 are not the cleared old er -> older cells")
++            or [(w["pos"], w["field"], w["before"], w["after"]) for w in words] != [
++                (8, "english", "old er", "older"), (8, "english_head", "er", "older"),
++                (8, "english_head_norm", "er", "older")]:
++        raise Stop("the rows are not the cleared old er -> older cells")
++    from number_fold import normalize
++    head, norm = words[1], words[2]
++    if (normalize(head["before"]), normalize(head["after"])) != (norm["before"], norm["after"]):
++        raise Stop("the finder key row is not number_fold.normalize of the head word row")
+     return {"prose": prose, "words": words}
+ 
+ 
+@@ -78,7 +102,8 @@ def new_rows(plan):
+     em-dashes back as '--', checked by check_feed); word source_value = the live cell. (DESIGN 9.80.)"""
+     p = plan["prose"]
+     out = [(*KEY, -1, "verses.text", p["before"].replace("—", "--"), p["after"], p["read"])]
+-    out += [(*KEY, w["pos"], w["field"], w["before"], w["after"], w["read"]) for w in plan["words"]]
++    out += [(*KEY, w["pos"], w["field"], w["before"], w["after"], w["read"]) for w in plan["words"]
++            if w["field"] in REGISTERED]
+     return out
+ 
+ 
+@@ -129,6 +154,24 @@ def check_feed(plan):
+     print("prose source: = the rebuild's own prose text for Exo 2:11, byte for byte")
+ 
+ 
++def dictionary_note(conn):
++    """Information only, never stops: the stored dictionary entry for μέγας (lexica_def, admin-only rollout)
++    counts head words in its 'renders as' evidence; this write does not touch it. Its own build marks a draw
++    stale when that evidence changes (build_lexica_def.py, 'stale')."""
++    try:
++        if not conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='lexica_def'").fetchone():
++            print("dictionary (information only): no lexica_def table")
++            return
++        row = conn.execute("SELECT def_json FROM lexica_def WHERE strongs='G3173'").fetchone()
++        if row is None:
++            print("dictionary (information only): no G3173 entry")
++        else:
++            print(f"dictionary (information only): G3173 entry present; the text '\"er\"' appears in it "
++                  f"{(row[0] or '').count(chr(34) + 'er' + chr(34))} time(s); not written by this step")
++    except sqlite3.Error as e:
++        print(f"dictionary (information only): not read ({e})")
++
++
+ def check_fill(plan):
+     B.check_fill({"words": [{"key": KEY, "pos": w["pos"]} for w in plan["words"]]})
+ 
+@@ -166,16 +209,17 @@ def do_check(db):
+         bad = verify(conn, plan, "before")
+         if bad:
+             raise Stop(f"{len(bad)} before-value(s) differ:\n  " + "\n  ".join(bad))
+-        print(f"before-values: Exo 2:11 verse text + 2 word cells, {ACTIVE_BEFORE} active rows, no Exo 2:11 row yet: all as cleared")
++        print(f"before-values: Exo 2:11 verse text + 3 word cells, {ACTIVE_BEFORE} active rows, no Exo 2:11 row yet: all as cleared")
+         n, h = B.active_sha(conn)
+         if (n, h) != (ACTIVE_BEFORE, ACTIVE_OLD_SHA):
+             raise Stop(f"active row list {n} / {h} is not the pinned {ACTIVE_BEFORE}")
+         print(f"active corrections: {n}, member list sha {h} (= {ACTIVE_OLD.name})")
++        dictionary_note(conn)
+         check_feed(plan)
+     finally:
+         conn.close()
+     _gates(db, plan)
+-    print(f"plan: 1 verse + 2 word cells + 3 new correction rows ({LEDGER}) = {CHANGES} changes")
++    print(f"plan: 1 verse + 3 word cells (English, head word, finder key) + 3 new correction rows ({LEDGER}) = {CHANGES} changes")
+ 
+ 
+ def _write(conn, plan, forward):
+@@ -246,11 +290,12 @@ def do_after(db):
+         bad = verify(conn, plan, "after")
+         if bad:
+             raise Stop(f"{len(bad)} after-value(s) differ:\n  " + "\n  ".join(bad))
+-        print(f"after-values: Exo 2:11 verse text + 2 word cells + 3 new rows, {ACTIVE_AFTER} active rows: all as cleared")
++        print(f"after-values: Exo 2:11 verse text + 3 word cells + 3 new rows, {ACTIVE_AFTER} active rows: all as cleared")
+         n, h = B.active_sha(conn)
+         if (n, h) != (ACTIVE_AFTER, ACTIVE_NEW_SHA):
+             raise Stop(f"active row list {n} / {h} is not the new pinned list")
+         print(f"NEW PIN abp_corrections_active: {n}, member list sha {h} (= {ACTIVE_NEW.name})")
++        dictionary_note(conn)
+     finally:
+         conn.close()
+     _gates(db, plan)
+diff --git a/docs/handoffs/drafts/ABP_CORRECTIONS/block_exo2_11.sh b/docs/handoffs/drafts/ABP_CORRECTIONS/block_exo2_11.sh
+index 3fade31c..20144410 100644
+--- a/docs/handoffs/drafts/ABP_CORRECTIONS/block_exo2_11.sh
++++ b/docs/handoffs/drafts/ABP_CORRECTIONS/block_exo2_11.sh
+@@ -4,11 +4,11 @@ if [ -e "$D/started" ]; then echo "EXO 2:11: STOP - already ran, log kept: $D";
+ mkdir -p "$D"
+ A="$D/try_$(date -u +%H%M%S).log"
+ ( set -uo pipefail
+-  REF=8ab5e307
+-  XP=66426c002d3aaed50de94601420495725332d28a2920b7aea5873ad2c94f34f0
++  REF=8e18b428
++  XP=b4245c04b07c06c02d6d4f08de2f5570e727656414e4ddba724598f6ac6f21b0
+   P=scripts/apply_abp_corrections_exo2_11_20261124.py
+   export PYTHONIOENCODING=utf-8 PYTHONDONTWRITEBYTECODE=1 GIT_OPTIONAL_LOCKS=0
+-  echo "EXO 2:11 - old er -> older, 3 cells + 3 correction rows - REF $REF - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
++  echo "EXO 2:11 - old er -> older, 4 cells + 3 correction rows - REF $REF - PA HEAD $(git -C ~/bible-db log -1 --format=%h) - $(date -u +%FT%TZ)"
+   cd ~/bible-db || { echo "EXO 2:11: STOP - no ~/bible-db"; exit 1; }
+   t=$(date -u +%H%M)
+   if [ "$((10#$t))" -ge 1230 ] && [ "$((10#$t))" -lt 1430 ]; then echo "EXO 2:11: STOP - too near the 13:00-14:30 UTC window; nothing written"; exit 1; fi
