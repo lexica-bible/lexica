@@ -1,0 +1,9 @@
+verse	cell	position_or_word_id	before	after	read
+Exo 2:11	verses.text		And it came to pass in those many days, Moses becoming old er, he went forth to his brothers of the sons of Israel. And contemplating their misery, he saw an Egyptian man beating a certain Hebrew of his own brothers of the sons of Israel.	And it came to pass in those many days, Moses becoming older, he went forth to his brothers of the sons of Israel. And contemplating their misery, he saw an Egyptian man beating a certain Hebrew of his own brothers of the sons of Israel.	the app edition prints [3old er (a stray space); the old edition read older; the only such split in the 577,994 app cells
+Exo 2:11	words.english	8	old er	older	the app edition prints [3old er (a stray space); the old edition read older; the only such split in the 577,994 app cells
+Exo 2:11	words.english_head	8	er	older	the app edition prints [3old er (a stray space); the old edition read older; the only such split in the 577,994 app cells; the head word was the stray piece
+Psa 2:0	abp_surface.form | translit	1	(no row)	τω | tō	the app prints τω βψ. (Greek, then 'by' typed in the Greek font); the form is τω, as Psa 3:0, 4:0, 5:0 show it
+1Sa 7:13	abp_surface.form | translit	9	ψου | psou	του | tou	'you' typed in the Greek font (from the base build); the app prints του
+1Ki 8:44	abp_surface.form | translit	25	οφ ης | hoph ēs	ης | hēs	'of' typed in the Greek font before ης (from the frozen fill); the app prints ης
+Zec 3:5	abp_surface.form | translit	0	ανδ | and	(no row)	'and' typed in the Greek font (from the base build); the app prints και, the same letters as the dictionary word, so no form line (the builder's rule)
+Mat 6:13	abp_surface.form | translit	12	ότιδαγγερ | hótidanger	(no row)	'dagger' typed in the Greek font after ότι (from the frozen fill); ότι is the same letters as the dictionary word, so no form line (the builder's rule)
