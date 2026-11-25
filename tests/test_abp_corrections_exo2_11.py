@@ -1,6 +1,6 @@
 """The Exo 2:11 write (scripts/apply_abp_corrections_exo2_11_20261124.py, DESIGN 9.266), on a throwaway
 database built from the cleared before-values plus the REAL 403-row member list. Proves: it writes exactly the
-three cleared cells and three correction rows; the active list after it is the new pinned member file; any
+three cleared cells, the head word's finder key, and three correction rows; the active list after it is the new pinned member file; any
 differing before-value writes nothing; a second apply writes nothing; it refuses the nightly window; undo puts
 every table back byte for byte. Never touches bible.db.
 
@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import apply_abp_corrections_exo2_11_20261124 as E   # noqa: E402
 import apply_bible_text_batch_20261122 as B          # noqa: E402
 
-TABLES = {"verses": "id, book, chapter, verse, text", "words": "verse_id, position, english, english_head",
+TABLES = {"verses": "id, book, chapter, verse, text", "words": "verse_id, position, english, english_head, english_head_norm",
           "abp_corrections": "book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref, "
                              "applied_at, status, created"}
 
@@ -36,7 +36,7 @@ class Exo211(unittest.TestCase):
         c = sqlite3.connect(self.db)
         c.executescript("""
             CREATE TABLE verses (id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT, text TEXT);
-            CREATE TABLE words (verse_id INT, position INT, english TEXT, english_head TEXT);
+            CREATE TABLE words (verse_id INT, position INT, english TEXT, english_head TEXT, english_head_norm TEXT);
             CREATE TABLE kjv_strongs (word_id INT, strongs_id TEXT);
             CREATE TABLE abp_corrections (id INTEGER PRIMARY KEY, book TEXT NOT NULL, chapter INTEGER NOT NULL,
                 verse INTEGER NOT NULL, position INTEGER NOT NULL, field TEXT NOT NULL, source_value TEXT,
@@ -46,9 +46,9 @@ class Exo211(unittest.TestCase):
         vid = c.execute("INSERT INTO verses (book, chapter, verse, text) VALUES ('Exo', 2, 11, ?)",
                         (self.plan["prose"]["before"],)).lastrowid
         other = c.execute("INSERT INTO verses (book, chapter, verse, text) VALUES ('Exo', 2, 12, 'old er')").lastrowid
-        c.execute("INSERT INTO words VALUES (?, 8, 'old er', 'er')", (vid,))
-        c.execute("INSERT INTO words VALUES (?, 9, 'old er', 'er')", (vid,))      # same text, another slot
-        c.execute("INSERT INTO words VALUES (?, 8, 'old er', 'er')", (other,))    # same slot, another verse
+        c.execute("INSERT INTO words VALUES (?, 8, 'old er', 'er', 'er')", (vid,))
+        c.execute("INSERT INTO words VALUES (?, 9, 'old er', 'er', 'er')", (vid,))      # same text, another slot
+        c.execute("INSERT INTO words VALUES (?, 8, 'old er', 'er', 'er')", (other,))    # same slot, another verse
         ins = """INSERT INTO abp_corrections (book, chapter, verse, position, field, source_value, corrected_value, reason,
                  ledger_ref, applied_at, status, created) VALUES (?,?,?,?,?,'a','b','filler',?,'ingest','active','2026-11-22')"""
         for line in Path(E.ACTIVE_OLD).read_text(encoding="utf-8").splitlines():
@@ -90,8 +90,11 @@ class Exo211(unittest.TestCase):
     def test_plan_is_rows_1_to_3(self):
         self.assertEqual(self.plan["prose"]["after"].count("older"), 1)
         self.assertEqual([(w["field"], w["before"], w["after"]) for w in self.plan["words"]],
-                         [("english", "old er", "older"), ("english_head", "er", "older")])
-        self.assertEqual(len(E.new_rows(self.plan)), E.ACTIVE_AFTER - E.ACTIVE_BEFORE)
+                         [("english", "old er", "older"), ("english_head", "er", "older"),
+                          ("english_head_norm", "er", "older")])
+        rows = E.new_rows(self.plan)
+        self.assertEqual(len(rows), E.ACTIVE_AFTER - E.ACTIVE_BEFORE)
+        self.assertNotIn("english_head_norm", [r[4] for r in rows])     # recomputed at rebuild, no correction row
 
     def test_member_files(self):
         old = Path(E.ACTIVE_OLD).read_text(encoding="utf-8").splitlines()
@@ -108,12 +111,12 @@ class Exo211(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         rc, out = self.run_mode("apply")
         self.assertEqual(rc, 0, out)
-        self.assertIn("written: 6 changes", out)
+        self.assertIn("written: 7 changes", out)
         rc, out = self.run_mode("after")
         self.assertEqual(rc, 0, out)
         self.assertIn(f"NEW PIN abp_corrections_active: 406, member list sha {E.ACTIVE_NEW_SHA}", out)
-        self.assertEqual(self.q("SELECT english, english_head FROM words ORDER BY verse_id, position"),
-                         [("older", "older"), ("old er", "er"), ("old er", "er")])
+        self.assertEqual(self.q("SELECT english, english_head, english_head_norm FROM words ORDER BY verse_id, position"),
+                         [("older", "older", "older"), ("old er", "er", "er"), ("old er", "er", "er")])
         self.assertEqual(self.q("SELECT text FROM verses WHERE verse=12"), [("old er",)])
         rc, out = self.run_mode("undo")
         self.assertEqual(rc, 0, out)
@@ -137,6 +140,17 @@ class Exo211(unittest.TestCase):
         rc, out = self.run_mode("apply")
         self.assertEqual(rc, 1, out)
         self.assertEqual(self.digest(), once)
+
+    def test_a_stale_finder_key_saves_nothing(self):
+        c = sqlite3.connect(self.db)
+        c.execute("UPDATE words SET english_head_norm=NULL WHERE position=8 AND verse_id=1")
+        c.commit()
+        c.close()
+        start = self.digest()
+        rc, out = self.run_mode("apply")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("english_head_norm", out)
+        self.assertEqual(self.digest(), start)
 
     def test_refuses_the_nightly_window(self):
         start = self.digest()

@@ -1,0 +1,2 @@
+verse	cell	position_or_word_id	before	after	read
+Exo 2:11	words.english_head_norm	8	er	older	the finder key built from the head word (number_fold.normalize, scripts/build_rendering_norm.py); normalize("er") = "er", normalize("older") = "older"; the public finder returns G3173 once for "er" today; a rebuild recomputes it at /rebuild-words step 11, after the word corrections, so it needs no correction row
