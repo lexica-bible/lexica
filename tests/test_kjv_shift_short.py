@@ -62,9 +62,13 @@ class Write(unittest.TestCase):
         self.assertEqual({p["key"] for p in two}, {(46, 5, 13), (41, 7, 11)})
         for other in ("short", "psa"):
             self.assertFalse({p["id"] for p in two} & {p["id"] for p in S.load_plan(other)})
+        rel = S.load_plan("relative")
+        self.assertEqual((len(rel), len({p["key"] for p in rel})), (200, 89))
+        for other in ("short", "psa", "two"):
+            self.assertFalse({p["id"] for p in rel} & {p["id"] for p in S.load_plan(other)})
 
     def test_round_trip_both_batches(self):
-        for batch in ("short", "psa", "two"):
+        for batch in ("short", "psa", "two", "relative"):
             with self.subTest(batch):
                 self.build(batch)
                 start = self.tags()
