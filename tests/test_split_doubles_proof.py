@@ -15,6 +15,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -85,6 +86,35 @@ class Proof(unittest.TestCase):
             rows = list(csv.DictReader(f, delimiter="\t"))
         self.assertEqual(sorted((r["where"], r["kind"], r["position"]) for r in rows),
                          [("inside", "differs", "1"), ("inside", "only old", "0"), ("outside", "only new", "9")])
+
+    def test_restore_sets_the_pins_for_one_run_and_puts_them_back(self):
+        import restore_surface_fill as rs
+        before = {k: getattr(rs, k) for k in P.RESTORE_PINS}
+        seen = {}
+
+        def fake_main(argv):
+            seen.update({k: getattr(rs, k) for k in P.RESTORE_PINS}, argv=argv)
+            return 0
+        sha = "ab" * 32
+        with mock.patch.object(rs, "main", fake_main):
+            rc, out = self.run_tool("restore", "--sha", sha, "--counts", "3952,3412,539,1", "--base", "391142",
+                                    "--", "copy.db", "--snapshot", "new.tsv", "--apply")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual((seen["SNAPSHOT_SHA256"], seen["N_ROWS"], seen["N_INSERT"], seen["N_UPDATE"],
+                          seen["N_REMOVE"], seen["ROWS_BASE"]), (sha, 3952, 3412, 539, 1, 391142))
+        self.assertEqual(seen["argv"], ["copy.db", "--snapshot", "new.tsv", "--apply"])
+        self.assertEqual({k: getattr(rs, k) for k in P.RESTORE_PINS}, before)
+        self.assertIn("PROOF RESTORE RESULT: DONE", out)
+
+    def test_restore_refuses_bad_counts_a_bad_sha_and_a_base_inside(self):
+        import restore_surface_fill as rs
+        with mock.patch.object(rs, "main", lambda argv: self.fail("restore must not run")):
+            for args in (("--sha", "ab" * 32, "--counts", "3952,3412,539,2", "--base", "1", "--", "c.db"),
+                         ("--sha", "xyz", "--counts", "3,1,1,1", "--base", "1", "--", "c.db"),
+                         ("--sha", "ab" * 32, "--counts", "3,1,1,1", "--base", "1", "--", "c.db", "--base", "2")):
+                rc, out = self.run_tool("restore", *args)
+                self.assertEqual(rc, 1, out)
+                self.assertIn("RESULT: STOP", out)
 
     def test_refuses_bible_db_and_an_existing_output(self):
         live_named = self.d / "bible.db"

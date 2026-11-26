@@ -1,0 +1,3 @@
+book	chapter	verse	position	action	cls	form	old_form	note
+1Ki	22	45	16	insert	fill_resolved	γεγραμμένα		split doubles: the form moved from @15 'are' (loses its number) to the kept row @16 'written'; restore reason 6 at @15; DESIGN 9.280-9.284
+Luk	11	11	22	insert	fill_pronoun	αυτώ		unchanged on live by the split write; on the new builder table restore reason 2 (key 2 none, key 1 at 12 and 22); DESIGN 9.284

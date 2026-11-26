@@ -14,6 +14,11 @@ calls on a WHOLE-FILE COPY of live. Neither ever writes the database it reads.
         Verse ids and each differing slot's word come from --verses (the copy). Writes every slot that is not
         the same to --out (TSV). All three databases are opened read-only; --out must not exist.
 
+  restore --sha <sha256> --counts rows,inserts,updates,removes --base N -- <restore_surface_fill.py arguments>
+        (DESIGN 9.284) Run restore_surface_fill.py's own main() on a NEW frozen file before its pins move: its
+        file pin (SNAPSHOT_SHA256), its four counts and its base are set for this one run and put back after.
+        Every gate of the restore runs as written, and it still refuses live.
+
 Refuses live (~/bible-db/bible.db) and any file named bible.db, for every database argument.
 
   python3 scripts/split_doubles_proof_20261126.py save ~/run/proof.db ~/run/builder.db
@@ -124,8 +129,36 @@ def compare(new, old, verses, out):
     print(f"every slot not the same listed in {out} ({len(listed):,} rows)")
 
 
+RESTORE_PINS = ("SNAPSHOT_SHA256", "N_ROWS", "N_INSERT", "N_UPDATE", "N_REMOVE", "ROWS_BASE")
+
+
+def restore_new(rest, sha, counts, base):
+    """restore_surface_fill.py's own main() on a NEW frozen file (DESIGN 9.284), with its file pin, counts and
+    base set for this one run and put back after. Every gate of the restore runs as written; it still refuses
+    live and any file named bible.db."""
+    import restore_surface_fill as rs
+    if len(sha) != 64 or any(ch not in "0123456789abcdef" for ch in sha):
+        raise Stop(f"--sha {sha!r} is not a sha256")
+    n_rows, n_ins, n_upd, n_rem = counts
+    if n_rows != n_ins + n_upd + n_rem:
+        raise Stop(f"--counts: {n_rows} != {n_ins} + {n_upd} + {n_rem}")
+    if "--base" in rest:
+        raise Stop("give the base as this tool's --base, not inside the restore's arguments")
+    old = {k: getattr(rs, k) for k in RESTORE_PINS}
+    new = dict(zip(RESTORE_PINS, (sha, n_rows, n_ins, n_upd, n_rem, base)))
+    print("restore pins for this run only: " + ", ".join(f"{k} {old[k]} -> {new[k]}" for k in RESTORE_PINS))
+    try:
+        for k, v in new.items():
+            setattr(rs, k, v)
+        rc = rs.main(rest)
+    finally:
+        for k, v in old.items():
+            setattr(rs, k, v)
+    return rc
+
+
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Split double rows copy proof tools (DESIGN 9.281).")
+    ap = argparse.ArgumentParser(description="Split double rows copy proof tools (DESIGN 9.281, 9.284).")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("save")
     s.add_argument("db")
@@ -135,8 +168,24 @@ def main(argv=None):
     c.add_argument("old")
     c.add_argument("--verses", required=True)
     c.add_argument("--out", required=True)
+    r = sub.add_parser("restore")
+    r.add_argument("--sha", required=True, help="the new frozen file's sha256")
+    r.add_argument("--counts", required=True, help="rows,inserts,updates,removes of the new frozen file")
+    r.add_argument("--base", required=True, type=int, help="the builder table's row count")
+    r.add_argument("rest", nargs=argparse.REMAINDER, help="-- then restore_surface_fill.py's own arguments")
     a = ap.parse_args(argv)
     try:
+        if a.cmd == "restore":
+            rest = a.rest[1:] if a.rest[:1] == ["--"] else a.rest
+            try:
+                counts = tuple(int(x) for x in a.counts.split(","))
+            except ValueError:
+                counts = ()
+            if len(counts) != 4:
+                raise Stop(f"--counts {a.counts!r}: give four numbers, rows,inserts,updates,removes")
+            rc = restore_new(rest, a.sha, counts, a.base)
+            print(f"PROOF RESTORE RESULT: {'DONE' if rc == 0 else 'STOP'} (restore_surface_fill.py exit {rc})")
+            return rc
         if a.cmd == "save":
             save(a.db, a.out)
         else:
