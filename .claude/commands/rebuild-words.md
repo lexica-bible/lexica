@@ -80,7 +80,7 @@ output, if any, rides the step-8 deploy).
    `~/edition_upgrade_runs/step9a_apply_20261115/before.db`, sha256 `ea6c54c3…`, 391,141 rows, DESIGN 9.128; its
    standing home, ruled DESIGN 9.134, is the sha-checked copy `~/abp_surface_prefill_20261115.db` — the original
    stays. Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Since the 11/21 swap this check reads CURRENT on a
-   fresh copy of live (P8, DESIGN 9.238).** The 10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
+   fresh copy of live (P8, DESIGN 9.238); on the 11/26 file with --amend it read CURRENT 11/26 03:09Z (CHECK1126, DESIGN 9.274).** The 10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
    (passes only with the 10/25 pin). It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
    table or a fill slot's word row changed since the freeze (or the file is not the pinned one) —
    surface it, never overwrite (a re-freeze is a ruling: `--replace`, without `--check`). `<src>`
