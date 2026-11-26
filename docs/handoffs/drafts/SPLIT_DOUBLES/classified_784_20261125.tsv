@@ -1,0 +1,785 @@
+verse	strongs	position	english_1	english_2	form_1	form_2	kind	class	app	src_eng_1	src_eng_2	evidence	verdict
+Gen 1:22	4129	19	let	be multiplied	πληθυνέσθωσαν	πληθυνέσθωσαν	same-form	split	one-slot	let	be multiplied	one tag: 1let] be multipliedG4129	SPLIT: one Greek word on two rows
+Gen 3:16	4129	4	In multiplying	I will multiply	πληθύνων		form-missing	two-words	two-slots	In multiplying	I will multiply	two tags: In multiplyingG4129 | I will multiplyG4129	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 7:2	2033	9	seven	by seven,			form-missing	two-words	two-slots	seven	by seven,	two tags: sevenG2033 | by seven,G2033	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 7:3	2033	8	seven	by seven,			form-missing	two-words	two-slots	seven	by seven,	two tags: sevenG2033 | by seven,G2033	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 16:10	4129	6	In multiplying	I will multiply	πληθύνων		form-missing	two-words	two-slots	In multiplying	I will multiply	two tags: In multiplyingG4129 | I will multiplyG4129	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 19:15	4881	28	should	be destroyed together	συναπόλη	συναπόλη	same-form	split	one-slot	should	be destroyed together	one tag: 2should] be destroyed togetherG4881	SPLIT: one Greek word on two rows
+Gen 19:22	1410	7	I will	be able	δυνήσομαι	δυνήσομαι	same-form	split	one-slot	I will	be able	one tag: 2I will] be ableG1410	SPLIT: one Greek word on two rows
+Gen 21:12	1510.5	8	Let it	be	έστω	έστω	same-form	split	one-slot	Let it	be	one tag: 1Let it 3be]G1510.5	SPLIT: one Greek word on two rows
+Gen 22:17	4129	5	in multiplying	I will multiply	πληθύνων		form-missing	two-words	two-slots	in multiplying	I will multiply	two tags: in multiplyingG4129 | I will multiplyG4129	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 24:40	846	9	him,	he	αυτού		form-missing	two-words	two-slots	him,	he	two tags: him,G1473 | heG1473	NOT A SPLIT: two Greek words (9 tags, none cut)
+Gen 24:41	1325	18	they should	give her,	δώσι	δώσι	same-form	split	one-slot	they should	give her,	one tag: 1they should 3give her],G1325	SPLIT: one Greek word on two rows
+Gen 27:22	5456	15	voice	is the voice			form-missing	two-words	two-slots	voice	is the voice	two tags: voiceG5456 | is the voiceG5456	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 27:22	5495	20	hands	are the hands	χείρες	χείρες	same-form	two-words	two-slots	hands	are the hands	two tags: handsG5495 | are the handsG5495	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 28:3	2127	4	may	bless	ευλογήσαι	ευλογήσαι	same-form	split	one-slot	may	bless	one tag: 1may 3bless]G2127	SPLIT: one Greek word on two rows
+Gen 31:43	2364	7	daughters	are my daughters,	θυγατέρες	θυγατέρες	same-form	two-words	unclear	daughters	are my daughters,	two tags: daughtersG2364 | are my daughters,G2364	NOT A SPLIT: two Greek words (3 tags, none cut)
+Gen 32:26	2127	18	you should	bless.	ευλογήσης	ευλογήσης	same-form	split	one-slot	you should	bless.	one tag: 1you should 3bless].G2127	SPLIT: one Greek word on two rows
+Gen 32:28	2564	4	shall	be called	κληθήσεται	κληθήσεται	same-form	split	one-slot	shall	be called	one tag: 2shall 5be calledG2564	SPLIT: one Greek word on two rows
+Gen 34:23	1510.8.3	13	will they	be?	έσται	έσται	same-form	split	one-slot	will they	be?	one tag: 1will they 3be]?G1510.8.3	SPLIT: one Greek word on two rows
+Gen 38:9	1510.8.3	6	will	be	έσται	έσται	same-form	split	one-slot	will	be	one tag: 3will 5beG1510.8.3	SPLIT: one Greek word on two rows
+Gen 42:19	2722	5	let	be held	κατασχεθήτω	κατασχεθήτω	same-form	split	one-slot	let	be held	one tag: 1let 4be heldG2722	SPLIT: one Greek word on two rows
+Gen 43:14	815.1	24	have been made childless,	I have been made childless.	ητέκνωμαι	ητέκνωμαι	same-form	two-words	two-slots	have been made childless,	I have been made childless.	two tags: have been made childless,G815.1 | I have been made childless.G815.1	NOT A SPLIT: two Greek words (2 tags, none cut)
+Gen 44:26	3361	31	if	is not			form-missing	split	one-slot	if	is not	one tag: 1if] is notG3361	SPLIT: one Greek word on two rows
+Gen 49:6	3361	3	May	not			form-missing	split	one-slot	May	not	one tag: 1May 3notG3361	SPLIT: one Greek word on two rows
+Gen 49:6	3361	13	may	not			form-missing	split	one-slot	may	not	one tag: 1may 3notG3361	SPLIT: one Greek word on two rows
+Exo 5:5	2664	12	I shall	rest	καταπαύσωμεν	καταπαύσωμεν	same-form	split	one-slot	I shall	rest	one tag: 1I shall] restG2664	SPLIT: one Greek word on two rows
+Exo 5:21	1929	3	give	over	επίδοι	επίδοι	same-form	split	one-slot	give	over	one tag: [2give 4overG1929	SPLIT: one Greek word on two rows
+Exo 6:25	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Exo 8:14	2338.1	3	heaps upon	heaps,	θημωνίας	θημωνίας	same-form	two-words	two-slots	heaps upon	heaps,	two tags: heaps uponG2338.1 | heaps,G2338.1	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 10:24	665.1	24	let	run	αποτρεχέτω	αποτρεχέτω	same-form	split	one-slot	let	run	one tag: 1let] runG665.1	SPLIT: one Greek word on two rows
+Exo 12:39	2220	12	it was	leavened;	εζυμώθη	εζυμώθη	same-form	split	one-slot	it was	leavened,	one tag: 2it was] leavened,G2220	SPLIT: one Greek word on two rows
+Exo 12:39	1544	14	cast	out	εξέβαλον	εξέβαλον	same-form	split	one-slot	cast	out	one tag: [4cast 6outG1544	SPLIT: one Greek word on two rows
+Exo 14:3	4788	12	has closed	up	συγκέκλεικε	συγκέκλεικε	same-form	split	one-slot	has closed	up	one tag: [4has closed 6upG4788	SPLIT: one Greek word on two rows
+Exo 16:15	1492	15	they had	known	ήδεισαν	ήδεισαν	same-form	split	unclear	they had	known	one tag: 2they had] knownG1492	SPLIT: one Greek word on two rows
+Exo 16:16	4816	25	let	collect together!	συλλέξατε	συλλέξατε	same-form	split	one-slot	let	collect together!	one tag: 1let] collect together!G4816	SPLIT: one Greek word on two rows
+Exo 16:21	4404	3	morning	by morning,			form-missing	two-words	two-slots	morning	by morning,	two tags: morningG4404 | by morning,G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 16:34	659	7	put	aside	απέθηκεν		form-missing	split	one-slot	put	aside	one tag: [2put 4asideG659	SPLIT: one Greek word on two rows
+Exo 21:17	5100	3	any	of any one		τινά	form-missing	two-words	two-slots	any	of any one	two tags: anyG5100 | of any oneG5100	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 22:6	3588	14	the one	the		το	form-missing	two-words	two-slots	the one	the	two tags: 1the oneG3588 | 3theG3588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 23:30	3397	1	little	by little			form-missing	two-words	two-slots	little	by little	two tags: littleG3397 | by littleG3397	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 28:21	1510.5	3	let	be	έστωσαν	έστωσαν	same-form	split	one-slot	let	be	one tag: 1let] beG1510.5	SPLIT: one Greek word on two rows
+Exo 30:7	4404	8	in the morning	by morning.	το πρωϊ		form-missing	two-words	two-slots	in the morning	by morning.	two tags: in the morningG4404 | by morning.G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 33:3	3361	11	I will	go up			form-missing	split	one-slot	I will	go up	one tag: 2I will] go upG3361	SPLIT: one Greek word on two rows
+Exo 33:11	1799.1	5	face	to face,		ενωπίω	form-missing	two-words	two-slots	face	to face,	two tags: faceG1799.1 | to face,G1799.1	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 33:15	321	12	you should	lead	αναγάγης	αναγάγης	same-form	split	one-slot	you should	lead	one tag: 1you should 3lead]G321	SPLIT: one Greek word on two rows
+Exo 36:3	4404	29	morning	by morning.			form-missing	two-words	two-slots	morning	by morning.	two tags: morningG4404 | by morning.G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Exo 38:22	3588	2	the	son		του	form-missing	two-words	two-slots	the	son	two tags: theG3588 | sonG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Exo 38:23	3588	2	the	son		του	form-missing	two-words	two-slots	the	son	two tags: theG3588 | sonG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Exo 38:27	5007	25	talents,	a talent	τάλαντα		form-missing	two-words	two-slots	talents,	a talent	two tags: talents,G5007 | a talentG5007	NOT A SPLIT: two Greek words (3 tags, none cut)
+Lev 5:17	4160	17	he	do;	ποιείν	ποιείν	same-form	split	one-slot	he	do,	one tag: 1he] do,G4160	SPLIT: one Greek word on two rows
+Lev 6:12	4404	17	morning	by morning,	τοπρωϊ		form-missing	two-words	two-slots	in the morning	by morning;	two tags: in the morningG4404 | by morning;G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Lev 7:7	846	18	it,	it shall be to him.	αυτώ	αυτώ	same-form	two-words	two-slots	it,	it shall be to him.	two tags: it,G1473 | it shall be to him.G1473	NOT A SPLIT: two Greek words (3 tags, none cut)
+Lev 11:43	1510.8.5	23	you shall	be	έσεσθε	έσεσθε	same-form	split	one-slot	you shall	be	one tag: 1you shall 3be]G1510.8.5	SPLIT: one Greek word on two rows
+Lev 14:48	2511	23	shall declare	cleansed	καθαριεί	καθαριεί	same-form	split	one-slot	shall declare	cleansed	one tag: [3shall declare 6cleansedG2511	SPLIT: one Greek word on two rows
+Lev 17:13	444	1	the man,	a man			form-missing	two-words	unclear	the man,	a man	two tags: the man,G444 | a manG444	NOT A SPLIT: two Greek words (2 tags, none cut)
+Lev 20:9	444	0	The man,	a man			form-missing	two-words	unclear	The man,	a man	two tags: The man,G444 | a manG444	NOT A SPLIT: two Greek words (2 tags, none cut)
+Lev 22:20	1510.8.3	13	it shall	be	έσται	έσται	same-form	split	one-slot	it shall	be	one tag: 1it shall 3be]G1510.8.3	SPLIT: one Greek word on two rows
+Lev 24:16	3036	9	Let	stone	λιθοβολείτω	λιθοβολείτω	same-form	split	one-slot	Let	stone	one tag: 1Let 5stoneG3036	SPLIT: one Greek word on two rows
+Lev 27:10	2934	13	cattle for	cattle,		κτήνει	form-missing	two-words	two-slots	cattle for	cattle,	two tags: cattle forG2934 | cattle,G2934	NOT A SPLIT: two Greek words (2 tags, none cut)
+Lev 27:28	39	29	a holy	of holies		αγίων	form-missing	two-words	two-slots	a holy	of holies	two tags: [2a holyG39 | 3of holiesG39	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 4:19	1531	21	Let	enter!	εισπορευέσθωσαν	εισπορευέσθωσαν	same-form	split	one-slot	Let	enter!	one tag: 1Let] enter!G1531	SPLIT: one Greek word on two rows
+Num 5:12	435	8	The man,	a man	ανδρός	ανδρός	same-form	two-words	unclear	The man,	a man	two tags: The man,G435 | a manG435	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 7:85	4608.2	23	shekels,	the shekels	σίκλοι	σίκλοι	same-form	two-words	two-slots	shekels,	the shekels	two tags: shekels,G4608.2 | the shekelsG4608.2	NOT A SPLIT: two Greek words (5 tags, none cut)
+Num 10:20	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 10:23	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 10:24	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 10:25	3588	19	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Num 11:19	2068	3	You shall	eat,	φάγεσθε	φάγεσθε	same-form	split	one-slot	You shall	eat,	one tag: 1You shall 3eat],G2068	SPLIT: one Greek word on two rows
+Num 11:28	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Num 11:32	3588	22	the	one		το	form-missing	two-words	two-slots	the	one	two tags: theG3588 | oneG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+Num 14:6	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Num 14:6	3588	7	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Num 14:30	3588	22	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Num 15:34	4793	7	they did	interpret	συνέκριναν	συνέκριναν	same-form	split	one-slot	they did	interpret	one tag: 2they did] interpretG4793	SPLIT: one Greek word on two rows
+Num 16:15	2983	18	I have	taken,	είληφα	είληφα	same-form	split	one-slot	I have	taken,	one tag: 1I have 3taken],G2983	SPLIT: one Greek word on two rows
+Num 19:11	3588	0	The	one		του	form-missing	unmatched	unclear	The	one touching	source numbers at 0,1 = 3588,680	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Num 19:22	169	7	being unclean)	shall be unclean		ακάθαρτον	form-missing	two-words	two-slots	being unclean)	shall be unclean	two tags: being unclean)G169 | shall be uncleanG169	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 26:62	4902.1	17	they were	considered together	συνεπεσκέπησαν	συνεπεσκέπησαν	same-form	split	one-slot	they were	considered together	one tag: 2they were] considered togetherG4902.1	SPLIT: one Greek word on two rows
+Num 26:65	3588	22	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 27:3	1096	31	there were	born	εγένοντο	εγένοντο	same-form	split	unclear	there were	born	one tag: 1there were] bornG1096	SPLIT: one Greek word on two rows
+Num 28:21	1181	0	a tenth	tithe	δέκατον	δέκατον	same-form	two-words	two-slots	a tenth	tithe	two tags: [2a tenthG1181 | 3titheG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 28:29	1181	0	a tenth	tithe	δέκατον	δέκατον	same-form	two-words	two-slots	a tenth	tithe	two tags: a tenthG1181 | titheG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 29:4	1181	0	A tenth	tithe	δέκατον	δέκατον	same-form	two-words	two-slots	A tenth	tithe	two tags: A tenthG1181 | titheG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 29:10	1181	0	a tenth	tithe	δέκατον	δέκατον	same-form	two-words	two-slots	A tenth	tithe	two tags: A tenthG1181 | titheG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 29:15	1181	1	a tenth	tithe	δέκατον	δέκατον	same-form	two-words	two-slots	a tenth	tithe	two tags: a tenthG1181 | titheG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 32:1	5117	26	place	a place			form-missing	two-words	two-slots	place	a place	two tags: 2place]G5117 | a placeG5117	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 32:6	4198	13	Shall	go	πορεύσονται	πορεύσονται	same-form	split	one-slot	Shall	go	one tag: 1Shall] goG4198	SPLIT: one Greek word on two rows
+Num 32:12	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 32:41	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+Num 34:17	3588	15	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+Num 35:8	4183	13	many	will be many;	πολλά	πολλά	same-form	two-words	two-slots	many	will be many;	two tags: manyG4183 | will be many;G4183	NOT A SPLIT: two Greek words (2 tags, none cut)
+Num 35:19	3588	0	The	one		το	form-missing	unmatched	unclear	The	one acting as next of kin	source numbers at 0,1 = 3588,70.4	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 1:20	3588	10	the one	the			form-missing	unmatched	unclear	the one	the LORD	source numbers at 10,11 = 3588,2962	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 4:10	191	25	let	hear	ακουσάτωσαν	ακουσάτωσαν	same-form	split	one-slot	let	hear	one tag: 2let] hearG191	SPLIT: one Greek word on two rows
+Deu 4:38	2478	4	stronger	than	ισχυρότερά	ισχυρότερά	same-form	split	one-slot	stronger	than	one tag: 3stronger] thanG2478	SPLIT: one Greek word on two rows
+Deu 7:22	3397	13	little	and little.			form-missing	two-words	two-slots	little	by little.	two tags: littleG3397 | by little.G3397	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 8:3	2198	25	shall	live	ζήσεται	ζήσεται	same-form	split	one-slot	shall	live	one tag: 2shall 4liveG2198	SPLIT: one Greek word on two rows
+Deu 9:26	2962	7	O Lord,	LORD,	κύριε	κύριε	same-form	two-words	two-slots	O Lord,	the LORD,	two tags: O Lord,G2962 | the LORD,G2962	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 12:9	2240	2	you have	come	ήκατε	ήκατε	same-form	split	one-slot	you have	come	one tag: 2you have] comeG2240	SPLIT: one Greek word on two rows
+Deu 12:11	1563	15	there,	that there			form-missing	two-words	two-slots	there --	there	two tags: there --G1563 | thereG1563	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 15:11	3588	31	to the	one	τω	τω	same-form	unmatched	unclear	to the	one wanting	source numbers at 31,32 = 3588,1926.1	NOT A SPLIT: two Greek words (8 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 15:18	1510.8.3	2	It shall	be	έσται	έσται	same-form	split	one-slot	It shall	be	one tag: 1It shall 3be]G1510.8.3	SPLIT: one Greek word on two rows
+Deu 17:8	129	9	blood	and blood,		αίματος	form-missing	two-words	two-slots	blood	and blood,	two tags: bloodG129 | and blood,G129	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 17:8	2920	13	judgment	and judgment,		κρίσεως	form-missing	two-words	two-slots	judgment	and judgment,	two tags: judgmentG2920 | and judgment,G2920	NOT A SPLIT: two Greek words (4 tags, none cut)
+Deu 17:8	860	17	blow	and blow,		αφής	form-missing	two-words	two-slots	blow	and blow,	two tags: blowG860 | and blow,G860	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 17:8	485	21	dispute	and dispute,		αντιλογίας	form-missing	two-words	two-slots	dispute	and dispute,	two tags: disputeG485 | and dispute,G485	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 24:6	1757.2	8	takes	for security.	ενεχυράζει	ενεχυράζει	same-form	split	one-slot	takes	for security.	one tag: 2takes] for security.G1757.2	SPLIT: one Greek word on two rows
+Deu 26:9	1093	12	land —	a land	γην	γην	same-form	unmatched	unclear		a land	source numbers at 12,13 = 3778,1093	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 27:24	3588	1	the	one		τον	form-missing	unmatched	unclear	the	one striking	source numbers at 1,2 = 3588,5180	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 28:43	507	9	upward	and upward;			form-missing	two-words	two-slots	upward	and upward;	two tags: upwardG507 | and upward;G507	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 28:43	2736	14	lower	and lower.			form-missing	two-words	two-slots	lower	and lower.	two tags: lowerG2736 | and lower.G2736	NOT A SPLIT: two Greek words (2 tags, none cut)
+Deu 29:19	1096	18	May	happen,	γένοιτο	γένοιτο	same-form	split	one-slot	May	happen,	one tag: 1May 3happen],G1096	SPLIT: one Greek word on two rows
+Deu 32:8	1266	1	divided	into parts	διεμέριζεν	διεμέριζεν	same-form	split	one-slot	divided	into parts	one tag: [3divided 5into partsG1266	SPLIT: one Greek word on two rows
+Deu 32:32	4718	15	grape	is the grape			form-missing	unmatched	unclear		is the grape	source numbers at 15,16 = 1473,4718	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Deu 32:44	3588	35	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+Jos 2:11	2316	21	God	is the God			form-missing	unmatched	unclear		is the God	source numbers at 21,22 = 1473,2316	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Jos 3:4	4198	24	you have	gone	πεπόρευσθε	πεπόρευσθε	same-form	split	one-slot	you have	gone	one tag: 2you have] goneG4198	SPLIT: one Greek word on two rows
+Jos 4:23	633.3	0	caused	to dry up	αποξηράναντος	αποξηράναντος	same-form	split	one-slot	caused	to dry up	one tag: [3caused 8to dry upG633.3	SPLIT: one Greek word on two rows
+Jos 5:1	633.3	28	caused	to dry up	απεξήρανε	απεξήρανε	same-form	split	one-slot	caused	to dry up	one tag: [3caused 7to dry upG633.3	SPLIT: one Greek word on two rows
+Jos 6:7	3899	15	let	come near	παραπορευέσθωσαν	παραπορευέσθωσαν	same-form	split	one-slot	let	come near!	one tag: 1let] come near!G3899	SPLIT: one Greek word on two rows
+Jos 9:7	4785.1	12	you do	dwell together;	συκατοικής	συκατοικής	same-form	split	one-slot	you do	dwell together,	one tag: 1you do 3dwell together],G4785.1	SPLIT: one Greek word on two rows
+Jos 10:12	2476	23	Let	stand,	στήτω	στήτω	same-form	split	one-slot	Let	stand,	one tag: 1Let 4stand],G2476	SPLIT: one Greek word on two rows
+Jos 14:1	3588	18	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Jos 14:6	3588	13	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Jos 18:22	2532	4	and	Beth-el,		Βηθήλ	form-missing	two-words	unclear	and	Beth-el,	two tags: andG2532 | Beth-el,G2532	NOT A SPLIT: two Greek words (4 tags); label error: Beth-el is tagged G2532 (and) in the source; a name, G*
+Jos 19:51	3588	10	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (12 tags, none cut)
+Jos 22:20	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Jos 24:9	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Jdg 5:23	2962	18	of the LORD.	The LORD	κυρίου		form-missing	two-words	two-slots	of the LORD.	The LORD	two tags: of the LORD.G2962 | The LORDG2962	NOT A SPLIT: two Greek words (3 tags, none cut)
+Jdg 8:23	1473	7	I	you,		υμών	form-missing	two-words	two-slots	I	you,	two tags: 1I]G1473 | you,G1473	NOT A SPLIT: two Greek words (6 tags, none cut)
+Jdg 20:35	5159.1	1	put	to flight	ετρόπωσε	ετρόπωσε	same-form	split	one-slot	put	to flight	one tag: [2put 4to flightG5159.1	SPLIT: one Greek word on two rows
+1Sa 3:14	3660	3	have I	sworn by an oath	ώμοσα	ώμοσα	same-form	split	one-slot	have I	sworn by an oath	one tag: 1have I] sworn by an oathG3660	SPLIT: one Greek word on two rows
+1Sa 7:16	1763	3	year	by year	ενιαυτόν	ενιαυτόν	same-form	two-words	two-slots	year	by year	two tags: yearG1763 | by yearG1763	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Sa 12:6	3588	9	the	one		τον	form-missing	unmatched	unclear	the	one preparing	source numbers at 9,10 = 3588,4160	NOT A SPLIT: two Greek words (6 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 12:6	3588	17	the	one		τους	form-missing	unmatched	unclear	the	one leading	source numbers at 17,18 = 3588,321	NOT A SPLIT: two Greek words (6 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 14:13	3588	13	the	one		τα	form-missing	unmatched	unclear	the	one carrying	source numbers at 13,14 = 3588,142	NOT A SPLIT: two Greek words (6 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 14:13	3588	30	the	one		τα	form-missing	unmatched	unclear	the	one carrying	source numbers at 30,31 = 3588,142	NOT A SPLIT: two Greek words (6 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 14:14	3588	10	the	one		τα	form-missing	unmatched	unclear	the	one carrying	source numbers at 10,11 = 3588,142	NOT A SPLIT: two Greek words (5 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 14:17	3588	24	the	one		τα	form-missing	unmatched	unclear	the	one carrying	source numbers at 24,25 = 3588,142	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 14:39	3588	3	the	one		τον	form-missing	unmatched	unclear	the	one delivering	source numbers at 3,4 = 3588,4982	NOT A SPLIT: two Greek words (5 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 15:33	815.1	6	made	childless	ητέκνωσε	ητέκνωσε	same-form	split	one-slot	made	childless	one tag: [3made 5childlessG815.1	SPLIT: one Greek word on two rows
+1Sa 17:7	3588	17	the	one		τα	form-missing	unmatched	unclear	the	one lifting	source numbers at 17,18 = 3588,142	NOT A SPLIT: two Greek words (5 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Sa 19:4	264	16	Let	sin	αμαρτησάτω	αμαρτησάτω	same-form	split	one-slot	Let	sin	one tag: 1Let 5sinG264	SPLIT: one Greek word on two rows
+1Sa 20:2	3778	40	This	so.	τούτο	τούτο	same-form	split	unclear	This	so.	one tag: 1This] so.G3778	SPLIT: one Greek word on two rows
+1Sa 20:26	1510.1	15	to	be;	είναι	είναι	same-form	split	one-slot	to	be,	one tag: 1to 3be],G1510.1	SPLIT: one Greek word on two rows
+1Sa 20:30	1492	15	do you	know	οίδα	οίδα	same-form	split	one-slot	do you	know	one tag: 2do you] knowG1492	SPLIT: one Greek word on two rows
+1Sa 26:20	4098	3	may	fall	πέσοι	πέσοι	same-form	split	one-slot	may	fall	one tag: 1may 4fallG4098	SPLIT: one Greek word on two rows
+1Sa 28:19	3326	17	will be with	with		μετ'	form-missing	two-words	two-slots	will be with	with	two tags: will be withG3326 | withG3326	NOT A SPLIT: two Greek words (3 tags, none cut)
+1Sa 30:22	520	39	let	take away,	απαγέσθωσαν	απαγέσθωσαν	same-form	split	one-slot	let	take away,	one tag: 1let 3take away],G520	SPLIT: one Greek word on two rows
+2Sa 2:26	2036	26	shall you	speak	είπης	είπης	same-form	split	one-slot	shall you	speak	one tag: 1shall you] speakG2036	SPLIT: one Greek word on two rows
+2Sa 3:35	4018.4	6	to eat	at the wake		περιδειπνήσαι	form-missing	split	unclear	to eat	at the wake	one tag: to cause [2to eat 4at the wakeG4018.4	SPLIT: one Greek word on two rows
+2Sa 11:10	2064	22	Are	come?	έρχη	έρχη	same-form	split	one-slot	Are	come?	one tag: 1Are 4come]?G2064	SPLIT: one Greek word on two rows
+2Sa 13:4	4404	8	morning	by morning,	τοπρωϊ		form-missing	two-words	two-slots	morning	by morning,	two tags: morningG4404 | by morning,G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Sa 14:7	3588	13	the	one	τον	τον	same-form	unmatched	unclear	the	one hitting	source numbers at 13,14 = 3588,3817	NOT A SPLIT: two Greek words (11 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+2Sa 14:14	2983	16	God shall	take	λήψεται	λήψεται	same-form	split	one-slot	God shall	take	one tag: 1God shall] takeG2983	SPLIT: one Greek word on two rows
+2Sa 15:20	4198	17	I shall go.	Go,		πορεύου	form-missing	two-words	two-slots	I shall go.	Go,	two tags: I shall go.G4198 | Go,G4198	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Sa 18:33	1473	34	you,	I	σου		form-missing	two-words	two-slots	you,	I	two tags: you,G1473 | IG1473	NOT A SPLIT: two Greek words (10 tags, none cut)
+2Sa 19:13	1510.8.2	27	you shall	be	έση	έση	same-form	split	one-slot	you shall	be	one tag: 1you shall 3be]G1510.8.2	SPLIT: one Greek word on two rows
+2Sa 19:38	1224	6	Let	pass over	διαβήτω	διαβήτω	same-form	split	one-slot	Let	pass over	one tag: 1Let 3pass overG1224	SPLIT: one Greek word on two rows
+2Sa 22:26	121	5	the innocent	you shall be innocent,	αθώου		form-missing	two-words	two-slots	the innocent	you shall be innocent,	two tags: the innocentG121 | you shall be innocent,G121	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Sa 22:27	1588	2	the chosen	you shall be chosen,	εκλεκτού		form-missing	two-words	two-slots	the chosen	you shall be chosen;	two tags: the chosenG1588 | you shall be chosen;G1588	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Sa 23:17	4095	18	I drink	, no.	πιόμαι	πιόμαι	same-form	split	unclear	I drink	, no.	one tag: 1I drink], no.G4095	SPLIT: one Greek word on two rows
+1Ki 5:8	1473	12	me.	I	με		form-missing	two-words	two-slots	me.	I	two tags: me.G1473 | IG1473	NOT A SPLIT: two Greek words (3 tags, none cut)
+1Ki 6:25	1520	7	one	and	ενί	ενί	same-form	split	one-slot	one	and	one tag: 1one] andG1520	SPLIT: one Greek word on two rows
+1Ki 6:27	4420	47	wing	to wing.		πτέρυγος	form-missing	two-words	two-slots	wing	to wing.	two tags: wingG4420 | to wing.G4420	NOT A SPLIT: two Greek words (6 tags, none cut)
+1Ki 14:3	846	16	him —	he	αυτόν		form-missing	two-words	two-slots	him.	He	two tags: him.G1473 | HeG1473	NOT A SPLIT: two Greek words (4 tags, none cut)
+1Ki 14:29	1125	13	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 15:7	1125	13	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 16:5	1125	17	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 16:14	1125	13	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 16:20	1125	15	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 16:27	1125	17	are	written	γεγραμμένα	γεγραμμένα	same-form	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+1Ki 18:23	2007	20	put	upon it!	επιθέτωσαν	επιθέτωσαν	same-form	split	one-slot	put	upon it!	one tag: 2put] upon it!G2007	SPLIT: one Greek word on two rows
+1Ki 18:23	2007	32	will I put	upon it.	επίθω	επίθω	same-form	split	one-slot	will I put	upon it.	one tag: 2will I put] upon it.G2007	SPLIT: one Greek word on two rows
+1Ki 18:25	2007	28	put	upon it!	επίθητε	επίθητε	same-form	split	one-slot	put	upon it!	one tag: 2put] upon it!G2007	SPLIT: one Greek word on two rows
+1Ki 18:27	96.2	16	in	meditation			form-missing	split	one-slot	in	meditation	one tag: [3in 5meditationG96.2	SPLIT: one Greek word on two rows
+1Ki 22:39	1125	24	have	been written	γέγραπται	γέγραπται	same-form	split	one-slot	have	been written	one tag: 2have] been writtenG1125	SPLIT: one Greek word on two rows
+1Ki 22:45	1125	15	are	written	γεγραμμένα		form-missing	split	one-slot	are	written	one tag: 2are] writtenG1125	SPLIT: one Greek word on two rows
+2Ki 3:16	999	9	cistern upon	cistern.	βοθύνους	βοθύνους	same-form	two-words	two-slots	cistern upon	cistern.	two tags: cistern uponG999 | cistern.G999	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Ki 7:2	4487	30	this thing	, no.			form-missing	split	unclear	this thing	, no.	one tag: 1this thing], no.G4487	SPLIT: one Greek word on two rows
+2Ki 7:19	4487	21	this thing	, no.			form-missing	split	unclear	this thing	, no.	one tag: 1this thing], no.G4487	SPLIT: one Greek word on two rows
+2Ki 17:29	1484	3	nation	by nation			form-missing	two-words	two-slots	nation	by nation	two tags: 1nationG1484 | 2 by nation]G1484	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ki 17:29	1484	19	nation	by nation			form-missing	two-words	two-slots	nation	by nation	two tags: nationG1484 | by nationG1484	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ki 18:32	1093	11	land,	a land	γην	γην	same-form	unmatched	unclear		a land	source numbers at 11,12 = 1473,1093	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+1Ch 6:62	575	14	and	from	και		form-missing	two-words	unclear	and	from	two tags: andG575 | fromG575	NOT A SPLIT: two Greek words (5 tags); label error: 'and' is tagged G575 (from) in the source; the printed form is και, G2532
+1Ch 9:27	4404	18	morning	by morning,	τοπρωϊ		form-missing	two-words	two-slots	morning	by morning,	two tags: morningG4404 | by morning,G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Ch 23:13	39	10	the holy	of holies,		αγίων	form-missing	two-words	two-slots	the holy	of holies,	two tags: the holyG39 | of holies,G39	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Ch 26:17	1417	17	two	by two			form-missing	two-words	two-slots	two	by two	two tags: twoG1417 | by twoG1417	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Ch 26:18	1417	8	two	by two			form-missing	two-words	two-slots	two	by two	two tags: twoG1417 | by twoG1417	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Ch 26:24	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 26:24	3588	5	the	son		του	form-missing	two-words	two-slots	the	son	two tags: theG3588 | sonG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 26:28	3588	14	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+1Ch 26:28	3588	19	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+1Ch 26:28	3588	24	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+1Ch 27:2	3588	11	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+1Ch 27:5	3588	11	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (10 tags, none cut)
+1Ch 27:16	3588	14	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 27:18	3588	9	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 27:19	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+1Ch 27:19	3588	9	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+1Ch 27:20	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+1Ch 27:21	3588	9	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+1Ch 27:21	3588	16	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+1Ch 27:22	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 27:24	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+1Ch 27:25	3588	7	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (12 tags, none cut)
+1Ch 27:25	3588	34	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (12 tags, none cut)
+1Ch 27:26	3588	9	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 27:27	3588	18	the	one of		του	form-missing	two-words	two-slots	the	one of	two tags: theG3588 | one ofG3588	NOT A SPLIT: two Greek words (8 tags, none cut)
+1Ch 27:32	3588	13	the one	of the		του	form-missing	two-words	two-slots	the one	of the	two tags: the oneG3588 | of theG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Ch 27:34	3588	5	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (3 tags, none cut)
+2Ch 9:18	5294	9	he placed	under	υπέθηκεν	υπέθηκεν	same-form	split	one-slot	he placed	under	one tag: 1he placed 5underG5294	SPLIT: one Greek word on two rows
+2Ch 9:24	1763	23	year by	year.	ενιαυτόν	ενιαυτόν	same-form	two-words	two-slots	year by	year.	two tags: year byG1763 | year.G1763	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Ch 13:11	4404	5	in the morning	by morning,	τοπρωϊ		form-missing	two-words	two-slots	morning	by morning,	two tags: morningG4404 | by morning,G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Ch 13:11	2073	9	evening	by evening;	εσπέρας	εσπέρας	same-form	two-words	two-slots	evening	to evening,	two tags: eveningG2073 | to evening,G2073	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ch 13:11	2073	34	evening	by evening;	εσπέρας	εσπέρας	same-form	two-words	two-slots	evening	by evening.	two tags: eveningG2073 | by evening.G2073	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ch 17:16	3588	4	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ch 19:2	3588	6	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+2Ch 19:2	5373.1	26	befriend	, no.	φιλιάζεις	φιλιάζεις	same-form	split	unclear	befriend	, no.	one tag: 2befriend], no.G5373.1	SPLIT: one Greek word on two rows
+2Ch 20:10	846	19	them,	in	αυτών	αυτών	same-form	unmatched	unclear	them,	in their coming forth	source numbers at 19,20 = 1473,1831	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+2Ch 20:14	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+2Ch 20:37	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: 2theG3588 | 3 son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+2Ch 25:25	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: 2theG3588 | 3 son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+2Ch 28:12	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+2Ch 28:12	3588	13	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+2Ch 28:12	3588	18	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+2Ch 28:12	3588	23	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+2Ch 29:12	3588	5	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 29:12	3588	10	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 29:12	3588	23	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 29:12	3588	28	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 29:12	3588	37	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 29:12	3588	42	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (16 tags, none cut)
+2Ch 30:3	1410	2	they were	able	εδυνήθησαν	εδυνήθησαν	same-form	split	one-slot	they were	able	one tag: 2they were] ableG1410	SPLIT: one Greek word on two rows
+2Ch 31:6	4987.2	27	heaps	upon heaps.	σωρούς	σωρούς	same-form	two-words	two-slots	heaps	upon heaps.	two tags: heapsG4987.2 | upon heaps.G4987.2	NOT A SPLIT: two Greek words (2 tags, none cut)
+2Ch 31:14	3588	2	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+2Ch 32:15	4982	45	shall	deliver	σώσει	σώσει	same-form	split	one-slot	shall	deliver	one tag: 2shall] deliverG4982	SPLIT: one Greek word on two rows
+Ezr 3:2	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: 2theG3588 | 3 son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+Ezr 3:2	3588	14	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (11 tags, none cut)
+Ezr 3:8	3588	23	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: 2theG3588 | 3 son ofG3588	NOT A SPLIT: two Greek words (20 tags, none cut)
+Ezr 3:8	3588	28	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (20 tags, none cut)
+Ezr 5:1	3588	7	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Ezr 5:2	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Ezr 6:3	3618	19	Let	be built,	οικοδομηθήτω	οικοδομηθήτω	same-form	split	one-slot	Let	be built,	one tag: 1Let] be built,G3618	SPLIT: one Greek word on two rows
+Ezr 7:12	935	1	king	of kings,		βασιλέων	form-missing	two-words	two-slots	king	of kings,	two tags: kingG935 | of kings,G935	NOT A SPLIT: two Greek words (2 tags, none cut)
+Neh 1:8	1473	13	You,	I	υμείς		form-missing	two-words	two-slots	You,	I	two tags: 1You],G1473 | IG1473	NOT A SPLIT: two Greek words (5 tags, none cut)
+Neh 5:9	565	15	Should you	go forth	απελεύσεσθε	απελεύσεσθε	same-form	split	one-slot	Should you	go forth	one tag: 1Should you 3go forth]G565	SPLIT: one Greek word on two rows
+Est 1:19	1325	31	let	give	δότω	δότω	same-form	split	one-slot	let	give	one tag: 1let 4giveG1325	SPLIT: one Greek word on two rows
+Est 2:5	3588	12	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Est 2:17	2037.1	1	loved	passionately	ηράσθη	ηράσθη	same-form	split	one-slot	loved	passionately	one tag: [3loved 5passionatelyG2037.1	SPLIT: one Greek word on two rows
+Job 3:4	1510.4	3	May	be	είη	είη	same-form	split	one-slot	May	be	one tag: 1May 3be]G1510.4	SPLIT: one Greek word on two rows
+Job 3:4	327	8	may	search	αναζητήσαι		form-missing	split	unclear	may	search	one tag: 1may 5search 7outG327	SPLIT: one Greek word on two rows
+Job 3:4	327	9	search	out		αναζητήσαι	form-missing	split	unclear	search	out	one tag: 1may 5search 7outG327	SPLIT: one Greek word on two rows
+Job 3:5	1583.1	0	may	take	εκλάβοι	εκλάβοι	same-form	split	one-slot	may	take	one tag: [2may 7takeG1583.1	SPLIT: one Greek word on two rows
+Job 3:6	667	5	have carried	away	απενέγκαιτο	απενέγκαιτο	same-form	split	unclear	have carried	away	one tag: May [2have carried 4awayG667	SPLIT: one Greek word on two rows
+Job 3:7	1510.4	4	may	be	είη	είη	same-form	split	one-slot	may	be	one tag: 1may] beG1510.4	SPLIT: one Greek word on two rows
+Job 3:23	613	3	was	concealed,	απεκρύβη	απεκρύβη	same-form	split	one-slot	was	concealed,	one tag: 3was] concealed,G613	SPLIT: one Greek word on two rows
+Job 4:16	3444	8	there	an appearance			form-missing	split	one-slot	there	appearance	one tag: 1there] appearanceG3444	SPLIT: one Greek word on two rows
+Job 4:16	191	17	I heard	, saying,	ήκουον	ήκουον	same-form	split	one-slot	I heard	, saying,	one tag: 1I heard], saying,G191	SPLIT: one Greek word on two rows
+Job 4:20	622	14	they	perish.	απώλοντο	απώλοντο	same-form	split	one-slot	they	perish.	one tag: 2they] perish.G622	SPLIT: one Greek word on two rows
+Job 5:4	1096	1	May	be	γένοιντο	γένοιντο	same-form	split	one-slot	May	be	one tag: 1May 3beG1096	SPLIT: one Greek word on two rows
+Job 5:16	1719.2	7	may	be obstructed.	εμφραχθείη	εμφραχθείη	same-form	split	one-slot	may	be obstructed.	one tag: 2may] be obstructed.G1719.2	SPLIT: one Greek word on two rows
+Job 6:5	2212	10	seeking	, no.	ζητών	ζητών	same-form	split	unclear	seeking	, no.	one tag: 1seeking], no.G2212	SPLIT: one Greek word on two rows
+Job 6:6	2756	10	empty	, no.	κενοίς	κενοίς	same-form	split	unclear	empty	, no.	one tag: 1empty], no.G2756	SPLIT: one Greek word on two rows
+Job 6:9	5103.1	3	let	pierce;	τρωσάτω	τρωσάτω	same-form	split	one-slot	let	pierce;	one tag: 1let] pierce;G5103.1	SPLIT: one Greek word on two rows
+Job 6:9	337	10	let	be done away with!	ανελέτω	ανελέτω	same-form	split	one-slot	let	be done away with!	one tag: 2let 4be done away with]!G337	SPLIT: one Greek word on two rows
+Job 6:10	1510.4	0	may	be	είη	είη	same-form	split	one-slot	may	be	one tag: [2may 4beG1510.4	SPLIT: one Greek word on two rows
+Job 6:10	5574	17	I lied	about	εψευσάμην	εψευσάμην	same-form	split	one-slot	I lied	about	one tag: 2I lied] aboutG5574	SPLIT: one Greek word on two rows
+Job 6:25	154	12	I do	ask.	αιτούμαι	αιτούμαι	same-form	split	one-slot	I do	ask.	one tag: 2I do 4ask].G154	SPLIT: one Greek word on two rows
+Job 7:10	1921	9	shall	recognize	επιγνώ	επιγνώ	same-form	split	one-slot	shall	recognize	one tag: 1shall 4recognizeG1921	SPLIT: one Greek word on two rows
+Job 7:16	2198	5	I shall	live,	ζήσομαι	ζήσομαι	same-form	split	one-slot	I shall	live,	one tag: 2I shall 4live],G2198	SPLIT: one Greek word on two rows
+Job 9:28	1439	10	you will	let.	εάσεις	εάσεις	same-form	split	one-slot	you will	let.	one tag: 1you will 3let].G1439	SPLIT: one Greek word on two rows
+Job 10:10	271.1	5	did you	extract,	ήμελξας		form-missing	split	one-slot	did you	extract,	one tag: 1did you 3extract],G271.1	SPLIT: one Greek word on two rows
+Job 10:14	4160	12	you have	appointed.	πεποίηκας	πεποίηκας	same-form	split	one-slot	you have	appointed.	one tag: 1you have 3appointed].G4160	SPLIT: one Greek word on two rows
+Job 12:6	1510.8.3	10	there will	be.	έσται	έσται	same-form	split	one-slot	there will	be.	one tag: 1there will 3be].G1510.8.3	SPLIT: one Greek word on two rows
+Job 12:8	1555	0	let	tell in detail	εκδιήγησαι	εκδιήγησαι	same-form	split	one-slot	let	tell in detail	one tag: [2let 4tell in detailG1555	SPLIT: one Greek word on two rows
+Job 13:10	2296	10	you shall	wonder,	θαυμάσετε	θαυμάσετε	same-form	split	one-slot	you shall	wonder.	one tag: 1you shall 3wonder].G2296	SPLIT: one Greek word on two rows
+Job 13:16	1525	11	shall	enter.	εισελεύσεται	εισελεύσεται	same-form	split	one-slot	shall	enter.	one tag: 3shall 5enter].G1525	SPLIT: one Greek word on two rows
+Job 15:30	3133	7	May	wither	μαράναι	μαράναι	same-form	split	one-slot	may	wither	one tag: 1may 3witherG3133	SPLIT: one Greek word on two rows
+Job 15:30	1601	10	may	fall off	εκπέσοι	εκπέσοι	same-form	split	one-slot	may	fall off	one tag: [2may 5fall offG1601	SPLIT: one Greek word on two rows
+Job 17:8	1881	9	may	rise up.	επανασταίη	επανασταίη	same-form	split	one-slot	may	rise up.	one tag: 2may 4rise up].G1881	SPLIT: one Greek word on two rows
+Job 17:9	2192	0	may	hold	σχοίη	σχοίη	same-form	split	one-slot	may	hold	one tag: [2may 4holdG2192	SPLIT: one Greek word on two rows
+Job 17:9	353	10	may	take	αναλάβοι	αναλάβοι	same-form	split	one-slot	may	take	one tag: 2may] takeG353	SPLIT: one Greek word on two rows
+Job 17:10	2147	11	I do	find			form-missing	split	one-slot	I do	find	one tag: 2I do 4find]G2147	SPLIT: one Greek word on two rows
+Job 18:7	4968.4	6	may	trip him	σφάλαι	σφάλαι	same-form	split	one-slot	may	trip him	one tag: [2may 5trip himG4968.4	SPLIT: one Greek word on two rows
+Job 18:8	1685	0	may	be put	εμβληθείη	εμβληθείη	same-form	split	one-slot	may	be put	one tag: [2may 4be putG1685	SPLIT: one Greek word on two rows
+Job 18:11	3643.4	1	may	destroy	ολέσαισαν	ολέσαισαν	same-form	split	one-slot	May	destroy	one tag: 1May 3destroyG3643.4	SPLIT: one Greek word on two rows
+Job 18:11	2064	10	may	come;	έλθοισαν	έλθοισαν	same-form	split	one-slot	may	come.	one tag: 2may 4come].G2064	SPLIT: one Greek word on two rows
+Job 18:14	1609.2	0	may	be torn	εκραγείη	εκραγείη	same-form	split	one-slot	may	be torn	one tag: [2may 4be tornG1609.2	SPLIT: one Greek word on two rows
+Job 18:17	622	3	may	be destroyed	απόλοιτο	απόλοιτο	same-form	split	one-slot	May	be destroyed	one tag: 1May] be destroyedG622	SPLIT: one Greek word on two rows
+Job 20:10	3643.4	3	may	destroy	ολέσαισαν	ολέσαισαν	same-form	split	one-slot	May	destroy	one tag: 1May 3destroyG3643.4	SPLIT: one Greek word on two rows
+Job 20:16	337	4	may	do away with	ανέλοι	ανέλοι	same-form	split	one-slot	may	do away with	one tag: [2may 5do away withG337	SPLIT: one Greek word on two rows
+Job 20:25	1326.7	0	may	go completely	διεξέλθοι	διεξέλθοι	same-form	split	one-slot	may	go completely	one tag: [2may 4go completelyG1326.7	SPLIT: one Greek word on two rows
+Job 20:25	4043	12	may	walk;	περιπατήσαισαν	περιπατήσαισαν	same-form	split	one-slot	may	walk;	one tag: 2may 4walk];G4043	SPLIT: one Greek word on two rows
+Job 20:26	5278	4	may	wait;	υπομείναι	υπομείναι	same-form	split	one-slot	may	wait;	one tag: 2may 5wait];G5278	SPLIT: one Greek word on two rows
+Job 20:26	2559	10	may	inflict evil on	κακώσαι	κακώσαι	same-form	split	one-slot	may	inflict evil on	one tag: [2may 4inflict evil onG2559	SPLIT: one Greek word on two rows
+Job 20:27	343	0	may	uncover	ανακαλύψαι	ανακαλύψαι	same-form	split	one-slot	may	uncover	one tag: [2may 5uncoverG343	SPLIT: one Greek word on two rows
+Job 20:28	1904	10	may	come upon	επέλθοι	επέλθοι	same-form	split	one-slot	may	come upon	one tag: 1may] come uponG1904	SPLIT: one Greek word on two rows
+Job 22:7	4222	3	did you give	to drink,	επότισας	επότισας	same-form	split	one-slot	did you give	to drink,	one tag: 1did you give 3to drink],G4222	SPLIT: one Greek word on two rows
+Job 22:15	5442	3	Will you	guard	φυλάξεις	φυλάξεις	same-form	split	one-slot	Will you	guard	one tag: 1Will you 3guard]G5442	SPLIT: one Greek word on two rows
+Job 23:15	2686.5	5	I should take	seriously;	κατασπουδασθώ	κατασπουδασθώ	same-form	split	one-slot	I should take	seriously;	one tag: 1I should take] seriously;G2686.5	SPLIT: one Greek word on two rows
+Job 24:18	398	12	may	appear	αναφανείη	αναφανείη	same-form	split	one-slot	may	appear	one tag: [2may 4appearG398	SPLIT: one Greek word on two rows
+Job 24:20	4937	16	may	be destroyed	συντριβείη	συντριβείη	same-form	split	one-slot	may	be destroyed	one tag: [2may 5be destroyedG4937	SPLIT: one Greek word on two rows
+Job 24:21	4160	4	he did	do,	εποίησε	εποίησε	same-form	split	one-slot	he did	do,	one tag: 1he did 3do],G4160	SPLIT: one Greek word on two rows
+Job 25:2	3588	7	the	one		την	form-missing	unmatched	unclear	the	one making	source numbers at 7,8 = 3588,4160	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Job 27:4	3191	10	shall	meditate upon	μελετήσει	μελετήσει	same-form	split	one-slot	shall	meditate upon	one tag: 1shall] meditate uponG3191	SPLIT: one Greek word on two rows
+Job 27:5	525	11	I will	dismiss	απαλλάξω	απαλλάξω	same-form	split	one-slot	I will	dismiss	one tag: 2I will] dismissG525	SPLIT: one Greek word on two rows
+Job 27:6	4894	7	I am	fully conscious	σύνοιδα	σύνοιδα	same-form	split	one-slot	I am	fully conscious	one tag: 2I am 5fully consciousG4894	SPLIT: one Greek word on two rows
+Job 27:9	1522	4	will	listen to	εισακούσεται	εισακούσεται	same-form	split	one-slot	will	listen to	one tag: 1will 3listen toG1522	SPLIT: one Greek word on two rows
+Job 29:13	2064	4	May	come;	έλθοι	έλθοι	same-form	split	one-slot	May	come;	one tag: 1May 4come];G2064	SPLIT: one Greek word on two rows
+Job 31:10	700	0	may	please	αρέσαι	αρέσαι	same-form	split	one-slot	may	please	one tag: [2may 5pleaseG700	SPLIT: one Greek word on two rows
+Job 31:10	5013	12	may	be humbled.	ταπεινωθείη	ταπεινωθείη	same-form	split	one-slot	may	be humbled.	one tag: 1may 3be humbled].G5013	SPLIT: one Greek word on two rows
+Job 31:22	868	0	may	separate	αποσταίη	αποσταίη	same-form	split	one-slot	may	separate	one tag: [2may 4separateG868	SPLIT: one Greek word on two rows
+Job 31:22	4937	16	may	be broken.	συντριβείη	συντριβείη	same-form	split	one-slot	may	be broken.	one tag: 1may 3be broken].G4937	SPLIT: one Greek word on two rows
+Job 32:2	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Job 32:6	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+Job 33:7	4764.2	5	shall	whirl about,		εκθαμβήσει	form-missing	split	unclear	shall	whirl about,	one tag: 2shall 4whirl about],G4764.2	SPLIT: one Greek word on two rows
+Job 33:7	1510.8.3	12	shall	be	έσται	έσται	same-form	split	one-slot	shall	be	one tag: 1shall 3be]G1510.8.3	SPLIT: one Greek word on two rows
+Job 34:9	2036	2	you should	say	είπης	είπης	same-form	split	one-slot	you should	say	one tag: 2you should] sayG2036	SPLIT: one Greek word on two rows
+Job 34:10	1510.4	7	May it	be	είη	είη	same-form	split	one-slot	May it	be	one tag: 1May it 3be]G1510.4	SPLIT: one Greek word on two rows
+Job 34:23	5087	4	he will	put	θήσει	θήσει	same-form	split	one-slot	he will	put	one tag: 1he will 3put]G5087	SPLIT: one Greek word on two rows
+Job 36:4	4920	9	you shall	perceive.	συνιείς	συνιείς	same-form	split	one-slot	you shall	perceive.	one tag: 1you shall 4perceive].G4920	SPLIT: one Greek word on two rows
+Job 36:14	599	0	may	die	αποθάνοι	αποθάνοι	same-form	split	one-slot	may	die	one tag: [2may 4dieG599	SPLIT: one Greek word on two rows
+Job 36:19	1578	2	Let	turn	εκκλινάτω		form-missing	split	unclear	Let	turn	one tag: 1Let 6turn 8asideG1578	SPLIT: one Greek word on two rows
+Job 36:19	1578	3	turn	aside		εκκλινάτω	form-missing	split	unclear	turn	aside	one tag: 1Let 6turn 8asideG1578	SPLIT: one Greek word on two rows
+Job 38:34	5219	8	will	obey	υπακούσεταί	υπακούσεταί	same-form	split	one-slot	will	obey	one tag: 1will] obeyG5219	SPLIT: one Greek word on two rows
+Job 39:9	1014	0	shall	be willing	βουλήσεται	βουλήσεται	same-form	split	one-slot	shall	be willing	one tag: [2shall 4be willingG1014	SPLIT: one Greek word on two rows
+Job 40:12	4595	3	cause	to rot	σήψον	σήψον	same-form	split	one-slot	cause	to rot	one tag: [2cause 4to rotG4595	SPLIT: one Greek word on two rows
+Job 42:8	2980	34	you did	speak	ελαλήσατε	ελαλήσατε	same-form	split	one-slot	you did	speak	one tag: 2you did] speakG2980	SPLIT: one Greek word on two rows
+Job 42:11	1325	43	they	gave	έδωκε	έδωκε	same-form	split	one-slot	they	gave	one tag: [2they 4gaveG1325	SPLIT: one Greek word on two rows
+Psa 2:7	2962	3	of the LORD.	The LORD	κυρίου		form-missing	two-words	unclear	of the LORD.	The LORD	two tags: of the LORD.G2962 | The LORDG2962	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 7:5	2681	23	may	be encamped.	κατασκηνώσαι	κατασκηνώσαι	same-form	split	unclear	may	be encamped.	one tag: 1may 3be encamped].G2681	SPLIT: one Greek word on two rows
+Psa 9:18	1950	4	shall	be forgotten	επιλησθήσεται	επιλησθήσεται	same-form	split	unclear	shall	be forgotten	one tag: 3shall 5be forgottenG1950	SPLIT: one Greek word on two rows
+Psa 10:13	3949	3	provoke	to anger	παρώργισεν	παρώργισεν	same-form	split	unclear	provoke	to anger	one tag: did [3provoke 5to angerG3949	SPLIT: one Greek word on two rows
+Psa 16:5	3588	11	the	one		την	form-missing	unmatched	unclear	the	one restoring	source numbers at 11,12 = 3588,600	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Psa 17:2	1831	6	May	come forth;	εξέλθοι	εξέλθοι	same-form	split	unclear	May	come forth;	one tag: 1May 3come forth];G1831	SPLIT: one Greek word on two rows
+Psa 17:2	1492	11	let	behold	ιδέτωσαν	ιδέτωσαν	same-form	split	unclear	let	behold	one tag: 1let] beholdG1492	SPLIT: one Greek word on two rows
+Psa 18:10	4070.3	5	spread out;	he spread out	επετάσθη	επετάσθη	same-form	two-words	unclear	he spread out;	he spread out	two tags: he spread out;G4070.3 | he spread outG4070.3	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 18:25	3741	1	the sacred	you shall be sacred;	οσίου		form-missing	two-words	unclear	the sacred	you shall be sacred;	two tags: the sacredG3741 | you shall be sacred;G3741	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 18:25	121	7	the innocent	you shall be innocent;	αθώου		form-missing	two-words	unclear	the innocent	you shall be innocent;	two tags: 1 the innocent]G121 | you shall be innocent;G121	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 18:26	1588	2	the choice one	you shall be choice;	εκλεκτού		form-missing	two-words	unclear	the choice one,	you will be choice;	two tags: the choice one,G1588 | you will be choice;G1588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 19:2	3571	6	night unto	night		νυκτί	form-missing	two-words	unclear	night unto	night	two tags: night untoG3571 | nightG3571	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 21:3	4399	2	beforehand	with	προέφθασας	προέφθασας	same-form	split	unclear	beforehand	with	one tag: you were [3beforehand 1withG4399	SPLIT: one Greek word on two rows
+Psa 21:8	2147	12	may	be found	εύροι	εύροι	same-form	split	unclear	may	be found	one tag: 1may] be foundG2147	SPLIT: one Greek word on two rows
+Psa 31:18	1096	1	Let	become	γενηθήτω	γενηθήτω	same-form	split	unclear	Let	become	one tag: 1Let 6becomeG1096	SPLIT: one Greek word on two rows
+Psa 37:15	1525	3	May	enter	εισέλθοι	εισέλθοι	same-form	split	unclear	May	enter	one tag: 1May] enterG1525	SPLIT: one Greek word on two rows
+Psa 37:15	4937	13	may	be broken.	συντριβείη	συντριβείη	same-form	split	unclear	may	be broken.	one tag: 1may] be broken.G4937	SPLIT: one Greek word on two rows
+Psa 40:11	482	18	may they	take hold of	αντιλάβοιντό	αντιλάβοιντό	same-form	split	unclear	may they	take hold of	one tag: 1may they] take hold ofG482	SPLIT: one Greek word on two rows
+Psa 46:5	4404	14	morning	by morning.			form-missing	two-words	unclear	morning	by morning.	two tags: morningG4404 | by morning.G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 49:17	2983	6	he shall	take	λήψεται	λήψεται	same-form	split	unclear	he shall	take	one tag: 1he shall 3takeG2983	SPLIT: one Greek word on two rows
+Psa 50:1	2316	1	God	of gods,		θεών	form-missing	two-words	unclear	God	of gods,	two tags: GodG2316 | of gods,G2316	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 50:8	1651	5	I will	reprove	ελέγξω	ελέγξω	same-form	split	unclear	I will	reprove	one tag: 1I will 3reproveG1651	SPLIT: one Greek word on two rows
+Psa 68:3	2165	3	let	be glad!	ευφρανθήτωσαν	ευφρανθήτωσαν	same-form	split	unclear	let	be glad!	one tag: 1let] be glad!G2165	SPLIT: one Greek word on two rows
+Psa 68:19	2128	3	blessed.	Blessed be			form-missing	two-words	unclear	blessed.	Blessed be	two tags: blessed.G2128 | Blessed beG2128	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 69:6	153	1	May	be ashamed	αισχυνθείησαν	αισχυνθείησαν	same-form	split	unclear	May	be ashamed	one tag: 1May 6be ashamedG153	SPLIT: one Greek word on two rows
+Psa 69:6	1788	13	May	feel shame	εντραπείησαν	εντραπείησαν	same-form	split	unclear	May	feel shame	one tag: 1May 6feel shameG1788	SPLIT: one Greek word on two rows
+Psa 69:15	2670	2	Let	sink	καταποντισάτω	καταποντισάτω	same-form	split	unclear	Let	sink	one tag: 1Let 5sinkG2670	SPLIT: one Greek word on two rows
+Psa 69:24	2638	12	may	overtake	καταλάβοι	καταλάβοι	same-form	split	unclear	may	overtake	one tag: 1may] overtakeG2638	SPLIT: one Greek word on two rows
+Psa 73:20	1847	11	you will treat	with contempt.	εξουδενώσεις	εξουδενώσεις	same-form	split	unclear	you will treat	with contempt.	one tag: 1you will treat] with contempt.G1847	SPLIT: one Greek word on two rows
+Psa 74:4	4592	13	signs	for signs;	σημεία	σημεία	same-form	unmatched	unclear		for signs.	source numbers at 13,14 = 1473,4592	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Psa 79:7	2049	8	made	desolate.	ηρήμωσαν	ηρήμωσαν	same-form	split	unclear	made	desolate.	one tag: 1made] desolate.G2049	SPLIT: one Greek word on two rows
+Psa 93:1	1746	4	he put on;	put on	ενεδύσατο	ενεδύσατο	same-form	two-words	unclear	he put on;	the LORD put on	two tags: 1he put on];G1746 | the LORD put onG1746	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 102:1	2064	11	let	come!	ελθέτω	ελθέτω	same-form	split	unclear	let	come!	one tag: 1let 3come]!G2064	SPLIT: one Greek word on two rows
+Psa 102:24	1074	8	generation	of generations		γενεών	form-missing	two-words	unclear	generation	of generations	two tags: 3generationG1074 | 4of generationsG1074	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 105:14	935	9	kings	, saying,	βασιλείς	βασιλείς	same-form	split	unclear	kings	, saying,	one tag: 1kings], saying,G935	SPLIT: one Greek word on two rows
+Psa 105:22	4679	11	to make	wise.	σοφίσαι	σοφίσαι	same-form	split	unclear	to make	wise.	one tag: 1to make] wise.G4679	SPLIT: one Greek word on two rows
+Psa 109:7	1096	10	let	become	γενέσθω	γενέσθω	same-form	split	unclear	let	become	one tag: 1let] becomeG1096	SPLIT: one Greek word on two rows
+Psa 109:8	2983	10	may	take	λάβοι	λάβοι	same-form	split	unclear	may	take	one tag: 1may 3takeG2983	SPLIT: one Greek word on two rows
+Psa 109:14	1813	16	may	be wiped away.	εξαλειφθείη	εξαλειφθείη	same-form	split	unclear	may	be wiped away.	one tag: 1may] be wiped away.G1813	SPLIT: one Greek word on two rows
+Psa 115:8	1096	2	Let	become	γένοιντο	γένοιντο	same-form	split	one-slot	Let	become	one tag: 1Let 5becomeG1096	SPLIT: one Greek word on two rows
+Psa 115:17	134	3	shall	praise	αινέσουσί	αινέσουσί	same-form	split	one-slot	shall	praise	one tag: 3shall] praiseG134	SPLIT: one Greek word on two rows
+Psa 119:3	4198	10	were	gone.	επορεύθησαν	επορεύθησαν	same-form	split	unclear	were	gone.	one tag: 5were 7gone].G4198	SPLIT: one Greek word on two rows
+Psa 119:135	2014	3	Let	appear	επίφανον	επίφανον	same-form	split	unclear	Let	appear	one tag: 1Let] appearG2014	SPLIT: one Greek word on two rows
+Psa 123:4	4130	2	was	filled	επλήσθη	επλήσθη	same-form	split	unclear	was	filled	one tag: 2was 4filledG4130	SPLIT: one Greek word on two rows
+Psa 135:12	2817	5	for an inheritance,	an inheritance	κληρονομίαν	κληρονομίαν	same-form	two-words	unclear	for an inheritance;	an inheritance	two tags: for an inheritance;G2817 | an inheritanceG2817	NOT A SPLIT: two Greek words (2 tags, none cut)
+Psa 135:18	1096	2	May	become	γένοιντο	γένοιντο	same-form	split	unclear	May	become	one tag: 1May 5becomeG1096	SPLIT: one Greek word on two rows
+Psa 139:17	2901	10	were	strengthened	εκραταιώθησαν	εκραταιώθησαν	same-form	split	unclear	were	strengthened	one tag: 2were 4strengthenedG2901	SPLIT: one Greek word on two rows
+Psa 143:2	1344	11	shall	do justice	δικαιωθήσεται	δικαιωθήσεται	same-form	split	unclear	shall	do justice	one tag: 3shall 5do justiceG1344	SPLIT: one Greek word on two rows
+Psa 144:8	1188	8	right hand	is a right hand	δεξιά	δεξιά	same-form	unmatched	unclear		is a right hand	source numbers at 8,9 = 1473,1188	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Psa 144:11	1188	17	right hand	is a right hand	δεξιά	δεξιά	same-form	unmatched	unclear		is a right hand	source numbers at 17,18 = 1473,1188	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Psa 145:10	2127	12	let	bless	ευλογησάτωσάν	ευλογησάτωσάν	same-form	split	unclear	let	bless	one tag: 1let] blessG2127	SPLIT: one Greek word on two rows
+Psa 147:1	2237.1	9	May	be delicious	ηδυνθείη	ηδυνθείη	same-form	split	unclear	may	be delicious	one tag: 1may 3be deliciousG2237.1	SPLIT: one Greek word on two rows
+Psa 147:14	3588	0	the	one		τα	form-missing	unmatched	unclear	The	one putting	source numbers at 0,1 = 3588,5087	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Psa 147:15	3588	0	the	one		το	form-missing	unmatched	unclear	The	one sending	source numbers at 0,1 = 3588,649	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Pro 1:5	4680	4	a wise one	will be wiser,		σοφώτερος	form-missing	two-words	two-slots	the wise	will be wiser,	two tags: the wiseG4680 | will be wiser,G4680	NOT A SPLIT: two Greek words (2 tags, none cut)
+Pro 3:15	514	9	equal	worth	άξιον	άξιον	same-form	split	one-slot	equal	worth	one tag: 3 equal 5worthG514	SPLIT: one Greek word on two rows
+Pro 3:30	2038	9	he should	work	εργάσηται	εργάσηται	same-form	split	one-slot	he should	work	one tag: 1he should 3workG2038	SPLIT: one Greek word on two rows
+Pro 4:11	1688	5	I put	on board			form-missing	split	one-slot	I put	on board	one tag: [2I put 4on boardG1688	SPLIT: one Greek word on two rows
+Pro 4:25	991	4	Let	see,	βλεπέτωσαν	βλεπέτωσαν	same-form	split	one-slot	Let	see,	one tag: 1Let 3see],G991	SPLIT: one Greek word on two rows
+Pro 7:21	635	0	she led	astray	απεπλάνησε	απεπλάνησε	same-form	split	one-slot	she led	astray	one tag: [2she led 4astrayG635	SPLIT: one Greek word on two rows
+Pro 11:21	1510.8.3	6	will	be	έσται	έσται	same-form	split	one-slot	will	be	one tag: 5will 7be]G1510.8.3	SPLIT: one Greek word on two rows
+Pro 11:26	5275	3	May	leave	υπολείποιτο	υπολείποιτο	same-form	split	one-slot	May	leave	one tag: 1May] leaveG5275	SPLIT: one Greek word on two rows
+Pro 12:11	3588	0	The	one		την	form-missing	unmatched	unclear	The	one working	source numbers at 0,1 = 3588,2038	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Pro 13:20	4680	1	wise ones	will be wise;	σοφοίς		form-missing	two-words	two-slots	wise men,	will be wise;	two tags: wise men,G4680 | will be wise;G4680	NOT A SPLIT: two Greek words (2 tags, none cut)
+Pro 17:15	94	4	unjust,	as an unjust one	άδικον	άδικον	same-form	two-words	two-slots	unjust,	as unjust	two tags: 3unjust],G94 | [4 as unjustG94	NOT A SPLIT: two Greek words (2 tags, none cut)
+Pro 17:17	5224	5	let	exist	υπαρχέτω	υπαρχέτω	same-form	split	one-slot	let	exist	one tag: 1let] existG5224	SPLIT: one Greek word on two rows
+Pro 17:17	1510.5	12	Let	be,	έστωσαν		form-missing	split	one-slot	let	be!	one tag: 1let 3be]!G1510.5	SPLIT: one Greek word on two rows
+Pro 19:5	1510.8.3	4	shall	be;	έσται	έσται	same-form	split	one-slot	shall	be;	one tag: 3shall 5be];G1510.8.3	SPLIT: one Greek word on two rows
+Pro 19:7	1510.8.3	8	will	be.	έσται	έσται	same-form	split	one-slot	will	be.	one tag: 1will 3be].G1510.8.3	SPLIT: one Greek word on two rows
+Pro 19:9	1510.8.3	4	shall	be;	έσται		form-missing	split	one-slot	shall	be;	one tag: 3shall 5be];G1510.8.3	SPLIT: one Greek word on two rows
+Pro 20:18	1096	7	let	be	γίνεται	γίνεται	same-form	split	one-slot	let	be	one tag: 1let 3beG1096	SPLIT: one Greek word on two rows
+Pro 25:10	1096	30	you should	be!	γένη	γένη	same-form	split	one-slot	you should	be.	one tag: 1you should 3be].G1096	SPLIT: one Greek word on two rows
+Pro 26:10	5492	1	is tossed	by a storm	χειμάζεται	χειμάζεται	same-form	split	one-slot	is tossed	by a storm	one tag: 4is tossed 6by a stormG5492	SPLIT: one Greek word on two rows
+Pro 28:8	3588	0	The	one		τον	form-missing	unmatched	unclear	The	one multiplying	source numbers at 0,1 = 3588,4129	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Pro 28:9	3588	0	The	one		το	form-missing	unmatched	unclear	The	one turning aside	source numbers at 0,1 = 3588,1578	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Pro 28:10	1706	9	shall	fall;	εμπεσείται	εμπεσείται	same-form	split	one-slot	shall	fall;	one tag: 1shall 3fall];G1706	SPLIT: one Greek word on two rows
+Pro 28:13	2137	5	his way shall	be prospered;	ευοδωθήσεται	ευοδωθήσεται	same-form	split	one-slot	his way shall	be prospered;	one tag: 1his way shall] be prospered;G2137	SPLIT: one Greek word on two rows
+Pro 28:19	3588	0	The	one		την	form-missing	unmatched	unclear	The	one working	source numbers at 0,1 = 3588,2038	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Pro 30:9	1096	4	I should	become,	γένωμαι	γένωμαι	same-form	split	one-slot	I should	become,	one tag: 1I should 3become],G1096	SPLIT: one Greek word on two rows
+Ecc 1:2	3153	0	Folly	of follies,		ματαιοτήτων	form-missing	two-words	two-slots	Folly	of follies,	two tags: FollyG3153 | of follies,G3153	NOT A SPLIT: two Greek words (5 tags, none cut)
+Ecc 1:2	3153	5	folly	of follies —		ματαιοτήτων	form-missing	two-words	two-slots	folly	of follies;	two tags: follyG3153 | of follies;G3153	NOT A SPLIT: two Greek words (5 tags, none cut)
+Ecc 8:3	4198	5	You should	go.	πορεύση	πορεύση	same-form	split	one-slot	You should	go.	one tag: 1You should 4go].G4198	SPLIT: one Greek word on two rows
+Ecc 12:8	3153	0	Folly	of follies,		ματαιοτήτων	form-missing	two-words	two-slots	Folly	of follies,	two tags: FollyG3153 | of follies,G3153	NOT A SPLIT: two Greek words (3 tags, none cut)
+Son 1:1	779.1	0	A song	of songs		ασμάτων	form-missing	two-words	two-slots	A song	of songs	two tags: A songG779.1 | of songsG779.1	NOT A SPLIT: two Greek words (2 tags, none cut)
+Son 8:6	4047.3	25	sparkling	is the sparkling	περίπτερα	περίπτερα	same-form	unmatched	unclear		are sparks	source numbers at 25,26 = 1473,4047.3	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Isa 1:6	5392.1	15	inflamed	are healed;	φλεγμαίνουσα	φλεγμαίνουσα	same-form	split	one-slot	inflamed	are healed;	one tag: 1inflamed] are healed;G5392.1	SPLIT: one Greek word on two rows
+Isa 3:6	1510.5	25	let	be!	έστω	έστω	same-form	split	one-slot	let	be!	one tag: 1let 4be]!G1510.5	SPLIT: one Greek word on two rows
+Isa 4:1	2564	24	let	be called	κεκλήσθω	κεκλήσθω	same-form	split	one-slot	let	be called	one tag: 1let] be calledG2564	SPLIT: one Greek word on two rows
+Isa 5:2	4060	2	I put	around it,	περιέθηκα	περιέθηκα	same-form	split	one-slot	I put	around it,	one tag: 1I put] around it,G4060	SPLIT: one Greek word on two rows
+Isa 7:5	4190	13	wicked	, saying,	πονηράν	πονηράν	same-form	split	one-slot	wicked	, saying,	one tag: 1wicked], saying,G4190	SPLIT: one Greek word on two rows
+Isa 7:17	2240	21	have	come,	ήκασιν	ήκασιν	same-form	split	one-slot	have	come	one tag: 1have 3come]G2240	SPLIT: one Greek word on two rows
+Isa 9:16	3106	3	declaring	blessed	μακαρίζοντες	μακαρίζοντες	same-form	split	one-slot	declaring	blessed	one tag: 2declaring 5blessedG3106	SPLIT: one Greek word on two rows
+Isa 10:23	4932	9	is the one rendering	concise	συντετμημένον	συντετμημένον	same-form	split	one-slot	is the one rendering	concise	one tag: 2 is the one rendering 4conciseG4932	SPLIT: one Greek word on two rows
+Isa 11:3	2919	9	He shall	judge,	κρινεί	κρινεί	same-form	split	one-slot	He shall	judge,	one tag: 1He shall 3judge],G2919	SPLIT: one Greek word on two rows
+Isa 11:15	2049	1	shall make	desolate	ερημώσει	ερημώσει	same-form	split	one-slot	shall make	desolate	one tag: [2shall make 6desolateG2049	SPLIT: one Greek word on two rows
+Isa 23:2	1096	2	have	become	γεγόνασιν	γεγόνασιν	same-form	split	one-slot	have	become	one tag: 1have 7becomeG1096	SPLIT: one Greek word on two rows
+Isa 23:18	4863	13	It shall	be brought,	συναχθήσεται	συναχθήσεται	same-form	split	one-slot	It shall	be brought,	one tag: 1It shall 3be brought],G4863	SPLIT: one Greek word on two rows
+Isa 26:20	3745	14	as much as this,	as much as that,	όσον	όσον	same-form	two-words	two-slots	as much as this,	as much as that,	two tags: as much as this,G3745 | as much as that,G3745	NOT A SPLIT: two Greek words (2 tags, none cut)
+Isa 27:12	1520	22	one	by one!	ένα	ένα	same-form	two-words	two-slots	one	by one!	two tags: oneG1520 | by one!G1520	NOT A SPLIT: two Greek words (2 tags, none cut)
+Isa 28:19	4404	4	Morning	by morning			form-missing	two-words	two-slots	Morning	by morning	two tags: MorningG4404 | by morningG4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Isa 28:27	4013	10	shall	lead about	περιάξει	περιάξει	same-form	split	one-slot	shall	lead about	one tag: 1shall] lead aboutG4013	SPLIT: one Greek word on two rows
+Isa 29:16	3049	5	Shall you	be considered?	λογισθήσεσθε	λογισθήσεσθε	same-form	split	one-slot	Shall you	be considered?	one tag: 1Shall you 3be considered]?G3049	SPLIT: one Greek word on two rows
+Isa 29:22	153	15	shall	be ashamed	αισχυνθήσεται	αισχυνθήσεται	same-form	split	one-slot	shall	be ashamed	one tag: 2shall 5be ashamedG153	SPLIT: one Greek word on two rows
+Isa 31:8	2719	9	shall	devour	καταφάγεται	καταφάγεται	same-form	split	one-slot	shall	devour	one tag: 1shall] devourG2719	SPLIT: one Greek word on two rows
+Isa 32:19	2240	8	it will	come.	ήξει	ήξει	same-form	split	one-slot	it will	come.	one tag: 1it will 3come].G2240	SPLIT: one Greek word on two rows
+Isa 33:20	1284	35	shall	be torn up.	διαρραγώσιν	διαρραγώσιν	same-form	split	one-slot	shall	be torn up.	one tag: 2shall] be torn up.G1284	SPLIT: one Greek word on two rows
+Isa 36:3	3588	5	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Isa 36:3	3588	16	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Isa 36:17	1093	11	land —	a land			form-missing	unmatched	unclear		a land	source numbers at 11,12 = 1473,1093	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Isa 36:22	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: 2theG3588 | 3 son ofG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+Isa 36:22	3588	14	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+Isa 38:18	134	5	shall	praise	αινέσουσί	αινέσουσί	same-form	split	one-slot	shall	praise	one tag: 5shall] praiseG134	SPLIT: one Greek word on two rows
+Isa 40:27	2036	2	you should	say,	είπης	είπης	same-form	split	one-slot	you should	say,	one tag: 2you should] say,G2036	SPLIT: one Greek word on two rows
+Isa 44:11	4863	9	let	be brought together	συναχθήτωσαν	συναχθήτωσαν	same-form	split	one-slot	let	be brought together	one tag: 1let 6be brought togetherG4863	SPLIT: one Greek word on two rows
+Isa 45:8	4468.3	8	let	sprinkle	ρανάτωσαν	ρανάτωσαν	same-form	split	one-slot	let	sprinkle	one tag: 1let] sprinkleG4468.3	SPLIT: one Greek word on two rows
+Isa 45:18	846	17	it;	he	αυτήν		form-missing	two-words	two-slots	it;	he	two tags: it;G1473 | heG1473	NOT A SPLIT: two Greek words (6 tags, none cut)
+Isa 45:18	4160	24	he did	make	εποίησεν	εποίησεν	same-form	split	one-slot	he did	make	one tag: 1he did 3makeG4160	SPLIT: one Greek word on two rows
+Isa 45:19	2980	3	I have	spoken,	λελάληκα	λελάληκα	same-form	split	one-slot	I have	spoken,	one tag: 1I have 3spoken],G2980	SPLIT: one Greek word on two rows
+Isa 47:13	312	19	Let	announce	αναγγειλάτωσάν	αναγγειλάτωσάν	same-form	split	one-slot	let	announce	one tag: 1let] announceG312	SPLIT: one Greek word on two rows
+Isa 48:16	2980	11	I have	spoken.	λελάληκα	λελάληκα	same-form	split	one-slot	I have	spoken.	one tag: 1I have 3spoken].G2980	SPLIT: one Greek word on two rows
+Isa 50:4	4404	14	morning	by morning.			form-missing	two-words	two-slots	morning	by morning.	two tags: morningG4404 | by morning.G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Isa 51:7	2274	23	let	vanquish you!	ηττάσθε	ηττάσθε	same-form	split	one-slot	let	vanquish you!	one tag: 1let] vanquish you!G2274	SPLIT: one Greek word on two rows
+Isa 51:22	3588	5	the	one		τον	form-missing	unmatched	unclear	the	one judging	source numbers at 5,6 = 3588,2919	NOT A SPLIT: two Greek words (8 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Isa 52:3	3084	10	you shall	be ransomed.	λυτρωθήσεσθε	λυτρωθήσεσθε	same-form	split	one-slot	you shall	be ransomed.	one tag: 1you shall 3be ransomed].G3084	SPLIT: one Greek word on two rows
+Isa 52:12	1831	4	you shall	come forth,	εξελεύσεσθε	εξελεύσεσθε	same-form	split	one-slot	you shall	come forth,	one tag: 1you shall 3come forth],G1831	SPLIT: one Greek word on two rows
+Isa 53:3	444	10	of men.	A man	ανθρώπων		form-missing	two-words	two-slots	of men.	A man	two tags: of men.G444 | A manG444	NOT A SPLIT: two Greek words (2 tags, none cut)
+Isa 53:6	4105	3	We were	wandered.	επλανήθημεν	επλανήθημεν	same-form	split	one-slot	We were	wandered.	one tag: 1We were 3wandered].G4105	SPLIT: one Greek word on two rows
+Isa 54:10	3179	2	Shall	change over,	μεταστήσεσθαι	μεταστήσεσθαι	same-form	split	one-slot	Shall	change over,	one tag: 1Shall] change over,G3179	SPLIT: one Greek word on two rows
+Isa 56:3	3004	1	Let	say	λεγέτω	λεγέτω	same-form	split	one-slot	Let	say	one tag: 1Let 5sayG3004	SPLIT: one Greek word on two rows
+Isa 56:3	3004	21	let	say	λεγέτω	λεγέτω	same-form	split	one-slot	let	say	one tag: 1let 5sayG3004	SPLIT: one Greek word on two rows
+Isa 57:16	1556	4	I shall	punish	εκδικήσω	εκδικήσω	same-form	split	one-slot	I shall	punish	one tag: 1I shall 3punishG1556	SPLIT: one Greek word on two rows
+Isa 58:5	1586	4	I did	choose,	εξελεξάμην	εξελεξάμην	same-form	split	one-slot	I did	choose,	one tag: 1I did 3choose],G1586	SPLIT: one Greek word on two rows
+Isa 58:6	1586	3	Did	choose	εξελεξάμην	εξελεξάμην	same-form	split	unclear	Did	choose	one tag: 1Did 4choose]G1586	SPLIT: one Greek word on two rows
+Isa 59:6	2041	16	works	are works	έργα	έργα	same-form	unmatched	unclear		are works	source numbers at 16,17 = 1473,2041	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Isa 60:6	2240	12	they	come	ήξουσι	ήξουσι	same-form	split	one-slot	they	come	one tag: 1they 3come]G2240	SPLIT: one Greek word on two rows
+Isa 63:9	846	20	them —	he	αυτών		form-missing	two-words	two-slots	them --	he	two tags: them --G1473 | heG1473	NOT A SPLIT: two Greek words (9 tags, none cut)
+Isa 65:12	4098	8	You shall	fall,	πεσείσθε	πεσείσθε	same-form	split	one-slot	You shall	fall,	one tag: 1You shall 3fall],G4098	SPLIT: one Greek word on two rows
+Jer 2:33	2006.2	3	will you	apply	επιτηδεύσεις	επιτηδεύσεις	same-form	split	one-slot	will you	apply	one tag: 2will you] applyG2006.2	SPLIT: one Greek word on two rows
+Jer 5:9	1980	4	I	visit,	επισκέψομαι	επισκέψομαι	same-form	split	one-slot	I	visit?	one tag: 1I 3visit]?G1980	SPLIT: one Greek word on two rows
+Jer 7:19	3949	4	provoke	to anger,	παροργίζουσι	παροργίζουσι	same-form	split	one-slot	provoke	to anger,	one tag: 3provoke] to anger,G3949	SPLIT: one Greek word on two rows
+Jer 8:6	2980	6	Will they	speak?	λαλήσουσιν	λαλήσουσιν	same-form	split	one-slot	Will they	speak?	one tag: 1Will they] speak?G2980	SPLIT: one Greek word on two rows
+Jer 9:4	5442	5	Let	take guard,	φυλάξασθε	φυλάξασθε	same-form	split	one-slot	Let	take guard,	one tag: 1Let 3take guard],G5442	SPLIT: one Greek word on two rows
+Jer 9:9	1556	12	shall	take vengeance	εκδικήσει	εκδικήσει	same-form	split	one-slot	shall	take vengeance	one tag: 1shall 4take vengeanceG1556	SPLIT: one Greek word on two rows
+Jer 9:18	4482	16	let	flow	ρείτω	ρείτω	same-form	split	one-slot	let	flow	one tag: 1let] flowG4482	SPLIT: one Greek word on two rows
+Jer 10:14	5560.9	14	they cast	in a furnace;		εχώνευσαν	form-missing	split	unclear	they cast	in a furnace;	one tag: 1they cast] in a furnace;G5560.9	SPLIT: one Greek word on two rows
+Jer 10:24	4160	14	you should	make.		ποιήσης	form-missing	split	unclear	you should	make.	one tag: 1you should 3make].G4160	SPLIT: one Greek word on two rows
+Jer 12:15	1544	4	casting	out	εκβαλείν	εκβαλείν	same-form	split	one-slot	casting	out	one tag: [2casting 4outG1544	SPLIT: one Greek word on two rows
+Jer 16:14	2046	9	they shall	say	ερούσιν	ερούσιν	same-form	split	one-slot	they shall	say	one tag: 1they shall 4sayG2046	SPLIT: one Greek word on two rows
+Jer 18:20	2556	4	evils	, no.	κακά	κακά	same-form	split	unclear	evils	, no.	one tag: 1evils], no.G2556	SPLIT: one Greek word on two rows
+Jer 18:21	1096	26	let	become	γενέσθωσαν	γενέσθωσαν	same-form	split	one-slot	let	become	one tag: 1let] becomeG1096	SPLIT: one Greek word on two rows
+Jer 20:16	1510.5	0	Let	be	έστω	έστω	same-form	split	one-slot	Let	be	one tag: [1Let 3beG1510.5	SPLIT: one Greek word on two rows
+Jer 24:2	1520	3	one	was of			form-missing	split	one-slot	one	was of	one tag: 1one] was ofG1520	SPLIT: one Greek word on two rows
+Jer 24:2	2087	17	other	was of			form-missing	split	one-slot	other	was of	one tag: 1other] was ofG2087	SPLIT: one Greek word on two rows
+Jer 38:24	1097	10	Let	know	γνώτω	γνώτω	same-form	split	one-slot	Let	know	one tag: 1Let] knowG1097	SPLIT: one Greek word on two rows
+Jer 44:18	1639.2	12	were	made less	ηλαττώθημεν	ηλαττώθημεν	same-form	split	one-slot	were	made less	one tag: [2were 4made lessG1639.2	SPLIT: one Greek word on two rows
+Jer 44:26	2962	33	O Lord	the LORD,			form-missing	two-words	two-slots	O Lord	the LORD,	two tags: O LordG2962 | the LORD,G2962	NOT A SPLIT: two Greek words (4 tags, none cut)
+Jer 49:14	649	8	he sent	, saying,	απέστειλε	απέστειλε	same-form	split	one-slot	he sent	, saying,	one tag: 1he sent], saying,G649	SPLIT: one Greek word on two rows
+Jer 50:39	2532	23	and	generation.		γενεάς	form-missing	two-words	unclear	and	generation.	two tags: andG2532 | generation.G2532	NOT A SPLIT: two Greek words (3 tags); label error: 'generation.' is tagged G2532 in the source; the word is γενεάς, G1074
+Jer 52:4	1181	13	tenth,	on the tenth	δεκάτω		form-missing	two-words	two-slots	tenth,	on the tenth	two tags: 2tenth],G1181 | on the tenthG1181	NOT A SPLIT: two Greek words (2 tags, none cut)
+Jer 52:19	5552	20	gold	by gold,	χρυσά	χρυσά	same-form	two-words	two-slots	gold	by gold,	two tags: goldG5552 | by gold,G5552	NOT A SPLIT: two Greek words (2 tags, none cut)
+Jer 52:19	693	25	silver	by silver,)	αργυρά	αργυρά	same-form	two-words	two-slots	silver	by silver	two tags: silverG693 | by silverG693	NOT A SPLIT: two Greek words (2 tags, none cut)
+Lam 2:16	1272	0	opened	wide		διήνοιξαν	form-missing	split	one-slot	opened	wide	one tag: [3opened 5wideG1272	SPLIT: one Greek word on two rows
+Lam 4:1	5553	3	gold	, and			form-missing	split	one-slot	gold	, and	one tag: 2gold], andG5553	SPLIT: one Greek word on two rows
+Eze 1:10	4383	4	their faces	was as the face	προσώπων		form-missing	unmatched	unclear		was as the face	source numbers at 4,5 = 1473,4383	NOT A SPLIT: two Greek words (5 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Eze 3:12	3173	10	of a great	, saying,	μεγάλου	μεγάλου	same-form	split	one-slot	of a great	, saying,	one tag: 1of a great], saying,G3173	SPLIT: one Greek word on two rows
+Eze 3:18	3588	25	so that	he	του		form-missing	unmatched	unclear	so that	he should live;	source numbers at 25,26 = 3588,2198	NOT A SPLIT: two Greek words (10 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Eze 6:10	2980	8	have	spoken	λελάληκα	λελάληκα	same-form	split	one-slot	have	spoken	one tag: 1have 3spokenG2980	SPLIT: one Greek word on two rows
+Eze 8:11	3588	10	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Eze 9:9	4970	11	very	exceedingly.			form-missing	two-words	two-slots	very	exceedingly.	two tags: veryG4970 | exceedingly.G4970	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 11:13	3588	8	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Eze 14:19	1883.4	4	I should send	as a successor			form-missing	split	one-slot	I should send	as a successor	one tag: 2I should send] as a successorG1883.4	SPLIT: one Greek word on two rows
+Eze 14:23	4160	17	I have	done	πεποίηκα	πεποίηκα	same-form	split	one-slot	I have	done	one tag: 1I have 3doneG4160	SPLIT: one Greek word on two rows
+Eze 17:15	1727	22	opposite	, no.	εναντία	εναντία	same-form	split	unclear	opposite	, no.	one tag: 3opposite], no.G1727	SPLIT: one Greek word on two rows
+Eze 19:7	1830.2	10	made	quite desolate;	εξηρήμωσε	εξηρήμωσε	same-form	split	one-slot	made	quite desolate;	one tag: 1made] quite desolate;G1830.2	SPLIT: one Greek word on two rows
+Eze 20:22	953	17	be	profaned	βεβηλωθή	βεβηλωθή	same-form	split	one-slot	be	profaned	one tag: 2be] profanedG953	SPLIT: one Greek word on two rows
+Eze 20:31	3778	52	this thing	, no.		τούτο	form-missing	split	unclear	this thing	, no.	one tag: 1this thing], no.G3778	SPLIT: one Greek word on two rows
+Eze 20:39	1808	12	Let	remove!	εξάρατε	εξάρατε	same-form	split	one-slot	Let	remove!	one tag: 1Let 3remove]!G1808	SPLIT: one Greek word on two rows
+Eze 21:23	846	1	he	to them		αυτοίς	form-missing	two-words	two-slots	he	to them	two tags: heG1473 | to themG1473	NOT A SPLIT: two Greek words (5 tags, none cut)
+Eze 21:26	1510.8.3	14	will	be!	έσται	έσται	same-form	split	one-slot	will	be.	one tag: 1will 3be].G1510.8.3	SPLIT: one Greek word on two rows
+Eze 22:14	2588	3	your heart	, no.			form-missing	split	unclear	your heart	, no.	one tag: 1your heart], no.G2588	SPLIT: one Greek word on two rows
+Eze 22:25	726	9	seizing	by force	αρπάζοντες	αρπάζοντες	same-form	split	one-slot	seizing	by force	one tag: 3seizing 5by forceG726	SPLIT: one Greek word on two rows
+Eze 23:43	3431	5	Do they	commit adultery?	μοιχεύουσι	μοιχεύουσι	same-form	split	one-slot	Do they	commit adultery?	one tag: 1Do they 3commit adultery]?G3431	SPLIT: one Greek word on two rows
+Eze 26:7	935	18	( king	of kings		βασιλέων	form-missing	two-words	two-slots	( king	of kings	two tags: ( [2kingG935 | 3of kingsG935	NOT A SPLIT: two Greek words (3 tags, none cut)
+Eze 28:3	3756	8	did not	correct	ουκ	ουκ	same-form	split	one-slot	did not	correct	one tag: 1did not] correctG3756	SPLIT: one Greek word on two rows
+Eze 32:18	2601	8	shall bring	down	καταβιβάσουσιν	καταβιβάσουσιν	same-form	split	one-slot	shall bring	down	one tag: [3shall bring 5downG2601	SPLIT: one Greek word on two rows
+Eze 33:19	846	15	them	he	αυτοίς		form-missing	two-words	two-slots	them	he	two tags: themG1473 | heG1473	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 36:14	3756	9	you shall not make	childless	ουκ	ουκ	same-form	split	one-slot	you shall not make	childless	one tag: 1you shall not make] childlessG3756	SPLIT: one Greek word on two rows
+Eze 37:10	4970	21	a very	exceedingly.			form-missing	two-words	two-slots	a very	exceedingly.	two tags: 1a veryG4970 | 2exceedingly].G4970	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 40:6	1803	16	six by	six;			form-missing	two-words	two-slots	six by	six;	two tags: six byG1803 | six;G1803	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 42:14	1510.3	20	might	be	ώσιν	ώσιν	same-form	split	one-slot	might	be	one tag: 3might 5beG1510.3	SPLIT: one Greek word on two rows
+Eze 44:21	4095	3	shall	drink	πίωσι	πίωσι	same-form	split	one-slot	shall	drink	one tag: 2shall 5drinkG4095	SPLIT: one Greek word on two rows
+Eze 45:9	851	14	Let	be removed,	αφέλεσθε	αφέλεσθε	same-form	split	one-slot	Let	be removed,	one tag: 1Let] be removed,G851	SPLIT: one Greek word on two rows
+Eze 46:13	4404	11	morning	by morning			form-missing	two-words	two-slots	morning	by morning	two tags: morningG4404 | by morningG4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 46:14	4404	5	morning	by morning,	τοπρωϊ		form-missing	two-words	two-slots	morning	by morning,	two tags: morningG4404 | by morning,G4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 46:15	4404	10	morning	by morning	τοπρωϊ		form-missing	two-words	two-slots	morning	by morning	two tags: morningG4404 | by morningG4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Eze 47:4	5204	4	water,	the water	ύδατι		form-missing	two-words	two-slots	water,	the water	two tags: water,G5204 | the waterG5204	NOT A SPLIT: two Greek words (4 tags, none cut)
+Eze 48:12	39	11	a holy	of holies		αγίων	form-missing	two-words	two-slots	a holy	of holies	two tags: a holyG39 | of holiesG39	NOT A SPLIT: two Greek words (2 tags, none cut)
+Dan 1:2	2532	16	of the LORD.	And	κυρίου		form-missing	two-words	unclear	of the LORD.	And	two tags: of the LORD.G2532 | AndG2532	NOT A SPLIT: two Greek words (5 tags); label error: 'of the LORD.' is tagged G2532 in the source; the word is κυρίου, G2962
+Dan 2:7	2036	6	Let	tell	ειπάτω	ειπάτω	same-form	split	one-slot	Let	tell	one tag: 1Let] tellG2036	SPLIT: one Greek word on two rows
+Dan 2:37	935	1	O king,	are king	βασιλεύ		form-missing	two-words	two-slots	O king,	are king	two tags: O king,G935 | are kingG935	NOT A SPLIT: two Greek words (3 tags, none cut)
+Dan 2:37	935	2	are king	of kings;		βασιλέων	form-missing	two-words	two-slots	are king	of kings,	two tags: are kingG935 | of kings,G935	NOT A SPLIT: two Greek words (3 tags, none cut)
+Dan 2:47	2316	14	God	of gods,		θεών	form-missing	two-words	two-slots	God	of gods,	two tags: GodG2316 | of gods,G2316	NOT A SPLIT: two Greek words (3 tags, none cut)
+Dan 4:1	4129	16	may	be multiplied.	πληθυνθείη	πληθυνθείη	same-form	split	one-slot	may	be multiplied.	one tag: 1may 3 be multiplied].G4129	SPLIT: one Greek word on two rows
+Dan 4:27	700	6	let	please	αρεσάτω	αρεσάτω	same-form	split	one-slot	let	please	one tag: 1let] pleaseG700	SPLIT: one Greek word on two rows
+Dan 5:10	5015	21	Let	disturb	ταρασσέτωσάν	ταρασσέτωσάν	same-form	split	one-slot	Let	disturb	one tag: 1Let 4disturbG5015	SPLIT: one Greek word on two rows
+Dan 5:10	241.3	32	let	be changed!		αλλοιούσθω	form-missing	split	one-slot	let	be changed!	one tag: 1let] be changed!G241.3	SPLIT: one Greek word on two rows
+Dan 5:17	1510.5	12	Let	be,	έστω	έστω	same-form	split	one-slot	Let	be,	one tag: 1Let 3be],G1510.5	SPLIT: one Greek word on two rows
+Dan 8:1	1473	11	me,	I	με		form-missing	two-words	two-slots	me,	I	two tags: me,G1473 | IG1473	NOT A SPLIT: two Greek words (3 tags, none cut)
+Dan 9:24	39	42	the holy	of holies.		αγίων	form-missing	two-words	two-slots	the holy	of holies.	two tags: the holyG39 | of holies.G39	NOT A SPLIT: two Greek words (3 tags, none cut)
+Dan 11:17	1510.8.3	33	she will	be.	έσται	έσται	same-form	split	one-slot	she will	be.	one tag: 1she will 3be].G1510.8.3	SPLIT: one Greek word on two rows
+Amo 3:4	5100	24	anything	, no.	τι	τι	same-form	split	unclear	anything	, no.	one tag: 1anything], no.G5100	SPLIT: one Greek word on two rows
+Amo 6:12	2462	4	horses	, no.	ίπποι	ίπποι	same-form	split	unclear	horses	, no.	one tag: 1horses], no.G2462	SPLIT: one Greek word on two rows
+Amo 8:8	5015	4	shall	be disturbed	ταραχθήσεται	ταραχθήσεται	same-form	split	one-slot	shall	be disturbed	one tag: 1shall 5be disturbedG5015	SPLIT: one Greek word on two rows
+Mic 6:7	4104.2	10	of hearty	, no.	πιόνων	πιόνων	same-form	split	unclear	of hearty	, no.	one tag: 1of hearty], no.G4104.2	SPLIT: one Greek word on two rows
+Hab 2:6	2983	6	Shall	take up,	λήψονται	λήψονται	same-form	split	one-slot	Shall	take up,	one tag: 1Shall 5take up],G2983	SPLIT: one Greek word on two rows
+Zep 3:5	4404	11	Morning	by morning			form-missing	two-words	two-slots	Morning	by morning	two tags: MorningG4404 | by morningG4404	NOT A SPLIT: two Greek words (2 tags, none cut)
+Hag 1:6	3588	22	the one	of the ones		τους	form-missing	two-words	two-slots	the one	of the ones	two tags: the oneG3588 | of the onesG3588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Hag 1:12	3588	3	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (15 tags, none cut)
+Hag 1:12	3588	11	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (15 tags, none cut)
+Hag 2:4	3588	9	O,	son of		του	form-missing	two-words	unclear		son of	two tags: G3588 | son ofG3588	NOT A SPLIT: two Greek words (6 tags, none cut)
+Zec 7:9	4160	12	let	execute	ποιείτε	ποιείτε	same-form	split	one-slot	let	execute	one tag: 1let 3executeG4160	SPLIT: one Greek word on two rows
+Zec 7:10	3422.2	17	let	resent	μνησικακείτω	μνησικακείτω	same-form	split	one-slot	let	resent	one tag: 1let 4resent]G3422.2	SPLIT: one Greek word on two rows
+Zec 8:17	3049	8	let	consider	λογίζεσθε	λογίζεσθε	same-form	split	one-slot	let	consider	one tag: 1let 4consider]G3049	SPLIT: one Greek word on two rows
+Zec 12:12	5443	5	tribes	by tribes;	φυλάς	φυλάς	same-form	two-words	two-slots	tribes	by tribes;	two tags: tribesG5443 | by tribes;G5443	NOT A SPLIT: two Greek words (4 tags, none cut)
+Zec 12:12	5443	6	by tribes;	the tribe	φυλάς		form-missing	two-words	two-slots	by tribes;	the tribe	two tags: by tribes;G5443 | the tribeG5443	NOT A SPLIT: two Greek words (4 tags, none cut)
+Mal 2:17	846	26	them	he	αυτοίς		form-missing	two-words	two-slots	them	he	two tags: themG1473 | heG1473	NOT A SPLIT: two Greek words (5 tags, none cut)
+1Co 1:10	3004	15	you should	say	λέγητε	λέγητε	same-form	split	one-slot	you should	say	one tag: 1you should 3sayG3004	SPLIT: one Greek word on two rows
+1Co 2:8	4717	17	they	have crucified.	εσταύρωσαν	εσταύρωσαν	same-form	split	one-slot	they	have crucified.	one tag: 1they 4have crucified].G4717	SPLIT: one Greek word on two rows
+1Co 3:2	4222	2	I gave	to drink,	επότισα	επότισα	same-form	split	one-slot	I gave	to drink	one tag: 1I gave 4to drink]G4222	SPLIT: one Greek word on two rows
+1Co 3:10	991	18	let	take heed	βλεπέτω	βλεπέτω	same-form	split	one-slot	let	take heed	one tag: 2let] take heedG991	SPLIT: one Greek word on two rows
+1Co 3:18	1818	2	Let	cheat!	εξαπατάτω	εξαπατάτω	same-form	split	one-slot	Let	cheat!	one tag: 1Let 3cheat]!G1818	SPLIT: one Greek word on two rows
+1Co 4:1	3049	2	let	consider	λογιζέσθω	λογιζέσθω	same-form	split	one-slot	let	consider	one tag: 1let 3considerG3049	SPLIT: one Greek word on two rows
+1Co 4:8	4147	4	are you	enriched?	επλουτήσατε	επλουτήσατε	same-form	split	one-slot	Are you	enriched?	one tag: 1Are you] enriched?G4147	SPLIT: one Greek word on two rows
+1Co 5:1	191	1	is	heard	ακούεται	ακούεται	same-form	split	one-slot	is	heard	one tag: 2is 4heardG191	SPLIT: one Greek word on two rows
+1Co 6:12	1850	13	shall	be brought under the authority	εξουσιασθήσομαι	εξουσιασθήσομαι	same-form	split	one-slot	shall	be brought under the authority	one tag: 2shall] be brought under the authorityG1850	SPLIT: one Greek word on two rows
+1Co 7:2	2192	8	let	have,	εχέτω	εχέτω	same-form	split	one-slot	let	have,	one tag: 1let 3have],G2192	SPLIT: one Greek word on two rows
+1Co 7:2	2192	15	let	have!	εχέτω	εχέτω	same-form	split	one-slot	let	have!	one tag: 1let 3have]!G2192	SPLIT: one Greek word on two rows
+1Co 7:3	591	7	Let	render;	αποδιδότω		form-missing	split	one-slot	Let	render,	one tag: 1Let 4render],G591	SPLIT: one Greek word on two rows
+1Co 8:8	3936	4	stand	before	παρίστησι	παρίστησι	same-form	split	one-slot	stand	before	one tag: 2stand] beforeG3936	SPLIT: one Greek word on two rows
+1Co 8:13	4624	19	I should	cause	σκανδαλίσω		form-missing	split	unclear	I should	cause	one tag: 1I should 3cause] to stumble.G4624	SPLIT: one Greek word on two rows
+1Co 8:13	4624	20	cause	to stumble.		σκανδαλίσω	form-missing	split	unclear	cause	to stumble.	one tag: 1I should 3cause] to stumble.G4624	SPLIT: one Greek word on two rows
+1Co 9:1	3708	12	Have I	seen?	εώρακα	εώρακα	same-form	split	one-slot	Have I	seen?	one tag: 1Have I 3seen]?G3708	SPLIT: one Greek word on two rows
+1Co 9:12	1325	22	we should	give	δώμεν	δώμεν	same-form	split	one-slot	we should	give	one tag: 1we should 3give]G1325	SPLIT: one Greek word on two rows
+1Co 10:17	3348	15	we	partake.	μετέχομεν	μετέχομεν	same-form	split	one-slot	we	partake.	one tag: 1we 3partake].G3348	SPLIT: one Greek word on two rows
+1Co 10:24	2212	3	Let	seek,	ζητείτω	ζητείτω	same-form	split	one-slot	Let	seek,	one tag: 1Let 3seek],G2212	SPLIT: one Greek word on two rows
+1Co 11:17	4905	14	you	come together.	συνέρχεσθε	συνέρχεσθε	same-form	split	one-slot	you	come together.	one tag: 1you 3come together].G4905	SPLIT: one Greek word on two rows
+1Co 11:28	1381	0	let	prove	δοκιμαζέτω	δοκιμαζέτω	same-form	split	one-slot	let	prove	one tag: [2let 4proveG1381	SPLIT: one Greek word on two rows
+1Co 11:31	2919	6	we should	be judged.	εκρινόμεθα	εκρινόμεθα	same-form	split	one-slot	we should	be judged.	one tag: 3we should] be judged.G2919	SPLIT: one Greek word on two rows
+1Co 11:32	2632	11	we should	be condemned.	κατακριθώμεν	κατακριθώμεν	same-form	split	one-slot	we should	be condemned.	one tag: 1we should 3be condemned].G2632	SPLIT: one Greek word on two rows
+1Co 11:34	4905	11	you should	come together!	συνέρχησθε	συνέρχησθε	same-form	split	one-slot	you should	come together.	one tag: 1you should 3come together].G4905	SPLIT: one Greek word on two rows
+1Co 12:25	3309	12	should have	concern	μεριμνώσι	μεριμνώσι	same-form	split	one-slot	should have	concern	one tag: 3should have 6concernG3309	SPLIT: one Greek word on two rows
+1Co 14:9	1325	10	you should	give,	δώτε	δώτε	same-form	split	one-slot	you should	give,	one tag: 1you should 3give],G1325	SPLIT: one Greek word on two rows
+1Co 14:26	1096	21	Let	be!	γενέσθω	γενέσθω	same-form	split	one-slot	let	be!	one tag: 1let 3be]!G1096	SPLIT: one Greek word on two rows
+1Co 14:27	1329	15	let	interpret!	διερμηνευέτω	διερμηνευέτω	same-form	split	one-slot	let	interpret!	one tag: 1let] interpret!G1329	SPLIT: one Greek word on two rows
+1Co 14:29	2980	5	let	speak,	λαλείτωσαν	λαλείτωσαν	same-form	split	one-slot	let	speak,	one tag: 1let 5speak],G2980	SPLIT: one Greek word on two rows
+1Co 14:30	4601	7	let	be quiet!	σιγάτω	σιγάτω	same-form	split	one-slot	let	be quiet!	one tag: 1let] be quiet!G4601	SPLIT: one Greek word on two rows
+1Co 14:34	4601	6	Let	be quiet,	σιγάτωσαν		form-missing	split	one-slot	Let	be quiet!	one tag: 1Let] be quiet!G4601	SPLIT: one Greek word on two rows
+1Co 15:51	2837	7	we shall	sleep,	κοιμηθησόμεθα		form-missing	split	one-slot	we shall	sleep,	one tag: 1we shall] sleep,G2837	SPLIT: one Greek word on two rows
+1Co 16:14	1096	4	Let	be!	γινέσθω	γινέσθω	same-form	split	one-slot	Let	be!	one tag: 1Let 4be]!G1096	SPLIT: one Greek word on two rows
+1Jn 2:7	1125	4	I	write			form-missing	split	one-slot	I	write	one tag: 1I 3writeG1125	SPLIT: one Greek word on two rows
+1Th 2:1	1096	13	it has	been.	γέγονεν	γέγονεν	same-form	split	one-slot	it has	been;	one tag: 1it has 3been];G1096	SPLIT: one Greek word on two rows
+1Th 3:11	2720	13	may	straighten out	κατευθύναι	κατευθύναι	same-form	split	one-slot	may	straighten out	one tag: 2may] straighten outG2720	SPLIT: one Greek word on two rows
+1Th 3:12	4121	4	may	superabound,	πλεονάσαι	πλεονάσαι	same-form	split	one-slot	may	superabound,	one tag: 2may 5superabound],G4121	SPLIT: one Greek word on two rows
+1Th 5:2	1492	3	you	know	οίδατε	οίδατε	same-form	split	one-slot	you	know	one tag: 2you 4know]G1492	SPLIT: one Greek word on two rows
+1Th 5:20	1848	2	treat	with contempt!	εξουθενείτε	εξουθενείτε	same-form	split	one-slot	treat	with contempt!	one tag: 2treat] with contempt!G1848	SPLIT: one Greek word on two rows
+1Ti 2:5	444	8	of men —	the man	ανθρώπων		form-missing	two-words	two-slots	of men --	the man	two tags: of men --G444 | the manG444	NOT A SPLIT: two Greek words (2 tags, none cut)
+1Ti 2:11	3129	3	Let	learn	μανθανέτω	μανθανέτω	same-form	split	one-slot	Let	learn	one tag: 1Let 3learn]G3129	SPLIT: one Greek word on two rows
+1Ti 2:12	2010	4	I commit	to their care,			form-missing	split	one-slot	I commit	to their care,	one tag: 1I commit 3to their care],G2010	SPLIT: one Greek word on two rows
+1Ti 3:4	4291	4	standing	over,	προϊστάμενον	προϊστάμενον	same-form	split	one-slot	standing	over,	one tag: 1standing 3over],G4291	SPLIT: one Greek word on two rows
+1Ti 3:7	1706	14	he should	fall,	εμπέση	εμπέση	same-form	split	one-slot	he should	fall,	one tag: 1he should 3fall],G1706	SPLIT: one Greek word on two rows
+1Ti 4:12	2706	4	Let	disdain!	καταφρονείτω	καταφρονείτω	same-form	split	one-slot	Let	disdain!	one tag: 1Let 3disdain]!G2706	SPLIT: one Greek word on two rows
+1Ti 5:1	1969	2	You should	rebuke.	επιπλήξης	επιπλήξης	same-form	split	one-slot	You should	rebuke,	one tag: 1You should 3rebuke],G1969	SPLIT: one Greek word on two rows
+1Ti 5:9	2639	1	Let	be enrolled	καταλεγέσθω	καταλεγέσθω	same-form	split	one-slot	Let	be enrolled	one tag: 1Let 4be enrolledG2639	SPLIT: one Greek word on two rows
+1Ti 5:17	515	6	Let	be worthy,	αξιούσθωσαν	αξιούσθωσαν	same-form	split	one-slot	Let	be worthy,	one tag: 1Let 6be worthy],G515	SPLIT: one Greek word on two rows
+2Co 1:8	2309	2	we do	want	θέλομεν	θέλομεν	same-form	split	one-slot	we do	want	one tag: 2we do] wantG2309	SPLIT: one Greek word on two rows
+2Co 1:9	1510.3	12	we should	be	ώμεν	ώμεν	same-form	split	one-slot	we should	be	one tag: 1we should 3be]G1510.3	SPLIT: one Greek word on two rows
+2Co 2:5	3076	6	he has	grieved,	λελύπηκεν	λελύπηκεν	same-form	split	one-slot	he has	grieved,	one tag: 1he has 3grieved],G3076	SPLIT: one Greek word on two rows
+2Co 2:11	50	11	we are	ignorant.	αγνοούμεν	αγνοούμεν	same-form	split	one-slot	we are	ignorant.	one tag: 2we are 4ignorant].G50	SPLIT: one Greek word on two rows
+2Co 4:15	4052	14	should cause	to abound	περισσεύση	περισσεύση	same-form	split	one-slot	should cause	to abound	one tag: 1should cause] to aboundG4052	SPLIT: one Greek word on two rows
+2Co 5:3	2147	5	we shall	be found.	ευρεθησόμεθα	ευρεθησόμεθα	same-form	split	one-slot	we shall	be found.	one tag: 1we shall 3be found].G2147	SPLIT: one Greek word on two rows
+2Co 5:4	4727	7	we	moan,	στενάζομεν	στενάζομεν	same-form	split	one-slot	we	moan,	one tag: 1we] moan,G4727	SPLIT: one Greek word on two rows
+2Co 5:12	4921	5	we do	commend	συνιστάνομεν	συνιστάνομεν	same-form	split	one-slot	we do	commend	one tag: 1we do 3commend]G4921	SPLIT: one Greek word on two rows
+2Co 10:11	3049	1	Let	consider	λογιζέσθω	λογιζέσθω	same-form	split	one-slot	Let	consider	one tag: 1Let 3considerG3049	SPLIT: one Greek word on two rows
+2Co 10:13	2744	6	shall	boast,	καυχησόμεθα	καυχησόμεθα	same-form	split	one-slot	shall	boast,	one tag: 1shall 3boast],G2744	SPLIT: one Greek word on two rows
+2Co 12:18	4043	14	Do we	walk?	περιεπατήσαμεν	περιεπατήσαμεν	same-form	split	one-slot	Do we	walk?	one tag: 1Do we 3walk]?G4043	SPLIT: one Greek word on two rows
+2Co 13:10	5530	9	I should	treat you,	χρήσωμαι	χρήσωμαι	same-form	split	one-slot	I should	treat you,	one tag: 1I should 3treat you],G5530	SPLIT: one Greek word on two rows
+2Pe 1:2	4129	4	may	be multiplied	πληθυνθείη	πληθυνθείη	same-form	split	one-slot	may	be multiplied	one tag: 1may] be multipliedG4129	SPLIT: one Greek word on two rows
+2Pe 2:18	5350	4	uttering	sounds,	φθεγγόμενοι	φθεγγόμενοι	same-form	split	one-slot	uttering	sounds,	one tag: 1uttering 3sounds],G5350	SPLIT: one Greek word on two rows
+2Pe 3:5	2990	0	escaped	notice	λανθάνει	λανθάνει	same-form	split	one-slot	escaped	notice	one tag: [3escaped 5noticeG2990	SPLIT: one Greek word on two rows
+2Th 3:16	1325	6	may	give	δώη	δώη	same-form	split	one-slot	may	give	one tag: 2may] giveG1325	SPLIT: one Greek word on two rows
+2Ti 2:5	118	10	he should	fight.	αθλήση	αθλήση	same-form	split	one-slot	he should	fight.	one tag: 1he should 3fight].G118	SPLIT: one Greek word on two rows
+2Ti 2:7	1325	3	may	give	δώη	δώη	same-form	split	one-slot	may	give	one tag: [2may 5giveG1325	SPLIT: one Greek word on two rows
+2Ti 4:16	3049	14	May it	be imputed.	λογισθείη	λογισθείη	same-form	split	one-slot	May it	be imputed.	one tag: 1May it 3be imputed].G3049	SPLIT: one Greek word on two rows
+Act 1:20	2983	22	May	receive	λάβοι	λάβοι	same-form	split	one-slot	May	receive	one tag: 1May 3receiveG2983	SPLIT: one Greek word on two rows
+Act 2:2	4157	9	of a	breath	πνοής	πνοής	same-form	split	one-slot	of a	breath	one tag: 1of a 3breathG4157	SPLIT: one Greek word on two rows
+Act 2:14	1510.5	23	let	be,	έστω	έστω	same-form	split	one-slot	let	be,	one tag: 1let 3be],G1510.5	SPLIT: one Greek word on two rows
+Act 4:10	3778	27	this one	this man	τούτω		form-missing	two-words	two-slots	this one	this man	two tags: this oneG3778 | this manG3778	NOT A SPLIT: two Greek words (2 tags, none cut)
+Act 4:17	1268	5	it should	be spread	διανεμηθή	διανεμηθή	same-form	split	one-slot	it should	be spread	one tag: 1it should 3be spread]G1268	SPLIT: one Greek word on two rows
+Act 5:4	3306	3	did it	remain?	έμενε	έμενε	same-form	split	one-slot	did it	remain?	one tag: 3did it] remain?G3306	SPLIT: one Greek word on two rows
+Act 5:19	1806	11	leading	out	εξαγαγών	εξαγαγών	same-form	split	one-slot	leading	out	one tag: [2leading 4outG1806	SPLIT: one Greek word on two rows
+Act 8:20	1510.4	9	May	be	είη	είη	same-form	split	one-slot	May	be	one tag: 1May 3be]G1510.4	SPLIT: one Greek word on two rows
+Act 9:8	5496	14	leading	by the hand	χειραγωγούντες	χειραγωγούντες	same-form	split	one-slot	leading	by the hand	one tag: [2leading 4by the handG5496	SPLIT: one Greek word on two rows
+Act 10:28	3367	20	not	one	μηδένα	μηδένα	same-form	split	unclear	not	one	one tag: 4not 5oneG3367	SPLIT: one Greek word on two rows
+Act 11:26	5537	20	were	treated	χρηματίσαι	χρηματίσαι	same-form	split	one-slot	were	treated	one tag: [4were 6treatedG5537	SPLIT: one Greek word on two rows
+Act 16:3	1492	20	they	knew	ήδεισαν	ήδεισαν	same-form	split	one-slot	they	knew	one tag: [2they 4knewG1492	SPLIT: one Greek word on two rows
+Act 19:6	2007	1	having put	upon	επιθέντος	επιθέντος	same-form	split	one-slot	having put	upon	one tag: [2having put 4uponG2007	SPLIT: one Greek word on two rows
+Act 20:27	5288	2	I	keep back	υπεστειλάμην	υπεστειλάμην	same-form	split	one-slot	I	keep back	one tag: 2I] keep backG5288	SPLIT: one Greek word on two rows
+Act 24:4	1465	6	I	hinder,			form-missing	split	one-slot	I	hinder,	one tag: 1I 3hinder],G1465	SPLIT: one Greek word on two rows
+Act 24:20	2036	3	let	speak!	ειπάτωσαν	ειπάτωσαν	same-form	split	one-slot	let	speak!	one tag: 1let] speak!G2036	SPLIT: one Greek word on two rows
+Act 26:26	3982	18	I am	persuaded	πείθομαι	πείθομαι	same-form	split	one-slot	I am	persuaded	one tag: 2I am 4persuadedG3982	SPLIT: one Greek word on two rows
+Act 27:10	1510.9	23	is	to be	έσεσθαι	έσεσθαι	same-form	split	one-slot	is	to be	one tag: 3is 5to beG1510.9	SPLIT: one Greek word on two rows
+Act 27:16	2480	7	we were	able	ισχύσαμεν	ισχύσαμεν	same-form	split	one-slot	we were	able	one tag: 1we were 3ableG2480	SPLIT: one Greek word on two rows
+Act 27:33	4355	20	having taken	to yourselves.	προσλαβόμενοι	προσλαβόμενοι	same-form	split	one-slot	having taken	to yourselves.	one tag: 1having taken] to yourselves.G4355	SPLIT: one Greek word on two rows
+Col 2:16	2919	4	Let	judge	κρινέτω	κρινέτω	same-form	split	one-slot	Let	judge	one tag: 1Let 5judge]G2919	SPLIT: one Greek word on two rows
+Col 2:18	2603	2	Let	deprive	καταβραβεύετω		form-missing	split	unclear	Let	deprive	one tag: 1Let 3deprive] of due reward,G2603	SPLIT: one Greek word on two rows
+Col 2:18	2603	3	deprive	of due reward!		καταβραβεύετω	form-missing	split	unclear	deprive	of due reward,	one tag: 1Let 3deprive] of due reward,G2603	SPLIT: one Greek word on two rows
+Col 3:15	1018	5	let	preside	βραβευέτω	βραβευέτω	same-form	split	one-slot	let	preside	one tag: 1let] presideG1018	SPLIT: one Greek word on two rows
+Col 3:16	1774	4	Let	dwell	ενοικείτω	ενοικείτω	same-form	split	one-slot	Let	dwell	one tag: 1Let] dwellG1774	SPLIT: one Greek word on two rows
+Col 4:1	3930	9	Let	furnish;	παρέχεσθε	παρέχεσθε	same-form	split	one-slot	Let	furnish!	one tag: 1Let 4furnish]!G3930	SPLIT: one Greek word on two rows
+Eph 4:26	1931	7	let	set	επιδυέτω	επιδυέτω	same-form	split	one-slot	let	set	one tag: 2let] setG1931	SPLIT: one Greek word on two rows
+Eph 5:6	538	2	Let	be deceived	απατάτω	απατάτω	same-form	split	one-slot	Let	be deceived	one tag: 1Let] be deceivedG538	SPLIT: one Greek word on two rows
+Eph 5:22	5293	5	Let	submit,	υποτάσσεσθε	υποτάσσεσθε	same-form	split	one-slot	Let	submit,	one tag: 1Let 4submit],G5293	SPLIT: one Greek word on two rows
+Eph 5:25	25	2	Let	love	αγαπάτε	αγαπάτε	same-form	split	one-slot	Let	love	one tag: 1Let] loveG25	SPLIT: one Greek word on two rows
+Eph 5:33	25	11	let	love	αγαπάτω	αγαπάτω	same-form	split	one-slot	let	love	one tag: 2let 4love]G25	SPLIT: one Greek word on two rows
+Gal 2:20	2198	15	I	live	ζω	ζω	same-form	split	one-slot	I	live	one tag: 3I 5liveG2198	SPLIT: one Greek word on two rows
+Gal 3:3	2005	7	you are	completed?	επιτελείσθε	επιτελείσθε	same-form	split	one-slot	you are	completed?	one tag: 1you are 3completed]?G2005	SPLIT: one Greek word on two rows
+Gal 5:2	5623	11	shall derive	benefit.	ωφελήσει	ωφελήσει	same-form	split	one-slot	shall derive	benefit.	one tag: 1shall derive] benefit.G5623	SPLIT: one Greek word on two rows
+Gal 5:10	5426	9	you shall	think;	φρονήσετε	φρονήσετε	same-form	split	one-slot	you shall	think;	one tag: 1you shall 3think];G5426	SPLIT: one Greek word on two rows
+Gal 6:4	1381	4	let	try	δοκιμαζέτω	δοκιμαζέτω	same-form	split	one-slot	let	try	one tag: 1let 3tryG1381	SPLIT: one Greek word on two rows
+Gal 6:6	2841	0	let	participate with	κοινωνείτω	κοινωνείτω	same-form	split	one-slot	let	participate with	one tag: [2let 7participate withG2841	SPLIT: one Greek word on two rows
+Gal 6:12	1377	16	they should	be persecuted.	διώκωνται	διώκωνται	same-form	split	one-slot	they should	be persecuted.	one tag: 1they should 3be persecuted].G1377	SPLIT: one Greek word on two rows
+Gal 6:17	3930	5	let	make.	παρεχέτω		form-missing	split	one-slot	let	make;	one tag: 1let 3make];G3930	SPLIT: one Greek word on two rows
+Heb 4:8	2664	4	gave	rest,	κατέπαυσεν	κατέπαυσεν	same-form	split	one-slot	gave	rest,	one tag: 2gave] rest,G2664	SPLIT: one Greek word on two rows
+Heb 5:1	2525	7	is established	in		καθίσταται	form-missing	split	one-slot	is established	in	one tag: 1is established] inG2525	SPLIT: one Greek word on two rows
+Heb 6:12	1096	3	you should	become,	γένησθε		form-missing	split	one-slot	you should	become,	one tag: 1you should 3become],G1096	SPLIT: one Greek word on two rows
+Heb 6:14	4129	6	multiplying	I will multiply	πληθύνων		form-missing	two-words	two-slots	multiplying	I will multiply	two tags: multiplyingG4129 | I will multiplyG4129	NOT A SPLIT: two Greek words (2 tags, none cut)
+Heb 8:7	2212	10	there	be sought	εζητείτο	εζητείτο	same-form	split	one-slot	there	be sought	one tag: 1there 3be soughtG2212	SPLIT: one Greek word on two rows
+Heb 9:2	3739	6	which	was	η	η	same-form	two-words	two-slots	which	was	two tags: whichG3739 | wasG3739	NOT A SPLIT: two Greek words (2 tags, none cut)
+Heb 10:2	3973	3	they	have ceased	επαύσαντο	επαύσαντο	same-form	split	one-slot	they	have ceased	one tag: 1they] have ceasedG3973	SPLIT: one Greek word on two rows
+Heb 11:40	5048	11	they should	be perfected.	τελειωθώσι	τελειωθώσι	same-form	split	one-slot	they should	be perfected.	one tag: 1they should 3be perfected].G5048	SPLIT: one Greek word on two rows
+Heb 12:5	1256	8	he reasons	, saying,	διαλέγεται	διαλέγεται	same-form	split	one-slot	he reasons	, saying,	one tag: 1he reasons], saying,G1256	SPLIT: one Greek word on two rows
+Heb 12:9	5293	14	Shall we	be	υποταγησόμεθα		form-missing	split	unclear	shall we	be	one tag: 1shall we 3be] submittedG5293	SPLIT: one Greek word on two rows
+Heb 12:9	5293	15	be	submitted		υποταγησόμεθα	form-missing	split	unclear	be	submitted	one tag: 1shall we 3be] submittedG5293	SPLIT: one Greek word on two rows
+Heb 12:13	1624	11	should	be turned aside;	εκτραπή	εκτραπή	same-form	split	one-slot	should	be turned aside,	one tag: 3should] be turned aside,G1624	SPLIT: one Greek word on two rows
+Heb 12:18	4334	2	you have	come forward to	προσεληλύθατε	προσεληλύθατε	same-form	split	one-slot	you have	come forward to	one tag: 2you have] come forward toG4334	SPLIT: one Greek word on two rows
+Jas 1:4	2192	5	let	have,	εχέτω	εχέτω	same-form	split	one-slot	let	have!	one tag: 1let 3have]!G2192	SPLIT: one Greek word on two rows
+Jas 1:7	3633	2	let	imagine	οιέσθω	οιέσθω	same-form	split	one-slot	let	imagine	one tag: 2let 6imagineG3633	SPLIT: one Greek word on two rows
+Jas 1:9	2744	0	let	boast	καυχάσθω	καυχάσθω	same-form	split	one-slot	let	boast	one tag: [2let 6boastG2744	SPLIT: one Greek word on two rows
+Jas 1:13	3004	2	Let	say	λεγέτω	λεγέτω	same-form	split	one-slot	Let	say	one tag: 1Let] sayG3004	SPLIT: one Greek word on two rows
+Jas 2:7	987	2	Do	blaspheme	βλασφημούσι	βλασφημούσι	same-form	split	one-slot	Do	blaspheme	one tag: 1Do] blasphemeG987	SPLIT: one Greek word on two rows
+Jas 2:14	2192	13	should	have?	έχη	έχη	same-form	split	one-slot	should	have?	one tag: 2should 4have]?G2192	SPLIT: one Greek word on two rows
+Jas 2:17	2192	7	it should	have	έχη	έχη	same-form	split	one-slot	it should	have	one tag: 1it should 3have]G2192	SPLIT: one Greek word on two rows
+Jas 2:21	1344	7	Was	justified,	εδικαιώθη	εδικαιώθη	same-form	split	one-slot	Was	justified,	one tag: 1Was 5justified],G1344	SPLIT: one Greek word on two rows
+Jas 2:25	1344	9	was she	justified,	εδικαιώθη	εδικαιώθη	same-form	split	one-slot	was she	justified,	one tag: 1was she 3justified],G1344	SPLIT: one Greek word on two rows
+Jas 3:1	1096	3	Let there	be,	γίνεσθε		form-missing	split	one-slot	Let there	be,	one tag: 1Let there 3be],G1096	SPLIT: one Greek word on two rows
+Jas 4:9	3344	10	Let	be converted,	μεταστραφήτω	μεταστραφήτω	same-form	split	one-slot	Let	be converted,	one tag: 1Let 3be converted],G3344	SPLIT: one Greek word on two rows
+Jas 4:12	1161	10	But,	and			form-missing	unmatched	unclear		and who	source numbers at 10,11 = 1161,5100	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Jas 5:12	1510.5	17	let	be	ήτω	ήτω	same-form	split	one-slot	let	be	one tag: [2let 5beG1510.5	SPLIT: one Greek word on two rows
+Jas 5:12	4098	32	you should	fall.	πέσητε	πέσητε	same-form	split	one-slot	you should	fall.	one tag: 1you should 3fall].G4098	SPLIT: one Greek word on two rows
+Joh 2:4	2240	10	is	come	ήκει	ήκει	same-form	split	one-slot	is	come	one tag: 3is 5comeG2240	SPLIT: one Greek word on two rows
+Joh 3:6	4561	4	flesh	is flesh;	σαρκός		form-missing	two-words	two-slots	flesh	is flesh;	two tags: fleshG4561 | is flesh;G4561	NOT A SPLIT: two Greek words (2 tags, none cut)
+Joh 3:6	4151	12	spirit	is spirit.	πνεύματος		form-missing	two-words	two-slots	spirit	is spirit.	two tags: spiritG4151 | is spirit.G4151	NOT A SPLIT: two Greek words (2 tags, none cut)
+Joh 4:48	1492	11	you should	behold,	ίδητε	ίδητε	same-form	split	one-slot	you should	behold,	one tag: 1you should 3behold],G1492	SPLIT: one Greek word on two rows
+Joh 5:24	3588	5	The	one		τον	form-missing	two-words	two-slots	the	one	two tags: theG3588 | oneG3588	NOT A SPLIT: two Greek words (5 tags, none cut)
+Joh 9:21	846	19	him!	he	αυτόν		form-missing	unmatched	unclear		he	source numbers at 19,20 = 2065,1473	NOT A SPLIT: two Greek words (6 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Joh 11:50	622	17	should	perish.	απόληται	απόληται	same-form	split	one-slot	should	perish.	one tag: 3should] perish.G622	SPLIT: one Greek word on two rows
+Joh 12:35	2638	22	should	overtake.	καταλάβη	καταλάβη	same-form	split	one-slot	should	overtake.	one tag: 2should 4overtake].G2638	SPLIT: one Greek word on two rows
+Joh 14:27	1325	12	gives,	give	δίδωσιν		form-missing	unmatched	unclear	gives,	give I	source numbers at 12,13 = 1325,1473	NOT A SPLIT: two Greek words (3 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Joh 14:30	3588	7	the one	of the		του	form-missing	two-words	two-slots	the one	of the	two tags: 2the oneG3588 | 3of theG3588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Joh 16:13	2980	16	he shall	speak	λαλήσει	λαλήσει	same-form	split	one-slot	he shall	speak	one tag: 2he shall] speakG2980	SPLIT: one Greek word on two rows
+Joh 18:30	3860	12	we	have delivered him up.	παρεδώκαμεν	παρεδώκαμεν	same-form	split	one-slot	we	have delivered him up.	one tag: 1we 3have delivered him up].G3860	SPLIT: one Greek word on two rows
+Joh 19:10	3756	7	not?	Do you not know		ουκ	form-missing	unmatched	unclear		Do you not know	source numbers at 7,8 = 2980,3756	NOT A SPLIT: two Greek words (2 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Jud 1:2	4129	6	may	be multiplied.	πληθυνθείη	πληθυνθείη	same-form	split	one-slot	may	be multiplied.	one tag: 1may] be multiplied.G4129	SPLIT: one Greek word on two rows
+Jud 1:10	1987	14	they	have knowledge of,	επίστανται	επίστανται	same-form	split	one-slot	they	have knowledge of,	one tag: 1they 3have knowledge of],G1987	SPLIT: one Greek word on two rows
+Luk 1:66	1510.8.3	15	will	be?	έσται	έσται	same-form	split	one-slot	will	be?	one tag: 1will] be?G1510.8.3	SPLIT: one Greek word on two rows
+Luk 4:40	2007	21	having placed	upon,	επιθείς	επιθείς	same-form	split	one-slot	having placed	upon,	one tag: 1having placed 4upon],G2007	SPLIT: one Greek word on two rows
+Luk 8:17	1096	7	shall	become;	γενήσεται	γενήσεται	same-form	split	one-slot	shall	become,	one tag: 1shall 3become],G1096	SPLIT: one Greek word on two rows
+Luk 8:28	928	26	that you should	torment.	βασανίσης	βασανίσης	same-form	split	one-slot	that you should	torment.	one tag: 1 that you should 3torment].G928	SPLIT: one Greek word on two rows
+Luk 11:11	846	12	to him	, no.	αυτώ	αυτώ	same-form	split	unclear	to him	, no.	one tag: 2to him], no.G1473	SPLIT: one Greek word on two rows
+Luk 11:45	5195	12	you	insult.	υβρίζεις	υβρίζεις	same-form	split	one-slot	you	insult.	one tag: 1you 3insult].G5195	SPLIT: one Greek word on two rows
+Luk 12:22	3309	11	Let	be anxious	μεριμνάτε	μεριμνάτε	same-form	split	one-slot	Let	be anxious	one tag: 1Let 5be anxiousG3309	SPLIT: one Greek word on two rows
+Luk 13:3	622	9	you shall	perish.	απολείσθε	απολείσθε	same-form	split	one-slot	you shall	perish.	one tag: 1you shall 3perish].G622	SPLIT: one Greek word on two rows
+Luk 13:5	622	9	you shall	perish.	απολείσθε	απολείσθε	same-form	split	one-slot	you shall	perish.	one tag: 1you shall 3perish].G622	SPLIT: one Greek word on two rows
+Luk 13:7	2673	24	render	useless?	καταργεί	καταργεί	same-form	split	one-slot	render	useless?	one tag: 1render] useless?G2673	SPLIT: one Greek word on two rows
+Luk 16:2	1410	17	you are	able		δυνήση	form-missing	split	one-slot	you are	able	one tag: 2you are] ableG1410	SPLIT: one Greek word on two rows
+Luk 16:3	2480	19	strong	enough;			form-missing	split	unclear	strong	enough;	one tag: 2strong 3enough];G2480	SPLIT: one Greek word on two rows
+Luk 16:28	2064	11	should	come	έλθωσιν	έλθωσιν	same-form	split	one-slot	should	come	one tag: 2should] comeG2064	SPLIT: one Greek word on two rows
+Luk 18:5	2064	15	it should	come to pass	ερχομένη	ερχομένη	same-form	split	one-slot	it should	come to pass	one tag: 1it should 3come to passG2064	SPLIT: one Greek word on two rows
+Luk 19:43	4016	6	shall put	around	περιβαλούσιν	περιβαλούσιν	same-form	split	one-slot	shall put	around	one tag: [2shall put 4aroundG4016	SPLIT: one Greek word on two rows
+Luk 21:8	4198	23	You should	go	πορευθήτε	πορευθήτε	same-form	split	one-slot	You should	go	one tag: 1You should] goG4198	SPLIT: one Greek word on two rows
+Luk 23:11	1848	0	having treated	with contempt	εξουθενήσας	εξουθενήσας	same-form	split	one-slot	having treated	with contempt	one tag: [5having treated 7with contemptG1848	SPLIT: one Greek word on two rows
+Mar 3:12	4160	8	they should	make.	ποιήσωσι	ποιήσωσι	same-form	split	one-slot	they should	make.	one tag: 1they should 3make].G4160	SPLIT: one Greek word on two rows
+Mar 5:10	649	7	he should	send	αποστείλη	αποστείλη	same-form	split	one-slot	he should	send	one tag: 1he should 3send]G649	SPLIT: one Greek word on two rows
+Mar 6:39	4849	5	parties	by parties,	συμπόσια	συμπόσια	same-form	two-words	two-slots	parties	by parties,	two tags: partiesG4849 | by parties,G4849	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mar 6:40	4237	2	plot	by plot,	πρασιαί	πρασιαί	same-form	two-words	two-slots	plot	by plot,	two tags: plotG4237 | by plot,G4237	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mar 8:4	1410	8	shall	be able	δυνήσεταί	δυνήσεταί	same-form	split	one-slot	shall	be able	one tag: 1shall 5be ableG1410	SPLIT: one Greek word on two rows
+Mar 8:12	4592	20	a sign	, no.			form-missing	split	unclear	a sign	, no.	one tag: 1a sign], no.G4592	SPLIT: one Greek word on two rows
+Mar 8:17	2192	18	Do you	have	έχετε	έχετε	same-form	split	one-slot	Do you	have	one tag: 1Do you 3haveG2192	SPLIT: one Greek word on two rows
+Mar 9:25	1473	20	I	give orders to you —		σοι	form-missing	two-words	two-slots	I	give orders to you,	two tags: IG1473 | give orders to you,G1473	NOT A SPLIT: two Greek words (5 tags, none cut)
+Mar 10:39	4095	15	drink,	you shall drink;		πίεσθε	form-missing	two-words	two-slots	drink,	you shall drink;	two tags: drink,G4095 | you shall drink;G4095	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mar 11:14	2068	14	may	to eat.	φάγοι	φάγοι	same-form	split	one-slot	may	to eat.	one tag: 1may] to eat.G2068	SPLIT: one Greek word on two rows
+Mar 12:24	4105	9	do you	err,	πλανάσθε	πλανάσθε	same-form	split	one-slot	do you	err,	one tag: 3do you] err,G4105	SPLIT: one Greek word on two rows
+Mar 13:14	5343	25	let	flee	φευγέτωσαν	φευγέτωσαν	same-form	split	one-slot	let	flee	one tag: 1let] fleeG5343	SPLIT: one Greek word on two rows
+Mar 14:4	1096	15	has	taken place?	γέγονεν	γέγονεν	same-form	split	one-slot	has	taken place?	one tag: 1has] taken place?G1096	SPLIT: one Greek word on two rows
+Mar 14:7	2192	18	you do	have.	έχετε	έχετε	same-form	split	one-slot	you do	have.	one tag: 2you do 4have].G2192	SPLIT: one Greek word on two rows
+Mat 5:37	3483	5	a yes,	Yes!			form-missing	two-words	two-slots	a yes,	Yes!	two tags: a yes,G3483 | Yes!G3483	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mat 5:37	3756	7	a no,	No!			form-missing	two-words	two-slots	a no,	No!	two tags: a no,G3756 | No!G3756	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mat 6:15	863	15	shall	forgive	αφήσει	αφήσει	same-form	split	one-slot	shall	forgive	one tag: 1shall] forgiveG863	SPLIT: one Greek word on two rows
+Mat 7:22	4395	13	did we	prophesy,	προεφητεύσαμεν	προεφητεύσαμεν	same-form	split	one-slot	did we	prophesy,	one tag: 1did we 3prophesy],G4395	SPLIT: one Greek word on two rows
+Mat 9:12	2192	15	having	do.	έχοντες	έχοντες	same-form	split	one-slot	having	do.	one tag: 1having] do.G2192	SPLIT: one Greek word on two rows
+Mat 10:2	3588	18	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (7 tags, none cut)
+Mat 10:3	3588	9	the	son of		του	form-missing	two-words	two-slots	the	son of	two tags: theG3588 | son ofG3588	NOT A SPLIT: two Greek words (4 tags, none cut)
+Mat 10:13	1994	24	let	return!	επιστραφήτω	επιστραφήτω	same-form	split	one-slot	let	return!	one tag: 1let 3return]!G1994	SPLIT: one Greek word on two rows
+Mat 12:16	4160	7	they should	make,	ποιήσωσιν	ποιήσωσιν	same-form	split	one-slot	they should	make,	one tag: 1they should 4make],G4160	SPLIT: one Greek word on two rows
+Mat 16:13	3004	17	do	say	λέγουσιν	λέγουσιν	same-form	split	one-slot	do	say	one tag: 1do 3sayG3004	SPLIT: one Greek word on two rows
+Mat 16:26	1325	15	will	give		δώσει	form-missing	split	one-slot	will	give	one tag: [2will 4giveG1325	SPLIT: one Greek word on two rows
+Mat 19:13	2007	7	he should place	upon	επιθή	επιθή	same-form	split	one-slot	he should place	upon	one tag: 1he should place] uponG2007	SPLIT: one Greek word on two rows
+Mat 20:13	4856	12	did you	agree	συνεφώνησάς	συνεφώνησάς	same-form	split	one-slot	did you	agree	one tag: 1did you 3agreeG4856	SPLIT: one Greek word on two rows
+Mat 21:19	1096	25	should	be produced	γένηται	γένηται	same-form	split	one-slot	should	be produced	one tag: 1should] be producedG1096	SPLIT: one Greek word on two rows
+Mat 25:17	3588	2	the one	receiving the		τα	form-missing	two-words	two-slots	the one	receiving the	two tags: the oneG3588 | receiving theG3588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mat 25:20	3588	2	the one	the		τα	form-missing	two-words	two-slots	the one	the	two tags: the oneG3588 | [2theG3588	NOT A SPLIT: two Greek words (2 tags, none cut)
+Mat 26:62	2649	11	do	bear witness against?	καταμαρτυρούσιν	καταμαρτυρούσιν	same-form	split	one-slot	do	bear witness against?	one tag: 1do 3bear witness against]?G2649	SPLIT: one Greek word on two rows
+Phm 1:14	1510.3	15	should	be,		η	form-missing	split	one-slot	should	be,	one tag: 3should 5be],G1510.3	SPLIT: one Greek word on two rows
+Phm 1:20	3685	4	may	oblige	οναίμην	οναίμην	same-form	split	one-slot	may	oblige	one tag: 1may 3oblige]G3685	SPLIT: one Greek word on two rows
+Php 2:4	4648	4	Let	watch out,	σκοπείτε	σκοπείτε	same-form	split	one-slot	Let	watch out,	one tag: 1Let 4watch out],G4648	SPLIT: one Greek word on two rows
+Php 2:5	5426	2	let	thinking	φρονείσθω	φρονείσθω	same-form	split	one-slot	let	thinking	one tag: 2let 4thinking]G5426	SPLIT: one Greek word on two rows
+Php 2:8	2288	10	death,	even death	θανάτου	θανάτου	same-form	two-words	two-slots	death,	even death	two tags: death,G2288 | even deathG2288	NOT A SPLIT: two Greek words (2 tags, none cut)
+Php 2:25	2233	2	I esteemed it	that	ηγησάμην	ηγησάμην	same-form	split	one-slot	I esteemed it	that	one tag: 2I esteemed it] thatG2233	SPLIT: one Greek word on two rows
+Php 2:27	2192	22	I should	have.	σχώ	σχώ	same-form	split	one-slot	I should	have.	one tag: 1I should 3have].G2192	SPLIT: one Greek word on two rows
+Php 4:5	1097	3	Let	be known	γνωσθήτω	γνωσθήτω	same-form	split	one-slot	Let	be known	one tag: 1Let] be knownG1097	SPLIT: one Greek word on two rows
+Php 4:6	1107	15	let	be made known	γνωριζέσθω	γνωριζέσθω	same-form	split	one-slot	let	be made known	one tag: 1let] be made knownG1107	SPLIT: one Greek word on two rows
+Rev 1:4	3588	13	the	one	του		form-missing	two-words	one-slot	the	one	two tags: theG3588 | oneG3588	NOT A SPLIT: two Greek words (9 tags, none cut)
+Rev 2:13	4103	33	trustworthy	was,			form-missing	split	one-slot	trustworthy	was,	one tag: 2trustworthy] was,G4103	SPLIT: one Greek word on two rows
+Rev 14:8	4222	19	she has given	to drink	πεπότικε	πεπότικε	same-form	split	one-slot	she has given	to drink	one tag: 1she has given 5to drinkG4222	SPLIT: one Greek word on two rows
+Rev 16:15	4043	15	he should	walk,	περιπατή	περιπατή	same-form	split	one-slot	he should	walk,	one tag: 1he should 3walk],G4043	SPLIT: one Greek word on two rows
+Rev 17:14	2962	11	Lord	of lords		κυρίων	form-missing	two-words	two-slots	Lord	of lords	two tags: [2LordG2962 | 3of lordsG2962	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rev 17:14	935	15	king	of kings.		βασιλέων	form-missing	two-words	two-slots	king	of kings;	two tags: kingG935 | of kings;G935	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rev 19:16	935	12	King	of kings,		βασιλέων	form-missing	two-words	two-slots	King	of kings,	two tags: KingG935 | of kings,G935	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rev 19:16	2962	15	Lord	of lords.		κυρίων	form-missing	two-words	two-slots	Lord	of lords.	two tags: LordG2962 | of lords.G2962	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rom 6:10	3588	1	the fact	he	τη	τη	same-form	unmatched	unclear		he died,	source numbers at 1,2 = 1063,599	NOT A SPLIT: two Greek words (4 tags, none cut); a build step swapped row positions (_split_compounds), so the rows no longer line up with the source by position
+Rom 6:12	936	2	let	reign	βασιλευέτω	βασιλευέτω	same-form	split	one-slot	let	reign	one tag: 2let 5reignG936	SPLIT: one Greek word on two rows
+Rom 8:32	5483	21	shall he	grant?	χαρίσεται	χαρίσεται	same-form	split	one-slot	shall he	grant?	one tag: 1shall he 4grant]?G5483	SPLIT: one Greek word on two rows
+Rom 8:33	2316	4	of God?	God	θεού		form-missing	two-words	two-slots	of God?	God	two tags: of God?G2316 | GodG2316	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rom 9:25	25	16	being loved,	One being loved.	ηγαπημένην	ηγαπημένην	same-form	two-words	two-slots	being loved,	One being loved;	two tags: being loved,G25 | One being loved;G25	NOT A SPLIT: two Greek words (2 tags, none cut)
+Rom 10:6	2609	20	to lead	down;	καταγαγείν	καταγαγείν	same-form	split	one-slot	to lead	down;	one tag: 1to lead] down;G2609	SPLIT: one Greek word on two rows
+Rom 13:3	2309	12	you should	want	θέλεις	θέλεις	same-form	split	one-slot	you should	want	one tag: [2you should 4wantG2309	SPLIT: one Greek word on two rows
+Rom 14:5	4135	16	let	have full assurance!	πληροφορείσθω	πληροφορείσθω	same-form	split	one-slot	let	have full assurance!	one tag: 1let 3have full assurance]!G4135	SPLIT: one Greek word on two rows
+Rom 15:2	700	5	let	please	αρεσκέτω	αρεσκέτω	same-form	split	one-slot	let	please	one tag: 2let 5please]G700	SPLIT: one Greek word on two rows
+Rom 15:20	3618	13	I should	build;	οικοδομώ	οικοδομώ	same-form	split	one-slot	I should	build;	one tag: 1I should 3build];G3618	SPLIT: one Greek word on two rows
+Tit 2:5	987	14	should	be blasphemed.	βλασφημήται	βλασφημήται	same-form	split	one-slot	should	be blasphemed.	one tag: 4should] be blasphemed.G987	SPLIT: one Greek word on two rows
+Tit 2:15	4065	11	Let	speculate about!	περιφρονείτω	περιφρονείτω	same-form	split	one-slot	Let	speculate about!	one tag: 1Let 3speculate about]!G4065	SPLIT: one Greek word on two rows
+Tit 3:2	987	1	to	blaspheme,	βλασφημείν	βλασφημείν	same-form	split	one-slot	to	blaspheme,	one tag: 1to 3blaspheme],G987	SPLIT: one Greek word on two rows
+Tit 3:14	3129	0	let	learn	μανθανέτωσαν	μανθανέτωσαν	same-form	split	one-slot	let	learn	one tag: [2let 6learnG3129	SPLIT: one Greek word on two rows
+Heb 13:1	3306	2	Let	abide!	μενέτω	μενέτω	same-form	split	one-slot	Let	abide!	one tag: 1Let] abide!G3306	SPLIT: one Greek word on two rows
+Heb 13:14	2192	2	we do	have	έχομεν	έχομεν	same-form	split	one-slot	we do	have	one tag: 2we do] haveG2192	SPLIT: one Greek word on two rows
