@@ -93,6 +93,7 @@ jobs:
           python tests/test_kjv_shift_short.py
           python tests/test_abp_corrections_exo2_11.py
           python tests/test_verse_break_forms.py
+          python tests/test_surface_formcells.py
           python tests/test_delete_account.py
           python tests/test_key_strongs_alias.py
           python tests/test_pin_retrieval_alias.py

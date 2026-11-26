@@ -38,6 +38,12 @@ The edition-upgrade re-freeze (2026-11-15, DESIGN 9.120 F3 / 9.133; STEP9C-FREEZ
 pinned, from the upgraded copy after 9a: --src <built> --prefill <the pre-9a copy of its abp_surface>
 --from-restore <the 9a apply report> --out .../abp_surface_fill_20261115.tsv.
 
+--amend (DESIGN 9.269, the form-cell lane): a small pinned fill-amendment file laid over --from-restore,
+for slots a ruled lane changed on live after the report (insert / update / change / drop / remove; see
+read_amend). A `remove` row is a builder row the fill result does not hold: action remove, form \\N,
+old_form = the builder's form; the restore deletes exactly that row. Pinned as AMEND_SHA256 in
+restore_surface_fill.py; once set, --check must name the file.
+
 The snapshot holds ABP text (printed Greek forms + ABP English): it stays OUT of the public repo
 (.gitignore) — PA keeps it in the fixture folder; a second copy goes to the local fixture folder.
 
@@ -142,13 +148,52 @@ def word_rows(con, vids):
     return out
 
 
-def g0_report(csrc, cpre, report_path):
+AMEND_HEADER = ("book", "chapter", "verse", "position", "action", "cls", "form", "old_form", "note")
+AMEND_ACTIONS = ("insert", "update", "change", "drop", "remove")
+
+
+def read_amend(path):
+    """The fill-amendment file (DESIGN 9.269): the slots a ruled lane changes on top of the restore
+    report, at their CURRENT positions. One row per slot:
+      insert  a new fill slot: the pre-fill table has no row; --src holds `form`
+      update  a new fill slot over a builder row: the pre-fill row is `old_form`; --src holds `form`
+      change  a slot the report placed: its form was `old_form`, --src now holds `form`
+      drop    a slot the report placed (form `old_form`) leaves the fill: --src = the pre-fill table there
+      remove  the pre-fill row `old_form` is not in the fill result: --src holds no row there
+    -> [dict]; any malformed line stops before a database is read."""
+    with open(real(path), encoding="utf-8", newline="") as f:
+        lines = [ln.rstrip("\n") for ln in f if ln.strip()]
+    if not lines or tuple(lines[0].split("\t")) != AMEND_HEADER:
+        raise Stop(f"--amend {path}: header must be {AMEND_HEADER}")
+    out, seen = [], set()
+    for n, ln in enumerate(lines[1:], 2):
+        c = ln.split("\t")
+        if len(c) != len(AMEND_HEADER) or not all(x.isdigit() for x in c[1:4]) or c[4] not in AMEND_ACTIONS:
+            raise Stop(f"--amend {path}: line {n} is not {AMEND_HEADER} with an action in {AMEND_ACTIONS}")
+        r = dict(zip(AMEND_HEADER, c))
+        r.update(chapter=int(r["chapter"]), verse=int(r["verse"]), position=int(r["position"]))
+        k = (r["book"], r["chapter"], r["verse"], r["position"])
+        if k in seen:
+            raise Stop(f"--amend {path}: {k} listed twice")
+        seen.add(k)
+        needs_form = r["action"] in ("insert", "update", "change")
+        needs_old = r["action"] in ("update", "change", "drop", "remove")
+        if bool(r["form"]) != needs_form or bool(r["old_form"]) != needs_old or (needs_form and not r["cls"]):
+            raise Stop(f"--amend {path}: line {n} ({r['action']}): form / old_form / cls do not fit the action")
+        out.append(r)
+    return out
+
+
+def g0_report(csrc, cpre, report_path, amend_path=None):
     """G0 for a re-freeze after an edition upgrade (DESIGN 9.120, F3): the fill = --src minus the
     pre-fill table, and it must be EXACTLY the slots restore_surface_fill.py's --report placed
     (key-2-listed included, leave-listed never), at their NEW positions, form for form. Action
     and cls come from the report; the counts are the report's, never the 10/25 constants.
-    -> the same tuple as dryrun_rekey_fill.g0."""
-    say("G0  the fill diff vs the restore report")
+    With --amend (DESIGN 9.269) the amendment file's rows are laid over the report first. A
+    `remove` slot (from the amendment file, or a report placed with action remove) is a pre-fill
+    row that --src does not hold.
+    -> the same tuple as dryrun_rekey_fill.g0, plus the remove slots {slot: cls}."""
+    say("G0  the fill diff vs the restore report" + (" + the amendment file" if amend_path else ""))
     s_src, s_pre = dr.surface(csrc), dr.surface(cpre)
     new_side = {k: v for k, v in s_src.items() if s_pre.get(k) != v}
     old_side = {k: v for k, v in s_pre.items() if s_src.get(k) != v}
@@ -160,7 +205,7 @@ def g0_report(csrc, cpre, report_path):
     if not lines or not need <= set(lines[0]):
         raise Stop(f"G0 {report_path} is not a restore_surface_fill.py --report (columns {sorted(need)})")
     head = lines[0]
-    writes = {}
+    writes, removes = {}, {}
     for cells in lines[1:]:
         r = dict(zip(head, cells))
         if r["result"] != "placed":
@@ -169,10 +214,37 @@ def g0_report(csrc, cpre, report_path):
         if vid is None:
             raise Stop(f"G0 report verse {r['book']} {r['chapter']}:{r['verse']} is not in --src")
         k = (vid, int(r["new_position"]))
-        if k in writes:
+        if k in writes or k in removes:
             raise Stop(f"G0 report places two snapshot rows on slot {k}")
-        writes[k] = dict(action=r["action"], cls=r["cls"], new_form=r["form"])
-    say(f"    report placed {len(writes):,} · src-not-in-prefill {len(new_side):,} · "
+        if r["action"] == "remove":
+            removes[k] = r["cls"]
+        else:
+            writes[k] = dict(action=r["action"], cls=r["cls"], new_form=r["form"])
+    if amend_path:
+        for a in read_amend(amend_path):
+            vid = vkey.get((a["book"], a["chapter"], a["verse"]))
+            if vid is None:
+                raise Stop(f"G0 amendment verse {a['book']} {a['chapter']}:{a['verse']} is not in --src")
+            k, act, where = (vid, a["position"]), a["action"], f"{a['book']} {a['chapter']}:{a['verse']} @{a['position']}"
+            if act in ("change", "drop"):
+                if k not in writes or writes[k]["new_form"] != a["old_form"]:
+                    raise Stop(f"G0 amendment {act} {where}: the report does not place {a['old_form']!r} there")
+                if act == "drop":
+                    del writes[k]
+                else:
+                    writes[k] = dict(writes[k], cls=a["cls"], new_form=a["form"])
+                continue
+            if k in writes or k in removes:
+                raise Stop(f"G0 amendment {act} {where}: the report already places that slot")
+            if act == "remove":
+                if s_pre.get(k, (None,))[0] != a["old_form"]:
+                    raise Stop(f"G0 amendment remove {where}: the pre-fill row is {s_pre.get(k)!r}, not {a['old_form']!r}")
+                removes[k] = a["cls"]
+            else:
+                if act == "update" and s_pre.get(k, (None,))[0] != a["old_form"]:
+                    raise Stop(f"G0 amendment update {where}: the pre-fill row is {s_pre.get(k)!r}, not {a['old_form']!r}")
+                writes[k] = dict(action=act, cls=a["cls"], new_form=a["form"])
+    say(f"    placed {len(writes):,} + removed {len(removes):,} · src-not-in-prefill {len(new_side):,} · "
         f"prefill-not-in-src {len(old_side):,}")
     if set(writes) != set(new_side):
         raise Stop(f"G0 the report places {len(writes):,} slots, the diff holds {len(new_side):,} "
@@ -184,23 +256,31 @@ def g0_report(csrc, cpre, report_path):
     ins = {k for k, w in writes.items() if w["action"] == "insert"}
     upd = {k for k, w in writes.items() if w["action"] == "update"}
     if len(ins) + len(upd) != len(writes) or any(k in s_pre for k in ins) \
-            or set(old_side) != upd:
-        raise Stop("G0 insert/update split does not match the pre-fill table (an insert slot was "
-                   "filled, or the changed pre-fill rows are not exactly the updates)")
-    say(f"    PASS — {len(writes):,} = {len(ins):,} insert + {len(upd):,} update = the restore report")
-    return new_side, old_side, writes, ins, upd, vold
+            or set(old_side) != upd | set(removes) or any(k in s_src for k in removes):
+        raise Stop("G0 insert/update/remove split does not match the pre-fill table (an insert slot was "
+                   "filled, or the changed pre-fill rows are not exactly the updates and removes)")
+    if removes or amend_path:
+        say(f"    PASS — {len(writes) + len(removes):,} = {len(ins):,} insert + {len(upd):,} update + "
+            f"{len(removes):,} remove = the restore report" + (" + the amendment file" if amend_path else ""))
+    else:
+        say(f"    PASS — {len(writes):,} = {len(ins):,} insert + {len(upd):,} update = the restore report")
+    return new_side, old_side, writes, ins, upd, vold, removes
 
 
-def build_rows(csrc, cpre, csv_path, report=None):
+def build_rows(csrc, cpre, csv_path, report=None, amend=None):
+    """-> (rows, inserts, updates, removes)."""
     if report:
-        new_side, old_side, writes, ins, upd, vold = g0_report(csrc, cpre, report)
+        new_side, old_side, writes, ins, upd, vold, removes = g0_report(csrc, cpre, report, amend)
     else:
         new_side, old_side, writes, ins, upd, vold = dr.g0(csrc, cpre, csv_path)
-    vids = {v for v, _ in new_side}
+        removes = {}
+    vids = {v for v, _ in new_side} | {v for v, _ in removes}
     words = word_rows(csrc, vids)
     say("O   every fill slot has exactly one word row in --src")
     rows, orphans, dupes = [], [], []
-    for (vid, pos), (form, translit) in sorted(new_side.items()):
+    slots = [(k, writes[k]["action"], writes[k]["cls"], new_side[k]) for k in new_side] + \
+            [(k, "remove", cls, (None, None)) for k, cls in removes.items()]
+    for (vid, pos), action, cls, (form, translit) in sorted(slots):
         vrows = words.get(vid, [])
         mine = [r for r in vrows if r[0] == pos]
         if not mine:
@@ -211,13 +291,12 @@ def build_rows(csrc, cpre, csv_path, report=None):
             continue
         _, s, sb, e, eh, pn = mine[0]
         same = [r[0] for r in vrows if r[1] == s]
-        w = writes[(vid, pos)]
-        old = old_side.get((vid, pos))           # updates only (an insert slot had no row)
-        if (w["action"] == "update") != (old is not None):
-            raise Stop(f"slot {(vid, pos)}: action {w['action']} but pre-fill row {old!r}")
+        old = old_side.get((vid, pos))           # updates + removes only (an insert slot had no row)
+        if (action in ("update", "remove")) != (old is not None):
+            raise Stop(f"slot {(vid, pos)}: action {action} but pre-fill row {old!r}")
         b, c, v = vold[vid]
         rows.append(dict(verse_id=vid, book=b, chapter=c, verse=v, position=pos,
-                         action=w["action"], cls=w["cls"], form=form, translit=translit,
+                         action=action, cls=cls, form=form, translit=translit,
                          old_form=old[0] if old else None, old_translit=old[1] if old else None,
                          strongs=s, strongs_base=sb, english=e, english_head=eh, is_pn=pn,
                          k2_ordinal=same.index(pos), k2_count=len(same)))
@@ -225,7 +304,7 @@ def build_rows(csrc, cpre, csv_path, report=None):
         raise Stop(f"{len(orphans)} fill slot(s) with no word row (e.g. {orphans[:3]}), "
                    f"{len(dupes)} on a duplicate position (e.g. {dupes[:3]})")
     say(f"    PASS — {len(rows):,} slots, each on one word row")
-    return rows, len(ins), len(upd)
+    return rows, len(ins), len(upd), len(removes)
 
 
 def pinned():
@@ -288,12 +367,45 @@ def report_pin(report_path, required):
     return hexd
 
 
-def expected_counts(a, n_ins, n_upd):
-    """(rows, inserts, updates) the receipt expects: the 10/25 constants with --csv; with
-    --from-restore, the report's own counts (G0 already proved they are the diff's)."""
+def pinned_amend():
+    """DESIGN 9.269: the amendment file's pin lives in restore_surface_fill.py (AMEND_SHA256), beside
+    the snapshot and report pins — read it from there."""
+    import restore_surface_fill as rs
+    return rs.AMEND_SHA256
+
+
+def amend_pin(amend_path, required):
+    """The amendment file is a pinned input once a freeze is made from it: <file>.sha256 beside it
+    must match; under --check it must also be AMEND_SHA256 in restore_surface_fill.py."""
+    with open(real(amend_path), "rb") as f:
+        hexd = sha256(f.read())
+    pin = real(amend_path) + ".sha256"
+    if os.path.isfile(pin):
+        with open(pin, encoding="utf-8") as f:
+            want = (f.read().split() or [""])[0]
+        if want != hexd:
+            raise Stop(f"--amend {amend_path}: sha256 {hexd[:16]}… != its .sha256 {(want or '(empty file)')[:16]}…")
+        say(f"    amendment file sha256 {hexd} = its .sha256")
+    elif required:
+        raise Stop(f"--amend {amend_path}: no .sha256 beside it — the amendment file is a pinned input under --check")
+    else:
+        say(f"    amendment file sha256 {hexd} (no .sha256 beside it yet)")
+    if required:
+        code = pinned_amend()
+        if code is not None and hexd != code:
+            raise Stop(f"--amend {amend_path}: sha256 {hexd[:16]}… is not the pinned amendment file "
+                       f"{code[:16]}… (AMEND_SHA256 in restore_surface_fill.py)")
+        say("    amendment file = the pin in restore_surface_fill.py" if code
+            else "    (no amendment pin set in restore_surface_fill.py)")
+    return hexd
+
+
+def expected_counts(a, n_ins, n_upd, n_rem=0):
+    """(rows, inserts, updates, removes) the receipt expects: the 10/25 constants with --csv; with
+    --from-restore, the report's own counts (+ the amendment file's; G0 already proved they are the diff's)."""
     if a.from_restore:
-        return n_ins + n_upd, n_ins, n_upd
-    return N_ROWS, dr.N_INSERT, dr.N_UPDATE
+        return n_ins + n_upd + n_rem, n_ins, n_upd, n_rem
+    return N_ROWS, dr.N_INSERT, dr.N_UPDATE, 0
 
 
 def check_current(a, out):
@@ -318,12 +430,14 @@ def check_current(a, out):
     if a.from_restore:
         try:
             report_pin(a.from_restore, required=True)
+            if a.amend:
+                amend_pin(a.amend, required=True)
         except Stop as e:
             raise Stop(f"STALE SNAPSHOT — {e} — nothing overwritten") from None
     csrc, cpre = dr.ro(a.src), dr.ro(a.prefill)
     try:
         try:
-            rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv, a.from_restore)
+            rows, n_ins, n_upd, n_rem = build_rows(csrc, cpre, a.csv, a.from_restore, a.amend)
         except Stop as e:
             raise Stop(f"STALE SNAPSHOT — --src no longer yields the frozen fill ({e}) — "
                        "nothing overwritten") from None
@@ -340,10 +454,12 @@ def check_current(a, out):
                    "file" + ("" if diffs else " (every row matches, the bytes do not)") +
                    " — nothing overwritten. A re-freeze is a ruling, never a way past this")
     say(f"    PASS — {len(rows):,} rows, identical bytes")
-    x_rows, x_ins, x_upd = expected_counts(a, n_ins, n_upd)
+    x_rows, x_ins, x_upd, x_rem = expected_counts(a, n_ins, n_upd, n_rem)
     say("\nRECEIPT (expected | actual)")
     say(f"  rows                    {x_rows:,} | {len(rows):,}")
     say(f"  inserts / updates       {x_ins:,} / {x_upd:,} | {n_ins:,} / {n_upd:,}")
+    if a.amend or n_rem:
+        say(f"  removes                 {x_rem:,} | {n_rem:,}")
     say(f"  sha256                  {pin or '(no pin)'} | {hexd}")
     say("RESULT: SNAPSHOT CURRENT — the frozen file matches --src byte for byte; nothing written")
     return 0
@@ -371,7 +487,18 @@ def run(a, live=dr.LIVE):
         raise Stop(f"--out {a.out} must end in .tsv")
     if a.check and a.replace:
         raise Stop("--check and --replace cannot be used together")
+    if a.amend:
+        if not a.from_restore:
+            raise Stop("--amend goes with --from-restore (it is laid over a restore report)")
+        if not os.path.isfile(real(a.amend)):
+            raise Stop(f"--amend {a.amend}: no such file")
+        if real(a.amend) in (out, real(a.from_restore)):
+            raise Stop(f"--amend {a.amend} must be its own file, not --out or the report")
     if a.check:
+        if not a.amend and pinned_amend() is not None:
+            # DESIGN 9.269: the pinned snapshot was frozen with an amendment file, so its --check must name it
+            raise Stop("--check needs --amend: the pinned snapshot was frozen with an amendment file "
+                       "(AMEND_SHA256 in restore_surface_fill.py)")
         if not a.from_restore and pinned_report() is not None:
             # DESIGN 9.134 (reviewer finding 3): the pinned snapshot was made from a restore report
             # (R1), so its --check must name that report — a --csv check would skip the report pin
@@ -392,13 +519,15 @@ def run(a, live=dr.LIVE):
     say("=" * 78)
     if a.from_restore:
         report_pin(a.from_restore, required=False)
+        if a.amend:
+            amend_pin(a.amend, required=False)
     csrc, cpre = dr.ro(a.src), dr.ro(a.prefill)
     try:
-        rows, n_ins, n_upd = build_rows(csrc, cpre, a.csv, a.from_restore)
+        rows, n_ins, n_upd, n_rem = build_rows(csrc, cpre, a.csv, a.from_restore, a.amend)
     finally:
         csrc.close()
         cpre.close()
-    x_rows, x_ins, x_upd = expected_counts(a, n_ins, n_upd)
+    x_rows, x_ins, x_upd, x_rem = expected_counts(a, n_ins, n_upd, n_rem)
     if len(rows) != x_rows:
         raise Stop(f"{len(rows):,} rows, expect {x_rows:,}")
 
@@ -425,6 +554,8 @@ def run(a, live=dr.LIVE):
     say("\nRECEIPT (expected | actual)")
     say(f"  rows                    {x_rows:,} | {len(rows):,}")
     say(f"  inserts / updates       {x_ins:,} / {x_upd:,} | {n_ins:,} / {n_upd:,}")
+    if a.amend or n_rem:
+        say(f"  removes                 {x_rem:,} | {n_rem:,}")
     say(f"  distinct slots          {x_rows:,} | {len({(r['verse_id'], r['position']) for r in rows}):,}")
     say(f"  on name slots (is_pn=1) — | {sum(1 for r in rows if r['is_pn'] == 1):,}")
     say(f"  slots whose number repeats in the verse (k2_count > 1) — | "
@@ -444,6 +575,9 @@ def main(argv=None, live=dr.LIVE):
     ap.add_argument("--from-restore", metavar="REPORT",
                     help="a restore_surface_fill.py --report: G0 = the slots it placed, at their NEW "
                          "positions, counts from the report (DESIGN 9.120; the edition-upgrade re-freeze)")
+    ap.add_argument("--amend", metavar="TSV",
+                    help="a fill-amendment file laid over --from-restore (DESIGN 9.269): insert / update / "
+                         "change / drop / remove rows at current positions; pinned as AMEND_SHA256")
     ap.add_argument("--replace", action="store_true",
                     help="overwrite an existing snapshot (re-freeze by ruling only)")
     ap.add_argument("--check", action="store_true",

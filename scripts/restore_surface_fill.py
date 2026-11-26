@@ -67,8 +67,12 @@ sys.path.insert(0, HERE)
 import dryrun_rekey_fill as dr                     # noqa: E402  the key rules + the live gate
 import snapshot_surface_fill as snap               # noqa: E402  the file format
 
-ROWS_BASE, ROWS_AFTER = 391141, 395014       # defaults: --base, and base + every insert written
+ROWS_BASE, ROWS_AFTER = 391141, 395014       # defaults: --base, and base + every insert written - every remove
 N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
+N_REMOVE = 0                                 # DESIGN 9.269: a snapshot row may now be a `remove`
+# DESIGN 9.269: the fill-amendment file a freeze was laid over (snapshot_surface_fill.py --amend), when the
+# pinned snapshot was made with one; None = the pinned snapshot needs none.
+AMEND_SHA256 = None
 # RE-PINNED 2026-11-15 (edition upgrade step 9c, DESIGN 9.133 declaration) to the re-freeze from the
 # upgraded copy after 9a: tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv — 4,411 rows
 # (3,873 insert + 538 update), 455,953 bytes; made by STEP9C-FREEZE (~/edition_upgrade_runs/
@@ -99,9 +103,18 @@ def check(ok, msg):
 
 
 def after_count(base, res):
-    """G1's expected table after the write (DESIGN 9.120, F1): the base + the inserts among the
-    slots that are written (placed, incl. key-2-listed). Never the leave-listed ones."""
-    return base + sum(1 for x in res if not x["reason"] and x["row"]["action"] == "insert")
+    """G1's expected table after the write (DESIGN 9.120, F1): the base + the inserts - the removes
+    (DESIGN 9.269) among the slots that are written (placed, incl. key-2-listed). Never the leave-listed ones."""
+    step = {"insert": 1, "remove": -1}
+    return base + sum(step.get(x["row"]["action"], 0) for x in res if not x["reason"])
+
+
+def holds(r, cur):
+    """Does the table's row `cur` at the slot already carry what snapshot row `r` leaves there?
+    A remove leaves no row; insert / update leave the row's form."""
+    if r["action"] == "remove":
+        return cur is None
+    return bool(cur) and cur[0] == r["form"]
 
 
 # ── the declared slot lists (DESIGN 9.112 / 9.120 / 9.124, charter 4.9 reason 6) ───────────────
@@ -164,10 +177,14 @@ def load_snapshot(path):
     acts = Counter(r["action"] for r in rows)
     check(len(rows) == N_ROWS and len(keys) == N_ROWS,
           f"{len(rows):,} rows, {len(keys):,} distinct slots (expect {N_ROWS:,})")
-    check((acts["insert"], acts["update"]) == (N_INSERT, N_UPDATE) and len(acts) == 2,
-          f"insert {acts['insert']:,} / update {acts['update']:,} (expect {N_INSERT:,} / {N_UPDATE:,})")
-    bad = [r for r in rows if not r["form"] or (r["action"] == "update") != (r["old_form"] is not None)]
-    check(not bad, f"every row has a form; old form present exactly on updates ({len(bad)} bad)")
+    check((acts["insert"], acts["update"], acts["remove"]) == (N_INSERT, N_UPDATE, N_REMOVE)
+          and set(acts) <= {"insert", "update", "remove"},
+          f"insert {acts['insert']:,} / update {acts['update']:,} / remove {acts['remove']:,} "
+          f"(expect {N_INSERT:,} / {N_UPDATE:,} / {N_REMOVE:,})")
+    bad = [r for r in rows if bool(r["form"]) == (r["action"] == "remove")
+           or (r["action"] in ("update", "remove")) != (r["old_form"] is not None)]
+    check(not bad, f"a form on every insert / update and none on a remove; old form present exactly on "
+                   f"updates and removes ({len(bad)} bad)")
     return rows, hexd
 
 
@@ -232,17 +249,17 @@ def evaluate(con, rows, lex, restoring, key2=None, leave=None):
             if not restoring and leave.get(sk) in (3, 4):
                 # a slot left unwritten at the restore for a precondition (3/4) cannot re-run that
                 # precondition once the rest of the fill is in; it must simply not hold the fill form
-                if cur and cur[0] == r["form"]:
+                if holds(r, cur):
                     list_err = f"on the leave list (reason {leave[sk]}) but its slot holds the fill form"
                 else:
                     reason, detail = leave[sk], "left unwritten at the restore (leave list)"
             elif not restoring:
-                state = "already" if cur and cur[0] == r["form"] else "missing"
-            elif r["action"] == "update" and (cur is None or cur[0] != r["old_form"]):
+                state = "already" if holds(r, cur) else "missing"
+            elif r["action"] in ("update", "remove") and (cur is None or cur[0] != r["old_form"]):
                 reason, detail = 3, f"builder form {cur[0] if cur else None!r} != old {r['old_form']!r}"
             elif r["action"] == "insert" and cur is not None:
                 reason, detail = 4, f"slot holds {cur[0]!r}"
-        want = LEXICON_CLASSES.get(r["cls"])
+        want = LEXICON_CLASSES.get(r["cls"]) if r["action"] != "remove" else None
         if reason == 0 and want:
             s = next(x[1] for x in new_rows if x[0] == np)
             ag = agree(lex, s, r["form"])
@@ -273,7 +290,7 @@ def write_report(path, res):
             f.write("\t".join(str(v) for v in (
                 r["book"], r["chapter"], r["verse"], r["position"],
                 "" if x["new_pos"] is None else x["new_pos"], r["action"], r["cls"], r["is_pn"],
-                r["form"], f"{x['k2'][0]}:{x['k2'][1]}", f"{x['k1'][0]}:{x['k1'][1]}",
+                r["form"] or "", f"{x['k2'][0]}:{x['k2'][1]}", f"{x['k1'][0]}:{x['k1'][1]}",
                 "placed" if not x["reason"] else "unplaced", x["reason"] or "", x["detail"],
                 x["lex"])) + "\n")
 
@@ -314,7 +331,8 @@ def apply(db, res, base, expected):
             for r, k in todo:
                 if k not in lem:
                     raise Stop(f"no word row at new slot {k}")
-                tl[k] = romanize(r["form"], lem[k])
+                if r["action"] != "remove":
+                    tl[k] = romanize(r["form"], lem[k])
             for r, (v, p) in todo:
                 if r["action"] == "update":
                     cur = con.execute("UPDATE abp_surface SET form=?, translit=? WHERE verse_id=? "
@@ -322,6 +340,12 @@ def apply(db, res, base, expected):
                                                                      r["old_form"]))
                     if cur.rowcount != 1:
                         raise Stop(f"update {r['book']} {r['chapter']}:{r['verse']} pos {p}: "
+                                   "old form not as recorded")
+                elif r["action"] == "remove":               # DESIGN 9.269: only the recorded builder row
+                    cur = con.execute("DELETE FROM abp_surface WHERE verse_id=? AND position=? AND form=?",
+                                      (v, p, r["old_form"]))
+                    if cur.rowcount != 1:
+                        raise Stop(f"remove {r['book']} {r['chapter']}:{r['verse']} pos {p}: "
                                    "old form not as recorded")
                 else:                                       # a filled slot raises: no overwrite
                     con.execute("INSERT INTO abp_surface (verse_id, position, form, translit) "
@@ -331,14 +355,16 @@ def apply(db, res, base, expected):
             check(n == expected, f"G1 abp_surface = {n:,} rows (expect {expected:,} exactly)")
             after = dr.surface(con)
             wk = {k for _, k in todo}
-            bad = [k for r, k in todo if after.get(k) != (r["form"], tl[k])]
-            check(not bad, f"the {len(todo):,} written rows = snapshot form + new-slot translit "
-                           f"({len(bad)} differ)")
+            bad = [k for r, k in todo if after.get(k) != (None if r["action"] == "remove" else (r["form"], tl[k]))]
+            check(not bad, f"the {len(todo):,} written rows = snapshot form + new-slot translit, "
+                           f"a remove slot empty ({len(bad)} differ)")
             other = [k for k in set(after) | set(before) if k not in wk and after.get(k) != before.get(k)]
             check(not other, f"every other row unchanged ({len(other)} differ)")
             ins = {k for r, k in todo if r["action"] == "insert"}
+            rem = {k for r, k in todo if r["action"] == "remove"}
             check(set(after) - set(before) == ins, "new rows = exactly the insert slots")
-            g6 = [k for r, k in todo if NB in r["form"] or "ἡ" in r["form"]]
+            check(set(before) - set(after) == rem, "rows gone = exactly the remove slots")
+            g6 = [k for r, k in todo if r["form"] and (NB in r["form"] or "ἡ" in r["form"])]
             check(not g6, f"written forms carry no NBSP and no ἡ ({len(g6)} fail)")
             con.execute("COMMIT")
             say("   COMMITTED")
@@ -416,7 +442,8 @@ def run(a, live=dr.LIVE):
     moved = [x for x in placed if x["new_pos"] != x["row"]["position"]]
     by_reason = Counter(x["reason"] for x in unplaced)
     p_ins = sum(1 for x in placed if x["row"]["action"] == "insert")
-    p_upd = len(placed) - p_ins
+    p_rem = sum(1 for x in placed if x["row"]["action"] == "remove")
+    p_upd = len(placed) - p_ins - p_rem
 
     if weak:
         say(f"\nAGREE-WEAK rows ({len(weak):,}): key 1 found several slots, key 2's among them "
@@ -459,9 +486,15 @@ def run(a, live=dr.LIVE):
     if key2 or leave:
         say(f"  listed slots not as listed 0 | {len(list_bad):,}")
     say(f"  placed inserts / updates  {N_INSERT:,} / {N_UPDATE:,} | {p_ins:,} / {p_upd:,}")
+    if N_REMOVE or p_rem:
+        say(f"  placed removes            {N_REMOVE:,} | {p_rem:,}")
     say(f"  placed rows that moved    — | {len(moved):,}")
     say(f"  Lexicon witness (placed)  — | {dict(sorted(Counter(x['lex'] for x in placed).items()))}")
-    say(f"  G1 after-count            base {base:,} + inserts written {expected - base:,} = {expected:,}")
+    if N_REMOVE or p_rem:
+        say(f"  G1 after-count            base {base:,} + inserts written {expected - base + p_rem:,} "
+            f"- removes {p_rem:,} = {expected:,}")
+    else:
+        say(f"  G1 after-count            base {base:,} + inserts written {expected - base:,} = {expected:,}")
 
     if not restoring:
         missing = [x for x in placed if x["state"] != "already"]

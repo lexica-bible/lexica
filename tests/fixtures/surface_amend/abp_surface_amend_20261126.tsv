@@ -1,0 +1,11 @@
+book	chapter	verse	position	action	cls	form	old_form	note
+Psa	2	0	1	insert	app_form	τω		the app prints τω (then 'by' in the Greek font); DESIGN 9.266 row 4
+1Sa	7	13	9	update	font_fix	του	ψου	'you' in the Greek font from the base build; the app prints του; DESIGN 9.266 row 5
+1Ki	8	44	25	change	font_fix	ης	οφ ης	'of' in the Greek font before ης; the app prints ης; DESIGN 9.266 row 6
+Zec	3	5	0	remove	font_fix		ανδ	'and' in the Greek font from the base build; the app's και is the dictionary word, no form line; DESIGN 9.266 row 7
+Mat	6	13	12	drop			ότιδαγγερ	'dagger' in the Greek font after ότι; ότι is the dictionary word, no form line; DESIGN 9.266 row 8
+1Jn	5	8	2	insert	verse_break	εισίν		the app has these words at the end of 5:7; the form did not follow; DESIGN 9.269
+1Jn	5	8	3	insert	verse_break	οι		the app has these words at the end of 5:7; the form did not follow; DESIGN 9.269
+1Jn	5	8	4	insert	verse_break	μαρτυρούντες		the app has these words at the end of 5:7; the form did not follow; DESIGN 9.269
+1Jn	5	8	6	insert	verse_break	της		the app has these words at the end of 5:7; the form did not follow; DESIGN 9.269
+1Jn	5	8	7	insert	verse_break	γης		the app has these words at the end of 5:7; the form did not follow; DESIGN 9.269

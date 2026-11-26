@@ -731,6 +731,159 @@ class Refreeze(ListsBase):
         self.assertFalse(os.path.exists(out2))
 
 
+class AmendRemove(ListsBase):
+    """DESIGN 9.269: a fill-amendment file over the restore report (insert / update / change / drop /
+    remove), the `remove` snapshot row, and the restore deleting a recorded builder row."""
+    WORDS = OLD_WORDS + [(3, 2, "2316", "God")]
+    BUILDER = PREFILL_SURFACE + [(2, 1, "ανδ")]                 # a builder row in the font, to be removed
+    LANE = [("Gen", 1, 1, 1, "update", "lane_fix", "τῶν", "τοῦ"), ("Gen", 1, 1, 2, "change", "lane_fix", "λόγον", "λόγου"),
+            ("Gen", 1, 2, 2, "drop", "", "", "και"), ("Gen", 1, 2, 1, "remove", "lane_fix", "", "ανδ"),
+            ("Gen", 1, 3, 2, "insert", "lane_fix", "θεὸς", "")]
+
+    def amend_file(self, lines=None, pin=True):
+        p = os.path.join(self.tmp, "amend.tsv")
+        with open(p, "w", encoding="utf-8", newline="\n") as f:
+            f.write("\t".join(sn.AMEND_HEADER) + "\n")
+            for r in (self.LANE if lines is None else lines):
+                f.write("\t".join(map(str, r)) + "\tnote\n")
+        if pin:
+            with open(p + ".sha256", "w", encoding="utf-8") as f:
+                f.write(f"{digest(p)}  amend.tsv\n")
+        return p
+
+    def lane_table(self):
+        """The restored copy, then the lane's edits on it (what live holds after the write)."""
+        self.build(words=self.WORDS, surface=self.BUILDER)
+        pre2 = os.path.join(self.tmp, "built_after_step9.sqlite")
+        shutil.copyfile(self.built, pre2)
+        rc, out = self.run_lists(apply=True, base=3)
+        assert rc == 0, out
+        c = sqlite3.connect(self.built)
+        sb = {(v, p): "G" + s for v, p, s, _ in self.WORDS}
+        for v, p, f in ((1, 1, "τῶν"), (1, 2, "λόγον")):
+            c.execute("UPDATE abp_surface SET form=?, translit=? WHERE verse_id=? AND position=?",
+                      (f, romanize(f, lem(sb[(v, p)])), v, p))
+        c.execute("DELETE FROM abp_surface WHERE (verse_id, position) IN ((2, 2), (2, 1))")
+        c.execute("INSERT INTO abp_surface VALUES (3, 2, 'θεὸς', ?)", (romanize("θεὸς", lem("G2316")),))
+        c.commit()
+        c.close()
+        with open(self.report + ".sha256", "w", encoding="utf-8") as f:
+            f.write(f"{digest(self.report)}  report.tsv\n")
+        return pre2
+
+    def freeze(self, src, prefill, out, amend, check=False):
+        argv = ["--src", src, "--prefill", prefill, "--from-restore", self.report, "--out", out]
+        if amend:
+            argv += ["--amend", amend]
+        if check:
+            argv.append("--check")
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = sn.main(argv, live=self.live)
+        return rc, buf.getvalue()
+
+    def test_freeze_with_amendments_then_restore_gives_the_lane_table(self):
+        pre2 = self.lane_table()
+        snap2 = os.path.join(self.tmp, "fix", "snap_lane.tsv")
+        rc, out = self.freeze(self.built, pre2, snap2, self.amend_file())
+        self.assertEqual(rc, 0, out)
+        self.assertIn("PASS — 6 = 3 insert + 2 update + 1 remove = the restore report + the amendment file", out)
+        self.assertIn("removes                 1 | 1", out)
+        rows, hexd = sn.read_snapshot(snap2)
+        rem = [r for r in rows if r["action"] == "remove"]
+        self.assertEqual([(r["verse_id"], r["position"], r["form"], r["old_form"]) for r in rem], [(2, 1, None, "ανδ")])
+        self.assertNotIn((2, 2), {(r["verse_id"], r["position"]) for r in rows})          # the dropped slot
+        # a rebuild: a fresh builder table, the new snapshot restored onto it
+        lane = rows_of(self.built)
+        self.snap = snap2
+        rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE = 6, 3, 2, 1
+        self.addCleanup(setattr, rs, "N_REMOVE", 0)
+        self.built = os.path.join(self.tmp, "rebuilt.sqlite")
+        self.build(words=self.WORDS, surface=self.BUILDER)
+        rc, out = self.run_lists(apply=True, base=3)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("placed removes            1 | 1", out)
+        self.assertIn("G1 table after            5 | 5", out)
+        self.assertEqual(rows_of(self.built), lane)                                       # row for row
+        before = digest(self.built)
+        rc, out = self.run_lists(base=3)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("ALREADY RESTORED", out)
+        self.assertEqual(digest(self.built), before)
+        c = sqlite3.connect(self.built)                                                    # the removed row back
+        c.execute("INSERT INTO abp_surface VALUES (2, 1, 'ανδ', 'and')")
+        c.execute("DELETE FROM abp_surface WHERE verse_id = 3 AND position = 2")          # count kept at 5
+        c.commit()
+        c.close()
+        rc, out = self.run_lists(base=3)
+        self.assertEqual(rc, 1)
+        self.assertIn("not every slot holds its form", out)
+
+    def test_remove_on_a_different_builder_row_is_reason3_and_writes_nothing(self):
+        pre2 = self.lane_table()
+        snap2 = os.path.join(self.tmp, "fix", "snap_lane3.tsv")
+        rc, out = self.freeze(self.built, pre2, snap2, self.amend_file())
+        self.assertEqual(rc, 0, out)
+        self.snap = snap2
+        rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE = 6, 3, 2, 1
+        self.addCleanup(setattr, rs, "N_REMOVE", 0)
+        self.built = os.path.join(self.tmp, "rebuilt.sqlite")
+        self.build(words=self.WORDS, surface=PREFILL_SURFACE + [(2, 1, "και")])
+        before = digest(self.built)
+        rc, out = self.run_lists(apply=True, base=3)
+        self.assertEqual(rc, 1)
+        self.assertIn("builder form 'και' != old 'ανδ'", out)
+        self.assertIn("STOPPED before any write", out)
+        self.assertEqual(digest(self.built), before)
+
+    def test_check_with_the_amendment_reads_current_and_needs_it_once_pinned(self):
+        pre2 = self.lane_table()
+        snap2 = os.path.join(self.tmp, "fix", "snap_lane_c.tsv")
+        amend = self.amend_file()
+        rc, out = self.freeze(self.built, pre2, snap2, amend)
+        self.assertEqual(rc, 0, out)
+        rs.SNAPSHOT_SHA256, rs.REPORT_SHA256, rs.AMEND_SHA256 = digest(snap2), digest(self.report), digest(amend)
+        self.addCleanup(setattr, rs, "AMEND_SHA256", None)
+        rc, out = self.freeze(self.built, pre2, snap2, amend, check=True)
+        self.assertEqual(rc, 0, out)
+        self.assertIn("amendment file = the pin in restore_surface_fill.py", out)
+        self.assertIn("SNAPSHOT CURRENT", out)
+        rc, out = self.freeze(self.built, pre2, snap2, None, check=True)                  # pinned: must be named
+        self.assertEqual(rc, 1)
+        self.assertIn("--check needs --amend", out)
+        rs.AMEND_SHA256 = "0" * 64
+        rc, out = self.freeze(self.built, pre2, snap2, amend, check=True)
+        self.assertEqual(rc, 1)
+        self.assertIn("is not the pinned amendment file", out)
+        self.assertNotIn("SNAPSHOT CURRENT", out)
+
+    def test_an_amendment_that_does_not_match_stops_before_any_file(self):
+        pre2 = self.lane_table()
+        cases = [
+            ([r if r[4] != "change" else (*r[:7], "λόγος") for r in self.LANE], "the report does not place 'λόγος' there"),
+            ([r if r[4] != "remove" else (*r[:7], "και") for r in self.LANE], "the pre-fill row is"),
+            ([r for r in self.LANE if r[4] != "drop"], "something else changed abp_surface"),
+            ([r for r in self.LANE if r[4] != "remove"], "insert/update/remove split does not match"),
+            ([r if r[4] != "insert" else (*r[:6], "", "") for r in self.LANE], "do not fit the action"),
+        ]
+        for i, (lines, msg) in enumerate(cases):
+            with self.subTest(msg):
+                out_p = os.path.join(self.tmp, "fix", f"bad{i}.tsv")
+                rc, out = self.freeze(self.built, pre2, out_p, self.amend_file(lines, pin=False))
+                self.assertEqual(rc, 1, out)
+                self.assertIn(msg, out)
+                self.assertFalse(os.path.exists(out_p))
+
+    def test_amend_needs_from_restore(self):
+        amend = self.amend_file()
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = sn.main(["--src", self.old, "--prefill", self.pre, "--csv", self.csv, "--amend", amend,
+                          "--out", os.path.join(self.tmp, "fix", "z.tsv")], live=self.live)
+        self.assertEqual(rc, 1)
+        self.assertIn("--amend goes with --from-restore", buf.getvalue())
+
+
 class Floor(unittest.TestCase):
     def health(self, n, *extra):
         tmp = tempfile.mkdtemp()
