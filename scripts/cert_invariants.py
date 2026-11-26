@@ -44,7 +44,7 @@ from lane3_spent import Lane3Ops as _Lane3Ops, declared as _spent_declared, desc
 PINS = {
     "words": 626309,  # S11: +4 vs Session-3 pin = the (P2) _split_numbered splits (Dan 4:1, Isa 10:23, Luk 8:28, Pro 3:15), verified by per-verse word-count diff vs live
     "verses": 31237,  # read from live at suite landing 2026-07-04
-    "abp_corrections_active": 403,  # Bible-text batch, DESIGN 9.247-9.251: 375 + 28 new rows, read off live by block r3 2026-11-23 (cert 8/8 at 403); members tests/fixtures/corrections/abp_corrections_active_live_20261122.txt (sha256 1d727333...). Was 375 (the swap, DESIGN 9.156 (4); members ..._built_20261121.txt)
+    "abp_corrections_active": 406,  # Exo 2:11 old er -> older, DESIGN 9.266-9.268: 403 + 3 new rows (EU-Exo2:11), read off live by block_exo2_11.sh 2026-11-26 02:00Z (cert 8/8 at 406); members tests/fixtures/corrections/abp_corrections_active_live_20261124.txt (sha256 1f5cec8f...). Was 403 (Bible-text batch, DESIGN 9.247-9.251; members ..._live_20261122.txt, sha256 1d727333...); before that 375 (the swap, DESIGN 9.156 (4))
     "abp_corrections_spent_lane3": 1,  # DESIGN 9.153: Heb 11:24 pos 7 english (members = lane3_spent.DECLARED); a second spent row is red until ruled
 }
 

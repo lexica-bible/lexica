@@ -206,7 +206,7 @@ class Batch(unittest.TestCase):
 
     def test_cert_reads_at_403_and_puts_the_pin_back(self):
         import cert_invariants as C
-        pin = C.PINS["abp_corrections_active"]     # 403 since the batch landed (DESIGN 9.251)
+        pin = C.PINS["abp_corrections_active"]     # 403 after this batch (DESIGN 9.251); 406 since Exo 2:11 (9.268)
         with mock.patch.dict(C.PINS, {"abp_corrections_active": B.ACTIVE_BEFORE}):
             seen = []
             with mock.patch.object(C, "run_suite", lambda db: seen.append(C.PINS["abp_corrections_active"]) or 0):
@@ -217,7 +217,8 @@ class Batch(unittest.TestCase):
                 with self.assertRaises(B.Stop):
                     B.run_cert(self.db)
             self.assertEqual(C.PINS["abp_corrections_active"], B.ACTIVE_BEFORE)
-        self.assertEqual(pin, B.ACTIVE_AFTER)
+        import apply_abp_corrections_exo2_11_20261124 as E
+        self.assertEqual(pin, E.ACTIVE_AFTER)       # the latest write that moved the pin
 
     def _audit_db(self, name, control=True, lsj=True):
         p = os.path.join(self.tmp.name, name)
