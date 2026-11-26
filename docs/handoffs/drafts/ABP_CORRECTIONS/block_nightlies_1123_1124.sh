@@ -7,7 +7,8 @@ XDAYS="20261123 20261124 20261125"              # the 13:30 UTC nightlies since;
 XW=626309; XV=31237; XS=395014                  # live at each of those three nightlies (the form cells came 11/26 02:40Z)
 echo "NIGHTLIES - the 11/23 and 11/24 nightlies (DESIGN 9.274 (3)) - READ-ONLY: reads files in ~/db_backups and git's HEAD; opens no database; runs no backup and no health check; writes no file"
 echo "now UTC: $(date -u +%FT%TZ); PA HEAD: $(git -C ~/bible-db rev-parse --short=8 HEAD 2>&1)"
-hm=$(date -u +%H%M); if [ "$hm" -ge 1300 ] && [ "$hm" -le 1430 ]; then echo "NIGHTLIES RESULT: STOP - inside the 13:00-14:30 UTC run; paste after 14:30 (nothing read)"; exit 1; fi
+[ "$(date -u +%Y%m%d%H%M)" -lt 202611261300 ] || { echo "NIGHTLIES RESULT: STOP - the 11/26 nightly is due or done; this block's figures are for the 11/23-11/25 runs only (nothing read; it comes back re-drafted)"; exit 1; }
+[ "$(date -u +%Y%m%d%H%M)" -ge 202611251500 ] || { echo "NIGHTLIES RESULT: STOP - before the 11/25 nightly finished (nothing read)"; exit 1; }
 bad=0
 ok() { if [ "$2" = "$3" ]; then echo "$1: $2 - yes"; else echo "$1: $2 - NO (expected $3)"; bad=1; fi; }
 cnt() { grep -E "^  $2: " "$1" | sed -E 's/^.*: //'; }
@@ -31,7 +32,7 @@ for k in 3 2 1; do
   ok "    check files written with this stamp (= dbs)" "$(ls "$B" | grep -c -E "\.$s\.info\$")" "$NDB"
 done
 S=$(head -c 40 "$B/last_success.txt" 2>&1 | tr -d '\n'); echo "last_success.txt: $S"
-case "$S" in 2026-11-25T13:*) echo "  success stamp from the 11/25 13:30 run: yes";; *) echo "  success stamp from the 11/25 13:30 run: NO"; bad=1;; esac
+case "$S" in 2026-11-25T13:*|2026-11-25T14:*) echo "  success stamp from the 11/25 13:30 run: yes";; *) echo "  success stamp from the 11/25 13:30 run: NO"; bad=1;; esac
 echo "--- 3. the bible.db copy of each: its check file"
 for s in $NEW; do
   I="$B/bible.db.$s.info"
