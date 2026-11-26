@@ -11,7 +11,8 @@ What must hold (feedback_audit_tools_must_fail — every outcome fires on a plan
   * reasons 3 / 4 / 6 fire and block the write (database bytes unchanged);
   * G1a stops on a wrong builder total; G1b stops when the builder table != the pre-fill copy;
   * a tampered snapshot is refused (checksum);
-  * the health floor: 395,013 rows WARN shortfall 1, 395,014 rows OK (re-pinned at the edition-upgrade swap; was 395,003).
+  * the health floor: 395,017 rows WARN shortfall 1, 395,018 rows OK (re-pinned 2026-11-26, the form-cell lane;
+    was 395,014 from the edition-upgrade swap, before that 395,003).
 
 Run:  python tests/test_surface_fill_restore.py
 """
@@ -115,9 +116,11 @@ class Base(unittest.TestCase):
                 f.write("\t".join(row) + "\n")
         self._saved = (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE,
                        sn.N_ROWS, rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
-                       rs.SNAPSHOT_SHA256, rs.REPORT_SHA256)
+                       rs.SNAPSHOT_SHA256, rs.REPORT_SHA256, rs.N_REMOVE, rs.AMEND_SHA256)
         rs.SNAPSHOT_SHA256 = None                  # the planted snapshot is not the pinned one
         rs.REPORT_SHA256 = None                    # nor is a planted restore report
+        rs.AMEND_SHA256 = None                     # nor a planted amendment file (DESIGN 9.269)
+        rs.N_REMOVE = 0                            # the planted fill has no remove row
         dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE = 4, 1, 3, 1
         sn.N_ROWS = 4
         rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE = 2, 5, 4, 3, 1
@@ -125,7 +128,7 @@ class Base(unittest.TestCase):
     def tearDown(self):
         (dr.EXPECT_DIFF_NEW, dr.EXPECT_DIFF_OLD, dr.N_INSERT, dr.N_UPDATE, sn.N_ROWS,
          rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE,
-         rs.SNAPSHOT_SHA256, rs.REPORT_SHA256) = self._saved
+         rs.SNAPSHOT_SHA256, rs.REPORT_SHA256, rs.N_REMOVE, rs.AMEND_SHA256) = self._saved
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def snapshot(self, **over):
@@ -383,24 +386,30 @@ class Restore(Base):
 class AfterCount(unittest.TestCase):
     """DESIGN 9.120 F1: with no lists the computed after-count is the 10/25 figure 395,003 on the
     10/25 shapes (3,873 inserts + 538 updates laid on 391,130). Since the 9c re-pin (DESIGN 9.133)
-    the DEFAULT base is the upgraded chain's 391,141, so the default after-count is 395,014."""
+    the DEFAULT base is the upgraded chain's 391,141; since the 11/26 re-pin (DESIGN 9.272) the default
+    after-count is 391,141 + 3,878 - 1 remove = 395,018."""
     def test_no_lists_reproduces_395003(self):
-        res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
-               + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE)
-        self.assertEqual((rs.N_INSERT, rs.N_UPDATE), (3873, 538))
+        res = ([dict(reason=0, row=dict(action="insert"))] * 3873
+               + [dict(reason=0, row=dict(action="update"))] * 538)
         self.assertEqual(rs.after_count(391130, res), 395003)              # the 10/25 shapes
         res[0] = dict(reason=6, row=dict(action="insert"))                 # an unwritten slot
         self.assertEqual(rs.after_count(391141, res), 395013)
 
-    def test_defaults_are_the_9c_pins(self):
+    def test_defaults_are_the_1126_pins(self):
+        # DESIGN 9.272: the form-cell re-freeze (was the 9c pins: 395,014 / 4,411 / d025cc08…)
         res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
-               + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE)
-        self.assertEqual((rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS), (391141, 395014, 4411))
+               + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE
+               + [dict(reason=0, row=dict(action="remove"))] * rs.N_REMOVE)
+        self.assertEqual((rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS), (391141, 395018, 4418))
+        self.assertEqual((rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE), (3878, 539, 1))
+        self.assertEqual(len(res), rs.N_ROWS)
         self.assertEqual(rs.after_count(rs.ROWS_BASE, res), rs.ROWS_AFTER)
         self.assertEqual(rs.SNAPSHOT_SHA256,
-                         "d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff")
+                         "3cc35e7d9fcfdc5c7d47da25ba1ba3785cdde504868e3e64cfde8aab4308fe28")
         self.assertEqual(rs.REPORT_SHA256,
                          "e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a")
+        self.assertEqual(rs.AMEND_SHA256,
+                         "acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8")
 
 
 class PinnedFiles(unittest.TestCase):
@@ -417,7 +426,14 @@ class PinnedFiles(unittest.TestCase):
             self.assertEqual(f.read().split()[0], pin)
 
     def test_snapshot_file_is_the_pin(self):
-        self.check("abp_surface_fill_20261115.tsv", rs.SNAPSHOT_SHA256)
+        self.check("abp_surface_fill_20261126.tsv", rs.SNAPSHOT_SHA256)
+
+    def test_amendment_file_is_the_pin(self):
+        # tracked in git (tests/fixtures/surface_amend), so this always runs
+        p = os.path.join(os.path.dirname(self.FIX), "surface_amend", "abp_surface_amend_20261126.tsv")
+        self.assertEqual(digest(p), rs.AMEND_SHA256)
+        with open(p + ".sha256", encoding="utf-8") as f:
+            self.assertEqual(f.read().split()[0], rs.AMEND_SHA256)
 
     def test_report_file_is_the_pin(self):
         self.check("restore_report_20261115.tsv", rs.REPORT_SHA256)
@@ -797,7 +813,6 @@ class AmendRemove(ListsBase):
         lane = rows_of(self.built)
         self.snap = snap2
         rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE = 6, 3, 2, 1
-        self.addCleanup(setattr, rs, "N_REMOVE", 0)
         self.built = os.path.join(self.tmp, "rebuilt.sqlite")
         self.build(words=self.WORDS, surface=self.BUILDER)
         rc, out = self.run_lists(apply=True, base=3)
@@ -826,7 +841,6 @@ class AmendRemove(ListsBase):
         self.assertEqual(rc, 0, out)
         self.snap = snap2
         rs.N_ROWS, rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE = 6, 3, 2, 1
-        self.addCleanup(setattr, rs, "N_REMOVE", 0)
         self.built = os.path.join(self.tmp, "rebuilt.sqlite")
         self.build(words=self.WORDS, surface=PREFILL_SURFACE + [(2, 1, "και")])
         before = digest(self.built)
@@ -843,7 +857,6 @@ class AmendRemove(ListsBase):
         rc, out = self.freeze(self.built, pre2, snap2, amend)
         self.assertEqual(rc, 0, out)
         rs.SNAPSHOT_SHA256, rs.REPORT_SHA256, rs.AMEND_SHA256 = digest(snap2), digest(self.report), digest(amend)
-        self.addCleanup(setattr, rs, "AMEND_SHA256", None)
         rc, out = self.freeze(self.built, pre2, snap2, amend, check=True)
         self.assertEqual(rc, 0, out)
         self.assertIn("amendment file = the pin in restore_surface_fill.py", out)
@@ -901,14 +914,14 @@ class Floor(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
-    def test_floor_is_395014(self):
-        # re-pinned at the edition-upgrade swap: builder chain 391,141 + the fill's 3,873 (DESIGN 9.120, 9.130)
-        self.assertIn("[WARN] abp_surface rows BELOW floor 395014", self.health(395013))
-        self.assertTrue(self.health(395013).split("]: ")[1].startswith("1 "))
-        line = self.health(395014)
-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395014", line)
+    def test_floor_is_395018(self):
+        # re-pinned 2026-11-26 (DESIGN 9.272): builder chain 391,141 + 3,878 inserts - 1 remove; was 395,014
+        self.assertIn("[WARN] abp_surface rows BELOW floor 395018", self.health(395017))
+        self.assertTrue(self.health(395017).split("]: ")[1].startswith("1 "))
+        line = self.health(395018)
+        self.assertIn("[OK  ] abp_surface rows BELOW floor 395018", line)
         self.assertTrue(line.split("]: ")[1].startswith("0 "))
-        self.assertTrue(self.health(391141).split("]: ")[1].startswith("3873 "))   # the fill missing = shortfall 3,873 exactly
+        self.assertTrue(self.health(391141).split("]: ")[1].startswith("3877 "))   # the fill missing = shortfall 3,873 exactly
 
     def test_surface_floor_option_moves_only_that_run(self):
         # --surface-floor=N checks one run against a declared floor (DESIGN 9.120); a different N than the default
@@ -916,7 +929,7 @@ class Floor(unittest.TestCase):
         self.assertIn("[WARN] abp_surface rows BELOW floor 395020", line)
         self.assertTrue(line.split("]: ")[1].startswith("1 "))
         self.assertIn("[OK  ] abp_surface rows BELOW floor 395020", self.health(395020, "--surface-floor=395020"))
-        self.assertIn("BELOW floor 395014", self.health(395020))       # the default is untouched
+        self.assertIn("BELOW floor 395018", self.health(395020))       # the default is untouched
         tmp = tempfile.mkdtemp()                                         # the two-word form is refused
         try:
             p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"),

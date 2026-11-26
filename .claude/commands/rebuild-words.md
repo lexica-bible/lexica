@@ -66,12 +66,16 @@ output, if any, rides the step-8 deploy).
    and before DELETING any old copy, check the newest nightly in ~/db_backups is stamped
    AFTER the last swap — the nightly runs ~13:30 UTC and does not cover an evening ship.)
 1a. **SNAPSHOT CHECK — before the build, on `<src>`** (added 2026-10-25, charter §9). The
-   abp_surface fill is frozen in `tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv` — re-frozen
-   2026-11-15 by the edition upgrade from its copy after 9a (DESIGN 9.133; was `abp_surface_fill_20261025.tsv`)
-   — beside the 9a report it was made from, `restore_report_20261115.tsv` (each + `.sha256`; git-ignored
-   ABP text — on PA and in the local checkout only; both sha256s pinned in `restore_surface_fill.py`:
-   SNAPSHOT_SHA256, REPORT_SHA256). Before every rebuild, prove the frozen file still describes live:
-   `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <src> --prefill ~/abp_surface_prefill_20261115.db --from-restore tests/fixtures/rebuild_trap/restore_report_20261115.tsv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv`
+   abp_surface fill is frozen in `tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv` (4,418 rows =
+   3,878 insert + 539 update + 1 remove) — re-frozen 2026-11-26 by the form-cell lane from a fresh copy of live
+   after its 10-cell write (DESIGN 9.269-9.272; was `abp_surface_fill_20261115.tsv`, the edition upgrade's 9c
+   re-freeze, DESIGN 9.133; before that `abp_surface_fill_20261025.tsv`) — made from the 11/15 9a report
+   `restore_report_20261115.tsv` with the amendment file `tests/fixtures/surface_amend/abp_surface_amend_20261126.tsv`
+   laid over it (the frozen file and the report: git-ignored ABP text, on PA and in the local checkout only; the
+   amendment file is in git; each + `.sha256`; all three sha256s pinned in `restore_surface_fill.py`:
+   SNAPSHOT_SHA256, REPORT_SHA256, AMEND_SHA256). Before every rebuild, prove the frozen file still describes live:
+   `PYTHONIOENCODING=utf-8 python3 scripts/snapshot_surface_fill.py --check --src <src> --prefill ~/abp_surface_prefill_20261115.db --from-restore tests/fixtures/rebuild_trap/restore_report_20261115.tsv --amend tests/fixtures/surface_amend/abp_surface_amend_20261126.tsv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv`
+   (`--check` refuses to run without `--amend` while AMEND_SHA256 is set, DESIGN 9.269.)
    (`--prefill` = the upgraded chain's step-9 table, saved by the 9a apply as
    `~/edition_upgrade_runs/step9a_apply_20261115/before.db`, sha256 `ea6c54c3…`, 391,141 rows, DESIGN 9.128; its
    standing home, ruled DESIGN 9.134, is the sha-checked copy `~/abp_surface_prefill_20261115.db` — the original
@@ -329,9 +333,12 @@ output, if any, rides the step-8 deploy).
    `docs/handoffs/CENSUS_abp_surface_fill.md`) is NOT re-created by any builder above** — step 9 drops
    it; 9a puts it back. `apply_abp_surface_fill.py` is one-shot (keyed to 391,130 rows); never re-run it.
 9a. **RESTORE THE FILL — on `<built>`, dry run → verdict → `--apply`** (charter G1–G3 §8, wired §9).
-   `PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py <built> --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/abp_surface_prefill_20261115.db --report <report.tsv>`
-   (read-only; then the same + `--apply`). **Re-pinned 2026-11-15 (DESIGN 9.133): snapshot
-   `abp_surface_fill_20261115.tsv`, default `--base` 391,141, so G1 = 391,141 + 3,873 = 395,014** — these
+   `PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py <built> --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv --lexicon abp_helps/analytical_lexicon.tsv --prefill ~/abp_surface_prefill_20261115.db --report <report.tsv>`
+   (read-only; then the same + `--apply`). **Re-pinned 2026-11-26 (DESIGN 9.272): snapshot
+   `abp_surface_fill_20261126.tsv`, 3,878 insert + 539 update + 1 remove (a `remove` row deletes exactly the
+   recorded builder row: Zec 3:5 @0 ανδ; any other form there is reason 3, nothing written), default `--base`
+   391,141, so G1 = 391,141 + 3,878 - 1 = 395,018** (was 2026-11-15, DESIGN 9.133: `abp_surface_fill_20261115.tsv`,
+   G1 = 391,141 + 3,873 = 395,014) — these
    describe live only AFTER the edition-upgrade swap; the same-code split figures below are the 10/25
    ones and are re-declared at the first same-code run after the swap (the 10/25 command used
    `--snapshot …/abp_surface_fill_20261025.tsv --prefill ~/bible.db.pre-surface-fill-20261025`).
@@ -343,15 +350,15 @@ output, if any, rides the step-8 deploy).
    edition upgrade) drops it, re-declares these figures, and needs a re-freeze afterwards (handoff
    held item "snapshot staleness"). The restore refuses live by design: it only ever runs here.
 9b. **HEALTH FLOOR + ORACLE — on `<built>`.** `health_check.py <built> --no-backup-check
-   --no-disk-check`: the `abp_surface rows BELOW floor 395014` line must read `[OK  ] … : 0`
-   (floor 395,014 since the edition-upgrade swap, DESIGN 9.130: builder chain 391,141 + the fill's
-   3,873 inserts; before it 395,003, raised 2026-10-25 from 389,244 — charter G3; shortfall 3,873
-   exactly = the fill is missing; the 2026-07-16 miss is why the guard exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
+   --no-disk-check`: the `abp_surface rows BELOW floor 395018` line must read `[OK  ] … : 0`
+   (floor 395,018 since 2026-11-26, DESIGN 9.272: builder chain 391,141 + the fill's 3,878 inserts - 1 remove;
+   before it 395,014 from the edition-upgrade swap, DESIGN 9.130, and 395,003, raised 2026-10-25 from 389,244 —
+   charter G3; shortfall 3,877 exactly = the fill is missing; the 2026-07-16 miss is why the guard exists). Then, on a same-code rebuild, the restored table vs live, read-only both ways, must be
    `0|0` (the end-to-end oracle; also proves live's table did not change since `<src>` was taken).
 8. **Swap + deploy (the only live action):** `mv bible.db bible_pre_<reason>_<date>.db; mv <built> bible.db`; then
    `bash ~/bible-db/scripts/deploy.sh` — its API reload is the dashboard-Reload equivalent and its
    built-in 5× sweep is the verification (the G2 stale-worker rule — never bare touch). Live goes from
-   the old table to the rebuilt one (395,014 rows since the edition upgrade) in one move; no fill-less moment. At the
+   the old table to the rebuilt one (395,018 rows since 2026-11-26; 395,014 from the edition upgrade) in one move; no fill-less moment. At the
    swap, record G5 (expected, not a block): `pn_hebrew_xref` 519 | 519 · `pn_greek_identity` 21 | 21 ·
    name-slot `strongs_base` 501 (charter §7).
 10. **WHERE: on `<built>`, right after step 11, before steps 12 and 9** (JP ruling after the 10/25 run). RE-GENERATE

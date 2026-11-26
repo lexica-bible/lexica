@@ -28,10 +28,11 @@ Per slot (JP rulings 2026-10-25; THE key rules are dryrun_rekey_fill.key2_at / k
     Lexicon-backed class: number + form agree (apply's own rule)         (else reason 5)
 Reasons (closed list, charter §2b): 1 no slot · 2 ambiguous · 3 update precondition · 4 insert
 target filled · 5 number + form disagree · 6 key 1 none / several without key 2's slot · 7 key
-conflict. Placed + unplaced = 4,411.
+conflict. Placed + unplaced = 4,418 (the pinned snapshot since 2026-11-26; was 4,411).
 
 Gates (STOP before any write):
-  S    snapshot = 4,411 rows (3,873 insert + 538 update), distinct slots, checksum matches
+  S    snapshot = 4,418 rows (3,878 insert + 539 update + 1 remove; was 4,411 = 3,873 + 538), distinct
+       slots, checksum matches
   V    every snapshot verse_id names the same book/chapter/verse in <db>
   G1a  the builder chain's table = --base rows exactly (default 391,141 since 2026-11-15, was 391,130;
        the base the fill is laid on)
@@ -41,17 +42,17 @@ Gates (STOP before any write):
        through the same preconditions + Lexicon check; reason 7 since DESIGN 9.124) or
        leave-listed (unplaced with exactly its listed reason); any slot that does not resolve
        as listed, or a listed slot not in the snapshot, STOPs
-  G1   after the writes, before COMMIT: abp_surface = base + the inserts written (395,014 with
-       the defaults; was 395,003); the written rows (placed + key-2-listed; never leave-listed) = snapshot
+  G1   after the writes, before COMMIT: abp_surface = base + the inserts written - the removes written
+       (395,018 with the defaults since 2026-11-26; was 395,014, before that 395,003); the written rows (placed + key-2-listed; never leave-listed) = snapshot
        form + romanize(form, lemma of the NEW slot); every other row unchanged; new rows =
-       exactly the insert slots
+       exactly the insert slots; rows gone = exactly the remove slots (DESIGN 9.269)
   T    after COMMIT: build_abp_translit.py's rule would change 0 rows; quick_check ok
 A table already at that after-count with every written slot holding its form reads ALREADY
 RESTORED (no write, exit 0); any other table count is a G1a STOP; a mix of restored and
 not-restored slots fails.
 
   PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py ~/rekey/built3.db \\
-      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv \\
+      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv \\
       --lexicon abp_helps/analytical_lexicon.tsv --prefill <the pre-fill copy, rebuild-words 9a> \\
       --report ~/rekey/restore_dry.tsv            # add --apply to write (copies only)
 """
@@ -67,22 +68,29 @@ sys.path.insert(0, HERE)
 import dryrun_rekey_fill as dr                     # noqa: E402  the key rules + the live gate
 import snapshot_surface_fill as snap               # noqa: E402  the file format
 
-ROWS_BASE, ROWS_AFTER = 391141, 395014       # defaults: --base, and base + every insert written - every remove
-N_ROWS, N_INSERT, N_UPDATE = 4411, 3873, 538
-N_REMOVE = 0                                 # DESIGN 9.269: a snapshot row may now be a `remove`
-# DESIGN 9.269: the fill-amendment file a freeze was laid over (snapshot_surface_fill.py --amend), when the
-# pinned snapshot was made with one; None = the pinned snapshot needs none.
-AMEND_SHA256 = None
-# RE-PINNED 2026-11-15 (edition upgrade step 9c, DESIGN 9.133 declaration) to the re-freeze from the
+ROWS_BASE, ROWS_AFTER = 391141, 395018       # defaults: --base, and base + every insert written - every remove
+N_ROWS, N_INSERT, N_UPDATE = 4418, 3878, 539
+N_REMOVE = 1                                 # DESIGN 9.269: a snapshot row may be a `remove` (Zec 3:5 @0)
+# DESIGN 9.269 / 9.272: the fill-amendment file the pinned freeze was laid over (snapshot_surface_fill.py
+# --amend): tests/fixtures/surface_amend/abp_surface_amend_20261126.tsv (+ .sha256), 10 rows; once set,
+# every --check must name it. None = the pinned snapshot needs none.
+AMEND_SHA256 = "acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8"
+# RE-PINNED 2026-11-26 (the form-cell lane, DESIGN 9.269-9.272) to the re-freeze from a fresh copy of live after
+# the 10-cell write: tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv — 4,418 rows (3,878 insert +
+# 539 update + 1 remove), 456,514 bytes; made by block_formcells.sh (~/edition_upgrade_runs/formcells_20261126,
+# 11/26 02:41Z) with --from-restore the 11/15 report --amend the amendment file. 391,141 + 3,878 - 1 = 395,018.
+# Was (2026-11-15, edition upgrade step 9c, DESIGN 9.133 declaration) to the re-freeze from the
 # upgraded copy after 9a: tests/fixtures/rebuild_trap/abp_surface_fill_20261115.tsv — 4,411 rows
 # (3,873 insert + 538 update), 455,953 bytes; made by STEP9C-FREEZE (~/edition_upgrade_runs/
 # step9c_freeze_20261115.log, 11/15 15:15Z) with --from-restore the 9a apply report. Default base
 # 391,141 = the upgraded builder chain (DESIGN 9.122); 391,141 + 3,873 = 395,014 (DESIGN 9.128).
-# Was (2026-10-25, the first PA snapshot of live, receipt CHARTER_rebuild_trap_fix.md §8):
+# Before that (2026-10-25, the first PA snapshot of live, receipt CHARTER_rebuild_trap_fix.md §8):
 # abp_surface_fill_20261025.tsv d9435bdea8f3ec768053dbefb8c19a920905ed616bdfcb3b2a5f55cf9b4a295b,
 # base 391,130, after 395,003 — kept on PA + locally until the new freeze passes --check against
 # the swapped live (charter §7).
-SNAPSHOT_SHA256 = "d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff"
+# The 11/15 pin was abp_surface_fill_20261115.tsv d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff;
+# that file stays until the 11/26 step-1a check is ruled (DESIGN 9.272 (5)).
+SNAPSHOT_SHA256 = "3cc35e7d9fcfdc5c7d47da25ba1ba3785cdde504868e3e64cfde8aab4308fe28"
 # R1 (DESIGN 9.121 / 9.133): the 9a apply report the new freeze was made from — the third pinned
 # input of `snapshot_surface_fill.py --check --from-restore` (beside the snapshot pin above and the
 # pre-fill table). Kept beside the snapshot as restore_report_20261115.tsv (+ .sha256), 4,412 lines.
