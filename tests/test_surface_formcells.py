@@ -34,7 +34,7 @@ class FormCells(unittest.TestCase):
         self.pre = os.path.join(self.tmp.name, "prefill.db")
         self.plan = F.load_plan()
         self.make(self.db, {p["key"]: p["before"] for p in self.plan})
-        self.make(self.pre, {k: (f, "x") for k, f in F.PREFILL_AT.items()})
+        self.make_prefill(self.pre, {k: (f, "x") for k, f in F.PREFILL_AT.items()})
         for obj, name, value in ((F, "SURFACE_BEFORE", 3 + 4), (F, "SURFACE_AFTER", 3 + 8),
                                  (B, "WORDS", len(F.STRONGS) + 1), (B, "VERSES", 6),
                                  (B, "in_window", lambda now=None: False)):
@@ -62,6 +62,26 @@ class FormCells(unittest.TestCase):
             c.execute("INSERT INTO abp_surface VALUES (1, ?, ?, ?)", (pos, f, romanize(f, "ὁ")))
         c.commit()
         c.close()
+
+    def make_prefill(self, path, cells):
+        """Shaped like the real pre-fill file (DESIGN 9.270): step 9a's before.db holds ONLY the abp_surface
+        table, keyed (verse_id, position) on live's verse ids. No verses, no words, no lexicon."""
+        live = sqlite3.connect(self.db)
+        vid = {(b, c, v): i for i, b, c, v in live.execute("SELECT id, book, chapter, verse FROM verses")}
+        live.close()
+        c = sqlite3.connect(path)
+        c.execute("CREATE TABLE abp_surface (verse_id INT, position INT, form TEXT, translit TEXT)")
+        for key, cell in cells.items():
+            c.execute("INSERT INTO abp_surface VALUES (?,?,?,?)", (vid[key[:3]], key[3], *cell))
+        c.execute("INSERT INTO abp_surface VALUES (1, 99, 'τον', 'ton')")                 # another builder row
+        c.commit()
+        c.close()
+
+    def test_the_prefill_stand_in_is_shaped_like_the_real_file(self):
+        c = sqlite3.connect(self.pre)
+        tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")]
+        c.close()
+        self.assertEqual(tables, ["abp_surface"])
 
     def run_mode(self, mode):
         out = io.StringIO()

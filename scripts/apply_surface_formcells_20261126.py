@@ -176,16 +176,19 @@ def check_structure(conn):
     print(f"structure: no triggers on abp_surface; journal delete; words {w:,}; verses {v:,}")
 
 
-def check_prefill(plan, prefill):
-    """The pre-fill table the re-freeze compares against: the builder's own rows at these slots."""
+def check_prefill(plan, prefill, where):
+    """The pre-fill table the re-freeze compares against: the builder's own rows at these slots.
+    DESIGN 9.270: that file holds ONLY abp_surface (step 9a's before.db saves the one table), keyed by
+    (verse_id, position) on the same verse ids as live (the freeze's G0 compares the two on exactly
+    those keys), so each slot is looked up by live's verse id (`where`, from slots() on live)."""
     if not prefill.is_file():
         raise Stop(f"no pre-fill table at {prefill}")
     conn = sqlite3.connect(f"file:{prefill}?mode=ro", uri=True)
     try:
         bad = []
         for p in plan:
-            vid = _vid(conn, p["key"])
-            got = surface_row(conn, vid, p["key"][3])
+            vid, pos = where[p["key"]][:2]
+            got = surface_row(conn, vid, pos)
             want = PREFILL_AT.get(p["key"])
             if (got[0] if got else None) != want:
                 bad.append(f"{p['key']}: pre-fill holds {got!r}, expected form {want!r}")
@@ -222,10 +225,11 @@ def do_read(db, side, prefill):
         print(f"{side}-values: all 10 slots as cleared; abp_surface {n:,} rows")
         check_translit(conn, plan)
         translit_gate(conn)
+        where = slots(conn, plan)
     finally:
         conn.close()
     if side == "before":
-        check_prefill(plan, prefill)
+        check_prefill(plan, prefill, where)
         print(f"plan: 6 added + 2 changed + 2 removed = {CHANGES} changes; abp_surface {SURFACE_BEFORE:,} -> {SURFACE_AFTER:,}")
 
 
