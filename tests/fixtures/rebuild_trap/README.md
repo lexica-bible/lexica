@@ -7,16 +7,12 @@ Home of the frozen abp_surface fill:
   (`snapshot_surface_fill.py --from-restore restore_report_20261115.tsv --amend
   ../surface_amend/abp_surface_amend_20261126.tsv`): 4,418 rows (3,878 insert + 539 update + 1 remove).
   The amendment file is in git (`tests/fixtures/surface_amend/`), pinned as `AMEND_SHA256`.
-- `abp_surface_fill_20261115.tsv` — the pinned file 2026-11-15 to 11-26 (DESIGN 9.133): the fill
-  re-frozen by the edition upgrade from its copy after step 9a (`scripts/snapshot_surface_fill.py
-  --from-restore`, STEP9C-FREEZE): 4,411 rows (3,873 insert + 538 update), one per fill slot at its
-  upgraded position.
+- `abp_surface_fill_20261115.tsv` (the 11/15 freeze, 4,411 rows) and `abp_surface_fill_20261025.tsv` (the
+  first freeze): REMOVED 2026-11-26 (DESIGN 9.275), locally and on PA; the 11/26 file replaced them.
 - `restore_report_20261115.tsv` — the 9a apply report that file was made from (4,412 lines); the
   third pinned input of `snapshot_surface_fill.py --check --from-restore` (R1, DESIGN 9.121); still
-  the base of the 11/26 freeze. The 11/15 file and the pre-fill table stay until the 11/26 step-1a
-  check is ruled (DESIGN 9.272 (5)).
-- `abp_surface_fill_20261025.tsv` — the first freeze (2026-10-25, 4,411 rows at the pre-upgrade
-  positions). Kept until the new freeze passes `--check` against the swapped live (charter §7).
+  the base of the 11/26 freeze. The pre-fill table (~/abp_surface_prefill_20261115.db, on PA) stays: step 1a
+  and 9a read it (DESIGN 9.275).
 - Each has a `.sha256` beside it; `scripts/restore_surface_fill.py` pins the snapshot
   (`SNAPSHOT_SHA256`), the report (`REPORT_SHA256`) and the amendment file (`AMEND_SHA256`), and refuses
   any other file.
