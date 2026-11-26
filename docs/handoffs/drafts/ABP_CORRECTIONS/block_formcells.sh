@@ -5,8 +5,8 @@ if [ -e "$D/started" ]; then echo "FORMCELLS: STOP - already ran, kept in $D"; e
 mkdir -p "$D"
 A="$D/try_$(date -u +%H%M%S).log"
 ( set -uo pipefail
-  REF=2b322f61
-  XP=60711caf08ceb7403791beb11787beccf78b2bb165a4493cecc58e5736c1e301                                                                  # apply_surface_formcells_20261126.py
+  REF=69e79319
+  XP=7bc32ee4bf0d16e19bbb584a0d4329883ec8ec7e31b122273367e5af7c3a9adf                                                                  # apply_surface_formcells_20261126.py
   XN=eaeee80750e658290c49f05866b9a69f954e2807515e4b82caf3285df5dbf228                                                                  # snapshot_surface_fill.py
   XAM=acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8       # the amendment file
   XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a        # the 11/15 restore report = REPORT_SHA256

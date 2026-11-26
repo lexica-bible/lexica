@@ -1,0 +1,96 @@
+diff --git a/scripts/apply_surface_formcells_20261126.py b/scripts/apply_surface_formcells_20261126.py
+index c571fe83..8a5958b9 100644
+--- a/scripts/apply_surface_formcells_20261126.py
++++ b/scripts/apply_surface_formcells_20261126.py
+@@ -176,16 +176,19 @@ def check_structure(conn):
+     print(f"structure: no triggers on abp_surface; journal delete; words {w:,}; verses {v:,}")
+ 
+ 
+-def check_prefill(plan, prefill):
+-    """The pre-fill table the re-freeze compares against: the builder's own rows at these slots."""
++def check_prefill(plan, prefill, where):
++    """The pre-fill table the re-freeze compares against: the builder's own rows at these slots.
++    DESIGN 9.270: that file holds ONLY abp_surface (step 9a's before.db saves the one table), keyed by
++    (verse_id, position) on the same verse ids as live (the freeze's G0 compares the two on exactly
++    those keys), so each slot is looked up by live's verse id (`where`, from slots() on live)."""
+     if not prefill.is_file():
+         raise Stop(f"no pre-fill table at {prefill}")
+     conn = sqlite3.connect(f"file:{prefill}?mode=ro", uri=True)
+     try:
+         bad = []
+         for p in plan:
+-            vid = _vid(conn, p["key"])
+-            got = surface_row(conn, vid, p["key"][3])
++            vid, pos = where[p["key"]][:2]
++            got = surface_row(conn, vid, pos)
+             want = PREFILL_AT.get(p["key"])
+             if (got[0] if got else None) != want:
+                 bad.append(f"{p['key']}: pre-fill holds {got!r}, expected form {want!r}")
+@@ -222,10 +225,11 @@ def do_read(db, side, prefill):
+         print(f"{side}-values: all 10 slots as cleared; abp_surface {n:,} rows")
+         check_translit(conn, plan)
+         translit_gate(conn)
++        where = slots(conn, plan)
+     finally:
+         conn.close()
+     if side == "before":
+-        check_prefill(plan, prefill)
++        check_prefill(plan, prefill, where)
+         print(f"plan: 6 added + 2 changed + 2 removed = {CHANGES} changes; abp_surface {SURFACE_BEFORE:,} -> {SURFACE_AFTER:,}")
+ 
+ 
+diff --git a/tests/test_surface_formcells.py b/tests/test_surface_formcells.py
+index f8d1b241..1fd3c4a7 100644
+--- a/tests/test_surface_formcells.py
++++ b/tests/test_surface_formcells.py
+@@ -34,7 +34,7 @@ class FormCells(unittest.TestCase):
+         self.pre = os.path.join(self.tmp.name, "prefill.db")
+         self.plan = F.load_plan()
+         self.make(self.db, {p["key"]: p["before"] for p in self.plan})
+-        self.make(self.pre, {k: (f, "x") for k, f in F.PREFILL_AT.items()})
++        self.make_prefill(self.pre, {k: (f, "x") for k, f in F.PREFILL_AT.items()})
+         for obj, name, value in ((F, "SURFACE_BEFORE", 3 + 4), (F, "SURFACE_AFTER", 3 + 8),
+                                  (B, "WORDS", len(F.STRONGS) + 1), (B, "VERSES", 6),
+                                  (B, "in_window", lambda now=None: False)):
+@@ -63,6 +63,26 @@ class FormCells(unittest.TestCase):
+         c.commit()
+         c.close()
+ 
++    def make_prefill(self, path, cells):
++        """Shaped like the real pre-fill file (DESIGN 9.270): step 9a's before.db holds ONLY the abp_surface
++        table, keyed (verse_id, position) on live's verse ids. No verses, no words, no lexicon."""
++        live = sqlite3.connect(self.db)
++        vid = {(b, c, v): i for i, b, c, v in live.execute("SELECT id, book, chapter, verse FROM verses")}
++        live.close()
++        c = sqlite3.connect(path)
++        c.execute("CREATE TABLE abp_surface (verse_id INT, position INT, form TEXT, translit TEXT)")
++        for key, cell in cells.items():
++            c.execute("INSERT INTO abp_surface VALUES (?,?,?,?)", (vid[key[:3]], key[3], *cell))
++        c.execute("INSERT INTO abp_surface VALUES (1, 99, 'τον', 'ton')")                 # another builder row
++        c.commit()
++        c.close()
++
++    def test_the_prefill_stand_in_is_shaped_like_the_real_file(self):
++        c = sqlite3.connect(self.pre)
++        tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")]
++        c.close()
++        self.assertEqual(tables, ["abp_surface"])
++
+     def run_mode(self, mode):
+         out = io.StringIO()
+         with contextlib.redirect_stdout(out):
+diff --git a/docs/handoffs/drafts/ABP_CORRECTIONS/block_formcells.sh b/docs/handoffs/drafts/ABP_CORRECTIONS/block_formcells.sh
+index f7fd8fe4..0296e680 100644
+--- a/docs/handoffs/drafts/ABP_CORRECTIONS/block_formcells.sh
++++ b/docs/handoffs/drafts/ABP_CORRECTIONS/block_formcells.sh
+@@ -5,8 +5,8 @@ if [ -e "$D/started" ]; then echo "FORMCELLS: STOP - already ran, kept in $D"; e
+ mkdir -p "$D"
+ A="$D/try_$(date -u +%H%M%S).log"
+ ( set -uo pipefail
+-  REF=2b322f61
+-  XP=60711caf08ceb7403791beb11787beccf78b2bb165a4493cecc58e5736c1e301                                                                  # apply_surface_formcells_20261126.py
++  REF=69e79319
++  XP=7bc32ee4bf0d16e19bbb584a0d4329883ec8ec7e31b122273367e5af7c3a9adf                                                                  # apply_surface_formcells_20261126.py
+   XN=eaeee80750e658290c49f05866b9a69f954e2807515e4b82caf3285df5dbf228                                                                  # snapshot_surface_fill.py
+   XAM=acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8       # the amendment file
+   XR=e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a        # the 11/15 restore report = REPORT_SHA256
