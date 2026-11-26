@@ -241,11 +241,12 @@ Jdg 20:35	53	abp_surface.form	1	ετρόπωσε		'put' loses its form
 2Sa 2:26	62	words.strongs_base	26	G2036		'shall you'
 2Sa 2:26	62	abp_surface.form	26	είπης		'shall you' loses its form
 2Sa 3:35	63	keeps	6	4018.4	4018.4	one Greek word, one source tag: to cause [2to eat 4at the wakeG4018.4; keeps the number: @6 'to eat' (hand)
-2Sa 3:35	63	words.strongs	5	4018.4		'to cause' - NOT READ ON LIVE (a peeled helper the detector skips); before-value from the build; any printed form here is unread too
-2Sa 3:35	63	words.strongs_base	5	G4018		'to cause' - NOT READ ON LIVE (a peeled helper the detector skips); before-value from the build; any printed form here is unread too
+2Sa 3:35	63	words.strongs	5	4018.4		'to cause' - NOT READ ON LIVE (a peeled helper the detector skips); number from the build, form from the frozen fill
+2Sa 3:35	63	words.strongs_base	5	G4018		'to cause' - NOT READ ON LIVE (a peeled helper the detector skips); number from the build, form from the frozen fill
+2Sa 3:35	63	abp_surface.form	6		περιδειπνήσαι	the form moves to the kept row 'to eat'
+2Sa 3:35	63	abp_surface.form	5	περιδειπνήσαι		'to cause' loses its form
 2Sa 3:35	63	words.strongs	7	4018.4		'at the wake'
 2Sa 3:35	63	words.strongs_base	7	G4018		'at the wake'
-2Sa 3:35	63	abp_surface.form	6		περιδειπνήσαι	the form moves to the kept row 'to eat'
 2Sa 3:35	63	abp_surface.form	7	περιδειπνήσαι		'at the wake' loses its form
 2Sa 11:10	64	keeps	23	2064	2064	one Greek word, one source tag: 1Are 4come]?G2064; keeps the number: @23 'come?' (auto)
 2Sa 11:10	64	words.strongs	22	2064		'Are'

@@ -97,6 +97,7 @@ python tests/test_kjv_shift_short.py >/dev/null
 python tests/test_abp_corrections_exo2_11.py >/dev/null
 python tests/test_verse_break_forms.py >/dev/null
 python tests/test_surface_formcells.py >/dev/null
+python tests/test_split_doubles.py >/dev/null
 python tests/test_delete_account.py >/dev/null
 python tests/test_key_strongs_alias.py >/dev/null
 python tests/test_pin_retrieval_alias.py >/dev/null

@@ -85,9 +85,10 @@ HAND = {
 }
 # A word the detector caught only in part: its first piece is a helper the build peels out in front of
 # the bracket and keeps tagged (helper_ok refuses it), the shape the detector skips by design.
-# (verse, strongs) -> (live position, source English). Not in pairs.tsv, so not read on live: the
-# before-value is the build's, and the guarded apply's check reads it first.
-EXTRA = {("2Sa 3:35", "4018.4"): (5, "to cause")}
+# (verse, strongs) -> (live position, source English, printed form). Not in pairs.tsv, so not read on live:
+# the number is the build's; the form is the frozen fill's insert at that slot (abp_surface_fill_20261126.tsv,
+# read CURRENT against live 11/26 03:09Z, DESIGN 9.274). The guarded apply's check reads both first.
+EXTRA = {("2Sa 3:35", "4018.4"): (5, "to cause", "περιδειπνήσαι")}
 HELD = {("Exo 33:3", "3361"), ("Eze 28:3", "3756"), ("Eze 36:14", "3756")}
 HELD_WHY = "held: the second piece is the English of the next, blank Greek word (splitter polarity B)"
 
@@ -127,7 +128,7 @@ def words_from(classified):
         if x:
             if x[0] in w["rows"] or x[0] != min(w["rows"]) - 1:
                 raise SystemExit(f"EXTRA {w['verse']} @{x[0]} does not sit just before the word")
-            w["rows"][x[0]] = (x[1], "")
+            w["rows"][x[0]] = (x[1], x[2])
             w["extra"] = x[0]
     return list(out.values()), len(pairs)
 
@@ -175,8 +176,8 @@ def main():
         for p, (e, f) in rows:
             if p == keep:
                 continue
-            tail = (" - NOT READ ON LIVE (a peeled helper the detector skips); before-value from the build;"
-                    " any printed form here is unread too" if p == w.get("extra") else "")
+            tail = (" - NOT READ ON LIVE (a peeled helper the detector skips); number from the build, form from"
+                    " the frozen fill" if p == w.get("extra") else "")
             lines.append((w["verse"], n, "words.strongs", p, w["strongs"], "", f"'{e}'{tail}"))
             lines.append((w["verse"], n, "words.strongs_base", p, base(w["strongs"]), "", f"'{e}'{tail}"))
             if f:
