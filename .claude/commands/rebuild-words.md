@@ -69,7 +69,8 @@ output, if any, rides the step-8 deploy).
    abp_surface fill is frozen in `tests/fixtures/rebuild_trap/abp_surface_fill_20261127.tsv` (3,952 rows =
    3,412 insert + 539 update + 1 remove) — re-frozen by the split double rows lane on a whole-file copy written
    by its program, proven there to give back the written table, pinned after the live write of 2026-11-28
-   (DESIGN 9.280-9.289; was `abp_surface_fill_20261126.tsv`, the form-cell lane, DESIGN 9.269-9.272; before that
+   (DESIGN 9.280-9.289; was `abp_surface_fill_20261126.tsv`, the form-cell lane, DESIGN 9.269-9.272, removed 11/28,
+   DESIGN 9.291; before that
    the 11/15 and 10/25 files) — made from the copy-proof's dry-run report `restore_report_20261127.tsv` with the
    amendment file `tests/fixtures/surface_amend/abp_surface_amend_split_20261127.tsv` (2 rows) laid over it (the frozen file and the report: git-ignored ABP text, on PA and in the local checkout only; the
    amendment file is in git; each + `.sha256`; all three sha256s pinned in `restore_surface_fill.py`:
@@ -79,7 +80,8 @@ output, if any, rides the step-8 deploy).
    (`--prefill` = the builder chain's step-9 table on the written words, 391,142 rows: the split copy-proof's
    `~/edition_upgrade_runs/split_proof_20261127/builder.db`, sha256 `c739a168…`, repeated slot for slot by the
    re-freeze run (DESIGN 9.284, 9.286); its standing home is the sha-checked copy `~/abp_surface_prefill_20261127.db`.
-   Was the 11/15 table `~/abp_surface_prefill_20261115.db`, `ea6c54c3…`, 391,141 rows, DESIGN 9.128 / 9.134. Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Since the 11/21 swap this check reads CURRENT on a
+   Was the 11/15 table `~/abp_surface_prefill_20261115.db`, `ea6c54c3…`, 391,141 rows, DESIGN 9.128 / 9.134
+   (removed 11/28 with the 11/15 report, DESIGN 9.291). Since 9.134 `--check` refuses `--csv` while a report is pinned.) **Since the 11/21 swap this check reads CURRENT on a
    fresh copy of live (P8, DESIGN 9.238); on the 11/26 file with --amend it read CURRENT 11/26 03:09Z (CHECK1126, DESIGN 9.274); the 11/27 file's check after the split write: DESIGN 9.289 and after.** The 10/25 command, for the record: `… --check --src <src> --prefill ~/bible.db.pre-surface-fill-20261025 --csv ~/abp_surface_fill_dryrun.csv --out tests/fixtures/rebuild_trap/abp_surface_fill_20261025.tsv`
    (passes only with the 10/25 pin). It writes nothing. **Must print `RESULT: SNAPSHOT CURRENT`.** `STALE SNAPSHOT` = STOP: live's
    table or a fill slot's word row changed since the freeze (or the file is not the pinned one) —
