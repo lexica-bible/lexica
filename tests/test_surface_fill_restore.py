@@ -386,8 +386,8 @@ class Restore(Base):
 class AfterCount(unittest.TestCase):
     """DESIGN 9.120 F1: with no lists the computed after-count is the 10/25 figure 395,003 on the
     10/25 shapes (3,873 inserts + 538 updates laid on 391,130). Since the 9c re-pin (DESIGN 9.133)
-    the DEFAULT base is the upgraded chain's 391,141; since the 11/26 re-pin (DESIGN 9.272) the default
-    after-count is 391,141 + 3,878 - 1 remove = 395,018."""
+    the DEFAULT base was the upgraded chain's 391,141; since the 11/28 re-pin (DESIGN 9.284-9.289) the default
+    base is 391,142 and the after-count 391,142 + 3,412 - 1 remove = 394,553 (was 391,141 + 3,878 - 1 = 395,018)."""
     def test_no_lists_reproduces_395003(self):
         res = ([dict(reason=0, row=dict(action="insert"))] * 3873
                + [dict(reason=0, row=dict(action="update"))] * 538)
@@ -395,21 +395,21 @@ class AfterCount(unittest.TestCase):
         res[0] = dict(reason=6, row=dict(action="insert"))                 # an unwritten slot
         self.assertEqual(rs.after_count(391141, res), 395013)
 
-    def test_defaults_are_the_1126_pins(self):
-        # DESIGN 9.272: the form-cell re-freeze (was the 9c pins: 395,014 / 4,411 / d025cc08…)
+    def test_defaults_are_the_1128_pins(self):
+        # DESIGN 9.284-9.289: the split double rows re-freeze (was the 11/26 pins: 391,141 / 395,018 / 4,418 / 3cc35e7d…)
         res = ([dict(reason=0, row=dict(action="insert"))] * rs.N_INSERT
                + [dict(reason=0, row=dict(action="update"))] * rs.N_UPDATE
                + [dict(reason=0, row=dict(action="remove"))] * rs.N_REMOVE)
-        self.assertEqual((rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS), (391141, 395018, 4418))
-        self.assertEqual((rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE), (3878, 539, 1))
+        self.assertEqual((rs.ROWS_BASE, rs.ROWS_AFTER, rs.N_ROWS), (391142, 394553, 3952))
+        self.assertEqual((rs.N_INSERT, rs.N_UPDATE, rs.N_REMOVE), (3412, 539, 1))
         self.assertEqual(len(res), rs.N_ROWS)
         self.assertEqual(rs.after_count(rs.ROWS_BASE, res), rs.ROWS_AFTER)
         self.assertEqual(rs.SNAPSHOT_SHA256,
-                         "3cc35e7d9fcfdc5c7d47da25ba1ba3785cdde504868e3e64cfde8aab4308fe28")
+                         "a0777ea9a85fe0b6b5b28a40edd012af1cbe753d650c869899cb9283baf142f0")
         self.assertEqual(rs.REPORT_SHA256,
-                         "e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a")
+                         "a15bd77e3d1481fb40cc68a2fb4cc9e1ae6ee67511b21ed533f14d5148e12d2f")
         self.assertEqual(rs.AMEND_SHA256,
-                         "acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8")
+                         "98bfb3508555c664a560cb085c70dab91508df30313f4c8c6c4e37c4ed247b41")
 
 
 class PinnedFiles(unittest.TestCase):
@@ -426,17 +426,17 @@ class PinnedFiles(unittest.TestCase):
             self.assertEqual(f.read().split()[0], pin)
 
     def test_snapshot_file_is_the_pin(self):
-        self.check("abp_surface_fill_20261126.tsv", rs.SNAPSHOT_SHA256)
+        self.check("abp_surface_fill_20261127.tsv", rs.SNAPSHOT_SHA256)
 
     def test_amendment_file_is_the_pin(self):
         # tracked in git (tests/fixtures/surface_amend), so this always runs
-        p = os.path.join(os.path.dirname(self.FIX), "surface_amend", "abp_surface_amend_20261126.tsv")
+        p = os.path.join(os.path.dirname(self.FIX), "surface_amend", "abp_surface_amend_split_20261127.tsv")
         self.assertEqual(digest(p), rs.AMEND_SHA256)
         with open(p + ".sha256", encoding="utf-8") as f:
             self.assertEqual(f.read().split()[0], rs.AMEND_SHA256)
 
     def test_report_file_is_the_pin(self):
-        self.check("restore_report_20261115.tsv", rs.REPORT_SHA256)
+        self.check("restore_report_20261127.tsv", rs.REPORT_SHA256)
 
 
 class ListsBase(Base):

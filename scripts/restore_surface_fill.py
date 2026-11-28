@@ -28,13 +28,13 @@ Per slot (JP rulings 2026-10-25; THE key rules are dryrun_rekey_fill.key2_at / k
     Lexicon-backed class: number + form agree (apply's own rule)         (else reason 5)
 Reasons (closed list, charter §2b): 1 no slot · 2 ambiguous · 3 update precondition · 4 insert
 target filled · 5 number + form disagree · 6 key 1 none / several without key 2's slot · 7 key
-conflict. Placed + unplaced = 4,418 (the pinned snapshot since 2026-11-26; was 4,411).
+conflict. Placed + unplaced = 3,952 (the pinned snapshot since 2026-11-28; was 4,418, before that 4,411).
 
 Gates (STOP before any write):
-  S    snapshot = 4,418 rows (3,878 insert + 539 update + 1 remove; was 4,411 = 3,873 + 538), distinct
+  S    snapshot = 3,952 rows (3,412 insert + 539 update + 1 remove; was 4,418 = 3,878 + 539 + 1), distinct
        slots, checksum matches
   V    every snapshot verse_id names the same book/chapter/verse in <db>
-  G1a  the builder chain's table = --base rows exactly (default 391,141 since 2026-11-15, was 391,130;
+  G1a  the builder chain's table = --base rows exactly (default 391,142 since 2026-11-28, was 391,141, before that 391,130;
        the base the fill is laid on)
   G1b  (--prefill given) builder table = the pre-fill copy row for row (same-code rebuild only)
   G2   every slot placed (unplaced = 0) — or, with the declared lists (DESIGN 9.120), every slot
@@ -43,7 +43,7 @@ Gates (STOP before any write):
        leave-listed (unplaced with exactly its listed reason); any slot that does not resolve
        as listed, or a listed slot not in the snapshot, STOPs
   G1   after the writes, before COMMIT: abp_surface = base + the inserts written - the removes written
-       (395,018 with the defaults since 2026-11-26; was 395,014, before that 395,003); the written rows (placed + key-2-listed; never leave-listed) = snapshot
+       (394,553 with the defaults since 2026-11-28; was 395,018, 395,014, before that 395,003); the written rows (placed + key-2-listed; never leave-listed) = snapshot
        form + romanize(form, lemma of the NEW slot); every other row unchanged; new rows =
        exactly the insert slots; rows gone = exactly the remove slots (DESIGN 9.269)
   T    after COMMIT: build_abp_translit.py's rule would change 0 rows; quick_check ok
@@ -52,7 +52,7 @@ RESTORED (no write, exit 0); any other table count is a G1a STOP; a mix of resto
 not-restored slots fails.
 
   PYTHONIOENCODING=utf-8 python3 scripts/restore_surface_fill.py ~/rekey/built3.db \\
-      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv \\
+      --snapshot tests/fixtures/rebuild_trap/abp_surface_fill_20261127.tsv \\
       --lexicon abp_helps/analytical_lexicon.tsv --prefill <the pre-fill copy, rebuild-words 9a> \\
       --report ~/rekey/restore_dry.tsv            # add --apply to write (copies only)
 """
@@ -68,14 +68,24 @@ sys.path.insert(0, HERE)
 import dryrun_rekey_fill as dr                     # noqa: E402  the key rules + the live gate
 import snapshot_surface_fill as snap               # noqa: E402  the file format
 
-ROWS_BASE, ROWS_AFTER = 391141, 395018       # defaults: --base, and base + every insert written - every remove
-N_ROWS, N_INSERT, N_UPDATE = 4418, 3878, 539
+ROWS_BASE, ROWS_AFTER = 391142, 394553       # defaults: --base, and base + every insert written - every remove
+N_ROWS, N_INSERT, N_UPDATE = 3952, 3412, 539
 N_REMOVE = 1                                 # DESIGN 9.269: a snapshot row may be a `remove` (Zec 3:5 @0)
-# DESIGN 9.269 / 9.272: the fill-amendment file the pinned freeze was laid over (snapshot_surface_fill.py
-# --amend): tests/fixtures/surface_amend/abp_surface_amend_20261126.tsv (+ .sha256), 10 rows; once set,
-# every --check must name it. None = the pinned snapshot needs none.
-AMEND_SHA256 = "acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8"
-# RE-PINNED 2026-11-26 (the form-cell lane, DESIGN 9.269-9.272) to the re-freeze from a fresh copy of live after
+# DESIGN 9.284-9.286: the fill-amendment file the pinned freeze was laid over (snapshot_surface_fill.py
+# --amend): tests/fixtures/surface_amend/abp_surface_amend_split_20261127.tsv (+ .sha256), 2 rows (1Ki 22:45 @16,
+# Luk 11:11 @22); once set, every --check must name it. None = the pinned snapshot needs none.
+# Was (DESIGN 9.269 / 9.272) abp_surface_amend_20261126.tsv acf93423…a7cd8, 10 rows, laid over the 11/15 report.
+AMEND_SHA256 = "98bfb3508555c664a560cb085c70dab91508df30313f4c8c6c4e37c4ed247b41"
+# RE-PINNED 2026-11-28 (the split double rows lane, DESIGN 9.280-9.289) to the re-freeze proven on a whole-file copy
+# written by apply_split_doubles_20261126.py: tests/fixtures/rebuild_trap/abp_surface_fill_20261127.tsv — 3,952 rows
+# (3,412 insert + 539 update + 1 remove), 408,875 bytes; made by block_split_refreeze.sh
+# (~/edition_upgrade_runs/split_refreeze_20261127, 11/26 20:58Z) with --prefill the copy's new builder table (the
+# standing pre-fill table ~/abp_surface_prefill_20261127.db, 391,142 rows) --from-restore the copy-proof's dry-run
+# report --amend the 2-row file. On that copy it restored with 0 unplaced and gave back the written table at every
+# slot (DESIGN 9.286); live was written 11/28 00:40Z (DESIGN 9.289). 391,142 + 3,412 - 1 = 394,553.
+# Was (2026-11-26, the form-cell lane, DESIGN 9.269-9.272) abp_surface_fill_20261126.tsv
+# 3cc35e7d9fcfdc5c7d47da25ba1ba3785cdde504868e3e64cfde8aab4308fe28, base 391,141, after 395,018:
+# the re-freeze from a fresh copy of live after
 # the 10-cell write: tests/fixtures/rebuild_trap/abp_surface_fill_20261126.tsv — 4,418 rows (3,878 insert +
 # 539 update + 1 remove), 456,514 bytes; made by block_formcells.sh (~/edition_upgrade_runs/formcells_20261126,
 # 11/26 02:41Z) with --from-restore the 11/15 report --amend the amendment file. 391,141 + 3,878 - 1 = 395,018.
@@ -90,11 +100,13 @@ AMEND_SHA256 = "acf9342309e043a806e25f0faf1cf35aa0cf935aec25b68a1400eb41429a7cd8
 # the swapped live (charter §7).
 # The 11/15 pin was abp_surface_fill_20261115.tsv d025cc086cd7f325bafe3c89655c778f8cdc57f67ba127061a3edfd2192472ff;
 # that file stays until the 11/26 step-1a check is ruled (DESIGN 9.272 (5)).
-SNAPSHOT_SHA256 = "3cc35e7d9fcfdc5c7d47da25ba1ba3785cdde504868e3e64cfde8aab4308fe28"
-# R1 (DESIGN 9.121 / 9.133): the 9a apply report the new freeze was made from — the third pinned
+SNAPSHOT_SHA256 = "a0777ea9a85fe0b6b5b28a40edd012af1cbe753d650c869899cb9283baf142f0"
+# R1 (DESIGN 9.121 / 9.133): the restore report the new freeze was made from — the third pinned
 # input of `snapshot_surface_fill.py --check --from-restore` (beside the snapshot pin above and the
-# pre-fill table). Kept beside the snapshot as restore_report_20261115.tsv (+ .sha256), 4,412 lines.
-REPORT_SHA256 = "e154d8d4991aa02d49380d473c22b511d7c5a7be4c7239873b0bfe19ebc4748a"
+# pre-fill table). Since 2026-11-28 (DESIGN 9.284-9.289): the split copy-proof's dry-run report
+# (~/edition_upgrade_runs/split_proof_20261127/restore_dry.tsv), kept beside the snapshot as
+# restore_report_20261127.tsv (+ .sha256), 4,419 lines. Was restore_report_20261115.tsv e154d8d4…748a (4,412 lines).
+REPORT_SHA256 = "a15bd77e3d1481fb40cc68a2fb4cc9e1ae6ee67511b21ed533f14d5148e12d2f"
 
 REASONS = {1: "no slot (key 2 found none)", 2: "ambiguous",
            3: "update precondition (builder form != recorded old form)",

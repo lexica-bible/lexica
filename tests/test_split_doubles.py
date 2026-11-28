@@ -43,10 +43,12 @@ class SplitDoubles(unittest.TestCase):
             p = mock.patch.object(obj, name, value)
             p.start()
             self.addCleanup(p.stop)
-        if not A.FILL.is_file():      # the frozen fill is ABP text, git-ignored: absent on CI, present on PA
-            p = mock.patch.object(A, "fill_note", lambda conn, plan: print("frozen fill: not here (CI)"))
-            p.start()
-            self.addCleanup(p.stop)
+        # fill_note reads the 11/26 frozen fill against restore_surface_fill's pin. That pin moved to the 11/27
+        # re-freeze after the live write (DESIGN 9.289), and the note was information for the pre-write check
+        # only, so it is stood in here (the fill is git-ignored ABP text anyway: absent on CI).
+        p = mock.patch.object(A, "fill_note", lambda conn, plan: print("frozen fill: note stood in (pin moved 11/28)"))
+        p.start()
+        self.addCleanup(p.stop)
 
     def make(self):
         """verses / words / abp_surface / abp_corrections / lexicon shaped like live's, holding only the plan's

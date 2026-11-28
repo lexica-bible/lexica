@@ -175,8 +175,9 @@ locked CI test, `test_pn_lemma_wordstudy.py`). Invariants:
   the file, never re-argue the members. Adjudicate on the ENGLISH
   column: a name reads as a place, a defect reads as a sentence ("And Herod" = `Ηρώδης δε`).
   Known-bad and parked: Act 12:19, Act 13:1, Jos 12:23.
-- **Form-table state:** `abp_surface` floor = 395,018 rows since 2026-11-26 (the builder chain's 391,141 +
-  the frozen fill's 3,878 inserts - 1 remove, DESIGN 9.272; was 395,003, then 395,014; floor checked in
+- **Form-table state:** `abp_surface` floor = 394,553 rows since 2026-11-27 (the builder chain's 391,142 +
+  the frozen fill's 3,412 inserts - 1 remove, DESIGN 9.280-9.289, the split double rows lane; was 395,003, then
+  395,014, then 395,018; floor checked in
   `scripts/health_check.py`). Name slots with no printed
   form were **642** when the form lane landed (2026-08-23; the 10/25 fill may have moved it). Name-slot
   coverage includes the BRIDGE rule in `backfill_pn_surface.py`: a labeled name slot may take
