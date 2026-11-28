@@ -11,8 +11,8 @@ What must hold (feedback_audit_tools_must_fail — every outcome fires on a plan
   * reasons 3 / 4 / 6 fire and block the write (database bytes unchanged);
   * G1a stops on a wrong builder total; G1b stops when the builder table != the pre-fill copy;
   * a tampered snapshot is refused (checksum);
-  * the health floor: 395,017 rows WARN shortfall 1, 395,018 rows OK (re-pinned 2026-11-26, the form-cell lane;
-    was 395,014 from the edition-upgrade swap, before that 395,003).
+  * the health floor: 394,552 rows WARN shortfall 1, 394,553 rows OK (lowered 2026-11-27, the split double rows
+    lane, DESIGN 9.281 (b); was 395,018 from the form-cell lane, 395,014 from the edition-upgrade swap, 395,003).
 
 Run:  python tests/test_surface_fill_restore.py
 """
@@ -914,14 +914,15 @@ class Floor(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
-    def test_floor_is_395018(self):
-        # re-pinned 2026-11-26 (DESIGN 9.272): builder chain 391,141 + 3,878 inserts - 1 remove; was 395,014
-        self.assertIn("[WARN] abp_surface rows BELOW floor 395018", self.health(395017))
-        self.assertTrue(self.health(395017).split("]: ")[1].startswith("1 "))
-        line = self.health(395018)
-        self.assertIn("[OK  ] abp_surface rows BELOW floor 395018", line)
+    def test_floor_is_394553(self):
+        # lowered 2026-11-27 (DESIGN 9.281 (b), 9.286): new builder base 391,142 + 3,412 inserts - 1 remove; was 395,018
+        self.assertIn("[WARN] abp_surface rows BELOW floor 394553", self.health(394552))
+        self.assertTrue(self.health(394552).split("]: ")[1].startswith("1 "))
+        line = self.health(394553)
+        self.assertIn("[OK  ] abp_surface rows BELOW floor 394553", line)
         self.assertTrue(line.split("]: ")[1].startswith("0 "))
-        self.assertTrue(self.health(391141).split("]: ")[1].startswith("3877 "))   # the fill missing = shortfall 3,873 exactly
+        self.assertTrue(self.health(395018).split("]: ")[1].startswith("0 "))      # live before the write: OK
+        self.assertTrue(self.health(391142).split("]: ")[1].startswith("3411 "))   # the fill missing = shortfall 3,411 exactly
 
     def test_surface_floor_option_moves_only_that_run(self):
         # --surface-floor=N checks one run against a declared floor (DESIGN 9.120); a different N than the default
@@ -929,7 +930,7 @@ class Floor(unittest.TestCase):
         self.assertIn("[WARN] abp_surface rows BELOW floor 395020", line)
         self.assertTrue(line.split("]: ")[1].startswith("1 "))
         self.assertIn("[OK  ] abp_surface rows BELOW floor 395020", self.health(395020, "--surface-floor=395020"))
-        self.assertIn("BELOW floor 395018", self.health(395020))       # the default is untouched
+        self.assertIn("BELOW floor 394553", self.health(395020))       # the default is untouched
         tmp = tempfile.mkdtemp()                                         # the two-word form is refused
         try:
             p = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "health_check.py"),

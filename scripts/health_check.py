@@ -150,7 +150,12 @@ check("distinct H-bases with NO bdb entry",
 # (6 forms added, 2 removed) and the fill was re-frozen at 4,418 rows = 3,878 inserts + 539 updates + 1
 # remove, so a rebuild's 9a gives 391,141 + 3,878 - 1 = 395,018. Raised AFTER the write (live only went up,
 # the old floor was never crossed). Shortfall 3,877 exactly (= 3,878 - 1) = the fill is missing.
-SURFACE_FLOOR = 395018
+# FLOOR LOWERED 2026-11-27 to 394,553 (the split double rows lane, DESIGN 9.280-9.286): the write takes live
+# 395,018 -> 394,553 (512 rows lose the number; 482 printed forms go with it, 17 move to the kept row). Lowered
+# BEFORE the write (DESIGN 9.281 (b)): the check fails only below the floor, so 394,553 holds live before and
+# after. The re-frozen fill (abp_surface_fill_20261127.tsv, 3,952 = 3,412 insert + 539 update + 1 remove) on the
+# new builder base 391,142 gives 391,142 + 3,412 - 1 = 394,553. Shortfall 3,411 exactly = the fill is missing.
+SURFACE_FLOOR = 394553
 # --surface-floor=N (DESIGN 9.120, rebuild-words 9b on the edition upgrade's copy): check THIS run
 # against a declared floor; the constant itself is re-pinned only in the swap commit.
 if "--surface-floor" in sys.argv:                  # the '--surface-floor N' form would be ignored
@@ -160,7 +165,7 @@ SURFACE_FLOOR = int(next((a.split("=", 1)[1] for a in sys.argv if a.startswith("
 check(f"abp_surface rows BELOW floor {SURFACE_FLOOR}  [fill or a backfill missing?]",
       f"SELECT CASE WHEN count(*) < {SURFACE_FLOOR} THEN {SURFACE_FLOOR} - count(*) ELSE 0 END "
       "FROM abp_surface",
-      note="shortfall vs floor; 3877 = the fill is missing (restore_surface_fill.py); "
+      note="shortfall vs floor; 3411 = the fill is missing (restore_surface_fill.py); "
            "other = backfill_abp_surface.py + backfill_pn_surface.py + build_abp_translit.py")
 
 # ── verses ───────────────────────────────────────────────────────────────────
